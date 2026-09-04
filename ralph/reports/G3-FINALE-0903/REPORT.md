@@ -396,18 +396,135 @@ read as the AI simply being far away rather than *leaving and coming back
 from a new side*, that's the gap between the contract's numbers and this
 intent worth checking for.
 
+## Addendum 2 — the coordinator's three remaining items
+
+A second relayed message ranked three items: persistence (highest risk),
+D41 world healing via Gate F's S10c/d/e, and matching G3-BAND5's
+per-entry `_why_combat` authoring shape (Corr at DEFAULT, Ness on CURRENT)
+for Solene/Hald/the Warden. All three addressed this round.
+
+### Combat-block comments restructured, Solene authored
+
+Fetched `origin/ralph/G3-BAND5-0903` and read their actual landed rows
+(`stronghold_outer_watch`/Corr: no `combat` block at all, left at DEFAULT
+deliberately; `stronghold_checkpoint`/Ness: all three creatures on CURRENT)
+to match their exact convention: a `_why_combat` string on each team
+member citing G-2/G-3/the specific W- id, not a team-level summary.
+Restructured the Warden's five and Hald's three onto that shape (same
+`combat` values as before, comments rewritten per-entry). `stronghold_courtyard`
+(Solene) gets a `_why_combat` note too, but **no profile** — no W- id
+assigns her one, and G3-BAND5's own Ness row already spends the "first
+behavioural surprise on the approach" beat one room earlier; giving Solene
+one as well would spend that beat twice in three fights and blunt it where
+Hald's DIVER/WALL actually needs it. Documented as a judgment call, not a
+contract requirement, so the coordinator can override.
+
+### Persistence — the highest-risk item, now tested through a REAL save/load round trip
+
+`smoke_stronghold_reload.gd` (already in the repo before this lane) sets
+finale flags directly on the live `Game.progression` object across a world
+swap — a strong test of `StrongholdClimax.build()`'s own reload guards, but
+it never once calls `Game.save_game()` or `Game.load_game()`, so it could
+not catch a defect specific to `save_game.gd`'s own JSON round trip. The
+coordinator's brief named this gap explicitly: "test it by actually saving
+and reloading, not by asserting a flag was written."
+
+New file: `tests/smoke_finale_persistence.gd`. Three scenarios, each
+through the real `user://saves/slot_N.json` write/read
+(`Game.save_game(slot)` / `Game.load_game(slot)`, the same calls the title
+screen's Load and `camp.gd`'s autosave make):
+
+1. **Settled ending** — full five including the joined legendary, every
+   finale flag set, saved, reloaded into a fresh world. Passed: exactly one
+   `veridian` in the reloaded party, no caged legendary body, climax stage
+   `done`, machine refused, healing state (`MeadowHealing.applied()`)
+   correctly re-derived from the saved flag.
+2. **Freed-but-unsettled window** — `defeated_warden`/`legendary_freed`
+   only, saved before the roster decision. Passed: legendary comes back
+   freed (not caged), climax stage resumes toward the join offer, nothing
+   premature on the belt.
+3. **Mid-ceremony** — a save taken WHILE `Game.pending_catch` is genuinely
+   live (the player is looking at the release-ceremony menu right now).
+   **This scenario's first draft was wrong and failed**, and the failure is
+   worth recording rather than quietly fixing: it set the same flags as
+   scenario 2, saved immediately, then waited on the reload with zero input
+   and expected `pending_catch` to appear on its own. It does not, because
+   `_advance()`'s STAGE_FREED → STAGE_JOIN transition opens a dialogue
+   conversation and `_panel_busy()` blocks STAGE_JOIN → STAGE_CEREMONY (the
+   transition that actually sets `pending_catch`) until that conversation
+   is dismissed — the same way a live player has to click through it. The
+   scenario was testing a state the game was never in. Corrected to
+   actually DRIVE the join conversation closed (same `_press("interact")`
+   technique `smoke_gate_e_finale.gd` uses) before saving, so
+   `pending_catch` is genuinely non-null at save time — the real
+   "mid-ceremony" window. **Passed** once corrected: `pending_catch` is
+   never saved by design (`game_state.gd`'s own comment — "the player
+   cannot walk around owning six"), and on reload the climax correctly
+   re-derives the offer by re-showing (and this run re-dismissing) the same
+   join conversation, landing back on `pending_catch = veridian` with the
+   belt untouched — re-offered, not lost, not duplicated.
+
+All three pass on this branch (`godot --headless --path . --script
+tests/smoke_finale_persistence.gd`, exit 0). This is now the strongest
+persistence evidence in the gate: not "a flag survives," but "a real save
+file, written and read back by the production code path, resolves every
+finale window correctly."
+
+### D41 world healing — verified through materials directly, not through the Gate F walk
+
+Read `tools/gate_f/run_segment.sh` and `S10c.json`: its own header states
+`evidence_lane: "logic"` with the visual captures **delegated to a separate
+segment** (`S10cC`), so the walk itself was the only thing standing between
+"ran the segment" and "verified the mechanism" — and the walk is real:
+`operator_harness.gd`'s `move_to` is "walked, never teleported," and
+S10c/S10d/S10e's own frame budgets total roughly 300,000+ physics frames
+(the header on S10c alone estimates 3,530–10,388 seconds of wall clock for
+that one sub-segment). Three sub-segments at that cost was not achievable
+in this session, and is recorded here rather than silently skipped.
+
+Instead of the walk, verified the actual claim underneath it — "anything
+that works through materials, lights, skins... is yours to ship now" —
+directly, headless, against the live nodes:
+
+- `smoke_gate_e_finale.gd` and the new `smoke_finale_persistence.gd` both
+  already print `MeadowHealing.report()`'s real numbers on this branch
+  (1,156 plants regrown, 20-21 tether lights killed, 0-2 barriers opened
+  depending on which flags were already set, 0-4 patrols withdrawn
+  depending on which were already beaten) — confirmed in both a live
+  session and after a real save/load round trip.
+- Neither of those checks the two drain-ground *skins*
+  (`approach_drain_skin.gd`, `tether_relay.gd`) specifically, so a
+  dedicated read-only probe (not committed — a throwaway transform/state
+  query, same shape as the W-9 probe above) checked them directly. First
+  pass at +0.5s looked like a defect (`dead_ground_visible` still `true`
+  after `legendary_freed` was set) — but `_fade_the_drain_skins()`
+  (`meadow_healing.gd:131-142`) intentionally passes a **12-second** fade
+  duration for a live (non-`immediate`) heal, so 0.5s was never long enough
+  to see anything change. Re-run waiting the full 12s: both skins correctly
+  read `dead_ground_visible=false, healed=true` at +15.5s. **Confirmed
+  working, not a defect** — the false alarm itself is recorded because the
+  same 0.5s mistake would read as a real bug to a less patient check.
+
+Net: D41's material/light/skin clauses are verified directly and
+positively; the walking Gate F evidence for the same claim is not attempted
+this session, for the reason stated above.
+
 ## What changed on this branch
 
 - `tools/_capture_band1_map_trails.gd.uid`,
   `tools/_capture_band1_signpost_legibility.gd.uid` — added (Godot-generated
   sidecars for two scripts committed without one; see commit `37afeb04`).
 - `ralph/reports/G3-FINALE-0903/REPORT.md` — this report (commit
-  `24bb3754`, this addendum).
+  `24bb3754`, this addendum, and addendum 2).
 - `data/config/bands/band5_stronghold_approach/trainers.json` — the
-  `warden_aldis` and `stronghold_elite` rows only, per
-  `GATE3_ENCOUNTER_CONTRACTS.md` W-1/W-2/W-3/W-7 (commit `a54aacd5`). See
-  the addendum above for the full reasoning; `stronghold_courtyard` was
-  checked and left unchanged.
+  `warden_aldis`, `stronghold_elite` and `stronghold_courtyard` rows only,
+  per `GATE3_ENCOUNTER_CONTRACTS.md` W-1/W-2/W-3/W-7 and this round's
+  comment restructuring. See the addenda above for the full reasoning;
+  `stronghold_courtyard`'s own team levels/species are untouched, only a
+  `_why_combat` explanatory comment was added.
+- `tests/smoke_finale_persistence.gd` — new file, this round. Real
+  save/load round-trip coverage for all three finale reload windows (see
+  addendum 2).
 - No other files changed. Every system this lane owns was verified against
   its acceptance bullet by real execution and left as authored, or (the
   Warden/Hald data) changed against a design contract and re-verified by
@@ -435,3 +552,13 @@ intent worth checking for.
   actual in-engine feel) is the coordinator's own branch and was not
   re-verified here beyond confirming the `combat` blocks this lane authored
   parse correctly and stay inert until that merge lands.
+- **Gate F segments S10c/S10d/S10e themselves were not run.** Their own
+  frame budgets (a real, non-teleported walk — see addendum 2) put the
+  three sub-segments at an estimated multiple hours of wall clock in this
+  container, which this session did not have. The claim they exist to
+  verify (D41's material/light/skin/spawn changes) was instead verified
+  directly against the live nodes — see addendum 2 for the method and the
+  numbers. If the coordinator specifically needs the Gate F run itself
+  (for its screenshot evidence, or because the walked traversal is part of
+  what's being tested, not just the destination state), that is still
+  open and would need a session budgeted for it.
