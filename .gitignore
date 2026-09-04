@@ -105,6 +105,10 @@ ralph/reports/TOURNAMENT-*/**/[!_]*.png
 ralph/reports/HARNESS-*/**/[!_]*.png
 ralph/reports/OPENING-*/**/[!_]*.png
 ralph/reports/CREATURE-*/**/[!_]*.png
+# G3-CREATURE-COLOUR-0904: per-frame sweep captures stay local, same
+# convention as CREATURE-*/GATE2-* above -- only underscore-prefixed contact
+# sheets and REPORT.md are evidence worth carrying in the tree.
+ralph/reports/G3-CREATURE-COLOUR-*/**/[!_]*.png
 ralph/reports/**/*.jsonl
 ralph/reports/**/*.csv
 ralph/reports/**/telemetry/
