@@ -45,9 +45,19 @@ claims it, and marks the rest **unassigned** for the coordinator to route.
 | 17 | G3-FINALE report §1 (first pass) | "no change to `warden_aldis`" | superseded by its own addendum (W-1 applied) | the addendum stands; recorded so the first-pass sentence is not quoted |
 | 18 | `GATE3_EXECUTION_PLAN.md` §6 "Still open, owned by the coordinator" | the single re-bake is needed for the Warrens clearings, P-5.2 and Band 1's dome hill / tree layout | needed for P-5.2 and Band 1's proposals only; the Warrens clearings are done | item 2 |
 
-## Questions escalated to the owner
+## Questions escalated to the owner — answered 2026-09-04
 
-Kept in plan §4; listed here so the coordinator can route them in one message.
+Answers are recorded verbatim in `docs/owner/OWNER_DIRECTIVES_2026-09-04.md` and folded
+into plan §4.2–§4.4. In one line each: (1) yes; (2) yes; (3) seen again, roaming,
+uncatchable; (4) yes; (5) Halda; (6) the visual half runs as its own track — the owner
+also asked what happened to last night's visual lanes, and the answer (they all landed;
+the residual gap was never any lane's scope) is in the directive file; (7) free packs
+first, three candidates, then the owner designs in Meshy — new lane CL-A1; (8) fix the
+camera, and fix the dialogue portrait, which is the player's face on every NPC because
+only two portrait assets exist — CL-G10, CL-G11; (9) no grass clump-cards; the loft bed
+is owner-reproduced as broken — CL-G12; (10) later.
+
+The list as put:
 
 1. **V-5** — heal the relay's own drain stations on `relay_disabled` (D41 reading). Recommended yes.
 2. **W-1** — the Warden's front is now 18/18/19/19/20, implemented ahead of an answer. Confirm, or lower Hald instead.

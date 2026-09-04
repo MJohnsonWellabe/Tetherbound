@@ -344,7 +344,17 @@ protocol says the operator must not fabricate a proxy.
 | Windows export identity | protocol §0.5 | the export is verified to *build* and to *pack* the scatter; behaviour on Windows is the owner's |
 | Twitch feel, controller latency, audio, handheld legibility at 1280×800 | protocol §K | the same pass |
 
-### 4.2 Design questions escalated, not decided
+### 4.2 Design questions escalated — **answered by the owner 2026-09-04**
+
+`docs/owner/OWNER_DIRECTIVES_2026-09-04.md` records the answers verbatim with triage.
+In short: V-5 yes; W-1 confirmed; a refused Veridian roams the land, uncatchable; R-3
+confirmed; Halda restores the team; the visual half runs as its own track; art comes
+from free packs first and the owner designs in Meshy when three candidates fail; fix the
+dialogue camera and the dialogue portrait (every NPC is drawn with the player's face);
+the grass clump-card question is closed (procedural grass is enough); Grandpa's loft bed
+is owner-reproduced as broken; the hardware pass is later. The new items that fall out
+are CL-E12, CL-G10, CL-G11, CL-G12 and CL-A1 below. The list as it stood, kept for the
+record:
 
 From `docs/specs/GATE3_ENCOUNTER_CONTRACTS.md` §9, with what has happened since:
 
@@ -392,6 +402,29 @@ picture). The first is inside the plan (CL-H9 plus GAME-2 if it is real). The se
 no owner and no budget line anywhere in `docs/ROADMAP.md`. If the owner wants Bar B to be
 answered yes, VFX needs a lane; if not, Bar B's wording should say what it is actually
 measuring (§5).
+
+**Owner's answer, 2026-09-04:** free packs first; if the first three candidates fail, the
+owner designs the reference in Meshy. That gives the table above a lane:
+
+| Id | Item | Size | Kind |
+|---|---|---|---|
+| CL-A1 | **Art sourcing.** For each row of the table above, in this order — the South Bridge gate and Team Tether presence, a Meadows landmark, a branching tree form, combat/reward VFX, distinct NPC bodies — find up to three free-pack candidates that match the installed families' style and scale (`docs/art/HUMANOID_ASSET_INVENTORY.md` and the nature/village/prop family rule are the yardstick), install each in place, render it on the stand where the judge named the gap, and put the three to a blind judge. A pass ships; three fails go to the owner with the contact sheet as the Meshy brief. The one-family rules are relaxed only for the specific object the owner then designs. | M per row; the tree and VFX rows are L | not done |
+
+The rows above that were "needs the owner" are now "needs CL-A1, then maybe the owner".
+
+### 4.4 New items from the 2026-09-04 answers
+
+| Id | Item | Source | Size | Kind |
+|---|---|---|---|---|
+| CL-E12 | **V-5 implemented:** on `relay_disabled`, run `meadow_healing` for the relay's own three drain stations only (a station filter on the existing mechanism, not a new system). Evidence: a before/after frame from the `06-relay-standing` stand shows the ground change inside the site radius. | contract V-5; owner 2026-09-04 #1 | S–M | not done |
+| CL-G10 | **The dialogue camera.** Villagers read too small in conversation; a conversation framing in `camera_rig.gd` that puts the speaker at a readable size at 1280×800 on the pad. Evidence: a frame from a real conversation judged legible at handheld resolution. | `CURRENT_STATE` §3 P2; owner #8 | M | not done |
+| CL-G11 | **Every NPC is drawn with the player's portrait.** `assets/ui/portraits/` holds `trainer.png` and `grandpa.png` only; 125 of 138 authored `portrait` entries in `data/dialogue/` name `trainer.png`, so Mira, Oskar, Tam, Bram, Halda, every Team Tether rank and the Warden speak with the player's face. `dialogue_panel.gd:205` draws exactly what the line names, so the fix is art plus data: one portrait per installed humanoid rig, rendered from the installed meshes (no new mesh), each conversation's `portrait` re-pointed to its speaker, and a test that no non-player speaker resolves to `trainer.png`. | owner #8b | M | proven failing (owner) |
+| CL-G12 | **Grandpa's loft bed does not work** on the owner's build. The in-engine probe passes, so the defect is between the probe's path and the real one: the prompt, the reach, interact arbitration on the loft, or the bed's placement. Root-cause on a real body driven up the loft stair, not by re-running the probe. Reopens `CURRENT_STATE` §3's "verified in-engine". | owner #9b; `CURRENT_STATE` §3 P1 | S–M | proven failing (owner) |
+
+Closed by the same answers, no lane: the grass clump-card redesign (procedural grass is
+enough); W-1 as shipped; R-3 as shipped. R-8 (CL-E11) is now specified: the refused
+Veridian **roams the land and is uncatchable** — the lane chooses where it is seen
+inside that rule.
 
 ---
 
