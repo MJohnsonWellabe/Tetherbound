@@ -1,5 +1,10 @@
 # START HERE — Tetherbound
 
+> **Start here, 2026-09-04: [`docs/FINISH_THE_MEADOWS.md`](FINISH_THE_MEADOWS.md)** — the
+> whole remaining plan to finish the chapter, in order, written to be picked up cold. It
+> supersedes older prose about what is next. `docs/GATE2_GATE3_CLOSURE_PLAN.md` is the
+> detail behind it, with a *fails if* on every open item.
+
 **Read this first. It is the only routing document.** Rewritten 2026-09-02 at the
 repository reset; it replaces `ralph/START_HERE.md`, the coordinator handovers and the
 dated backlogs, which are now under `archive/`.
