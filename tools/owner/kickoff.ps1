@@ -189,7 +189,8 @@ function Ensure-Repo {
     $script:Repo = $repo
     Log "repo: $repo (this checkout)"
     if ($git -and (Test-Path (Join-Path $repo ".git"))) {
-      $dirty = (& git -C $repo status --porcelain 2>$null)
+      # Untracked files (Godot writes .uid sidecars on import) do not count as dirty.
+      $dirty = (& git -C $repo status --porcelain --untracked-files=no 2>$null)
       if ($dirty) {
         Log "working tree has local changes; running on it AS IS, no fetch"
       } else {
