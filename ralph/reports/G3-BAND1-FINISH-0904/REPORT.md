@@ -410,3 +410,103 @@ scope and are recorded here for whichever lane picks up general prop polish next
   stretches of a fairly straight corridor rather than a derivation bug, but it was not
   possible to confirm against the original route.csv (gone, gitignored), so it is used
   as-is rather than re-guessed.
+
+---
+
+## 10. Follow-up: `docs/specs/GATE3_CREATURE_PRESENCE.md` (CP-2a, CP-2d) and the owner's
+2026-09-04 art-sourcing directive
+
+Landed on `ralph/G3-LAND-0904` after this report's first push. Two contracts in that spec
+are explicitly assigned to this lane by file; the owner's own directive that day (item 7)
+names this lane's South Bridge work among the art gaps needing sourced candidates. Both
+addressed below without reopening §0–9 above.
+
+### 10.1 CP-2a / CP-2d — the Band 1 road herd
+
+**The contract:** no stretch of the Band 1 spine longer than ~250m should pass with no
+wild creature within 12m (species < 1.3m) or 25m (species > 1.7m) of the walked line
+(CP-2a), and the first ambient creature visible from the farmhouse door or the road gate
+should be one of the band's "tall commons" — Meadowhart, Burrowback, Trailpup — at that
+same distance (CP-2d).
+
+**Investigated, not edited.** Measured directly rather than assumed: the full 21-point
+spine polyline (`terrain_playground.json` `trail.bands[0]`) against every daytime cluster
+in `band1_lower_meadows/spawns.json`, sampled every 5m, with each cluster's covering
+radius taken as (distance from sample point to cluster centre) − (cluster's own scatter
+radius), against the species-height-derived threshold above. Band 1 has no Burrowback at
+all (that species belongs to a later band), so the two species actually available for this
+check are Meadowhart (order 1005, already re-sited by this lane in §7) and Trailpup
+(orders 1058–1061, 1072, 1074, 1075).
+
+Result: **the worst gap on the entire 2,403m spine is 85m** (arc 281–366), with zero gaps
+over 150m anywhere on the route — comfortably inside CP-2a's 250m bar without changing a
+single coordinate. The specific claim CP-2d asks for is also already true: order 1075
+(`trailpup`, 5 individuals, centre `(5.9, 113.0)`, radius 10m, `wander_radius` 20m) sits
+**9m off the spine's own centreline at arc ~113m** — inside its own species' scatter disc
+overlapping the walkable line itself — authored by an earlier lane (WORLD-LIFE, per its own
+`_why_worldlife_0903`: *"a herd of 4-5 Trailpups grazing on the road shoulder within
+15m"*, sited explicitly at *"the closest any cluster in this file sits to the road"*) and
+confirmed still present and unmoved. This is at arc ~113m into the route — the first
+stretch of open corridor after leaving the village — which is what CP-2d asks for.
+
+**Not added, and why:** with the structural (interval/distance) half of both contracts
+already true and independently re-measured, adding further clusters here would be
+un-asked-for density on top of already-tuned collision-avoidance siting (several existing
+clusters carry their own hard-won wedge/clearance fixes, e.g. `STRANDED-P3`'s order 1006).
+What the contracts' own `fails if` also asks — a wild creature actually measuring ≥ 40px in
+the PLAYED-ROUTE EVIDENCE FRAMES, and no two bodies in one frame sharing the same mesh,
+scale and rotation (CP-2b) — is a rendering/encounter-director question this lane's file
+ownership does not reach (`scripts/combat/encounter_director.gd` is explicitly
+**G3-OPENING-FIX**'s per the spec's own table), and re-running the full Gate F evidence
+harness to reconfirm it is `tools/gate_f`, explicitly not this lane's to touch. Recorded
+here as investigated-and-confirmed-already-true for the half this lane owns, not claimed
+for the half it does not.
+
+### 10.2 Art-sourcing candidates for the South Bridge checkpoint
+
+Owner directive, 2026-09-04, item 7: for art the judge says is not in the build — the
+South Bridge gate and Team Tether presence are named explicitly — a lane finds up to three
+free-pack candidates matching the installed families' style and scale, each to be rendered
+in place and blind-judged; if none passes, the owner designs the reference in Meshy. Per
+the same directive and the coordinator's own instruction: this lane names candidates and
+stops. Fetching, importing, rendering and judging them is a new **ART-SOURCING** lane's
+job, not this one's.
+
+**What is genuinely missing, checked before naming anything:** neither installed kit this
+crossing already draws from has a closable gate/barrier heavier than a farm fence panel.
+`assets/buildings/quaternius_medieval/` (the Medieval Village MegaKit, D24's one village
+family) has doors and the `Prop_WoodenFence_*` family used everywhere in this lane's own
+work, and nothing else gate-shaped. `assets/buildings/quaternius_castle/` (used for the
+Meadows Hall) has towers, walls and open wall-entrance arches, but no closable gate either
+— confirmed by listing both directories directly rather than assumed. **Camp dressing is
+NOT a gap**: crates and barrels already exist locally at
+`assets/props/quaternius_fantasy/` (`Crate_Wooden`, `Barrel`, `FarmCrate_*`) and Kenney's
+already-vendored Survival kit (`assets/props/quaternius_survival/`, `assets/props/kenney_survival/`)
+has a bonfire; dressing the checkpoint with a barricade of crates and a brazier from
+stock is composition work, not a new asset — flagged so ART-SOURCING does not spend a
+candidate slot on it.
+
+**The one real gap is a proper closable gate/portcullis/heavy barrier**, and the three
+candidates, all CC0, checked for licence and rough content match (not downloaded or
+imported — that is ART-SOURCING's step), **ranked in try-first order**:
+
+1. **Quaternius's own Fantasy Props MegaKit** — <https://quaternius.itch.io/fantasy-props-megakit>.
+   CC0, same creator as the primary installed village kit — the best-guaranteed style and
+   scale match of the three, since it is literally the same hand, and the lowest-risk first
+   try since a style mismatch is the most likely failure mode a blind judge would name. Its
+   own listing confirms banners among its ~200 props; whether it also carries a
+   barrier/gate-shaped piece is exactly the kind of thing ART-SOURCING's own render-and-judge
+   step should confirm rather than this lane asserting it sight unseen.
+2. **Kenney's Castle Kit** — <https://kenney.nl/assets/castle-kit>. CC0 (confirmed on the
+   page), 75 models, "castle walls, towers, gates, siege weaponry, characters, flags and
+   more" per its own listing. Same creator as the Kenney Survival Kit this project already
+   vendors and has already blended with the Quaternius village family at the Trail Camp
+   (`docs/specs/ASSET_LEDGER.md`'s own Survival Kit entry) — a precedent for mixing kits
+   when neither family alone covers a gap, not a new risk this lane is introducing.
+3. **KayKit's Medieval Hexagon Pack** — <https://kaylousberg.itch.io/kaykit-medieval-hexagon>.
+   CC0, no attribution required per its own listing, ships `.gltf` natively (this project's
+   own Medieval Village kit is glTF; the castle kit's `.obj` has needed extra retint work
+   this file's own history records at length) and its feature list names "Gates & Walls"
+   explicitly. A well-regarded, widely-used stylised low-poly family in the same rough
+   register as the installed kits, from a third creator — the outside option if the first
+   two read too close to what a judge already rejected.
