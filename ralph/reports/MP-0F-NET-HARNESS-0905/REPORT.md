@@ -61,3 +61,22 @@ net-specific action; `probe session` returns an honest stub.
 largest budget; real peer exit codes are not recoverable through `OS.create_process`
 (`ERROR: peer exited (peer <i>, pid <pid>)` instead of `<code>`); `multiplayer.json` absent
 until 2.A. All to be re-judged by the Opus review and closed in Wave 2 where non-blocking.
+
+## Fable's reproduction on the merged tree (`16a3aa12`)
+
+`GODOT_BIN=/root/godot-bin/godot tools/net/run_net_smoke.sh two_peers_boot` → exit 0 in 97 s,
+nine PASS, zero `^ERROR:` lines in either peer log. Matches the lane's numbers.
+
+## Opus review (same day) — blocking findings, all routed back to the lane
+
+Exit 1 instead of 2 for control-plane faults; a peer `ERROR` verdict not stopping the run; a
+literal `0` state hash on failure that lets shared failure read as agreement; a vacuous press
+check in the boot smoke and no port of Gate F's inertness gate; a 120 s hello budget against a
+180 s cold-boot budget; the CI artifact upload skipping on timeout and the shard able to go
+green on empty discovery; `run_all_smokes.sh` not excluding `smoke_net_*`. Cheap items routed
+with them: the world/per-player hash key split and erasing `world_seed` rather than
+normalising it, shipping `multiplayer.json` `test_budgets` and enforcing the smoke wall clock,
+the never-heartbeated peer, duplicate-peer `race()`, an honest `session` stub, run-id-derived
+ports. Carried to Wave 2: the `log` channel and tick-rate warning, `save_dict` and per-peer
+desync dumps, verdict-by-id, a dictionary-only hash source, probe null ambiguity. The
+review's full text is in this session's record; the fixes land as a second lane commit.
