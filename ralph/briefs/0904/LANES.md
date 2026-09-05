@@ -642,3 +642,57 @@ All other lanes (W02, W03, W06, W07, W08-finisher, W10-finisher, W11-finisher, W
 ## Sweep 02:46-02:50Z (generic, non-top-11)
 W09-VFX responded to its nudge within a minute: pushed `04e5bc40` filling in the real final-commit reference (last code commit `75a0241b`). Treating W09 as done; will archive once its session goes fully idle rather than mid-cleanup — check next sweep.
 Checked all other paused lanes' live session status (not just git log): **W08-DIALOGUE-CAMERA finisher RUNNING** (4 unit tests green, 2 long tests + capture in progress) — left alone. **W10-TRAINER-RULES and W11-ALPHA-PINS finishers both FAILED with an internal error ~1hr ago** (crash, not a rate limit) — resumed both via a fired trigger telling them to check branch state first and continue from where they crashed rather than restart. **W22-BRIDGE-SIGNPOST idle ~45min, blocked on its own pending judge verdict** (signpost + bridges verified, awaiting a rope-band-stacking/bracket-lump defect review it dispatched) — left alone this sweep, watch next cycle. **W02, W03, W14, W16, W20, W21 all hit their 5h session limit** (reset already passed — "resets 1am UTC" and it's now past 02:00); none resumed this sweep to honor the 1-2-per-sweep cap (already spent on the two crash-recoveries) — queued for the next sweep(s), closest-to-done first. PR #42 and #43 both show CI `state: pending` with no status entries yet (GitHub check-runs, not commit statuses — W24's own job to watch, not urgent).
+
+## 2026-09-05 15:35 UTC — cycle 11: W21-HARNESS-FIGHTS lands; the chop-swing tolerance measured
+
+`main` is `4acd59ff` (PR #52, eight lanes, confirmed ancestor). W21 closed a 523-line report
+with no placeholders and lands from `ralph/LAND-0904-9`.
+
+### The W20 → W21 handoff worked
+
+W20-SMALL-FIXES decided the S06 workbench beat should be deleted but would not cross into
+W21's half of `S06.json`; it wrote the CL-H8 verdict into step S06-30, the only step it
+owned, and handed the deletion over. **W21 deleted S06-31..S06-49 and left W20's verdict in
+S06-30 verbatim.** Verified on the merged tree: `S06-30` present, `CL-H8 VERDICT` still in
+its note text, no `S06-3x` steps beyond it. An ownership line held from both sides, which is
+worth recording because it usually does not.
+
+### Verified on the merged tree
+
+Two clean import passes. `test_gate_f_segments` (the lane's new file) 7/184/0,
+`test_gate_f_rig` 54/220/0, `test_gate_f_instrumentation` 18/43,136/0,
+`test_terrain_bake_freshness` 3/8/0. One conflict, `docs/CURRENT_STATE.md`, union-resolved.
+
+### `smoke_playground`'s chop-swing tolerance is too tight for its own variance — measured
+
+`smoke_playground` failed once here at **0.81**, the same assertion that reddened #51's
+push run at 0.82. It is not W21's: the lane touches `tools/gate_f/segments/*.json`, one new
+test and its own report, nothing in the chop, harvest or animation path. Re-running gave
+0.77 and 0.76, both passing.
+
+The numbers are now worth stating exactly, because "flake" has been doing too much work.
+`tests/smoke_playground.gd:951` fails when the measured fraction exceeds `impact + 0.20`,
+and `impact` is 0.6 — so **the ceiling is 0.80**. Observed on this container plus CI:
+
+| 0.71 | 0.73 | 0.76 | 0.77 | 0.78 | **0.81** | **0.82** |
+|---|---|---|---|---|---|---|
+| pass | pass | pass | pass | pass | FAIL | FAIL |
+
+The natural spread is 0.71–0.82 against a 0.80 ceiling, so **roughly two runs in seven fail**
+— and `smoke_playground` runs with `RETRIES: 1`, so there is no second attempt. This is not a
+rare flake; the upper tolerance sits inside the measurement's own noise band. It will keep
+reddening `verify-core-verb-shard` on unrelated PRs until either the tolerance is widened to
+match the observed variance or the measurement is made frame-rate independent.
+
+**The landing lane is not changing it.** Choosing a test's tolerance is a judgement about how
+tight the animation contract should be, not merge fallout, and the file belongs to whoever
+owns the core-verb smokes. Recorded here with the data so the decision can be made once.
+
+### Still out
+
+**W06-FINALE** — unchanged since it was held (295 lines, same three commits); Cloudreach's
+ninth stronghold conversation still puts the ending at 2112 characters against its own
+`MAX_FILE_CHARS := 2000`. **W10-TRAINER-RULES** — 274 lines, still one unfilled placeholder.
+**W15-NIGHT** — still no `REPORT.md`.
+
+Next free decision number is **D87**.
