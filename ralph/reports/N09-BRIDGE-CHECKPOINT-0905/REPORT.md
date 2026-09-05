@@ -20,7 +20,7 @@ and material work, not new art"*. Nothing below adds a mesh, a texture or a gene
 | `tests/test_signpost_geometry.gd` | two new behavioural tests: no label runs under the post, and the ink outline is weighted between its two known limits |
 | `tests/smoke_traversal.gd` | `_assert_the_checkpoint_narrows_the_road_without_closing_it` — a real 0.4 m shape query against the built collision space, with a positive control at the barricade's own beam so a query that is not seeing the world fails instead of passing |
 | `tools/_probe_n09_checkpoint.gd` | new: prints the checkpoint's real built geometry (how far each barricade reaches into the road, the clear gap, the hero gate's material list, BoxMesh UV bounds). Every placement number below came out of it |
-| `docs/decisions/D87-the-checkpoint-narrows-the-road-and-its-guard-wears-the-colour.md` | new |
+| `docs/decisions/D92-the-checkpoint-narrows-the-road-and-its-guard-wears-the-colour.md` | new |
 | `docs/CURRENT_STATE.md` | §3 and §4b rows |
 | `ralph/reports/N09-BRIDGE-CHECKPOINT-0905/` | this report, `JUDGE.md` and `JUDGE2.md` (two blind rounds), `JUDGE_PROMPT.md`, and one sheet per round: `_sheet_bridge_ab.png` + `_sheet_signpost_ab.png` (round 1), `_sheet_checkpoint_r2_ab.png` (round 2) |
 

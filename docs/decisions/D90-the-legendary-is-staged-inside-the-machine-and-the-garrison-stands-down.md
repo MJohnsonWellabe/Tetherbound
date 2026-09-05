@@ -1,4 +1,4 @@
-# D74 — The legendary is staged inside the machine, and the Hall's garrison stands down
+# D90 — The legendary is staged inside the machine, and the Hall's garrison stands down
 
 **Date:** 2026-09-04 · **Decided by:** lane W06-FINALE-0904, implementing owner
 playtest OP-0904-8 and closure items CL-O8 / CL-G5 / CL-W7. Small calls recorded

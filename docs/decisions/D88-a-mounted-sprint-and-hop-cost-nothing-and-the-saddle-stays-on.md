@@ -1,4 +1,4 @@
-# D74 — A mounted sprint and hop cost nothing, and a fitted saddle stays on
+# D88 — A mounted sprint and hop cost nothing, and a fitted saddle stays on
 
 **Date:** 2026-09-04
 **Items:** `OP-0904-3` / `CL-O3` (riding is unfinished three ways), lane `W14-RIDING`

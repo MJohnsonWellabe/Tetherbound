@@ -1,4 +1,4 @@
-# D74 — The Gate F harness refuses a press the live input context does not list
+# D89 — The Gate F harness refuses a press the live input context does not list
 
 **Date:** 2026-09-04
 **Lane:** W02-HARNESS-CONTEXT-0904 (CL-H13, `docs/FINISH_THE_MEADOWS.md` §0.2)

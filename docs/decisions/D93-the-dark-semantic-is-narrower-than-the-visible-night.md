@@ -1,4 +1,4 @@
-# D87 — `is_dark()` is the true-dark window, narrower than the visible night, and a time of day is judged against the other times of day
+# D93 — `is_dark()` is the true-dark window, narrower than the visible night, and a time of day is judged against the other times of day
 
 **Date:** 2026-09-05 · **Decided by:** lane N13-NIGHT-RESUME-0905, under the COMMON
 rule that a lane makes the smallest defensible call and records it rather than

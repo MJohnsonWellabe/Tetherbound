@@ -13,8 +13,8 @@ Branch: `ralph/W14-RIDING-0904`. All three owner items closed and verified live.
 - `tests/smoke_riding_saddle.gd` — new. The saddle rule against every rideable species, standing bodies up in the real playground
 - `tests/test_riding_saddle.gd` — new. The saddle rule's pure-logic half against the real species/recipe data
 - `tools/_capture_riding.gd` — new. Renders the before/after saddle frames
-- `docs/decisions/D74-a-mounted-sprint-and-hop-cost-nothing-and-the-saddle-stays-on.md` — new
-- `docs/decisions/D75-riding-jump-relocation-and-the-workshop-arch-bay.md` — new (process finding, see below)
+- `docs/decisions/D88-a-mounted-sprint-and-hop-cost-nothing-and-the-saddle-stays-on.md` — new
+- `docs/decisions/D91-riding-jump-relocation-and-the-workshop-arch-bay.md` — new (process finding, see below)
 - `docs/CURRENT_STATE.md` — CL-O3 row rewritten with live-verified numbers
 
 ## Functionality implemented, in player-visible terms

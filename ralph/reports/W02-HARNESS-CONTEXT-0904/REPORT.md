@@ -66,7 +66,7 @@ nothing. Recorded as `docs/decisions/D74-…`.
 | `tools/gate_f/operator_harness.gd` | press guard (§2); `INPUT_CONTEXTS_PATH`; `_input_contexts` cache; `_physical_binding` static |
 | `tests/test_gate_f_rig.gd` | four CL-H13 tests (§4) |
 | `tools/gate_f/probe_press_context_flip.gd` | new: the per-frame reproduction / verification probe (§5) |
-| `docs/decisions/D74-the-harness-refuses-a-press-the-live-context-does-not-list.md` | new |
+| `docs/decisions/D89-the-harness-refuses-a-press-the-live-context-does-not-list.md` | new |
 | `docs/CURRENT_STATE.md` | §3 P1 row rewritten to fixed, with the evidence |
 | `docs/GATE2_GATE3_CLOSURE_PLAN.md` | CL-H13 row rewritten to fixed, with the evidence |
 | `ralph/reports/W02-HARNESS-CONTEXT-0904/REPORT.md` | this file |

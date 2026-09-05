@@ -1,4 +1,4 @@
-# D87 — The South Bridge checkpoint narrows the road, and its guard wears the faction colour
+# D92 — The South Bridge checkpoint narrows the road, and its guard wears the faction colour
 
 **Date:** 2026-09-05 · **Decided by:** lane N09-BRIDGE-CHECKPOINT-0905, under the
 COMMON rule that a lane makes the smallest defensible call and records it rather

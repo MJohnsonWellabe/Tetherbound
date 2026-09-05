@@ -1,4 +1,4 @@
-# D87 — The wind-up ring is magenta, the one colour the meadow and the reward layer do not use, and the seal flash is sized to the orb
+# D94 — The wind-up ring is magenta, the one colour the meadow and the reward layer do not use, and the seal flash is sized to the orb
 
 **Date:** 2026-09-05 · **Decided by:** lane N07-VFX-POLISH (0905 follow-up wave), inside the
 two items W09-VFX's blind judge named and routed. Small calls the brief left open, recorded
