@@ -1701,6 +1701,20 @@ func _elixir_headroom(creature: RefCounted) -> int:
 	return maxi(0, cap - current)
 
 
+## The line a candy leaves on the Satchel screen. Static and pure so
+## `tests/test_candy_progression_safety.gd` can prove the cap is spoken, not
+## swallowed: "+1 of +3 -- level cap" when the candy could not grant its full
+## amount (addendum §B: "prefer clamping/clear player feedback over silent
+## waste"), the plain jump line otherwise.
+static func candy_result_line(label: String, before: int, after: int, requested: int, cap: int) -> String:
+	var gained := after - before
+	if gained < requested:
+		return "%s jumped to level %d (+%d of +%d) — that's the level cap, %d." % [
+			label, after, gained, requested, cap
+		]
+	return "%s jumped to level %d! (+%d)" % [label, after, gained]
+
+
 ## Levels this creature can still gain before the level cap
 ## (`progression.json`'s `level.cap`) refuses it outright, mirroring
 ## `_elixir_headroom` exactly.
@@ -2009,9 +2023,15 @@ func _on_target_row(index: int) -> void:
 	if not _targeting_level_up.is_empty():
 		var levels := int((db.call("definition", id) as Dictionary).get("level_up", 0))
 		var before := int(creature.get("level"))
-		creature.call("set_level", before + levels, PROGRESSION.config())
-		var after := int(creature.get("level"))
-		if after <= before:
+		# PROGRESSION-VISIBLE (addendum §B): through `gain_levels()`, not
+		# `set_level()`, so the candy speaks the same `level_up` event the
+		# combat award does -- the party strip, the HUD banner and the sound
+		# cue all fire for a candy exactly as for a fight -- and so the hp
+		# fraction and banked xp survive the jump the way a real level-up
+		# keeps them (`set_level` is the spawn path: it refills hp and zeroes
+		# xp, neither of which a consumable should do).
+		var gained := int(creature.call("gain_levels", levels, PROGRESSION.config()))
+		if gained <= 0:
 			# `_eligible()` said yes a line ago; the same defensive dead-end
 			# guard every branch here keeps -- never spend a permanent item
 			# on nothing.
@@ -2019,9 +2039,8 @@ func _on_target_row(index: int) -> void:
 			_end_targeting()
 			return
 		inventory.call("remove", id, 1)
-		say("%s jumped to level %d! (+%d)" % [
-			str(creature.call("label")), after, after - before
-		])
+		say(candy_result_line(str(creature.call("label")), before, before + gained, levels,
+			int(PROGRESSION.config().get("level", {}).get("cap", 50))))
 		_end_targeting()
 		return
 
