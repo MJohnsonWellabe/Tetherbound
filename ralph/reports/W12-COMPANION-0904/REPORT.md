@@ -294,4 +294,55 @@ rather than touch.
 
 ### Limitations of the feature itself
 
-*(filled in below)*
+**The continuous claim is not evidenced.** Addendum section E asks that "a
+continuous play segment with one creature produces multiple contextual
+companion moments naturally". Every capture here **stages one moment at a
+time** — it stands the trainer still, sets HP, builds a fire. That proves each
+state fires on its real trigger, and proves nothing about frequency or feel
+across twenty-five minutes of actual play. `smoke_gate_b_continuous` drives
+that segment and does not look at the companion. Closing this honestly needs
+the layer's own counters read at the end of a continuous run, which is a
+follow-up, not a claim to make now. `docs/CURRENT_STATE.md` says so in its row.
+
+**Hurt cannot be made unambiguous in a still with this roster.** See section 6:
+no wince, limp, pant or facial rig exists on any of the 21 rigs. What is left
+is a slower gait and a periodic flinch, both of which are motion.
+
+**The reactions are not tuned by anyone who has played the game.** Every
+number in `data/config/companion_presence.json` is a first estimate, chosen
+conservatively so reactions stay rare. An owner note that the creature reacts
+too often, or too rarely, is a config edit and needs no code.
+
+**No audio.** The rigs have no vocal cues wired to these states and
+`data/config/audio.json` was not touched. The owner directive mentions
+reactions, not barks, and explicitly warns against constant barking, so this
+was left alone deliberately rather than guessed at.
+
+**Bond milestones are polled, not pushed.** Until the progression feed lands,
+the layer compares `bond_nodes()` against the last value it read, keyed to the
+creature it read it from. That catches a milestone within a frame of it
+happening and cannot celebrate a party swap or a loaded save, but it is a poll.
+`on_event("bond_milestone")` is the hook to call instead; the poll becomes
+redundant and deletable the day it does.
+
+**Only the deployed creature reacts.** The four benched party members have no
+body in the world, so there is nothing to animate. This matches the directive,
+which is about "the active/deployed creature".
+
+### What was deliberately not done
+
+- **No progression feed.** Prompt 73 assigns it to another lane on
+  `autoload/game_state.gd` and says explicitly: "Provide the hook; do not build
+  them here." A hook is provided; nothing on `Game` was touched.
+- **No new meshes, no Meshy generation, no new clips.** `CLAUDE.md` forbids all
+  three for the Meadows, which is why the layer is procedural. See D74.
+- **`creature_body.gd`, `combat_hud.gd` and `party_strip.gd` untouched**, per
+  the brief's ownership list — including the latent `play_rest()` sign issue in
+  section 6, which is reported for routing rather than fixed here.
+- **The environment findings in round 2's verdict were not acted on.** Cast
+  shadows, tree variety, horizon landmarks, campfire light emission, terrain
+  seams and HUD panel opacity are other lanes' files.
+- **No second creature or NPC staged in the capture frames.** Round 2 notes the
+  world reads empty next to the Palworld bar. True, and it is a world-density
+  finding, not a companion-presence one; staging extras to flatter the frames
+  would have made the evidence worse, not better.
