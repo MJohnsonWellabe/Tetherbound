@@ -333,6 +333,71 @@ capture now walks the player 850 m back down the corridor before opening the map
 separates the two marks by roughly 50 px — and is better evidence anyway, because the
 directive's whole point is that the pin stays after the player leaves.
 
+### Rounds two and three — what the judge changed about the marker
+
+Three blind rounds were run, each with a fresh 1280x800 frame and a judge told nothing
+about what had changed. Each round moved something, so none was a wasted round.
+
+**Round 2** (after the player marker was moved off the pin) found the mark unprompted —
+*"the oxblood disc at (631,341) … nothing else on the map is red"* — and separated it
+easily from the flag and house pins, *"those being line silhouettes against a filled
+disc."* But it failed the harder test it set itself: against the **player** marker it
+could separate the alpha *"barely, and only by hue … strip the colour and the two are the
+same object."* Two filled discs of similar footprint, 35 px apart on one axis. It also
+measured the label starting 5 px from the plate, *"the glyph and the letterform fuse into
+one shape"*, and noted the legend printed *Alpha* in the same neutral grey as every place
+row — *"the one place where the game explains its symbol set throws away the red coding
+entirely."*
+
+Hue alone is the weakest channel there is: it fails for a colour-blind player and on a
+handheld panel in daylight. So three changes went into `tab_map.gd`, all inside this lane's
+ownership: the alpha plate became a **nine-point starburst rosette** behind the disc, the
+label offset went 8 px → 15 px, and `_legend_entry()` gained an optional `tint` defaulting
+to the colour it always used (so every existing caller is untouched) with the alpha row
+passing `UITokens.DANGER`.
+
+**Round 3** was the one that mattered, because the judge tested it the right way — it
+converted the frame to greyscale and looked at 1:1. The rosette was still too timid:
+*"The spikes are 2–3 px long on a 22 px disc. At 1:1 they read as anti-aliasing fuzz, not
+as a shape … remove colour and I would not confidently tell you which one is the danger."*
+So the badge gained a **size class** as well as a contour — spikes to 1.72× the plate
+radius over a 0.58 core, roughly twice the player pin's footprint — and the label offset
+went to 26 px to clear them.
+
+The final round's verdict on the decisive question, recorded verbatim:
+
+> **Greyscale, at 1:1 — the honest answer: yes** […] Converted to L and viewed unscaled, I
+> *can* separate them by silhouette: the alpha is a spiked star, the player is a plain ring
+> with a tail. The spikes survive greyscale. **So this is not a colour-only distinction,
+> and that is a genuine pass on the decisive question.**
+
+and on the label:
+
+> measured, the rosette's rightmost red pixel is x=645 and the label's first stroke is
+> x=659 — a 13 px gap, about half a marker width. It does **not** fuse with the marker
+> geometrically, and the text is readable at full size.
+
+It also kept, as things worth keeping: *"the two pin forms themselves — the ring-and-teardrop
+and the spiked rosette — are well drawn at this pixel size and, importantly, they do survive
+greyscale as distinct silhouettes."*
+
+**The ceiling this lane stops at, and the two residual marker findings it did not fix:**
+
+1. *"In greyscale 'ALPHA TRAILPUP' collapses to L≈136 while 'GRANDPA'S HOUSE' and 'THE
+   VILLAGE' sit at L=255 — the danger label becomes the dimmest text on the screen."* True,
+   and the fix (give the label its weight through a white core or heavier outline rather
+   than through hue) is a change to the shared `_draw_string_legible` treatment that every
+   map label uses, not to the alpha path alone. Left for whoever owns the map screen's type.
+2. *"The alpha's silhouette is contaminated"* by the mossy path end-cap filling the notches
+   between the lower spikes. The dark backing rosette is already drawn one step larger than
+   the red one; making it larger still starts to read as a shadow blob. A real fix wants the
+   terrain under a threat pin knocked back, which is the same fog/value work item as (1)
+   in the list below.
+
+Three rounds, three real movements, and the acceptance question answered yes. Stopping here
+per COMMON.md rather than spending a fourth world boot on residuals that belong to the map
+screen's own palette and type work.
+
 **Judge findings that stand and are NOT this lane's to fix** (recorded for the coordinator;
 every one of them is about the map screen this lane only added a marker to):
 
