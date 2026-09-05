@@ -85,7 +85,12 @@ the right reason before being kept: with `stretch` forced back to 1.0 (the old l
 `panel_fit` (a band correction that flipped a 9 m edge to two panels at ×0.73) before any
 render did.
 
-Frames: __FENCE_FRAMES__
+Frames: `_sheet_dressing.png` rows 1–2 and the zoomed junction pair at the bottom (A =
+`main`, B = this branch, same stands). In A the run behind Halda ends in mid-air a stride
+short of the [30,11] corner, a post of the next run stands through its rails, and the
+near rail floats over visible ground; in B the two runs meet end to end at the corner and
+the rails follow the slope down to the ground. Pixel change at the W08 stand: 7.8% of the
+frame; at the fence-run stand: 10.3%.
 
 ### 2.2 Bram's inn behind the bar (W08 finding 5)
 
@@ -103,7 +108,8 @@ cast shadows, and a shadow-casting light inside an opaque box lights nothing. No
 solid enters the door lane, stands where Bram does, or stands in front of the counter's
 middle where the player talks to him.
 
-Frames: __INN_FRAMES__
+Frames: `_sheet_dressing.png` row 3 (29.0% of the frame changed at the across-the-bar
+stand). Judged blind in `JUDGE_DRESSING.md` (§4).
 
 ### 2.3 The courtyard gauntlet trainer after the world changes (W06 finding)
 
@@ -145,7 +151,11 @@ regardless of being beaten is a design call §9 currently answers "no" to in wri
 lane did not overturn it. **Routed to the owner/orchestrator** as the one open question
 here.
 
-Frames: __COURTYARD_FRAMES__
+Frames: `_sheet_dressing.png` rows 4–5: the same courtyard stand before and after
+`legendary_freed` with the courtyard flag set; the capture tool itself reports
+`courtyard trainer body after legendary_freed (beaten): WITHDRAWN` in both the `main`
+and the branch runs — because this is `main`'s behaviour, verified, not this lane's
+change.
 
 ### 2.4 The Legendary Chamber's light (W06, three independent judges)
 
@@ -183,7 +193,10 @@ What changed (all data-driven, all recorded beside the number):
    flush with the walls it stands against, floor to ceiling, snapped up to a half-metre
    course — which is what the inside of a corner tower is. Legendary Chamber: 5.05, 4.05,
    4.05 and 3.55 m. Non-solid, like the tower shell it hides: no walkable metre changes and
-   `combat_arena_bounds_at` is untouched. __PIERS_ELSEWHERE__
+   `combat_arena_bounds_at` is untouched. The same rule found the same defect in the Warden Arena: its four
+   corners carry the LargeTower modules at 2.6 × 3.1 m, and get 2.6 × 3.1 m piers (well
+   outside the 11 m combat ring). Row 4 of `_sheet_chamber.png` shows that room before and
+   after; nothing else in it changed except the floor conduits' energy.
 3. Three lights in `stronghold.json`'s `lights`: a warm fill (`#d9a06a`, 1.4, range 30)
    high inside the doorway wall; a shadow-casting spot (`#ffe3bd`, 3.5) over the bound
    creature's stand, placed behind and above it relative to the reveal stand so the
@@ -209,7 +222,20 @@ The "before" run used `main`'s versions of the four changed files checked out in
 same tree (`git checkout f8a47ee4 -- …`, then restored) so both columns share one build
 of everything else.
 
-__RENDER_LOG__
+```
+xvfb-run -a -s "-screen 0 1280x720x24" godot --path . --rendering-driver opengl3 \
+  --resolution 1280x720 --script tools/_capture_n05_dressing.gd -- --out=res://shots/n05_before2
+→ wrote 9 frames, 0 failures (main's four files checked out; 21 min)
+... --out=res://shots/n05_after
+→ wrote 9 frames, 0 failures (this branch)
+... --out=res://shots/n05_after2 --only=C-0,W-01 --skip-freed
+→ the four chamber/arena stands again after the fill became a spot (§2.4, point 3)
+```
+
+A first baseline attempt ran four headless jobs alongside the render and managed one stand
+in fifty minutes; it was killed, the settle was shortened indoors (one pass of 30 physics
+frames instead of two of 60; the terrain is not in frame there), and both runs were
+repeated alone. `^ERROR:` in the capture logs: `Parameter "material" is null` only.
 
 ## 4. Blind judge
 
@@ -248,7 +274,13 @@ on `main`); the set did not grow.
   chamber stands show; the lights here were aimed at the `legendary_stand` mark the
   creature occupies on `main`. Nothing here edits W06's or W08's files.
 - Not done: no new mesh, no Meshy, no other chamber's lights touched, no PR.
-- __IMPORT_UIDS__
+- **12 untracked `.uid` sidecars were left untracked on purpose** and want routing:
+  `godot --headless --import` in this container generated them for other lanes'
+  Cloudreach (Biome 2) scripts and tests (`autoload/realm_heart_state.gd`,
+  `scripts/world/cloudreach_world.gd`, `realm_gate.gd`, `realm_heart_shrine.gd`, seven
+  `tests/*cloudreach*|realm*` files, `tools/capture_cloudreach_foundation.gd`). They are
+  outside this lane's ownership; the four `.uid` files for this lane's own new scripts
+  ARE committed.
 
 ## 7. Commits
 
