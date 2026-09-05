@@ -675,9 +675,17 @@ Branch `ralph/W20-SMALL-FIXES-0904`, from `origin/main` at `ef16544f`.
 
 ## Final state
 
-Branch: `ralph/W20-SMALL-FIXES-0904`
-Final commit: **`8018aa7c`** (`docs(W20): the lane report, its evidence, and one finding the
-judge produced`), on top of the nine item commits tabled above.
+Branch: `ralph/W20-SMALL-FIXES-0904`, from `origin/main` at `ef16544f`.
+
+**Final code commit: `b1d77d7a`** (CL-E10) — the last commit that changes the game, its
+data, its tests or its tools. Everything this report claims about behaviour is reproducible
+at that hash.
+
+Two documentation commits sit on top of it: `7756bc03`, the report before its evidence
+sections, and the branch tip, which is this file complete with the render results, the
+contact sheet, the code-blind verdict and the layer probe. A report cannot carry its own
+hash, so the tip is named by position rather than by number; `git log --oneline
+origin/main..ralph/W20-SMALL-FIXES-0904` lists all eleven.
 
 Every claim in this report is reproducible from that branch: the tests by their exact
 commands, the probes by `godot --headless --path . --script tools/_probe_*.gd`, the frames
