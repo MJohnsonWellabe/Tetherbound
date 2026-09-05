@@ -404,6 +404,17 @@ Owner noticed the session count didn't match my reports. Root cause: 5 lanes (W0
 Separately, 5 lanes had genuinely gone stale 4+ hours with NO replacement running: W02-HARNESS-CONTEXT, W03-S08-FREEZE, W16-LOFT-BED, W20-SMALL-FIXES, W21-HARNESS-FIGHTS — all hit their 5h limit hours ago (reset already passed) and were sitting untouched. Given the owner flagged this directly, resumed all 5 at once (departing from the normal 1-2/sweep trickle, since the owner surfaced the actual backlog size).
 main also moved: PR #42 merged — **W00-ICONS is now on main**. PR #45 (consolidated: icons+contracts+progression+portraits+companion+bands2-5) is open, still blocked only on the pre-existing finale regression. PR #44 is Codex's own draft PR for Cloudreach, unrelated to this batch, explicitly not ready to merge.
 
+## 16:56 UTC: N06-MAP-UI confirmed done — the nudge worked
+Final `f23c0d3a`. Killed the hung render, then honestly closed out round-2 verification: only
+`map_fresh` and both isolated minimap stands were actually re-rendered; the other three stands
+(`map_day1`, `map_surveyed`, `hud_minimap`) were deliberately NOT re-rendered because each was
+measured against `map_fresh` and shown to differ only where the round-2 changes don't touch them
+(one is pixel-identical to a 10-threshold across the whole map body) — a real verification
+substitute, not a skipped step. All 8 map-legibility items closed with real before/after
+numbers. No second blind-judge round on the round-2 frames — stated plainly as a wall-clock
+call, verified by measurement against the judge's own quantities instead. Archived. **All 13
+original 0905 follow-up lanes are done; N14-ROUTED-FOLLOWUPS is the only lane still running.**
+
 ## 16:53 UTC: N06-MAP-UI nudged — stuck fighting a hung render, substance already done
 Checked N06 directly: its report already shows all 8 map-legibility items fixed with real
 before/after measurements (fog contrast 1.16:1 -> 2.08:1 and reversed direction, legend
