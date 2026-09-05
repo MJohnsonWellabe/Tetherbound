@@ -169,6 +169,38 @@ The one `ERROR:` line is the known-benign alpha-resize message `AGENT_WORKFLOW.m
 by hand (it comes off alpha creature builds and its *count* varies with what streamed in;
 the distinct set is what matters and it has not grown).
 
+## CI on the branch
+
+Run [4073](https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/33935294226) on
+`56027a7a` (the code-and-data commit), ~70 minutes with all code jobs executed — not a
+docs-only skip. Green: `verify-scatter-rules`, `verify-harvest`, `verify-veg-corridor`,
+`verify-gate-a-ui-build-shard`, `verify-combat-shard`, `verify-regions-shard` (warrens,
+relay_station, relay), `verify-gate-b-core`, `verify-unit-tests` shards 3 and 4.
+
+Four jobs failed, **and all four fail identically on `main`** — checked directly against
+`main`'s own run
+[4070](https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/33933772655), which is
+also red, on the same four:
+
+| Failing job | Why it is not this lane's |
+|---|---|
+| `verify-unit-tests (1)` | `test_item_icons.gd` — the six missing candy/mushroom icon PNGs the lane brief names as known-red on `main` and assigns to another lane, plus `test_scatter_perf_budget.gd::test_playground_bake_is_committed_and_fresh` (below). No file this lane touched appears in the failure. |
+| `verify-unit-tests (2)` | Same shard family, red on `main` at the same commit. |
+| `verify-scatter-bake-freshness` | The committed `data/scatter/playground` bake is stale against the live `vegetation.json` / `terrain_playground.json`. **This lane touched neither file** (both are explicitly outside its ownership) and cannot have staled the bake. |
+| `verify-terrain-bake-freshness` | Same, for the terrain bake. Same reasoning. |
+
+`verify-gate-b-core` is the one difference in the other direction: it **fails on `main`
+and passes on this branch**.
+
+The jobs still in flight when the report was written (`verify-core-verb-shard`,
+`verify-gate-evidence-shard`) were green through every step they had reached, including
+`Verify playground`, and their region equivalents already passed locally here. Two jobs show
+`cancelled` because the follow-up report commit superseded the run mid-flight, not because
+they failed.
+
+No fix is pushed for the four failures: each is red on the base branch, none is in a file
+this lane owns, and the brief explicitly forbids adding the missing icons.
+
 ## Visual evidence
 
 `tools/_capture_w18_pickups.gd` renders six frames at player eye height (1.7 m, 7–12 m
