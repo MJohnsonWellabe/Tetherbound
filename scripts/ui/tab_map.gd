@@ -1332,12 +1332,13 @@ func _map_rect_for_canvas(canvas_size: Vector2) -> Rect2:
 ## shoreline, hills and road network off the menu. FULLY OPAQUE (alpha 1.0)
 ## now: unexplored cells hide the terrain underneath completely, so what
 ## shows on open is exactly what `MapState`'s fog grid says has been
-## visited — nothing more. Kept the same near-black hue rather than
+## visited — nothing more. Kept on this project's own cool ramp rather than
 ## switching to a parchment-style unexplored fill: this project's whole menu
 ## chrome is the dark blue-gray/teal panel language (`UITokens`, D28,
 ## `menu_tab.gd`'s own header), and introducing a second, warmer "unknown
 ## territory" material would be a new visual language for one screen, not a
-## fog fix. Edges read soft, not blocky, for free: `ImageTexture` samples
+## fog fix. (That pass ALSO made the fill near-black, which is the half N06
+## below had to undo — see its own note; the cool-ramp half stands.) Edges read soft, not blocky, for free: `ImageTexture` samples
 ## with linear filtering by default, and the grid is drawn scaled up from
 ## 128px to the panel's ~400+px side, so cell boundaries blend across a few
 ## screen pixels exactly the way `reveal_radius`'s circular reveal already
