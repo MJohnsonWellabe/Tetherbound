@@ -44,16 +44,34 @@
     },
     "_comment_wall_tint_lerp": "W07-WARRENS-0904. `_material()` pulled every interior stone albedo 0.75 toward near-white #fff2e0; under the new dark ambient the pools alone light the walls and a ~0.85 albedo blows out beside each one. 0.6 keeps the stone warm and lets a pool read as a pool. Round 2: 0.6 still read as pale flat granite under the pools; 0.45.",
     "wall_tint_lerp": 0.45,
-    "_comment_exterior_faces": "W07-WARRENS-0904. Which chamber walls get the exterior earth skin (`_clad_exterior_face`). The hall's -z face is visible from the approach between the mound's boulders and read as grey ashlar blocks in the before frame; now earth like the mouth's front.",
+    "_comment_exterior_faces": "W07-WARRENS-0904. Which chamber walls get the exterior earth skin (`_clad_exterior_face`). The hall's -z face is visible from the approach between the mound's boulders and read as grey ashlar blocks in the before frame; now earth like the mouth's front. Round 3: the mouth chamber's own side walls' OUTER faces are what the approach actually sees receding to the right of the cut (after2 frame 01), not the hall's; both sides clad too.",
     "exterior_faces": [
       [
         "mouth",
         "-z"
       ],
       [
+        "mouth",
+        "-x"
+      ],
+      [
+        "mouth",
+        "+x"
+      ],
+      [
         "hall",
         "-z"
       ]
+    ],
+    "_comment_mouth_opening": "Round 3 (owner: the outside still looks awful). The cut in the hillside was the first passage's own 3.0 x 3.0 m door; a burrow mouth is a wider, lower-browed hole. Read by `_opening_on(mouth, -z)`.",
+    "mouth_opening": [
+      4.6,
+      3.3
+    ],
+    "_comment_approach_clear": "Round 3 (owner: 'the vertical beam through the middle of the entrance'). Two causes, both fixed: a structure bay stood in the unframed cut (burrow_warrens.gd registers the mouth as a doorway now) and a baked tree stood on the approach axis, seen from inside as a trunk through the opening. [distance_m out from the mouth, radius_m].",
+    "approach_clear": [
+      34.0,
+      16.0
     ]
   },
   "_comment_mound": "BAND2-63-WARRENS. The cave stands in ground that does not cover it (see `_comment_resiting`), so what a player sees from the road is the cave's own rock mass standing proud of the meadow -- and the first capture round showed exactly what that is without help: a grey rectangular slab, six metres tall, in a field. This is the outcrop that makes it a knoll instead. Deterministic boulders from the nature family the corridor is already scattered with (`Rock_Medium_1..3`, the same models `vegetation.json` uses), set around the perimeter and over the roof so the silhouette breaks up and the mass reads as stone in the ground rather than a building. Seeded, never random: the same rock stands in the same place every boot, which is the determinism promise the rest of the world keeps. `skip_front_m` keeps the DOORWAY clear and nothing else -- it was 9m, which left the whole front of the cave as a bare flat rectangle standing in a field, and the blind critic called it exactly that: a textured plane with straight cut edges reading as unfinished blocking geometry. At 6m the rock runs across the front too and the opening reads as a hole in a rock face. `tint` multiplies the boulders' own albedo toward the cave's rock colour, because the nature pack's rocks ship a cool mint-grey that the same critic read as 'a heap of enormous cabbages' beside this cave's warm dark stone. ALL TUNABLE.",
@@ -77,10 +95,10 @@
     ],
     "roof_spacing_m": 20.0,
     "roof_scale": [
-      3.0,
-      4.5
+      2.6,
+      3.8
     ],
-    "sink_m": 2.0,
+    "sink_m": 2.8,
     "_comment_mouth_dome_ext09": "EXT-09-MOUNDMASS, item 2 second half: 'scale up 2-3 pieces to dome the mouth'. `burrow_warrens.gd::_build_mouth_dome()`, called right after `_build_accent_boulders()`. Thinning the perimeter/roof grid above left the doorway's own gap (`skip_front_m`'s clear radius, unchanged, protects the walkway and the hand-authored jambs/brow) with no earth mass over it at all -- three hand-placed pieces fill exactly that gap: one centred and set back/up over the opening, two flanking it lower on the mound's own shoulders, all wearing the SAME earth material the rest of the mound wears (`_wear_as_earth()`) and squashed into the same low mounded-hump silhouette `_build_spoil_mounds()` already uses, at roughly double an accent boulder's own scale so each one reads as a single dome. Ground-sampled (no `y_m`), same rule the accent boulders and skirt already follow, so each one sits on the real hillside rather than an assumed flat plane.",
     "_why_mouth_dome_scale_ext10": "EXT-10-OVERSHOOT correction. These three were new this round at scale 6.6-7.5/sink 1.8-2.1 (ratio sink/scale ~0.27-0.28) and are part of the overshoot the frame showed. Halved to keep the same proven sink/scale ratio at the new, smaller size, rather than reusing the old absolute sink metres against a much smaller piece (which would over-bury instead).",
     "mouth_dome": [
@@ -400,7 +418,29 @@
         "yaw_deg": 25.0,
         "_why": "the right spoil heap, independently scaled/rotated/positioned rather than a mirror of the left -- two hand-dug piles are never the same shape"
       }
-    ]
+    ],
+    "_why_round3": "W07 round 3, blind before-judge item 01.3: 'the large overhanging boulder mass across the top of the frame is unsupported: open sky and the distant meadow horizon are visible underneath it'. Roof pieces smaller and sunk deeper so they nestle into the mass instead of overhanging it.",
+    "growth": {
+      "_comment": "Round 3. Flora on the mound's own pieces (`_dress_mound_with_growth`): the hillock a burrow is dug into is grown over, not bare. Same models and retint as the skirt.",
+      "enabled": true,
+      "seed": 907,
+      "models": [
+        "res://assets/environment/stylized_nature/Bush_Common.gltf",
+        "res://assets/environment/stylized_nature/Fern_1.gltf",
+        "res://assets/environment/stylized_nature/Grass_Wide_Tall.gltf",
+        "res://assets/environment/stylized_nature/Grass_Common_Tall.gltf"
+      ],
+      "reach_m": 6.0,
+      "per_piece": [
+        2,
+        4
+      ],
+      "scale": [
+        0.6,
+        1.2
+      ],
+      "sink_m": 0.15
+    }
   },
   "_comment_chambers_heights": "BAND2-63-WARRENS lowered every ceiling by 0.6-1.2m (mouth 4.2->3.6, hall 5.0->4.2, warren 4.0->3.4, den 6.0->4.8, vault 4.0->3.4). At this site most of the cave's mass stands ABOVE the meadow (see `_comment_resiting`), so every metre of ceiling is a metre of grey slab on the skyline; the first capture round showed a six-metre wall. They are still taller than the player and taller than the guardian, and the den is still the tallest room in the cave -- the shape of the place is unchanged, it is just not a tower any more. `lights[].y` moved with the two ceilings it would otherwise have poked through. TUNABLE.",
   "_comment_chambers": "Local metres: x is lateral, +z is depth into the hill; `at` is the chamber centre, `size` is [width, depth], `height` is floor-to-ceiling. Chambers connected by a passage MUST share the axis the passage runs on (the wall opener splits one wall, it does not cut diagonals). `branch: true` marks the optional deep branch -- it is not on the way to anything.",
@@ -1088,11 +1128,12 @@
   "interior_ambient": {
     "_comment": "W07-WARRENS-0904. One ReflectionProbe over the cave footprint, interior mode, constant-colour ambient, `reflection_mask` = `layer` so only meshes `_layer_interior()` marked (everything not under an EXTERIOR_META subtree, plus any body that walks in) take it. `colour`*`energy` is the ambient the room gets instead of the sky's; `intensity` is how much of the probe's own (cave-only) cubemap reflects, kept low. `margin_m` grows the box past the walls so wall faces are never at its edge.",
     "enabled": true,
-    "colour": "#16120f",
+    "colour": "#1e1915",
     "energy": 1.0,
     "intensity": 0.12,
     "layer": 12,
-    "margin_m": 1.5
+    "margin_m": 1.5,
+    "_comment_round3": "Round 2 frames measured 65-69% of the interior below luminance 40 at stands 02/03 with #16120f: pools read, but everything a pool did not reach went to pure black (the T1-HALL-4 'shadow equals black' lesson). Lifted a step so shadowed stone keeps its grain."
   },
   "roots": {
     "_comment": "W07-WARRENS-0904. The installed DeadTree family (no new mesh), each piece aimed crown-first along `dir` so only its bare branching crown is in the room -- a root mass through the ceiling or wall. `tip` (chamber+offset, `tip_y` above the floor) is the crown's furthest point; the trunk sits behind it inside the slab/wall. `scale` per model keeps every trunk shorter than the roof mass above (DeadTree_1 9.5m, _2 11.5m, _3 13.3m native). Every tip in a walking lane stays above 2.2m.",
@@ -1431,7 +1472,7 @@
       "res://assets/environment/stylized_nature/Plant_7.gltf",
       "res://assets/environment/stylized_nature/Plant_7_Big.gltf"
     ],
-    "tint": "#8a6a3a",
+    "tint": "#7a5a32",
     "scale": [
       0.5,
       1.1

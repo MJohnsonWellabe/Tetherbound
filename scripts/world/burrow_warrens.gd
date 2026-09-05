@@ -240,6 +240,7 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null, director
 	_build_mouth_dome()
 	_build_entrance_dressing()
 	_build_spoil_mounds()
+	_dress_mound_with_growth()
 	_tag_exterior_children(exterior_from)
 	_build_deposits()
 	_build_dressing()
@@ -546,6 +547,14 @@ func _build_chambers() -> void:
 			# door in a wall from the approach; a raw cut under the root fringe
 			# reads as a dug hole.
 			var frame_the_mouth := bool(_config.get("interior_structure", {}).get("frame_the_mouth", true))
+			if id == "mouth" and side == "-z" and not opening.is_empty():
+				# Owner 2026-09-05: "the vertical beam through the middle of the
+				# entrance". Round 2 dropped the mouth from `_openings` and the
+				# structure dresser, which only skips `_doorways`, stood a bay
+				# shaft across the cut. The mouth is a doorway whether or not
+				# it is framed.
+				_doorways.append([Vector3(centre.x, 0.0, _mouth_outer_z()),
+					float(opening.get("width", 3.0)) * 0.5 + 1.6])
 			if id == "mouth" and side == "-z" and not opening.is_empty() and frame_the_mouth:
 				_openings.append({
 					"centre": Vector3(centre.x, 0.0, _mouth_outer_z()),
@@ -583,6 +592,12 @@ func _opening_on(chamber_id: String, side: String) -> Dictionary:
 	# its inward passage does -- one cave mouth, sized like a tunnel.
 	if chamber_id == "mouth" and side == "-z":
 		var first: Dictionary = _first_passage()
+		# W07-WARRENS-0904 round 3: `site.mouth_opening` [width, height] lets the
+		# cut in the hillside be wider and taller than the first passage, so
+		# from the approach it reads as a hole in the ground rather than a door.
+		var own: Array = _config.get("site", {}).get("mouth_opening", [])
+		if own.size() >= 2:
+			return {"width": float(own[0]), "height": float(own[1])}
 		return {"width": float(first.get("width", 3.0)), "height": float(first.get("height", 3.0))}
 	return {}
 
@@ -1135,6 +1150,13 @@ func _clear_the_ground_the_cave_stands_on() -> void:
 		var size := _size_of(chamber.get("size", []))
 		removed += int(vegetation.call("clear_area",
 			to_global(Vector3(centre.x, 0.0, centre.z)), size.length() * 0.5 + 4.0))
+	# Round 3: the sightline OUT of the mouth. A baked tree stood on the
+	# approach axis and, seen from inside, was a trunk through the middle of
+	# the opening. `site.approach_clear` [distance_m, radius_m] clears it.
+	var approach: Array = _config.get("site", {}).get("approach_clear", [])
+	if approach.size() >= 2:
+		removed += int(vegetation.call("clear_area",
+			to_global(Vector3(0.0, 0.0, -float(approach[0]))), float(approach[1])))
 	if removed > 0:
 		print("[warrens] cleared %d scattered trees/rocks inside the %.0fm site radius and the chambers" % [
 			removed, radius])
@@ -3779,11 +3801,37 @@ func _build_floor_litter() -> void:
 			art.position = at
 			art.rotation = Vector3(0.0, rng.randf_range(-PI, PI), 0.0)
 			holder.add_child(art)
-			_tint_rock(art, tint)
+			_wear_as_dead_leaf(art, tint)
 			done += 1
 			placed += 1
 	if placed > 0:
 		print("[warrens] %d litter pieces" % placed)
+
+
+## Round 2 found the Plant meshes' own "Leaves" photo multiplies to magenta
+## under any brown tint (after2 frame 02/05), the same trap `_dress_skirt_flora`
+## already records for Bush_Common. Same cure: the installed green leaf photo
+## (`LEAF_GREEN`) under the tint, so the litter reads as dead leaf, not orchid.
+func _wear_as_dead_leaf(node: Node, tint: Color) -> void:
+	if node is MeshInstance3D:
+		var mesh_instance := node as MeshInstance3D
+		var mesh := mesh_instance.mesh
+		if mesh != null:
+			for surface in mesh.get_surface_count():
+				var source: Material = mesh_instance.get_active_material(surface)
+				if source == null:
+					continue
+				var key := "litter_%s#%d" % [str(source.resource_path), source.get_instance_id()]
+				if not _materials.has(key):
+					var copy: StandardMaterial3D = source.duplicate() as StandardMaterial3D
+					if copy == null:
+						continue
+					copy.albedo_texture = LEAF_GREEN
+					copy.albedo_color = tint
+					_materials[key] = copy
+				mesh_instance.set_surface_override_material(surface, _materials[key])
+	for child in node.get_children():
+		_wear_as_dead_leaf(child, tint)
 
 
 ## Haze cards: the only depth cue a renderer with no volumetric fog can draw.
@@ -3889,3 +3937,68 @@ func _glow_the_deposit(spec: Dictionary, at: Vector3) -> void:
 	light.omni_range = float(cfg.get("range", 3.5))
 	light.position = Vector3(at.x, _floor_y + float(cfg.get("y", 0.9)), at.z)
 	add_child(light)
+
+
+## Round 3, owner: "the outside still looks awful. focus on the outside."
+## The mound was bare earth boulders; a burrow's hillock is grown over. Every
+## mound piece standing on or against the cave (the perimeter and roof grid,
+## not the far skirt) gets a few pieces of the installed flora on its own top
+## -- bush, fern, tall grass -- retinted the same way the skirt's are, sunk a
+## hand's breadth so nothing floats. Exterior, so the sun lights it.
+func _dress_mound_with_growth() -> void:
+	var cfg: Dictionary = _config.get("mound", {}).get("growth", {})
+	if cfg.is_empty() or not bool(cfg.get("enabled", true)):
+		return
+	var mound: Node3D = get_node_or_null(^"Mound") as Node3D
+	if mound == null:
+		return
+	var models: Array[PackedScene] = _load_models(cfg.get("models", []))
+	if models.is_empty():
+		return
+	var holder := Node3D.new()
+	holder.name = "MoundGrowth"
+	add_child(holder)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(cfg.get("seed", 907))
+	var reach := float(cfg.get("reach_m", 6.0))
+	var per_piece: Array = cfg.get("per_piece", [2, 4])
+	var scale_range: Array = cfg.get("scale", [0.5, 1.1])
+	var min_x := INF
+	var min_z := INF
+	var max_x := -INF
+	var max_z := -INF
+	for rect: Array in _footprint:
+		min_x = minf(min_x, float(rect[0]))
+		min_z = minf(min_z, float(rect[1]))
+		max_x = maxf(max_x, float(rect[2]))
+		max_z = maxf(max_z, float(rect[3]))
+	var placed := 0
+	for piece in mound.get_children():
+		var art := piece as Node3D
+		if art == null:
+			continue
+		var at := art.position
+		if at.x < min_x - reach or at.x > max_x + reach or at.z < min_z - reach or at.z > max_z + reach:
+			continue  # the far skirt, already dressed with its own flora
+		if absf(at.x) < 4.0 and at.z < 3.0:
+			continue  # never over the mouth itself
+		var box := _bounds_of(art)
+		if box.size.y < 0.5:
+			continue
+		var count := rng.randi_range(int(per_piece[0]), int(per_piece[1]))
+		for n in count:
+			var flora: Node3D = models[rng.randi() % models.size()].instantiate() as Node3D
+			if flora == null:
+				continue
+			var s := rng.randf_range(float(scale_range[0]), float(scale_range[1]))
+			flora.scale = Vector3.ONE * s
+			flora.position = Vector3(
+				box.get_center().x + rng.randf_range(-0.45, 0.45) * box.size.x,
+				box.end.y - float(cfg.get("sink_m", 0.15)),
+				box.get_center().z + rng.randf_range(-0.45, 0.45) * box.size.z)
+			flora.rotation = Vector3(rng.randf_range(-0.15, 0.15), rng.randf_range(-PI, PI), rng.randf_range(-0.15, 0.15))
+			holder.add_child(flora)
+			_dress_skirt_flora(flora)
+			placed += 1
+	if placed > 0:
+		print("[warrens] %d pieces of growth on the mound" % placed)
