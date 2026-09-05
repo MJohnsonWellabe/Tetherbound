@@ -55,9 +55,16 @@ here to change), and the treatments it did change are the ones W11 asked for.
 | A | `ralph/reports/N06-MAP-UI-0905/` | this report and `_sheet_map_ui.png` |
 
 Each new `.gd` carries its `.uid`, which is how every other script in `tests/` and `tools/` is
-tracked on `main`. A `godot --import` also generates `.uid` sidecars for a dozen OTHER lanes'
-untracked scripts (the `cloudreach`/`realm_heart` set); none of them is staged — the branch diff
-above is the complete list.
+tracked on `main`.
+
+**A diff-hygiene note, because this bites every lane that runs an import.** `godot --import`
+also generated `.uid` sidecars for twelve OTHER lanes' scripts — the `cloudreach` /
+`realm_heart` set, which are tracked on `main` *without* their sidecars. This is the same trap
+W11-ALPHA-PINS-0904's own report recorded (an import there swept 58 unrelated files into a
+feature commit). They were **deleted**, not committed and not merely left unstaged: a `.uid` is
+a generated artefact that the next import recreates, `main`'s own CI runs without them, and
+carrying another lane's files in this diff is exactly what COMMON.md's ownership rule forbids.
+The working tree is clean and the branch diff above is the complete list.
 
 Nothing outside `scripts/ui/tab_map.gd` and `scripts/ui/minimap.gd` is modified. The new test
 and the three tools are additive files that no sibling lane in this wave owns.
