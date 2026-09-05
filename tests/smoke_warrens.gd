@@ -629,19 +629,30 @@ func _no_daylight_leaks(world: Node, warrens: Node3D) -> void:
 	var space := (world as Node3D).get_world_3d().direct_space_state
 	var leaks := 0
 	var checked := 0
+	# Bodies are not walls: the trainer and the residents are cast through.
+	var exclude: Array[RID] = []
+	for body in world.find_children("*", "CharacterBody3D", true, false):
+		exclude.append((body as CharacterBody3D).get_rid())
+	# The mouth is OPEN on purpose: rays within 45 degrees of the way out are
+	# allowed to leave (the spine mouth-hall-den is one straight sightline to
+	# daylight, by design); every other direction must end on the cave.
+	var way_out: Vector3 = (warrens.global_transform.basis * Vector3(0.0, 0.0, -1.0)).normalized()
 	for id: String in warrens.call("chamber_ids"):
 		var eye: Vector3 = warrens.call("marker", id) + Vector3.UP * 1.7
 		for step in 24:
 			var angle := TAU * float(step) / 24.0
 			for pitch: float in [0.0, 0.35]:
 				var dir := Vector3(sin(angle) * cos(pitch), sin(pitch), cos(angle) * cos(pitch))
+				if Vector3(dir.x, 0.0, dir.z).normalized().dot(way_out) > cos(deg_to_rad(45.0)):
+					continue
 				var query := PhysicsRayQueryParameters3D.create(eye, eye + dir * 60.0)
+				query.exclude = exclude
 				var hit := space.intersect_ray(query)
 				checked += 1
 				var collider: Node = hit.get("collider", null) as Node
 				if hit.is_empty() or collider == null or not warrens.is_ancestor_of(collider):
 					leaks += 1
-					if leaks <= 3:
+					if leaks <= 12:
 						_fail("a ray from '%s' at yaw %.0f pitch %.2f left the cave (%s)" % [
 							id, rad_to_deg(angle), pitch,
 							"no hit" if hit.is_empty() else str(collider.get_path())])
@@ -681,8 +692,14 @@ func _the_room_has_its_own_dark(player: CharacterBody3D, warrens: Node3D) -> voi
 	var exterior_named: Array[GeometryInstance3D] = []
 	for holder_name: String in ["InteriorRock", "Roots", "Fungus", "Haze", "FloorLitter", "DenBones"]:
 		var holder: Node = warrens.get_node_or_null(NodePath(holder_name))
-		if holder != null:
-			_geometry_under(holder, interior_named)
+		if holder == null:
+			continue
+		for piece in holder.get_children():
+			# The root fringe over the mouth hangs outside, tagged so.
+			if piece.has_meta("warrens_exterior"):
+				_geometry_under(piece, exterior_named)
+			else:
+				_geometry_under(piece, interior_named)
 	var mound: Node = warrens.get_node_or_null(^"Mound")
 	if mound != null:
 		_geometry_under(mound, exterior_named)

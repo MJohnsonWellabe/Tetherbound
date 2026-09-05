@@ -1102,7 +1102,7 @@
           -1.0,
           0.1
         ],
-        "tip_y": 2.3,
+        "tip_y": 2.8,
         "roll_deg": 20.0
       },
       {
@@ -1135,7 +1135,7 @@
           -1.0,
           0.2
         ],
-        "tip_y": 2.8
+        "tip_y": 3.0
       },
       {
         "chamber": "hall",
@@ -1150,7 +1150,7 @@
           -1.0,
           -0.15
         ],
-        "tip_y": 2.9,
+        "tip_y": 3.1,
         "roll_deg": 60.0
       },
       {
@@ -1166,7 +1166,7 @@
           -1.0,
           -0.4
         ],
-        "tip_y": 3.1
+        "tip_y": 3.2
       },
       {
         "chamber": "hall",
@@ -1181,7 +1181,7 @@
           -0.25,
           0.1
         ],
-        "tip_y": 2.6,
+        "tip_y": 3.0,
         "_why": "a wall root, thrust through the west wall"
       },
       {
@@ -1197,7 +1197,7 @@
           -1.0,
           0.3
         ],
-        "tip_y": 2.2
+        "tip_y": 2.7
       },
       {
         "chamber": "den",
@@ -1258,7 +1258,7 @@
           -0.3,
           -1.0
         ],
-        "tip_y": 3.0,
+        "tip_y": 3.2,
         "_why": "a wall root through the den's back wall"
       },
       {
@@ -1274,9 +1274,10 @@
           -1.0,
           0.2
         ],
-        "tip_y": 2.3
+        "tip_y": 2.7
       }
-    ]
+    ],
+    "_comment_tip_y": "Tilted crowns droop their side branches 0.3-0.5 m below the tip point; smoke run 1 measured four pieces at 1.56-1.83 m. Every interior tip now sits >= 2.7 m so the lowest branch clears 1.9 m (the smoke's bar)."
   },
   "fungus": {
     "_comment": "W07-WARRENS-0904. Installed Mushroom meshes, albedo wired into emission at `glow_colour` (the cave's own pale green against the heartstone's red at the end), one small omni per cluster. `between` entries sit in the two unlit passages as beacons -- navigation stays readable with no torch.",

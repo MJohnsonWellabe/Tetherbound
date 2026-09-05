@@ -536,7 +536,13 @@ func _build_chambers() -> void:
 			# mouth needed it more than any interior opening, not less, since
 			# it is also the one doorway a player sees from ten metres away
 			# in full daylight instead of three paces in torchlight.
-			if id == "mouth" and side == "-z" and not opening.is_empty():
+			# W07-WARRENS-0904: `interior_structure.frame_the_mouth` (default
+			# true) decides whether the OUTER mouth gets the jamb-and-lintel
+			# reveal every cut opening gets. A framed portal reads as a built
+			# door in a wall from the approach; a raw cut under the root fringe
+			# reads as a dug hole.
+			var frame_the_mouth := bool(_config.get("interior_structure", {}).get("frame_the_mouth", true))
+			if id == "mouth" and side == "-z" and not opening.is_empty() and frame_the_mouth:
 				_openings.append({
 					"centre": Vector3(centre.x, 0.0, _mouth_outer_z()),
 					"along_x": true,
@@ -1105,8 +1111,19 @@ func _clear_the_ground_the_cave_stands_on() -> void:
 	if vegetation == null or not vegetation.has_method("clear_area"):
 		return
 	var removed := int(vegetation.call("clear_area", global_position, radius))
+	# W07-WARRENS-0904. The site radius is measured from the MOUTH, and the
+	# den's centre is 40 m in, the vault's 43 m: the BEFORE frames of this
+	# pass showed a full CommonTree standing in the guardian's den and
+	# `tests/smoke_warrens.gd`'s leak rays hit tree colliders inside the den
+	# and the warren. Every chamber now clears its own footprint too.
+	for id: String in _chambers:
+		var chamber: Dictionary = _chambers[id]
+		var centre := _local_of(chamber.get("at", []))
+		var size := _size_of(chamber.get("size", []))
+		removed += int(vegetation.call("clear_area",
+			to_global(Vector3(centre.x, 0.0, centre.z)), size.length() * 0.5 + 4.0))
 	if removed > 0:
-		print("[warrens] cleared %d scattered trees/rocks inside the %.0fm site radius" % [
+		print("[warrens] cleared %d scattered trees/rocks inside the %.0fm site radius and the chambers" % [
 			removed, radius])
 
 
@@ -3601,6 +3618,7 @@ func _build_roots() -> void:
 		# take the cave's own ambient.
 		if bool(spec.get("exterior", false)):
 			art.set_meta(EXTERIOR_META, true)
+		art.name = "Root_%d" % placed
 		holder.add_child(art)
 		_tint_rock(art, tint)
 		placed += 1
