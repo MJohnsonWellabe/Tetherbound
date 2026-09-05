@@ -1,5 +1,5 @@
 {
-  "captured_at_utc": "2026-09-05T01:49:58",
+  "captured_at_utc": "2026-09-05T02:35:23",
   "display_server": "Windows",
   "engine": "4.7-stable (official)",
   "resolution": [
@@ -10,11 +10,11 @@
   "video_adapter": "NVIDIA GeForce GTX 1060 3GB",
   "views": [
     {
-      "draw_calls": 803,
-      "measured_frame_ms": 3.61,
-      "objects": 803,
-      "primitives": 1504625,
-      "reported_fps": 24.3,
+      "draw_calls": 704,
+      "measured_frame_ms": 4.54,
+      "objects": 704,
+      "primitives": 1057747,
+      "reported_fps": 1.0,
       "stand": [
         0.0,
         105.199996948242,
@@ -28,46 +28,46 @@
       "view": "01-arrival-first-reveal"
     },
     {
-      "draw_calls": 906,
-      "measured_frame_ms": 4.5,
-      "objects": 906,
-      "primitives": 2462935,
-      "reported_fps": 44.0,
+      "draw_calls": 756,
+      "measured_frame_ms": 4.33,
+      "objects": 756,
+      "primitives": 902634,
+      "reported_fps": 58.0,
       "stand": [
-        -320.0,
-        300.200012207031,
-        1040.0
+        -540.0,
+        330.200012207031,
+        1280.0
       ],
       "target": [
-        -485.0,
-        338.0,
-        1320.0
+        -450.0,
+        342.0,
+        1360.0
       ],
       "view": "02-broken-causeways"
     },
     {
-      "draw_calls": 836,
-      "measured_frame_ms": 3.9,
-      "objects": 836,
-      "primitives": 2280838,
-      "reported_fps": 59.8,
+      "draw_calls": 730,
+      "measured_frame_ms": 4.44,
+      "objects": 730,
+      "primitives": 1120070,
+      "reported_fps": 58.0,
       "stand": [
-        -90.0,
-        465.200012207031,
-        2385.0
+        -520.0,
+        430.200012207031,
+        2720.0
       ],
       "target": [
-        -260.0,
-        500.0,
-        2680.0
+        -300.0,
+        460.0,
+        3100.0
       ],
       "view": "03-windscar-ravine"
     },
     {
-      "draw_calls": 139,
-      "measured_frame_ms": 2.31,
-      "objects": 139,
-      "primitives": 494717,
+      "draw_calls": 215,
+      "measured_frame_ms": 3.05,
+      "objects": 215,
+      "primitives": 347926,
       "reported_fps": 86.0,
       "stand": [
         330.0,
@@ -82,15 +82,15 @@
       "view": "04-high-roost-before-fly"
     },
     {
-      "draw_calls": 392,
-      "measured_frame_ms": 3.31,
-      "objects": 392,
-      "primitives": 1389668,
+      "draw_calls": 502,
+      "measured_frame_ms": 4.27,
+      "objects": 502,
+      "primitives": 1029743,
       "reported_fps": 86.0,
       "stand": [
-        -720.0,
-        700.200012207031,
-        3680.0
+        -400.0,
+        780.200012207031,
+        3890.0
       ],
       "target": [
         -340.0,
@@ -100,19 +100,19 @@
       "view": "05-upper-cloudreach-cliffhold"
     },
     {
-      "draw_calls": 494,
-      "measured_frame_ms": 3.09,
-      "objects": 494,
-      "primitives": 1192418,
-      "reported_fps": 92.0,
+      "draw_calls": 467,
+      "measured_frame_ms": 8.49,
+      "objects": 467,
+      "primitives": 6479973,
+      "reported_fps": 93.0,
       "stand": [
-        -180.0,
-        900.200012207031,
-        4720.0
+        100.0,
+        1160.19995117188,
+        5290.0
       ],
       "target": [
         100.0,
-        1190.0,
+        1215.0,
         5350.0
       ],
       "view": "06-summit-final-approach"

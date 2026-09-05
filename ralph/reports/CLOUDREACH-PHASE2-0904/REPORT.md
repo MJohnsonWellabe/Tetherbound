@@ -21,12 +21,12 @@ complete.
 
 | View | Draw calls | Primitives | Objects | Measured frame time |
 | --- | ---: | ---: | ---: | ---: |
-| Arrival reveal | 803 | 1,504,625 | 803 | 3.61 ms |
-| Broken Causeways | 906 | 2,462,935 | 906 | 4.50 ms |
-| Windscar Ravine | 836 | 2,280,838 | 836 | 3.90 ms |
-| High Roost before Fly | 139 | 494,717 | 139 | 2.31 ms |
-| Upper Cloudreach / Cliffhold | 392 | 1,389,668 | 392 | 3.31 ms |
-| Summit approach | 494 | 1,192,418 | 494 | 3.09 ms |
+| Arrival reveal | 704 | 1,057,747 | 704 | 4.54 ms |
+| Broken Causeways | 756 | 902,634 | 756 | 4.33 ms |
+| Windscar Ravine | 730 | 1,120,070 | 730 | 4.44 ms |
+| High Roost before Fly | 215 | 347,926 | 215 | 3.05 ms |
+| Upper Cloudreach / Cliffhold | 502 | 1,029,743 | 502 | 4.27 ms |
+| Summit approach | 467 | 6,479,973 | 467 | 8.49 ms |
 
 The highest recorded draw count is below the Hall reference ceiling of 4,000 draws. The
 engine-reported instantaneous FPS was not treated as evidence because it includes capture-start
@@ -43,8 +43,18 @@ noise; measured frame time and structural renderer counters are the useful value
 - Continuous irregular cliff ribbons replace the repeated hanging-cylinder supports. Route
   landings are grounded, their path joints are covered, and the arrival gate has a supporting
   crag instead of appearing unsupported.
+- Bridge intervals now cut the route terrain, path, vegetation, and collision consistently. The
+  rope and stone spans cross real chasms rather than sitting decoratively over continuous land.
+- Trails use a narrower irregular visual ribbon over a controller-safe collision bed, replacing
+  the broad straight dirt-carpet treatment without making traversal brittle.
 - Production Quaternius trees and rocks now appear in clustered region groves, repeated route-edge
-  groups, and non-uniform landing accents. No creature content was added in this pass.
+  groups, and non-uniform landing accents. Their installed meshes now share the Meadows-derived
+  olive leaf palette, and each region receives an installed twisted-tree wind silhouette. No
+  creature content was added in this pass.
+- Cloudreach now uses the production Meadows cloud-sky shader instead of an empty gradient. Cliff
+  faces have warm high/mid/deep material bands, lower-frequency rock texture, and less grain.
+- The summit stronghold now has an open gate throat, articulated wings, buttresses, threshold,
+  crenellations, and danger banners instead of one solid wall-like cuboid.
 - The updated route, suspended-cliff, bridge, vegetation, settlement, shrine, and summit rendering
   remains below the 4,000-draw reference ceiling on the local GTX 1060 capture machine.
 - Meadows-only HUD/objective copy is excluded from this environment-only evidence set. The capture
@@ -54,34 +64,39 @@ noise; measured frame time and structural renderer counters are the useful value
 
 ## Open visual result
 
-The required code-blind visual review is a clear **FAIL**. All six locations still read as one
-under-authored route blockout despite the new Meadows-derived surface treatment. The grass,
-flowers, trees, grounded cliff ribbons, and corrected HUD context materially improve the previous
-evidence set, but they do not solve the region's larger composition and terrain-form problems.
-Creatures were deliberately excluded from this pass and were not used as a reason for failure.
-Neither required bar passed:
+The required code-blind visual review is a clear **FAIL**. The bright open sky, suspended land,
+long crossings, coherent natural palette, and danger-only oxblood accents now establish a useful
+Cloudreach identity, but the six locations still read as an under-authored traversal prototype.
+The grass, flowers, asset trees, grounded cliff ribbons, bridge gaps, Meadows cloud sky, narrower
+trails, and stronger summit silhouette materially improve the previous evidence set. They do not
+yet supply the natural accumulation, human-scale construction, geology, or atmospheric depth in
+the references. Creatures were deliberately excluded from this pass and were not used as a reason
+for failure. Neither required bar passed:
 
 - Belongs to the world of the Tetherbound Meadows key art: **No**
 - Looks like the same kind of game as the Palworld references: **No**
 
 The reviewer identified these three largest reference gaps:
 
-1. Replace the unfinished gray slab geology with authored warm cliff strata, terraces, ledges,
-   shadowed recesses, and overlapping silhouettes while preserving the traversable green caps.
-2. Recompose each vista around one unmistakable exposed crossing and one farther destination;
-   the present paths are too broad, straight, centered, and runway-like to communicate danger.
-3. Create a stronger warm-sun/cool-shadow palette, atmospheric cloud and distance layers, and
-   visibly wind-shaped vegetation clusters rather than uniform roadside bands.
+1. Authored, lived-in world density: clustered foliage, rocks, flowers, built edges, route-side
+   stories, negative-space clearings, habitation traces, and intermediate scale cues.
+2. Finished landform and landmark vocabulary: irregular geology and readable constructed parts
+   instead of banded cutaway slabs, repeated arch teeth, skeletal pavilions, and enlarged primitive
+   fortress masses.
+3. Lighting, material, and atmospheric depth: stable warm/cool separation, coloured shade,
+   corrected material scale, controlled haze, and several overlapping distance layers.
 
 The full code-blind critique is preserved in `JUDGE.md`. Final visual acceptance remains with an
 external ChatGPT review.
 
-Exact resume point: keep creatures deferred. First reshape the broad straight route ribbons and
-blank region slabs into layered, irregular highland terrain with narrow embedded paths and
-legible drops. Then author one dangerous bridge/crossing composition and one distinct destination
-silhouette for each named reveal. Finally vary cliff materials, lighting, vegetation clustering,
-and background silhouettes before recapturing these same six views. Do not call Phase 2 complete
-until an external review accepts the environment on its own merits.
+Exact resume point: keep creatures deferred and preserve the real chasms, open Meadows sky,
+Meadows-derived surface family, and current performance structure. Replace the remaining
+procedural-primitives look with a stronger authored environment-art vocabulary: irregular cliff
+strata, terraces, recesses, causeway supports and edges, landmark-specific constructed parts, and
+route-side habitation/secondary-scale clusters. Then correct the visible seams and summit
+grass/trench intersection, widen destination-reveal compositions, and add layered atmospheric
+depth. Recapture these same six views and repeat external review. Do not call Phase 2 complete
+until the environment is accepted on its own merits.
 
 ## Reference gap
 

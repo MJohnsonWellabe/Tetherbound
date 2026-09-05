@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/ui/playground_hud.tscn" id="2_hud"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://scripts/world/cloudreach_world.gd" id="4_world"]
 [ext_resource type="Script" path="res://scripts/world/interaction_arbiter.gd" id="5_arbiter"]
 [ext_resource type="PackedScene" path="res://scenes/ui/dialogue_panel.tscn" id="6_dialogue"]
+[ext_resource type="Script" path="res://scripts/world/world_look.gd" id="7_look"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMaterial_cloudreach"]
 sky_top_color = Color(0.12, 0.33, 0.57, 1)
@@ -47,6 +48,14 @@ shadow_enabled = true
 shadow_opacity = 0.68
 directional_shadow_mode = 2
 directional_shadow_max_distance = 420.0
+
+; Share the production Meadows day/sky language, including its authored
+; cumulus shader. Cloudreach remains a different composition and terrain
+; palette, but no longer falls back to an empty procedural gradient.
+[node name="WorldLook" type="Node" parent="."]
+script = ExtResource("7_look")
+sun_path = NodePath("../Sun")
+environment_path = NodePath("../WorldEnvironment")
 
 [node name="CameraRig" type="SpringArm3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 60, 0)

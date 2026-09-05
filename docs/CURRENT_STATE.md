@@ -592,3 +592,48 @@ compose each of the six named views around one dangerous crossing and one distin
 then improve wind-shaped vegetation clusters, warm/cool light separation, cloud layers, and
 distant silhouettes. Recapture the same six views and repeat external visual review. The named
 Cloudreach concept board is still absent from the repository/local workspaces.
+
+## 2026-09-04 — Cloudreach checkpoint 5 / exposed-crossing and sky corrective pass
+
+Branch: `codex/cloudreach-cliffs`. This is the pushed-safe continuation of checkpoint 4, not
+completion of Cloudreach Phase 2 and not final visual acceptance. Creatures remain deliberately
+deferred.
+
+Cloudreach now loads the production Meadows cloud-sky/day look and keeps the Meadows-derived
+surface family across its procedural highland geometry. Grass uses denser seven-blade procedural
+tufts with flowers and bushes; approved production CommonTree and TwistedTree assets are placed
+in clustered groves with an olive Meadows-derived leaf palette. Route shoulders and visible paths
+are narrower. Authored bridge intervals now remove terrain, path, vegetation, and collision so
+the rope and stone spans cross real chasms. Cliff ribbons use warmer high/mid/deep geological
+bands, route-ridge walls have three irregular layers, and the summit destination is an open gate
+with wings, buttresses, threshold, crenellations, towers, banners, and a spire instead of a solid
+wall cuboid. The region surface query was tightened from an enclosing rectangle to a conservative
+rotated ellipse so gameplay height checks do not report false ground beyond the rendered cap.
+
+Final Windows/OpenGL3 capture evidence at 1280×720 is in
+`ralph/reports/CLOUDREACH-PHASE2-0904/`. On the local GTX 1060, the six 24-frame samples recorded
+**215–756 draw calls**, **347,926–6,479,973 primitives**, **215–756 objects**, and **3.05–8.49 ms
+measured frame time**. These are local structural measurements, not ROG Ally claims.
+
+Verification for the final source state:
+
+- Cloudreach world-data selection: **13 tests / 391 assertions / 0 failures**.
+- Grass-field selection: **18 tests / 87,806 assertions / 0 failures**.
+- `tests/smoke_cloudreach_foundation.gd`: **PASS**, including a zero-ground-section assertion over
+  the complete west ropeway interval.
+- `tests/smoke_cloudreach_transition.gd`: **PASS**, Meadows → Cloudreach → Meadows.
+- Six-view Windows GPU capture and contact-sheet assembly: **PASS**.
+
+The required code-blind visual review still returned **No / No**. It recognized the bright sky,
+suspended-land identity, long crossings, coherent palette, and danger-only oxblood, but found the
+world still reads as an early platform/traversal prototype. The three ranked gaps are authored
+lived-in density, finished landform/landmark vocabulary, and lighting/material/atmospheric depth.
+That verdict is preserved in the evidence report and must not be softened.
+
+Exact resume point: keep creatures deferred. Preserve the real chasms, sky, surface family, and
+performance structure. Replace the remaining procedural-primitives look with authored irregular
+cliff strata, terraces, recesses, constructed causeway edges/supports, landmark-specific parts,
+route-side stories, and secondary-scale habitation clusters. Fix the visible seams and summit
+grass/trench intersection, widen the destination reveals, and build several overlapping distance
+layers before recapturing the same six views for external ChatGPT review. Do not advance to Phase
+3 content or call Phase 2 complete until that environment review passes.

@@ -20,11 +20,17 @@ const NATURE_TREES: Array[PackedScene] = [
 	preload("res://assets/environment/stylized_nature/CommonTree_4.gltf"),
 	preload("res://assets/environment/stylized_nature/CommonTree_5.gltf"),
 ]
+const WIND_TREES: Array[PackedScene] = [
+	preload("res://assets/environment/stylized_nature/TwistedTree_2.gltf"),
+	preload("res://assets/environment/stylized_nature/TwistedTree_4.gltf"),
+]
 const NATURE_ROCKS: Array[PackedScene] = [
 	preload("res://assets/environment/stylized_nature/Rock_Medium_1.gltf"),
 	preload("res://assets/environment/stylized_nature/Rock_Medium_2.gltf"),
 	preload("res://assets/environment/stylized_nature/Rock_Medium_3.gltf"),
 ]
+const CLOUDREACH_LEAF_TEXTURE := preload(
+	"res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55_b100.png")
 
 @onready var _player: CharacterBody3D = $Player
 @onready var _camera_rig: Node3D = $CameraRig
@@ -34,6 +40,7 @@ var _visual_config: Dictionary = {}
 var _surfaces: Array[Dictionary] = []
 var _cover_patches: Array[Dictionary] = []
 var _materials: Dictionary = {}
+var _tree_palette_materials: Dictionary = {}
 var _region_count := 0
 var _landmark_count := 0
 var _progression_revision := -1
@@ -99,6 +106,15 @@ func ground_height_at(x: float, z: float) -> float:
 			var half: Vector2 = surface.get("half", Vector2.ZERO)
 			if absf(x - centre.x) <= half.x and absf(z - centre.y) <= half.y:
 				best = maxf(best, float(surface.get("height", -INF)))
+		elif kind == "ellipse":
+			var centre: Vector2 = surface.get("centre", Vector2.ZERO)
+			var half: Vector2 = surface.get("half", Vector2.ONE)
+			var local := Vector2(x - centre.x, z - centre.y).rotated(
+				-float(surface.get("rotation", 0.0)))
+			if half.x > 0.01 and half.y > 0.01 \
+					and local.x * local.x / (half.x * half.x) \
+					+ local.y * local.y / (half.y * half.y) <= 1.0:
+				best = maxf(best, float(surface.get("height", -INF)))
 		elif kind == "segment":
 			var a: Vector3 = surface.get("a", Vector3.ZERO)
 			var b: Vector3 = surface.get("b", Vector3.ZERO)
@@ -129,19 +145,24 @@ func _build_materials() -> void:
 	# keeps the texture scale coherent across cliff walls, caps and sloping
 	# route ribbons without requiring UVs on every generated landform.
 	var surface: Dictionary = _visual_config.get("surface", {})
-	_materials["cliff"] = _textured_material(surface.get("cliff", {}), Color("#b78c70"))
+	var cliff_surface: Dictionary = surface.get("cliff", {})
+	_materials["cliff"] = _textured_material(_surface_tint(cliff_surface, "#c9865f"), Color("#c9865f"))
+	_materials["cliff_high"] = _textured_material(_surface_tint(cliff_surface, "#e3ac79"), Color("#e3ac79"))
+	_materials["cliff_mid"] = _textured_material(_surface_tint(cliff_surface, "#ad704f"), Color("#ad704f"))
+	_materials["cliff_deep"] = _textured_material(_surface_tint(cliff_surface, "#82594a"), Color("#82594a"))
 	_materials["cliff_shadow"] = _material(Color("#3f2b2a"), 1.0)
 	_materials["upland"] = _textured_material(surface.get("upland", {}), Color("#e8dfbf"))
 	_materials["upland_dry"] = _textured_material(surface.get("upland_dry", {}), Color("#e4d5aa"))
 	_materials["path"] = _textured_material(surface.get("path", {}), Color("#caa77f"))
-	_materials["stone"] = _textured_material(surface.get("cliff", {}), Color("#8a8982"))
-	_materials["stone_light"] = _textured_material(surface.get("cliff", {}), Color("#b6aa94"))
+	_materials["stone"] = _textured_material(_surface_tint(cliff_surface, "#906955"), Color("#906955"))
+	_materials["stone_light"] = _textured_material(_surface_tint(cliff_surface, "#cbae82"), Color("#cbae82"))
 	_materials["wood"] = _material(Color("#432d24"), 1.0)
 	_materials["rope"] = _material(Color("#8f7048"), 1.0)
 	_materials["leaf"] = _material(Color("#4f623d"), 0.94)
 	_materials["leaf_gold"] = _material(Color("#8f8744"), 0.94)
 	_materials["tether"] = _material(Color("#651f2b"), 0.82)
-	_materials["heart"] = _emissive_material(Color("#5ee0c2"), 2.6)
+	_materials["heart"] = _emissive_material(Color("#5ee0c2"), 1.35)
+	_materials["wind_veil"] = _wind_veil_material()
 	_materials["cloud"] = _cloud_material()
 	_materials["cloud_bank"] = _emissive_material(Color("#d4e2e5"), 0.12)
 
@@ -192,7 +213,7 @@ func _build_regions() -> void:
 		var node := Node3D.new()
 		node.name = _safe_name(str(spec.get("id", "Region")))
 		root.add_child(node)
-		_mesa(node, "CliffMass", centre, size, _materials["cliff"],
+		var region_mass := _mesa(node, "CliffMass", centre, size, _materials["cliff"],
 			_materials["upland_dry"] if int(spec.get("order", 0)) >= 5 else _materials["upland"], true,
 			int(spec.get("order", 0)))
 		_add_cliff_strata(node, centre, size, top)
@@ -208,7 +229,12 @@ func _build_regions() -> void:
 			"seed": int(spec.get("order", 0)) * 101,
 			"dry": int(spec.get("order", 0)) >= 5,
 		})
-		_surfaces.append({"kind": "rect", "centre": Vector2(centre.x, centre.z), "half": Vector2(size.x, size.z) * 0.5, "height": top})
+		# Match the real rotated irregular crown conservatively. The old enclosing
+		# rectangle reported invisible corner air as ground, which could place a
+		# loaded player or an evidence camera beside a floating island.
+		_surfaces.append({"kind": "ellipse", "centre": Vector2(centre.x, centre.z),
+			"half": Vector2(size.x, size.z) * 0.30,
+			"rotation": region_mass.rotation.y, "height": top})
 		_region_count += 1
 
 
@@ -245,7 +271,10 @@ func _add_satellite_crags(parent: Node3D, centre: Vector3, size: Vector3, top: f
 	# Three asymmetric companions stop each region reading as one isolated stamp
 	# and give the long approach views overlapping silhouettes at different
 	# depths. They are visual geology outside the walkable top, not secret paths.
-	const OFFSETS := [Vector2(-0.58, -0.24), Vector2(0.51, 0.34), Vector2(0.12, -0.62)]
+	# Keep companions lateral/back from each region's main south-to-north
+	# approach. A former front-centre crag hid both Cliffhold and the Summit from
+	# their authored roads, turning destination vistas into blank walls.
+	const OFFSETS := [Vector2(-0.62, -0.12), Vector2(0.60, 0.36)]
 	for i in OFFSETS.size():
 		var offset: Vector2 = OFFSETS[(i + order) % OFFSETS.size()]
 		var crag_top := top - 18.0 - float((i + order) % 3) * 14.0
@@ -255,8 +284,10 @@ func _add_satellite_crags(parent: Node3D, centre: Vector3, size: Vector3, top: f
 			crag_top - crag_height * 0.5,
 			centre.z + offset.y * size.z)
 		_mesa(parent, "SatelliteCrag%d" % i, at,
-			Vector3(size.x * (0.22 + i * 0.035), crag_height, size.z * (0.25 + i * 0.03)),
-			_materials["cliff_shadow"], _materials["stone"], false, order * 7 + i)
+			Vector3(size.x * (0.17 + i * 0.025), crag_height, size.z * (0.19 + i * 0.025)),
+			_materials["cliff_mid"],
+			_materials["upland_dry"] if order >= 5 else _materials["upland"],
+			false, order * 7 + i)
 
 
 func _add_wind_vegetation(parent: Node3D, rect: Rect2, top: float, order: int) -> void:
@@ -274,7 +305,9 @@ func _add_wind_vegetation(parent: Node3D, rect: Rect2, top: float, order: int) -
 		var radius := 0.22 + 0.52 * sqrt(fmod(float(i) * 0.6180339 + float(order) * 0.17, 1.0))
 		var at := Vector3(centre.x + cos(angle) * half.x * radius, top,
 			centre.y + sin(angle) * half.y * radius)
-		var tree := NATURE_TREES[(i + order) % NATURE_TREES.size()].instantiate() as Node3D
+		var tree_scene := WIND_TREES[order % WIND_TREES.size()] if i == 0 \
+			else NATURE_TREES[(i + order) % NATURE_TREES.size()]
+		var tree := tree_scene.instantiate() as Node3D
 		tree.name = "WindTree%d" % i
 		tree.position = at
 		# Keep trunks planted and readable; wind character comes from clustered
@@ -286,8 +319,11 @@ func _add_wind_vegetation(parent: Node3D, rect: Rect2, top: float, order: int) -
 		var scale_value := lerpf(scale_min, scale_max,
 			float(posmod(i * 7 + order * 3, 11)) / 10.0)
 		if i == 0:
-			scale_value = float(nature.get("hero_tree_scale", 2.25))
+			# Twisted trees are natively 16–19 m tall, versus 7–9 m for the
+			# common canopy, so their final multiplier must be smaller.
+			scale_value = 0.82 + float(order % 3) * 0.07
 		tree.scale = Vector3.ONE * scale_value
+		_apply_tree_palette(tree, i + order * 17)
 		parent.add_child(tree)
 		_set_geometry_visibility(tree, float(nature.get("tree_visibility_range_m", 1050.0)))
 	for i in int(nature.get("rock_count", 16)):
@@ -319,6 +355,10 @@ func _build_routes() -> void:
 		for point: Variant in spec.get("polyline", []):
 			points.append(_vec3(point))
 		var width := float(spec.get("width_m", 7.5))
+		var landmass: Dictionary = _visual_config.get("landmass", {})
+		var collision_width := minf(width, float(landmass.get("path_collision_width_m", 7.0)))
+		var visible_width := minf(collision_width - 0.8,
+			float(landmass.get("path_visible_width_m", 4.2)))
 		_build_route_shoulders(root, spec, points, width)
 		var route_name_lower := str(spec.get("id", "")).to_lower()
 		var landing_top: Material = _materials["upland_dry"] if (
@@ -326,7 +366,8 @@ func _build_routes() -> void:
 		) else _materials["upland"]
 		for i in points.size():
 			var pad := points[i]
-			var landing_size := maxf(20.0, width * 3.0)
+			var landing_size := maxf(float(landmass.get("landing_size_m", 16.0)),
+				collision_width * 2.25)
 			_mesa(root, "%s_Ledge%d" % [_safe_name(str(spec.get("id", "Route"))), i],
 				pad - Vector3.UP * 7.0, Vector3(landing_size, 14.0, landing_size),
 				_materials["cliff"], landing_top, false,
@@ -342,8 +383,23 @@ func _build_routes() -> void:
 			_surfaces.append({"kind": "rect", "centre": Vector2(pad.x, pad.z),
 				"half": Vector2.ONE * landing_size * 0.44, "height": pad.y})
 		for i in points.size() - 1:
-			_segment_box(root, "%s_%d" % [_safe_name(str(spec.get("id", "Route"))), i], points[i], points[i + 1], width, 0.8, _materials["path"], true)
-			_surfaces.append({"kind": "segment", "a": points[i], "b": points[i + 1], "half_width": width * 0.5, "height": points[i].y})
+			var route_label := "%s_%d" % [_safe_name(str(spec.get("id", "Route"))), i]
+			var sections := _ground_sections_for_segment(str(spec.get("id", "")),
+				points[i], points[i + 1])
+			for section_index in sections.size():
+				var section: Dictionary = sections[section_index]
+				var section_a: Vector3 = section["a"]
+				var section_b: Vector3 = section["b"]
+				# Keep one forgiving collision ribbon for controller traversal, but
+				# let the visible trail meander and breathe inside it. Bridge intervals
+				# are omitted completely so the authored span and drop are real.
+				_segment_box(root, "%sGround%d" % [route_label, section_index], section_a,
+					section_b, collision_width, 0.72, landing_top, true)
+				_path_ribbon(root, "%sTrail%d" % [route_label, section_index], section_a,
+					section_b, visible_width,
+					i * 97 + section_index * 31 + absi(str(spec.get("id", "Route")).hash()))
+				_surfaces.append({"kind": "segment", "a": section_a, "b": section_b,
+					"half_width": collision_width * 0.5, "height": section_a.y})
 
 
 func _add_landing_nature(parent: Node3D, points: Array[Vector3], index: int,
@@ -363,6 +419,7 @@ func _add_landing_nature(parent: Node3D, points: Array[Vector3], index: int,
 	tree.rotation.y = float(posmod(seed_value * 17, 41)) / 41.0 * TAU
 	tree.rotation.z = deg_to_rad(-0.8 - float(posmod(seed_value, 3)) * 0.6)
 	tree.scale = Vector3.ONE * (1.32 + float(posmod(seed_value * 7, 7)) * 0.085)
+	_apply_tree_palette(tree, seed_value)
 	parent.add_child(tree)
 	var nature: Dictionary = _visual_config.get("nature", {})
 	_set_geometry_visibility(tree, float(nature.get("tree_visibility_range_m", 1050.0)))
@@ -376,33 +433,86 @@ func _build_route_shoulders(root: Node3D, spec: Dictionary, points: Array[Vector
 	var landmass: Dictionary = _visual_config.get("landmass", {})
 	var serial := 0
 	for segment_index in points.size() - 1:
-		var a := points[segment_index]
-		var b := points[segment_index + 1]
+		var original_a := points[segment_index]
+		var original_b := points[segment_index + 1]
 		var half_width := maxf(float(landmass.get("route_shoulder_min_half_width_m", 24.0)),
 			width * float(landmass.get("route_shoulder_path_multiplier", 3.8)))
 		var route_is_dry := route_name.to_lower().contains("upper") \
 			or route_name.to_lower().contains("summit")
-		_route_ridge(shoulder_root, "Ridge%03d" % serial, a, b, half_width,
-			segment_index + int(spec.get("order", 0)) * 17 + serial,
-			_materials["upland_dry"] if route_is_dry else _materials["upland"], landmass)
-		_add_route_edge_nature(shoulder_root, a, b, half_width, serial)
-		var cover_config: Dictionary = _visual_config.get("ground_cover", {})
-		var cover_chunks := maxi(1, int(ceilf(a.distance_to(b)
-			/ float(cover_config.get("route_cover_chunk_m", 120.0)))))
-		for chunk in cover_chunks:
-			var chunk_a := a.lerp(b, float(chunk) / float(cover_chunks))
-			var chunk_b := a.lerp(b, float(chunk + 1) / float(cover_chunks))
-			_cover_patches.append({
-				"kind": "segment", "a": chunk_a, "b": chunk_b,
-				# The ribbon's narrowest generated station is 0.58x. Sampling
-				# inside 0.52x leaves margin even between different-width stations.
-				"half_width": half_width * 0.52,
-				"path_half_width": width * 0.5,
-				"seed": serial * 3701 + chunk * 101 + absi(route_name.hash()),
-				"surface_offset_y": -0.70,
-				"dry": route_is_dry,
-			})
-		serial += 1
+		var sections := _ground_sections_for_segment(str(spec.get("id", "")),
+			original_a, original_b)
+		for section: Dictionary in sections:
+			var a: Vector3 = section["a"]
+			var b: Vector3 = section["b"]
+			_route_ridge(shoulder_root, "Ridge%03d" % serial, a, b, half_width,
+				segment_index + int(spec.get("order", 0)) * 17 + serial,
+				_materials["upland_dry"] if route_is_dry else _materials["upland"], landmass)
+			_add_route_edge_nature(shoulder_root, a, b, half_width, serial)
+			var cover_config: Dictionary = _visual_config.get("ground_cover", {})
+			var cover_chunks := maxi(1, int(ceilf(a.distance_to(b)
+				/ float(cover_config.get("route_cover_chunk_m", 120.0)))))
+			for chunk in cover_chunks:
+				var chunk_a := a.lerp(b, float(chunk) / float(cover_chunks))
+				var chunk_b := a.lerp(b, float(chunk + 1) / float(cover_chunks))
+				_cover_patches.append({
+					"kind": "segment", "a": chunk_a, "b": chunk_b,
+					# The ribbon's narrowest generated station is 0.58x. Sampling
+					# inside 0.52x leaves margin even between different-width stations.
+					"half_width": half_width * 0.52,
+					"path_half_width": width * 0.5,
+					"seed": serial * 3701 + chunk * 101 + absi(route_name.hash()),
+					"surface_offset_y": -0.70,
+					"dry": route_is_dry,
+				})
+			serial += 1
+
+
+## Split an authored ground segment around every bridge assigned to its route.
+## The first foundation pass placed bridge meshes over a continuous land ribbon,
+## so no causeway actually exposed sky or danger. Keeping the cut here makes the
+## same gap authoritative for cliff mass, trail visuals, cover, and collision.
+func _ground_sections_for_segment(route_id: String, a: Vector3, b: Vector3) -> Array[Dictionary]:
+	var delta := b - a
+	var length_squared := delta.length_squared()
+	if length_squared < 0.01:
+		return []
+	var cut_start := 1.0
+	var cut_end := 0.0
+	for raw: Variant in _config.get("bridges", []):
+		if not raw is Dictionary:
+			continue
+		var bridge := raw as Dictionary
+		if str(bridge.get("route_id", "")) != route_id:
+			continue
+		var endpoints: Variant = bridge.get("endpoints", [])
+		if not endpoints is Array or (endpoints as Array).size() < 2:
+			continue
+		var p0 := _vec3((endpoints as Array)[0])
+		var p1 := _vec3((endpoints as Array)[1])
+		var t0 := (p0 - a).dot(delta) / length_squared
+		var t1 := (p1 - a).dot(delta) / length_squared
+		var distance0 := p0.distance_to(a + delta * clampf(t0, 0.0, 1.0))
+		var distance1 := p1.distance_to(a + delta * clampf(t1, 0.0, 1.0))
+		# A bridge can straddle a polyline joint, so each adjacent segment sees
+		# the nearby portion while unrelated segments on the same route do not.
+		if minf(distance0, distance1) > 145.0:
+			continue
+		var margin := 8.0 / maxf(delta.length(), 1.0)
+		var local_start := clampf(minf(t0, t1) - margin, 0.0, 1.0)
+		var local_end := clampf(maxf(t0, t1) + margin, 0.0, 1.0)
+		if local_end <= 0.0 or local_start >= 1.0 or local_end - local_start < 0.015:
+			continue
+		cut_start = minf(cut_start, local_start)
+		cut_end = maxf(cut_end, local_end)
+	var result: Array[Dictionary] = []
+	if cut_end <= cut_start:
+		result.append({"a": a, "b": b})
+		return result
+	if cut_start > 0.035:
+		result.append({"a": a, "b": a.lerp(b, cut_start)})
+	if cut_end < 0.965:
+		result.append({"a": a.lerp(b, cut_end), "b": b})
+	return result
 
 
 func _build_ground_cover() -> void:
@@ -423,6 +533,10 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 	var station_count := clampi(int(ceilf(flat.length() / maxf(spacing, 8.0))) + 1, 3, 28)
 	var left_top: Array[Vector3] = []
 	var right_top: Array[Vector3] = []
+	var left_upper: Array[Vector3] = []
+	var right_upper: Array[Vector3] = []
+	var left_lower: Array[Vector3] = []
+	var right_lower: Array[Vector3] = []
 	var left_bottom: Array[Vector3] = []
 	var right_bottom: Array[Vector3] = []
 	for i in station_count:
@@ -438,8 +552,14 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 			float(config.get("route_cliff_depth_max_m", 92.0)), depth_mix)
 		left_top.append(left)
 		right_top.append(right_edge)
-		left_bottom.append(centre + (left - centre) * 0.72 - Vector3.UP * depth)
-		right_bottom.append(centre + (right_edge - centre) * 0.72 - Vector3.UP * (depth * 0.92))
+		var upper_push := 1.02 + 0.06 * sin(float(i * 7 + seed_value * 5))
+		var lower_push := 0.84 + 0.05 * cos(float(i * 9 + seed_value * 3))
+		left_upper.append(centre + (left - centre) * upper_push - Vector3.UP * depth * 0.28)
+		right_upper.append(centre + (right_edge - centre) * upper_push - Vector3.UP * depth * 0.25)
+		left_lower.append(centre + (left - centre) * lower_push - Vector3.UP * depth * 0.68)
+		right_lower.append(centre + (right_edge - centre) * lower_push - Vector3.UP * depth * 0.64)
+		left_bottom.append(centre + (left - centre) * 0.62 - Vector3.UP * depth)
+		right_bottom.append(centre + (right_edge - centre) * 0.62 - Vector3.UP * (depth * 0.94))
 
 	var mesh := ArrayMesh.new()
 	var top_tool := SurfaceTool.new()
@@ -451,22 +571,44 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 	top_tool.generate_normals()
 	top_tool.commit(mesh)
 
-	var side_tool := SurfaceTool.new()
-	side_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
-	side_tool.set_material(_materials["cliff"])
+	var upper_tool := SurfaceTool.new()
+	upper_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	upper_tool.set_material(_materials["cliff_high"])
 	for i in station_count - 1:
-		_add_surface_triangle(side_tool, left_top[i], left_bottom[i], left_top[i + 1])
-		_add_surface_triangle(side_tool, left_bottom[i], left_bottom[i + 1], left_top[i + 1])
-		_add_surface_triangle(side_tool, right_top[i], right_top[i + 1], right_bottom[i])
-		_add_surface_triangle(side_tool, right_bottom[i], right_top[i + 1], right_bottom[i + 1])
+		_add_surface_triangle(upper_tool, left_top[i], left_upper[i], left_top[i + 1])
+		_add_surface_triangle(upper_tool, left_upper[i], left_upper[i + 1], left_top[i + 1])
+		_add_surface_triangle(upper_tool, right_top[i], right_top[i + 1], right_upper[i])
+		_add_surface_triangle(upper_tool, right_upper[i], right_top[i + 1], right_upper[i + 1])
+	upper_tool.generate_normals()
+	upper_tool.commit(mesh)
+
+	var middle_tool := SurfaceTool.new()
+	middle_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	middle_tool.set_material(_materials["cliff_mid"])
+	for i in station_count - 1:
+		_add_surface_triangle(middle_tool, left_upper[i], left_lower[i], left_upper[i + 1])
+		_add_surface_triangle(middle_tool, left_lower[i], left_lower[i + 1], left_upper[i + 1])
+		_add_surface_triangle(middle_tool, right_upper[i], right_upper[i + 1], right_lower[i])
+		_add_surface_triangle(middle_tool, right_lower[i], right_upper[i + 1], right_lower[i + 1])
+	middle_tool.generate_normals()
+	middle_tool.commit(mesh)
+
+	var deep_tool := SurfaceTool.new()
+	deep_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	deep_tool.set_material(_materials["cliff_deep"])
+	for i in station_count - 1:
+		_add_surface_triangle(deep_tool, left_lower[i], left_bottom[i], left_lower[i + 1])
+		_add_surface_triangle(deep_tool, left_bottom[i], left_bottom[i + 1], left_lower[i + 1])
+		_add_surface_triangle(deep_tool, right_lower[i], right_lower[i + 1], right_bottom[i])
+		_add_surface_triangle(deep_tool, right_bottom[i], right_lower[i + 1], right_bottom[i + 1])
 	# End faces prevent the ribbon's first/last station reading as a sliced box.
-	_add_surface_triangle(side_tool, left_top[0], right_top[0], left_bottom[0])
-	_add_surface_triangle(side_tool, left_bottom[0], right_top[0], right_bottom[0])
+	_add_surface_triangle(deep_tool, left_top[0], right_top[0], left_bottom[0])
+	_add_surface_triangle(deep_tool, left_bottom[0], right_top[0], right_bottom[0])
 	var last := station_count - 1
-	_add_surface_triangle(side_tool, left_top[last], left_bottom[last], right_top[last])
-	_add_surface_triangle(side_tool, left_bottom[last], right_bottom[last], right_top[last])
-	side_tool.generate_normals()
-	side_tool.commit(mesh)
+	_add_surface_triangle(deep_tool, left_top[last], left_bottom[last], right_top[last])
+	_add_surface_triangle(deep_tool, left_bottom[last], right_bottom[last], right_top[last])
+	deep_tool.generate_normals()
+	deep_tool.commit(mesh)
 
 	var ridge := MeshInstance3D.new()
 	ridge.name = label
@@ -483,6 +625,42 @@ func _add_surface_triangle(tool: SurfaceTool, a: Vector3, b: Vector3, c: Vector3
 	tool.add_vertex(b)
 	tool.set_uv(Vector2(c.x, c.z) * 0.04)
 	tool.add_vertex(c)
+
+
+func _path_ribbon(parent: Node3D, label: String, a: Vector3, b: Vector3,
+		width: float, seed_value: int) -> void:
+	var flat := Vector3(b.x - a.x, 0.0, b.z - a.z)
+	if flat.length_squared() < 0.01:
+		return
+	var right := Vector3.UP.cross(flat.normalized()).normalized()
+	var up := _segment_basis(a, b).y
+	var stations := clampi(int(ceilf(flat.length() / 14.0)) + 1, 5, 42)
+	var left: Array[Vector3] = []
+	var right_edge: Array[Vector3] = []
+	for i in stations:
+		var t := float(i) / float(stations - 1)
+		var envelope := sin(PI * t)
+		var wander := sin(t * TAU * 1.35 + float(seed_value % 29)) * width * 0.24 * envelope
+		wander += sin(t * TAU * 3.1 + float(seed_value % 11)) * width * 0.08 * envelope
+		var half_here := width * (0.43 + 0.08 * sin(t * TAU * 2.4 + float(seed_value % 17)))
+		var centre := a.lerp(b, t) + right * wander + up * 0.06
+		left.append(centre - right * half_here)
+		right_edge.append(centre + right * half_here)
+	var mesh := ArrayMesh.new()
+	var tool := SurfaceTool.new()
+	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	tool.set_material(_materials["path"])
+	for i in stations - 1:
+		_add_surface_triangle(tool, left[i], left[i + 1], right_edge[i])
+		_add_surface_triangle(tool, right_edge[i], left[i + 1], right_edge[i + 1])
+	tool.generate_normals()
+	tool.commit(mesh)
+	var trail := MeshInstance3D.new()
+	trail.name = label
+	trail.mesh = mesh
+	trail.visibility_range_end = 1200.0
+	trail.visibility_range_end_margin = 100.0
+	parent.add_child(trail)
 
 
 func _add_route_edge_nature(parent: Node3D, a: Vector3, b: Vector3,
@@ -524,6 +702,7 @@ func _add_route_edge_nature(parent: Node3D, a: Vector3, b: Vector3,
 				deg_to_rad(-0.4 - float(grove_tree) * 1.1))
 			tree.scale = Vector3.ONE * (1.28
 				+ float(posmod(serial * 5 + cluster * 3 + grove_tree * 3, 8)) * 0.085)
+			_apply_tree_palette(tree, serial * 31 + cluster * 7 + grove_tree)
 			parent.add_child(tree)
 			_set_geometry_visibility(tree, float(nature.get("tree_visibility_range_m", 1050.0)))
 
@@ -535,6 +714,41 @@ func _set_geometry_visibility(root_node: Node, distance: float) -> void:
 		geometry.visibility_range_end_margin = minf(120.0, distance * 0.14)
 	for child: Node in root_node.get_children():
 		_set_geometry_visibility(child, distance)
+
+
+## Reuse the Meadows' desaturated green leaf sheet on the installed Quaternius
+## trees. The source twisted-tree sheet is crimson and the raw common sheet is
+## fluorescent; both break the project's one-nature-family palette. Surface
+## overrides preserve the imported meshes, LOD chains, alpha mode and shadows.
+func _apply_tree_palette(root_node: Node, seed_value: int) -> void:
+	if root_node is MeshInstance3D:
+		var instance := root_node as MeshInstance3D
+		if instance.mesh != null:
+			for surface in instance.mesh.get_surface_count():
+				var source := instance.mesh.surface_get_material(surface) as StandardMaterial3D
+				if source == null:
+					continue
+				var key_name := source.resource_name.to_lower()
+				if not key_name.contains("leaves") and not key_name.contains("bark"):
+					continue
+				var variant := posmod(seed_value, 3)
+				var cache_key := "%s|%d" % [source.resource_path if source.resource_path != "" \
+					else source.resource_name, variant]
+				var material := _tree_palette_materials.get(cache_key) as StandardMaterial3D
+				if material == null:
+					material = source.duplicate(true) as StandardMaterial3D
+					if key_name.contains("leaves"):
+						material.albedo_texture = CLOUDREACH_LEAF_TEXTURE
+						material.albedo_color = [Color("#eef1d5"), Color("#b9cbb5"),
+							Color("#ded39a")][variant]
+					else:
+						material.albedo_color = [Color("#d4bc9e"), Color("#bda68f"),
+							Color("#cbb08c")][variant]
+					material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+					_tree_palette_materials[cache_key] = material
+				instance.set_surface_override_material(surface, material)
+	for child: Node in root_node.get_children():
+		_apply_tree_palette(child, seed_value)
 
 
 func _build_bridges() -> void:
@@ -634,7 +848,7 @@ func _build_progression_gates() -> void:
 		veil_mesh.size = Vector3(opening_width, opening_height, 0.12)
 		veil.mesh = veil_mesh
 		veil.position.y = opening_height * 0.5
-		veil.material_override = _materials["heart"]
+		veil.material_override = _materials["wind_veil"]
 		gate.add_child(veil)
 		_progression_gates.append({"flag": required, "shape": shape_node, "veil": veil})
 
@@ -871,13 +1085,32 @@ func _build_sky_shrine(root: Node3D) -> void:
 
 
 func _build_summit_stronghold(root: Node3D) -> void:
-	_box(root, "SummitKeep", Vector3(0.0, 15.0, 0.0), Vector3(42.0, 30.0, 34.0), _materials["stone"], true)
-	_box(root, "UpperKeep", Vector3(0.0, 34.0, -2.0), Vector3(25.0, 11.0, 22.0), _materials["stone_light"], true)
+	# Two articulated wings and a high gate bridge replace the solid cuboid that
+	# filled the whole final-approach frame. The open central throat is readable
+	# from the road and gives the eventual pre-boss route a physical entrance.
+	for side: float in [-1.0, 1.0]:
+		_box(root, "SummitWing", Vector3(side * 13.5, 13.0, 0.0),
+			Vector3(15.0, 26.0, 34.0), _materials["stone"], true)
+		_box(root, "WingButtress", Vector3(side * 22.0, 7.5, 8.0),
+			Vector3(4.0, 15.0, 10.0), _materials["cliff_mid"], true)
+	_box(root, "GateBridge", Vector3(0.0, 25.0, 0.0),
+		Vector3(14.0, 7.0, 34.0), _materials["stone_light"], true)
+	_box(root, "UpperKeep", Vector3(0.0, 36.0, -3.0),
+		Vector3(24.0, 15.0, 22.0), _materials["stone_light"], true)
+	_box(root, "GateThreshold", Vector3(0.0, 0.6, -19.0),
+		Vector3(9.0, 1.2, 12.0), _materials["path"], true)
 	for corner in [Vector3(-24.0, 17.0, -20.0), Vector3(24.0, 17.0, -20.0), Vector3(-24.0, 17.0, 20.0), Vector3(24.0, 17.0, 20.0)]:
 		_cylinder(root, "SummitTower", corner, 6.5, 34.0, _materials["stone"])
 		_cylinder(root, "TowerCap", corner + Vector3.UP * 18.5, 8.0, 3.0, _materials["tether"])
-	_cylinder(root, "TetherSpire", Vector3(0.0, 49.0, -2.0), 2.8, 20.0, _materials["tether"])
-	_box(root, "TetherCrown", Vector3(0.0, 41.0, -2.0), Vector3(30.0, 2.2, 26.0), _materials["tether"], false)
+	for x in [-10.0, -3.3, 3.3, 10.0]:
+		_box(root, "Crenellation", Vector3(x, 45.0, -3.0),
+			Vector3(3.5, 3.5, 24.0), _materials["stone"], false)
+	for side: float in [-1.0, 1.0]:
+		_box(root, "TetherBanner", Vector3(side * 8.5, 22.0, -17.3),
+			Vector3(3.8, 11.0, 0.28), _materials["tether"], false)
+	_cylinder(root, "TetherSpire", Vector3(0.0, 55.0, -3.0), 2.3, 22.0, _materials["tether"])
+	_box(root, "TetherCrown", Vector3(0.0, 47.0, -3.0),
+		Vector3(29.0, 2.2, 24.0), _materials["tether"], false)
 
 
 func _build_wayfinder(root: Node3D) -> void:
@@ -992,7 +1225,8 @@ func _mesa(
 	# than a row of identical hanging prisms.
 	var sides := 14 + posmod(seed_value, 4)
 	var top_ring: Array[Vector3] = []
-	var middle_ring: Array[Vector3] = []
+	var upper_ring: Array[Vector3] = []
+	var lower_ring: Array[Vector3] = []
 	var bottom_ring: Array[Vector3] = []
 	for i in sides:
 		var angle := TAU * float(i) / float(sides)
@@ -1000,10 +1234,13 @@ func _mesa(
 		irregular += 0.035 * cos(float(i * 13 + seed_value * 3))
 		var top_point := Vector3(cos(angle) * size.x * 0.47 * irregular,
 			size.y * 0.5, sin(angle) * size.z * 0.47 * irregular)
-		var middle_push := 0.96 + 0.10 * sin(float(i * 5 + seed_value * 19))
+		var upper_push := 1.02 + 0.10 * sin(float(i * 5 + seed_value * 19))
+		var lower_push := 0.84 + 0.08 * cos(float(i * 9 + seed_value * 7))
 		top_ring.append(top_point)
-		middle_ring.append(Vector3(top_point.x * middle_push, size.y * 0.02,
-			top_point.z * middle_push))
+		upper_ring.append(Vector3(top_point.x * upper_push, size.y * 0.20,
+			top_point.z * upper_push))
+		lower_ring.append(Vector3(top_point.x * lower_push, -size.y * 0.20,
+			top_point.z * lower_push))
 		bottom_ring.append(Vector3(top_point.x * (0.66 + 0.06 * sin(float(i * 3 + seed_value))),
 			-size.y * 0.5, top_point.z * (0.66 + 0.05 * cos(float(i * 5 - seed_value)))))
 
@@ -1019,17 +1256,35 @@ func _mesa(
 	top_tool.generate_normals()
 	top_tool.commit(mesh)
 
-	var side_tool := SurfaceTool.new()
-	side_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
-	side_tool.set_material(side_material)
+	var upper_tool := SurfaceTool.new()
+	upper_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	upper_tool.set_material(_materials["cliff_high"] if side_material != _materials["cliff_shadow"] else side_material)
 	for i in sides:
 		var next := (i + 1) % sides
-		_add_surface_triangle(side_tool, top_ring[i], middle_ring[i], top_ring[next])
-		_add_surface_triangle(side_tool, middle_ring[i], middle_ring[next], top_ring[next])
-		_add_surface_triangle(side_tool, middle_ring[i], bottom_ring[i], middle_ring[next])
-		_add_surface_triangle(side_tool, bottom_ring[i], bottom_ring[next], middle_ring[next])
-	side_tool.generate_normals()
-	side_tool.commit(mesh)
+		_add_surface_triangle(upper_tool, top_ring[i], upper_ring[i], top_ring[next])
+		_add_surface_triangle(upper_tool, upper_ring[i], upper_ring[next], top_ring[next])
+	upper_tool.generate_normals()
+	upper_tool.commit(mesh)
+
+	var middle_tool := SurfaceTool.new()
+	middle_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	middle_tool.set_material(_materials["cliff_mid"] if side_material != _materials["cliff_shadow"] else side_material)
+	for i in sides:
+		var next := (i + 1) % sides
+		_add_surface_triangle(middle_tool, upper_ring[i], lower_ring[i], upper_ring[next])
+		_add_surface_triangle(middle_tool, lower_ring[i], lower_ring[next], upper_ring[next])
+	middle_tool.generate_normals()
+	middle_tool.commit(mesh)
+
+	var lower_tool := SurfaceTool.new()
+	lower_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	lower_tool.set_material(_materials["cliff_deep"] if side_material != _materials["cliff_shadow"] else side_material)
+	for i in sides:
+		var next := (i + 1) % sides
+		_add_surface_triangle(lower_tool, lower_ring[i], bottom_ring[i], lower_ring[next])
+		_add_surface_triangle(lower_tool, bottom_ring[i], bottom_ring[next], lower_ring[next])
+	lower_tool.generate_normals()
+	lower_tool.commit(mesh)
 
 	var mass := MeshInstance3D.new()
 	mass.name = "StratifiedCliffBody"
@@ -1111,11 +1366,25 @@ func _textured_material(raw: Variant, fallback_tint: Color) -> StandardMaterial3
 	return material
 
 
+func _surface_tint(raw: Dictionary, tint: String) -> Dictionary:
+	var result := raw.duplicate(true)
+	result["tint"] = tint
+	return result
+
+
 func _emissive_material(colour: Color, energy: float) -> StandardMaterial3D:
 	var material := _material(colour, 0.48)
 	material.emission_enabled = true
 	material.emission = colour
 	material.emission_energy_multiplier = energy
+	return material
+
+
+func _wind_veil_material() -> StandardMaterial3D:
+	var material := _emissive_material(Color(0.33, 0.78, 0.84, 0.24), 0.55)
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	material.albedo_color.a = 0.24
 	return material
 
 

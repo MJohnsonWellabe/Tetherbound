@@ -24,15 +24,15 @@ const VIEWS := [
 	},
 	{
 		"name": "02-broken-causeways",
-		"stand": Vector2(-320.0, 1040.0),
-		"target": Vector3(-485.0, 338.0, 1320.0),
-		"pitch_deg": 4.0,
+		"stand": Vector2(-540.0, 1280.0),
+		"target": Vector3(-450.0, 342.0, 1360.0),
+		"pitch_deg": 2.0,
 	},
 	{
 		"name": "03-windscar-ravine",
-		"stand": Vector2(-90.0, 2385.0),
-		"target": Vector3(-260.0, 500.0, 2680.0),
-		"pitch_deg": 0.0,
+		"stand": Vector2(-520.0, 2720.0),
+		"target": Vector3(-300.0, 460.0, 3100.0),
+		"pitch_deg": 3.0,
 	},
 	{
 		"name": "04-high-roost-before-fly",
@@ -42,15 +42,15 @@ const VIEWS := [
 	},
 	{
 		"name": "05-upper-cloudreach-cliffhold",
-		"stand": Vector2(-720.0, 3680.0),
+		"stand": Vector2(-400.0, 3890.0),
 		"target": Vector3(-340.0, 830.0, 3970.0),
-		"pitch_deg": 4.0,
+		"pitch_deg": 2.0,
 	},
 	{
 		"name": "06-summit-final-approach",
-		"stand": Vector2(-180.0, 4720.0),
-		"target": Vector3(100.0, 1190.0, 5350.0),
-		"pitch_deg": 8.0,
+		"stand": Vector2(100.0, 5290.0),
+		"target": Vector3(100.0, 1215.0, 5350.0),
+		"pitch_deg": 5.0,
 	},
 ]
 
@@ -76,6 +76,7 @@ func _run() -> void:
 	var rig := world.get_node_or_null(^"CameraRig") as SpringArm3D
 	var camera := world.get_node_or_null(^"CameraRig/Camera3D") as Camera3D
 	var hud := world.get_node_or_null(^"PlaygroundHUD") as CanvasLayer
+	var look := world.get_node_or_null(^"WorldLook")
 	if player == null or rig == null or camera == null:
 		push_error("Cloudreach capture: production player/camera shell is missing")
 		quit(1)
@@ -88,6 +89,9 @@ func _run() -> void:
 	# player, camera and world remain the real scene.
 	if hud != null:
 		hud.visible = false
+	if look != null:
+		look.call("set_clock_frozen", true)
+		look.call("apply_time", "day")
 	rig.set_process(false)
 	rig.set_physics_process(false)
 	rig.spring_length = 5.8

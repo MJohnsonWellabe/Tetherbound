@@ -30,6 +30,11 @@ func _run() -> void:
 	var bridges := world.get_node_or_null(^"SuspendedBridges")
 	_expect(bridges != null and bridges.get_child_count() == 5,
 		"five authored bridges were not constructed", failures)
+	var bridge_gap_sections: Array = world.call("_ground_sections_for_segment",
+		"causeway_west_loop", Vector3(-1200.0, 420.0, 1700.0),
+		Vector3(-760.0, 400.0, 2050.0))
+	_expect(bridge_gap_sections.is_empty(),
+		"west ropeway still has continuous ground beneath its bridge", failures)
 	var routes := world.get_node_or_null(^"AuthoredRoutes")
 	_expect(routes != null and routes.get_child_count() > 20,
 		"ground route geometry is missing", failures)

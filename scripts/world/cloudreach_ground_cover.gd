@@ -19,7 +19,10 @@ var _bush_instances := 0
 
 func build(patches: Array[Dictionary], config: Dictionary) -> void:
 	var factory := GRASS_FIELD_SCRIPT.new()
-	var grass_mesh := factory.call("surface_tuft_mesh", 4, 3) as ArrayMesh
+	# Seven-blade groups read as tufted ground cover at gameplay distance. The
+	# former four-blade/high-density combination resolved into uniform vertical
+	# noise even though its instance count was high.
+	var grass_mesh := factory.call("surface_tuft_mesh", 7, 3) as ArrayMesh
 	var flower_mesh := factory.call("surface_cover_mesh", "flower") as ArrayMesh
 	var bush_mesh := factory.call("surface_cover_mesh", "bush") as ArrayMesh
 	factory.free()
@@ -107,7 +110,7 @@ func _build_patch_tier(parent: Node3D, label: String, patch: Dictionary, mesh: A
 		if tier == 0:
 			# The shared Meadows tuft mesh is authored at real blade width. Height
 			# variation must not also shrink every blade/spread into sub-pixel lines.
-			width_scale = rng.randf_range(0.94, 1.22)
+			width_scale = rng.randf_range(1.05, 1.38)
 		var basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU)).scaled(
 			Vector3(width_scale, scale_value, width_scale))
 		transforms.append(Transform3D(basis, at - origin))

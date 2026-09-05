@@ -123,3 +123,24 @@ acceptance. Creatures were deliberately deferred so the environment could be jud
 Evidence and the full critique are in `ralph/reports/CLOUDREACH-PHASE2-0904/`. Exact resume:
 reshape the terrain and route composition first, then refine materials/lighting/vegetation and
 recapture the same six views for another external review.
+
+## Cloudreach environment corrective pass 2 — 2026-09-04
+
+This additional checkpoint keeps creatures deferred and is still **not accepted**. Cloudreach now
+uses the Meadows cloud-sky/day look, denser seven-blade procedural grass plus flowers and bushes,
+olive-palette production tree assets, warmer three-band cliff ribbons, narrower paths, and true
+terrain/collision gaps beneath authored bridge spans. The summit stronghold is now an open,
+articulated gate complex rather than a solid block.
+
+Final six-view Windows/OpenGL3 evidence measured **215–756 draws** and **3.05–8.49 ms** per sampled
+frame on the local GTX 1060 at 1280×720. World-data and grass-field unit selections passed, as did
+the foundation smoke, complete Meadows → Cloudreach → Meadows transition smoke, GPU capture, and
+contact-sheet assembly.
+
+The code-blind judge again returned **No / No**. The environment has a clearer suspended-highland
+identity, but still reads as a traversal prototype because it lacks authored lived-in density,
+finished geological/architectural vocabulary, and layered lighting/material/atmospheric depth.
+Exact resume: retain the current grass/trees/sky/real-chasm foundation; replace the remaining
+primitive landforms and landmarks with irregular strata, terraces, built edges/supports,
+human-scale detail clusters, and multiple distance layers; repair the visible seams and summit
+grass/trench intersection; then recapture the same six views for external ChatGPT acceptance.
