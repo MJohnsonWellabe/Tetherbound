@@ -6,7 +6,8 @@ Lane brief: `ralph/briefs/0904/W12-COMPANION.md` (on
 `docs/owner/OWNER_DIRECTIVES_2026-09-04-C.md` §5.
 
 Branch: `ralph/W12-COMPANION-0904`, from `origin/main` at `ef16544f`.
-Final commit: **`7086b639`** (this report's own commit follows it).
+Final commit: **`49076394`**. Unit tests re-run green at that commit
+(27 tests, 144 assertions, 0 failed).
 
 **Read section 6 before landing this.** The camp state is capped at a
 conservative value with its ceiling recorded, and the frame committed for it
@@ -54,7 +55,7 @@ New:
 |---|---|
 | `scripts/creatures/companion_presence.gd` | The layer: states, cooldowns, the context guard, bond scaling, procedural pose composition, the head-turn modifier. |
 | `data/config/companion_presence.json` | Every threshold, cooldown, distance, duration and amplitude, with the reasoning in comments. |
-| `tests/test_companion_presence.gd` | 26 tests over a real rigged follower body. |
+| `tests/test_companion_presence.gd` | 27 tests over a real rigged follower body. |
 | `tools/_capture_companion_rig_inventory.gd` | What clips and bones the installed rigs actually carry. |
 | `tools/_capture_companion_moments.gd` | Photographs the three moments in the real Meadows as paired frames. |
 | `docs/decisions/D74-companion-reactions-are-procedural-over-the-model-pivot.md` | The three design calls this lane made. |
@@ -106,7 +107,7 @@ D74 records this and the two other calls in full.
 godot --headless --path . --script tests/run_tests.gd -- --only=test_companion_presence.gd
 ```
 
-**26 tests, 132 assertions, 0 failed.**
+**27 tests, 144 assertions, 0 failed.**
 
 The fixture is real, not a mock of the layer: `scenes/creatures/creature.tscn`
 with `follower_creature.gd` on it and the actual terrapup GLB, its
