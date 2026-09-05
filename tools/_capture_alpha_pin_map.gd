@@ -17,7 +17,17 @@ extends SceneTree
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const OUT_DIR := "res://shots/_diag"
-const SETTLE_FRAMES := 240
+## Waited for AFTER the AlphaPins node exists, not instead of waiting for it.
+const SETTLE_FRAMES := 120
+## `playground_world.gd::_ready()` awaits process frames throughout and only
+## reaches its `add_child(ALPHA_PINS.new())` line after `_build_settlement()`,
+## which internally builds the village, the trainers, the stronghold and the
+## stronghold climax. A fixed frame budget is not a way to wait for that: the
+## first run of this file spent 240 physics frames and was still inside
+## `_build_settlement()`, so it looked for the node before the world had made
+## one and reported "no alpha pinned" for a feature that was working. Wait for
+## the NODE.
+const READY_TIMEOUT_MS := 2400000
 
 const TARGET := Vector3(-180.0, 0.0, 2250.0)
 ## 120 m short of the cluster centre, on the corridor axis: comfortably inside
@@ -41,6 +51,19 @@ func _run() -> void:
 	var world: Node = packed.instantiate()
 	root.add_child(world)
 	current_scene = world
+
+	# Wait until the world's own _ready() has reached its alpha-pin hook.
+	var pins: Node = null
+	var deadline := Time.get_ticks_msec() + READY_TIMEOUT_MS
+	while pins == null and Time.get_ticks_msec() < deadline:
+		await process_frame
+		pins = _find_alpha_pins(world)
+	if pins == null:
+		push_error("the world never added an AlphaPins node — playground_world.gd's hook line did not run")
+		quit(1)
+		return
+	print("[probe] AlphaPins node appeared after %.1f s of world boot" % [
+		(Time.get_ticks_msec() - (deadline - READY_TIMEOUT_MS)) / 1000.0])
 	for i in SETTLE_FRAMES:
 		await physics_frame
 
@@ -64,14 +87,32 @@ func _run() -> void:
 		map_state.mark_visited(here.lerp(STAND, float(step + 1) / 60.0))
 	map_state.reveal_circle(STAND, 220.0)
 
-	player.global_position = STAND
-	# Let the real AlphaPins node's own clock reach a tick (check_interval_s is
-	# 0.5 s of accumulated delta, not a frame count — see smoke_alpha_pins.gd).
-	var until := Time.get_ticks_msec() + 2000
+	print("[probe] its player_path=%s resolves to %s" % [
+		str(pins.get("player_path")), str(pins.get_node_or_null(pins.get("player_path")))])
+	print("[probe] clusters loaded: %d" % (pins.get("_clusters") as Array).size())
+
+	# Hold the body at the stand point for the whole wait. A one-shot assignment
+	# cannot tell "the node never ticked" apart from "something moved the body
+	# back", and those want different fixes.
+	var until := Time.get_ticks_msec() + 6000
+	var frames := 0
 	while Time.get_ticks_msec() < until:
+		player.global_position = STAND
 		await process_frame
+		frames += 1
+	print("[probe] %d frames held at %s; body ended at %s" % [
+		frames, str(STAND), str(player.global_position)])
 
 	var pinned: int = int(map_state.call("alpha_pin_count"))
+	if pinned <= 0:
+		# Cross-check: drive the node's own tick() by hand. If THIS pins, the
+		# logic is right and the node is simply not being processed; if it does
+		# not, the logic itself is wrong in a real world.
+		pins.call("tick")
+		var after: int = int(map_state.call("alpha_pin_count"))
+		print("[probe] a hand-driven tick() pinned %d — so the node's _process %s" % [
+			after, "is not running" if after > 0 else "is not the problem"])
+		pinned = after
 	if pinned <= 0:
 		push_error("no alpha pinned from %s — nothing to capture" % str(STAND))
 		quit(1)
@@ -107,3 +148,13 @@ func _run() -> void:
 	print("wrote %s at %dx%d with %d pin(s)" % [path, image.get_width(), image.get_height(), pinned])
 	print("Software rendering. Frame times from this harness are NOT a performance measurement.")
 	quit(0)
+
+
+## The node `playground_world.gd` adds with `add_child(ALPHA_PINS.new())`, which
+## therefore carries an engine-assigned name and can only be found by its script.
+func _find_alpha_pins(world: Node) -> Node:
+	for child: Node in world.get_children():
+		var script: Script = child.get_script() as Script
+		if script != null and str(script.resource_path).ends_with("alpha_pins.gd"):
+			return child
+	return null

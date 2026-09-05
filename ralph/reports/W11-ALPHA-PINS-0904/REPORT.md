@@ -200,3 +200,44 @@ full corridor scatter — `smoke_save_persistence` above spent several minutes i
 `assets/ui/icons/map/alpha.png` **byte-identically** (`cmp` clean), so the committed asset
 is the generator's output and not a hand-edited divergence.
 
+---
+
+## 4. The acceptance frame
+
+`tools/_capture_alpha_pin_map.gd`, run as COMMON.md prescribes — under `xvfb`, with a
+rendering driver and **never** `--headless`:
+
+```
+xvfb-run -a -s "-screen 0 1280x800x24" godot --path . \
+  --rendering-driver opengl3 --resolution 1280x800 \
+  --script tools/_capture_alpha_pin_map.gd
+```
+
+### A process finding, recorded because it cost two world boots
+
+The first two runs reported **"no alpha pinned — nothing to capture"**, which reads exactly
+like the feature being broken in the shipped world scene. It was not. The capture was
+wrong.
+
+`playground_world.gd::_ready()` is not synchronous — it `await`s process frames while
+Terrain3D builds its data, and its `add_child(ALPHA_PINS.new())` hook sits at line 601,
+*after* `_build_settlement()`, which internally builds the village, the props, the NPCs,
+the trainers, the stronghold and the stronghold climax. The capture, copying
+`tools/capture_map_tab.gd`, waited a fixed **240 physics frames** and then looked for the
+pin. On software GL that budget expires while `_ready()` is still inside
+`_build_settlement()` — the run's own last log line was
+`[trainers] placed 1 trainer(s) for group 'stronghold_climax'` — so the probe was looking
+for a node the world had not made yet, and blamed the feature.
+
+**A fixed frame budget is not a way to wait for an `await`ing `_ready()`.** The fix is to
+wait for the *node*: the capture now polls `world.get_children()` for the child whose
+script is `alpha_pins.gd` (the hook uses `add_child(ALPHA_PINS.new())`, so the node carries
+an engine-assigned name and can only be found by its script) before it does anything else,
+and only then places the body and waits for a tick. Any other probe of a world-scene node
+added late in that `_ready()` has the same trap waiting for it.
+
+The capture also now **holds** the body at the stand point for every frame of the wait
+rather than assigning the position once, so "the node never ticked" and "something moved
+the body back" cannot be confused, and it cross-checks with a hand-driven `tick()` so a
+failure says whether the logic or the processing is at fault.
+
