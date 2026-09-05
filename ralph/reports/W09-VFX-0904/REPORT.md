@@ -83,7 +83,42 @@ shots written, none failed, rc=0, both rounds.
 
 ## Frames and the blind judge
 
-_(round 1 and round 2 sections filled below)_
+Two rounds, both captured by `tools/_capture_vfx_moments.gd` under
+`xvfb-run -a -s "-screen 0 1280x720x24" godot --path . --rendering-driver opengl3 --resolution 1280x720`,
+day/clear pinned and frozen, the tree paused for every shutter. Ten frames a round (five
+moments x HUD/clean), 0 failed, rc=0 both times. Sheets: `_sheet_round1.png`,
+`_sheet_round2.png`. Verdicts: `JUDGE_round1.md`, `JUDGE_round2.md`.
+
+**Round 1** — the judge (blind, opus, given only the sheet, the frames and `docs/reference/`)
+said the effects were invisible at the size the eye reads them, that there was no hot colour
+anywhere, and that the level-up ring read as a stun rather than a reward. Three of its
+findings were not this lane's and are routed to the coordinator: the oxblood ring on a
+friendly is `telegraph_glow.gd` / `combat.json`'s `telegraph.colour`; the flat khaki disc and
+hard white spikes at the catch are `catching.json`'s existing `vfx.caught` burst sized for the
+resolve close-up; the orb prop, the hit/KO reaction animations and the capture absorb are art
+and animation, not tuning.
+
+**Round 2** — retuned against that verdict: element tints saturated 1.7x, motes born white-hot
+and cooling to the element, a dark contrast halo behind every mote and streak, spark raised to
+22 motes at 0.28 m with a 0.65 m warm core, damage scale 1.2-2.0x, level-up rings gold and
+widened to 2.3x body radius, the beam rebuilt as a real column, catch sparkle gold at 26 motes
+shot 16 ticks in once the existing white flash has faded.
+
+**Measured, by a rule fixed before the render** (`tools/_probe_vfx_frame_energy.gd`, whole-frame
+pixel counts; `00-squared-up` is the same fight and camera with nothing landing, so each row is
+what the effect adds over the creature's own bright coat):
+
+| Round-2 clean frame | bright-warm px | over the control |
+|---|---|---|
+| `00-squared-up` (control) | 8,255 | - |
+| `01-hit-spark` | 20,509 | **+12,254** |
+| `02-knockout` | 34,857 | **+26,602** |
+| `03-level-up` | 25,888 | **+17,633** |
+
+For scale, the number that opened this file's case: the blind critic counted 10 bright-warm
+pixels at `combat/05-quick-attack-lands` and 24,623 at `palworld-01`. `04-catch-success` is
+excluded from the table because the catch resolve camera cuts to an orb close-up, so it shares
+no framing with the control.
 
 ## Perf
 
