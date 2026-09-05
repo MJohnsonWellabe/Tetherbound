@@ -445,6 +445,38 @@ engage to press. On `main`'s S06 the old bare press would have reported that gre
 W21-HARNESS-FIGHTS-0904's unmerged branch puts a by-identity Revive ladder in front of every one
 of these fights, which is the fix; this is independent evidence that it is needed.
 
+### 3.2 The rest of that S06 run, and a hard freeze at the Warrens anchor
+
+The run completed rather than derailed: **99 steps, 67 PASS, 21 FAIL, 11 DELEGATED,
+`complete: true`, no derail** (`ralph/reports/gate-f-run-N10-S06/S06/`; telemetry payloads stay
+local per `.gitignore`'s evidence rule, the written verdicts are committed). Most of the tail is
+one thing, and it is not the quarry:
+
+`S06-50` **reached** the protocol's Warrens anchor `(-420, 2470)` — and the body ends at
+`(-406.0, -6.4, 2488)`. Every walk after it fails from that identical position: `S06-55`
+(7,200 frames), `S06-58`, `S06-62`, `S06-68`, `S06-73` and the rest, ~19,200 walking frames
+between them, each reporting *"0 held"* and a distance short that only differs by where it was
+aiming. The route trace is unambiguous:
+
+```
+t=1250.2 .. t=2129.9   (880 play-seconds, 1521 sampled rows)
+x -406.1 .. -406.0     y -6.44 .. -6.23     z 2487.2 .. 2490.2
+dead_travel_m: 21.27 at the start of the window, 0.00 at the end
+region: corridor        (not the_burrow_warrens)
+```
+
+A 0.1 m × 3.0 m box for nearly fifteen play-minutes with **`dead_travel_m` at zero** — the body
+is not oscillating, it is not moving at all, and the walker is pushing at it the whole time.
+`player_controller.gd::_recover_if_entombed` never fires, which means at least three of its eight
+compass sweeps read clear at `STEP_HEIGHT` and the body still cannot go. `y = -6.4` is below the
+surface, at a site whose own dressing is *"mouth dome pieces (earth over the entrance)"*.
+
+**This is not the S06-50 pin and it is not this lane's to fix.** `S06-54`'s own existing note
+already records that the protocol's anchor and `burrow_warrens.json`'s built `site.at`
+`(-357, 2610)` are ~150 m apart; the anchor is the map region's centre, not the mouth. Whether
+the fix is the waypoint or the site, it belongs to whoever owns the Warrens. Routed in §5.
+
+
 ## 4. What I deliberately did not do
 
 - **I did not run S06, S07, S08 and S09 end to end.** The Verify section asks for it; four Gate 3
@@ -505,7 +537,12 @@ of these fights, which is the fix; this is independent evidence that it is neede
    derail to one of them winning the arbiter with Captain Halder's *challenge* conversation
    instead of the ride prompt. `interact_with` with the ride prompt's own text would end it in one
    line; it needs whoever owns `riding_controller.gd`'s prompt strings.
-8. **`operator_harness.gd` and the four Gate 3 segment files carry unmerged edits on two branches
+8. **The body freezes solid at the protocol's Warrens anchor.** §3.2: 880 play-seconds at
+   `(-406.0, -6.4, 2488)` with `dead_travel_m` 0.00 and no failsafe, after `S06-50` arrives.
+   `S06-54` already records that the anchor is the map region's centre and the built mouth is
+   150 m north-east at `(-357, 2610)`. Every Warrens interior step in this segment is downstream
+   of it. Whoever owns `burrow_warrens.gd` / that map pin.
+9. **`operator_harness.gd` and the four Gate 3 segment files carry unmerged edits on two branches
    each** (this one, and W02's / W21's). Named again here because it is the most likely way this
    work gets lost. Neither pair conflicts semantically.
 
