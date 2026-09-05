@@ -255,12 +255,26 @@ are the same number, and the test that catches that is a walk, not a render.
 - **The collider fix trades a little camera/trunk clipping for the unblocked route.**
   Because `collision_radius` is scaled down by a constant factor, the *widest* collider
   matches `main` exactly but every smaller instance's collider is up to ~27 % tighter
-  than it was. Two consequences, both named rather than discovered later: a player
-  brushing a large trunk clips a little further into the bark, and the camera SpringArm
-  (which stops on the same colliders — see `vegetation.json`'s own `_comment_collision`,
-  written after survey frames came back showing the inside of a bush) can now sit
-  marginally closer to a small trunk. Neither was observed in the four rendered stands.
-  The alternative was leaving a wall across a route the game asks players to walk.
+  than it was, so the collider sits at **59 % of the trunk radius instead of 81 %**.
+  Measured at the largest common tree in each build (trunk radius = 0.741 m × placement
+  scale, from `_probe_trunk_radius_0905.gd`):
+
+  | | placement scale | trunk r | collider r | player can clip in |
+  |---|---|---|---|---|
+  | `main` | 1.624 | 1.203 m | 0.974 m | 0.229 m |
+  | grown, collider untouched | 2.240 | 1.660 m | 1.344 m | 0.316 m |
+  | grown + this fix | 2.240 | 1.660 m | 0.974 m | **0.685 m** |
+
+  So the honest cost is bigger than "a little": against the very largest trunks a player
+  can push about 0.69 m into the bark where `main` allowed 0.23 m. Two thirds of that is
+  the fix, one third is simply the tree being bigger. The same applies to the camera
+  SpringArm, which stops on these colliders (see `vegetation.json`'s own
+  `_comment_collision`, written after survey frames came back showing the inside of a
+  bush). Not observed in the four rendered stands, and it is a cosmetic cost against a
+  hard block on a route the game asks players to walk — but if a playtest calls the
+  clipping out, the lever is this number and the answer is a per-instance collider
+  (`collision_radius` × a sub-linear function of scale) in `vegetation.gd`, which is a
+  script change and outside this lane.
 - Bands 2–5 anchors with explicit ranges were **not** lifted; the fill around them grew,
   their copses did not. Their frames were not judged this round.
 - Grove reaches 2.94× p5–p95 (range 3.0× by config); the brief's "≥ 3× per family" is

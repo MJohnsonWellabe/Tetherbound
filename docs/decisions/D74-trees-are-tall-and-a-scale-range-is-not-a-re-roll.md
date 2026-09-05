@@ -86,9 +86,14 @@ The alternative — trimming `scale_max` back — was rejected: it undoes the la
 (`tools/_probe_trunk_radius_0905.gd`): the CommonTree trunk's own radius over its
 lowest 2 m is **0.741 m** at scale 1.0 and TwistedTree_2's is **1.351 m**, so 0.6 and
 1.1 were both already inside the visible trunk, and 0.435 and 0.70 still are relative
-to their families. The honest cost: a player brushing the very largest trunks clips a
-little further into the bark than before. That is a better trade than a wall across a
-route the game asks players to walk.
+to their families. **The honest cost, measured rather than waved at:** the collider is
+now 59 % of the trunk radius where it was 81 %, so against the largest common tree
+(placement scale 2.24, trunk radius 1.660 m) a player can push **0.685 m** into the bark
+where `main`'s largest tree allowed 0.229 m. Two thirds of that increase is this fix and
+one third is simply the tree being bigger. Still a better trade than a wall across a
+route the game asks players to walk — and if a playtest calls the clipping out, the real
+answer is a per-instance collider (`collision_radius` times a sub-linear function of
+scale) in `vegetation.gd`, which is a script change this lane does not own.
 
 **The general lesson for the next lane that scales a scatter layer:** in this codebase
 a layer's visual size and its collision size are the same number. Changing one changes
