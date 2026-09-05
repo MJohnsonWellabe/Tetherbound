@@ -65,6 +65,7 @@ class FakeGame:
 	## Cloudreach Phase 1 / VERSION 17.
 	var realm_hearts: RefCounted = null
 	var current_realm: String = "meadows"
+	var pending_realm_entry: String = ""
 	## Fallback satiety — round-tripped directly when `_vitals` below is null,
 	## mirroring the real `Game.satiety` field's job.
 	var satiety: float = 100.0
@@ -125,11 +126,13 @@ func test_save_then_load_round_trips_realm_and_active_heart() -> void:
 	assert_true(written.realm_hearts.place("meadows", written.progression))
 	assert_true(written.realm_hearts.activate("meadows", written.progression))
 	written.current_realm = "cloudreach"
+	written.pending_realm_entry = "cloudreach_gate_arrival"
 	assert_true(saver.save(written, 1))
 
 	var read := _game(false)
 	assert_true(saver.load_slot(read, 1))
 	assert_eq(read.current_realm, "cloudreach")
+	assert_eq(read.pending_realm_entry, "cloudreach_gate_arrival")
 	assert_eq(read.realm_hearts.active_id(), "meadows")
 	assert_eq(read.realm_hearts.stamina_capacity_multiplier(), 2.0)
 

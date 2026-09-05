@@ -84,6 +84,11 @@ var realm_hearts: RefCounted = null
 ## carry the same id so coordinates from one realm are never applied to another.
 var current_realm: String = "meadows"
 
+## Authored arrival anchor requested by a realm gate. It survives the
+## transition autosave so Continue after a crash lands at the destination
+## gate, then the destination world consumes it and writes a settled autosave.
+var pending_realm_entry: String = ""
+
 ## SB11. Reads `progression`'s flags against `data/progression/objectives.json`
 ## to answer "what is the one tracked Main Story line" and "what does the
 ## two-list quest log show" — see its own header. Instantiated in `_ready()`,
@@ -473,6 +478,7 @@ func reset_for_new_game() -> void:
 	progression = PROGRESSION_STATE.new()
 	realm_hearts = REALM_HEART_STATE.new()
 	current_realm = "meadows"
+	pending_realm_entry = ""
 	quest_log = QUEST_LOG.new()
 	objective_text = quest_log.call("tracked_text", progression)
 	objective_hint = quest_log.call("tracked_hint", progression)
@@ -960,7 +966,7 @@ func can_enter_realm(realm_id: String) -> bool:
 ## `save_game()`'s pose capture: after `current_realm` changes, a pose captured
 ## from the outgoing scene would be labelled as the destination and could drop
 ## the player at a valid but unrelated coordinate on Continue.
-func enter_realm(realm_id: String) -> bool:
+func enter_realm(realm_id: String, entry_id: String = "") -> bool:
 	if not can_enter_realm(realm_id):
 		return false
 	var scene := str(realm_hearts.call("scene_for_realm", realm_id))
@@ -971,11 +977,26 @@ func enter_realm(realm_id: String) -> bool:
 	_sync_death_satchel_state()
 	_sync_harvest_state()
 	current_realm = realm_id
+	pending_realm_entry = entry_id
 	saved_player_pose = {}
 	if save_system != null:
 		save_system.call("save", self, autosave_slot())
 	get_tree().change_scene_to_file(scene)
 	return true
+
+
+func pending_entry_for(realm_id: String) -> String:
+	return pending_realm_entry if realm_id == current_realm else ""
+
+
+## Called only after the destination world has placed Player on its authored
+## anchor. Clearing first and using the normal save path records the correct
+## destination pose; a crash before this point retains the pending anchor.
+func complete_realm_entry(realm_id: String) -> bool:
+	if realm_id != current_realm:
+		return false
+	pending_realm_entry = ""
+	return save_game(autosave_slot())
 
 
 ## R3.1-remainder. A placed storage chest's own contents live on the live
@@ -1087,6 +1108,8 @@ func _capture_player_pose() -> void:
 ## Apply a loaded pose if both the data and Player exist. False is the normal
 ## pre-world/title-screen case, not an error; Player._ready retries it.
 func apply_loaded_player_pose() -> bool:
+	if pending_realm_entry != "":
+		return false
 	if saved_player_pose.is_empty():
 		return false
 	if str(saved_player_pose.get("realm", "meadows")) != current_realm:

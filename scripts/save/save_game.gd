@@ -257,6 +257,7 @@ func save(game: Object, slot: int) -> bool:
 		"progression": (progression_obj as RefCounted).call("save_data") if progression_obj != null else {},
 		"realm_hearts": (realm_hearts_obj as RefCounted).call("save_data") if realm_hearts_obj != null else {},
 		"current_realm": str(game.get("current_realm")) if game.get("current_realm") != null else "meadows",
+		"pending_realm_entry": str(game.get("pending_realm_entry")) if game.get("pending_realm_entry") != null else "",
 		"harvested_vegetation": (game.get("harvested_vegetation") as Dictionary).duplicate(true),
 		"world_seed": int(game.get("world_seed")) if game.get("world_seed") != null else 0,
 		"felled_vegetation": (game.get("felled_vegetation") as Dictionary).duplicate(true),
@@ -307,6 +308,8 @@ func load_slot(game: Object, slot: int) -> bool:
 		game.set("saved_player_pose", _sanitise_player_pose(pose_raw))
 	if game.get("current_realm") != null:
 		game.set("current_realm", str(data.get("current_realm", "meadows")))
+	if game.get("pending_realm_entry") != null:
+		game.set("pending_realm_entry", str(data.get("pending_realm_entry", "")))
 	_write_satiety(game, float(data.get("satiety", _default_satiety())))
 
 	var map_obj: Variant = game.get("map")

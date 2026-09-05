@@ -429,3 +429,60 @@ local copy was found on C: or D:. Follow the directive's written visual language
 provides the board; do not invent a competing style reference. Do not implement the intentionally
 deferred final Cloudreach creature roster, final Fly bird models, unique animations, legendary
 final art, or the Water biome while completing the functional chapter.
+
+## 2026-09-04 — Cloudreach checkpoint 2 / agent exit
+
+Branch: `codex/cloudreach-cliffs`, continuing from checkpoint `04d844d07`. This checkpoint is
+buildable and safe for another agent to continue; it is **not** a completed Cloudreach biome,
+visual acceptance, or a substitute for the remaining phases in
+`docs/biomes/cloudreach/BUILD_CLOUDREACH_CLIFFS_TO_COMPLETION.md`.
+
+The Meadows-to-Cloudreach seam is now physical and bidirectional. The Meadows builds an
+interactive Realm Heart shrine and a locked Storm Road gate from
+`data/config/realm_transitions.json`. The gate recognizes the Warden's durable Realm Key,
+persists its own unlock, and routes through `Game.enter_realm()` without consuming the key.
+Destination entry ids now survive the transition autosave and are cleared only after the new
+world places the player and records the destination pose. Returning from Cloudreach uses the
+authored far-north Meadows anchor; the player is held out of gravity for the first four terrain
+collision-streaming physics beats, then re-grounded before the arrival autosave, preventing the
+remote Storm Road spawn from falling through while Terrain3D catches up.
+
+Cloudreach now has its first production scene and authored world-data foundation. The scene
+builds the directive's exact six ordered regions across a 3.2 km × 6.5 km × 1.7 km volume, an
+authored route graph with loops, twelve recognizable landmark masses, five suspended/broken
+bridge spans, a cloud sea, wind-bent vegetation, a visible sheer High Roost, an upper-route
+counterweight barrier, initial settlement/shrine/stronghold silhouettes, solid walkable
+surfaces, a physical return gate, the normal player/camera/HUD/interaction shell, and explicit
+arrival/return anchors. High Roost has only a Fly edge in the data graph; the grounded graph
+stops at Windscar until `cloudreach_upper_route_unlocked`, then reaches Upper Cloudreach and the
+Summit through one authored ground crossing. This is traversal/composition massing, not final
+art or content.
+
+Verification on Godot 4.7 stable:
+
+- Focused Heart/handoff/world-data/vitals/save/component suite: **113 tests / 782 assertions /
+  0 runner failures**. Five older tournament-save methods still emit the known false-green
+  `SaveGame.save_game()` script errors in this runner; they predate and do not exercise this
+  checkpoint, so the output must not be described as a globally clean save suite.
+- `tests/smoke_cloudreach_foundation.gd`: **PASS** — six regions, twelve landmarks, five
+  bridges, authored route/collision volume, and player grounded at the Meadows arrival.
+- `tests/smoke_cloudreach_transition.gd`: **PASS** — real physical gate, Meadows → Cloudreach
+  authored arrival, durable unlock, physical return gate, Cloudreach → full production Meadows
+  Storm Road arrival, stable Terrain3D grounding, pending-entry settlement, and isolated
+  autosave cleanup.
+- Direct `--check-only` parsing passed for the new/changed world and transition scripts.
+- The full unit suite, a real rendered capture/contact sheet, blind `visual-judge` review, and a
+  representative performance capture were **not** run for this checkpoint and are not claimed.
+  Full Meadows boot still prints existing no-mipmap warnings and, in this unimported D: checkout,
+  warnings for the four pickup GLBs while the transition smoke builds the source world.
+
+Exact resume point: first render the current Cloudreach scene from the real gameplay camera at
+arrival, Broken Causeways, Windscar, High Roost, Cliffhold, and the Summit; measure representative
+performance; and run the required code-blind visual-judge pass. Treat that evidence as a massing
+critique and correct the world foundation before layering content. Then implement Phase 3 in
+order: Cloudreach act/progression data, local NPCs/dialogue/tasks, encounters/trainers/resources/
+pickups/camps, the functional Windscar Fly unlock and controller-safe flight loop, the interactive
+Sky Shrine that grants the separate upper-route unlock, and save/load coverage for both. After
+that continue the stronghold, boss/reward/aftermath/Water setup and final full-route acceptance
+phases. The referenced Cloudreach concept board remains absent; use the directive's written
+visual language and document the missing reference rather than inventing a replacement.
