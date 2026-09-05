@@ -590,5 +590,5 @@ committed in full rather than summarised, because that table is the useful artef
 
 ## Branch and commit
 
-Branch `ralph/N09-BRIDGE-CHECKPOINT-0905`, pushed. Final commit: ``f6313dc43e1e93ae7ca84fd0a798e64a0b6da148``.
+Branch `ralph/N09-BRIDGE-CHECKPOINT-0905`, pushed. Final commit: `fc12ac3e3` (this report's own hash-recording commit; the work is `f6313dc43`).
 No pull request opened, per COMMON.
