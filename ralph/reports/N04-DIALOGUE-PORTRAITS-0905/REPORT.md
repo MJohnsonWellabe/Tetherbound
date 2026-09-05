@@ -62,3 +62,49 @@ in `art.json` / `village_npcs.json` / `river_nest_clear.gd`, `docs/owner/*`.
 - Mira (chestnut), Tam (silver), Halda (iron grey), Rae (warm auburn), Doss (green) and the
   plain rangers (deep auburn) are now different people from the front, in the world and on
   their plates. Eyebrows, eyes and skin are unchanged.
+
+## Tests and smokes — every command, every count
+
+Godot 4.7-stable headless in this container, two clean import passes before the
+first run and a third after the plates were re-rendered.
+
+| Command | Result |
+|---|---|
+| `godot --headless --path . --script tests/run_tests.gd -- --only=test_dialogue_portraits.gd,test_villager_female_painted_hair.gd,test_character_hair_split.gd` | **22 tests, 2194 assertions, 0 failed**, no `SCRIPT ERROR`. (A first run had two panel tests crash on `Engine.get_main_loop()` being null under `run_tests.gd` and the harness still printed `ok` for them — the panel is now stood up off-tree the way `test_companion_presence.gd` does it, and the run was repeated clean.) |
+| Same selectors with the three fixes reverted at once (panel ignoring the identity, `_recolour_painted_hair` call removed, Warden back to `trainer.png`) | **18 tests, 9 failed**, exactly: `test_a_stale_identity_portrait_falls_back…`, `test_every_trainer_in_the_table_has_a_face…`, `test_no_line_spoken_by_someone_other_than_the_player…`, `test_ranked_and_family_speakers…`, `test_the_generic_refusal_wears…`, `test_the_warden_wears_his_own_plate…`, `test_a_hair_colour_reaches_the_painted_hair…`, `test_the_art_json_villagers_each_get…`, `test_two_colours_are_two_materials…`. Restored; green again. |
+| `godot --headless --path . --script tests/smoke_trainer_refusal_portrait.gd` (new) | exit 0. `refusal opened by 'practice_trainer': plate=bryn.png speaker='Bryn' (own=bryn.png neutral=villager_male.png)`; the panel reports no plate/speaker after the refusal closes. `grep -E '^ERROR:\|SCRIPT ERROR'`: 1 line, the known-benign `Parameter "material" is null` at `creature_body.gd:492` (recorded at 0–3 per run by W00, W09, W12, G3-BAND5 before this lane; N03 owns it). |
+| `godot --headless --path . --script tests/smoke_trainer_no_usable_ally.gd` (unchanged) | exit 0, `OK`; 0 error lines. |
+| `godot --headless --path . --script tests/smoke_trainer_no_ally_deployed.gd` (unchanged) | exit 0, `OK`; 2 error lines, both the known-benign material line. |
+| `godot --headless --path . --script tests/smoke_dialogue_clears_the_world_hud.gd` (unchanged) | exit 0, `PASS: nothing the world HUD draws composites through the dialogue box`; 0 error lines. |
+| `godot --headless --path . --script tests/smoke_village_trainer.gd` (unchanged) | exit 0, `OK`; 2 error lines, both the known-benign material line. |
+| `godot --headless --path . --script tests/run_tests.gd -- --only=test_trainers_data.gd,test_dialogue_runner.gd,test_character_model.gd` (neighbours, unchanged) | **116 tests, 2402 assertions, 0 failed**. |
+
+The known-benign set did not grow: the only `ERROR:` line in any run above is the one
+`docs/AGENT_WORKFLOW.md` and four earlier reports already record.
+
+### What the new tests actually exercise
+
+`test_dialogue_portraits.gd` (16 tests, was 5):
+- the real `dialogue_panel.tscn`, `_ready()` run, opened on `tournament_halda` then
+  `village_oskar`, and on `village_mira` then `village_tam`: `current_portrait()` differs
+  within each pair, equals the speaker's own authored plate, and is never `trainer.png`;
+- the generic refusal with `trainer_npc.speaker_identity(practice_trainer)` draws `bryn.png`
+  labelled "Bryn"; the same refusal with no identity draws `villager_male.png` labelled
+  "Trainer" (so no caller is worse off);
+- the identity is gone once the refusal is advanced off its last line (Oskar's greeting after
+  it draws Oskar); a stale plate path in an identity falls through to the line's own plate
+  while the name half still applies;
+- every one of the 24 trainers in the band tables resolves an identity with a name and a
+  plate that exists and is not the player's;
+- the Warden's lines (all ≥3 conversations) wear `warden.png`; the three named carve-outs are
+  all still spoken somewhere (a carve-out for nobody comes out of the list);
+- the five W04 tests are unchanged in intent; the stronghold carve-out is now by speaker
+  name, so the not-the-player rule and the rank-family rule cover the Warden.
+
+`test_villager_female_painted_hair.gd` (6 tests): builds the real rig off-tree and reads the
+materials it carries — the body material has `detail_enabled`, `BLEND_MODE_MIX`, `detail_mask`
+= the baked mask, `detail_albedo` pixel = the hair hex, `albedo_color` still white (the face
+is on that material); the ponytail carries the same layer; two colours give two materials
+and one colour is shared from the cache; no colour or hidden hair adds nothing; farmer, smith
+and ranger from `art.json` land three different colours; Grandpa and the trainer rig (no mask
+on disk) gain no layer even when handed a colour.
