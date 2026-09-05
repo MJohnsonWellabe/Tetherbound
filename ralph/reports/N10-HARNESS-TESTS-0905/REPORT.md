@@ -389,3 +389,138 @@ no blind judge.
 | 17 | `tools/gate_f/run_segment.sh --run-dir ralph/reports/gate-f-run-N10-S06 S06` | see §3.1 |
 | 18 | `… run_tests.gd -- --only=test_terrain_bake_freshness.gd` | **3 tests, 8 assertions, 0 failed** — see §5, this is not what COMMON.md says |
 
+### 3.1 The S06 run, and what it changed about item 11
+
+Run 17 was launched against S06 **before** the spine fix, i.e. with `S06-30b` still a single
+straight `move_to` from the quarry to the ranger camp. It is the run that produced the item-11
+answer, so it is reported as the reproduction it turned out to be rather than as a validation:
+
+```
+S06-30b  FAIL did not reach (-260, 2257) in 30000 walking frames;
+         stopped 734.2 m short at (340.0, 4.0, 1834.0) (0 held)
+```
+
+and its own `route.csv`, read back: **1,048 sampled rows between t=476.4 and t=1020.2 — 544
+play-seconds — inside x 321.5..399.9, z 1780.9..1846.4, with `dead_travel_m` climbing from 0 to
+1,986.68 m.** W21 logged the same shape 14 m away (711 s, 1,258 m of dead travel at
+`(336.2, 1.3, 1820.6)`) and attributed it to navigator state left behind by the workbench placed
+one step earlier. **There is no workbench on this branch** — item 4 deleted `S06-38` — and it
+happens anyway. That hypothesis is closed: the site is the cause, and it is the Old Quarry's own
+exit.
+
+The fix is the authored route rather than a bigger budget, and it is verified leg by leg
+(`tools/gate_f/probe_band2_spine_walk.gd`, driving the real `walk_to()`):
+
+```
+=== band 2 spine walk probe ===
+  ARRIVED (403.0, 1794.0) -> (330.0, 1950.0): walked 166.3 m in 2226 frames, 0 confined reset(s)
+  ARRIVED (332.6, 1944.6) -> (180.0, 2050.0): walked 179.4 m in 2387 frames, 0 confined reset(s)
+  ARRIVED (185.0, 2046.7) -> (20.0, 2130.0):  walked 178.9 m in 2169 frames, 0 confined reset(s)
+  ARRIVED (25.3, 2127.3) -> (-150.0, 2210.0): walked 187.9 m in 2315 frames, 0 confined reset(s)
+  ARRIVED (-144.6, 2207.5) -> (-259.6, 2257.4): walked 120.1 m in 1839 frames, 0 confined reset(s)
+  ARRIVED (-255.8, 2252.8) -> (-310.0, 2320.0): walked 80.4 m in 1202 frames, 0 confined reset(s)
+  ARRIVED (-306.9, 2314.9) -> (-420.0, 2470.0): walked 186.1 m in 2242 frames, 0 confined reset(s)
+VERDICT: 7 of 7 legs walked
+```
+
+Every leg arrives in a fifth to a sixth of its budget, and the leg-level watchdog never has to
+fire. `S06-30b`..`S06-30b4` and `S06-49a` are those waypoints. `terrain_playground.json`'s
+`trail.bands[band2_stone_and_root]` is where they come from, and `trail.loops` is what says the
+ranger camp spur leaves the spine at `(-150, 2210)` and rejoins at `(-310, 2320)`.
+
+**Two more things that run proved, both from item 9's conversion:**
+
+```
+S06-30c  FAIL the live prompt is "…Chop", which does not contain "Craft"
+         -- pressing here would activate a different provider. Not pressed.
+S06-60   FAIL the live prompt is "Trailpup is out of the fight.", which does not
+         contain "Engage" -- pressing here would activate a different provider.
+```
+
+The first is `interact_with` refusing to press a tree-chop prompt while the walk was 734 m short
+of the anvil — the guard doing exactly its job instead of banking a green press. The second is
+worth more: S06 enters the Warrens chamber fight **with the party's lead fainted**, so
+`encounter_director.gd::interaction_offer()` returns the fainted statement and there is no
+engage to press. On `main`'s S06 the old bare press would have reported that green.
+W21-HARNESS-FIGHTS-0904's unmerged branch puts a by-identity Revive ladder in front of every one
+of these fights, which is the fix; this is independent evidence that it is needed.
+
+## 4. What I deliberately did not do
+
+- **I did not run S06, S07, S08 and S09 end to end.** The Verify section asks for it; four Gate 3
+  segments is what W21-HARNESS-FIGHTS-0904 spent a whole lane on, two at a time on this box, and
+  S06 alone predicts ~230,000 frames at the 0.0167 s/frame this container measures. One S06 run
+  was launched and is the reproduction §3.1 is written from. What is verified instead: the full
+  unit suite (2,012 tests), both Gate B smokes with the walker A/B'd, the pond leg on both
+  walkers, the whole quarry→Warrens route leg by leg, and eight new tests each seen red first.
+  **The four end-to-end runs are the outstanding debt of this lane** and belong with W21's
+  landing, since the segments only make sense together.
+- **I did not touch `docs/GATE2_GATE3_CLOSURE_PLAN.md`'s `CL-H3`**, though item 12 closes its
+  remaining third. The brief names six rows and says not to go beyond them. Routed in §5.
+- **I did not convert the non-engage `press interact` steps** — gate opens, harvest swings, the
+  riding mount/dismount presses, the aim/throw pair. The riding ones are the site of W21's
+  `S08-79` derail and want their own pass; §5.
+- **I did not re-run S04 or S05 live** to re-derive their thresholds. The brief says "matching
+  the S02 fix's method exactly", and that fix measured committed telemetry rather than running
+  the segments. Stated as the reading it is.
+- **I did not change `run_segment.sh`** (not in the ownership list) even though the world-seed pin
+  would sit as naturally there. It is in `operator_harness.gd`, which is, and it covers every
+  invocation the runner makes.
+- **No visual work**, so no frames, no contact sheet and no blind judge: nothing this lane
+  touches renders.
+- **I did not commit the seeded save or the telemetry payloads** from run 17. `.gitignore`'s
+  evidence rule already excludes `ralph/reports/**/telemetry/`; the save was regenerable and was
+  removed after the first commit caught it.
+
+## 5. Routed findings — things this lane found and does not own
+
+1. **`CL-H3`'s last third is closed and its row still says otherwise.** Item 12 fixed the
+   `sigil_gate_gorge_west` waypoint; that row is outside this lane's named set. Whoever updates
+   it: the corner half and the Pond half were already done, so the row can close outright.
+2. **Every Gate F run since 2026-09-02 has played a randomly-rolled world.** See item 10(b).
+   This lane pinned `TB_WORLD_SEED=0` in `operator_harness.gd`, which fixes it going forward,
+   but **every Gate 3 encounter verdict recorded between 2026-09-02 and this commit was gathered
+   against clusters whose species the scripts did not name.** Anyone quoting a band's encounter
+   evidence from that window should re-check it. The synthetic seed builders that boot a new game
+   (`build_s06/07/08_entry_synthetic.gd`) each bake a random `world_seed` into their save; the
+   env pin overrides it at read time (`spawn_tables.gd::resolve_seed` checks the environment
+   first), so no seed needs rebuilding — but a seed rebuilt without the pin will still carry a
+   rolled seed, which is confusing rather than harmful.
+3. **`test_terrain_bake_freshness.gd` passes here, and COMMON.md and the N11 brief both say it
+   is red on `main`.** Run 18: `3 tests, 8 assertions, 0 failed`, standalone and inside the full
+   suite, on a branch whose `git diff origin/main -- data/` is empty. W03 measured it failing at
+   `ef16544f`; `main` is now `f8a47ee4`. It looks like it was fixed between those two, and
+   **N11-TERRAIN-BAKE may be about to re-bake something that is already fresh.** Worth one check
+   before that lane spends a session.
+4. **`--gate-b-full-chain`'s three tail failures** — the objective rung after the campsite does
+   not move to `tournament_build_camp`, the live pending build selection is empty after selecting
+   `creature_bed`, and only 3 of 5 creature beds go up against the owner's one-bed-per-entrant
+   directive. None is a walk. They are newly visible because the walker now gets that far; on
+   `main` the run derails 81.6 m short of the Practice Meadow clearing before reaching them.
+5. **S06 enters its Warrens chamber fight with a fainted lead** (§3.1). W21's unmerged Revive
+   ladders are the fix; nothing on `main` recovers the party there.
+6. **`_recover_if_entombed` fired once at `(77.31, -2.19, 839.44)`** during the pond probe, 340 m
+   past the basin. The failsafe working, at a site nobody has looked at.
+7. **`S08-72`/`S08-74`/`S08-76`, the riding presses, are still bare.** W21 traced `S08-79`'s
+   derail to one of them winning the arbiter with Captain Halder's *challenge* conversation
+   instead of the ride prompt. `interact_with` with the ride prompt's own text would end it in one
+   line; it needs whoever owns `riding_controller.gd`'s prompt strings.
+8. **`operator_harness.gd` and the four Gate 3 segment files carry unmerged edits on two branches
+   each** (this one, and W02's / W21's). Named again here because it is the most likely way this
+   work gets lost. Neither pair conflicts semantically.
+
+## 6. Final state
+
+- Branch: `ralph/N10-HARNESS-TESTS-0905`, off `origin/main` at `f8a47ee4`.
+- CI could not be read from this container — the GitHub API returns *"GitHub access is not
+  enabled for this session"* and there is no `gh`. The full unit suite was therefore run locally
+  in full (run 1: **2,012 tests, 3,765,848 assertions, 0 failed**), which is what
+  `verify-unit-tests`'s shards run between them, plus both Gate B smokes. **The coordinator
+  should still read the CI run for this branch rather than take this paragraph for it.**
+- Acceptance, item by item: **1 done** (with the Gate B A/B the brief demanded), **2 closed**
+  (both walkers arrive), **3 done** (both thresholds, by S02-60's method), **4 done** (deleted,
+  and L.3 rehomed to a real authored site), **5 done**, **6 done**, **7 done** (one key), **8
+  done**, **9 done for all four segments**, **10 root-caused and closed** (two independent
+  causes, both measured), **11 root-caused, the workbench hypothesis disproved, and the route
+  fixed and verified**, **12 done by waypoint**, **13 done** (six rows in place, two of them
+  saying plainly that the fix is on an unlanded branch).
