@@ -190,9 +190,19 @@ func _run() -> void:
 	else:
 		failures.append("no Terrain node with set_camera")
 
+	# W05-TREELINE-0904: `--only=a,b` re-renders named stands into the same
+	# directory without touching the others (same contract as
+	# tools/_capture_band1_composition.gd), so a before/after pair on two
+	# stands does not cost five full-world software-GL renders each side.
+	var only := ""
+	for argument in OS.get_cmdline_user_args():
+		if argument.begins_with("--only="):
+			only = argument.trim_prefix("--only=")
 	for entry: Variant in VIEWPOINTS:
 		var view: Dictionary = entry
 		var name: String = str(view["name"])
+		if only != "" and name not in only.split(","):
+			continue
 
 		_pose(camera, field, view)
 		_place_actor(player, field, camera, view)
