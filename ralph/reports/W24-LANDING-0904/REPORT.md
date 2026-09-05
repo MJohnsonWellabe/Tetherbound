@@ -203,3 +203,24 @@ no conflicts, plus one landing commit renumbering W13's decision **D74 → D76**
 renamed and every reference rewritten: two config `_comment`s, six script and test headers,
 the `CURRENT_STATE` row and the lane's own report; W19's D74/D75 untouched). Not pushed
 while the finale red stands, since it would only reproduce it.
+
+### Cycle 1 close-out
+
+- Both finale reproductions completed after the section above was written, and both failed
+  exactly as predicted: PR head `3fbd67ad` and the `main`-equivalent tree, first attempt
+  each, same assertion. Base-red is proven, not inferred.
+- One standing-down comment posted on PR #42
+  (`#issuecomment-5548679310`): the failing check, the evidence it is not this PR's, the
+  cause commit, why no fix is ported, and that no re-run was spent because a re-run cannot
+  help a failure that reproduces on the base branch.
+- Batch 1's merged tree (`ralph/LAND-0904-2`) passes `smoke_gate_b_continuous` —
+  `gate B continuous (CORE): OK` — which is the run W13's report asked the coordinator to
+  make, and `smoke_progression_feedback` passes on W13's own branch
+  (`Progression feedback: OK`, known-benign `material` line ×1).
+- **Nothing merged this cycle.** Under this lane's rule (merge only on a fully green run
+  whose code jobs executed) PR #42 cannot merge while the finale is red, even though every
+  job it exists to fix is now green and it strictly reduces `main`'s red set. That is the
+  coordinator's call to make, and it is the single decision blocking the whole queue:
+  either the finale is fixed on `main` (the finale lane, or whoever owns Cloudreach), or
+  this lane is told that a proven pre-existing red does not block a landing that removes
+  reds. This lane will not override the rule on its own.
