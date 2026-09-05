@@ -4,12 +4,20 @@ extends RefCounted
 ## dynamic markers. The minimap and the full map both read THIS and nothing
 ## else — spec §6A.12 forbids two map databases, and this is the one.
 ##
-## Deliberately not a radar. Spec §6A.6: wild creatures never get a marker here,
-## and there is no method on this class that could produce one — the only
-## positions this file ever stores are the player's own fog trail, the
-## data-driven landmarks and whatever calls `add_dynamic_marker()` (camps,
-## the tracked objective). If a future change wants wild-creature blips, that is a
-## design decision for someone to flag, not a natural extension of this file.
+## Still not a radar, and the distinction is now load-bearing rather than
+## rhetorical. Spec §6A.6: wild creatures never get a marker here. Nothing in
+## this file reads a live creature body's position — the only positions it ever
+## stores are the player's own fog trail, the data-driven landmarks, and
+## whatever calls `add_dynamic_marker()` (camps, the tracked objective).
+##
+## `pin_alpha()` (CL-W1, owner directive D-0904B-1 with amendment A-3) is the
+## one addition to that list, and it is the design decision this comment used to
+## ask someone to flag — flagged, decided by the owner, and narrow. It pins the
+## AUTHORED cluster centre out of `data/config/bands/*/spawns.json`, never a
+## body: it is the same kind of entry as a landmark (a fixed authored place the
+## player has discovered), for the sixteen authored alpha/elder clusters only,
+## and it does not move when the creature does. An ordinary wild still has no
+## marker and no method here that could give it one.
 ##
 ## Discovery is permanent: fog cells and landmarks only ever move from
 ## hidden to revealed, never back. A `PackedByteArray` rather than a
@@ -114,8 +122,29 @@ var _fog_has_dirty_rect: bool = false
 var _landmark_defs: Dictionary = {}
 ## id -> true, for every discovered landmark id.
 var _discovered: Dictionary = {}
-## id -> {icon, position: Vector2}
+## id -> {icon, position: Vector2, display_name: String}
+##
+## `display_name` is usually "" -- a camp or the tracked objective is drawn as
+## a shape and needs no text. CL-W1's alpha pins are the first dynamic marker
+## that carries a name (D-0904B-1 asks the full map to say WHICH alpha), so the
+## field is optional rather than required and every existing caller keeps
+## working unchanged.
 var _dynamic: Dictionary = {}
+
+## CL-W1. `order` (a band spawn entry's own globally-unique id) -> {species,
+## display_name, position: Vector2}, for every authored alpha/elder cluster the
+## player has come within `alpha_pin.radius_m` of and not yet cleared.
+##
+## THIS is the pinned set the save persists (`alpha_pin_save_data()` below,
+## written at the save's top level by `scripts/save/save_game.gd` VERSION 17).
+## The `_dynamic` markers are derived from it, not the other way round:
+## `alpha_pin_load_data()` rebuilds every marker from this dictionary, so a
+## loaded save has its pins back before `scripts/world/alpha_pins.gd` has run a
+## single tick -- which is the point. The closure plan's own *fails if* on this
+## row is "the pinned set is not persisted"; deriving the set from the markers
+## instead would have persisted a picture of the pins and thrown away the fact
+## that they are pins at all (which order cleared, which species it was).
+var _alpha_pins: Dictionary = {}
 
 ## Owner directive: "name some of the areas and uncover them like fortnite
 ## maps do." A named region is broader than a landmark (spec's landmarks are
@@ -164,6 +193,7 @@ func configure(config: Dictionary) -> void:
 	_landmark_defs.clear()
 	_discovered.clear()
 	_dynamic.clear()
+	_alpha_pins.clear()
 
 	var raw_landmarks: Array = config.get("landmarks", [])
 	for entry: Variant in raw_landmarks:
@@ -398,6 +428,7 @@ func landmarks() -> Array[Dictionary]:
 			"id": id,
 			"icon": marker.get("icon", ""),
 			"position": marker.get("position"),
+			"display_name": str(marker.get("display_name", "")),
 			"dynamic": true,
 			"discovered": true,
 		})
@@ -434,8 +465,12 @@ func discover_landmark(id: String) -> bool:
 ## Adds or replaces the marker at `id` — camps and the tracked objective use
 ## this, and a repeated call with the same id (e.g. the objective moving)
 ## replaces rather than stacks.
-func add_dynamic_marker(id: String, icon: String, world_pos: Vector3) -> void:
-	_dynamic[id] = {"icon": icon, "position": Vector2(world_pos.x, world_pos.z)}
+func add_dynamic_marker(id: String, icon: String, world_pos: Vector3, display_name: String = "") -> void:
+	_dynamic[id] = {
+		"icon": icon,
+		"position": Vector2(world_pos.x, world_pos.z),
+		"display_name": display_name,
+	}
 	revision += 1
 
 
@@ -443,6 +478,133 @@ func remove_dynamic_marker(id: String) -> void:
 	if not _dynamic.has(id):
 		return
 	_dynamic.erase(id)
+	revision += 1
+
+
+# --- alpha pins (CL-W1) -----------------------------------------------------
+
+## The dynamic-marker id prefix every alpha pin uses. A renderer that wants to
+## draw a pin differently from a camp (`minimap.gd`, `tab_map.gd` both do)
+## matches on THIS rather than on the icon name, because the icon is a
+## `data/config/map.json` tunable and the identity is not.
+const ALPHA_MARKER_PREFIX := "alpha_"
+
+
+static func alpha_marker_id(order: int) -> String:
+	return "%s%d" % [ALPHA_MARKER_PREFIX, order]
+
+
+## Pins the authored alpha/elder cluster `order` at `world_pos`, labelled
+## `display_name` ("Alpha Galecrest", "Elder Mosshell"). Returns true only on a
+## NEW pin -- a repeat call for an already-pinned order is a no-op and does not
+## bump `revision`, because `alpha_pins.gd` re-tests every cluster twice a
+## second and a bump per test would rebuild the whole map UI forever.
+func pin_alpha(order: int, species: String, display_name: String, world_pos: Vector3, icon: String) -> bool:
+	if _alpha_pins.has(order):
+		return false
+	_alpha_pins[order] = {
+		"species": species,
+		"display_name": display_name,
+		"position": Vector2(world_pos.x, world_pos.z),
+		"icon": icon,
+	}
+	add_dynamic_marker(alpha_marker_id(order), icon, world_pos, display_name)
+	return true
+
+
+## Removes the pin for `order` -- what a caught or beaten alpha does (A-3).
+## Returns true only if there was one to remove.
+func unpin_alpha(order: int) -> bool:
+	if not _alpha_pins.has(order):
+		return false
+	_alpha_pins.erase(order)
+	remove_dynamic_marker(alpha_marker_id(order))
+	return true
+
+
+func is_alpha_pinned(order: int) -> bool:
+	return _alpha_pins.has(order)
+
+
+func alpha_pin_count() -> int:
+	return _alpha_pins.size()
+
+
+## Every live pin, for tests and for anything that wants the set rather than
+## the markers. Ordered by `order` so two calls never disagree.
+func alpha_pins() -> Array[Dictionary]:
+	var orders: Array = _alpha_pins.keys()
+	orders.sort()
+	var out: Array[Dictionary] = []
+	for order: Variant in orders:
+		var pin: Dictionary = _alpha_pins[order]
+		out.append({
+			"order": int(order),
+			"species": str(pin.get("species", "")),
+			"display_name": str(pin.get("display_name", "")),
+			"position": pin.get("position", Vector2.ZERO),
+			"icon": str(pin.get("icon", "")),
+		})
+	return out
+
+
+## THE PINNED SET, as `scripts/save/save_game.gd` writes it (VERSION 17, top
+## level key `alpha_pins`). Kept separate from `save_data()` above deliberately:
+## `save_data()` is the map DATABASE (fog, landmarks, regions, markers) and this
+## is a gameplay set that happens to be drawn on the map, so the closure plan's
+## *fails if* ("the pinned set is not persisted") is answered by a key a reader
+## of the save file can see, rather than by an inference from the marker list.
+func alpha_pin_save_data() -> Array:
+	var out: Array = []
+	for pin: Dictionary in alpha_pins():
+		var pos: Vector2 = pin.get("position", Vector2.ZERO)
+		out.append({
+			"order": int(pin.get("order", 0)),
+			"species": str(pin.get("species", "")),
+			"display_name": str(pin.get("display_name", "")),
+			"position": [pos.x, pos.y],
+			"icon": str(pin.get("icon", "")),
+		})
+	return out
+
+
+## Restores the pinned set AND the markers that draw it. Tolerant of anything:
+## a missing key, a null, a non-array, a malformed entry -- all read as "no
+## pins", never a crash, the same contract `load_data()` above already gives.
+##
+## Called by `save_game.gd::load_slot()` AFTER `load_data()`, which clears
+## `_dynamic` wholesale; calling it before would restore the markers and then
+## immediately throw them away.
+func alpha_pin_load_data(raw: Variant) -> void:
+	_alpha_pins.clear()
+	if typeof(raw) != TYPE_ARRAY:
+		revision += 1
+		return
+	for entry: Variant in raw as Array:
+		if typeof(entry) != TYPE_DICTIONARY:
+			continue
+		var d := entry as Dictionary
+		if not d.has("order"):
+			continue
+		var order := int(d.get("order", 0))
+		var pos_raw: Variant = d.get("position", [])
+		var pos: Array = pos_raw as Array if typeof(pos_raw) == TYPE_ARRAY else []
+		if pos.size() < 2:
+			continue
+		var icon := str(d.get("icon", ""))
+		var display_name := str(d.get("display_name", ""))
+		var world := Vector3(float(pos[0]), 0.0, float(pos[1]))
+		_alpha_pins[order] = {
+			"species": str(d.get("species", "")),
+			"display_name": display_name,
+			"position": Vector2(world.x, world.z),
+			"icon": icon,
+		}
+		_dynamic[alpha_marker_id(order)] = {
+			"icon": icon,
+			"position": Vector2(world.x, world.z),
+			"display_name": display_name,
+		}
 	revision += 1
 
 
@@ -455,6 +617,7 @@ func objective_marker() -> Dictionary:
 		"id": "objective",
 		"icon": marker.get("icon", ""),
 		"position": marker.get("position"),
+		"display_name": str(marker.get("display_name", "")),
 		"dynamic": true,
 		"discovered": true,
 	}
@@ -479,7 +642,12 @@ func save_data() -> Dictionary:
 	for id: String in _dynamic.keys():
 		var marker: Dictionary = _dynamic[id]
 		var pos: Vector2 = marker.get("position", Vector2.ZERO)
-		markers.append({"id": id, "icon": marker.get("icon", ""), "position": [pos.x, pos.y]})
+		markers.append({
+			"id": id,
+			"icon": marker.get("icon", ""),
+			"position": [pos.x, pos.y],
+			"display_name": str(marker.get("display_name", "")),
+		})
 	var o := origin()
 	return {
 		"visited_b64": Marshalls.raw_to_base64(_visited),
@@ -518,6 +686,7 @@ func load_data(data: Dictionary) -> void:
 	_mark_fog_dirty_all()
 	_discovered.clear()
 	_dynamic.clear()
+	_alpha_pins.clear()
 	_discovered_regions.clear()
 	_current_region_id = ""
 	_pending_region_announcement = ""
@@ -566,7 +735,11 @@ func load_data(data: Dictionary) -> void:
 		var position := Vector2.ZERO
 		if pos.size() >= 2:
 			position = Vector2(float(pos[0]), float(pos[1]))
-		_dynamic[id] = {"icon": str(d.get("icon", "")), "position": position}
+		_dynamic[id] = {
+			"icon": str(d.get("icon", "")),
+			"position": position,
+			"display_name": str(d.get("display_name", "")),
+		}
 
 	revision += 1
 

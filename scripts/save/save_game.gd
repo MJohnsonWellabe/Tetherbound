@@ -162,6 +162,36 @@ extends RefCounted
 ## active Heart id. Older saves honestly belong to the Meadows and have no
 ## active Heart, so `_migrate_v16` supplies exactly those defaults.
 ##
+## NOTE (landing lane, merge resolution): this lane and Cloudreach both authored a
+## VERSION 17. Per the owner's standing rule that Cloudreach wins a conflict,
+## Cloudreach keeps 17 (realms and Realm Hearts) and the alpha pin set became 18.
+## `_migrate_to_current` dispatches `_migrate_v<version>` in a loop, so a v16 save
+## now runs `_migrate_v16` (realms) and then `_migrate_v17` (pins).
+
+## ## VERSION 18 — CL-W1, the alpha pin set
+##
+## Owner directive D-0904B-1 with amendment A-3: an alpha within 300 m pins
+## itself to the map and the pin stays until that alpha is caught or beaten.
+## The closure plan's *fails if* on that row is exactly this file's problem —
+## "the pinned set is not persisted; a pin that survives only until the next
+## load is worse than none" — so `alpha_pins` is a top-level key here, written
+## from and read back into `map_state.gd`'s own `alpha_pin_save_data()` /
+## `alpha_pin_load_data()`.
+##
+## It is deliberately NOT folded into the existing `map` blob, even though the
+## map object owns it. `map` is the map database (fog bytes, discovered
+## landmarks, regions, markers) and has its own tolerant, versionless internal
+## contract; the pinned set is gameplay state that happens to be drawn on the
+## map, and a reviewer opening a save file should be able to see whether a pin
+## survived without inferring it from a marker list.
+##
+## Same "nothing to migrate FROM" answer every migration above gives: a pre-18
+## save was not tracking pins, so `[]` is the true statement that no alpha had
+## been discovered yet, not a placeholder. The player re-pins the moment they
+## walk back within 300 m of one, and any alpha they already beat stays cleared
+## because clearing reads `progression`'s own `wild_once_<order>` flag, which
+## has round-tripped since VERSION 3.
+##
 ## ## The satiety seam
 ##
 ## Satiety lives on `PlayerVitals` (`scripts/player/player_vitals.gd`), a
@@ -199,7 +229,7 @@ const PROGRESSION_CONFIG_PATH := "res://data/config/progression.json"
 const VITALS_CONFIG_PATH := "res://data/config/vitals.json"
 const SPECIES_PATH := "res://data/creatures/species.json"
 
-const VERSION := 17
+const VERSION := 18
 const SLOT_COUNT := 5
 ## Written automatically whenever the player rests (`scripts/build/camp.gd`).
 ## Slots 1-4 are the player's own manual saves. Nothing enforces the split
@@ -254,6 +284,7 @@ func save(game: Object, slot: int) -> bool:
 		"death_satchels": (game.get("death_satchels") as Array).duplicate(true),
 		"satiety": _read_satiety(game),
 		"map": (map_obj as RefCounted).call("save_data") if map_obj != null else {},
+		"alpha_pins": (map_obj as RefCounted).call("alpha_pin_save_data") if map_obj != null else [],
 		"progression": (progression_obj as RefCounted).call("save_data") if progression_obj != null else {},
 		"realm_hearts": (realm_hearts_obj as RefCounted).call("save_data") if realm_hearts_obj != null else {},
 		"current_realm": str(game.get("current_realm")) if game.get("current_realm") != null else "meadows",
@@ -316,6 +347,14 @@ func load_slot(game: Object, slot: int) -> bool:
 	if map_obj != null:
 		var map_data: Variant = data.get("map", {})
 		(map_obj as RefCounted).call("load_data", map_data if typeof(map_data) == TYPE_DICTIONARY else {})
+		# CL-W1. STRICTLY AFTER `load_data`, which clears every dynamic marker
+		# wholesale — restoring the pins first would rebuild their markers and
+		# then immediately throw them away, which is the "pin survives only
+		# until the next load" failure this row is written against.
+		var alpha_pin_data: Variant = data.get("alpha_pins", [])
+		(map_obj as RefCounted).call(
+			"alpha_pin_load_data",
+			alpha_pin_data if typeof(alpha_pin_data) == TYPE_ARRAY else [])
 
 	var progression_obj: Variant = game.get("progression")
 	if progression_obj != null:
@@ -684,6 +723,14 @@ func _migrate_v16(data: Dictionary) -> Dictionary:
 	if pose is Dictionary and not (pose as Dictionary).is_empty():
 		(pose as Dictionary)["realm"] = "meadows"
 		migrated["player_pose"] = pose
+	return migrated
+
+
+## VERSION 17 -> 18: CL-W1's alpha pin set. See the class header.
+func _migrate_v17(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["version"] = 18
+	migrated["alpha_pins"] = []
 	return migrated
 
 

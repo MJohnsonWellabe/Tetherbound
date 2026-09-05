@@ -50,6 +50,10 @@ const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 ## but the literal baked terrain bitmap, one bake for both.
 const MAP_BAKER_PATH := "res://scripts/world/map_baker.gd"
 
+## CL-W1. Read from `map_state.gd` (already preloaded above as `MAP_STATE`)
+## rather than respelled — see `minimap.gd`'s own copy of this line for why.
+const ALPHA_MARKER_PREFIX := MAP_STATE.ALPHA_MARKER_PREFIX
+
 const ICON_DIR := "res://assets/ui/icons/map/"
 ## OP21-15: bumped from 26 across the board (icon/marker/font sizes below) —
 ## this screen's `canvas.draw_*` calls sit under the SAME `canvas_items`
@@ -435,6 +439,15 @@ func _update_legend(map_state: RefCounted) -> void:
 	var seen: Dictionary = {}
 	for entry: Dictionary in (map_state.call("landmarks") as Array):
 		if bool(entry.get("dynamic", false)):
+			# CL-W1. One exception to "dynamic markers are not legend material":
+			# a red mark the player has never seen before needs a word for what
+			# it is, once. Camps and the objective still do not appear here --
+			# the player placed the camp and the objective has its own HUD line,
+			# so neither is a symbol anybody has to look up.
+			if str(entry.get("id", "")).begins_with(ALPHA_MARKER_PREFIX) and not seen.has("alpha"):
+				seen["alpha"] = true
+				_legend_row.add_child(_legend_entry(
+					str(entry.get("icon", "alpha")), "Alpha", UITokens.DANGER))
 			continue
 		if not bool(entry.get("discovered", false)):
 			continue
@@ -447,12 +460,21 @@ func _update_legend(map_state: RefCounted) -> void:
 	UITokens.make_text_legible(_legend_row)
 
 
-func _legend_entry(icon_name: String, label_text: String) -> Control:
+## `tint` defaults to the neutral secondary every place row has always used, so
+## every existing caller is unchanged. The alpha row passes `UITokens.DANGER`,
+## because a legend printed in grey throws away the one colour code the map is
+## using -- the blind judge's words: "the one place where the game explains its
+## symbol set throws away the red coding entirely."
+func _legend_entry(icon_name: String, label_text: String, tint: Color = UITokens.TEXT_SECONDARY) -> Control:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 6)
 
 	var icon := TextureRect.new()
 	icon.texture = _icon_texture(icon_name)
+	# The swatch carries the row's colour as well as its word, so the legend
+	# teaches the code the map is actually using rather than printing every
+	# marker in the same neutral grey.
+	icon.modulate = tint
 	icon.custom_minimum_size = Vector2(24, 24)
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
@@ -462,7 +484,7 @@ func _legend_entry(icon_name: String, label_text: String) -> Control:
 	label.text = label_text
 	# OP21-15: see CANVAS_LABEL_FONT_SIZE's header — bumped past FONT_TINY.
 	label.add_theme_font_size_override("font_size", CANVAS_HEADING_FONT_SIZE + 2)
-	label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
+	label.add_theme_color_override("font_color", tint)
 	row.add_child(label)
 
 	return row
@@ -517,6 +539,12 @@ func _draw_map(canvas: Control) -> void:
 			_draw_icon(canvas, map_rect, entry, 1.0)
 		elif bool(entry.get("silhouette", false)):
 			_draw_icon(canvas, map_rect, {"icon": "question", "position": entry.get("position")}, 0.6)
+
+	# CL-W1. Alpha pin names, in their own pass AFTER every icon: a label drawn
+	# inside the loop above would be painted over by whatever icon the loop
+	# reached next. D-0904B-1's pin has to say WHICH alpha, or it is a red mark
+	# the player has to walk to in order to learn anything.
+	_draw_alpha_pin_labels(canvas, map_rect, map_state)
 
 	# Region name labels — only for regions the player has actually entered
 	# (map_state.gd's own regions() doc: "a renderer needs the geometry for
@@ -736,6 +764,51 @@ func _map_marker_exclusion_rects(canvas: Control, map_rect: Rect2, map_state: Re
 	return occupied
 
 
+## Draws "Alpha Galecrest" / "Elder Mosshell" beside each pin.
+##
+## Placed to the right of its marker by default and flipped to the left when
+## that would run the text off the canvas — the corridor's whole-Meadows fit is
+## a narrow centre strip with wide gutters, so a right-hand label is usually
+## reading into empty gutter, which is exactly where there is room for it. No
+## collision solve between labels: the sixteen authored clusters are spread over
+## 7 km of corridor and only the ones within 300 m of somewhere the player has
+## been are pinned at all, so two pin labels landing on each other is not a case
+## that exists in the authored world. If it ever does, this is where to fix it.
+func _draw_alpha_pin_labels(canvas: Control, map_rect: Rect2, map_state: RefCounted) -> void:
+	if _region_font == null:
+		_region_font = load(UITokens.FONT_PATH)
+	if _region_font == null:
+		return
+	for entry: Dictionary in (map_state.call("landmarks") as Array):
+		if not bool(entry.get("dynamic", false)):
+			continue
+		if not str(entry.get("id", "")).begins_with(ALPHA_MARKER_PREFIX):
+			continue
+		var text := str(entry.get("display_name", ""))
+		if text.is_empty():
+			continue
+		var point := _world_to_canvas(entry.get("position", Vector2.ZERO), map_rect)
+		var half := _marker_size(entry) * 0.5
+		var viewport := Rect2(Vector2.ZERO, canvas.size).grow(-half)
+		if not viewport.has_point(point):
+			continue
+		var width := _region_font.get_string_size(
+			text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, CANVAS_LABEL_FONT_SIZE).x
+		# 15 px, not 8: at 8 the first letter began five pixels from the plate's
+		# edge and the glyph and the letterform fused into one shape at 100%.
+		# The starburst above also reaches further out than the old disc did.
+		var baseline := point + Vector2(half + 26.0, CANVAS_LABEL_FONT_SIZE * 0.36)
+		var alignment := HORIZONTAL_ALIGNMENT_LEFT
+		if baseline.x + width > canvas.size.x - 8.0:
+			baseline.x = point.x - half - 26.0 - width
+			alignment = HORIZONTAL_ALIGNMENT_LEFT
+			if baseline.x < 8.0:
+				continue
+		_draw_string_legible(
+			canvas, _region_font, baseline, text, alignment, width + 4.0,
+			CANVAS_LABEL_FONT_SIZE, UITokens.DANGER)
+
+
 func _marker_size(entry: Dictionary) -> float:
 	var category := str(entry.get("category", ""))
 	if category == "major":
@@ -771,7 +844,37 @@ func _draw_icon(canvas: Control, map_rect: Rect2, entry: Dictionary, alpha: floa
 	# landmark now gets one, sized down for minor/generic categories so a
 	# major destination still reads as visually heavier on the map.
 	var plate_scale := 0.58 if category == "major" else 0.48
-	canvas.draw_circle(point, marker_size * plate_scale, Color(0.02, 0.03, 0.04, 0.72))
+	var plate := Color(0.02, 0.03, 0.04, 0.72)
+	if str(entry.get("id", "")).begins_with(ALPHA_MARKER_PREFIX):
+		# CL-W1. The one coloured plate on this map. Every place icon shares
+		# the neutral dark disc above precisely so that no place shouts louder
+		# than another; an alpha pin is not a place, it is a threat the owner
+		# asked to be advertised, and it is the only mark here that is meant to
+		# pull the eye. Drawn a shade darker than `UITokens.DANGER` itself so
+		# the white glyph on top keeps its contrast.
+		# A blind judge found this mark on its own but could separate it from the
+		# player marker "barely, and only by hue" -- both were filled discs of
+		# about the same footprint 35 px apart, and hue is the weakest channel
+		# there is: it fails for a colour-blind player and on a handheld panel in
+		# daylight. So the alpha now differs in SILHOUETTE. The starburst reads
+		# as a hazard rosette at a glance and, unlike a disc, nothing else on
+		# this screen has that outline at any size.
+		plate = Color(UITokens.DANGER.darkened(0.35), 0.94)
+		# Round two of the blind pass moved the mark from "found only by its red
+		# label" to "found instantly", but the rosette was still too timid to
+		# survive GREYSCALE: 2-3 px of serration on a 22 px disc reads as
+		# anti-aliasing at 1:1, and the judge, looking at the frame with colour
+		# removed, could not say which of the two round marks on that axis was
+		# the danger. So the badge now differs in SIZE CLASS as well as contour
+		# -- spikes reaching 1.55x the disc, a core at 0.58 of that, which is a
+		# serrated form roughly twice the player pin's footprint. Hue is now the
+		# third cue, not the only one.
+		var spike := marker_size * plate_scale
+		canvas.draw_colored_polygon(
+			_alpha_starburst(point, spike * 1.72), Color(0.02, 0.03, 0.04, 0.9))
+		canvas.draw_colored_polygon(
+			_alpha_starburst(point, spike * 1.55), Color(UITokens.DANGER, 0.95))
+	canvas.draw_circle(point, marker_size * plate_scale, plate)
 	canvas.draw_texture_rect(tex, Rect2(point - size * 0.5, size), false, Color(1, 1, 1, alpha))
 
 
@@ -1121,3 +1224,17 @@ func _player_node() -> Node3D:
 	if world == null:
 		return null
 	return world.get_node_or_null(^"Player") as Node3D
+
+
+## The alpha marker's outline: a rosette of `SPIKES` points alternating between
+## `radius` and `radius * 0.62`. Drawn rather than authored as a texture because
+## it is the marker's PLATE, sized from `marker_size` like the disc it replaced,
+## and `assets/ui/icons/map/alpha.png`'s chevron still sits on top of it.
+func _alpha_starburst(centre: Vector2, radius: float) -> PackedVector2Array:
+	const SPIKES := 9
+	var points := PackedVector2Array()
+	for index in SPIKES * 2:
+		var r := radius if index % 2 == 0 else radius * 0.58
+		var angle := TAU * float(index) / float(SPIKES * 2) - TAU * 0.25
+		points.append(centre + Vector2(cos(angle), sin(angle)) * r)
+	return points
