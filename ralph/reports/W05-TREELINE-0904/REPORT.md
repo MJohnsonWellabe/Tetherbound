@@ -65,7 +65,7 @@ order, after every rejection test, so a wider range consumes the same draws.
 |---|---|---|---|
 | budget (plan) | ≤ 7,500 | ≤ 12.0 M | |
 | before (this container, current config) | 6,963 | 10,800,474 | 5,982 |
-| after | AFTER_DRAWS | AFTER_PRIMS | AFTER_OBJS |
+| after | 6,977 | 10,818,854 | 5,996 |
 
 ## 5. Finding: the bake on `main` was already stale
 
