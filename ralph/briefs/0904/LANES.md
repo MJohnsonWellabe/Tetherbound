@@ -1,6 +1,6 @@
 | Lane | Session | Branch | Model | State |
 |---|---|---|---|---|
-| W00-ICONS | session_011dNQ8FdKFxipGAyMpFqxDX | ralph/W00-ICONS-0904 | fable | resumed 01:06Z (wave 2) |
+| W00-ICONS | session_011dNQ8FdKFxipGAyMpFqxDX | ralph/W00-ICONS-0904 | fable | DONE 01:21Z, ARCHIVED; PR #42 (ralph/LAND-0904) in CI |
 | W01-ROUTE-STRIP | session_01YZeGuGZmYaMfYiWt5F7u8s | ralph/W01-ROUTE-STRIP-0904 | fable | resumed 01:06Z (wave 2) |
 | W02-HARNESS-CONTEXT | session_01GXiERF5YzxNF8dAiFDZckr | ralph/W02-HARNESS-CONTEXT-0904 | fable | PAUSED (hit 5h limit 21:xx; partial push kept) |
 | W03-S08-FREEZE | session_01Rn6edt5WwLFj2QjeEZ6xB7 | ralph/W03-S08-FREEZE-0904 | fable | PAUSED (hit 5h limit 21:xx; partial push kept) |
@@ -15,11 +15,11 @@
 | W12-COMPANION | session_01GwmYsvBJgk8LZjAcncw6Uj | ralph/W12-COMPANION-0904 | fable | resumed 01:06Z (wave 2) |
 | W13-PROGRESSION-FEED | session_01LvTJr575z5MeAB4mYwwSa1 | ralph/W13-PROGRESSION-FEED-0904 | fable | resumed 01:06Z (wave 2) |
 | W14-RIDING | session_01E5oABcNXe8KY4bgZr1nd33 | ralph/W14-RIDING-0904 | opus | PAUSED (hit 5h limit 21:xx; partial push kept) |
-| W15-NIGHT | session_01EedqpY5BgYWGCHuUG5w6VR | ralph/W15-NIGHT-0904 | fable | PAUSED (hit 5h limit 21:xx; partial push kept) |
+| W15-NIGHT | session_01EedqpY5BgYWGCHuUG5w6VR | ralph/W15-NIGHT-0904 | fable | resumed 01:25Z (backfill for W00) |
 | W16-LOFT-BED | session_01EHxzFs2VaZmn7b6UHWYyeg | ralph/W16-LOFT-BED-0904 | opus | PAUSED (hit 5h limit 21:xx; partial push kept) |
 | W17-DENSITY-B2-B3 | session_013yknopk7xZdMbGWHEgWokR | ralph/W17-DENSITY-B2-B3-0904 | fable | resumed 01:06Z (wave 2) |
 | W18-DENSITY-B4-B5 | session_01JDyZNRegueK2qa9YNZnXvC | ralph/W18-DENSITY-B4-B5-0904 | fable | resumed 01:06Z (wave 2) |
-| W19-CONTRACTS | session_01AHh7dCnebbJAjjWTCEJ7oS | ralph/W19-CONTRACTS-0904 | fable | DONE 01:09Z — report pushed, awaiting landing |
+| W19-CONTRACTS | session_01AHh7dCnebbJAjjWTCEJ7oS | ralph/W19-CONTRACTS-0904 | fable | DONE 01:09Z, ARCHIVED; awaiting landing batch |
 | W20-SMALL-FIXES | session_01UUtrNg1WUDF1qA7XabKfaG | ralph/W20-SMALL-FIXES-0904 | opus | PAUSED (hit 5h limit 21:xx; partial push kept) |
 | W21-HARNESS-FIGHTS | session_01654XjihMdSzNkv2qoKUJez | ralph/W21-HARNESS-FIGHTS-0904 | opus | PAUSED (hit 5h limit 21:xx; partial push kept) |
 | W22-BRIDGE-SIGNPOST | session_01JsXprpxn5HzVvCoubWsYS8 | ralph/W22-BRIDGE-SIGNPOST-0904 | fable | PAUSED (hit 5h limit 21:xx; partial push kept) |
@@ -38,3 +38,5 @@ All 24 lanes hit the 5-hour session limit around 21:10–21:25 UTC; 17 had pushe
 | W08-DIALOGUE-CAMERA | session_01W3PYtSyEg9qrLkp7NEb4ty | ralph/W08-DIALOGUE-CAMERA-0904 | opus |
 | W22-BRIDGE-SIGNPOST | session_015gFJnm7kJjKThCfeQ1UjTx | ralph/W22-BRIDGE-SIGNPOST-0904 | opus |
 Queued for Opus finishers when Fable lanes free slots: W02, W20, W21 (all ~50%). Fable stays on the low-done lanes: W07, W12 active; W15, W03, W05, W16, W14 next as slots free. Rules for finishers: ralph/briefs/0904/FINISHER.md.
+
+Coordinator sweep cadence: every 10 minutes (in-session cron 5caf037b). Landing PR #42 "Land W00-ICONS" opened by W24 01:23Z; W24 also restored the Linux bake-manifest fingerprints that Codex commit f2dd20e4 clobbered with Windows ones (this is why lanes saw freshness checks red in their own CI).
