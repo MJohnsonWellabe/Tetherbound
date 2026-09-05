@@ -143,3 +143,12 @@ LF bake and the folded fingerprint accepts it unchanged. Re-run on the merged tr
 `test_terrain_bake_freshness.gd` 4 / 15 / 0 failed, `test_scatter_fingerprint_covers_bands.gd`
 4 / 22 / 0 failed, `test_scatter_perf_budget.gd` 3 / 6 / 0 failed. Diff against
 `origin/main`: 8 files, 335 insertions, 2 deletions — the table above plus the merge.
+
+## Sidecars, committed separately
+
+The import generated `.uid` sidecars for twelve Cloudreach scripts that are on `main`
+without them (`autoload/realm_heart_state.gd`, `scripts/world/cloudreach_world.gd`,
+`realm_gate.gd`, `realm_heart_shrine.gd`, `tools/capture_cloudreach_foundation.gd` and
+seven `tests/*cloudreach*`/`*realm*` files). They are committed as their own commit on this
+branch, the way `dfc26293` did for the W08/W11/W14/W16 scripts, so the landing lane can
+drop that one commit if Cloudreach's owner would rather add them. No other file is touched.
