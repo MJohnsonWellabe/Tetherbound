@@ -250,5 +250,25 @@ smoke that pressed nothing. It is recorded here as a finding, per COMMON.md.
 
 ## Landing
 
-Branch `ralph/W10-TRAINER-RULES-0904`, final commit `FINAL_HASH`.
+Branch `ralph/W10-TRAINER-RULES-0904`.
+
+Last commit carrying code or data: **`8264cc9d`** (`smoke_trainer_battle`: wait
+out the input guard) — that is the tree every count above was measured against.
+The two commits after it are documentation only: `f5ec355e` (this report and the
+status row) and the amendment stamping this line, which is the branch head.
+Verify with `git log --oneline origin/main..origin/ralph/W10-TRAINER-RULES-0904`.
+
+Full branch, oldest first:
+
+```
+1983309f  trainers: the three rules
+9bbf1935  trainers: runtime checks, spec paragraph, decision record, status row
+2449216e  chore: drop import artefacts this lane never owned
+20f05182  docs: report skeleton
+505ae5e4  smoke_trainer_battle: clear the toast before reading it
+7b710d05  docs: renumber the lane's decision record D74 -> D79
+8264cc9d  smoke_trainer_battle: wait out the input guard before pressing disengage
+f5ec355e  docs: report, and the status row rewritten with verified counts
+```
+
 No PR opened; the landing lane owns that.
