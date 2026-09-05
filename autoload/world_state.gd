@@ -184,9 +184,9 @@ func save_data() -> Dictionary:
 ## `save_game.gd`.
 func load_data(data: Dictionary) -> void:
 	world_id = str(data.get("world_id", world_id))
-	day = int(data.get("day", 1))
+	day = _int(data.get("day"), 1)
 	clock_elapsed_seconds = _finite_clock(data.get("clock_elapsed_seconds"))
-	world_seed = int(data.get("world_seed", 0))
+	world_seed = _int(data.get("world_seed"), 0)
 	placed_buildings = _array(data.get("placed_buildings", []))
 	farm_plots = _array(data.get("farm_plots", []))
 	death_satchels = _array(data.get("death_satchels", []))
@@ -197,6 +197,17 @@ func load_data(data: Dictionary) -> void:
 	var raw_flags: Variant = data.get("flags", {})
 	flags.call("load_data", raw_flags if typeof(raw_flags) == TYPE_DICTIONARY else {})
 	revision += 1
+
+
+## A saved number, or the default. Deliberately strict about the TYPE rather
+## than calling `int()` on whatever arrived: `int([])` is not a conversion, it
+## is a "Nonexistent 'int' constructor" error that aborts the whole load
+## halfway through and leaves a half-restored world -- which is exactly the
+## failure "never fatal on load" exists to prevent.
+func _int(raw: Variant, fallback: int) -> int:
+	if typeof(raw) == TYPE_INT or typeof(raw) == TYPE_FLOAT:
+		return int(raw)
+	return fallback
 
 
 func _array(raw: Variant) -> Array:
