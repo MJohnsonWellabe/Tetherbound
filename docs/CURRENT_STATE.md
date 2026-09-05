@@ -56,14 +56,22 @@ See `docs/biomes/cloudreach/CONTINUOUS_ACCEPTANCE_0905.md`,
 `SHRINE_SIGHTLINE_0905.md` and the round-5 `JUDGE-ASTRA.md`.
 
 The older exit note and main snapshot below are dated history, not current
-Cloudreach routing. Wild footprint admission/roaming/recovery now passes 73
-production checks, including actual Engage at all three early sites and identity/
-fight/faint/respawn guards. The 18-ray moving-step upper bound needs isolated
-profiling. Pre-Senn absence of Engage in the continuous fixture also reflects
-its undeployed companion; it is not proof of missing wilds. Next steps: finish
-continuous upper-route/finale/aftermath/exact disk reload, measure active roaming
-and activity gaps, and resolve the round-5 criticisms. Draft PR #44 CI for
-`97de9bbf7` remains running/queued, not passed; do not merge.
+Cloudreach routing. Wild footprint admission/roaming/recovery passes 73 production
+checks, including actual Engage at all three early sites and identity/fight/faint/
+respawn guards. Two separate quiet 12-phase profiles measure each actual resident
+pair at roughly 0.35–0.60ms of inclusive instrumented support work per physics
+tick. This is not a scene/device pass: rendered causeway roaming reached 19.30ms
+p95 / 28.10ms max, and separate zero-query headless controls stalled to 430–596ms.
+Pre-Senn absence of Engage in the continuous fixture also reflects its undeployed
+companion; it is not proof of missing wilds.
+
+Controlled Fly now permits the authored 425m High Roost-to-aerie descent while
+exhausted flight still returns to its physically verified anchor. The isolated
+route lands on real aerie collision with 115.75 stamina and no recovery. Next:
+wire the authored Cloudreach camp creature-recovery service, finish continuous
+upper-route/finale/aftermath/exact disk reload with real combat, measure activity
+gaps, and resolve the round-5 criticisms. Draft PR #44 CI for `c1e834771` remains
+queued, not passed; do not merge.
 
 **Status:** the live status document. Replaces `ralph/BACKLOG.md`, `ralph/STATUS.md` and
 the coordinator handovers (all under `archive/ralph/`). Update it when evidence changes;

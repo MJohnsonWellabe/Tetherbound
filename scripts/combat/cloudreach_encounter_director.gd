@@ -65,6 +65,38 @@ var _site_members: Dictionary = {}
 var _site_failures: Dictionary = {}
 var _wild_homes: Dictionary = {}
 
+# Default-off, read-only diagnostics for the active-roaming probe. No clock or
+# counter work is performed by the normal path. The proxy counts actual rays,
+# including short-circuited footprints, without branches inside the ray loop.
+class WildRayCounter:
+	extends RefCounted
+	var world: Node3D
+	var rays := 0
+	func intersect_ray(query: PhysicsRayQueryParameters3D) -> Dictionary:
+		rays += 1
+		return world.get_world_3d().direct_space_state.intersect_ray(query)
+
+var _wild_diagnostics_enabled := false
+var _wild_support_calls := 0
+var _wild_support_usec := 0
+var _wild_ray_counter := WildRayCounter.new()
+
+
+func set_wild_diagnostics_enabled(enabled: bool) -> void:
+	_wild_diagnostics_enabled = enabled
+	_wild_ray_counter.world = realm_world as Node3D
+
+
+func reset_wild_diagnostics() -> void:
+	_wild_support_calls = 0
+	_wild_support_usec = 0
+	_wild_ray_counter.rays = 0
+
+
+func wild_diagnostics_snapshot() -> Dictionary:
+	return {"enabled": _wild_diagnostics_enabled, "support_calls": _wild_support_calls,
+		"rays": _wild_ray_counter.rays, "support_usec": _wild_support_usec}
+
 
 static func read_json(path: String) -> Dictionary:
 	var file := FileAccess.open(path, FileAccess.READ)
@@ -348,6 +380,16 @@ func spawn_wild(species: String, spot: Vector3, opts: Dictionary = {}) -> Node3D
 ## Real collision AND the intended analytic stratum must agree. An enclosing
 ## mesa, a different stacked deck or a ray hitting another creature is not floor.
 func _wild_support(at: Vector3, radius: float, wild: Node3D) -> Vector3:
+	if _wild_diagnostics_enabled:
+		var started := Time.get_ticks_usec()
+		_wild_support_calls += 1
+		var result := _wild_support_impl(at, radius, wild, _wild_ray_counter)
+		_wild_support_usec += Time.get_ticks_usec() - started
+		return result
+	return _wild_support_impl(at, radius, wild)
+
+
+func _wild_support_impl(at: Vector3, radius: float, wild: Node3D, query_proxy: Object = null) -> Vector3:
 	if not at.is_finite() or not is_instance_valid(realm_world) \
 			or not realm_world.has_method("ground_height_near") or not realm_world.is_inside_tree():
 		return Vector3.INF
@@ -359,6 +401,7 @@ func _wild_support(at: Vector3, radius: float, wild: Node3D) -> Vector3:
 		if is_instance_valid(actor) and actor is CollisionObject3D:
 			exclusions.append(actor.get_rid())
 	var highest := ground
+	var query_space: Object = query_proxy if query_proxy != null else (realm_world as Node3D).get_world_3d().direct_space_state
 	for i in 9:
 		var offset := Vector3.ZERO if i == 0 else Vector3(cos((i-1)*TAU/8.0), 0, sin((i-1)*TAU/8.0)) * radius
 		var sample := Vector3(at.x + offset.x, ground, at.z + offset.z)
@@ -367,7 +410,7 @@ func _wild_support(at: Vector3, radius: float, wild: Node3D) -> Vector3:
 			return Vector3.INF
 		var ray := PhysicsRayQueryParameters3D.create(sample + Vector3.UP * 1.6, sample - Vector3.UP * 1.6)
 		ray.exclude = exclusions
-		var hit := (realm_world as Node3D).get_world_3d().direct_space_state.intersect_ray(ray)
+		var hit: Dictionary = query_space.intersect_ray(ray)
 		if hit.is_empty() or not hit.collider is StaticBody3D \
 				or hit.normal.y < 0.7 or absf(hit.position.y - expected) > 0.35:
 			return Vector3.INF

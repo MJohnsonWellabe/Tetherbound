@@ -221,7 +221,12 @@ func physics_step(delta: float, input_owned: bool) -> bool:
 		_finish("grounded")
 		observe_ground()
 		landed.emit(_player.global_position, species_id)
-	elif safe_anchor != Vector3.INF and _player.global_position.y < safe_anchor.y - float(config.get("recovery_drop_m", 100.0)):
+	# Cloudreach intentionally descends hundreds of metres between authored
+	# shelves. Altitude below the previous landing is not itself a fall while
+	# the carrier, stamina and flight clock still provide normal control. Keep
+	# the verified-anchor fallback for exhausted/invalid flight only.
+	elif state == "exhausted" and safe_anchor != Vector3.INF \
+			and _player.global_position.y < safe_anchor.y - float(config.get("recovery_drop_m", 100.0)):
 		recover_to_anchor("The wind carried you back to your last safe landing.")
 	return true
 

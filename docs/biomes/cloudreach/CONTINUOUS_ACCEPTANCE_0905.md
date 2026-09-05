@@ -2,6 +2,15 @@
 
 Harness: `tests/smoke_cloudreach_continuous.gd`.
 
+Latest continuous boundary: **Retry 9 earns Fly, lands at High Roost, aligns
+all three vanes, completes Sora's dialogue, and unlocks the windlass road**.
+The return departure needs a climb before descent. Its isolated correction
+exposed a production 100m-below-anchor safety rule that rejected healthy flight;
+the world owner's fix now passes the real full return in a separate fixture.
+The next clean replay is held for the confirmed camp creature-recovery wiring
+gap. Return flight, grounded upper progression, finale and final disk persistence
+are not yet continuously proven. This remains **not passed**.
+
 It uses the production Cloudreach scene, actual controller/InputEventAction
 movement and interactions, normal collision, grounded authored-route graph,
 Fly input/rings/landing, real trainer combat starts, production round callbacks,
@@ -440,7 +449,44 @@ separate shrine fixture adds the same declared Meadows Heart precondition and
 tests this departure/return with the same original five non-Fly members. It
 cannot replace the subsequent new clean continuous run.
 
+`shrine-services5-return.log` verifies the normal-speed clearance input:
+the departure waypoint is reached at **7.08s** airborne and `(850,975,3020)`
+at **19.60s**, still with **163.33 stamina**. It then exposes a real recovery
+bug: `fly_controller.gd` applies `recovery_drop_m` (100m) below the last safe
+anchor even to healthy, intentionally controlled flight. A shrine anchor at
+about y1050 therefore recovers the return before it can reach the aerie at
+y610. The real recovery signal stops the fixture; no added floor, intermediate
+teleport, stamina write or recovery suppression is used. The world owner has
+the production condition and is responsible for the bounded safety correction.
+The departure pilot change remains separate from that production issue.
+
+`shrine-services6-return.log` **passes** after the production safety correction.
+The shared drop fallback now applies to exhausted flight, retaining carrier,
+stamina and duration exhaustion, verified-anchor recovery, restricted-volume
+recovery and ordinary grounded cliff-fall recovery. Its focused production
+physics fixture passes 30 assertions, including healthy-descent and exhausted
+controls. The actual normal-speed return crosses the old 100m threshold at
+`(805.541,949.974,3045.467)` with **159.40 stamina**, then continues beyond
+**425m** below the shrine anchor. It lands at
+`(401.584,610.101,3249.878)` on
+`WindscarFlightAerie/LandmarkLedge/Collision`, still with **115.75 stamina**.
+The final approach is reached at **63.88s airborne** and the fixture exits 0
+at **140.77 wall seconds** including world creation and all shrine services.
+No recovery signal fires and the same five non-Fly members remain owned.
+This verifies the return pilot/safety corrections independently; the full
+continuous replay still must repeat them without the shrine-start fixture.
+
 ## Remaining
+
+Before live-combat acceptance, named-camp creature recovery must be made real.
+Every Cloudreach camp declares `creature_recovery`, but the current physical
+adapter passes no `creature_bed` spec to `rest_point.gd` and adds only a
+decorative human bed. The shared night-rest contract intentionally heals only
+physically bedded creatures. The healthy lethal-prefix team masked no damage
+with rest, and the future live-combat harness must not copy the flat balance
+probe's direct all-party `home_recovery.rest` seam. The world owner confirmed
+this service wiring gap; a genuine camp-bed interaction and injury/rest/reload
+proof are required before treating camp preparation as functional recovery.
 
 The current source has moved the upper gate clear of the mandatory junction,
 relocated the captured-picket signal beside Senn, added an accessible causeway

@@ -131,13 +131,20 @@ func _run() -> void:
 			break
 	_action("fly_descend", false)
 	_check(not fly.is_flying() and player.is_on_floor(), "controller descent ends on floor contact (state=%s y=%.2f vy=%.2f)" % [fly.state, player.position.y, player.velocity.y])
-	# A fall below the level must use verified ground, never a highest-XZ snap.
+	# High Roost -> aerie loses >400m legitimately. A healthy controlled glide
+	# below the old anchor threshold is not an exhausted/void fall. Relocation
+	# here is explicit boundary fault injection, not evidence of route travel.
 	player.vitals.rest()
 	await _deploy()
 	var recovery_anchor: Vector3 = fly.safe_anchor
 	player.position.y = recovery_anchor.y - 110.0
 	await _frames(3)
-	_check(not fly.is_flying() and player.position.distance_to(recovery_anchor) < 1.0, "void recovery returns to the physically verified landing")
+	_check(fly.is_flying() and player.position.y < recovery_anchor.y - 100.0, "healthy flight can descend below the previous landing")
+	# Exhaustion still invokes the verified anchor. Do not replace it with a
+	# highest-XZ snap or remove the resource/safety fallback to fix descent.
+	player.vitals.stamina = 0.0
+	await _frames(3)
+	_check(not fly.is_flying() and player.position.distance_to(recovery_anchor) < 1.0, "exhausted void recovery returns to the physically verified landing")
 	_check(player.rider_visible() and not player.is_carried(), "landing preserves ordinary riding/visibility state")
 	await _frames(4)
 	_check(player.get_node("Model").animation_player().is_playing(), "ordinary trainer animation resumes after flight")

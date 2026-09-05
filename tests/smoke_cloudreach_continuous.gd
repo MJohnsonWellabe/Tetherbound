@@ -167,10 +167,7 @@ func _run() -> void:
 	if not await _talk("naturalist_sora", "storm_anchor_engine_truth_learned", false): return _finish()
 	if not await _physical_action("shrine_windlass", "cloudreach_upper_route_unlocked", false): return _finish()
 	stage = "return_glide_to_grounded_counterweight"
-	if not await _deploy(): return _finish()
-	for target: Vector3 in [Vector3(850,975,3020), Vector3(620,800,3150), Vector3(405,630,3250)]:
-		if not await _fly_to(target): return _finish()
-	if not await _land(Vector3(400,610,3250)): return _finish()
+	if not await _return_to_aerie(): return _finish()
 	if not await _navigate(Vector3(-720,700,3680)): return _finish()
 	if not _require(_has("cloudreach_act_ii_complete"), "Grounded counterweight route entered"): return _finish()
 	if not await _physical_action("upper_anchor_west", "storm_anchor_upper_west_disabled"): return _finish()
@@ -608,6 +605,15 @@ func _deploy() -> bool:
 	if not _require(roster_ids == initial_party_ids and fly.last_flight_used_mentor_loaner(),"Maela loaner carries the unchanged five-non-Fly team without a sixth slot"): return false
 	_log("flight_launch", {"carrier":fly.eligible_creature().species_id,"loaner":true,"stamina":player.vitals.stamina,"party_size":roster_ids.size()})
 	return true
+
+
+func _return_to_aerie() -> bool:
+	if not await _deploy(): return false
+	# Deployment begins only ~2m above the platform. Gain clearance in the real
+	# shrine updraft before descending away, or the capsule simply lands again.
+	for target: Vector3 in [Vector3(1020,1075,3000),Vector3(850,975,3020),Vector3(620,800,3150),Vector3(405,630,3250)]:
+		if not await _fly_to(target): return false
+	return await _land(Vector3(400,610,3250))
 
 
 func _fly_to(target: Vector3, radius: float = 5.0, expected_landing: Vector3 = Vector3.INF) -> bool:

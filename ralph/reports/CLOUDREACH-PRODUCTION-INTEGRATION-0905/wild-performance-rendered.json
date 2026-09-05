@@ -1,0 +1,917 @@
+{
+	"complete": true,
+	"failures": [],
+	"metadata": {
+		"boot_wall_seconds": 55.78212,
+		"display_server": "Windows",
+		"engine": "4.7-stable (official)",
+		"max_fps": 60,
+		"measurement": "Engine Performance.TIME_PROCESS/TIME_PHYSICS_PROCESS plus support wall timer; NOT isolated OS CPU or GPU time",
+		"overhead": "instrumented support includes two clock reads, counters and a script ray proxy; compare roaming_uninstrumented; sampler overhead common to all windows",
+		"phase_order": [
+			"sleeping",
+			"active_idle",
+			"roaming_uninstrumented",
+			"roaming_instrumented"
+		],
+		"physics_hz": 60,
+		"pid": 12368,
+		"prerequisite": "Engage requires a deployed ally; this roaming-only fixture intentionally leaves its party undeployed",
+		"sample_seconds": 10.0,
+		"scope": "same world and camera per site, actual six-site config, real residents, fixed seed and between-window home/RNG reset",
+		"seed": 1594702062,
+		"time_scale": 1.0,
+		"warmup_seconds": 3.0
+	},
+	"phases": [
+		{
+			"active_body_ticks": 0,
+			"bodies": [
+				{
+					"home": "(-188.2378, 194.1889, 619.5447)",
+					"instance_id": -9223371099830453249,
+					"level": 18,
+					"name": "lower_cliff_foragers_0",
+					"node_id": 934826507105,
+					"position": "(-188.2969, 194.1675, 619.5401)",
+					"species": "pipwing",
+					"supported": true
+				},
+				{
+					"home": "(-192.2378, 193.892, 619.5447)",
+					"instance_id": -9223371098119177196,
+					"level": 22,
+					"name": "lower_cliff_foragers_1",
+					"node_id": 938064509952,
+					"position": "(-192.2453, 193.8389, 619.4874)",
+					"species": "pipwing",
+					"supported": true
+				}
+			],
+			"diagnostics": {
+				"enabled": true,
+				"rays": 0,
+				"support_calls": 0,
+				"support_usec": 0
+			},
+			"frame_interval_ms": {
+				"count": 599,
+				"max": 23.838,
+				"mean": 16.6663722871453,
+				"p50": 16.666,
+				"p90": 16.683,
+				"p95": 16.696,
+				"p99": 16.894
+			},
+			"maximum_displacement_from_home_m": 0.0785922706127167,
+			"moving_body_ticks": 0,
+			"phase": "sleeping",
+			"physics_ticks": 600,
+			"physics_time_ms": {
+				"count": 600,
+				"max": 0.51,
+				"mean": 0.284053333333334,
+				"p50": 0.254,
+				"p90": 0.502,
+				"p95": 0.51,
+				"p99": 0.51
+			},
+			"process_time_ms": {
+				"count": 600,
+				"max": 23.364,
+				"mean": 10.2986766666666,
+				"p50": 8.121,
+				"p90": 15.648,
+				"p95": 23.364,
+				"p99": 23.364
+			},
+			"rays_per_sim_second": 0.0,
+			"residents": 2,
+			"sample_sim_seconds": 10.0,
+			"sample_wall_seconds": 9.999497,
+			"site": "lower_cliff_foragers",
+			"start_positions": [
+				"(-188.2969, 194.1675, 619.5401)",
+				"(-192.2453, 193.8389, 619.4874)"
+			],
+			"support_ms_per_physics_tick": 0.0,
+			"support_ms_per_wall_second": 0.0,
+			"warmup_sim_seconds": 3.0
+		},
+		{
+			"active_body_ticks": 1200,
+			"bodies": [
+				{
+					"home": "(-188.2378, 194.1889, 619.5447)",
+					"instance_id": -9223371099830453249,
+					"level": 18,
+					"name": "lower_cliff_foragers_0",
+					"node_id": 934826507105,
+					"position": "(-188.24, 194.171, 619.5424)",
+					"species": "pipwing",
+					"supported": true
+				},
+				{
+					"home": "(-192.2378, 193.892, 619.5447)",
+					"instance_id": -9223371098119177196,
+					"level": 22,
+					"name": "lower_cliff_foragers_1",
+					"node_id": 938064509952,
+					"position": "(-192.2413, 193.8733, 619.5408)",
+					"species": "pipwing",
+					"supported": true
+				}
+			],
+			"diagnostics": {
+				"enabled": true,
+				"rays": 0,
+				"support_calls": 0,
+				"support_usec": 0
+			},
+			"frame_interval_ms": {
+				"count": 600,
+				"max": 17.642,
+				"mean": 16.665715,
+				"p50": 16.667,
+				"p90": 16.711,
+				"p95": 16.729,
+				"p99": 16.782
+			},
+			"maximum_displacement_from_home_m": 0.019439535215497,
+			"moving_body_ticks": 0,
+			"phase": "active_idle",
+			"physics_ticks": 600,
+			"physics_time_ms": {
+				"count": 600,
+				"max": 1.323,
+				"mean": 0.683375000000003,
+				"p50": 0.524,
+				"p90": 1.309,
+				"p95": 1.323,
+				"p99": 1.323
+			},
+			"process_time_ms": {
+				"count": 601,
+				"max": 16.293,
+				"mean": 10.3434708818636,
+				"p50": 9.96,
+				"p90": 15.939,
+				"p95": 15.939,
+				"p99": 15.939
+			},
+			"rays_per_sim_second": 0.0,
+			"residents": 2,
+			"sample_sim_seconds": 10.0,
+			"sample_wall_seconds": 10.016162,
+			"site": "lower_cliff_foragers",
+			"start_positions": [
+				"(-188.24, 194.171, 619.5424)",
+				"(-192.2413, 193.8733, 619.5408)"
+			],
+			"support_ms_per_physics_tick": 0.0,
+			"support_ms_per_wall_second": 0.0,
+			"warmup_sim_seconds": 3.0
+		},
+		{
+			"active_body_ticks": 1200,
+			"bodies": [
+				{
+					"home": "(-188.2378, 194.1889, 619.5447)",
+					"instance_id": -9223371099830453249,
+					"level": 18,
+					"name": "lower_cliff_foragers_0",
+					"node_id": 934826507105,
+					"position": "(-189.7462, 193.8978, 617.6089)",
+					"species": "pipwing",
+					"supported": true
+				},
+				{
+					"home": "(-192.2378, 193.892, 619.5447)",
+					"instance_id": -9223371098119177196,
+					"level": 22,
+					"name": "lower_cliff_foragers_1",
+					"node_id": 938064509952,
+					"position": "(-188.553, 194.3719, 622.2418)",
+					"species": "pipwing",
+					"supported": true
+				}
+			],
+			"diagnostics": {
+				"enabled": false,
+				"rays": 0,
+				"support_calls": 0,
+				"support_usec": 0
+			},
+			"frame_interval_ms": {
+				"count": 599,
+				"max": 21.954,
+				"mean": 16.665307178631,
+				"p50": 16.669,
+				"p90": 16.758,
+				"p95": 16.787,
+				"p99": 16.896
+			},
+			"maximum_displacement_from_home_m": 6.06256341934204,
+			"moving_body_ticks": 670,
+			"phase": "roaming_uninstrumented",
+			"physics_ticks": 600,
+			"physics_time_ms": {
+				"count": 600,
+				"max": 6.051,
+				"mean": 2.16742499999999,
+				"p50": 1.08,
+				"p90": 3.861,
+				"p95": 6.051,
+				"p99": 6.051
+			},
+			"process_time_ms": {
+				"count": 600,
+				"max": 11.451,
+				"mean": 9.13346333333332,
+				"p50": 9.037,
+				"p90": 9.953,
+				"p95": 9.953,
+				"p99": 9.953
+			},
+			"rays_per_sim_second": 0.0,
+			"residents": 2,
+			"sample_sim_seconds": 10.0,
+			"sample_wall_seconds": 9.999533,
+			"site": "lower_cliff_foragers",
+			"start_positions": [
+				"(-192.8201, 193.8122, 619.3076)",
+				"(-192.6233, 193.5642, 616.1636)"
+			],
+			"support_ms_per_physics_tick": 0.0,
+			"support_ms_per_wall_second": 0.0,
+			"warmup_sim_seconds": 3.0
+		},
+		{
+			"active_body_ticks": 1200,
+			"bodies": [
+				{
+					"home": "(-188.2378, 194.1889, 619.5447)",
+					"instance_id": -9223371099830453249,
+					"level": 18,
+					"name": "lower_cliff_foragers_0",
+					"node_id": 934826507105,
+					"position": "(-189.7354, 193.9011, 617.6288)",
+					"species": "pipwing",
+					"supported": true
+				},
+				{
+					"home": "(-192.2378, 193.892, 619.5447)",
+					"instance_id": -9223371098119177196,
+					"level": 22,
+					"name": "lower_cliff_foragers_1",
+					"node_id": 938064509952,
+					"position": "(-188.5568, 194.3591, 622.2399)",
+					"species": "pipwing",
+					"supported": true
+				}
+			],
+			"diagnostics": {
+				"enabled": true,
+				"rays": 12740,
+				"support_calls": 1418,
+				"support_usec": 229368
+			},
+			"frame_interval_ms": {
+				"count": 599,
+				"max": 21.449,
+				"mean": 16.6652687813022,
+				"p50": 16.67,
+				"p90": 16.78,
+				"p95": 16.843,
+				"p99": 17.03
+			},
+			"maximum_displacement_from_home_m": 6.06510925292969,
+			"moving_body_ticks": 672,
+			"phase": "roaming_instrumented",
+			"physics_ticks": 600,
+			"physics_time_ms": {
+				"count": 600,
+				"max": 5.634,
+				"mean": 2.105985,
+				"p50": 1.258,
+				"p90": 3.693,
+				"p95": 5.634,
+				"p99": 5.634
+			},
+			"process_time_ms": {
+				"count": 600,
+				"max": 10.783,
+				"mean": 9.69042666666677,
+				"p50": 9.745,
+				"p90": 10.692,
+				"p95": 10.783,
+				"p99": 10.783
+			},
+			"rays_per_sim_second": 1274.0,
+			"residents": 2,
+			"sample_sim_seconds": 10.0,
+			"sample_wall_seconds": 9.999527,
+			"site": "lower_cliff_foragers",
+			"start_positions": [
+				"(-192.8225, 193.812, 619.3074)",
+				"(-192.6418, 193.5608, 616.1462)"
+			],
+			"support_ms_per_physics_tick": 0.38228,
+			"support_ms_per_wall_second": 22.9378849619587,
+			"warmup_sim_seconds": 3.0
+		},
+		{
+			"active_body_ticks": 0,
+			"bodies": [
+				{
+					"home": "(-231.9843, 390.0, 1569.269)",
+					"instance_id": -9223370400254100427,
+					"level": 25,
+					"name": "causeway_watch_0",
+					"node_id": 1634637711985,
+					"position": "(-231.9843, 390.027, 1569.269)",
+					"species": "shadelet",
+					"supported": true
+				},
+				{
+					"home": "(-239.9843, 390.0, 1569.269)",
+					"instance_id": -9223370395925578661,
+					"level": 25,
+					"name": "causeway_watch_1",
+					"node_id": 1638697827382,
+					"position": "(-239.9843, 390.027, 1569.269)",
+					"species": "bramblebun",
+					"supported": true
+				}
+			],
+			"diagnostics": {
+				"enabled": true,
+				"rays": 0,
+				"support_calls": 0,
+				"support_usec": 0
+			},
+			"frame_interval_ms": {
+				"count": 599,
+				"max": 23.173,
+				"mean": 16.6658397328881,
+				"p50": 16.667,
+				"p90": 16.917,
+				"p95": 17.604,
+				"p99": 18.323
+			},
+			"maximum_displacement_from_home_m": 0.027008056640625,
+			"moving_body_ticks": 0,
+			"phase": "sleeping",
+			"physics_ticks": 600,
+			"physics_time_ms": {
+				"count": 600,
+				"max": 0.501,
+				"mean": 0.314425,
+				"p50": 0.263,
+				"p90": 0.448,
+				"p95": 0.501,
+				"p99": 0.501
+			},
+			"process_time_ms": {
+				"count": 600,
+				"max": 22.905,
+				"mean": 14.2019499999999,
+				"p50": 11.499,
+				"p90": 18.663,
+				"p95": 22.905,
+				"p99": 22.905
+			},
+			"rays_per_sim_second": 0.0,
+			"residents": 2,
+			"sample_sim_seconds": 10.0,
+			"sample_wall_seconds": 9.99952,
+			"site": "causeway_watch",
+			"start_positions": [
+				"(-231.9843, 390.027, 1569.269)",
+				"(-239.9843, 390.027, 1569.269)"
+			],
+			"support_ms_per_physics_tick": 0.0,
+			"support_ms_per_wall_second": 0.0,
+			"warmup_sim_seconds": 3.0
+		},
+		{
+			"active_body_ticks": 1200,
+			"bodies": [
+				{
+					"home": "(-231.9843, 390.0, 1569.269)",
+					"instance_id": -9223370400254100427,
+					"level": 25,
+					"name": "causeway_watch_0",
+					"node_id": 1634637711985,
+					"position": "(-231.9843, 390.0301, 1569.269)",
+					"species": "shadelet",
+					"supported": true
+				},
+				{
+					"home": "(-239.9843, 390.0, 1569.269)",
+					"instance_id": -9223370395925578661,
+					"level": 25,
+					"name": "causeway_watch_1",
+					"node_id": 1638697827382,
+					"position": "(-239.9843, 390.0301, 1569.269)",
+					"species": "bramblebun",
+					"supported": true
+				}
+			],
+			"diagnostics": {
+				"enabled": true,
+				"rays": 0,
+				"support_calls": 0,
+				"support_usec": 0
+			},
+			"frame_interval_ms": {
+				"count": 599,
+				"max": 23.406,
+				"mean": 16.6675392320534,
+				"p50": 16.667,
+				"p90": 17.583,
+				"p95": 17.672,
+				"p99": 18.738
+			},
+			"maximum_displacement_from_home_m": 0.030120849609375,
+			"moving_body_ticks": 0,
+			"phase": "active_idle",
+			"physics_ticks": 600,
+			"physics_time_ms": {
+				"count": 600,
+				"max": 2.015,
+				"mean": 0.985275,
+				"p50": 0.599,
+				"p90": 1.63,
+				"p95": 2.015,
+				"p99": 2.015
+			},
+			"process_time_ms": {
+				"count": 600,
+				"max": 21.836,
+				"mean": 13.92677,
+				"p50": 11.039,
+				"p90": 19.301,
+				"p95": 21.836,
+				"p99": 21.836
+			},
+			"rays_per_sim_second": 0.0,
+			"residents": 2,
+			"sample_sim_seconds": 10.0,
+			"sample_wall_seconds": 10.001693,
+			"site": "causeway_watch",
+			"start_positions": [
+				"(-231.9843, 390.0301, 1569.269)",
+				"(-239.9843, 390.0, 1569.269)"
+			],
+			"support_ms_per_physics_tick": 0.0,
+			"support_ms_per_wall_second": 0.0,
+			"warmup_sim_seconds": 3.0
+		},
+		{
+			"active_body_ticks": 1200,
+			"bodies": [
+				{
+					"home": "(-231.9843, 390.0, 1569.269)",
+					"instance_id": -9223370400254100427,
+					"level": 25,
+					"name": "causeway_watch_0",
+					"node_id": 1634637711985,
+					"position": "(-228.0325, 390.0309, 1566.883)",
+					"species": "shadelet",
+					"supported": true
+				},
+				{
+					"home": "(-239.9843, 390.0, 1569.269)",
+					"instance_id": -9223370395925578661,
+					"level": 25,
+					"name": "causeway_watch_1",
+					"node_id": 1638697827382,
+					"position": "(-242.6454, 390.0308, 1572.197)",
+					"species": "bramblebun",
+					"supported": true
+				}
+			],
+			"diagnostics": {
+				"enabled": false,
+				"rays": 0,
+				"support_calls": 0,
+				"support_usec": 0
+			},
+			"frame_interval_ms": {
+				"count": 599,
+				"max": 28.096,
+				"mean": 16.6672220367279,
+				"p50": 16.756,
+				"p90": 18.692,
+				"p95": 19.302,
+				"p99": 20.007
+			},
+			"maximum_displacement_from_home_m": 5.80228853225708,
+			"moving_body_ticks": 734,
+			"phase": "roaming_uninstrumented",
+			"physics_ticks": 600,
+			"physics_time_ms": {
+				"count": 600,
+				"max": 11.965,
+				"mean": 4.41660833333335,
+				"p50": 4.17,
+				"p90": 4.82,
+				"p95": 11.965,
+				"p99": 11.965
+			},
+			"process_time_ms": {
+				"count": 600,
+				"max": 20.734,
+				"mean": 17.6280100000001,
+				"p50": 17.599,
+				"p90": 19.185,
+				"p95": 20.734,
+				"p99": 20.734
+			},
+			"rays_per_sim_second": 0.0,
+			"residents": 2,
+			"sample_sim_seconds": 10.0,
+			"sample_wall_seconds": 9.999516,
+			"site": "causeway_watch",
+			"start_positions": [
+				"(-230.6839, 390.0309, 1568.885)",
+				"(-238.4302, 390.0309, 1568.273)"
+			],
+			"support_ms_per_physics_tick": 0.0,
+			"support_ms_per_wall_second": 0.0,
+			"warmup_sim_seconds": 3.0
+		},
+		{
+			"active_body_ticks": 1200,
+			"bodies": [
+				{
+					"home": "(-231.9843, 390.0, 1569.269)",
+					"instance_id": -9223370400254100427,
+					"level": 25,
+					"name": "causeway_watch_0",
+					"node_id": 1634637711985,
+					"position": "(-228.0325, 390.0309, 1566.882)",
+					"species": "shadelet",
+					"supported": true
+				},
+				{
+					"home": "(-239.9843, 390.0, 1569.269)",
+					"instance_id": -9223370395925578661,
+					"level": 25,
+					"name": "causeway_watch_1",
+					"node_id": 1638697827382,
+					"position": "(-242.6452, 390.0308, 1572.197)",
+					"species": "bramblebun",
+					"supported": true
+				}
+			],
+			"diagnostics": {
+				"enabled": true,
+				"rays": 14022,
+				"support_calls": 1558,
+				"support_usec": 331607
+			},
+			"frame_interval_ms": {
+				"count": 599,
+				"max": 28.094,
+				"mean": 16.6672721202003,
+				"p50": 16.665,
+				"p90": 17.881,
+				"p95": 19.087,
+				"p99": 21.16
+			},
+			"maximum_displacement_from_home_m": 5.80257177352905,
+			"moving_body_ticks": 734,
+			"phase": "roaming_instrumented",
+			"physics_ticks": 600,
+			"physics_time_ms": {
+				"count": 600,
+				"max": 12.474,
+				"mean": 4.49129166666667,
+				"p50": 4.316,
+				"p90": 6.656,
+				"p95": 12.474,
+				"p99": 12.474
+			},
+			"process_time_ms": {
+				"count": 600,
+				"max": 20.613,
+				"mean": 15.39011,
+				"p50": 17.666,
+				"p90": 19.987,
+				"p95": 20.613,
+				"p99": 20.613
+			},
+			"rays_per_sim_second": 1402.2,
+			"residents": 2,
+			"sample_sim_seconds": 10.0,
+			"sample_wall_seconds": 9.99952,
+			"site": "causeway_watch",
+			"start_positions": [
+				"(-230.6839, 390.0309, 1568.885)",
+				"(-238.4302, 390.0309, 1568.273)"
+			],
+			"support_ms_per_physics_tick": 0.552678333333333,
+			"support_ms_per_wall_second": 33.1622917900059,
+			"warmup_sim_seconds": 3.0
+		},
+		{
+			"active_body_ticks": 0,
+			"bodies": [
+				{
+					"home": "(382.3403, 610.0, 3257.355)",
+					"instance_id": -9223369773809632126,
+					"level": 23,
+					"name": "ravine_wind_0",
+					"node_id": 2261082209301,
+					"position": "(382.3403, 610.0, 3257.355)",
+					"species": "frostclaw",
+					"supported": true
+				},
+				{
+					"home": "(374.3403, 610.0, 3257.355)",
+					"instance_id": -9223369769665659736,
+					"level": 25,
+					"name": "ravine_wind_1",
+					"node_id": 2265142295683,
+					"position": "(374.3403, 610.0, 3257.355)",
+					"species": "galewisp",
+					"supported": true
+				}
+			],
+			"diagnostics": {
+				"enabled": true,
+				"rays": 0,
+				"support_calls": 0,
+				"support_usec": 0
+			},
+			"frame_interval_ms": {
+				"count": 599,
+				"max": 16.855,
+				"mean": 16.6656494156929,
+				"p50": 16.666,
+				"p90": 16.673,
+				"p95": 16.679,
+				"p99": 16.733
+			},
+			"maximum_displacement_from_home_m": 0.0,
+			"moving_body_ticks": 0,
+			"phase": "sleeping",
+			"physics_ticks": 600,
+			"physics_time_ms": {
+				"count": 600,
+				"max": 0.369,
+				"mean": 0.236633333333334,
+				"p50": 0.219,
+				"p90": 0.265,
+				"p95": 0.369,
+				"p99": 0.369
+			},
+			"process_time_ms": {
+				"count": 600,
+				"max": 11.624,
+				"mean": 10.5286299999999,
+				"p50": 10.286,
+				"p90": 11.422,
+				"p95": 11.624,
+				"p99": 11.624
+			},
+			"rays_per_sim_second": 0.0,
+			"residents": 2,
+			"sample_sim_seconds": 10.0,
+			"sample_wall_seconds": 9.999474,
+			"site": "ravine_wind",
+			"start_positions": [
+				"(382.3403, 610.0, 3257.355)",
+				"(374.3403, 610.0, 3257.355)"
+			],
+			"support_ms_per_physics_tick": 0.0,
+			"support_ms_per_wall_second": 0.0,
+			"warmup_sim_seconds": 3.0
+		},
+		{
+			"active_body_ticks": 1200,
+			"bodies": [
+				{
+					"home": "(382.3403, 610.0, 3257.355)",
+					"instance_id": -9223369773809632126,
+					"level": 23,
+					"name": "ravine_wind_0",
+					"node_id": 2261082209301,
+					"position": "(382.3403, 610.0, 3257.355)",
+					"species": "frostclaw",
+					"supported": true
+				},
+				{
+					"home": "(374.3403, 610.0, 3257.355)",
+					"instance_id": -9223369769665659736,
+					"level": 25,
+					"name": "ravine_wind_1",
+					"node_id": 2265142295683,
+					"position": "(374.3403, 610.0, 3257.355)",
+					"species": "galewisp",
+					"supported": true
+				}
+			],
+			"diagnostics": {
+				"enabled": true,
+				"rays": 0,
+				"support_calls": 0,
+				"support_usec": 0
+			},
+			"frame_interval_ms": {
+				"count": 599,
+				"max": 16.813,
+				"mean": 16.6658046744574,
+				"p50": 16.666,
+				"p90": 16.692,
+				"p95": 16.704,
+				"p99": 16.731
+			},
+			"maximum_displacement_from_home_m": 0.0,
+			"moving_body_ticks": 0,
+			"phase": "active_idle",
+			"physics_ticks": 600,
+			"physics_time_ms": {
+				"count": 600,
+				"max": 0.558,
+				"mean": 0.510093333333333,
+				"p50": 0.51,
+				"p90": 0.543,
+				"p95": 0.558,
+				"p99": 0.558
+			},
+			"process_time_ms": {
+				"count": 600,
+				"max": 12.065,
+				"mean": 10.572765,
+				"p50": 10.28,
+				"p90": 11.371,
+				"p95": 12.065,
+				"p99": 12.065
+			},
+			"rays_per_sim_second": 0.0,
+			"residents": 2,
+			"sample_sim_seconds": 10.0,
+			"sample_wall_seconds": 9.999519,
+			"site": "ravine_wind",
+			"start_positions": [
+				"(382.3403, 610.0, 3257.355)",
+				"(374.3403, 610.0, 3257.355)"
+			],
+			"support_ms_per_physics_tick": 0.0,
+			"support_ms_per_wall_second": 0.0,
+			"warmup_sim_seconds": 3.0
+		},
+		{
+			"active_body_ticks": 1200,
+			"bodies": [
+				{
+					"home": "(382.3403, 610.0, 3257.355)",
+					"instance_id": -9223369773809632126,
+					"level": 23,
+					"name": "ravine_wind_0",
+					"node_id": 2261082209301,
+					"position": "(378.2361, 610.0009, 3258.597)",
+					"species": "frostclaw",
+					"supported": true
+				},
+				{
+					"home": "(374.3403, 610.0, 3257.355)",
+					"instance_id": -9223369769665659736,
+					"level": 25,
+					"name": "ravine_wind_1",
+					"node_id": 2265142295683,
+					"position": "(373.5799, 610.0008, 3259.655)",
+					"species": "galewisp",
+					"supported": true
+				}
+			],
+			"diagnostics": {
+				"enabled": false,
+				"rays": 0,
+				"support_calls": 0,
+				"support_usec": 0
+			},
+			"frame_interval_ms": {
+				"count": 599,
+				"max": 22.912,
+				"mean": 16.6670333889816,
+				"p50": 16.665,
+				"p90": 16.704,
+				"p95": 16.729,
+				"p99": 17.012
+			},
+			"maximum_displacement_from_home_m": 4.75687122344971,
+			"moving_body_ticks": 637,
+			"phase": "roaming_uninstrumented",
+			"physics_ticks": 600,
+			"physics_time_ms": {
+				"count": 600,
+				"max": 7.019,
+				"mean": 1.84197333333333,
+				"p50": 1.264,
+				"p90": 3.694,
+				"p95": 3.694,
+				"p99": 7.019
+			},
+			"process_time_ms": {
+				"count": 600,
+				"max": 11.253,
+				"mean": 10.71257,
+				"p50": 10.612,
+				"p90": 11.008,
+				"p95": 11.253,
+				"p99": 11.253
+			},
+			"rays_per_sim_second": 0.0,
+			"residents": 2,
+			"sample_sim_seconds": 10.0,
+			"sample_wall_seconds": 9.999516,
+			"site": "ravine_wind",
+			"start_positions": [
+				"(380.6474, 609.9991, 3256.814)",
+				"(375.3976, 609.9996, 3258.089)"
+			],
+			"support_ms_per_physics_tick": 0.0,
+			"support_ms_per_wall_second": 0.0,
+			"warmup_sim_seconds": 3.0
+		},
+		{
+			"active_body_ticks": 1200,
+			"bodies": [
+				{
+					"home": "(382.3403, 610.0, 3257.355)",
+					"instance_id": -9223369773809632126,
+					"level": 23,
+					"name": "ravine_wind_0",
+					"node_id": 2261082209301,
+					"position": "(378.2359, 610.0009, 3258.597)",
+					"species": "frostclaw",
+					"supported": true
+				},
+				{
+					"home": "(374.3403, 610.0, 3257.355)",
+					"instance_id": -9223369769665659736,
+					"level": 25,
+					"name": "ravine_wind_1",
+					"node_id": 2265142295683,
+					"position": "(373.5795, 610.0008, 3259.655)",
+					"species": "galewisp",
+					"supported": true
+				}
+			],
+			"diagnostics": {
+				"enabled": true,
+				"rays": 12721,
+				"support_calls": 1415,
+				"support_usec": 210053
+			},
+			"frame_interval_ms": {
+				"count": 599,
+				"max": 32.713,
+				"mean": 16.6709315525876,
+				"p50": 16.665,
+				"p90": 16.702,
+				"p95": 16.737,
+				"p99": 19.716
+			},
+			"maximum_displacement_from_home_m": 4.75682306289673,
+			"moving_body_ticks": 637,
+			"phase": "roaming_instrumented",
+			"physics_ticks": 600,
+			"physics_time_ms": {
+				"count": 600,
+				"max": 7.349,
+				"mean": 2.37283333333334,
+				"p50": 1.195,
+				"p90": 5.053,
+				"p95": 5.053,
+				"p99": 7.349
+			},
+			"process_time_ms": {
+				"count": 600,
+				"max": 30.518,
+				"mean": 13.650855,
+				"p50": 10.333,
+				"p90": 29.401,
+				"p95": 30.518,
+				"p99": 30.518
+			},
+			"rays_per_sim_second": 1272.1,
+			"residents": 2,
+			"sample_sim_seconds": 10.0,
+			"sample_wall_seconds": 10.001833,
+			"site": "ravine_wind",
+			"start_positions": [
+				"(380.6474, 609.9991, 3256.814)",
+				"(375.3973, 609.9998, 3258.088)"
+			],
+			"support_ms_per_physics_tick": 0.350088333333333,
+			"support_ms_per_wall_second": 21.0014504341354,
+			"warmup_sim_seconds": 3.0
+		}
+	],
+	"total_wall_seconds": 213.320631
+}
