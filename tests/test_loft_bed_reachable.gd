@@ -96,6 +96,21 @@ func _bed_half_extent() -> Vector3:
 	return Vector3.ZERO if mesh == null else mesh.get_aabb().size * _k("FURNITURE_SCALE") * 0.5
 
 
+## `BedTwin.obj`'s AABB is not centred on its own origin (z −1.529 … 2.730 in
+## mesh space), and `_furnish` draws the mesh AT the placement point — so the
+## bed a player sees, and the collider `_bed_mattress_collider()` builds, are
+## centred here, not on the placement point. A collider built without this is
+## 0.30 m toward the headboard of the bed it stands for, which is the defect
+## the W16-LOFT-BED fix corrected.
+func _bed_centre() -> Vector3:
+	var mesh: Mesh = load(BED_MESH)
+	var at := Vector3(-_k("INNER_W") * 0.5 + 1.3, _k("LOFT_TOP"), -_k("INNER_D") * 0.5 + 1.9)
+	if mesh == null:
+		return at
+	var offset := mesh.get_aabb().get_center() * _k("FURNITURE_SCALE")
+	return Vector3(at.x + offset.x, at.y, at.z + offset.z)
+
+
 ## The flight has to arrive at the floor it serves. It used to stop at
 ## `FLOOR_H` — the loft slab's underside — leaving a quarter-metre of unmarked
 ## lip that only `player_controller.gd::_try_step_up` could cross.
@@ -181,7 +196,7 @@ func test_the_sleep_prompt_reaches_a_body_standing_on_the_loft() -> void:
 		return
 	assert_eq(str(prompt.get("label")), "Sleep")
 	var radius := float(prompt.get("radius"))
-	var bed_at := Vector3(-_k("INNER_W") * 0.5 + 1.3, _k("LOFT_TOP"), -_k("INNER_D") * 0.5 + 1.9)
+	var bed_at := _bed_centre()
 	var half := _bed_half_extent()
 	# Beside the bed, on the loft floor, one capsule radius clear of the
 	# mattress: the nearest a walking body gets without climbing onto it.
@@ -192,6 +207,30 @@ func test_the_sleep_prompt_reaches_a_body_standing_on_the_loft() -> void:
 			% gap + "outside its %.2fm radius" % radius)
 
 
+## The mattress blocker has to stand where the bed a player sees stands.
+## `BedTwin.obj`'s AABB is offset 0.601 from its own origin in Z, and a
+## collider built from `aabb.size` alone and hung on the placement point ran
+## 0.30 m toward the headboard of the mesh it stands for — a strip of open air
+## past the footboard reading solid, and a strip of real mattress at the foot
+## end reading empty. Invisible until something tries to LIE on it.
+func test_the_mattress_blocker_stands_where_the_bed_is() -> void:
+	var centre := _bed_centre()
+	var half := _bed_half_extent()
+	var found := false
+	for solid: Dictionary in _solids:
+		var at: Vector3 = solid["at"]
+		var size: Vector3 = solid["size"]
+		if absf(size.x - half.x * 2.0) > 0.01 or absf(size.z - half.z * 2.0) > 0.01:
+			continue
+		found = true
+		assert_almost_eq(at.x, centre.x, 0.02,
+			"the mattress blocker is off the bed mesh in X")
+		assert_almost_eq(at.z, centre.z, 0.02,
+			"the mattress blocker is off the bed mesh in Z: it stands at %.3f, the bed at %.3f"
+				% [at.z, centre.z])
+	assert_true(found, "the loft bed must carry a mattress-height blocker")
+
+
 ## The wake beat has to leave the body ON the mattress, along it and inside
 ## it. `BED_LIE_REACH` was 1.5, which put the feet 0.135m past the footboard
 ## and out over the loft floor — so the body settled on the FLOOR, a full
@@ -200,7 +239,7 @@ func test_the_wake_pose_lies_inside_the_mattress() -> void:
 	var reach := float((load(DIRECTOR_PATH) as GDScript)
 		.get_script_constant_map()["BED_LIE_REACH"])
 	var bed: Vector3 = _house.call("marker", "bed")
-	var bed_at_z := -_k("INNER_D") * 0.5 + 1.9
+	var bed_at_z := _bed_centre().z
 	var half := _bed_half_extent()
 	# `character_model.gd::set_lying()` swings the head toward -Z from the
 	# feet, so the body occupies [feet - height, feet]. The trainer's own

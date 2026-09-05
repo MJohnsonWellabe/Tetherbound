@@ -533,7 +533,28 @@ func _bed_mattress_collider(at: Vector3) -> void:
 	var aabb := mesh.get_aabb()
 	var mattress_h := 0.3
 	var size := Vector3(aabb.size.x * FURNITURE_SCALE, mattress_h, aabb.size.z * FURNITURE_SCALE)
-	_collider(size, at + Vector3(0, mattress_h * 0.5, 0))
+	# W16-LOFT-BED: centred on the MESH, not on `at`.
+	#
+	# `BedTwin.obj`'s own AABB is not centred on its origin — it runs z −1.529
+	# … 2.730 in mesh space, a centre 0.601 off. `_furnish` draws the mesh at
+	# `at`, so the bed a player sees runs `at.z` −0.765 … +1.365 once
+	# `FURNITURE_SCALE` is applied — while this collider, built from
+	# `aabb.size` alone and hung on `at`, ran `at.z` ±1.065. The blocker was
+	# 0.30 m toward the headboard of the bed it stands for: a strip of open
+	# air past the footboard read as solid, and a strip of real mattress at
+	# the foot end read as empty. That is invisible until something tries to
+	# LIE on it — a code-blind judge, given a ladder of positions along the
+	# bed, put the body's head *inside the headboard* at the placement this
+	# collider's own footprint says is centred, and picked the rung 0.20 m
+	# toward the footboard instead. Correcting the collider is what lets the
+	# staging point (`sequence_director.gd::BED_LIE_REACH`) land there while
+	# the capsule still rests on real mattress.
+	#
+	# X and Z only. The height is deliberately NOT the mesh's (see above): a
+	# body resting on this box must land at mattress height, not headboard
+	# height, so the box keeps its base at `at.y` and its capped 0.3 m.
+	var centre := aabb.get_center() * FURNITURE_SCALE
+	_collider(size, at + Vector3(centre.x, mattress_h * 0.5, centre.z))
 
 
 ## Clutter, through the same loader with a friendlier name at the call site:

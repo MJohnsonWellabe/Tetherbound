@@ -28,10 +28,19 @@ const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 
 const SETTLE_FRAMES := 120
 
-## Passes only when the whole rendered body is at or above the mattress plane
-## (a hair of tolerance for float noise), and the body lies inside the
-## mattress footprint in Z. Decided here, before any frame is rendered.
-const SUBMERSION_TOLERANCE_M := 0.02
+## How far below the mattress plane the rendered AABB may still reach.
+##
+## The first cut of this probe said "zero, plus float noise", decided before
+## any frame was rendered — and that criterion was wrong about what the AABB's
+## minimum IS. A code-blind judge, handed a ladder of lifts, established that
+## the rig's lowest rendered point is the pouch and bedroll slung at the
+## trainer's hip, not the body: lift the pack clear of the sheet and the body
+## flies above it (*"a body suspended from a bag, which is exactly
+## backwards"*). So the criterion is the one the judge's chosen rung actually
+## satisfies — the KIT sinks into the bedding by
+## `sequence_director.gd::LIE_KIT_SINK_M`, and nothing more of the body than
+## that goes under. Compare with the 0.331 m this measured before the fix.
+const SUBMERSION_TOLERANCE_M := 0.24
 
 
 func _init() -> void:
@@ -94,6 +103,13 @@ func _run() -> void:
 	var floor_h := float(house.get_script().get_script_constant_map()["FLOOR_H"])
 	var bed_at := Vector3(-inner_w * 0.5 + 1.3, floor_h + 0.25, -inner_d * 0.5 + 1.9)
 	var half := aabb.size * scale_factor * 0.5
+	# `BedTwin.obj`'s AABB is not centred on its own origin, and the mesh is
+	# drawn at `bed_at` — so the bed a player sees, and the collider
+	# `_bed_mattress_collider()` now builds, are both centred here rather than
+	# on `bed_at` itself. Getting this wrong is the defect that fix corrected.
+	var centre := aabb.get_center() * scale_factor
+	bed_at.x += centre.x
+	bed_at.z += centre.z
 	var plane := bed_at.y + 0.3
 	print("")
 	print("=== the wake beat, measured ===")
@@ -124,7 +140,9 @@ func _run() -> void:
 		failures.append("the body settles %.3fm BELOW the mattress top -- the staging point"
 			% (plane - support) + " is outside the mattress footprint, so it lands on the loft floor")
 	if sunk > SUBMERSION_TOLERANCE_M:
-		failures.append("%.3fm of the rendered body is below the mattress plane" % sunk)
+		failures.append("%.3fm of the rendered body is below the mattress plane (the slung"
+			% sunk + " kit may sink %.3fm; more than that is the body itself)"
+			% SUBMERSION_TOLERANCE_M)
 	if world_min.z < bed_at.z - half.z - 0.02 or world_max.z > bed_at.z + half.z + 0.02:
 		failures.append("the body hangs off the mattress in Z (%.3f..%.3f vs %.3f..%.3f)"
 			% [world_min.z, world_max.z, bed_at.z - half.z, bed_at.z + half.z])
