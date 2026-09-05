@@ -322,7 +322,15 @@ godot --headless --path . --script tests/smoke_gate_a_map_cycle.gd
 → "Gate A map/cycle: OK"; exit 0
 ```
 
-`^ERROR:` 2 and 3 respectively, `SCRIPT ERROR` 0 in both. **The known-benign set did not
+```
+godot --headless --path . --script tests/smoke_menu_focus.gd
+→ "menu focus smoke test passed"; exit 0
+
+godot --headless --path . --script tests/run_tests.gd -- --only=test_menu
+→ 12 tests, 160 assertions, 0 failed
+```
+
+`^ERROR:` 2, 3 and 2 respectively, `SCRIPT ERROR` 0 in all three. **The known-benign set did not
 grow**: every one of those errors is `Parameter "material" is null` from the headless dummy
 renderer, with backtraces in `creature_body.gd::_build_model` via
 `encounter_director.gd::_make_alpha` — nothing from `tab_map.gd` or `minimap.gd`.
@@ -482,4 +490,55 @@ Predicted 2.10:1 from the constants; measured 2.08:1 on the frame — the ~0.02 
 
 ## 6. Final state
 
-<!-- FINAL -->
+| | |
+|---|---|
+| Branch | `ralph/N06-MAP-UI-0905`, based on `origin/main` at `f8a47ee4` |
+| Files in the diff | 11, all this lane's (see §1); `scripts/ui/tab_map.gd` and `scripts/ui/minimap.gd` are the only files modified |
+| Lane test | `test_map_legibility.gd` — 13 tests, 28 assertions, 0 failed; watched red four times, each for the right reason |
+| Named tests | `test_map_fog` / `test_map_icons` / `test_map_zoom_persistence` / `test_map_baker` / `test_map_state` / `test_map_landmarks` / `test_ui_tokens` — 74 tests, 478 assertions, 0 failed |
+| Menu tests | `--only=test_menu` — 12 tests, 160 assertions, 0 failed |
+| Smokes | `smoke_menu`, `smoke_gate_a_map_cycle`, `smoke_menu_focus` — all pass, exit 0, 0 `SCRIPT ERROR`, known-benign `^ERROR:` set unchanged |
+| Frames | 4 world stands × before/after + 2 isolated minimap stands × before/after, all 1280×800 or the widget's real 240px |
+| Contact sheet | `_sheet_map_ui.png`, six after stands, one sheet |
+| Items | 8 of 8 addressed; item 6 verified already correct on `main` and pinned rather than changed |
+
+### The eight items, one line each
+
+| # | Item | Outcome |
+|---|---|---|
+| 1 | fog inverted | **Fixed.** Root-caused to fog colliding with the page chrome, not with terrain. Measured on frames: 1.16:1 → 2.08:1, and the direction reversed. |
+| 2 | legend swatches indistinguishable | **Fixed.** Swatches now go through the map's own marker pass — real backing, real size class, real tint. |
+| 3 | two typefaces | **Fixed.** The canvas draws in `get_theme_default_font()`, the same lookup this screen's Labels resolve. |
+| 4 | callout text with no container | **Fixed.** Both columns get a real container. The judge's 40%-coverage prediction is corrected in §2: it cannot happen at fit today, for a reason that is incidental rather than structural. |
+| 5 | no north, no scale, legend reads as keybinds | **Fixed.** North indicator, scale bar (2000 m at fit), and the legend in its own captioned panel. |
+| 6 | no controller zoom binding | **Already correct on `main`.** RT/LT are bound; the judge read keyboard glyphs off a padless capture. Verified, pinned by a test, not changed. |
+| 7 | danger labels lost in greyscale | **Fixed** in the shared function. Greyscale spread between brightest and dimmest label: 120 → 15 of 255. |
+| 8 | marker silhouette contaminated by terrain | **Fixed** at the shared backing: a 72%-opacity tint became an opaque knock-back, on both screens. Visible in the isolated minimap pair. |
+
+### Known limitations and what was deliberately not done
+
+1. **W11 has not landed** (§0), so items 2 and 8 are fixed at the shared treatment they belong
+   in but were not verified against a rendered alpha pin, and `test_alpha_pins.gd` /
+   `smoke_alpha_pins.gd` could not be run because they do not exist on this base.
+2. **No 40%-coverage stand.** The highest coverage rendered is 1.42%; reaching 40% of a
+   2048 × 8192 m corridor needs a reveal an order of magnitude wider and each stand costs a
+   ~45-minute world boot. §2 item 4 settles the question the stand would have asked,
+   structurally rather than by picture.
+3. **`minimap.gd` still draws its own text in `kenney_future.ttf`.** Item 3 is scoped to the map
+   screen; the minimap is a HUD widget among different neighbours, and widening the typeface
+   change to it is a separate call. Flagged, not taken.
+4. **The player marker swallows the early-game map** at whole-Meadows fit (§4). Routed: the fix
+   is a zoom-to-explored-region behaviour or a smaller halo, and the smaller halo reverses
+   OP21-15's own blind-pass fix.
+5. **The full ~28-minute suite was not run** (§3), and **CI could not be observed from this
+   container** — no `gh`, and the GitHub API is not enabled for this session. The coordinator
+   must confirm the run on this branch actually executed its code jobs.
+6. **`docs/CURRENT_STATE.md` was not edited.** COMMON.md asks for findings to be recorded there;
+   that file is a single shared status document and several lanes in this wave are running
+   concurrently, so a rewrite of its map row from here would collide. The map row's update is
+   this report, and the coordinator can fold it in when landing. Recorded rather than silently
+   skipped.
+
+**Final commit:** the tip of `ralph/N06-MAP-UI-0905` at the time this line was written —
+`git log -1 origin/ralph/N06-MAP-UI-0905` names it. A report cannot contain its own hash; the
+commit carrying this report's final state is the one immediately after `c075081f`.
