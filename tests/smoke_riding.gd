@@ -20,11 +20,20 @@ extends SceneTree
 ##
 ##   1. mounting is REFUSED with no saddle, and the prompt says what is missing
 ##   2. with a saddle, the ordinary interact press mounts
-##   3. the stick moves the CREATURE, faster than the trainer's own walk speed
-##   4. the camera is following the mount, not the trainer
-##   5. the interact press dismounts, and the trainer is visible and grounded
-##   6. despawning the mount mid-ride does not strand the player
-##   7. mounting is refused while a fight is running
+##   3. the RIDER is on the creature: visible, seated, and at the right height
+##   4. the stick moves the CREATURE, faster than the trainer's own walk speed
+##   5. the sprint button makes the mount run, and it beats a sprinting trainer
+##   6. the jump button makes the mount leave the ground, and the rider goes up
+##      with it and is still seated when it lands
+##   7. the camera is following the mount, not the trainer
+##   8. the interact press dismounts, and the trainer is visible and grounded
+##   9. despawning the mount mid-ride does not strand the player
+##  10. mounting is refused while a fight is running
+##
+## 3, 5 and 6 are OP-0904-3, the owner's own three riding items from the shipped
+## build; the saddle rule that is his third is `tests/smoke_riding_saddle.gd`,
+## which needs to stand a body of every rideable species up and does not belong
+## in the middle of one continuous ride.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
@@ -35,6 +44,12 @@ const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const MOUNT_SPECIES := "meadowhart"
 
 const SETTLE_FRAMES := 300
+
+## The height of the low fences and rocks a walking trainer already gets over
+## (`player_controller._try_step_up()`'s ledge probe plus the meadow's own low
+## fence props). The bar the brief sets for a mounted hop: "a real hop that
+## clears the low fences/rocks a walking player can vault".
+const LOW_OBSTACLE_M := 0.6
 
 var _failures: Array[String] = []
 var _world: Node = null
@@ -85,7 +100,10 @@ func _run() -> void:
 	await _refuses_without_a_saddle()
 	_bag.call("add", "saddle", 1)
 	await _mounts_on_the_interact_press()
+	await _the_rider_is_on_the_creature()
 	await _the_stick_moves_the_creature()
+	await _the_mount_sprints()
+	await _the_mount_jumps()
 	await _dismounts_and_gives_the_body_back()
 	await _despawning_the_mount_does_not_strand_the_player()
 	# R8.5 before the mid-fight check on purpose: that check deliberately leaves
@@ -286,11 +304,184 @@ func _mounts_on_the_interact_press() -> void:
 	if not bool(_riding.call("is_mounted")):
 		_fail("the interact press next to a rideable creature did not mount it")
 		return
-	if bool(_player.call("rider_visible")):
-		_fail("the trainer's own body is still drawn while mounted")
+	# OP-0904-3, and the assertion this line used to make was the exact
+	# opposite: it PINNED the trainer's art being hidden while mounted, which
+	# is the defect the owner reported. `_the_rider_is_on_the_creature()` below
+	# takes the claim apart properly.
+	if not bool(_player.call("rider_visible")):
+		_fail("the trainer's own body is not drawn while mounted; the rider is invisible on the creature")
 	if _player.call("carrier") != _director.call("ally_body"):
 		_fail("the player is mounted but is not being carried by the creature")
 	print("mounted: '%s' put the trainer on the %s" % [str(_arbiter.call("prompt")), MOUNT_SPECIES])
+
+
+## OP-0904-3, item one. Owner, on hardware: "When you ride your person didn't
+## show up on the creature."
+##
+## Three separate claims, because "visible" alone was never the whole bug and a
+## test that only asked about visibility would pass on a trainer standing bolt
+## upright on the animal's back:
+##
+##   * the art is on screen at all (`rider_visible`);
+##   * the SEATED POSE actually reached the skeleton, checked as a real node
+##     query on the rig rather than as a flag the model sets about itself;
+##   * the rider is where a rider goes -- above the creature's feet, below its
+##     own back line, and travelling WITH it.
+func _the_rider_is_on_the_creature() -> void:
+	if not bool(_riding.call("is_mounted")):
+		_fail("not mounted; the rider check cannot run")
+		return
+	var mount: Node3D = _riding.call("mount_body")
+	var model: Node3D = _player.get_node_or_null(^"Model") as Node3D
+	if model == null:
+		_fail("the player has no Model node; the rider cannot be checked")
+		return
+	if not bool(_player.call("rider_visible")) or not model.visible:
+		_fail("the trainer's art is hidden while mounted; the rider is invisible on the creature")
+	if model.has_method("is_riding") and not bool(model.call("is_riding")):
+		_fail("the trainer's model was never told it is riding; it is standing on the creature's back")
+	if model.has_method("ride_pose_applied") and not bool(model.call("ride_pose_applied")):
+		_fail("the seated pose never reached the trainer's skeleton")
+
+	# The pose is bones, so check the BONES. A rig whose hip and knee are still
+	# at their rest rotation is a rig standing up, whatever any flag says.
+	var skeleton: Skeleton3D = model.call("skeleton") if model.has_method("skeleton") else null
+	if skeleton == null:
+		_fail("the trainer has no skeleton; the seated pose cannot be verified")
+	else:
+		for bone_name in ["LeftUpLeg", "LeftLeg"]:
+			var index := skeleton.find_bone(bone_name)
+			if index < 0:
+				_fail("the trainer rig has no '%s' bone; the seated pose cannot be verified" % bone_name)
+				continue
+			var rest: Quaternion = skeleton.get_bone_rest(index).basis.get_rotation_quaternion()
+			var pose: Quaternion = skeleton.get_bone_pose_rotation(index)
+			var bend := rad_to_deg(rest.angle_to(pose))
+			if bend < 20.0:
+				_fail("the mounted trainer's %s is %.1f degrees from rest; the leg is straight, so they are standing on the creature, not sitting on it"
+					% [bone_name, bend])
+			else:
+				print("  seated: %s bent %.1f degrees from rest" % [bone_name, bend])
+
+	# And the body is on the animal rather than beside it or inside the ground.
+	var lift := _player.global_position.y - mount.global_position.y
+	if lift < 0.2:
+		_fail("the rider's feet are %.2f m above the mount's; they are not on it" % lift)
+	var reach := Vector2(_player.global_position.x - mount.global_position.x,
+		_player.global_position.z - mount.global_position.z).length()
+	if reach > 1.2:
+		_fail("the rider is %.2f m to one side of the mount they are sitting on" % reach)
+	print("rider: visible, seated, %.2f m up and %.2f m off centre on the %s"
+		% [lift, reach, MOUNT_SPECIES])
+
+
+## OP-0904-3, item two, first half: "You can't sprint or jump when riding."
+##
+## Measured as speed the mount actually reached with the button held against
+## speed it reached without, on the SAME heading -- not against the number in
+## riding.json, which is the bug this exists for. The bar is the trainer's own
+## sprint: a mount that cannot beat a running player is a mount nobody rides.
+func _the_mount_sprints() -> void:
+	if not bool(_riding.call("is_mounted")):
+		_fail("not mounted; the sprint check cannot run")
+		return
+	var mount: Node3D = _riding.call("mount_body")
+	var walking_peak := await _peak_speed_holding(mount, [])
+	var sprinting_peak := await _peak_speed_holding(mount, ["sprint"])
+	var sprint_on_foot := _sprint_speed()
+	if sprinting_peak <= walking_peak + 0.5:
+		_fail("the mount peaked at %.2f m/s sprinting and %.2f m/s not; holding sprint while mounted does nothing"
+			% [sprinting_peak, walking_peak])
+		return
+	if sprinting_peak <= sprint_on_foot:
+		_fail("a sprinting mount reaches %.2f m/s and a sprinting trainer reaches %.2f; riding is the slower way to travel"
+			% [sprinting_peak, sprint_on_foot])
+	if bool(_riding.call("is_ride_sprinting")):
+		_fail("the mount still reads as sprinting with the button released")
+	print("sprint: %.2f m/s held against %.2f m/s not, and %.2f m/s on foot"
+		% [sprinting_peak, walking_peak, sprint_on_foot])
+
+
+## OP-0904-3, item two, second half. A REAL hop: the mount leaves the ground by
+## enough to clear the low fences and rocks a walking player vaults, and the
+## rider goes up with it and is still seated when it lands.
+##
+## The rise is measured against the height the hop ASKED for
+## (`ride_jump_height`), with a generous floor rather than an exact match --
+## the creature is standing on real terrain and a slope under its feet is not
+## the jump failing.
+func _the_mount_jumps() -> void:
+	if not bool(_riding.call("is_mounted")):
+		_fail("not mounted; the jump check cannot run")
+		return
+	var mount: CharacterBody3D = _riding.call("mount_body") as CharacterBody3D
+	if mount == null:
+		_fail("the mount is not a CharacterBody3D; the jump cannot be measured")
+		return
+	# Let it settle on the ground first: a hop measured from a body that is
+	# still falling measures the fall.
+	for i in 40:
+		await physics_frame
+	var floor_y := mount.global_position.y
+	var rider_floor_y := _player.global_position.y
+	var asked := float(_riding.call("ride_jump_height"))
+
+	Input.action_press("jump")
+	await physics_frame
+	await physics_frame
+	Input.action_release("jump")
+
+	var peak := floor_y
+	var rider_peak := rider_floor_y
+	var left_the_ground := false
+	for i in 90:
+		await physics_frame
+		peak = maxf(peak, mount.global_position.y)
+		rider_peak = maxf(rider_peak, _player.global_position.y)
+		if not mount.is_on_floor():
+			left_the_ground = true
+	var rise := peak - floor_y
+	var rider_rise := rider_peak - rider_floor_y
+	if not left_the_ground:
+		_fail("the mount never left the floor on a jump press")
+	if rise < asked * 0.6:
+		_fail("the mount rose %.2f m on a jump that asked for %.2f m; that is not a hop that clears anything"
+			% [rise, asked])
+	# The fence and rock heights a walking player vaults, from the trainer's own
+	# step-up allowance and the low fence props -- a mount that cannot clear
+	# them is a downgrade on foot.
+	if rise < LOW_OBSTACLE_M:
+		_fail("the mount rose %.2f m and the low fences a walking player vaults are %.2f m"
+			% [rise, LOW_OBSTACLE_M])
+	if rider_rise < rise - 0.15:
+		_fail("the mount rose %.2f m and the rider only %.2f m; the trainer did not go up with it"
+			% [rise, rider_rise])
+	var model: Node3D = _player.get_node_or_null(^"Model") as Node3D
+	if model != null and model.has_method("is_riding") and not bool(model.call("is_riding")):
+		_fail("the rider stopped being seated somewhere in the jump")
+	if not bool(_riding.call("is_mounted")):
+		_fail("the jump ended the ride")
+	print("jump: the mount rose %.2f m (asked %.2f) and the rider rose %.2f with it"
+		% [rise, asked, rider_rise])
+
+
+## Peak horizontal speed the mount reaches with `held` pressed alongside a
+## forward stick, over a fixed window. Shared by the sprint check so both halves
+## of its comparison are measured exactly the same way.
+func _peak_speed_holding(mount: Node3D, held: Array) -> float:
+	for action in held:
+		Input.action_press(action)
+	Input.action_press("move_forward")
+	var peak := 0.0
+	for i in 70:
+		await physics_frame
+		peak = maxf(peak, Vector3(mount.velocity.x, 0.0, mount.velocity.z).length())
+	Input.action_release("move_forward")
+	for action in held:
+		Input.action_release(action)
+	for i in 20:
+		await physics_frame
+	return peak
 
 
 ## The core of R6.1: the stick drives the CREATURE, and it beats running.
@@ -488,6 +679,27 @@ func _assert_the_player_is_back(context: String) -> void:
 		_fail("%s: the player is still being carried by something" % context)
 	if not bool(_player.call("rider_visible")):
 		_fail("%s: the trainer's body was never made visible again" % context)
+
+	# OP-0904-3: everything the seated pose did has to come back off. A rider
+	# left seated walks around the meadow sitting in mid-air with their knees
+	# up, and one left dropped by the seat offset walks with their feet
+	# underground -- both are quieter than an invisible trainer and neither is
+	# caught by a visibility check.
+	var model: Node3D = _player.get_node_or_null(^"Model") as Node3D
+	if model != null:
+		if model.has_method("is_riding") and bool(model.call("is_riding")):
+			_fail("%s: the trainer's model still thinks it is riding" % context)
+		if absf(model.position.y) > 0.01:
+			_fail("%s: the trainer's art is still offset %.2f m from the body; the seat drop was never undone"
+				% [context, model.position.y])
+		var anim: AnimationPlayer = model.call("animation_player") if model.has_method("animation_player") else null
+		if anim != null and not anim.active:
+			_fail("%s: the trainer's animation player is still switched off; the body would never move again" % context)
+		# Deliberately NOT a bone-angle assertion here. With the mixer back on
+		# it owns every bone this pose touched within a frame, and the clip it
+		# resumes can legitimately be mid-stride -- a knee 60 degrees from rest
+		# would be a correct walk, not a leftover saddle. `anim.active` above is
+		# the honest form of the same claim.
 	if not _player.visible:
 		_fail("%s: the player node itself is hidden" % context)
 	if _player.collision_layer == 0:
@@ -523,6 +735,18 @@ func _stand_beside_the_mount() -> void:
 	_player.velocity = Vector3.ZERO
 	for i in 20:
 		await physics_frame
+
+
+## The trainer's own sprint, for the bar a mounted sprint has to beat. Read
+## from the same file the controller reads rather than typed here.
+func _sprint_speed() -> float:
+	var file := FileAccess.open("res://data/config/movement.json", FileAccess.READ)
+	if file == null:
+		return 8.6
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		return 8.6
+	return float(((parsed as Dictionary).get("locomotion", {}) as Dictionary).get("sprint_speed", 8.6))
 
 
 func _walk_speed() -> float:

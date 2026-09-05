@@ -4,7 +4,7 @@
   "sprint": {
     "_comment": "Owner, on hardware: `You can't sprint or jump when riding.` A multiplier on the species' own ride speed, not a second speed table, for the same reason ride_speed_multiplier multiplies the trainer's walk: one number to move if a mount is retuned. Meadowhart rides at 2.0 x 5.0 = 10 m/s, so a sprinting Meadowhart is 14 m/s against a sprinting trainer's 8.6 -- the gap riding is sold on stays a gap when both sides are running.",
     "speed_multiplier": 1.4,
-    "_comment_stamina": "D48 §3 says riding costs the PLAYER no stamina and the mount has no meter. D75 extends that ruling to the sprint rather than quietly inventing a cost: `creature_stamina_cost` is 0.0 and reads as documentation of a decision, not as a knob that was never wired. A future cost belongs on a distance budget or a cooldown, per D48's own note, and would be a decision before it was a number.",
+    "_comment_stamina": "D48 §3 says riding costs the PLAYER no stamina and the mount has no meter. D74 extends that ruling to the sprint rather than quietly inventing a cost: `creature_stamina_cost` is 0.0 and reads as documentation of a decision, not as a knob that was never wired. A future cost belongs on a distance budget or a cooldown, per D48's own note, and would be a decision before it was a number.",
     "creature_stamina_cost": 0.0
   },
 

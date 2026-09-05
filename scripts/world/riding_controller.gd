@@ -455,7 +455,7 @@ func _physics_process(delta: float) -> void:
 	var input := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
 	# Sprint is speed, not a mode: held with the stick centred it does nothing,
 	# the same rule `player_controller._apply_movement()` uses for the trainer.
-	# D48 §3 and D75: it costs the player nothing and the mount has no meter.
+	# D48 §3 and D74: it costs the player nothing and the mount has no meter.
 	_sprinting = not input_owned and input != Vector2.ZERO \
 		and Input.is_action_pressed("sprint")
 	if input == Vector2.ZERO:
@@ -557,7 +557,7 @@ func _restore_climb_limit(body: Node3D) -> void:
 ## which would have to grow a field, a save key and a migration for a boolean.
 ## The flag is per-SPECIES (`saddle_fitted_meadowhart`), so a second Meadowhart
 ## in a five-creature roster wears the saddle its species was fitted for. That
-## is a deliberate simplification and it is recorded in `D75`; the alternative
+## is a deliberate simplification and it is recorded in `D74`; the alternative
 ## reads as a bug the first time a player swaps mounts and finds bare leather.
 ##
 ## **The legendary is exempt and stays exempt.** Its `requires_item` is empty
