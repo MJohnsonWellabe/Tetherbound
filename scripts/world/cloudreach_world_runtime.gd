@@ -13,6 +13,7 @@ const PLACER := preload("res://scripts/build/build_placer.gd")
 const DEATH := preload("res://scripts/world/player_death.gd")
 const COMBAT_HUD := preload("res://scenes/combat/combat_hud.tscn")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+const FALL_RECOVERY := preload("res://scripts/world/fall_recovery.gd")
 var world: Node3D
 var player: CharacterBody3D
 var chapter: Node
@@ -25,6 +26,7 @@ var presentation: Node3D
 var navigation: RefCounted
 var battle_yards: Node3D
 var payoffs: Node3D
+var fall_recovery: Node3D
 var _registered: Array[CharacterBody3D] = []
 var _field_body: CharacterBody3D
 var _mounted := false
@@ -115,6 +117,7 @@ func mount(owner_world: Node3D, chapter_node: Node, realm_map: RefCounted) -> vo
 		hud.set("_minimap_baked", true)
 	add_to_group("progression_restore")
 	_publish_finale_presentation_mode()
+	_mount_fall_recovery()
 
 
 func _install_creature_relay_prompts() -> void:
@@ -290,10 +293,30 @@ func recover_to_bivouac(_body: CharacterBody3D, _camp: String, _safe: Vector3) -
 	if _recovering:
 		return
 	_recovering = true
-	_recover.call_deferred()
+	_recover.call_deferred(Vector3.INF)
 
 
-func _recover() -> void:
+## OP-0905-22 fall failsafe entry point (see `_mount_fall_recovery`/`_on_world_fall`
+## below). Shares `_recover` with the finale hazard current's own recovery
+## (`recover_to_bivouac`, wired in `mount()`), and the same `_recovering` guard,
+## so a hazard-current recovery already in flight can never be doubled by a
+## kill-plane one landing in the same frame -- whichever fires first wins and
+## the other is a no-op.
+func recover_from_world_fall(body: CharacterBody3D) -> void:
+	if _recovering:
+		return
+	_recovering = true
+	_recover.call_deferred(body.global_position)
+
+
+## `from` is the point `player_death.gd::recovery_position` measures "nearest
+## unlocked camp" against. The finale hazard current always resolves that
+## against its own arena (`finale.global_position`) -- the current only ever
+## runs near there, so that reads as "nearest camp to here" in practice. A
+## kill-plane fall can happen anywhere in the realm, so `recover_from_world_fall`
+## passes the body's own (pre-recovery) position instead; `Vector3.INF` keeps
+## the original arena-relative behaviour for the hazard-current caller.
+func _recover(from: Vector3 = Vector3.INF) -> void:
 	_release_field_control()
 	# A deep fall can arrive during a live round, not only after defeat. Let the
 	# real manager/director unwind that round as a retreat before moving bodies.
@@ -303,7 +326,8 @@ func _recover() -> void:
 	elif bool(director.call("trainer_battle_active")):
 		director.call("_finish_trainer_battle", false)
 	var game := get_node("/root/Game")
-	var at: Vector3 = death.call("recovery_position", game, finale.global_position)
+	var origin := from if from.is_finite() else finale.global_position
+	var at: Vector3 = death.call("recovery_position", game, origin)
 	death.call("_respawn", at)
 	var ally: Node3D = director.call("ally_body")
 	if is_instance_valid(ally):
@@ -313,6 +337,83 @@ func _recover() -> void:
 	world.get_node("CameraRig").global_position = at+Vector3.UP*1.75
 	game.call("save_game", game.call("autosave_slot"))
 	_recovering = false
+
+
+## OP-0905-22: a below-the-cloud-sea kill plane covering the whole realm, not
+## just the finale arena -- `cloudreach_finale_controller.gd::_apply_recovery_current`
+## only ever acts within `config.recovery.current_radius_m` of the arena while a
+## finale phase is live, so a fall anywhere else (or before the finale engages
+## at all) had nothing catching it. Kill-plane Y and XZ bounds live in
+## `data/config/cloudreach_world.json::realm.fall_recovery` per CLAUDE.md
+## ("tunables in data/config").
+##
+## The kill plane is measured off the CloudSea mesh's own built Y rather than
+## re-deriving `world_bounds.min_y + 18.0` a second time (`cloudreach_world.gd
+## ::_build_cloud_sea`) -- one authored offset, read once, so the two can never
+## quietly drift apart if that formula ever changes.
+func _mount_fall_recovery() -> void:
+	var config: Dictionary = world.call("config_data")
+	var realm: Dictionary = config.get("realm", {})
+	var bounds: Dictionary = realm.get("world_bounds", {})
+	var tunables: Dictionary = realm.get("fall_recovery", {})
+	var cloud_sea := world.get_node_or_null(^"CloudSea") as Node3D
+	var cloud_sea_y: float = cloud_sea.global_position.y if cloud_sea != null \
+		else float(bounds.get("min_y", -200.0)) + 18.0
+	var kill_plane_y: float = cloud_sea_y - float(tunables.get("below_cloud_sea_m", 50.0))
+	fall_recovery = FALL_RECOVERY.new()
+	fall_recovery.name = "FallRecovery"
+	world.add_child(fall_recovery)
+	fall_recovery.call("setup", Callable(self, "_recovery_target"), kill_plane_y, bounds,
+		Callable(self, "_on_world_fall"), player.global_position,
+		float(tunables.get("bounds_margin_m", 400.0)))
+
+
+## Always the human trainer body, never whichever body `controlled_body()`
+## returns -- the piloted-ally case only exists briefly, close to the finale
+## arena, exactly where `_apply_recovery_current`'s own current already
+## watches for a fall. This is the map-wide backstop underneath that, not a
+## replacement for it.
+func _recovery_target() -> CharacterBody3D:
+	return player
+
+
+## `last_safe` is finite only when the trainer was genuinely, recently
+## standing on solid ground moments before the fall (`fall_recovery.gd`) --
+## that case is corrected LOCALLY, a few metres, the same way
+## `world_perimeter.gd` recovers a Meadows physics glitch rather than sending
+## a long walk all the way home. Anything else -- a real plunge off the
+## world, or a reading too old to trust -- goes through the exact
+## nearest-camp/realm-entry ladder a real death already uses, by way of
+## `recover_from_world_fall` above, rather than duplicating that ladder here.
+func _on_world_fall(body: CharacterBody3D, last_safe: Vector3) -> void:
+	if not is_instance_valid(body):
+		return
+	var riding := world.get_node_or_null(^"RidingController")
+	if riding != null and bool(riding.call("is_mounted")) and riding.call("mount_body") == body:
+		riding.call("dismount")
+	if last_safe.is_finite():
+		print("[cloudreach_fall_recovery] %s fell below the cloud sea -- returning to last safe ground" % body.name)
+		body.global_position = last_safe
+		body.velocity = Vector3.ZERO
+		_settle_companion_beside(body)
+	else:
+		print("[cloudreach_fall_recovery] %s fell below the cloud sea with no fresh safe ground -- recovering to camp/realm entry" % body.name)
+		recover_from_world_fall(body)
+
+
+## The follower re-leashes on its own once it is more than `LEASH` metres
+## away in XZ (`follower_creature.gd::_tick_follow`) -- but that check ignores
+## Y entirely, so a companion left standing on a ledge directly above a
+## trainer who just fell straight down reads as "close enough" and never
+## moves. Only reachable from the local-recovery branch above: the ladder
+## branch's own `_recover()` already repositions the ally beside wherever it
+## respawns the trainer.
+func _settle_companion_beside(body: CharacterBody3D) -> void:
+	var companion: Node3D = director.call("ally_body") if director != null else null
+	if is_instance_valid(companion) and companion != body:
+		companion.global_position = body.global_position + Vector3(1.5, 0.0, 1.5)
+		if companion is CharacterBody3D:
+			companion.velocity = Vector3.ZERO
 
 
 func restore_progression_from_game(_game: Node) -> void:
