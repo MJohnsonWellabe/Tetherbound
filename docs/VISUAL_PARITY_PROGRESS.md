@@ -100,3 +100,26 @@ is no half-finished route-strip implementation in this checkpoint.
 - Do not alter the shipped candy/potion geometry open items unless the owner
   explicitly reopens them.
 - ROG Ally performance remains unmeasured in this checkpoint.
+
+## Cloudreach environment corrective pass — 2026-09-04
+
+This is a Cloudreach visual-foundation checkpoint, not a completed VP pass and not final visual
+acceptance. Creatures were deliberately deferred so the environment could be judged on its own.
+
+- Ported the Meadows surface family to Cloudreach procedural geometry: meadow grass, verge, dirt
+  path, and rock scree with world-space triplanar mapping.
+- Added deterministic, chunked, culled MultiMesh grass, flowers, and bushes using the production
+  Meadows procedural meshes across Cloudreach's stacked elevations.
+- Replaced repeated route-support cylinders with continuous irregular cliff ribbons and grounded
+  route landings; added clustered production trees and rocks.
+- Captured six real production-scene gameplay views and measured 139–906 draws and 2.31–4.50 ms
+  frame time on the local GTX 1060 at 1280x720. This is not ROG Ally evidence.
+- Passed the Cloudreach world-data and grass-field selections plus both foundation and full
+  Meadows → Cloudreach → Meadows smoke paths.
+- Code-blind review still returned **No / No**. The next pass must solve the gray slab geology,
+  runway-like routes, weak exposed-crossing/destination compositions, flat palette and lighting,
+  and mechanically uniform vegetation. Creature absence was not counted against the result.
+
+Evidence and the full critique are in `ralph/reports/CLOUDREACH-PHASE2-0904/`. Exact resume:
+reshape the terrain and route composition first, then refine materials/lighting/vegetation and
+recapture the same six views for another external review.

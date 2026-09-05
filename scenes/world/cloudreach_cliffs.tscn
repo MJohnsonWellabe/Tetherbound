@@ -22,12 +22,12 @@ background_mode = 2
 sky = SubResource("Sky_cloudreach")
 ambient_light_source = 3
 ambient_light_color = Color(0.57, 0.67, 0.73, 1)
-ambient_light_energy = 0.72
-ambient_light_sky_contribution = 0.38
+ambient_light_energy = 0.96
+ambient_light_sky_contribution = 0.52
 reflected_light_source = 2
 tonemap_mode = 3
 tonemap_white = 4.0
-ssao_enabled = true
+ssao_enabled = false
 fog_enabled = true
 fog_light_color = Color(0.74, 0.8, 0.84, 1)
 fog_density = 0.00028
@@ -41,9 +41,10 @@ environment = SubResource("Environment_cloudreach")
 
 [node name="Sun" type="DirectionalLight3D" parent="."]
 rotation = Vector3(-0.907571, -0.663225, 0)
-light_energy = 0.92
+light_energy = 1.02
 light_color = Color(1, 0.91, 0.78, 1)
 shadow_enabled = true
+shadow_opacity = 0.68
 directional_shadow_mode = 2
 directional_shadow_max_distance = 420.0
 

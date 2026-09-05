@@ -552,3 +552,43 @@ as implemented content. A separate read-only systems audit is preserved at
 `ralph/reports/CLOUDREACH-PHASE3-AUDIT-0904/REPORT.md`; it routes the next agent through the
 required realm-aware persistence, vertical 3D placement, dialogue-effect, catalogue injection,
 map isolation, and gameplay-scene wiring seams before live content is spawned.
+
+## 2026-09-04 — Cloudreach checkpoint 4 / Meadows-surface corrective pass
+
+Branch: `codex/cloudreach-cliffs`. This is a coherent, tested visual-foundation checkpoint, not
+final Cloudreach acceptance and not completion of Phase 2.
+
+Cloudreach now uses the Meadows meadow-grass, verge, dirt-path, and rock-scree texture family on
+its procedural geometry. Repeated hanging-cylinder route supports were replaced by continuous
+irregular cliff ribbons and grounded landings. A new deterministic, chunked, distance-culled
+MultiMesh layer places the production Meadows procedural grass, flowers, and bushes across
+overlapping Cloudreach elevations, where the single-height Terrain3D grass sampler could not be
+used safely. Approved production trees and rocks are clustered on region caps, route edges, and
+landings. The capture harness now excludes Meadows-only HUD copy. No creatures were added.
+
+Real Windows/OpenGL3 evidence from six production-scene gameplay viewpoints is stored in
+`ralph/reports/CLOUDREACH-PHASE2-0904/`. On the local GTX 1060 at 1280x720, 24-frame samples
+recorded 139–906 draw calls, 494,717–2,462,935 primitives, 139–906 objects, and 2.31–4.50 ms
+measured frame time. These are local structural measurements, not ROG Ally claims.
+
+Verification after the final geometry changes:
+
+- Cloudreach world-data selection: **13 tests / 391 assertions / 0 failures**.
+- Grass-field selection: **18 tests / 87,806 assertions / 0 failures**.
+- `tests/smoke_cloudreach_foundation.gd`: **PASS** — six regions, twelve landmarks, five bridges,
+  cover thresholds, and grounded player arrival.
+- `tests/smoke_cloudreach_transition.gd`: **PASS** — production Meadows → Cloudreach → Meadows.
+- Six-view GPU capture/performance run: **PASS**.
+
+The mandatory code-blind visual judge still rejected both comparison bars. The corrective pass
+improved surface continuity and scene population, but the distant geology remains too slab-like,
+routes too straight and broad, landmark/crossing compositions too weak, and the palette/lighting/
+vegetation pattern too flat and mechanical. Creature absence was explicitly excluded from the
+verdict.
+
+Exact resume point: keep creatures deferred. Replace broad route ribbons and blank slabs with
+layered, irregular warm cliff forms, narrow embedded paths, terraces, recesses, and legible drops;
+compose each of the six named views around one dangerous crossing and one distinct destination;
+then improve wind-shaped vegetation clusters, warm/cool light separation, cloud layers, and
+distant silhouettes. Recapture the same six views and repeat external visual review. The named
+Cloudreach concept board is still absent from the repository/local workspaces.

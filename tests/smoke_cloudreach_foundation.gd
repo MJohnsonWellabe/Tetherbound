@@ -33,6 +33,15 @@ func _run() -> void:
 	var routes := world.get_node_or_null(^"AuthoredRoutes")
 	_expect(routes != null and routes.get_child_count() > 20,
 		"ground route geometry is missing", failures)
+	var cover := world.get_node_or_null(^"ProceduralGroundCover")
+	_expect(cover != null, "procedural grass/flower cover is absent", failures)
+	if cover != null:
+		_expect(int(cover.call("grass_instance_count")) >= 40000,
+			"Cloudreach grass carpet is too sparse", failures)
+		_expect(int(cover.call("flower_instance_count")) >= 1200,
+			"Cloudreach flower drifts are too sparse", failures)
+		_expect(int(cover.call("bush_instance_count")) >= 300,
+			"Cloudreach understorey is too sparse", failures)
 	_expect(world.find_children("*", "StaticBody3D", true, false).size() > 40,
 		"foundation did not build solid collision", failures)
 	if failures.is_empty():

@@ -1,89 +1,36 @@
-# Code-blind Cloudreach visual review — 2026-09-04
+# Cloudreach Phase 2 — code-blind visual judgment
 
-The reviewer received only the six current gameplay frames/contact sheet and the standard visual
-references. It did not receive code, change history, performance data, or implementation notes.
+Scope: `contact-sheet.png` and frames `01`–`06`, compared only with the Meadows key art, `palworld-04-plateau-landmark.jpg`, and the stated Cloudreach target. This is an environment pass; creatures are deliberately deferred and are not part of this verdict.
 
-## Verdict
+## Immediate read
 
-At small size the trainer is readable, but the six environments collapse into the same
-tan/rust/gray blockout. Arrival, Windscar Ravine, High Roost, Cliffhold, and the summit are not
-visually distinct without filenames.
+The region has the beginnings of the right spatial idea. Frames `01-arrival-first-reveal` and `06-summit-final-approach` establish very large elevated landforms, frame `02-broken-causeways` hints at multiple traversable tiers, and all six frames preserve a broad sky. The tower in `01` and the suspended mass in `06` survive at contact-sheet size.
 
-### Silhouette and composition
+What survives more strongly, however, is the same centered brown road, centered trainer, neon grass, and gray slab terrain in nearly every frame. The survey does not yet read as six authored highland spaces with escalating danger. It reads as one sparse route blockout photographed six times. The region is bright, but not yet awe-inspiring or convincingly dangerous.
 
-- Arrival has a clear centered route, but the destination reads as an unfinished bowl rather
-  than a landmark; pale hanging forms read as debris.
-- Broken Causeways is dominated by a featureless slab, without a memorable break pattern.
-- Windscar does not communicate either a ravine or wind, and a large pale rectangle dominates.
-- High Roost lacks a roost silhouette, creature presence, launch cue, or wind-shaped vegetation.
-- Cliffhold's small leaning structure is too weak a focal point and repeated hanging columns
-  clutter the horizon.
-- The summit mass is large but not identifiable as architecture; repeated underside teeth create
-  noise instead of grandeur.
+## Specific, addressable defects
 
-### Value, palette, and lighting
+- **`01-arrival-first-reveal`:** The tower is a useful destination silhouette, but its unbroken charcoal surface reads as a solid placeholder volume rather than an ancient structure. Give it a recognizable architectural rhythm—warm stone courses, openings, broken edges, projecting supports, and sunlit versus shadowed faces—and frame it against a lighter atmospheric layer so it has form instead of becoming a black cutout. The floating white specks behind and left of it read as stray geometry.
+- **`02-broken-causeways`:** The “broken causeways” do not read as broken or risky from this view. The road pieces form broad, flat trapezoids, while the chasms and supporting landforms collapse into low-contrast gray walls. Expose a visible gap or bridge crossing in the player’s route, show sheer warm cliff faces beneath it, and use a sideward view or bend so the drop is legible. The uniformly spaced trees and identical roadside grass bands make the space feel procedurally striped rather than wind-shaped.
+- **`03-windscar-ravine`:** The ravine is visually hidden by the road and the blown-out white rectangle at its end. That rectangle is the brightest and largest focal object in the frame, so it reads as a missing material or render fault, not a mysterious ancient gateway. Restore material and interior value to the structure, reveal the depth of the ravine on at least one side of the approach, and make the crossing itself the composition. The pale floating shelf and thin lines at upper left also read as incomplete or stray geometry.
+- **`04-high-roost-before-fly`:** The roost has the same blown-out white panels and low-detail cylindrical mass, so it lacks age, function, and danger. Its silhouette is too compact and symmetrical to explain “high roost” at a glance. Open the view past or through it to the drop, add weathered structural detail and asymmetrical broken elements, and give its white surfaces enough texture and shadow to retain form. The small floating object left of the roost and the faint diagonal lines to its right look accidental.
+- **`05-upper-cloudreach-cliffhold`:** The destination is reduced to a tiny indistinct shape at the end of another straight runway. The enormous right-hand shelf is a blank gray wall, and its chasm is only a dark strip; neither reads as a monumental cliffhold. Enlarge or elevate the destination silhouette, interrupt the approach with a bridge, switchback, or suspended secondary route, and put warm strata, ledges, shadow, and vegetation breaks on the cliff wall. The trees are evenly rationed down the route instead of clustered around shelter and exposure.
+- **`06-summit-final-approach`:** This is the strongest statement of suspended scale, but the giant island is a featureless gray extrusion with saw-cut undersides. It reads as unfinished floating geometry rather than a warm sheer highland. Break the long top edge into terraces and visible paths, give the underside coherent rock strata and occlusion, and place a strong summit structure or bridge silhouette against the sky so the player can read the final destination. The foreground path terminates in a sharp rectangular/diagonal seam and appears slightly lifted off the ground, which reads as a placement bug.
 
-- Flat cyan, pale tan, rust, and neutral gray lack the key art's natural greens, warm sunlight,
-  cool shadows, localized accents, and varied surface response.
-- Broad rust traversal surfaces confuse a possible danger color with generic terrain trim.
-- The black HUD panels are darker and more resolved than the world, so the interface wins every
-  composition.
-- Lighting is nearly identical everywhere, with weak environmental shadowing and form.
-- The bright midday presentation conflicts with the displayed `Day 1 · 00:00`.
+Across all six frames, the grass is dense but visually mechanical: thin upright blades form uniform bands with little height, hue, or clustering variation. Nothing visibly leans with the wind. Use a few large, readable clumps with a shared wind direction, low mats in exposed areas, taller protected pockets, and sparse rock/flower accents rather than continuous vertical noise. The dirt texture also repeats at a scale that makes the paths resemble carpeted runways; narrower, irregular edges plus stones, erosion, and wheel/foot wear would restore physical scale.
 
-### World density and intentionality
+Lighting is consistent but too flat. The Meadows key art separates sunlit yellow-green ground, deep cool tree shade, warm rock, bright cloud, and blue atmospheric distance. Here the sky is a nearly empty blue field, the ground sits around one mottled mid-value, and distant cliffs fade to neutral gray. Add a directional warm sun read, cooler shadowed cliff undersides, cloud masses, and progressively bluer/softer distant layers. This would make height and distance legible without filling the broad sky.
 
-- Uniform ramps, large uninterrupted planes, repeated hanging prisms, and isolated props read as
-  construction geometry rather than authored places.
-- Vegetation and habitat scale cues are sparse at arrival and Broken Causeways and almost absent
-  in the upper regions.
-- There is no creature visible in any frame, so none reads as companionship, encounter,
-  traversal partnership, or ecosystem.
-- The same trainer-centered survey composition further flattens regional identity.
+The trainer provides a 1.80 m ruler: in `02`, `03`, `04`, and `05`, the main paths appear roughly several trainer-heights wide and therefore read as roads or runways, not precarious highland paths. With almost no parapets, stones, posts, or bridge construction to explain that scale, the oversized widths suppress danger. Narrow selected segments and add human-scale edge cues where broad ceremonial causeways are intentional.
 
-### Depth, artifacts, interface, and scale
+## Three biggest remaining gaps
 
-- Pale suspended fragments, slab seams, intersecting planes, floating pieces, and repeated
-  unsupported prisms read as missing or corrupted geometry.
-- Atmospheric haze exists, but distinct foreground, midground, and background layers do not.
-- Meadows-specific Grandpa/tutorial copy is contextually broken in Cloudreach; the empty party
-  panel emphasizes the absence of a team; the minimap and lower action bar are not informative;
-  visible prompts are keyboard-first rather than controller-first.
-- Traversal ramps are monumental beside the 1.80 m trainer yet lack edge construction and detail.
-  Architectural openings and suspended forms have no human- or creature-scale features.
+1. **The cliffs and suspended terrain lack authored geological form and warm material structure.** The Palworld plateau reference uses layered rock faces, vegetation caps, shadowed recesses, and overlapping silhouettes to make elevation believable; the Meadows key art likewise gives mountains warm/cool face changes and atmospheric depth. Frames `02`, `05`, and especially `06` instead use long blank gray extrusions. This is the largest reason Cloudreach still reads as a blockout.
+2. **The journey is not composed around exposed crossings, layered paths, and visible destinations.** The references guide the eye with curved routes, framing trees, overlapping ridges, and distinct architecture. Frames `02`–`05` repeatedly center a broad straight road while bridges, gaps, ravines, and secondary paths are hidden or visually weak. Recompose each vista so one dangerous traversal beat and one farther destination are unmistakable at contact-sheet size.
+3. **Palette, lighting, and vegetation do not yet create the bright-but-dangerous highland mood.** The key art uses warm sunlight, rich natural greens, cool distance, clouds, deep shade, and clustered foliage. All six frames instead share neon-green bands, brown carpet-like paths, neutral gray rock, and a mostly empty flat-blue sky. Frames `03` and `04` add blown-out white structures that further break material cohesion. A warm cliff palette, stronger value range, atmospheric sky, and visibly wind-bent plant groupings are all scene-fixable.
 
-## Three largest gaps from the references
+## Bar questions
 
-1. **Creature-led life and activity.** The references center creatures, companions, combat,
-   work, or travel; these frames show one trainer in an empty world.
-2. **Authored environmental richness.** The references layer ground cover, rocks, trees, paths,
-   structures, surface variation, and inhabited detail; the upper four views are dominated by
-   planes and repeated primitives.
-3. **Landmark composition and depth.** The references use focal silhouettes and layered depth;
-   Cloudreach currently offers ambiguous, undersized, or unreadable destinations.
+**A. Does this belong to the world of the Tetherbound Meadows key art? No.** The green meadow surface, stylized trainer, blue sky, and isolated broad-canopy trees point in the right direction, but the key art’s natural palette, warm/cool depth, authored foliage clusters, weathered landmark language, and inviting mystery are not yet present. The result currently looks like a sparse gray-and-green prototype region adjacent to that world rather than a finished highland within it. The listed blockers are scene-fixable through terrain shaping/materials, lighting, scatter, and composition; no new creature art is required for this environment judgment.
 
-## Required bars
-
-### A. Do these frames belong to the world of the Tetherbound Meadows key art?
-
-**No.** The blue sky, stylized trainer, and traces of green provide only weak connective tissue.
-The frames read as a sparse floating-platform prototype rather than a lush, deliberately composed
-natural world.
-
-Scene-fixable work includes stronger compositions, differentiated regional palettes, clustered
-foliage/rocks/props/creatures, purposeful paths and clearings, better light/shadow separation,
-atmospheric depth, contextual UI, and more informative cameras. Art-dependent work includes
-authored cliff, roost, causeway, and summit silhouettes and surface language where the existing
-kit cannot provide them.
-
-### B. Beside the Palworld references, do these look like the same kind of game?
-
-**No.** The trainer and open-world HUD hint at the genre, but there are no creatures, combat,
-gathering, building, companionship, traversal partnership, or inhabited ecosystems. These are
-navigation tests rather than a creature-driven open-world adventure.
-
-Scene-fixable work includes staging creatures/NPCs and meaningful encounters, showing the team,
-composing around combat/flight/traversal, increasing nature density, establishing focal effects,
-and reducing irrelevant HUD obstruction. Art-dependent work may require stronger cliff,
-structure, foliage, prop, and VFX assets. Creature-art parity cannot be judged until
-representative creatures are visible.
+**B. Beside the Palworld plateau reference, does this look like the same kind of game? No.** The third-person scale and grassy plateau premise are compatible, but the comparison is sunk by unfinished slab geometry, empty intervals, runway-like routes, weak landmark articulation, and the absence of readable rock/foliage layering. Palworld’s frame feels like a traversable, inhabited landscape whose paths, cliffs, trees, ruins, and distant tower all share one material world; these frames still separate into flat road, grass strips, gray blocks, and isolated props. Those failures are predominantly scene-fixable. Creature population is outside this pass and is not used as a reason for the verdict.

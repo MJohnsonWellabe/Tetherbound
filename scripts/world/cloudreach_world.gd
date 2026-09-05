@@ -9,12 +9,16 @@ extends Node3D
 ## Meadows' 1,700-line runtime composer.
 
 const CONFIG_PATH := "res://data/config/cloudreach_world.json"
+const VISUAL_CONFIG_PATH := "res://data/config/cloudreach_visual.json"
 const REALM_ID := "cloudreach"
 const REALM_GATE := preload("res://scripts/world/realm_gate.gd")
+const GROUND_COVER := preload("res://scripts/world/cloudreach_ground_cover.gd")
 const NATURE_TREES: Array[PackedScene] = [
 	preload("res://assets/environment/stylized_nature/CommonTree_1.gltf"),
 	preload("res://assets/environment/stylized_nature/CommonTree_2.gltf"),
 	preload("res://assets/environment/stylized_nature/CommonTree_3.gltf"),
+	preload("res://assets/environment/stylized_nature/CommonTree_4.gltf"),
+	preload("res://assets/environment/stylized_nature/CommonTree_5.gltf"),
 ]
 const NATURE_ROCKS: Array[PackedScene] = [
 	preload("res://assets/environment/stylized_nature/Rock_Medium_1.gltf"),
@@ -26,7 +30,9 @@ const NATURE_ROCKS: Array[PackedScene] = [
 @onready var _camera_rig: Node3D = $CameraRig
 
 var _config: Dictionary = {}
+var _visual_config: Dictionary = {}
 var _surfaces: Array[Dictionary] = []
+var _cover_patches: Array[Dictionary] = []
 var _materials: Dictionary = {}
 var _region_count := 0
 var _landmark_count := 0
@@ -37,6 +43,7 @@ var _progression_gates: Array[Dictionary] = []
 func _ready() -> void:
 	add_to_group("progression_restore")
 	_config = _read_json(CONFIG_PATH)
+	_visual_config = _read_json(VISUAL_CONFIG_PATH)
 	if _config.is_empty():
 		push_error("Cloudreach world config missing or invalid: %s" % CONFIG_PATH)
 		return
@@ -49,6 +56,7 @@ func _ready() -> void:
 	_build_bridges()
 	_build_landmarks()
 	_build_return_gate()
+	_build_ground_cover()
 	_place_player()
 	_capture_mouse_if_free()
 	get_window().focus_entered.connect(_capture_mouse_if_free)
@@ -117,16 +125,17 @@ func entry_anchor(anchor_id: String) -> Dictionary:
 
 
 func _build_materials() -> void:
-	# Darker than the raw swatches because the Compatibility renderer's sun and
-	# sky contribution lift mid-values hard. These retain hue at noon instead
-	# of bleaching every distant cliff into the same white slab.
-	_materials["cliff"] = _material(Color("#754331"), 0.96)
+	# Reuse the exact Meadows terrain family. World-space triplanar projection
+	# keeps the texture scale coherent across cliff walls, caps and sloping
+	# route ribbons without requiring UVs on every generated landform.
+	var surface: Dictionary = _visual_config.get("surface", {})
+	_materials["cliff"] = _textured_material(surface.get("cliff", {}), Color("#b78c70"))
 	_materials["cliff_shadow"] = _material(Color("#3f2b2a"), 1.0)
-	_materials["upland"] = _material(Color("#6f7448"), 0.94)
-	_materials["upland_dry"] = _material(Color("#8c7c4a"), 0.95)
-	_materials["path"] = _material(Color("#aa8150"), 0.96)
-	_materials["stone"] = _material(Color("#595a58"), 1.0)
-	_materials["stone_light"] = _material(Color("#898377"), 0.98)
+	_materials["upland"] = _textured_material(surface.get("upland", {}), Color("#e8dfbf"))
+	_materials["upland_dry"] = _textured_material(surface.get("upland_dry", {}), Color("#e4d5aa"))
+	_materials["path"] = _textured_material(surface.get("path", {}), Color("#caa77f"))
+	_materials["stone"] = _textured_material(surface.get("cliff", {}), Color("#8a8982"))
+	_materials["stone_light"] = _textured_material(surface.get("cliff", {}), Color("#b6aa94"))
 	_materials["wood"] = _material(Color("#432d24"), 1.0)
 	_materials["rope"] = _material(Color("#8f7048"), 1.0)
 	_materials["leaf"] = _material(Color("#4f623d"), 0.94)
@@ -147,27 +156,9 @@ func _build_cloud_sea() -> void:
 	var banks := Node3D.new()
 	banks.name = "CloudBanks"
 	add_child(banks)
-	const BANKS := [
-		Vector3(-520.0, 75.0, 520.0), Vector3(470.0, 120.0, 980.0),
-		Vector3(-820.0, 235.0, 1720.0), Vector3(690.0, 315.0, 2200.0),
-		Vector3(760.0, 690.0, 3050.0), Vector3(-760.0, 610.0, 3750.0),
-		Vector3(610.0, 810.0, 4570.0), Vector3(-560.0, 930.0, 5280.0),
-	]
-	for i in BANKS.size():
-		var centre: Vector3 = BANKS[i]
-		for puff in 3:
-			var cloud := MeshInstance3D.new()
-			cloud.name = "Cloud%02d_%d" % [i, puff]
-			var mesh := SphereMesh.new()
-			mesh.radius = 1.0
-			mesh.height = 2.0
-			mesh.radial_segments = 12
-			mesh.rings = 6
-			cloud.mesh = mesh
-			cloud.position = centre + Vector3((puff - 1) * 54.0, float(puff % 2) * 7.0, (puff - 1) * 18.0)
-			cloud.scale = Vector3(74.0 - puff * 9.0, 13.0 + puff * 2.0, 38.0 + puff * 8.0)
-			cloud.material_override = _materials["cloud_bank"]
-			banks.add_child(cloud)
+	# The former stretched SphereMesh puffs read as dark/white floating debris
+	# from several real gameplay angles. Keep the cloud sea and atmospheric fog;
+	# authored sky banks return only with a proper soft-cloud material.
 
 
 func _build_regions() -> void:
@@ -190,10 +181,13 @@ func _build_regions() -> void:
 		# single tabletop. A compact authored mesa at the region anchor plus the
 		# route-ledges below produces separated vertical silhouettes instead of
 		# six overlapping rectangular continents.
+		var landmass: Dictionary = _visual_config.get("landmass", {})
 		var size := Vector3(
-			clampf((max_x - min_x) * 0.18, 120.0, 300.0),
+			clampf((max_x - min_x) * float(landmass.get("region_width_factor", 0.30)),
+				float(landmass.get("min_width_m", 260.0)), float(landmass.get("max_width_m", 560.0))),
 			maxf(18.0, top - bottom),
-			clampf((max_z - min_z) * 0.16, 100.0, 250.0))
+			clampf((max_z - min_z) * float(landmass.get("region_depth_factor", 0.28)),
+				float(landmass.get("min_depth_m", 220.0)), float(landmass.get("max_depth_m", 460.0))))
 		var centre := Vector3(authored.x, (top + bottom) * 0.5, authored.z)
 		var node := Node3D.new()
 		node.name = _safe_name(str(spec.get("id", "Region")))
@@ -206,6 +200,14 @@ func _build_regions() -> void:
 		_add_wind_vegetation(node,
 			Rect2(centre.x - size.x * 0.5, centre.z - size.z * 0.5, size.x, size.z),
 			top, int(spec.get("order", 0)))
+		_cover_patches.append({
+			"kind": "ellipse", "centre": Vector3(centre.x, top, centre.z),
+			# Conservative inside the rotated irregular crown; no grass can hang
+			# in the air at the ellipse corners.
+			"half": Vector2(size.x, size.z) * 0.34,
+			"seed": int(spec.get("order", 0)) * 101,
+			"dry": int(spec.get("order", 0)) >= 5,
+		})
 		_surfaces.append({"kind": "rect", "centre": Vector2(centre.x, centre.z), "half": Vector2(size.x, size.z) * 0.5, "height": top})
 		_region_count += 1
 
@@ -225,6 +227,8 @@ func _build_transition_ledges() -> void:
 			at - Vector3.UP * 8.0, Vector3(42.0, 16.0, 42.0), _materials["cliff"],
 			_materials["upland"], true, int(absf(at.x + at.z)))
 		_surfaces.append({"kind": "rect", "centre": Vector2(at.x, at.z), "half": Vector2(21.0, 21.0), "height": at.y})
+		_cover_patches.append({"kind": "ellipse", "centre": at, "half": Vector2(17.0, 17.0),
+			"seed": int(absf(at.x + at.z)) + 501, "dry": false})
 
 
 func _add_cliff_strata(parent: Node3D, centre: Vector3, size: Vector3, top: float) -> void:
@@ -256,22 +260,37 @@ func _add_satellite_crags(parent: Node3D, centre: Vector3, size: Vector3, top: f
 
 
 func _add_wind_vegetation(parent: Node3D, rect: Rect2, top: float, order: int) -> void:
+	var nature: Dictionary = _visual_config.get("nature", {})
 	var centre := rect.get_center()
 	var half := rect.size * 0.5
-	var tree_count := maxi(6, 13 - order)
+	var tree_count := maxi(12, int(nature.get("tree_count_base", 27))
+		- order * int(nature.get("tree_count_order_falloff", 2)))
 	for i in tree_count:
-		var angle := fmod(float(i) * 2.399963 + float(order) * 0.71, TAU)
-		var radius := 0.22 + 0.58 * sqrt(fmod(float(i) * 0.6180339 + float(order) * 0.17, 1.0))
+		# Golden-angle groups are biased into three groves, leaving authored open
+		# sky between them instead of distributing one tree every N metres.
+		var grove := i % 3
+		var grove_angle := float(grove) * TAU / 3.0 + float(order) * 0.61
+		var angle := grove_angle + sin(float(i * 17 + order * 5)) * 0.42
+		var radius := 0.22 + 0.52 * sqrt(fmod(float(i) * 0.6180339 + float(order) * 0.17, 1.0))
 		var at := Vector3(centre.x + cos(angle) * half.x * radius, top,
 			centre.y + sin(angle) * half.y * radius)
 		var tree := NATURE_TREES[(i + order) % NATURE_TREES.size()].instantiate() as Node3D
 		tree.name = "WindTree%d" % i
 		tree.position = at
-		tree.rotation = Vector3(0.0, angle + 0.4, deg_to_rad(-5.0 - float((i + order) % 4) * 2.5))
-		var scale_value := 0.54 + float((i * 7 + order) % 6) * 0.075
+		# Keep trunks planted and readable; wind character comes from clustered
+		# crowns and the asset silhouettes, not from visibly uprooting whole trees.
+		tree.rotation = Vector3(0.0, angle + 0.4,
+			deg_to_rad(-0.5 - float((i + order) % 4) * 0.8))
+		var scale_min := float(nature.get("tree_scale_min", 1.12))
+		var scale_max := float(nature.get("tree_scale_max", 1.92))
+		var scale_value := lerpf(scale_min, scale_max,
+			float(posmod(i * 7 + order * 3, 11)) / 10.0)
+		if i == 0:
+			scale_value = float(nature.get("hero_tree_scale", 2.25))
 		tree.scale = Vector3.ONE * scale_value
 		parent.add_child(tree)
-	for i in 10:
+		_set_geometry_visibility(tree, float(nature.get("tree_visibility_range_m", 1050.0)))
+	for i in int(nature.get("rock_count", 16)):
 		var angle := fmod(float(i) * 2.071 + float(order) * 0.39, TAU)
 		var radius := 0.24 + 0.63 * sqrt(fmod(float(i) * 0.4142 + 0.13 * order, 1.0))
 		var at := Vector3(centre.x + cos(angle) * half.x * radius, top - 0.18,
@@ -280,8 +299,10 @@ func _add_wind_vegetation(parent: Node3D, rect: Rect2, top: float, order: int) -
 		rock.name = "BeddedRock%d" % i
 		rock.position = at
 		rock.rotation.y = angle
-		rock.scale = Vector3.ONE * (0.65 + float((i + order) % 4) * 0.18)
+		rock.scale = Vector3.ONE * lerpf(float(nature.get("rock_scale_min", 0.85)),
+			float(nature.get("rock_scale_max", 1.75)), float(posmod(i * 5 + order, 9)) / 8.0)
 		parent.add_child(rock)
+		_set_geometry_visibility(rock, float(nature.get("rock_visibility_range_m", 820.0)))
 
 
 func _build_routes() -> void:
@@ -299,16 +320,52 @@ func _build_routes() -> void:
 			points.append(_vec3(point))
 		var width := float(spec.get("width_m", 7.5))
 		_build_route_shoulders(root, spec, points, width)
+		var route_name_lower := str(spec.get("id", "")).to_lower()
+		var landing_top: Material = _materials["upland_dry"] if (
+			route_name_lower.contains("upper") or route_name_lower.contains("summit")
+		) else _materials["upland"]
 		for i in points.size():
 			var pad := points[i]
-			_box(root, "%s_Ledge%d" % [_safe_name(str(spec.get("id", "Route"))), i],
-				pad - Vector3.UP * 7.0, Vector3(maxf(14.0, width * 2.5), 14.0, maxf(14.0, width * 2.5)),
-				_materials["cliff"], true)
+			var landing_size := maxf(20.0, width * 3.0)
+			_mesa(root, "%s_Ledge%d" % [_safe_name(str(spec.get("id", "Route"))), i],
+				pad - Vector3.UP * 7.0, Vector3(landing_size, 14.0, landing_size),
+				_materials["cliff"], landing_top, false,
+				i * 19 + absi(str(spec.get("id", "Route")).hash()))
+			# A shallow walkable cap bridges the several sloped path boxes meeting
+			# here. The irregular cliff below carries the silhouette; this cap keeps
+			# the joint from exposing a sky crack at player eye height.
+			_box(root, "%s_LedgeCap%d" % [_safe_name(str(spec.get("id", "Route"))), i],
+				pad - Vector3.UP * 0.42, Vector3(landing_size * 0.82, 0.84, landing_size * 0.82),
+				landing_top, true)
+			_add_landing_nature(root, points, i, pad, landing_size,
+				i * 43 + absi(str(spec.get("id", "Route")).hash()))
 			_surfaces.append({"kind": "rect", "centre": Vector2(pad.x, pad.z),
-				"half": Vector2(maxf(7.0, width * 1.25), maxf(7.0, width * 1.25)), "height": pad.y})
+				"half": Vector2.ONE * landing_size * 0.44, "height": pad.y})
 		for i in points.size() - 1:
 			_segment_box(root, "%s_%d" % [_safe_name(str(spec.get("id", "Route"))), i], points[i], points[i + 1], width, 0.8, _materials["path"], true)
 			_surfaces.append({"kind": "segment", "a": points[i], "b": points[i + 1], "half_width": width * 0.5, "height": points[i].y})
+
+
+func _add_landing_nature(parent: Node3D, points: Array[Vector3], index: int,
+		pad: Vector3, landing_size: float, seed_value: int) -> void:
+	if points.size() < 2 or posmod(seed_value, 4) == 0:
+		return
+	var previous := points[maxi(0, index - 1)]
+	var following := points[mini(points.size() - 1, index + 1)]
+	var flat := Vector3(following.x - previous.x, 0.0, following.z - previous.z)
+	if flat.length_squared() < 0.01:
+		return
+	var right := Vector3.UP.cross(flat.normalized()).normalized()
+	var side := -1.0 if posmod(seed_value, 2) == 0 else 1.0
+	var tree := NATURE_TREES[posmod(seed_value, NATURE_TREES.size())].instantiate() as Node3D
+	tree.name = "LandingTree%03d" % posmod(seed_value, 1000)
+	tree.position = pad + right * side * landing_size * 0.46 - Vector3.UP * 0.32
+	tree.rotation.y = float(posmod(seed_value * 17, 41)) / 41.0 * TAU
+	tree.rotation.z = deg_to_rad(-0.8 - float(posmod(seed_value, 3)) * 0.6)
+	tree.scale = Vector3.ONE * (1.32 + float(posmod(seed_value * 7, 7)) * 0.085)
+	parent.add_child(tree)
+	var nature: Dictionary = _visual_config.get("nature", {})
+	_set_geometry_visibility(tree, float(nature.get("tree_visibility_range_m", 1050.0)))
 
 
 func _build_route_shoulders(root: Node3D, spec: Dictionary, points: Array[Vector3], width: float) -> void:
@@ -316,47 +373,168 @@ func _build_route_shoulders(root: Node3D, spec: Dictionary, points: Array[Vector
 	var shoulder_root := Node3D.new()
 	shoulder_root.name = "%sCliffShoulders" % route_name
 	root.add_child(shoulder_root)
+	var landmass: Dictionary = _visual_config.get("landmass", {})
 	var serial := 0
 	for segment_index in points.size() - 1:
 		var a := points[segment_index]
 		var b := points[segment_index + 1]
-		var length := a.distance_to(b)
-		var count := clampi(int(ceilf(length / 66.0)), 2, 12)
-		var flat_forward := Vector3(b.x - a.x, 0.0, b.z - a.z).normalized()
-		var right := Vector3.UP.cross(flat_forward).normalized()
-		for i in count:
-			var jitter := sin(float(i * 19 + serial * 7 + segment_index * 13)) * 0.24
-			var t := clampf((float(i) + 0.5 + jitter) / float(count), 0.08, 0.92)
-			var p := a.lerp(b, t)
-			var phase := float(posmod(serial * 17 + segment_index * 11, 9)) / 8.0
-			var shoulder_width := maxf(width * 4.0, 30.0) * (0.72 + phase * 0.58)
-			var shoulder_depth := shoulder_width * (0.68 + float(posmod(serial, 5)) * 0.095)
-			var height := 48.0 + float(posmod(serial * 13, 9)) * 13.0
-			var top := p.y - 0.65
-			_mesa(shoulder_root, "Shelf%03d" % serial,
-				Vector3(p.x, top - height * 0.5, p.z),
-				Vector3(shoulder_width, height, shoulder_depth),
-				_materials["cliff"], _materials["upland_dry"], false, serial + 70)
+		var half_width := maxf(float(landmass.get("route_shoulder_min_half_width_m", 24.0)),
+			width * float(landmass.get("route_shoulder_path_multiplier", 3.8)))
+		var route_is_dry := route_name.to_lower().contains("upper") \
+			or route_name.to_lower().contains("summit")
+		_route_ridge(shoulder_root, "Ridge%03d" % serial, a, b, half_width,
+			segment_index + int(spec.get("order", 0)) * 17 + serial,
+			_materials["upland_dry"] if route_is_dry else _materials["upland"], landmass)
+		_add_route_edge_nature(shoulder_root, a, b, half_width, serial)
+		var cover_config: Dictionary = _visual_config.get("ground_cover", {})
+		var cover_chunks := maxi(1, int(ceilf(a.distance_to(b)
+			/ float(cover_config.get("route_cover_chunk_m", 120.0)))))
+		for chunk in cover_chunks:
+			var chunk_a := a.lerp(b, float(chunk) / float(cover_chunks))
+			var chunk_b := a.lerp(b, float(chunk + 1) / float(cover_chunks))
+			_cover_patches.append({
+				"kind": "segment", "a": chunk_a, "b": chunk_b,
+				# The ribbon's narrowest generated station is 0.58x. Sampling
+				# inside 0.52x leaves margin even between different-width stations.
+				"half_width": half_width * 0.52,
+				"path_half_width": width * 0.5,
+				"seed": serial * 3701 + chunk * 101 + absi(route_name.hash()),
+				"surface_offset_y": -0.70,
+				"dry": route_is_dry,
+			})
+		serial += 1
 
-			# Sparse, clustered route-edge scale cues. Real Quaternius nature assets
-			# make the shelf size readable without turning every ascent into woods.
-			if serial % 3 == 0:
-				var side := -1.0 if serial % 2 == 0 else 1.0
-				var rock := NATURE_ROCKS[serial % NATURE_ROCKS.size()].instantiate() as Node3D
-				rock.name = "RouteRock%03d" % serial
-				rock.position = p + right * side * shoulder_width * 0.3 - Vector3.UP * 0.5
-				rock.rotation.y = phase * TAU
-				rock.scale = Vector3.ONE * (0.95 + phase * 0.8)
-				shoulder_root.add_child(rock)
-			if serial % 5 == 1:
-				var side := -1.0 if serial % 2 == 0 else 1.0
-				var tree := NATURE_TREES[(serial + segment_index) % NATURE_TREES.size()].instantiate() as Node3D
-				tree.name = "RouteTree%03d" % serial
-				tree.position = p + right * side * shoulder_width * 0.32
-				tree.rotation = Vector3(0.0, phase * TAU, deg_to_rad(-7.0 - phase * 5.0))
-				tree.scale = Vector3.ONE * (0.58 + phase * 0.22)
-				shoulder_root.add_child(tree)
-			serial += 1
+
+func _build_ground_cover() -> void:
+	var cover := GROUND_COVER.new()
+	cover.name = "ProceduralGroundCover"
+	add_child(cover)
+	cover.call("build", _cover_patches, _visual_config.get("ground_cover", {}))
+
+
+func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
+		half_width: float, seed_value: int, top_material: Material, config: Dictionary) -> void:
+	var flat := Vector3(b.x - a.x, 0.0, b.z - a.z)
+	if flat.length_squared() < 0.01:
+		return
+	var forward := flat.normalized()
+	var right := Vector3.UP.cross(forward).normalized()
+	var spacing := float(config.get("route_station_spacing_m", 48.0))
+	var station_count := clampi(int(ceilf(flat.length() / maxf(spacing, 8.0))) + 1, 3, 28)
+	var left_top: Array[Vector3] = []
+	var right_top: Array[Vector3] = []
+	var left_bottom: Array[Vector3] = []
+	var right_bottom: Array[Vector3] = []
+	for i in station_count:
+		var t := float(i) / float(station_count - 1)
+		var centre := a.lerp(b, t) - Vector3.UP * 0.72
+		var irregular := 0.84 + 0.18 * sin(float(i * 13 + seed_value * 7))
+		irregular += 0.08 * cos(float(i * 5 + seed_value * 3))
+		var width_here := half_width * irregular
+		var left := centre - right * width_here
+		var right_edge := centre + right * width_here
+		var depth_mix := 0.5 + 0.5 * sin(float(i * 11 + seed_value * 17))
+		var depth := lerpf(float(config.get("route_cliff_depth_min_m", 36.0)),
+			float(config.get("route_cliff_depth_max_m", 92.0)), depth_mix)
+		left_top.append(left)
+		right_top.append(right_edge)
+		left_bottom.append(centre + (left - centre) * 0.72 - Vector3.UP * depth)
+		right_bottom.append(centre + (right_edge - centre) * 0.72 - Vector3.UP * (depth * 0.92))
+
+	var mesh := ArrayMesh.new()
+	var top_tool := SurfaceTool.new()
+	top_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	top_tool.set_material(top_material)
+	for i in station_count - 1:
+		_add_surface_triangle(top_tool, left_top[i], left_top[i + 1], right_top[i])
+		_add_surface_triangle(top_tool, right_top[i], left_top[i + 1], right_top[i + 1])
+	top_tool.generate_normals()
+	top_tool.commit(mesh)
+
+	var side_tool := SurfaceTool.new()
+	side_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	side_tool.set_material(_materials["cliff"])
+	for i in station_count - 1:
+		_add_surface_triangle(side_tool, left_top[i], left_bottom[i], left_top[i + 1])
+		_add_surface_triangle(side_tool, left_bottom[i], left_bottom[i + 1], left_top[i + 1])
+		_add_surface_triangle(side_tool, right_top[i], right_top[i + 1], right_bottom[i])
+		_add_surface_triangle(side_tool, right_bottom[i], right_top[i + 1], right_bottom[i + 1])
+	# End faces prevent the ribbon's first/last station reading as a sliced box.
+	_add_surface_triangle(side_tool, left_top[0], right_top[0], left_bottom[0])
+	_add_surface_triangle(side_tool, left_bottom[0], right_top[0], right_bottom[0])
+	var last := station_count - 1
+	_add_surface_triangle(side_tool, left_top[last], left_bottom[last], right_top[last])
+	_add_surface_triangle(side_tool, left_bottom[last], right_bottom[last], right_top[last])
+	side_tool.generate_normals()
+	side_tool.commit(mesh)
+
+	var ridge := MeshInstance3D.new()
+	ridge.name = label
+	ridge.mesh = mesh
+	ridge.visibility_range_end = 1900.0
+	ridge.visibility_range_end_margin = 160.0
+	parent.add_child(ridge)
+
+
+func _add_surface_triangle(tool: SurfaceTool, a: Vector3, b: Vector3, c: Vector3) -> void:
+	tool.set_uv(Vector2(a.x, a.z) * 0.04)
+	tool.add_vertex(a)
+	tool.set_uv(Vector2(b.x, b.z) * 0.04)
+	tool.add_vertex(b)
+	tool.set_uv(Vector2(c.x, c.z) * 0.04)
+	tool.add_vertex(c)
+
+
+func _add_route_edge_nature(parent: Node3D, a: Vector3, b: Vector3,
+		half_width: float, serial: int) -> void:
+	var nature: Dictionary = _visual_config.get("nature", {})
+	var flat := Vector3(b.x - a.x, 0.0, b.z - a.z)
+	if flat.length_squared() < 0.01:
+		return
+	var forward := flat.normalized()
+	var right := Vector3.UP.cross(forward).normalized()
+	# A route segment can be several hundred metres long. Populate it in
+	# readable edge clusters rather than putting one tiny grove at its midpoint.
+	var cluster_count := clampi(int(ceilf(flat.length() / 74.0)), 3, 9)
+	for cluster in cluster_count:
+		var t := float(cluster + 1) / float(cluster_count + 1)
+		# The route ridge's walkable top sits below the authored spline. Keep all
+		# imported nature rooted into that same generated surface.
+		var anchor := a.lerp(b, t) - Vector3.UP * 0.72
+		var side := -1.0 if (serial + cluster) % 2 == 0 else 1.0
+		var rock := NATURE_ROCKS[(serial + cluster) % NATURE_ROCKS.size()].instantiate() as Node3D
+		rock.name = "RouteRock%03d_%d" % [serial, cluster]
+		rock.position = anchor + right * side * half_width * 0.70 - Vector3.UP * 0.32
+		rock.rotation.y = float(posmod(serial * 17 + cluster * 11, 31)) / 31.0 * TAU
+		rock.scale = Vector3.ONE * (1.0 + float(posmod(serial * 7 + cluster * 5, 9)) * 0.10)
+		parent.add_child(rock)
+		_set_geometry_visibility(rock, float(nature.get("rock_visibility_range_m", 820.0)))
+		for grove_tree in 2:
+			# Skip occasional trees to preserve windswept openings and sightlines.
+			if posmod(serial * 3 + cluster * 5 + grove_tree, 7) == 0:
+				continue
+			var tree := NATURE_TREES[(serial + cluster + grove_tree) % NATURE_TREES.size()].instantiate() as Node3D
+			tree.name = "RouteTree%03d_%d_%d" % [serial, cluster, grove_tree]
+			tree.position = (
+				anchor + right * side * half_width * (0.64 + grove_tree * 0.17)
+				+ forward * (float(grove_tree) - 0.5) * 10.0
+			)
+			tree.rotation = Vector3(0.0,
+				float(posmod(serial * 13 + cluster * 7 + grove_tree * 19, 37)) / 37.0 * TAU,
+				deg_to_rad(-0.4 - float(grove_tree) * 1.1))
+			tree.scale = Vector3.ONE * (1.28
+				+ float(posmod(serial * 5 + cluster * 3 + grove_tree * 3, 8)) * 0.085)
+			parent.add_child(tree)
+			_set_geometry_visibility(tree, float(nature.get("tree_visibility_range_m", 1050.0)))
+
+
+func _set_geometry_visibility(root_node: Node, distance: float) -> void:
+	if root_node is GeometryInstance3D:
+		var geometry := root_node as GeometryInstance3D
+		geometry.visibility_range_end = distance
+		geometry.visibility_range_end_margin = minf(120.0, distance * 0.14)
+	for child: Node in root_node.get_children():
+		_set_geometry_visibility(child, distance)
 
 
 func _build_bridges() -> void:
@@ -505,8 +683,28 @@ func _build_landmarks() -> void:
 		_mesa(landmark, "LandmarkLedge", Vector3(0.0, -6.0, 0.0), Vector3(40.0, 12.0, 38.0),
 			_materials["cliff"], _materials["upland_dry"], true, _landmark_count + 31)
 		_surfaces.append({"kind": "rect", "centre": Vector2(at.x, at.z), "half": Vector2(17.0, 17.0), "height": at.y})
-		var identity := (str(spec.get("id", "")) + " " + str(spec.get("category", ""))).to_lower()
-		if identity.contains("settlement") or identity.contains("village"):
+		_cover_patches.append({"kind": "ellipse", "centre": at, "half": Vector2(16.5, 15.5),
+			"inner_clear_fraction": 0.42, "seed": _landmark_count * 71 + 809,
+			"dry": at.y >= 790.0})
+		var landmark_id := str(spec.get("id", ""))
+		var identity := (landmark_id + " " + str(spec.get("category", ""))).to_lower()
+		if landmark_id == "realm_gate_crag":
+			_build_realm_gate_crag(landmark)
+		elif landmark_id == "three_bells_bridge":
+			_build_three_bells(landmark)
+		elif landmark_id == "broken_skyroad_arch":
+			_build_broken_arch(landmark)
+		elif landmark_id == "windscar_beacon":
+			_build_windscar_beacon(landmark)
+		elif landmark_id == "windscar_flight_aerie":
+			_build_flight_aerie(landmark)
+		elif landmark_id == "high_roost_perches":
+			_build_high_perches(landmark)
+		elif landmark_id == "old_wind_observatory":
+			_build_observatory(landmark)
+		elif landmark_id == "waterward_overlook":
+			_build_waterward_overlook(landmark)
+		elif identity.contains("settlement") or identity.contains("village"):
 			_build_cliff_settlement(landmark)
 		elif identity.contains("shrine") or identity.contains("roost"):
 			_build_sky_shrine(landmark)
@@ -553,6 +751,104 @@ func _build_cliff_settlement(root: Node3D) -> void:
 		mesh.mesh = roof
 		mesh.material_override = _materials["wood"]
 		root.add_child(mesh)
+
+
+func _build_realm_gate_crag(root: Node3D) -> void:
+	# The gate is deliberately above the arrival road; carry that elevation with
+	# one readable cliff tower so the reveal is a grounded destination, not a
+	# black frame apparently floating in empty sky.
+	_mesa(root, "GateFoundationCrag", Vector3(0.0, -20.0, 2.0),
+		Vector3(44.0, 40.0, 42.0), _materials["cliff"], _materials["upland"], false, 211)
+	for side: float in [-1.0, 1.0]:
+		_cylinder(root, "GateCrag", Vector3(side * 11.0, 12.0, 2.0), 4.2, 24.0, _materials["stone"])
+		_cylinder(root, "GateNeedle", Vector3(side * 11.0, 27.0, 2.0), 1.8, 10.0, _materials["stone_light"])
+	_box(root, "AncientGateLintel", Vector3(0.0, 22.0, 2.0), Vector3(24.0, 3.0, 4.0), _materials["stone_light"], false)
+	_box(root, "RealmKeyGlow", Vector3(0.0, 26.0, 1.7), Vector3(7.0, 0.45, 0.35), _materials["heart"], false)
+
+
+func _build_three_bells(root: Node3D) -> void:
+	for side: float in [-1.0, 1.0]:
+		_box(root, "BellPier", Vector3(side * 12.0, 8.0, 0.0), Vector3(3.2, 16.0, 4.0), _materials["stone"], false)
+	_box(root, "BellBeam", Vector3(0.0, 16.0, 0.0), Vector3(28.0, 2.4, 3.0), _materials["wood"], false)
+	for i in 3:
+		var x := (float(i) - 1.0) * 7.0
+		_cylinder(root, "BellRope%d" % i, Vector3(x, 12.5, 0.0), 0.10, 6.0, _materials["rope"])
+		var bell := MeshInstance3D.new()
+		bell.name = "SkyBell%d" % i
+		bell.position = Vector3(x, 9.0, 0.0)
+		var bell_mesh := SphereMesh.new()
+		bell_mesh.radius = 1.25
+		bell_mesh.height = 2.2
+		bell.mesh = bell_mesh
+		bell.scale = Vector3(1.0, 0.85, 1.0)
+		bell.material_override = _materials["leaf_gold"]
+		root.add_child(bell)
+
+
+func _build_broken_arch(root: Node3D) -> void:
+	_box(root, "WestArchPier", Vector3(-10.0, 10.0, 0.0), Vector3(5.0, 20.0, 6.0), _materials["stone"], false)
+	_box(root, "EastArchPier", Vector3(10.0, 7.0, 0.0), Vector3(5.0, 14.0, 6.0), _materials["stone"], false)
+	_box(root, "WestArchCrown", Vector3(-4.0, 20.0, 0.0), Vector3(10.0, 3.0, 6.0), _materials["stone_light"], false,
+		Basis(Vector3.FORWARD, deg_to_rad(-8.0)))
+	_box(root, "FallenArchCrown", Vector3(8.0, 2.0, 8.0), Vector3(12.0, 3.0, 5.0), _materials["stone_light"], false,
+		Basis(Vector3.FORWARD, deg_to_rad(17.0)))
+
+
+func _build_windscar_beacon(root: Node3D) -> void:
+	_cylinder(root, "BeaconPlinth", Vector3(0.0, 2.0, 0.0), 8.0, 4.0, _materials["stone"])
+	_cylinder(root, "BeaconTower", Vector3(0.0, 15.0, 0.0), 3.8, 26.0, _materials["stone_light"])
+	_box(root, "BeaconCrossarm", Vector3(0.0, 25.0, 0.0), Vector3(18.0, 1.0, 1.4), _materials["wood"], false)
+	_cylinder(root, "BeaconFire", Vector3(0.0, 30.0, 0.0), 1.8, 7.0, _materials["heart"])
+
+
+func _build_flight_aerie(root: Node3D) -> void:
+	_cylinder(root, "AerieDais", Vector3(0.0, 1.2, 0.0), 15.0, 2.4, _materials["stone_light"])
+	for i in 5:
+		var angle := TAU * float(i) / 5.0 + 0.35
+		var height := 12.0 + float(i % 3) * 4.0
+		_cylinder(root, "AeriePerch%d" % i,
+			Vector3(cos(angle) * 11.0, height * 0.5 + 2.0, sin(angle) * 8.0),
+			0.65, height, _materials["wood"])
+	_box(root, "LaunchStone", Vector3(0.0, 2.3, -13.0), Vector3(12.0, 1.0, 12.0), _materials["path"], false)
+
+
+func _build_high_perches(root: Node3D) -> void:
+	for i in 6:
+		var angle := TAU * float(i) / 6.0 + 0.2
+		var height := 16.0 + float(posmod(i * 7, 5)) * 5.0
+		_cylinder(root, "RoostNeedle%d" % i,
+			Vector3(cos(angle) * (8.0 + float(i % 2) * 5.0), height * 0.5,
+				sin(angle) * (7.0 + float((i + 1) % 2) * 5.0)),
+			1.8 + float(i % 2), height, _materials["stone"])
+		_box(root, "PerchCap%d" % i,
+			Vector3(cos(angle) * (8.0 + float(i % 2) * 5.0), height,
+				sin(angle) * (7.0 + float((i + 1) % 2) * 5.0)),
+			Vector3(8.0, 0.8, 4.0), _materials["wood"], false,
+			Basis(Vector3.UP, angle))
+
+
+func _build_observatory(root: Node3D) -> void:
+	_cylinder(root, "ObservatoryTower", Vector3(0.0, 10.0, 0.0), 8.5, 20.0, _materials["stone"])
+	var dome := MeshInstance3D.new()
+	dome.name = "WindDome"
+	dome.position = Vector3(0.0, 21.0, 0.0)
+	var sphere := SphereMesh.new()
+	sphere.radius = 8.8
+	sphere.height = 10.0
+	dome.mesh = sphere
+	dome.scale = Vector3(1.0, 0.58, 1.0)
+	dome.material_override = _materials["stone_light"]
+	root.add_child(dome)
+	_cylinder(root, "WeatherSpire", Vector3(0.0, 32.0, 0.0), 0.75, 16.0, _materials["tether"])
+	_box(root, "WindVane", Vector3(0.0, 38.0, 0.0), Vector3(12.0, 0.6, 1.2), _materials["leaf_gold"], false)
+
+
+func _build_waterward_overlook(root: Node3D) -> void:
+	_box(root, "OverlookDeck", Vector3(0.0, 1.0, -6.0), Vector3(30.0, 2.0, 18.0), _materials["stone_light"], false)
+	for side: float in [-1.0, 1.0]:
+		_box(root, "WaterwardPillar", Vector3(side * 10.0, 10.0, 1.0), Vector3(3.0, 20.0, 3.0), _materials["stone"], false)
+	_box(root, "WaterwardLintel", Vector3(0.0, 19.0, 1.0), Vector3(23.0, 2.5, 3.5), _materials["stone"], false)
+	_box(root, "WaterwardGlow", Vector3(0.0, 16.0, 0.7), Vector3(8.0, 0.4, 0.3), _materials["heart"], false)
 
 
 func _build_sky_shrine(root: Node3D) -> void:
@@ -690,44 +986,64 @@ func _mesa(
 	root.rotation.y = deg_to_rad(float(posmod(seed_value * 23, 36)) - 18.0)
 	parent.add_child(root)
 
-	var sides := 9 + posmod(seed_value, 3)
-	var mesa_mesh := CylinderMesh.new()
-	mesa_mesh.top_radius = 1.0
-	mesa_mesh.bottom_radius = 0.68
-	mesa_mesh.height = size.y
-	mesa_mesh.radial_segments = sides
-	mesa_mesh.rings = 2
-	var mass := MeshInstance3D.new()
-	mass.name = "RockBody"
-	mass.mesh = mesa_mesh
-	mass.scale = Vector3(size.x * 0.5, 1.0, size.z * 0.5)
-	mass.material_override = side_material
-	root.add_child(mass)
+	# An irregular three-ring cliff profile replaces the early CylinderMesh
+	# placeholder. The top retains a broad playable crown; the wall overhangs,
+	# pinches and tapers independently so a long route reads as geology rather
+	# than a row of identical hanging prisms.
+	var sides := 14 + posmod(seed_value, 4)
+	var top_ring: Array[Vector3] = []
+	var middle_ring: Array[Vector3] = []
+	var bottom_ring: Array[Vector3] = []
+	for i in sides:
+		var angle := TAU * float(i) / float(sides)
+		var irregular := 0.91 + 0.075 * sin(float(i * 7 + seed_value * 11))
+		irregular += 0.035 * cos(float(i * 13 + seed_value * 3))
+		var top_point := Vector3(cos(angle) * size.x * 0.47 * irregular,
+			size.y * 0.5, sin(angle) * size.z * 0.47 * irregular)
+		var middle_push := 0.96 + 0.10 * sin(float(i * 5 + seed_value * 19))
+		top_ring.append(top_point)
+		middle_ring.append(Vector3(top_point.x * middle_push, size.y * 0.02,
+			top_point.z * middle_push))
+		bottom_ring.append(Vector3(top_point.x * (0.66 + 0.06 * sin(float(i * 3 + seed_value))),
+			-size.y * 0.5, top_point.z * (0.66 + 0.05 * cos(float(i * 5 - seed_value)))))
 
-	# A thin inset cap gives the plateau a distinct walkable value and hides the
-	# cylinder's single-material top without adding another terrain system.
-	var cap_mesh := CylinderMesh.new()
-	cap_mesh.top_radius = 1.0
-	cap_mesh.bottom_radius = 1.0
-	cap_mesh.height = 0.55
-	cap_mesh.radial_segments = sides
-	var cap := MeshInstance3D.new()
-	cap.name = "UplandCap"
-	cap.position.y = size.y * 0.5 + 0.16
-	cap.scale = Vector3(size.x * 0.47, 1.0, size.z * 0.47)
-	cap.mesh = cap_mesh
-	cap.material_override = top_material
-	root.add_child(cap)
+	var mesh := ArrayMesh.new()
+	var top_tool := SurfaceTool.new()
+	top_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	top_tool.set_material(top_material)
+	var crown := Vector3(0.0, size.y * 0.5 + 0.03, 0.0)
+	for i in sides:
+		var next := (i + 1) % sides
+		_add_surface_triangle(top_tool, crown, top_ring[next] + Vector3.UP * 0.03,
+			top_ring[i] + Vector3.UP * 0.03)
+	top_tool.generate_normals()
+	top_tool.commit(mesh)
+
+	var side_tool := SurfaceTool.new()
+	side_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	side_tool.set_material(side_material)
+	for i in sides:
+		var next := (i + 1) % sides
+		_add_surface_triangle(side_tool, top_ring[i], middle_ring[i], top_ring[next])
+		_add_surface_triangle(side_tool, middle_ring[i], middle_ring[next], top_ring[next])
+		_add_surface_triangle(side_tool, middle_ring[i], bottom_ring[i], middle_ring[next])
+		_add_surface_triangle(side_tool, bottom_ring[i], bottom_ring[next], middle_ring[next])
+	side_tool.generate_normals()
+	side_tool.commit(mesh)
+
+	var mass := MeshInstance3D.new()
+	mass.name = "StratifiedCliffBody"
+	mass.mesh = mesh
+	mass.visibility_range_end = 2600.0
+	mass.visibility_range_end_margin = 220.0
+	root.add_child(mass)
 
 	if collision:
 		var points := PackedVector3Array()
-		for ring in 2:
-			var y := size.y * (0.5 if ring == 0 else -0.5)
-			var radius_scale := 0.47 if ring == 0 else 0.32
-			for i in sides:
-				var angle := TAU * float(i) / float(sides)
-				points.append(Vector3(cos(angle) * size.x * radius_scale, y,
-					sin(angle) * size.z * radius_scale))
+		for point: Vector3 in top_ring:
+			points.append(point)
+		for point: Vector3 in bottom_ring:
+			points.append(point)
 		var body := StaticBody3D.new()
 		body.name = "Collision"
 		var shape_node := CollisionShape3D.new()
@@ -770,6 +1086,28 @@ func _material(colour: Color, roughness: float) -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
 	material.albedo_color = colour
 	material.roughness = roughness
+	return material
+
+
+func _textured_material(raw: Variant, fallback_tint: Color) -> StandardMaterial3D:
+	var spec: Dictionary = raw as Dictionary if raw is Dictionary else {}
+	var material := _material(Color(str(spec.get("tint", fallback_tint.to_html()))), 0.96)
+	var albedo_path := str(spec.get("albedo", ""))
+	var normal_path := str(spec.get("normal", ""))
+	var albedo := load(albedo_path) as Texture2D if albedo_path != "" else null
+	var normal := load(normal_path) as Texture2D if normal_path != "" else null
+	if albedo != null:
+		material.albedo_texture = albedo
+	if normal != null:
+		material.normal_enabled = true
+		material.normal_texture = normal
+		material.normal_scale = float(spec.get("normal_depth", 0.3))
+	var uv_scale := float(spec.get("uv_scale", 0.2))
+	material.uv1_triplanar = true
+	material.uv1_world_triplanar = true
+	material.uv1_triplanar_sharpness = 6.0
+	material.uv1_scale = Vector3.ONE * uv_scale
+	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
 	return material
 
 

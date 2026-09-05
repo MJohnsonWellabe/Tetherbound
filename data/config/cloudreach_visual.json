@@ -1,0 +1,89 @@
+{
+  "_comment": "Tunable Phase 2 visual language for Cloudreach. It deliberately reuses the Meadows terrain textures and generated ground-cover meshes: one nature family, a different high-altitude composition.",
+  "schema_version": 1,
+  "surface": {
+    "cliff": {
+      "albedo": "res://assets/environment/terrain/stylised/rock_scree_Color.png",
+      "normal": "res://assets/environment/terrain/stylised/rock_scree_NormalGL.png",
+      "uv_scale": 0.16,
+      "normal_depth": 0.48,
+      "tint": "#c79a7d"
+    },
+    "upland": {
+      "albedo": "res://assets/environment/terrain/stylised/meadow_grass_Color.png",
+      "normal": "res://assets/environment/terrain/stylised/meadow_grass_NormalGL.png",
+      "uv_scale": 0.27,
+      "normal_depth": 0.32,
+      "tint": "#e8dfbf"
+    },
+    "upland_dry": {
+      "albedo": "res://assets/environment/terrain/stylised/verge_grass_Color.png",
+      "normal": "res://assets/environment/terrain/stylised/verge_grass_NormalGL.png",
+      "uv_scale": 0.20,
+      "normal_depth": 0.22,
+      "tint": "#e4d5aa"
+    },
+    "path": {
+      "albedo": "res://assets/environment/terrain/stylised/dirt_path_Color.png",
+      "normal": "res://assets/environment/terrain/stylised/dirt_path_NormalGL.png",
+      "uv_scale": 0.25,
+      "normal_depth": 0.25,
+      "tint": "#9b805f"
+    }
+  },
+  "landmass": {
+    "region_width_factor": 0.30,
+    "region_depth_factor": 0.28,
+    "min_width_m": 260.0,
+    "max_width_m": 560.0,
+    "min_depth_m": 220.0,
+    "max_depth_m": 460.0,
+    "route_shoulder_min_half_width_m": 24.0,
+    "route_shoulder_path_multiplier": 3.8,
+    "route_station_spacing_m": 48.0,
+    "route_cliff_depth_min_m": 36.0,
+    "route_cliff_depth_max_m": 92.0
+  },
+  "ground_cover": {
+    "grass_density_per_m2": 5.80,
+    "region_grass_patch_cap": 135000,
+    "route_grass_patch_cap": 38000,
+    "grass_scale_min": 0.46,
+    "grass_scale_max": 0.72,
+    "flower_density_per_m2": 0.055,
+    "region_flower_patch_cap": 1800,
+    "route_flower_patch_cap": 720,
+    "flower_scale_min": 0.62,
+    "flower_scale_max": 1.05,
+    "bush_density_per_m2": 0.0025,
+    "region_bush_patch_cap": 130,
+    "route_bush_patch_cap": 52,
+    "bush_scale_min": 0.72,
+    "bush_scale_max": 1.18,
+    "visibility_range_m": 260.0,
+    "route_cover_chunk_m": 120.0,
+    "path_clearance_m": 1.8,
+    "cluster_frequency": 0.021,
+    "cluster_threshold": -0.40,
+    "grass_base": "#334512",
+    "grass_tip": "#84933a",
+    "dry_grass_base": "#4b4919",
+    "dry_grass_tip": "#a89b42",
+    "flower_base": "#335119",
+    "flower_tip": "#d49ac6",
+    "bush_base": "#243b16",
+    "bush_tip": "#647a31"
+  },
+  "nature": {
+    "tree_count_base": 27,
+    "tree_count_order_falloff": 2,
+    "tree_scale_min": 1.00,
+    "tree_scale_max": 1.62,
+    "hero_tree_scale": 2.10,
+    "tree_visibility_range_m": 1050.0,
+    "rock_count": 16,
+    "rock_scale_min": 0.85,
+    "rock_scale_max": 1.75,
+    "rock_visibility_range_m": 820.0
+  }
+}
