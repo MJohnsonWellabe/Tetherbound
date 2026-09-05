@@ -124,3 +124,82 @@ or W23. It is not this lane's to fix; recorded here so nobody re-diagnoses it.
   after #42 merges, so the bake repair and the icons are its base.
 - W23 not landed (Gate B red on its branch — above). W10 not landed (skeleton report).
 - No lane code fixed. No history rewritten. Nothing pushed to `main`.
+
+### The finale is broken on `main`, and it blocks every landing
+
+PR #42's `verify-gate-evidence-shard` failed at `smoke_gate_e_finale`:
+`FAIL: exploration never came back after 'warden_aldis''s fight`. Everything before it
+passes — the Warden falls, the tether machine is shut down, the legendary is freed, the
+roster decision resolves, the region answers, the objective chain terminates — and then
+the player cannot move.
+
+**Not this PR's, established rather than assumed.**
+
+- The finale **passed on `main` at `90efc0d5`** (run 33916194315, `Verify gate_e_finale`
+  20:41→20:45 UTC), the run whose only red job was the icon test this PR fixes.
+- PR #42 adds six PNGs, six `.import` files, one Python generator and two manifest
+  fingerprint lines. None is reachable from locomotion after a fight.
+- Reproduced here on the PR head (`3fbd67ad`) and on a tree whose code is byte-identical
+  to `origin/main` (`git diff origin/main HEAD -- ':!ralph'` is empty), same failure text.
+- No CI run since `90efc0d5` had executed the step at all: fail-fast cancelled the shard
+  on the bake reds first. Repairing those is what let the finale run and exposed this.
+
+**Mechanism, to the commit.** `04d844d0` (`feat(cloudreach): establish realm reward
+checkpoint`) gave the Warden `"victory_conversation": "stronghold_warden_realm_reward"` in
+`data/config/bands/band5_stronghold_approach/trainers.json` and added the auto-play in
+`scripts/combat/encounter_director.gd` (+19 lines), so a dialogue panel now opens by itself
+the moment the Warden falls. `sequence_director.gd:747` computes
+`modal := panel or is_fading() or _adopting` and line 774 holds
+`set_locomotion_enabled(not modal)`, so locomotion stays off while that panel is up — which
+is exactly when `smoke_gate_e_finale.gd:814` checks it.
+
+**Not fixed here, deliberately.** The honest fix is to teach the finale smoke the new beat
+(advance and close the Warden's victory conversation before asserting locomotion), and that
+is the finale lane's file, not this lane's. More importantly it would mean adapting the
+Meadows' own exit smoke to accommodate Biome 2 content, which is a decision above a landing
+lane:
+
+> **Hard-rule concern for the coordinator and the owner.** `CLAUDE.md` says *no Biome 2
+> implementation until the Meadows passes its exit gate*, and any reconnection view is
+> distant and non-enterable. Three commits on `main` since `90efc0d5` — `04d844d0`,
+> `3f9e1a14`, `47ca2e12` — build Cloudreach Cliffs: a realm-heart autoload, a keyed realm
+> arch and a Heart socket built into `scripts/world/playground_world.gd` (`+92` lines,
+> including an arrival path that calls `_player.set_physics_process(false)`), a
+> `cloudreach_cliffs.tscn`, and the Warden handoff above. That work has broken the Meadows
+> finale. This lane records it; it does not touch it.
+
+**Consequence for the push.** Every landing from now on carries this red, batch 1 included,
+so under this lane's own rule ("merge only on a fully green run whose code jobs executed")
+nothing can merge until the finale is green again on `main`. That is the one thing blocking
+the queue, and it needs the finale owner (W06) or whoever owns the Cloudreach work.
+
+### W13-PROGRESSION-FEED verified by this lane (worktree at `94a84c5f`)
+
+| Command | Report claims | W24 result |
+|---|---|---|
+| `--only=test_progression_feed.gd,test_bond.gd,test_level_up_announcement.gd,test_candy_progression_safety.gd` | 80 tests, 249 assertions, 0 failed | **80 tests, 249 assertions, 0 failed** |
+| the twelve-file set including `test_save_format.gd` | 336 tests, 1290 assertions, 0 failed | **336 tests, 1290 assertions, 0 failed** |
+| `godot --headless --path . --import` ×2 | — | 0 `SCRIPT ERROR` / `Parse Error` |
+
+One defect in its evidence: the report says the blind verdict is at
+`ralph/reports/W13-PROGRESSION-FEED-0904/JUDGE.md`, and that file is not committed — only
+`shots/_sheet_round1.png` is. The lane is active and may still add it; the claim cannot be
+reproduced until it does.
+
+### W17-DENSITY-B2-B3 verified by this lane (worktree at `a2f1d23d`)
+
+| Command | Report claims | W24 result |
+|---|---|---|
+| `--only=test_band_pickups.gd` | 20 tests, 7851 assertions, 0 failed | **20 tests, 9599 assertions, 0 failed** (assertion count scales with the data walked; test count and result match) |
+| the eight-file band set | 148 tests, 817,100 assertions, 0 failed | **148 tests, 817,100 assertions, 0 failed** |
+| `tests/smoke_playground.gd` | `smoke: OK`, 46 pickups placed | **exit 0, `smoke: OK`**, `placed 46 band pickups (0 already taken, 9 nudged off scatter, 0 unclear, 0 without ground)`, known-benign `material` line ×2 |
+
+Its substance is landable; only its report's `RENDER_SECTION` and `FINAL_COMMIT` are unfilled.
+
+### Batch 1 assembled and waiting on the finale
+
+`ralph/LAND-0904-2` off `origin/main`: W19-CONTRACTS and W13-PROGRESSION-FEED merged with
+no conflicts, plus one landing commit renumbering W13's decision **D74 → D76** (the record
+renamed and every reference rewritten: two config `_comment`s, six script and test headers,
+the `CURRENT_STATE` row and the lane's own report; W19's D74/D75 untouched). Not pushed
+while the finale red stands, since it would only reproduce it.
