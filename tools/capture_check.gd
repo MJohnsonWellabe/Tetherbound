@@ -571,6 +571,9 @@ static func projected_rect(cam: Transform3D, fov_deg: float, size: Vector2,
 ##   max_height_frac  -- a subject taller than this fraction of the frame is
 ##                       too close to read as part of a scene (0 = no cap)
 ##   max_overlap_frac -- override `READABLE_MAX_OVERLAP_FRAC`
+##   min_gap_frac     -- subjects marked `"fighter": true` must ALSO stand
+##                       this fraction of the frame's width apart on screen,
+##                       with clear frame between them
 ##   space            -- a `PhysicsDirectSpaceState3D`; when given, two rays
 ##                       (camera -> box centre, camera -> three-quarter height)
 ##                       must not BOTH be stopped by something that is not the
@@ -591,6 +594,7 @@ static func readable_problems(cam: Transform3D, fov_deg: float, size: Vector2,
 	var min_inside := float(opts.get("min_inside_frac", READABLE_MIN_INSIDE_FRAC))
 	var max_height := float(opts.get("max_height_frac", 0.0))
 	var max_overlap := float(opts.get("max_overlap_frac", READABLE_MAX_OVERLAP_FRAC))
+	var min_gap := float(opts.get("min_gap_frac", 0.0))
 	var space: Variant = opts.get("space", null)
 	var frame := Rect2(Vector2.ZERO, size)
 	var rects: Array = []
@@ -616,7 +620,8 @@ static func readable_problems(cam: Transform3D, fov_deg: float, size: Vector2,
 		if max_height > 0.0 and height_frac > max_height:
 			out.append("'%s' fills %.0f%% of the frame's height; over %.0f%% it is a close-up, not a subject in a scene" % [
 				name, height_frac * 100.0, max_height * 100.0])
-		rects.append({"name": name, "rect": rect, "box": box})
+		rects.append({"name": name, "rect": rect, "box": box,
+			"fighter": bool(subject.get("fighter", false))})
 		var visible := frame.intersection(rect)
 		var inside_frac := 0.0
 		if rect.get_area() > 0.0:
@@ -649,7 +654,27 @@ static func readable_problems(cam: Transform3D, fov_deg: float, size: Vector2,
 				if shared > max_overlap:
 					out.append("'%s' and '%s' overlap on screen by %.0f%% of the smaller one -- one is hiding the other" % [
 						str(rects[i]["name"]), str(rects[j]["name"]), shared * 100.0])
+	if min_gap > 0.0:
+		for i in rects.size():
+			for j in range(i + 1, rects.size()):
+				if not (bool(rects[i]["fighter"]) and bool(rects[j]["fighter"])):
+					continue
+				var gap := _screen_gap(rects[i]["rect"], rects[j]["rect"])
+				if gap < size.x * min_gap:
+					out.append(("'%s' and '%s' stand %.0f px apart on screen; %.0f px of clear frame " +
+						"is the floor for reading them as two animals rather than one shape") % [
+						str(rects[i]["name"]), str(rects[j]["name"]), gap, size.x * min_gap])
 	return out
+
+
+## Clear pixels between two screen rects: zero when they touch or overlap.
+## Measured on the axis that separates them, which is how a viewer reads two
+## bodies apart -- two silhouettes with daylight between them horizontally are
+## two animals even if their vertical spans coincide.
+static func _screen_gap(a: Rect2, b: Rect2) -> float:
+	var dx := maxf(a.position.x - b.end.x, b.position.x - a.end.x)
+	var dy := maxf(a.position.y - b.end.y, b.position.y - a.end.y)
+	return maxf(0.0, maxf(dx, dy))
 
 
 ## The same check, read off a live camera: its global transform, vertical FOV,

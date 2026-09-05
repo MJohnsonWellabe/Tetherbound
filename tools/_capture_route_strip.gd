@@ -99,6 +99,14 @@ const FIGHT_MAX_HEIGHT_FRAC := 0.5
 ## In a fight the two bodies must also be clearly separate on screen, tighter
 ## than the general rule: half of the smaller body hidden is one silhouette.
 const FIGHT_MAX_OVERLAP_FRAC := 0.25
+## And they must have daylight between them, as a fraction of the frame's
+## width. Run 7 stopped the two fighters standing INSIDE each other, and the
+## code-blind judge still reported "they do not read as two separate animals
+## ... at contact-sheet size they read as one tan-and-blue mass": the boxes
+## these bounds are measured on come from `species.json`'s collider radius,
+## and a galecrest's spread wings reach well past it. A required gap between
+## the boxes buys the silhouette the room the data does not describe.
+const FIGHT_MIN_GAP_FRAC := 0.04
 ## And nobody may be smaller than this. Run 3 framed a mudsnout at 14.5% --
 ## it passed every other rule and the code-blind judge reported it as
 ## unreadable and ambiguous with a background prop.
@@ -527,7 +535,8 @@ func _creature_subject(body: Node3D, label: String) -> Dictionary:
 	# mesh's bind-pose AABB, and never `footprint_allowance`: see
 	# `capture_check.body_box()` for what that number is and what it broke.
 	return {"name": "%s:%s" % [label, species_id],
-		"aabb": CAPTURE_CHECK.body_box(body.global_position, height, radius), "body": body}
+		"aabb": CAPTURE_CHECK.body_box(body.global_position, height, radius), "body": body,
+		"fighter": label != "trainer"}
 
 
 func _road_subjects() -> Array:
@@ -731,7 +740,7 @@ func _shoot_fight(band_index: int, band_id: String, stand_xz: Vector2, look_xz: 
 		_clear_toast()
 		var problems := _frame_problems(subjects, [_player, _companion, wild], {
 			"max_height_frac": FIGHT_MAX_HEIGHT_FRAC, "min_height_frac": FIGHT_MIN_HEIGHT_FRAC,
-			"max_overlap_frac": FIGHT_MAX_OVERLAP_FRAC})
+			"max_overlap_frac": FIGHT_MAX_OVERLAP_FRAC, "min_gap_frac": FIGHT_MIN_GAP_FRAC})
 		print("[fight] %s at %.1f m: %s" % [str(candidate["label"]), d,
 			"fits and reads" if problems.is_empty() else str(problems)])
 		if problems.is_empty():
