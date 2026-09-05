@@ -969,32 +969,37 @@ def icon_great_candy() -> Image.Image:
     reads as 'this one is better' next to the plain tier."""
     img = _candy_body()
     d = ImageDraw.Draw(img)
-    _cutout_star(d, 128, CANDY_CY, 40, 16)
+    _cutout_star(d, 128, CANDY_CY, 46, 19)
     return img
 
 
 def icon_rare_candy() -> Image.Image:
-    """Rare Candy, +3 levels: the starred sweet with two small wings lifted
-    off its shoulders -- board 17's gold tier is winged, and the world pickup
-    grows the same wings as child geometry. The wings sit above the wrapper
-    fans so the outline gains a third silhouette feature (ball, fans, wings)
-    where Good has one and Great two.
+    """Rare Candy, +3 levels: the starred sweet with two small wings on its
+    shoulders -- board 17's gold tier is winged, and the world pickup grows
+    the same wings as child geometry. The wings sit above the wrapper fans so
+    the outline gains a third silhouette feature (ball, fans, wings) where
+    Good has one and Great two, and Rare is the widest of the three.
 
-    Each wing is a smooth lobe (a rotated ellipse) swept up and outward,
-    split by one full-stroke feather cutout along its length, and held a
-    clear gap off the ball rather than joined to it: two blind rounds read
-    wings that met the sweet (straight hatched ribbons, then lobes seated
-    behind a shoulder cutout) as a medal's ribbons, rim and lug."""
-    img = icon_great_candy()
+    Each wing is a solid lobe (a rotated ellipse) rooted on the ball's side
+    behind the wrapper fan, sweeping outward past the fan's tip and only
+    gently up, the way board 17's wings flank the sweet; the top of the ball
+    stays a clean arc, because any two lobes rising off the top of a disc
+    read as an animal's ears. Drawn under the ball so the join is
+    seamless, and carrying no interior mark: three blind rounds read wings
+    that were hatched, split by a feather cutout, or held off the sweet by a
+    clearance ring as a medal's ribbons, hollow loops, or antennae, and the
+    hollow-shape treatment was the one thing in the set the existing icons
+    never do. The wrapper fans are exactly `_candy_body`'s, untouched."""
+    img = new_canvas()
     d = ImageDraw.Draw(img)
     cx, cy = 128, CANDY_CY
     for sign in (1, -1):
-        root = (cx + sign * 50, cy - 70)
-        tip = (cx + sign * 100, cy - 102)
+        root = (cx + sign * 58, cy - 34)
+        tip = (cx + sign * 110, cy - 62)
         mx, my = (root[0] + tip[0]) / 2, (root[1] + tip[1]) / 2
         ang = math.atan2(tip[1] - root[1], tip[0] - root[0])
-        a = math.hypot(tip[0] - root[0], tip[1] - root[1]) / 2 + 4
-        b = 20
+        a = math.hypot(tip[0] - root[0], tip[1] - root[1]) / 2 + 6
+        b = 17
         pts = []
         for i in range(48):
             t = i * 2 * math.pi / 48
@@ -1002,16 +1007,9 @@ def icon_rare_candy() -> Image.Image:
             pts.append((mx + ex * math.cos(ang) - ey * math.sin(ang),
                         my + ex * math.sin(ang) + ey * math.cos(ang)))
         d.polygon(pts, fill=FG)
-        # the feather split, from a quarter of the way out to just short of the tip
-        f0 = (root[0] + (tip[0] - root[0]) * 0.25, root[1] + (tip[1] - root[1]) * 0.25)
-        f1 = (root[0] + (tip[0] - root[0]) * 0.98, root[1] + (tip[1] - root[1]) * 0.98)
-        cutout_line(d, [f0, f1], width=STROKE)
-    # the gap between wing and sweet: re-cut the ball's outline so the wing
-    # root never touches it
-    r = 72
-    d.ellipse((cx - r - 6, cy - r - 6, cx + r + 6, cy + r + 6), outline=CLEAR, width=7)
-    d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=FG)
-    _cutout_star(d, cx, cy, 40, 16)
+    # the starred sweet, laid over the wing roots
+    body = icon_great_candy()
+    img.alpha_composite(body)
     return img
 
 
@@ -1058,35 +1056,29 @@ def icon_speed_mushroom() -> Image.Image:
 
 
 def icon_stamina_mushroom() -> Image.Image:
-    """Stamina Shroom: the orange cap, ringed. Three open ring cutouts (an
+    """Stamina Shroom: the orange cap, ringed. Two open ring cutouts (an
     outline each, not a filled dot) so it and Speed are told apart by the
-    mark itself even before the tint: rings against dots. The rings are
-    large with a full-stroke wall so the hole survives the 19px thumbnail,
-    and they are three in a triangle: one concentric bullseye read as an eye
-    (and as the orbs' own ring ladder) to the blind judge."""
+    mark itself even before the tint: rings against dots. Two, unequal and
+    offset -- a large one high on the cap and a smaller one low to one side
+    -- because three small rings smeared into one band at the 19px thumbnail,
+    a matched pair side by side read as eyes, and a concentric pair read as
+    a bullseye (and as the orbs' own tier rings)."""
     img = _mushroom_body(cap_half_w=92, cap_top=36, cap_bottom=124)
     d = ImageDraw.Draw(img)
     cx = 128
-    w = int(STROKE * 0.9)
-    for x, y, r in ((cx, 66, 24), (cx - 48, 98, 22), (cx + 48, 98, 22)):
-        d.ellipse((x - r, y - r, x + r, y + r), outline=CLEAR, width=w)
+    for x, y, r in ((cx - 14, 72, 30), (cx + 48, 100, 18)):
+        d.ellipse((x - r, y - r, x + r, y + r), outline=CLEAR, width=STROKE)
     return img
 
 
 def icon_wild_mushroom() -> Image.Image:
     """Wild Shroom: the red cap, broad and flat -- board 17's "broad and
-    unmistakable". Wider than its siblings on a stouter stem, and the cap's
-    only marks are gill cutouts along the underside, so the tier reads by
-    outline (a wide flat cap) rather than by a spot pattern."""
-    # Round 1's four hairline rim ticks were gone by 32px. Two full-stroke
-    # gill notches per side, run up from the rim well into the cap, are the
-    # smallest mark that still shows at the 19px thumbnail.
-    img = _mushroom_body(cap_half_w=106, cap_top=50, cap_bottom=120, stem_half_w=34)
-    d = ImageDraw.Draw(img)
-    cx, rim_y = 128, 120
-    for x in (cx - 88, cx - 60, cx + 60, cx + 88):
-        cutout_line(d, [(x, rim_y - 14), (x, rim_y + 14)], width=STROKE)
-    return img
+    unmistakable". Wider than its siblings on a stouter stem, with no cap
+    marking at all: the brief makes the broader cap the tier's mark, and the
+    gill ticks tried in rounds 1-3 either vanished below 64px or read as
+    chipping at the cap's ends. Against a dotted and a ringed cap, the plain
+    wide one is the third pattern."""
+    return _mushroom_body(cap_half_w=106, cap_top=50, cap_bottom=120, stem_half_w=34)
 
 
 ITEM_ICONS = {
