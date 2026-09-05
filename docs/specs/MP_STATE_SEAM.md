@@ -201,3 +201,16 @@ Until 2.A exists, `is_host()` is a stub returning true.
    `tools/run_all_smokes.sh` on the lane head with its summary in the report, every red explained.
 5. No player-facing behaviour changes in solo. The report lists every place a forwarding property
    was bypassed for an explicit store, with the reason.
+
+## 6. Pinned behaviours 1.B must carry over unchanged (from lane 0.E)
+
+- `progression_feed.gd::drain()` bumps `_revision`, **not** `_epoch`; only `clear()` bumps the
+  epoch. The instance conversion keeps exactly that (`test_characterize_progression_feed`).
+- `inventory.gd::drain()` returns a **compacted** array with no `null` holes; the index is not
+  the slot number. Any slot-preserving hand-off (death satchel, a future transfer) captures
+  indices first. Do not "fix" this in 1.B.
+- `map_state.gd`'s extent statics: the one characterization test whose expected value changes
+  is `test_characterize_map_state`'s shared-extent test; change it deliberately in 1.B and say so.
+- `SceneTree.paused` cannot be observed by a unit test (`Engine.get_main_loop()` is null under
+  `run_tests.gd`); D-MP8 coverage is `smoke_menu` / `smoke_post_modal_control` and the new
+  `smoke_net_menu_does_not_freeze_peer`.
