@@ -229,8 +229,27 @@ arena pair, the siphon, the approach) and a ninth is dropped silently on exactly
 surfaces the "crushed blacks" verdict was about. Spots are budgeted separately and the
 room had none, so the fill is now a wide spot (85°, 2.4, range 36) thrown from the
 doorway wall across the room; that is the state committed and in `stronghold.json`'s own
-comment. The four chamber/arena stands were re-rendered on it (`shots/n05_after2`) —
-__AFTER2_NUMBERS__
+comment. The four chamber/arena stands were re-rendered on it (`shots/n05_after2`, the frames in
+`_sheet_chamber.png` and the ones the judge saw):
+
+| stand | blown pale-cyan px | pixels under luma 20 | mean luma |
+|---|---|---|---|
+| C-01 face-on | 15,659 → 3,419 | 31.1% → **29.4%** | 36.7 → 36.8 |
+| C-03 door corner | 11,865 → 6,033 | 44.8% → **39.4%** | 33.4 → 34.7 |
+| C-02 creature | 241 → 238 | 44.5% → **38.9%** | 30.3 → 34.7 |
+
+Creature crop vs surround, C-02: 42.0 vs 33.6 (+8.5) → **50.2 vs 39.3 (+10.9)**; creature
+crop C-03: 53.7 → 61.0; machine front C-01: 41.1 → 47.5. **The walls still barely moved**
+(C-01 right wall 25.2 → 26.0, C-03 far wall 25.2 → 25.5). So of the judges' four chamber
+findings this lane's data changes answer the light-bars and the wall slabs directly, give
+the machine and the creature a directional key and a shadow, and open the crushed blacks by
+five to six points of the frame — not the room's walls. **That is the recorded ceiling for
+this lane:** whatever keeps a 2.4-energy 85° spot from lifting a 30 m stone wall by more
+than a luma point on this renderer (the weathered `hall_stone.gdshader` face at grazing
+angles, a second per-object cap, or software GL itself) needs a look at the wall material
+or the room's ambient, which is `world_look.gd`'s global setting and not this lane's to
+reach into. Per the coordinator's 15:58 instruction no further render rounds were spent on
+it; the gap is stated here rather than closed.
 
 ## 3. Runtime validation and frames
 
@@ -269,7 +288,31 @@ names (per the brief: one round, focused, no re-litigating the rest of the room)
 
 - **Dressing sheet** (`_sheet_dressing.png`: Halda's stand, the fence run, the inn, the
   courtyard held/freed, the zoomed junction): verdict in `JUDGE_DRESSING.md`.
-  __JUDGE_DRESSING_SUMMARY__
+  **Fence (rows 1–2, zoom): "Column B is better, and not marginally: it is the difference
+  between a fence and a pile of fence segments. Every defect below is present in A and
+  absent in B."** It measured A's run with 10 px and 17 px voids at row 2 x 944–953 and
+  1042–1058, a 17 px void at row 1 x 1189–1206, a 16 px hole at the corner with three
+  separate posts arriving at different rail heights and angles, and a rail driven through
+  a post protruding into air at (519–524, 371–377); in B one shared corner post at each
+  corner, both runs' rails dying on it, the line following the slope. It could find no
+  floating post in either column ("A's problem is horizontal continuity, not vertical
+  seating") — which is the probe's finding too (worst float 0.48 m is a foot, not a
+  visible gap at 3.5 m). **Inn (row 3):** "Column A is a greybox. Not 'sparse' — a
+  greybox." B has the dressing and every object's scale is right against Bram (bar at
+  belt height, bottles 20–26 cm, tankards under 20 cm), and B "is not there yet": the
+  sign's lettering ran 1.8× the board's width (672 px on a 372 px board) with the overhang
+  at 1.2:1 against plaster; the bottles were a fixed-pitch array (77/42/75/41 px); the
+  lower-west shelf plank passed through the stock shelf's stile at (125–140, 300–312); no
+  light source in frame (the lantern cages hang above the 40° conversation frame). All four
+  were fixed in data after the verdict (text sized to the board and painted dark, per-shelf
+  counts and uneven pitch with an empty stretch and one bottle lying down, the west shelves
+  shortened to clear the stock shelf, a candle on the counter end) and confirmed in one
+  render of that stand (`shots/n05_after3`, §3) — not re-judged, per the coordinator's
+  15:58 instruction. **Courtyard (rows 4–5):** the figure stands in row 4 and is gone in
+  row 5 in BOTH columns, byte-identical silhouette — correct, and this lane changed nothing
+  there. The judge's own finding on those rows is the one routed in §2.3 and §6: "when the
+  garrison stands down, the fortress does not visibly react" beyond the missing trainer.
+  That is W06-FINALE's unlanded withdrawal (braziers, camp, lamps), not this lane's.
 - **Chamber sheet** (`_sheet_chamber.png`: W06's two chamber stands, the creature, the
   Warden Arena): verdict in `JUDGE_CHAMBER.md`. __JUDGE_CHAMBER_SUMMARY__
 
