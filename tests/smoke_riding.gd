@@ -443,14 +443,30 @@ func _the_mount_jumps() -> void:
 	var peak := floor_y
 	var rider_peak := rider_floor_y
 	var left_the_ground := false
+	var ceiling_hit := ""
 	for i in 90:
 		await physics_frame
 		peak = maxf(peak, mount.global_position.y)
 		rider_peak = maxf(rider_peak, _player.global_position.y)
 		if not mount.is_on_floor():
 			left_the_ground = true
+		# A downward-pointing contact normal while rising is a CEILING, not the
+		# ground -- this is how the workshop's own arch bay was actually found
+		# (`_onto_open_ground`'s own header tells that story). Checked live
+		# rather than assumed clear, so a future relocation that drives back
+		# into an overhang fails with the collider's name instead of a bare
+		# height number nobody can act on.
+		if ceiling_hit == "" and mount.velocity.y > 0.0:
+			for c in mount.get_slide_collision_count():
+				var col := mount.get_slide_collision(c)
+				if col.get_normal().y < -0.5:
+					var collider: Object = col.get_collider()
+					ceiling_hit = str(collider.name) if collider != null else "an unnamed body"
 	var rise := peak - floor_y
 	var rider_rise := rider_peak - rider_floor_y
+	if ceiling_hit != "":
+		_fail("the mount's hop hit '%s' overhead while still rising; the relocation this test drives to is not actually clear"
+			% ceiling_hit)
 	if not left_the_ground:
 		_fail("the mount never left the floor on a jump press")
 	if rise < asked * 0.6:
@@ -697,7 +713,12 @@ func _assert_the_player_is_back(context: String) -> void:
 	if model != null:
 		if model.has_method("is_riding") and bool(model.call("is_riding")):
 			_fail("%s: the trainer's model still thinks it is riding" % context)
-		if absf(model.position.y) > 0.01:
+		# Not "back to exactly zero": `character_model.apply_terrain_adaptation()`
+		# already writes a small nonzero `position.y` of its own from ground
+		# slope under ordinary standing, so zero was never the honest baseline.
+		# The seat drop specifically is what has to come off, and 0.92 m (the
+		# fallback `seat_drop_m`) is unmistakable if it does not.
+		if absf(model.position.y) > 0.3:
 			_fail("%s: the trainer's art is still offset %.2f m from the body; the seat drop was never undone"
 				% [context, model.position.y])
 		var anim: AnimationPlayer = model.call("animation_player") if model.has_method("animation_player") else null
@@ -745,27 +766,50 @@ func _stand_beside_the_mount() -> void:
 		await physics_frame
 
 
-## World origin is NOT open ground: `data/config/village.json`'s `workshop`
-## prefab sits at `[2.0, 2.0]`, 2.8 m from (0,0) -- close enough that a mount
-## placed at the origin stands in its doorway (`ralph/reports/W14-RIDING-0904/
-## _shot_before_open_ground_fix.png` is the render that caught it: a sprint
-## reading 0.00 m/s and a hop reading 0.89 m against an asked 1.60 m, both
-## explained by an animal partly inside a building rather than by the sprint
-## or the jump). `OPEN_GROUND` is measured clear of every structure
-## `village.json` places: nearest is `square_oak_a` at `[31.5, 1.5]`, 28.9 m
-## away, well outside a rideable creature's ~1 m radius.
+## World origin stands 2.8 m from `data/config/village.json`'s `workshop`
+## prefab, close enough that a mount placed there can clip it -- which is what
+## the sprint and jump checks first caught (a sprint reading 0.00 m/s and a
+## hop reading 0.89 m against an asked 1.60 m).
 ##
-## Put the mount there, with the rider on it, and let physics settle.
-## `place_on_ground` is the creature's own relocation call (D09: ask the world,
-## do not raycast) and the rider comes along because the rider is parented to
-## the answer.
-const OPEN_GROUND := Vector3(60.0, 0.0, 0.0)
-
+## Two dead ends on the way to this, both worth recording so nobody repeats
+## them. First, teleporting to a coordinate read off `village.json`'s numbers
+## (picked clear of every authored structure): `creature_body.place_on_ground()`
+## silently no-ops -- returns false, leaves the body exactly where it was --
+## wherever `_ground_height()`/`_ray_ground()` cannot resolve a height, and
+## Terrain3D's collision streams in around the tracked body rather than
+## existing everywhere the heightmap technically covers. Both attempted
+## coordinates landed nowhere, and the failure was invisible because the call
+## returns a bool this test never checked, so "moved to open ground" was
+## assumed rather than confirmed.
+##
+## Second, driving there instead of teleporting: `move_back` is the heading
+## `_the_stick_moves_the_creature` already presses and already measures clean
+## (10 m/s peak, 7.3 m in 1.5 s) -- so it looked like the fix. It drives the
+## mount straight into the workshop's own south-west-facing open arch bay
+## (`village.json`'s own comment names it): a real, low, roofed porch a
+## creature can walk INTO at full speed without a wall ever stopping it, which
+## is exactly why the horizontal peak reads clean. The jump's own
+## `get_slide_collision()` is what actually found it -- a `(0, -1, 0)` normal
+## (a ceiling) on the exact frame the rise stopped at 0.89 m, bracketed by a
+## steady wall-normal collision on every frame before and after. Distance
+## along that heading never mattered (90 frames or 130 gave the identical
+## clamp): once wedged under the eave, more time driving into it does nothing.
+##
+## `move_left` is a different heading off the same spawn point and clears
+## everything (`get_slide_collision_count() == 0` for the whole rise, 1.68 m
+## on a 1.60 m ask). It is not claimed clear by inspection; it is EARNED by
+## the same evidence the workshop bay was ruled out with.
 func _onto_open_ground(mount: Node3D) -> void:
 	if mount == null or not is_instance_valid(mount):
 		return
-	mount.call("place_on_ground", OPEN_GROUND)
-	for i in 40:
+	mount.call("place_on_ground", Vector3.ZERO)
+	for i in 20:
+		await physics_frame
+	Input.action_press("move_left")
+	for i in 90:
+		await physics_frame
+	Input.action_release("move_left")
+	for i in 30:
 		await physics_frame
 
 

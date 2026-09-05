@@ -122,15 +122,26 @@ func _run() -> void:
 		return
 	var mount: Node3D = director.call("ally_body")
 
-	# World origin is NOT open ground: `data/config/village.json`'s `workshop`
-	# prefab sits at [2.0, 2.0], 2.8 m away -- close enough that a mount placed
-	# at (0,0,0) stands in its doorway, which was this tool's own first result
-	# (`ralph/reports/W14-RIDING-0904/_shot_before_open_ground_fix.png`). This
-	# point is measured clear of every structure `village.json` places: the
-	# nearest is `square_oak_a` at [31.5, 1.5], 28.9 m away.
-	mount.call("place_on_ground", Vector3(60.0, 0.0, 0.0))
+	# World origin is 2.8m from `data/config/village.json`'s `workshop` prefab
+	# -- close enough that a mount placed at (0,0,0) stands in its doorway.
+	# `move_back` looked like the fix (`tests/smoke_riding.gd`'s own stick
+	# test already measures it clean, 10 m/s peak over 7.3 m) but drives
+	# straight into the workshop's own south-west-facing open arch bay --
+	# `get_slide_collision()` in that file caught a ceiling-normal hit at
+	# 0.89 m every time, regardless of how long the heading was held, because
+	# a full stop under a low roof does not move any further with more time.
+	# `move_left` is a different heading off the same spawn point that clears
+	# with zero slide collisions for the whole rise -- see that file's
+	# `_onto_open_ground()` for the full elimination.
+	mount.call("place_on_ground", Vector3.ZERO)
 	player.global_position = mount.global_position + mount.global_basis.x * 1.4
-	for i in 60:
+	for i in 20:
+		await physics_frame
+	Input.action_press("move_left")
+	for i in 90:
+		await physics_frame
+	Input.action_release("move_left")
+	for i in 30:
 		await physics_frame
 
 	var camera := Camera3D.new()
