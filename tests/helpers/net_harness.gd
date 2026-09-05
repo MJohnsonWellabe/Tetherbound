@@ -47,8 +47,16 @@ extends SceneTree
 const PEER_RUNNER := preload("res://tools/net/peer_runner.gd")
 
 const DEFAULT_STEP_BUDGET_FRAMES := 3000
-const DEFAULT_SMOKE_BUDGET_S_2PEER := 600.0
-const DEFAULT_SMOKE_BUDGET_S_WIDE := 1500.0
+## Contract §8 as amended (`f090076c`): hello and the step phase are budgeted
+## SEPARATELY -- a cold Meadows boot is ~85 s per peer (spike S2,
+## `ralph/reports/MP-0D-SPIKE-HOSTCOST-0905/`), both booting concurrently on
+## one runner, so 180 s covers hello with real margin; the smoke's own STEPS
+## get their own 300 s clock starting only once hello is done, so a slow boot
+## cannot eat into the budget a smoke's assertions actually need.
+const DEFAULT_HELLO_BUDGET_S := 180.0
+const DEFAULT_SMOKE_STEP_BUDGET_S_2PEER := 300.0
+const DEFAULT_SMOKE_STEP_BUDGET_S_WIDE := 1500.0
+const DEFAULT_HEARTBEAT_FRAMES := 60
 const DEFAULT_DESYNC_FRAMES := 240
 const DEFAULT_NEAR_REST_M := 1.5
 const DEFAULT_NEAR_MOTION_M := 4.0
@@ -63,29 +71,34 @@ const HEARTBEAT_SILENT_TIMEOUT_S := 15.0
 ## slack, matching §3's own "budget_frames (plus 5s of wall clock)" rule.
 const NOMINAL_MS_PER_PHYSICS_FRAME := 1000.0 / 60.0
 const WALL_SLACK_MS := 5000.0
-## Wall-clock budget for every peer to accept + say `hello` after launch.
-## Generous: a cold Meadows boot (240 settle frames) plus process spawn
-## overhead, doubled for a loaded CI runner.
-const HELLO_BUDGET_MS := 120000.0
 
 var failures: Array[String] = []
 var _peers: Array = []
 var _run_dir := ""
 var _run_id := ""
 var _scene_for_run := ""
+var _peer_count_for_run := 0
 var _budgets := {}
 var _next_step_id := 0
 ## Set once, the first time the run becomes unrecoverable (a peer died
-## unexpectedly, or went heartbeat-silent). Every wait loop below checks it and
-## bails rather than spinning out its own budget once the run is already dead.
+## unexpectedly, went heartbeat-silent, sent an ERROR verdict, produced no
+## state hash, or the smoke's own step-phase budget ran out). Every wait loop
+## below checks it and bails rather than spinning out its own budget once the
+## run is already dead.
 var _fatal_reason := ""
+## Wall-clock deadline for every STEP the smoke issues after `launch()`'s own
+## hello wait succeeds (contract §8 amended, item 9's "enforce the per-smoke
+## step wall clock"). 0 until `launch()` sets it.
+var _step_phase_deadline_ms := 0.0
 
 
 func _init_budgets() -> void:
 	_budgets = {
 		"step_budget_frames": DEFAULT_STEP_BUDGET_FRAMES,
-		"smoke_budget_s_2peer": DEFAULT_SMOKE_BUDGET_S_2PEER,
-		"smoke_budget_s_wide": DEFAULT_SMOKE_BUDGET_S_WIDE,
+		"hello_budget_s": DEFAULT_HELLO_BUDGET_S,
+		"smoke_step_budget_s_2peer": DEFAULT_SMOKE_STEP_BUDGET_S_2PEER,
+		"smoke_step_budget_s_wide": DEFAULT_SMOKE_STEP_BUDGET_S_WIDE,
+		"heartbeat_frames": DEFAULT_HEARTBEAT_FRAMES,
 		"desync_frames": DEFAULT_DESYNC_FRAMES,
 		"near_tolerance_rest_m": DEFAULT_NEAR_REST_M,
 		"near_tolerance_motion_m": DEFAULT_NEAR_MOTION_M,
@@ -101,6 +114,10 @@ func _init_budgets() -> void:
 	if typeof(parsed) == TYPE_DICTIONARY and (parsed as Dictionary).has("test_budgets"):
 		var tb: Dictionary = (parsed as Dictionary)["test_budgets"]
 		for k in tb.keys():
+			# `_comment*` keys are this repo's own JSON-doesn't-support-comments
+			# convention (see data/config/spawn_tables.json) -- not a budget.
+			if str(k).begins_with("_comment"):
+				continue
 			_budgets[k] = tb[k]
 
 
@@ -116,22 +133,31 @@ func _init_budgets() -> void:
 func launch(peer_count: int, scene: String, extra_args: Array = []) -> bool:
 	_init_budgets()
 	_scene_for_run = scene
-	_run_dir = _resolve_run_dir()
-	DirAccess.make_dir_recursive_absolute(_run_dir)
+	_peer_count_for_run = peer_count
 
 	_run_id = OS.get_environment("TB_NET_RUN_ID")
 	if _run_id.is_empty():
 		_run_id = "local-%d" % Time.get_ticks_usec()
 
-	var control_base := _env_int("TB_NET_CONTROL_BASE", CONTROL_BASE_PORT)
-	var enet_base := _env_int("TB_NET_ENET_BASE", ENET_BASE_PORT)
+	_run_dir = _resolve_run_dir()
+	DirAccess.make_dir_recursive_absolute(_run_dir)
+
+	# Item 13 (review): derive the port bases from the run id itself, so two
+	# runs on one box do not collide by default -- a human who wants exact
+	# ports still can via TB_NET_CONTROL_BASE/TB_NET_ENET_BASE, which win over
+	# the derived offset (contract §8: "both overridable by argument").
+	var offset := _port_offset_from_run_id(_run_id)
+	var control_base := _env_int("TB_NET_CONTROL_BASE", CONTROL_BASE_PORT + offset)
+	var enet_base := _env_int("TB_NET_ENET_BASE", ENET_BASE_PORT + offset)
 
 	_peers.clear()
 	for i in peer_count:
 		var control_port := control_base + i
 		var server := TCPServer.new()
 		if server.listen(control_port) != OK:
-			failures.append("coordinator: could not listen on control port %d for peer %d" % [control_port, i])
+			var why := "coordinator: could not listen on control port %d for peer %d" % [control_port, i]
+			failures.append(why)
+			_fatal_reason = why # item 1: a launch-time harness fault is exit 2, not 1
 			return false
 		var home := _run_dir.path_join("home-%d" % i)
 		DirAccess.make_dir_recursive_absolute(home)
@@ -139,7 +165,9 @@ func launch(peer_count: int, scene: String, extra_args: Array = []) -> bool:
 		var log_path := _run_dir.path_join("peer-%d.log" % i)
 		var pid := _spawn_peer(i, role, control_port, enet_base + i, scene, home, log_path, extra_args)
 		if pid <= 0:
-			failures.append("coordinator: OS.create_process failed for peer %d" % i)
+			var why2 := "coordinator: OS.create_process failed for peer %d" % i
+			failures.append(why2)
+			_fatal_reason = why2
 			return false
 		print("coordinator: launched peer %d (%s) pid=%d control_port=%d home=%s log=%s" %
 			[i, role, pid, control_port, home, log_path])
@@ -151,12 +179,14 @@ func launch(peer_count: int, scene: String, extra_args: Array = []) -> bool:
 			"last_verdict": null, "last_value": null,
 		})
 
-	var deadline := Time.get_ticks_msec() + HELLO_BUDGET_MS
+	var hello_budget_s: float = float(_budgets.get("hello_budget_s", DEFAULT_HELLO_BUDGET_S))
+	var deadline := Time.get_ticks_msec() + hello_budget_s * 1000.0
 	while true:
 		await process_frame
 		_pump_once()
 		if not _fatal_reason.is_empty():
-			failures.append(_fatal_reason)
+			if not failures.has(_fatal_reason):
+				failures.append(_fatal_reason)
 			return false
 		var all_hello := true
 		for p in _peers:
@@ -165,11 +195,26 @@ func launch(peer_count: int, scene: String, extra_args: Array = []) -> bool:
 				break
 		if all_hello:
 			print("coordinator: all %d peer(s) said hello" % peer_count)
+			var step_budget_s: float = float(_budgets.get(
+				"smoke_step_budget_s_2peer" if peer_count <= 2 else "smoke_step_budget_s_wide",
+				DEFAULT_SMOKE_STEP_BUDGET_S_2PEER if peer_count <= 2 else DEFAULT_SMOKE_STEP_BUDGET_S_WIDE))
+			_step_phase_deadline_ms = Time.get_ticks_msec() + step_budget_s * 1000.0
 			return true
 		if Time.get_ticks_msec() > deadline:
-			failures.append("coordinator: not every peer said hello within %.0f ms" % HELLO_BUDGET_MS)
+			var why3 := "ERROR: not every peer said hello within %.0f s" % hello_budget_s
+			failures.append(why3)
+			_fatal_reason = why3 # item 1: hello timeout is a harness fault, exit 2
 			return false
 	return false # unreachable; satisfies static return-path analysis on `while true`
+
+
+## Item 13 (review): a small, deterministic, bounded offset from the run id so
+## concurrent runs land in different port ranges without a human passing
+## --port by hand. Stride 20 leaves room for up to 4 peers per run before the
+## next run's range begins; modulo 400 keeps the whole span (base..base+8000)
+## comfortably inside the ephemeral port range.
+func _port_offset_from_run_id(run_id: String) -> int:
+	return (absi(hash(run_id)) % 400) * 20
 
 
 func _spawn_peer(i: int, role: String, control_port: int, enet_port: int, scene: String,
@@ -236,8 +281,13 @@ func _resolve_run_dir() -> String:
 	var out := OS.get_environment("TB_NET_OUT_DIR")
 	if not out.is_empty():
 		return out
-	var stamp := Time.get_datetime_string_from_system(true).replace(":", "").replace("-", "")
-	return "/tmp/net-run-%s" % stamp
+	# Item 13 (review): the fallback default (no run_net_smoke.sh, which
+	# always sets TB_NET_OUT_DIR itself) folds `_run_id` in too -- two bare
+	# invocations in the same wall-clock second used to collide on the
+	# timestamp alone; `_run_id` is already unique per invocation (env or the
+	# microsecond fallback above it).
+	var safe_id := _run_id.replace("/", "_").replace(":", "_").replace(" ", "_")
+	return "/tmp/net-run-%s" % safe_id
 
 
 # =====================================================================
@@ -245,7 +295,21 @@ func _resolve_run_dir() -> String:
 # awaits a frame, servicing every peer's socket (accept, read, dispatch).
 # =====================================================================
 
+## Item 9 (review): the smoke's own step-phase wall clock (contract §8
+## amended), enforced in ONE place -- `_pump_once()` runs inside every wait
+## loop in this file (`step`, `probe`, `race`, `assert_all_hashes_equal`,
+## `expect_desync_free`), so checking it here covers all of them without a
+## duplicate deadline check in each.
+func _check_step_budget() -> void:
+	if _step_phase_deadline_ms <= 0.0 or not _fatal_reason.is_empty():
+		return
+	if Time.get_ticks_msec() > _step_phase_deadline_ms:
+		_fatal_reason = "ERROR: smoke budget exceeded"
+		print("coordinator: %s" % _fatal_reason)
+
+
 func _pump_once() -> void:
+	_check_step_budget()
 	for entry in _peers:
 		var p: Dictionary = entry
 		if bool(p.get("exited", false)):
@@ -281,19 +345,45 @@ func _handle_peer_line(p: Dictionary, line: String) -> void:
 	match kind:
 		"hello":
 			p["hello"] = msg
+			# Item 10 (review): the reference point a silence check needs
+			# BEFORE the first heartbeat has ever arrived -- `last_heartbeat_t`
+			# stays 0.0 until then, and a peer that said hello and then never
+			# heartbeats at all must still trip the 15 s guard.
+			p["hello_at"] = Time.get_ticks_msec() / 1000.0
 			print("coordinator: peer %d hello: %s" % [int(p["index"]), JSON.stringify(msg)])
 		"verdict":
 			p["last_verdict"] = msg
+			# Item 1 (review): an ERROR verdict from a peer is a harness fault
+			# per contract §4 ("stops the run"), not a check the caller can
+			# choose to treat as a mere FAIL -- so this sets `_fatal_reason`
+			# itself, independent of whatever `step()`'s own caller does with
+			# the returned Dictionary.
+			if str((msg as Dictionary).get("verdict", "")) == "ERROR":
+				var why := "ERROR: peer %d reported ERROR: %s" % [int(p["index"]), str((msg as Dictionary).get("detail", ""))]
+				print("coordinator: %s" % why)
+				if _fatal_reason.is_empty():
+					_fatal_reason = why
 		"value":
 			p["last_value"] = msg
 		"heartbeat":
 			p["last_heartbeat_t"] = Time.get_ticks_msec() / 1000.0
 			p["last_heartbeat"] = msg
-			var hashes: Array = p.get("hashes", [])
-			hashes.append(int((msg as Dictionary).get("state_hash", 0)))
-			while hashes.size() > 3:
-				hashes.pop_front()
-			p["hashes"] = hashes
+			# Item 2 (review): `null` means the peer could not produce a hash
+			# at all (peer_runner.gd::_compute_state_hash's own contract) --
+			# never coerce that into the legal hash value 0. A missing key
+			# (an old peer build, or a malformed message) is treated the same
+			# way: absence is not zero either.
+			if not (msg as Dictionary).has("state_hash") or (msg as Dictionary)["state_hash"] == null:
+				var why2 := "ERROR: state hash unavailable (peer %d)" % int(p["index"])
+				print("coordinator: %s" % why2)
+				if _fatal_reason.is_empty():
+					_fatal_reason = why2
+			else:
+				var hashes: Array = p.get("hashes", [])
+				hashes.append(int((msg as Dictionary)["state_hash"]))
+				while hashes.size() > 3:
+					hashes.pop_front()
+				p["hashes"] = hashes
 		"log":
 			print("peer[%d] log[%s]: %s" % [int(p["index"]), str((msg as Dictionary).get("level", "")),
 				str((msg as Dictionary).get("text", ""))])
@@ -321,7 +411,14 @@ func _check_liveness(p: Dictionary) -> void:
 				_fatal_reason = reason
 	if bool(p.get("hello") != null) and not bool(p.get("exited", false)):
 		var last: float = float(p.get("last_heartbeat_t", 0.0))
-		if last > 0.0 and (Time.get_ticks_msec() / 1000.0 - last) > HEARTBEAT_SILENT_TIMEOUT_S:
+		# Item 10 (review): `last > 0.0` alone means a peer that said hello and
+		# then NEVER heartbeated at all (last_heartbeat_t stays its 0.0
+		# default forever) can never trip this guard -- it would just sit
+		# silently until whatever OUTER budget eventually times the run out,
+		# reporting the wrong reason. Fall back to `hello_at` as the reference
+		# point when no heartbeat has ever arrived.
+		var reference: float = last if last > 0.0 else float(p.get("hello_at", 0.0))
+		if reference > 0.0 and (Time.get_ticks_msec() / 1000.0 - reference) > HEARTBEAT_SILENT_TIMEOUT_S:
 			var reason2 := "ERROR: peer silent (peer %d, no heartbeat for >%.0f s)" % [int(p["index"]), HEARTBEAT_SILENT_TIMEOUT_S]
 			if _fatal_reason.is_empty():
 				_fatal_reason = reason2
@@ -387,6 +484,27 @@ func steps(peer: int, list: Array) -> Array:
 ## tests named in the contract). Returns `[{peer, verdict}, ...]` once every
 ## entry has a verdict or the shared deadline passes.
 func race(list: Array) -> Array:
+	# Item 11 (review): `p["last_verdict"]` is ONE slot per peer, not a queue
+	# keyed by step id -- two entries addressing the SAME peer in one race can
+	# have the second verdict overwrite the first before this function ever
+	# observes it, silently losing a verdict rather than mismatching one.
+	# Rejected as a harness ERROR until verdicts are tracked per id (contract
+	# §6's own carry-over, not this lane's to fix here).
+	var seen_peers := {}
+	for item0 in list:
+		var peer_idx0 := int((item0 as Dictionary).get("peer"))
+		if seen_peers.has(peer_idx0):
+			var why := "ERROR: race() cannot address peer %d twice in one call until verdicts are keyed by id" % peer_idx0
+			print("coordinator: %s" % why)
+			if _fatal_reason.is_empty():
+				_fatal_reason = why
+			var err_out: Array = []
+			for item1 in list:
+				err_out.append({"peer": (item1 as Dictionary).get("peer"),
+					"verdict": {"verdict": "ERROR", "detail": why}})
+			return err_out
+		seen_peers[peer_idx0] = true
+
 	var ids: Array = []
 	var default_budget := int(_budgets.get("step_budget_frames", DEFAULT_STEP_BUDGET_FRAMES))
 	var max_budget := default_budget
@@ -592,11 +710,11 @@ func _write_run_json() -> void:
 	var doc := {
 		"run_id": _run_id, "scene": _scene_for_run, "peers": peers_out,
 		"failures": failures, "fatal": _fatal_reason,
-		"state_hash_excluded_keys": PEER_RUNNER.STATE_HASH_EXCLUDED_KEYS,
-		# NOT in the contract's own §7 list -- see peer_runner.gd's own
-		# comment on WAVE0_PROVISIONAL_EXCLUDED_KEYS for why it exists and why
-		# it is kept separate rather than merged into the line above.
-		"state_hash_excluded_keys_wave0_provisional": PEER_RUNNER.WAVE0_PROVISIONAL_EXCLUDED_KEYS,
+		# Contract §7 as amended (`f090076c`): one key, the allowlist actually
+		# hashed. `EXCLUDED_KEYS` is printed alongside it as the record of
+		# what was deliberately left out, not a second mechanism.
+		"state_hash_hashed_keys": PEER_RUNNER.HASHED_KEYS,
+		"state_hash_excluded_keys": PEER_RUNNER.EXCLUDED_KEYS,
 		"budgets": _budgets,
 	}
 	var f := FileAccess.open(_run_dir.path_join("NET_RUN.json"), FileAccess.WRITE)

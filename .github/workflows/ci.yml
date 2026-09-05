@@ -1927,13 +1927,23 @@ jobs:
         run: |
           set -uo pipefail
           files=""
+          count=0
           for f in tests/smoke_net_*.gd; do
             [ -f "$f" ] || continue
             if head -5 "$f" | grep -qE '^#\s*peers:\s*2\s*$'; then
               files="$files $f"
+              count=$((count + 1))
             fi
           done
-          echo "found:${files}"
+          echo "found (${count}):${files}"
+          # Review item 6: a renamed/deleted header must not make this shard
+          # go green without actually running a peer -- fewer than the two
+          # smokes this lane ships (the boot smoke and its negative control)
+          # fails the job outright rather than silently skipping the run step.
+          if [ "$count" -lt 2 ]; then
+            echo "::error::expected at least 2 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
+            exit 1
+          fi
           echo "files=${files}" >> "$GITHUB_OUTPUT"
       - name: Run net smokes
         if: ${{ !cancelled() && steps.discover.outputs.files != '' }}
@@ -1960,7 +1970,7 @@ jobs:
           done
           exit "$status"
       - uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
+        if: always()
         with:
           name: net-smoke-runs
           path: /tmp/net-ci/

@@ -67,7 +67,13 @@ if ! command -v "$godot_bin" >/dev/null 2>&1; then
 	fi
 fi
 
-mapfile -t smokes < <(find tests -maxdepth 1 -name 'smoke_*.gd' -printf '%f\n' | sort)
+# `smoke_net_*.gd` is excluded (Stage B Wave 0 lane 0.F review, item 7): each
+# one launches multiple real peer PROCESSES via tools/net/run_net_smoke.sh,
+# with its own port/XDG_DATA_HOME isolation and orphan-kill by TB_NET_RUN_ID.
+# A plain smoke sweep must never launch a peer process outside that isolation
+# -- it has no run id to sweep by and no port-collision handling, so two
+# sweeps (or a sweep beside a net smoke run) would silently collide.
+mapfile -t smokes < <(find tests -maxdepth 1 -name 'smoke_*.gd' ! -name 'smoke_net_*.gd' -printf '%f\n' | sort)
 if [ -n "$only" ]; then
 	# Comma-separated substrings, same composition rule as tests/run_tests.gd's
 	# own --only=: a file matches if ANY selector is a substring of its name.
