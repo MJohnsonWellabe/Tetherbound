@@ -75,6 +75,9 @@ func _ready() -> void:
 	_cycle = DAY_CYCLE.new(_config)
 	add_to_group(GROUP)
 	apply_time(DEFAULT_TIME)
+	_verify = OS.get_cmdline_args().has(VERIFY_FLAG)
+	if _verify:
+		_report_daynight_config()
 
 
 ## Real time passing, not gameplay -- there is no pause here on purpose: the
@@ -137,6 +140,31 @@ var _blend_accum: float = BLEND_INTERVAL
 ## this file has always claimed to honour.
 var _clock_frozen: bool = false
 
+## N13-NIGHT-RESUME (CL-O2, OP-0904-2 "There is no night time"). A day/night
+## report an EXPORTED build can actually be tested against, in the same shape
+## and for the same reason as `playground_world.gd::_report_for_export_check()`:
+## a release export strips `print()`, `--quit-after` is an editor flag an export
+## ignores, and -- measured on this exact binary, 2026-09-05 -- a release export
+## template silently ignores `--script` too, so the SceneTree probe
+## `tools/gate_f/probe_daynight_exported.gd` boots the title screen and never
+## runs a line. `push_warning` goes through the error macros, which release
+## builds keep, and is written immediately rather than buffered, so it is the
+## one channel that survives all of that.
+##
+## Run the exported release binary with BOTH flags:
+##
+##   ./Tetherbound.x86_64 --rendering-driver opengl3 --verify-export --verify-daynight
+##
+## `--verify-export` is what makes `title_screen.gd` take the shipped
+## title -> New Game -> `change_scene_to_file()` path without a controller, and
+## `playground_world.gd` quits once the world has stood up -- so this reports on
+## a cadence rather than once, and every line before that quit is real evidence
+## from the real binary. Nothing else in the game reads this flag.
+const VERIFY_FLAG := "--verify-daynight"
+const VERIFY_INTERVAL := 2.0
+var _verify := false
+var _verify_accum := 0.0
+
 
 ## Capture/diagnostic-only. See `_clock_frozen`'s own comment for why this
 ## exists and the arithmetic that makes it necessary. Never called from any
@@ -168,11 +196,120 @@ func _process(delta: float) -> void:
 		if game != null:
 			game.call("advance_day")
 
+	if _verify:
+		_verify_accum += delta
+		if _verify_accum >= VERIFY_INTERVAL:
+			_verify_accum = 0.0
+			_report_daynight_sample(hour)
+
 	_blend_accum += delta
 	if _blend_accum < BLEND_INTERVAL:
 		return
 	_blend_accum = 0.0
 	_apply_blended(hour)
+
+
+## N13-NIGHT-RESUME. One-shot, at `_ready()`: what this binary actually loaded
+## out of its own resource pack, and what that data asks the renderer for at the
+## two hours the whole question turns on.
+##
+## Every hypothesis about "there is no night time" that blames the shipped
+## build's PATH to the clock -- art.json not packed, a harness-only flag, a
+## release `project.godot` override -- is answered by the first three lines.
+## The last two are the answer when those all come back clean.
+func _report_daynight_config() -> void:
+	push_warning("DAYNIGHT-CONFIG template=%s debug_build=%s editor_feature=%s renderer=%s" % [
+		str(OS.has_feature("template")), str(OS.is_debug_build()),
+		str(OS.has_feature("editor")),
+		str(ProjectSettings.get_setting("rendering/renderer/rendering_method", "?"))])
+	push_warning("DAYNIGHT-CONFIG art.json loaded=%s keys=%d cycle=%s" % [
+		str(not _config.is_empty()), _config.size(),
+		"live" if _cycle != null else "NULL -- the clock will never run"])
+	if _cycle == null:
+		return
+	push_warning("DAYNIGHT-CONFIG day_length_seconds=%.1f dark_from=%.1f dark_to=%.1f keyframes=%s" % [
+		float(_cycle.get("day_length_seconds")), float(_cycle.get("dark_from_hour")),
+		float(_cycle.get("dark_to_hour")), str(_cycle.call("keyframe_names"))])
+	# The comparison no probe in this project has ever made: the light the clock
+	# asks for at the darkest hour of the night against the light it asks for at
+	# midday, both read through the SAME blend the running game uses.
+	var darkest := _darkest_dark_hour()
+	var night := light_budget_at(_config, _cycle, darkest)
+	var noon := light_budget_at(_config, _cycle, _brightest_lit_hour())
+	push_warning("DAYNIGHT-CONFIG asked-for light: darkest dark hour %.1f -> direct %.3f + ambient %.3f = %.3f" % [
+		darkest, float(night.direct), float(night.ambient), float(night.total)])
+	push_warning("DAYNIGHT-CONFIG asked-for light: brightest lit hour %.1f -> direct %.3f + ambient %.3f = %.3f" % [
+		_brightest_lit_hour(), float(noon.direct), float(noon.ambient), float(noon.total)])
+	push_warning("DAYNIGHT-CONFIG night/day light ratio = %.3f%s" % [
+		float(night.total) / maxf(0.0001, float(noon.total)),
+		"  <-- night asks for MORE light than day" if float(night.total) > float(noon.total) else ""])
+
+
+## N13-NIGHT-RESUME. Every VERIFY_INTERVAL real seconds while the clock runs.
+## `hour` moving across these lines is the proof the shipped clock advances at
+## all; `exposure`, `ambient` and `luma` moving (or not) with it is the proof of
+## what a player actually sees while it does.
+func _report_daynight_sample(hour: float) -> void:
+	var sun: DirectionalLight3D = get_node_or_null(sun_path) as DirectionalLight3D
+	var holder: WorldEnvironment = get_node_or_null(environment_path) as WorldEnvironment
+	var env: Environment = holder.environment if holder != null else null
+	push_warning("DAYNIGHT-SAMPLE t=%.1f hour=%.3f preset=%s dark=%s sun_e=%.3f sun_pitch=%.1f ambient_e=%.3f sky_contrib=%.2f exposure=%.3f luma=%.1f" % [
+		_elapsed_seconds, hour, _time, "1" if bool(is_dark()) else "0",
+		sun.light_energy if sun != null else -1.0,
+		rad_to_deg(sun.rotation.x) if sun != null else 0.0,
+		env.ambient_light_energy if env != null else -1.0,
+		env.ambient_light_sky_contribution if env != null else -1.0,
+		env.tonemap_exposure if env != null else -1.0,
+		_mean_viewport_luma()])
+
+
+## Mean Rec.709 luma of the frame the player is looking at, 0..255. Downsampled
+## first: this runs on a cadence inside a real session, and reading a full
+## viewport per sample is not free.
+func _mean_viewport_luma() -> float:
+	var viewport := get_viewport()
+	if viewport == null:
+		return -1.0
+	var texture := viewport.get_texture()
+	if texture == null:
+		return -1.0
+	var img: Image = texture.get_image()
+	if img == null:
+		return -1.0
+	img.resize(48, 27, Image.INTERPOLATE_BILINEAR)
+	var total := 0.0
+	for y in img.get_height():
+		for x in img.get_width():
+			var c := img.get_pixel(x, y)
+			total += 0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b
+	return total / float(img.get_width() * img.get_height()) * 255.0
+
+
+## The hour inside `is_dark()`'s own window at which the clock asks for the
+## least light, and the hour outside it at which it asks for the most -- the two
+## ends of the contrast the owner is reporting the absence of. Swept at
+## half-hour resolution because the blend is piecewise linear between keyframes,
+## so the extremes sit on or very near a keyframe either way.
+func _darkest_dark_hour() -> float:
+	return _extreme_hour(true)
+
+
+func _brightest_lit_hour() -> float:
+	return _extreme_hour(false)
+
+
+func _extreme_hour(dark: bool) -> float:
+	var best := 0.0
+	var best_total := INF if dark else -INF
+	for step in 48:
+		var hour := step * 0.5
+		if bool(_cycle.call("is_dark", hour)) != dark:
+			continue
+		var total := float(light_budget_at(_config, _cycle, hour).total)
+		if (dark and total < best_total) or (not dark and total > best_total):
+			best_total = total
+			best = hour
+	return best
 
 
 ## Camp rest calls this (by group, not by node reference -- see GROUP above)
@@ -319,10 +456,96 @@ func times_available() -> Array:
 ## base block. Full copies of every value per hour is how two of them end up
 ## silently disagreeing about something nobody meant to vary.
 func _merged(section: String, over: Dictionary) -> Dictionary:
-	var base: Dictionary = (_config.get(section, {}) as Dictionary).duplicate(true)
+	return _merged_from(_config, section, over)
+
+
+## N13-NIGHT-RESUME. `_merged()`'s body, with the config passed in rather than
+## read off `self`, so `blended_config_at()` below can be static. See that
+## function's own comment for why any of this needed to be reachable without a
+## live WorldLook node.
+static func _merged_from(config: Dictionary, section: String, over: Dictionary) -> Dictionary:
+	var base: Dictionary = (config.get(section, {}) as Dictionary).duplicate(true)
 	for key: String in (over.get(section, {}) as Dictionary).keys():
 		base[key] = over[section][key]
 	return base
+
+
+## N13-NIGHT-RESUME (CL-O2, OP-0904-2 "There is no night time"). The sun, sky
+## and environment the PASSIVE CLOCK asks for at `hour` -- the blend
+## `_apply_blended()` installs, not the snap `apply_time()` installs.
+##
+## Static, and config-in, for two reasons that are the same reason:
+##
+## 1. Every day/night instrument this project had pinned a preset BY NAME with
+##    `apply_time()` -- `tools/survey.gd`, `tools/gate_f/probe_daynight_*.gd`,
+##    every capture tool, and the NIGHT-LIGHT and NIGHT-LEGIBILITY passes that
+##    tuned `art.json`'s night values against rendered frames. The running game
+##    never does that. It hands the renderer a lerp between the two bracketing
+##    keyframes, which means the frames night was judged on are frames the game
+##    only draws at the single instant the clock crosses `night`'s own hour.
+##    Nothing could see the difference because the blend had no way to be read
+##    without standing a whole world up first.
+## 2. `docs/decisions/D02` scopes `tests/test_case.gd` suites to pure logic with
+##    no scene tree, so a test could not reach the blend at all while it lived
+##    on a Node's instance state. It does now, and
+##    `tests/test_day_cycle_night_contrast.gd` reads exactly this function --
+##    the one the game itself calls -- rather than a copy of its arithmetic.
+##
+## `cycle` is a `day_cycle.gd`, whose `interpolate_at()` decides the bracket.
+static func blended_config_at(config: Dictionary, cycle: RefCounted, hour: float) -> Dictionary:
+	var interp: Dictionary = cycle.call("interpolate_at", hour)
+	var from_name: String = str(interp.get("from", DEFAULT_TIME))
+	var to_name: String = str(interp.get("to", from_name))
+	var t: float = float(interp.get("t", 0.0))
+	var times: Dictionary = config.get("times", {})
+	var from_over: Dictionary = times.get(from_name, {})
+	var to_over: Dictionary = times.get(to_name, {})
+	return {
+		"from": from_name,
+		"to": to_name,
+		"t": t,
+		"sun": _blend_dict(_COLOUR_KEYS.sun,
+			_merged_from(config, "sun", from_over), _merged_from(config, "sun", to_over), t),
+		"sky": _blend_dict(_COLOUR_KEYS.sky,
+			_merged_from(config, "sky", from_over), _merged_from(config, "sky", to_over), t),
+		"environment": _blend_dict(_COLOUR_KEYS.environment,
+			_merged_from(config, "environment", from_over),
+			_merged_from(config, "environment", to_over), t),
+	}
+
+
+## N13-NIGHT-RESUME. How much light the clock asks for at `hour`, reduced to the
+## only two numbers that decide whether a frame reads as day or as night.
+##
+## `_apply_environment()` below installs `exposure` as `env.tonemap_exposure`,
+## which multiplies the linear value BEFORE the ACES curve. So a preset that
+## halves its light and doubles its exposure has changed nothing about how
+## bright the frame is, and reading `sun.energy` or `ambient_energy` on their
+## own -- which is what every existing day/night probe does -- cannot tell the
+## two apart. Multiplying them here is the whole point of this function.
+##
+## `ambient` is the COMPATIBILITY ambient, not the raw `ambient_energy`.
+## `project.godot` ships `renderer/rendering_method="gl_compatibility"` and
+## under Compatibility sky radiance does not reach the terrain at all (D06 --
+## `_apply_environment()`'s own comment states it and measured it), so only the
+## `(1 - ambient_sky_contribution)` explicit-colour share is real light on the
+## renderer the game actually ships.
+static func light_budget_at(config: Dictionary, cycle: RefCounted, hour: float) -> Dictionary:
+	var blended: Dictionary = blended_config_at(config, cycle, hour)
+	var env: Dictionary = blended.environment
+	var exposure := float(env.get("exposure", 1.0))
+	var direct := float((blended.sun as Dictionary).get("energy", 1.25)) * exposure
+	var ambient := float(env.get("ambient_energy", 1.0)) \
+		* (1.0 - float(env.get("ambient_sky_contribution", 0.55))) * exposure
+	return {
+		"direct": direct,
+		"ambient": ambient,
+		"total": direct + ambient,
+		"exposure": exposure,
+		"from": blended.from,
+		"to": blended.to,
+		"t": blended.t,
+	}
 
 
 ## OP23-05. The passive clock's own tick: blend sun/sky/environment between
@@ -331,17 +554,10 @@ func _merged(section: String, over: Dictionary) -> Dictionary:
 func _apply_blended(hour: float) -> void:
 	if _cycle == null:
 		return
-	var interp: Dictionary = _cycle.call("interpolate_at", hour)
-	var from_name: String = str(interp.get("from", DEFAULT_TIME))
-	var to_name: String = str(interp.get("to", from_name))
-	var t: float = float(interp.get("t", 0.0))
-	var times: Dictionary = _config.get("times", {})
-	var from_over: Dictionary = times.get(from_name, {})
-	var to_over: Dictionary = times.get(to_name, {})
-
-	var sun_cfg := _blend_dict(_COLOUR_KEYS.sun, _merged("sun", from_over), _merged("sun", to_over), t)
-	var sky_cfg := _blend_dict(_COLOUR_KEYS.sky, _merged("sky", from_over), _merged("sky", to_over), t)
-	var env_cfg := _blend_dict(_COLOUR_KEYS.environment, _merged("environment", from_over), _merged("environment", to_over), t)
+	var blended := blended_config_at(_config, _cycle, hour)
+	var sun_cfg: Dictionary = blended.sun
+	var sky_cfg: Dictionary = blended.sky
+	var env_cfg: Dictionary = blended.environment
 	_layer_weather(sun_cfg, sky_cfg, env_cfg)
 
 	_apply_sun(sun_cfg)
@@ -382,7 +598,7 @@ const _ANGLE_KEYS := ["yaw_deg"]
 ## path string) snaps at the midpoint -- there is no meaningful blend for
 ## "is this shadow-casting" or "which texture", and every such key in this
 ## project is already identical across every time-of-day preset in practice.
-func _blend_dict(colour_keys: Array, a: Dictionary, b: Dictionary, t: float) -> Dictionary:
+static func _blend_dict(colour_keys: Array, a: Dictionary, b: Dictionary, t: float) -> Dictionary:
 	var out: Dictionary = a.duplicate(true)
 	for key: String in b.keys():
 		var bv: Variant = b[key]
