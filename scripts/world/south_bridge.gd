@@ -230,11 +230,16 @@ func _build_hero_gate(prefabs: RefCounted, arch_x: float, deck_y: float) -> bool
 ## of +90.
 const BANNER_CLOTH_SHADER := preload("res://assets/environment/team_tether/hall/banner_cloth.gdshader")
 const BANNER_CLOTH_T := 0.05
+var _banners_hung := 0
 
 
 func _hang_checkpoint_banner(at: Vector3) -> void:
 	var holder := Node3D.new()
-	holder.name = "CheckpointBanner"
+	# Numbered: a second child named "CheckpointBanner" is silently renamed
+	# by the tree to "@CheckpointBanner@N", which is how `smoke_traversal`'s
+	# banner count first came back as one of two.
+	_banners_hung += 1
+	holder.name = "CheckpointBanner%d" % _banners_hung
 	holder.position = at
 	add_child(holder)
 
