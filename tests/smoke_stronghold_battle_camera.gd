@@ -186,17 +186,36 @@ func _challenge() -> void:
 		_fail("the gauntlet battle started without the challenge conversation being read")
 
 
+## UPDATED by the landing lane, 2026-09-05, for owner directive 2026-09-04-B
+## amendment A-1, implemented by lane W10-TRAINER-RULES: *"you shouldn't be
+## able to leave a fight with another character once it's started. still
+## should be able to with a wild creature."* `combat_manager.gd::can_flee()`
+## now returns `not _enemy_owned`, and this gauntlet fight is a TRAINER
+## battle (`stronghold_elite`), so RB must be refused here exactly as
+## `smoke_trainer_battle_camera.gd::_prove_combat_exit_restores_orbit()`
+## already proves for Mira. The camera half of this test is what it was
+## always for, so the fight is then ended the only way a trainer fight can
+## end other than the party fainting -- resolving it as won -- and the orbit
+## assertions run unchanged against that exit instead of against a flee that
+## is no longer allowed to happen.
 func _prove_combat_exit_restores_orbit() -> void:
 	await _press_button(JOY_BUTTON_RIGHT_SHOULDER)
+	for i in 30:
+		await physics_frame
+	if not bool(_manager.call("is_fighting")):
+		_fail("RB ended a TRAINER fight: owner directive 2026-09-04-B A-1 says a "
+			+ "trainer fight cannot be left once it has started")
+		return
+	_manager.call("_begin_resolve", "won")
 	for i in 180:
 		if not bool(_manager.call("is_fighting")):
 			break
 		await physics_frame
 	if bool(_manager.call("is_fighting")):
-		_fail("physical RB did not disengage the stronghold battle")
+		_fail("the stronghold gauntlet battle never resolved after being won")
 		return
 	if _rig.get("_target") != _player or not _rig.is_processing() or not _camera.current:
-		_fail("fleeing the stronghold battle did not restore the exploration camera")
+		_fail("winning the stronghold gauntlet battle did not restore the exploration camera")
 	await _assert_raw_orbit_changes("exploration after stronghold battle")
 
 
