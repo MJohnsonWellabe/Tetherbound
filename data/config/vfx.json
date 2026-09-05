@@ -91,11 +91,12 @@
 
   "_comment_catch_burst": "The seal, on top of catching.json's own warm flash: gold sparkles thrown out from the sealed orb and drifting up, so a catch lands as a reward and not only as a verdict line.",
   "catch_burst": {
+    "_why_n14": "N14-ROUTED-FOLLOWUPS, 2026-09-05, on N07-VFX-POLISH's routed finding: 'vfx.json catch_burst throws 26 dark-haloed motes from the orb; at three ticks they are still packed on it and the round-1 judge read them as dust or mud kicked up, burying the orb.'\n\nThe first attempt at this was WRONG and the arithmetic is why, so it is recorded: raising `speed` and WIDENING `speed_variance` moves the leading edge and leaves the slow tail exactly where it was, and the slow tail is what sits on the orb. `vfx_burst.gd` places a mote at `speed * (1 +- variance) * duration * (1 - (1 - u)^2.2)`, so at three ticks (u = 0.05, eased 0.107) the SHIPPED burst put its slowest motes 0.224 m from the orb centre -- deep inside a 0.60 m orb (`catching.json::throw.radius`), which is the pile-up the judge saw -- while its fastest were already 0.672 m out and clear. It was never a burst that failed to leave; it was a burst whose slowest third never left.\n\nSo `speed` 4.2 -> 8.1 and `speed_variance` 0.5 -> 0.30, which RAISES the floor rather than the ceiling: the slowest motes now stand 0.605 m out at three ticks, on the orb's rim rather than inside it, and the fastest at 1.124 m. `count` 26 -> 16 thins what is over the orb at any instant. `duration`, `size`, `halo`, `heat`, `streak_*`, `gravity` and both colours are untouched, so it is W09's own sparkle, thrown harder and thinner.\n\nWhat this trades: at 8.1 the motes leave the resolve camera's frame sooner, so the sparkle is briefer. That is the priority N07's own round-2 judge already set on this composite when it ranked the orb's legibility above the ring's persistence -- 'every extra tenth of a second is a tenth of a second the orb is veiled'.",
     "enabled": true,
-    "count": 26,
+    "count": 16,
     "duration": 1.0,
-    "speed": 4.2,
-    "speed_variance": 0.5,
+    "speed": 8.1,
+    "speed_variance": 0.3,
     "spread_degrees": 360.0,
     "gravity": -2.4,
     "up_bias": 0.6,

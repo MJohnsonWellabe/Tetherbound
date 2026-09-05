@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://p8adxwovik4t"
-path="res://.godot/imported/side.png-082796f0df2a4508c4a2689427ec9586.ctex"
+uid="uid://brdscpwla2rd4"
+path="res://.godot/imported/oskar.png-3845d23318da8efc178b05c6467bbd78.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/creatures/tetherbound/warden_head/reference/side.png"
-dest_files=["res://.godot/imported/side.png-082796f0df2a4508c4a2689427ec9586.ctex"]
+source_file="res://assets/ui/portraits/oskar.png"
+dest_files=["res://.godot/imported/oskar.png-3845d23318da8efc178b05c6467bbd78.ctex"]
 
 [params]
 

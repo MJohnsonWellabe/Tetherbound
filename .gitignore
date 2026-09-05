@@ -63,6 +63,28 @@ __pycache__/
 # these since the page was written -- they were committed anyway.
 site/img/*.import
 
+# Godot sidecars for owner reference art. Every `reference/` directory under
+# assets/creatures/tetherbound/ that carries its own `.gdignore` is invisible to
+# the editor, so nothing in it is ever imported and its `.import` sidecars are
+# dead weight -- 30 of them were tracked anyway, from before those `.gdignore`
+# files existed. Untracked by N14-ROUTED-FOLLOWUPS on N12-REPO-HYGIENE's routed
+# §8, which called it "a one-line follow-up if wanted".
+#
+# The eight `reference/` directories that carry NO `.gdignore` are re-admitted
+# below: the editor DOES import those, so their 21 sidecars are live files and
+# must stay tracked. Git cannot express "a directory containing a `.gdignore`",
+# so the live eight are named. Whether they should also be `.gdignore`d is a
+# real question and is NOT answered here.
+assets/creatures/tetherbound/*/reference/*.import
+!assets/creatures/tetherbound/candy_pickup/reference/*.import
+!assets/creatures/tetherbound/meadows_bridge_section/reference/*.import
+!assets/creatures/tetherbound/meadows_signpost/reference/*.import
+!assets/creatures/tetherbound/mushroom_pickup/reference/*.import
+!assets/creatures/tetherbound/potion_plant/reference/*.import
+!assets/creatures/tetherbound/revive_flower/reference/*.import
+!assets/creatures/tetherbound/riding_saddle/reference/*.import
+!assets/creatures/tetherbound/south_bridge_gate/reference/*.import
+
 # throwaway lane capture/probe scripts, by convention run-and-deleted, never shipped
 tools/_scratch_*
 

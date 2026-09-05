@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bceh1spsn5eif"
-path="res://.godot/imported/three_quarter.png-875f1e3cdfc2e4e947acfe1d3e13d09c.ctex"
+uid="uid://dia08qy82jcss"
+path="res://.godot/imported/villager_male_lod0_hair_mask.png-0d672076549d45ee1fa60337d2b2f53e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/creatures/tetherbound/warden_head/reference/three_quarter.png"
-dest_files=["res://.godot/imported/three_quarter.png-875f1e3cdfc2e4e947acfe1d3e13d09c.ctex"]
+source_file="res://assets/characters/villager_male/villager_male_lod0_hair_mask.png"
+dest_files=["res://.godot/imported/villager_male_lod0_hair_mask.png-0d672076549d45ee1fa60337d2b2f53e.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://be3ooyd4gdkaw"
-path="res://.godot/imported/top.png-862dd6e51aeba9b2de9505ff60f50196.ctex"
+uid="uid://df0gm47y6mc3g"
+path="res://.godot/imported/kell.png-beeac56671cf37974c0c89e5d5059247.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/creatures/tetherbound/tether_machine/reference/top.png"
-dest_files=["res://.godot/imported/top.png-862dd6e51aeba9b2de9505ff60f50196.ctex"]
+source_file="res://assets/ui/portraits/kell.png"
+dest_files=["res://.godot/imported/kell.png-beeac56671cf37974c0c89e5d5059247.ctex"]
 
 [params]
 

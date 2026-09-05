@@ -750,6 +750,25 @@ func _apply_hair(cfg: Dictionary) -> void:
 				real_part.get_active_material(0), "hair", Color(hex_real)))
 			_recolour_painted_hair(real_part, Color(hex_real))
 		return
+
+	# N14-ROUTED-FOLLOWUPS. No separated hair mesh on this rig -- but a rig can
+	# have PAINTED hair and a baked mask without having a hair mesh, and the
+	# male villager rig is exactly that case (`villager_male_lod0.glb` has
+	# `char1` and `trousers` and nothing else; N04 cut a ponytail for the female
+	# rig only, and `art.json::villager_keeper` records a whole-body tint and a
+	# belt-pouch accessory both tried and reverted as differentiators for it).
+	# The mask is a region of the TEXTURE, not a mesh, so the recolour reaches
+	# the painted fringe on the body material with no new geometry at all.
+	#
+	# Before the placeholder below, deliberately: falling through to a primitive
+	# sphere on the Head bone would put a ball of hair-coloured plastic on the
+	# five NPCs this is meant to tell apart.
+	var hex_painted := str(hair.get("color", hair.get("colour", "")))
+	if hex_painted != "" and _has_painted_hair_mask():
+		if visible:
+			_recolour_painted_hair(null, Color(hex_painted))
+		return
+
 	if not visible:
 		return
 	var mesh := _primitive_mesh(str(hair.get("shape", "sphere")), 0.11)
@@ -766,6 +785,13 @@ func _apply_hair(cfg: Dictionary) -> void:
 ## `villager_female_lod0_hair_mask.png`, baked by
 ## `tools/_bake_villager_female_hair_mask.py`). A rig with no mask on disk
 ## keeps the ponytail-only behaviour above; nothing is invented for it.
+## Whether THIS model has one on disk. Split out because two callers want the
+## question rather than the path.
+func _has_painted_hair_mask() -> bool:
+	var path := painted_hair_mask_path(str(_cfg.get("model", "")))
+	return path != "" and ResourceLoader.exists(path)
+
+
 static func painted_hair_mask_path(model_path: String) -> String:
 	if model_path == "":
 		return ""

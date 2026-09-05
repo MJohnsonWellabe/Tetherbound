@@ -542,11 +542,23 @@ static func set_aerial_fade_colour(colour: Color) -> void:
 ## the SAME preset, not a new one -- so the one-frame ordering race can no
 ## longer matter: whichever of the two `_ready()`s happens to run first, the
 ## terrain ends this function with the correct preset's fade colour on it.
+## N14: through `reapply_current_look()`, not `apply_time()`. The paragraph
+## above already describes the intent as "a plain re-push of the SAME preset,
+## not a new one" -- but `apply_time()` also PINS the clock to that preset's
+## authored hour (its own R5.1 comment), which was invisible while every world
+## opened at 08:00 and became a real defect the moment a world could open at a
+## saved evening: this re-push snapped 19:40 back to `golden`'s 18:00 on every
+## boot. `reapply_current_look()` pushes the same look off the live clock
+## instead of writing to it.
 func _reapply_look_after_ground_materials() -> void:
 	var look := get_node_or_null(^"WorldLook")
-	if look == null or not look.has_method("apply_time") or not look.has_method("time_of_day"):
+	if look == null:
 		return
-	look.call("apply_time", look.call("time_of_day"))
+	if look.has_method("reapply_current_look"):
+		look.call("reapply_current_look")
+		return
+	if look.has_method("apply_time") and look.has_method("time_of_day"):
+		look.call("apply_time", look.call("time_of_day"))
 
 
 func _ready() -> void:

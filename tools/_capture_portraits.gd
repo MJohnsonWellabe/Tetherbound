@@ -121,9 +121,26 @@ const PORTRAITS: Array = [
 	{"file": "mira", "config_key": "villager_farmer"},
 	{"file": "tam", "config_key": "villager_smith"},
 	{"file": "villager_ranger", "config_key": "villager_ranger"},
-	{"file": "halda", "config_key": "villager_ranger", "hair": {"visible": true, "color": "#8f8f96"}},
-	{"file": "rae", "config_key": "villager_farmer", "hair": {"visible": true, "color": "#7a4a2c"}},
+	# N14-ROUTED-FOLLOWUPS, 2026-09-05: these two hexes are DUPLICATES of the
+	# same people's `hair.color` in `data/config/village_npcs.json`, and the
+	# duplication is a real trap -- a plate is a pre-rendered PNG, so changing
+	# the world's hair colour without changing this line leaves the portrait
+	# showing the old head forever, with nothing failing. Held by
+	# `tests/test_dialogue_portraits.gd::test_the_portrait_tool_agrees_with_the_world_about_hair`.
+	# Halda #8f8f96 -> #63636e and Rae #7a4a2c -> #a8663f are the hue-spacing
+	# pass N04's judge asked for; both plates were re-rendered.
+	{"file": "halda", "config_key": "villager_ranger", "hair": {"visible": true, "color": "#63636e"}},
+	{"file": "rae", "config_key": "villager_farmer", "hair": {"visible": true, "color": "#a8663f"}},
 	{"file": "doss", "config_key": "villager_ranger", "hair": {"visible": true, "color": "#4a5c3d"}},
+	# --- villagers on the shared MALE rig, told apart by hair (N14) ---------
+	# Same duplication trap as halda/rae above, and the same test holds these
+	# in sync with `village_npcs.json`. The male rig has no separated hair mesh;
+	# the colour lands on the painted fringe through
+	# `villager_male_lod0_hair_mask.png` (`tools/_bake_villager_male_hair_mask.py`).
+	{"file": "oskar", "config_key": "villager_keeper", "hair": {"visible": true, "color": "#2f2320"}},
+	{"file": "bram", "config_key": "villager_keeper", "hair": {"visible": true, "color": "#9c8450"}},
+	{"file": "kell", "config_key": "villager_keeper", "hair": {"visible": true, "color": "#a49e99"}},
+	{"file": "quarry_foreman", "config_key": "villager_quarryman", "hair": {"visible": true, "color": "#74512f"}},
 	# --- named cast with their own installed body ---------------------------
 	{"file": "bryn", "config_key": "young_trainer", "exposure": 0.8},
 	{"file": "wandering_trainer", "config_key": "wandering_trainer"},

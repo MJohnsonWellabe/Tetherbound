@@ -246,7 +246,14 @@ const SPECIES_PATH := "res://data/creatures/species.json"
 ## `_migrate_v<version>` in a loop, so a v16 save now runs realms (16→17), fly
 ## state (17→18), realm fog (18→19), realm ownership (19→20) and finally the
 ## pins (20→21), in that order.
-const VERSION := 21
+## VERSION 22 — the carried day clock (N14-ROUTED-FOLLOWUPS, from
+## N13-NIGHT-RESUME §5). Before this key the format carried no clock at all, so
+## every Continue rebuilt the world at 08:00 and the player walked the 350
+## seconds to nightfall again. Negative means "no carried clock, open at the
+## authored morning" — `game_state.gd::CLOCK_UNSET`. N14 authored it as 19,
+## which Cloudreach owns; it takes the next free number here for the same
+## reason the pin set did.
+const VERSION := 22
 const WORLD_RECORDS := preload("res://scripts/world/realm_world_records.gd")
 const SLOT_COUNT := 5
 ## Written automatically whenever the player rests (`scripts/build/camp.gd`).
@@ -311,6 +318,12 @@ func save(game: Object, slot: int) -> bool:
 		"world_seed": int(game.get("world_seed")) if game.get("world_seed") != null else 0,
 		"felled_vegetation": (game.get("felled_vegetation") as Dictionary).duplicate(true),
 		"player_pose": _capture_traversal_pose(game),
+		# N14-ROUTED-FOLLOWUPS, from N13-NIGHT-RESUME §5. VERSION 19. Before
+		# this key the format carried no clock at all, so every Continue
+		# rebuilt the world at 08:00 and the player walked the 350 seconds to
+		# nightfall again. Negative means "no carried clock, open at the
+		# authored morning" -- `game_state.gd::CLOCK_UNSET`.
+		"clock_elapsed_seconds": _read_clock(game),
 	}
 	data["realm_maps"] = game.call("save_realm_maps") if game.has_method("save_realm_maps") else _realm_map_payloads(data)
 
@@ -364,6 +377,8 @@ func load_slot(game: Object, slot: int) -> bool:
 		game.set("current_realm", str(data.get("current_realm", "meadows")))
 	if game.get("pending_realm_entry") != null:
 		game.set("pending_realm_entry", str(data.get("pending_realm_entry", "")))
+	if game.get("clock_elapsed_seconds") != null:
+		game.set("clock_elapsed_seconds", _finite_clock(data.get("clock_elapsed_seconds")))
 	_write_satiety(game, float(data.get("satiety", _default_satiety())))
 
 	var map_obj: Variant = game.get("map")
@@ -438,6 +453,20 @@ func _reconcile_meadows_realm_rewards(progression: RefCounted) -> void:
 ## RG7. A corrupt JSON pose must fall back to the authored spawn as one unit.
 ## Applying a valid position with a NaN/invalid view (or vice versa) creates a
 ## half-restored player that can be stranded or make the camera unusable.
+## The live clock, as a number safe to write. Anything that is not a finite
+## number becomes the "no carried clock" sentinel rather than a NaN that would
+## come back out of JSON as `null` and restore the world to hour NaN.
+func _read_clock(game: Object) -> float:
+	return _finite_clock(game.get("clock_elapsed_seconds"))
+
+
+func _finite_clock(raw: Variant) -> float:
+	if not _finite_number(raw):
+		return -1.0
+	var seconds := float(raw)
+	return seconds if seconds >= 0.0 else -1.0
+
+
 func _sanitise_player_pose(raw: Variant) -> Dictionary:
 	if typeof(raw) != TYPE_DICTIONARY:
 		return {}
@@ -886,6 +915,18 @@ func _migrate_v20(data: Dictionary) -> Dictionary:
 	var migrated := data.duplicate(true)
 	migrated["version"] = 21
 	migrated["alpha_pins"] = []
+	return migrated
+
+
+## VERSION 18 -> 19: N14's persisted day/night clock. A save written before it
+## has no memory of the hour, and the honest migration is to say so rather than
+## invent one -- the sentinel opens that save at the authored morning, which is
+## exactly what it did on the old build.
+## VERSION 21 -> 22: the carried day clock. See the class header.
+func _migrate_v21(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["version"] = 22
+	migrated["clock_elapsed_seconds"] = -1.0
 	return migrated
 
 

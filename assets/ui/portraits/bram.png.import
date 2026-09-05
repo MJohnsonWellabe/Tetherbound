@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d0dx82w0qyp6i"
-path="res://.godot/imported/side.png-59f54b4eaf74d8a7b0cb42c1a8f45ba6.ctex"
+uid="uid://cmet74jbxoaqr"
+path="res://.godot/imported/bram.png-692c2ceebc4c4c281bdac12887394192.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/creatures/tetherbound/tether_machine/reference/side.png"
-dest_files=["res://.godot/imported/side.png-59f54b4eaf74d8a7b0cb42c1a8f45ba6.ctex"]
+source_file="res://assets/ui/portraits/bram.png"
+dest_files=["res://.godot/imported/bram.png-692c2ceebc4c4c281bdac12887394192.ctex"]
 
 [params]
 

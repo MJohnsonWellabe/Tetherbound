@@ -74,7 +74,21 @@ func _ready() -> void:
 		return
 	_cycle = DAY_CYCLE.new(_config)
 	add_to_group(GROUP)
-	apply_time(DEFAULT_TIME)
+	# N14-ROUTED-FOLLOWUPS, from N13-NIGHT-RESUME §5. This used to be an
+	# unconditional `apply_time(DEFAULT_TIME)`, which is what made the clock
+	# amnesiac: EVERY scene build -- a Continue, a realm crossing, a load --
+	# pinned the hour back to 08:00 and restarted the 350-second walk to
+	# nightfall, so a player who crossed a boundary or reloaded could play for
+	# hours without the world ever reaching hour 22. The carried value lives on
+	# `Game` (see `game_state.gd::clock_elapsed_seconds`) because THIS node is
+	# destroyed and rebuilt by every one of those transitions, and it is cleared
+	# by `reset_for_new_game()` so a fresh game still opens at morning -- the
+	# exact reason N13 refused to do this half with a `static var`.
+	var carried := _carried_clock_seconds()
+	if carried >= 0.0:
+		resume_at_elapsed(carried)
+	else:
+		apply_time(DEFAULT_TIME)
 	_verify = OS.get_cmdline_args().has(VERIFY_FLAG)
 	if _verify:
 		_report_daynight_config()
@@ -349,6 +363,83 @@ func reset_to_morning() -> void:
 	# would still be sitting close to a rollover from the time already spent
 	# before the player slept, and fire again just moments into the new day.
 	_auto_day_accum = 0.0
+	# N14: a rest is the one transition that is SUPPOSED to lose the hour, so
+	# it clears the carried clock too -- otherwise the next scene rebuild after
+	# a rest would restore the evening the player just slept through.
+	_store_clock_on_game(0.0 if _cycle == null else _cycle.elapsed_for_hour(_hour_of(DEFAULT_TIME)))
+
+
+## Re-push the look the world is ALREADY on, without moving the clock.
+##
+## N14. `playground_world.gd::_reapply_look_after_ground_materials()` needs
+## exactly this and its own comment says so in as many words -- *"a plain
+## re-push of the SAME preset, not a new one"* -- but the only method that
+## existed was `apply_time()`, which by its own R5.1 contract PINS
+## `_elapsed_seconds` to the named preset's authored `hour`. Harmless while
+## every world opened at 08:00 anyway; fatal the moment a world can open at
+## 19:40, because the re-push snapped a resumed evening back to `golden`'s
+## authored 18:00. (Measured: `smoke_clock_survives_a_reload` read exactly
+## 18.00 where it wanted 19.67.) Same shape as `set_weather()` above, and for
+## the same reason: go through the blend, which reads the clock rather than
+## writing it.
+func reapply_current_look() -> void:
+	if _config.is_empty():
+		return
+	if _cycle == null:
+		apply_time(_time)
+		return
+	_apply_blended(_cycle.hour_at(_elapsed_seconds))
+
+
+## N14-ROUTED-FOLLOWUPS. Pick the clock up mid-cycle instead of at a named
+## preset's hour. `apply_time()` snaps to a keyframe and then pins
+## `_elapsed_seconds` from that keyframe's own `hour`; this is the reverse --
+## the elapsed time is the input, and the look is derived from it through the
+## same `_apply_blended()` the passive clock uses every tick, so a save
+## restored at 19:40 opens on the sky 19:40 actually looks like rather than on
+## the nearest authored preset.
+func resume_at_elapsed(seconds: float) -> void:
+	if _cycle == null:
+		return
+	var day_length := float(_cycle.get("day_length_seconds"))
+	_elapsed_seconds = fposmod(seconds, day_length) if day_length > 0.0 else seconds
+	var hour: float = _cycle.hour_at(_elapsed_seconds)
+	_time = str(_cycle.preset_at(hour))
+	_apply_blended(hour)
+	# The day-roll accumulator measures time since the last rollover, and a
+	# resumed clock is already that far into its day. Starting it at zero would
+	# give the restored session a full extra day_length before Game.day moved.
+	_auto_day_accum = _elapsed_seconds
+
+
+## The live clock in elapsed seconds -- what `game_state.gd` writes into a save
+## slot. `hour()` above is the same number expressed for display.
+func elapsed_seconds() -> float:
+	return _elapsed_seconds
+
+
+## The carried clock `Game` is holding for this scene build, or a negative
+## number when there is none (a new game, or a save written before the format
+## carried one) -- in which case the caller should open at DEFAULT_TIME.
+func _carried_clock_seconds() -> float:
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return -1.0
+	var carried: Variant = game.get("clock_elapsed_seconds")
+	return float(carried) if carried != null else -1.0
+
+
+func _store_clock_on_game(seconds: float) -> void:
+	var game := get_node_or_null(^"/root/Game")
+	if game != null and game.get("clock_elapsed_seconds") != null:
+		game.set("clock_elapsed_seconds", seconds)
+
+
+## The authored `hour` of a named preset, for the one caller that needs a
+## number rather than a look.
+func _hour_of(name: String) -> float:
+	var over: Dictionary = _preset_over(_config, name)
+	return float(over["hour"]) if over.has("hour") else 8.0
 
 
 func is_dark() -> bool:

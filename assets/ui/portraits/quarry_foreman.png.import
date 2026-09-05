@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bgfsl24anj2ah"
-path="res://.godot/imported/front.png-222eeb443e8b90db115ae237ad24c19a.ctex"
+uid="uid://dmp4jat7nmyv6"
+path="res://.godot/imported/quarry_foreman.png-5d3da63c0d2377387839723da63b73dd.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/creatures/tetherbound/tm_orb/reference/front.png"
-dest_files=["res://.godot/imported/front.png-222eeb443e8b90db115ae237ad24c19a.ctex"]
+source_file="res://assets/ui/portraits/quarry_foreman.png"
+dest_files=["res://.godot/imported/quarry_foreman.png-5d3da63c0d2377387839723da63b73dd.ctex"]
 
 [params]
 

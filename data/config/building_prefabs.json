@@ -6643,22 +6643,23 @@
           ]
         },
         {
-          "module": "Prop_ExteriorBorder_Straight1",
+          "module": "Floor_UnevenBrick",
           "at": [
-            -9.0,
-            0.0,
+            -10.0,
+            0.02,
             0.0
           ],
-          "yaw_deg": -90.0
+          "_why_n14": "WAS `Prop_ExteriorBorder_Straight1` at [-9, 0, 0], yaw -90. N14-ROUTED-FOLLOWUPS, on N09-BRIDGE-CHECKPOINT's routed finding §3, whose blind judge measured it: 'A flat blue-grey plate (median ~(120,128,133), essentially uniform)... It has a visible hard edge against the dirt and does not read as stone, plank, threshold or ramp. It is the one piece of undisguised placeholder left in column A and it sits at the exact centre of the composition.' Present on `main` too, and confirmed by rendering this recipe in isolation (`tools/_capture_bridge_deck_isolated.gd`): the kit's exterior-border prop is an untextured grey plate, and it caps the approach at exactly the point where the road meets the gate.\n\nN09's own prescription was 'a material already in the same frame'. This goes one better and uses a MODULE already in the same frame: `Floor_UnevenBrick`, the cobbled stone this recipe already lays at +-8 for the abutment landings, one slab further out. So the approach is now two slabs of the same authored cobble instead of one slab of cobble capped by a grey plate -- no new asset, no new material, and nothing to retint. The `colliders` block below is UNTOUCHED and already reached +-9.2, past both the old border and this slab, so the walkable extent and the gate's seal are exactly as they were.",
+          "yaw_deg": 0.0
         },
         {
-          "module": "Prop_ExteriorBorder_Straight2",
+          "module": "Floor_UnevenBrick",
           "at": [
-            9.0,
-            0.0,
+            10.0,
+            0.02,
             0.0
           ],
-          "yaw_deg": 90.0
+          "yaw_deg": 0.0
         }
       ],
       "rail": {
