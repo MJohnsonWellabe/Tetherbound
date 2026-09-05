@@ -93,6 +93,16 @@ Linux-computed fingerprint `4984520267706256` and the test passes.
 scratch as it built. The after-render's log shows the opposite (bake loaded, no
 `all_placements` warnings), which is what a fresh bake being consumed looks like.
 
+**CLOSED ON `main` AS OF 2026-09-05, and not by me.** Commit `2724b5af`, *"bake manifests:
+restore the Linux fingerprints clobbered by f2dd20e4"*, restored both manifests to their
+pre-`f2dd20e4` values — the scatter one to 7496100143687718 and the terrain one to
+1823724492. On the merged tree `test_terrain_bake_freshness.gd` now passes 3/3 where it
+failed on this lane's original base, so the routed half of this finding needs no further
+action and the "coordinator should run `build_playground_terrain.gd`" recommendation below
+is superseded. Kept in the report because the diagnosis is what the fix was made against,
+and because the mechanism — a bake manifest hand-edited on a platform whose line endings
+change the config hash — will recur unless something guards it.
+
 **Same commit, same pattern, not this lane's file:** `data/terrain/playground/
 manifest.json` was hand-edited too, and `test_terrain_bake_freshness.gd::
 test_playground_terrain_bake_is_committed_and_fresh` fails on `main` for the same
@@ -309,7 +319,21 @@ stalling on CI at 44.1 m, 38.0 m and 45.1 m with a ~7 % residual rate, which is 
 unstick escape exists at all — so a single red run on a historically flaky walk is worth a
 re-run before it is attributed.
 
-REPEATS_PLACEHOLDER
+**Repeated, because one green run is not an answer to a red one on a walk with this
+walk's history.** `smoke_aggression` was run **four times** on the merged tree and passed
+every time (11:03, 11:09, 11:12, 11:16). The full named test set was re-run on the same
+tree:
+
+| file | result on merged `main` |
+|---|---|
+| `test_scatter_perf_budget.gd` | 3 tests, 6 assertions, **0 failed** |
+| `test_scatter_rules.gd` | 38 tests, 1,019,854 assertions, **0 failed** |
+| `test_veg_corridor.gd` | 9 tests, 1,537,510 assertions, **0 failed** |
+| `test_band_vegetation.gd` | 5 tests, 142 assertions, **0 failed** |
+| `test_terrain_bake_freshness.gd` | 3 tests, 8 assertions, **0 failed** — see §5, now closed |
+
+That is 4/4 on the smoke and 58/58 across the five files, with nothing red anywhere in
+this lane's scope.
 
 **Nothing was changed in this round.** No configuration, no bake, no collider — the fix from
 round 2 stands as it was, and the merge is the only code movement. If the failure does
