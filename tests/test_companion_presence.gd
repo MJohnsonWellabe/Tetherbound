@@ -122,6 +122,21 @@ func _cfg() -> Dictionary:
 	return PRESENCE.config()
 
 
+## Ticks `seconds` with the trainer pacing (a half-metre step every tick, so
+## the still clock never accumulates), then leaves them standing. Used to let
+## the deploy cooldown from `before_each` lapse before a test measures the
+## acknowledgment DELAY rather than the cooldown.
+func _pace_then_stand(seconds: float) -> void:
+	var t := 0.0
+	var side := 1.0
+	while t < seconds - 0.0001:
+		_leader.position.x += 0.5 * side
+		side = -side
+		_presence.call("tick", TICK)
+		t += TICK
+	_leader.position.x = 0.0
+
+
 func _pivot() -> Node3D:
 	return _body.call("model_pivot") as Node3D
 
@@ -164,11 +179,14 @@ func test_the_fixture_is_a_real_rigged_follower() -> void:
 # --- acknowledgment -----------------------------------------------------------
 
 func test_acknowledges_a_trainer_who_stands_still_for_the_configured_delay() -> void:
+	_pace_then_stand(10.0)
+	assert_eq(_presence.call("fired_count", "acknowledge"), 0, "pacing earns no acknowledgment")
 	var delay := float(_cfg()["acknowledge"]["still_seconds"])
 	_tick_seconds(delay * 0.5)
 	assert_eq(_presence.call("state"), "", "half the delay is not yet an acknowledgment")
 	var took := _tick_until_state("acknowledge", delay)
 	assert_true(took >= 0.0, "standing still for the delay makes the creature acknowledge the trainer")
+	assert_almost_eq(took + delay * 0.5, delay, 0.25, "and it is the configured delay that decides when")
 	assert_eq(_presence.call("fired_count", "acknowledge"), 1)
 
 
@@ -215,17 +233,20 @@ func test_acknowledgment_respects_its_cooldown() -> void:
 
 
 func test_higher_bond_acknowledges_sooner() -> void:
+	_pace_then_stand(10.0)
 	var low := _tick_until_state("acknowledge", 20.0)
 	assert_true(low > 0.0)
 	after_each()
 	before_each()
-	_cross_first_bond_milestone()
-	_presence.call("tick", TICK)  # primes the bond poll without celebrating a loaded save
-	assert_true(int(_creature.call("bond_nodes")) >= 1, "the fixture creature reached bond node 1")
+	_swap_in_a_bonded_creature()
+	_pace_then_stand(10.0)
+	assert_true(int(_creature.call("bond_nodes")) >= 4, "the swapped-in creature is deep in the ladder")
 	var high := _tick_until_state("acknowledge", 20.0)
 	assert_true(high > 0.0)
-	assert_true(high < low, "bond %d acknowledged in %.1fs, bond 0 in %.1fs" % [
+	assert_true(high < low - 1.0, "bond %d acknowledged in %.1fs, bond 0 in %.1fs" % [
 		int(_creature.call("bond_nodes")), high, low])
+	assert_true(high >= float(_cfg()["acknowledge"]["still_seconds_min"]) - 0.25,
+		"but never under the floor (%.1fs)" % high)
 
 
 # --- victory ------------------------------------------------------------------
@@ -308,10 +329,15 @@ func test_low_hp_slows_the_gait_lowers_the_head_and_flinches() -> void:
 	assert_false(_pivot().transform.is_equal_approx(rest), "the head-low pose moved the pivot")
 	assert_true(float(_presence.call("anim_speed_scale")) < 1.0, "the idle plays slower")
 	# A flinch arrives inside the configured window: the rig's own `hit` clip.
+	# The trainer paces meanwhile so no acknowledgment can start and hide the
+	# hurt idle behind a reaction (a reaction is what a flinch yields to).
 	var window := float(_cfg()["hurt"]["flinch_every_s"]) + float(_cfg()["hurt"]["flinch_jitter_s"]) + 1.0
 	var flinched := false
 	var t := 0.0
+	var side := 1.0
 	while t < window and not flinched:
+		_leader.position.x += 0.5 * side
+		side = -side
 		_presence.call("tick", TICK)
 		t += TICK
 		flinched = _anim().current_animation == "hit"
