@@ -337,7 +337,29 @@ godot --headless --path . --script tests/run_tests.gd -- --only=test_menu
 → 12 tests, 160 assertions, 0 failed
 ```
 
-`^ERROR:` 2, 3 and 2 respectively, `SCRIPT ERROR` 0 in all three. **The known-benign set did not
+`^ERROR:` 2, 3 and 2 respectively, `SCRIPT ERROR` 0 in all three.
+
+### Re-run after round 2 (§5)
+
+Both files changed again after the judge, so everything above was re-run:
+
+```
+godot --headless --path . --script tests/run_tests.gd -- --only=test_map_fog.gd,
+  test_map_icons.gd,test_map_zoom_persistence.gd,test_map_baker.gd,test_map_state.gd,
+  test_map_landmarks.gd,test_ui_tokens.gd,test_map_legibility.gd,test_menu
+→ 99 tests, 666 assertions, 0 failed
+
+godot --headless --path . --script tests/smoke_gate_a_map_cycle.gd
+→ "Gate A map/cycle: OK"; exit 0; `^ERROR:` 0, `SCRIPT ERROR` 0
+
+godot --headless --path . --script tests/smoke_menu.gd
+→ "menu smoke test passed"; exit 0; `^ERROR:` 1, `SCRIPT ERROR` 0
+```
+
+The benign `^ERROR:` counts moved DOWN (3 → 0, 2 → 1) rather than up. They are the dummy
+renderer's `Parameter "material" is null` from `creature_body.gd`, so the count tracks which
+creatures the encounter director happened to spawn that run, not anything on this branch — the
+set did not grow, which is the contract. **The known-benign set did not
 grow**: every one of those errors is `Parameter "material" is null` from the headless dummy
 renderer, with backtraces in `creature_body.gd::_build_model` via
 `encounter_director.gd::_make_alpha` — nothing from `tab_map.gd` or `minimap.gd`.
