@@ -404,6 +404,37 @@ Owner noticed the session count didn't match my reports. Root cause: 5 lanes (W0
 Separately, 5 lanes had genuinely gone stale 4+ hours with NO replacement running: W02-HARNESS-CONTEXT, W03-S08-FREEZE, W16-LOFT-BED, W20-SMALL-FIXES, W21-HARNESS-FIGHTS — all hit their 5h limit hours ago (reset already passed) and were sitting untouched. Given the owner flagged this directly, resumed all 5 at once (departing from the normal 1-2/sweep trickle, since the owner surfaced the actual backlog size).
 main also moved: PR #42 merged — **W00-ICONS is now on main**. PR #45 (consolidated: icons+contracts+progression+portraits+companion+bands2-5) is open, still blocked only on the pre-existing finale regression. PR #44 is Codex's own draft PR for Cloudreach, unrelated to this batch, explicitly not ready to merge.
 
+## 16:53 UTC: N06-MAP-UI nudged — stuck fighting a hung render, substance already done
+Checked N06 directly: its report already shows all 8 map-legibility items fixed with real
+before/after measurements (fog contrast 1.16:1 -> 2.08:1 and reversed direction, legend
+swatches through the real marker pass, unified typeface, containerized callouts, north/scale
+indicators added, danger-label greyscale spread 120->15/255, marker silhouette knock-back) and
+a complete "Final state" section — but its live task_summary was "Force-stop the render",
+same stuck-render symptom N05/N08 had earlier. Nudged with the same message: stop chasing the
+round-2 confirmation render, kill it if it won't die, document the gap honestly, push the
+final commit. Still running as of this entry — not yet archived.
+
+## 16:40 UTC: N05-WORLD-DRESSING and N08-PICKUP-TIERS both confirmed done — all 13 original lanes closed
+**N05**, final `da51813b`: fixed the fence gap behind Halda (panels now fit end-to-end and
+pitch to the slope), dressed the previously-bare inn bar (shelves, bottles, sign, keg, lantern
+cages), added lighting/piers to the Legendary Chamber, and added a real regression test for the
+courtyard trainer stand-down (`smoke_stronghold_courtyard_withdrawal.gd`). Honestly flagged: the
+chamber's floor conduits still render as a black slab and there's no contact shadow under the
+machine — routed to whoever owns `stronghold.gd` next; both source lanes (W06, W08) still aren't
+landed, so this lane rebuilt their camera stands independently to reproduce each defect on
+`main` first, which is why nothing here conflicts with either once they do land.
+**N08**, final `56d7feee`: made the three candy tiers tell apart by shape/size/motion, not just
+hue (Good: leaf crest; Great: star + ring; Rare: crown + wings + widest glow, and no longer
+washed-out cream). Very honest about incomplete verification — round 3's render was inspected by
+the lane itself, not blind-judged (round 2 is the last actually-judged state, and round 3 only
+moved the same constants further in the direction round 2's judge asked for); band-4 authored
+stands were captured but never judged; a pre-existing flaky timing test was measured on `main`
+too (not a regression) and reported with real numbers rather than papered over. Both nudges
+worked — neither lane kept re-rendering past what was needed.
+Both were already merged into W24-LANDING's `ralph/CONSOLIDATE-0905` branch before either
+session self-reported done. Archived both. **All 13 of the original N0x follow-up lanes are now
+closed** (N01-N13); N14-ROUTED-FOLLOWUPS (the 14th, new) is the only one still running.
+
 ## 16:25 UTC: N10-HARNESS-TESTS confirmed done — a real gameplay bug and a world-seed bug found
 9 commits, final `cdd87e15` on `ralph/N10-HARNESS-TESTS-0905`. All 13 named items closed, verified
 item-by-item in a real acceptance table. **Two findings worth flagging beyond its own scope:**
