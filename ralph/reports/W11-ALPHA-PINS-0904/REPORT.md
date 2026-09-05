@@ -241,6 +241,49 @@ rather than assigning the position once, so "the node never ticked" and "somethi
 the body back" cannot be confused, and it cross-checks with a hand-driven `tick()` so a
 failure says whether the logic or the processing is at fault.
 
+### A second process finding: the clamped idle delta
+
+The capture also reported, twice, that only a hand-driven `tick()` pinned — which reads as
+`AlphaPins._process` never running in the shipped world, i.e. the feature not working in
+play at all. It was measured rather than argued, in three steps:
+
+1. **A seconds-long repro** (`tools/_probe_alpha_pin_process.gd`) wires the node exactly as
+   `playground_world.gd` does — child of a `Node3D` world, default relative `../Player`, a
+   `CharacterBody3D` sibling inside the radius — with no world scene. It pins from the
+   node's own `_process` in 53 frames. So `_process` reaching `tick()` is not broken.
+2. **A sentinel** settled the world case. Reading `_elapsed` before and after cannot: every
+   tick resets it to `0.0`, so "never ran" and "ran and ticked" both read `0.0` — which is
+   why the first diagnostic was ambiguous. Writing `-1000.0` into it can, because `_process`
+   adds delta and cannot reach a tick from there:
+   ```
+   [probe] paused=false time_scale=1.00 process_mode=0 is_processing=true can_process=true
+   [probe] sentinel -1000.0 -> -999.0771 after 8 frames: _process RAN
+   ```
+3. **The arithmetic explains the whole thing.** 0.923 s of delta over 8 frames is ~0.115 s
+   per frame — the engine **clamps its idle delta**, so under software GL a frame credits
+   about 0.115 s however long it actually took. The hold loop was written in wall time: six
+   seconds of wall clock was four frames and **0.46 s of delta, a hair under
+   `check_interval_s`'s 0.5**. The pin that "never appeared" was one frame short.
+
+The hold now counts frames, not wall time. With that fixed the run reports:
+
+```
+[probe] 4 frames held at (-180.0, 0.0, 2130.0)
+pinned: order 2011, 'Alpha Trailpup' at (-180.0, 2250.0)
+[probe] 1 pin(s) still set from 850 m away
+wrote res://shots/_diag/alpha_pin_full_map.png at 1280x800 with 1 pin(s)
+```
+
+and **no** `hand-driven tick()` line — the loop exited because the count went non-zero, so
+the node's own `_process` placed the pin in the real world scene. The capture additionally
+asserts the pin does **not** clear when the player leaves the radius (only the once-flag
+clears it), which is the directive's actual promise and which no test covers from a live
+world.
+
+Nothing in `alpha_pins.gd`, `map_state.gd` or `save_game.gd` changed as a result. The
+defect was entirely in the probe, and it is recorded because "wall time is not delta" will
+cost the next person the same two world boots.
+
 ### The blind judge
 
 A sub-agent was spawned with the Agent tool (model `opus`) and given **only** the frame,
