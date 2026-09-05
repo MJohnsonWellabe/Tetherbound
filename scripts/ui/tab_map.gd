@@ -50,10 +50,6 @@ const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 ## but the literal baked terrain bitmap, one bake for both.
 const MAP_BAKER_PATH := "res://scripts/world/map_baker.gd"
 
-## CL-W1. Read from `map_state.gd` (already preloaded above as `MAP_STATE`)
-## rather than respelled — see `minimap.gd`'s own copy of this line for why.
-const ALPHA_MARKER_PREFIX := MAP_STATE.ALPHA_MARKER_PREFIX
-
 const ICON_DIR := "res://assets/ui/icons/map/"
 ## OP21-15: bumped from 26 across the board (icon/marker/font sizes below) —
 ## this screen's `canvas.draw_*` calls sit under the SAME `canvas_items`
@@ -123,47 +119,6 @@ const HEADING_CLEARANCE := 8.0
 const CANVAS_HEADING_FONT_SIZE := 30
 const CANVAS_LABEL_FONT_SIZE := 38
 
-## N06-MAP-UI item 7. The shared `UITokens.OUTLINE_SIZE` (6) is authored for
-## `Label` nodes at `FONT_TINY`/`FONT_LABEL` (19/23); this screen draws at 30
-## and 38 over a busy multi-coloured terrain bake, where a 6px outline is
-## proportionally thinner than the one every other screen gets. Raised here
-## only — the token is shared with every other tab and is not this lane's to
-## retune globally, the same reasoning `CANVAS_LABEL_FONT_SIZE` gives.
-const CANVAS_OUTLINE_SIZE := 10
-
-## The luma floor (Rec. 709, 0..1) every canvas label is inked at or above.
-## Set just under `UITokens.TEXT_PRIMARY`'s own 0.958, so a place name keeps
-## its exact token colour untouched while a coloured label — `DANGER` at 0.487,
-## `TEXT_SECONDARY` at 0.762 — is lifted to within ~15 greyscale levels of it.
-## That is the whole point: after this the labels on the map differ by HUE, and
-## barely at all by value, so no single label can be "the dimmest text on the
-## screen" the way the danger label was. See `label_core_colour()`.
-const CANVAS_LABEL_MIN_LUMA := 0.90
-
-## N06-MAP-UI item 8. The knock-back disc drawn under every marker glyph.
-## W11's judge found the mossy path texture under a threat pin filling the
-## notches between its rosette's spikes, so the pin's silhouette — the thing
-## that made it separable from the player marker in greyscale — was being eaten
-## by the ground. The old plate was `Color(0.02, 0.03, 0.04, 0.72)`: 28% of
-## whatever terrain was underneath still came through, and around a spiked or
-## notched glyph that show-through lands exactly in the notches. This is the
-## same defect as item 1 one scale down — a value relationship that was never
-## actually established — so it gets the same answer: an opaque core that ends
-## the terrain outright, with a soft translucent skirt one step wider so the
-## disc still reads as a shadow under the glyph rather than as a hard coin.
-const MARKER_KNOCKBACK := Color(0.04, 0.06, 0.07, 1.0)
-const MARKER_KNOCKBACK_SKIRT := 3.0
-
-## Item 5: the north arrow and the scale bar, both drawn inside the map canvas.
-const COMPASS_MARGIN := 18.0
-const COMPASS_RADIUS := 17.0
-const SCALE_BAR_MARGIN := 18.0
-const SCALE_BAR_MAX_WIDTH := 150.0
-## Metre steps a scale bar is allowed to land on, so the number under it is
-## always one a player can hold in their head. Chosen from the widest step that
-## still fits `SCALE_BAR_MAX_WIDTH` at the current zoom.
-const SCALE_BAR_STEPS_M := [10.0, 25.0, 50.0, 100.0, 250.0, 500.0, 1000.0, 2000.0, 5000.0]
-
 ## One draw call's worth of state, refreshed by `MapCanvas._draw()` reaching
 ## back into the owning tab. A plain `Control` rather than a scene: this
 ## screen has exactly one of them and it is entirely code-drawn, the same
@@ -203,9 +158,6 @@ var _terrain_attempted: bool = false
 var _terrain_tex: Texture2D = null
 var _icon_cache: Dictionary = {}
 var _region_font: Font = null
-## Built once on first use — a `StyleBoxFlat` per `_draw()` would allocate a
-## Resource every redraw for a box whose geometry never changes.
-var _chrome_style_box: StyleBoxFlat = null
 
 ## Cache for `_fog_texture()`, keyed on `map_state.revision` — see that
 ## function's own header for why this exists: the bug it fixed, not a
@@ -248,11 +200,6 @@ func build() -> void:
 	_fog_tex = null
 	_fog_tex_revision = -1
 	_icon_cache.clear()
-	# Re-resolved per build (`_canvas_font()`): a tab built before it is in the
-	# tree falls back to `ThemeDB`, and the next build — which always happens
-	# on open, see `revision()`'s header — must be free to pick up the real
-	# theme font instead of keeping the fallback forever.
-	_region_font = null
 	_last_map_revision = -1
 	_has_last_player_pos = false
 	_settle_frames_left = SETTLE_FRAMES
@@ -298,39 +245,9 @@ func build() -> void:
 	add_child(_controls_label)
 	_refresh_controls_label()
 
-	# N06-MAP-UI item 5, second half. The legend used to be a bare HBox sitting
-	# directly under the control-hint row, with the menu shell's own footer hint
-	# row directly under that — three unlabelled rows of small glyph-and-text
-	# pairs in a stack, which the judge read as "a third row of keybinds." It is
-	# not a keybind row; it is the key to the symbols on the map, and it now
-	# says so and sits on its own surface to prove it.
-	var legend_panel := PanelContainer.new()
-	var legend_box := UITokens.panel_box(Color(UITokens.BG_PANEL_ALT, 0.9), UITokens.BORDER)
-	legend_box.content_margin_left = 14
-	legend_box.content_margin_right = 14
-	legend_box.content_margin_top = 8
-	legend_box.content_margin_bottom = 8
-	legend_panel.add_theme_stylebox_override("panel", legend_box)
-	add_child(legend_panel)
-
-	var legend_line := HBoxContainer.new()
-	legend_line.add_theme_constant_override("separation", 18)
-	legend_panel.add_child(legend_line)
-
-	var legend_caption := Label.new()
-	legend_caption.text = "MAP KEY"
-	legend_caption.add_theme_font_size_override("font_size", CANVAS_HEADING_FONT_SIZE)
-	legend_caption.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
-	legend_caption.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	legend_line.add_child(legend_caption)
-
-	var legend_rule := VSeparator.new()
-	legend_line.add_child(legend_rule)
-
 	_legend_row = HBoxContainer.new()
 	_legend_row.add_theme_constant_override("separation", 22)
-	_legend_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	legend_line.add_child(_legend_row)
+	add_child(_legend_row)
 
 	poll()
 	UITokens.make_text_legible(self)
@@ -521,15 +438,6 @@ func _update_legend(map_state: RefCounted) -> void:
 	var seen: Dictionary = {}
 	for entry: Dictionary in (map_state.call("landmarks") as Array):
 		if bool(entry.get("dynamic", false)):
-			# CL-W1. One exception to "dynamic markers are not legend material":
-			# a red mark the player has never seen before needs a word for what
-			# it is, once. Camps and the objective still do not appear here --
-			# the player placed the camp and the objective has its own HUD line,
-			# so neither is a symbol anybody has to look up.
-			if str(entry.get("id", "")).begins_with(ALPHA_MARKER_PREFIX) and not seen.has("alpha"):
-				seen["alpha"] = true
-				_legend_row.add_child(_legend_entry(
-					str(entry.get("icon", "alpha")), "Alpha", UITokens.DANGER))
 			continue
 		if not bool(entry.get("discovered", false)):
 			continue
@@ -537,119 +445,33 @@ func _update_legend(map_state: RefCounted) -> void:
 		if icon_name.is_empty() or seen.has(icon_name):
 			continue
 		seen[icon_name] = true
-		_legend_row.add_child(_legend_entry(
-			icon_name,
-			str(entry.get("display_name", icon_name)),
-			str(entry.get("category", "")),
-			entry.get("tint"),
-		))
+		_legend_row.add_child(_legend_entry(icon_name, str(entry.get("display_name", icon_name))))
 
 	UITokens.make_text_legible(_legend_row)
 
 
-## `tint` defaults to the neutral secondary every place row has always used, so
-## every existing caller is unchanged. The alpha row passes `UITokens.DANGER`,
-## because a legend printed in grey throws away the one colour code the map is
-## using -- the blind judge's words: "the one place where the game explains its
-## symbol set throws away the red coding entirely."
-func _legend_entry(icon_name: String, label_text: String, tint: Color = UITokens.TEXT_SECONDARY) -> Control:
-## One legend row: the marker exactly as the map draws it, then its name.
-##
-## N06-MAP-UI item 2 — "every legend entry draws as a near-identical pale
-## glyph." A bare `TextureRect` was the cause. Several of the vendored icons in
-## `assets/ui/icons/map/` are pale, low-contrast line art that only becomes a
-## distinct mark once it is sitting on the dark knock-back disc `_draw_icon()`
-## puts under it; the legend showed the art with the disc stripped off, at one
-## flat 24px box for every category, and with no tint. So the one place on the
-## screen whose entire job is to teach the symbol set was showing symbols that
-## did not match the ones on the map, and showing them as near-identical pale
-## smudges besides.
-## The swatch now goes through the SAME `draw_marker_knockback()` +
-## `_marker_size()` the canvas uses, so it carries the real backing, the real
-## category size class (a major destination reads heavier than a minor one
-## here too), and any tint the marker carries — and it cannot drift from the
-## map, because a change to how a marker draws changes both call sites at once.
-func _legend_entry(icon_name: String, label_text: String, category: String, tint: Variant = null) -> Control:
+func _legend_entry(icon_name: String, label_text: String) -> Control:
 	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 8)
+	row.add_theme_constant_override("separation", 6)
 
 	var icon := TextureRect.new()
 	icon.texture = _icon_texture(icon_name)
-	# The swatch carries the row's colour as well as its word, so the legend
-	# teaches the code the map is actually using rather than printing every
-	# marker in the same neutral grey.
-	icon.modulate = tint
 	icon.custom_minimum_size = Vector2(24, 24)
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	row.add_child(icon)
-	var texture := _icon_texture(icon_name)
-	var marker_size := _marker_size({"category": category})
-	var plate_scale := 0.58 if category == "major" else 0.48
-	var colour := (tint as Color) if tint is Color else Color(1, 1, 1, 1)
-	var swatch := Control.new()
-	swatch.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	# Big enough to hold the largest marker plus its skirt, so a "major" and a
-	# "minor" swatch differ by the marker's own size rather than by the box's.
-	var box := _marker_size({"category": "major"}) + MARKER_KNOCKBACK_SKIRT * 2.0
-	swatch.custom_minimum_size = Vector2(box, box)
-	# A closure rather than an inner `Control` subclass: an inner class cannot
-	# see this script's own consts or statics, so a subclass would have to
-	# re-declare the marker geometry and could then drift from `_draw_icon()` —
-	# which is precisely the defect being fixed. Bound to the same
-	# `draw_marker_knockback()` the canvas calls, and to the same numbers.
-	if texture != null:
-		var paint_swatch := func() -> void:
-			var centre: Vector2 = swatch.size * 0.5
-			draw_marker_knockback(swatch, centre, marker_size * plate_scale)
-			var glyph := Vector2(marker_size, marker_size)
-			swatch.draw_texture_rect(texture, Rect2(centre - glyph * 0.5, glyph), false, colour)
-		swatch.draw.connect(paint_swatch)
-	row.add_child(swatch)
 
 	var label := Label.new()
 	label.text = label_text
 	# OP21-15: see CANVAS_LABEL_FONT_SIZE's header — bumped past FONT_TINY.
 	label.add_theme_font_size_override("font_size", CANVAS_HEADING_FONT_SIZE + 2)
-	label.add_theme_color_override("font_color", tint)
+	label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 	row.add_child(label)
 
 	return row
 
 
 # --- drawing -----------------------------------------------------------------
-
-
-## The font every string drawn INSIDE the map canvas is set in.
-##
-## N06-MAP-UI item 3 — "two typefaces on one screen." The panel chrome on this
-## tab (the THE MEADOWS title, the surveyed-% readout, the legend rows, the
-## control hints) is `Label`/`RichTextLabel` nodes, which take the theme's own
-## default face — a humanist sans. Everything the canvas drew by hand took
-## `UITokens.FONT_PATH` (`kenney_future.ttf`), a condensed geometric techno
-## face. Nothing chose that pairing; it happened because a `draw_string` call
-## has to name a font and a `Label` does not, so the two halves of one screen
-## drifted apart. The judge read it as exactly that.
-##
-## Resolved toward the CHROME, not toward the canvas, because the chrome font
-## is what the rest of the menu — every tab, every Label in the game — already
-## renders in, so this is the map joining the house style rather than a third
-## opinion. `get_theme_default_font()` reads the very font those Labels
-## resolve, so the two can no longer diverge if the project ever sets a theme
-## font: they are literally the same lookup.
-##
-## `ThemeDB` is the fallback for the case where this tab is asked to measure
-## text before it is inside a tree (the headless label-layout tests do exactly
-## that through `_resolved_region_label_rect`), where `get_theme_default_font()`
-## has no theme context to resolve against.
-func _canvas_font() -> Font:
-	if _region_font != null:
-		return _region_font
-	if is_inside_tree():
-		_region_font = get_theme_default_font()
-	if _region_font == null:
-		_region_font = ThemeDB.fallback_font
-	return _region_font
 
 
 ## Called by `MapCanvas._draw()`. Split out of the inner class so every helper
@@ -699,12 +521,6 @@ func _draw_map(canvas: Control) -> void:
 		elif bool(entry.get("silhouette", false)):
 			_draw_icon(canvas, map_rect, {"icon": "question", "position": entry.get("position")}, 0.6)
 
-	# CL-W1. Alpha pin names, in their own pass AFTER every icon: a label drawn
-	# inside the loop above would be painted over by whatever icon the loop
-	# reached next. D-0904B-1's pin has to say WHICH alpha, or it is a red mark
-	# the player has to walk to in order to learn anything.
-	_draw_alpha_pin_labels(canvas, map_rect, map_state)
-
 	# Region name labels — only for regions the player has actually entered
 	# (map_state.gd's own regions() doc: "a renderer needs the geometry for
 	# both to decide that for itself"). Drawn after the fog/icon passes so the
@@ -753,104 +569,15 @@ func _draw_map(canvas: Control) -> void:
 		if player != null:
 			_draw_player(canvas, map_rect, player.global_position, _facing_yaw(world, player))
 
-	# N06-MAP-UI item 5. Last, so nothing is ever drawn over them: on a
-	# north-up map these two are the only things that say what the picture
-	# MEANS, and the judge found the screen carrying neither.
-	_draw_north_indicator(canvas)
-	_draw_scale_bar(canvas, map_rect)
-
-
-## The north arrow. This map is north-up and never rotates (see the file
-## header), so the arrow is fixed — which is exactly why it can be drawn once
-## as a static mark and still be honest. It is here because a reader coming to
-## the screen cold has no way to know the orientation is fixed, and the minimap
-## next to it in play DOES rotate; without a compass the two screens silently
-## disagree about what "up" is.
-func _draw_north_indicator(canvas: Control) -> void:
-	var centre := Vector2(canvas.size.x - COMPASS_MARGIN - COMPASS_RADIUS, COMPASS_MARGIN + COMPASS_RADIUS)
-	canvas.draw_circle(centre, COMPASS_RADIUS + 2.0, Color(UITokens.BG_PANEL_ALT, 0.94))
-	canvas.draw_arc(centre, COMPASS_RADIUS + 2.0, 0.0, TAU, 24, Color(UITokens.BORDER, 0.9), 1.5, true)
-	var tip := centre + Vector2(0.0, -COMPASS_RADIUS + 1.0)
-	var base := centre + Vector2(0.0, COMPASS_RADIUS * 0.45)
-	var half := COMPASS_RADIUS * 0.42
-	# A split needle rather than a plain triangle: the lit half points north,
-	# the dark half is the tail, so the mark reads as a compass at a glance and
-	# survives greyscale (item 7's rule applied to a glyph instead of a label).
-	canvas.draw_colored_polygon(
-		PackedVector2Array([tip, base, base + Vector2(-half, 0.0)]), UITokens.TEXT_PRIMARY)
-	canvas.draw_colored_polygon(
-		PackedVector2Array([tip, base, base + Vector2(half, 0.0)]), UITokens.TEAL)
-	var font := _canvas_font()
-	if font == null:
-		return
-	var size := font.get_string_size("N", HORIZONTAL_ALIGNMENT_LEFT, -1.0, CANVAS_HEADING_FONT_SIZE)
-	_draw_string_legible(
-		canvas, font,
-		centre + Vector2(-size.x * 0.5, COMPASS_RADIUS + size.y * 0.72),
-		"N", HORIZONTAL_ALIGNMENT_LEFT, -1.0, CANVAS_HEADING_FONT_SIZE, UITokens.TEXT_PRIMARY)
-
-
-## The scale bar, bottom-left of the canvas. Derived from `map_rect` rather
-## than from `_zoom`, so it stays true at any zoom level, at any panel aspect,
-## and if the world extent ever changes underneath this screen.
-func _draw_scale_bar(canvas: Control, map_rect: Rect2) -> void:
-	var span_x := float(MAP_STATE.CELL) * float(MAP_STATE.grid_x())
-	if span_x <= 0.0 or map_rect.size.x <= 0.0:
-		return
-	var px_per_m := map_rect.size.x / span_x
-	var metres := 0.0
-	for step: float in SCALE_BAR_STEPS_M:
-		if step * px_per_m <= SCALE_BAR_MAX_WIDTH:
-			metres = step
-	if metres <= 0.0:
-		return # the whole world is narrower on screen than the smallest step
-	var width := metres * px_per_m
-	var font := _canvas_font()
-	var text := "%d m" % int(metres)
-	var text_height := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, CANVAS_HEADING_FONT_SIZE).y if font != null else 0.0
-	var left := SCALE_BAR_MARGIN
-	var baseline_y := canvas.size.y - SCALE_BAR_MARGIN
-	var bar_y := baseline_y - text_height - 6.0
-	canvas.draw_style_box(_chrome_box(), Rect2(
-		left - 8.0, bar_y - 12.0, width + 16.0, baseline_y - bar_y + 18.0))
-	# A ruler, not a line: end ticks give the bar two ends a reader can measure
-	# between, which a bare stroke over a busy bake does not.
-	canvas.draw_line(Vector2(left, bar_y), Vector2(left + width, bar_y), UITokens.TEXT_PRIMARY, 3.0)
-	canvas.draw_line(Vector2(left, bar_y - 6.0), Vector2(left, bar_y + 6.0), UITokens.TEXT_PRIMARY, 3.0)
-	canvas.draw_line(Vector2(left + width, bar_y - 6.0), Vector2(left + width, bar_y + 6.0), UITokens.TEXT_PRIMARY, 3.0)
-	if font != null:
-		_draw_string_legible(
-			canvas, font, Vector2(left, baseline_y), text,
-			HORIZONTAL_ALIGNMENT_LEFT, -1.0, CANVAS_HEADING_FONT_SIZE, UITokens.TEXT_PRIMARY)
-
-
-## The surface every piece of canvas chrome is printed on — the callout
-## columns, the scale bar.
-##
-## It has to be `BG_PANEL_ALT` and NOT `BG_DEEP`, and that is worth stating
-## because the obvious choice is wrong here: `_draw_map()` fills the whole
-## canvas with `BG_DEEP` before anything else, so a `BG_DEEP` container would
-## be invisible against the exact surface it is meant to lift its contents off.
-## One step up the same cool ramp gives the columns a real edge — and it is the
-## same ramp the fog now sits further up, so page, container, fog and revealed
-## ground read as four rungs of one ladder rather than four unrelated greys.
-func _chrome_box() -> StyleBoxFlat:
-	if _chrome_style_box == null:
-		_chrome_style_box = UITokens.panel_box(
-			Color(UITokens.BG_PANEL_ALT, 0.94), Color(UITokens.BORDER, 0.55))
-		_chrome_style_box.content_margin_left = 0
-		_chrome_style_box.content_margin_right = 0
-		_chrome_style_box.content_margin_top = 0
-		_chrome_style_box.content_margin_bottom = 0
-	return _chrome_style_box
-
 
 ## A 4:1 world cannot honestly fill a 16:9 panel at whole-world fit. The
 ## corridor therefore remains an undistorted strip, while its otherwise-empty
 ## side gutters carry spatial callouts connected to their true Z positions.
 ## This is overview-only: local zoom returns labels and icons to the terrain.
 func _draw_overview_callouts(canvas: Control, map_rect: Rect2, map_state: RefCounted) -> void:
-	if _canvas_font() == null:
+	if _region_font == null:
+		_region_font = load(UITokens.FONT_PATH)
+	if _region_font == null:
 		return
 
 	var regions: Array[Dictionary] = []
@@ -877,46 +604,12 @@ func _draw_overview_callouts(canvas: Control, map_rect: Rect2, map_state: RefCou
 	var spread_top := _callout_spread_top()
 	_spread_callouts(regions, spread_top, canvas.size.y - 24.0)
 	_spread_callouts(destinations, spread_top, canvas.size.y - 24.0)
-	# N06-MAP-UI item 4, drawn FIRST so it backs the headings, the callout text
-	# and the leader lines' outer ends rather than covering them.
-	_draw_callout_backing(canvas, regions, Rect2(12.0, HEADING_TOP - 8.0, map_rect.position.x - 30.0, 0.0))
-	_draw_callout_backing(canvas, destinations, Rect2(map_rect.end.x + 18.0, HEADING_TOP - 8.0, canvas.size.x - map_rect.end.x - 30.0, 0.0))
 	_draw_callout_heading(canvas, "DISCOVERED REGIONS", Rect2(18.0, HEADING_TOP, map_rect.position.x - 42.0, HEADING_HEIGHT), HORIZONTAL_ALIGNMENT_RIGHT)
 	_draw_callout_heading(canvas, "DESTINATIONS", Rect2(map_rect.end.x + 24.0, HEADING_TOP, canvas.size.x - map_rect.end.x - 42.0, HEADING_HEIGHT), HORIZONTAL_ALIGNMENT_LEFT)
 	for callout in regions:
 		_draw_region_callout(canvas, map_rect, callout)
 	for callout in destinations:
 		_draw_destination_callout(canvas, map_rect, callout)
-
-
-## The panel a callout column is printed ON.
-##
-## N06-MAP-UI item 4. The DISCOVERED REGIONS / DESTINATIONS columns were drawn
-## straight onto the canvas with nothing but a text outline holding them up.
-## The judge's exact words: "at 3% surveyed they miss the terrain, at 40% they
-## will not." That is right in principle and turns out to be right in fact for
-## a reason worth writing down — the columns sit in the side gutters, which at
-## whole-world fit are page rather than map, so at low coverage they never
-## touched terrain at all; but the map rectangle grows with `_zoom` and with
-## the panel's aspect, and the gutters are simply what is left over. Column
-## text has no container of its own and nothing guarantees it stays off the
-## map: `_draw_callout_heading` even ends its own rect at `map_rect.position.x
-## - 42`, i.e. defined BY the map edge, not clear of it by construction.
-##
-## Anchoring them off the terrain layer is the fix the judge named, and this is
-## it: an explicit surface under the column, in the same panel language the
-## rest of the menu uses (`UITokens.panel_deep_box()` — deliberately edgeless,
-## so it reads as furniture behind the map rather than as another card).
-## Sized from the callouts actually placed this frame, so an empty column draws
-## nothing at all rather than a bare box.
-func _draw_callout_backing(canvas: Control, entries: Array[Dictionary], column: Rect2) -> void:
-	if entries.is_empty() or column.size.x <= 40.0:
-		return
-	var bottom := column.position.y + HEADING_HEIGHT
-	for entry in entries:
-		bottom = maxf(bottom, float(entry.label_y) + CANVAS_LABEL_FONT_SIZE * 0.5)
-	var rect := Rect2(column.position, Vector2(column.size.x, bottom + 12.0 - column.position.y))
-	canvas.draw_style_box(_chrome_box(), rect)
 
 
 ## The lowest `label_y` a callout may take without its glyphs climbing into the
@@ -967,55 +660,9 @@ func _spread_callouts(entries: Array[Dictionary], top: float, bottom: float) -> 
 ## and every string this file draws is a raw `_draw()` call over a busy,
 ## multi-coloured baked terrain texture, so it needs the SAME outline
 ## treatment applied by hand rather than going unplated.
-##
-## N06-MAP-UI item 7 — the shared treatment, which is why it is fixed HERE and
-## not in whichever caller happened to be complained about. W11's round-3 blind
-## judge converted the map to greyscale and found that "ALPHA TRAILPUP"
-## collapsed to L≈136 while "GRANDPA'S HOUSE" and "THE VILLAGE" sat at L=255:
-## the one label on the screen that means DANGER was the dimmest text on it.
-## The cause is that a coloured label was drawn at its token colour and nothing
-## else, so its whole claim on the reader's attention was hue — and hue is the
-## one channel that does not survive greyscale, a colour-blind player, or a
-## handheld panel in daylight.
-##
-## Every canvas label now gets its weight from VALUE first: the fill is lifted
-## toward white until it clears `CANVAS_LABEL_MIN_LUMA`, and the dark outline
-## behind it is drawn heavier than the shared `UITokens.OUTLINE_SIZE` so the
-## lifted core has something to sit against on pale high ground. Hue is kept —
-## `UITokens.DANGER` still reads red, `WARNING` still reads gold — it is just
-## no longer carrying the legibility on its own. Labels already at or above the
-## bar (`TEXT_PRIMARY`, at 0.94) are returned untouched, so this changes only
-## the labels that were actually failing.
 func _draw_string_legible(canvas: Control, font: Font, baseline: Vector2, text: String, alignment: HorizontalAlignment, width: float, font_size: int, colour: Color) -> void:
-	canvas.draw_string_outline(font, baseline, text, alignment, width, font_size, CANVAS_OUTLINE_SIZE, UITokens.OUTLINE)
-	canvas.draw_string(font, baseline, text, alignment, width, font_size, label_core_colour(colour))
-
-
-## Rec. 709 luma of `colour`, 0..1. Plain (gamma-space) luma rather than a
-## linearised relative luminance on purpose: this is deciding how a glyph will
-## read against its own outline at small sizes, which is a perceptual "how
-## light is this ink" question, and it is the same quantity the judge measured
-## off the frame when it reported L≈136 out of 255.
-static func luma(colour: Color) -> float:
-	return 0.2126 * colour.r + 0.7152 * colour.g + 0.0722 * colour.b
-
-
-## The colour a canvas label is actually inked in: `colour` blended toward
-## white by exactly the amount that brings its luma to `CANVAS_LABEL_MIN_LUMA`,
-## and no further. Static and pure so `tests/test_map_legibility.gd` can assert
-## the guarantee (every label colour this screen uses clears the bar, and the
-## spread between the brightest and dimmest label collapses) without standing
-## up a scene or reading a rendered frame.
-static func label_core_colour(colour: Color) -> Color:
-	var current := luma(colour)
-	if current >= CANVAS_LABEL_MIN_LUMA:
-		return colour
-	# luma(lerp(c, white, t)) == (1 - t) * luma(c) + t, so the t that lands
-	# exactly on the target is closed-form rather than searched for.
-	var t := clampf((CANVAS_LABEL_MIN_LUMA - current) / maxf(1.0 - current, 0.0001), 0.0, 1.0)
-	var lifted := colour.lerp(Color(1.0, 1.0, 1.0), t)
-	lifted.a = colour.a
-	return lifted
+	canvas.draw_string_outline(font, baseline, text, alignment, width, font_size, UITokens.OUTLINE_SIZE, UITokens.OUTLINE)
+	canvas.draw_string(font, baseline, text, alignment, width, font_size, colour)
 
 
 func _draw_callout_heading(canvas: Control, text: String, rect: Rect2, alignment: HorizontalAlignment) -> void:
@@ -1050,10 +697,7 @@ func _draw_destination_callout(canvas: Control, map_rect: Rect2, callout: Dictio
 	if icon != null:
 		canvas.draw_texture_rect(icon, Rect2(text_x, y - 11.0, 22.0, 22.0), false)
 		text_x += 30.0
-	# The right end of this column is reserved for the north indicator (item 5),
-	# so the longest destination name cannot grow into it.
-	var reserved := COMPASS_MARGIN * 2.0 + COMPASS_RADIUS * 2.0
-	var label_width := maxf(canvas.size.x - text_x - reserved, 20.0)
+	var label_width := maxf(canvas.size.x - text_x - 18.0, 20.0)
 	var baseline := Vector2(text_x, y + 7.0)
 	_draw_string_legible(canvas, _region_font, baseline, str(callout.text), HORIZONTAL_ALIGNMENT_LEFT, label_width, CANVAS_LABEL_FONT_SIZE, UITokens.TEXT_PRIMARY)
 
@@ -1095,51 +739,6 @@ func _map_marker_exclusion_rects(canvas: Control, map_rect: Rect2, map_state: Re
 	return occupied
 
 
-## Draws "Alpha Galecrest" / "Elder Mosshell" beside each pin.
-##
-## Placed to the right of its marker by default and flipped to the left when
-## that would run the text off the canvas — the corridor's whole-Meadows fit is
-## a narrow centre strip with wide gutters, so a right-hand label is usually
-## reading into empty gutter, which is exactly where there is room for it. No
-## collision solve between labels: the sixteen authored clusters are spread over
-## 7 km of corridor and only the ones within 300 m of somewhere the player has
-## been are pinned at all, so two pin labels landing on each other is not a case
-## that exists in the authored world. If it ever does, this is where to fix it.
-func _draw_alpha_pin_labels(canvas: Control, map_rect: Rect2, map_state: RefCounted) -> void:
-	if _region_font == null:
-		_region_font = load(UITokens.FONT_PATH)
-	if _region_font == null:
-		return
-	for entry: Dictionary in (map_state.call("landmarks") as Array):
-		if not bool(entry.get("dynamic", false)):
-			continue
-		if not str(entry.get("id", "")).begins_with(ALPHA_MARKER_PREFIX):
-			continue
-		var text := str(entry.get("display_name", ""))
-		if text.is_empty():
-			continue
-		var point := _world_to_canvas(entry.get("position", Vector2.ZERO), map_rect)
-		var half := _marker_size(entry) * 0.5
-		var viewport := Rect2(Vector2.ZERO, canvas.size).grow(-half)
-		if not viewport.has_point(point):
-			continue
-		var width := _region_font.get_string_size(
-			text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, CANVAS_LABEL_FONT_SIZE).x
-		# 15 px, not 8: at 8 the first letter began five pixels from the plate's
-		# edge and the glyph and the letterform fused into one shape at 100%.
-		# The starburst above also reaches further out than the old disc did.
-		var baseline := point + Vector2(half + 26.0, CANVAS_LABEL_FONT_SIZE * 0.36)
-		var alignment := HORIZONTAL_ALIGNMENT_LEFT
-		if baseline.x + width > canvas.size.x - 8.0:
-			baseline.x = point.x - half - 26.0 - width
-			alignment = HORIZONTAL_ALIGNMENT_LEFT
-			if baseline.x < 8.0:
-				continue
-		_draw_string_legible(
-			canvas, _region_font, baseline, text, alignment, width + 4.0,
-			CANVAS_LABEL_FONT_SIZE, UITokens.DANGER)
-
-
 func _marker_size(entry: Dictionary) -> float:
 	var category := str(entry.get("category", ""))
 	if category == "major":
@@ -1175,52 +774,8 @@ func _draw_icon(canvas: Control, map_rect: Rect2, entry: Dictionary, alpha: floa
 	# landmark now gets one, sized down for minor/generic categories so a
 	# major destination still reads as visually heavier on the map.
 	var plate_scale := 0.58 if category == "major" else 0.48
-	var plate := Color(0.02, 0.03, 0.04, 0.72)
-	if str(entry.get("id", "")).begins_with(ALPHA_MARKER_PREFIX):
-		# CL-W1. The one coloured plate on this map. Every place icon shares
-		# the neutral dark disc above precisely so that no place shouts louder
-		# than another; an alpha pin is not a place, it is a threat the owner
-		# asked to be advertised, and it is the only mark here that is meant to
-		# pull the eye. Drawn a shade darker than `UITokens.DANGER` itself so
-		# the white glyph on top keeps its contrast.
-		# A blind judge found this mark on its own but could separate it from the
-		# player marker "barely, and only by hue" -- both were filled discs of
-		# about the same footprint 35 px apart, and hue is the weakest channel
-		# there is: it fails for a colour-blind player and on a handheld panel in
-		# daylight. So the alpha now differs in SILHOUETTE. The starburst reads
-		# as a hazard rosette at a glance and, unlike a disc, nothing else on
-		# this screen has that outline at any size.
-		plate = Color(UITokens.DANGER.darkened(0.35), 0.94)
-		# Round two of the blind pass moved the mark from "found only by its red
-		# label" to "found instantly", but the rosette was still too timid to
-		# survive GREYSCALE: 2-3 px of serration on a 22 px disc reads as
-		# anti-aliasing at 1:1, and the judge, looking at the frame with colour
-		# removed, could not say which of the two round marks on that axis was
-		# the danger. So the badge now differs in SIZE CLASS as well as contour
-		# -- spikes reaching 1.55x the disc, a core at 0.58 of that, which is a
-		# serrated form roughly twice the player pin's footprint. Hue is now the
-		# third cue, not the only one.
-		var spike := marker_size * plate_scale
-		canvas.draw_colored_polygon(
-			_alpha_starburst(point, spike * 1.72), Color(0.02, 0.03, 0.04, 0.9))
-		canvas.draw_colored_polygon(
-			_alpha_starburst(point, spike * 1.55), Color(UITokens.DANGER, 0.95))
-	canvas.draw_circle(point, marker_size * plate_scale, plate)
-	#
-	# N06-MAP-UI item 8: that plate is now an opaque knock-back rather than a
-	# 72%-opacity tint — see `MARKER_KNOCKBACK`'s own header for the judge
-	# finding (terrain filling the notches of a spiked pin) and why the
-	# remaining 28% was the whole problem.
-	draw_marker_knockback(canvas, point, marker_size * (0.58 if category == "major" else 0.48))
+	canvas.draw_circle(point, marker_size * plate_scale, Color(0.02, 0.03, 0.04, 0.72))
 	canvas.draw_texture_rect(tex, Rect2(point - size * 0.5, size), false, Color(1, 1, 1, alpha))
-
-
-## The disc that ends the terrain under a marker glyph. Shared by the map's own
-## icon pass and by the legend swatch, so a legend row is drawn with the same
-## backing the real marker has and the two cannot drift (item 2's other half).
-static func draw_marker_knockback(canvas: CanvasItem, point: Vector2, radius: float) -> void:
-	canvas.draw_circle(point, radius + MARKER_KNOCKBACK_SKIRT, Color(MARKER_KNOCKBACK, 0.5))
-	canvas.draw_circle(point, radius, MARKER_KNOCKBACK)
 
 
 ## `player_point` is the player marker's own canvas position, or `null` when
@@ -1291,7 +846,9 @@ func _draw_region_label(canvas: Control, map_rect: Rect2, region: Dictionary, pl
 ## from drawing so the controller smoke can prove that an icon-centred region
 ## cannot regress to printing through that icon again.
 func _resolved_region_label_rect(canvas: Control, map_rect: Rect2, region: Dictionary, occupied: Array[Rect2]) -> Rect2:
-	if _canvas_font() == null:
+	if _region_font == null:
+		_region_font = load(UITokens.FONT_PATH)
+	if _region_font == null:
 		return Rect2()
 	var text := str(region.get("display_name", ""))
 	if text.is_empty():
@@ -1467,46 +1024,7 @@ static func bounds_for_map(map_state: RefCounted) -> Dictionary:
 ## 128px to the panel's ~400+px side, so cell boundaries blend across a few
 ## screen pixels exactly the way `reveal_radius`'s circular reveal already
 ## implies they should.
-##
-## N06-MAP-UI (W11-ALPHA-PINS-0904's round-3 blind judge, item 1 — "the single
-## largest defect on the screen"). The judge measured two flat fields on this
-## screen 1.16:1 apart and could not tell which of them was the ground it had
-## earned: RGB(5,5,7) and RGB(17,26,31). Those numbers identify themselves
-## exactly — (5,5,7) was `FOG_UNDISCOVERED` at its old near-black
-## `Color(0.02, 0.02, 0.03)`, and (17,26,31) is `UITokens.BG_DEEP` (#10191E),
-## the page the canvas paints under everything. So the fog was not literally
-## inverted against the terrain; it had collapsed into the CHROME. Unexplored
-## ground and the empty page around the map were the same colour, the map had
-## no readable footprint at all, and at a realistic early-game coverage the
-## whole screen was that one black field — which is also the owner's own
-## OP23-03 report, "the map is still a black rectangle."
-##
-## The screen now carries three separated value tiers instead of two colliding
-## ones, which is what makes "explored reads clearer than fog" true as a thing
-## you can see rather than as a thing the code intends:
-##
-##   page chrome   `UITokens.BG_DEEP`   #10191E   relative luminance 0.0089
-##   unexplored    FOG_UNDISCOVERED     #3A505C   relative luminance 0.0742
-##   revealed      the terrain bake     ~#4FBA84   relative luminance 0.3845
-##
-## giving 2.11:1 from chrome to fog (the map now has an edge) and 3.50:1 from
-## fog to revealed meadow (explored ground is unmistakably the brighter half of
-## the pair, in the direction the judge asked for). Both ratios hold in
-## greyscale, because both are value differences and neither depends on hue.
-##
-## STILL FULLY OPAQUE, so none of this reopens OW3. `test_map_fog.gd` pins
-## `alpha == 1.0` on both screens and this change keeps it: an opaque fill
-## hides the terrain underneath completely whatever its colour is, so spec
-## §16's "does not reveal everything automatically" is untouched — a player
-## who has walked nowhere still sees zero terrain, they just see it as a
-## legible unknown field instead of as a hole in the screen.
-##
-## And it is still this project's own panel language, not a new one. #3A505C
-## sits on the same dark blue-gray/teal ramp as `UITokens.BG_PANEL_ALT`
-## (#1E3037) two steps up — the header note above rejected a WARMER
-## parchment-style unexplored fill and that rejection stands; this is the cool
-## chrome ramp, lifted far enough off the page to be a surface.
-const FOG_UNDISCOVERED := Color(0.227, 0.314, 0.361, 1.0)
+const FOG_UNDISCOVERED := Color(0.02, 0.02, 0.03, 1.0)
 const FOG_DISCOVERED := Color(0.0, 0.0, 0.0, 0.0)
 
 
@@ -1622,17 +1140,3 @@ func _player_node() -> Node3D:
 	if world == null:
 		return null
 	return world.get_node_or_null(^"Player") as Node3D
-
-
-## The alpha marker's outline: a rosette of `SPIKES` points alternating between
-## `radius` and `radius * 0.62`. Drawn rather than authored as a texture because
-## it is the marker's PLATE, sized from `marker_size` like the disc it replaced,
-## and `assets/ui/icons/map/alpha.png`'s chevron still sits on top of it.
-func _alpha_starburst(centre: Vector2, radius: float) -> PackedVector2Array:
-	const SPIKES := 9
-	var points := PackedVector2Array()
-	for index in SPIKES * 2:
-		var r := radius if index % 2 == 0 else radius * 0.58
-		var angle := TAU * float(index) / float(SPIKES * 2) - TAU * 0.25
-		points.append(centre + Vector2(cos(angle), sin(angle)) * r)
-	return points

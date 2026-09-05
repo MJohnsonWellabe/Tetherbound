@@ -98,11 +98,13 @@ func _physics_process(delta: float) -> void:
 	# Landing lane: W14's ride pose and Cloudreach's fly-hang are both authored
 	# poses that suppress the gait, and they are not alternatives -- a rider is
 	# seated on a mount, a hanging trainer is carried under one. Both are kept.
-	# Riding is tested first because `set_carrier()` runs before any fly state.
-	if _riding:
-		return
+	# CLOUDREACH IS TESTED FIRST, per the owner's standing rule that Cloudreach
+	# wins: if a build ever reaches a state where both flags are set, the fly
+	# hang is the pose that draws, and W14's seated pose yields to it.
 	if _fly_hang:
 		_apply_fly_hang()
+		return
+	if _riding:
 		return
 	_throwing_for = maxf(0.0, _throwing_for - delta)
 	_tool_swing_for = maxf(0.0, _tool_swing_for - delta)
