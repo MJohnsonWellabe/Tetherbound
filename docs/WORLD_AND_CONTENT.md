@@ -175,8 +175,9 @@ Vendors confirmed in `data/config/trade.json`: Mira (goods), Oskar
 | Dialogue lines | 339 | same files |
 | Objectives | 33 (27 main + 6 local) | `data/progression/objectives.json` |
 | Trainers (field) | 29 (9+4+5+5+6 per band) | `data/config/bands/*/trainers.json` |
-| Wild spawn-table entries | 283 (68+57+54+81+23 per band) | `data/config/bands/*/spawns.json` |
-| Harvest/gathering nodes | 131 (40+26+31+26+8 per band) | `data/config/bands/*/harvest.json` |
+| Wild spawn-table entries | 309 (68+71+66+81+23 per band; bands 2–3 raised by W17-DENSITY-B2-B3, 2026-09-04) | `data/config/bands/*/spawns.json` |
+| Harvest/gathering nodes | 169 (40+46+49+26+8 per band; bands 2–3 raised by W17-DENSITY-B2-B3) | `data/config/bands/*/harvest.json` |
+| Authored world pickups (candy, revives, potions, mushrooms) | 46 (0+22+24+0+0 per band; bands 4–5 are the W18 lane's batch) | `data/config/bands/*/pickups.json`, read by `scripts/world/band_pickups.gd` |
 | NPC ranks | 4 | `data/config/npc_ranks.json` `.ranks` |
 | Tournament rounds | 3 | `data/config/tournament.json` `.rounds` |
 | Landmarks/POIs | 12 | `data/config/map_landmarks.json` `.regions` |
@@ -188,14 +189,20 @@ Vendors confirmed in `data/config/trade.json`: Mira (goods), Oskar
 
 ## 7. Per-band content counts (from §6, broken out by band)
 
-| Band | Trainers | Wild spawn entries | Harvest nodes |
-|---|---|---|---|
-| band1_lower_meadows | 9 | 68 | 40 |
-| band2_stone_and_root | 4 | 57 | 26 |
-| band3_the_river_lock | 5 | 54 | 31 |
-| band4_upper_meadows_ironwood | 5 | 81 | 26 |
-| band5_stronghold_approach | 6 | 23 | 8 |
-| **Total** | **29** | **283** | **131** |
+| Band | Trainers | Wild spawn entries | Harvest nodes | Pickups (critical / optional; Good / Great / Rare candy) |
+|---|---|---|---|---|
+| band1_lower_meadows | 9 | 68 | 40 | 0 (the four `CACHE_AT` caches in `playground_world.gd` are not band pickups) |
+| band2_stone_and_root | 4 | 71 | 46 | 22 (3 / 19; 9 / 5 / 2, plus 6 recovery) |
+| band3_the_river_lock | 5 | 66 | 49 | 24 (6 / 18; 9 / 6 / 2, plus 7 recovery) |
+| band4_upper_meadows_ironwood | 5 | 81 | 26 | 0 (W18 lane) |
+| band5_stronghold_approach | 6 | 23 | 8 | 0 (W18 lane) |
+| **Total** | **29** | **309** | **169** | **46** |
+
+Per-km density (spine length from `terrain_playground.json`, `tools/_probe_band_density.gd`,
+2026-09-04): band 1 28.7 clusters/km and 20.0 harvest/km; band 2 was 21.5 / 9.8 and is now
+26.8 / 17.3; band 3 was 22.7 / 13.1 and is now 28.2 / 20.6. Runtime confirmation
+(`tools/_probe_gate_f_corridor.gd`, things met within 30 m of the spine): band 2 100 → 133,
+worst gap 165 → 141 m; band 3 117 → 127, worst gap 163 → 118 m; band 1 172 / 100 m.
 
 ## 8. Scatter re-bake rule
 
