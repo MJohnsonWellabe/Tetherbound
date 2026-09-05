@@ -370,14 +370,6 @@ func load_slot(game: Object, slot: int) -> bool:
 	if map_obj != null and not game.has_method("restore_realm_maps"):
 		var map_data: Variant = data.get("map", {})
 		(map_obj as RefCounted).call("load_data", map_data if typeof(map_data) == TYPE_DICTIONARY else {})
-		# CL-W1. STRICTLY AFTER `load_data`, which clears every dynamic marker
-		# wholesale — restoring the pins first would rebuild their markers and
-		# then immediately throw them away, which is the "pin survives only
-		# until the next load" failure this row is written against.
-		var alpha_pin_data: Variant = data.get("alpha_pins", [])
-		(map_obj as RefCounted).call(
-			"alpha_pin_load_data",
-			alpha_pin_data if typeof(alpha_pin_data) == TYPE_ARRAY else [])
 
 	var progression_obj: Variant = game.get("progression")
 	if progression_obj != null:
@@ -386,6 +378,32 @@ func load_slot(game: Object, slot: int) -> bool:
 		_reconcile_meadows_realm_rewards(progression_obj as RefCounted)
 	if game.has_method("restore_realm_maps"):
 		game.call("restore_realm_maps", _realm_map_payloads(data))
+
+	# CL-W1. STRICTLY AFTER whichever map restore ran above, because both clear
+	# every dynamic marker wholesale — restoring the pins first would rebuild
+	# their markers and then immediately throw them away, which is the "a pin
+	# that survives only until the next load is worse than none" failure the row
+	# is written against.
+	#
+	# Moved here by the landing lane, 2026-09-05, and this is a real merge
+	# interaction rather than a tidy-up. The pin restore used to sit inside the
+	# `not game.has_method("restore_realm_maps")` branch above. Cloudreach's
+	# VERSION 19 work ADDED `restore_realm_maps`, so that branch became
+	# permanently false and the pins stopped being loaded at all —
+	# `smoke_alpha_pins` failed with "the pin did not survive a real save and
+	# load". Neither lane is wrong on its own; only the combination is. Running
+	# it unconditionally after both paths satisfies W11's ordering requirement
+	# and leaves Cloudreach's realm-map restore untouched.
+	# The map object is RE-READ here rather than reusing `map_obj` from above:
+	# `restore_realm_maps()` ends in `bind_realm_map()`, which rebinds
+	# `game.map` to the realm's own instance. Loading the pins into the object
+	# captured before that call put them on an orphaned map that nothing draws.
+	var live_map: Variant = game.get("map")
+	if live_map != null:
+		var alpha_pin_data: Variant = data.get("alpha_pins", [])
+		(live_map as RefCounted).call(
+			"alpha_pin_load_data",
+			alpha_pin_data if typeof(alpha_pin_data) == TYPE_ARRAY else [])
 
 	var realm_hearts_obj: Variant = game.get("realm_hearts")
 	if realm_hearts_obj != null:
