@@ -35,9 +35,13 @@ Game data and code:
 - `data/config/chapter_curve.json` — the stale "no trainers of its own" sentence (CL-D1)
 - `data/config/tether_relay.json` — `dead_ground.heal_stations` (CL-E12)
 - `scripts/world/meadow_healing.gd` — `heal_stations()`, the station filter (CL-E12)
-- `scripts/world/tether_relay.gd` — `_heal_local_scatter()`, fired from the console (CL-E12)
-- `scripts/world/vegetation.gd` — `restore_drained(within)` (CL-E12) **— outside the
-  brief's named ownership list; see "One file touched outside the list" below**
+- `scripts/world/tether_relay.gd` — `_heal_local_scatter()` and `healing()`, fired from the
+  console (CL-E12)
+
+`scripts/world/vegetation.gd` is **not** in this list. An earlier revision of CL-E12 added
+an optional filter parameter to `restore_drained()` there; it was backed out on a routing
+decision and the file is identical to `origin/main`. The filter lives in
+`meadow_healing.gd` instead, and the cleanup is ROUTED FINDING 1 below.
 
 Tests:
 
@@ -329,32 +333,109 @@ are the three things that *can* change, and all three now do.
 
 ---
 
-## One file touched outside the brief's named ownership list
+## ROUTED FINDING 1 — the filter belongs in `scripts/world/vegetation.gd`
 
-`scripts/world/vegetation.gd` — one function signature and one 12-line helper.
-`restore_drained()` gained an optional `within: Array = []` filter, plus `_inside_any()`.
+**Status: not made. `scripts/world/vegetation.gd` is untouched and identical to
+`origin/main`.**
 
-The brief names `meadow_healing.gd` and `tether_relay.gd` for CL-E12 and says to stop a
-sub-item and report it rather than reach outside the list. This is reported rather than
-silently done, and here is the reasoning for doing it rather than dropping the item:
+CL-E12 was first built with the clean version of this — one optional parameter on
+`restore_drained()` — and it worked. It was **backed out** on a routing decision: that file
+is outside this lane's ownership, and this round's standing rule is to document a needed
+change in another lane's file rather than make it. The filter now lives entirely in
+`meadow_healing.gd`, which this lane does own. CL-E12 still works and is still verified;
+what follows is the cleanup the next owner of `vegetation.gd` should make.
 
-- CL-E12 is an owner-approved item (V-5, answered **yes** on 2026-09-04) and its whole
-  content is the vegetation half. Without a partial restore there is no station filter to
-  put in `meadow_healing.gd` — the item cannot be delivered at all.
-- No 0904 lane claims `scripts/world/vegetation.gd`. W05-TREELINE owns the vegetation
-  **data** and the bake and is told explicitly to stay out of `scatter_rules.gd`; it does
-  not name this script. W06-FINALE is told not to touch `meadow_healing.gd`, which points
-  the other way.
-- The change is additive and the default path is unchanged: with no argument the partition
-  puts every entry in the restore set and `_drained` still ends empty, so
-  `regrown_count()`, `drained_count()` and the second-call no-op all behave exactly as
-  before. The chapter-wide sweep does not know the argument exists.
-- It follows the precedent the coordinator set for W14-RIDING on `creature_body.gd`:
-  "apply the minimal one-line change and flag it".
+**The fix, precisely.**
 
-If the coordinator would rather this went through the vegetation lane, the whole of it is
-`restore_drained`'s signature plus `_inside_any`, and `meadow_healing.gd` calls it in one
-place.
+```gdscript
+# scripts/world/vegetation.gd, restore_drained() -- currently line ~1534
+func restore_drained(within: Array = []) -> int:
+```
+
+1. Add the optional `within: Array = []` parameter. Each entry is
+   `{"centre": Vector2, "radius": float}`. **Empty must mean "no filter"**, not "no discs",
+   or the chapter-wide `legendary_freed` heal — which passes nothing — becomes a no-op and
+   the ending silently stops healing the Meadows.
+2. In the loop that groups `_drained` by model, skip any placement whose `position` is
+   outside every disc and collect it into a `held` dictionary instead.
+3. Return early with `_drained = held` when nothing matched.
+4. At the end, assign `_drained = held` rather than `_drained.clear()`, so a partial heal
+   leaves the remainder owed.
+5. **Change `_regrown = _placed - before` to `_regrown += _placed - before`.** This is the
+   one-character half and it is worth doing even alone: with assignment, a local heal
+   followed by the chapter-wide one makes `regrown_count()` and `stats()`'s `regrown` field
+   report the last call's share rather than the running total. Both are diagnostics and
+   nothing reads them for a decision, which is why this is a wart and not a defect.
+6. Then delete the partition block from `meadow_healing.gd::_heal_the_scatter_within()` and
+   call `vegetation.call("restore_drained", discs)` instead.
+
+**Why it matters more than tidiness.** The workaround shipped here reaches into
+`vegetation.gd`'s `_drained` from another node — it lends the node a smaller list for the
+length of one call and hands back the remainder. That is documented at length at the
+function, and it works, but a private the owner does not know is being borrowed is exactly
+the kind of coupling that breaks silently when the owner refactors. The parameter makes the
+same behaviour the file's own contract.
+
+## ROUTED FINDING 2 — the drain cannot touch the procedural grass, in either direction
+
+**Status: not fixed, and not fixable in this lane. Recorded as a documented gap in D41/D45's
+grammar.**
+
+`data/config/grass_field.json` is enabled and suppresses the `grass` and `flowers` scatter
+layers outright; `scripts/world/vegetation.gd` drops them at build time and calls
+`_drained.erase(layer_name)` on them; and nothing in `scripts/world/grass_field.gd` or its
+shaders reads `drain_factor` at all. So the two densest ground-cover layers — the carpet a
+player reads as "the ground" — are **never removed by a drain station and therefore can
+never be restored by any healing**. Drained ground reads as dead tint plus missing trees
+rather than as missing grass, and that is why a code-blind judge looking at CL-E12's own
+before/after pair reported the ground unchanged (see the evidence section above for the
+full verdict and the layer numbers that reconcile it).
+
+This is not a CL-E12 defect and CL-E12 must not "fix" it: the healing restores exactly what
+the drain took, which is the contract's requirement. The gap arrived when the procedural
+grass field took over the ground plane and D41/D45's drained-ground grammar was not
+revisited.
+
+**The cheapest honest fix, for whoever owns the grass field:** have the field's per-item
+coverage roll read `playground_heightfield.drain_factor()` at the item's world position and
+thin against it, the way `scatter_rules._thin_by_drain` already does for the scatter. The
+field already hashes every item on its world position, so the value is available where the
+roll happens. That is a shader/`grass_field.gd` change and it needs its own before/after
+judge pass, because the owner's standing directive on this system is *"don't change the look
+of my grass, it's awesome"* — thinning it inside a drain radius is a deliberate exception to
+that and should be put to the owner rather than assumed.
+
+**Affects more than the relay:** every "the land heals" beat in the chapter, including the
+chapter-wide `legendary_freed` sweep, has the same blind spot.
+
+## ROUTED FINDING 3 — `S06-31`…`S06-49` still need deleting, and not by this lane
+
+**Status: not deleted. Decision made, action routed.**
+
+The routing that unblocked the two findings above allowed this lane to make the deletions
+itself *if* they sit in files this brief already owns. They do not, and the carve-out is
+explicit on both sides: this lane's brief says to touch **only** step `S06-30` of
+`tools/gate_f/segments/S06.json` and say so, and W21-HARNESS-FIGHTS's brief lists
+"`tools/gate_f/segments/S06.json` (except step S06-30)" in its own **Owns**. These are Gate
+F segment steps in a file assigned to another lane, not config entries in a file this lane
+holds, so the conditional's "do NOT make them" branch applies.
+
+**What to delete:** steps `S06-31` through `S06-49` inclusive — the pause-shell open, the
+tab walk to Build, the build-menu open, the workbench placement, the interact, the craft,
+the cancel, and the `input_context == world` assert that follows them.
+
+**Why, verified rather than asserted:** `tools/_probe_workbench_context.gd` (committed)
+drives the real nodes in a live world and reads the result through the harness's own
+resolver. The `build_catalogue` context releases at every step, and the workbench interact
+does not enter that context at all — it opens `craft_panel.gd` and cancels back to `world`.
+So the beat is not masking a game defect; S06's stuck catalogue belongs to CL-H13. Band 2
+authors no crafting site, and `S06-30`'s own note already called the workbench a
+transcriber's siting.
+
+**What must not be lost with it:** protocol section L.3 still requires "S06 orb_greater +
+reinforced tools — each paid at real cost". That requirement needs a home in a segment whose
+band has an authored crafting site, not a workbench conjured at the quarry. The full verdict
+and reasoning are in `S06-30`'s own note, in the file, where W21 will read them.
 
 ## Files this lane did NOT touch, and why
 
@@ -383,8 +464,13 @@ place.
   discoloured after the heal. D45 decided that and priced it; nothing at run time can
   repaint a texel, and re-baking is a ~15–40 minute offline job this lane is not
   authorised to run. The plants, the runtime skin and the dead lights all change.
-- **CL-H8 is a decision, not a deletion.** Steps `S06-31`…`S06-49` are still in the file.
-  Only W21-HARNESS-FIGHTS can remove them this round.
+- **CL-H8 is a decision, not a deletion.** Steps `S06-31`…`S06-49` are still in the file;
+  `tools/gate_f/segments/S06.json` is W21-HARNESS-FIGHTS's except for the one step this
+  lane was given. ROUTED FINDING 3.
+- **CL-E12's filter is in the wrong file, deliberately.** It works and is verified, but it
+  borrows a private from `vegetation.gd` because that file is another lane's. ROUTED
+  FINDING 1 carries the six-step fix.
+- **The drained ground's grass cannot heal, and never could.** ROUTED FINDING 2.
 - **CL-H4 fixed one of three thresholds.** S04's 1,200 and S05's 3,000 are the same
   transcription defect and belong to G3-HARNESS.
 - **CL-D4 is untouched by design** — the vegetation lane's.
@@ -474,7 +560,7 @@ A green test is not evidence until it has failed for the right reason.
 
 | Command | Result |
 |---|---|
-| `godot --headless --path . --script tests/smoke_relay_station.gd` | **passed** |
+| `godot --headless --path . --script tests/smoke_relay_station.gd` | **passed** — run twice, before and after the filter moved out of `vegetation.gd`, with identical numbers |
 | `godot --headless --path . --script tests/smoke_relay.gd` | **OK** — "the captain is beaten, the captive is freed, the Gear is carried, and she is in the village saying something new" |
 
 `smoke_relay_station`'s own lines, on the final code:
@@ -649,8 +735,9 @@ depends on the grass-field gap above, which is outside this lane.
    the same transcription defect S02's 900 was. G3-HARNESS owns them.
 5. **CL-D4 is still open** and its evidence is already assembled in the closure plan; it
    needs one lane-minute from whoever owns vegetation data.
-6. **`scripts/world/vegetation.gd` needs an owner ruling** — see "One file touched outside
-   the brief's named ownership list" above.
+6. **Three routed findings are written up in full below** — the `vegetation.gd` filter
+   parameter (with the exact six-step edit), the grass-field drain gap, and the
+   `S06-31`…`S06-49` deletion. Each names its owner, what to change and why.
 
 ---
 
@@ -669,6 +756,7 @@ Branch `ralph/W20-SMALL-FIXES-0904`, from `origin/main` at `ef16544f`.
 | `8332fb9b` | CL-H8 — the workbench beat decided by probe |
 | `5874ce11` | CL-E12 — the relay heals its own three drain stations |
 | `b1d77d7a` | CL-E10 — `03-mid-route` back on the Hall sightline |
+| `b6830639` | CL-E12 — station filter moved out of `vegetation.gd`, per routing |
 
 
 ---
@@ -677,15 +765,15 @@ Branch `ralph/W20-SMALL-FIXES-0904`, from `origin/main` at `ef16544f`.
 
 Branch: `ralph/W20-SMALL-FIXES-0904`, from `origin/main` at `ef16544f`.
 
-**Final code commit: `b1d77d7a`** (CL-E10) — the last commit that changes the game, its
-data, its tests or its tools. Everything this report claims about behaviour is reproducible
-at that hash.
+**Final code commit: `b6830639`** — the last commit that changes the game, its data, its
+tests or its tools. Everything this report claims about behaviour is reproducible at that
+hash, and at it `scripts/world/vegetation.gd` is identical to `origin/main`.
 
-Two documentation commits sit on top of it: `7756bc03`, the report before its evidence
-sections, and the branch tip, which is this file complete with the render results, the
-contact sheet, the code-blind verdict and the layer probe. A report cannot carry its own
-hash, so the tip is named by position rather than by number; `git log --oneline
-origin/main..ralph/W20-SMALL-FIXES-0904` lists all eleven.
+The documentation commits sit on top of it, ending with the branch tip: this file complete
+with the render results, the contact sheet, the code-blind verdict, the layer probe and the
+three routed findings. A report cannot carry its own hash, so the tip is named by position
+rather than by number; `git log --oneline origin/main..ralph/W20-SMALL-FIXES-0904` lists
+them all.
 
 Every claim in this report is reproducible from that branch: the tests by their exact
 commands, the probes by `godot --headless --path . --script tools/_probe_*.gd`, the frames
