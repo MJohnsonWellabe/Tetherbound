@@ -501,13 +501,29 @@ func test_the_resolve_camera_clears_an_ally_without_shrinking_the_orb() -> void:
 	var distance := float(camera.get("distance", 0.0))
 	var fov := float(camera.get("fov", 0.0))
 	var height := float(camera.get("height", 0.0))
+	var pitch := absf(float(camera.get("pitch_start_deg", 0.0)))
 
 	# A deployed creature is roughly a metre and a half across at the shoulder,
 	# so a lens closer than that to the orb it is standing over is inside it.
 	assert_true(distance >= 3.0,
 		"the lens is %.2fm from the orb; an ally standing at the seal is between it and its subject, which the judge called 'indistinguishable from a bug'" % distance)
-	assert_true(height >= 1.0,
-		"the lens sits at %.2fm, chest height on a creature rather than above its back" % height)
+
+	# `height` is NOT the camera's elevation -- `camera_rig.gd:380` makes it the
+	# pivot offset, i.e. how far above the orb the frame is CENTRED. The first
+	# pass at this raised it to clear a creature and rendered a seal with the
+	# orb sliced off the bottom edge. It has to stay small.
+	assert_true(height <= 0.8,
+		"the frame is centred %.2fm above the orb; at this shot's %.2fm half-height the orb slides off the bottom edge" % [
+			height, distance * tan(deg_to_rad(fov) * 0.5)])
+
+	# The lens is lifted by the PITCH instead, which moves the camera without
+	# moving the frame. Elevation above the pivot is distance * sin(pitch).
+	var lens_above_pivot: float = distance * sin(deg_to_rad(pitch))
+	var standoff: float = distance * cos(deg_to_rad(pitch))
+	assert_true(lens_above_pivot + height >= 2.2,
+		"the lens sits %.2fm over the ground -- chest height on a deployed creature standing at the seal, which is how it ends up inside one" % (lens_above_pivot + height))
+	assert_true(standoff >= 2.0,
+		"the lens is only %.2fm horizontally from the orb; it clears a creature's height but not its bulk" % standoff)
 
 	# The framing the earlier pass settled on, held to within 10%: the previous
 	# rejected attempt (3.2 / fov 50) reads 1.49m here against the 1.12m that
