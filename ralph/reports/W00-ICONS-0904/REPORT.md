@@ -85,11 +85,69 @@ the brief's design stands.
 
 ### Round 2 (`_sheet_r2.png`)
 
+Verdict, condensed: families still read; mushrooms "unmistakable" at every
+size; stroke and colour handling "convincingly" the same language (every icon
+peaks at the same 0xDF channel). Defects named:
+
+1. Stamina's concentric bullseye read as an eye at every size, and as the
+   orbs' own ring ladder (Basic / Greater / Prime = 0 / 1 / 2 rings).
+2. Rare's shoulder cutouts read as a medal's rim ring and 12-o'clock lug; the
+   wings as laurel / a butterfly at 19 px.
+3. All three candies bled to both tile edges (x0-63) with a 38 px height and
+   sat low, where the existing set is inset 8-11 px per side and centred.
+4. Wild's cap was 60 px wide against its siblings' 47.
+5. Repeats of round 1's out-of-brief asks (leaf on Good, crown on Rare, spots
+   moved from Speed to Wild, tint changes) and the hue collisions.
+
+Acted on (round 3): 1, 2, 3, 4. Not acted on: 5, same reasons as round 1 (the
+brief fixes the tier markers and tints are `items.json`'s).
+
+### Round 3 (`_sheet_r3.png`)
+
 _(filled in below)_
 
 ## CI
 
-_(filled in below)_
+Run 33920949877 on `e8c4b997` (the round-3 code head; the later commits are
+report-only), 2026-09-04 21:24 to 2026-09-05 00:23 UTC. Jobs relevant to this
+lane:
+
+| job | this branch | `main` @ base `ef16544f` (run 33916513195) |
+|---|---|---|
+| verify-unit-tests (4), the shard holding `test_item_icons.gd` | 255 tests, **1 failed: `test_scatter_perf_budget.gd::test_playground_bake_is_committed_and_fresh`** (icon tests all green) | failed |
+| verify-unit-tests (3) | green | green |
+| verify-unit-tests (1) | 511 tests, 1 failed: `test_terrain_bake_freshness.gd::test_playground_terrain_bake_is_committed_and_fresh` | failed on the same single test |
+| verify-unit-tests (2) | green | green |
+| verify-terrain-bake-freshness / verify-scatter-bake-freshness | failed | failed |
+| verify-gate-b-core | failed | failed |
+| verify-regions-shard (`Verify art` step) | cancelled by fail-fast before `art` ran | same |
+
+Two things the brief did not know, both verified rather than assumed:
+
+- **The icon failure sits in shard 4 at this base, not shard 3.** PR #39's own
+  merge run (33916194315 on `90efc0d5`) is where `verify-unit-tests (3)` was
+  the only red job, exactly as the brief says. The docs checkpoint `ef16544f`
+  that followed it added `tests/test_capture_check.gd`, which re-sliced the
+  four shards; `--shard=4/4` lists `test_item_icons.gd`'s seven methods on this
+  branch and `--shard=3/4` none. On this branch shard 4 runs 255 tests and the
+  only failure is the scatter bake; on `main` at the base the same shard died
+  in 8 s. The icon test is green in CI on this branch.
+- **Every remaining red job is inherited from `main`.** `ef16544f` also
+  rewrote `data/scatter/playground/manifest.json` and
+  `data/terrain/playground/manifest.json`, and both bake-freshness tests fail
+  on `main` at the base and locally on this branch (which changes nothing under
+  `data/` or `scripts/`, per `git diff --stat origin/main -- data/ scripts/`):
+
+  ```
+  godot --headless --path . --script tests/run_tests.gd -- --only=test_terrain_bake_freshness.gd
+    3 tests, 8 assertions, 1 failed  (test_playground_terrain_bake_is_committed_and_fresh)
+  godot --headless --path . --script tests/run_tests.gd -- --only=test_scatter_perf_budget.gd
+    3 tests, 6 assertions, 1 failed  (test_playground_bake_is_committed_and_fresh)
+  ```
+
+  `verify-gate-b-core` is red on `main` at the base too. Not this lane's to
+  fix (outside the ownership list); the coordinator should know `main` needs a
+  terrain and scatter re-bake before anything lands green.
 
 ## Known limitations / deliberately not done
 
