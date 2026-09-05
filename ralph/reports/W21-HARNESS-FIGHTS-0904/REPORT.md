@@ -501,3 +501,23 @@ moved.
 
 This branch was **not** rebased. `main` moved to `f8a47ee4` while this lane ran; COMMON.md
 forbids a rebase and the coordinator lands the merge.
+
+### The final head's run, stated exactly
+
+At the moment this lane finished, CI run **4307**
+(<https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/33966831410>) on the final head
+`1ea037c0` had been **queued for 20 minutes without starting** — the runner pool is saturated
+with the other lanes in this cycle. So, precisely:
+
+* **`01dfdc5c`** — the whole segment rewrite and the first six tests — has a **completed** run
+  (4040) whose code jobs really ran (`verify-gate-b-core` 14 min, `verify-combat-shard` 33 min,
+  `verify-gate-a-ui-build-shard` 24 min, `verify-veg-corridor` 11 min) and whose only reds are
+  the four proven above to be pre-existing on the base.
+* **`96b315e9`** — the five `close_enough` values and the seventh test — has **no completed CI
+  run of its own**: run 4291 was cancelled by this lane's own next push. It is covered locally
+  by `--only=gate_f` (74 tests, 43,455 assertions, 0 failed) and, more usefully, by the two
+  logic-lane runs that were driven with it — `gate-f-run-W21-S07` (154 PASS / 3 FAIL, all five
+  relay fights resolved) and `gate-f-run-W21-S08` — but the coordinator should read run 4307,
+  or re-run CI on the landing branch, rather than take that as a CI verdict.
+* Everything after `96b315e9` on this branch is this report's own text.
+
