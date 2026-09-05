@@ -21,3 +21,13 @@ things that sink it: a `MultiplayerSpawner` spawns under a `spawn_path` that mus
 host, so a host with no Cloudreach scene cannot spawn Cloudreach trainers for a second client; and
 a delegating client's disconnect mid-fight loses encounter state nothing else holds. A headless
 shell keeps the host authoritative with a bounded cost that spike S2 measures.
+
+## Amended 2026-09-05, after spike S2
+
+A shell is a **skip-build flag** threaded through `playground_world.gd`'s `_dress_the_meadow()`,
+`_stand_up_the_grass_field()` and `_build_water()` (and the visual half of vegetation), never a
+post-hoc free: freeing after `_ready()` recovered 30 % of frame time but only 1.2 % of memory,
+because the 385,333-prop scatter and Terrain3D's resident data were already built. The three
+story panels (`DialoguePanel`, `NamePrompt`, `StarterPicker`) stay in a shell —
+`sequence_director.gd` calls them every frame. The shell's memory budget is set in Wave 6 only
+after a spike measures the skip-build variant; the interim same-realm limitation stands until then.

@@ -71,7 +71,7 @@ State classes: **W** world (host-authoritative, in `WorldState`), **P** player (
 | Item trading, dropped items | none | via ledger (D107) | 3.E | `smoke_net_trade` |
 | Crafting stations, campfire, workbench | local, pause the tree | shared by default; local inventory | 2.D, 3.C | `smoke_craft_panel_controller` |
 | Creature deployment / recall / switch | one `AllyCreature`, director-owned | P-owned body, host-spawned (D96) | 4.B | `smoke_net_deploy_two_creatures` |
-| Wild clusters, streaming, respawn, aggression | keyed on one player | host-simulated, union of occupants | 4.B | `smoke_wild_streaming`, `smoke_aggression`, S2 tick numbers |
+| Wild clusters, streaming, respawn, aggression | keyed on one player | host-simulated on FULL_GAME collision, union of occupants (D96 amended) | 4.B | `smoke_wild_streaming`, `smoke_aggression`, S2 tick numbers |
 | Combat: strikes, damage, enemy strikes, switching, fleeing | one manager, one body each side, local RNG | host-validated intents, host RNG (D96) | 4.C | `test_encounter_host_rejects_friendly_strike`, `smoke_net_shared_wild_fight`, `smoke_net_friendly_fire_is_zero`, solo `smoke_combat` + baseline tolerance |
 | Catching | decided in `_on_orb_struck` locally | host re-derives and rolls; first commit owns | 4.C | `test_catch_arbitration`, `smoke_net_catch_race` |
 | Trainer battles, tournament, bosses, Warden, captains | data-driven on `_enemy_owned` | shared encounter; world defeat flag once; `reward_grant` per participant | 4.D | `smoke_net_shared_trainer_fight`, `smoke_net_shared_boss`, `smoke_net_boss_rewards_each_participant` |
@@ -96,12 +96,12 @@ defaults in `MP_NET_HARNESS_CONTRACT.md` §8.
 | ENet RPC round trip, two headless processes on one box (min / median / max) | 4.2 / 6.9 / 40 ms loopback; reproduced by Fable at 6.8 / 6.9 / 13.8 | `MP-0C-SPIKE-ENET-0905` |
 | Frames for a spawner spawn and a synchronizer update to reach a client | spawn 2–34 frames (2 in the reproduction); synchronized position 2–3 frames; ~143 MB RSS per bare peer process; 1 host + 3 clients in 4.1 s | same |
 | `OS.create_process` inherits `XDG_DATA_HOME` from the parent | yes, and `OS.set_environment` before the call is honoured; reap by polling `OS.is_process_running` | same |
-| One / two / four concurrent headless Meadows boots: wall-clock and peak RSS | *pending S2* | `MP-0D-SPIKE-HOSTCOST-0905` |
-| Host physics-frame cost with clusters active around 1 / 2 / 4 occupants | *pending S2* | same |
-| 40 wild bodies: `move_and_slide` vs heightfield-grounded | *pending S2* | same |
-| Simulation-only Meadows shell: RSS and frame time vs full boot | *pending S2* | same |
-| Terrain3D full collision: RSS delta; runtime camera re-target builds collision elsewhere: yes/no | *pending S2* | same |
-| CI budget: 2-peer smoke wall clock on a 4-vCPU runner; 3/4-peer off-CI | *pending S2* | same |
+| One / two / four concurrent headless Meadows boots: wall-clock and peak RSS | 50–60 s warm, 84 s cold, flat across 1/2/4-way; 3.2 GB VmHWM each, **12.85 GB** for four | `MP-0D-SPIKE-HOSTCOST-0905` |
+| Host physics-frame cost with clusters active around 1 / 2 / 4 occupants | active wild bodies 8 → 15 → 23 (sub-linear, production streaming); frame-time delta below the box's noise (20–27 ms band) | same |
+| 40 wild bodies: `move_and_slide` vs heightfield-grounded | heightfield via `.call()` is **+11 ms median** (twice); D96 amended — host uses FULL_GAME collision instead | same |
+| Simulation-only Meadows shell: RSS and frame time vs full boot | post-hoc free: −30 % median frame time, −1.2 % memory (floor; vegetation/terrain untouched); D97 amended — skip-build flag, re-measured in Wave 6 | same |
+| Terrain3D full collision: RSS delta; runtime camera re-target builds collision elsewhere: yes/no | FULL_GAME: +16.1 MB, 3.06 s, whole map; re-targeting `set_camera` builds collision at the new spot within 180 frames | same |
+| CI budget: 2-peer smoke wall clock on a 4-vCPU runner; 3/4-peer off-CI | 2-peer: 300 s budget (cold boot ~85 s × 2 + steps); 3/4-peer nightly and owner kit only (12.85 GB leaves no margin on a 16 GB runner) | same |
 
 ## 5. Directive §19 risks, each with an owner
 

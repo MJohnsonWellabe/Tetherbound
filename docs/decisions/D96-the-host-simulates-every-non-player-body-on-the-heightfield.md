@@ -32,3 +32,14 @@ are cited in `docs/specs/MULTIPLAYER_CONVERSION_MAP.md`.
 Host-simulated bodies outside the host's own scatter-collision radius do not collide with
 vegetation. The code-blind judge watches remote-peer frames for creatures clipping trees; if it
 names it, the fix is per-body vegetation probes, not a return to delegation.
+
+## Amended 2026-09-05, after spike S2 (`ralph/reports/MP-0D-SPIKE-HOSTCOST-0905/`)
+
+Two measurements change the mechanism, not the decision. Terrain3D's FULL_GAME collision mode
+builds whole-map collision for **+16.1 MB in 3.06 s**, and a heightfield-grounding loop through
+`.call()` measured **+11 ms median** over `move_and_slide` for 40 bodies, twice. So: **the host
+runs Terrain3D in FULL_GAME collision mode**, and host-simulated bodies keep the existing
+`move_and_slide` path everywhere in the Meadows; Cloudreach already has authored mesh collision
+and analytic ground. The kinematic heightfield mode is dropped from lane 4.B's scope. Clients
+keep Dynamic/Game collision around their own camera. Everything about authority above stands:
+the host still owns every opponent body, every HP value, every strike and every catch.

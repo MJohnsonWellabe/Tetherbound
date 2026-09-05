@@ -207,9 +207,11 @@ sequence.
   tolerances meaningless in review). A heartbeat carries `physics_frame` so the coordinator can
   report each peer's achieved tick rate; a peer below 80 % of nominal for 10 s is a `log`
   warning and the run's `SUMMARY.md` says so.
-- Default per-step budget 3,000 physics frames; per-smoke wall clock **600 s for a 2-peer smoke
-  on PR CI**, 1,500 s for 3/4-peer runs off-CI. Spike S2 sets the numbers that replace these
-  defaults; the harness reads them from `data/config/multiplayer.json` `test_budgets` so a
+- Default per-step budget 3,000 physics frames; per-smoke wall clock **300 s of steps after both
+  peers report `hello` for a 2-peer smoke on PR CI** (a cold Meadows boot is ~85 s per peer and
+  is budgeted separately at 180 s), 1,500 s for 3/4-peer runs off-CI — spike S2's numbers
+  (`ralph/reports/MP-0D-SPIKE-HOSTCOST-0905/`: four full boots need 12.85 GB, so 3/4-peer runs
+  never share a 16 GB runner with PR CI); the harness reads them from `data/config/multiplayer.json` `test_budgets` so a
   change is data, not a rewrite.
 - Position tolerances (used by `near` and by movement smokes): **1.5 m at rest, 4.0 m in
   motion**, provisional until 2.C measures interpolation lag; recorded in the same config block.
