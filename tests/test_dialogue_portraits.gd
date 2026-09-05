@@ -219,11 +219,21 @@ func test_the_bodiless_narration_carve_out_names_only_speakers_that_exist() -> v
 		assert_true(spoken.has(name), "'%s' is exempt but no line is spoken by it any more" % name)
 
 
+## Scoped to the MEADOWS Warden by the landing lane, 2026-09-05.
+##
+## This matched on the "Warden " title and demanded `warden.png` from everyone
+## carrying it. Cloudreach ships its own Warden, Aila, with her own dedicated
+## plate (`cloudreach_aila_clean.png`), and the owner's standing rule is that
+## Cloudreach wins a conflict — so the title is no longer the key, the character
+## is. The finding this test exists for is unchanged and still enforced: a named
+## speaker must not be drawn with the PLAYER's face. Aila satisfies it with her
+## own plate; the test above (`..._other_than_the_player_wears_the_players_face`)
+## is what actually polices that rule across every speaker, Aila included.
 func test_the_warden_wears_his_own_plate_in_every_one_of_his_conversations() -> void:
 	# He was the last named speaker still drawn with the player's face.
 	var seen := 0
 	for entry: Dictionary in _every_line():
-		if not str(entry["speaker"]).begins_with("Warden "):
+		if str(entry["speaker"]) != "Warden Aldis":
 			continue
 		seen += 1
 		assert_eq(str(entry["portrait"]).get_file(), "warden.png",

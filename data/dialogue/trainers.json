@@ -9,7 +9,8 @@
   "conversations": {
     "trainer_too_low": {
       "speaker": "Trainer",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "_comment_portrait": "D81: `trainer.png` is the PLAYER's plate, so this rival was speaking with the player's own face. The two other generic `Trainer` conversations in this same file already use `villager_male.png`; this follows them.",
+      "portrait": "res://assets/ui/portraits/villager_male.png",
       "lines": [
         "You're too low level. I'll crush you and send you crying to Grandpa.",
         "Come back with something at level $level and I'll take you seriously."

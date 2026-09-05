@@ -22,13 +22,26 @@ const STRONGHOLD_PATH := "res://data/dialogue/stronghold.json"
 
 const MAX_LINE_CHARS := 110
 const MAX_CHALLENGE_CHARS := 350
-const MAX_FILE_CHARS := 2000
+## Raised 2000 -> 2200 by the landing lane, 2026-09-05. This is a real widening
+## of the budget, not a rounding, and it is recorded rather than quietly done.
+##
+## W06-FINALE set 2000 against its own EIGHT-conversation cut of the ending.
+## Cloudreach adds a ninth — the Realm Key / Heart of Meadows handoff — and the
+## owner's standing rule is that Cloudreach wins, so the handoff stays and the
+## budget is what moves. With it included the ending measures 2112 characters;
+## 2200 leaves roughly the same headroom over the measured total that 2000 left
+## over W06's own 1926. If the ending should hold to 2000, the handoff is the
+## text to trim, not this number.
+const MAX_FILE_CHARS := 2200
 
 const CONVERSATIONS := [
 	"stronghold_duty_board",
 	"stronghold_reveal",
 	"stronghold_warden_challenge",
 	"stronghold_warden_defeated",
+	## Cloudreach Phase 1's handoff, added to stronghold.json after W06-FINALE
+	## cut its branch. Listed so this budget measures the file it claims to.
+	"stronghold_warden_realm_reward",
 	"stronghold_chamber",
 	"stronghold_free_legendary",
 	"stronghold_legendary_joins",
