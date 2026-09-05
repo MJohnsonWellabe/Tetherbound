@@ -263,6 +263,10 @@ runtime evidence in place of frames.
 | Commit | What |
 |---|---|
 | `4687df271` | `vegetation.gd` items 1 and 2, plus `tests/test_vegetation_siting.gd` |
-| `ac34d674d` | the census probe and this report |
+| `79eb92aeb` | the census probe and the first push of this report |
+| _head_ | this hash table, corrected after `79eb92aeb` changed under an amend |
 
-Final state is on `ralph/N02-VEGETATION-0905`. No pull request opened, per the lane rules.
+**Every claim above is reproducible at `4687df271`**, which is the whole of the shipped
+change — the two commits after it add only `tools/_probe_n02_occluders.gd` and this file.
+Final state is the head of `ralph/N02-VEGETATION-0905`. No pull request opened, per the
+lane rules.
