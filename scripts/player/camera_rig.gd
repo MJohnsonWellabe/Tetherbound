@@ -569,12 +569,19 @@ func _solve_conversation_shot() -> Dictionary:
 	var shot := CONVERSATION.solve(trainer_anchor, speaker_anchor, forward, _talk_cfg)
 	var room := _free_distance_behind(shot["pivot"], shot["dir"], float(shot["distance"]))
 	if CONVERSATION.is_blocked(shot, room, _talk_cfg):
+		# Re-solved rather than trimmed. The room is handed to the solver as a
+		# ceiling so that every guard it applies — the speaker's clearance, and
+		# above all the trainer's — is worked out against the arm the camera
+		# will REALLY have. Clamping a finished shot afterwards left the guards
+		# holding for a length that no longer existed, which is how the lens
+		# ended up inside the player's own head in Bram's inn.
 		var tighter := CONVERSATION.fallback_config(_talk_cfg)
-		shot = CONVERSATION.solve(trainer_anchor, speaker_anchor, forward, tighter)
-		shot["fallback"] = true
+		var probe := CONVERSATION.solve(trainer_anchor, speaker_anchor, forward, tighter)
 		var tighter_room := _free_distance_behind(
-			shot["pivot"], shot["dir"], float(shot["distance"]))
-		shot = CONVERSATION.clamp_to_room(shot, tighter_room, tighter)
+			probe["pivot"], probe["dir"], float(probe["distance"]))
+		shot = CONVERSATION.solve(
+			trainer_anchor, speaker_anchor, forward, tighter, tighter_room)
+		shot["fallback"] = true
 	_talk_used_fallback = bool(shot.get("fallback", false))
 	return shot
 
@@ -587,6 +594,9 @@ func _solve_conversation_shot() -> Dictionary:
 func _free_distance_behind(pivot: Vector3, dir: Vector3, limit: float) -> float:
 	if _occlusion_probe.is_valid():
 		return float(_occlusion_probe.call(pivot, dir, limit))
+	# `get_world_3d()` does not merely answer null off the tree, it PRINTS.
+	if not is_inside_tree():
+		return limit
 	var world := get_world_3d()
 	if world == null:
 		return limit
@@ -603,7 +613,16 @@ func _free_distance_behind(pivot: Vector3, dir: Vector3, limit: float) -> float:
 	var travel: Array = space.cast_motion(query)
 	if travel.size() < 1:
 		return limit
-	return float(travel[0]) * limit
+	var hit := float(travel[0]) * limit
+	if hit >= limit:
+		return limit
+	# The room a hit leaves is NOT where the camera goes. SpringArm3D keeps
+	# `margin` (0.6m here, and deliberately large — see `_collision_margin`)
+	# between the arm's end and whatever it hit, so an arm set to exactly this
+	# measurement is placed 0.6m shorter than that, forward of everything the
+	# framing was solved for. Reporting the usable length instead is what lets
+	# the solver's guards mean anything indoors.
+	return maxf(hit - margin, 0.0)
 
 
 ## The trainer and the person they are talking to are both excluded from the

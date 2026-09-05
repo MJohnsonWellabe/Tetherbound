@@ -377,12 +377,51 @@ func test_a_cramped_room_falls_back_to_a_closer_over_the_shoulder() -> void:
 	assert_true(_rig.conversation_used_fallback(),
 		"1.8m of room must not be filled with a 3.5m two-shot")
 	assert_almost_eq(_rig.spring_length, 1.8, 0.02,
-		"the fallback must then be clamped to the room actually measured")
+		"the fallback must then be held to the room actually measured")
 	var shot: Dictionary = _rig.conversation_shot()
 	assert_true(float(shot["distance"]) < float(cfg["distance"]),
 		"the fallback shot must be shorter than the shot it replaced")
 	assert_true(float(shot["fov"]) > float(cfg["fov"]),
 		"a closer camera needs a wider lens or the speaker overflows the frame")
+
+
+func test_a_cramped_room_still_keeps_the_lens_out_of_the_trainers_head() -> void:
+	# The defect a blind judge found in a real captured frame of Bram's inn:
+	# the shot fell back, the arm was cut to the room and then cut AGAIN by the
+	# spring arm's own 0.6m margin, and the lens finished 0.36m from the
+	# trainer's centre line with their hair filling the left third of the
+	# picture as unlit backfaces. The room cannot grow, so the speaker bias is
+	# what has to give.
+	var cfg := CONVERSATION.config()
+	_rig.set_occlusion_probe_for_tests(_wall_at_1_8m)
+	assert_true(_rig.enter_conversation(_speaker, cfg))
+	_settle_until_blended(1.0)
+
+	var shot: Dictionary = _rig.conversation_shot()
+	var trainer_anchor := TRAINER_AT + Vector3.UP * float(cfg["trainer_anchor_height"])
+	assert_true(
+		CONVERSATION.trainer_clearance_of(shot, trainer_anchor)
+			>= float(cfg["min_trainer_clearance"]) - 0.01,
+		"the lens must stay behind the trainer's head even with no room to do it in")
+	assert_true(float(shot["distance"]) > 0.0)
+
+
+func test_the_measured_room_is_the_room_the_camera_can_actually_use() -> void:
+	# `SpringArm3D` holds `margin` back from whatever it hits, so an arm set to
+	# the raw hit distance is placed that much shorter — forward of everything
+	# the shot was solved for. The probe must report the usable length, not the
+	# raw one, or every guard downstream is computed for a camera that is not
+	# where it says.
+	var raw := 2.4
+	var usable: float = _rig.call("_free_distance_behind", TRAINER_AT, Vector3.FORWARD, 4.0)
+	# With no world and no injected probe the query cannot run and the full
+	# limit is the honest answer; the interesting case is an actual hit.
+	assert_almost_eq(usable, 4.0, 0.001, "no world to sweep means no reported obstruction")
+	_rig.set_occlusion_probe_for_tests(func(_p: Vector3, _d: Vector3, limit: float) -> float:
+		return minf(raw, limit))
+	assert_almost_eq(
+		float(_rig.call("_free_distance_behind", TRAINER_AT, Vector3.FORWARD, 4.0)), raw, 0.001,
+		"an injected probe answers the usable length itself and is not trimmed twice")
 
 
 func test_the_same_fixture_with_room_behind_it_keeps_the_two_shot() -> void:
@@ -416,6 +455,30 @@ func test_the_fallback_config_replaces_the_shot_and_drops_its_own_key() -> void:
 	assert_true(float(tighter["distance"]) < float(cfg["distance"]))
 	assert_almost_eq(float(tighter["min_distance"]), float(cfg["min_distance"]), 0.001,
 		"guards the fallback does not override must survive the merge")
+	assert_almost_eq(
+		float(tighter["min_trainer_clearance"]), float(cfg["min_trainer_clearance"]), 0.001,
+		"the closer shot is the one that needs the trainer guard most; it must survive too")
+
+
+func test_a_room_ceiling_never_pushes_the_lens_through_the_trainer() -> void:
+	# The solver's own half of the same guard, as pure geometry across a sweep
+	# of rooms from generous to hopeless. No rig, no blend: if this can be made
+	# to fail, no amount of care in the rig can save the frame.
+	var cfg := CONVERSATION.fallback_config(CONVERSATION.config())
+	var trainer_anchor := Vector3(0.0, 1.45, 0.0)
+	var speaker_anchor_point := Vector3(0.0, 1.48, -1.83)
+	for tenths in range(3, 36):
+		var room := float(tenths) * 0.1
+		var shot := CONVERSATION.solve(
+			trainer_anchor, speaker_anchor_point, Vector3.FORWARD, cfg, room)
+		var clear := CONVERSATION.trainer_clearance_of(shot, trainer_anchor)
+		# Below the guard's own value there is simply not that much arm; the
+		# shot must then spend ALL of it standing clear of the trainer, which is
+		# bias zero and a clearance equal to the whole arm.
+		var want := minf(float(cfg["min_trainer_clearance"]), float(shot["distance"]))
+		assert_true(clear >= want - 0.01,
+			"a %.1fm room left the lens %.2fm from the trainer, wanted %.2fm"
+				% [room, clear, want])
 
 
 ## --- helpers ----------------------------------------------------------------

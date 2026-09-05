@@ -56,6 +56,7 @@ const DEFAULTS := {
 	"trainer_anchor_height": 1.45,
 	"speaker_anchor_frac": 0.78,
 	"min_speaker_clearance": 1.25,
+	"min_trainer_clearance": 1.0,
 	"min_pair_separation": 0.6,
 	"max_speaker_distance": 9.0,
 	"min_distance": 1.2,
@@ -288,7 +289,8 @@ static func speaker_anchor(speaker: Node3D, cfg: Dictionary) -> Vector3:
 ## `fallback_forward` is used only when the two are standing on top of each
 ## other and the line between them has no direction to speak of.
 static func solve(trainer_anchor: Vector3, speaker_anchor_point: Vector3,
-		fallback_forward: Vector3, cfg: Dictionary) -> Dictionary:
+		fallback_forward: Vector3, cfg: Dictionary,
+		max_distance: float = INF) -> Dictionary:
 	var to_speaker := speaker_anchor_point - trainer_anchor
 	var planar := Vector3(to_speaker.x, 0.0, to_speaker.z)
 	var separation := float(cfg.get("min_pair_separation", DEFAULTS["min_pair_separation"]))
@@ -299,22 +301,50 @@ static func solve(trainer_anchor: Vector3, speaker_anchor_point: Vector3,
 		var fallback_planar := Vector3(fallback_forward.x, 0.0, fallback_forward.z)
 		axis = fallback_planar.normalized() if fallback_planar.length() > 0.001 else Vector3.FORWARD
 
-	var bias := clampf(float(cfg.get("speaker_bias", DEFAULTS["speaker_bias"])), 0.0, 1.0)
-	var pivot := trainer_anchor.lerp(speaker_anchor_point, bias)
-
 	var swing := deg_to_rad(float(cfg.get("shoulder_yaw_deg", DEFAULTS["shoulder_yaw_deg"])))
 	var elevation := deg_to_rad(float(cfg.get("elevation_deg", DEFAULTS["elevation_deg"])))
 	var back := (-axis).rotated(Vector3.UP, swing)
 	var dir := (back * cos(elevation) + Vector3.UP * sin(elevation)).normalized()
 
-	var distance := maxf(
-		float(cfg.get("distance", DEFAULTS["distance"])),
-		float(cfg.get("min_distance", DEFAULTS["min_distance"])))
+	var floor_distance := float(cfg.get("min_distance", DEFAULTS["min_distance"]))
+	var distance := maxf(float(cfg.get("distance", DEFAULTS["distance"])), floor_distance)
+	# `max_distance` is the room actually measured behind the shot, and it is a
+	# hard ceiling: past this point there is a wall, and an arm longer than it
+	# is an arm the engine will shorten on its own, somewhere the framing did
+	# not choose.
+	if max_distance < INF:
+		distance = clampf(max_distance, floor_distance, distance)
 
-	# Never inside the person talking. The camera stands behind the trainer, so
-	# this only bites when the two are almost sharing a tile — but that is
-	# exactly what happens when a villager is placed against a wall and the
-	# player walks into them to trigger the greeting.
+	var bias := clampf(float(cfg.get("speaker_bias", DEFAULTS["speaker_bias"])), 0.0, 1.0)
+
+	# NEVER INSIDE THE TRAINER'S OWN HEAD.
+	#
+	# The pivot sits `bias` of the way along the line to the speaker and the
+	# camera stands `distance` back along it, so the lens ends up
+	# `distance - bias * separation` behind the trainer. Outdoors, with the full
+	# 3.5m arm, that is a comfortable metre and a half. In Bram's inn, with the
+	# arm clamped to the room and then shortened again by the spring arm's own
+	# margin, it went NEGATIVE-ish: measured at 0.36m, the trainer's hair filling
+	# the left third of the frame as unlit backfaces.
+	#
+	# `distance` cannot grow — there is a wall there. So the bias gives way
+	# instead: sliding the pivot back toward the trainer pushes the lens further
+	# behind them for the same arm length. At the limit the bias reaches zero,
+	# the pivot sits on the trainer's own chest and the whole arm is clear
+	# behind them, which is the ordinary over-the-shoulder shot and always safe.
+	var pair_span := maxf((speaker_anchor_point - trainer_anchor).length(), 0.001)
+	var trainer_clearance := float(cfg.get(
+		"min_trainer_clearance", DEFAULTS["min_trainer_clearance"]))
+	bias = minf(bias, clampf((distance - trainer_clearance) / pair_span, 0.0, 1.0))
+
+	var pivot := trainer_anchor.lerp(speaker_anchor_point, bias)
+
+	# Never inside the person talking either. The camera stands behind the
+	# trainer, so this only bites when the two are almost sharing a tile — but
+	# that is exactly what happens when a villager is placed against a wall and
+	# the player walks into them to trigger the greeting. It may lengthen the
+	# arm past `max_distance`, and is allowed to: a lens inside somebody's chest
+	# is a worse frame than one that clips a wall behind it.
 	var clearance := float(cfg.get("min_speaker_clearance", DEFAULTS["min_speaker_clearance"]))
 	var gap := (pivot + dir * distance).distance_to(speaker_anchor_point)
 	if gap < clearance:
@@ -355,14 +385,14 @@ static func is_blocked(shot: Dictionary, free_distance: float, cfg: Dictionary) 
 	return free_distance < float(shot.get("distance", 0.0)) * ratio
 
 
-## Clamp a shot to the room actually measured behind it, never below
-## `min_distance` — a camera pushed to zero is the collapse this rig's own
-## header spends a paragraph on.
-static func clamp_to_room(shot: Dictionary, free_distance: float, cfg: Dictionary) -> Dictionary:
-	var floor_distance := float(cfg.get("min_distance", DEFAULTS["min_distance"]))
-	var clamped := shot.duplicate()
-	clamped["distance"] = clampf(free_distance, floor_distance, float(shot.get("distance", 0.0)))
-	return clamped
+## How far behind the trainer this shot actually puts the lens. The number the
+## `min_trainer_clearance` guard above exists to hold up, exposed so a test can
+## assert on it rather than on the bias that produced it.
+static func trainer_clearance_of(shot: Dictionary, trainer_anchor: Vector3) -> float:
+	var pivot: Vector3 = shot.get("pivot", Vector3.ZERO)
+	var dir: Vector3 = shot.get("dir", Vector3.FORWARD)
+	var at := pivot + dir * float(shot.get("distance", 0.0))
+	return at.distance_to(trainer_anchor)
 
 
 ## --- config -----------------------------------------------------------------

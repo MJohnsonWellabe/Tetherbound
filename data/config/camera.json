@@ -19,8 +19,11 @@
     "trainer_anchor_height": 1.45,
     "speaker_anchor_frac": 0.78,
 
-    "_comment_guards": "Nothing here may put the camera inside the person talking, and a conversation opened from across a field is not a conversation this shot is for.",
+    "_comment_guards": "Nothing here may put the camera inside EITHER person, and a conversation opened from across a field is not a conversation this shot is for.",
     "min_speaker_clearance": 1.25,
+
+    "_comment_trainer_clearance": "The same guard pointed the other way, and it is the one a cramped room breaks. The framing pivot sits most of the way toward the speaker, so the trainer stands between it and the lens: shorten the arm enough and the camera walks forward through the back of the player's own head. Measured in Bram's inn before this existed -- the lens ended up 0.36m from the trainer's centre line and their hair filled the left third of the frame. When the room cannot pay for both this and the speaker bias, the BIAS gives way (the pivot slides back toward the trainer, which pushes the lens further behind them); the shot loses some of its lean onto the speaker rather than losing the frame.",
+    "min_trainer_clearance": 1.0,
     "min_pair_separation": 0.6,
     "max_speaker_distance": 9.0,
     "min_distance": 1.2,
