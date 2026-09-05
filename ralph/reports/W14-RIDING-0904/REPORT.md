@@ -178,4 +178,4 @@ screenshot.
 ## Final commit and branch
 
 Branch: `ralph/W14-RIDING-0904`
-Final commit: `ee37c7a8` (`docs(riding): the lane report, and a camera-framing note for the capture tool`)
+Final commit: HEAD of `ralph/W14-RIDING-0904` at push time (`git log -1` on the branch).
