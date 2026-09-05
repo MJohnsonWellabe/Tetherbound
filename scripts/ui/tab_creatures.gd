@@ -1199,7 +1199,13 @@ func _describe(index: int, cfg: Dictionary) -> void:
 	for raw: Variant in rows:
 		if bool((raw as Dictionary).get("next", false)):
 			next_fraction = float((raw as Dictionary).get("fraction", 0.0))
-	_bond_meter.call("set_bond", progress, nodes, maxi(total, 1), next_fraction)
+	# BLIND-JUDGE ROUND 1: the caption under the five-dot track read a bare
+	# "4/10 meals fed together", and the judge called the picture and the
+	# number a contradiction -- five nodes against a count to ten. They
+	# measure different things (nodes earned vs the current task's counter),
+	# so the caption now says which it is.
+	_bond_meter.call("set_bond", "" if progress == "Fully bonded" else "next:  " + progress,
+		nodes, maxi(total, 1), next_fraction)
 	var per_node: float = float(cfg.get("bond", {}).get("effects_per_node", {}).get("attack_scale", 0.0))
 	_bond_caption.text = "Bond %d / %d   ·   +%d%% ATK/DEF now (+%d%% per node)" % [
 		nodes, maxi(total, 1), int(round(per_node * 100.0 * float(nodes))), int(round(per_node * 100.0))

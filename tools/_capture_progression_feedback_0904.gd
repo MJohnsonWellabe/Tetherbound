@@ -120,7 +120,11 @@ func _run() -> void:
 	for i in 200:
 		await process_frame
 	BOND.credit_feed(members[2])
-	for i in 3:
+	# ROUND 1 capture defect: shot 3 frames after the credit, which was inside
+	# the strip's own 0.14s reveal tween -- the judge measured the whole strip
+	# at ~25% opacity and (fairly) called the tick unreadable. The tick holds
+	# for `tick_seconds`; shoot it once the reveal has actually landed.
+	for i in 18:
 		await process_frame
 	await _shoot("strip_bond_tick")
 

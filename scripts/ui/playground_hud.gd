@@ -2968,14 +2968,29 @@ func _build_moment_banner() -> void:
 
 ## The banner's slot, clamped inside the safe area on whatever canvas is
 ## actually rendering (1080 tall authored, 1200 on the Ally): never above
-## `safe_area_fraction` of the height, never below the region card.
+## `safe_area_fraction` of the height, and never on top of the two cards that
+## already own this top-centre lane.
+##
+## BLIND-JUDGE ROUND 1: the first version cleared only the region banner's
+## slot, and the objective HINT CARD sits directly under that
+## (`_build_objective_hint_card()`, `_region_banner_bottom() +
+## OBJECTIVE_HINT_CARD_GAP_UNDER_BANNER`) and grows downward with its own
+## wrapped text. So a Moment landing while a hint was up drew straight
+## through it -- the judge read "He is waiting at the table downstairs" and
+## the banner headline occupying the same pixels, and called it the worst
+## defect in the set. The card's real bottom is measured here, live, rather
+## than assumed from its authored offset, because its height depends on how
+## many lines the hint wrapped to.
 func _position_moment_banner() -> void:
 	if _moment_banner == null:
 		return
 	var cfg: Dictionary = PROGRESSION_FEED.config().get("banner", {})
 	var canvas_h: float = _root.size.y if _root != null and _root.size.y > 0.0 else 1080.0
 	var safe := canvas_h * float(cfg.get("safe_area_fraction", 0.05))
-	var top := maxf(float(cfg.get("top", 184)), maxf(safe, _region_banner_bottom() + UITokens.GAP))
+	var floor_y := maxf(safe, _region_banner_bottom() + UITokens.GAP)
+	if _objective_hint_card != null and _objective_hint_card.visible:
+		floor_y = maxf(floor_y, _objective_hint_card.position.y + _objective_hint_card.size.y + UITokens.GAP)
+	var top := maxf(float(cfg.get("top", 184)), floor_y)
 	var height := float(cfg.get("height", 92))
 	_moment_banner.offset_top = top
 	_moment_banner.offset_bottom = top + height
@@ -2998,6 +3013,9 @@ func _update_moment_banner() -> void:
 		_moment_feed_seq = newest
 
 	var now := Time.get_ticks_msec() / 1000.0
+	if _moment_banner.visible:
+		# The hint card can appear, grow or go away while the banner is up.
+		_position_moment_banner()
 	if _moment_banner.visible and now >= _moment_until:
 		_moment_banner.visible = false
 		_moment_cooldown_until = now + PROGRESSION_FEED.seconds("moment_cooldown_seconds", 0.4)

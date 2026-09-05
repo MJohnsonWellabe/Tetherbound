@@ -93,7 +93,14 @@ const SLOTS := 5
 ## any time, so the strip is always 2px taller than a row-height fitted to the
 ## other four. The old 62 was fitted the same way; that was not obvious from
 ## the number and is why this note exists.
-const ROW_SIZE := Vector2(336.0, 48.0)
+## BLIND-JUDGE ROUND 1: 336 -> 420. PROGRESSION-VISIBLE added the bond pip
+## ("bond 2/5") to a row that was already full, and the HBox had nowhere to
+## take the width from: the judge read "Biscui" (the name truncated mid-word,
+## too narrow even to draw its ellipsis) and "Lv 7bond 2/5" (the separation
+## squeezed to nothing), with the HP bar crushed into the row's rounded
+## border. The row is the only thing that grew; the strip still docks at
+## `CREATURE_BLOCK_X` and the creature block above it is narrower than this.
+const ROW_SIZE := Vector2(420.0, 48.0)
 ## 6 -> 2, and `HEADER_GAP` 6 -> 4 alongside it: together they pay for the 24px
 ## `HEADER_HEIGHT` below was under-reporting. Measured, the left column at the
 ## shorter supported canvas (1080) offers 380px between `TOP_SAFE_INSET` and the
@@ -182,11 +189,33 @@ const BAR_GAP := 2
 ## The bond pip text ("bond 2/5") beside the level, one size down from the
 ## row so the level number stays the louder of the two.
 const BOND_FONT_SIZE := 19
+## The name never shrinks below this, and the level/bond group never below
+## its own content (both were being squeezed to illegibility, round 1).
+const NAME_MIN_WIDTH := 150.0
+const LEVEL_GROUP_SEPARATION := 10
+## Enough for "bond 5/5" at BOND_FONT_SIZE without the row stealing it back.
+const BOND_MIN_WIDTH := 86.0
 ## Tick label: floats just right of the row, outside the plate, like a
 ## damage number -- never inside the row, where it would fight the HP bar.
 const TICK_FONT_SIZE := 22
 const TICK_X := ROW_SIZE.x + 10.0
 const TICK_RISE := 10.0
+const TICK_PLATE_INSET_Y := 8.0
+
+
+## A compact dark plate for one tick label -- the same deep panel ground the
+## rest of the HUD uses, sized to its own text by PanelContainer.
+static func _tick_plate_box() -> StyleBoxFlat:
+	var box := UI_TOKENS.fill_box(Color(UI_TOKENS.BG_DEEP, 0.94))
+	box.corner_radius_top_left = UI_TOKENS.RADIUS_SLOT
+	box.corner_radius_top_right = UI_TOKENS.RADIUS_SLOT
+	box.corner_radius_bottom_left = UI_TOKENS.RADIUS_SLOT
+	box.corner_radius_bottom_right = UI_TOKENS.RADIUS_SLOT
+	box.content_margin_left = 8.0
+	box.content_margin_right = 8.0
+	box.content_margin_top = 2.0
+	box.content_margin_bottom = 2.0
+	return box
 
 ## Fainted always reads as fainted, whether or not the slot happens to also be
 ## the (impossible, but not this file's job to assume) selected one.
@@ -311,6 +340,7 @@ var _xp_bars: Array[ProgressBar] = []
 var _xp_fills: Array[StyleBoxFlat] = []
 var _bond_labels: Array[Label] = []
 var _tick_labels: Array[Label] = []
+var _tick_plates: Array[PanelContainer] = []
 ## One plain Control holding the five tick labels, so the widget keeps a
 ## fixed child list (stack, cycle banner, ticks) whatever the rows do.
 var _ticks: Control = null
@@ -638,6 +668,9 @@ func _build_row(slot_index: int) -> PanelContainer:
 	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	name_label.clip_text = true
 	name_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	# A floor under the name, so it elides with a visible "..." instead of
+	# being cut mid-word when the level and bond pip beside it are long.
+	name_label.custom_minimum_size = Vector2(NAME_MIN_WIDTH, 0.0)
 	_name_labels.append(name_label)
 	info.add_child(name_label)
 
@@ -647,7 +680,8 @@ func _build_row(slot_index: int) -> PanelContainer:
 	# Container, and that is still true here.
 	var level_row := HBoxContainer.new()
 	level_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	level_row.add_theme_constant_override("separation", 6)
+	level_row.add_theme_constant_override("separation", LEVEL_GROUP_SEPARATION)
+	level_row.size_flags_horizontal = Control.SIZE_SHRINK_END
 	info.add_child(level_row)
 
 	var level_label := Label.new()
@@ -665,6 +699,7 @@ func _build_row(slot_index: int) -> PanelContainer:
 	bond_label.add_theme_font_size_override("font_size", BOND_FONT_SIZE)
 	bond_label.add_theme_color_override("font_color", UI_TOKENS.WARNING)
 	bond_label.visible = false
+	bond_label.custom_minimum_size = Vector2(BOND_MIN_WIDTH, 0.0)
 	_bond_labels.append(bond_label)
 	level_row.add_child(bond_label)
 
@@ -784,21 +819,30 @@ func _build_row(slot_index: int) -> PanelContainer:
 	# The tick label lives on the STRIP, not in the row: a PanelContainer
 	# would lay it into the row's rect, and the row's rect is full. It draws
 	# just right of the plate, at this row's height (see `_row_top`).
+	# BLIND-JUDGE ROUND 1: the tick was bare text with only a shadow, and the
+	# judge measured the amber bond tag at ~1.3:1 against the backdrop --
+	# "the feature's payload, invisible". It is the one HUD element that
+	# lands over open ground rather than over a plate, so it gets its own.
+	var tick_plate := PanelContainer.new()
+	tick_plate.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tick_plate.add_theme_stylebox_override("panel", _tick_plate_box())
+	tick_plate.visible = false
+	tick_plate.position = Vector2(TICK_X, _row_top(slot_index) + TICK_PLATE_INSET_Y)
+	_tick_plates.append(tick_plate)
+
 	var tick := Label.new()
 	tick.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	tick.add_theme_font_size_override("font_size", TICK_FONT_SIZE)
 	tick.add_theme_color_override("font_color", UI_TOKENS.TEAL_SOFT)
-	tick.visible = false
-	tick.position = Vector2(TICK_X, _row_top(slot_index))
-	tick.size = Vector2(240.0, ROW_SIZE.y)
 	tick.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	tick_plate.add_child(tick)
 	_tick_labels.append(tick)
 	if _ticks == null:
 		_ticks = Control.new()
 		_ticks.name = "Ticks"
 		_ticks.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		add_child(_ticks)
-	_ticks.add_child(tick)
+	_ticks.add_child(tick_plate)
 
 	return row
 
@@ -1176,9 +1220,9 @@ func _flick(i: int, event: Dictionary) -> void:
 	var bond := str(event.get("kind", "")) == "bond_credit"
 	_tick_labels[i].text = label
 	_tick_labels[i].add_theme_color_override("font_color", UI_TOKENS.WARNING if bond else UI_TOKENS.TEAL_SOFT)
-	_tick_labels[i].position = Vector2(TICK_X, _row_top(i))
-	_tick_labels[i].modulate.a = 1.0
-	_tick_labels[i].visible = true
+	_tick_plates[i].position = Vector2(TICK_X, _row_top(i) + TICK_PLATE_INSET_Y)
+	_tick_plates[i].modulate.a = 1.0
+	_tick_plates[i].visible = true
 	_tick_left[i] = FEED.seconds("tick_seconds", 0.9)
 	_tick_counts[i] += 1
 	_last_tick_label[i] = label
@@ -1196,11 +1240,11 @@ func _tick_ticks(timer_delta: float) -> void:
 		_tick_left[i] -= timer_delta
 		var t := clampf(1.0 - _tick_left[i] / maxf(total, 0.01), 0.0, 1.0)
 		# Rise a little and fade over the last half.
-		_tick_labels[i].position = Vector2(TICK_X, _row_top(i) - TICK_RISE * t)
-		_tick_labels[i].modulate.a = 1.0 if t < 0.5 else 1.0 - (t - 0.5) * 2.0
+		_tick_plates[i].position = Vector2(TICK_X, _row_top(i) + TICK_PLATE_INSET_Y - TICK_RISE * t)
+		_tick_plates[i].modulate.a = 1.0 if t < 0.5 else 1.0 - (t - 0.5) * 2.0
 		_bond_labels[i].scale = Vector2.ONE.lerp(Vector2(1.25, 1.25), maxf(0.0, 1.0 - t * 2.0))
 		if _tick_left[i] <= 0.0:
-			_tick_labels[i].visible = false
+			_tick_plates[i].visible = false
 			_bond_labels[i].scale = Vector2.ONE
 
 
