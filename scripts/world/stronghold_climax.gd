@@ -44,6 +44,9 @@ const STAGE_CEREMONY := "ceremony"
 const STAGE_FAILURE := "failure"
 const STAGE_DONE := "done"
 
+## Polar bins the machine's plinth reach is measured into; see `_measure_cage`.
+const PLINTH_BINS := 16
+
 var _config: Dictionary = {}
 var _world: Node = null
 var _player: Node3D = null
@@ -453,6 +456,12 @@ func _measure_cage(stage: Dictionary) -> Dictionary:
 	# Measured over everything standing below the dais, for the same reason
 	# the void is measured rather than assumed.
 	var footprint := 0.0
+	# Per BEARING, not just the maximum: this machine's plinth reaches 8.3 m
+	# across its width and 6.0 m along its depth, and pushing the freed
+	# creature out by the widest number in every direction would stand it
+	# against the chamber wall. 16 bins is a bin every 22.5 degrees.
+	var bins: PackedFloat32Array = PackedFloat32Array()
+	bins.resize(PLINTH_BINS)
 	for child in meshes:
 		var mi := child as MeshInstance3D
 		if mi.mesh == null:
@@ -462,8 +471,12 @@ func _measure_cage(stage: Dictionary) -> Dictionary:
 			var verts: PackedVector3Array = mi.mesh.surface_get_arrays(surface)[Mesh.ARRAY_VERTEX]
 			for v in verts:
 				var p: Vector3 = into * v
-				if p.y <= dais_top:
-					footprint = maxf(footprint, Vector2(p.x, p.z).length())
+				if p.y > dais_top:
+					continue
+				var r := Vector2(p.x, p.z).length()
+				footprint = maxf(footprint, r)
+				var bin := _bin_of(Vector2(p.x, p.z))
+				bins[bin] = maxf(bins[bin], r)
 	var clearance := float(stage.get("clearance", 0.05))
 	var stand: Vector3 = machine.global_transform * Vector3(0.0, dais_top + clearance, 0.0)
 	return {
@@ -471,6 +484,7 @@ func _measure_cage(stage: Dictionary) -> Dictionary:
 		"crown_under": crown_under,
 		"void_height": crown_under - dais_top,
 		"footprint": footprint,
+		"plinth_bins": bins,
 		"stand": stand,
 		"axis": machine.global_position,
 	}
@@ -489,8 +503,8 @@ func _measure_cage(stage: Dictionary) -> Dictionary:
 ## not edited for this.
 func _clear_of_the_machine(mark: Vector3, stage: Dictionary) -> Vector3:
 	var axis: Vector3 = _cage_measure["axis"]
-	var want := float(_cage_measure["footprint"]) + float(stage.get("step_out_clearance", 2.5))
 	var flat := Vector3(mark.x - axis.x, 0.0, mark.z - axis.z)
+	var want := _clear_distance(Vector2(flat.x, flat.z), stage)
 	if flat.length() < 0.01:
 		# A mark on the axis has no bearing of its own; walk out the way the
 		# player came in, which is the chamber's own doorway side.
@@ -499,9 +513,44 @@ func _clear_of_the_machine(mark: Vector3, stage: Dictionary) -> Vector3:
 		return mark
 	var out := axis + flat.normalized() * want
 	out.y = mark.y
-	print("[climax] the freed stand is %.2f m from the machine's axis, inside its %.2f m plinth; moved out to %.2f m" % [
-		flat.length(), float(_cage_measure["footprint"]), want])
+	print("[climax] the freed stand is %.2f m from the machine's axis, inside its %.2f m plinth on that bearing; moved out to %.2f m" % [
+		flat.length(), want - float(stage.get("step_out_clearance", 2.5)), want])
 	return out
+
+
+## The bin a horizontal direction falls in.
+func _bin_of(flat: Vector2) -> int:
+	var angle := atan2(flat.y, flat.x)
+	if angle < 0.0:
+		angle += TAU
+	return clampi(int(angle / TAU * float(PLINTH_BINS)), 0, PLINTH_BINS - 1)
+
+
+## How far from the machine's axis a body has to stand, on this bearing, to be
+## clear of the plinth. Reads the widest of the bearing's own bin and its two
+## neighbours, so a body is never squeezed against a corner of the base.
+func _clear_distance(flat: Vector2, stage: Dictionary) -> float:
+	var clearance := float(stage.get("step_out_clearance", 2.5))
+	if _cage_measure.is_empty():
+		return clearance
+	var bins: PackedFloat32Array = _cage_measure["plinth_bins"]
+	if bins.is_empty() or flat.length() < 0.001:
+		return float(_cage_measure["footprint"]) + clearance
+	var bin := _bin_of(flat)
+	var reach := 0.0
+	for step in [-1, 0, 1]:
+		reach = maxf(reach, bins[(bin + step + PLINTH_BINS) % PLINTH_BINS])
+	return reach + clearance
+
+
+## How far the freed creature must stand from the machine's axis on the bearing
+## it actually stands on. For the smokes and the capture tool.
+func freed_clearance() -> float:
+	if _cage_measure.is_empty() or _legendary == null:
+		return 0.0
+	var axis: Vector3 = _cage_measure["axis"]
+	var flat := Vector2(_legendary.global_position.x - axis.x, _legendary.global_position.z - axis.z)
+	return _clear_distance(flat, (_config.get("legendary", {}) as Dictionary).get("stage", {}) as Dictionary)
 
 
 ## A mesh's transform into the machine node's own frame, composed by walking
@@ -636,6 +685,7 @@ func _advance() -> void:
 				_start(str((_config.get("machine", {}) as Dictionary).get("failure_conversation", "")))
 		STAGE_FAILURE:
 			if not _panel_busy():
+				_settle_position()
 				_stage = STAGE_DONE
 				print("[climax] the tether machinery has failed; '%s' is set for SG44" % _flag("legendary_freed"))
 		_:
@@ -700,7 +750,7 @@ func _step_out(freed: Dictionary, immediate: bool) -> void:
 		return
 	if immediate:
 		_legendary.global_position = _freed_spot
-		_set_body_physics(true)
+		_landed()
 		return
 	if _step_tween != null and _step_tween.is_valid():
 		_step_tween.kill()
@@ -719,13 +769,40 @@ func _step_out(freed: Dictionary, immediate: bool) -> void:
 
 
 ## Back on the floor and under its own weight again, facing the player.
+## Where the freed creature ENDS UP, set rather than arrived at.
+##
+## The walk out and the walk over are tweens, and a tween's finishing position
+## is at the mercy of what interrupted it: the join offer starts the moment the
+## freeing conversation closes, which on a fast reader is while the step-out is
+## still in the air, and the offer then carried that mid-flight height into its
+## own target. `smoke_gate_e_finale` measured the ending twice at 5.3 m and
+## 4.7 m from the machine's axis, 1.5-2.0 m up -- standing in the machine, at
+## the end of the chapter. The animation may be interrupted; the ending may
+## not. Called once, when the last conversation closes.
+func _settle_position() -> void:
+	if _legendary == null or _cage_measure.is_empty():
+		return
+	if _step_tween != null and _step_tween.is_valid():
+		_step_tween.kill()
+	_legendary.global_position = _freed_spot
+	_landed()
+
+
+## The freed creature is STAGED, not simulated. Physics stays off for the whole
+## sequence: the first attempt handed it back to `move_and_slide` on landing
+## and `smoke_gate_e_finale` measured it back at 5.3 m from the machine's axis
+## -- against the base drum's collider -- after the join offer, having been
+## pushed there frame by frame. `place_on_ground` still seats it on the real
+## floor once, which is the part that was actually wanted.
 func _landed() -> void:
-	_set_body_physics(true)
-	# On the floor it is actually standing on, not on the height the tween
-	# happened to end at -- `place_on_ground` is the creature's own seating.
 	if _legendary != null and _legendary.has_method("place_on_ground"):
 		_legendary.call("place_on_ground", _legendary.global_position)
 	_face_the_player()
+	if _legendary != null and not _cage_measure.is_empty():
+		var axis: Vector3 = _cage_measure["axis"]
+		print("[climax] the legendary stands %.2f m from the machine's axis, %.2f m up" % [
+			Vector2(_legendary.global_position.x - axis.x, _legendary.global_position.z - axis.z).length(),
+			_legendary.global_position.y - axis.y])
 
 
 ## A bound or walking creature is carried by this node, not by physics: with
@@ -758,11 +835,11 @@ func _approach_player() -> void:
 	# Never let the offer walk it back onto the machine's plinth.
 	if not _cage_measure.is_empty():
 		var axis: Vector3 = _cage_measure["axis"]
-		var want := float(_cage_measure["footprint"]) \
-			+ float((_config.get("legendary", {}) as Dictionary).get("stage", {}).get("step_out_clearance", 2.5))
 		var off := Vector3(target.x - axis.x, 0.0, target.z - axis.z)
-		if off.length() < want:
-			target = axis + off.normalized() * want if off.length() > 0.01 else target
+		var want := _clear_distance(Vector2(off.x, off.z),
+			(_config.get("legendary", {}) as Dictionary).get("stage", {}) as Dictionary)
+		if off.length() < want and off.length() > 0.01:
+			target = axis + off.normalized() * want
 			target.y = here.y
 	if _step_tween != null and _step_tween.is_valid():
 		_step_tween.kill()

@@ -565,14 +565,31 @@ func _the_legendary_stepped_out_and_the_garrison_withdrew() -> void:
 		# chamber floor rather than on the base -- the first version of this
 		# assertion allowed 2.0 m off axis at 2.0 m up, which is ON the
 		# plinth, and the print is what caught it.
-		var footprint := float(measure["footprint"])
-		if off < footprint + 1.0:
-			_fail("the freed legendary is %.1f m from the machine's axis, inside its %.1f m plinth" % [off, footprint])
+		# Two independent facts, neither of them the code's own arithmetic:
+		# the body's position is OUTSIDE the machine mesh's own bounds, and it
+		# is on the chamber floor rather than up on the base. The first
+		# version of this assertion allowed 2.0 m off axis at 2.0 m up, which
+		# is standing ON the plinth, and the smoke's own print caught it.
+		var machine: Node3D = _hold.call("machine") as Node3D
+		var outside := true
+		if machine != null:
+			var box := AABB()
+			var seeded := false
+			for child in machine.find_children("*", "VisualInstance3D", true, false):
+				var here: AABB = (child as VisualInstance3D).get_aabb()
+				here = (child as Node3D).global_transform * here
+				box = here if not seeded else box.merge(here)
+				seeded = true
+			if seeded:
+				var at := legendary.global_position + Vector3.UP * 0.5
+				outside = not Rect2(Vector2(box.position.x, box.position.z),
+					Vector2(box.size.x, box.size.z)).has_point(Vector2(at.x, at.z))
+		if not outside:
+			_fail("the freed legendary is standing inside the machine's own footprint (%.1f m off axis, %.2f m up)" % [off, up])
 		elif up > 0.6:
 			_fail("the freed legendary is standing %.2f m up; the chamber floor is the machine's own base height" % up)
 		else:
-			print("the freed legendary stepped out of the machine: %.1f m off axis (plinth %.1f m), %.2f m up" % [
-				off, footprint, up])
+			print("the freed legendary stepped out of the machine: %.1f m off axis, %.2f m up, clear of its footprint" % [off, up])
 	var watcher: Node = _climax.call("garrison_withdrawal")
 	if watcher == null:
 		_fail("the climax hung no garrison watcher off the Hall; the occupation can never withdraw")
