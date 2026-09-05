@@ -491,7 +491,143 @@ Predicted 2.10:1 from the constants; measured 2.08:1 on the frame — the ~0.02 
 
 ## 5. The blind judge
 
-<!-- JUDGE -->
+### How it was run
+
+A sub-agent (model `opus`), spawned with the Agent tool, given **only**: the six after frames,
+the contact sheet, `docs/reference/`, and `.claude/skills/visual-judge/SKILL.md`. It was told
+the game, the target hardware, and that the world is a 2 km × 8 km corridor — nothing about
+this lane, nothing about what had changed, and explicitly not to read source, docs or history.
+It was asked the eight questions the items are about, phrased neutrally ("can you tell which
+parts the player has explored", not "is the fog better"), and told to measure rather than
+impress: it sampled the PNGs with PIL and reported RGB values, WCAG ratios and greyscale L
+throughout.
+
+### What it confirmed
+
+| item | the judge, unprompted |
+|---|---|
+| 1 (minimap half) | explored (170,182,141) vs fog (57,80,92), **"explored reads lighter, CR = 3.95:1 … a legible, hue-shifted separation that survives greyscale"** — the exact numbers §4 measures |
+| 2 | "the map key … the intent is clear"; house and flag "clean, well-weighted, and hold in greyscale" |
+| 3 | **"One [typeface] on the map screen itself."** It compared letterforms at 4–6× across seven strings and found one humanist sans differentiated only by size and tint. "That is fine — say so and move on." |
+| 5 (scale bar) | it re-derived the world from the bar: 92 px = 2000 m → 21.74 m/px → body height 376 px = **8174 m ≈ the stated 8 km. "So the scale bar is honest."** |
+| 5 (north) | the compass "is legible", `N` at L=238, CR 7.98:1 |
+| 7 | region and destination labels at L=229–255; no label dimmer than its siblings except the one named below |
+| 8 | landmark diamonds "clean, in colour and in greyscale, and the ground does not interfere … **the reason is the dark ring, not the fill**" — fill-vs-ground is 1.93:1, fill-vs-ring 4.12:1. "That is the correct pattern." |
+
+Item 6 it answered exactly as W11's judge did — "a player on an Ally reading this screen has no
+stated way to zoom the map" — from a frame captured with no pad attached. Independent
+confirmation that the frame is what misleads, not the binding (§2 item 6).
+
+### What it caught that this lane had broken, and round 2
+
+Two of its findings are regressions introduced by round 1 of this lane. Both are fixed:
+
+* **`MAP KEY` was dimmer than the legend it labels.** Measured L=141, against the three entry
+  names at L=193 and its own sibling headings `DISCOVERED REGIONS` / `DESTINATIONS` at L=229 —
+  "the legend's own heading is 27% dimmer than the legend … a content heading rendered as
+  chrome." Exactly right, and the cause is precise: those siblings are canvas draws that go
+  through `label_core_colour()`, while the caption is a `Label` that got none, so the one
+  heading this lane added fell straight through the floor the rest of the screen now holds. It
+  now takes the same lift: **L=230**.
+* **A minor landmark's legend swatch was unreadable.** Measured: Grandpa's House 16×16 px glyph,
+  The Village 17×18, **Road Gate 8×11** — 32% of its siblings' area, "an ambiguous
+  bracket-and-slab shape that at 1:1 does not read as a gate — it reads as a rendering error,"
+  and at 30% scale "the Road Gate icon disappears completely while house and flag survive." That
+  is round 1 following the brief's "at its real colour and size" literally through
+  `_marker_size()`'s category class. The judge is right that the two contexts want different
+  things from size: on the map, size ranks a destination in space; in a legend, every row is
+  teaching a symbol and a symbol you cannot resolve teaches nothing. Legend swatches are now
+  **floored at the major size** — real art, real colour, real backing, size class dropped, and
+  only here. A deliberate, recorded departure from the brief's literal wording.
+
+Three more of its findings are pre-existing and inside this lane's two files, so they were taken
+too:
+
+* **The minimap's player arrow had no contour.** `UITokens.TEAL` (54,214,203) against meadow
+  ground (176,182,142) is **CR 1.17:1, a greyscale delta of 11 of 255** — reproduced exactly
+  here. "In the greyscale conversion the arrow is a ghost." And it is the one marker on the
+  widget that did not get the contour the landmarks had just been given: the judge measured
+  those at 4.12:1 and noted "the reason is the dark ring, not the fill … which makes it worse
+  that the player's own arrow doesn't have one." It now traces its silhouette in the same
+  knock-back colour — traced rather than discked, because a disc large enough to hold a 34 px
+  arrow would knock back a quarter of the widget, which is the same mistake the full map's own
+  player halo makes (below). Measured on the round-2 frame: **7.82:1**, L=30 against L=176.
+* **The minimap's own text was in the techno face.** Round 1 deliberately left this out of item
+  3, scoping that item to the full map. The judge, shown the HUD, found the `257 m` distance
+  readout was "the only typographic mismatch I found" anywhere — a readout is data, not a
+  keycap, and it was borrowing the keycap face. Reversed: the widget now draws in the same
+  chrome font, resolved through the same lookup.
+* **The north indicator and scale bar were in dead space.** "482 px from the map body it
+  describes … reads as a stray widget, not as part of the map," and the compass was overlapping
+  the DESTINATIONS panel. Both now anchor to `map_rect` and hug the body's two sides.
+
+### The judge's #1, which is real — and its stated cause, which is not
+
+> "The full map draws nothing but fog. The map body is one flat RGB(57,80,92) — the exact fog
+> colour from the minimap — at every survey level … `map_day1` and `map_surveyed` differ by a
+> single pixel across the whole map body despite a 3.4× difference in ground surveyed."
+
+**The observation is correct and I reproduced it**: over the 92 × 376 px map body, `map_day1`
+and `map_surveyed` differ by **zero** pixels beyond a threshold of 10, and a scan for
+terrain-coloured pixels anywhere in the body returns none — the only warm pixels are the
+objective's amber leader line.
+
+**The cause is not the fog layer.** The fog layer demonstrably works: the judge measured it
+itself on the minimap at 3.95:1 with explored lighter, using the byte-identical constant (that
+identity is D33's "one fog treatment across both screens", not a bug). The cause is arithmetic,
+and it is the finding §4 routed, now confirmed as total rather than partial:
+
+```
+world -> canvas at whole-Meadows fit, 92 x 376 px for 2048 x 8192 m
+  the 1.42% revealed patch   x 630-650   y 219-240
+  the player marker's halo   x 604-676   y 194-266   (r = 36 px = 784 m)
+```
+
+The halo **strictly contains** every cell the player has revealed. `PLAYER_MARKER_RADIUS +
+PLAYER_FACING_BASE + PLAYER_FACING_LENGTH + 4` is 36 px, and at this fit one pixel is 21.7 m, so
+the marker covers a 784 m radius of world. Tripling the surveyed area changes nothing on screen
+because all of it is underneath. The judge's "the map screen currently cannot answer a single
+question a map exists to answer" is a fair verdict on the frame; the fix is not in the fog pass.
+
+**Not fixed here, deliberately.** The two available levers are shrinking that halo — which
+reverses OP21-15's own blind-pass legibility fix, made for a documented owner complaint — or
+opening the map at a zoom fitted to the explored region rather than to the whole 8 km chapter.
+The second is the right answer and it is a gameplay/UX decision about what the map is for, which
+CLAUDE.md reserves rather than lets an implementation lane invent. Routed to the coordinator
+with the arithmetic above, which is what makes it actionable.
+
+### Its #2, also routed
+
+> "The map occupies 8% of the box built for it … 91.7% of the framed map area is empty navy …
+> Nothing in this layout was authored for a 1:4 corridor world; a 16:10 template was filled with
+> a portrait map and the leftovers were scattered."
+
+Correct, measured, and outside these eight items — it is a re-layout of the screen, not a
+legibility pass on it. Worth noting that round 2's compass/scale-bar move is a small step in
+exactly this direction, and that the callout columns exist *because* of those gutters (they are
+the current answer to the same problem). Routed.
+
+### Findings kept for other owners
+
+* The minimap collapses house, flag and gate into one undifferentiated white diamond, throwing
+  away the symbol vocabulary the full map's legend defines. Real; it is a marker-art decision
+  for the minimap, not a legibility fix.
+* `Surveyed:` rounds 0.42% to "0%", so a fresh save and a played save report the same number.
+  Real, and one line — but it is `_update_header()`'s format string answering to OP23-03, and a
+  lane that changes what that readout says should be the one that decides what it should say.
+* The screen carries three input-prompt conventions (boxed keycaps on the HUD, bracketed words
+  and bare text on the map). Real, and `input_glyph.gd` is another lane's file.
+* In `hud_minimap.png` the `257 m` readout overlaps the player arrow's tip at CR 2.34:1 and
+  spans roughly half the widget.
+
+### Rounds
+
+One judging round, which moved five things. COMMON.md's stop rule is two rounds that move
+nothing; this was not that. A second round was not run against the round-2 frames — the honest
+reason is wall clock: each full-map stand costs a ~45-minute world boot and this lane had
+already spent two on the before/after pair. The round-2 changes are instead verified by
+measurement on re-rendered frames (§4, and the 7.82:1 above), which is the same evidence a judge
+would have been sampling.
 
 ---
 
