@@ -56,11 +56,31 @@ const BAKE_WORLD_NAME := "playground"
 ## terrain under a prop is sampled at a single point, but the prop has width.
 const SINK := 0.06
 
-## OW7. How far off a marked tree its woodpile stands. Clear of the widest
-## trunk this scatter places (CommonTree at 1.35 scale) so the pile never
-## intersects the tree it belongs to, and close enough to read as ITS pile
-## rather than as unrelated dressing. TUNABLE.
+## OW7. How far off a felled tree/rock its resource pile stands: the FLOOR
+## now, not the whole answer -- `_prop_offset_for()` below derives the real
+## distance from the placement's OWN scale and only falls back to this.
+##
+## N02. The old comment claimed this was "clear of the widest trunk this
+## scatter places (CommonTree at 1.35 scale)", and that reference was simply
+## wrong about its own config: `trees.heroes` reaches scale 2.1 (collider
+## `collision_radius` 0.6 x 2.1 = 1.26 m) and `rocks.anchors` reaches 2.9
+## (0.9 x 2.9 = 2.61 m), against 1.3 m of offset. So the constant did not
+## clear the widest thing it stands a pile beside, and could not: one number
+## cannot answer a question whose input spans a 10x range of scales. Kept as
+## the floor so nothing that already cleared its placement moves at all --
+## every `trees` instance below scale 1.17 and every `rocks` instance below
+## 0.78 lands on exactly the distance it landed on before. TUNABLE.
 const PROP_OFFSET := 1.3
+
+## N02. Ground the pile keeps between the felled thing's own footprint and
+## its own near edge, when `_prop_offset_for()` derives from scale rather
+## than taking the floor. Measured off the pile, not guessed:
+## `felled_resource.gd::_build_woodpile()` lays `log.glb` (0.710 m long) at
+## +/-0.15 m either side of its centre, so the pile's own half-span is about
+## 0.50 m; 0.6 puts the whole pile outside the footprint rather than only its
+## centre. At a `trees` hero (scale 2.1) that lands the pile 1.86 m out, which
+## is where W05-TREELINE-0904 independently asked for it ("~1.9 m"). TUNABLE.
+const PROP_CLEARANCE := 0.6
 
 var _placed: int = 0
 ## GATE-D: layer name -> how many placements that layer contributed to the
@@ -188,19 +208,54 @@ var _mesh_ids: Dictionary = {}
 var _instance_positions: Dictionary = {}
 var _next_mesh_id: int = 0
 
-## OWNER-0901-CREATURE-GRASS-VISIBILITY-V2. The `bushes` layer's own config
-## carries `collides: false` (`data/config/vegetation.json`) -- ferns/shrubs
-## are visually solid but the player walks through them, so they hold no
-## entry in `_collision_batches` at all. `has_solid_scatter_near()` needs
-## them anyway (that is the exact layer the coordinator's worst-case creature
-## landed inside), so this is a second, narrow position list -- filled
-## alongside `_instance_positions` in `_build_batch()`, filtered to just this
-## one layer rather than reusing the general list, which also holds
-## thousands of grass/flower/groundmat instances that spawn siting has no
-## reason to avoid.
-var _bush_positions: PackedVector3Array = PackedVector3Array()
-## No authored `collision_radius` exists for a non-colliding layer to draw
-## from. vegetation.json's own `_comment_flower_scale_visual_census` measures
+## OWNER-0901-CREATURE-GRASS-VISIBILITY-V2, generalised by N02/W18. Scatter
+## that is visually solid but carries `collides: false`
+## (`data/config/vegetation.json`) -- shrubs, ferns, standing dead trees --
+## holds no entry in `_collision_batches` at all, so `has_solid_scatter_near()`
+## cannot see it there. This is the second, narrow list that covers it:
+## positions filled alongside `_instance_positions` in `_build_batch()`, and
+## `_soft_occluder_radii` the matching per-placement reach for each one.
+##
+## Two parallel arrays rather than an array of dictionaries: one entry per
+## instance across two of the world's denser layers is tens of thousands of
+## entries, `has_solid_scatter_near()` walks all of them on every query, and
+## packed arrays keep that a flat scan over floats instead of a dictionary
+## lookup per instance.
+var _soft_occluder_positions: PackedVector3Array = PackedVector3Array()
+var _soft_occluder_radii: PackedFloat32Array = PackedFloat32Array()
+## W18-DENSITY-B4-B5-0904 found the gap this closes: the site validator that
+## keeps band pickups clear of scatter saw only the collision batches, so a
+## Rare-tier pickup at the herd bull sat under a shrub that covered 86% of it
+## by a blind judge's own measurement and still passed the check.
+##
+## WHICH non-colliding layers, and why not simply "all of them". Measured
+## with `tools/measure_models.gd` (glTF bounding box, X x Y x Z in metres)
+## against each layer's realised `base_scale` x `scale_max`:
+##
+##   bushes       Bush_Common 1.91x1.58x1.97, Fern_1 2.83x0.84x2.65   -> in
+##   deadfall     DeadTree_3 6.39x13.28x6.43 (5.2m wide, 10.7m tall)  -> in
+##   grass        Grass_Wide_Tall 1.15x1.61x1.11 -> 0.33m radius      -> out
+##   drygrass     Grass_Wispy_Tall 1.54x1.67x1.59 -> 0.49m radius     -> out
+##   flowers      Flower_4_Group 1.78x2.49x1.37 -> 0.08m radius       -> out
+##   groundmat    Plant_1_Big 1.81x2.35x1.95 -> 0.45m radius          -> out
+##   path_stones  RockPath_Round_Wide 2.11x0.11x2.13 -> 0.11m TALL    -> out
+##
+## The four ground-cover layers are excluded because they are the ground the
+## player and every creature stand ON by design and they are placed by the
+## thousand: at `band_pickups.gd`'s own 1.6 m clearance margin, a 0.33 m grass
+## clump answers "occupied" over a 1.9 m disc, and enough of those tile the
+## whole meadow, so including them would not tighten the check, it would make
+## it return true everywhere and every pickup unplaceable. `path_stones` is
+## excluded on HEIGHT rather than width: it is 0.11 m of flat stone authored
+## onto the trail, wide enough to trip a radius test and incapable of hiding
+## anything. Size alone cannot make this split -- a `drygrass` clump (0.49 m)
+## is wider than a small `bushes` instance (0.40 m) -- which is why the two
+## layers are named here rather than derived from a threshold.
+const SOFT_OCCLUDER_LAYERS: Array[String] = ["bushes", "deadfall"]
+## The floor under every derived soft-occluder reach, so this generalisation
+## cannot make the check LOOSER than the bushes-only version it replaces.
+##
+## vegetation.json's own `_comment_flower_scale_visual_census` measures
 ## `Bush_Common`'s raw glTF bounding box directly at 1.91 x 1.97m (X/Z) before
 ## scale; at this layer's `scale_max` 1.0 * `base_scale` 0.9, the realised
 ## footprint reaches ~1.7-1.8m across, so 1.2m of radius (not quite half that
@@ -211,7 +266,11 @@ var _bush_positions: PackedVector3Array = PackedVector3Array()
 ## dense pair at (0.93, 701.08)/(1.10, 700.97) on this branch's own test
 ## site, 0.2m apart -- a value tighter than this reads clear of the near
 ## bush by the check and still visually inside the cluster's combined mass.
-const BUSH_VISUAL_RADIUS := 1.2
+const SOFT_OCCLUDER_FLOOR_RADIUS := 1.2
+## model path -> half the wider of its glTF bounding box's X/Z, in metres, at
+## scale 1. Filled lazily by `_model_footprint_radius()`; one `_mesh_for()`
+## load per soft-occluder model per build, not per placement.
+var _footprint_radii: Dictionary = {}
 
 ## COLL1 / §8.3: how close a collidable placement must be to the last point
 ## passed to `update_collision_streaming()` to keep a real `CollisionShape3D`.
@@ -297,7 +356,8 @@ func build(world_size: float, terrain: Node) -> void:
 	_tints.clear()
 	_mesh_ids.clear()
 	_instance_positions.clear()
-	_bush_positions.clear()
+	_soft_occluder_positions.clear()
+	_soft_occluder_radii.clear()
 	_next_mesh_id = 0
 	_harvested.clear()
 	_harvest_layer_counts.clear()
@@ -1074,9 +1134,7 @@ func _build_batch(model_path: String, placements: Array) -> void:
 		known.append((placements[i] as Dictionary)["position"])
 	_instance_positions[mesh_id] = known
 
-	if _layer_name_for(model_path) == "bushes":
-		for i in placements.size():
-			_bush_positions.append((placements[i] as Dictionary)["position"])
+	_record_soft_occluders(model_path, layer_cfg, placements)
 
 	_placed += placements.size()
 	_draw_calls += 1
@@ -1109,7 +1167,7 @@ func _spawn_harvest_point(placement: Dictionary) -> void:
 	point.position = spot
 	add_child(point)
 	var bearing := float(hash(spot) & 0xFFFFFF) / float(0xFFFFFF) * TAU
-	var away := Vector2(sin(bearing), cos(bearing)) * PROP_OFFSET
+	var away := Vector2(sin(bearing), cos(bearing)) * _prop_offset_for(placement)
 	var drop := 0.0
 	if _field != null:
 		drop = float(_field.call("height_at", spot.x + away.x, spot.z + away.y)) - spot.y
@@ -1145,6 +1203,84 @@ func _spawn_harvest_point(placement: Dictionary) -> void:
 	}
 	_harvest_nodes[key] = point
 	_harvest_points += 1
+
+
+## N02/W18. Records the non-colliding-but-visually-solid half of this model's
+## placements for `has_solid_scatter_near()`, each with its OWN reach.
+##
+## Per placement rather than per layer because a `deadfall` instance spans
+## `base_scale` 0.7 x `scale_min` 0.45 = 0.32 to x `scale_max` 1.15 = 0.81 of
+## a mesh that is itself 6.4 m across at the widest: one number for the layer
+## would either miss the small ones' true size or reject ground the big ones
+## are nowhere near. `SOFT_OCCLUDER_FLOOR_RADIUS` is applied per entry so a
+## small instance is never treated as more permissive than the bushes-only
+## check this replaced.
+func _record_soft_occluders(model_path: String, layer_cfg: Dictionary, placements: Array) -> void:
+	if bool(layer_cfg.get("collides", false)):
+		return
+	if not SOFT_OCCLUDER_LAYERS.has(_layer_name_for(model_path)):
+		return
+	var span := _model_footprint_radius(model_path)
+	for i in placements.size():
+		var placement: Dictionary = placements[i]
+		_soft_occluder_positions.append(placement["position"])
+		_soft_occluder_radii.append(
+			maxf(span * float(placement.get("scale", 1.0)), SOFT_OCCLUDER_FLOOR_RADIUS))
+
+
+## Half the wider of a model's own glTF bounding box in X/Z, at scale 1 --
+## the "bounding radius from the scatter's own placement data" a non-colliding
+## layer has instead of an authored `collision_radius`. The wider of the two
+## rather than an average because the placement is yawed arbitrarily
+## (`_build_batch` rotates every instance by `placement["yaw"]`), so the axis
+## that faces a given query point is not knowable here; the wider one is the
+## only value that is right whichever way the instance turned out to be
+## facing. Cached per model: `_mesh_for()` instantiates a PackedScene, which
+## is far too expensive to repeat per placement.
+func _model_footprint_radius(model_path: String) -> float:
+	if _footprint_radii.has(model_path):
+		return float(_footprint_radii[model_path])
+	var radius := 0.0
+	var mesh := _mesh_for(model_path)
+	if mesh != null:
+		var box := mesh.get_aabb()
+		radius = maxf(box.size.x, box.size.z) * 0.5
+	_footprint_radii[model_path] = radius
+	return radius
+
+
+## N02/W05-TREELINE-0904. How far off THIS placement its felled resource pile
+## stands, derived from the placement's own scale rather than read off one
+## constant that cannot be right for every size the scatter places.
+##
+## The number that matters is the same one `_make_collision_shape()` already
+## builds the trunk collider from: `collision_radius` x the placement's scale.
+## That is the felled thing's own footprint on the ground, it spans 0.17 m
+## (a `saplings` instance) to 2.61 m (a `rocks` anchor at scale 2.9) across
+## this scatter, and `PROP_OFFSET`'s 1.3 m only cleared the middle of that
+## range -- see its own comment for the arithmetic.
+##
+## HONEST SCOPE, because the finding that asked for this predates RG9 and its
+## symptom no longer reproduces: `fell()` calls `harvest_permanently()` BEFORE
+## `_spawn_felled()`, so the standing tree/rock is already gone by the time
+## the pile appears and a pile cannot literally intersect its own trunk today.
+## What is still wrong, and is what this fixes, is that the distance did not
+## track the thing it is a distance FROM: a felled `rocks` anchor 5.2 m across
+## left its rubble 1.3 m from the boulder's centre, i.e. inside the ground the
+## boulder had been standing on, rather than beside where it stood.
+##
+## Never SHRINKS an offset: `PROP_OFFSET` is the floor, so every placement
+## small enough to have been cleared by the old constant keeps exactly the
+## position it had (`collision_radius` x scale + `PROP_CLEARANCE` <= 1.3,
+## i.e. scale <= 1.17 for `trees`, <= 0.78 for `rocks`). A non-colliding harvestable layer (`bushes`, whose
+## `harvest_fraction` is 0.2) has no authored footprint to derive from and
+## takes the floor unchanged.
+func _prop_offset_for(placement: Dictionary) -> float:
+	var layer := _layer_for(str(placement.get("model", "")))
+	if layer.is_empty() or not bool(layer.get("collides", false)):
+		return PROP_OFFSET
+	var footprint := float(layer.get("collision_radius", 0.5)) * float(placement.get("scale", 1.0))
+	return maxf(PROP_OFFSET, footprint + PROP_CLEARANCE)
 
 
 ## Give the solid layers real collision.
@@ -1859,16 +1995,26 @@ func harvested_count() -> int:
 ## saplings/grove COLLIDE (`vegetation.json`'s own `collides: true`), so
 ## `_collision_batches` already carries their positions and each layer's own
 ## authored `radius` -- the same number a player's own footstep bounces off
-## of, reused rather than guessing a distance. `bushes` carries
-## `collides: false` -- ferns/shrubs the player walks straight through, so
-## they hold NO entry in `_collision_batches` at all despite being visually
-## the densest occluder in the whole layer set (and the exact one this was
-## traced from) -- `_bush_positions`/`BUSH_VISUAL_RADIUS` is the second,
-## narrower source that covers them.
+## of, reused rather than guessing a distance. `bushes` and `deadfall` carry
+## `collides: false` -- shrubs, ferns and standing dead trees the player walks
+## straight through, so they hold NO entry in `_collision_batches` at all
+## despite being the densest visual occluders in the whole layer set --
+## `_soft_occluder_positions`/`_soft_occluder_radii` is the second, narrower
+## source that covers them, with a per-placement reach rather than one number
+## for the layer. See `SOFT_OCCLUDER_LAYERS` for which layers qualify and the
+## measurements that decide it.
+##
+## N02/W18: it is the SECOND source, not the collision one, that this query
+## was wrong about. The collision half never missed a trunk; what it missed
+## was everything a player can walk through and still not see a pickup
+## behind, which is the whole of what buried the herd bull's Rare.
 ##
 ## Read-only on purpose: `clear_area()` is the destructive sibling and stays
 ## that way -- deleting authored dressing to make room for a creature is not
-## this method's job.
+## this method's job. That also means a `clear_area()` call leaves this
+## method's soft-occluder entries standing for scatter it has removed --
+## conservative in the safe direction (a site reads as busier than it is,
+## never emptier), and named here rather than fixed silently.
 func has_solid_scatter_near(centre: Vector3, extra: float) -> bool:
 	for batch: Dictionary in _collision_batches:
 		var reach: float = float(batch["radius"]) + extra
@@ -1877,12 +2023,10 @@ func has_solid_scatter_near(centre: Vector3, extra: float) -> bool:
 			var spot: Vector3 = placement["position"]
 			if Vector2(spot.x - centre.x, spot.z - centre.z).length_squared() <= reach_sq:
 				return true
-	# `bushes` carries `collides: false` (walked through, never in
-	# `_collision_batches`) but is visually solid enough to bury a small
-	# creature standing among it -- see `_bush_positions`' own comment.
-	var bush_reach_sq := (BUSH_VISUAL_RADIUS + extra) * (BUSH_VISUAL_RADIUS + extra)
-	for spot: Vector3 in _bush_positions:
-		if Vector2(spot.x - centre.x, spot.z - centre.z).length_squared() <= bush_reach_sq:
+	for i in _soft_occluder_positions.size():
+		var spot: Vector3 = _soft_occluder_positions[i]
+		var reach: float = _soft_occluder_radii[i] + extra
+		if Vector2(spot.x - centre.x, spot.z - centre.z).length_squared() <= reach * reach:
 			return true
 	return false
 
