@@ -2075,6 +2075,8 @@ func _build_tower_piers() -> void:
 			var at := Vector3((x_range.x + x_range.y) * 0.5, _floor_y + pier.y * 0.5 - 0.02,
 				(z_range.x + z_range.y) * 0.5)
 			_box(pier, at, _wall_material(true), false, "TowerPier_%s_%d" % [id, built])
+			print("[stronghold] tower pier in %s: %.1f x %.1f m at local (%.1f, %.1f), enclosing %s" % [
+				id, pier.x, pier.z, at.x, at.z, str(module.name)])
 			# The same darker base course every chamber wall stands on.
 			_box(Vector3(pier.x + BASE_COURSE_PROUD, BASE_COURSE_H, pier.z + BASE_COURSE_PROUD),
 				Vector3(at.x, _floor_y + BASE_COURSE_H * 0.5, at.z),

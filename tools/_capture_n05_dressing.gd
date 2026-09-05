@@ -123,13 +123,11 @@ func _run() -> void:
 		# what places this stand.
 		var board := Vector3(20.0, at.y, 15.0)
 		var away := (at - board).normalized()
-		for pair: Array in [["F-05-halda-w08-stand", 14.0], ["F-01-halda-two-shot-left", 40.0]]:
+		for pair: Array in [["F-05-halda-w08-stand", 14.0]]:
 			var dir := away.rotated(Vector3.UP, deg_to_rad(float(pair[1])))
 			var eye := at + dir * CONVERSATION_ARM + Vector3(0.0, 1.55, 0.0)
 			await _shoot(camera, look, eye, chest, str(pair[0]), CONVERSATION_FOV, written, failures, player)
-		# The fence itself: the boundary's [30,11] corner and the run past her.
-		await _shoot(camera, look, Vector3(20.0, 2.4, 6.0), Vector3(30.0, 0.6, 11.0),
-			"F-03-fence-corner-30-11", 55.0, written, failures, player)
+		# The fence itself: the run behind her and the boundary's [30,11] corner.
 		await _shoot(camera, look, Vector3(27.0, 2.2, 5.0), Vector3(20.0, 0.6, 19.0),
 			"F-04-fence-run-behind-halda", 55.0, written, failures, player)
 	else:
@@ -142,9 +140,7 @@ func _run() -> void:
 		var bram: Vector3 = interior.call("bar_position")
 		var eye := interior.to_global(Vector3(-0.55, 1.6, -0.9))
 		await _shoot(camera, look, eye, bram + Vector3(0.0, 1.3, 0.0), "I-01-inn-across-the-bar",
-			CONVERSATION_FOV, written, failures, player)
-		await _shoot(camera, look, interior.to_global(Vector3(0.4, 1.6, 2.2)),
-			interior.to_global(Vector3(0.0, 1.0, -4.0)), "I-02-inn-from-the-door", 60.0, written, failures, player)
+			CONVERSATION_FOV, written, failures, player, false)
 	else:
 		failures.append("no inn interior in the world")
 
@@ -165,13 +161,13 @@ func _run() -> void:
 		var corner := chamber + local_x * 11.5 - Vector3(-sin(yaw), 0.0, -cos(yaw)) * 9.0
 		var stand_corner := Vector3(corner.x, chamber.y + 5.5, corner.z)
 		var aim_ring := machine_at + Vector3(0.0, 5.0, 0.0)
-		await _shoot(camera, look, stand_face, aim_ring, "C-01-chamber-face", 70.0, written, failures, player)
-		await _shoot(camera, look, stand_corner, aim_ring, "C-03-chamber-corner", 70.0, written, failures, player)
+		await _shoot(camera, look, stand_face, aim_ring, "C-01-chamber-face", 70.0, written, failures, player, false)
+		await _shoot(camera, look, stand_corner, aim_ring, "C-03-chamber-corner", 70.0, written, failures, player, false)
 		# The bound creature itself, from where the player stands to read it.
 		var legendary: Vector3 = hold.call("marker", "legendary_stand")
 		var eye_l := reveal + Vector3(0.0, 1.7, 0.0)
 		await _shoot(camera, look, eye_l, legendary + Vector3(0.0, 1.6, 0.0), "C-02-chamber-creature", 55.0,
-			written, failures, player)
+			written, failures, player, false)
 
 		# The courtyard gauntlet trainer: held, then after the Meadows answers.
 		var trainer_at: Vector3 = hold.call("marker", "trainer_stronghold_courtyard")
@@ -183,7 +179,7 @@ func _run() -> void:
 		var yard_aim := trainer_at + Vector3(0.0, 1.2, 0.0)
 		var body_before := world.find_child("Warder Solene", true, false)
 		print("[n05] courtyard trainer body before: %s" % ("present at %s" % str((body_before as Node3D).global_position) if body_before != null else "MISSING"))
-		await _shoot(camera, look, yard_eye, yard_aim, "Y-01-courtyard-held", 60.0, written, failures, player)
+		await _shoot(camera, look, yard_eye, yard_aim, "Y-01-courtyard-held", 60.0, written, failures, player, false)
 		if not _skip_freed:
 			var game := root.get_node_or_null(^"/root/Game")
 			var progression: Variant = game.get("progression") if game != null else null
@@ -204,7 +200,7 @@ func _run() -> void:
 				var body_after := world.find_child("Warder Solene", true, false)
 				var gone := body_after == null or not is_instance_valid(body_after) or body_after.is_queued_for_deletion()
 				print("[n05] courtyard trainer body after legendary_freed (beaten): %s" % ("WITHDRAWN" if gone else "STILL STANDING"))
-				await _shoot(camera, look, yard_eye, yard_aim, "Y-02-courtyard-freed", 60.0, written, failures, player)
+				await _shoot(camera, look, yard_eye, yard_aim, "Y-02-courtyard-freed", 60.0, written, failures, player, false)
 
 	print("\nwrote %d frames to %s" % [written.size(), _out_dir])
 	for path in written:
@@ -227,7 +223,7 @@ func _find_inn(world: Node) -> Node3D:
 
 
 func _shoot(camera: Camera3D, look: Node, eye: Vector3, target: Vector3, name_value: String, fov: float,
-		written: Array[String], failures: Array[String], player: Node3D) -> void:
+		written: Array[String], failures: Array[String], player: Node3D, outdoors := true) -> void:
 	if not _wanted(name_value):
 		return
 	camera.fov = fov
@@ -235,10 +231,12 @@ func _shoot(camera: Camera3D, look: Node, eye: Vector3, target: Vector3, name_va
 	camera.look_at(target, Vector3.UP)
 	if player != null:
 		player.global_position = eye
-	# Two settle passes with a drawn frame between them (tools/_judge_capture_hall.gd's
-	# finding): the second visit is the one Terrain3D has streamed for.
-	for pass_index in 2:
-		for i in 60:
+	# Outdoors: two settle passes with a drawn frame between them
+	# (tools/_judge_capture_hall.gd's finding: the second visit is the one
+	# Terrain3D has streamed for). Indoors the terrain is not in frame, and a
+	# software-GL frame costs seconds, so one shorter pass.
+	for pass_index in (2 if outdoors else 1):
+		for i in (60 if outdoors else 30):
 			await physics_frame
 		for i in POSE_FRAMES:
 			await process_frame
