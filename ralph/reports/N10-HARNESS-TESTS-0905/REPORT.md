@@ -386,7 +386,8 @@ no blind judge.
 | 14 | `godot --headless --path . --script tools/gate_f/probe_grove_pipwing_engage.gd` | three boots: order 4020 held galecrest, then duskhush, then (at `TB_WORLD_SEED=0`) the authored pipwings at 9.70–12.98 m against a 6.00 m engage range; `_engageable()` null |
 | 15 | `godot --headless --path . --script tools/gate_f/build_s09_entry_synthetic.gd -- --out /tmp/s09seed` | wrote 24 slots, 13 filled: `potion_small x10, potion_large x3, revive x2, …` |
 | 16 | `godot --headless --path . --script tools/gate_f/build_s06_entry_synthetic.gd -- --out ralph/reports/gate-f-run-N10-S06/saves` | seed built, 25 flags, party of 4, tracked objective *Clear the Burrow Warrens beneath the Old Quarry* |
-| 17 | `tools/gate_f/run_segment.sh --run-dir ralph/reports/gate-f-run-N10-S06 S06` | see §3.1 |
+| 17 | `tools/gate_f/run_segment.sh --run-dir ralph/reports/gate-f-run-N10-S06 S06` | **99 steps, 67 PASS, 21 FAIL, 11 DELEGATED, `complete: true`, no derail** — see §3.1 and §3.2 |
+| 19 | `godot --headless --path . --script tools/gate_f/probe_band2_spine_walk.gd` | **7 of 7 legs walked**, 1,202–2,387 frames each against 12,000, 0 confined resets |
 | 18 | `… run_tests.gd -- --only=test_terrain_bake_freshness.gd` | **3 tests, 8 assertions, 0 failed** — see §5, this is not what COMMON.md says |
 
 ### 3.1 The S06 run, and what it changed about item 11
@@ -548,7 +549,9 @@ the fix is the waypoint or the site, it belongs to whoever owns the Warrens. Rou
 
 ## 6. Final state
 
-- Branch: `ralph/N10-HARNESS-TESTS-0905`, off `origin/main` at `f8a47ee4`.
+- Branch: `ralph/N10-HARNESS-TESTS-0905`, off `origin/main` at `f8a47ee4`. Commits
+  `538310f2`, `8993be59`, `c05cfeab`, `1ece62aa`, `c10b2a9c`, `d835d498`, `e4bf61dd`,
+  `dbe3cb14`, and the commit carrying this line.
 - CI could not be read from this container — the GitHub API returns *"GitHub access is not
   enabled for this session"* and there is no `gh`. The full unit suite was therefore run locally
   in full (run 1: **2,012 tests, 3,765,848 assertions, 0 failed**), which is what
