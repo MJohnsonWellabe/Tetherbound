@@ -148,6 +148,15 @@ func _run() -> void:
 	toward = toward.normalized()
 	var yard_eye := works - toward * 10.0 + Vector3(0.0, 3.0, 0.0)
 	var yard_aim := works + Vector3(0.0, 0.8, 0.0)
+	# Closer: 18 m up the causeway from its foot, on the deck itself (the
+	# stronghold knows its own walking surface), where the sentries, sconces
+	# and causeway braziers are people-sized rather than pinpricks.
+	var cause := entrance + toward * 18.0
+	var cause_y := float(hold.call("ground_height_at", cause.x, cause.z)) if hold.has_method("ground_height_at") else NAN
+	if is_nan(cause_y):
+		cause_y = _ground(world, cause.x, cause.z)
+	var cause_eye := Vector3(cause.x, cause_y + 1.7, cause.z)
+	var cause_aim := entrance + toward * 46.0 + Vector3(0.0, 3.0, 0.0)
 
 	var torch := OmniLight3D.new()
 	torch.light_energy = 0.0
@@ -159,6 +168,7 @@ func _run() -> void:
 	await _shoot(camera, look, stand_door, aim_low, "C-02-chamber-door-bound", written, failures, "day", player)
 	await _shoot(camera, look, stand_corner, aim_ring, "C-03-chamber-corner-bound", written, failures, "day", player)
 	await _shoot(camera, look, gate_eye, gate_aim, "G-01-gate-night-held", written, failures, "night", player)
+	await _shoot(camera, look, cause_eye, cause_aim, "G-01b-causeway-night-held", written, failures, "night", player)
 	await _shoot(camera, look, yard_eye, yard_aim, "G-02-yard-night-held", written, failures, "night", player)
 
 	# The lever, the game's own way. The Warden gate is what the lever checks;
@@ -174,6 +184,7 @@ func _run() -> void:
 	await _shoot(camera, look, stand_face, aim_ring, "C-04-chamber-face-freed", written, failures, "day", player)
 	await _shoot(camera, look, stand_corner, aim_ring, "C-05-chamber-corner-freed", written, failures, "day", player)
 	await _shoot(camera, look, gate_eye, gate_aim, "G-03-gate-night-freed", written, failures, "night", player)
+	await _shoot(camera, look, cause_eye, cause_aim, "G-03b-causeway-night-freed", written, failures, "night", player)
 	await _shoot(camera, look, yard_eye, yard_aim, "G-04-yard-night-freed", written, failures, "night", player)
 
 	print("\nwrote %d frames to %s" % [written.size(), _out_dir])
