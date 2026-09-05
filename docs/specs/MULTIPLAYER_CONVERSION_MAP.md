@@ -93,9 +93,9 @@ defaults in `MP_NET_HARNESS_CONTRACT.md` §8.
 
 | Measurement | Value | Source |
 |---|---|---|
-| ENet RPC round trip, two headless processes on one box (min / median / max) | *pending S1* | `MP-0C-SPIKE-ENET-0905` |
-| Frames for a spawner spawn and a synchronizer update to reach a client | *pending S1* | same |
-| `OS.create_process` inherits `XDG_DATA_HOME` from the parent | *pending S1* | same |
+| ENet RPC round trip, two headless processes on one box (min / median / max) | 4.2 / 6.9 / 40 ms loopback; reproduced by Fable at 6.8 / 6.9 / 13.8 | `MP-0C-SPIKE-ENET-0905` |
+| Frames for a spawner spawn and a synchronizer update to reach a client | spawn 2–34 frames (2 in the reproduction); synchronized position 2–3 frames; ~143 MB RSS per bare peer process; 1 host + 3 clients in 4.1 s | same |
+| `OS.create_process` inherits `XDG_DATA_HOME` from the parent | yes, and `OS.set_environment` before the call is honoured; reap by polling `OS.is_process_running` | same |
 | One / two / four concurrent headless Meadows boots: wall-clock and peak RSS | *pending S2* | `MP-0D-SPIKE-HOSTCOST-0905` |
 | Host physics-frame cost with clusters active around 1 / 2 / 4 occupants | *pending S2* | same |
 | 40 wild bodies: `move_and_slide` vs heightfield-grounded | *pending S2* | same |
