@@ -799,3 +799,75 @@ passes on current `main`, it lands; if it entombs, its probe will name what it h
 that may not be a tree.
 
 This is the more useful instruction and it replaces the flat rejection in PR #50's body.
+
+---
+
+## Cycle 9 — 2026-09-05 10:05 UTC — W20-SMALL-FIXES lands
+
+First cycle run entirely under the consolidation rule: one branch (`ralph/LAND-0904-7`), one
+CI run, one PR, ledger included on the same branch.
+
+### Verified, not accepted
+
+The lane's report names six test files. All six were re-run on the merged tree:
+
+| File | Result |
+|---|---|
+| `test_recipes` | 48 tests / 352 assertions / **0 failed** |
+| `test_chapter_curve` | 22 / 520 / **0** (lane claimed 20 / 465) |
+| `test_band_content` | 6 / 1,339 / **0** (lane claimed 6 / 1,147) |
+| `test_trainers_data` | 50 / 1,386 / **0** |
+| `test_gate_f_rig` | 50 / 191 / **0** |
+| `test_gate_f_instrumentation` | 18 / 41,593 / **0** |
+
+The two higher counts are the merged tree exercising other lanes' data, not a discrepancy in
+the lane's favour — more is checked and it is still green. Two import passes clean of
+`SCRIPT ERROR` and `Parse Error`. `smoke_relay_station` (the lane's own new smoke),
+`smoke_playground` and `smoke_aggression` all exit 0.
+
+`smoke_aggression` was run deliberately even though the lane does not claim it: W20 edits
+`scripts/world/vegetation.gd`, the file W05's collider regression lives in. It passes. That
+is also a **second independent confirmation that current `main` passes this smoke**, which is
+the baseline the W05 finding rests on.
+
+### Ownership: two files that looked like breaches and are not
+
+**`scripts/world/vegetation.gd`.** The brief tells W20 "SKIP this one (another lane owns
+vegetation this round)" — but that instruction names band 2's `vegetation.json` `_why`
+strings, which is W05's data file, not this script. Item CL-E12 in the same brief requires
+"a station filter on the existing mechanism in `scripts/world/meadow_healing.gd`, fired from
+`scripts/world/tether_relay.gd`", and that filter has to reach `restore_drained()`. The change
+adds an optional `within` disc list; the empty default keeps the whole-map heal identical, and
+the code says so in its own comment — *"An EMPTY list means 'no filter', not 'no discs' — the
+whole-map heal is the default and must not be turned into a no-op by an argument it never
+passes."* It also switches `_regrown` from assignment to accumulation so two partial heals
+report the real total. W05 touches `vegetation.json`, not `vegetation.gd`, so there is no
+collision between the two lanes.
+
+**`tools/gate_f/segments/S06.json`.** The brief allows step S06-30 only. The diff touches
+exactly that step. The lane's verdict is that steps S06-31..S06-49 should be deleted — and
+rather than delete them, it writes the verdict into S06-30's own note and hands the deletion
+to W21-HARNESS-FIGHTS, which owns the rest of the file. That is the correct behaviour at an
+ownership boundary and it is the kind of thing that usually gets quietly violated.
+
+Its CL-H8 finding is properly evidenced: `tools/_probe_workbench_context.gd` drives the real
+nodes in a live world and reads contexts through the harness's own resolver, showing
+world → catalogue → world → place → world → interact → `panel:<craft_panel.gd>` → cancel →
+world with every context releasing. So the workbench beat is not masking a shared-UI bug, and
+S06's stuck catalogue belongs to CL-H13. The lane looked for a reason to keep a beat that
+would have made its own item unnecessary, and reported the negative result.
+
+`docs/acceptance/MEADOWS_EXIT_CRITERION.md` is a gate document, so its edit was read closely:
+it corrects B2's three-passes-stale 1.08:1 to the measured 1.618:1, and marks B4 **half**
+closed — contact shadows done, embedded-on-slope still open — rather than closing it. It does
+not move the finish line in the lane's favour.
+
+CL-D4 was skipped exactly as instructed, and said so.
+
+### Ledger
+
+Still off `main`: **W05** — report complete and no placeholders, but the branch has **not**
+been rebased; it is still on `ef16544f`, and the ask remains to re-run its own probe on
+current `main`. **W10** — still the 7-line stub. W02, W03, W06, W07, W08, W11, W14, W15, W16
+and W21 have no `REPORT.md`; W16 woke at 09:52 and W08 at 09:40, so the wave is still moving.
+D85 stays reserved for W05; next free for a new lane is **D87**.

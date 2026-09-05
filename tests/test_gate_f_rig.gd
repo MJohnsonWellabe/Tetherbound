@@ -619,6 +619,79 @@ func test_the_runner_refuses_a_capture_segment_in_logic_mode() -> void:
 		+ "exit codes must not have to open a JSON file to learn a segment produced nothing")
 
 
+## CL-H5: the freeze-record trap, and the runner's own closing of it.
+##
+## Before this, an isolated logic-lane run refused to start unless somebody had
+## hand-written a run-local RUN_METADATA.json first: `_freeze_display_claim()`
+## fell through to the TRACKED candidate record from 2026-08-27, which says
+## `display_server: "X11 under xvfb-run"`, the claim contradicted a --headless
+## process, and every segment wrote a BLOCKER having executed no step. Three
+## lanes and the coordinator each lost a launch to it.
+##
+## This is deliberately NOT a source-text check. It runs the real script, on the
+## real filesystem, and then hands what the script wrote to the real
+## `_freeze_display_claim()` -- so it fails if the runner stops writing the
+## record, if it writes it under the wrong key, or if the harness stops looking
+## where it looks. A grep for a function name would survive all three.
+func test_the_runner_declares_its_own_logic_lane_so_a_run_can_start() -> void:
+	var run_dir := OS.get_user_data_dir().path_join("gate_f_lane_declaration_test")
+	var absolute := DirAccess.open(OS.get_user_data_dir())
+	if absolute != null and absolute.dir_exists(run_dir.get_file()):
+		OS.move_to_trash(run_dir)
+	DirAccess.make_dir_recursive_absolute(run_dir)
+	var script := ProjectSettings.globalize_path("res://tools/gate_f/run_segment.sh")
+	var output: Array = []
+	var code := OS.execute("bash", [script, "--write-lane-declaration",
+		"--run-dir", run_dir, "S02"], output, true)
+	assert_eq(code, 0, "run_segment.sh --write-lane-declaration failed: %s" % str(output))
+
+	var record := run_dir.path_join("RUN_METADATA.json")
+	assert_true(FileAccess.file_exists(record),
+		"the runner wrote no freeze record; every logic-lane run is back to refusing at step 0")
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(record))
+	assert_true(parsed is Dictionary, "the record the runner wrote is not a JSON object")
+	var written: Dictionary = parsed
+
+	# A FLAT `display_server` would bind every lane, including a capture lane run
+	# into the same directory later -- which would make this fix the next version
+	# of the same trap. The declaration must be lane-scoped or it is wrong.
+	assert_false(written.has("display_server"),
+		"the runner must never write a flat display_server; that claim binds the capture lane too")
+	# And it must say what it did not check rather than implying a green suite.
+	var suite: Dictionary = written.get("suite_state_at_freeze", {})
+	assert_false(suite.is_empty(), "section A.4's suite_state_at_freeze was left absent")
+	assert_false(bool(suite.get("reverified_in_container", true)),
+		"a runner that cannot run the suite must not claim it reverified it")
+
+	# Now the half that matters: the harness's OWN reader, on the file the
+	# runner's OWN writer produced.
+	var harness := HARNESS.new()
+	harness.set("_out_dir", run_dir.path_join("S02"))
+	harness.set("_evidence_lane", "logic")
+	var claim: Dictionary = harness.call("_freeze_display_claim")
+	assert_eq(str(claim.get("from", "")), record,
+		"the harness did not read the record the runner wrote; it fell through to the tracked one")
+	assert_eq(str(claim.get("key", "")), "lanes.logic.display_server",
+		"the declaration is not under the key the harness looks for")
+	# operator_harness.gd's own rule, at the line that raises `contradiction`:
+	# `claims_server := not claim.to_lower().contains("headless")`.
+	assert_true(str(claim.get("claim", "")).to_lower().contains("headless"),
+		"the claim does not contain 'headless', so a --headless process still contradicts it")
+
+	# The negative half, and the reason this test is not circular: with no
+	# run-local record the harness falls through to the tracked 2026-08-27
+	# candidate record, whose claim does NOT contain 'headless'. That is the
+	# trap, still armed, still reachable -- so this test fails if the runner ever
+	# quietly stops writing.
+	var bare := OS.get_user_data_dir().path_join("gate_f_lane_declaration_bare")
+	DirAccess.make_dir_recursive_absolute(bare)
+	harness.set("_out_dir", bare.path_join("S02"))
+	var fallback: Dictionary = harness.call("_freeze_display_claim")
+	assert_false(str(fallback.get("claim", "")).to_lower().contains("headless"),
+		"the tracked candidate record no longer claims a display server, so this test proves nothing")
+	harness.free()
+
+
 func test_missing_evidence_fails_the_process_but_a_failed_expectation_does_not() -> void:
 	var source := _harness_source()
 	assert_true(source.contains("quit(1 if (not _harness_errors.is_empty() or _evidence_missing) else 0)"),

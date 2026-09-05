@@ -28,6 +28,11 @@ The player sees the river, understands why it blocks progression and can identif
 ### Wild ecology
 Populate the region with appropriate Water/Air and bank species plus other sensible Meadows inhabitants. Current empty Band 3 spawn data is not acceptable for completion.
 
+> **Stale as of 2026-09-04 (CL-D2).** Band 3's spawn data has not been empty since this
+> prompt was written: `data/config/bands/band3_the_river_lock/spawns.json` authors **54
+> clusters**. The requirement above stands as a quality bar; the "currently empty"
+> premise does not, and a lane reading it cold must not treat this region as unpopulated.
+
 ### Trainers before relay
 The route should not jump from wilderness directly into the four-person relay gauntlet. Use the trainer journey as appropriate so the player has normal progression opportunities and sees Team Tether presence building.
 

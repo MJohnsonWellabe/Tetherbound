@@ -443,6 +443,7 @@ func test_saddle_recipe_consumes_the_frame_and_makes_a_saddle() -> void:
 		bag.add(id, int((requirement as Dictionary).get("n", 0)))
 	assert_true(names.has("saddle_frame"), "the saddle does not consume SD18's saddle_frame")
 	assert_true(names.has("rootstone"), "the saddle is not priced in Rootstone (spec 3 Band 4)")
+	assert_true(names.has("ironwood"), "the saddle is not priced in Ironwood (spec 3 Band 4)")
 
 	assert_true(state.can_craft("saddle"), "a full satchel could not afford the saddle")
 	assert_true(state.craft("saddle"))
@@ -462,15 +463,40 @@ func test_the_saddle_is_a_real_item_the_riding_gate_can_ask_for() -> void:
 
 ## The saddle must be affordable without anything that does not exist yet.
 ##
-## This is the guard on `recipes_rootstone.json`'s Ironwood seam: the recipe is
-## written to take an `ironwood` line when SF31 lands, and until it does, every
-## ingredient has to be an item a player can actually hold. The generic
-## `test_recipe_cost_only_names_real_items` above would catch a bad id; this
-## says specifically that R6.2 did not ship blocked on R-something-else.
+## This was the guard on `recipes_rootstone.json`'s Ironwood seam while the
+## recipe still shipped at the Rootstone-only price. CL-G6 closed that seam --
+## the recipe now names `ironwood`, and SF31's item and Band 4 harvest nodes
+## are what make that payable -- so the test's job is unchanged and its stakes
+## are higher: every ingredient has to be an item a player can actually hold.
+## The generic `test_recipe_cost_only_names_real_items` above would catch a bad
+## id; this says specifically that the saddle did not ship blocked on a
+## material that does not exist.
 func test_the_saddle_costs_nothing_that_does_not_exist_yet() -> void:
 	for requirement in state.recipe_cost_for("saddle"):
 		var id := str((requirement as Dictionary).get("id", ""))
 		assert_true(db.has(id), "the saddle costs '%s', which items.json does not define" % id)
+
+
+## CL-G6, the other half: the saddle is priced in BOTH progression materials,
+## and the ONE gathering path that pays for it is real. Spec 3 Band 4 asks for
+## "Rootstone/Ironwood components"; the recipe shipped Rootstone-only with a
+## `_comment_ironwood` describing the edit to make once SF31 landed. It landed.
+## Without this test, deleting the ironwood line would leave every other saddle
+## assertion green and quietly put riding back on the wrong side of the spec.
+func test_the_saddle_is_priced_in_both_progression_materials() -> void:
+	var counts := {}
+	for requirement in state.recipe_cost_for("saddle"):
+		var entry := requirement as Dictionary
+		counts[str(entry.get("id", ""))] = int(entry.get("n", 0))
+	assert_true(int(counts.get("rootstone", 0)) > 0,
+		"the saddle must cost Rootstone (spec 3 Band 4)")
+	assert_true(int(counts.get("ironwood", 0)) > 0,
+		"the saddle must cost Ironwood (spec 3 Band 4); recipes_rootstone.json's seam is closed")
+	# The intermediate stays Rootstone-only on purpose: half the saddle is a
+	# Band 3 goal, and only the finishing step waits on the Band 4 grove.
+	for requirement in state.recipe_cost_for("saddle_frame"):
+		assert_true(str((requirement as Dictionary).get("id", "")) != "ironwood",
+			"saddle_frame must stay payable before Band 4's ironwood exists")
 
 
 ## --- SD18: reinforced tools (inventory.gd::reinforce_tool) -----------------

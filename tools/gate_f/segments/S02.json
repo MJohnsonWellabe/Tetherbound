@@ -944,9 +944,10 @@
       "action": "assert",
       "args": {
         "check": "route_rows_at_least",
-        "rows": 900
+        "rows": 450
       },
-      "expected": "Section C.2: the pacing study's raw material and the section 12 correlation spine"
+      "expected": "Section C.2: the pacing study's raw material and the section 12 correlation spine",
+      "observation": "CL-H4, 2026-09-04. WAS 900, which this segment has never once satisfied and never could. The trace fires at `trace_hz` 2.0 in PLAY seconds (operator_harness.gd's `_next_trace_t`), so 900 rows is 450 play seconds -- 7.5 play minutes -- of a segment whose thirteen recorded healthy completions run 287.1 to 341.7 play seconds and write 561 to 681 rows (mean 599). The number was transcribed, not derived, and every run of S02 that reached this step failed it while the recorder was working perfectly. RE-DERIVED FROM THE REAL PLAY CLOCK, which is what this check is for: it exists to catch a recorder that stopped, not to grade pacing (S02-59's distance and S02-61's dead travel do that). 450 rows = 225 play seconds is 80% of the SHORTEST healthy run ever measured (561 rows, gate-f-run7), so it carries ~20% headroom for run-to-run variance while still failing a recorder that quits before roughly the last quarter of the segment -- and failing every broken shape on record, including the 235-row aborted attempt in gate-f-run-20260826T110000Z and the 1-row boot-only trace a refused segment writes. Counts taken from every committed `S02/telemetry/route.csv` under ralph/reports/, filtered to the runs whose measured rate is actually ~2 rows per play second (the 2026-08-25/27 pair record 1.62-1.63, a different clock, and are excluded rather than averaged in). S04's 1,200 and S05's 3,000 are the same defect and are NOT touched here: the closure plan assigns those two to G3-HARNESS."
     },
     {
       "id": "S02-61",
