@@ -288,7 +288,31 @@ names (per the brief: one round, focused, no re-litigating the rest of the room)
 
 - **Dressing sheet** (`_sheet_dressing.png`: Halda's stand, the fence run, the inn, the
   courtyard held/freed, the zoomed junction): verdict in `JUDGE_DRESSING.md`.
-  __JUDGE_DRESSING_SUMMARY__
+  **Fence (rows 1–2, zoom): "Column B is better, and not marginally: it is the difference
+  between a fence and a pile of fence segments. Every defect below is present in A and
+  absent in B."** It measured A's run with 10 px and 17 px voids at row 2 x 944–953 and
+  1042–1058, a 17 px void at row 1 x 1189–1206, a 16 px hole at the corner with three
+  separate posts arriving at different rail heights and angles, and a rail driven through
+  a post protruding into air at (519–524, 371–377); in B one shared corner post at each
+  corner, both runs' rails dying on it, the line following the slope. It could find no
+  floating post in either column ("A's problem is horizontal continuity, not vertical
+  seating") — which is the probe's finding too (worst float 0.48 m is a foot, not a
+  visible gap at 3.5 m). **Inn (row 3):** "Column A is a greybox. Not 'sparse' — a
+  greybox." B has the dressing and every object's scale is right against Bram (bar at
+  belt height, bottles 20–26 cm, tankards under 20 cm), and B "is not there yet": the
+  sign's lettering ran 1.8× the board's width (672 px on a 372 px board) with the overhang
+  at 1.2:1 against plaster; the bottles were a fixed-pitch array (77/42/75/41 px); the
+  lower-west shelf plank passed through the stock shelf's stile at (125–140, 300–312); no
+  light source in frame (the lantern cages hang above the 40° conversation frame). All four
+  were fixed in data after the verdict (text sized to the board and painted dark, per-shelf
+  counts and uneven pitch with an empty stretch and one bottle lying down, the west shelves
+  shortened to clear the stock shelf, a candle on the counter end) and confirmed in one
+  render of that stand (`shots/n05_after3`, §3) — not re-judged, per the coordinator's
+  15:58 instruction. **Courtyard (rows 4–5):** the figure stands in row 4 and is gone in
+  row 5 in BOTH columns, byte-identical silhouette — correct, and this lane changed nothing
+  there. The judge's own finding on those rows is the one routed in §2.3 and §6: "when the
+  garrison stands down, the fortress does not visibly react" beyond the missing trainer.
+  That is W06-FINALE's unlanded withdrawal (braziers, camp, lamps), not this lane's.
 - **Chamber sheet** (`_sheet_chamber.png`: W06's two chamber stands, the creature, the
   Warden Arena): verdict in `JUDGE_CHAMBER.md`. __JUDGE_CHAMBER_SUMMARY__
 

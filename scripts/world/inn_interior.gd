@@ -320,19 +320,26 @@ func _material(colour: Color) -> StandardMaterial3D:
 func _build_bar_dressing() -> void:
 	var back := -INNER_HALF_D   # the back wall's inner face
 	# Two pairs of wall shelves, one each side of Bram, bottles on every one.
+	# JUDGE_DRESSING (blind, 2026-09-05): the west shelves ran into the stock
+	# shelf's stile, so the west pair is shorter and stops 4 cm clear of it;
+	# the east pair keeps its length. Uneven on purpose -- see `_bottle_row`.
 	for side: float in [-1.0, 1.0]:
-		var x := side * 1.55
+		var width := 1.1 if side < 0.0 else 1.5
+		var x := -1.1 if side < 0.0 else 1.55
 		for shelf_y: float in [1.5, 2.0]:
-			_box(Vector3(1.5, 0.04, 0.28), Vector3(x, shelf_y, back + 0.14), COL_SHELF, false)
-			_bottle_row(x, shelf_y + 0.02, back + 0.15, int(side))
+			_box(Vector3(width, 0.04, 0.28), Vector3(x, shelf_y, back + 0.14), COL_SHELF, false)
+			_bottle_row(x, width, shelf_y + 0.02, back + 0.15, int(side) + (1 if shelf_y > 1.7 else 0))
 	# The sign, centred over the bar and over Bram, on the wall behind him.
 	_box(Vector3(1.4, 0.44, 0.05), Vector3(0.0, 2.42, back + 0.03), COL_SHELF, false)
 	var label := Label3D.new()
 	label.name = "InnSign"
 	label.text = "ROOMS  -  ALE  -  STOCK"
+	# JUDGE_DRESSING: at pixel_size 0.004 the text ran 1.8x the board's width
+	# and the overhang sat at 1.2:1 against the plaster. Sized to the board
+	# (1.4 m for ~23 glyphs), and painted dark so it reads ON the wood.
 	label.font_size = 56
-	label.pixel_size = 0.004
-	label.modulate = Color("#e8d9b8")
+	label.pixel_size = 0.0021
+	label.modulate = Color("#2e1f12")
 	label.outline_size = 0
 	label.position = Vector3(0.0, 2.42, back + 0.06)
 	add_child(label)
@@ -347,6 +354,24 @@ func _build_bar_dressing() -> void:
 	_tankard(Vector3(-0.92, 1.0, COUNTER_Z + 0.18))
 	_tankard(Vector3(0.95, 1.0, COUNTER_Z + 0.14))
 	_cylinder(0.09, 0.24, Vector3(1.22, 1.0, COUNTER_Z - 0.05), COL_JUG)
+	# JUDGE_DRESSING: the three lantern cages hang above the conversation
+	# camera's 40-degree frame, so the room read as having no light source at
+	# all. A candle on the counter end puts one in the shot: a stub of wax and
+	# a small glowing flame, no new light (the counter omni already lights it).
+	_cylinder(0.035, 0.11, Vector3(-1.38, 1.0, COUNTER_Z - 0.1), Color("#e9dcc0"))
+	var flame := MeshInstance3D.new()
+	flame.name = "CandleFlame"
+	var flame_box := BoxMesh.new()
+	flame_box.size = Vector3(0.03, 0.06, 0.03)
+	flame.mesh = flame_box
+	var flame_mat := StandardMaterial3D.new()
+	flame_mat.albedo_color = Color(1.0, 0.75, 0.35)
+	flame_mat.emission_enabled = true
+	flame_mat.emission = Color(1.0, 0.7, 0.3)
+	flame_mat.emission_energy_multiplier = 2.0
+	flame.material_override = flame_mat
+	flame.position = Vector3(-1.38, 1.14, COUNTER_Z - 0.1)
+	add_child(flame)
 	# Two bar stools on the guest side of the counter, either side of the
 	# door lane. Native scale for a stool a person could sit at -- the pack's
 	# 0.5 correction makes a 0.29 m footstool of it.
@@ -358,14 +383,39 @@ func _build_bar_dressing() -> void:
 	_lantern(Vector3(0.0, 2.3, 3.8))
 
 
-## Five bottles across a 1.5 m shelf, alternating two glasses and stepping
-## height a little so the row does not read as one bottle stamped five times.
-func _bottle_row(shelf_x: float, base_y: float, z: float, side: int) -> void:
-	for i in 5:
-		var x := shelf_x - 0.5 + 0.25 * float(i) + (0.04 if (i + side) % 2 == 0 else -0.03)
-		var tall := i % 2 == 0
-		var body_h := 0.24 if tall else 0.19
-		var colour := COL_GLASS_GREEN if (i + side) % 2 == 0 else COL_GLASS_AMBER
+## Bottles along a shelf as stock rather than as an array: the blind judge
+## measured the first version's spacings at 77/42/75/41 px, "a strictly
+## periodic pair repeated at fixed pitch, mirrored on the left shelf, repeated
+## again on all four shelves". Each shelf now gets its own count, an uneven
+## pitch from a small deterministic sequence (no RNG, so the room is the same
+## on every load), three body heights, an empty stretch, and one bottle lying
+## on its side.
+func _bottle_row(shelf_x: float, width: float, base_y: float, z: float, seed_value: int) -> void:
+	var offsets: Array[float] = [0.0, 0.17, 0.41, 0.52, 0.83, 1.0, 1.3]
+	var heights: Array[float] = [0.24, 0.19, 0.27, 0.21, 0.24, 0.18]
+	var count := 4 + (absi(seed_value) % 3)   # 4..6 on a shelf
+	var start := shelf_x - width * 0.5 + 0.1
+	var usable := width - 0.2
+	for i in count:
+		var t: float = offsets[(i + seed_value) % offsets.size()] / 1.3
+		var x := start + usable * (float(i) / float(count) * 0.55 + t * 0.45)
+		x = clampf(x, start, start + usable)
+		var body_h: float = heights[(i * 2 + seed_value) % heights.size()]
+		var colour := COL_GLASS_GREEN if (i + seed_value) % 3 != 1 else COL_GLASS_AMBER
+		if i == count - 1 and seed_value % 2 == 0:
+			# One on its side, along the shelf.
+			var lying := MeshInstance3D.new()
+			var cyl := CylinderMesh.new()
+			cyl.top_radius = 0.045
+			cyl.bottom_radius = 0.045
+			cyl.height = body_h
+			cyl.radial_segments = 12
+			lying.mesh = cyl
+			lying.material_override = _material(colour)
+			lying.position = Vector3(x, base_y + 0.045, z)
+			lying.rotation.z = PI * 0.5
+			add_child(lying)
+			continue
 		_cylinder(0.045, body_h, Vector3(x, base_y, z), colour)
 		_cylinder(0.018, 0.08, Vector3(x, base_y + body_h, z), colour)
 
