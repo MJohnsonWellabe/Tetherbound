@@ -1,6 +1,6 @@
 # TETHERBOUND — BUILD BIOME 3: THE STORMWOOD TO COMPLETION
 
-**Status:** DRAFT for owner review, 2026-09-05. When the owner merges this file it becomes
+**Status:** DRAFT for owner review, 2026-09-05 (revised the same day after owner feedback: no creature teleport in this biome, Stormglass Arches instead; level cap to 100; denser off-route pickups; distinct realm relics). When the owner merges this file it becomes
 the authoritative Biome 3 directive and outranks older biome-order prose (`docs/specs/GAME_DESIGN.md`
 §9, the Cloudreach directive's "Water comes after Cloudreach" line). Until then it is a proposal.
 
@@ -16,9 +16,9 @@ integrated, playable third chapter after Cloudreach Cliffs.
 This is **not** a design-only task and not a massing prototype.
 
 Take the game from the end of Cloudreach into a fully playable third biome: terrain, world,
-story, the Surge weather cycle, Arc-Step traversal, NPCs, trainers, encounters, resources,
-gear, pickups, objectives, mini-bosses, the Dynamo finale, the captive legendary, the Realm
-Heart reward, save-state integration, UI hooks, tests, evidence, and integration to `main`.
+story, the Surge weather cycle, Stormglass Arches, NPCs, trainers, encounters, resources,
+gear, pickups, objectives, mini-bosses, the Dynamo finale, the captive legendary, the realm
+relic reward, save-state integration, UI hooks, tests, evidence, and integration to `main`.
 
 Creatures are the one deliberate exception. **Use Meadows creatures as placeholders in every
 encounter slot** (§17). The final Stormwood roster is dropped in later through replaceable
@@ -41,11 +41,11 @@ them before Codex starts; Codex must not silently choose differently.
 |---|---|---|
 | 0.1 | **Biome order.** Canon (`GAME_DESIGN.md` §9, the Cloudreach directive §1) put Water third. The owner now wants the electric forest next. | Electric Forest is Biome 3. Water moves to Biome 4. Cloudreach's completion rewards are retargeted from `realm_key_water` / `waterward_route_revealed` to `realm_key_stormwood` / `stormward_route_revealed` (§5). |
 | 0.2 | **Name.** The Meadows already signposts this direction as "Storm Country" (`terrain_playground.json` spoke `storm_road`, fingerpost label `Storm Country`). | **The Stormwood.** Alternatives for the Creative Director to pick from: Voltwood, Thunderwood, Glimmerwood, the Sparkwild. The realm id is `stormwood` whichever display name wins; change the display string, not the id. |
-| 0.3 | **The biome's traversal verb is Teleport (Arc-Step).** `docs/specs/C1_RIDEABLE_ROSTER_FLY_TELEPORT.md` promises the Ripplet starter learns teleport "in a later biome"; Cloudreach paid off Galewisp's Fly. | The Stormwood teaches Arc-Step. Ripplet learns it here; a catchable wild blink-capable creature also exists so a Terrapup or Galewisp player can complete the chapter (§10). |
+| 0.3 | **No creature teleport ability in this biome.** The owner's call (2026-09-05): the Stormwood's mechanic is **Stormglass Arches** — paired gates of lightning-glass the player relights or builds and steps through. `docs/specs/C1_RIDEABLE_ROSTER_FLY_TELEPORT.md`'s promise that Ripplet learns teleport "in a later biome" stays deferred to a later biome; when it lands it lets the player teleport to anywhere they have stood *without* building an arch, and supersedes arch-building for travel. | No new creature verb. Arches are a buildable and a world object (§10). No species, wild or starter, gains a traversal ability here. |
 | 0.4 | **A captive legendary.** `GAME_DESIGN.md` §5 gives every stronghold a captive legendary; the Cloudreach chapter data has none. | The Stormwood has one, imprisoned in the Dynamo, freed in the finale, offering to join with the existing release ceremony. Its final art comes later; a placeholder body ships (§17.5). |
-| 0.5 | **Heart of the Stormwood power.** Only Meadowstride (double stamina) exists; Cloudreach's power is intentionally undefined. | **Livewire:** the piloted creature's move cooldowns are 25 % shorter. Tunable in `realm_hearts.json`. Cloudreach's power stays deferred unless the owner names it. |
+| 0.5 | **Realm relics are distinct per biome.** Owner (2026-09-05): the Meadows gave the **Heart**; Cloudreach's reward is the **Wings of Cloudreach**, which let the player Fly without losing stamina. So every realm's reward is its own relic, not another Heart, and the Stormwood needs one. | The Stormwood's relic is **the Spark of the Stormwood** — a name for the owner and Creative Director to confirm or replace (alternates: the Eye of the Storm, the Fang of the Stormwood). Its power, **Livewire**, shortens the piloted creature's move cooldowns by 25 % (tunable). The existing single-active-power system (`realm_hearts.json`, `RealmHeartState`) keeps its code names and gains per-realm display names and icons: Heart, Wings, Spark (§6). Codex also implements the Wings' power as part of the Cloudreach handoff (§5). |
 | 0.6 | **Lightning can hurt the player.** The Meadows has player death and persistent satchels; Cloudreach prevents falls with recovery currents. | Yes, Valheim-style: telegraphed strikes on exposed ground during a Surge damage the player and creatures; never in regions 1–2, never inside a rod-protected camp, never a one-shot at the region's expected level (§11). |
-| 0.7 | **Level range.** Meadows 3→20, Cloudreach 18→34; `GAME_DESIGN.md` §11 caps levels at 50 with five biomes still to come. | Team enters at 33 and leaves at 44; captain ace 44. The cap question is the owner's: this document recommends raising the cap to 100 in a later decision rather than compressing the Stormwood. |
+| 0.7 | **Level range and cap.** Meadows 3→20, Cloudreach 18→34; `GAME_DESIGN.md` §11 caps levels at 50 with five biomes still to come. | Owner confirmed: the Stormwood runs 33→44 (captain ace 44) and **the level cap rises to 100** so the next five biomes keep offering higher levels. Codex raises the cap in `data/config/progression.json`, re-probes the XP curve to 100 with `tools/_probe_pacing.py` so the exponent does not explode past 50, updates `GAME_DESIGN.md` §11 and the tests that pin 50, and records it as a `docs/decisions/` entry (§5). |
 | 0.8 | **Concept board.** Cloudreach's board never reached the repo and its first visual pass failed the blind judge. | Build against the written visual language in §4 and the installed nature family. If the owner supplies a Stormwood board, it wins over §4. |
 
 ---
@@ -60,7 +60,7 @@ Before changing anything, read and obey, in this order:
 4. `docs/CURRENT_STATE.md` — especially the Cloudreach checkpoints and their honest visual verdict
 5. `docs/biomes/cloudreach/BUILD_CLOUDREACH_CLIFFS_TO_COMPLETION.md` and `ralph/reports/CLOUDREACH-PHASE3-AUDIT-0904/REPORT.md` — the realm seams (persistence namespaces, 3D placement, dialogue manifest, catalogue injection, map isolation) that Cloudreach had to open are the seams this biome reuses
 6. `docs/specs/GATE3_ENCOUNTER_CONTRACTS.md` — the encounter standard (G-1 three-sentence test, G-3 behaviour profiles) applies here unchanged
-7. `docs/specs/C1_RIDEABLE_ROSTER_FLY_TELEPORT.md` — the teleport promise this biome pays off
+7. `docs/specs/C1_RIDEABLE_ROSTER_FLY_TELEPORT.md` — the teleport promise this biome must *not* pay off (§0.3); read it so the arches and the future creature ability do not collide
 8. `docs/specs/C4_CAMPING_NECESSARY.md`, `docs/specs/C2_TASK_FEED.md`
 9. `docs/WORLD_AND_CONTENT.md` §7 — the Meadows density census this biome is measured against
 10. this document
@@ -76,17 +76,17 @@ Electric, update them so the Stormwood becomes the authoritative third biome (§
 At the end of this goal a player can:
 
 1. finish Cloudreach and defeat Captain Veyra;
-2. receive the **Heart of Cloudreach** and the **Key to the Stormwood**;
+2. receive the **Wings of Cloudreach** and the **Key to the Stormwood**;
 3. see the Stormward route revealed from the summit (a distant wall of permanent storm over a forest);
 4. travel to the Stormward gate and open it with the key;
 5. enter the Stormwood and immediately understand: a forest, under a storm that never ends;
 6. play through the entire Stormwood chapter across six regions;
 7. live with the **Surge** cycle — the storm building, breaking, fading — and learn to use it;
-8. learn **Arc-Step** and reach the teleport-only **Hollow Crown**;
+8. learn to relight the Rodfolk's **Stormglass Arches**, then build one of their own and step through it to the otherwise unreachable **Hollow Crown**;
 9. disable Team Tether's four **rod stations** and reach the **Dynamo**;
 10. defeat the Dynamo captain in a real arena fight;
 11. free the captive legendary, face the five-creature choice, and see the Long Storm end;
-12. receive the **Heart of the Stormwood** and place it at a shrine;
+12. receive the **Spark of the Stormwood** and place it at a shrine;
 13. see the world point clearly toward the Water biome without entering it.
 
 The Stormwood must be a real playable chapter that a blind tester can finish in a
@@ -115,10 +115,10 @@ It is built around:
 - lightning-struck clearings of black glass and cinder where the sky briefly shows;
 - the **Surge** — a visible, audible cycle of the storm building and breaking;
 - rod lines and capacitor trees: Team Tether hardware bolted onto living wood;
-- **Waystones**: ancient conductor stones the forest folk once used to travel;
+- **Stormglass Arches**: the Rodfolk's old road — paired gates of fused lightning-glass you step through and come out of the twin, now standing dark;
 - ravines, root bridges, hollow trunks and fallen giants as traversal;
 - settlements built into and under trees, lit by moss lanterns;
-- the Hollow Crown, a grove on an island of glass no path reaches;
+- the Hollow Crown, a grove on an island of glass no path reaches — only an arch does;
 - the Dynamo, a storm-harvesting station at the forest's heart, humming.
 
 It should feel like the world got darker and stranger after Cloudreach's open sky — closed
@@ -132,7 +132,7 @@ The Stormwood should feel:
 - electric, alive, humming, never silent;
 - lit from within (moss, fungus, glass, arcs), not dark for darkness' sake;
 - dangerous on a rhythm the player learns to read;
-- old (the Waystones) under something new and wrong (the rod lines);
+- old (the arches) under something new and wrong (the rod lines);
 - generous with discovery: every clearing, hollow and pool has something in it.
 
 It should NOT feel like:
@@ -171,7 +171,7 @@ Preserve these ideas in every frame:
 - **large readable silhouettes**: capacitor trees, rod towers over the canopy, the Crown's
   glass island, the Dynamo's chimneys;
 - **places seen before reached**: the Hollow Crown from region 2, the Dynamo's glow from
-  region 3 onward.
+  region 3 onward, and every dark arch readable as a gate long before it is lit.
 
 Materials, textures, emissive maps, modest scale, VFX and shaders differentiate the forest
 from the Meadows grove. The tree meshes are the installed Stylized Nature MegaKit and Nature
@@ -191,7 +191,13 @@ Cloudreach currently ends by granting `realm_key_water` and revealing a Waterwar
 §0.1 that changes, in data and in tests:
 
 - Captain Veyra's defeat grants **Key to the Stormwood** (`realm_key_stormwood`) and the
-  **Heart of Cloudreach** (`realm_heart_cloudreach_earned`, power still deferred).
+  **Wings of Cloudreach** (flag stays `realm_heart_cloudreach_earned` for save compatibility;
+  display name "Wings of Cloudreach"). Its power is now defined and must be implemented in
+  this handoff: **Skyborne — Fly drains no stamina.** For that to mean anything, Fly must
+  cost stamina by default; if the current Cloudreach Fly does not, give it a tunable drain
+  first (in Fly's own config file) and prove the Wings remove it. Cloudreach's shrine
+  placement follows the Meadows pattern: its shrine stands at the Sky Shrine heartstone and
+  the Wings are placed there on the return visit.
 - `waterward_route_revealed` becomes `stormward_route_revealed`; the Waterward Overlook
   landmark becomes the **Stormward Overlook**: from the summit the player sees, far off, a
   bruise-coloured permanent storm sitting over a dark forest — the Tether Rift that is this
@@ -207,21 +213,23 @@ Nothing else in Cloudreach's chapter changes.
 
 ---
 
-# 6. HEART OF THE STORMWOOD
+# 6. THE SPARK OF THE STORMWOOD (realm relic)
 
-Extend the existing Realm Heart system (`autoload/realm_heart_state.gd`,
+Extend the existing realm-reward system (`autoload/realm_heart_state.gd`,
 `scripts/world/realm_heart_shrine.gd`, `data/config/realm_hearts.json`). Do not write a
-second one.
+second one. The code and flag names may keep the word "heart"; the player-facing names are
+per realm: **Heart of the Meadows**, **Wings of Cloudreach**, **Spark of the Stormwood**.
+The shrine UI, banners and dialogue never call the Wings or the Spark a Heart.
 
 - **Earned** when the legendary is freed (`realm_heart_stormwood_earned`).
 - **Placed** at the **Stormwood shrine** in Lantern Hollow (§12 region 5); placing it is
   the aftermath beat that shows the forest lit calm for the first time.
 - **Power — Livewire:** the piloted creature's move cooldowns are shortened by 25 %
   (`cooldown_multiplier: 0.75`, tunable). It must go through the same single-active-power
-  selection as Meadowstride, swap cleanly, never stack, and persist.
-- The shrine must show three Heart slots (Meadows, Cloudreach, Stormwood) with the
-  Cloudreach slot holding an earned-but-undefined Heart that displays honestly ("its power
-  has not woken") rather than a fake power.
+  selection as Meadowstride and Skyborne, swap cleanly, never stack, and persist.
+- Every shrine shows three relic slots (Heart, Wings, Spark) with their own icon and name;
+  an unearned slot reads as empty, never as a fake power. Only one relic power is active at
+  a time, and the UI says so where the choice is made.
 
 ---
 
@@ -247,12 +255,12 @@ A real realm transition, modelled on `realm_transitions.json` and `realm_gate.gd
 ## The regional problem
 
 The Stormwood always had storm seasons. Its people — the **Rodfolk** — lived by them: they
-raised Waystones to travel under the canopy, harvested stormglass after the season, and let
-the forest rest between. Team Tether built the **Dynamo** at the forest's heart, bound the
+raised Stormglass Arches to travel under the canopy, harvested stormglass after the season,
+and let the forest rest between. Team Tether built the **Dynamo** at the forest's heart, bound the
 forest's legendary inside it, and used it to hold one storm over the forest permanently:
 the Rift that severs the Stormwood from the world. Their **rod lines** drag every strike to
-the Dynamo. The canopy is dying at the edges, the Waystones have gone dark, the Rodfolk
-cannot travel their own forest, and Team Tether's public line is that the Long Storm keeps
+the Dynamo. The canopy is dying at the edges, the arches have gone dark for want of charge and
+glass, the Rodfolk cannot travel their own forest, and Team Tether's public line is that the Long Storm keeps
 the wild forest from spilling into the neighbouring realms.
 
 Persistent flags (namespace `stormwood:`), acts, objectives, NPCs, trainers, tables,
@@ -265,26 +273,34 @@ Cloudreach audit names. Data presence is not content; every objective below must
 ## Act I — Under the Storm (regions 1–2)
 
 - Arrive at the Cinder Verge; reach **Ashfoot Waycamp**.
-- Meet **Rodkeeper Hesk**, who explains the Long Storm and the dark Waystones.
+- Meet **Rodkeeper Hesk**, who explains the Long Storm and the dark arches.
 - Learn the Surge: survive the first break under canopy (tutorialised by Hesk's daughter
   **Tamsin**, who reads the storm for a living).
+- Gather the first stormglass from the Verge's marked strike clearing during a Break and
+  **relight the first arch pair** (Ashfoot Waycamp ↔ Lantern Pools): the relight tutorial,
+  the first step through a gate, the first "the forest just got smaller."
 - Trace the first two rod stations (Verge and Hollows) and disable them: each is a small
-  Team Tether picket, a grunt fight, a rod-tower switch, and a visible change (the local
-  Waystone relights, drained ground begins to heal).
-- Relight the Hollows Waystone; the Rodfolk can move again between camps.
+  Team Tether picket, a grunt fight, a rod-tower switch, and a visible change (the Calm
+  lengthens, drained ground begins to heal, the nearest arch burns brighter).
+- Relight the second pair (Lantern Pools ↔ Rodline Post) for Pim; the Rodfolk can move
+  again between camps.
 - Act I ends when the player reaches **Rodline Post** at the foot of the Conductor Run and
   **Warden-Elect Bryn** (the Rodfolk's own defiant leader, not a Team Tether Warden) tells
-  them the Waystones are only half the road: the old road went *across*, by Arc-Step.
+  them relighting is only half the craft: the Rodfolk used to *raise* arches, and the one
+  that reached the Crown was shattered by Team Tether.
 
 ## Act II — The Road Across (regions 3–4)
 
 - Climb the Conductor Run under full storm exposure; learn rod protection and insulation.
-- Reach the **Still Grove**, the one place the storm does not touch, where **Keeper Ondra**
-  teaches Arc-Step to the player's blink-capable creature (Ripplet, or a caught Sparkit-role
-  creature) in a controller-safe trial across a ring of Waystones.
-- Arc-Step across the Glass Sink to the **Hollow Crown** — the teleport-only destination —
-  and find the truth at its heartstone: the Dynamo is not harvesting storms, it is *making*
-  them, by draining the legendary bound inside it; the Long Storm is the Rift.
+- Reach the **Still Grove**, the one place the storm does not touch, where **Keeper Ondra**,
+  the last arch-wright, teaches the **Stormglass Arch** recipe and shows the shattered
+  footing of the arch that once reached the Crown.
+- Gather Crown-grade stormglass in the **Capacitor Grove** during a Break, build the twin
+  arch on the Still Grove footing, and watch it bind to the Crown arch still lit by the
+  Crown's heartstone across the Sink.
+- Step through to the **Hollow Crown** — the arch-only destination — and find the truth at
+  its heartstone: the Dynamo is not harvesting storms, it is *making* them, by draining the
+  legendary bound inside it; the Long Storm is the Rift.
 - The Crown's heartstone releases the **Rootgate**: a grounded route into the Deepwood that
   no amount of walking opened before.
 
@@ -303,8 +319,8 @@ Cloudreach audit names. Data presence is not content; every objective below must
 - Disable the core; the legendary wakes and offers to join; the five-creature ceremony runs
   if the team is full.
 - **Aftermath:** the Long Storm breaks for the last time and does not return; sky shows
-  through the canopy; Waystones all relight; Rodfolk travel the forest; NPCs get post-storm
-  dialogue; the Stormwood Heart is placed; the Stormward-to-Waterward route is revealed
+  through the canopy; every ancient arch relights on its own; Rodfolk travel the forest;
+  NPCs get post-storm dialogue; the Spark is placed; the Stormward-to-Waterward route is revealed
   from Lantern Hollow's high platform as a distant, non-enterable view.
 
 Do not stop at "boss defeated." Aftermath and region-state change are part of the chapter.
@@ -322,9 +338,9 @@ player learns to read and use. Implement it as a realm-scoped extension of `Worl
 
 | Phase | Default length | What the player sees and hears | What it changes |
 |---|---|---|---|
-| Calm | 240 s | blue-green moss light, drizzle on canopy, distant rumble | baseline spawns; Waystones idle-glow; rod stations hum |
+| Calm | 240 s | blue-green moss light, drizzle on canopy, distant rumble | baseline spawns; lit arches idle-glow; rod stations hum |
 | Building | 90 s | copper flicker on vines, wind, rising hum, birds go quiet | storm-linked species begin to appear; ground-glow telegraphs start in exposed clearings |
-| Break | 120 s | strikes every 4–8 s on exposed ground, white-violet light, hard shadows | lightning hazard live (§11); surge encounter tables replace calm tables; capacitor trees charge (harvestable stormglass nodes open); Arc-Step range +50 % |
+| Break | 120 s | strikes every 4–8 s on exposed ground, white-violet light, hard shadows | lightning hazard live (§11); surge encounter tables replace calm tables; capacitor trees charge (harvestable stormglass nodes open); lit arches flare to full brightness and read from far away |
 | Fading | 60 s | ember afterglow, steam off glass, thunder rolling away | charged nodes stay open; rare "afterglow" spawns; strikes stop |
 
 Rules:
@@ -343,66 +359,81 @@ alone, or if the phase changes nothing about what they meet and what they can ga
 
 ---
 
-# 10. ARC-STEP AND WAYSTONES (new mechanic 2 — teleport traversal)
+# 10. STORMGLASS ARCHES (the biome's mechanic — gates you relight, build and step through)
 
-This is the biome's Fly. It pays off the C1 promise ("Teleports — beyond the Meadows").
+This is the biome's Fly-equivalent, and it is **not a creature ability**. Nothing in this
+section grants any species a verb. The C1 promise ("Teleports — beyond the Meadows") stays a
+promise for a later biome (§0.3, §33).
 
-## Visual concept
+## What an arch is
 
-The blink-capable creature is piloted, the player beside it. On Arc-Step the creature
-gathers charge (arcs along its body, 0.6 s), the pair collapse into a bolt that jumps to
-the target Waystone or charged anchor, and re-form there with a thunderclap and a ground
-scorch. It should read as lightning travelling between conductors, not as a menu teleport.
+A **Stormglass Arch** is a gate of fused lightning-glass, about 4 m tall, standing on a stone
+footing, always one of a **pair**. Walk through a lit arch and you step out of its twin,
+the active companion beside you, with a thunderclap, a scorch on the far footing and a
+half-second of white-out. It should read as lightning travelling between two conductors,
+never as a menu teleport. Arches work in every Surge phase; a Break makes them flare.
 
-## Two verbs, one unlock
+## Two ways to get one
 
-1. **Arc-Step (hop):** from anywhere, target a visible **charged anchor** (a lit Waystone
-   or a charged capacitor tree) within range — default 28 m, +50 % during a Break — and jump
-   to it. Line of sight required; no jumping through canopy or terrain; a target must be
-   *lit*, so an unlit Waystone is a locked door the player can see.
-2. **Waystone travel (fast travel):** interact with any lit Waystone to travel to any
-   other lit Waystone the player has *stood at*. Costs nothing but a short charge-up; not
-   available during a Break; never crosses a realm.
+1. **Relight an ancient pair.** Nine ancient arches stand in the world, dark. Interacting
+   with a dark arch while carrying enough **Stormglass** (§20; default 3, Crown-grade 6,
+   tunable) spends it, lights the arch, and — once both twins are lit — links the pair.
+   Which arch is whose twin is authored and fixed:
 
-Both unlock together at the Still Grove trial (`arc_step_unlocked`). Neither works before
-it. Nothing in the Meadows or Cloudreach gains them.
+   | Pair | Twins | Opens | Purpose |
+   |---|---|---|---|
+   | A | Ashfoot Waycamp ↔ Lantern Pools | Act I, relight tutorial | the first "the forest got smaller" |
+   | B | Lantern Pools ↔ Rodline Post | Act I, Pim's chain | Rodfolk reconnected |
+   | C | Rodline Post ↔ Lantern Hollow | Act III, after `rootgate_released` | the loop back across the whole biome |
+   | D | Old Rodfolk Hall ↔ Fallen Giant | optional, Deepwood | dungeon shortcut |
+   | E | the **Crown Arch** (lit, on the island) ↔ *a twin the player must build* | Act II | the required destination |
 
-## Who can Arc-Step
-
-- **Ripplet** (the starter) learns it here, reading the `future_traversal` block C1 placed in
-  `species.json`.
-- **Placeholder wild blink-capable role** (`blink_capable: true` on the encounter role, not on
-  the species): the Sparkit-role creature in regions 2–3 is catchable and carries the verb, so
-  every player can complete the chapter. The final roster will replace the body; the role
-  and flag stay.
-- The freed legendary can Arc-Step.
-- A traversal creature costs one of five slots exactly as riding and flying do
-  (`chapter_curve.json` `five_slot`). No sixth slot, no storage.
+2. **Build your own.** The **Stormglass Arch** buildable (`stormglass_arch`; recipe learned
+   from Keeper Ondra at the Still Grove, `stormglass_arch_recipe_learned`; cost Stormglass +
+   Thunderwood + Conductor Vine) goes through the normal build system. Place one arch; the
+   next arch you place binds to it as its twin. Up to **3 player pairs** at once (tunable);
+   dismantling either end unlinks the pair and refunds normally. A player arch can also be
+   built on an **authored footing** — a build socket that accepts only an arch — and one
+   footing is mandatory: the shattered twin at the Still Grove, whose only valid link is the
+   Crown Arch.
 
 ## Rules
 
-- Controller-first: hold the traversal button to aim, anchors highlight in range, release to
-  jump; the same context map pattern as Fly.
-- No Arc-Step through locked progression: the Rootgate and the Dynamo's gates are not
-  anchors; the Hollow Crown's Waystone ring is the only way across the Glass Sink.
-- Collision-safe: arrival is always on an authored surface at the anchor; never inside
-  geometry; never off the world.
-- Landing near an enemy engages normally; Arc-Step is not an escape from a started fight
-  (mirror the existing combat-lock rules).
-- Completing an authored Waystone circuit grants a small bond event to the piloted creature,
-  subject to the bond cap (mirror Cloudreach's `fly_bond_rule`).
+- Controller-first: walking into a lit arch is the interaction; no aim, no map pick.
+- No travel through a dark arch, a half-lit pair, or an arch whose twin is dismantled; the
+  arch shows its state (dark / lit-unlinked / linked) from a distance.
+- Arrival is always on the twin's authored footing, never inside geometry, never off the
+  world; arriving next to an enemy engages normally; an arch is not an escape from a fight
+  already started (mirror the existing combat-lock rules).
+- Arches never cross a realm and never bypass a locked gate: the Rootgate and the Dynamo's
+  gates have no arch on their far side until the story opens them (pair C is dark until
+  `rootgate_released`).
+- Relighting an arch with your team present grants a small bond event to the active
+  creature, subject to the normal bond cap.
+- Player arches are buildings: realm-tagged, persisted, restored with the rest of the
+  player's structures.
 
-## The required teleport-only destination: the Hollow Crown
+## The required arch-only destination: the Hollow Crown
 
-Region 4. An ancient grove standing on an island of black glass in the **Glass Sink**, a
+Region 4. An ancient grove on an island of black glass in the **Glass Sink**, a
 lightning-fused crater no path enters; the sink floor is a live strike field in every
-phase. Visible from regions 2 and 3 as a ring of tall pale trees with a lit crown above
-the canopy. Before Arc-Step: "I can see that place, and I cannot get there." After: the
-ring of Waystones across the sink lights one by one as the player hops.
+phase. Visible from regions 2 and 3 as a ring of tall pale trees with a lit crown above the
+canopy, and one lit arch on its shore facing the Still Grove's broken footing. Before the
+recipe: "I can see that place, and I cannot get there." After building the twin: "I built
+the road." The link binds the moment the built arch completes, and the first step through
+is the chapter's mid-point reveal.
 
-It contains: the story truth (§8 Act II), **Keeper Ondra's** counterpart **Archivist Wen**,
-the Crown heartstone that releases the Rootgate, a Rare Candy, a TM, and the biome's
-richest stormglass. It is memorable or it is wrong.
+It contains: the story truth (§8 Act II), **Archivist Wen**, the Crown heartstone that
+releases the Rootgate, a Rare Candy, a TM, and the biome's richest stormglass. It is
+memorable or it is wrong.
+
+## What comes later, so nothing here blocks it
+
+When the later biome grants the creature teleport ability C1 promises, the player will
+teleport to any place they have stood without building anything. Keep the arch system
+independent of that: arches stay useful as shared gates for a team, and the future ability
+reads the same realm-tagged "places stood" record the map already keeps. Do not implement
+that ability, its data, its move or any dialogue naming it here.
 
 ---
 
@@ -440,7 +471,7 @@ transition points, unlocks, regions, landmarks, routes, bridges, gates), built b
 
 **Size:** playable footprint about **4.5 km × 6.0 km** (wider than Cloudreach; a forest is
 not a corridor), critical path about **6.5 km**, total authored route **≥ 12 km** including
-loops, side routes and the Waystone network. Vertical range about 120 m of terrain plus the
+loops and side routes; the arch pairs are shortcuts on top of that, not a substitute for it. Vertical range about 120 m of terrain plus the
 canopy; the Conductor Run ridge and the Deepwood's fallen-giant root bridges provide
 vertical play without Cloudreach's cliffs.
 
@@ -458,26 +489,28 @@ Landmarks: **the Struck Sentinel** (a lightning-split giant, arrival orientation
 
 Purpose: wet low forest lit by moss and fungus; still pools; hollow trunks as passages; the
 first route choices (three ways through, one flooded until a Break drains it); the Hollows
-rod station; the first relit Waystone; the first view of the Hollow Crown.
-Landmarks: **the Lantern Pools**, **Hollows Rod Station**, **the First Waystone**.
+rod station; the first relit arch pair; the first view of the Hollow Crown.
+Landmarks: **the Lantern Pools** (with pair A's far arch), **Hollows Rod Station**, **the
+Crown Overlook**.
 
 ## Region 3 — The Conductor Run
 
 Purpose: a ridge of glass-fused trees carrying the main rod line toward the Dynamo; full
 storm exposure; insulation and rod tutorials; the mid-biome conflict (a Tether lieutenant
-holding Rodline Post's old bridge); the Still Grove at its end.
+holding Rodline Post's old bridge); the Capacitor Grove's Crown-grade stormglass; the Still
+Grove and its shattered arch footing at its end.
 Landmarks: **Rodline Post** (settlement), **the Capacitor Grove**, **the Still Grove**.
 
-## Region 4 — The Hollow Crown (Arc-Step only)
+## Region 4 — The Hollow Crown (arch only)
 
 Purpose: story pivot, memorable reward, Rootgate release. See §10.
-Landmarks: **the Glass Sink**, **the Crown**, **the Crown Heartstone**.
+Landmarks: **the Glass Sink**, **the Crown Arch**, **the Crown Heartstone**.
 
 ## Region 5 — The Deepwood
 
 Purpose: the largest region; canopy giants and root bridges; **Lantern Hollow** (main
 settlement, trade, shrine); stronger trainers and the ace optional circuit; the Deepwood
-rod station; the Stormwood's richest resources and optional pockets; the Heart shrine.
+rod station; the Stormwood's richest resources and optional pockets; the relic shrine.
 Landmarks: **Lantern Hollow**, **the Fallen Giant** (a root bridge over the Blackwater
 ravine), **Deepwood Rod Station**, **the Old Rodfolk Hall** (optional dungeon, mini-boss).
 
@@ -492,7 +525,7 @@ Do not build these as six straight checkpoints. Required structure:
 
 - **≥ 4 loops** that return the player to a place they know by another way;
 - **≥ 3 shortcuts** that open from the far side (a hollow trunk kicked through, a root
-  bridge dropped, a Waystone relit);
+  bridge dropped, an arch pair relit);
 - **≥ 5 dead-end reward pockets** off the main routes, each paying in candy, TM, gear or a
   named encounter;
 - **≥ 2 alternate routes** between consecutive regions after region 2;
@@ -528,31 +561,45 @@ Counts are minimums unless a range is given. "Route" means authored route length
 | Settlements / camps with residents | 3 (Ashfoot 4, Rodline Post 4, Lantern Hollow 8) | — | trade at Rodline Post and Lantern Hollow; shrine at Lantern Hollow |
 | Authored safe camps | 6 | 1 | save, rest, cook, creature recovery; rod pre-built; Cloudreach `camping_contract` shape |
 | Rod-able clearings | 10 | ≥ 1 in regions 3–6 | flat, buildable, visibly exposed; a rod placed there makes it surge-safe |
-| Waystones | 10 | ≥ 1 | 1 (Hollows), 2 (Run), 4 (Crown ring), 2 (Deepwood), 1 (Dynamo approach) |
+| Ancient Stormglass Arches | 9 (4 fixed pairs + the Crown Arch) | — | pairs A–E per §10; every arch a landmark-scale silhouette; state readable from afar |
+| Arch footings (build sockets) | 5 | — | 1 mandatory (Still Grove, links only to the Crown Arch) + 4 optional at authored viewpoints |
+| Player arch pairs allowed | 3 (tunable) | — | build system; dismantle unlinks and refunds |
 | Harvest nodes (authored) | ≥ 210 (≥ 17 / km) | ≥ 25 | plus every scattered tree and stone harvestable and staying gone (D60, D72) |
 | Charged nodes (Break-only stormglass) | 24 | ≥ 3 in regions 2–6 | open only in Break/Fading; the biome's reason to be out in a storm |
-| Placed item pickups (total) | 120–140 | ≥ 15 | authored placement logic; persistent, one-time; a stable `pickup_id` per placement |
-| — Good / Great / Rare Candy | 40 / 20 / 8 | — | Good on side exploration, Great on detours and named fights, Rare on secrets, the Crown, the Hall, the Dynamo; critical path carries ≤ 10 candy total |
-| — Potions (small / large) | 18 / 12 | — | main routes occasional, dangerous spaces stronger |
-| — Revives | 16 | — | ≥ 2 within reach of every mini-boss and the Dynamo |
-| — Tonics / elixirs / mushrooms | 12 | — | elixirs respect the existing cap (D47) |
-| — Orbs (greater / prime) | 6 | — | late regions only |
+| Placed item pickups (total) | 200–230 (≈ 17–19 / km) | ≥ 28 | authored placement logic; persistent, one-time; a stable `pickup_id` per placement; **≥ 80 % off the critical path** |
+| — Good / Great / Rare Candy | 60 / 30 / 10 | — | Good on side exploration, Great on detours and named fights, Rare on secrets, the Crown, the Hall, the Dynamo; the critical path carries ≤ 12 candy total |
+| — Potions (small / large) | 30 / 18 | — | main routes occasional, side routes better, dangerous spaces stronger |
+| — Revives | 24 | — | ≥ 2 within reach of every mini-boss and the Dynamo; the rest in pockets and at arch footings |
+| — Mushrooms (speed / stamina / wild) | 24 | — | under giants, in hollows, on the Fallen Giant; also a food source |
+| — Tonics / elixirs | 12 | — | elixirs respect the existing cap (D47) |
+| — Orbs (basic / greater / prime) | 12 | — | greater and prime in regions 4–6 only |
 | — TMs | 4 (electric ladder, §20) | — | one each in regions 2, 4, 5, 6 |
 | — Insulated gear pieces (found, not crafted) | 2 of 4 | — | the other two are crafted |
-| — Story items | 3 | — | Rootgate release, Dynamo core key, Heart |
-| Main objectives | 24–30 | — | three acts; count-flags for the rod stations; ≥ 1 objective visibly changes at `arc_step_unlocked` |
-| Side chains | 6 | — | ≥ 3 steps each; categories: exploration, affected locals, Arc-Step exploration, trainer completion, resource, mystery |
+| — Story items | 3 | — | Rootgate release, Dynamo core key, the Spark |
+| Main objectives | 24–30 | — | three acts; count-flags for the rod stations; ≥ 1 objective visibly changes at `stormglass_arch_recipe_learned` |
+| Side chains | 6 | — | ≥ 3 steps each; categories: exploration, affected locals, arch relighting, trainer completion, resource, mystery |
 | Dialogue nodes | ≥ 160 | — | every NPC ≥ 2 states; every trainer 3 lines; every objective a `how` |
-| Buildables (new) | 3 | — | lightning rod, moss lantern, insulated workbench upgrade |
+| Buildables (new) | 4 | — | Stormglass Arch, lightning rod, moss lantern, insulated workbench upgrade |
 | Resources (new) | 6 | — | §20 |
 | Recipes (new) | ≥ 12 | — | §20 |
 | Audio cues | 10 | — | §23 |
 | Visual review points | 8 | — | §27 |
 | Surge phases | 4 | — | §9 |
 
+**The off-route rule.** Pickups exist to answer "why should I go over there?" Every
+150 m of critical path, on average, something worth picking up must be *visible* from the
+road and *not on it*: at the end of a hollow trunk, up a root, across a pool, on a ledge, at
+a dark arch, beside a charged node, behind a named fight. Reward pockets, landmarks and
+optional dungeons carry the Great and Rare tiers. The road itself gets occasional small
+potions and Good Candy only. This is the owner's 2026-09-04-C density directive applied to a
+forest: frequent enough that exploring keeps paying, never spam, and never so much that
+potions and revives erase camping and attrition (tune from route evidence, not from the
+count).
+
 **Fails if** any region's count is under its minimum, if the critical-path worst gap exceeds
-120 m, if any pickup lacks a stable id, or if the count is met by uniform scatter rather
-than authored placement (the blind route strip must show *reasons*, not objects).
+120 m, if fewer than 80 % of pickups sit off the critical path, if any pickup lacks a stable
+id, or if the count is met by uniform scatter rather than authored placement (the blind route
+strip must show *reasons*, not objects).
 
 ---
 
@@ -568,15 +615,15 @@ ids stay.
 | rodkeeper_hesk | Rodkeeper Hesk | 1 Cinder Verge | local_historian | arrival guide, explains the Long Storm, late-story reward |
 | stormreader_tamsin | Tamsin | 1 | young_trainer | Surge tutorial, optional trainer, memorable side character |
 | cook_marl | Marl | 1 | innkeeper | camp support, teaches rod protection, food buffs |
-| courier_pim | Pim | 2 Glowmoss Hollows | courier | affected local stranded between Waystones; side chain giver |
+| courier_pim | Pim | 2 Glowmoss Hollows | courier | affected local stranded between dark arches; side chain giver |
 | trainer_ivo | Ivo | 2 | wandering_trainer | optional trainer, route-choice hints |
 | grunt_lieutenant_dace | Lieutenant Dace | 2 | grunt_c | Hollows rod station picket, first Team Tether fight |
-| warden_elect_bryn | Warden-Elect Bryn | 3 Conductor Run (Rodline Post) | craftsperson | Rodfolk leader, Act I close, insulation recipes |
+| warden_elect_bryn | Warden-Elect Bryn | 3 Conductor Run (Rodline Post) | local_historian | Rodfolk leader, Act I close, insulation recipes |
 | trader_oswin | Oswin | 3 | trader | Rodline Post trade |
 | tether_lieutenant_varga | Lieutenant Varga | 3 | officer_a | holds the Rodline bridge, mid-biome conflict fight |
-| keeper_ondra | Keeper Ondra | 3 (Still Grove) | creature_caretaker | Arc-Step mentor, trial giver |
+| keeper_ondra | Keeper Ondra | 3 (Still Grove) | craftsperson | the last arch-wright; teaches the Stormglass Arch recipe; keeps the shattered footing |
 | archivist_wen | Archivist Wen | 4 Hollow Crown | field_researcher | the truth, Rootgate release, late-story NPC |
-| elder_maud | Elder Maud | 5 Deepwood (Lantern Hollow) | local_historian | Lantern Hollow elder, shrine keeper, Heart placement |
+| elder_maud | Elder Maud | 5 Deepwood (Lantern Hollow) | local_historian | Lantern Hollow elder, shrine keeper, Spark placement |
 | trader_fenn | Fenn | 5 | trader | Lantern Hollow trade, high-tier recipes |
 | caretaker_lio | Lio | 5 | creature_caretaker | creature recovery, bond gifts |
 | ace_trainer_rook | Rook | 5 | rival_trainer | ace optional circuit, "the Deepwood Circuit" side chain |
@@ -596,11 +643,12 @@ Cloudreach act/objective shape. The Stormwood has:
 
 - one main chain of 24–30 objectives across three acts, with count-flags for the four rod
   stations (feed shows "2 of 4", no GPS route);
-- six side chains (§13) — including **"Dark Stones"** (relight every Waystone),
+- six side chains (§13) — including **"Dark Arches"** (relight every ancient pair),
   **"The Deepwood Circuit"** (Rook's trainer completion), **"Pim's Parcels"** (affected
-  locals across Waystones), **"What the Crown Remembers"** (mystery, Archivist Wen),
-  **"Glass for Bryn"** (resource), **"Across the Sink"** (Arc-Step exploration);
-- at least one objective that visibly changes at `arc_step_unlocked`;
+  locals across the arches), **"What the Crown Remembers"** (mystery, Archivist Wen),
+  **"Glass for Bryn"** (resource), **"Raise a Road"** (build an arch pair of your own
+  between two named viewpoints);
+- at least one objective that visibly changes at `stormglass_arch_recipe_learned`;
 - clear completion feedback through the existing banner and reward summary.
 
 Avoid GPS spam; the feed says what matters, the world says where.
@@ -617,10 +665,10 @@ deficit ≤ `max_catch_level_deficit`; trainer step ≤ 4).
 | Region | team enters → leaves | wild field (Calm / Surge) | authored opposition | key tools |
 |---|---|---|---|---|
 | 1 Cinder Verge | 33 → 35 | 30–34 / 32–35 | trainers 33–35, picket 34 | rod protection, first insulated piece |
-| 2 Glowmoss Hollows | 35 → 37 | 32–36 / 34–37 | trainers 35–37, Dace 36, alpha 38 | first Waystone, TM 1 |
-| 3 Conductor Run | 37 → 39 | 34–38 / 36–39 | trainers 37–39, Varga 39, Capacitor alpha 40 | insulation set, Arc-Step |
+| 2 Glowmoss Hollows | 35 → 37 | 32–36 / 34–37 | trainers 35–37, Dace 36, alpha 38 | first relit pair, TM 1 |
+| 3 Conductor Run | 37 → 39 | 34–38 / 36–39 | trainers 37–39, Varga 39, Capacitor alpha 40 | insulation set, the arch recipe |
 | 4 Hollow Crown | 39 → 40 | 37–40 / 38–41 | Crown guardian 41 | TM 2, Rootgate |
-| 5 Deepwood | 40 → 42 | 38–42 / 39–42 | trainers 40–42, Rook ace 42, Hall guardian 43, Blackwater elder 43 | TM 3, prime orbs, Heart shrine |
+| 5 Deepwood | 40 → 42 | 38–42 / 39–42 | trainers 40–42, Rook ace 42, Hall guardian 43, Blackwater elder 43 | TM 3, prime orbs, relic shrine |
 | 6 Dynamo | 42 → 44 | 40–42 / 41–43 | Kestrel 42–43, Marrow 43–44 (ace 44), legendary 44 | TM 4, everything |
 
 Stronger than Cloudreach must come from moves, composition, G-3 behaviour profiles,
@@ -654,11 +702,11 @@ replaces bodies later without touching architecture, flags, or placement.
 | Table | Level | Calm roles (placeholder) | Surge roles (placeholder) |
 |---|---|---|---|
 | verge_calm / verge_surge | 30–34 / 32–35 | cinder_forager (bramblebun), edge_scout (pipwing), ash_digger (burrowback) | storm_runner (stormtrail), edge_scout, glass_lurker (shadelet, rare) |
-| hollows_calm / hollows_surge | 32–36 / 34–37 | pool_drifter (brooktail), moss_grazer (meadowhart), blink_spark (sparkit, `blink_capable`) | blink_spark, night_glider (duskhush), pool_ambusher (riftfrill) |
-| run_calm / run_surge | 34–38 / 36–39 | ridge_stalker (frostclaw), blink_spark (sparkit), vine_climber (veridian) | storm_runner (stormtrail), arc_diver (galecrest), ridge_stalker |
-| crown_calm / crown_surge | 37–40 / 38–41 | crown_keeper (mosshell), blink_spark (sparkit, vivid) | crown_wisp (duskhush, vivid), glass_lurker (shadelet) |
+| hollows_calm / hollows_surge | 32–36 / 34–37 | pool_drifter (brooktail), moss_grazer (meadowhart), spark_darter (sparkit) | spark_darter, night_glider (duskhush), pool_ambusher (riftfrill) |
+| run_calm / run_surge | 34–38 / 36–39 | ridge_stalker (frostclaw), spark_darter (sparkit), vine_climber (veridian) | storm_runner (stormtrail), arc_diver (galecrest), ridge_stalker |
+| crown_calm / crown_surge | 37–40 / 38–41 | crown_keeper (mosshell), spark_darter (sparkit, vivid) | crown_wisp (duskhush, vivid), glass_lurker (shadelet) |
 | deepwood_calm / deepwood_surge | 38–42 / 39–42 | giant_rooter (tuskroot), canopy_hunter (galecrest), ember_scavenger (cindercub) | storm_runner (stormtrail), night_glider (duskhush), ash_charger (ashtusk) |
-| dynamo_calm / dynamo_surge | 40–42 / 41–43 | fence_prowler (shadelet), conduit_gnawer (nightburrow) | arc_diver (galecrest), blink_spark (sparkit, alpha), ash_charger (ashtusk) |
+| dynamo_calm / dynamo_surge | 40–42 / 41–43 | fence_prowler (shadelet), conduit_gnawer (nightburrow) | arc_diver (galecrest), spark_darter (sparkit, alpha), ash_charger (ashtusk) |
 
 Night weights raise the night_glider, glass_lurker and conduit_gnawer roles on every table.
 
@@ -666,7 +714,7 @@ Night weights raise the night_glider, glass_lurker and conduit_gnawer roles on e
 
 | Encounter | Where | Level | Profile | Identity |
 |---|---|---|---|---|
-| Hollows Alpha | region 2 flooded route after a Break | 38 | CHARGER | a Sparkit alpha that Arc-Steps between the pool's stones every third attack (visual only until the roster lands — the behaviour override is the `reposition_distance` lever) |
+| Hollows Alpha | region 2 flooded route after a Break | 38 | CHARGER | a Sparkit alpha that surfaces from a different pool each time it lunges (the `reposition_distance` lever, with a splash-and-arc VFX so the reposition reads) |
 | Capacitor Alpha | Capacitor Grove, Break only | 40 | DIVER | strikes land where it stood; the fight is about leaving the glow |
 | Crown Guardian | Hollow Crown | 41 | WALL | a Mosshell alpha, vivid, glass-plated; blocks the heartstone |
 | Old Rodfolk Hall Guardian | Deepwood optional dungeon | 43 | ACE | the one telegraph you must read; guards the Hall's Rare Candy and gear |
@@ -686,7 +734,7 @@ Tether ranks use TM-tier quicks at officer and captain only (G-4).
 
 Bound in the Dynamo core. Placeholder body: Sparkit at ×1.8 scale, alpha colourway, the
 aspect emissive boosted, nickname **"the Stormheart"** (rename is the Creative Director's).
-Level 44. It Arc-Steps. It is the single strongest catch in the chapter and the reason the
+Level 44. It is the single strongest catch in the chapter and the reason the
 five-creature cap bites again at the end (`five_slot`). Its final art and name arrive with
 the roster; the chamber, the release beat, the offer to join and the ceremony ship now.
 
@@ -711,11 +759,11 @@ system (never a large generic trainer):
      charge and positions on plates; captain counter-switches.
   2. *Overload* — at half team, Marrow vents the core: shorter safe windows, forced switch
      decisions, Static on the exposed.
-  3. *Break the Core* — team defeated, Marrow retreats to the pillar; the player Arc-Steps
-     between the three plates while the floor arcs, striking four exposed conduits with the
-     piloted creature before the banks re-fire.
+  3. *Break the Core* — team defeated, Marrow retreats to the pillar; the four banks fire in
+     sequence and the player runs the rod plates between fires, striking four exposed
+     conduits with the piloted creature before the banks complete a cycle.
 - **Tests:** team strength, switching, bond/level investment, preparation (insulation, rod,
-  revives), recovery planning, movement/combat skill, and the biome's own verb.
+  revives), recovery planning, movement/combat skill, and reading the Surge.
 - **Loss** returns the player to Ember Bivouac with flags intact and no duplicated rewards.
 - **Victory** (`captain_marrow_defeated`) → the pillar opens → the legendary release
   (§17.5), the offer, the ceremony → the Long Storm's last Break, then silence, then sky.
@@ -728,7 +776,7 @@ Everything the 2026-09-04-C directive requires continues here unchanged: XP visi
 progress visible, level-up celebration, bond progress visible during ordinary play, milestone
 celebration, an understandable bond UI, companion personality visible outside combat. New
 shared actions that reinforce bond in this biome: sheltering together through a Break at a
-rod camp, completing a Waystone circuit, and feeding Voltcap. The player should feel the team
+rod camp, relighting an ancient arch with the team present, and feeding Voltcap. The player should feel the team
 become strong enough to stand in a Break by the end.
 
 ---
@@ -741,9 +789,9 @@ dialogue flags (D43).
 
 | Resource | Kind | Gather | Where | Uses |
 |---|---|---|---|---|
-| **Stormglass** | ore (fulgurite) | pickaxe; charged nodes open in Break/Fading | 2–6 | insulated gear, lightning rod, TM orb sockets |
-| **Thunderwood** | wood | axe, glass-fused trunks | 3, 5 | rod mast, moss lantern, camp upgrade |
-| **Conductor Vine** | fiber | knife | 1–3 | rod wiring, insulated lining |
+| **Stormglass** | ore (fulgurite) | pickaxe; charged nodes open in Break/Fading | 1–6 (Crown-grade only in the Capacitor Grove and the Crown) | relighting arches, building arches, insulated gear, lightning rod, TM orb sockets |
+| **Thunderwood** | wood | axe, glass-fused trunks | 3, 5 | arch frame, rod mast, moss lantern, camp upgrade |
+| **Conductor Vine** | fiber | knife | 1–3 | arch binding, rod wiring, insulated lining |
 | **Glowmoss** | herb | hand | 1, 2, 5 | moss lantern, recovery tonic, sight in the Deepwood |
 | **Voltcap** | food (mushroom) | hand | 2, 5 | satiety, Static resistance, bond food |
 | **Sparkfur** | creature drop | encounter reward | 2–6 | insulated gear, bond gift |
@@ -762,9 +810,10 @@ author four TM-tier moves in `data/moves/moves.json` with the existing schema:
 items `tm_static_snap`, `tm_voltaic_whip`, `tm_thunder_break`, `tm_stormfall`, type-coloured
 orbs through the existing TM orb path. A TM is an item and it is spent (D44).
 
-**≥ 12 recipes**: the four gear pieces, lightning rod, moss lantern, rod mast, insulated
-workbench upgrade, Voltcap stew, glowmoss tonic (recovery), stormglass orb socket (prime
-orb), and a Waystone repair kit (a story-gated recipe for "Dark Stones").
+**≥ 12 recipes**: the Stormglass Arch (story-gated at the Still Grove), the four gear
+pieces, lightning rod, moss lantern, rod mast, insulated workbench upgrade, Voltcap stew,
+glowmoss tonic (recovery), and a stormglass orb socket (prime orb). Relighting an ancient
+arch is not a recipe: it spends Stormglass on interaction.
 
 ---
 
@@ -773,6 +822,8 @@ orb), and a Waystone repair kit (a story-gated recipe for "Dark Stones").
 Camping matters more than in Cloudreach without any change to satiety
 (`satiety_policy: reuse_existing_slow_nonlethal_drain`).
 
+- **Stormglass Arch** (new buildable; §10): the biome's road. Building a pair between a
+  rod camp and the frontier is the intended way to make a base matter in the Deepwood.
 - **Lightning rod** (new buildable; Thunderwood mast + Stormglass + Conductor Vine): a placed
   rod makes a 12 m radius surge-safe; the six authored camps have one pre-built; the ten
   rod-able clearings do not.
@@ -792,10 +843,12 @@ Realm-keyed `MapState` (the Cloudreach audit's map-isolation seam), `map_stormwo
 fog, landmarks and regions per §12–13. The player must recognise the six regions from the
 world before the map: the Struck Sentinel, the Lantern Pools' glow, the rod towers over the
 ridge, the Crown's lit ring, Lantern Hollow's lanterns under the giants, the Dynamo's
-chimneys. Unlock events: `arc_step_unlocked` reveals the Waystone network on the map;
-`rootgate_released` reveals the Deepwood; `stormwood_upper_rods_disabled` reveals the Dynamo
-approach; `stormwood_storm_broken` reveals the Waterward view. Waystone travel uses the map
-screen to pick a destination, controller-first.
+chimneys. Unlock events: `stormglass_arch_recipe_learned` reveals every ancient arch on the
+map with its lit/dark state; `rootgate_released` reveals the Deepwood;
+`stormwood_upper_rods_disabled` reveals the Dynamo approach; `stormwood_storm_broken`
+reveals the Waterward view. Arch travel is walking through; the map shows linked pairs as a
+dotted line and never offers a pick-a-destination teleport (that is the later creature
+ability's job, §33).
 
 ---
 
@@ -828,12 +881,13 @@ Everything survives save/load and realm travel, under the `stormwood:` namespace
 realm-aware persistence the Cloudreach audit specifies:
 
 Key to the Stormwood earned; Stormward gate discovered/unlocked; chapter started; every act
-and objective flag; the Surge phase and timer; each rod station's state; each Waystone's
-lit state and visited state; `arc_step_unlocked`; Rootgate released; trainers defeated;
+and objective flag; the Surge phase and timer; each rod station's state; each ancient
+arch's lit state and each pair's link state; `stormglass_arch_recipe_learned`; every player
+arch as a realm-tagged building with its link; Rootgate released; trainers defeated;
 named encounters beaten/caught (once-only); pickups collected by `pickup_id`; harvest
 records; charged-node state; camps discovered; rods and lanterns built; side-chain
 progress; shortcuts opened; Kestrel and Marrow state; legendary freed/joined/released;
-Heart earned/placed/active; the storm broken; NPC post-storm states; the Waterward reveal.
+Spark earned/placed/active and the Wings' power state; the storm broken; NPC post-storm states; the Waterward reveal.
 Add migration and defaults so Meadows-only and Cloudreach-only saves load cleanly, and
 migrate `realm_key_water` to `realm_key_stormwood` (§5).
 
@@ -848,18 +902,22 @@ realm transition both ways; `stormwood_world.json` and `stormwood_chapter.json` 
 (a `test_stormwood_chapter_data.gd` in the shape of the Cloudreach test, plus the §13 count
 minimums as assertions against the data); the level-curve invariants; the Surge state
 machine and its region modifiers; strike telegraph, shelter and damage bounds; rod safe
-radius; Arc-Step eligibility, range, line of sight, lit-anchor rule, arrival grounding,
-combat lock, slot cost; Waystone travel rules; Rootgate release; rod-station disable
+radius; arch relight cost and pair linking; travel both ways with the companion; refusal
+through dark, half-lit or unlinked arches; arrival grounding; combat lock; player arch
+placement, auto-pairing, the 3-pair cap, dismantle unlinking and refund; the Still Grove
+footing accepting only an arch and linking only to the Crown Arch; the Crown unreachable by
+any grounded, ridden, jumped or flown route; Rootgate release; rod-station disable
 effects; pickup identity and persistence; harvest identity; camp restore; named-encounter
 once-only; trainer defeat persistence; the Dynamo phases and loss recovery; legendary
-release, offer, ceremony when full; Heart earn/place/Livewire/single-active/swap; aftermath
+release, offer, ceremony when full; Spark earn/place/Livewire/single-active/swap; the Wings'
+Skyborne removing Fly's stamina drain; aftermath
 state; save/load of every §25 item.
 
 Smoke: `smoke_stormwood_foundation.gd` (real scene, regions, landmarks, routes, collision,
 player grounded), `smoke_stormwood_transition.gd` (Cloudreach → Stormwood → Cloudreach →
 Meadows), and a **continuous `smoke_stormwood_chapter.gd`** that drives the whole chapter
-Act I → Arc-Step → Crown → Rootgate → rods → Dynamo → legendary → Heart with a real body,
-whose reliable prefix gates in CI. A CI run under five minutes verified nothing.
+Act I → relight A and B → recipe → build the Crown twin → Crown → Rootgate → rods → Dynamo
+→ legendary → Spark with a real body, whose reliable prefix gates in CI. A CI run under five minutes verified nothing.
 
 ---
 
@@ -869,7 +927,7 @@ Every major visual batch is implemented, captured from the real gameplay camera 
 route frames, judged code-blind against the two bars (belongs to the Meadows key art's
 world; looks like the same kind of game as the Palworld references), and revised. Eight
 required review points: first Stormwood reveal under the canopy; Cinder Verge in a Break;
-Glowmoss Hollows in Calm at night; the Conductor Run's rod line; Arc-Step in flight; the
+Glowmoss Hollows in Calm at night; the Conductor Run's rod line; stepping through a lit arch; the
 Hollow Crown across the Glass Sink; Lantern Hollow; the Dynamo core. The Stormwood does not
 advance past its foundation until the environment review materially closes the gaps, as
 the owner required of Cloudreach.
@@ -904,7 +962,7 @@ and the Stormwood rebases.
 Delegate: tables and catalogues, NPC dialogue drafts, pickup and harvest placement, trainer
 data, objective data, recipes, tests, capture runs, bug investigations, placeholder
 integration, regional dressing, map pins, save-migration tests, tuning slices.
-Retain: chapter story, world composition, the Surge and Arc-Step architecture, gating,
+Retain: chapter story, world composition, the Surge and arch architecture, gating,
 major encounter design, the Dynamo, integration, visual acceptance, final acceptance.
 
 ---
@@ -918,8 +976,8 @@ catalogue injection, map isolation) exist on `main` or open them first — the S
 not re-learn that audit.
 
 ## Phase 1 — Cloudreach handoff
-Reward retarget; Stormward Overlook; the Stormward gate; realm registry; save migration;
-transition smoke.
+Reward retarget; the Wings of Cloudreach and Skyborne; Stormward Overlook; the Stormward
+gate; realm registry; level cap 100; save migration; transition smoke.
 
 ## Phase 2 — World foundation (Terrain3D first)
 Heightfield; the six regions; routes, loops, shortcuts; root bridges; landmarks; settlements
@@ -928,20 +986,22 @@ the eight review captures; the blind judge; iterate until the environment passes
 
 ## Phase 3 — The Surge and the hazard
 Weather extension, four phases, region modifiers, light and audio, strike telegraph and
-damage, shelter, rod buildable, insulation items, HUD glyph, tests.
+damage, shelter, rod buildable, insulation items, HUD glyph, tests. (Relighting pair A in
+Act I depends on Break-only stormglass, so this phase lands before Phase 4's Act I content.)
 
 ## Phase 4 — Core chapter content
 NPCs, dialogue, main chain Act I, trainers, pickets, encounter tables with placeholders,
-harvest and charged nodes, pickups, camps, side chains, Waystones (lit/unlit), density
+harvest and charged nodes, pickups, camps, side chains, ancient arches (lit/dark), density
 census against §13.
 
-## Phase 5 — Arc-Step
-Mechanics, controls, VFX, unlock trial, Waystone travel, the Crown, Rootgate release,
-tests, bond rule.
+## Phase 5 — Stormglass Arches
+Ancient arch objects and relighting, pair linking, travel and VFX, the arch buildable and
+its build-system integration, footings, the Still Grove recipe beat, the Capacitor Grove
+Crown-grade glass, the Crown twin, the Crown, Rootgate release, tests, bond rule.
 
 ## Phase 6 — Deepwood and the Dynamo
 Lantern Hollow, shrine, upper rods, optional Hall dungeon, the Circuit, Kestrel, the Dynamo
-climax, legendary release and ceremony, Heart, aftermath, Waterward reveal.
+climax, legendary release and ceremony, the Spark, aftermath, Waterward reveal.
 
 ## Phase 7 — Evidence and polish
 Continuous chapter smoke; route strip and blind judge on all eight points; balance pass on
@@ -967,15 +1027,18 @@ a **fails if** is scored by a blind run, not by inspection.
 3. **The Surge changes play.** A blind tester names the phase from sound and light, meets
    different things in a Break than in Calm, gathers something only a Break opens, and
    shelters on purpose. *Fails if* the storm is decoration.
-4. **Arc-Step is required and remembered.** The Hollow Crown is unreachable by walking,
-   riding, jumping or Fly; after the Still Grove trial it is reached by Arc-Step; the tester
-   can say what changed about the map afterwards. *Fails if* any grounded route or exploit
-   reaches the Crown, or Arc-Step works before the trial.
-5. **Every player can complete it.** A Terrapup or Galewisp starter completes the chapter
-   through a caught blink-capable creature. *Fails if* the chapter requires Ripplet.
+4. **The arches are required and remembered.** The Hollow Crown is unreachable by walking,
+   riding, jumping or Fly; it is reached only by building the Still Grove twin after the
+   recipe; the tester can say what changed about the map afterwards. *Fails if* any grounded
+   route or exploit reaches the Crown, if an arch can be built before the recipe, or if the
+   Crown twin can be built anywhere but the footing.
+5. **Building is part of the path.** A tester relights at least two ancient pairs and builds
+   at least one arch to finish the chapter, and can explain in one sentence what an arch
+   does. *Fails if* the chapter can be finished without ever gathering stormglass in a Break,
+   or if any creature is found to carry a teleport verb.
 6. **The story runs.** All three acts, every objective, every side chain, every NPC state,
    the four rod stations, the truth at the Crown, the Rootgate, the Dynamo, the release,
-   the ceremony when full, the Heart, the aftermath and the Waterward reveal run in order
+   the ceremony when full, the Spark, the aftermath and the Waterward reveal run in order
    from the task feed with no dead ends. *Fails if* any objective needs a console or a
    re-load to advance.
 7. **Density meets §13.** Every count and gap rule holds by census and by the walked route
@@ -994,9 +1057,10 @@ a **fails if** is scored by a blind run, not by inspection.
 11. **Camping matters.** A tester who tries to push through regions 3–6 without a rod camp
     is set back by a Break and learns; one who builds is not. Satiety is unchanged.
     *Fails if* the pressure comes from hunger, or if findables erase it.
-12. **Realm Heart.** The Heart is earned, placed at Lantern Hollow, Livewire works and is
-    measurable, only one power is active, swapping works, all persists. *Fails if* two
-    powers stack or the Cloudreach slot lies about its power.
+12. **Realm relics.** The Spark is earned, placed at Lantern Hollow, Livewire works and is
+    measurable; the Wings' Skyborne measurably removes Fly's stamina drain; only one relic
+    power is active, swapping works, all persists. *Fails if* two powers stack, if any UI
+    calls the Wings or the Spark a Heart, or if Fly costs nothing even without the Wings.
 13. **Persistence.** Every §25 item survives save/load, realm travel and an old-save
     migration. *Fails if* a one-time reward respawns, a satchel lands in the wrong realm,
     or a Meadows-only save crashes.
@@ -1024,7 +1088,8 @@ produces the intended Tetherbound experience.
 - the final Stormwood creature roster (10–12 species, one evolution line);
 - the legendary's final body, name and animations;
 - a Meshy Dynamo core hero object (needs owner reference art);
-- the Cloudreach Heart's power definition;
+- the creature teleport ability C1 promises Ripplet (a later biome; when it lands it lets the
+  player teleport to anywhere they have stood without building an arch);
 - the Water biome.
 
 Placeholders must let the entire chapter function. The missing roster is not permission to
@@ -1035,9 +1100,9 @@ leave anything else incomplete.
 # 34. REQUIRED FINAL REPORT
 
 Before ending the goal, provide: current `main` SHA and merge confirmation; open branches
-and why; the Cloudreach handoff status; for each of world, Surge, hazard, Arc-Step, Crown,
+and why; the Cloudreach handoff status; for each of world, Surge, hazard, arches, Crown,
 story, NPCs, trainers, encounters, objectives, resources, gear, pickups, camps, Dynamo,
-legendary, Heart, aftermath, Waterward setup — classify **proven / implemented but unproven
+legendary, Spark, aftermath, Waterward setup — classify **proven / implemented but unproven
 / blocked / intentionally deferred**; the evidence list (tests, smokes, continuous run,
 judge verdicts, performance); every placeholder with its replacement point; the §13 census
 table with actuals beside minimums; and the highest-value remaining work if anything is
@@ -1049,8 +1114,8 @@ short. If the Stormwood is truly complete except creature art, say so plainly.
 
 Build the chapter, do not describe it. Terrain3D and baked scatter from day one; never a
 box-and-cylinder forest. Integrate continuously. Evidence over assumptions. The Surge must
-change what the player does. Arc-Step must change the player's understanding of the map. Lit
-from within, never dark for its own sake. Designed density over empty acreage. The Heart must
+change what the player does. The arches must change the player's understanding of the map. Lit
+from within, never dark for its own sake. Designed density over empty acreage. The Spark must
 feel like a realm reward. The Stormwood must feel like the third chapter of the same game.
 
 Do not stop at architecture. Do not stop at scaffolding. Do not stop at "ready for
