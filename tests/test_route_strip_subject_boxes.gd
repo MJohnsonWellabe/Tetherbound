@@ -82,3 +82,35 @@ func test_one_fighter_directly_behind_the_other_is_still_reported() -> void:
 	assert_eq(problems.size(), 1, str(problems))
 	assert_true(problems[0].contains("overlap on screen"), problems[0])
 
+
+
+func test_two_fighters_standing_inside_each_other_are_reported_as_such() -> void:
+	# Run 6: the combat AI had closed the arena's 5 m separation to contact by
+	# the time the shutter opened, and the judge saw one silhouette. Bodies
+	# that interpenetrate in the WORLD are not a framing problem -- the report
+	# has to say so, because no bearing fixes it.
+	var ally := {"name": "companion:terrapup", "aabb": _box("terrapup", Vector3.ZERO)}
+	var wild := {"name": "opponent:galecrest", "aabb": _box("galecrest", Vector3(0.9, 0.0, 0.0))}
+	assert_true((ally["aabb"] as AABB).intersects(wild["aabb"]),
+		"0.9 m apart really is inside each other for these two bodies")
+	var problems: Array[String] = CAPTURE_CHECK.readable_problems(_camera(6.2, 2.4), FOV, SIZE, [ally, wild])
+	assert_eq(problems.size(), 1, str(problems))
+	assert_true(problems[0].contains("standing inside each other"), problems[0])
+	assert_true(problems[0].contains("no camera angle separates them"), problems[0])
+
+
+func test_the_interpenetration_report_replaces_the_screen_overlap_one() -> void:
+	# Not both: two bodies inside each other also overlap on screen, and two
+	# messages about one situation is noise in a refusal that has to be read.
+	var ally := {"name": "companion:terrapup", "aabb": _box("terrapup", Vector3.ZERO)}
+	var wild := {"name": "opponent:galecrest", "aabb": _box("galecrest", Vector3(0.9, 0.0, 0.0))}
+	var problems: Array[String] = CAPTURE_CHECK.readable_problems(_camera(6.2, 2.4), FOV, SIZE, [ally, wild])
+	for line: String in problems:
+		assert_false(line.contains("overlap on screen"), "the screen-overlap line is not also emitted: %s" % line)
+
+
+func test_fighters_at_the_arena_separation_are_not_reported_as_interpenetrating() -> void:
+	var ally := {"name": "companion:terrapup", "aabb": _box("terrapup", Vector3.ZERO)}
+	var wild := {"name": "opponent:galecrest", "aabb": _box("galecrest", Vector3(ARENA_SEPARATION, 0.0, 0.0))}
+	assert_false((ally["aabb"] as AABB).intersects(wild["aabb"]))
+	assert_eq(CAPTURE_CHECK.readable_problems(_camera(9.0, 2.4), FOV, SIZE, [ally, wild]).size(), 0)

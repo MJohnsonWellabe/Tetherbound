@@ -484,6 +484,14 @@ const READABLE_MIN_HEIGHT_FRAC := 0.12
 ## quarter of its box cropped by the frame edge is still a subject; one with
 ## half of it gone is not.
 const READABLE_MIN_INSIDE_FRAC := 0.75
+## Two subjects whose WORLD boxes intersect are standing inside each other.
+## No camera separates that, so it is reported on its own terms rather than as
+## a framing problem: W01-ROUTE-STRIP run 6's fight frame was refused by no
+## rule and the code-blind judge opened with "the two creatures interpenetrate
+## and merge into one silhouette ... at 30% they are a single beige-and-blue
+## lump". The fighters had closed the arena's authored 5 m separation to
+## contact while the capture waited for its camera settle.
+const REPORT_INTERPENETRATION := true
 ## Two subjects whose projected boxes overlap by more than this fraction of
 ## the smaller box's area are reported: the one behind is, to a viewer, not
 ## in the frame. Run 2 of W01-ROUTE-STRIP saved a fight frame whose trainer's
@@ -608,7 +616,7 @@ static func readable_problems(cam: Transform3D, fov_deg: float, size: Vector2,
 		if max_height > 0.0 and height_frac > max_height:
 			out.append("'%s' fills %.0f%% of the frame's height; over %.0f%% it is a close-up, not a subject in a scene" % [
 				name, height_frac * 100.0, max_height * 100.0])
-		rects.append({"name": name, "rect": rect})
+		rects.append({"name": name, "rect": rect, "box": box})
 		var visible := frame.intersection(rect)
 		var inside_frac := 0.0
 		if rect.get_area() > 0.0:
@@ -625,6 +633,13 @@ static func readable_problems(cam: Transform3D, fov_deg: float, size: Vector2,
 	if max_overlap > 0.0:
 		for i in rects.size():
 			for j in range(i + 1, rects.size()):
+				var box_a: AABB = rects[i]["box"]
+				var box_b: AABB = rects[j]["box"]
+				if REPORT_INTERPENETRATION and box_a.intersects(box_b):
+					out.append(("'%s' and '%s' are standing inside each other (their bodies " +
+						"overlap in the world, not just on screen) -- no camera angle separates them") % [
+						str(rects[i]["name"]), str(rects[j]["name"])])
+					continue
 				var a: Rect2 = rects[i]["rect"]
 				var b: Rect2 = rects[j]["rect"]
 				var smaller := minf(a.get_area(), b.get_area())

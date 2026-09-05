@@ -96,6 +96,9 @@ const FIGHT_MARGIN := 0.08
 ## No fighter may fill more than this of the frame: run 2's first fit put the
 ## companion at 69% with the fight behind it.
 const FIGHT_MAX_HEIGHT_FRAC := 0.5
+## In a fight the two bodies must also be clearly separate on screen, tighter
+## than the general rule: half of the smaller body hidden is one silhouette.
+const FIGHT_MAX_OVERLAP_FRAC := 0.25
 ## And nobody may be smaller than this. Run 3 framed a mudsnout at 14.5% --
 ## it passed every other rule and the code-blind judge reported it as
 ## unreadable and ambiguous with a background prop.
@@ -111,12 +114,20 @@ const FIGHT_MIN_HEIGHT_FRAC := 0.18
 const FIGHT_D_MIN := 4.0
 const FIGHT_D_MAX := 26.0
 ## How many physics ticks the trainer stands beside the wild before engaging,
-## then after `begin()` before the shutter. The second must clear both
-## `combat.json` flow.input_guard (0.25 s = 15 ticks at 60 Hz) -- the flee
-## below is read by `_read_player_input`, which the guard gates -- and the
-## camera hand-off, so the fight is visibly under way rather than mid-deploy.
+## then after `begin()` before the shutter.
+##
+## The second was 40, copied from `_capture_combat_moments.gd`, which needs
+## that long because it shoots through the REAL rig and must wait out
+## `combat.json` camera.retarget_lag. This strip poses its own camera, so it
+## waits out nothing -- and 40 ticks is two thirds of a second in which the
+## combat AI closes the arena's authored 5 m separation to contact. Run 6's
+## judge saw the result: "the two creatures interpenetrate and merge into one
+## silhouette". Ten ticks is past `_place_fighters()` and the arena's own
+## construction, with the fighters still near where the fight put them.
+## Nothing here needs the input guard: the flee spends FIGHT_GUARD_TICKS of
+## its own, after the shutter.
 const FIGHT_APPROACH_SETTLE := 25
-const FIGHT_ENGAGE_SETTLE := 40
+const FIGHT_ENGAGE_SETTLE := 10
 const FIGHT_GUARD_TICKS := 20
 const ENGAGE_ATTEMPTS := 2
 const ENGAGE_WAIT := 30
@@ -719,7 +730,8 @@ func _shoot_fight(band_index: int, band_id: String, stand_xz: Vector2, look_xz: 
 			await process_frame
 		_clear_toast()
 		var problems := _frame_problems(subjects, [_player, _companion, wild], {
-			"max_height_frac": FIGHT_MAX_HEIGHT_FRAC, "min_height_frac": FIGHT_MIN_HEIGHT_FRAC})
+			"max_height_frac": FIGHT_MAX_HEIGHT_FRAC, "min_height_frac": FIGHT_MIN_HEIGHT_FRAC,
+			"max_overlap_frac": FIGHT_MAX_OVERLAP_FRAC})
 		print("[fight] %s at %.1f m: %s" % [str(candidate["label"]), d,
 			"fits and reads" if problems.is_empty() else str(problems)])
 		if problems.is_empty():
