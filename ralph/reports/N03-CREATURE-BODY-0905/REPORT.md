@@ -4,7 +4,7 @@ Lane: **N03-CREATURE-BODY** (Fable), 2026-09-05 follow-up round. Session title:
 *"CL-G7 material bug + play_rest signed-roll bug"*.
 
 Branch: `ralph/N03-CREATURE-BODY-0905`, from `origin/main` at `f8a47ee4`.
-Final commit: **__FINAL_COMMIT__**.
+Code commit: **`d52be361`** (every code, test, tool and docs change; the commits after it on the branch are this report only). Verify with `git diff f8a47ee4..d52be361 --stat`.
 
 **One line per item, up front. Detail below.**
 
@@ -206,13 +206,26 @@ Each of these boots the Meadows world (the guardian is dressed during
 `burrow_warrens` population) and is the path that used to log the error once per
 boot:
 
-__SMOKE_TABLE__
+| Smoke | Exit | `^ERROR:` lines | `Parameter "material" is null` |
+|---|---|---|---|
+| `tests/smoke_warrens.gd` (builds and dresses the guardian; the path every band report named) | 0 — "warrens smoke test passed" | **0** | **0** |
+| `tests/smoke_art.gd` (alpha burrowback and shiny bodies, model fit) | 0 — "art: OK" | **0** | **0** |
+| `tests/smoke_combat.gd` (one of the five W23 listed as logging it once per boot) | 0 — "combat: OK" | **0** | **0** |
+
+Before this branch, every one of these logged the error exactly once per boot
+(`ralph/reports/W23-DIFFICULTY-0904/_smokes_after_summary.txt`, and every band
+report before it). The `^ERROR:` count is now zero, not merely one lower — the
+CL-G7 line was the only engine error these boots produced.
 
 ### Not run
 
-No visual judge round: no GPU here and the change is geometric. No CI run had
-finished at the time of this report; the branch carries no `[skip ci]` on its
-final commit, so the push run is the verification to read.
+No visual judge round: no GPU here and the change is geometric. **CI status
+could not be read from this session** — the GitHub API answers 403 ("GitHub
+access is not enabled for this session") and `gh` is not installed — so the
+push run on the branch head is the verification to read, and this report makes
+no claim about it. Intermediate pushes were avoided on purpose: `ci.yml` cancels
+in-progress runs on every push to a non-`main` branch, so the report commits
+were pushed once, together, after the code commit's run had a chance to start.
 
 ---
 
