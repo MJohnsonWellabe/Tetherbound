@@ -121,12 +121,35 @@ Every round was judged by a **code-blind** sub-agent given only the frames, `doc
 - `JUDGE-after1.md` / `JUDGE-after2.md` — intermediate rounds on the same stands.
 - `JUDGE-after-final.md` — the final verdict on the same five stands, scored explicitly against R1–R8 and asked directly whether any mass still reads as floating.
 
+### What the final blind verdict says, in its own terms
+
+Scored against the BEFORE verdict's own numbered defects, on the same stands:
+
+| | |
+|---|---|
+| R1 no light/value structure | **partly improved, by subtraction** — see below |
+| R2 the cave is boxes | **unchanged** (needs cave modules; outside the hard rules) |
+| R3 one granite bitmap, not dug earth | **partly improved** — the new earth surfaces are real and visible, the granite is still dominant |
+| R4 no evidence a creature dug or lives here | **marginally improved** — roots, spoil, the tree and crate gone; still no nest, bones or side burrows |
+| R5 four palettes, does not read as one place | **improved — "the clearest win in the set"**; interior saturation 0.16/0.18/0.13 → 0.32/0.28/0.37, and the green tree that made 02 and 03 look like they pointed *out* of the cave is gone from both |
+| R6 nothing anchored to the ground | **partly improved, and now inconsistent** — the guardian has a measurable contact shadow (93 under the paw vs 127 beside), the trainer still has none |
+| R7 no layering, foreground accidental | **improved** — 02 and 05 now have deliberate near-field occluders and a real near/mid/far read; 03 still has neither |
+| R8 artefacts | **mostly improved** — the unsupported boulder mass and the camera-clipped creature both **fixed**; the granite/sandstone seam unchanged |
+
+**The owner's floating complaint, answered by measurement.** Asked directly whether any mass still reads as unsupported: *"No — the defect is fixed."* In `before/01` a continuous band of sky and distant meadow ran under the overhanging mass across the full frame width — **14,959 sky pixels in rows 200–300, spanning x 0–1279**. In `final2/01` that band is filled: **2,564 pixels in three isolated places**, one of them correct (sky above a low rock at the frame edge). It names one residual: a dark slab at x 1061–1144 tapering to a tongue with sky under its tip — *"worth tidying but no viewer would call it floating."*
+
+**Where the judge and the owner disagree, and which one I followed.** R1: the judge's position is that the room improved *by subtraction* — the darks were crushed (dark fraction 34→57 % at 02, 30→67 % at 03) while the top of the range did not move (0.1–0.4 % of pixels above luma 200, against 14–22 % in the Palworld shots), so *"the cave is no longer uniformly dim; it is now mostly black with one bright hole … closer to a cave, and still not a lit room."* That is a fair reading of the numbers and it argues for raising the key pools until lit surfaces reach a real top end.
+
+I did **not** do that, deliberately. The owner, looking at these same interiors on 2026-09-05, said *"the inside looks acceptable except the thing that goes through the middle of the entrance"* and directed the remaining effort at the exterior. `CLAUDE.md`'s precedence puts the newest owner statement above a critic's rubric, and re-lighting an interior the owner has just accepted risks trading a verdict they gave for one they did not ask for. **Recorded as the open item rather than acted on:** if the owner wants the interior brighter rather than darker, the lever is the pool energies in `lights` (and the interior ambient a step further up), and it is one config edit plus a re-judge on these same five stands.
+
 Sheets committed: `_sheet_before.png`, `_sheet_after1.png`, `_sheet_after2.png`, `_sheet_after_final.png` (one per round, per the evidence rule; no per-frame PNGs).
 
 ## Known limitations, and what I deliberately did not do
 
 - **The cave is still axis-aligned boxes** (the before judge's R2) and still wears **one granite photo** on the interior (R3). Both are named in that verdict as needing art that is not in the build — irregular cave modules and a dug-earth material set. Nothing inside the hard rules fixes them; lighting, dressing and material tint are what this pass could reach.
 - **The mouth crop got brighter, not darker** (41 → 54 against a frame median of 53). Stated above; the first thing to fix next.
+- **The interior gained its range downward, not upward** — the judge's R1 reading, above. Left as the owner's call, with the lever named.
+- **One residual tapering slab** at x 1061–1144 in the entry stand, with sky under its tip; the judge calls it worth tidying and not floating.
 - **Draw calls are up 1.3–2.0×** at the exterior and hall stands. Levers named above; the Ally decides.
 - **The torch does nothing here by day.** `scripts/player/torch.gd` only lights when `world_look.is_dark()` is true, so inside this cave at noon the player has no torch — which is why the capture tool photographs the stands without one. If the intent is that the torch is what reads a dark cave, that is a `torch.gd` change (not this lane's file) and it interacts directly with how dark this room should be.
 - **CL-G7's patch is written, not applied** — `creature_body.gd` is outside this lane's ownership, as the brief requires.
