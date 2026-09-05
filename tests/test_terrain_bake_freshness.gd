@@ -78,3 +78,40 @@ func test_fingerprint_moves_when_the_config_changes() -> void:
 func test_missing_manifest_is_not_fresh() -> void:
 	assert_false(TERRAIN_BAKE.is_terrain_bake_fresh("res://data/terrain/__no_such_world__"),
 		"a data directory with no manifest.json must not read as fresh")
+
+
+## N11-TERRAIN-BAKE-0905. The fingerprint must not depend on line endings:
+## the same config checked out under `core.autocrlf` (the owner's Windows
+## working copy) hashed to 4395215917 where Linux hashed 1823724492, and
+## `f2dd20e4` stamped the Windows value into the manifest, so CI read a
+## real bake as stale. Rewrites the real file with CRLF endings, takes the
+## fingerprint, restores the original bytes, and asserts the number did not
+## move. Verified failable: with the `\r\n` fold removed from
+## `config_fingerprint()`, this fails with exactly those two numbers.
+func test_fingerprint_ignores_crlf_line_endings() -> void:
+	var original := FileAccess.get_file_as_string(CONFIG_PATH)
+	assert_ne(original, "", "%s is empty or unreadable; this test needs the real config" % CONFIG_PATH)
+	assert_false(original.contains("\r"), "%s already carries CR bytes; the committed file must be LF" % CONFIG_PATH)
+
+	var before := TERRAIN_BAKE.config_fingerprint()
+
+	var crlf := original.replace("\n", "\r\n")
+	assert_ne(crlf, original, "could not re-end %s with CRLF" % CONFIG_PATH)
+
+	var writer := FileAccess.open(CONFIG_PATH, FileAccess.WRITE)
+	assert_true(writer != null, "cannot open %s for writing" % CONFIG_PATH)
+	writer.store_string(crlf)
+	writer.close()
+
+	var after := TERRAIN_BAKE.config_fingerprint()
+
+	var restore := FileAccess.open(CONFIG_PATH, FileAccess.WRITE)
+	assert_true(restore != null, "cannot reopen %s to restore it" % CONFIG_PATH)
+	restore.store_string(original)
+	restore.close()
+	assert_eq(FileAccess.get_file_as_string(CONFIG_PATH), original,
+		"failed to restore %s; the working tree is now dirty" % CONFIG_PATH)
+
+	assert_eq(after, before,
+		"a CRLF checkout of terrain_playground.json moved the terrain bake fingerprint " +
+		"(%d vs %d), so a Windows bake stamps a manifest Linux CI reads as stale" % [after, before])
