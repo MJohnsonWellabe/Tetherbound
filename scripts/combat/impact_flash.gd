@@ -31,6 +31,22 @@ var _radius: float = 1.5
 var _colour: Color = Color("#ffd27a")
 var _core_colour: Color = Color("#fff6df")
 
+## N14-ROUTED-FOLLOWUPS, from N07-VFX-POLISH's routed finding: "impact_flash.gd
+## draws nine hard-edged radial triangles in its core colour and exposes no
+## softness key; the brief's 'spike softness' is not reachable from
+## catching.json, and that script is shared by every attack in the game."
+##
+## So it is a PARAMETER with a zero default, not a change to how the spikes are
+## drawn. At 0.0 every streak is exactly the flat, uniformly-lit triangle it has
+## always been, so every attack in the game is byte-identical unless its own
+## config block asks otherwise; above 0.0 the streak fades along its length and
+## across its width, which is what makes it read as a spray rather than as nine
+## cut-out spikes. Each caller opts in from its own data
+## (`combat.json::impact.*` and `catching.json::vfx.*`, key `spike_softness`),
+## which is the only way a shared primitive can be softened for the catch seal
+## without silently restyling every blow in the game on the same commit.
+var _spike_softness: float = 0.0
+
 var _ring: MeshInstance3D = null
 var _core: MeshInstance3D = null
 var _streaks: MeshInstance3D = null
@@ -41,11 +57,13 @@ var _streak_mesh: ImmediateMesh = null
 ## `strength` scales the whole burst — a charged attack should not look like a
 ## quick one, because the difference between them is the only reason to build
 ## energy.
-static func burst(parent: Node, at: Vector3, colour: Color, radius: float, duration: float, strength: float) -> Node3D:
+static func burst(parent: Node, at: Vector3, colour: Color, radius: float, duration: float,
+		strength: float, spike_softness: float = 0.0) -> Node3D:
 	var flash := new()
 	flash._colour = colour
 	flash._radius = radius * strength
 	flash._duration = duration
+	flash._spike_softness = clampf(spike_softness, 0.0, 1.0)
 	parent.add_child(flash)
 	flash.global_position = at
 	return flash
@@ -202,6 +220,13 @@ func _draw_streaks(reach: float, alpha: float) -> void:
 	(_streaks.material_override as StandardMaterial3D).albedo_color = Color(
 		_core_colour.r, _core_colour.g, _core_colour.b, alpha
 	)
+	# `_spike_softness` 0 keeps the historical flat triangle exactly: the material
+	# carries the alpha, every vertex is white, and vertex colour is a no-op
+	# multiply. Above 0 the base stays lit and the tip and the two edges fall
+	# away, so the spike ends in a point of light instead of a cut edge.
+	var base_alpha := 1.0
+	var tip_alpha := 1.0 - _spike_softness
+	var edge_alpha := 1.0 - _spike_softness * 0.65
 	_streak_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
 	for i in STREAKS:
 		# Deterministic from the index, so a survey frame is reproducible and two
@@ -211,7 +236,10 @@ func _draw_streaks(reach: float, alpha: float) -> void:
 		var direction: Vector3 = right * cos(angle) + up * sin(angle)
 		var side: Vector3 = (right * -sin(angle) + up * cos(angle)) * reach * 0.055
 
+		_streak_mesh.surface_set_color(Color(1.0, 1.0, 1.0, base_alpha * edge_alpha))
 		_streak_mesh.surface_add_vertex(direction * reach * 0.3 + side)
+		_streak_mesh.surface_set_color(Color(1.0, 1.0, 1.0, base_alpha * edge_alpha))
 		_streak_mesh.surface_add_vertex(direction * reach * 0.3 - side)
+		_streak_mesh.surface_set_color(Color(1.0, 1.0, 1.0, tip_alpha))
 		_streak_mesh.surface_add_vertex(direction * length)
 	_streak_mesh.surface_end()

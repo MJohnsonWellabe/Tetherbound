@@ -401,3 +401,129 @@ func test_the_watcher_records_a_newcomer_without_flourishing_and_only_lights_the
 	assert_true(played, "a level_up feed event for the deployed creature flourishes it")
 	assert_false(bool(watcher.call("on_progression_event", {"kind": "xp_gained", "creature": mine}, director)),
 		"only level_up events are the flourish's business")
+
+
+## --- the catch-seal composite (N14-ROUTED-FOLLOWUPS, from N07-VFX-POLISH) ----
+##
+## N07 finished the seal's ring and its colour and then listed four things it
+## could not reach from its own file. All four are fixed together, because all
+## four are the same composite: the orb at the moment it seals.
+##
+## These are bounds tests on the numbers, not on how they look -- the looking is
+## a blind judge's job and the sheet is in this lane's report. What each one
+## holds is the ARITHMETIC the change was argued from, so a later retune that
+## walks past the reason has to answer for it.
+
+const IMPACT_FLASH := preload("res://scripts/combat/impact_flash.gd")
+const ORB := preload("res://scripts/combat/orb.gd")
+
+
+func _json(path: String) -> Dictionary:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	return parsed as Dictionary if typeof(parsed) == TYPE_DICTIONARY else {}
+
+
+## `impact_flash.gd` is shared by every attack in the game, which is exactly why
+## N07 refused to soften it in place. The softness must therefore be OFF unless
+## a caller's own data asks for it.
+func test_spike_softness_is_opt_in_and_off_for_every_attack() -> void:
+	var combat := _json("res://data/config/combat.json")
+	var impact: Dictionary = combat.get("impact", {})
+	for key: String in ["quick", "charged"]:
+		var spec: Dictionary = impact.get(key, {})
+		assert_false(spec.has("spike_softness"),
+			"combat.json's %s attack opted into spike softness; every blow in the game just changed look without a judged render" % key)
+
+	var flash: Node3D = IMPACT_FLASH.new()
+	assert_almost_eq(float(flash.get("_spike_softness")), 0.0, 0.0001,
+		"the default is not 0.0, so an attack that names no softness no longer draws the spike it always has")
+	flash.free()
+
+
+func test_the_catch_seal_is_the_one_effect_that_asks_for_soft_spikes() -> void:
+	var vfx: Dictionary = _json("res://data/config/catching.json").get("vfx", {})
+	var caught: Dictionary = vfx.get("caught", {})
+	var softness := float(caught.get("spike_softness", 0.0))
+	assert_true(softness > 0.0,
+		"the seal no longer softens its spikes; N07's routed finding is back")
+	assert_true(softness <= 1.0, "softness is a 0-1 fraction; %f is out of range" % softness)
+	# The other two catch effects play at different moments and were not judged
+	# with the seal. Silence here is deliberate, not an oversight.
+	for key: String in ["strike", "breakout"]:
+		assert_false((vfx.get(key, {}) as Dictionary).has("spike_softness"),
+			"%s opted in without a render; only the seal was judged" % key)
+
+
+## The claim the retune was argued from, and specifically the half the first
+## attempt got wrong: it is the SLOWEST motes that have to clear the orb, not
+## the fastest. The shipped burst's leading edge was already 0.672 m out at
+## three ticks and clear of a 0.60 m orb; its slowest third was at 0.224 m,
+## sitting inside it. That tail is what N07's judge read as "dust or mud kicked
+## up" burying the orb, and a retune that raises the ceiling without raising the
+## floor leaves it exactly where it was.
+##
+## `vfx_burst.gd` eases the displacement rather than running it at constant
+## speed (`1 - (1 - u)^2.2`), so this test asks that curve rather than
+## multiplying speed by time -- which is the arithmetic error the first pass
+## made, and it under-reported the reach by a factor of two.
+func test_the_slowest_catch_burst_motes_clear_the_orb_by_the_third_tick() -> void:
+	var burst: Dictionary = _json("res://data/config/vfx.json").get("catch_burst", {})
+	assert_false(burst.is_empty(), "catch_burst is gone from vfx.json")
+	var orb_radius := float(_json("res://data/config/catching.json").get("throw", {}).get("radius", 0.6))
+	var duration := float(burst.get("duration", 1.0))
+	var speed := float(burst.get("speed", 0.0))
+	var variance := float(burst.get("speed_variance", 0.0))
+
+	var u: float = (3.0 * TICK) / duration
+	var eased: float = 1.0 - pow(1.0 - u, 2.2)
+	var slowest: float = speed * (1.0 - variance) * eased * duration
+	var fastest: float = speed * (1.0 + variance) * eased * duration
+
+	assert_true(slowest >= orb_radius,
+		"at three ticks the SLOWEST motes are %.3fm from the centre of a %.2fm orb -- still inside it, which is the finding" % [slowest, orb_radius])
+	assert_true(fastest > slowest,
+		"the spread collapsed to a single speed; the burst reads as one expanding shell rather than a spray")
+	# And not so hard or so thin that the sparkle stops being one.
+	assert_true(float(burst.get("duration", 0.0)) >= 0.45,
+		"the burst now ends before the seal does")
+	assert_true(int(burst.get("count", 0)) >= 10,
+		"fewer than ten motes is not a burst any more")
+	assert_true(variance >= 0.2,
+		"with no speed spread every mote arrives at the same radius at the same instant")
+
+
+## The resolve camera has to clear a creature standing at the orb AND keep the
+## orb the size the framing pass settled on. Half the frame width at the subject
+## is distance * tan(fov / 2); that product is the number that must not move.
+func test_the_resolve_camera_clears_an_ally_without_shrinking_the_orb() -> void:
+	var camera: Dictionary = _json("res://data/config/catching.json").get("resolve_camera", {})
+	assert_false(camera.is_empty(), "resolve_camera is gone from catching.json")
+	var distance := float(camera.get("distance", 0.0))
+	var fov := float(camera.get("fov", 0.0))
+	var height := float(camera.get("height", 0.0))
+
+	# A deployed creature is roughly a metre and a half across at the shoulder,
+	# so a lens closer than that to the orb it is standing over is inside it.
+	assert_true(distance >= 3.0,
+		"the lens is %.2fm from the orb; an ally standing at the seal is between it and its subject, which the judge called 'indistinguishable from a bug'" % distance)
+	assert_true(height >= 1.0,
+		"the lens sits at %.2fm, chest height on a creature rather than above its back" % height)
+
+	# The framing the earlier pass settled on, held to within 10%: the previous
+	# rejected attempt (3.2 / fov 50) reads 1.49m here against the 1.12m that
+	# was accepted, which is the "orb huddled small at the bottom of the frame"
+	# this bound exists to catch.
+	var half_frame: float = distance * tan(deg_to_rad(fov) * 0.5)
+	assert_true(absf(half_frame - 1.12) <= 0.112,
+		"half the frame at the orb is %.2fm against the 1.12m the framing pass accepted; the orb changed size on screen" % half_frame)
+
+
+## The halo the judge called "the clearest rendering bug in the catch sequence":
+## a straight-edged disc with a linear ramp. Rounder rim, curved falloff.
+func test_the_orb_halo_is_round_enough_and_falls_off_on_a_curve() -> void:
+	assert_true(int(ORB.HALO_SEGMENTS) >= 28,
+		"at %d segments the halo shows its own polygon edges as the straight lines the judge called a trapezoid" % int(ORB.HALO_SEGMENTS))
+	assert_true(int(ORB.HALO_RINGS) >= 2,
+		"one ring means one linear ramp from centre to rim, which is the hard cone edge being fixed")
+	assert_true(float(ORB.HALO_FALLOFF_EXP) > 1.0,
+		"an exponent of 1 or less is a linear (or worse) ramp; a glow needs to fall off faster than its radius grows")

@@ -1301,7 +1301,11 @@ func _flash_at(where: Vector3, charged: bool, tint: Variant = null, struck: Node
 		colour,
 		float(spec.get("radius", 1.5)),
 		float(spec.get("duration", 0.34)),
-		float(spec.get("strength", 1.0))
+		float(spec.get("strength", 1.0)),
+		# N14: the attack path reads the same opt-in key from `combat.json`'s own
+		# `impact.quick` / `impact.charged`. Neither sets it today, so every blow
+		# in the game draws exactly the spike it always has.
+		float(spec.get("spike_softness", 0.0))
 	)
 
 
@@ -1537,7 +1541,10 @@ func _catch_flash(key: String, at: Vector3) -> void:
 		Color(str(spec.get("colour", "#ffd27a"))),
 		float(spec.get("radius", 1.2)),
 		float(spec.get("duration", 0.35)),
-		float(spec.get("strength", 1.0))
+		float(spec.get("strength", 1.0)),
+		# N14: opt-in, from the spec's own data. 0.0 (absent) is the flat spike
+		# every attack has always drawn -- see impact_flash.gd's `_spike_softness`.
+		float(spec.get("spike_softness", 0.0))
 	)
 
 
