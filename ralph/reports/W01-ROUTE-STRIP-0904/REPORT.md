@@ -235,7 +235,9 @@ bd90a6d1 W01-ROUTE-STRIP: code-blind verdict on the run-6 frames, verbatim
 ac22de7e route strip: a fight frame needs daylight between the two fighters
 caf370a7 W01-ROUTE-STRIP: code-blind verdict on the run-7 frames, verbatim
 61648f6b W01-ROUTE-STRIP: contact sheet from run 8 (fighters separated with a clear gap, 0 refused)
-<this report and JUDGE-ROUND-4.md, committed next>
+2c995b3c W01-ROUTE-STRIP: final report and round-4 code-blind verdict
 ```
+
+Final commit hash for this report: **2c995b3c**.
 
 Branch: `ralph/W01-ROUTE-STRIP-0904`, pushed to `origin` after every commit above.
