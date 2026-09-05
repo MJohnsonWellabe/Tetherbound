@@ -1,4 +1,4 @@
-# D74 — A speaker without a body wears a faction or family plate, never the player's
+# D81 — A speaker without a body wears a faction or family plate, never the player's
 
 **Date:** 2026-09-04 · **Decided by:** lane W04-PORTRAITS, implementing owner directive
 2026-09-04 item 8b (*"fix the picture during dialogue always being the main character"*)

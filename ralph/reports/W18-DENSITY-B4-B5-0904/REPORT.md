@@ -47,7 +47,7 @@ pickups loader. Final commit: see the last section.
   the band's hardest optional encounter. **Nothing is inside the waystop clearing** (R-5).
 - **The road's beat list is unchanged** (P-5.3): the one added cluster and both added
   harvest nodes are off-road, under the outer watch's own stonework and on the west
-  shoulder. `docs/decisions/D74-band-5-findables-sit-off-the-road.md` records the call and
+  shoulder. `docs/decisions/D78-band-5-findables-sit-off-the-road.md` records the call and
   why the newer owner directive and P-5.3 can both be honoured.
 
 ## Files changed
@@ -63,7 +63,7 @@ pickups loader. Final commit: see the last section.
 | `tools/_probe_band_density.gd` | new: per-band authored census + real-world site validation, and the nearest-clear-ground suggestion a failing site needs |
 | `tools/_capture_w18_pickups.gd` | new: candy-tier frames for the blind judge |
 | `tests/test_band_pickups.gd` | W17's test; `AUTHORED_BANDS` extended to bands 4–5 so its tier and critical-path rules run over this lane's files |
-| `docs/decisions/D74-band-5-findables-sit-off-the-road.md` | new |
+| `docs/decisions/D78-band-5-findables-sit-off-the-road.md` | new |
 | `docs/WORLD_AND_CONTENT.md` | §6 counts, §7 rewritten with spine length, per-km values and a pickups column |
 | `docs/CURRENT_STATE.md` | §2 status row for this lane; content counts refreshed |
 | `docs/GATE2_GATE3_CLOSURE_PLAN.md` | CL-O4 row: density half, bands 4–5 |

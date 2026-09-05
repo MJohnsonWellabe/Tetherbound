@@ -1,4 +1,4 @@
-# D74 — Companion reactions are procedural over the model pivot, and yield to everything
+# D83 — Companion reactions are procedural over the model pivot, and yield to everything
 
 **Status:** implemented (lane W12-COMPANION-0904); the tuned numbers in
 `data/config/companion_presence.json` are judgment calls open to owner

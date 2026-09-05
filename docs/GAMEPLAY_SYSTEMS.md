@@ -151,7 +151,7 @@ continuous scene (`scenes/world/meadows_playground.tscn`, root script
 
 ## Companion presence (the deployed creature's reactions)
 
-- Rule: D74 — companion reactions are procedural over the model pivot and
+- Rule: D83 — companion reactions are procedural over the model pivot and
   yield to everything; addendum section E / owner directive C section 5.
 - Scripts: `scripts/creatures/companion_presence.gd` (the layer),
   `scripts/creatures/follower_creature.gd` (builds and ticks it, and reads

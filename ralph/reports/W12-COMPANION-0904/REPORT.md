@@ -53,7 +53,7 @@ New:
 | `tests/test_companion_presence.gd` | 26 tests over a real rigged follower body. |
 | `tools/_capture_companion_rig_inventory.gd` | What clips and bones the installed rigs actually carry. |
 | `tools/_capture_companion_moments.gd` | Photographs the three moments in the real Meadows as paired frames. |
-| `docs/decisions/D74-companion-reactions-are-procedural-over-the-model-pivot.md` | The three design calls this lane made. |
+| `docs/decisions/D83-companion-reactions-are-procedural-over-the-model-pivot.md` | The three design calls this lane made. |
 | `ralph/reports/W12-COMPANION-0904/` | This report, the rig inventory, the contact sheet, the blind verdict. |
 
 Modified (all diffs deliberately small):
@@ -92,7 +92,7 @@ asks for. So the reactions are procedural motion on
 exactly this — composed over the two clips that are reusable (`hit` as a
 flinch, `attack` as a roar) with a `LookAtModifier3D` on the `head` bone for
 the gaze. Every species gets every state; no new mesh, no Meshy generation.
-D74 records this and the two other calls in full.
+D83 records this and the two other calls in full.
 
 ---
 
@@ -349,7 +349,7 @@ which is about "the active/deployed creature".
   `autoload/game_state.gd` and says explicitly: "Provide the hook; do not build
   them here." A hook is provided; nothing on `Game` was touched.
 - **No new meshes, no Meshy generation, no new clips.** `CLAUDE.md` forbids all
-  three for the Meadows, which is why the layer is procedural. See D74.
+  three for the Meadows, which is why the layer is procedural. See D83.
 - **`creature_body.gd`, `combat_hud.gd` and `party_strip.gd` untouched**, per
   the brief's ownership list — including the latent `play_rest()` sign issue in
   section 6, which is reported for routing rather than fixed here.

@@ -1,4 +1,4 @@
-# D74 — Band 5 gets findables, off the road; D70's shape and P-5.3's road are kept
+# D78 — Band 5 gets findables, off the road; D70's shape and P-5.3's road are kept
 
 **Decided:** 2026-09-04, by the W18-DENSITY-B4-B5 lane, under the common lane rule
 ("make the smallest defensible call, record it, continue").

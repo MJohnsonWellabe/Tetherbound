@@ -24,7 +24,7 @@ conversation with Halda and with Oskar shows their own face in the box beside th
 | `tools/_capture_portraits.gd` (new) | Renders every plate from the installed rig through `village_npcs.gd::model_config()` (the world's own dressing call: rank palette, `base` override, hair) in a transparent 512² SubViewport downscaled to 256², framed from the measured hair top. `-- --ingame` boots the Meadows and photographs two real conversations at 1280×800. |
 | `data/dialogue/village.json`, `trainers.json`, `relay.json`, `meadows_freed.json`, `bands/band1..5*.json` | 119 `portrait` fields re-pointed (`ralph/reports/W04-PORTRAITS-0904/repoint_portraits.py` is the exact, re-runnable edit). `stronghold.json` untouched (other lane). `band1_lower_meadows.json`'s stale `_comment_portraits` rewritten. `opening.json` unchanged (Grandpa already correct). |
 | `tests/test_dialogue_portraits.gd` (new) | Five tests, see below. |
-| `docs/decisions/D74-…md` (new) | The three bodiless speakers and the female-rig hair finding. |
+| `docs/decisions/D81-…md` (new) | The three bodiless speakers and the female-rig hair finding. |
 | `docs/CURRENT_STATE.md` | One new §3 row (P2, struck through, fixed on this branch). |
 | `ralph/reports/W04-PORTRAITS-0904/` | `_sheet_portraits.png` (34 plates, 1536×1536), `_sheet_ingame_conversations.png` (two 1280×800 frames), three judge verdicts, `repoint_portraits.py`, this report. |
 
@@ -44,9 +44,9 @@ Not touched: `scripts/ui/dialogue_panel.gd` (draws what the line names; every pl
 | Doss | `villager_ranger` + `#4a5c3d` hair (`river_nest_clear.gd`) | `doss.png` |
 | Sela, "Rescued Ranger", Dara, Nan | `villager_ranger` | `villager_ranger.png` |
 | Oskar, Bram, Kell, Quarry Foreman | `villager_keeper` / `villager_quarryman` (male rig, no hair part) | `villager_male.png` |
-| Coll (Broken Cart; no body placed) | — | `villager_male.png` (D74) |
-| "Trainer" (generic refusals in `trainers.json`; any trainer) | — | `villager_male.png` (D74) |
-| "Team Tether Notice" (hall-approach board) | — | `grunt.png` (faction plate, D74) |
+| Coll (Broken Cart; no body placed) | — | `villager_male.png` (D81) |
+| "Trainer" (generic refusals in `trainers.json`; any trainer) | — | `villager_male.png` (D81) |
+| "Team Tether Notice" (hall-approach board) | — | `grunt.png` (faction plate, D81) |
 | Bryn | `young_trainer` | `bryn.png` |
 | Gil, Old Bram | `wandering_trainer` | `wandering_trainer.png` |
 | Juno | `rival_trainer` | `juno.png` |
@@ -183,7 +183,7 @@ skull width against 140/160.
 2. **Female-rig villagers share one face** (Mira, Tam, Halda, Rae, Doss, Sela,
    Dara, Nan). Probed in-engine: the tint applies only to `hair_ponytail`, which
    sits at the nape behind the head and is invisible from the front, in the
-   world as well as the plate. Two judges counted the repeats unprompted. D74; a
+   world as well as the plate. Two judges counted the repeats unprompted. D81; a
    rig/texture task. The per-NPC file names are kept so a fix there re-renders
    into the right names with no dialogue edit.
 3. **A texture artefact on the shared rigs** — a pale wedge on the right cheek,
@@ -197,7 +197,7 @@ skull width against 140/160.
    versions of those two into `shots/` for comparison, never over the files.
 5. **The generic trainer refusals** wear `villager_male.png` because
    `trainer_npc.gd` does not pass the speaker's portrait through. Passing it is a
-   small code change outside this lane's ownership. D74.
+   small code change outside this lane's ownership. D81.
 6. `data/dialogue/stronghold.json` (8 fields) still names `trainer.png` — other
    lane, by design. Note for the coordinator: **main has since added a ninth**
    (commit `04d844d0` added a conversation naming `trainer.png`), so that lane's
@@ -226,11 +226,11 @@ on a clean checkout of my branch and on `main`'s own run 33932088359.
 | Commit | What |
 |---|---|
 | `97b5c459` | The plates, the re-point, the test, the capture tool |
-| `5a8b2d7f` | In-game evidence mode, D74, the `CURRENT_STATE` row |
+| `5a8b2d7f` | In-game evidence mode, D81, the `CURRENT_STATE` row |
 | `f26681ec` | Re-render all 34 in one pass, fix the stale contact sheet |
 | `f26681ec`+ | One lens, the shipping ground, clean framing (judge round 2) |
 
-| `5ea816e6` | This report, the round-3 verdict, the D74 findings |
+| `5ea816e6` | This report, the round-3 verdict, the D81 findings |
 
 **Branch:** `ralph/W04-PORTRAITS-0904`, pushed to `origin`.
 **Final commit:** `5ea816e6`.

@@ -202,7 +202,7 @@ Per-km figures are against each band's own spine length from
 `terrain_playground.json` (`tools/_probe_band_density.gd`, the authored census the
 density lanes report with; D70's corridor probe counts what a walked route *meets*
 and is the Gate F figure). Band 5 is short on purpose (D70) and its road carries no
-added trainer, cache or cluster (P-5.3, D74): its three additions and twelve of its
+added trainer, cache or cluster (P-5.3, D78): its three additions and twelve of its
 fifteen pickups sit off the road at places the band already names.
 
 ## 8. Scatter re-bake rule
