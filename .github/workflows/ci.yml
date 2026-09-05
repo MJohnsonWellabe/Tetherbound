@@ -1864,6 +1864,42 @@ jobs:
           set -euo pipefail
           godot --headless --path . --script tests/smoke_gate_b_continuous.gd -- --gate-b-full-chain
 
+  # Stage B lane 0.E — the named fence
+  # `docs/specs/STAGE_B_MULTIPLAYER_EXECUTION_PLAN.md` Wave 1 row 1.B refers to.
+  # This job runs nothing new: it is a checkpoint that every job the plan
+  # calls "the existing 46 CI smokes" (the six verify-*-shard jobs) plus
+  # verify-gate-b-core actually ran and passed before a Wave 1 state-seam
+  # change is allowed to call itself green. It exists so Wave 1's own
+  # completion report has one job name to point at rather than enumerating
+  # six shard jobs by hand every time, and so a future job rename or an
+  # accidentally-dropped `needs:` entry is a visible CI failure instead of a
+  # silent gap in the fence.
+  verify-solo-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs:
+      - changes
+      - verify-core-verb-shard
+      - verify-gate-a-ui-build-shard
+      - verify-combat-shard
+      - verify-regions-shard
+      - verify-owner-regressions-shard
+      - verify-gate-evidence-shard
+      - verify-gate-b-core
+    if: needs.changes.outputs.code == 'true'
+    steps:
+      - name: Confirm the solo regression fence held
+        run: |
+          echo "Solo regression fence held. Depended-on jobs, all green:"
+          echo "  - verify-core-verb-shard"
+          echo "  - verify-gate-a-ui-build-shard"
+          echo "  - verify-combat-shard"
+          echo "  - verify-regions-shard"
+          echo "  - verify-owner-regressions-shard"
+          echo "  - verify-gate-evidence-shard"
+          echo "  - verify-gate-b-core"
+          exit 0
+
   # Main only. Ralph dispatches CI after a clean branch rebase; treating that
   # workflow_dispatch as an export request made every rebase pay this tail.
   # The export tail was ~40% of every branch
