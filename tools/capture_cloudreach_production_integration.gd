@@ -88,6 +88,9 @@ func _run() -> void:
 	if "--round4" in OS.get_cmdline_user_args():
 		output_dir="res://ralph/reports/CLOUDREACH-ENV-CORRECTION-0904/round4/"+("repair" if repair else "shots")
 		performance_path=output_dir+"/performance.json"
+	if "--round5" in OS.get_cmdline_user_args():
+		output_dir="res://ralph/reports/CLOUDREACH-ENV-CORRECTION-0904/round5/"+("repair" if repair else "shots")
+		performance_path=output_dir+"/performance.json"
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(output_dir))
 	var game := root.get_node_or_null(^"Game")
 	if game != null and game.has_method("reset_for_new_game"):
@@ -133,7 +136,7 @@ func _run() -> void:
 	var rows: Array[Dictionary] = []
 	var failures: Array[String] = []
 	var selected_views: Array=REPAIR_VIEWS if repair else VIEWS
-	if not repair and "--round4" in OS.get_cmdline_user_args():
+	if not repair and ("--round4" in OS.get_cmdline_user_args() or "--round5" in OS.get_cmdline_user_args()):
 		selected_views=VIEWS+EYE_LEVEL_VIEWS
 	for raw_view: Variant in selected_views:
 		var view := raw_view as Dictionary

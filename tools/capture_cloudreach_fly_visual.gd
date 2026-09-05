@@ -22,6 +22,8 @@ func _action(name: String,pressed: bool) -> void:
 func _run() -> void:
 	if "--round4" in OS.get_cmdline_user_args():
 		output="res://ralph/reports/CLOUDREACH-ENV-CORRECTION-0904/round4"
+	if "--round5" in OS.get_cmdline_user_args():
+		output="res://ralph/reports/CLOUDREACH-ENV-CORRECTION-0904/round5"
 	root.size=Vector2i(1280,800)
 	root.content_scale_size=Vector2i(1920,1200)
 	var game:=root.get_node("Game")

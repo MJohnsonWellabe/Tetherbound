@@ -3,8 +3,9 @@ extends SceneTree
 ## Continuous production chapter, not a checkpoint montage. All route movement
 ## uses InputEventAction and the actual controller/collision. No position writes.
 ## Completed-Meadows entitlement/Heart precondition reuses the separately proven
-## smoke_meadows_realm_handoff + smoke_cloudreach_transition path. Only enemy
-## damage/result latency is accelerated; no Cloudreach objective is seeded.
+## smoke_meadows_realm_handoff + smoke_cloudreach_transition path. Optional
+## clock acceleration preserves the simulation step; enemy defeat has the
+## separately declared lethal seam. No Cloudreach objective is seeded.
 const SCENE := preload("res://scenes/world/cloudreach_cliffs.tscn")
 const SAVE := preload("res://scripts/save/save_game.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
@@ -38,6 +39,8 @@ var initial_party_ids: Array[int] = []
 var last_reported_denial := ""
 var activity_intervals: Array[Dictionary] = []
 var previous_activity: Dictionary = {}
+var interaction_activations := 0
+var last_activated_path := ""
 
 
 func _init() -> void:
@@ -83,18 +86,26 @@ func _run() -> void:
 	director = runtime.director
 	manager = runtime.manager
 	fly = player.fly_controller
+	physics_frame.connect(_record_frame)
+	world.get_node("InteractionArbiter").activated.connect(func(provider: Object) -> void:
+		interaction_activations += 1
+		last_activated_path = str(provider.get_path())
+		_log("offer_activated", {"path":last_activated_path}))
+	world.get_node("DialoguePanel").finished.connect(func(id: String) -> void: _log("dialogue_finished", {"id":id}))
 	director.trainer_started.connect(func(id: String) -> void: _log("battle_started", {"id": id}))
 	director.trainer_victory.connect(func(id: String) -> void: _log("battle_victory", {"id": id}))
 	director.trainer_opposition_changed.connect(func(id: String, remaining: int, total: int) -> void: _log("opposition", {"id": id,"remaining": remaining,"total": total}))
 	physical.interaction_completed.connect(func(id: String) -> void: _log("physical_interaction", {"id": id}))
 	physical.trial_progress.connect(func(passed: int, total: int) -> void: _log("trial_gate", {"passed": passed,"total": total}))
 	fly.recovered.connect(func(reason: String) -> void: _fail("Unexpected recovery interrupts continuous route: " + reason))
+	fly.landed.connect(func(at: Vector3, carrier: String) -> void:
+		_log("flight_landed", {"landing_position":str(at),"carrier":carrier,"on_floor":player.is_on_floor(),"state":fly.state,"stamina":player.vitals.stamina,"shrine_reached":_has("sky_shrine_reached")}))
 	fly.denied.connect(func(reason: String) -> void:
 		if reason != last_reported_denial:
 			last_reported_denial = reason
 			_log("flight_denied", {"reason":reason,"state":fly.state,"velocity":str(player.velocity)}))
 	await _frames(20)
-	_log("precondition", {"description": "Fresh completed-Meadows fixture; five level-25 installed creatures; active Meadows Heart; separate proven handoff reused", "accelerated": accelerated})
+	_log("precondition", {"description": "Fresh completed-Meadows fixture; five level-25 installed creatures; active Meadows Heart; separate proven handoff reused", "accelerated": accelerated,"team":_team_snapshot(),"inventory":_inventory_snapshot()})
 	await _capture("arrival")
 	stage = "arrival_to_aila"
 	var arrival := _route("arrival_gate_road")
@@ -143,8 +154,11 @@ func _run() -> void:
 	if not await _trial(): return _finish()
 	stage = "mandatory_high_roost_flight"
 	if not await _deploy(): return _finish()
-	for target: Vector3 in [Vector3(535,760,3170), Vector3(750,935,3030), Vector3(1020,1075,2960), Vector3(1110,1053,2940)]:
+	for target: Vector3 in [Vector3(535,760,3170), Vector3(750,935,3030), Vector3(1020,1075,2960)]:
 		if not await _fly_to(target): return _finish()
+	# The shrine crown can legitimately intercept the final descent before the
+	# exact airborne waypoint. Accept only a verified floor inside this landing.
+	if not await _fly_to(Vector3(1110,1053,2940),5.0,Vector3(1110,1050,2940)): return _finish()
 	if not await _land(Vector3(1110,1050,2940)): return _finish()
 	if not _require(_has("sky_shrine_reached"), "Actual Fly-only shrine landing"): return _finish()
 	await _capture("high-roost-landing")
@@ -179,16 +193,23 @@ func _run() -> void:
 	if not await _navigate(Vector3(-420,1110,5650)): return _finish()
 	await _frames(30)
 	if not _require(_has("cloudreach_winds_restored"), "Witness restored winds at overlook"): return _finish()
+	var reward_coins_before: int = game.inventory.count("coin")
 	if not await _talk("warden_aila", "cloudreach_chapter_complete", false): return _finish()
+	_log("chapter_reward_delta", {"coins_before":reward_coins_before,"coins_after":game.inventory.count("coin"),"inventory":_inventory_snapshot(),"team":_team_snapshot()})
 	await _capture("waterward-reward")
 	var coins: int = game.inventory.count("coin")
+	var saved_inventory := _inventory_snapshot()
+	var saved_team := _team_snapshot()
 	if not _require(game.save_game(0), "Save completed continuous run"): return _finish()
 	if not _require(game.load_game(0), "Reload completed continuous run"): return _finish()
 	await _frames(30)
 	for flag: String in ["realm_heart_cloudreach_earned", "realm_key_water", "waterward_route_revealed", "captain_veyra_defeated", "cloudreach_chapter_complete"]:
 		_require(_has(flag), "Reload preserved " + flag)
 	_require(game.inventory.count("coin") == coins, "Reload did not duplicate payouts")
+	_require(_inventory_snapshot() == saved_inventory,"Reload preserved every occupied inventory slot")
+	_require(_team_snapshot() == saved_team,"Reload preserved all five species, levels, XP and HP")
 	_require(not game.can_enter_realm("water"), "Water realm remains non-enterable")
+	_log("persistence_snapshot", {"inventory":_inventory_snapshot(),"team":_team_snapshot(),"day":game.day,"water_enterable":game.can_enter_realm("water")})
 	_log("complete", {"optional_trainers": "not attempted", "optional_detours": "opening candy; required fiber and camp preparation"})
 	completed_route = true
 	_finish()
@@ -209,7 +230,7 @@ func _vec(raw: Array) -> Vector3:
 
 
 func _input(action: String, strength: float) -> void:
-	if is_equal_approx(float(input_values.get(action, -1)), strength): return
+	if is_equal_approx(float(input_values.get(action, -1)), strength) and is_equal_approx(Input.get_action_strength(action), strength): return
 	input_values[action] = strength
 	var event := InputEventAction.new()
 	event.action = action
@@ -233,32 +254,69 @@ func _steer(offset: Vector3, strength: float = 1.0) -> void:
 func _frames(count: int) -> void:
 	for i in count:
 		await physics_frame
-		if game != null and game.party.members().size() != 5:
-			_fail("Permanent party must remain exactly the original five; loaner is never owned")
-		simulated_seconds += 1.0 / 60.0
-		if is_instance_valid(player):
-			if last_position != Vector3.INF:
-				distance_m += player.global_position.distance_to(last_position)
-			last_position = player.global_position
-		longest_dead_travel = maxf(longest_dead_travel, simulated_seconds-last_activity)
-		offer_poll += 1
-		if offer_poll >= 30 and is_instance_valid(world):
-			offer_poll = 0
-			for candidate: Variant in world.get_node("InteractionArbiter").get("_providers"):
-				if not is_instance_valid(candidate) or not candidate is Node3D: continue
-				var prompt: Node3D = candidate
-				if not prompt.has_method("interaction_offer") or offered.has(str(prompt.get_path())): continue
-				var offer: Dictionary = prompt.call("interaction_offer", player.global_position)
-				if not offer.is_empty():
-					offered[str(prompt.get_path())] = true
-					_log("meaningful_offer", {"path":str(prompt.get_path()),"label":str(prompt.get("label")),"chosen":false})
 
 
-func _tap(action: String) -> void:
+func _record_frame() -> void:
+	# Count every production physics tick, including ticks while input waits for
+	# an idle frame. Coroutine-only counting understated those waits.
+	if game != null and game.party.members().size() != 5:
+		_fail("Permanent party must remain exactly the original five; loaner is never owned")
+	simulated_seconds += 1.0 / 60.0
+	if is_instance_valid(player):
+		if last_position != Vector3.INF:
+			distance_m += player.global_position.distance_to(last_position)
+		last_position = player.global_position
+	longest_dead_travel = maxf(longest_dead_travel, simulated_seconds-last_activity)
+	offer_poll += 1
+	if offer_poll >= 30 and is_instance_valid(world):
+		offer_poll = 0
+		for candidate: Variant in world.get_node("InteractionArbiter").get("_providers"):
+			if not is_instance_valid(candidate) or not candidate is Node: continue
+			var prompt: Node = candidate
+			if not prompt.has_method("interaction_offer"): continue
+			var offer: Dictionary = prompt.call("interaction_offer", runtime.controlled_body().global_position)
+			if not offer.is_empty() and bool(offer.get("actionable", true)):
+				var key := str(prompt.get_path())
+				# Wild engagement is supplied by a non-spatial director. Track
+				# each actual nearby body, not just its shared provider once.
+				if prompt == director:
+					var wild: Node3D = director.call("_engageable")
+					if wild != null: key += ":" + str(wild.get_path())
+				if offered.has(key): continue
+				offered[key] = true
+				_log("meaningful_offer", {"path":key,"label":str(offer.label),"distance_m":offer.get("distance",0),"chosen":false})
+
+
+func _normal_input_clock(reason: String) -> Dictionary:
+	var previous := {"time_scale":Engine.time_scale,"physics_hz":Engine.physics_ticks_per_second}
+	if Engine.time_scale == 1.0 and Engine.physics_ticks_per_second == 60: return previous
+	await process_frame
+	Engine.time_scale = 1.0
+	Engine.physics_ticks_per_second = 60
+	_log("clock_mode", {"reason":reason,"time_scale":1.0,"physics_hz":60})
+	return previous
+
+
+func _restore_route_clock(previous: Dictionary) -> void:
+	if Engine.time_scale == previous.time_scale and Engine.physics_ticks_per_second == previous.physics_hz: return
+	await process_frame
+	Engine.time_scale = previous.time_scale
+	Engine.physics_ticks_per_second = previous.physics_hz
+	_log("clock_mode", {"reason":"resume route diagnosis","time_scale":Engine.time_scale,"physics_hz":Engine.physics_ticks_per_second})
+
+
+func _tap(action: String, synchronize: bool = true) -> void:
+	# Deliver an event between physics batches, as hardware input arrives. An
+	# accelerated batch can otherwise contain both synthetic edges and miss the
+	# just-pressed window. Do not call the interaction/combat methods directly.
+	var previous_clock := await _normal_input_clock("button " + action)
+	if synchronize: await process_frame
 	_input(action,1)
 	await _frames(4)
+	await process_frame
 	_input(action,0)
 	await _frames(8)
+	await _restore_route_clock(previous_clock)
 
 
 func _walk(target: Vector3, radius: float = 0.75, body: CharacterBody3D = null) -> bool:
@@ -268,15 +326,28 @@ func _walk(target: Vector3, radius: float = 0.75, body: CharacterBody3D = null) 
 	var segment_start := body.global_position
 	var recent_collisions: Array[Dictionary] = []
 	var stalls := 0
-	_log("travel_start", {"target": str(target)})
+	var precision_clock: Dictionary = {}
+	var started_seconds := simulated_seconds
+	var travel_limit := segment_start.distance_to(target) / 5.0 * 3.0 + 30.0
+	_log("travel_start", {"target": str(target),"body_path":str(body.get_path()),"body_position":str(body.global_position)})
 	for frame in 36000:
 		var offset := target - body.global_position
+		if simulated_seconds-started_seconds > travel_limit:
+			_log("precision_timeout", {"target":str(target),"body_position":str(body.global_position),"velocity":str(body.velocity),"input_vector":str(Input.get_vector("move_left","move_right","move_forward","move_back")),"recent_wall_contacts":recent_collisions})
+			return _fail("Walking exceeded measured-distance time limit toward " + str(target))
+		if precision_clock.is_empty() and Vector2(offset.x,offset.z).length() < 8.0:
+			precision_clock = await _normal_input_clock("grounded precision approach")
+			offset = target-body.global_position
 		if Vector2(offset.x,offset.z).length() < radius:
 			_release()
-			await _frames(8)
+			await process_frame
+			await _frames(12)
 			if absf(body.global_position.y-target.y) > 7:
 				return _fail("Wrong elevation at destination " + str(target))
+			if Vector2(target.x-body.global_position.x,target.z-body.global_position.z).length() >= radius:
+				continue
 			_log("travel_arrived", {"target": str(target)})
+			if not precision_clock.is_empty(): await _restore_route_clock(precision_clock)
 			return true
 		_steer(offset, clampf(Vector2(offset.x,offset.z).length()/2,0.22,1))
 		await _frames(1)
@@ -294,7 +365,7 @@ func _walk(target: Vector3, radius: float = 0.75, body: CharacterBody3D = null) 
 				for index in body.get_slide_collision_count():
 					var hit := body.get_slide_collision(index)
 					collisions.append({"body": str(hit.get_collider().get_path()), "normal": str(hit.get_normal())})
-				_log("collision_block", {"target": str(target), "collisions": collisions,"velocity":str(body.velocity),"locomotion_enabled":player.locomotion_enabled(),"dialogue_open":world.get_node("DialoguePanel").is_open(),"input_vector":str(Input.get_vector("move_left","move_right","move_forward","move_back")),"winner":str(world.get_node("InteractionArbiter").get("_winning_provider"))})
+				_log("collision_block", {"target": str(target), "body_path":str(body.get_path()),"body_position":str(body.global_position),"collisions": collisions,"velocity":str(body.velocity),"locomotion_enabled":player.locomotion_enabled(),"dialogue_open":world.get_node("DialoguePanel").is_open(),"input_vector":str(Input.get_vector("move_left","move_right","move_forward","move_back")),"winner":str(world.get_node("InteractionArbiter").get("_winning_provider"))})
 				await _capture("blocked-"+stage)
 				return _fail("Walking stalled toward " + str(target))
 		var expected := Geometry3D.get_closest_point_to_segment(body.global_position,segment_start,target)
@@ -360,6 +431,13 @@ func _navigate(target: Vector3) -> bool:
 
 
 func _interact(prompt: Node3D, flag: String = "", approach: bool = true) -> bool:
+	var previous_clock := await _normal_input_clock("physical interaction")
+	var succeeded := await _interact_normal(prompt,flag,approach)
+	await _restore_route_clock(previous_clock)
+	return succeeded
+
+
+func _interact_normal(prompt: Node3D, flag: String, approach: bool) -> bool:
 	if not is_instance_valid(prompt): return _fail("Missing physical interaction")
 	var arbiter: Node = world.get_node("InteractionArbiter")
 	# Do not move away from a real winning offer merely to satisfy a canned
@@ -368,12 +446,20 @@ func _interact(prompt: Node3D, flag: String = "", approach: bool = true) -> bool
 		if not await _walk(prompt.global_position+Vector3(0,-0.8,-1.5),0.35): return false
 	_release()
 	await _frames(2)
+	await process_frame
+	# Match the arbiter's production press-time scan at the actual event boundary.
+	# The idle-frame wait can contain many accelerated movement ticks.
+	arbiter.call("_recompute")
 	if arbiter.get("_winning_provider") != prompt:
+		var controlled: CharacterBody3D = runtime.controlled_body()
+		_log("offer_conflict", {"wanted":str(prompt.get_path()),"prompt_position":str(prompt.global_position),"prompt_enabled":prompt.get("enabled"),"target_offer":prompt.call("interaction_offer",controlled.global_position),"winner_offer":arbiter.call("winner"),"actor":str(controlled.get_path()),"actor_position":str(controlled.global_position)})
 		return _fail("Expected offer %s, actual %s" % [prompt.get_path(),arbiter.get("_winning_provider")])
 	var prompt_path := str(prompt.get_path())
-	_log("interaction_context", {"prompt":prompt_path,"prompt_position":str(prompt.global_position),"root_position":str(prompt.get_parent().global_position),"on_floor":player.is_on_floor(),"locomotion_enabled":player.locomotion_enabled(),"root_distance":player.global_position.distance_to(prompt.get_parent().global_position),"manager_state":manager.state,"senn_defeated":_has("defeated_cloudreach_senn")})
-	await _tap("interact")
+	var activations_before := interaction_activations
+	_log("interaction_context", {"prompt":prompt_path,"prompt_position":str(prompt.global_position),"root_position":str(prompt.get_parent().global_position),"on_floor":player.is_on_floor(),"locomotion_enabled":player.locomotion_enabled(),"root_distance":player.global_position.distance_to(prompt.get_parent().global_position),"manager_state":manager.state,"senn_defeated":_has("defeated_cloudreach_senn"),"input_vector":str(Input.get_vector("move_left","move_right","move_forward","move_back")),"velocity":str(player.velocity)})
+	await _tap("interact",false)
 	_log("input_interact", {"prompt": prompt_path})
+	if not _require(interaction_activations == activations_before + 1 and last_activated_path == prompt_path,"Real input activated expected offer " + prompt_path): return false
 	if not flag.is_empty() and not _require(_has(flag),"Input completed "+flag): return false
 	return true
 
@@ -398,13 +484,17 @@ func _talk(id: String, flag: String, navigate: bool = true) -> bool:
 	var body: Node3D = chapter.npc_bodies().get(id)
 	if body == null: return _fail("Missing NPC "+id)
 	if navigate and not await _navigate(body.global_position+Vector3(0,0,-2)): return false
-	if not await _interact(body.get_node("Interactable")): return false
+	var previous_clock := await _normal_input_clock("dialogue " + id)
+	if not await _interact(body.get_node("Interactable")):
+		await _restore_route_clock(previous_clock)
+		return false
 	var panel: Node = world.get_node("DialoguePanel")
 	for line in 45:
 		if not panel.is_open(): break
 		await _frames(20)
 		await _tap("interact")
 	await _frames(15)
+	await _restore_route_clock(previous_clock)
 	if not _require(_has(flag),"Dialogue completed "+flag): return false
 	await _capture(stage)
 	return true
@@ -414,7 +504,13 @@ func _physical_action(id: String, flag: String, navigate: bool = true) -> bool:
 	stage=id
 	var prompt: Node3D=physical.get_node(id+"/Interactable")
 	if navigate and not await _navigate(prompt.global_position-Vector3.UP*0.8): return false
-	return await _interact(prompt,flag)
+	var fiber_before: int = game.inventory.count("gale_fiber")
+	if not await _interact(prompt,flag): return false
+	if id == "aerie_repair":
+		var spent: int = fiber_before-game.inventory.count("gale_fiber")
+		_log("resource_delta", {"id":id,"item":"gale_fiber","before":fiber_before,"after":game.inventory.count("gale_fiber"),"spent":spent})
+		return _require(spent == 3,"Actual perch repair spent exactly 3 gathered Gale Fiber")
+	return true
 
 
 func _pickup(id: String) -> bool:
@@ -430,11 +526,16 @@ func _rest(id: String) -> bool:
 	var camp: Node3D=physical.get_node_or_null(id)
 	if camp==null: return _fail("Missing unlocked camp "+id)
 	if not await _navigate(camp.global_position): return false
+	var previous_clock := await _normal_input_clock("camp rest and fade")
 	var day_before:int=game.day
 	var team_before := _team_snapshot()
-	if not await _interact(camp.get_node("Interactable")): return false
-	await _frames(60)
+	if not await _interact(camp.get_node("Interactable")):
+		await _restore_route_clock(previous_clock)
+		return false
+	await _frames(120)
 	_log("rest_delta", {"id":id,"day_before":day_before,"day_after":game.day,"team_before":team_before,"team_after":_team_snapshot()})
+	await _capture(stage)
+	await _restore_route_clock(previous_clock)
 	return _require(game.day>day_before,"Actual camp rest advanced day")
 
 
@@ -474,7 +575,15 @@ func _battle(id: String) -> bool:
 func _team_snapshot() -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
 	for member: RefCounted in game.party.members():
-		result.append({"label":member.label(),"level":member.level,"xp":member.xp,"hp":member.hp})
+		result.append({"species_id":member.species_id,"label":member.label(),"level":member.level,"xp":member.xp,"hp":member.hp})
+	return result
+
+
+func _inventory_snapshot() -> Array[Dictionary]:
+	var result: Array[Dictionary] = []
+	for index in game.inventory.slot_count():
+		var stack: Dictionary = game.inventory.stack_at(index)
+		if not stack.is_empty(): result.append({"slot":index,"stack":stack})
 	return result
 
 
@@ -486,8 +595,13 @@ func _deploy() -> bool:
 		await _frames(1)
 	if player.vitals.stamina > stamina_before + 1:
 		_log("flight_preparation_recovery", {"stamina_before":stamina_before,"stamina_after":player.vitals.stamina,"method":"Standing on verified floor; ordinary stamina regeneration"})
+	# A single accelerated idle-frame batch can consume the entire ordinary
+	# jump window. Drive the two physical presses at normal simulation speed,
+	# then resume route acceleration; physics remains 1/60 in both modes.
+	var previous_clock := await _normal_input_clock("double-jump Fly deployment")
 	await _tap("jump")
 	await _tap("jump")
+	await _restore_route_clock(previous_clock)
 	if not _require(fly.is_flying(),"Double-jump input deployed Fly"): return false
 	var roster_ids: Array[int] = []
 	for member: RefCounted in game.party.members(): roster_ids.append(member.get_instance_id())
@@ -496,14 +610,17 @@ func _deploy() -> bool:
 	return true
 
 
-func _fly_to(target: Vector3, radius: float = 5.0) -> bool:
+func _fly_to(target: Vector3, radius: float = 5.0, expected_landing: Vector3 = Vector3.INF) -> bool:
 	for frame in 10800:
 		var offset:=target-player.global_position
 		if offset.length()<radius:
 			_release()
 			_log("flight_waypoint", {"target":str(target),"state":fly.state,"flight_seconds":fly.flight_seconds,"stamina":player.vitals.stamina})
 			return true
-		if not fly.is_flying(): return _fail("Flight ended before "+str(target))
+		if not fly.is_flying():
+			if expected_landing != Vector3.INF:
+				return await _verify_landing(expected_landing)
+			return _fail("Flight ended before "+str(target))
 		var horizontal:=Vector2(offset.x,offset.z).length()
 		_steer(offset,clampf(horizontal/12,0,1))
 		_input("jump",1 if offset.y>2 else 0)
@@ -514,15 +631,32 @@ func _fly_to(target: Vector3, radius: float = 5.0) -> bool:
 
 
 func _land(at: Vector3) -> bool:
+	if not fly.is_flying(): return await _verify_landing(at)
+	# Ring 3 is roughly 44m from the perch but only 14m above it. Starting an
+	# 8m/s descent there reaches the cliff skirt before the landing surface.
+	# Fly horizontally over the intended landing first, using the same input
+	# controller and authored lift; this is no ground/position/recovery seam.
+	if Vector2(at.x-player.global_position.x,at.z-player.global_position.z).length() > 8.0:
+		var approach := Vector3(at.x,maxf(at.y+12.0,player.global_position.y),at.z)
+		if not await _fly_to(approach,3.0): return false
 	for frame in 2400:
 		if not fly.is_flying():
-			_release(); await _frames(12)
-			return _require(player.is_on_floor() and player.global_position.distance_to(at)<14,"Collision landing at "+str(at))
+			return await _verify_landing(at)
 		_steer(at-player.global_position,clampf(Vector2(at.x-player.global_position.x,at.z-player.global_position.z).length()/8,0,1))
 		_input("jump",0); _input("fly_descend",1)
 		await _frames(1)
 		if failed:return false
 	return _fail("Landing timed out "+str(at))
+
+
+func _verify_landing(at: Vector3) -> bool:
+	_release()
+	await _frames(12)
+	var query := PhysicsRayQueryParameters3D.create(player.global_position+Vector3.UP,player.global_position-Vector3.UP*4,1)
+	query.exclude = [player.get_rid()]
+	var floor_hit := player.get_world_3d().direct_space_state.intersect_ray(query)
+	_log("landing_floor", {"target":str(at),"on_floor":player.is_on_floor(),"state":fly.state,"floor_path":str(floor_hit.collider.get_path()) if not floor_hit.is_empty() else "none","floor_position":str(floor_hit.get("position",Vector3.INF)),"shrine_reached":_has("sky_shrine_reached")})
+	return _require(player.is_on_floor() and not floor_hit.is_empty() and player.global_position.distance_to(at)<14,"Collision landing at "+str(at))
 
 
 func _trial() -> bool:
@@ -559,7 +693,7 @@ func _log(kind: String, details: Dictionary = {}) -> void:
 		if not previous_activity.is_empty():
 			activity_intervals.append({"from":previous_activity.kind,"to":kind,"from_stage":previous_activity.stage,"to_stage":stage,"start_seconds":previous_activity.simulated_seconds,"end_seconds":snappedf(simulated_seconds,0.01),"gap_seconds":snappedf(simulated_seconds-float(previous_activity.simulated_seconds),0.01)})
 		previous_activity = row
-	if kind not in ["travel_start","travel_arrived"]: last_activity=simulated_seconds
+		last_activity=simulated_seconds
 	print("CLOUDREACH CONTINUOUS "+JSON.stringify(row))
 	_write_report()
 

@@ -4,9 +4,10 @@
 
 Owner resumed the full Cloudreach chapter goal, excluding final creature art.
 Work is in `D:\Tetherbound-source` on `codex/cloudreach-cliffs`, draft PR #44.
-Environment checkpoint `ca7d87113` and merge `1f1f23652` are pushed, preserving `e002853ea` and the reference
-import sidecars in `92fda325e`. It integrates fetched main `2cd711eb1` without
-discarding either lane's compatible behavior.
+Environment checkpoint `ca7d87113`, five-member HUD checkpoint `aaee9f064` and
+merge `97de9bbf7` are pushed, preserving the earlier route fixes and reference
+import sidecars. Latest integrated main is `590741fe6`; its forward merge was
+documentation-only and discarded no compatible behavior from either lane.
 This is **not** a merge to main or a claim of chapter completion.
 
 Main's single progression feed/unordered bonds, pickups, portraits, companion,
@@ -24,34 +25,45 @@ fixtures that aborted despite nominal passes. Corrected follow-ups pass 95 tests
 41,908 assertions with no errors. No clean second full-suite pass is claimed;
 the initial native-error/leak set remains disclosed in `MAIN-MERGE-REGRESSION.md`.
 
-Acceptance remains open. Continuous play now passes Senn and Maela but still
-needs the complete Fly, shrine, upper-route and finale sequence. The flight
-perch rest/launch overlap was reproduced and its camp moved on the same ledge;
-the latest replay is diagnosing precision approach/input timing, not bypassing it.
-Round 4's twelve real environment frames receive **art direction Yes / Palworld
-presentation No**. Foundation and 37 related unit tests pass; real-input airborne
-Fly and 63/63 rendered side-payoff checks pass. Sustained local static samples
-measure p95 8.34–15.18 ms on GTX 1060 at 1280×800, not Ally acceptance. A new
+Acceptance remains open. Continuous play now passes the real loaner trial,
+earns permanent Fly and reaches High Roost. A real own-capsule sight-line defect
+blocked low shrine prompts; the viewer-only exclusion passes positive and
+wall/floor/other-body negative controls. Original-offset production input now
+passes all three vanes, Sora's actual dialogue/effect and the windlass. The
+isolated shrine fixture explicitly seeds prior Act I/Fly; clean continuous
+replay 9 must still prove that sequence and the rest without such seeding.
+Round 5's twelve real environment frames receive **art direction Yes / Palworld
+presentation No**. Foundation, 39 related tests / 1,201 assertions and real-input
+Fly pass. Quiet static p95 is 8.37–10.33ms on GTX 1060 at 1280×800, not Ally
+acceptance. Road boundaries, lawn clearings, cliff form/depth, arena staging and
+material cohesion remain scene work. A standalone Cloudreach board was not found
+in the reference paths; there is no claim of acceptance against unseen art. A new
 five-member reward capture exposed a genuine HUD overlap. The upper-right
 single-card correction passes 74/74 real production checks and fresh blind
 review finds no blocking HUD defect; its dense detail and relay-object occlusion
 remain nonblocking findings. See `ralph/reports/CLOUDREACH-HUD-0905/REPORT.md`.
 
 Combat has been remeasured against main's 1.6 damage multiplier: 28/28 real-input
-trainer-ladder wins, real wipe/rest/retry, maximum individual hit 39.85% HP,
-no further balance tuning. Root also fixed freed-body glow cleanup and empty
-level-up VFX surface errors; focused VFX checks pass. This probe excludes live
-finale wind/relay hazards and continuous attrition, so final balance remains open.
+trainer-ladder wins and real wipe/rest/retry. A separate actual-world finale
+probe now wins all nine rounds across three input policies, observes live wind/
+arc/lee and real movement drift, and walks to all relays. Remaining party HP is
+23.21–51.96%; maximum individual hit is 40.58%. No further balance tuning.
+This uses an explicit rested summit fixture, not continuous attrition; final
+balance remains open. Root also fixed freed-body glow cleanup and empty
+level-up VFX surface errors; focused VFX checks pass.
 See `docs/biomes/cloudreach/CONTINUOUS_ACCEPTANCE_0905.md`,
-`COMBAT_BALANCE_EVIDENCE_0905.md` and the round-4 `JUDGE-ASTRA.md`.
+`COMBAT_BALANCE_EVIDENCE_0905.md`, `LIVE_FINALE_EVIDENCE_0905.md`,
+`SHRINE_SIGHTLINE_0905.md` and the round-5 `JUDGE-ASTRA.md`.
 
 The older exit note and main snapshot below are dated history, not current
-Cloudreach routing. Next steps: finish the continuous chapter, repair the audited
-wild spawn/wander grounding contract and measured activity gaps, and complete
-round-5 scene corrections and fresh review. The latest continuous run completes
-the real loaner trial and reaches the High Roost crown; its test pilot must
-continue on foot after legitimate early touchdown. Draft PR #44 CI is queued
-for `ca7d87113`; do not merge.
+Cloudreach routing. Wild footprint admission/roaming/recovery now passes 73
+production checks, including actual Engage at all three early sites and identity/
+fight/faint/respawn guards. The 18-ray moving-step upper bound needs isolated
+profiling. Pre-Senn absence of Engage in the continuous fixture also reflects
+its undeployed companion; it is not proof of missing wilds. Next steps: finish
+continuous upper-route/finale/aftermath/exact disk reload, measure active roaming
+and activity gaps, and resolve the round-5 criticisms. Draft PR #44 CI for
+`97de9bbf7` remains running/queued, not passed; do not merge.
 
 **Status:** the live status document. Replaces `ralph/BACKLOG.md`, `ralph/STATUS.md` and
 the coordinator handovers (all under `archive/ralph/`). Update it when evidence changes;

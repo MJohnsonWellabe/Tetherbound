@@ -7,6 +7,7 @@ const BOUNDS := preload("res://scripts/world/building_prefabs.gd")
 const SCAFFOLD:=preload("res://assets/environment/team_tether/hall/team_tether_scaffold_tower.glb")
 const WALL_MACHINE:=preload("res://assets/environment/team_tether/hall/rift_siphon_wall_machine.glb")
 const PIPE_VALVE:=preload("res://assets/environment/team_tether/hall/tt_pipe_valve.glb")
+const BOILER:=preload("res://assets/environment/team_tether/hall/team_tether_boiler_chimney.glb")
 var config: Dictionary
 var finale: Node3D
 var _hazards: ShaderMaterial
@@ -51,7 +52,8 @@ func build(world: Node3D) -> void:
 		var safe_material := paving.duplicate() as ShaderMaterial
 		safe_material.set_shader_parameter("tint",Color("#80938a"))
 		world.call("_cylinder", self, str(lee.id)+"SafeFloor", at+Vector3.UP*0.18, float(lee.radius_m), 0.05, safe_material)
-		world.call("_box", self, str(lee.id)+"Windbreak", at+Vector3(0,1.8,4.4), Vector3(6,3.6,1.2), paving, true)
+		world.call("_box", self, str(lee.id)+"Windbreak", at+Vector3(0,1.8,4.4), Vector3(6,3.6,1.2), materials.masonry, true)
+		world.call("_box",self,str(lee.id)+"WeatheredCoping",at+Vector3(0,3.58,4.4),Vector3(6.2,0.26,1.4),materials.masonry_trim,false)
 	for relay: Dictionary in config.relays:
 		var model := RELAY.instantiate() as Node3D
 		model.name = "EngineRelay_"+str(relay.id)
@@ -88,14 +90,28 @@ func build(world: Node3D) -> void:
 		_install(PIPE_VALVE,self,core_at+Vector3.UP*0.15,1.0,atan2(outward.x,outward.z))
 		var beacon := MeshInstance3D.new()
 		beacon.name="ExposedCore_"+str(relay.id)
-		var core:=PrismMesh.new()
-		core.size=Vector3(0.65,0.9,0.65)
+		var core:=SphereMesh.new()
+		core.radius=0.32
+		core.height=0.9
+		core.radial_segments=6
+		core.rings=3
 		beacon.mesh=core
-		beacon.material_override=materials.heart
+		var crystal:=StandardMaterial3D.new()
+		crystal.albedo_color=Color("#237f85")
+		crystal.metallic=0.30
+		crystal.roughness=0.34
+		crystal.emission_enabled=true
+		crystal.emission=Color("#338e94")
+		crystal.emission_energy_multiplier=0.32
+		beacon.material_override=crystal
 		beacon.position=core_at+Vector3.UP*2.6
 		add_child(beacon)
-		world.call("_cylinder_between",self,"CoreConduit_"+str(relay.id),core_at+Vector3.UP*0.9,beacon.position,0.10,materials.bronze)
-		world.call("_cylinder_between",self,"MountFeedPipe_"+str(relay.id),core_at+Vector3.UP*0.7,machinery_at+Vector3.UP*0.7,0.12,materials.bronze)
+		var pipe_metal:=StandardMaterial3D.new()
+		pipe_metal.albedo_color=Color("#465a52")
+		pipe_metal.metallic=0.70
+		pipe_metal.roughness=0.64
+		world.call("_cylinder_between",self,"CoreConduit_"+str(relay.id),core_at+Vector3.UP*0.9,beacon.position,0.10,pipe_metal)
+		world.call("_cylinder_between",self,"MountFeedPipe_"+str(relay.id),core_at+Vector3.UP*0.7,machinery_at+Vector3.UP*0.7,0.12,pipe_metal)
 		_relay_beacons[str(relay.id)]=beacon
 	# A coherent rear machinery spine grounds the three relay stations without
 	# putting equipment in the central fight lane or the authored lee pockets.
@@ -146,6 +162,7 @@ func _paving_material() -> ShaderMaterial:
 	var material:=ShaderMaterial.new()
 	material.shader=preload("res://shaders/cloudreach_arena_paving.gdshader")
 	material.set_shader_parameter("albedo_tex",preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_BaseColor.png"))
+	material.set_shader_parameter("soil_tex",preload("res://assets/environment/terrain/stylised/dirt_path_Color.png"))
 	material.set_shader_parameter("tint",Color("#8f8a70"))
 	material.set_shader_parameter("origin",position)
 	return material
@@ -175,7 +192,10 @@ func _build_occupied_perimeter(world: Node3D,materials: Dictionary) -> void:
 			world.call("_hang_cloudreach_banner",segment,Vector3(0,2.2,-1.4),Vector2(1.6,2.8),0.0)
 	# Asymmetric occupied bays, all beyond the relay/camera circulation ring.
 	for side: float in [-1.0,1.0]:
-		_install(SCAFFOLD,root,Vector3(side*34,0.15,21),7.5,side*0.35)
+		if side<0:
+			_install(BOILER,root,Vector3(-34,0.15,21),7.0,0.35)
+		else:
+			world.call("_place_local_prop",root,"wagon",Vector3(34,0.15,21),2.4,16)
 		world.call("_place_local_prop",root,"crate",Vector3(side*31.5,0.15,20),1.15,side*12)
 		world.call("_place_local_prop",root,"barrel",Vector3(side*33,0.15,17.5),1.25,side*28)
 		world.call("_place_local_prop",root,"workbench",Vector3(side*29,0.15,25),1.1,side*70)

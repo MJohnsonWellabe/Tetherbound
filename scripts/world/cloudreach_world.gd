@@ -324,6 +324,9 @@ func _build_materials() -> void:
 		var masonry := ENVIRONMENT_MATERIALS.masonry(material_key=="masonry_trim")
 		_materials[material_key] = masonry
 	_materials["bronze"] = _material(Color("#81704b"), 0.72)
+	var timber:=ShaderMaterial.new()
+	timber.shader=preload("res://shaders/cloudreach_timber.gdshader")
+	_materials["weathered_timber"]=timber
 	var geology := ShaderMaterial.new()
 	geology.shader = GEOLOGY_SHADER
 	geology.set_shader_parameter("rock_texture", preload("res://assets/environment/terrain/Rock030_Color.jpg"))
@@ -1196,6 +1199,21 @@ func _build_bridges() -> void:
 			if i==points.size()-2:
 				b=_landing_join(b,a,cap_half,0.75)
 			_build_bridge_section(section,spec,a,b)
+		for end_index in [0,points.size()-1]:
+			var endpoint:=_vec3(points[end_index])
+			var neighbor:=_vec3(points[1] if end_index==0 else points[points.size()-2])
+			var away:=Vector3(endpoint.x-neighbor.x,0,endpoint.z-neighbor.z).normalized()
+			var right:=Vector3.UP.cross(away)
+			for side: float in [-1.0,1.0]:
+				for layer in 2:
+					var foot:=endpoint+away*(3.0+layer*5.5)+right*side*(6.0+layer*2.5)
+					_visual_rock_mass(bridge,"RootedAbutmentShoulder",foot-Vector3.UP*(18.0+layer*9.0),
+						Vector3(13.0+layer*5.0,17.2+layer*8.0,16.0),2111+end_index*13+layer*5+int(side))
+				var verge:=endpoint+away*8+right*side*5.0
+				var ground:=_route_detail_ground(verge)
+				if not is_nan(ground) and absf(ground-verge.y)<2.0:
+					verge.y=ground+0.08
+					_plant_floor_pocket(bridge,verge,Vector2(1.6,2.3),2217+end_index+int(side),endpoint.y>700)
 
 
 func _build_bridge_section(bridge: Node3D, spec: Dictionary, a: Vector3, b: Vector3) -> void:
@@ -1293,14 +1311,23 @@ func _build_progression_gates() -> void:
 		shape_node.position.y = opening_height * 0.5
 		barrier.add_child(shape_node)
 		gate.add_child(barrier)
-		var veil := MeshInstance3D.new()
+		var veil := Node3D.new()
 		veil.name = "LockedWindVeil"
-		var veil_mesh := BoxMesh.new()
-		veil_mesh.size = Vector3(opening_width, opening_height, 0.12)
-		veil.mesh = veil_mesh
 		veil.position.y = opening_height * 0.5
-		veil.material_override = _materials["wind_veil"]
 		gate.add_child(veil)
+		for layer in 3:
+			var stream:=MeshInstance3D.new()
+			stream.name="LockedCrosswindLayer%d"%layer
+			var veil_mesh:=PlaneMesh.new()
+			veil_mesh.orientation=PlaneMesh.FACE_Z
+			veil_mesh.size=Vector2(opening_width,opening_height)
+			stream.mesh=veil_mesh
+			stream.position.z=(layer-1)*0.65
+			var wind:=ShaderMaterial.new()
+			wind.shader=preload("res://shaders/cloudreach_locked_wind.gdshader")
+			wind.set_shader_parameter("phase",layer*2.1)
+			stream.material_override=wind
+			veil.add_child(stream)
 		_progression_gates.append({"flag": required, "shape": shape_node, "veil": veil})
 
 
@@ -1353,15 +1380,17 @@ func _build_landmarks() -> void:
 			# The old 72 m cap stopped in the air above its parent highland crown.
 			# Carry this exceptional Fly-only pinnacle down into the cloud valley.
 			ledge_size = Vector3(132.0, at.y + 210.0, 126.0)
-		_mesa(landmark, "LandmarkLedge", Vector3(0.0, -ledge_size.y * 0.5 + 0.10, 0.0), ledge_size,
+		var ledge:=_mesa(landmark, "LandmarkLedge", Vector3(0.0, -ledge_size.y * 0.5 + 0.10, 0.0), ledge_size,
 			_materials["cliff"], _materials["upland_dry"] if at.y>=700.0 else _materials["upland"], not settlement, _landmark_count + 31)
 		if settlement:
+			(ledge.get_node("StratifiedCliffBody") as MeshInstance3D).visible=false
+			_build_articulated_settlement_skirt(landmark,at.y>=700.0)
 			# The last approach reaches terrace height at z=490. Keep its collision
 			# inside that level approach while the geological skirt extends farther.
 			_box(landmark, "SettlementWalkableTerrace", Vector3(0, -0.22, 0),
 				Vector3(48, 0.44, 48), _materials["upland_dry"], true).visible = false
 		_surfaces.append({"kind": "rect", "centre": Vector2(at.x, at.z), "half": Vector2(17.0, 17.0), "height": at.y})
-		_cover_patches.append({"kind": "ellipse", "centre": at, "half": Vector2(34.0,31.0) if settlement else Vector2(16.5, 15.5),
+		_cover_patches.append({"kind": "ellipse", "centre": at, "half": Vector2(25.5,25.5) if settlement else Vector2(16.5, 15.5),
 			"inner_clear_fraction": 0.42, "seed": _landmark_count * 71 + 809,
 			"dry": at.y >= 790.0})
 		var landmark_id := str(spec.get("id", ""))
@@ -1396,6 +1425,56 @@ func _build_landmarks() -> void:
 		_landmark_count += 1
 
 
+func _build_articulated_settlement_skirt(root: Node3D,dry: bool) -> void:
+	# Appearance only: the unchanged 48m square collision terrace remains the
+	# authoritative floor. A flat inner crown covers that square completely;
+	# inset sloping turf and overlapping rock shoulders replace the rounded stack.
+	var crown:=SurfaceTool.new()
+	crown.begin(Mesh.PRIMITIVE_TRIANGLES)
+	crown.set_material(_materials["upland_dry"] if dry else _materials["upland"])
+	var subsoil:=SurfaceTool.new()
+	subsoil.begin(Mesh.PRIMITIVE_TRIANGLES)
+	subsoil.set_material(_materials["cliff"])
+	for i in 48:
+		var a:=TAU*i/48.0
+		var b:=TAU*(i+1)/48.0
+		var ra:=24.1/maxf(absf(cos(a)),absf(sin(a)))
+		var rb:=24.1/maxf(absf(cos(b)),absf(sin(b)))
+		var p:=Vector3(cos(a)*ra,0.11,sin(a)*ra)
+		var q:=Vector3(cos(b)*rb,0.11,sin(b)*rb)
+		var outer_a:=Vector3(cos(a)*(ra+9.0+3.0*sin(a*3)), -10.0-7.0*sin(a*2+1),sin(a)*(ra+9.0+3.0*sin(a*3)))
+		var outer_b:=Vector3(cos(b)*(rb+9.0+3.0*sin(b*3)), -10.0-7.0*sin(b*2+1),sin(b)*(rb+9.0+3.0*sin(b*3)))
+		_add_surface_triangle(crown,Vector3(0,0.11,0),q,p)
+		_add_surface_triangle(crown,p,q,outer_a)
+		_add_surface_triangle(crown,q,outer_b,outer_a)
+		# The turf is the roof of a solid geological volume, never a floating
+		# sheet between boulders. Close every outer edge down behind the crags.
+		var base_a:=Vector3(outer_a.x*1.05,-92.0,outer_a.z*1.05)
+		var base_b:=Vector3(outer_b.x*1.05,-92.0,outer_b.z*1.05)
+		_add_geological_face(subsoil,outer_a,outer_b,base_a,base_b,
+			Vector3(cos(a),0,sin(a)),Vector3(cos(b),0,sin(b)),2.0)
+	crown.generate_normals()
+	var turf:=MeshInstance3D.new()
+	turf.name="IrregularTurfToRockCrown"
+	turf.mesh=crown.commit()
+	root.add_child(turf)
+	subsoil.generate_normals()
+	var core:=MeshInstance3D.new()
+	core.name="ClosedSettlementSubsoil"
+	core.mesh=subsoil.commit()
+	root.add_child(core)
+	for i in 12:
+		var angle:=TAU*i/12.0+0.12
+		var radius:=30.0+4.0*sin(angle*3)
+		var height:=86.0+9.0*sin(angle*2+0.7)
+		_visual_rock_mass(root,"SettlementRootedButtress%02d"%i,
+			Vector3(cos(angle)*radius,-height-4.0,sin(angle)*radius),
+			Vector3(29.0+5.0*(i%3),height,28.0),1043+i*17,1800.0)
+		if i%2==0:
+			var contact:=Vector3(cos(angle)*21.5,0.12,sin(angle)*21.5)
+			_plant_floor_pocket(root,contact,Vector2(2.6,3.0),1211+i,dry)
+
+
 func _build_return_gate() -> void:
 	var points: Dictionary = _config.get("transition_points", {})
 	var raw: Variant = points.get("meadows_return", {})
@@ -1417,7 +1496,7 @@ func _build_cliff_settlement(root: Node3D) -> void:
 	# A tall windwatch anchors the cluster at route-view distance; the houses
 	# then read as an inhabited terrace instead of five same-sized boxes.
 	var upper_settlement := root.global_position.y > 700.0
-	var watch := Vector3(20, 0, 18) if upper_settlement else Vector3(-22, 0, 15)
+	var watch := Vector3(-20, 0, 18) if upper_settlement else Vector3(-22, 0, 15)
 	var watch_height := 19.0 if upper_settlement else 16.0
 	_castle_piece(root, "WindwatchTower", CASTLE_TOWER, watch, Vector3(10.0, watch_height, 10.0), _materials["stone_light"])
 	_box(root, "WindwatchCrown", watch + Vector3.UP * (watch_height - 0.2), Vector3(11.0, 1.0, 11.0), _materials["wood"], false)
@@ -1468,8 +1547,21 @@ func _build_cliff_settlement(root: Node3D) -> void:
 			body.add_child(shape)
 			model.add_child(body)
 		_set_geometry_visibility(model, float(settlement.get("visibility_range_m", 850.0)))
+		var doorway:=model.to_global(Vector3(1,0.18,4.1 if prefab=="cottage_a" else 3.1))
+		var local_door:=root.to_local(doorway)
+		var hub:=Vector3(0,0.18,-1)
+		_path_ribbon(root,"WornHouseThreshold",local_door,hub,2.4,root.get_child_count()*13)
+		var threshold:=MeshInstance3D.new()
+		threshold.name="DoorstepWearPatch"
+		var threshold_plane:=PlaneMesh.new()
+		threshold_plane.size=Vector2(4.8,4.8)
+		threshold.mesh=threshold_plane
+		threshold.position=local_door
+		threshold.material_override=ENVIRONMENT_MATERIALS.worn_ground(doorway,2.8)
+		root.add_child(threshold)
 	_build_settlement_yard(root)
 	_build_settlement_precinct(root,watch)
+	_path_ribbon(root,"WornArrivalToSharedYard",Vector3(0,0.18,-24),Vector3(0,0.18,-1),4.1,991)
 
 
 func _plant_floor_pocket(parent: Node3D,at: Vector3,half: Vector2,seed_value: int,dry: bool) -> void:
@@ -1583,20 +1675,59 @@ func _build_realm_gate_crag(root: Node3D) -> void:
 func _build_three_bells(root: Node3D) -> void:
 	for side: float in [-1.0, 1.0]:
 		_box(root, "BellPier", Vector3(side * 12.0, 8.0, 0.0), Vector3(3.2, 16.0, 4.0), _materials["stone"], false)
-	_box(root, "BellBeam", Vector3(0.0, 16.0, 0.0), Vector3(28.0, 2.4, 3.0), _materials["wood"], false)
+		_box(root,"BellPierFoot",Vector3(side*12,0.8,0),Vector3(4.2,1.6,5.0),_materials["masonry"],false)
+		_cylinder_between(root,"BellFrameKneeBrace",Vector3(side*11,12,0),Vector3(side*6.5,15.3,0),0.28,_materials["weathered_timber"])
+	_box(root, "BellBeam", Vector3(0.0, 16.0, 0.0), Vector3(28.0, 2.0, 2.1), _materials["weathered_timber"], false)
+	for yoke_x in [-12.0,-7.0,0.0,7.0,12.0]:
+		_box(root,"BellBeamIronStrap",Vector3(yoke_x,16,0),Vector3(0.23,2.14,2.24),_materials["bronze"],false)
 	for i in 3:
 		var x := (float(i) - 1.0) * 7.0
-		_cylinder(root, "BellRope%d" % i, Vector3(x, 12.5, 0.0), 0.10, 6.0, _materials["rope"])
-		var bell := MeshInstance3D.new()
-		bell.name = "SkyBell%d" % i
-		bell.position = Vector3(x, 9.0, 0.0)
-		var bell_mesh := SphereMesh.new()
-		bell_mesh.radius = 1.25
-		bell_mesh.height = 2.2
-		bell.mesh = bell_mesh
-		bell.scale = Vector3(1.0, 0.85, 1.0)
-		bell.material_override = _materials["leaf_gold"]
-		root.add_child(bell)
+		_cylinder(root, "BellRope%d" % i, Vector3(x, 12.9, 0.0), 0.08, 4.4, _materials["rope"])
+		_box(root,"BellYoke%d"%i,Vector3(x,10.65,0),Vector3(1.45,0.3,0.45),_materials["weathered_timber"],false)
+		_build_hollow_bell(root,Vector3(x,10.5,0),i)
+
+
+func _build_hollow_bell(parent: Node3D,at: Vector3,index: int) -> void:
+	var root:=Node3D.new()
+	root.name="SkyBell%d"%index
+	root.position=at
+	parent.add_child(root)
+	var profile: Array[Vector2]=[Vector2(0.26,0),Vector2(0.55,-0.22),Vector2(0.67,-0.75),Vector2(0.88,-1.45),Vector2(1.32,-1.85),Vector2(1.35,-2.0)]
+	var bronze:=(_materials["bronze"] as StandardMaterial3D).duplicate() as StandardMaterial3D
+	bronze.albedo_color=Color("#8f7950")
+	bronze.metallic=0.65
+	bronze.roughness=0.55
+	bronze.cull_mode=BaseMaterial3D.CULL_DISABLED
+	var tool:=SurfaceTool.new()
+	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	tool.set_material(bronze)
+	for row in profile.size()-1:
+		for column in 32:
+			var a:=TAU*column/32.0
+			var b:=TAU*(column+1)/32.0
+			var p:=Vector3(cos(a)*profile[row].x,profile[row].y,sin(a)*profile[row].x)
+			var q:=Vector3(cos(b)*profile[row].x,profile[row].y,sin(b)*profile[row].x)
+			var r:=Vector3(cos(a)*profile[row+1].x,profile[row+1].y,sin(a)*profile[row+1].x)
+			var s:=Vector3(cos(b)*profile[row+1].x,profile[row+1].y,sin(b)*profile[row+1].x)
+			_add_surface_triangle(tool,p,q,r)
+			_add_surface_triangle(tool,q,s,r)
+	tool.generate_normals()
+	var shell:=MeshInstance3D.new()
+	shell.name="HollowFlaredBronzeShell"
+	shell.mesh=tool.commit()
+	root.add_child(shell)
+	var rim:=MeshInstance3D.new()
+	var lip:=TorusMesh.new()
+	lip.inner_radius=1.21
+	lip.outer_radius=1.42
+	lip.rings=32
+	lip.ring_segments=8
+	rim.mesh=lip
+	rim.material_override=bronze
+	rim.position.y=-1.94
+	root.add_child(rim)
+	_cylinder(root,"SuspendedClapper",Vector3(0,-1.17,0),0.12,1.7,_materials["bronze"])
+	_cylinder(root,"ClapperHead",Vector3(0,-1.99,0),0.27,0.30,bronze)
 
 
 func _build_broken_arch(root: Node3D) -> void:
@@ -1616,14 +1747,20 @@ func _build_windscar_beacon(root: Node3D) -> void:
 
 
 func _build_flight_aerie(root: Node3D) -> void:
-	_cylinder(root, "AerieDais", Vector3(0.0, 1.2, 0.0), 15.0, 2.4, _materials["stone_light"])
+	# This is visual paving on the real y=610 approach, not a second unwalkable
+	# 2.4m-high display plinth swallowing the mentor/player's lower bodies.
+	_cylinder(root, "AerieDais", Vector3(0.0, 0.04, 0.0), 15.0, 0.16, _materials["masonry"])
 	for i in 5:
 		var angle := TAU * float(i) / 5.0 + 0.35
 		var height := 12.0 + float(i % 3) * 4.0
 		_cylinder(root, "AeriePerch%d" % i,
-			Vector3(cos(angle) * 11.0, height * 0.5 + 2.0, sin(angle) * 8.0),
-			0.65, height, _materials["wood"])
-	_box(root, "LaunchStone", Vector3(0.0, 2.3, -13.0), Vector3(12.0, 1.0, 12.0), _materials["path"], false)
+			Vector3(cos(angle) * 11.0, height * 0.5 + 0.25, sin(angle) * 8.0),
+			0.38, height, _materials["weathered_timber"])
+		var foot:=Vector3(cos(angle)*11.0,0.25,sin(angle)*8.0)
+		_cylinder(root,"PerchStoneSocket",foot,0.9,0.7,_materials["masonry"])
+		_box(root,"PerchRestArm",foot+Vector3.UP*(height-0.8),Vector3(3.8,0.24,0.65),_materials["weathered_timber"],false,Basis(Vector3.UP,angle))
+		_cylinder_between(root,"PerchKneeBrace",foot+Vector3.UP*(height-2.6),foot+Vector3.UP*(height-0.8)+Vector3(cos(angle),0,-sin(angle))*1.6,0.12,_materials["weathered_timber"])
+	_box(root, "LaunchStone", Vector3(0.0, 0.07, -13.0), Vector3(12.0, 0.14, 12.0), _materials["path"], false)
 
 
 func _build_high_perches(root: Node3D) -> void:

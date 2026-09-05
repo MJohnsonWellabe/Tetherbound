@@ -59,6 +59,8 @@ func build(patches: Array[Dictionary], config: Dictionary, exclusions: Array[Dic
 		var grass_count := mini(int(area * float(config.get("grass_density_per_m2", 0.24))),
 			int(config.get("route_grass_patch_cap", 12000) if is_route
 				else config.get("region_grass_patch_cap", 50000)))
+		if is_route:
+			grass_count=int(grass_count*0.64)
 		var flower_count := mini(int(area * float(config.get("flower_density_per_m2", 0.010))),
 			int(config.get("route_flower_patch_cap", 360) if is_route
 				else config.get("region_flower_patch_cap", 900)))
@@ -117,6 +119,16 @@ func _build_patch_tier(parent: Node3D, label: String, patch: Dictionary, mesh: A
 		if cluster < threshold:
 			continue
 		var scale_value := rng.randf_range(scale_min, scale_max)
+		if tier==0 and str(patch.get("kind",""))=="segment":
+			var axis: Vector3=(patch["b"] as Vector3)-(patch["a"] as Vector3)
+			axis.y=0
+			var lateral: float=Vector3.UP.cross(axis.normalized()).dot(at-(patch["a"] as Vector3))
+			# Short wear-edge growth gives way to distinct tall shoulder clumps.
+			# The two sides have different phases, not matching luminous rails.
+			var mass:=0.5+0.5*sin(at.x*0.17+at.z*0.11+signf(lateral)*1.9)
+			scale_value*=lerpf(0.30,1.0,smoothstep(0.22,0.80,mass))
+			if absf(lateral)<3.6:
+				scale_value*=0.68
 		var width_scale := scale_value * rng.randf_range(0.82, 1.16)
 		if tier == 0:
 			# The shared Meadows tuft mesh is authored at real blade width. Height
@@ -212,7 +224,15 @@ func _sample_patch(patch: Dictionary, rng: RandomNumberGenerator, path_clearance
 		var side := -1.0 if rng.randf() < 0.5 else 1.0
 		var lateral := rng.randf_range(clear, half_width * 0.92) * side
 		var t := rng.randf_range(0.02, 0.98)
-		return a.lerp(b, t) + right * lateral + Vector3.UP * float(patch.get("surface_offset_y", -0.64))
+		var at:=a.lerp(b,t)+right*lateral
+		# Two-dimensional lobes avoid a route aligned with a phase gradient
+		# turning a low-frequency field into one uninterrupted bright rail.
+		var edge_mass:=sin(at.x*0.49+side*1.7)*cos(at.z*0.43-side*0.7)
+		edge_mass+=0.35*sin(at.x*0.91+at.z*0.77)
+		var worn_width:=clear+minf(2.0,half_width-clear)*(0.5+0.5*sin(at.x*0.27+at.z*0.31))
+		if edge_mass < 0.05 or absf(lateral)<worn_width:
+			return Vector3(NAN,NAN,NAN)
+		return at + Vector3.UP * float(patch.get("surface_offset_y", -0.64))
 	var centre: Vector3 = patch.get("centre", Vector3.ZERO)
 	var half: Vector2 = patch.get("half", Vector2(20.0, 20.0))
 	var angle := rng.randf_range(0.0, TAU)

@@ -16,6 +16,42 @@ const CONFIG_PATH := "res://data/config/cloudreach_encounters.json"
 const CHAPTER_PATH := "res://data/config/cloudreach_chapter.json"
 const PAYOFF_PATH := "res://data/config/cloudreach_npc_runtime.json"
 
+# Safety tolerances, not encounter-density or difficulty tuning. The complete
+# capsule footprint must fit the real collision floor of the authored stratum.
+const WILD_FOOT_MARGIN := 0.25
+const WILD_PATH_STEP := 0.5
+const WILD_STRATUM_TOLERANCE := 4.0
+
+
+class CliffWild:
+	extends "res://scripts/creatures/wild_creature.gd"
+
+	# Main intentionally accepts its last random candidate when all eight
+	# clearance attempts fail. On a cliff, that fallback is a fall, not roaming.
+	# Keep this stricter contract local; all combat/catch/health remains inherited.
+	func _pick_destination() -> Vector3:
+		var candidate := super._pick_destination()
+		return checked_destination(candidate, global_position, _clearance_check)
+
+	static func checked_destination(candidate: Vector3, current: Vector3, clearance: Callable) -> Vector3:
+		if not candidate.is_finite() or (clearance.is_valid() and not bool(clearance.call(candidate))):
+			return current
+		return candidate
+
+	func _wander(delta: float) -> void:
+		super._wander(delta)
+		# A safe endpoint is not permission to coast across a corner. Validate
+		# the next short movement with the full capsule margin, then brake when
+		# collisions or a changed starting point invalidate the original segment.
+		if _requested.length_squared() > 0.001 and _clearance_check.is_valid():
+			var next := global_position + _requested.normalized() * maxf(0.35, _wander_speed * delta * 2.0)
+			if not bool(_clearance_check.call(next)):
+				_requested = Vector3.ZERO
+				velocity.x = 0.0
+				velocity.z = 0.0
+				_target = global_position
+				_pause_left = 0.3
+
 var realm_world: Node
 var chapter: Dictionary = {}
 var encounter_config: Dictionary = {}
@@ -25,6 +61,9 @@ var trainer_nodes: Dictionary = {}
 var trainer_prompts: Dictionary = {}
 var _site_spawned: Dictionary = {}
 var _surface_nodes: Dictionary = {}
+var _site_members: Dictionary = {}
+var _site_failures: Dictionary = {}
+var _wild_homes: Dictionary = {}
 
 
 static func read_json(path: String) -> Dictionary:
@@ -152,11 +191,17 @@ func _process(delta: float) -> void:
 	# Inherited streaming only tracks Meadows clusters. Our small authored sites
 	# use full 3D distance, so a body stacked far above the player stays asleep.
 	for wild: Node3D in _wild_creatures:
-		if not is_instance_valid(wild) or wild == _engaged_with or not wild.visible:
+		if not is_instance_valid(wild) or _player == null or not wild.visible \
+				or wild == _engaged_with or bool(wild.get("engaged")):
 			continue
-		var active := wild.global_position.distance_to(_player.global_position) \
+		# A fallen body must not freeze forever outside the activation sphere.
+		# Its validated home owns residency; inherited guards own fights, gates,
+		# faint timers and respawns, including the recovery hook before wake-up.
+		var resident: Vector3 = _wild_homes.get(wild, wild.global_position)
+		var active := minf(resident.distance_to(_player.global_position),
+			wild.global_position.distance_to(_player.global_position)) \
 			<= float(encounter_config.get("activation_distance_m", 130.0))
-		wild.set_physics_process(active)
+		_set_wild_active(wild, active)
 
 
 func _build_trainers() -> void:
@@ -195,7 +240,7 @@ func _challenge(id: String) -> void:
 func _spawn_available_sites() -> void:
 	for site: Dictionary in encounter_config.get("wild_sites", []):
 		var id := str(site["id"])
-		if _site_spawned.has(id):
+		if _site_spawned.has(id) or _site_failures.has(id):
 			continue
 		var table := find_id(chapter.get("encounter_tables", []), str(site["table_id"]))
 		var gate := str(table.get("requires_unlock", ""))
@@ -204,20 +249,34 @@ func _spawn_available_sites() -> void:
 		var centre := _vector3_of(site["position"])
 		if _player == null or centre.distance_to(_player.global_position) > float(encounter_config.get("activation_distance_m", 130.0)):
 			continue
-		_site_spawned[id] = true
+		var members: Array = []
+		var complete := true
 		for index in int(site.get("count", 1)):
 			var selected := roll_wild(table, world_seed(), hash(id) + index)
 			if selected.is_empty():
+				complete = false
 				continue
 			var angle := index * TAU / maxi(1, int(site.get("count", 1)))
 			var at := centre + Vector3(cos(angle), 0, sin(angle)) * float(site.get("radius_m", 4.0)) * 0.5
 			var wild := spawn_wild(str(selected["species"]), at, {"name": "%s_%d" % [id, index],
+				"site_anchor": centre,
 				"level": selected["level"], "aggressive": false, "wander_radius": float(site.get("radius_m", 4.0)),
 				"combat": encounter_config.get("behavior_profiles", {}).get("scout", {})})
 			if wild != null:
+				members.append(wild)
 				_wild_respawn[wild] = float(encounter_config.get("wild_respawn_seconds", 180.0))
 				if not gate.is_empty():
 					_wild_gates[wild] = {"cloudreach_requires_flags": [gate]}
+			else:
+				complete = false
+		_site_members[id] = members
+		if complete:
+			_site_spawned[id] = true
+		else:
+			# Fail closed once, visibly. Never mark an unsupported population as
+			# valid or roll replacements every idle frame for a partial site.
+			_site_failures[id] = true
+			push_warning("Cloudreach wild site has unsupported placements: " + id)
 
 
 func _gate_active(gate: Dictionary) -> bool:
@@ -238,12 +297,129 @@ func _surface_for(body: Node3D, spot: Vector3) -> void:
 
 
 func spawn_wild(species: String, spot: Vector3, opts: Dictionary = {}) -> Node3D:
-	var wild := super.spawn_wild(species, spot, opts)
-	if wild != null:
-		_surface_for(wild, spot)
-		wild.call("place_on_ground", spot)
-		wild.set("home", wild.global_position)
+	if not SPECIES.has(species):
+		push_error("spawn_wild('%s') names a species that is not in species.json" % species)
+		return null
+	var once_id := str(opts.get("once_id", ""))
+	if _once_cleared(once_id):
+		return null
+	# Same construction contract as main spawn_wild: canonical prefab,
+	# populate/instance roll, combat override, fixed level, config, signal and
+	# once-only registration. Only the script's peaceful fallback and admission
+	# grounding differ. Trainer bodies still use the untouched main pipeline.
+	var wild: Node3D = CREATURE_SCENE.instantiate()
+	wild.set_script(CliffWild)
+	wild.name = str(opts.get("name", "Wild_%s_%d" % [species, _wild_creatures.size() + 1]))
+	var parent: Node = opts.get("parent", null) as Node
+	if not is_instance_valid(parent):
+		parent = get_parent()
+	parent.add_child(wild)
+	wild.call("populate", species, _player)
+	var opt_combat: Variant = opts.get("combat", {})
+	if opt_combat is Dictionary and not opt_combat.is_empty():
+		wild.set("combat_override", opt_combat.duplicate(true))
+	var level := int(opts.get("level", 0))
+	if level > 0:
+		_set_fixed_level(wild, species, level)
+	if opts.has("aggressive"):
+		wild.set("aggressive", bool(opts.aggressive))
+	var wild_cfg: Dictionary = MATH.config().get("wild", {}).duplicate()
+	if opts.has("wander_radius"):
+		wild_cfg["wander_radius"] = opts.wander_radius
+	wild.call("configure", wild_cfg)
+	_surface_for(wild, spot)
+	var anchor: Vector3 = opts.get("site_anchor", spot)
+	var safe := _find_wild_spawn(wild, spot, anchor)
+	if not safe.is_finite() or not bool(wild.call("place_on_ground", safe)):
+		_surface_nodes.erase(wild.get_instance_id())
+		wild.free()
+		return null
+	wild.set("home", wild.global_position)
+	wild.set("_target", wild.global_position)
+	_wild_homes[wild] = wild.global_position
+	wild.call("set_clearance_check", Callable(self, "_wild_destination_supported").bind(wild))
+	wild.connect("wants_to_engage", _on_wild_wants_to_engage.bind(wild))
+	_wild_creatures.append(wild)
+	if not once_id.is_empty():
+		_once_only[wild] = once_id
 	return wild
+
+
+## Real collision AND the intended analytic stratum must agree. An enclosing
+## mesa, a different stacked deck or a ray hitting another creature is not floor.
+func _wild_support(at: Vector3, radius: float, wild: Node3D) -> Vector3:
+	if not at.is_finite() or not is_instance_valid(realm_world) \
+			or not realm_world.has_method("ground_height_near") or not realm_world.is_inside_tree():
+		return Vector3.INF
+	var ground := float(realm_world.call("ground_height_near", at))
+	if not is_finite(ground) or absf(ground - at.y) > WILD_STRATUM_TOLERANCE:
+		return Vector3.INF
+	var exclusions: Array[RID] = []
+	for actor: Variant in [_player, _ally_body, _trainer_body, wild] + _wild_creatures:
+		if is_instance_valid(actor) and actor is CollisionObject3D:
+			exclusions.append(actor.get_rid())
+	var highest := ground
+	for i in 9:
+		var offset := Vector3.ZERO if i == 0 else Vector3(cos((i-1)*TAU/8.0), 0, sin((i-1)*TAU/8.0)) * radius
+		var sample := Vector3(at.x + offset.x, ground, at.z + offset.z)
+		var expected := float(realm_world.call("ground_height_near", sample))
+		if not is_finite(expected) or absf(expected - ground) > radius * 0.8 + 0.3:
+			return Vector3.INF
+		var ray := PhysicsRayQueryParameters3D.create(sample + Vector3.UP * 1.6, sample - Vector3.UP * 1.6)
+		ray.exclude = exclusions
+		var hit := (realm_world as Node3D).get_world_3d().direct_space_state.intersect_ray(ray)
+		if hit.is_empty() or not hit.collider is StaticBody3D \
+				or hit.normal.y < 0.7 or absf(hit.position.y - expected) > 0.35:
+			return Vector3.INF
+		highest = maxf(highest, float(hit.position.y))
+	return Vector3(at.x, highest, at.z)
+
+
+func _wild_path_supported(from: Vector3, to: Vector3, radius: float, wild: Node3D) -> bool:
+	if not from.is_finite() or not to.is_finite() or from.distance_to(to) > 24.0:
+		return false
+	var steps := maxi(1, ceili(Vector2(to.x-from.x, to.z-from.z).length() / WILD_PATH_STEP))
+	for i in steps + 1:
+		if not _wild_support(from.lerp(to, float(i)/steps), radius, wild).is_finite():
+			return false
+	return true
+
+
+func _find_wild_spawn(wild: Node3D, requested: Vector3, centre: Vector3) -> Vector3:
+	var radius := float(wild.call("body_radius")) + WILD_FOOT_MARGIN
+	# Stable order and no random draws: repair an edge-biased generic resource
+	# anchor, then validate each actual body and the short connection to it.
+	var anchors: Array[Vector3] = [centre]
+	for ring in [1.0, 2.0, 3.0]:
+		for i in 8:
+			anchors.append(centre + Vector3(cos(i*TAU/8.0), 0, sin(i*TAU/8.0)) * ring)
+	for raw_anchor in anchors:
+		var anchor := _wild_support(raw_anchor, radius, wild)
+		if not anchor.is_finite() or not _wild_path_supported(centre, anchor, 0.05, wild):
+			continue
+		var candidates: Array[Vector3] = [requested, anchor]
+		for ring in [1.5, 3.0, 4.5]:
+			for i in 8:
+				candidates.append(anchor + Vector3(cos(i*TAU/8.0), 0, sin(i*TAU/8.0)) * ring)
+		for candidate in candidates:
+			var safe := _wild_support(candidate, radius, wild)
+			if not safe.is_finite() or not _wild_path_supported(anchor, safe, radius, wild):
+				continue
+			var occupied := false
+			for other: Node3D in _wild_creatures:
+				if other != wild and is_instance_valid(other) and other.global_position.distance_to(safe) \
+						< radius + float(other.call("body_radius")) + WILD_FOOT_MARGIN:
+					occupied = true
+			if not occupied:
+				return safe
+	return Vector3.INF
+
+
+func _wild_destination_supported(candidate: Vector3, wild: Node3D) -> bool:
+	if not is_instance_valid(wild):
+		return false
+	return _wild_path_supported(wild.global_position, candidate,
+		float(wild.call("body_radius")) + WILD_FOOT_MARGIN, wild)
 
 
 func _stand_on_ground(body: Node3D, spot: Vector3) -> bool:
@@ -252,17 +428,29 @@ func _stand_on_ground(body: Node3D, spot: Vector3) -> bool:
 
 
 func _start_fight(wild: Node3D, opponent_owned: bool = false) -> void:
+	if wild == _engaged_with or (_manager != null and bool(_manager.call("is_fighting"))):
+		return
 	_surface_for(wild, Vector3(wild.global_position.x, _player.global_position.y, wild.global_position.z))
 	super._start_fight(wild, opponent_owned)
 
 
 func _reground_if_fallen(wild: Node3D) -> void:
-	if not is_instance_valid(realm_world) or not realm_world.has_method("ground_height_near"):
+	if not is_instance_valid(wild) or not _wild_homes.has(wild) or wild == _engaged_with \
+			or bool(wild.get("engaged")) or not bool(wild.call("is_alive")) \
+			or _faint_timers.has(wild) or _respawn_timers.has(wild):
 		return
+	var home: Vector3 = _wild_homes[wild]
 	var at := wild.global_position
-	var ground := float(realm_world.call("ground_height_near", at))
-	if not is_nan(ground) and at.y < ground - REGROUND_DEPTH_M:
-		wild.call("place_on_ground", Vector3(at.x, ground, at.z))
+	var ground := float(realm_world.call("ground_height_near", Vector3(at.x, home.y, at.z))) if at.is_finite() else NAN
+	if is_finite(ground) and at.y >= ground - REGROUND_DEPTH_M:
+		return
+	var safe := _wild_support(home, float(wild.call("body_radius")) + WILD_FOOT_MARGIN, wild)
+	if safe.is_finite():
+		# Recover this same body/instance, never a new population roll. The last
+		# falling Y cannot choose a lower stacked road. Combat remains untouched.
+		_surface_for(wild, safe)
+		wild.call("place_on_ground", safe)
+		wild.set("_target", safe)
 
 
 func begin_trainer_battle(spec: Dictionary, trainer: Node3D = null) -> bool:

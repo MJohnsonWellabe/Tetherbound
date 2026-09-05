@@ -3,6 +3,37 @@
 Final visual acceptance belongs to external ChatGPT review. This file records
 only implementation, test, capture, and handoff state.
 
+## Cloudreach round 5 — 2026-09-05
+
+Active resumed owner goal is Cloudreach, excluding final creature art. Branch
+`codex/cloudreach-cliffs` integrates main `590741fe6` through merge `97de9bbf7`;
+no branch-to-main merge. This checkpoint corrects bridge construction, settlement
+base closure and approach visibility, grass-edge continuity, locked-wind
+transparency, and arena/settlement wear. Physical routes and gates are unchanged.
+
+- Same twelve actual Windows/NVIDIA Compatibility views and separate real-input
+  Fly capture are in `ralph/reports/CLOUDREACH-ENV-CORRECTION-0904/round5/`.
+  `_sheet.png` is the sole committed image for this round.
+- Fresh blind Astra: **art-direction A Yes / shipping-game B No**. See
+  `JUDGE-ASTRA.md`; neither final visual acceptance nor a pass against an unseen
+  Cloudreach concept board is claimed. Lawn clearings, hard road boundaries,
+  cliff form/depth, arena staging and inconsistent asset finish remain work.
+- Foundation and actual double-Jump/Fly pass; 39 related tests / 1,201 assertions
+  pass. Meadows world smoke exits 0/OK with only the disclosed known headless
+  alpha material-null error in its distinct ERROR set.
+- Quiet 1280×800 GTX 1060 static means: 8.21–10.15ms; p95: 8.37–10.33ms.
+  Peak: 4,587 draws / 6,928,266 primitives. These are not continuous gameplay or
+  ROG Ally measurements. Wild-roaming cost needs its separate active-site profile.
+- Adjacent mechanics now prove all three shrine vanes/Sora/windlass at original
+  approach offsets, 73 real wild-retention checks and nine actual live-arena
+  captain rounds with movement-driven relays. These bounded fixtures do not
+  replace the uninterrupted chapter replay, which remains in progress.
+
+Exact continuation: finish the uninterrupted shrine/upper-route/finale/aftermath
+and disk reload, profile moving wilds, then resolve the round-5 critic's named
+scene defects with same-camera evidence. Draft PR #44 remains unmerged; CI is
+still running/queued, not accepted.
+
 ## Exit checkpoint — 2026-09-04
 
 - Working branch: `codex/meadows-visual-parity`
