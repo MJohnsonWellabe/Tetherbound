@@ -31,6 +31,9 @@ const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 ## For `FLEE_REFUSED_MESSAGE` only -- a const, so it is read off the script
 ## rather than off the live node (`Node.get()` sees properties, not consts).
 const COMBAT := preload("res://scripts/combat/combat_manager.gd")
+## For the input-guard duration only, read from the same place
+## `combat_manager.gd` reads it (`_let_the_input_guard_expire()` below).
+const COMBAT_MATH := preload("res://scripts/combat/combat_math.gd")
 
 ## Which trainer this test fights. Read by ID from the table rather than by
 ## index or position, so SC12/SC13 replacing the placeholder with Mira, Oskar
@@ -236,6 +239,7 @@ func _trainer_prompt_label() -> String:
 ## have been told why -- a dead button with no explanation is the failure
 ## `_refuse_combat_input()` already exists to prevent for the other three.
 func _a_trainer_fight_cannot_be_walked_out_of() -> void:
+	await _let_the_input_guard_expire()
 	for action: String in ["combat_run", "creature_recall"]:
 		# Blank the toast first. `_throw_pressed()` reads `interact` as well as
 		# `combat_throw`, so every interact press of the challenge just above
@@ -258,6 +262,27 @@ func _a_trainer_fight_cannot_be_walked_out_of() -> void:
 			_fail("'%s' was refused silently; the HUD says '%s'" % [action, said])
 			return
 	print("disengage refused on both bindings: '%s'" % COMBAT.FLEE_REFUSED_MESSAGE)
+
+
+## Wait out `combat.json::flow.input_guard` before pressing anything.
+##
+## `combat_manager.gd::_tick_active()` skips `_read_player_input()` entirely for
+## the first quarter-second of a fight -- engage and charged attack are the same
+## physical button, and without that guard the press that OPENS the fight is
+## also read as the first attack of it. The challenge above finishes microseconds
+## before this check starts, so a press made straight away lands inside the guard
+## and is dropped before `_flee_pressed()` ever sees it: the fight survives, the
+## player is told nothing, and the check reads that as a silent refusal when in
+## fact no button was ever delivered. This cost one full smoke run to find; it is
+## a property of when the press is made, not of the rule under test.
+##
+## The number is read from the same config the manager reads rather than
+## hard-coded here, so retuning the guard cannot leave this waiting too little.
+func _let_the_input_guard_expire() -> void:
+	var guard := float(COMBAT_MATH.config().get("flow", {}).get("input_guard", 0.25))
+	var frames := int(ceil(guard * float(Engine.physics_ticks_per_second))) + 4
+	for i in frames:
+		await physics_frame
 
 
 ## Empty the toast label AND the one-shot queue behind it, so the next thing
