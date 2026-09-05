@@ -24,6 +24,16 @@ How the mask is found, so it can be re-baked if the rig or its texture changes:
      `StandardMaterial3D` mixes `detail_albedo` over the body texture by this
      value, so a crevice the painter darkened stays darker in the new colour
      and the hair keeps its painted shading instead of flattening to a swatch.
+  5. The mask is then DILATED into the atlas gutters -- the empty texels
+     between UV islands -- by up to GUTTER_DILATION texels of grey dilation,
+     never onto a texel any island of the body mesh actually uses. Without
+     this, bilinear and mip sampling at the edge of every hair island blends
+     toward the mask's zero in the gutter and the painted dark brown shows
+     through as a lattice of one-texel seams across the head in the world
+     (the plate, sampled close up at mip 0, hid it). The albedo itself is
+     already dilated into those gutters by whatever authored it, which is
+     why the ORIGINAL hair shows no seams; the mask has to be dilated the
+     same way to follow it.
 
 Run from the repo root with numpy, Pillow and scipy installed:
 
@@ -53,6 +63,7 @@ HAIR_MIN_WARMTH = 8
 MIN_COMPONENT_TEXELS = 1500
 SHADE_REFERENCE_LUMA = 28.0
 SHADE_GAMMA = 0.7
+GUTTER_DILATION = 12
 
 
 def load_glb(path):
@@ -111,6 +122,10 @@ def main():
     meshes = {m["name"]: m for m in doc["meshes"]}
     region = rasterise(doc, blob, meshes["char1"], size, True, head_joints)
     region |= rasterise(doc, blob, meshes["hair_ponytail"], size, False, head_joints)
+    # Every texel any triangle of the body or ponytail uses, head or not: the
+    # dilation below may only ever grow into what is left (the gutters).
+    used = rasterise(doc, blob, meshes["char1"], size, False, head_joints)
+    used |= rasterise(doc, blob, meshes["hair_ponytail"], size, False, head_joints)
 
     r, g, b = rgb[..., 0], rgb[..., 1], rgb[..., 2]
     luma = 0.299 * r + 0.587 * g + 0.114 * b
@@ -122,10 +137,18 @@ def main():
 
     shade = np.clip(luma / SHADE_REFERENCE_LUMA, 0.0, 1.0) ** SHADE_GAMMA
     mask = np.where(kept, shade, 0.0)
+    gutter = ~used
+    grown = mask.copy()
+    for _ in range(GUTTER_DILATION):
+        wider = ndimage.grey_dilation(grown, size=(3, 3))
+        grown = np.where(gutter, np.maximum(grown, wider), grown)
+    dilated = int(((grown > 0) & ~kept).sum())
+    mask = grown
     Image.fromarray((mask * 255.0 + 0.5).astype(np.uint8), "L").save(OUT, optimize=True)
-    print("head region %d texels, hair candidates %d, kept %d in %d components; mean mask value over hair %.2f"
+    print("head region %d texels, hair candidates %d, kept %d in %d components; mean mask value over hair %.2f; "
+          "dilated %d gutter texels"
           % (region.sum(), candidate.sum(), kept.sum(), int((sizes >= MIN_COMPONENT_TEXELS).sum()),
-             float(mask[kept].mean())))
+             float(mask[kept].mean()), dilated))
     print("wrote", os.path.relpath(OUT, ROOT))
 
 
