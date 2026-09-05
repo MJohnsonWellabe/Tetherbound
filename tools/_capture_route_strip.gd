@@ -499,25 +499,24 @@ func _trainer_subject() -> Dictionary:
 			height = (cs.shape as CapsuleShape3D).height * scale.y
 			radius = (cs.shape as CapsuleShape3D).radius * maxf(scale.x, scale.z)
 			break
-	var half := Vector3(radius, height * 0.5, radius)
-	var centre := _player.global_position + Vector3(0.0, height * 0.5, 0.0)
-	return {"name": "trainer", "aabb": AABB(centre - half, half * 2.0), "body": _player}
+	return {"name": "trainer", "aabb": CAPTURE_CHECK.body_box(_player.global_position, height, radius),
+		"body": _player}
 
 
 func _creature_subject(body: Node3D, label: String) -> Dictionary:
 	var species_id := str(body.get("species_id"))
 	var height := 1.0
 	var radius := 0.4
-	var footprint := 1.5
 	if species_id != "" and SPECIES.has(species_id):
 		var ph: Dictionary = SPECIES.placeholder(species_id)
 		height = float(ph.get("height", height))
 		radius = float(ph.get("radius", radius))
-		footprint = float(ph.get("footprint_allowance", footprint))
-	var horiz := radius * maxf(1.0, footprint * 0.65)
-	var half := Vector3(horiz, height * 0.5, horiz)
-	var centre := body.global_position + Vector3(0.0, height * 0.5, 0.0)
-	return {"name": "%s:%s" % [label, species_id], "aabb": AABB(centre - half, half * 2.0), "body": body}
+	# `species.json`'s own height and radius -- the numbers
+	# `creature_body.gd::_fit()` builds the collider from -- never a skinned
+	# mesh's bind-pose AABB, and never `footprint_allowance`: see
+	# `capture_check.body_box()` for what that number is and what it broke.
+	return {"name": "%s:%s" % [label, species_id],
+		"aabb": CAPTURE_CHECK.body_box(body.global_position, height, radius), "body": body}
 
 
 func _road_subjects() -> Array:

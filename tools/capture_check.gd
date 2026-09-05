@@ -495,6 +495,24 @@ const READABLE_MAX_OVERLAP_FRAC := 0.5
 const READABLE_NEAR := 0.05
 
 
+## A standing body's world-space box: `height` tall, `radius` in each
+## horizontal direction, standing ON the ground at `at`.
+##
+## The radius is the body's own collider radius and nothing else. W01-ROUTE-STRIP
+## run 5 built these boxes the way `_capture_life.gd`'s bbox check does --
+## `radius * max(1, footprint_allowance * 0.65)` -- and every fight frame was
+## refused for on-screen overlap: `footprint_allowance` is a SPAWN-SPACING
+## number (`creature_body.gd` divides by it to decide how much room a body
+## needs among scattered props), not a visual width, and for a galecrest
+## (radius 0.65, allowance 4.2) it inflates a 1.30 m body into a 3.55 m box.
+## Two creatures standing a fight's own distance apart then overlap as boxes
+## while nothing overlaps on screen. A height fraction survives that error;
+## an occlusion test does not.
+static func body_box(at: Vector3, height: float, radius: float) -> AABB:
+	var half := Vector3(radius, height * 0.5, radius)
+	return AABB(at + Vector3(0.0, height * 0.5, 0.0) - half, half * 2.0)
+
+
 ## Screen-space point for `world_point` through a camera at `cam` (its global
 ## transform) with vertical field of view `fov_deg`, drawing into a viewport
 ## `size` pixels large. Null when the point is behind the near plane --
