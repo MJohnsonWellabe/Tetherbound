@@ -186,3 +186,63 @@ obstruction, `ralph/LAND-0904-4` holds the prepared landing) and W10 (seven-line
 report, no test results). W02, W06, W07, W08, W11, W14, W15, W20 and W21 have pushed no
 report of their own — W07 has judge sheets but no `REPORT.md`, which under the brief is not
 done. **No lane has pushed anything since W13 at 03:06 UTC**, five and a half hours ago.
+
+## 2026-09-05 09:05 UTC — cycle 8: lanes woke; W05 rejected again; consolidation rule
+
+**Owner instruction, 2026-09-05 ~09:00 UTC:** *"you need to be consolidating lanes so we
+don't have five separate CIs trying to happen at once in GitHub."* From here every landing
+is one branch, one CI run, one PR — even when the lanes are unrelated. A second open landing
+PR is a defect, not a convenience.
+
+**Owner instruction, same window:** *"if there are merge conflicts with cloudreach, whatever
+it is doing should win."* Cloudreach takes the conflicting side, unconditionally. None of
+cycle 8's conflicts touched it — they were the scatter manifest fingerprint and two docs —
+so nothing was reversed retroactively; the rule applies going forward.
+
+Four lanes woke between 08:39 and 08:54 after nearly six hours of silence: W01, W05, W09,
+W14.
+
+| Lane | Push | State |
+|---|---|---|
+| W01-ROUTE-STRIP | 08:39 | report closed (JUDGE-ROUND-4 + a rewrite fixing its undercount) — **in PR #50** |
+| W09-VFX | 08:44 | report closed (commit ref, one flaky `smoke_combat_camera` run and its clean re-run) — **in PR #50** |
+| W05-TREELINE | 08:40, 08:53 | real fix attempted; **rejected again**, see below |
+| W14-RIDING | 08:47, 08:54 | still no `REPORT.md`; probe commits only. Not done, left alone. |
+
+### W05-TREELINE, rejection 2
+
+The lane did the right kind of work and the fix still fails. It diagnosed with a probe
+(`tools/_probe_walk_block_0905.gd`) that names the blocking body instead of guessing —
+`CommonTree_1_Collision`, r = 1.21 m, axis 1.61 m off the walk line, a 0.40 m gap — then
+decoupled collider growth from mesh growth, scaling `collision_radius` down by exactly the
+factor `scale_max` went up (trees 0.6 → 0.435, grove 1.1 → 0.7). The arithmetic holds:
+0.6 × 1.45 = 0.435 × 2.0 = 0.87, so the widest collider equals the widest one `main` already
+ships and every other instance's is strictly smaller.
+
+Verified on `main` + W05 @ `457f179f`, two clean import passes first:
+
+```
+[player] entombed at 42.33, 0.79, -66.54 -- recovering to -25.40, 4.93, -15.60
+aggression FAIL: stood 116.1m from Galecrest for 900 frames ... it never attacked
+```
+
+The walk no longer *stops* at 53.7 m. The player now penetrates the trunk at essentially the
+spot the lane's own probe named (42.33, −66.54 against 40.54, −65.82), trips
+`player_controller.gd::_recover_if_entombed`, and is teleported 116.1 m away, so the
+aggression check never runs. **A collider strictly inside the bark means the player can enter
+the bark** — the lane's own measurement says the trunk is 0.741 m at scale 1.0 against a
+0.435 m collider. The fix trades a wall for a pit.
+
+Not a flake and not the documented one: the smoke's header documents 38–45 m traced to
+Terrain3D; this is 116.1 m with an explicit entombment line. `main` passes this smoke —
+`verify-combat-shard` green at 08:11:12 on `b510043f`, now `main`'s ancestor.
+
+The lane owns the fix. Scaling the radius down globally cannot satisfy both constraints at
+once; holding the collider at a fixed absolute radius independent of placement scale, or
+moving the single placement on the corridor, can. **The lane could not be reached by peer
+message (no sessions live), so PR #50's body carries the rejection.** Its decision record is
+renumbered D74 → **D85** on the landing side and the branch is otherwise clean: no
+placeholders, diff inside its ownership.
+
+**Decision numbers:** D85 returns to W05 as originally allocated, once it lands. Next free
+for a new lane is **D87**.
