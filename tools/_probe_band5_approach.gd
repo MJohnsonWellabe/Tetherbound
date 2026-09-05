@@ -201,10 +201,45 @@ func _captures(world: Node, suffix: String) -> void:
 	if terrain != null and terrain.has_method("set_camera"):
 		terrain.call("set_camera", camera)
 	var field: RefCounted = HEIGHTFIELD.new()
+	# CL-E10, 2026-09-04. `03-mid-route` WAS Vector2(-20.0, 7250.0) and the
+	# G3-BAND5 blind judge called it out by itself: "This viewpoint faces a
+	# foreground pylon inside a tree grove -- the sightline has turned away from
+	# the target entirely... the one frame in the sequence that breaks the
+	# 'watch it get closer' read." P-5.1 passed anyway, so the frame's loss was
+	# nearly free and nearly invisible, which is why it is worth naming.
+	#
+	# THE AIM WAS NEVER THE PROBLEM AND THE LOOK-AT NEEDED NO CHANGE. Every shot
+	# here already points at the same fixed target and the arithmetic is right:
+	# from (-20, 7250) toward (0, 7560) the camera faces up-corridor exactly as
+	# intended. What was wrong was WHERE IT STOOD. Band 5's Hall sightline is an
+	# authored corridor -- `bands/band5_stronghold_approach/vegetation.json`
+	# clearings 15-19, x interpolated 0 -> 8 across z 7160 -> 7560, radius 16 --
+	# cut for this exact reason ("the sightline is opened instead, along the road
+	# the player actually walks, on the camera-to-Hall bearing"). At z=7250 that
+	# corridor's centre is x=1.8, so the old eye stood 21.8 m OUTSIDE it, in
+	# canopy the clearings deliberately do not touch. The judge photographed a
+	# grove because the camera was in one.
+	#
+	# Moved onto the corridor, and onto a clearing's own centre rather than
+	# between two: the discs are r=16 at z 7230 and 7270, so z=7250 falls in the
+	# 8 m gap between them and even x=1.8 would not have been reliably clear.
+	# (2.2, 7270) IS clearing 16's centre. The camera stands 4.2 m back along the
+	# bearing at (2.23, 7265.8), 4.2 m from that centre and well inside r=16.
+	# Still between 02 (z 7150) and 04 (z 7350) and still monotone in z, so the
+	# sequence's "watch it get closer" read is unchanged in shape.
+	#
+	# NOT CHANGED, recorded so the next reader does not think it was checked:
+	# `02-outer-watch` (x -70) and `04-before-the-gate` (x +60) sit even further
+	# off the corridor than the old 03 did. Neither was flagged by the judge and
+	# neither is what CL-E10 names, and a capture list is a composition the band
+	# lane owns -- widening this to "re-site every stand" would be exactly the
+	# un-asked-for redesign this tool's own neighbours warn about. If a later
+	# pass finds the same grove defect at those two, the corridor centres are
+	# x = 8 * (z - 7160) / 400.
 	var shots := [
 		["01-band-mouth", Vector2(0.0, 7000.0)],
 		["02-outer-watch", Vector2(-70.0, 7150.0)],
-		["03-mid-route", Vector2(-20.0, 7250.0)],
+		["03-mid-route", Vector2(2.2, 7270.0)],
 		["04-before-the-gate", Vector2(60.0, 7350.0)],
 		["05-past-the-gate", Vector2(20.0, 7440.0)],
 		["06-the-waystop", Vector2(-25.0, 7462.0)],

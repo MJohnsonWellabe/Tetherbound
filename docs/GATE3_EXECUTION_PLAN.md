@@ -137,15 +137,30 @@ Recorded here so they are not rediscovered a fourth time.
   `docs/specs/MEADOWS_PROGRESSION_SPEC.md` and `docs/prompts/65` treat the Riverwatch
   Captain as one of Band 4's three Sigil captains. G3-BAND3 reports from the played route,
   G3-ENCOUNTERS gives the design verdict, the coordinator decides. No lane moves him.
-- **Does the relay escalate?** Hess (8/8), Orrin (9/9), Officer Dell (10/10/10) and Captain
-  Vance (11/11/12) stand within ~30 m of each other. Vance is +1/+2 over the officer
-  before him and is meant to be a chapter milestone.
-- **Does the Warden read as the hardest fight?** He fields five at 16/17/17/18/20 — larger
-  in aggregate than Keeper Hald's three at 18/19/19, and softer at the front, against the
-  one opponent the player cannot walk around. A play question, not a table question.
-- **Is Band 5 an empty corridor?** 23 spawns, 8 harvest nodes and 3 prop clusters over the
-  chapter's largest extent, against Band 1's 69 / 48 / 15. Measured; the player-facing
-  consequence is not.
+- **Does the relay escalate?** ~~Hess (8/8), Orrin (9/9), Officer Dell (10/10/10) and
+  Captain Vance (11/11/12) stand within ~30 m of each other.~~ **ANSWERED on the table,
+  2026-09-04 (CL-D6) — still unplayed.** The clustering is gone: V-1 spread the picket
+  line down the spine road (Hess at z=3680, Orrin at 3710, Dell at 3771 — a ~90 m gradient,
+  not a ~30 m huddle), and V-2 re-cut Vance to galecrest 11 / duskhush 11 / tuskroot 12
+  with the Tuskroot on CHARGER, so the milestone is a shape change and not only a +1. Both
+  are live in `data/config/bands/band3_the_river_lock/trainers.json`. What remains open is
+  narrower than the question as written: whether the escalation *reads* on a played run.
+  Nobody has played it.
+- **Does the Warden read as the hardest fight?** ~~He fields five at 16/17/17/18/20~~
+  **ANSWERED, 2026-09-04 (CL-D6).** He was measured, the measurement said his front was
+  soft against Keeper Hald's three at 18/19/19, and W-1 acted on it with the owner's
+  explicit **yes** (`docs/owner/OWNER_DIRECTIVES_2026-09-04.md`, question 2): the team is
+  now burrowback 18 / galecrest 18 / brooktail 19 / meadowhart 19 / tuskroot 20, live in
+  `data/config/bands/band5_stronghold_approach/trainers.json`. The front no longer dips
+  below the Keeper's. This is a table answer; how the fight plays is Gate F's.
+- **Is Band 5 an empty corridor?** ~~23 spawns, 8 harvest nodes and 3 prop clusters~~
+  **ANSWERED: no, 2026-09-04 (CL-D6).** The cluster count was the wrong instrument — a
+  cluster is not a creature. G3-BAND5 counted live bodies at three eyes on the approach and
+  got **26, 30 and 22**, with a worst gap of **63 m** of dead travel over a 651 m leg
+  (`tools/_probe_band5_approach.gd`). D70 also made the approach deliberately thinner than
+  Band 3's 54 clusters as the chapter's crescendo, so the low cluster number is authored
+  shape. The corridor is populated; what is still unmeasured is whether the *escalation*
+  reads, which is P-5.2's question, not this one.
 
 ## 4b. The trap that blocks a logic-lane Gate F run before step 1
 

@@ -216,10 +216,18 @@
       "challenge": "captain_riverwatch_challenge",
       "defeated": "captain_riverwatch_defeated",
       "_why_c1_gate3_encounters": "GATE3_ENCOUNTER_CONTRACTS.md C-1, G3-BAND3-0903: brooktail ace was 16, tying Vess (the third captain fought in road order) and out-levelling Halder (15, the second) -- the same backwards step GATEC-CURVE already fixed for captain_field/captain_ridge, left in this one. Dropped to 15: still inside Band 3's [8,16] trainer_levels window, still above Vance's 12, and the road-order ladder now reads 15 -> 15 -> 16 (Oreth -> Halder -> Vess) instead of dipping. Mirrored in tests/fixtures/band_split_baseline/trainers.json the same commit.",
+      "_why_combat_g3encounters": "GATE3_ENCOUNTER_CONTRACTS.md C-3 and G-3, CL-G6's sibling item CL-E1 (2026-09-04). C-3 -- Oreth, the Draw: composition -- is the only one of the three captains whose profiles were never authored; both band lanes recorded it as the other's and it fell between them. G-2 defines the per-team-member `combat` override that `wild_creature.set_engaged()` merges over `combat.json`'s `enemy` block for that body only, and captain_field/captain_ridge already carry theirs (see their own `_why_combat_g3encounters`); this is the third. MOSSHELL GETS WALL -- the roster's highest defence (130/12/26) made behavioural: telegraph 0.85, recovery 1.1, chase_speed 3.4, reposition_distance 2.5, power 8.0x1.5=12.0. It does not chase, it waits, and the punish window is long and the hit is expensive. BROOKTAIL (the ace) GETS CURRENT -- 92/18/13, fast and thin: attack_cooldown 0.7, recovery 0.55, reposition_time 0.5, reposition_distance 2.0, power 8.0x0.8=6.4. CURRENT keeps its own x0.8 here, unlike C-4's Meadowhart which the contract explicitly re-prices at x1.0; C-3 asks for thin, not relentless. TRAILPUP carries no override -- C-3's own 'default' third member, and the shape contrast is the point: three members, three ways of fighting, which is what 'you'll want a plan, not a favourite' means mechanically. All values computed against combat.json's own `enemy` defaults (power 8.0, telegraph 0.55, recovery 0.75, attack_cooldown 1.1, preferred_range 2.1, reposition_distance 4.0, reposition_time 1.0, lunge 3.4, chase_speed 4.6), which is what an absent block still resolves to for every other creature in the game (G-2's own fails-if). G-3's OWN FAILS-IF CHECKED BEFORE SHIPPING, not assumed: `combat_math.base_damage` with these powers against every species' stats at chapter_curve.json's Band 3 `team.enter` level of 12, at the worst type multiplier (1.25) and each attacker's own quick move -- Mosshell's worst single hit is 18.3 against the frailest level-12 creature's 129.5 HP (14.1%), Brooktail's is 9.0 (7.0%). Neither is within a factor of seven of a one-blow kill.",
       "team": [
         {
           "species": "mosshell",
-          "level": 13
+          "level": 13,
+          "combat": {
+            "telegraph": 0.85,
+            "recovery": 1.1,
+            "chase_speed": 3.4,
+            "reposition_distance": 2.5,
+            "power": 12.0
+          }
         },
         {
           "species": "trailpup",
@@ -227,7 +235,14 @@
         },
         {
           "species": "brooktail",
-          "level": 15
+          "level": 15,
+          "combat": {
+            "attack_cooldown": 0.7,
+            "recovery": 0.55,
+            "reposition_time": 0.5,
+            "reposition_distance": 2.0,
+            "power": 6.4
+          }
         }
       ],
       "reward": {

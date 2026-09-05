@@ -59,6 +59,7 @@ FALLBACK_H=800
 
 MODE="logic"
 ALLOW_NO_CAPTURE="no"
+DECLARE_ONLY="no"
 SEGMENT=""
 RUN_DIR="${GATE_F_RUN_DIR:-}"
 
@@ -79,6 +80,11 @@ usage: tools/gate_f/run_segment.sh [--capture] [--overhead] [--run-dir DIR] <seg
                  ralph/reports/gate-f-run-<stamp>/. Also settable as
                  GATE_F_RUN_DIR, which is how a batch keeps every segment of one
                  run together.
+  --write-lane-declaration
+                 write the run directory's logic-lane freeze declaration and
+                 exit without running anything. Logic-mode runs do this for
+                 themselves; the flag exists so a batch can declare the lane up
+                 front and so the behaviour is testable without a Godot boot.
 
 Environment: GODOT (path to the binary, default $HOME/.cache/tetherbound-art/godot)
 EOF
@@ -89,6 +95,7 @@ while [[ $# -gt 0 ]]; do
 		--capture) MODE="capture"; shift ;;
 		--overhead) MODE="overhead"; shift ;;
 		--allow-no-capture) ALLOW_NO_CAPTURE="yes"; shift ;;
+		--write-lane-declaration) DECLARE_ONLY="yes"; shift ;;
 		--run-dir) RUN_DIR="$2"; shift 2 ;;
 		-h|--help) usage; exit 0 ;;
 		-*) echo "unknown flag: $1" >&2; usage; exit 2 ;;
@@ -123,15 +130,20 @@ trap kill_orphans EXIT
 
 # --- resolve paths ------------------------------------------------------------
 
-if [[ ! -x "$GODOT" ]]; then
-	echo "run_segment: no Godot at $GODOT (set GODOT=/path/to/godot)" >&2
-	exit 1
-fi
+# Skipped for --write-lane-declaration: that path starts no engine, so demanding
+# a binary and an import cache would make declaring a lane cost more than the
+# thing it is declaring for.
+if [[ "$DECLARE_ONLY" != "yes" ]]; then
+	if [[ ! -x "$GODOT" ]]; then
+		echo "run_segment: no Godot at $GODOT (set GODOT=/path/to/godot)" >&2
+		exit 1
+	fi
 
-if [[ ! -d .godot/imported ]]; then
-	echo "run_segment: no import cache. Run: $GODOT --headless --path . --import" >&2
-	echo "run_segment: without it, resources fail to load and viewpoints render empty instead of erroring." >&2
-	exit 1
+	if [[ ! -d .godot/imported ]]; then
+		echo "run_segment: no import cache. Run: $GODOT --headless --path . --import" >&2
+		echo "run_segment: without it, resources fail to load and viewpoints render empty instead of erroring." >&2
+		exit 1
+	fi
 fi
 
 if [[ -z "$RUN_DIR" ]]; then
@@ -203,6 +215,156 @@ segment_evidence_lane() {
 EVIDENCE_LANE="both"
 if [[ -n "$SEGMENT_PATH" ]]; then
 	EVIDENCE_LANE="$(segment_evidence_lane "$SEGMENT_PATH")"
+fi
+
+# --- CL-H5: the freeze-record trap, closed at its source ----------------------
+#
+# The harness's `_freeze_display_claim()` looks for a freeze record nearest
+# first: this run directory's own RUN_METADATA.json, then the TRACKED candidate
+# record at ralph/reports/gate-f-candidate/RUN_METADATA.json. That tracked
+# record is from 2026-08-27 and says `"display_server": "X11 under xvfb-run"`.
+# A logic-lane run is --headless with no rendering driver, so it has no display
+# server, the claim contradicts the process, and EVERY SEGMENT REFUSES TO START
+# -- writing a BLOCKER.md, an INCOMPLETE.md and an INVENTORY.json of 0 pass /
+# 0 fail / 0 skipped having executed no step. Read too fast that looks like a
+# chain that died rather than one that was refused. Three lanes and the
+# coordinator each lost a launch to it (GATE3_EXECUTION_PLAN.md section 4b).
+#
+# The workaround was always "the operator hand-writes a run-local record before
+# the run". That is the right shape and the wrong owner: the only fact the
+# declaration carries is what THIS INVOCATION IS, and this script is the thing
+# that knows it. So it writes it.
+#
+# What it will not do, all three deliberate:
+#
+#   * It never touches the tracked candidate record. Scoping a new claim into
+#     it rewrites the 2026-08-27 run's history, which is the CD-8b sin.
+#   * It never overwrites a declaration that is already there. A coordinator's
+#     real freeze record wins outright, and a contradiction between an existing
+#     record and this invocation stays a refusal rather than being amended away
+#     -- amending a freeze record so a segment will start is exactly what
+#     CD-8b exists to prevent.
+#   * It never writes a FLAT `display_server`. A flat claim binds every lane,
+#     including a capture lane run into the same directory later, which would
+#     turn this fix into the next version of the same trap.
+#
+# It only ever declares the LOGIC lane, and only when the segment itself
+# declares `evidence_lane: logic`. Capture runs and unconverted (`both`)
+# segments are left to the operator, because for those the honest claim depends
+# on the invocation rather than on the file, and guessing it is how the trap
+# started.
+#
+# `suite_state_at_freeze` is filled at the same time and filled HONESTLY: this
+# script cannot run a ~28 minute suite, so it records that it did not rather
+# than an implied green. Section A.4's own words are that the field exists "so
+# Phase B reads the actual state rather than an implied green"; a runner that
+# wrote `GREEN` because it had nothing better to say would be worse than the
+# missing field.
+write_lane_declaration() {
+	local run_dir="$1" lane="$2" sha="$3"
+	local record="$run_dir/RUN_METADATA.json"
+	if [[ "$(cd "$run_dir" && pwd)" == "$REPO_ROOT/ralph/reports/gate-f-candidate" ]]; then
+		echo "run_segment: refusing to write into the TRACKED candidate freeze record." >&2
+		return 1
+	fi
+	local godot_build="unknown"
+	if [[ -x "$GODOT" ]]; then
+		godot_build="$("$GODOT" --version 2>/dev/null | head -n1 || echo unknown)"
+	fi
+	RECORD="$record" LANE="$lane" SHA="$sha" RUN_DIR_REL="$run_dir" \
+		GODOT_BUILD="$godot_build" python3 - <<'PY'
+import json, os, sys, datetime
+
+record = os.environ["RECORD"]
+lane = os.environ["LANE"]
+
+data = {}
+if os.path.exists(record):
+    try:
+        with open(record) as handle:
+            data = json.load(handle)
+    except (ValueError, OSError):
+        print("run_segment: %s exists and is not readable JSON; leaving it alone." % record,
+              file=sys.stderr)
+        sys.exit(0)
+    if not isinstance(data, dict):
+        print("run_segment: %s is not a JSON object; leaving it alone." % record, file=sys.stderr)
+        sys.exit(0)
+
+changed = []
+lanes = data.setdefault("lanes", {})
+if not isinstance(lanes, dict):
+    print("run_segment: %s has a non-object `lanes`; leaving it alone." % record, file=sys.stderr)
+    sys.exit(0)
+
+if lane in lanes:
+    print("run_segment: %s already declares lanes.%s; left untouched." % (record, lane))
+else:
+    lanes[lane] = {
+        "display_server": "headless (--headless, no rendering driver)",
+        "renderer": "none -- no rendering driver is loaded",
+        "_comment": (
+            "Written by tools/gate_f/run_segment.sh at launch (CL-H5). This is a "
+            "statement about the invocation, not a promise about the build: logic "
+            "mode is plain --headless with NO rendering driver, because --headless "
+            "WITH a driver hangs forever. The harness's _freeze_display_claim() "
+            "reads this and passes because the claim contains 'headless'."
+        ),
+    }
+    changed.append("lanes.%s" % lane)
+
+if "suite_state_at_freeze" not in data:
+    data["suite_state_at_freeze"] = {
+        "reverified_in_container": False,
+        "result": "NOT VERIFIED BY THIS RUNNER.",
+        "how": (
+            "tools/gate_f/run_segment.sh wrote this record at launch and does not run "
+            "the unit suite (~28 minutes). Whoever froze this candidate should replace "
+            "this block with a real result before the run is read as evidence."
+        ),
+        "_comment": (
+            "Protocol section A.4 makes a green suite a precondition of the run rather "
+            "than a finding of it, and says the field exists so Phase B reads the actual "
+            "state rather than an implied green. An honest 'not verified' is the actual "
+            "state when a runner writes the record."
+        ),
+    }
+    changed.append("suite_state_at_freeze")
+
+for key, value in (
+    ("_written_by", "tools/gate_f/run_segment.sh"),
+    ("candidate_sha", os.environ.get("SHA", "unknown")),
+    ("run_dir", os.environ.get("RUN_DIR_REL", "")),
+    ("godot_build", os.environ.get("GODOT_BUILD", "unknown")),
+    ("frozen_at_utc", datetime.datetime.now(datetime.timezone.utc)
+        .strftime("%Y-%m-%dT%H:%M:%SZ")),
+):
+    if key not in data:
+        data[key] = value
+        changed.append(key)
+
+if not changed:
+    sys.exit(0)
+
+with open(record, "w") as handle:
+    json.dump(data, handle, indent=2)
+    handle.write("\n")
+print("run_segment: declared %s in %s" % (", ".join(changed), record))
+PY
+}
+
+if [[ "$MODE" == "logic" && "$EVIDENCE_LANE" == "logic" ]]; then
+	write_lane_declaration "$RUN_DIR" "logic" "$SHA"
+elif [[ "$DECLARE_ONLY" == "yes" ]]; then
+	echo "run_segment: --write-lane-declaration only declares the LOGIC lane, and this is" >&2
+	echo "             mode=$MODE / evidence_lane=$EVIDENCE_LANE. Write the record by hand;" >&2
+	echo "             GATE3_EXECUTION_PLAN.md section 4b has the shape." >&2
+	exit 2
+fi
+
+if [[ "$DECLARE_ONLY" == "yes" ]]; then
+	echo "run_segment: lane declared; nothing run (--write-lane-declaration)."
+	exit 0
 fi
 
 # The evidence split's runner-side consequence. A LOGIC lane is *supposed* to
