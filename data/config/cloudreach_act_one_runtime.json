@@ -1,0 +1,16 @@
+{
+  "_comment": "Playable opening slice. IDs and flags reference cloudreach_chapter.json. Position overrides move draft pickups onto existing walkable ledges without changing their permanent identity.",
+  "arrival": {"camp_id": "galefoot_waycamp", "radius_m": 18.0, "height_tolerance_m": 4.0},
+  "npcs": [
+    {"id": "warden_aila", "greeting": "cloudreach_aila_arrival", "greeting_when": [{"if_flag": "cloudreach_crisis_learned", "conversation": "cloudreach_aila_anchor_reminder"}], "facing_deg": 180.0}
+  ],
+  "anchors": [
+    {"id": "lower_west", "label": "Inspect the west Storm Anchor", "flag_id": "storm_anchor_lower_west_mapped", "position": [-544.0, 330.0, 1280.0], "model_scale": 1.0},
+    {"id": "lower_east", "label": "Inspect the east Storm Anchor", "flag_id": "storm_anchor_lower_east_mapped", "position": [124.0, 420.0, 1830.0], "model_scale": 1.0}
+  ],
+  "pickups": [
+    {"id": "cr_pickup_lower_good_candy", "position": [-281.5, 180.0, 509.5]},
+    {"id": "cr_pickup_bridge_good_candy", "position": [-489.0, 338.0, 1329.0]}
+  ],
+  "rest": {"camp_id": "galefoot_waycamp", "position": [-287.0, 180.0, 513.0], "label": "Rest at Galefoot until morning", "craft": true, "radius": 3.2}
+}

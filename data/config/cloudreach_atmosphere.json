@@ -1,0 +1,22 @@
+{
+  "fade_seconds": 3.0,
+  "map_cell_m": 8.0,
+  "landmark_discovery_radius_m": 35.0,
+  "landmark_height_tolerance_m": 12.0,
+  "shrine_restored_energy_multiplier": 1.35,
+  "region_mix": {
+    "gate_lower_cliffs": {"wind": 0.5, "exposed_cliff": 0.12, "distant_bird_calls": 0.32, "settlement": 0.3, "boss_zone_escalation": 0.0},
+    "broken_causeways": {"wind": 0.6, "exposed_cliff": 0.4, "distant_bird_calls": 0.2, "settlement": 0.0, "boss_zone_escalation": 0.12},
+    "windscar_ravine": {"wind": 0.45, "exposed_cliff": 0.7, "distant_bird_calls": 0.1, "settlement": 0.0, "boss_zone_escalation": 0.2},
+    "high_roost_sky_shrine": {"wind": 0.15, "exposed_cliff": 0.45, "distant_bird_calls": 0.05, "settlement": 0.0, "boss_zone_escalation": 0.0},
+    "upper_cloudreach": {"wind": 0.55, "exposed_cliff": 0.4, "distant_bird_calls": 0.15, "settlement": 0.35, "boss_zone_escalation": 0.2},
+    "summit_final_stronghold": {"wind": 0.2, "exposed_cliff": 0.75, "distant_bird_calls": 0.0, "settlement": 0.0, "boss_zone_escalation": 0.65}
+  },
+  "restored_bird_gain": 0.32,
+  "restored_wind_gain": 0.55,
+  "restored_exposed_gain": 0.3,
+  "finale_music_gain": 0.65,
+  "settlement_radius_m": 95.0,
+  "settlement_height_tolerance_m": 25.0,
+  "settlements": [[-275.0, 180.0, 520.0], [320.0, 850.0, 4190.0]]
+}

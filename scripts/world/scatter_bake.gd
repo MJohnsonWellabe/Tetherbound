@@ -79,7 +79,7 @@ static func config_fingerprint() -> int:
 			if path.begins_with("res://data/config/bands/"):
 				continue
 			return 0
-		mixed = mixed ^ (file.get_as_text().hash() + int(path.hash()) + 0x9e3779b9 + (mixed << 6) + (mixed >> 2))
+		mixed = mix_config_source(mixed, file.get_as_text(), path)
 	# GATE-D: masked to 53 bits, and it has to be.
 	#
 	# This number is written into `manifest.json` and read back through
@@ -100,6 +100,13 @@ static func config_fingerprint() -> int:
 	# staleness check needs; the alternative, storing it as a string, buys
 	# 11 more bits of hash for a format change nothing else wants.
 	return mixed & 0x1FFFFFFFFFFFFF
+
+
+## Pure source mixer shared by file loading and portability tests. Git's
+## CRLF checkout preserves the historical LF hash; every other text edit
+## still changes it. Tests need no transient writes to live world configs.
+static func mix_config_source(mixed: int, source: String, path: String) -> int:
+	return mixed ^ (source.replace("\r\n", "\n").hash() + int(path.hash()) + 0x9e3779b9 + (mixed << 6) + (mixed >> 2))
 
 
 ## Floor-divided region coordinate for a world-space spot, matching the

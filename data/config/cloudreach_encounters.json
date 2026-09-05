@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "activation_distance_m": 130.0,
+  "trainer_prompt_radius_m": 4.2,
+  "wild_respawn_seconds": 180.0,
+  "behavior_profiles": {
+    "scout": {"telegraph": 0.8, "recovery": 0.85, "attack_cooldown": 1.4, "reposition_time": 1.2, "reposition_distance": 6.0},
+    "controller": {"telegraph": 0.9, "recovery": 1.0, "attack_cooldown": 1.2, "preferred_range": 4.0, "reposition_time": 1.1, "reposition_distance": 8.0},
+    "pursuer": {"telegraph": 0.65, "recovery": 0.7, "attack_cooldown": 1.0, "chase_speed": 5.2, "reposition_time": 0.6},
+    "ace": {"telegraph": 0.65, "recovery": 0.7, "attack_cooldown": 0.95, "reposition_time": 0.8, "reposition_distance": 7.0},
+    "trainer_scout": {"power": 24.0, "telegraph": 0.8, "recovery": 0.85, "attack_cooldown": 1.4, "reposition_time": 1.2, "reposition_distance": 6.0},
+    "trainer_controller": {"power": 28.0, "telegraph": 0.9, "recovery": 1.0, "attack_cooldown": 1.2, "preferred_range": 4.0, "reposition_time": 1.1, "reposition_distance": 8.0},
+    "trainer_pursuer": {"power": 32.0, "telegraph": 0.65, "recovery": 0.7, "attack_cooldown": 1.0, "chase_speed": 5.2, "reposition_time": 0.6},
+    "trainer_ace": {"power": 36.0, "telegraph": 0.65, "recovery": 0.7, "attack_cooldown": 0.95, "reposition_time": 0.8, "reposition_distance": 7.0}
+  },
+  "reward_tiers": {
+    "local": {"coins": 45, "items": [{"id": "potion_large", "count": 2}]},
+    "grunt": {"coins": 65, "items": [{"id": "potion_large", "count": 2}]},
+    "mentor": {"coins": 60, "items": [{"id": "revive", "count": 1}, {"id": "skyplume", "count": 2}]},
+    "ace": {"coins": 90, "items": [{"id": "great_candy", "count": 1}]},
+    "elite": {"coins": 110, "items": [{"id": "revive", "count": 2}]},
+    "captain": {"coins": 150, "items": [{"id": "rare_candy", "count": 1}]}
+  },
+  "trainers": [
+    {"id": "trainer_ila_lower_ring", "position": [-345, 180, 620], "requires_flags": ["cloudreach_chapter_started"], "behavior_sequence": ["trainer_scout", "trainer_ace"]},
+    {"id": "trainer_orrin_bridge_watch", "position": [-160, 320, 1750], "reuse_npc_id": "orrin", "requires_flags": ["cloudreach_lower_anchors_investigated"], "behavior_sequence": ["trainer_controller", "trainer_pursuer"]},
+    {"id": "tether_lieutenant_senn", "position": [-360, 390, 2290], "requires_flags": ["cloudreach_lower_anchors_investigated"], "behavior_sequence": ["trainer_controller", "trainer_pursuer"]},
+    {"id": "keeper_maela_trial", "position": [400, 610, 3250], "reuse_npc_id": "keeper_maela", "requires_flags": ["windscar_aerie_prepared"], "behavior_sequence": ["trainer_controller", "trainer_ace"]},
+    {"id": "young_trainer_tavi_upper_ring", "position": [320, 850, 4190], "reuse_npc_id": "young_trainer_tavi", "requires_flags": ["cloudreach_upper_route_unlocked"], "behavior_sequence": ["trainer_controller", "trainer_pursuer", "trainer_ace"]},
+    {"id": "officer_voss_summit_approach", "position": [-520, 1080, 5370], "requires_flags": ["cloudreach_upper_anchors_disabled"], "behavior_sequence": ["trainer_controller", "trainer_pursuer", "trainer_ace"]},
+    {"id": "captain_veyra_storm_anchor", "position": [100, 1160, 5450], "reuse_npc_id": "captain_veyra", "requires_flags": ["cloudreach_act_ii_complete", "cloudreach_upper_anchors_disabled", "summit_extraction_engine_reached"], "behavior_sequence": ["trainer_controller", "trainer_pursuer", "trainer_ace"]}
+  ],
+  "wild_sites": [
+    {"id": "lower_cliff_foragers", "table_id": "cloudreach_lower_wild", "position": [-200, 180, 630], "count": 2, "radius_m": 8.0},
+    {"id": "causeway_watch", "table_id": "cloudreach_causeway_wild", "position": [-280, 320, 1750], "count": 2, "radius_m": 8.0},
+    {"id": "ravine_wind", "table_id": "cloudreach_windscar_wild", "position": [330, 610, 3250], "count": 2, "radius_m": 8.0},
+    {"id": "roost_perches", "table_id": "cloudreach_high_roost_wild", "position": [970, 1050, 3450], "count": 2, "radius_m": 8.0},
+    {"id": "upper_scouts", "table_id": "cloudreach_upper_wild", "position": [400, 850, 4300], "count": 2, "radius_m": 8.0},
+    {"id": "summit_watch", "table_id": "cloudreach_summit_wild", "position": [-460, 1080, 5300], "count": 2, "radius_m": 8.0}
+  ]
+}

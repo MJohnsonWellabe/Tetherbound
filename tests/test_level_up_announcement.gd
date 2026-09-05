@@ -38,10 +38,12 @@ func _mudsnout(level: int) -> RefCounted:
 
 
 ## Award `xp` to a real creature through the real path, then render the line.
-func _line_after_award(creature: RefCounted, xp: int) -> String:
+func _line_after_award(creature: RefCounted, xp: int, discard_events: bool = false) -> String:
 	FEED.clear()
 	if xp > 0:
 		creature.call("gain_xp", xp, PROGRESSION.config())
+	if discard_events:
+		FEED.drain()
 	var manager := FakeManager.new()
 	manager.creature = creature
 	var hud: Object = load(HUD_PATH).new()
@@ -63,6 +65,13 @@ func _xp_for_one_level(creature: RefCounted) -> int:
 func test_an_ordinary_award_produces_the_plain_xp_line() -> void:
 	var creature := _mudsnout(12)
 	assert_eq(_line_after_award(creature, 12), "+12 XP")
+
+
+func test_disconnecting_the_event_path_removes_the_announcement() -> void:
+	var creature := _mudsnout(12)
+	assert_false(_line_after_award(creature, _xp_for_one_level(creature)).is_empty())
+	assert_eq(_line_after_award(creature, _xp_for_one_level(creature), true), "",
+		"negative control: the same real level change has no announcement without its feed event")
 
 
 func test_the_level_up_line_names_the_creature_and_its_new_level() -> void:

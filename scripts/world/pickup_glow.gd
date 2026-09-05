@@ -355,8 +355,8 @@ func _process(_delta: float) -> void:
 
 func _any_visibility_changed() -> bool:
 	for entry: Dictionary in _entries:
-		var node: Node3D = entry.get("node") as Node3D
-		if node == null or not is_instance_valid(node):
+		var node := _live_emitter(entry.get("node"))
+		if node == null:
 			return true
 		if bool(entry.get("shown", true)) != node.is_visible_in_tree():
 			return true
@@ -365,8 +365,7 @@ func _any_visibility_changed() -> bool:
 
 func _rebuild() -> void:
 	for i in range(_entries.size() - 1, -1, -1):
-		var node: Node3D = _entries[i].get("node") as Node3D
-		if node == null or not is_instance_valid(node):
+		if _live_emitter(_entries[i].get("node")) == null:
 			_entries.remove_at(i)
 	if _motes == null or _auras == null:
 		return
@@ -430,7 +429,17 @@ func highlight_count() -> int:
 func highlight_positions() -> Array[Vector3]:
 	var out: Array[Vector3] = []
 	for entry: Dictionary in _entries:
-		var node: Node3D = entry.get("node") as Node3D
-		if node != null and is_instance_valid(node):
+		var node := _live_emitter(entry.get("node"))
+		if node != null:
 			out.append(node.global_position)
 	return out
+
+
+## A freed Object reference throws during an `as Node3D` cast, before a later
+## validity check can run. Regrowth and scene replacement can also leave a
+## live but detached emitter whose global transform is no longer available.
+static func _live_emitter(raw: Variant) -> Node3D:
+	if not is_instance_valid(raw) or not raw is Node3D:
+		return null
+	var node := raw as Node3D
+	return node if node.is_inside_tree() and not node.is_queued_for_deletion() else null

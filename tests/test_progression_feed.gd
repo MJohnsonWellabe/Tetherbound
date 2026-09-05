@@ -12,6 +12,8 @@ const FEED := preload("res://scripts/creatures/progression_feed.gd")
 const CREATURE := preload("res://scripts/creatures/creature_instance.gd")
 const BOND := preload("res://scripts/creatures/bond_milestones.gd")
 const PARTY := preload("res://autoload/party.gd")
+const GAME := preload("res://autoload/game_state.gd")
+const REST := preload("res://scripts/creatures/home_recovery.gd")
 
 const DEFINITION := {
 	"display_name": "Terrapup", "type": "ground",
@@ -315,3 +317,79 @@ func test_tick_and_moment_text_name_the_creature_and_the_change() -> void:
 	assert_true(str(moment.get("detail", "")).contains("HP"), "the detail line carries the stat change")
 	BOND.credit_feed(c)
 	assert_eq(FEED.tick_label(_of_kind("bond_credit")[0]), "+bond · fed")
+
+
+## Cloudreach overlap regressions: these exercise the main log after merging
+## the former game-owned queue; no alternate event sink is installed.
+func test_candy_and_rest_share_the_one_log_without_fabricated_candy_xp() -> void:
+	var c := _creature("Tup")
+	c.gain_levels(1, CFG)
+	assert_eq(_of_kind("level_up").size(), 1)
+	assert_eq(_of_kind("xp_gained").size(), 0)
+	REST.rest(c, preload("res://scripts/creatures/progression.gd").config())
+	assert_eq(_of_kind("xp_gained").size(), 1, "the real rest bonus reaches the XP producer")
+
+
+func test_an_authored_fly_route_credit_ticks_once_below_the_distance_poll_step() -> void:
+	var c := _creature("Tup")
+	var meters := float(FEED.config().get("fly_route_bond_meters", 0.0))
+	assert_true(meters > 0.0 and meters < float(FEED.config().get("distance_tick_m", 250)))
+	BOND.credit_distance(c, meters, "fly_route")
+	var credits := _of_kind("bond_credit")
+	assert_eq(credits.size(), 1, "one completed authored flight is one visible credit")
+	assert_eq(str(credits[0].source), "fly_route")
+	assert_almost_eq(float(credits[0].after) - float(credits[0].before), meters, 0.001)
+	BOND.credit_distance(c, 0.5)
+	assert_eq(_of_kind("bond_credit").size(), 1, "ordinary distance polls remain throttled")
+
+
+func test_game_wrappers_keep_nonactive_owned_members_and_reject_trainer_spawns() -> void:
+	var game := GAME.new()
+	game.reset_for_new_game()
+	var active := _creature("Lead")
+	var other := _creature("Bench")
+	var trainer := _creature("Trainer")
+	game.party.add(active)
+	game.party.add(other)
+	game.push_progression_event("xp_gained", other, {"amount": 5})
+	assert_true(game.push_progression_event("xp_gained", trainer, {"amount": 5}).is_empty())
+	var events: Array = game.peek_progression_events(0)
+	assert_eq(events.size(), 1)
+	assert_eq(int(events[0].creature_id), other.get_instance_id())
+	assert_eq(FEED.events(), events, "Game reads the same static log")
+	assert_eq(game.party.size(), 2)
+	var revision := game.progression_feed_revision()
+	assert_eq(game.take_progression_events(), events)
+	assert_true(game.progression_feed_revision() > revision)
+	game.free()
+
+
+func test_new_game_resets_the_one_log_and_invalidates_old_presentation_cursors() -> void:
+	var game := GAME.new()
+	game.reset_for_new_game()
+	var c := _creature()
+	game.party.add(c)
+	game.push_progression_event("xp_gained", c, {"amount": 5})
+	var old_epoch := FEED.epoch()
+	game.reset_for_new_game()
+	assert_true(FEED.events().is_empty())
+	assert_eq(FEED.latest_seq(), 0)
+	assert_true(FEED.epoch() > old_epoch, "a reused seq cannot replay an old-save banner")
+	game.free()
+
+
+func test_readers_cannot_modify_another_readers_event() -> void:
+	var c := _creature()
+	var pushed := FEED.push("xp_gained", c, {"amount": 5, "context": {"route": "trial"}})
+	pushed.context.route = "changed"
+	var first := FEED.peek_since(0)
+	first[0].context.route = "changed again"
+	assert_eq(str(FEED.events()[0].context.route), "trial", "every presenter receives its own immutable snapshot")
+
+
+func test_reward_receipt_uses_the_same_moment_log_and_preserves_its_words() -> void:
+	var receipt := "Captain Maela's reward: 200 XP · Rare Candy"
+	var event := FEED.push("reward_summary", null, {"name": "Team", "receipt": receipt})
+	assert_eq(str(event.name), "Team")
+	assert_true(FEED.is_moment(event))
+	assert_eq(FEED.moment_text(event), {"title": "Captain Maela defeated", "detail": receipt})

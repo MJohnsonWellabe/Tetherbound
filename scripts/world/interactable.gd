@@ -199,6 +199,15 @@ func _has_line_of_sight(from: Vector3) -> bool:
 	# Areas are triggers, not geometry — the house's own interior camera area
 	# covers the whole ground floor and would occlude everything in it.
 	query.collide_with_areas = false
+	# A steep ray to a low prompt can still enter the trainer's capsule after
+	# endpoint trimming (High Roost's raised dais reproduces this). Ignore only
+	# the arbiter's actual querying collision body, including a piloted creature;
+	# do not ignore unrelated actors or weaken real wall/floor occlusion.
+	if is_instance_valid(_arbiter):
+		var viewer := _arbiter.get("_player") as CollisionObject3D
+		if is_instance_valid(viewer) and viewer.is_inside_tree() \
+				and viewer.global_position.is_equal_approx(from):
+			query.exclude = [viewer.get_rid()]
 	return space.intersect_ray(query).is_empty()
 
 

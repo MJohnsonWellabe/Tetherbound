@@ -455,6 +455,12 @@ func test_a_higher_tier_glows_harder() -> void:
 		"Rare does not glow harder than Great")
 
 
+func test_realm_pickups_preserve_shipped_meadows_keys_and_isolate_other_realms() -> void:
+	assert_eq(ITEM_CACHE_PICKUP.flag_id("good_candy", "b2_candy_quarry_ledge", "meadows"), "cache:b2_candy_quarry_ledge")
+	assert_eq(ITEM_CACHE_PICKUP.flag_id("good_candy", "b2_candy_quarry_ledge", "cloudreach"), "cache:cloudreach:b2_candy_quarry_ledge")
+	assert_eq(ITEM_CACHE_PICKUP.flag_id("elixir_attack"), "cache:elixir_attack")
+
+
 func test_the_wild_shroom_is_broader_than_the_stamina_shroom() -> void:
 	var wild := _built("wild_mushroom", "t_wild")
 	var stamina := _built("stamina_mushroom", "t_stamina")

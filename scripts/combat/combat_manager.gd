@@ -1,4 +1,5 @@
 extends Node
+const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
 
 ## Combat Mode: a STATE, not a scene.
 ##

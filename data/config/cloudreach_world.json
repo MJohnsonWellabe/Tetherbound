@@ -20,7 +20,7 @@
       "role": "entry_from_meadows",
       "region_id": "gate_lower_cliffs",
       "position": [0.0, 105.0, -260.0],
-      "facing_yaw_deg": 0.0,
+      "facing_yaw_deg": 165.0,
       "peer_realm_id": "meadows",
       "peer_anchor_id": "meadows_cloudreach_gate_exit",
       "requires_flag": "realm_key_cloudreach",
@@ -278,7 +278,8 @@
       "bidirectional": true,
       "traversal_mode": "ground",
       "requires_unlock": "",
-      "polyline": [[0.0, 105.0, -260.0], [-80.0, 130.0, 40.0], [-280.0, 180.0, 520.0]],
+      "polyline": [[0.0, 105.0, -260.0], [-80.0, 130.0, 40.0], [-300.0, 145.0, 200.0], [-280.0, 180.0, 490.0], [-280.0, 180.0, 520.0]],
+      "_runtime_evidence": "The original direct segment from [-80,130,40] to the waycamp intersected the solid lower-cliffs mesa at [-139,145,183], pushing a normally walking player off the road. The western bend goes around the existing cliff face. The final level approach reaches camp height before its solid terrace edge at z=502, removing a measured 1.33 m entrance wall.",
       "purpose": "Readable arrival road connecting the realm gate to Galefoot Waycamp."
     },
     {
@@ -308,7 +309,7 @@
       "bidirectional": true,
       "traversal_mode": "ground",
       "requires_unlock": "",
-      "polyline": [[-320.0, 300.0, 1040.0], [-540.0, 330.0, 1320.0], [-260.0, 370.0, 1560.0], [120.0, 420.0, 1830.0], [-60.0, 450.0, 2220.0], [-100.0, 470.0, 2440.0]],
+        "polyline": [[-320.0, 300.0, 1040.0], [-540.0, 330.0, 1280.0], [-511.2, 338.25, 1305.6], [-468.0, 338.25, 1344.0], [-450.0, 342.0, 1360.0], [-260.0, 390.0, 1560.0], [-230.0, 390.0, 1575.0], [110.0, 420.0, 1815.0], [120.0, 420.0, 1830.0], [-60.0, 450.0, 2220.0], [-100.0, 470.0, 2440.0]],
       "purpose": "Main broken skyroad, crossing alternating rope and stone spans before entering the ravine."
     },
     {
@@ -328,7 +329,7 @@
       "bidirectional": true,
       "traversal_mode": "ground",
       "requires_unlock": "",
-      "polyline": [[-100.0, 470.0, 2440.0], [-520.0, 430.0, 2720.0], [-300.0, 460.0, 3100.0], [120.0, 520.0, 3380.0], [400.0, 610.0, 3250.0]],
+        "polyline": [[-100.0, 470.0, 2440.0], [-520.0, 430.0, 2720.0], [-300.0, 460.0, 3100.0], [120.0, 520.0, 3380.0], [373.0, 610.0, 3262.5357], [400.0, 610.0, 3250.0]],
       "purpose": "Ravine circuit through the beacon and flight aerie, with a return leg rather than a dead-end spur."
     },
     {
@@ -390,6 +391,7 @@
       "type": "rope_suspension",
       "position": [-495.0, 336.0, 1320.0],
       "endpoints": [[-540.0, 330.0, 1280.0], [-450.0, 342.0, 1360.0]],
+      "deck_profile": [[-540.0,330.0,1280.0],[-511.2,338.25,1305.6],[-468.0,338.25,1344.0],[-450.0,342.0,1360.0]],
       "width_m": 4.0,
       "length_m": 121.0,
       "requires_unlock": ""
@@ -400,7 +402,7 @@
       "region_id": "broken_causeways",
       "type": "broken_stone",
       "position": [-60.0, 395.0, 1695.0],
-      "endpoints": [[-230.0, 375.0, 1575.0], [110.0, 420.0, 1815.0]],
+        "endpoints": [[-230.0, 390.0, 1575.0], [110.0, 420.0, 1815.0]],
       "width_m": 7.0,
       "length_m": 419.0,
       "requires_unlock": ""
@@ -441,19 +443,19 @@
   ],
   "gates": [
     {
-      "id": "high_roost_fly_gate",
+        "id": "high_roost_fly_gate",
       "kind": "traversal",
       "region_id": "windscar_ravine",
-      "position": [400.0, 610.0, 3250.0],
+        "position": [426.4, 623.2, 3238.0],
       "required_traversal": "fly",
       "requires_unlock": "fly_traversal_unlocked",
       "protects_region_ids": ["high_roost_sky_shrine"]
     },
     {
-      "id": "upper_counterweight_gate",
+        "id": "upper_counterweight_gate",
       "kind": "story_unlock",
       "region_id": "windscar_ravine",
-      "position": [-100.0, 470.0, 2440.0],
+        "position": [-123.4, 474.5, 2481.4],
       "required_traversal": "ground",
       "requires_unlock": "cloudreach_upper_route_unlocked",
       "protects_region_ids": ["upper_cloudreach", "summit_final_stronghold"]

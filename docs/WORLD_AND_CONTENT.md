@@ -36,9 +36,14 @@ stronghold, and the tournament in a single `_ready()` pass.
   `scripts/data/band_content.gd`. There is no scene-streaming/chunk loader;
   distance-based structure culling (`scripts/world/structure_visibility_range.gd`)
   is the closest thing to "streaming."
-- Only one region exists in `data/terrain/` and `data/scatter/`: the
-  Meadows/"playground." This matches the CLAUDE.md hard rule that no Biome 2
-  exists until the Meadows exit gate passes.
+- The authored Terrain3D/scatter data remains Meadows/"playground." The newer
+  owner-authorized Cloudreach chapter uses separate procedural stacked cliff
+  meshes in `scenes/world/cloudreach_cliffs.tscn`, with the same Meadows surface
+  textures and procedural grass/flower family, sampled against multiple heights.
+  `cloudreach_world.json` defines six connected vertical regions and their route
+  graph; `cloudreach_chapter.json` defines story/content. Saves tag realm-local
+  poses, buildings and death satchels so the two worlds do not share coordinates.
+  Cloudreach acceptance is tracked in `docs/biomes/cloudreach/` and remains open.
 
 ## 2. The five Z-bands
 
@@ -245,10 +250,9 @@ resulting `.bin` files before the CI freshness job will pass.
 
 Per CLAUDE.md hard rules, binding over any lower-level convenience:
 
-- **Meadows-only.** No Biome 2 implementation until the Meadows passes its
-  exit gate. Any reconnection view to a future biome is distant/non-enterable.
-  Only one region's terrain/scatter data exists in the repo today — this is
-  itself evidence the rule is being followed, not just documented.
+- **Chapter scope.** The newer owner Cloudreach directive authorizes Biome 2
+  (Air). The Waterward reveal after Cloudreach remains distant and non-enterable;
+  no Water-biome implementation is authorized by that directive.
 - **No new creature meshes or Meshy generations for Meadows.** All 25
   species use installed creature meshes; differentiate with materials,
   textures, modest scale, animation, VFX, habitat, behavior, traits, and

@@ -55,6 +55,7 @@ static func attach(body: Node3D, mode: int, spec: Dictionary, strength: float) -
 	glow._material.set_shader_parameter("strength", 0.0)
 	glow._collect_meshes(body)
 	if glow._meshes.is_empty():
+		glow.free()
 		return null
 	for mesh: MeshInstance3D in glow._meshes:
 		mesh.material_overlay = glow._material
@@ -76,7 +77,7 @@ func mesh_count() -> int:
 ## without this effect and nothing else different.
 func suspend(off: bool) -> void:
 	for mesh: Variant in _meshes:
-		if mesh is MeshInstance3D and is_instance_valid(mesh):
+		if is_instance_valid(mesh) and mesh is MeshInstance3D:
 			(mesh as MeshInstance3D).material_overlay = null if off else _material
 
 
@@ -140,7 +141,9 @@ func _apply(u: float) -> void:
 func _finish() -> void:
 	_finished = true
 	for mesh: Variant in _meshes:
-		if mesh is MeshInstance3D and is_instance_valid(mesh) and (mesh as MeshInstance3D).material_overlay == _material:
+		# A model rebuild can free a mesh while its glow still lives on the body.
+		# Validate before even querying its type: `is` on a freed object errors.
+		if is_instance_valid(mesh) and mesh is MeshInstance3D and (mesh as MeshInstance3D).material_overlay == _material:
 			(mesh as MeshInstance3D).material_overlay = null
 	_meshes.clear()
 	queue_free()

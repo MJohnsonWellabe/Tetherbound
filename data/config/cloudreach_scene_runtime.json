@@ -1,0 +1,11 @@
+{
+  "_contract": "Dedicated encounter yards attach to real authored roads. These placement overrides retain trainer IDs, teams, prerequisites and rewards. No wild roster changes.",
+  "battle_yards": [
+    {"id":"trainer_ila_lower_ring","road_position":[-232,187.5,574],"outward":[0.747,0,-0.664]},
+    {"id":"tether_lieutenant_senn","road_position":[-60,450,2220],"outward":[-1,0,0]},
+    {"id":"officer_voss_summit_approach","road_position":[300,1080,5100],"outward":[0.781,0,0.625]}
+  ],
+  "yard_offset_m":25.0,
+  "yard_radius_m":16.5,
+  "yard_clear_radius_m":14.0
+}

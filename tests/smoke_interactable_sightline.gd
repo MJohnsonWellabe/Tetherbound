@@ -51,6 +51,7 @@ func _run() -> void:
 	await _a_wall_between_refuses()
 	await _a_floor_overhead_refuses()
 	await _the_prompts_own_body_does_not_block_it()
+	await _raised_viewer_capsule_does_not_block_it()
 	await _distance_still_gates()
 	_report()
 
@@ -157,6 +158,59 @@ func _distance_still_gates() -> void:
 
 
 # --- building the world -----------------------------------------------------
+
+
+## High Roost's actual relative geometry: the trainer stands on a raised dais
+## beside a lower prompt. Trimming 0.55m along this steep ray still ends inside
+## the viewer's own capsule. Excluding that exact viewer must not exclude walls
+## or a body belonging to someone other than the caller.
+func _raised_viewer_capsule_does_not_block_it() -> void:
+	var viewer := CharacterBody3D.new()
+	var shape := CollisionShape3D.new()
+	var capsule := CapsuleShape3D.new()
+	capsule.radius = 0.4
+	capsule.height = 1.8
+	shape.shape = capsule
+	shape.position.y = 0.9
+	viewer.add_child(shape)
+	_world.add_child(viewer)
+	viewer.global_position = Vector3(-0.02,1.301,-1.521)
+	var arbiter := preload("res://scripts/world/interaction_arbiter.gd").new()
+	_world.add_child(arbiter)
+	arbiter.set_player(viewer)
+	var prompt := _spawn_prompt(Vector3(0,0.8,0),4.0)
+	for i in SETTLE_FRAMES:
+		await physics_frame
+	if prompt.interaction_offer(viewer.global_position).is_empty():
+		_fail("raised viewer's own capsule occludes the low shrine prompt")
+	else:
+		print("raised viewer: own capsule excluded")
+	var wall := _spawn_slab(Vector3(3,3,0.1),Vector3(0,1.5,-0.9))
+	for i in SETTLE_FRAMES:
+		await physics_frame
+	if not prompt.interaction_offer(viewer.global_position).is_empty():
+		_fail("viewer exclusion also bypassed a real wall")
+	else:
+		print("raised viewer plus real wall: refused")
+	wall.queue_free()
+	for i in SETTLE_FRAMES:
+		await physics_frame
+	if prompt.interaction_offer(viewer.global_position).is_empty():
+		_fail("wall removed but raised viewer prompt did not recover")
+	var other_viewer := Node3D.new()
+	_world.add_child(other_viewer)
+	other_viewer.global_position = Vector3(10,0,10)
+	arbiter.set_player(other_viewer)
+	if not prompt.interaction_offer(viewer.global_position).is_empty():
+		_fail("a different caller incorrectly excluded the original viewer collider")
+	else:
+		print("unrelated body at sight-line end: still occludes")
+	prompt.queue_free()
+	viewer.queue_free()
+	other_viewer.queue_free()
+	arbiter.queue_free()
+	for i in SETTLE_FRAMES:
+		await physics_frame
 
 
 func _spawn_prompt(at: Vector3, radius: float = 4.0) -> Node3D:

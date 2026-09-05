@@ -1,0 +1,42 @@
+{
+  "_comment": "Cloudreach Fly. Installed Galecrest is the replaceable traversal presentation. An owned healthy active carrier is preferred; Maela's story loaner guarantees the chapter cannot deadlock a valid full five-creature Meadows team and never becomes owned or consumes a party slot. Second Jump (A) airborne deploys; hold A in marked updrafts to climb; hold LT/C to descend. Outside authored currents flight only descends.",
+  "unlock_flag": "fly_traversal_unlocked",
+  "speed_mps": 16.0,
+  "acceleration_mps2": 12.0,
+  "sink_mps": 2.0,
+  "descent_mps": 8.0,
+  "exhausted_sink_mps": 9.0,
+  "vertical_acceleration_mps2": 12.0,
+  "maximum_updraft_mps": 18.0,
+  "launch_stamina": 8.0,
+  "minimum_launch_stamina": 18.0,
+  "stamina_per_second": 1.0,
+  "climb_stamina_per_second": 1.6,
+  "maximum_flight_seconds": 180.0,
+  "recovery_drop_m": 100.0,
+  "body_clearance_m": 0.75,
+  "collision_height_m": 4.5,
+  "collision_radius_m": 0.7,
+  "camera_distance": 7.5,
+  "camera_height": 2.0,
+  "hang_pose": {"upper_lateral": 0.8, "forearm_lateral": 0.65},
+  "mentor_loaner": {
+    "species_id": "galecrest",
+    "realm_id": "cloudreach",
+    "available_during_trial": true,
+    "available_after_unlock": true
+  },
+  "capabilities": {
+    "galecrest": {
+      "can_carry": true,
+      "model": "res://assets/creatures/tetherbound/galecrest/models/creature_galecrest_lod0.glb",
+      "height_m": 2.1,
+      "grip_bones": ["foot_l", "foot_r"],
+      "procedural_wing_pose": true,
+      "wing_flap_amplitude": 0.16,
+      "wing_flap_frequency": 2.2,
+      "feet_offset": [0.0, 2.45, 0.0],
+      "animation": "idle"
+    }
+  }
+}

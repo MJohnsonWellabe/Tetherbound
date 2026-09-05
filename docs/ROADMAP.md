@@ -302,7 +302,9 @@ not construction.
 
 ## What not to spend time on yet
 
-- Biome 2 in any form.
+- Additional biomes beyond the separately owner-authorized Cloudreach chapter.
+  Cloudreach work follows `docs/biomes/cloudreach/BUILD_CLOUDREACH_CLIFFS_TO_COMPLETION.md`;
+  this Meadows roadmap does not certify that chapter's completion.
 - New creature or character meshes, or Meshy generation (hard rule; also the judges'
   "needs art not in the build" list is deferred by design).
 - Global shader or lighting passes "to get closer to the key art" — each remaining gap

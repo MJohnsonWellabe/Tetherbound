@@ -1,5 +1,78 @@
 # Current state — evidence-backed, 2026-09-02
 
+## Active Cloudreach branch — 2026-09-05
+
+Owner resumed the full Cloudreach chapter goal, excluding final creature art.
+Work is in `D:\Tetherbound-source` on `codex/cloudreach-cliffs`, draft PR #44.
+Environment checkpoint `ca7d87113`, five-member HUD checkpoint `aaee9f064` and
+merge `97de9bbf7` are pushed, preserving the earlier route fixes and reference
+import sidecars. Latest integrated main is `590741fe6`; its forward merge was
+documentation-only and discarded no compatible behavior from either lane.
+This is **not** a merge to main or a claim of chapter completion.
+
+Main's single progression feed/unordered bonds, pickups, portraits, companion,
+VFX and difficulty updates are retained. Cloudreach keeps realm-safe pickup keys,
+owned-only Fly credit, reward receipts and the five-creature limit. Import is
+clean. Of 352 selected tests, three stale shrine fixtures initially failed;
+their corrected chapter suite passes 8/8. Merged smokes pass HUD lifecycle 34/34,
+production finale 64/64, feed lifecycle 14/14 and physical Fly 36/36. Meadows
+world boot passes, retaining its known headless alpha material-null error.
+Windows CRLF hashing incorrectly marked unchanged bakes stale; canonical LF
+hashing now preserves both shipped bake identities (2/2 freshness guards pass)
+without rebaking. Full regression completed: 2,093 tests / 3,768,872 assertions,
+16 failures from the then-loaded portability/freshness checks, plus five shiny
+fixtures that aborted despite nominal passes. Corrected follow-ups pass 95 tests /
+41,908 assertions with no errors. No clean second full-suite pass is claimed;
+the initial native-error/leak set remains disclosed in `MAIN-MERGE-REGRESSION.md`.
+
+Acceptance remains open. Continuous play now passes the real loaner trial,
+earns permanent Fly and reaches High Roost. A real own-capsule sight-line defect
+blocked low shrine prompts; the viewer-only exclusion passes positive and
+wall/floor/other-body negative controls. Original-offset production input now
+passes all three vanes, Sora's actual dialogue/effect and the windlass. The
+isolated shrine fixture explicitly seeds prior Act I/Fly; clean continuous
+replay 9 must still prove that sequence and the rest without such seeding.
+Round 5's twelve real environment frames receive **art direction Yes / Palworld
+presentation No**. Foundation, 39 related tests / 1,201 assertions and real-input
+Fly pass. Quiet static p95 is 8.37–10.33ms on GTX 1060 at 1280×800, not Ally
+acceptance. Road boundaries, lawn clearings, cliff form/depth, arena staging and
+material cohesion remain scene work. A standalone Cloudreach board was not found
+in the reference paths; there is no claim of acceptance against unseen art. A new
+five-member reward capture exposed a genuine HUD overlap. The upper-right
+single-card correction passes 74/74 real production checks and fresh blind
+review finds no blocking HUD defect; its dense detail and relay-object occlusion
+remain nonblocking findings. See `ralph/reports/CLOUDREACH-HUD-0905/REPORT.md`.
+
+Combat has been remeasured against main's 1.6 damage multiplier: 28/28 real-input
+trainer-ladder wins and real wipe/rest/retry. A separate actual-world finale
+probe now wins all nine rounds across three input policies, observes live wind/
+arc/lee and real movement drift, and walks to all relays. Remaining party HP is
+23.21–51.96%; maximum individual hit is 40.58%. No further balance tuning.
+This uses an explicit rested summit fixture, not continuous attrition; final
+balance remains open. Root also fixed freed-body glow cleanup and empty
+level-up VFX surface errors; focused VFX checks pass.
+See `docs/biomes/cloudreach/CONTINUOUS_ACCEPTANCE_0905.md`,
+`COMBAT_BALANCE_EVIDENCE_0905.md`, `LIVE_FINALE_EVIDENCE_0905.md`,
+`SHRINE_SIGHTLINE_0905.md` and the round-5 `JUDGE-ASTRA.md`.
+
+The older exit note and main snapshot below are dated history, not current
+Cloudreach routing. Wild footprint admission/roaming/recovery passes 73 production
+checks, including actual Engage at all three early sites and identity/fight/faint/
+respawn guards. Two separate quiet 12-phase profiles measure each actual resident
+pair at roughly 0.35–0.60ms of inclusive instrumented support work per physics
+tick. This is not a scene/device pass: rendered causeway roaming reached 19.30ms
+p95 / 28.10ms max, and separate zero-query headless controls stalled to 430–596ms.
+Pre-Senn absence of Engage in the continuous fixture also reflects its undeployed
+companion; it is not proof of missing wilds.
+
+Controlled Fly now permits the authored 425m High Roost-to-aerie descent while
+exhausted flight still returns to its physically verified anchor. The isolated
+route lands on real aerie collision with 115.75 stamina and no recovery. Next:
+wire the authored Cloudreach camp creature-recovery service, finish continuous
+upper-route/finale/aftermath/exact disk reload with real combat, measure activity
+gaps, and resolve the round-5 criticisms. Draft PR #44 CI for `c1e834771` remains
+queued, not passed; do not merge.
+
 **Status:** the live status document. Replaces `ralph/BACKLOG.md`, `ralph/STATUS.md` and
 the coordinator handovers (all under `archive/ralph/`). Update it when evidence changes;
 do not let it accrete layers — rewrite the section.
@@ -680,3 +753,149 @@ as implemented content. A separate read-only systems audit is preserved at
 `ralph/reports/CLOUDREACH-PHASE3-AUDIT-0904/REPORT.md`; it routes the next agent through the
 required realm-aware persistence, vertical 3D placement, dialogue-effect, catalogue injection,
 map isolation, and gameplay-scene wiring seams before live content is spawned.
+
+## 2026-09-04 — Cloudreach checkpoint 4 / Meadows-surface corrective pass
+
+Branch: `codex/cloudreach-cliffs`. This is a coherent, tested visual-foundation checkpoint, not
+final Cloudreach acceptance and not completion of Phase 2.
+
+Cloudreach now uses the Meadows meadow-grass, verge, dirt-path, and rock-scree texture family on
+its procedural geometry. Repeated hanging-cylinder route supports were replaced by continuous
+irregular cliff ribbons and grounded landings. A new deterministic, chunked, distance-culled
+MultiMesh layer places the production Meadows procedural grass, flowers, and bushes across
+overlapping Cloudreach elevations, where the single-height Terrain3D grass sampler could not be
+used safely. Approved production trees and rocks are clustered on region caps, route edges, and
+landings. The capture harness now excludes Meadows-only HUD copy. No creatures were added.
+
+Real Windows/OpenGL3 evidence from six production-scene gameplay viewpoints is stored in
+`ralph/reports/CLOUDREACH-PHASE2-0904/`. On the local GTX 1060 at 1280x720, 24-frame samples
+recorded 139–906 draw calls, 494,717–2,462,935 primitives, 139–906 objects, and 2.31–4.50 ms
+measured frame time. These are local structural measurements, not ROG Ally claims.
+
+Verification after the final geometry changes:
+
+- Cloudreach world-data selection: **13 tests / 391 assertions / 0 failures**.
+- Grass-field selection: **18 tests / 87,806 assertions / 0 failures**.
+- `tests/smoke_cloudreach_foundation.gd`: **PASS** — six regions, twelve landmarks, five bridges,
+  cover thresholds, and grounded player arrival.
+- `tests/smoke_cloudreach_transition.gd`: **PASS** — production Meadows → Cloudreach → Meadows.
+- Six-view GPU capture/performance run: **PASS**.
+
+The mandatory code-blind visual judge still rejected both comparison bars. The corrective pass
+improved surface continuity and scene population, but the distant geology remains too slab-like,
+routes too straight and broad, landmark/crossing compositions too weak, and the palette/lighting/
+vegetation pattern too flat and mechanical. Creature absence was explicitly excluded from the
+verdict.
+
+Exact resume point: keep creatures deferred. Replace broad route ribbons and blank slabs with
+layered, irregular warm cliff forms, narrow embedded paths, terraces, recesses, and legible drops;
+compose each of the six named views around one dangerous crossing and one distinct destination;
+then improve wind-shaped vegetation clusters, warm/cool light separation, cloud layers, and
+distant silhouettes. Recapture the same six views and repeat external visual review. The named
+Cloudreach concept board is still absent from the repository/local workspaces.
+
+## 2026-09-04 — Cloudreach checkpoint 5 / exposed-crossing and sky corrective pass
+
+Branch: `codex/cloudreach-cliffs`. This is the pushed-safe continuation of checkpoint 4, not
+completion of Cloudreach Phase 2 and not final visual acceptance. Creatures remain deliberately
+deferred.
+
+Cloudreach now loads the production Meadows cloud-sky/day look and keeps the Meadows-derived
+surface family across its procedural highland geometry. Grass uses denser seven-blade procedural
+tufts with flowers and bushes; approved production CommonTree and TwistedTree assets are placed
+in clustered groves with an olive Meadows-derived leaf palette. Route shoulders and visible paths
+are narrower. Authored bridge intervals now remove terrain, path, vegetation, and collision so
+the rope and stone spans cross real chasms. Cliff ribbons use warmer high/mid/deep geological
+bands, route-ridge walls have three irregular layers, and the summit destination is an open gate
+with wings, buttresses, threshold, crenellations, towers, banners, and a spire instead of a solid
+wall cuboid. The region surface query was tightened from an enclosing rectangle to a conservative
+rotated ellipse so gameplay height checks do not report false ground beyond the rendered cap.
+
+Final Windows/OpenGL3 capture evidence at 1280×720 is in
+`ralph/reports/CLOUDREACH-PHASE2-0904/`. On the local GTX 1060, the six 24-frame samples recorded
+**215–756 draw calls**, **347,926–6,479,973 primitives**, **215–756 objects**, and **3.05–8.49 ms
+measured frame time**. These are local structural measurements, not ROG Ally claims.
+
+Verification for the final source state:
+
+- Cloudreach world-data selection: **13 tests / 391 assertions / 0 failures**.
+- Grass-field selection: **18 tests / 87,806 assertions / 0 failures**.
+- `tests/smoke_cloudreach_foundation.gd`: **PASS**, including a zero-ground-section assertion over
+  the complete west ropeway interval.
+- `tests/smoke_cloudreach_transition.gd`: **PASS**, Meadows → Cloudreach → Meadows.
+- Six-view Windows GPU capture and contact-sheet assembly: **PASS**.
+
+The required code-blind visual review still returned **No / No**. It recognized the bright sky,
+suspended-land identity, long crossings, coherent palette, and danger-only oxblood, but found the
+world still reads as an early platform/traversal prototype. The three ranked gaps are authored
+lived-in density, finished landform/landmark vocabulary, and lighting/material/atmospheric depth.
+That verdict is preserved in the evidence report and must not be softened.
+
+Exact resume point: keep creatures deferred. Preserve the real chasms, sky, surface family, and
+performance structure. Replace the remaining procedural-primitives look with authored irregular
+cliff strata, terraces, recesses, constructed causeway edges/supports, landmark-specific parts,
+route-side stories, and secondary-scale habitation clusters. Fix the visible seams and summit
+grass/trench intersection, widen the destination reveals, and build several overlapping distance
+layers before recapturing the same six views for external ChatGPT review. Do not advance to Phase
+3 content or call Phase 2 complete until that environment review passes.
+
+## 2026-09-04 — Cloudreach checkpoint 6 / irregular cliff-strata profile
+
+Branch: `codex/cloudreach-cliffs`, continuing from checkpoint `61e24cedb`. The shared procedural
+mesa builder no longer holds its high and low geological rings at perfectly constant elevations.
+Each generated region mass and satellite crag now receives deterministic, independently phased
+vertical strata variation while its walkable crown remains level. This directly reduces the
+clean horizontal cutaway signature without changing routes, top-surface collision, or the
+creature-deferred scope.
+
+`tests/smoke_cloudreach_foundation.gd` passes after the change. A fresh six-view Windows/OpenGL3
+capture and contact sheet also pass. The local GTX 1060 samples remain **215–756 draws** and
+**2.86–8.44 ms** measured frame time at 1280×720. External visual acceptance remains required;
+this bounded corrective pass does not complete Phase 2 or the biome. The new code-blind verdict
+is **Meadows art direction: No / Palworld game category: Yes**. The latter is real progress, but
+the former remains the controlling visual failure: authored density, natural terrain/depth, and
+landmark-context richness are still below the reference.
+
+## 2026-09-05 — Cloudreach integrated checkpoint, acceptance still open
+
+Branch `codex/cloudreach-cliffs` contains the integrated chapter runtime and
+round 3 environment work. The exact evidence and remaining work are recorded in
+`docs/VISUAL_PARITY_PROGRESS.md` and `docs/biomes/cloudreach/`. Fresh visual
+judgment remains No/No; continuous play has reached Maela but has not completed
+Fly, the upper chapter or finale. The full unit run found missing portrait
+bindings for new payoff travelers and historical Gate F instrumentation failures;
+these are not a clean-suite claim. New main 2cd711eb1 now needs integration,
+especially its shared progression feed, HUD, combat and creature hooks. Preserve
+both implementations' behavior when resolving those overlaps. No merge to main
+or final acceptance is claimed.
+
+## 2026-09-04 — Cloudreach checkpoint 7 / authored roadside-place pass
+
+Branch: `codex/cloudreach-cliffs`, after merging current `origin/main` at `c5a16dfb9` without
+discarding branch work. Astra implemented eight individually authored roadside pockets containing
+59 installed production props across the six evidence routes: boulders, low rocks, bushes,
+flowers, paving remnants, broken fence runs, wagons, crates, and barrels. Placement is scaled from
+real imported bounds, kept clear of controller route centre lines, grounded only on the matching
+stacked surface, and culled at 320 m. Meadows modular cottage prefabs now replace five primitive
+house boxes in each generated settlement; their authored doorway/wall collision is retained.
+Creatures remain deferred.
+
+Fresh Windows/OpenGL3 capture evidence at 1280×720 is in
+`ralph/reports/CLOUDREACH-PHASE2-0904/`. On the local GTX 1060, six 24-frame samples recorded
+**252–915 draw calls**, **368,618–6,494,861 primitives**, **252–927 objects**, and **3.14–8.51 ms
+measured frame time**. These are local structural measurements, not ROG Ally claims.
+
+Verification for this source state:
+
+- Cloudreach world-data selection: **13 tests / 391 assertions / 0 failures**.
+- `tests/smoke_cloudreach_foundation.gd`: **PASS**, including all 59 authored props on supported
+  ground and rejection of an unrelated stacked bridge surface.
+- `tests/smoke_cloudreach_transition.gd`: **PASS**, production Meadows → Cloudreach → Meadows.
+- Six-view Windows GPU capture and contact-sheet assembly: **PASS**.
+- Code-blind visual review: **Meadows art direction No / Palworld game category Yes**.
+
+The route now has more readable human-scale places, but the review still rejects the environment
+on authored richness. The next visual pass must work at middle-distance composition scale: larger
+irregular groves and clearings, terrain terraces/recesses, route-edge construction, and layered
+atmospheric silhouettes. Do not answer this with more uniform micro-scatter. Remove the stray sky
+marks and repair the harsh summit foreground shadow/grass intersection while doing that work.

@@ -101,11 +101,13 @@ func _build_collider() -> void:
 ##
 ## Returns false when there is no ground yet, so the caller can retry: Terrain3D
 ## builds its data over several frames after the directory loads.
-func stand_at(x: float, z: float) -> bool:
+func stand_at(x: float, z: float, preferred_y: float = NAN) -> bool:
 	var source := _ground_source()
 	if source == null:
 		return false
 	var ground: float = float(source.call("ground_height_at", x, z))
+	if not is_nan(preferred_y) and source.has_method("ground_height_near"):
+		ground = float(source.call("ground_height_near", Vector3(x, preferred_y, z)))
 	if is_nan(ground):
 		return false
 	global_position = Vector3(x, ground, z)

@@ -45,25 +45,50 @@ const DATA_PATH := "res://data/progression/objectives.json"
 ## reader over `InputMap`; it stands up no node and needs no scene tree, so
 ## this file stays as headlessly testable as it was.
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
+const CHAPTER_LOGIC := preload("res://scripts/world/realm_chapter_progression.gd")
 
 var _main: Array = []
 var _local: Array = []
+var _realm_id := ""
+var _realm_data: Dictionary = {}
 
 
 func _init() -> void:
-	var file := FileAccess.open(DATA_PATH, FileAccess.READ)
+	set_realm("meadows")
+
+
+## The realm chooses the authored task feed; flags remain in the shared save.
+func set_realm(realm_id: String) -> bool:
+	if realm_id == _realm_id:
+		return false
+	_realm_id = realm_id
+	_main = []
+	_local = []
+	_realm_data = {}
+	var path := "res://data/config/cloudreach_chapter.json" if realm_id == "cloudreach" else DATA_PATH
+	var file := FileAccess.open(path, FileAccess.READ)
 	if file == null:
-		push_warning("quest_log.gd: %s missing" % DATA_PATH)
-		return
+		push_warning("quest_log.gd: %s missing" % path)
+		return true
 	var parsed: Variant = JSON.parse_string(file.get_as_text())
 	if typeof(parsed) != TYPE_DICTIONARY:
 		push_warning("quest_log.gd: %s is not a JSON object" % DATA_PATH)
-		return
+		return true
 	var data := parsed as Dictionary
+	_realm_data = data
+	if realm_id == "cloudreach":
+		for act: Dictionary in data.get("acts", []):
+			_main.append_array(act.get("objectives", []))
+		for chain: Dictionary in data.get("side_chains", []):
+			_local.append({"label": chain.get("title", ""),
+				"flag_id": chain.get("completion_flag", ""),
+				"revealed_by": chain.get("revealed_by", "")})
+		return true
 	var main_raw: Variant = data.get("main", [])
 	var local_raw: Variant = data.get("local", [])
 	_main = main_raw if typeof(main_raw) == TYPE_ARRAY else []
 	_local = local_raw if typeof(local_raw) == TYPE_ARRAY else []
+	return true
 
 
 ## The Main Story list, `{label, done, how}` in file order -- the WHOLE chain,
@@ -77,6 +102,8 @@ func main_entries(progression: RefCounted) -> Array:
 ## revealed by meeting the person who asks for it (`revealed_by`), which is
 ## already its own one-at-a-time rule.
 func local_entries(progression: RefCounted) -> Array:
+	if _realm_id == "cloudreach":
+		return CHAPTER_LOGIC.side_entries(progression, _realm_data)
 	return _entries(_local, progression)
 
 

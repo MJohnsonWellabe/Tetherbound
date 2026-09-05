@@ -53,6 +53,8 @@ var _pose_before_riding: Dictionary = {}
 ## movement.json's `gait_feel` block (MQ1A, TUNABLE) — momentum-tilt limits for
 ## character_model.gd's apply_momentum_tilt(). Read once at ready.
 var _gait_feel: Dictionary = {}
+var _fly_hang := false
+var _fly_pose: Dictionary = {}
 
 
 func _ready() -> void:
@@ -92,7 +94,15 @@ func _physics_process(delta: float) -> void:
 	# friction, no move_and_slide). Running any of it here would read the
 	# mount's motion as the rider's and swing the legs of somebody sitting
 	# still.
+	#
+	# Landing lane: W14's ride pose and Cloudreach's fly-hang are both authored
+	# poses that suppress the gait, and they are not alternatives -- a rider is
+	# seated on a mount, a hanging trainer is carried under one. Both are kept.
+	# Riding is tested first because `set_carrier()` runs before any fly state.
 	if _riding:
+		return
+	if _fly_hang:
+		_apply_fly_hang()
 		return
 	_throwing_for = maxf(0.0, _throwing_for - delta)
 	_tool_swing_for = maxf(0.0, _tool_swing_for - delta)
@@ -391,3 +401,49 @@ func _restore_ride_pose(skeleton_node: Skeleton3D) -> void:
 			if index < skeleton_node.get_bone_count():
 				skeleton_node.set_bone_pose_rotation(index, _pose_before_riding[index])
 	_pose_before_riding.clear()
+
+
+## Installed humanoid rig, both hands above the head. This pose is procedural
+## because final species-specific Fly clips remain deferred. Keep the trainer
+## visible and retain the ordinary player collision shape throughout.
+func set_fly_hang(enabled: bool, pose: Dictionary = {}) -> void:
+	_fly_hang = enabled
+	_fly_pose = pose
+	if animation_player() != null:
+		animation_player().stop()
+	_current = "" # the base clip cache must not suppress the resumed gait
+	var rig := skeleton()
+	if rig != null:
+		rig.reset_bone_poses()
+	if enabled:
+		set_lying(false)
+		_apply_fly_hang()
+
+
+func _apply_fly_hang() -> void:
+	var rig := skeleton()
+	if rig == null:
+		return
+	# Aim each arm chain toward the creature's grip points. Bone rest axes are
+	# read from the actual installed rig, not assumed to be Mixamo or KayKit.
+	for side: String in ["Left", "Right"]:
+		var side_sign := 1.0 if side == "Left" else -1.0
+		_aim_hang_bone(rig, side + "Arm", side + "ForeArm", Vector3(side_sign * float(_fly_pose.get("upper_lateral", 0.8)), 1.0, 0.08))
+		_aim_hang_bone(rig, side + "ForeArm", side + "Hand", Vector3(side_sign * float(_fly_pose.get("forearm_lateral", 0.65)), 1.0, 0.0))
+
+
+func _aim_hang_bone(rig: Skeleton3D, bone_name: String, child_name: String, direction: Vector3) -> void:
+	var bone := rig.find_bone(bone_name)
+	var child := rig.find_bone(child_name)
+	if bone < 0 or child < 0:
+		return
+	var parent := rig.get_bone_parent(bone)
+	var parent_basis := rig.get_bone_global_pose(parent).basis if parent >= 0 else Basis.IDENTITY
+	var rest_basis := rig.get_bone_rest(bone).basis
+	var rest_axis := rig.get_bone_rest(child).origin.normalized()
+	var target := (parent_basis.inverse() * direction).normalized()
+	if rest_axis.length_squared() > 0.5:
+		# Godot's pose rotation replaces the local rest rotation; it is not an
+		# additive delta. Preserve rest roll while aiming the actual limb axis.
+		var aim := Quaternion((rest_basis * rest_axis).normalized(), target)
+		rig.set_bone_pose_rotation(bone, aim * rest_basis.get_rotation_quaternion())

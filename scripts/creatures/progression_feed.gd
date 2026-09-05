@@ -29,6 +29,7 @@ extends RefCounted
 ##   bond_credit    task, task_name, before, after, target, remaining, tier
 ##   bond_near      task, task_name, remaining, target
 ##   bond_milestone node, task, task_name, benefit, tier, total
+##   reward_summary receipt (a team-wide victory receipt)
 ## Every event also carries `kind`, `seq`, `creature_id` (the instance id),
 ## `name` (the creature's label) and `species_id`.
 
@@ -39,6 +40,7 @@ static var _config: Dictionary = {}
 static var _events: Array = []
 static var _seq: int = 0
 static var _revision: int = 0
+static var _epoch: int = 0
 
 
 ## data/config/progression_feedback.json, cached after the first read.
@@ -69,19 +71,43 @@ static func seconds(key: String, fallback: float, cfg: Dictionary = {}) -> float
 ## Append one event. Returns the stored event (with its `seq`), so a caller
 ## that wants to react to its own push -- a test, mostly -- has the record.
 static func push(kind: String, creature: RefCounted, payload: Dictionary = {}) -> Dictionary:
+	if not enabled(creature):
+		return {}
 	_seq += 1
-	var event := payload.duplicate()
+	var event := payload.duplicate(true)
 	event["kind"] = kind
 	event["seq"] = _seq
 	event["creature_id"] = creature.get_instance_id() if creature != null else 0
-	event["name"] = str(creature.call("label")) if creature != null and creature.has_method("label") else ""
+	event["name"] = str(creature.call("label")) if creature != null and creature.has_method("label") else str(payload.get("name", ""))
 	event["species_id"] = str(creature.get("species_id")) if creature != null else ""
 	_events.append(event)
 	var cap := int(config().get("max_events", 64))
 	while _events.size() > maxi(cap, 1):
 		_events.pop_front()
 	_revision += 1
-	return event
+	var owner := game()
+	if kind == "level_up" and owner != null:
+		var party: RefCounted = owner.get("party")
+		if party != null:
+			party.set("revision", int(party.get("revision")) + 1)
+	return event.duplicate(true)
+
+
+## Gameplay feedback belongs to the owned five. Standalone logic tests have
+## no Game node; construction and set_level stay silent in either context.
+static func game() -> Node:
+	var tree := Engine.get_main_loop() as SceneTree
+	return tree.root.get_node_or_null("Game") if tree != null and tree.root != null else null
+
+
+static func enabled(creature: RefCounted) -> bool:
+	if creature == null:
+		return true  # A team reward receipt has no individual creature.
+	var owner := game()
+	if owner == null:
+		return true
+	var party: RefCounted = owner.get("party")
+	return party != null and (party.call("members") as Array).has(creature)
 
 
 ## Bumps on every push and every drain -- the cheap integer a presenter
@@ -97,24 +123,30 @@ static func latest_seq() -> int:
 	return _seq
 
 
+## A reset/load can reuse a sequence number. Readers compare this first and
+## discard pending presentations from the previous run before reading again.
+static func epoch() -> int:
+	return _epoch
+
+
 ## Every event with `seq` strictly greater than `after`, oldest first.
 static func peek_since(after: int) -> Array:
 	var out: Array = []
 	for event: Variant in _events:
 		if int((event as Dictionary).get("seq", 0)) > after:
-			out.append(event)
+			out.append((event as Dictionary).duplicate(true))
 	return out
 
 
 ## A copy of everything currently held, oldest first.
 static func events() -> Array:
-	return _events.duplicate()
+	return _events.duplicate(true)
 
 
 ## Take everything and empty the log. Bumps the revision so a presenter
 ## comparing revisions sees the drain as a change too.
 static func drain() -> Array:
-	var out := _events.duplicate()
+	var out := _events.duplicate(true)
 	_events.clear()
 	_revision += 1
 	return out
@@ -125,6 +157,7 @@ static func clear() -> void:
 	_events.clear()
 	_seq = 0
 	_revision = 0
+	_epoch += 1
 
 
 # --- derived state presenters ask about ---------------------------------------
@@ -208,11 +241,16 @@ static func level_up_changes(event: Dictionary) -> Array[String]:
 	return out
 
 
-## The Moment banner's two lines for a `level_up` or `bond_milestone` event:
+## The Moment banner's two lines for a level, bond milestone, or reward receipt:
 ## `{title, detail}`. Anything else returns empty strings.
 static func moment_text(event: Dictionary) -> Dictionary:
 	var name := str(event.get("name", ""))
 	match str(event.get("kind", "")):
+		"reward_summary":
+			var receipt := str(event.get("receipt", ""))
+			var marker := receipt.find("'s reward:")
+			var title := receipt.left(marker) + " defeated" if marker > 0 else "Victory rewards"
+			return {"title": title, "detail": receipt}
 		"level_up":
 			var gained := int(event.get("levels_gained", 1))
 			var title := "%s reached Lv %d" % [name, int(event.get("new_level", 0))]
@@ -229,7 +267,7 @@ static func moment_text(event: Dictionary) -> Dictionary:
 
 static func is_moment(event: Dictionary) -> bool:
 	var kind := str(event.get("kind", ""))
-	return kind == "level_up" or kind == "bond_milestone"
+	return kind == "level_up" or kind == "bond_milestone" or kind == "reward_summary"
 
 
 static func is_tick(event: Dictionary) -> bool:
