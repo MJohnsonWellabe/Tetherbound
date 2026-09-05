@@ -11,6 +11,25 @@
 > that are the point of the feature drawn at roughly 1.3:1 against the backdrop, marginal on
 > a flat scaffold and gone over sunlit grass. Two blind judges reaching the same three
 > findings from different frame sets is the strongest signal in this batch's evidence.
+>
+> **SUPERSEDED BY THE LANE'S OWN ROUND 2 — read this before acting on anything below.**
+> Both rounds judged the **round-1** frames. W13 has since pushed `14f4c84c`, and its own
+> round-2 judge (`JUDGE_ROUND2.md`) confirms all three defects above are **fixed**: "Not
+> truncated, no run-together" for the strip rows, no banner collision, and the feed tick off
+> the illegibility list. That round found three further defects of its own — the two banner
+> types were 98.9 % identical pixels, a collapsed level-up was demoted to the dimmest line,
+> and the bond pip sat where it read as the HP meter — and `14f4c84c` fixes those too
+> (a teal plate for a level-up against amber for a bond node, remeasured at 9.33 % of the
+> frame differing; the level-up taking the headline; the pip moved to the text side).
+>
+> So the correct reading of this file is historical: it is the independent corroboration
+> that the round-1 defects were real, not a statement of what ships. What still stands from
+> both rounds is the **untested** part — every frame in both was shot over a flat scaffold,
+> so legibility over real Meadows terrain remains unproven, and that is the open item this
+> lane hands to the owner. The pre-existing HUD furniture defects (health and food pills
+> covering their own bars, portraits, minimap, hotbar, safe-area margins) also still stand
+> and belong to no lane in this batch.
+
 
 # Blind judge verdict — W13's progression HUD sheet
 
