@@ -11,6 +11,20 @@ extends CanvasLayer
 ## every label, walked over the tree rather than set per node — because this
 ## panel sits over a sunlit meadow and the measured contrast problem that fixed
 ## is the same problem here.
+##
+## WHOSE FACE IS IN THE FRAME (N04-DIALOGUE-PORTRAITS, 2026-09-05). The plate is
+## the speaking line's own `portrait`, read off the runner every draw, exactly
+## as the speaker's name is -- never a constant, never the player's by default.
+## `trainer.png` is the player's face and is drawn only when a line names it
+## (`tests/test_dialogue_portraits.gd` refuses any other speaker resolving to
+## it). The one thing the data cannot say is who is speaking a SHARED
+## conversation: the generic trainer refusals in `data/dialogue/trainers.json`
+## are one conversation said by ~27 different trainers, so their JSON can only
+## name a neutral plate. `start()` therefore takes an optional speaker
+## identity (`{"speaker": name, "portrait": path}`) that the caller who knows
+## the body -- `trainer_npc.gd` -- lays over the conversation's own fields for
+## as long as it is open. It is an overlay, not a second source of truth: with
+## nothing passed, every field still comes from the line.
 
 const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
@@ -61,6 +75,11 @@ var _buffered_during_guard: bool = false
 ## already closed, so a real second press is still caught, same as OF3 intended.
 var _skip_input_this_tick: bool = false
 var _last_portrait: String = ""
+## Per-conversation speaker overlay, see the file comment. Empty for every
+## conversation whose JSON already names its speaker, which is all but the
+## shared generic ones. Cleared the moment the conversation ends so it can
+## never bleed into the next one.
+var _identity: Dictionary = {}
 
 @onready var _box: Control = $Root/Box
 @onready var _portrait: TextureRect = $Root/Box/Margin/Row/Portrait
@@ -133,9 +152,15 @@ func is_open() -> bool:
 	return _runner.is_active()
 
 
-func start(conversation_id: String) -> bool:
+## `identity` may carry `speaker` and/or `portrait` for a conversation whose
+## JSON cannot know who is saying it (the shared trainer refusals). Either key
+## absent or empty falls through to the line's own field; a `portrait` that is
+## not on disk is ignored the same way, so a stale path degrades to the
+## conversation's neutral plate rather than to an empty frame.
+func start(conversation_id: String, identity: Dictionary = {}) -> bool:
 	if not _runner.start(conversation_id):
 		return false
+	_identity = identity.duplicate()
 	_guard = OPEN_GUARD_FRAMES
 	_buffered_during_guard = false
 	_skip_input_this_tick = true
@@ -159,6 +184,18 @@ func advance() -> void:
 
 func close() -> void:
 	_runner.close()
+
+
+## The plate actually in the frame right now (the resolved `res://` path), or
+## "" when nothing is drawn. Public so a test can ask what the player sees
+## rather than what the JSON says.
+func current_portrait() -> String:
+	return _last_portrait if _runner.is_active() and _portrait != null and _portrait.texture != null else ""
+
+
+## The name over the text right now, or "" when closed.
+func current_speaker() -> String:
+	return _speaker.text if _runner.is_active() and _speaker != null else ""
 
 
 func _process(_delta: float) -> void:
@@ -192,7 +229,8 @@ func _draw() -> void:
 		return
 
 	_box.visible = true
-	_speaker.text = str(line.get("speaker", ""))
+	var speaker := str(_identity.get("speaker", ""))
+	_speaker.text = speaker if speaker != "" else str(line.get("speaker", ""))
 	_body.text = str(line.get("text", ""))
 	# Real glyph, not "[X] / [E]" bracket text showing both devices at once --
 	# bible sec18: "Do not display both keyboard and controller prompts
@@ -202,7 +240,9 @@ func _draw() -> void:
 		"Close" if bool(line.get("is_last", false)) else "Continue",
 	]
 
-	var portrait := str(line.get("portrait", ""))
+	var portrait := str(_identity.get("portrait", ""))
+	if portrait == "" or not ResourceLoader.exists(portrait):
+		portrait = str(line.get("portrait", ""))
 	if portrait != _last_portrait:
 		_last_portrait = portrait
 		# A missing portrait leaves the frame empty rather than pushing an error
@@ -213,4 +253,5 @@ func _draw() -> void:
 
 func _on_runner_finished(conversation_id: String) -> void:
 	_box.visible = false
+	_identity = {}
 	finished.emit(conversation_id)
