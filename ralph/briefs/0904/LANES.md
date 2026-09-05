@@ -65,6 +65,9 @@ Owner noticed the session count didn't match my reports. Root cause: 5 lanes (W0
 Separately, 5 lanes had genuinely gone stale 4+ hours with NO replacement running: W02-HARNESS-CONTEXT, W03-S08-FREEZE, W16-LOFT-BED, W20-SMALL-FIXES, W21-HARNESS-FIGHTS — all hit their 5h limit hours ago (reset already passed) and were sitting untouched. Given the owner flagged this directly, resumed all 5 at once (departing from the normal 1-2/sweep trickle, since the owner surfaced the actual backlog size).
 main also moved: PR #42 merged — **W00-ICONS is now on main**. PR #45 (consolidated: icons+contracts+progression+portraits+companion+bands2-5) is open, still blocked only on the pre-existing finale regression. PR #44 is Codex's own draft PR for Cloudreach, unrelated to this batch, explicitly not ready to merge.
 
+## Sweep 09:45Z
+All 5 running lanes checked, none finished/crashed. W06: rendering finale, chains re-verifying, drafting report. W07: final render in flight, seating mound pieces to terrain. W08-finisher: real capture running, drafting report, will re-run smokes after. W14: fixing its own capture tool for the drive approach, rerunning smoke+capture. No action needed.
+
 ## Sweep 09:29Z
 5 lanes running, all genuine, none finished/crashed. W06: rendering finale, chains re-verifying, drafting report. W07: seating pass fixed mid-ground, densifying mound grid — deep in polish. W20: 10 commits pushed, 3 validation runs in flight. No action needed.
 
