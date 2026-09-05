@@ -33,6 +33,30 @@ re-opens them:
    speaks from the cart's prompt) wears the plate of the nearest family, here
    `villager_male.png`. If a body is placed later, re-point to that body's plate.
 
+## The plate's ground is part of the contract too
+
+A plate is **256x256, fully opaque, on (242,242,242)** — measured off
+`trainer.png` and `grandpa.png`, the two plates that already shipped and that
+every new plate has to sit beside in the same box. The rendered plates were
+transparent cut-outs at first, and a code-blind judge called that the loudest
+mismatch it found: in one dialogue box the villagers floated free on the dark
+panel while Grandpa drew as a bright white card, *"a player sees it the first
+time Grandpa speaks."* `tools/_capture_portraits.gd` renders on transparency and
+composites onto that ground in code, so the value is exact rather than something
+tonemapping can drift.
+
+The same tool enforces, per plate, what that judge measured by eye: subject
+coverage inside a 38–68% band (the shipping plates sit at 51% and 55%), under
+1.5% of the drawn pixels clipped to flat white (the shipping plates clip 0.2%
+and 0.6%), and nothing reaching the top or upper sides, which is where hair, a
+hat brim or a carried prop gets sliced. The bottom edge is deliberately
+unchecked: a head-and-shoulders plate is meant to run off the bottom, and both
+shipping plates do.
+
+One lens for every plate. The camera steps back automatically when a subject
+does not fit, rather than the window being tuned per character — a wide-brimmed
+hat gets distance, not a different lens.
+
 ## Plate names are a contract
 
 `trainer.png`, `grandpa.png`, `villager_male.png`, `villager_female.png`, `grunt.png`,
@@ -41,12 +65,24 @@ at; they are not renamed. Named-cast plates (`mira.png`, `halda.png`, `grunt_b.p
 …) sit beside them so a speaker whose body is a per-individual base (a Team Tether
 trainer's `base` override, a villager's hair colour) can be drawn as that body.
 
-## A finding, not a decision
+## Two findings, not decisions
 
-Every villager on the shared `villager_female` rig (Mira, Tam, Halda, Rae, Doss, Sela,
-Dara, Nan) renders an identical face: the rig's only per-NPC differentiator is the
-`hair_ponytail` mesh, which sits at the nape (y 1.36–1.55 m, wholly behind the head)
-and is invisible from the front — in the plate and in the world alike. Spec §21's
-"NPCs differ by hair colour" is therefore not being delivered by that rig from any
-conversational angle. The plates are honest to the bodies; making the villagers
-actually differ is a rig or texture task for a lane that owns the rig.
+**One face, eight villagers.** Every villager on the shared `villager_female`
+rig (Mira, Tam, Halda, Rae, Doss, Sela, Dara, Nan) renders an identical face:
+the rig's only per-NPC differentiator is the `hair_ponytail` mesh, which sits at
+the nape (y 1.36–1.55 m, wholly behind the head) and is invisible from the front
+— in the plate and in the world alike. Spec §21's "NPCs differ by hair colour"
+is therefore not being delivered by that rig from any conversational angle. Two
+independent code-blind judges counted the repeats unprompted ("seven of 34 cells
+are one asset"). The plates are honest to the bodies; making the villagers
+actually differ is a rig or texture task for a lane that owns the rig. The
+per-NPC file names (`mira.png`, `halda.png`, …) are kept so that a fix there
+re-renders straight into the right names with no dialogue edit.
+
+**A texture artefact on the shared rigs.** A hard-edged pale wedge sits on the
+right cheek, with thin dark lines on the neck, on `villager_female` and
+`villager_male` alike. It is in the body texture, not the plate: a judge given
+only the frames spotted it on the standing NPC in the world *and* on the
+portrait, and used the fact that the two match as proof the portrait is the
+right person. Not introduced here and not fixable here — it belongs to whoever
+owns those two rigs' textures.

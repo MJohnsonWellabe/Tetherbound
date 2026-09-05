@@ -26,7 +26,7 @@ conversation with Halda and with Oskar shows their own face in the box beside th
 | `tests/test_dialogue_portraits.gd` (new) | Five tests, see below. |
 | `docs/decisions/D74-…md` (new) | The three bodiless speakers and the female-rig hair finding. |
 | `docs/CURRENT_STATE.md` | One new §3 row (P2, struck through, fixed on this branch). |
-| `ralph/reports/W04-PORTRAITS-0904/` | `_sheet_portraits.png` (34 plates), `_sheet_ingame_conversations.png` (two 1280×800 frames), `JUDGE_VERDICT.md`, `repoint_portraits.py`, this report. |
+| `ralph/reports/W04-PORTRAITS-0904/` | `_sheet_portraits.png` (34 plates, 1536×1536), `_sheet_ingame_conversations.png` (two 1280×800 frames), three judge verdicts, `repoint_portraits.py`, this report. |
 
 Not touched: `scripts/ui/dialogue_panel.gd` (draws what the line names; every plate shows),
 `data/dialogue/stronghold.json`, `docs/GATE2_GATE3_CLOSURE_PLAN.md` (CL-G11 row still reads
@@ -118,56 +118,117 @@ PASS: nothing the world HUD draws composites through the dialogue box   (exit 0)
 
 ## Visual evidence and blind judge
 
-- `_sheet_portraits.png` — all 34 rendered plates, alphabetical, 6 per row (1536x1536).
-- `_sheet_ingame_conversations.png` — Halda (top) and Oskar (bottom) at 1280x800, real
-  Meadows boot, the world's own `DialoguePanel`.
-- `JUDGE_VERDICT_round1.md`, `JUDGE_VERDICT.md` — two code-blind judges, each given only
-  the sheets, the two painted plates, `docs/reference/` and the visual-judge skill.
+Three code-blind rounds, each given only the sheets, the two shipping painted
+plates, `docs/reference/` and the visual-judge skill. Verdicts committed as
+`JUDGE_VERDICT_round1.md`, `JUDGE_VERDICT_round2.md`, `JUDGE_VERDICT.md`.
 
-**Round 1 found a real evidence defect and I fixed it.** The contact sheet committed in
-`97b5c459` was **not** the 34-plate sheet: it was a stale 6-cell sheet left over from an
-earlier framing round, because `_write_sheet()` only sheets what the current run rendered
-and the last run before that commit was a 7-plate subset. The judge caught it as its
-headline finding ("the contact sheet does not show what it claims to") and was therefore
-judging 4 plates while believing it was judging 34. Every plate was then re-rendered in
-one deterministic pass (`34 plates written, 0 failures`) so the plates and the sheet come
-from the same run; the sheet is now 1536x1536 with 34 populated cells, and all 36 plate
-files hash distinctly.
+**The acceptance criterion passed in every round.** Round 3, unprompted: Oskar
+*"yes, unambiguously"*; Halda *"yes ... she is clearly not the player"*.
 
-Round 1's substantive findings, and what each got:
+**Round 1** found an evidence defect, not an art defect. The contact sheet
+committed in `97b5c459` was a stale 6-cell partial from an earlier framing
+round, because `_write_sheet()` only sheets what the current run rendered. The
+judge was looking at 4 plates believing it was 34, and said so as its headline.
+Fixed by re-rendering every plate in one pass so plates and sheet come from the
+same run. Its other actionable finding, that the player model dominated both
+in-game frames, was fixed by widening the evidence camera.
 
-| Finding | Verdict | Action |
+**Round 2** measured the plates against the two shipping ones and found three
+real defects, all mine, all fixed:
+
+| Finding | Measured before | After |
 |---|---|---|
-| Both frames: the portrait reads as the NPC actually speaking, not the player | **the acceptance criterion, passed** | none needed |
-| The player model dominates both frames; the speaker is small and part-occluded | fair | evidence camera widened and pushed off the player's shoulder for round 2 |
-| Rendered plates are a different style family from the two painted plates (cel-shaded vs painterly; one eye vs frontal) | fair, and structural | recorded as a limitation, not tuned. These are engine renders of the shipped bodies; matching a painting means repainting, which is owner-gated art. See limitation 2 |
-| Female-rig cells are indistinguishable from one another | correct, and already independently measured | D74. The rig's only differentiator is a nape ponytail invisible from the front |
-| A jagged pale mark on the female rig's right cheek and dark lines on the neck | correct, and it is in the body texture, not the plate | it shows on the standing NPC in-world too. Recorded as a `villager_female` texture defect for the lane that owns the rig; not introduced here |
-| Tree canopy crowds the HUD; grass reads as even tufts | outside this lane | left for the world/vegetation lanes |
+| Ground mismatch: shipping plates are opaque on (242,242,242), mine were transparent cut-outs, so villagers floated on the dark panel while Grandpa drew as a white card | alpha 100% opaque vs ~50% clear | every plate composited onto the exact shipping ground. Round 3: *"exact match, no complaint ... Nothing to fix here."* |
+| Wrong lens: the window was scaled by body height, so short bodies got a tighter crop | coverage 46–69% (shipping: 51%, 55%) | one fixed window, camera auto-steps back when a subject will not fit. Coverage 41–60% |
+| Blown-out skin | worst plate clipped 10.5% of itself to flat white (shipping: 0.2%, 0.6%) | worst 0.9%, via per-character exposure that scales the whole rig at once |
 
-JUDGE_ROUND2_PLACEHOLDER
+Also fixed in that round: framing centred on the head rather than the body's
+bounding box, so a carried prop no longer enters the frame edge-on; and the
+render now measures what the judge measured and fails the run on it (coverage
+band, clipped-to-white fraction, content reaching the top or upper sides).
+Final render: **34 plates, 0 failures.**
+
+**Round 3** confirmed the ground and the identity, and found one thing I could
+still fix and did not get to ship — see the ceiling below.
+
+## The ceiling, measured
+
+The heads are smaller than the two shipping plates. Skull width at 256 px,
+my own measurement (the judge measured the same gap independently):
+
+| Plate | Skull width |
+|---|---|
+| `trainer.png` (shipping) | 140 px |
+| `grandpa.png` (shipping) | 160 px |
+| `halda.png` | 113 px |
+| `villager_male.png` | 119 px |
+| `warden.png` | 79 px |
+
+So a typical villager reads ~20% narrower, and the Warden half — his crown
+raises the measured top the window hangs from, so his face sits low and small.
+The judge called it *"a low-grade irritation, visible only when a villager plate
+follows trainer/grandpa in the same conversation"*, with the outliers worse.
+
+The fix is one constant: `WINDOW_HEIGHT` 0.66 → ~0.51, which is safe only
+because the auto-fit steps back for the bodies that then would not fit. **That
+render was started and interrupted partway (19 of 34 plates), so the branch
+ships the round-3 plates rather than a half-rendered mix.** The tool is
+unchanged at 0.66 so it still reproduces exactly what is committed. The next
+lane to touch this changes that one number, re-runs the render, and re-measures
+skull width against 140/160.
 
 ## Known limitations and what was deliberately not done
 
-1. **Female-rig villagers share one face** (Mira, Tam, Halda, Rae, Doss, Sela, Dara, Nan).
-   Probed in-engine: the tint is applied, but only to `hair_ponytail`, which sits at the
-   nape (y 1.36–1.55 m) behind the head; nothing forward of it is tintable. Turning the
-   body to 48° did not reveal it. The plates are honest to the body, and the same is true
-   in the world — spec §21's hair-colour differentiation is not being delivered by that
-   rig. Recorded in D74; a rig/texture task for a lane that owns the rig. The per-NPC
-   files are kept so a fix there re-renders into the right names.
-2. **Plates are engine renders, the two originals are paintings.** Framing, size and
-   transparency match; surface style does not fully (see the verdict). Replacing the two
-   painted plates with renders for consistency is a call the coordinator can make by
-   running the tool with `-- trainer grandpa` (writes to `shots/`, never over the files).
-3. **The generic trainer refusals** wear `villager_male.png` because `trainer_npc.gd`
-   does not pass the speaker's portrait; passing it is a small code change outside this
-   lane's ownership.
-4. `stronghold.json` (8 fields) still names `trainer.png` — other lane, by design.
-5. The Team Tether rank plates on the default `grunt` body (`grunt`, `officer`, `captain`)
-   differ only by palette; the rank badge sits on the chest below the crop.
-6. `docs/GATE2_GATE3_CLOSURE_PLAN.md`'s CL-G11 row not edited (outside ownership).
+1. **Head size, above.** One constant, one render, not shipped.
+2. **Female-rig villagers share one face** (Mira, Tam, Halda, Rae, Doss, Sela,
+   Dara, Nan). Probed in-engine: the tint applies only to `hair_ponytail`, which
+   sits at the nape behind the head and is invisible from the front, in the
+   world as well as the plate. Two judges counted the repeats unprompted. D74; a
+   rig/texture task. The per-NPC file names are kept so a fix there re-renders
+   into the right names with no dialogue edit.
+3. **A texture artefact on the shared rigs** — a pale wedge on the right cheek,
+   dark lines on the neck. It is in the body texture, not the plate: round 3
+   found it on the standing NPC, on the player, and on the plate, and used the
+   match as proof of identity. Not introduced here, not fixable here.
+4. **Engine renders next to paintings.** The plates now match the shipping ones
+   on ground, framing band and exposure, but a render is not a painting: no
+   catchlight in the eye, softer hair edges. Closing that means repainting, which
+   is owner-gated art. Running the tool with `-- trainer grandpa` writes rig
+   versions of those two into `shots/` for comparison, never over the files.
+5. **The generic trainer refusals** wear `villager_male.png` because
+   `trainer_npc.gd` does not pass the speaker's portrait through. Passing it is a
+   small code change outside this lane's ownership. D74.
+6. `data/dialogue/stronghold.json` (8 fields) still names `trainer.png` — other
+   lane, by design. Note for the coordinator: **main has since added a ninth**
+   (commit `04d844d0` added a conversation naming `trainer.png`), so that lane's
+   job grew. My test carves stronghold ids out of the not-the-player rule until
+   it lands; delete `STRONGHOLD_PATH` and the two `_is_exempt` calls then.
+7. `docs/GATE2_GATE3_CLOSURE_PLAN.md`'s CL-G11 row still reads "proven failing
+   (owner)" — outside this lane's ownership, coordinator to flip on landing.
+8. Everything the judges raised about the world around the box — the hero tree's
+   canopy, floating grey blocks, the quest tracker covering a signboard, grass
+   scatter, the conversation camera never framing both speakers — is other lanes'
+   and is recorded here only so it is not lost.
+
+## CI
+
+`ralph/W04-PORTRAITS-0904` run 33920901460 (head `5a8b2d7f`): the four red jobs
+are all inherited from `main`, none from this lane. `verify-unit-tests (1)` is
+the known candy/mushroom icon failure another lane owns plus the scatter-bake
+freshness assertion; `verify-unit-tests (2)`, `verify-terrain-bake-freshness`
+and `verify-scatter-bake-freshness` are the terrain/scatter bake staleness.
+Confirmed not mine two ways: `git diff origin/main -- data/config data/terrain
+data/scatter scripts/world` is empty, and both freshness tests fail identically
+on a clean checkout of my branch and on `main`'s own run 33932088359.
 
 ## Commits
 
-COMMITS_PLACEHOLDER
+| Commit | What |
+|---|---|
+| `97b5c459` | The plates, the re-point, the test, the capture tool |
+| `5a8b2d7f` | In-game evidence mode, D74, the `CURRENT_STATE` row |
+| `f26681ec` | Re-render all 34 in one pass, fix the stale contact sheet |
+| `f26681ec`+ | One lens, the shipping ground, clean framing (judge round 2) |
+
+Branch `ralph/W04-PORTRAITS-0904`. Final commit hash recorded at the end of this
+file after the last push.
