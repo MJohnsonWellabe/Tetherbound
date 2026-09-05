@@ -31,9 +31,20 @@ const READY_TIMEOUT_MS := 2400000
 
 const TARGET := Vector3(-180.0, 0.0, 2250.0)
 ## 120 m short of the cluster centre, on the corridor axis: comfortably inside
-## the 300 m radius and not standing on top of the pin, so the marker and the
-## player arrow are distinguishable in the frame.
+## the 300 m radius, which is what makes the alpha pin itself.
 const STAND := Vector3(-180.0, 0.0, 2130.0)
+## Where the player stands for the FRAME, once the pin has landed.
+##
+## The first frame put the player at STAND and the two marks landed on top of
+## each other: `tab_map.gd::_draw_player()` runs after the icon pass, and at the
+## whole-Meadows fit 120 m is about seven pixels, so the player marker sat
+## squarely over the alpha glyph and a blind judge read the pin as a cyan
+## teardrop -- the player marker -- rather than the red chevron it is.
+##
+## Walking back down the corridor separates them by roughly 50 px AND is the
+## better evidence: the pin is supposed to stay after the player leaves, so a
+## frame taken 850 m away shows the persistence the directive actually asks for.
+const VIEW_FROM := Vector3(-180.0, 0.0, 1400.0)
 
 
 func _init() -> void:
@@ -83,9 +94,14 @@ func _run() -> void:
 	# would reveal it.
 	map_state.reveal_circle(Vector3(-6.0, 0.0, -13.0), 60.0)
 	var here := Vector3(-6.0, 0.0, -13.0)
-	for step in 60:
-		map_state.mark_visited(here.lerp(STAND, float(step + 1) / 60.0))
-	map_state.reveal_circle(STAND, 220.0)
+	for step in 240:
+		var along := here.lerp(STAND, float(step + 1) / 240.0)
+		map_state.mark_visited(along)
+		# A walked corridor is revealed to either side of the walker, not as a
+		# one-cell thread; a hairline trail is what made the first frame read as
+		# 97% fog with a scratch in it.
+		map_state.reveal_circle(along, 90.0)
+	map_state.reveal_circle(STAND, 260.0)
 
 	print("[probe] its player_path=%s resolves to %s" % [
 		str(pins.get("player_path")), str(pins.get_node_or_null(pins.get("player_path")))])
@@ -132,6 +148,22 @@ func _run() -> void:
 		print("pinned: order %d, '%s' at %s" % [
 			int(pin.get("order", 0)), str(pin.get("display_name", "")),
 			str(pin.get("position", Vector2.ZERO))])
+
+	# Walk back out of the radius before the frame. The pin must NOT clear —
+	# only the once-flag clears it — so this doubles as a live check that
+	# leaving does not unpin, which no test covers from a real world.
+	player.global_position = VIEW_FROM
+	var settle := Time.get_ticks_msec() + 3000
+	while Time.get_ticks_msec() < settle:
+		player.global_position = VIEW_FROM
+		await process_frame
+	var still: int = int(map_state.call("alpha_pin_count"))
+	if still < pinned:
+		push_error("the pin cleared when the player walked away — it must survive leaving")
+		quit(1)
+		return
+	print("[probe] %d pin(s) still set from %.0f m away" % [
+		still, Vector2(VIEW_FROM.x, VIEW_FROM.z).distance_to(Vector2(TARGET.x, TARGET.z))])
 
 	var menu: CanvasLayer = game.call("menu")
 	if menu == null:
