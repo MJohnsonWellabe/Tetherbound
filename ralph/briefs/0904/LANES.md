@@ -65,6 +65,13 @@ Owner noticed the session count didn't match my reports. Root cause: 5 lanes (W0
 Separately, 5 lanes had genuinely gone stale 4+ hours with NO replacement running: W02-HARNESS-CONTEXT, W03-S08-FREEZE, W16-LOFT-BED, W20-SMALL-FIXES, W21-HARNESS-FIGHTS — all hit their 5h limit hours ago (reset already passed) and were sitting untouched. Given the owner flagged this directly, resumed all 5 at once (departing from the normal 1-2/sweep trickle, since the owner surfaced the actual backlog size).
 main also moved: PR #42 merged — **W00-ICONS is now on main**. PR #45 (consolidated: icons+contracts+progression+portraits+companion+bands2-5) is open, still blocked only on the pre-existing finale regression. PR #44 is Codex's own draft PR for Cloudreach, unrelated to this batch, explicitly not ready to merge.
 
+## 15:37 UTC: N12-REPO-HYGIENE confirmed done
+12 sidecars added, 28 orphans removed. Proactively cross-checked its overlap with N11's own
+sidecar commit (same 12 Cloudreach files) and confirmed byte-identical — no merge conflict for
+whichever lands second. Honestly flagged that its own brief file couldn't be read at session
+start and was reconstructed from context instead (§0) — scope match confirmed close enough to
+the actual brief. Archived. 6/13 done (N01, N02, N03, N04, N11, N12); 7 running.
+
 ## Sweep 15:21Z
 No new finishes this cycle. N10 is writing its per-item report sections (sounds close). N12
 pushed real progress (12 sidecars added, 28 orphans removed) but hasn't self-reported complete
