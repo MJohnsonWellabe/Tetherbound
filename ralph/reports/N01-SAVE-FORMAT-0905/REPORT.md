@@ -2,7 +2,7 @@
 
 **Lane:** N01-SAVE-FORMAT · **Branch:** `ralph/N01-SAVE-FORMAT-0905` (from `origin/main` at
 `f8a47ee4`) · **Kind:** test repair; one test file, no game code, no data.
-**Final commit:** `__FINAL_COMMIT__`.
+**Commits:** `d10e4ef8` (the test repair, WIP-marked), `9a89d3e0` (report draft), and the final commit that closes this report on top of them — `git log -1 origin/ralph/N01-SAVE-FORMAT-0905`. The tree is identical from `d10e4ef8` onward except for this report and one `CURRENT_STATE.md` row.
 
 **Brief:** the session was opened as "Lane N01-SAVE-FORMAT (Fable): fix the 5 false-passing
 save-format tests" with the instruction to read `ralph/briefs/0905-followup/COMMON.md` and
@@ -21,7 +21,7 @@ would normally settle is recorded under "Calls made without the brief" below.
 | Make each of the five actually execute its assertions | **done** |
 | See each go red for the right reason before calling it green | **done** — four loader mutations, each fails exactly the tests it should |
 | Full `test_save_format.gd` green after the repair | **done** — 56 tests / 304 assertions / 0 failed, 0 SCRIPT ERROR lines (was 279 assertions with 5 SCRIPT ERROR lines) |
-| Full unit suite (the rule for save-format changes, `docs/AGENT_WORKFLOW.md` §6) | __SUITE_VERDICT__ |
+| Full unit suite (the rule for save-format changes, `docs/AGENT_WORKFLOW.md` §6) | **done** — 2004 tests / 3,765,645 assertions / 0 failed, exit 0, 2348 s; the log carries **10 SCRIPT ERROR lines, none from this file** — all ten are `test_shiny.gd`, five more tests with the identical defect, handed over below |
 | Systemic fix so an aborted test method cannot read as `ok` again | **not done, deliberately** — `tests/run_tests.gd` and `ci.yml` are shared harness files outside a one-file test-repair lane; the gap and two candidate fixes are handed over below |
 
 ## The defect
@@ -128,7 +128,7 @@ retries, each command run once unless stated:
 | `godot --headless --path . --script tests/run_tests.gd -- --only=test_save_format.gd` on `main`'s file | 56 tests / 279 assertions / 0 failed; **5 SCRIPT ERROR** (the defect) |
 | same, repaired file | **56 tests / 304 assertions / 0 failed; 0 SCRIPT ERROR** |
 | same, under M1 / M2 / M3 / M4 | 5 / 1 / 1 / 4 failed, as tabled above |
-| `godot --headless --path . --script tests/run_tests.gd` (full suite, repaired file) | __SUITE_LINE__ |
+| `godot --headless --path . --script tests/run_tests.gd` (full suite, repaired file) | **2004 tests / 3,765,645 assertions / 0 failed**, exit 0, 2348 s (39 min, 4 cores); 10 SCRIPT ERROR lines, all in `test_shiny.gd` (see handover), 0 in `test_save_format.gd` |
 
 ## Runtime validation
 
@@ -162,7 +162,20 @@ A test method that dies on a script error is indistinguishable from one that pas
    legitimately assertion-free test first.
 
 Until one lands, a `grep -c "SCRIPT ERROR"` over a shard log is the only way to know the
-number of `ok` lines means anything. The lane checked the repaired file's own run: 0 SCRIPT ERROR lines on the repaired file, against 5 on `main`'s.
+number of `ok` lines means anything.
+
+**Five more of these exist right now, in `tests/test_shiny.gd`, found by that grep over this
+lane's full-suite log.** Its `_roll()` helper (line 47) calls
+`encounter_director._roll_wild_level` via `call` with the wrong number of arguments ("Expected 4
+argument(s)"), the call aborts, and line 76 / 88 / 97 / 113 / 126 then index `'wild'` on the
+empty result and abort again — so `test_same_seed_rolls_the_same_shiny_outcome_every_time`,
+`test_a_seed_below_the_odds_threshold_rolls_shiny`,
+`test_a_seed_above_the_odds_threshold_does_not_roll_shiny`,
+`test_existing_level_and_individuality_draws_are_unchanged_by_the_shiny_roll` and
+`test_existing_level_and_individuality_draws_are_unchanged_for_a_second_seed` all print `ok`
+with no assertion run. The shiny roll has no working regression coverage. **Not touched by this
+lane** (a creature/encounter file, not save format); it needs its own owner, and it is the reason
+fix 1 above should land before the next lane wave rather than after. The lane checked the repaired file's own run: 0 SCRIPT ERROR lines on the repaired file, against 5 on `main`'s.
 
 ## Known limitations
 
