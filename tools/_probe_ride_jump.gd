@@ -61,15 +61,19 @@ func _run() -> void:
 
 	# Origin is 2.8m from the workshop (village.json). "move_back" was already
 	# proven clear by smoke_riding's own stick test (10 m/s peak, 7.3m/1.5s).
-	# Drive that heading for longer to get well clear before measuring the hop.
-	Input.action_press("move_back")
-	for i in 180:
-		await physics_frame
-	Input.action_release("move_back")
-	for i in 60:
-		await physics_frame
-	_mark("after move_back: pos=(%.1f, %.1f, %.1f) on_floor=%s" % [
-		mount.global_position.x, mount.global_position.y, mount.global_position.z, str(mount.is_on_floor())])
+	# Sample several stopping points along it rather than committing to one
+	# distance blind -- 180 frames landed in a hole (-25.4,-18.8), on_floor
+	# false before the jump was even pressed.
+	for chunk in [15, 15, 15, 15, 15, 15]:
+		Input.action_press("move_back")
+		for i in chunk:
+			await physics_frame
+		Input.action_release("move_back")
+		for i in 20:
+			await physics_frame
+		_mark("pos=(%.1f, %.1f, %.1f) on_floor=%s vy=%.2f" % [
+			mount.global_position.x, mount.global_position.y, mount.global_position.z,
+			str(mount.is_on_floor()), mount.velocity.y])
 
 	_mark("gravity=%s speed=%s floor_max=%.1f snap=%.3f safe_margin=%.4f motion_mode=%d" % [
 		str(mount.get("_gravity")), str(mount.get("_speed")),
