@@ -131,8 +131,8 @@ Seen red first, then restored (`test_band_pickups.gd` header records it):
 | `godot --headless --path . --script tests/smoke_playground.gd` (baseline, unmodified tree) | `smoke: OK` | `Parameter "material" is null` ×4 (known-benign, alpha builds) |
 | same, with the lane's content | `smoke: OK` | `Parameter "material" is null` ×3 — same set, count varies as AGENT_WORKFLOW §6 says |
 | `tests/smoke_wild_streaming.gd` | `wild streaming: OK` | none |
-| `tests/smoke_warrens.gd` | SMOKE_WARRENS_RESULT | SMOKE_WARRENS_ERRORS |
-| `tests/smoke_relay.gd` | SMOKE_RELAY_RESULT | SMOKE_RELAY_ERRORS |
+| `tests/smoke_warrens.gd` | `warrens smoke test passed` | `Parameter "material" is null` ×1 |
+| `tests/smoke_relay.gd` | `relay: OK — the captain is beaten, the captive is freed, the Gear is carried...` | `Parameter "material" is null` ×1 |
 
 ## Visual: candy tiers and mushrooms in place
 
