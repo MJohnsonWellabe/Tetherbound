@@ -114,7 +114,21 @@ re-bake window should run `build_playground_terrain.gd` once.
 
 ## 7. Code-blind judge
 
-JUDGE_SECTION
+_The lane left this section's inline summary unfilled. It is not missing evidence: the
+code-blind verdict is committed beside this report as `JUDGE-after.md` (334 lines, four
+stands plus the contact sheet, references read). Filled in by lane W24-LANDING at landing
+time with a pointer rather than a paraphrase, so the lane's own words are not put in its
+mouth._
+
+**Read `JUDGE-after.md` directly.** Two things it says up front matter to anyone reading
+this lane's height numbers: the player figure is absent from two of the four frames
+(`place2-the-rise`, `place5-bridge-approach`), and those two were shot from a camera at
+roughly 1.05 m rather than the game's ~2.8 m third-person rig, so their bottom half is
+blurred ground and their absolute heights are ranges derived from in-frame props, not from
+the trainer. Ratios within a frame are calibration-free and are the numbers to trust. Of
+the four stands the judge calls `comp7-pond-reveal` "the only stand with a real tree-line,
+and it is good". The capture defect is in the evidence, not in the trees; a re-shoot of
+those two stands through the game camera is the open item.
 
 ## 8. Known limitations, and what was deliberately not done
 
