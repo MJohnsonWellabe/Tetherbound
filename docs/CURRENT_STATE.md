@@ -655,6 +655,19 @@ is **Meadows art direction: No / Palworld game category: Yes**. The latter is re
 the former remains the controlling visual failure: authored density, natural terrain/depth, and
 landmark-context richness are still below the reference.
 
+## 2026-09-05 — Cloudreach integrated checkpoint, acceptance still open
+
+Branch `codex/cloudreach-cliffs` contains the integrated chapter runtime and
+round 3 environment work. The exact evidence and remaining work are recorded in
+`docs/VISUAL_PARITY_PROGRESS.md` and `docs/biomes/cloudreach/`. Fresh visual
+judgment remains No/No; continuous play has reached Maela but has not completed
+Fly, the upper chapter or finale. The full unit run found missing portrait
+bindings for new payoff travelers and historical Gate F instrumentation failures;
+these are not a clean-suite claim. New main 2cd711eb1 now needs integration,
+especially its shared progression feed, HUD, combat and creature hooks. Preserve
+both implementations' behavior when resolving those overlaps. No merge to main
+or final acceptance is claimed.
+
 ## 2026-09-04 — Cloudreach checkpoint 7 / authored roadside-place pass
 
 Branch: `codex/cloudreach-cliffs`, after merging current `origin/main` at `c5a16dfb9` without

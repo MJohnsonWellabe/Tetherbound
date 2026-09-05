@@ -177,6 +177,8 @@ func _on_craft() -> void:
 func _ground_height(x: float, z: float) -> float:
 	var node: Node = get_parent()
 	while node != null:
+		if _spec.has("height") and node.has_method("ground_height_near"):
+			return float(node.call("ground_height_near", Vector3(x, float(_spec["height"]), z)))
 		if node.has_method("ground_height_at"):
 			return float(node.call("ground_height_at", x, z))
 		node = node.get_parent()

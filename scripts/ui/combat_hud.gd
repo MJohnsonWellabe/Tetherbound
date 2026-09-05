@@ -36,6 +36,9 @@ const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 const COMBAT_MATH := preload("res://scripts/combat/combat_math.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const PARTY_STRIP := preload("res://scripts/ui/party_strip.gd")
+const FEEDBACK := preload("res://scripts/creatures/progression_feed.gd")
+var progression_feed: RefCounted = null
+var _world_presentation_mode := "exploration"
 
 ## The orb cluster's fallback icon/id (spec §10.4), used only if the combat
 ## manager cannot be reached. R4.9: the real icon and name are read per-frame
@@ -260,6 +263,7 @@ func _ready() -> void:
 		(cell as PanelContainer).add_theme_stylebox_override("panel", UITokens.slot_box(false))
 
 	_party_strip = PARTY_STRIP.new()
+	_party_strip.set("progression_feedback_enabled", false)
 	$Root.add_child(_party_strip)
 	# `set_rest_position()`, not a plain `.position` write: the strip is not
 	# visible yet (`party_strip.gd::_ready()` leaves it hidden), so this both
@@ -416,6 +420,9 @@ func _quiet_panel_box() -> StyleBoxFlat:
 
 
 func _process(delta: float) -> void:
+	if _world_presentation_mode == "relays":
+		relinquish_result_presentation()
+		return
 	_tick_outcome(delta)
 	_tick_xp(delta)
 	_tick_go_text(delta)
@@ -444,6 +451,8 @@ func _process(delta: float) -> void:
 ## stopped" from every idle frame after it, which keep calling this with
 ## `visible_now=false` but must not repeat the hard cut below.
 func _show_fight(visible_now: bool, just_ended: bool = false) -> void:
+	if _party_strip != null:
+		_party_strip.set("progression_feedback_enabled", visible_now)
 	_enemy_panel.visible = visible_now
 	_ally_panel.visible = visible_now
 	_go_text.visible = visible_now
@@ -571,8 +580,9 @@ func _draw_type_tag(foe_type: String, foe_secondary: String = "") -> void:
 func _draw_enemy() -> void:
 	var foe: RefCounted = _manager.call("enemy")
 	if foe == null:
+		_enemy_eyebrow.text = ""
 		return
-	_enemy_eyebrow.text = "LEVEL %d" % int(foe.level)
+	_enemy_eyebrow.text = enemy_identity_text(foe, _manager, _director)
 	# `label()`, not `display_name`: for every wild creature in the game those
 	# are the same string, because `label()` falls back to the species name
 	# whenever there is no nickname. The one creature that has one is the
@@ -1152,6 +1162,12 @@ func _on_catch_resolved(success: bool, shakes: int) -> void:
 
 
 func _on_exited(outcome: String) -> void:
+	# Ownership survives _finish(), unlike the director's cleared trainer spec.
+	# Trainer round wins are represented by the next opponent and shared feed;
+	# no wild verdict or centre-screen result may leak into a relay objective.
+	if _world_presentation_mode == "relays" or (outcome == "won" and _manager != null and bool(_manager.get("_enemy_owned"))):
+		relinquish_result_presentation()
+		return
 	match outcome:
 		"caught":
 			# Already announced by _on_catch_resolved, which knows the name.
@@ -1171,6 +1187,35 @@ func _on_exited(outcome: String) -> void:
 	_outcome_left = 2.5
 
 
+## Optional world phase hook. Ordinary Meadows reads its manager as before.
+static func enemy_identity_text(foe: RefCounted, manager: Node, director: Node) -> String:
+	if foe == null: return ""
+	var level := "LEVEL %d" % int(foe.get("level")) if int(foe.get("level")) > 0 else ""
+	if manager == null or not bool(manager.get("_enemy_owned")): return level
+	var spec: Variant = director.get("_trainer_spec") if director != null else null
+	var owner_name := str(spec.get("name", "Trainer-owned")) if spec is Dictionary else "Trainer-owned"
+	return owner_name + (" · " + level if not level.is_empty() else "")
+
+
+func set_world_presentation_mode(mode: String) -> void:
+	_world_presentation_mode = mode if mode in ["combat", "relays", "exploration"] else "exploration"
+	if _world_presentation_mode == "relays" and is_node_ready():
+		relinquish_result_presentation()
+
+
+func relinquish_result_presentation() -> void:
+	_outcome_left = 0.0
+	_xp_left = 0.0
+	_go_left = 0.0
+	_miss_left = 0.0
+	if _outcome != null: _outcome.text = ""
+	if _xp_line != null: _xp_line.text = ""
+	if _go_text != null: _go_text.text = ""
+	if _prompt != null: _prompt.text = ""
+	if is_node_ready(): _show_fight(false, true)
+	_was_fighting = false
+
+
 ## D30's award, read off the manager for the creature that fought. `last_xp_award`
 ## is a plain public var, not a function — `.get()` reflection is not needed
 ## here, but is used anyway for consistency with `_party_entries()` above and
@@ -1183,15 +1228,21 @@ func _set_xp_line() -> void:
 	if creature == null:
 		_xp_line.text = ""
 		return
-	var all_awards: Variant = _manager.get("last_xp_award")
-	var award: Dictionary = (all_awards as Dictionary).get(creature.label(), {}) if all_awards is Dictionary else {}
+	var active_feed := progression_feed
+	if active_feed == null:
+		var game := FEEDBACK.game()
+		active_feed = game.get("progression_feed") if game != null else null
+	var event: Dictionary = active_feed.call("latest_for", creature.get_instance_id(), "xp_gained") if active_feed != null else {}
+	var level_event: Dictionary = active_feed.call("latest_for", creature.get_instance_id(), "level_up") if active_feed != null else {}
+	var levels_from_feed := int(level_event.get("levels_gained", 0)) if int(level_event.get("sequence", -1)) == int(event.get("sequence", -3)) + 1 else 0
+	var award := {"xp": event.get("amount", 0), "levels": levels_from_feed} if not event.is_empty() else {}
 	if award.is_empty():
 		_xp_line.text = ""
 		return
 	var xp := int(award.get("xp", 0))
 	var levels := int(award.get("levels", 0))
 	if levels <= 0:
-		_xp_line.text = "+%d XP" % xp
+		_xp_line.text = "+%d XP · %s · EXP %d/%d" % [xp, creature.label(), int(event.xp), int(event.xp_to_next)]
 		_xp_left = 2.4
 		return
 	# OP11: "level-up must announce identity, level, unlock". The line used to
@@ -1222,8 +1273,7 @@ func _set_xp_line() -> void:
 	# It survived because tests/test_level_up_announcement.gd asserts on the
 	# SOURCE TEXT of this function rather than running it (prompt 33's exact
 	# false-positive shape). Found by driving four real fights end to end.
-	var nodes := int(creature.call("bond_nodes", cfg)) if creature.has_method("bond_nodes") else 0
-	if PROGRESSION.trait_unlocked(nodes, cfg):
+	if bool(level_event.get("trait_unlocked", false)):
 		line += "   ·   trait unlocked"
 	_xp_line.text = "+%d XP   ·   %s" % [xp, line]
 	_xp_left = 2.4

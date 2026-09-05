@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "realm_id": "cloudreach",
+  "_integration": "Merge each npc with cloudreach_chapter.json by id through CloudreachChapter.npc_specs. This replaces the opening-only npc list. Resolve position_when first matching branch on progression restore/revision; it relocates the same body, never duplicates it. All coordinates are authored world metres and require nearest-elevation grounding. greeting_when uses the production VillageNPCs first-match rule. topic_interactions are optional nearby conversation prompts, independently guarded; they never replace a greeting. Encounter phase dialogue is triggered by the encounter controller, not the NPC greeting.",
+  "_portrait_policy": "Aila reuses her clean installed owner-reference portrait. Every other cast member explicitly uses portrait empty: DialoguePanel hides that frame and keeps the named speaker and correct installed world body. Never fall back to trainer.png, never display uncropped reference sheets, and never substitute Aila for another person's face. Dedicated clean portraits may replace the empty paths after visual review.",
+  "physical_state_flags": ["cloudreach_shrine_vane_west_aligned", "cloudreach_shrine_vane_east_aligned", "cloudreach_shrine_vane_crown_aligned"],
+  "dialogue_event_guards": [
+    {"conversation": "cloudreach_aila_arrival", "effect": "cloudreach:cloudreach_aila_arrival_complete", "event": "dialogue:cloudreach_aila_arrival_complete", "requires_flags": ["realm_key_cloudreach", "cloudreach_chapter_started"]},
+    {"conversation": "cloudreach_maela_flight_trial", "effect": "cloudreach:cloudreach_maela_flight_trial_ready", "event": "dialogue:cloudreach_maela_flight_trial_ready", "requires_flags": ["realm_key_cloudreach", "windscar_aerie_prepared"]},
+    {"conversation": "cloudreach_sora_storm_engine_truth", "effect": "cloudreach:cloudreach_sora_storm_engine_truth", "event": "dialogue:cloudreach_sora_storm_engine_truth", "requires_flags": ["cloudreach_act_i_complete", "fly_traversal_unlocked", "sky_shrine_reached", "cloudreach_shrine_vane_west_aligned", "cloudreach_shrine_vane_east_aligned", "cloudreach_shrine_vane_crown_aligned"]},
+    {"conversation": "cloudreach_neri_delivery_report", "effect": "cloudreach:side:packs_on_the_wrong_side:report_to_neri", "event": "side:packs_on_the_wrong_side:report_to_neri", "requires_flags": ["causeway_survivors_reconnected", "side_courier_pack_recovered", "side_courier_medicine_delivered"]},
+    {"conversation": "cloudreach_aila_final_reward", "effect": "cloudreach:cloudreach_aila_final_reward_complete", "event": "dialogue:cloudreach_aila_final_reward_complete", "requires_flags": ["cloudreach_act_ii_complete", "captain_veyra_defeated", "storm_anchor_network_disabled", "cloudreach_winds_restored"]}
+  ],
+  "world_payoffs": {
+    "route_signal": {"position": [-495,338.5,1310], "source": "res://assets/audio/sfx/craft_done.wav", "pitch_scale": 0.6, "interval_seconds": 24.0, "max_distance_m": 100.0},
+    "travelers": [
+      {"id":"bell_courier","name":"Bridge Courier","config_key":"courier","greeting":"cloudreach_bridge_courier","position":[-509,338.25,1307],"walk_to":[-502,338.25,1313],"reveal_any":["side_three_bells_complete","cloudreach_winds_restored"]},
+      {"id":"bell_traveler","name":"Bridge Traveler","config_key":"wandering_trainer","greeting":"cloudreach_bridge_traveler","position":[-478,338.25,1337],"walk_to":[-485,338.25,1331],"reveal_any":["side_three_bells_complete","cloudreach_winds_restored"]},
+      {"id":"shelter_traveler","name":"Shelter Traveler","config_key":"lost_traveler","greeting":"cloudreach_shelter_traveler","position":[-303,460,3100],"return_position":[-295,180,536],"return_flag":"side_stranded_couriers_complete","reveal_any":["causeway_survivors_reconnected","side_stranded_couriers_complete"]},
+      {"id":"shelter_courier","name":"Shelter Courier","config_key":"courier","greeting":"cloudreach_shelter_courier","position":[-297,460,3098],"return_position":[-292,180,536],"return_flag":"side_stranded_couriers_complete","reveal_any":["causeway_survivors_reconnected","side_stranded_couriers_complete"]},
+      {"id":"upper_traveler","name":"Cliffhold Traveler","config_key":"farmer","greeting":"cloudreach_upper_traveler","position":[-342,830,3977],"walk_to":[-336,830,3973],"reveal_any":["cloudreach_winds_restored"]},
+      {"id":"upper_courier","name":"Upper Road Courier","config_key":"courier","greeting":"cloudreach_upper_courier","position":[425,920,4499],"walk_to":[431,920,4503],"reveal_any":["cloudreach_winds_restored"]}
+    ],
+    "walk_speed_mps": 0.85,
+    "walk_pause_seconds": 5.0,
+    "survey_markers": [
+      {"id":"high_perches","flag":"side_aerie_high_perches_surveyed","position":[900,1020,2700],"label":"High Perches · safe landing"},
+      {"id":"observatory","flag":"side_aerie_observatory_surveyed","position":[430,920,4500],"label":"Observatory · safe landing"},
+      {"id":"waterward","flag":"side_aeries_complete","position":[-420,1110,5650],"label":"Waterward roost · safe landing"}
+    ],
+    "circuit_board": {"position":[-183,850,4101],"facing_degrees":180},
+    "tavi_rematch": {"id":"young_trainer_tavi_rematch","base_id":"young_trainer_tavi_upper_ring","name":"Tavi · Circuit Mastery","defeat_flag":"defeated_cloudreach_tavi_rematch","requires_flags":["side_cliff_circuit_complete","cloudreach_upper_route_unlocked"],"level_bonus":3,"reward_tier":"ace"}
+  },
+  "npcs": [
+    {
+      "id": "warden_aila", "portrait": "res://assets/ui/portraits/cloudreach_aila_clean.png", "portrait_mode": "clean_owner_reference", "facing_deg": 180.0,
+      "greeting": "cloudreach_aila_arrival",
+      "greeting_when": [
+        {"if_flag": "cloudreach_chapter_complete", "conversation": "cloudreach_aila_after_restoration"},
+        {"if_flag": ["cloudreach_act_ii_complete", "captain_veyra_defeated", "storm_anchor_network_disabled", "cloudreach_winds_restored"], "conversation": "cloudreach_aila_final_reward"},
+        {"if_flag": "causeway_survivors_reconnected", "conversation": "cloudreach_aila_act_two"},
+        {"if_flag": "cloudreach_crisis_learned", "conversation": "cloudreach_aila_anchor_reminder"}
+      ],
+      "position_when": [{"if_flag": "cloudreach_winds_restored", "position": [-414.0, 1110.0, 5644.0], "region_id": "summit_final_stronghold"}]
+    },
+    {
+      "id": "healer_iven", "portrait": "", "portrait_mode": "hidden_until_clean_portrait", "facing_deg": 90.0,
+      "greeting": "cloudreach_iven_waycamp",
+      "greeting_when": [{"if_flag": "cloudreach_winds_restored", "conversation": "cloudreach_iven_after_restoration"}]
+    },
+    {
+      "id": "bridgekeeper_orrin", "portrait": "", "portrait_mode": "hidden_until_clean_portrait", "facing_deg": 180.0,
+      "greeting": "cloudreach_orrin_bridge",
+      "greeting_when": [
+        {"if_flag": "cloudreach_winds_restored", "conversation": "cloudreach_orrin_route_open"},
+        {"if_flag": "side_three_bells_complete", "conversation": "cloudreach_orrin_bells_complete"},
+        {"if_flag": "causeway_survivors_reconnected", "conversation": "cloudreach_orrin_three_bells"}
+      ]
+    },
+    {
+      "id": "courier_neri", "portrait": "", "portrait_mode": "hidden_until_clean_portrait", "facing_deg": 180.0,
+      "greeting": "cloudreach_neri_stranded",
+      "greeting_when": [
+        {"if_flag": "side_stranded_couriers_complete", "conversation": "cloudreach_neri_home"},
+        {"if_flag": ["causeway_survivors_reconnected", "side_courier_pack_recovered", "side_courier_medicine_delivered"], "conversation": "cloudreach_neri_delivery_report"},
+        {"if_flag": "side_courier_pack_recovered", "conversation": "cloudreach_neri_pack_return"}
+      ],
+      "position_when": [{"if_flag": "side_courier_medicine_delivered", "position": [-296.0, 180.0, 534.0], "region_id": "gate_lower_cliffs"}]
+    },
+    {
+      "id": "keeper_maela", "portrait": "", "portrait_mode": "hidden_until_clean_portrait", "facing_deg": 135.0,
+      "greeting": "cloudreach_maela_aerie",
+      "greeting_when": [
+        {"if_flag": "cloudreach_winds_restored", "conversation": "cloudreach_maela_after_restoration"},
+        {"if_flag": "fly_traversal_unlocked", "conversation": "cloudreach_maela_fly_unlocked"},
+        {"if_flag": "cloudreach_act_i_complete", "conversation": "cloudreach_maela_trial_reminder"},
+        {"if_flag": ["realm_key_cloudreach", "windscar_aerie_prepared"], "conversation": "cloudreach_maela_flight_trial"}
+      ]
+    },
+    {
+      "id": "naturalist_sora", "portrait": "", "portrait_mode": "hidden_until_clean_portrait", "facing_deg": -90.0,
+      "greeting": "cloudreach_sora_shrine",
+      "greeting_when": [
+        {"if_flag": ["storm_anchor_engine_truth_learned", "side_aeries_complete"], "conversation": "cloudreach_sora_aeries_complete"},
+        {"if_flag": "storm_anchor_engine_truth_learned", "conversation": "cloudreach_sora_aeries"},
+        {"if_flag": ["cloudreach_act_i_complete", "fly_traversal_unlocked", "sky_shrine_reached", "cloudreach_shrine_vane_west_aligned", "cloudreach_shrine_vane_east_aligned", "cloudreach_shrine_vane_crown_aligned"], "conversation": "cloudreach_sora_storm_engine_truth"}
+      ]
+    },
+    {
+      "id": "trader_kelm", "portrait": "", "portrait_mode": "hidden_until_clean_portrait", "facing_deg": 90.0,
+      "greeting": "cloudreach_kelm_cliffhold",
+      "greeting_when": [{"if_flag": "cloudreach_winds_restored", "conversation": "cloudreach_kelm_after_restoration"}],
+      "topic_interactions": [{"id": "kelm_material_advice", "label": "Ask Kelm about cliff materials", "conversation": "cloudreach_kelm_resource_tier", "requires_flags": ["cloudreach_upper_route_unlocked"], "offset": [1.8, 0.0, 0.0]}]
+    },
+    {
+      "id": "young_trainer_tavi", "portrait": "", "portrait_mode": "hidden_until_clean_portrait", "facing_deg": 180.0,
+      "greeting": "cloudreach_tavi_circuit",
+      "greeting_when": [
+        {"if_flag": "defeated_cloudreach_tavi_rematch", "conversation": "cloudreach_tavi_rematch_complete"},
+        {"if_flag": "side_cliff_circuit_complete", "conversation": "cloudreach_tavi_defeated"},
+        {"if_flag": ["side_cliff_circuit_windscar", "cloudreach_upper_route_unlocked"], "conversation": "cloudreach_tavi_challenge"}
+      ]
+    },
+    {
+      "id": "defector_rusk", "portrait": "", "portrait_mode": "hidden_until_clean_portrait", "facing_deg": 180.0,
+      "greeting": "cloudreach_rusk_observatory",
+      "greeting_when": [{"if_flag": "cloudreach_winds_restored", "conversation": "cloudreach_rusk_after_restoration"}],
+      "topic_interactions": [{"id": "rusk_anchor_advice", "label": "Ask Rusk about the upper defenses", "conversation": "cloudreach_rusk_upper_anchor_warning", "requires_flags": ["cloudreach_act_ii_complete"], "offset": [1.8, 0.0, 0.0]}]
+    },
+    {
+      "id": "officer_voss", "portrait": "", "portrait_mode": "hidden_until_clean_portrait", "facing_deg": 180.0,
+      "greeting": "cloudreach_voss_challenge",
+      "greeting_when": [{"if_flag": "defeated_cloudreach_voss", "conversation": "cloudreach_voss_defeated"}]
+    },
+    {
+      "id": "captain_veyra", "portrait": "", "portrait_mode": "hidden_until_clean_portrait", "facing_deg": 180.0,
+      "greeting": "cloudreach_veyra_prebattle",
+      "greeting_when": [{"if_flag": "captain_veyra_defeated", "conversation": "cloudreach_veyra_defeated"}],
+      "encounter_dialogue": [{"encounter_id": "captain_veyra_storm_anchor", "phase_id": "anchor_overload", "conversation": "cloudreach_veyra_phase_change"}]
+    }
+  ]
+}

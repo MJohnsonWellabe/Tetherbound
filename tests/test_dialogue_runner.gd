@@ -127,11 +127,47 @@ func test_every_conversation_has_a_speaker_and_a_portrait_that_is_really_there()
 		var line: Dictionary = probe.line()
 		assert_ne(str(line.get("speaker")), "", "'%s' has no speaker name" % id)
 		var portrait := str(line.get("portrait"))
+		# Cloudreach explicitly hides an unavailable clean portrait beside the
+		# correct named world body. Only a mapped conversation/speaker pair may
+		# use this presentation; missing portraits elsewhere remain failures.
+		if portrait.is_empty() and _cloudreach_hides_portrait(id, str(line.get("speaker"))):
+			continue
 		assert_ne(portrait, "", "'%s' has no portrait" % id)
 		assert_true(
 			ResourceLoader.exists(portrait),
 			"'%s' points at a portrait that is not on disk: %s" % [id, portrait]
 		)
+
+
+func _cloudreach_hides_portrait(id: String, speaker: String) -> bool:
+	var runtime: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
+		"res://data/config/cloudreach_npc_runtime.json"))
+	var chapter: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
+		"res://data/config/cloudreach_chapter.json"))
+	for spec: Dictionary in runtime.get("npcs", []):
+		if spec.get("portrait_mode", "") != "hidden_until_clean_portrait" or spec.get("portrait", "") != "":
+			continue
+		var ids: Array = [spec.get("greeting", "")]
+		for branch: Dictionary in spec.get("greeting_when", []):
+			ids.append(branch.get("conversation", ""))
+		for topic: Dictionary in spec.get("topic_interactions", []):
+			ids.append(topic.get("conversation", ""))
+		for cue: Dictionary in spec.get("encounter_dialogue", []):
+			ids.append(cue.get("conversation", ""))
+		if not ids.has(id):
+			continue
+		for authored: Dictionary in chapter.get("npcs", []):
+			if authored["id"] == spec["id"]:
+				return authored["name"] == speaker
+	return false
+
+
+func test_hidden_cloudreach_portrait_policy_is_specific_to_named_cast_conversations() -> void:
+	assert_true(_cloudreach_hides_portrait("cloudreach_iven_waycamp", "Iven"))
+	assert_false(_cloudreach_hides_portrait("cloudreach_iven_waycamp", "Grandpa"))
+	assert_false(_cloudreach_hides_portrait("grandpa_house", "Grandpa"))
+	assert_false(_cloudreach_hides_portrait("cloudreach_missing_conversation", "Iven"))
+	assert_false(_cloudreach_hides_portrait("cloudreach_aila_arrival", "Warden Aila"))
 
 
 ## Grandpa's first-catch conversation hands over a generous Basic Orb supply

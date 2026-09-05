@@ -298,6 +298,16 @@ func test_every_unlock_flag_named_by_a_recipe_is_actually_written_by_something()
 	const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
 	const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 	var written: Array[String] = []
+	# Cloudreach arrival is a real world event, not a conversation reward.
+	# Exercise the chapter transition instead of accepting arbitrary flag text.
+	const CLOUDREACH := preload("res://scripts/world/cloudreach_chapter.gd")
+	var arrival_progression: RefCounted = PROGRESSION_STATE.new()
+	arrival_progression.set_flag("realm_key_cloudreach")
+	CLOUDREACH.apply_event(arrival_progression,
+		_load_json("res://data/config/cloudreach_chapter.json"), "arrival_anchor_reached")
+	for earned: String in arrival_progression.all_set():
+		if earned != "realm_key_cloudreach":
+			written.append(earned)
 	for entry: Variant in TRAINERS.trainers():
 		for flag: String in TRAINERS.reward_flags(entry as Dictionary):
 			written.append(flag)
@@ -564,6 +574,8 @@ func test_no_recipe_anywhere_needs_a_third_progression_material() -> void:
 		"potion_small", "potion_large", "revive", "coin", "axe", "pickaxe", "hammer",
 		"knife", "fishing_rod"]
 	for id in db.recipe_ids():
+		if str(db.recipe(str(id)).get("realm_id", "meadows")) != "meadows":
+			continue # Cloudreach recipes must not add a Meadows stronghold cost.
 		for requirement in (db.recipe(str(id)).get("cost", []) as Array):
 			var ingredient := str((requirement as Dictionary).get("id", ""))
 			assert_true(MATERIALS.has(ingredient) or CRAFTED_OR_GIVEN.has(ingredient),
@@ -576,7 +588,7 @@ func test_no_recipe_anywhere_needs_a_third_progression_material() -> void:
 func test_no_recipe_id_is_defined_in_two_tier_files() -> void:
 	var seen: Array[String] = []
 	for path in ["res://data/recipes/recipes.json", "res://data/recipes/recipes_rootstone.json",
-			"res://data/recipes/recipes_ironwood.json"]:
+			"res://data/recipes/recipes_ironwood.json", "res://data/recipes/recipes_cloudreach.json"]:
 		var file := FileAccess.open(path, FileAccess.READ)
 		assert_true(file != null, "%s is missing" % path)
 		var parsed: Variant = JSON.parse_string(file.get_as_text())

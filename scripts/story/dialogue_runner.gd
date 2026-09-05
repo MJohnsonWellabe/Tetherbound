@@ -28,6 +28,7 @@ const VILLAGE_DIALOGUE_PATH := "res://data/dialogue/village.json"
 ## Listed together so a fourth file is one array entry rather than a third
 ## copy of the merge loop.
 const EXTRA_DIALOGUE_PATHS := [
+	"res://data/dialogue/cloudreach.json",
 	VILLAGE_DIALOGUE_PATH,
 	"res://data/dialogue/trainers.json",
 	# SE27's captive at the relay station. A fourth file exactly as the note

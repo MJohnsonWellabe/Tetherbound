@@ -42,6 +42,10 @@ var _heart_material: StandardMaterial3D = null
 var _socket_material: StandardMaterial3D = null
 var _heart_light: OmniLight3D = null
 var _built := false
+var _observed_progression: RefCounted = null
+var _observed_hearts: RefCounted = null
+var _progression_revision := -1
+var _heart_revision := -1
 
 
 ## Configure before adding the shrine to the scene tree.  Calling it later is
@@ -82,6 +86,16 @@ func current_state() -> String:
 	return state_for(_game())
 
 
+func _process(_delta: float) -> void:
+	var game := _game()
+	var progression := _progression(game)
+	var hearts := _realm_hearts(game)
+	if progression != _observed_progression or hearts != _observed_hearts \
+			or (progression != null and int(progression.get("revision")) != _progression_revision) \
+			or (hearts != null and int(hearts.get("revision")) != _heart_revision):
+		_refresh(game)
+
+
 ## `Game.load_game()` calls this on every member of `progression_restore` after
 ## replacing the durable flag/state objects.  Nothing is cached across it.
 func restore_progression_from_game(game: Node) -> void:
@@ -101,11 +115,14 @@ func _on_activated() -> void:
 
 	match state_for(game):
 		STATE_EARNED_UNPLACED:
-			hearts.call("place", heart_id, progression)
+			if bool(hearts.call("place", heart_id, progression)):
+				_announce(game, "%s placed. %s Only one Heart power can be active." % [heart_name, _power_description(hearts)])
 		STATE_PLACED_INACTIVE:
-			hearts.call("activate", heart_id, progression)
+			if bool(hearts.call("activate", heart_id, progression)):
+				_announce(game, "%s active. %s Only one Heart power can be active." % [heart_name, _power_description(hearts)])
 		STATE_ACTIVE:
 			hearts.call("clear_active")
+			_announce(game, "%s power released. No Heart power is active." % heart_name)
 		_:
 			return
 	_refresh(game)
@@ -114,24 +131,44 @@ func _on_activated() -> void:
 func _refresh(game: Node) -> void:
 	if not _built or _prompt == null:
 		return
+	_observed_progression = _progression(game)
+	_observed_hearts = _realm_hearts(game)
+	_progression_revision = int(_observed_progression.get("revision")) if _observed_progression != null else -1
+	_heart_revision = int(_observed_hearts.get("revision")) if _observed_hearts != null else -1
 	var state := state_for(game)
+	# Keep the power and replacement rule readable for as long as the player
+	# stands at the shrine, including when a save already has it placed.
+	var details := ""
+	if _observed_hearts != null:
+		details = "\n%s\nOnly one Heart power can be active." % _power_description(_observed_hearts)
 	match state:
 		STATE_UNEARNED:
 			_prompt.call("configure", "The Meadows shrine is waiting", interaction_radius, true)
 			_prompt.set("actionable", false)
 			_set_visual(false, false, false)
 		STATE_EARNED_UNPLACED:
-			_prompt.call("configure", "Place %s" % heart_name, interaction_radius, true)
+			_prompt.call("configure", "Place %s%s" % [heart_name, details], interaction_radius, true)
 			_prompt.set("actionable", true)
 			_set_visual(true, false, false)
 		STATE_PLACED_INACTIVE:
-			_prompt.call("configure", "Activate %s" % heart_name, interaction_radius, true)
+			_prompt.call("configure", "Activate %s%s" % [heart_name, details], interaction_radius, true)
 			_prompt.set("actionable", true)
 			_set_visual(true, true, false)
 		STATE_ACTIVE:
-			_prompt.call("configure", "Release %s power" % heart_name, interaction_radius, true)
+			_prompt.call("configure", "Release %s power%s" % [heart_name, details], interaction_radius, true)
 			_prompt.set("actionable", true)
 			_set_visual(true, true, true)
+
+
+func _power_description(hearts: RefCounted) -> String:
+	var spec: Dictionary = hearts.call("heart", heart_id)
+	var power: Dictionary = spec.get("power", {})
+	return str(power.get("description", ""))
+
+
+func _announce(game: Node, message: String) -> void:
+	if game.has_method("push_world_message"):
+		game.call("push_world_message", message)
 
 
 func _set_visual(heart_visible: bool, placed: bool, active: bool) -> void:

@@ -30,6 +30,7 @@ extends RefCounted
 ## move a buildable's cost and both beats move with it for free.
 
 const CONFIG_PATH := "res://data/config/progression.json"
+const WORLD_RECORDS := preload("res://scripts/world/realm_world_records.gd")
 
 static var _config: Dictionary = {}
 
@@ -64,7 +65,7 @@ static func required_pieces(cfg: Dictionary = {}) -> Dictionary:
 static func pieces_built(placed_buildings: Array) -> Dictionary:
 	var counts := {}
 	for entry: Variant in placed_buildings:
-		if typeof(entry) != TYPE_DICTIONARY:
+		if not WORLD_RECORDS.belongs(entry, "meadows") or bool(entry.get("removed", false)):
 			continue
 		var id := str((entry as Dictionary).get("id", ""))
 		if id.is_empty():

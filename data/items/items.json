@@ -19,6 +19,88 @@
   "_comment_armor": "R7.7. GAME_DESIGN.md sec18's five trainer equipment slots (Helmet, Upper body, Lower body, Boots, Backpack) -- 'trainer armor protects the human, not creatures'. `kind: \"armor\"` items are worn, not spent (`stack: 1`, same as a tool), and carry two fields nothing else in this file uses: `armor_slot` (one of the five slot names scripts/player/player_equipment.gd knows) and `defense` (a 0..1 fraction of incoming damage the piece alone soaks, summed across every equipped piece and capped by player_equipment.gd's own MAX_TOTAL_DEFENSE). CLAUDE.md's hard rules bound this on purpose: no shields (this is passive damage reduction, never a block/parry verb), and the human still cannot fight (nothing here is a weapon or adds an attack). The only real damage source the Meadows has today is a fall (player_vitals.gd's own fall-damage curve), so that is the one thing armor reduces so far; GAME_DESIGN.md's 'later biomes require gear' line is explicitly Biome-2 scope and stays unbuilt. Icons are original flat silhouettes (tools/gen_item_icons.py, spec sec21's sanctioned 'simple generated vector icons for game-specific concepts') -- neither vendored Kenney icon pack this project uses has a clothing/armor glyph to reuse.",
   "_comment_saddle_frame": "SD18/R6.2. An intermediate crafted component, not a gathered resource -- `kind: material` says so without inventing a branch nothing reads yet (same 'descriptive only' rule `coin`'s `kind: currency` documents). Consumed later by the Riding Saddle (R6.2, spec Band 4) once the saddle recipe itself is built; this item and the recipe that makes it are SD18's whole contribution toward that -- no riding code, no mount/dismount, nothing here reads or writes anything about a creature.",
   "items": {
+    "windworn_heartwood": {
+      "name": "Windworn Heartwood",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#9c7953",
+      "icon": "res://assets/ui/icons/items/wood.png",
+      "blurb": "Close-grained cliff timber.",
+      "description": "Close-grained cliff timber. Reinforce gathering tools or cut it into ordinary wood for tents, beds and camp repairs.",
+      "gathered_with": "axe"
+    },
+    "cliffglass_ore": {
+      "name": "Cliffglass Ore",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#88b5bd",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Pale blue mineral threaded through warm cliffstone.",
+      "description": "Pale blue mineral threaded through warm cliffstone. Brace existing tools with Windworn Heartwood.",
+      "gathered_with": "pickaxe"
+    },
+    "gale_fiber": {
+      "name": "Gale Fiber",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#bdbe77",
+      "icon": "res://assets/ui/icons/items/fiber.png",
+      "blurb": "Long wiry strands from cliff grass.",
+      "description": "Long wiry strands from cliff grass. Separate into ordinary fiber for tent ties, bedding and camp repairs.",
+      "gathered_with": "knife"
+    },
+    "skyplume": {
+      "name": "Skyplume",
+      "kind": "resource",
+      "stack": 30,
+      "colour": "#d3dfea",
+      "icon": "res://assets/ui/icons/items/fiber.png",
+      "blurb": "A naturally shed highland plume, never a hunting reward.",
+      "description": "A naturally shed highland plume, never a hunting reward. Bind it with Gale Fiber into soft camp bedding."
+    },
+    "sunleaf": {
+      "name": "Sunleaf",
+      "kind": "resource",
+      "stack": 30,
+      "colour": "#dec864",
+      "icon": "res://assets/ui/icons/items/fiber.png",
+      "blurb": "A fragrant golden alpine herb.",
+      "description": "A fragrant golden alpine herb. Steep with Cloudberries for a Ridge Tonic or prepare a sustaining trail meal."
+    },
+    "cloudberry": {
+      "name": "Cloudberry",
+      "kind": "food",
+      "stack": 30,
+      "colour": "#e5b564",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "Golden highland berries.",
+      "description": "Golden highland berries. Restore 20 satiety or share with a creature through the ordinary feeding and bonding system.",
+      "satiety": 20,
+      "creature_food": {
+        "nourishment": 35,
+        "happiness": 9
+      }
+    },
+    "cloudreach_trail_preserve": {
+      "name": "Cloudberry Trail Preserve",
+      "kind": "food",
+      "stack": 20,
+      "colour": "#dd9e55",
+      "satiety": 35,
+      "creature_food": {
+        "nourishment": 55,
+        "happiness": 12
+      },
+      "buff": {
+        "id": "cloudreach_trail_verve",
+        "stat": "stamina_regen_scale",
+        "amount": 1.3,
+        "duration_s": 240
+      },
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "A sustaining meal with four minutes of faster stamina recovery.",
+      "description": "Restores 35 satiety and improves stamina regeneration by 30% for four minutes, or makes a nourishing shared creature meal. It does not prevent wind or fall damage."
+    },
     "coin": {
       "name": "Coin",
       "kind": "currency",
@@ -598,6 +680,8 @@
       "stack": 1,
       "colour": "#b9d6ea",
       "icon": "res://assets/ui/icons/items/tm_quick.png",
+      "world_model": "res://assets/props/tm_orb/tm_orb.glb",
+      "world_model_scale": 0.42,
       "blurb": "A visible cutting edge of compressed air.",
       "description": "A visible cutting edge of compressed air. Teaching it spends the disc, and it replaces whatever sits in that creature's quick slot.",
       "move": "wind_blade"
@@ -608,6 +692,8 @@
       "stack": 1,
       "colour": "#a7c9e2",
       "icon": "res://assets/ui/icons/items/tm_charged.png",
+      "world_model": "res://assets/props/tm_orb/tm_orb.glb",
+      "world_model_scale": 0.42,
       "blurb": "A dash so fast the strike lands before the movement reads.",
       "description": "A dash so fast the strike lands before the movement reads. Teaching it spends the disc, and it replaces whatever sits in that creature's charged slot.",
       "move": "aerial_flash"
@@ -628,6 +714,8 @@
       "stack": 1,
       "colour": "#7aa9cc",
       "icon": "res://assets/ui/icons/items/tm_charged.png",
+      "world_model": "res://assets/props/tm_orb/tm_orb.glb",
+      "world_model_scale": 0.42,
       "blurb": "Everything the sky has, at once. Very rare.",
       "description": "Everything the sky has, at once. Very rare. Teaching it spends the disc, and it replaces whatever sits in that creature's charged slot.",
       "move": "heavenfall"

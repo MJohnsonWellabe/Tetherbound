@@ -170,3 +170,33 @@ remains **Meadows art direction No / Palworld game category Yes**: the authored 
 human-scale grounding, but broad empty platforms, simple cliff faces, pale voids, and repeated
 straight corridors still dominate. Next: larger middle-distance clusters, terraces/recesses,
 constructed route edges, atmospheric layers, and visible artifact repair—not more uniform scatter.
+
+## Cloudreach integrated chapter / round 3 checkpoint — 2026-09-05
+
+The chapter runtime now mounts the main story, cast, trainers, resources, camps,
+Fly trial and temporary non-owned carrier, realm saves/building/recovery, finale,
+and persistent side-world payoffs. This is an implementation checkpoint, not
+chapter acceptance. Full continuous evidence currently reaches Maela; the moving
+challenge prompt is under investigation. Fly, upper routes and the finale remain
+unproven as one uninterrupted path. Separate production payoff checks pass 57/57;
+the production finale regression passes 62/62. Trainer-only powers 24/28/32/36
+produced 28/28 real-input wins plus a real wipe/recovery/retry; finale hazards were
+not included in that balance probe.
+
+Round 3 real production captures are in
+`ralph/reports/CLOUDREACH-ENV-CORRECTION-0904/round3/`. Fresh Astra judgment is
+**Meadows reference No / Palworld reference No** (`JUDGE-ASTRA.md`): repetitive pale
+cliffs, rigid path borders, bare ground and sparse landmark settings remain.
+The causeway frame is obstructed; the airborne and payoff capture harness fixes
+are prepared but have not yet produced acceptable replacement evidence.
+
+Ten views at 1280×800 on Windows/GTX 1060 measured a maximum 4,293 draws and
+7.60M primitives. Three ten-second static samples measured means 8.59–11.26 ms
+and p95 8.74–11.47 ms. These are local static-view results, not Ally or continuous
+frame-pacing acceptance. Creatures remain deferred; final visual acceptance is
+external ChatGPT review.
+
+Resume: preserve this checkpoint, merge `origin/main` 2cd711eb1 (new Meadows
+progression/UI/combat/companion/VFX/portrait/route work), reconcile shared APIs,
+run regression checks, finish the continuous chapter and corrected real Fly/
+payoff evidence, then implement the next geometry/material/composition pass.

@@ -1,0 +1,16 @@
+{
+  "near_thresholds": {"battles_fought": 5, "landmarks_visited_together": 1, "distance_m_together": 400, "rest_nights_together": 1, "feeds_together": 2},
+  "task_labels": {"battles_fought": "won", "landmarks_visited_together": "discovered", "distance_m_together": "travelled", "rest_nights_together": "rested", "feeds_together": "fed"},
+  "xp_near_threshold": 30,
+  "xp_near_fights": 1.0,
+  "tick_seconds": 0.9,
+  "near_pulse_seconds": 1.6,
+  "moment_seconds": 3.0,
+  "moment_cooldown_seconds": 5.0,
+  "safe_area_inset": 0.05,
+  "moment_font_size": 24,
+  "detail_font_size": 18,
+  "level_sound": "progression_level_up",
+  "bond_sound": "progression_bond_milestone",
+  "fly_route_bond_meters": 25.0
+}

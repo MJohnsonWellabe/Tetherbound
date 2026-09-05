@@ -17,6 +17,8 @@ extends RefCounted
 ## draws from `progression.gd`.
 
 const CONFIG_PATH := "res://data/config/bond_milestones.json"
+const FEEDBACK := preload("res://scripts/creatures/progression_feed.gd")
+const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 
 static var _config: Dictionary = {}
 
@@ -97,22 +99,87 @@ static func progress_text(creature: RefCounted, cfg: Dictionary) -> String:
 static func credit_landmark_visit(creature: RefCounted) -> void:
 	if creature == null:
 		return
-	creature.set("landmarks_visited_together", int(creature.get("landmarks_visited_together")) + 1)
+	credit(creature, "landmarks_visited_together", 1)
 
 
-static func credit_distance(creature: RefCounted, meters: float) -> void:
+static func credit_distance(creature: RefCounted, meters: float, source: String = "") -> void:
 	if creature == null or meters <= 0.0:
 		return
-	creature.set("distance_m_together", float(creature.get("distance_m_together")) + meters)
+	credit(creature, "distance_m_together", meters, source)
 
 
 static func credit_rest_night(creature: RefCounted) -> void:
 	if creature == null:
 		return
-	creature.set("rest_nights_together", int(creature.get("rest_nights_together")) + 1)
+	credit(creature, "rest_nights_together", 1)
 
 
 static func credit_feed(creature: RefCounted) -> void:
 	if creature == null:
 		return
-	creature.set("feeds_together", int(creature.get("feeds_together")) + 1)
+	credit(creature, "feeds_together", 1)
+
+
+static func credit_battle(creature: RefCounted) -> void:
+	credit(creature, "battles_fought", 1)
+
+
+static func credit(creature: RefCounted, task: String, amount: float, source: String = "") -> void:
+	if creature == null or amount <= 0:
+		return
+	var before := float(creature.get(task))
+	var previous_tier := tier(creature, config())
+	var after := before + amount
+	creature.set(task, after if task == "distance_m_together" else int(after))
+	for milestone: Dictionary in milestones(config()):
+		if str(milestone.task) != task:
+			continue
+		var target := float(milestone.target)
+		FEEDBACK.publish(creature, {"kind": "bond_credit", "task_id": task, "before": before,
+			"after": after, "target": target, "source": source})
+		var threshold := float(FEEDBACK.config().near_thresholds.get(task, 0))
+		if before < target - threshold and after >= target - threshold and after < target:
+			FEEDBACK.publish(creature, {"kind": "bond_near", "task_id": task, "remaining": target - after})
+	var next_tier := tier(creature, config())
+	for node_index in range(previous_tier + 1, next_tier + 1):
+		var task_id := str(milestones(config())[node_index - 1].task)
+		FEEDBACK.publish(creature, {"kind": "bond_milestone", "node_index": node_index,
+			"task_id": task_id, "benefit": benefit_for(node_index, creature),
+			"trait_unlocked": node_index == int(PROGRESSION.config().get("traits", {}).get("unlock_bond_nodes", 5)),
+			"evolution_ready": FEEDBACK.evolution_ready(creature)})
+
+
+static func benefit_for(node_index: int, creature: RefCounted = null) -> String:
+	var cfg := PROGRESSION.config()
+	var benefit := "+%d%% attack and defence" % int(round(float(cfg.get("bond", {}).get("effects_per_node", {}).get("attack_scale", 0.01)) * 100))
+	if node_index == int(cfg.get("traits", {}).get("unlock_bond_nodes", 5)):
+		benefit += " · second trait revealed"
+	var evolution: Dictionary = cfg.get("evolution", {}).get(str(creature.get("species_id")), {}) if creature != null else {}
+	if not evolution.is_empty() and node_index == int(evolution.get("bond_tier", -1)):
+		benefit += " · evolution bond requirement met"
+	return benefit
+
+
+static func all_progress_text(creature: RefCounted) -> String:
+	var lines: PackedStringArray = []
+	var reached := tier(creature, config())
+	var index := 0
+	for milestone: Dictionary in milestones(config()):
+		var have := minf(float(creature.get(str(milestone.task))), float(milestone.target))
+		var state := "done" if index < reached else ("next" if index == reached else ("ready; earlier task first" if have >= float(milestone.target) else "counts now; later node"))
+		lines.append("%d/%d %s · %s" % [int(have), int(milestone.target), milestone.name, state])
+		index += 1
+	if reached < milestones(config()).size():
+		lines.append("Next action: " + next_action_text(creature))
+		lines.append("Next benefit: " + benefit_for(reached + 1, creature))
+	return "\n".join(lines)
+
+
+static func next_action_text(creature: RefCounted) -> String:
+	var milestone := current(creature, config())
+	if milestone.is_empty():
+		return "All five bond tasks complete"
+	var remaining := maxi(0, ceili(float(milestone.target) - float(creature.get(str(milestone.task)))))
+	var actions := {"battles_fought": "Win %d more battles together", "landmarks_visited_together": "Discover %d more landmarks together",
+		"distance_m_together": "Travel %d more metres together", "rest_nights_together": "Complete %d more nights in a creature bed", "feeds_together": "Share %d more meals"}
+	return str(actions.get(milestone.task, "%d more shared actions")) % remaining

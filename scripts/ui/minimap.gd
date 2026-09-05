@@ -107,10 +107,19 @@ func _init() -> void:
 ## `terrain` is a texture from `map_baker.gd::bake()`/`bake_cached()`.
 func configure(map_state: RefCounted, terrain: Texture2D, span_m: float = 90.0) -> void:
 	_map_state = map_state
+	var bounds := bounds_for_map(map_state)
+	_world_min = Vector2(float(bounds["min_x"]), float(bounds["min_z"]))
+	_world_max = Vector2(float(bounds["max_x"]), float(bounds["max_z"]))
 	_terrain_texture = terrain
 	_span_m = span_m
 	_last_fog_revision = -1 # force the fog texture to rebuild on the next draw
 	queue_redraw()
+
+
+static func bounds_for_map(map_state: RefCounted) -> Dictionary:
+	if map_state != null and map_state.has_method("world_bounds"):
+		return map_state.call("world_bounds")
+	return WORLD_EXTENT.bounds()
 
 
 ## Called once a frame by whatever owns the HUD. Cheap by design: redraw is

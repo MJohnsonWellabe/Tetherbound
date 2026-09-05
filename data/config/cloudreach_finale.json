@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "encounter_id": "captain_veyra_storm_anchor",
+  "arena_landmark_id": "summit_eyrie_stronghold",
+  "arena_origin": [100.0, 1160.0, 5450.0],
+  "arena_radius_m": 36.0,
+  "arena_height_tolerance_m": 7.0,
+  "requires_flags": ["cloudreach_act_ii_complete", "cloudreach_upper_anchors_disabled", "summit_extraction_engine_reached"],
+  "captain_victory_flag": "captain_veyra_defeated",
+  "captain_victory_event": "encounter:captain_veyra_storm_anchor_won",
+  "network_flag": "storm_anchor_network_disabled",
+  "network_event": "summit_engine_relays_disabled",
+  "aftermath_flag": "cloudreach_winds_restored",
+  "aftermath_event": "aftermath:cloudreach_winds_restored",
+  "wind": {
+    "lane_offsets_m": [-19.0, 0.0, 19.0],
+    "lane_half_width_m": 3.2,
+    "rotation_degrees_per_second": 8.0,
+    "acceleration_mps2": 9.0,
+    "max_push_speed_mps": 7.0,
+    "cycle_seconds": 6.0,
+    "telegraph_seconds": 1.4,
+    "recovery_window_seconds": 1.5
+  },
+  "relay_arc": {
+    "inner_radius_m": 14.0,
+    "outer_radius_m": 33.0,
+    "sector_half_angle_degrees": 18.0,
+    "rotation_degrees_per_second": -14.0,
+    "cycle_seconds": 5.0,
+    "telegraph_seconds": 1.6,
+    "recovery_window_seconds": 1.4,
+    "repulsion_acceleration_mps2": 18.0,
+    "max_push_speed_mps": 10.0
+  },
+  "lee_pockets": [
+    {"id": "west_lee", "offset": [-20.0, 0.0, -12.0], "radius_m": 5.5},
+    {"id": "crown_lee", "offset": [0.0, 0.0, 24.0], "radius_m": 5.5},
+    {"id": "east_lee", "offset": [20.0, 0.0, -12.0], "radius_m": 5.5}
+  ],
+  "relays": [
+    {"id": "west", "offset": [-29.0, 0.0, 4.0], "flag_id": "cloudreach_summit_relay_west_disabled"},
+    {"id": "crown", "offset": [0.0, 0.0, -29.0], "flag_id": "cloudreach_summit_relay_crown_disabled"},
+    {"id": "east", "offset": [29.0, 0.0, 4.0], "flag_id": "cloudreach_summit_relay_east_disabled"}
+  ],
+  "relay_interaction_radius_m": 3.8,
+  "recovery": {
+    "current_radius_m": 53.0,
+    "current_below_deck_m": 3.0,
+    "handoff_below_deck_m": 27.0,
+    "lift_speed_mps": 15.0,
+    "inward_speed_mps": 10.0,
+    "safe_camp_id": "summit_bivouac",
+    "safe_position": [-520.0, 1080.2, 5300.0]
+  },
+  "aftermath_witness": {
+    "position": [-420.0, 1110.0, 5650.0],
+    "radius_m": 8.0,
+    "height_tolerance_m": 4.0
+  }
+}

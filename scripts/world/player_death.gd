@@ -12,6 +12,7 @@ extends Node3D
 ## logic living inside the world script itself.
 
 const DEATH_SATCHEL := preload("res://scripts/world/death_satchel.gd")
+const WORLD_RECORDS := preload("res://scripts/world/realm_world_records.gd")
 
 const FADE_SECONDS := 1.2
 const MAP_ICON := "death_satchel"
@@ -31,6 +32,16 @@ var _world: Node3D = null
 var _player: CharacterBody3D = null
 var _fallback_home: Vector3 = Vector3.ZERO
 var _satchel_count: int = 0
+var _recovery_camps: Array = []
+var _recovery_ground: Callable = Callable()
+
+
+## World may inject already-resolved authored camps, or the canonical chapter
+## camps plus a nearest-elevation ground callback (Vector3 -> float or Vector3).
+## No checkpoint is earned here; each camp's real prerequisite remains binding.
+func configure_recovery(camps: Array, ground_resolver: Callable = Callable()) -> void:
+	_recovery_camps = camps.duplicate(true)
+	_recovery_ground = ground_resolver
 
 
 ## `world` is where satchels get parented — the same level everything else
@@ -41,6 +52,11 @@ func build(world: Node3D, player: CharacterBody3D, spawn_position: Vector3) -> v
 	_world = world
 	_player = player
 	_fallback_home = spawn_position
+	if _recovery_camps.is_empty():
+		var chapter: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_chapter.json"))
+		_recovery_camps = chapter.get("camping_contract", {}).get("camps", [])
+	if not _recovery_ground.is_valid() and world.has_method("ground_height_near"):
+		_recovery_ground = Callable(world, "ground_height_near")
 	add_to_group(GROUP)
 	if player.has_signal("died"):
 		player.connect("died", _on_died)
@@ -58,8 +74,49 @@ func _on_died() -> void:
 	if not carried.is_empty():
 		_drop_satchel(carried, _player.global_position, game)
 
-	var respawn_at: Vector3 = resolve_home(game.get("placed_buildings"), _fallback_home)
+	var respawn_at := recovery_position(game, _player.global_position)
 	_fade_and_respawn(respawn_at)
+
+
+func recovery_position(game: Node, from: Vector3) -> Vector3:
+	var realm := WORLD_RECORDS.active(game)
+	var fallback := _fallback_home
+	if realm == "cloudreach":
+		fallback = resolve_safe_camp(_recovery_camps, game.get("progression"), from,
+			_fallback_home, _recovery_ground)
+	return resolve_home(game.get("placed_buildings"), fallback, realm)
+
+
+static func resolve_safe_camp(camps: Array, flags: RefCounted, from: Vector3,
+		fallback: Vector3, ground_resolver: Callable = Callable()) -> Vector3:
+	var nearest := fallback
+	var distance := INF
+	for camp: Dictionary in camps:
+		var required := str(camp.get("requires_flag", ""))
+		if not required.is_empty() and (flags == null or not flags.call("has", required)):
+			continue
+		var raw: Array = camp.get("position", [])
+		if raw.size() != 3:
+			continue
+		var at := Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
+		var authored_y := at.y
+		# Keep the respawn capsule beside, rather than inside, the camp furniture.
+		at += Vector3(2, 0, 2)
+		if ground_resolver.is_valid():
+			var resolved: Variant = ground_resolver.call(at)
+			if resolved is Vector3:
+				at = resolved
+			elif typeof(resolved) in [TYPE_FLOAT, TYPE_INT]:
+				at.y = float(resolved)
+			else:
+				continue
+		if not at.is_finite() or absf(at.y - authored_y) > 8.0:
+			continue
+		var candidate_distance := from.distance_squared_to(at)
+		if candidate_distance < distance:
+			distance = candidate_distance
+			nearest = at + Vector3.UP
+	return nearest
 
 
 func _drop_satchel(carried: Array, at: Vector3, game: Node) -> void:
@@ -74,12 +131,15 @@ func _drop_satchel(carried: Array, at: Vector3, game: Node) -> void:
 	satchel.name = "DeathSatchel_%d" % _satchel_count
 	satchel.position = at
 	satchel.set_meta(SATCHEL_INDEX_META, index)
+	satchel.set_meta("realm", WORLD_RECORDS.active(game))
 	_world.add_child(satchel)
 	satchel.call("build", carried, game.get("items"))
+	# Capture immediately, not only at the next scene/save synchronization.
+	(game.get("death_satchels") as Array)[index]["state"] = satchel.get("state").call("save_data")
 
 	var map: RefCounted = game.get("map")
 	if map != null:
-		map.call("add_dynamic_marker", "death_satchel_%d" % _satchel_count, MAP_ICON, at)
+		map.call("add_dynamic_marker", "death_satchel_%d" % (index + 1), MAP_ICON, at)
 
 
 ## R3.2. The reverse of `restore_from_game`'s `state` half: called by
@@ -95,6 +155,9 @@ func sync_state_to_game(game: Node) -> void:
 	for node in get_tree().get_nodes_in_group(DEATH_SATCHEL.GROUP):
 		var index := int(node.get_meta(SATCHEL_INDEX_META, -1))
 		if index < 0 or index >= satchels.size():
+			continue
+		if not WORLD_RECORDS.belongs(satchels[index], WORLD_RECORDS.active(game)) \
+				or str(node.get_meta("realm", "meadows")) != WORLD_RECORDS.active(game):
 			continue
 		var state: RefCounted = node.get("state")
 		if state == null:
@@ -114,6 +177,9 @@ func restore_from_game(game: Node) -> void:
 	if game == null or _world == null:
 		return
 	for node in get_tree().get_nodes_in_group(DEATH_SATCHEL.GROUP):
+		if not _world.is_ancestor_of(node):
+			continue
+		node.get_parent().remove_child(node)
 		node.queue_free()
 
 	var satchels: Array = game.get("death_satchels") as Array
@@ -124,6 +190,8 @@ func restore_from_game(game: Node) -> void:
 		if typeof(entry) != TYPE_DICTIONARY:
 			continue
 		var record := entry as Dictionary
+		if not WORLD_RECORDS.belongs(record, WORLD_RECORDS.active(game)):
+			continue
 		var position: Array = record.get("position", [])
 		if position.size() != 3:
 			continue
@@ -134,6 +202,7 @@ func restore_from_game(game: Node) -> void:
 		satchel.name = "DeathSatchel_%d" % _satchel_count
 		satchel.position = at
 		satchel.set_meta(SATCHEL_INDEX_META, i)
+		satchel.set_meta("realm", WORLD_RECORDS.active(game))
 		_world.add_child(satchel)
 		satchel.call("restore", record.get("state", []), db)
 
@@ -145,7 +214,7 @@ func restore_from_game(game: Node) -> void:
 ## bedroll is the specific piece that carries the rest interaction now that
 ## tent/campfire/bedroll place independently. A static, dependency-free
 ## function so this is testable headless, no node required.
-static func resolve_home(buildings: Variant, fallback: Vector3) -> Vector3:
+static func resolve_home(buildings: Variant, fallback: Vector3, realm: String = "meadows") -> Vector3:
 	if not buildings is Array:
 		return fallback
 	var list: Array = buildings
@@ -153,11 +222,15 @@ static func resolve_home(buildings: Variant, fallback: Vector3) -> Vector3:
 		if not list[i] is Dictionary:
 			continue
 		var entry: Dictionary = list[i]
+		if not WORLD_RECORDS.belongs(entry, realm) or bool(entry.get("removed", false)):
+			continue
 		if str(entry.get("id", "")) != "bedroll":
 			continue
 		var pos: Array = entry.get("position", [])
 		if pos.size() >= 3:
-			return Vector3(float(pos[0]), float(pos[1]), float(pos[2]))
+			var at := Vector3(float(pos[0]), float(pos[1]), float(pos[2]))
+			if at.is_finite():
+				return at
 	return fallback
 
 
@@ -186,6 +259,9 @@ func _fade_and_respawn(at: Vector3) -> void:
 
 
 func _respawn(at: Vector3) -> void:
+	var fly := _player.get_node_or_null("FlyController")
+	if fly != null and fly.has_method("end_for_carrier"):
+		fly.call("end_for_carrier")
 	_player.velocity = Vector3.ZERO
 	_player.global_position = at
 	var vitals: RefCounted = _player.get("vitals")

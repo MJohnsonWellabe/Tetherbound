@@ -23,6 +23,7 @@ const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 ## OWNER-0901-BOND-MILESTONES. Bond as an ordered ladder of concrete tasks
 ## instead of a bare 0-100 meter -- see bond_milestones.gd's own header.
 const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
+const FEEDBACK := preload("res://scripts/creatures/progression_feed.gd")
 
 var species_id: String = ""
 var display_name: String = ""
@@ -524,16 +525,25 @@ func xp_to_next(cfg: Dictionary) -> int:
 ## way a level-up does, and refills hp, because every caller of this sets the
 ## level before the creature has ever taken a hit (D30: starter_level).
 func set_level(new_level: int, cfg: Dictionary) -> void:
+	var before := _progression_snapshot()
+	var previous_xp := xp
 	var cap := int(cfg.get("level", {}).get("cap", 50))
 	level = clampi(new_level, 1, cap)
 	xp = 0
 	_apply_level_stats(cfg)
 	hp = max_hp
+	if level > int(before.level):
+		var equivalent := -previous_xp
+		for earned_level in range(int(before.level), level):
+			equivalent += PROGRESSION.xp_to_next(earned_level, cfg)
+		_publish_xp(maxi(0, equivalent), cfg, "level_item")
+		_publish_level(before)
 
 
 func gain_xp(amount: int, cfg: Dictionary) -> int:
 	if amount <= 0:
 		return 0
+	var before := _progression_snapshot()
 	xp += amount
 
 	var cap := int(cfg.get("level", {}).get("cap", level))
@@ -543,7 +553,28 @@ func gain_xp(amount: int, cfg: Dictionary) -> int:
 		level += 1
 		levels_gained += 1
 		_apply_level_stats(cfg)
+	_publish_xp(amount, cfg, "xp")
+	if levels_gained > 0:
+		_publish_level(before)
 	return levels_gained
+
+
+func _progression_snapshot() -> Dictionary:
+	return {"level": level, "hp": max_hp, "attack": attack, "defence": defence}
+
+
+func _publish_xp(amount: int, cfg: Dictionary, source: String) -> void:
+	FEEDBACK.publish(self, {"kind": "xp_gained", "amount": amount, "xp": xp,
+		"xp_to_next": xp_to_next(cfg), "level": level, "source": source})
+
+
+func _publish_level(before: Dictionary) -> void:
+	if not FEEDBACK.enabled(self):
+		return
+	FEEDBACK.publish(self, {"kind": "level_up", "old_level": before.level, "new_level": level,
+		"levels_gained": level - int(before.level), "stat_deltas": {"hp": max_hp - float(before.hp),
+		"attack": attack - float(before.attack), "defence": defence - float(before.defence)},
+		"trait_unlocked": false, "evolution_ready": FEEDBACK.evolution_ready(self)})
 
 
 ## --- evolution (R4.6) --------------------------------------------------------

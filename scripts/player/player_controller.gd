@@ -17,6 +17,12 @@ const VITALS := preload("res://scripts/player/player_vitals.gd")
 const TORCH := preload("res://scripts/player/torch.gd")
 const TOOL_HOLD := preload("res://scripts/player/tool_hold.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+const FLY := preload("res://scripts/player/fly_controller.gd")
+const ENVIRONMENT_VELOCITY := preload("res://scripts/world/environment_velocity_modifiers.gd")
+
+var _environment_velocity := ENVIRONMENT_VELOCITY.new()
+
+var fly_controller: Node = null
 
 signal landed(impact_speed: float, damage: float)
 signal died()
@@ -140,6 +146,10 @@ func _ready() -> void:
 	add_child(tool_hold)
 	if tool_hold.has_signal("swing_started"):
 		tool_hold.connect("swing_started", _on_tool_swing_started)
+	fly_controller = FLY.new()
+	fly_controller.name = "FlyController"
+	add_child(fly_controller)
+	fly_controller.call("setup", self, _camera_rig, _model)
 
 	# RG7: if a slot was loaded before this scene existed (title -> Load), Game
 	# retained the pose and can finally apply it now that Player/CameraRig exist.
@@ -209,6 +219,8 @@ func _load_vitals_config() -> void:
 
 func _physics_process(delta: float) -> void:
 	_sync_realm_heart_power()
+	if fly_controller != null:
+		fly_controller.call("apply_pending_load")
 	if _carried:
 		_ride(delta)
 		return
@@ -223,6 +235,14 @@ func _physics_process(delta: float) -> void:
 	# (`build_placer.gd`, `interaction_arbiter.gd`); this was the one that
 	# never had, despite being the most obviously affected by a leak.
 	var input_owned := INPUT_OWNER.current(get_tree()) != null
+	if fly_controller != null and bool(fly_controller.call("physics_step", delta, input_owned or not _locomotion_enabled)):
+		_sprinting = false
+		_jump_buffered_for = INF
+		_was_on_floor = is_on_floor()
+		_airborne_for = 0.0 if is_on_floor() else _coyote_time + 1.0
+		vitals.tick_satiety(delta)
+		return
+	begin_environment_velocity_step()
 	_track_airborne(delta, input_owned)
 	_apply_gravity(delta)
 	_toggle_auto_run(input_owned)
@@ -231,20 +251,52 @@ func _physics_process(delta: float) -> void:
 
 	_clamp_runaway_velocity()
 
-	var falling_speed := -velocity.y
 	# Captured BEFORE move_and_slide: sliding against a wall zeroes the
 	# into-wall component of velocity, which is precisely the motion the
 	# step-up probe needs to test.
 	var planned_motion := Vector3(velocity.x, 0.0, velocity.z) * delta
 	var before := global_position
+	apply_environment_velocity_modifiers(delta)
+	var falling_speed := -velocity.y
 	move_and_slide()
+	finish_environment_velocity_step()
 	_try_step_up(planned_motion)
 	_unwedge(planned_motion, before, delta)
 	_recover_if_entombed(delta)
 	_resolve_landing(falling_speed)
+	if fly_controller != null:
+		fly_controller.call("observe_ground")
 
 	vitals.tick(delta, _sprinting and velocity.length() > 0.5)
 	vitals.tick_satiety(delta)
+
+
+func register_environment_velocity_modifier(id: StringName, owner: Node, modifier: Callable, order: int = 0) -> bool:
+	return _environment_velocity.register_modifier(id, owner, modifier, order)
+
+
+func clear_environment_velocity_modifier(id: StringName) -> void:
+	_environment_velocity.clear_modifier(id)
+
+
+func clear_environment_velocity_modifiers() -> void:
+	_environment_velocity.clear_all()
+
+
+func begin_environment_velocity_step() -> void:
+	_environment_velocity.begin_step(self)
+
+
+func apply_environment_velocity_modifiers(delta: float) -> void:
+	_environment_velocity.apply(self, delta)
+
+
+func finish_environment_velocity_step(discarded: bool = false) -> void:
+	_environment_velocity.after_slide(self, discarded)
+
+
+func _exit_tree() -> void:
+	clear_environment_velocity_modifiers()
 
 
 func _sync_realm_heart_power() -> void:
@@ -798,6 +850,8 @@ func locomotion_enabled() -> bool:
 ## 500 m/s (encounter_director._spawn_ally_body's own comment) — and the reason
 ## `follower_creature.gd` already zeroes its layer while following.
 func set_carrier(node: Node3D, offset: Vector3 = Vector3.ZERO) -> void:
+	if node != null and fly_controller != null and bool(fly_controller.call("is_flying")):
+		fly_controller.call("end_for_carrier")
 	if node != null and not _carried:
 		_carry_saved_layer = collision_layer
 		_carry_saved_mask = collision_mask

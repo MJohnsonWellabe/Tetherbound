@@ -24,6 +24,7 @@ const ROOTSTONE_RECIPES_PATH := "res://data/recipes/recipes_rootstone.json"
 ## own file, merged into the same table on load. Two tiers is the whole of the
 ## Meadows economy (spec §10), so this is the last of these constants.
 const IRONWOOD_RECIPES_PATH := "res://data/recipes/recipes_ironwood.json"
+const CLOUDREACH_RECIPES_PATH := "res://data/recipes/recipes_cloudreach.json"
 
 ## Fallback stack size for an id with no definition. One, so an unknown item
 ## cannot merge with anything and quietly lose itself.
@@ -39,7 +40,8 @@ func _init(
 	buildables_path: String = BUILDABLES_PATH,
 	recipes_path: String = RECIPES_PATH,
 	rootstone_recipes_path: String = ROOTSTONE_RECIPES_PATH,
-	ironwood_recipes_path: String = IRONWOOD_RECIPES_PATH
+	ironwood_recipes_path: String = IRONWOOD_RECIPES_PATH,
+	cloudreach_recipes_path: String = CLOUDREACH_RECIPES_PATH
 ) -> void:
 	_items = _read(items_path).get("items", {})
 	_buildables = _read(buildables_path).get("buildables", [])
@@ -48,7 +50,7 @@ func _init(
 	# would silently favour whichever file merges last; the three tables are
 	# hand-authored with no overlap today, and `tests/test_recipes.gd` now
 	# asserts that directly rather than this growing a runtime conflict check.
-	for tier_path: String in [rootstone_recipes_path, ironwood_recipes_path]:
+	for tier_path: String in [rootstone_recipes_path, ironwood_recipes_path, cloudreach_recipes_path]:
 		var tier_recipes: Dictionary = _read(tier_path).get("recipes", {})
 		for id: Variant in tier_recipes:
 			_recipes[id] = tier_recipes[id]

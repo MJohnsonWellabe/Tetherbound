@@ -35,6 +35,8 @@ var _sealed_visual: Node3D = null
 var _open_visual: Node3D = null
 var _open_material: StandardMaterial3D = null
 var _built := false
+var _observed_progression: RefCounted = null
+var _progression_revision := -1
 
 
 ## Configure before adding to the scene tree.  The destination entry id names
@@ -74,6 +76,14 @@ func state_for(game: Node) -> String:
 
 func current_state() -> String:
 	return state_for(_game())
+
+
+func _process(_delta: float) -> void:
+	var game := _game()
+	var progression := _progression(game)
+	if progression != _observed_progression \
+			or (progression != null and int(progression.get("revision")) != _progression_revision):
+		_refresh(game)
 
 
 func has_key(game: Node) -> bool:
@@ -137,6 +147,8 @@ func _on_activated() -> void:
 func _refresh(game: Node) -> void:
 	if not _built or _prompt == null:
 		return
+	_observed_progression = _progression(game)
+	_progression_revision = int(_observed_progression.get("revision")) if _observed_progression != null else -1
 	var state := state_for(game)
 	match state:
 		STATE_LOCKED:

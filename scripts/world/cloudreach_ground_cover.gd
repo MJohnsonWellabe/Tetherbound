@@ -15,14 +15,17 @@ const COVER_SHADER := preload("res://shaders/cloudreach_ground_cover.gdshader")
 var _grass_instances := 0
 var _flower_instances := 0
 var _bush_instances := 0
+var _exclusions: Array[Dictionary] = []
+var _active_exclusions: Array[Dictionary] = []
 
 
-func build(patches: Array[Dictionary], config: Dictionary) -> void:
+func build(patches: Array[Dictionary], config: Dictionary, exclusions: Array[Dictionary] = []) -> void:
+	_exclusions = exclusions
 	var factory := GRASS_FIELD_SCRIPT.new()
 	# Seven-blade groups read as tufted ground cover at gameplay distance. The
 	# former four-blade/high-density combination resolved into uniform vertical
 	# noise even though its instance count was high.
-	var grass_mesh := factory.call("surface_tuft_mesh", 7, 3) as ArrayMesh
+	var grass_mesh := factory.call("surface_tuft_mesh", 7, 2) as ArrayMesh
 	var flower_mesh := factory.call("surface_cover_mesh", "flower") as ArrayMesh
 	var bush_mesh := factory.call("surface_cover_mesh", "bush") as ArrayMesh
 	factory.free()
@@ -33,6 +36,10 @@ func build(patches: Array[Dictionary], config: Dictionary) -> void:
 	var dry_grass_material := _cover_material(
 		Color(str(config.get("dry_grass_base", "#4b4919"))),
 		Color(str(config.get("dry_grass_tip", "#a89b42"))), 0.14, 0.50, false)
+	grass_material.set_shader_parameter("grass_curve", 0.30)
+	dry_grass_material.set_shader_parameter("grass_curve", 0.30)
+	grass_material.set_shader_parameter("camera_clearance", true)
+	dry_grass_material.set_shader_parameter("camera_clearance", true)
 	var flower_material := _cover_material(
 		Color(str(config.get("flower_base", "#335119"))),
 		Color(str(config.get("flower_tip", "#d49ac6"))), 0.075, 0.62, false)
@@ -42,6 +49,7 @@ func build(patches: Array[Dictionary], config: Dictionary) -> void:
 
 	for patch_index in patches.size():
 		var patch := patches[patch_index]
+		_active_exclusions = _nearby_exclusions(patch)
 		var patch_root := Node3D.new()
 		patch_root.name = "CoverPatch%03d" % patch_index
 		patch_root.position = _patch_origin(patch)
@@ -97,20 +105,22 @@ func _build_patch_tier(parent: Node3D, label: String, patch: Dictionary, mesh: A
 		var at := _sample_patch(patch, rng, float(config.get("path_clearance_m", 1.8)))
 		if is_nan(at.y):
 			continue
+		if _excluded(at, true):
+			continue
 		var cluster := (
 			sin(at.x * float(config.get("cluster_frequency", 0.021)) + float(seed_value))
 			+ sin(at.z * float(config.get("cluster_frequency", 0.021)) * 0.73
 				- float(seed_value) * 0.37)
 		)
 		var threshold := float(config.get("cluster_threshold", -0.18)) + float(tier) * 0.34
-		if cluster < threshold and rng.randf() > 0.12:
+		if cluster < threshold:
 			continue
 		var scale_value := rng.randf_range(scale_min, scale_max)
 		var width_scale := scale_value * rng.randf_range(0.82, 1.16)
 		if tier == 0:
 			# The shared Meadows tuft mesh is authored at real blade width. Height
 			# variation must not also shrink every blade/spread into sub-pixel lines.
-			width_scale = rng.randf_range(1.05, 1.38)
+			width_scale = rng.randf_range(1.6, 2.3)
 		var basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU)).scaled(
 			Vector3(width_scale, scale_value, width_scale))
 		transforms.append(Transform3D(basis, at - origin))
@@ -132,6 +142,57 @@ func _build_patch_tier(parent: Node3D, label: String, patch: Dictionary, mesh: A
 	instances.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 	parent.add_child(instances)
 	return transforms.size()
+
+
+func _nearby_exclusions(patch: Dictionary) -> Array[Dictionary]:
+	var centre := _patch_origin(patch)
+	var radius := 0.0
+	if str(patch.get("kind", "")) == "segment":
+		radius = (patch["a"] as Vector3).distance_to(patch["b"]) * 0.5 + float(patch["half_width"])
+	else:
+		var half: Vector2 = patch["half"]
+		radius = maxf(half.x, half.y)
+	var nearby: Array[Dictionary] = []
+	for exclusion: Dictionary in _exclusions:
+		var at: Vector3
+		var extra := 10.0
+		if str(exclusion.get("kind", "")) == "segment":
+			var a: Vector3 = exclusion["a"]
+			var b: Vector3 = exclusion["b"]
+			var ab := b - a
+			var t := clampf((centre - a).dot(ab) / maxf(ab.length_squared(), 0.01), 0, 1)
+			at = a.lerp(b, t)
+		else:
+			at = exclusion["centre"]
+			extra = (exclusion["half"] as Vector2).length()
+		if at.distance_to(centre) < radius + extra + 4.0:
+			nearby.append(exclusion)
+	return nearby
+
+
+func _excluded(at: Vector3, local_only: bool = false) -> bool:
+	for exclusion: Dictionary in (_active_exclusions if local_only else _exclusions):
+		if str(exclusion.get("kind", "")) == "segment":
+			var a: Vector3 = exclusion["a"]
+			var b: Vector3 = exclusion["b"]
+			var ab := Vector2(b.x - a.x, b.z - a.z)
+			var t := clampf(Vector2(at.x - a.x, at.z - a.z).dot(ab) / maxf(ab.length_squared(), 0.01), 0, 1)
+			var nearest := a.lerp(b, t)
+			if absf(nearest.y - at.y) < 3.0 and Vector2(at.x - nearest.x, at.z - nearest.z).length() < float(exclusion["half_width"]):
+				return true
+			continue
+		var centre: Vector3 = exclusion["centre"]
+		if absf(at.y - centre.y) > 3.0:
+			continue
+		var local := Vector2(at.x - centre.x, at.z - centre.z).rotated(-float(exclusion["rotation"]))
+		var half: Vector2 = exclusion["half"]
+		if str(exclusion.get("kind",""))=="ellipse":
+			if (local/half).length_squared()<=1.0:
+				return true
+			continue
+		if absf(local.x) <= half.x and absf(local.y) <= half.y:
+			return true
+	return false
 
 
 func _sample_patch(patch: Dictionary, rng: RandomNumberGenerator, path_clearance: float) -> Vector3:

@@ -25,6 +25,9 @@ const VISUAL := preload("res://scripts/creatures/creature_visual.gd")
 const BUILT_FLOOR := preload("res://scripts/world/built_floor.gd")
 const ALPHA_AURA := preload("res://scripts/creatures/alpha_aura.gd")
 const ASPECT_VFX := preload("res://scripts/creatures/vfx/aspect_vfx.gd")
+const ENVIRONMENT_VELOCITY := preload("res://scripts/world/environment_velocity_modifiers.gd")
+
+var _environment_velocity := ENVIRONMENT_VELOCITY.new()
 
 ## CREATURE-IDENTITY-2 alpha presence. Warm gold rather than a warning red:
 ## an alpha is a bigger animal, not an attack telegraph, and combat already owns
@@ -1469,6 +1472,7 @@ func add_impulse(direction: Vector3, strength: float) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	_environment_velocity.begin_step(self)
 	if not is_on_floor():
 		velocity.y -= _gravity * delta
 	else:
@@ -1487,7 +1491,9 @@ func _physics_process(delta: float) -> void:
 
 	velocity.x = horizontal.x + _impulse.x
 	velocity.z = horizontal.z + _impulse.z
+	_environment_velocity.apply(self, delta)
 	move_and_slide()
+	_environment_velocity.after_slide(self)
 
 	if arena != null:
 		arena.call("hold_inside", self)
@@ -1497,6 +1503,22 @@ func _physics_process(delta: float) -> void:
 		_animator.call("tick", delta, moving, _speed)
 
 	_requested = Vector3.ZERO
+
+
+func register_environment_velocity_modifier(id: StringName, owner: Node, modifier: Callable, order: int = 0) -> bool:
+	return _environment_velocity.register_modifier(id, owner, modifier, order)
+
+
+func clear_environment_velocity_modifier(id: StringName) -> void:
+	_environment_velocity.clear_modifier(id)
+
+
+func clear_environment_velocity_modifiers() -> void:
+	_environment_velocity.clear_all()
+
+
+func _exit_tree() -> void:
+	clear_environment_velocity_modifiers()
 
 
 func _turn_towards(direction: Vector3, delta: float) -> void:

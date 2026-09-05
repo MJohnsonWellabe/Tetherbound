@@ -20,6 +20,8 @@ uniform vec2 wind_dir = vec2(0.86, 0.51);
 uniform float leaf_cut : hint_range(0.0, 1.0) = 0.0;
 uniform float leaf_root_darken : hint_range(0.0, 1.0) = 0.42;
 uniform vec3 tint_wood : source_color = vec3(0.28, 0.22, 0.13);
+uniform float grass_curve = 0.0;
+uniform bool camera_clearance = false;
 
 varying float v_t;
 varying float v_shade;
@@ -39,7 +41,16 @@ void vertex() {
 	float ambient = sin(TIME * 1.7 + dot(origin.xz, vec2(0.041, 0.057)));
 	float gust = max(0.0, sin(front * 6.2831853)) * gust_strength;
 	float bend = (ambient * 0.45 + gust) * wind_strength * UV.y;
+	// The shared mesh is intentionally straight; Meadows gives each blade its
+	// own curved lean in its shader. Keep that same tuft volume on stacked land.
+	float blade_hash = hash12(origin.xz + vec2(UV2.x * 71.3, UV2.x * 29.7));
+	float blade_angle = blade_hash * 6.2831853;
+	VERTEX.xz += vec2(sin(blade_angle), cos(blade_angle)) * UV.y * UV.y * grass_curve * (0.35 + blade_hash * 0.65);
 	VERTEX.xz += direction * bend;
+	if (camera_clearance) {
+		float camera_distance = distance(origin, CAMERA_POSITION_WORLD);
+		VERTEX *= mix(0.015, 1.0, smoothstep(1.2, 2.8, camera_distance));
+	}
 	NORMAL = normalize(mix(NORMAL, vec3(0.0, 1.0, 0.0), normal_soften));
 	v_t = UV.y;
 	v_shade = mix(1.0 - shade_jitter, 1.0 + shade_jitter, hash12(origin.xz));

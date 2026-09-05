@@ -1132,10 +1132,10 @@ func test_a_half_fought_bracket_survives_a_save() -> void:
 	game.progression.set_flag("tournament_training_ready")
 	game.progression.set_flag("tournament_entered")
 	game.progression.set_flag("tournament_quarter_won")
-	assert_true(saver.save_game(game, 0))
+	assert_true(saver.save(game, 0))
 
 	var loaded := _game()
-	assert_true(saver.load_game(loaded, 0))
+	assert_true(saver.load_slot(loaded, 0))
 	for flag: String in ["tournament_entered", "tournament_quarter_won"]:
 		assert_true(bool(loaded.progression.has(flag)),
 			"'%s' did not survive the save; the player is back outside the bracket" % flag)
@@ -1150,10 +1150,10 @@ func test_the_board_reads_the_same_bracket_after_a_reload() -> void:
 	game.progression.set_flag("tournament_entered")
 	game.progression.set_flag("tournament_quarter_won")
 	var before := TOURNAMENT.status_line(game.progression)
-	assert_true(saver.save_game(game, 0))
+	assert_true(saver.save(game, 0))
 
 	var loaded := _game()
-	assert_true(saver.load_game(loaded, 0))
+	assert_true(saver.load_slot(loaded, 0))
 	assert_eq(TOURNAMENT.status_line(loaded.progression), before,
 		"the board forgot where the player was in the bracket")
 
@@ -1166,10 +1166,10 @@ func test_a_won_tournament_cannot_be_reloaded_into_a_second_payout() -> void:
 	game.progression.set_flag("tournament_won")
 	game.progression.set_flag("recipe_saddle")
 	game.inventory.add("coin", 40)
-	assert_true(saver.save_game(game, 0))
+	assert_true(saver.save(game, 0))
 
 	var loaded := _game()
-	assert_true(saver.load_game(loaded, 0))
+	assert_true(saver.load_slot(loaded, 0))
 	assert_true(bool(loaded.progression.has("tournament_won")),
 		"the victory flag did not survive; the final would pay out again")
 	assert_true(bool(loaded.progression.has("recipe_saddle")),
@@ -1185,12 +1185,14 @@ func test_condition_survives_a_save() -> void:
 	var game := _game()
 	var creature: RefCounted = game.party.at(0)
 	creature.set("nourishment", 91.0)
-	creature.set("happiness", 88.0)
+	# Rest adds the configured +12 mood before the round trip; seed 76 so the
+	# expected persisted post-rest value remains the intentionally non-max 88.
+	creature.set("happiness", 76.0)
 	CONDITION.note_rest_completed(creature, CONDITION.config())
-	assert_true(saver.save_game(game, 0))
+	assert_true(saver.save(game, 0))
 
 	var loaded := _game()
-	assert_true(saver.load_game(loaded, 0))
+	assert_true(saver.load_slot(loaded, 0))
 	var back: RefCounted = loaded.party.at(0)
 	assert_almost_eq(float(back.get("nourishment")), 91.0, 0.001, "the team came back hungry")
 	assert_almost_eq(float(back.get("happiness")), 88.0, 0.001, "the team came back miserable")
@@ -1201,10 +1203,10 @@ func test_condition_survives_a_save() -> void:
 ## was never measured, not as one that is starving.
 func test_a_pre_condition_save_loads_at_the_configured_start() -> void:
 	var game := _game()
-	assert_true(saver.save_game(game, 0))
+	assert_true(saver.save(game, 0))
 
 	# Rewrite the slot as VERSION 12: the format immediately before D68.
-	var path := "%ssave_0.json" % TEST_DIR
+	var path: String = saver.slot_path(0)
 	var file := FileAccess.open(path, FileAccess.READ)
 	var data: Dictionary = JSON.parse_string(file.get_as_text()) as Dictionary
 	file.close()
@@ -1218,7 +1220,7 @@ func test_a_pre_condition_save_loads_at_the_configured_start() -> void:
 	out.close()
 
 	var loaded := _game()
-	assert_true(saver.load_game(loaded, 0), "a version 12 save no longer loads at all")
+	assert_true(saver.load_slot(loaded, 0), "a version 12 save no longer loads at all")
 	var back: RefCounted = loaded.party.at(0)
 	var cfg: Dictionary = CONDITION.config()
 	assert_almost_eq(float(back.get("nourishment")),

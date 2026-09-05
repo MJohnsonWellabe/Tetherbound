@@ -1,11 +1,55 @@
 {
   "_comment": "Tunable Phase 2 visual language for Cloudreach. It deliberately reuses the Meadows terrain textures and generated ground-cover meshes: one nature family, a different high-altitude composition.",
   "schema_version": 1,
+  "settlement_dressing": [
+    {"asset": "workbench", "at": [-17.5, 0.14, -6], "height": 1.15, "yaw": 18},
+    {"asset": "bucket", "at": [-17, 0.14, -8], "height": 0.48},
+    {"asset": "apples", "at": [-15, 0.14, -6], "height": 0.55, "yaw": -12},
+    {"asset": "bench", "at": [4, 0.14, -4], "height": 0.85, "yaw": 95},
+    {"asset": "barrel", "at": [16, 0.14, -6], "height": 1.1, "yaw": 24},
+    {"asset": "bag", "at": [15, 0.14, -8], "height": 0.65, "yaw": 74},
+    {"asset": "crate", "at": [16, 0.14, -9], "height": 0.8, "yaw": -8},
+    {"asset": "flowers", "at": [-16, 0.14, 4], "height": 0.75, "yaw": 64},
+    {"asset": "rock_low", "at": [20, 0.05, 17], "height": 0.7, "yaw": 12}
+  ],
+  "sky_profile": {
+    "cloud_coverage": 0.34,
+    "cloud_lit_contrast": 0.10,
+    "cloud_sun_gain": 0.35,
+    "cloud_edge_softness": 0.23,
+    "cloud_high_opacity": 0.12
+  },
+  "atmosphere": {
+    "environment": {"fog_density_add": -0.00015, "fog_colour": "#a2bdc8"},
+    "sky": {"horizon_colour": "#a2bdc8", "ground_horizon_colour": "#a2bdc8"}
+  },
+  "resource_positions": {
+    "cr_node_cloudberry_waycamp": [-175.0, 136.5, 109.0],
+    "cr_node_gale_fiber_gate": [-292.0, 159.5, 320.0],
+    "cr_node_gale_fiber_bridge": [-284.0, 261.0, 890.0],
+    "cr_node_sunleaf_shrine": [1124.0, 1050.0, 2940.0]
+  },
+  "arrival_beats": {
+    "ruin_position": [-40.0, 117.5, -110.0],
+    "description": "The weathered marker overlooks the sheltered road toward Galefoot Waycamp. Cloudberries and wind-bent fiber grow along its planted margins."
+  },
+  "horizon_ranges": [
+    {"id": "SouthwestFoothills", "position": [-1100, -20, -700], "size": [1000, 500, 750], "seed": 302},
+    {"id": "SouthEastCrags", "position": [980, 30, -600], "size": [780, 600, 800], "seed": 317},
+    {"id": "WestLowerRange", "position": [-1600, 90, 700], "size": [650, 740, 1400], "seed": 328},
+    {"id": "EastLowerRange", "position": [1550, 120, 650], "size": [700, 800, 1050], "seed": 343},
+    {"id": "EastBrokenPeaks", "position": [1780, 270, 1950], "size": [750, 1100, 1050], "seed": 359},
+    {"id": "WestWindscarRange", "position": [-1700, 350, 2900], "size": [650, 1300, 1250], "seed": 361},
+    {"id": "EastRoostRange", "position": [2090, 570, 3100], "size": [700, 1700, 1050], "seed": 377},
+    {"id": "WestUpperRange", "position": [-1730, 580, 4400], "size": [800, 1720, 1300], "seed": 389},
+    {"id": "EastUpperPeaks", "position": [1660, 680, 4620], "size": [600, 1920, 950], "seed": 391},
+    {"id": "NorthSummitRange", "position": [220, 720, 6260], "size": [1550, 2040, 650], "seed": 407}
+  ],
   "surface": {
     "cliff": {
       "albedo": "res://assets/environment/terrain/stylised/rock_scree_Color.png",
       "normal": "res://assets/environment/terrain/stylised/rock_scree_NormalGL.png",
-      "uv_scale": 0.055,
+      "uv_scale": 0.12,
       "normal_depth": 0.30,
       "tint": "#c9865f"
     },
@@ -14,14 +58,14 @@
       "normal": "res://assets/environment/terrain/stylised/meadow_grass_NormalGL.png",
       "uv_scale": 0.27,
       "normal_depth": 0.32,
-      "tint": "#e8dfbf"
+      "tint": "#abc89f"
     },
     "upland_dry": {
       "albedo": "res://assets/environment/terrain/stylised/verge_grass_Color.png",
       "normal": "res://assets/environment/terrain/stylised/verge_grass_NormalGL.png",
       "uv_scale": 0.20,
       "normal_depth": 0.22,
-      "tint": "#e4d5aa"
+      "tint": "#c3c6a2"
     },
     "path": {
       "albedo": "res://assets/environment/terrain/stylised/dirt_path_Color.png",
@@ -32,6 +76,7 @@
     }
   },
   "landmass": {
+    "geology_base_y": -210.0,
     "region_width_factor": 0.30,
     "region_depth_factor": 0.28,
     "min_width_m": 260.0,
@@ -48,10 +93,10 @@
     "landing_size_m": 16.0
   },
   "ground_cover": {
-    "grass_density_per_m2": 2.75,
+    "grass_density_per_m2": 4.8,
     "region_grass_patch_cap": 135000,
     "route_grass_patch_cap": 38000,
-    "grass_scale_min": 0.38,
+    "grass_scale_min": 0.30,
     "grass_scale_max": 0.64,
     "flower_density_per_m2": 0.055,
     "region_flower_patch_cap": 1800,
@@ -65,9 +110,9 @@
     "bush_scale_max": 1.18,
     "visibility_range_m": 260.0,
     "route_cover_chunk_m": 120.0,
-    "path_clearance_m": 1.8,
-    "cluster_frequency": 0.021,
-    "cluster_threshold": -0.08,
+    "path_clearance_m": 0.7,
+    "cluster_frequency": 0.16,
+    "cluster_threshold": -0.22,
     "grass_base": "#2c4214",
     "grass_tip": "#91a947",
     "dry_grass_base": "#4b4919",
@@ -83,13 +128,23 @@
       {"prefab": "cottage_a", "position": [-10.0, 0.0, -8.0], "yaw_deg": 28.0},
       {"prefab": "cottage_b", "position": [10.0, 0.0, -7.0], "yaw_deg": -38.0},
       {"prefab": "cottage_b", "position": [-9.0, 0.0, 9.0], "yaw_deg": 138.0},
-      {"prefab": "cottage_a", "position": [9.0, 0.0, 10.0], "yaw_deg": -148.0}
+      {"prefab": "cottage_a", "position": [9.0, 0.0, 10.0], "yaw_deg": -148.0,
+       "lower_position": [2.0, 0.0, 18.0], "lower_yaw_deg": 180.0}
     ]
   },
   "route_details": {
     "_comment": "Individually authored roadside pockets. Offsets are [sideways, forward] metres from each anchor; dimensions are actual final mesh bounds. Keep the route centre free and never bridge a missing surface with dressing.",
     "visibility_range_m": 320.0,
     "pockets": [
+      {
+        "id": "GalefootSupplyCourtyard", "anchor": [-280.0, 180.0, 520.0], "forward": [0, 0, 1],
+        "items": [
+          {"asset": "crate", "offset": [-4.1, -10.7], "height_m": 0.85, "yaw_deg": 6},
+          {"asset": "crate", "offset": [-4.7, -9.1], "height_m": 0.6, "yaw_deg": -12},
+          {"asset": "barrel", "offset": [-6.0, -10.1], "height_m": 1.15, "yaw_deg": 18},
+          {"asset": "paving", "offset": [-1.5, -10.5], "width_m": 1.5, "yaw_deg": 15}
+        ]
+      },
       {
         "id": "ArrivalTravelersLayby", "anchor": [-3.2, 106.0, -248.0], "forward": [-0.258, 0.0, 0.966],
         "items": [
@@ -116,7 +171,7 @@
         ]
       },
       {
-        "id": "ThreeBellsBridgeRepair", "anchor": [-510.0, 325.9, 1281.9], "forward": [-0.618, 0.0, 0.786],
+        "id": "ThreeBellsBridgeRepair", "anchor": [-535.0, 329.3, 1274.5], "forward": [-0.676, 0.0, 0.738],
         "items": [
           {"asset": "fence", "offset": [-5.5, -1.0], "height_m": 1.1, "yaw_deg": 82.0},
           {"asset": "crate", "offset": [-4.8, 1.0], "height_m": 0.85, "yaw_deg": 18.0},
@@ -140,7 +195,7 @@
         ]
       },
       {
-        "id": "RoostWatchRest", "anchor": [330.0, 587.5, 3282.5], "forward": [0.907, 0.0, -0.421],
+        "id": "RoostWatchRest", "anchor": [330.0, 595.0, 3282.5], "forward": [0.907, 0.0, -0.421],
         "items": [
           {"asset": "fence", "offset": [-7.8, 2.0], "height_m": 1.15, "yaw_deg": 90.0},
           {"asset": "fence", "offset": [-7.8, 6.0], "height_m": 1.15, "yaw_deg": 90.0},
@@ -154,7 +209,7 @@
         ]
       },
       {
-        "id": "AerieApproachRockShelter", "anchor": [357.0, 596.2, 3270.0], "forward": [0.907, 0.0, -0.421],
+        "id": "AerieApproachRockShelter", "anchor": [357.0, 605.0, 3270.0], "forward": [0.907, 0.0, -0.421],
         "items": [
           {"asset": "rock", "offset": [-7.6, 1.0], "height_m": 2.9, "yaw_deg": 111.0, "bury_m": 0.4},
           {"asset": "rock_low", "offset": [-5.2, 3.0], "height_m": 1.2, "yaw_deg": 71.0, "bury_m": 0.25},

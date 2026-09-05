@@ -34,15 +34,23 @@ var _item_id: String = ""
 var _label: String = ""
 var _model_path: String = ""
 var _model_scale: float = 1.0
+var _placement_id := ""
+var _realm_id := "meadows"
+var _count := 1
+var _taken := false
 var _visual: Node3D = null
 var _prompt: Node3D = null
 
 
-func setup(item_id: String, label: String, model_path: String, model_scale: float = 1.0) -> void:
+func setup(item_id: String, label: String, model_path: String, model_scale: float = 1.0,
+		placement_id: String = "", realm_id: String = "meadows", count: int = 1) -> void:
 	_item_id = item_id
 	_label = label
 	_model_path = model_path
 	_model_scale = model_scale
+	_placement_id = placement_id
+	_realm_id = realm_id
+	_count = maxi(1, count)
 	add_to_group("progression_restore")
 	_build_visual()
 	_prompt = INTERACTABLE.new()
@@ -52,27 +60,32 @@ func setup(item_id: String, label: String, model_path: String, model_scale: floa
 	_prompt.connect("activated", _on_picked_up)
 	add_child(_prompt)
 	var game := get_node_or_null(^"/root/Game")
-	if was_taken(game, _item_id):
+	if was_taken(game, _item_id, _placement_id, _realm_id):
 		_deactivate()
 
 
-static func flag_id(item_id: String) -> String:
+static func flag_id(item_id: String, placement_id: String = "", realm_id: String = "meadows") -> String:
+	# Unidentified legacy Meadows caches retain their old flags. New authored
+	# placements are independent even when they hold the same item.
+	if not placement_id.is_empty():
+		return "%s%s:%s" % [FLAG_PREFIX, realm_id, placement_id]
 	return FLAG_PREFIX + item_id
 
 
-static func was_taken(game: Node, item_id: String) -> bool:
+static func was_taken(game: Node, item_id: String, placement_id: String = "", realm_id: String = "meadows") -> bool:
 	if game == null or item_id == "":
 		return false
 	var progression: RefCounted = game.get("progression")
-	return progression != null and bool(progression.call("has", flag_id(item_id)))
+	return progression != null and bool(progression.call("has", flag_id(item_id, placement_id, realm_id)))
 
 
 func restore_progression_from_game(game: Node) -> void:
-	if was_taken(game, _item_id):
+	if was_taken(game, _item_id, _placement_id, _realm_id):
 		_deactivate()
 
 
 func _deactivate() -> void:
+	_taken = true
 	if _prompt != null and is_instance_valid(_prompt):
 		_prompt.call("set_enabled", false)
 	PICKUP_GLOW.detach(self)
@@ -135,6 +148,8 @@ func _build_visual() -> void:
 
 
 func _on_picked_up() -> void:
+	if _taken:
+		return
 	var game := get_node_or_null(^"/root/Game")
 	if game == null:
 		push_error("no Game autoload; a cache was found but has nowhere to go")
@@ -143,14 +158,14 @@ func _on_picked_up() -> void:
 	if inventory == null:
 		push_error("no inventory; a cache was found but has nowhere to go")
 		return
-	if not bool(inventory.call("has_room_for", _item_id, 1)):
+	if not bool(inventory.call("has_room_for", _item_id, _count)):
 		# Refused, visibly, same as key_pickup.gd/harvest_node.gd: stays in
 		# the world and keeps offering rather than vanishing into a full
 		# satchel.
 		game.call("push_world_message", "Satchel is full.")
 		return
-	inventory.call("add", _item_id, 1)
+	inventory.call("add", _item_id, _count)
 	var progression: RefCounted = game.get("progression")
 	if progression != null:
-		progression.call("set_flag", flag_id(_item_id))
+		progression.call("set_flag", flag_id(_item_id, _placement_id, _realm_id))
 	_deactivate()

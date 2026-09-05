@@ -97,6 +97,7 @@ const ICON_STAMINA := "res://assets/ui/icons/hud/stamina_bolt.png"
 const ICON_CREATURES := "res://assets/ui/icons/hud/creatures_paw.png"
 
 const PARTY_STRIP_SCRIPT := "res://scripts/ui/party_strip.gd"
+const PROGRESSION_FEEDBACK_HUD := preload("res://scripts/ui/progression_feedback_hud.gd")
 const STAMINA_ARC_SCRIPT := "res://scripts/ui/stamina_arc.gd"
 ## Owned by a concurrent agent this pass (see CLAUDE.md task header) — never
 ## edited here, only loaded and called defensively. If either file is missing
@@ -864,6 +865,9 @@ var _objective_eyebrow_label: Label = null
 ## no objective left to track. See that function's own comment.
 var _objective_block: Control = null
 var _objective_last_text := ""
+var _world_presentation_mode := "exploration"
+var _presentation_suppressed: Dictionary = {}
+const HUD_PRESENTATION := preload("res://scripts/ui/hud_presentation_policy.gd")
 ## The block's backing panel. Held as a field because it is the visible edge --
 ## `_update_objective()`'s own comment already notes that the panel, not the
 ## text, is what the player sees -- and `_layout_objective_block()` has to
@@ -936,6 +940,9 @@ func _ready() -> void:
 	_load_buff_config()
 	_build_creature_block()
 	_mount_party_strip()
+	var progression_presenter := PROGRESSION_FEEDBACK_HUD.new()
+	progression_presenter.name = "ProgressionFeedback"
+	add_child(progression_presenter)
 	_build_vitals_cluster()
 	_build_player_health_bar()
 	_mount_stamina_arc()
@@ -2911,10 +2918,62 @@ func _input(event: InputEvent) -> void:
 func _process(delta: float) -> void:
 	if _debug_level == DEBUG_OFF:
 		_run_frame(delta)
+		_apply_presentation_priority()
 		return
 	var t0 := Time.get_ticks_usec()
 	_run_frame(delta)
+	_apply_presentation_priority()
 	PERF_TRACE.record("HUD", Time.get_ticks_usec() - t0)
+
+
+## Optional shared world lifecycle hook; does not disable controller bindings.
+func set_world_presentation_mode(mode: String) -> void:
+	_world_presentation_mode = mode if mode in ["combat", "relays", "exploration"] else "exploration"
+	_left_stack_canvas_h = -1.0
+	if is_node_ready():
+		_reflow_left_stack()
+		_apply_presentation_priority()
+
+
+func _apply_presentation_priority() -> void:
+	var moment := false
+	for presenter: Node in get_tree().get_nodes_in_group("progression_feedback_presenter"):
+		if presenter.has_method("set_world_presentation_mode"):
+			presenter.call("set_world_presentation_mode", _world_presentation_mode)
+		if presenter.has_method("moment_visible") and presenter.call("moment_visible"):
+			moment = true
+	var mode := HUD_PRESENTATION.resolve(_world_presentation_mode, _combat_is_running(), _bottom_dock_should_yield(), moment)
+	if _party_strip != null:
+		_party_strip.call("set_readable_presentation", _world_presentation_mode == "relays")
+		if _world_presentation_mode == "relays":
+			var canvas := get_viewport().get_visible_rect().size
+			_party_strip.call("set_rest_position", Vector2(canvas.x * 0.05, canvas.y * 0.30))
+	# This final pass owns visibility after all legacy polling/cache writers.
+	for entry: Array in [[_region_banner,mode.location],[_daytime_label,mode.location],
+		[_objective_block,mode.task],[_hotbar_panel,mode.hotbar],[_exploration_legend,mode.exploration],
+		[_party_strip,mode.party],[_creature_block,mode.exploration],[_health_bar_cluster,mode.human_vitals],
+		[_vitals_cluster,mode.human_vitals],[_minimap,mode.minimap],[_prompt_label,mode.prompt]]:
+		_presentation_allow(entry[0],entry[1])
+	# During combat, enemy plate and telegraphs own the top. In the post-combat
+	# mechanic, one instruction replaces the task card/legend/hotbar cluster.
+	_presentation_allow(_objective_hint_card, mode.instruction or (mode.exploration and not moment))
+
+
+func _presentation_allow(widget: CanvasItem, allowed: bool) -> void:
+	if widget == null: return
+	var id := widget.get_instance_id()
+	if not allowed:
+		if not _presentation_suppressed.has(id): _presentation_suppressed[id] = widget.visible
+		widget.visible = false
+	elif _presentation_suppressed.has(id):
+		# A fresh contextual offer may have been drawn while changing modes.
+		# Do not overwrite that new state with the old (often empty) prompt.
+		widget.visible = widget.visible or bool(_presentation_suppressed[id])
+		if widget == _objective_hint_card:
+			widget.visible = widget.visible and Time.get_ticks_msec()/1000.0 < _objective_hint_until
+		elif widget == _region_banner:
+			widget.visible = widget.visible and Time.get_ticks_msec()/1000.0 < _region_banner_until
+		_presentation_suppressed.erase(id)
 
 
 ## The HUD's actual per-frame work, split out of `_process` so the readout can
@@ -4027,7 +4086,13 @@ func _update_world_message() -> void:
 		return
 	var text := str(_game.call("take_pending_world_message"))
 	if not text.is_empty():
-		_show_hotbar_message(text)
+		# The production payout source already reports only items that fitted.
+		# Route its existing exact reward receipt through the one progression
+		# presenter; do not reconstruct inventory awards or pay anything here.
+		if text.contains("'s reward:") and _game.get("progression_feed") != null:
+			_game.get("progression_feed").call("push_event", {"kind":"reward_summary", "instance_id":0,"display_name":"Team", "receipt":text})
+		else:
+			_show_hotbar_message(text)
 
 
 func _show_hotbar_message(text: String) -> void:

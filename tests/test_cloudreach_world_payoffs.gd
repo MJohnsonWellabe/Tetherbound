@@ -1,0 +1,68 @@
+extends "res://tests/test_case.gd"
+
+const PAYOFFS := preload("res://scripts/world/cloudreach_world_payoffs.gd")
+const DATA := preload("res://scripts/world/cloudreach_physical_rules.gd")
+const FLAGS := preload("res://autoload/progression_state.gd")
+const DIRECTOR := preload("res://scripts/combat/cloudreach_encounter_director.gd")
+const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
+
+
+func test_side_payoffs_restore_each_independent_canonical_fact() -> void:
+	var data: Dictionary = DATA.read(DIRECTOR.PAYOFF_PATH).world_payoffs
+	var flags := FLAGS.new()
+	var empty := PAYOFFS.state_for(flags,data)
+	assert_true(empty.people.is_empty())
+	assert_false(empty.bells)
+	flags.set_flag("side_three_bells_complete")
+	var bells := PAYOFFS.state_for(flags,data)
+	assert_true(bells.bells)
+	assert_eq(bells.people.size(),2)
+	assert_false(bells.restored)
+	flags.set_flag("causeway_survivors_reconnected")
+	var stranded := PAYOFFS.state_for(flags,data)
+	assert_eq(stranded.people.size(),4)
+	assert_false(stranded.people.shelter_courier.returned)
+	flags.set_flag("side_stranded_couriers_complete")
+	flags.set_flag("side_aerie_high_perches_surveyed")
+	flags.set_flag("side_cliff_circuit_complete")
+	var written := PAYOFFS.state_for(flags,data)
+	assert_true(written.people.shelter_traveler.returned)
+	assert_true(written.people.shelter_courier.returned)
+	assert_true(written.surveys.high_perches)
+	assert_false(written.surveys.observatory)
+	assert_true(written.circuit)
+	assert_false(written.mastery)
+	var restored := FLAGS.new()
+	restored.load_data(JSON.parse_string(JSON.stringify(flags.save_data())))
+	assert_eq(PAYOFFS.state_for(restored,data),written)
+	restored.set_flag("cloudreach_winds_restored")
+	assert_eq(PAYOFFS.state_for(restored,data).people.size(),6)
+	assert_true(PAYOFFS.state_for(restored,data).restored)
+	restored.load_data({})
+	assert_eq(PAYOFFS.state_for(restored,data),empty,"old/earlier saves remove later presentation")
+
+
+func test_tavi_rematch_is_a_distinct_once_only_tier_using_the_existing_team_and_reward() -> void:
+	var director := DIRECTOR.new()
+	director.setup(null)
+	assert_eq(director.trainer_specs.size(),8)
+	var original: Dictionary = director.trainer_specs.young_trainer_tavi_upper_ring
+	var rematch: Dictionary = director.trainer_specs.young_trainer_tavi_rematch
+	assert_false(rematch.rechallenge)
+	assert_eq(rematch.requires_flags,["side_cliff_circuit_complete","cloudreach_upper_route_unlocked"])
+	assert_eq(rematch.reward,director.encounter_config.reward_tiers.ace)
+	assert_true(rematch.defeat_flag != original.defeat_flag)
+	for index in original.team.size():
+		assert_eq(rematch.team[index].species,original.team[index].species)
+		assert_eq(rematch.team[index].level,original.team[index].level+3)
+	var flags := FLAGS.new()
+	flags.set_flag(original.defeat_flag)
+	assert_false(TRAINERS.already_beaten(rematch,flags),"first circuit victory does not consume the rematch")
+	flags.set_flag(rematch.defeat_flag)
+	assert_true(TRAINERS.already_beaten(rematch,flags))
+	var saved := FLAGS.new()
+	saved.load_data(flags.save_data())
+	assert_true(TRAINERS.already_beaten(rematch,saved))
+	director.call("_install_circuit_rematch")
+	assert_eq(director.trainer_specs.size(),8,"reinstall cannot append another tier")
+	director.free()

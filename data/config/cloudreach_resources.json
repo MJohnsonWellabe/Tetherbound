@@ -1,0 +1,10 @@
+{
+  "_comment": "Presentation for chapter-owned resource positions. Reuses installed nature-family models and shared harvest material corrections. Parent patch sits on the intended authored surface; the harvest prop is local zero. Skyplume remains an encounter-cycle source and has no hand-gather model. New dedicated resource art is not required.",
+  "resources": {
+    "windworn_heartwood": {"label": "Gather Windworn Heartwood", "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf", "model_scale": 1.0},
+    "cliffglass_ore": {"label": "Gather Cliffglass Ore", "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf", "model_scale": 1.0},
+    "gale_fiber": {"label": "Gather Gale Fiber", "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf", "model_scale": 1.0},
+    "sunleaf": {"label": "Gather Sunleaf", "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf", "model_scale": 0.8},
+    "cloudberry": {"label": "Gather Cloudberries", "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf", "model_scale": 1.1}
+  }
+}

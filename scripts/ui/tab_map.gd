@@ -370,9 +370,10 @@ func _follow_player_if_not_panned() -> void:
 ## player at any zoom level once `_map_rect_for_canvas` scales the rectangle
 ## around it.
 func _pan_world_for_player(world_pos: Vector3) -> Vector2:
-	var origin: Vector2 = MAP_STATE.origin()
-	var span_x := float(MAP_STATE.CELL) * float(MAP_STATE.grid_x())
-	var span_z := float(MAP_STATE.CELL) * float(MAP_STATE.grid_z())
+	var bounds := bounds_for_map(_map_state())
+	var origin := Vector2(float(bounds["min_x"]), float(bounds["min_z"]))
+	var span_x := float(bounds["max_x"]) - origin.x
+	var span_z := float(bounds["max_z"]) - origin.y
 	return Vector2(
 		world_pos.x - (origin.x + span_x * 0.5),
 		world_pos.z - (origin.y + span_z * 0.5),
@@ -392,8 +393,9 @@ func _clamp_pan() -> void:
 		_pan_world = Vector2.ZERO
 		_manual_pan = false # whole-world fit has no "player" or "manual" focal point to remember
 		return
-	var span_x := float(MAP_STATE.CELL) * float(MAP_STATE.grid_x())
-	var span_z := float(MAP_STATE.CELL) * float(MAP_STATE.grid_z())
+	var bounds := bounds_for_map(_map_state())
+	var span_x := float(bounds["max_x"]) - float(bounds["min_x"])
+	var span_z := float(bounds["max_z"]) - float(bounds["min_z"])
 	var canvas_size := _canvas.size if _canvas != null else Vector2(640.0, 440.0)
 	var fit_scale := minf(canvas_size.x / span_x, canvas_size.y / span_z)
 	var scale := fit_scale * _zoom
@@ -420,7 +422,8 @@ func _update_header(map_state: RefCounted) -> void:
 		_surveyed_label.text = "Surveyed: --"
 		return
 	var fraction: float = float(map_state.call("discovered_fraction"))
-	var view_name := "Whole Meadows" if _zoom <= MIN_ZOOM else "%dx local view" % int(_zoom)
+	var realm_name := str(map_state.call("map_display_name")) if map_state.has_method("map_display_name") else "Meadows"
+	var view_name := "Whole " + realm_name if _zoom <= MIN_ZOOM else "%dx local view" % int(_zoom)
 	_surveyed_label.text = "Surveyed: %d%%   •   %s" % [int(round(fraction * 100.0)), view_name]
 
 
@@ -961,9 +964,10 @@ func _facing_yaw(world: Node, player: Node3D) -> float:
 ## sides of this mapping already agree the world need not be square. Zoom and
 ## pan are applied after that north-up fit, identically to the texture rect.
 func _world_to_canvas(pos: Vector2, map_rect: Rect2) -> Vector2:
-	var span_x: float = float(MAP_STATE.CELL) * float(MAP_STATE.grid_x())
-	var span_z: float = float(MAP_STATE.CELL) * float(MAP_STATE.grid_z())
-	var origin: Vector2 = MAP_STATE.origin()
+	var bounds := bounds_for_map(_map_state())
+	var origin := Vector2(float(bounds["min_x"]), float(bounds["min_z"]))
+	var span_x := float(bounds["max_x"]) - origin.x
+	var span_z := float(bounds["max_z"]) - origin.y
 	var nx: float = clampf((pos.x - origin.x) / span_x, 0.0, 1.0)
 	var nz: float = clampf((pos.y - origin.y) / span_z, 0.0, 1.0)
 	return map_rect.position + Vector2(nx * map_rect.size.x, nz * map_rect.size.y)
@@ -973,15 +977,25 @@ func _world_to_canvas(pos: Vector2, map_rect: Rect2) -> Vector2:
 ## it is the complete corridor. At larger scales it grows around the panel
 ## centre and `_pan_world` moves it under the fixed clipping viewport.
 func _map_rect_for_canvas(canvas_size: Vector2) -> Rect2:
+	var bounds := bounds_for_map(_map_state())
 	var span := Vector2(
-		float(MAP_STATE.CELL) * float(MAP_STATE.grid_x()),
-		float(MAP_STATE.CELL) * float(MAP_STATE.grid_z()),
+		float(bounds["max_x"]) - float(bounds["min_x"]),
+		float(bounds["max_z"]) - float(bounds["min_z"]),
 	)
 	var fit_scale := minf(canvas_size.x / span.x, canvas_size.y / span.y)
 	var scale := fit_scale * _zoom
 	var size := span * scale
 	var centre := canvas_size * 0.5 - _pan_world * scale
 	return Rect2(centre - size * 0.5, size)
+
+
+static func bounds_for_map(map_state: RefCounted) -> Dictionary:
+	if map_state != null and map_state.has_method("world_bounds"):
+		return map_state.call("world_bounds")
+	var origin := MAP_STATE.origin()
+	return {"min_x": origin.x, "min_z": origin.y,
+		"max_x": origin.x + MAP_STATE.CELL * MAP_STATE.grid_x(),
+		"max_z": origin.y + MAP_STATE.CELL * MAP_STATE.grid_z()}
 
 
 ## Same two colours `scripts/ui/minimap.gd` fogs with (its own `FOG_UNDISCOVERED`/
@@ -1079,6 +1093,11 @@ func _fog_texture(map_state: RefCounted) -> ImageTexture:
 ## `open()`/`select()` (see the header note on `revision()`), which is exactly
 ## when it is worth retrying a world that was not ready last time.
 func _terrain_texture(world: Node) -> Texture2D:
+	if world != null and world.has_method("map_terrain_texture"):
+		return world.call("map_terrain_texture") as Texture2D
+	var map_state := _map_state()
+	if map_state != null and map_state.has_method("world_bounds"):
+		return null # A realm must not display the cached Meadows bake.
 	if _terrain_attempted:
 		return _terrain_tex
 	_terrain_attempted = true

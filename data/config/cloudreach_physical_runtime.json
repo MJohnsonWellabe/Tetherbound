@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "realm_id": "cloudreach",
+  "_contract": "Positions are world metres. Runtime takes a nearest-elevation ground resolver; missing surfaces are reported, never fabricated. Existing opening NPC/pickup/rest construction must be disabled when this full runtime is installed. Creature encounters call encounter_won only after actual success; no interaction awards their defeat flags.",
+  "interaction_radius_m": 3.8,
+  "aerie_fiber_cost": 3,
+  "interactions": [
+    {"id": "causeway_signal", "kind": "bell", "position": [-66,453,2251], "label": "Ring the captured picket's safe-route signal", "requires_flags": ["cloudreach_lower_anchors_investigated", "defeated_cloudreach_senn"], "completion_flag": "causeway_survivors_reconnected", "event": "three_bells_safe_route_signaled"},
+    {"id": "aerie_repair", "kind": "repair", "position": [405,610,3255], "label": "Restore the flight perch (3 Gale Fiber)", "requires_flags": ["causeway_survivors_reconnected", "completed_cloudreach_maela_trial_battle"], "completion_flag": "windscar_aerie_prepared", "cost": {"item_id": "gale_fiber", "count": 3}, "event": "windscar_aerie_restored"},
+    {"id": "flight_trial_start", "kind": "launch", "position": [400,610,3250], "label": "Begin the marked flight trial", "requires_flags": ["cloudreach_act_i_complete"], "completion_flag": "fly_traversal_unlocked", "action": "start_trial"},
+    {"id": "shrine_vane_west", "kind": "vane", "position": [1099,1050,2940], "label": "Align the west wind vane", "requires_flags": ["sky_shrine_reached"], "completion_flag": "cloudreach_shrine_vane_west_aligned", "set_physical_flag": "cloudreach_shrine_vane_west_aligned"},
+    {"id": "shrine_vane_east", "kind": "vane", "position": [1121,1050,2940], "label": "Align the east wind vane", "requires_flags": ["sky_shrine_reached"], "completion_flag": "cloudreach_shrine_vane_east_aligned", "set_physical_flag": "cloudreach_shrine_vane_east_aligned"},
+    {"id": "shrine_vane_crown", "kind": "vane", "position": [1110,1050,2929], "label": "Align the crown wind vane", "requires_flags": ["sky_shrine_reached"], "completion_flag": "cloudreach_shrine_vane_crown_aligned", "set_physical_flag": "cloudreach_shrine_vane_crown_aligned"},
+    {"id": "shrine_windlass", "kind": "windlass", "position": [1110,1050,2952], "label": "Lower the counterweight road", "requires_flags": ["storm_anchor_engine_truth_learned"], "completion_flag": "cloudreach_upper_route_unlocked", "event": "sky_shrine_counterweight_released"},
+    {"id": "upper_anchor_west", "kind": "anchor", "position": [-916,760,4103], "label": "Disable the west upper anchor", "requires_flags": ["cloudreach_act_ii_complete"], "completion_flag": "storm_anchor_upper_west_disabled", "event": "count:storm_anchor_upper_west_disabled"},
+    {"id": "upper_anchor_east", "kind": "anchor", "position": [436,920,4503], "label": "Disable the east upper anchor", "requires_flags": ["cloudreach_act_ii_complete"], "completion_flag": "storm_anchor_upper_east_disabled", "event": "count:storm_anchor_upper_east_disabled"},
+    {"id": "summit_feed", "kind": "anchor", "position": [298,1080,5104], "label": "Disable the summit feed", "requires_flags": ["cloudreach_act_ii_complete", "defeated_cloudreach_voss"], "completion_flag": "storm_anchor_summit_feed_disabled", "event": "count:storm_anchor_summit_feed_disabled"},
+    {"id": "side_lower_bell", "kind": "bell", "position": [-485,338,1313], "label": "Inspect the lower route bell", "requires_flags": ["cloudreach_crisis_learned"], "completion_flag": "side_bell_lower_found", "event": "side:three_bells_against_silence:find_lower_bell"},
+    {"id": "side_windscar_bell", "kind": "bell", "position": [-255,500,2675], "label": "Ring the Windscar bell", "requires_flags": ["side_bell_lower_found"], "completion_flag": "side_bell_windscar_rung", "event": "side:three_bells_against_silence:ring_windscar_bell"},
+    {"id": "side_high_bell", "kind": "bell", "position": [906,1020,2700], "label": "Ring the High Perches bell", "requires_flags": ["side_bell_windscar_rung", "fly_traversal_unlocked"], "completion_flag": "side_three_bells_complete", "event": "side:three_bells_against_silence:ring_high_roost_bell"},
+    {"id": "courier_pack", "kind": "pack", "position": [-1195,420,1703], "label": "Recover Neri's medicine pack", "requires_flags": ["causeway_survivors_reconnected"], "completion_flag": "side_courier_pack_recovered", "event": "side:packs_on_the_wrong_side:recover_abandoned_pack"},
+    {"id": "courier_delivery", "kind": "pack", "position": [-298,460,3103], "label": "Deliver the sealed medicine", "requires_flags": ["side_courier_pack_recovered"], "completion_flag": "side_courier_medicine_delivered", "event": "side:packs_on_the_wrong_side:deliver_medicine"}
+  ],
+  "trial": {
+    "bounds_position": [365,602,3215], "bounds_size": [110,80,110],
+    "gates": [{"position": [420,626,3250], "radius_m": 6}, {"position": [440,634,3270], "radius_m": 6}, {"position": [420,622,3290], "radius_m": 6}],
+    "landing_position": [400,610,3250], "landing_radius_m": 12, "landing_height_tolerance_m": 2.5,
+    "minimum_flight_seconds": 3.0,
+    "updraft": {"id": "cloudreach_trial_lift", "position": [390,608,3240], "size": [65,40,65], "lift_speed": 10, "ceiling_y": 644}
+  },
+  "updrafts": [
+    {"id": "cloudreach_aerie_lift", "position": [375,605,3075], "size": [300,175,220], "lift_speed": 18, "ceiling_y": 778, "requires_flag": "fly_traversal_unlocked"},
+    {"id": "cloudreach_middle_lift", "position": [580,700,2960], "size": [330,260,240], "lift_speed": 18, "ceiling_y": 958, "requires_flag": "fly_traversal_unlocked"},
+    {"id": "cloudreach_shrine_lift", "position": [805,840,2860], "size": [335,250,230], "lift_speed": 18, "ceiling_y": 1088, "requires_flag": "fly_traversal_unlocked"},
+    {"id": "cloudreach_perches_lift", "position": [860,940,2660], "size": [270,145,290], "lift_speed": 14, "ceiling_y": 1080, "requires_flag": "fly_traversal_unlocked"},
+    {"id": "cloudreach_observatory_lift", "position": [370,900,4440], "size": [150,180,150], "lift_speed": 14, "ceiling_y": 1076, "requires_flag": "cloudreach_upper_route_unlocked"},
+    {"id": "cloudreach_waterward_lift", "position": [-500,1000,5520], "size": [160,180,220], "lift_speed": 14, "ceiling_y": 1176, "requires_flag": "cloudreach_upper_anchors_disabled"}
+  ],
+  "restrictions": [
+    {"id": "cloudreach_high_roost", "position": [700,760,2350], "size": [850,1000,1150], "requires_flag": "fly_traversal_unlocked"},
+    {"id": "cloudreach_upper", "position": [-1800,620,3600], "size": [3600,1500,1350], "requires_flag": "cloudreach_upper_route_unlocked"},
+    {"id": "cloudreach_summit", "position": [-1800,800,4950], "size": [3600,1500,1250], "requires_flag": "cloudreach_upper_route_unlocked"}
+  ],
+  "landing_objectives": [
+    {"id": "sky_shrine", "position": [1110,1050,2940], "radius_m": 22, "height_tolerance_m": 3, "requires_flags": ["fly_traversal_unlocked"], "completion_flag": "sky_shrine_reached", "event": "landmark:sky_shrine_heartstone_reached"},
+    {"id": "survey_high_perches", "position": [900,1020,2700], "approach_position": [920,1055,2720], "approach_radius_m": 22, "radius_m": 18, "height_tolerance_m": 3, "requires_flags": ["fly_traversal_unlocked"], "completion_flag": "side_aerie_high_perches_surveyed", "event": "side:aeries_of_cloudreach:survey_high_perches"},
+    {"id": "survey_observatory", "position": [430,920,4500], "approach_position": [430,1000,4500], "approach_radius_m": 25, "radius_m": 22, "height_tolerance_m": 3, "requires_flags": ["cloudreach_upper_route_unlocked"], "completion_flag": "side_aerie_observatory_surveyed", "event": "side:aeries_of_cloudreach:survey_observatory_updraft"},
+    {"id": "survey_waterward", "position": [-420,1110,5650], "approach_position": [-420,1145,5605], "approach_radius_m": 22, "radius_m": 18, "height_tolerance_m": 3, "requires_flags": ["side_aerie_high_perches_surveyed", "side_aerie_observatory_surveyed"], "completion_flag": "side_aeries_complete", "event": "side:aeries_of_cloudreach:survey_waterward_roost"}
+  ],
+  "ground_triggers": [
+    {"id": "counterweight_entered", "position": [-720,700,3680], "radius_m": 20, "height_tolerance_m": 4, "requires_flags": ["cloudreach_upper_route_unlocked"], "completion_flag": "cloudreach_act_ii_complete", "event": "counterweight_road_entered"},
+    {"id": "summit_threshold", "position": [100,1160,5350], "radius_m": 28, "height_tolerance_m": 4, "requires_flags": ["cloudreach_upper_anchors_disabled"], "completion_flag": "summit_extraction_engine_reached", "event": "summit_arena_threshold_crossed"}
+  ],
+  "circuit_requirements": {
+    "lower": ["defeated_cloudreach_ila", "defeated_cloudreach_orrin"],
+    "windscar": ["defeated_cloudreach_senn", "completed_cloudreach_maela_trial_battle"]
+  },
+  "encounter_requirements": {
+    "trainer_ila_lower_ring": ["cloudreach_chapter_started"],
+    "trainer_orrin_bridge_watch": ["cloudreach_crisis_learned"],
+    "tether_lieutenant_senn": ["cloudreach_lower_anchors_investigated"],
+    "keeper_maela_trial": ["causeway_survivors_reconnected"],
+    "young_trainer_tavi_upper_ring": ["side_cliff_circuit_windscar", "cloudreach_upper_route_unlocked"],
+    "officer_voss_summit_approach": ["cloudreach_act_ii_complete"],
+    "captain_veyra_storm_anchor": ["cloudreach_upper_anchors_disabled", "summit_extraction_engine_reached"]
+  },
+  "npc_position_overrides": {
+    "healer_iven": [-290,180,526],
+    "bridgekeeper_orrin": [-491,338,1320],
+    "courier_neri": [-763,400,2047],
+    "trader_kelm": [-346,830,3975],
+    "young_trainer_tavi": [-180,850,4100]
+  },
+  "pickup_overrides": {
+    "cr_pickup_lower_good_candy": [-281.5,180,509.5], "cr_pickup_lower_potion": [-124,205,704], "cr_pickup_lower_revive": [-320,300,1040],
+    "cr_pickup_bridge_good_candy": [-489,338,1329], "cr_pickup_west_great_candy": [-1004,350,1315], "cr_pickup_arch_large_potion": [346,480,1945],
+    "cr_pickup_west_wind_tm": [-1204,420,1695], "cr_pickup_windscar_great_candy": [-524,430,2715], "cr_pickup_aerie_revive": [123,520,3383],
+    "cr_pickup_aerie_stamina": [409,610,3245], "cr_pickup_shrine_rare_candy": [1116,1050,2946], "cr_pickup_perches_heavenfall": [895,1020,2705],
+    "cr_pickup_shrine_revive": [1100,1050,2930], "cr_pickup_upper_great_candy": [-924,760,4105], "cr_pickup_observatory_potion": [425,920,4505],
+    "cr_pickup_upper_rare_candy": [438,920,4493], "cr_pickup_upper_aerial_tm": [-755,850,4565], "cr_pickup_waterward_rare_candy": [-426,1110,5653],
+    "cr_pickup_summit_revive": [106,1160,5343]
+  }
+}

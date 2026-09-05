@@ -31,7 +31,11 @@
     ],
     "act_ii": [
       "fly_traversal_unlocked",
+      "fly_tutorial_completed",
       "sky_shrine_reached",
+      "cloudreach_shrine_vane_west_aligned",
+      "cloudreach_shrine_vane_east_aligned",
+      "cloudreach_shrine_vane_crown_aligned",
       "storm_anchor_engine_truth_learned",
       "cloudreach_upper_route_unlocked",
       "cloudreach_act_ii_complete"
@@ -43,12 +47,18 @@
       "cloudreach_upper_anchors_disabled",
       "summit_extraction_engine_reached",
       "captain_veyra_defeated",
+      "cloudreach_summit_relay_west_disabled",
+      "cloudreach_summit_relay_crown_disabled",
+      "cloudreach_summit_relay_east_disabled",
       "storm_anchor_network_disabled",
       "cloudreach_winds_restored",
       "realm_heart_cloudreach_earned",
       "realm_key_water",
       "waterward_route_revealed",
       "cloudreach_chapter_complete"
+    ],
+    "side_content": [
+      "defeated_cloudreach_tavi_rematch"
     ]
   },
   "acts": [
@@ -81,7 +91,7 @@
           "id": "cloudreach_investigate_lower_anchors",
           "flag_id": "cloudreach_lower_anchors_investigated",
           "label": "Trace the Storm Anchors along the broken roads.",
-          "how": "Inspect both lower anchor sites; the task feed reports the count without marking a GPS route.",
+          "how": "Follow the broken causeway uphill. Inspect the west anchor by Three Bells Bridge, then the east anchor near the skyroad arch.",
           "region_id": "broken_causeways",
           "requires_flags": ["cloudreach_crisis_learned"],
           "count_flags": [
@@ -94,7 +104,7 @@
           "id": "cloudreach_reconnect_survivors",
           "flag_id": "causeway_survivors_reconnected",
           "label": "Open a safe line through the Broken Causeways.",
-          "how": "Clear the anchor picket and ring the Three Bells signal for the stranded travelers.",
+          "how": "Clear the anchor picket, then ring its route bell so Orrin can signal the stranded travelers.",
           "region_id": "broken_causeways",
           "requires_flags": ["cloudreach_lower_anchors_investigated"],
           "completion_event": "three_bells_safe_route_signaled"
@@ -133,6 +143,7 @@
           "how": "Pilot the active fly-capable creature through the aerie's wind gates.",
           "region_id": "windscar_ravine",
           "requires_flags": ["cloudreach_act_i_complete"],
+          "grants_flags": ["fly_tutorial_completed"],
           "completion_event": "flight_trial_completed"
         },
         {
@@ -150,7 +161,12 @@
           "label": "Read the wind record held by the shrine.",
           "how": "Restore the shrine's three vanes and listen to the path of the stolen wind.",
           "region_id": "high_roost_sky_shrine",
-          "requires_flags": ["sky_shrine_reached"],
+          "requires_flags": [
+            "sky_shrine_reached",
+            "cloudreach_shrine_vane_west_aligned",
+            "cloudreach_shrine_vane_east_aligned",
+            "cloudreach_shrine_vane_crown_aligned"
+          ],
           "completion_event": "dialogue:cloudreach_sora_storm_engine_truth"
         },
         {
@@ -624,7 +640,7 @@
   ],
   "resource_tier": {
     "id": "cloudreach_tier_2",
-    "implementation_status": "contract_requires_item_and_recipe_definitions",
+    "implementation_status": "implemented_and_runtime_mounted",
     "design_rule": "Useful preparation and compact upgrades, never a factory chain.",
     "resources": [
       {"id": "windworn_heartwood", "display_name": "Windworn Heartwood", "kind": "wood", "gather_method": "axe", "region_ids": ["broken_causeways", "upper_cloudreach"], "uses": ["bridge_repair", "camp_upgrade"]},
@@ -639,6 +655,8 @@
       {"id": "cr_node_cloudberry_waycamp", "resource_id": "cloudberry", "region_id": "gate_lower_cliffs", "position": [-400.0, 175.0, 570.0], "amount": 4, "respawn_policy": "world_day_regrow"},
       {"id": "cr_node_heartwood_west", "resource_id": "windworn_heartwood", "region_id": "broken_causeways", "position": [-1080.0, 390.0, 1500.0], "amount": 4, "respawn_policy": "world_day_regrow"},
       {"id": "cr_node_gale_fiber_bridge", "resource_id": "gale_fiber", "region_id": "broken_causeways", "position": [-420.0, 350.0, 1420.0], "amount": 3, "respawn_policy": "world_day_regrow"},
+      {"id": "cr_node_gale_fiber_causeway", "resource_id": "gale_fiber", "region_id": "broken_causeways", "position": [-245.0, 390.0, 1582.0], "amount": 2, "respawn_policy": "world_day_regrow"},
+      {"id": "cr_node_gale_fiber_anchor_picket", "resource_id": "gale_fiber", "region_id": "broken_causeways", "position": [30.0, 435.0, 2025.0], "amount": 2, "respawn_policy": "world_day_regrow"},
       {"id": "cr_node_cliffglass_ravine", "resource_id": "cliffglass_ore", "region_id": "windscar_ravine", "position": [-600.0, 420.0, 2900.0], "amount": 3, "respawn_policy": "world_day_regrow"},
       {"id": "cr_node_skyplume_aerie", "resource_id": "skyplume", "region_id": "windscar_ravine", "position": [500.0, 640.0, 3220.0], "amount": 2, "respawn_policy": "encounter_cycle"},
       {"id": "cr_node_sunleaf_shrine", "resource_id": "sunleaf", "region_id": "high_roost_sky_shrine", "position": [1200.0, 1080.0, 3100.0], "amount": 3, "respawn_policy": "world_day_regrow"},

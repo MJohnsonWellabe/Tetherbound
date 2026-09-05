@@ -150,6 +150,12 @@ func try_spend_jump() -> bool:
 	return true
 
 
+## Flight spends the same stamina pool as walking/jumping and suppresses regen
+## while deployed, including an exhausted descent. Never grants free flight.
+func spend_traversal(amount: float) -> void:
+	_spend(maxf(0.0, amount))
+
+
 func _spend(amount: float) -> void:
 	stamina = maxf(0.0, stamina - amount)
 	_regen_cooldown = _regen_delay

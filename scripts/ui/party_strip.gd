@@ -32,6 +32,8 @@ extends Control
 ## cursor — or here, an in-flight reveal tween — gets destroyed mid-motion.
 
 const UI_TOKENS := preload("res://scripts/ui/ui_tokens.gd")
+const PROGRESSION_OVERLAY := preload("res://scripts/ui/progression_strip_overlay.gd")
+var _progression_overlays: Array[Control] = []
 
 const SLOTS := 5
 # Fixed at the occupied row's real text-driven height. A 56px minimum let
@@ -267,6 +269,19 @@ var _cycle_banner_timer := 0.0
 ## Captured once in `_build()` so the reveal tween has a fixed "home" to slide
 ## into rather than drifting further every time it fires.
 var _rest_position := Vector2.ZERO
+var _readable_presentation := false
+
+
+## Post-combat mechanics retain a stable, physically readable roster at 800p.
+## Ordinary exploration/combat sizing and reveal timing are unchanged.
+func set_readable_presentation(enabled: bool) -> void:
+	_readable_presentation = enabled
+	scale = Vector2.ONE / maxf(0.1, get_viewport().get_screen_transform().get_scale().x) if enabled else Vector2.ONE
+	if enabled:
+		if _tween != null and _tween.is_valid(): _tween.kill()
+		modulate.a = 1.0
+		position = _rest_position
+		visible = true
 
 var _rows: Array[PanelContainer] = []
 var _count_label: Label = null
@@ -344,6 +359,7 @@ func set_rest_position(pos: Vector2) -> void:
 
 
 func _ready() -> void:
+	add_to_group("progression_party_strips")
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_rest_position = position
 	_build()
@@ -510,6 +526,11 @@ func _build_row(slot_index: int) -> PanelContainer:
 	row.custom_minimum_size = ROW_SIZE
 	row.add_theme_stylebox_override("panel", _row_box(false))
 	_rows.append(row)
+	var progression_overlay := PROGRESSION_OVERLAY.new()
+	progression_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	progression_overlay.z_index = 2
+	row.add_child(progression_overlay)
+	_progression_overlays.append(progression_overlay)
 
 	var margin := MarginContainer.new()
 	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -807,6 +828,26 @@ func hide_now() -> void:
 	visible = false
 
 
+## The shared presenter supplies plain per-creature state, never a Game lookup.
+var progression_feedback_enabled := true
+
+
+func update_progression(entries: Array, ticks: Dictionary, seconds: float) -> void:
+	if not progression_feedback_enabled:
+		return
+	for index in _progression_overlays.size():
+		var entry: Dictionary = entries[index] if index < entries.size() else {}
+		if not entry.is_empty():
+			entry["portrait"] = _portraits[index].texture
+		var tick: Dictionary = ticks.get(int(entry.get("instance_id", -1)), {})
+		_progression_overlays[index].update_state(entry, tick, seconds)
+		if bool(entry.get("active", false)) and _count_label != null:
+			_count_label.add_theme_font_size_override("font_size", 18)
+			_count_label.text = "TEAM %d/5 · Active: %s" % [entries.size(), str(entry.get("label", ""))]
+	if not ticks.is_empty() and not _pinned:
+		show_strip()
+
+
 ## `entries`: up to `SLOTS` Dictionaries of
 ## `{label: String, level: int, hp_fraction: float, tint: Color,
 ## portrait: String, fainted: bool, resting: bool}`,
@@ -928,7 +969,7 @@ func _set_level(label: Label, i: int, level: int, text: String) -> void:
 
 func _reveal() -> void:
 	visible = true
-	if not is_inside_tree():
+	if not is_inside_tree() or _readable_presentation:
 		# No live tree (a headless test calling this directly, say) — land in
 		# the fully-shown state instantly rather than erroring on
 		# `create_tween()`, which requires one.
@@ -1006,7 +1047,7 @@ func _process(delta: float) -> void:
 			# banner shows.
 			_count_label.visible = true
 
-	if _pinned or not visible:
+	if _pinned or _readable_presentation or not visible:
 		return
 	if _fade_timer > 0.0:
 		_fade_timer -= timer_delta

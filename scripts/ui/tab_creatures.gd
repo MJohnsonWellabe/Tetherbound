@@ -597,6 +597,7 @@ func _build_detail() -> Control:
 	panel.add_child(_detail_trait_desc)
 
 	_detail_xp = Label.new()
+	_detail_xp.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_detail_xp.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
 	_detail_xp.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
 	panel.add_child(_detail_xp)
@@ -642,6 +643,7 @@ func _build_detail() -> Control:
 	bond_wrap.add_child(_bond_meter)
 
 	_bond_caption = Label.new()
+	_bond_caption.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_bond_caption.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
 	_bond_caption.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
 	bond_wrap.add_child(_bond_caption)
@@ -1144,6 +1146,9 @@ func _describe(index: int, cfg: Dictionary) -> void:
 	# 121" as a second HP line. Spelling it out removes the collision without
 	# touching the shared font.
 	_detail_xp.text = "EXP  %d / %d" % [xp, xp_needed]
+	var evolution_requirement: Dictionary = cfg.get("evolution", {}).get(str(creature.get("species_id")), {})
+	if not evolution_requirement.is_empty():
+		_detail_xp.text += " · Evolution at Lv %d + Bond %d + catalyst" % [int(evolution_requirement.get("level", 0)), int(evolution_requirement.get("bond_tier", 0))]
 	_detail_xp_bar.value = 0.0 if xp_needed <= 0 else clampf(float(xp) / float(xp_needed), 0.0, 1.0) * 100.0
 
 	_fill_move_row(
@@ -1160,7 +1165,7 @@ func _describe(index: int, cfg: Dictionary) -> void:
 	var progress := BOND_MILESTONES.progress_text(creature, BOND_MILESTONES.config())
 	_bond_meter.call("set_bond", progress, nodes, maxi(total, 1))
 	var per_node: float = float(cfg.get("bond", {}).get("effects_per_node", {}).get("attack_scale", 0.0))
-	_bond_caption.text = "+%d%% ATK/DEF per node" % int(round(per_node * 100.0))
+	_bond_caption.text = "+%d%% ATK/DEF per node\n%s" % [int(round(per_node * 100.0)), BOND_MILESTONES.all_progress_text(creature)]
 
 	# R4.7's Best Creature caption, null-guarded for R4.10's ceremony: during
 	# the ceremony `_creature_at()` can hand back the pending sixth catch while
