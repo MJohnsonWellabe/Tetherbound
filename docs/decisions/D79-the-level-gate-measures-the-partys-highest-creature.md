@@ -1,4 +1,4 @@
-# D74 — A trainer's level gate measures the party's highest-level creature
+# D79 — A trainer's level gate measures the party's highest-level creature
 
 **Date:** 2026-09-04 · **Decided by:** lane W10-TRAINER-RULES, under
 `docs/owner/OWNER_DIRECTIVES_2026-09-04-B.md` D-0904B-4 and amendment A-4:

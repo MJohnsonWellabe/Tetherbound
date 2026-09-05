@@ -323,7 +323,7 @@ Defeating the required trainer earns access.
 Recommended natural team level by crossing: roughly **5–8** (tunable, not a hard level requirement).
 
 **The level condition is a trainer refusing, not a lock** (owner directive
-2026-09-04-B, amendment A-4; closure plan §7; D74). A trainer row may carry an
+2026-09-04-B, amendment A-4; closure plan §7; D79). A trainer row may carry an
 optional `min_level`; while the player's highest-level creature is under it the
 fight simply does not start, and that trainer says why, in character — *"You're
 too low level. I'll crush you and send you crying to Grandpa."* — naming the

@@ -482,7 +482,7 @@ static func required_level(spec: Dictionary) -> int:
 ## The number `required_level()` is measured against: the HIGHEST level in the
 ## party, not the active creature's and not an average.
 ##
-## D74 records why. The player owns five creatures total and switches mid-fight
+## D79 records why. The player owns five creatures total and switches mid-fight
 ## (`combat_manager.gd::switchable_indices`), so the team that would actually
 ## answer a challenge is the whole party; gating on whoever happens to be
 ## deployed would refuse a player whose strongest creature is one button press

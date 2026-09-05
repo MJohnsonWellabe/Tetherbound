@@ -170,7 +170,7 @@ func test_no_shipped_trainer_carries_a_level_condition_yet() -> void:
 	for entry: Variant in TRAINERS.trainers():
 		var spec: Dictionary = entry
 		assert_eq(TRAINERS.required_level(spec), 0,
-			"trainer '%s' carries a level gate; density lands first (D74)" % str(spec.get("id", "")))
+			"trainer '%s' carries a level gate; density lands first (D79)" % str(spec.get("id", "")))
 
 
 func test_a_level_condition_refuses_a_party_below_it() -> void:
@@ -184,7 +184,7 @@ func test_a_level_condition_refuses_a_party_below_it() -> void:
 
 
 func test_the_gate_reads_the_highest_creature_not_the_first_or_the_average() -> void:
-	# D74. Ordered lowest-last and lowest-first so a first-slot or last-slot
+	# D79. Ordered lowest-last and lowest-first so a first-slot or last-slot
 	# reading fails, and with an average of 4 against a requirement of 8 so an
 	# averaging reading fails too.
 	var gated := _SPEC.duplicate(true)
