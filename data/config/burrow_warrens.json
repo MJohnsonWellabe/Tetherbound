@@ -44,11 +44,15 @@
     },
     "_comment_wall_tint_lerp": "W07-WARRENS-0904. `_material()` pulled every interior stone albedo 0.75 toward near-white #fff2e0; under the new dark ambient the pools alone light the walls and a ~0.85 albedo blows out beside each one. 0.6 keeps the stone warm and lets a pool read as a pool. Round 2: 0.6 still read as pale flat granite under the pools; 0.45.",
     "wall_tint_lerp": 0.45,
-    "_comment_exterior_faces": "W07-WARRENS-0904. Which chamber walls get the exterior earth skin (`_clad_exterior_face`). The hall's -z face is visible from the approach between the mound's boulders and read as grey ashlar blocks in the before frame; now earth like the mouth's front. Round 3: the mouth chamber's own side walls' OUTER faces are what the approach actually sees receding to the right of the cut (after2 frame 01), not the hall's; both sides clad too.",
+    "_comment_exterior_faces": "W07-WARRENS-0904. Which chamber walls get the exterior earth skin. Round 5, measured (scratchpad/float_probe.gd): at this site the cave's own boxes stand 4.6-6.2 m proud of the meadow -- expected per `_comment_resiting` -- so EVERY chamber face can end up seen from outside where the mound does not reach, and a bare one reads as a grey slab hanging in the air. All of them are clad; the skin is collision-free and the interior is untouched.",
     "exterior_faces": [
       [
         "mouth",
         "-z"
+      ],
+      [
+        "mouth",
+        "+z"
       ],
       [
         "mouth",
@@ -61,6 +65,66 @@
       [
         "hall",
         "-z"
+      ],
+      [
+        "hall",
+        "+z"
+      ],
+      [
+        "hall",
+        "-x"
+      ],
+      [
+        "hall",
+        "+x"
+      ],
+      [
+        "warren",
+        "-z"
+      ],
+      [
+        "warren",
+        "+z"
+      ],
+      [
+        "warren",
+        "-x"
+      ],
+      [
+        "warren",
+        "+x"
+      ],
+      [
+        "den",
+        "-z"
+      ],
+      [
+        "den",
+        "+z"
+      ],
+      [
+        "den",
+        "-x"
+      ],
+      [
+        "den",
+        "+x"
+      ],
+      [
+        "vault",
+        "-z"
+      ],
+      [
+        "vault",
+        "+z"
+      ],
+      [
+        "vault",
+        "-x"
+      ],
+      [
+        "vault",
+        "+x"
       ]
     ],
     "_comment_mouth_opening": "Round 3 (owner: the outside still looks awful). The cut in the hillside was the first passage's own 3.0 x 3.0 m door; a burrow mouth is a wider, lower-browed hole. Read by `_opening_on(mouth, -z)`.",
@@ -72,7 +136,9 @@
     "approach_clear": [
       34.0,
       16.0
-    ]
+    ],
+    "_comment_cap_ceilings": "Round 5. An earth cap over each chamber's ceiling slab, so the top of the outcrop is earth rather than a grey box lid where the roof boulders do not cover it.",
+    "cap_ceilings": true
   },
   "_comment_mound": "BAND2-63-WARRENS. The cave stands in ground that does not cover it (see `_comment_resiting`), so what a player sees from the road is the cave's own rock mass standing proud of the meadow -- and the first capture round showed exactly what that is without help: a grey rectangular slab, six metres tall, in a field. This is the outcrop that makes it a knoll instead. Deterministic boulders from the nature family the corridor is already scattered with (`Rock_Medium_1..3`, the same models `vegetation.json` uses), set around the perimeter and over the roof so the silhouette breaks up and the mass reads as stone in the ground rather than a building. Seeded, never random: the same rock stands in the same place every boot, which is the determinism promise the rest of the world keeps. `skip_front_m` keeps the DOORWAY clear and nothing else -- it was 9m, which left the whole front of the cave as a bare flat rectangle standing in a field, and the blind critic called it exactly that: a textured plane with straight cut edges reading as unfinished blocking geometry. At 6m the rock runs across the front too and the opening reads as a hole in a rock face. `tint` multiplies the boulders' own albedo toward the cave's rock colour, because the nature pack's rocks ship a cool mint-grey that the same critic read as 'a heap of enormous cabbages' beside this cave's warm dark stone. ALL TUNABLE.",
   "mound": {
@@ -86,17 +152,17 @@
     "_why_earthmound_ext08": "EXT-08-EARTHMOUND, round 5, code-blind judge, in substance: the exterior 'still reads as a sculpted rock bunker with a flush door -- no spoil, no discrete half-buried boulders, no dark mouth in earth'. Four rounds (EXT-04..07) kept retuning colour, spacing and scale on this same grid without ever changing what it fundamentally IS: a grid of individual Rock030-stone boulders, which reads as a rock pile at any tuning. `burrow_warrens.gd::_build_mound()` now wears this grid's own mass with `_wear_as_earth()` -- the SAME triplanar Ground030 earth material the trodden approach ramp already wears (`_floor_material(true)`) -- instead of the cave's rock stone, so the grid reads as one continuous mound of dug earth. Spacing widens further (5.4->8.0 / 6.5->9.0) and scale widens and shifts up (perimeter 2.6-5.8 -> 3.5-6.5; roof 2.0-4.2 -> 3.0-5.5) so fewer, bigger, more overlapping pieces blend into a mass rather than a denser field of small discrete stones. Net perimeter+roof count: 89 -> 66 (fewer, bigger, earth-textured). The handful of pieces still meant to read as bare stone are new, separate, hand-placed `accent_boulders` below (item 2: '4-6 large half-buried boulders as accents only, not a heap') -- this grid is no longer where the outcrop's rock read comes from at all.",
     "_why_reshape_ext09": "EXT-09-MOUNDMASS, round 6 code-blind judge: the mound (now correctly earth-textured, EXT-08) 'still reads as a boulder pile' -- 66 overlapping pieces read as a heap of earth clods no matter the material, the same lesson EXT-08 already taught about ROCK-textured piles. Instruction: 'use the earth triplanar on a FEW LARGE SMOOTH pieces... NOT many overlapping rocks'. `perimeter_spacing_m`/`roof_spacing_m` widen again (8.0->18.0, 9.0->20.0), `perimeter_courses` drops to its floor (2->1, the single course a 6-10m boulder no longer needs a second course to break up), and `perimeter_scale`/`roof_scale` both jump a full size class (3.5-6.5->6.0-10.0, 3.0-5.5->6.0-9.0) so what remains are genuinely large, domed masses. Paired with a code fix in `burrow_warrens.gd::_build_mound()` (the roof grid used to floor its per-chamber step count at 1, forcing a minimum four-corner grid over every chamber roof regardless of spacing -- now floors at 0, so a chamber smaller than the spacing draws ONE centred piece instead of four). Net perimeter+roof count: 66 -> 15. The mouth chamber's own roof pieces (previously fully inside `skip_front_m`'s clearance and excluded either way) are replaced by three dedicated, hand-placed `mouth_dome` pieces below rather than left empty -- see that key's own comment.",
     "_why_scale_correction_ext10": "EXT-10-OVERSHOOT correction, 2026-09-02. EXT-09's own scale-up ([3.5,6.5]->[6.0,10.0] perimeter, [3.0,5.5]->[6.0,9.0] roof) overshot: the delivered frame (round7/locations/04-warrens-approach-day.png) shows ~15-20m angular slabs dwarfing the player figure, several visibly floating (sky under the upper-left slab). The count reduction (66->15) stays -- only the scale is walked back, to roughly EXT-08's own working range (which `sink_m` 2.0 and `perimeter_base_drop_m` 2.4 were already tuned against and did NOT float), slightly smaller again per owner instruction (top of mound at ~2-3x player height, not 10x). `sink_m`/`perimeter_base_drop_m` are UNCHANGED from EXT-08's own values on purpose: they were the last values proven not to float at a scale range this close to the new one; re-widening the scale again without retuning them is exactly EXT-09's own mistake.",
-    "perimeter_spacing_m": 14.0,
-    "perimeter_courses": 1,
-    "perimeter_base_drop_m": 3.6,
+    "perimeter_spacing_m": 6.0,
+    "perimeter_courses": 2,
+    "perimeter_base_drop_m": 2.2,
     "perimeter_scale": [
-      3.0,
-      4.2
+      1.8,
+      2.9
     ],
-    "roof_spacing_m": 20.0,
+    "roof_spacing_m": 7.0,
     "roof_scale": [
-      2.6,
-      3.8
+      1.7,
+      2.6
     ],
     "sink_m": 2.8,
     "_comment_mouth_dome_ext09": "EXT-09-MOUNDMASS, item 2 second half: 'scale up 2-3 pieces to dome the mouth'. `burrow_warrens.gd::_build_mouth_dome()`, called right after `_build_accent_boulders()`. Thinning the perimeter/roof grid above left the doorway's own gap (`skip_front_m`'s clear radius, unchanged, protects the walkway and the hand-authored jambs/brow) with no earth mass over it at all -- three hand-placed pieces fill exactly that gap: one centred and set back/up over the opening, two flanking it lower on the mound's own shoulders, all wearing the SAME earth material the rest of the mound wears (`_wear_as_earth()`) and squashed into the same low mounded-hump silhouette `_build_spoil_mounds()` already uses, at roughly double an accent boulder's own scale so each one reads as a single dome. Ground-sampled (no `y_m`), same rule the accent boulders and skirt already follow, so each one sits on the real hillside rather than an assumed flat plane.",
@@ -432,20 +498,26 @@
       ],
       "reach_m": 6.0,
       "per_piece": [
-        2,
-        4
+        1,
+        2
       ],
       "scale": [
-        0.6,
-        1.2
+        0.7,
+        1.4
       ],
-      "sink_m": 0.15
+      "sink_m": 0.15,
+      "_comment_perf_round5": "Trimmed from [2,4] to [1,2] per piece (405 -> ~200 meshes) after the round-5 entry stand measured 7420 draw calls against the before frame's 3249; each piece is its own draw. Slightly larger scale keeps the coverage. `reach_m`, `per_piece` and `mound.perimeter_spacing_m` are the knobs if the Ally wants more back."
     },
     "_comment_earth_round4": "Round 4 (owner: the outside still looks awful). The mound wore the apron's near-black #2b2118 over Ground030 at a 3.3 m tile: on 10-15 m boulders in sun that multiplies the photo flat, so each facet read as one chocolate polygon. Its own earth now: brighter (a sunlit dirt bank, not a shaded ramp) and tiled ~3x tighter so the grain reads at that size.",
     "earth_colour": "#7a5f3f",
     "earth_uv_scale": 0.9,
     "earth_normal_scale": 1.6,
-    "_why_base_drop_round4": "Round 4, blind-judge item 01.3 ('the overhanging boulder mass is unsupported -- open sky and the meadow horizon are visible underneath it'). Round 3 sank the ROOF grid; the sky was under the PERIMETER row. Dropped further and its top scale pulled in so a perimeter piece nestles into the mass instead of cantilevering off it."
+    "_why_base_drop_round4": "Round 4, blind-judge item 01.3 ('the overhanging boulder mass is unsupported -- open sky and the meadow horizon are visible underneath it'). Round 3 sank the ROOF grid; the sky was under the PERIMETER row. Dropped further and its top scale pulled in so a perimeter piece nestles into the mass instead of cantilevering off it.",
+    "_comment_seat_round5": "Round 5 (owner: 'they're still floating in the air'). The perimeter/roof grids never sampled the ground under a piece, so on the downhill side of the knoll pieces hung metres above the meadow with sky under them. burrow_warrens.gd::_seat_on_what_holds_it() seats every mound piece on whichever is higher, the terrain or the cave's own roof, and buries it `bury_m` past that. Only ever lowers.",
+    "seat_to_ground": true,
+    "bury_m": 0.5,
+    "_why_density_round5": "Round 5, owner ('still floating'). Seating each piece on what holds it fixed the mid-ground but not the crown: at spacing 14 m with 10-13 m pieces (scale 3.0-4.2 on ~3.2 m rocks) the grid could never close, so sky showed between the perimeter row and the roof row and the mass read as a few giant slabs balanced over a hole. Smaller and much denser -- a hillock built of many stones instead of six boulders -- plus a second, lower perimeter course to close the gap down to the ground. EXT-09/EXT-10 oscillated this number on APPEARANCE; this is the first pass to change it for a stated geometric reason.",
+    "roof_overhang_steps": 1
   },
   "_comment_chambers_heights": "BAND2-63-WARRENS lowered every ceiling by 0.6-1.2m (mouth 4.2->3.6, hall 5.0->4.2, warren 4.0->3.4, den 6.0->4.8, vault 4.0->3.4). At this site most of the cave's mass stands ABOVE the meadow (see `_comment_resiting`), so every metre of ceiling is a metre of grey slab on the skyline; the first capture round showed a six-metre wall. They are still taller than the player and taller than the guardian, and the den is still the tallest room in the cave -- the shape of the place is unchanged, it is just not a tower any more. `lights[].y` moved with the two ceilings it would otherwise have poked through. TUNABLE.",
   "_comment_chambers": "Local metres: x is lateral, +z is depth into the hill; `at` is the chamber centre, `size` is [width, depth], `height` is floor-to-ceiling. Chambers connected by a passage MUST share the axis the passage runs on (the wall opener splits one wall, it does not cut diagonals). `branch: true` marks the optional deep branch -- it is not on the way to anything.",

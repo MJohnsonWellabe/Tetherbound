@@ -482,6 +482,7 @@ func _floor_box(size: Vector3, at: Vector3, exterior := false) -> void:
 ## does not float where the hillside falls away below the mouth), a ceiling
 ## slab, and four walls split around whatever passages meet them.
 func _build_chambers() -> void:
+	var site: Dictionary = _config.get("site", {})
 	for id: String in _chambers:
 		var chamber: Dictionary = _chambers[id]
 		var centre := _local_of(chamber.get("at", []))
@@ -491,8 +492,22 @@ func _build_chambers() -> void:
 
 		_floor_box(Vector3(outer.x, _skirt, outer.y),
 			Vector3(centre.x, _floor_y - _skirt * 0.5, centre.z))
-		_box(Vector3(outer.x, 0.8, outer.y),
+		var ceiling := _box(Vector3(outer.x, 0.8, outer.y),
 			Vector3(centre.x, _floor_y + height + 0.4, centre.z), _rock(), true, true)
+		# Round 5: this slab stands above the meadow at this site and is seen
+		# from outside; bare it reads as a grey box lid on the outcrop. An
+		# earth cap over it, the same skin the mouth's front wall wears.
+		if bool(site.get("cap_ceilings", false)):
+			var cap := MeshInstance3D.new()
+			var cap_box := BoxMesh.new()
+			cap_box.size = Vector3(outer.x + 0.3, 0.5, outer.y + 0.3)
+			cap.mesh = cap_box
+			cap.material_override = _mound_earth_material()
+			cap.position = Vector3(centre.x, _floor_y + height + 0.9, centre.z)
+			cap.name = "CeilingEarthCap_%s" % id
+			cap.set_meta(EXTERIOR_META, true)
+			add_child(cap)
+			ceiling.set_meta(EXTERIOR_META, true)
 
 		for side: String in ["-x", "+x", "-z", "+z"]:
 			var opening := _opening_on(id, side)
@@ -1296,8 +1311,18 @@ func _build_mound() -> void:
 		var top: float = _floor_y + float(chamber.get("height", 4.0)) + 0.8
 		var steps_x := maxi(int(size.x / roof_spacing), 0)
 		var steps_z := maxi(int(size.y / roof_spacing), 0)
-		for ix in steps_x + 1:
-			for iz in steps_z + 1:
+		# W07-WARRENS-0904 round 5, owner ("still floating in the air"), after
+		# measuring rather than guessing (`scratchpad/float_probe.gd`): the
+		# pieces hanging over open sky are not mound boulders at all -- they
+		# are the CAVE'S OWN ceiling slabs, 15-22 m boxes standing 4.6-6.2 m
+		# proud of the meadow, which this site's own `_comment_resiting` says
+		# is expected and which the mound exists to bury. The roof grid stopped
+		# ON the chamber edge, so the slab's rim always stuck out past the last
+		# boulder. `mound.roof_overhang_steps` carries the grid out past the
+		# edge so the mass laps over the rim and down its side.
+		var overhang := maxi(int(mound.get("roof_overhang_steps", 0)), 0)
+		for ix in range(-overhang, steps_x + 1 + overhang):
+			for iz in range(-overhang, steps_z + 1 + overhang):
 				var x: float = centre.x + size.x * (float(ix) / float(steps_x) - 0.5) if steps_x > 0 else centre.x
 				var z: float = centre.z + size.y * (float(iz) / float(steps_z) - 0.5) if steps_z > 0 else centre.z
 				var at := Vector3(x, top, z)
@@ -1413,6 +1438,7 @@ func _build_mouth_dome() -> void:
 		art.scale = Vector3(draw, draw * squash, draw)
 		holder.add_child(art)
 		_keep_rock_out_of_the_rooms(art)
+		_seat_on_what_holds_it(art)
 		_wear_as_earth(art)
 		placed += 1
 	if placed > 0:
@@ -2446,6 +2472,7 @@ func _place_rock(holder: Node3D, models: Array[PackedScene], rng: RandomNumberGe
 	# -- today, nothing does; kept rather than deleted because it is still the
 	# correct treatment for a piece of bare cave stone, and `_build_accent_
 	# boulders()` calls `_wear_the_cave_stone()` directly for the same reason.
+	_seat_on_what_holds_it(art)
 	if earth:
 		_wear_as_earth(art)
 	else:
@@ -2483,6 +2510,50 @@ func _place_rock(holder: Node3D, models: Array[PackedScene], rng: RandomNumberGe
 ## scaled, and if its underside is below the ceiling of a chamber it stands
 ## over, lift it until it is not. A rock over open ground is untouched, so the
 ## outcrop's silhouette from the road is the silhouette that was tuned.
+## W07-WARRENS-0904 round 5, owner: "they're still floating in the air and
+## they shouldn't be."
+##
+## The mound's perimeter and roof grids place every piece at a height derived
+## from the CAVE (the floor plus a lift, or a chamber's ceiling top) and never
+## look at what is underneath it. That is fine directly over the cave, whose
+## own mass holds the piece up -- and wrong everywhere else, because this site
+## stands in a knoll and the meadow falls away from it (`_comment_resiting`).
+## A perimeter piece on the downhill side was being placed metres above the
+## ground it should be sitting in, with sky and the far horizon visible under
+## it -- which is exactly what the owner sees and what the blind judge called
+## the loudest artefact in the set ("the overhanging boulder mass is
+## unsupported ... open sky and the distant meadow horizon are visible
+## underneath it").
+##
+## So every mound piece is seated on whichever is HIGHER: the terrain under
+## its own footprint, or the cave's own mass if it stands over a chamber. Only
+## ever lowered, never raised, so nothing is pushed out of the outcrop; and
+## `bury_m` past that so a piece reads as sitting IN the ground rather than
+## balanced on it. `mound.seat_to_ground: false` restores the old behaviour.
+func _seat_on_what_holds_it(art: Node3D) -> void:
+	var mound: Dictionary = _config.get("mound", {})
+	if not bool(mound.get("seat_to_ground", true)):
+		return
+	var box := _bounds_of(art)
+	if box.size.y <= 0.001:
+		return
+	var support := _site_ground(art.position)
+	# Over a chamber, the cave's own roof is what holds the piece up.
+	for id: String in _chambers:
+		var chamber: Dictionary = _chambers[id]
+		var centre := _local_of(chamber.get("at", []))
+		var half := _size_of(chamber.get("size", [])) * 0.5 + Vector2(_wall_t, _wall_t)
+		if absf(art.position.x - centre.x) <= half.x and absf(art.position.z - centre.z) <= half.y:
+			var top: float = _floor_y + float(chamber.get("height", 4.0)) + 0.8
+			support = top if is_nan(support) else maxf(support, top)
+	if is_nan(support):
+		return
+	var bury := float(mound.get("bury_m", 0.6))
+	var gap := box.position.y - (support - bury)
+	if gap > 0.0:
+		art.position.y -= gap
+
+
 func _keep_rock_out_of_the_rooms(art: Node3D) -> void:
 	var box := _bounds_of(art)
 	if box.size == Vector3.ZERO:
