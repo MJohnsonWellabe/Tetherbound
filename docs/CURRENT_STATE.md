@@ -305,6 +305,20 @@ Decision record: `docs/decisions/D74`.
 | **CL-O8** the legendary should be inside the machine | The bound Veridian stands INSIDE the Tether Machine — on its axis, on the dais the installed mesh carries, under its crown — measured off the mesh at build (`_measure_cage`: dais 3.13 m, crown 8.89 m, 5.76 m void, 1.4 m headroom over the 4.39 m body). Two tight teal restraint rings on the body replace the 24-bar floor ring outside the machine. On the lever it steps down and out to `legendary_stand`, turns to the player, and on the join offer crosses to within 2.6 m. A save in the freed window stands it at the mark | **done on the branch;** blind-judge verdict in `ralph/reports/W06-FINALE-0904/`. `smoke_stronghold` asserts the body is inside the measured void; `smoke_gate_e_finale` asserts inside-before-lever and stepped-out-after; `smoke_stronghold_reload` and `smoke_finale_persistence` pass unchanged on the freed/settled windows |
 | **CL-G5** the Hall's garrison never withdraws | On `legendary_freed` — live, or on a load carrying it — the gate sentries and the garrison camp leave and every brazier, sconce, work-lamp and the relay hub go dark (lights hidden, flames hidden, emissive surfaces unlit; iron and hardware stay). `stronghold_occupation.gd::watch_withdrawal()` owns it, hung off the Stronghold node by `stronghold_climax.gd`; `stronghold.gd` untouched. Found on the way: `stronghold_occupation.gd::build()` is dead code since T1-HALL-REBUILD retired `landmark.gd`'s castle, so CL-G5's named file was never the shipped garrison — the withdrawal targets `stronghold.gd::_build_occupation()`'s holders by name | **done on the branch.** Live path: `smoke_gate_e_finale` (report `2 groups gone, 3 dark, 11 lights out, 45 flames out, 2 surfaces unlit`); load path: `smoke_finale_persistence` (settled ending) and `smoke_stronghold_reload` (`[occupation] the garrison withdrew` on both scenarios) |
 
+**Visual ceiling recorded (three blind rounds).** Round 1's code-blind judge confirmed the
+staging — *"Row 1 B and Row 2 B read as inside the machine… the staging decisions
+underneath are sound"* — and named two defects this lane owned, both fixed and measured:
+the restraint rings clipped teal to white at emission 2.2 (hue separation (G+B)/2−R **+6 →
++35** at 1.15, the same ceiling `stronghold_occupation.gd`'s work-lamp lens already
+records), and the withdrawal was too narrow (**11 → 14** lights out, **2 → 13** emissive
+surfaces unlit, after the siphons and pipe runs were added). Round 3 attempted the judges'
+remaining in-lane finding — nothing visually connects the creature to the machine — with a
+drain column, and a third blind judge called it worse than nothing; it was **reverted**.
+The ceiling is the asset: the machine needs a socket or clamp the creature sits in and a
+retrofit material language, and D49 generated that mesh *without its prisoner* on purpose,
+so its cage volume is a bare arch. `stronghold.gd` and the machine GLB own the rest.
+Full verdicts: `ralph/reports/W06-FINALE-0904/JUDGE_ROUND{1,2,3}.md`.
+
 ## 5. Gate status
 
 - **Gate 0 (reset):** this session; see `docs/CLEANUP_MANIFEST.md`.

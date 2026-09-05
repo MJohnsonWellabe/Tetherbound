@@ -89,6 +89,12 @@ All results are from this branch's head unless a line says otherwise.
 | `godot --headless --path . --script tests/smoke_stronghold_reload.gd` | **passed** (`stronghold reload smoke test passed`) |
 | `godot --headless --path . --script tests/smoke_finale_persistence.gd` | **passed** (`finale persistence smoke test passed`) |
 
+All five commands above were re-run together on the branch head after the last code change,
+so every result in this table is reproducible from the head commit named in §6 — not
+carried over from an earlier tree. The three unit files run together report
+**76 tests, 1145 assertions, 1 failed**, the one failure being the `warden.png` portrait
+file another lane owns (§5).
+
 **The length test was seen red on the old file, for the right reasons**, before the cut was
 written — `'stronghold_warden_challenge' has a 379-character line (budget 110)`, `the
 Warden's pre-fight speech is 1547 characters; budget 350`, `the stronghold's spoken text is
@@ -135,12 +141,14 @@ opengl3` at 1280×720 (never `--headless` with a driver). The freeing in the cap
 driven through the climax's own `_free_the_legendary()` — the lever's own path — so the
 after-frames are what the game does, not a posed copy.
 
-Round 1 sheet: `_sheet_round1.png`. Verdict: `JUDGE_ROUND1.md`, committed verbatim.
-The judge was code-blind: it got the sheet, the frames, `docs/reference/` and the
-visual-judge skill, with rows labelled by camera stand only and no hint which column was
-which or what had changed. It identified the frames itself by matching pixels.
+Three rounds, three sheets, three verdicts, each committed verbatim: `_sheet_round1.png` /
+`JUDGE_ROUND1.md`, `_sheet_round2.png` / `JUDGE_ROUND2.md`, `_sheet_round3.png` /
+`JUDGE_ROUND3.md`. Each round used a **fresh** code-blind sub-agent with no knowledge of the
+previous rounds: it got the sheet, the frames, `docs/reference/` and the visual-judge skill,
+with rows labelled by camera stand only and no hint which column was which or what had
+changed. Round 1's judge identified the frames itself by matching pixels.
 
-**On the lane's own acceptance question it is unambiguous:**
+**On the lane's own acceptance question round 1 is unambiguous:**
 
 > Row 1 B and Row 2 B read as inside the machine. Rows 2 A, 3 A and 3 B read as beside it.
 
@@ -161,7 +169,31 @@ were fixed rather than filed:
   bolted to the Hall, each carrying a `SiphonGlow` omni and an emissive rift skin — now go
   dark with the rest. Measured effect: 11 lights → **14**, 2 emissive surfaces → **13**.
 
-Round-2 frames of the four affected stands are under `shots/w06_round2/`.
+Round-2 frames of the four affected stands are under `shots/w06_round2/`. Round 2's judge
+confirmed the ring change landed — *"B stops being an off-palette pure-white foreign object
+and joins the room's one accent colour"* — and called the gain small, which the numbers
+agree with.
+
+**Round 3 was a failure and is recorded as one.** Round 2's top finding inside this lane's
+ownership was that *nothing connects the creature to the structure, so the central premise
+is not rendered*. That is the premise of the whole reveal, so it was attempted rather than
+filed: a tapered column of the reserved teal from the creature's back to the machine's
+crown. A third blind judge, given it against the round-2 frames and told nothing, called it
+**worse than nothing** — an opaque cone whose taper points *down at* the creature ("the
+shape language of a spotlight… the opposite of extraction"), which in the corner view
+"terminates in mid-air above the antlers without touching anything". It was reverted
+(`f28fc030`); the shipped state is the round-2 state.
+
+**The ceiling, recorded** (COMMON's stop rule): the remaining findings that would move the
+reveal are geometry this build does not have. The machine needs a socket, clamp or cable
+the creature physically sits in, and a second material language saying "bolted on by Team
+Tether". The installed hero mesh has neither — **D49 generated it deliberately *without* its
+prisoner**, because the licence forbade the creature in the reference crops, so its cage
+volume is a bare arch with nothing to attach to. Primitives placed in that arch by this lane
+read as gizmos, and round 3 demonstrated that adding more of them makes the frame worse.
+`stronghold.gd` and `assets/environment/team_tether/tether_machine.glb` own the rest; both
+are outside this lane's ownership list. `JUDGE_ROUND3.md` carries the full ranked list and
+the round-by-round table of what measured.
 
 Numbers decided before the render, measured on fixed crops:
 
@@ -172,6 +204,8 @@ Numbers decided before the render, measured on fixed crops:
 - Old floor-ring crop, before vs after: **20.7%** of pixels changed (the 24-bar fence gone).
 - Hall yard crop, held vs freed: mean luma **7.0 → 1.4** (0.20×).
 - Hall causeway, gate arch + sentries crop, held vs freed: mean luma **6.3 → 4.3** (0.69×).
+- Restraint-ring hue separation (G+B)/2−R, emission 2.2 → 1.15: **+6 → +35** — from
+  indistinguishable-from-white to reading as the reserved teal.
 
 ---
 
@@ -196,32 +230,30 @@ Numbers decided before the render, measured on fixed crops:
   figure is a `stronghold.gd`-placed gauntlet trainer, and withdrawing **beaten trainers** is
   `meadow_healing.gd`'s job — both files are explicitly outside this lane's ownership list.
   It is a real defect in the "the world changed" read and wants an owner.
-- **The judge's larger verdict is a fair one and is not this lane's to answer.** It calls the
-  chamber not shippable — the machine has no legible mechanism, no Team Tether retrofit
-  geometry, cyan light-bars slice the room, both locations are single-key with crushed
-  blacks. Those are art and lighting defects in the Hall and the machine asset, not in the
-  staging this lane changed, and fixing them means new art the build does not have.
-  `JUDGE_ROUND1.md` carries the ranked list in full for whoever owns it.
+- **All three judges' larger verdict is fair and is not this lane's to answer.** They call
+  the chamber not shippable — the machine reads as a stone shrine rather than as captured
+  machinery, it carries no retrofit vocabulary and no Team Tether colour, cyan light-bars
+  slice the room and read as debug draws, the chamber walls show overlapping slabs and a
+  black gap, the stairs are a painted texture, nothing casts a contact shadow, and both
+  locations are single-key with crushed blacks. Every one of those lives in `stronghold.gd`,
+  the Hall's kit, or the machine asset — none in the staging this lane changed. The three
+  verdict files carry the ranked lists in full for whoever owns them.
+- **Two further findings are worth a lane of their own:** the creature reads as a neutral
+  standing idle rather than as something being drained (a pose/animation ask), and the
+  chamber gives it no value separation, so at distance "you cannot tell there is a creature
+  there at all".
 - **Not done:** no new mesh, no Meshy generation, nothing shrunk, no other dialogue file
   touched, no PR opened.
 
 ---
 
-## 6. Branch
+## 6. Branch and head commit
 
-Head: **`7445518f`** on **`ralph/W06-FINALE-0904`** (this line is updated by the final
-commit; see §7).
+Branch **`ralph/W06-FINALE-0904`**, head **`HEAD_PLACEHOLDER`**. No pull request was opened,
+per COMMON.
 
 ## 7. Commits
 
 ```
-7445518f finale smoke: the machine's footprint test counted its own light
-105b074c finale: round-1 blind judge verdict and contact sheet
-5fc7f00c finale: settle the ending position when the ceremony resolves, not after it
-f1f84e76 finale: the restraint rings read teal, and the withdrawal reaches the siphons
-ad95db4d finale: the freed legendary's ending position is set, not left to a tween
-1faef27e finale: hold the bound creature on the dais; step it clear of the machine's plinth
-bb1cccc1 finale: CURRENT_STATE rows for CL-W7/CL-O8/CL-G5; causeway stand in the climax capture
-1103a5dd finale: stage the legendary inside the machine; the garrison stands down (CL-O8, CL-G5)
-87e36533 finale: cut the stronghold dialogue to a handheld budget (CL-W7)
+COMMITS_PLACEHOLDER
 ```
