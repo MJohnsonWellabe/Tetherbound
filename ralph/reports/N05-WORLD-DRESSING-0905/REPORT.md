@@ -55,8 +55,9 @@ within 40 m of her stand on `main`:
 |---|---|---|
 | panels with a post floating over air | **6 of 13** | **0 of 14** |
 | worst float under a post | 0.476 m | 0.000 m |
-| worst post buried in the ground | 1.063 m | 0.138 m (`sink_m` is 0.12) |
-| every foot's height against its own ground | −1.06 … +0.48 m | −0.14 … −0.11 m |
+| worst post buried in the ground | 1.063 m | 0.121 m (`sink_m` is 0.12) |
+| every foot's height against its own ground | −1.06 … +0.48 m | −0.12 … −0.11 m |
+| distance between the nearest ends of two panels, median / worst | 0.705 m / 1.536 m | 0.003 m / 0.029 m |
 
 Two causes, both in how a panel was laid, not in the outline. Each edge was rounded to a
 whole number of 6.15 m panels and the panels spaced `length / count` apart: the 14.76 m
@@ -224,7 +225,7 @@ All commands from the repo root with `export PATH=$HOME/godot-bin:$PATH`, on the
 | `godot --headless --path . --script tests/run_tests.gd -- --only=test_village_boundary.gd` | 11 tests, 175 assertions, 0 failed |
 | `godot --headless --path . --script tests/smoke_stronghold_courtyard_withdrawal.gd` | passed (rc 0); red with the courtyard removed from the list (rc 1) |
 | `godot --headless --path . --script tests/smoke_stronghold.gd` | `stronghold smoke test passed` (rc 0) — the route is still walkable with the piers and lights in place |
-| `godot --headless --path . --script tests/smoke_traversal.gd` | __TRAVERSAL__ |
+| `godot --headless --path . --script tests/smoke_traversal.gd` | `traversal: OK` (rc 0), on the new fence — the village gates and perimeter still hold |
 
 `SCRIPT ERROR`: 0 in every run above. `^ERROR:`: only `Parameter "material" is null`
 (1–3 per run, the known-benign creature-build line under the headless renderer, present
