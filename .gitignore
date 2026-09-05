@@ -75,6 +75,9 @@ tools/_scratch_*
 # each atlas it edits. Git history is the real backup; these are 4MB each and
 # do not belong in the tree.
 *_lod0_texture_0.orig.png
+# N12-REPO-HYGIENE-0905: and the .import sidecar Godot writes beside each one,
+# so a local regrade never leaves an orphan sidecar for git to pick up again.
+*_lod0_texture_0.orig.png.import
 
 # Evidence payloads. Capture rounds and telemetry under ralph/reports/ grew to
 # 2.8 GB in three days. Only written verdicts (*.md) and one contact sheet
