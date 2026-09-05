@@ -65,6 +65,23 @@ Owner noticed the session count didn't match my reports. Root cause: 5 lanes (W0
 Separately, 5 lanes had genuinely gone stale 4+ hours with NO replacement running: W02-HARNESS-CONTEXT, W03-S08-FREEZE, W16-LOFT-BED, W20-SMALL-FIXES, W21-HARNESS-FIGHTS — all hit their 5h limit hours ago (reset already passed) and were sitting untouched. Given the owner flagged this directly, resumed all 5 at once (departing from the normal 1-2/sweep trickle, since the owner surfaced the actual backlog size).
 main also moved: PR #42 merged — **W00-ICONS is now on main**. PR #45 (consolidated: icons+contracts+progression+portraits+companion+bands2-5) is open, still blocked only on the pre-existing finale regression. PR #44 is Codex's own draft PR for Cloudreach, unrelated to this batch, explicitly not ready to merge.
 
+## 16:00 UTC: N09-BRIDGE-CHECKPOINT confirmed done — checkpoint still overall DO NOT SHIP, honestly reported
+9 commits, final `996eba53` on `ralph/N09-BRIDGE-CHECKPOINT-0905`. Closed all 3 of the landing
+judge's do-not-ship items with two independent blind judge rounds: barricades moved into the
+roadway and re-textured (measured collider gap 2.88m -> 1.36m on a 3.00m road, real wood
+material from the buildings kit, not a new asset), Bridge Sentry retinted into the faction's own
+oxblood (measured off the rig's real texture, S 0.25->0.54), signpost labels fitted to their own
+board (fixes the "Relay Statio" clip) with a heavier outline. Honest and important: **the
+checkpoint as a whole is still DO NOT SHIP** per round 2's judge — nothing casts a shadow, the
+crossing can be walked around on the verge, and a grey blockout slab sits at the gate — all
+routed as new findings, none in this lane's file list. Also routed: blue gate banners (measured,
+not a material-level fix), signpost cap height (needs a bigger board, Bucket-B), a stale
+misleading comment in npc_ranks.json, and correctly declined to commit 12 Cloudreach `.uid`
+sidecars it found untracked (would collide with whoever owns those files — different call than
+N12's, correctly reasoned: N12 owned already-known sidecars, these were newly discovered and
+outside N09's ownership). Archived. 8/13 done (N01-N04, N09, N11-N13); 5 running (N05, N06, N07,
+N08, N10).
+
 ## 15:58 UTC: nudged N05 and N08 — stuck on render/judge rounds
 Owner flagged N05-WORLD-DRESSING and N08-PICKUP-TIERS as stuck on renders. Fired a one-shot
 nudge into each live session (create_trigger + fire_trigger + delete_trigger, same mechanism
