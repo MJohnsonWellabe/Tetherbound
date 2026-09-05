@@ -131,6 +131,14 @@ frame, nothing moves it, and nothing is holding input").
 | 15 | — | +1 | 1 | 45 → 31 | sliding sideways; the body travels **< 0.12 m** |
 | — | — | −1 → +1 | **0 → 1** | 45 | `_detour_stalled()` fires, flips the side **and zeroes the count**; `_begin_detour` finds the −1 flank narrower than `BODY_WIDTH` and the +1 flank "free", flips straight back, and the count resets again |
 
+Which branch of `_begin_detour` runs is settled **by elimination from the
+logged values**, not assumed: the flip-on-count branch needs `_side_detours >=
+DETOURS_PER_SIDE` (0 ≥ 3, false), and the both-flanks-pinched branch calls
+`_back_off()`, which would show as `_detour_left = BACKOFF_FRAMES` (30). The log
+shows 45 every cycle, so the branch taken is the wedge check — the −1 flank
+probes narrower than `BODY_WIDTH`, the +1 flank probes clear, and the side flips
+straight back with its count zeroed.
+
 **The reset is the defect.** `_side_detours` returns to `0` on every flip, so it
 never climbs past 1, `DETOURS_PER_SIDE` (3 in that version) is never reached,
 `_back_off()` is never called, and nothing in the state machine can ever
