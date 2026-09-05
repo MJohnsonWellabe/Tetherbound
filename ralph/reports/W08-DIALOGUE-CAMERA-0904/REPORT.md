@@ -1,6 +1,6 @@
 # W08-DIALOGUE-CAMERA-0904 — the conversation push-in
 
-Branch `ralph/W08-DIALOGUE-CAMERA-0904`. Final commit **`<HASH>`**.
+Branch `ralph/W08-DIALOGUE-CAMERA-0904`. Final commit **`a05a0c9d`**.
 Finisher session: the feature commit `c5a381bd` was already on the branch; this
 session verified it, found it inert in the running game, fixed that and three
 further defects, and gathered the evidence.
@@ -275,5 +275,5 @@ Per FINISHER.md rule 4. Each was found by the blind judge on real frames.
 
 ---
 
-Branch `ralph/W08-DIALOGUE-CAMERA-0904`, final commit `<HASH>`.
+Branch `ralph/W08-DIALOGUE-CAMERA-0904`, final commit `a05a0c9d`.
 No pull request opened; the landing lane does that.
