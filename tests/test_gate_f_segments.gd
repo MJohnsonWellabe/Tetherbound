@@ -269,3 +269,51 @@ func test_the_long_water_is_only_asserted_from_inside_the_long_water() -> void:
 			assert_true(asserted, ("S07 asserts `the_long_water` nowhere. CL-H7 moved the assert to the Old "
 				+ "Mill Crossing rather than deleting it -- band 3's whole subject is the river as a regional "
 				+ "barrier, and a chapter that never checks the player entered it has no evidence of that."))
+## CL-H2's measured root cause, pinned so it cannot come back.
+##
+## `scripts/npc/npc_body.gd::add_prompt()` gives every NPC a 3.8 m prompt
+## radius. A walk that is allowed to stop further out than that arrives with no
+## live prompt at all, and the challenge press lands on empty world -- which a
+## `press` step reports as a green press, and the counted dialogue block behind
+## it then reports as ten more. Measured on this branch: S07-17 with
+## `close_enough: 5.0` stopped 4.1 m from Kest and the conversation never
+## opened, while the identical approach at Dorn (3.5 m) and at the outer watch
+## (3.5 m) opened theirs on the first press.
+##
+## The radius is READ FROM THE GAME rather than hard-coded here, so if the
+## prompt radius ever changes this test moves with it instead of enshrining a
+## number that used to be true.
+func test_a_challenge_approach_stops_inside_the_npc_prompt_radius() -> void:
+	var npc_source := FileAccess.get_file_as_string("res://scripts/npc/npc_body.gd")
+	var found := npc_source.get_slice("func add_prompt(label: String, radius: float = ", 1)
+	var radius := float(found.get_slice(")", 0))
+	assert_true(radius > 0.0,
+		"could not read npc_body.gd::add_prompt()'s default prompt radius; the check below is meaningless without it")
+	if radius <= 0.0:
+		return
+	for id in GATE3_SEGMENTS:
+		var steps := _steps(id)
+		for i in steps.size():
+			if typeof(steps[i]) != TYPE_DICTIONARY:
+				continue
+			if str((steps[i] as Dictionary).get("action", "")) != "advance_dialogue_until_closed":
+				continue
+			# The travel step that put the player in front of whoever is talking.
+			var back := i - 1
+			while back >= 0:
+				if typeof(steps[back]) != TYPE_DICTIONARY:
+					back -= 1
+					continue
+				var walk := steps[back] as Dictionary
+				var action := str(walk.get("action", ""))
+				if action != "move_to" and action != "move_to_entity":
+					back -= 1
+					continue
+				var args: Dictionary = walk.get("args", {}) as Dictionary
+				var tolerance := float(args.get("close_enough", 2.5 if action == "move_to_entity" else 2.0))
+				assert_true(tolerance <= radius, ("%s step %s may stop %.1f m from its target and then "
+					+ "%s expects a conversation, but npc_body.gd gives an NPC only a %.1f m prompt radius. "
+					+ "A walk that stops outside it arrives with no live prompt, the challenge press lands on "
+					+ "empty world, and every step after it measures a world that is not talking.")
+					% [id, str(walk.get("id", "?")), tolerance, str((steps[i] as Dictionary).get("id", "?")), radius])
+				break
