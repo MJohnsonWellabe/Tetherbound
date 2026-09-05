@@ -105,6 +105,11 @@ ralph/reports/TOURNAMENT-*/**/[!_]*.png
 ralph/reports/HARNESS-*/**/[!_]*.png
 ralph/reports/OPENING-*/**/[!_]*.png
 ralph/reports/CREATURE-*/**/[!_]*.png
+# W12-COMPANION-0904: the six paired companion-moment frames stay local, same
+# convention as the rest of this list -- only the `_sheet*.png` contact sheet
+# and the written verdict are committed.
+ralph/reports/W12-*/**/[!_]*.png
+ralph/reports/W12-*/**/[!_]*.jpg
 ralph/reports/G3-WARDEN-ARENA-*/**/[!_]*.png
 # G3-CREATURE-COLOUR-0904: per-frame sweep captures stay local, same
 # convention as CREATURE-*/GATE2-* above -- only underscore-prefixed contact

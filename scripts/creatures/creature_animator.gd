@@ -91,6 +91,21 @@ func revive() -> void:
 	_current = ""
 
 
+## W12-COMPANION-0904. Play `role` once IF this rig has a clip for it (its own
+## or a fallback), and say whether it did. The companion-presence layer asks
+## for clips by role ("hit" as a flinch, "attack" as a roar) without knowing
+## the rig, and a role the pack lacks must cost nothing rather than freeze the
+## pose -- `play_once` already refuses an unknown role silently; this is the
+## same call with an answer, so a caller can substitute procedural motion.
+func play_if_exists(role: String) -> bool:
+	if _player == null or _finished:
+		return false
+	if _resolve(role) == "":
+		return false
+	play_once(role)
+	return true
+
+
 ## A one-shot hold is presentation for a moment nothing more important is
 ## happening — but "nothing more important" stops being true the instant
 ## something asks this creature to move under its own power again. Recorded

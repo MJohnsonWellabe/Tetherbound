@@ -1539,6 +1539,14 @@ func _begin_resolve(outcome: String) -> void:
 		return
 	_outcome = outcome
 	state = State.RESOLVING
+	# W12-COMPANION-0904. The result beat: the fight is decided and nothing is
+	# piloting the ally body any more, but the arena still stands and the
+	# creature is still where it won. `companion_presence.gd`'s guard lets its
+	# victory reaction (and only that one) run during this pause -- celebrating
+	# after `_finish()` would mean celebrating back beside the trainer with the
+	# fight already gone.
+	if outcome == "won":
+		get_tree().call_group(&"companion_presence", "on_event", "victory")
 	var flow: Dictionary = MATH.config().get("flow", {})
 	_resolve_timer = float(flow.get("run_delay", 0.5)) if outcome == "fled" \
 		else float(flow.get("faint_pause", 1.6))

@@ -25,8 +25,15 @@ extends "res://scripts/creatures/creature_body.gd"
 ## across the biome.
 const LEASH := 45.0
 
+## W12-COMPANION-0904. The contextual-reaction layer (acknowledgment, victory,
+## hurt, camp, care, bond) that makes the follower read as a companion rather
+## than a model that appears for fights. Built once here; everything it does
+## is documented in its own header.
+const PRESENCE := preload("res://scripts/creatures/companion_presence.gd")
+
 
 var leader: Node3D = null
+var _presence: Node = null
 
 var _following: bool = false
 ## Metres. Kept well clear of the trainer's own capsule: a follower that stands
@@ -52,6 +59,8 @@ func configure_following(cfg: Dictionary) -> void:
 func set_following(value: bool) -> void:
 	_following = value
 	_closing = false
+	if value and _presence != null:
+		_presence.call("on_event", "deploy")
 	# Off every physics layer while following, so it can never wall the trainer
 	# in. It only re-closes the gap once past `_stop_distance` and has no idea
 	# whether "close enough" also means "standing in the way" — reversing
@@ -72,9 +81,35 @@ func is_following() -> bool:
 	return _following
 
 
+## True while closing the gap to the trainer (the presence layer reads it so it
+## never starts a reaction on a creature that is mid-walk).
+func is_closing() -> bool:
+	return _following and _closing
+
+
+func presence() -> Node:
+	return _presence
+
+
+func _ready() -> void:
+	super()
+	_presence = PRESENCE.new()
+	_presence.name = "Presence"
+	add_child(_presence)
+	_presence.call("setup", self)
+
+
 func _physics_process(delta: float) -> void:
 	if _following:
 		_tick_follow()
+	# The presence layer ticks after the follow logic and before integration:
+	# its one gameplay request (the short walk up to the trainer) has to be the
+	# last `request_move` of the frame to be the one honoured, and it must see
+	# the body still standing where the follow logic left it. It runs whether
+	# following or not -- the post-victory reaction plays in the fight's own
+	# result pause, when nothing else drives this body.
+	if _presence != null:
+		_presence.call("tick", delta)
 	# The body integrates whatever was requested above. Calling super LAST is
 	# required: `request_move` is cleared every frame by design, so a request
 	# made after integration would be thrown away. Same rule as wild_creature.gd.
@@ -108,4 +143,7 @@ func _tick_follow() -> void:
 		return
 
 	var speed := _run_speed if distance > _run_distance else _walk_speed
+	# A badly hurt or hungry creature trails at a slower gait (companion_presence.gd).
+	if _presence != null:
+		speed *= float(_presence.call("gait_scale"))
 	request_move(to / maxf(distance, 0.001), speed)
