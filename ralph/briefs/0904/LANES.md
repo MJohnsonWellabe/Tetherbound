@@ -65,6 +65,12 @@ Owner noticed the session count didn't match my reports. Root cause: 5 lanes (W0
 Separately, 5 lanes had genuinely gone stale 4+ hours with NO replacement running: W02-HARNESS-CONTEXT, W03-S08-FREEZE, W16-LOFT-BED, W20-SMALL-FIXES, W21-HARNESS-FIGHTS — all hit their 5h limit hours ago (reset already passed) and were sitting untouched. Given the owner flagged this directly, resumed all 5 at once (departing from the normal 1-2/sweep trickle, since the owner surfaced the actual backlog size).
 main also moved: PR #42 merged — **W00-ICONS is now on main**. PR #45 (consolidated: icons+contracts+progression+portraits+companion+bands2-5) is open, still blocked only on the pre-existing finale regression. PR #44 is Codex's own draft PR for Cloudreach, unrelated to this batch, explicitly not ready to merge.
 
+## 10:47 UTC: ramp-up executed
+Checked the remaining backlog before resuming: **W03, W10-finisher, W11-finisher were already running** (resumed by the owner/parallel process, not this coordinator). **Archived the original W22-BRIDGE-SIGNPOST session** — stale duplicate, its actual content already landed via PR #48. Resumed **W02, W13, W21** (all rate-limit-reset, genuinely idle, no live duplicate). Running now: W02, W03, W05 (fixing), W06, W07, W08-finisher, W10-finisher, W11-finisher, W13, W14, W16, W20 (unblocked), W21, plus W24-LANDING — 13 lanes. Still fully parked: W15 (already done/archived, just not yet landed — no session needed), W22 (done, landed, archived), W23 (done, landed, archived). Remaining never-yet-progressed backlog: none — every lane with outstanding work now has a live session.
+
+## Owner directive — 2026-09-05 ~10:50 UTC: ramp up, one-in-one-out cap lifted
+Owner is restarting lanes themselves too; usage window barely touched this cycle, so ramp concurrency up rather than holding at 4-5. The strict one-in-one-out cap from 08:24 UTC is RESCINDED. Going forward: resume more of the backlog freely (not one-for-one, not gated on a finish first), still verify genuine completion before archiving, still never interrupt a working session. No fixed ceiling stated — use judgement, snowball more aggressively than the last policy allowed.
+
 ## 10:44 UTC: Big landing progress + two corrections
 **PR #48 MERGED — W01-ROUTE-STRIP and W22-BRIDGE-SIGNPOST are on `main`.** PR #49 (ledger/docs repair) and PR #50 (report cleanup for W01/W09) also merged. `main` is now at `590741fe`.
 
