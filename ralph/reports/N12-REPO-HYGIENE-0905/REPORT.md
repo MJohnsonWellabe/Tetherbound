@@ -154,3 +154,16 @@ Not a visual change; none.
 
 Code commit: `54ab11d1badffcd0987e41876361ee9f0dfd5879` on `ralph/N12-REPO-HYGIENE-0905`
 (this report is committed as its immediate child). Base: `origin/main` @ `f8a47ee4`.
+
+## 10. Addendum, 14:4x UTC — overlap with N11-TERRAIN-BAKE is conflict-free
+
+After this lane pushed, `ralph/N11-TERRAIN-BAKE-0905` @ `fcd7c3d1` pushed a commit titled
+"`.uid` sidecars the import generates for the Cloudreach scripts already on main" — the same
+twelve files as §2.1. Compared file by file: **all twelve uid strings are byte-identical**
+across the two branches (Godot derives the uid from the script, not from a random draw), so
+whichever lands second merges clean; git treats identical additions as one. No action needed
+by the landing lane beyond taking either copy. The 28 orphan removals and the `.gitignore`
+line are only on this branch.
+
+The `0905-followup` briefs were still on no remote branch at this addendum (checked `main`,
+N01, N05, N10, N11).
