@@ -108,3 +108,107 @@ is on that material); the ponytail carries the same layer; two colours give two 
 and one colour is shared from the cache; no colour or hidden hair adds nothing; farmer, smith
 and ranger from `art.json` land three different colours; Grandpa and the trainer rig (no mask
 on disk) gain no layer even when handed a colour.
+
+## Renders and runtime validation
+
+All renders: `xvfb-run -a -s "-screen 0 <W>x<H>x24" godot --path . --rendering-driver opengl3
+--resolution <W>x<H> --script tools/_capture_portraits.gd …`, never `--headless` with a
+driver, one render at a time, a headless `--import` before each capture that followed an
+asset change (the one time that was skipped, the panel drew the stale cached plate — caught
+on the sheet, re-imported, recaptured; recorded here so the next lane does not repeat it).
+
+| Render | Result |
+|---|---|
+| Plates: `-- villager_female mira tam villager_ranger halda rae doss` (three rounds: first mask, dilated mask, refined mask) | 7 plates, 0 failures each round; every plate `edge=clear`, `blown=0.0%`, cover 44–45%. Final achieved hair colour (mean over the changed pixels) against the configured hex: mira (104,76,57) for `#5c3a22`; rae (115,71,45) for `#7a4a2c`; tam (122,116,105) for `#8a8578`; ranger (119,63,42) for `#7a3c22`; halda (127,125,130) for `#8f8f96`; doss (74,88,60) for `#4a5c3d`. So the colour lands in the intended sRGB value (no gamma double-conversion; the 4×4 `detail_albedo` texture is read as authored) and sits a little under it because the mask's shading value keeps the painted dark crevices. `_sheet_female_plates_before_after.png` is the before/after. |
+| In-game: `-- --ingame` (three rounds) | 2 frames (Halda in the square, Oskar by the hero tree), 0 failures. `_sheet_ingame_conversations.png` is the final round: Halda's plate and her in-world head are both iron grey; Oskar draws `villager_male.png`. The face-shadow region on Halda's right cheek samples (75,74,30) in W04's frame and identically in this lane's frames, so it predates this lane (it is D81's texture artefact plus the terminator). |
+
+What the world runs: `_recolour_painted_hair` adds one cached material per (rig, colour,
+body/ponytail) and one 4×4 texture per colour. Six colours are in use, so the whole village
+costs twelve small material duplicates and six tiny textures, all built at stand-up through
+the cache `_shared_variant_material` already uses. `set_emission_floor_scale` walks the same
+cache and skips these (emission off), unchanged.
+
+## Blind judge rounds (code-blind Opus sub-agents; only the sheet, `docs/reference/` and the
+## skill; told nothing about what changed)
+
+Round 1, plates (`JUDGE_VERDICT_plates.md`) and in-game frames (`JUDGE_VERDICT_ingame.md`),
+on the first mask. Round 2 (`JUDGE_VERDICT_plates_round2.md`,
+`JUDGE_VERDICT_ingame_round2.md`) on the refined mask. What round 1 established and what it
+sent back:
+
+- **The wiring is right.** In-game: "the plate reads as the same person who is standing in
+  the scene" for both Halda (hood, gold clasps, bob, face matched feature by feature) and
+  Oskar (waistcoat motif, bowl cut); "two different people, unmistakably"; "neither could be
+  mistaken for the player". Plates: row A (before) "one person, seven times — hair crown
+  samples read (64–65, 45, 33) in all seven cells"; row B (after) is one head in seven hair
+  colours, and everything that is not hair is "byte-for-byte the same portrait" — skin,
+  eyes, mouth and clothing within 1–3 levels, the render noise floor. Same ground, same
+  framing, one UI family.
+- **Three defects in the first mask, all fixed before round 2.** (1) In the world, "a
+  network of thin, one-pixel dark lines" across the crown — the UV-island gutters, where
+  the mask was zero and bilinear/mip sampling let the painted brown through; the mask is now
+  dilated 12 texels into the gutters, never onto another island. (2) "Untinted brown patches
+  stranded inside the recoloured hair" on the side-lock in front of the ear and the tips —
+  small islands the 1500-texel component floor dropped with the pupils; a component is now
+  kept when it is ≥1500 texels OR covers ≥ half its own island, and the colour key gained an
+  R−G floor so the hood's olive shadow stays out. (3) "The recolour destroyed the hair's
+  strand detail … relative contrast 0.50 → 0.38" — the 28/0.7 shade curve clamped ~40% of
+  hair texels to full colour; it is now 36/0.85.
+- **Findings that are not this lane's, recorded so they are not lost.** Eyebrows stay dark
+  under grey and green hair (deliberate: brows are small components inside face islands,
+  and the same rule that keeps them out keeps pupils out; a greying person with dark brows
+  is a look, not a bug — the owner can say otherwise). Three of the seven hues are close
+  (judge's ΔE at 72 px: ranger vs Rae 5.4, Tam vs Halda 8.9, Mira vs Rae 8.3) — the colours
+  live in `art.json` / `village_npcs.json` / `river_nest_clear.gd`, chosen when they were
+  invisible; D87 asks whoever owns them to spread them. Doss's green sits inside the tunic's
+  green family. The plate ground `#F2F2F2` against the dark panel, the plates being renders
+  rather than painted, the cheek chevron and crushed collar wedge on the shared rig, no
+  contact shadows under NPCs, the notice board jammed against the camera, the location
+  banner clipped, the hero tree's neon canopy, exposure disagreeing between the two frames —
+  all pre-existing and outside this brief (W04/D81 contract, W08 camera, world dressing).
+
+## Ownership notes for the coordinator
+
+1. **`data/dialogue/stronghold.json` is outside the brief's file list and was edited.** The
+   brief's item 1 named `dialogue_panel.gd` as the fix site on the assumption the panel keyed
+   off a constant; on `main` @ `f8a47ee4` it does not, and the only remaining "player's face
+   on a non-player speaker" was the Warden in that file. No lane in this wave owns the file
+   (checked every `N*.md` brief); the unlanded finale lane `ralph/W06-FINALE-0904` re-points
+   the same two Warden conversations to the same `warden.png` on its own branch, so the two
+   sides merge to the same value. The change is nine characters × 3 plus one comment; if the
+   coordinator would rather it came from W06, revert that one file and delete
+   `test_the_warden_wears_his_own_plate…` — the rank-family test will then go red on `main`
+   until W06 lands, which is the honest state.
+2. **Seven files under `assets/ui/portraits/` were re-rendered.** Not in the brief's list
+   either, but D81 states the per-NPC file names were kept precisely "so that a fix there
+   re-renders straight into the right names with no dialogue edit", and the brief's item 3
+   verify step asks for the female-rig NPCs rendered side by side. The tool that rendered them
+   (`tools/_capture_portraits.gd`) is unchanged; the `.import` sidecars did not change.
+3. **`docs/GATE2_GATE3_CLOSURE_PLAN.md`** is N10's file for status rows; this lane touched
+   only the CL-G11 row its brief names.
+4. **Untracked `.uid` files** for other lanes' scripts (`cloudreach_world.gd.uid`,
+   `realm_*.uid`, `smoke_cloudreach_*.uid`, `test_cloudreach_*.uid`, `test_realm_*.uid`)
+   appear after any headless import on this tree. They belong to N12-REPO-HYGIENE and were
+   not committed. Only the two `.uid` files for this lane's new tests were.
+
+## Known limitations and what was deliberately not done
+
+- **Per-NPC art is still partial, and the CL-G11 row says so.** No speaker resolves to the
+  player's face, but several share a plate: Oskar, Bram, Kell, the Quarry Foreman and Coll
+  (`villager_male.png` — the male rig has no separable hair and no mask; the same
+  mask-by-region approach would work for it but its painted hair is under a hat/short crop
+  and the brief did not ask), Sela/Dara/Nan/the Rescued Ranger (`villager_ranger.png`), the
+  Team Tether ranks, and the Readout/Duty Board/Chamber Five (`trainer.png` by the finale
+  lane's choice, D87 §2).
+- **Eyebrows are not recoloured** (see the judge section). Deliberate.
+- **Hair hues are close for three pairs**; data owned elsewhere, routed in D87.
+- **The cheek wedge and the neck lines on the shared rigs** (D81) are untouched.
+- **The mask is baked, not computed at runtime.** A rig or texture change needs
+  `python3 tools/_bake_villager_female_hair_mask.py` re-run (numpy, Pillow, scipy). The test
+  pins that the mask is on disk and matches the rig's path; it cannot tell a stale mask from a
+  fresh one — that is what the plate render is for.
+- **The dialogue camera** (W08's lane) was not touched; both frames still show the player
+  bisected at the right edge and the villager small, exactly as W04's and W08's judges said.
+- **The speaker identity is passed only for the two generic refusals.** Every other
+  trainer conversation carries its own fields. `encounter_director.gd`'s victory-conversation
+  start (`04d844d0`) passes no identity and needs none — that conversation is per-trainer data.
