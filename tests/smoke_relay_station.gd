@@ -88,10 +88,14 @@ func _run() -> void:
 	await _the_gate_is_open_and_the_yard_is_walkable(world, player, relay)
 	await _the_decks_are_floors(player, relay)
 	await _the_ramp_is_the_route(player, relay)
+	# CL-E12: measured BEFORE the console is ever pressed, because pressing it
+	# is what heals. `_the_console_is_one_way` below is the first press.
+	var drained_before := _drained_split(world, relay)
 	_the_console_is_one_way(relay, progression)
 	_the_console_can_be_gated(relay, progression)
 	_the_ground_is_drained(relay)
 	await _the_local_ground_heals_on_disable(relay)
+	_the_relay_heals_its_own_scatter_and_only_its_own(world, relay, drained_before)
 
 	print("")
 	if _failures.is_empty():
@@ -441,3 +445,106 @@ func _push(player: CharacterBody3D, direction: Vector3, frames: int = PUSH_FRAME
 ## slopes, steps and wall-slides on the way.
 func _frames_for(metres: float) -> int:
 	return int(ceil(metres / 4.0 * 60.0 * 1.5))
+
+
+## CL-E12 / contract V-5, and the half `_the_local_ground_heals_on_disable`
+## above cannot see.
+##
+## Fading the runtime skin makes the ground stop reading as dead. It does not
+## put back what the drain took out of the SCATTER, and a compound that goes
+## from dead ground with no plants to ordinary ground with no plants is a site
+## that still reads as half-healed to a player standing in it. The owner
+## answered V-5 yes, so the plants come back — at the relay's own three
+## stations and nowhere else, which is the part that is easy to get wrong in
+## the generous direction.
+##
+## Both halves are asserted, and the second is the load-bearing one: healing
+## the whole map early would pass a "did the relay heal?" check and quietly
+## spend the ending's biggest beat four regions early.
+func _the_relay_heals_its_own_scatter_and_only_its_own(
+		world: Node, relay: Node3D, before: Dictionary) -> void:
+	var vegetation := world.get_node_or_null(^"Vegetation")
+	if vegetation == null:
+		_fail("no Vegetation node; CL-E12 cannot be measured")
+		return
+	if int(before.get("inside", 0)) <= 0:
+		_fail("the drain held no vegetation inside the relay's own stations before the console "
+			+ "was pressed, so a heal there proves nothing")
+		return
+	if int(before.get("outside", 0)) <= 0:
+		_fail("the drain held nothing OUTSIDE the relay, so 'only its own' cannot be tested")
+		return
+	var after := _drained_split(world, relay)
+	if int(after.get("inside", 0)) != 0:
+		_fail("%d of the relay's own drained placements are still held after its console was "
+			% int(after.get("inside", 0)) + "pressed; the site's ground never grew back")
+	if int(after.get("outside", 0)) != int(before.get("outside", 0)):
+		_fail("the local heal changed the drain OUTSIDE the relay (%d -> %d); "
+			% [int(before.get("outside", 0)), int(after.get("outside", 0))]
+			+ "the chapter's own ending is what heals the rest of the map")
+	var regrown := int(vegetation.call("regrown_count"))
+	if regrown != int(before.get("inside", 0)):
+		_fail("vegetation reports %d regrown but %d were held inside the relay's stations"
+			% [regrown, int(before.get("inside", 0))])
+	# Idempotence, because `disable_relay()` is one-way but `heal_stations()` is
+	# reachable again through the chapter's own sweep on the same discs.
+	var healing := world.get_node_or_null(^"MeadowHealing")
+	if healing != null and healing.has_method("heal_stations"):
+		var again: Dictionary = healing.call("heal_stations",
+			(_config.get("dead_ground", {}) as Dictionary).get("heal_stations", []))
+		if int(again.get("regrown", -1)) != 0:
+			_fail("a second heal of the same stations put back %d more plants; it must be a no-op"
+				% int(again.get("regrown", -1)))
+	print("local scatter heal: %d plants back inside the relay's %d stations, %d still owed elsewhere"
+		% [regrown, int(after.get("stations", 0)), int(after.get("outside", 0))])
+
+
+## How many drained placements are being held INSIDE the relay's own authored
+## drain discs and how many outside them. Read off `vegetation.gd`'s own held
+## list and `terrain_playground.json`'s own radii — the same two sources the
+## heal itself uses, so this measures the thing rather than a proxy for it.
+func _drained_split(world: Node, relay: Node3D) -> Dictionary:
+	var out := {"inside": 0, "outside": 0, "stations": 0}
+	var vegetation := world.get_node_or_null(^"Vegetation")
+	if vegetation == null:
+		return out
+	var discs := _relay_discs()
+	out["stations"] = discs.size()
+	var held: Dictionary = vegetation.get("_drained")
+	for layer_name: String in held.keys():
+		for entry: Variant in (held[layer_name] as Array):
+			var at: Vector3 = (entry as Dictionary).get("position", Vector3.ZERO)
+			var spot := Vector2(at.x, at.z)
+			var inside := false
+			for raw: Variant in discs:
+				var disc: Dictionary = raw
+				if spot.distance_to(disc["centre"] as Vector2) <= float(disc["radius"]):
+					inside = true
+					break
+			if inside:
+				out["inside"] = int(out["inside"]) + 1
+			else:
+				out["outside"] = int(out["outside"]) + 1
+	return out
+
+
+## The relay's own drain stations, by the ids its own config names, with the
+## centres and radii `terrain_playground.json` authors.
+func _relay_discs() -> Array:
+	var wanted: Dictionary = {}
+	for raw: Variant in ((_config.get("dead_ground", {}) as Dictionary).get("heal_stations", []) as Array):
+		wanted[str(raw)] = true
+	var discs: Array = []
+	var terrain := _json(TERRAIN_CONFIG)
+	for raw: Variant in ((terrain.get("drains", {}) as Dictionary).get("stations", []) as Array):
+		var station: Dictionary = raw
+		if not wanted.has(str(station.get("id", ""))):
+			continue
+		var centre: Array = station.get("centre", [])
+		if centre.size() < 2:
+			continue
+		discs.append({
+			"centre": Vector2(float(centre[0]), float(centre[1])),
+			"radius": float(station.get("radius", 0.0)),
+		})
+	return discs

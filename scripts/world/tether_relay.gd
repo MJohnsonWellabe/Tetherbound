@@ -932,9 +932,46 @@ func disable_relay() -> bool:
 func _heal_local_ground() -> void:
 	var config: Dictionary = _config.get("dead_ground", {})
 	var seconds := float(config.get("heal_on_disable_seconds", 12.0))
-	if seconds <= 0.0:
+	if seconds > 0.0:
+		heal(seconds)
+	_heal_local_scatter()
+
+
+## CL-E12, and the half `heal()` above was never able to do.
+##
+## Fading this site's runtime skin makes the GROUND stop reading as dead. It
+## does not put back what the drain took out of the SCATTER -- `scatter_rules.
+## _thin_by_drain` removed real instances at build time and only
+## `vegetation.gd::restore_drained()` can return them -- so before this the
+## compound went from dead ground with no plants on it to ordinary ground with
+## no plants on it, and the site read as half-healed by a player standing in
+## it. The owner answered V-5 with a plain yes (owner directives 2026-09-04,
+## question 1), so the plants come back too, at this site and nowhere else.
+##
+## Delegated to `meadow_healing.gd` rather than reached for directly. That node
+## already owns every "the land heals" pass in the chapter and already knows
+## how to find Vegetation and how to walk the world for drain skins; giving the
+## relay its own copy of that would be a second healing system for one site,
+## which is exactly what the contract says NOT to build ("a station filter on
+## the existing mechanism, not a new system"). What is passed is the id list in
+## this site's own config -- the relay knows which drain stations are its own,
+## and `meadow_healing.gd` turns those ids into the authored discs.
+##
+## Silent no-op when the node is absent (a test scene, a probe world) or when
+## the list is empty; neither is an error, and neither changes the skin fade
+## above. Safe to reach twice: `restore_drained()` has already emptied those
+## discs the second time and returns 0.
+func _heal_local_scatter() -> void:
+	var config: Dictionary = _config.get("dead_ground", {})
+	var stations: Array = config.get("heal_stations", []) as Array
+	if stations.is_empty() or _world == null:
 		return
-	heal(seconds)
+	var healing := _world.get_node_or_null(^"MeadowHealing")
+	if healing == null:
+		healing = _world.find_child("MeadowHealing", true, false)
+	if healing == null or not healing.has_method("heal_stations"):
+		return
+	healing.call("heal_stations", stations)
 
 
 func _on_console_used() -> void:
@@ -1685,6 +1722,15 @@ func dead_ground_visible() -> bool:
 
 func healed() -> bool:
 	return _healed
+
+
+## Is the fade running right now? CL-E12: `meadow_healing.gd`'s station sweep
+## asks, so a skin that has ALREADY been told to fade -- which this one has, by
+## `_heal_local_ground()` above, one line before that sweep is reached -- is not
+## counted a second time as though the sweep started it. `heal()` is idempotent
+## either way; this is about the report telling the truth, not about safety.
+func healing() -> bool:
+	return _healing
 
 
 ## --- plumbing --------------------------------------------------------------

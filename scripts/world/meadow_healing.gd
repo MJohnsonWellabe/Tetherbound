@@ -39,6 +39,10 @@ extends Node3D
 ## bodies `trainer_npc.gd` already stood up.
 
 const CONFIG_PATH := "res://data/config/meadow_healing.json"
+## CL-E12: where the authored drain radii live. The same block
+## `playground_heightfield.drain_factor()` reads, so a local heal and the drain
+## it undoes are answering the same numbers.
+const TERRAIN_PATH := "res://data/config/terrain_playground.json"
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 
 var _config: Dictionary = {}
@@ -111,6 +115,160 @@ func apply(immediate: bool = false) -> Dictionary:
 
 func applied() -> bool:
 	return _applied
+
+
+## --- CL-E12 / contract V-5: healing ONE SITE, before the chapter's own ------
+##
+## D41 says drained ground "heals when the machinery fails". The chapter's
+## machinery fails once, at the Warden, and `apply()` above is that moment.
+## But the relay's OWN machinery fails the moment the player presses its
+## console, hours earlier, and the owner answered V-5 with a plain **yes**
+## (`docs/owner/OWNER_DIRECTIVES_2026-09-04.md`, question 1): heal the relay's
+## own three drain stations then, and leave the rest of the map to the Warden.
+##
+## This is a FILTER ON THE EXISTING MECHANISM, not a second healing system.
+## It calls the same `vegetation.restore_drained()` the chapter-wide sweep
+## calls and the same `heal()` every drain skin already carries; the only new
+## thing is a list of discs to restrict them to.
+##
+## `station_ids` names entries in `terrain_playground.json`'s `drains.stations`
+## -- the SAME authored radii `playground_heightfield.drain_factor()` reads and
+## `scatter_rules._thin_by_drain` filtered the scatter on, so what grows back
+## is exactly what those three stations took and nothing a fourth station took.
+## Reading the ids from the caller rather than from this file's own config is
+## deliberate: the relay knows which stations are its, and a second list here
+## would be a second place to keep that true.
+##
+## Idempotent and order-independent with `apply()`, both ways round. Run first,
+## it hands `apply()` a smaller `_drained` and a skin already faded, and
+## `apply()` heals the remainder normally. Run after — a save loaded past the
+## ending, then a console pressed — every disc's placements are already gone
+## from `_drained` and `restore_drained()` returns 0 rather than double-placing.
+##
+## What it CANNOT do is repaint the ground: the baked colour and control maps
+## are D45's stated remainder and no run-time pass can touch a texel. The
+## relay's own skin is a runtime overlay and does fade; the terrain under it
+## keeps its cast. See D45 and this file's header.
+func heal_stations(station_ids: Array, immediate: bool = false) -> Dictionary:
+	var discs := _station_discs(station_ids)
+	if discs.is_empty():
+		return {"regrown": 0, "dead_ground_faded": 0, "stations": 0}
+	var report := {
+		"stations": discs.size(),
+		"regrown": _heal_the_scatter_within(discs),
+		"dead_ground_faded": _fade_the_drain_skins_within(discs, immediate),
+	}
+	print("[meadow] local healing at %d station(s): %d plants back, %d drain skin(s) fading"
+		% [report["stations"], report["regrown"], report["dead_ground_faded"]])
+	return report
+
+
+## The authored discs for the named stations, straight out of the terrain
+## config. Unknown ids are warned about rather than skipped silently: a typo
+## here is a site that quietly never heals, which is precisely the V-5 *fails
+## if* ("a before/after frame shows no ground change inside the site radius").
+func _station_discs(station_ids: Array) -> Array:
+	var wanted: Dictionary = {}
+	for raw: Variant in station_ids:
+		var id := str(raw)
+		if not id.is_empty():
+			wanted[id] = true
+	if wanted.is_empty():
+		return []
+	var terrain := _load_json(TERRAIN_PATH)
+	var discs: Array = []
+	for raw: Variant in ((terrain.get("drains", {}) as Dictionary).get("stations", []) as Array):
+		var station: Dictionary = raw
+		var id := str(station.get("id", ""))
+		if not wanted.has(id):
+			continue
+		wanted.erase(id)
+		var centre: Array = station.get("centre", [])
+		if centre.size() < 2:
+			continue
+		discs.append({
+			"id": id,
+			"centre": Vector2(float(centre[0]), float(centre[1])),
+			"radius": float(station.get("radius", 0.0)),
+		})
+	for missing: String in wanted.keys():
+		push_warning("meadow_healing: no drain station '%s' in terrain_playground.json" % missing)
+	return discs
+
+
+func _heal_the_scatter_within(discs: Array) -> int:
+	if not bool((_config.get("vegetation", {}) as Dictionary).get("enabled", true)):
+		return 0
+	var vegetation := _find("Vegetation")
+	if vegetation == null or not vegetation.has_method("restore_drained"):
+		return 0
+	return int(vegetation.call("restore_drained", discs))
+
+
+## The same sweep `_fade_the_drain_skins` makes, restricted to skins that
+## actually STAND inside one of the discs. Found by geometry rather than by
+## name for the same reason the chapter-wide pass is found by method: a drain
+## skin belongs to whichever site built it, and this file must not learn the
+## list of files that build them.
+##
+## WHERE a skin is has to be asked carefully, and the first cut of this got it
+## wrong in the silent direction. `tether_relay.gd::_build_dead_ground()` writes
+## its mesh vertices in WORLD coordinates and leaves the MeshInstance3D at the
+## node origin, so `global_position` reads (0,0,0) for a skin painted 3.7 km
+## down the corridor — a filter that trusted it matched nothing, reported
+## "0 drain skins fading" and looked like it had simply found none to fade.
+## `_skin_position()` below asks the rendered geometry instead.
+func _fade_the_drain_skins_within(discs: Array, immediate: bool) -> int:
+	var block: Dictionary = _config.get("dead_ground", {})
+	if not bool(block.get("enabled", true)):
+		return 0
+	var seconds := 0.0 if immediate else float(block.get("fade_seconds", 12.0))
+	var faded := 0
+	for node: Node in _all_nodes(_world):
+		if not node.has_method("heal") or not node.has_method("dead_ground_visible"):
+			continue
+		if not bool(node.call("dead_ground_visible")):
+			continue
+		# Already fading, because the site that fired this sweep started its own
+		# skin first. `heal()` no-ops on it anyway; skipping keeps the count a
+		# statement about what THIS pass did.
+		if node.has_method("healing") and bool(node.call("healing")):
+			continue
+		var at := _skin_position(node)
+		if is_inf(at.x) or not _inside_any_disc(at, discs):
+			continue
+		node.call("heal", seconds)
+		faded += 1
+	return faded
+
+
+## Where a healable node's drained ground actually is, in world metres.
+##
+## The centre of the first visual instance's global AABB at or under the node,
+## because that is the paint; the node's own origin only as a last resort, for
+## a healable that carries no geometry of its own. `Vector3.INF` when neither
+## can be had, which the caller reads as "cannot place this one" rather than as
+## "it is at the origin".
+func _skin_position(node: Node) -> Vector3:
+	for child: Node in _all_nodes(node):
+		var visual := child as VisualInstance3D
+		if visual == null or not visual.is_inside_tree():
+			continue
+		var box := visual.get_aabb()
+		if box.size == Vector3.ZERO:
+			continue
+		return visual.global_transform * box.get_center()
+	var spatial := node as Node3D
+	return spatial.global_position if spatial != null else Vector3.INF
+
+
+func _inside_any_disc(position: Vector3, discs: Array) -> bool:
+	var spot := Vector2(position.x, position.z)
+	for raw: Variant in discs:
+		var disc: Dictionary = raw
+		if spot.distance_to(disc["centre"] as Vector2) <= float(disc["radius"]):
+			return true
+	return false
 
 
 func report() -> Dictionary:
