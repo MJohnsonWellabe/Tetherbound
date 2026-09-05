@@ -128,3 +128,18 @@ already on `main`, which are not committed.
 - Decision numbers: none taken. Nothing here is a design decision.
 - CI on this branch was not observed from the container (`gh` is not installed and
   `api.github.com` is not reachable through the proxy); the landing lane should read the run.
+
+## Merge-forward, 2026-09-05 ~14:35 UTC
+
+`main` moved to `4acd59ff` (PR #52, eight lanes) while this lane was baking. Merged forward
+(`git merge origin/main`, no conflicts; `18985576`). Checked before trusting the verdict
+above on the new base: **no terrain bake input changed** on `main` since `f8a47ee4`
+(`terrain_playground.json`, `playground_heightfield.gd`, `build_playground_terrain.gd`,
+`data/terrain/playground` all untouched), so the 64/64 decoded-identity result and the
+byte-identical manifest still describe the tree this branch lands on. W05-TREELINE changed
+`data/config/vegetation.json`, band 1's `vegetation.json` and re-stamped
+`data/scatter/playground/manifest.json` (now 19008234203076); that is the scatter lane's own
+LF bake and the folded fingerprint accepts it unchanged. Re-run on the merged tree:
+`test_terrain_bake_freshness.gd` 4 / 15 / 0 failed, `test_scatter_fingerprint_covers_bands.gd`
+4 / 22 / 0 failed, `test_scatter_perf_budget.gd` 3 / 6 / 0 failed. Diff against
+`origin/main`: 8 files, 335 insertions, 2 deletions — the table above plus the merge.
