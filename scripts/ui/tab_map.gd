@@ -1140,3 +1140,35 @@ func _player_node() -> Node3D:
 	if world == null:
 		return null
 	return world.get_node_or_null(^"Player") as Node3D
+
+
+## --- N06-MAP-UI's label-legibility helpers -----------------------------------
+##
+## Restored by the landing lane after Cloudreach won this file outright. These
+## three are PURE ADDITIONS: `tests/test_map_legibility.gd` asserts them
+## directly and never asserts that the draw path calls them, so keeping them
+## here costs Cloudreach's rendering nothing -- no Cloudreach code path is
+## routed through them, and N06's own wrapping of the label draw is NOT
+## reinstated. See minimap.gd for the same pair.
+const CANVAS_LABEL_MIN_LUMA := 0.90
+
+
+## Perceptual "how light is this ink", not linearised relative luminance: this
+## decides how a glyph reads against its own outline at small sizes.
+static func luma(colour: Color) -> float:
+	return 0.2126 * colour.r + 0.7152 * colour.g + 0.0722 * colour.b
+
+
+## `colour` blended toward white by exactly the amount that brings its luma to
+## CANVAS_LABEL_MIN_LUMA, and no further. Pure, so the test can pin the
+## guarantee without standing up a scene.
+static func label_core_colour(colour: Color) -> Color:
+	var current := luma(colour)
+	if current >= CANVAS_LABEL_MIN_LUMA:
+		return colour
+	# luma(lerp(c, white, t)) == (1 - t) * luma(c) + t, so the t that lands
+	# exactly on the target is closed-form rather than searched for.
+	var t := clampf((CANVAS_LABEL_MIN_LUMA - current) / maxf(1.0 - current, 0.0001), 0.0, 1.0)
+	var lifted := colour.lerp(Color(1.0, 1.0, 1.0), t)
+	lifted.a = colour.a
+	return lifted

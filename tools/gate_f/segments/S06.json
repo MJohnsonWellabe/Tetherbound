@@ -222,6 +222,18 @@
       "expected": "the window closes on the first ground inside band 2, at the quarry picket. This leg is longer than 60 s and cannot be split -- see this segment's section H note"
     },
     {
+      "id": "S06-18",
+      "title": "challenge Dorn",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Challenge",
+        "check_provider": false,
+        "settle_frames": 30
+      },
+      "expected": "a band 2 trainer on the approach",
+      "observation": "N10-HARNESS-TESTS-0905, brief item 9. WAS a bare `press interact`. `interact_with` presses only when the interaction arbiter has a LIVE prompt and only when that prompt's own text is the one this step means -- `trainer_npc.gd::_prompt_for` builds it from data/config/trainers.json's `challenge` template, \"Challenge %s\" -- and otherwise FAILs naming what it actually saw and how far the intended entity is. A bare press cannot tell a live challenge offer from no offer at all, which is how S08-27 reported a green press into an unengaged world and cost two lanes a run each to diagnose. check_provider false: the prompt belongs to a prompt child of the NPC, and matching on the text the player reads is the stronger check."
+    },
+    {
       "id": "S06-18p0",
       "title": "the world has input back before the satchel opens",
       "action": "wait_until",
@@ -333,18 +345,6 @@
       "expected": "CL-H1 (W21-HARNESS-FIGHTS-0904). the party-health assert CL-H1 asks for before each challenge. `active_creature_alive` fails the segment honestly at the moment the party stopped being fight-ready, instead of letting encounter_director.gd::can_challenge()'s silent refusal (or a scripted press landing on the no-usable-creature conversation instead of a fight) burn the rest of the budget unexplained."
     },
     {
-      "id": "S06-18",
-      "title": "challenge Dorn",
-      "action": "interact_with",
-      "args": {
-        "expect_prompt": "Challenge",
-        "check_provider": false,
-        "settle_frames": 30
-      },
-      "expected": "a band 2 trainer on the approach",
-      "observation": "N10-HARNESS-TESTS-0905, brief item 9. WAS a bare `press interact`. `interact_with` presses only when the interaction arbiter has a LIVE prompt and only when that prompt's own text is the one this step means -- `trainer_npc.gd::_prompt_for` builds it from data/config/trainers.json's `challenge` template, \"Challenge %s\" -- and otherwise FAILs naming what it actually saw and how far the intended entity is. A bare press cannot tell a live challenge offer from no offer at all, which is how S08-27 reported a green press into an unengaged world and cost two lanes a run each to diagnose. check_provider false: the prompt belongs to a prompt child of the NPC, and matching on the text the player reads is the stronger check."
-    },
-    {
       "id": "S06-19",
       "title": "hear Dorn out",
       "action": "advance_dialogue_until_closed",
@@ -354,6 +354,17 @@
       },
       "expected": "trainer flow stages send-out",
       "observation": "CL-H1 (W21-HARNESS-FIGHTS-0904). /CL-H2: was a fixed `press interact, times: N`. A count is right for one conversation length; over-pressing re-opens the panel and under-pressing leaves input_context on `narrative_modal` where the next step expects combat -- G3-BAND5 measured exactly that at the outer watch, and the fight never started. `advance_dialogue_until_closed` reads dialogue_runner.gd::line() and stops the moment the panel closes. quarry_dorn_challenge is two lines; scripts/world/trainer_npc.gd starts the fight when the words run out, so the predicate close IS the handoff."
+    },
+    {
+      "id": "S06-19w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
     },
     {
       "id": "S06-20",
@@ -440,17 +451,6 @@
         "seconds": 1
       },
       "expected": "encounter_director.gd::summon_active_creature() is async; the replacement body needs a few frames"
-    },
-    {
-      "id": "S06-19w",
-      "title": "the world owns input before this walk",
-      "action": "assert",
-      "args": {
-        "check": "input_context",
-        "equals": "world"
-      },
-      "expected": "no narrative modal is holding locomotion when this walk starts",
-      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
     },
     {
       "id": "S06-24",
@@ -867,6 +867,18 @@
       "expected": "Section G: interior chamber mid-clear, interior -- interior readability, lighting"
     },
     {
+      "id": "S06-60",
+      "title": "engage what is in the hall",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 CB-05: 'Warrens fight (enclosed geometry) | inside Burrow Warrens chambers'",
+      "observation": "N10-HARNESS-TESTS-0905, brief item 9. WAS a bare `press interact`. `encounter_director.gd` offers \"Engage <name>\" only when a creature is deployed and a live wild body is inside `engage_range` (6 m, data/config/combat.json `flow.engage_range`); `interaction_activate()` returns without doing anything when `_engageable()` is null, so a bare press on an empty flank is indistinguishable from a press that started a fight. This one refuses and says what the arbiter was actually offering. That is the single line that would have diagnosed S08-27."
+    },
+    {
       "id": "S06-60p0",
       "title": "the world has input back before the satchel opens",
       "action": "wait_until",
@@ -978,18 +990,6 @@
       "expected": "CL-H1 (W21-HARNESS-FIGHTS-0904). the party-health assert CL-H1 asks for before each challenge. `active_creature_alive` fails the segment honestly at the moment the party stopped being fight-ready, instead of letting encounter_director.gd::can_challenge()'s silent refusal (or a scripted press landing on the no-usable-creature conversation instead of a fight) burn the rest of the budget unexplained."
     },
     {
-      "id": "S06-60",
-      "title": "engage what is in the hall",
-      "action": "interact_with",
-      "args": {
-        "expect_prompt": "Engage",
-        "check_provider": false,
-        "settle_frames": 30
-      },
-      "expected": "Section E.1 CB-05: 'Warrens fight (enclosed geometry) | inside Burrow Warrens chambers'",
-      "observation": "N10-HARNESS-TESTS-0905, brief item 9. WAS a bare `press interact`. `encounter_director.gd` offers \"Engage <name>\" only when a creature is deployed and a live wild body is inside `engage_range` (6 m, data/config/combat.json `flow.engage_range`); `interaction_activate()` returns without doing anything when `_engageable()` is null, so a bare press on an empty flank is indistinguishable from a press that started a fight. This one refuses and says what the arbiter was actually offering. That is the single line that would have diagnosed S08-27."
-    },
-    {
       "id": "S06-61",
       "title": "let the fight stage",
       "action": "wait",
@@ -1034,6 +1034,17 @@
       "expected": "Section G: CB-05: Warrens fight, enclosed geometry, inside Burrow Warrens chambers -- per-case: camera fields under enclosure"
     },
     {
+      "id": "S06-64",
+      "title": "fight in the chamber",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 9000,
+        "switch_below": 0.35
+      },
+      "expected": "Section E.1 CB-05 records the camera fields specifically: a fight pressed against a wall is where `target_on_screen` drops out and the camera-correction count means something",
+      "observation": "CL-H1 (W21-HARNESS-FIGHTS-0904). was `press combat_quick, times: N` -- the failure mode SEGMENT_SCHEMA.md names by name. A counted press block is right for exactly one matchup, and G3-BAND2's own telemetry watched all four party members faint in sequence inside one such block while every step reported PASS. `fight_until_resolved` presses combat_quick only while the action machine reads READY, presses party_cycle once when the pilot drops below switch_below of max HP (which is CB-09's switching-under-pressure, driven by the creature's real HP instead of a scripted beat), and stops only when both is_fighting() and trainer_battle_active() have been false for quiet_frames. The camera recentre that used to sit BETWEEN two counted blocks now opens the fight: fight_until_resolved owns the fight end to end by design, so a scripted camera correction cannot be threaded through its middle. Section F still counts the press."
+    },
+    {
       "id": "S06-65",
       "title": "recentre the camera mid-fight",
       "action": "press",
@@ -1044,27 +1055,25 @@
       "expected": "Section F: 'Camera correction: any scripted camera input needed solely to restore the target/route to view'. Every one of these is counted"
     },
     {
-      "id": "S06-66",
-      "title": "finish the chamber fight",
-      "action": "press",
+      "id": "S06-65g",
+      "title": "party-health gate before S06-66",
+      "action": "assert",
       "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 18,
-        "settle_frames": 30
+        "check": "active_creature_alive"
       },
-      "expected": "Section E.1 per-fight record"
+      "expected": "CL-H1's party-health assert: the segment fails honestly at the moment the party stopped being fight-ready, instead of letting encounter_director.gd::can_challenge() refuse silently and every later step measure a world that is not fighting.",
+      "observation": "Landing lane, consolidation of 2026-09-05. S06-66 was one of N10-HARNESS-TESTS' counted `press combat_quick` blocks, converted here to W21-HARNESS-FIGHTS' predicate fight form; W21's contract also requires this gate in the run-up to each fight, and N10's block had none because the older contract did not ask for one."
     },
     {
-      "id": "S06-64",
-      "title": "fight in the chamber",
+      "id": "S06-66",
+      "title": "finish the chamber fight",
       "action": "fight_until_resolved",
       "args": {
-        "budget_frames": 9000,
+        "budget_frames": 7200,
         "switch_below": 0.35
       },
-      "expected": "Section E.1 CB-05 records the camera fields specifically: a fight pressed against a wall is where `target_on_screen` drops out and the camera-correction count means something",
-      "observation": "CL-H1 (W21-HARNESS-FIGHTS-0904). was `press combat_quick, times: N` -- the failure mode SEGMENT_SCHEMA.md names by name. A counted press block is right for exactly one matchup, and G3-BAND2's own telemetry watched all four party members faint in sequence inside one such block while every step reported PASS. `fight_until_resolved` presses combat_quick only while the action machine reads READY, presses party_cycle once when the pilot drops below switch_below of max HP (which is CB-09's switching-under-pressure, driven by the creature's real HP instead of a scripted beat), and stops only when both is_fighting() and trainer_battle_active() have been false for quiet_frames. The camera recentre that used to sit BETWEEN two counted blocks now opens the fight: fight_until_resolved owns the fight end to end by design, so a scripted camera correction cannot be threaded through its middle. Section F still counts the press."
+      "expected": "Section E.1 per-fight record",
+      "observation": "Landing lane, consolidation of 2026-09-05. N10-HARNESS-TESTS wrote this as `press combat_quick, times: 18` against the older contract; W21-HARNESS-FIGHTS' test_gate_f_segments.gd forbids a counted press block for a fight, because it reports PASS whether the fight was won, lost or wiped the party. Converted to the predicate form W21 uses elsewhere in this segment. budget_frames is scaled from the original press count; no until_flag, matching S06-64 and S06-74 which also omit it."
     },
     {
       "id": "S06-67",
@@ -1156,6 +1165,18 @@
         "intended_proof": "memorable-encounter staging"
       },
       "expected": "Section G: guardian encounter, guardian chamber -- memorable-encounter staging"
+    },
+    {
+      "id": "S06-72",
+      "title": "face the Warren Guardian",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 CB-04: 'S06: ... warrens guardian'. Section D RT-07's midpoint",
+      "observation": "N10-HARNESS-TESTS-0905, brief item 9. WAS a bare `press interact`. `encounter_director.gd` offers \"Engage <name>\" only when a creature is deployed and a live wild body is inside `engage_range` (6 m, data/config/combat.json `flow.engage_range`); `interaction_activate()` returns without doing anything when `_engageable()` is null, so a bare press on an empty flank is indistinguishable from a press that started a fight. This one refuses and says what the arbiter was actually offering. That is the single line that would have diagnosed S08-27."
     },
     {
       "id": "S06-72p0",
@@ -1269,18 +1290,6 @@
       "expected": "CL-H1 (W21-HARNESS-FIGHTS-0904). the party-health assert CL-H1 asks for before each challenge. `active_creature_alive` fails the segment honestly at the moment the party stopped being fight-ready, instead of letting encounter_director.gd::can_challenge()'s silent refusal (or a scripted press landing on the no-usable-creature conversation instead of a fight) burn the rest of the budget unexplained."
     },
     {
-      "id": "S06-72",
-      "title": "face the Warren Guardian",
-      "action": "interact_with",
-      "args": {
-        "expect_prompt": "Engage",
-        "check_provider": false,
-        "settle_frames": 30
-      },
-      "expected": "Section E.1 CB-04: 'S06: ... warrens guardian'. Section D RT-07's midpoint",
-      "observation": "N10-HARNESS-TESTS-0905, brief item 9. WAS a bare `press interact`. `encounter_director.gd` offers \"Engage <name>\" only when a creature is deployed and a live wild body is inside `engage_range` (6 m, data/config/combat.json `flow.engage_range`); `interaction_activate()` returns without doing anything when `_engageable()` is null, so a bare press on an empty flank is indistinguishable from a press that started a fight. This one refuses and says what the arbiter was actually offering. That is the single line that would have diagnosed S08-27."
-    },
-    {
       "id": "S06-73",
       "title": "let the guardian fight stage",
       "action": "wait",
@@ -1310,28 +1319,6 @@
       "expected": "CombatManager::is_fighting() is true -- the engage was RECEIVED, not merely pressed. A bare press asserts only that input was injected, which is how S02 passed its engage step into an unengaged world for six runs (RIG-26)."
     },
     {
-      "id": "S06-77",
-      "title": "a charged attack",
-      "action": "press",
-      "args": {
-        "control": "combat_charged",
-        "hold": "long"
-      },
-      "expected": "the charged verb's hold edge in an enclosed fight"
-    },
-    {
-      "id": "S06-78",
-      "title": "finish the guardian",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 20,
-        "settle_frames": 30
-      },
-      "expected": "Section E.1 per-fight record"
-    },
-    {
       "id": "S06-74",
       "title": "fight the guardian",
       "action": "fight_until_resolved",
@@ -1353,16 +1340,56 @@
       "expected": "Section E.1 CB-09's shape, crossed naturally: pilot handoff and camera handoff inside a chamber"
     },
     {
+      "id": "S06-75g",
+      "title": "party-health gate before S06-76",
+      "action": "assert",
+      "args": {
+        "check": "active_creature_alive"
+      },
+      "expected": "CL-H1's party-health assert: the segment fails honestly at the moment the party stopped being fight-ready, instead of letting encounter_director.gd::can_challenge() refuse silently and every later step measure a world that is not fighting.",
+      "observation": "Landing lane, consolidation of 2026-09-05. S06-76 was one of N10-HARNESS-TESTS' counted `press combat_quick` blocks, converted here to W21-HARNESS-FIGHTS' predicate fight form; W21's contract also requires this gate in the run-up to each fight, and N10's block had none because the older contract did not ask for one."
+    },
+    {
       "id": "S06-76",
       "title": "keep fighting",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 9600,
+        "switch_below": 0.35
+      },
+      "expected": "Section E.1 per-fight record",
+      "observation": "Landing lane, consolidation of 2026-09-05. N10-HARNESS-TESTS wrote this as `press combat_quick, times: 24` against the older contract; W21-HARNESS-FIGHTS' test_gate_f_segments.gd forbids a counted press block for a fight, because it reports PASS whether the fight was won, lost or wiped the party. Converted to the predicate form W21 uses elsewhere in this segment. budget_frames is scaled from the original press count; no until_flag, matching S06-64 and S06-74 which also omit it."
+    },
+    {
+      "id": "S06-77",
+      "title": "a charged attack",
       "action": "press",
       "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 24,
-        "settle_frames": 30
+        "control": "combat_charged",
+        "hold": "long"
       },
-      "expected": "Section E.1 per-fight record"
+      "expected": "the charged verb's hold edge in an enclosed fight"
+    },
+    {
+      "id": "S06-77g",
+      "title": "party-health gate before S06-78",
+      "action": "assert",
+      "args": {
+        "check": "active_creature_alive"
+      },
+      "expected": "CL-H1's party-health assert: the segment fails honestly at the moment the party stopped being fight-ready, instead of letting encounter_director.gd::can_challenge() refuse silently and every later step measure a world that is not fighting.",
+      "observation": "Landing lane, consolidation of 2026-09-05. S06-78 was one of N10-HARNESS-TESTS' counted `press combat_quick` blocks, converted here to W21-HARNESS-FIGHTS' predicate fight form; W21's contract also requires this gate in the run-up to each fight."
+    },
+    {
+      "id": "S06-78",
+      "title": "finish the guardian",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 8000,
+        "switch_below": 0.35
+      },
+      "expected": "Section E.1 per-fight record",
+      "observation": "Landing lane, consolidation of 2026-09-05. N10-HARNESS-TESTS wrote this as `press combat_quick, times: 20` against the older contract; W21-HARNESS-FIGHTS' test_gate_f_segments.gd forbids a counted press block for a fight, because it reports PASS whether the fight was won, lost or wiped the party. Converted to the predicate form W21 uses elsewhere in this segment. budget_frames is scaled from the original press count; no until_flag, matching S06-64 and S06-74 which also omit it."
     },
     {
       "id": "S06-79",

@@ -103,7 +103,13 @@ const SATCHEL: Array[Dictionary] = [
 	# plus one spare for the wild-encounter faint that same lane measured
 	# mid-walk in S09 (a burrowback fainted the lead at t=388.8 s, nowhere near a
 	# scripted fight). Same convention as `seed_s09_exit.gd`'s own 4.
-	{"id": "revive", "n": 4},
+	#
+	# Raised 4 -> 7 by the landing lane, 2026-09-05. Consolidating
+	# W21-HARNESS-FIGHTS and N10-HARNESS-TESTS onto one branch merged both
+	# lanes' additions into S06, and the segment now scripts SIX fights where
+	# each lane alone scripted fewer. The rule this file states -- one per
+	# scripted fight plus a spare -- is unchanged; only the fight count moved.
+	{"id": "revive", "n": 7},
 	{"id": "berries", "n": 8},
 	{"id": "orb_basic", "n": 6},
 	{"id": "wood", "n": 16},
