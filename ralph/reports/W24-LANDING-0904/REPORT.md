@@ -90,9 +90,29 @@ PR: **#42 "Land W00-ICONS"** — `ralph/LAND-0904` @ `a20e173f`, opened 01:23 UT
 33935971628 (push) and 33935993180 (pull_request) queued at open. Merge gate: every
 code job executed and green.
 
+### Gate B on `main`'s head is a flake, not a regression
+
+`verify-gate-b-core` failed on `main` @ `81dd6c40` (run 33933772655) with the same
+Quarry Foreman arbiter message W23's branch shows, on both attempts. The only code that
+changed on `main` between the passing run (`3f9e1a14`) and that one is Cloudreach-only
+(`scripts/world/cloudreach_world.gd`, `data/config/cloudreach_chapter.json`, one test),
+which the Meadows playground never loads. Run on the landing tree (`a20e173f`) in this
+container: `godot --headless --path . --script tests/smoke_gate_b_continuous.gd` →
+`gate B continuous (CORE): OK — a fresh save walked opening, road gate, village tools and
+tournament readiness in order` (+163 s). So the failure is a timing race in the smoke
+around the Foreman (`EncounterDirector` wins the interact line when a wild is close),
+seen on CI runners, not reproducible here, and not caused by W00, the manifest repair,
+or W23. It is not this lane's to fix; recorded here so nobody re-diagnoses it.
+
 ### W23-DIFFICULTY checks run by W24 (worktree at `187c2922`)
 
-_(filled in when the background run completes)_
+| Command | Report claims | W24 result |
+|---|---|---|
+| `godot --headless --path . --import` ×2 | — | 0 `SCRIPT ERROR` / `Parse Error` |
+| `run_tests.gd -- --only=test_combat_difficulty.gd,test_chapter_curve.gd,test_encounter_combat_override.gd` | 36 tests, 543 assertions, 0 failed | **36 tests, 543 assertions, 0 failed** |
+| `tests/smoke_combat_baseline.gd` | OK, 15 rows, 24 seeds | **OK (15 rows, 24 seeds each)**, 2.1 s |
+| its own CI run 33920831882 | (pending) | combat / riding / boss / trainer_battle green; aggression cancelled by fail-fast; tournament_bracket, gate_e_finale skipped; gate-b-core red with the `main` flake above |
+| `smoke_aggression`, `smoke_tournament_bracket`, `smoke_gate_e_finale` in the worktree | (pending) | _(running)_ |
 
 ### Not done this cycle, deliberately
 
