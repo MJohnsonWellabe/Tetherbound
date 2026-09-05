@@ -237,9 +237,16 @@ Not a flake and not the documented one: the smoke's header documents 38–45 m t
 Terrain3D; this is 116.1 m with an explicit entombment line. `main` passes this smoke —
 `verify-combat-shard` green at 08:11:12 on `b510043f`, now `main`'s ancestor.
 
-The lane owns the fix. Scaling the radius down globally cannot satisfy both constraints at
-once; holding the collider at a fixed absolute radius independent of placement scale, or
-moving the single placement on the corridor, can. **The lane could not be reached by peer
+**Refinement, 09:15 UTC:** the lane's report claims `smoke_aggression` is OK after the fix,
+and that is true *on its own base* — W05 is cut from `ef16544f`, before everything that
+landed today. I measured against current `main`, which is what landing means. Both baselines
+are now measured in this container: current `main` alone **passes** (exit 0, first attempt,
+09:12), current `main` + W05 **fails** with the entombment. So the entombment is real, but
+whether the cause is W05 alone or W05 against five hours of newer `main` is **not
+established**. The lane is asked to rebase onto current `main` and re-run its own probe and
+smoke there, not to accept a verdict it cannot reproduce. Scaling the radius down globally
+still cannot satisfy both constraints at once; a fixed absolute collider radius independent
+of placement scale, or moving the single placement on the corridor, can. **The lane could not be reached by peer
 message (no sessions live), so PR #50's body carries the rejection.** Its decision record is
 renumbered D74 → **D85** on the landing side and the branch is otherwise clean: no
 placeholders, diff inside its ownership.

@@ -762,3 +762,40 @@ skip rather than a run that verified nothing.
 Still off `main`: **W05** (rejected twice, evidence above), **W10** (skeleton report),
 **W14** (no report, probe commits only), and W02, W06, W07, W08, W11, W15, W20, W21 (no
 report). D85 returns to W05 when it lands; next free for a new lane is **D87**.
+
+### W05, refined — the lane's report and my run are both right
+
+The lane's round-2 report claims `smoke_aggression` is **OK** after its fix. I measured a
+FAIL. Both are true, and the difference is the base.
+
+W05's branch is cut from `origin/main` at **`ef16544f`**, which predates everything landed
+today — W22's bridge dressing, W01, W17/W18's density work, W12, W13, W04, W09, W19, W23.
+The lane verified its fix against that base and got a genuine red→green pair, with the test
+seen failing for the right reason first. That is good practice and I am not disputing it.
+
+I verified against **current `main`**, which is what landing actually means, and got the
+entombment at (42.33, −66.54) and the 116.1 m failure.
+
+Both baselines are now measured rather than inferred, in this container:
+
+| Tree | `smoke_aggression` | Notes |
+|---|---|---|
+| current `main` (this branch, docs-only delta) | **OK**, exit 0, first attempt | run 09:12 UTC |
+| current `main` + W05 @ `457f179f` | **FAIL** — entombed at (42.33, −66.54), recovered to (−25.40, 4.93, −15.60), 116.1 m | run 08:58 UTC, two clean imports first |
+| W05's own base + W05 | OK, per the lane's report | not re-run here |
+
+I also checked the premise I had been asserting from CI rather than from the workflow:
+`smoke_aggression` **is** in `verify-combat-shard` (`.github/workflows/ci.yml:1132`), so the
+green combat shard on `b510043f` was a real baseline. Note it runs with `RETRIES: 2`, so CI
+tolerates one retry there; my local runs are single-attempt, which is the stricter reading.
+
+**What this changes.** My cycle-8 wording — "the fix trades a wall for a pit" — describes the
+mechanism correctly but assigns the cause too confidently. The entombment is real and it is
+W05's collider change interacting with *something*; whether that something is W05 alone or
+W05 combined with a change that landed today is not established, because the lane's base is
+five hours stale. The lane is not being asked to accept a verdict it cannot reproduce: it is
+being asked to **rebase onto current `main` and re-run its own probe and smoke there**. If it
+passes on current `main`, it lands; if it entombs, its probe will name what it hits now, and
+that may not be a tree.
+
+This is the more useful instruction and it replaces the flat rejection in PR #50's body.
