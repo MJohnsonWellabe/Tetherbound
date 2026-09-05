@@ -26,6 +26,9 @@ The re-bake here repairs that as a side effect.
 | `data/scatter/playground/` (manifest + 256 regions) | re-baked, same commit as the config |
 | `tools/_probe_tree_heights_0904.gd` | new: reads the bake, reports per-layer rendered height distribution in metres against the trainer |
 | `tools/_capture_band1_places.gd` | `--only=a,b` stand selection (same contract as the composition capture) |
+| `tools/_probe_skyline_0904.py` | new: per-column skyline relief over sky-bearing columns — the silhouette-variety axis, defined before the after frames were rendered |
+| `tools/_probe_walk_block_0905.gd` | new (round 2): walks `smoke_aggression`'s line with the same held input and names the collider blocking it |
+| `tools/_probe_trunk_radius_0905.gd` | new (round 2): real trunk radius of each tree mesh at scale 1.0, to size the collider by measurement |
 | `docs/decisions/D74-…` | the size hierarchy and the "a scale range is not a re-roll" finding |
 | `docs/VISUAL_BIBLE.md` §4a, `docs/CURRENT_STATE.md` | status rows |
 | `ralph/reports/W05-TREELINE-0904/` | this report, `_sheet_before.png`, `_sheet_after.png`, `JUDGE-after.md` |
@@ -239,6 +242,22 @@ now clips a little further into the bark. Recorded in `docs/decisions/D74` §4, 
 general lesson — in this codebase a scatter layer's visual size and its collision size
 are the same number, and the test that catches that is a walk, not a render.
 
+**Round 2 verification, all re-run in this container after the fix and the re-bake:**
+
+| command | before the fix | after the fix |
+|---|---|---|
+| `godot --headless --path . --script tests/smoke_aggression.gd` | **FAIL** — "stood 53.7m from Galecrest for 900 frames without pressing anything and it never attacked" | **OK** — "the dangerous one initiates, the peaceful one never does" |
+| `scripts/world/bake_playground_scatter.gd` | — | 825,979 placements (3,883 drained), 11 layers, 251,739 ms; **all 256 region `.bin` files byte-identical to the previous bake**, only `manifest.json`'s fingerprint moved, which is the proof that `collision_radius` touches no placement |
+| `… --only=test_scatter_perf_budget.gd` | — | 3 tests, 6 assertions, 0 failed |
+| `… --only=test_scatter_rules.gd` | — | 38 tests, 1,019,854 assertions, 0 failed |
+| `… --only=test_veg_corridor.gd` | — | 9 tests, 1,537,510 assertions, 0 failed |
+| `… --only=test_band_vegetation.gd` | — | 5 tests, 142 assertions, 0 failed |
+| `… --only=test_terrain_bake_freshness.gd` | — | 3 tests, 1 failed — `test_playground_terrain_bake_is_committed_and_fresh`, **pre-existing and not this lane's file** (§5); the other two pass |
+
+That red→green pair on `smoke_aggression` is the evidence that matters: the test was seen
+failing for the right reason, on the right line, with the blocking collider named, before
+the fix was written.
+
 ## 8. Known limitations, and what was deliberately not done
 
 - **`scripts/world/vegetation.gd::PROP_OFFSET` (1.3 m) is now undersized, and I did not
@@ -286,4 +305,14 @@ are the same number, and the test that catches that is a walk, not a render.
 
 ## 9. Final state
 
-Branch `ralph/W05-TREELINE-0904`, head `FINAL_HASH`. Bake commit `46a6d195`.
+Branch `ralph/W05-TREELINE-0904`. Scale change and first bake `46a6d195`; collider fix
+`835f45e2` with its bake fingerprint `3da6a956`. **`smoke_aggression` is green, the four
+named test files are green, and the bake is fresh.** The one red left in anything this
+lane ran is `test_playground_terrain_bake_is_committed_and_fresh`, which fails identically
+on `origin/main` and belongs to the coordinator's terrain re-bake window (§5).
+
+**For the landing lane:** re-land from `ralph/W05-TREELINE-0904`. Acceptance on the visual
+criterion is **partial**, stated plainly in §7 — the silhouette change is confirmed by the
+blind judge on `comp7-pond-reveal` only, `comp8-bridge-rim` is worse for it and wants a
+capture re-framing, and the dominant residual is the tree mesh's 1:3 trunk-to-canopy
+proportion, which is CL-A1's art gap rather than anything scale tuning can reach.
