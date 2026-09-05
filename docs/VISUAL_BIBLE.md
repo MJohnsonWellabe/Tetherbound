@@ -241,6 +241,29 @@ road" — the leaf and its lock are unchanged and functional, this is a framing/
 finding, not a mechanism one), and the one Team Tether grunt in frame is distant, off the
 road and carries no faction colour of his own (`trainers.json`, not this lane's file).
 
+**W22-BRIDGE-SIGNPOST-0904 (2026-09-04) — the signpost and the bridge brought toward board 18
+without Meshy (prompt 74 §7), and the South Bridge held from the approach (CL-B3's in-rules
+half).** Board 18 (`docs/art/reference/18_Signpost_Bridge_Modular_Props.png`) was sampled by
+crop median before anything was retuned: its signpost planks are H25 S57 V52–58 with CREAM
+lettering, its post H29 S64 V57; the old `#c8a874` plank rendered lit at #ffdf9d (near
+white) with dark ink. `scripts/world/signpost.gd` now builds each arm as one pointed plank
+(full height at the post, 0.92 by the far end, then a point), a bracket at the golden-angle
+mount, three rope coils above the top arm and a pointed cap; post and plank albedos are the
+board's targets divided by the measured 1.3× sun lift, and the ink is cream with a dark edge.
+`_label_scale()` fits the tapered body's shallow end; `tests/test_signpost_geometry.gd` asks
+a built signpost whether every label still sits inside its plank and whether the arms still
+mount apart and stack clear. The bridge deck (`building_prefabs.json` `south_bridge`, used by
+both gated crossings) was rendered in isolation first (`tools/_capture_bridge_deck_isolated.gd`):
+kit floor slabs with grain along the span, railed by fourteen field-fence pickets. Now the
+slabs are yawed so their plank seams run across the walk, the pickets are gone, and a `rail`
+block builds squared posts on stone footings, two sagging hemp ropes and rope wraps at every
+post (`gated_crossing.gd::_build_rail`), with the kit timber retinted toward the board's
+weathered brown; the rail colliders are unchanged. In front of the generated checkpoint gate
+(`south_bridge.gd::_build_occupation`): two staked oxblood sigil banners, crossed-timber
+barricade frames on both shoulders with crates and a barrel against the archway, a post
+lantern with the faint `tether_teal`, and a posted grunt (`south_bridge_dressing.json`, no
+prompt) who stands down when the gate is opened — D74. Verdict: __W22_VERDICT__
+
 ## 5. Owner decisions that bound visual work
 
 - Creatures should stand taller than the trainer; fix relative scale by growing the

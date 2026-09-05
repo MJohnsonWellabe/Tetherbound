@@ -1,0 +1,20 @@
+{
+  "_comment": "W22-BRIDGE-SIGNPOST-0904, closure plan CL-B3's in-rules half. The South Bridge checkpoint's posted body, placed by `scripts/world/south_bridge.gd::_post_sentry` through `scripts/world/village_npcs.gd` -- the same set-dressing spec shape `data/config/relay_site.json`'s 'Relay Sentry' uses: a Team Tether rank on the installed grunt rig, a world position, a facing, a `place_when` gate, and NO `greeting`, so `village_npcs.gd` draws no prompt for him (INTERACT-SWEEP-0903: a body with nothing to say offers nothing). He is dressing; the fight at this crossing is `south_bridge_grunt` in `data/config/bands/band1_lower_meadows/trainers.json`, who stands 8m away at (14, 1314) and is untouched.",
+  "_comment_frame": "Positions are WORLD metres, as every `village_npcs.gd` config is. The crossing's own frame: centre (8, 1330), the village to the north (smaller z), the locked leaf at z=1321.5, the checkpoint archway at z=1321.0; the crossing's local +z is world -x. `tests/smoke_traversal.gd` walks a body straight down x=8 to the gate, so nobody here stands inside |x - 8| < 1.5.",
+  "people": [
+    {
+      "name": "Bridge Sentry",
+      "rank": "grunt",
+      "base": "grunt_b",
+      "position": [6.4, 1319.2],
+      "facing_deg": -5.0,
+      "_why_here": "Crossing-local (-10.8, +1.6): 1.8m in front of the archway on the road's east shoulder, 1.6m off the centreline (clear of the smoke walk and of the road's own 1.5m half-width), under the lantern at local (-10.5, +2.0) and inside the two staked banners at local z=+-2.7 -- so from the approach the body, the light and the cloth read as one post. 8.0m from the `south_bridge_grunt` challenger at (14, 1314) and outside his 4.2m challenge radius, so the two never contest a prompt. `base: grunt_b` so he is not a silhouette twin of the challenger's `grunt_a` in the same frame. `facing_deg` -5: turned back up the road toward the village bend at (11, 1270), at whoever is coming.",
+      "place_when": [
+        {
+          "unless_flag": "south_bridge_open",
+          "_why": "A posted sentry belongs to a held crossing. Once the player has genuinely opened the gate the checkpoint is beaten; the barricade, banners and lantern stay as the evidence it was held, but a body still standing guard over an open gate would contradict the leaf that just swung. Same shape as the relay's sentries leaving a dead station."
+        }
+      ]
+    }
+  ]
+}
