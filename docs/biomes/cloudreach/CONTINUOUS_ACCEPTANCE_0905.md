@@ -58,6 +58,40 @@ Continuous outcomes:
   findings; acceptance establishes continuity and correctness, not that this
   travel density is ideal.
 
+### Deployed-companion natural-route cadence closure
+
+A separate zero-Cloudreach-seed replay now measures the early route without the
+full harness's progression backtracking. From the completed-Meadows handoff it
+presses the real `creature_recall` action, verifies the active Sparkit body, and
+then travels only forward through the arrival marker/resources, Warden Aila,
+west anchor, causeway, east anchor and Senn approach. Dialogue, gathering,
+interaction waits, diagnostics and fixture setup do not advance its dead-travel
+clock. No player-position write or Cloudreach objective seed exists.
+
+The first run covered **3,138.1m / 652.12 natural travel seconds** and proved
+actual Engage, resource, NPC and rest offers plus seven real chosen
+interactions. It found one genuine **94.0s / 467.42m** gap between the second
+causeway wild and the east anchor. The raw failure is preserved as
+`deployed-cadence/cadence-before-gap-fix.json`. Rather than adding another item,
+the redundant same-region route-tier Good Candy `cr_candy_broken_route_good_04`
+was moved from the already dense post-anchor cluster to the exact supported
+midpoint of the authored causeway segment at `(-60, 405, 1695)`. Its item,
+region, lane, unique persistence id and one-time contract are unchanged; totals
+remain exactly 100 candy and 75 recovery placements.
+
+The clean replay after that move **passes** at **3,135.1m / 651.75 natural
+travel seconds**, with **37 actual offers**: 4 Engage, 23 resource, 4 NPC, 2
+rest and 4 other authored actions. The relocated pickup is genuinely offered
+through forward stick traversal at approximately `(-61.28, 404.90, 1694.36)`
+and splits the old gap into **44.5s / 222.42m** and **48.0s / 239.63m**. The
+remaining maximum is **76.5s / 345.45m**; no interval exceeds the chapter's
+roughly 60–90 second experiential bar. All seven activated choices match a
+previously observed offer and the companion remains deployed at the end.
+
+Evidence: `ralph/reports/CLOUDREACH-CONTINUOUS-0905/deployed-cadence/cadence.json`.
+Verification: parser pass; **24 tests / 7,477 assertions** across continuous,
+density and physical-runtime contracts; production placement audit **215/215**.
+
 The old test-lethal evidence below remains historical and is mechanics-only.
 It must not be cited as live combat or balance acceptance.
 

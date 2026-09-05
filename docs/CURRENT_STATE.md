@@ -25,32 +25,41 @@ fixtures that aborted despite nominal passes. Corrected follow-ups pass 95 tests
 41,908 assertions with no errors. No clean second full-suite pass is claimed;
 the initial native-error/leak set remains disclosed in `MAIN-MERGE-REGRESSION.md`.
 
-Acceptance remains open. Continuous play now passes the real loaner trial,
-earns permanent Fly and reaches High Roost. A real own-capsule sight-line defect
-blocked low shrine prompts; the viewer-only exclusion passes positive and
-wall/floor/other-body negative controls. Original-offset production input now
-passes all three vanes, Sora's actual dialogue/effect and the windlass. The
-isolated shrine fixture explicitly seeds prior Act I/Fly; clean continuous
-replay 9 must still prove that sequence and the rest without such seeding.
-Round 5's twelve real environment frames receive **art direction Yes / Palworld
-presentation No**. Foundation, 39 related tests / 1,201 assertions and real-input
-Fly pass. Quiet static p95 is 8.37–10.33ms on GTX 1060 at 1280×800, not Ally
-acceptance. Road boundaries, lawn clearings, cliff form/depth, arena staging and
-material cohesion remain scene work. A standalone Cloudreach board was not found
-in the reference paths; there is no claim of acceptance against unseen art. A new
-five-member reward capture exposed a genuine HUD overlap. The upper-right
-single-card correction passes 74/74 real production checks and fresh blind
-review finds no blocking HUD defect; its dense detail and relay-object occlusion
-remain nonblocking findings. See `ralph/reports/CLOUDREACH-HUD-0905/REPORT.md`.
+Continuous gameplay acceptance is closed by checkpoint `aa818b282`: one clean,
+zero-Cloudreach-seed `--accelerated --live-combat` replay covered **19,040.43m /
+3,795.33 simulated seconds** through four real-input battles, three actual camp
+recoveries, loaner Fly, grounded upper route, captain/relays, aftermath/reward,
+Waterward non-entry and the same five members across disk reload. The
+uninterrupted run's sole red was a millisecond-scale live condition tick during
+observation; the immediately following five-member persistence tail passes with
+zero field differences after the JSON writer is explicitly closed.
+
+The early deployed-companion cadence is also measured on a forward-only natural
+route. Real recall input deploys Sparkit before arrival travel; 37 actual
+Engage/resource/NPC/rest/other offers and seven matched interaction choices are
+recorded across **3,135.1m / 651.75 travel seconds**, excluding dialogue,
+interaction/gather waits, diagnostics and backtracking. One genuine 94.0s
+causeway gap was fixed by relocating—not adding—the redundant same-region route
+Good Candy to the supported midpoint. The resulting gaps are 44.5s and 48.0s;
+the remaining maximum is 76.5s with none over 90s. Exact 100-candy / 75-recovery
+totals, item/region matrix, persistent ids and detour balance pass, as do **24
+tests / 7,477 assertions** and **215/215** production placements.
+
+Visual acceptance remains separate and open. Round 5's twelve real environment
+frames received **art direction Yes / Palworld presentation No**. Quiet static
+p95 was 8.37–10.33ms on GTX 1060 at 1280×800, not Ally acceptance. Subsequent
+environment/HUD correction evidence remains in its own reports and is not made a
+gameplay or hardware claim here. See `ralph/reports/CLOUDREACH-HUD-0905/REPORT.md`.
 
 Combat has been remeasured against main's 1.6 damage multiplier: 28/28 real-input
 trainer-ladder wins and real wipe/rest/retry. A separate actual-world finale
 probe now wins all nine rounds across three input policies, observes live wind/
 arc/lee and real movement drift, and walks to all relays. Remaining party HP is
 23.21–51.96%; maximum individual hit is 40.58%. No further balance tuning.
-This uses an explicit rested summit fixture, not continuous attrition; final
-balance remains open. Root also fixed freed-body glow cleanup and empty
-level-up VFX surface errors; focused VFX checks pass.
+The separate balance fixture used an explicit rested summit start, while the
+accepted continuous route now supplies the missing attrition/context evidence.
+Root also fixed freed-body glow cleanup and empty level-up VFX surface errors;
+focused VFX checks pass.
 See `docs/biomes/cloudreach/CONTINUOUS_ACCEPTANCE_0905.md`,
 `COMBAT_BALANCE_EVIDENCE_0905.md`, `LIVE_FINALE_EVIDENCE_0905.md`,
 `SHRINE_SIGHTLINE_0905.md` and the round-5 `JUDGE-ASTRA.md`.
@@ -62,16 +71,14 @@ respawn guards. Two separate quiet 12-phase profiles measure each actual residen
 pair at roughly 0.35–0.60ms of inclusive instrumented support work per physics
 tick. This is not a scene/device pass: rendered causeway roaming reached 19.30ms
 p95 / 28.10ms max, and separate zero-query headless controls stalled to 430–596ms.
-Pre-Senn absence of Engage in the continuous fixture also reflects its undeployed
-companion; it is not proof of missing wilds.
+The forward deployed-companion evidence observes four actual pre-Senn Engage
+offers; the earlier undeployed-fixture absence is superseded.
 
-Controlled Fly now permits the authored 425m High Roost-to-aerie descent while
-exhausted flight still returns to its physically verified anchor. The isolated
-route lands on real aerie collision with 115.75 stamina and no recovery. Next:
-wire the authored Cloudreach camp creature-recovery service, finish continuous
-upper-route/finale/aftermath/exact disk reload with real combat, measure activity
-gaps, and resolve the round-5 criticisms. Draft PR #44 CI for `c1e834771` remains
-queued, not passed; do not merge.
+Controlled Fly permits the authored 425m High Roost-to-aerie descent while
+exhausted flight still returns to its physically verified anchor; the complete
+continuous route now proves that return and all downstream gameplay. Next work
+is the still-separate visual gate and device/hardware evidence. Do not merge
+without the branch's normal review/CI process.
 
 **Status:** the live status document. Replaces `ralph/BACKLOG.md`, `ralph/STATUS.md` and
 the coordinator handovers (all under `archive/ralph/`). Update it when evidence changes;
