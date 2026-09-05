@@ -247,6 +247,17 @@ Numbers decided before the render, measured on fixed crops:
   standing idle rather than as something being drained (a pose/animation ask), and the
   chamber gives it no value separation, so at distance "you cannot tell there is a creature
   there at all".
+- **58 untracked files were left untracked on purpose, and the coordinator should route
+  them.** Running `godot --headless --import` in this container generated import sidecars
+  and extracted textures for assets *other lanes* committed without them (41 under
+  `assets/` — candy/mushroom pickups, potion plant, revive flower, riding saddle, south
+  bridge gate, and their reference crops), plus 17 `.uid` files for other lanes' scripts
+  under `tests/` and `tools/`. They are all real files this project normally tracks (231
+  `.uid` in `tests/`, 525 in `tools/` are committed), so somebody owes them a commit — but
+  every one is outside this lane's ownership list, and committing them here would put other
+  lanes' assets in this branch's diff. The three `.uid` files this lane *does* own (its two
+  capture tools and its new test) were generated the same way and **are** committed
+  (`47a25030`).
 - **Not done:** no new mesh, no Meshy generation, nothing shrunk, no other dialogue file
   touched, no PR opened.
 
