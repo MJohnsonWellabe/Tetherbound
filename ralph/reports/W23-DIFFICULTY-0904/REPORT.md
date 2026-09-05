@@ -228,4 +228,7 @@ D77 §4. No numbers changed, only the comment.
 
 ## Commit and branch
 
-Branch `ralph/W23-DIFFICULTY-0904`, pushed. Final commit: FINAL_COMMIT_PLACEHOLDER
+Branch `ralph/W23-DIFFICULTY-0904`, pushed. The branch tip after this report's
+own commit carries every fix described above; its parent, verified green by
+the finisher session, is `0a84d911f7a4d84e66b42ce4e2a1ded00ae97b1f`. Check
+`git log ralph/W23-DIFFICULTY-0904` on the pushed branch for the exact tip.
