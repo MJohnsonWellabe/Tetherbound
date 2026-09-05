@@ -258,6 +258,66 @@ That red→green pair on `smoke_aggression` is the evidence that matters: the te
 failing for the right reason, on the right line, with the blocking collider named, before
 the fix was written.
 
+## 7c. Round 3 — re-verified on current `main`, where the reported second failure does not reproduce
+
+W24-LANDING reported that the collider fix is correct against the base it was verified on
+(`ef16544f`) but that `main` + this branch entombs the player at a **different** spot,
+(42.33, −66.54), failing at 116.1 m. Asked to merge current `main` and re-verify.
+
+**Merged, not rebased** — `git rebase` would need a force-push and the lane rules forbid
+that. `origin/main` (`590741fe`, 192 commits ahead) merged into this branch as `359abae3`;
+three conflicts, all resolved keeping both sides (`manifest.json`, and one appended block
+each in `VISUAL_BIBLE.md` and `CURRENT_STATE.md` — the second of which contained a
+duplicated `W05-TREELINE` row from an earlier commit of mine, deduped in the resolution).
+
+**The merged world's vegetation is provably the vegetation already verified.** Two
+independent checks:
+
+1. `main` changed **no bake input** in those 192 commits — `git diff --name-only ef16544f
+   origin/main -- data/config/vegetation.json 'data/config/bands/*/vegetation.json'
+   data/config/terrain_playground.json` is empty. The merged scatter config is this lane's
+   own, unmodified.
+2. Re-baking on the merged tree produced a **bit-identical** result: `git status
+   data/scatter/` is empty afterwards, all 256 region files and `manifest.json` unchanged,
+   825,979 kept / 3,883 drained. Not "the same numbers" — the same bytes.
+
+So every tree position, model, yaw, scale and collider in the merged world is exactly what
+round 2 verified. A tree cannot be blocking anything here that it was not blocking there.
+
+**And it does not.** On the merged tree:
+
+| check | result |
+|---|---|
+| `godot --headless --path . --script tests/smoke_aggression.gd` | **OK** — "the dangerous one initiates, the peaceful one never does" |
+| `tools/_probe_walk_block_0905.gd` (same walk, same held input, same unstick escape) | **reached 10 m at frame 772**, `on_wall=false`, velocity 5.0 m/s, **not one 120-frame stall recorded** |
+
+The probe also prints the geometry the report's numbers depend on: Galecrest spawns at
+(34.30, −119.15), **57.4 m** straight-line from the walk's start at (40, −62). A "116.1 m"
+distance is roughly twice that, which is not a distance this walk can report from a stall
+anywhere on the line unless the creature had wandered far from its spawn.
+
+**What I think happened, offered as a hypothesis and not as a claim about anyone's care.**
+The reported stall coordinate (42.33, −66.54) is **1.93 m** from the coordinate this lane's
+*own* pre-fix failure stalled at (40.54, −65.82), and 5.1 m from the walk's start — the same
+small thicket immediately south of it. That is the signature of the **pre-fix** state, not of
+a new blocker. The collider fix landed in `835f45e2`, one commit after the scale change in
+`46a6d195`; a tree that carried `46a6d195` but not `835f45e2` reproduces the original block
+in exactly that thicket. **Worth confirming which commit the failing tree contained before
+treating this as an open defect.** If it did contain `835f45e2`, the second candidate is the
+walk's documented intermittency: `smoke_aggression.gd`'s own header records this exact walk
+stalling on CI at 44.1 m, 38.0 m and 45.1 m with a ~7 % residual rate, which is why its
+unstick escape exists at all — so a single red run on a historically flaky walk is worth a
+re-run before it is attributed.
+
+REPEATS_PLACEHOLDER
+
+**Nothing was changed in this round.** No configuration, no bake, no collider — the fix from
+round 2 stands as it was, and the merge is the only code movement. If the failure does
+reproduce on a tree that contains `835f45e2`, my probe is committed and will name the
+blocker at whatever the new position is; if that blocker turns out to be a static object
+from another lane's landed work rather than a scatter instance, it is a routed finding
+rather than something to fix from here.
+
 ## 8. Known limitations, and what was deliberately not done
 
 - **`scripts/world/vegetation.gd::PROP_OFFSET` (1.3 m) is now undersized, and I did not
