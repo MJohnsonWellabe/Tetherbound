@@ -112,15 +112,38 @@ const PROBE_REACH := 3.0
 ## No waypoint could fix it, because the walker was not choosing badly between
 ## two known sides -- it could not see either one.
 ##
-## So the probe now sweeps the volume the BODY occupies: three heights by three
-## lateral offsets, nine rays, nearest hit wins. Still rays, still cheap, still
-## only fired when a leg has already stalled.
+## So the probe now sweeps the volume the BODY occupies: every height in
+## `PROBE_HEIGHTS` by three lateral offsets, nearest hit wins. Still rays,
+## still cheap, still only fired when a leg has already stalled.
 ##
 ## The lowest height clears `player_controller.gd::STEP_HEIGHT` (0.35): a kerb
 ## the body steps over must not read as a wall, or every outdoor detour would
 ## think it was boxed in. The crates at 0.50m are above that line and are seen;
 ## a stair tread is below it and is not.
-const PROBE_HEIGHTS: Array[float] = [0.45, 0.95, 1.55]
+##
+## CL-H14 / W03-S08-FREEZE-0904 §3.4, and the reason there are now FOUR heights.
+## The old lowest ray sat at 0.45, and STEP_HEIGHT is 0.35, so a ten-centimetre
+## band existed in which geometry stops the body dead and the probe cannot see
+## it at all. That band is not a curiosity: it is trunk flare and root, and it
+## is what pinned S08-22. The probe's own spatial dump at the pin reads
+## `test_move` BLOCKED in all eight compass directions and CLEAR in three of
+## eight when the capsule was raised 0.4m -- i.e. what stopped the body topped
+## out under 0.4m, entirely beneath the lowest ray. The walker therefore read
+## that flank as three metres of open air, committed a detour into it, and got
+## out only because FENCE-CORNER's measured-progress rule eventually noticed it
+## had gone nowhere. Escaping by noticing no progress is not the same as seeing
+## the obstacle, and the difference is a whole detour's worth of budget every
+## time.
+##
+## 0.38 rather than 0.35 exactly: `_try_step_up` and `_recover_if_entombed`
+## both probe FROM `STEP_HEIGHT` up, so a ray at exactly that height grazes the
+## top face of every kerb the body legitimately steps over and would turn each
+## one into a wall. Three centimetres of clearance keeps a steppable lip
+## invisible (nothing between 0.35 and 0.38 blocks a body that can step 0.35)
+## while catching everything that actually stops one. `tests/smoke_stick_navigator_low_geometry.gd`
+## pins both halves: a 0.40m root flare must read as blocked, and a 0.30m kerb
+## must still read as the full `PROBE_REACH`.
+const PROBE_HEIGHTS: Array[float] = [0.38, 0.45, 0.95, 1.55]
 ## Half the body's own width, so the outer rays trace the capsule's flanks
 ## rather than its centre line.
 const PROBE_HALF_WIDTH := 0.35
@@ -191,6 +214,39 @@ const GROUND_PROBE_START := 1.0
 const EASE_METRES := 0.9
 const EASE_FLOOR := 0.32
 
+## W21-HARNESS-FIGHTS-0904, S06-50. Physics frames a LEG may spend without the
+## body leaving a `CONFINED_RADIUS_M` ball before the walk concludes that its
+## own accumulated detour state has become the obstacle, and clears it.
+##
+## Nothing in this file measured the leg. `_stall` is only consulted outside a
+## detour; `_detour_stalled()` asks whether the CURRENT detour is moving the
+## body, and a body oscillating inside a small box is moving plenty;
+## `SIDE_ABANDON_PROGRESS_M` asks for net travel along the committed side, and
+## a couple of metres of lateral swing satisfies it. So every check in the
+## machine could read healthy while the walk went nowhere at all. Measured:
+## S06-50's `move_to` pinned the body inside a 2.7m x 2.5m box for its entire
+## 44,100-frame budget -- 711 seconds, `input_context` `world` throughout, 0
+## held frames -- with `dead_travel_m` climbing to 1,258m. It was not frozen;
+## it was walking, in circles, for twelve minutes.
+##
+## THE FIX IS THE ONE THE MEASUREMENT NAMES. The very next `move_to` in that
+## run started from that same position and walked away cleanly at ~3.9 m/s. A
+## fresh call escapes ground the previous call could not leave, and the only
+## thing a fresh call changes is `reset()`. So a leg that has demonstrably
+## stopped going anywhere does to itself what the next leg would have done to
+## it, and backs out of the pocket it is in rather than re-deriving the same
+## committed side from the same position.
+##
+## 1200 frames is 20 seconds of WALKING (held frames are not counted -- a
+## fight is not a stall, per `walk_to`'s own rule). 4 metres is comfortably
+## larger than the box S06-50 was measured in and comfortably smaller than
+## anything a working walk covers in 20 seconds: at even half a metre per
+## second a healthy leg leaves the ball in eight. A wall-following detour that
+## is genuinely creeping along a long obstacle keeps moving the anchor and
+## never trips this.
+const CONFINED_FRAMES := 1200
+const CONFINED_RADIUS_M := 4.0
+
 var _tree: SceneTree = null
 var _player: Node3D = null
 var _rig: Node3D = null
@@ -231,6 +287,12 @@ var _clear_ahead := 0
 ## guaranteed-terminating `_back_off()` (full side reset) instead of another
 ## attempt at the same stuck direction.
 var _recovering := false
+## How many times the CURRENT leg has given up on its own detour state after
+## `CONFINED_FRAMES` inside `CONFINED_RADIUS_M`. Public through
+## `confined_resets()` so a harness can report a leg that had to shake itself
+## loose, rather than that fact being invisible in a walk that eventually
+## arrived.
+var _confined_resets := 0
 
 
 func _init(tree: SceneTree, player: Node3D, rig: Node3D, drive: Callable) -> void:
@@ -263,8 +325,12 @@ const HELD_FRAMES := 36000
 ## measure of walking, and none is being done.
 func walk_to(point: Vector3, budget: int, close_enough: float = 0.8) -> bool:
 	reset()
+	_confined_resets = 0
 	var held := 0
 	var walked := 0
+	# The leg-level watchdog's rolling anchor -- see `CONFINED_FRAMES`.
+	var anchor := _player.global_position
+	var anchor_age := 0
 	while walked < budget:
 		var to := point - _player.global_position
 		to.y = 0.0
@@ -279,11 +345,39 @@ func walk_to(point: Vector3, budget: int, close_enough: float = 0.8) -> bool:
 			# about what is in the way.
 			_drive.call(0.0, 0.0)
 			reset()
+			# The anchor goes with it. A fight the body stood still through is
+			# not evidence that the walk is confined, and counting those frames
+			# would fire the watchdog on a walk that was never stuck.
+			anchor = _player.global_position
+			anchor_age = 0
 			await _tree.physics_frame
 			continue
 		walked += 1
+		if _player.global_position.distance_to(anchor) > CONFINED_RADIUS_M:
+			anchor = _player.global_position
+			anchor_age = 0
+		else:
+			anchor_age += 1
+			if anchor_age >= CONFINED_FRAMES:
+				# S06-50. The leg has gone nowhere for twenty seconds of real
+				# walking. Do what the next `move_to` would have done -- forget
+				# the committed side, the running detour and the stall count --
+				# and back straight out, which is the one direction the body is
+				# known to have come from. `_back_off` sets no side of its own,
+				# so the next stall re-probes fresh from wherever this lands.
+				_confined_resets += 1
+				reset()
+				_back_off(to)
+				anchor = _player.global_position
+				anchor_age = 0
 		await step(point)
 	return false
+
+
+## How many times the last leg had to abandon its own detour state because the
+## body had stopped going anywhere. Zero on a healthy walk.
+func confined_resets() -> int:
+	return _confined_resets
 
 
 ## Is the body this is driving actually able to move right now? Public, because
@@ -619,10 +713,11 @@ func _drops_away(direction: Vector3) -> bool:
 
 
 ## Metres of clear space in `direction` for the WHOLE body, capped at
-## `PROBE_REACH`. Nine rays -- `PROBE_HEIGHTS` by three lateral offsets across
-## `PROBE_HALF_WIDTH` -- and the nearest hit is the answer, because the body
-## stops at the first thing any part of it touches. See PROBE_HEIGHTS for why
-## one hip-height centre-line ray was not enough (GAME-8).
+## `PROBE_REACH`. Twelve rays -- `PROBE_HEIGHTS` by three lateral offsets
+## across `PROBE_HALF_WIDTH` -- and the nearest hit is the answer, because the
+## body stops at the first thing any part of it touches. See PROBE_HEIGHTS for
+## why one hip-height centre-line ray was not enough (GAME-8), and why the
+## lowest of the four sits three centimetres above STEP_HEIGHT (CL-H14).
 func _free_space(direction: Vector3) -> float:
 	var world := _player.get_world_3d()
 	var space := world.direct_space_state if world != null else null
