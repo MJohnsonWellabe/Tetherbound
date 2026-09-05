@@ -693,15 +693,22 @@
       "colour": "#7d8a99"
     },
     {
-      "_comment": "N05-WORLD-DRESSING-0905, W06-FINALE-0904's three blind judges on the Legendary Chamber: 'single-key with crushed blacks', 'teal-on-teal-on-olive with one green accent; there is no warm note anywhere to give the green somewhere to be green against', 'the chamber has almost no value structure, and the creature is lost in it'. The room's two grey-blue omnis above and the machine's teal core are all cool. This is the warm FILL: one shadowless omni high inside the doorway wall (the +x wall, the way the player walks in), in the same brazier-warm the courtyard's own fill uses, wide enough to reach the machine and the west wall. It opens the blacks and puts a second hue family in the room so the teal reads as teal against something. TUNABLE.",
+      "_comment": "N05-WORLD-DRESSING-0905, W06-FINALE-0904's three blind judges on the Legendary Chamber: 'single-key with crushed blacks', 'teal-on-teal-on-olive with one green accent; there is no warm note anywhere to give the green somewhere to be green against', 'the chamber has almost no value structure, and the creature is lost in it'. The room's two grey-blue omnis above and the machine's teal core are all cool. This is the warm FILL, high inside the doorway wall (the +x wall, the way the player walks in), in the same brazier-warm the courtyard's own fill uses, thrown across the room at the machine and the west wall so the teal reads as teal against something. A SPOT, not an omni, and measured into that shape: the first pass was a shadowless omni and moved the chamber's walls by nothing at all (right wall mean luma 25.2 -> 25.3, far wall 25.2 -> 25.2 on the same stand) while lifting the machine and creature -- the Compatibility renderer caps the OMNI lights a single mesh may take at rendering/limits/opengl/max_lights_per_object (8), the chamber's 41 m wall slabs already touch eight (two room omnis, the core, the containment light, the arena pair, the siphon, the approach), and a ninth omni is silently dropped on exactly the surfaces that needed it. Spots are counted on their own budget, and this room had none. TUNABLE.",
+      "type": "spot",
       "at": [
         -19.0,
         90.2
       ],
-      "y": 9.0,
-      "energy": 1.4,
-      "range": 30.0,
-      "attenuation": 1.1,
+      "y": 12.0,
+      "aim": [
+        -34.0,
+        90.2
+      ],
+      "aim_y": 4.0,
+      "angle": 85.0,
+      "energy": 2.4,
+      "range": 36.0,
+      "attenuation": 0.9,
       "colour": "#d9a06a"
     },
     {
