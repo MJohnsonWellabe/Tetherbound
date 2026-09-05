@@ -69,3 +69,29 @@ Gate B red was `main`'s flake, not its own, so that earlier reading is withdrawn
 **Decision numbers** land as: W19 keeps D74/D75; W13 → **D76** (done in #43); W23 → D77,
 W18 → D78, W10 → D79, W09 → D80 (the lane did its own), W04 → D81, W02 → D82; later
 decisions from D83.
+
+## Landing complete for the converged set — W24-LANDING, 2026-09-05 06:40 UTC
+
+| PR | Merge commit | Lanes |
+|---|---|---|
+| #42 | `c5a16dfb` | W00-ICONS + the bake-manifest repair |
+| #45 | `fdf70ab4` | W19, W13, W04, W12, W18, W17, W09, W23 (one consolidated branch, one verification pass) |
+
+PR #43 was closed as superseded by #45. Verified on the merged tree: 658 tests /
+3,399,284 assertions 0 failed, the progression+HUD set 158/2,521 after W13's round-2 fix,
+`smoke_playground` OK with 101 pickups, `smoke_gate_b_continuous` OK. #45 merged on CI run
+33949277496, **green on every job**.
+
+**Correction on the finale:** `smoke_gate_e_finale` is **intermittent, not deterministic**.
+It failed four times (main's own runs, this lane's PR head, and a local main-equivalent
+tree) and then passed on run 33949277496 for the same commit that failed on the push run.
+The `04d844d0` Warden `victory_conversation` mechanism is still the likely cause, as a race
+on whether the dialogue panel is open when the smoke checks locomotion. W06-FINALE owns
+that file.
+
+**Decision numbers on `main`, all unique:** D74/D75 W19, D76 W13, D77 W23, D78 W18,
+D80 W09, D81 W04, D83 W12, D84 W17. D79 stays reserved for W10 and D82 for W02; later
+lanes take D85 onward.
+
+**Not landed:** W05, W01, W10, W22 (reports still carry placeholders); W02, W06, W07, W08,
+W11, W14, W15, W20, W21 (no report). W05 and W23 were pre-verified by this lane.

@@ -302,3 +302,69 @@ owner decides rather than discovering it in play.
 - Not yet landable: W05, W09, W17's own commits, W22, W23, W01, W10 (reports still carry
   unfilled placeholders); W02, W06, W07, W08, W11, W14, W15, W20, W21 (no report). W17 and
   W23 are pre-verified by this lane and will land fast when their reports close.
+
+
+## Cycle 4 — the batch landed, 2026-09-05 06:40 UTC
+
+### LANDED — PR #45, merge commit `fdf70ab4`
+
+`git merge-base --is-ancestor d7d7df06 origin/main` confirms it, and each of the eight
+lane branches is individually an ancestor of `main`: W00 (via #42), W19, W13, W04, W12,
+W18, W17 and W09, plus W23. Nine decision records, all uniquely numbered, are on `main`.
+
+**Merged on a fully green run — no waiver used.** Two CI runs exist for the head
+`d7d7df06`. The pull-request run **33949277496 is green on every job**, including
+`verify-gate-evidence-shard`; the push-event run 33949278979 failed that one shard. Same
+commit, same tree, opposite results.
+
+### Correction: the finale failure is intermittent, not deterministic
+
+Earlier cycles of this report said `smoke_gate_e_finale` reproduces deterministically. That
+was the honest reading of the evidence then — it failed on `main`'s own run twice, on this
+lane's PR head, and on a locally built tree byte-identical to `origin/main`, four failures
+with no counter-example. **It now has a counter-example: it passed on run 33949277496.**
+So the correct statement is that the failure is a **race**, not a permanent break. The
+mechanism recorded on PR #42 remains the likely cause — `04d844d0` gave the Warden an
+automatic `victory_conversation`, and `sequence_director.gd` holds locomotion while that
+dialogue panel is open, so whether the smoke's check lands before or after the panel closes
+decides the run. That also explains why it began appearing only once the bake reds were
+repaired and the shard got far enough to reach the finale step at all.
+
+This does not change what the fix needs to be, and it does not change whose file it is
+(`tests/smoke_gate_e_finale.gd`, W06-FINALE's). It does change the severity: `main` is not
+permanently broken at the finale, it is flaky there, and a run can legitimately go green.
+
+### Final verification, on the merged tree, before the push
+
+| Command | Result |
+|---|---|
+| `godot --headless --path . --import` ×2 | 0 `SCRIPT ERROR`, 0 `Parse Error` |
+| the 33-file unit set across all eight lanes' owned tests | **658 tests, 3,399,284 assertions, 0 failed** |
+| the progression + HUD set, re-run after W13's round-2 UI fix | **158 tests, 2,521 assertions, 0 failed** |
+| `tests/smoke_playground.gd` | exit 0, `smoke: OK`, 101 band pickups placed |
+| `tests/smoke_gate_b_continuous.gd` | `gate B continuous (CORE): OK` |
+
+### The blind-judge story, as it ended
+
+Both blind rounds (W13's own and this lane's independent one) judged the **round-1** frames
+and converged on the same three defects. W13 then pushed `14f4c84c`, whose round-2 judge
+confirms all three fixed and which also fixes the three that round newly found. This lane's
+note is committed as `JUDGE-W24-landing-round.md`, **marked superseded**, because leaving it
+as written would have shipped a stale "not shippable" verdict as though it described the
+landed code. What still stands: every frame in both rounds was shot over a flat scaffold, so
+real-terrain legibility is unproven, and the pre-existing HUD furniture defects (health and
+food chips covering their own bars, portraits, minimap, hotbar, a safe-area margin nearer
+1 % than 5 %) belong to no lane in this batch.
+
+### Still open after this landing
+
+- **Nine lanes never produced a report**: W02, W06, W07, W08, W11, W14, W15, W20, W21.
+- **Four have reports with unfilled placeholders**: W05 (`JUDGE_SECTION`), W01, W10, W22.
+  W05's re-bake and its `vegetation.json` edit still want the bake-freshness re-run on
+  whatever tree lands it.
+- **The Biome 2 hard-rule concern** stands, untouched by this lane: `04d844d0`, `3f9e1a14`
+  and `47ca2e12` build Cloudreach Cliffs on `main`, including a realm arch and Heart socket
+  inside `scripts/world/playground_world.gd`, while `CLAUDE.md` bars Biome 2 implementation
+  until the Meadows passes its exit gate.
+- No lane closed a report between 03:10 and 06:40 UTC; the lane sessions appear to have
+  stopped.
