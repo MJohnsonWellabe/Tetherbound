@@ -1,15 +1,15 @@
 extends SceneTree
 
-## Cloudreach environment evidence: ten real production-scene, third-person views
+## Cloudreach environment evidence: twelve real production-scene, third-person views
 ## plus structural rendering counters and measured Windows frame pacing.
 ##
 ## Run with a real rendering driver, never `--headless`:
-##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
+##   godot --path . --rendering-driver opengl3 --resolution 1280x800 \
 ##     --script tools/capture_cloudreach_environment_correction.gd
 
 const SCENE := preload("res://scenes/world/cloudreach_cliffs.tscn")
-const OUT_DIR := "res://ralph/reports/CLOUDREACH-ENV-CORRECTION-0904/round2/shots"
-const PERF_PATH := "res://ralph/reports/CLOUDREACH-ENV-CORRECTION-0904/round2/performance.json"
+const OUT_DIR := "res://ralph/reports/CLOUDREACH-ENV-CORRECTION-0904/round6/shots"
+const PERF_PATH := "res://ralph/reports/CLOUDREACH-ENV-CORRECTION-0904/round6/performance.json"
 const SETTLE_FRAMES := 18
 const SAMPLE_FRAMES := 24
 
@@ -19,7 +19,7 @@ const VIEWS := [
 	{"name": "08-upper-cliffhold-east-arrival", "stand": Vector2(-309.2, 3991.2), "target": Vector3(-340.0, 835.0, 3970.0), "pitch_deg": -5.0},
 	{"name": "02-lower-cliffs-galefoot", "stand": Vector2(-280.0, 496.0), "target": Vector3(-280.0, 182.0, 520.0), "pitch_deg": -8.0},
 	{"name": "07-fly-only-destination", "stand": Vector2(1110.0, 2927.0), "target": Vector3(1110.0, 1060.0, 2943.0), "pitch_deg": 5.0},
-	{"name": "09-final-arena-space", "stand": Vector2(100.0, 5392.0), "target": Vector3(100.0, 1170.0, 5350.0), "pitch_deg": 4.0},
+	{"name": "09-final-arena-space", "stand": Vector2(100.0, 5427.0), "target": Vector3(100.0, 1162.0, 5450.0), "pitch_deg": -10.0},
 	{
 		"name": "01-arrival-first-reveal",
 		"stand": Vector2(0.0, -260.0),
@@ -28,7 +28,7 @@ const VIEWS := [
 	},
 	{
 		"name": "02-broken-causeways",
-		"stand": Vector2(-540.0, 1280.0),
+		"stand": Vector2(-534.0, 1285.3333),
 		"target": Vector3(-450.0, 342.0, 1360.0),
 		"pitch_deg": 2.0,
 	},
@@ -55,6 +55,18 @@ const VIEWS := [
 		"stand": Vector2(100.0, 5290.0),
 		"target": Vector3(100.0, 1215.0, 5350.0),
 		"pitch_deg": 18.0,
+	},
+	{
+		"name": "11-aerie-ground-connection",
+		"stand": Vector2(373.0,3262.5356),
+		"target": Vector3(400.0,614.0,3250.0),
+		"pitch_deg": -5.0,
+	},
+	{
+		"name": "12-cliffhold-ground-connection",
+		"stand": Vector2(-352.0,3954.0),
+		"target": Vector3(-340.0,832.0,3970.0),
+		"pitch_deg": -7.0,
 	},
 ]
 
@@ -101,7 +113,8 @@ func _run() -> void:
 	rig.spring_length = 5.8
 	camera.fov = 70.0
 	camera.make_current()
-	root.size = Vector2i(1280, 720)
+	root.size = Vector2i(1280, 800)
+	root.content_scale_size=Vector2i(1920,1200)
 
 	var rows: Array[Dictionary] = []
 	var failures: Array[String] = []

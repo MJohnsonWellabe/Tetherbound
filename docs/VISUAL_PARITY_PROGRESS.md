@@ -3,6 +3,42 @@
 Final visual acceptance belongs to external ChatGPT review. This file records
 only implementation, test, capture, and handoff state.
 
+## Cloudreach round 6 — 2026-09-05
+
+This is a pushed visual-correction checkpoint, not visual acceptance. It keeps
+the Round 5 palette and physical routes while removing the rendered route-box
+sides, feathering dirt-path endpoints, breaking up settlement lawns with short
+interior planting and connected work wear, and adding larger strata/shelf planes.
+No collision, progression, encounter, Fly, HUD, creature or generated-asset work
+is part of this batch.
+
+- The canonical twelve actual Windows/NVIDIA Compatibility frames are in
+  `ralph/reports/CLOUDREACH-ENV-CORRECTION-0904/round6/contact-sheet.png`.
+  Superseded construction/endpoint captures and raw frames remain local and are
+  not acceptance evidence.
+- The F3 rectangular/arrow-shaped path start and the F5/F9 raised collision-box
+  joins are absent in the final frames. Settlement work patches reach thresholds
+  and shared paths rather than reading only as perimeter decoration.
+- F6 still reads as a dark broad cliff monolith and F10 remains an underdressed,
+  open arena. They are explicit next-pass defects, not hidden by the capture.
+- Godot check-only and foundation smoke pass. Related coverage passes **39 tests /
+  1,201 assertions** with zero failures.
+- Three isolated ten-second static samples at 1280x800 on the local GTX 1060
+  measured mean **8.248-10.672 ms**, p95 **8.390-11.600 ms**, and maximum
+  **8.600-13.241 ms**. Peak geometry across the twelve short view samples was
+  **4,944 draws / 6,947,508 primitives**. This is neither ROG Ally nor continuous-
+  play frame-pacing acceptance.
+- A fresh code-blind Sol review was attempted repeatedly after capture, including
+  from a separate agent hierarchy, but the platform returned `agent thread limit
+  reached` each time. Therefore no A/B verdict is invented or self-awarded. Final
+  visual acceptance remains external ChatGPT/owner work.
+
+Exact continuation: keep the corrected ground joins, then articulate the F6
+approach into readable ledges/recesses and dress F10 as a authored final arena;
+recapture the same cameras and obtain fresh external A/B judgment. The continuous
+live-combat chapter run proceeds independently and must still pass through return
+to Meadows plus disk reload before chapter acceptance.
+
 ## Cloudreach round 5 — 2026-09-05
 
 Active resumed owner goal is Cloudreach, excluding final creature art. Branch

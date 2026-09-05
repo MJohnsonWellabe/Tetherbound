@@ -119,6 +119,7 @@ func _build_patch_tier(parent: Node3D, label: String, patch: Dictionary, mesh: A
 		if cluster < threshold:
 			continue
 		var scale_value := rng.randf_range(scale_min, scale_max)
+		scale_value *= float(patch.get("height_scale", 1.0))
 		if tier==0 and str(patch.get("kind",""))=="segment":
 			var axis: Vector3=(patch["b"] as Vector3)-(patch["a"] as Vector3)
 			axis.y=0

@@ -589,8 +589,14 @@ func _build_routes() -> void:
 				# Keep one forgiving collision ribbon for controller traversal, but
 				# let the visible trail meander and breathe inside it. Bridge intervals
 				# are omitted completely so the authored span and drop are real.
-				_segment_box(root, "%sGround%d" % [route_label, section_index], section_a,
+				var collision_ribbon := _segment_box(root, "%sGround%d" % [route_label, section_index], section_a,
 					section_b, collision_width, 0.72, landing_top, true)
+				# The broad geological crown now reaches the real walkable elevation.
+				# Retain this forgiving controller collision verbatim, but do not draw
+				# its box sides as a raised, ruler-straight road embankment.
+				var collision_visual := collision_ribbon.get_child(0) as MeshInstance3D
+				if collision_visual != null:
+					collision_visual.visible = false
 				_path_ribbon(root, "%sTrail%d" % [route_label, section_index], section_a,
 					section_b, visible_width,
 					i * 97 + section_index * 31 + absi(str(spec.get("id", "Route")).hash()))
@@ -683,7 +689,7 @@ func _build_route_shoulders(root: Node3D, spec: Dictionary, points: Array[Vector
 					"half_width": half_width * 0.52,
 					"path_half_width": float(landmass.get("path_visible_width_m", 4.2)) * 0.5,
 					"seed": serial * 3701 + chunk * 101 + absi(route_name.hash()),
-					"surface_offset_y": -0.70,
+					"surface_offset_y": 0.025,
 					"dry": route_is_dry,
 				})
 			serial += 1
@@ -822,13 +828,15 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 	var right_track: Array[Vector3] = []
 	var left_upper: Array[Vector3] = []
 	var right_upper: Array[Vector3] = []
+	var left_shelf_lip: Array[Vector3] = []
+	var right_shelf_lip: Array[Vector3] = []
 	var left_lower: Array[Vector3] = []
 	var right_lower: Array[Vector3] = []
 	var left_bottom: Array[Vector3] = []
 	var right_bottom: Array[Vector3] = []
 	for i in station_count:
 		var t := float(i) / float(station_count - 1)
-		var centre := a.lerp(b, t) - Vector3.UP * 0.72
+		var centre := a.lerp(b, t)
 		var irregular := 0.84 + 0.18 * sin(float(i * 13 + seed_value * 7))
 		irregular += 0.08 * cos(float(i * 5 + seed_value * 3))
 		var width_here := half_width * irregular
@@ -847,7 +855,10 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 		# A ridge is a mountain cross-section, not a retaining wall. Broad,
 		# uneven shoulders step into talus below the narrow traversable crest.
 		var upper_push := 1.65 + 0.75 * sin(float(i) * 1.37 + seed_value * 0.73)
-		var lower_push := 3.5 + 1.7 * cos(float(i) * 1.83 + seed_value * 0.39)
+		var shelf_push := upper_push + 0.72 + 0.24 * sin(float(i) * 1.11 + seed_value)
+		# Recess the next wall behind a pronounced bed lip. The former outward
+		# flare made the entire face one continuous slab despite its texture.
+		var lower_push := 2.10 + 0.58 * cos(float(i) * 1.83 + seed_value * 0.39)
 		var shelf_depth := 35.0 + depth_mix * 35.0
 		var talus_depth := depth * (0.38 + depth_mix * 0.22)
 		if i > 0 and i < station_count - 1 and sin(float(i * 11 + seed_value)) > -0.35 and not _inside_landmark_vista(centre):
@@ -872,6 +883,8 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 				_set_geometry_visibility(tree, 950.0)
 		left_upper.append(centre + (left - centre) * upper_push - Vector3.UP * shelf_depth)
 		right_upper.append(centre + (right_edge - centre) * upper_push - Vector3.UP * (shelf_depth * 0.85))
+		left_shelf_lip.append(centre + (left - centre) * shelf_push - Vector3.UP * (shelf_depth + 2.2))
+		right_shelf_lip.append(centre + (right_edge - centre) * shelf_push - Vector3.UP * (shelf_depth * 0.85 + 2.2))
 		left_lower.append(centre + (left - centre) * lower_push - Vector3.UP * talus_depth)
 		right_lower.append(centre + (right_edge - centre) * lower_push - Vector3.UP * (talus_depth * 0.9))
 		var foot_width := maxf(half_width * 4.0, depth * (0.40 + depth_mix * 0.20))
@@ -898,11 +911,15 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 	for i in station_count - 1:
 		_add_geological_face(upper_tool, left_top[i + 1], left_top[i], left_upper[i + 1], left_upper[i], -right, -right, 5.0)
 		_add_geological_face(upper_tool, right_top[i], right_top[i + 1], right_upper[i], right_upper[i + 1], right, right, 5.0)
+		# Wide, shallow rock planes catch light above a recessed wall. They are
+		# intermediate cliff structure, not tiny dressing scattered on the face.
+		_add_geological_face(upper_tool, left_upper[i + 1], left_upper[i], left_shelf_lip[i + 1], left_shelf_lip[i], -right, -right, 2.0)
+		_add_geological_face(upper_tool, right_upper[i], right_upper[i + 1], right_shelf_lip[i], right_shelf_lip[i + 1], right, right, 2.0)
 	# All cliff bands now share one geological material; submit one surface.
 	var middle_tool := upper_tool
 	for i in station_count - 1:
-		_add_geological_face(middle_tool, left_upper[i + 1], left_upper[i], left_lower[i + 1], left_lower[i], -right, -right, 9.0)
-		_add_geological_face(middle_tool, right_upper[i], right_upper[i + 1], right_lower[i], right_lower[i + 1], right, right, 9.0)
+		_add_geological_face(middle_tool, left_shelf_lip[i + 1], left_shelf_lip[i], left_lower[i + 1], left_lower[i], -right, -right, 9.0)
+		_add_geological_face(middle_tool, right_shelf_lip[i], right_shelf_lip[i + 1], right_lower[i], right_lower[i + 1], right, right, 9.0)
 	var deep_tool := upper_tool
 	for i in station_count - 1:
 		_add_geological_face(deep_tool, left_lower[i + 1], left_lower[i], left_bottom[i + 1], left_bottom[i], -right, -right, 15.0)
@@ -974,7 +991,7 @@ func _path_ribbon(parent: Node3D, label: String, a: Vector3, b: Vector3,
 		return
 	var right := Vector3.UP.cross(flat.normalized()).normalized()
 	var up := _segment_basis(a, b).y
-	var stations := clampi(int(ceilf(flat.length() / 5.0)) + 1, 5, 180)
+	var stations := clampi(int(ceilf(flat.length() / 1.25)) + 1, 5, 420)
 	var left: Array[Vector3] = []
 	var right_edge: Array[Vector3] = []
 	for i in stations:
@@ -984,7 +1001,13 @@ func _path_ribbon(parent: Node3D, label: String, a: Vector3, b: Vector3,
 		wander += sin(t * TAU * 3.1 + float(seed_value % 11)) * width * 0.08 * envelope
 		var half_here := width * (0.43 + 0.08 * sin(t * TAU * 2.4 + float(seed_value % 17)))
 		half_here += width * 0.03 * sin(t * TAU * 4.0 + seed_value)
-		var centre := a.lerp(b, t) + right * wander + up * 0.06
+		# Bury the full-width surface at each end and let it emerge while its soil
+		# mask feathers in. Collapsing width made an icon-like arrowhead; a buried
+		# irregular lobe has no transverse or triangular silhouette to catch light.
+		var endpoint_distance:=minf(t,1.0-t)*flat.length()
+		var endpoint_blend:=smoothstep(0.0,2.8,endpoint_distance)
+		var lift:=lerpf(-0.14,0.06,endpoint_blend)
+		var centre := a.lerp(b, t) + right * wander + up * lift
 		left.append(centre - right * half_here)
 		right_edge.append(centre + right * half_here)
 	var mesh := ArrayMesh.new()
@@ -992,8 +1015,12 @@ func _path_ribbon(parent: Node3D, label: String, a: Vector3, b: Vector3,
 	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 	tool.set_material(_materials["trail_dry"] if minf(parent.to_global(a).y,parent.to_global(b).y)>=700.0 else _materials["trail"])
 	for i in stations - 1:
-		_add_trail_triangle(tool, left[i], left[i + 1], right_edge[i], Vector2(0, i), Vector2(0, i + 1), Vector2(1, i))
-		_add_trail_triangle(tool, right_edge[i], left[i + 1], right_edge[i + 1], Vector2(1, i), Vector2(0, i + 1), Vector2(1, i + 1))
+		var t0:=float(i)/float(stations-1)
+		var t1:=float(i+1)/float(stations-1)
+		var v0 := minf(t0,1.0-t0)*flat.length()
+		var v1 := minf(t1,1.0-t1)*flat.length()
+		_add_trail_triangle(tool, left[i], left[i + 1], right_edge[i], Vector2(0, v0), Vector2(0, v1), Vector2(1, v0))
+		_add_trail_triangle(tool, right_edge[i], left[i + 1], right_edge[i + 1], Vector2(1, v0), Vector2(0, v1), Vector2(1, v1))
 	tool.generate_normals()
 	tool.commit(mesh)
 	var trail := MeshInstance3D.new()
@@ -1026,9 +1053,9 @@ func _add_route_edge_nature(parent: Node3D, a: Vector3, b: Vector3,
 	var cluster_count := clampi(int(ceilf(flat.length() / 74.0)), 3, 9)
 	for cluster in cluster_count:
 		var t := float(cluster + 1) / float(cluster_count + 1)
-		# The route ridge's walkable top sits below the authored spline. Keep all
-		# imported nature rooted into that same generated surface.
-		var anchor := a.lerp(b, t) - Vector3.UP * 0.72
+		# Imported nature roots into the same geological crown that visually owns
+		# the unchanged authored collision ribbon.
+		var anchor := a.lerp(b, t)
 		if _inside_settlement_clearance(anchor):
 			continue
 		var side := -1.0 if (serial + cluster) % 2 == 0 else 1.0
@@ -1391,7 +1418,11 @@ func _build_landmarks() -> void:
 				Vector3(48, 0.44, 48), _materials["upland_dry"], true).visible = false
 		_surfaces.append({"kind": "rect", "centre": Vector2(at.x, at.z), "half": Vector2(17.0, 17.0), "height": at.y})
 		_cover_patches.append({"kind": "ellipse", "centre": at, "half": Vector2(25.5,25.5) if settlement else Vector2(16.5, 15.5),
-			"inner_clear_fraction": 0.42, "seed": _landmark_count * 71 + 809,
+			# Settlement lanes are protected by their actual building, yard and
+			# path exclusions below. Do not cut one circular lawn out of the middle.
+			"inner_clear_fraction": 0.0 if settlement else 0.42,
+			"height_scale": 0.58 if settlement else 1.0,
+			"seed": _landmark_count * 71 + 809,
 			"dry": at.y >= 790.0})
 		var landmark_id := str(spec.get("id", ""))
 		var identity := (landmark_id + " " + str(spec.get("category", ""))).to_lower()
@@ -1473,6 +1504,35 @@ func _build_articulated_settlement_skirt(root: Node3D,dry: bool) -> void:
 		if i%2==0:
 			var contact:=Vector3(cos(angle)*21.5,0.12,sin(angle)*21.5)
 			_plant_floor_pocket(root,contact,Vector2(2.6,3.0),1211+i,dry)
+	# Installed rock forms cross the turf-to-cliff contact at different heights.
+	# Their broad lips interrupt the former straight green roof wedge and cast
+	# real recess shadows down the settlement face.
+	for i in 10:
+		var angle:=TAU*float(i)/10.0+0.31
+		var width:=18.0+float(i%3)*4.0
+		var height:=17.0+float((i+1)%4)*3.0
+		var radius:=28.0+3.5*sin(angle*3.0)
+		_visual_rock_mass(root,"SettlementCrownBreak%02d"%i,
+			Vector3(cos(angle)*radius,-height+0.35-float(i%2)*1.2,sin(angle)*radius),
+			Vector3(width,height,width*(0.68+0.08*(i%2))),1379+i*29,1700.0)
+	for i in 5:
+		var angle:=TAU*(float(i)+0.45)/5.0
+		var width:=30.0+float(i%2)*7.0
+		var height:=13.0+float(i%3)*3.0
+		var radius:=38.0+4.0*sin(angle*2.0)
+		_visual_rock_mass(root,"SettlementMidShelf%02d"%i,
+			Vector3(cos(angle)*radius,-31.0-float(i%2)*9.0,sin(angle)*radius),
+			Vector3(width,height,width*0.72),1523+i*31,1700.0)
+	# The normal approach sees the south face nearly square-on. These staggered
+	# visual-only shelves give that important face multiple readable planes;
+	# they remain buried outside the unchanged 48 m collision terrace.
+	for shelf: Dictionary in [
+		{"at":Vector3(-14,-36,-34),"size":Vector3(42,17,25),"seed":1711},
+		{"at":Vector3(15,-61,-36),"size":Vector3(46,16,27),"seed":1747},
+		{"at":Vector3(-8,-82,-38),"size":Vector3(38,14,24),"seed":1783},
+	]:
+		_visual_rock_mass(root,"SettlementSouthFaceShelf",
+			shelf["at"] as Vector3,shelf["size"] as Vector3,int(shelf["seed"]),1700.0)
 
 
 func _build_return_gate() -> void:
@@ -1551,6 +1611,7 @@ func _build_cliff_settlement(root: Node3D) -> void:
 		var local_door:=root.to_local(doorway)
 		var hub:=Vector3(0,0.18,-1)
 		_path_ribbon(root,"WornHouseThreshold",local_door,hub,2.4,root.get_child_count()*13)
+		_exclude_local_wear_segment(root,local_door,hub,1.05)
 		var threshold:=MeshInstance3D.new()
 		threshold.name="DoorstepWearPatch"
 		var threshold_plane:=PlaneMesh.new()
@@ -1559,17 +1620,49 @@ func _build_cliff_settlement(root: Node3D) -> void:
 		threshold.position=local_door
 		threshold.material_override=ENVIRONMENT_MATERIALS.worn_ground(doorway,2.8)
 		root.add_child(threshold)
+		_cover_exclusions.append({"kind":"ellipse","centre":doorway,
+			"half":Vector2(1.8,1.8),"rotation":0.0})
 	_build_settlement_yard(root)
 	_build_settlement_precinct(root,watch)
 	_path_ribbon(root,"WornArrivalToSharedYard",Vector3(0,0.18,-24),Vector3(0,0.18,-1),4.1,991)
+	_exclude_local_wear_segment(root,Vector3(0,0.18,-24),Vector3(0,0.18,-1),1.85)
 
 
 func _plant_floor_pocket(parent: Node3D,at: Vector3,half: Vector2,seed_value: int,dry: bool) -> void:
 	_cover_patches.append({"kind":"ellipse","centre":parent.to_global(at),"half":half,
-		"seed":seed_value,"dry":dry})
+		"seed":seed_value,"dry":dry,"height_scale":0.62})
 	_place_local_prop(parent,"bush",at+Vector3(half.x*0.22,0,-half.y*0.18),1.1+0.16*(seed_value%3),seed_value%180)
 	_place_local_prop(parent,"flowers",at+Vector3(-half.x*0.23,0,half.y*0.12),0.62,seed_value%90)
 	_place_local_prop(parent,"rock_low",at+Vector3(half.x*0.4,-0.08,half.y*0.3),0.6,seed_value%120)
+
+
+func _exclude_local_wear_segment(parent: Node3D,a: Vector3,b: Vector3,half_width: float) -> void:
+	_cover_exclusions.append({"kind":"segment","a":parent.to_global(a),"b":parent.to_global(b),
+		"half_width":half_width})
+
+
+func _build_worn_activity_patch(parent: Node3D,label: String,at: Vector3,half: Vector2,
+		seed_value: int) -> void:
+	# Irregular use-wear follows an actual prop group. It overlaps the shared
+	# yard at one edge so it reads as lived movement, not a decorative island.
+	var tool:=SurfaceTool.new()
+	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	tool.set_material(ENVIRONMENT_MATERIALS.worn_ground(parent.to_global(at),maxf(half.x,half.y)))
+	for i in 28:
+		var a:=TAU*float(i)/28.0
+		var b:=TAU*float(i+1)/28.0
+		var ra:=0.86+0.12*sin(a*5.0+seed_value)
+		var rb:=0.86+0.12*sin(b*5.0+seed_value)
+		var p:=at+Vector3(cos(a)*half.x*ra,0.19,sin(a)*half.y*ra)
+		var q:=at+Vector3(cos(b)*half.x*rb,0.19,sin(b)*half.y*rb)
+		_add_surface_triangle(tool,at+Vector3.UP*0.19,q,p)
+	tool.generate_normals()
+	var patch:=MeshInstance3D.new()
+	patch.name=label
+	patch.mesh=tool.commit()
+	parent.add_child(patch)
+	_cover_exclusions.append({"kind":"ellipse","centre":parent.to_global(at),
+		"half":half*0.62,"rotation":0.0})
 
 
 func _build_settlement_precinct(root: Node3D,watch: Vector3) -> void:
@@ -1584,9 +1677,11 @@ func _build_settlement_precinct(root: Node3D,watch: Vector3) -> void:
 				_place_local_prop(root,"fence",edge,1.12,90)
 			if i%2==0:
 				_plant_floor_pocket(root,edge+Vector3(-side*2.7,0,1.3),Vector2(2.5,4.5),713+i+int(side)*21,dry)
-	for at: Vector3 in [Vector3(-14,0.14,-15),Vector3(14,0.14,-16),Vector3(-16,0.14,18),Vector3(2,0.14,22)]:
+	for at: Vector3 in [Vector3(-14,0.14,-15),Vector3(-7,0.14,-18),
+		Vector3(7,0.14,-18),Vector3(14,0.14,-16),Vector3(-16,0.14,18),Vector3(2,0.14,22)]:
 		_plant_floor_pocket(root,at,Vector2(3.2,3.8),int(at.x*7+at.z*11),dry)
 	_path_ribbon(root,"WornWatchPrecinctConnection",Vector3(1,0.15,14),watch+Vector3(-6,0.15,-4),3.2,931)
+	_exclude_local_wear_segment(root,Vector3(1,0.15,14),watch+Vector3(-6,0.15,-4),1.4)
 	# Shared worn-ground shader gives the tower foot the same soil-and-turf
 	# transition as the communal yard instead of an isolated raw platform.
 	var apron:=MeshInstance3D.new()
@@ -1597,6 +1692,8 @@ func _build_settlement_precinct(root: Node3D,watch: Vector3) -> void:
 	apron.position=watch+Vector3(0,0.16,0)
 	apron.material_override=ENVIRONMENT_MATERIALS.worn_ground(root.to_global(apron.position),7.0)
 	root.add_child(apron)
+	_cover_exclusions.append({"kind":"ellipse","centre":root.to_global(apron.position),
+		"half":Vector2(4.4,4.0),"rotation":0.0})
 	_place_local_prop(root,"workbench",watch+Vector3(-6,0.14,1.5),1.15,90)
 	_place_local_prop(root,"crate",watch+Vector3(-6.2,0.14,3.2),0.75,18)
 
@@ -1638,24 +1735,41 @@ func _build_settlement_yard(parent: Node3D) -> void:
 	yard.name = "WornCommunalYard"
 	yard.mesh = tool.commit()
 	parent.add_child(yard)
+	# Keep only a compact usable centre open. The surrounding short planting is
+	# allowed to intrude between buildings instead of forming one empty lawn.
+	_cover_exclusions.append({"kind":"ellipse","centre":parent.to_global(centre),
+		"half":Vector2(6.8,8.2),"rotation":0.0})
 	for prop: Dictionary in _visual_config.get("settlement_dressing", []):
 		_place_local_prop(parent, str(prop["asset"]), _vec3(prop["at"]), float(prop["height"]), float(prop.get("yaw", 0)))
+	# The two service groups are connected to the communal court by use-wear.
+	# Their positions correspond to the installed workbench/bucket/apple and
+	# barrel/bag/crate clusters; no new prop family or walking lane is introduced.
+	_build_worn_activity_patch(parent,"WestWorkshopWear",Vector3(-16.0,0,-7.0),Vector2(5.5,4.3),419)
+	_build_worn_activity_patch(parent,"EastSupplyWear",Vector3(15.2,0,-7.8),Vector2(5.0,4.1),557)
+	_path_ribbon(parent,"WestWorkshopConnection",Vector3(-14.0,0.20,-6.0),Vector3(-6.5,0.20,-3.0),2.5,613)
+	_path_ribbon(parent,"EastSupplyConnection",Vector3(13.3,0.20,-6.7),Vector3(6.5,0.20,-3.0),2.4,677)
+	_exclude_local_wear_segment(parent,Vector3(-14.0,0.20,-6.0),Vector3(-6.5,0.20,-3.0),1.05)
+	_exclude_local_wear_segment(parent,Vector3(13.3,0.20,-6.7),Vector3(6.5,0.20,-3.0),1.0)
+	var dry:=parent.global_position.y>=700.0
 	for side: float in [-1.0, 1.0]:
 		for i in 3:
 			_place_local_prop(parent, "fence", Vector3(side * 21.0, 0.14, -13.0 + i * 4.0), 1.05, 90)
 			_place_local_prop(parent, "flowers", Vector3(side * (17.0 + i * 1.3), 0.14, 13.0 + i * 1.5), 0.5 + i * 0.12, i * 41)
 		_place_local_prop(parent, "bush", Vector3(side * 19.0, 0.14, 15.0), 1.25, side * 37)
 		_cover_patches.append({"kind": "ellipse", "centre": parent.global_position + Vector3(side * 18.0, 0.14, 13.0),
-			"half": Vector2(6.0, 7.0), "seed": int(parent.global_position.y) + int(side) * 11, "dry": false})
+			"half": Vector2(6.0, 7.0), "seed": int(parent.global_position.y) + int(side) * 11,
+			"dry":dry,"height_scale":0.68})
 		for i in 2:
 			_cover_patches.append({"kind": "ellipse", "centre": parent.global_position + Vector3(side * (9.0 + i * 7.0), 0.14, -26.0 + i * 7.0),
-				"half": Vector2(4.7, 6.0), "seed": 541 + i + int(side) * 17, "dry": false})
+				"half": Vector2(6.8-i*0.6,9.0-i*0.8), "seed": 541 + i + int(side) * 17,
+				"dry":dry,"height_scale":0.82})
 		_place_local_prop(parent, "flowers", Vector3(side * 14.0, 0.14, -22.0), 0.65, side * 42)
 		_place_local_prop(parent, "rock_low", Vector3(side * 15.2, 0.04, -21.0), 0.5, side * 71)
 	if parent.global_position.y > 700.0:
 		for i in 3:
 			_cover_patches.append({"kind": "ellipse", "centre": parent.global_position + Vector3(20.0 + i * 5.0, 0.14, 4.0 + i * 6.0),
-				"half": Vector2(4.5, 5.0), "seed": 842 + i * 13, "dry": false})
+				"half": Vector2(4.5, 5.0), "seed": 842 + i * 13,
+				"dry":dry,"height_scale":0.68})
 		_place_local_prop(parent, "flowers", Vector3(26, 0.14, 10), 0.75, 32)
 		_place_local_prop(parent, "rock_low", Vector3(24, 0.04, 8), 0.8, 71)
 
@@ -2190,7 +2304,7 @@ func _mesa(
 	if rugged_crown:
 		_build_crown_outcrops(root,size,seed_value)
 	if label == "CliffMass" or label == "LandmarkLedge" or label.contains("RockShoulder"):
-		_build_embedded_rock_shelves(root, size, seed_value)
+		_build_embedded_rock_shelves(root, size, seed_value, label)
 
 	if collision:
 		var points := PackedVector3Array()
@@ -2240,13 +2354,19 @@ func _build_crown_outcrops(parent: Node3D, size: Vector3, seed_value: int) -> vo
 		_set_geometry_visibility(rock,1500.0)
 
 
-func _build_embedded_rock_shelves(parent: Node3D, size: Vector3, seed_value: int) -> void:
+func _build_embedded_rock_shelves(parent: Node3D, size: Vector3, seed_value: int,
+		mass_label: String) -> void:
 	# Production-family outcrops break the generated cliff skin into recognizable
 	# eroded blocks. Their inner halves are buried into the supporting mass.
-	for i in 9:
-		var angle := float(i) * TAU / 9.0 + float(seed_value) * 0.23
-		var depth := 8.0 + float(i % 3) * minf(22.0, size.y * 0.10)
-		var width := clampf(size.x * 0.24, 14.0, 52.0)
+	var monumental:=mass_label=="CliffMass" or mass_label=="LandmarkLedge"
+	var outcrop_count:=13 if monumental else 9
+	for i in outcrop_count:
+		var angle := float(i) * TAU / float(outcrop_count) + float(seed_value) * 0.23
+		var depth_step:=clampf(size.y*0.085,22.0,58.0) if monumental else minf(22.0,size.y*0.10)
+		var depth := 9.0 + float(i % (5 if monumental else 3)) * depth_step
+		var width := clampf(size.x * (0.29 if monumental else 0.24),
+			22.0 if monumental else 14.0,78.0 if monumental else 52.0)
+		width*=0.82+0.18*sin(float(i)*2.17+seed_value)
 		var height := width * (0.35 + float(i % 2) * 0.14)
 		var rock := NATURE_ROCKS[posmod(i + seed_value, NATURE_ROCKS.size())].instantiate() as Node3D
 		var bounds_tool := BUILDING_PREFABS.new()
@@ -2259,24 +2379,33 @@ func _build_embedded_rock_shelves(parent: Node3D, size: Vector3, seed_value: int
 		for mesh: MeshInstance3D in rock.find_children("*", "MeshInstance3D", true, false):
 			mesh.material_override = _materials["cliff"]
 		_set_geometry_visibility(rock, 1250.0)
-	# Sparse vegetated shelves give the cliffs a human-readable scale and show
-	# that the crowns and outcrops belong to the same living upland landscape.
-	for i in 3:
+	# Broad ledges, spread down the face rather than clustered under the crown,
+	# give large ravine/landmark silhouettes intermediate planes and scale.
+	var shelf_count:=5 if monumental else 3
+	for i in shelf_count:
 		var angle := float(i) * 2.399 + seed_value * 0.23
-		var shelf_width := clampf(size.x * 0.22, 16.0, 44.0)
-		var shelf_height := minf(18.0, size.y * 0.12)
-		var shelf_top := size.y * 0.5 - 12.0 - i * 19.0
+		# Preserve the three existing shelf bodies and their collision exactly.
+		# The two larger, deeper additions are visual-only transition planes.
+		var shelf_width := clampf(size.x * 0.22,16.0,44.0)
+		var shelf_height := minf(18.0,size.y*0.12)
+		var shelf_top := size.y*0.5-12.0-i*19.0
+		if i>=3:
+			shelf_width=clampf(size.x*0.32,28.0,86.0)*(0.82+0.16*float(i%3))
+			shelf_height=minf(24.0,size.y*0.12)
+			shelf_top=size.y*0.5-14.0-i*clampf(size.y*0.075,21.0,64.0)
 		var shelf := Vector3(cos(angle) * size.x * 0.44, shelf_top, sin(angle) * size.z * 0.44)
 		_mesa(parent, "VegetatedGeologicalShelf%d" % i, shelf - Vector3.UP * shelf_height * 0.5,
-			Vector3(shelf_width, shelf_height, shelf_width * 0.78), _materials["cliff"], _materials["upland"], true, seed_value + 131 + i)
+			Vector3(shelf_width, shelf_height, shelf_width * 0.78), _materials["cliff"], _materials["upland"],
+			i<3, seed_value + 131 + i)
 		_cover_patches.append({"kind":"ellipse","centre":parent.to_global(shelf),
 			"half":Vector2(shelf_width*0.30,shelf_width*0.23),"seed":seed_value*31+i,"dry":false})
-		var tree := NATURE_TREES[posmod(i + seed_value, NATURE_TREES.size())].instantiate() as Node3D
-		tree.position = shelf - Vector3.UP * 0.10
-		tree.scale = Vector3.ONE * (0.92 + i * 0.16)
-		_apply_tree_palette(tree, seed_value + i)
-		parent.add_child(tree)
-		_set_geometry_visibility(tree, 1050.0)
+		if i%2==0 or not monumental:
+			var tree := NATURE_TREES[posmod(i + seed_value, NATURE_TREES.size())].instantiate() as Node3D
+			tree.position = shelf - Vector3.UP * 0.10
+			tree.scale = Vector3.ONE * (0.92 + i * 0.12)
+			_apply_tree_palette(tree, seed_value + i)
+			parent.add_child(tree)
+			_set_geometry_visibility(tree, 1050.0)
 
 
 func _cylinder(parent: Node, label: String, centre: Vector3, radius: float, height: float, material: Material) -> MeshInstance3D:
