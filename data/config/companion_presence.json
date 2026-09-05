@@ -1,0 +1,102 @@
+{
+  "_comment": "W12-COMPANION-0904 (addendum E / owner directive C section 5). Tunables for scripts/creatures/companion_presence.gd, the contextual-reaction layer on the player's deployed creature. Every reaction here is presentation over the follower's own locomotion: none of it moves the gameplay body except the short `approach` walk, which goes through the same request_move() the follower uses. All durations/cooldowns are seconds, all distances metres, all angles degrees.",
+
+  "_comment_rigs": "Every installed creature rig carries exactly six clips (attack, faint, hit, idle, run, walk) and a `head`/`neck` bone -- tools/_capture_companion_rig_inventory.gd, 2026-09-04. There is no happy/bounce/lie-down clip anywhere in the roster, so every reaction below is procedural motion on the model pivot (hop, nod, wiggle, scale pulse, roll/sink) plus a clip the rig does have, and the head turn is a LookAtModifier3D on the head bone. Nothing here names a clip the roster lacks.",
+
+  "guard": {
+    "_comment": "Context in which NO reaction may start and any running one is cut: a fight (aiming included), riding, any panel/menu/dialogue owning input (input_owner.gd), a live actionable interact prompt, the sequence director's lockout, an armed build ghost. `victory_during_resolve` lets the post-victory reaction alone play during combat_manager's RESOLVING pause after a WON fight -- the result beat -- when nothing is piloting the creature any more.",
+    "victory_during_resolve": true,
+    "pending_expiry_s": 20.0
+  },
+
+  "bond": {
+    "_comment": "How bond_nodes() (0-5 milestones completed) warms the layer. Each is subtracted/added per node; floors keep bond 5 from making the creature clingy.",
+    "acknowledge_still_seconds_per_node": -0.7,
+    "acknowledge_cooldown_per_node": -3.0,
+    "victory_extra_hops_per_two_nodes": 1,
+    "victory_hop_height_scale_per_node": 0.12,
+    "victory_roar_from_node": 3,
+    "approach_from_node": 2
+  },
+
+  "acknowledge": {
+    "_comment": "The trainer has stood still for `still_seconds` (less at higher bond) while the creature is standing with them: it walks up to `approach_distance`, faces them, dips its head once and holds their gaze. Also fired, without the wait, on deploy (`deploy` event) with its own shorter cooldown.",
+    "still_seconds": 6.0,
+    "still_seconds_min": 2.5,
+    "still_speed": 0.3,
+    "cooldown_s": 30.0,
+    "cooldown_min_s": 12.0,
+    "deploy_cooldown_s": 8.0,
+    "approach_distance": 2.2,
+    "approach_seconds_max": 3.0,
+    "duration_s": 1.8,
+    "nod_deg": 9.0,
+    "nods": 1
+  },
+
+  "victory": {
+    "_comment": "A won fight's result beat: hops on the spot with a small scale pulse for ~2 s; at `bond.victory_roar_from_node` and above the attack clip plays once as a roar/pounce. If the fight teardown hides the body mid-reaction, the layer queues a `deploy` acknowledgment so the creature turns to the trainer when it reappears beside them.",
+    "hops": 2,
+    "hop_height_fraction": 0.16,
+    "pulse": 0.06,
+    "duration_s": 2.0,
+    "cooldown_s": 6.0,
+    "roar_clip": "attack"
+  },
+
+  "hurt": {
+    "_comment": "Continuous while HP is under `hp_below` or the creature is hungry (creature_condition.is_hungry -- the light-hunger rule; nothing here harms it). Slower gait (follower reads gait_scale), head-low pitch on the pivot, slowed idle, and a flinch (the rig's own `hit` clip) every `flinch_every_s` +/- `flinch_jitter_s` while standing.",
+    "hp_below": 0.30,
+    "gait_scale": 0.72,
+    "anim_speed_scale": 0.78,
+    "head_low_deg": 11.0,
+    "sink_fraction": 0.03,
+    "flinch_every_s": 9.0,
+    "flinch_jitter_s": 3.0,
+    "flinch_clip": "hit"
+  },
+
+  "camp": {
+    "_comment": "Within `radius` of a camp source (a lit campfire's campfire_glow.gd overlay, a creature_bed.gd or player_bed.gd, or anything in the `companion_camp` group) and standing for `settle_seconds`: rolls partway toward its species' rest pose (rest_roll_deg * roll_fraction; 0 opts out as in creature_body.play_rest), sinks a little, and idles at half speed. Stands back up the moment it has to move or the trainer leaves.",
+    "radius": 6.0,
+    "settle_seconds": 2.0,
+    "scan_every_s": 2.0,
+    "roll_fraction": 0.45,
+    "sink_fraction": 0.05,
+    "anim_speed_scale": 0.5,
+    "script_suffixes": ["campfire_glow.gd", "creature_bed.gd", "player_bed.gd"]
+  },
+
+  "care": {
+    "_comment": "Fed / healed / revived from the satchel (tab_backpack.gd hooks). The menu owns input at that moment, so the reaction is queued and plays the instant the satchel closes: walk up, face the trainer, then feed = two quick hops, heal = a slow stretch (scale pulse) with a nod, revive = a head shake.",
+    "approach_distance": 2.0,
+    "approach_seconds_max": 2.5,
+    "duration_s": 1.6,
+    "cooldown_s": 4.0,
+    "feed": { "hops": 2, "hop_height_fraction": 0.10 },
+    "heal": { "pulse": 0.07, "nods": 1, "nod_deg": 7.0 },
+    "revive": { "wiggle_deg": 10.0, "wiggles": 3 }
+  },
+
+  "bond_milestone": {
+    "_comment": "A bond node just completed (polled off bond_nodes(); the `bond_milestone` event from the progression feed, once another lane lands it, is the same entry). The strongest moment the layer owns: walk right up, four rising hops, a pulse, and the roar clip.",
+    "approach_distance": 1.8,
+    "approach_seconds_max": 3.0,
+    "hops": 4,
+    "hop_height_fraction": 0.22,
+    "pulse": 0.10,
+    "duration_s": 3.0,
+    "cooldown_s": 0.0,
+    "roar_clip": "attack"
+  },
+
+  "look": {
+    "_comment": "Head turn toward the trainer via LookAtModifier3D on the rig's `head` bone, while standing within `radius`. `influence` under 1 keeps the idle's own head motion alive under it.",
+    "enabled": true,
+    "bone": "head",
+    "radius": 7.0,
+    "limit_deg": 55.0,
+    "duration_s": 0.35,
+    "influence": 0.75
+  }
+}

@@ -1981,6 +1981,7 @@ func _on_target_row(index: int) -> void:
 		# inherently per-creature and manual, so unlike distance/landmarks/rest
 		# this credits only the one creature actually fed.
 		BOND_MILESTONES.credit_feed(creature)
+		get_tree().call_group(&"companion_presence", "on_care", creature, "feed")  # W12-COMPANION-0904
 		say("%s ate the %s. %s" % [
 			str(creature.call("label")), str(db.call("item_name", id)),
 			CONDITION.label(creature, CONDITION.config())
@@ -2076,6 +2077,7 @@ func _on_target_row(index: int) -> void:
 			return
 		creature.call("revive", _targeting_revive)
 		inventory.call("remove", id, 1)
+		get_tree().call_group(&"companion_presence", "on_care", creature, "revive")  # W12-COMPANION-0904
 		say("%s is back on its feet." % str(creature.call("label")))
 		# G3-OPENING-FIX-0904 (2.11). Reviving the party's ACTIVE creature does
 		# not, by itself, put it back beside the trainer: nothing that sends a
@@ -2101,6 +2103,7 @@ func _on_target_row(index: int) -> void:
 
 	var restored := float(creature.call("heal", _targeting_heal))
 	inventory.call("remove", id, 1)
+	get_tree().call_group(&"companion_presence", "on_care", creature, "heal")  # W12-COMPANION-0904
 	say("%s recovers %d." % [str(creature.call("label")), int(restored)])
 	_end_targeting()
 
