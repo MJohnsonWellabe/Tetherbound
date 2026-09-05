@@ -13,11 +13,13 @@ const LOWER_FORAGER_SMOKE_PATH := "res://tests/smoke_cloudreach_lower_forager_de
 const POST_CAMP_SMOKE_PATH := "res://tests/smoke_cloudreach_post_camp_locomotion.gd"
 const POST_RELAY_SMOKE_PATH := "res://tests/smoke_cloudreach_post_relay_exit.gd"
 const PERSISTENCE_TAIL_SMOKE_PATH := "res://tests/smoke_cloudreach_persistence_tail.gd"
+const DEPLOYED_CADENCE_SMOKE_PATH := "res://tests/smoke_cloudreach_deployed_cadence.gd"
 const WORLD_PATH := "res://scripts/world/cloudreach_world.gd"
 const SUMMIT_PRESENTATION_PATH := "res://scripts/world/cloudreach_summit_presentation.gd"
 const YARDS_PATH := "res://scripts/world/cloudreach_battle_yards.gd"
 const DIRECTOR_PATH := "res://scripts/combat/cloudreach_encounter_director.gd"
 const SCENE_RUNTIME_PATH := "res://data/config/cloudreach_scene_runtime.json"
+const CHAPTER_PATH := "res://data/config/cloudreach_chapter.json"
 
 
 func _source() -> String:
@@ -243,6 +245,41 @@ func test_exact_persistence_tail_freezes_observation_and_logs_field_differences(
 		"persistence regression does not report exact per-member field changes")
 	assert_true(smoke.contains("game.party.size()==5"),
 		"persistence regression does not enforce the five-member party")
+
+
+func test_deployed_companion_cadence_is_zero_seed_real_input_forward_evidence() -> void:
+	var smoke:=FileAccess.get_file_as_string(DEPLOYED_CADENCE_SMOKE_PATH)
+	assert_true(smoke.contains('await _tap("creature_recall")') and \
+		smoke.contains("director.ally_body()!=null"),
+		"cadence evidence does not deploy the owned companion through real input")
+	assert_true(smoke.contains('"cloudreach_seed_count":0') and \
+		smoke.contains("Completed-Meadows handoff only. No Cloudreach chapter/objective flag is seeded."),
+		"cadence evidence does not declare its zero-Cloudreach-seed fixture")
+	assert_false(smoke.contains("player.global_position="),
+		"cadence evidence writes the player's position")
+	assert_true(smoke.contains("_walk_forward") and smoke.contains("_navigate_forward"),
+		"cadence evidence does not isolate natural forward route travel")
+	assert_true(smoke.contains('for category: String in ["engage","resource","npc","rest"]'),
+		"cadence evidence does not require all actual offer categories")
+	assert_true(smoke.contains("const CADENCE_REVIEW_SECONDS:=60.0") and \
+		smoke.contains("const CADENCE_BAR_SECONDS:=90.0") and \
+		smoke.contains("gap_seconds\",0.0))>CADENCE_BAR_SECONDS"),
+		"cadence evidence does not review 60-second gaps and enforce the 90-second chapter bar")
+	assert_true(smoke.contains("_mark_cadence_choice(last_activated_path)"),
+		"cadence evidence does not distinguish offered activity from player choices")
+	assert_true(smoke.contains('"choices":cadence_choices'),
+		"cadence report omits its actual interaction choices")
+	assert_true(smoke.contains('"excluded_time":"dialogue, interaction waits, gathering, diagnostics, backtracking"'),
+		"cadence report does not disclose excluded non-travel time")
+	var chapter: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(CHAPTER_PATH))
+	var midpoint: Dictionary={}
+	for spec: Dictionary in chapter.get("pickups",[]):
+		if str(spec.get("id",""))=="cr_candy_broken_route_good_04":
+			midpoint=spec
+	assert_eq(midpoint.get("position",[]),[-60.0,405.0,1695.0],
+		"the measured causeway-to-east-anchor gap lost its supported route-tier midpoint")
+	assert_eq(midpoint.get("item_id",""),"good_candy",
+		"the cadence repair changed its existing pickup identity")
 
 
 func test_waterward_overlook_join_uses_thin_crown_and_real_input() -> void:
