@@ -122,9 +122,13 @@ func _run() -> void:
 		return
 	var mount: Node3D = director.call("ally_body")
 
-	# Open, flat ground: the point of the frame is the animal and the rider, and
-	# a mount standing in a hedge is a frame about the hedge.
-	mount.call("place_on_ground", Vector3(0.0, 0.0, 0.0))
+	# World origin is NOT open ground: `data/config/village.json`'s `workshop`
+	# prefab sits at [2.0, 2.0], 2.8 m away -- close enough that a mount placed
+	# at (0,0,0) stands in its doorway, which was this tool's own first result
+	# (`ralph/reports/W14-RIDING-0904/_shot_before_open_ground_fix.png`). This
+	# point is measured clear of every structure `village.json` places: the
+	# nearest is `square_oak_a` at [31.5, 1.5], 28.9 m away.
+	mount.call("place_on_ground", Vector3(60.0, 0.0, 0.0))
 	player.global_position = mount.global_position + mount.global_basis.x * 1.4
 	for i in 60:
 		await physics_frame

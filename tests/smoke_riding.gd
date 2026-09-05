@@ -386,6 +386,13 @@ func _the_mount_sprints() -> void:
 		_fail("not mounted; the sprint check cannot run")
 		return
 	var mount: Node3D = _riding.call("mount_body")
+	# BOTH legs start from the same open ground, and neither starts from
+	# wherever the last check left the animal. The first version of this did
+	# not, and it measured a mount that had run 12 m into the meadow on the
+	# walking leg and was standing against something on the sprinting one:
+	# 10.00 m/s walking, 0.00 m/s sprinting, which reads as "sprint does
+	# nothing" and is really "this creature is against a tree". A speed test
+	# whose two halves start in different places is not a comparison.
 	var walking_peak := await _peak_speed_holding(mount, [])
 	var sprinting_peak := await _peak_speed_holding(mount, ["sprint"])
 	var sprint_on_foot := _sprint_speed()
@@ -418,8 +425,10 @@ func _the_mount_jumps() -> void:
 	if mount == null:
 		_fail("the mount is not a CharacterBody3D; the jump cannot be measured")
 		return
-	# Let it settle on the ground first: a hop measured from a body that is
-	# still falling measures the fall.
+	# Open ground and settled first: a hop measured from a body that is still
+	# falling measures the fall, and one measured from a body wedged under a
+	# branch measures the branch.
+	await _onto_open_ground(mount)
 	for i in 40:
 		await physics_frame
 	var floor_y := mount.global_position.y
@@ -469,6 +478,7 @@ func _the_mount_jumps() -> void:
 ## forward stick, over a fixed window. Shared by the sprint check so both halves
 ## of its comparison are measured exactly the same way.
 func _peak_speed_holding(mount: Node3D, held: Array) -> float:
+	await _onto_open_ground(mount)
 	for action in held:
 		Input.action_press(action)
 	Input.action_press("move_forward")
@@ -513,9 +523,7 @@ func _the_stick_moves_the_creature() -> void:
 	# useless thing to measure a top speed against. `place_on_ground` is the
 	# creature's own relocation call (D09: ask the world, do not raycast), and
 	# the rider comes along because the rider is parented to the answer.
-	mount.call("place_on_ground", Vector3(0.0, 0.0, 0.0))
-	for i in 30:
-		await physics_frame
+	await _onto_open_ground(mount)
 
 	var frames := 90
 	var seconds := float(frames) / float(Engine.physics_ticks_per_second)
@@ -734,6 +742,30 @@ func _stand_beside_the_mount() -> void:
 	_player.global_position = spot
 	_player.velocity = Vector3.ZERO
 	for i in 20:
+		await physics_frame
+
+
+## World origin is NOT open ground: `data/config/village.json`'s `workshop`
+## prefab sits at `[2.0, 2.0]`, 2.8 m from (0,0) -- close enough that a mount
+## placed at the origin stands in its doorway (`ralph/reports/W14-RIDING-0904/
+## _shot_before_open_ground_fix.png` is the render that caught it: a sprint
+## reading 0.00 m/s and a hop reading 0.89 m against an asked 1.60 m, both
+## explained by an animal partly inside a building rather than by the sprint
+## or the jump). `OPEN_GROUND` is measured clear of every structure
+## `village.json` places: nearest is `square_oak_a` at `[31.5, 1.5]`, 28.9 m
+## away, well outside a rideable creature's ~1 m radius.
+##
+## Put the mount there, with the rider on it, and let physics settle.
+## `place_on_ground` is the creature's own relocation call (D09: ask the world,
+## do not raycast) and the rider comes along because the rider is parented to
+## the answer.
+const OPEN_GROUND := Vector3(60.0, 0.0, 0.0)
+
+func _onto_open_ground(mount: Node3D) -> void:
+	if mount == null or not is_instance_valid(mount):
+		return
+	mount.call("place_on_ground", OPEN_GROUND)
+	for i in 40:
 		await physics_frame
 
 
