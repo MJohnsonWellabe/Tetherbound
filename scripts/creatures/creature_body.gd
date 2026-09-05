@@ -495,7 +495,7 @@ func _build_model(look: Dictionary) -> bool:
 		return false
 
 	for child in _model.get_children():
-		child.free()
+		_release_art(child)
 	var art: Node3D = packed.instantiate() as Node3D
 	if art == null:
 		push_error("species '%s' model root is not a Node3D" % species_id)
@@ -514,6 +514,43 @@ func _build_model(look: Dictionary) -> bool:
 	_has_model = true
 	_build_animator(art, look)
 	return true
+
+
+## Free a piece of art this body dressed, without the engine error every
+## headless world boot used to open with (CL-G7,
+## `docs/GATE2_GATE3_CLOSURE_PLAN.md` §2.B):
+##
+##   ERROR: Parameter "material" is null.
+##      at: material_get_instance_shader_parameters
+##      GDScript backtrace: _build_model <- apply_size_multiplier
+##
+## Traced with tools/_probe_null_material_rebuild.gd to the teardown above,
+## on a body re-sized in the SAME frame it was dressed (the Warren Guardian:
+## `burrow_warrens.gd::_dress_the_guardian()` calls `apply_size_multiplier`
+## straight after `spawn_wild` built and dressed it). The dressing passes
+## (`_rim_light_node`, `_wire_self_light`, ...) hand each MeshInstance3D a
+## surface override that only that node holds a reference to. A
+## MeshInstance3D's members die before its VisualInstance3D base does, so
+## the override material's RID is freed FIRST and the server's own
+## `free(instance)` then flushes the instance's pending update against a
+## material that no longer exists -- the null it complains about. A rendered
+## frame between dressing and freeing does not change this (the probe's
+## `next-frame` mode still errors); holding a reference to every active
+## material across the free does make it vanish (`hold-materials` mode),
+## which is what pins the mechanism. The fix is simply to clear the
+## overrides first, so the flush has nothing dangling to look at and the
+## shipped mesh material is what it falls back to. `material_override` is cleared for the same reason
+## on the one path (`_build_capsule`) that sets it.
+func _release_art(node: Node) -> void:
+	for child in node.get_children():
+		_release_art(child)
+	if node is MeshInstance3D:
+		var instance := node as MeshInstance3D
+		for surface in instance.get_surface_override_material_count():
+			instance.set_surface_override_material(surface, null)
+		instance.material_override = null
+	if node.get_parent() == _model:
+		node.free()
 
 
 ## Wire the model's AnimationPlayer to the role names the species declares.
@@ -1625,8 +1662,19 @@ func play_rest() -> void:
 	# REST_SINK_METERS -- a hovering flier's idle can sit well clear of its
 	# own rest pose, which the radius term above cannot see, so an outlier
 	# gets a bigger number here rather than the whole roster paying for it).
+	#
+	# The grounding term is `_radius * |sin(roll)|`, NOT `_radius * sin(roll)`.
+	# Rolling a body either way dips its low side by about a radius, so the
+	# correction is a LIFT whichever way it tips. Written signed (as it was
+	# until N03-CREATURE-BODY-0905), a negative `rest_roll_deg` turned the
+	# lift into a dip: terrapup and trailpup both carry -45, and their
+	# sleepers sat 1.24m and 0.61m under the bed line -- most of a body
+	# height -- which is the same arithmetic W12 found and fixed in
+	# companion_presence.gd's camp roll ("the creature is half inside the
+	# hillside"). The sideways term keeps its sign on purpose: which way the
+	# body fell is exactly what it means. Pinned by tests/test_creature_rest_pose.gd.
 	var sink := float(SPECIES.placeholder(species_id).get("rest_sink_extra", REST_SINK_METERS))
-	_model.position = Vector3(_height * 0.5 * sin(roll_rad), _radius * sin(roll_rad) - sink, 0.0)
+	_model.position = Vector3(_height * 0.5 * sin(roll_rad), _radius * absf(sin(roll_rad)) - sink, 0.0)
 
 
 func revive_animation() -> void:

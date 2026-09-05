@@ -860,10 +860,10 @@ func _apply_pivot(offsets: Dictionary, rolled: bool = false) -> void:
 	# a paw lying detached in a meadow". The sideways re-centre above keeps its
 	# sign, because which way the body falls is exactly what that term means.
 	#
-	# `creature_body.gd::play_rest()` carries the same signed form for the bed
-	# pose and so has the same latent dip on the two negative-roll species
-	# (terrapup, trailpup). That file is outside this lane's ownership and is
-	# not touched here; reported for routing instead.
+	# `creature_body.gd::play_rest()` carried the same signed form for the bed
+	# pose, with the same dip on the two negative-roll species (terrapup,
+	# trailpup); W12 reported it for routing and N03-CREATURE-BODY-0905 fixed
+	# it to the same `|sin|` form, pinned by tests/test_creature_rest_pose.gd.
 	var position := _pivot_rest.origin + Vector3(
 		float(offsets.get("x", 0.0)) + (_height() * 0.5 * sin(roll) if rolled else 0.0),
 		float(offsets.get("y", 0.0)) + (_radius() * absf(sin(roll)) if rolled else 0.0),
