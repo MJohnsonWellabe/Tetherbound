@@ -28,14 +28,16 @@
   "near_pulse_seconds": 1.6,
   "moment_seconds": 3.0,
   "reward_seconds": 6.0,
+  "additional_member_seconds": 1.0,
   "moment_collapse_seconds": 5.0,
   "moment_cooldown_seconds": 0.4,
 
-  "_comment_banner": "The moment banner's slot on the authored 1920x1080 canvas (canvas_items / expand stretch, so the canvas grows to 1920x1200 on the Ally). top/height in canvas px; width centred. safe_area_fraction is the overscan margin every edge must clear (GATE3-HUD-SAFEAREA's own 5%): the HUD clamps the banner inside it whatever canvas it draws on. It sits under the region banner's slot (playground_hud.gd::REGION_BANNER_TOP 120 + 48) so the two top-centre cards never overlap, and well above the combat HUD's centre outcome line.",
+  "_comment_banner": "The single moment card occupies an upper-right lane on the live canvas, inside safe_area_fraction. Width is capped by both width and side_width_fraction so the central player and left five-member roster remain clear. Height is a minimum and grows with actual wrapped rewards. The historical top field is retained for compatibility but no longer positions this card. additional_member_seconds adds reading time for each distinct creature after the first.",
   "banner": {
     "top": 184,
     "height": 92,
     "width": 900,
+    "side_width_fraction": 0.31,
     "safe_area_fraction": 0.05
   },
 

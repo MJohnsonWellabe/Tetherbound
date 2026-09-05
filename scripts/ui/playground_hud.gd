@@ -2921,12 +2921,8 @@ func _update_region_banner() -> void:
 
 # --- the progression Moment banner (PROGRESSION-VISIBLE, prompt 73 §2.2) ------------
 
-## Top-centre, under `_build_region_banner()`'s slot, sized from
-## data/config/progression_feedback.json's `banner` block. Built here rather
-## than in the .tscn like every other card on this HUD. Two Labels in a
-## plate: the title ("Tup reached Lv 8") in the heading tier and the detail
-## ("+4 HP · +1 ATK · +1 DEF · evolution level reached") in the label tier,
-## plus an "also" line for a second moment collapsed into the same plate.
+## One passive progression card, sized from the feedback config and the live
+## canvas. A title and payout sit above compact per-creature growth entries.
 func _build_moment_banner() -> void:
 	add_to_group("progression_feedback_presenter")
 	var cfg: Dictionary = PROGRESSION_FEED.config().get("banner", {})
@@ -2952,7 +2948,7 @@ func _build_moment_banner() -> void:
 
 	_moment_title = Label.new()
 	_moment_title.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_moment_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_moment_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	_moment_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_moment_title.add_theme_font_size_override("font_size", UITokens.FONT_HEADING)
 	_moment_title.add_theme_color_override("font_color", UITokens.WARNING)
@@ -2960,7 +2956,7 @@ func _build_moment_banner() -> void:
 
 	_moment_detail = Label.new()
 	_moment_detail.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_moment_detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_moment_detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	_moment_detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_moment_detail.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
 	_moment_detail.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
@@ -2968,7 +2964,7 @@ func _build_moment_banner() -> void:
 
 	_moment_also = Label.new()
 	_moment_also.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_moment_also.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_moment_also.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	_moment_also.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	# FONT_TINY (19) measured ~11px on the judge's 1280x800 ruler and was
 	# called too small for a handheld; the also-line carries a real event
@@ -2983,34 +2979,27 @@ func _build_moment_banner() -> void:
 	_moment_feed_epoch = PROGRESSION_FEED.epoch()
 
 
-## The banner's slot, clamped inside the safe area on whatever canvas is
-## actually rendering (1080 tall authored, 1200 on the Ally): never above
-## `safe_area_fraction` of the height, and never on top of the two cards that
-## already own this top-centre lane.
-##
-## BLIND-JUDGE ROUND 1: the first version cleared only the region banner's
-## slot, and the objective HINT CARD sits directly under that
-## (`_build_objective_hint_card()`, `_region_banner_bottom() +
-## OBJECTIVE_HINT_CARD_GAP_UNDER_BANNER`) and grows downward with its own
-## wrapped text. So a Moment landing while a hint was up drew straight
-## through it -- the judge read "He is waiting at the table downstairs" and
-## the banner headline occupying the same pixels, and called it the worst
-## defect in the set. The card's real bottom is measured here, live, rather
-## than assumed from its authored offset, because its height depends on how
-## many lines the hint wrapped to.
+## The reward has a right-hand lane inside the safe area. The full-party
+## captain capture exposed the old centred plate crossing both the large
+## relay roster and the directly piloted creature. The normal rail uses the
+## same lane; task/location/minimap cards yield through presentation policy.
 func _position_moment_banner() -> void:
 	if _moment_banner == null:
 		return
 	var cfg: Dictionary = PROGRESSION_FEED.config().get("banner", {})
-	var canvas_h: float = _root.size.y if _root != null and _root.size.y > 0.0 else 1080.0
-	var safe := canvas_h * float(cfg.get("safe_area_fraction", 0.05))
-	var floor_y := maxf(safe, _region_banner_bottom() + UITokens.GAP)
-	if _objective_hint_card != null and _objective_hint_card.visible:
-		floor_y = maxf(floor_y, _objective_hint_card.position.y + _objective_hint_card.size.y + UITokens.GAP)
-	var top := maxf(float(cfg.get("top", 184)), floor_y)
+	var canvas := _root.size if _root != null and _root.size.x > 0.0 else Vector2(1920, 1080)
+	var safe := canvas * float(cfg.get("safe_area_fraction", 0.05))
+	# The full-team receipt must leave the creature and the enlarged relay roster
+	# clear. Its own right-hand lane also works with the normal exploration rail.
+	var width := minf(float(cfg.get("width", 900)), canvas.x * float(cfg.get("side_width_fraction", 0.31)))
+	var right := canvas.x - safe.x
+	_moment_banner.anchor_left = 0.0
+	_moment_banner.anchor_right = 0.0
+	_moment_banner.offset_left = right - width
+	_moment_banner.offset_right = right
 	var height := float(cfg.get("height", 92))
-	_moment_banner.offset_top = top
-	_moment_banner.offset_bottom = top + height
+	_moment_banner.offset_top = safe.y
+	_moment_banner.offset_bottom = safe.y + height
 
 
 ## Poll the feed for Moments, queue them, and show them when the screen is
@@ -3051,6 +3040,7 @@ func _update_moment_banner() -> void:
 				_recent_xp_awards[id]["amount"] = accumulated + int(event.get("amount", 0))
 			if str(event.get("kind", "")) == "reward_summary":
 				event["reward_xp"] = _reward_xp_text()
+				event["reward_xp_events"] = _recent_xp_awards.duplicate(true)
 				_recent_xp_awards.clear()
 			if PROGRESSION_FEED.is_moment(event):
 				_moment_queue.append(event)
@@ -3134,43 +3124,86 @@ func _reward_xp_text() -> String:
 
 
 func _moment_hold_seconds() -> float:
+	var members: Dictionary = {}
+	var seconds := PROGRESSION_FEED.seconds("moment_seconds", 3.0)
+	for event: Dictionary in _moment_events:
+		var id := int(event.get("creature_id", 0))
+		if id != 0:
+			members[id] = true
+		if str(event.get("kind", "")) == "reward_summary":
+			seconds = PROGRESSION_FEED.seconds("reward_seconds", 6.0)
+			for award_id: Variant in event.get("reward_xp_events", {}):
+				members[award_id] = true
+	return seconds + maxi(0, members.size() - 1) * PROGRESSION_FEED.seconds("additional_member_seconds", 1.0)
+
+
+## One compact entry per growth event carries its actual stat and XP details.
+## Receipts retain their exact payout above those entries; creature names are
+## not repeated in a second XP list after all five level-up announcements.
+func _render_moment_events() -> void:
+	var receipts: Array[Dictionary] = []
+	var growth: Array[Dictionary] = []
+	var awards: Dictionary = {}
+	var has_level := false
 	for event: Dictionary in _moment_events:
 		if str(event.get("kind", "")) == "reward_summary":
-			return PROGRESSION_FEED.seconds("reward_seconds", 6.0)
-	return PROGRESSION_FEED.seconds("moment_seconds", 3.0)
+			receipts.append(event)
+			awards.merge(event.get("reward_xp_events", {}), true)
+		else:
+			growth.append(event)
+			has_level = has_level or str(event.get("kind", "")) == "level_up"
 
+	_dress_moment_banner("level_up" if has_level else "bond_milestone")
+	var rows := PackedStringArray()
+	var used_awards: Dictionary = {}
+	var single_growth := receipts.is_empty() and growth.size() == 1
+	if not receipts.is_empty():
+		_moment_title.text = str(PROGRESSION_FEED.moment_text(receipts[0]).get("title", "Victory rewards"))
+		var payout := PackedStringArray()
+		for receipt: Dictionary in receipts:
+			payout.append(str(receipt.get("receipt", "")))
+		_moment_detail.text = "\n".join(payout)
+	elif single_growth:
+		var lines: Dictionary = PROGRESSION_FEED.moment_text(growth[0])
+		_moment_title.text = str(lines.get("title", ""))
+		_moment_detail.text = str(lines.get("detail", ""))
+	else:
+		_moment_title.text = "Your team grew stronger"
+		_moment_detail.text = ""
 
-## One plate holds the collapsed events. Level-ups retain the headline, while
-## receipts keep their full payout and XP lines even when another event joins.
-func _render_moment_events() -> void:
-	var primary := 0
-	for i in _moment_events.size():
-		if str(_moment_events[i].get("kind", "")) == "level_up":
-			primary = i
+	for event: Dictionary in growth:
+		if single_growth:
 			break
-	var event: Dictionary = _moment_events[primary]
-	var lines: Dictionary = PROGRESSION_FEED.moment_text(event)
-	_dress_moment_banner(str(event.get("kind", "")))
-	_moment_title.text = str(lines.get("title", ""))
-	_moment_detail.text = str(lines.get("detail", ""))
+		var lines: Dictionary = PROGRESSION_FEED.moment_text(event)
+		var id := int(event.get("creature_id", 0))
+		var award: Dictionary = awards.get(id, {})
+		var identity := str(lines.get("title", ""))
+		var detail := str(lines.get("detail", ""))
+		if str(event.get("kind", "")) == "level_up":
+			detail = " · ".join(PROGRESSION_FEED.level_up_changes(event))
+		if not award.is_empty() and not used_awards.has(id):
+			identity += " · +%d XP" % int(award.get("amount", 0))
+			detail += (" · " if not detail.is_empty() else "") + "EXP %d/%d" % [
+				int(award.get("xp", 0)), int(award.get("xp_to_next", 0))]
+			used_awards[id] = true
+		rows.append(identity)
+		if not detail.is_empty():
+			rows.append(detail)
+
+	# Members who earned XP without a level still keep their own award row.
+	for id: Variant in awards:
+		if used_awards.has(id):
+			continue
+		var award: Dictionary = awards[id]
+		rows.append("%s · +%d XP · EXP %d/%d" % [str(award.get("name", "")),
+			int(award.get("amount", 0)), int(award.get("xp", 0)), int(award.get("xp_to_next", 0))])
+	for receipt: Dictionary in receipts:
+		if not receipt.has("reward_xp_events") and not str(receipt.get("reward_xp", "")).is_empty():
+			rows.append(str(receipt["reward_xp"]))
+	if not receipts.is_empty() and _world_presentation_mode == "relays":
+		rows.append("Next: disable the three exposed relays.")
 	_moment_detail.visible = not _moment_detail.text.is_empty()
-	var extra := PackedStringArray()
-	var has_receipt := false
-	for i in _moment_events.size():
-		var additional: Dictionary = _moment_events[i]
-		var additional_lines: Dictionary = PROGRESSION_FEED.moment_text(additional)
-		var receipt := str(additional.get("kind", "")) == "reward_summary"
-		if i != primary:
-			extra.append(str(additional_lines.get("title", "")))
-			if receipt:
-				extra.append(str(additional_lines.get("detail", "")))
-		if receipt:
-			has_receipt = true
-			if not str(additional.get("reward_xp", "")).is_empty():
-				extra.append(str(additional["reward_xp"]))
-	if has_receipt and _world_presentation_mode == "relays":
-		extra.append("Next: disable the three exposed relays.")
-	_moment_also.text = "\n".join(extra)
+	_moment_also.text = "\n".join(rows)
 	_moment_also.visible = not _moment_also.text.is_empty()
 	_position_moment_banner()
 

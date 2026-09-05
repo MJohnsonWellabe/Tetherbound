@@ -4,7 +4,7 @@
 
 Owner resumed the full Cloudreach chapter goal, excluding final creature art.
 Work is in `D:\Tetherbound-source` on `codex/cloudreach-cliffs`, draft PR #44.
-Merge checkpoint `1f1f23652` is pushed, preserving `e002853ea` and the reference
+Environment checkpoint `ca7d87113` and merge `1f1f23652` are pushed, preserving `e002853ea` and the reference
 import sidecars in `92fda325e`. It integrates fetched main `2cd711eb1` without
 discarding either lane's compatible behavior.
 This is **not** a merge to main or a claim of chapter completion.
@@ -32,7 +32,10 @@ Round 4's twelve real environment frames receive **art direction Yes / Palworld
 presentation No**. Foundation and 37 related unit tests pass; real-input airborne
 Fly and 63/63 rendered side-payoff checks pass. Sustained local static samples
 measure p95 8.34–15.18 ms on GTX 1060 at 1280×800, not Ally acceptance. A new
-five-member reward capture exposes a genuine HUD overlap; correction is underway.
+five-member reward capture exposed a genuine HUD overlap. The upper-right
+single-card correction passes 74/74 real production checks and fresh blind
+review finds no blocking HUD defect; its dense detail and relay-object occlusion
+remain nonblocking findings. See `ralph/reports/CLOUDREACH-HUD-0905/REPORT.md`.
 
 Combat has been remeasured against main's 1.6 damage multiplier: 28/28 real-input
 trainer-ladder wins, real wipe/rest/retry, maximum individual hit 39.85% HP,
@@ -43,9 +46,12 @@ See `docs/biomes/cloudreach/CONTINUOUS_ACCEPTANCE_0905.md`,
 `COMBAT_BALANCE_EVIDENCE_0905.md` and the round-4 `JUDGE-ASTRA.md`.
 
 The older exit note and main snapshot below are dated history, not current
-Cloudreach routing. Next steps: finish the live five-member HUD regression,
-continuous chapter and content-cadence audit, then correct the round-4 visual
-defects and recapture/judge. Draft PR #44 CI remains in progress; do not merge.
+Cloudreach routing. Next steps: finish the continuous chapter, repair the audited
+wild spawn/wander grounding contract and measured activity gaps, and complete
+round-5 scene corrections and fresh review. The latest continuous run completes
+the real loaner trial and reaches the High Roost crown; its test pilot must
+continue on foot after legitimate early touchdown. Draft PR #44 CI is queued
+for `ca7d87113`; do not merge.
 
 **Status:** the live status document. Replaces `ralph/BACKLOG.md`, `ralph/STATUS.md` and
 the coordinator handovers (all under `archive/ralph/`). Update it when evidence changes;

@@ -137,11 +137,60 @@ func _run()->void:
 	combat.set_world_presentation_mode("exploration")
 	_check(hud._hotbar_panel.visible,"Exploration restores hotbar")
 	_check(combat._outcome.text.is_empty(),"Exploration does not revive stale result")
+	await _full_party_moment_layout()
 	await _progression_reset_and_modal_lifecycle(member)
 	print("HUD LIFECYCLE %s: %d checks"%["PASS" if failures.is_empty() else "FAIL",checks])
 	world.queue_free()
 	await _frames(3)
+	# This short fixture emits eleven real level cues then quits immediately.
+	# Stop its one-shots and let the audio thread release playback buffers before
+	# shutdown; their normal duration exceeds the remaining test lifetime.
+	for cue: AudioStreamPlayer in AudioManager._pool:
+		if is_instance_valid(cue):
+			cue.stop()
+			cue.stream = null
+	await create_timer(0.15).timeout
 	quit(0 if failures.is_empty() else 1)
+
+
+func _full_party_moment_layout() -> void:
+	var cfg: Dictionary = PROGRESSION.config()
+	for mode: String in ["exploration", "relays"]:
+		hud.set_world_presentation_mode(mode)
+		FEED.clear()
+		var index := 0
+		for member: RefCounted in game.party.members():
+			member.set_level(40, cfg)
+			member.xp = member.xp_to_next(cfg) - 1
+			member.gain_xp(100 + index * 17, cfg)
+			index += 1
+		game.push_world_message("Captain Veyra's reward: 150 Coin, 1 Rare Candy")
+		hud._update_world_message()
+		# Five real level events and their receipt collapse through production.
+		for i in 6:
+			hud._update_moment_banner()
+		hud._update_party_strip()
+		hud._party_strip.show_strip()
+		hud._apply_presentation_priority()
+		await _frames(10)
+		var rect: Rect2 = hud.moment_banner_rect()
+		var canvas: Vector2 = hud._root.size
+		var text: String = hud.moment_banner_text()
+		_check(hud.moments_shown() == 6 and hud.moments_queued() == 0, mode + ": all five levels and receipt share one visible card")
+		_check(not rect.intersects(hud._party_strip.get_global_rect()), mode + ": full-party receipt clears the actual roster bounds")
+		_check(not rect.intersects(hud._prompt_label.get_global_rect()), mode + ": reward keeps the controller interaction prompt clear")
+		_check(rect.position.x >= canvas.x * 0.60, mode + ": reward leaves the central creature view open")
+		_check(rect.position.y >= canvas.y * 0.05 - 1 and rect.end.x <= canvas.x * 0.95 + 1 and rect.end.y <= canvas.y * 0.95 + 1, mode + ": whole receipt fits the handheld safe area")
+		_check(rect.size.y <= canvas.y * 0.48, mode + ": five-member details remain a compact card")
+		_check(text.contains("150 Coin, 1 Rare Candy"), mode + ": full-team layout retains exact payout")
+		_check(text.count(" HP") == 5 and text.count(" ATK") == 5 and text.count(" DEF") == 5, mode + ": every member retains its stat deltas")
+		index = 0
+		for member: RefCounted in game.party.members():
+			_check(text.contains("%s reached Lv 41 · +%d XP" % [member.label(), 100 + index * 17]), mode + ": level and XP stay attributed to " + member.label())
+			_check(text.contains("EXP %d/%d" % [member.xp, member.xp_to_next(cfg)]), mode + ": exact XP progress remains visible for " + member.label())
+			index += 1
+		print("FULL PARTY HUD %s bounds=%s canvas=%s" % [mode, rect, canvas])
+	hud.set_world_presentation_mode("exploration")
 
 
 func _progression_reset_and_modal_lifecycle(member: RefCounted) -> void:

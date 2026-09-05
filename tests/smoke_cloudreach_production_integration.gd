@@ -38,7 +38,7 @@ func action(name: String, down: bool) -> void:
 func evidence(label: String) -> void:
 	if not "--capture" in OS.get_cmdline_user_args():
 		return
-	var folder:="res://ralph/reports/CLOUDREACH-PRODUCTION-INTEGRATION-0905/live"
+	var folder := evidence_folder()
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(folder))
 	var draws:=0.0
 	var primitives:=0.0
@@ -49,6 +49,11 @@ func evidence(label: String) -> void:
 		primitives+=Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME)
 	root.get_texture().get_image().save_png(folder+"/"+label+".png")
 	evidence_rows.append({"view":label,"draw_calls":roundi(draws/24.0),"primitives":roundi(primitives/24.0),"measured_frame_ms":float(Time.get_ticks_usec()-start)/24000.0})
+
+
+func evidence_folder() -> String:
+	var folder := "res://ralph/reports/CLOUDREACH-PRODUCTION-INTEGRATION-0905/live"
+	return folder + ("-full-party" if "--full-party" in OS.get_cmdline_user_args() else "")
 
 
 func _run() -> void:
@@ -62,6 +67,17 @@ func _run() -> void:
 	var member: RefCounted = SPECIES.spawn("galecrest")
 	member.call("set_level",40,preload("res://scripts/creatures/progression.gd").config())
 	game.get("party").call("add",member)
+	if "--full-party" in OS.get_cmdline_user_args():
+		# Explicit near-level full-team checkpoint to stress production reward
+		# presentation. Awards still come only from the real three battle rounds.
+		var progression_config := preload("res://scripts/creatures/progression.gd").config()
+		for species_id: String in ["terrapup", "ripplet", "bramblebun", "mudsnout"]:
+			var companion: RefCounted = SPECIES.spawn(species_id)
+			companion.call("set_level", 40, progression_config)
+			game.get("party").call("add", companion)
+		for owned: RefCounted in game.get("party").call("members"):
+			owned.set("xp", int(owned.call("xp_to_next", progression_config)) - 1)
+		check(game.get("party").call("size") == 5, "explicit full-team reward fixture owns exactly five")
 	world = SCENE.instantiate()
 	root.add_child(world)
 	current_scene = world
@@ -131,6 +147,9 @@ func _run() -> void:
 			break
 		await physics_frame
 	check(rounds==3,"three real captain rounds resolve")
+	if "--full-party" in OS.get_cmdline_user_args():
+		for owned: RefCounted in game.get("party").call("members"):
+			check(int(owned.get("level")) > 40, "real captain awards level up full-team member " + str(owned.get("species_id")))
 	await frames(8)
 	check(flags.call("has","captain_veyra_defeated"),"captain victory canonical event")
 	check(finale.get("phase")=="break_the_eye","relay phase follows real victory")
@@ -161,6 +180,15 @@ func _run() -> void:
 		Input.parse_input_event(pad_neutral)
 		await frames(2)
 		await evidence("relay-"+relay.id+"-live")
+		if relay.id == "west" and "--full-party" in OS.get_cmdline_user_args():
+			var hud := world.get_node("PlaygroundHUD")
+			var banner: Control = hud.get("_moment_banner")
+			var strip: Control = hud.get("_party_strip")
+			var prompt: Control = hud.get("_prompt_label")
+			check(banner.is_visible_in_tree() and strip.is_visible_in_tree(), "full-team reward and party rail remain visible together")
+			check(not banner.get_global_rect().intersects(strip.get_global_rect()), "full-team reward does not overlap party rail")
+			check(not banner.get_global_rect().intersects(prompt.get_global_rect()), "full-team reward leaves actual relay prompt clear")
+			check(banner.get_global_rect().position.x >= banner.get_viewport_rect().size.x * 0.60, "full-team reward leaves central play space clear")
 		action("interact",true)
 		await frames(3)
 		action("interact",false)
@@ -183,7 +211,7 @@ func _run() -> void:
 	check(game.get("inventory").call("count","coin")==coins_before,"reload preserves exact trainer payout")
 	check(director.get("trainer_nodes").get("captain_veyra_storm_anchor")==chapter.call("npc_bodies").get("captain_veyra"),"reload retargets canonical cast without duplicate challenge")
 	if not evidence_rows.is_empty():
-		var file:=FileAccess.open("res://ralph/reports/CLOUDREACH-PRODUCTION-INTEGRATION-0905/live/performance.json",FileAccess.WRITE)
+		var file:=FileAccess.open(evidence_folder()+"/performance.json",FileAccess.WRITE)
 		file.store_string(JSON.stringify({"video_adapter":RenderingServer.get_video_adapter_name(),"resolution":[root.size.x,root.size.y],"views":evidence_rows},"  "))
 	world.queue_free()
 	await process_frame

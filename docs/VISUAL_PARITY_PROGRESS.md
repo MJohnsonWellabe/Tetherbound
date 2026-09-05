@@ -256,3 +256,19 @@ Resume: finish the live five-member HUD regression and continuous flight-perch
 approach/trial, then address the blind judge's terrain contacts, asymmetric
 route vegetation, bell/veil construction, watch alignment and arena surface
 grouping. Preserve the passing palette and real collision/progression gates.
+
+### Full-team HUD follow-up
+
+The simultaneous five-level-up receipt no longer covers the party rail or
+controlled creature. The same production presenter retains all five actual
+stat/XP results, exact payout and relay instruction in a tunable upper-right
+card. Actual 1280×800 captain/relay/save capture passes 74/74; the expanded
+HUD lifecycle passes 70/70 and related units pass 43 tests / 159 assertions.
+Fresh code-blind review finds no blocking visible HUD defect, with receipt
+density, relay-object occlusion and faint Energy track recorded for refinement.
+
+`ralph/reports/CLOUDREACH-HUD-0905/` holds the verdict and one contact sheet.
+Its four arena frames return A No / B Yes; this narrower sample does not
+replace the twelve-view round-4 result or accept the arena. Short live means
+24.12–28.34 ms share the host with continuous diagnosis and are not a sustained
+performance baseline. Round 4 itself is pushed as `ca7d87113`; round 5 is active.
