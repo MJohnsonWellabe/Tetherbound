@@ -195,3 +195,76 @@ cream, because the meadow already owns cream. No candy hovers: finds stay on the
 (owner directive 2026-08-30, board 17's "fits in world, not UI-looking"); they turn
 slowly instead. `parts_for`, `crest_for` and `glow_scale_for` in `band_pickups.gd` are
 the queries a test pins; `tests/test_band_pickups.gd` refuses a flatter ladder.
+
+## Round 3, and where verification stopped
+
+The coordinator's 15:58 UTC nudge (*"converge fast… if something genuinely needs a
+visual check, do one pass, not multiple rounds… note in your report exactly what
+verification is incomplete"*) arrived while round 3's render was on its first frame.
+This lane stopped there. Round 3's changes are the direct answer to round 2's three
+named defects and every one is pinned by a test (`RING_EMISSION` under the sky value and
+the ring never white; the wings rooted, upswept and outward; the Good's emission
+brighter than before with the hue ladder intact), so they are verified by test and code
+inspection, not by a third blind pass.
+
+**Verification that is incomplete, exactly:**
+
+- **Round 3 has no blind verdict.** Its 7 m line-up frame
+  (`shots/n08_pickup_tiers/AFTER3/01-lineup-cam7m.png`, local only) was rendered and
+  inspected by this lane — the ring reads as a coloured ground mark rather than the
+  frame's white point, the Good is a visible pale-mint form, the Rare is amber with gold
+  fins — but that is this lane's eye, not a judge's. Frames 02–03 and the band-4 stands
+  were still rendering. The last *judged* state is round 2 (`06e5a5c1`); the difference
+  between round 2 and the shipped round 3 is three constants and two colours in
+  `CANDY_LOOK` / the ring and wing blocks, all of them in the direction round 2's judge
+  asked for.
+- **The band-4 authored stands were captured but never blind-judged.** `main` pairs
+  (`BEFORE-b4`, three frames, bearing search on) and round-2 pairs (`AFTER2` 04–06) exist
+  locally at identical eye positions. Read by this lane: the Good in the south-paddock
+  glade is found by its glow and green ring in shade; the Great on the wind ridge is
+  found by its blue ring under the canopy edge; the herd-bull Rare is an amber glow with
+  **a bush growing through it** — W18's own finding, unchanged, because the site validator
+  cannot see non-colliding scatter (`vegetation.gd`, not this lane). No sheet is committed
+  for them (one sheet per judged round; there was no judged round).
+- **`smoke_playground` on the round-3 loader has not run on an idle box.** It passed on the
+  round-1 loader (`smoke: OK`, 101 pickups, the `ERROR:` set unchanged). On the round-2
+  loader it ran beside a software-GL render and failed the chop-swing timing check
+  (`impact at 0.86 of 0.625s (want ~0.60)`; the earlier, lighter-loaded run printed 0.78
+  against the same 0.80 ceiling) — a load-sensitive gate-A check that touches nothing this
+  lane changed, but it is a red run and is recorded as one. A chained idle rerun was
+  armed; its log was not in hand when this report was written.
+- **No CI run has verified the branch.** Every commit up to the report carries
+  `[skip ci]` as a checkpoint; the commit that records this report carries no marker, so
+  the push that lands it is the first CI run, and its result is not in this report. The
+  base is the merge-base with `main`, so the code jobs will run on a report-only head.
+- **The spin is invisible in a still.** `_spin()` is exercised only by `place_one()` in a
+  booted world; the unit test proves the off-tree path stays still and the phase is
+  deterministic, and `smoke_playground` boots the world with every candy spinning without
+  error. Whether eight seconds a turn is the right speed is a playtest question.
+
+## Known limitations, and what was deliberately not done
+
+- **The mesh is the mesh.** Both judges, like W17's and W18's, say `candy_pickup.glb`'s
+  lobed wrapper reads as a fungus or a creature. `CLAUDE.md` bars a generation without
+  owner reference art and the owner shipped the mesh as-is on 2026-09-04; nothing here
+  changes that, and the parts are built around it.
+- **Mushrooms untouched.** The other pickup family keeps its W17 look and no ring; a judge
+  who sees both families in one line reads the ringless mushroom as an unmarked fourth
+  tier. Whether the mushrooms should carry the family mark too is the coordinator's.
+- **Scale untouched** (see the routed list above).
+- **No hover.** Deliberate; recorded in the decision.
+- **Tunables stay in `CANDY_LOOK` and its sibling constants**, where W17 put them, rather
+  than a new `data/config/` file — one place for the whole tier look was worth more than
+  the split, and the file's header says every number is tunable.
+- **Twelve untracked `.gd.uid` sidecars** for the Cloudreach lane's scripts are generated
+  by any local import of `main` and were not committed, per the file-ownership rule and
+  W18's precedent; the repo's stop hook flags them every turn. Whoever owns Cloudreach
+  should commit them.
+- **`docs/CURRENT_STATE.md` not edited** — the landing lane's file this cycle.
+
+## Commit hash and branch
+
+Final code commit: **`56d7feee`** on `ralph/N08-PICKUP-TIERS-0905` (round 3 of the
+loader; the capture tool's last change is `0a2a5ce3`, the tests' last change is
+`06e5a5c1`). The report commits that follow it are its children; the one that records
+this line carries no `[skip ci]`.
