@@ -3,6 +3,48 @@
 Final visual acceptance belongs to external ChatGPT review. This file records
 only implementation, test, capture, and handoff state.
 
+## Cloudreach round 7 — 2026-09-05
+
+Pushed checkpoint `644760f26` is a deliberately F10-only summit-arena
+presentation pass, not whole-biome visual acceptance. The real 36 m combat deck,
+southern approach, relay/lee locations, collisions, hazard geometry, combat
+circulation and progression are unchanged. Existing castle/village/Team Tether
+assets now form an uneven visual-only perimeter: varied retained-wall heights,
+four unequal watch towers, asymmetric boiler/machine work bays, taller rear
+machinery, lee standards, banners and narrow west/east relay conduits. No new or
+generated asset, creature, encounter, director, HUD or chapter-runtime work is
+in this checkpoint.
+
+- Canonical evidence is the same twelve actual Windows/NVIDIA Compatibility
+  cameras at 1280x800 in
+  `ralph/reports/CLOUDREACH-ENV-CORRECTION-0904/round7/contact-sheet.png`.
+  Two complete rejected iterations remain local/untracked: a wide runner that
+  read as a red carpet plus a detached pale pylon, then a southern runner that
+  read as an orphaned ladder because its relay sat behind the camera.
+- Final F10 retains the required broad fight centre but replaces the former low,
+  even boundary band with a more legible occupied Team Tether skyline and side
+  staging. The red carpet, pale beacon and foreground ladder are absent. F6's
+  broad dark cliff remains explicitly outside this F10-only scope.
+- Godot check-only and foundation smoke pass. Related Cloudreach coverage passes
+  **37 tests / 1,195 assertions** with zero failures.
+- The final F10 short sample measured **1,486 draws / 5,841,340 primitives**,
+  **+118 draws / +17,276 primitives** against the same Round 6 camera. Its quiet
+  ten-second static interval measured mean **8.289 ms**, p95 **8.406 ms**, p99
+  **8.454 ms**, maximum **8.577 ms**. Arrival/Galefoot static means were
+  **9.830/10.649 ms**. These are GTX 1060 desktop measurements, not ROG Ally or
+  continuous-play acceptance.
+- A fresh code-blind A/B review could not be commissioned: repeated attempts
+  after Round 6 exhausted both direct and child-agent routes with `agent thread
+  limit reached`, and the cap remained occupied by the required continuous lane
+  through Round 7. No verdict is inferred from self-inspection. External
+  ChatGPT/owner visual acceptance remains required.
+
+Exact continuation: preserve the accepted F10 perimeter checkpoint, finish the
+continuous route/finale/reload evidence independently, then treat F6's broad dark
+monolith as a separate bounded visual correction after overlapping world-source
+work is committed. Recapture the same cameras and obtain a fresh external A/B
+judgment when the platform permits a genuinely code-blind reviewer.
+
 ## Cloudreach round 6 — 2026-09-05
 
 This is a pushed visual-correction checkpoint, not visual acceptance. It keeps

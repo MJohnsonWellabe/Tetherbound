@@ -88,3 +88,12 @@ At the same F10 camera, Round 7 measures **1,486 draws / 5,841,340
 primitives**, an increase of **118 draws / 17,276 primitives** over Round 6.
 The expanded perimeter is visibility-capped at 700 m. No visual self-acceptance
 or whole-biome B-bar claim is made.
+
+## External review limitation
+
+A fresh code-blind A/B reviewer could not be commissioned for this checkpoint.
+Repeated direct and child-agent attempts after Round 6 returned `agent thread
+limit reached`; the remaining capacity was occupied by the required continuous
+chapter evidence lane throughout Round 7. The full-size inspection above is
+implementation QA only, not a substitute verdict. External ChatGPT/owner visual
+acceptance remains open.
