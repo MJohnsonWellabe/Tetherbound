@@ -91,6 +91,13 @@ func _run() -> void:
 		str(pins.get("player_path")), str(pins.get_node_or_null(pins.get("player_path")))])
 	print("[probe] clusters loaded: %d" % (pins.get("_clusters") as Array).size())
 
+	# Everything that decides whether `_process` can reach `tick()` at all.
+	print("[probe] paused=%s time_scale=%.2f process_mode=%d is_processing=%s can_process=%s" % [
+		str(paused), Engine.time_scale, pins.process_mode,
+		str(pins.is_processing()), str(pins.can_process())])
+	print("[probe] interval_s=%s elapsed_before=%s" % [
+		str(pins.get("_interval_s")), str(pins.get("_elapsed"))])
+
 	# Hold the body at the stand point for the whole wait. A one-shot assignment
 	# cannot tell "the node never ticked" apart from "something moved the body
 	# back", and those want different fixes.
@@ -102,6 +109,10 @@ func _run() -> void:
 		frames += 1
 	print("[probe] %d frames held at %s; body ended at %s" % [
 		frames, str(STAND), str(player.global_position)])
+	# If `_elapsed` moved, `_process` ran and the interval is the question; if it
+	# did not, `_process` never fired and the interval is irrelevant.
+	print("[probe] elapsed_after=%s (a value that moved means _process ran)" % [
+		str(pins.get("_elapsed"))])
 
 	var pinned: int = int(map_state.call("alpha_pin_count"))
 	if pinned <= 0:
