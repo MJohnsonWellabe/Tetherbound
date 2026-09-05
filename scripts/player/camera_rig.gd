@@ -576,11 +576,29 @@ func _solve_conversation_shot() -> Dictionary:
 		# holding for a length that no longer existed, which is how the lens
 		# ended up inside the player's own head in Bram's inn.
 		var tighter := CONVERSATION.fallback_config(_talk_cfg)
-		var probe := CONVERSATION.solve(trainer_anchor, speaker_anchor, forward, tighter)
-		var tighter_room := _free_distance_behind(
-			probe["pivot"], probe["dir"], float(probe["distance"]))
+		# Where the room IS, not where the shot would like it to be. Standing
+		# behind the trainer is the default and the first thing tried; backed
+		# into a corner it is a wall, and insisting on it produces a lens in the
+		# back of the player's own head with the speaker hidden behind it. Each
+		# candidate swing is solved and then swept for real, nearest-first, and
+		# the first that fits its own arm wins.
+		var base_swing := float(tighter.get("shoulder_yaw_deg", 0.0))
+		var best: Dictionary = tighter
+		var best_room := -1.0
+		for extra: float in CONVERSATION.swing_search(tighter):
+			var candidate := tighter.duplicate()
+			candidate["shoulder_yaw_deg"] = base_swing + extra
+			var probe := CONVERSATION.solve(
+				trainer_anchor, speaker_anchor, forward, candidate)
+			var probe_room := _free_distance_behind(
+				probe["pivot"], probe["dir"], float(probe["distance"]))
+			if probe_room > best_room:
+				best_room = probe_room
+				best = candidate
+			if probe_room >= float(probe["distance"]):
+				break
 		shot = CONVERSATION.solve(
-			trainer_anchor, speaker_anchor, forward, tighter, tighter_room)
+			trainer_anchor, speaker_anchor, forward, best, best_room)
 		shot["fallback"] = true
 	_talk_used_fallback = bool(shot.get("fallback", false))
 	return shot

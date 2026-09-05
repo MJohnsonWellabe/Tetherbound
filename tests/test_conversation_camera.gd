@@ -437,6 +437,35 @@ func test_the_same_fixture_with_room_behind_it_keeps_the_two_shot() -> void:
 	assert_almost_eq(_rig.spring_length, float(cfg["distance"]), 0.02)
 
 
+func test_a_corner_swings_the_camera_to_the_side_the_room_is_on() -> void:
+	# Backed into a corner: a wall a metre behind the trainer's shoulders, open
+	# floor off to one side. A shot that insists on standing behind them gets
+	# either the wall or the back of their head — captured once in Bram's inn,
+	# the trainer's hair filling the middle of frame with the speaker entirely
+	# hidden behind it. The camera has to go where the room is.
+	var cfg := CONVERSATION.config()
+	_rig.set_occlusion_probe_for_tests(_wall_behind_open_to_the_side)
+	assert_true(_rig.enter_conversation(_speaker, cfg))
+	_settle_until_blended(1.0)
+
+	assert_true(_rig.conversation_used_fallback())
+	var shot: Dictionary = _rig.conversation_shot()
+	var axis := (SPEAKER_AT - TRAINER_AT).normalized()
+	var dir: Vector3 = shot["dir"]
+	var planar := Vector3(dir.x, 0.0, dir.z).normalized()
+	# Straight back down the axis is what the room does not allow. Anything
+	# meaningfully off it is the search having done its job.
+	assert_true(absf(planar.dot(-axis)) < 0.9,
+		"the shot must swing off the blocked axis, not stand in the wall")
+	assert_true(float(shot["distance"]) > 1.5,
+		"having swung to the open side, the shot gets a usable arm back")
+	var trainer_anchor := TRAINER_AT + Vector3.UP * float(cfg["trainer_anchor_height"])
+	assert_true(
+		CONVERSATION.trainer_clearance_of(shot, trainer_anchor)
+			>= float(cfg["min_trainer_clearance"]) - 0.01,
+		"and is still outside the trainer")
+
+
 func test_a_wall_pressed_against_the_lens_never_collapses_the_arm() -> void:
 	var cfg := CONVERSATION.config()
 	_rig.set_occlusion_probe_for_tests(func(_p: Vector3, _d: Vector3, _l: float) -> float:
@@ -508,3 +537,12 @@ func _clear_room(_pivot: Vector3, _dir: Vector3, limit: float) -> float:
 
 func _wall_at_1_8m(_pivot: Vector3, _dir: Vector3, limit: float) -> float:
 	return minf(1.8, limit)
+
+
+## A corner. The fixture pair stands along -Z, so "behind the trainer" is +Z:
+## that direction has a wall a metre out, and everything off it is open floor.
+func _wall_behind_open_to_the_side(_pivot: Vector3, dir: Vector3, limit: float) -> float:
+	var planar := Vector3(dir.x, 0.0, dir.z).normalized()
+	if planar.dot(Vector3.BACK) > 0.9:
+		return minf(1.0, limit)
+	return limit

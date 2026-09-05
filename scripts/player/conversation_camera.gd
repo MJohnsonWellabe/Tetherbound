@@ -67,6 +67,7 @@ const DEFAULTS := {
 		"elevation_deg": 5.0,
 		"fov": 46.0,
 		"speaker_bias": 0.7,
+		"swing_search_deg": [0.0, 25.0, -25.0, 50.0, -50.0, 75.0, -75.0, 100.0, -100.0],
 	},
 }
 
@@ -320,22 +321,38 @@ static func solve(trainer_anchor: Vector3, speaker_anchor_point: Vector3,
 	# NEVER INSIDE THE TRAINER'S OWN HEAD.
 	#
 	# The pivot sits `bias` of the way along the line to the speaker and the
-	# camera stands `distance` back along it, so the lens ends up
-	# `distance - bias * separation` behind the trainer. Outdoors, with the full
-	# 3.5m arm, that is a comfortable metre and a half. In Bram's inn, with the
-	# arm clamped to the room and then shortened again by the spring arm's own
-	# margin, it went NEGATIVE-ish: measured at 0.36m, the trainer's hair filling
-	# the left third of the frame as unlit backfaces.
+	# camera stands `distance` back from it, so it is the TRAINER who ends up
+	# between the pivot and the lens. Outdoors, with the full 3.5m arm, they are
+	# a comfortable metre and a half away. In Bram's inn, with the arm cut to the
+	# room and then cut again by the spring arm's own margin, the lens finished
+	# 0.36m off their centre line with their hair filling the left third of the
+	# frame as unlit backfaces.
 	#
-	# `distance` cannot grow — there is a wall there. So the bias gives way
+	# `distance` cannot grow — there is a wall there — so the bias gives way
 	# instead: sliding the pivot back toward the trainer pushes the lens further
-	# behind them for the same arm length. At the limit the bias reaches zero,
-	# the pivot sits on the trainer's own chest and the whole arm is clear
-	# behind them, which is the ordinary over-the-shoulder shot and always safe.
-	var pair_span := maxf((speaker_anchor_point - trainer_anchor).length(), 0.001)
+	# from them for the same arm.
+	#
+	# Solved rather than approximated, because the swing matters. With the
+	# camera almost straight behind the trainer, clearance is very nearly
+	# `distance - bias * separation`; swung 80 degrees round the pivot (which is
+	# what a corner forces, see `swing_search_deg`) the lens is off to one side
+	# and already clear, and an along-the-axis estimate would crush the bias to
+	# nothing for no reason. So: the lens sits at `bias * u + v` from the
+	# trainer, where u is the trainer -> speaker vector and v the arm. Its length
+	# is a quadratic in `bias`, dipping below the guard between two roots; the
+	# lower root is the largest bias still outside the trainer.
+	var u := speaker_anchor_point - trainer_anchor
+	var v := dir * distance
 	var trainer_clearance := float(cfg.get(
 		"min_trainer_clearance", DEFAULTS["min_trainer_clearance"]))
-	bias = minf(bias, clampf((distance - trainer_clearance) / pair_span, 0.0, 1.0))
+	var uu := u.length_squared()
+	if uu > 0.000001:
+		var uv := u.dot(v)
+		var disc := uv * uv - uu * (v.length_squared() - trainer_clearance * trainer_clearance)
+		if disc > 0.0:
+			# disc <= 0 means the arm never brings the lens within the guard at
+			# any bias, and there is nothing to correct.
+			bias = minf(bias, maxf((-uv - sqrt(disc)) / uu, 0.0))
 
 	var pivot := trainer_anchor.lerp(speaker_anchor_point, bias)
 
@@ -430,3 +447,13 @@ static func config() -> Dictionary:
 			continue
 		_cached_config[key] = (block as Dictionary)[key]
 	return _cached_config
+
+
+## The swings the cramped shot is allowed to try, as extra degrees added to the
+## configured `shoulder_yaw_deg`. See `camera.json`'s own note: a corner has no
+## room behind the trainer and plenty beside them.
+static func swing_search(cfg: Dictionary) -> Array:
+	var swings: Variant = cfg.get("swing_search_deg", DEFAULTS["fallback"]["swing_search_deg"])
+	if swings is Array and not (swings as Array).is_empty():
+		return swings as Array
+	return [0.0]

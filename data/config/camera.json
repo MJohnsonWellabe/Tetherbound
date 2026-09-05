@@ -28,14 +28,17 @@
     "max_speaker_distance": 9.0,
     "min_distance": 1.2,
 
-    "_comment_fallback": "Indoors -- Mira's cottage, Bram's inn -- there is often no 3.5m of room behind the trainer. When the arm's own sweep says the two-shot is blocked before `clearance_ratio` of its length, the shot is re-solved as a closer over-shoulder and then clamped to whatever room is actually there.",
+    "_comment_fallback": "Indoors -- Mira's cottage, Bram's inn -- there is often no 3.5m of room behind the trainer. When the arm's own sweep says the two-shot is blocked before `clearance_ratio` of its length, the shot is re-solved as a closer over-shoulder against whatever room is actually there.",
     "clearance_ratio": 0.82,
     "fallback": {
       "distance": 2.1,
       "shoulder_yaw_deg": 11.0,
       "elevation_deg": 5.0,
       "fov": 46.0,
-      "speaker_bias": 0.7
+      "speaker_bias": 0.7,
+
+      "_comment_swing_search": "Extra degrees of swing to try, in order, when even the closer shot has no room BEHIND the trainer. A corner is the case: backed into one, the wall is a metre behind the player's shoulders and the open floor is off to the side, so a shot that insists on standing behind them ends up either in the wall or in the back of their head -- captured once, the trainer's hair filling the middle of frame with Bram entirely hidden behind it. Swinging the camera round the pivot walks it toward the room that does exist and turns the shot into a profile two-shot, which is what a person with a camera would do in that corner. Tried nearest-first, both ways, and the first swing whose measured room fits the arm wins; if none fits, the roomiest is used.",
+      "swing_search_deg": [0.0, 25.0, -25.0, 50.0, -50.0, 75.0, -75.0, 100.0, -100.0]
     }
   }
 }
