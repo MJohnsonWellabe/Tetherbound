@@ -80,3 +80,26 @@ the never-heartbeated peer, duplicate-peer `race()`, an honest `session` stub, r
 ports. Carried to Wave 2: the `log` channel and tick-rate warning, `save_dict` and per-peer
 desync dumps, verdict-by-id, a dictionary-only hash source, probe null ambiguity. The
 review's full text is in this session's record; the fixes land as a second lane commit.
+
+## Review fixes (lane commit `b82abb73`, merged as `cb892eac`)
+
+All thirteen routed items fixed: control-plane faults and peer `ERROR` verdicts exit 2; a null
+state hash is `ERROR: state hash unavailable`; the boot smoke's press check is a held-stick
+displacement (≥ 0.5 m; measured 2.71 m on both peers, 5/5 runs) and was seen red with the
+stick injection no-op'd; Gate F's inertness gate is reused by preload (`_resolve_press`,
+`_load_input_contexts`); hello budget 180 s and a separate 300 s step clock enforced centrally;
+CI upload `if: always()` and the discover step fails on fewer than two `# peers: 2` smokes;
+`run_all_smokes.sh` excludes `smoke_net_*`; the hash is an allowlist of world keys with
+`world_seed` erased and asserted separately via a new `probe world_seed`;
+`data/config/multiplayer.json` ships `test_budgets`; the never-heartbeated peer, duplicate-peer
+`race()`, honest `session` stub, and run-id-derived ports are in. `smoke_playground`'s error
+set unchanged. Carried to Wave 2 as listed above.
+
+**Two findings from the fix pass.** (1) `jump` never fires during the opening's wake-in-bed
+beat on a fresh New Game although every inspectable precondition reads true
+(`is_on_floor`, `locomotion_enabled`, no input owner, `is_action_just_pressed` true on the
+physics frame); walking is unaffected. Recorded in the smoke's comment; not chased further in
+this lane — a candidate for the Stage C audit's controller checks. (2) `operator_harness.gd`'s
+idle-frame-before-physics-frame injection order starves `is_action_just_pressed` for
+`_physics_process`-polled actions; the peer runner puts the physics frame first, a deliberate
+scoped divergence while Wave 0 drives no menu actions.
