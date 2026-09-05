@@ -65,6 +65,14 @@ Owner noticed the session count didn't match my reports. Root cause: 5 lanes (W0
 Separately, 5 lanes had genuinely gone stale 4+ hours with NO replacement running: W02-HARNESS-CONTEXT, W03-S08-FREEZE, W16-LOFT-BED, W20-SMALL-FIXES, W21-HARNESS-FIGHTS — all hit their 5h limit hours ago (reset already passed) and were sitting untouched. Given the owner flagged this directly, resumed all 5 at once (departing from the normal 1-2/sweep trickle, since the owner surfaced the actual backlog size).
 main also moved: PR #42 merged — **W00-ICONS is now on main**. PR #45 (consolidated: icons+contracts+progression+portraits+companion+bands2-5) is open, still blocked only on the pre-existing finale regression. PR #44 is Codex's own draft PR for Cloudreach, unrelated to this batch, explicitly not ready to merge.
 
+## 14:30 UTC: PR #52 merged — 20/24 original lanes now on main
+**PR #52 merged** (`4acd59ff`): eight lanes landed in one batch — W02, W03, W05, W07, W08, W11,
+W14, W16. Combined with earlier landings, **20 of the 24 original lanes are now on `main`.**
+Only W06 (held — see below), W10, W15, W21 remain unlanded. W24-LANDING's own cycle-10 ledger
+entry confirms W06-FINALE is still held on the same char-budget collision flagged in the
+previous sweep — still needs the owner's call, not re-decided here. Also good progress on the
+0905 wave: N04, N05, N08, N10 have all pushed new commits since the last check.
+
 ## Sweep 13:56Z
 All 13 N0x lanes confirmed RUNNING (launched 0.2-1.0 min ago at check time). W24-LANDING is IDLE but not stuck — between its own scheduled check-ins (next at 13:58), working PR #52 (8 lanes: W02/W03/W05/W07/W08/W11/W14/W16). One real item flagged for a human: **W06-FINALE's ending dialogue is 112 chars over its own `MAX_FILE_CHARS` (2000) budget** because Cloudreach's 9th stronghold conversation (added after W06 set that budget) wasn't checked against it. W24 correctly held rather than raising the constant itself — that's a design call (keep W06's deliberate handheld-readability cap and trim Cloudreach's ending text, or decide the cap should flex for this content) that needs the owner, not a coordinator guess on dialogue content not yet reviewed here.
 
