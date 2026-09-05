@@ -271,3 +271,89 @@ func test_every_village_harvest_node_is_inside_the_fence() -> void:
 		var at: Vector2 = entry["at"]
 		assert_true(BOUNDARY.contains(outline, at),
 			"the '%s' node (%s) at (%.1f, %.1f) is OUTSIDE the village boundary -- the first day's gathering lesson sends the player through their own gate, and a player without the gate key cannot reach it at all" % [entry["label"], entry["item"], at.x, at.y])
+
+
+## --- N05-WORLD-DRESSING-0905: how the panels are laid along the line ---------
+##
+## W08-DIALOGUE-CAMERA-0904's blind judge, on the real Halda two-shot: a rail
+## ends in mid-air, a post floats over visible ground, a post of one run stabs
+## through another run's rails. `village_boundary.gd::panel_fit` /
+## `panel_pitch` are the pure halves of the fix and are checked here against
+## the REAL outline, so a later edit to either cannot quietly reopen the gap.
+
+## Every edge of the authored outline is covered exactly by the panels laid
+## along it: `count` stretched panels span the whole edge, so the last one ends
+## on the vertex where the next edge's first begins, and no panel is stretched
+## past what a rustic rail can hide.
+func test_the_panels_laid_along_every_edge_meet_end_to_end() -> void:
+	var wall: Dictionary = config.get("wall", {})
+	var unit := float(wall.get("panel_length_m", 6.15))
+	assert_true(outline.size() >= 3, "no outline to lay panels along")
+	for i in outline.size():
+		var from := outline[i]
+		var to := outline[(i + 1) % outline.size()]
+		var length := from.distance_to(to)
+		var fit := BOUNDARY.panel_fit(length, unit)
+		var count := int(fit["count"])
+		var covered := float(count) * unit * float(fit["stretch"])
+		assert_almost_eq(covered, length, 0.001,
+			"edge %d (%s -> %s, %.2f m): %d panels of %.2f m x %.3f cover %.2f m, leaving %.2f m of daylight" % [
+				i, str(from), str(to), length, count, unit, float(fit["stretch"]), covered, length - covered])
+		assert_true(float(fit["stretch"]) <= BOUNDARY.MAX_PANEL_STRETCH + 0.001,
+			"edge %d: a panel stretched x%.3f no longer reads as the fence prefab" % [i, float(fit["stretch"])])
+		if count >= 2:
+			assert_true(float(fit["stretch"]) >= 0.707,
+				"edge %d: %d panels squeezed to x%.3f when fewer would have fit better" % [i, count, float(fit["stretch"])])
+
+
+## The edge behind Halda's stand, [37,-2] -> [30,11], is 14.76 m: rounding
+## alone laid two 6.15 m panels 7.38 m apart -- 1.23 m of air between them and
+## the rail ending 0.6 m short of the corner, which is the judge's "rail ends
+## in mid-air". The fit keeps two panels and stretches them to meet.
+func test_the_edge_behind_halda_no_longer_has_air_in_it() -> void:
+	var fit := BOUNDARY.panel_fit(14.76, 6.15)
+	assert_eq(int(fit["count"]), 2, "two panels still fit the 14.76 m edge")
+	assert_almost_eq(float(fit["step"]), 7.38, 0.001, "each panel is laid across half the edge")
+	assert_almost_eq(float(fit["step"]) * float(fit["count"]), 14.76, 0.001)
+	assert_almost_eq(float(fit["stretch"]), 1.2, 0.001, "and stretched a fifth to get there")
+
+
+## Of one panel fewer, the rounded count and one more, the fit takes whichever
+## leaves the panels nearest their own length -- so once an edge holds two or
+## more panels the stretch never leaves [0.707, 1.414], and a single panel on an
+## edge shorter than itself shrinks rather than overhanging both neighbours.
+func test_the_fit_stays_as_near_the_prefabs_own_length_as_whole_panels_allow() -> void:
+	for length: float in [8.8, 9.0, 9.49, 12.0, 14.76, 18.19, 30.0]:
+		var fit := BOUNDARY.panel_fit(length, 6.15)
+		var stretch := float(fit["stretch"])
+		var count := int(fit["count"])
+		assert_true(count >= 2, "%.2f m is more than one panel's worth" % length)
+		assert_between(stretch, 0.707, BOUNDARY.MAX_PANEL_STRETCH,
+			"%.2f m -> %d panels at x%.3f" % [length, count, stretch])
+		# No other count would have been nearer x1.0.
+		for other: int in [count - 1, count + 1]:
+			if other < 1:
+				continue
+			var other_stretch := length / (float(other) * 6.15)
+			assert_true(absf(log(stretch)) <= absf(log(other_stretch)) + 0.000001,
+				"%.2f m: %d panels (x%.3f) chosen over %d (x%.3f)" % [length, count, stretch, other, other_stretch])
+		assert_almost_eq(float(fit["step"]) * float(count), length, 0.001)
+	var short := BOUNDARY.panel_fit(3.64, 6.15)
+	assert_eq(int(short["count"]), 1, "a 3.64 m edge is one panel")
+	assert_almost_eq(float(short["stretch"]), 3.64 / 6.15, 0.001, "shrunk to the edge, not overhanging it")
+	var nearly_one := BOUNDARY.panel_fit(7.6, 6.15)
+	assert_eq(int(nearly_one["count"]), 1, "7.6 m: one panel at x1.236 beats two at x0.618")
+	assert_almost_eq(float(nearly_one["stretch"]), 7.6 / 6.15, 0.001)
+
+
+## A panel across a slope tilts so that both of its end posts stand on the
+## ground: 0.6 m of rise over a 6 m panel is a 0.0997 rad pitch, uphill toward
+## the +X end, and level ground is level.
+func test_a_panel_on_a_slope_pitches_to_put_both_posts_on_the_ground() -> void:
+	assert_almost_eq(BOUNDARY.panel_pitch(-1.0, -0.4, 6.0), atan2(0.6, 6.0), 0.000001,
+		"the +X end is 0.6 m uphill, so the panel pitches up toward it")
+	assert_almost_eq(BOUNDARY.panel_pitch(-0.4, -1.0, 6.0), -atan2(0.6, 6.0), 0.000001,
+		"and down toward it when it is the lower end")
+	assert_almost_eq(BOUNDARY.panel_pitch(0.9, 0.9, 6.15), 0.0, 0.000001, "level ground, level panel")
+	assert_almost_eq(BOUNDARY.panel_pitch(0.0, 5.0, 0.0), 0.0, 0.000001,
+		"a zero-length panel has no run to pitch along")

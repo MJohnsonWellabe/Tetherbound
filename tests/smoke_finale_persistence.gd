@@ -128,6 +128,29 @@ func _settled_ending_round_trips_through_a_real_save() -> void:
 		print("settled ending, through a real save/load round trip: 5 party (1 veridian), no caged legendary, "
 			+ "stage 'done', machine refused, healing re-applied")
 
+	# CL-G5: the Hall's garrison is withdrawn ON LOAD too -- a save carrying
+	# `legendary_freed` must come back to a dark, unmanned gate, not to the
+	# fires and sentries the player watched stand down before saving.
+	var watcher: Node = climax.call("garrison_withdrawal")
+	var hold := world.get_node_or_null(^"Stronghold")
+	if watcher == null or hold == null:
+		_fail("(settled) the reloaded climax hung no garrison watcher off the Hall")
+	elif not bool(watcher.call("withdrawn")):
+		_fail("(settled) the reloaded Hall's garrison is back at its posts with 'legendary_freed' saved")
+	else:
+		var sentries: Node3D = hold.find_child("GateSentries", false, false) as Node3D
+		var lit := 0
+		var fires: Node = hold.find_child("HallBraziers", false, false)
+		if fires != null:
+			for light in fires.find_children("*", "Light3D", true, false):
+				if (light as Light3D).visible:
+					lit += 1
+		if (sentries != null and sentries.visible) or lit > 0:
+			_fail("(settled) after reload the gate is still manned (%s) or lit (%d fires)" % [
+				str(sentries != null and sentries.visible), lit])
+		else:
+			print("settled ending: the Hall's garrison came back withdrawn (%s)" % str(watcher.call("withdrawal_report")))
+
 
 ## --- scenario 2: the narrow risky window --------------------------------
 

@@ -34,6 +34,7 @@ const ITEM_DB := preload("res://autoload/item_db.gd")
 const INVENTORY := preload("res://autoload/inventory.gd")
 const PARTY := preload("res://autoload/party.gd")
 const MAP_STATE := preload("res://autoload/map_state.gd")
+const CLOUDREACH_MAP_STATE := preload("res://scripts/world/cloudreach_map_state.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const REALM_HEART_STATE := preload("res://autoload/realm_heart_state.gd")
 const PLAYER_EQUIPMENT := preload("res://scripts/player/player_equipment.gd")
@@ -70,6 +71,9 @@ var player_equipment: RefCounted = null
 ## these. Configured from `data/config/map_landmarks.json` in `_ready()`, the
 ## same "load+parse a data file" pattern `_species()` below already uses.
 var map: RefCounted = null
+## The public map remains the active consumer interface. Inactive realm maps
+## retain their own fog/landmarks; never reconfigure one grid for another realm.
+var _realm_map_instances: Dictionary = {}
 
 ## SB9. The flag store behind objective/completion/world-state tracking —
 ## see `autoload/progression_state.gd`'s own header for the full contract.
@@ -156,6 +160,24 @@ var _objective_is_posed: bool = false
 ## ceremony screen both need a clock that is not wall time, and this is it.
 ## Nothing advances it yet; M10's day/night cycle will.
 var day: int = 1
+
+## N14-ROUTED-FOLLOWUPS, from N13-NIGHT-RESUME §5: the hour of day, carried
+## across everything that destroys and rebuilds the world scene.
+##
+## `world_look.gd` owns the live clock, but it is a node in the scene, so a
+## Continue, a `enter_realm()` crossing and a title-screen Load all threw it
+## away and rebuilt it at 08:00 -- N13 measured a player being able to run for
+## hours without the world ever reaching hour 22, because every transition
+## restarted the 350-second walk to nightfall. `Game` outlives those rebuilds,
+## so it is where the number waits.
+##
+## `CLOCK_UNSET` (negative) means "no carried clock, open at the authored
+## morning": a New Game, or a save written before VERSION 19. That distinction
+## is the whole reason this lives here rather than in a `static var` on
+## `world_look.gd` -- a static would survive New Game too, and start a fresh
+## run at whatever hour the last one ended at.
+const CLOCK_UNSET := -1.0
+var clock_elapsed_seconds: float = CLOCK_UNSET
 
 ## What the build menu last armed, or an empty string. The building system reads
 ## this when there is one; until then it is the honest end of the build screen.
@@ -474,11 +496,12 @@ func reset_for_new_game() -> void:
 	party = PARTY.new()
 	player_equipment = PLAYER_EQUIPMENT.new()
 	player_equipment.call("configure", items)
-	map = MAP_STATE.new()
-	map.configure(_map_landmarks_config())
 	progression = PROGRESSION_STATE.new()
 	realm_hearts = REALM_HEART_STATE.new()
 	current_realm = "meadows"
+	_realm_map_instances.clear()
+	map = null
+	bind_realm_map()
 	pending_realm_entry = ""
 	quest_log = QUEST_LOG.new()
 	objective_text = quest_log.call("tracked_text", progression)
@@ -488,6 +511,9 @@ func reset_for_new_game() -> void:
 	_objective_is_posed = false
 
 	day = 1
+	# N14: a fresh run opens at the authored morning, whatever hour the last
+	# one ended at. This is the half N13 could not do from `world_look.gd`.
+	clock_elapsed_seconds = CLOCK_UNSET
 	pending_build = ""
 	_pending_world_message = ""
 	PROGRESSION_FEED.clear()
@@ -615,7 +641,8 @@ func _process(delta: float) -> void:
 			# reading the backpack costs no nourishment.
 			CREATURE_CONDITION.tick(member as RefCounted, condition_cfg, delta)
 	var progression_revision: int = int(progression.get("revision"))
-	var rung_moved := progression_revision != _last_progression_revision
+	var realm_changed: bool = bool(quest_log.call("set_realm", current_realm))
+	var rung_moved := progression_revision != _last_progression_revision or realm_changed
 	# BINDINGS. A device flip re-resolves the hint's baked-in button names, but
 	# must NOT take a POSED objective down: `set_objective()`'s contract is that
 	# the capture tools' demo line sticks until the rung moves, and several of
@@ -773,6 +800,8 @@ func take_pending_world_message() -> String:
 ## production takes (drains) the log, so several readers share it.
 
 func push_progression_event(kind: String, creature: RefCounted, payload: Dictionary = {}) -> Dictionary:
+	if creature != null and (party == null or not (party.call("members") as Array).has(creature)):
+		return {}
 	return PROGRESSION_FEED.push(kind, creature, payload)
 
 
@@ -870,6 +899,7 @@ func complete_creature_bed_rests() -> int:
 ## the read side (`build_placer.gd::restore_from_game`) tolerates both.
 func register_building(id: String, position: Vector3, yaw_deg: float = 0.0, paid: bool = true) -> void:
 	placed_buildings.append({
+		"realm": current_realm,
 		"id": id,
 		"position": [position.x, position.y, position.z],
 		"yaw_deg": yaw_deg,
@@ -888,6 +918,7 @@ func register_building(id: String, position: Vector3, yaw_deg: float = 0.0, paid
 ## for a placed building).
 func register_death_satchel(position: Vector3) -> int:
 	death_satchels.append({
+		"realm": current_realm,
 		"position": [position.x, position.y, position.z],
 		"state": [],
 	})
@@ -972,6 +1003,7 @@ func save_game(slot: int) -> bool:
 	_sync_placed_building_state()
 	_sync_death_satchel_state()
 	_sync_harvest_state()
+	_sync_clock_state()
 	return bool(save_system.call("save", self, slot))
 
 
@@ -1005,7 +1037,13 @@ func enter_realm(realm_id: String, entry_id: String = "") -> bool:
 	_sync_placed_building_state()
 	_sync_death_satchel_state()
 	_sync_harvest_state()
+	# N14: the crossing rebuilds the scene, which destroys the live clock. Read
+	# it off the outgoing world BEFORE `change_scene_to_file()` so the arriving
+	# `world_look.gd::_ready()` picks the same hour up instead of snapping the
+	# player back to morning for having walked through a gate.
+	_sync_clock_state()
 	current_realm = realm_id
+	bind_realm_map()
 	pending_realm_entry = entry_id
 	saved_player_pose = {}
 	if save_system != null:
@@ -1016,6 +1054,57 @@ func enter_realm(realm_id: String, entry_id: String = "") -> bool:
 
 func pending_entry_for(realm_id: String) -> String:
 	return pending_realm_entry if realm_id == current_realm else ""
+
+
+## One scene-facing bind/sync seam. Call after realm selection and before
+## configuring the minimap/atmosphere; pass Player.global_position to sync
+## Cloudreach progression-gated navigation. This does not authorize travel,
+## change scenes, grant flags, or change current_realm.
+func bind_realm_map(realm_id: String = "", player_position: Variant = null) -> RefCounted:
+	var selected := current_realm if realm_id.is_empty() else realm_id
+	var selected_map := _ensure_realm_map(selected)
+	if selected_map == null:
+		return null
+	map = selected_map
+	if map.has_method("sync_navigation") and player_position is Vector3:
+		map.call("sync_navigation", progression, player_position)
+	return map
+
+
+## SaveGame owns the file; Game owns these two live map instances. The legacy
+## `map` field remains an active-map compatibility alias in the serialized file.
+func save_realm_maps() -> Dictionary:
+	var payloads: Dictionary = {}
+	for realm_id: String in ["meadows", "cloudreach"]:
+		payloads[realm_id] = _ensure_realm_map(realm_id).call("save_data")
+	return payloads
+
+
+## Load after progression so Cloudreach reads the same canonical flag object.
+## Reuse existing instances: an already-mounted minimap can retain its handle.
+func restore_realm_maps(payloads: Dictionary) -> void:
+	for realm_id: String in ["meadows", "cloudreach"]:
+		var payload: Variant = payloads.get(realm_id, {})
+		_ensure_realm_map(realm_id).call("load_data", payload if payload is Dictionary else {})
+	bind_realm_map()
+
+
+func _ensure_realm_map(realm_id: String) -> RefCounted:
+	if realm_id not in ["meadows", "cloudreach"]:
+		return null # Waterward is a distant vista, not an implemented map.
+	if _realm_map_instances.has(realm_id):
+		return _realm_map_instances[realm_id]
+	var instance: RefCounted
+	if realm_id == "cloudreach":
+		instance = CLOUDREACH_MAP_STATE.new()
+		var world_data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_world.json"))
+		var chapter_data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_chapter.json"))
+		instance.call("configure_cloudreach", world_data, chapter_data, progression)
+	else:
+		instance = MAP_STATE.new()
+		instance.call("configure", _map_landmarks_config())
+	_realm_map_instances[realm_id] = instance
+	return instance
 
 
 ## Called only after the destination world has placed Player on its authored
@@ -1078,6 +1167,27 @@ func _sync_harvest_state() -> void:
 			node.call("sync_state_to_game", self)
 
 
+## N14-ROUTED-FOLLOWUPS, from N13-NIGHT-RESUME §5. Read the live day/night
+## clock off the world before anything that destroys it (a save write, a realm
+## crossing), through the same "by group" seam the three syncs above use --
+## `Game` has no direct handle on `world_look.gd`, and a scene with no world at
+## all (a test harness, the title screen) must still save cleanly.
+##
+## Leaves `clock_elapsed_seconds` alone when there is no live clock to read, so
+## a save written from the title screen keeps whatever hour the last world
+## reported rather than silently rewriting it to the unset sentinel.
+func _sync_clock_state() -> void:
+	if not is_inside_tree():
+		return
+	var tree := get_tree()
+	if tree == null:
+		return
+	for node in tree.get_nodes_in_group("day_cycle"):
+		if node.has_method("elapsed_seconds"):
+			clock_elapsed_seconds = float(node.call("elapsed_seconds"))
+			return
+
+
 ## Load `slot` onto this live state and tell the world to rebuild whatever it
 ## placed. Returns whether a save was actually applied.
 ##
@@ -1088,6 +1198,7 @@ func _sync_harvest_state() -> void:
 func load_game(slot: int) -> bool:
 	if not bool(save_system.call("load_slot", self, slot)):
 		return false
+	PROGRESSION_FEED.clear()
 	for node in get_tree().get_nodes_in_group("build_placer"):
 		if node.has_method("restore_from_game"):
 			node.call("restore_from_game", self)
@@ -1105,11 +1216,29 @@ func load_game(slot: int) -> bool:
 	for node in get_tree().get_nodes_in_group("progression_restore"):
 		if node.has_method("restore_progression_from_game"):
 			node.call("restore_progression_from_game", self)
+	# N14: the same two-path problem the pose below has. A title-screen Continue
+	# rebuilds the scene, and the new `world_look.gd::_ready()` picks the hour
+	# up off `clock_elapsed_seconds` on its own; a MID-SESSION load leaves the
+	# world standing, so the restored hour has to be pushed into the live clock
+	# here or the sky would keep running from wherever the abandoned session had
+	# got to.
+	_restore_clock_to_world()
 	# Mid-session loads can apply immediately. A title-screen load has no Player
 	# yet; player_controller.gd calls apply_loaded_player_pose() from _ready(), so
 	# the same saved dictionary is applied once the world exists.
 	apply_loaded_player_pose()
 	return true
+
+
+func _restore_clock_to_world() -> void:
+	if clock_elapsed_seconds < 0.0 or not is_inside_tree():
+		return
+	var tree := get_tree()
+	if tree == null:
+		return
+	for node in tree.get_nodes_in_group("day_cycle"):
+		if node.has_method("resume_at_elapsed"):
+			node.call("resume_at_elapsed", clock_elapsed_seconds)
 
 
 ## RG7. Capture exact trainer position/facing and camera view before each save.
@@ -1357,6 +1486,20 @@ func can_craft(id: String) -> bool:
 	if not reinforce.is_empty():
 		if int(inventory.find_slot(str(reinforce.get("tool", "")))) < 0:
 			return false
+		return true
+	# Output capacity is measured after the cost is removed. A consumed last
+	# stack can make room; a merely reduced stack cannot. Preflight on a copy
+	# so a full satchel never spends ingredients and silently loses the result.
+	var preview := INVENTORY.new(items)
+	for slot in inventory.slot_count():
+		if not inventory.is_slot_empty(slot):
+			preview.set_slot(slot, inventory.stack_at(slot))
+	for requirement: Dictionary in recipe_cost_for(id):
+		if not preview.remove(str(requirement.get("id", "")), int(requirement.get("n", 0))):
+			return false
+	var output: Dictionary = items.recipe(id).get("output", {})
+	if not output.is_empty():
+		return preview.has_room_for(str(output.get("id", "")), int(output.get("n", 0)))
 	return true
 
 

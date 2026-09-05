@@ -75,11 +75,11 @@
       "id": "b5_candy_alpha_galecrest_pack",
       "item": "great_candy",
       "pos": [
-        -50.0,
+        -50.5,
         7268.0
       ],
       "tier": "detour",
-      "why": "Behind the alpha Galecrest pack of three at (-25,7255) -- the encounter contract's 'danger beat', the largest aggressive cluster in the chapter: a Great guarded by the band's hardest ordinary fight."
+      "why": "Behind the alpha Galecrest pack of three at (-25,7255) -- the encounter contract's 'danger beat', the largest aggressive cluster in the chapter: a Great guarded by the band's hardest ordinary fight. N14-ROUTED-FOLLOWUPS moved this coordinate on 2026-09-05, from N02-VEGETATION's routed finding §7: the authored spot sat inside solid scatter and `band_pickups.gd`'s nudge search could not find clear ground for it, so the world warned `sits inside solid scatter... move it` on every boot. The new coordinate is MEASURED, not guessed -- `tools/_probe_n14_pickup_ground.gd` asked the same `vegetation.gd::has_solid_scatter_near` query the placer uses over a 0.5m grid around the authored spot and reported the nearest genuinely clear cell. The place this find is about is unchanged; only the metre or so it stands on moved. Nearest clear ground was 0.5m out -- the nudge search's smallest ring is 2.0m, so it stepped straight over half a metre of clear ground and then ran out of rings."
     },
     {
       "id": "b5_candy_scorched_pocket_heart",

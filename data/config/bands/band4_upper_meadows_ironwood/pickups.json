@@ -205,11 +205,11 @@
       "id": "b4_candy_wind_ridge_crest",
       "item": "great_candy",
       "pos": [
-        463.0,
-        5896.7
+        467.0,
+        5899.2
       ],
       "tier": "detour",
-      "why": "The wind ridge traverse's crest (loop `wind_ridge_traverse`, the highest ground in the Meadows): the loop is the band's biggest detour and MACRO_LAYOUT wants it sparse so the vista lands -- one Great, not a scatter."
+      "why": "The wind ridge traverse's crest (loop `wind_ridge_traverse`, the highest ground in the Meadows): the loop is the band's biggest detour and MACRO_LAYOUT wants it sparse so the vista lands -- one Great, not a scatter. N14-ROUTED-FOLLOWUPS moved this coordinate on 2026-09-05, from N02-VEGETATION's routed finding §7: the authored spot sat inside solid scatter and `band_pickups.gd`'s nudge search could not find clear ground for it, so the world warned `sits inside solid scatter... move it` on every boot. The new coordinate is MEASURED, not guessed -- `tools/_probe_n14_pickup_ground.gd` asked the same `vegetation.gd::has_solid_scatter_near` query the placer uses over a 0.5m grid around the authored spot and reported the nearest genuinely clear cell. The place this find is about is unchanged; only the metre or so it stands on moved. Nearest clear ground was 4.7m out, still on the crest."
     },
     {
       "id": "b4_candy_high_pasture_herd_edge",
@@ -275,11 +275,11 @@
       "id": "b4_candy_herd_bull_highfield",
       "item": "rare_candy",
       "pos": [
-        442.0,
-        5829.7
+        446.5,
+        5833.7
       ],
       "tier": "secret",
-      "why": "Beside the herd bull (order 4101, alpha Meadowhart level +4, P-4.3's kept block) on the Highfield: the band's landmark encounter and its riding temptation in one place, so the Rare sits where the roster question is asked."
+      "why": "Beside the herd bull (order 4101, alpha Meadowhart level +4, P-4.3's kept block) on the Highfield: the band's landmark encounter and its riding temptation in one place, so the Rare sits where the roster question is asked. N14-ROUTED-FOLLOWUPS moved this coordinate on 2026-09-05, from N02-VEGETATION's routed finding §7: the authored spot sat inside solid scatter and `band_pickups.gd`'s nudge search could not find clear ground for it, so the world warned `sits inside solid scatter... move it` on every boot. The new coordinate is MEASURED, not guessed -- `tools/_probe_n14_pickup_ground.gd` asked the same `vegetation.gd::has_solid_scatter_near` query the placer uses over a 0.5m grid around the authored spot and reported the nearest genuinely clear cell. The place this find is about is unchanged; only the metre or so it stands on moved. Nearest clear ground was 6.0m out, still inside the bull's own field and well inside the encounter."
     },
     {
       "id": "b4_candy_watchtower_spur_corner",

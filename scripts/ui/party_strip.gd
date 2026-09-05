@@ -314,6 +314,19 @@ var _cycle_banner_timer := 0.0
 ## Captured once in `_build()` so the reveal tween has a fixed "home" to slide
 ## into rather than drifting further every time it fires.
 var _rest_position := Vector2.ZERO
+var _readable_presentation := false
+
+
+## Post-combat mechanics retain a stable, physically readable roster at 800p.
+## Ordinary exploration/combat sizing and reveal timing are unchanged.
+func set_readable_presentation(enabled: bool) -> void:
+	_readable_presentation = enabled
+	scale = Vector2.ONE / maxf(0.1, get_viewport().get_screen_transform().get_scale().x) if enabled else Vector2.ONE
+	if enabled:
+		if _tween != null and _tween.is_valid(): _tween.kill()
+		modulate.a = 1.0
+		position = _rest_position
+		visible = true
 
 var _rows: Array[PanelContainer] = []
 var _count_label: Label = null
@@ -348,6 +361,7 @@ var _tick_left: Array[float] = [0.0, 0.0, 0.0, 0.0, 0.0]
 var _near: Array[bool] = [false, false, false, false, false]
 var _row_creature_ids: Array[int] = [0, 0, 0, 0, 0]
 var _feed_seq: int = 0
+var _feed_epoch: int = -1
 var _pulse_clock: float = 0.0
 ## Evidence for a smoke: how many ticks each row has flicked and the last
 ## label it showed.
@@ -410,11 +424,13 @@ func set_rest_position(pos: Vector2) -> void:
 
 
 func _ready() -> void:
+	add_to_group("progression_party_strips")
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_rest_position = position
 	# Start from the feed's present, not its history: a strip mounted after a
 	# fight must not replay that fight's ticks.
 	_feed_seq = FEED.latest_seq()
+	_feed_epoch = FEED.epoch()
 	_build()
 	UI_TOKENS.make_text_legible(self)
 	modulate.a = 0.0
@@ -956,6 +972,11 @@ func hide_now() -> void:
 	visible = false
 
 
+## Only the currently responsible HUD may reveal this strip for a tick.
+## Inactive combat strips still advance their cursor without replaying awards.
+var progression_feedback_enabled := true
+
+
 ## `entries`: up to `SLOTS` Dictionaries of
 ## `{label: String, level: int, hp_fraction: float, tint: Color,
 ## portrait: String, fainted: bool, resting: bool}`,
@@ -1097,7 +1118,7 @@ func _set_level(label: Label, i: int, level: int, text: String) -> void:
 
 func _reveal() -> void:
 	visible = true
-	if not is_inside_tree():
+	if not is_inside_tree() or _readable_presentation:
 		# No live tree (a headless test calling this directly, say) — land in
 		# the fully-shown state instantly rather than erroring on
 		# `create_tween()`, which requires one.
@@ -1178,7 +1199,7 @@ func _process(delta: float) -> void:
 			# banner shows.
 			_count_label.visible = true
 
-	if _pinned or not visible:
+	if _pinned or _readable_presentation or not visible:
 		return
 	if _fade_timer > 0.0:
 		_fade_timer -= timer_delta
@@ -1194,11 +1215,22 @@ func _process(delta: float) -> void:
 ## (the same `show_strip()` a roster change uses), so an award seen while
 ## walking is seen on the plate that shows it, then fades as usual.
 func _poll_feed() -> void:
+	if _feed_epoch != FEED.epoch():
+		_feed_epoch = FEED.epoch()
+		_feed_seq = 0
+		for i in SLOTS:
+			_tick_left[i] = 0.0
+			_tick_plates[i].hide()
+			_tick_counts[i] = 0
+			_last_tick_label[i] = ""
+			_bond_labels[i].scale = Vector2.ONE
 	var newest := FEED.latest_seq()
 	if newest == _feed_seq:
 		return
 	var events := FEED.peek_since(_feed_seq)
 	_feed_seq = newest
+	if not progression_feedback_enabled:
+		return
 	var flicked := false
 	for raw: Variant in events:
 		var event := raw as Dictionary

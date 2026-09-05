@@ -10,6 +10,7 @@ const SPECIES_PATH := "res://data/creatures/species.json"
 const INSTANCE := preload("res://scripts/creatures/creature_instance.gd")
 
 static var _table: Dictionary = {}
+static var _fly_capabilities: Dictionary = {}
 
 
 static func table() -> Dictionary:
@@ -108,6 +109,21 @@ static func rideable(species_id: String) -> Dictionary:
 static func is_rideable(species_id: String) -> bool:
 	var block := rideable(species_id)
 	return not block.is_empty() and bool(block.get("can_carry", false))
+
+
+## Traversal capability is independent of final creature art/encounter tables.
+## An entry authorizes an OWNED active creature; it never supplies one.
+static func fly_capability(species_id: String) -> Dictionary:
+	if _fly_capabilities.is_empty():
+		var file := FileAccess.open("res://data/config/fly_traversal.json", FileAccess.READ)
+		if file == null:
+			return {}
+		var raw: Variant = JSON.parse_string(file.get_as_text())
+		if not raw is Dictionary:
+			return {}
+		_fly_capabilities = (raw as Dictionary).get("capabilities", {})
+	var entry: Variant = _fly_capabilities.get(species_id, {})
+	return (entry as Dictionary).duplicate(true) if entry is Dictionary else {}
 
 
 ## Best Creature's species-specific perk (GAME_DESIGN.md §12: "Best Creature

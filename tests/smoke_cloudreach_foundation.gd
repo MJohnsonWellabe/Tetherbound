@@ -30,11 +30,38 @@ func _run() -> void:
 	var bridges := world.get_node_or_null(^"SuspendedBridges")
 	_expect(bridges != null and bridges.get_child_count() == 5,
 		"five authored bridges were not constructed", failures)
+	var bridge_gap_sections: Array = world.call("_ground_sections_for_segment",
+		"causeway_west_loop", Vector3(-1200.0, 420.0, 1700.0),
+		Vector3(-760.0, 400.0, 2050.0))
+	_expect(bridge_gap_sections.is_empty(),
+		"west ropeway still has continuous ground beneath its bridge", failures)
 	var routes := world.get_node_or_null(^"AuthoredRoutes")
 	_expect(routes != null and routes.get_child_count() > 20,
 		"ground route geometry is missing", failures)
+	var cover := world.get_node_or_null(^"ProceduralGroundCover")
+	_expect(cover != null, "procedural grass/flower cover is absent", failures)
+	if cover != null:
+		_expect(int(cover.call("grass_instance_count")) >= 40000,
+			"Cloudreach grass carpet is too sparse", failures)
+		_expect(int(cover.call("flower_instance_count")) >= 1200,
+			"Cloudreach flower drifts are too sparse", failures)
+		_expect(int(cover.call("bush_instance_count")) >= 300,
+			"Cloudreach understorey is too sparse", failures)
 	_expect(world.find_children("*", "StaticBody3D", true, false).size() > 40,
 		"foundation did not build solid collision", failures)
+	var detail_root := world.get_node_or_null(^"AuthoredRouteDetails")
+	_expect(detail_root != null, "authored roadside places are absent", failures)
+	if detail_root != null:
+		var visual: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
+			"res://data/config/cloudreach_visual.json"))
+		for pocket: Dictionary in visual.get("route_details", {}).get("pockets", []):
+			var built := detail_root.get_node_or_null(NodePath(str(pocket["id"])))
+			_expect(built != null and built.get_child_count() == pocket["items"].size(),
+				"%s lost authored props to missing assets or unsupported ground" % pocket["id"], failures)
+		# Decorative grounding must never accept the middle of the open ropeway
+		# simply because a different elevation occupies the same map position.
+		_expect(is_nan(float(world.call("_route_detail_ground", Vector3(-980.0, 100.0, 1875.0)))),
+			"detail grounding accepted an unrelated stacked surface", failures)
 	if failures.is_empty():
 		print("CLOUDREACH FOUNDATION OK regions=%d landmarks=%d bridges=%d player=%s" % [
 			int(world.call("region_count")), int(world.call("landmark_count")),

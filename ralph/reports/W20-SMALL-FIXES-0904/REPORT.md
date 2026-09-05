@@ -35,9 +35,13 @@ Game data and code:
 - `data/config/chapter_curve.json` — the stale "no trainers of its own" sentence (CL-D1)
 - `data/config/tether_relay.json` — `dead_ground.heal_stations` (CL-E12)
 - `scripts/world/meadow_healing.gd` — `heal_stations()`, the station filter (CL-E12)
-- `scripts/world/tether_relay.gd` — `_heal_local_scatter()`, fired from the console (CL-E12)
-- `scripts/world/vegetation.gd` — `restore_drained(within)` (CL-E12) **— outside the
-  brief's named ownership list; see "One file touched outside the list" below**
+- `scripts/world/tether_relay.gd` — `_heal_local_scatter()` and `healing()`, fired from the
+  console (CL-E12)
+
+`scripts/world/vegetation.gd` is **not** in this list. An earlier revision of CL-E12 added
+an optional filter parameter to `restore_drained()` there; it was backed out on a routing
+decision and the file is identical to `origin/main`. The filter lives in
+`meadow_healing.gd` instead, and the cleanup is ROUTED FINDING 1 below.
 
 Tests:
 
@@ -329,32 +333,109 @@ are the three things that *can* change, and all three now do.
 
 ---
 
-## One file touched outside the brief's named ownership list
+## ROUTED FINDING 1 — the filter belongs in `scripts/world/vegetation.gd`
 
-`scripts/world/vegetation.gd` — one function signature and one 12-line helper.
-`restore_drained()` gained an optional `within: Array = []` filter, plus `_inside_any()`.
+**Status: not made. `scripts/world/vegetation.gd` is untouched and identical to
+`origin/main`.**
 
-The brief names `meadow_healing.gd` and `tether_relay.gd` for CL-E12 and says to stop a
-sub-item and report it rather than reach outside the list. This is reported rather than
-silently done, and here is the reasoning for doing it rather than dropping the item:
+CL-E12 was first built with the clean version of this — one optional parameter on
+`restore_drained()` — and it worked. It was **backed out** on a routing decision: that file
+is outside this lane's ownership, and this round's standing rule is to document a needed
+change in another lane's file rather than make it. The filter now lives entirely in
+`meadow_healing.gd`, which this lane does own. CL-E12 still works and is still verified;
+what follows is the cleanup the next owner of `vegetation.gd` should make.
 
-- CL-E12 is an owner-approved item (V-5, answered **yes** on 2026-09-04) and its whole
-  content is the vegetation half. Without a partial restore there is no station filter to
-  put in `meadow_healing.gd` — the item cannot be delivered at all.
-- No 0904 lane claims `scripts/world/vegetation.gd`. W05-TREELINE owns the vegetation
-  **data** and the bake and is told explicitly to stay out of `scatter_rules.gd`; it does
-  not name this script. W06-FINALE is told not to touch `meadow_healing.gd`, which points
-  the other way.
-- The change is additive and the default path is unchanged: with no argument the partition
-  puts every entry in the restore set and `_drained` still ends empty, so
-  `regrown_count()`, `drained_count()` and the second-call no-op all behave exactly as
-  before. The chapter-wide sweep does not know the argument exists.
-- It follows the precedent the coordinator set for W14-RIDING on `creature_body.gd`:
-  "apply the minimal one-line change and flag it".
+**The fix, precisely.**
 
-If the coordinator would rather this went through the vegetation lane, the whole of it is
-`restore_drained`'s signature plus `_inside_any`, and `meadow_healing.gd` calls it in one
-place.
+```gdscript
+# scripts/world/vegetation.gd, restore_drained() -- currently line ~1534
+func restore_drained(within: Array = []) -> int:
+```
+
+1. Add the optional `within: Array = []` parameter. Each entry is
+   `{"centre": Vector2, "radius": float}`. **Empty must mean "no filter"**, not "no discs",
+   or the chapter-wide `legendary_freed` heal — which passes nothing — becomes a no-op and
+   the ending silently stops healing the Meadows.
+2. In the loop that groups `_drained` by model, skip any placement whose `position` is
+   outside every disc and collect it into a `held` dictionary instead.
+3. Return early with `_drained = held` when nothing matched.
+4. At the end, assign `_drained = held` rather than `_drained.clear()`, so a partial heal
+   leaves the remainder owed.
+5. **Change `_regrown = _placed - before` to `_regrown += _placed - before`.** This is the
+   one-character half and it is worth doing even alone: with assignment, a local heal
+   followed by the chapter-wide one makes `regrown_count()` and `stats()`'s `regrown` field
+   report the last call's share rather than the running total. Both are diagnostics and
+   nothing reads them for a decision, which is why this is a wart and not a defect.
+6. Then delete the partition block from `meadow_healing.gd::_heal_the_scatter_within()` and
+   call `vegetation.call("restore_drained", discs)` instead.
+
+**Why it matters more than tidiness.** The workaround shipped here reaches into
+`vegetation.gd`'s `_drained` from another node — it lends the node a smaller list for the
+length of one call and hands back the remainder. That is documented at length at the
+function, and it works, but a private the owner does not know is being borrowed is exactly
+the kind of coupling that breaks silently when the owner refactors. The parameter makes the
+same behaviour the file's own contract.
+
+## ROUTED FINDING 2 — the drain cannot touch the procedural grass, in either direction
+
+**Status: not fixed, and not fixable in this lane. Recorded as a documented gap in D41/D45's
+grammar.**
+
+`data/config/grass_field.json` is enabled and suppresses the `grass` and `flowers` scatter
+layers outright; `scripts/world/vegetation.gd` drops them at build time and calls
+`_drained.erase(layer_name)` on them; and nothing in `scripts/world/grass_field.gd` or its
+shaders reads `drain_factor` at all. So the two densest ground-cover layers — the carpet a
+player reads as "the ground" — are **never removed by a drain station and therefore can
+never be restored by any healing**. Drained ground reads as dead tint plus missing trees
+rather than as missing grass, and that is why a code-blind judge looking at CL-E12's own
+before/after pair reported the ground unchanged (see the evidence section above for the
+full verdict and the layer numbers that reconcile it).
+
+This is not a CL-E12 defect and CL-E12 must not "fix" it: the healing restores exactly what
+the drain took, which is the contract's requirement. The gap arrived when the procedural
+grass field took over the ground plane and D41/D45's drained-ground grammar was not
+revisited.
+
+**The cheapest honest fix, for whoever owns the grass field:** have the field's per-item
+coverage roll read `playground_heightfield.drain_factor()` at the item's world position and
+thin against it, the way `scatter_rules._thin_by_drain` already does for the scatter. The
+field already hashes every item on its world position, so the value is available where the
+roll happens. That is a shader/`grass_field.gd` change and it needs its own before/after
+judge pass, because the owner's standing directive on this system is *"don't change the look
+of my grass, it's awesome"* — thinning it inside a drain radius is a deliberate exception to
+that and should be put to the owner rather than assumed.
+
+**Affects more than the relay:** every "the land heals" beat in the chapter, including the
+chapter-wide `legendary_freed` sweep, has the same blind spot.
+
+## ROUTED FINDING 3 — `S06-31`…`S06-49` still need deleting, and not by this lane
+
+**Status: not deleted. Decision made, action routed.**
+
+The routing that unblocked the two findings above allowed this lane to make the deletions
+itself *if* they sit in files this brief already owns. They do not, and the carve-out is
+explicit on both sides: this lane's brief says to touch **only** step `S06-30` of
+`tools/gate_f/segments/S06.json` and say so, and W21-HARNESS-FIGHTS's brief lists
+"`tools/gate_f/segments/S06.json` (except step S06-30)" in its own **Owns**. These are Gate
+F segment steps in a file assigned to another lane, not config entries in a file this lane
+holds, so the conditional's "do NOT make them" branch applies.
+
+**What to delete:** steps `S06-31` through `S06-49` inclusive — the pause-shell open, the
+tab walk to Build, the build-menu open, the workbench placement, the interact, the craft,
+the cancel, and the `input_context == world` assert that follows them.
+
+**Why, verified rather than asserted:** `tools/_probe_workbench_context.gd` (committed)
+drives the real nodes in a live world and reads the result through the harness's own
+resolver. The `build_catalogue` context releases at every step, and the workbench interact
+does not enter that context at all — it opens `craft_panel.gd` and cancels back to `world`.
+So the beat is not masking a game defect; S06's stuck catalogue belongs to CL-H13. Band 2
+authors no crafting site, and `S06-30`'s own note already called the workbench a
+transcriber's siting.
+
+**What must not be lost with it:** protocol section L.3 still requires "S06 orb_greater +
+reinforced tools — each paid at real cost". That requirement needs a home in a segment whose
+band has an authored crafting site, not a workbench conjured at the quarry. The full verdict
+and reasoning are in `S06-30`'s own note, in the file, where W21 will read them.
 
 ## Files this lane did NOT touch, and why
 
@@ -383,8 +464,13 @@ place.
   discoloured after the heal. D45 decided that and priced it; nothing at run time can
   repaint a texel, and re-baking is a ~15–40 minute offline job this lane is not
   authorised to run. The plants, the runtime skin and the dead lights all change.
-- **CL-H8 is a decision, not a deletion.** Steps `S06-31`…`S06-49` are still in the file.
-  Only W21-HARNESS-FIGHTS can remove them this round.
+- **CL-H8 is a decision, not a deletion.** Steps `S06-31`…`S06-49` are still in the file;
+  `tools/gate_f/segments/S06.json` is W21-HARNESS-FIGHTS's except for the one step this
+  lane was given. ROUTED FINDING 3.
+- **CL-E12's filter is in the wrong file, deliberately.** It works and is verified, but it
+  borrows a private from `vegetation.gd` because that file is another lane's. ROUTED
+  FINDING 1 carries the six-step fix.
+- **The drained ground's grass cannot heal, and never could.** ROUTED FINDING 2.
 - **CL-H4 fixed one of three thresholds.** S04's 1,200 and S05's 3,000 are the same
   transcription defect and belong to G3-HARNESS.
 - **CL-D4 is untouched by design** — the vegetation lane's.
@@ -470,3 +556,233 @@ A green test is not evidence until it has failed for the right reason.
 | CL-H5 a logic run starts | `tools/gate_f/run_segment.sh --run-dir <tmp> tools/gate_f/segments/selfcheck_context.json` | **no BLOCKER**, 9 of 12 steps executed, preflight `freeze_record.key = lanes.logic.display_server`, no `contradiction` |
 | CL-H5 the trap without it | the same segment straight at the harness, no run-local record | **BLOCKER.md**, 0 steps executed |
 
+### Smoke
+
+| Command | Result |
+|---|---|
+| `godot --headless --path . --script tests/smoke_relay_station.gd` | **passed** — run twice, before and after the filter moved out of `vegetation.gd`, with identical numbers |
+| `godot --headless --path . --script tests/smoke_relay.gd` | **OK** — "the captain is beaten, the captive is freed, the Gear is carried, and she is in the village saying something new" |
+
+`smoke_relay_station`'s own lines, on the final code:
+
+```
+[meadow] local healing at 3 station(s): 449 plants back, 0 drain skin(s) fading
+lit surfaces: 14 before the console, 0 after
+local ground heal: healed=true dead_ground_visible=false (12.0s after disable)
+local scatter heal: 449 plants back inside the relay's 3 stations, 707 still owed elsewhere
+relay smoke test passed
+```
+
+**"0 drain skin(s) fading" is correct, not a miss.** `_heal_local_ground()` starts the
+relay's own skin one line before it reaches the sweep, so the new `tether_relay.healing()`
+guard skips it rather than counting a fade it did not start. The line above it —
+`healed=true dead_ground_visible=false (12.0s after disable)` — is that same skin
+finishing. This is the reporting half of the silent-failure fix described under CL-E12: an
+earlier cut printed the same 0 for the wrong reason (the disc test read the node origin)
+and looked identical.
+
+### CL-E12's visual evidence — `06-relay-standing`, before and after, one boot
+
+`xvfb-run -a -s "-screen 0 1280x800x24" godot --path . --rendering-driver opengl3
+--resolution 1280x800 --script tools/_capture_relay_healing.gd`
+
+Sheet committed at `ralph/reports/W20-SMALL-FIXES-0904/_sheet_relay_healing.png`. Reading
+order: 1 approach-after, 2 approach-before, 3 standing-after, 4 standing-before.
+
+**Ground truth, from the capture's own instrumentation — the third independent
+measurement of the same fact, after the two smokes:**
+
+```
+drained placements held inside the relay's own stations: 449 (707 elsewhere)
+console pressed; waiting for the skin fade to finish
+after the press: 0 held inside, 707 elsewhere -> 449 plants back inside the site
+```
+
+The "707 elsewhere" is unchanged across the press. That is the locality claim measured
+rather than asserted: the relay's console healed its own three stations and touched
+nothing the rest of the map is still owed.
+
+**Pixels, on the metric fixed before the render** (mean green excess = G − (R+B)/2, with
+mean luminance printed beside it precisely so a fading grey skin could not be mistaken for
+plants):
+
+| stand | green excess | luminance |
+|---|---|---|
+| `06-relay-standing` | 0.03452 → **0.04375** (+0.00923, +27%) | 0.3772 → 0.2233 (−0.1540) |
+| `06-relay-approach` | 0.01340 → **0.05624** (+0.04284, +320%) | 0.1885 → 0.1517 (−0.0369) |
+
+Green excess rose on both stands while luminance **fell** on both, so the change is
+chromatic rather than exposure — the frames did not simply get brighter. The two stands
+moved by very different amounts (−0.154 vs −0.037 luminance), which also rules out a
+global lighting shift as the explanation, though the ~12 s the fade takes does advance the
+world clock and some of the luminance drop is likely that. Flagged rather than hidden: the
+luminance numbers are a control, not a claim.
+
+**V-5's fails-if does not fire.** Its wording is "a before/after frame from the
+`06-relay-standing` stand shows **no** ground change inside the site radius". The standing
+pair shows a large one.
+
+### The code-blind judge on that sheet, and what it found instead
+
+Per COMMON: a fresh sub-agent, given only the sheet, `docs/reference/` and
+`.claude/skills/visual-judge/SKILL.md`, told nothing about what changed, what caused it, or
+what anyone hoped it would say. It was asked to describe any difference in the ground, to
+name capture defects, and — separately — to say whether the light had changed, so that
+nothing in its ground answer could be explained by exposure.
+
+**It did not agree that the ground changed, and it is worth reading carefully:**
+
+> "The ground and its planting are, to the pixel, the same in both frames. The difference
+> is a canopy, not a lawn." … "I can match individual props across the two frames: the
+> white-bellflower broadleaf clump directly in front of the trainer's left boot, the clump
+> at his right hip, the ochre timber planks… all in identical positions, identical
+> density." … "What frame 3 really adds: a large number of tall broadleaf trees."
+
+And on the control question, which is the half that makes the rest trustworthy:
+
+> "Sun angle is identical… Sky patches that remain sky in both frames of a pair measure
+> within a few percent… Whole-frame mean luminance does fall a lot, but the sky-patch
+> measurements show the exposure and sun are unchanged, so that fall is entirely new
+> canopy occluding sky and casting shadow. It is a content change, not a lighting change."
+
+So the luminance drop this report flagged as "likely partly the world clock" is **not** the
+clock: the judge measured the sky and the sun and both are unchanged. That is a better
+control than the one I designed, and it is recorded here as a correction to my own reading.
+
+**So which is right — the ledger's 449 or the judge's "no ground change"? Both, and the
+resolution is a real finding.** `tools/_probe_relay_drain_layers.gd` breaks the 449 down:
+
+| layer | placements the drain holds inside the relay's three stations |
+|---|---|
+| `groundmat` (Clover_1/2, Plant_1_Big) | 141 |
+| `trees` | 112 |
+| `drygrass` (Grass_Wispy_Tall/Short, Grass_Wheat) | 107 |
+| `bushes` (Fern_1, Plant_7, Bush_Common…) | 78 |
+| `saplings` | 7 |
+| `grove` | 2 |
+| `path_stones` | 2 |
+| **total** | **449** |
+
+**250 of the 449 — 56% — are ground-level layers**, not canopy. The judge is still right
+about what the *frame* shows: 121 canopy placements dominate a 1280×800 view of the site,
+while 250 small ground plants spread across the three discs' ~9,000 m² union work out to
+roughly one per 36 m² and simply do not read at that framing against ground cover that was
+already there.
+
+**And here is the finding the judge's answer actually exposes, which no test would have
+caught.** `data/config/grass_field.json` is enabled and suppresses the `grass` and
+`flowers` scatter layers outright; `vegetation.gd` drops them at build time *and* calls
+`_drained.erase(layer_name)` on them. Nothing in `grass_field.gd` or its shaders reads
+`drain_factor` at all. So **the two densest ground-cover layers — the carpet a player
+actually reads as "the ground" — are immune to the drain in both directions.** The drain
+never removed them, so no heal can bring them back, and drained ground at the relay reads
+as *dead tint plus missing trees* rather than as *missing grass*.
+
+That is not a defect in CL-E12 and CL-E12 cannot fix it: the healing restores exactly what
+the drain took, which is the contract's own requirement. It is a gap in D41/D45's grammar
+that arrived when the procedural grass field took over the ground plane, and it is why
+V-5's evidence bullet — "shows the ground change inside the site radius" — is answered by
+canopy, ferns and the skin fade rather than by grass. **Escalated for the owner or the
+visual track, not decided here.** The cheapest honest fix would be for the grass field's
+coverage to read `drain_factor` the way the scatter does, which is a shader change in
+someone else's file.
+
+**Capture defects the judge named, which are mine and which I am not fixing:**
+
+> "Frame 1 — severe… A giant fern/palm is pressed against the lens, filling roughly the
+> right 25% of the image… It occludes the right crate, the entire right-hand meadow, and
+> the black-clad Team Tether figure who stands plainly visible there in frame 2."
+> "Frame 3 — moderate-to-severe. A trunk is hard against the left edge of the lens… they
+> bury the relay platform and tether machine — the landmark this camera stand is evidently
+> framed on."
+
+Both are the regrowth landing on a camera parked inside the site, and both are real. They
+do not affect the standing pair's verdict on the ground (the judge compared the near
+foreground, which is unoccluded in both), and they do **not** affect the shipped
+`_capture_locations.gd --only=06-relay` survey, which never presses the console and so
+never sees the regrown state. Recorded so that whoever next photographs this site after a
+heal expects it and re-sites the two eyes.
+
+**The judge's wider verdict — bare ground at 65–75% coverage, flat untextured foliage
+assets, canopy that "reads procedural", no creature in any frame — is about the build, not
+about this change.** It restates CL-B2/B3/B6 and the route-strip gap (CL-H9) from a fresh
+angle and is relayed to the visual track verbatim rather than acted on here. Its one line
+worth quoting to that track: *"they are flat-shaded primitives being offered as the game's
+look, and no amount of placement fixes that."*
+
+**Verdict on CL-E12: done on the mechanism, with the evidence finding reported rather than
+smoothed over.** The station filter works, restores exactly the 449 placements the drain
+took inside the relay's own three stations, provably touches none of the 707 it holds
+elsewhere, and fires on the console. Whether that reads to a player as "the ground healed"
+depends on the grass-field gap above, which is outside this lane.
+
+---
+
+## Findings for the coordinator, ranked
+
+1. **The procedural grass field is immune to the drain, in both directions.**
+   `grass_field.json` suppresses the `grass` and `flowers` scatter layers, `vegetation.gd`
+   erases them from the drained list, and nothing in the grass field reads `drain_factor`.
+   So the densest ground cover — what a player reads as "the ground" — is neither killed by
+   a drain station nor restorable by any healing. Found by putting a code-blind judge on
+   CL-E12's own evidence and believing it rather than the ledger. Affects D41's and D45's
+   grammar and every "the land heals" beat, not just the relay.
+2. **CL-H8 is decided and needs W21 to act:** delete `S06-31`…`S06-49`. The catalogue
+   context releases correctly; the beat is a transcriber's invention.
+3. **CL-H13 gains a fourth confirmation, from the positive direction:** at the site S06
+   blamed, the game does not stick. It is the harness's input path.
+4. **CL-H4's siblings are still wrong:** S04 wants 1,200 rows and S05 wants 3,000, both by
+   the same transcription defect S02's 900 was. G3-HARNESS owns them.
+5. **CL-D4 is still open** and its evidence is already assembled in the closure plan; it
+   needs one lane-minute from whoever owns vegetation data.
+6. **Three routed findings are written up in full below** — the `vegetation.gd` filter
+   parameter (with the exact six-step edit), the grass-field drain gap, and the
+   `S06-31`…`S06-49` deletion. Each names its owner, what to change and why.
+
+---
+
+## Commits
+
+Branch `ralph/W20-SMALL-FIXES-0904`, from `origin/main` at `ef16544f`.
+
+| Commit | Item |
+|---|---|
+| `fc1c11d4` | CL-G6 — the Riding Saddle costs Ironwood |
+| `a7bc7221` | CL-D1, CL-D2 — three sentences that describe content as missing |
+| `4ff46cc6` | CL-E1 — Oreth's C-3 profiles (+ CL-E2 verified already fixed) |
+| `33018fdc` | CL-D6, CL-D7 — answered questions and stale numbers |
+| `49b8af28` | CL-H5 — the freeze-record trap, closed at its source |
+| `ecb4b6c8` | CL-H4 — S02-60's threshold re-derived |
+| `8332fb9b` | CL-H8 — the workbench beat decided by probe |
+| `5874ce11` | CL-E12 — the relay heals its own three drain stations |
+| `b1d77d7a` | CL-E10 — `03-mid-route` back on the Hall sightline |
+| `b6830639` | CL-E12 — station filter moved out of `vegetation.gd`, per routing |
+
+
+---
+
+## Final state
+
+Branch: `ralph/W20-SMALL-FIXES-0904`, from `origin/main` at `ef16544f`.
+
+**Final code commit: `b6830639`** — the last commit that changes the game, its data, its
+tests or its tools. Everything this report claims about behaviour is reproducible at that
+hash, and at it `scripts/world/vegetation.gd` is identical to `origin/main`.
+
+The documentation commits sit on top of it, ending with the branch tip: this file complete
+with the render results, the contact sheet, the code-blind verdict, the layer probe and the
+three routed findings. A report cannot carry its own hash, so the tip is named by position
+rather than by number; `git log --oneline origin/main..ralph/W20-SMALL-FIXES-0904` lists
+them all.
+
+Every claim in this report is reproducible from that branch: the tests by their exact
+commands, the probes by `godot --headless --path . --script tools/_probe_*.gd`, the frames
+by the one xvfb command under CL-E12's evidence section, and the sheet is committed beside
+this file.
+
+Not committed, and deliberately: the Godot import artefacts (`*.import`, `*.uid`, and the
+textures the importer extracts from `.glb`) that a local `--import` generated for OTHER
+lanes' assets and scripts. They are excluded locally through `.git/info/exclude`, which is
+not a tracked file and does not reach the remote. Committing another lane's generated
+artefacts from here is the cross-lane edit COMMON forbids, and they would collide
+byte-for-byte when those lanes commit them themselves.

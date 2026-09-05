@@ -109,11 +109,29 @@ const VIEWPOINTS := [
 		# Place 5: the Bridge approach (arc 1950-2421). Not this lane's file
 		# scope; captured for the judge's full five-place set and as an
 		# unrelated-region control.
+		#
+		# N14-ROUTED-FOLLOWUPS, 2026-09-05, on N09-BRIDGE-CHECKPOINT's routed
+		# §9. THREE independent blind judges -- W05's, W22's and N09's -- have
+		# now looked at this stand and said the same thing about the camera
+		# rather than about the crossing: N09 records it as "still shot at knee
+		# height with heavy depth-of-field blur", and calls it "a defect in the
+		# capture tooling's viewpoint list, not in anything at the crossing".
+		#
+		# The cause is the distance, not the height: the eye stood at (-20,
+		# 1318), THIRTY-ONE METRES from a target at (8, 1330), so the crossing
+		# arrived through the full depth of this world's aerial-perspective fade
+		# (`art.json::environment.aerial_perspective` 0.7) as a soft smudge, and
+		# an `eye_h` of 2.2 m read as knee height against a 3.6 m gate that far
+		# away. Halved to 15.6 m and raised to 3.0 m: the crossing is now the
+		# subject of the frame rather than a thing on the horizon of one, and the
+		# stand still looks along the road from the village side, which is the
+		# approach this "place" is for. `horizon` 0.30 -> 0.38 because a nearer,
+		# higher stand needs less sky to hold the same composition.
 		"name": "place5-bridge-approach",
-		"eye": Vector2(-20.0, 1318.0), "eye_h": 2.2,
-		"target": Vector2(8.0, 1330.0), "target_h": 2.0,
-		"time": "day", "horizon": 0.30,
-		"actor": Vector2(-17.0, 1315.0),
+		"eye": Vector2(-6.0, 1319.0), "eye_h": 3.0,
+		"target": Vector2(7.0, 1329.0), "target_h": 1.6,
+		"time": "day", "horizon": 0.38,
+		"actor": Vector2(-4.5, 1316.5),
 	},
 ]
 

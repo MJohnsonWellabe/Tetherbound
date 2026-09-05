@@ -379,7 +379,24 @@ continuous scene (`scenes/world/meadows_playground.tscn`, root script
   `interpolate_at()`, `is_dark()`), `scripts/world/world_weather.gd` (wired
   as `WorldWeather` node).
 - Wiring: `Game.advance_day()` (`autoload/game_state.gd:534`).
-- Tests: `tests/test_day_cycle.gd`, `tests/test_world_weather.gd`.
+- Tests: `tests/test_day_cycle.gd`, `tests/test_day_cycle_night_contrast.gd`,
+  `tests/test_world_weather.gd`.
+- **The clock has no memory.** `world_look.gd::_ready()` starts every world at
+  08:00 and nothing anywhere saves or restores it: `save_game.gd` has no clock
+  key, a realm crossing (`game_state.gd::enter_realm()`) and Continue both
+  rebuild the scene, and a rest snaps to morning by design. Night sits at the
+  far end of a 600-second day, so in normal play it is often never reached at
+  all — the measured root cause behind OP-0904-2, see
+  `ralph/reports/N13-NIGHT-RESUME-0905/REPORT.md`. Not yet fixed; the fix is a
+  `save_game.gd`/`game_state.gd` change and is routed there.
+- `is_dark()`'s window (`art.json` `dark_from_hour`/`dark_to_hour`, 22 → 3,
+  125 real seconds) is the true-dark semantic every torch, camp fill light and
+  creature emission floor switches on. It is deliberately NARROWER than the
+  visible dusk→night→dawn sweep, per
+  `docs/prompts/07-RG21-continuous-day-night-short-night.md`: dusk and dawn are
+  transitions and are not part of it. Measured frame luma across the sweep, one
+  camera, `tools/gate_f/probe_daynight_contrast.gd`: hour 8 = 114.5, 18 = 90.5,
+  20 = 77.0, 22 = 54.7, 0 = 29.5, 3 = 43.2.
 
 ## Riding
 

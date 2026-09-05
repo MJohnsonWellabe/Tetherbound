@@ -33,6 +33,10 @@ const PLACEMENT_FIXED_BYTES := 4 + 2 + 12 + 8 + 8
 ## its own header. This file still does no other content loading.
 const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
 
+## For `normalised_text()` only -- the terrain guard owns the line-ending rule
+## both fingerprints follow.
+const TERRAIN_BAKE := preload("res://scripts/world/terrain_bake.gd")
+
 
 ## Every file the placement pass reads, hashed together. Baked placements are
 ## only trusted when this matches the value stamped into every region file at
@@ -79,7 +83,14 @@ static func config_fingerprint() -> int:
 			if path.begins_with("res://data/config/bands/"):
 				continue
 			return 0
-		mixed = mixed ^ (file.get_as_text().hash() + int(path.hash()) + 0x9e3779b9 + (mixed << 6) + (mixed >> 2))
+		mixed = mix_config_source(mixed, file.get_as_text(), path)
+		# N11-TERRAIN-BAKE-0905: `\r\n` folded to `\n` before hashing, for the
+		# reason `terrain_bake.gd::config_fingerprint()` gives -- a Windows
+		# checkout under `core.autocrlf` stamped a CRLF hash into
+		# data/scatter/playground/manifest.json (`f2dd20e4`) and Linux CI read
+		# the bake as stale. An LF file hashes exactly as before.
+		var text := TERRAIN_BAKE.normalised_text(file.get_as_text())
+		mixed = mixed ^ (text.hash() + int(path.hash()) + 0x9e3779b9 + (mixed << 6) + (mixed >> 2))
 	# GATE-D: masked to 53 bits, and it has to be.
 	#
 	# This number is written into `manifest.json` and read back through
@@ -100,6 +111,13 @@ static func config_fingerprint() -> int:
 	# staleness check needs; the alternative, storing it as a string, buys
 	# 11 more bits of hash for a format change nothing else wants.
 	return mixed & 0x1FFFFFFFFFFFFF
+
+
+## Pure source mixer shared by file loading and portability tests. Git's
+## CRLF checkout preserves the historical LF hash; every other text edit
+## still changes it. Tests need no transient writes to live world configs.
+static func mix_config_source(mixed: int, source: String, path: String) -> int:
+	return mixed ^ (source.replace("\r\n", "\n").hash() + int(path.hash()) + 0x9e3779b9 + (mixed << 6) + (mixed >> 2))
 
 
 ## Floor-divided region coordinate for a world-space spot, matching the

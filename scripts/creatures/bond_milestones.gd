@@ -220,7 +220,7 @@ static func next_benefit_text(creature: RefCounted, cfg: Dictionary, progression
 ## tier_before, tier_after, ticked, near, milestone}` -- so a test or a
 ## caller can read the outcome without re-deriving it from the feed.
 
-static func credit(creature: RefCounted, task: String, amount: float, cfg: Dictionary = {}) -> Dictionary:
+static func credit(creature: RefCounted, task: String, amount: float, cfg: Dictionary = {}, source: String = "") -> Dictionary:
 	if creature == null or task.is_empty() or amount <= 0.0:
 		return {}
 	var ladder := cfg if cfg.has("milestones") else config()
@@ -236,7 +236,7 @@ static func credit(creature: RefCounted, task: String, amount: float, cfg: Dicti
 
 	var feedback := FEED.config()
 	var ticked := true
-	if task == "distance_m_together":
+	if task == "distance_m_together" and source != "fly_route":
 		var step := maxf(float(feedback.get("distance_tick_m", 250)), 1.0)
 		ticked = floori(before / step) != floori(after / step)
 	var remaining := maxf(0.0, target - after)
@@ -252,17 +252,20 @@ static func credit(creature: RefCounted, task: String, amount: float, cfg: Dicti
 	if ticked:
 		FEED.push("bond_credit", creature, {
 			"task": task, "task_name": task_name,
+			"source": source,
 			"before": before, "after": after, "target": target,
 			"remaining": remaining, "tier": tier_after,
 		})
 	if near:
 		FEED.push("bond_near", creature, {
 			"task": task, "task_name": task_name,
+			"source": source,
 			"remaining": remaining, "target": target,
 		})
 	if milestone:
 		FEED.push("bond_milestone", creature, {
 			"node": tier_after, "task": task, "task_name": task_name,
+			"source": source,
 			"benefit": benefit_text(tier_after, creature, PROGRESSION.config()),
 			"tier": tier_after, "total": milestones(ladder).size(),
 		})
@@ -291,10 +294,10 @@ static func credit_landmark_visit(creature: RefCounted) -> void:
 	credit(creature, "landmarks_visited_together", 1.0)
 
 
-static func credit_distance(creature: RefCounted, meters: float) -> void:
+static func credit_distance(creature: RefCounted, meters: float, source: String = "") -> void:
 	if meters <= 0.0:
 		return
-	credit(creature, "distance_m_together", meters)
+	credit(creature, "distance_m_together", meters, {}, source)
 
 
 static func credit_rest_night(creature: RefCounted) -> void:

@@ -229,7 +229,32 @@ const PROGRESSION_CONFIG_PATH := "res://data/config/progression.json"
 const VITALS_CONFIG_PATH := "res://data/config/vitals.json"
 const SPECIES_PATH := "res://data/creatures/species.json"
 
-const VERSION := 18
+## VERSION 18 — Fly state, stamina fraction, active party slot, and verified
+## ground recovery anchor inside player_pose. Airborne reloads resume safely
+## grounded; old poses migrate unchanged and all realm rewards are preserved.
+## VERSION 19 — separate realm-map fog and discoveries. Untagged legacy map
+## payloads belong to Meadows even when an early save selected Cloudreach.
+## VERSION 20 — realm ownership for player buildings and death satchels.
+## Untagged records migrate to Meadows even when a v19 save selects Cloudreach.
+## VERSION 21 — CL-W1's alpha pin set (lane W11-ALPHA-PINS-0904).
+##
+## NOTE (landing lane): W11 and Cloudreach have now collided on a save version
+## twice. W11 first authored 17, was moved to 18 when Cloudreach claimed 17, and
+## is moved again to 21 here because Cloudreach's branch claims 18, 19 and 20.
+## The owner's standing rule is that Cloudreach wins, so the pin set takes the
+## next free number each time. `_migrate_to_current` dispatches
+## `_migrate_v<version>` in a loop, so a v16 save now runs realms (16→17), fly
+## state (17→18), realm fog (18→19), realm ownership (19→20) and finally the
+## pins (20→21), in that order.
+## VERSION 22 — the carried day clock (N14-ROUTED-FOLLOWUPS, from
+## N13-NIGHT-RESUME §5). Before this key the format carried no clock at all, so
+## every Continue rebuilt the world at 08:00 and the player walked the 350
+## seconds to nightfall again. Negative means "no carried clock, open at the
+## authored morning" — `game_state.gd::CLOCK_UNSET`. N14 authored it as 19,
+## which Cloudreach owns; it takes the next free number here for the same
+## reason the pin set did.
+const VERSION := 22
+const WORLD_RECORDS := preload("res://scripts/world/realm_world_records.gd")
 const SLOT_COUNT := 5
 ## Written automatically whenever the player rests (`scripts/build/camp.gd`).
 ## Slots 1-4 are the player's own manual saves. Nothing enforces the split
@@ -279,9 +304,9 @@ func save(game: Object, slot: int) -> bool:
 		"party": _party_to_array(game.get("party")),
 		"inventory": _inventory_to_array(game.get("inventory")),
 		"hotbar": _hotbar_to_array(game),
-		"placed_buildings": (game.get("placed_buildings") as Array).duplicate(true),
+		"placed_buildings": WORLD_RECORDS.normalized(game.get("placed_buildings")),
 		"farm_plots": (game.get("farm_plots") as Array).duplicate(true),
-		"death_satchels": (game.get("death_satchels") as Array).duplicate(true),
+		"death_satchels": WORLD_RECORDS.normalized(game.get("death_satchels")),
 		"satiety": _read_satiety(game),
 		"map": (map_obj as RefCounted).call("save_data") if map_obj != null else {},
 		"alpha_pins": (map_obj as RefCounted).call("alpha_pin_save_data") if map_obj != null else [],
@@ -292,13 +317,24 @@ func save(game: Object, slot: int) -> bool:
 		"harvested_vegetation": (game.get("harvested_vegetation") as Dictionary).duplicate(true),
 		"world_seed": int(game.get("world_seed")) if game.get("world_seed") != null else 0,
 		"felled_vegetation": (game.get("felled_vegetation") as Dictionary).duplicate(true),
-		"player_pose": _sanitise_player_pose(game.get("saved_player_pose")),
+		"player_pose": _capture_traversal_pose(game),
+		# N14-ROUTED-FOLLOWUPS, from N13-NIGHT-RESUME §5. VERSION 19. Before
+		# this key the format carried no clock at all, so every Continue
+		# rebuilt the world at 08:00 and the player walked the 350 seconds to
+		# nightfall again. Negative means "no carried clock, open at the
+		# authored morning" -- `game_state.gd::CLOCK_UNSET`.
+		"clock_elapsed_seconds": _read_clock(game),
 	}
+	data["realm_maps"] = game.call("save_realm_maps") if game.has_method("save_realm_maps") else _realm_map_payloads(data)
 
 	var file := FileAccess.open(slot_path(slot), FileAccess.WRITE)
 	if file == null:
 		return false
 	file.store_string(JSON.stringify(data, "\t"))
+	# A save may be loaded again immediately from the same UI/session. Close the
+	# writer before reporting success so that read never observes a buffered or
+	# partially flushed JSON document.
+	file.close()
 	return true
 
 
@@ -326,9 +362,9 @@ func load_slot(game: Object, slot: int) -> bool:
 	_array_to_party(data.get("party", []), game.get("party"))
 	_array_to_inventory(data.get("inventory", []), game.get("inventory"))
 	_array_to_hotbar(data.get("hotbar", []), game)
-	game.set("placed_buildings", (data.get("placed_buildings", []) as Array).duplicate(true))
+	game.set("placed_buildings", WORLD_RECORDS.normalized(data.get("placed_buildings", [])))
 	game.set("farm_plots", (data.get("farm_plots", []) as Array).duplicate(true))
-	game.set("death_satchels", (data.get("death_satchels", []) as Array).duplicate(true))
+	game.set("death_satchels", WORLD_RECORDS.normalized(data.get("death_satchels", [])))
 	game.set("world_seed", int(data.get("world_seed", 0)))
 	var harvested_raw: Variant = data.get("harvested_vegetation", {})
 	game.set("harvested_vegetation", (harvested_raw as Dictionary).duplicate(true) if typeof(harvested_raw) == TYPE_DICTIONARY else {})
@@ -341,25 +377,48 @@ func load_slot(game: Object, slot: int) -> bool:
 		game.set("current_realm", str(data.get("current_realm", "meadows")))
 	if game.get("pending_realm_entry") != null:
 		game.set("pending_realm_entry", str(data.get("pending_realm_entry", "")))
+	if game.get("clock_elapsed_seconds") != null:
+		game.set("clock_elapsed_seconds", _finite_clock(data.get("clock_elapsed_seconds")))
 	_write_satiety(game, float(data.get("satiety", _default_satiety())))
 
 	var map_obj: Variant = game.get("map")
-	if map_obj != null:
+	if map_obj != null and not game.has_method("restore_realm_maps"):
 		var map_data: Variant = data.get("map", {})
 		(map_obj as RefCounted).call("load_data", map_data if typeof(map_data) == TYPE_DICTIONARY else {})
-		# CL-W1. STRICTLY AFTER `load_data`, which clears every dynamic marker
-		# wholesale — restoring the pins first would rebuild their markers and
-		# then immediately throw them away, which is the "pin survives only
-		# until the next load" failure this row is written against.
-		var alpha_pin_data: Variant = data.get("alpha_pins", [])
-		(map_obj as RefCounted).call(
-			"alpha_pin_load_data",
-			alpha_pin_data if typeof(alpha_pin_data) == TYPE_ARRAY else [])
 
 	var progression_obj: Variant = game.get("progression")
 	if progression_obj != null:
 		var progression_data: Variant = data.get("progression", {})
 		(progression_obj as RefCounted).call("load_data", progression_data if typeof(progression_data) == TYPE_DICTIONARY else {})
+		_reconcile_meadows_realm_rewards(progression_obj as RefCounted)
+	if game.has_method("restore_realm_maps"):
+		game.call("restore_realm_maps", _realm_map_payloads(data))
+
+	# CL-W1. STRICTLY AFTER whichever map restore ran above, because both clear
+	# every dynamic marker wholesale — restoring the pins first would rebuild
+	# their markers and then immediately throw them away, which is the "a pin
+	# that survives only until the next load is worse than none" failure the row
+	# is written against.
+	#
+	# Moved here by the landing lane, 2026-09-05, and this is a real merge
+	# interaction rather than a tidy-up. The pin restore used to sit inside the
+	# `not game.has_method("restore_realm_maps")` branch above. Cloudreach's
+	# VERSION 19 work ADDED `restore_realm_maps`, so that branch became
+	# permanently false and the pins stopped being loaded at all —
+	# `smoke_alpha_pins` failed with "the pin did not survive a real save and
+	# load". Neither lane is wrong on its own; only the combination is. Running
+	# it unconditionally after both paths satisfies W11's ordering requirement
+	# and leaves Cloudreach's realm-map restore untouched.
+	# The map object is RE-READ here rather than reusing `map_obj` from above:
+	# `restore_realm_maps()` ends in `bind_realm_map()`, which rebinds
+	# `game.map` to the realm's own instance. Loading the pins into the object
+	# captured before that call put them on an orphaned map that nothing draws.
+	var live_map: Variant = game.get("map")
+	if live_map != null:
+		var alpha_pin_data: Variant = data.get("alpha_pins", [])
+		(live_map as RefCounted).call(
+			"alpha_pin_load_data",
+			alpha_pin_data if typeof(alpha_pin_data) == TYPE_ARRAY else [])
 
 	var realm_hearts_obj: Variant = game.get("realm_hearts")
 	if realm_hearts_obj != null:
@@ -368,12 +427,46 @@ func load_slot(game: Object, slot: int) -> bool:
 			"load_data",
 			hearts_data if typeof(hearts_data) == TYPE_DICTIONARY else {},
 			progression_obj as RefCounted if progression_obj != null else null)
+	var loaded_pose := _sanitise_player_pose(data.get("player_pose", {}))
+	var traversal: Dictionary = loaded_pose.get("traversal", {})
+	if not traversal.is_empty():
+		game.set_meta("pending_fly_load", traversal)
+		var party: Variant = game.get("party")
+		if party != null and int(traversal.get("active_index", -1)) >= 0:
+			party.call("set_active", int(traversal["active_index"]))
+	elif game.has_meta("pending_fly_load"):
+		game.remove_meta("pending_fly_load")
 	return true
+
+
+## A completed Meadows save may predate the Warden's realm rewards, including
+## one already upgraded to v17 by the first Cloudreach build. Restore only the
+## earned entitlements: placement, gate unlock and power selection remain the
+## player's choices. set_flag is idempotent and never pays inventory rewards.
+func _reconcile_meadows_realm_rewards(progression: RefCounted) -> void:
+	if not bool(progression.call("has", "defeated_warden")):
+		return
+	progression.call("set_flag", "realm_key_cloudreach")
+	progression.call("set_flag", "realm_heart_meadows_earned")
 
 
 ## RG7. A corrupt JSON pose must fall back to the authored spawn as one unit.
 ## Applying a valid position with a NaN/invalid view (or vice versa) creates a
 ## half-restored player that can be stranded or make the camera unusable.
+## The live clock, as a number safe to write. Anything that is not a finite
+## number becomes the "no carried clock" sentinel rather than a NaN that would
+## come back out of JSON as `null` and restore the world to hour NaN.
+func _read_clock(game: Object) -> float:
+	return _finite_clock(game.get("clock_elapsed_seconds"))
+
+
+func _finite_clock(raw: Variant) -> float:
+	if not _finite_number(raw):
+		return -1.0
+	var seconds := float(raw)
+	return seconds if seconds >= 0.0 else -1.0
+
+
 func _sanitise_player_pose(raw: Variant) -> Dictionary:
 	if typeof(raw) != TYPE_DICTIONARY:
 		return {}
@@ -387,13 +480,104 @@ func _sanitise_player_pose(raw: Variant) -> Dictionary:
 	for key: String in ["model_yaw", "camera_yaw", "camera_pitch"]:
 		if not _finite_number(pose.get(key)):
 			return {}
-	return {
+	var clean := {
 		"realm": str(pose.get("realm", "meadows")),
 		"position": [float(position_raw[0]), float(position_raw[1]), float(position_raw[2])],
 		"model_yaw": float(pose["model_yaw"]),
 		"camera_yaw": float(pose["camera_yaw"]),
 		"camera_pitch": float(pose["camera_pitch"]),
 	}
+	if pose.has("traversal"):
+		var traversal := _sanitise_traversal(pose["traversal"])
+		if traversal.is_empty() or str(traversal["realm"]) != str(clean["realm"]):
+			return {} # invalid airborne state falls back as a unit to realm spawn
+		clean["traversal"] = traversal
+		if str(traversal["mode"]) in ["glide", "climb", "descent", "exhausted"]:
+			var anchor: Array = traversal["safe_anchor"]
+			if anchor.size() != 3:
+				return {}
+			clean["position"] = [anchor[0], float(anchor[1]) + 0.08, anchor[2]]
+	return clean
+
+
+## v18 stores stamina/active identity and a safe flight landing. Resuming a
+## suspended flight above unstreamed terrain is deliberately disallowed; the
+## saved grounded anchor is used for both same-scene and fresh-world loads.
+func _capture_traversal_pose(game: Object) -> Dictionary:
+	var raw: Variant = game.get("saved_player_pose")
+	if not raw is Dictionary:
+		return {}
+	var pose := (raw as Dictionary).duplicate(true)
+	if game.has_method("_find_player"):
+		var player: Node = game.call("_find_player")
+		var fly: Node = player.get_node_or_null(^"FlyController") if player != null else null
+		if fly != null:
+			pose["traversal"] = fly.call("save_data")
+	return _sanitise_player_pose(pose)
+
+
+func _sanitise_traversal(raw: Variant) -> Dictionary:
+	if not raw is Dictionary:
+		return {}
+	var data: Dictionary = raw
+	if int(data.get("version", 0)) != 1 or not _finite_number(data.get("stamina_fraction")):
+		return {}
+	var mode := str(data.get("mode", "grounded"))
+	if not mode in ["grounded", "glide", "climb", "descent", "exhausted", "recovery"]:
+		return {}
+	var anchor: Variant = data.get("safe_anchor", [])
+	var velocity: Variant = data.get("velocity", [])
+	if not anchor is Array or not velocity is Array or (velocity as Array).size() != 3:
+		return {}
+	if (anchor as Array).size() != 0 and (anchor as Array).size() != 3:
+		return {}
+	for number: Variant in (anchor as Array) + (velocity as Array):
+		if not _finite_number(number):
+			return {}
+	return {"version": 1, "mode": mode, "realm": str(data.get("realm", "meadows")), "safe_anchor": anchor, "velocity": velocity, "stamina_fraction": clampf(float(data["stamina_fraction"]), 0.0, 1.0), "active_index": clampi(int(data.get("active_index", -1)), -1, 4)}
+
+
+func _migrate_v17(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["version"] = 18
+	# Old saves have no deployed Fly state. Their existing exact pose is valid.
+	return migrated
+
+
+func _migrate_v18(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["version"] = 19
+	migrated["realm_maps"] = _realm_map_payloads(data)
+	return migrated
+
+
+func _migrate_v19(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["version"] = 20
+	for key: String in ["placed_buildings", "death_satchels"]:
+		migrated[key] = WORLD_RECORDS.normalized(data.get(key, []))
+	return migrated
+
+
+## Pre-ownership saves used Meadows' grid regardless of selected scene. Only
+## an explicit Cloudreach realm tag identifies that newer grid safely. Never
+## reinterpret the bytes using current_realm, which would lose Meadows fog.
+func _realm_map_payloads(data: Dictionary) -> Dictionary:
+	var result: Dictionary = {}
+	var raw: Variant = data.get("realm_maps", {})
+	if raw is Dictionary:
+		for realm_id: String in ["meadows", "cloudreach"]:
+			if raw.get(realm_id) is Dictionary:
+				result[realm_id] = raw[realm_id].duplicate(true)
+	var legacy: Variant = data.get("map", {})
+	if legacy is Dictionary:
+		var owner := "cloudreach" if str(legacy.get("realm_id", "")) == "cloudreach" else "meadows"
+		if not result.has(owner):
+			result[owner] = legacy.duplicate(true)
+	for realm_id: String in ["meadows", "cloudreach"]:
+		if not result.has(realm_id):
+			result[realm_id] = {}
+	return result
 
 
 func _finite_number(value: Variant) -> bool:
@@ -726,11 +910,23 @@ func _migrate_v16(data: Dictionary) -> Dictionary:
 	return migrated
 
 
-## VERSION 17 -> 18: CL-W1's alpha pin set. See the class header.
-func _migrate_v17(data: Dictionary) -> Dictionary:
+## VERSION 20 -> 21: CL-W1's alpha pin set. See the class header.
+func _migrate_v20(data: Dictionary) -> Dictionary:
 	var migrated := data.duplicate(true)
-	migrated["version"] = 18
+	migrated["version"] = 21
 	migrated["alpha_pins"] = []
+	return migrated
+
+
+## VERSION 18 -> 19: N14's persisted day/night clock. A save written before it
+## has no memory of the hour, and the honest migration is to say so rather than
+## invent one -- the sentinel opens that save at the authored morning, which is
+## exactly what it did on the old build.
+## VERSION 21 -> 22: the carried day clock. See the class header.
+func _migrate_v21(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["version"] = 22
+	migrated["clock_elapsed_seconds"] = -1.0
 	return migrated
 
 

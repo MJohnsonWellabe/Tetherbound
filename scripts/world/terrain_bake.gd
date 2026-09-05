@@ -24,13 +24,32 @@ const CONFIG_PATH := "res://data/config/terrain_playground.json"
 
 ## Hash of the one file this bake depends on. Whole raw text, not a parsed
 ## subset -- matching `scatter_bake.gd::config_fingerprint()`'s own choice,
+## any text change (including a comment) invalidates the bake, except Git's
+## LF/CRLF checkout conversion, which does not alter the authored terrain.
 ## any byte change (including a comment) is a real edit to the file the bake
 ## reads and has to be able to invalidate a bake, not just a schema change.
+##
+## N11-TERRAIN-BAKE-0905: line endings are normalised before hashing. A
+## checkout with `core.autocrlf` (the owner's Windows working copy) hands
+## `get_as_text()` the same file with `\r\n` endings, and that hashed to a
+## different number: `f2dd20e4` stamped 4395215917 into this manifest from a
+## Windows bake, which is exactly the CRLF hash of the config whose LF hash is
+## 1823724492, so Linux CI read a freshly baked manifest as stale. The bake
+## parses the JSON, which is byte-for-byte the same on both sides once the
+## line endings are dropped, so the ending is not an input and must not be
+## part of the fingerprint. An LF file hashes exactly as it did before this
+## change; no committed manifest moves.
 static func config_fingerprint() -> int:
 	var file := FileAccess.open(CONFIG_PATH, FileAccess.READ)
 	if file == null:
 		return 0
-	var mixed := file.get_as_text().hash() + int(CONFIG_PATH.hash())
+	return fingerprint_for_source(file.get_as_text())
+
+
+## The canonical source hash, also usable without rewriting a live config.
+static func fingerprint_for_source(source: String) -> int:
+	# Keep the committed Linux fingerprint valid on Windows without rebaking.
+	var mixed := source.replace("\r\n", "\n").hash() + int(CONFIG_PATH.hash())
 	# Masked to 53 bits for the same reason `scatter_bake.gd` masks its own
 	# fingerprint: this number is written into manifest.json and read back
 	# through `JSON.parse_string`, which has no integer type -- every number
@@ -38,6 +57,13 @@ static func config_fingerprint() -> int:
 	# integers exactly past 2^53. See that file's own comment for the
 	# concrete failure this avoids.
 	return mixed & 0x1FFFFFFFFFFFFF
+
+
+## The text a fingerprint hashes: the file's bytes with every `\r\n` folded
+## to `\n`. Shared with `scatter_bake.gd::config_fingerprint()` so the two
+## guards agree on what a line ending is.
+static func normalised_text(text: String) -> String:
+	return text.replace("\r\n", "\n")
 
 
 static func manifest_path(data_dir: String) -> String:

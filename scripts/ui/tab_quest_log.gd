@@ -105,7 +105,8 @@ func poll() -> void:
 	if progression == null:
 		return
 	var revision := int(progression.get("revision"))
-	if revision == _last_progression_revision:
+	var realm_changed := bool(_log.call("set_realm", str(game.get("current_realm"))))
+	if revision == _last_progression_revision and not realm_changed:
 		return
 	_last_progression_revision = revision
 	_fill(

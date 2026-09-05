@@ -281,3 +281,5 @@ the judge can find.** Posed stands flatter a build.
 - **The `material_get_instance_shader_parameters` null-material warning** during
   guardian dressing (`burrow_warrens.gd`), seen by two lanes, chased by neither,
   non-fatal in both.
+  **Fixed 2026-09-05 (N03-CREATURE-BODY-0905, CL-G7):** the cause was in
+  `creature_body.gd::_build_model()`'s teardown of the old art, not in the warrens.

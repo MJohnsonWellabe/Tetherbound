@@ -343,6 +343,64 @@ None of those are touched by this diff.
   strip would flicker continuously, since distance is credited in fractions of a metre on a
   half-second poll. Tunable in `progression_feedback.json`.
 
+## 6b. Routed finding — `test_save_format.gd` calls a method that does not exist
+
+**Found 2026-09-05, after this lane landed, while re-verifying its own tests. Not caused by
+this lane, and outside its ownership, so it is documented here for whoever owns
+`scripts/save/save_game.gd` / `tests/test_save_format.gd` next** (coordinator routing
+decision, same treatment as W05/W17/W20).
+
+`tests/test_save_format.gd` reports **"55 tests, 268 assertions, 0 failed"** while **five of
+its test bodies never execute a single assertion**. Each aborts on its first line with:
+
+```
+SCRIPT ERROR: Invalid call. Nonexistent function 'save_game' in base 'RefCounted (save_game.gd)'.
+```
+
+This is the false-green shape `AGENT_WORKFLOW.md` §6 exists to catch: the runner counts the
+test, reports no failure, and the body never ran.
+
+**The five orphaned tests**, with the exact lines (line numbers as of `590741fe`):
+
+| Test | Lines |
+|---|---|
+| `test_a_half_fought_bracket_survives_a_save` | 1135, 1138 |
+| `test_the_board_reads_the_same_bracket_after_a_reload` | 1153, 1156 |
+| `test_a_won_tournament_cannot_be_reloaded_into_a_second_payout` | 1169, 1172 |
+| `test_condition_survives_a_save` | 1190, 1193 |
+| `test_a_pre_condition_save_loads_at_the_configured_start` | 1204, 1221 |
+
+**What they call** (ten call sites, two per test):
+
+```gdscript
+assert_true(saver.save_game(game, 0))     # no such method
+assert_true(saver.load_game(loaded, 0))   # no such method
+```
+
+**What `scripts/save/save_game.gd` actually provides** — unchanged at this lane's base
+(`ef16544f`) and at `590741fe`, so this has never worked:
+
+```gdscript
+func save(game: Object, slot: int) -> bool:        # line 238
+func load_slot(game: Object, slot: int) -> bool:   # line 277
+```
+
+**The rest of the same file already uses the real API** — roughly thirty call sites of
+`saver.save(written, 1)` / `saver.load_slot(read, 1)` — so the fix is a mechanical rename in
+those five tests only: `save_game(` → `save(`, `load_game(` → `load_slot(`.
+
+**One warning for whoever makes that change.** These five tests have never once run their
+bodies, so renaming the calls will execute them for the first time. Expect real failures
+rather than a clean green, and budget for fixing what they then find — they cover a
+half-fought tournament bracket surviving a save, a won tournament not paying out twice on
+reload, and creature condition surviving a save. That is exactly the behaviour nobody has
+been verifying.
+
+**Effect on this lane's own claim:** §4's line that `test_save_format` passes stands, but
+narrows — this lane's save-format claim (no persisted field changed, so no migration was
+needed) rests on the file's *other* fifty tests, which do run. None of the five orphans
+touches bond counters, XP or the progression feed.
+
 ## 7. Commits
 
 Branch `ralph/W13-PROGRESSION-FEED-0904`, pushed.
@@ -359,4 +417,14 @@ aea5887b  fix: round-2 blind-judge defects — banner collision, strip overflow,
 14f4c84c  fix: round-2 judge — banner chrome per kind, level-up headline, bond pip
 ```
 
-**Head of branch: `14f4c84c`.** Pushed to `origin/ralph/W13-PROGRESSION-FEED-0904`.
+**Landed.** All nine commits above are ancestors of `origin/main` (`590741fe` at the time of
+this addendum); the coordinator merged the lane and deleted the branch, and the decision
+record landed renumbered as **D76**, not D74. This §6b addendum is therefore follow-up work
+on a branch restarted from current `main`, per the repo's rule for a lane whose branch has
+already merged.
+
+**Re-verified on that new base** (`590741fe`, 182 commits after this lane's own base), so the
+numbers below are current rather than inherited: `test_progression_feed`, `test_bond`,
+`test_level_up_announcement`, `test_candy_progression_safety`, `test_hud_widgets` and
+`test_save_format` together give **170 tests, 658 assertions, 0 failed**. (Higher than the
+169/647 recorded at this lane's own base: other lanes have since added to the shared files.)

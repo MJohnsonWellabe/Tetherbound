@@ -331,6 +331,78 @@ content / encounter-director lane, not this one.
   so, and names the cheap way to settle it (re-run that leg against
   `probe_s08_freeze_legacy_navigator.gd` and the live walker).
 
+## 9b. CI on this branch — the two red jobs are inherited, not this lane's
+
+Run [33964632572](https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/33964632572)
+on tip `040aa73e`. The `changes` gate classed the diff as code, so the code jobs
+really ran — this is not a docs-only run that verified nothing.
+
+Two jobs failed, **and both are the same single test**:
+
+```
+test_terrain_bake_freshness.gd :: test_playground_terrain_bake_is_committed_and_fresh
+  expected true, got false  (data/terrain/playground has no manifest, or is stale
+  against the live data/config/terrain_playground.json ...)
+```
+
+- `verify-terrain-bake-freshness` — that check, alone, failing one second in.
+- `verify-unit-tests (1)` — **511 tests, 225,538 assertions, 1 failed**, and the
+  one is that same test.
+
+**Not caused by this lane, and checked rather than assumed.** This branch changes
+two probe scripts, their `.uid` files and three documents; it touches neither
+`data/config/terrain_playground.json` nor `data/terrain/**`. Run at this branch's
+tip and again in a clean worktree at the **unmodified base commit `ef16544f`**,
+the test fails identically both times:
+
+```
+godot --headless --path . --script tests/run_tests.gd -- --only=test_terrain_bake_freshness.gd
+  # branch tip 040aa73e : 3 tests, 8 assertions, 1 failed
+  # base     ef16544f   : 3 tests, 8 assertions, 1 failed   (worktree, none of this lane's files)
+```
+
+So the committed Terrain3D bake was already stale against its config at the base
+this lane branched from. The fix is a re-bake and a commit of `data/terrain/**`
+— a large binary change in nobody-here's ownership. **Handed to the coordinator**;
+it is a different failure from the `test_item_icons.gd` red that COMMON.md named
+at lane start, which now **passes** (`verify-unit-tests (3)`: success).
+
+One further job, `verify-regions-shard`, was **cancelled** rather than failed: it
+ran warrens, relay_station and relay green and was killed inside `stronghold` at
+the job's own 35-minute ceiling. A timeout, not a verdict, and not this lane's
+either.
+
+## 9c. A repo gap this lane surfaced: GLB textures the pickup/saddle landings did not commit
+
+Running `godot --headless --path . --import` in a clean checkout of `ef16544f`
+leaves **58 untracked files**: 51 `.import`/`.uid` siblings, and **7 textures
+Godot extracts out of embedded GLBs**, each named for its own GLB and sitting
+beside it —
+
+```
+assets/props/candy_pickup/candy_pickup_0.png        (beside candy_pickup.glb)
+assets/props/mushroom_pickup/mushroom_pickup_0.png
+assets/props/potion_plant/potion_plant_0.png, _1.png
+assets/props/revive_flower/revive_flower_0.png
+assets/props/riding_saddle/riding_saddle_0.jpg
+assets/environment/team_tether/south_bridge_gate_0.jpg
+```
+
+**This repo's convention is to commit those**: 153 of them are already tracked
+(`assets/characters/**/*_lod0_texture_0.png`, and `relay_apparatus_0.jpg` in the
+very same `team_tether/` directory). The seven above are the ones whose GLBs
+landed in `15751023` / `893df10e` / `9c14e5a7` — **the GLB was committed and the
+texture Godot extracts from it was not.** Nothing is broken by that (they are
+derived, and any import regenerates them, which is why CI is unaffected), so it
+is a tidiness gap rather than a defect — but it belongs to those lanes' assets,
+not this one's.
+
+I removed all 58 from this container's working tree rather than committing 18 MB
+of regenerable binaries onto a branch that owns none of those assets. **For the
+coordinator:** either have the owning lane commit its seven textures, matching
+the convention the other 153 follow, or add the pattern to `.gitignore` and drop
+the 153 — but the two halves should agree, and today they do not.
+
 ## 10. Final state
 
 - Branch: `ralph/W03-S08-FREEZE-0904`

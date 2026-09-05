@@ -45,6 +45,7 @@ var _solid_mesh: ImmediateMesh = null
 var _solid_instance: MeshInstance3D = null
 ## Which surface `_tri`/`_disc`/`_ring` are currently writing into.
 var _target: ImmediateMesh = null
+var _surface_open := false
 
 
 ## `height`/`radius` are the body's own gameplay size (`body_height()` /
@@ -150,7 +151,6 @@ func _redraw() -> void:
 
 	# The beam, on the un-depth-tested surface.
 	_target = _mesh
-	_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
 
 	# The column of light: a camera-facing band through the body, opaque at
 	# the core and fading to the sides and toward the top.
@@ -159,12 +159,11 @@ func _redraw() -> void:
 	var beam_alpha: float = float(_spec.get("beam_alpha", 0.5)) * envelope
 	_beam(right, beam_width, beam_height, beam_alpha)
 
-	_mesh.surface_end()
+	_end_surface()
 
 	# Rings and motes, on the depth-tested surface, so their far halves pass
 	# behind the creature and the ring reads as a ring around a body.
 	_target = _solid_mesh
-	_solid_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
 
 	# The rings: flat, rising from the feet past the crown, each on its own
 	# phase so the second follows the first.
@@ -198,7 +197,13 @@ func _redraw() -> void:
 		_disc(centre, right * size * 1.45, up * size * 1.45, Color(dark.r, dark.g, dark.b, alpha * 0.6))
 		_disc(centre, right * size, up * size, Color(_colour.r, _colour.g, _colour.b, alpha))
 
-	_solid_mesh.surface_end()
+	_end_surface()
+
+
+func _end_surface() -> void:
+	if _surface_open:
+		_target.surface_end()
+		_surface_open = false
 
 
 func _beam(right: Vector3, width: float, height: float, alpha: float) -> void:
@@ -245,6 +250,11 @@ func _beam(right: Vector3, width: float, height: float, alpha: float) -> void:
 
 ## Writes into whichever surface `_redraw` is currently filling (`_target`).
 func _tri(p0: Vector3, c0: Color, p1: Vector3, c1: Color, p2: Vector3, c2: Color) -> void:
+	# A zero/near-zero envelope can emit no triangles. Begin lazily so neither
+	# layer submits an empty ImmediateMesh surface during level-up boundaries.
+	if not _surface_open:
+		_target.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
+		_surface_open = true
 	_target.surface_set_color(c0)
 	_target.surface_add_vertex(p0)
 	_target.surface_set_color(c1)

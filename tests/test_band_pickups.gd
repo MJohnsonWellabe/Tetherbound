@@ -364,13 +364,13 @@ func _walk(node: Node) -> Array[Node]:
 	return out
 
 
-func _built(item_id: String, key: String) -> Node3D:
+func _built(item_id: String, key: String, badge: Color = Color.WHITE) -> Node3D:
 	var items: Dictionary = _read_json(ITEMS_PATH).get("items", {}) as Dictionary
 	var definition: Dictionary = items.get(item_id, {}) as Dictionary
 	var node: Node3D = ITEM_CACHE_PICKUP.new()
 	node.call("setup", item_id, BAND_PICKUPS.label_for(item_id), str(definition.get("world_model", "")),
 		float(definition.get("world_model_scale", 1.0)), key)
-	BAND_PICKUPS.dress(node, item_id, Color.WHITE)
+	BAND_PICKUPS.dress(node, item_id, badge)
 	return node
 
 
@@ -455,6 +455,12 @@ func test_a_higher_tier_glows_harder() -> void:
 		"Rare does not glow harder than Great")
 
 
+func test_realm_pickups_preserve_shipped_meadows_keys_and_isolate_other_realms() -> void:
+	assert_eq(ITEM_CACHE_PICKUP.flag_id("good_candy", "b2_candy_quarry_ledge", "meadows"), "cache:b2_candy_quarry_ledge")
+	assert_eq(ITEM_CACHE_PICKUP.flag_id("good_candy", "b2_candy_quarry_ledge", "cloudreach"), "cache:cloudreach:b2_candy_quarry_ledge")
+	assert_eq(ITEM_CACHE_PICKUP.flag_id("elixir_attack"), "cache:elixir_attack")
+
+
 func test_the_wild_shroom_is_broader_than_the_stamina_shroom() -> void:
 	var wild := _built("wild_mushroom", "t_wild")
 	var stamina := _built("stamina_mushroom", "t_stamina")
@@ -472,3 +478,329 @@ func test_the_wild_shroom_is_broader_than_the_stamina_shroom() -> void:
 		"the Wild Shroom's cap is not broader (%s vs %s)" % [str(wild_scale), str(stamina_scale)])
 	wild.free()
 	stamina.free()
+
+
+## --- N08-PICKUP-TIERS (2026-09-05): the ladder is more than hue -----------
+##
+## Two code-blind judges read the tiers off hue alone and could not (W17
+## round 2: "what separates them is size, colour hue, and the number of side
+## attachments -- all three changing at once"; W18 round 1: "the only
+## difference between the two objects I can find is hue... far too subtle to
+## tell apart in play", and inverted). The tests below pin the structural
+## ladder so a tuning pass cannot quietly flatten it back to a tint.
+##
+## Seen red first (N08 report): with the crest kind, the ring and the glow
+## multiplier stripped back to W17's table, `test_a_tier_is_an_additive_part_count`,
+## `test_each_tier_wears_a_different_crest_shape` and
+## `test_a_higher_tier_glows_wider` all fail; with the wing sweep sign
+## flipped back to W17's, `test_the_rare_wings_are_rooted_and_sweep_upward`
+## fails on the tip height. Round 2 (ring on every candy, coloured; sparkles)
+## re-seen red the same way: with the ring dropped from Good and painted
+## white, the part-count and ring tests fail on "Good has no ring" and
+## "ring is not coloured".
+
+
+func _body_mesh(node: Node) -> MeshInstance3D:
+	for descendant in _walk(node):
+		if descendant is MeshInstance3D and descendant.name != "TierMedallion" and descendant.name != "TierRing" \
+				and not descendant.name.begins_with("RareWing") and not descendant.name.begins_with("CrownSpike"):
+			return descendant as MeshInstance3D
+	return null
+
+
+func _child_named(node: Node, name: String) -> Node:
+	for descendant in _walk(node):
+		if descendant.name == name:
+			return descendant
+	return null
+
+
+func _count_prefixed(node: Node, prefix: String) -> int:
+	var count := 0
+	for descendant in _walk(node):
+		if descendant.name.begins_with(prefix):
+			count += 1
+	return count
+
+
+func test_a_tier_is_an_additive_part_count() -> void:
+	# Every candy wears the family's two marks (crest, ground ring); Great
+	# adds sparkles; Rare adds wings. N08 round 1 put the ring on Great and
+	# Rare only and its judge read a ring on half the set as "an editor
+	# selection gizmo", so the ring is a family mark, not a tier mark.
+	assert_eq(BAND_PICKUPS.parts_for("good_candy"), 2, "Good carries two parts (crest + ring)")
+	assert_eq(BAND_PICKUPS.parts_for("great_candy"), 3, "Great carries three parts (+ sparkles)")
+	assert_eq(BAND_PICKUPS.parts_for("rare_candy"), 4, "Rare carries four parts (+ wings)")
+	assert_eq(BAND_PICKUPS.parts_for("stamina_mushroom"), 0, "a mushroom is not on the candy ladder")
+	# And the built nodes agree with the table, part by part.
+	var good := _built("good_candy", "p_good")
+	assert_true(_child_named(good, "TierMedallion") != null, "Good has no crest")
+	assert_true(_child_named(good, "TierRing") != null, "Good has no ring")
+	assert_eq(_count_prefixed(good, "Sparkle"), 0, "Good grew sparkles")
+	assert_true(_child_named(good, "RareWingL") == null, "Good grew wings")
+	good.free()
+	var great := _built("great_candy", "p_great")
+	assert_true(_child_named(great, "TierMedallion") != null, "Great has no crest")
+	assert_true(_child_named(great, "TierRing") != null, "Great has no ring")
+	assert_eq(_count_prefixed(great, "Sparkle"), 3, "Great has no sparkles")
+	assert_true(_child_named(great, "RareWingL") == null, "Great grew wings")
+	great.free()
+	var rare := _built("rare_candy", "p_rare")
+	assert_true(_child_named(rare, "TierMedallion") != null, "Rare has no crest")
+	assert_true(_child_named(rare, "TierRing") != null, "Rare has no ring")
+	assert_eq(_count_prefixed(rare, "Sparkle"), 3, "Rare has no sparkles")
+	assert_true(_child_named(rare, "RareWingL") != null and _child_named(rare, "RareWingR") != null, "Rare has no wings")
+	rare.free()
+	var shroom := _built("stamina_mushroom", "p_shroom")
+	assert_true(_child_named(shroom, "TierRing") == null, "a mushroom grew a ring")
+	shroom.free()
+
+
+func test_each_tier_wears_a_different_crest_shape() -> void:
+	var kinds := {}
+	for grade: String in ["good_candy", "great_candy", "rare_candy"]:
+		kinds[grade] = BAND_PICKUPS.crest_for(grade)
+	assert_eq(kinds["good_candy"], "disc")
+	assert_eq(kinds["great_candy"], "star")
+	assert_eq(kinds["rare_candy"], "crown")
+	assert_eq(BAND_PICKUPS.crest_for("wild_mushroom"), "", "a mushroom wears no crest")
+	# The shapes are real geometry, not a label: Good's crest is a cylinder,
+	# Great's a built star (an ArrayMesh with the star's own vertex count),
+	# Rare's a cylinder wearing spikes.
+	var good := _built("good_candy", "c_good")
+	var good_crest := _child_named(good, "TierMedallion") as MeshInstance3D
+	assert_true(good_crest.mesh is CylinderMesh, "Good's crest is not a disc")
+	assert_eq(good_crest.get_child_count(), 0, "Good's disc grew children")
+	good.free()
+	var great := _built("great_candy", "c_great")
+	var great_crest := _child_named(great, "TierMedallion") as MeshInstance3D
+	assert_true(great_crest.mesh is ArrayMesh, "Great's crest is not a built star")
+	if great_crest.mesh is ArrayMesh:
+		var faces := (great_crest.mesh as ArrayMesh).get_faces()
+		# Ten outline edges, each a top fan triangle, a bottom fan triangle
+		# and a two-triangle wall: 40 triangles, 120 vertices.
+		assert_eq(faces.size(), BAND_PICKUPS.STAR_POINTS * 2 * 4 * 3, "the star's triangle count is off")
+	great.free()
+	var rare := _built("rare_candy", "c_rare")
+	var rare_crest := _child_named(rare, "TierMedallion") as MeshInstance3D
+	assert_true(rare_crest.mesh is CylinderMesh, "Rare's crown has no disc")
+	var spikes := 0
+	for child in rare_crest.get_children():
+		if child.name.begins_with("CrownSpike"):
+			spikes += 1
+	assert_eq(spikes, BAND_PICKUPS.CROWN_SPIKES, "Rare's crown has the wrong number of spikes")
+	rare.free()
+
+
+func test_a_higher_tier_glows_wider() -> void:
+	# The shared highlight's radius steps with the tier, so at the range
+	# where no crest resolves the Rare is still the loudest thing on the
+	# ground -- the hierarchy W18's judge called inverted.
+	var good := BAND_PICKUPS.glow_scale_for("good_candy")
+	var great := BAND_PICKUPS.glow_scale_for("great_candy")
+	var rare := BAND_PICKUPS.glow_scale_for("rare_candy")
+	assert_true(great > good, "Great's highlight is not wider than Good's (%s vs %s)" % [str(great), str(good)])
+	assert_true(rare > great, "Rare's highlight is not wider than Great's (%s vs %s)" % [str(rare), str(great)])
+	assert_almost_eq(BAND_PICKUPS.glow_scale_for("revive"), 1.0, 0.0001, "a non-candy is scaled")
+
+
+func test_the_rare_wings_are_rooted_and_sweep_upward() -> void:
+	# Round 2 on the old wings: "hard-edged, flat, untextured quads at
+	# inconsistent angles; the right-hand one is visually detached from the
+	# body with a gap between them... appears to float." Each wing's box now
+	# overlaps the body's, and each tip sits higher than its root -- the
+	# board's sweep, and the opposite of the old droop.
+	var rare := _built("rare_candy", "w_rare")
+	var body := _body_mesh(rare)
+	assert_true(body != null, "no body mesh")
+	var body_box := body.get_aabb()
+	for name: String in ["RareWingL", "RareWingR"]:
+		var wing := _child_named(rare, name) as MeshInstance3D
+		assert_true(wing != null, "%s missing" % name)
+		if wing == null:
+			continue
+		var wing_box := wing.transform * wing.get_aabb()
+		assert_true(wing_box.intersects(body_box), "%s does not overlap the body (%s vs %s)" % [name, str(wing_box), str(body_box)])
+		var outward := 1.0 if wing.position.x > body_box.get_center().x else -1.0
+		var half_span := wing.get_aabb().size.x * 0.5
+		var tip := wing.transform * Vector3(outward * half_span, 0.0, 0.0)
+		var root := wing.transform * Vector3(-outward * half_span, 0.0, 0.0)
+		assert_true(tip.y > root.y + 0.01, "%s's tip (%.3f) is not above its root (%.3f): the wing droops" % [name, tip.y, root.y])
+		assert_true(absf(tip.x - body_box.get_center().x) > absf(root.x - body_box.get_center().x), "%s does not point outward" % name)
+	rare.free()
+
+
+func test_the_ground_ring_lies_at_the_foot_clears_the_wrapper_ends_and_is_never_white() -> void:
+	var radii := {}
+	for grade: String in ["good_candy", "great_candy", "rare_candy"]:
+		# Dressed with the tier's own badge colour, as the world does from
+		# `items.json`; the helper's default white is the colour under test.
+		var node := _built(grade, "r_" + grade, (BAND_PICKUPS.CANDY_LOOK[grade] as Dictionary)["badge"] as Color)
+		var body := _body_mesh(node)
+		var ring := _child_named(node, "TierRing") as MeshInstance3D
+		assert_true(ring != null and ring.mesh is TorusMesh, "%s has no torus ring" % grade)
+		if ring != null and ring.mesh is TorusMesh:
+			var torus := ring.mesh as TorusMesh
+			var box := body.get_aabb()
+			assert_true(ring.position.y - box.position.y < box.size.y * 0.15, "%s's ring is not at the foot (y %.3f)" % [grade, ring.position.y])
+			assert_true(torus.inner_radius > box.size.x * 0.5, "%s's ring passes through the wrapper ends (%.3f <= %.3f)" % [grade, torus.inner_radius, box.size.x * 0.5])
+			radii[grade] = torus.outer_radius
+			# Coloured, in the tier's hue, at a modest emission: a pure-white
+			# ring at 2.0 read as a selection gizmo in N08 round 1.
+			var material := ring.material_override as StandardMaterial3D
+			assert_true(material != null and material.albedo_color.s > 0.5, "%s's ring is not coloured (s=%.2f)" % [grade, material.albedo_color.s if material != null else -1.0])
+			assert_true(material != null and material.emission_energy_multiplier < 1.5, "%s's ring is lit like a HUD mark" % grade)
+		node.free()
+	# The ring is a size step too, in world units (the tier scale is applied
+	# to the body, and the ring rides under it).
+	assert_true(float(radii["great_candy"]) > float(radii["good_candy"]) and float(radii["rare_candy"]) > float(radii["great_candy"]),
+		"the rings do not step up the ladder (%s)" % str(radii))
+
+
+func test_the_tier_hues_are_far_apart_and_rare_is_amber_not_cream() -> void:
+	# The W18 judge: Rare's cream "collides with the frame's existing white
+	# cup flowers". The emission colour is what the eye reads in shade and at
+	# distance (it adds; the albedo multiplies into the wrapper), so that is
+	# the colour pinned: three hues at least 60 degrees apart, and Rare's a
+	# saturated amber rather than a pale gold that clips to cream.
+	var hues := {}
+	for grade: String in ["good_candy", "great_candy", "rare_candy"]:
+		var node := _built(grade, "h_" + grade)
+		var material := _body_mesh(node).material_override as StandardMaterial3D
+		assert_true(material != null and material.emission_enabled, "%s has no emission" % grade)
+		hues[grade] = material.emission.h * 360.0
+		if grade == "rare_candy":
+			assert_true(material.emission.s > 0.85, "Rare's emission is not saturated (s=%.2f), it will clip to cream" % material.emission.s)
+			assert_between(material.emission.h * 360.0, 20.0, 45.0, "Rare's emission is not amber (%.0f deg)" % (material.emission.h * 360.0))
+			assert_true(material.albedo_color.v > 0.8, "Rare's albedo went dark; multiplied into the wrapper it goes olive")
+		node.free()
+	var grades := hues.keys()
+	for i in grades.size():
+		for j in range(i + 1, grades.size()):
+			var a := float(hues[grades[i]])
+			var b := float(hues[grades[j]])
+			var apart := minf(absf(a - b), 360.0 - absf(a - b))
+			assert_true(apart >= 60.0, "%s and %s are only %.0f degrees of hue apart" % [str(grades[i]), str(grades[j]), apart])
+
+
+func test_a_candy_dressed_off_tree_is_phased_but_not_spinning() -> void:
+	# Off a tree there is no tween to make, and the loader must not try: a
+	# unit-built candy keeps its phase (so the still capture can freeze it)
+	# and no `tier_spin`.
+	var node := _built("good_candy", "s_good")
+	assert_true(node.has_meta("tier_spinner"), "no spinner recorded")
+	assert_false(node.has_meta("tier_spin"), "a tween was made with no tree")
+	var spinner := node.get_node_or_null(NodePath(str(node.get_meta("tier_spinner")))) as Node3D
+	assert_true(spinner != null, "the recorded spinner is not a child of the pickup")
+	node.free()
+	var shroom := _built("stamina_mushroom", "s_shroom")
+	assert_false(shroom.has_meta("tier_spinner"), "a mushroom was given a spin")
+	shroom.free()
+	# The phase is a pure function of the placement id: the same world boots
+	# to the same angles, and two neighbours never turn in step.
+	var a := BAND_PICKUPS.spin_phase_for("b4_candy_herd_bull_highfield")
+	assert_almost_eq(a, BAND_PICKUPS.spin_phase_for("b4_candy_herd_bull_highfield"), 0.0001, "phase is not deterministic")
+	assert_between(a, 0.0, TAU, "phase out of range")
+	assert_true(absf(a - BAND_PICKUPS.spin_phase_for("b4_candy_wind_ridge_crest")) > 0.05, "two ids share a phase")
+## --- the nudge search (N14-ROUTED-FOLLOWUPS, from N02-VEGETATION §7) ----------
+## Three authored sites -- `b4_candy_herd_bull_highfield` (442, 5830),
+## `b4_candy_wind_ridge_crest` (463, 5897) and `b5_candy_alpha_galecrest_pack`
+## (-50, 7268) -- warned `sits inside solid scatter and no spot within 5m was
+## clear; move it` on every boot, because `NUDGE_RADII_M` stopped at 5.0 and the
+## sites are genuinely enclosed. N02 measured that and routed it: *"the site
+## validator is not failing to notice these three; the nudge search is failing
+## to solve them."*
+## The fix appends two larger rings. The whole safety argument for doing that
+## rather than re-authoring three coordinates is a property of the SEARCH -- it
+## walks the radii smallest-first and returns on the first clear bearing, so a
+## site that resolves at 2 m cannot be moved by a ring added after it. These
+## tests hold that property, which is the thing a future widening could break;
+## `tests/smoke_playground.gd`'s own placement line is the booted-world half
+## (101 placed / 22 nudged / 3 unclear before, 101 / 25 / 0 after).
+
+## Flat ground everywhere, so the nudge search's only variable is the scatter.
+class FlatWorld:
+	extends Node3D
+	func ground_height_at(_x: float, _z: float) -> float:
+		return 0.0
+
+
+## Solid scatter inside `blocked_radius` of the origin and nowhere else -- one
+## round obstacle whose size the test picks, so "how far out does the search
+## have to reach" is a number rather than a guess. A NEGATIVE radius is empty
+## ground: the query is `distance < blocked_radius + clearance`, so zero would
+## still block everything inside SCATTER_CLEARANCE_M, which is not the same
+## thing as "there is nothing here".
+class BlobScatter:
+	extends Node3D
+	var blocked_radius: float = 0.0
+	var asked: Array[Vector3] = []
+
+	func has_solid_scatter_near(at: Vector3, clearance: float) -> bool:
+		asked.append(at)
+		if blocked_radius < 0.0:
+			return false
+		return Vector2(at.x, at.z).length() < blocked_radius + clearance
+
+
+func _spot_for(blocked_radius: float) -> Dictionary:
+	var world := FlatWorld.new()
+	var scatter := BlobScatter.new()
+	scatter.blocked_radius = blocked_radius
+	var spot: Dictionary = BAND_PICKUPS._clear_spot(world, scatter, Vector2.ZERO)
+	world.free()
+	scatter.free()
+	return spot
+
+
+func test_a_site_that_is_already_clear_is_never_moved() -> void:
+	var spot := _spot_for(-1.0)
+	assert_false(bool(spot["nudged"]), "a clear site was nudged off its authored spot")
+	assert_true(bool(spot["clear"]))
+	assert_almost_eq(float(spot["moved_m"]), 0.0, 0.001)
+
+
+## The property the widening rests on: adding bigger rings must not move a site
+## that the small rings already solved.
+func test_the_search_takes_the_smallest_ring_that_clears() -> void:
+	# Blocked out to 0.3 m; with SCATTER_CLEARANCE_M (1.6) the first ring at
+	# 2.0 m already stands clear, so that is where it must land -- not 8.0.
+	var spot := _spot_for(0.3)
+	assert_true(bool(spot["nudged"]))
+	assert_almost_eq(float(spot["moved_m"]), BAND_PICKUPS.NUDGE_RADII_M[0], 0.001,
+		"the search skipped past the smallest ring that clears; widening it would now move settled sites")
+	assert_almost_eq(Vector2(float(spot["at"].x), float(spot["at"].z)).length(),
+		BAND_PICKUPS.NUDGE_RADII_M[0], 0.001)
+
+
+## The three stuck sites' case: an obstacle too wide for the old 5 m ceiling and
+## inside the new one.
+func test_a_site_enclosed_past_the_old_ceiling_is_now_solved() -> void:
+	# Clearance 1.6, so a blob of radius 4.6 blocks every bearing out to 6.2 m:
+	# unsolvable on the old [2.0, 3.5, 5.0] list, solved by the 6.5 ring.
+	var spot := _spot_for(4.6)
+	assert_true(bool(spot["clear"]),
+		"a site enclosed past 5m is still unsolvable; the three warned sites stay warned")
+	assert_true(float(spot["moved_m"]) > 5.0,
+		"it reported a nudge inside the old ceiling, which cannot be true for this obstacle")
+	assert_true(float(spot["moved_m"]) <= float(BAND_PICKUPS.NUDGE_RADII_M[-1]))
+
+
+## And the search still gives up rather than walking a pickup off its site
+## forever. A find that cannot be placed near its own `_why` is a re-authoring
+## job, and the boot log now says exactly that.
+func test_a_site_enclosed_past_the_new_ceiling_still_reports_unclear() -> void:
+	var spot := _spot_for(20.0)
+	assert_false(bool(spot["clear"]),
+		"the search claimed clear ground inside a blob wider than its widest ring")
+	assert_false(bool(spot["nudged"]), "an unsolved site must stand on its authored spot, not a guess")
+
+
+func test_the_nudge_rings_are_ordered_and_bounded() -> void:
+	var radii: Array = BAND_PICKUPS.NUDGE_RADII_M
+	assert_true(radii.size() >= 2)
+	for i in range(1, radii.size()):
+		assert_true(float(radii[i]) > float(radii[i - 1]),
+			"NUDGE_RADII_M must ascend: the smallest-ring-first guarantee is the reason widening it is safe")
+	assert_true(float(radii[-1]) <= 10.0,
+		"a 'nudge' past 10m is a re-authoring, not a nudge -- see the constant's own note")

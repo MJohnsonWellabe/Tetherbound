@@ -263,6 +263,7 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null) -> bool:
 	_build_keep_parapets()
 	_build_gate_frame()
 	_build_hall_massing()
+	_build_tower_piers()
 	_build_occupation()
 	_build_interior_area()
 	_build_machine()
@@ -830,6 +831,51 @@ func _exterior_live_material() -> Material:
 		float(_config.get("site", {}).get("exterior_conduit_energy", 0.45)))
 
 
+## N05-WORLD-DRESSING-0905. The reserved teal for the live runs INSIDE the
+## roofed rooms: the floor conduits and the line a `lit` girder carries. Three
+## independent blind judges (W06-FINALE-0904 rounds 1-3) read the Legendary
+## Chamber's `_live_material()` runs at 1.4 as "flat cyan bars ... they pass
+## through solid geometry, cast no light, have no source and no terminus ...
+## read as a rendering bug" / "unmounted floating bars". The energy is the
+## half of that this material answers: W06 measured the same teal clipping to
+## white at 2.2 and keeping its hue at 1.15, and a bare 0.6 x 0.5 m box at 1.4
+## is most of the way to white. 0.9 keeps the teal a colour; the albedo is
+## pulled down a quarter so the unlit face of a cable is a dark cable, not a
+## light source seen edge-on. TUNABLE via `site.interior_conduit_energy`. The
+## machine's own crown and ring lamps keep `_live_material()`: they ARE the
+## light source of the room and are meant to be the brightest teal in it.
+func _interior_live_material() -> Material:
+	return _material(_palette("tether_teal", Color("#3fe8c4")).darkened(0.25),
+		float(_config.get("site", {}).get("interior_conduit_energy", 0.9)))
+
+
+## N05-WORLD-DRESSING-0905. A `lit` band used to be one 0.6 x 0.5 m box of
+## `_live_material()` the full inner width of the room at 15 m -- which from
+## the reveal stand, looking up at the machine, is a bright cyan bar running
+## from the top corner of the frame to a point in mid-air (its far end, where
+## it meets the far wall the room's two omnis barely reach). That is the
+## judges' "light-bar" and it is the loudest artefact in the chamber set. The
+## band's JOB (`_comment_trim`) is to mark hardware that is carrying
+## something, so it is now built as what that is: an oxblood girder bolted to
+## the wall, with a slim live line clipped along its room-facing edge, a hand
+## shorter than the girder at both ends so the line visibly terminates inside
+## the hardware rather than in air. The girder is the same `_tether_material()`
+## every unlit band and pillar in the complex already wears; the line is
+## `_interior_live_material()`.
+func _lit_girder(band: Vector3, at: Vector3, along_x: bool, sign_: float) -> void:
+	_box(band, at, _tether_material(), false)
+	var line := Vector3(band.x - 0.6, 0.14, 0.14) if along_x else Vector3(0.14, 0.14, band.z - 0.6)
+	var face := at
+	# The band sits against the wall on the `sign_` side; the room is the
+	# other way. Half the line stands proud of the girder's room-facing face.
+	if along_x:
+		face.z -= sign_ * band.z * 0.5
+	else:
+		face.x -= sign_ * band.x * 0.5
+	face.y += 0.04
+	_box(line, face, _interior_live_material(), false)
+
+
 ## --- geometry ---------------------------------------------------------------
 
 ## A box with matching collision, positioned by its centre in complex-local
@@ -1244,7 +1290,10 @@ func _build_trim() -> void:
 				var band := Vector3(size.x, 0.5, 0.6) if along_x else Vector3(0.6, 0.5, size.y)
 				# Decoration: never solid. A girder with a collider is a ledge
 				# the player can stand on halfway up a wall.
-				_box(band, Vector3(at.x, _floor_y + y, at.z), material, false)
+				if bool(spec.get("lit", false)):
+					_lit_girder(band, Vector3(at.x, _floor_y + y, at.z), along_x, sign_)
+				else:
+					_box(band, Vector3(at.x, _floor_y + y, at.z), material, false)
 			"pillar":
 				var offset := _local_of(spec.get("offset", [0.0, 0.0]))
 				_box(Vector3(0.7, height, 0.7),
@@ -1966,6 +2015,96 @@ func _build_hall_massing() -> void:
 	_build_hall_slits()
 	_build_cable_landing()
 	_build_blue_relic_banner()
+
+
+## N05-WORLD-DRESSING-0905, the judges' "chamber walls show overlapping slabs
+## with a visible black gap between them" (W06-FINALE-0904, three independent
+## blind rounds). Attributed with `tools/_probe_legendary_chamber.gd` rather
+## than guessed from the frame: the Hall's exterior massing towers stand ON the
+## chamber's corners, and a 10.7 m PointyTower centred 0.85 m from an inner
+## corner reaches 4.75 m into the room along both walls. From inside, that is
+## the tower's own outer shell -- the kit's coarser stone at a different
+## scale, lit by nothing -- overlapping the chamber's wall slabs, with the
+## culled inside of the shell showing black wherever it crosses them. All four
+## corners of the Legendary Chamber carry one (4.75 / 3.5 / 3.5 / 2.9 m deep);
+## the massing itself is `_lift_hall_massing_exterior`'s exterior-only pass
+## and never reads the chambers, so nothing ever checked.
+##
+## The fix is a placement fix on the wall side, not a change to the massing
+## (which three exterior-silhouette rounds tuned): wherever a massing module's
+## bounds reach inside a roofed chamber, that intrusion is enclosed in a
+## masonry pier of the chamber's own wall stone, flush with the walls it
+## stands against, floor to ceiling, snapped up to a half-metre course so the
+## four piers read as built rather than measured. Which is exactly what the
+## inside of a corner tower IS. Decoration only (never solid): the tower shell
+## it hides had no collider either, so no walkable metre changes and the
+## combat-arena contract (`combat_arena_bounds_at`) is untouched. Open yards
+## are skipped -- their corners stand under the sky and read as towers already.
+const PIER_COURSE_M := 0.5
+const PIER_MARGIN_M := 0.15
+func _build_tower_piers() -> void:
+	var massing: Node3D = get_node_or_null(^"HallMassing") as Node3D
+	if massing == null:
+		return
+	var built := 0
+	for id: String in _chambers:
+		var chamber: Dictionary = _chambers[id]
+		if bool(chamber.get("open", false)):
+			continue
+		var centre := _local_of(chamber.get("at", []))
+		var size := _size_of(chamber.get("size", []))
+		var height := float(chamber.get("height", 6.0))
+		var room := AABB(Vector3(centre.x - size.x * 0.5, _floor_y, centre.z - size.y * 0.5),
+			Vector3(size.x, height, size.y))
+		for child in massing.get_children():
+			var module := child as Node3D
+			if module == null:
+				continue
+			# `_module_bounds`, not `_visual_bounds`: three of the chamber's four
+			# corner towers are bare MeshInstance3Ds with no descendants.
+			var bounds := _module_bounds(module)
+			if bounds.size.x <= 0.001 or bounds.size.z <= 0.001:
+				continue
+			var local_box := (massing.transform * module.transform) * bounds
+			var hit := room.intersection(local_box)
+			if hit.size.x < 0.25 or hit.size.z < 0.25 or hit.size.y < 0.25:
+				continue
+			var x_range := _pier_span(hit.position.x, hit.end.x, room.position.x, room.end.x)
+			var z_range := _pier_span(hit.position.z, hit.end.z, room.position.z, room.end.z)
+			var pier := Vector3(x_range.y - x_range.x, height + 0.6, z_range.y - z_range.x)
+			var at := Vector3((x_range.x + x_range.y) * 0.5, _floor_y + pier.y * 0.5 - 0.02,
+				(z_range.x + z_range.y) * 0.5)
+			_box(pier, at, _wall_material(true), false, "TowerPier_%s_%d" % [id, built])
+			print("[stronghold] tower pier in %s: %.1f x %.1f m at local (%.1f, %.1f), enclosing %s" % [
+				id, pier.x, pier.z, at.x, at.z, str(module.name)])
+			# The same darker base course every chamber wall stands on.
+			_box(Vector3(pier.x + BASE_COURSE_PROUD, BASE_COURSE_H, pier.z + BASE_COURSE_PROUD),
+				Vector3(at.x, _floor_y + BASE_COURSE_H * 0.5, at.z),
+				_material(_stone_dark(), 0.0, true), false)
+			built += 1
+	if built > 0:
+		print("[stronghold] %d tower pier(s) enclosing massing that reached inside a roofed chamber" % built)
+
+
+## One axis of a pier: the wall-side edge goes a hand INTO the wall it stands
+## against; the room-side edge is the intrusion plus a margin, rounded up to
+## the next half-metre course from that wall. An intrusion that touches
+## neither wall on this axis (a mid-wall tower) is padded and snapped on both
+## sides instead.
+func _pier_span(lo: float, hi: float, room_lo: float, room_hi: float) -> Vector2:
+	var touches_lo := lo <= room_lo + 0.3
+	var touches_hi := hi >= room_hi - 0.3
+	if touches_lo and not touches_hi:
+		var depth := ceilf((hi - room_lo + PIER_MARGIN_M) / PIER_COURSE_M) * PIER_COURSE_M
+		return Vector2(room_lo - 0.05, room_lo + depth)
+	if touches_hi and not touches_lo:
+		var depth := ceilf((room_hi - lo + PIER_MARGIN_M) / PIER_COURSE_M) * PIER_COURSE_M
+		return Vector2(room_hi - depth, room_hi + 0.05)
+	if touches_lo and touches_hi:
+		return Vector2(room_lo - 0.05, room_hi + 0.05)
+	var half := ceilf(((hi - lo) * 0.5 + PIER_MARGIN_M) / PIER_COURSE_M) * PIER_COURSE_M
+	var mid := (lo + hi) * 0.5
+	return Vector2(mid - half, mid + half)
 
 
 ## VP-HALL-FIX ITEM1a (2026-09-02). A code-blind judge, fresh 100/200/400m
@@ -3660,8 +3799,10 @@ func _build_conduits() -> void:
 			mid.x += offset
 		var open_yard := bool((_chambers[from] as Dictionary).get("open", false)) \
 			or bool((_chambers[to] as Dictionary).get("open", false))
+		# N05-WORLD-DRESSING-0905: the roofed runs take the interior energy too
+		# (`_interior_live_material`), for the same three verdicts.
 		_box(size, Vector3(mid.x, _floor_y + 0.06, mid.z),
-			_exterior_live_material() if open_yard else _live_material(), false)
+			_exterior_live_material() if open_yard else _interior_live_material(), false)
 
 
 ## W-4 (docs/specs/GATE3_ENCOUNTER_CONTRACTS.md sec5.2). CONTENT-0828B measured
@@ -3748,20 +3889,49 @@ func _build_lights() -> void:
 	for entry: Variant in _config.get("lights", []) + _config.get("lights_flanks", []):
 		var spec: Dictionary = entry as Dictionary
 		var at := _local_of(spec.get("at", []))
-		var light := OmniLight3D.new()
-		light.position = Vector3(at.x, _floor_y + float(spec.get("y", 5.0)), at.z)
+		var position := Vector3(at.x, _floor_y + float(spec.get("y", 5.0)), at.z)
+		var light: Light3D
+		if str(spec.get("type", "omni")) == "spot":
+			# N05-WORLD-DRESSING-0905. `type: "spot"` aims a cone at `aim`
+			# (chamber-local [lateral, depth], `aim_y` above the floor). The
+			# only reason to want one indoors is a SHADOW: three blind judges
+			# on the Legendary Chamber named the absence of any contact shadow
+			# under the machine and under the bound creature ("it sits on the
+			# floor rather than standing on it"), and every omni in this
+			# building is deliberately shadowless. A shadowed omni pays for six
+			# cubemap faces; a shadowed spot pays for one map, aimed at the one
+			# object that needs grounding. Same shadowed-positional-light setup
+			# the village interiors already run (inn_interior.gd's bar and room
+			# lights, cottage_interior.gd, shop_interior.gd).
+			var spot := SpotLight3D.new()
+			spot.spot_range = float(spec.get("range", 14.0))
+			spot.spot_angle = float(spec.get("angle", 45.0))
+			spot.spot_attenuation = float(spec.get("attenuation", 1.0))
+			var aim := _local_of(spec.get("aim", spec.get("at", [])))
+			var target := Vector3(aim.x, _floor_y + float(spec.get("aim_y", 0.0)), aim.z)
+			var direction := (target - position).normalized()
+			# A cone aimed straight down has no "up"; hand it one along the wall.
+			var up := Vector3.UP if absf(direction.dot(Vector3.UP)) < 0.98 else Vector3.RIGHT
+			spot.transform = Transform3D(Basis.looking_at(direction, up), position)
+			light = spot
+		else:
+			var omni := OmniLight3D.new()
+			omni.position = position
+			omni.omni_range = float(spec.get("range", 14.0))
+			# VP-HALL-FIX: same shape control `_build_hall_fire()`'s braziers
+			# already have -- pools light near the source at >1.0 instead of
+			# spreading it thinly to the range edge, which is what the two gate
+			# fires standing at a real basket (`gate_source`) need to climb the
+			# gate face and reach the banner at night rather than washing the
+			# ground alone. Defaults to Godot's own 1.0, so any entry that does
+			# not ask is unchanged.
+			omni.omni_attenuation = float(spec.get("attenuation", 1.0))
+			light = omni
 		light.light_color = Color(str(spec.get("colour", "#8a8a8a")))
 		light.light_energy = float(spec.get("energy", 0.5))
-		light.omni_range = float(spec.get("range", 14.0))
-		# VP-HALL-FIX: same shape control `_build_hall_fire()`'s braziers
-		# already have -- pools light near the source at >1.0 instead of
-		# spreading it thinly to the range edge, which is what the two gate
-		# fires standing at a real basket (`gate_source`) need to climb the
-		# gate face and reach the banner at night rather than washing the
-		# ground alone. Defaults to Godot's own 1.0, so any entry that does
-		# not ask is unchanged.
-		light.omni_attenuation = float(spec.get("attenuation", 1.0))
-		light.shadow_enabled = false
+		# Shadowless unless an entry asks (N05: `shadow: true`); every entry
+		# that does not ask is exactly the light it was.
+		light.shadow_enabled = bool(spec.get("shadow", false))
 		add_child(light)
 
 

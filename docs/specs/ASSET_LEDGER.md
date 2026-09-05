@@ -855,3 +855,15 @@ The pickup props, the saddle and the checkpoint gate above all shipped as instal
 Fixed with a new base-class hook: `gated_crossing.gd::_unlock()` now calls a virtual `_on_unlocked()` (no-op by default) as its last step, fired both live (`_on_tried`) and on save-restore. `south_bridge.gd::_build_checkpoint_gatehouse` now tries `_build_hero_gate()` first — which loads `south_bridge_gate.glb`, fits it by height against the existing procedural posts (`POST_H + LINTEL_H`, since the scan's own bounds run roughly 1:0.41:0.16 width:height:depth and fitting by width would read wrong), and stands it at the archway as pure dressing — falling back to the original procedural posts/lintel/banners if the model fails to load. `south_bridge.gd` overrides `_on_unlocked()` to free the hero dressing node the instant the gate is genuinely opened, so the real leaf is the only one left standing open. `mill_crossing.gd`, the only other `gated_crossing` subclass, inherits the no-op default unchanged.
 
 **Not verified by this entry:** none of this GDScript ran in a live Godot instance this session (no headless-with-rendering environment available) — everything here was checked by hand against the existing call graph, method signatures (`item_db.gd::definition`, `building_prefabs.gd::combined_aabb`, `progression.gd::config`) and indentation, not by running the game. The next session with a running instance should walk the South Bridge and Band 1 caches directly before treating this as done.
+
+## Warden Aila dialogue portrait cleanup (2026-09-04)
+
+| | |
+|---|---|
+| Source | OpenAI built-in image editing, precise-object-edit over the existing owner-board local-historian portrait |
+| Reference | `assets/creatures/tetherbound/local_historian/reference/front.png` |
+| Installed | `assets/ui/portraits/cloudreach_aila_clean.png` |
+| Purpose | Remove the cropped `15. LOCAL HIS...` source-sheet heading that was visibly shipped in the first Cloudreach dialogue capture, while retaining Aila's established elderly historian design, green coat, spectacles and cane. |
+| Licence/provenance | Proprietary project derivative of the owner-supplied reference, generated inside the owner's OpenAI workspace for this private project. No Meshy credits or new humanoid mesh were used. |
+
+The first edit attempt returned no usable artifact. The installed second result is the only selected output. The original reference remains unchanged; `data/dialogue/cloudreach.json` points only to the clean project portrait.

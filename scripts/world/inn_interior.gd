@@ -31,6 +31,15 @@ const FURNITURE_DIR := "res://assets/props/quaternius_furniture"
 const FANTASY_DIR := "res://assets/props/quaternius_fantasy"
 const FURNITURE_SCALE := 0.5
 
+## N05-WORLD-DRESSING-0905 dressing tones: shelf and sign timber a shade
+## darker than the counter, lantern iron, pewter, and two bottle glasses.
+const COL_SHELF := Color("#5a3d22")
+const COL_IRON := Color("#2a2724")
+const COL_PEWTER := Color("#8e8a84")
+const COL_GLASS_GREEN := Color("#3a5a2e")
+const COL_GLASS_AMBER := Color("#8a5a1e")
+const COL_JUG := Color("#7a4a35")
+const COL_LAMP_GLOW := Color(1.0, 0.82, 0.55)
 const COL_FLOOR := Color("#6b4f30")
 const COL_COUNTER := Color("#8a6a3f")
 const COL_CEILING := Color("#4a3626")
@@ -51,6 +60,7 @@ func build(_room: Dictionary = {}) -> void:
 	_build_bed_nook(1.7, -1.7)
 	_build_rug()
 	_build_lights()
+	_build_bar_dressing()
 
 
 ## The point Bram stands, local to this node — a stride behind the counter,
@@ -281,3 +291,182 @@ func _material(colour: Color) -> StandardMaterial3D:
 	material.albedo_color = colour
 	material.roughness = 0.9
 	return material
+
+
+## --- N05-WORLD-DRESSING-0905: the wall Bram stands in front of -----------------
+##
+## W08-DIALOGUE-CAMERA-0904's two blind-judge rounds, independently, on the
+## real across-the-bar frame: "There is not one bottle, shelf, stool, tankard,
+## barrel, sign or lamp in either frame", in a room whose own line says "beds
+## are through the back, and I keep stock too." The conversation push-in that
+## lane built parks the player's eye on the BACK wall for the length of every
+## conversation with Bram, and until now that wall was bare plaster from the
+## counter to the ceiling.
+##
+## Everything here is the installed prop family or a primitive the room already
+## uses (`_box` is what the counter, rug and ceiling are made of) -- no new
+## mesh, nothing generated. The furniture pack's Stool and Bookcase and the
+## Fantasy kit's Barrel and Bucket are the same two packs `_furnish()` already
+## loads; a tankard, a bottle and a lantern cage have no mesh in either pack and
+## are a few cylinders and boxes each, which is what they are in the world too.
+##
+## Placement rules kept from the rest of this file: nothing enters the door
+## lane (`DOOR_X` +/- half `DOOR_W`); nothing solid stands where Bram does
+## (`bar_position()`, x 0 behind the counter) or in front of the counter's
+## middle where the player talks to him; the shelves flank his stand rather
+## than sit behind his head; and the lantern cages hang ABOVE the three lights
+## `_build_lights()` already places, never around them -- two of those omnis
+## cast shadows, and a shadow-casting light inside an opaque box lights nothing.
+func _build_bar_dressing() -> void:
+	var back := -INNER_HALF_D   # the back wall's inner face
+	# Two pairs of wall shelves, one each side of Bram, bottles on every one.
+	# JUDGE_DRESSING (blind, 2026-09-05): the west shelves ran into the stock
+	# shelf's stile, so the west pair is shorter and stops 4 cm clear of it;
+	# the east pair keeps its length. Uneven on purpose -- see `_bottle_row`.
+	for side: float in [-1.0, 1.0]:
+		var width := 1.1 if side < 0.0 else 1.5
+		var x := -1.1 if side < 0.0 else 1.55
+		for shelf_y: float in [1.5, 2.0]:
+			_box(Vector3(width, 0.04, 0.28), Vector3(x, shelf_y, back + 0.14), COL_SHELF, false)
+			_bottle_row(x, width, shelf_y + 0.02, back + 0.15, int(side) + (1 if shelf_y > 1.7 else 0))
+	# The sign, centred over the bar and over Bram, on the wall behind him.
+	_box(Vector3(1.4, 0.44, 0.05), Vector3(0.0, 2.42, back + 0.03), COL_SHELF, false)
+	var label := Label3D.new()
+	label.name = "InnSign"
+	label.text = "ROOMS  -  ALE  -  STOCK"
+	# JUDGE_DRESSING: at pixel_size 0.004 the text ran 1.8x the board's width
+	# and the overhang sat at 1.2:1 against the plaster. Sized to the board
+	# (1.4 m for ~23 glyphs), and painted dark so it reads ON the wood.
+	label.font_size = 56
+	label.pixel_size = 0.0021
+	label.modulate = Color("#2e1f12")
+	label.outline_size = 0
+	label.position = Vector3(0.0, 2.42, back + 0.06)
+	add_child(label)
+	# Stock: a keg and a bucket at the east end of the counter, a tall empty
+	# shelf unit at the west end, all behind the bar where Bram keeps it.
+	_furnish("Barrel", Vector3(2.1, 0.08, -4.15), 0.0, 1.0, FANTASY_DIR)
+	_furnish("Bucket_Wooden_1", Vector3(2.25, 0.08, -3.25), 35.0, 1.0, FANTASY_DIR)
+	_furnish("Bookcase", Vector3(-2.15, 0.08, -4.4), 0.0, FURNITURE_SCALE, FURNITURE_DIR)
+	# On the counter: three tankards and a jug, on the top (y 1.0), toward the
+	# guest side, clear of the middle where the player stands to talk.
+	_tankard(Vector3(-1.15, 1.0, COUNTER_Z + 0.12))
+	_tankard(Vector3(-0.92, 1.0, COUNTER_Z + 0.18))
+	_tankard(Vector3(0.95, 1.0, COUNTER_Z + 0.14))
+	_cylinder(0.09, 0.24, Vector3(1.22, 1.0, COUNTER_Z - 0.05), COL_JUG)
+	# JUDGE_DRESSING: the three lantern cages hang above the conversation
+	# camera's 40-degree frame, so the room read as having no light source at
+	# all. A candle on the counter end puts one in the shot: a stub of wax and
+	# a small glowing flame, no new light (the counter omni already lights it).
+	_cylinder(0.035, 0.11, Vector3(-1.38, 1.0, COUNTER_Z - 0.1), Color("#e9dcc0"))
+	var flame := MeshInstance3D.new()
+	flame.name = "CandleFlame"
+	var flame_box := BoxMesh.new()
+	flame_box.size = Vector3(0.03, 0.06, 0.03)
+	flame.mesh = flame_box
+	var flame_mat := StandardMaterial3D.new()
+	flame_mat.albedo_color = Color(1.0, 0.75, 0.35)
+	flame_mat.emission_enabled = true
+	flame_mat.emission = Color(1.0, 0.7, 0.3)
+	flame_mat.emission_energy_multiplier = 2.0
+	flame.material_override = flame_mat
+	flame.position = Vector3(-1.38, 1.14, COUNTER_Z - 0.1)
+	add_child(flame)
+	# Two bar stools on the guest side of the counter, either side of the
+	# door lane. Native scale for a stool a person could sit at -- the pack's
+	# 0.5 correction makes a 0.29 m footstool of it.
+	_furnish("Stool", Vector3(-1.15, 0.08, COUNTER_Z + 0.78), 12.0, 1.0, FURNITURE_DIR)
+	_furnish("Stool", Vector3(1.15, 0.08, COUNTER_Z + 0.78), -8.0, 1.0, FURNITURE_DIR)
+	# A lantern cage over each of the room's three lights.
+	_lantern(Vector3(0.0, 2.3, COUNTER_Z + 1.0))
+	_lantern(Vector3(0.0, 2.3, 1.5))
+	_lantern(Vector3(0.0, 2.3, 3.8))
+
+
+## Bottles along a shelf as stock rather than as an array: the blind judge
+## measured the first version's spacings at 77/42/75/41 px, "a strictly
+## periodic pair repeated at fixed pitch, mirrored on the left shelf, repeated
+## again on all four shelves". Each shelf now gets its own count, an uneven
+## pitch from a small deterministic sequence (no RNG, so the room is the same
+## on every load), three body heights, an empty stretch, and one bottle lying
+## on its side.
+func _bottle_row(shelf_x: float, width: float, base_y: float, z: float, seed_value: int) -> void:
+	var offsets: Array[float] = [0.0, 0.17, 0.41, 0.52, 0.83, 1.0, 1.3]
+	var heights: Array[float] = [0.24, 0.19, 0.27, 0.21, 0.24, 0.18]
+	var count := 4 + (absi(seed_value) % 3)   # 4..6 on a shelf
+	var start := shelf_x - width * 0.5 + 0.1
+	var usable := width - 0.2
+	for i in count:
+		var t: float = offsets[(i + seed_value) % offsets.size()] / 1.3
+		var x := start + usable * (float(i) / float(count) * 0.55 + t * 0.45)
+		x = clampf(x, start, start + usable)
+		var body_h: float = heights[(i * 2 + seed_value) % heights.size()]
+		var colour := COL_GLASS_GREEN if (i + seed_value) % 3 != 1 else COL_GLASS_AMBER
+		if i == count - 1 and seed_value % 2 == 0:
+			# One on its side, along the shelf.
+			var lying := MeshInstance3D.new()
+			var cyl := CylinderMesh.new()
+			cyl.top_radius = 0.045
+			cyl.bottom_radius = 0.045
+			cyl.height = body_h
+			cyl.radial_segments = 12
+			lying.mesh = cyl
+			lying.material_override = _material(colour)
+			lying.position = Vector3(x, base_y + 0.045, z)
+			lying.rotation.z = PI * 0.5
+			add_child(lying)
+			continue
+		_cylinder(0.045, body_h, Vector3(x, base_y, z), colour)
+		_cylinder(0.018, 0.08, Vector3(x, base_y + body_h, z), colour)
+
+
+## A pewter tankard: a cup and a handle.
+func _tankard(at: Vector3) -> void:
+	_cylinder(0.055, 0.15, at, COL_PEWTER)
+	_box(Vector3(0.025, 0.09, 0.03), at + Vector3(0.07, 0.08, 0.0), COL_PEWTER, false)
+
+
+## A lantern cage hung from the ceiling over one of the room's lights: chain,
+## cap, base ring, four corner posts and the glowing glass between them. The
+## cage's bottom sits 0.2 m ABOVE the light it belongs to, so the omni itself
+## stays outside anything opaque (see `_build_bar_dressing`'s header).
+func _lantern(light_at: Vector3) -> void:
+	var glass_y := light_at.y + 0.36
+	var cap_y := glass_y + 0.15
+	var base_y := glass_y - 0.14
+	var ceiling := 3.0   # the ceiling slab's underside (see `_build_ceiling`)
+	_box(Vector3(0.03, ceiling - cap_y, 0.03), Vector3(light_at.x, (ceiling + cap_y) * 0.5, light_at.z), COL_IRON, false)
+	_box(Vector3(0.26, 0.04, 0.26), Vector3(light_at.x, cap_y, light_at.z), COL_IRON, false)
+	_box(Vector3(0.26, 0.03, 0.26), Vector3(light_at.x, base_y, light_at.z), COL_IRON, false)
+	for cx: float in [-0.115, 0.115]:
+		for cz: float in [-0.115, 0.115]:
+			_box(Vector3(0.025, cap_y - base_y, 0.025),
+				Vector3(light_at.x + cx, glass_y, light_at.z + cz), COL_IRON, false)
+	var glass := MeshInstance3D.new()
+	glass.name = "LanternGlass"
+	var box := BoxMesh.new()
+	box.size = Vector3(0.17, 0.24, 0.17)
+	glass.mesh = box
+	var material := StandardMaterial3D.new()
+	material.albedo_color = COL_LAMP_GLOW
+	material.emission_enabled = true
+	material.emission = COL_LAMP_GLOW
+	material.emission_energy_multiplier = 1.3
+	glass.material_override = material
+	glass.position = Vector3(light_at.x, glass_y, light_at.z)
+	add_child(glass)
+
+
+## A vertical cylinder standing on `base` (its own bottom at `base.y`).
+## Decoration only: nothing here is solid.
+func _cylinder(radius: float, height: float, base: Vector3, colour: Color) -> void:
+	var mesh := MeshInstance3D.new()
+	var cylinder := CylinderMesh.new()
+	cylinder.top_radius = radius
+	cylinder.bottom_radius = radius
+	cylinder.height = height
+	cylinder.radial_segments = 12
+	mesh.mesh = cylinder
+	mesh.material_override = _material(colour)
+	mesh.position = base + Vector3(0.0, height * 0.5, 0.0)
+	add_child(mesh)

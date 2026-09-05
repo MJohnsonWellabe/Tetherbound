@@ -3,6 +3,115 @@
 Final visual acceptance belongs to external ChatGPT review. This file records
 only implementation, test, capture, and handoff state.
 
+## Cloudreach round 7 — 2026-09-05
+
+Pushed checkpoint `644760f26` is a deliberately F10-only summit-arena
+presentation pass, not whole-biome visual acceptance. The real 36 m combat deck,
+southern approach, relay/lee locations, collisions, hazard geometry, combat
+circulation and progression are unchanged. Existing castle/village/Team Tether
+assets now form an uneven visual-only perimeter: varied retained-wall heights,
+four unequal watch towers, asymmetric boiler/machine work bays, taller rear
+machinery, lee standards, banners and narrow west/east relay conduits. No new or
+generated asset, creature, encounter, director, HUD or chapter-runtime work is
+in this checkpoint.
+
+- Canonical evidence is the same twelve actual Windows/NVIDIA Compatibility
+  cameras at 1280x800 in
+  `ralph/reports/CLOUDREACH-ENV-CORRECTION-0904/round7/contact-sheet.png`.
+  Two complete rejected iterations remain local/untracked: a wide runner that
+  read as a red carpet plus a detached pale pylon, then a southern runner that
+  read as an orphaned ladder because its relay sat behind the camera.
+- Final F10 retains the required broad fight centre but replaces the former low,
+  even boundary band with a more legible occupied Team Tether skyline and side
+  staging. The red carpet, pale beacon and foreground ladder are absent. F6's
+  broad dark cliff remains explicitly outside this F10-only scope.
+- Godot check-only and foundation smoke pass. Related Cloudreach coverage passes
+  **37 tests / 1,195 assertions** with zero failures.
+- The final F10 short sample measured **1,486 draws / 5,841,340 primitives**,
+  **+118 draws / +17,276 primitives** against the same Round 6 camera. Its quiet
+  ten-second static interval measured mean **8.289 ms**, p95 **8.406 ms**, p99
+  **8.454 ms**, maximum **8.577 ms**. Arrival/Galefoot static means were
+  **9.830/10.649 ms**. These are GTX 1060 desktop measurements, not ROG Ally or
+  continuous-play acceptance.
+- A fresh code-blind A/B review could not be commissioned: repeated attempts
+  after Round 6 exhausted both direct and child-agent routes with `agent thread
+  limit reached`, and the cap remained occupied by the required continuous lane
+  through Round 7. No verdict is inferred from self-inspection. External
+  ChatGPT/owner visual acceptance remains required.
+
+Exact continuation: preserve the accepted F10 perimeter checkpoint, finish the
+continuous route/finale/reload evidence independently, then treat F6's broad dark
+monolith as a separate bounded visual correction after overlapping world-source
+work is committed. Recapture the same cameras and obtain a fresh external A/B
+judgment when the platform permits a genuinely code-blind reviewer.
+
+## Cloudreach round 6 — 2026-09-05
+
+This is a pushed visual-correction checkpoint, not visual acceptance. It keeps
+the Round 5 palette and physical routes while removing the rendered route-box
+sides, feathering dirt-path endpoints, breaking up settlement lawns with short
+interior planting and connected work wear, and adding larger strata/shelf planes.
+No collision, progression, encounter, Fly, HUD, creature or generated-asset work
+is part of this batch.
+
+- The canonical twelve actual Windows/NVIDIA Compatibility frames are in
+  `ralph/reports/CLOUDREACH-ENV-CORRECTION-0904/round6/contact-sheet.png`.
+  Superseded construction/endpoint captures and raw frames remain local and are
+  not acceptance evidence.
+- The F3 rectangular/arrow-shaped path start and the F5/F9 raised collision-box
+  joins are absent in the final frames. Settlement work patches reach thresholds
+  and shared paths rather than reading only as perimeter decoration.
+- F6 still reads as a dark broad cliff monolith and F10 remains an underdressed,
+  open arena. They are explicit next-pass defects, not hidden by the capture.
+- Godot check-only and foundation smoke pass. Related coverage passes **39 tests /
+  1,201 assertions** with zero failures.
+- Three isolated ten-second static samples at 1280x800 on the local GTX 1060
+  measured mean **8.248-10.672 ms**, p95 **8.390-11.600 ms**, and maximum
+  **8.600-13.241 ms**. Peak geometry across the twelve short view samples was
+  **4,944 draws / 6,947,508 primitives**. This is neither ROG Ally nor continuous-
+  play frame-pacing acceptance.
+- A fresh code-blind Sol review was attempted repeatedly after capture, including
+  from a separate agent hierarchy, but the platform returned `agent thread limit
+  reached` each time. Therefore no A/B verdict is invented or self-awarded. Final
+  visual acceptance remains external ChatGPT/owner work.
+
+Exact continuation: keep the corrected ground joins, then articulate the F6
+approach into readable ledges/recesses and dress F10 as a authored final arena;
+recapture the same cameras and obtain fresh external A/B judgment. The continuous
+live-combat chapter run proceeds independently and must still pass through return
+to Meadows plus disk reload before chapter acceptance.
+
+## Cloudreach round 5 — 2026-09-05
+
+Active resumed owner goal is Cloudreach, excluding final creature art. Branch
+`codex/cloudreach-cliffs` integrates main `590741fe6` through merge `97de9bbf7`;
+no branch-to-main merge. This checkpoint corrects bridge construction, settlement
+base closure and approach visibility, grass-edge continuity, locked-wind
+transparency, and arena/settlement wear. Physical routes and gates are unchanged.
+
+- Same twelve actual Windows/NVIDIA Compatibility views and separate real-input
+  Fly capture are in `ralph/reports/CLOUDREACH-ENV-CORRECTION-0904/round5/`.
+  `_sheet.png` is the sole committed image for this round.
+- Fresh blind Astra: **art-direction A Yes / shipping-game B No**. See
+  `JUDGE-ASTRA.md`; neither final visual acceptance nor a pass against an unseen
+  Cloudreach concept board is claimed. Lawn clearings, hard road boundaries,
+  cliff form/depth, arena staging and inconsistent asset finish remain work.
+- Foundation and actual double-Jump/Fly pass; 39 related tests / 1,201 assertions
+  pass. Meadows world smoke exits 0/OK with only the disclosed known headless
+  alpha material-null error in its distinct ERROR set.
+- Quiet 1280×800 GTX 1060 static means: 8.21–10.15ms; p95: 8.37–10.33ms.
+  Peak: 4,587 draws / 6,928,266 primitives. These are not continuous gameplay or
+  ROG Ally measurements. Wild-roaming cost needs its separate active-site profile.
+- Adjacent mechanics now prove all three shrine vanes/Sora/windlass at original
+  approach offsets, 73 real wild-retention checks and nine actual live-arena
+  captain rounds with movement-driven relays. These bounded fixtures do not
+  replace the uninterrupted chapter replay, which remains in progress.
+
+Exact continuation: finish the uninterrupted shrine/upper-route/finale/aftermath
+and disk reload, profile moving wilds, then resolve the round-5 critic's named
+scene defects with same-camera evidence. Draft PR #44 remains unmerged; CI is
+still running/queued, not accepted.
+
 ## Exit checkpoint — 2026-09-04
 
 - Working branch: `codex/meadows-visual-parity`
@@ -125,3 +234,150 @@ Evidence, sheet and the code-blind verdict:
 - Do not alter the shipped candy/potion geometry open items unless the owner
   explicitly reopens them.
 - ROG Ally performance remains unmeasured in this checkpoint.
+
+## Cloudreach environment corrective pass — 2026-09-04
+
+This is a Cloudreach visual-foundation checkpoint, not a completed VP pass and not final visual
+acceptance. Creatures were deliberately deferred so the environment could be judged on its own.
+
+- Ported the Meadows surface family to Cloudreach procedural geometry: meadow grass, verge, dirt
+  path, and rock scree with world-space triplanar mapping.
+- Added deterministic, chunked, culled MultiMesh grass, flowers, and bushes using the production
+  Meadows procedural meshes across Cloudreach's stacked elevations.
+- Replaced repeated route-support cylinders with continuous irregular cliff ribbons and grounded
+  route landings; added clustered production trees and rocks.
+- Captured six real production-scene gameplay views and measured 139–906 draws and 2.31–4.50 ms
+  frame time on the local GTX 1060 at 1280x720. This is not ROG Ally evidence.
+- Passed the Cloudreach world-data and grass-field selections plus both foundation and full
+  Meadows → Cloudreach → Meadows smoke paths.
+- Code-blind review still returned **No / No**. The next pass must solve the gray slab geology,
+  runway-like routes, weak exposed-crossing/destination compositions, flat palette and lighting,
+  and mechanically uniform vegetation. Creature absence was not counted against the result.
+
+Evidence and the full critique are in `ralph/reports/CLOUDREACH-PHASE2-0904/`. Exact resume:
+reshape the terrain and route composition first, then refine materials/lighting/vegetation and
+recapture the same six views for another external review.
+
+## Cloudreach environment corrective pass 2 — 2026-09-04
+
+This additional checkpoint keeps creatures deferred and is still **not accepted**. Cloudreach now
+uses the Meadows cloud-sky/day look, denser seven-blade procedural grass plus flowers and bushes,
+olive-palette production tree assets, warmer three-band cliff ribbons, narrower paths, and true
+terrain/collision gaps beneath authored bridge spans. The summit stronghold is now an open,
+articulated gate complex rather than a solid block.
+
+Final six-view Windows/OpenGL3 evidence measured **215–756 draws** and **3.05–8.49 ms** per sampled
+frame on the local GTX 1060 at 1280×720. World-data and grass-field unit selections passed, as did
+the foundation smoke, complete Meadows → Cloudreach → Meadows transition smoke, GPU capture, and
+contact-sheet assembly.
+
+The code-blind judge again returned **No / No**. The environment has a clearer suspended-highland
+identity, but still reads as a traversal prototype because it lacks authored lived-in density,
+finished geological/architectural vocabulary, and layered lighting/material/atmospheric depth.
+Exact resume: retain the current grass/trees/sky/real-chasm foundation; replace the remaining
+primitive landforms and landmarks with irregular strata, terraces, built edges/supports,
+human-scale detail clusters, and multiple distance layers; repair the visible seams and summit
+grass/trench intersection; then recapture the same six views for external ChatGPT acceptance.
+
+## Cloudreach irregular-strata corrective pass — 2026-09-04
+
+The procedural cliff body's high and low rings now rise and fall independently around every
+region and satellite crag instead of forming ruler-flat horizontal bands. Walkable crowns remain
+level, preserving traversal and collision. Foundation smoke and the six-view GPU capture passed;
+the final local GTX 1060 samples measured **215–756 draws** and **2.86–8.44 ms** at 1280×720.
+Creatures remain deferred. The new code-blind result is **Meadows art direction: No / Palworld
+game category: Yes**. The category bar is a genuine improvement; the art-direction failure means
+this remains an evidence-backed visual correction, not Phase 2 acceptance.
+
+## Cloudreach authored-roadside pass — 2026-09-04
+
+Astra added eight distinct route-side places using 59 installed, bounds-normalized production
+rocks, shrubs, flowers, paving remnants, fences, wagons, crates, and barrels. Meadows modular
+cottages now replace the primitive settlement house boxes. All details are deliberately off the
+controller route centre, reject unsupported/stacked surfaces, and use distance culling. Creatures
+remain deferred.
+
+Foundation smoke, world-data tests, the full Meadows → Cloudreach → Meadows transition smoke,
+Windows GPU capture, and contact-sheet assembly pass. The local GTX 1060 evidence measured
+**252–915 draws** and **3.14–8.51 ms** at 1280×720. Blind review
+remains **Meadows art direction No / Palworld game category Yes**: the authored pockets improve
+human-scale grounding, but broad empty platforms, simple cliff faces, pale voids, and repeated
+straight corridors still dominate. Next: larger middle-distance clusters, terraces/recesses,
+constructed route edges, atmospheric layers, and visible artifact repair—not more uniform scatter.
+
+## Cloudreach integrated chapter / round 3 checkpoint — 2026-09-05
+
+The chapter runtime now mounts the main story, cast, trainers, resources, camps,
+Fly trial and temporary non-owned carrier, realm saves/building/recovery, finale,
+and persistent side-world payoffs. This is an implementation checkpoint, not
+chapter acceptance. Full continuous evidence currently reaches Maela; the moving
+challenge prompt is under investigation. Fly, upper routes and the finale remain
+unproven as one uninterrupted path. Separate production payoff checks pass 57/57;
+the production finale regression passes 62/62. Trainer-only powers 24/28/32/36
+produced 28/28 real-input wins plus a real wipe/recovery/retry; finale hazards were
+not included in that balance probe.
+
+Round 3 real production captures are in
+`ralph/reports/CLOUDREACH-ENV-CORRECTION-0904/round3/`. Fresh Astra judgment is
+**Meadows reference No / Palworld reference No** (`JUDGE-ASTRA.md`): repetitive pale
+cliffs, rigid path borders, bare ground and sparse landmark settings remain.
+The causeway frame is obstructed; the airborne and payoff capture harness fixes
+are prepared but have not yet produced acceptable replacement evidence.
+
+Ten views at 1280×800 on Windows/GTX 1060 measured a maximum 4,293 draws and
+7.60M primitives. Three ten-second static samples measured means 8.59–11.26 ms
+and p95 8.74–11.47 ms. These are local static-view results, not Ally or continuous
+frame-pacing acceptance. Creatures remain deferred; final visual acceptance is
+external ChatGPT review.
+
+Resume: preserve this checkpoint, merge `origin/main` 2cd711eb1 (new Meadows
+progression/UI/combat/companion/VFX/portrait/route work), reconcile shared APIs,
+run regression checks, finish the continuous chapter and corrected real Fly/
+payoff evidence, then implement the next geometry/material/composition pass.
+
+## Cloudreach round 4 — 2026-09-05
+
+Main `2cd711eb1` is integrated in pushed checkpoint `1f1f23652`. Round 4 joins
+the turf/material family, warms the cliff stone, replaces distant tabletop
+masses with installed irregular rock geometry, and develops settlement,
+shrine and summit edges. Real twelve-frame evidence and the original blind
+verdict are in `ralph/reports/CLOUDREACH-ENV-CORRECTION-0904/round4/`.
+
+Fresh Astra verdict: **art direction Yes / Palworld presentation No**. Final
+external ChatGPT acceptance remains open; creatures remain deferred. Terrain
+joins, uniform ground bands and unfinished apparatus still need correction.
+The upper watch's new position also obscures the east arrival and must move.
+
+Production foundation passes; five related unit files pass 37 tests / 1,195
+assertions. Real-input airborne Fly capture passes. Five rendered side-payoff
+views pass 63/63 checks, and live captain/relay/save checks pass 64/64. A separate
+five-member near-level reward fixture passes its 65 functional checks but
+reveals a genuine banner/party-rail overlap; layout correction is in progress.
+
+Local Windows / GTX 1060 / Compatibility / 1280×800 sustained static samples
+measure mean 8.20–11.70 ms, p95 8.34–15.18 ms, maximum 15.81 ms. Maximum geometry
+across twelve views is 4,416 draws / 7.486M primitives. The arrival tail regresses
+against round 3; these are neither Ally nor continuous-play acceptance figures.
+Failed first launches and concurrent-load measurements remain disclosed in
+`round4/IMPLEMENTATION.md` rather than being replaced by successful retries.
+
+Resume: finish the live five-member HUD regression and continuous flight-perch
+approach/trial, then address the blind judge's terrain contacts, asymmetric
+route vegetation, bell/veil construction, watch alignment and arena surface
+grouping. Preserve the passing palette and real collision/progression gates.
+
+### Full-team HUD follow-up
+
+The simultaneous five-level-up receipt no longer covers the party rail or
+controlled creature. The same production presenter retains all five actual
+stat/XP results, exact payout and relay instruction in a tunable upper-right
+card. Actual 1280×800 captain/relay/save capture passes 74/74; the expanded
+HUD lifecycle passes 70/70 and related units pass 43 tests / 159 assertions.
+Fresh code-blind review finds no blocking visible HUD defect, with receipt
+density, relay-object occlusion and faint Energy track recorded for refinement.
+
+`ralph/reports/CLOUDREACH-HUD-0905/` holds the verdict and one contact sheet.
+Its four arena frames return A No / B Yes; this narrower sample does not
+replace the twelve-view round-4 result or accept the arena. Short live means
+24.12–28.34 ms share the host with continuous diagnosis and are not a sustained
+performance baseline. Round 4 itself is pushed as `ca7d87113`; round 5 is active.

@@ -1,0 +1,145 @@
+{
+  "_comment": "Cloudreach preparation reuses existing crafting, reinforcement, food, recovery and camp-material mechanics. Arrival unlocks these recipes; they add no Meadows requirement. Weather immunity, a dedicated rope bridge kit and camp service upgrades are deferred until supported by a real consumer. Values are tunable.",
+  "recipes": {
+    "cloudreach_camp_boards": {
+      "name": "Heartwood Camp Boards",
+      "realm_id": "cloudreach",
+      "unlocked_by": "cloudreach_chapter_started",
+      "cost": [
+        {
+          "id": "windworn_heartwood",
+          "n": 2
+        }
+      ],
+      "blurb": "Cut heartwood into six wood for familiar tents, bedrolls and camp repairs.",
+      "output": {
+        "id": "wood",
+        "n": 6
+      }
+    },
+    "cloudreach_camp_cordage": {
+      "name": "Gale Camp Cordage",
+      "realm_id": "cloudreach",
+      "unlocked_by": "cloudreach_chapter_started",
+      "cost": [
+        {
+          "id": "gale_fiber",
+          "n": 2
+        }
+      ],
+      "blurb": "Separate cliff strands into six fiber for tent ties and bedding.",
+      "output": {
+        "id": "fiber",
+        "n": 6
+      }
+    },
+    "cloudreach_perch_padding": {
+      "name": "Skyplume Camp Padding",
+      "realm_id": "cloudreach",
+      "unlocked_by": "cloudreach_chapter_started",
+      "cost": [
+        {
+          "id": "skyplume",
+          "n": 1
+        },
+        {
+          "id": "gale_fiber",
+          "n": 1
+        }
+      ],
+      "blurb": "Bind a shed plume into eight fiber for ordinary camp bedding.",
+      "output": {
+        "id": "fiber",
+        "n": 8
+      }
+    },
+    "cloudreach_axe_bracing": {
+      "name": "Cliffglass Bracing (axe)",
+      "realm_id": "cloudreach",
+      "unlocked_by": "cloudreach_chapter_started",
+      "cost": [
+        {
+          "id": "windworn_heartwood",
+          "n": 2
+        },
+        {
+          "id": "cliffglass_ore",
+          "n": 2
+        },
+        {
+          "id": "gale_fiber",
+          "n": 1
+        }
+      ],
+      "blurb": "Brace your existing tool for 35 more maximum durability.",
+      "reinforce": {
+        "tool": "axe",
+        "bonus": 35
+      }
+    },
+    "cloudreach_pickaxe_bracing": {
+      "name": "Cliffglass Bracing (pickaxe)",
+      "realm_id": "cloudreach",
+      "unlocked_by": "cloudreach_chapter_started",
+      "cost": [
+        {
+          "id": "windworn_heartwood",
+          "n": 2
+        },
+        {
+          "id": "cliffglass_ore",
+          "n": 2
+        },
+        {
+          "id": "gale_fiber",
+          "n": 1
+        }
+      ],
+      "blurb": "Brace your existing tool for 35 more maximum durability.",
+      "reinforce": {
+        "tool": "pickaxe",
+        "bonus": 35
+      }
+    },
+    "cloudreach_recovery_tonic": {
+      "name": "Sunleaf Ridge Tonic",
+      "realm_id": "cloudreach",
+      "unlocked_by": "cloudreach_chapter_started",
+      "cost": [
+        {
+          "id": "sunleaf",
+          "n": 2
+        },
+        {
+          "id": "cloudberry",
+          "n": 2
+        }
+      ],
+      "blurb": "Brew the familiar 80 HP Ridge Tonic. Does not revive a fainted creature.",
+      "output": {
+        "id": "potion_large",
+        "n": 1
+      }
+    },
+    "cloudreach_trail_preserve": {
+      "name": "Cloudberry Trail Preserve",
+      "realm_id": "cloudreach",
+      "unlocked_by": "cloudreach_chapter_started",
+      "cost": [
+        {
+          "id": "cloudberry",
+          "n": 3
+        },
+        {
+          "id": "sunleaf",
+          "n": 1
+        }
+      ],
+      "blurb": "Prepare a sustaining meal for stamina recovery, or share it with your team.",
+      "output": {
+        "id": "cloudreach_trail_preserve",
+        "n": 1
+      }
+    }
+  }
+}

@@ -145,8 +145,9 @@
   },
   "telegraph": {
     "_comment": "R9.4-remainder-9-combat: the wind-up's own visual event. A blind critic covering the HUD's '! incoming' text found the frame indistinguishable from ordinary standing \u2014 this is a pulsing warning ring at the opponent's feet for the exact length of its wind-up beat, so the read survives with the text covered. ALL tunable presentation; nothing here touches the AI's actual telegraph duration (enemy.telegraph).",
+    "_why_colour_0905": "N07-VFX-POLISH (D87): #ff5a3c (hue 9, sat 0.76) sat inside the band palette.json reserves for Team Tether (#6b2a20 hue 8 / #7a2430 hue 352, both sat 0.70) and W09-VFX's blind judge read it, at partial opacity over fur and grass, as 'a dull oxblood torus' on the FRIENDLY creature. Round 1 of this lane tried the HUD's own WARNING amber (#ffbe47, hue 39); a blind judge found it three degrees from the reward gold the orb band, the catch sparkle and the level-up rings all use, at a value inside the sunlit-grass band -- 'a dropped coin', a buff, not a warning. This is magenta on purpose: hue 308, the complement of the meadow's green, a colour nothing in the world or the reward layer carries, 44 degrees of hue from the nearest painted oxblood and 31 from the palette's near-black tether_oxblood, and the genre's established colour for an attack you cannot block and must MOVE off -- which, with no shields in this game, is every wind-up. The 'on the friendly' half of that finding was telegraph_glow.gd drawing without a depth test through the ally's back; fixed there. Colour only here; radius untouched. tests/test_telegraph_glow.gd holds the ring at least 25 degrees of hue from every reserved oxblood.",
     "enabled": true,
-    "colour": "#ff5a3c",
+    "colour": "#ff40e6",
     "radius": 1.1
   },
   "effect_banner": {

@@ -65,6 +65,13 @@ func build(player: Node3D, config_path: String = CONFIG_PATH) -> void:
 		return
 
 	var listed: Variant = (parsed as Dictionary).get("villagers", (parsed as Dictionary).get("people", []))
+	build_specs(player, listed if listed is Array else [])
+
+
+## Chapter adapters can translate their authored cast into the existing NPC
+## contract without writing a second NPC placer or duplicating the cast data.
+func build_specs(player: Node3D, listed: Array) -> void:
+	_player = player
 	if listed is Array:
 		for entry: Variant in (listed as Array):
 			if entry is Dictionary:
@@ -194,8 +201,9 @@ func _spawn(spec: Dictionary, player: Node3D) -> void:
 
 	var at: Array = spec.get("position", [0.0, 0.0])
 	var x := float(at[0]) if at.size() > 0 else 0.0
-	var z := float(at[1]) if at.size() > 1 else 0.0
-	if not bool(npc.call("stand_at", x, z)):
+	var z := float(at[2]) if at.size() >= 3 else (float(at[1]) if at.size() > 1 else 0.0)
+	var preferred_y := float(at[1]) if at.size() >= 3 else NAN
+	if not bool(npc.call("stand_at", x, z, preferred_y)):
 		push_error("no ground under villager '%s' at %.0f, %.0f" % [display_name, x, z])
 		return
 	npc.rotation.y = deg_to_rad(float(spec.get("facing_deg", 0.0)))

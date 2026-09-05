@@ -348,7 +348,9 @@ func _build_ribbon(mesh: ImmediateMesh, points: Array[Vector3], eye: Vector3,
 	var total: int = points.size() - 1
 	if total < 1:
 		return
-	mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
+	# A near-eye or collinear trajectory can contain multiple points while
+	# producing no ribbon triangles. Begin only once there is a visible dash.
+	var begun := false
 	for i in total:
 		var a: Vector3 = points[i]
 		var b: Vector3 = a.lerp(points[i + 1], DASH_COVERAGE)
@@ -375,11 +377,15 @@ func _build_ribbon(mesh: ImmediateMesh, points: Array[Vector3], eye: Vector3,
 		var a1 := a + side_a * half_a
 		var b0 := b - side_b * half_b
 		var b1 := b + side_b * half_b
+		if not begun:
+			mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
+			begun = true
 		for vertex: Array in [[a0, near_colour], [b0, far_colour], [b1, far_colour],
 				[a0, near_colour], [b1, far_colour], [a1, near_colour]]:
 			mesh.surface_set_color(vertex[1])
 			mesh.surface_add_vertex(vertex[0])
-	mesh.surface_end()
+	if begun:
+		mesh.surface_end()
 
 
 ## Half-width at one point on the arc: a constant angle from the eye, flared
@@ -405,6 +411,10 @@ func hide_arc() -> void:
 func _ground_height(at: Vector3) -> float:
 	var node: Node = get_parent()
 	while node != null:
+		# Stacked realms must terminate against the floor near the flying orb,
+		# not an unrelated deck hundreds of metres above its trajectory.
+		if node.has_method("ground_height_near"):
+			return float(node.call("ground_height_near", at))
 		if node.has_method("ground_height_at"):
 			return float(node.call("ground_height_at", at.x, at.z))
 		node = node.get_parent()

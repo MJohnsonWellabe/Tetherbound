@@ -35,6 +35,7 @@ const STORAGE_CONTAINER := preload("res://scripts/build/storage_container.gd")
 const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
 const BUILD_DOOR := preload("res://scripts/build/build_door.gd")
 const HOME_PROGRESS := preload("res://scripts/build/home_progress.gd")
+const WORLD_RECORDS := preload("res://scripts/world/realm_world_records.gd")
 const BUILD_PIECE := preload("res://scripts/build/build_piece.gd")
 const BUILD_GRID := preload("res://scripts/build/build_grid.gd")
 const BUILD_SNAP := preload("res://scripts/build/build_snap_contract.gd")
@@ -431,7 +432,7 @@ func _show_ghost(game: Node, armed: String) -> void:
 	else:
 		_ghost.call("tint_ghost", _ghost_ok)
 
-	var buildings: Array = game.get("placed_buildings") as Array
+	var buildings: Array = WORLD_RECORDS.for_realm(game.get("placed_buildings"), WORLD_RECORDS.active(game))
 	_snap_candidates = BUILD_GRID.neighbours_in_range(
 		raw_spot, BUILD_SNAP.candidate_positions(armed, buildings))
 	if _snap_candidates.is_empty():
@@ -484,10 +485,13 @@ func preview_placement(game: Node, armed: String, raw_spot: Vector3,
 	if game != null:
 		var placed: Variant = game.get("placed_buildings")
 		if placed is Array:
-			buildings = (placed as Array).duplicate(true)
+			buildings = WORLD_RECORDS.for_realm(placed, WORLD_RECORDS.active(game)).duplicate(true)
 	for record: Variant in planned_records:
 		if record is Dictionary:
-			buildings.append((record as Dictionary).duplicate(true))
+			var planned: Dictionary = record.duplicate(true)
+			if not planned.has("realm"):
+				planned["realm"] = WORLD_RECORDS.active(game)
+			buildings.append(planned)
 	return evaluate_placement(game, armed, raw_spot, buildings, Callable(self, "_ground_height"))
 
 
@@ -496,6 +500,7 @@ func preview_placement(game: Node, armed: String, raw_spot: Vector3,
 ## lockstep with the calculation that `_show_ghost` consumes.
 static func evaluate_placement(game: Node, armed: String, raw_spot: Vector3,
 		buildings: Array, ground_height: Callable) -> Dictionary:
+	buildings = WORLD_RECORDS.for_realm(buildings, WORLD_RECORDS.active(game))
 	var ground := float(ground_height.call(raw_spot))
 	if is_nan(ground):
 		return {
@@ -647,6 +652,7 @@ func _spawn_building(game: Node, id: String, yaw_deg: float = 0.0, index: int = 
 			placed.add_child(craft_prompt)
 	placed.rotation.y = deg_to_rad(yaw_deg)
 	placed.set_meta(BUILDING_ID_META, id)
+	placed.set_meta("realm", WORLD_RECORDS.active(game))
 	if index >= 0:
 		placed.set_meta(PLACED_INDEX_META, index)
 		if id == "creature_bed" and placed.has_method("set_build_index"):
@@ -719,6 +725,9 @@ func restore_from_game(game: Node) -> void:
 	if game == null:
 		return
 	for node in get_tree().get_nodes_in_group(PLACED_GROUP):
+		if not get_parent().is_ancestor_of(node):
+			continue
+		node.get_parent().remove_child(node)
 		node.queue_free()
 	var buildings: Array = game.get("placed_buildings") as Array
 	for i in buildings.size():
@@ -726,6 +735,8 @@ func restore_from_game(game: Node) -> void:
 		if typeof(entry) != TYPE_DICTIONARY:
 			continue
 		var record := entry as Dictionary
+		if not WORLD_RECORDS.belongs(record, WORLD_RECORDS.active(game)) or bool(record.get("removed", false)):
+			continue
 		var id := str(record.get("id", ""))
 		var position: Array = record.get("position", [])
 		if id.is_empty() or position.size() != 3:
@@ -769,6 +780,9 @@ func sync_state_to_game(game: Node) -> void:
 		var index := int(node.get_meta(PLACED_INDEX_META, -1))
 		if index < 0 or index >= buildings.size():
 			continue
+		if not WORLD_RECORDS.belongs(buildings[index], WORLD_RECORDS.active(game)) \
+				or str(node.get_meta("realm", "meadows")) != WORLD_RECORDS.active(game):
+			continue
 		var state: RefCounted = node.get("state")
 		if state == null:
 			continue
@@ -787,6 +801,9 @@ func dismantle_piece(game: Node, target: Node3D) -> bool:
 	if index < 0 or index >= buildings.size():
 		return false
 	var record := buildings[index] as Dictionary
+	if not WORLD_RECORDS.belongs(record, WORLD_RECORDS.active(game)) \
+			or str(target.get_meta("realm", "meadows")) != WORLD_RECORDS.active(game):
+		return false
 	var id := str(record.get("id", ""))
 	if id.is_empty() or str(target.get_meta(BUILDING_ID_META, "")) != id:
 		return false
@@ -971,6 +988,8 @@ func _drop_ghost() -> void:
 func _ground_height(at: Vector3) -> float:
 	var node: Node = get_parent()
 	while node != null:
+		if node.has_method("ground_height_near"):
+			return float(node.call("ground_height_near", at))
 		if node.has_method("ground_height_at"):
 			return float(node.call("ground_height_at", at.x, at.z))
 		node = node.get_parent()

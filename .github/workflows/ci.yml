@@ -69,16 +69,26 @@ name: CI
 
 on:
   push:
-    # `ralph/**` is here because it is the loop's ship action. Ralph's sessions
-    # cannot open a pull request, so pushing the branch is the only signal they
-    # can send, and ralph-merge.yml only lands a branch whose CI went green.
-    # Leaving it out meant CI never ran on those branches at all, so the merge
-    # workflow sat waiting on a success that could not arrive -- the loop would
-    # have pushed work forever and shipped none of it.
-    # claude/** dropped 2026-09-03: orchestrator branches land through a pull
-    # request, whose pull_request event already runs CI once; the push trigger
-    # ran every job a second time per push and doubled the queue the lanes wait in.
-    branches: [main, 'ralph/**']
+    # `ralph/**` dropped 2026-09-05 (owner: "the Ralph process isn't even
+    # running anymore so just get rid of that"), for the same reason `claude/**`
+    # went on 2026-09-03 and with the same effect: a branch that also has a pull
+    # request fired BOTH events on every push and ran the whole ~58-job matrix
+    # twice on one commit, doubling the queue everything else waits in. The
+    # `concurrency` group below cannot dedupe those two, because it keys on
+    # `github.ref` and the same commit arrives as `refs/heads/<branch>` from the
+    # push and `refs/pull/<n>/merge` from the pull request.
+    #
+    # Why it was here: Ralph's lane sessions could not open a pull request, so
+    # pushing was their only signal, and `ralph-merge.yml` only lands a branch
+    # whose CI went green -- without the trigger that workflow waited on a
+    # success that could never arrive. That fleet is no longer running, and work
+    # now lands through pull requests, whose `pull_request` event below already
+    # runs CI exactly once.
+    #
+    # If a Ralph-style loop is ever restarted, restore `'ralph/**'` here AND
+    # give the concurrency group a key both events share (the head SHA), or the
+    # double-run comes back for any lane branch that also opens a PR.
+    branches: [main]
   pull_request:
   workflow_dispatch:
 

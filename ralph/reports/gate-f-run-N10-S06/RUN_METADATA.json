@@ -1,0 +1,18 @@
+{
+  "lanes": {
+    "logic": {
+      "display_server": "headless (--headless, no rendering driver)"
+    }
+  },
+  "suite_state_at_freeze": {
+    "reverified_in_container": false,
+    "result": "NOT VERIFIED BY THIS RUNNER.",
+    "how": "tools/gate_f/run_segment.sh wrote this record at launch and does not run the unit suite (~28 minutes). Whoever froze this candidate should replace this block with a real result before the run is read as evidence.",
+    "_comment": "Protocol section A.4 makes a green suite a precondition of the run rather than a finding of it, and says the field exists so Phase B reads the actual state rather than an implied green. An honest 'not verified' is the actual state when a runner writes the record."
+  },
+  "_written_by": "tools/gate_f/run_segment.sh",
+  "candidate_sha": "1ece62aaa96e77ad7595e930bd18ff9f3f2d7d88",
+  "run_dir": "ralph/reports/gate-f-run-N10-S06",
+  "godot_build": "4.7.stable.official.5b4e0cb0f",
+  "frozen_at_utc": "2026-09-05T15:24:14Z"
+}

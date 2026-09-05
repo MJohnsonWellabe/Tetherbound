@@ -1051,6 +1051,14 @@ func _cover_mesh(kind: String) -> ArrayMesh:
 			return _bush_mesh()
 
 
+## Shared mesh contract for stacked/non-Terrain3D surfaces. Cloudreach cannot
+## run this node's heightmap shader because several cliff plates may occupy one
+## XZ coordinate, but it must still use the production Meadows silhouettes.
+## Keeping this narrow public factory prevents a second grass/flower art style.
+func surface_cover_mesh(kind: String) -> ArrayMesh:
+	return _cover_mesh(kind)
+
+
 ## A small bush: leaves carried on branches, not floating in a dome.
 ##
 ## The owner's words on the previous version were the whole brief: "they can't
@@ -1517,6 +1525,11 @@ func _tuft_mesh(blades: int, segments: int, keep: int = -1) -> ArrayMesh:
 	var mesh := ArrayMesh.new()
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
 	return mesh
+
+
+## Public companion to `surface_cover_mesh`; see that method's contract.
+func surface_tuft_mesh(blades: int = 4, segments: int = 3) -> ArrayMesh:
+	return _tuft_mesh(blades, segments)
 
 
 func _apply_config(cfg: Dictionary) -> void:

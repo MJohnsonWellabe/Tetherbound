@@ -871,6 +871,9 @@ var _objective_eyebrow_label: Label = null
 ## no objective left to track. See that function's own comment.
 var _objective_block: Control = null
 var _objective_last_text := ""
+var _world_presentation_mode := "exploration"
+var _presentation_suppressed: Dictionary = {}
+const HUD_PRESENTATION := preload("res://scripts/ui/hud_presentation_policy.gd")
 ## The block's backing panel. Held as a field because it is the visible edge --
 ## `_update_objective()`'s own comment already notes that the panel, not the
 ## text, is what the player sees -- and `_layout_objective_block()` has to
@@ -902,6 +905,12 @@ var _moment_detail: Label = null
 var _moment_also: Label = null
 var _moment_queue: Array = []
 var _moment_feed_seq: int = 0
+var _moment_feed_epoch: int = -1
+var _moment_events: Array[Dictionary] = []
+var _moment_pause_started := -1.0
+var _moment_suspended := false
+var _recent_xp_awards: Dictionary = {}
+var _progression_was_fighting := false
 var _moment_until := 0.0
 var _moment_shown_at := 0.0
 var _moment_cooldown_until := 0.0
@@ -2912,13 +2921,10 @@ func _update_region_banner() -> void:
 
 # --- the progression Moment banner (PROGRESSION-VISIBLE, prompt 73 §2.2) ------------
 
-## Top-centre, under `_build_region_banner()`'s slot, sized from
-## data/config/progression_feedback.json's `banner` block. Built here rather
-## than in the .tscn like every other card on this HUD. Two Labels in a
-## plate: the title ("Tup reached Lv 8") in the heading tier and the detail
-## ("+4 HP · +1 ATK · +1 DEF · evolution level reached") in the label tier,
-## plus an "also" line for a second moment collapsed into the same plate.
+## One passive progression card, sized from the feedback config and the live
+## canvas. A title and payout sit above compact per-creature growth entries.
 func _build_moment_banner() -> void:
+	add_to_group("progression_feedback_presenter")
 	var cfg: Dictionary = PROGRESSION_FEED.config().get("banner", {})
 	var width := float(cfg.get("width", 900))
 	_moment_banner = PanelContainer.new()
@@ -2942,21 +2948,24 @@ func _build_moment_banner() -> void:
 
 	_moment_title = Label.new()
 	_moment_title.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_moment_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_moment_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	_moment_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_moment_title.add_theme_font_size_override("font_size", UITokens.FONT_HEADING)
 	_moment_title.add_theme_color_override("font_color", UITokens.WARNING)
 	column.add_child(_moment_title)
 
 	_moment_detail = Label.new()
 	_moment_detail.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_moment_detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_moment_detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	_moment_detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_moment_detail.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
 	_moment_detail.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 	column.add_child(_moment_detail)
 
 	_moment_also = Label.new()
 	_moment_also.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_moment_also.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_moment_also.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	_moment_also.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	# FONT_TINY (19) measured ~11px on the judge's 1280x800 ruler and was
 	# called too small for a handheld; the also-line carries a real event
 	# name, so it sits in the label tier with the rest of the readable HUD.
@@ -2967,36 +2976,30 @@ func _build_moment_banner() -> void:
 	UITokens.make_text_legible(_moment_banner)
 	# Present, not history: a HUD mounted after a fight does not replay it.
 	_moment_feed_seq = PROGRESSION_FEED.latest_seq()
+	_moment_feed_epoch = PROGRESSION_FEED.epoch()
 
 
-## The banner's slot, clamped inside the safe area on whatever canvas is
-## actually rendering (1080 tall authored, 1200 on the Ally): never above
-## `safe_area_fraction` of the height, and never on top of the two cards that
-## already own this top-centre lane.
-##
-## BLIND-JUDGE ROUND 1: the first version cleared only the region banner's
-## slot, and the objective HINT CARD sits directly under that
-## (`_build_objective_hint_card()`, `_region_banner_bottom() +
-## OBJECTIVE_HINT_CARD_GAP_UNDER_BANNER`) and grows downward with its own
-## wrapped text. So a Moment landing while a hint was up drew straight
-## through it -- the judge read "He is waiting at the table downstairs" and
-## the banner headline occupying the same pixels, and called it the worst
-## defect in the set. The card's real bottom is measured here, live, rather
-## than assumed from its authored offset, because its height depends on how
-## many lines the hint wrapped to.
+## The reward has a right-hand lane inside the safe area. The full-party
+## captain capture exposed the old centred plate crossing both the large
+## relay roster and the directly piloted creature. The normal rail uses the
+## same lane; task/location/minimap cards yield through presentation policy.
 func _position_moment_banner() -> void:
 	if _moment_banner == null:
 		return
 	var cfg: Dictionary = PROGRESSION_FEED.config().get("banner", {})
-	var canvas_h: float = _root.size.y if _root != null and _root.size.y > 0.0 else 1080.0
-	var safe := canvas_h * float(cfg.get("safe_area_fraction", 0.05))
-	var floor_y := maxf(safe, _region_banner_bottom() + UITokens.GAP)
-	if _objective_hint_card != null and _objective_hint_card.visible:
-		floor_y = maxf(floor_y, _objective_hint_card.position.y + _objective_hint_card.size.y + UITokens.GAP)
-	var top := maxf(float(cfg.get("top", 184)), floor_y)
+	var canvas := _root.size if _root != null and _root.size.x > 0.0 else Vector2(1920, 1080)
+	var safe := canvas * float(cfg.get("safe_area_fraction", 0.05))
+	# The full-team receipt must leave the creature and the enlarged relay roster
+	# clear. Its own right-hand lane also works with the normal exploration rail.
+	var width := minf(float(cfg.get("width", 900)), canvas.x * float(cfg.get("side_width_fraction", 0.31)))
+	var right := canvas.x - safe.x
+	_moment_banner.anchor_left = 0.0
+	_moment_banner.anchor_right = 0.0
+	_moment_banner.offset_left = right - width
+	_moment_banner.offset_right = right
 	var height := float(cfg.get("height", 92))
-	_moment_banner.offset_top = top
-	_moment_banner.offset_bottom = top + height
+	_moment_banner.offset_top = safe.y
+	_moment_banner.offset_bottom = safe.y + height
 
 
 ## Poll the feed for Moments, queue them, and show them when the screen is
@@ -3007,52 +3010,70 @@ func _position_moment_banner() -> void:
 func _update_moment_banner() -> void:
 	if _moment_banner == null:
 		return
+	if _moment_feed_epoch != PROGRESSION_FEED.epoch():
+		_moment_feed_epoch = PROGRESSION_FEED.epoch()
+		_moment_feed_seq = 0
+		_moment_queue.clear()
+		_moment_events.clear()
+		_recent_xp_awards.clear()
+		_last_moment.clear()
+		_moment_banner.hide()
+		_moment_until = 0.0
+		_moment_cooldown_until = 0.0
+		_moment_pause_started = -1.0
+		_moment_suspended = false
+		_moment_shown_count = 0
+		_party_strip_last_feed_revision = -999
+
+	var fighting := _progression_combat_is_running()
+	if fighting and not _progression_was_fighting:
+		_recent_xp_awards.clear()
+	_progression_was_fighting = fighting
 	var newest := PROGRESSION_FEED.latest_seq()
 	if newest != _moment_feed_seq:
 		for raw: Variant in PROGRESSION_FEED.peek_since(_moment_feed_seq):
-			var event := raw as Dictionary
+			var event: Dictionary = (raw as Dictionary).duplicate(true)
+			if str(event.get("kind", "")) == "xp_gained":
+				var id := int(event.get("creature_id", 0))
+				var accumulated := int(_recent_xp_awards.get(id, {}).get("amount", 0))
+				_recent_xp_awards[id] = event.duplicate()
+				_recent_xp_awards[id]["amount"] = accumulated + int(event.get("amount", 0))
+			if str(event.get("kind", "")) == "reward_summary":
+				event["reward_xp"] = _reward_xp_text()
+				event["reward_xp_events"] = _recent_xp_awards.duplicate(true)
+				_recent_xp_awards.clear()
 			if PROGRESSION_FEED.is_moment(event):
 				_moment_queue.append(event)
 		_moment_feed_seq = newest
 
 	var now := Time.get_ticks_msec() / 1000.0
-	if _moment_banner.visible:
-		# The hint card can appear, grow or go away while the banner is up.
-		_position_moment_banner()
-	if _moment_banner.visible and now >= _moment_until:
-		_moment_banner.visible = false
-		_moment_cooldown_until = now + PROGRESSION_FEED.seconds("moment_cooldown_seconds", 0.4)
-
-	if _moment_queue.is_empty():
+	if not visible or fighting or _world_presentation_mode == "combat" or _bottom_dock_should_yield() or _story_modal_is_open():
+		_pause_moment_banner(now)
 		return
-	if _combat_is_running() or _story_modal_is_open():
+	if _moment_pause_started >= 0.0:
+		var paused_for := now - _moment_pause_started
+		_moment_until += paused_for
+		_moment_shown_at += paused_for
+		_moment_cooldown_until += paused_for
+		_moment_banner.visible = _moment_suspended
+		_moment_suspended = false
+		_moment_pause_started = -1.0
+
+	if _moment_banner.visible and now >= _moment_until:
+		_moment_banner.hide()
+		_moment_events.clear()
+		_moment_cooldown_until = now + PROGRESSION_FEED.seconds("moment_cooldown_seconds", 0.4)
+	if _moment_banner.visible:
+		_position_moment_banner()
+	if _moment_queue.is_empty():
 		return
 
 	var collapse := PROGRESSION_FEED.seconds("moment_collapse_seconds", 5.0)
 	if _moment_banner.visible and now - _moment_shown_at < collapse:
-		# The owner's rule on noise: a second moment inside the window joins
-		# the plate that is already up instead of queueing a second one.
 		var event: Dictionary = _moment_queue.pop_front()
-		var text: Dictionary = PROGRESSION_FEED.moment_text(event)
-		var also := str(text.get("title", ""))
-		# BLIND-JUDGE ROUNDS 1 AND 2, both raised it: whichever moment landed
-		# FIRST owned the headline, so a level-up arriving a beat after a bond
-		# node was relegated to the smallest, dimmest line on the plate --
-		# "the level-up should not be the thing hidden in tier three". A
-		# level-up outranks a bond node for the headline (the directive asks
-		# for it to be "a noticeable audiovisual event"); the one it displaces
-		# moves down to the also-line rather than being dropped.
-		if str(event.get("kind", "")) == "level_up" and str(_last_moment.get("kind", "")) != "level_up":
-			_dress_moment_banner("level_up")
-			var displaced := _moment_title.text
-			_moment_title.text = str(text.get("title", ""))
-			_moment_detail.text = str(text.get("detail", ""))
-			_moment_detail.visible = not _moment_detail.text.is_empty()
-			also = displaced
-		_moment_also.text = also if _moment_also.text.is_empty() or not _moment_also.visible \
-				else "%s   ·   %s" % [_moment_also.text, also]
-		_moment_also.visible = true
-		_moment_until = now + PROGRESSION_FEED.seconds("moment_seconds", 3.0)
+		_moment_events.append(event)
+		_render_moment_events()
+		_moment_until = now + _moment_hold_seconds()
 		_last_moment = event
 		_moment_shown_count += 1
 		_play_moment_cue(event)
@@ -3061,20 +3082,130 @@ func _update_moment_banner() -> void:
 		return
 
 	var next: Dictionary = _moment_queue.pop_front()
-	var lines: Dictionary = PROGRESSION_FEED.moment_text(next)
-	_dress_moment_banner(str(next.get("kind", "")))
-	_moment_title.text = str(lines.get("title", ""))
-	_moment_detail.text = str(lines.get("detail", ""))
-	_moment_detail.visible = not _moment_detail.text.is_empty()
-	_moment_also.text = ""
-	_moment_also.visible = false
-	_position_moment_banner()
-	_moment_banner.visible = true
+	_moment_events.assign([next])
+	_render_moment_events()
+	_moment_banner.show()
 	_moment_shown_at = now
-	_moment_until = now + PROGRESSION_FEED.seconds("moment_seconds", 3.0)
+	_moment_until = now + _moment_hold_seconds()
 	_last_moment = next
 	_moment_shown_count += 1
 	_play_moment_cue(next)
+
+
+func _pause_moment_banner(now: float) -> void:
+	if _moment_pause_started < 0.0:
+		_moment_pause_started = now
+		_moment_suspended = _moment_banner.visible
+	_moment_banner.hide()
+
+
+## Pausing menus stop _process before it can notice their input owner. Capture
+## the pause edge so time spent in Team, Map or a picker cannot eat a reward.
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_PAUSED and _moment_banner != null:
+		_pause_moment_banner(Time.get_ticks_msec() / 1000.0)
+
+
+## Trainer rounds keep their moments until the whole encounter releases the HUD.
+func _progression_combat_is_running() -> bool:
+	if _combat_is_running():
+		return true
+	var world := get_tree().current_scene
+	var director := world.get_node_or_null("EncounterDirector") if world != null else null
+	return director != null and director.has_method("trainer_battle_active") and bool(director.call("trainer_battle_active"))
+
+
+func _reward_xp_text() -> String:
+	var lines := PackedStringArray()
+	for event: Dictionary in _recent_xp_awards.values():
+		lines.append("%s · +%d XP · EXP %d/%d" % [str(event.get("name", "")),
+			int(event.get("amount", 0)), int(event.get("xp", 0)), int(event.get("xp_to_next", 0))])
+	return "\n".join(lines)
+
+
+func _moment_hold_seconds() -> float:
+	var members: Dictionary = {}
+	var seconds := PROGRESSION_FEED.seconds("moment_seconds", 3.0)
+	for event: Dictionary in _moment_events:
+		var id := int(event.get("creature_id", 0))
+		if id != 0:
+			members[id] = true
+		if str(event.get("kind", "")) == "reward_summary":
+			seconds = PROGRESSION_FEED.seconds("reward_seconds", 6.0)
+			for award_id: Variant in event.get("reward_xp_events", {}):
+				members[award_id] = true
+	return seconds + maxi(0, members.size() - 1) * PROGRESSION_FEED.seconds("additional_member_seconds", 1.0)
+
+
+## One compact entry per growth event carries its actual stat and XP details.
+## Receipts retain their exact payout above those entries; creature names are
+## not repeated in a second XP list after all five level-up announcements.
+func _render_moment_events() -> void:
+	var receipts: Array[Dictionary] = []
+	var growth: Array[Dictionary] = []
+	var awards: Dictionary = {}
+	var has_level := false
+	for event: Dictionary in _moment_events:
+		if str(event.get("kind", "")) == "reward_summary":
+			receipts.append(event)
+			awards.merge(event.get("reward_xp_events", {}), true)
+		else:
+			growth.append(event)
+			has_level = has_level or str(event.get("kind", "")) == "level_up"
+
+	_dress_moment_banner("level_up" if has_level else "bond_milestone")
+	var rows := PackedStringArray()
+	var used_awards: Dictionary = {}
+	var single_growth := receipts.is_empty() and growth.size() == 1
+	if not receipts.is_empty():
+		_moment_title.text = str(PROGRESSION_FEED.moment_text(receipts[0]).get("title", "Victory rewards"))
+		var payout := PackedStringArray()
+		for receipt: Dictionary in receipts:
+			payout.append(str(receipt.get("receipt", "")))
+		_moment_detail.text = "\n".join(payout)
+	elif single_growth:
+		var lines: Dictionary = PROGRESSION_FEED.moment_text(growth[0])
+		_moment_title.text = str(lines.get("title", ""))
+		_moment_detail.text = str(lines.get("detail", ""))
+	else:
+		_moment_title.text = "Your team grew stronger"
+		_moment_detail.text = ""
+
+	for event: Dictionary in growth:
+		if single_growth:
+			break
+		var lines: Dictionary = PROGRESSION_FEED.moment_text(event)
+		var id := int(event.get("creature_id", 0))
+		var award: Dictionary = awards.get(id, {})
+		var identity := str(lines.get("title", ""))
+		var detail := str(lines.get("detail", ""))
+		if str(event.get("kind", "")) == "level_up":
+			detail = " · ".join(PROGRESSION_FEED.level_up_changes(event))
+		if not award.is_empty() and not used_awards.has(id):
+			identity += " · +%d XP" % int(award.get("amount", 0))
+			detail += (" · " if not detail.is_empty() else "") + "EXP %d/%d" % [
+				int(award.get("xp", 0)), int(award.get("xp_to_next", 0))]
+			used_awards[id] = true
+		rows.append(identity)
+		if not detail.is_empty():
+			rows.append(detail)
+
+	# Members who earned XP without a level still keep their own award row.
+	for id: Variant in awards:
+		if used_awards.has(id):
+			continue
+		var award: Dictionary = awards[id]
+		rows.append("%s · +%d XP · EXP %d/%d" % [str(award.get("name", "")),
+			int(award.get("amount", 0)), int(award.get("xp", 0)), int(award.get("xp_to_next", 0))])
+	for receipt: Dictionary in receipts:
+		if not receipt.has("reward_xp_events") and not str(receipt.get("reward_xp", "")).is_empty():
+			rows.append(str(receipt["reward_xp"]))
+	if not receipts.is_empty() and _world_presentation_mode == "relays":
+		rows.append("Next: disable the three exposed relays.")
+	_moment_detail.visible = not _moment_detail.text.is_empty()
+	_moment_also.text = "\n".join(rows)
+	_moment_also.visible = not _moment_also.text.is_empty()
+	_position_moment_banner()
 
 
 ## BLIND-JUDGE ROUND 2: a pixel diff of the level-up and milestone banners
@@ -3116,7 +3247,11 @@ func _story_modal_is_open() -> bool:
 
 ## Evidence accessors for the progression smoke.
 func moment_banner_visible() -> bool:
-	return _moment_banner != null and _moment_banner.visible
+	return visible and _moment_banner != null and _moment_banner.visible
+
+
+func moment_visible() -> bool:
+	return moment_banner_visible()
 
 
 func moment_banner_rect() -> Rect2:
@@ -3212,10 +3347,61 @@ func _input(event: InputEvent) -> void:
 func _process(delta: float) -> void:
 	if _debug_level == DEBUG_OFF:
 		_run_frame(delta)
+		_apply_presentation_priority()
 		return
 	var t0 := Time.get_ticks_usec()
 	_run_frame(delta)
+	_apply_presentation_priority()
 	PERF_TRACE.record("HUD", Time.get_ticks_usec() - t0)
+
+
+## Optional shared world lifecycle hook; does not disable controller bindings.
+func set_world_presentation_mode(mode: String) -> void:
+	_world_presentation_mode = mode if mode in ["combat", "relays", "exploration"] else "exploration"
+	_left_stack_canvas_h = -1.0
+	if is_node_ready():
+		_reflow_left_stack()
+		_update_moment_banner()
+		if not _moment_events.is_empty():
+			_render_moment_events()
+		_apply_presentation_priority()
+
+
+func _apply_presentation_priority() -> void:
+	var moment := moment_banner_visible()
+	var mode := HUD_PRESENTATION.resolve(_world_presentation_mode, _combat_is_running(), _bottom_dock_should_yield(), moment)
+	if _party_strip != null:
+		_party_strip.set("progression_feedback_enabled", mode.party and not _bottom_dock_should_yield())
+		_party_strip.call("set_readable_presentation", _world_presentation_mode == "relays")
+		if _world_presentation_mode == "relays":
+			var canvas := get_viewport().get_visible_rect().size
+			_party_strip.call("set_rest_position", Vector2(canvas.x * 0.05, canvas.y * 0.30))
+	# This final pass owns visibility after all legacy polling/cache writers.
+	for entry: Array in [[_region_banner,mode.location],[_daytime_label,mode.location],
+		[_objective_block,mode.task],[_hotbar_panel,mode.hotbar],[_exploration_legend,mode.exploration],
+		[_party_strip,mode.party],[_creature_block,mode.exploration],[_health_bar_cluster,mode.human_vitals],
+		[_vitals_cluster,mode.human_vitals],[_minimap,mode.minimap],[_prompt_label,mode.prompt]]:
+		_presentation_allow(entry[0],entry[1])
+	# During combat, enemy plate and telegraphs own the top. In the post-combat
+	# mechanic, one instruction replaces the task card/legend/hotbar cluster.
+	_presentation_allow(_objective_hint_card, mode.instruction or (mode.exploration and not moment))
+
+
+func _presentation_allow(widget: CanvasItem, allowed: bool) -> void:
+	if widget == null: return
+	var id := widget.get_instance_id()
+	if not allowed:
+		if not _presentation_suppressed.has(id): _presentation_suppressed[id] = widget.visible
+		widget.visible = false
+	elif _presentation_suppressed.has(id):
+		# A fresh contextual offer may have been drawn while changing modes.
+		# Do not overwrite that new state with the old (often empty) prompt.
+		widget.visible = widget.visible or bool(_presentation_suppressed[id])
+		if widget == _objective_hint_card:
+			widget.visible = widget.visible and Time.get_ticks_msec()/1000.0 < _objective_hint_until
+		elif widget == _region_banner:
+			widget.visible = widget.visible and Time.get_ticks_msec()/1000.0 < _region_banner_until
+		_presentation_suppressed.erase(id)
 
 
 ## The HUD's actual per-frame work, split out of `_process` so the readout can
@@ -4329,7 +4515,13 @@ func _update_world_message() -> void:
 		return
 	var text := str(_game.call("take_pending_world_message"))
 	if not text.is_empty():
-		_show_hotbar_message(text)
+		# The production payout source already reports only items that fitted.
+		# Route its existing exact reward receipt through the one progression
+		# presenter; do not reconstruct inventory awards or pay anything here.
+		if text.contains("'s reward:"):
+			PROGRESSION_FEED.push("reward_summary", null, {"name": "Team", "receipt": text})
+		else:
+			_show_hotbar_message(text)
 
 
 func _show_hotbar_message(text: String) -> void:

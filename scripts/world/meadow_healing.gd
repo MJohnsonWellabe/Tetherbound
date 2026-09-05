@@ -196,13 +196,75 @@ func _station_discs(station_ids: Array) -> Array:
 	return discs
 
 
+## The scatter half, restricted to the discs, WITHOUT a filter argument on
+## `vegetation.gd::restore_drained()`.
+##
+## READ THIS BEFORE CHANGING IT, because the shape is deliberate and it is not
+## the shape anybody would choose freely.
+##
+## The clean version of this is one optional parameter on `restore_drained()`
+## -- `restore_drained(within: Array = [])`, partitioning inside the function
+## that owns the list. It was written that way first and it worked. It was
+## backed out on a routing decision: `scripts/world/vegetation.gd` is outside
+## this lane's ownership and the round's standing rule is to document a needed
+## change in another lane's file rather than make it. The exact fix is written
+## up as a routed finding in `ralph/reports/W20-SMALL-FIXES-0904/REPORT.md`.
+##
+## So the partition happens HERE instead, by lending `vegetation.gd` a smaller
+## `_drained` for the length of one call and handing back the remainder:
+##
+##   1. read the held list, split it on the discs;
+##   2. give the node only the entries inside them;
+##   3. call the SAME `restore_drained()` the chapter-wide sweep calls, which
+##      rebuilds those placements and clears the list;
+##   4. give the node back everything that was outside.
+##
+## Step 4 is what keeps the rest of the map owed to the Warden. Every step
+## uses the same `_build_batch` path any other heal uses; there is no second
+## vegetation system and no "healed" variant asset, which is the property the
+## contract actually asks for.
+##
+## THE TWO WARTS, named rather than discovered later:
+##
+##   * it touches `_drained`, an underscore-private of another node. That is
+##     the whole reason the parameter belongs in `vegetation.gd` and it is the
+##     substance of the routed finding.
+##   * `restore_drained()` ASSIGNS `_regrown` rather than accumulating it, so
+##     after a local heal and then the chapter-wide one, `regrown_count()` and
+##     `vegetation.stats()`'s `regrown` field report the LAST call's share
+##     rather than the running total. Nothing reads either for a decision --
+##     they are diagnostics -- and this function's own return value is always
+##     the number this call put back, which is what `heal_stations()` reports.
+##     Fixing it is one character (`=` to `+=`) in the same file the routed
+##     finding names.
 func _heal_the_scatter_within(discs: Array) -> int:
 	if not bool((_config.get("vegetation", {}) as Dictionary).get("enabled", true)):
 		return 0
 	var vegetation := _find("Vegetation")
 	if vegetation == null or not vegetation.has_method("restore_drained"):
 		return 0
-	return int(vegetation.call("restore_drained", discs))
+	var held: Variant = vegetation.get("_drained")
+	if not (held is Dictionary) or (held as Dictionary).is_empty():
+		return 0
+	var inside: Dictionary = {}
+	var outside: Dictionary = {}
+	for layer_name: String in (held as Dictionary).keys():
+		for entry: Variant in ((held as Dictionary)[layer_name] as Array):
+			var placement: Dictionary = entry
+			var bucket := inside if _inside_any_disc(
+				placement.get("position", Vector3.ZERO), discs) else outside
+			if not bucket.has(layer_name):
+				bucket[layer_name] = []
+			(bucket[layer_name] as Array).append(placement)
+	if inside.is_empty():
+		return 0
+	vegetation.set("_drained", inside)
+	var regrown := int(vegetation.call("restore_drained"))
+	# `restore_drained()` clears the list it was given. Everything the drain
+	# still holds outside these stations goes back, and stays owed until
+	# `legendary_freed`.
+	vegetation.set("_drained", outside)
+	return regrown
 
 
 ## The same sweep `_fade_the_drain_skins` makes, restricted to skins that

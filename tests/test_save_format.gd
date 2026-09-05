@@ -60,6 +60,12 @@ class FakeGame:
 	## walked to somewhere else.
 	var world_seed: int = 0
 	var saved_player_pose: Dictionary = {}
+	## N14 / VERSION 19. The day/night clock in elapsed seconds, or a negative
+	## number for "no carried clock -- open at the authored morning". Present on
+	## the fake for the same reason `world_seed` is: the whole point of the key
+	## is that it round-trips, so a fake that did not carry it would let a saver
+	## which dropped it pass.
+	var clock_elapsed_seconds: float = -1.0
 	var map: RefCounted = null
 	var progression: RefCounted = null
 	## Cloudreach Phase 1 / VERSION 17.
@@ -1121,6 +1127,20 @@ func test_v2_save_migrates_with_a_fresh_progression_store() -> void:
 
 
 ## --- the tournament across a save (26-RG19) -----------------------------------
+##
+## N01-SAVE-FORMAT, 2026-09-05. The five tests in this section (the three
+## bracket tests, `test_condition_survives_a_save` and
+## `test_a_pre_condition_save_loads_at_the_configured_start`) were green from
+## the day they landed (d409939e) without a single one of their assertions
+## ever running. They called `saver.save_game()` / `saver.load_game()` -- the
+## `Game` autoload's method names, which `save_game.gd` has never had (its API
+## is `save()` / `load_slot()`). GDScript aborts a method on a nonexistent
+## call, `run_tests.gd` only reads the `failures` list afterwards, and an
+## aborted method has an empty one -- so each printed `ok` beside a SCRIPT
+## ERROR nobody grepped for. The pre-condition test also opened
+## `save_0.json`; the saver writes `slot_0.json`. Every test below now uses
+## the saver's real API and was seen red for the right reason before this
+## comment was written (see `ralph/reports/N01-SAVE-FORMAT-0905/REPORT.md`).
 
 ## 26-RG19's own acceptance list: "save/load does not duplicate rewards or
 ## regress to pre-tournament objective." The bracket is nothing but flags and
@@ -1132,10 +1152,10 @@ func test_a_half_fought_bracket_survives_a_save() -> void:
 	game.progression.set_flag("tournament_training_ready")
 	game.progression.set_flag("tournament_entered")
 	game.progression.set_flag("tournament_quarter_won")
-	assert_true(saver.save_game(game, 0))
+	assert_true(saver.save(game, 0))
 
 	var loaded := _game()
-	assert_true(saver.load_game(loaded, 0))
+	assert_true(saver.load_slot(loaded, 0))
 	for flag: String in ["tournament_entered", "tournament_quarter_won"]:
 		assert_true(bool(loaded.progression.has(flag)),
 			"'%s' did not survive the save; the player is back outside the bracket" % flag)
@@ -1150,10 +1170,10 @@ func test_the_board_reads_the_same_bracket_after_a_reload() -> void:
 	game.progression.set_flag("tournament_entered")
 	game.progression.set_flag("tournament_quarter_won")
 	var before := TOURNAMENT.status_line(game.progression)
-	assert_true(saver.save_game(game, 0))
+	assert_true(saver.save(game, 0))
 
 	var loaded := _game()
-	assert_true(saver.load_game(loaded, 0))
+	assert_true(saver.load_slot(loaded, 0))
 	assert_eq(TOURNAMENT.status_line(loaded.progression), before,
 		"the board forgot where the player was in the bracket")
 
@@ -1166,10 +1186,10 @@ func test_a_won_tournament_cannot_be_reloaded_into_a_second_payout() -> void:
 	game.progression.set_flag("tournament_won")
 	game.progression.set_flag("recipe_saddle")
 	game.inventory.add("coin", 40)
-	assert_true(saver.save_game(game, 0))
+	assert_true(saver.save(game, 0))
 
 	var loaded := _game()
-	assert_true(saver.load_game(loaded, 0))
+	assert_true(saver.load_slot(loaded, 0))
 	assert_true(bool(loaded.progression.has("tournament_won")),
 		"the victory flag did not survive; the final would pay out again")
 	assert_true(bool(loaded.progression.has("recipe_saddle")),
@@ -1185,26 +1205,47 @@ func test_condition_survives_a_save() -> void:
 	var game := _game()
 	var creature: RefCounted = game.party.at(0)
 	creature.set("nourishment", 91.0)
-	creature.set("happiness", 88.0)
+	# Rest adds the configured +12 mood before the round trip; seed 76 so the
+	# expected persisted post-rest value remains the intentionally non-max 88.
+	creature.set("happiness", 76.0)
 	CONDITION.note_rest_completed(creature, CONDITION.config())
-	assert_true(saver.save_game(game, 0))
+
+	# `note_rest_completed` pays its own mood (`happiness.on_rest_completed`,
+	# clamped at the meter's max), so the file is asked to carry what the
+	# creature holds NOW, not the 88 set two lines up -- the original
+	# assertion against 88.0 would have gone red the first time this test
+	# actually ran. Both values must also differ from `creature_instance.gd`'s
+	# own defaults (70 / 55), or a loader that dropped the keys would pass.
+	var fed_before := float(creature.get("nourishment"))
+	var happy_before := float(creature.get("happiness"))
+	var rest_left_before := float(creature.get("rested_seconds_left"))
+	assert_true(rest_left_before > 0.0, "the fixture never started the rest clock; the test proves nothing")
+	assert_true(absf(fed_before - 70.0) > 1.0 and absf(happy_before - 55.0) > 1.0,
+		"the fixture matches the class defaults; a loader that ignored the file would pass")
+	assert_true(saver.save(game, 0))
 
 	var loaded := _game()
-	assert_true(saver.load_game(loaded, 0))
+	assert_true(saver.load_slot(loaded, 0))
 	var back: RefCounted = loaded.party.at(0)
-	assert_almost_eq(float(back.get("nourishment")), 91.0, 0.001, "the team came back hungry")
-	assert_almost_eq(float(back.get("happiness")), 88.0, 0.001, "the team came back miserable")
+	assert_almost_eq(float(back.get("nourishment")), fed_before, 0.001, "the team came back hungry")
+	assert_almost_eq(float(back.get("happiness")), happy_before, 0.001, "the team came back miserable")
 	assert_true(bool(back.get("rested")), "a rested team came back tired")
+	assert_almost_eq(float(back.get("rested_seconds_left")), rest_left_before, 0.001,
+		"the rest clock did not survive; 'rested' would lapse on the wrong schedule")
 
 
 ## A save written before the condition model existed loads as a creature that
 ## was never measured, not as one that is starving.
 func test_a_pre_condition_save_loads_at_the_configured_start() -> void:
 	var game := _game()
-	assert_true(saver.save_game(game, 0))
+	assert_true(saver.save(game, 0))
 
 	# Rewrite the slot as VERSION 12: the format immediately before D68.
-	var path := "%ssave_0.json" % TEST_DIR
+
+	# Through `slot_path()`, not a hand-built name: the original
+	# `"%ssave_0.json"` never matched the saver's `slot_%d.json`, so the
+	# rewrite below opened nothing and the test aborted there.
+	var path: String = saver.slot_path(0)
 	var file := FileAccess.open(path, FileAccess.READ)
 	var data: Dictionary = JSON.parse_string(file.get_as_text()) as Dictionary
 	file.close()
@@ -1218,7 +1259,12 @@ func test_a_pre_condition_save_loads_at_the_configured_start() -> void:
 	out.close()
 
 	var loaded := _game()
-	assert_true(saver.load_game(loaded, 0), "a version 12 save no longer loads at all")
+
+	# Dirty the in-memory creature first, so "came back at the configured
+	# start" cannot be the loader leaving the party it found alone.
+	loaded.party.at(0).set("nourishment", 3.0)
+	loaded.party.at(0).set("happiness", 2.0)
+	assert_true(saver.load_slot(loaded, 0), "a version 12 save no longer loads at all")
 	var back: RefCounted = loaded.party.at(0)
 	var cfg: Dictionary = CONDITION.config()
 	assert_almost_eq(float(back.get("nourishment")),
@@ -1331,3 +1377,93 @@ func test_a_pre_gamef4_save_migrates_base_stats_from_species_json() -> void:
 	creature.gain_xp(int(creature.call("xp_to_next", cfg)), cfg)
 	assert_true(float(creature.get("max_hp")) > 10.0,
 		"GAME-F4: a migrated creature's first level-up collapsed its stats toward the class default of 1.0")
+
+
+## --- the day/night clock across a save (N14-ROUTED-FOLLOWUPS, VERSION 19) ------
+##
+## N13-NIGHT-RESUME §5 root-caused the owner's "There is no night time" report
+## and found the clock had no memory of any kind: `save_game.gd` had no clock
+## key at all (`grep -in "elapsed\|hour\|clock"` over its 1013 lines returned
+## three comments about respawn timers and nothing else), so every Continue
+## rebuilt the world at 08:00 and the player walked the 350 seconds to nightfall
+## again. These three tests cover the format half of the fix.
+##
+## All three go through `saver.save()` / `saver.load_slot()` -- the saver's real
+## API. N01-SAVE-FORMAT found five tests in this file that had been green for
+## days without a single assertion running because they called `save_game()` /
+## `load_game()`, which this class has never had; GDScript aborts the method on
+## a nonexistent call and `run_tests.gd` only reads the empty `failures` list
+## afterwards. Not reintroducing that is the point of naming it here.
+
+## The whole finding, in one round trip: save at an hour that is not morning,
+## reload, and the hour must survive.
+func test_the_hour_survives_a_save_and_reload() -> void:
+	var written := _game(false)
+	# 19:40 on `art.json`'s 600-second day: late enough to be a different look
+	# from 08:00, and deliberately NOT a keyframe hour, so a loader that snapped
+	# to the nearest authored preset instead of restoring the real elapsed time
+	# would fail this.
+	var evening := 600.0 * (19.0 + 40.0 / 60.0) / 24.0
+	written.clock_elapsed_seconds = evening
+	assert_true(saver.save(written, 1))
+
+	var read := _game(false)
+	assert_true(read.clock_elapsed_seconds < 0.0,
+		"the fixture already holds a clock; a loader that ignored the file would pass")
+	assert_true(saver.load_slot(read, 1))
+	assert_almost_eq(read.clock_elapsed_seconds, evening, 0.001,
+		"the clock did not survive the save: a Continue puts the player back at 08:00 and night never falls")
+
+
+## A save written before VERSION 19 has no memory of the hour, and the migration
+## must say so rather than invent one -- the sentinel opens that save at the
+## authored morning, exactly as the old build did.
+func test_a_pre_clock_save_loads_with_no_carried_hour() -> void:
+	var written := _game(false)
+	written.clock_elapsed_seconds = 480.0
+	assert_true(saver.save(written, 1))
+
+	var raw := _read_slot_json(1)
+	assert_true(raw.has("clock_elapsed_seconds"), "VERSION 19 must write the clock key")
+	raw.erase("clock_elapsed_seconds")
+	raw["version"] = 18
+	_write_slot_json(1, raw)
+
+	var read := _game(false)
+	read.clock_elapsed_seconds = 123.0
+	assert_true(saver.load_slot(read, 1))
+	assert_true(read.clock_elapsed_seconds < 0.0,
+		"a VERSION 18 save must migrate to 'no carried clock', not to hour 123")
+
+
+## The file is trusted no further than any other save field. A corrupt clock
+## must fall back to the sentinel, not restore the world to hour NaN.
+func test_a_corrupt_clock_falls_back_to_no_carried_hour() -> void:
+	for junk: Variant in ["nineteen", null, {"hour": 19}, [19.0], true]:
+		var written := _game(false)
+		written.clock_elapsed_seconds = 480.0
+		assert_true(saver.save(written, 1))
+		var raw := _read_slot_json(1)
+		raw["clock_elapsed_seconds"] = junk
+		_write_slot_json(1, raw)
+
+		var read := _game(false)
+		assert_true(saver.load_slot(read, 1), "a corrupt clock must not refuse the whole save")
+		assert_true(read.clock_elapsed_seconds < 0.0,
+			"a corrupt clock (%s) restored as something other than the sentinel" % [junk])
+
+
+func _read_slot_json(slot: int) -> Dictionary:
+	var file := FileAccess.open(saver.slot_path(slot), FileAccess.READ)
+	assert_true(file != null, "slot %d was never written" % slot)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	return parsed as Dictionary if typeof(parsed) == TYPE_DICTIONARY else {}
+
+
+func _write_slot_json(slot: int, data: Dictionary) -> void:
+	var file := FileAccess.open(saver.slot_path(slot), FileAccess.WRITE)
+	assert_true(file != null, "could not rewrite slot %d" % slot)
+	if file != null:
+		file.store_string(JSON.stringify(data, "\t"))

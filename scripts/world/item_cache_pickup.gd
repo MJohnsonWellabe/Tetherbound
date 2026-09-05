@@ -34,26 +34,23 @@ var _item_id: String = ""
 var _label: String = ""
 var _model_path: String = ""
 var _model_scale: float = 1.0
-## W17-DENSITY-B2-B3 (2026-09-04). The once-flag's key. Empty means the item
-## id, exactly as every `CACHE_AT` cache has always been keyed -- one elixir,
-## one flag. A band `pickups.json` entry passes its own authored id instead,
-## because the addendum's placement contract puts thirty Good Candies in the
-## world and "cache:good_candy" can only ever remember one of them: the first
-## taken would silently deactivate every other on the next boot. One
-## persistent identity per authored LOCATION is the contract; this is the
-## one field that makes the seam able to honour it.
-var _flag_key: String = ""
+var _placement_id := ""
+var _realm_id := "meadows"
+var _count := 1
+var _taken := false
 var _visual: Node3D = null
 var _prompt: Node3D = null
 
 
 func setup(item_id: String, label: String, model_path: String, model_scale: float = 1.0,
-		flag_key: String = "") -> void:
+		placement_id: String = "", realm_id: String = "meadows", count: int = 1) -> void:
 	_item_id = item_id
 	_label = label
 	_model_path = model_path
 	_model_scale = model_scale
-	_flag_key = flag_key
+	_placement_id = placement_id
+	_realm_id = realm_id
+	_count = maxi(1, count)
 	add_to_group("progression_restore")
 	_build_visual()
 	_prompt = INTERACTABLE.new()
@@ -63,34 +60,40 @@ func setup(item_id: String, label: String, model_path: String, model_scale: floa
 	_prompt.connect("activated", _on_picked_up)
 	add_child(_prompt)
 	var game := get_node_or_null(^"/root/Game")
-	if was_taken(game, _key()):
+	if was_taken(game, _item_id, _placement_id, _realm_id):
 		_deactivate()
 
 
-## The id this pickup's once-flag is written under: the authored placement id
-## when one was given, the item id otherwise (the pre-W17 behaviour, unchanged
-## for every existing cache).
+## Keep main's public placement key and historic Meadows flag format.
+## Non-Meadows locations are realm-qualified so stacked worlds stay isolated.
 func _key() -> String:
-	return _flag_key if _flag_key != "" else _item_id
+	if _placement_id.is_empty():
+		return _item_id
+	return _placement_id if _realm_id == "meadows" else _realm_id + ":" + _placement_id
 
 
-static func flag_id(item_id: String) -> String:
+static func flag_id(item_id: String, placement_id: String = "", realm_id: String = "meadows") -> String:
+	if not placement_id.is_empty():
+		if realm_id == "meadows":
+			return FLAG_PREFIX + placement_id
+		return "%s%s:%s" % [FLAG_PREFIX, realm_id, placement_id]
 	return FLAG_PREFIX + item_id
 
 
-static func was_taken(game: Node, item_id: String) -> bool:
+static func was_taken(game: Node, item_id: String, placement_id: String = "", realm_id: String = "meadows") -> bool:
 	if game == null or item_id == "":
 		return false
 	var progression: RefCounted = game.get("progression")
-	return progression != null and bool(progression.call("has", flag_id(item_id)))
+	return progression != null and bool(progression.call("has", flag_id(item_id, placement_id, realm_id)))
 
 
 func restore_progression_from_game(game: Node) -> void:
-	if was_taken(game, _key()):
+	if was_taken(game, _item_id, _placement_id, _realm_id):
 		_deactivate()
 
 
 func _deactivate() -> void:
+	_taken = true
 	if _prompt != null and is_instance_valid(_prompt):
 		_prompt.call("set_enabled", false)
 	PICKUP_GLOW.detach(self)
@@ -153,6 +156,8 @@ func _build_visual() -> void:
 
 
 func _on_picked_up() -> void:
+	if _taken:
+		return
 	var game := get_node_or_null(^"/root/Game")
 	if game == null:
 		push_error("no Game autoload; a cache was found but has nowhere to go")
@@ -161,14 +166,14 @@ func _on_picked_up() -> void:
 	if inventory == null:
 		push_error("no inventory; a cache was found but has nowhere to go")
 		return
-	if not bool(inventory.call("has_room_for", _item_id, 1)):
+	if not bool(inventory.call("has_room_for", _item_id, _count)):
 		# Refused, visibly, same as key_pickup.gd/harvest_node.gd: stays in
 		# the world and keeps offering rather than vanishing into a full
 		# satchel.
 		game.call("push_world_message", "Satchel is full.")
 		return
-	inventory.call("add", _item_id, 1)
+	inventory.call("add", _item_id, _count)
 	var progression: RefCounted = game.get("progression")
 	if progression != null:
-		progression.call("set_flag", flag_id(_key()))
+		progression.call("set_flag", flag_id(_item_id, _placement_id, _realm_id))
 	_deactivate()

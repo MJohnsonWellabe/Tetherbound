@@ -61,6 +61,8 @@ extends SceneTree
 
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const ITEM_DB := preload("res://autoload/item_db.gd")
+const INVENTORY := preload("res://autoload/inventory.gd")
 
 ## Lead first, mirroring `seed_s09_exit.gd`'s PARTY order (index 0 is active).
 const TEAM := [
@@ -93,6 +95,62 @@ const FLAGS := [
 ]
 
 const DAY := 5
+
+## What the player is carrying, as item id and how many. Laid out into real
+## slots by `inventory_slots()`; see its header for why this cannot be written
+## into the save as it stands here.
+const SATCHEL := [
+	{"id": "potion_small", "count": 10},
+	{"id": "potion_large", "count": 3},
+	{"id": "revive", "count": 2},
+	{"id": "berries", "count": 12},
+	{"id": "orb_basic", "count": 6},
+	{"id": "wood", "count": 20},
+	{"id": "stone", "count": 16},
+	{"id": "fiber", "count": 16},
+	{"id": "axe", "count": 1},
+	{"id": "pickaxe", "count": 1},
+	{"id": "knife", "count": 1},
+	{"id": "hammer", "count": 1},
+	{"id": "torch", "count": 1},
+]
+
+
+## `SATCHEL` as `save_game.gd` actually reads a satchel: a POSITIONAL array of
+## slots, `INVENTORY.SLOT_COUNT` long, each entry `{"id", "n"}` or null. Empty
+## array when the declared items cannot fit, so the caller can refuse rather
+## than write a truncated seed.
+##
+## W21-HARNESS-FIGHTS-0904 found this file's satchel silently not landing: it
+## declared `{"id": "revive", "count": 2}` and the loaded game reported
+## `revive: 0`, with every other satchel line at 0 too. The cause is one key.
+## `save_game.gd::_array_to_inventory` walks SLOT INDICES and hands each entry
+## to `_stack_from_json`, which reads `int(dict.get("n", 0))` -- there is no
+## `count` in the save format and never has been, so every stack this file
+## wrote loaded as that item at a quantity of zero. Nothing complained,
+## because a zero-quantity stack is a legal slot; the seed simply arrived
+## empty. Only `S09-24p3`'s `skip_if {inventory_count revive max 0}` guard kept
+## that run from pressing blind into the item grid on top of it.
+##
+## Laid out the way `inventory.gd::add()` lays a pickup out -- honouring each
+## item's own `stack` size from `data/items/items.json` -- rather than one slot
+## per line, so a count raised past a stack cap spills into a second slot
+## instead of writing an over-full stack no gathering could ever produce.
+static func inventory_slots(db: RefCounted) -> Array:
+	var slots: Array = []
+	for entry: Dictionary in SATCHEL:
+		var id := str(entry.get("id", ""))
+		var left := int(entry.get("count", 0))
+		var cap: int = maxi(1, int(db.call("stack_size", id)))
+		while left > 0:
+			var put := mini(cap, left)
+			slots.append({"id": id, "n": put})
+			left -= put
+	if slots.size() > INVENTORY.SLOT_COUNT:
+		return []
+	while slots.size() < INVENTORY.SLOT_COUNT:
+		slots.append(null)
+	return slots
 
 var _out_dir := ""
 
@@ -180,21 +238,11 @@ func _init() -> void:
 		"camera_pitch": -0.15,
 	}
 
-	var inventory: Array = [
-		{"id": "potion_small", "count": 10},
-		{"id": "potion_large", "count": 3},
-		{"id": "revive", "count": 2},
-		{"id": "berries", "count": 12},
-		{"id": "orb_basic", "count": 6},
-		{"id": "wood", "count": 20},
-		{"id": "stone", "count": 16},
-		{"id": "fiber", "count": 16},
-		{"id": "axe", "count": 1},
-		{"id": "pickaxe", "count": 1},
-		{"id": "knife", "count": 1},
-		{"id": "hammer", "count": 1},
-		{"id": "torch", "count": 1},
-	]
+	var inventory := inventory_slots(ITEM_DB.new())
+	if inventory.is_empty():
+		print("SEED FAIL: SATCHEL does not fit %d slots" % INVENTORY.SLOT_COUNT)
+		quit(1)
+		return
 
 	var data := {
 		"version": 16,
@@ -244,8 +292,13 @@ func _init() -> void:
 		return
 	file.store_string(JSON.stringify(data, "\t"))
 	file.close()
+	var carried: Array[String] = []
+	for slot: Variant in inventory:
+		if slot != null:
+			carried.append("%s x%d" % [str((slot as Dictionary)["id"]), int((slot as Dictionary)["n"])])
 	print("[seed] wrote synthetic S08-exit.json: %d party members, %d flags, day %d"
 		% [party.size(), FLAGS.size(), DAY])
+	print("  satchel (%d slots): %s" % [carried.size(), ", ".join(carried)])
 	for c: Dictionary in party:
 		print("  - %s (%s) L%d hp=%.2f/%.2f atk=%.2f def=%.2f"
 			% [c["nickname"], c["species_id"], c["level"], c["hp"], c["max_hp"], c["attack"], c["defence"]])

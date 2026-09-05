@@ -20,7 +20,7 @@ const TRAIT_DB := preload("res://scripts/creatures/trait_db.gd")
 ## here without a cycle: creature_condition.gd knows nothing about this class,
 ## it only reads and writes fields on whatever RefCounted it is handed.
 const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
-## OWNER-0901-BOND-MILESTONES. Bond as an ordered ladder of concrete tasks
+## OWNER-0901-BOND-MILESTONES / D76. Bond as five concrete, unordered tasks
 ## instead of a bare 0-100 meter -- see bond_milestones.gd's own header.
 const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
 const FEED := preload("res://scripts/creatures/progression_feed.gd")
