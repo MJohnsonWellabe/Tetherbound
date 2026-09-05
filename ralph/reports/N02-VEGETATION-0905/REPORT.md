@@ -158,6 +158,9 @@ Every command was run from the repository root with `export PATH=$HOME/godot-bin
 | `… --only=test_harvest.gd,test_harvest_permanence.gd,test_band_pickups.gd` | **74 tests, 1,046,823 assertions, 0 failed** |
 | `godot --headless --path . --script tests/smoke_playground.gd` | OK, exit 0 (twice) |
 
+`test_vegetation_siting.gd` runs in **1 s wall**, so it adds nothing measurable to whichever
+of CI's four `verify-unit-tests` shards it lands in.
+
 The four-suite run is the set the brief names, run with all four in one `--only=` as asked.
 It includes `test_scatter_perf_budget.gd::test_playground_bake_is_committed_and_fresh`,
 which is the exact assertion CI's `verify-scatter-bake-freshness` job runs — **green, so no
@@ -209,6 +212,14 @@ Item 1 moves a felled pickup that only exists after the player chops something, 
 at a `trees` hero and 1.91 m at the single largest `rocks` anchor; item 2 is a query-time
 predicate with no render side; item 3 is tests only. The `smoke_playground` A/B above is the
 runtime evidence in place of frames.
+
+**CI could not be checked from this container.** The GitHub REST API is refused from this
+session (`403 GitHub access is not enabled for this session`) and no `gh` binary is
+installed, so the three pushes to `ralph/N02-VEGETATION-0905` have triggered runs I cannot
+read. Everything CI would run for these files was run locally instead and is in the table
+above, including the exact `--only=` selector `verify-scatter-bake-freshness` uses. **The
+landing lane must still open the run** — per the process rule, a self-report is not
+evidence.
 
 ## 7. Routed findings — not this lane's files
 
