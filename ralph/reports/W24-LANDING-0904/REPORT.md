@@ -368,3 +368,54 @@ food chips covering their own bars, portraits, minimap, hotbar, a safe-area marg
   until the Meadows passes its exit gate.
 - No lane closed a report between 03:10 and 06:40 UTC; the lane sessions appear to have
   stopped.
+
+## Cycle 5 — W05-TREELINE, and a check that the benign-error set did not grow
+
+**PR #46 landed** (`504c7b55`): `CURRENT_STATE.md` §1 now records the wave. Documents only,
+so CI's own docs gate skipped the code jobs by design — verified the diff really was one
+file before merging.
+
+**PR #47 opened** for W05-TREELINE on `ralph/LAND-0904-4`. Its report's only gap was an
+inline `JUDGE_SECTION` token; its code-blind verdict is committed as `JUDGE-after.md`, so
+there was no unjudged visual work for this lane to run a round on. The placeholder was
+replaced with a pointer to that file rather than a paraphrase, so the lane's summary is not
+written in its voice.
+
+The risk was the bake. W05 is the only lane allowed to touch `vegetation.json` and it
+re-baked all 256 regions; its manifest fingerprint (`4984520267706256`) conflicted with the
+repair `main` carries from #42 (`7496100143687718`). W05's is correct on the merged tree
+because it changed the configs the fingerprint hashes. Checked, not assumed:
+
+| Command | Lane's claim | Result on the merged tree |
+|---|---|---|
+| `--only=test_scatter_perf_budget.gd` | 3 / 6 / 0 | **3 / 6 / 0** |
+| `--only=test_terrain_bake_freshness.gd` | 1 failed on its branch (pre-existing) | **3 / 8 / 0** — green here, #42's terrain repair is on `main` |
+| `--only=test_scatter_rules.gd` | 38 / 1,019,854 / 0 | **38 / 1,019,854 / 0** |
+| `--only=test_veg_corridor.gd` | 9 / 1,537,510 / 0 | **9 / 1,537,510 / 0** |
+| `--only=test_band_vegetation.gd` | 5 / 142 / 0 | **5 / 142 / 0** |
+| `godot --headless --path . --import` ×2 | — | 0 `SCRIPT ERROR`, 0 `Parse Error` |
+| `tests/smoke_playground.gd` | — | exit 0, `smoke: OK` |
+
+Cross-check on the lane's central claim that nothing moved and only sizes changed: both its
+before and after bakes report **825,979 placements kept and 3,883 drained**, identical.
+
+### The benign-error set: checked, and it did not grow
+
+`smoke_playground` on the W05 tree logged `ERROR: 4 resources still in use at exit` beside
+the usual `Parameter "material" is null` ×2. My earlier smokes on the eight-lane tree showed
+only the material line, so on its face the known-benign set had grown — which
+`ralph/briefs/0904/COMMON.md` says must not happen.
+
+Ran the identical smoke on **current `main`** (`504c7b55`) as a baseline: it logs the same
+two lines in the same counts, `4 resources still in use at exit` ×1 and
+`Parameter "material" is null` ×2. **So W05 does not grow the set** — the line is already on
+`main`. W22's own report recorded the same exit-time line on a branch cut before this wave
+landed, which points at an intermittent shutdown artefact rather than anything this wave
+introduced. Recorded here because "the set must not grow" is only a real check if someone
+actually compares against a baseline when it appears to.
+
+### Where the wave stands
+
+Landed: #42 (`c5a16dfb`), #45 (`fdf70ab4`), #46 (`504c7b55`), and #47 open for W05.
+Still off `main`: W01, W10, W22 (reports carry unfilled placeholders) and W02, W06, W07,
+W08, W11, W14, W15, W20, W21 (no report pushed). No lane has closed a report since 03:10 UTC.
