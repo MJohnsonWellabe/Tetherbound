@@ -535,7 +535,6 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
-
       "id": "S06-30a",
       "title": "CL-H8: the invented workbench beat is gone; L.3 moves to band 2's authored anvil",
       "action": "note",
@@ -548,6 +547,7 @@
       "id": "S06-30b",
       "title": "leave the quarry along the band 2 spine",
       "action": "move_to",
+      "args": {
         "at": [
           330.0,
           1950.0
@@ -556,81 +556,194 @@
         "close_enough": 6.0,
         "held_budget_frames": 10800,
         "answer_prompts": true
+      },
       "expected": "data/config/terrain_playground.json's band 2 spine (trail.bands), walked rather than cut across",
       "observation": "N10-HARNESS-TESTS-0905. MEASURED, not routed: a single straight `move_to` from the quarry at (403, 1794) to the ranger camp does NOT go. Run today on this branch it burned all 30,000 walking frames with 0 held and stopped 734.2 m short at (340.0, 4.0, 1834.0), and the route trace shows why: 544 play-seconds inside a 78 m x 66 m band with `dead_travel_m` climbing to 1,986 m. That is W21-HARNESS-FIGHTS-0904's S06-50 signature at the same place (it logged 711 s and 1,258 m of dead travel at (336.2, 1.3, 1820.6), 14 m from where this stopped) -- and it settles that lane's own hypothesis: the pin is NOT the just-placed workbench confusing navigator state. There is no workbench any more; this branch deleted S06-38 with the rest of the invented beat, and the body still cannot leave the quarry on that bearing. It is the Old Quarry's own exit. THE FIX IS THE AUTHORED ROUTE, not a bigger budget: `data/config/terrain_playground.json`'s `trail.bands[band2_stone_and_root]` spine runs (400,1800) -> (330,1950) -> (180,2050) -> (20,2130) -> (-150,2210) -> (-310,2320) -> (-420,2470), and the ranger camp sits on the `ranger_camp_spur` loop that leaves that spine at (-150,2210) and rejoins it at (-310,2320). These legs walk it. Nothing teleports and no terrain moved."
+    },
+    {
       "id": "S06-30b1",
       "title": "follow the spine north-west",
+      "action": "move_to",
+      "args": {
+        "at": [
           180.0,
           2050.0
+        ],
+        "budget_frames": 12000,
+        "close_enough": 6.0,
+        "held_budget_frames": 10800,
+        "answer_prompts": true
+      },
       "expected": "data/config/terrain_playground.json's band 2 spine (trail.bands), walked rather than cut across"
+    },
+    {
       "id": "S06-30b2",
       "title": "follow the spine past the corridor's midpoint",
+      "action": "move_to",
+      "args": {
+        "at": [
           20.0,
           2130.0
+        ],
+        "budget_frames": 12000,
+        "close_enough": 6.0,
+        "held_budget_frames": 10800,
+        "answer_prompts": true
+      },
+      "expected": "data/config/terrain_playground.json's band 2 spine (trail.bands), walked rather than cut across"
+    },
+    {
       "id": "S06-30b3",
       "title": "reach the ranger camp spur's own junction",
+      "action": "move_to",
+      "args": {
+        "at": [
           -150.0,
           2210.0
+        ],
+        "budget_frames": 12000,
+        "close_enough": 6.0,
+        "held_budget_frames": 10800,
+        "answer_prompts": true
+      },
+      "expected": "data/config/terrain_playground.json's band 2 spine (trail.bands), walked rather than cut across",
       "observation": "terrain_playground.json's `trail.loops` says the ranger_camp_spur leaves the spine here."
+    },
+    {
       "id": "S06-30b4",
       "title": "walk the spur to the anvil",
+      "action": "move_to",
+      "args": {
+        "at": [
           -259.6,
           2257.4
+        ],
+        "budget_frames": 12000,
         "close_enough": 2.5,
+        "held_budget_frames": 10800,
+        "answer_prompts": true
+      },
+      "expected": "data/config/terrain_playground.json's band 2 spine (trail.bands), walked rather than cut across",
       "observation": "the camp's CraftInteractable at data/config/bands/band2_stone_and_root/props.json's `ranger_camp.rest.craft_at`."
+    },
+    {
       "id": "S06-30c",
       "title": "open the ranger's anvil",
       "action": "interact_with",
+      "args": {
         "expect_prompt": "Craft",
         "check_provider": false,
         "settle_frames": 30
+      },
       "expected": "the authored camp's craft prompt opens craft_panel.gd and it takes the input-owner group",
       "observation": "interact_with, not a bare `press interact`: this presses only when the arbiter has a LIVE prompt and only when that prompt's own text is the craft offer, so a rest prompt, a wandering creature's engage offer or no prompt at all reports what it saw instead of firing `interact` into the world. check_provider false because the prompt is a child of the RestPoint, not of a named entity this step can look up."
+    },
+    {
       "id": "S06-30d",
       "title": "let the craft panel open",
       "action": "wait",
+      "args": {
         "seconds": 2
+      },
       "expected": "Section E.4 lists the craft panel as one of the surfaces the matrix crosses"
+    },
+    {
       "id": "S06-30e",
       "title": "the craft panel focuses a recipe",
       "action": "assert",
+      "args": {
         "check": "focus_owned"
+      },
       "expected": "without focus the panel cannot be driven on a pad at all"
+    },
+    {
       "id": "S06-30f",
       "title": "craft the greater orb",
       "action": "press",
+      "args": {
         "control": "ui_accept",
         "hold": "tap"
+      },
       "expected": "Section L.3: 'S06 orb_greater + reinforced tools -- each paid at real cost'. The inventory snapshot on the `craft` event is the evidence the cost was paid",
       "observation": "data/recipes/recipes_rootstone.json prices orb_greater at 4 rootstone / 3 wood / 3 fiber -- the rootstone comes from S06-28's own gathering at the quarry, which is why this beat sits after it and not before."
+    },
+    {
       "id": "S06-30g",
       "title": "let the craft resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
       "expected": "the `craft` event carries the full slot snapshot"
+    },
+    {
       "id": "S06-30h",
       "title": "focus the next recipe",
       "action": "focus_move",
+      "args": {
         "direction": "down",
         "times": 1
+      },
       "expected": "AMBIGUITY RECORDED: the protocol names the recipes but not their order in the panel; a focus_move that does not land FAILs rather than crafting the wrong thing"
+    },
+    {
       "id": "S06-30i",
       "title": "craft the reinforced tool",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
       "expected": "Section L.3's second band 2 recipe, paid at the real cost",
       "observation": "recipes_rootstone.json's `reinforce_axe`/`reinforce_pickaxe`, 3 rootstone / 2 wood each."
+    },
+    {
       "id": "S06-30j",
+      "title": "let the craft resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the `craft` event carries the full slot snapshot"
+    },
+    {
       "id": "S06-30k",
       "title": "leave the craft panel",
+      "action": "press",
+      "args": {
         "control": "menu_cancel",
+        "hold": "tap"
+      },
       "expected": "Section L.6 T01's shape: the surface hands the world back"
+    },
+    {
       "id": "S06-30l",
       "title": "the world owns input again",
+      "action": "assert",
+      "args": {
         "check": "input_context",
         "equals": "world"
+      },
       "expected": "input_context is back to 'world'; section E.3 step 6's target is input leakage after a surface closes"
+    },
+    {
       "id": "S06-49a",
       "title": "rejoin the spine where the camp spur ends",
+      "action": "move_to",
+      "args": {
+        "at": [
           -310.0,
           2320.0
+        ],
+        "budget_frames": 12000,
+        "close_enough": 6.0,
+        "held_budget_frames": 10800,
+        "answer_prompts": true
+      },
+      "expected": "data/config/terrain_playground.json's band 2 spine (trail.bands), walked rather than cut across",
       "observation": "terrain_playground.json's `trail.loops`: the ranger_camp_spur rejoins the band 2 spine at (-310, 2320). N10-HARNESS-TESTS-0905 added this so S06-50's walk to the Warrens mouth follows the authored trail instead of cutting across, the same correction its own quarry-exit leg needed."
+    },
+    {
       "id": "S06-50",
       "title": "walk to the Warrens mouth anchor",
       "action": "move_to",
@@ -931,6 +1044,18 @@
       "expected": "Section F: 'Camera correction: any scripted camera input needed solely to restore the target/route to view'. Every one of these is counted"
     },
     {
+      "id": "S06-66",
+      "title": "finish the chamber fight",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 18,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 per-fight record"
+    },
+    {
       "id": "S06-64",
       "title": "fight in the chamber",
       "action": "fight_until_resolved",
@@ -1195,6 +1320,18 @@
       "expected": "the charged verb's hold edge in an enclosed fight"
     },
     {
+      "id": "S06-78",
+      "title": "finish the guardian",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 20,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 per-fight record"
+    },
+    {
       "id": "S06-74",
       "title": "fight the guardian",
       "action": "fight_until_resolved",
@@ -1204,6 +1341,28 @@
       },
       "expected": "Section E.1 per-fight record; the guardian is the band's memorable encounter and its difficulty read is section D's material",
       "observation": "CL-H1 (W21-HARNESS-FIGHTS-0904). was `press combat_quick, times: N` -- the failure mode SEGMENT_SCHEMA.md names by name. A counted press block is right for exactly one matchup, and G3-BAND2's own telemetry watched all four party members faint in sequence inside one such block while every step reported PASS. `fight_until_resolved` presses combat_quick only while the action machine reads READY, presses party_cycle once when the pilot drops below switch_below of max HP (which is CB-09's switching-under-pressure, driven by the creature's real HP instead of a scripted beat), and stops only when both is_fighting() and trainer_battle_active() have been false for quiet_frames. The charged attack that used to sit between two counted blocks now opens the fight, and the scripted mid-fight party_cycle is gone: fight_until_resolved's own switch fires on the pilot's real HP instead of on a beat guessed in advance, which is what CB-09's 'switching under pressure' actually means."
+    },
+    {
+      "id": "S06-75",
+      "title": "switch pilot under pressure",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "Section E.1 CB-09's shape, crossed naturally: pilot handoff and camera handoff inside a chamber"
+    },
+    {
+      "id": "S06-76",
+      "title": "keep fighting",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 24,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 per-fight record"
     },
     {
       "id": "S06-79",
