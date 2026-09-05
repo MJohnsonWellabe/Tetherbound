@@ -642,6 +642,21 @@ the current answer to the same problem). Routed.
 * In `hud_minimap.png` the `257 m` readout overlaps the player arrow's tip at CR 2.34:1 and
   spans roughly half the widget.
 
+### Round-2 verification, measured on re-rendered frames
+
+Every round-2 change was re-rendered and re-measured, using the judge's own quantities so the
+numbers are comparable to its verdict rather than to a different metric:
+
+| what the judge measured | its round-1 number | round-2, measured |
+|---|---|---|
+| `MAP KEY` caption, greyscale L | **141** (entries it labels: 193; sibling headings: 229) | **229** — the caption now inks at exactly its siblings' tier, and above the entries |
+| legend entry names, greyscale L | 193 | 193, unchanged (they were not the defect) |
+| minimap player arrow vs its ground | **CR 1.17:1**, greyscale delta 11/255 | **CR 7.82:1**, L=30 against L=176 — delta 146/255 |
+| minimap landmark diamonds vs ground | 4.12:1 via their ring | unchanged; the arrow now uses the same device |
+
+The compass and scale bar were re-rendered and are visibly adjacent to the map body rather than
+in the far corners, and the `Road Gate` swatch now draws at the same size as its two siblings.
+
 ### Rounds
 
 One judging round, which moved five things. COMMON.md's stop rule is two rounds that move
