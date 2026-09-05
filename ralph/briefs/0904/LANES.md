@@ -65,6 +65,10 @@ Owner noticed the session count didn't match my reports. Root cause: 5 lanes (W0
 Separately, 5 lanes had genuinely gone stale 4+ hours with NO replacement running: W02-HARNESS-CONTEXT, W03-S08-FREEZE, W16-LOFT-BED, W20-SMALL-FIXES, W21-HARNESS-FIGHTS — all hit their 5h limit hours ago (reset already passed) and were sitting untouched. Given the owner flagged this directly, resumed all 5 at once (departing from the normal 1-2/sweep trickle, since the owner surfaced the actual backlog size).
 main also moved: PR #42 merged — **W00-ICONS is now on main**. PR #45 (consolidated: icons+contracts+progression+portraits+companion+bands2-5) is open, still blocked only on the pre-existing finale regression. PR #44 is Codex's own draft PR for Cloudreach, unrelated to this batch, explicitly not ready to merge.
 
+## 11:30 UTC: W08-finisher confirmed done; W13 unblocked
+**W08-DIALOGUE-CAMERA finisher DONE** — 23 tests/100 assertions green, 6 smokes pass, round-2 blind judge PASS on speaker legibility, real final commit `2d8de7e6`, five honest routed findings (dialogue portrait key-off, village fence clipping, clothing collision, wrong controller glyph, undressed inn — none touched, correctly outside ownership). Archived. 16/24 done now.
+**W13-PROGRESSION-FEED was blocked** on a save_game.gd API mismatch (5 orphaned save_format tests calling an undefined `save_game()`) — outside its ownership. Routed per the same established pattern: document the exact finding, don't fix outside ownership, finish the report. Not force-fired (session is idle, not running, so this delivers immediately at its next turn).
+
 ## Sweep 11:24Z
 W05 checked: real progress on the rebase — `smoke_aggression` now 4/4 green against current main, bake test green too, still running a hypothesis test on the remaining question. Not done yet but on track. No other action needed this cycle.
 
