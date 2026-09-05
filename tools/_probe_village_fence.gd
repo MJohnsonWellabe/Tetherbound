@@ -55,9 +55,10 @@ func _run() -> void:
 		var p := panel.global_position
 		if Vector2(p.x, p.z).distance_to(near) > radius:
 			continue
-		var half := PANEL_HALF * panel.scale.x
-		var a := panel.to_global(Vector3(-half, 0.0, 0.0))
-		var b := panel.to_global(Vector3(half, 0.0, 0.0))
+		# `to_global` already applies the panel's own stretch (`scale.x`), so the
+		# prefab's half-length in LOCAL metres is the end post.
+		var a := panel.to_global(Vector3(-PANEL_HALF, 0.0, 0.0))
+		var b := panel.to_global(Vector3(PANEL_HALF, 0.0, 0.0))
 		var ga := float(world.call("ground_height_at", a.x, a.z))
 		var gb := float(world.call("ground_height_at", b.x, b.z))
 		# Positive = the post's foot is above the ground (floating); the fence
