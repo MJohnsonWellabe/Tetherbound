@@ -28,8 +28,23 @@ var _beam_colour: Color = Color("#ffe9a8")
 var _duration: float = 1.5
 var _life: float = 0.0
 var _finished: bool = false
+## Two surfaces, because the two halves of this effect want opposite depth
+## rules. The BEAM runs straight through the creature, so depth-tested it is
+## eaten by the very body it is celebrating (impact_flash.gd paid for that
+## lesson). The RINGS and MOTES orbit OUTSIDE the silhouette at 2.3x the body
+## radius, and alpha_aura.gd's header is explicit about what depth testing
+## buys there: "a mote passing behind the creature is correctly hidden. That
+## occlusion is most of what makes the ring read as being around the animal
+## in space rather than painted over it." A blind round confirmed the
+## un-tested version reads as one flat annulus decal, because the ring's near
+## AND far edges both drew in front. So: beam un-tested, rings and motes
+## tested.
 var _mesh: ImmediateMesh = null
 var _instance: MeshInstance3D = null
+var _solid_mesh: ImmediateMesh = null
+var _solid_instance: MeshInstance3D = null
+## Which surface `_tri`/`_disc`/`_ring` are currently writing into.
+var _target: ImmediateMesh = null
 
 
 ## `height`/`radius` are the body's own gameplay size (`body_height()` /
@@ -67,18 +82,28 @@ func _ready() -> void:
 func _build() -> void:
 	if _mesh != null:
 		return
+	var reach: float = maxf(_radius * float(_spec.get("ring_radius_scale", 1.6)) * 1.5,
+		_height * float(_spec.get("beam_height_scale", 2.4)))
+	var bounds := AABB(Vector3(-reach, -0.5, -reach), Vector3(reach * 2.0, reach + 1.0, reach * 2.0))
+
 	_mesh = ImmediateMesh.new()
 	_instance = MeshInstance3D.new()
 	_instance.mesh = _mesh
-	_instance.material_override = _material()
+	_instance.material_override = _material(bool(_spec.get("no_depth_test", true)))
 	_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	var reach: float = maxf(_radius * float(_spec.get("ring_radius_scale", 1.6)) * 1.5,
-		_height * float(_spec.get("beam_height_scale", 2.4)))
-	_instance.custom_aabb = AABB(Vector3(-reach, -0.5, -reach), Vector3(reach * 2.0, reach + 1.0, reach * 2.0))
+	_instance.custom_aabb = bounds
 	add_child(_instance)
 
+	_solid_mesh = ImmediateMesh.new()
+	_solid_instance = MeshInstance3D.new()
+	_solid_instance.mesh = _solid_mesh
+	_solid_instance.material_override = _material(false)
+	_solid_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	_solid_instance.custom_aabb = bounds
+	add_child(_solid_instance)
 
-func _material() -> StandardMaterial3D:
+
+func _material(no_depth_test: bool) -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
@@ -86,10 +111,7 @@ func _material() -> StandardMaterial3D:
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	material.disable_receive_shadows = true
 	material.vertex_color_use_as_albedo = true
-	# The rings start at the feet, inside the ground contact and the model's
-	# own footprint, and the beam runs through the body: depth-tested, most of
-	# the picture would be eaten by the very creature it is celebrating.
-	material.no_depth_test = bool(_spec.get("no_depth_test", true))
+	material.no_depth_test = no_depth_test
 	return material
 
 
@@ -105,6 +127,7 @@ func advance(delta: float) -> void:
 	if _life >= _duration:
 		_finished = true
 		_mesh.clear_surfaces()
+		_solid_mesh.clear_surfaces()
 		queue_free()
 		return
 	_redraw()
@@ -112,6 +135,7 @@ func advance(delta: float) -> void:
 
 func _redraw() -> void:
 	_mesh.clear_surfaces()
+	_solid_mesh.clear_surfaces()
 	var camera: Camera3D = get_viewport().get_camera_3d() if is_inside_tree() else null
 	if camera == null:
 		return
@@ -124,6 +148,8 @@ func _redraw() -> void:
 	var envelope: float = minf(1.0, u * 6.0) * pow(1.0 - u, 0.8)
 	var rise: float = _height * float(_spec.get("rise_scale", 1.35))
 
+	# The beam, on the un-depth-tested surface.
+	_target = _mesh
 	_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
 
 	# The column of light: a camera-facing band through the body, opaque at
@@ -132,6 +158,13 @@ func _redraw() -> void:
 	var beam_height: float = _height * float(_spec.get("beam_height_scale", 2.4))
 	var beam_alpha: float = float(_spec.get("beam_alpha", 0.5)) * envelope
 	_beam(right, beam_width, beam_height, beam_alpha)
+
+	_mesh.surface_end()
+
+	# Rings and motes, on the depth-tested surface, so their far halves pass
+	# behind the creature and the ring reads as a ring around a body.
+	_target = _solid_mesh
+	_solid_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
 
 	# The rings: flat, rising from the feet past the crown, each on its own
 	# phase so the second follows the first.
@@ -165,7 +198,7 @@ func _redraw() -> void:
 		_disc(centre, right * size * 1.45, up * size * 1.45, Color(dark.r, dark.g, dark.b, alpha * 0.6))
 		_disc(centre, right * size, up * size, Color(_colour.r, _colour.g, _colour.b, alpha))
 
-	_mesh.surface_end()
+	_solid_mesh.surface_end()
 
 
 func _beam(right: Vector3, width: float, height: float, alpha: float) -> void:
@@ -210,13 +243,14 @@ func _beam(right: Vector3, width: float, height: float, alpha: float) -> void:
 		_tri(cr0, m0, r1, faint, cr1, m1)
 
 
+## Writes into whichever surface `_redraw` is currently filling (`_target`).
 func _tri(p0: Vector3, c0: Color, p1: Vector3, c1: Color, p2: Vector3, c2: Color) -> void:
-	_mesh.surface_set_color(c0)
-	_mesh.surface_add_vertex(p0)
-	_mesh.surface_set_color(c1)
-	_mesh.surface_add_vertex(p1)
-	_mesh.surface_set_color(c2)
-	_mesh.surface_add_vertex(p2)
+	_target.surface_set_color(c0)
+	_target.surface_add_vertex(p0)
+	_target.surface_set_color(c1)
+	_target.surface_add_vertex(p1)
+	_target.surface_set_color(c2)
+	_target.surface_add_vertex(p2)
 
 
 ## A flat annulus in the XZ plane, opaque at its middle radius and transparent

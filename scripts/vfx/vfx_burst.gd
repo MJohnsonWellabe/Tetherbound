@@ -213,11 +213,14 @@ func _redraw() -> void:
 	# born near-white and cooling to the element's colour it reads as a spark
 	# and still says which element it was.
 	var heat: float = clampf(float(_spec.get("heat", 0.0)), 0.0, 1.0)
-	var body_colour: Color = _colour.lerp(_core_colour, heat * (1.0 - minf(u * 1.6, 1.0)))
+	var body_colour: Color = _colour.lerp(_core_colour, heat * (1.0 - minf(u * 1.05, 1.0)))
 	# `halo`: a darker, slightly larger disc drawn behind each mote so it keeps
 	# an edge against a bright ground as well as a dark one. 0 turns it off.
 	var halo: float = clampf(float(_spec.get("halo", 0.0)), 0.0, 1.0)
-	var halo_colour: Color = _colour.darkened(0.55)
+	# Near-black, not a dark version of the tint: a dark TAN halo behind a tan
+	# mote on tan fur was measured as more of the same hue. Near-black separates
+	# from sunlit grass and from a cream creature alike.
+	var halo_colour: Color = _colour.darkened(0.82)
 
 	_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
 
@@ -248,9 +251,12 @@ func _redraw() -> void:
 			var tail_dir: Vector3 = velocity.normalized() if velocity.length() > 0.001 else direction
 			var tail: Vector3 = position - tail_dir * size * streak_length
 			if halo > 0.0:
-				_streak(position, tail, size * 0.7, forward,
+				_streak(position, tail, size * 0.8, forward,
 					Color(halo_colour.r, halo_colour.g, halo_colour.b, alpha * halo))
-			_streak(position, tail, size * 0.45, forward, colour)
+			_streak(position, tail, size * 0.5, forward, colour)
+			# A round head on the streak: a tapered sliver alone still reads as
+			# a shard, and a spark is a bright point that left a trail.
+			_disc(position, right * size * 0.55, up * size * 0.55, colour)
 		else:
 			if halo > 0.0:
 				_disc(position, right * size * 1.45, up * size * 1.45,
@@ -275,8 +281,18 @@ func _disc(centre: Vector3, right: Vector3, up: Vector3, colour: Color) -> void:
 		_mesh.surface_add_vertex(centre + right * cos(a1) + up * sin(a1))
 
 
-## A camera-facing streak from `head` to `tail`: bright at the head, transparent
-## at the tail, so it reads as motion rather than as a line.
+## A camera-facing streak from `head` to `tail`, soft on every edge.
+##
+## The first version was a plain quad: bright along the head edge, transparent
+## along the tail edge, and HARD down both sides. A blind round named exactly
+## that as the loudest defect in the set -- "flat tan rectangles... visible
+## straight edges and square corners... no internal detail" -- and it was
+## right: a quad with a constant cross-section alpha is a rectangle, whatever
+## it is meant to be a picture of. So the alpha now falls off across the
+## streak's WIDTH as well as along its length: a bright centre line, fully
+## transparent side edges, fading to nothing at the tail. Same triangle
+## budget as before plus two, and no texture -- the falloff lives in the
+## geometry, the way alpha_aura.gd's mote already solves this.
 func _streak(head: Vector3, tail: Vector3, width: float, forward: Vector3, colour: Color) -> void:
 	var along: Vector3 = tail - head
 	if along.length() < 0.0001:
@@ -285,20 +301,35 @@ func _streak(head: Vector3, tail: Vector3, width: float, forward: Vector3, colou
 	if side.length() < 0.0001:
 		side = along.cross(Vector3.UP)
 	side = side.normalized() * width
-	var faint := Color(colour.r, colour.g, colour.b, 0.0)
-	var a := head + side
-	var b := head - side
-	var c := tail - side
-	var d := tail + side
+	var edge := Color(colour.r, colour.g, colour.b, 0.0)
+	var tip := Color(colour.r, colour.g, colour.b, 0.0)
+	var hl := head + side
+	var hr := head - side
+	var tl := tail + side
+	var tr := tail - side
+	# left half: transparent edge -> bright centre -> transparent tail
+	_mesh.surface_set_color(edge)
+	_mesh.surface_add_vertex(hl)
 	_mesh.surface_set_color(colour)
-	_mesh.surface_add_vertex(a)
+	_mesh.surface_add_vertex(head)
+	_mesh.surface_set_color(tip)
+	_mesh.surface_add_vertex(tail)
+	_mesh.surface_set_color(edge)
+	_mesh.surface_add_vertex(hl)
+	_mesh.surface_set_color(tip)
+	_mesh.surface_add_vertex(tail)
+	_mesh.surface_set_color(tip)
+	_mesh.surface_add_vertex(tl)
+	# right half
 	_mesh.surface_set_color(colour)
-	_mesh.surface_add_vertex(b)
-	_mesh.surface_set_color(faint)
-	_mesh.surface_add_vertex(c)
+	_mesh.surface_add_vertex(head)
+	_mesh.surface_set_color(edge)
+	_mesh.surface_add_vertex(hr)
+	_mesh.surface_set_color(tip)
+	_mesh.surface_add_vertex(tr)
 	_mesh.surface_set_color(colour)
-	_mesh.surface_add_vertex(a)
-	_mesh.surface_set_color(faint)
-	_mesh.surface_add_vertex(c)
-	_mesh.surface_set_color(faint)
-	_mesh.surface_add_vertex(d)
+	_mesh.surface_add_vertex(head)
+	_mesh.surface_set_color(tip)
+	_mesh.surface_add_vertex(tr)
+	_mesh.surface_set_color(tip)
+	_mesh.surface_add_vertex(tail)
