@@ -169,6 +169,13 @@ func _run() -> void:
 		await _shoot(camera, look, eye_l, legendary + Vector3(0.0, 1.6, 0.0), "C-02-chamber-creature", 55.0,
 			written, failures, player, false)
 
+		# The Warden Arena from the challenge mark: the other roofed room the
+		# massing towers stand on, so a pier built there is seen, not assumed.
+		var warden_stand: Vector3 = hold.call("marker", "warden_stand")
+		var challenge: Vector3 = hold.call("marker", "warden_challenge")
+		await _shoot(camera, look, challenge + Vector3(0.0, 1.7, 0.0), warden_stand + Vector3(0.0, 2.5, 0.0),
+			"W-01-warden-arena", 70.0, written, failures, player, false)
+
 		# The courtyard gauntlet trainer: held, then after the Meadows answers.
 		var trainer_at: Vector3 = hold.call("marker", "trainer_stronghold_courtyard")
 		var court: Vector3 = hold.call("marker", "courtyard")
