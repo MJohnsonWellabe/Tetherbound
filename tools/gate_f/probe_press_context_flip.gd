@@ -15,7 +15,8 @@ extends SceneTree
 ##      Meadows up, loads through the production `Game.load_game()`;
 ##   2. teleports the trainer onto the captain's own challenge line;
 ##   3. puts the party's lead in the state under test (`--ally=fit|fainted|
-##      undeployed`);
+##      undeployed|weak|weak_backed` -- `weak` is a 1 HP lead with the bench
+##      fainted, so the fight is lost before the charged press lands);
 ##   4. runs the EXACT step shape the segment JSON uses at that site
 ##      (S08-89..S08-95 / S07-50..S07-58), with the harness's own injection
 ##      semantics (`_edge`: the physical binding via `Input.parse_input_event`
@@ -138,8 +139,8 @@ func _run() -> void:
 	_mode = _arg("mode", "blind")
 	_out = _arg("out", "")
 	if _seed.is_empty() or not SITES.has(_site) or not _mode in ["blind", "guarded"] \
-			or not _ally in ["fit", "fainted", "undeployed"]:
-		print("PROBE FAIL: needs --seed=<save json> --site=oreth|vance --ally=fit|fainted|undeployed --mode=blind|guarded")
+			or not _ally in ["fit", "fainted", "undeployed", "weak", "weak_backed"]:
+		print("PROBE FAIL: needs --seed=<save json> --site=oreth|vance --ally=fit|fainted|undeployed|weak|weak_backed --mode=blind|guarded")
 		quit(2)
 		return
 	_contexts_table = HARNESS._load_input_contexts()
@@ -230,6 +231,27 @@ func _run() -> void:
 			if lead != null:
 				lead.set("hp", 0.0)
 				lead.set("fainted", true)
+		"weak", "weak_backed":
+			# The fight ENDS before the charged press: the lead goes in with 1 HP
+			# and the first hit faints it. `weak` also faints the bench, so the
+			# trainer battle is lost outright and the world comes back before
+			# S08-93 / S07-57 -- the shape the three lane runs actually hit.
+			# `weak_backed` keeps the bench fit, for the switch-prompt variant.
+			if _director.call("ally_instance") == null:
+				_director.call("summon_active_creature")
+				for i in 30:
+					await physics_frame
+			var lead: RefCounted = _director.call("ally_instance")
+			for c: RefCounted in party.call("members"):
+				if c == lead:
+					c.set("hp", 1.0)
+					c.set("fainted", false)
+				elif _ally == "weak":
+					c.set("hp", 0.0)
+					c.set("fainted", true)
+				else:
+					c.set("hp", c.get("max_hp"))
+					c.set("fainted", false)
 		"undeployed":
 			pass
 	for i in 30:
