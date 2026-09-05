@@ -118,7 +118,7 @@ Verified clean in the isolated repro (case H: override cleared before `free()` �
 Every round was judged by a **code-blind** sub-agent given only the frames, `docs/reference/` and the rubric in `.claude/skills/visual-judge/SKILL.md`, and told nothing about what had changed.
 
 - `JUDGE-before.md` — the BEFORE verdict on the five stands. Both bar questions **no**. Eight ranked room defects, R1 first: *"There is no light structure, and therefore no value structure … Nothing in the cave emits … A cave being dark is correct; a cave being uniformly dim with no bright anchor is not the same thing."* It also independently found the artefacts this lane then fixed — the unsupported boulder mass with the horizon visible underneath (01.3), the tree and the crate furnishing the guardian's den (04.2), the mouth reading as "a doorway on a wall, not a hole in the ground" (01.1).
-- `JUDGE-after1.md` / `JUDGE-after2.md` — intermediate rounds on the same stands.
+- The two intermediate rounds (after1, after2) were judged on the same stands, but this session was interrupted twice while those agents were running and **their verdict files were not written** — `_sheet_after1.png` and `_sheet_after2.png` are committed, the write-ups are not. Their findings survive only as the round-2 and round-3 changes they caused (recorded in the commits and in "The rounds" above). Stated rather than papered over: the before and final verdicts are the two that exist as documents.
 - `JUDGE-after-final.md` — the final verdict on the same five stands, scored explicitly against R1–R8 and asked directly whether any mass still reads as floating.
 
 ### What the final blind verdict says, in its own terms
@@ -142,7 +142,7 @@ Scored against the BEFORE verdict's own numbered defects, on the same stands:
 
 I did **not** do that, deliberately. The owner, looking at these same interiors on 2026-09-05, said *"the inside looks acceptable except the thing that goes through the middle of the entrance"* and directed the remaining effort at the exterior. `CLAUDE.md`'s precedence puts the newest owner statement above a critic's rubric, and re-lighting an interior the owner has just accepted risks trading a verdict they gave for one they did not ask for. **Recorded as the open item rather than acted on:** if the owner wants the interior brighter rather than darker, the lever is the pool energies in `lights` (and the interior ambient a step further up), and it is one config edit plus a re-judge on these same five stands.
 
-Sheets committed: `_sheet_before.png`, `_sheet_after1.png`, `_sheet_after2.png`, `_sheet_after_final.png` (one per round, per the evidence rule; no per-frame PNGs).
+Sheets committed: `_sheet_before.png`, `_sheet_after1.png`, `_sheet_after2.png`, `_sheet_after_final.png` — one per round, per the evidence rule; no per-frame PNGs, no telemetry.
 
 ## Known limitations, and what I deliberately did not do
 
