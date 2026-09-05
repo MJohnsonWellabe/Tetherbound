@@ -65,6 +65,12 @@ Owner noticed the session count didn't match my reports. Root cause: 5 lanes (W0
 Separately, 5 lanes had genuinely gone stale 4+ hours with NO replacement running: W02-HARNESS-CONTEXT, W03-S08-FREEZE, W16-LOFT-BED, W20-SMALL-FIXES, W21-HARNESS-FIGHTS — all hit their 5h limit hours ago (reset already passed) and were sitting untouched. Given the owner flagged this directly, resumed all 5 at once (departing from the normal 1-2/sweep trickle, since the owner surfaced the actual backlog size).
 main also moved: PR #42 merged — **W00-ICONS is now on main**. PR #45 (consolidated: icons+contracts+progression+portraits+companion+bands2-5) is open, still blocked only on the pre-existing finale regression. PR #44 is Codex's own draft PR for Cloudreach, unrelated to this batch, explicitly not ready to merge.
 
+## Sweep 15:21Z
+No new finishes this cycle. N10 is writing its per-item report sections (sounds close). N12
+pushed real progress (12 sidecars added, 28 orphans removed) but hasn't self-reported complete
+yet. N05, N07, N08, N09, N13 all still mid-render/judge cycles. Nothing stalled, nothing
+crashed, no new main landing. 5/13 done, 8 running.
+
 ## 15:05 UTC: N02-VEGETATION confirmed done; rest checked, none stalled
 **N02-VEGETATION DONE** — all 3 deliverables, 92 tests green, smoke A/B clean against main.
 Notably disciplined: deliberately did NOT edit `docs/CURRENT_STATE.md` even though it's
