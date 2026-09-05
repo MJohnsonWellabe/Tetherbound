@@ -515,6 +515,25 @@ func _set_vfx_drawing(nodes: Array, on: bool) -> void:
 			(node as Node3D).visible = on
 
 
+## A/B/A/B inside one paused span, after a long settle.
+##
+## The first version sampled once with the effects drawing and once with them
+## lifted and called the difference the cost. It is not: between two
+## consecutive samples of a PAUSED tree at band1_open, `draw_calls` fell
+## 7,315 -> 3,790 and `objects` fell 6,826 -> 3,301 -- exactly -3,525 on both,
+## about half the visible scene, which cannot come from hiding two effect
+## nodes. Terrain and scatter LOD keeps converging on the render side while
+## the tree is paused. A second pair the same run differed by 334, again
+## equal on draw calls and objects.
+##
+## So: settle far longer before the first sample, then alternate
+## with/without/with/without and print all four. Two deltas that agree are a
+## measurement; two that disagree are the scene still moving, and the reader
+## can see which they got. The clean structural number for the layer itself
+## comes from `tools/_probe_vfx_perf.gd`, which measures it in a bare scene
+## with nothing to converge.
+const PERF_SETTLE_FRAMES := 24
+
 func _sample_pair(label: String) -> void:
 	var nodes := _vfx_nodes()
 	var names: Array = []
@@ -523,12 +542,23 @@ func _sample_pair(label: String) -> void:
 	print("[perf] %s: %d VFX nodes alive (%s)" % [label, nodes.size(), ", ".join(PackedStringArray(names))])
 	var was_paused := paused
 	paused = true
-	var with_vfx := await _sample("%s, VFX drawing" % label)
+	await _await_process(PERF_SETTLE_FRAMES, "perf settle (letting LOD converge)")
+
+	var with_a := await _sample("%s, VFX drawing (A)" % label)
 	_set_vfx_drawing(nodes, false)
-	var without := await _sample("%s, VFX lifted" % label)
+	var without_a := await _sample("%s, VFX lifted (A)" % label)
 	_set_vfx_drawing(nodes, true)
+	var with_b := await _sample("%s, VFX drawing (B)" % label)
+	_set_vfx_drawing(nodes, false)
+	var without_b := await _sample("%s, VFX lifted (B)" % label)
+	_set_vfx_drawing(nodes, true)
+
 	paused = was_paused
-	_print_delta(label, with_vfx, without)
+	_print_delta("%s (pair A)" % label, with_a, without_a)
+	_print_delta("%s (pair B)" % label, with_b, without_b)
+	var drift: int = absi((int(with_a[0]) - int(without_a[0])) - (int(with_b[0]) - int(without_b[0])))
+	if drift > 8:
+		print("[perf] NOISE: the two pairs disagree by %d draw calls; the scene is still converging and this number is not the effect. Use tools/_probe_vfx_perf.gd." % drift)
 
 
 ## One structural sample of the current (paused) frame.
