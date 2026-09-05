@@ -65,6 +65,9 @@ Owner noticed the session count didn't match my reports. Root cause: 5 lanes (W0
 Separately, 5 lanes had genuinely gone stale 4+ hours with NO replacement running: W02-HARNESS-CONTEXT, W03-S08-FREEZE, W16-LOFT-BED, W20-SMALL-FIXES, W21-HARNESS-FIGHTS — all hit their 5h limit hours ago (reset already passed) and were sitting untouched. Given the owner flagged this directly, resumed all 5 at once (departing from the normal 1-2/sweep trickle, since the owner surfaced the actual backlog size).
 main also moved: PR #42 merged — **W00-ICONS is now on main**. PR #45 (consolidated: icons+contracts+progression+portraits+companion+bands2-5) is open, still blocked only on the pre-existing finale regression. PR #44 is Codex's own draft PR for Cloudreach, unrelated to this batch, explicitly not ready to merge.
 
+## Owner directive — 2026-09-05 08:24 UTC: strict one-in-one-out concurrency
+Confirmed 4 lanes RUNNING right now: W14-RIDING, W05-TREELINE (just reopened), W01-ROUTE-STRIP, W09-VFX, plus W24-LANDING active. Owner: let these finish; restart more **only as a running one finishes**, not on any other timer — specifically NOT just because a paused lane's rate limit already reset. This replaces the earlier "resume 1-2 per sweep once reset has passed" rule. Going forward: the rate-limited backlog (W02, W03, W06, W07, W08/W10/W11-finishers, W16, W20, W21) stays parked until one of the 4-5 currently-running lanes archives as done (or needs a crash-recovery resume, which doesn't count as growing concurrency), at which point resume exactly one replacement, closest-to-done first.
+
 ## Resumed after ~5hr idle gap — 2026-09-05 08:17-08:20 UTC
 Real time had jumped from 03:09 to 08:17 UTC between turns (confirmed via own get_session). Per overnight-coordination's "resume after a gap" rule, did a full fresh audit rather than trusting the 03:xx state.
 
