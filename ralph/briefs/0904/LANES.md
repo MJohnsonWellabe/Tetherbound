@@ -65,6 +65,25 @@ Owner noticed the session count didn't match my reports. Root cause: 5 lanes (W0
 Separately, 5 lanes had genuinely gone stale 4+ hours with NO replacement running: W02-HARNESS-CONTEXT, W03-S08-FREEZE, W16-LOFT-BED, W20-SMALL-FIXES, W21-HARNESS-FIGHTS — all hit their 5h limit hours ago (reset already passed) and were sitting untouched. Given the owner flagged this directly, resumed all 5 at once (departing from the normal 1-2/sweep trickle, since the owner surfaced the actual backlog size).
 main also moved: PR #42 merged — **W00-ICONS is now on main**. PR #45 (consolidated: icons+contracts+progression+portraits+companion+bands2-5) is open, still blocked only on the pre-existing finale regression. PR #44 is Codex's own draft PR for Cloudreach, unrelated to this batch, explicitly not ready to merge.
 
+## 15:41 UTC: N13-NIGHT-RESUME confirmed done — CL-O2 root-caused, partly fixed, not fully closed
+10 commits on `ralph/N13-NIGHT-RESUME-0905` (final `0959ba85`). Real root cause via a new
+`--verify-daynight` export flag (W15's own probe was dead on arrival — exported Godot 4.7
+silently ignores `--script`, a fourth trap alongside the three `playground_world.gd` already
+documents). Found and fixed two real defects: `is_dark()` was ~2x its specified length
+(hour 20->5 instead of 22->3) and covered the wrong hours; the `night` keyframe stood alone so
+the tuned look was arrived at for one instant and left (now held via a `same_as` alias,
+hour 23->2). Verified on the actual exported release binary, not just the editor. Honestly
+scoped: **CL-O2 is NOT closed** — the larger half (the clock is never persisted; every scene
+load resets to 08:00) is explicitly routed to `save_game.gd`/`game_state.gd`, not touched here
+per its ownership boundary. Also routed: no moon/stars/moonlight-colour tint (art.json, needs
+an art-owning lane), a bush that renders as a black hole at every hour (vegetation/material
+owner) — both Bucket B, not launched. D87 used for this decision. 107 adjacent unit tests +
+2 smokes green; one benign extra `ERROR:` line noted and explained (unrelated alpha-spawn path,
+not chased). Archived. 7/13 done (N01, N02, N03, N04, N11, N12, N13); 6 running (N05, N06, N07,
+N08, N09, N10). N08-PICKUP-TIERS is close (rendering its last 2 frames, then auto-render).
+W24-LANDING opened a new consolidation branch `ralph/LAND-0904-9` and merged W21-HARNESS-FIGHTS
+onto it (cycle 11 ledger, `11f053ac`); no PR opened yet.
+
 ## 15:37 UTC: N12-REPO-HYGIENE confirmed done
 12 sidecars added, 28 orphans removed. Proactively cross-checked its overlap with N11's own
 sidecar commit (same 12 Cloudreach files) and confirmed byte-identical — no merge conflict for
