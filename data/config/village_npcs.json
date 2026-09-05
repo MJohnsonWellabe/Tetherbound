@@ -57,6 +57,11 @@
     },
     {
       "name": "Oskar",
+      "hair": {
+        "visible": true,
+        "color": "#2f2320",
+        "_comment": "Near-black brown -- the darkest of the four. N14-ROUTED-FOLLOWUPS, 2026-09-05, second half of N04-DIALOGUE-PORTRAITS's routed finding: 'several male NPCs currently all share one undifferentiated plate'. N04 built the mask-by-region hair recolour for the female rig and its brief scoped it there; `tools/_bake_villager_male_hair_mask.py` now bakes the same mask for `villager_male_lod0.glb`, and `character_model.gd::_apply_hair` reaches it on a rig that has NO separated hair mesh. This rig's two previous differentiators are both recorded in art.json as tried and reverted -- a whole-body tint ('looks stupid', owner playtest) and a per-material belt pouch (rendered in the wrong place) -- so a per-person hair colour on the painted fringe is the first one that reaches the face without touching it. No new mesh, no new humanoid, no Meshy spend: the mask is a region of the rig's OWN texture. Colours chosen by measurement, not by eye -- CIE76 deltaE across the four, worst pair 21.38, against the 6.83 that N04's judge flagged as 'the same person at speaking distance' on the female rig."
+      },
       "config_key": "villager_keeper",
       "position": [
         22.0,
@@ -154,6 +159,11 @@
     },
     {
       "name": "Quarry Foreman",
+      "hair": {
+        "visible": true,
+        "color": "#74512f",
+        "_comment": "Mid chestnut, between Oskar's near-black and Bram's straw. N14-ROUTED-FOLLOWUPS, 2026-09-05, second half of N04-DIALOGUE-PORTRAITS's routed finding: 'several male NPCs currently all share one undifferentiated plate'. N04 built the mask-by-region hair recolour for the female rig and its brief scoped it there; `tools/_bake_villager_male_hair_mask.py` now bakes the same mask for `villager_male_lod0.glb`, and `character_model.gd::_apply_hair` reaches it on a rig that has NO separated hair mesh. This rig's two previous differentiators are both recorded in art.json as tried and reverted -- a whole-body tint ('looks stupid', owner playtest) and a per-material belt pouch (rendered in the wrong place) -- so a per-person hair colour on the painted fringe is the first one that reaches the face without touching it. No new mesh, no new humanoid, no Meshy spend: the mask is a region of the rig's OWN texture. Colours chosen by measurement, not by eye -- CIE76 deltaE across the four, worst pair 21.38, against the 6.83 that N04's judge flagged as 'the same person at speaking distance' on the female rig."
+      },
       "config_key": "villager_quarryman",
       "position": [
         0.0,
@@ -203,6 +213,11 @@
     },
     {
       "name": "Kell",
+      "hair": {
+        "visible": true,
+        "color": "#a49e99",
+        "_comment": "Pale grey -- the oldest-reading of the four. N14-ROUTED-FOLLOWUPS, 2026-09-05, second half of N04-DIALOGUE-PORTRAITS's routed finding: 'several male NPCs currently all share one undifferentiated plate'. N04 built the mask-by-region hair recolour for the female rig and its brief scoped it there; `tools/_bake_villager_male_hair_mask.py` now bakes the same mask for `villager_male_lod0.glb`, and `character_model.gd::_apply_hair` reaches it on a rig that has NO separated hair mesh. This rig's two previous differentiators are both recorded in art.json as tried and reverted -- a whole-body tint ('looks stupid', owner playtest) and a per-material belt pouch (rendered in the wrong place) -- so a per-person hair colour on the painted fringe is the first one that reaches the face without touching it. No new mesh, no new humanoid, no Meshy spend: the mask is a region of the rig's OWN texture. Colours chosen by measurement, not by eye -- CIE76 deltaE across the four, worst pair 21.38, against the 6.83 that N04's judge flagged as 'the same person at speaking distance' on the female rig."
+      },
       "_comment": "R8.6 / SG46's 'at least one outward spoke gains new dialogue'. She stands at the STORM ROAD's end -- the spoke SG44 reconnects -- and only after `legendary_freed`. Placed from this file rather than from severed_spokes.gd deliberately: that script carries a hard rule that a spoke never explains itself with UI text, and it still does not. Nothing is added to the road, the blocker or the sign; a PERSON walked out to look at a horizon that changed, and she is met the way every other person in the chapter is met. The road past her is exactly as impassable while she talks as it was in hour one, which tests/smoke_boss.gd re-proves after the flag.",
       "config_key": "villager_keeper",
       "position": [
@@ -223,6 +238,11 @@
     },
     {
       "name": "Bram",
+      "hair": {
+        "visible": true,
+        "color": "#9c8450",
+        "_comment": "Dark blond/straw -- the only light-warm head on this rig. N14-ROUTED-FOLLOWUPS, 2026-09-05, second half of N04-DIALOGUE-PORTRAITS's routed finding: 'several male NPCs currently all share one undifferentiated plate'. N04 built the mask-by-region hair recolour for the female rig and its brief scoped it there; `tools/_bake_villager_male_hair_mask.py` now bakes the same mask for `villager_male_lod0.glb`, and `character_model.gd::_apply_hair` reaches it on a rig that has NO separated hair mesh. This rig's two previous differentiators are both recorded in art.json as tried and reverted -- a whole-body tint ('looks stupid', owner playtest) and a per-material belt pouch (rendered in the wrong place) -- so a per-person hair colour on the painted fringe is the first one that reaches the face without touching it. No new mesh, no new humanoid, no Meshy spend: the mask is a region of the rig's OWN texture. Colours chosen by measurement, not by eye -- CIE76 deltaE across the four, worst pair 21.38, against the 6.83 that N04's judge flagged as 'the same person at speaking distance' on the female rig."
+      },
       "config_key": "villager_keeper",
       "position": [
         -5.89,

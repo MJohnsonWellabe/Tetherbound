@@ -77,7 +77,7 @@
     },
     "village_bram": {
       "speaker": "Bram",
-      "portrait": "res://assets/ui/portraits/villager_male.png",
+      "portrait": "res://assets/ui/portraits/bram.png",
       "lines": [
         "Innkeeper's the whole of it. Bed, board and a fire that stays lit.",
         "Half the square eats here on a cold night. The other half just likes complaining about my stew."
@@ -85,7 +85,7 @@
     },
     "village_bram_shop_intro": {
       "speaker": "Bram",
-      "portrait": "res://assets/ui/portraits/villager_male.png",
+      "portrait": "res://assets/ui/portraits/bram.png",
       "lines": [
         "First one through the door gets the tour. Bar's here, beds are through the back, and I keep stock too.",
         {
@@ -96,7 +96,7 @@
     },
     "village_bram_shop": {
       "speaker": "Bram",
-      "portrait": "res://assets/ui/portraits/villager_male.png",
+      "portrait": "res://assets/ui/portraits/bram.png",
       "lines": [
         {
           "text": "Back again. Shelf's the same as you left it.",
@@ -106,7 +106,7 @@
     },
     "village_oskar": {
       "speaker": "Oskar",
-      "portrait": "res://assets/ui/portraits/villager_male.png",
+      "portrait": "res://assets/ui/portraits/oskar.png",
       "lines": [
         "Bridgehand's my trade — I keep the old crossing south of here. Team Tether's been sniffing round it lately.",
         "Well rope's been fraying since spring. Nobody's got round to it.",
@@ -116,7 +116,7 @@
     },
     "village_oskar_trade_intro": {
       "speaker": "Oskar",
-      "portrait": "res://assets/ui/portraits/villager_male.png",
+      "portrait": "res://assets/ui/portraits/oskar.png",
       "lines": [
         "Bridgehand's my trade, but I keep pens behind the cottage too — creatures that came off the crossing road with nobody beside them.",
         {
@@ -131,7 +131,7 @@
     },
     "village_oskar_trade": {
       "speaker": "Oskar",
-      "portrait": "res://assets/ui/portraits/villager_male.png",
+      "portrait": "res://assets/ui/portraits/oskar.png",
       "lines": [
         {
           "text": "Same terms as ever. Have a look at who's in the pen — they change about, so it's worth the walk.",
@@ -141,7 +141,7 @@
     },
     "village_oskar_challenge": {
       "speaker": "Oskar",
-      "portrait": "res://assets/ui/portraits/villager_male.png",
+      "portrait": "res://assets/ui/portraits/oskar.png",
       "lines": [
         "That bridge south of here was mine to keep shut. Was. Tether took the key off my belt in the spring.",
         {
@@ -152,7 +152,7 @@
     },
     "village_oskar_beaten": {
       "speaker": "Oskar",
-      "portrait": "res://assets/ui/portraits/villager_male.png",
+      "portrait": "res://assets/ui/portraits/oskar.png",
       "lines": [
         {
           "text": "Square's square. Wish I still had that key — the lad in the grey coat has it, down at the crossing. Mind the far bank either way.",
@@ -203,7 +203,7 @@
     },
     "village_quarry_foreman": {
       "speaker": "Quarry Foreman",
-      "portrait": "res://assets/ui/portraits/villager_male.png",
+      "portrait": "res://assets/ui/portraits/quarry_foreman.png",
       "lines": [
         "Foreman by trade, though there's no quarry to run yet — Team Tether's been working the old rootstone seams longer than anyone local has.",
         "Give it time. Stone doesn't go anywhere. Neither do I.",
@@ -212,7 +212,7 @@
     },
     "village_quarry_foreman_hammer": {
       "speaker": "Quarry Foreman",
-      "portrait": "res://assets/ui/portraits/villager_male.png",
+      "portrait": "res://assets/ui/portraits/quarry_foreman.png",
       "lines": [
         "No quarry to run leaves a foreman with time on his hands — enough to watch you cross this square with an armful of deadwood and nowhere to put it down.",
         "Wood left in a heap too long rots. A trainer left out in the open does worse.",
@@ -386,7 +386,7 @@
     "village_oskar_bridge": {
       "_comment": "T5-STORY-2, and the same measured gap `village_mira_road` documents. Gated on `south_bridge_open` because the key that opens it was HIS -- his own `village_oskar_challenge` line already says so ('Tether took the key off my belt in the spring and put one of their own on the near landing'), and until now the game never let him find out it had come back. That is F3's 'returning is worth it' in one branch.\n\nCarries `shop:creatures:oskar`, per D39, so the pen stays reachable. Placed above his `defeated_oskar` branch and below his `legendary_freed` one, so his challenge (which sits higher and is `unless defeated_oskar`) is untouched and the ending still wins.",
       "speaker": "Oskar",
-      "portrait": "res://assets/ui/portraits/villager_male.png",
+      "portrait": "res://assets/ui/portraits/oskar.png",
       "lines": [
         "The near landing's clear. Tam's boy ran the whole way back to tell me and he hasn't run anywhere since he was nine.",
         "That was my key on that man's belt. I let them take it, and I've been quietly ashamed of it since.",

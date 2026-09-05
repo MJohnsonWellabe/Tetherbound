@@ -132,6 +132,15 @@ const PORTRAITS: Array = [
 	{"file": "halda", "config_key": "villager_ranger", "hair": {"visible": true, "color": "#63636e"}},
 	{"file": "rae", "config_key": "villager_farmer", "hair": {"visible": true, "color": "#a8663f"}},
 	{"file": "doss", "config_key": "villager_ranger", "hair": {"visible": true, "color": "#4a5c3d"}},
+	# --- villagers on the shared MALE rig, told apart by hair (N14) ---------
+	# Same duplication trap as halda/rae above, and the same test holds these
+	# in sync with `village_npcs.json`. The male rig has no separated hair mesh;
+	# the colour lands on the painted fringe through
+	# `villager_male_lod0_hair_mask.png` (`tools/_bake_villager_male_hair_mask.py`).
+	{"file": "oskar", "config_key": "villager_keeper", "hair": {"visible": true, "color": "#2f2320"}},
+	{"file": "bram", "config_key": "villager_keeper", "hair": {"visible": true, "color": "#9c8450"}},
+	{"file": "kell", "config_key": "villager_keeper", "hair": {"visible": true, "color": "#a49e99"}},
+	{"file": "quarry_foreman", "config_key": "villager_quarryman", "hair": {"visible": true, "color": "#74512f"}},
 	# --- named cast with their own installed body ---------------------------
 	{"file": "bryn", "config_key": "young_trainer", "exposure": 0.8},
 	{"file": "wandering_trainer", "config_key": "wandering_trainer"},

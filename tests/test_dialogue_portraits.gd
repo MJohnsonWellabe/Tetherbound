@@ -364,7 +364,8 @@ func test_the_portrait_tool_agrees_with_the_world_about_hair() -> void:
 		if typeof(hair) != TYPE_DICTIONARY or not (hair as Dictionary).has("color"):
 			continue
 		var name := str(villager.get("name", ""))
-		var file := name.to_lower()
+		# "Quarry Foreman" -> "quarry_foreman", the plate filename convention.
+		var file := name.to_lower().replace(" ", "_")
 		# Only the people the tool actually renders a named plate for.
 		var marker := '{"file": "%s"' % file
 		if not tool_source.contains(marker):
@@ -376,5 +377,5 @@ func test_the_portrait_tool_agrees_with_the_world_about_hair() -> void:
 			"the portrait tool renders %s's plate with a different hair colour than the world gives %s: the world says %s, the tool's line is %s" % [
 				name, name, colour, line])
 		checked += 1
-	assert_true(checked >= 2,
-		"this test matched no villager at all; it would pass whatever the tool said")
+	assert_true(checked >= 6,
+		"this test matched only %d villagers; the two female-rig and four male-rig plates all carry a duplicated hex and all need covering" % checked)
