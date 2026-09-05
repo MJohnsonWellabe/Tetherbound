@@ -123,3 +123,50 @@ evidence on unusable frames.
 **Remaining lanes:** W10 has a skeleton report with no test results (not landable);
 W02, W06, W07, W08, W11, W14, W15, W20, W21 have pushed no report. Next free decision
 number is **D87**.
+
+## 2026-09-05 08:25 UTC — PR #48 merged; W01 and W22 are on `main`
+
+| PR | Merge commit | Lanes |
+|---|---|---|
+| #42 | `c5a16dfb` | W00 + the bake-manifest repair |
+| #45 | `fdf70ab4` | W19, W13, W04, W12, W18, W17, W09, W23 |
+| #46 | `504c7b55` | CURRENT_STATE §1 record |
+| #47 | **closed, not merged** | W05-TREELINE — breaks `smoke_aggression` at 53.7 m |
+| #48 | `2cd711eb` | **W01-ROUTE-STRIP, W22-BRIDGE-SIGNPOST** |
+
+`main` is `2cd711eb`; `git merge-base --is-ancestor b510043f origin/main` confirms the
+landing. **CI run 33953926952 finished green on every one of its eighteen non-skipped
+jobs**, 23 minutes, code jobs executed, no re-runs. That includes
+`verify-gate-evidence-shard` (success 08:20:04), so the owner directive's waiver on the
+intermittent finale was available but **not used** — this landing did not need it. It also
+includes `verify-combat-shard` (success 08:11:12), which was held binding rather than
+waived because it is the job W05 broke deterministically and W22 moves world geometry near
+the South Bridge. It passed on both runs.
+
+**W22 lands with a "do not ship" verdict recorded against two of its three parts**, not a
+clean one. The lane committed its A/B sheets and `JUDGE_PROMPT.md` but never ran the round,
+so the landing lane ran it code-blind
+(`ralph/reports/W22-BRIDGE-SIGNPOST-0904/JUDGE.md`): ship the bridge deck and rail after
+value fixes; do **not** ship the signpost, whose glyphs cap at 5–7 px and 1.3:1 in world
+frames, so it cannot do its only job from the path; do **not** ship the checkpoint dressing,
+whose barricades are untextured and sit beside rather than across the road and whose guard
+wears none of the faction's red. The judge identified the after column as the finished pass
+unprompted, so the improvement is real. It landed because the diff improves what exists and
+the remainder is scene and material work rather than new art, with the gap written down
+rather than hidden — **if the owner would rather hold W22 out until those fixes land, say so
+and it comes back out.**
+
+**Two documentation defects fixed in `docs/CURRENT_STATE.md` on the way through:** the
+D-renumbering sed had rewritten W19's own row to read "D86/D75 W19" and "eight lanes each
+opened a D86" (both should say D74), and W22's §4b row shipped an unfilled
+`__W22_VERDICT__` placeholder, now filled from the judge round above.
+
+**Decision numbers on `main`, all unique:** D74/D75 W19, D76 W13, D77 W23, D78 W18,
+D80 W09, D81 W04, D83 W12, D84 W17, D86 W22. D79 stays reserved for W10 and D82 for W02.
+**D85 is unused** because W05 did not land. Next free number is **D87**.
+
+**Remaining off `main`:** W05 (rejected on evidence; the lane must fix its own walk
+obstruction, `ralph/LAND-0904-4` holds the prepared landing) and W10 (seven-line skeleton
+report, no test results). W02, W06, W07, W08, W11, W14, W15, W20 and W21 have pushed no
+report of their own — W07 has judge sheets but no `REPORT.md`, which under the brief is not
+done. **No lane has pushed anything since W13 at 03:06 UTC**, five and a half hours ago.

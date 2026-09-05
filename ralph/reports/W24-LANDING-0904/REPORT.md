@@ -508,3 +508,119 @@ W22's judge and W05's judge, independently and from different frames, both flagg
 lanes, two judges, one broken capture stand. That is a defect in the capture tooling's
 viewpoint list, not in either lane's art, and it wants one fix rather than two workarounds —
 `tools/_capture_band1_places.gd`'s `VIEWPOINTS`.
+
+---
+
+## Cycle 7 — 2026-09-05 08:25 UTC — PR #48 merged (W01-ROUTE-STRIP, W22-BRIDGE-SIGNPOST)
+
+`main` is now `2cd711eb`. `git merge-base --is-ancestor b510043f origin/main` returns true.
+
+### The run
+
+CI run **33953926952** on head `b510043f`, 07:57 → 08:20 UTC, **23 minutes**, green on
+every one of its eighteen non-skipped jobs. The two `*-known-red` jobs and `export` are
+`skipped` by workflow condition, as on every other run this session.
+
+| Job | Result | Finished |
+|---|---|---|
+| `changes` | success | 07:59:42 |
+| `verify-unit-tests (1)` … `(4)` | success ×4 | 08:02–08:04 |
+| `verify-terrain-bake-freshness` | success | 08:05:15 |
+| `verify-scatter-bake-freshness` | success | 08:04:17 |
+| `verify-gate-b-core` | success | 08:04:48 |
+| `verify-harvest` | success | 08:07:31 |
+| `verify-gate-a-ui-build-shard` | success | 08:09:34 |
+| **`verify-combat-shard`** | **success** | 08:11:12 |
+| `verify-regions-shard` | success | 08:12:14 |
+| `verify-veg-corridor` | success | 08:12:47 |
+| `verify-owner-regressions-shard` | success | 08:15:12 |
+| `verify-scatter-rules` | success | 08:16:28 |
+| `verify-core-verb-shard` | success | 08:16:57 |
+| **`verify-gate-evidence-shard`** | **success** | 08:20:04 |
+
+The pull_request run 33953949833 agrees job for job on everything it had finished, with
+`verify-combat-shard` green at 08:10:02 and `verify-core-verb-shard` at 08:15:11.
+
+**No job was waived.** The owner directive permits not blocking on
+`verify-gate-evidence-shard` because `smoke_gate_e_finale` is intermittent on `main`; that
+permission was available and went unused, because the shard passed. That is worth recording
+precisely: this landing is green on its own merits, not green-by-exemption.
+
+**`verify-combat-shard` was held binding and it passed.** I set that asymmetry deliberately
+before the run: gate-evidence waivable, combat not, because combat is the job that caught
+W05-TREELINE deterministically and W22 changes world geometry near the South Bridge. The
+risk was real and it did not materialise — the bridge dressing, barricades and rail do not
+disturb the combat approach walks. Had it failed I would have investigated rather than
+waived, and #48 would have been split.
+
+No re-runs. Every `started_at` sits inside the original 07:57–08:04 dispatch window, so
+each result is a first attempt; nothing here is a retry that turned 0-for-1 into green.
+
+### What W01 actually carries
+
+The lane's report undercounts its own branch. It claims 18 tests / 39 assertions; the branch
+carries **21 / 47**, plus a second test file the report never mentions. The extra coverage is
+real, it is green, and it is inside the lane's ownership, so the discrepancy is a reporting
+defect rather than a landing blocker — recorded here so nobody later reads the report as the
+authority on what shipped. The branch is.
+
+### What W22 carries, and the verdict against it
+
+W22 committed both A/B contact sheets and its `JUDGE_PROMPT.md` but never ran the round,
+leaving `__W22_VERDICT_BLOCK__` in its report and `__W22_VERDICT__` in its
+`docs/CURRENT_STATE.md` row. Per the owner directive of 02:24 UTC — one blind round for
+visual work no lane already has a verdict on — I ran it: a code-blind sub-agent given only
+the visual-judge skill, `docs/reference/`, board 18 and the two sheets, told the columns are
+A and B and explicitly **not** told which was the newer work, and barred from reading
+anything under `ralph/`. Full round at
+`ralph/reports/W22-BRIDGE-SIGNPOST-0904/JUDGE.md`.
+
+It identified B — the lane's after column — as the finished pass **unprompted**. The
+improvement is visible to someone who was not told where to look. Its call:
+
+> Not shippable for a first playable — but the remaining work is scene and material work,
+> not new art.
+
+Split three ways: **ship** the bridge deck and rail once the value fixes land (silhouette,
+plank orientation and deck colour `(127, 90, 61)` against the reference `#7f5b44` are
+already right); **do not ship** the signpost, whose glyph band caps at 5–7 px with 1.3:1
+text-to-board contrast at `south-bridge-trailhead`, so it fails its only job in every
+gameplay frame; **do not ship** the checkpoint dressing, whose barricades are untextured and
+sit beside rather than across the road and whose guard wears none of the faction's red.
+
+I landed it anyway, and the reasoning should be legible so it can be overruled: the diff
+improves what exists, nothing in it regresses a passing behaviour, every test the lane names
+is green, and the outstanding work is scene and material work that a later pass can do
+without new art. The alternative — holding a lane out over a verdict on two of its three
+parts — would strand a real improvement. **The gap is now written into `LANES.md`, this
+report and `docs/CURRENT_STATE.md` §4b rather than hidden. If the owner would rather hold W22
+out until the signpost and checkpoint fixes land, say so and I will pull it back out.**
+
+### Two documentation defects repaired on the way through
+
+Both in `docs/CURRENT_STATE.md`, both mine to fix:
+
+1. The D-renumbering sed I ran during the wave had rewritten W19's own row to read
+   "D86/D75 W19" and "after eight lanes each opened a D86". Both should read **D74** — W19
+   keeps D74/D75, and D74 is what eight lanes had each independently claimed. The artifact
+   came from renumbering W22 to D86 with a docs-wide substitution. Corrected.
+2. W22's §4b row shipped with an unfilled `__W22_VERDICT__` token. Filled from the judge
+   round above. This is the same class of defect I have now caught in four lanes' reports;
+   the difference here is that it had already reached `main`.
+
+### Ledger
+
+Decision numbers on `main`, all unique: D74/D75 W19, D76 W13, D77 W23, D78 W18, D80 W09,
+D81 W04, D83 W12, D84 W17, **D86 W22**. D79 reserved for W10, D82 for W02. **D85 is unused**
+because W05 did not land. Next free: **D87**.
+
+Still off `main`: **W05** (rejected on evidence — `smoke_aggression` stops at 53.7 m; the
+lane owns the fix, `ralph/LAND-0904-4` holds the prepared landing) and **W10** (seven-line
+skeleton report, no test results). **W02, W06, W07, W08, W11, W14, W15, W20, W21** have
+pushed no report of their own; W07 has judge sheets but no `REPORT.md`, which under the brief
+is not done. An exact-path rescan at 08:10 confirmed this — an earlier looser grep matched
+other lanes' reports that had arrived on those branches via `main` and briefly read as nine
+lanes closing at once. They had not.
+
+**No lane has pushed anything since W13 at 03:06 UTC.** Every lane that has produced a
+closeable report is now on `main`.
