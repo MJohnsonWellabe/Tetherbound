@@ -506,7 +506,11 @@ calls**, **65,265–334,480 primitives**, and **1.93–5.44 ms measured frame ti
 views (24 frames/view). The highest draw count remains below the Hall reference ceiling of 4,000.
 `tests/smoke_cloudreach_foundation.gd`, direct parsing of `cloudreach_world.gd`, and the complete
 physical Meadows -> Cloudreach -> Meadows transition smoke all pass. The transition still prints
-the pre-existing Meadows Terrain3D no-mipmap/deprecation warnings.
+the pre-existing Meadows Terrain3D no-mipmap/deprecation warnings. After merging current `main`,
+the combined Cloudreach chapter/world/handoff/realm/Heart/vitals/save unit selection passed
+**129 tests / 1,511 assertions / 0 runner failures**. Five pre-existing tournament save methods
+still emit the known false-green `SaveGame.save_game()` errors while the runner marks them `ok`;
+this checkpoint does not claim those methods are clean.
 
 The mandatory code-blind visual judge rejected the result on both bars:
 
