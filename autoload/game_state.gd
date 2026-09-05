@@ -977,19 +977,19 @@ func take_pending_world_message() -> String:
 func push_progression_event(kind: String, creature: RefCounted, payload: Dictionary = {}) -> Dictionary:
 	if creature != null and (party == null or not (party.call("members") as Array).has(creature)):
 		return {}
-	return local.feed.call("push", kind, creature, payload)
+	return local.feed.call("push_event", kind, creature, payload)
 
 
 func progression_feed_revision() -> int:
-	return int(local.feed.call("revision"))
+	return int(local.feed.call("event_revision"))
 
 
 func peek_progression_events(after_seq: int) -> Array:
-	return local.feed.call("peek_since", after_seq)
+	return local.feed.call("events_since", after_seq)
 
 
 func take_progression_events() -> Array:
-	return local.feed.call("drain")
+	return local.feed.call("drain_events")
 
 
 # --- creature-bed recovery (Gate A) -----------------------------------------
@@ -1320,7 +1320,7 @@ func _sync_clock_state() -> void:
 func load_game(slot: int) -> bool:
 	if not bool(save_system.call("load_slot", self, slot)):
 		return false
-	local.feed.call("clear")
+	local.feed.call("clear_events")
 	for node in get_tree().get_nodes_in_group("build_placer"):
 		if node.has_method("restore_from_game"):
 			node.call("restore_from_game", self)

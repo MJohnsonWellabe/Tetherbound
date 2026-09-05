@@ -122,7 +122,7 @@ func _init() -> void:
 ## epoch, exactly as `Game.reset_for_new_game()` has always called it.
 func reset() -> void:
 	flags.call("load_data", {})
-	feed.call("clear")
+	feed.call("clear_events")
 	maps.clear()
 	realm = "meadows"
 	pending_realm_entry = ""

@@ -356,7 +356,13 @@ func test_game_wrappers_keep_nonactive_owned_members_and_reject_trainer_spawns()
 	var events: Array = game.peek_progression_events(0)
 	assert_eq(events.size(), 1)
 	assert_eq(int(events[0].creature_id), other.get_instance_id())
-	assert_eq(FEED.events(), events, "Game reads the same static log")
+	# Wave 1 lane 1.B: the log is `PlayerState.feed`, not a `static var` on the
+	# script, so "the same log" is now a statement about THIS Game's own player
+	# rather than about the process. `FEED.events()` still answers for the
+	# LOCAL player when there is a `/root/Game` autoload to find one on; this
+	# test builds a detached `GAME.new()`, which is a second player as far as
+	# the split is concerned, so it asks that player's feed directly.
+	assert_eq(game.local.feed.all_events(), events, "Game reads the log its own player holds")
 	assert_eq(game.party.size(), 2)
 	var revision := game.progression_feed_revision()
 	assert_eq(game.take_progression_events(), events)
@@ -370,11 +376,18 @@ func test_new_game_resets_the_one_log_and_invalidates_old_presentation_cursors()
 	var c := _creature()
 	game.party.add(c)
 	game.push_progression_event("xp_gained", c, {"amount": 5})
-	var old_epoch := FEED.epoch()
+	# Same lane 1.B change as above: this detached Game owns its own feed, so
+	# the reset is asserted on that feed. The epoch still CLIMBS across the
+	# reset rather than restarting at 0, which is the whole point of it --
+	# `PlayerState.reset()` clears the feed in place instead of building a new
+	# one for exactly this reason.
+	var feed: RefCounted = game.local.feed
+	var old_epoch: int = feed.feed_epoch()
 	game.reset_for_new_game()
-	assert_true(FEED.events().is_empty())
-	assert_eq(FEED.latest_seq(), 0)
-	assert_true(FEED.epoch() > old_epoch, "a reused seq cannot replay an old-save banner")
+	assert_true(feed.all_events().is_empty())
+	assert_eq(feed.newest_seq(), 0)
+	assert_true(feed.feed_epoch() > old_epoch, "a reused seq cannot replay an old-save banner")
+	assert_true(game.local.feed == feed, "the reset keeps the feed object, so a presenter cursor still resolves")
 	game.free()
 
 
