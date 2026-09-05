@@ -168,3 +168,39 @@ func test_a_band_with_no_vegetation_file_does_not_void_the_fingerprint() -> void
 	assert_ne(without_file, with_file,
 		"removing a band's vegetation.json did not move the fingerprint, so the "
 		+ "file is not actually in the hash")
+
+
+## N11-TERRAIN-BAKE-0905. Same property as
+## `test_terrain_bake_freshness.gd::test_fingerprint_ignores_crlf_line_endings`,
+## for the scatter guard: `f2dd20e4` stamped a CRLF-hashed fingerprint into
+## data/scatter/playground/manifest.json from a Windows checkout and Linux CI
+## read the bake as stale. Rewrites one real input with CRLF endings, takes the
+## fingerprint, restores the bytes, and asserts the number did not move.
+func test_the_fingerprint_ignores_crlf_line_endings() -> void:
+	var path := "res://data/config/vegetation.json"
+	var original := FileAccess.get_file_as_string(path)
+	assert_ne(original, "", "%s is empty or unreadable; this test needs the real config" % path)
+	assert_false(original.contains("\r"), "%s already carries CR bytes; the committed file must be LF" % path)
+
+	var before := BAKE.config_fingerprint()
+
+	var crlf := original.replace("\n", "\r\n")
+	assert_ne(crlf, original, "could not re-end %s with CRLF" % path)
+
+	var writer := FileAccess.open(path, FileAccess.WRITE)
+	assert_true(writer != null, "cannot open %s for writing" % path)
+	writer.store_string(crlf)
+	writer.close()
+
+	var after := BAKE.config_fingerprint()
+
+	var restore := FileAccess.open(path, FileAccess.WRITE)
+	assert_true(restore != null, "cannot reopen %s to restore it" % path)
+	restore.store_string(original)
+	restore.close()
+	assert_eq(FileAccess.get_file_as_string(path), original,
+		"failed to restore %s; the working tree is now dirty" % path)
+
+	assert_eq(after, before,
+		"a CRLF checkout of vegetation.json moved the scatter fingerprint (%d vs %d), " % [after, before]
+		+ "so a Windows bake stamps a manifest Linux CI reads as stale")

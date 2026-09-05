@@ -138,6 +138,17 @@ placed; `smoke_gate_b_continuous` OK. #45 merged on CI run 33949277496, green on
   guards read the committed bakes as stale and `main` went red on four jobs. #42 restores
   the two fingerprints from `90efc0d5`, which is what a re-bake against the unchanged config
   writes; both guards pass. W05-TREELINE and W18 reached the same diagnosis independently.
+- **The terrain bake is verified fresh by a real bake, and the manifest clobber has a
+  named cause (N11-TERRAIN-BAKE-0905, `ralph/reports/N11-TERRAIN-BAKE-0905/REPORT.md`).**
+  A full 64-region `build_playground_terrain.gd` run on `f8a47ee4` decodes pixel-identical
+  to the committed `data/terrain/playground` in every region (height_range, height_map,
+  control_map, color_map; `tools/_probe_n11_terrain_dir_diff.gd`) and writes a byte-identical
+  `manifest.json`, so the region files were left alone — PR #29's trailhead move feeds
+  `signpost.gd`, not the heightfield. `f2dd20e4`'s "stale" fingerprints (4395215917 terrain,
+  404295163156206 scatter) are exactly the CRLF hashes of the unchanged inputs: a Windows
+  checkout under `core.autocrlf` stamps a value Linux CI rejects. Both
+  `config_fingerprint()`s now fold `\r\n` to `\n` before hashing (LF values unchanged, no
+  manifest moves) and each guard's test file proves the property.
 - **`smoke_gate_e_finale` is flaky on `main`, not broken.** It failed four times (two `main`
   runs, a landing branch, and a locally built tree byte-identical to `origin/main`) and then
   passed on run 33949277496 for the same commit that failed on that commit's push run. The
