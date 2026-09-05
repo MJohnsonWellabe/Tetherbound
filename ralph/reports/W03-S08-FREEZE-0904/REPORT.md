@@ -372,6 +372,37 @@ ran warrens, relay_station and relay green and was killed inside `stronghold` at
 the job's own 35-minute ceiling. A timeout, not a verdict, and not this lane's
 either.
 
+## 9c. A repo gap this lane surfaced: GLB textures the pickup/saddle landings did not commit
+
+Running `godot --headless --path . --import` in a clean checkout of `ef16544f`
+leaves **58 untracked files**: 51 `.import`/`.uid` siblings, and **7 textures
+Godot extracts out of embedded GLBs**, each named for its own GLB and sitting
+beside it —
+
+```
+assets/props/candy_pickup/candy_pickup_0.png        (beside candy_pickup.glb)
+assets/props/mushroom_pickup/mushroom_pickup_0.png
+assets/props/potion_plant/potion_plant_0.png, _1.png
+assets/props/revive_flower/revive_flower_0.png
+assets/props/riding_saddle/riding_saddle_0.jpg
+assets/environment/team_tether/south_bridge_gate_0.jpg
+```
+
+**This repo's convention is to commit those**: 153 of them are already tracked
+(`assets/characters/**/*_lod0_texture_0.png`, and `relay_apparatus_0.jpg` in the
+very same `team_tether/` directory). The seven above are the ones whose GLBs
+landed in `15751023` / `893df10e` / `9c14e5a7` — **the GLB was committed and the
+texture Godot extracts from it was not.** Nothing is broken by that (they are
+derived, and any import regenerates them, which is why CI is unaffected), so it
+is a tidiness gap rather than a defect — but it belongs to those lanes' assets,
+not this one's.
+
+I removed all 58 from this container's working tree rather than committing 18 MB
+of regenerable binaries onto a branch that owns none of those assets. **For the
+coordinator:** either have the owning lane commit its seven textures, matching
+the convention the other 153 follow, or add the pattern to `.gitignore` and drop
+the 153 — but the two halves should agree, and today they do not.
+
 ## 10. Final state
 
 - Branch: `ralph/W03-S08-FREEZE-0904`
