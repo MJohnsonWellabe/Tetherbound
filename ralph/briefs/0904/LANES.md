@@ -65,6 +65,38 @@ Owner noticed the session count didn't match my reports. Root cause: 5 lanes (W0
 Separately, 5 lanes had genuinely gone stale 4+ hours with NO replacement running: W02-HARNESS-CONTEXT, W03-S08-FREEZE, W16-LOFT-BED, W20-SMALL-FIXES, W21-HARNESS-FIGHTS — all hit their 5h limit hours ago (reset already passed) and were sitting untouched. Given the owner flagged this directly, resumed all 5 at once (departing from the normal 1-2/sweep trickle, since the owner surfaced the actual backlog size).
 main also moved: PR #42 merged — **W00-ICONS is now on main**. PR #45 (consolidated: icons+contracts+progression+portraits+companion+bands2-5) is open, still blocked only on the pre-existing finale regression. PR #44 is Codex's own draft PR for Cloudreach, unrelated to this batch, explicitly not ready to merge.
 
+## 13:38 UTC: 0905 follow-up wave launched — 13 new lanes for routed findings
+Owner asked to launch the work the 0904 lanes documented as unfinished/routed. Extracted every
+concrete finding from all 24 lane reports (via a research agent plus a manual second pass for
+8 reports whose branches had already been merged/deleted and needed pulling from `main`
+instead), classified into launchable-now (code/data/config, no new art needed) vs. blocked
+(needs new art, Meshy, or an owner design decision — deliberately NOT launched, per CLAUDE.md).
+~93 launchable findings clustered by file/area into 13 new lane briefs at
+`ralph/briefs/0905-followup/`, based on `origin/main` (all 0904 work already landed). Also
+found: W15-NIGHT never actually finished (one investigative commit, no report, no fix) — its
+original brief is folded into N13 as a genuine resume, not a routed finding.
+
+| Lane | Session | Model | Scope |
+|---|---|---|---|
+| N01-SAVE-FORMAT | session_01B9VLFnHBGEKMtYVGxjFpuu | fable | 5 false-passing save-format tests (W13 finding) |
+| N02-VEGETATION | session_01D8jdo3Ry2y8xeVZbtsjsWp | opus | vegetation.gd: PROP_OFFSET, scatter-occupancy query, restore_drained refactor (W05/W18/W20) |
+| N03-CREATURE-BODY | session_01MrGsgLRPE82uyuYGj7cah4 | fable | CL-G7 material-null bug + play_rest() signed-roll bug (W07/W12) |
+| N04-DIALOGUE-PORTRAITS | session_01AoqCELkyMhtpkDKJBPxv5E | fable | every NPC shows the player's own portrait (W08/W04) |
+| N05-WORLD-DRESSING | session_01Uq9kdSDPEsd5Q7jGEUVSzo | fable | fence clipping, undressed inn, stronghold chamber lighting (W08/W06) |
+| N06-MAP-UI | session_019ZVZ7ywt9PiRNqEY8QBtGF | opus | inverted fog contrast + 7 other map legibility gaps (W11) |
+| N07-VFX-POLISH | session_01XSSRR4US1hQe46vhWggitY | fable | telegraph glow color, catch burst retune (W09) |
+| N08-PICKUP-TIERS | session_01N3ubqJEXMFE2KdjSupzHYW | fable | pickup tiers indistinguishable by hue alone (W18/W00) |
+| N09-BRIDGE-CHECKPOINT | session_01TmSiZGbe7tUCfFAKZNfp2k | opus | checkpoint items the landing judge said not to ship (W22) |
+| N10-HARNESS-TESTS | session_01WWVCXmDLeyrR9KVkRw9C2C | opus | 13 harness/test fixes + Band 4 pipwing encounter bug (W03/W20/W21) |
+| N11-TERRAIN-BAKE | session_01PBLLN9soLdr9PmagJEFCv1 | fable | re-bake the stale terrain manifest (main's one remaining self-inflicted red) |
+| N12-REPO-HYGIENE | session_01UVKhSGpHq6AMo7ZFFvGVGY | fable | commit missing import sidecars (flagged by 6 lanes) |
+| N13-NIGHT-RESUME | session_01MS59LAWJQ3Vh9ZWfDE2RYU | opus | finish W15's abandoned day/night investigation |
+
+Full extraction (all ~93 items, plus the 10 explicitly-blocked-on-art/design items not
+launched) lives in this session's transcript; briefs at `ralph/briefs/0905-followup/*.md` carry
+the actionable subset with exact file paths and values. W24-LANDING continues unaffected —
+these are new lanes on top of already-landed work, not a reopening of anything it merged.
+
 ## 13:14 UTC: ALL 24 LANES DONE — W24-LANDING is the only work left
 **W21-HARNESS-FIGHTS DONE** — the last lane. Converted 4 of 6 fights, proved 3 CI reds are pre-existing on `origin/main` (byte-identical failure set on branch vs base), documented the remaining 6 fights' blockers rather than forcing them through, and correctly executed the W20-relayed deletion (`S06-31`...`S06-49`). Extremely careful about CI-verdict honesty: named exactly which commit has a completed CI run and which doesn't (a run queued 20 min with a saturated runner pool, not claimed as a false pass), and correctly did NOT rebase since COMMON.md reserves that for the coordinator. Archived.
 **All 24 lanes are now done.** W24-LANDING is actively working (`ralph/LAND-0904-8`, 7/11 CI jobs green as of the last check, will push+open a PR once its multi-minute tests finish) — the only remaining work is landing what's left onto `main`. This is the parallel process's job; nothing here needs a lane-level action anymore, just watching landing PRs through to green and merged.
