@@ -1845,8 +1845,40 @@ func _wear_the_cave_stone(node: Node, tint: Color, exterior := false,
 ## mechanism `_wear_the_cave_stone()` and `_build_spoil_mounds()` already use
 ## for exactly this: overriding a glTF's own material without touching the
 ## shared resource other instances of the same mesh still use.
+## W07-WARRENS-0904 round 4, owner: "the outside still looks awful".
+## The mound wore the APRON's own material -- `apron_colour` #2b2118 (RGB
+## 43,33,24) lerped 5 % toward white, over Ground030 at a 3.3 m tile. That is
+## right for a worn dirt ramp seen at a grazing angle underfoot; on a 10-15 m
+## boulder in full sun it multiplies the photo down to a near-flat value, so
+## every facet reads as one flat chocolate polygon and the mound reads as
+## untextured geometry -- which is what the frames show and what the blind
+## judge named ("untextured flat-shaded facets in flat chocolate brown", 01.4).
+## `mound.earth_colour` / `mound.earth_uv_scale` give the mound its own
+## brighter, tighter-tiled earth so the grain survives at that size; absent,
+## it falls back to the apron material exactly as before.
+func _mound_earth_material() -> StandardMaterial3D:
+	var mound: Dictionary = _config.get("mound", {})
+	if not mound.has("earth_colour"):
+		return _floor_material(true)
+	var key := "mound_earth"
+	if _materials.has(key):
+		return _materials[key]
+	var m := StandardMaterial3D.new()
+	m.roughness = 0.97
+	m.albedo_texture = FLOOR_ALBEDO
+	m.albedo_color = Color(str(mound.get("earth_colour")))
+	m.normal_enabled = true
+	m.normal_texture = FLOOR_NORMAL
+	m.normal_scale = float(mound.get("earth_normal_scale", 1.4))
+	m.uv1_triplanar = true
+	m.uv1_scale = Vector3.ONE * float(mound.get("earth_uv_scale", FLOOR_UV_SCALE))
+	m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	_materials[key] = m
+	return m
+
+
 func _wear_as_earth(node: Node) -> void:
-	var earth := _floor_material(true)
+	var earth := _mound_earth_material()
 	for child in _mesh_boxes_nodes(node):
 		var instance := child as MeshInstance3D
 		var mesh := instance.mesh
