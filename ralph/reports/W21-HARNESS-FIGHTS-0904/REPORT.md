@@ -432,10 +432,14 @@ Branch `ralph/W21-HARNESS-FIGHTS-0904`, from `origin/main` at `ef16544f`.
 | commit | what |
 |---|---|
 | `01dfdc5c` | the segment rewrite and `tests/test_gate_f_segments.gd` (CL-H1, CL-H2, CL-H7) |
-| `96b315e9` | the challenge-approach tolerance fix and its test (found by the S07 run) |
+| `96b315e9` | the challenge-approach tolerance fix and its seventh test (found by the S07 run) |
 | `1d8a4fd0` | this report, the four runs' written verdicts, and the `docs/CURRENT_STATE.md` rows |
-| `208ca0b6805799710abc550620bccf391e0116ab` | this commit table |
-| **the commit that added this row** | the final commit on this branch — it changes nothing but this table, and its hash is in the lane summary and in `git log -1 ralph/W21-HARNESS-FIGHTS-0904` |
+| `208ca0b6`, `00729c1e` | the commit table |
+| `32f6640a` | the CI section above — the four reds proven pre-existing on the base |
+| the commit that added this row | the branch tip; `git rev-parse ralph/W21-HARNESS-FIGHTS-0904` names it, and it changes nothing but this table |
+
+The two commits that carry every code and script change in this lane are **`01dfdc5c`** and
+**`96b315e9`**; everything after them is this report.
 
 No pull request was opened, per COMMON.md — the coordinator lands this.
 
