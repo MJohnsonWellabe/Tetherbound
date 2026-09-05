@@ -392,6 +392,29 @@ func test_the_camp_group_is_an_opt_in_camp_source() -> void:
 	assert_true(bool(_presence.call("is_camp_near")))
 
 
+func test_the_camp_scan_costs_nothing_while_the_creature_is_moving() -> void:
+	var bed := Node3D.new()
+	bed.add_to_group(PRESENCE.CAMP_GROUP)
+	_root.add_child(bed)
+	_extras.append(bed)
+	bed.position = _body.position + Vector3(0.0, 0.0, 2.0)
+	# Walking: the follower is closing the gap to a trainer who moved off.
+	_leader.position = Vector3(0.0, 0.0, -40.0)
+	_body.set("_closing", true)
+	_presence.set("last_camp_scan_nodes", 0)
+	_tick_seconds(float(_cfg()["camp"]["scan_every_s"]) * 3.0)
+	assert_false(bool(_presence.call("is_camp_near")),
+		"a creature under way does not settle, so the world tree is not walked")
+	assert_eq(int(_presence.get("last_camp_scan_nodes")), 0,
+		"three scan intervals of travel and not one scan happened")
+	# Standing again: the scan runs on the next tick and finds the same bed.
+	_body.set("_closing", false)
+	_leader.position = _body.position + Vector3(0.0, 0.0, 2.0)
+	_presence.call("tick", TICK)
+	assert_true(bool(_presence.call("is_camp_near")))
+	assert_true(int(_presence.get("last_camp_scan_nodes")) > 0, "and it walked a bounded tree")
+
+
 func test_far_from_any_camp_nothing_settles() -> void:
 	_tick_seconds(float(_cfg()["camp"]["settle_seconds"]) + 1.0)
 	assert_false(bool(_presence.call("is_camp_near")))

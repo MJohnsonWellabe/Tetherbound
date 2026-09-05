@@ -671,6 +671,16 @@ func _next_flinch() -> float:
 
 func _update_camp(delta: float, leader: Node3D) -> void:
 	var cfg: Dictionary = _cfg.get(CAMP, {})
+	# Only ever scanned while the creature is standing. Settling requires
+	# standing anyway (below), so a walk across the Meadows costs this nothing
+	# -- which is the half that matters: the scan walks the world's node tree,
+	# and the world is at its largest exactly while the player is travelling
+	# through it. `last_camp_scan_nodes` reports what one scan actually cost.
+	if not _standing():
+		_camp_near = false
+		_camp_standing_seconds = 0.0
+		_camp_scan_timer = 0.0
+		return
 	_camp_scan_timer -= delta
 	if _camp_scan_timer <= 0.0:
 		_camp_scan_timer = float(cfg.get("scan_every_s", 2.0))
@@ -692,7 +702,7 @@ func _update_camp(delta: float, leader: Node3D) -> void:
 		to_leader.y = 0.0
 		if to_leader.length() > radius:
 			_camp_near = false
-	if _camp_near and _standing():
+	if _camp_near:
 		_camp_standing_seconds += delta
 	else:
 		_camp_standing_seconds = 0.0
