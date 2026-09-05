@@ -428,7 +428,7 @@ every one of them is about the map screen this lane only added a marker to):
 | | |
 |---|---|
 | Branch | `ralph/W11-ALPHA-PINS-0904` |
-| Files in the diff | 15, all inside the ownership list |
+| Files in the diff | 19, all inside the ownership list (see §1) |
 | Lane test | `test_alpha_pins.gd` — 24 tests, 154 assertions, 0 failed |
 | Lane smoke | `smoke_alpha_pins.gd` — pins at 275.0 m walking in from 550 m, 0 errors |
 | Named tests | `test_save_format` 55/271/0, `test_map_baker` 7/13/0, `test_map_icons` 6/35/0, `test_map_fog` 5/18/0, `test_map_zoom_persistence` 3/9/0 |
@@ -453,4 +453,29 @@ does not drop when the player walks 850 m out of the radius, and reports `1 pin(
 from 850 m away`. Only the once-flag clears it, which is the directive's actual promise and
 which no unit test covers from a live world.
 
-**Final commit:** `8eac795d` on `ralph/W11-ALPHA-PINS-0904` (this line was written into the commit that follows it, `8eac795d` being the commit that closed the report body).
+**Final commit:** `913848ca` on `ralph/W11-ALPHA-PINS-0904` — the last commit before this
+line was written. A report cannot contain its own hash, so the tip is the commit that
+carries this correction; `git log -1 origin/ralph/W11-ALPHA-PINS-0904` names it. The last
+commit touching **shipped code** (as opposed to the report, the sheet or the capture tools)
+is `5a40b79b`.
+
+**Full file list**, `git diff --name-status origin/main...HEAD`:
+
+```
+A  assets/ui/icons/map/alpha.png            A  tests/smoke_alpha_pins.gd
+A  assets/ui/icons/map/alpha.png.import     A  tests/smoke_alpha_pins.gd.uid
+M  autoload/map_state.gd                    A  tests/test_alpha_pins.gd
+A  data/config/map.json                     A  tests/test_alpha_pins.gd.uid
+A  ralph/reports/W11-ALPHA-PINS-0904/REPORT.md
+A  ralph/reports/W11-ALPHA-PINS-0904/_sheet_alpha_pin.png
+M  scripts/save/save_game.gd                A  tools/_capture_alpha_pin_map.gd
+M  scripts/ui/minimap.gd                    A  tools/_probe_alpha_pin_process.gd
+M  scripts/ui/tab_map.gd                    A  tools/gen_alpha_pin_icon.py
+A  scripts/world/alpha_pins.gd
+A  scripts/world/alpha_pins.gd.uid
+M  scripts/world/playground_world.gd
+```
+
+Nothing outside the brief's ownership list. The `.uid` sidecars are for this lane's own
+three new scripts, which is how every other script in `tests/` and `scripts/world/` is
+tracked on `main`.
