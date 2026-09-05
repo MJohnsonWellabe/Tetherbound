@@ -919,7 +919,7 @@ func _hand_over_the_legendary() -> void:
 	var party: RefCounted = game.get("party")
 	if party != null and not bool(party.call("is_full")):
 		party.call("add", creature)
-		_set_flag(_flag("legendary_joined"))
+		_set_player_flag(_flag("legendary_joined"))
 		_settle()
 		print("[climax] the legendary joined a belt with room on it")
 		return
@@ -938,7 +938,7 @@ func _ceremony_pending() -> bool:
 	if _joined != null and not _has_flag(_flag("legendary_joined")):
 		var party: RefCounted = game.get("party")
 		if party != null and (party.call("members") as Array).has(_joined):
-			_set_flag(_flag("legendary_joined"))
+			_set_player_flag(_flag("legendary_joined"))
 	if _joined != null:
 		_settle()
 	return false
@@ -1034,6 +1034,23 @@ func _set_flag(flag: String) -> void:
 		push_error("no progression store; '%s' was recorded nowhere" % flag)
 		return
 	progression.call("set_flag", flag)
+
+
+## MP_STATE_SEAM.md §3: `legendary_joined` goes to THE PARTY OWNER'S own store,
+## named explicitly rather than routed by the merged view. `legendary_freed` is
+## the world's -- the machine is dead for everyone -- but which belt the freed
+## creature ended up on is one trainer's fact, and the owner of the belt it
+## joined is the owner of `Game.party`, i.e. the local player.
+func _set_player_flag(flag: String) -> void:
+	if flag == "":
+		return
+	var game := _game()
+	var store: RefCounted = game.call("player_flags") if game != null \
+		and game.has_method("player_flags") else _progression()
+	if store == null:
+		push_error("no progression store; '%s' was recorded nowhere" % flag)
+		return
+	store.call("set_flag", flag)
 
 
 func _prompt_radius() -> float:

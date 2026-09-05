@@ -948,6 +948,44 @@ func set_objective(text: String, world_pos: Variant = null) -> void:
 		map.remove_dynamic_marker("objective")
 
 
+# --- naming a flag store explicitly (MP_STATE_SEAM.md §3, last paragraph) ----
+##
+## Four writer sites must NOT go through `Game.progression`, because the ACTOR
+## is not simply "whoever is local right now" and scope routing alone would put
+## the flag in a store that is right today and wrong with a second player in the
+## session. They name a store through these three instead, and Waves 3/5 change
+## the bodies here rather than hunting the call sites again.
+
+## The world's store. `realm_heart_state.place()` writes through this so a
+## client cannot record a Heart placement locally from Wave 3.
+func world_flags() -> RefCounted:
+	return world.flags if world != null else null
+
+
+## One player's store -- the local one, which is the only one that exists
+## before Wave 2. `peer_id` 0 means "local"; from Wave 2 a host passes a real
+## peer id and gets that peer's.
+func player_flags(peer_id: int = 0) -> RefCounted:
+	if peer_id != 0 and players.has(peer_id):
+		return (players[peer_id] as Object).get("flags") as RefCounted
+	return local.flags if local != null else null
+
+
+## D99/D-MP5: home and creature-bed flags are PLAYER flags granted to EVERY
+## connected peer when the world gains the pieces -- a shared camp is
+## everyone's camp. Solo, that is exactly one store and exactly today's
+## behaviour; from Wave 3 this fans out a per-peer delta and the call sites
+## (`home_progress.gd`) do not change.
+func grant_player_flag(id: String, value: bool = true) -> void:
+	if local != null:
+		local.flags.call("set_flag", id, value)
+	for peer_id: Variant in players.keys():
+		var peer: Object = players[peer_id]
+		var store: Object = peer.get("flags") if peer != null else null
+		if store != null and store != local.flags:
+			store.call("set_flag", id, value)
+
+
 ## OF20. Any world node with no HUD handle of its own queues its one-line
 ## refusal here; see `_pending_world_message`'s own comment for why this
 ## exists instead of the node reaching for the HUD directly.
