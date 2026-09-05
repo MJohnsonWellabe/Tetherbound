@@ -240,6 +240,19 @@ evidence.
   cannot bury anything, and fixing it properly means indexing the list by position the way
   `_instance_positions` is. Named in the code comment and left alone deliberately rather
   than fixed as a drive-by inside a query-only change.
+- **Twelve scripts on `main` are missing their `.uid` sidecars.** A clean
+  `godot --headless --path . --import` in this container generates untracked `.uid` files
+  for `autoload/realm_heart_state.gd`, `scripts/world/cloudreach_world.gd`,
+  `scripts/world/realm_gate.gd`, `scripts/world/realm_heart_shrine.gd`,
+  `tools/capture_cloudreach_foundation.gd` and seven `tests/*cloudreach*`/`*realm*` files —
+  i.e. every script the Cloudreach Cliffs commits (`04d844d0`, `3f9e1a14`, `47ca2e12`)
+  added. 248 of the repository's 249 test scripts carry a committed sidecar, so this is an
+  omission in that landing, not a convention. Deleted locally rather than committed here:
+  they are another lane's files and this wave's COMMON says to stay inside the brief's list.
+  **Ask:** N12-REPO-HYGIENE owns this — commit the twelve sidecars, or decide `.uid` is not
+  tracked and remove all 248. (The same commits are also what W24-LANDING already flagged as
+  Biome 2 work landing on `main` against `CLAUDE.md`; that is the owner's call, not this
+  one.)
 - **`_layer_for()` / `_layer_name_for()` still cannot see an anchor that overrides its
   layer's `models` list.** Pre-existing, documented on those functions, and inherited by
   both `_prop_offset_for()` and `_record_soft_occluders()`. An anchor-override model falls
