@@ -342,6 +342,7 @@ func _place_legendary() -> void:
 	_cage_measure = _measure_cage(spec.get("stage", {}) as Dictionary)
 	if not _cage_measure.is_empty():
 		bound_at = _cage_measure["stand"] as Vector3
+		_freed_spot = _clear_of_the_machine(_freed_spot, spec.get("stage", {}) as Dictionary)
 	var body: Node3D = CREATURE_SCENE.instantiate()
 	body.name = "BoundLegendary"
 	body.set_script(CREATURE_BODY)
@@ -361,6 +362,13 @@ func _place_legendary() -> void:
 
 	_legendary = body
 	if not _cage_measure.is_empty():
+		# The dais is geometry with no collider (the machine's only collider is
+		# its 2.7 m base drum), and a creature body is a CharacterBody3D that
+		# falls under its own gravity -- so a bound creature left to physics
+		# sinks 0.4 m into the dais and rests on the drum's invisible top.
+		# Found by smoke_stronghold measuring feet at 2.70 m against a dais at
+		# 3.13 m. Held, the machine holds it: no physics until it steps out.
+		_set_body_physics(false)
 		var top := float(body.call("body_height")) * float(spec.get("scale", 1.0))
 		var headroom := float(_cage_measure["void_height"]) - top
 		print("[climax] the legendary stands inside the machine: dais %.2f m up, void %.2f m tall, body %.2f m, headroom %.2f m" % [
@@ -440,15 +448,60 @@ func _measure_cage(stage: Dictionary) -> Dictionary:
 					crown_under = minf(crown_under, p.y)
 	if not is_finite(dais_top) or not is_finite(crown_under) or crown_under <= dais_top:
 		return {}
+	# The plinth: how far the machine's own geometry reaches across the floor,
+	# which is what the freed creature has to be clear of to read as OUT of it.
+	# Measured over everything standing below the dais, for the same reason
+	# the void is measured rather than assumed.
+	var footprint := 0.0
+	for child in meshes:
+		var mi := child as MeshInstance3D
+		if mi.mesh == null:
+			continue
+		var into := _to_machine(mi, machine)
+		for surface in mi.mesh.get_surface_count():
+			var verts: PackedVector3Array = mi.mesh.surface_get_arrays(surface)[Mesh.ARRAY_VERTEX]
+			for v in verts:
+				var p: Vector3 = into * v
+				if p.y <= dais_top:
+					footprint = maxf(footprint, Vector2(p.x, p.z).length())
 	var clearance := float(stage.get("clearance", 0.05))
 	var stand: Vector3 = machine.global_transform * Vector3(0.0, dais_top + clearance, 0.0)
 	return {
 		"dais_top": dais_top,
 		"crown_under": crown_under,
 		"void_height": crown_under - dais_top,
+		"footprint": footprint,
 		"stand": stand,
 		"axis": machine.global_position,
 	}
+
+
+## Where the freed creature stands, pushed out along the mark's own bearing
+## until it clears the machine's MEASURED plinth by `stage.step_out_clearance`.
+##
+## R8.2's `legendary_stand` is 6 m from the chamber centre and the installed
+## mesh's plinth reaches 5.98 m across its own depth axis, so the mark as
+## authored leaves the freed creature standing on the machine's own base --
+## measured in `smoke_gate_e_finale` at 2.0 m off the axis and 2.0 m up. That
+## reads as still in the machine, which is the very thing OP-0904-8 is about.
+## The bearing is the mark's, so the authored direction is respected and only
+## the distance is corrected; `stronghold.json` is another lane's file and is
+## not edited for this.
+func _clear_of_the_machine(mark: Vector3, stage: Dictionary) -> Vector3:
+	var axis: Vector3 = _cage_measure["axis"]
+	var want := float(_cage_measure["footprint"]) + float(stage.get("step_out_clearance", 2.5))
+	var flat := Vector3(mark.x - axis.x, 0.0, mark.z - axis.z)
+	if flat.length() < 0.01:
+		# A mark on the axis has no bearing of its own; walk out the way the
+		# player came in, which is the chamber's own doorway side.
+		flat = Vector3(cos(deg_to_rad(_stronghold_yaw_deg())), 0.0, -sin(deg_to_rad(_stronghold_yaw_deg())))
+	if flat.length() >= want:
+		return mark
+	var out := axis + flat.normalized() * want
+	out.y = mark.y
+	print("[climax] the freed stand is %.2f m from the machine's axis, inside its %.2f m plinth; moved out to %.2f m" % [
+		flat.length(), float(_cage_measure["footprint"]), want])
+	return out
 
 
 ## A mesh's transform into the machine node's own frame, composed by walking
@@ -647,9 +700,11 @@ func _step_out(freed: Dictionary, immediate: bool) -> void:
 		return
 	if immediate:
 		_legendary.global_position = _freed_spot
+		_set_body_physics(true)
 		return
 	if _step_tween != null and _step_tween.is_valid():
 		_step_tween.kill()
+	_set_body_physics(false)
 	var seconds := maxf(0.1, float(freed.get("step_out_seconds", 2.4)))
 	var from := _legendary.global_position
 	# Down off the dais first, then across the floor: two legs so it does not
@@ -660,7 +715,28 @@ func _step_out(freed: Dictionary, immediate: bool) -> void:
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	_step_tween.tween_property(_legendary, "global_position", _freed_spot, seconds * 0.55) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	_step_tween.tween_callback(_face_the_player)
+	_step_tween.tween_callback(_landed)
+
+
+## Back on the floor and under its own weight again, facing the player.
+func _landed() -> void:
+	_set_body_physics(true)
+	# On the floor it is actually standing on, not on the height the tween
+	# happened to end at -- `place_on_ground` is the creature's own seating.
+	if _legendary != null and _legendary.has_method("place_on_ground"):
+		_legendary.call("place_on_ground", _legendary.global_position)
+	_face_the_player()
+
+
+## A bound or walking creature is carried by this node, not by physics: with
+## gravity on, a body standing on collider-less machine geometry falls, and a
+## tweened body fights `move_and_slide` every tick.
+func _set_body_physics(on: bool) -> void:
+	if _legendary == null:
+		return
+	_legendary.set_physics_process(on)
+	if _legendary is CharacterBody3D:
+		(_legendary as CharacterBody3D).velocity = Vector3.ZERO
 
 
 ## It comes to the player: the offer is the creature crossing the room, not a
@@ -679,13 +755,23 @@ func _approach_player() -> void:
 		return
 	var target := to - flat.normalized() * stop
 	target.y = here.y
+	# Never let the offer walk it back onto the machine's plinth.
+	if not _cage_measure.is_empty():
+		var axis: Vector3 = _cage_measure["axis"]
+		var want := float(_cage_measure["footprint"]) \
+			+ float((_config.get("legendary", {}) as Dictionary).get("stage", {}).get("step_out_clearance", 2.5))
+		var off := Vector3(target.x - axis.x, 0.0, target.z - axis.z)
+		if off.length() < want:
+			target = axis + off.normalized() * want if off.length() > 0.01 else target
+			target.y = here.y
 	if _step_tween != null and _step_tween.is_valid():
 		_step_tween.kill()
+	_set_body_physics(false)
 	_step_tween = create_tween()
 	_step_tween.tween_property(_legendary, "global_position", target,
 		maxf(0.1, float(freed.get("approach_seconds", 2.0)))) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	_step_tween.tween_callback(_face_the_player)
+	_step_tween.tween_callback(_landed)
 
 
 func _face_the_player() -> void:

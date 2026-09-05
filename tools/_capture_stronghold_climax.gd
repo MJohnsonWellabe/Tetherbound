@@ -151,12 +151,17 @@ func _run() -> void:
 	# Closer: 18 m up the causeway from its foot, on the deck itself (the
 	# stronghold knows its own walking surface), where the sentries, sconces
 	# and causeway braziers are people-sized rather than pinpricks.
-	var cause := entrance + toward * 18.0
-	var cause_y := float(hold.call("ground_height_at", cause.x, cause.z)) if hold.has_method("ground_height_at") else NAN
+	# `causeway_surface_y` is the deck itself (tools/_judge_capture_hall.gd's
+	# H-04 learned this: `ground_height_at` under the ramp is the terrain the
+	# deck bridges, and an eye taken from it is buried inside the slab).
+	var cause := entrance + toward * 20.0
+	var cause_y := float(hold.call("causeway_surface_y", cause.x, cause.z)) if hold.has_method("causeway_surface_y") else NAN
 	if is_nan(cause_y):
 		cause_y = _ground(world, cause.x, cause.z)
 	var cause_eye := Vector3(cause.x, cause_y + 1.7, cause.z)
-	var cause_aim := entrance + toward * 46.0 + Vector3(0.0, 3.0, 0.0)
+	var cause_aim := cause_eye + toward * 20.0
+	var aim_y := float(hold.call("causeway_surface_y", cause_aim.x, cause_aim.z)) if hold.has_method("causeway_surface_y") else NAN
+	cause_aim.y = (cause_y if is_nan(aim_y) else aim_y) + 4.0
 
 	var torch := OmniLight3D.new()
 	torch.light_energy = 0.0

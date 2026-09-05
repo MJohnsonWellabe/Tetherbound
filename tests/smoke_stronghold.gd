@@ -334,9 +334,12 @@ func _the_legendary_is_bound_inside_the_machine(world: Node, hold: Node3D) -> vo
 	if body_top > crown + 0.05:
 		_fail("the bound legendary's %.2f m body top pokes through the machine's crown at %.2f m" % [body_top, crown])
 	if machine != null:
+		# `_aabb_of` measures in the machine's OWN frame, so the point goes
+		# into that frame too.
 		var box := _aabb_of(machine)
-		if not box.has_point(legendary.global_position + Vector3.UP * 0.5):
-			_fail("the bound legendary is outside the machine's own bounds")
+		var local := machine.global_transform.affine_inverse() * (legendary.global_position + Vector3.UP * 0.5)
+		if not box.has_point(local):
+			_fail("the bound legendary is outside the machine's own bounds (local %s vs %s)" % [str(local), str(box)])
 	if legendary.get_node_or_null(^"ContainmentVFX") == null:
 		_fail("the bound legendary carries no containment VFX")
 

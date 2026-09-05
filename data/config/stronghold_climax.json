@@ -59,7 +59,9 @@
     "stage": {
       "_comment": "How the cage void is read off the machine mesh. `axis_probe_radius` is how far from the axis still counts as 'the middle' when finding the dais top and the crown underside; `clearance` lifts the feet that far off the dais so the hooves do not z-fight it.",
       "axis_probe_radius": 1.0,
-      "clearance": 0.05
+      "clearance": 0.05,
+      "step_out_clearance": 2.5,
+      "_comment_step_out": "How far clear of the machine's MEASURED plinth the freed creature stands. R8.2's `legendary_stand` mark is 6 m from the chamber centre and the installed mesh's plinth reaches 5.98 m, so the mark as authored left the freed creature standing on the base -- measured at 2.0 m off the axis in smoke_gate_e_finale. The mark's bearing is kept; only its distance is corrected, so stronghold.json (another file's) is untouched."
     },
     "bound": {
       "_comment": "While it is held in the machine: drained, clamped, lit by somebody else's light. Two cold teal restraint rings (palette.json's reserved Tether teal) tight on the body -- `rings` are heights as fractions of the body's own height, the radius is the species' gameplay radius plus `ring_clearance` -- plus a slow pulse so it reads as machinery working rather than as scenery. The old 24-bar floor ring of radius 3.4 m is gone: it was the ring outside the machine.",
