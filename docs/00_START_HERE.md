@@ -76,6 +76,7 @@ and which must wait for 2.8's verdict.
 | Settled design decisions (append-only) | `docs/decisions/` |
 | Detailed implementation contracts per task | `docs/prompts/` |
 | Long-form owner-supplied specs (progression, macro layout, design) | `docs/specs/` |
+| The Phase 2 design contracts (rideable roster / fly / teleport, the task feed, the village replan, camping made necessary) — the implementation briefs for the 2026-09-04 directives | `docs/specs/C*.md` (`C1_RIDEABLE_ROSTER_FLY_TELEPORT.md`, `C2_TASK_FEED.md`, `C3_VILLAGE_REPLAN.md`, `C4_CAMPING_NECESSARY.md`) |
 | Chapter acceptance and the Gate F full-playtest protocol | `docs/acceptance/` |
 | Reference art (key art, Palworld bar) | `docs/reference/` |
 | What was moved/archived/removed in the reset and why | `docs/CLEANUP_MANIFEST.md` |
