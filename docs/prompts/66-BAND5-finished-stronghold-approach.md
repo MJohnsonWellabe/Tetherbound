@@ -34,6 +34,13 @@ Use current canonical STORM-GATE placement if it belongs on this route. A physic
 ### Wild ecology
 Populate the approach with stronger believable wild presence. Current empty Band 5 spawn data is not acceptable. Use habitat/Team Tether damage to shape placement rather than simply increasing density.
 
+> **Stale as of 2026-09-04 (CL-D2).** Band 5's spawn data has not been empty since this
+> prompt was written: `data/config/bands/band5_stronghold_approach/spawns.json` authors
+> **23 clusters**. That number is deliberately below Band 3's 54 — D70 made the final
+> approach thin on purpose, as the chapter's crescendo, and the habitat/damage shaping
+> this section asks for is what the thinness is for. Read 23 as authored shape, not as a
+> gap to fill.
+
 ### Trainers/patrols
 Use ordinary faction patrols/checkpoints to build pressure before the interior. Do not consume every major combat beat before the stronghold.
 
