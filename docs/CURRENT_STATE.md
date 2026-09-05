@@ -390,5 +390,37 @@ Points of interest: one optional discovery with a real reward, signposts legible
   the climb out of its north-east shoulder (`S05-32x`, the RIG-F6 precedent — legs checked
   against a route that was actually walked, never a teleport past geometry): 23 s instead of 543.
 
-- **Gate 3 / 4:** not started. Gate F S03 reached 6 failures outside its lane's scope;
-  S04–S10 unverified as a chain.
+- **Gate 3 / 4:** not started as a chain. Gate F S03 reached 6 failures outside its lane's
+  scope; S04–S10 unverified as a chain.
+
+  **CL-H1 / CL-H2 / CL-H7 are closed at the script level and half-proven in play
+  (W21-HARNESS-FIGHTS-0904, `ralph/reports/W21-HARNESS-FIGHTS-0904/REPORT.md`).** Every fight
+  in `S06`–`S09` and their capture twins was `press combat_quick, times: N`, the failure mode
+  `SEGMENT_SCHEMA.md` names by name; all 21 blocks are now `fight_until_resolved` (or
+  `chip_to_floor` for S08's two catch chips, which must NOT resolve), all 21 challenge
+  conversations are `advance_dialogue_until_closed`, and every fight carries a
+  revive-by-item-identity + switch ladder ending in the `active_creature_alive` gate.
+  `tests/test_gate_f_segments.gd` (7 tests) pins all of it, seen red on the old files for the
+  right reason at every one. **Played evidence, four logic-lane runs from the synthetic
+  entries:** nine trainer fights resolved by predicate, every one ending on its own defeat
+  flag with a live party — including **S06-22 against Dorn (41 presses, `defeated_quarry_dorn`
+  set, lead at 94/170, bench untouched), the fight G3-BAND2 watched wipe a party of four
+  inside its 34-press block**. S07 ran 154/3 through the whole relay ladder with zero faints;
+  S09's ladder was observed handing the pilot from a fainted Tup to Ripple and winning a fight
+  `can_challenge()` would otherwise have refused. **Still unplayed:** S06's Warrens fights
+  (blocked by the S06-50 pin below), S08's captains (derailed at S08-79) and S09's checkpoint
+  (derailed at S09-35), each behind a defect another lane owns.
+
+- **A second `stick_navigator.gd` pin, same class as the Pond stall above and CL-H14, with the
+  detail that changes the diagnosis (open, W21-HARNESS-FIGHTS-0904).** `S06-50`'s walk out of
+  the Old Quarry pinned inside a **2.7 m × 2.5 m box at (336.2, 1.3, 1820.6) for its entire
+  44,100-frame budget — 711 play seconds, `input_context` `world` throughout, "0 held"** — and
+  took eleven Warrens steps down with it. Unlike the Pond stall it is **not frozen**:
+  `dead_travel_m` climbed to 1,258 m while the body jittered inside that box, so the walker
+  was pushing and moving. And the **next** `move_to` (`S06-55`) started from the same position
+  and walked away cleanly at ~3.9 m/s, 470 m in 7,200 frames. A fresh walk call escapes ground
+  the previous call cannot leave — navigator state, not terrain — one step after `S06-38`
+  placed a workbench at the player's feet. Meanwhile **CL-H14's `S08-22` freeze did not
+  reproduce** on that branch: `walked 839.5 m to (-345, 5060) in 10912 walking frames (0 held)`,
+  region confirmed `the_ironwood_grove`. One clean crossing from a synthetic entry, not a
+  refutation.
