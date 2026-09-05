@@ -21,9 +21,9 @@ result: **10 tests, 19 assertions, 0 failed**.
 No pickup/progression implementation from prompt 75 has started. The attempted
 Phase 0.1 route-strip implementation was reverted after its final GPU smoke
 failed the stricter three-subject fight framing and combat-exit cleanup checks.
-The exact reproduction, blind visual finding, and next implementation steps are
-in `docs/VISUAL_PARITY_PROGRESS.md` under “Exact resume point.” There are no
-half-finished source edits from that attempt in this checkpoint.
+**Phase 0.1 was then landed by lane W01-ROUTE-STRIP-0904 (2026-09-05)** from those
+recorded lessons — see the "Route strip / creature evidence (2.15, CL-H9)" row in §2
+and `docs/VISUAL_PARITY_PROGRESS.md`'s resume point, which now records what landed.
 
 ## 1. Git truth
 
@@ -46,6 +46,7 @@ player-path smoke chain run one test at a time. Classification per the audit bri
 
 | System | Status | Evidence |
 |---|---|---|
+| Route strip / creature evidence (2.15, CL-H9) | **Working in-container; GPU strip not yet run** | `tools/_capture_route_strip.gd` summons the party's active creature through `CreatureSpecies.spawn` + `Game.party.add` + `EncounterDirector.summon_active_creature`, stands trainer and companion side by side on every road stand, enters one real `CombatManager` fight per band through the interact press, solves the fight camera against trainer, companion and opponent (`capture_check.fit_distance`), and refuses any frame `capture_check.readable_problems` faults (empty, behind, < 12 % of frame height, cropped, occluded, overlapped on screen, or a > 50 % close-up in a fight). Fight cleanup is unconditional, waits past `combat.json`'s 0.25 s input guard, and asserts `gate_f_probe.input_context() == "world"`. Bounded xvfb run `--bands=1 --max=3 --fast`: 3 road frames + 1 fight frame, 0 refused, exit 0 (`ralph/reports/W01-ROUTE-STRIP-0904/REPORT.md`, `_sheet_route_strip.png`, blind verdict there). `tests/test_capture_check.gd` 18 tests, the readable rules seen red when weakened. The refusal is also the finding: a refused frame is listed in `manifest.json` under `rejected` and the run exits 1. The GPU strip (owner kickoff) has not run since this landed. |
 | Title / new game / load game | Working | `smoke_title_new_game`, `smoke_title_load_game` pass |
 | Opening (wake → Grandpa → starter → first catch → exit house) | **Working but rough** | `smoke_opening` passes; `smoke_gate_a_opening_segment` **failed** on `main`: the tutorial orb floor was gated on the enemy being a Bramblebun, and the real interact press engaged a Mudsnout, so a player who throws their last orb before the first catch dead-ends. Fixed this session in `scripts/story/sequence_director.gd` (gate on the opening beat, not species); re-run pending at time of writing |
 | Menus, modal stacking, post-modal control | Working | `smoke_post_modal_control`, `smoke_modal_stacking`, `smoke_menu` pass; the input-owner group contract is the mechanism (`scripts/ui/input_owner.gd`) |
