@@ -166,13 +166,14 @@ const NUDGE_BEARINGS := 12
 ## so "more parts" is "worth more" without a key. `parts_for()` is the count
 ## a test can pin.
 ##
-## Good's emission went 0.30 -> 0.55 on a lighter, yellower green after
-## N08's round-1 judge could not find it at 7 m: "a green shape, on green
-## grass, inside a green glow... it needs to be darker or lighter than the
-## grass, because it will never win on green-against-green."
+## Good's emission went 0.30 -> 0.55 -> 0.80 on a lighter, minty green after
+## N08's round-1 and round-2 judges could not find it at 7 m: "a green shape,
+## on green grass, inside a green glow... it needs to be darker or lighter
+## than the grass, because it will never win on green-against-green." Lighter
+## is the only way open to the quiet tier: darker would read as a stone.
 const CANDY_LOOK := {
-	"good_candy": {"tint": Color(0.80, 1.0, 0.80), "emit": Color(0.72, 1.0, 0.58), "badge": Color(0.24, 0.72, 0.40), "emission": 0.55, "scale": 0.34, "crest": "disc", "ring": 1.10, "sparkles": 0, "wings": false, "glow": 1.0},
-	"great_candy": {"tint": Color(0.62, 0.76, 1.0), "badge": Color(0.22, 0.46, 0.92), "emission": 0.70, "scale": 0.42, "crest": "star", "ring": 1.18, "sparkles": 3, "wings": false, "glow": 1.3},
+	"good_candy": {"tint": Color(0.88, 1.0, 0.84), "emit": Color(0.78, 1.0, 0.70), "badge": Color(0.24, 0.72, 0.40), "emission": 0.80, "scale": 0.34, "crest": "disc", "ring": 1.10, "sparkles": 0, "wings": false, "glow": 1.0},
+	"great_candy": {"tint": Color(0.62, 0.76, 1.0), "badge": Color(0.22, 0.46, 0.92), "emission": 0.90, "scale": 0.42, "crest": "star", "ring": 1.18, "sparkles": 3, "wings": false, "glow": 1.3},
 	"rare_candy": {"tint": Color(1.0, 0.86, 0.48), "emit": Color(1.0, 0.56, 0.06), "badge": Color(1.0, 0.70, 0.10), "emission": 1.25, "scale": 0.52, "crest": "crown", "ring": 1.26, "sparkles": 3, "wings": true, "glow": 1.7},
 }
 ## Per-tier mushroom look. Stamina is the shipped orange (ASSET_LEDGER), so it
@@ -217,10 +218,14 @@ const CROWN_SPIKE_RADIUS_FRACTION := 0.05
 ## the round core's width, so any band round the waist either passes through
 ## the ends or hangs a body-width off the core.
 const RING_TUBE_FRACTION := 0.06
-const RING_EMISSION := 0.9
+## Round 2's ring at 0.9 was the brightest pixel in the frame, brighter than
+## the sky ("a targeting reticle"); the ring now sits well under the cloud
+## value -- a coloured mark on the ground, not a light.
+const RING_EMISSION := 0.25
+const RING_DARKEN := 0.20
 ## Sparkles (Great, Rare): mote radius and orbit radius as fractions of the
 ## round core, and how far above the crest they sit.
-const SPARKLE_RADIUS_FRACTION := 0.11
+const SPARKLE_RADIUS_FRACTION := 0.14
 const SPARKLE_ORBIT_FRACTION := 0.62
 const SPARKLE_LIFT_FRACTION := 0.10
 ## Wings (Rare): span, height and thickness as fractions of the body's round
@@ -228,11 +233,14 @@ const SPARKLE_LIFT_FRACTION := 0.10
 ## the wing is rooted, not floating); and the upward sweep of the outer tip. The sign is the point:
 ## a positive tilt on the right wing lifts its +x end, and the mirrored left
 ## wing gets the mirrored angle, so both tips rise as the board draws them.
-const WING_SPAN_FRACTION := 0.80
-const WING_HEIGHT_FRACTION := 0.36
-const WING_THICKNESS_FRACTION := 0.10
-const WING_ROOT_INSET_FRACTION := 0.34
-const WING_SWEEP_DEG := 28.0
+## Round 2's wings were still read as "a flat pale-gold blade... a hard-edged
+## flat plane": a thin prism is a blade from any angle. Shorter, taller and
+## more than twice as thick, they are fins with volume, in the tier's gold.
+const WING_SPAN_FRACTION := 0.62
+const WING_HEIGHT_FRACTION := 0.40
+const WING_THICKNESS_FRACTION := 0.24
+const WING_ROOT_INSET_FRACTION := 0.42
+const WING_SWEEP_DEG := 36.0
 ## The idle spin, one full turn per period. A period, not a rate, so the
 ## number reads as "eight seconds a turn"; 0 disables it.
 const SPIN_PERIOD_S := 8.0
@@ -573,7 +581,7 @@ static func _dress_candy(mesh: MeshInstance3D, look: Dictionary, badge: Color) -
 		torus.ring_segments = 8
 		ring.mesh = torus
 		ring.position = Vector3(centre.x, aabb.position.y + tube, centre.z)
-		ring.material_override = _flat(badge, RING_EMISSION)
+		ring.material_override = _flat(badge.darkened(RING_DARKEN), RING_EMISSION)
 		mesh.add_child(ring)
 	var sparkles := int(look.get("sparkles", 0))
 	if sparkles > 0:
@@ -627,7 +635,7 @@ static func _dress_candy(mesh: MeshInstance3D, look: Dictionary, badge: Color) -
 			wing.rotation_degrees = Vector3(0.0, 0.0, side * WING_SWEEP_DEG)
 			# Gold, not white: round 1's pale wings were "two flat white
 			# blades" a judge could not tie to the body.
-			wing.material_override = _flat(badge.lerp(Color.WHITE, 0.12), 1.3)
+			wing.material_override = _flat(badge, 1.0)
 			mesh.add_child(wing)
 
 
