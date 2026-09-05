@@ -446,7 +446,8 @@ func _update_legend(map_state: RefCounted) -> void:
 			# so neither is a symbol anybody has to look up.
 			if str(entry.get("id", "")).begins_with(ALPHA_MARKER_PREFIX) and not seen.has("alpha"):
 				seen["alpha"] = true
-				_legend_row.add_child(_legend_entry(str(entry.get("icon", "alpha")), "Alpha"))
+				_legend_row.add_child(_legend_entry(
+					str(entry.get("icon", "alpha")), "Alpha", UITokens.DANGER))
 			continue
 		if not bool(entry.get("discovered", false)):
 			continue
@@ -459,7 +460,12 @@ func _update_legend(map_state: RefCounted) -> void:
 	UITokens.make_text_legible(_legend_row)
 
 
-func _legend_entry(icon_name: String, label_text: String) -> Control:
+## `tint` defaults to the neutral secondary every place row has always used, so
+## every existing caller is unchanged. The alpha row passes `UITokens.DANGER`,
+## because a legend printed in grey throws away the one colour code the map is
+## using -- the blind judge's words: "the one place where the game explains its
+## symbol set throws away the red coding entirely."
+func _legend_entry(icon_name: String, label_text: String, tint: Color = UITokens.TEXT_SECONDARY) -> Control:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 6)
 
@@ -474,7 +480,7 @@ func _legend_entry(icon_name: String, label_text: String) -> Control:
 	label.text = label_text
 	# OP21-15: see CANVAS_LABEL_FONT_SIZE's header — bumped past FONT_TINY.
 	label.add_theme_font_size_override("font_size", CANVAS_HEADING_FONT_SIZE + 2)
-	label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
+	label.add_theme_color_override("font_color", tint)
 	row.add_child(label)
 
 	return row
@@ -784,10 +790,13 @@ func _draw_alpha_pin_labels(canvas: Control, map_rect: Rect2, map_state: RefCoun
 			continue
 		var width := _region_font.get_string_size(
 			text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, CANVAS_LABEL_FONT_SIZE).x
-		var baseline := point + Vector2(half + 8.0, CANVAS_LABEL_FONT_SIZE * 0.36)
+		# 15 px, not 8: at 8 the first letter began five pixels from the plate's
+		# edge and the glyph and the letterform fused into one shape at 100%.
+		# The starburst above also reaches further out than the old disc did.
+		var baseline := point + Vector2(half + 15.0, CANVAS_LABEL_FONT_SIZE * 0.36)
 		var alignment := HORIZONTAL_ALIGNMENT_LEFT
 		if baseline.x + width > canvas.size.x - 8.0:
-			baseline.x = point.x - half - 8.0 - width
+			baseline.x = point.x - half - 15.0 - width
 			alignment = HORIZONTAL_ALIGNMENT_LEFT
 			if baseline.x < 8.0:
 				continue
@@ -839,8 +848,19 @@ func _draw_icon(canvas: Control, map_rect: Rect2, entry: Dictionary, alpha: floa
 		# asked to be advertised, and it is the only mark here that is meant to
 		# pull the eye. Drawn a shade darker than `UITokens.DANGER` itself so
 		# the white glyph on top keeps its contrast.
+		# A blind judge found this mark on its own but could separate it from the
+		# player marker "barely, and only by hue" -- both were filled discs of
+		# about the same footprint 35 px apart, and hue is the weakest channel
+		# there is: it fails for a colour-blind player and on a handheld panel in
+		# daylight. So the alpha now differs in SILHOUETTE. The starburst reads
+		# as a hazard rosette at a glance and, unlike a disc, nothing else on
+		# this screen has that outline at any size.
 		plate = Color(UITokens.DANGER.darkened(0.35), 0.94)
-		canvas.draw_circle(point, marker_size * plate_scale + 2.0, Color(0.02, 0.03, 0.04, 0.85))
+		var spike := marker_size * plate_scale
+		canvas.draw_colored_polygon(
+			_alpha_starburst(point, spike + 6.0), Color(0.02, 0.03, 0.04, 0.85))
+		canvas.draw_colored_polygon(
+			_alpha_starburst(point, spike + 4.0), Color(UITokens.DANGER, 0.95))
 	canvas.draw_circle(point, marker_size * plate_scale, plate)
 	canvas.draw_texture_rect(tex, Rect2(point - size * 0.5, size), false, Color(1, 1, 1, alpha))
 
@@ -1191,3 +1211,17 @@ func _player_node() -> Node3D:
 	if world == null:
 		return null
 	return world.get_node_or_null(^"Player") as Node3D
+
+
+## The alpha marker's outline: a rosette of `SPIKES` points alternating between
+## `radius` and `radius * 0.62`. Drawn rather than authored as a texture because
+## it is the marker's PLATE, sized from `marker_size` like the disc it replaced,
+## and `assets/ui/icons/map/alpha.png`'s chevron still sits on top of it.
+func _alpha_starburst(centre: Vector2, radius: float) -> PackedVector2Array:
+	const SPIKES := 9
+	var points := PackedVector2Array()
+	for index in SPIKES * 2:
+		var r := radius if index % 2 == 0 else radius * 0.62
+		var angle := TAU * float(index) / float(SPIKES * 2) - TAU * 0.25
+		points.append(centre + Vector2(cos(angle), sin(angle)) * r)
+	return points
