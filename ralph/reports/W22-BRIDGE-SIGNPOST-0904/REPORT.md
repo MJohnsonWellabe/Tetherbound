@@ -1,7 +1,7 @@
 # W22-BRIDGE-SIGNPOST-0904 — report
 
 Branch `ralph/W22-BRIDGE-SIGNPOST-0904`, from `origin/main` at `ef16544f`.
-Final commit: __W22_COMMIT__.
+Final commit on the lane branch: `a89d0859` (recorded by lane W24-LANDING at landing time; the lane left the token unfilled).
 
 Brief: prompt 74 §7 (signpost and bridge deck brought toward board 18 without Meshy) and
 closure plan CL-B3's in-rules half (the South Bridge as a held crossing from the approach).
