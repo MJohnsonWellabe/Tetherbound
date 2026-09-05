@@ -413,6 +413,48 @@ func test_the_three_candy_tiers_are_tinted_differently() -> void:
 	assert_false((tints["good_candy"] as Color).is_equal_approx(tints["rare_candy"] as Color), "Good and Rare share a tint")
 
 
+func test_the_candy_tiers_step_up_in_size_not_only_in_hue() -> void:
+	# Round 1's code-blind judge could not read the ladder from hue alone
+	# ("grade is carried entirely by a colour with no key attached to it").
+	# A tier now also differs in size, so the ladder survives a frame where
+	# the hue does not.
+	var sizes := {}
+	for grade: String in ["good_candy", "great_candy", "rare_candy"]:
+		var node := _built(grade, "s_" + grade)
+		for descendant in _walk(node):
+			if descendant is MeshInstance3D and descendant.name != "TierMedallion" and not descendant.name.begins_with("RareWing"):
+				sizes[grade] = (descendant as Node3D).scale.x
+				break
+		node.free()
+	assert_true(float(sizes["great_candy"]) > float(sizes["good_candy"]),
+		"Great is not larger than Good (%s vs %s)" % [str(sizes["great_candy"]), str(sizes["good_candy"])])
+	assert_true(float(sizes["rare_candy"]) > float(sizes["great_candy"]),
+		"Rare is not larger than Great (%s vs %s)" % [str(sizes["rare_candy"]), str(sizes["great_candy"])])
+
+
+func test_a_higher_tier_glows_harder() -> void:
+	# The other half of the ladder: Rare's hue has to sit ON TOP of the
+	# wrapper texture (emission adds) rather than under it (albedo
+	# multiplies), which is what made round 1's Rare read as the most washed
+	# out of the three.
+	var energies := {}
+	for grade: String in ["good_candy", "great_candy", "rare_candy"]:
+		var node := _built(grade, "e_" + grade)
+		for descendant in _walk(node):
+			if descendant is MeshInstance3D and descendant.name != "TierMedallion" and not descendant.name.begins_with("RareWing"):
+				var material: Material = (descendant as MeshInstance3D).material_override
+				assert_true(material is StandardMaterial3D, "%s has no override" % grade)
+				var standard := material as StandardMaterial3D
+				assert_true(standard.emission_enabled, "%s does not glow at all" % grade)
+				energies[grade] = standard.emission_energy_multiplier
+				break
+		node.free()
+	assert_true(float(energies["great_candy"]) > float(energies["good_candy"]),
+		"Great does not glow harder than Good")
+	assert_true(float(energies["rare_candy"]) > float(energies["great_candy"]),
+		"Rare does not glow harder than Great")
+
+
 func test_the_wild_shroom_is_broader_than_the_stamina_shroom() -> void:
 	var wild := _built("wild_mushroom", "t_wild")
 	var stamina := _built("stamina_mushroom", "t_stamina")

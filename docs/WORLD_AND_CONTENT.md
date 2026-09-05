@@ -175,8 +175,8 @@ Vendors confirmed in `data/config/trade.json`: Mira (goods), Oskar
 | Dialogue lines | 339 | same files |
 | Objectives | 33 (27 main + 6 local) | `data/progression/objectives.json` |
 | Trainers (field) | 29 (9+4+5+5+6 per band) | `data/config/bands/*/trainers.json` |
-| Wild spawn-table entries | 294 (68+57+54+91+24 per band) | `data/config/bands/*/spawns.json` |
-| Harvest/gathering nodes | 152 (40+26+31+45+10 per band) | `data/config/bands/*/harvest.json` |
+| Wild spawn-table entries | 320 (68+71+66+91+24 per band; bands 2–3 raised by W17-DENSITY-B2-B3, bands 4–5 by W18-DENSITY-B4-B5, both 2026-09-04) | `data/config/bands/*/spawns.json` |
+| Harvest/gathering nodes | 190 (40+46+49+45+10 per band; same two lanes) | `data/config/bands/*/harvest.json` |
 | Authored world pickups (candy, potions, revives, mushrooms; one once-flag per placement) | 101 (0+22+24+40+15 per band; candy 41 Good / 23 Great / 9 Rare + 28 recovery) | `data/config/bands/*/pickups.json`, loaded by `scripts/world/band_pickups.gd` (W17/W18-DENSITY, 2026-09-04; band 1's batch is a separate lane) |
 | NPC ranks | 4 | `data/config/npc_ranks.json` `.ranks` |
 | Tournament rounds | 3 | `data/config/tournament.json` `.rounds` |
@@ -192,18 +192,24 @@ Vendors confirmed in `data/config/trade.json`: Mira (goods), Oskar
 | Band | Spine (m) | Trainers | Wild spawn entries (per km) | Harvest nodes (per km) | Pickups G/Gr/R + recovery (per km) |
 |---|---|---|---|---|---|
 | band1_lower_meadows | 2403 | 9 | 68 (28.3) | 40 (16.6) | — (another lane) |
-| band2_stone_and_root | 2653 | 4 | 57 (21.5) | 26 (9.8) | 9/5/2 + 6 = 22 (8.3) |
-| band3_the_river_lock | 2375 | 5 | 54 (22.7) | 31 (13.1) | 9/6/2 + 7 = 24 (10.1) |
+| band2_stone_and_root | 2653 | 4 | 71 (26.8) | 46 (17.3) | 9/5/2 + 6 = 22 (8.3) |
+| band3_the_river_lock | 2375 | 5 | 66 (27.8) | 49 (20.6) | 9/6/2 + 7 = 24 (10.1) |
 | band4_upper_meadows_ironwood | 3436 | 5 | 91 (26.5) | 45 (13.1) | 16/9/4 + 11 = 40 (11.6) |
 | band5_stronghold_approach | 651 | 6 | 24 (36.9) | 10 (15.4) | 7/3/1 + 4 = 15 (23.0) |
-| **Total** | **11518** | **29** | **294** | **152** | **41/23/9 + 28 = 101** |
+| **Total** | **11518** | **29** | **320** | **190** | **41/23/9 + 28 = 101** |
 
 Per-km figures are against each band's own spine length from
 `terrain_playground.json` (`tools/_probe_band_density.gd`, the authored census the
 density lanes report with; D70's corridor probe counts what a walked route *meets*
-and is the Gate F figure). Band 5 is short on purpose (D70) and its road carries no
-added trainer, cache or cluster (P-5.3, D78): its three additions and twelve of its
-fifteen pickups sit off the road at places the band already names.
+and is the Gate F figure). Bands 2–3 were raised by W17-DENSITY-B2-B3 (band 2 from
+21.5 clusters/km and 9.8 harvest/km, band 3 from 22.7 and 13.1) and bands 4–5 by
+W18-DENSITY-B4-B5 (band 4 from 23.6 and 7.6). The census attributes one band-2 seam
+cluster to band 3 by z, so it prints 67 there where the file holds 66. Runtime
+confirmation for bands 2–3 (`tools/_probe_gate_f_corridor.gd`, things met within 30 m
+of the spine): band 2 100 → 133 with the worst gap 165 → 141 m, band 3 117 → 127 with
+163 → 118 m, against band 1's 172 and 100 m. Band 5 is short on purpose (D70) and its
+road carries no added trainer, cache or cluster (P-5.3, D78): its three additions and
+twelve of its fifteen pickups sit off the road at places the band already names.
 
 ## 8. Scatter re-bake rule
 
