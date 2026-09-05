@@ -273,7 +273,24 @@ Grow-never-shrink throughout: no `scale_min` moved down, saplings are untouched 
 common hero < ancient oak) is preserved by lifting all three together. Perf proxy at
 `band1_open` stayed inside the plan's 7,500 draw / 12.0 M primitive ceiling.
 
-**Blind judge on the after frames:** verdict in `ralph/reports/W05-TREELINE-0904/JUDGE-after.md`, summarised in that lane's report §7.
+**Blind judge on the after frames** (`ralph/reports/W05-TREELINE-0904/JUDGE-after.md`,
+full reasoning in that lane's report §7). It confirms the change reads on the one stand
+that actually presents a tree-line — `comp7-pond-reveal`, *"the only stand with a real
+tree-line, and it is good... varied, roughly a 4:1 height spread with three legible age
+classes"*, tallest ≈15.5 m or 8.6 player heights — and does **not** confirm it on
+`place2-the-rise` (*"a repeated row"*), `place5-bridge-approach` (*"no tree-line is
+presented"*, the frame walled by cropped near-camera giants) or `comp8-bridge-rim`
+(*"the camera is inside the grove; there is no silhouette to read"*). **Acceptance is
+partial, not met.**
+
+`comp8` is worse for this change and is recorded as such: taller trees turned a stand
+sited 3 m from a trunk into a canopy ceiling (sky fraction 0.032 → 0.017). The fix is a
+capture re-framing, not a vegetation change, and belongs with whoever owns the stand set.
+
+The judge's dominant scale finding is the mesh, not the scaling: trunk-to-canopy measures
+**1:3.1–1:3.6** against roughly 1:9 for a real broadleaf, so *"even the good comp7 tree
+line reads as a row of stumpy mushrooms rather than as oaks"*. That is `CommonTree_*`
+geometry and it is CL-A1's, below.
 
 **Still open on these stands, and honestly not this change's to close:** the trunk-to-
 canopy proportion complaint and "no branch structure below the canopy" are the installed

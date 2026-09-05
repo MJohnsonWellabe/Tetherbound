@@ -54,3 +54,42 @@ fill.
 Whether the installed trunk-plus-blob forms can ever read as oaks (closure plan
 CL-A1's "one branching tree form, with reference art") is untouched. This is scale and
 spread inside the installed nature family, nothing more.
+
+## 4. Addendum, same day: the collider is not the mesh
+
+Growing the trees caused one real, player-facing regression, caught by the landing
+lane's `smoke_aggression` run and reproduced here: the scripted walk toward the
+aggressor stalls at 53.7 m and never arrives. `tools/_probe_walk_block_0905.gd` walks
+the same line with the same held input and names the blocker instead of guessing —
+at (40.54, −65.82) a step in any direction is `test_move`-BLOCKED by
+`CommonTree_1_Collision`, a trunk cylinder of **r = 1.21 m** whose axis is 1.61 m away.
+That leaves a 0.40 m gap, narrower than the player. The same instance carried
+**r = 0.89 m** before this lane. Nothing moved — the tree got wider.
+
+The mechanism: `vegetation.gd::_make_collision_shape` sizes the trunk cylinder as
+`collision_radius × placement scale`, so the obstacle grows with the mesh, and the
+part of a tree a walking player actually touches is its widest — the root flare in
+the model's lowest metre, which for a 2× tree is the lowest half-metre of local space.
+
+**Decision: decouple collider growth from visual growth.** `collision_radius` is
+scaled down by exactly the factor `scale_max` was scaled up — `trees` 0.6 → 0.435
+(× 1.45/2.0), `grove` 1.1 → 0.70 (× 1.15/1.8). The consequence is the property that
+matters: **the widest collider in the world is now identical to the widest collider
+`main` already shipped** (0.974 m for the common fill, 1.071 m for the grove), and
+every other instance's collider is strictly smaller than it was before. No tree
+anywhere can block a line `main` did not already block.
+
+The alternative — trimming `scale_max` back — was rejected: it undoes the lane, and
+`CLAUDE.md` says grow, never shrink.
+
+**The collider was never a snug fit, measured rather than assumed**
+(`tools/_probe_trunk_radius_0905.gd`): the CommonTree trunk's own radius over its
+lowest 2 m is **0.741 m** at scale 1.0 and TwistedTree_2's is **1.351 m**, so 0.6 and
+1.1 were both already inside the visible trunk, and 0.435 and 0.70 still are relative
+to their families. The honest cost: a player brushing the very largest trunks clips a
+little further into the bark than before. That is a better trade than a wall across a
+route the game asks players to walk.
+
+**The general lesson for the next lane that scales a scatter layer:** in this codebase
+a layer's visual size and its collision size are the same number. Changing one changes
+the other, and the test that catches it is a walk, not a render.

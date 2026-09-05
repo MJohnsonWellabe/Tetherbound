@@ -114,7 +114,130 @@ re-bake window should run `build_playground_terrain.gd` once.
 
 ## 7. Code-blind judge
 
-JUDGE_SECTION
+Full verdict: `ralph/reports/W05-TREELINE-0904/JUDGE-after.md`. Run on the after sheet
+and the four full-resolution frames plus `docs/reference/`, told nothing about what
+changed, by a sub-agent following `.claude/skills/visual-judge/SKILL.md`. It reports the
+**absolute** state; it never saw the before frames, so the "improved" claim in this
+report rests on §3's and §4's numbers, not on the judge.
+
+**Acceptance is PARTIAL, not met.** The brief's bar was "judge names silhouette variety
+improved on the named stands with no new scale defect". Stand by stand:
+
+| stand | judge's verdict on tree-line silhouette |
+|---|---|
+| `comp7-pond-reveal` | **"the only stand with a real tree-line, and it is good"** — four distinguishable individuals in the right-hand run, canopy tops at y≈145/158/172/190 on bases within 15 px; the left grove reads "much older" with "a layered interior with visible sky holes" and "secondary branch structure inside the canopy rather than a solid blob". Tallest ≈15.5 m, **8.6 player heights**. "**Varied**, roughly a 4:1 height spread with three legible age classes. This is the standard the other three stands are failing to meet." |
+| `place2-the-rise` | **"the worst offender: a repeated row"** — six mid-ground trunks with canopy tops spanning only 16 px; "a picket fence with green on top". Verdict **near-uniform**. |
+| `place5-bridge-approach` | **"no tree-line is presented"** — the frame is walled by cropped near-camera giants; the only full trees are a distant plateau row of "near-equal lollipops". |
+| `comp8-bridge-rim` | **"the camera is inside the grove; there is no silhouette to read"** — all seven large trunks are cut by the top edge and "the upper third of the image is a continuous near-camera leaf ceiling that closes off the entire skyline". |
+
+So the change is confirmed to read on the one stand that actually presents a tree-line,
+and is not confirmed on the other three — two of which the judge finds cannot present
+one at all from where they are shot.
+
+**One of those three is worse because of this lane, and I am not going to dress it up.**
+`comp8-bridge-rim`'s canopy ceiling is a direct consequence of growing the trees: the
+before frame has visible sky between the crowns, the after frame does not (my own
+pre-registered skyline metric caught it independently — sky fraction 0.032 → 0.017, and
+the per-column skyline "relief" degenerating from 41.5 px to 1.9 px because the canopy
+now leaves the frame rather than breaking against sky). The stand is 3 m from a trunk by
+its own authored siting; taller trees turn that into a ceiling. **Recommended follow-up
+(not done here, it is a framing change that would break before/after comparability
+mid-round):** pull `comp8-bridge-rim`'s eye back along its own sightline until the
+crowns are in shot.
+
+**The dominant scale finding is the mesh, not the scaling.** The judge measures
+trunk-to-canopy at **1:3.1 – 1:3.6** across every frame against roughly 1:9 for a real
+broadleaf, and concludes the trunks are "two to three times too thick for the crowns they
+carry", so "even the good `comp7` tree line reads as a row of stumpy mushrooms rather
+than as oaks". That is `CommonTree_*` geometry — exactly the residual §4a already routes
+to closure-plan CL-A1 (a branching / re-proportioned tree form, art not in the build).
+Growing a trunk-plus-blob makes a bigger trunk-plus-blob, which is the honest ceiling on
+this lane. Its ranked gap #3 says the same from the other side: per-instance jitter,
+lean, and framing are scene work; "the trunk-to-canopy proportion is baked into the mesh,
+and there is no mid-age tree" is not.
+
+**One judge claim I checked and do not pass on as fact.** It infers from the waymarker
+signboard that `place2` and `place5` "were shot from a knee-height camera... **≈1.05 m**",
+which would be a capture-harness defect. Checked against the source rather than repeated:
+`tools/_capture_band1_places.gd` sets `eye_h` **2.4 m** for `place2` and **2.2 m** for
+`place5`, applied as ground + eye_h in `_pose()`, and `scripts/world/signpost.gd`'s
+`POST_HEIGHT` is **2.35 m** — so the inference is out by more than 2×, most likely
+because the post's base is occluded by ground cover and only part of it was measured. The
+observation underneath it is real, though, and is a framing question rather than a bug:
+`horizon` 0.26–0.30 puts a lot of near ground in these frames, which is why the judge
+reads ~55% of `place2`/`place5` as a blurred foreground plane.
+
+**Findings outside this lane's files**, recorded for whoever owns them rather than acted
+on: no creature or NPC in any of the four frames (its ranked gap #1, "by a wide margin
+the largest gap", spawn/staging work); the `comp7` cottage reading ≈1.9 m to the ridge;
+`place5`'s bridge crossing no water or gap; a terrain shear and an untextured wedge at
+`place5`; `place2`'s horizon ending in a hard grey band; evenly-spread unclustered
+bushes and thin ground-cover mat; no contact shadow under the trainer; and bark sampling
+`#833B1F`–`#864024`, the same rust the board reserves for Team Tether — a re-statement of
+the oxblood-reservation finding §4a already carries.
+
+**Rounds used: one.** The brief allows two. A second round was not spent: the two things
+that would move the verdict are a capture re-framing at `comp8` (which belongs with the
+coordinator's stand set, not mid-round) and a tree mesh with real branch structure
+(CL-A1, art not in the build). Two rounds of scale tuning against a mesh whose
+proportions are the finding would be the "tuning rounds are not progress" trap
+`AGENT_WORKFLOW.md` §7 names.
+
+## 7b. Round 2 — the walk-blocking collider regression, and its fix
+
+**This lane shipped a real regression and it was caught before landing.** PR #47 was
+closed by the landing lane because `smoke_aggression` failed deterministically on these
+changes, on two machines: *"stood 53.7m from Galecrest for 900 frames without pressing
+anything and it never attacked"* — the scripted walk toward the aggressor never gets
+within the 10 m it needs.
+
+**Reproduced here first, then diagnosed rather than assumed.** The test's own header
+records this same walk historically stalling at ~40 m against the `Terrain3D` node with
+no tree involved, so the attribution needed checking, not accepting.
+`godot --headless --path . --script tests/smoke_aggression.gd` on branch head reproduced
+the failure at exactly 53.7 m. `tools/_probe_walk_block_0905.gd` (new) then walked the
+same line with the same start, the same held input and the same unstick escape, and
+named the blocker at the stall:
+
+```
+player=(40.54, 0.80, -65.82)  dist_to_galecrest=53.70 m  on_wall=true  vel=(0,0,0)
+wall_normal=(-0.076, 0.000, 0.997)     ground slope here = 6.8 deg
+  test_move 0.5 m BLOCKED by CommonTree_1_Collision (StaticBody3D)
+  test_move 1.0 m BLOCKED by CommonTree_1_Collision (StaticBody3D)
+  test_move 2.0 m BLOCKED by CommonTree_1_Collision (StaticBody3D)
+  nearest trunk cylinders: r=1.21 h=8.10 axis 1.61 m away  (gap 0.40 m)
+                           r=0.63 h=4.18 axis 1.13 m away  (gap 0.50 m)
+```
+
+So it is this lane's, and it is a genuine player-facing defect rather than a test
+artefact: the ground is ordinary 6.8° meadow, and the blocking cylinder is a tree that
+carried **r = 0.89 m before this lane and r = 1.21 m after**. Placements never moved
+(825,979 kept either side) — the tree got wider.
+`vegetation.gd::_make_collision_shape` sizes the trunk as `collision_radius × placement
+scale`, so growing the mesh grew the obstacle with it.
+
+**Fix: decouple collider growth from visual growth** (`data/config/vegetation.json`,
+this lane's own file). `collision_radius` is scaled down by exactly the factor
+`scale_max` went up:
+
+| layer | collision_radius | widest collider, main | widest collider, now |
+|---|---|---|---|
+| `trees` | 0.6 → **0.435** (× 1.45/2.0) | 0.974 m | 0.974 m |
+| `grove` | 1.1 → **0.70** (× 1.15/1.8) | 1.075 m | 1.071 m |
+
+The widest collider in the world is now the widest collider `main` already shipped, and
+every other instance's collider is strictly *smaller* than before — so no tree anywhere
+can block a line `main` did not already block. The trees themselves are untouched: the
+visual result in §3 and the judged frames still stand. Trimming `scale_max` back was
+rejected — it undoes the lane, and `CLAUDE.md` says grow, never shrink.
+
+**The collider is still inside the trunk, measured not assumed**
+(`tools/_probe_trunk_radius_0905.gd`, new): the CommonTree trunk's own radius over its
+lowest 2 m is 0.741 m at scale 1.0, TwistedTree_2's is 1.351 m — both the old and the
+new radii sit inside the visible trunk. Honest cost: brushing the very largest trunks
+now clips a little further into the bark. Recorded in `docs/decisions/D74` §4, with the
+general lesson — in this codebase a scatter layer's visual size and its collision size
+are the same number, and the test that catches that is a walk, not a render.
 
 ## 8. Known limitations, and what was deliberately not done
 
@@ -129,6 +252,15 @@ JUDGE_SECTION
   owns `vegetation.gd`:** raise `PROP_OFFSET` to ~1.9 m, or derive it from the placement's
   own scale rather than a constant. Not observed in any of the four rendered stands (no
   woodpile was in frame), so this is reasoning from the constant, not a sighting.
+- **The collider fix trades a little camera/trunk clipping for the unblocked route.**
+  Because `collision_radius` is scaled down by a constant factor, the *widest* collider
+  matches `main` exactly but every smaller instance's collider is up to ~27 % tighter
+  than it was. Two consequences, both named rather than discovered later: a player
+  brushing a large trunk clips a little further into the bark, and the camera SpringArm
+  (which stops on the same colliders — see `vegetation.json`'s own `_comment_collision`,
+  written after survey frames came back showing the inside of a bush) can now sit
+  marginally closer to a small trunk. Neither was observed in the four rendered stands.
+  The alternative was leaving a wall across a route the game asks players to walk.
 - Bands 2–5 anchors with explicit ranges were **not** lifted; the fill around them grew,
   their copses did not. Their frames were not judged this round.
 - Grove reaches 2.94× p5–p95 (range 3.0× by config); the brief's "≥ 3× per family" is
