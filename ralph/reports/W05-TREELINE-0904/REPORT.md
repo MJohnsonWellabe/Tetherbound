@@ -26,7 +26,7 @@ The re-bake here repairs that as a side effect.
 | `data/scatter/playground/` (manifest + 256 regions) | re-baked, same commit as the config |
 | `tools/_probe_tree_heights_0904.gd` | new: reads the bake, reports per-layer rendered height distribution in metres against the trainer |
 | `tools/_capture_band1_places.gd` | `--only=a,b` stand selection (same contract as the composition capture) |
-| `docs/decisions/D74-…` | the size hierarchy and the "a scale range is not a re-roll" finding |
+| `docs/decisions/D85-…` | the size hierarchy and the "a scale range is not a re-roll" finding |
 | `docs/VISUAL_BIBLE.md` §4a, `docs/CURRENT_STATE.md` | status rows |
 | `ralph/reports/W05-TREELINE-0904/` | this report, `_sheet_before.png`, `_sheet_after.png`, `JUDGE-after.md` |
 
@@ -55,7 +55,7 @@ Per-model after: CommonTree_3 4.7–18.9 m (fill), CommonTree_1 4.1–16.3 m, Co
 ((2,47), (−58,199), (−10,1318), (−248.7,6462.9)) and no new one.
 
 **RNG safety, proven by the bake rather than argued:** both bakes produce 825,979 kept
-and 3,883 drained placements. The `_comment` in `vegetation.json` and D74 record why:
+and 3,883 drained placements. The `_comment` in `vegetation.json` and D85 record why:
 `scatter_rules.gd::_consider` draws scale, model and yaw unconditionally, in fixed
 order, after every rejection test, so a wider range consumes the same draws.
 

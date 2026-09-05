@@ -258,7 +258,7 @@ unconditionally, in that fixed order, after every rejection test; a wider range 
 the same draws. Proven by the bake rather than argued: both bakes produce 825,979 kept
 and 3,883 drained placements, same positions, models and yaws. What genuinely re-rolls
 is an anchor's `count`, a per-layer `band_scale`, a layer `seed_offset` or the top-level
-`seed` — none of which moved. Recorded as `docs/decisions/D74`.
+`seed` — none of which moved. Recorded as `docs/decisions/D85`.
 
 **What changed, measured off both bakes** (`tools/_probe_tree_heights_0904.gd`, native
 glTF AABB × baked instance scale, corridor-wide n = 43,051 common trees):

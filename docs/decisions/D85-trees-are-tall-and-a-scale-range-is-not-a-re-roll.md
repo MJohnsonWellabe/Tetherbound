@@ -1,4 +1,4 @@
-# D74 — Trees are tall, and a scale range is not a re-roll
+# D85 — Trees are tall, and a scale range is not a re-roll
 
 **Date:** 2026-09-04 · **Decided by:** lane W05-TREELINE-0904, under the COMMON
 lane rule ("make the smallest defensible call, record it, continue"), implementing
