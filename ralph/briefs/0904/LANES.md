@@ -65,6 +65,9 @@ Owner noticed the session count didn't match my reports. Root cause: 5 lanes (W0
 Separately, 5 lanes had genuinely gone stale 4+ hours with NO replacement running: W02-HARNESS-CONTEXT, W03-S08-FREEZE, W16-LOFT-BED, W20-SMALL-FIXES, W21-HARNESS-FIGHTS — all hit their 5h limit hours ago (reset already passed) and were sitting untouched. Given the owner flagged this directly, resumed all 5 at once (departing from the normal 1-2/sweep trickle, since the owner surfaced the actual backlog size).
 main also moved: PR #42 merged — **W00-ICONS is now on main**. PR #45 (consolidated: icons+contracts+progression+portraits+companion+bands2-5) is open, still blocked only on the pre-existing finale regression. PR #44 is Codex's own draft PR for Cloudreach, unrelated to this batch, explicitly not ready to merge.
 
+## Sweep 08:55Z
+All 4 running lanes checked, none finished, none crashed — no action needed. W05: pushed `457f179f`, waiting on `test_veg_corridor` + 2 files. W06: running, re-verifying smokes after its resume, waiting on a persistence render. W07: running, final render+smoke in flight, drafting its report — closest to done. W14: idle-live, waiting on an incremental `move_back` probe result.
+
 ## 08:53 UTC: W09 confirmed done and archived; W06 resumed as its replacement
 Verified before archiving: W09-VFX's substantive commit (`04e5bc40`) was already merged to `main` via PR #45; its two newest commits (`4dbb3855`, `863318fa`) are report-only (documenting one flaky `smoke_combat_camera` re-run and a wording clarification), not new code. Genuinely done, thorough limitations section. Archived. One-in-one-out replacement: **W06-FINALE** (4 commits ahead of main, most recent among the remaining backlog after W07, reset already passed).
 
