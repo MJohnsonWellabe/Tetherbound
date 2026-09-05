@@ -65,6 +65,13 @@ Owner noticed the session count didn't match my reports. Root cause: 5 lanes (W0
 Separately, 5 lanes had genuinely gone stale 4+ hours with NO replacement running: W02-HARNESS-CONTEXT, W03-S08-FREEZE, W16-LOFT-BED, W20-SMALL-FIXES, W21-HARNESS-FIGHTS — all hit their 5h limit hours ago (reset already passed) and were sitting untouched. Given the owner flagged this directly, resumed all 5 at once (departing from the normal 1-2/sweep trickle, since the owner surfaced the actual backlog size).
 main also moved: PR #42 merged — **W00-ICONS is now on main**. PR #45 (consolidated: icons+contracts+progression+portraits+companion+bands2-5) is open, still blocked only on the pre-existing finale regression. PR #44 is Codex's own draft PR for Cloudreach, unrelated to this batch, explicitly not ready to merge.
 
+## 15:58 UTC: nudged N05 and N08 — stuck on render/judge rounds
+Owner flagged N05-WORLD-DRESSING and N08-PICKUP-TIERS as stuck on renders. Fired a one-shot
+nudge into each live session (create_trigger + fire_trigger + delete_trigger, same mechanism
+used on W09 earlier): converge fast, push what's already verified by tests/code, do at most
+one visual pass rather than repeated render/judge rounds, and write REPORT.md now rather than
+chasing further confirmation.
+
 ## 15:41 UTC: N13-NIGHT-RESUME confirmed done — CL-O2 root-caused, partly fixed, not fully closed
 10 commits on `ralph/N13-NIGHT-RESUME-0905` (final `0959ba85`). Real root cause via a new
 `--verify-daynight` export flag (W15's own probe was dead on arrival — exported Godot 4.7
