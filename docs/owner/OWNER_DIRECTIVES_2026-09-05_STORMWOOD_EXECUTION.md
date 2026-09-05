@@ -23,6 +23,28 @@ The Stormwood run should reproduce or exceed the strong broad-build portion of C
 7. **Stop the broad orchestration session when the remaining tail becomes low-yield.** Leave a precise fresh-session handoff rather than burning context to say the original goal kept running.
 8. **Do not call 80–85% complete.** That number describes the minimum broad-build benchmark for the primary run, not the final definition of done. The full Stormwood exit criteria remain the ultimate completion bar.
 
+## Multiplayer requirement
+
+The planned project sequence puts the multiplayer conversion before later biome development. Therefore, **if `docs/MULTIPLAYER_DIRECTIVE.md` has been implemented when Stormwood work begins, Stormwood must ship on that multiplayer architecture rather than recreating single-player-only assumptions.**
+
+In that case every new Stormwood system must work in both solo and 1–4 player hosted co-op from its first landed implementation, including:
+
+- Stormwood realm entry/exit and players occupying different realms where the multiplayer architecture supports it;
+- Surge phase replication and server-authoritative strike/hazard outcomes;
+- Stormglass Arch activation, pairing, travel, construction, persistence and simultaneous use;
+- world pickups/resource depletion without duplication;
+- shared rod-station and chapter/world progression;
+- personal inventory, creature growth, bond and equipped realm-relic power;
+- trainer/encounter/boss scaling using the multiplayer directive's composition-first rule;
+- co-op combat and the Dynamo finale;
+- camps/buildings and shared world persistence;
+- save, reconnect and late-join reconstruction of Stormwood state;
+- post-boss world changes and Water-biome unlocks.
+
+Do not build a single-player Stormwood implementation and schedule a later multiplayer retrofit if multiplayer already exists on `main`.
+
+If Stormwood is somehow built before the multiplayer conversion, preserve the state-ownership boundaries in `docs/MULTIPLAYER_DIRECTIVE.md` and avoid introducing new global-one-player assumptions.
+
 ## Canonical execution policy
 
 Read and follow:
@@ -33,4 +55,4 @@ That file defines the phase checkpoints, two-checkpoint no-progress trigger, tes
 
 ## Bottom line
 
-**Get Stormwood at least as materially far as Cloudreach got before the late grind. Continue beyond that while each meaningful iteration is still moving the game. Once progress flattens, stop grinding, integrate the good work, document the tail precisely, and let a fresh focused session close it.**
+**Get Stormwood at least as materially far as Cloudreach got before the late grind. Continue beyond that while each meaningful iteration is still moving the game. Once progress flattens, stop grinding, integrate the good work, document the tail precisely, and let a fresh focused session close it. If multiplayer is already live, Stormwood is multiplayer from day one.**
