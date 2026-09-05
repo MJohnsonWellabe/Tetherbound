@@ -242,9 +242,9 @@ func _shoot(stand: Dictionary) -> void:
 		if node == null:
 			_failures.append("%s: no BandPickup_%s in the world" % [name, str(stand["id"])])
 			return
-		bearing = deg_to_rad(float(stand.get("bearing", 0.0)))
-		_freeze_spin(node, bearing)
 		subject = node.global_position
+		bearing = _clear_bearing(subject, float(stand.get("bearing", 0.0)), distance, name)
+		_freeze_spin(node, bearing)
 	# The sightline runs from the stand toward the subject; the aim point is
 	# `AIM_SIDE_M` to the right of the subject along that line's perpendicular,
 	# and the player stands `distance` back from the AIM point, so the body
@@ -320,6 +320,53 @@ func _shoot(stand: Dictionary) -> void:
 		name, _tag, distance, lens_m, str(camera.global_position), str(subject), str(_player.global_position), "", grass, "", str(stand["why"]), "", path])
 	_write_log()
 	print("[n08-capture] %s -> %s | %s" % [name, path, grass])
+
+
+## The bearing to shoot an authored placement from: the authored one if the
+## stand, the lens and the line between the lens and the subject are all
+## clear of trunks, boulders and bushes, else the first of a fixed fan of
+## alternatives that is. W18's judge threw a frame out because "the camera
+## sits behind a large trunk... as shot it proves nothing", and the first
+## pass here put the lens INSIDE a canopy; a bearing chosen blind is not
+## evidence about the pickup. The fan is fixed and the world is the same for
+## every run, so a before and an after pick the same bearing. Logged.
+const BEARING_FAN_DEG: Array[float] = [0.0, 45.0, -45.0, 90.0, -90.0, 135.0, -135.0, 180.0]
+const LENS_BOOM_M := 5.2
+const LENS_CLEAR_M := 2.6
+const PATH_CLEAR_M := 0.9
+
+func _clear_bearing(subject: Vector3, authored_deg: float, distance: float, name: String) -> float:
+	var vegetation: Node3D = _world.get("_vegetation") as Node3D
+	if vegetation == null or not vegetation.has_method("has_solid_scatter_near"):
+		return deg_to_rad(authored_deg)
+	for offset: float in BEARING_FAN_DEG:
+		var deg := authored_deg + offset
+		var b := deg_to_rad(deg)
+		var toward := Vector3(-sin(b), 0.0, -cos(b))
+		var right := Vector3(-toward.z, 0.0, toward.x)
+		var aim := subject + right * AIM_SIDE_M
+		var stand_at := aim - toward * distance
+		var lens := stand_at - toward * LENS_BOOM_M
+		var clear := not bool(vegetation.call("has_solid_scatter_near", lens, LENS_CLEAR_M)) \
+			and not bool(vegetation.call("has_solid_scatter_near", stand_at, 1.0))
+		if clear:
+			# The sightline, sampled every ~1 m from the lens to a metre short
+			# of the subject (the loader already keeps the subject itself clear).
+			var run := subject - lens
+			var steps := maxi(int(run.length()), 2)
+			for i in range(1, steps):
+				var t := float(i) / float(steps)
+				if run.length() * (1.0 - t) < 1.0:
+					break
+				if bool(vegetation.call("has_solid_scatter_near", lens + run * t, PATH_CLEAR_M)):
+					clear = false
+					break
+		if clear:
+			if not is_zero_approx(offset):
+				_log.append("%s: authored bearing %.0f blocked by scatter; shooting from %.0f" % [name, authored_deg, deg])
+			return b
+	_log.append("%s: no clear bearing in the fan; shooting from the authored %.0f" % [name, authored_deg])
+	return deg_to_rad(authored_deg)
 
 
 func _write_log() -> void:
