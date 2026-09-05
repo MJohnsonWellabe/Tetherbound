@@ -91,6 +91,7 @@ var _switches := 0
 var _starts: Array[String] = []
 var _wins: Array[String] = []
 var _losses: Array[String] = []
+var _incoming_hits: Array[Dictionary] = []
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -122,6 +123,8 @@ func _run() -> void:
 		"source_sha256": {"chapter": FileAccess.get_sha256(DIRECTOR.CHAPTER_PATH),
 			"encounters": FileAccess.get_sha256(DIRECTOR.CONFIG_PATH),
 			"combat": FileAccess.get_sha256("res://data/config/combat.json"),
+			"probe": FileAccess.get_sha256("res://tools/_probe_cloudreach_combat_balance.gd"),
+			"wild_creature": FileAccess.get_sha256("res://scripts/creatures/wild_creature.gd"),
 			"progression": FileAccess.get_sha256(PROGRESSION.CONFIG_PATH)},
 		"progression": "Natural production battle XP; full recovery/rest XP at named camp boundaries only",
 		"limitations": ["Flat arena; no approach travel, wild attrition, geometry or finale hazards",
@@ -213,6 +216,18 @@ func _setup() -> void:
 	_manager.name = "CombatManager"
 	_manager.ground_world = _world
 	_manager.creature_switched.connect(func(_index: int) -> void: _switches += 1)
+	# Production emits hit_landed before replacing a fainted active creature.
+	# Observe the actual target here, so half-health blows cannot hide in the
+	# aggregate five-member HP percentage. No damage or outcome is assigned.
+	_manager.hit_landed.connect(func(on_enemy: bool, amount: float) -> void:
+		if on_enemy:
+			return
+		var member: RefCounted = _manager.active_creature()
+		var opponent: RefCounted = _manager.enemy()
+		_incoming_hits.append({"damage": amount, "fraction_of_max_hp": amount / member.max_hp,
+			"target": member.species_id, "target_level": member.level,
+			"target_max_hp": member.max_hp, "target_hp_after": member.hp,
+			"opponent": opponent.species_id}))
 	_world.add_child(_manager)
 	var data := DIRECTOR.read_json(DIRECTOR.CONFIG_PATH)
 	var reused := {}
@@ -306,6 +321,7 @@ func _fight(id: String, passive: bool) -> Dictionary:
 	_starts.clear()
 	_wins.clear()
 	_losses.clear()
+	_incoming_hits.clear()
 	var spec: Dictionary = _director.trainer_specs[id]
 	var before := _party_snapshot()
 	var rewards_before: int = _game.inventory.count("coin")
@@ -345,7 +361,11 @@ func _fight(id: String, passive: bool) -> Dictionary:
 		max_hp += member["max_hp"]
 		faints += 1 if member["fainted"] else 0
 	var won: bool = _game.progression.has(str(spec["defeat_flag"]))
+	var max_hit_fraction := 0.0
+	for hit: Dictionary in _incoming_hits:
+		max_hit_fraction = maxf(max_hit_fraction, float(hit["fraction_of_max_hp"]))
 	record.merge({"won": won, "timed_out": timed_out,
+		"incoming_hits": _incoming_hits.duplicate(true), "max_hit_fraction": max_hit_fraction,
 		"seconds": float(frames) / Engine.physics_ticks_per_second,
 		"team_after": _party_snapshot(), "party_hp_fraction": hp / max_hp,
 		"consumables_to_full": _consumable_equivalent(),

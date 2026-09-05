@@ -107,11 +107,12 @@ func _build_patch_tier(parent: Node3D, label: String, patch: Dictionary, mesh: A
 			continue
 		if _excluded(at, true):
 			continue
-		var cluster := (
-			sin(at.x * float(config.get("cluster_frequency", 0.021)) + float(seed_value))
-			+ sin(at.z * float(config.get("cluster_frequency", 0.021)) * 0.73
-				- float(seed_value) * 0.37)
-		)
+		# One continuous asymmetric planting field across adjacent geometry
+		# chunks. Per-patch phase previously made visible parallel planting bands.
+		var frequency:=float(config.get("cluster_frequency",0.16))
+		var cluster:=sin(at.x*frequency*0.61+sin(at.z*frequency*0.39))
+		cluster+=sin(at.z*frequency*0.47-at.x*frequency*0.23)*0.8
+		cluster+=sin(at.x*frequency*1.9+at.z*frequency*1.2)*0.22
 		var threshold := float(config.get("cluster_threshold", -0.18)) + float(tier) * 0.34
 		if cluster < threshold:
 			continue

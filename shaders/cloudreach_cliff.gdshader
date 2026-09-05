@@ -2,8 +2,8 @@ shader_type spatial;
 render_mode diffuse_burley, specular_disabled;
 uniform sampler2D rock_texture : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform sampler2D rock_normal : hint_normal, filter_linear_mipmap_anisotropic, repeat_enable;
-uniform vec3 stone_light : source_color = vec3(0.70, 0.65, 0.53);
-uniform vec3 stone_dark : source_color = vec3(0.38, 0.39, 0.33);
+uniform vec3 stone_light : source_color = vec3(0.63, 0.53, 0.40);
+uniform vec3 stone_dark : source_color = vec3(0.32, 0.30, 0.24);
 uniform float texture_scale = 0.055;
 varying vec3 world_position;
 varying vec3 world_normal;
@@ -19,11 +19,11 @@ void fragment() {
 	tex += texture(rock_texture, world_position.xz * texture_scale).rgb * weight.y;
 	tex += texture(rock_texture, world_position.xy * texture_scale).rgb * weight.z;
 	float bend = noise3(world_position * 0.027) * 8.0;
-	float bed_phase=fract((world_position.y+bend)*0.11);
-	float strata=smoothstep(0.02,0.20,bed_phase)*(1.0-smoothstep(0.72,0.96,bed_phase));
-	float macro = noise3(world_position * 0.043) * 0.5 + 0.5;
-	vec3 stone = mix(stone_dark, stone_light, clamp(0.18 + macro * 0.45 + strata * 0.23, 0.0, 1.0));
-	ALBEDO = stone * mix(vec3(0.78),tex*2.0,0.80);
+	float macro=clamp(noise3(world_position*0.016)*0.5+0.5,0.0,1.0);
+	float face=abs(sin(world_position.x*0.019-world_position.z*0.024+bend*0.04));
+	vec3 stone=mix(stone_dark,stone_light,0.30+macro*0.45+face*0.15);
+	// Broad stone planes, not a repeated white corrugated stripe system.
+	ALBEDO=stone*mix(vec3(0.82),tex*1.28,0.52);
 	// Rock-family normals are projected on the same world-space faces. Strong
 	// strata remain metre-scale; normal relief supplies readable close stone.
 	vec3 nx=texture(rock_normal,world_position.zy*texture_scale).xyz*2.0-1.0;

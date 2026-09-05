@@ -94,15 +94,33 @@ func _build_horizon_ranges() -> void:
 		var group := Node3D.new()
 		group.name = str(range_spec.get("id", "FarRange"))
 		root.add_child(group)
-		for cluster in 4:
+		for cluster in 7:
 			var angle := float(cluster) * 2.399 + float(range_spec.get("seed", 0))
-			var portion := 0.42 + 0.11 * float(cluster % 3)
-			var cluster_size := Vector3(size.x * portion * 1.55, size.y * (0.43 + 0.13 * cluster), size.z * portion * 1.45)
-			var cluster_at := at + Vector3(cos(angle) * size.x * 0.28,
-				(cluster_size.y - size.y) * 0.5, sin(angle) * size.z * 0.28)
-			_mesa(group, "Peak%d" % cluster, cluster_at, cluster_size,
-				_materials["cliff"], _materials["cliff_high"], false,
-				int(range_spec.get("seed", 0)) + cluster * 17, true)
+			var portion := 0.34 + 0.09 * float(cluster % 3)
+			var cluster_size := Vector3(size.x*portion,size.y*(0.34+0.11*(cluster%4)),size.z*portion)
+			var base:=at+Vector3(cos(angle)*size.x*0.34,-size.y*0.5,sin(angle)*size.z*0.34)
+			# Installed asymmetrical closed rock geometry, overlapping down to the
+			# common range base. No kilometre-high tabletop perimeter or new floor.
+			_visual_rock_mass(group,"RangeCrag%d"%cluster,base,cluster_size,
+				int(range_spec.get("seed",0))+cluster*17,2600.0)
+
+
+func _visual_rock_mass(parent: Node3D,label: String,base: Vector3,size: Vector3,
+		seed_value: int,visible_distance: float=1600.0) -> Node3D:
+	var root:=Node3D.new()
+	root.name=label
+	root.position=base
+	root.rotation.y=float(posmod(seed_value*37,360))*PI/180.0
+	parent.add_child(root)
+	var rock:=NATURE_ROCKS[posmod(seed_value,3)].instantiate() as Node3D
+	var bounds: AABB=BUILDING_PREFABS.new().combined_aabb(rock)
+	rock.scale=size/bounds.size
+	rock.position=-Vector3(bounds.get_center().x,bounds.position.y,bounds.get_center().z)*rock.scale
+	root.add_child(rock)
+	for mesh: MeshInstance3D in rock.find_children("*","MeshInstance3D",true,false):
+		mesh.material_override=_materials["cliff"]
+	_set_geometry_visibility(root,visible_distance)
+	return root
 
 
 func _ready() -> void:
@@ -317,6 +335,13 @@ func _build_materials() -> void:
 	trail.set_shader_parameter("grass_texture",preload("res://assets/environment/terrain/stylised/meadow_grass_Color.png"))
 	trail.set_shader_parameter("dirt_texture", load(str(surface.get("path", {}).get("albedo", "res://assets/environment/terrain/stylised/dirt_path_Color.png"))))
 	_materials["trail"] = trail
+	ENVIRONMENT_MATERIALS.turf_parameters(trail,false)
+	trail.set_shader_parameter("tint",Color("#9b805f"))
+	var trail_dry:=trail.duplicate() as ShaderMaterial
+	ENVIRONMENT_MATERIALS.turf_parameters(trail_dry,true)
+	_materials["trail_dry"]=trail_dry
+	_materials["upland"]=ENVIRONMENT_MATERIALS.ground(false)
+	_materials["upland_dry"]=ENVIRONMENT_MATERIALS.ground(true)
 
 
 func _build_cloud_sea() -> void:
@@ -418,9 +443,8 @@ func _add_cliff_strata(parent: Node3D, centre: Vector3, size: Vector3, top: floa
 		var shelf_depth := shelf_top - float(_visual_config.get("landmass", {}).get("geology_base_y", -210.0))
 		var at := Vector3(centre.x + cos(angle) * size.x * 0.37,
 			shelf_top - shelf_depth * 0.5, centre.z + sin(angle) * size.z * 0.37)
-		_mesa(parent, "BeddedSpur%d" % i, at,
-			Vector3(size.x * 0.24, shelf_depth, size.z * 0.21),
-			_materials["cliff_mid"], _materials["cliff"], false, i * 31 + int(top))
+		_visual_rock_mass(parent,"BeddedSpur%d"%i,at-Vector3.UP*shelf_depth*0.5,
+			Vector3(size.x*(0.25+0.06*(i%2)),shelf_depth,size.z*0.25),i*31+int(top))
 
 
 func _add_satellite_crags(parent: Node3D, centre: Vector3, size: Vector3, top: float, order: int) -> void:
@@ -439,11 +463,8 @@ func _add_satellite_crags(parent: Node3D, centre: Vector3, size: Vector3, top: f
 			centre.x + offset.x * size.x,
 			crag_top - crag_height * 0.5,
 			centre.z + offset.y * size.z)
-		_mesa(parent, "SatelliteCrag%d" % i, at,
-			Vector3(size.x * (0.17 + i * 0.025), crag_height, size.z * (0.19 + i * 0.025)),
-			_materials["cliff_mid"],
-			_materials["upland_dry"] if order >= 5 else _materials["upland"],
-			false, order * 7 + i)
+		_visual_rock_mass(parent,"SatelliteCrag%d"%i,at-Vector3.UP*crag_height*0.5,
+			Vector3(size.x*(0.23+i*0.04),crag_height,size.z*(0.25+i*0.04)),order*7+i)
 
 
 func _add_wind_vegetation(parent: Node3D, rect: Rect2, top: float, order: int) -> void:
@@ -966,7 +987,7 @@ func _path_ribbon(parent: Node3D, label: String, a: Vector3, b: Vector3,
 	var mesh := ArrayMesh.new()
 	var tool := SurfaceTool.new()
 	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
-	tool.set_material(_materials["trail"])
+	tool.set_material(_materials["trail_dry"] if minf(parent.to_global(a).y,parent.to_global(b).y)>=700.0 else _materials["trail"])
 	for i in stations - 1:
 		_add_trail_triangle(tool, left[i], left[i + 1], right_edge[i], Vector2(0, i), Vector2(0, i + 1), Vector2(1, i))
 		_add_trail_triangle(tool, right_edge[i], left[i + 1], right_edge[i + 1], Vector2(1, i), Vector2(0, i + 1), Vector2(1, i + 1))
@@ -1333,7 +1354,7 @@ func _build_landmarks() -> void:
 			# Carry this exceptional Fly-only pinnacle down into the cloud valley.
 			ledge_size = Vector3(132.0, at.y + 210.0, 126.0)
 		_mesa(landmark, "LandmarkLedge", Vector3(0.0, -ledge_size.y * 0.5 + 0.10, 0.0), ledge_size,
-			_materials["cliff"], _materials["upland_dry"], not settlement, _landmark_count + 31)
+			_materials["cliff"], _materials["upland_dry"] if at.y>=700.0 else _materials["upland"], not settlement, _landmark_count + 31)
 		if settlement:
 			# The last approach reaches terrace height at z=490. Keep its collision
 			# inside that level approach while the geological skirt extends farther.
@@ -1396,10 +1417,11 @@ func _build_cliff_settlement(root: Node3D) -> void:
 	# A tall windwatch anchors the cluster at route-view distance; the houses
 	# then read as an inhabited terrace instead of five same-sized boxes.
 	var upper_settlement := root.global_position.y > 700.0
-	var watch := Vector3(-21, 0, -20) if upper_settlement else Vector3(-22, 0, 15)
-	var watch_height := 28.0 if upper_settlement else 18.0
-	_castle_piece(root, "WindwatchTower", CASTLE_TOWER, watch, Vector3(7.2, watch_height, 7.2), _materials["stone_light"])
-	_box(root, "WindwatchCrown", watch + Vector3.UP * (watch_height - 0.2), Vector3(9.0, 1.3, 9.0), _materials["wood"], false)
+	var watch := Vector3(20, 0, 18) if upper_settlement else Vector3(-22, 0, 15)
+	var watch_height := 19.0 if upper_settlement else 16.0
+	_castle_piece(root, "WindwatchTower", CASTLE_TOWER, watch, Vector3(10.0, watch_height, 10.0), _materials["stone_light"])
+	_box(root, "WindwatchCrown", watch + Vector3.UP * (watch_height - 0.2), Vector3(11.0, 1.0, 11.0), _materials["wood"], false)
+	_box(root,"WindwatchSplayedFoot",watch+Vector3.UP*0.65,Vector3(10.5,1.3,10.5),_materials["masonry"],false)
 	for side: float in [-1.0, 1.0]:
 		_box(root, "WindBanner", watch + Vector3(side * 4.6, watch_height - 2.8, 0),
 			Vector3(0.18, 4.2, 2.4), _materials["leaf_gold"], false)
@@ -1416,6 +1438,17 @@ func _build_cliff_settlement(root: Node3D) -> void:
 		model.position = _vec3(house.get("lower_position",house["position"]) if not upper_settlement else house["position"])
 		model.rotation.y = deg_to_rad(float(house.get("lower_yaw_deg",house.get("yaw_deg",0.0)) if not upper_settlement else house.get("yaw_deg",0.0)))
 		root.add_child(model)
+		# The kit roof is a thin tile shell. Its underside must also cover the
+		# rafters when a cliff approach sees the eaves from below.
+		for roof_mesh: MeshInstance3D in model.find_children("*","MeshInstance3D",true,false):
+			if not str(roof_mesh.get_path()).contains("Roof_RoundTiles"):
+				continue
+			for surface_index in roof_mesh.mesh.get_surface_count():
+				var roof_material:=roof_mesh.get_active_material(surface_index) as StandardMaterial3D
+				if roof_material!=null:
+					var solid_roof:=roof_material.duplicate() as StandardMaterial3D
+					solid_roof.cull_mode=BaseMaterial3D.CULL_DISABLED
+					roof_mesh.set_surface_override_material(surface_index,solid_roof)
 		var bounds: AABB = _building_prefabs.call("combined_aabb", model)
 		# A complete foundation is essential here: the source prefab is assembled
 		# wall-by-wall and the former 17 m ledge cut through its outer rooms.
@@ -1436,6 +1469,44 @@ func _build_cliff_settlement(root: Node3D) -> void:
 			model.add_child(body)
 		_set_geometry_visibility(model, float(settlement.get("visibility_range_m", 850.0)))
 	_build_settlement_yard(root)
+	_build_settlement_precinct(root,watch)
+
+
+func _plant_floor_pocket(parent: Node3D,at: Vector3,half: Vector2,seed_value: int,dry: bool) -> void:
+	_cover_patches.append({"kind":"ellipse","centre":parent.to_global(at),"half":half,
+		"seed":seed_value,"dry":dry})
+	_place_local_prop(parent,"bush",at+Vector3(half.x*0.22,0,-half.y*0.18),1.1+0.16*(seed_value%3),seed_value%180)
+	_place_local_prop(parent,"flowers",at+Vector3(-half.x*0.23,0,half.y*0.12),0.62,seed_value%90)
+	_place_local_prop(parent,"rock_low",at+Vector3(half.x*0.4,-0.08,half.y*0.3),0.6,seed_value%120)
+
+
+func _build_settlement_precinct(root: Node3D,watch: Vector3) -> void:
+	# Connected inhabited edges, with the communal centre and all real door/
+	# dialogue lanes left untouched. These sit on the existing terrace crown.
+	var dry:=root.global_position.y>=700.0
+	for side: float in [-1.0,1.0]:
+		for i in 4:
+			var edge:=Vector3(side*22.0,0.12,-20.0+i*10.0)
+			_box(root,"TerraceRetainingCourse",edge+Vector3(0,-0.4,0),Vector3(1.1,0.9,9.6),_materials["masonry"],false)
+			if i!=1:
+				_place_local_prop(root,"fence",edge,1.12,90)
+			if i%2==0:
+				_plant_floor_pocket(root,edge+Vector3(-side*2.7,0,1.3),Vector2(2.5,4.5),713+i+int(side)*21,dry)
+	for at: Vector3 in [Vector3(-14,0.14,-15),Vector3(14,0.14,-16),Vector3(-16,0.14,18),Vector3(2,0.14,22)]:
+		_plant_floor_pocket(root,at,Vector2(3.2,3.8),int(at.x*7+at.z*11),dry)
+	_path_ribbon(root,"WornWatchPrecinctConnection",Vector3(1,0.15,14),watch+Vector3(-6,0.15,-4),3.2,931)
+	# Shared worn-ground shader gives the tower foot the same soil-and-turf
+	# transition as the communal yard instead of an isolated raw platform.
+	var apron:=MeshInstance3D.new()
+	apron.name="WatchMaintenanceApron"
+	var plane:=PlaneMesh.new()
+	plane.size=Vector2(13,12)
+	apron.mesh=plane
+	apron.position=watch+Vector3(0,0.16,0)
+	apron.material_override=ENVIRONMENT_MATERIALS.worn_ground(root.to_global(apron.position),7.0)
+	root.add_child(apron)
+	_place_local_prop(root,"workbench",watch+Vector3(-6,0.14,1.5),1.15,90)
+	_place_local_prop(root,"crate",watch+Vector3(-6.2,0.14,3.2),0.75,18)
 
 
 func _place_local_prop(parent: Node3D, asset: String, at: Vector3, height: float, yaw: float = 0.0) -> void:
@@ -1644,6 +1715,15 @@ func _build_sky_shrine(root: Node3D) -> void:
 		_place_local_prop(root, "rock_low", Vector3(side * 11.0, 1.3, -7.0), 0.8, side * 25)
 		_place_local_prop(root, "flowers", Vector3(side * 11.4, 1.3, -6.0), 0.55, side * 50)
 	_cylinder(root, "HeartstonePedestal", Vector3(0, 2.2, 0), 2.7, 1.8, _materials["masonry"])
+	for side: float in [-1.0,1.0]:
+		# The low retaining wings connect stair and sanctuary foundation. Their
+		# planting is on the existing level shrine crown, outside the steps.
+		for i in 3:
+			_box(root,"ShrineRetainingWing",Vector3(side*(7.5+i*3.2),0.42,-13.0+i*1.8),
+				Vector3(3.5,0.84,1.0),_materials["masonry"],false)
+		_plant_floor_pocket(root,Vector3(side*11.0,0.12,-15.0),Vector2(5.2,3.2),831+int(side)*23,true)
+		_plant_floor_pocket(root,Vector3(side*15.0,0.12,-3.0),Vector2(3.5,5.0),865+int(side)*17,true)
+		_place_local_prop(root,"bench",Vector3(side*9.0,0.12,-18.0),0.95,0)
 
 
 func _build_summit_stronghold(root: Node3D) -> void:
@@ -1738,6 +1818,17 @@ func _develop_stronghold_spaces(root: Node3D) -> void:
 	root.add_child(apparatus)
 	for i in 7:
 		_place_local_prop(root, "paving", Vector3(sin(i * 1.7) * 0.45, 0.16, -47.0 + i * 3.3), 0.16, i * 29)
+	# Defensive/work edges lead from the approach to the gate rather than
+	# leaving the facade at the end of an empty plane. Preserve the 18 m lane.
+	for side: float in [-1.0,1.0]:
+		for i in 4:
+			var at:=Vector3(side*(15.0+i*0.8),0.0,-26.0-i*7.5)
+			_box(root,"ApproachRetainingEdge",at+Vector3(0,0.45,0),Vector3(1.4,0.9,7.7),_materials["masonry"],false)
+			if i%2==0:
+				_plant_floor_pocket(root,at+Vector3(side*3.4,0.12,0),Vector2(3.0,5.5),941+i+int(side)*21,true)
+		_place_local_prop(root,"wagon",Vector3(side*18,0.12,-34),2.2,side*7)
+		_place_local_prop(root,"crate",Vector3(side*20,0.12,-38),1.05,side*28)
+		_place_local_prop(root,"barrel",Vector3(side*21.3,0.12,-37),1.1,18)
 
 
 func _build_wayfinder(root: Node3D) -> void:
@@ -2041,6 +2132,8 @@ func _build_embedded_rock_shelves(parent: Node3D, size: Vector3, seed_value: int
 		var shelf := Vector3(cos(angle) * size.x * 0.44, shelf_top, sin(angle) * size.z * 0.44)
 		_mesa(parent, "VegetatedGeologicalShelf%d" % i, shelf - Vector3.UP * shelf_height * 0.5,
 			Vector3(shelf_width, shelf_height, shelf_width * 0.78), _materials["cliff"], _materials["upland"], true, seed_value + 131 + i)
+		_cover_patches.append({"kind":"ellipse","centre":parent.to_global(shelf),
+			"half":Vector2(shelf_width*0.30,shelf_width*0.23),"seed":seed_value*31+i,"dry":false})
 		var tree := NATURE_TREES[posmod(i + seed_value, NATURE_TREES.size())].instantiate() as Node3D
 		tree.position = shelf - Vector3.UP * 0.10
 		tree.scale = Vector3.ONE * (0.92 + i * 0.16)

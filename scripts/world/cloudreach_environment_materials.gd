@@ -34,12 +34,22 @@ static func banner(size: Vector2, phase: float) -> ShaderMaterial:
 	material.set_shader_parameter("phase",phase)
 	return material
 
+static func turf_parameters(material: ShaderMaterial,dry: bool) -> void:
+	material.set_shader_parameter("grass_texture",preload("res://assets/environment/terrain/stylised/verge_grass_Color.png") if dry else preload("res://assets/environment/terrain/stylised/meadow_grass_Color.png"))
+	material.set_shader_parameter("grass_tint",Color("#a2ad78") if dry else Color("#8ca867"))
+	material.set_shader_parameter("grass_scale",0.65)
+
+static func ground(dry: bool) -> ShaderMaterial:
+	var material:=ShaderMaterial.new()
+	material.shader=preload("res://shaders/cloudreach_surface.gdshader")
+	turf_parameters(material,dry)
+	return material
+
 static func worn_ground(centre: Vector3,radius: float) -> ShaderMaterial:
 	var material:=ShaderMaterial.new()
 	material.shader=preload("res://shaders/cloudreach_worn_ground.gdshader")
-	material.set_shader_parameter("grass_tex",preload("res://assets/environment/terrain/stylised/meadow_grass_Color.png"))
+	turf_parameters(material,centre.y>=700.0)
 	material.set_shader_parameter("soil_tex",preload("res://assets/environment/terrain/stylised/dirt_path_Color.png"))
-	material.set_shader_parameter("grass_tint",Color("#abc89f"))
 	material.set_shader_parameter("soil_tint",Color("#9b805f"))
 	material.set_shader_parameter("patch_centre",centre)
 	material.set_shader_parameter("radius",radius)

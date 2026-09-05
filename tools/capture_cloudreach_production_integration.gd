@@ -68,6 +68,10 @@ const VIEWS := [
 		"pitch_deg": 18.0,
 	},
 ]
+const EYE_LEVEL_VIEWS := [
+	{"name":"11-aerie-ground-connection","stand":Vector2(373,3262.5357),"target":Vector3(400,614,3250),"pitch_deg":-5.0},
+	{"name":"12-cliffhold-ground-connection","stand":Vector2(-352,3954),"target":Vector3(-340,832,3970),"pitch_deg":-7.0}
+]
 
 
 func _init() -> void:
@@ -80,6 +84,9 @@ func _run() -> void:
 	var performance_path:=output_dir+"/performance.json" if repair else PERF_PATH
 	if "--round3" in OS.get_cmdline_user_args():
 		output_dir="res://ralph/reports/CLOUDREACH-ENV-CORRECTION-0904/round3/"+("repair" if repair else "shots")
+		performance_path=output_dir+"/performance.json"
+	if "--round4" in OS.get_cmdline_user_args():
+		output_dir="res://ralph/reports/CLOUDREACH-ENV-CORRECTION-0904/round4/"+("repair" if repair else "shots")
 		performance_path=output_dir+"/performance.json"
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(output_dir))
 	var game := root.get_node_or_null(^"Game")
@@ -125,7 +132,10 @@ func _run() -> void:
 
 	var rows: Array[Dictionary] = []
 	var failures: Array[String] = []
-	for raw_view: Variant in (REPAIR_VIEWS if repair else VIEWS):
+	var selected_views: Array=REPAIR_VIEWS if repair else VIEWS
+	if not repair and "--round4" in OS.get_cmdline_user_args():
+		selected_views=VIEWS+EYE_LEVEL_VIEWS
+	for raw_view: Variant in selected_views:
 		var view := raw_view as Dictionary
 		var stand: Vector2 = view["stand"]
 		var ground := float(world.call("ground_height_at", stand.x, stand.y))

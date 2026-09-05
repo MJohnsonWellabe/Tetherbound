@@ -4,8 +4,9 @@
 
 Owner resumed the full Cloudreach chapter goal, excluding final creature art.
 Work is in `D:\Tetherbound-source` on `codex/cloudreach-cliffs`, draft PR #44.
-Checkpoint `e002853ea` is pushed; `92fda325e` preserves reference import sidecars.
-The branch integrates fetched main `2cd711eb1` without discarding its work.
+Merge checkpoint `1f1f23652` is pushed, preserving `e002853ea` and the reference
+import sidecars in `92fda325e`. It integrates fetched main `2cd711eb1` without
+discarding either lane's compatible behavior.
 This is **not** a merge to main or a claim of chapter completion.
 
 Main's single progression feed/unordered bonds, pickups, portraits, companion,
@@ -17,19 +18,34 @@ production finale 64/64, feed lifecycle 14/14 and physical Fly 36/36. Meadows
 world boot passes, retaining its known headless alpha material-null error.
 Windows CRLF hashing incorrectly marked unchanged bakes stale; canonical LF
 hashing now preserves both shipped bake identities (2/2 freshness guards pass)
-without rebaking. Full regression is still running; no full-suite pass is claimed.
+without rebaking. Full regression completed: 2,093 tests / 3,768,872 assertions,
+16 failures from the then-loaded portability/freshness checks, plus five shiny
+fixtures that aborted despite nominal passes. Corrected follow-ups pass 95 tests /
+41,908 assertions with no errors. No clean second full-suite pass is claimed;
+the initial native-error/leak set remains disclosed in `MAIN-MERGE-REGRESSION.md`.
 
-Acceptance remains open: the uninterrupted route last reached Maela; the fixed
-challenge prompt needs replay through Fly, shrine, upper routes and finale.
-The environment's round-3 blind verdict is **No / No**; round 4 has twelve real
-captured views under fresh blind review, not accepted. Its real-input airborne
-Fly capture now passes. The new main damage multiplier invalidates earlier combat-balance
-measurements until rerun. See `docs/biomes/cloudreach/CONTINUOUS_ACCEPTANCE_0905.md`
-and `ralph/reports/CLOUDREACH-ENV-CORRECTION-0904/round3/JUDGE-ASTRA.md`.
+Acceptance remains open. Continuous play now passes Senn and Maela but still
+needs the complete Fly, shrine, upper-route and finale sequence. The flight
+perch rest/launch overlap was reproduced and its camp moved on the same ledge;
+the latest replay is diagnosing precision approach/input timing, not bypassing it.
+Round 4's twelve real environment frames receive **art direction Yes / Palworld
+presentation No**. Foundation and 37 related unit tests pass; real-input airborne
+Fly and 63/63 rendered side-payoff checks pass. Sustained local static samples
+measure p95 8.34–15.18 ms on GTX 1060 at 1280×800, not Ally acceptance. A new
+five-member reward capture exposes a genuine HUD overlap; correction is underway.
+
+Combat has been remeasured against main's 1.6 damage multiplier: 28/28 real-input
+trainer-ladder wins, real wipe/rest/retry, maximum individual hit 39.85% HP,
+no further balance tuning. Root also fixed freed-body glow cleanup and empty
+level-up VFX surface errors; focused VFX checks pass. This probe excludes live
+finale wind/relay hazards and continuous attrition, so final balance remains open.
+See `docs/biomes/cloudreach/CONTINUOUS_ACCEPTANCE_0905.md`,
+`COMBAT_BALANCE_EVIDENCE_0905.md` and the round-4 `JUDGE-ASTRA.md`.
 
 The older exit note and main snapshot below are dated history, not current
-Cloudreach routing. Next steps: finish the full regression, replay the continuous
-route, remeasure combat, capture/judge the next environment pass and iterate.
+Cloudreach routing. Next steps: finish the live five-member HUD regression,
+continuous chapter and content-cadence audit, then correct the round-4 visual
+defects and recapture/judge. Draft PR #44 CI remains in progress; do not merge.
 
 **Status:** the live status document. Replaces `ralph/BACKLOG.md`, `ralph/STATUS.md` and
 the coordinator handovers (all under `archive/ralph/`). Update it when evidence changes;

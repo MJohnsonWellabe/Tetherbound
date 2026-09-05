@@ -1,6 +1,161 @@
 # Cloudreach combat balance evidence — 2026-09-05
 
-## Verdict and scope
+## Current verdict after merged W23 baseline
+
+**Retain trainer-only powers 24 / 28 / 32 / 36 and all existing levels.**
+The final rerun after the coordinator's VFX fixes wins **28/28 base-ladder
+fights plus the actual recovery/retry**, exits 0 twice, and has **no engine errors
+or warnings** in either log. Final measured values are recorded below; the first
+merged pass is preserved separately because its errors exposed real defects.
+The earlier candidate measurements below predate main's W23 difficulty merge and
+must not be used as current balance numbers. The remeasurement starts at branch
+HEAD `1f1f23652244df9c687566a7cc7d57b7d4a3d6ee`, containing main
+`2cd711eb1`. Main now multiplies each authored opponent power by **1.6 after the
+body profile merge**, and trainer-owned creatures inherit a **0.7-second first
+attack delay**. Thus Cloudreach's effective trainer powers are
+**38.4 / 44.8 / 51.2 / 57.6**. The global combat baseline is preserved.
+
+The first merged run won all **28 base-ladder fights** (three Terrapup-leading
+policies and a separate Ripplet-leading switching policy). No active fight timed
+out or wiped the team. A fresh passive five did actually wipe and then recover
+and win a retry. These are combat outcomes, not a claim of clean engine logs:
+this first pass exposed the VFX lifecycle failures described below.
+
+All percentages below are remaining HP across the five. Each later fight starts
+after the existing named recovery boundary; Ila, Orrin and Senn are unhealed.
+Faints therefore accumulate across those opening three. No consumables were used.
+
+| Trainer | Spacer seconds / HP / faints | Brawler seconds / HP / faints | Switching seconds / HP / faints |
+|---|---:|---:|---:|
+| Ila | 21.17 / 100.0% / 0 | 16.82 / 91.9% / 0 | 18.33 / 89.3% / 0 |
+| Orrin | 25.83 / 89.6% / 0 | 21.32 / 74.6% / 1 | 19.70 / 74.9% / 1 |
+| Senn | 30.15 / 77.5% / 1 | 20.77 / 46.9% / 2 | 21.82 / 47.5% / 2 |
+| Maela | 28.35 / 81.1% / 0 | 20.18 / 74.8% / 1 | 27.00 / 67.5% / 1 |
+| Tavi | 46.27 / 80.7% / 1 | 39.32 / 36.1% / 3 | 40.55 / 39.5% / 2 |
+| Voss | 48.20 / 58.2% / 1 | 46.47 / 34.6% / 3 | 47.22 / 32.3% / 3 |
+| Veyra, roster only | 57.88 / 70.7% / 1 | 45.73 / 12.0% / 4 | 48.13 / 21.0% / 3 |
+
+This is materially more pressure than the pre-merge candidate: the brawler's
+captain recovery estimate rises from four tonics and two Revives to **eleven
+tonics and four Revives**. The full named rest immediately before the captain
+matters. Reading telegraphs remains valuable: the spacer finishes the same roster
+at 70.7% party HP with one faint, versus the brawler's 12.0% and four faints.
+The switching pilot only uses the offensive matchup arrow; it does not react to
+low HP or incoming type advantage. It is not an optimal defensive player.
+
+A separate observer-only hit audit adds every incoming production hit, target,
+target level/max HP and damage fraction to the probe's JSON. The manager emits
+this signal before replacing a fainted creature, so the denominator is the actual
+target, including lethal overkill. It changes no combat behavior. The audit wins
+seven of seven with the Ripplet-leading switching policy. Maximum observed hit
+fractions by trainer are **20.4 / 15.8 / 32.3 / 25.9 / 36.7 / 32.2 / 36.4%**.
+The largest is Tavi's Galecrest hitting level-26 Galewisp for 84.42 of 230 HP.
+These observed blows remain below D77's half-full-health ceiling. That audit's
+captain ends at 37.2% party HP and three faints, illustrating the production RNG
+and replacement-sequence variability; one sample is not a statistical win rate.
+
+Taken together, clean combat resolution, the surviving telegraph skill gap and
+sub-half-health blows do **not** justify automatically dividing Cloudreach's
+powers by 1.6. Retain the harder measured ladder. The remaining risk is the
+**integrated captain arena**: its wind/relay displacement is absent here, and the
+brawler has little spare health. This report does not approve full finale balance,
+wild attrition, physical camp UI or continuous chapter acceptance.
+
+The merged passive loss is **97.65 seconds, 31 hits, 1449.4 damage**, five faints
+and four automatic replacements, with `trainer_lost`, zero reward, and challenge
+refusal while all five are fainted. Public Galefoot recovery permits a real input
+retry: **17.62 seconds, zero faints, 45 coins**, `passed: true`. No victory flag,
+private HP assignment, lethal seam or owner save is used to manufacture outcomes.
+
+### Runtime failures and exact evidence
+
+The initial default and lead-1 commands both exited 0 with probe `errors: []`,
+but their logs contain `body_glow.gd:143` accessing a freed instance during
+cleanup, `level_up_flourish.gd:162` ending an empty ImmediateMesh surface, and
+shutdown resource/leak diagnostics. Probe outcome success does not erase those
+engine failures. The coordinator owns their production fixes; the balance agent
+changes only observational probe telemetry and this report. The hit-audit process
+loaded after the body-glow fix but before the flourish fix and still records the
+empty-surface error. All failure logs remain in the local report directory.
+
+Source configuration SHA-256 for these merged runs:
+
+- Encounters: `06fd13d236db6da5cacd6c929e3cb1c90fdb0bee0d95d5038ae5e5243db7e33f`.
+- Shared combat: `ed339b53fc7e8d63511c4512d4537d3afb47192bf8f0933cf57d190cb55d37b2`.
+- Chapter: `dd30fdd666ec6d8e551bd333c86e82113675394cea49f45b97e9be0993e57335`.
+- Progression: `45875dd868ed32ffdaa410b5ed740a7209140ea6675081a55b8d10faf9c2e61e`.
+
+Raw files under `ralph/reports/CLOUDREACH-COMBAT-BALANCE-0905/`:
+`mixed-spacer-brawler-brawler_switch-lead0-merged-main.json`,
+`mixed-brawler_switch-lead1-merged-main.json`, and
+`mixed-brawler_switch-lead1-merged-main-hit-audit.json`.
+Their logs use `merged-main-default.log`, `merged-main-lead1.log` and
+`merged-main-hit-audit.log`. Other headless suites ran concurrently; simulation
+time/hit metrics remain usable, wall-clock performance is not measured.
+
+### Final clean rerun after VFX fixes
+
+The exact same authored encounters, team assumptions and global combat config
+were rerun after the coordinator fixed both VFX lifecycle defects and passed its
+dedicated live regression. The trainer powers were not changed. Both commands
+exit **0**, both JSON files have `errors: []`, all **28/28 base fights win**, and
+neither log contains `ERROR` or `WARNING`, including shutdown. The final sample
+confirms the pressure seen above without the earlier VFX failures.
+
+| Trainer | Spacer seconds / HP / faints | Brawler seconds / HP / faints | Switching seconds / HP / faints |
+|---|---:|---:|---:|
+| Ila | 21.17 / 100.0% / 0 | 17.62 / 89.8% / 0 | 16.82 / 92.6% / 0 |
+| Orrin | 25.80 / 89.8% / 0 | 18.95 / 74.7% / 1 | 19.72 / 77.9% / 1 |
+| Senn | 29.70 / 77.5% / 1 | 20.77 / 47.8% / 2 | 20.58 / 54.0% / 2 |
+| Maela | 29.63 / 80.4% / 0 | 20.98 / 75.0% / 1 | 27.02 / 71.8% / 1 |
+| Tavi | 47.08 / 80.7% / 1 | 39.77 / 35.4% / 3 | 40.58 / 30.5% / 2 |
+| Voss | 47.22 / 63.1% / 1 | 46.02 / 29.3% / 3 | 46.77 / 32.3% / 3 |
+| Veyra, roster only | 53.60 / 64.3% / 1 | 46.65 / 12.1% / 4 | 48.02 / 19.7% / 3 |
+
+The separate Ripplet-leading switching run wins all seven in
+**15.93 / 20.08 / 21.50 / 26.65 / 41.40 / 46.48 / 45.13 seconds**. It records
+seven voluntary `party_cycle` switches (Ila one, Senn one, Tavi one, Voss one,
+captain three), ending the captain at **32.1% HP and three faints**. The default
+switching ladder records six voluntary input switches. The brawler's captain
+recovery estimate is ten tonics and four Revives; the spacer's is five tonics and
+one Revive. These remain estimates, not item-use evidence.
+
+The greatest observed incoming hit across the final 28 fights is **39.85%**:
+Tavi's Galecrest deals **104.59 damage** to level-26 Ripplet's **262.5 max HP**.
+The Ripplet-leading suite's maximum is 38.08%. No measured hit exceeds half of
+the actual target's maximum HP. This is observed sample evidence, not a proof for
+every species/level/matchup combination or every RNG seed.
+
+Natural final levels, in the initial team order: spacer **28/27/27/27/27**,
+brawler **26/27/27/27/27**, switching **26/27/26/27/27**, and Ripplet-leading
+switching **26/27/27/27/27**. Faints and participation redistribute real XP.
+
+The final unattended loss takes **100.72 seconds, 32 hits, 1464.8 damage**.
+All five faint, four automatic replacements occur, `trainer_lost` fires, and no
+coins are paid. Challenge access is false while the five remain fainted. Public
+Galefoot recovery then permits the input-driven retry: **16.82 seconds, 92.6%
+team HP, no faints, 45 coins and a victory callback**. `retry.passed` is true.
+
+Reproduction from `D:\Tetherbound-source`:
+
+```powershell
+& 'D:\Tetherbound-tools\godot\Godot_v4.7-stable_win64_console.exe' --headless --path . --fixed-fps 60 --log-file 'D:\Tetherbound-source\ralph\reports\CLOUDREACH-COMBAT-BALANCE-0905\merged-main-final-default.log' --script tools/_probe_cloudreach_combat_balance.gd -- --loss-retry --tag=merged-main-final
+& 'D:\Tetherbound-tools\godot\Godot_v4.7-stable_win64_console.exe' --headless --path . --fixed-fps 60 --log-file 'D:\Tetherbound-source\ralph\reports\CLOUDREACH-COMBAT-BALANCE-0905\merged-main-final-lead1.log' --script tools/_probe_cloudreach_combat_balance.gd -- --pilot=brawler_switch --lead=1 --tag=merged-main-final
+```
+
+Final telemetry filenames are
+`mixed-spacer-brawler-brawler_switch-lead0-merged-main-final.json` and
+`mixed-brawler_switch-lead1-merged-main-final.json` in the same local report folder.
+All four configuration hashes above are unchanged. Final probe SHA-256 is
+`fa99be8f1603e3a404afc5d2f347add37e1d251ab4d38e00458787a0cb0888b9`, and
+`wild_creature.gd` is
+`3c9349635554d7e3cde20b0a7ca010bc6b75e1c70bc3eabafbc9bdc99a291291`.
+The coordinator's fixed VFX sources at measurement time are `body_glow.gd`
+`a81b010e8ef592b05bdd3d5a6ddefa865bc5b1d664579ab25e5f9d12dffc8229` and
+`level_up_flourish.gd`
+`26ee6060b999c202843d0184eaf1679af8830000ded772eee1bf8e34b9fe0bd6`.
+
+## Historical pre-W23 verdict and scope
 
 **Keep the measured trainer-only power values 24 / 28 / 32 / 36. Retain the current
 trainer levels.** The coordinator applied those candidate profiles after the

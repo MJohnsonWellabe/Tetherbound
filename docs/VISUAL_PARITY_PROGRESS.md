@@ -225,3 +225,34 @@ Resume: preserve this checkpoint, merge `origin/main` 2cd711eb1 (new Meadows
 progression/UI/combat/companion/VFX/portrait/route work), reconcile shared APIs,
 run regression checks, finish the continuous chapter and corrected real Fly/
 payoff evidence, then implement the next geometry/material/composition pass.
+
+## Cloudreach round 4 — 2026-09-05
+
+Main `2cd711eb1` is integrated in pushed checkpoint `1f1f23652`. Round 4 joins
+the turf/material family, warms the cliff stone, replaces distant tabletop
+masses with installed irregular rock geometry, and develops settlement,
+shrine and summit edges. Real twelve-frame evidence and the original blind
+verdict are in `ralph/reports/CLOUDREACH-ENV-CORRECTION-0904/round4/`.
+
+Fresh Astra verdict: **art direction Yes / Palworld presentation No**. Final
+external ChatGPT acceptance remains open; creatures remain deferred. Terrain
+joins, uniform ground bands and unfinished apparatus still need correction.
+The upper watch's new position also obscures the east arrival and must move.
+
+Production foundation passes; five related unit files pass 37 tests / 1,195
+assertions. Real-input airborne Fly capture passes. Five rendered side-payoff
+views pass 63/63 checks, and live captain/relay/save checks pass 64/64. A separate
+five-member near-level reward fixture passes its 65 functional checks but
+reveals a genuine banner/party-rail overlap; layout correction is in progress.
+
+Local Windows / GTX 1060 / Compatibility / 1280×800 sustained static samples
+measure mean 8.20–11.70 ms, p95 8.34–15.18 ms, maximum 15.81 ms. Maximum geometry
+across twelve views is 4,416 draws / 7.486M primitives. The arrival tail regresses
+against round 3; these are neither Ally nor continuous-play acceptance figures.
+Failed first launches and concurrent-load measurements remain disclosed in
+`round4/IMPLEMENTATION.md` rather than being replaced by successful retries.
+
+Resume: finish the live five-member HUD regression and continuous flight-perch
+approach/trial, then address the blind judge's terrain contacts, asymmetric
+route vegetation, bell/veil construction, watch alignment and arena surface
+grouping. Preserve the passing palette and real collision/progression gates.

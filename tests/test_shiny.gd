@@ -13,12 +13,20 @@ extends "res://tests/test_case.gd"
 ## own header explains for CombatManager, and the same fix: build a
 ## throwaway `EncounterDirector.new()` off-tree (`.new()` never calls
 ## `_ready()` outside a live SceneTree, so nothing here needs a scene) and
-## poke `_roll_wild_level` directly through `.call()`, the identical
-## reflection style `encounter_director.gd` itself already uses to talk to
-## every Node it does not own the script of.
+## call `_roll_wild_level` on the typed script instance. Its authored region
+## coordinate is explicit so signature drift cannot abort a reflection call
+## before the test has asserted anything.
 
 const ENCOUNTER_DIRECTOR := preload("res://scripts/combat/encounter_director.gd")
 const CREATURE_VISUAL := preload("res://scripts/creatures/creature_visual.gd")
+
+var _wild_bodies: Array[Node3D] = []
+
+
+func after_each() -> void:
+	for wild in _wild_bodies:
+		wild.free()
+	_wild_bodies.clear()
 
 ## A stand-in for the real wild body `_roll_wild_level` drives: only what it
 ## actually touches (`instance`, `set_shiny`), the same "no scene tree
@@ -39,13 +47,31 @@ class FakeWildBody:
 ## its own per-entry generator (`hash("wild_spawn_%d" % index)`) — the string
 ## itself does not have to match a real spawns.json entry for this to prove
 ## anything about the roll's own behaviour.
-func _roll(seed_string: String, species: String = "terrapup") -> Dictionary:
-	var director: Node = ENCOUNTER_DIRECTOR.new()
+func _roll(seed_string: String, species: String = "terrapup", centre_z: float = 0.0) -> Dictionary:
+	var director := ENCOUNTER_DIRECTOR.new()
 	var wild := FakeWildBody.new()
+	_wild_bodies.append(wild)
 	var rng := RandomNumberGenerator.new()
 	rng.seed = hash(seed_string)
-	director.call("_roll_wild_level", wild, species, rng)
+	# Historical roll fixtures live in Lower Meadows (z=0). The current
+	# producer requires authored position to select its chapter level band.
+	# A typed call makes future signature drift a parse failure, not an
+	# aborted reflection call that the tiny runner can mistake for a pass.
+	director._roll_wild_level(wild, species, rng, centre_z)
+	director.free()
+	assert_true(wild.instance != null, "the real encounter producer must construct the rolled creature")
 	return {"wild": wild, "rng": rng}
+
+
+func test_authored_region_changes_level_without_reordering_the_shiny_or_iv_draws() -> void:
+	var lower := _roll("wild_spawn_0", "terrapup", 0.0)["wild"] as FakeWildBody
+	var river := _roll("wild_spawn_0", "terrapup", 4000.0)["wild"] as FakeWildBody
+	assert_between(int(lower.instance.get("level")), 2, 6)
+	assert_between(int(river.instance.get("level")), 9, 12)
+	assert_true(int(river.instance.get("level")) > int(lower.instance.get("level")),
+		"negative control: the fourth argument must actually select the authored region")
+	assert_eq(lower.shiny, river.shiny)
+	assert_almost_eq(float(lower.instance.get("iv_hp")), float(river.instance.get("iv_hp")), 0.0000001)
 
 
 # --- odds read from config --------------------------------------------------

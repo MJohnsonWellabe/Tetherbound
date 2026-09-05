@@ -142,7 +142,24 @@ func _run() -> void:
 func _captures() -> void:
 	root.size=Vector2i(1280,800)
 	root.content_scale_size=Vector2i(1920,1200)
+	# Creature art is excluded from this environment evidence. Use the player's
+	# actual recall action, rather than concealing a mesh just for the camera.
+	if is_instance_valid(director.get("_ally_body")):
+		await process_frame
+		var recall := InputEventAction.new()
+		recall.action = "creature_recall"
+		recall.pressed = true
+		Input.parse_input_event(recall)
+		await frames(4)
+		recall = InputEventAction.new()
+		recall.action = "creature_recall"
+		recall.pressed = false
+		Input.parse_input_event(recall)
+		await frames(30)
+		check(not is_instance_valid(director.get("_ally_body")), "real recall clears companion from payoff sightlines")
 	var folder:="res://ralph/reports/CLOUDREACH-WORLD-PAYOFFS-0905/shots"
+	if "--round4" in OS.get_cmdline_user_args():
+		folder="res://ralph/reports/CLOUDREACH-ENV-CORRECTION-0904/round4/payoffs"
 	DirAccess.make_dir_recursive_absolute(folder)
 	var shots: Array=[
 		["bell-road",Vector3(-499,338.25,1317),Vector3(-506,340,1310)],
@@ -160,8 +177,15 @@ func _captures() -> void:
 	player.set_physics_process(false)
 	for shot: Array in shots:
 		var at: Vector3=shot[1]
+		if str(shot[0]) == "circuit-mark":
+			# Follow the real board's grounded elevation rather than the obsolete
+			# draft Tavi coordinates on this sloping route.
+			var board: Node3D = payoffs.get("board")
+			at = board.global_position + Vector3(0,0,-2.5)
+			shot[2] = board.global_position + Vector3.UP * 1.8
 		var height:=float(world.call("ground_height_near",at))
-		check(not is_nan(height) and absf(height-at.y)<4.0,str(shot[0])+" capture stand has authored floor")
+		check(not is_nan(height) and absf(height-at.y)<4.0,
+			str(shot[0])+" capture stand has authored floor at "+str(at)+" height="+str(height))
 		if is_nan(height) or absf(height-at.y)>=4.0:
 			continue
 		at.y=height+0.2

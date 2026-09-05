@@ -103,6 +103,7 @@ func build(world: Node3D) -> void:
 		_install(SCAFFOLD,self,Vector3(side*13,0.15,30),6.5,0.0)
 		world.call("_box",self,"SpineMasonryFoot",Vector3(side*13,0.35,30),Vector3(5.5,0.4,5.5),paving,false)
 	_install(WALL_MACHINE,self,Vector3(0,0.15,33),4.5,0.0)
+	_build_occupied_perimeter(world,materials)
 	var overlay := MeshInstance3D.new()
 	overlay.name = "LiveHazardTelegraphs"
 	var plane := PlaneMesh.new()
@@ -143,19 +144,42 @@ func _install(scene: PackedScene,parent: Node3D,at: Vector3,height: float,yaw: f
 
 func _paving_material() -> ShaderMaterial:
 	var material:=ShaderMaterial.new()
-	material.shader=preload("res://assets/environment/team_tether/hall/hall_stone.gdshader")
+	material.shader=preload("res://shaders/cloudreach_arena_paving.gdshader")
 	material.set_shader_parameter("albedo_tex",preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_BaseColor.png"))
-	material.set_shader_parameter("normal_tex",preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_Normal.png"))
-	material.set_shader_parameter("rough_tex",preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_Roughness.png"))
-	material.set_shader_parameter("tile",0.28)
-	material.set_shader_parameter("tint",Color("#a29b89"))
-	material.set_shader_parameter("damp_top_y",1160.3)
-	material.set_shader_parameter("damp_height",0.8)
-	material.set_shader_parameter("damp_strength",0.10)
-	material.set_shader_parameter("up_moss",0.15)
-	material.set_shader_parameter("moss_amount",0.28)
-	material.set_shader_parameter("macro_strength",0.20)
+	material.set_shader_parameter("tint",Color("#8f8a70"))
+	material.set_shader_parameter("origin",position)
 	return material
+
+
+func _build_occupied_perimeter(world: Node3D,materials: Dictionary) -> void:
+	# Define the work court beyond the existing 36 m fight deck. Nothing here
+	# changes collision, lee pockets, relay offers or hazard dimensions.
+	var root:=Node3D.new()
+	root.name="OccupiedArenaPerimeter"
+	add_child(root)
+	for index in 24:
+		var angle:=TAU*index/24.0
+		var outward:=Vector3(sin(angle),0,cos(angle))
+		# Clear southern entry and northern recovery/afterward path, each 22 m.
+		if absf(outward.x)<0.30:
+			continue
+		var segment:=Node3D.new()
+		segment.name="PerimeterBay%02d"%index
+		segment.position=outward*39.8
+		segment.rotation.y=angle
+		root.add_child(segment)
+		world.call("_castle_piece",segment,"RetainedMasonry",preload("res://assets/buildings/quaternius_castle/TallWallBricks.obj"),
+			Vector3(0,-1.6,0),Vector3(10.8,5.6 if index%3==0 else 3.8,2.6),materials.stone)
+		world.call("_box",segment,"ServiceWallFoot",Vector3(0,-0.8,0),Vector3(11,1.6,3.2),materials.masonry,false)
+		if index%3==0:
+			world.call("_hang_cloudreach_banner",segment,Vector3(0,2.2,-1.4),Vector2(1.6,2.8),0.0)
+	# Asymmetric occupied bays, all beyond the relay/camera circulation ring.
+	for side: float in [-1.0,1.0]:
+		_install(SCAFFOLD,root,Vector3(side*34,0.15,21),7.5,side*0.35)
+		world.call("_place_local_prop",root,"crate",Vector3(side*31.5,0.15,20),1.15,side*12)
+		world.call("_place_local_prop",root,"barrel",Vector3(side*33,0.15,17.5),1.25,side*28)
+		world.call("_place_local_prop",root,"workbench",Vector3(side*29,0.15,25),1.1,side*70)
+		world.call("_box",root,"MachineryServiceFoot",Vector3(side*34,-0.05,21),Vector3(6,0.4,7),materials.masonry,false)
 
 
 func _clear_arena_dressing(world: Node3D) -> void:

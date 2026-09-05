@@ -4,7 +4,7 @@ extends SceneTree
 ## inputs produce this airborne frame; no mid-flight pose writes or fake carrier.
 const SCENE:=preload("res://scenes/world/cloudreach_cliffs.tscn")
 const SPECIES:=preload("res://scripts/creatures/creature_species.gd")
-const OUTPUT:="res://ralph/reports/CLOUDREACH-ENV-CORRECTION-0904/round3"
+var output:="res://ralph/reports/CLOUDREACH-ENV-CORRECTION-0904/round3"
 
 func _init() -> void:
 	_run.call_deferred()
@@ -20,6 +20,8 @@ func _action(name: String,pressed: bool) -> void:
 	Input.parse_input_event(event)
 
 func _run() -> void:
+	if "--round4" in OS.get_cmdline_user_args():
+		output="res://ralph/reports/CLOUDREACH-ENV-CORRECTION-0904/round4"
 	root.size=Vector2i(1280,800)
 	root.content_scale_size=Vector2i(1920,1200)
 	var game:=root.get_node("Game")
@@ -90,8 +92,8 @@ func _run() -> void:
 	for action in ["move_right","move_left","move_back","move_forward","jump"]:
 		Input.action_release(action)
 	if not reached or not fly.call("is_flying"):
-		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUTPUT))
-		var diagnostic:=FileAccess.open(OUTPUT+"/fly-diagnostic.json",FileAccess.WRITE)
+		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(output))
+		var diagnostic:=FileAccess.open(output+"/fly-diagnostic.json",FileAccess.WRITE)
 		diagnostic.store_string(JSON.stringify({"target":str(target),"updrafts":str(fly.get("updrafts")),"history":history},"  "))
 		push_error("Production flight did not reach the actual airborne evidence stand")
 		quit(1)
@@ -112,9 +114,9 @@ func _run() -> void:
 		await RenderingServer.frame_post_draw
 		draws+=Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)
 		primitives+=Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME)
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUTPUT+"/shots"))
-	root.get_texture().get_image().save_png(OUTPUT+"/shots/10-real-fly-silhouette.png")
-	var file:=FileAccess.open(OUTPUT+"/fly-performance.json",FileAccess.WRITE)
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(output+"/shots"))
+	root.get_texture().get_image().save_png(output+"/shots/10-real-fly-silhouette.png")
+	var file:=FileAccess.open(output+"/fly-performance.json",FileAccess.WRITE)
 	file.store_string(JSON.stringify({"fixture":"Explicit unlocked aerie start; real double-Jump/input flight afterward","position":str(player.global_position),"flying":fly.call("is_flying"),"draw_calls":draws/24.0,"primitives":primitives/24.0,"measured_frame_ms":float(Time.get_ticks_usec()-started)/24000.0,"adapter":RenderingServer.get_video_adapter_name()},"  "))
 	print("CLOUDREACH REAL FLY VISUAL PASS at ",player.global_position)
 	quit(0)

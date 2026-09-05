@@ -197,6 +197,21 @@ func _glows_on(body: Node) -> Array:
 	return out
 
 
+func test_glow_tolerates_model_mesh_freed_before_suspension_and_finish() -> void:
+	var body := StandInBody.new()
+	var glow: Node = GLOW.attach(body, GLOW.Mode.FLASH, {"duration": 0.1}, 0.85)
+	assert_true(glow != null)
+	body.mesh_node.free()
+	body.mesh_node = null
+	glow.call("suspend", true)
+	glow.call("suspend", false)
+	glow.call("advance", 0.2)
+	assert_true(glow.call("finished"))
+	assert_true(glow.is_queued_for_deletion())
+	assert_eq(glow.call("mesh_count"), 0)
+	body.free()
+
+
 # --- the damage path ---------------------------------------------------------
 
 func test_a_landed_blow_spawns_a_spark_and_a_body_flash_that_live_and_free() -> void:
