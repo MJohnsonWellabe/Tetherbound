@@ -1,10 +1,11 @@
 # W09-VFX — combat and reward VFX (CL-A2) — lane report
 
 Branch: `ralph/W09-VFX-0904`, from `origin/main` at `ef16544f`.
-**Last code commit: `75a0241b`** (round-3 fixes). Everything after it is this report and its
-evidence; the head of the branch when this line was written is `663f9271`, and the commit that
-adds the line is its child, so the branch head is one commit ahead of any hash quotable here.
-Verify with `git log --oneline origin/main..ralph/W09-VFX-0904`.
+**Last code commit: `75a0241b`** (round-3 fixes). Everything after it is evidence and this
+report, landing as one commit per addition so each is individually reviewable. **This report's
+own commit is necessarily one past whatever hash is written here** (writing a hash into a file
+cannot name the commit that saves the edit); run `git log --oneline -1 origin/ralph/W09-VFX-0904`
+for the true head. At the time this line was written that head was `4dbb3855`.
 
 ## What the player sees
 
