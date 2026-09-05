@@ -207,7 +207,30 @@ What changed (all data-driven, all recorded beside the number):
    building — one shadow map each, not an omni's six — the same shadowed-positional setup
    the inn, cottage and shop interiors already run.
 
-Numbers decided before the render, measured on the same stands (§3): __CHAMBER_NUMBERS__
+Numbers decided before the render (`tools`-side script in the lane's scratch, thresholds
+fixed before any frame was seen), measured on the same stands, A = `main`, B = branch:
+
+| stand | pixels reading as a blown pale-cyan bar (G−R>40, B−R>40, luma>160) | pixels under luma 20 | mean luma |
+|---|---|---|---|
+| C-01 face-on from the reveal stand | **15,659 → 3,417** (the rest is the machine's own crown and ring lamps, deliberately kept at 1.4) | 31.1% → 30.2% | 36.7 → 36.2 |
+| C-03 raised three-quarter from the door corner | **11,865 → 6,032** | 44.8% → 41.1% | 33.4 → 33.9 |
+| C-02 the held creature | 241 → 238 | 44.5% → 41.0% | 30.3 → 33.8 |
+
+Creature crop (frame centre) against the ring around it, C-02: **42.0 vs 33.6 (+8.5) →
+48.2 vs 38.0 (+10.3)**. Machine front crop, C-01: 41.1 → 46.0; floor in front of the
+machine, C-03: 38.9 → 44.8; creature crop, C-03: 53.7 → 60.3.
+
+**And the honest half of that table: the walls did not move.** C-01 right wall 25.2 →
+25.3, C-03 far wall 25.2 → 25.2. The machine, creature and floor took the new light and
+the walls took none — which is the Compatibility renderer's per-mesh cap
+(`rendering/limits/opengl/max_lights_per_object`, 8) on OMNI lights: the chamber's 41 m
+wall slabs already touch eight (two room omnis, the core, the containment light, the
+arena pair, the siphon, the approach) and a ninth is dropped silently on exactly the
+surfaces the "crushed blacks" verdict was about. Spots are budgeted separately and the
+room had none, so the fill is now a wide spot (85°, 2.4, range 36) thrown from the
+doorway wall across the room; that is the state committed and in `stronghold.json`'s own
+comment. The four chamber/arena stands were re-rendered on it (`shots/n05_after2`) —
+__AFTER2_NUMBERS__
 
 ## 3. Runtime validation and frames
 
@@ -239,7 +262,16 @@ repeated alone. `^ERROR:` in the capture logs: `Parameter "material" is null` on
 
 ## 4. Blind judge
 
-__JUDGE_SECTION__
+Two code-blind sub-agents (`opus`), each given one contact sheet, the individual frames,
+`docs/reference/` and `.claude/skills/visual-judge/SKILL.md`, told nothing about which
+column is which build or what changed, and asked to rule only on the defects this brief
+names (per the brief: one round, focused, no re-litigating the rest of the room).
+
+- **Dressing sheet** (`_sheet_dressing.png`: Halda's stand, the fence run, the inn, the
+  courtyard held/freed, the zoomed junction): verdict in `JUDGE_DRESSING.md`.
+  __JUDGE_DRESSING_SUMMARY__
+- **Chamber sheet** (`_sheet_chamber.png`: W06's two chamber stands, the creature, the
+  Warden Arena): verdict in `JUDGE_CHAMBER.md`. __JUDGE_CHAMBER_SUMMARY__
 
 ## 5. Tests and smokes
 
@@ -284,4 +316,13 @@ on `main`); the set did not grow.
 
 ## 7. Commits
 
-__COMMITS__
+```
+614b9151 N05 report: frames, piers, render log, routed sidecars
+b42b730e N05: the chamber fill is a spot (omnis are capped per mesh); uid sidecars; dressing contact sheet
+86c13af0 N05: fence join numbers from the corrected probe; traversal smoke result
+077423db N05: CURRENT_STATE rows, report draft, fence probe end-post fix
+ff70d6df N05 capture: a Warden Arena stand
+998bc89e N05: log each tower pier; trim the capture to the judged stands
+6932968f N05 dressing: fence panels meet and sit on the ground, the inn's bar wall, the chamber's light-bars, piers, fill and shadows
+<the report/sheet/verdict commits after these carry no behaviour>
+```
