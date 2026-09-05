@@ -71,14 +71,6 @@
       "pulse_seconds": 2.6,
       "emission": 1.15,
       "_comment_emission": "NOT higher. Above ~1.2 the teal clips to white and the ring stops reading as the reserved colour at all -- the same ceiling stronghold_occupation.gd's work-lamp lens found at 2.4 and fixed at 1.15, and the same finding a blind judge returned on these rings at 2.2 ('unlit white primitives').",
-      "draw": {
-        "_comment": "The draw made visible: a column of the reserved teal from the creature's back up to the machine's crown, plus a light where it lands. Answers the one thing two blind judges independently named -- 'nothing connects the creature to the structure, so the central premise is not rendered'. Emission keeps the same 1.15 ceiling as the rings; the radii taper UP so the column reads as being taken from the animal rather than shone onto it.",
-        "top_radius": 0.55,
-        "bottom_radius": 0.16,
-        "emission": 1.15,
-        "energy": 2.0,
-        "range": 7.0
-      },
       "rings": [0.42, 0.74],
       "ring_clearance": 0.25,
       "ring_thickness": 0.08
