@@ -77,6 +77,120 @@
     "bush_base": "#243b16",
     "bush_tip": "#647a31"
   },
+  "settlement": {
+    "visibility_range_m": 850.0,
+    "houses": [
+      {"prefab": "cottage_a", "position": [-10.0, 0.0, -8.0], "yaw_deg": 28.0},
+      {"prefab": "cottage_b", "position": [10.0, 0.0, -7.0], "yaw_deg": -38.0},
+      {"prefab": "cottage_b", "position": [-9.0, 0.0, 9.0], "yaw_deg": 138.0},
+      {"prefab": "cottage_a", "position": [9.0, 0.0, 10.0], "yaw_deg": -148.0}
+    ]
+  },
+  "route_details": {
+    "_comment": "Individually authored roadside pockets. Offsets are [sideways, forward] metres from each anchor; dimensions are actual final mesh bounds. Keep the route centre free and never bridge a missing surface with dressing.",
+    "visibility_range_m": 320.0,
+    "pockets": [
+      {
+        "id": "ArrivalTravelersLayby", "anchor": [-3.2, 106.0, -248.0], "forward": [-0.258, 0.0, 0.966],
+        "items": [
+          {"asset": "wagon", "offset": [6.8, 9.0], "height_m": 2.3, "yaw_deg": -18.0},
+          {"asset": "barrel", "offset": [4.7, 7.0], "height_m": 1.15, "yaw_deg": 21.0},
+          {"asset": "crate", "offset": [5.9, 5.8], "height_m": 0.8, "yaw_deg": -9.0},
+          {"asset": "fence", "offset": [9.0, 8.0], "height_m": 1.15, "yaw_deg": 90.0},
+          {"asset": "rock", "offset": [-5.8, 1.0], "height_m": 1.5, "yaw_deg": 42.0, "bury_m": 0.25},
+          {"asset": "rock_low", "offset": [-4.7, 3.2], "height_m": 0.55, "yaw_deg": 15.0, "bury_m": 0.12},
+          {"asset": "bush", "offset": [-7.0, 2.3], "height_m": 1.4, "yaw_deg": 37.0},
+          {"asset": "flowers", "offset": [-4.9, 0.0], "height_m": 0.7, "yaw_deg": -25.0},
+          {"asset": "flowers", "offset": [4.8, 2.5], "height_m": 0.6, "yaw_deg": 72.0},
+          {"asset": "bush", "offset": [7.7, 12.5], "height_m": 1.7, "yaw_deg": 142.0}
+        ]
+      },
+      {
+        "id": "ArrivalStoneGarden", "anchor": [-12.0, 108.75, -215.0], "forward": [-0.258, 0.0, 0.966],
+        "items": [
+          {"asset": "rock", "offset": [-7.8, 1.0], "height_m": 2.6, "yaw_deg": 74.0, "bury_m": 0.4},
+          {"asset": "rock_low", "offset": [-5.5, -1.0], "height_m": 1.1, "yaw_deg": 8.0, "bury_m": 0.2},
+          {"asset": "bush", "offset": [-6.0, 3.0], "height_m": 1.75, "yaw_deg": 83.0},
+          {"asset": "flowers", "offset": [-4.8, 1.0], "height_m": 0.8, "yaw_deg": 14.0},
+          {"asset": "bush", "offset": [6.4, 11.0], "height_m": 1.4, "yaw_deg": 30.0}
+        ]
+      },
+      {
+        "id": "ThreeBellsBridgeRepair", "anchor": [-510.0, 325.9, 1281.9], "forward": [-0.618, 0.0, 0.786],
+        "items": [
+          {"asset": "fence", "offset": [-5.5, -1.0], "height_m": 1.1, "yaw_deg": 82.0},
+          {"asset": "crate", "offset": [-4.8, 1.0], "height_m": 0.85, "yaw_deg": 18.0},
+          {"asset": "barrel", "offset": [-6.0, 2.0], "height_m": 1.2, "yaw_deg": 47.0},
+          {"asset": "rock", "offset": [-8.0, 4.0], "height_m": 1.8, "yaw_deg": 85.0, "bury_m": 0.3},
+          {"asset": "bush", "offset": [-7.0, 5.4], "height_m": 1.5, "yaw_deg": 36.0},
+          {"asset": "flowers", "offset": [-5.0, 4.0], "height_m": 0.65, "yaw_deg": -24.0},
+          {"asset": "paving", "offset": [-3.9, -2.0], "width_m": 1.5, "yaw_deg": 21.0}
+        ]
+      },
+      {
+        "id": "WindscarCrossingAbutment", "anchor": [-520.0, 430.0, 2720.0], "forward": [0.501, 0.0, 0.865],
+        "items": [
+          {"asset": "rock", "offset": [-5.7, -1.0], "height_m": 1.75, "yaw_deg": 61.0, "bury_m": 0.3},
+          {"asset": "rock_low", "offset": [-4.5, -3.0], "height_m": 0.8, "yaw_deg": 94.0, "bury_m": 0.16},
+          {"asset": "flowers", "offset": [-4.3, -0.4], "height_m": 0.7, "yaw_deg": 24.0},
+          {"asset": "bush", "offset": [-6.0, 1.0], "height_m": 1.3, "yaw_deg": 87.0},
+          {"asset": "fence", "offset": [5.3, -1.0], "height_m": 1.1, "yaw_deg": 90.0},
+          {"asset": "crate", "offset": [4.5, -2.7], "height_m": 0.8, "yaw_deg": -21.0},
+          {"asset": "rock_low", "offset": [5.2, 1.8], "height_m": 1.1, "yaw_deg": 32.0, "bury_m": 0.22}
+        ]
+      },
+      {
+        "id": "RoostWatchRest", "anchor": [330.0, 587.5, 3282.5], "forward": [0.907, 0.0, -0.421],
+        "items": [
+          {"asset": "fence", "offset": [-7.8, 2.0], "height_m": 1.15, "yaw_deg": 90.0},
+          {"asset": "fence", "offset": [-7.8, 6.0], "height_m": 1.15, "yaw_deg": 90.0},
+          {"asset": "barrel", "offset": [-5.8, 5.0], "height_m": 1.2, "yaw_deg": 13.0},
+          {"asset": "crate", "offset": [-5.0, 3.8], "height_m": 0.75, "yaw_deg": -12.0},
+          {"asset": "rock", "offset": [6.5, 1.0], "height_m": 2.0, "yaw_deg": 49.0, "bury_m": 0.28},
+          {"asset": "rock_low", "offset": [5.0, -1.5], "height_m": 0.65, "yaw_deg": 27.0, "bury_m": 0.15},
+          {"asset": "bush", "offset": [7.6, 4.0], "height_m": 1.8, "yaw_deg": 61.0},
+          {"asset": "flowers", "offset": [4.8, 2.0], "height_m": 0.75, "yaw_deg": -30.0},
+          {"asset": "bush", "offset": [-8.0, 10.0], "height_m": 1.3, "yaw_deg": 76.0}
+        ]
+      },
+      {
+        "id": "AerieApproachRockShelter", "anchor": [357.0, 596.2, 3270.0], "forward": [0.907, 0.0, -0.421],
+        "items": [
+          {"asset": "rock", "offset": [-7.6, 1.0], "height_m": 2.9, "yaw_deg": 111.0, "bury_m": 0.4},
+          {"asset": "rock_low", "offset": [-5.2, 3.0], "height_m": 1.2, "yaw_deg": 71.0, "bury_m": 0.25},
+          {"asset": "bush", "offset": [-6.7, 4.6], "height_m": 1.7, "yaw_deg": 123.0},
+          {"asset": "flowers", "offset": [-4.6, 1.5], "height_m": 0.7, "yaw_deg": -18.0},
+          {"asset": "bush", "offset": [6.0, 4.0], "height_m": 1.25, "yaw_deg": 38.0}
+        ]
+      },
+      {
+        "id": "CliffholdArrivalLookout", "anchor": [-400.0, 780.0, 3890.0], "forward": [0.6, 0.0, 0.8],
+        "items": [
+          {"asset": "fence", "offset": [-5.7, 1.0], "height_m": 1.15, "yaw_deg": 90.0},
+          {"asset": "barrel", "offset": [-4.5, -1.7], "height_m": 1.1, "yaw_deg": 24.0},
+          {"asset": "crate", "offset": [-5.2, -3.2], "height_m": 0.75, "yaw_deg": -19.0},
+          {"asset": "rock", "offset": [5.6, -0.8], "height_m": 1.8, "yaw_deg": 68.0, "bury_m": 0.28},
+          {"asset": "rock_low", "offset": [4.2, 1.0], "height_m": 0.6, "yaw_deg": 42.0, "bury_m": 0.14},
+          {"asset": "bush", "offset": [6.4, -2.4], "height_m": 1.6, "yaw_deg": 31.0},
+          {"asset": "flowers", "offset": [4.5, -1.3], "height_m": 0.65, "yaw_deg": 91.0},
+          {"asset": "paving", "offset": [-3.8, 0.4], "width_m": 1.6, "yaw_deg": -27.0}
+        ]
+      },
+      {
+        "id": "SummitSupplyPosition", "anchor": [100.0, 1160.0, 5297.0], "forward": [0.0, 0.0, 1.0],
+        "items": [
+          {"asset": "wagon", "offset": [-9.0, 8.0], "height_m": 2.35, "yaw_deg": 24.0},
+          {"asset": "crate", "offset": [-6.7, 6.5], "height_m": 1.0, "yaw_deg": -16.0},
+          {"asset": "barrel", "offset": [-8.5, 5.0], "height_m": 1.25, "yaw_deg": 17.0},
+          {"asset": "fence", "offset": [-11.5, 7.0], "height_m": 1.2, "yaw_deg": 80.0},
+          {"asset": "rock", "offset": [7.4, 1.0], "height_m": 2.2, "yaw_deg": 96.0, "bury_m": 0.35},
+          {"asset": "rock_low", "offset": [5.5, -0.5], "height_m": 0.9, "yaw_deg": 31.0, "bury_m": 0.18},
+          {"asset": "bush", "offset": [8.7, 3.2], "height_m": 1.45, "yaw_deg": 19.0},
+          {"asset": "flowers", "offset": [5.4, 1.3], "height_m": 0.5, "yaw_deg": 41.0}
+        ]
+      }
+    ]
+  },
   "nature": {
     "tree_count_base": 27,
     "tree_count_order_falloff": 2,

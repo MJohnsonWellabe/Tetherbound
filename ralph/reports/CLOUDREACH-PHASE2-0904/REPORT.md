@@ -21,12 +21,12 @@ complete.
 
 | View | Draw calls | Primitives | Objects | Measured frame time |
 | --- | ---: | ---: | ---: | ---: |
-| Arrival reveal | 704 | 1,057,747 | 704 | 4.32 ms |
-| Broken Causeways | 756 | 902,634 | 756 | 4.16 ms |
-| Windscar Ravine | 730 | 1,120,070 | 730 | 4.20 ms |
-| High Roost before Fly | 215 | 347,926 | 215 | 2.86 ms |
-| Upper Cloudreach / Cliffhold | 502 | 1,029,743 | 502 | 4.08 ms |
-| Summit approach | 467 | 6,479,973 | 467 | 8.44 ms |
+| Arrival reveal | 741 | 1,085,393 | 741 | 4.60 ms |
+| Broken Causeways | 766 | 913,930 | 766 | 4.32 ms |
+| Windscar Ravine | 738 | 1,130,486 | 738 | 4.47 ms |
+| High Roost before Fly | 252 | 368,618 | 252 | 3.14 ms |
+| Upper Cloudreach / Cliffhold | 915 | 1,076,681 | 927 | 4.38 ms |
+| Summit approach | 490 | 6,494,861 | 490 | 8.51 ms |
 
 The highest recorded draw count is below the Hall reference ceiling of 4,000 draws. The
 engine-reported instantaneous FPS was not treated as evidence because it includes capture-start
@@ -51,6 +51,11 @@ noise; measured frame time and structural renderer counters are the useful value
   groups, and non-uniform landing accents. Their installed meshes now share the Meadows-derived
   olive leaf palette, and each region receives an installed twisted-tree wind silhouette. No
   creature content was added in this pass.
+- Eight authored roadside places add 59 bounds-normalized installed rocks, shrubs, flowers,
+  paving remnants, fences, wagons, crates, and barrels at the six route reveals. Their placement
+  rejects unsupported or wrong-elevation surfaces and preserves the controller route centre.
+- Generated settlement house boxes have been replaced by Meadows modular cottage prefabs with
+  authored wall and doorway collision, keeping Cloudreach in the established village family.
 - Cloudreach now uses the production Meadows cloud-sky shader instead of an empty gradient. Cliff
   faces have warm high/mid/deep material bands, lower-frequency rock texture, and less grain.
 - The summit stronghold now has an open gate throat, articulated wings, buttresses, threshold,
@@ -80,12 +85,13 @@ not, so the environment is still unaccepted:
 The reviewer identified these three largest reference gaps:
 
 1. Authored density and lived-in scale: clustered vegetation, rocks, built edges, route-side
-   stories, negative-space clearings, and intermediate scale cues, especially at High Roost and
+   stories, negative-space clearings, and intermediate scale cues. The new lay-bys help, but broad
+   platforms and straight corridors still dominate Arrival, High Roost, Cliffhold, and Summit.
+2. Material and terrain richness: believable cliff layering, atmospheric distance, and varied
+   silhouettes instead of broad low-detail faces, exposed polygon bands, and hard underside teeth.
+3. Depth and finish at the world boundary: layered distant terrain and haze instead of the pale
+   void, repeated background slabs, and stray sky marks in Causeways, Windscar, High Roost, and
    Cliffhold.
-2. Natural terrain and depth language: believable cliff layering, atmospheric distance, and
-   varied silhouettes instead of exposed polygon bands, repeated underside teeth, and pale voids.
-3. Environmental focal richness: landmark context, contrast, and surrounding scale detail so the
-   summit gate and arrival tower read as events rather than isolated objects on broad slabs.
 
 The full code-blind critique is preserved in `JUDGE.md`. Final visual acceptance remains with an
 external ChatGPT review.

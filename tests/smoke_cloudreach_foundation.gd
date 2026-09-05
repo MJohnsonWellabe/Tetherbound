@@ -49,6 +49,19 @@ func _run() -> void:
 			"Cloudreach understorey is too sparse", failures)
 	_expect(world.find_children("*", "StaticBody3D", true, false).size() > 40,
 		"foundation did not build solid collision", failures)
+	var detail_root := world.get_node_or_null(^"AuthoredRouteDetails")
+	_expect(detail_root != null, "authored roadside places are absent", failures)
+	if detail_root != null:
+		var visual: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
+			"res://data/config/cloudreach_visual.json"))
+		for pocket: Dictionary in visual.get("route_details", {}).get("pockets", []):
+			var built := detail_root.get_node_or_null(NodePath(str(pocket["id"])))
+			_expect(built != null and built.get_child_count() == pocket["items"].size(),
+				"%s lost authored props to missing assets or unsupported ground" % pocket["id"], failures)
+		# Decorative grounding must never accept the middle of the open ropeway
+		# simply because a different elevation occupies the same map position.
+		_expect(is_nan(float(world.call("_route_detail_ground", Vector3(-980.0, 100.0, 1875.0)))),
+			"detail grounding accepted an unrelated stacked surface", failures)
 	if failures.is_empty():
 		print("CLOUDREACH FOUNDATION OK regions=%d landmarks=%d bridges=%d player=%s" % [
 			int(world.call("region_count")), int(world.call("landmark_count")),

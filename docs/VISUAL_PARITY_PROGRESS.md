@@ -154,3 +154,19 @@ the final local GTX 1060 samples measured **215–756 draws** and **2.86–8.44 
 Creatures remain deferred. The new code-blind result is **Meadows art direction: No / Palworld
 game category: Yes**. The category bar is a genuine improvement; the art-direction failure means
 this remains an evidence-backed visual correction, not Phase 2 acceptance.
+
+## Cloudreach authored-roadside pass — 2026-09-04
+
+Astra added eight distinct route-side places using 59 installed, bounds-normalized production
+rocks, shrubs, flowers, paving remnants, fences, wagons, crates, and barrels. Meadows modular
+cottages now replace the primitive settlement house boxes. All details are deliberately off the
+controller route centre, reject unsupported/stacked surfaces, and use distance culling. Creatures
+remain deferred.
+
+Foundation smoke, world-data tests, the full Meadows → Cloudreach → Meadows transition smoke,
+Windows GPU capture, and contact-sheet assembly pass. The local GTX 1060 evidence measured
+**252–915 draws** and **3.14–8.51 ms** at 1280×720. Blind review
+remains **Meadows art direction No / Palworld game category Yes**: the authored pockets improve
+human-scale grounding, but broad empty platforms, simple cliff faces, pale voids, and repeated
+straight corridors still dominate. Next: larger middle-distance clusters, terraces/recesses,
+constructed route edges, atmospheric layers, and visible artifact repair—not more uniform scatter.

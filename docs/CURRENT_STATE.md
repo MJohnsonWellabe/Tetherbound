@@ -654,3 +654,34 @@ this bounded corrective pass does not complete Phase 2 or the biome. The new cod
 is **Meadows art direction: No / Palworld game category: Yes**. The latter is real progress, but
 the former remains the controlling visual failure: authored density, natural terrain/depth, and
 landmark-context richness are still below the reference.
+
+## 2026-09-04 — Cloudreach checkpoint 7 / authored roadside-place pass
+
+Branch: `codex/cloudreach-cliffs`, after merging current `origin/main` at `c5a16dfb9` without
+discarding branch work. Astra implemented eight individually authored roadside pockets containing
+59 installed production props across the six evidence routes: boulders, low rocks, bushes,
+flowers, paving remnants, broken fence runs, wagons, crates, and barrels. Placement is scaled from
+real imported bounds, kept clear of controller route centre lines, grounded only on the matching
+stacked surface, and culled at 320 m. Meadows modular cottage prefabs now replace five primitive
+house boxes in each generated settlement; their authored doorway/wall collision is retained.
+Creatures remain deferred.
+
+Fresh Windows/OpenGL3 capture evidence at 1280×720 is in
+`ralph/reports/CLOUDREACH-PHASE2-0904/`. On the local GTX 1060, six 24-frame samples recorded
+**252–915 draw calls**, **368,618–6,494,861 primitives**, **252–927 objects**, and **3.14–8.51 ms
+measured frame time**. These are local structural measurements, not ROG Ally claims.
+
+Verification for this source state:
+
+- Cloudreach world-data selection: **13 tests / 391 assertions / 0 failures**.
+- `tests/smoke_cloudreach_foundation.gd`: **PASS**, including all 59 authored props on supported
+  ground and rejection of an unrelated stacked bridge surface.
+- `tests/smoke_cloudreach_transition.gd`: **PASS**, production Meadows → Cloudreach → Meadows.
+- Six-view Windows GPU capture and contact-sheet assembly: **PASS**.
+- Code-blind visual review: **Meadows art direction No / Palworld game category Yes**.
+
+The route now has more readable human-scale places, but the review still rejects the environment
+on authored richness. The next visual pass must work at middle-distance composition scale: larger
+irregular groves and clearings, terrain terraces/recesses, route-edge construction, and layered
+atmospheric silhouettes. Do not answer this with more uniform micro-scatter. Remove the stray sky
+marks and repair the harsh summit foreground shadow/grass intersection while doing that work.

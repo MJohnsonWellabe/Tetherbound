@@ -13,6 +13,18 @@ const VISUAL_CONFIG_PATH := "res://data/config/cloudreach_visual.json"
 const REALM_ID := "cloudreach"
 const REALM_GATE := preload("res://scripts/world/realm_gate.gd")
 const GROUND_COVER := preload("res://scripts/world/cloudreach_ground_cover.gd")
+const BUILDING_PREFABS := preload("res://scripts/world/building_prefabs.gd")
+const ROUTE_DETAIL_SCENES := {
+	"bush": preload("res://assets/environment/stylized_nature/Bush_Common.gltf"),
+	"flowers": preload("res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf"),
+	"rock": preload("res://assets/environment/stylized_nature/Rock_Medium_1.gltf"),
+	"rock_low": preload("res://assets/environment/stylized_nature/Rock_Medium_3.gltf"),
+	"paving": preload("res://assets/environment/stylized_nature/RockPath_Round_Wide.gltf"),
+	"fence": preload("res://assets/buildings/quaternius_medieval/Prop_WoodenFence_Extension2.gltf"),
+	"wagon": preload("res://assets/buildings/quaternius_medieval/Prop_Wagon.gltf"),
+	"crate": preload("res://assets/props/quaternius_fantasy/Crate_Wooden.gltf"),
+	"barrel": preload("res://assets/props/quaternius_fantasy/Barrel.gltf"),
+}
 const NATURE_TREES: Array[PackedScene] = [
 	preload("res://assets/environment/stylized_nature/CommonTree_1.gltf"),
 	preload("res://assets/environment/stylized_nature/CommonTree_2.gltf"),
@@ -45,6 +57,7 @@ var _region_count := 0
 var _landmark_count := 0
 var _progression_revision := -1
 var _progression_gates: Array[Dictionary] = []
+var _building_prefabs: RefCounted
 
 
 func _ready() -> void:
@@ -63,6 +76,7 @@ func _ready() -> void:
 	_build_bridges()
 	_build_landmarks()
 	_build_return_gate()
+	_build_authored_route_details()
 	_build_ground_cover()
 	_place_player()
 	_capture_mouse_if_free()
@@ -716,6 +730,78 @@ func _set_geometry_visibility(root_node: Node, distance: float) -> void:
 		_set_geometry_visibility(child, distance)
 
 
+## Small, individually authored places along the road. Imported meshes retain
+## their production materials; the shared prefab utility measures real bounds
+## so barrels, wagons and shrubs agree with the 1.80 m trainer.
+func _build_authored_route_details() -> void:
+	var root := Node3D.new()
+	root.name = "AuthoredRouteDetails"
+	add_child(root)
+	var detail: Dictionary = _visual_config.get("route_details", {})
+	var bounds_tool := BUILDING_PREFABS.new()
+	for raw: Dictionary in detail.get("pockets", []):
+		var pocket := Node3D.new()
+		pocket.name = str(raw.get("id", "Pocket"))
+		root.add_child(pocket)
+		var anchor := _vec3(raw.get("anchor", []))
+		var forward := _vec3(raw.get("forward", [0.0, 0.0, 1.0])).normalized()
+		forward.y = 0.0
+		forward = forward.normalized()
+		var right := Vector3.UP.cross(forward)
+		for item: Dictionary in raw.get("items", []):
+			var asset := str(item.get("asset", "rock"))
+			var packed := ROUTE_DETAIL_SCENES.get(asset) as PackedScene
+			if packed == null:
+				continue
+			var offset: Array = item.get("offset", [0.0, 0.0])
+			var at := anchor + right * float(offset[0]) + forward * float(offset[1])
+			var ground := _route_detail_ground(at)
+			if is_nan(ground):
+				push_warning("Cloudreach detail %s/%s has no supporting surface" % [pocket.name, asset])
+				continue
+			var model := packed.instantiate() as Node3D
+			var bounds: AABB = bounds_tool.combined_aabb(model)
+			var span := maxf(bounds.size.x, bounds.size.z) if item.has("width_m") else bounds.size.y
+			var size_m := float(item.get("width_m", item.get("height_m", 1.0)))
+			var scale_value := size_m / maxf(span, 0.01)
+			var placement := Node3D.new()
+			placement.name = "%s%02d" % [asset.capitalize(), pocket.get_child_count()]
+			placement.position = Vector3(at.x, ground - float(item.get("bury_m", 0.04)), at.z)
+			placement.rotation.y = atan2(forward.x, forward.z) + deg_to_rad(float(item.get("yaw_deg", 0.0)))
+			pocket.add_child(placement)
+			model.scale = Vector3.ONE * scale_value
+			model.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * scale_value
+			placement.add_child(model)
+			if asset == "bush" or asset == "flowers":
+				_apply_tree_palette(model, pocket.get_child_count())
+			_set_geometry_visibility(placement, float(detail.get("visibility_range_m", 320.0)))
+
+
+## Route shoulders are visual ground, while the controller collision ribbon is
+## narrower. Use the same conservative shoulder samples as ground cover, and
+## reject unrelated stacked plateaus rather than floating a prop across a gap.
+func _route_detail_ground(at: Vector3) -> float:
+	var ground := ground_height_at(at.x, at.z)
+	if not is_nan(ground) and absf(ground - at.y) < 8.0:
+		return ground
+	for patch: Dictionary in _cover_patches:
+		if str(patch.get("kind", "")) != "segment":
+			continue
+		var a: Vector3 = patch["a"]
+		var b: Vector3 = patch["b"]
+		var ab := Vector2(b.x - a.x, b.z - a.z)
+		var t := Vector2(at.x - a.x, at.z - a.z).dot(ab) / maxf(ab.length_squared(), 0.01)
+		if t < 0.0 or t > 1.0:
+			continue
+		var centre := a.lerp(b, t)
+		if Vector2(at.x - centre.x, at.z - centre.z).length() > float(patch["half_width"]):
+			continue
+		var height := centre.y + float(patch.get("surface_offset_y", -0.72))
+		if absf(height - at.y) < 8.0:
+			return height
+	return NAN
+
+
 ## Reuse the Meadows' desaturated green leaf sheet on the installed Quaternius
 ## trees. The source twisted-tree sheet is crimson and the raw common sheet is
 ## fluorescent; both break the project's one-nature-family palette. Surface
@@ -952,19 +1038,30 @@ func _build_cliff_settlement(root: Node3D) -> void:
 	for side: float in [-1.0, 1.0]:
 		_box(root, "WindBanner", Vector3(-1.5 + side * 4.6, 15.2, -2.0),
 			Vector3(0.18, 4.2, 2.4), _materials["leaf_gold"], false)
-	for i in 5:
-		var row := i / 3
-		var col := i % 3
-		var p := Vector3((col - 1) * 9.0 + row * 3.0, row * 2.5, (row - 0.5) * 10.0)
-		_box(root, "House%d" % i, p + Vector3.UP * 3.1, Vector3(6.2, 6.2, 5.2), _materials["stone_light"], true)
-		var roof := PrismMesh.new()
-		roof.size = Vector3(7.2, 2.4, 6.2)
-		var mesh := MeshInstance3D.new()
-		mesh.name = "Roof%d" % i
-		mesh.position = p + Vector3.UP * 7.3
-		mesh.mesh = roof
-		mesh.material_override = _materials["wood"]
-		root.add_child(mesh)
+	if _building_prefabs == null:
+		_building_prefabs = BUILDING_PREFABS.new()
+		_building_prefabs.call("load_recipes")
+	var settlement: Dictionary = _visual_config.get("settlement", {})
+	for house: Dictionary in settlement.get("houses", []):
+		var prefab := str(house["prefab"])
+		var model := _building_prefabs.call("instantiate", prefab) as Node3D
+		if model == null:
+			continue
+		model.name = "Terrace_%s_%d" % [prefab, root.get_child_count()]
+		model.position = _vec3(house["position"])
+		model.rotation.y = deg_to_rad(float(house.get("yaw_deg", 0.0)))
+		root.add_child(model)
+		# Reuse the prefab's authored wall boxes, including its open doorway.
+		for collider: Dictionary in _building_prefabs.call("colliders", prefab):
+			var body := StaticBody3D.new()
+			var shape := CollisionShape3D.new()
+			var box := BoxShape3D.new()
+			box.size = _vec3(collider.get("size", [1.0, 1.0, 1.0]))
+			shape.shape = box
+			shape.position = _vec3(collider.get("at", [0.0, 0.0, 0.0]))
+			body.add_child(shape)
+			model.add_child(body)
+		_set_geometry_visibility(model, float(settlement.get("visibility_range_m", 850.0)))
 
 
 func _build_realm_gate_crag(root: Node3D) -> void:
