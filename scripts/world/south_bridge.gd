@@ -316,7 +316,7 @@ func _banner_cloth_material(colour: Color, size: Vector2, at: Vector3) -> Shader
 ## The barricade, banners and lantern stay after the gate opens: the
 ## crossing WAS held, and the evidence of it is the story the player walked
 ## through. Only the body that would contradict an open gate leaves.
-## `docs/decisions/D74-the-south-bridge-is-held-from-the-approach.md`.
+## `docs/decisions/D86-the-south-bridge-is-held-from-the-approach.md`.
 const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
 const OCCUPATION_CONFIG := "res://data/config/south_bridge_dressing.json"
 const FANTASY_PROPS := "res://assets/props/quaternius_fantasy"
