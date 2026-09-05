@@ -32,9 +32,11 @@ const GROUND_LIFT := 0.08
 var _life: float = 0.0
 var _duration: float = 0.55
 var _radius: float = 1.1
-## Follows combat.json `telegraph.colour`. N07-VFX-POLISH (D87): the HUD's own
-## warning amber, not the red the reserved Team Tether oxblood band sits in.
-var _colour: Color = Color("#ffbe47")
+## Follows combat.json `telegraph.colour`. N07-VFX-POLISH (D87): magenta -- a
+## colour the meadow and the reward layer do not use -- not the red the
+## reserved Team Tether oxblood band sits in, and not the reward gold a blind
+## round read as "a dropped coin".
+var _colour: Color = Color("#ff40e6")
 
 var _ring: MeshInstance3D = null
 var _ring_mesh: ImmediateMesh = null

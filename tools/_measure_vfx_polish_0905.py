@@ -15,6 +15,9 @@ Bands (HSV, hue in degrees, sat/val 0..1):
   amber     H in [28, 58], S >= 0.45, V >= 0.55
             the HUD's own WARNING token family (#e8b74a, H 42), which the retuned
             telegraph ring joins
+  magenta   H in [285, 335], S >= 0.45, V >= 0.50
+            the round-2 telegraph family (#ff40e6, H 308) -- the meadow's complement;
+            added before the round-2 render, after round 1 was measured
   wash      S <= 0.30, V >= 0.72
             the pale near-white sheet the old seal flash lays over the resolve
             close-up (its ring at #ffe9a8, its spikes and core near white)
@@ -23,7 +26,8 @@ Bands (HSV, hue in degrees, sat/val 0..1):
 
 Telegraph rule: oxblood(05) - oxblood(07) is the ring's own reserved-band
 footprint; after the retune it must fall to at most a tenth of the before value
-and amber(05) - amber(07) must be positive.
+and the retuned family's delta over the control (amber in round 1, magenta in
+round 2) must be positive.
 Catch rule: wash(04a) as a share of the frame must fall by at least half and
 gold(04a) must stay above zero -- smaller and still gold, not gone.
 """
@@ -60,12 +64,14 @@ def counts(path):
     r, g, b = (arr[..., i] * 255.0 for i in range(3))
     ox = ((h >= 345) | (h <= 25)) & (s >= 0.45) & (v >= 0.20) & (v <= 0.90)
     am = (h >= 28) & (h <= 58) & (s >= 0.45) & (v >= 0.55)
+    mg = (h >= 285) & (h <= 335) & (s >= 0.45) & (v >= 0.50)
     wash = (s <= 0.30) & (v >= 0.72)
     gold = (r > 220) & (g > 180) & (b < 150)
     total = h.size
     return {
         "oxblood": int(ox.sum()),
         "amber": int(am.sum()),
+        "magenta": int(mg.sum()),
         "wash": int(wash.sum()),
         "wash_share": float(wash.sum()) / total,
         "gold": int(gold.sum()),
@@ -87,10 +93,10 @@ def main():
     for name, data in rounds:
         print(f"== {name}")
         for shot, c in data.items():
-            print(f"  {shot:22s} oxblood={c['oxblood']:6d} amber={c['amber']:6d} wash={c['wash']:7d} ({c['wash_share']*100:5.1f}%) gold={c['gold']:6d}")
+            print(f"  {shot:22s} oxblood={c['oxblood']:6d} amber={c['amber']:6d} magenta={c['magenta']:6d} wash={c['wash']:7d} ({c['wash_share']*100:5.1f}%) gold={c['gold']:6d}")
         if "05-telegraph" in data and "07-telegraph-control" in data:
             a, b = data["05-telegraph"], data["07-telegraph-control"]
-            print(f"  telegraph delta over control: oxblood {a['oxblood'] - b['oxblood']:+d}  amber {a['amber'] - b['amber']:+d}")
+            print(f"  telegraph delta over control: oxblood {a['oxblood'] - b['oxblood']:+d}  amber {a['amber'] - b['amber']:+d}  magenta {a['magenta'] - b['magenta']:+d}")
     if len(rounds) == 2:
         (n0, d0), (n1, d1) = rounds
         print(f"== {n0} -> {n1}")
@@ -98,8 +104,9 @@ def main():
             ox0 = d0["05-telegraph"]["oxblood"] - d0["07-telegraph-control"]["oxblood"]
             ox1 = d1["05-telegraph"]["oxblood"] - d1["07-telegraph-control"]["oxblood"]
             am1 = d1["05-telegraph"]["amber"] - d1["07-telegraph-control"]["amber"]
-            verdict = "PASS" if (ox0 <= 0 or ox1 <= max(0, ox0 * 0.1)) and am1 > 0 else "FAIL"
-            print(f"  telegraph: oxblood ring footprint {ox0:+d} -> {ox1:+d}; amber footprint after {am1:+d}  [{verdict}]")
+            mg1 = d1["05-telegraph"]["magenta"] - d1["07-telegraph-control"]["magenta"]
+            verdict = "PASS" if (ox0 <= 0 or ox1 <= max(0, ox0 * 0.1)) and (am1 > 0 or mg1 > 0) else "FAIL"
+            print(f"  telegraph: oxblood ring footprint {ox0:+d} -> {ox1:+d}; amber footprint after {am1:+d}; magenta footprint after {mg1:+d}  [{verdict}]")
         for shot in ("04a-catch-seal", "04-catch-success"):
             if shot in d0 and shot in d1:
                 w0, w1 = d0[shot]["wash_share"], d1[shot]["wash_share"]
