@@ -1,0 +1,353 @@
+# W11-ALPHA-PINS — alphas pin to the map at 300 m and stay pinned (CL-W1)
+
+Branch: `ralph/W11-ALPHA-PINS-0904`
+Closure-plan row: CL-W1. Owner directive D-0904B-1 with same-day amendment A-3.
+
+This lane was started by an earlier session that hit a usage limit after pushing the
+feature and a live smoke. This report is the finisher's: it verifies what was pushed,
+trims the diff back to the lane's ownership list, runs the full unit suite the save-format
+change requires, runs the named tests and smokes with independent red checks, captures the
+acceptance frame, and records the blind judge's verdict.
+
+---
+
+## 1. Files changed
+
+`git diff --name-status origin/main...HEAD` — 13 files, all inside the brief's ownership
+list and nothing else:
+
+| Status | File | Why |
+|---|---|---|
+| M | `autoload/map_state.gd` | owns the pinned set (`pin_alpha`/`unpin_alpha`/`is_alpha_pinned`/`alpha_pins`), its save/load pair, and the `display_name` field dynamic markers gained |
+| M | `scripts/save/save_game.gd` | `VERSION` 16 → 17, the `alpha_pins` top-level key, `_migrate_v16` |
+| M | `scripts/ui/minimap.gd` | draws an alpha marker as a red chevron instead of a camp dot |
+| M | `scripts/ui/tab_map.gd` | full map: the coloured plate, the species-name pass, the one legend row |
+| M | `scripts/world/playground_world.gd` | one `add_child(ALPHA_PINS.new())` line, nothing else |
+| A | `scripts/world/alpha_pins.gd` (+ `.uid`) | the proximity and clearing logic, kept out of `encounter_director.gd` |
+| A | `data/config/map.json` | `radius_m` / `check_interval_s` / `icon` / `first_pin_message` |
+| A | `assets/ui/icons/map/alpha.png` (+ `.import`) | the pin glyph |
+| A | `tools/gen_alpha_pin_icon.py` | generates that glyph |
+| A | `tests/test_alpha_pins.gd` | the logic, persistence and clearing half |
+| A | `tests/smoke_alpha_pins.gd` | the live half — a real node, a real clock, a real save file |
+| A | `tools/_capture_alpha_pin_map.gd` | the acceptance frame (added by this finisher) |
+
+### Diff hygiene — 58 files removed
+
+The feature commit was made after a full `godot --import` and had swept up 58 files that
+belong to no part of this lane: `.import` sidecars **and the extracted textures** for other
+lanes' GLB assets (candy/mushroom/potion/revive pickups, the riding saddle, the south
+bridge gate — ~18 MB of PNG and JPG), plus `.uid` sidecars for fourteen other lanes' test
+and tool scripts. Commit `730633db` removes all 58. The branch diff is now exactly the
+table above.
+
+`assets/ui/icons/map/alpha.png.import` and `scripts/world/alpha_pins.gd.uid` are **kept**:
+every other icon in `assets/ui/icons/map/` and every other script in `scripts/world/` is
+tracked with its sidecar on `main`, so dropping these two would be the inconsistency.
+
+> **For the coordinator:** the removal is a normal commit, not a history rewrite (COMMON
+> forbids force-push), so those ~18 MB of blobs still exist in this branch's *history* even
+> though they are absent from its tip. A **squash merge** keeps them off `main` entirely.
+
+---
+
+## 2. What the player gets
+
+Sixteen `alpha`/`elder` clusters are authored across `data/config/bands/*/spawns.json` and
+were, before this, entirely unadvertised — a player could walk the whole corridor past
+every one of them and never learn they were there.
+
+Now:
+
+* **They announce themselves.** Come within **300 m** of an authored alpha or elder cluster
+  and it appears on both the minimap and the full map. On the minimap it is a red chevron —
+  a different *shape*, not just a different colour, because colour alone does not survive
+  being drawn small next to cream camp dots and white landmark circles. On the full map it
+  is the only coloured plate on the screen, captioned with the name the creature's own
+  nameplate will carry (**"Alpha Trailpup"**, **"Elder Mosshell"**), with one legend row
+  reading *Alpha* so a red mark the player has never seen has a word for it.
+* **The pin comes from the authored data, never a live body.** At 300 m the creature is
+  usually not streamed in yet; a body-driven pin would appear only once the player could
+  already *see* the alpha, which advertises nothing.
+* **It survives quitting.** The pinned set is in the save (`VERSION 17`, top-level
+  `alpha_pins`) and comes back on load, markers and labels included. This is the closure
+  plan's own *fails if* — "a pin that survives only until the next load is worse than none."
+* **It clears when you win.** Catching **or** beating the alpha (A-3) fires the same
+  `wild_once_<order>` flag `encounter_director.gd` already fires, and the pin goes within
+  half a second — including retroactively on load, if the flag fired in a session whose
+  save predates the pin. A beaten alpha does not re-pin while the player stands next to it.
+* **One line, once.** The first pin ever placed pushes *"An alpha is near — marked on your
+  map."* through the normal world-message channel; the remaining fifteen do not repeat it.
+  The one-shot is a progression flag, so it survives a save and a scene change.
+
+**Amendment A-3, honoured as written.** The directive said "does not disappear until
+caught"; A-3 amended it to *caught or beaten*, because a player whose five slots are full
+cannot catch anything and a catch-only clear would leave a permanent pin they could do
+nothing about. Both outcomes already fire one flag, so both clear the pin.
+
+---
+
+## 3. Tests and smokes
+
+Godot 4.7-stable, installed per COMMON.md. Every command below was run in this container on
+this branch's tip tree.
+
+### The lane's own test
+
+```
+godot --headless --path . --script tests/run_tests.gd -- --only=test_alpha_pins.gd
+→ 24 tests, 154 assertions, 0 failed
+```
+
+**Seen red, independently of the authoring session's own claims.** Two behaviours were
+broken by hand, watched fail for the right reason, and restored:
+
+| Broken | Result |
+|---|---|
+| `map_state.gd::unpin_alpha()` made a no-op (the erase and `remove_dynamic_marker` deleted) | **3 failed** — `test_the_pin_clears_when_the_alphas_once_flag_fires`, `test_clearing_one_alpha_leaves_its_neighbours_pinned`, `test_a_pin_whose_flag_fired_before_the_save_is_pruned_on_load` |
+| `save_game.gd`'s `"alpha_pins"` write replaced with a literal `[]` (the closure plan's *fails if*, reproduced) | **3 failed** — `test_a_pin_survives_a_save_and_load`, `test_the_save_file_carries_the_pinned_set_at_its_top_level`, `test_a_pin_whose_flag_fired_before_the_save_is_pruned_on_load` |
+
+Restored and re-run: 24 / 154 / 0 again, and `git diff` clean.
+
+### The live smoke — the acceptance sentence
+
+```
+godot --headless --path . --script tests/smoke_alpha_pins.gd
+→ alpha pins: pinned at 275.0 m (radius 300 m, walked in from 550.0 m)
+→ alpha pins: OK — a body walking in pins the Band 2 alpha inside 300 m, the pin is in
+  the marker list both screens draw, it survives a real save/load, and beating it clears
+  it and keeps it cleared.
+→ exit 0; `^ERROR:` 0, `SCRIPT ERROR` 0
+```
+
+A real `CharacterBody3D` walks in from 550 m toward Band 2's order 2011 (trailpup, authored
+centre `[-180, 0, 2250]`) on a real `SceneTree` clock, driving the real `AlphaPins` node's
+own `_process`. It pins at 275 m — the boundary crossing, not a teleport onto the marker.
+A real `SaveGame` write and read into a **discarded and rebuilt** `MapState` brings it back;
+firing `wild_once_2011` clears it; it does not return on reload.
+
+**Seen red:** `radius_m` dropped to `30.0` in `data/config/map.json` →
+`alpha pins FAIL: the alpha pinned only at 0.0 m; the owner's directive is 300 m`.
+Restored; `git diff -- data/config/map.json` empty.
+
+### The other named tests and smokes
+
+```
+godot --headless --path . --script tests/run_tests.gd -- --only=test_save_format.gd
+→ 55 tests, 271 assertions, 0 failed
+
+godot --headless --path . --script tests/run_tests.gd -- --only=test_map_baker.gd
+→ 7 tests, 13 assertions, 0 failed
+
+godot --headless --path . --script tests/smoke_save_persistence.gd
+→ PASS: exact pose, opening/starter, Tam gift, TM/key one-shots, and controls
+  survived a real Meadows save/load
+→ exit 0; `^ERROR:` 0, `SCRIPT ERROR` 0
+
+godot --headless --path . --script tests/smoke_wild_streaming.gd
+→ wild streaming: OK — distant clusters sleep, near ones tick, engaged/fainting/
+  respawning are never touched, and a round trip changes nothing about a
+  creature's identity.
+→ exit 0; `^ERROR:` 0, `SCRIPT ERROR` 0
+```
+
+Both smokes ran clean: the known-benign error set did not grow — it stayed at **zero**
+matches for `^ERROR:` and `SCRIPT ERROR` in either log.
+
+### The FULL unit suite — required, because the save format changed
+
+```
+godot --headless --path . --script tests/run_tests.gd
+→ 1837 tests, 3723851 assertions, 4 failed   (~26 min)
+```
+
+**All four failures are pre-existing on `main` and none is reachable from this diff.**
+
+| Failing test | Why it is not this lane's |
+|---|---|
+| `test_item_icons.gd :: test_every_item_has_an_icon_field_whose_file_exists` | The red COMMON.md names at lane start: six missing candy/mushroom icons, owned by another lane. Explicitly not to be fixed here. |
+| `test_item_icons.gd :: test_every_item_icon_loads_as_a_texture` | Same cause, same lane. |
+| `test_scatter_perf_budget.gd :: test_playground_bake_is_committed_and_fresh` | See below. |
+| `test_terrain_bake_freshness.gd :: test_playground_terrain_bake_is_committed_and_fresh` | See below. |
+
+The two bake-freshness failures are **not** in COMMON.md's known-red list, so they are a
+finding for the coordinator rather than an expected red. They are demonstrably not this
+branch's: both assertions compare a manifest against a hash of a fixed input set —
+`terrain_bake.gd::config_fingerprint()` reads `data/config/terrain_playground.json`, and
+`scatter_bake.gd::config_fingerprint()` reads that plus `data/config/vegetation.json` plus
+`data/config/bands/*/vegetation.json` — and **every one of those files, and both
+`manifest.json` files, is byte-identical to `origin/main`** on this branch:
+
+```
+data/config/terrain_playground.json   main=00f5c76c  head=00f5c76c  SAME
+data/config/vegetation.json           main=790b44ce  head=790b44ce  SAME
+data/terrain/playground/manifest.json main=ded90a9b  head=ded90a9b  SAME
+data/scatter/playground/manifest.json main=be3cf87b  head=be3cf87b  SAME
+git diff --name-only origin/main...HEAD -- 'data/config/bands/**/vegetation.json' \
+    'data/scatter/**' 'data/terrain/**'   → 0 files
+```
+
+Every input to both assertions is unchanged, so the verdict on `main` is identical. The
+staleness landed with a config edit on `main` (the bakes were last re-run at `3c73aab5`);
+the fix is a re-bake and commit of `data/terrain/playground` and `data/scatter/playground`,
+which is outside this lane's ownership list and is left to the coordinator. It has a
+player-visible cost worth flagging: with the scatter bake stale, every boot recomputes the
+full corridor scatter — `smoke_save_persistence` above spent several minutes in
+`vegetation.gd::build()` before its first frame.
+
+### Icon provenance
+
+`tools/gen_alpha_pin_icon.py` was re-run against the committed PNG: it reproduces
+`assets/ui/icons/map/alpha.png` **byte-identically** (`cmp` clean), so the committed asset
+is the generator's output and not a hand-edited divergence.
+
+---
+
+## 4. The acceptance frame
+
+`tools/_capture_alpha_pin_map.gd`, run as COMMON.md prescribes — under `xvfb`, with a
+rendering driver and **never** `--headless`:
+
+```
+xvfb-run -a -s "-screen 0 1280x800x24" godot --path . \
+  --rendering-driver opengl3 --resolution 1280x800 \
+  --script tools/_capture_alpha_pin_map.gd
+```
+
+### A process finding, recorded because it cost two world boots
+
+The first two runs reported **"no alpha pinned — nothing to capture"**, which reads exactly
+like the feature being broken in the shipped world scene. It was not. The capture was
+wrong.
+
+`playground_world.gd::_ready()` is not synchronous — it `await`s process frames while
+Terrain3D builds its data, and its `add_child(ALPHA_PINS.new())` hook sits at line 601,
+*after* `_build_settlement()`, which internally builds the village, the props, the NPCs,
+the trainers, the stronghold and the stronghold climax. The capture, copying
+`tools/capture_map_tab.gd`, waited a fixed **240 physics frames** and then looked for the
+pin. On software GL that budget expires while `_ready()` is still inside
+`_build_settlement()` — the run's own last log line was
+`[trainers] placed 1 trainer(s) for group 'stronghold_climax'` — so the probe was looking
+for a node the world had not made yet, and blamed the feature.
+
+**A fixed frame budget is not a way to wait for an `await`ing `_ready()`.** The fix is to
+wait for the *node*: the capture now polls `world.get_children()` for the child whose
+script is `alpha_pins.gd` (the hook uses `add_child(ALPHA_PINS.new())`, so the node carries
+an engine-assigned name and can only be found by its script) before it does anything else,
+and only then places the body and waits for a tick. Any other probe of a world-scene node
+added late in that `_ready()` has the same trap waiting for it.
+
+The capture also now **holds** the body at the stand point for every frame of the wait
+rather than assigning the position once, so "the node never ticked" and "something moved
+the body back" cannot be confused, and it cross-checks with a hand-driven `tick()` so a
+failure says whether the logic or the processing is at fault.
+
+### A second process finding: the clamped idle delta
+
+The capture also reported, twice, that only a hand-driven `tick()` pinned — which reads as
+`AlphaPins._process` never running in the shipped world, i.e. the feature not working in
+play at all. It was measured rather than argued, in three steps:
+
+1. **A seconds-long repro** (`tools/_probe_alpha_pin_process.gd`) wires the node exactly as
+   `playground_world.gd` does — child of a `Node3D` world, default relative `../Player`, a
+   `CharacterBody3D` sibling inside the radius — with no world scene. It pins from the
+   node's own `_process` in 53 frames. So `_process` reaching `tick()` is not broken.
+2. **A sentinel** settled the world case. Reading `_elapsed` before and after cannot: every
+   tick resets it to `0.0`, so "never ran" and "ran and ticked" both read `0.0` — which is
+   why the first diagnostic was ambiguous. Writing `-1000.0` into it can, because `_process`
+   adds delta and cannot reach a tick from there:
+   ```
+   [probe] paused=false time_scale=1.00 process_mode=0 is_processing=true can_process=true
+   [probe] sentinel -1000.0 -> -999.0771 after 8 frames: _process RAN
+   ```
+3. **The arithmetic explains the whole thing.** 0.923 s of delta over 8 frames is ~0.115 s
+   per frame — the engine **clamps its idle delta**, so under software GL a frame credits
+   about 0.115 s however long it actually took. The hold loop was written in wall time: six
+   seconds of wall clock was four frames and **0.46 s of delta, a hair under
+   `check_interval_s`'s 0.5**. The pin that "never appeared" was one frame short.
+
+The hold now counts frames, not wall time. With that fixed the run reports:
+
+```
+[probe] 4 frames held at (-180.0, 0.0, 2130.0)
+pinned: order 2011, 'Alpha Trailpup' at (-180.0, 2250.0)
+[probe] 1 pin(s) still set from 850 m away
+wrote res://shots/_diag/alpha_pin_full_map.png at 1280x800 with 1 pin(s)
+```
+
+and **no** `hand-driven tick()` line — the loop exited because the count went non-zero, so
+the node's own `_process` placed the pin in the real world scene. The capture additionally
+asserts the pin does **not** clear when the player leaves the radius (only the once-flag
+clears it), which is the directive's actual promise and which no test covers from a live
+world.
+
+Nothing in `alpha_pins.gd`, `map_state.gd` or `save_game.gd` changed as a result. The
+defect was entirely in the probe, and it is recorded because "wall time is not delta" will
+cost the next person the same two world boots.
+
+### The blind judge
+
+A sub-agent was spawned with the Agent tool (model `opus`) and given **only** the frame,
+`docs/reference/` and `.claude/skills/visual-judge/SKILL.md`. It was told nothing about
+what had changed, what the mark was, or what verdict was wanted — it was asked to say
+whether it could find a distinct point-of-interest mark *without being told where to look*,
+and whether that mark was legible. Its verdict, recorded as given:
+
+> Scanning the frame, the one thing that jumps out of an otherwise entirely cyan-and-slate
+> screen is the salmon-red word pair **ALPHA TRAILPUP**, roughly at frame centre […]
+> Every warm pixel in the image — 2,107 of 1,024,000 — falls in a single band […]
+>
+> And critically: **the pin itself is not the warm mark.** At pixel zoom the pin is a cyan
+> teardrop, core RGB(54,214,203), inside a white ring. […]
+>
+> **The text: yes, readable** […] Brightest glyph pixels are RGB(231,96,91), which is
+> 5.22:1 against the panel field — comfortably readable at 1280×800. It reads clearly at
+> 35% scale too.
+>
+> **The icon: no.** […] Its dominant colour is cyan — the same cyan as the active-tab
+> underline […] The "A" of ALPHA TRAILPUP physically overlaps the pin's white ring.
+
+**The judge is right about what is in the frame and wrong about the cause, and the cause is
+mine.** I measured the same pixels rather than take either reading on trust:
+
+```
+top colours around the marker (55x55 px window):
+  (5,5,7)         x1190   the surveyed corridor
+  (54,214,203)    x122    cyan
+  (68,32,32)      x61     UITokens.DANGER.darkened(0.35) — the alpha plate
+  (108,49,48)     x49     the same plate, lit edge
+  (242,245,242)   x38     alpha.png's own glyph colour
+```
+
+The dark-red plate **is** there — `(68,32,32)` and `(108,49,48)` are
+`UITokens.DANGER.darkened(0.35)`, drawn by the one branch in `tab_map.gd::_draw_icon()`
+that only alpha markers take. The cyan teardrop sitting on top of it is the **player
+marker**: `tab_map.gd::_draw_map()` calls `_draw_player()` *after* the icon pass, and the
+capture had the player standing 120 m from the pin — which at the whole-Meadows fit is
+about **seven pixels**. The player marker covered the alpha glyph, and the judge, correctly
+describing what it saw, read the covering mark as the pin and concluded the pin had no
+distinct silhouette. It also concluded the screen has "no player-position marker", which is
+the same fact from the other side.
+
+So the judge's finding is real as a *frame* defect and is not evidence about the icon. The
+capture now walks the player 850 m back down the corridor before opening the map, which
+separates the two marks by roughly 50 px — and is better evidence anyway, because the
+directive's whole point is that the pin stays after the player leaves.
+
+**Judge findings that stand and are NOT this lane's to fix** (recorded for the coordinator;
+every one of them is about the map screen this lane only added a marker to):
+
+* Fog is inverted — the surveyed corridor renders at RGB(5,5,7), *darker* than the
+  unexplored field at RGB(17,26,31), and the two differ by only 1.16:1. The ground the
+  player earned is the blackest thing on screen. This is the single largest defect on the
+  screen and it is `tab_map.gd`'s fog pass, not the pin.
+* The map legend draws every entry as a near-identical pale glyph, so the new *Alpha* row
+  teaches nothing next to *Grandpa's House*. Legend swatches should be the marker art at
+  the colour and size it actually draws.
+* Two typefaces on one screen: the panel chrome is a humanist sans, everything drawn
+  *inside* the map canvas is a condensed techno face.
+* The DISCOVERED REGIONS / DESTINATIONS columns are drawn onto the map canvas with no
+  container; at 3% surveyed they miss the terrain, at 40% they will not.
+* No north indicator, no scale bar, and the footer sandwiches the legend between two
+  control-hint rows so it reads as a third row of keybinds.
+* Zoom is bound to `[Minus]`/`[Equal]` with no pad binding, on a controller-first project.
+

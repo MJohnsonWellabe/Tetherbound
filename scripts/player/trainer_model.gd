@@ -39,6 +39,17 @@ const LYING_ANCHOR_RADIUS_M := 3.2
 ## Where the body was when the lying pose was applied. `Vector3.INF` means
 ## "not lying", so a standing trainer never carries a stale anchor.
 var _lying_anchor: Vector3 = Vector3.INF
+## W14-RIDING / CL-O3. True while the trainer is sitting on a mount. See
+## `set_riding()` for what that actually does to the rig.
+var _riding: bool = false
+## Metres the art was dropped so the rider's hips, not their feet, land on the
+## species' `mount_offset`. Remembered rather than re-read on the way out, so
+## a config edit mid-ride cannot leave the body permanently sunk.
+var _seat_drop: float = 0.0
+## bone index -> the pose rotation that was there before the seated pose was
+## written over it. Restored on dismount so nothing of the ride is left on the
+## skeleton if the animation player is slow to write its first frame.
+var _pose_before_riding: Dictionary = {}
 ## movement.json's `gait_feel` block (MQ1A, TUNABLE) — momentum-tilt limits for
 ## character_model.gd's apply_momentum_tilt(). Read once at ready.
 var _gait_feel: Dictionary = {}
@@ -73,6 +84,15 @@ static func _load_gait_feel() -> Dictionary:
 # slow-motion in play and to trip smoke_input's cadence streak in CI.
 func _physics_process(delta: float) -> void:
 	if animation_player() == null or _player == null:
+		return
+	# W14-RIDING: a seated rider is posed, not animated. Everything below drives
+	# the body from the trainer's OWN locomotion -- gait role, cadence, momentum
+	# tilt, terrain adaptation -- and while carried the trainer has no
+	# locomotion of its own (`player_controller._ride()`: no gravity, no
+	# friction, no move_and_slide). Running any of it here would read the
+	# mount's motion as the rider's and swing the legs of somebody sitting
+	# still.
+	if _riding:
 		return
 	_throwing_for = maxf(0.0, _throwing_for - delta)
 	_tool_swing_for = maxf(0.0, _tool_swing_for - delta)
@@ -222,3 +242,152 @@ func play_throw(seconds: float = 0.6) -> void:
 ## own length. `tool_hold.gd` passes `art.json`'s `tool_swing.seconds`.
 func play_tool_swing(seconds: float = 0.625) -> void:
 	_tool_swing_for = maxf(_tool_swing_for, seconds)
+
+
+## --- W14-RIDING / CL-O3: the rider is on the creature ------------------------
+##
+## Owner, playing the shipped build: *"When you ride your person didn't show up
+## on the creature."* He was right, and it was deliberate — `player_controller.
+## set_carrier()` hid the trainer's art outright, with a comment saying why:
+## there is no seated clip on this rig, so a visible trainer rode the Meadowhart
+## standing bolt upright on its back.
+##
+## The clip still does not exist and cannot be bought: `animate_humanoid.py`'s
+## `CLIPS` bakes idle/walk/sprint/jump/throw/chop, and CLAUDE.md forbids
+## spending a Meshy generation without owner-supplied reference art. So the pose
+## is authored here, on the skeleton, the same way `set_lying()` authors the bed
+## pose in the base class rather than waiting for a clip that is never coming.
+##
+## AXES, MEASURED, NOT ASSUMED (`tools/_probe_ride_pose.gd`, this lane).
+## `animate_humanoid.py`'s own AXES table is stated in BLENDER pose-euler terms
+## and glTF's axis conversion sits between it and the game, so it was re-derived
+## from the clips that actually shipped: for every joint below, the probe read
+## the delta between the authored walk/jump extremes and the bone's rest pose
+## and reported the axis-angle. Every one of them came back on the bone's own
+## LOCAL X, to three decimal places (`LeftLeg max 69.2 deg about (1.00, 0.00,
+## 0.00)`), and the signs match the Blender table verbatim:
+##
+##   thigh   -X = swing forward (jump's landing crouch: -39.7 deg)
+##   shin    +X = knee flexion  (walk's swing phase: +69.2 deg)
+##   foot    +X = plantarflex   (toes down)
+##   arm     -X = swing forward (jump's tuck: -63.6 deg)
+##   forearm -X = elbow flexion (walk: -62.0 deg)
+##
+## So a seated pose is: thighs flexed forward to roughly horizontal, knees bent
+## down under them, ankles a little plantarflexed into the stirrups, arms
+## forward on the reins, and a slight forward lean at the spine. Every angle is
+## TUNABLE in `data/config/riding.json`.
+##
+## The animation player is switched OFF (`AnimationMixer.active`) rather than
+## fought: it writes every one of these bones every frame, so a pose written
+## underneath a running mixer is a pose that lasts until the next tick. Off, the
+## skeleton holds what it is given, and turning it back on resumes the clip it
+## was already playing, at the position it had — which is why nothing here has
+## to remember what the trainer was doing before they got on.
+
+const RIDING_CONFIG_PATH := "res://data/config/riding.json"
+
+## Bone name -> what a seated body does with it, in degrees about the bone's own
+## local X, positive as the probe measured it. `key` names the riding.json entry
+## the magnitude comes from; `sign` is the direction the measurement above says
+## that flexion actually lives on for THAT joint.
+const RIDE_POSE := [
+	{"bone": "LeftUpLeg", "key": "hip_flexion_deg", "sign": -1.0, "spread": 1.0},
+	{"bone": "RightUpLeg", "key": "hip_flexion_deg", "sign": -1.0, "spread": -1.0},
+	{"bone": "LeftLeg", "key": "knee_flexion_deg", "sign": 1.0, "spread": 0.0},
+	{"bone": "RightLeg", "key": "knee_flexion_deg", "sign": 1.0, "spread": 0.0},
+	{"bone": "LeftFoot", "key": "ankle_flexion_deg", "sign": 1.0, "spread": 0.0},
+	{"bone": "RightFoot", "key": "ankle_flexion_deg", "sign": 1.0, "spread": 0.0},
+	{"bone": "Spine", "key": "torso_lean_deg", "sign": 1.0, "spread": 0.0},
+	{"bone": "LeftArm", "key": "shoulder_flexion_deg", "sign": -1.0, "spread": 0.0},
+	{"bone": "RightArm", "key": "shoulder_flexion_deg", "sign": -1.0, "spread": 0.0},
+	{"bone": "LeftForeArm", "key": "elbow_flexion_deg", "sign": -1.0, "spread": 0.0},
+	{"bone": "RightForeArm", "key": "elbow_flexion_deg", "sign": -1.0, "spread": 0.0},
+]
+
+
+## Sit on the mount, or get off it. Called by `player_controller.set_carrier()`,
+## which is the one place in the project that knows a body is being carried.
+##
+## Safe to call twice with the same value, and safe to call before the art has
+## loaded — a trainer with no skeleton simply stays standing, which is the same
+## failure mode `build()` already has.
+func set_riding(riding: bool) -> void:
+	if _riding == riding:
+		return
+	_riding = riding
+	var skeleton_node := skeleton()
+	var anim := animation_player()
+	if riding:
+		# The bed pose and the saddle are mutually exclusive states of one body;
+		# whichever is asked for last wins, and getting on a creature is the
+		# clearer statement of the two.
+		set_lying(false)
+		# MQ1A's momentum tilt is the trainer leaning into their own
+		# acceleration. A passenger has none, and a leftover tilt reads as a
+		# rider slowly falling off the side.
+		rotation.x = 0.0
+		rotation.z = 0.0
+		if anim != null:
+			anim.active = false
+		_apply_ride_pose(skeleton_node)
+		_seat_drop = float(_rider_config().get("seat_drop_m", 0.92))
+		position.y -= _seat_drop
+		return
+	_restore_ride_pose(skeleton_node)
+	if anim != null:
+		anim.active = true
+	position.y += _seat_drop
+	_seat_drop = 0.0
+
+
+func is_riding() -> bool:
+	return _riding
+
+
+## True when the seated pose actually reached the skeleton. The rider being
+## VISIBLE is not the same claim as the rider being SEATED, and
+## `tests/smoke_riding.gd` asserts both — a standing trainer drawn on a
+## creature's back is the bug this lane was given, wearing a different mask.
+func ride_pose_applied() -> bool:
+	return _riding and not _pose_before_riding.is_empty()
+
+
+static func _rider_config() -> Dictionary:
+	var file := FileAccess.open(RIDING_CONFIG_PATH, FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		return {}
+	var rider: Variant = (parsed as Dictionary).get("rider", {})
+	return rider if rider is Dictionary else {}
+
+
+func _apply_ride_pose(skeleton_node: Skeleton3D) -> void:
+	_pose_before_riding.clear()
+	if skeleton_node == null:
+		return
+	var cfg := _rider_config()
+	var spread := deg_to_rad(float(cfg.get("thigh_spread_deg", 0.0)))
+	for entry: Dictionary in RIDE_POSE:
+		var index := skeleton_node.find_bone(str(entry["bone"]))
+		if index < 0:
+			continue
+		_pose_before_riding[index] = skeleton_node.get_bone_pose_rotation(index)
+		var flex := deg_to_rad(float(cfg.get(str(entry["key"]), 0.0))) * float(entry["sign"])
+		# Rest-relative, never absolute: the rest pose already carries the
+		# rig's own limb orientation, and writing an absolute rotation would
+		# throw that away and splay the legs sideways on any rig whose bones
+		# are not axis-aligned at rest.
+		var rest: Quaternion = skeleton_node.get_bone_rest(index).basis.get_rotation_quaternion()
+		skeleton_node.set_bone_pose_rotation(index,
+			rest * Quaternion.from_euler(Vector3(flex, 0.0, spread * float(entry["spread"]))))
+
+
+func _restore_ride_pose(skeleton_node: Skeleton3D) -> void:
+	if skeleton_node != null:
+		for index: int in _pose_before_riding:
+			if index < skeleton_node.get_bone_count():
+				skeleton_node.set_bone_pose_rotation(index, _pose_before_riding[index])
+	_pose_before_riding.clear()

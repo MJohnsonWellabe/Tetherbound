@@ -14,6 +14,16 @@ extends SpringArm3D
 
 const CONFIG_PATH := "res://data/config/movement.json"
 
+## The conversation push-in (D73 §6 / CL-G10). It resolves who is being talked
+## to and solves the framing; the blend, the arm and the occlusion probe stay
+## here, because they are this rig's own state.
+const CONVERSATION := preload("res://scripts/player/conversation_camera.gd")
+
+## `dialogue_panel.gd` and `tab_map.gd`-style callers find the rig through this
+## rather than through a NodePath, because the rig is a sibling of the world's
+## UI layers and every scene spells that path differently.
+const GROUP := "camera_rig"
+
 var yaw: float = 0.0
 var pitch: float = 0.0
 
@@ -117,6 +127,45 @@ var _base_fov: float = 70.0
 var _shoulder: float = 0.0
 
 
+## --- the conversation push-in ------------------------------------------------
+##
+## While a conversation is on screen the rig stops orbiting the player and
+## blends to a two-shot on the speaker (`conversation_camera.gd` solves it).
+## Look input is ignored for the duration: the shot is the composition, and a
+## player who nudges the stick while reading should not end up looking at a
+## hedge.
+##
+## The pose the rig had before the push-in is saved here and blended back to on
+## close, rather than recomputed — the exploration yaw is a player-authored
+## value and guessing it back is how a camera "snaps somewhere else" every time
+## you finish talking to somebody.
+var _talk_speaker: Node3D = null
+var _talk_cfg: Dictionary = {}
+var _talk_shot: Dictionary = {}
+var _talk_active: bool = false
+var _talk_leaving: bool = false
+var _talk_blend_time: float = 0.45
+## 0 is the exploration orbit, 1 is the two-shot. Moves toward whichever end the
+## current state wants, so a conversation reopened mid-exit picks up where the
+## blend had got to instead of jumping.
+var _talk_blend: float = 0.0
+var _talk_saved_yaw: float = 0.0
+var _talk_saved_pitch: float = 0.0
+var _talk_saved_distance: float = 5.2
+var _talk_saved_fov: float = 70.0
+var _talk_used_fallback: bool = false
+## Mirror of the arm's exclusion list while a conversation is up — see
+## `_exclude_conversation_bodies()`.
+var _talk_excluded: Array[RID] = []
+
+## How far the camera may stand from the framing pivot before world geometry is
+## in the way, in metres. Replaced by tests with a fixture that describes a wall
+## analytically: `tests/run_tests.gd` has no live SceneTree, so it has no physics
+## space to put a real wall in, and a fallback that only ever ran indoors in a
+## booted scene would be covered by nothing that runs on every push.
+var _occlusion_probe: Callable = Callable()
+
+
 func _ready() -> void:
 	_load_config()
 	top_level = true          # the arm follows the player by code, not by parenting
@@ -130,6 +179,17 @@ func _ready() -> void:
 		probe.radius = _probe_radius
 		shape = probe
 	pitch = deg_to_rad(clampf(pitch, _pitch_min, _pitch_max))
+	add_to_group(GROUP)
+	# The push-in's watcher, created here rather than placed in the two scenes
+	# that carry a rig, so a rig instanced anywhere — a capture fixture, a test —
+	# has one without anybody remembering to add a node. It is a plain `Node`:
+	# SpringArm3D rewrites the transform of every Node3D child every frame to put
+	# it at the end of the arm, so a Node3D helper would be dragged around the
+	# world by the very camera it is advising.
+	if get_node_or_null(^"ConversationCamera") == null:
+		var watcher: Node = CONVERSATION.new()
+		watcher.name = "ConversationCamera"
+		add_child(watcher)
 
 
 func _load_config() -> void:
@@ -169,6 +229,12 @@ func _load_config() -> void:
 ## ease, because a fight opening with a hard cut loses the connection between
 ## "the animal I walked up to" and "the animal I am fighting".
 func set_target(target: Node3D, profile: Dictionary = {}) -> void:
+	# A fight, a mount or a thrown orb taking the camera outranks a conversation
+	# push-in that is still blending: whoever calls this is about to overwrite
+	# every value the push-in is interpolating, and a half-finished blend left
+	# running on top of it drags the new shot back toward a villager's chest.
+	if _talk_active or _talk_leaving:
+		_abandon_conversation()
 	var had_target := _target != null
 	_target = target
 
@@ -199,7 +265,8 @@ func set_target(target: Node3D, profile: Dictionary = {}) -> void:
 		add_excluded_object((target as CollisionObject3D).get_rid())
 
 	if target != null and not had_target:
-		global_position = target.global_position + Vector3.UP * _height
+		CONVERSATION.set_world_position(
+			self, CONVERSATION.world_position(target) + Vector3.UP * _height)
 		spring_length = _distance
 
 
@@ -215,8 +282,45 @@ func _process(delta: float) -> void:
 	if _target == null or not is_instance_valid(_target):
 		_target = null
 		return
+	if _talk_active or _talk_leaving:
+		# Look input is ignored for the duration, and the accumulated mouse
+		# motion is DROPPED rather than kept: a mouse moved across a whole
+		# conversation would otherwise be replayed as one flick the frame the
+		# box closes. The shot itself is driven on the physics tick below.
+		_mouse_delta = Vector2.ZERO
+		return
 	_apply_look(delta)
 	_follow(delta)
+
+
+## The conversation push-in, and only the push-in.
+##
+## It is driven here rather than from `_process` because THE IDLE TICK IS NOT
+## THE RIG'S TO RELY ON WHILE A DIALOGUE BOX IS UP.
+## `scripts/story/sequence_director.gd` ends its per-frame gate with
+## `_camera_rig.set_process(not panel)` — the rig has never had a suspend of its
+## own, so the director switches the whole idle tick off for the length of every
+## conversation, deliberately, to stop the stick look and the follow.
+##
+## Driving the blend from `_process` therefore advanced it for exactly one frame
+## and then froze it: measured on the real village with
+## `tools/_capture_dialogue_camera.gd --dry-run`, the rig reported
+## `in_conv yes  blend 0.056  arm 5.18  fov 69.7` at every sample from t+0 to
+## t+48 — a push-in that had engaged and then never moved. Nothing in the unit
+## suite could see it, because a detached rig stepped by hand is never suspended
+## by a director that is not there.
+##
+## The physics tick is the right home for it beyond just being the one that
+## still runs: `dialogue_panel.gd` reads its advance input on the physics tick
+## and `interaction_arbiter.gd` recomputes there, so the shot now ticks on the
+## same clock as the box it exists for.
+func _physics_process(delta: float) -> void:
+	if not (_talk_active or _talk_leaving):
+		return
+	if _target == null or not is_instance_valid(_target):
+		_target = null
+		return
+	_conversation_follow(delta)
 
 
 ## CONTROLLER-MAP: R3 (or Home) swings the camera back behind whatever it is
@@ -297,6 +401,320 @@ func _follow(delta: float) -> void:
 	# The spring arm collapses instantly on intrusion (SpringArm3D's own
 	# behaviour) and is eased back out here, so leaving cover is smooth.
 	spring_length = move_toward(spring_length, _distance, _recover_speed * delta)
+
+
+## --- the conversation push-in -----------------------------------------------
+
+## Blend to the two-shot on `speaker`. Returns false, and leaves the camera
+## exactly where it was, when there is nothing worth pushing in on.
+##
+## Called from `scripts/ui/dialogue_panel.gd` by way of
+## `conversation_camera.gd::begin()` — one call in, one call out, so there is a
+## single place that knows a conversation moves the camera at all.
+func enter_conversation(speaker: Node3D, cfg: Dictionary) -> bool:
+	if speaker == null or not is_instance_valid(speaker):
+		return false
+	if _target == null or not is_instance_valid(_target):
+		return false
+	if _talk_active:
+		return false
+
+	var anchor := CONVERSATION.speaker_anchor(speaker, cfg)
+	# A conversation opened from across a field is not the shot this is for —
+	# the road gate calls its lock message from wherever you are standing, and a
+	# 3.5m two-shot on a person 20m away frames a patch of grass between you.
+	if CONVERSATION.world_position(_target).distance_to(anchor) \
+			> float(cfg.get("max_speaker_distance", 9.0)):
+		return false
+
+	# Only save the exploration pose on a genuine entry. Re-entering while the
+	# exit blend is still running (two villagers in one press, the stronghold's
+	# back-to-back beats) must keep the ORIGINAL saved pose, or the second
+	# conversation blends back to the two-shot the first one left behind.
+	if not _talk_leaving:
+		_talk_saved_yaw = yaw
+		_talk_saved_pitch = pitch
+		_talk_saved_distance = _distance
+		_talk_saved_fov = _camera.fov if _camera != null else _base_fov
+		_talk_blend = 0.0
+
+	_talk_speaker = speaker
+	_talk_cfg = cfg
+	_talk_blend_time = maxf(float(cfg.get("blend_time", 0.45)), 0.01)
+	_talk_active = true
+	_talk_leaving = false
+	_exclude_conversation_bodies()
+	_talk_shot = _solve_conversation_shot()
+	return true
+
+
+## Blend back to the pose the rig had before the push-in. Safe when nothing
+## pushed in.
+func exit_conversation() -> void:
+	if not _talk_active:
+		return
+	_talk_active = false
+	_talk_leaving = true
+
+
+func is_in_conversation() -> bool:
+	return _talk_active
+
+
+## True when the two-shot did not fit and the closer over-shoulder was used
+## instead. Read by `tests/test_conversation_camera.gd`; nothing in the game
+## branches on it.
+func conversation_used_fallback() -> bool:
+	return _talk_used_fallback
+
+
+## How far the push-in has got: 0 is the exploration orbit, 1 is the two-shot.
+## Read by `tests/test_conversation_camera.gd` to step the blend to its end
+## rather than guessing a frame count.
+func conversation_blend() -> float:
+	return _talk_blend
+
+
+## The shot currently being blended toward, in `conversation_camera.gd::solve`'s
+## own terms. For tests and for the capture tool.
+func conversation_shot() -> Dictionary:
+	return _talk_shot.duplicate()
+
+
+## Test seam. `probe.call(pivot, dir, limit) -> float` answers "how many metres
+## of clear space are there from `pivot` along `dir`", the same question the
+## physics query below answers.
+func set_occlusion_probe_for_tests(probe: Callable) -> void:
+	_occlusion_probe = probe
+
+
+## Drop the push-in immediately, with no blend, and put back everything it
+## changed. Used when something with a better claim takes the camera.
+func _abandon_conversation() -> void:
+	_talk_active = false
+	_talk_leaving = false
+	_talk_blend = 0.0
+	_talk_speaker = null
+	_talk_shot = {}
+	_talk_used_fallback = false
+	_talk_excluded.clear()
+	yaw = _talk_saved_yaw
+	pitch = _talk_saved_pitch
+	rotation = Vector3(pitch, yaw, 0.0)
+	spring_length = _talk_saved_distance
+	if _camera != null:
+		_camera.fov = _talk_saved_fov
+
+
+## Drive the blend, in either direction. Called instead of `_apply_look` and
+## `_follow`, never alongside them.
+func _conversation_follow(delta: float) -> void:
+	if _talk_active:
+		# Re-solved every frame rather than once on open: the speaker turns to
+		# face you as you arrive (`npc_body.gd` TURN_SPEED), the player is still
+		# settling on the ground, and a shot frozen on the opening frame drifts
+		# visibly off both of them during the fade.
+		var solved := _solve_conversation_shot()
+		if not solved.is_empty():
+			_talk_shot = solved
+
+	var wanted := 1.0 if _talk_active else 0.0
+	_talk_blend = move_toward(_talk_blend, wanted, delta / _talk_blend_time)
+	var weight := smoothstep(0.0, 1.0, _talk_blend)
+
+	# The far end of the blend is the exploration orbit as it would be RIGHT
+	# NOW, not as it was when the conversation opened. The player can be shoved
+	# by a creature mid-sentence, and blending back to a stale point would walk
+	# the camera to where they used to be.
+	var explore_pivot := CONVERSATION.world_position(_target) + Vector3.UP * _height
+	var pivot: Vector3 = _talk_shot.get("pivot", explore_pivot)
+	var shot_yaw: float = float(_talk_shot.get("yaw", _talk_saved_yaw))
+	var shot_pitch: float = float(_talk_shot.get("pitch", _talk_saved_pitch))
+	var shot_distance: float = float(_talk_shot.get("distance", _talk_saved_distance))
+	var shot_fov: float = float(_talk_shot.get("fov", _talk_saved_fov))
+
+	CONVERSATION.set_world_position(self, explore_pivot.lerp(pivot, weight))
+	yaw = lerp_angle(_talk_saved_yaw, shot_yaw, weight)
+	pitch = lerpf(_talk_saved_pitch, shot_pitch, weight)
+	rotation = Vector3(pitch, yaw, 0.0)
+	spring_length = lerpf(_talk_saved_distance, shot_distance, weight)
+	if _camera != null:
+		_camera.fov = lerpf(_talk_saved_fov, shot_fov, weight)
+
+	if _talk_leaving and is_zero_approx(_talk_blend):
+		_talk_leaving = false
+		_talk_speaker = null
+		_talk_shot = {}
+		_talk_used_fallback = false
+		# Hand the arm back to `_follow`'s own recovery, and give the exclusion
+		# list back to the plain "ignore whatever I am following" rule.
+		_talk_excluded.clear()
+		clear_excluded_objects()
+		if _target is CollisionObject3D:
+			add_excluded_object((_target as CollisionObject3D).get_rid())
+
+
+## Solve the two-shot, then find out whether it fits, then take the closer
+## over-shoulder if it does not. Empty when the speaker has gone (a villager
+## removed by a progression flag mid-sentence), in which case the caller keeps
+## the last good shot rather than snapping to nothing.
+func _solve_conversation_shot() -> Dictionary:
+	if _talk_speaker == null or not is_instance_valid(_talk_speaker):
+		return {}
+	var trainer_anchor := CONVERSATION.world_position(_target) \
+		+ Vector3.UP * float(_talk_cfg.get("trainer_anchor_height", 1.45))
+	var speaker_anchor := CONVERSATION.speaker_anchor(_talk_speaker, _talk_cfg)
+	var forward := -CONVERSATION.world_basis(self).z
+
+	var shot := CONVERSATION.solve(trainer_anchor, speaker_anchor, forward, _talk_cfg)
+	var room := _free_distance_behind(shot["pivot"], shot["dir"], float(shot["distance"]))
+	if CONVERSATION.is_blocked(shot, room, _talk_cfg):
+		# Re-solved rather than trimmed. The room is handed to the solver as a
+		# ceiling so that every guard it applies — the speaker's clearance, and
+		# above all the trainer's — is worked out against the arm the camera
+		# will REALLY have. Clamping a finished shot afterwards left the guards
+		# holding for a length that no longer existed, which is how the lens
+		# ended up inside the player's own head in Bram's inn.
+		var tighter := CONVERSATION.fallback_config(_talk_cfg)
+		# Where the room IS, not where the shot would like it to be. Standing
+		# behind the trainer is the default and the first thing tried; backed
+		# into a corner it is a wall, and insisting on it produces a lens in the
+		# back of the player's own head with the speaker hidden behind it. Each
+		# candidate swing is solved and then swept for real, nearest-first, and
+		# the first that fits its own arm wins.
+		var base_swing := float(tighter.get("shoulder_yaw_deg", 0.0))
+		var best: Dictionary = tighter
+		var best_room := -1.0
+		var found_reachable := false
+		for extra: float in CONVERSATION.swing_search(tighter):
+			var candidate := tighter.duplicate()
+			candidate["shoulder_yaw_deg"] = base_swing + extra
+			var probe := CONVERSATION.solve(
+				trainer_anchor, speaker_anchor, forward, candidate)
+			var probe_room := _free_distance_behind(
+				probe["pivot"], probe["dir"], float(probe["distance"]))
+			# A swing is only worth having if the camera could GET there from
+			# behind the player. Room measured outward from the pivot says
+			# nothing about that: the pivot already sits most of the way toward
+			# the speaker, so in Bram's inn a wide swing found clear air on the
+			# FAR side of the bar and put the lens there — nothing intersecting,
+			# and a viewpoint standing where no camera following this player
+			# could stand, with the trainer not in the picture at all. Sweeping
+			# the trainer -> camera path rules that out.
+			var reachable := _camera_is_reachable(trainer_anchor, probe)
+			var better := probe_room > best_room
+			if reachable and not found_reachable:
+				# Any reachable shot beats the best unreachable one.
+				better = true
+			elif found_reachable and not reachable:
+				better = false
+			if better:
+				best_room = probe_room
+				best = candidate
+				found_reachable = reachable
+			if reachable and probe_room >= float(probe["distance"]):
+				break
+		shot = CONVERSATION.solve(
+			trainer_anchor, speaker_anchor, forward, best, best_room)
+		shot["fallback"] = true
+	_talk_used_fallback = bool(shot.get("fallback", false))
+	return shot
+
+
+## Metres of clear space from `pivot` out along `dir`, capped at `limit`.
+##
+## A swept ball rather than a ray, for the reason `_probe_radius` above gives at
+## length: indoors a single hairline ray slips between a chair back and a table
+## edge and reports a room that is not there.
+func _free_distance_behind(pivot: Vector3, dir: Vector3, limit: float,
+		apply_margin: bool = true) -> float:
+	if _occlusion_probe.is_valid():
+		return float(_occlusion_probe.call(pivot, dir, limit))
+	# `get_world_3d()` does not merely answer null off the tree, it PRINTS.
+	if not is_inside_tree():
+		return limit
+	var world := get_world_3d()
+	if world == null:
+		return limit
+	var space := world.direct_space_state
+	if space == null:
+		return limit
+	var query := PhysicsShapeQueryParameters3D.new()
+	var ball := SphereShape3D.new()
+	ball.radius = _probe_radius
+	query.shape = ball
+	query.transform = Transform3D(Basis(), pivot)
+	query.motion = dir * limit
+	query.exclude = _talk_excluded
+	var travel: Array = space.cast_motion(query)
+	if travel.size() < 1:
+		return limit
+	var hit := float(travel[0]) * limit
+	if hit >= limit or not apply_margin:
+		return minf(hit, limit)
+	# The room a hit leaves is NOT where the camera goes. SpringArm3D keeps
+	# `margin` (0.6m here, and deliberately large — see `_collision_margin`)
+	# between the arm's end and whatever it hit, so an arm set to exactly this
+	# measurement is placed 0.6m shorter than that, forward of everything the
+	# framing was solved for. Reporting the usable length instead is what lets
+	# the solver's guards mean anything indoors.
+	return maxf(hit - margin, 0.0)
+
+
+## Could a camera following this player actually stand where `shot` puts it?
+##
+## Swept from the trainer's own framing anchor out to the lens, with no margin:
+## this is a line-of-travel question, not a "how much arm fits" one. Both people
+## are already excluded from the sweep, so what it finds is furniture and walls
+## — the bar Bram stands behind, the cottage wall Mira stands against.
+func _camera_is_reachable(trainer_anchor: Vector3, shot: Dictionary) -> bool:
+	var at: Vector3 = shot["pivot"] + Vector3(shot["dir"]) * float(shot["distance"])
+	var to_camera := at - trainer_anchor
+	var reach := to_camera.length()
+	if reach <= 0.01:
+		return true
+	return _free_distance_behind(trainer_anchor, to_camera / reach, reach, false) >= reach - 0.01
+
+
+## The trainer and the person they are talking to are both excluded from the
+## arm's sweep for the whole conversation.
+##
+## Both matter and for different reasons. The framing pivot sits most of the way
+## along the line to the speaker, so the TRAINER stands between that pivot and
+## the camera — an arm that collided with them would collapse onto the back of
+## their own head every single time. And the pivot can end up inside the
+## SPEAKER's capsule when the player walks right into a villager to greet them,
+## which a sweep starting in contact reports as zero room and the fallback then
+## reads as a wall.
+func _exclude_conversation_bodies() -> void:
+	# SpringArm3D exposes add/remove/clear for its exclusion list but no getter,
+	# so the same RIDs are mirrored here for the shape query below to reuse.
+	_talk_excluded.clear()
+	clear_excluded_objects()
+	if _target is CollisionObject3D:
+		_talk_excluded.append((_target as CollisionObject3D).get_rid())
+	for body: CollisionObject3D in _collision_bodies_of(_talk_speaker):
+		_talk_excluded.append(body.get_rid())
+	for rid: RID in _talk_excluded:
+		add_excluded_object(rid)
+
+
+## The colliders belonging to a body. `npc_body.gd` builds its StaticBody3D as a
+## direct child, so the node itself and one level of children is the whole
+## answer. Deliberately NOT recursive and deliberately not walking upward: a
+## villager's parent is the node holding every OTHER villager, and excluding
+## that whole level would let the camera sweep straight through the rest of the
+## square.
+static func _collision_bodies_of(node: Node) -> Array[CollisionObject3D]:
+	var found: Array[CollisionObject3D] = []
+	if node == null or not is_instance_valid(node):
+		return found
+	if node is CollisionObject3D:
+		found.append(node as CollisionObject3D)
+	for child in node.get_children():
+		if child is CollisionObject3D:
+			found.append(child as CollisionObject3D)
+	return found
 
 
 ## Forward direction on the horizontal plane, for translating stick input into

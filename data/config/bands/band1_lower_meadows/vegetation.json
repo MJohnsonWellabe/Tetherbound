@@ -159,8 +159,8 @@
         ],
         "radius": 12.0,
         "count": 1,
-        "scale_min": 1.4,
-        "scale_max": 1.55
+        "scale_min": 1.93,
+        "scale_max": 2.14
       },
       {
         "_why": "station 02-first-bend, shoulder pair -- see the peak sub-anchor above for the recipe and siting history.",
@@ -181,8 +181,8 @@
         ],
         "radius": 12.0,
         "count": 3,
-        "scale_min": 0.75,
-        "scale_max": 1.2
+        "scale_min": 1.03,
+        "scale_max": 1.66
       },
       {
         "_why": "ROUND 2 (JUDGE-round1.md), COORDINATES CORRECTED THREE TIMES across two rounds: round 1's own additions here were confirmed present by crop diff but judged net emptier than before (the pre-isolation-fix RNG-reshuffle bug, see round-2-addendum's own report section). Attempt 1 ((-158,280)) rendered on the wrong side (screen-right, not left). Attempt 2 ((-126,302)) fixed the side but sat 50.8 degrees off-axis, clipped at the edge of a ~51.3-degree half-FOV. Attempt 3 ((-138,300), 35m out at 30 degrees) fixed both, but JUDGE-round2.md (round against the isolation-fixed bake) called the frame 'still right-heavy -- new copse smaller/farther than the grove it replaced'. This FOURTH centre is closer (25m, within the FOV at 22 degrees off-axis) and bigger (10 trees, radius 13, up from 8/11) so it reads at a comparable size and prominence to the pre-existing right-side mass rather than a token gesture on the opposite side. Two leaf variants only (CommonTree_1/_3, skipping _2) per the original brief; >20m off the path centreline (past the 6m minimum). TREE-SILHOUETTE-0903: split into the same copse recipe as the (-95,292) station above (peak/shoulder/body sub-anchors at this same centre/radius, count and model list unchanged, 1+2+7=10) for the same reason -- BAND1_COMPOSITION_PLAN.md 5.4 names this exact mass 'a flat row'.",
@@ -192,8 +192,8 @@
         ],
         "radius": 13.0,
         "count": 1,
-        "scale_min": 1.4,
-        "scale_max": 1.5,
+        "scale_min": 1.93,
+        "scale_max": 2.07,
         "max_slope_deg": 24.0,
         "models": [
           "res://assets/environment/stylized_nature/CommonTree_1.gltf",
@@ -224,8 +224,8 @@
         ],
         "radius": 13.0,
         "count": 7,
-        "scale_min": 0.8,
-        "scale_max": 1.25,
+        "scale_min": 1.1,
+        "scale_max": 1.72,
         "max_slope_deg": 24.0,
         "models": [
           "res://assets/environment/stylized_nature/CommonTree_1.gltf",
@@ -240,8 +240,8 @@
         ],
         "radius": 2.0,
         "count": 1,
-        "scale_min": 1.4,
-        "scale_max": 1.4,
+        "scale_min": 1.93,
+        "scale_max": 1.93,
         "max_slope_deg": 28.0
       },
       {
@@ -255,8 +255,8 @@
         "models": [
           "res://assets/environment/stylized_nature/CommonTree_3.gltf"
         ],
-        "scale_min": 1.5,
-        "scale_max": 1.5
+        "scale_min": 2.07,
+        "scale_max": 2.07
       },
       {
         "_why": "TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.2/5.3): the crest's other two trees, right of the road behind the outcrop -- they make the crest a crown of three from 360m at comp2-route-out without entering the window clearing MID-LAYER-0903 cut on the basin side. `max_slope_deg` overridden 21 -> 26: tools/_probe_tree_silhouette_0903.gd measured this centre at 22.2 degrees (the crest shoulder MID-LAYER-0903's own outcrop anchor is built on, 5.3), over the layer's 21-degree ceiling.",
@@ -269,8 +269,8 @@
         "models": [
           "res://assets/environment/stylized_nature/CommonTree_1.gltf"
         ],
-        "scale_min": 1.25,
-        "scale_max": 1.35,
+        "scale_min": 1.72,
+        "scale_max": 1.86,
         "max_slope_deg": 26.0
       },
       {
@@ -281,8 +281,8 @@
         ],
         "radius": 14.0,
         "count": 10,
-        "scale_min": 0.8,
-        "scale_max": 1.6
+        "scale_min": 1.1,
+        "scale_max": 2.21
       },
       {
         "_why": "TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.7): the far-rim treeline behind the South Bridge, on the far bank south of the trail's end -- the dark mass the pale bridge parapet is composed against instead of sky or bare slope (comp8-bridge-rim); also breaks the horizon.",
@@ -292,8 +292,8 @@
         ],
         "radius": 14.0,
         "count": 9,
-        "scale_min": 0.8,
-        "scale_max": 1.6
+        "scale_min": 1.1,
+        "scale_max": 2.21
       },
       {
         "_why": "ROUND 2, station 04-eastward-swing (360,910)->(430,1020), COORDINATES CORRECTED: JUDGE-round1.md called round 1's fix here 'the one real, working fix' but named the LEFT flank 'thin'. This round's first attempt ((412,1067)) used the same inverted left/right axis as station 02's grove above and rendered on the already-strong right side instead -- checked directly, its offset from the eye has a POSITIVE dot with the camera's true right axis here ((-0.843,0.537), from the same `(-Fz,Fx)` derivation), i.e. right, not left. This corrected centre has a NEGATIVE dot (-40.0, confirmed left) with that axis, ~165m out (within the 120-200m ask), balancing the already-good right flank without adding anything near the camera or path.",
@@ -303,8 +303,8 @@
         ],
         "radius": 22.0,
         "count": 12,
-        "scale_min": 0.9,
-        "scale_max": 1.2
+        "scale_min": 1.24,
+        "scale_max": 1.66
       },
       {
         "_why": "ROUND 2 ADDENDUM: the program coordinator asked to also thicken 04's left flank at closer range, not just the distant 120-200m horizon mass above -- 4 trees at ~80m out, 25 degrees off-axis (comfortably inside the ~51.3-degree half-FOV, unlike station 02's own first miss), clear of the (480,1023) mass (87.6m apart) and >30m off the path centreline (checked against the p13-p14 trail segment).",
@@ -314,8 +314,8 @@
         ],
         "radius": 10.0,
         "count": 4,
-        "scale_min": 0.85,
-        "scale_max": 1.25
+        "scale_min": 1.17,
+        "scale_max": 1.72
       }
     ],
     "rocks": [
@@ -818,5 +818,6 @@
       "radius": 7.8,
       "_why": "R7.9: the inn, 6x10m plus walls (half-diagonal 5.83m) -- same footprint class as Grandpa's house above and given the same margin. Found the same way Grandpa's own entry was: a tools/capture_inn.gd render showed grass standing on the common room's floor and rug. Site moved once already (village.json's own `_why` on the `inn` structure records why); this entry has to move with it or it excludes nothing the inn actually stands on. T1-VILLAGE 2026-08-30: widened 6.5 -> 7.8. This pass's own door-canopy addition (building_prefabs.json `inn`, Overhang_Roof_Plaster + Roof_FrontSupports at the front gable) pushed the recipe's own combined AABB out to a 7.76m half-diagonal (probed: local X half 4.12, Z -5.90..6.58), past the old 5.83m-derived radius -- a tree or rock scattered under a canopy that did not exist when this entry was written."
     }
-  ]
+  ],
+  "_comment_w05_treeline_0904": "W05-TREELINE-0904: every `trees` anchor here that carries its own scale range (the TREE-SILHOUETTE copse peaks and bodies, the frame trunk, the crest pair, the comp4 pin, the basin and far-rim treelines, station 04) is lifted by the same 2.0/1.45 factor the corridor-wide `trees.scale_max` moved by, so each composed silhouette keeps its authored relationship to the fill around it instead of becoming the SHORT stand in a taller wood. Shoulder pairs (scale_max <= 0.85, the deliberately young trees of the peak/shoulder/body recipe) are untouched: grow, never shrink, and the recipe wants them small. Anchor `count`, `at`, `radius`, `models` untouched -- those would re-roll the shared stream; a scale range does not."
 }

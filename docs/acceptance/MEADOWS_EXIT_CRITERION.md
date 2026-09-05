@@ -156,6 +156,11 @@ stretch · day/night readability · acceptable ROG performance.
   read this row as a reason to leave the Warrens alone. The Warrens interior
   visual pass is closure-plan item **CL-E8**; that row, not this one, carries
   the work.)
+- E5. Interiors and dungeons read as places, not corridors — the **Warrens
+  interior is the standing GOOD example; protect it.** *Superseded 2026-09-04
+  by the owner on hardware (`OWNER_PLAYTEST_2026-09-04.md` OP-0904-7, "Burrow
+  warrens looks terrible"): the four prior verdicts judged the guardian, not
+  the room; the room is reworked and re-judged under W07-WARRENS-0904 (CL-O7).*
 
 ## F. Good story and its delivery
 

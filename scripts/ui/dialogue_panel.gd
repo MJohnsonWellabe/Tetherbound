@@ -18,6 +18,10 @@ const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 ## naming it in one place beats three panels each spelling the same string.
 const GAME_MENU := preload("res://scripts/ui/game_menu.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+## For its `GROUP` name only. The push-in itself lives on the camera rig
+## (`scripts/player/conversation_camera.gd`); this panel is the one place that
+## knows a conversation is on screen, so it is the one place that says so.
+const CONVERSATION_CAMERA := preload("res://scripts/player/conversation_camera.gd")
 
 ## Frames of deafness after opening.
 ##
@@ -139,6 +143,7 @@ func start(conversation_id: String) -> bool:
 	_guard = OPEN_GUARD_FRAMES
 	_buffered_during_guard = false
 	_skip_input_this_tick = true
+	_push_the_camera_in()
 	_draw()
 	return true
 
@@ -213,4 +218,37 @@ func _draw() -> void:
 
 func _on_runner_finished(conversation_id: String) -> void:
 	_box.visible = false
+	_pull_the_camera_out()
 	finished.emit(conversation_id)
+
+
+## --- the conversation camera ------------------------------------------------
+##
+## D73 §6 / CL-G10: villagers read too small in dialogue, and the answer is a
+## camera push-in to a two-shot rather than a change to anyone's scale. One call
+## on open, one on close; everything about the shot — who is being framed,
+## whether the room is big enough for it, how long the blend takes — belongs to
+## `scripts/player/conversation_camera.gd` and its rig.
+##
+## Reached through the group for the same reason this panel is itself reached
+## through "dialogue_panel": the panel is built by the world and has no path to
+## the player's camera. A scene with no rig in it (a test fixture, the title
+## screen) simply has nobody to tell, which is not an error.
+##
+## `_on_runner_finished` is the ONLY close: `dialogue_runner.gd::close()` emits
+## it whether the conversation ended by advancing off the last line or by
+## somebody calling `close()`, so there is no second path out to keep in sync.
+func _push_the_camera_in() -> void:
+	var camera := _conversation_camera()
+	if camera != null:
+		camera.call("begin")
+
+
+func _pull_the_camera_out() -> void:
+	var camera := _conversation_camera()
+	if camera != null:
+		camera.call("end")
+
+
+func _conversation_camera() -> Node:
+	return get_tree().get_first_node_in_group(CONVERSATION_CAMERA.GROUP)

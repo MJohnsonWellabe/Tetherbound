@@ -187,7 +187,8 @@ section is the residual band's own record, not a replacement for §4.
   so part of its scatter draw now lands on the walkable line itself. Order 1900 (the elder
   Mosshell) is untouched — it stays the region's deliberately curiosity-gated temptation.
 
-**Named but not fixable from this lane's files:**
+**Named but not fixable from this lane's files** (the first is since closed — see the
+W05-TREELINE-0904 block below it):
 
 - **Tree scale and trunk proportion** — "trees measuring only ~2.3× the 1.80m trainer on
   redwood-thick trunks" (JUDGE.md §8, §8.3). `data/config/vegetation.json` `layers.trees`
@@ -263,6 +264,63 @@ weathered brown; the rail colliders are unchanged. In front of the generated che
 barricade frames on both shoulders with crates and a barrel against the archway, a post
 lantern with the faint `tether_teal`, and a posted grunt (`south_bridge_dressing.json`, no
 prompt) who stands down when the gate is opened — D86. Verdict: __W22_VERDICT__
+
+## 4b. W05-TREELINE-0904 — the tree-lines, and what remains after growing them
+
+`docs/FINISH_THE_MEADOWS.md` §1.2 / closure plan CL-B2's tree slice. Two blind judges
+independently ranked "one lollipop, repeated" the top residual visual gap and named the
+same four stands: `place2-the-rise`, `place5-bridge-approach`, `comp7-pond-reveal`,
+`comp8-bridge-rim`. §4a above records the gap as unreachable from a band lane's files;
+it was reachable all along, and the block above it is left standing as history rather
+than rewritten.
+
+**The blocker was a false belief, not a constraint.** Three documents claimed widening
+the `trees` layer's corridor-wide `scale_min`/`scale_max` would re-roll the whole
+corridor's RNG stream. `scatter_rules.gd::_consider` draws scale, model and yaw
+unconditionally, in that fixed order, after every rejection test; a wider range consumes
+the same draws. Proven by the bake rather than argued: both bakes produce 825,979 kept
+and 3,883 drained placements, same positions, models and yaws. What genuinely re-rolls
+is an anchor's `count`, a per-layer `band_scale`, a layer `seed_offset` or the top-level
+`seed` — none of which moved. Recorded as `docs/decisions/D74`.
+
+**What changed, measured off both bakes** (`tools/_probe_tree_heights_0904.gd`, native
+glTF AABB × baked instance scale, corridor-wide n = 43,051 common trees):
+
+| | p5 | p50 | p95 | max | ≥12 m | p95/p5 |
+|---|---|---|---|---|---|---|
+| before | 4.2 m | 7.7 m | 12.4 m | 19.7 m | 6.6 % | 2.98× |
+| after | 4.5 m | 9.9 m | 16.8 m | 25.4 m | 32.2 % | 3.76× |
+
+Grow-never-shrink throughout: no `scale_min` moved down, saplings are untouched at
+1.8–4.7 m, and the family hierarchy the file's own comments assert (common fill < lone
+common hero < ancient oak) is preserved by lifting all three together. Perf proxy at
+`band1_open` stayed inside the plan's 7,500 draw / 12.0 M primitive ceiling.
+
+**Blind judge on the after frames** (`ralph/reports/W05-TREELINE-0904/JUDGE-after.md`,
+full reasoning in that lane's report §7). It confirms the change reads on the one stand
+that actually presents a tree-line — `comp7-pond-reveal`, *"the only stand with a real
+tree-line, and it is good... varied, roughly a 4:1 height spread with three legible age
+classes"*, tallest ≈15.5 m or 8.6 player heights — and does **not** confirm it on
+`place2-the-rise` (*"a repeated row"*), `place5-bridge-approach` (*"no tree-line is
+presented"*, the frame walled by cropped near-camera giants) or `comp8-bridge-rim`
+(*"the camera is inside the grove; there is no silhouette to read"*). **Acceptance is
+partial, not met.**
+
+`comp8` is worse for this change and is recorded as such: taller trees turned a stand
+sited 3 m from a trunk into a canopy ceiling (sky fraction 0.032 → 0.017). The fix is a
+capture re-framing, not a vegetation change, and belongs with whoever owns the stand set.
+
+The judge's dominant scale finding is the mesh, not the scaling: trunk-to-canopy measures
+**1:3.1–1:3.6** against roughly 1:9 for a real broadleaf, so *"even the good comp7 tree
+line reads as a row of stumpy mushrooms rather than as oaks"*. That is `CommonTree_*`
+geometry and it is CL-A1's, below.
+
+**Still open on these stands, and honestly not this change's to close:** the trunk-to-
+canopy proportion complaint and "no branch structure below the canopy" are the installed
+`CommonTree_*` form itself, which is a trunk and a blob at every scale. Closure plan
+CL-A1 routes that to free-pack candidates first and an owner-supplied Meshy reference
+only if three fail. Growing the trees makes the wood read as a wood; it does not make the
+tree read as an oak.
 
 ## 5. Owner decisions that bound visual work
 
