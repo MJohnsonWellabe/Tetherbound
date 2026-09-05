@@ -1161,7 +1161,7 @@ jobs:
     runs-on: ubuntu-latest
     # Sum of these six tests' own run time measured 2026-09-01: 1,034s
     # (17.2 min). 25 min covers checkout/setup with margin.
-    timeout-minutes: 25
+    timeout-minutes: 35
     needs: changes
     if: needs.changes.outputs.code == 'true'
     steps:
@@ -1206,6 +1206,27 @@ jobs:
       - name: Verify relay_station
         if: ${{ !cancelled() }}
         env: { SMOKE: relay_station, RETRIES: 1 }
+        run: |
+          set -uo pipefail
+          n=0
+          until [ "$n" -ge "$RETRIES" ]; do
+            n=$((n + 1))
+            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+              echo "::endgroup::"
+              exit 0
+            fi
+            echo "::endgroup::"
+            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+          done
+          exit 1
+      # Stage B Wave 0: Cloudreach had no smoke in CI, and main shipped with the
+      # whole realm unbuilt (cloudreach_world.gd's typed preset loop aborted on an
+      # art.json comment key; ralph/reports/MP-0D-SPIKE-HOSTCOST-0905/). This
+      # walks the real arrival route on the production scene, ~8 min.
+      - name: Verify cloudreach_arrival_walk
+        if: ${{ !cancelled() }}
+        env: { SMOKE: cloudreach_arrival_walk, RETRIES: 1 }
         run: |
           set -uo pipefail
           n=0
