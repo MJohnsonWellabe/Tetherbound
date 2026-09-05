@@ -253,3 +253,42 @@ placeholders, diff inside its ownership.
 
 **Decision numbers:** D85 returns to W05 as originally allocated, once it lands. Next free
 for a new lane is **D87**.
+
+## 2026-09-05 10:05 UTC — cycle 9: W20-SMALL-FIXES lands
+
+| PR | Merge commit | Lanes |
+|---|---|---|
+| #50 | `590741fe` | W01 + W09 reports, cycle-8 ledger |
+| #51 | pending | **W20-SMALL-FIXES** |
+
+W20 closed a 472-line report with no placeholders and it verifies. Landed from
+`ralph/LAND-0904-7`, one branch and one CI run per the consolidation rule, with this ledger
+entry on the same branch rather than in a second PR.
+
+**Verified on the merged tree**, not taken from the report: two clean import passes; the six
+named test files all 0-failed (`test_recipes` 48/352, `test_chapter_curve` 22/520,
+`test_band_content` 6/1339, `test_trainers_data` 50/1386, `test_gate_f_rig` 50/191,
+`test_gate_f_instrumentation` 18/41,593); `smoke_relay_station` (the lane's new smoke),
+`smoke_playground` and `smoke_aggression` all exit 0. Two counts came in *higher* than the
+lane claimed — chapter_curve 22/520 against its 20/465, band_content 6/1339 against its
+6/1147 — because the merged tree carries other lanes' data. More exercised, still green.
+
+**Ownership checked file by file, and two looked wrong until read.** `scripts/world/
+vegetation.gd` is not the vegetation the brief told this lane to skip: that note names band 2's
+`vegetation.json` `_why` strings (W05's data), while item CL-E12 explicitly requires a station
+filter on this mechanism. The change adds an optional `within` disc list to `restore_drained()`
+with a default that preserves the whole-map heal byte for byte. `tools/gate_f/segments/
+S06.json` touches **only** step S06-30, as instructed, and the lane hands the S06-31..49
+deletion to W21-HARNESS-FIGHTS with its verdict rather than making it across an ownership
+line. That is the right call and it is worth naming.
+
+Its CL-H8 verdict is evidence-backed: one live probe (`tools/_probe_workbench_context.gd`)
+driving the real nodes shows every context releasing cleanly, so the workbench beat is *not*
+masking a game defect and S06's stuck catalogue belongs to CL-H13 instead. It skipped CL-D4
+as its brief instructed and said so.
+
+**Still not landable:** W05 (report complete, but it has **not** rebased — still on
+`ef16544f`; current `main` passes `smoke_aggression` and `main` + W05 entombs the player, and
+the lane needs to re-run its own probe on current `main`), W10 (7-line stub). W02, W03, W06,
+W07, W08, W11, W14, W15, W16, W21 have no `REPORT.md` — W16 woke at 09:52 and W08 at 09:40,
+so more may close. Next free decision number is **D87**; D85 stays reserved for W05.
