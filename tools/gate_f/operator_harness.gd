@@ -72,6 +72,11 @@ const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 ## data configs. Missing file = the defaults below, so the harness still runs
 ## from a bare checkout.
 const CONFIG_PATH := "res://tools/gate_f/harness_config.json"
+## The game's own authored map of which actions are live in which input
+## context. Read by the press guard below (`_resolve_press`); nothing about it
+## is invented here. `tests/test_input_context_collisions.gd` keeps it honest
+## against project.godot.
+const INPUT_CONTEXTS_PATH := "res://data/config/input_contexts.json"
 
 ## Hold lengths in PHYSICS frames, named so a step script says "long" instead
 ## of a number whose meaning nobody remembers. Overridable per step with an
@@ -401,6 +406,9 @@ var _slow_watch_tick := 0
 
 ## The last physical input injected, for the `input` field of the next event.
 var _last_input := {}
+## `input_contexts.json` with its `includes` expanded, loaded once on first
+## use. See `_resolve_press`.
+var _input_contexts := {}
 
 ## Rolling frame-time window for `perf`.
 var _frame_ms: Array[float] = []
@@ -2516,7 +2524,16 @@ func _step_press(args: Dictionary, step_id: String) -> String:
 	# this argument existed behaves identically.
 	var device := str(args.get("device", ""))
 	var raw := ""
+	var unchecked := ""
 	for i in times:
+		# CL-H13. Resolved against the LIVE context before every repetition,
+		# not once per step: a fight can end on press 25 of 40, and press 26
+		# is then a different physical verb in a different context.
+		var guard := _press_guard(control, device)
+		if not bool(guard.get("ok", true)):
+			return _press_refusal(control, i, times, guard)
+		if not bool(guard.get("checked", false)):
+			unchecked = str(guard.get("why", ""))
 		var sent := await _inject(control, frames, device)
 		if not bool(sent.get("ok", false)):
 			if bool(sent.get("device_miss", false)):
@@ -2525,9 +2542,12 @@ func _step_press(args: Dictionary, step_id: String) -> String:
 		raw = str(sent.get("raw", ""))
 		for f in gap:
 			await process_frame
-	return "pressed %s x%d (%s, %d frames each) on %s, resolved to %s" % [control, times,
+	var note := ""
+	if not unchecked.is_empty():
+		note = " [unchecked against input_contexts.json: %s]" % unchecked
+	return "pressed %s x%d (%s, %d frames each) on %s, resolved to %s%s" % [control, times,
 		str(args.get("hold", "tap")), frames,
-		device if not device.is_empty() else "the default device", raw]
+		device if not device.is_empty() else "the default device", raw, note]
 
 
 ## Same-frame multi-press, for the collision probes §8 needs: two controls
@@ -2703,6 +2723,10 @@ func _step_fight(args: Dictionary, step_id: String) -> String:
 
 func _step_hold(args: Dictionary, step_id: String) -> String:
 	var control := str(args.get("control", ""))
+	# CL-H13: a hold is a press that has not released yet; same guard.
+	var guard := _press_guard(control, "")
+	if not bool(guard.get("ok", true)):
+		return _press_refusal(control, 0, 1, guard)
 	var down := _edge(control, true)
 	if not bool(down.get("ok", false)):
 		return "HARNESS-ERROR hold step %s: %s" % [step_id, str(down.get("why", ""))]
@@ -3364,6 +3388,10 @@ func _step_press_until(args: Dictionary, step_id: String) -> String:
 
 	var last := str(first.get("actual", ""))
 	for attempt in budget:
+		# CL-H13: same guard as `press`, re-resolved before every attempt.
+		var guard := _press_guard(control, "")
+		if not bool(guard.get("ok", true)):
+			return _press_refusal(control, attempt, budget, guard) + " (last state: %s)" % last
 		var sent := await _inject(control, hold)
 		if not bool(sent.get("ok", false)):
 			return "HARNESS-ERROR %s" % str(sent.get("why", ""))
@@ -5672,7 +5700,174 @@ func _edge(control: String, pressed: bool, device: String = "") -> Dictionary:
 ## caller records a FAIL. Deliberately not a fallback to another device: a
 ## silent fallback is exactly how this stayed invisible, and a KBM cell that
 ## quietly injected a pad event is worse evidence than an honest gap.
-func _physical_binding(action: StringName, device: String = "") -> InputEvent:
+# --- CL-H13: the press guard --------------------------------------------------
+##
+## ## The mechanism this guards against, stated once
+##
+## A `press` step names an ACTION ("combat_charged"). `_edge()` below injects
+## that action's PHYSICAL binding (LT, `JoyAxis:4`), because a poll-only press
+## reaches nothing that reads events. The engine then does what it does for a
+## real trigger pull: every action bound to that axis is marked pressed --
+## `combat_charged`, AND `build_shortcut`, AND `map_zoom_out`, AND
+## `build_rotate_left`. Which of them the game acts on is decided by the
+## game's input context, exactly as it would be for a player, and that is
+## correct: `data/config/input_contexts.json` makes the four mutually
+## exclusive, one per context.
+##
+## The harness, until this guard, was context-blind. A segment that pressed
+## `combat_charged` while no fight was running (the challenge refused because
+## the lead had fainted; the fight already over; the count simply too long)
+## was pulling LT in the `world` context, where LT means "open the Build
+## catalogue" (HUD-INPUT-0903). The catalogue opened, the harness recorded
+## "pressed combat_charged x1 ... PASS", and every later step in the segment
+## ran behind a menu nothing in the script closes. Measured at three sites
+## (Oreth / Captain Riverwatch in S08, Captain Vance in S07) and misread as
+## the game's context router failing; `ralph/reports/W02-HARNESS-CONTEXT-0904/`
+## carries the per-frame reproduction. A real player cannot be surprised by
+## this -- they know whether they are in a fight -- but a step-script does not,
+## and `input_context` was reporting the truth all along.
+##
+## ## What the guard does
+##
+## Before a `press`, `press_until` or `hold` injects anything, it asks the live
+## `input_context` and the authored context map whether the named action is
+## LIVE there. If it is, the press goes through unchanged. If it is not, the
+## press is REFUSED and the step FAILs, naming the context, the physical
+## binding that would have gone in, and the live action(s) that binding would
+## have fired instead -- which is the finding those three segments were
+## missing. Contexts the map does not describe (`title`, `scene:*`, `panel:*`,
+## `locked`, an unmapped `menu_*` tab) and actions the map does not list
+## (`ui_*`) are passed through UNCHECKED and say so in the result, rather than
+## refused on a guess.
+##
+## Deliberately NOT in `_edge()`/`_inject()`: `advance_dialogue_until_closed`,
+## `fight_until_resolved`, `press_multi` and the menu walkers each already
+## check the state they are about before pressing, and `press_multi` exists
+## to press across contexts on purpose. The three script-facing blind
+## primitives are where a count outlives the state it assumed.
+
+## `input_contexts.json` as `{context: Array[String]}`, `includes` expanded.
+## `{}` if the file cannot be read, which the callers treat as "unchecked".
+static func _load_input_contexts() -> Dictionary:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(INPUT_CONTEXTS_PATH))
+	if not parsed is Dictionary:
+		return {}
+	var table: Dictionary = (parsed as Dictionary).get("contexts", {}) as Dictionary
+	var out := {}
+	for name: String in table.keys():
+		out[name] = _expand_context(name, table, [])
+	return out
+
+
+static func _expand_context(name: String, table: Dictionary, seen: Array) -> Array:
+	if seen.has(name) or not table.has(name):
+		return []
+	seen.append(name)
+	var entry: Dictionary = table[name] as Dictionary
+	var actions: Array = []
+	for parent: Variant in entry.get("includes", []) as Array:
+		for a: Variant in _expand_context(str(parent), table, seen):
+			if not actions.has(a):
+				actions.append(a)
+	for a: Variant in entry.get("actions", []) as Array:
+		if not actions.has(str(a)):
+			actions.append(str(a))
+	return actions
+
+
+## The verdict on one press, pure: no injection, no probe. Static so a test can
+## ask it the same question a run asks, against the real InputMap.
+##
+## Returns:
+##   ok       -- false only when the press is REFUSED
+##   checked  -- false when nothing could be decided (unmapped context or action)
+##   context  -- the context resolved against
+##   raw      -- the physical event that would be injected ("JoyAxis:4:1.0")
+##   fires    -- every action that physical event marks pressed
+##   fires_live -- the subset of `fires` that IS live in `context` (the
+##               collision: what the game would actually do with the press)
+##   why      -- the sentence to put in a result line
+static func _resolve_press(control: String, context: String, device: String = "",
+		contexts: Dictionary = {}) -> Dictionary:
+	var table := contexts if not contexts.is_empty() else _load_input_contexts()
+	var out := {"ok": true, "checked": false, "context": context, "raw": "",
+		"fires": [], "fires_live": [], "why": ""}
+	if table.is_empty():
+		out["why"] = "input_contexts.json could not be read"
+		return out
+	var known := false
+	for name: String in table.keys():
+		if (table[name] as Array).has(control):
+			known = true
+			break
+	if not known:
+		out["why"] = "'%s' is listed in no context" % control
+		return out
+	if not table.has(context):
+		out["why"] = "input_context '%s' is not in input_contexts.json" % context
+		return out
+	var live: Array = table[context] as Array
+	out["checked"] = true
+	if live.has(control):
+		return out
+	var action := StringName(control)
+	var binding: InputEvent = _physical_binding(action, device) if InputMap.has_action(action) else null
+	if binding != null:
+		out["raw"] = _raw_of(binding)
+		for other: StringName in InputMap.get_actions():
+			if InputMap.event_is_action(binding, other, true):
+				(out["fires"] as Array).append(str(other))
+				if live.has(str(other)):
+					(out["fires_live"] as Array).append(str(other))
+	out["ok"] = false
+	var fires_live: Array = out["fires_live"]
+	if fires_live.is_empty():
+		out["why"] = ("'%s' is not live in input_context '%s'; its binding %s fires nothing "
+			+ "the game reads here (an inert press, measuring nothing)") % [control, context, out["raw"]]
+	else:
+		out["why"] = ("'%s' is not live in input_context '%s'; its binding %s would fire %s here "
+			+ "instead -- the press was refused so the run does not act on a verb the step "
+			+ "did not name") % [control, context, out["raw"], ", ".join(fires_live)]
+	return out
+
+
+## §C.1's `input.raw` shorthand for a binding, without injecting it.
+static func _raw_of(binding: InputEvent) -> String:
+	if binding is InputEventJoypadButton:
+		return "JoyBtn:%d" % (binding as InputEventJoypadButton).button_index
+	if binding is InputEventJoypadMotion:
+		var m := binding as InputEventJoypadMotion
+		return "JoyAxis:%d:%.1f" % [int(m.axis), m.axis_value]
+	if binding is InputEventKey:
+		var k := binding as InputEventKey
+		return "Key:%d" % int(k.keycode if k.keycode != KEY_NONE else k.physical_keycode)
+	if binding is InputEventMouseButton:
+		return "MouseBtn:%d" % int((binding as InputEventMouseButton).button_index)
+	return binding.get_class()
+
+
+## The instance half: reads the live context off the probe and asks
+## `_resolve_press`. A press with no probe (nothing booted yet) is unchecked.
+func _press_guard(control: String, device: String) -> Dictionary:
+	if _input_contexts.is_empty():
+		_input_contexts = _load_input_contexts()
+	var context := str(_probe.call("input_context")) if _probe != null else "no_probe"
+	return _resolve_press(control, context, device, _input_contexts)
+
+
+## The result line for a refused press. `landed` presses went in before this
+## one was refused; naming both numbers is what lets a reader see a fight that
+## ended on press 25 of 40 rather than a step that never pressed at all.
+func _press_refusal(control: String, landed: int, wanted: int, guard: Dictionary) -> String:
+	_emit("note", {"observation": ("press guard refused '%s' (%d of %d landed): %s"
+		% [control, landed, wanted, str(guard.get("why", ""))]),
+		"context": str(guard.get("context", "")), "fires": guard.get("fires", []),
+		"fires_live": guard.get("fires_live", [])})
+	return "FAIL press guard: %s (%d of %d %s presses landed before the refusal, input_context '%s')" % [
+		str(guard.get("why", "")), landed, wanted, control, str(guard.get("context", ""))]
+
+
+static func _physical_binding(action: StringName, device: String = "") -> InputEvent:
 	var by_kind := {"joypad": null, "key": null, "mouse": null}
 	for event in InputMap.action_get_events(action):
 		if (event is InputEventJoypadButton or event is InputEventJoypadMotion) \
