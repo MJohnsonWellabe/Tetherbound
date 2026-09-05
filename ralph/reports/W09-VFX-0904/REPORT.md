@@ -145,8 +145,24 @@ returned to baseline after it expired, which the probe asserts rather than assum
 case is lower than the flourish row because the hit flash claims the overlay slot first, so
 only one overlay pass is ever live (see the limitation below).
 
-**The in-world number at `band1_open` could not be measured, and that is a finding rather than
-a gap.** The first attempt paused the tree during a real fight and sampled once with the
+**In the world, at `band1_open`, with a fight running** (`tools/_capture_vfx_moments.gd
+-- --only=perf`, the fixed sampler below):
+
+| Moment | draw calls | primitives | objects |
+|---|---|---|---|
+| hit spark + body flash | **+2** | +14,286 | +2 |
+| KO puff + flourish + rim glow + spark tail | **+5** | +70,916 | +5 |
+
+Both were measured twice, alternating with/without/with/without inside one paused span, and
+**the two pairs agree to the primitive** (3,742/3,740 twice; 3,993/3,988 twice), which is what
+makes them a measurement rather than a reading. Against the proxy budget this project holds
+itself to at that exact site — 6,891 draws / 10.79 M primitives, `docs/CURRENT_STATE.md` §2 —
+the worst moment in a fight costs **0.07 % of the draw calls and 0.66 % of the primitives.**
+The primitive count is higher in the world than in the bare scene because the rim glow's extra
+pass re-submits a creature at its in-world detail, and two bodies carry a glow at that moment.
+
+**Getting there took fixing the method, and the first number was wrong.** The first attempt
+paused the tree during a real fight and sampled once with the
 effects drawing and once with them lifted. Between two consecutive samples of a **paused**
 tree, `draw_calls` fell 7,315 → 3,790 and `objects` fell 6,826 → 3,301 — exactly −3,525 on
 both, about half the visible scene, which cannot come from hiding two effect nodes. Terrain
@@ -155,8 +171,9 @@ the same run disagreed by 334, again equal on draw calls and objects. `_sample_p
 settles 24 frames and alternates with/without/with/without, prints all four samples, and
 prints a `NOISE:` line naming the disagreement when the two deltas differ by more than eight
 draw calls, so the number can never again be quoted as the effect's cost when it is the
-scene's. The isolated probe is the number to trust; it is measuring the same submissions a
-ROG Ally's GPU would be handed.
+scene's. With that settle in place the samples hold still and the table above reproduces
+exactly; the isolated probe agrees with it on draw calls, which is the check that both are
+measuring the same thing.
 
 llvmpipe frame time is meaningless on this box and is not quoted, per
 `tools/perf_render_stats.gd`'s own rule.
