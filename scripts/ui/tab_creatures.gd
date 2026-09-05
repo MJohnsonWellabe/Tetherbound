@@ -34,6 +34,7 @@ const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const EVOLUTION := preload("res://scripts/creatures/evolution.gd")
 const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
+const PROGRESSION_FEED := preload("res://scripts/creatures/progression_feed.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 ## PT-17. `party_seam.gd::set_nickname` is the one place a nickname gets
 ## written anywhere in the project (the opening beat routes through it too,
@@ -190,6 +191,12 @@ var _move_charged_tag: Label = null
 var _move_charged_sub: Label = null
 var _bond_meter: Control = null
 var _bond_caption: Label = null
+## PROGRESSION-VISIBLE (prompt 73 §2.3): one row per bond task, every task,
+## with the nearest one marked next and the finished ones marked done; the
+## benefit of the next node; and the xp-to-next / evolution-level line.
+var _bond_rows: Array[Label] = []
+var _bond_next_benefit: Label = null
+var _detail_xp_next: Label = null
 var _best_caption: Label = null
 var _detail_status: Label = null
 ## RichTextLabel, not Label (blind-judge findings #2/#5): the ceremony's one
@@ -614,6 +621,11 @@ func _build_detail() -> Control:
 	_detail_xp_bar.add_theme_stylebox_override("fill", xp_fill)
 	panel.add_child(_detail_xp_bar)
 
+	_detail_xp_next = Label.new()
+	_detail_xp_next.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_detail_xp_next.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
+	panel.add_child(_detail_xp_next)
+
 	panel.add_child(_hairline())
 
 	var quick := _build_move_row()
@@ -645,6 +657,21 @@ func _build_detail() -> Control:
 	_bond_caption.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
 	_bond_caption.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
 	bond_wrap.add_child(_bond_caption)
+
+	# The five task rows -- "How bonded am I, and what am I doing that
+	# increases it?" answered in full, not only the current line.
+	_bond_rows.clear()
+	for i in BOND_MILESTONES.milestones(BOND_MILESTONES.config()).size():
+		var row := Label.new()
+		row.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+		row.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
+		bond_wrap.add_child(row)
+		_bond_rows.append(row)
+
+	_bond_next_benefit = Label.new()
+	_bond_next_benefit.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_bond_next_benefit.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
+	bond_wrap.add_child(_bond_next_benefit)
 
 	_best_caption = Label.new()
 	_best_caption.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
@@ -1077,6 +1104,12 @@ func _describe(index: int, cfg: Dictionary) -> void:
 		_move_charged_icon.texture = null
 		_bond_meter.call("set_bond", "", 0, 5)
 		_bond_caption.text = ""
+		for row: Label in _bond_rows:
+			row.text = ""
+		if _bond_next_benefit != null:
+			_bond_next_benefit.text = ""
+		if _detail_xp_next != null:
+			_detail_xp_next.text = ""
 		_best_caption.text = ""
 		_detail_status.text = ""
 		_detail_hint.add_theme_font_size_override("normal_font_size", UITokens.FONT_TINY)
@@ -1145,6 +1178,8 @@ func _describe(index: int, cfg: Dictionary) -> void:
 	# touching the shared font.
 	_detail_xp.text = "EXP  %d / %d" % [xp, xp_needed]
 	_detail_xp_bar.value = 0.0 if xp_needed <= 0 else clampf(float(xp) / float(xp_needed), 0.0, 1.0) * 100.0
+	if _detail_xp_next != null:
+		_detail_xp_next.text = _xp_next_line(creature, cfg)
 
 	_fill_move_row(
 		str(creature.get("move_quick")), "QUICK", creature_type,
@@ -1156,11 +1191,32 @@ func _describe(index: int, cfg: Dictionary) -> void:
 	)
 
 	var nodes: int = int(creature.call("bond_nodes"))
-	var total: int = BOND_MILESTONES.milestones(BOND_MILESTONES.config()).size()
-	var progress := BOND_MILESTONES.progress_text(creature, BOND_MILESTONES.config())
-	_bond_meter.call("set_bond", progress, nodes, maxi(total, 1))
+	var ladder: Dictionary = BOND_MILESTONES.config()
+	var total: int = BOND_MILESTONES.milestones(ladder).size()
+	var progress := BOND_MILESTONES.progress_text(creature, ladder)
+	var rows: Array = BOND_MILESTONES.task_rows(creature, ladder)
+	var next_fraction := 0.0
+	for raw: Variant in rows:
+		if bool((raw as Dictionary).get("next", false)):
+			next_fraction = float((raw as Dictionary).get("fraction", 0.0))
+	_bond_meter.call("set_bond", progress, nodes, maxi(total, 1), next_fraction)
 	var per_node: float = float(cfg.get("bond", {}).get("effects_per_node", {}).get("attack_scale", 0.0))
-	_bond_caption.text = "+%d%% ATK/DEF per node" % int(round(per_node * 100.0))
+	_bond_caption.text = "Bond %d / %d   ·   +%d%% ATK/DEF now (+%d%% per node)" % [
+		nodes, maxi(total, 1), int(round(per_node * 100.0 * float(nodes))), int(round(per_node * 100.0))
+	]
+	for i in _bond_rows.size():
+		var row_label: Label = _bond_rows[i]
+		if i >= rows.size():
+			row_label.text = ""
+			continue
+		var row: Dictionary = rows[i]
+		row_label.text = _bond_row_text(row)
+		row_label.add_theme_color_override("font_color",
+			UITokens.SUCCESS if bool(row.get("done", false))
+			else (UITokens.WARNING if bool(row.get("next", false)) else UITokens.TEXT_MUTED))
+	if _bond_next_benefit != null:
+		var benefit := BOND_MILESTONES.next_benefit_text(creature, ladder, cfg)
+		_bond_next_benefit.text = "" if benefit.is_empty() else "Next node:  %s" % benefit
 
 	# R4.7's Best Creature caption, null-guarded for R4.10's ceremony: during
 	# the ceremony `_creature_at()` can hand back the pending sixth catch while
@@ -1217,6 +1273,37 @@ func _describe(index: int, cfg: Dictionary) -> void:
 	_detail_hint.text = DETAIL_HINT_BASE
 	if not EVOLUTION.requirements(species_id, cfg).is_empty():
 		_detail_hint.text += "      G  evolve"
+
+
+## One bond task row: "DONE  50/50 wild creatures defeated together",
+## "NEXT  3/10 meals fed together  ·  7 more meals", or the plain counter.
+## Words rather than glyphs, so the state survives the shared HUD font.
+static func _bond_row_text(row: Dictionary) -> String:
+	var counter := "%d/%d %s" % [int(row.get("have", 0)), int(row.get("target", 0)), str(row.get("name", ""))]
+	if bool(row.get("done", false)):
+		return "DONE   %s" % counter
+	if bool(row.get("next", false)):
+		return "NEXT   %s   ·   %s" % [counter, BOND_MILESTONES.remaining_text(row)]
+	return "          %s" % counter
+
+
+## "34 EXP to Lv 9   ·   evolves at Lv 15" -- how close the next level is and
+## the level at which anything changes (prompt 73 §2.3).
+static func _xp_next_line(creature: RefCounted, cfg: Dictionary) -> String:
+	var level := int(creature.get("level"))
+	var cap := int(cfg.get("level", {}).get("cap", 50))
+	var parts: Array[String] = []
+	if level >= cap:
+		parts.append("At the level cap (%d)" % cap)
+	else:
+		parts.append("%d EXP to Lv %d" % [PROGRESSION_FEED.xp_remaining(creature, cfg), level + 1])
+		if PROGRESSION_FEED.xp_near(creature, cfg):
+			parts.append("one fight away")
+	var req: Dictionary = cfg.get("evolution", {}).get(str(creature.get("species_id")), {})
+	var evolve_level := int(req.get("level", 0))
+	if evolve_level > 0:
+		parts.append("evolves at Lv %d" % evolve_level if level < evolve_level else "evolution level met")
+	return "   ·   ".join(parts)
 
 
 func _fill_move_row(

@@ -36,6 +36,7 @@ const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 const COMBAT_MATH := preload("res://scripts/combat/combat_math.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const FEED := preload("res://scripts/creatures/progression_feed.gd")
+const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
 const PARTY_STRIP := preload("res://scripts/ui/party_strip.gd")
 
 ## The orb cluster's fallback icon/id (spec §10.4), used only if the combat
@@ -1001,13 +1002,17 @@ func _party_entries() -> Array:
 	for member in source:
 		if member == null:
 			continue
-		entries.append({
+		var entry := {
 			"label": member.label(),
 			"level": int(member.level),
 			"hp_fraction": member.hp_fraction(),
 			"tint": _species_colour(str(member.species_id)),
 			"fainted": bool(member.fainted),
-		})
+		}
+		# PROGRESSION-VISIBLE: the xp sliver, the bond pip and the creature id
+		# the strip's own feed polling matches ticks against.
+		entry.merge(BOND_MILESTONES.strip_fields(member, PROGRESSION.config()))
+		entries.append(entry)
 	return entries
 
 

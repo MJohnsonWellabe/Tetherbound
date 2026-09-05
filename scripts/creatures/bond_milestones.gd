@@ -303,3 +303,23 @@ static func credit_rest_night(creature: RefCounted) -> void:
 
 static func credit_feed(creature: RefCounted) -> void:
 	credit(creature, "feeds_together", 1.0)
+
+
+# --- what a party-strip row needs to know (PROGRESSION-VISIBLE) ------------------
+##
+## One builder for both HUDs (`playground_hud.gd` and `combat_hud.gd` each
+## assemble the strip's entries), so the exploration strip and the combat
+## strip can never disagree about a creature's xp sliver or bond pip.
+## `progression_cfg` is progression.json's shape.
+static func strip_fields(creature: RefCounted, progression_cfg: Dictionary) -> Dictionary:
+	if creature == null:
+		return {}
+	var ladder := config()
+	return {
+		"creature_id": creature.get_instance_id(),
+		"xp_fraction": FEED.xp_fraction(creature, progression_cfg),
+		"xp_near": FEED.xp_near(creature, progression_cfg),
+		"bond_nodes": tier(creature, ladder),
+		"bond_total": milestones(ladder).size(),
+		"bond_near": is_near(creature, ladder),
+	}

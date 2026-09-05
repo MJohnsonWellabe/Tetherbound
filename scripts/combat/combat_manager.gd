@@ -924,7 +924,7 @@ func _award_victory() -> void:
 		# Prompt 67's history, recorded where the facts already are. This loop
 		# already skips a fainted member ("it did not fight"), so the same rule
 		# decides what counts as a battle fought -- one definition, one place.
-		member.credit_battle_fought()  # PROGRESSION-VISIBLE: bond_milestones.credit() ticks the feed
+		member.credit_battle_fought()  # battles_fought += 1 via bond_milestones.credit(), which ticks the feed
 		if levels_gained > 0:
 			member.set("levels_gained_with_you",
 				int(member.get("levels_gained_with_you")) + levels_gained)

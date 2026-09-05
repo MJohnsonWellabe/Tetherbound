@@ -31,6 +31,10 @@ var _caption: String = ""
 var _nodes: int = 0
 var _total_nodes: int = 5
 var _font: Font = null
+## PROGRESSION-VISIBLE: how far along (0..1) the NEXT node's task is. Drawn
+## as a partial arc on the first hollow node, so the meter itself says "you
+## are most of the way to the next one" rather than five identical rings.
+var _next_progress: float = 0.0
 
 
 func _ready() -> void:
@@ -45,11 +49,16 @@ func _ready() -> void:
 ## here, because the milestone ladder (`data/config/bond_milestones.json`) is
 ## not this widget's to know — `creature_instance.bond_nodes(cfg)` already
 ## does that work.
-func set_bond(caption: String, nodes: int, total_nodes: int = 5) -> void:
+func set_bond(caption: String, nodes: int, total_nodes: int = 5, next_progress: float = 0.0) -> void:
 	_caption = caption
 	_nodes = clampi(nodes, 0, total_nodes)
 	_total_nodes = maxi(total_nodes, 1)
+	_next_progress = clampf(next_progress, 0.0, 1.0)
 	queue_redraw()
+
+
+func next_progress() -> float:
+	return _next_progress
 
 
 func _draw() -> void:
@@ -72,6 +81,11 @@ func _draw() -> void:
 			draw_circle(center, NODE_RADIUS, UI_TOKENS.TEAL.lerp(UI_TOKENS.WARNING, t))
 		else:
 			draw_arc(center, NODE_RADIUS, 0.0, TAU, 16, UI_TOKENS.BORDER, 2.0, true)
+			if i == _nodes and _next_progress > 0.0:
+				# The node being worked toward: a warm arc that closes as the
+				# task's counter approaches its target (clockwise from the top).
+				draw_arc(center, NODE_RADIUS + 1.0, -TAU * 0.25, -TAU * 0.25 + TAU * _next_progress,
+					24, UI_TOKENS.WARNING, 3.0, true)
 
 	var caption_pos := Vector2(0.0, GRAPHIC_SIZE.y + UI_TOKENS.FONT_TINY)
 	draw_string(

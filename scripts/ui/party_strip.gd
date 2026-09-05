@@ -32,6 +32,11 @@ extends Control
 ## cursor — or here, an in-flight reveal tween — gets destroyed mid-motion.
 
 const UI_TOKENS := preload("res://scripts/ui/ui_tokens.gd")
+## PROGRESSION-VISIBLE (prompt 73 §2.2): the strip is the Tick surface. It
+## polls the progression feed itself (`_poll_feed`), so a `+12 XP` or a
+## `+bond · fed` flicks the right row whether this is the exploration strip
+## or the combat HUD's own mount, with nothing routed through either HUD.
+const FEED := preload("res://scripts/creatures/progression_feed.gd")
 
 const SLOTS := 5
 # Fixed at the occupied row's real text-driven height. A 56px minimum let
@@ -169,6 +174,19 @@ const RAIL_WIDTH := 4.0
 ## it has never carried a number, so a fraction still reads. The 12px it gives
 ## up go straight to the name column, which is the row's real constraint.
 const HP_BAR_SIZE := Vector2(44.0, 8.0)
+## PROGRESSION-VISIBLE: the xp sliver under the HP bar -- same width, a third
+## of the height, teal. Thin on purpose: it is the "how close to a level"
+## readout the directive asks the world HUD for, not a second health bar.
+const XP_BAR_SIZE := Vector2(44.0, 3.0)
+const BAR_GAP := 2
+## The bond pip text ("bond 2/5") beside the level, one size down from the
+## row so the level number stays the louder of the two.
+const BOND_FONT_SIZE := 19
+## Tick label: floats just right of the row, outside the plate, like a
+## damage number -- never inside the row, where it would fight the HP bar.
+const TICK_FONT_SIZE := 22
+const TICK_X := ROW_SIZE.x + 10.0
+const TICK_RISE := 10.0
 
 ## Fainted always reads as fainted, whether or not the slot happens to also be
 ## the (impossible, but not this file's job to assume) selected one.
@@ -287,6 +305,24 @@ var _ko_badges: Array[PanelContainer] = []
 var _rest_labels: Array[Label] = []
 var _hp_bars: Array[ProgressBar] = []
 var _hp_fills: Array[StyleBoxFlat] = []
+## PROGRESSION-VISIBLE rows: xp sliver, bond pip, tick label, and the
+## per-row feed state the flick/pulse read.
+var _xp_bars: Array[ProgressBar] = []
+var _xp_fills: Array[StyleBoxFlat] = []
+var _bond_labels: Array[Label] = []
+var _tick_labels: Array[Label] = []
+## One plain Control holding the five tick labels, so the widget keeps a
+## fixed child list (stack, cycle banner, ticks) whatever the rows do.
+var _ticks: Control = null
+var _tick_left: Array[float] = [0.0, 0.0, 0.0, 0.0, 0.0]
+var _near: Array[bool] = [false, false, false, false, false]
+var _row_creature_ids: Array[int] = [0, 0, 0, 0, 0]
+var _feed_seq: int = 0
+var _pulse_clock: float = 0.0
+## Evidence for a smoke: how many ticks each row has flicked and the last
+## label it showed.
+var _tick_counts: Array[int] = [0, 0, 0, 0, 0]
+var _last_tick_label: Array[String] = ["", "", "", "", ""]
 
 ## Per-row cache so a poll call that changes nothing writes nothing — the same
 ## reason `playground_hud.gd::_update_hotbar` only assigns a Label's `text`
@@ -346,6 +382,9 @@ func set_rest_position(pos: Vector2) -> void:
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_rest_position = position
+	# Start from the feed's present, not its history: a strip mounted after a
+	# fight must not replay that fight's ticks.
+	_feed_seq = FEED.latest_seq()
 	_build()
 	UI_TOKENS.make_text_legible(self)
 	modulate.a = 0.0
@@ -618,6 +657,17 @@ func _build_row(slot_index: int) -> PanelContainer:
 	_level_labels.append(level_label)
 	level_row.add_child(level_label)
 
+	# PROGRESSION-VISIBLE: the bond pip. "bond 2/5" in the row itself, so the
+	# roster answers "how bonded" without opening the Team screen; it flicks
+	# on a bond tick and pulses slowly while a milestone is near.
+	var bond_label := Label.new()
+	bond_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	bond_label.add_theme_font_size_override("font_size", BOND_FONT_SIZE)
+	bond_label.add_theme_color_override("font_color", UI_TOKENS.WARNING)
+	bond_label.visible = false
+	_bond_labels.append(bond_label)
+	level_row.add_child(bond_label)
+
 	# Small "KO" tag next to the level, shown only for a fainted entry — blind
 	# visual review: a fainted creature in the strip had no marker at all, reading
 	# identically to a healthy one at a glance.
@@ -691,6 +741,13 @@ func _build_row(slot_index: int) -> PanelContainer:
 	_rest_labels.append(rest_label)
 	level_row.add_child(rest_label)
 
+	# HP bar over the xp sliver, one column at the row's right end.
+	var bars := VBoxContainer.new()
+	bars.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	bars.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	bars.add_theme_constant_override("separation", BAR_GAP)
+	hbox.add_child(bars)
+
 	var hp_bar := ProgressBar.new()
 	hp_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hp_bar.custom_minimum_size = HP_BAR_SIZE
@@ -704,9 +761,51 @@ func _build_row(slot_index: int) -> PanelContainer:
 	hp_bar.add_theme_stylebox_override("fill", fill)
 	_hp_fills.append(fill)
 	_hp_bars.append(hp_bar)
-	hbox.add_child(hp_bar)
+	bars.add_child(hp_bar)
+
+	# PROGRESSION-VISIBLE: the xp sliver (prompt 73 §2.2's Tick surface for
+	# xp) -- fills toward the next level, flicks on an award, pulses when a
+	# level is one fight away.
+	var xp_bar := ProgressBar.new()
+	xp_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	xp_bar.custom_minimum_size = XP_BAR_SIZE
+	xp_bar.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	xp_bar.show_percentage = false
+	xp_bar.min_value = 0.0
+	xp_bar.max_value = 1.0
+	xp_bar.add_theme_stylebox_override("background", UI_TOKENS.fill_box(UI_TOKENS.TRACK))
+	var xp_fill := UI_TOKENS.fill_box(UI_TOKENS.TEAL)
+	xp_bar.add_theme_stylebox_override("fill", xp_fill)
+	xp_bar.visible = false
+	_xp_fills.append(xp_fill)
+	_xp_bars.append(xp_bar)
+	bars.add_child(xp_bar)
+
+	# The tick label lives on the STRIP, not in the row: a PanelContainer
+	# would lay it into the row's rect, and the row's rect is full. It draws
+	# just right of the plate, at this row's height (see `_row_top`).
+	var tick := Label.new()
+	tick.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tick.add_theme_font_size_override("font_size", TICK_FONT_SIZE)
+	tick.add_theme_color_override("font_color", UI_TOKENS.TEAL_SOFT)
+	tick.visible = false
+	tick.position = Vector2(TICK_X, _row_top(slot_index))
+	tick.size = Vector2(240.0, ROW_SIZE.y)
+	tick.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_tick_labels.append(tick)
+	if _ticks == null:
+		_ticks = Control.new()
+		_ticks.name = "Ticks"
+		_ticks.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(_ticks)
+	_ticks.add_child(tick)
 
 	return row
+
+
+## The y of row `i`'s top edge inside the strip.
+static func _row_top(i: int) -> float:
+	return HEADER_HEIGHT + HEADER_GAP + float(i) * (ROW_SIZE.y + float(ROW_SEPARATION))
 
 
 ## Reveal the strip and (re)start its `T_PARTY_FADE` countdown. Call this
@@ -878,6 +977,10 @@ func _update_row(i: int, entry: Dictionary, has_creature: bool, selected: bool, 
 		_hp_bars[i].visible = false
 		_hp_bars[i].value = 0.0
 		_hp_fills[i].bg_color = UI_TOKENS.HP_GREEN
+		_xp_bars[i].visible = false
+		_bond_labels[i].visible = false
+		_near[i] = false
+		_row_creature_ids[i] = 0
 		return
 
 	_level_labels[i].visible = true
@@ -901,6 +1004,22 @@ func _update_row(i: int, entry: Dictionary, has_creature: bool, selected: bool, 
 
 	_hp_bars[i].value = clampf(float(entry.get("hp_fraction", 0.0)), 0.0, 1.0)
 	_hp_fills[i].bg_color = UI_TOKENS.DANGER if fainted else UI_TOKENS.HP_GREEN
+
+	# PROGRESSION-VISIBLE. An entry that carries no progression fields (an
+	# older caller, a bare test) simply shows no sliver and no pip.
+	_row_creature_ids[i] = int(entry.get("creature_id", 0))
+	var has_xp := entry.has("xp_fraction")
+	_xp_bars[i].visible = has_xp
+	if has_xp:
+		_xp_bars[i].value = clampf(float(entry.get("xp_fraction", 0.0)), 0.0, 1.0)
+	var has_bond := entry.has("bond_nodes")
+	_bond_labels[i].visible = has_bond
+	if has_bond:
+		_bond_labels[i].text = "bond %d/%d" % [int(entry.get("bond_nodes", 0)), int(entry.get("bond_total", 5))]
+	_near[i] = bool(entry.get("bond_near", false)) or bool(entry.get("xp_near", false))
+	if not _near[i]:
+		_bond_labels[i].modulate.a = 1.0
+		_xp_bars[i].modulate.a = 1.0
 
 
 func _set_portrait(i: int, path: String) -> void:
@@ -993,6 +1112,9 @@ const MAX_TIMER_DELTA := 1.0 / 20.0
 
 func _process(delta: float) -> void:
 	var timer_delta: float = minf(delta, MAX_TIMER_DELTA)
+	_poll_feed()
+	_tick_ticks(timer_delta)
+	_pulse_near(delta)
 
 	# Runs whether or not the strip itself is fading/pinned — a cycle mid-fight
 	# (pinned) still deserves the same "who you were on, who you're on now"
@@ -1012,3 +1134,106 @@ func _process(delta: float) -> void:
 		_fade_timer -= timer_delta
 		if _fade_timer <= 0.0:
 			_hide_strip()
+
+
+# --- PROGRESSION-VISIBLE: ticks and the near pulse -------------------------------
+
+## Read every feed event since this strip last looked and flick the row it
+## belongs to. Only Tick-level kinds (`xp_gained`, `bond_credit`) touch the
+## strip; Moments are the world HUD banner's. A tick also reveals the strip
+## (the same `show_strip()` a roster change uses), so an award seen while
+## walking is seen on the plate that shows it, then fades as usual.
+func _poll_feed() -> void:
+	var newest := FEED.latest_seq()
+	if newest == _feed_seq:
+		return
+	var events := FEED.peek_since(_feed_seq)
+	_feed_seq = newest
+	var flicked := false
+	for raw: Variant in events:
+		var event := raw as Dictionary
+		if not FEED.is_tick(event):
+			continue
+		var id := int(event.get("creature_id", 0))
+		for i in SLOTS:
+			if id != 0 and _row_creature_ids[i] == id:
+				_flick(i, event)
+				flicked = true
+				# The sliver moves on the award itself, not on the next roster
+				# poll, so the bar and the "+12 XP" agree on the same frame.
+				if str(event.get("kind", "")) == "xp_gained" and _xp_bars[i].visible:
+					var needed := float(event.get("xp_to_next", 0))
+					if needed > 0.0:
+						_xp_bars[i].value = clampf(float(event.get("xp", 0)) / needed, 0.0, 1.0)
+	if flicked and not _pinned:
+		show_strip()
+
+
+func _flick(i: int, event: Dictionary) -> void:
+	var label := FEED.tick_label(event)
+	if label.is_empty():
+		return
+	var bond := str(event.get("kind", "")) == "bond_credit"
+	_tick_labels[i].text = label
+	_tick_labels[i].add_theme_color_override("font_color", UI_TOKENS.WARNING if bond else UI_TOKENS.TEAL_SOFT)
+	_tick_labels[i].position = Vector2(TICK_X, _row_top(i))
+	_tick_labels[i].modulate.a = 1.0
+	_tick_labels[i].visible = true
+	_tick_left[i] = FEED.seconds("tick_seconds", 0.9)
+	_tick_counts[i] += 1
+	_last_tick_label[i] = label
+	if bond and _bond_labels[i].visible:
+		# The pip itself flicks: full bright now, eased back by `_tick_ticks`.
+		_bond_labels[i].scale = Vector2(1.25, 1.25)
+		_bond_labels[i].pivot_offset = _bond_labels[i].size * 0.5
+
+
+func _tick_ticks(timer_delta: float) -> void:
+	var total := FEED.seconds("tick_seconds", 0.9)
+	for i in SLOTS:
+		if _tick_left[i] <= 0.0:
+			continue
+		_tick_left[i] -= timer_delta
+		var t := clampf(1.0 - _tick_left[i] / maxf(total, 0.01), 0.0, 1.0)
+		# Rise a little and fade over the last half.
+		_tick_labels[i].position = Vector2(TICK_X, _row_top(i) - TICK_RISE * t)
+		_tick_labels[i].modulate.a = 1.0 if t < 0.5 else 1.0 - (t - 0.5) * 2.0
+		_bond_labels[i].scale = Vector2.ONE.lerp(Vector2(1.25, 1.25), maxf(0.0, 1.0 - t * 2.0))
+		if _tick_left[i] <= 0.0:
+			_tick_labels[i].visible = false
+			_bond_labels[i].scale = Vector2.ONE
+
+
+## The Near level: a slow breathe on the pip and the sliver of any row within
+## a threshold of a milestone or a level, until the milestone resolves and
+## the next roster poll clears `_near`.
+func _pulse_near(delta: float) -> void:
+	var period := maxf(FEED.seconds("near_pulse_seconds", 1.6), 0.1)
+	_pulse_clock = fmod(_pulse_clock + delta, period)
+	var a := 0.55 + 0.45 * (0.5 + 0.5 * sin(_pulse_clock / period * TAU))
+	for i in SLOTS:
+		if not _near[i]:
+			continue
+		_bond_labels[i].modulate.a = a
+		_xp_bars[i].modulate.a = a
+
+
+## Evidence accessors for smokes: ticks flicked on row `i` and the last label.
+func tick_count(i: int) -> int:
+	return _tick_counts[i] if i >= 0 and i < SLOTS else 0
+
+
+func last_tick_label(i: int) -> String:
+	return _last_tick_label[i] if i >= 0 and i < SLOTS else ""
+
+
+func row_is_near(i: int) -> bool:
+	return _near[i] if i >= 0 and i < SLOTS else false
+
+
+func xp_bar_value(i: int) -> float:
+	return float(_xp_bars[i].value) if i >= 0 and i < SLOTS else 0.0
+
+
+func bond_label_text(i: int) -> String:
+	return _bond_labels[i].text if i >= 0 and i < SLOTS and _bond_labels[i].visible else ""
