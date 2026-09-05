@@ -233,3 +233,40 @@ func test_fit_distance_backs_off_further_when_a_height_cap_is_given() -> void:
 	var cam: Transform3D = CAPTURE_CHECK.camera_transform_at(focus, bearing, capped, 1.6, 0.9)
 	var ally: Dictionary = CAPTURE_CHECK.projected_rect(cam, FOV, SIZE, subjects[1]["aabb"])
 	assert_true((ally["rect"] as Rect2).size.y <= SIZE.y * 0.4 + 0.5, "at the capped distance the ally is under the cap")
+
+
+func test_fit_distance_refuses_a_solve_that_leaves_the_smallest_subject_a_smudge() -> void:
+	# A looming companion and a low, small opponent beside it. Any distance
+	# that keeps the companion under half the frame leaves the opponent under
+	# a fifth of it, so there is no honest framing from this bearing.
+	var focus := Vector3(0.0, 0.0, -20.0)
+	var subjects := [
+		{"name": "ally", "aabb": AABB(focus + Vector3(-1.2, 0.0, 0.0), Vector3(2.4, 2.6, 2.4))},
+		{"name": "opponent", "aabb": AABB(focus + Vector3(1.4, 0.0, 0.0), Vector3(1.0, 0.7, 1.0))},
+	]
+	var bearing := Vector3(0.0, 0.0, 1.0)
+	var without: float = CAPTURE_CHECK.fit_distance(focus, bearing, 1.6, 0.9, FOV, SIZE, subjects,
+		0.06, 3.0, 30.0, 0.25, 0.5)
+	assert_true(without > 0.0, "with only a maximum, some distance satisfies the solve")
+	var cam: Transform3D = CAPTURE_CHECK.camera_transform_at(focus, bearing, without, 1.6, 0.9)
+	var small: Dictionary = CAPTURE_CHECK.projected_rect(cam, FOV, SIZE, subjects[1]["aabb"])
+	assert_true((small["rect"] as Rect2).size.y < SIZE.y * 0.18,
+		"and that distance is exactly the one that leaves the opponent a smudge")
+	var with_floor: float = CAPTURE_CHECK.fit_distance(focus, bearing, 1.6, 0.9, FOV, SIZE, subjects,
+		0.06, 3.0, 30.0, 0.25, 0.5, 0.18)
+	assert_eq(with_floor, -1.0, "with both bounds this bearing has no honest framing and says so")
+
+
+func test_fit_distance_with_both_bounds_still_solves_a_fair_matchup() -> void:
+	var focus := Vector3(0.0, 0.0, -20.0)
+	var subjects := [
+		{"name": "ally", "aabb": AABB(focus + Vector3(-1.6, 0.0, 0.0), Vector3(1.6, 1.6, 1.6))},
+		{"name": "opponent", "aabb": AABB(focus + Vector3(0.6, 0.0, 0.0), Vector3(1.4, 1.4, 1.4))},
+	]
+	var d: float = CAPTURE_CHECK.fit_distance(focus, Vector3(0.0, 0.0, 1.0), 1.6, 0.9, FOV, SIZE, subjects,
+		0.06, 3.0, 30.0, 0.25, 0.5, 0.18)
+	assert_true(d > 0.0, "two comparable fighters are framable under both bounds")
+	var cam: Transform3D = CAPTURE_CHECK.camera_transform_at(focus, Vector3(0.0, 0.0, 1.0), d, 1.6, 0.9)
+	for subject: Dictionary in subjects:
+		var r: Rect2 = CAPTURE_CHECK.projected_rect(cam, FOV, SIZE, subject["aabb"])["rect"]
+		assert_between(r.size.y / SIZE.y, 0.18, 0.5, "%s sits between the two bounds" % subject["name"])

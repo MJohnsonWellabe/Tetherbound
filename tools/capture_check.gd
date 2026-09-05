@@ -691,10 +691,20 @@ static func _collect_rids(node: Node, into: Array[RID]) -> void:
 ## puts the nearest body at the safe-area edge, which for a looming companion
 ## is a close-up with the scene behind it (W01 run 2: 69% of the frame).
 ##
+## `min_height_frac`, when positive, additionally requires the SMALLEST
+## subject to reach that fraction. Without it the solve is free to satisfy
+## everything else by standing far enough back that the smallest fighter is a
+## smudge: W01 run 3 framed a mudsnout at 14.5% of frame height, passed every
+## other rule, and the code-blind judge reported the opponent as unreadable
+## and ambiguous with a background prop. The two bounds together state the
+## real requirement -- nobody a close-up, nobody a smudge -- and a bearing
+## where they cannot both hold returns -1.0 so the caller tries another.
+##
 ## Returns -1.0 when no distance in [`d_min`, `d_max`] fits everything.
 static func fit_distance(focus: Vector3, bearing: Vector3, height: float, look_up: float,
 		fov_deg: float, size: Vector2, subjects: Array, margin_frac := 0.06,
-		d_min := 3.0, d_max := 30.0, step := 0.25, max_height_frac := 0.0) -> float:
+		d_min := 3.0, d_max := 30.0, step := 0.25, max_height_frac := 0.0,
+		min_height_frac := 0.0) -> float:
 	var flat := Vector3(bearing.x, 0.0, bearing.z)
 	if flat.length() < 0.001:
 		return -1.0
@@ -712,7 +722,11 @@ static func fit_distance(focus: Vector3, bearing: Vector3, height: float, look_u
 			if bool(projected["behind"]) or not safe.encloses(projected["rect"]):
 				all_in = false
 				break
-			if max_height_frac > 0.0 and (projected["rect"] as Rect2).size.y > size.y * max_height_frac:
+			var box_h: float = (projected["rect"] as Rect2).size.y
+			if max_height_frac > 0.0 and box_h > size.y * max_height_frac:
+				all_in = false
+				break
+			if min_height_frac > 0.0 and box_h < size.y * min_height_frac:
 				all_in = false
 				break
 		if all_in:

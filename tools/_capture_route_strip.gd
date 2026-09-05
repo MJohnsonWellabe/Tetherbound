@@ -86,13 +86,21 @@ const HORIZON := 0.30
 ## at a point this high above their centroid.
 ## Run 2 of this lane, at 1.9 m: the fighters had closed to touching and the
 ## front one hid the back one on any ground-level bearing. A higher eye
-## looking down separates bodies that stand in a line.
-const FIGHT_EYE_H := 3.2
+## looking down separates bodies that stand in a line. Run 3's code-blind
+## judge then called the resulting frame a high, distant view in which the
+## fight occupied a twelfth of the picture, so this is the compromise: high
+## enough to separate two bodies in a line, low enough to be a fight camera.
+const FIGHT_EYE_H := 2.4
 const FIGHT_LOOK_UP := 0.8
 const FIGHT_MARGIN := 0.08
 ## No fighter may fill more than this of the frame: run 2's first fit put the
 ## companion at 69% with the fight behind it.
 const FIGHT_MAX_HEIGHT_FRAC := 0.5
+## And none may be smaller than this. Run 3 framed a mudsnout at 14.5% -- it
+## passed every other rule and the judge reported it as unreadable and
+## ambiguous with a background prop. A bearing that cannot satisfy both
+## bounds is skipped rather than shot.
+const FIGHT_MIN_HEIGHT_FRAC := 0.18
 const FIGHT_D_MIN := 4.0
 const FIGHT_D_MAX := 26.0
 ## How many physics ticks the trainer stands beside the wild before engaging,
@@ -666,11 +674,14 @@ func _shoot_fight(band_index: int, band_id: String, stand_xz: Vector2, look_xz: 
 		var focus := _ground_centroid(subjects)
 		var d: float = CAPTURE_CHECK.fit_distance(focus, candidate["bearing"], FIGHT_EYE_H, FIGHT_LOOK_UP,
 			FOV, _camera.get_viewport().get_visible_rect().size, subjects, FIGHT_MARGIN, FIGHT_D_MIN, FIGHT_D_MAX,
-			0.25, FIGHT_MAX_HEIGHT_FRAC)
+			0.25, FIGHT_MAX_HEIGHT_FRAC, FIGHT_MIN_HEIGHT_FRAC)
 		if d < 0.0:
+			print("[fight] %s: no distance between %.0f and %.0f m puts all three fighters inside the frame with none under %.0f%% or over %.0f%% of its height" % [
+				str(candidate["label"]), FIGHT_D_MIN, FIGHT_D_MAX,
+				FIGHT_MIN_HEIGHT_FRAC * 100.0, FIGHT_MAX_HEIGHT_FRAC * 100.0])
 			if best_bearing == "":
-				best_problems = ["no distance between %.0f and %.0f m fits all three fighters from the %s" % [
-					FIGHT_D_MIN, FIGHT_D_MAX, str(candidate["label"])]]
+				best_problems = ["no distance between %.0f and %.0f m frames all three fighters readably from any bearing tried" % [
+					FIGHT_D_MIN, FIGHT_D_MAX]]
 			continue
 		_pose_fight_eye(focus, candidate["bearing"], d)
 		# Let the grass ring and terrain bubble follow the moved eye before
@@ -681,7 +692,8 @@ func _shoot_fight(band_index: int, band_id: String, stand_xz: Vector2, look_xz: 
 		subjects = _fight_subjects(wild)
 		for i in 2:
 			await process_frame
-		var problems := _frame_problems(subjects, [_player, _companion, wild], {"max_height_frac": FIGHT_MAX_HEIGHT_FRAC})
+		var problems := _frame_problems(subjects, [_player, _companion, wild], {
+			"max_height_frac": FIGHT_MAX_HEIGHT_FRAC, "min_height_frac": FIGHT_MIN_HEIGHT_FRAC})
 		print("[fight] %s at %.1f m: %s" % [str(candidate["label"]), d,
 			"fits and reads" if problems.is_empty() else str(problems)])
 		if problems.is_empty():
