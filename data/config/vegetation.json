@@ -91,7 +91,7 @@
       "min_height": -21.6,
       "_comment_scale": "A 2.5x spread inside one copse. Uniform prop scale is one of the two readable signatures of generator output, and a wood with saplings and old trees in it is the difference between a grove and a stamp.",
       "scale_min": 0.5,
-      "scale_max": 1.45,
+      "scale_max": 2.0,
       "_comment_clear": "The spawn pad stays clear. The player's first sight of the game should not be the inside of a tree.",
       "clear_radius": 14.0,
       "base_scale": 1.0,
@@ -160,8 +160,8 @@
           "radius": 10.0,
           "count": 1,
           "max_slope_deg": 25.0,
-          "scale_min": 1.4,
-          "scale_max": 1.6
+          "scale_min": 1.93,
+          "scale_max": 2.21
         },
         {
           "_why": "south-west foot, shoulder pair -- see the peak sub-anchor above for the recipe and the siting history.",
@@ -184,8 +184,8 @@
           "radius": 10.0,
           "count": 4,
           "max_slope_deg": 25.0,
-          "scale_min": 0.9,
-          "scale_max": 1.3
+          "scale_min": 1.24,
+          "scale_max": 1.79
         },
         {
           "_why": "BAND2-FLOOR round 2: a blind critique of this exact anchor's own frame (01-early-forest-day) still read the treeline as 'near-identical canopy size/height/tint... a scatter-brush pass'. Scale pushed further (1.4-1.75 -> 1.55-2.0, RNG-safe: a wider scale_min/scale_max range draws the same one randf_range() call per placed instance regardless of its bounds) so the two old trees are unmistakably a different age class. `count` deliberately left at 2, NOT raised -- `_place_anchor`'s attempt budget is `count * ANCHOR_ATTEMPTS_PER_INSTANCE`, drawn from this layer's single shared RNG stream (scatter_rules.gd::all_placements), and `_place_corridor_fill` runs after every anchor in that same stream for the WHOLE CORRIDOR, not just Band 2 -- raising `count` here was tried, rendered, and found to reshuffle corridor-wide tree corridor_fill enough that this exact frame's own midground/background treeline (the coverage that answers the region's core 'is there a forest here' complaint) thinned out, trading a solved complaint for a resurfaced one. Centred on the harvest.json order 2005/2006 cluster (135-145,1538-1543), the exact ground tools/survey_band2.gd's 01-early-forest-day frame looks at. This layer's own scale_min/max (0.55-1.35) already varies size but tops out short of an OLD tree beside young growth, which is the age-range read a closed canopy needs and the girth half of the same blind critique's complaint ('no leaf litter, undergrowth, fallen branches, saplings... uniform salmon trunks'). docs/reviews/band2/round-05 already measured that the corridor-wide trail-biased fill lands near none of Band 2's eight survey viewpoints by chance -- a density multiplier has nothing to multiply at a site it never reaches, so this is a hand-placed anchor, not a tuning number.",
@@ -359,8 +359,8 @@
           ],
           "radius": 9.0,
           "count": 1,
-          "scale_min": 1.4,
-          "scale_max": 1.6
+          "scale_min": 1.93,
+          "scale_max": 2.21
         },
         {
           "_why": "Gate Meadow east flank, shoulder pair -- see the peak sub-anchor above for the recipe and siting history.",
@@ -381,8 +381,8 @@
           ],
           "radius": 9.0,
           "count": 3,
-          "scale_min": 0.9,
-          "scale_max": 1.3
+          "scale_min": 1.24,
+          "scale_max": 1.79
         },
         {
           "_why": "WORLD-TREES-0903, Place 1, west flank -- same station, opposite side of the road so the gate meadow reads as flanked rather than one-sided. Probed at 9.1m off the trail, clear of every village-hub clearing. TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.1/5.2): moved (-5,95) -> (-4,58) so the two flanks straddle the road at the same arc with a 16m gap it runs through (the 'gate' 5.2 names), radius 6->7, count 4->5, scale ceiling narrowed to 0.5-1.1 -- 'the shorter side', so the gate reads as two different heights, not a mirror of the east flank. Split into the same copse recipe (1+2+2=5).",
@@ -392,8 +392,8 @@
           ],
           "radius": 7.0,
           "count": 1,
-          "scale_min": 1.0,
-          "scale_max": 1.1
+          "scale_min": 1.38,
+          "scale_max": 1.52
         },
         {
           "_why": "Gate Meadow west flank, shoulder pair -- see the peak sub-anchor above for the recipe and siting history.",
@@ -414,8 +414,8 @@
           ],
           "radius": 7.0,
           "count": 2,
-          "scale_min": 0.7,
-          "scale_max": 0.9
+          "scale_min": 0.97,
+          "scale_max": 1.24
         },
         {
           "_why": "WORLD-TREES-0903, Place 4 (the Long Field): the first of BAND1_ROUTE_INVESTIGATION.md's two named thin legs, arc 1050-1200 (86 trees against 300-580 on the legs either side). Sited by probing for a flat shelf 20-25m off the trail between the (-190,650) and (-50,700) waypoints (tools/_probe_band1_worldtrees.gd), clear of any existing clearing/footprint. The matching glade clearing sits at (-104,660) in the band file so the grove has an open pocket rather than a solid wall of canopy. TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.6): split into the section-3 copse recipe (peak/shoulder/body sub-anchors at this same centre/radius, 1+2+7=10) -- place4-long-field's own Judged line named 'every trunk the same girth'.",
@@ -425,8 +425,8 @@
           ],
           "radius": 14.0,
           "count": 1,
-          "scale_min": 1.4,
-          "scale_max": 1.6
+          "scale_min": 1.93,
+          "scale_max": 2.21
         },
         {
           "_why": "Long Field first grove, shoulder pair -- see the peak sub-anchor above for the recipe and siting history.",
@@ -447,8 +447,8 @@
           ],
           "radius": 14.0,
           "count": 7,
-          "scale_min": 0.8,
-          "scale_max": 1.3
+          "scale_min": 1.1,
+          "scale_max": 1.79
         },
         {
           "_why": "WORLD-TREES-0903, Place 4: the second named thin leg, arc 2100-2250 (19 trees, the lowest of any leg past the opening). Sited the same way, 12-13m off the trail between the (180,1200) and (30,1250) waypoints. Matching glade clearing at (21,1245) in the band file. TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.6): same copse-recipe split as the first grove above (1+2+7=10) -- this is also the grove the bridge-approach road passes through (5.7's 'the grove is the gate'), so its own peak now stands where comp6's approach gathers the eye.",
@@ -458,8 +458,8 @@
           ],
           "radius": 14.0,
           "count": 1,
-          "scale_min": 1.4,
-          "scale_max": 1.6
+          "scale_min": 1.93,
+          "scale_max": 2.21
         },
         {
           "_why": "Long Field second grove, shoulder pair -- see the peak sub-anchor above for the recipe and siting history.",
@@ -480,8 +480,8 @@
           ],
           "radius": 14.0,
           "count": 7,
-          "scale_min": 0.8,
-          "scale_max": 1.3
+          "scale_min": 1.1,
+          "scale_max": 1.79
         }
       ],
       "_comment_model_scale_vp3": "VP3: per-model size classes on top of the shared range (scatter_rules.gd `model_scale`, RNG-safe). CommonTree_1 (widest canopy) becomes the big broad form, _2 (deep-green variant) the compact one, so the three variants differ in SIZE as well as tint and a copse carries an age range rather than three tints of one silhouette.",
@@ -497,8 +497,8 @@
         "trail_offset_min": 14.0,
         "trail_offset_max": 40.0,
         "spacing": 90.0,
-        "scale_min": 1.7,
-        "scale_max": 2.1,
+        "scale_min": 2.2,
+        "scale_max": 2.7,
         "max_slope_deg": 21.0,
         "ecology": {
           "salt": 7001,
@@ -524,7 +524,8 @@
         "scale_min": 0.9,
         "scale_max": 1.5
       },
-      "_comment_lod_vp3": "VP3: `scatter_lod_ranges` is now TRUE in performance.json (measured with tools/perf_render_stats.gd -- see ralph/reports/visual-parity/VEG/REPORT.md), so these ranges are LIVE. Canopy layers reach far enough for a distant tree-mass read (a 400m view has trees on its horizon); the ground layers cull at ~100m where they were never resolvable, which is where the primitive saving comes from."
+      "_comment_lod_vp3": "VP3: `scatter_lod_ranges` is now TRUE in performance.json (measured with tools/perf_render_stats.gd -- see ralph/reports/visual-parity/VEG/REPORT.md), so these ranges are LIVE. Canopy layers reach far enough for a distant tree-mass read (a 400m view has trees on its horizon); the ground layers cull at ~100m where they were never resolvable, which is where the primitive saving comes from.",
+      "_comment_scale_w05_treeline_0904": "W05-TREELINE-0904 (FINISH_THE_MEADOWS 1.2, closure plan CL-B2). `scale_max` 1.45 -> 2.0, `scale_min` held at 0.5 (grow, never shrink). Measured off the committed bake with tools/_probe_tree_heights_0904.gd before the change: corridor-fill common trees stood p5 4.2 m / p50 7.7 m / p95 12.4 m -- only 6.6% cleared 12 m and the p5-p95 spread was 2.98x, which two blind judges read as 'one lollipop, repeated' on place2/place5/comp7/comp8. At 2.0 the tallest CommonTree_3 reaches 18.9 m (10.5x the 1.80 m trainer), CommonTree_1 16.3 m, CommonTree_2 13.1 m, and the range is 4x. RNG-SAFE: scatter_rules.gd::_consider draws one randf_range(low, high) for scale, then the model, then the yaw, unconditionally and in that order, with every rejection test resolved before them -- a wider range consumes the same draws, so every placement, model and yaw is byte-identical and only the sizes change (checked against the code 2026-09-04; the older claim that this re-rolls the corridor was wrong). What DOES re-roll: an anchor's `count`, a per-layer `band_scale`, `seed_offset`. `heroes` lifted 1.7-2.1 -> 2.2-2.7 so the lone landmark still stands above the fill's new ceiling. TUNABLE."
     },
     "grove": {
       "_comment": "The ancient twisted oaks, 15-19m and far broader. A genuinely DIFFERENT species, not the same mesh retinted — which was the previous version of this layer and exactly what the critic caught. These are the landmark trees: at twice the height of a common tree and three times the canopy, a stand of them reads from across the playground.",
@@ -559,7 +560,7 @@
       "_comment_min_height_ev5": "OP21-19: re-anchored to the current water level. OW5D moved the pond basin (docs/MEADOWS_MACRO_LAYOUT.md section 10.2) and Gate A then moved `water.level` itself from -22.5 to -17.0 (terrain_playground.json `_comment_gate_a_level`) to restore a rendered surface at the new basin, but this min_height floor was never re-derived against the new level -- it stayed anchored to the OLD waterline, so trees/bushes/grass grew straight through the new, shallower water. Shifted by the same +5.5m the water level moved, preserving this layer's original wading depth relative to the shoreline. Same shoreline standoff as the standard canopy. TUNABLE.",
       "min_height": -21.6,
       "scale_min": 0.6,
-      "scale_max": 1.15,
+      "scale_max": 1.8,
       "clear_radius": 22.0,
       "base_scale": 0.85,
       "lod_range": 460.0,
@@ -676,8 +677,8 @@
           "models": [
             "res://assets/environment/stylized_nature/TwistedTree_2.gltf"
           ],
-          "scale_min": 1.3,
-          "scale_max": 1.3,
+          "scale_min": 1.6,
+          "scale_max": 1.6,
           "max_slope_deg": 20.0,
           "_why_tree_silhouette_0903": "TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.2/5.3): 1.1-1.15 -> 1.3. At 360m from comp2-route-out this is a 19m tree at 3 degrees of visual height -- the crest reads as a crown of three (this tree plus the new CommonTree_1 pair below) only if the hero itself is unmistakably the tallest thing in it. Fixed rather than ranged: this is the ONE hero on the route's only overlook and its whole job is to be a known, repeatable height a player can size the basin against, not to vary."
         },
@@ -692,8 +693,8 @@
           "models": [
             "res://assets/environment/stylized_nature/CherryBlossom_3.gltf"
           ],
-          "scale_min": 1.25,
-          "scale_max": 1.25,
+          "scale_min": 1.5,
+          "scale_max": 1.5,
           "max_slope_deg": 30.0
         }
       ],
@@ -704,8 +705,8 @@
         "trail_offset_min": 18.0,
         "trail_offset_max": 50.0,
         "spacing": 220.0,
-        "scale_min": 1.15,
-        "scale_max": 1.35,
+        "scale_min": 1.6,
+        "scale_max": 1.9,
         "max_slope_deg": 20.0,
         "models": [
           "res://assets/environment/stylized_nature/TwistedTree_2.gltf",
@@ -734,7 +735,8 @@
         "scale_min": 0.9,
         "scale_max": 1.1
       },
-      "_comment_lod_vp3": "VP3: `scatter_lod_ranges` is now TRUE in performance.json (measured with tools/perf_render_stats.gd -- see ralph/reports/visual-parity/VEG/REPORT.md), so these ranges are LIVE. Canopy layers reach far enough for a distant tree-mass read (a 400m view has trees on its horizon); the ground layers cull at ~100m where they were never resolvable, which is where the primitive saving comes from."
+      "_comment_lod_vp3": "VP3: `scatter_lod_ranges` is now TRUE in performance.json (measured with tools/perf_render_stats.gd -- see ralph/reports/visual-parity/VEG/REPORT.md), so these ranges are LIVE. Canopy layers reach far enough for a distant tree-mass read (a 400m view has trees on its horizon); the ground layers cull at ~100m where they were never resolvable, which is where the primitive saving comes from.",
+      "_comment_scale_w05_treeline_0904": "W05-TREELINE-0904: `scale_max` 1.15 -> 1.8 (x base_scale 0.85: TwistedTree_2 tops at 29 m, CherryBlossom_3 at 22 m), `scale_min` held at 0.6, so this family also carries a >=3x range and the ancient oaks keep their 'twice a common tree' read now that the common tree itself reaches 19 m. `heroes` 1.15-1.35 -> 1.6-1.9 for the same reason; the two Band 1 named heroes (the Rise crest, the Gate Meadow knoll) lifted by the same factor. Same RNG-safety argument as `trees` above. TUNABLE."
     },
     "saplings": {
       "_comment": "EV2 (bible sec10): 'young/small, 2-3 sapling forms'. No dedicated sapling mesh exists in the imported subset, and the fuller Stylized Nature MegaKit is itch.io-blocked (see EV1-remainder in BLOCKED.md) -- so this reuses CommonTree_4 and _5, the two narrowest standard-canopy forms cut from the `trees` layer above, at young-tree scale instead of medium-tree scale. Same species, a different age, not a new model -- exactly what the bible means by controlled variants rather than clutter.",
@@ -954,7 +956,7 @@
       "_comment_min_height_ev5": "OP21-19: re-anchored to the current water level. OW5D moved the pond basin (docs/MEADOWS_MACRO_LAYOUT.md section 10.2) and Gate A then moved `water.level` itself from -22.5 to -17.0 (terrain_playground.json `_comment_gate_a_level`) to restore a rendered surface at the new basin, but this min_height floor was never re-derived against the new level -- it stayed anchored to the OLD waterline, so trees/bushes/grass grew straight through the new, shallower water. Shifted by the same +5.5m the water level moved, preserving this layer's original wading depth relative to the shoreline. A dead tree IN the pond would be a nice touch one day, but placed deliberately, not by a scatter that cannot see the water. TUNABLE.",
       "min_height": -21.6,
       "scale_min": 0.45,
-      "scale_max": 1.15,
+      "scale_max": 1.6,
       "clear_radius": 26.0,
       "base_scale": 0.7,
       "lod_range": 260.0,
@@ -965,7 +967,12 @@
         "Bark_DeadTree": "#e0d2bc"
       },
       "_comment_scale_vp3": "VP3: widened 0.5-1.0 -> 0.45-1.15 so two dead trees in one view are not the same silhouette at the same size (JUDGE-village-pond named exactly that pair). Band moved to `edge`: a bare trunk on a grove's OUTLINE breaks the canopy line, which is its whole job; inside the core it is hidden and in the open it is the out-of-palette foreground R9.4 already cut.",
-      "_why_mid_layer_0903_removed_stray_deadfall": "MID-LAYER-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.3, 6.1): this anchor and the cache marker at (-382.8,355.5) are 107m apart and only one can be the discovery marker WORLD-CONTENT actually placed the cache pickup beside. The marker is the one at the cache; this one lied about where the TM was, 54m from the crest instead of at the find. Removed, not moved -- the cache anchor's own scale bump to 1.3 is 2.6's job (props.json), not this file's."
+      "_why_mid_layer_0903_removed_stray_deadfall": "MID-LAYER-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.3, 6.1): this anchor and the cache marker at (-382.8,355.5) are 107m apart and only one can be the discovery marker WORLD-CONTENT actually placed the cache pickup beside. The marker is the one at the cache; this one lied about where the TM was, 54m from the crest instead of at the find. Removed, not moved -- the cache anchor's own scale bump to 1.3 is 2.6's job (props.json), not this file's.",
+      "model_scale": {
+        "res://assets/environment/stylized_nature/Mushroom_Common.gltf": 0.72,
+        "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf": 0.72
+      },
+      "_comment_scale_w05_treeline_0904": "W05-TREELINE-0904: `scale_max` 1.15 -> 1.6 (x base_scale 0.7: DeadTree_3 tops at 14.9 m, _2 at 12.9, _1 at 10.6) so the grey vertical this layer exists for still breaks a canopy line that now reaches 19 m instead of standing under it. The two mushrooms share this range, so `model_scale` holds them at their previous top (1.15/1.6 = 0.72; Mushroom_Common stays <= 0.37 m, Laetiporus <= 0.62 m) -- applied after the draws, RNG-safe. TUNABLE."
     },
     "bushes": {
       "_comment": "The middle layer. Without something between grass height and tree height the ground reads as a lawn with poles on it. Ferns and broad plants included, because undergrowth banked at the base of a tree is what makes a copse read as a wood rather than as trees standing on a lawn.",
