@@ -701,7 +701,13 @@ func _build_row(slot_index: int) -> PanelContainer:
 	bond_label.visible = false
 	bond_label.custom_minimum_size = Vector2(BOND_MIN_WIDTH, 0.0)
 	_bond_labels.append(bond_label)
-	level_row.add_child(bond_label)
+	# BLIND-JUDGE ROUND 2: this sat in `level_row`, immediately left of the HP
+	# pill, and the judge read the pill as the bond meter -- "it reads as the
+	# bond meter and therefore actively contradicts the number beside it".
+	# It belongs with the name, on the text side of the row, with the bars
+	# left to mean what the bars mean.
+	info.add_child(bond_label)
+	info.move_child(bond_label, 1)
 
 	# Small "KO" tag next to the level, shown only for a fainted entry — blind
 	# visual review: a fainted creature in the strip had no marker at all, reading
