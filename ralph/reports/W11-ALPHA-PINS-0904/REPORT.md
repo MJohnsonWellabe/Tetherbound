@@ -453,4 +453,4 @@ does not drop when the player walks 850 m out of the radius, and reports `1 pin(
 from 850 m away`. Only the once-flag clears it, which is the directive's actual promise and
 which no unit test covers from a live world.
 
-**Final commit:** see the branch tip; this report's own commit is the last one.
+**Final commit:** `8eac795d` on `ralph/W11-ALPHA-PINS-0904` (this line was written into the commit that follows it, `8eac795d` being the commit that closed the report body).
