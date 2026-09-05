@@ -1,95 +1,275 @@
 extends RefCounted
 
-## Game-owned transient queue + read-only recent-event cursor for presenters.
-## No signals, autoload, save fields or second progression model.
+## PROGRESSION-VISIBLE (docs/prompts/73, D76): the one progression feed.
+##
+## Every progression change -- XP, a level, a bond credit, a bond milestone --
+## is pushed here by its single source of truth, and every presenter (the
+## party strip, the world HUD's moment banner, the combat HUD's XP line, the
+## Team screen) reads it back. Not a signal: `project.godot` declares one
+## autoload and zero signals, and cross-system change in this repo is
+## revision-counter polling. This is that shape: a bounded, sequence-numbered
+## log with a revision counter, exactly what `Game.push_world_message()` /
+## `take_pending_world_message()` already do for a one-line toast.
+##
+## Static rather than a node on purpose. The producers are `RefCounted`
+## instances (`creature_instance.gd::gain_xp`) with no scene tree to reach
+## `Game` through, and the unit suite runs without the autoload at all;
+## `autoload/game_state.gd` exposes the same queue beside `push_world_message`
+## for anything that already talks to `Game`.
+##
+## Presenters keep their own cursor (the `seq` of the last event they acted
+## on) and call `peek_since()`; nothing in production drains, so four readers
+## can watch one log. `drain()` exists for the new-game reset and for tests.
+##
+## Event kinds and payloads (prompt 73 §2.1):
+##   xp_gained      amount, xp, xp_to_next, level
+##   level_up       old_level, new_level, levels_gained, hp_delta, attack_delta,
+##                  defence_delta, trait_unlocked, evolution_ready,
+##                  evolution_level_reached, source
+##   bond_credit    task, task_name, before, after, target, remaining, tier
+##   bond_near      task, task_name, remaining, target
+##   bond_milestone node, task, task_name, benefit, tier, total
+##   reward_summary receipt (a team-wide victory receipt)
+## Every event also carries `kind`, `seq`, `creature_id` (the instance id),
+## `name` (the creature's label) and `species_id`.
+
 const CONFIG_PATH := "res://data/config/progression_feedback.json"
+const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+
 static var _config: Dictionary = {}
-var revision := 0
-var _queue: Array[Dictionary] = []
-var _recent: Array[Dictionary] = []
+static var _events: Array = []
+static var _seq: int = 0
+static var _revision: int = 0
+static var _epoch: int = 0
 
 
+## data/config/progression_feedback.json, cached after the first read.
 static func config() -> Dictionary:
-	if _config.is_empty():
-		_config = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
+	if not _config.is_empty():
+		return _config
+	var file := FileAccess.open(CONFIG_PATH, FileAccess.READ)
+	if file == null:
+		push_error("progression_feedback.json missing at %s" % CONFIG_PATH)
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if parsed is Dictionary:
+		_config = parsed
 	return _config
 
 
+static func near_threshold(task: String, cfg: Dictionary = {}) -> float:
+	var near: Dictionary = (cfg if not cfg.is_empty() else config()).get("near", {})
+	return float(near.get(task, 0))
+
+
+static func seconds(key: String, fallback: float, cfg: Dictionary = {}) -> float:
+	return float((cfg if not cfg.is_empty() else config()).get(key, fallback))
+
+
+# --- the log -----------------------------------------------------------------
+
+## Append one event. Returns the stored event (with its `seq`), so a caller
+## that wants to react to its own push -- a test, mostly -- has the record.
+static func push(kind: String, creature: RefCounted, payload: Dictionary = {}) -> Dictionary:
+	if not enabled(creature):
+		return {}
+	_seq += 1
+	var event := payload.duplicate(true)
+	event["kind"] = kind
+	event["seq"] = _seq
+	event["creature_id"] = creature.get_instance_id() if creature != null else 0
+	event["name"] = str(creature.call("label")) if creature != null and creature.has_method("label") else str(payload.get("name", ""))
+	event["species_id"] = str(creature.get("species_id")) if creature != null else ""
+	_events.append(event)
+	var cap := int(config().get("max_events", 64))
+	while _events.size() > maxi(cap, 1):
+		_events.pop_front()
+	_revision += 1
+	var owner := game()
+	if kind == "level_up" and owner != null:
+		var party: RefCounted = owner.get("party")
+		if party != null:
+			party.set("revision", int(party.get("revision")) + 1)
+	return event.duplicate(true)
+
+
+## Gameplay feedback belongs to the owned five. Standalone logic tests have
+## no Game node; construction and set_level stay silent in either context.
 static func game() -> Node:
 	var tree := Engine.get_main_loop() as SceneTree
-	return tree.root.get_node_or_null("Game") if tree != null else null
-
-
-static func publish(creature: RefCounted, event: Dictionary) -> void:
-	event = event.duplicate(true)
-	event["instance_id"] = creature.get_instance_id()
-	event["display_name"] = str(creature.call("label"))
-	# Explicit sink enables behaviour tests and other game instances without
-	# binding live creatures to a global event bus. Never serialized.
-	var sink: Callable = creature.get_meta("progression_sink", Callable())
-	if sink.is_valid():
-		sink.call(event)
-		return
-	var owner := game()
-	if owner != null and owner.has_method("push_progression_event"):
-		owner.call("push_progression_event", creature, event)
+	return tree.root.get_node_or_null("Game") if tree != null and tree.root != null else null
 
 
 static func enabled(creature: RefCounted) -> bool:
-	if (creature.get_meta("progression_sink", Callable()) as Callable).is_valid():
-		return true
+	if creature == null:
+		return true  # A team reward receipt has no individual creature.
 	var owner := game()
-	var party: RefCounted = owner.get("party") if owner != null else null
+	if owner == null:
+		return true
+	var party: RefCounted = owner.get("party")
 	return party != null and (party.call("members") as Array).has(creature)
 
 
-func push_event(event: Dictionary) -> void:
-	revision += 1
-	var copy := event.duplicate(true)
-	copy["sequence"] = revision
-	_queue.append(copy)
-	_recent.append(copy)
-	while _recent.size() > 256:
-		_recent.pop_front()
+## Bumps on every push and every drain -- the cheap integer a presenter
+## compares each frame before doing any work.
+static func revision() -> int:
+	return _revision
 
 
-func drain() -> Array[Dictionary]:
-	var events: Array[Dictionary] = _queue.duplicate(true)
-	_queue.clear()
-	if not events.is_empty():
-		revision += 1
-	return events
+## The `seq` of the newest event, 0 when nothing has ever been pushed. A
+## presenter that mounts late seeds its cursor from this so it does not replay
+## history it never saw happen.
+static func latest_seq() -> int:
+	return _seq
 
 
-func since(cursor: int) -> Array[Dictionary]:
-	var events: Array[Dictionary] = []
-	for event: Dictionary in _recent:
-		if int(event.sequence) > cursor:
-			events.append(event.duplicate(true))
-	return events
+## A reset/load can reuse a sequence number. Readers compare this first and
+## discard pending presentations from the previous run before reading again.
+static func epoch() -> int:
+	return _epoch
 
 
-func latest_for(instance_id: int, kind: String) -> Dictionary:
-	for index in range(_recent.size() - 1, -1, -1):
-		if int(_recent[index].instance_id) == instance_id and str(_recent[index].kind) == kind:
-			return _recent[index].duplicate(true)
-	return {}
+## Every event with `seq` strictly greater than `after`, oldest first.
+static func peek_since(after: int) -> Array:
+	var out: Array = []
+	for event: Variant in _events:
+		if int((event as Dictionary).get("seq", 0)) > after:
+			out.append((event as Dictionary).duplicate(true))
+	return out
 
 
-static func evolution_ready(creature: RefCounted) -> bool:
-	var owner := game()
-	var inventory: RefCounted = owner.get("inventory") if owner != null else null
-	var evolution: Script = load("res://scripts/creatures/evolution.gd")
-	var progression: Script = load("res://scripts/creatures/progression.gd")
-	return bool(evolution.check(creature, progression.config(), inventory).get("eligible", false))
+## A copy of everything currently held, oldest first.
+static func events() -> Array:
+	return _events.duplicate(true)
 
 
-static func moment_text(event: Dictionary) -> String:
-	if str(event.get("kind", "")) == "level_up":
-		var stats: Dictionary = event.get("stat_deltas", {})
-		var text := "%s reached Lv %d  ·  HP +%d / ATK +%d / DEF +%d" % [event.display_name, int(event.new_level),
-			int(round(float(stats.get("hp", 0)))), int(round(float(stats.get("attack", 0)))), int(round(float(stats.get("defence", 0))))]
-		if event.get("evolution_ready", false):
-			text += "  ·  Evolution ready"
-		return text
-	return "%s  ·  Bond %d/5  ·  %s" % [event.display_name, int(event.get("node_index", 0)), str(event.get("benefit", ""))]
+## Take everything and empty the log. Bumps the revision so a presenter
+## comparing revisions sees the drain as a change too.
+static func drain() -> Array:
+	var out := _events.duplicate(true)
+	_events.clear()
+	_revision += 1
+	return out
+
+
+## The new-game reset: nothing held, sequence and revision back to zero.
+static func clear() -> void:
+	_events.clear()
+	_seq = 0
+	_revision = 0
+	_epoch += 1
+
+
+# --- derived state presenters ask about ---------------------------------------
+
+## XP the creature still needs for its next level.
+static func xp_remaining(creature: RefCounted, progression_cfg: Dictionary) -> int:
+	if creature == null:
+		return 0
+	return maxi(0, int(creature.call("xp_to_next", progression_cfg)) - int(creature.get("xp")))
+
+
+## "Within one ordinary fight of a level" (prompt 73 §2.2's Near level for
+## XP): the XP still needed is at most `near.xp_fights` level-matched wild
+## wins' worth. A creature at the level cap is never near.
+static func xp_near(creature: RefCounted, progression_cfg: Dictionary, cfg: Dictionary = {}) -> bool:
+	if creature == null:
+		return false
+	var cap := int(progression_cfg.get("level", {}).get("cap", 50))
+	if int(creature.get("level")) >= cap:
+		return false
+	var fights := float((cfg if not cfg.is_empty() else config()).get("near", {}).get("xp_fights", 1.0))
+	var one_fight := float(PROGRESSION.xp_award_for(int(creature.get("level")), progression_cfg))
+	return float(xp_remaining(creature, progression_cfg)) <= one_fight * fights
+
+
+## 0..1 fill of the creature's XP bar toward its next level.
+static func xp_fraction(creature: RefCounted, progression_cfg: Dictionary) -> float:
+	if creature == null:
+		return 0.0
+	var needed := int(creature.call("xp_to_next", progression_cfg))
+	if needed <= 0:
+		return 1.0
+	return clampf(float(creature.get("xp")) / float(needed), 0.0, 1.0)
+
+
+# --- the sentences, built once -------------------------------------------------
+##
+## Every surface that says something about an event says it through one of
+## these, so the strip, the banner and the combat HUD can never disagree
+## about wording (the same rule `bond_milestones.gd::progress_text` set).
+
+## The one-word verb a bond tick shows ("+bond · fed"), from
+## progression_feedback.json's `tick_verbs`.
+static func tick_verb(task: String) -> String:
+	var verbs: Dictionary = config().get("tick_verbs", {})
+	return str(verbs.get(task, "together"))
+
+
+## The short label the party strip flicks for a Tick-level event, or "" for
+## an event kind that is not a tick.
+static func tick_label(event: Dictionary) -> String:
+	match str(event.get("kind", "")):
+		"xp_gained":
+			return "+%d XP" % int(event.get("amount", 0))
+		"bond_credit":
+			return "+bond · %s" % tick_verb(str(event.get("task", "")))
+		_:
+			return ""
+
+
+## What a level changed, as short fragments: "+4 HP", "+1 ATK", "+1 DEF",
+## then "second trait revealed" / "evolution ready" / "evolution level reached"
+## when the event says so.
+static func level_up_changes(event: Dictionary) -> Array[String]:
+	var out: Array[String] = []
+	var hp := int(round(float(event.get("hp_delta", 0.0))))
+	var atk := int(round(float(event.get("attack_delta", 0.0))))
+	var def := int(round(float(event.get("defence_delta", 0.0))))
+	if hp != 0:
+		out.append("%+d HP" % hp)
+	if atk != 0:
+		out.append("%+d ATK" % atk)
+	if def != 0:
+		out.append("%+d DEF" % def)
+	if bool(event.get("trait_unlocked", false)):
+		out.append("second trait revealed")
+	if bool(event.get("evolution_ready", false)):
+		out.append("evolution ready")
+	elif bool(event.get("evolution_level_reached", false)):
+		out.append("evolution level reached")
+	return out
+
+
+## The Moment banner's two lines for a level, bond milestone, or reward receipt:
+## `{title, detail}`. Anything else returns empty strings.
+static func moment_text(event: Dictionary) -> Dictionary:
+	var name := str(event.get("name", ""))
+	match str(event.get("kind", "")):
+		"reward_summary":
+			var receipt := str(event.get("receipt", ""))
+			var marker := receipt.find("'s reward:")
+			var title := receipt.left(marker) + " defeated" if marker > 0 else "Victory rewards"
+			return {"title": title, "detail": receipt}
+		"level_up":
+			var gained := int(event.get("levels_gained", 1))
+			var title := "%s reached Lv %d" % [name, int(event.get("new_level", 0))]
+			if gained > 1:
+				title += "  (+%d levels)" % gained
+			return {"title": title, "detail": "  ·  ".join(level_up_changes(event))}
+		"bond_milestone":
+			var title := "%s  ·  bond %d / %d" % [name, int(event.get("node", 0)), int(event.get("total", 5))]
+			var detail := "%s  ·  %s" % [str(event.get("task_name", "")), str(event.get("benefit", ""))]
+			return {"title": title, "detail": detail}
+		_:
+			return {"title": "", "detail": ""}
+
+
+static func is_moment(event: Dictionary) -> bool:
+	var kind := str(event.get("kind", ""))
+	return kind == "level_up" or kind == "bond_milestone" or kind == "reward_summary"
+
+
+static func is_tick(event: Dictionary) -> bool:
+	var kind := str(event.get("kind", ""))
+	return kind == "xp_gained" or kind == "bond_credit"

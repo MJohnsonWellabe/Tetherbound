@@ -1,5 +1,12 @@
 # Shared combat / exploration HUD lifecycle
 
+> **Merged-main update, 2026-09-05:** the presenter is now main's embedded
+> PlaygroundHUD MomentBanner and native PartyStrip ticks, reading the single
+> static feed in progression_feed.gd. The previous standalone presenter/overlay
+> have been removed. The merged lifecycle smoke passes **34 checks** including
+> modal/tree-pause timing and same-sequence reset. The older rendered evidence
+> below is historical; fresh production renders and review are still required.
+
 Production relay frames exposed a real ownership defect: the previous trainer
 result still said “wild creature”, while location, enemy plate, mechanic hint,
 tracked task, hotbar/reward message and exploration legend competed for the view.
@@ -36,7 +43,7 @@ still uses the production combat manager, while ordinary wild/catch/loss output
 remains unchanged. Definitive trainer victory relinquishes the old result layer.
 
 The existing production payout's exact `Name's reward: ...` receipt is routed by
-the shared world-message consumer into `Game.progression_feed` as `reward_summary`.
+the shared world-message consumer into the canonical static feed as `reward_summary`.
 It reports only what the payout source actually placed in inventory. The HUD
 neither recalculates nor grants rewards. The shared presenter combines a receipt
 with a queued level/bond Moment where possible, otherwise displays a compact

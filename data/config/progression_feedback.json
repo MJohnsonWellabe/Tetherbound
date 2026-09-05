@@ -1,16 +1,51 @@
 {
-  "near_thresholds": {"battles_fought": 5, "landmarks_visited_together": 1, "distance_m_together": 400, "rest_nights_together": 1, "feeds_together": 2},
-  "task_labels": {"battles_fought": "won", "landmarks_visited_together": "discovered", "distance_m_together": "travelled", "rest_nights_together": "rested", "feeds_together": "fed"},
-  "xp_near_threshold": 30,
-  "xp_near_fights": 1.0,
+  "_comment": "PROGRESSION-VISIBLE (docs/prompts/73, D76). Every number the progression feed's presenters read: how close to a milestone counts as 'near', how long a tick / near pulse / moment banner lives, how two moments collapse, where the banner sits inside the safe area, and which sound cue a moment plays. Read by scripts/creatures/progression_feed.gd::config(); nothing else parses this file. ALL TUNABLE.",
+
+  "_comment_near": "Per bond task: how many units short of the target counts as 'near' -- the party strip pip starts its slow pulse and the Team screen row says what is left. Keys are the task field names bond_milestones.json uses. `xp_fights` is the XP version: a creature is near a level when the XP still needed is at most this many level-matched wild wins' worth (progression.gd::xp_award_for at the creature's own level).",
+  "near": {
+    "battles_fought": 5,
+    "landmarks_visited_together": 1,
+    "distance_m_together": 500,
+    "rest_nights_together": 1,
+    "feeds_together": 2,
+    "xp_fights": 1.0
+  },
+
+  "_comment_tick_verbs": "The one word the party strip's bond tick shows after '+bond ·', per task. Past tense, what the player just did with the creature.",
+  "tick_verbs": {
+    "battles_fought": "won",
+    "landmarks_visited_together": "discovered",
+    "distance_m_together": "travelled",
+    "rest_nights_together": "rested",
+    "feeds_together": "fed"
+  },
+
+  "_comment_distance_tick_m": "Distance is credited on every half-second discovery poll in fractions of a metre; a tick on each of those would never stop flickering. One bond_credit per this many metres crossed instead (the near/milestone checks still run on every credit).",
+  "distance_tick_m": 250,
+
+  "_comment_durations": "Seconds. tick: how long a '+bond · fed' flick shows on the party strip (<= 1s per prompt 73 §2.2). near_pulse: one full slow pulse period on a near pip/sliver. moment: how long the HUD banner holds. moment_collapse: two moments within this window share one banner. moment_cooldown: gap after a banner before the next one may show.",
   "tick_seconds": 0.9,
   "near_pulse_seconds": 1.6,
   "moment_seconds": 3.0,
-  "moment_cooldown_seconds": 5.0,
-  "safe_area_inset": 0.05,
-  "moment_font_size": 24,
-  "detail_font_size": 18,
-  "level_sound": "progression_level_up",
-  "bond_sound": "progression_bond_milestone",
+  "reward_seconds": 6.0,
+  "moment_collapse_seconds": 5.0,
+  "moment_cooldown_seconds": 0.4,
+
+  "_comment_banner": "The moment banner's slot on the authored 1920x1080 canvas (canvas_items / expand stretch, so the canvas grows to 1920x1200 on the Ally). top/height in canvas px; width centred. safe_area_fraction is the overscan margin every edge must clear (GATE3-HUD-SAFEAREA's own 5%): the HUD clamps the banner inside it whatever canvas it draws on. It sits under the region banner's slot (playground_hud.gd::REGION_BANNER_TOP 120 + 48) so the two top-centre cards never overlap, and well above the combat HUD's centre outcome line.",
+  "banner": {
+    "top": 184,
+    "height": 92,
+    "width": 900,
+    "safe_area_fraction": 0.05
+  },
+
+  "_comment_sound_cues": "Cue ids per moment kind, resolved through data/config/audio.json's `progression` block to a generated sfx file (tools/audio/gen_sfx.py). An empty string is silence.",
+  "sound_cues": {
+    "level_up": "level_up",
+    "bond_milestone": "bond_milestone"
+  },
+
+  "_comment_max_events": "How many feed events the log keeps. Presenters read by sequence number and never drain, so this only bounds memory; 64 is far past anything one fight produces (five creatures x two events).",
+  "max_events": 64,
   "fly_route_bond_meters": 25.0
 }

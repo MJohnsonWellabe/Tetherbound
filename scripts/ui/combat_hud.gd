@@ -35,9 +35,9 @@ const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 ## no damage and reads no other part of that config.
 const COMBAT_MATH := preload("res://scripts/combat/combat_math.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const FEED := preload("res://scripts/creatures/progression_feed.gd")
+const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
 const PARTY_STRIP := preload("res://scripts/ui/party_strip.gd")
-const FEEDBACK := preload("res://scripts/creatures/progression_feed.gd")
-var progression_feed: RefCounted = null
 var _world_presentation_mode := "exploration"
 
 ## The orb cluster's fallback icon/id (spec §10.4), used only if the combat
@@ -99,6 +99,9 @@ var _energy_fill: StyleBoxFlat = null
 
 var _outcome_left: float = 0.0
 var _xp_left: float = 0.0
+## PROGRESSION-VISIBLE: the feed `seq` when the current fight began.
+var _fight_feed_seq: int = 0
+var _fight_feed_epoch: int = -1
 var _go_left: float = 0.0
 var _miss_left: float = 0.0
 var _miss_text: String = ""
@@ -287,6 +290,7 @@ func _ready() -> void:
 		# opponent gets told about, and none of them inherits the previous
 		# round's verdict.
 		_manager.connect("entered", _forget_the_last_verdict)
+		_manager.connect("entered", _mark_feed_at_fight_start)
 		_manager.connect("catch_refused", _on_catch_refused)
 		_manager.connect("catch_resolved", _on_catch_resolved)
 		_manager.connect("creature_switched", _on_creature_switched)
@@ -420,6 +424,7 @@ func _quiet_panel_box() -> StyleBoxFlat:
 
 
 func _process(delta: float) -> void:
+	_sync_feed_epoch()
 	if _world_presentation_mode == "relays":
 		relinquish_result_presentation()
 		return
@@ -1007,13 +1012,17 @@ func _party_entries() -> Array:
 	for member in source:
 		if member == null:
 			continue
-		entries.append({
+		var entry := {
 			"label": member.label(),
 			"level": int(member.level),
 			"hp_fraction": member.hp_fraction(),
 			"tint": _species_colour(str(member.species_id)),
 			"fainted": bool(member.fainted),
-		})
+		}
+		# PROGRESSION-VISIBLE: the xp sliver, the bond pip and the creature id
+		# the strip's own feed polling matches ticks against.
+		entry.merge(BOND_MILESTONES.strip_fields(member, PROGRESSION.config()))
+		entries.append(entry)
 	return entries
 
 
@@ -1216,67 +1225,71 @@ func relinquish_result_presentation() -> void:
 	_was_fighting = false
 
 
-## D30's award, read off the manager for the creature that fought. `last_xp_award`
-## is a plain public var, not a function — `.get()` reflection is not needed
-## here, but is used anyway for consistency with `_party_entries()` above and
-## because `_manager` is typed `Node`, which has no `last_xp_award` of its own
-## to autocomplete against.
+## PROGRESSION-VISIBLE (prompt 73, D76): the fight's award, read off the
+## progression feed rather than the manager's `last_xp_award` dict. The feed
+## is the single source of every `xp_gained` / `level_up` (pushed inside
+## `creature_instance.gain_xp()`), so this line says exactly what the party
+## strip and the world HUD banner say, and a test can drive it by awarding a
+## real creature and reading the text back -- no source-grepping
+## (`tests/test_level_up_announcement.gd`). `_fight_feed_seq` is the feed
+## cursor taken when the fight began, so a previous fight's award is never
+## re-announced.
 func _set_xp_line() -> void:
+	_sync_feed_epoch()
 	if _manager == null:
 		return
 	var creature: RefCounted = _manager.call("active_creature")
 	if creature == null:
 		_xp_line.text = ""
 		return
-	var active_feed := progression_feed
-	if active_feed == null:
-		var game := FEEDBACK.game()
-		active_feed = game.get("progression_feed") if game != null else null
-	var event: Dictionary = active_feed.call("latest_for", creature.get_instance_id(), "xp_gained") if active_feed != null else {}
-	var level_event: Dictionary = active_feed.call("latest_for", creature.get_instance_id(), "level_up") if active_feed != null else {}
-	var levels_from_feed := int(level_event.get("levels_gained", 0)) if int(level_event.get("sequence", -1)) == int(event.get("sequence", -3)) + 1 else 0
-	var award := {"xp": event.get("amount", 0), "levels": levels_from_feed} if not event.is_empty() else {}
-	if award.is_empty():
+	var id := creature.get_instance_id()
+	var xp_event: Dictionary = {}
+	var level_event: Dictionary = {}
+	for raw: Variant in FEED.peek_since(_fight_feed_seq):
+		var event := raw as Dictionary
+		if int(event.get("creature_id", 0)) != id:
+			continue
+		match str(event.get("kind", "")):
+			"xp_gained":
+				xp_event = event
+			"level_up":
+				level_event = event
+	if xp_event.is_empty() and level_event.is_empty():
 		_xp_line.text = ""
 		return
-	var xp := int(award.get("xp", 0))
-	var levels := int(award.get("levels", 0))
-	if levels <= 0:
-		_xp_line.text = "+%d XP · %s · EXP %d/%d" % [xp, creature.label(), int(event.xp), int(event.xp_to_next)]
+	var xp := int(xp_event.get("amount", 0))
+	if level_event.is_empty():
+		_xp_line.text = "+%d XP" % xp
 		_xp_left = 2.4
 		return
-	# OP11: "level-up must announce identity, level, unlock". The line used to
-	# read "+12 XP   ·   Lv up!" -- which announces none of the three. WHOSE
-	# level went up is the question a five-creature team makes urgent (the XP
-	# is split across everyone who fought, so "Lv up!" over a shared party
-	# strip names nobody), and the new NUMBER is the thing a player is actually
-	# tracking. Both were already in hand here: `creature.label()` and
-	# `creature.level` sit one line above and were simply not being read.
-	# §20's celebration-moment ask: a level-up used to be plain text,
-	# indistinguishable from an ordinary "+3 XP" line. This adds a scale/colour
-	# pop on the level-up branch only -- no new node, no new scene, the same
-	# `_xp_line` Label this function already writes to.
+	# OP11: "level-up must announce identity, level, unlock" -- and now WHAT
+	# CHANGED (prompt 73 §2.2's Moment: stat deltas, the second trait, the
+	# evolution gate), all from the event, all worded by
+	# `progression_feed.moment_text()` so no surface can disagree.
 	_celebrate_level_up()
-	var line := "%s reached Lv %d" % [creature.label(), int(creature.level)]
-	# The unlock, when the same fight bought one. `trait_unlocked()` is the
-	# only thing levelling actually opens, and it turns on bond nodes rather
-	# than level -- so this is reported when it is true and the creature has a
-	# second trait to show for it, not asserted on every level.
-	var cfg: Dictionary = PROGRESSION.config()
-	# GATE-E: this used to read `creature.get("bond_nodes")`, and `bond_nodes`
-	# is a METHOD on creature_instance.gd, not a property. `get()` handed back a
-	# Callable, `int(Callable)` is not a constructor, and the whole announcement
-	# died at this line with "Invalid call. Nonexistent 'int' constructor" --
-	# every trainer fight in the chapter, every time somebody levelled. The
-	# level-up line the player is meant to see was never assigned.
-	#
-	# It survived because tests/test_level_up_announcement.gd asserts on the
-	# SOURCE TEXT of this function rather than running it (prompt 33's exact
-	# false-positive shape). Found by driving four real fights end to end.
-	if bool(level_event.get("trait_unlocked", false)):
-		line += "   ·   trait unlocked"
-	_xp_line.text = "+%d XP   ·   %s" % [xp, line]
-	_xp_left = 2.4
+	var moment: Dictionary = FEED.moment_text(level_event)
+	var line := "+%d XP   ·   %s" % [xp, str(moment.get("title", ""))]
+	var detail := str(moment.get("detail", ""))
+	if not detail.is_empty():
+		line += "   ·   " + detail
+	_xp_line.text = line
+	_xp_left = 3.0
+
+
+## Feed cursor at the moment a fight opens (see `_set_xp_line`).
+func _mark_feed_at_fight_start() -> void:
+	_fight_feed_epoch = FEED.epoch()
+	_fight_feed_seq = FEED.latest_seq()
+
+
+func _sync_feed_epoch() -> void:
+	if _fight_feed_epoch == FEED.epoch():
+		return
+	_fight_feed_epoch = FEED.epoch()
+	_fight_feed_seq = 0
+	_xp_left = 0.0
+	if _xp_line != null:
+		_xp_line.text = ""
 
 
 ## A brief scale pop plus a flash to the WARNING accent, back to whatever

@@ -162,8 +162,8 @@ func _cloudreach_hides_portrait(id: String, speaker: String) -> bool:
 	return false
 
 
-func test_hidden_cloudreach_portrait_policy_is_specific_to_named_cast_conversations() -> void:
-	assert_true(_cloudreach_hides_portrait("cloudreach_iven_waycamp", "Iven"))
+func test_clean_cloudreach_portraits_do_not_take_the_hidden_portrait_exception() -> void:
+	assert_false(_cloudreach_hides_portrait("cloudreach_iven_waycamp", "Iven"))
 	assert_false(_cloudreach_hides_portrait("cloudreach_iven_waycamp", "Grandpa"))
 	assert_false(_cloudreach_hides_portrait("grandpa_house", "Grandpa"))
 	assert_false(_cloudreach_hides_portrait("cloudreach_missing_conversation", "Iven"))

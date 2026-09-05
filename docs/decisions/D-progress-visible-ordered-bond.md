@@ -1,5 +1,12 @@
 # Visible progression: retain the ordered bond ladder
 
+**Superseded during the 2026-09-05 integration of main 2cd711eb1.** The landed
+W13 implementation and D76 are authoritative: any completed task earns a bond
+node, with one static progression feed shared by every presenter. The branch
+implementation below was authored independently before those commits landed;
+it must not override the shipped unordered ladder. Its once-only 25 m Fly-route
+credit remains valid and feeds the same existing travel task.
+
 2026-09-05. Prompt 73 §2.4 decision, explicitly selected by the orchestration
 owner for this implementation: **option 2, keep the order and show all five**.
 

@@ -15,7 +15,7 @@ func test_reusable_segment_parses() -> void:
 
 
 func test_reusable_segment_mutates_play_only_through_parsed_controller_events() -> void:
-	var source := FileAccess.get_file_as_string(SOURCE_PATH)
+	var source := FileAccess.get_file_as_string(SOURCE_PATH).replace("\r\n", "\n")
 	for banned in [
 		"set(\"pending_build\"",
 		"_spawn_building",
@@ -32,7 +32,7 @@ func test_reusable_segment_mutates_play_only_through_parsed_controller_events() 
 
 
 func test_reusable_segment_names_the_canonical_paid_house_contract() -> void:
-	var source := FileAccess.get_file_as_string(SOURCE_PATH)
+	var source := FileAccess.get_file_as_string(SOURCE_PATH).replace("\r\n", "\n")
 	assert_true(source.contains("before_wood - 39"), "2x2 house must spend its exact 39 wood")
 	assert_true(source.contains("before_stone - 34"), "2x2 house must spend its exact 34 stone")
 	assert_true(source.contains("built_records != 12"), "four floors + door + three walls + four roofs")
@@ -41,7 +41,7 @@ func test_reusable_segment_names_the_canonical_paid_house_contract() -> void:
 
 
 func test_reusable_segment_enters_and_preflights_the_documented_patch_before_spending() -> void:
-	var source := FileAccess.get_file_as_string(SOURCE_PATH)
+	var source := FileAccess.get_file_as_string(SOURCE_PATH).replace("\r\n", "\n")
 	assert_true(source.contains("BUILD_PATCH_XZ := Vector2(30.0, -40.0)"),
 		"the authored Practice Meadow clearing must be the documented patch")
 	assert_true(source.contains("Vector2(10.0, -13.0), # Village Square"),
@@ -79,7 +79,7 @@ func test_mechanical_fixture_is_not_misrepresented_as_canonical_evidence() -> vo
 
 
 func test_roof_stances_use_the_preflighted_open_exterior_ring() -> void:
-	var source := FileAccess.get_file_as_string(SOURCE_PATH)
+	var source := FileAccess.get_file_as_string(SOURCE_PATH).replace("\r\n", "\n")
 	assert_true(source.contains("_place_roof_from_exterior"),
 		"each roof must be placed from an explicitly staged exterior stance")
 	assert_true(source.contains("var door_target := floor_a + Vector3(0, 0, -1)"),
@@ -121,7 +121,7 @@ func test_roof_stances_use_the_preflighted_open_exterior_ring() -> void:
 
 
 func test_structural_travel_is_stowed_then_rearmed_through_the_catalogue() -> void:
-	var source := FileAccess.get_file_as_string(SOURCE_PATH)
+	var source := FileAccess.get_file_as_string(SOURCE_PATH).replace("\r\n", "\n")
 	assert_true(source.contains("_stow_piece_for_travel"),
 		"roof and dismantle travel must use the public Cancel path")
 	assert_true(source.contains("await _tap_action(&\"build_cancel\")"),
@@ -135,7 +135,7 @@ func test_structural_travel_is_stowed_then_rearmed_through_the_catalogue() -> vo
 
 
 func test_preflight_errors_do_not_claim_a_dismantle_attempt() -> void:
-	var source := FileAccess.get_file_as_string(SOURCE_PATH)
+	var source := FileAccess.get_file_as_string(SOURCE_PATH).replace("\r\n", "\n")
 	var preflight := source.substr(source.find("func _preflight()"), source.find("func _preflight_all_planned_anchors"))
 	assert_false(preflight.contains("aimed dismantle stance"),
 		"a pre-spend route failure must not be reported as dismantle movement")

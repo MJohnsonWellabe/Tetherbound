@@ -22,6 +22,21 @@ const TERRAIN_BAKE := preload("res://scripts/world/terrain_bake.gd")
 const CONFIG_PATH := "res://data/config/terrain_playground.json"
 
 
+func test_lf_and_crlf_terrain_configs_share_the_same_fingerprint() -> void:
+	var source := FileAccess.get_file_as_string(CONFIG_PATH).replace("\r\n", "\n")
+	assert_false(source.is_empty())
+	var expected := (source.hash() + int(CONFIG_PATH.hash())) & 0x1FFFFFFFFFFFFF
+	assert_eq(TERRAIN_BAKE.fingerprint_for_source(source), expected,
+		"the existing Linux hash remains unchanged")
+	assert_eq(TERRAIN_BAKE.fingerprint_for_source(source.replace("\n", "\r\n")), expected,
+		"checkout line endings must not invalidate authored terrain")
+	assert_eq(TERRAIN_BAKE.config_fingerprint(), expected,
+		"the real file reader uses the same canonical source hash")
+	assert_ne(TERRAIN_BAKE.fingerprint_for_source("{\"seed\": 1}\n"),
+		TERRAIN_BAKE.fingerprint_for_source("{\"seed\": 2}\r\n"),
+		"negative control: a real terrain seed change still invalidates its bake")
+
+
 ## The regression this file exists to guard: a config edit with no re-bake
 ## must be loud, not silent. See this task's own completion report for
 ## whether `data/terrain/playground` currently passes this -- it may not,

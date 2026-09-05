@@ -60,33 +60,58 @@ commit. It must not be treated as a completed baseline.
 - No pickup wiring, candy mechanics, progression feed, signpost, bridge, or
   Meshy work was started in this checkpoint.
 
-### Route-strip investigation (not landed)
+### Route-strip investigation (landed 2026-09-05, lane W01-ROUTE-STRIP-0904)
 
-Phase 0.1 was reproduced and prototyped. A real party Terrapup was summoned,
-the route frames showed trainer + companion, and a real CombatManager fight
-was entered. The blind visual judge found the two traversal frames readable
-and answered **yes** to the broad creature-adventure category, but rejected the
-fight frame because the Bramblebun silhouette was too small and the trainer
-was absent. A stricter three-subject capture then exposed two more details:
+Phase 0.1 was reproduced and prototyped by Codex. A real party Terrapup was
+summoned, the route frames showed trainer + companion, and a real
+CombatManager fight was entered. The blind visual judge found the two
+traversal frames readable and answered **yes** to the broad creature-adventure
+category, but rejected the fight frame because the Bramblebun silhouette was
+too small and the trainer was absent. A stricter three-subject capture then
+exposed two more details:
 
 1. camera distance must be solved against all three projected bounds, not only
    the two creatures;
 2. the scripted flee must wait beyond combat's 0.25 s input guard, and cleanup
    must run even when a capture assertion fails.
 
-The prototype was reverted because its final bounded GPU smoke was red. There
-is no half-finished route-strip implementation in this checkpoint.
+That prototype was reverted. Lane W01-ROUTE-STRIP-0904 then implemented it
+from those findings on branch `ralph/W01-ROUTE-STRIP-0904`:
+
+- `tools/capture_check.gd`: `readable_problems()` (pure projection, so the
+  headless unit suite can see it fail) refuses an empty subject list, a
+  subject behind the camera, under 12 % of frame height, more than a quarter
+  cropped, occluded by geometry, overlapped on screen by another subject by
+  more than half, or (opt-in) filling more than a cap of the frame;
+  `fit_distance()` solves the smallest camera distance at which every subject
+  fits the safe area, optionally stepping out until none exceeds the cap.
+- `tools/_capture_route_strip.gd`: summons the party's active creature through
+  the production path, stands the pair side by side on every road stand
+  (canvas layers hidden), enters one real fight per band through the interact
+  press (director fallbacks recorded in the manifest), solves the fight camera
+  from a 3.2 m eye over seven bearings (front quarters first), refuses and
+  lists any frame the check faults, flees only after the 0.25 s guard, and
+  asserts the world is back in the `world` input context via
+  `gate_f_probe.input_context()` after a process frame has run.
+- Three in-container findings, all in the tool: WorldWeather is thawed by the
+  world's boot coroutine (re-pinned before every shutter); a `--max` that
+  counted saved frames walked the whole band when every frame was refused
+  (now counts attempted stands); the context read `locked` on the physics
+  tick a fight ended (read after a process frame).
+
+Evidence, sheet and the code-blind verdict:
+`ralph/reports/W01-ROUTE-STRIP-0904/REPORT.md`.
 
 ### Exact resume point
 
-1. Implement `docs/FINISH_THE_MEADOWS.md` Phase 0.1 in
-   `tools/_capture_route_strip.gd`: real party/summon path, trainer + companion
-   in every road frame, one real fight frame containing trainer + both creature
-   silhouettes, projection-based rejection, and unconditional fight cleanup.
-   Wait beyond CombatManager's 0.25 s input guard before scripted flee.
-2. Run a Windows GPU smoke with `--bands=1 --max=2 --fast`; inspect all three
-   PNGs and run the code-blind visual judge. Do not accept a frame merely
-   because a projected AABB is technically on screen.
+1. **Run the GPU route strip on the owner's Windows machine** with the landed
+   tool (`--bands=1 --max=3 --fast` first, then the full strip via the kickoff)
+   and put the sheet to the code-blind judge. The in-container frames are
+   llvmpipe: trust composition, silhouette and scale, not lighting.
+2. If the judge still faults fight readability, the levers are
+   `FIGHT_EYE_H`, `FIGHT_MAX_HEIGHT_FRAC` and the bearing order in
+   `_capture_route_strip.gd`, and `READABLE_MIN_HEIGHT_FRAC` in
+   `capture_check.gd` — never the check's refusal.
 3. Continue Phase 0.2 (`input_context`) and Phase 0.3 (S08-22 freeze).
 4. Build prompt 73's progression feed before candy, record the bond-ladder
    decision, then wire prompt 75's four props through

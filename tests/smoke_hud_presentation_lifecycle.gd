@@ -7,6 +7,8 @@ const COMBAT_HUD:=preload("res://scenes/combat/combat_hud.tscn")
 const SPECIES:=preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION:=preload("res://scripts/creatures/progression.gd")
 const GLYPHS:=preload("res://scripts/ui/input_glyph.gd")
+const FEED:=preload("res://scripts/creatures/progression_feed.gd")
+const INPUT_OWNER:=preload("res://scripts/ui/input_owner.gd")
 class Manager extends Node:
 	var _enemy_owned := true
 class Director extends Node:
@@ -63,6 +65,7 @@ func _run()->void:
 	combat.set_process(false)
 	feed=get_first_node_in_group("progression_feedback_presenter")
 	feed.set_process(false)
+	_check(feed == hud and get_nodes_in_group("progression_feedback_presenter").size() == 1,"Production HUD owns one progression presenter")
 	# Explicit overlapping historical-state fixture; no fake production verdict.
 	hud._region_banner.text="Summit / Final Stronghold"
 	hud._region_banner.show()
@@ -112,20 +115,21 @@ func _run()->void:
 	member.gain_xp(12,PROGRESSION.config())
 	game.push_world_message("Captain Veyra's reward: 150 Coin, 1 Rare Candy")
 	hud._update_world_message()
-	feed.step(0.1,game.drain_progression_events(),false)
+	feed._update_moment_banner()
 	hud._apply_presentation_priority()
 	await _frames(10)
 	_check(feed.moment_visible(),"Production receipt reaches shared feed")
-	_check(feed._moment_label.text.contains("150 Coin"),"Receipt preserves actual payout wording")
-	_check(feed._moment_label.text.contains("Captain Veyra defeated"),"Receipt explicitly closes captain phase")
-	_check(feed._progress_label.text.contains("Next: disable the three exposed relays"),"Reward distinguishes continuing relay objective")
+	_check(feed.moment_banner_text().contains("150 Coin"),"Receipt preserves actual payout wording")
+	_check(feed.moment_banner_text().contains("Captain Veyra defeated"),"Receipt explicitly closes captain phase")
+	_check(feed.moment_banner_text().contains("Next: disable the three exposed relays"),"Reward distinguishes continuing relay objective")
 	_check(is_equal_approx(hud._party_strip.modulate.a,1.0),"Reward retains full party text contrast")
-	_check(feed._progress_label.text.contains("+12 XP"),"Shared receipt attributes XP")
+	_check(feed.moment_banner_text().contains("+12 XP"),"Shared receipt attributes XP")
 	_check(not hud._objective_hint_card.visible,"Instruction yields while reward moment occupies top lane")
 	_check(not hud._hotbar_panel.visible,"Reward does not reveal hotbar behind relay")
 	_check(not combat._party_strip.visible,"Shared XP tick cannot resurrect the inactive combat party rail")
 	await _capture("after-relay-reward")
-	feed.step(4.0,[],false)
+	feed._moment_until = 0.0
+	feed._update_moment_banner()
 	hud._apply_presentation_priority()
 	_check(hud._objective_hint_card.visible,"Mechanic instruction returns after reward")
 	await _capture("after-relay-instruction")
@@ -133,7 +137,51 @@ func _run()->void:
 	combat.set_world_presentation_mode("exploration")
 	_check(hud._hotbar_panel.visible,"Exploration restores hotbar")
 	_check(combat._outcome.text.is_empty(),"Exploration does not revive stale result")
+	await _progression_reset_and_modal_lifecycle(member)
 	print("HUD LIFECYCLE %s: %d checks"%["PASS" if failures.is_empty() else "FAIL",checks])
 	world.queue_free()
 	await _frames(3)
 	quit(0 if failures.is_empty() else 1)
+
+
+func _progression_reset_and_modal_lifecycle(member: RefCounted) -> void:
+	FEED.clear()
+	member.gain_xp(member.xp_to_next(PROGRESSION.config()), PROGRESSION.config())
+	hud._update_moment_banner()
+	_check(hud.moment_banner_visible(), "Fresh generation displays a new level moment")
+	var previous_text: String = hud.moment_banner_text()
+	var modal := Control.new()
+	modal.name = "FlyDestinationPickerInputOwner"
+	root.add_child(modal)
+	modal.add_to_group(INPUT_OWNER.GROUP)
+	# A nearly expired real banner must survive longer than its remaining hold.
+	hud._moment_until = Time.get_ticks_msec()/1000.0 + 0.05
+	hud._update_moment_banner()
+	_check(not hud.moment_banner_visible(), "Modal ownership hides an already visible moment")
+	var remaining: float = hud._moment_until - hud._moment_pause_started
+	await create_timer(0.1).timeout
+	modal.hide()
+	hud._update_moment_banner()
+	_check(hud.moment_banner_visible() and hud.moment_banner_text() == previous_text, "Closing modal restores the same earned moment")
+	_check(hud._moment_until - Time.get_ticks_msec()/1000.0 >= remaining - 0.02, "Modal visit preserves the moment's reading time")
+	modal.queue_free()
+	paused = true
+	_check(not hud.moment_banner_visible(), "Tree-pausing menus capture the pause before HUD processing stops")
+	paused = false
+	hud._update_moment_banner()
+	_check(hud.moment_banner_visible(), "Unpausing resumes the earned moment")
+	# A reset followed by an identical number of events can reuse the exact seq.
+	# Epochs, not seq comparisons, must discard both the visible and queued save.
+	var old_seq: int = FEED.latest_seq()
+	FEED.clear()
+	for i in old_seq:
+		FEED.push("reward_summary", null, {"name":"Team", "receipt":"New save's reward: 1 Coin"})
+	_check(FEED.latest_seq() == old_seq, "Reset fixture reuses the old sequence")
+	hud._update_moment_banner()
+	_check(hud.moment_banner_text().contains("New save") and not hud.moment_banner_text().contains("reached Lv"), "Same-sequence save reset discards the old banner")
+	var strip: Control = combat._party_strip
+	strip.hide_now()
+	strip.progression_feedback_enabled = false
+	member.gain_xp(1, PROGRESSION.config())
+	strip._poll_feed()
+	_check(not strip.visible, "Inactive combat strip cannot resurrect itself on a new feed generation")

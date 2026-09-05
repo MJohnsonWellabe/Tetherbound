@@ -24,13 +24,19 @@ const CONFIG_PATH := "res://data/config/terrain_playground.json"
 
 ## Hash of the one file this bake depends on. Whole raw text, not a parsed
 ## subset -- matching `scatter_bake.gd::config_fingerprint()`'s own choice,
-## any byte change (including a comment) is a real edit to the file the bake
-## reads and has to be able to invalidate a bake, not just a schema change.
+## any text change (including a comment) invalidates the bake, except Git's
+## LF/CRLF checkout conversion, which does not alter the authored terrain.
 static func config_fingerprint() -> int:
 	var file := FileAccess.open(CONFIG_PATH, FileAccess.READ)
 	if file == null:
 		return 0
-	var mixed := file.get_as_text().hash() + int(CONFIG_PATH.hash())
+	return fingerprint_for_source(file.get_as_text())
+
+
+## The canonical source hash, also usable without rewriting a live config.
+static func fingerprint_for_source(source: String) -> int:
+	# Keep the committed Linux fingerprint valid on Windows without rebaking.
+	var mixed := source.replace("\r\n", "\n").hash() + int(CONFIG_PATH.hash())
 	# Masked to 53 bits for the same reason `scatter_bake.gd` masks its own
 	# fingerprint: this number is written into manifest.json and read back
 	# through `JSON.parse_string`, which has no integer type -- every number

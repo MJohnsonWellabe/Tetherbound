@@ -137,9 +137,8 @@ func _sync_people() -> void:
 			add_child(root)
 			var npc_spec := spec.duplicate(true)
 			npc_spec["position"] = [target.x, target.y, target.z]
-			npc_spec["portrait"] = ""
 			if spec.has("return_flag"):
-				npc_spec["greeting_when"] = [{"if_flag":spec.return_flag,"conversation":"cloudreach_shelter_pair_home"}]
+				npc_spec["greeting_when"] = [{"if_flag":spec.return_flag,"conversation":spec.get("return_greeting", "cloudreach_shelter_pair_home")}]
 			root.call("build_specs", player, [npc_spec])
 			var body := root.get_node(NodePath(str(spec.name))) as Node3D
 			people[id] = {"root":root,"body":body,"spec":spec,"home":target,"returned":_state.people[id].returned,"to_end":true,"pause":0.0}

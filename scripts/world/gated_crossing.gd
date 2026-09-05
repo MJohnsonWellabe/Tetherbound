@@ -159,6 +159,7 @@ func build(world: Node3D) -> void:
 	span.name = "Span"
 	add_child(span)
 	_add_prefab_colliders(prefabs, span, str(bridge.get("prefab", "south_bridge")))
+	_build_rail(prefabs, span, str(bridge.get("prefab", "south_bridge")))
 
 	_build_gate(prefabs, bridge)
 	_hang_failsafe(world, carve, centre, across, reach)
@@ -453,3 +454,192 @@ func _vec2(raw: Variant) -> Vector2:
 	if not raw is Array or (raw as Array).size() < 2:
 		return Vector2.INF
 	return Vector2(float((raw as Array)[0]), float((raw as Array)[1]))
+
+
+## W22-BRIDGE-SIGNPOST-0904, prompt 74 §7 / board 18's "Bridge Plank & Rail".
+## The recipe used to rail the deck with the kit's picket fence panels --
+## `Prop_WoodenFence_Single`, the same panel every field boundary in the game
+## stands on -- and rendered in isolation (`tools/_capture_bridge_deck_
+## isolated.gd`) that is exactly what it read as: a farm fence on a bridge.
+## The board draws a ROPE rail: squared timber posts on stone-block footings,
+## a hemp rope strung between them with a little sag, and the rope wrapped
+## round each post where it is tied off. None of that exists in any vendored
+## pack (checked: the medieval kit has fences, the fantasy kit a rope COIL
+## prop, nothing strung), so it is primitives, authored by the recipe's own
+## `rail` block (local metres, same frame as its `modules` and `colliders`)
+## and built here so a second crossing that wants the same rail gets it from
+## data rather than a copy of this function.
+##
+## The recipe's rail COLLIDERS are untouched -- they still seal the deck's
+## sides out to +-8.6 -- so this is dressing over the same mechanism, never a
+## change to what the gate gates.
+const RAIL_TIMBER := Color("#5c3f26")
+const RAIL_ROPE := Color("#8e7a52")
+const RAIL_STONE := Color("#8f897c")
+const ROPE_SEGMENTS := 6
+const DECK_SURFACE := 0.12
+
+
+func _build_rail(prefabs: RefCounted, span: Node3D, prefab_name: String) -> void:
+	var recipe: Dictionary = prefabs.call("recipe", prefab_name)
+	var rail: Dictionary = recipe.get("rail", {})
+	if rail.is_empty():
+		return
+	var from := float(rail.get("from", -8.0))
+	var to := float(rail.get("to", 8.0))
+	var step := maxf(0.5, float(rail.get("post_every", 2.0)))
+	var half_z := float(rail.get("z", 0.95))
+	var top := float(rail.get("height", 0.95))
+	var lower := float(rail.get("lower_height", -1.0))
+	var sag := float(rail.get("sag", 0.09))
+	var post_size := float(rail.get("post_size", 0.16))
+	var footing_size := float(rail.get("footing_size", 0.32))
+	var footing_h := float(rail.get("footing_height", 0.16))
+	var rope_r := float(rail.get("rope_radius", 0.026))
+	var lower_r := float(rail.get("lower_rope_radius", 0.02))
+
+	var timber := StandardMaterial3D.new()
+	timber.albedo_color = RAIL_TIMBER
+	timber.roughness = 0.9
+	var rope := StandardMaterial3D.new()
+	rope.albedo_color = RAIL_ROPE
+	rope.roughness = 1.0
+	var stone := StandardMaterial3D.new()
+	stone.albedo_color = RAIL_STONE
+	stone.roughness = 0.95
+
+	var holder := Node3D.new()
+	holder.name = "Rail"
+	span.add_child(holder)
+
+	var xs: Array[float] = []
+	var x := from
+	while x <= to + 0.001:
+		xs.append(x)
+		x += step
+
+	var post_top := DECK_SURFACE + top + 0.12
+	var heights: Array[float] = [DECK_SURFACE + top]
+	var radii: Array[float] = [rope_r]
+	if lower > 0.0:
+		heights.append(DECK_SURFACE + lower)
+		radii.append(lower_r)
+
+	for side: float in [-1.0, 1.0]:
+		var z := side * half_z
+		var index := 0
+		for px in xs:
+			# Footing: a stone block the post is bedded into, a hair of yaw
+			# jitter per post (deterministic) so the row is laid, not tiled.
+			var footing := MeshInstance3D.new()
+			footing.name = "Footing_%s%d" % ["A" if side < 0.0 else "B", index]
+			var footing_box := BoxMesh.new()
+			footing_box.size = Vector3(footing_size, footing_h, footing_size)
+			footing.mesh = footing_box
+			footing.material_override = stone
+			footing.position = Vector3(px, footing_h * 0.5, z)
+			footing.rotation.y = deg_to_rad(float((index * 7 + int(side * 3.0)) % 11 - 5))
+			holder.add_child(footing)
+
+			var post := MeshInstance3D.new()
+			post.name = "Post_%s%d" % ["A" if side < 0.0 else "B", index]
+			var post_box := BoxMesh.new()
+			post_box.size = Vector3(post_size, post_top - footing_h, post_size)
+			post.mesh = post_box
+			post.material_override = timber
+			post.position = Vector3(px, footing_h + (post_top - footing_h) * 0.5, z)
+			holder.add_child(post)
+
+			var cap := MeshInstance3D.new()
+			cap.name = "Cap"
+			var cap_box := BoxMesh.new()
+			cap_box.size = Vector3(post_size * 1.3, 0.05, post_size * 1.3)
+			cap.mesh = cap_box
+			cap.material_override = timber
+			cap.position = Vector3(px, post_top + 0.02, z)
+			holder.add_child(cap)
+
+			# The tie-off: rope wound twice round the post at each rope
+			# height, with the knot's lump on the outboard face.
+			for h in heights.size():
+				var wrap_r := radii[h]
+				for coil in 2:
+					var wrap := MeshInstance3D.new()
+					wrap.name = "Wrap"
+					var torus := TorusMesh.new()
+					torus.inner_radius = post_size * 0.72
+					torus.outer_radius = post_size * 0.72 + wrap_r * 2.2
+					torus.rings = 20
+					torus.ring_segments = 8
+					wrap.mesh = torus
+					wrap.material_override = rope
+					wrap.position = Vector3(px, heights[h] - wrap_r + coil * wrap_r * 2.1, z)
+					holder.add_child(wrap)
+				var knot := MeshInstance3D.new()
+				knot.name = "Knot"
+				var lump := SphereMesh.new()
+				lump.radius = wrap_r * 1.9
+				lump.height = wrap_r * 3.8
+				lump.radial_segments = 10
+				lump.rings = 6
+				knot.mesh = lump
+				knot.material_override = rope
+				knot.position = Vector3(px, heights[h] + wrap_r * 0.4, z + side * (post_size * 0.5 + wrap_r * 1.2))
+				holder.add_child(knot)
+			index += 1
+
+		# Ropes, span by span, sagging to `sag` at mid-span.
+		for i in range(xs.size() - 1):
+			for h in heights.size():
+				_string_rope(holder, rope, Vector3(xs[i], heights[h], z), Vector3(xs[i + 1], heights[h], z), sag, radii[h])
+
+	if bool(rail.get("edge_beam", true)):
+		var length := (to - from) + 0.4
+		var centre := (to + from) * 0.5
+		for side: float in [-1.0, 1.0]:
+			var kerb := MeshInstance3D.new()
+			kerb.name = "EdgeBeam_%s" % ["A" if side < 0.0 else "B"]
+			var kerb_box := BoxMesh.new()
+			kerb_box.size = Vector3(length, 0.14, 0.12)
+			kerb.mesh = kerb_box
+			kerb.material_override = timber
+			kerb.position = Vector3(centre, 0.09, side * (half_z + 0.09))
+			holder.add_child(kerb)
+			# The bearers under the deck, seen from the approach across the
+			# gully: the span has something holding it up.
+			var bearer := MeshInstance3D.new()
+			bearer.name = "Bearer_%s" % ["A" if side < 0.0 else "B"]
+			var bearer_box := BoxMesh.new()
+			bearer_box.size = Vector3(length - 2.4, 0.22, 0.22)
+			bearer.mesh = bearer_box
+			bearer.material_override = timber
+			bearer.position = Vector3(centre, -0.11, side * (half_z - 0.25))
+			holder.add_child(bearer)
+
+
+## One rope between two tie-offs as a chain of short cylinders along a
+## parabola -- the cheapest thing that reads as hanging rather than as a
+## rigid bar. Each segment's local Y (a CylinderMesh's axis) is turned in the
+## x-y plane to lie along its own chord.
+func _string_rope(into: Node3D, material: Material, a: Vector3, b: Vector3, sag: float, radius: float) -> void:
+	var previous := a
+	for i in range(1, ROPE_SEGMENTS + 1):
+		var t := float(i) / float(ROPE_SEGMENTS)
+		var point := a.lerp(b, t)
+		point.y -= sag * 4.0 * t * (1.0 - t)
+		var chord := point - previous
+		var seg := MeshInstance3D.new()
+		seg.name = "Rope"
+		var cyl := CylinderMesh.new()
+		cyl.top_radius = radius
+		cyl.bottom_radius = radius
+		cyl.height = chord.length() + radius * 0.6
+		cyl.radial_segments = 7
+		cyl.rings = 1
+		seg.mesh = cyl
+		seg.material_override = material
+		seg.position = (previous + point) * 0.5
+		seg.rotation.z = atan2(-chord.x, chord.y)
+		into.add_child(seg)
+		previous = point
+

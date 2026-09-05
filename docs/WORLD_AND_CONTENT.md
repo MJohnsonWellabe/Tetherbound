@@ -36,9 +36,14 @@ stronghold, and the tournament in a single `_ready()` pass.
   `scripts/data/band_content.gd`. There is no scene-streaming/chunk loader;
   distance-based structure culling (`scripts/world/structure_visibility_range.gd`)
   is the closest thing to "streaming."
-- Only one region exists in `data/terrain/` and `data/scatter/`: the
-  Meadows/"playground." This matches the CLAUDE.md hard rule that no Biome 2
-  exists until the Meadows exit gate passes.
+- The authored Terrain3D/scatter data remains Meadows/"playground." The newer
+  owner-authorized Cloudreach chapter uses separate procedural stacked cliff
+  meshes in `scenes/world/cloudreach_cliffs.tscn`, with the same Meadows surface
+  textures and procedural grass/flower family, sampled against multiple heights.
+  `cloudreach_world.json` defines six connected vertical regions and their route
+  graph; `cloudreach_chapter.json` defines story/content. Saves tag realm-local
+  poses, buildings and death satchels so the two worlds do not share coordinates.
+  Cloudreach acceptance is tracked in `docs/biomes/cloudreach/` and remains open.
 
 ## 2. The five Z-bands
 
@@ -175,8 +180,9 @@ Vendors confirmed in `data/config/trade.json`: Mira (goods), Oskar
 | Dialogue lines | 339 | same files |
 | Objectives | 33 (27 main + 6 local) | `data/progression/objectives.json` |
 | Trainers (field) | 29 (9+4+5+5+6 per band) | `data/config/bands/*/trainers.json` |
-| Wild spawn-table entries | 283 (68+57+54+81+23 per band) | `data/config/bands/*/spawns.json` |
-| Harvest/gathering nodes | 131 (40+26+31+26+8 per band) | `data/config/bands/*/harvest.json` |
+| Wild spawn-table entries | 321 (69+71+66+91+24 per band; bands 2–3 raised by W17-DENSITY-B2-B3, bands 4–5 by W18-DENSITY-B4-B5, both 2026-09-04) | `data/config/bands/*/spawns.json` |
+| Harvest/gathering nodes | 198 (48+46+49+45+10 per band; same two lanes) | `data/config/bands/*/harvest.json` |
+| Authored world pickups (candy, potions, revives, mushrooms; one once-flag per placement) | 101 (0+22+24+40+15 per band; candy 41 Good / 23 Great / 9 Rare + 28 recovery) | `data/config/bands/*/pickups.json`, loaded by `scripts/world/band_pickups.gd` (W17/W18-DENSITY, 2026-09-04; band 1's batch is a separate lane) |
 | NPC ranks | 4 | `data/config/npc_ranks.json` `.ranks` |
 | Tournament rounds | 3 | `data/config/tournament.json` `.rounds` |
 | Landmarks/POIs | 12 | `data/config/map_landmarks.json` `.regions` |
@@ -188,14 +194,27 @@ Vendors confirmed in `data/config/trade.json`: Mira (goods), Oskar
 
 ## 7. Per-band content counts (from §6, broken out by band)
 
-| Band | Trainers | Wild spawn entries | Harvest nodes |
-|---|---|---|---|
-| band1_lower_meadows | 9 | 68 | 40 |
-| band2_stone_and_root | 4 | 57 | 26 |
-| band3_the_river_lock | 5 | 54 | 31 |
-| band4_upper_meadows_ironwood | 5 | 81 | 26 |
-| band5_stronghold_approach | 6 | 23 | 8 |
-| **Total** | **29** | **283** | **131** |
+| Band | Spine (m) | Trainers | Wild spawn entries (per km) | Harvest nodes (per km) | Pickups G/Gr/R + recovery (per km) |
+|---|---|---|---|---|---|
+| band1_lower_meadows | 2403 | 9 | 69 (28.7) | 48 (20.0) | — (another lane) |
+| band2_stone_and_root | 2653 | 4 | 71 (26.8) | 46 (17.3) | 9/5/2 + 6 = 22 (8.3) |
+| band3_the_river_lock | 2375 | 5 | 66 (27.8) | 49 (20.6) | 9/6/2 + 7 = 24 (10.1) |
+| band4_upper_meadows_ironwood | 3436 | 5 | 91 (26.5) | 45 (13.1) | 16/9/4 + 11 = 40 (11.6) |
+| band5_stronghold_approach | 651 | 6 | 24 (36.9) | 10 (15.4) | 7/3/1 + 4 = 15 (23.0) |
+| **Total** | **11518** | **29** | **321** | **198** | **41/23/9 + 28 = 101** |
+
+Per-km figures are against each band's own spine length from
+`terrain_playground.json` (`tools/_probe_band_density.gd`, the authored census the
+density lanes report with; D70's corridor probe counts what a walked route *meets*
+and is the Gate F figure). Bands 2–3 were raised by W17-DENSITY-B2-B3 (band 2 from
+21.5 clusters/km and 9.8 harvest/km, band 3 from 22.7 and 13.1) and bands 4–5 by
+W18-DENSITY-B4-B5 (band 4 from 23.6 and 7.6). The census attributes one band-2 seam
+cluster to band 3 by z, so it prints 67 there where the file holds 66. Runtime
+confirmation for bands 2–3 (`tools/_probe_gate_f_corridor.gd`, things met within 30 m
+of the spine): band 2 100 → 133 with the worst gap 165 → 141 m, band 3 117 → 127 with
+163 → 118 m, against band 1's 172 and 100 m. Band 5 is short on purpose (D70) and its
+road carries no added trainer, cache or cluster (P-5.3, D78): its three additions and
+twelve of its fifteen pickups sit off the road at places the band already names.
 
 ## 8. Scatter re-bake rule
 
@@ -231,10 +250,9 @@ resulting `.bin` files before the CI freshness job will pass.
 
 Per CLAUDE.md hard rules, binding over any lower-level convenience:
 
-- **Meadows-only.** No Biome 2 implementation until the Meadows passes its
-  exit gate. Any reconnection view to a future biome is distant/non-enterable.
-  Only one region's terrain/scatter data exists in the repo today — this is
-  itself evidence the rule is being followed, not just documented.
+- **Chapter scope.** The newer owner Cloudreach directive authorizes Biome 2
+  (Air). The Waterward reveal after Cloudreach remains distant and non-enterable;
+  no Water-biome implementation is authorized by that directive.
 - **No new creature meshes or Meshy generations for Meadows.** All 25
   species use installed creature meshes; differentiate with materials,
   textures, modest scale, animation, VFX, habitat, behavior, traits, and

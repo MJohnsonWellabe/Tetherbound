@@ -4,7 +4,7 @@
   "conversations": {
     "stronghold_outer_watch_challenge": {
       "speaker": "Watchman Corr",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/grunt_a.png",
       "lines": [
         "Far as you're walking, this is where I stop you asking nicely.",
         "Ground past here answers to us now. Turn back or prove you belong on it."
@@ -12,7 +12,7 @@
     },
     "stronghold_outer_watch_defeated": {
       "speaker": "Watchman Corr",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/grunt_a.png",
       "lines": [
         "Go on, then. Won't be the last of us you meet before the Hall.",
         "And it gets worse from here, not better."
@@ -20,7 +20,7 @@
     },
     "stronghold_checkpoint_challenge": {
       "speaker": "Warder Ness",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/officer_b.png",
       "lines": [
         "Corr let you through the gate, not past me. Rank means something out here.",
         "Three to your string against one grunt's two -- let's see if that math troubles you."
@@ -28,7 +28,7 @@
     },
     "stronghold_checkpoint_defeated": {
       "speaker": "Warder Ness",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/officer_b.png",
       "lines": [
         "Keeper Hald's past the works, and he won't talk this much before he fights you.",
         "Walk careful. The land gets worse the closer you get to the works, and so do we."

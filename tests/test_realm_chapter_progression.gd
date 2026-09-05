@@ -24,7 +24,17 @@ func _finish_act_two(flags: RefCounted, chapter: Dictionary) -> void:
 	for event: String in ["flight_trial_completed", "landmark:sky_shrine_heartstone_reached",
 		"dialogue:cloudreach_sora_storm_engine_truth", "sky_shrine_counterweight_released",
 		"counterweight_road_entered"]:
+		if event == "dialogue:cloudreach_sora_storm_engine_truth":
+			_complete_shrine_vane_fixture(flags)
 		assert_true(LOGIC.dispatch(flags, chapter, event)["changed"], event)
+
+
+func _complete_shrine_vane_fixture(flags: RefCounted) -> void:
+	# The physical shrine runtime owns these interactions. This isolated chapter
+	# reducer fixture models its completed output; physical smokes prove the inputs.
+	for flag: String in ["cloudreach_shrine_vane_west_aligned",
+		"cloudreach_shrine_vane_east_aligned", "cloudreach_shrine_vane_crown_aligned"]:
+		flags.set_flag(flag)
 
 
 func test_unknown_and_premature_events_cannot_skip_chapter_gates() -> void:
@@ -52,6 +62,9 @@ func test_act_two_requires_each_authored_event_and_survives_save_load() -> void:
 	loaded.load_data(flags.save_data())
 	assert_false(LOGIC.reconcile(loaded, chapter)["changed"])
 	assert_false(loaded.has("cloudreach_upper_route_unlocked"))
+	assert_false(LOGIC.dispatch(loaded, chapter, "dialogue:cloudreach_sora_storm_engine_truth")["changed"],
+		"Reaching the shrine does not bypass its three physical vanes")
+	_complete_shrine_vane_fixture(loaded)
 	for event: String in ["dialogue:cloudreach_sora_storm_engine_truth", "sky_shrine_counterweight_released", "counterweight_road_entered"]:
 		assert_true(LOGIC.dispatch(loaded, chapter, event)["changed"])
 	assert_true(loaded.has("cloudreach_act_ii_complete"))

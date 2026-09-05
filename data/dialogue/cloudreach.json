@@ -1,5 +1,5 @@
 {
-  "_portrait_source": "cloudreach_aila_clean.png is a 2026-09-04 OpenAI image-edit pass over assets/creatures/tetherbound/local_historian/reference/front.png, the existing owner-board reference for Aila's installed local_historian body. The edit removes the cropped source-sheet heading and prepares a clean portrait background; no new character design was requested.",
+  "_portrait_source": "cloudreach_aila_clean.png is a 2026-09-04 OpenAI image-edit pass over assets/creatures/tetherbound/local_historian/reference/front.png, the existing owner-board reference for Aila's installed local_historian body. The edit removes the cropped source-sheet heading and prepares a clean portrait background; no new character design was requested. Other speakers reuse W04 installed-body renders by matching their art.json model identity; the Meadows filename denotes the source render, not the Cloudreach speaker's name.",
   "conversations": {
     "cloudreach_aila_arrival": {
       "speaker": "Warden Aila",
@@ -28,167 +28,171 @@
       "lines": ["You brought the wind back to its roads. No warden should own those roads; our work is to keep them open for everyone.", "This is the Heart of Cloudreach, and the key kept for the Waterward realm. The Heart is a realm trophy. Its power is not yet available; your equipped Meadows power remains yours to use.", {"text": "Take them with our thanks. Look out from Waterward Overlook: that distant coast is the next chapter, when its gate opens. For now, Cloudreach and the road home are yours to explore.", "effect": "cloudreach:cloudreach_aila_final_reward_complete"}]
     },
     "cloudreach_iven_waycamp": {
-      "speaker": "Iven", "portrait": "",
+      "speaker": "Iven", "portrait": "res://assets/ui/portraits/wilhelm.png",
       "lines": ["Boots by the fire, please. The grit up here gets into everything, including my soup.", "Rest at the camp before the long climb. Check your supplies and make food while you have shelter. Hunger comes slowly; an empty stomach will make the road harder, but it won't kill you.", "I used to send medicine up with Neri every morning. Now a short delivery takes a day of detours. If you see a stranded courier, ask what they need."]
     },
     "cloudreach_iven_after_restoration": {
-      "speaker": "Iven", "portrait": "",
+      "speaker": "Iven", "portrait": "res://assets/ui/portraits/wilhelm.png",
       "lines": ["Neri's route is moving again. I packed tomorrow's medicine before supper, just to enjoy saying 'tomorrow'.", "The roads are safer, but the climb is still a climb. The fire and a place to rest will stay here."]
     },
     "cloudreach_orrin_bridge": {
-      "speaker": "Orrin", "portrait": "",
+      "speaker": "Orrin", "portrait": "res://assets/ui/portraits/wandering_trainer.png",
       "lines": ["Three Bells Bridge. One bell for a safe span, two for a traveler coming through, three when the whole road can answer. These days I mostly count the silence.", "The lower Storm Anchors feed uphill. Inspect both before you try to reopen the route; the picket controls the signal approach.", "When the approach is safe, ring the road signal yourself. Hearing a promise from me won't tell the travelers that the bridge is clear."]
     },
     "cloudreach_orrin_three_bells": {
-      "speaker": "Orrin", "portrait": "",
+      "speaker": "Orrin", "portrait": "res://assets/ui/portraits/wandering_trainer.png",
       "lines": ["The safe-route signal has reached the refuge. There's a longer song we can put back together, if you like a detour.", "Find the bell beside the first broken span, then ring the one above Windscar. The last hangs at the High Perches. You'll need Fly to reach it.", "Each bell marks a place people used to stop and look after one another. Let all three answer, and this can be a road again."]
     },
     "cloudreach_orrin_bells_complete": {
-      "speaker": "Orrin", "portrait": "",
+      "speaker": "Orrin", "portrait": "res://assets/ui/portraits/wandering_trainer.png",
       "lines": ["All three! I heard the High Perches answer clear down here. Haven't heard that since the anchors came.", "The travelers have their signals back. Take the side spans when you return; there's more to this place than the quickest road uphill."]
     },
     "cloudreach_orrin_route_open": {
-      "speaker": "Orrin", "portrait": "",
+      "speaker": "Orrin", "portrait": "res://assets/ui/portraits/wandering_trainer.png",
       "lines": ["Look at them crossing. I'm back to telling people not to lean on the ropes, which is a fine complaint to have.", "The wind's moving around the towers again. We'll keep the bells ringing and the bridges inspected. You did the part no bridgekeeper could reach."]
     },
     "cloudreach_neri_stranded": {
-      "speaker": "Neri", "portrait": "",
+      "speaker": "Neri", "portrait": "res://assets/ui/portraits/lark.png",
       "lines": ["I can see the road I need from here. I've been staring at it long enough to learn every loose stone.", "I left a marked courier pack at the west ropeway when the crossing failed. There's medicine in it for the Windscar ravine shelter.", "Recover the pack, then deliver its medicine at the shelter. Come tell me once it is safely there. I need a delivery, not another brave promise."]
     },
     "cloudreach_neri_pack_return": {
-      "speaker": "Neri", "portrait": "",
+      "speaker": "Neri", "portrait": "res://assets/ui/portraits/lark.png",
       "lines": ["That's the pack from the ropeway. The medicine belongs at the ravine shelter, farther up Windscar.", "Keep it sealed until you reach their delivery point. I'll wait for your report; the people up there have waited long enough."]
     },
     "cloudreach_neri_delivery_report": {
-      "speaker": "Neri", "portrait": "",
+      "speaker": "Neri", "portrait": "res://assets/ui/portraits/lark.png",
       "lines": ["The shelter received it? Every parcel? Good. Now we can get the stranded pair down to a warm fire.", {"text": "I'll meet them at Galefoot Waycamp. Thank you for finishing the delivery. A route isn't open until something people need can travel along it.", "effect": "cloudreach:side:packs_on_the_wrong_side:report_to_neri"}]
     },
     "cloudreach_neri_home": {
-      "speaker": "Neri", "portrait": "",
+      "speaker": "Neri", "portrait": "res://assets/ui/portraits/lark.png",
       "lines": ["Both travelers made it to Galefoot. The shelter has medicine and Iven has his courier back.", "I've shortened my next route and left room for a rest. You can keep a promise without running yourself into the ground."]
     },
     "cloudreach_maela_aerie": {
-      "speaker": "Keeper Maela", "portrait": "",
+      "speaker": "Keeper Maela", "portrait": "res://assets/ui/portraits/fenn.png",
       "lines": ["This perch used to carry travelers above the broken roads. The anchor gusts tore its rigging before I could close it.", "Bring gale fiber to the restoration point, clear the ravine threat, and repair the launch perch. Then come back to me.", "See the shrine above that bare wall? No stair, no climbing trail. The way there is through the air, once you're ready."]
     },
     "cloudreach_maela_flight_trial": {
-      "speaker": "Keeper Maela", "portrait": "",
+      "speaker": "Keeper Maela", "portrait": "res://assets/ui/portraits/fenn.png",
       "lines": ["The perch is sound. Before the High Roost, we'll use the aerie's marked wind gates to learn the route.", "If your active companion cannot carry you, I'll lend you my Galecrest for these Cloudreach flights. Your own team stays yours; a healthy carrier of your own can take over whenever you're ready.", "Read the streamers. Launch from the marked perch, steer forward through the gates, and aim for the landing ground. A rising current can lift you; open sky alone cannot.", {"text": "You're ready to attempt the trial. The launch marker will guide you. Take it at your own pace, and return here if you need another try.", "effect": "cloudreach:cloudreach_maela_flight_trial_ready"}]
     },
     "cloudreach_maela_trial_reminder": {
-      "speaker": "Keeper Maela", "portrait": "",
+      "speaker": "Keeper Maela", "portrait": "res://assets/ui/portraits/fenn.png",
       "lines": ["The trial starts at the aerie's marked launch. Pass the wind gates in order and land inside the finish area.", "Watch your stamina and choose a landing before you leave safe ground. If a run goes wrong, recover and try again; you won't lose the repaired aerie."]
     },
     "cloudreach_maela_fly_unlocked": {
-      "speaker": "Keeper Maela", "portrait": "",
+      "speaker": "Keeper Maela", "portrait": "res://assets/ui/portraits/fenn.png",
       "lines": ["A clean landing. You've earned the open flight routes. The High Roost is no longer just a shape against the sky.", "Follow the updrafts from this aerie to the Sky Shrine. Sora is studying its wind record. Land on the shrine ledge before approaching the vanes.", "Fly gives you choices, not endless height. Keep enough stamina for the approach and use the perches to rest."]
     },
     "cloudreach_maela_after_restoration": {
-      "speaker": "Keeper Maela", "portrait": "",
+      "speaker": "Keeper Maela", "portrait": "res://assets/ui/portraits/fenn.png",
       "lines": ["Feel how the lift holds steady? The wind routes are moving to their old rhythm. We can teach here again.", "The High Roost flight will always be a journey worth taking. Keep using the marked landing places; a free wind still deserves your attention."]
     },
     "cloudreach_sora_shrine": {
-      "speaker": "Sora", "portrait": "",
+      "speaker": "Sora", "portrait": "res://assets/ui/portraits/maren.png",
       "lines": ["You made the landing. I wondered how long I'd have the shrine to myself. The view is lovely; the conversation has been poor.", "The record is carried through three vanes: west, east, and the crown. Align each at its own base. Then I can read where the missing wind has gone.", "That windlass controls a separate counterweight road below. First let us understand the record; then we can open the way to Cliffhold."]
     },
     "cloudreach_sora_storm_engine_truth": {
-      "speaker": "Sora", "portrait": "",
+      "speaker": "Sora", "portrait": "res://assets/ui/portraits/maren.png",
       "lines": ["There. All three vanes agree. These lines aren't storm warnings. They're a record of wind moving between the settlements.", "Team Tether reversed the flow. The lower anchors pull it from the roads, the upper feeds compress it, and Veyra's summit engine takes the rest. Cloudreach isn't suffering a natural storm; it is being emptied.", {"text": "The upper feeds must go dark before anyone can reach that engine safely. Turn the windlass here to lower the counterweight road. It connects Windscar to Cliffhold; this shrine remains an air landing.", "effect": "cloudreach:cloudreach_sora_storm_engine_truth"}]
     },
     "cloudreach_sora_aeries": {
-      "speaker": "Sora", "portrait": "",
+      "speaker": "Sora", "portrait": "res://assets/ui/portraits/maren.png",
       "lines": ["Now that you can fly, help me mark three places where the old routes still breathe: the High Perches, the updraft above the Old Wind Observatory, and the hidden roost below Waterward Overlook.", "Survey them from their marked air approaches and land where the stone gives shelter. Looking from the ground won't tell us whether a route is usable.", "The perches are more than viewpoints. Knowing where you can rest turns one risky flight into a journey you can plan."]
     },
     "cloudreach_sora_aeries_complete": {
-      "speaker": "Sora", "portrait": "",
+      "speaker": "Sora", "portrait": "res://assets/ui/portraits/maren.png",
       "lines": ["Three surveys, three safe places on the map. Someone who has never flown this route can now plan where to stop.", "I'll keep the markers visible. You have helped us read the sky as a road again."]
     },
     "cloudreach_kelm_cliffhold": {
-      "speaker": "Kelm", "portrait": "",
+      "speaker": "Kelm", "portrait": "res://assets/ui/portraits/corin.png",
       "lines": ["Cliffhold. We used to welcome visitors with a market, not an inventory of what we're running out of.", "There's shelter in the commons. Rest and check your supplies before the upper anchors. The summit isn't a good place to discover you've used your last recovery item.", "Our materials are tough because everything growing here has spent its life holding on. I'll tell you what is worth gathering."]
     },
     "cloudreach_kelm_resource_tier": {
-      "speaker": "Kelm", "portrait": "",
+      "speaker": "Kelm", "portrait": "res://assets/ui/portraits/corin.png",
       "lines": ["Gale fiber makes rope fittings; windworn heartwood holds a repair under strain. Bring a knife for the fiber and an axe for the wood.", "Cliffglass ore takes a pickaxe. Save it for the useful upgrades in your crafting list. Sunleaf and cloudberries are easier to gather and help with recovery and food.", "Take what your next trip needs. A camp repair or a few supplies can change a climb; you don't need to turn the whole plateau into a workshop."]
     },
     "cloudreach_kelm_after_restoration": {
-      "speaker": "Kelm", "portrait": "",
+      "speaker": "Kelm", "portrait": "res://assets/ui/portraits/corin.png",
       "lines": ["A cart arrived from Galefoot this morning. Ordinary rope, ordinary flour. I could have cheered every sack.", "Cliffhold is trading with its neighbors again. Keep your tools ready; repairing an open road is happier work, but it's still work."]
     },
     "cloudreach_tavi_circuit": {
-      "speaker": "Tavi", "portrait": "",
+      "speaker": "Tavi", "portrait": "res://assets/ui/portraits/bryn.png",
       "lines": ["I keep the Cliff Circuit board. Two trainers in the lower cliffs, the Windscar pair, then my upper ring here at Cliffhold.", "Take the lower pair first. Each part of the circuit checks something the next stretch asks of you. Rest between attempts and come back when the earlier marks are recorded.", "A mark means you've completed the challenge there. I can't hand one out just because you found the board."]
     },
     "cloudreach_tavi_challenge": {
-      "speaker": "Tavi", "portrait": "",
+      "speaker": "Tavi", "portrait": "res://assets/ui/portraits/bryn.png",
       "lines": ["The lower and Windscar marks are on your record. You're ready for the upper ring.", "Prepare at the commons, then use the challenge marker when you're ready. I'll be here. No one learns much from rushing in exhausted."]
     },
     "cloudreach_tavi_defeated": {
-      "speaker": "Tavi", "portrait": "",
+      "speaker": "Tavi", "portrait": "res://assets/ui/portraits/bryn.png",
       "lines": ["Your five-place team mark belongs at the top of the board. The whole Cliff Circuit, from the lower road to this ring.", "One final Circuit Mastery rematch is ready at my challenge marker. My same team has trained three levels further. Win it for one more circuit reward; the completed mark stays yours afterward."]
     },
     "cloudreach_tavi_rematch_complete": {
-      "speaker":"Tavi", "portrait":"",
+      "speaker":"Tavi", "portrait":"res://assets/ui/portraits/bryn.png",
       "lines":["The mastery mark is on your board. You've beaten both of my circuit challenges and earned both rewards.","Take a look at your team. The whole road brought you here."]
     },
     "cloudreach_bridge_courier": {
-      "speaker":"Bridge Courier", "portrait":"",
+      "speaker":"Bridge Courier", "portrait":"res://assets/ui/portraits/lark.png",
       "lines":["Three bells answering one another. That's a route I can put a delivery on again."]
     },
     "cloudreach_bridge_traveler": {
-      "speaker":"Bridge Traveler", "portrait":"",
+      "speaker":"Bridge Traveler", "portrait":"res://assets/ui/portraits/wandering_trainer.png",
       "lines":["Orrin's watching the span and the upper bell is answering. We're crossing together this time."]
     },
     "cloudreach_shelter_traveler": {
-      "speaker":"Shelter Traveler", "portrait":"",
+      "speaker":"Shelter Traveler", "portrait":"res://assets/ui/portraits/tobin.png",
       "lines":["Neri knows where to find us. We can make the road home once the shelter has its medicine."]
     },
     "cloudreach_shelter_courier": {
-      "speaker":"Shelter Courier", "portrait":"",
+      "speaker":"Shelter Courier", "portrait":"res://assets/ui/portraits/lark.png",
       "lines":["I stayed with the other traveler when the crossing failed. Neither of us should make that return alone."]
     },
     "cloudreach_shelter_pair_home": {
-      "speaker":"Returned Traveler", "portrait":"",
+      "speaker":"Returned Traveler", "portrait":"res://assets/ui/portraits/tobin.png",
+      "lines":["Both of us made it down. Your delivery meant we could leave the shelter safely. Iven kept a place by the fire."]
+    },
+    "cloudreach_shelter_courier_home": {
+      "speaker":"Shelter Courier", "portrait":"res://assets/ui/portraits/lark.png",
       "lines":["Both of us made it down. Your delivery meant we could leave the shelter safely. Iven kept a place by the fire."]
     },
     "cloudreach_upper_traveler": {
-      "speaker":"Cliffhold Traveler", "portrait":"",
+      "speaker":"Cliffhold Traveler", "portrait":"res://assets/ui/portraits/garrick.png",
       "lines":["We can travel between Galefoot and Cliffhold again. The road has neighbors at both ends."]
     },
     "cloudreach_upper_courier": {
-      "speaker":"Upper Road Courier", "portrait":"",
+      "speaker":"Upper Road Courier", "portrait":"res://assets/ui/portraits/lark.png",
       "lines":["The anchor is letting the wind through. I'm carrying the first regular deliveries back to the observatory."]
     },
     "cloudreach_rusk_observatory": {
-      "speaker": "Rusk", "portrait": "",
+      "speaker": "Rusk", "portrait": "res://assets/ui/portraits/ren.png",
       "lines": ["I worked on those feed housings. They told us the anchors would make travel safer. Then the couriers stopped arriving and we were ordered to increase the pull.", "Sora's record tells you what the network does. I can tell you where it is vulnerable: the west anchor, east anchor, and summit feed must all stop before the engine approach clears.", "I left my uniform behind. The things I helped build are still here. Showing you their weak points is a start."]
     },
     "cloudreach_rusk_upper_anchor_warning": {
-      "speaker": "Rusk", "portrait": "",
+      "speaker": "Rusk", "portrait": "res://assets/ui/portraits/ren.png",
       "lines": ["Each upper feed has its own defense. Use the stone cover, deal with the approach, then disable the anchor at its control point.", "Don't walk straight into a live feed lane. Watch its pulse and move when the lane clears. There's shelter at the summit bivouac once all three feeds are down.", "Voss guards the approach. Veyra is farther up, at the Eye. Stopping her won't stop the machine by itself; the exposed relays will still need to be broken."]
     },
     "cloudreach_rusk_after_restoration": {
-      "speaker": "Rusk", "portrait": "",
+      "speaker": "Rusk", "portrait": "res://assets/ui/portraits/ren.png",
       "lines": ["The drone is gone. I didn't realize how much of it I'd learned to ignore.", "I'll stay to help dismantle the housings. Leaving Team Tether was a decision; this is the work that should follow it."]
     },
     "cloudreach_voss_challenge": {
-      "speaker": "Officer Voss", "portrait": "",
+      "speaker": "Officer Voss", "portrait": "res://assets/ui/portraits/officer_b.png",
       "lines": ["You interrupted three feeds to reach one road. Captain Veyra will call that an expensive mistake.", "The summit has no room for careless movement. If you want the approach, face its challenge. You won't talk your way through my post."]
     },
     "cloudreach_voss_defeated": {
-      "speaker": "Officer Voss", "portrait": "",
+      "speaker": "Officer Voss", "portrait": "res://assets/ui/portraits/officer_b.png",
       "lines": ["The post is yours. I won't order another stand here.", "Veyra is still running the extraction cycle. Those lee pockets around her deck are the only places the crosswind doesn't own. Remember that when you reach her."]
     },
     "cloudreach_veyra_prebattle": {
-      "speaker": "Captain Veyra", "portrait": "",
+      "speaker": "Captain Veyra", "portrait": "res://assets/ui/portraits/captain_b.png",
       "lines": ["Every settlement below us depends on a wind it cannot command. I built something that can command it.", "You call those roads stolen. I call them a resource no one had the discipline to gather. One more cycle and the network will hold.", "If you mean to stop it, come into the Eye. The lee pockets won't shelter you forever."]
     },
     "cloudreach_veyra_phase_change": {
-      "speaker": "Captain Veyra", "portrait": "",
+      "speaker": "Captain Veyra", "portrait": "res://assets/ui/portraits/captain_b.png",
       "lines": ["Crosswind lanes, tighten. No more wasted pressure.", "Move if you can. The engine is still drawing, and every open lane belongs to it."]
     },
     "cloudreach_veyra_defeated": {
-      "speaker": "Captain Veyra", "portrait": "",
+      "speaker": "Captain Veyra", "portrait": "res://assets/ui/portraits/captain_b.png",
       "lines": ["Enough. My command is finished.", "The engine won't obey a surrender. Its exposed relays are still holding the extraction cycle. Break all three before the wind folds back through the roads."]
     }
   }

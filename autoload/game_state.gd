@@ -28,12 +28,12 @@ const CREATURE_CONDITION := preload("res://scripts/creatures/creature_condition.
 ## OWNER-0901-BOND-MILESTONES: distance/landmark/rest-night crediting for the
 ## bond ladder's "travelling"/"visiting"/"resting" tasks.
 const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
+const PROGRESSION_FEED := preload("res://scripts/creatures/progression_feed.gd")
 
 const ITEM_DB := preload("res://autoload/item_db.gd")
 const INVENTORY := preload("res://autoload/inventory.gd")
 const PARTY := preload("res://autoload/party.gd")
 const MAP_STATE := preload("res://autoload/map_state.gd")
-const PROGRESSION_FEED := preload("res://scripts/creatures/progression_feed.gd")
 const CLOUDREACH_MAP_STATE := preload("res://scripts/world/cloudreach_map_state.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const REALM_HEART_STATE := preload("res://autoload/realm_heart_state.gd")
@@ -71,7 +71,6 @@ var player_equipment: RefCounted = null
 ## these. Configured from `data/config/map_landmarks.json` in `_ready()`, the
 ## same "load+parse a data file" pattern `_species()` below already uses.
 var map: RefCounted = null
-var progression_feed: RefCounted = PROGRESSION_FEED.new()
 ## The public map remains the active consumer interface. Inactive realm maps
 ## retain their own fog/landmarks; never reconfigure one grid for another realm.
 var _realm_map_instances: Dictionary = {}
@@ -473,7 +472,6 @@ func _ready() -> void:
 ## Start New Game means start a new run, not delete the player's other slots.
 ## Settings (`free_build`/`debug_teleport`) are preferences and likewise stay.
 func reset_for_new_game() -> void:
-	progression_feed = PROGRESSION_FEED.new()
 	if items == null:
 		items = ITEM_DB.new()
 	inventory = INVENTORY.new(items)
@@ -497,6 +495,7 @@ func reset_for_new_game() -> void:
 	day = 1
 	pending_build = ""
 	_pending_world_message = ""
+	PROGRESSION_FEED.clear()
 	pending_catch = null
 	placed_buildings = []
 	farm_plots = []
@@ -768,6 +767,35 @@ func take_pending_world_message() -> String:
 	return text
 
 
+# --- the progression feed (PROGRESSION-VISIBLE, prompt 73, D76) ---------------
+##
+## The same queue-plus-revision shape as the world message above, for every
+## progression change: XP, levels, bond credits, bond milestones. The storage
+## is `scripts/creatures/progression_feed.gd`'s static log, because the
+## producers are RefCounted creatures with no tree to reach this autoload
+## through -- these are the `Game`-shaped handles for anything that already
+## talks to `Game`. Presenters poll `progression_feed_revision()` and read
+## `peek_progression_events(seq)` past their own cursor; nothing in
+## production takes (drains) the log, so several readers share it.
+
+func push_progression_event(kind: String, creature: RefCounted, payload: Dictionary = {}) -> Dictionary:
+	if creature != null and (party == null or not (party.call("members") as Array).has(creature)):
+		return {}
+	return PROGRESSION_FEED.push(kind, creature, payload)
+
+
+func progression_feed_revision() -> int:
+	return PROGRESSION_FEED.revision()
+
+
+func peek_progression_events(after_seq: int) -> Array:
+	return PROGRESSION_FEED.peek_since(after_seq)
+
+
+func take_progression_events() -> Array:
+	return PROGRESSION_FEED.drain()
+
+
 # --- creature-bed recovery (Gate A) -----------------------------------------
 
 func _tick_creature_bed_recovery(delta: float) -> void:
@@ -1001,19 +1029,6 @@ func pending_entry_for(realm_id: String) -> String:
 	return pending_realm_entry if realm_id == current_realm else ""
 
 
-## Only owned creatures publish: wild/trainer construction and save hydration
-## must never look like earned progress. No additional creature ownership.
-func push_progression_event(creature: RefCounted, event: Dictionary) -> void:
-	if party != null and (party.call("members") as Array).has(creature):
-		progression_feed.call("push_event", event)
-		if str(event.get("kind", "")) == "level_up":
-			party.set("revision", int(party.get("revision")) + 1)
-
-
-func drain_progression_events() -> Array:
-	return progression_feed.call("drain")
-
-
 ## One scene-facing bind/sync seam. Call after realm selection and before
 ## configuring the minimap/atmosphere; pass Player.global_position to sync
 ## Cloudreach progression-gated navigation. This does not authorize travel,
@@ -1135,7 +1150,7 @@ func _sync_harvest_state() -> void:
 func load_game(slot: int) -> bool:
 	if not bool(save_system.call("load_slot", self, slot)):
 		return false
-	progression_feed = PROGRESSION_FEED.new()
+	PROGRESSION_FEED.clear()
 	for node in get_tree().get_nodes_in_group("build_placer"):
 		if node.has_method("restore_from_game"):
 			node.call("restore_from_game", self)

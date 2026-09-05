@@ -70,7 +70,9 @@ func _run() -> void:
 	player = world.get_node("Player")
 	for name in ["CloudreachRuntime","CloudreachChapter","BuildPlacer","PlayerDeath","CombatManager","EncounterDirector","CloudreachFinaleController","CloudreachAtmosphere","CombatHUD","SummitArenaPresentation"]:
 		check(world.find_children(name,"",true,false).size()==1,"exactly one "+name)
-	check(world.find_children("ProgressionFeedback","",true,false).size()==1,"exactly one shared progression feed")
+	check(get_nodes_in_group("progression_feedback_presenter").size()==1,"exactly one shared progression presenter")
+	check(get_first_node_in_group("progression_feedback_presenter")==world.get_node("PlaygroundHUD"),"production HUD owns the single progression banner")
+	check(world.find_children("MomentBanner","",true,false).size()==1,"exactly one moment banner")
 	check(runtime.get("navigation")==game.call("bind_realm_map","cloudreach",player.global_position),"canonical map identity")
 	check(world.call("map_terrain_texture")!=null,"production terrain atlas")
 	var director: Node = runtime.get("director")

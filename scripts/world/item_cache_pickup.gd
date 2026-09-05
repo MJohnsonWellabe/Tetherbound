@@ -64,10 +64,18 @@ func setup(item_id: String, label: String, model_path: String, model_scale: floa
 		_deactivate()
 
 
+## Keep main's public placement key and historic Meadows flag format.
+## Non-Meadows locations are realm-qualified so stacked worlds stay isolated.
+func _key() -> String:
+	if _placement_id.is_empty():
+		return _item_id
+	return _placement_id if _realm_id == "meadows" else _realm_id + ":" + _placement_id
+
+
 static func flag_id(item_id: String, placement_id: String = "", realm_id: String = "meadows") -> String:
-	# Unidentified legacy Meadows caches retain their old flags. New authored
-	# placements are independent even when they hold the same item.
 	if not placement_id.is_empty():
+		if realm_id == "meadows":
+			return FLAG_PREFIX + placement_id
 		return "%s%s:%s" % [FLAG_PREFIX, realm_id, placement_id]
 	return FLAG_PREFIX + item_id
 

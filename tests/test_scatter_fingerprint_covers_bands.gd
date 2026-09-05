@@ -35,6 +35,21 @@ func _band_veg_path(band: String) -> String:
 	return "res://data/config/bands/%s/vegetation.json" % band
 
 
+func test_lf_and_crlf_band_configs_share_the_same_fingerprint() -> void:
+	var path := _band_veg_path(BAND_CONTENT.BANDS[0])
+	var source := FileAccess.get_file_as_string(path).replace("\r\n", "\n")
+	assert_false(source.is_empty())
+	var mixed := 12345
+	var expected := mixed ^ (source.hash() + int(path.hash()) + 0x9e3779b9 + (mixed << 6) + (mixed >> 2))
+	assert_eq(BAKE.mix_config_source(mixed, source, path), expected,
+		"the existing Linux hash remains unchanged")
+	assert_eq(BAKE.mix_config_source(mixed, source.replace("\n", "\r\n"), path), expected,
+		"a Windows checkout must trust the same authored bake")
+	assert_ne(BAKE.mix_config_source(mixed, "{\"radius\": 1}\n", path),
+		BAKE.mix_config_source(mixed, "{\"radius\": 2}\r\n", path),
+		"negative control: an actual clearing edit still invalidates its bake")
+
+
 ## The load-bearing property. Perturb one band's vegetation.json on disk, take
 ## the fingerprint again, restore the file, and assert the number moved.
 ##

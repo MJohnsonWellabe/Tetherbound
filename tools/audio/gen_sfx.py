@@ -426,6 +426,58 @@ def combat_win(gen: np.random.Generator) -> np.ndarray:
     return synth.fade_edges(synth.normalise(out), 0.006, SR)
 
 
+def level_up(gen: np.random.Generator) -> np.ndarray:
+    """PROGRESSION-VISIBLE (prompt 73 §2.2): a creature reached a new level.
+
+    Louder and longer than `combat_win` on purpose -- the directive asks for a
+    "noticeable audiovisual event rather than a background number changing" --
+    but built from the same rising-major idea so it reads as the same family:
+    five notes climbing an octave and a half with a bright shimmer on the last,
+    then a short sustained chord under it. Plays on the UI bus, so it is heard
+    at a constant level wherever the creature is."""
+    n = int(1.35 * SR)
+    out = np.zeros(n)
+    root = 523.25  # C5
+    for i, ratio in enumerate([1.0, 1.25, 1.5, 2.0, 2.5]):
+        m = int(0.42 * SR)
+        f = root * ratio
+        note = synth.sine(f, SR, m) + 0.30 * synth.sine(f * 2.0, SR, m) + 0.12 * synth.sine(f * 3.0, SR, m)
+        note *= synth.percussive(m, 0.18, SR, attack_s=0.004, curve=1.0)
+        synth.place(out, note, int(i * 0.075 * SR), 0.40)
+    # The chord under the top note: root, fifth and octave held with a slow
+    # release, which is what makes it a moment rather than a jingle.
+    m = int(0.9 * SR)
+    chord = sum(synth.sine(root * r, SR, m) for r in (1.0, 1.5, 2.0)) / 3.0
+    chord *= synth.adsr(m, 0.02, 0.15, 0.55, 0.6, SR)
+    synth.place(out, chord, int(0.30 * SR), 0.32)
+    # Shimmer: a very quiet high partial that rings out over the tail.
+    shimmer = synth.sine(root * 5.0, SR, m) * synth.percussive(m, 0.45, SR, attack_s=0.01, curve=1.2)
+    synth.place(out, shimmer, int(0.30 * SR), 0.06)
+    return synth.fade_edges(synth.normalise(out), 0.006, SR)
+
+
+def bond_milestone(gen: np.random.Generator) -> np.ndarray:
+    """PROGRESSION-VISIBLE: a bond node was earned. Warmer and rounder than
+    `level_up` -- two low notes swelling into a soft bell -- because bond is
+    about the relationship, not power, and the two moments should be
+    tellable apart with eyes closed."""
+    n = int(1.5 * SR)
+    out = np.zeros(n)
+    low = 261.63  # C4
+    for i, ratio in enumerate([1.0, 1.5]):
+        m = int(0.7 * SR)
+        f = low * ratio
+        swell = synth.sine(f, SR, m) + 0.35 * synth.sine(f * 2.0, SR, m)
+        swell *= synth.adsr(m, 0.12, 0.1, 0.8, 0.35, SR)
+        synth.place(out, swell, int(i * 0.16 * SR), 0.36)
+    # The bell: an inharmonic pair with a long decay, struck as the swell peaks.
+    m = int(1.0 * SR)
+    bell = synth.sine(low * 4.0, SR, m) + 0.6 * synth.sine(low * 4.0 * 2.76, SR, m)
+    bell *= synth.percussive(m, 0.55, SR, attack_s=0.003, curve=1.1)
+    synth.place(out, bell, int(0.34 * SR), 0.22)
+    return synth.fade_edges(synth.normalise(out), 0.006, SR)
+
+
 def build_place_thud(gen: np.random.Generator) -> np.ndarray:
     """A built piece lands in the world.
 
@@ -486,6 +538,10 @@ SOUNDS = {
     "catch_fail": (catch_fail, 2029, 1, -5.0),
     "combat_start": (combat_start, 2030, 1, -4.0),
     "combat_win": (combat_win, 2031, 1, -5.0),
+
+    # PROGRESSION-VISIBLE moments (docs/prompts/73 §2.2, data/config/audio.json `progression`).
+    "level_up": (level_up, 2032, 1, -4.0),
+    "bond_milestone": (bond_milestone, 2033, 1, -5.0),
 }
 
 

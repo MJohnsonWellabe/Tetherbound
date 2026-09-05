@@ -3,11 +3,11 @@
   "_comment_tournament_1": "TOURNAMENT-1 / FIRST-HOUR-FUN-REBUILD. The village tournament's whole script, plus the South Bridge gatekeeper's. Halda is the marshal (data/config/village_npcs.json); her ordered `greeting_when` list uses existing progression flags, not a tournament state machine. Registration names the complete-team, camp, Creature Bed, rest/recovery and strength requirements and sets `opening:tournament_registered` -- and, per TOURNAMENT-FLOW-0903 below, so does every other branch that can be a player's first meeting with her, so a team that was ready before it ever met Halda is never sent through the registration speech at all. Each round is now TWO conversations, spoken by the OPPONENT rather than by Halda (the last voice the player hears should be the person about to send a creature out): the ring-entrance banter, which sets `tournament_<round>_at_ring` and starts nothing, and `tournament_<round>_begin`, the explicit 'begin the round' line that ends on `battle:<trainer_id>` -- owner playtest 2026-09-03 item 3's 'you enter then you choose to start the battle'.",
   "_comment_tournament_flow_0903": "TOURNAMENT-FLOW-0903, 2026-09-03. Two owner playtest findings, both about how the tournament FEELS to walk into rather than what it fights: (2) 'Starting the tournament was hard even after I had everything. I had to talk to the starter several times' -- village_npcs.json's Halda ladder put the registration briefing ahead of every readiness branch regardless of how ready the team already was, so a player who had already trained, fed, rested and camped a full team before ever meeting her still had to sit through the register speech and talk to her again before sign-up was even offered. Fixed by narrowing registration's own branch to the case it is actually for (`unless_flag` now also requires the team NOT be ready yet), so a team that is already ready meets whichever specific branch names it -- sign-up if everything holds, camp/condition/train otherwise -- in ONE visit. (3) 'you enter then you choose to start the battle then it announces you won and announces the next round' -- see the round comment above for the two-conversation split, and scripts/world/tournament.gd's `_announce_new_round_wins()`/`round_result_message()` for the win/next-round announcement, pushed through the same one-shot `Game.push_world_message()` toast every other world event already uses.",
   "_comment_saddle": "`tournament_halda_champion` is the NPC line the owner directive asks for: it says out loud that a Meadowhart can be ridden, and that the saddle needs rootstone from past the crossing. It does NOT carry a `flag:` effect -- the saddle pattern is granted by `tournament_final_oskar`'s own `reward.flags` the moment the final is won, so a player who never walks back to Halda still has it. The line explains the prize; it is not the prize. That split is deliberate: a reward that can only be collected by re-reading a conversation is a reward that gets lost.",
-  "_comment_portraits": "Every conversation here uses the trainer portrait plate, the only villager portrait on disk (assets/ui/portraits/ holds grandpa.png and trainer.png and nothing else). tests/test_dialogue_runner.gd::test_every_conversation_has_a_speaker_and_a_portrait_that_is_really_there requires a real file, and CLAUDE.md's prototyping rule allows the stand-in. The grunt in particular should get a faction plate when Team Tether has portrait art of its own.",
+  "_comment_portraits": "W04-PORTRAITS, 2026-09-04 (owner directive 8b): every conversation now names its speaker's own plate, rendered from the installed rig the world stands that speaker in by tools/_capture_portraits.gd (Halda: villager_ranger with her iron-grey hair; Mira/Tam: the farmer and smith presets; Oskar and the male-rig villagers: villager_male; the South Bridge grunt: grunt_a, the base data/config/bands/band1_lower_meadows/trainers.json gives him). tests/test_dialogue_portraits.gd holds the line: no speaker other than the player may resolve to trainer.png.",
   "conversations": {
     "tournament_halda": {
       "speaker": "Halda",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/halda.png",
       "lines": [
         "Halda. I keep the board and I keep the draw honest — two jobs, this village.",
         "Eight slots, four bouts, then two, then one."
@@ -15,7 +15,7 @@
     },
     "tournament_halda_closed": {
       "speaker": "Halda",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/halda.png",
       "lines": [
         "You'll want the tournament, then. Everyone does, first week.",
         "Rule's the rule: no name on that board without a proper team behind it. One creature's a favourite, not a team.",
@@ -24,7 +24,7 @@
     },
     "tournament_halda_register": {
       "speaker": "Halda",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/halda.png",
       "lines": [
         "You want your name on the board? Here's what I need to see first.",
         "Five creatures. Your whole team, trained till they can stand in the ring.",
@@ -37,7 +37,7 @@
     },
     "tournament_halda_train": {
       "speaker": "Halda",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/halda.png",
       "_comment_registration": "TOURNAMENT-FLOW-0903. This can be a player's FIRST-EVER conversation with Halda -- one who built the whole roster before ever walking up to her skips `tournament_halda_register` entirely (village_npcs.json's own branch order), so this line also writes the opening handoff. Owner playtest 2026-09-03 item 2: 'even after I had everything, I had to talk to the starter several times' -- the fix is that a ready-enough team is never told the register speech at all, and every branch that could be the first meeting still marks it met.",
       "lines": [
         "All five. Good. Now look at them.",
@@ -50,7 +50,7 @@
     },
     "tournament_halda_condition": {
       "speaker": "Halda",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/halda.png",
       "_comment": "RG19-spec/D68. The entry gate the owner named in his own words: 'They have to be well rested, well fed, and happy.' Shown when the team is big enough and levelled enough but not in shape. Deliberately written as a reason and a to-do list, not a refusal -- she names the three things and where to go and do them, and the team screen's own condition line says WHICH creature is short of WHICH. The thresholds are in data/config/creature_condition.json and are not repeated here or anywhere else.",
       "_comment_registration": "TOURNAMENT-FLOW-0903, same reasoning as tournament_halda_train's own comment: this can be a first meeting too, so it also writes the opening handoff.",
       "lines": [
@@ -64,7 +64,7 @@
     },
     "tournament_halda_camp": {
       "speaker": "Halda",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/halda.png",
       "_comment_registration": "TOURNAMENT-FLOW-0903, same reasoning as tournament_halda_train's own comment: this can be a first meeting too, so it also writes the opening handoff.",
       "lines": [
         "They look strong enough. Now show me they have somewhere safe to come back to.",
@@ -76,7 +76,7 @@
     },
     "tournament_halda_signup": {
       "speaker": "Halda",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/halda.png",
       "_comment_registration": "TOURNAMENT-FLOW-0903. A team that was already fully ready -- five trained creatures, rested, fed and camped -- before it ever met Halda gets sign-up as its ONE and only conversation with her, so this line also writes the opening handoff that `tournament_halda_register` used to own alone.",
       "lines": [
         "Now that's a team. Look at them stood there like they've done this before.",
@@ -88,7 +88,7 @@
     },
     "tournament_halda_champion": {
       "speaker": "Halda",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/halda.png",
       "lines": [
         "Champion of the Lower Meadows. That goes on the board properly now.",
         "Here — the pattern for a riding saddle. Oskar's, by rights; he said give it to whoever took the Meadowhart off him.",
@@ -97,7 +97,7 @@
     },
     "tournament_quarter": {
       "speaker": "Mira",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/mira.png",
       "lines": [
         "First bout, then. Don't look at me like that — the meadow doesn't care who's nice to it either.",
         {
@@ -108,7 +108,7 @@
     },
     "tournament_quarter_begin": {
       "speaker": "Mira",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/mira.png",
       "_comment": "TOURNAMENT-FLOW-0903 / owner playtest 2026-09-03 item 3: 'you enter then you choose to start the battle'. The ring-entrance banter above no longer starts the fight itself -- it only sets tournament_quarter_at_ring -- so a second, deliberate greeting is what actually opens it. Short on purpose: the owner wants ceremony, not delay.",
       "lines": [
         {
@@ -119,14 +119,14 @@
     },
     "tournament_quarter_beaten": {
       "speaker": "Mira",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/mira.png",
       "lines": [
         "Out in the first. Well. Somebody's got to be, and I'd rather it was to you."
       ]
     },
     "tournament_semi": {
       "speaker": "Tam",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/tam.png",
       "lines": [
         "Semi-final. Fen put up more than the board says — I've a limp to prove it.",
         {
@@ -137,7 +137,7 @@
     },
     "tournament_semi_begin": {
       "speaker": "Tam",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/tam.png",
       "lines": [
         {
           "text": "Ring's yours. Begin the round whenever you're ready.",
@@ -147,14 +147,14 @@
     },
     "tournament_semi_beaten": {
       "speaker": "Tam",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/tam.png",
       "lines": [
         "Switched on me twice and I never saw the second one coming. That's the lesson, that is."
       ]
     },
     "tournament_final": {
       "speaker": "Oskar",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/villager_male.png",
       "lines": [
         "Final. Bryn took me to the last creature in the semi and I'm still short of breath.",
         "You'll not have seen this one on the road. She's not a fighter by trade — she's a road, if you know how to sit on her.",
@@ -166,7 +166,7 @@
     },
     "tournament_final_begin": {
       "speaker": "Oskar",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/villager_male.png",
       "lines": [
         {
           "text": "Ring's yours. Begin the round whenever you're ready.",
@@ -176,7 +176,7 @@
     },
     "tournament_final_beaten": {
       "speaker": "Oskar",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/villager_male.png",
       "_comment_heal_party": "G3-OPENING-FIX-0904 (2.10), the owner instruction 'give revives after the tournament' (2026-09-03). The tournament's three rounds reliably leave three of five creatures on 0 HP, and this is the one line every player who wins the final sees -- unlike tournament_halda_champion, which needs a separate walk back to Halda and, by its own _comment_saddle above, is optional (the saddle pattern itself is already granted by tournament_final_oskar's reward.flags whether or not that walk happens). Putting the heal here means it lands on the exact state the tournament produces, for every winner, not only the ones who go looking for Halda afterward.",
       "lines": [
         {
@@ -187,7 +187,7 @@
     },
     "south_bridge_grunt_challenge": {
       "speaker": "Tether Grunt",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/grunt_a.png",
       "lines": [
         "Far side's closed. Company business. Go back up the road.",
         "Two of mine, nothing special. Shouldn't take long.",
@@ -199,7 +199,7 @@
     },
     "south_bridge_grunt_beaten": {
       "speaker": "Tether Grunt",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/grunt_a.png",
       "lines": [
         "Take it. I'll tell them you had one already.",
         "Straight over, don't stop on the span. Nothing down there but the old road."
@@ -207,7 +207,7 @@
     },
     "old_champion_challenge": {
       "speaker": "Old Bram",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
       "_comment": "Prompt 30's Old Champion: 'character/trainer history and a memorable battle or lesson using an existing NPC rig/team'. The history is Team Tether's arrival told from the losing side, which is the same story the site front door tells and the same one Grandpa is too old to finish -- so this is canon being said by somebody else, not a new thread. He never asks the player for anything and sets no flag until he is beaten: prompt 30 forbids the fetch-quest template and this is the opposite of one.",
       "lines": [
         "Sit if you like. I've not got anywhere to be.",
@@ -225,7 +225,7 @@
     },
     "old_champion_beaten": {
       "speaker": "Old Bram",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
       "_comment": "The payoff line. The items and coins are granted by the trainer's own `reward` block the moment the fight is won (data/config/bands/band1_lower_meadows/trainers.json), so a player who walks off and never speaks to him again keeps them -- this is the acknowledgement, not the delivery. The last two lines are the ONLY place the elder mosshell (spawns.json order 1900) is named anywhere in the game. Prompt 30: some optional content should be found by curiosity, and secrets should not be pre-labelled on the map, so the elder has no marker -- but a player who did the harder optional thing gets told where the other one is, which makes the two a chain instead of two icons.",
       "lines": [
         "Ha. Well.",
@@ -237,7 +237,7 @@
     },
     "meadowhart_herd_sighting": {
       "speaker": "Rae",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/rae.png",
       "_comment": "T3-ACTIVITIES, spec sec6's 'Meadowhart Herd: discovery activity that points toward the Riding Saddle progression'. Same OF30 one-time-gift shape Tam's tool handover uses: the discovery flag on the first line, the reward and the objective's own completion flag together on the last.",
       "lines": [
         {
@@ -257,14 +257,14 @@
     },
     "meadowhart_herd_greeting": {
       "speaker": "Rae",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/rae.png",
       "lines": [
         "Still my favourite spot in the whole band. They come back most evenings."
       ]
     },
     "broken_cart_broken": {
       "speaker": "Coll",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/villager_male.png",
       "_comment": "T3-ACTIVITIES, spec sec6's 'Broken Cart: gather materials to repair a bridgehand's cart'. No `battle:`/`give:` effect here -- `cart_repair.gd` owns the actual gather-and-hand-over check (item_gate.gd) and only opens the dialogue panel to report the result; this is what a player sees before they are carrying everything.",
       "lines": [
         "Wheel's cracked, axle's split, and I've got nothing left in the box to fix either one.",
@@ -273,7 +273,7 @@
     },
     "broken_cart_repaired": {
       "speaker": "Coll",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/villager_male.png",
       "lines": [
         "That's everything. Give me an hour and this'll be rolling again.",
         "Not many stop to help a stranger's cart. I won't forget it."
@@ -281,7 +281,7 @@
     },
     "shepherd_the_rise_challenge": {
       "speaker": "Dara",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/villager_ranger.png",
       "_comment": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 2: 'teaches nothing, is a fight you can see coming'. No lesson, no fetch, no flag until beaten -- a plain first fight on the open road, the shape prompt 30 asks optional field trainers to have.",
       "lines": [
         "Gate's not far behind you. Long way to anywhere from here, if you're not ready for it.",
@@ -294,7 +294,7 @@
     },
     "shepherd_the_rise_defeated": {
       "speaker": "Dara",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/villager_ranger.png",
       "lines": [
         "Ha! Faster on their feet than I gave you credit for.",
         "Keep to the road. Long field ahead, then the water. Mind the bridge before you get there -- Tether's got somebody posted on it now."
@@ -302,7 +302,7 @@
     },
     "wanderer_trail_camp_challenge": {
       "speaker": "Gil",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
       "_comment": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 4. The second and harder of the two new field trainers, deep enough into the Long Field that it reads as the road's own difficulty climbing toward the South Bridge checkpoint rather than a repeat of the Rise's gentler fight.",
       "lines": [
         "Another one bound for the crossing. They're not letting much through without a fuss these days.",
@@ -315,7 +315,7 @@
     },
     "wanderer_trail_camp_defeated": {
       "speaker": "Gil",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
       "lines": [
         "Well fought. You've come a long way from whatever field you started in.",
         "Camp's just up ahead if you need it. After that it's a straight run to the bridge -- and whoever's standing on it."
@@ -323,7 +323,7 @@
     },
     "pond_fisher_greeting": {
       "speaker": "Nan",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/villager_ranger.png",
       "_comment": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 3: 'a fisher NPC who mentions the South Bridge and the captured keeper (dialogue only, no fight)'. The captured keeper is the relay's own captive (data/dialogue/relay.json's Sela, freed via `captive_rescued`; MEADOWS_PROGRESSION_SPEC.md sec on the river crossing: 'the bridge keeper / ranger / researcher who knows the mechanism has been captured'), named here only as rumour a Band 1 fisher would plausibly have heard -- the player has no way to know who she is yet, which is the point of a rumour this early.",
       "lines": [
         "Quiet out here since the company came through. Even the fish keep low these days.",

@@ -1,5 +1,12 @@
 # START HERE — Tetherbound
 
+> **Cloudreach branch scope, 2026-09-05:** the newer owner directive in
+> `docs/biomes/cloudreach/BUILD_CLOUDREACH_CLIFFS_TO_COMPLETION.md` authorizes the
+> second chapter, Cloudreach Cliffs (Air), on `codex/cloudreach-cliffs`. For that
+> work read the directive and `docs/biomes/cloudreach/CONTINUOUS_ACCEPTANCE_0905.md`.
+> The Meadows-only routing below still governs Meadows work. Cloudreach's
+> implementation does not imply either chapter's acceptance has passed.
+
 > **Start here, 2026-09-04: [`docs/FINISH_THE_MEADOWS.md`](FINISH_THE_MEADOWS.md)** — the
 > whole remaining plan to finish the chapter, in order, written to be picked up cold. It
 > supersedes older prose about what is next. `docs/GATE2_GATE3_CLOSURE_PLAN.md` is the
@@ -20,7 +27,7 @@ dated backlogs, which are now under `archive/`.
 A third-person open-world creature-training adventure in Godot 4.7 for Windows and the
 ROG Ally, controller-first, solo. The player owns **five creatures, total**, pilots them
 directly in real-time combat, and supports the team with gathering, crafting, building,
-care and rest. The first and only chapter in scope is **the Meadows**: wake at Grandpa's
+care and rest. The first chapter is **the Meadows**: wake at Grandpa's
 farmhouse, win the village tournament, travel south through five increasingly demanding
 bands, break Team Tether's relay, take the three Sigils, defeat the Warden in Meadows
 Hall, free the legendary, and choose the final five. Target: a 3–4 hour focused first
@@ -76,6 +83,7 @@ and which must wait for 2.8's verdict.
 | Settled design decisions (append-only) | `docs/decisions/` |
 | Detailed implementation contracts per task | `docs/prompts/` |
 | Long-form owner-supplied specs (progression, macro layout, design) | `docs/specs/` |
+| The Phase 2 design contracts (rideable roster / fly / teleport, the task feed, the village replan, camping made necessary) — the implementation briefs for the 2026-09-04 directives | `docs/specs/C*.md` (`C1_RIDEABLE_ROSTER_FLY_TELEPORT.md`, `C2_TASK_FEED.md`, `C3_VILLAGE_REPLAN.md`, `C4_CAMPING_NECESSARY.md`) |
 | Chapter acceptance and the Gate F full-playtest protocol | `docs/acceptance/` |
 | Reference art (key art, Palworld bar) | `docs/reference/` |
 | What was moved/archived/removed in the reset and why | `docs/CLEANUP_MANIFEST.md` |

@@ -11,6 +11,7 @@ const RULES := preload("res://scripts/world/cloudreach_physical_rules.gd")
 const FLAGS := preload("res://autoload/progression_state.gd")
 const PARTY := preload("res://autoload/party.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const FEED := preload("res://scripts/creatures/progression_feed.gd")
 
 var world: Node3D
 var player: CharacterBody3D
@@ -64,7 +65,7 @@ func _run() -> void:
 	await _walk_to(Vector3(0,0,0))
 	await _interact()
 	_check(physical.trial_active, "real launch-marker input authorizes bounded trial")
-	var feed_before_trial: int = game.progression_feed.revision
+	var feed_before_trial: int = FEED.latest_seq()
 	await _deploy()
 	_check(fly.is_flying(), "two airborne Jump presses use production Fly")
 	_action("jump", true)
@@ -91,13 +92,13 @@ func _run() -> void:
 	await _frames(3)
 	_check(game.progression.has("fly_traversal_unlocked"), "full gate route plus real landing unlocks Fly")
 	_check(not physical.trial_active, "trial authorization is revoked after success")
-	var route_events: Array = game.progression_feed.since(feed_before_trial).filter(func(event: Dictionary) -> bool: return str(event.get("source", "")) == "fly_route")
+	var route_events: Array = game.peek_progression_events(feed_before_trial).filter(func(event: Dictionary) -> bool: return str(event.get("source", "")) == "fly_route")
 	_check(route_events.size() == 1, "legitimate authored trial landing emits one shared Fly-route bond credit")
 	if route_events.size() == 1:
 		_check(is_equal_approx(float(route_events[0].after) - float(route_events[0].before), 25.0), "Fly-route credit uses the configured small travel bonus")
-	var before_duplicate: int = game.progression_feed.revision
+	var before_duplicate: int = game.progression_feed_revision()
 	physical._on_landed(player.global_position, "galecrest")
-	_check(game.progression_feed.revision == before_duplicate, "replaying a landing cannot farm bond credit")
+	_check(game.progression_feed_revision() == before_duplicate, "replaying a landing cannot farm bond credit")
 	_check(not game.progression.has("sky_shrine_reached"), "unrelated trial landing does not fabricate High Roost arrival")
 	_check(not physical.consume_dialogue_effect("cloudreach:cloudreach_sora_storm_engine_truth"), "Sora truth refuses missing shrine and vanes")
 	# This second flight uses a scaled landing destination in the same fixture;

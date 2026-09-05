@@ -49,7 +49,8 @@ const UNDOCUMENTED_ALLOWED: Array[String] = []
 
 
 func _harness_source() -> String:
-	return FileAccess.get_file_as_string(HARNESS_PATH)
+	# Git may check out CRLF on Windows; source contracts compare logical lines.
+	return FileAccess.get_file_as_string(HARNESS_PATH).replace("\r\n", "\n")
 
 
 func _schema_source() -> String:
@@ -60,7 +61,11 @@ func _schema_source() -> String:
 ## source rather than from a list in the harness, because a list that had to be
 ## kept in step with the match is the same drift this test exists to catch.
 func _implemented_actions() -> Array[String]:
-	var source := _harness_source()
+	return _actions_in(_harness_source())
+
+
+func _actions_in(raw_source: String) -> Array[String]:
+	var source := raw_source.replace("\r\n", "\n")
 	var start := source.find("	match action:")
 	var stop := source.find("\n		_:\n", start)
 	if start < 0 or stop < 0:
@@ -74,6 +79,18 @@ func _implemented_actions() -> Array[String]:
 				if not name.is_empty():
 					out.append(name)
 	return out
+
+
+func test_action_extraction_is_line_ending_independent_and_still_rejects_missing_code() -> void:
+	var source := _harness_source()
+	var expected := _actions_in(source)
+	assert_true(expected.size() > 10, "the production action match must actually parse")
+	assert_eq(_actions_in(source.replace("\n", "\r\n")), expected,
+		"CRLF and LF encode the same action implementation")
+	assert_true(_actions_in(source.replace("\tmatch action:", "\tmatch missing_action:")).is_empty(),
+		"negative control: a missing action match is still refused")
+	assert_false(_actions_in(source.replace("\"boot\":", "\"missing_boot\":")).has("boot"),
+		"negative control: removing an action must still fail the documented-vocabulary check")
 
 
 ## Every action named in a `| \`name\` |` cell of the schema doc's tables.

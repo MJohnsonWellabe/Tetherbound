@@ -8,6 +8,16 @@ const RUNTIME_PATH := "res://data/config/cloudreach_npc_runtime.json"
 const CHAPTER_PATH := "res://data/config/cloudreach_chapter.json"
 const DIALOGUE_PATH := "res://data/dialogue/cloudreach.json"
 
+## W04's render-source identities, independently of Cloudreach's speaker names.
+## Each source uses this installed art.json body (tools/_capture_portraits.gd).
+const RENDER_BODY_BY_PLATE := {
+	"wilhelm": "innkeeper", "wandering_trainer": "wandering_trainer",
+	"lark": "courier", "fenn": "creature_caretaker", "maren": "field_researcher",
+	"corin": "trader", "bryn": "young_trainer", "ren": "former_tether_member",
+	"officer_b": "officer_b", "captain_b": "captain_b",
+	"tobin": "lost_traveler", "garrick": "farmer",
+}
+
 
 func _read(path: String) -> Dictionary:
 	return JSON.parse_string(FileAccess.get_file_as_string(path)) as Dictionary
@@ -67,13 +77,55 @@ func test_every_canonical_cast_member_and_conversation_has_valid_identity() -> v
 			assert_eq(table[id]["portrait"], spec["portrait"], id)
 			assert_true(table[id]["lines"].size() >= 2, id)
 			assert_ne(table[id]["portrait"], "res://assets/ui/portraits/trainer.png")
-		if spec["portrait"] == "":
-			assert_eq(spec["portrait_mode"], "hidden_until_clean_portrait")
-		else:
-			assert_true(FileAccess.file_exists(spec["portrait"]))
+		assert_true(FileAccess.file_exists(spec["portrait"]))
+		if npc["id"] == "warden_aila":
+			assert_eq(spec["portrait_mode"], "clean_owner_reference")
 			assert_eq(spec["portrait"], "res://assets/ui/portraits/cloudreach_aila_clean.png")
+		else:
+			_assert_render_matches_body(spec, str(npc["body_profile"]), art)
 	for id: String in chapter["aftermath"]["return_dialogue_ids"]:
 		assert_true(table.has(id), "required aftermath conversation")
+
+
+func _assert_render_matches_body(spec: Dictionary, body_profile: String, art: Dictionary) -> void:
+	assert_eq(spec["portrait_mode"], "installed_body_render")
+	var plate := str(spec["portrait"]).get_file().get_basename()
+	assert_true(RENDER_BODY_BY_PLATE.has(plate), "unverified render source " + plate)
+	if not RENDER_BODY_BY_PLATE.has(plate):
+		return
+	assert_eq(art[body_profile]["model"], art[RENDER_BODY_BY_PLATE[plate]]["model"],
+		"portrait must depict the installed world body for " + str(spec["id"]))
+	assert_true(ResourceLoader.exists(str(spec["portrait"])))
+
+
+func test_payoff_travelers_keep_their_own_portraits_before_and_after_return() -> void:
+	var runtime := _read(RUNTIME_PATH)
+	var art := _read("res://data/config/art.json")
+	var table: Dictionary = _read(DIALOGUE_PATH)["conversations"]
+	var returned_portraits: Dictionary = {}
+	for traveler: Dictionary in runtime["world_payoffs"]["travelers"]:
+		_assert_render_matches_body(traveler, str(traveler["config_key"]), art)
+		var ids: Array = [traveler["greeting"]]
+		if traveler.has("return_flag"):
+			assert_true(traveler.has("return_greeting"), "return dialogue needs a body-specific identity")
+			ids.append(traveler.get("return_greeting", ""))
+			returned_portraits[traveler["id"]] = traveler["portrait"]
+		for id: String in ids:
+			assert_true(table.has(id), id)
+			if not table.has(id):
+				continue
+			var expected_speaker := str(traveler["name"])
+			if id == "cloudreach_shelter_pair_home":
+				expected_speaker = "Returned Traveler"
+			assert_eq(table[id]["speaker"], expected_speaker, id)
+			var runner := RUNNER.new()
+			assert_true(runner.start(id))
+			while runner.is_active():
+				assert_eq(runner.line()["portrait"], traveler["portrait"], id)
+				runner.advance()
+	assert_eq(returned_portraits.size(), 2)
+	assert_ne(returned_portraits.get("shelter_traveler"), returned_portraits.get("shelter_courier"),
+		"the returned pair use different installed bodies and cannot share one face")
 
 
 func test_dialogue_cannot_manufacture_physical_progression_or_creatures() -> void:

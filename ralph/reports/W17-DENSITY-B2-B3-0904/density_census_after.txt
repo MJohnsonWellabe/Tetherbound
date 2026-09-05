@@ -1,0 +1,46 @@
+BAND DENSITY CENSUS (authored data; run tools/_probe_gate_f_corridor.gd for the runtime confirmation)
+== band1_lower_meadows ==  spine 2403 m (~10.0 min)
+  wild:     69 clusters (6 gated night/weather, 1 alpha/elder), 222 heads, 11 species  -> 28.7 clusters/km, 92.4 heads/km
+  harvest:  48 nodes  -> 20.0/km   berries=8 fiber=12 orb_basic=1 potion_small=2 revive=1 stone=10 travel_pack=1 wood=13
+  pickups:   0  (0 critical, 0 optional)  tiers   families   -> 0.0/km
+  trainers 11, prop clusters 15 (1 rest)
+  spine walk: met 97 things, worst gap 118 m (all authored, no pickups)
+              met 97 things, worst gap 118 m (with pickups)
+              met 96 things, worst gap 118 m (with pickups, gated clusters hidden = daytime, clear)
+DENSITY-METRIC band=band1_lower_meadows metres=2403 clusters=69 heads=222 gated=6 alphas=1 species=11 clusters_per_km=28.7 heads_per_km=92.4 harvest=48 harvest_per_km=20.0 pickups=0 critical=0 optional=0 good=0 great=0 rare=0 recovery=0 trainers=11 props=15 worst_gap_m=118 worst_gap_daytime_m=118 worst_gap_no_pickups_m=118
+== band2_stone_and_root ==  spine 2653 m (~11.1 min)
+  wild:     71 clusters (14 gated night/weather, 4 alpha/elder), 237 heads, 7 species  -> 26.8 clusters/km, 89.3 heads/km
+  harvest:  46 nodes  -> 17.3/km   berries=7 fiber=8 hide_boots=1 ironwood=5 potion_large=1 revive=1 rootstone=7 stone=9 stoneguard_brew=1 wood=6
+  pickups:  22  (3 critical, 19 optional)  tiers critical=3 detour=5 secret=2 side=12  families good_candy=9 great_candy=5 mushroom=3 rare_candy=2 recovery=3  -> 8.3/km
+  trainers 4, prop clusters 3 (1 rest)
+  spine walk: met 76 things, worst gap 123 m (all authored, no pickups)
+              met 86 things, worst gap 123 m (with pickups)
+              met 83 things, worst gap 141 m (with pickups, gated clusters hidden = daytime, clear)
+DENSITY-METRIC band=band2_stone_and_root metres=2653 clusters=71 heads=237 gated=14 alphas=4 species=7 clusters_per_km=26.8 heads_per_km=89.3 harvest=46 harvest_per_km=17.3 pickups=22 critical=3 optional=19 good=9 great=5 rare=2 recovery=6 trainers=4 props=3 worst_gap_m=123 worst_gap_daytime_m=141 worst_gap_no_pickups_m=123
+== band3_the_river_lock ==  spine 2375 m (~9.9 min)
+  wild:     67 clusters (10 gated night/weather, 4 alpha/elder), 197 heads, 14 species  -> 28.2 clusters/km, 83.0 heads/km
+  harvest:  49 nodes  -> 20.6/km   attack_tonic=1 berries=9 fiber=10 hide_leggings=1 ironwood=4 orb_basic=1 orb_greater=1 potion_small=1 rootstone=3 stone=9 wood=9
+  pickups:  24  (6 critical, 18 optional)  tiers critical=6 detour=6 secret=2 side=10  families good_candy=9 great_candy=6 mushroom=3 rare_candy=2 recovery=4  -> 10.1/km
+  trainers 5, prop clusters 11 (1 rest)
+  spine walk: met 79 things, worst gap 126 m (all authored, no pickups)
+              met 98 things, worst gap 126 m (with pickups)
+              met 92 things, worst gap 171 m (with pickups, gated clusters hidden = daytime, clear)
+DENSITY-METRIC band=band3_the_river_lock metres=2375 clusters=67 heads=197 gated=10 alphas=4 species=14 clusters_per_km=28.2 heads_per_km=83.0 harvest=49 harvest_per_km=20.6 pickups=24 critical=6 optional=18 good=9 great=6 rare=2 recovery=7 trainers=5 props=11 worst_gap_m=126 worst_gap_daytime_m=171 worst_gap_no_pickups_m=126
+== band4_upper_meadows_ironwood ==  spine 3436 m (~14.3 min)
+  wild:     80 clusters (7 gated night/weather, 5 alpha/elder), 276 heads, 8 species  -> 23.3 clusters/km, 80.3 heads/km
+  harvest:  26 nodes  -> 7.6/km   fiber=4 hide_helm=1 ironwood=10 orb_greater=1 potion_large=1 revive=1 stone=4 swift_tonic=1 wood=3
+  pickups:   0  (0 critical, 0 optional)  tiers   families   -> 0.0/km
+  trainers 5, prop clusters 5 (2 rest)
+  spine walk: met 88 things, worst gap 192 m (all authored, no pickups)
+              met 88 things, worst gap 192 m (with pickups)
+              met 85 things, worst gap 192 m (with pickups, gated clusters hidden = daytime, clear)
+DENSITY-METRIC band=band4_upper_meadows_ironwood metres=3436 clusters=80 heads=276 gated=7 alphas=5 species=8 clusters_per_km=23.3 heads_per_km=80.3 harvest=26 harvest_per_km=7.6 pickups=0 critical=0 optional=0 good=0 great=0 rare=0 recovery=0 trainers=5 props=5 worst_gap_m=192 worst_gap_daytime_m=192 worst_gap_no_pickups_m=192
+== band5_stronghold_approach ==  spine 651 m (~2.7 min)
+  wild:     23 clusters (0 gated night/weather, 2 alpha/elder),  78 heads, 7 species  -> 35.3 clusters/km, 119.7 heads/km
+  harvest:   8 nodes  -> 12.3/km   fiber=2 revive=1 stone=3 wood=2
+  pickups:   0  (0 critical, 0 optional)  tiers   families   -> 0.0/km
+  trainers 6, prop clusters 3 (1 rest)
+  spine walk: met 22 things, worst gap 78 m (all authored, no pickups)
+              met 22 things, worst gap 78 m (with pickups)
+              met 22 things, worst gap 78 m (with pickups, gated clusters hidden = daytime, clear)
+DENSITY-METRIC band=band5_stronghold_approach metres=651 clusters=23 heads=78 gated=0 alphas=2 species=7 clusters_per_km=35.3 heads_per_km=119.7 harvest=8 harvest_per_km=12.3 pickups=0 critical=0 optional=0 good=0 great=0 rare=0 recovery=0 trainers=6 props=3 worst_gap_m=78 worst_gap_daytime_m=78 worst_gap_no_pickups_m=78

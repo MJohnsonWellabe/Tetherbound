@@ -40,7 +40,8 @@ const CONFIG_PATH := "res://tools/gate_f/harness_config.json"
 
 
 func _harness_source() -> String:
-	return FileAccess.get_file_as_string(HARNESS_PATH)
+	# Normalize checkout line endings before inspecting function boundaries.
+	return FileAccess.get_file_as_string(HARNESS_PATH).replace("\r\n", "\n")
 
 
 # --- GF-B-002 primitive 1: the context predicate -----------------------------
@@ -164,7 +165,7 @@ func test_the_closing_inventory_runs_as_code() -> void:
 
 
 func test_the_run_shots_directory_is_not_gitignored() -> void:
-	var text := FileAccess.get_file_as_string(GITIGNORE_PATH)
+	var text := FileAccess.get_file_as_string(GITIGNORE_PATH).replace("\r\n", "\n")
 	assert_false(text.contains("\nshots/\n"),
 		"CD-2: an unanchored `shots/` in .gitignore matches EVERY shots directory at every "
 		+ "depth, including ralph/reports/gate-f-run-*/<segment>/shots/. The harness wrote the "
@@ -570,7 +571,7 @@ func test_the_probe_reads_the_inventory_count_key_the_game_writes() -> void:
 	# save that actually held orb_basic ×15, potion_small ×3, berries ×5,
 	# revive ×2. It also silently disabled the gather and craft detectors, which
 	# compare two snapshots that were always equal.
-	var probe := FileAccess.get_file_as_string("res://scripts/debug/gate_f_probe.gd")
+	var probe := FileAccess.get_file_as_string("res://scripts/debug/gate_f_probe.gd").replace("\r\n", "\n")
 	var start := probe.find("func inventory_snapshot(")
 	assert_true(start >= 0, "gate_f_probe.gd has no inventory_snapshot()")
 	var body := probe.substr(start, probe.find("\n\n\n", start) - start)

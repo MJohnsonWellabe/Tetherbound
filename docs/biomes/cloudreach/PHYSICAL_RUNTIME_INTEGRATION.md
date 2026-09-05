@@ -42,7 +42,7 @@ Each aerial side survey requires visiting its marked air approach during the sam
 
 ## NPCs, camps and findables
 
-All 11 canonical NPCs use the installed body profiles and authored stateful conversations. The runtime honors Aila/Neri relocation after dialogue closes. Kelm's resource advice and Rusk's defense advice have separate guarded prompts. Aila uses the clean dedicated portrait; other portrait frames remain explicitly hidden.
+All 11 canonical NPCs use the installed body profiles and authored stateful conversations. The runtime honors Aila/Neri relocation after dialogue closes. Kelm's resource advice and Rusk's defense advice have separate guarded prompts. Aila retains the clean dedicated owner-reference portrait. The other ten cast members and six payoff travelers reuse W04's clean renders matched to their installed `art.json` bodies: Iven/Wilhelm, Orrin/wandering trainer, Neri/Lark, Maela/Fenn, Sora/Maren, Kelm/Corin, Tavi/Bryn, Rusk/Ren, Voss/officer_b, and Veyra/captain_b. Travelers reuse Lark (courier), wandering_trainer, Tobin (lost traveler), and Garrick (farmer). The returned shelter pair have separate greetings so their different bodies retain their own portraits. No new images or bodies were generated.
 
 All 19 chapter pickups retain realm + placement persistence and their canonical counts/items. Their unlock flags control spawning. All five camps reuse the production RestPoint/night-rest/autosave/crafting path and installed bed prop. Loading an earlier save reconstructs previously collected caches and removes later unlocked placements.
 

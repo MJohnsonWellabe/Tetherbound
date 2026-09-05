@@ -268,25 +268,26 @@ region reconnects to the world as its legendary is freed.
    - rolling grassland, oak groves, streams, ponds
    - first Team Tether sacred Hall/stronghold
 
-2. **Water — Coast/Wetlands**
+2. **Air — Cloudreach Cliffs**
+   - vertical highlands, broken sky roads, suspended crossings and Fly-only shrines
+   - Storm Anchor network and summit extraction engine
+   - newer owner directive: `docs/biomes/cloudreach/BUILD_CLOUDREACH_CLIFFS_TO_COMPLETION.md`
+
+3. **Water — Coast/Wetlands**
    - river/coast/marsh
    - flooded temple, dam, or water-control site
 
-3. **Electric — Stormlands**
+4. **Electric — Stormlands**
    - storms, machinery
    - power station / storm-harvesting stronghold
 
-4. **Fire — Volcanic Highlands**
+5. **Fire — Volcanic Highlands**
    - heat/lava
    - stronghold in or around volcano
 
-5. **Ice — Frozen Mountains**
+6. **Ice — Frozen Mountains**
    - snow/cold/altitude
    - frozen summit fortress
-
-6. **Air — Cliffs/Highlands**
-   - vertical terrain
-   - high tower / skyward stronghold
 
 7. **Psychic — Strange Ancient Wilderness**
    - unnatural ancient geography
