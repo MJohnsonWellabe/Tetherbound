@@ -20,6 +20,7 @@ const CREATURE := preload("res://scripts/creatures/creature_instance.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PARTY := preload("res://autoload/party.gd")
 const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
+const FEED := preload("res://scripts/creatures/progression_feed.gd")
 
 const DEFINITION := {
 	"display_name": "Terrapup", "type": "ground",
@@ -171,20 +172,21 @@ func test_every_shipped_species_has_a_best_creature_ability() -> void:
 			"%s has no Best Creature ability" % species_id)
 
 
-# --- bond_milestones.gd: bond as an ordered ladder of tasks (OWNER-0901) ----
+# --- bond_milestones.gd: bond as a ladder of tasks (OWNER-0901, D74) --------
 ##
 ## Owner playtest 2026-09-01: "I don't understand bond. It just goes up. It
-## needs to be a task." These pin the SEQUENTIAL behaviour the redesign is
-## actually about: a creature is always working toward exactly one named
-## task, and finishing task N advances the tier only once N is truly done —
-## not before, and not by finishing a LATER task out of order.
+## needs to be a task." D74 (2026-09-04): the ladder is UNORDERED -- a node is
+## earned when ANY task completes, so every one of the five actions reads the
+## moment it lands, and the "next" the UI points at is the incomplete task
+## closest to done. These pin that rule: a tier only moves when a task is
+## truly complete, any task counts, and nothing exceeds the ladder.
 
 func test_tier_is_zero_for_a_fresh_creature() -> void:
 	var creature := _creature()
 	assert_eq(BOND_MILESTONES.tier(creature, CFG), 0)
 
 
-func test_tier_advances_only_once_the_current_task_is_fully_met() -> void:
+func test_tier_advances_only_once_a_task_is_fully_met() -> void:
 	var creature := _creature()
 	creature.battles_fought = 1
 	assert_eq(BOND_MILESTONES.tier(creature, CFG), 0, "1 of 2 required wins should not advance the tier")
@@ -192,21 +194,22 @@ func test_tier_advances_only_once_the_current_task_is_fully_met() -> void:
 	assert_eq(BOND_MILESTONES.tier(creature, CFG), 1, "meeting the target should advance exactly one tier")
 
 
-func test_tier_does_not_skip_ahead_on_a_later_task_alone() -> void:
+func test_a_later_task_alone_earns_a_node_d74() -> void:
 	var creature := _creature()
-	# CFG's SECOND milestone (landmarks) met, but its first (battles) is not.
+	# CFG's SECOND milestone (landmarks) met while its first (battles) is not.
 	creature.landmarks_visited_together = 1
-	assert_eq(BOND_MILESTONES.tier(creature, CFG), 0,
-		"a creature must not skip milestone 1 by finishing milestone 2's task first")
+	assert_eq(BOND_MILESTONES.tier(creature, CFG), 1,
+		"D74: a completed task is a node whatever its position in the list -- "
+		+ "under the old ordered rule this read 0 and the landmark was invisible")
 
 
-func test_tier_advances_through_every_milestone_in_order() -> void:
+func test_tier_counts_every_completed_task_in_any_order() -> void:
 	var creature := _creature()
-	creature.battles_fought = 2
-	assert_eq(BOND_MILESTONES.tier(creature, CFG), 1)
-	creature.landmarks_visited_together = 1
-	assert_eq(BOND_MILESTONES.tier(creature, CFG), 2)
 	creature.rest_nights_together = 3
+	assert_eq(BOND_MILESTONES.tier(creature, CFG), 1)
+	creature.battles_fought = 2
+	assert_eq(BOND_MILESTONES.tier(creature, CFG), 2)
+	creature.landmarks_visited_together = 1
 	assert_eq(BOND_MILESTONES.tier(creature, CFG), 3, "every milestone in CFG's ladder is now met")
 
 
@@ -218,7 +221,17 @@ func test_tier_never_exceeds_the_ladder_length() -> void:
 	assert_eq(BOND_MILESTONES.tier(creature, CFG), 3, "CFG only has three milestones to complete")
 
 
-func test_progress_text_names_the_current_task() -> void:
+func test_current_names_the_incomplete_task_closest_to_done() -> void:
+	var creature := _creature()
+	assert_eq(str(BOND_MILESTONES.current(creature, CFG).get("task", "")), "battles_fought",
+		"all at zero: list order breaks the tie")
+	creature.rest_nights_together = 2  # 2/3 = 0.67, ahead of battles 0/2
+	assert_eq(str(BOND_MILESTONES.current(creature, CFG).get("task", "")), "rest_nights_together")
+	creature.battles_fought = 2  # done; rest is still the nearest incomplete
+	assert_eq(str(BOND_MILESTONES.current(creature, CFG).get("task", "")), "rest_nights_together")
+
+
+func test_progress_text_names_the_nearest_task() -> void:
 	var creature := _creature()
 	assert_eq(BOND_MILESTONES.progress_text(creature, CFG), "0/2 wild creatures defeated together")
 	creature.battles_fought = 2
@@ -231,6 +244,108 @@ func test_progress_text_reports_fully_bonded_once_every_milestone_is_done() -> v
 	creature.landmarks_visited_together = 1
 	creature.rest_nights_together = 3
 	assert_eq(BOND_MILESTONES.progress_text(creature, CFG), "Fully bonded")
+
+
+func test_task_rows_mark_done_and_exactly_one_next() -> void:
+	var creature := _creature()
+	creature.battles_fought = 2
+	creature.rest_nights_together = 1
+	var rows := BOND_MILESTONES.task_rows(creature, CFG)
+	assert_eq(rows.size(), 3, "one row per task, every task, not only the current one")
+	var next_count := 0
+	for row: Variant in rows:
+		var r := row as Dictionary
+		if bool(r.get("next", false)):
+			next_count += 1
+	assert_eq(next_count, 1)
+	assert_true(bool((rows[0] as Dictionary).get("done", false)), "battles 2/2 is done")
+	assert_false(bool((rows[0] as Dictionary).get("next", true)), "a done row is never next")
+	assert_true(bool((rows[2] as Dictionary).get("next", false)), "rest 1/3 is the nearest incomplete")
+	assert_eq(int((rows[2] as Dictionary).get("remaining", 0)), 2)
+	assert_eq(BOND_MILESTONES.remaining_text(rows[2]), "2 more nights")
+	assert_eq(BOND_MILESTONES.remaining_text(rows[0]), "", "a done row has nothing left to say")
+
+
+func test_evolution_gate_reads_any_three_nodes() -> void:
+	# progression.json: mudsnout needs bond_tier 3. Under D74 that is any three.
+	var cfg := PROGRESSION.config()
+	var needed := int(cfg.get("evolution", {}).get("mudsnout", {}).get("bond_tier", 0))
+	assert_eq(needed, 3, "sanity: the shipped gate is three nodes")
+	var creature := _creature()
+	creature.species_id = "mudsnout"
+	creature.landmarks_visited_together = 99
+	creature.rest_nights_together = 99
+	creature.feeds_together = 99
+	assert_eq(creature.bond_nodes(), 3, "three completed tasks, none of them the first, is tier 3")
+
+
+# --- the feed's bond events (PROGRESSION-VISIBLE, prompt 73 §4) --------------
+
+func test_bond_near_fires_at_the_configured_remaining_count_and_not_before() -> void:
+	FEED.clear()
+	var creature := _creature()
+	var threshold := int(FEED.near_threshold("battles_fought"))
+	assert_true(threshold > 0, "sanity: progression_feedback.json has a near threshold for battles")
+	var target := 0
+	for entry: Variant in BOND_MILESTONES.milestones(BOND_MILESTONES.config()):
+		if str((entry as Dictionary).get("task", "")) == "battles_fought":
+			target = int((entry as Dictionary).get("target", 0))
+	for i in target - threshold - 1:
+		BOND_MILESTONES.credit_battle(creature)
+	assert_eq(_feed_kind("bond_near").size(), 0,
+		"%d short of %d is not yet near (threshold %d)" % [target - creature.battles_fought, target, threshold])
+	BOND_MILESTONES.credit_battle(creature)
+	assert_eq(_feed_kind("bond_near").size(), 1, "exactly the threshold short: near fires")
+	assert_eq(int((_feed_kind("bond_near")[0] as Dictionary).get("remaining", -1)), threshold)
+
+
+func test_bond_milestone_carries_the_correct_benefit_text() -> void:
+	FEED.clear()
+	var creature := _creature()
+	creature.species_id = "mudsnout"
+	# Two nodes already held; the third completes Mudsnout's evolution tier.
+	creature.landmarks_visited_together = 99
+	creature.rest_nights_together = 99
+	var target := 0
+	for entry: Variant in BOND_MILESTONES.milestones(BOND_MILESTONES.config()):
+		if str((entry as Dictionary).get("task", "")) == "feeds_together":
+			target = int((entry as Dictionary).get("target", 0))
+	for i in target:
+		BOND_MILESTONES.credit_feed(creature)
+	var milestones := _feed_kind("bond_milestone")
+	assert_eq(milestones.size(), 1)
+	var event: Dictionary = milestones[0]
+	assert_eq(int(event.get("node", 0)), 3)
+	var benefit := str(event.get("benefit", ""))
+	assert_true(benefit.contains("+1% attack and defence"), benefit)
+	assert_true(benefit.contains("now +3%"), "the cumulative bonus is named: " + benefit)
+	assert_true(benefit.contains("unlocks evolution"),
+		"node 3 is Mudsnout's evolution tier and the milestone must say so: " + benefit)
+	assert_false(benefit.contains("second trait"), "the trait comes at node 5, not 3: " + benefit)
+
+
+func test_the_fifth_node_says_it_reveals_the_second_trait() -> void:
+	var creature := _creature()
+	var text := BOND_MILESTONES.benefit_text(5, creature, PROGRESSION.config())
+	assert_true(text.contains("reveals second trait"), text)
+	assert_false(text.contains("unlocks evolution"), "terrapup does not evolve: " + text)
+
+
+func test_next_benefit_text_is_empty_once_fully_bonded() -> void:
+	var creature := _creature()
+	assert_true(BOND_MILESTONES.next_benefit_text(creature, CFG, PROGRESSION.config()).contains("+1%"))
+	creature.battles_fought = 2
+	creature.landmarks_visited_together = 1
+	creature.rest_nights_together = 3
+	assert_eq(BOND_MILESTONES.next_benefit_text(creature, CFG, PROGRESSION.config()), "")
+
+
+func _feed_kind(kind: String) -> Array:
+	var out: Array = []
+	for event: Variant in FEED.events():
+		if str((event as Dictionary).get("kind", "")) == kind:
+			out.append(event)
+	return out
 
 
 # --- crediting helpers: the four tasks with no pre-existing counter --------
