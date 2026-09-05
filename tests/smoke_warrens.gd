@@ -23,6 +23,12 @@ extends SceneTree
 ##   * the deep branch is blocked before the cleared flag and open after
 ##   * the Heartstone is obtainable and turns R4.6's evolution item gate on
 ##   * the story reward pays exactly once
+##   * W07-WARRENS-0904, the ROOM: no ray from any chamber escapes the cave
+##     (no daylight leak through a missing wall); the interior-ambient probe
+##     exists, is gated to the interior layer, every wall/floor mesh carries
+##     that layer and no mound boulder does; a body that walks in takes the
+##     layer and loses it on the way out; roots, fungus, litter and haze add
+##     no collision and hang above head height in the lanes
 ##
 ## The guardian is not FOUGHT here — smoke_combat.gd is the test that pilots a
 ## real fight, and re-running it against a level-18 Burrowback would be a
@@ -87,6 +93,9 @@ func _run() -> void:
 	# smoke_combat.gd is the test that fights; this one holds still.
 	_quieten_the_residents(warrens)
 	await _the_cave_is_enclosed(world, player, warrens)
+	_no_daylight_leaks(world, warrens)
+	await _the_room_has_its_own_dark(player, warrens)
+	_the_room_dressing_is_clear_of_the_walk(warrens)
 	await _the_branch_is_shut_until_the_guardian_falls(player, warrens, progression)
 	await _the_route_can_be_walked(player, warrens, progression)
 	_the_heartstone_is_obtainable_and_arms_the_evolution_gate(warrens, inventory, progression)
@@ -606,3 +615,199 @@ func _progression_config() -> Dictionary:
 		return {}
 	var parsed: Variant = JSON.parse_string(file.get_as_text())
 	return parsed as Dictionary if parsed is Dictionary else {}
+
+
+## --- W07-WARRENS-0904: the room ----------------------------------------------
+
+const INTERIOR_LAYER_BIT := 1 << 11  # `interior_ambient.layer` 12
+
+
+## Every horizontal ray from every chamber's eye height must end on the cave
+## within 60 m. A ray that reaches the meadow found a missing wall -- which is
+## what a frame of daylight at the end of a corridor looks like.
+func _no_daylight_leaks(world: Node, warrens: Node3D) -> void:
+	var space := (world as Node3D).get_world_3d().direct_space_state
+	var leaks := 0
+	var checked := 0
+	for id: String in warrens.call("chamber_ids"):
+		var eye: Vector3 = warrens.call("marker", id) + Vector3.UP * 1.7
+		for step in 24:
+			var angle := TAU * float(step) / 24.0
+			for pitch: float in [0.0, 0.35]:
+				var dir := Vector3(sin(angle) * cos(pitch), sin(pitch), cos(angle) * cos(pitch))
+				var query := PhysicsRayQueryParameters3D.create(eye, eye + dir * 60.0)
+				var hit := space.intersect_ray(query)
+				checked += 1
+				var collider: Node = hit.get("collider", null) as Node
+				if hit.is_empty() or collider == null or not warrens.is_ancestor_of(collider):
+					leaks += 1
+					if leaks <= 3:
+						_fail("a ray from '%s' at yaw %.0f pitch %.2f left the cave (%s)" % [
+							id, rad_to_deg(angle), pitch,
+							"no hit" if hit.is_empty() else str(collider.get_path())])
+	print("daylight leak check: %d rays, %d leaks" % [checked, leaks])
+
+
+func _has_layer(node: Node) -> bool:
+	return node is GeometryInstance3D and ((node as GeometryInstance3D).layers & INTERIOR_LAYER_BIT) != 0
+
+
+func _geometry_under(node: Node, out: Array[GeometryInstance3D]) -> void:
+	if node is GeometryInstance3D:
+		out.append(node as GeometryInstance3D)
+	for child in node.get_children():
+		_geometry_under(child, out)
+
+
+func _the_room_has_its_own_dark(player: CharacterBody3D, warrens: Node3D) -> void:
+	var probe: ReflectionProbe = warrens.get_node_or_null(^"InteriorAmbient") as ReflectionProbe
+	if probe == null:
+		_fail("no InteriorAmbient probe under the warrens; the room is lit by the meadow's sky")
+		return
+	if not probe.interior or probe.ambient_mode != ReflectionProbe.AMBIENT_COLOR:
+		_fail("InteriorAmbient is not an interior constant-colour probe")
+	if probe.reflection_mask != INTERIOR_LAYER_BIT:
+		_fail("InteriorAmbient affects mask %d, not the interior layer alone" % probe.reflection_mask)
+	if probe.ambient_color.get_luminance() > 0.2:
+		_fail("InteriorAmbient's ambient is not dark (%s)" % probe.ambient_color.to_html(false))
+	for id: String in warrens.call("chamber_ids"):
+		var m: Vector3 = warrens.call("marker", id)
+		var local: Vector3 = probe.to_local(m)
+		if absf(local.x) > probe.size.x * 0.5 or absf(local.z) > probe.size.z * 0.5 or absf(local.y) > probe.size.y * 0.5:
+			_fail("chamber '%s' lies outside the InteriorAmbient box" % id)
+
+	# The interior carries the layer; the outside does not.
+	var interior_named: Array[GeometryInstance3D] = []
+	var exterior_named: Array[GeometryInstance3D] = []
+	for holder_name: String in ["InteriorRock", "Roots", "Fungus", "Haze", "FloorLitter", "DenBones"]:
+		var holder: Node = warrens.get_node_or_null(NodePath(holder_name))
+		if holder != null:
+			_geometry_under(holder, interior_named)
+	var mound: Node = warrens.get_node_or_null(^"Mound")
+	if mound != null:
+		_geometry_under(mound, exterior_named)
+	for child in warrens.get_children():
+		if str(child.name).begins_with("ExteriorEarthSkin"):
+			_geometry_under(child, exterior_named)
+	if interior_named.size() < 20 or exterior_named.size() < 20:
+		_fail("too little geometry to judge layering (%d interior, %d exterior)" % [
+			interior_named.size(), exterior_named.size()])
+	var unlayered := 0
+	for g in interior_named:
+		if not _has_layer(g):
+			unlayered += 1
+	var leaked := 0
+	for g in exterior_named:
+		if _has_layer(g):
+			leaked += 1
+	if unlayered > 0:
+		_fail("%d interior meshes do not carry the interior layer" % unlayered)
+	if leaked > 0:
+		_fail("%d mound/skin meshes carry the interior layer and would go dark in the sun" % leaked)
+	# The chamber walls and floors themselves: the direct MeshInstance3D
+	# children that are not tagged exterior.
+	var walls_unlayered := 0
+	var walls := 0
+	for child in warrens.get_children():
+		if child is MeshInstance3D and not child.has_meta("warrens_exterior"):
+			walls += 1
+			if not _has_layer(child):
+				walls_unlayered += 1
+	if walls < 20 or walls_unlayered > 0:
+		_fail("chamber walls/floors: %d of %d lack the interior layer" % [walls_unlayered, walls])
+
+	# A body that walks in takes the layer, and loses it walking out.
+	var player_geometry: Array[GeometryInstance3D] = []
+	_geometry_under(player, player_geometry)
+	if player_geometry.is_empty():
+		_fail("the player has no geometry to layer")
+		return
+	await _put_down(player, warrens.call("marker", "hall") + Vector3(0.0, 1.0, 0.0))
+	await physics_frame
+	var inside_on := 0
+	for g in player_geometry:
+		if _has_layer(g):
+			inside_on += 1
+	if inside_on != player_geometry.size():
+		_fail("inside the hall only %d of %d player meshes carry the interior layer" % [
+			inside_on, player_geometry.size()])
+	await _put_down(player, warrens.call("marker", "entrance") + Vector3(0.0, 1.0, 0.0))
+	await physics_frame
+	var outside_on := 0
+	for g in player_geometry:
+		if _has_layer(g):
+			outside_on += 1
+	if outside_on != 0:
+		_fail("back outside, %d player meshes still carry the interior layer" % outside_on)
+	print("interior ambient: probe ok, %d interior / %d exterior meshes checked, player layer %d -> %d" % [
+		interior_named.size(), exterior_named.size(), inside_on, outside_on])
+
+
+func _the_room_dressing_is_clear_of_the_walk(warrens: Node3D) -> void:
+	var floor_y: float = (warrens.call("marker", "hall") as Vector3).y
+	var counts := {}
+	for holder_name: String in ["Roots", "Fungus", "Haze", "FloorLitter"]:
+		var holder: Node = warrens.get_node_or_null(NodePath(holder_name))
+		if holder == null:
+			_fail("no '%s' holder under the warrens" % holder_name)
+			continue
+		var bodies := holder.find_children("*", "CollisionObject3D", true, false)
+		if not bodies.is_empty():
+			_fail("'%s' added %d collision objects; the dressing must not block the walk" % [
+				holder_name, bodies.size()])
+		var geometry: Array[GeometryInstance3D] = []
+		_geometry_under(holder, geometry)
+		counts[holder_name] = geometry.size()
+	if int(counts.get("Roots", 0)) < 8:
+		_fail("only %d root meshes; the mid-layer is missing" % int(counts.get("Roots", 0)))
+	if int(counts.get("Fungus", 0)) < 20:
+		_fail("only %d fungus meshes" % int(counts.get("Fungus", 0)))
+	if int(counts.get("Haze", 0)) < 6:
+		_fail("only %d haze cards" % int(counts.get("Haze", 0)))
+
+	# Roots inside the cave hang above head height. Each root is one direct
+	# child of the holder; its lowest world point is its mesh AABB through its
+	# global transform.
+	var roots: Node = warrens.get_node_or_null(^"Roots")
+	if roots != null:
+		var low := 0
+		for piece in roots.get_children():
+			if piece.has_meta("warrens_exterior"):
+				continue
+			var lowest := INF
+			for mi in piece.find_children("*", "MeshInstance3D", true, false):
+				var instance := mi as MeshInstance3D
+				var box: AABB = instance.global_transform * instance.get_aabb()
+				lowest = minf(lowest, box.position.y)
+			if lowest < floor_y + 1.9:
+				low += 1
+				_fail("root '%s' hangs to %.2f m above the floor, into the walk" % [
+					piece.name, lowest - floor_y])
+		print("roots: %d pieces, %d too low" % [roots.get_child_count(), low])
+
+	var fungus: Node = warrens.get_node_or_null(^"Fungus")
+	if fungus != null:
+		var lights := fungus.find_children("*", "OmniLight3D", true, false)
+		if lights.size() < 6:
+			_fail("fungus clusters carry %d lights; they are meant to be the passage beacons" % lights.size())
+		var glowing := 0
+		var dull := 0
+		for mi in fungus.find_children("*", "MeshInstance3D", true, false):
+			var instance := mi as MeshInstance3D
+			var material: Material = instance.get_active_material(0) if instance.mesh != null else null
+			if material is BaseMaterial3D and (material as BaseMaterial3D).emission_enabled:
+				glowing += 1
+			else:
+				dull += 1
+		if dull > 0:
+			_fail("%d fungus meshes do not glow" % dull)
+		print("fungus: %d glowing meshes, %d lights" % [glowing, lights.size()])
+
+	var haze: Node = warrens.get_node_or_null(^"Haze")
+	if haze != null:
+		for mi in haze.find_children("*", "MeshInstance3D", true, false):
+			var material := (mi as MeshInstance3D).material_override as BaseMaterial3D
+			if material == null or material.shading_mode != BaseMaterial3D.SHADING_MODE_UNSHADED \
+					or material.blend_mode != BaseMaterial3D.BLEND_MODE_ADD:
+				_fail("haze card '%s' is not an unshaded additive card" % mi.name)
+				break

@@ -133,7 +133,10 @@ stretch · day/night readability · acceptable ROG performance.
   scale, no interpenetrating props (**open**: judge found scanned-PBR vs
   hand-painted mixed, tent smaller than the bed inside it).
 - E5. Interiors and dungeons read as places, not corridors — the **Warrens
-  interior is the standing GOOD example; protect it.**
+  interior is the standing GOOD example; protect it.** *Superseded 2026-09-04
+  by the owner on hardware (`OWNER_PLAYTEST_2026-09-04.md` OP-0904-7, "Burrow
+  warrens looks terrible"): the four prior verdicts judged the guardian, not
+  the room; the room is reworked and re-judged under W07-WARRENS-0904 (CL-O7).*
 
 ## F. Good story and its delivery
 

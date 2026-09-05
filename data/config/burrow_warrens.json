@@ -5,7 +5,10 @@
   "_comment_ow5d_relocation": "OW5D, docs/specs/MEADOWS_MACRO_LAYOUT.md section 10.2: `site.at` moves from (70,-140) to (-420,2470). Everything else in this file (chambers, passages, lights, spawns, deposits, prize) is authored in the SITE'S OWN LOCAL frame per `_comment_site`/`_comment_floor` above and rotates/translates with `site.at`+`site.yaw_deg` automatically, so none of it needed editing. `yaw_deg` (54.5) is left UNCHANGED -- the relocation table gives only a new position, not a new approach bearing, and re-deriving it for the new site's actual hillside would need fresh ground probing (this file's own `_comment_site` explains the original 54.5 was picked from a 5-candidate probe of the OLD flank at [140,-90], which no longer describes anything at the new site). Ground truth at the new site was NOT probed by this pass (see the OW5D report) -- flagging per the macro-layout doc's own instruction that `burrow_warrens.json`'s 10m `skirt` needs ground that will accept it. `harvest.json`'s five ironwood nodes move with this site at the same offset (-490,+2610).",
   "_comment_resiting": "BAND2-63-WARRENS, 2026-08-22. `site.at` moves to (-357,2610) and `yaw_deg` to 315.0, from OW5D's (-420,2470)/54.5. The reason is not taste: at the OW5D site the cave could not be walked through. `tools/_probe_warrens_run.gd` drove the player in and wedged them solid at local z=27.5 against a collider named `Terrain`, five metres short of the passage to the den -- the guardian, the clear flag and the heartstone were all unreachable on foot, and `tests/smoke_warrens.gd` never saw it because it teleported the player into each chamber rather than walking between them. The cause is the one OW5D's own `_comment_ow5d_relocation` (below, kept) wrote down and left open: it translated a cave whose geometry had been measured against a specific steep flank at (70,-140) onto ground nobody had probed, and kept the bearing derived for the old flank. At (-420,2470) the ground rolls; it does not rise. `tools/_probe_warrens_site.gd` measures that chamber by chamber, and its modes rule out the obvious fixes in turn: another bearing does not clear it (`--scan`), no origin on a 25m grid out to 300m clears it (`--sites`, run from this site AND from the Old Quarry -- the best anywhere is 2.6m short of burying 4-6m ceilings), and making the cave DESCEND (`--plan`) buries the deep rooms but not the entrance, because the ground surface then cuts through the entry corridor and the player walks up it into the ceiling. There is no flank in this part of the Meadows. What works is `--mound`: stand the cave where the terrain never rises above its floor at all, so nothing intrudes anywhere, and let what shows above ground be a rock knoll with a hole in it -- which is what this file's own site comment always said the entrance was, and what `skirt` was built to hide the underside of (see `_comment_mound` for the outcrop that makes it read as stone rather than as a slab). The first such site, (-382,2510), cleared the footprint and failed the OTHER half nobody had checked: the driven run walked 30m from the road and stopped 25m short of the entrance, against a 50-degree bank. `--best` scores both at once -- footprint clear, the 40m in front of the mouth walkable, and the site kept near the spine -- and (-357,2610) at 315 degrees is its answer: clear by 0.43m, approach 6.9 degrees, 34m off the spine, sitting on the `warren_undertrail` loop that terrain_playground.json already runs past the warrens. The whole path now walks: road to entrance to mouth to hall to den to vault, 123m, 26s, measured. Everything sited against the old mouth moved with it: Pell's stand (trainers.json order 2001, 35m out on the approach), the five ironwood nodes (harvest.json), the warrens' own resident Burrowback cluster (spawns.json order 3) and the map region (map_landmarks.json). The chamber layout, sizes, spawns, deposits, dressing and prize are UNCHANGED -- they are authored in the site's own local frame and rotate with it, which is the property `_comment_site` describes. One dependency is NOT this lane's to close: the scatter still has a `CommonTree_3` standing in the new doorway, because a band clearing does not invalidate the bake (GATE_D_LANE_CONTRACT.md sec4). The clearing is authored (bands/band2_stone_and_root/vegetation.json order 2002, radius 30) and the walked evidence above was measured with the 93 scatter colliders inside it dropped, which is what the coordinator's single re-bake will do for real.",
   "site": {
-    "at": [-357.0, 2610.0],
+    "at": [
+      -357.0,
+      2610.0
+    ],
     "yaw_deg": 315.0,
     "_comment_clear_radius": "BAND2-63-WARRENS. Matches the authored clearing in bands/band2_stone_and_root/vegetation.json (order 2002) and is applied at BUILD time by burrow_warrens.gd::_clear_the_ground_the_cave_stands_on(), because that authored clearing cannot take effect until the coordinator re-bakes (GATE_D_LANE_CONTRACT.md sec4) and until then the stale bake stands a tree in the doorway. Keep the two numbers the same: when the re-bake lands, the runtime pass has nothing left to remove and this becomes a no-op rather than a second, disagreeing opinion about where the wood stops.",
     "clear_radius_m": 30.0,
@@ -38,7 +41,9 @@
       "range_m": 6.0,
       "spill_offset_m": 0.9,
       "open_seconds": 1.4
-    }
+    },
+    "_comment_wall_tint_lerp": "W07-WARRENS-0904. `_material()` pulled every interior stone albedo 0.75 toward near-white #fff2e0; under the new dark ambient the pools alone light the walls and a ~0.85 albedo blows out beside each one. 0.6 keeps the stone warm and lets a pool read as a pool.",
+    "wall_tint_lerp": 0.6
   },
   "_comment_mound": "BAND2-63-WARRENS. The cave stands in ground that does not cover it (see `_comment_resiting`), so what a player sees from the road is the cave's own rock mass standing proud of the meadow -- and the first capture round showed exactly what that is without help: a grey rectangular slab, six metres tall, in a field. This is the outcrop that makes it a knoll instead. Deterministic boulders from the nature family the corridor is already scattered with (`Rock_Medium_1..3`, the same models `vegetation.json` uses), set around the perimeter and over the roof so the silhouette breaks up and the mass reads as stone in the ground rather than a building. Seeded, never random: the same rock stands in the same place every boot, which is the determinism promise the rest of the world keeps. `skip_front_m` keeps the DOORWAY clear and nothing else -- it was 9m, which left the whole front of the cave as a bare flat rectangle standing in a field, and the blind critic called it exactly that: a textured plane with straight cut edges reading as unfinished blocking geometry. At 6m the rock runs across the front too and the opening reads as a hole in a rock face. `tint` multiplies the boulders' own albedo toward the cave's rock colour, because the nature pack's rocks ship a cool mint-grey that the same critic read as 'a heap of enormous cabbages' beside this cave's warm dark stone. ALL TUNABLE.",
   "mound": {
@@ -55,19 +60,53 @@
     "perimeter_spacing_m": 18.0,
     "perimeter_courses": 1,
     "perimeter_base_drop_m": 2.4,
-    "perimeter_scale": [3.0, 5.0],
+    "perimeter_scale": [
+      3.0,
+      5.0
+    ],
     "roof_spacing_m": 20.0,
-    "roof_scale": [3.0, 4.5],
+    "roof_scale": [
+      3.0,
+      4.5
+    ],
     "sink_m": 2.0,
     "_comment_mouth_dome_ext09": "EXT-09-MOUNDMASS, item 2 second half: 'scale up 2-3 pieces to dome the mouth'. `burrow_warrens.gd::_build_mouth_dome()`, called right after `_build_accent_boulders()`. Thinning the perimeter/roof grid above left the doorway's own gap (`skip_front_m`'s clear radius, unchanged, protects the walkway and the hand-authored jambs/brow) with no earth mass over it at all -- three hand-placed pieces fill exactly that gap: one centred and set back/up over the opening, two flanking it lower on the mound's own shoulders, all wearing the SAME earth material the rest of the mound wears (`_wear_as_earth()`) and squashed into the same low mounded-hump silhouette `_build_spoil_mounds()` already uses, at roughly double an accent boulder's own scale so each one reads as a single dome. Ground-sampled (no `y_m`), same rule the accent boulders and skirt already follow, so each one sits on the real hillside rather than an assumed flat plane.",
     "_why_mouth_dome_scale_ext10": "EXT-10-OVERSHOOT correction. These three were new this round at scale 6.6-7.5/sink 1.8-2.1 (ratio sink/scale ~0.27-0.28) and are part of the overshoot the frame showed. Halved to keep the same proven sink/scale ratio at the new, smaller size, rather than reusing the old absolute sink metres against a much smaller piece (which would over-bury instead).",
     "mouth_dome": [
-      {"model": "Rock_Medium_3", "offset": [0.0, 3.4], "scale": 3.8, "squash_y": 0.48, "yaw_deg": 15.0, "sink_m": 1.05,
-        "_why": "the centre dome, set back and up over the doorway roofline -- the mass the opening reads as cut INTO from the approach"},
-      {"model": "Rock_Medium_1", "offset": [-5.2, 1.2], "scale": 3.35, "yaw_deg": 40.0, "sink_m": 0.9,
-        "_why": "the left shoulder, bridging the jamb below and the thinned perimeter grid further out"},
-      {"model": "Rock_Medium_2", "offset": [5.4, 1.0], "scale": 3.45, "yaw_deg": -35.0, "sink_m": 0.95,
-        "_why": "the right shoulder, mirrored and independently scaled/rotated so the pair does not read as copy-pasted"}
+      {
+        "model": "Rock_Medium_3",
+        "offset": [
+          0.0,
+          3.4
+        ],
+        "scale": 3.8,
+        "squash_y": 0.48,
+        "yaw_deg": 15.0,
+        "sink_m": 1.05,
+        "_why": "the centre dome, set back and up over the doorway roofline -- the mass the opening reads as cut INTO from the approach"
+      },
+      {
+        "model": "Rock_Medium_1",
+        "offset": [
+          -5.2,
+          1.2
+        ],
+        "scale": 3.35,
+        "yaw_deg": 40.0,
+        "sink_m": 0.9,
+        "_why": "the left shoulder, bridging the jamb below and the thinned perimeter grid further out"
+      },
+      {
+        "model": "Rock_Medium_2",
+        "offset": [
+          5.4,
+          1.0
+        ],
+        "scale": 3.45,
+        "yaw_deg": -35.0,
+        "sink_m": 0.95,
+        "_why": "the right shoulder, mirrored and independently scaled/rotated so the pair does not read as copy-pasted"
+      }
     ],
     "_comment_skirt": "The site clears 30m of scatter so nothing stands in the cave or its doorway, and the first blind round showed the cost of that honestly: a bare lawn ring around the outcrop, in a survey whose loudest criticism was already ground density. These are the site's OWN ground cover, authored rather than scattered -- broken rock and low planting banked against the outcrop where debris and shade would actually put them, thinning outward. Same nature family the corridor already uses (D24, one nature family), deterministic from the same seed, no colliders: this is dressing, and a pebble that stops a player is a bug.",
     "_comment_skirt_split_t1_warrens_ext": "T1-WARRENS-EXT, owner+judge evidence 'Warrens exterior: bad' -- 'smooth mint-green faceted low-poly rocks that read as a different game's asset pack' and 'an oversized purple flower prop (petals ~40cm against the 1.8m-trainer ruler)'. `skirt_models`/`skirt_scale` used to cover all eight of these meshes at once, so a boulder scale range (2.2-4.4x wide, tuned for `Rock_Medium_*`) also stretched every plant, and none of the eight ever got a material pass -- the rocks stayed the nature pack's raw mint-grey `burrow_warrens.gd::_place_rock` had already been fixed away from everywhere else on this outcrop. Split in two: `skirt_rock_models` (still `skirt_scale`, still wears the cave's own Rock030 stone via `_wear_the_cave_stone`) and `skirt_flora_models` (its own, much smaller `skirt_flora_scale`, and `_dress_skirt_flora`'s already-vetted Bush_Common leaf swap / Grass_Wide_Tall retint -- the exact fix `vegetation.json`'s own corridor scatter already uses for these two meshes). `Plant_1` is dropped rather than moved across: `vegetation.json`'s own `_comment_rosettes_gate_d` already adjudicated it unfit for general ground cover (a blind critic read it as agave/tropical) and pulled it from the corridor scatter for the same reason; this is very likely the 'oversized purple flower' finding, and re-adding it here at any scale would reopen a defect already closed elsewhere. `skirt_flora_fraction` keeps the original list's roughly 50/50 rock-to-flora mix (four of each in the old eight-model list).",
@@ -85,8 +124,14 @@
     "_why_skirt_count_ext07": "EXT-07-EARTHWORK. Trimmed alongside the perimeter/roof reshape above rather than left alone -- the instruction this round is to prefer changing counts/scales/positions of what exists over adding more, and the new `spoil_mounds` below are new objects at the mouth. 260 -> 210 keeps the site's own general ground-cover density roughly proportionate to the now-smaller number of, but larger, boulders it surrounds, instead of the total piece count only ever climbing.",
     "skirt_count": 210,
     "skirt_reach_m": 30.0,
-    "skirt_scale": [0.7, 2.1],
-    "skirt_flora_scale": [0.45, 1.0],
+    "skirt_scale": [
+      0.7,
+      2.1
+    ],
+    "skirt_flora_scale": [
+      0.45,
+      1.0
+    ],
     "skirt_flora_fraction": 0.5,
     "_comment_skirt_ground_ext05": "EXT-05-GROUND, second blind pass, evidence 'boulders read as sitting ON top of grass ... uniform ... boulders on lawn'. Two separate defects, both in `_build_site_skirt()`. First, EVERY skirt rock sank a flat 0.08m regardless of its own drawn scale (`skirt_scale` 0.7-2.1x), which barely buries a small one and does nothing for a large one -- a boulder near the top of that range floats on the surface almost exactly the way the judge frame shows. `skirt_sink_min_m`/`skirt_sink_m` replace the fixed 0.08 with a range scaled to each piece's own draw (small end -> `skirt_sink_min_m`, large end -> `skirt_sink_m`), so a bigger rock genuinely sits deeper rather than merely being a bigger version of the same shallow float. Second, sinking a rock hides more of its OWN silhouette but does nothing about the ring where stone meets earth -- the ground right at its base is still bare grass. `soil_collar_scale` is the size (as a multiple of the rock's own drawn scale) of a small flattened dark-earth patch `burrow_warrens.gd::_boulder_soil_collar()` now drops at every skirt rock's foot, coloured with the new `site.apron_colour` so the apron and the ground at the boulders' feet read as the one worn dirt. Flora is unaffected (ferns/grass do not want a bare-earth collar under them). 0 on either sink key reproduces the old fixed 0.08; 0 on `soil_collar_scale` turns the collar off.",
     "skirt_sink_min_m": 0.18,
@@ -116,71 +161,328 @@
     "skip_front_m": 10.0,
     "_comment_accent_boulders_ext08": "EXT-08-EARTHMOUND, item 2: '4-6 large half-buried boulders as ACCENTS only, not a heap'. `burrow_warrens.gd::_build_accent_boulders()`, called right after `_build_mound()`. Five hand-placed `Rock_Medium_*` pieces (no new mesh) wearing the cave's OWN rock stone (`_wear_the_cave_stone()`, same as the site skirt) -- the only exterior geometry left that reads as bare stone, now that the mound's own grid wears earth. Placed clear of the doorway and its `skip_front_m` clearance, two flanking the mouth close in and three further round the mound's own shoulders, each sunk 0.8-1.1m (roughly a third to a half of its own drawn height) for the half-buried read. `offset` is cave-local [x, z]; no `y_m`, so each one samples the real hillside under it the same way the entrance dressing's ground-level pieces do.",
     "accent_boulders": [
-      {"model": "Rock_Medium_1", "offset": [-8.8, -3.2], "scale": 3.6, "yaw_deg": 25.0, "sink_m": 1.1,
-        "_why": "left of the mouth, close enough to the approach to read as a specific stone rather than background scatter"},
-      {"model": "Rock_Medium_2", "offset": [8.4, -2.6], "scale": 3.3, "yaw_deg": -40.0, "sink_m": 1.0,
-        "_why": "mirrors the left accent on the right of the mouth, independently scaled/rotated so the pair does not read as copy-pasted"},
-      {"model": "Rock_Medium_3", "offset": [-6.9, 4.8], "scale": 2.7, "yaw_deg": 70.0, "sink_m": 0.9,
-        "_why": "up the mound's own left shoulder, breaking the earth mass's silhouette above the doorway line"},
-      {"model": "Rock_Medium_1", "offset": [7.6, 5.4], "scale": 2.9, "yaw_deg": -15.0, "sink_m": 0.95,
-        "_why": "the right shoulder's own accent, at a different scale/rotation than its left counterpart"},
-      {"model": "Rock_Medium_2", "offset": [-11.5, -6.5], "scale": 2.4, "yaw_deg": 110.0, "sink_m": 0.8,
-        "_why": "further down the approach on the left, beside the spoil heaps, the smallest of the five and clear of the trodden path"}
+      {
+        "model": "Rock_Medium_1",
+        "offset": [
+          -8.8,
+          -3.2
+        ],
+        "scale": 3.6,
+        "yaw_deg": 25.0,
+        "sink_m": 1.1,
+        "_why": "left of the mouth, close enough to the approach to read as a specific stone rather than background scatter"
+      },
+      {
+        "model": "Rock_Medium_2",
+        "offset": [
+          8.4,
+          -2.6
+        ],
+        "scale": 3.3,
+        "yaw_deg": -40.0,
+        "sink_m": 1.0,
+        "_why": "mirrors the left accent on the right of the mouth, independently scaled/rotated so the pair does not read as copy-pasted"
+      },
+      {
+        "model": "Rock_Medium_3",
+        "offset": [
+          -6.9,
+          4.8
+        ],
+        "scale": 2.7,
+        "yaw_deg": 70.0,
+        "sink_m": 0.9,
+        "_why": "up the mound's own left shoulder, breaking the earth mass's silhouette above the doorway line"
+      },
+      {
+        "model": "Rock_Medium_1",
+        "offset": [
+          7.6,
+          5.4
+        ],
+        "scale": 2.9,
+        "yaw_deg": -15.0,
+        "sink_m": 0.95,
+        "_why": "the right shoulder's own accent, at a different scale/rotation than its left counterpart"
+      },
+      {
+        "model": "Rock_Medium_2",
+        "offset": [
+          -11.5,
+          -6.5
+        ],
+        "scale": 2.4,
+        "yaw_deg": 110.0,
+        "sink_m": 0.8,
+        "_why": "further down the approach on the left, beside the spoil heaps, the smallest of the five and clear of the trodden path"
+      }
     ],
     "_comment_entrance_dressing": "EXT-04-APRON. `skip_front_m` above (6m) and the skirt's own doorway carve-out both deliberately keep the area right around the opening EMPTY of the generic radial scatter -- correct for the walk-through gap, and the reason the mouth itself had nothing else going for it: no scrub growing up to where feet would actually wear the ground bare, and no rock actually framing the hole, just a gap in a scattered field. Hand-authored rather than another procedural pass, because a doorway wants a few placed pieces that read as INTENTIONAL, not more of the same scatter this file already keeps out of it. `kind: \"flora\"` reuses `_dress_skirt_flora()`'s vetted Bush_Common/Grass_Wide_Tall retint (the same fix `vegetation.json`'s own corridor scatter already uses for these two meshes); `kind: \"rock\"` (default) reuses `_wear_the_cave_stone()`/`_varied_tint()` above, and `dark: true` biases specifically toward that spread's darker end for the three pieces meant to read as the doorway's own shadowed jambs and brow -- CLAUDE.md's 'no new mesh' read as material/scale/placement, the same lever the guardian's own presentation pass already uses. `y_m` places a piece at a height above the cave floor (the hood stones, which belong to the doorway's structure, not the slope); omitted, the piece samples the real hillside under it instead, same as the skirt. Twelve pieces total, three small clusters (two fern/scrub, one rock hood) rather than a scatter -- CLAUDE.md's 'favour a few purposeful clusters over scattered filler'. No new asset: every model here is already installed and already used elsewhere on this exact outcrop (Rock_Medium_*, Fern_1, Bush_Common, Grass_Wide_Tall, Pebble_Round_3). ALL TUNABLE.",
     "_comment_entrance_dressing_ext05": "EXT-05-GROUND, second blind pass, evidence 'boulders on lawn' and this file's own instruction to make the entrance 'the darkest value in the frame'. Three changes to the two jambs and their darkening formula, none of them a new prop: (1) `sink_m` raised (0.3->0.5, 0.25->0.45) so the jambs themselves sit lower in the ground, same reasoning as the skirt's own sink fix above. (2) both jambs now get `burrow_warrens.gd::_boulder_soil_collar()` -- the same dark-earth patch the skirt rocks get, gated on `dark: true` with no `y_m` (ground-contact only; the elevated brow stone is untouched) -- so the doorway's own framing stones plant into visible dirt rather than grass. (3) `burrow_warrens.gd::_build_entrance_dressing()`'s own dark-tint clamp moved from `[0.22, 0.55]` to `[0.32, 0.78]` (darkened() fraction toward black), so the jambs and brow land at the genuinely darkest values in the frame rather than a ceiling that a mid-sized `tint_variation` bump would already have been saturating at. `y_m`/`scale`/`yaw_deg`/`offset` are unchanged from the first pass.",
     "_comment_entrance_dressing_ext06": "EXT-06-STAIN, third exterior pass, reviewer items 3 and 4: the fern/scrub ring 'not reading' and the entrance needing to be 'wider, darker ... so from the approach the eye lands on a dark hole'. Still twelve pieces -- the reviewer's own instruction was to push what exists harder rather than add more. Three moves, none of them a new prop: (1) both jambs' `offset.x` pushed outward (-2.5/2.5 -> -3.1/3.1) and their `scale` raised (1.7/1.8 -> 2.0/2.1) -- a wider gap between two BIGGER dark stones reads as a wider framed opening from the approach even though the walkable doorway itself (`passages[0].width`, chambers/passages architecture) is untouched; that geometry is shared with the interior the owner asked not to be touched, so this pass widens the FRAME around it instead. Every flora piece moved outward by the same +0.6m the jambs moved, so the ring still hugs its own jamb rather than the two now overlapping, and every flora `scale` raised roughly 30-35% for the density the reviewer asked for. (2) the darkening clamp itself moved again (see `_build_entrance_dressing()`'s own comment, [0.32,0.78] -> [0.40,0.86]) so the jambs and brow sit visibly darker than either prior pass landed them. (3) the brow pushed lower and further out (`y_m` 3.1->2.8, `offset.z` -1.2->-1.6) and enlarged (`scale` 2.2->2.6), so it overhangs more of the opening's own height and casts more of it into shadow by silhouette alone -- geometry, not a new light, and nothing here crosses the doorway's own threshold plane into the mouth chamber the owner judged good.",
     "_comment_entrance_dressing_ext08": "EXT-08-EARTHMOUND, round 5. Two independent judge findings land on these same three pieces. Item 5: 'the threshold rock is a third cold-grey material matching neither exterior nor den' -- `dark: true` now routes through `burrow_warrens.gd::_wear_as_wall_stone()` instead of the darkening clamp EXT-05/EXT-06 kept pushing toward black (see that function's own header); the JSON shape of these three entries is otherwise unchanged; only what `dark: true` MEANS changed. Item 4: 'the standing/threshold frame REGRESSED: darker, with a black overhang wedge covering a quarter of the frame' -- the brow (below) is the one piece EXT-07 grew and pushed out on every round (`y_m` 3.1->2.8->2.6, `offset.z` -1.2->-1.6->-1.85, `scale` 2.2->2.6->2.9) specifically so it would overhang the opening, and combined with the old darkening clamp that overhang is almost certainly the wedge the judge saw. Pulled back rather than grown again: `scale` 2.9->1.9, `offset.z` -1.85->-1.05, `y_m` 2.6->2.9 (higher, so it sits closer to the actual lintel line the doorway's own passage height implies instead of hanging low over the walkway). It still reads as a stone over the opening -- now the wall's own material, not a black wedge dropped over a quarter of the frame.",
     "entrance_dressing": [
-      {"kind": "rock", "model": "Rock_Medium_2", "offset": [-3.1, -0.5], "y_m": 0.5, "scale": 2.3, "yaw_deg": 15.0, "sink_m": 0.75, "dark": true,
-        "_why": "the left jamb, pushed outward from -2.5 to -3.1 and enlarged 1.7->2.0->2.3. EXT-07-EARTHWORK: sunk further still (0.5->0.75) to match the mound's own deeper `sink_m`, so the jamb reads as ground the boulder rises out of rather than a rock set on top of it -- the same half-buried read item 2 asks for, at the one boulder the approach camera sees closest. EXT-08-EARTHMOUND: `dark` now means 'wear the wall's own stone', not 'darken further' -- position/scale unchanged"},
-      {"kind": "rock", "model": "Rock_Medium_1", "offset": [3.1, -0.5], "y_m": 0.5, "scale": 2.4, "yaw_deg": -20.0, "sink_m": 0.7, "dark": true,
-        "_why": "the right jamb, mirrored and independently scaled/rotated so the two sides do not read as the same rock copy-pasted. EXT-07-EARTHWORK: sunk deeper (0.45->0.7) alongside its mirror. EXT-08-EARTHMOUND: same material-meaning change as its mirror, position/scale unchanged"},
-      {"kind": "rock", "model": "Rock_Medium_3", "offset": [0.2, -1.05], "y_m": 2.9, "scale": 1.9, "yaw_deg": 40.0, "sink_m": 0.0, "dark": true,
-        "_why": "the brow. EXT-08-EARTHMOUND, item 4: three straight rounds (EXT-05/06/07) grew this piece and pushed it further out over the opening, and round 5's judge named the result -- 'a black overhang wedge covering a quarter of the frame'. Pulled back rather than grown again: scale 2.9->1.9, offset.z -1.85->-1.05 (less reach out over the walkway), y_m 2.6->2.9 (higher, nearer the doorway's own lintel line). Also now wears the wall's own stone (`dark` -> `_wear_as_wall_stone()`) instead of a darkened tint, so what remains reads as a stone set into the earth over the doorway rather than a black wedge"},
-      {"kind": "flora", "model": "Fern_1", "offset": [-4.2, 0.4], "scale": 1.9, "yaw_deg": 10.0,
-        "_why": "the left fern/scrub cluster, piece 1 of 4, moved out with its own jamb and enlarged 1.4->1.9 -- reviewer instruction was to push what exists harder rather than add more"},
-      {"kind": "flora", "model": "Fern_1", "offset": [-4.6, 0.9], "scale": 1.6, "yaw_deg": -35.0,
-        "_why": "touching the first fern rather than merely near it -- EV7-clusters-fix's own finding, that a touching pile reads as one thing and a loose arc reads as two"},
-      {"kind": "flora", "model": "Bush_Common", "offset": [-3.9, 1.1], "scale": 1.5, "yaw_deg": 60.0,
-        "_why": "a second silhouette in the same cluster so it is not two identical fern models standing side by side"},
-      {"kind": "flora", "model": "Grass_Wide_Tall", "offset": [-4.5, 0.2], "scale": 2.0, "yaw_deg": 100.0,
-        "_why": "fills the gap at the cluster's own foot, the same role Grass_Wide_Tall already plays in the den's nest heap (AUDIT-E5)"},
-      {"kind": "flora", "model": "Fern_1", "offset": [4.2, 0.4], "scale": 1.85, "yaw_deg": -10.0,
-        "_why": "the right fern/scrub cluster, mirrored -- both sides of the mouth get a ring, not just one"},
-      {"kind": "flora", "model": "Fern_1", "offset": [4.6, 0.9], "scale": 1.55, "yaw_deg": 35.0,
-        "_why": "touching cluster piece 2, mirrored"},
-      {"kind": "flora", "model": "Bush_Common", "offset": [3.9, 1.1], "scale": 1.45, "yaw_deg": -60.0,
-        "_why": "second silhouette, mirrored"},
-      {"kind": "flora", "model": "Grass_Wide_Tall", "offset": [4.5, 0.2], "scale": 1.95, "yaw_deg": -100.0,
-        "_why": "fills the right cluster's own foot, mirrored"},
-      {"kind": "rock", "model": "Pebble_Round_3", "offset": [0.0, -0.2], "scale": 0.5, "yaw_deg": 5.0,
-        "_why": "one worn stone sitting on the threshold itself, on the apron's own centreline -- the detail that says feet cross here, not just that the ground nearby was cleared. Untouched this pass."}
+      {
+        "kind": "rock",
+        "model": "Rock_Medium_2",
+        "offset": [
+          -3.1,
+          -0.5
+        ],
+        "y_m": 0.5,
+        "scale": 2.3,
+        "yaw_deg": 15.0,
+        "sink_m": 0.75,
+        "dark": true,
+        "_why": "the left jamb, pushed outward from -2.5 to -3.1 and enlarged 1.7->2.0->2.3. EXT-07-EARTHWORK: sunk further still (0.5->0.75) to match the mound's own deeper `sink_m`, so the jamb reads as ground the boulder rises out of rather than a rock set on top of it -- the same half-buried read item 2 asks for, at the one boulder the approach camera sees closest. EXT-08-EARTHMOUND: `dark` now means 'wear the wall's own stone', not 'darken further' -- position/scale unchanged"
+      },
+      {
+        "kind": "rock",
+        "model": "Rock_Medium_1",
+        "offset": [
+          3.1,
+          -0.5
+        ],
+        "y_m": 0.5,
+        "scale": 2.4,
+        "yaw_deg": -20.0,
+        "sink_m": 0.7,
+        "dark": true,
+        "_why": "the right jamb, mirrored and independently scaled/rotated so the two sides do not read as the same rock copy-pasted. EXT-07-EARTHWORK: sunk deeper (0.45->0.7) alongside its mirror. EXT-08-EARTHMOUND: same material-meaning change as its mirror, position/scale unchanged"
+      },
+      {
+        "kind": "rock",
+        "model": "Rock_Medium_3",
+        "offset": [
+          0.2,
+          -1.05
+        ],
+        "y_m": 2.9,
+        "scale": 1.9,
+        "yaw_deg": 40.0,
+        "sink_m": 0.0,
+        "dark": true,
+        "_why": "the brow. EXT-08-EARTHMOUND, item 4: three straight rounds (EXT-05/06/07) grew this piece and pushed it further out over the opening, and round 5's judge named the result -- 'a black overhang wedge covering a quarter of the frame'. Pulled back rather than grown again: scale 2.9->1.9, offset.z -1.85->-1.05 (less reach out over the walkway), y_m 2.6->2.9 (higher, nearer the doorway's own lintel line). Also now wears the wall's own stone (`dark` -> `_wear_as_wall_stone()`) instead of a darkened tint, so what remains reads as a stone set into the earth over the doorway rather than a black wedge"
+      },
+      {
+        "kind": "flora",
+        "model": "Fern_1",
+        "offset": [
+          -4.2,
+          0.4
+        ],
+        "scale": 1.9,
+        "yaw_deg": 10.0,
+        "_why": "the left fern/scrub cluster, piece 1 of 4, moved out with its own jamb and enlarged 1.4->1.9 -- reviewer instruction was to push what exists harder rather than add more"
+      },
+      {
+        "kind": "flora",
+        "model": "Fern_1",
+        "offset": [
+          -4.6,
+          0.9
+        ],
+        "scale": 1.6,
+        "yaw_deg": -35.0,
+        "_why": "touching the first fern rather than merely near it -- EV7-clusters-fix's own finding, that a touching pile reads as one thing and a loose arc reads as two"
+      },
+      {
+        "kind": "flora",
+        "model": "Bush_Common",
+        "offset": [
+          -3.9,
+          1.1
+        ],
+        "scale": 1.5,
+        "yaw_deg": 60.0,
+        "_why": "a second silhouette in the same cluster so it is not two identical fern models standing side by side"
+      },
+      {
+        "kind": "flora",
+        "model": "Grass_Wide_Tall",
+        "offset": [
+          -4.5,
+          0.2
+        ],
+        "scale": 2.0,
+        "yaw_deg": 100.0,
+        "_why": "fills the gap at the cluster's own foot, the same role Grass_Wide_Tall already plays in the den's nest heap (AUDIT-E5)"
+      },
+      {
+        "kind": "flora",
+        "model": "Fern_1",
+        "offset": [
+          4.2,
+          0.4
+        ],
+        "scale": 1.85,
+        "yaw_deg": -10.0,
+        "_why": "the right fern/scrub cluster, mirrored -- both sides of the mouth get a ring, not just one"
+      },
+      {
+        "kind": "flora",
+        "model": "Fern_1",
+        "offset": [
+          4.6,
+          0.9
+        ],
+        "scale": 1.55,
+        "yaw_deg": 35.0,
+        "_why": "touching cluster piece 2, mirrored"
+      },
+      {
+        "kind": "flora",
+        "model": "Bush_Common",
+        "offset": [
+          3.9,
+          1.1
+        ],
+        "scale": 1.45,
+        "yaw_deg": -60.0,
+        "_why": "second silhouette, mirrored"
+      },
+      {
+        "kind": "flora",
+        "model": "Grass_Wide_Tall",
+        "offset": [
+          4.5,
+          0.2
+        ],
+        "scale": 1.95,
+        "yaw_deg": -100.0,
+        "_why": "fills the right cluster's own foot, mirrored"
+      },
+      {
+        "kind": "rock",
+        "model": "Pebble_Round_3",
+        "offset": [
+          0.0,
+          -0.2
+        ],
+        "scale": 0.5,
+        "yaw_deg": 5.0,
+        "_why": "one worn stone sitting on the threshold itself, on the apron's own centreline -- the detail that says feet cross here, not just that the ground nearby was cleared. Untouched this pass."
+      }
     ],
     "_comment_spoil_mounds_ext07": "EXT-07-EARTHWORK, item 3: 'spoil mounds / soil apron of terrain-coloured earth around the mouth -- the dug-out material a burrow would throw up'. NEW key, `burrow_warrens.gd::_build_spoil_mounds()`, called right after `_build_entrance_dressing()`. Reuses the same installed Rock_Medium_* meshes the rest of the outcrop is built from (no new mesh, D24/CLAUDE.md) but wears them with `_floor_material(true)` -- the SAME triplanar Ground030 earth material and `apron_colour` the trodden approach ramp and every boulder's own soil collar already use -- rather than `_wear_the_cave_stone()`'s rock stone, so these read as heaped DIRT next to the boulders rather than more rock. `squash_y` flattens the model on its own Y axis before the uniform `scale` is applied (`art.scale = Vector3(scale, scale*squash_y, scale)`), turning a boulder silhouette into a low mounded hump -- the shape a pile of thrown spoil actually has, from an asset never built to be one. Both sample the real hillside under them (no `y_m`, same rule the skirt and ground-level entrance dressing already follow) and carry no collider -- dressing, not a stepping hazard, the rule this whole outcrop keeps. Neither crosses `_apron_colour()`'s own trodden-path width at its own z (checked against `site.apron_mouth_width_m`/`apron_far_width_m`/`apron_run_m`'s own taper), so nothing stands where a player's own feet already wear the ground bare. ALL TUNABLE.",
     "_comment_spoil_mounds_ext08": "EXT-08-EARTHMOUND, item 3: 'Two spoil heaps in front'. EXT-07 authored three (two flanking, one smaller unpaired heap further down the approach); trimmed to the two flanking heaps the instruction actually names -- the third, smallest of the three, is dropped rather than kept alongside a now much bigger set of accent boulders in the same general area (item 2), which is where the 'no spoil' verdict most likely came from: three small earth humps competing for attention against 89 rock boulders were easy to miss. Two clear flanking heaps, now beside a mound that reads as earth rather than rock throughout, should read as what they are.",
     "spoil_mounds": [
-      {"model": "Rock_Medium_2", "offset": [-5.6, -2.4], "scale": 3.2, "squash_y": 0.4, "yaw_deg": -15.0,
-        "_why": "the left spoil heap, wider than the left entrance jamb (-3.1) and inside its fern ring (-3.9 to -4.6) -- earth thrown clear of the dig, piled where the digger would actually have piled it"},
-      {"model": "Rock_Medium_1", "offset": [6.1, -2.0], "scale": 3.0, "squash_y": 0.42, "yaw_deg": 25.0,
-        "_why": "the right spoil heap, independently scaled/rotated/positioned rather than a mirror of the left -- two hand-dug piles are never the same shape"}
+      {
+        "model": "Rock_Medium_2",
+        "offset": [
+          -5.6,
+          -2.4
+        ],
+        "scale": 3.2,
+        "squash_y": 0.4,
+        "yaw_deg": -15.0,
+        "_why": "the left spoil heap, wider than the left entrance jamb (-3.1) and inside its fern ring (-3.9 to -4.6) -- earth thrown clear of the dig, piled where the digger would actually have piled it"
+      },
+      {
+        "model": "Rock_Medium_1",
+        "offset": [
+          6.1,
+          -2.0
+        ],
+        "scale": 3.0,
+        "squash_y": 0.42,
+        "yaw_deg": 25.0,
+        "_why": "the right spoil heap, independently scaled/rotated/positioned rather than a mirror of the left -- two hand-dug piles are never the same shape"
+      }
     ]
   },
   "_comment_chambers_heights": "BAND2-63-WARRENS lowered every ceiling by 0.6-1.2m (mouth 4.2->3.6, hall 5.0->4.2, warren 4.0->3.4, den 6.0->4.8, vault 4.0->3.4). At this site most of the cave's mass stands ABOVE the meadow (see `_comment_resiting`), so every metre of ceiling is a metre of grey slab on the skyline; the first capture round showed a six-metre wall. They are still taller than the player and taller than the guardian, and the den is still the tallest room in the cave -- the shape of the place is unchanged, it is just not a tower any more. `lights[].y` moved with the two ceilings it would otherwise have poked through. TUNABLE.",
   "_comment_chambers": "Local metres: x is lateral, +z is depth into the hill; `at` is the chamber centre, `size` is [width, depth], `height` is floor-to-ceiling. Chambers connected by a passage MUST share the axis the passage runs on (the wall opener splits one wall, it does not cut diagonals). `branch: true` marks the optional deep branch -- it is not on the way to anything.",
   "chambers": [
-    {"id": "mouth",  "at": [0.0, 6.0],    "size": [7.0, 10.0],  "height": 3.6},
-    {"id": "hall",   "at": [0.0, 22.0],   "size": [14.0, 12.0], "height": 4.2},
-    {"id": "warren", "at": [-16.0, 22.0], "size": [10.0, 9.0],  "height": 3.4},
-    {"id": "den",    "at": [0.0, 40.0],   "size": [16.0, 14.0], "height": 4.8},
-    {"id": "vault",  "at": [15.0, 40.0],  "size": [8.0, 8.0],   "height": 3.4, "branch": true}
+    {
+      "id": "mouth",
+      "at": [
+        0.0,
+        6.0
+      ],
+      "size": [
+        7.0,
+        10.0
+      ],
+      "height": 3.6
+    },
+    {
+      "id": "hall",
+      "at": [
+        0.0,
+        22.0
+      ],
+      "size": [
+        14.0,
+        12.0
+      ],
+      "height": 4.2
+    },
+    {
+      "id": "warren",
+      "at": [
+        -16.0,
+        22.0
+      ],
+      "size": [
+        10.0,
+        9.0
+      ],
+      "height": 3.4
+    },
+    {
+      "id": "den",
+      "at": [
+        0.0,
+        40.0
+      ],
+      "size": [
+        16.0,
+        14.0
+      ],
+      "height": 4.8
+    },
+    {
+      "id": "vault",
+      "at": [
+        15.0,
+        40.0
+      ],
+      "size": [
+        8.0,
+        8.0
+      ],
+      "height": 3.4,
+      "branch": true
+    }
   ],
   "_comment_passages": "`gated: true` is the one door in the cave: a rock slab across the den->vault passage that only lifts once `clear.flag` is set (see `guardian`). Deliberately NOT an item_gate.gd gate -- SB10's mechanism is a carried KEY operating the world, and nothing in the warrens hands out a key; the thing that opens this is having beaten the guardian, which is a fact about the world the flag store already remembers.",
   "passages": [
-    {"from": "mouth", "to": "hall", "width": 3.0, "height": 3.0},
-    {"from": "hall", "to": "warren", "width": 2.6, "height": 2.8},
-    {"from": "hall", "to": "den", "width": 3.2, "height": 3.4},
-    {"from": "den", "to": "vault", "width": 2.4, "height": 2.8, "gated": true}
+    {
+      "from": "mouth",
+      "to": "hall",
+      "width": 3.0,
+      "height": 3.0
+    },
+    {
+      "from": "hall",
+      "to": "warren",
+      "width": 2.6,
+      "height": 2.8
+    },
+    {
+      "from": "hall",
+      "to": "den",
+      "width": 3.2,
+      "height": 3.4
+    },
+    {
+      "from": "den",
+      "to": "vault",
+      "width": 2.4,
+      "height": 2.8,
+      "gated": true
+    }
   ],
   "_comment_lights": "Dim on purpose. OF24 shipped a carried torch and this is the place it is supposed to matter, so these are low-energy pools that shape the chambers without lighting them -- a player who walks in without a torch should be able to find the way back out and not much else. `at` is [x, z] local plus `y` above the floor.",
   "_comment_lights_authored": "CONTENT-0828. Playtest 4a's own candidate direction: 'lighting authored per space rather than inherited'. Every chamber had exactly one dim pool of roughly the same energy in roughly the same place, which lights a room evenly and therefore says nothing about it -- an even wash is the lighting equivalent of the flat wall. The dark stays dark (the cave is authored dim on purpose and OF24's torch is what reads it, see `_comment_lights`); what changes is that the two rooms the dungeon exists for now have a SHAPE. The den's own fill drops 0.6 -> 0.40 and a warmer key washes the guardian's half of the room, so the alpha stands in warm light in a room that falls off cool around it rather than being one more evenly-lit object. Round 1 of this put that key at y=3.9 with range 9.5 and the frames showed it lighting the CEILING while the guardian went to silhouette -- and taught the other half of the lesson: the guardian is a wild body with a `home` and it WANDERS, so a tight spot on its authored stand cannot track it. It is a broad wash over its half of the den instead (y 3.9 -> 3.1, range 9.5 -> 13), which is a thing a room can have and a spotlight is not. The vault keeps its warm pool and gains a low cool bounce at the door end, so the chamber reads as deep rather than as a lit box -- the heartstone's own OmniLight (burrow_warrens.gd::_build_prize) is still the brightest thing in it, which is the point. The other three chambers are unchanged. ALL TUNABLE.",
@@ -189,15 +491,128 @@
   "_comment_guardian_stand_wash_verified_0830": "T1-CAST. Re-rendered (tools/capture_warrens_63.gd's 06-den-and-guardian stand, fresh camera angle since the guardian's wander is unseeded -- confirmed a different composition than either prior round's frame, expected per this same block's own round-1 lesson) and re-judged blind (Fable, model fable, no knowledge of what changed, guardian-den-0830-full.png only). Verdict flipped from round 1's 'no, not reliably' to 'yes -- the silhouette reads, carried by the dark body against a mid wall and the floor light pool under it.' The floor-level light specifically: 'a warm light pool on the floor directly beneath it backlights the legs, so the outline of the head, back and legs is traceable... legible, thanks to the light pool -- the feet read against ground.' Two defects the judge still named, NEITHER addressable by another light and both left open rather than chased blind: the moss-green back plates sit at roughly the wall's own value so the UPPER silhouette contour stays mushy even though the lower body now reads clean (a colour problem, the same class as Bramblebun's own flagged-not-fixed contrast defect, see ralph/BLOCKED.md) -- retinting an established alpha colourway is an owner decision, not a lighting one; and a second body at the frame's right edge 'reads as a yellow grain sack, not a creature... if that is an animal it fails completely' -- almost certainly the den's own resident trailpup (`spawns` array, chamber `den`, offset [-5,-4]), not identified with certainty from the frame alone. Not this entry's light (trailpup is not near the [3,44] wash added here) and not chased further -- flagged as a possible separate presentation defect on a different resident, out of scope for this entry.",
   "_comment_guardian_shadow_and_wall_0830_t1_light": "T1-LIGHT, JUDGE-3-2026-08-30.md sec1e/sec3, the round AFTER the 'verified_0830' entry above -- a second, independent blind pass on the SAME committed guardian-den-0830-full.png this file's own history just called 'yes, legible' scored it the opposite way: 'the guardian is a near-black lump... the rim does not separate the animal from the wall behind it' and 'legs and belly are the same value as the floor... no contact shadow, so the animal reads as sitting IN the ground.' Two real, previously-untried levers, not a fourth repeat of the same small-energy-nudge this block's own three prior rounds already tried and got an inconsistent read from: (1) EVERY light in this array was `shadow_enabled=false` (`_comment_lights`'s own 'shadowless omni' language), and a cave interior has no sun reaching in, so nothing standing in this room could EVER cast a real contact shadow, at any energy -- the round-1/2/3 fixes above all tried to solve a shadow-shaped problem with more wash, which cannot produce a shadow. The guardian's own key (`[3.0,43.0]`) is now the one light in the room allowed to cast one (`burrow_warrens.gd::_build_lights` reads the new opt-in `shadow` key; every other light stays shadowless, same bounded VRAM cost this codebase already pays at `cottage_interior.gd`/`grandpa_house.gd`/`inn_interior.gd`/`shop_interior.gd`, not a blanket spend). (2) The backlight (`[3.0,46.0]`) and general fill (`[0.0,40.0]`) energies move for the first time since CONTENT-0828 authored them -- 0.55->1.2 and 0.4->0.6 -- because NIGHT-LIGHT's own documented ACES-toe lesson applies here too: this file's prior rounds kept nudging a SMALL energy by a SMALL amount near the bottom of the tonemap's flat region and getting little to no rendered movement, which is exactly the shape of result three consecutive judge rounds on this exact mechanism have now produced. Re-render and re-measure before calling this closed -- see T1-LIGHT's own handover for the numbers. ALL TUNABLE.",
   "lights": [
-    {"at": [0.0, 2.0],    "y": 3.0, "energy": 0.55, "range": 9.0,  "colour": "#8fa6b8"},
-    {"at": [0.0, 22.0],   "y": 3.4, "energy": 0.5,  "range": 13.0, "colour": "#7d8a99"},
-    {"at": [-16.0, 22.0], "y": 3.2, "energy": 0.4,  "range": 10.0, "colour": "#7d8a99"},
-    {"at": [0.0, 40.0],   "y": 4.0, "energy": 0.6,  "range": 16.0, "colour": "#7c8898"},
-    {"at": [3.0, 43.0],   "y": 3.1, "energy": 1.5,  "range": 13.0, "colour": "#d9a05c", "shadow": true},
-    {"at": [3.0, 46.0],   "y": 1.8, "energy": 1.2,  "range": 8.0,  "colour": "#c9814a"},
-    {"at": [15.0, 40.0],  "y": 3.2, "energy": 0.7,  "range": 9.0,  "colour": "#b09a6a"},
-    {"at": [11.8, 40.0],  "y": 2.6, "energy": 0.3,  "range": 6.0,  "colour": "#6f7f92"},
-    {"at": [3.0, 44.0],   "y": 1.0, "energy": 0.9,  "range": 8.0,  "colour": "#e2a868"}
+    {
+      "at": [
+        0.0,
+        3.0
+      ],
+      "y": 2.4,
+      "energy": 2.6,
+      "range": 8.5,
+      "colour": "#dde7ef",
+      "_why": "daylight bounce at the mouth"
+    },
+    {
+      "at": [
+        1.5,
+        8.5
+      ],
+      "y": 2.6,
+      "energy": 0.8,
+      "range": 6.0,
+      "colour": "#aeb9c4",
+      "_why": "the mouth's deeper, dimmer half"
+    },
+    {
+      "at": [
+        -2.5,
+        20.5
+      ],
+      "y": 3.3,
+      "energy": 2.4,
+      "range": 9.0,
+      "colour": "#d8c19c",
+      "_why": "the hall's one key, off-centre"
+    },
+    {
+      "at": [
+        5.5,
+        25.5
+      ],
+      "y": 2.4,
+      "energy": 0.7,
+      "range": 6.0,
+      "colour": "#8fa3b5",
+      "_why": "cool fill on the dressing corner"
+    },
+    {
+      "at": [
+        -16.0,
+        22.0
+      ],
+      "y": 2.8,
+      "energy": 1.2,
+      "range": 7.5,
+      "colour": "#93a8b8",
+      "_why": "the warren, dim and cool"
+    },
+    {
+      "at": [
+        0.0,
+        40.0
+      ],
+      "y": 4.0,
+      "energy": 0.45,
+      "range": 15.0,
+      "colour": "#6f7f92",
+      "_why": "den fill (CONTENT-0828), lowered"
+    },
+    {
+      "at": [
+        3.0,
+        43.0
+      ],
+      "y": 3.1,
+      "energy": 2.4,
+      "range": 12.0,
+      "colour": "#d9a05c",
+      "shadow": true,
+      "_why": "den warm key over the guardian's half (T1-LIGHT), lifted"
+    },
+    {
+      "at": [
+        3.0,
+        46.0
+      ],
+      "y": 1.8,
+      "energy": 1.3,
+      "range": 8.0,
+      "colour": "#c9814a",
+      "_why": "den backlight (0829)"
+    },
+    {
+      "at": [
+        3.0,
+        44.0
+      ],
+      "y": 1.0,
+      "energy": 1.1,
+      "range": 8.0,
+      "colour": "#e2a868",
+      "_why": "den stand wash (0830)"
+    },
+    {
+      "at": [
+        15.0,
+        40.0
+      ],
+      "y": 3.2,
+      "energy": 1.1,
+      "range": 9.0,
+      "colour": "#b09a6a",
+      "_why": "vault warm pool"
+    },
+    {
+      "at": [
+        11.8,
+        40.0
+      ],
+      "y": 2.6,
+      "energy": 0.3,
+      "range": 6.0,
+      "colour": "#6f7f92",
+      "_why": "vault door-end bounce (CONTENT-0828)"
+    }
   ],
   "_comment_interior_rock": "CONTENT-0828. The owner localised the looks complaint on 2026-08-28 -- 'burrow warrens and the castle are the lame looking locations. basically everywhere we had to build an under ground or build a building' -- and this is the half of the answer that needs no owner art. The terrain, scatter and grass drew no complaint; the two ASSEMBLED spaces did, and this cave's own before-frames say why: archive/reports/docs-evidence-full/content-0828/04-vault-prize-after.png is a perfect rectangular box -- four flat walls meeting at hard 90-degree corners, a flat ceiling, a flat floor, one triplanar texture at one scale over all of it, next door to a meadow with hundreds of pieces of variety per comparable area. It does not read as unfinished because the rock texture is bad. It reads as unfinished because a cave does not have corners. So this breaks the three junctions that say 'box' and nothing else: the wall/floor line (boulders banked along the inside of each wall), the wall/ceiling line (rock in the four ceiling corners only -- the ceiling's MIDDLE stays clear on purpose, because rock over the guardian's head is the frame this pass exists to stop producing) and the flat floor (scree thinning inward from the walls). Everything sits within `edge_band_m` of a wall, so the middle of every room is untouched and a den fight keeps the arena combat_arena_bounds_at() promises it; nothing goes in a doorway; and none of it has colliders, the rule _build_site_skirt()'s own comment states -- this is dressing, and a pebble that stops a player is a bug. Same nature family as the outcrop outside and the same `mound.tint`, per D24: the stone inside the hill and the stone showing above it are the same stone. `enabled: false` turns the whole pass off. ALL TUNABLE.",
   "interior_rock": {
@@ -223,13 +638,22 @@
     "scree_height_cap_m": 0.5,
     "edge_band_m": 1.7,
     "wall_spacing_m": 3.2,
-    "wall_scale": [0.7, 1.4],
+    "wall_scale": [
+      0.7,
+      1.4
+    ],
     "wall_sink_m": 0.45,
     "wall_height_cap": 0.55,
-    "corner_scale": [1.1, 1.9],
+    "corner_scale": [
+      1.1,
+      1.9
+    ],
     "corner_lift_m": 0.35,
     "scree_per_chamber": 30,
-    "scree_scale": [0.4, 1.15]
+    "scree_scale": [
+      0.4,
+      1.15
+    ]
   },
   "_comment_interior_structure": "CONTENT-0828B. The other half of the owner's 4a diagnosis, and the half `interior_rock` above deliberately did not attempt -- its own report: 'the walls themselves are still flat planes and the ceiling is still a slab between its corners. This pass changes what the room's EDGES do; it does not give the space vertical interest, level changes, or a silhouette.' The owner named a CLASS of space ('basically everywhere we had to build an under ground or build a building'), so the answer is a shared method rather than a second dressing pass on one cave: scripts/world/interior_structure.gd, which stronghold.json consumes from the same file with its own vocabulary. That file's header carries the mechanism; the short version is that a chamber built from six flat boxes has exactly two scales of incident (the room, and its props) where the meadow outside has five or six, and that missing MIDDLE scale is what makes an interior read as blockout however good its texture is. The five passes put it back: a vertical member at a repeating pitch along every wall (`bays`), a jointed horizontal band at mid-height (`course`), ceiling ribs landed on the same divisions so the structure reads as continuous (`ribs`), a jamb-and-lintel frame around every cut opening (`reveals`), and a post in each internal corner (`corners`). None of it is solid, none of it enters a doorway, and none of it reaches further into a room than interior_structure.gd's own MAX_PROJECT_M -- half the metre `combat_arena_bounds_at()` reserves from every wall, so the den fight keeps the arena it was tuned against. ALL TUNABLE; `enabled: false` turns the whole pass off.",
   "_comment_interior_structure_cave": "This cave's VOCABULARY, against the castle's. `jitter` above zero is the whole difference in code: each member takes a small lean, inset and scale variation, so the same rhythm that reads as masonry in the stronghold reads as rock ribbing here. 0.85 rather than 1.0 because past that the members stop lining up with each other and the rhythm -- which is the point of the pass -- stops reading. `bay_pitch_m` is tighter than the stronghold's (2.9 against 3.6): these chambers are 7-16m across and 3.4-4.8m tall, and a pitch tuned for a 28m hall gives a small room one member and no rhythm at all. `tints` are per-role value steps off `site.rock`; they exist because every light in this cave is a shadowless omni (`_build_lights`), so nothing here is going to model the form for us and a member the same value as the wall behind it is invisible however well it is shaped. Omit a role and burrow_warrens.gd::_structure_colour derives it.",
@@ -261,18 +685,82 @@
     "reveal_depth_m": 1.9,
     "corners": true,
     "corner_width_m": 0.95,
-    "corner_project_m": 0.46
+    "corner_project_m": 0.46,
+    "_comment_tints_w07": "W07-WARRENS-0904. Members were rock LIGHTENED 0.34 (`_structure_colour` default): pale ashlar stripes on a pale wall -- masonry, not a burrow. Darker than the wall now, ribs darkest, so bays and course read as strata and the ceiling ribs as roots in section.",
+    "tints": {
+      "shaft": "#4e4235",
+      "capital": "#4e4235",
+      "course": "#46392e",
+      "corner": "#4e4235",
+      "reveal": "#46392e",
+      "rib": "#2e2621",
+      "corbel": "#2e2621"
+    }
   },
   "_comment_spawns": "The warrens' own population, spawned through encounter_director.gd's `spawn_wild()` so these are ORDINARY wild creatures -- same engage prompt, same fight, same catching, same respawn. No second combat mode exists and none is wanted. `aggressive: true` overrides the species' own temperament for THESE bodies only (species.json still has Burrowback and Mudsnout as non-aggressive animals out in the meadow): a creature defending the tunnel it lives in comes at you, the same one grazing a field does not. `level` overrides the wild band roll (progression.json) -- the warrens is Band 2 content and its residents are above the field's. Ground species only, from the existing roster; no new species and no new meshes (Sec20, D23). Tuskroot is deliberately absent for the same reason spawns.json leaves it out: D20 makes it the EVOLVED form, obtainable only by evolving a caught Mudsnout.",
   "_comment_spawns_sh47": "SH47/D42 LEVELS LOWERED: mouth 10->9, hall 12->10, warren 11->10, den 13->11, and the guardian 18->14 below. Still TUNABLE, and the shape is unchanged -- the residents still climb as you go deeper and the guardian is still well above them. What moved is the STEP UP FROM BAND 1. Band 1's gate trainer (Oskar) fields levels 6 and 7 and spec Sec3 recommends a team of 5-8 at the bridge; arriving here at 7 to meet a 13 in the den and an 18 at the bottom was an eleven-level gulf, and tools/_probe_pacing.py measured what a player actually did about it: 25 wild fights against level-2-to-6 field creatures before daring to go in, 19 minutes of Sec11's `bad grind` bolted onto the front of the chapter's best dungeon. Clearing the warrens is on Sec11's GOOD list and nothing about it is cut -- the fights are the same fights, the deposits the same deposits, the heartstone still behind the guardian. They now sit where a player who played Band 1 actually is.",
   "_comment_spawns_nickname": "FIRST-HOUR-FUN-REBUILD. `nickname` is optional on any spawn entry and is used by exactly one of them. The vault encounter remains a named Elder Trailpup: a player who reaches the branch should understand this is an exceptional animal, not one more aggressive body in a dark room. The original Terrapup was removed because all three starter species are unique to Grandpa's opening choice and cannot be ordinary catchable wilds. Trailpup also deliberately differs from the Burrowback guardian, so the optional catch has its own quicker, higher-risk fight rather than reading as a second copy of the boss. The name is written the same two-object way the guardian's name is (burrow_warrens.gd::_spawn_population), so a caught one keeps its species underneath. Presentation only: level, temperament, catch rate and the fight are untouched.",
   "_comment_spawns_special": "BAND2-63 / FIRST-HOUR-FUN-REBUILD. Prompt 63 asks for 'at least one optional strong/rare encounter... worth seeing even if not caught', distinct from the required guardian fight. The Elder Trailpup is the warrens' established Ground species in an exceptional context: alone in the vault, past the Burrowback alpha and next to the heartstone. Level 13 sits one below the guardian's own 14 (still above the den's 11), so it reads as a real fight and not a formality, and it is entirely optional -- clear.flag already pays out when the guardian falls, so reaching this chamber is never a completion wall. It replaces the former wild Terrapup so the starter choice stays meaningful everywhere catchable wilds spawn.",
   "spawns": [
-    {"species": "mudsnout", "chamber": "mouth", "count": 1, "level": 9, "aggressive": true, "offset": [1.8, -1.5]},
-    {"species": "burrowback", "chamber": "hall", "count": 2, "level": 10, "aggressive": true, "offset": [-4.0, 2.0], "spread": 4.0},
-    {"species": "mudsnout", "chamber": "warren", "count": 2, "level": 10, "aggressive": true, "offset": [0.0, 0.0], "spread": 3.0},
-    {"species": "trailpup", "chamber": "den", "count": 1, "level": 11, "aggressive": true, "offset": [-5.0, -4.0]},
-    {"species": "trailpup", "chamber": "vault", "count": 1, "level": 13, "aggressive": true, "offset": [1.5, 0.0], "wander_radius": 1.2, "nickname": "Elder Trailpup"}
+    {
+      "species": "mudsnout",
+      "chamber": "mouth",
+      "count": 1,
+      "level": 9,
+      "aggressive": true,
+      "offset": [
+        1.8,
+        -1.5
+      ]
+    },
+    {
+      "species": "burrowback",
+      "chamber": "hall",
+      "count": 2,
+      "level": 10,
+      "aggressive": true,
+      "offset": [
+        -4.0,
+        2.0
+      ],
+      "spread": 4.0
+    },
+    {
+      "species": "mudsnout",
+      "chamber": "warren",
+      "count": 2,
+      "level": 10,
+      "aggressive": true,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "spread": 3.0
+    },
+    {
+      "species": "trailpup",
+      "chamber": "den",
+      "count": 1,
+      "level": 11,
+      "aggressive": true,
+      "offset": [
+        -5.0,
+        -4.0
+      ]
+    },
+    {
+      "species": "trailpup",
+      "chamber": "vault",
+      "count": 1,
+      "level": 13,
+      "aggressive": true,
+      "offset": [
+        1.5,
+        0.0
+      ],
+      "wander_radius": 1.2,
+      "nickname": "Elder Trailpup"
+    }
   ],
   "_comment_vault_trailpup_wander": "VAULT-BLOCK-REGRESSION. The vault is 8m across and its one exit is the gated passage back to the den -- the old offset [-2.0,-1.5] put the Elder Trailpup within 3.8m of that passage's own centre, inside its doorway clearance, with `wild_creature.gd`'s open-meadow wander radius (7m, and never seeded, so a different roll every boot). Enough boots rolled a wander target across the gate for the creature to walk into the passage under its own idle AI during the settle window and be standing there, motionless, before the player ever gets near it -- a beaten guardian and an open door with the reward chamber still sealed behind a resident nobody fought. The offset now sits in the vault's own back half, away from the door, and `wander_radius` keeps its whole patrol circle (plus body radius) inside the vault with room to spare before the passage's actual 2.4m-wide opening.",
   "_comment_guardian": "Spec Sec3 Band 2 and Sec20: a STRONG NORMAL SPECIES, explicitly not a new legendary and explicitly not a new mesh. Burrowback is the roster's highest-defence Ground creature and the animal this whole warren belongs to, so the biggest one in it is the thing at the bottom. Level is well above its own residents and above the recommended Band 2 team, TUNABLE -- it is meant to be the fight you come back for, not a wall. It can be CAUGHT rather than beaten (catching is available during wild combat, CLAUDE.md; a guardian is not trainer-owned) and either way the warrens counts as cleared -- a dungeon that can only be resolved one of the two legal ways would be a rule this game does not have.",
@@ -286,7 +774,10 @@
     "species": "burrowback",
     "level": 14,
     "chamber": "den",
-    "offset": [3.0, 4.0],
+    "offset": [
+      3.0,
+      4.0
+    ],
     "name": "Warren Guardian",
     "nickname": "Warren Guardian",
     "scale": 1.35,
@@ -318,10 +809,22 @@
     "reward": {
       "coins": 90,
       "items": [
-        {"id": "rootstone", "count": 5},
-        {"id": "orb_greater", "count": 2},
-        {"id": "revive", "count": 1},
-        {"id": "hide_vest", "count": 1}
+        {
+          "id": "rootstone",
+          "count": 5
+        },
+        {
+          "id": "orb_greater",
+          "count": 2
+        },
+        {
+          "id": "revive",
+          "count": 1
+        },
+        {
+          "id": "hide_vest",
+          "count": 1
+        }
       ],
       "xp_bonus": 140,
       "message": "The guardian goes down and the warren goes quiet. The slab across the deep branch grinds into the floor -- something is lit back there."
@@ -331,58 +834,684 @@
   "_comment_deposits": "Rootstone in the walls -- Sec3 Band 2's own material, the first tier above wood/stone/fiber/berries. These are harvest_node.gd nodes with their specs written HERE rather than in data/config/harvest.json: that file is the first day's tutorial gathering out in the meadow (and the Old Quarry lane owns its own additions to it), and a deposit inside a dungeon has no business being in the same list. `at` is chamber-local [x, z] like everything above.",
   "_comment_deposit_models": "BAND2-63-WARRENS round 2. These carried no `model`, and `harvest_node.gd` falls back to `_box_visual()` when a spec has none -- so every rootstone deposit in the cave rendered as an untextured pale placeholder cube. The blind critic found it twice without being told what it was looking at ('a bare placeholder box ... a placeholder block in a frame offered for judgement is a defect, twice'). Rocks from the same nature family the outcrop outside uses, at deposit scale: the seam the player breaks is now made of the stone the hill is made of.",
   "deposits": [
-    {"at": [-5.0, 20.0],  "item": "rootstone", "amount": 3, "label": "Break out rootstone",
-      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf", "model_scale": 0.85},
-    {"at": [5.5, 25.0],   "item": "rootstone", "amount": 3, "label": "Break out rootstone",
-      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf", "model_scale": 0.75},
-    {"at": [-17.5, 20.0], "item": "rootstone", "amount": 4, "label": "Break out rootstone",
-      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf", "model_scale": 0.95},
-    {"at": [-6.0, 43.0],  "item": "rootstone", "amount": 4, "label": "Break out rootstone",
-      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf", "model_scale": 1.05},
-    {"at": [-13.0, 24.5], "item": "stone",     "amount": 4, "label": "Break out stone",
-      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf", "model_scale": 0.9}
+    {
+      "at": [
+        -5.0,
+        20.0
+      ],
+      "item": "rootstone",
+      "amount": 3,
+      "label": "Break out rootstone",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.85
+    },
+    {
+      "at": [
+        5.5,
+        25.0
+      ],
+      "item": "rootstone",
+      "amount": 3,
+      "label": "Break out rootstone",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "model_scale": 0.75
+    },
+    {
+      "at": [
+        -17.5,
+        20.0
+      ],
+      "item": "rootstone",
+      "amount": 4,
+      "label": "Break out rootstone",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 0.95
+    },
+    {
+      "at": [
+        -6.0,
+        43.0
+      ],
+      "item": "rootstone",
+      "amount": 4,
+      "label": "Break out rootstone",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 1.05
+    },
+    {
+      "at": [
+        -13.0,
+        24.5
+      ],
+      "item": "stone",
+      "amount": 4,
+      "label": "Break out stone",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "model_scale": 0.9
+    }
   ],
   "_comment_dressing": "BAND2-63-WARRENS. Prompt 63's required-dungeon list names `evidence of Team Tether activity` as part of the Burrow Warrens itself, and the band had none INSIDE the cave -- the only Team Tether trace in the region was the `quarry_supply_cache` prop cluster out at the ranger camp spur, which a player who walks the road to the warrens mouth and goes straight down never sees. This is that evidence, and it is deliberately EVIDENCE AND NOT EXPLANATION: the same rule `old_quarry.json`'s own `_comment_evidence` states for the quarry (Sec32's reveal ladder), so there is no note to read, no interactable, and nobody down here who knows what the seam is for. What the player is shown is a working face somebody was cutting rootstone out of and left mid-load, deeper in a cave than anyone local has a reason to be. Every model is from the ONE prop family the settlement already uses (`assets/props/quaternius_fantasy`, D24) and is the same crate/barrel/pickaxe vocabulary `quarry_station` puts on the quarry floor, so the player reads the two sites as one operation. Placed by `scripts/world/props.gd::place()` -- the same placer, collider and sink behaviour as every authored prop above ground -- through a `top_level` child so the cave's own `ground_height_at()` puts them on the CAVE FLOOR rather than on the hillside now several metres overhead. `chamber` + `offset` are chamber-local metres, the same authoring shape `spawns` above already uses, so the whole set rotates and translates with `site.at`/`site.yaw_deg` if this cave is ever relocated again. `yaw_deg` is likewise cave-local. NO ROPE: `Rope_1` is illegible at normal camera distance, a limitation the shipped `ranger_camp` cluster's own rope already has and this pass did not repeat.",
   "dressing": [
-    {"model": "FarmCrate_Empty", "chamber": "mouth", "offset": [2.3, -3.6], "yaw_deg": -25.0, "sink_m": 0.04,
-      "_why": "the first thing inside the mouth, four paces in: one empty crate, so the very first read of the cave is somebody has been carrying things out of here, before a single creature or deposit is seen"},
-    {"model": "Crate_Wooden", "chamber": "hall", "offset": [5.2, -3.6], "yaw_deg": 15.0, "sink_m": 0.06,
-      "_why": "the staging pile's anchor against the hall's east wall, well off both the mouth->den corridor at x=0 and the burrowback pair at [-4, 2] -- a load filled and never collected"},
-    {"model": "FarmCrate_Empty", "chamber": "hall", "offset": [6.0, -2.6], "yaw_deg": -40.0, "sink_m": 0.05,
-      "_why": "set touching the first crate rather than merely near it, EV7-clusters-fix's own finding: a loose arc reads as dumped, a touching pile reads as one load"},
-    {"model": "Barrel", "chamber": "hall", "offset": [4.3, -2.4], "yaw_deg": 0.0, "sink_m": 0.05,
-      "_why": "water for whoever was working the seam, kept with the load -- the detail that makes this a shift rather than a raid"},
-    {"model": "Pickaxe_Bronze", "chamber": "hall", "offset": [6.3, -4.6], "yaw_deg": 62.0, "pitch_deg": -74.0, "sink_m": 0.02,
-      "_why": "leaning off vertical against the hall wall, the one prop that names the work -- and the same tool the rootstone deposits three metres away want from the player"},
-    {"model": "Bag", "chamber": "hall", "offset": [4.5, -4.7], "yaw_deg": 130.0, "sink_m": 0.06,
-      "_why": "somebody's pack, still here: the detail that makes the site abandoned rather than merely finished, exactly as it does at the quarry station"},
-    {"model": "Crate_Wooden", "chamber": "den", "offset": [-5.6, 1.2], "yaw_deg": -70.0, "sink_m": 0.06,
-      "_why": "the deepest crate, a metre and a half from the den's own rootstone deposit and across the room from the guardian -- they got this far, they were still cutting, and then they stopped. This is what makes the animal at the bottom the reason the dig ended rather than a fight bolted onto the end of a corridor"},
-    {"model": "Bucket_Wooden_1", "chamber": "den", "offset": [-4.3, 0.2], "yaw_deg": -15.0, "roll_deg": 90.0, "sink_m": 0.03,
-      "_why": "tipped on its side beside that crate: the one prop in the cave that is not standing, so the den's pile reads as left in a hurry against the hall's, which reads as stacked"},
-    {"model": "Barrel", "chamber": "den", "offset": [-6.6, 2.4], "yaw_deg": 0.0, "sink_m": 0.05,
-      "_why": "the edge of the deep pile, so the group has an edge instead of a boundary"},
-    {"model": "Crate_Wooden", "chamber": "den", "offset": [5.4, -4.2], "yaw_deg": 25.0, "pitch_deg": 12.0, "sink_m": 0.05,
-      "_why": "BAND2-63-WARRENS round 2. The blind pass called the den bare -- 'one chest and one small scrap on an otherwise bare flat floor ... a den should show occupation'. This one is tipped and on the far side of the room from the rest, so the den reads as a place something large moves through rather than a store room"},
-    {"model": "Bucket_Wooden_1", "chamber": "den", "offset": [2.6, -5.4], "yaw_deg": 70.0, "roll_deg": 74.0, "sink_m": 0.03,
-      "_why": "round 2: knocked well clear of the pile it belongs to, in the guardian's own half of the room"},
-    {"model": "Bag", "chamber": "den", "offset": [-2.2, 5.6], "yaw_deg": -110.0, "sink_m": 0.06,
-      "_why": "round 2: dropped deepest of all, past the guardian -- whoever carried it did not come back for it"},
-    {"model": "Grass_Wide_Tall", "chamber": "den", "offset": [5.6, 5.0], "yaw_deg": 15.0, "scale": 1.8, "sink_m": 0.05,
+    {
+      "model": "FarmCrate_Empty",
+      "chamber": "mouth",
+      "offset": [
+        2.3,
+        -3.6
+      ],
+      "yaw_deg": -25.0,
+      "sink_m": 0.04,
+      "_why": "the first thing inside the mouth, four paces in: one empty crate, so the very first read of the cave is somebody has been carrying things out of here, before a single creature or deposit is seen"
+    },
+    {
+      "model": "Crate_Wooden",
+      "chamber": "hall",
+      "offset": [
+        5.2,
+        -3.6
+      ],
+      "yaw_deg": 15.0,
+      "sink_m": 0.06,
+      "_why": "the staging pile's anchor against the hall's east wall, well off both the mouth->den corridor at x=0 and the burrowback pair at [-4, 2] -- a load filled and never collected"
+    },
+    {
+      "model": "FarmCrate_Empty",
+      "chamber": "hall",
+      "offset": [
+        6.0,
+        -2.6
+      ],
+      "yaw_deg": -40.0,
+      "sink_m": 0.05,
+      "_why": "set touching the first crate rather than merely near it, EV7-clusters-fix's own finding: a loose arc reads as dumped, a touching pile reads as one load"
+    },
+    {
+      "model": "Barrel",
+      "chamber": "hall",
+      "offset": [
+        4.3,
+        -2.4
+      ],
+      "yaw_deg": 0.0,
+      "sink_m": 0.05,
+      "_why": "water for whoever was working the seam, kept with the load -- the detail that makes this a shift rather than a raid"
+    },
+    {
+      "model": "Pickaxe_Bronze",
+      "chamber": "hall",
+      "offset": [
+        6.3,
+        -4.6
+      ],
+      "yaw_deg": 62.0,
+      "pitch_deg": -74.0,
+      "sink_m": 0.02,
+      "_why": "leaning off vertical against the hall wall, the one prop that names the work -- and the same tool the rootstone deposits three metres away want from the player"
+    },
+    {
+      "model": "Bag",
+      "chamber": "hall",
+      "offset": [
+        4.5,
+        -4.7
+      ],
+      "yaw_deg": 130.0,
+      "sink_m": 0.06,
+      "_why": "somebody's pack, still here: the detail that makes the site abandoned rather than merely finished, exactly as it does at the quarry station"
+    },
+    {
+      "model": "Crate_Wooden",
+      "chamber": "den",
+      "offset": [
+        -5.6,
+        1.2
+      ],
+      "yaw_deg": -70.0,
+      "sink_m": 0.06,
+      "_why": "the deepest crate, a metre and a half from the den's own rootstone deposit and across the room from the guardian -- they got this far, they were still cutting, and then they stopped. This is what makes the animal at the bottom the reason the dig ended rather than a fight bolted onto the end of a corridor"
+    },
+    {
+      "model": "Bucket_Wooden_1",
+      "chamber": "den",
+      "offset": [
+        -4.3,
+        0.2
+      ],
+      "yaw_deg": -15.0,
+      "roll_deg": 90.0,
+      "sink_m": 0.03,
+      "_why": "tipped on its side beside that crate: the one prop in the cave that is not standing, so the den's pile reads as left in a hurry against the hall's, which reads as stacked"
+    },
+    {
+      "model": "Barrel",
+      "chamber": "den",
+      "offset": [
+        -6.6,
+        2.4
+      ],
+      "yaw_deg": 0.0,
+      "sink_m": 0.05,
+      "_why": "the edge of the deep pile, so the group has an edge instead of a boundary"
+    },
+    {
+      "model": "Crate_Wooden",
+      "chamber": "den",
+      "offset": [
+        5.4,
+        -4.2
+      ],
+      "yaw_deg": 25.0,
+      "pitch_deg": 12.0,
+      "sink_m": 0.05,
+      "_why": "BAND2-63-WARRENS round 2. The blind pass called the den bare -- 'one chest and one small scrap on an otherwise bare flat floor ... a den should show occupation'. This one is tipped and on the far side of the room from the rest, so the den reads as a place something large moves through rather than a store room"
+    },
+    {
+      "model": "Bucket_Wooden_1",
+      "chamber": "den",
+      "offset": [
+        2.6,
+        -5.4
+      ],
+      "yaw_deg": 70.0,
+      "roll_deg": 74.0,
+      "sink_m": 0.03,
+      "_why": "round 2: knocked well clear of the pile it belongs to, in the guardian's own half of the room"
+    },
+    {
+      "model": "Bag",
+      "chamber": "den",
+      "offset": [
+        -2.2,
+        5.6
+      ],
+      "yaw_deg": -110.0,
+      "sink_m": 0.06,
+      "_why": "round 2: dropped deepest of all, past the guardian -- whoever carried it did not come back for it"
+    },
+    {
+      "model": "Grass_Wide_Tall",
+      "chamber": "den",
+      "offset": [
+        5.6,
+        5.0
+      ],
+      "yaw_deg": 15.0,
+      "scale": 1.8,
+      "sink_m": 0.05,
       "dir": "res://assets/environment/stylized_nature",
-      "_why": "AUDIT-E5. A blind visual pass on this passing location still called the den under-dressed -- 'dirt floor, one rock, one sack, no bedding/bones/nest material/water'. This and the fern beside it are the guardian's own bedding, in the back corner of its half of the room, from the same nature-family models the cave's own exterior skirt already scatters (`mound.skirt_models` above) -- no new asset, just heaped rather than scattered"},
-    {"model": "Fern_1", "chamber": "den", "offset": [6.6, 5.9], "yaw_deg": -50.0, "scale": 1.6, "sink_m": 0.05,
+      "_why": "AUDIT-E5. A blind visual pass on this passing location still called the den under-dressed -- 'dirt floor, one rock, one sack, no bedding/bones/nest material/water'. This and the fern beside it are the guardian's own bedding, in the back corner of its half of the room, from the same nature-family models the cave's own exterior skirt already scatters (`mound.skirt_models` above) -- no new asset, just heaped rather than scattered"
+    },
+    {
+      "model": "Fern_1",
+      "chamber": "den",
+      "offset": [
+        6.6,
+        5.9
+      ],
+      "yaw_deg": -50.0,
+      "scale": 1.6,
+      "sink_m": 0.05,
       "dir": "res://assets/environment/stylized_nature",
-      "_why": "AUDIT-E5. The second half of the nest heap, touching the first tuft rather than merely near it -- EV7-clusters-fix's own finding that a touching pile reads as one thing and a loose arc reads as two"}
+      "_why": "AUDIT-E5. The second half of the nest heap, touching the first tuft rather than merely near it -- EV7-clusters-fix's own finding that a touching pile reads as one thing and a loose arc reads as two"
+    }
   ],
   "_comment_prize_lead": "BAND2-63-WARRENS. The pickup line carries the LEAD, not just the object. Prompt 63 asks this region to make the Mudsnout -> Tuskroot connection meaningful, and the lead was legible only to a player who happened to open the satchel and read the item description, or who owned a Mudsnout and pressed G on the creatures tab to be told `Mudsnout needs a Heartstone to evolve` (scripts/ui/tab_creatures.gd::_read_evolve, whose refusal string is where the requirement actually surfaces today). Both of those work and neither is guaranteed to happen in this region, which is where the stone is found. The line now says what the stone is FOR in the same words items.json already uses, at the one moment every player who takes it is looking at it. No rule changed: `progression.json`'s gate is still level 15 + bond 55 + heartstone, and this file does not touch it.",
   "_comment_prize": "R4.6 built the evolution item gate as real, unit-tested infrastructure and then left it switched OFF, because nothing in the world could source the item (see data/config/progression.json's own note). THIS is the source: the Heartstone, sitting in the one chamber that is off the critical path, behind the guardian. Taking it flips nothing by itself -- progression.json's `evolution.mudsnout.item_id` is what turns the gate on, and it is now `heartstone`. `flag` makes the pickup one-time across saves, the same rule tm_pickup.gd already keeps for a disc.",
   "prize": {
     "item": "heartstone",
     "chamber": "vault",
-    "offset": [0.0, 1.0],
+    "offset": [
+      0.0,
+      1.0
+    ],
     "label": "Take the heartstone",
     "flag": "warrens_heartstone_taken",
     "message": "A heartstone. Warm, and beating slowly -- the kind of stone a creature is held against to finish becoming what it was already turning into."
+  },
+  "_comment_w07_room": "W07-WARRENS-0904 (CL-O7/CL-E8; owner 2026-09-04 'Burrow warrens looks terrible', superseding E5). The room had never been judged, only the guardian. Root cause is measurable: art.json day lighting runs ambient_energy 1.9, the Compatibility renderer has no AO and no light volumes, so the SKY ambient lit every interior surface at one level and the authored pools (0.4-0.6) were a few percent on top -- one mid-tone whatever the pools did. `interior_ambient` below is the new mechanism (a ReflectionProbe's constant-colour ambient, gated to the cave's interior meshes by reflection_mask; verified 133 -> 17 wall luminance in isolation before authoring). With the room dark, `lights` is re-authored as pools with dark passages, and the mid-layer the walls never had is put back from the installed families: `roots` (DeadTree crowns through ceiling and wall), `fungus` (glowing Mushroom clusters, one per dark passage as a beacon), `litter`, `haze` cards for depth, `deposit_glow` on the rootstone seams, `site.wall_tint_lerp` (0.75 -> 0.6, so pool-lit walls do not blow out) and `interior_structure.tints` (members darker than the wall so they read as strata and roots, not lightened ashlar). ALL TUNABLE. burrow_warrens.gd's own 'W07-WARRENS-0904: the room' section is the machine.",
+  "_comment_lights_w07": "W07-WARRENS-0904. Re-authored as POOLS now that `interior_ambient` makes the dark real: a sky-white daylight bounce just inside the mouth (the brightest thing in the cave, so the way out always reads), a single warm key in the hall off-centre, the warren dim and cool, the den's authored warm side kept and lifted, the vault warm. The two long passages carry NO light of their own -- their fungus cluster (`fungus.clusters`, `between`) is the beacon. Energies are 3-5x the old washes because they are now the only light, not a few percent over sky ambient.",
+  "interior_ambient": {
+    "_comment": "W07-WARRENS-0904. One ReflectionProbe over the cave footprint, interior mode, constant-colour ambient, `reflection_mask` = `layer` so only meshes `_layer_interior()` marked (everything not under an EXTERIOR_META subtree, plus any body that walks in) take it. `colour`*`energy` is the ambient the room gets instead of the sky's; `intensity` is how much of the probe's own (cave-only) cubemap reflects, kept low. `margin_m` grows the box past the walls so wall faces are never at its edge.",
+    "enabled": true,
+    "colour": "#16120f",
+    "energy": 1.0,
+    "intensity": 0.12,
+    "layer": 12,
+    "margin_m": 1.5
+  },
+  "roots": {
+    "_comment": "W07-WARRENS-0904. The installed DeadTree family (no new mesh), each piece aimed crown-first along `dir` so only its bare branching crown is in the room -- a root mass through the ceiling or wall. `tip` (chamber+offset, `tip_y` above the floor) is the crown's furthest point; the trunk sits behind it inside the slab/wall. `scale` per model keeps every trunk shorter than the roof mass above (DeadTree_1 9.5m, _2 11.5m, _3 13.3m native). Every tip in a walking lane stays above 2.2m.",
+    "enabled": true,
+    "models": [
+      "res://assets/environment/stylized_nature/DeadTree_1.gltf",
+      "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "res://assets/environment/stylized_nature/DeadTree_3.gltf"
+    ],
+    "tint": "#4a3524",
+    "pieces": [
+      {
+        "chamber": "mouth",
+        "offset": [
+          -2.2,
+          1.5
+        ],
+        "model": 0,
+        "scale": 0.3,
+        "dir": [
+          0.35,
+          -1.0,
+          0.1
+        ],
+        "tip_y": 2.3,
+        "roll_deg": 20.0
+      },
+      {
+        "chamber": "mouth",
+        "offset": [
+          0.0,
+          -6.9
+        ],
+        "model": 1,
+        "scale": 0.26,
+        "dir": [
+          0.0,
+          -1.0,
+          -0.4
+        ],
+        "tip_y": 2.5,
+        "exterior": true,
+        "_why": "the fringe over the mouth from outside -- roots hanging over a dug hole"
+      },
+      {
+        "chamber": "hall",
+        "offset": [
+          -5.5,
+          -4.0
+        ],
+        "model": 2,
+        "scale": 0.24,
+        "dir": [
+          0.3,
+          -1.0,
+          0.2
+        ],
+        "tip_y": 2.8
+      },
+      {
+        "chamber": "hall",
+        "offset": [
+          5.8,
+          3.5
+        ],
+        "model": 0,
+        "scale": 0.32,
+        "dir": [
+          -0.3,
+          -1.0,
+          -0.15
+        ],
+        "tip_y": 2.9,
+        "roll_deg": 60.0
+      },
+      {
+        "chamber": "hall",
+        "offset": [
+          0.5,
+          5.2
+        ],
+        "model": 1,
+        "scale": 0.27,
+        "dir": [
+          0.1,
+          -1.0,
+          -0.4
+        ],
+        "tip_y": 3.1
+      },
+      {
+        "chamber": "hall",
+        "offset": [
+          -5.6,
+          2.0
+        ],
+        "model": 0,
+        "scale": 0.28,
+        "dir": [
+          1.0,
+          -0.25,
+          0.1
+        ],
+        "tip_y": 2.6,
+        "_why": "a wall root, thrust through the west wall"
+      },
+      {
+        "chamber": "warren",
+        "offset": [
+          3.0,
+          -2.5
+        ],
+        "model": 2,
+        "scale": 0.24,
+        "dir": [
+          -0.2,
+          -1.0,
+          0.3
+        ],
+        "tip_y": 2.2
+      },
+      {
+        "chamber": "den",
+        "offset": [
+          -5.5,
+          -5.5
+        ],
+        "model": 1,
+        "scale": 0.27,
+        "dir": [
+          0.3,
+          -1.0,
+          0.3
+        ],
+        "tip_y": 3.4
+      },
+      {
+        "chamber": "den",
+        "offset": [
+          6.5,
+          -4.5
+        ],
+        "model": 0,
+        "scale": 0.32,
+        "dir": [
+          -0.35,
+          -1.0,
+          0.1
+        ],
+        "tip_y": 3.3,
+        "roll_deg": 110.0
+      },
+      {
+        "chamber": "den",
+        "offset": [
+          -6.5,
+          4.5
+        ],
+        "model": 2,
+        "scale": 0.25,
+        "dir": [
+          0.3,
+          -1.0,
+          -0.2
+        ],
+        "tip_y": 3.5
+      },
+      {
+        "chamber": "den",
+        "offset": [
+          -2.0,
+          5.7
+        ],
+        "model": 0,
+        "scale": 0.28,
+        "dir": [
+          0.1,
+          -0.3,
+          -1.0
+        ],
+        "tip_y": 3.0,
+        "_why": "a wall root through the den's back wall"
+      },
+      {
+        "chamber": "vault",
+        "offset": [
+          -2.5,
+          -2.5
+        ],
+        "model": 1,
+        "scale": 0.24,
+        "dir": [
+          0.3,
+          -1.0,
+          0.2
+        ],
+        "tip_y": 2.3
+      }
+    ]
+  },
+  "fungus": {
+    "_comment": "W07-WARRENS-0904. Installed Mushroom meshes, albedo wired into emission at `glow_colour` (the cave's own pale green against the heartstone's red at the end), one small omni per cluster. `between` entries sit in the two unlit passages as beacons -- navigation stays readable with no torch.",
+    "enabled": true,
+    "seed": 905,
+    "models": [
+      "res://assets/environment/stylized_nature/Mushroom_Common.gltf"
+    ],
+    "bracket_models": [
+      "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf"
+    ],
+    "glow_colour": "#9fe3b0",
+    "emission": 1.5,
+    "light_energy": 0.9,
+    "light_range": 4.5,
+    "clusters": [
+      {
+        "between": [
+          "mouth",
+          "hall"
+        ],
+        "offset": [
+          1.0,
+          0.0
+        ],
+        "count": 4,
+        "spread": 0.6
+      },
+      {
+        "chamber": "hall",
+        "offset": [
+          -6.0,
+          -3.5
+        ],
+        "count": 5,
+        "spread": 0.9,
+        "bracket": true,
+        "bracket_offset": [
+          -0.7,
+          0.0
+        ],
+        "bracket_y": 1.3,
+        "bracket_yaw_deg": 90.0
+      },
+      {
+        "chamber": "hall",
+        "offset": [
+          6.2,
+          4.5
+        ],
+        "count": 3,
+        "spread": 0.6
+      },
+      {
+        "chamber": "warren",
+        "offset": [
+          -3.5,
+          -3.0
+        ],
+        "count": 4,
+        "spread": 0.8
+      },
+      {
+        "between": [
+          "hall",
+          "den"
+        ],
+        "offset": [
+          -1.2,
+          0.5
+        ],
+        "count": 4,
+        "spread": 0.6
+      },
+      {
+        "chamber": "den",
+        "offset": [
+          -6.5,
+          -4.0
+        ],
+        "count": 5,
+        "spread": 1.0,
+        "bracket": true,
+        "bracket_offset": [
+          -1.2,
+          0.4
+        ],
+        "bracket_y": 1.1,
+        "bracket_yaw_deg": 90.0
+      },
+      {
+        "chamber": "den",
+        "offset": [
+          -7.0,
+          5.5
+        ],
+        "count": 3,
+        "spread": 0.7
+      },
+      {
+        "chamber": "vault",
+        "offset": [
+          -3.0,
+          2.5
+        ],
+        "count": 4,
+        "spread": 0.7
+      }
+    ]
+  },
+  "litter": {
+    "_comment": "W07-WARRENS-0904. Dead leaf litter from the installed flat Plant meshes, retinted; counts per chamber, most where the wind reaches.",
+    "enabled": true,
+    "seed": 906,
+    "models": [
+      "res://assets/environment/stylized_nature/Plant_7.gltf",
+      "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "res://assets/environment/stylized_nature/Clover_1.gltf"
+    ],
+    "tint": "#6a5030",
+    "scale": [
+      0.5,
+      1.1
+    ],
+    "counts": {
+      "mouth": 14,
+      "hall": 12,
+      "warren": 5,
+      "den": 6,
+      "vault": 3
+    }
+  },
+  "haze": {
+    "_comment": "W07-WARRENS-0904. Unshaded additive gradient cards: `pool` billboards at each light, `shaft` crossed quads under the den's spot, `doorway` a card facing INTO the cave (back-face culled) so daylight reads from inside and the mouth stays a hole from outside. `alpha` is the card's peak.",
+    "enabled": true,
+    "cards": [
+      {
+        "kind": "doorway",
+        "chamber": "mouth",
+        "offset": [
+          0.0,
+          -2.0
+        ],
+        "y": 1.7,
+        "size": [
+          6.5,
+          3.4
+        ],
+        "colour": "#dfe8f2",
+        "alpha": 0.32
+      },
+      {
+        "kind": "pool",
+        "chamber": "mouth",
+        "offset": [
+          0.0,
+          -3.0
+        ],
+        "y": 2.2,
+        "size": [
+          5.0,
+          5.0
+        ],
+        "colour": "#dde7ef",
+        "alpha": 0.18
+      },
+      {
+        "kind": "pool",
+        "chamber": "hall",
+        "offset": [
+          -2.5,
+          -1.5
+        ],
+        "y": 3.0,
+        "size": [
+          6.0,
+          6.0
+        ],
+        "colour": "#d8c19c",
+        "alpha": 0.16
+      },
+      {
+        "kind": "pool",
+        "chamber": "den",
+        "offset": [
+          3.0,
+          3.0
+        ],
+        "y": 2.8,
+        "size": [
+          7.0,
+          7.0
+        ],
+        "colour": "#d9a05c",
+        "alpha": 0.16
+      },
+      {
+        "kind": "pool",
+        "chamber": "vault",
+        "offset": [
+          0.0,
+          0.0
+        ],
+        "y": 2.6,
+        "size": [
+          4.5,
+          4.5
+        ],
+        "colour": "#b09a6a",
+        "alpha": 0.14
+      },
+      {
+        "kind": "shaft",
+        "chamber": "den",
+        "offset": [
+          -7.0,
+          -5.0
+        ],
+        "y": 2.45,
+        "size": [
+          2.4,
+          4.6
+        ],
+        "colour": "#bfe0e6",
+        "alpha": 0.28
+      }
+    ]
+  },
+  "deposit_glow": {
+    "_comment": "W07-WARRENS-0904. A small amber omni over each rootstone seam: the band's own material glows in the walls.",
+    "enabled": true,
+    "item": "rootstone",
+    "colour": "#e2a860",
+    "energy": 0.7,
+    "range": 3.5,
+    "y": 0.9
   }
 }

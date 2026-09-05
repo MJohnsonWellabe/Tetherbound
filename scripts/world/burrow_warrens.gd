@@ -71,6 +71,12 @@ const INTERIOR_STRUCTURE := preload("res://scripts/world/interior_structure.gd")
 ## radius, not a fudge factor.
 const ARENA_WALL_MARGIN := 1.0
 
+## W07-WARRENS-0904. Meta set on every node that stands OUTSIDE the cave
+## (apron, mound, skirt, dome, entrance dressing, spoil, the exterior earth
+## skin). `_layer_interior()` skips these subtrees, so the cave's own dark
+## ambient never reaches a boulder the sun is meant to light.
+const EXTERIOR_META := "warrens_exterior"
+
 ## MAT-BLOCKOUT. The wall/ceiling boxes below carried a flat StandardMaterial3D
 ## colour and nothing else, by design (see this file's header) -- a blind
 ## critic named the result correctly: "completely flat-shaded... no texture...
@@ -219,21 +225,33 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null, director
 
 	_build_chambers()
 	_build_passages()
+	# W07-WARRENS-0904. Everything the next call adds stands OUTSIDE the cave,
+	# and `_build_interior_ambient()` must never darken it -- see
+	# `_tag_exterior_children()`.
+	var exterior_from := get_child_count()
 	_build_approach_apron()
+	_tag_exterior_children(exterior_from)
 	_build_lights()
 	_build_interior_area()
+	exterior_from = get_child_count()
 	_clear_the_ground_the_cave_stands_on()
 	_build_mound()
 	_build_accent_boulders()
 	_build_mouth_dome()
 	_build_entrance_dressing()
 	_build_spoil_mounds()
+	_tag_exterior_children(exterior_from)
 	_build_deposits()
 	_build_dressing()
 	_build_den_atmosphere()
 	_build_interior_rock()
 	_build_structure()
 	_build_prize()
+	_build_roots()
+	_build_fungus()
+	_build_floor_litter()
+	_build_haze()
+	_build_interior_ambient()
 	_sync_vault_door()
 
 	_markers["entrance"] = to_global(Vector3(0.0, _floor_y, _mouth_outer_z() - 3.0))
@@ -300,7 +318,12 @@ func _material(colour: Color, emissive := 0.0, textured := false, normal_scale :
 		# colour for more contrast, and normal_scale raised past the terrain's
 		# default 1.0 to buy back relief the cave's flatter, less grazing light
 		# doesn't supply on its own. TUNABLE.
-		m.albedo_color = colour.lerp(ROCK_TINT, 0.75)
+		# W07-WARRENS-0904: `site.wall_tint_lerp` (default the 0.75 above).
+		# Under the cave's own dark ambient the walls are lit by the pools
+		# alone, and a near-white albedo blows out beside each one -- see
+		# burrow_warrens.json `_comment_w07_room`.
+		m.albedo_color = colour.lerp(ROCK_TINT,
+			float(_config.get("site", {}).get("wall_tint_lerp", 0.75)))
 		m.normal_enabled = true
 		m.normal_texture = ROCK_NORMAL
 		m.normal_scale = normal_scale
@@ -685,6 +708,9 @@ func _clad_exterior_face(wall: MeshInstance3D, size: Vector3, piece_at: Vector3,
 		else Vector3(-(_wall_t * 0.5 + thickness * 0.5), 0.0, 0.0)
 	skin.position = piece_at + outward
 	skin.name = "ExteriorEarthSkin_%s" % wall.get_instance_id()
+	# Built inside `_build_chambers()` but it is the cave's OUTSIDE face; the
+	# interior ambient must leave it in the sun (W07-WARRENS-0904).
+	skin.set_meta(EXTERIOR_META, true)
 	add_child(skin)
 
 
@@ -1026,12 +1052,17 @@ func _combat_owns_the_camera() -> bool:
 
 
 func _on_body_entered(body: Node3D) -> void:
+	# W07-WARRENS-0904. Whoever walks in -- the trainer, a deployed companion,
+	# a resident -- takes the cave's own ambient with them, or they would stand
+	# in a dark room lit by the meadow's sky. See `_build_interior_ambient()`.
+	_layer_interior(body, true)
 	if body != _player or _camera_rig == null or _combat_owns_the_camera():
 		return
 	_camera_rig.call("set_target", _player, INTERIOR_PROFILE)
 
 
 func _on_body_exited(body: Node3D) -> void:
+	_layer_interior(body, false)
 	if body != _player or _camera_rig == null or _combat_owns_the_camera():
 		return
 	_camera_rig.call("set_target", _player, {})
@@ -1048,6 +1079,7 @@ func _build_deposits() -> void:
 		node.position = Vector3(at.x, _floor_y, at.z)
 		add_child(node)
 		node.call("setup", spec)
+		_glow_the_deposit(spec, at)
 
 
 ## Nothing grows through a cave.
@@ -2878,6 +2910,12 @@ func _spawn_population(director: Node) -> void:
 		_guardian_seen_alive = true
 		_dress_the_guardian(guardian)
 		_markers["guardian"] = _guardian.global_position
+	# AFTER dressing: `apply_size_multiplier()` rebuilds the guardian's art,
+	# and a layer bit set on the old art dies with it (W07-WARRENS-0904).
+	for body: Node3D in _population:
+		_layer_interior(body, true)
+	if _guardian != null:
+		_layer_interior(_guardian, true)
 
 
 ## What makes the thing at the bottom read as the thing at the bottom.
@@ -3369,3 +3407,451 @@ func _progression_config() -> Dictionary:
 		return {}
 	var parsed: Variant = JSON.parse_string(file.get_as_text())
 	return parsed as Dictionary if parsed is Dictionary else {}
+
+
+## --- W07-WARRENS-0904: the room ----------------------------------------------
+##
+## Owner, twice, on hardware: "Burrow warrens looks terrible." Four prior blind
+## passes judged the guardian; the room around it had never been judged, and
+## the reason it did not read is measurable, not taste:
+##
+##   `data/config/art.json` day lighting runs `ambient_energy` 1.9 and the
+##   Compatibility renderer has no ambient occlusion and no light volumes, so
+##   the meadow's SKY ambient lit every wall, floor and ceiling of this cave
+##   at the same level -- and the authored pools (energy 0.4-0.6) were a few
+##   percent on top of that. One mid-tone, no value range, no dark passage,
+##   however the pools were tuned. Every prior lighting round tuned the pools.
+##
+## The mechanism this pass adds, verified in isolation before it was written
+## (a closed grey box under the same ambient: wall median 133 -> 17 with the
+## probe, 133 again with the probe's `reflection_mask` pointed elsewhere):
+##
+##   * `_build_interior_ambient()` -- ONE `ReflectionProbe` over the cave,
+##     `interior` mode, `ambient_mode` CONSTANT COLOUR, a near-black warm
+##     ambient, gated by `reflection_mask` to a visual layer that only the
+##     cave's INTERIOR meshes carry (`_layer_interior()`, skipping every
+##     `EXTERIOR_META` subtree). The mound flanks beside the mouth stay in the
+##     sun; the room goes dark; the pools finally shape it. Bodies that walk
+##     in take the layer with them (`_on_body_entered`) and lose it on the way
+##     out, so the trainer is not a sky-lit figure in a dark room.
+##   * `lights` (config) re-authored as fewer, stronger, warmer POOLS with
+##     dark passages between them -- daylight bounce at the mouth, the hall's
+##     one key, the den's warm side -- a value range instead of a wash.
+##   * `_build_roots()` -- the installed DeadTree family, inverted through the
+##     ceiling and thrust through walls so a bare crown reads as a root mass
+##     breaking into a dug burrow: the mid-layer between wall and prop this
+##     cave had none of. No new mesh. Bark retinted, never re-textured.
+##   * `_build_fungus()` -- the installed Mushroom family with its own albedo
+##     wired into emission at a pale green, one small omni per cluster: the
+##     band's identity (rootstone, the heartstone) as glow accents, one in
+##     each dark passage so navigation stays readable without a torch.
+##   * `_build_floor_litter()` -- dead leaf litter (Plant_7) blown into the
+##     mouth and hall, retinted, thinning with depth.
+##   * `_build_haze()` -- unshaded additive gradient cards at each pool and a
+##     crossed shaft under the den's spot, the only depth cue a renderer with
+##     no volumetric fog can draw: the pools recede down the passages instead
+##     of sitting on one plane.
+##   * `_glow_the_deposit()` -- a small amber omni over every rootstone seam.
+##
+## All of it is config (`burrow_warrens.json`: `interior_ambient`, `lights`,
+## `roots`, `fungus`, `litter`, `haze`, `deposit_glow`, `site.wall_tint_lerp`,
+## `interior_structure.tints`); this file is only the machine. Nothing here
+## collides, enters a doorway lane below head height, or touches the
+## guardian's encounter data, and `tests/smoke_warrens.gd` asserts each of
+## those on the real built cave.
+
+func _tag_exterior_children(from_index: int) -> void:
+	for i in range(from_index, get_child_count()):
+		get_child(i).set_meta(EXTERIOR_META, true)
+
+
+func _interior_layer_bit() -> int:
+	var layer := int(_config.get("interior_ambient", {}).get("layer", 12))
+	return 1 << (clampi(layer, 1, 20) - 1)
+
+
+## Add (or remove) the interior visual layer on every GeometryInstance3D under
+## `node`, skipping subtrees tagged as standing outside the cave. Lights and
+## the probe itself are VisualInstance3Ds but not geometry; they are left
+## alone.
+func _layer_interior(node: Node, on: bool) -> void:
+	if node == null or node.has_meta(EXTERIOR_META):
+		return
+	if node is GeometryInstance3D:
+		var geometry := node as GeometryInstance3D
+		if on:
+			geometry.layers |= _interior_layer_bit()
+		else:
+			geometry.layers &= ~_interior_layer_bit()
+	for child in node.get_children():
+		_layer_interior(child, on)
+
+
+func _build_interior_ambient() -> void:
+	var cfg: Dictionary = _config.get("interior_ambient", {})
+	if cfg.is_empty() or not bool(cfg.get("enabled", true)):
+		return
+	var min_x := INF
+	var min_z := INF
+	var max_x := -INF
+	var max_z := -INF
+	var top := 0.0
+	for rect: Array in _footprint:
+		min_x = minf(min_x, float(rect[0]) - _wall_t)
+		min_z = minf(min_z, float(rect[1]) - _wall_t)
+		max_x = maxf(max_x, float(rect[2]) + _wall_t)
+		max_z = maxf(max_z, float(rect[3]) + _wall_t)
+	for id: String in _chambers:
+		top = maxf(top, float((_chambers[id] as Dictionary).get("height", 4.0)))
+	if not is_finite(min_x):
+		return
+	var margin := float(cfg.get("margin_m", 1.5))
+	var below := 2.0
+	var above := top + 1.5 + margin
+	var probe := ReflectionProbe.new()
+	probe.name = "InteriorAmbient"
+	probe.size = Vector3(max_x - min_x + margin * 2.0, above + below, max_z - min_z + margin * 2.0)
+	probe.position = Vector3((min_x + max_x) * 0.5, _floor_y + (above - below) * 0.5, (min_z + max_z) * 0.5)
+	probe.interior = true
+	probe.box_projection = false
+	probe.enable_shadows = false
+	probe.ambient_mode = ReflectionProbe.AMBIENT_COLOR
+	probe.ambient_color = Color(str(cfg.get("colour", "#141110")))
+	probe.ambient_color_energy = float(cfg.get("energy", 1.0))
+	probe.intensity = float(cfg.get("intensity", 0.12))
+	probe.update_mode = ReflectionProbe.UPDATE_ONCE
+	# `reflection_mask`: what the probe AFFECTS. `cull_mask`: what it renders
+	# into its six faces -- the room, not the meadow, so the one-time bake is
+	# cheap and what little it reflects is the cave.
+	probe.reflection_mask = _interior_layer_bit()
+	probe.cull_mask = _interior_layer_bit()
+	add_child(probe)
+	_layer_interior(self, true)
+
+
+## One point in cave-local metres from an authored entry: `chamber` + `offset`,
+## or `between: [a, b]` (the midpoint of that passage) + `offset`.
+func _spot_of(spec: Dictionary) -> Vector3:
+	var offset := _local_of(spec.get("offset", [0.0, 0.0]))
+	var between: Array = spec.get("between", [])
+	if between.size() == 2 and _chambers.has(str(between[0])) and _chambers.has(str(between[1])):
+		var a := _local_of((_chambers[str(between[0])] as Dictionary).get("at", []))
+		var b := _local_of((_chambers[str(between[1])] as Dictionary).get("at", []))
+		var mid := (a + b) * 0.5
+		return Vector3(mid.x + offset.x, _floor_y, mid.z + offset.z)
+	var chamber := str(spec.get("chamber", ""))
+	if not _chambers.has(chamber):
+		return Vector3(offset.x, _floor_y, offset.z)
+	var centre := _local_of((_chambers[chamber] as Dictionary).get("at", []))
+	return Vector3(centre.x + offset.x, _floor_y, centre.z + offset.z)
+
+
+func _chamber_height(spec: Dictionary) -> float:
+	var chamber := str(spec.get("chamber", ""))
+	if _chambers.has(chamber):
+		return float((_chambers[chamber] as Dictionary).get("height", 4.0))
+	var between: Array = spec.get("between", [])
+	for entry: Variant in _config.get("passages", []):
+		var passage: Dictionary = entry as Dictionary
+		if between.size() == 2 and str(passage.get("from", "")) == str(between[0]) \
+				and str(passage.get("to", "")) == str(between[1]):
+			return float(passage.get("height", 2.6))
+	return 4.0
+
+
+## Roots. A DeadTree is a trunk with a bare branching crown; pointed crown-first
+## along `dir` from a hidden trunk, the crown is the only part in the room and
+## it reads as roots that broke through. `tip` is where the crown's furthest
+## point lands (cave-local x/z, `tip_y` above the floor); the trunk sits
+## behind it, inside the ceiling slab or the wall.
+func _build_roots() -> void:
+	var cfg: Dictionary = _config.get("roots", {})
+	if cfg.is_empty() or not bool(cfg.get("enabled", true)):
+		return
+	var models: Array[PackedScene] = _load_models(cfg.get("models", []))
+	if models.is_empty():
+		return
+	var holder := Node3D.new()
+	holder.name = "Roots"
+	add_child(holder)
+	var tint := Color(str(cfg.get("tint", "#4a3524")))
+	var placed := 0
+	for entry: Variant in cfg.get("pieces", []):
+		var spec: Dictionary = entry as Dictionary
+		var index := int(spec.get("model", 0))
+		var art: Node3D = models[index % models.size()].instantiate() as Node3D
+		if art == null:
+			continue
+		var box := _bounds_of(art)
+		var crown_y := box.end.y
+		var scale := float(spec.get("scale", 0.3))
+		var dir_raw: Array = spec.get("dir", [0.0, -1.0, 0.0])
+		var dir := Vector3(float(dir_raw[0]), float(dir_raw[1]), float(dir_raw[2])).normalized()
+		if dir.length() < 0.5:
+			dir = Vector3.DOWN
+		var tip := _spot_of(spec)
+		tip.y = _floor_y + float(spec.get("tip_y", _chamber_height(spec) - 1.3))
+		var swing := Quaternion(Vector3.UP, dir) if not dir.is_equal_approx(Vector3.UP) else Quaternion.IDENTITY
+		if dir.is_equal_approx(Vector3.DOWN):
+			swing = Quaternion(Vector3.RIGHT, PI)
+		var roll := Quaternion(dir, deg_to_rad(float(spec.get("roll_deg", 0.0))))
+		var basis := Basis(roll * swing).scaled(Vector3.ONE * scale)
+		art.transform = Transform3D(basis, tip - dir * crown_y * scale)
+		# A fringe over the mouth hangs OUTSIDE, under the sun, and must not
+		# take the cave's own ambient.
+		if bool(spec.get("exterior", false)):
+			art.set_meta(EXTERIOR_META, true)
+		holder.add_child(art)
+		_tint_rock(art, tint)
+		placed += 1
+	if placed > 0:
+		print("[warrens] %d root masses" % placed)
+
+
+## Glowing fungus clusters: the installed Mushroom meshes with their own albedo
+## wired into emission at a pale green, and one small omni per cluster.
+func _build_fungus() -> void:
+	var cfg: Dictionary = _config.get("fungus", {})
+	if cfg.is_empty() or not bool(cfg.get("enabled", true)):
+		return
+	var models: Array[PackedScene] = _load_models(cfg.get("models", []))
+	var brackets: Array[PackedScene] = _load_models(cfg.get("bracket_models", []))
+	if models.is_empty():
+		return
+	var holder := Node3D.new()
+	holder.name = "Fungus"
+	add_child(holder)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(cfg.get("seed", 905))
+	var glow := Color(str(cfg.get("glow_colour", "#9fe3b0")))
+	var emission := float(cfg.get("emission", 1.4))
+	var clusters := 0
+	for entry: Variant in cfg.get("clusters", []):
+		var spec: Dictionary = entry as Dictionary
+		var at := _spot_of(spec)
+		at.y = _floor_y + float(spec.get("y", 0.0))
+		var count := int(spec.get("count", 4))
+		var spread := float(spec.get("spread", 0.8))
+		var scale_range: Array = spec.get("scale", [0.7, 1.3])
+		for n in count:
+			var art: Node3D = models[rng.randi() % models.size()].instantiate() as Node3D
+			if art == null:
+				continue
+			var s := rng.randf_range(float(scale_range[0]), float(scale_range[1]))
+			art.scale = Vector3(s, s * rng.randf_range(0.85, 1.25), s)
+			var angle := rng.randf_range(-PI, PI)
+			var reach := rng.randf_range(0.0, spread)
+			art.position = at + Vector3(sin(angle) * reach, -0.02, cos(angle) * reach)
+			art.rotation = Vector3(rng.randf_range(-0.12, 0.12), rng.randf_range(-PI, PI), rng.randf_range(-0.12, 0.12))
+			holder.add_child(art)
+			_glow_fungus(art, glow, emission)
+		if bool(spec.get("bracket", false)) and not brackets.is_empty():
+			var bracket: Node3D = brackets[rng.randi() % brackets.size()].instantiate() as Node3D
+			if bracket != null:
+				var bs := float(spec.get("bracket_scale", 0.7))
+				bracket.scale = Vector3.ONE * bs
+				var b_off := _local_of(spec.get("bracket_offset", [0.0, 0.0]))
+				bracket.position = Vector3(at.x + b_off.x, _floor_y + float(spec.get("bracket_y", 1.2)), at.z + b_off.z)
+				bracket.rotation = Vector3(deg_to_rad(float(spec.get("bracket_pitch_deg", 0.0))),
+					deg_to_rad(float(spec.get("bracket_yaw_deg", 0.0))), 0.0)
+				holder.add_child(bracket)
+				_glow_fungus(bracket, glow, emission)
+		var light := OmniLight3D.new()
+		light.light_color = glow
+		light.light_energy = float(spec.get("light_energy", cfg.get("light_energy", 0.9)))
+		light.omni_range = float(spec.get("light_range", cfg.get("light_range", 4.5)))
+		light.position = at + Vector3(0.0, float(spec.get("light_y", 0.7)), 0.0)
+		holder.add_child(light)
+		clusters += 1
+	if clusters > 0:
+		print("[warrens] %d fungus clusters" % clusters)
+
+
+## The mushroom material's own texture, wired into emission so the painted
+## caps glow in the glow colour and the gaps between them stay dark. One
+## duplicate per source material, cached; never the shared resource.
+func _glow_fungus(node: Node, glow: Color, emission: float) -> void:
+	if node is MeshInstance3D:
+		var mesh_instance := node as MeshInstance3D
+		var mesh := mesh_instance.mesh
+		if mesh != null:
+			for surface in mesh.get_surface_count():
+				var source: Material = mesh_instance.get_active_material(surface)
+				if source == null:
+					continue
+				var key := "fungus_%s#%d" % [str(source.resource_path), source.get_instance_id()]
+				if not _materials.has(key):
+					var copy: StandardMaterial3D = source.duplicate() as StandardMaterial3D
+					if copy == null:
+						continue
+					copy.albedo_color = copy.albedo_color * glow.lerp(Color.WHITE, 0.35)
+					copy.emission_enabled = true
+					copy.emission = glow
+					copy.emission_energy_multiplier = emission
+					if copy.albedo_texture != null:
+						copy.emission_texture = copy.albedo_texture
+					_materials[key] = copy
+				mesh_instance.set_surface_override_material(surface, _materials[key])
+	for child in node.get_children():
+		_glow_fungus(child, glow, emission)
+
+
+## Leaf litter on the floor: the installed flat Plant meshes retinted to dead
+## leaf, scattered per chamber (counts authored per chamber so the mouth
+## carries what the wind blew in and the deep rooms carry almost nothing),
+## kept out of doorways and off the arena lane.
+func _build_floor_litter() -> void:
+	var cfg: Dictionary = _config.get("litter", {})
+	if cfg.is_empty() or not bool(cfg.get("enabled", true)):
+		return
+	var models: Array[PackedScene] = _load_models(cfg.get("models", []))
+	if models.is_empty():
+		return
+	var holder := Node3D.new()
+	holder.name = "FloorLitter"
+	add_child(holder)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(cfg.get("seed", 906))
+	var tint := Color(str(cfg.get("tint", "#6a5030")))
+	var scale_range: Array = cfg.get("scale", [0.5, 1.1])
+	var counts: Dictionary = cfg.get("counts", {})
+	var placed := 0
+	for id: String in _chambers:
+		var count := int(counts.get(id, 0))
+		if count <= 0:
+			continue
+		var chamber: Dictionary = _chambers[id]
+		var centre := _local_of(chamber.get("at", []))
+		var half := _size_of(chamber.get("size", [])) * 0.5 - Vector2(0.6, 0.6)
+		var tries := 0
+		var done := 0
+		while done < count and tries < count * 6:
+			tries += 1
+			# Two in three pieces hug a wall, where litter actually collects.
+			var at := Vector3(centre.x + rng.randf_range(-half.x, half.x), _floor_y + 0.015,
+				centre.z + rng.randf_range(-half.y, half.y))
+			if rng.randf() < 0.66:
+				if rng.randf() < 0.5:
+					at.x = centre.x + signf(rng.randf() - 0.5) * rng.randf_range(half.x - 1.4, half.x)
+				else:
+					at.z = centre.z + signf(rng.randf() - 0.5) * rng.randf_range(half.y - 1.4, half.y)
+			if _blocks_a_doorway(at):
+				continue
+			var art: Node3D = models[rng.randi() % models.size()].instantiate() as Node3D
+			if art == null:
+				continue
+			var s := rng.randf_range(float(scale_range[0]), float(scale_range[1]))
+			art.scale = Vector3(s, s * 0.6, s)
+			art.position = at
+			art.rotation = Vector3(0.0, rng.randf_range(-PI, PI), 0.0)
+			holder.add_child(art)
+			_tint_rock(art, tint)
+			done += 1
+			placed += 1
+	if placed > 0:
+		print("[warrens] %d litter pieces" % placed)
+
+
+## Haze cards: the only depth cue a renderer with no volumetric fog can draw.
+## `pool` cards are billboarded radial glows hung at a light; `shaft` cards
+## are two crossed vertical quads with a top-to-bottom fade under the den's
+## spot; `doorway` cards face INTO the cave (back-face culled) so daylight
+## reads from inside the mouth and the mouth still reads as a hole from the
+## approach. All unshaded and additive: they add light, never occlude.
+func _build_haze() -> void:
+	var cfg: Dictionary = _config.get("haze", {})
+	if cfg.is_empty() or not bool(cfg.get("enabled", true)):
+		return
+	var holder := Node3D.new()
+	holder.name = "Haze"
+	add_child(holder)
+	var placed := 0
+	for entry: Variant in cfg.get("cards", []):
+		var spec: Dictionary = entry as Dictionary
+		var kind := str(spec.get("kind", "pool"))
+		var at := _spot_of(spec)
+		at.y = _floor_y + float(spec.get("y", 2.0))
+		var colour := Color(str(spec.get("colour", "#ffffff")))
+		colour.a = float(spec.get("alpha", 0.2))
+		var size: Array = spec.get("size", [4.0, 4.0])
+		var w := float(size[0])
+		var h := float(size[1]) if size.size() > 1 else w
+		if kind == "shaft":
+			for yaw in [0.0, PI * 0.5]:
+				var card := _haze_card(Vector2(w, h), _haze_material(colour, "shaft"))
+				card.position = at
+				card.rotation.y = yaw
+				holder.add_child(card)
+		elif kind == "doorway":
+			var card := _haze_card(Vector2(w, h), _haze_material(colour, "doorway"))
+			card.position = at
+			card.rotation.y = deg_to_rad(float(spec.get("yaw_deg", 0.0)))
+			holder.add_child(card)
+		else:
+			var card := _haze_card(Vector2(w, h), _haze_material(colour, "pool"))
+			card.position = at
+			holder.add_child(card)
+		placed += 1
+	if placed > 0:
+		print("[warrens] %d haze cards" % placed)
+
+
+func _haze_card(size: Vector2, material: Material) -> MeshInstance3D:
+	var card := MeshInstance3D.new()
+	var quad := QuadMesh.new()
+	quad.size = size
+	card.mesh = quad
+	card.material_override = material
+	card.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	return card
+
+
+func _haze_material(colour: Color, kind: String) -> StandardMaterial3D:
+	var key := "haze_%s_%s" % [kind, colour.to_html(true)]
+	if _materials.has(key):
+		return _materials[key]
+	var gradient := Gradient.new()
+	var texture := GradientTexture2D.new()
+	texture.width = 96
+	texture.height = 96
+	if kind == "shaft":
+		gradient.set_offsets(PackedFloat32Array([0.0, 0.5, 1.0]))
+		gradient.set_colors(PackedColorArray([Color(1, 1, 1, 0.0), Color(1, 1, 1, 0.45), Color(1, 1, 1, 1.0)]))
+		texture.fill = GradientTexture2D.FILL_LINEAR
+		texture.fill_from = Vector2(0.5, 1.0)
+		texture.fill_to = Vector2(0.5, 0.0)
+	else:
+		gradient.set_offsets(PackedFloat32Array([0.0, 0.45, 1.0]))
+		gradient.set_colors(PackedColorArray([Color(1, 1, 1, 1.0), Color(1, 1, 1, 0.35), Color(1, 1, 1, 0.0)]))
+		texture.fill = GradientTexture2D.FILL_RADIAL
+		texture.fill_from = Vector2(0.5, 0.5)
+		texture.fill_to = Vector2(0.5, 0.0)
+	texture.gradient = gradient
+	var m := StandardMaterial3D.new()
+	m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	m.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+	m.cull_mode = BaseMaterial3D.CULL_BACK if kind == "doorway" else BaseMaterial3D.CULL_DISABLED
+	m.albedo_texture = texture
+	m.albedo_color = colour
+	m.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED if kind == "pool" else BaseMaterial3D.BILLBOARD_DISABLED
+	m.disable_receive_shadows = true
+	_materials[key] = m
+	return m
+
+
+## A small amber omni over every rootstone seam -- the band's own material is
+## the thing that glows in the walls.
+func _glow_the_deposit(spec: Dictionary, at: Vector3) -> void:
+	var cfg: Dictionary = _config.get("deposit_glow", {})
+	if cfg.is_empty() or not bool(cfg.get("enabled", true)):
+		return
+	if str(spec.get("item", "")) != str(cfg.get("item", "rootstone")):
+		return
+	var light := OmniLight3D.new()
+	light.name = "DepositGlow"
+	light.light_color = Color(str(cfg.get("colour", "#e2a860")))
+	light.light_energy = float(cfg.get("energy", 0.7))
+	light.omni_range = float(cfg.get("range", 3.5))
+	light.position = Vector3(at.x, _floor_y + float(cfg.get("y", 0.9)), at.z)
+	add_child(light)
