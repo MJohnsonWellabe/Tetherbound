@@ -850,9 +850,23 @@ func _apply_pivot(offsets: Dictionary, rolled: bool = false) -> void:
 	if pivot == null or not _pivot_held:
 		return
 	var roll := float(offsets.get("roll", 0.0))
+	# Grounding a roll is `+radius * |sin(roll)|`, NOT `+radius * sin(roll)`.
+	# Rolling a body either way dips its lower corner by about a radius, so the
+	# correction that puts it back on the ground is a LIFT in both directions.
+	# Signed, a negative roll turns the lift into a dip and buries the creature:
+	# terrapup's own `rest_roll_deg` is -45, and at 0.85 of it the signed form
+	# drops the pivot 0.75m -- most of a 2.3m animal -- which a code-blind
+	# critic caught as "the creature is half inside the hillside... a head and
+	# a paw lying detached in a meadow". The sideways re-centre above keeps its
+	# sign, because which way the body falls is exactly what that term means.
+	#
+	# `creature_body.gd::play_rest()` carries the same signed form for the bed
+	# pose and so has the same latent dip on the two negative-roll species
+	# (terrapup, trailpup). That file is outside this lane's ownership and is
+	# not touched here; reported for routing instead.
 	var position := _pivot_rest.origin + Vector3(
 		float(offsets.get("x", 0.0)) + (_height() * 0.5 * sin(roll) if rolled else 0.0),
-		float(offsets.get("y", 0.0)) + (_radius() * sin(roll) if rolled else 0.0),
+		float(offsets.get("y", 0.0)) + (_radius() * absf(sin(roll)) if rolled else 0.0),
 		0.0)
 	var rotation := Basis.from_euler(Vector3(
 		float(offsets.get("pitch", 0.0)), float(offsets.get("yaw", 0.0)), roll))

@@ -393,7 +393,16 @@ func test_settles_beside_a_lit_campfire_and_stands_up_to_move() -> void:
 	# beside a fire.
 	var roll_deg := absf(rad_to_deg(_pivot().rotation.z))
 	assert_true(roll_deg > 30.0, "rolled %.1f degrees toward its species rest pose" % roll_deg)
-	assert_true(_pivot().position.y < 0.0, "and sank into the bedding")
+	# It must NOT disappear into the ground. Terrapup's own rest roll is
+	# NEGATIVE (-45 degrees), and grounding a roll with a signed sine turns the
+	# lift into a dip: the pivot fell 0.75m of a 2.3m animal, and a code-blind
+	# critic saw "a head and a paw lying detached in a meadow". The floor here
+	# is deliberately generous -- a rest pose may settle a little -- but a drop
+	# anywhere near a body radius is the bug, not a settle.
+	var drop := -_pivot().position.y
+	assert_true(drop < float(_body.call("body_radius")) * 0.5,
+		"the camp pose dropped the model %.2fm; a %.2fm-radius creature is being buried" % [
+			drop, float(_body.call("body_radius"))])
 	assert_true(float(_presence.call("anim_speed_scale")) < 1.0, "the idle slows to a resting pace")
 	# The trainer walks off: the follower must be able to stand and go.
 	_leader.position += Vector3(30.0, 0.0, 0.0)
