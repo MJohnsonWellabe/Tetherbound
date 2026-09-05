@@ -69,6 +69,8 @@
       "energy": 2.4,
       "range": 9.0,
       "pulse_seconds": 2.6,
+      "emission": 1.15,
+      "_comment_emission": "NOT higher. Above ~1.2 the teal clips to white and the ring stops reading as the reserved colour at all -- the same ceiling stronghold_occupation.gd's work-lamp lens found at 2.4 and fixed at 1.15, and the same finding a blind judge returned on these rings at 2.2 ('unlit white primitives').",
       "rings": [0.42, 0.74],
       "ring_clearance": 0.25,
       "ring_thickness": 0.08

@@ -593,7 +593,13 @@ func _build_cage(bound: Dictionary) -> void:
 	var radius := float(_legendary.call("body_radius")) * factor + float(bound.get("ring_clearance", 0.25))
 	var height := float(_legendary.call("body_height")) * factor
 	var thickness := float(bound.get("ring_thickness", 0.08))
-	var material := _material(str(bound.get("colour", "#7fd8c4")), 2.2)
+	# Emission that blows out loses its HUE first, and a restraint ring whose
+	# whole job is to be recognisably Tether teal then renders as a flat white
+	# polygon. `stronghold_occupation.gd::_build_tether_lamps()` recorded this
+	# exact defect on the work-lamp lens and fixed it the same way (2.4 ->
+	# 1.15); a code-blind judge on this chamber read these rings as "unlit
+	# white primitives" at 2.2, which is the same finding on the same cause.
+	var material := _material(str(bound.get("colour", "#7fd8c4")), float(bound.get("emission", 1.15)))
 	var index := 0
 	for entry: Variant in (bound.get("rings", [0.42, 0.74]) as Array):
 		var ring := MeshInstance3D.new()

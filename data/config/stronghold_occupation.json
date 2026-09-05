@@ -3,7 +3,8 @@
   "withdrawal": {
     "flag": "legendary_freed",
     "withdraw": ["GateSentries", "GarrisonCamp", "Checkpoint"],
-    "darken": ["HallBraziers", "GateSconces", "RelayHub", "Braziers", "TetherLamps"]
+    "darken": ["HallBraziers", "GateSconces", "RelayHub", "TetherRetrofit", "TetherPipes", "Braziers", "TetherLamps"],
+    "_comment_darken": "TetherRetrofit and TetherPipes were added after a code-blind judge read the withdrawal as too small to call ('strip two guards and one brazier flame and the pairs are indistinguishable'). They are the siphons and pipe runs bolted to the Hall by stronghold.gd::_build_tether_retrofit/_build_tether_pipe_runs, each carrying a SiphonGlow omni and an emissive rift skin -- live Team Tether machinery on a building whose machine has just run down, which is precisely what must not still be glowing. Braziers/TetherLamps are stronghold_occupation.gd::build()'s own holder names, kept so this works on either placement."
   },
 
   "_comment": "GATE-E-STRONGHOLD-ART (2026-08-23). Team Tether's occupation of the castle on the ridge, as dressing. Two blind critics reading the same frames called the stronghold 'bannerless, unlit-looking, no Tether presence' against key art whose fortress is a sprawling OCCUPIED complex, and this file is the half of that answer that is not stone colour: the fires that are actually burning on it, the machinery bolted to it, and the checkpoint camp its garrison keeps at the foot of the ramp.",
