@@ -1,6 +1,6 @@
 extends "res://tests/test_case.gd"
 
-## W23-DIFFICULTY (docs/decisions/D74) -- the two code paths the baseline
+## W23-DIFFICULTY (docs/decisions/D77) -- the two code paths the baseline
 ## retune added, and the one ordering rule that keeps the G-2 profiles honest.
 ##
 ## Why this is worth a build. The owner reproduced "beating creatures and
@@ -116,7 +116,7 @@ func test_damage_scale_keeps_the_profiles_ratios() -> void:
 	assert_almost_eq(ratio, 12.0 / float(base.get("power", 8.0)), 0.0001,
 		"a WALL's hit should stay exactly its authored ratio over a wild's after the scale")
 	assert_true(float(wild["power"]) > float(base.get("power", 8.0)),
-		"the shipped damage_scale should make a wild hit HARDER than the raw `power` (%.1f), or D74 did not land" % float(base.get("power", 8.0)))
+		"the shipped damage_scale should make a wild hit HARDER than the raw `power` (%.1f), or D77 did not land" % float(base.get("power", 8.0)))
 
 
 func test_no_band_file_can_author_damage_scale() -> void:

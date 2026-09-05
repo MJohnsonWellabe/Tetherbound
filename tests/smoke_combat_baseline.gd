@@ -43,7 +43,7 @@ extends SceneTree
 ## in seconds. The two are read together, never one instead of the other.
 ##
 ## WHAT IT ASSERTS. The `difficulty` block of chapter_curve.json names the
-## targets (docs/decisions/D74): an ordinary wild at band entry costs the lead a
+## targets (docs/decisions/D77): an ordinary wild at band entry costs the lead a
 ## real fraction of its health; the band's floor trainer is lost by this pilot
 ## some of the time without preparation; the tournament stays winnable at its
 ## entry level; the Warden stays winnable at the level the team reaches him and

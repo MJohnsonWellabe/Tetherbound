@@ -2,7 +2,7 @@
 
 Lane W23-DIFFICULTY. Branch `ralph/W23-DIFFICULTY-0904`, from `origin/main` @ `ef16544f`.
 No PR opened, per the common brief; the coordinator lands it.
-Decision: `docs/decisions/D74-the-baseline-fight-costs-something.md`.
+Decision: `docs/decisions/D77-the-baseline-fight-costs-something.md`.
 
 ## Headline
 
@@ -30,12 +30,12 @@ floor before and after). Danger ×2–2.5, grind ×1.
 | `scripts/creatures/wild_creature.gd` | `trainer_owned` flag; `_enemy_config_for_this_body()` lays `enemy_trainer` under the member's own block; `_spaced_config()` factored into a static `spaced_config_for()` that also applies `damage_scale` |
 | `scripts/combat/encounter_director.gd` | one line: `body.set("trainer_owned", true)` beside the existing `combat_override` set in `_send_out_next_creature()` — the only touch outside the named ownership; a one-line add next to the line it belongs with |
 | `tools/_probe_pacing.py` | a `danger_report()` section: enemy damage rate at even level from the same config, so a retune that adds danger without grind is visible in the probe |
-| `docs/decisions/D74-…` | the decision and the targets |
+| `docs/decisions/D77-…` | the decision and the targets |
 | `docs/CURRENT_STATE.md` | §2 combat row rewritten; §3 new P1 (owner) row for CL-O5 with the numbers |
 | `ralph/reports/W23-DIFFICULTY-0904/` | this report, before/after tables (`_baseline_before.txt/.json`, `_baseline_after.txt/.json`), pacing before/after, smoke summary |
 
 `progression.json` and `creature_condition.json` were read and deliberately not changed
-(D74 §5). No band `spawns.json`/`trainers.json`, no `burrow_warrens.json`, no
+(D77 §5). No band `spawns.json`/`trainers.json`, no `burrow_warrens.json`, no
 `combat_manager.gd`.
 
 ## What the player sees
@@ -77,7 +77,7 @@ It runs 15 rows in 2.5 s. **Cross-check against the real scene:** `smoke_combat`
 tally on `main` was five player hits to a faint and two hits taken in a band 1 wild
 fight; the model's band 1 row before tuning is a 6.5 s fight with ~2 hits taken.
 
-It asserts the `difficulty` targets (D74 §3) and G-3's one-shot rule, and it was seen
+It asserts the `difficulty` targets (D77 §3) and G-3's one-shot rule, and it was seen
 red for the right reason: on shipped `main` it failed nine rows (wilds under 15 %,
 floors never costing anything), and the unit tests went 6-for-31 red when the overlay
 merge, the scale multiply, the chase speed and the band 4 ceiling were each reverted
@@ -148,13 +148,13 @@ D42 — **identical before and after**, as intended (CL-G9 stays Gate 4's). The 
 line: enemy hit 12.8 every 2.49 s at even level, 3.09 dps against the player's 8.18
 (ratio 0.38, up from 0.19).
 
-## Targets recorded (D74 §3, `chapter_curve.json` `difficulty`)
+## Targets recorded (D77 §3, `chapter_curve.json` `difficulty`)
 
 wild at band entry costs the lead 15–30 % (band 1 exempt); floor trainer 25–80 % of the
 lead and never a five-wipe more than 25 %; tournament won ≥ 75 % at its entry level;
 Warden won ≥ 50 % at L19 and no cheaper for the five than the elite; no single hit
 ≥ 50 % of a full-health entry-level creature. **The brief's "floor lost 1 in 4" was
-re-argued** (D74 §3): with auto-switch a loss is a five-wipe, and a weakest trainer
+re-argued** (D77 §3): with auto-switch a loss is a five-wipe, and a weakest trainer
 that wipes an equal-level five a quarter of the time makes the band's strongest a wall
 and the tournament unwinnable at L5. The target is read as the lead paying for
 arriving unprepared, and the wipe rate is guarded from the other side.
@@ -172,7 +172,34 @@ arriving unprepared, and the wipe rate is guarded from the other side.
 | `tests/smoke_combat.gd` on `main` (model cross-check) | OK — 5 hits on the enemy, 2 on the ally, 2 misses, 210 action frames |
 | the six verify smokes on this branch | see `_smokes_after_summary.txt` and the section below |
 
-SMOKE_RESULTS_PLACEHOLDER
+Run by the finisher session, this branch, godot 4.7-stable `--headless`, no
+rendering driver, each log grepped for `^ERROR:` and `SCRIPT ERROR`:
+
+| smoke / test | result |
+|---|---|
+| `smoke_combat.gd` | OK — 5 hits landed, 2 taken, 3 misses, 208 action frames, won |
+| `smoke_boss.gd` | OK — barrier holds, gate signal counts as expected, boss smoke test passed |
+| `smoke_trainer_battle.gd` | OK — trainer beaten once through its team, re-challenge refused, reward paid exactly once |
+| `smoke_aggression.gd` | OK — the peaceful creature never initiates (900 frames, nothing); the aggressive one starts from 9.1m |
+| `smoke_tournament_bracket.gd` | OK — final won in 2181 frames, all three rounds fought, saddle pattern granted, champion state steady |
+| `smoke_gate_e_finale.gd` | OK — roster decision resolved, region state answers, objective chain terminated |
+| `smoke_combat_baseline.gd` (re-run) | OK, 15 rows, 24 seeds each — reproduces `_baseline_after.txt` exactly |
+| `test_chapter_curve.gd` | included in the 36-test/543-assertion run above; both new tests (CL-G8 ceiling bound, `difficulty` shape) pass |
+| `test_encounter_combat_override.gd` | included in the same run; all 5 pass |
+
+All eight of the brief's named smokes/tests green, first attempt. The only
+`^ERROR:` in any log is `ERROR: Parameter "material" is null.` from
+`material_get_instance_shader_parameters` during creature-body dressing
+(`creature_body.gd:492`), one occurrence per world boot — the known-benign
+CL-G7 finding (`docs/GATE2_GATE3_CLOSURE_PLAN.md`: "seen by four lanes, chased
+by none, non-fatal in all"), unrouted and not this lane's; the set did not
+grow. Full detail: `_smokes_after_summary.txt`.
+
+While verifying, one stale line in `data/config/combat.json`'s
+`_comment_damage_scale` was fixed: it still described the pre-final `1.5`
+tuning value and the old "lost one run in four at the floor" reading; it now
+names the shipped `1.6` and the measured 29–62% floor-trainer cost, matching
+D77 §4. No numbers changed, only the comment.
 
 ## Known limitations, and what was deliberately not done
 

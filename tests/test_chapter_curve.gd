@@ -389,7 +389,7 @@ func test_a_caller_with_no_curve_falls_back_to_the_global_band() -> void:
 	assert_eq(cfg, prog, "an empty curve did not fall back to the shipped progression config unchanged")
 
 
-# --- W23-DIFFICULTY (D74): the baseline danger targets ------------------------
+# --- W23-DIFFICULTY (D77): the baseline danger targets ------------------------
 
 ## CL-G8. A region whose strongest field creature sits well below the level the
 ## team ARRIVES at is a region where the field is scenery from the first step.

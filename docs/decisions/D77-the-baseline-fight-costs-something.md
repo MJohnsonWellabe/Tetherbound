@@ -1,4 +1,4 @@
-# D74 — The baseline fight costs something
+# D77 — The baseline fight costs something
 
 **Date:** 2026-09-04 · **Decided by:** lane W23-DIFFICULTY, on the owner's
 hardware reproduction of the same day (`docs/owner/OWNER_PLAYTEST_2026-09-04.md`,

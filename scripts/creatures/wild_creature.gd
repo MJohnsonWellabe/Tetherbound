@@ -111,7 +111,7 @@ var _catch_aim_slowdown_scale: float = 0.35
 ## numbers it is handed, not how it thinks. No new intent, no charged-move AI.
 var combat_override: Dictionary = {}
 
-## W23-DIFFICULTY (D74). True for a body a TRAINER sent out, set by
+## W23-DIFFICULTY (D77). True for a body a TRAINER sent out, set by
 ## `encounter_director._send_out_next_creature()` beside `combat_override`.
 ## It selects `combat.json`'s optional `enemy_trainer` overlay in
 ## `_enemy_config_for_this_body()`: a drilled creature fights with a shorter
@@ -511,7 +511,7 @@ func _spaced_config() -> Dictionary:
 ## the SAME numbers a live body does rather than a copy of this function that
 ## drifts. `mine`/`theirs` are the two gameplay radii.
 ##
-## W23-DIFFICULTY (D74): this is also where `enemy.damage_scale` lands.
+## W23-DIFFICULTY (D77): this is also where `enemy.damage_scale` lands.
 ## The G-2 profiles author ABSOLUTE `power` values against the 8.0 baseline
 ## (WALL 12.0, CURRENT 6.4, ACE 14.4), so raising `enemy.power` itself would
 ## have quietly inverted their shapes -- a CURRENT picket hitting softer than

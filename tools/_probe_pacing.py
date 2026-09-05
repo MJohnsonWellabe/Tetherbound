@@ -592,7 +592,7 @@ def material_report():
 
 
 def danger_report():
-    """W23-DIFFICULTY (D74): the opponent's side of the same arithmetic dps() does.
+    """W23-DIFFICULTY (D77): the opponent's side of the same arithmetic dps() does.
 
     The chapter's pacing verdict (D42) counts fight TIME, which enemy damage does
     not change -- so a difficulty retune that adds danger without adding grind
@@ -843,7 +843,7 @@ def main():
     print()
 
     hit, cycle, enemy_dps, ratio = danger_report()
-    print("-- danger (D74): what an even-level opponent takes back " + "-" * 22)
+    print("-- danger (D77): what an even-level opponent takes back " + "-" * 22)
     print("  enemy hit at even level: %.1f  every %.2fs  ->  %.2f dps against the player's %.2f (ratio %.2f)"
           % (hit, cycle, enemy_dps, DPS, ratio))
     print("  i.e. an even-level opponent gives back ~%.0f%% of the damage it takes. Per fight that is an "
