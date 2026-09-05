@@ -42,6 +42,9 @@ var _lying: bool = false
 ## "keep colour calls low by using shared materials" is a literal requirement,
 ## not a nice-to-have.
 static var _variant_materials: Dictionary = {}
+## One tiny solid-colour texture per hair colour, for `_painted_hair_material`'s
+## `detail_albedo`. Shared across every character asking for that colour.
+static var _solid_textures: Dictionary = {}
 
 ## How much of the additive emission floor below is currently in effect, 0..1.
 ##
@@ -745,6 +748,7 @@ func _apply_hair(cfg: Dictionary) -> void:
 		if hex_real != "":
 			real_part.set_surface_override_material(0, _shared_variant_material(
 				real_part.get_active_material(0), "hair", Color(hex_real)))
+			_recolour_painted_hair(real_part, Color(hex_real))
 		return
 	if not visible:
 		return
@@ -755,6 +759,86 @@ func _apply_hair(cfg: Dictionary) -> void:
 	var hex := str(hair.get("color", hair.get("colour", "#2b1b12")))
 	part.set_surface_override_material(
 		0, _shared_variant_material(StandardMaterial3D.new(), "hair", Color(hex)))
+
+
+## Where a rig's painted-hair mask lives if it has one: beside the model, as
+## `<model>_hair_mask.png` (`villager_female_lod0.glb` ->
+## `villager_female_lod0_hair_mask.png`, baked by
+## `tools/_bake_villager_female_hair_mask.py`). A rig with no mask on disk
+## keeps the ponytail-only behaviour above; nothing is invented for it.
+static func painted_hair_mask_path(model_path: String) -> String:
+	if model_path == "":
+		return ""
+	return "%s/%s_hair_mask.png" % [model_path.get_base_dir(), model_path.get_file().get_basename()]
+
+
+## N04-DIALOGUE-PORTRAITS, 2026-09-05. The colour above lands on the separated
+## ponytail only, and the ponytail sits at the nape, wholly behind the head:
+## two independent code-blind judges counted eight villagers on this rig as
+## one face, and an in-engine probe (D81) confirmed the tint was invisible from
+## every conversational angle. The hair a player actually sees -- the fringe,
+## the cap, the sides -- is PAINTED into the body texture, on the one fused
+## material the whole rig shares with its face and clothes, so a material
+## multiply cannot reach it without tinting the face (the whole-body hue shift
+## the owner rejected: "looks stupid").
+##
+## So the colour is laid on by REGION instead of by material: the body
+## material's `detail` layer mixes a solid hair-colour texture over the albedo
+## wherever `<model>_hair_mask.png` says there is painted hair, and nowhere
+## else. The mask is baked once from the rig itself (head-bone-skinned UV
+## islands, colour-keyed to the painted hair, small dark features such as
+## pupils and brows dropped) and carries the painted shading as its value, so
+## a crevice stays a crevice in the new colour. The same material goes on the
+## ponytail mesh, which shares the texture, so nape and fringe agree. No new
+## geometry, no new mesh, the same material slots the rig already has --
+## CLAUDE.md's "differentiate with materials and textures" done literally.
+##
+## Cached like every other variant: one material per (model, colour, body),
+## shared by every villager asking for that colour.
+func _recolour_painted_hair(real_part: MeshInstance3D, colour: Color) -> void:
+	var mask_path := painted_hair_mask_path(str(_cfg.get("model", "")))
+	if mask_path == "" or not ResourceLoader.exists(mask_path):
+		return
+	var mask := load(mask_path) as Texture2D
+	if mask == null:
+		return
+	for instance: MeshInstance3D in [_body, real_part]:
+		if instance == null or instance.mesh == null or instance.mesh.get_surface_count() == 0:
+			continue
+		var source: Material = instance.get_active_material(0)
+		if not source is BaseMaterial3D:
+			continue
+		instance.set_surface_override_material(0,
+			_painted_hair_material(source as BaseMaterial3D, instance == _body, colour, mask))
+
+
+func _painted_hair_material(source: BaseMaterial3D, body: bool, colour: Color,
+		mask: Texture2D) -> Material:
+	var key := "%s|painted_hair|%s|%s" % [str(_cfg.get("model", "")), colour.to_html(), str(body)]
+	if _variant_materials.has(key):
+		return _variant_materials[key]
+	# Duplicated from the variant already on the surface, so the palette
+	# multiply, the metallic correction and whatever else `_shared_variant_
+	# material` settled are all kept; only the detail layer is added.
+	var material: BaseMaterial3D = source.duplicate() as BaseMaterial3D
+	material.detail_enabled = true
+	material.detail_blend_mode = BaseMaterial3D.BLEND_MODE_MIX
+	material.detail_uv_layer = BaseMaterial3D.DETAIL_UV_1
+	material.detail_mask = mask
+	material.detail_albedo = _solid_texture(colour)
+	_variant_materials[key] = material
+	return material
+
+
+static func _solid_texture(colour: Color) -> Texture2D:
+	var key := colour.to_html()
+	if _solid_textures.has(key):
+		return _solid_textures[key]
+	var image := Image.create(4, 4, false, Image.FORMAT_RGBA8)
+	image.fill(colour)
+	var texture := ImageTexture.create_from_image(image)
+	_solid_textures[key] = texture
+	return texture
 
 
 ## Same placeholder reasoning as `_apply_hair`, for however many entries `cfg`

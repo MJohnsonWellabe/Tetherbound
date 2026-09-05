@@ -5,7 +5,7 @@
 
   "_comment_order": "Spec §28's order is not optional and this file is written in it. The READOUT (`stronghold_reveal`) is spec Act VI step 33's environmental/story reveal and it sits on the threshold of the Warden Arena, so the player learns what is at the far end of the cables BEFORE the Warden opens his mouth and before the fight. Then step 34, his dialogue. Then step 35, the battle. Only after that do the chamber conversations exist to be reached at all.",
 
-  "_comment_portraits": "The four narration beats (`stronghold_chamber` and the three after it) are attributed to 'Chamber Five' and the readout to 'Tether Readout', and all of them point at the EXISTING generic portrait. tests/test_dialogue_runner.gd requires every conversation to have a speaker and a portrait that is really on disk, and that rule was not weakened to fit these lines in. But it is an acknowledged STAND-IN and it is flagged, not faked: the room and the machine do not have a face of their own, and neither does the Warden (his own is still painted rather than modelled -- HANDOFF §6). Both want owner-gated art before this scene is judged final, and no generation was spent guessing at either.",
+  "_comment_portraits": "N04-DIALOGUE-PORTRAITS, 2026-09-05: Warden Aldis now wears `warden.png`, the plate W04-PORTRAITS rendered from the installed Warden body (D81's eight-name contract), in all three of his conversations -- he was the last named speaker in the game still drawn with the player's face. The four narration beats (`stronghold_chamber` and the three after it, 'Chamber Five') plus 'Tether Readout' and 'Tether Duty Board' are what the PLAYER reads and sees, second person, and keep `trainer.png` as the deliberate first-person stand-in the finale lane chose (ralph/W06-FINALE-0904's own `_comment_portraits` says the same); tests/test_dialogue_portraits.gd carves out exactly those three bodiless speakers by name, nothing else in this file. The room and the machine still have no face of their own; that stays owner-gated art, and no generation was spent guessing at it.",
 
   "_comment_warden": "Spec §33, and it is the whole assignment. He sincerely believes separation prevents chaos, that controlled trade prevents regional conflict, that dangerous migration must be limited, that ordinary people do not understand the risks, and that Team Tether carries the burden of holding it together. He can still be abusing power -- he is -- and he is NOT a moustache-twirler. He never says 'you cannot stop me'. He says a version of 'you don't understand what these barriers are holding apart', and he means it, and he is not entirely wrong, and he is doing this to a living thing anyway. He does not recant when he loses. That is the point: the player has to make the choice against a real argument, not against a sneer.",
 
@@ -43,7 +43,7 @@
     "stronghold_warden_challenge": {
       "_comment": "R8.3, spec Act VI step 34. He has watched you come the whole way and he is not surprised, because he thinks the ending is arithmetic. Note what he does NOT do: threaten, gloat, or deny the readout. He confirms it, and then argues that it is worth it -- which is the harder version and the one §33 asks for. His last line is the challenge; scripts/world/trainer_npc.gd starts the fight when the words run out, so nothing here carries a `battle:` effect.",
       "speaker": "Warden Aldis",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/warden.png",
       "lines": [
         "You read the board. Good. I would rather you did — I have no interest in a person who came all this way to break something they never bothered to look at.",
         "Then you know it is true, and you can stop hunting for the lie. There isn't one. It is exactly what it says.",
@@ -59,7 +59,7 @@
     "stronghold_warden_defeated": {
       "_comment": "R8.3. He loses and does not fold. A villain would recant; a believer does the thing this does -- concedes the fight, concedes nothing else, and tells you the truth about what the door behind him leads to, because he thinks the truth is his best remaining argument. That he stands aside at all is the one crack in him: he plays by the rules he says he is defending.",
       "speaker": "Warden Aldis",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/warden.png",
       "lines": [
         "…Well fought. Genuinely. I do not say that to soften it.",
         "I won't stop you at the door. That was the wager and I lost it, and a man who breaks his own rules the moment they cost him was never keeping rules at all.",
@@ -72,7 +72,7 @@
     "stronghold_warden_realm_reward": {
       "_comment": "Cloudreach Phase 1. Automatic first-victory handoff. The flags are granted by the Warden trainer row before this opens, so closing the panel early cannot lose either entitlement and a full satchel cannot block them.",
       "speaker": "Warden Aldis",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/warden.png",
       "lines": [
         "You won. Take the Realm Key — it opens the Storm Road beyond the village.",
         "And take the Heart of Meadows home. Place it at the old shrine; its strength will carry you into Cloudreach."
