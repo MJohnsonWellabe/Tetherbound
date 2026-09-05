@@ -323,12 +323,12 @@ walkable here.
 | `tools/gate_f/segments/S09.json` | 79 → 102 steps. Corr and the checkpoint. |
 | `tools/gate_f/segments/S09C.json` | 44 → 67 steps. |
 | `tests/test_gate_f_segments.gd` | **new**, 7 tests. |
-
-Counted precisely, across the eight files: **43** `press combat_quick` blocks removed, **23**
-`fight_until_resolved` and **4** `chip_to_floor` steps added, **20** counted challenge
-conversations converted, **21** recovery ladders and **4** compact wild-engage gates inserted,
-**25** post-fight switches added. Step counts per file:
 | `ralph/reports/W21-HARNESS-FIGHTS-0904/` | this report and the five runs' written verdicts. |
+
+Counted precisely, across the eight segment files: **43** `press combat_quick` blocks removed,
+**23** `fight_until_resolved` and **4** `chip_to_floor` steps added, **20** counted challenge
+conversations converted, **21** recovery ladders and **4** compact wild-engage gates inserted,
+**25** post-fight switches added.
 
 Nothing outside the ownership list was touched. `operator_harness.gd`, `run_segment.sh` and
 `stick_navigator.gd` are unmodified — confirmed by the diff.
