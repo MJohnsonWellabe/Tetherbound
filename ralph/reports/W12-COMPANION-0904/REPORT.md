@@ -151,7 +151,37 @@ break table above is the result after that fix.
 
 ## 5. Smokes
 
-*(filled in below when the runs complete)*
+All five the brief names, each run whole, one at a time:
+
+```
+godot --headless --path . --script tests/smoke_creature_control.gd
+godot --headless --path . --script tests/smoke_combat.gd
+godot --headless --path . --script tests/smoke_catching.gd
+godot --headless --path . --script tests/smoke_gate_a_rest_torch.gd
+godot --headless --path . --script tests/smoke_riding.gd
+```
+
+| Smoke | Exit | What it reported | Distinct `ERROR:` lines |
+|---|---|---|---|
+| `smoke_creature_control` | 0 | "dismissed, recalled, swapped, and refused mid-fight" | `Parameter "material" is null` x1 |
+| `smoke_combat` | 0 | "a fight can be entered, piloted, won and left" | none |
+| `smoke_catching` | 0 | "a throw can be aimed, missed, and landed" | `Parameter "material" is null` x1; `4 resources still in use at exit` x1 |
+| `smoke_gate_a_rest_torch` | 0 | "Gate A rest/torch smoke passed", including a real creature-bed rest, which is the camp state's own fixture | `Parameter "material" is null` x1 |
+| `smoke_riding` | 0 | "saddled, mounted, ridden, dismounted, and refused when it had to be" | `Parameter "material" is null` x2 |
+
+`Parameter "material" is null` is the known-benign line
+`docs/AGENT_WORKFLOW.md` section 6 documents by name, together with the warning
+that its *count* varies with how many alpha creatures streamed in and must not
+be the bar. The distinct set did not grow.
+
+`4 resources still in use at exit` in `smoke_catching` is an exit-time message
+printed after the smoke had already reported its pass. It was checked against
+unmodified `main` rather than assumed: a `git worktree` at `ef16544f` was
+imported and the same smoke run there. *(Result recorded below.)*
+
+`smoke_combat` is the one that matters most of the five. The victory hook is a
+call inside `_begin_resolve()`, on the path every won fight takes, and that run
+produced **no `ERROR:` lines at all**.
 
 ---
 
