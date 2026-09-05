@@ -114,6 +114,23 @@ func _run() -> void:
 	print("[probe] interval_s=%s elapsed_before=%s" % [
 		str(pins.get("_interval_s")), str(pins.get("_elapsed"))])
 
+	# Phase A: did `_process` run AT ALL?
+	#
+	# `_elapsed` is reset to 0.0 by every tick, so reading it before and after
+	# cannot tell "never ran" from "ran and ticked" — the previous run's
+	# diagnostic was ambiguous for exactly that reason. A sentinel far below the
+	# interval can: `_process` adds delta to it and cannot reach a tick, so if
+	# the value is still exactly the sentinel afterwards, `_process` never fired.
+	const SENTINEL := -1000.0
+	pins.set("_elapsed", SENTINEL)
+	for i in 8:
+		player.global_position = STAND
+		await process_frame
+	var moved: float = float(pins.get("_elapsed"))
+	print("[probe] sentinel %.1f -> %.4f after 8 frames: _process %s" % [
+		SENTINEL, moved, "RAN" if moved != SENTINEL else "NEVER FIRED"])
+	pins.set("_elapsed", 0.0)
+
 	# Hold the body at the stand point for the whole wait. A one-shot assignment
 	# cannot tell "the node never ticked" apart from "something moved the body
 	# back", and those want different fixes.
