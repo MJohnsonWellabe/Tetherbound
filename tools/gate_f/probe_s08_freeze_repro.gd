@@ -29,6 +29,7 @@ extends SceneTree
 ##       --mode=loaded --save=<dir>/S07-exit.json --log=<dir>/loaded.csv [--deploy] \
 ##       [--settle=10800] [--budget=45000] [--stop-on-freeze]
 ##       [--navigator=res://tools/gate_f/probe_s08_freeze_legacy_navigator.gd]
+##       [--start=x,y,z]   isolated mode only: where to stand the body first
 ##
 ## `--navigator` swaps in a different walker script for the SAME leg -- the
 ## controlled A/B this lane's root cause rests on. Default is the live
@@ -40,6 +41,10 @@ const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const PROBE := preload("res://scripts/debug/gate_f_probe.gd")
 
+## probe_ironwood_approach.gd's own hard-coded start. NOT where the entry save
+## actually settles today -- `--start=x,y,z` overrides it, and the difference
+## between these two heights is what decides whether the leg walks into the
+## thicket at (-164.12, -9.13, 4334.56) or west of it.
 const ISOLATED_START := Vector3(-152.0, -2.15, 4238.0)
 const TARGET := Vector2(-345.0, 5060.0)
 const CLOSE_ENOUGH := 5.0
@@ -61,6 +66,7 @@ var _world: Node = null
 var _stick := Vector2.ZERO
 var _log: FileAccess = null
 var _probe: RefCounted = null
+var _start := ISOLATED_START
 var _navigator_path := ""
 var _navigator_script: GDScript = null
 
@@ -88,6 +94,11 @@ func _run() -> void:
 	_settle = int(_arg("settle", "10800"))
 	_budget = int(_arg("budget", "45000"))
 	_stop_on_freeze = _flag("stop-on-freeze")
+	var start_raw := _arg("start", "")
+	if not start_raw.is_empty():
+		var parts := start_raw.split(",")
+		if parts.size() == 3:
+			_start = Vector3(float(parts[0]), float(parts[1]), float(parts[2]))
 	_navigator_path = _arg("navigator", "")
 	_navigator_script = NAVIGATOR
 	if not _navigator_path.is_empty():
@@ -255,9 +266,9 @@ func _boot_isolated() -> bool:
 	_rig = _world.get_node_or_null(^"CameraRig") as Node3D
 	if _player == null or _rig == null:
 		return false
-	_player.global_position = ISOLATED_START
+	_player.global_position = _start
 	_player.velocity = Vector3.ZERO
-	_rig.global_position = ISOLATED_START
+	_rig.global_position = _start
 	for i in 90:
 		await physics_frame
 	return true

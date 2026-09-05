@@ -377,18 +377,39 @@ Points of interest: one optional discovery with a real reward, signposts legible
   the revives. Owner instruction 2026-09-03 ("give revives after the tournament") is implemented
   as a production-menu recovery block asserted by the satchel dropping 10 → 7 Revives.
 
-- **Gate 2's Pond stall — the walker, not the world (open, scoped as 2.9).** Walking straight at
-  the Old Bram detour from the Pond shore, `stick_navigator.gd` freezes a real player body at
-  **(−328.7, −14.2, 505.3)** — to a centimetre, on three independent runs — for **543 play
-  seconds** with locomotion enabled throughout ("0 held"); on the first run it never recovered
-  and the leg reported "stopped 658.8 m short". This is **not** a world hole:
-  `tools/gate_f/probe_pond_stranding.gd` stands the real body at that exact coordinate and at
-  eight points on a 6 m ring, injects a real full-deflection stick, and finds **0 of 10 stands
-  wedged** — every stand walks 12–17 m in five or more of eight bearings, resting on the
-  authored heightfield (worst delta 0.09 m), `on_floor`, touching nothing but `Terrain3D`. The
-  Pond is a real 14 m basin (water surface authored at −17.0 m) and the evidence run now authors
-  the climb out of its north-east shoulder (`S05-32x`, the RIG-F6 precedent — legs checked
-  against a route that was actually walked, never a teleport past geometry): 23 s instead of 543.
+- **S08's Ironwood freeze (CL-H14) is closed — root-caused and reproduced, W03-S08-FREEZE-0904 —
+  and Gate 2's Pond stall (2.9) has the same signature but was NOT re-measured here.** S08-22 pinned
+  at **(−164.12, −9.13, 4334.56)** for its whole 45,000-frame budget on two runs, which is why Band 4
+  had no evidence. W03-S08-FREEZE reproduced it a third time and measured the mechanism: **the body walks head-on into a tree**. At frame 1474,
+  travelling 5.00 m/s, the capsule contacts `CommonTree_2_Collision` with normal `(0.33, 0.00,
+  −0.95)` — dot **−1.00** against its own travel, so `move_and_slide` has no tangential component to
+  turn into a slide, and velocity goes to exactly zero and never changes again. The world is fine:
+  ground 1 cm under the feet, `on_floor` true every frame, rays from +1 m and +3 m both hitting
+  `Terrain` at the body's own height, the camera rig 1.7 m away throughout (collision is streamed),
+  the ally 10.2 m off on layer 0, `unstick_count` 0 because `_entombed_at()` correctly answers
+  "pressed against something, not sealed in it". What pinned it was the WALKER: `_detour_stalled()`
+  flipped `_side` **and zeroed `_side_detours`**, so the counter never passed 1, `DETOURS_PER_SIDE`
+  was never reached, `_back_off()` never fired, and the walk ran a closed 41-frame cycle at exactly
+  zero displacement to the end of its budget. **The fix was already on `main`, and had been sitting
+  in an unmerged pull request the whole time it was being investigated:** FENCE-CORNER-0903
+  (`c64af25f`, landed as #30 / `65fc6625`) abandons a side on measured progress instead of a
+  resettable attempt count. Proven by swapping only the walker on today's tree — the frozen
+  pre-fix copy pins at the recorded coordinate to the centimetre and 747.6 m short, the live walker
+  **arrives (839.5 m, 10,907 walking frames, 0 held)** and the segment runs 12 steps past S08-22.
+  It also explains why the site's own probe said the world was clear: the trap is **dynamic**. Four
+  teleported starts at the Ironwood site — the freeze coordinate itself included — all walk out. A
+  *placed* body is never stuck; only one pressed into geometry by its own motion is.
+  **About the Pond stall (2.9), stated as the inference it is:** it carries the identical signature
+  (body pinned to the centimetre at (−328.7, −14.2, 505.3) for 543 play seconds over three runs,
+  locomotion enabled, "0 held"), and `probe_pond_stranding.gd`'s "0 of 10 stands wedged" is exactly
+  the placed-body result above — so the same mechanism very likely explains it, and the same landed
+  fix would cover it. **This lane did not re-run the Pond leg**, so 2.9 stays open on its own
+  evidence rather than being closed by analogy; re-running it against
+  `probe_s08_freeze_legacy_navigator.gd` and the live walker is a cheap way to settle it. **Residual, not fixed:** `_free_space()`'s lowest
+  probe ray sits 45 cm up and this geometry is below it, so the walker still cannot see what stops
+  it and escapes only by noticing it made no progress — recorded for the walker's next owner in
+  `ralph/reports/W03-S08-FREEZE-0904/REPORT.md` §7 with the measurement that would justify a
+  foot-height ray. The Pond leg's own authored climb-out (`S05-32x`, 23 s instead of 543) stands.
 
 - **Gate 3 / 4:** not started. Gate F S03 reached 6 failures outside its lane's scope;
   S04–S10 unverified as a chain.
