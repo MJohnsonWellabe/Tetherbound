@@ -122,7 +122,44 @@ no framing with the control.
 
 ## Perf
 
-_(filled from the round-2 `[perf] DELTA` lines)_
+**The layer costs one to three draw calls.** Measured in isolation by
+`tools/_probe_vfx_perf.gd` (a bare scene, one Terrapup, structural counters from the
+RenderingServer, each effect sampled alive and the scene checked back to baseline after it
+ends), under `xvfb-run … --rendering-driver opengl3 --resolution 1280x720`:
+
+| Effect | draw calls | primitives | objects |
+|---|---|---|---|
+| hit spark (quick, mid-damage) | +1 | +216 | +1 |
+| hit spark (charged, heavy) | +1 | +232 | +1 |
+| KO puff | +1 | +240 | +1 |
+| catch burst | +1 | +402 | +1 |
+| level-up flourish, rim glow alive | +2 | +28,408 | +2 |
+| worst case: charged hit + KO puff + flourish | +3 | +1,088 | +3 |
+
+The flourish's +28,408 is the **rim glow**, not its own geometry: a `material_overlay` is a
+second full pass over the creature's mesh, so it re-submits that one creature's triangles for
+the 1.5 s it runs. Against the `band1_open` proxy the project budgets on (6,891 draws /
+10.79 M primitives, `docs/CURRENT_STATE.md` §2) that is **0.04 % of the draw-call budget and
+0.26 % of the primitive budget, on one creature, for 1.5 s.** No effect leaked: every row
+returned to baseline after it expired, which the probe asserts rather than assumes. The worst
+case is lower than the flourish row because the hit flash claims the overlay slot first, so
+only one overlay pass is ever live (see the limitation below).
+
+**The in-world number at `band1_open` could not be measured, and that is a finding rather than
+a gap.** The first attempt paused the tree during a real fight and sampled once with the
+effects drawing and once with them lifted. Between two consecutive samples of a **paused**
+tree, `draw_calls` fell 7,315 → 3,790 and `objects` fell 6,826 → 3,301 — exactly −3,525 on
+both, about half the visible scene, which cannot come from hiding two effect nodes. Terrain
+and scatter LOD keeps converging on the render side while the tree is paused; a second pair
+the same run disagreed by 334, again equal on draw calls and objects. `_sample_pair` now
+settles 24 frames and alternates with/without/with/without, prints all four samples, and
+prints a `NOISE:` line naming the disagreement when the two deltas differ by more than eight
+draw calls, so the number can never again be quoted as the effect's cost when it is the
+scene's. The isolated probe is the number to trust; it is measuring the same submissions a
+ROG Ally's GPU would be handed.
+
+llvmpipe frame time is meaningless on this box and is not quoted, per
+`tools/perf_render_stats.gd`'s own rule.
 
 ## Known limitations and what was deliberately not done
 
@@ -137,3 +174,15 @@ _(filled from the round-2 `[perf] DELTA` lines)_
 - The catch sparkle competes with `catching.json`'s existing white seal flash for its first
   third of a second; it is shot 16 ticks in, once that flash has faded.
 - No sound cue: `data/config/audio.json` is not this lane's file.
+- **One body overlay at a time.** `body_glow.gd` skips a mesh that already carries someone
+  else's overlay, so a creature hit during its own 1.5 s level-up rim gets the spark but no
+  body flash, and vice versa. Deliberate (the alternative is stacking passes on one mesh and
+  fighting over who restores it), and rarely reachable: the flourish plays after the blow that
+  ended the fight. Recorded rather than fixed.
+- Round 3's frames are **not blind-judged**: `COMMON.md` allows two rounds and both were
+  spent. They are measured against the round-2 control by the same pixel rule, and the
+  round-2 verdict they answer is committed beside them.
+- The capture's `_aim_at_fight` steps the camera 3 m sideways, but the combat camera owns its
+  own yaw during a fight, so the struck creature can still sit behind the player's own body in
+  a capture frame. A framing limit of the tool, not of the effects; the judge saw it as "the
+  enemy is a 35-pixel dot".
