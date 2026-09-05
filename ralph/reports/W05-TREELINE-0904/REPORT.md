@@ -82,6 +82,14 @@ computing the corridor scatter at load on every boot (~4 min in this container; 
 test's header measured ~60 s on a faster box). This branch's re-bake carries the
 Linux-computed fingerprint `4984520267706256` and the test passes.
 
+**Confirmed in the running game, not only in the test.** The before-render's own log
+(`shots_places` capture on the unmodified tree) carries four
+`WARNING: scatter anchor at (…) placed N of M` lines emitted from
+`scatter_rules.gd::_place_anchor` ← `all_placements` ← `vegetation.gd::build`, and **no**
+`[scatter bake] load phases` line: the world was computing the corridor scatter from
+scratch as it built. The after-render's log shows the opposite (bake loaded, no
+`all_placements` warnings), which is what a fresh bake being consumed looks like.
+
 **Same commit, same pattern, not this lane's file:** `data/terrain/playground/
 manifest.json` was hand-edited too, and `test_terrain_bake_freshness.gd::
 test_playground_terrain_bake_is_committed_and_fresh` fails on `main` for the same
@@ -110,11 +118,17 @@ JUDGE_SECTION
 
 ## 8. Known limitations, and what was deliberately not done
 
-- **`scripts/world/vegetation.gd::PROP_OFFSET` (1.3 m)** is a constant sized for "the
-  widest trunk this scatter places (CommonTree at 1.35 scale)". Trunk collision now
-  reaches 0.6 × 2.0 = 1.2 m, so a woodpile beside the very largest harvest-marked trunk
-  may sit closer than intended. Script file, outside this lane's ownership; flagged for
-  whoever owns `vegetation.gd` (one constant, probably 1.3 → 1.9).
+- **`scripts/world/vegetation.gd::PROP_OFFSET` (1.3 m) is now undersized, and I did not
+  fix it** — it is a script file, outside this lane's ownership. Its own comment sizes it
+  against "the widest trunk this scatter places (CommonTree at 1.35 scale)". That
+  reference was already stale before this lane (the fill's `scale_max` was 1.45 and
+  `heroes` reached 2.1); this change makes it worse — the fill now reaches 2.0 and a hero
+  2.7, so the felled-wood pile beside a large harvest-marked tree can sit inside the
+  trunk. Trunk collision (`collision_radius` 0.6 × scale) reaches 1.20 m at the fill's
+  new top and 1.62 m at a hero's, against the 1.3 m offset. **Suggested fix for whoever
+  owns `vegetation.gd`:** raise `PROP_OFFSET` to ~1.9 m, or derive it from the placement's
+  own scale rather than a constant. Not observed in any of the four rendered stands (no
+  woodpile was in frame), so this is reasoning from the constant, not a sighting.
 - Bands 2–5 anchors with explicit ranges were **not** lifted; the fill around them grew,
   their copses did not. Their frames were not judged this round.
 - Grove reaches 2.94× p5–p95 (range 3.0× by config); the brief's "≥ 3× per family" is
