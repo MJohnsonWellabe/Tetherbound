@@ -5,7 +5,7 @@
   "conversations": {
     "village_mira_freed": {
       "speaker": "Mira",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/mira.png",
       "lines": [
         {
           "text": "Every machine on the road went quiet at once. I was counting stock and the humming just -- stopped.",
@@ -20,7 +20,7 @@
     },
     "village_oskar_freed": {
       "speaker": "Oskar",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/villager_male.png",
       "lines": [
         {
           "text": "The pens are loud again. They've been half-asleep for a season and now they won't settle.",
@@ -35,7 +35,7 @@
     },
     "village_tam_freed": {
       "speaker": "Tam",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/tam.png",
       "lines": [
         {
           "text": "Their gate's standing open on the north road. No one on it. First time in my life I've walked through without asking.",
@@ -47,7 +47,7 @@
     },
     "village_quarry_foreman_freed": {
       "speaker": "Quarry Foreman",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/villager_male.png",
       "lines": [
         {
           "text": "Floor's still grey down there. Some of it won't come back in my lifetime -- that's just true.",
@@ -70,7 +70,7 @@
     },
     "spoke_traveller_storm_road": {
       "speaker": "Kell",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/villager_male.png",
       "lines": [
         {
           "text": "Don't come further. The bridge is still gone and the drop hasn't got any kinder.",

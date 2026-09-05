@@ -1,0 +1,22 @@
+verify smokes/tests, this branch, run by the finisher session (2026-09-05)
+godot 4.7-stable, --headless, no rendering driver
+
+smoke_combat.gd             : OK  -- 5 hits landed, 2 taken, 3 misses, 208 action frames, won
+smoke_boss.gd                : OK  -- barrier holds, gate signal counts as expected, boss smoke test passed
+smoke_trainer_battle.gd      : OK  -- trainer beaten once through its team, re-challenge refused, reward paid exactly once
+smoke_aggression.gd          : OK  -- the peaceful creature never initiates (900 frames, nothing); the aggressive one starts the fight from 9.1m
+smoke_tournament_bracket.gd  : OK  -- final won in 2181 frames, all three rounds fought, saddle pattern prize granted, champion state steady
+smoke_gate_e_finale.gd       : OK  -- roster decision resolved, region state answers, objective chain terminated
+smoke_combat_baseline.gd     : OK  -- 15 rows, 24 seeds each, matches the committed _baseline_after.txt exactly
+tests/run_tests.gd -- --only=test_combat_difficulty.gd,test_chapter_curve.gd,test_encounter_combat_override.gd
+                              : 36 tests, 543 assertions, 0 failed
+
+Every log grepped for ^ERROR: and SCRIPT ERROR. The only hit anywhere is
+`ERROR: Parameter "material" is null.` from material_get_instance_shader_parameters
+during creature-body dressing (creature_body.gd:492), one occurrence per world boot,
+in smoke_combat/boss/aggression/tournament_bracket/gate_e_finale (not in
+trainer_battle or combat_baseline, which use no creature body or none at all). This
+is the known-benign CL-G7 finding (docs/GATE2_GATE3_CLOSURE_PLAN.md, "seen by four
+lanes, chased by none, non-fatal in all"; also docs/AGENT_WORKFLOW.md,
+GATE3_EXECUTION_PLAN.md) -- unrouted, not this lane's, and the set did not grow
+(one occurrence per boot, as in every prior band report).

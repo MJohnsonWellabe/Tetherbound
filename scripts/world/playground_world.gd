@@ -45,6 +45,7 @@ const VILLAGE_BOUNDARY := preload("res://scripts/world/village_boundary.gd")
 const KEY_PICKUP := preload("res://scripts/world/key_pickup.gd")
 const TM_PICKUP := preload("res://scripts/world/tm_pickup.gd")
 const ITEM_CACHE_PICKUP := preload("res://scripts/world/item_cache_pickup.gd")
+const BAND_PICKUPS := preload("res://scripts/world/band_pickups.gd")
 const CART_REPAIR := preload("res://scripts/world/cart_repair.gd")
 const RIVER_NEST_CLEAR := preload("res://scripts/world/river_nest_clear.gd")
 const WORLD_PERIMETER := preload("res://scripts/world/world_perimeter.gd")
@@ -1252,6 +1253,7 @@ func _build_settlement() -> void:
 	_place_farm_plots()
 	_place_tms()
 	_place_item_caches()
+	_place_band_pickups()
 	_place_sunstone()
 	_build_burrow_warrens()
 	_build_stronghold()
@@ -1493,6 +1495,17 @@ func _spawn_item_cache(item_id: String) -> void:
 	var model_and_scale := _item_cache_model(item_id)
 	pickup.call("setup", item_id, CACHE_LABEL.get(item_id, "Take it"),
 		model_and_scale[0], model_and_scale[1])
+
+
+## W17-DENSITY-B2-B3. The authored per-band findables (candy, revives,
+## potions, mushrooms) from `data/config/bands/<band>/pickups.json`, stood up
+## through the same `item_cache_pickup.gd` seam `_place_item_caches()` uses,
+## keyed on their own authored id. `band_pickups.gd` owns the reading, the
+## ground/scatter siting and the tier look; this is the one hook.
+func _place_band_pickups() -> void:
+	var stats: Dictionary = BAND_PICKUPS.place_all(self, _vegetation)
+	print("[playground] placed %d band pickups (%d already taken, %d nudged off scatter, %d unclear, %d without ground)" % [
+		int(stats["placed"]), int(stats["taken"]), int(stats["nudged"]), int(stats["unclear"]), int(stats["no_ground"])])
 
 
 ## D71/T3-SUNSTONE: the Sunstone, a one-time physical pickup exactly like

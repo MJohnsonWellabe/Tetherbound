@@ -23,7 +23,7 @@ So the work divides three ways, and they are not equally blocked:
 | Track | State | Blocked by |
 |---|---|---|
 | **Visuals** | the owner's top priority; several fixes are cheap and one is nearly free | one instrument (below) |
-| **Content after the village** | the largest body of work; needs three design contracts written first | nothing — start writing today |
+| **Content after the village** | the largest body of work; its four design contracts are written (2a, `docs/specs/C*.md`) | density first, then the contracts' slices |
 | **Evidence** | one band of five has real played evidence | two harness defects |
 
 **One thing blocks two of the three tracks**, and it is first for that reason.
@@ -209,6 +209,9 @@ raised. Terrapup already cleared. **Burrowback is a design question, not a bug:*
 darker than the field *by design* (grey-olive rock-nodule armour), reaches only 1.18:1
 against the 1.5:1 bar across a full sweep, and pushing it brighter trades away the
 identity. Someone has to decide whether the bar or the identity gives.
+**Decided 2026-09-04: `docs/decisions/D74-burrowback-keeps-its-rock-armour.md`** — the
+identity stays; legibility is met in the dark direction (field over creature ≥ 1.30:1) by
+value, rim and contact shadow, never hue.
 
 ---
 
@@ -219,6 +222,21 @@ independently: **band 5 ships 23 spawns and 8 harvest nodes over the chapter's l
 extent, against band 1's 69 and 48.** The owner is describing that gradient as a player.
 
 ## 2a. Write these three contracts first — **XL each, and they are the long pole**
+
+> **Written 2026-09-04 (W19-CONTRACTS).** The contracts exist and are the implementation
+> briefs; the paragraphs below are the summary that commissioned them. Hand a lane the
+> contract, not this section:
+>
+> | Contract | File | What it settles |
+> |---|---|---|
+> | **C1** | [`docs/specs/C1_RIDEABLE_ROSTER_FLY_TELEPORT.md`](specs/C1_RIDEABLE_ROSTER_FLY_TELEPORT.md) | Terrapup, Burrowback and Tuskroot rideable behind the one saddle; Galewisp flies and Ripplet teleports only beyond the Meadows, as a presentation-only promise; the pick made legible on three surfaces; each starter's in-chapter payoff; the nine-site gate sweep that proves nothing rides over a locked gate |
+> | **C2** | [`docs/specs/C2_TASK_FEED.md`](specs/C2_TASK_FEED.md) | a task is an objective plus a pin, a counter and a reward, still a pure function of the flag store; the four-station relay shutdown chain and the generated every-trainer tally, plus alphas, Sigil pins, the Rootstone/Ironwood surveys and the camping chain; no save-format change, the MAIN STORY card untouched |
+> | **C3** | [`docs/specs/C3_VILLAGE_REPLAN.md`](specs/C3_VILLAGE_REPLAN.md) | houses along the chapter's own road, a berry field, a grove and a stone yard as named places; five villagers stay by function and fourteen are resited with a role each; the opening's smoke constraints, the one terrain bake, and a four-stage plan |
+> | **C4** | [`docs/specs/C4_CAMPING_NECESSARY.md`](specs/C4_CAMPING_NECESSARY.md) | the 2b row "Camping made necessary", promoted to a contract: strain (damage only rest clears), recovery scarcity, a per-leg strain floor for the density pass, and night rules — with every satiety number frozen by test |
+>
+> Two decisions this section was waiting on are recorded: **D74** (Burrowback keeps its
+> rock-armour; item 1.8 below is closed) and **D75** (where a level gate sits and at what
+> number; the 2b row "The level gate that prompts" now has its placement rule).
 
 Do not hand any of these to an implementation lane as a paragraph of owner quote. Each
 changes what the game is, and each has a trap that a contract exists to catch.
@@ -264,11 +282,11 @@ do."
 | **Alpha map pins at 300 m** | Clears when caught **or beaten**. 16 alpha/elder entries already exist, unadvertised. **Cheaper than it looks:** `map_state.gd` already has `add_dynamic_marker`/`remove_dynamic_marker` and the minimap already draws dynamic markers with collision handling. **Fails if** the pinned set is not persisted. | M |
 | **The Challenge button never disappears** | Confirmed defect: `trainer_npc.gd::_prompt_for()` is unconditional, so a beaten trainer still advertises "Challenge" though the conversation has correctly switched. **The trap:** that function's comment records the prompt must never contain "talk" or "choose", because `smoke_opening.gd` finds Grandpa and the three starters by those exact substrings. "Talk to %s" breaks the opening smoke. | S |
 | **No leaving a trainer fight** | Trainers only. Wild fights keep their exit, which removes the softlock risk. The tournament's post-loss retry stays a deliberate exception. | M |
-| **The level gate that prompts** | No UI lock: **the fight does not start and the trainer says why, in character.** A fifth reason `can_challenge()` can be false. **A too-low player must hear the taunt, not the already-defeated line.** | M |
+| **The level gate that prompts** | No UI lock: **the fight does not start and the trainer says why, in character.** A fifth reason `can_challenge()` can be false. **A too-low player must hear the taunt, not the already-defeated line.** Placement and number: `docs/decisions/D75-the-level-gate-placement-rule.md`. | M |
 | **Bonding and levelling made visible** | *"Once we make bonding and levelling more important and visual it will feel better to grind it. That's what we need."* **Load-bearing** — until advancing a bond or a level is legible, every other tracked objective asks the player to grind toward a number they cannot see. | L |
 | **The legendary inside the machine** | The creature *is* the power source, so it belongs inside the thing draining it. | S–M |
 | **Fights are too easy** | Now owner-reproduced, which changes the standing of the per-encounter combat work that landed: named opponents have real behaviour for the first time, and this says the **baseline** is soft too. | M |
-| **Camping made necessary** | `CLAUDE.md` forbids harsher hunger and starvation death. Necessity comes from attrition, distance and recovery scarcity. **Fails if** the fix is a faster satiety drain. | M |
+| **Camping made necessary** | `CLAUDE.md` forbids harsher hunger and starvation death. Necessity comes from attrition, distance and recovery scarcity. **Fails if** the fix is a faster satiety drain. Contract: `docs/specs/C4_CAMPING_NECESSARY.md`. | M |
 
 ## The dependency to state plainly
 
