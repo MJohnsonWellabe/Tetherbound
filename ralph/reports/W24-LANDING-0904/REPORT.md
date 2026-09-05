@@ -224,3 +224,81 @@ while the finale red stands, since it would only reproduce it.
   either the finale is fixed on `main` (the finale lane, or whoever owns Cloudreach), or
   this lane is told that a proven pre-existing red does not block a landing that removes
   reds. This lane will not override the rule on its own.
+
+
+## Cycle 3 — the owner's consolidation directive, 2026-09-05 02:24 UTC
+
+The directive changed this lane's job: stop requiring each lane's own verification, merge
+the converged lanes onto one branch, run **one** pass over the merged tree, and **do not
+block on `main`'s pre-existing finale regression**. Done, in that order.
+
+### LANDED — PR #42, merge commit `c5a16dfb`
+
+`git merge-base --is-ancestor 3fbd67ad origin/main` confirms it. **W00-ICONS** and the
+bake-manifest repair are on `main`; the six candy and mushroom PNGs are in
+`assets/ui/icons/items/`. Its final CI run had every job green except
+`verify-gate-evidence-shard`, and within that shard every step passed except
+`gate_e_finale` — including `tournament_bracket`. Landed with that red per the directive,
+which unpolls every other lane's CI: `main` was red on the icon test and on four
+bake-dependent jobs until this merge.
+
+### PR #45 — the consolidated batch, `ralph/LAND-0904-3` @ `8873f93b`
+
+Off current `origin/main`, carrying seven lanes: W00 (via `ralph/LAND-0904`), W19 and W13
+(via `ralph/LAND-0904-2`), W18, W04, W12, and W17's pickups loader through W18's merge of
+its branch. PR #43 was closed as superseded, with a comment naming exactly what carries
+over. 68 commits, 187 files.
+
+**The one consolidated pass, on the merged tree:**
+
+| Command | Result |
+|---|---|
+| `godot --headless --path . --import` ×2 | 0 `SCRIPT ERROR`, 0 `Parse Error` |
+| the 26-file unit set across every merged lane's owned tests | **533 tests, 829,776 assertions, 0 failed** |
+| `tests/smoke_playground.gd` | exit 0, `smoke: OK`, `placed 101 band pickups (0 already taken, 9 nudged off scatter, 0 unclear, 0 without ground)`, known-benign `material` line ×3 |
+| `tests/smoke_gate_b_continuous.gd` (W19+W13 subset) | `gate B continuous (CORE): OK` |
+
+Conflicts were confined to `docs/CURRENT_STATE.md`, where each lane appends its own row;
+resolved as a union, with one stale combined row dropped because W13 replaced it with two
+more specific ones. No bake input changed, so no re-bake was needed.
+
+**Decision renumbering in this batch:** W19 keeps D74/D75, W13 → D76 (in `-2`), W18 → D78,
+W04 → D81, and W12 → **D83**, the next free number after the addendum's reserved block
+(D77 W23, D79 W10, D80 W09, D82 W02), since W12 was not in the addendum's list. Every
+reference that means each record moved with it. Eight `.uid` sidecars the lanes' own
+scripts needed were committed too.
+
+### The blind-judge round, and it is not a pass
+
+Five merged lanes already carried verdicts. W13 had frames but cited a `JUDGE.md` it never
+committed, so this lane ran the round on the sheet that existed — no new render, since a
+software-GL world capture costs 20–50 minutes. Verdict committed at
+`ralph/reports/W13-PROGRESSION-FEED-0904/JUDGE.md`; the judge was code-blind and told
+nothing about what changed.
+
+**"Not shippable for a first playable."** Three findings are unambiguously W13's own: the
+feed's tick labels at **1.34:1** ("over grass they will not exist"), the bond readout at
+**1.85:1** ("the least legible text in the frame"), and the moment banner drawn over a live
+world interaction prompt, ghosting both at 1.28:1 in a still with no fight running. It also
+reached independently the limitation W13's report admits — the survey was shot over a flat
+scaffold, so real-terrain legibility is still untested — and it notes the Team screen's
+one-NEXT behaviour cannot be judged because that tab was never shot (the runtime smoke does
+assert it). Where the plate is used, type measures 8.8:1 to 14.7:1, and nothing reads as
+imported from another game. The rest of its list is pre-existing furniture no lane in this
+batch owns: the health and food pills covering their own bars, portraits, minimap, hotbar,
+safe-area margins.
+
+Landed anyway, per the directive: the tests are green and the feature works; what the judge
+found is that several readouts are **drawn too faint to read**, which no test asserts. It
+wants a contrast pass and a re-shoot over real terrain, not a revert. Recorded here so the
+owner decides rather than discovering it in play.
+
+### Still open
+
+- The finale regression stands on `main` (`04d844d0`'s Warden victory conversation).
+  `tests/smoke_gate_e_finale.gd` is W06-FINALE's file. Every landing carries this red until
+  that lane fixes it.
+- The Biome 2 hard-rule concern stands, unchanged and untouched by this lane.
+- Not yet landable: W05, W09, W17's own commits, W22, W23, W01, W10 (reports still carry
+  unfilled placeholders); W02, W06, W07, W08, W11, W14, W15, W20, W21 (no report). W17 and
+  W23 are pre-verified by this lane and will land fast when their reports close.
