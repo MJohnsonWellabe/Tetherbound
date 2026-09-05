@@ -163,4 +163,19 @@ break table above is the result after that fix.
 
 ## 7. Known limitations and what was deliberately not done
 
+### Untracked files this lane deliberately did not commit
+
+`godot --headless --path . --import` (which COMMON.md instructs every lane to
+run once) generates 58 import artifacts that are untracked on `main`:
+34 `.import` sidecars, 7 extracted textures and 17 `.uid` files. They belong
+to the pickup-art lane's assets (candy, mushroom, potion, revive flower,
+saddle, bridge, signpost) and to other lanes' new scripts. **None are this
+lane's work**, and committing them would put another lane's binaries on this
+branch and hand its owner a conflict. Left untracked; the coordinator should
+expect them from any lane that imports, and they regenerate on demand. This
+is the "a file outside your ownership list" case COMMON.md says to report
+rather than touch.
+
+### Limitations of the feature itself
+
 *(filled in below)*
