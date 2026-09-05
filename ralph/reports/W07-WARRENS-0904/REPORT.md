@@ -169,3 +169,15 @@ Sheets committed: `_sheet_before.png`, `_sheet_after1.png`, `_sheet_after2.png`,
 | Perf measured before/after, same order | done and reported honestly, including the draw-call rise |
 | Update `docs/CURRENT_STATE.md` (CL-O7) | done |
 | Note the E5 supersession in `MEADOWS_EXIT_CRITERION.md` | done, one line |
+
+## Final state
+
+- **Branch:** `ralph/W07-WARRENS-0904`, cut from `origin/main` at `ef16544f`, pushed to `origin`.
+- **Final commit carrying all code, data and evidence:** `68c7ffc3` (`Warrens: commit the capture tool's own .uid`). The commit that adds this section follows it on the same branch and touches only this file.
+- **Twelve commits ahead of `origin/main`.** The work is on the branch; nothing was pushed to `main` and no pull request was opened, per the brief.
+- **Working tree clean.** The 58 untracked files this container's `godot --import` run generated (`.import` sidecars and extracted textures for candy_pickup, mushroom_pickup, revive_flower, riding_saddle, south_bridge_gate, potion_plant, meadows_signpost, plus `.uid` files for other lanes' scripts) were **not** committed: every one belongs to another lane's assets, their source `.glb`s are already tracked, and the ownership rule forbids carrying another lane's files on this branch. They were removed; the importer regenerates them. The one `.uid` that is genuinely this lane's — `tools/_capture_warrens_0904.gd.uid` — is committed.
+- **Reproduce the green smoke from this branch:**
+  ```
+  godot --headless --path . --script tests/smoke_warrens.gd
+  ```
+  Last run on the final tree: `warrens smoke test passed`, exit 0; `daylight leak check: 180 rays, 0 leaks`; `275 pieces of growth on the mound`; distinct `^ERROR:` set `Parameter "material" is null` ×1 (pre-existing, CL-G7).
