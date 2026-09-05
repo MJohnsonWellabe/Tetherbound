@@ -43,6 +43,9 @@ const TRAINER_AT := Vector3(10.0, 0.0, 10.0)
 const SPEAKER_AT := Vector3(10.0, 0.0, 7.4)
 const SPEAKER_HEIGHT := 1.9
 
+## Halfway between the pair: where `_open_except_across_the_bar`'s counter lies.
+const BAR_LINE_Z := (TRAINER_AT.z + SPEAKER_AT.z) * 0.5
+
 
 ## A person to talk to. `conversation_camera.gd` accepts a speaker by duck type —
 ## `height()` and `has_model()` are what every `character_model.gd` descendant
@@ -466,6 +469,26 @@ func test_a_corner_swings_the_camera_to_the_side_the_room_is_on() -> void:
 		"and is still outside the trainer")
 
 
+func test_the_camera_never_takes_a_position_it_could_not_reach() -> void:
+	# Bram stands behind a bar. A swing that finds clear air on the FAR side of
+	# it is not a shot: nothing intersects, but the viewpoint is standing where
+	# no camera following this player could stand, and the trainer is not in the
+	# picture at all. A blind judge, given only the frame, called it out as "a
+	# camera pushed through the bar with the player entirely out of frame".
+	#
+	# The fixture is that bar: room everywhere except a slab on the +X side that
+	# the trainer would have to pass through to get there.
+	var cfg := CONVERSATION.config()
+	_rig.set_occlusion_probe_for_tests(_open_except_across_the_bar)
+	assert_true(_rig.enter_conversation(_speaker, cfg))
+	_settle_until_blended(1.0)
+
+	var shot: Dictionary = _rig.conversation_shot()
+	var camera_at: Vector3 = shot["pivot"] + Vector3(shot["dir"]) * float(shot["distance"])
+	assert_true(camera_at.x <= TRAINER_AT.x + 0.5,
+		"the shot must stay on the side of the bar the player is actually on")
+
+
 func test_a_wall_pressed_against_the_lens_never_collapses_the_arm() -> void:
 	var cfg := CONVERSATION.config()
 	_rig.set_occlusion_probe_for_tests(func(_p: Vector3, _d: Vector3, _l: float) -> float:
@@ -537,6 +560,28 @@ func _clear_room(_pivot: Vector3, _dir: Vector3, limit: float) -> float:
 
 func _wall_at_1_8m(_pivot: Vector3, _dir: Vector3, limit: float) -> float:
 	return minf(1.8, limit)
+
+
+## A bar with a wall behind the player. Straight back is short, so the two-shot
+## gives way and the swing search runs. Travel toward +X is blocked half a metre
+## out — that is the counter itself — while the space BEYOND it reads as wide
+## open to a sweep fired from the pivot, which already sits over the bar. So the
+## roomiest swing is the one across the counter, and the only thing that can
+## reject it is the trainer -> camera reachability sweep.
+func _open_except_across_the_bar(from: Vector3, dir: Vector3, limit: float) -> float:
+	var planar := Vector3(dir.x, 0.0, dir.z).normalized()
+	# The wall a step behind the player's shoulders, which is what makes the
+	# two-shot give way and the swing search run at all.
+	if planar.dot(Vector3.BACK) > 0.8:
+		return minf(1.0, limit)
+	# The counter, lying across the room between the two of them. A sweep that
+	# STARTS on the player's side runs into it; one that starts past it — which
+	# the framing pivot does, sitting most of the way toward the speaker — finds
+	# the open floor on the far side and reports it as room. That asymmetry is
+	# the whole trap, and it is exactly what Bram's inn does.
+	if planar.dot(Vector3.RIGHT) > 0.5:
+		return limit if from.z < BAR_LINE_Z else minf(0.5, limit)
+	return limit
 
 
 ## A corner. The fixture pair stands along -Z, so "behind the trainer" is +Z:

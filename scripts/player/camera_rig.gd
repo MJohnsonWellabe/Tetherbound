@@ -585,6 +585,7 @@ func _solve_conversation_shot() -> Dictionary:
 		var base_swing := float(tighter.get("shoulder_yaw_deg", 0.0))
 		var best: Dictionary = tighter
 		var best_room := -1.0
+		var found_reachable := false
 		for extra: float in CONVERSATION.swing_search(tighter):
 			var candidate := tighter.duplicate()
 			candidate["shoulder_yaw_deg"] = base_swing + extra
@@ -592,10 +593,26 @@ func _solve_conversation_shot() -> Dictionary:
 				trainer_anchor, speaker_anchor, forward, candidate)
 			var probe_room := _free_distance_behind(
 				probe["pivot"], probe["dir"], float(probe["distance"]))
-			if probe_room > best_room:
+			# A swing is only worth having if the camera could GET there from
+			# behind the player. Room measured outward from the pivot says
+			# nothing about that: the pivot already sits most of the way toward
+			# the speaker, so in Bram's inn a wide swing found clear air on the
+			# FAR side of the bar and put the lens there — nothing intersecting,
+			# and a viewpoint standing where no camera following this player
+			# could stand, with the trainer not in the picture at all. Sweeping
+			# the trainer -> camera path rules that out.
+			var reachable := _camera_is_reachable(trainer_anchor, probe)
+			var better := probe_room > best_room
+			if reachable and not found_reachable:
+				# Any reachable shot beats the best unreachable one.
+				better = true
+			elif found_reachable and not reachable:
+				better = false
+			if better:
 				best_room = probe_room
 				best = candidate
-			if probe_room >= float(probe["distance"]):
+				found_reachable = reachable
+			if reachable and probe_room >= float(probe["distance"]):
 				break
 		shot = CONVERSATION.solve(
 			trainer_anchor, speaker_anchor, forward, best, best_room)
@@ -609,7 +626,8 @@ func _solve_conversation_shot() -> Dictionary:
 ## A swept ball rather than a ray, for the reason `_probe_radius` above gives at
 ## length: indoors a single hairline ray slips between a chair back and a table
 ## edge and reports a room that is not there.
-func _free_distance_behind(pivot: Vector3, dir: Vector3, limit: float) -> float:
+func _free_distance_behind(pivot: Vector3, dir: Vector3, limit: float,
+		apply_margin: bool = true) -> float:
 	if _occlusion_probe.is_valid():
 		return float(_occlusion_probe.call(pivot, dir, limit))
 	# `get_world_3d()` does not merely answer null off the tree, it PRINTS.
@@ -632,8 +650,8 @@ func _free_distance_behind(pivot: Vector3, dir: Vector3, limit: float) -> float:
 	if travel.size() < 1:
 		return limit
 	var hit := float(travel[0]) * limit
-	if hit >= limit:
-		return limit
+	if hit >= limit or not apply_margin:
+		return minf(hit, limit)
 	# The room a hit leaves is NOT where the camera goes. SpringArm3D keeps
 	# `margin` (0.6m here, and deliberately large — see `_collision_margin`)
 	# between the arm's end and whatever it hit, so an arm set to exactly this
@@ -641,6 +659,21 @@ func _free_distance_behind(pivot: Vector3, dir: Vector3, limit: float) -> float:
 	# framing was solved for. Reporting the usable length instead is what lets
 	# the solver's guards mean anything indoors.
 	return maxf(hit - margin, 0.0)
+
+
+## Could a camera following this player actually stand where `shot` puts it?
+##
+## Swept from the trainer's own framing anchor out to the lens, with no margin:
+## this is a line-of-travel question, not a "how much arm fits" one. Both people
+## are already excluded from the sweep, so what it finds is furniture and walls
+## — the bar Bram stands behind, the cottage wall Mira stands against.
+func _camera_is_reachable(trainer_anchor: Vector3, shot: Dictionary) -> bool:
+	var at: Vector3 = shot["pivot"] + Vector3(shot["dir"]) * float(shot["distance"])
+	var to_camera := at - trainer_anchor
+	var reach := to_camera.length()
+	if reach <= 0.01:
+		return true
+	return _free_distance_behind(trainer_anchor, to_camera / reach, reach, false) >= reach - 0.01
 
 
 ## The trainer and the person they are talking to are both excluded from the
