@@ -126,7 +126,7 @@ failure the old source-grep version could not see.
 ### Smoke
 
 ```
-godot --headless --path . --script tests/smoke_progression_feedback.gd     → exit 0, "Progression feedback: OK"
+godot --headless --path . --script tests/smoke_progression_feedback.gd     → exit 0, "Progression feedback: OK"  (twice: before and after the round-2 banner move)
 godot --headless --path . --script tests/smoke_combat.gd                   → exit 0, "combat: OK"
 godot --headless --path . --script tests/smoke_tournament_bracket.gd       → exit 0, "smoke: OK"
 godot --headless --path . --script tests/smoke_creatures_tab_controller.gd → exit 0, "Creatures tab controller isolation: OK"
@@ -171,9 +171,30 @@ ok    Team screen next benefit: 'Next node:  +1% attack and defence (now +1%)'
 ```
 
 **Engine error set.** Grepped for `^ERROR:` and `SCRIPT ERROR` (not `SCRIPT ERROR` alone,
-per AGENT_WORKFLOW §6). The distinct set did not grow: `smoke_progression_feedback` and
-`smoke_tournament_bracket` each show only the known-benign
-`ERROR: Parameter "material" is null.` off alpha creature builds; `smoke_combat` shows none.
+per AGENT_WORKFLOW §6), and read rather than counted. `smoke_progression_feedback`,
+`smoke_tournament_bracket` and `smoke_creatures_tab_controller` show only the known-benign
+`ERROR: Parameter "material" is null.` off alpha creature builds; `smoke_combat` and
+`smoke_backpack_player_eats` show none.
+
+**One line did appear that is not on `main`, and it does not reproduce.** The first
+`smoke_creatures_tab_controller` run on this branch printed
+`ERROR: 4 resources still in use at exit.` — a shutdown-time diagnostic, after the smoke's
+own `OK`. It is worth writing down rather than averaging away, so it was chased:
+
+| Run | Result |
+|---|---|
+| `origin/main` in a clean worktree, same smoke, same box | 0 occurrences |
+| this branch, run 1 | **1 occurrence** |
+| this branch, run 2 | 0 occurrences |
+| this branch, run 3 | 0 occurrences |
+
+It also appears in **none** of the other four smokes on this branch, including
+`smoke_progression_feedback`, which exercises far more of the new code (the full world, the
+menu, the Team screen, the banner and its audio cue) than the tab smoke does. So: one
+occurrence in three, at exit, in the smoke that touches the least of this diff. That is the
+same shape AGENT_WORKFLOW §6 warns about with the `material is null` count ("not stable and
+must not be the bar"), and it is not evidence of a leak in the feed — but it is a line that
+was not there before, so the coordinator should know it exists rather than find it in CI.
 
 ### Visual
 
@@ -185,7 +206,7 @@ build is 20–50 minutes under software GL and every question here is about the 
 geometry and colour, not how it composites against grass). Events are pushed through the
 real producers, so the frames show what the shipped code draws.
 
-Contact sheet: `ralph/reports/W13-PROGRESSION-FEED-0904/shots/_sheet_round1.png`
+Contact sheets: `shots/_sheet_round1.png` and `shots/_sheet_round2.png`
 (level-up banner, bond-milestone banner, strip mid bond-tick, Team screen).
 
 Measured before the render: the banner plate's crop median luminance **31.6** against the
@@ -194,9 +215,52 @@ with text peaking at **243**. The banner's measured rect is `(510, 184) 900×111
 1920-wide canvas, inside the 5% safe area on every edge; the smoke asserts this
 independently at runtime.
 
-Blind judge: verdict at `ralph/reports/W13-PROGRESSION-FEED-0904/JUDGE.md`, produced by a
-code-blind sub-agent given only the frames, `docs/reference/` and the visual-judge skill,
-and told nothing about what changed or what was hoped for.
+Two rounds, each judged by a **fresh** code-blind sub-agent given only the frames,
+`docs/reference/` and the visual-judge skill — told nothing about what changed, what was
+hoped for, or what the previous round said. Both were asked the same six questions
+(legibility at 1280x800, the plates' internal hierarchy, clipping and the 5% safe-area
+margin, whether the roster's labels and bars are distinguishable, whether the Team screen's
+progress list is scannable at a glance, and whether any overlay would obscure something
+during action).
+
+**Round 1** — `JUDGE.md`, sheet `shots/_sheet_round1.png`. It found three defects of mine
+worth the round, and they were real:
+
+1. **The banner drew straight through the objective hint card.** `_position_moment_banner()`
+   cleared only the region banner's slot, and `_build_objective_hint_card()` places itself
+   directly under that and *grows downward with its wrapped text* — so a Moment landing while
+   a hint was up put two strings on the same pixels, on the headline. The judge called it the
+   worst thing in the set and it was right; nothing in my own smoke could have caught it,
+   because the smoke asserts the banner's rect against the safe area, not against its
+   neighbours.
+2. **The strip's new bond pip overflowed the row.** At `ROW_SIZE.x` 336 there was no width
+   left to take: the name truncated mid-word to `Biscui` (too narrow even to draw its
+   ellipsis), `Lv 7` and `bond 2/5` ran together as `Lv 7bond 2/5`, and the HP bar was
+   crushed into the row's rounded border.
+3. **The tick tag was unplated** — the judge measured the amber `+bond · discovered` at
+   ~1.3:1 against the backdrop and noted it is the feature's whole payload, and that it
+   would vanish outright over sunlit grass. It was the one HUD element landing over open
+   ground rather than over a plate.
+
+It also, fairly, called the strip unreadable at ~25% opacity in the tick frame — that one was
+a **capture defect**, not a shipped one: the frame was shot 3 frames after the credit, inside
+the strip's own 0.14 s reveal tween.
+
+**Fixed in round 2** (`_sheet_round2.png`, judged fresh as `JUDGE_ROUND2.md`): the banner now
+measures the hint card's live bottom edge and sits below it, re-checked every frame while it
+is up, so a hint appearing mid-banner pushes the banner down instead of colliding; the row
+widened to 420 with a floor under the name and a minimum width for the bond pip; the tick got
+its own `BG_DEEP` plate; the capture waits for the reveal to land. Measured after: the tick
+core reads **(224, 177, 72) on a (9, 12, 15) plate — 9.85:1**, against ~1.3:1 unplated in
+round 1.
+
+**Not mine, left alone and reported up** (the judge found these too, and they are outside
+this lane's ownership): the whole HUD is anchored to roughly a 1% margin rather than 5% (the
+HP/FOOD plates 53 px inside the left edge, the minimap 3 px past the top) — that is CL-B4's
+standing item and it predates this branch; the HP/FOOD value chips cover the bar fill they
+annotate; roster portraits are duplicated across creatures and disagree with the 3D preview;
+`Tired · Fed · Restless` renders identically on every roster row; the keycap glyphs are ~6 px.
+None of those are touched by this diff.
 
 ## 5. Acceptance (prompt 73 §5)
 
