@@ -65,10 +65,30 @@ const MARKER_SEPARATION := 22.0
 ## rather than hidden fog. Bumped to fully opaque (1.0) to match `tab_map.gd`'s
 ## own OW3 fix and actually satisfy spec §16 ("does not reveal everything
 ## automatically") rather than merely approximate it. See that file's header
-## comment for why the colour stays near-black rather than becoming a
-## parchment-style fill.
-const FOG_UNDISCOVERED := Color(0.02, 0.02, 0.03, 1.0)
+## comment for why the colour stays on this project's own cool panel ramp
+## rather than becoming a warm parchment-style fill.
+##
+## N06-MAP-UI item 1. Kept deliberately EQUAL to `tab_map.gd`'s constant of the
+## same name — D33's "one fog treatment across both screens" is the reason this
+## value was copied here rather than imported in the first place, and the two
+## must move together or the same ground reads as two different states
+## depending on which screen the player is looking at. That file's own header
+## carries the measurement and the reasoning: unexplored ground had collapsed
+## into the page chrome (1.16:1), so it is lifted onto the cool panel ramp far
+## enough to be a surface, while staying fully opaque so `test_map_fog.gd`'s
+## spec-§16 contract ("does not reveal everything automatically") is untouched.
+const FOG_UNDISCOVERED := Color(0.227, 0.314, 0.361, 1.0)
 const FOG_DISCOVERED := Color(0.0, 0.0, 0.0, 0.0)
+
+## N06-MAP-UI items 7 and 8, the minimap's half. The full map's own
+## `tab_map.gd` carries the reasoning for both: a marker glyph needs the
+## terrain under it ENDED rather than tinted, or a notched silhouette fills in;
+## and a drawn label needs its weight from value rather than hue, or it
+## vanishes in greyscale. These are the same two numbers as that file's, for
+## the same reason `FOG_UNDISCOVERED` above is.
+const MARKER_KNOCKBACK := Color(0.04, 0.06, 0.07, 1.0)
+const MARKER_KNOCKBACK_SKIRT := 3.0
+const LABEL_MIN_LUMA := 0.90
 
 var _map_state: RefCounted = null
 var _terrain_texture: Texture2D = null
@@ -367,17 +387,32 @@ func _draw_landmarks(centre: Vector2, scale_px_per_m: float, objective_position:
 			# Camps and the like — muted cream, always discovered by
 			# definition (map_state.gd's own contract: a dynamic marker would
 			# not exist yet if it were not).
+			_draw_marker_knockback(local, 6.0)
 			_draw_dot(local, 6.0, Color(UITokens.BUILD_TEXT, 0.75))
 		elif discovered:
 			_draw_landmark_icon(local, str(entry.get("category", "minor")))
 		else:
 			# silhouette, not yet discovered: a "?" placeholder, spec §6A.4.
+			_draw_marker_knockback(local, 8.0)
 			_draw_upright_text(local, "?", UITokens.FONT_LABEL, UITokens.TEXT_MUTED)
+
+
+## N06-MAP-UI item 8. Every marker on this widget was drawn straight onto the
+## terrain bake — a white disc or diamond over whatever colour happened to be
+## under it. On the pale high ground `map_baker.gd` bakes at the top of its
+## height ramp that is a near-value match, and on the mossy path texture the
+## edges of a shaped marker fill in, which is the contamination W11's judge
+## measured on the full map. The knock-back gives every marker on both screens
+## the same guarantee: whatever is under it stops at the disc.
+func _draw_marker_knockback(local: Vector2, radius: float) -> void:
+	draw_circle(local, radius + MARKER_KNOCKBACK_SKIRT, Color(MARKER_KNOCKBACK, 0.5))
+	draw_circle(local, radius, MARKER_KNOCKBACK)
 
 
 func _draw_landmark_icon(local: Vector2, category: String) -> void:
 	var major := category == "major"
 	var r := 12.0 if major else 9.0
+	_draw_marker_knockback(local, r)
 	if major:
 		_draw_diamond(local, r, UITokens.TEXT_PRIMARY)
 	else:
@@ -657,4 +692,20 @@ func _draw_upright_text(centre: Vector2, text: String, font_size: int, colour: C
 	top_left.y = clampf(top_left.y, MARGIN, maxf(MARGIN, size.y - text_size.y - MARGIN))
 	var baseline := top_left + Vector2(0.0, text_size.y - _font.get_descent(font_size))
 	draw_string_outline(_font, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, UITokens.OUTLINE_SIZE, UITokens.OUTLINE)
-	draw_string(_font, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, colour)
+	draw_string(_font, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, label_core_colour(colour))
+
+
+## N06-MAP-UI item 7, the minimap's half of the same shared-label fix — see
+## `tab_map.gd::label_core_colour()` for the finding and the closed form. The
+## widget's own `TEXT_MUTED` "?" silhouette label sat at luma 0.56 against a
+## `TEXT_PRIMARY` distance label at 0.96, which is the same "the label that
+## means something is the dimmest one" shape the judge measured on the full
+## map, one screen over.
+static func label_core_colour(colour: Color) -> Color:
+	var current := 0.2126 * colour.r + 0.7152 * colour.g + 0.0722 * colour.b
+	if current >= LABEL_MIN_LUMA:
+		return colour
+	var t := clampf((LABEL_MIN_LUMA - current) / maxf(1.0 - current, 0.0001), 0.0, 1.0)
+	var lifted := colour.lerp(Color(1.0, 1.0, 1.0), t)
+	lifted.a = colour.a
+	return lifted
