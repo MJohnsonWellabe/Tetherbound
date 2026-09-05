@@ -8,6 +8,9 @@ const SCAFFOLD:=preload("res://assets/environment/team_tether/hall/team_tether_s
 const WALL_MACHINE:=preload("res://assets/environment/team_tether/hall/rift_siphon_wall_machine.glb")
 const PIPE_VALVE:=preload("res://assets/environment/team_tether/hall/tt_pipe_valve.glb")
 const BOILER:=preload("res://assets/environment/team_tether/hall/team_tether_boiler_chimney.glb")
+const BANNER_RIG:=preload("res://assets/environment/team_tether/hall/team_tether_banner_rig.glb")
+const CASTLE_WALL:=preload("res://assets/buildings/quaternius_castle/TallWallBricks.obj")
+const CASTLE_TOWER:=preload("res://assets/buildings/quaternius_castle/LargeSquareTowerBricks.obj")
 var config: Dictionary
 var finale: Node3D
 var _hazards: ShaderMaterial
@@ -54,6 +57,7 @@ func build(world: Node3D) -> void:
 		world.call("_cylinder", self, str(lee.id)+"SafeFloor", at+Vector3.UP*0.18, float(lee.radius_m), 0.05, safe_material)
 		world.call("_box", self, str(lee.id)+"Windbreak", at+Vector3(0,1.8,4.4), Vector3(6,3.6,1.2), materials.masonry, true)
 		world.call("_box",self,str(lee.id)+"WeatheredCoping",at+Vector3(0,3.58,4.4),Vector3(6.2,0.26,1.4),materials.masonry_trim,false)
+		_build_lee_standard(world,materials,at,str(lee.id))
 	for relay: Dictionary in config.relays:
 		var model := RELAY.instantiate() as Node3D
 		model.name = "EngineRelay_"+str(relay.id)
@@ -113,12 +117,14 @@ func build(world: Node3D) -> void:
 		world.call("_cylinder_between",self,"CoreConduit_"+str(relay.id),core_at+Vector3.UP*0.9,beacon.position,0.10,pipe_metal)
 		world.call("_cylinder_between",self,"MountFeedPipe_"+str(relay.id),core_at+Vector3.UP*0.7,machinery_at+Vector3.UP*0.7,0.12,pipe_metal)
 		_relay_beacons[str(relay.id)]=beacon
+		_build_relay_runner(world,materials,relay_at,str(relay.id))
 	# A coherent rear machinery spine grounds the three relay stations without
 	# putting equipment in the central fight lane or the authored lee pockets.
-	for side: float in [-1.0,1.0]:
-		_install(SCAFFOLD,self,Vector3(side*13,0.15,30),6.5,0.0)
-		world.call("_box",self,"SpineMasonryFoot",Vector3(side*13,0.35,30),Vector3(5.5,0.4,5.5),paving,false)
-	_install(WALL_MACHINE,self,Vector3(0,0.15,33),4.5,0.0)
+	_install(SCAFFOLD,self,Vector3(-14,0.15,30),10.5,0.08)
+	world.call("_box",self,"WestSpineMasonryFoot",Vector3(-14,0.35,30),Vector3(6.4,0.4,6.0),paving,false)
+	_install(SCAFFOLD,self,Vector3(15,0.15,31),7.8,-0.10)
+	world.call("_box",self,"EastSpineMasonryFoot",Vector3(15,0.35,31),Vector3(5.5,0.4,5.5),paving,false)
+	_install(WALL_MACHINE,self,Vector3(1.5,0.15,33),7.5,0.0)
 	_build_occupied_perimeter(world,materials)
 	var overlay := MeshInstance3D.new()
 	overlay.name = "LiveHazardTelegraphs"
@@ -168,12 +174,49 @@ func _paving_material() -> ShaderMaterial:
 	return material
 
 
+func _build_lee_standard(world: Node3D,materials: Dictionary,at: Vector3,label: String) -> void:
+	# These standards sit on the existing windbreak, so the authored shelter
+	# footprint stays exact while the lee reads above waist height in the arena
+	# camera. They are visual faction marks, not new cover or collision.
+	for side: float in [-1.0,1.0]:
+		var suffix:="West" if side<0 else "East"
+		world.call("_box",self,label+"LeeStandard"+suffix,at+Vector3(side*3.0,4.7,4.4),
+			Vector3(0.42,2.5,0.55),materials.tether,false)
+	world.call("_box",self,label+"LeeLintel",at+Vector3(0,5.72,4.4),
+		Vector3(6.4,0.34,0.58),materials.bronze,false)
+	world.call("_hang_cloudreach_banner",self,at+Vector3(0,4.75,3.78),Vector2(1.25,1.65),0.0)
+
+
+func _build_relay_runner(world: Node3D,materials: Dictionary,relay_at: Vector3,label: String) -> void:
+	# Paired radial conduit rails let the eye connect the exposed core to the
+	# fight floor. They sit under the live hazard overlay: no body, navigation
+	# role or change to the three relay interaction sites.
+	# The crown relay is immediately behind the canonical southern camera. Rails
+	# there read as a disconnected ladder under the trainer instead of pointing
+	# to machinery, so its installed apparatus remains the marker from that side.
+	if label=="crown":
+		return
+	var outward:=Vector3(relay_at.x,0,relay_at.z).normalized()
+	var tangent:=Vector3(outward.z,0,-outward.x)
+	var yaw:=atan2(outward.x,outward.z)
+	var basis:=Basis(Vector3.UP,yaw)
+	for side: float in [-1.0,1.0]:
+		var rail_at:=outward*21.0+tangent*side*1.1+Vector3.UP*0.185
+		world.call("_box",self,"RelayRail_"+label+str(side),rail_at,
+			Vector3(0.18,0.025,9.5),materials.bronze,false,basis)
+	for index in 3:
+		var radius:=17.0+float(index)*4.0
+		world.call("_box",self,"RelayRunnerTie_"+label+str(index),outward*radius+Vector3.UP*0.205,
+			Vector3(2.55,0.025,0.12),materials.tether,false,basis)
+
+
 func _build_occupied_perimeter(world: Node3D,materials: Dictionary) -> void:
 	# Define the work court beyond the existing 36 m fight deck. Nothing here
 	# changes collision, lee pockets, relay offers or hazard dimensions.
 	var root:=Node3D.new()
 	root.name="OccupiedArenaPerimeter"
 	add_child(root)
+	var bay_heights: Array[float]=[3.8,5.3,4.4,6.4,4.1,5.8]
 	for index in 24:
 		var angle:=TAU*index/24.0
 		var outward:=Vector3(sin(angle),0,cos(angle))
@@ -182,24 +225,49 @@ func _build_occupied_perimeter(world: Node3D,materials: Dictionary) -> void:
 			continue
 		var segment:=Node3D.new()
 		segment.name="PerimeterBay%02d"%index
-		segment.position=outward*39.8
+		segment.position=outward*(39.3+0.7*sin(float(index)*2.31))
 		segment.rotation.y=angle
 		root.add_child(segment)
-		world.call("_castle_piece",segment,"RetainedMasonry",preload("res://assets/buildings/quaternius_castle/TallWallBricks.obj"),
-			Vector3(0,-1.6,0),Vector3(10.8,5.6 if index%3==0 else 3.8,2.6),materials.stone)
+		var height:=bay_heights[index%bay_heights.size()]
+		world.call("_castle_piece",segment,"RetainedMasonry",CASTLE_WALL,
+			Vector3(0,-1.6,0),Vector3(10.8,height,2.6),materials.stone)
 		world.call("_box",segment,"ServiceWallFoot",Vector3(0,-0.8,0),Vector3(11,1.6,3.2),materials.masonry,false)
-		if index%3==0:
-			world.call("_hang_cloudreach_banner",segment,Vector3(0,2.2,-1.4),Vector2(1.6,2.8),0.0)
+		if index in [3,5,8,16,19,21]:
+			world.call("_hang_cloudreach_banner",segment,Vector3(0,height-2.0,-1.4),Vector2(1.7,2.9),0.0)
+		if index in [4,7,17,20]:
+			world.call("_box",segment,"OxbloodButtress",Vector3(-4.4,height*0.35,-1.5),
+				Vector3(0.55,height*0.70,0.65),materials.tether,false)
+	# Unequal visual towers break the low circular wall into an occupied skyline.
+	# All four sit outside the 36 m deck and intentionally carry no bodies.
+	for tower: Dictionary in [
+		{"at":Vector3(-37.5,0.0,-16.5),"size":Vector3(7.0,8.2,7.0),"yaw":-0.20},
+		{"at":Vector3(40.0,0.0,10.5),"size":Vector3(8.0,11.5,8.0),"yaw":0.18},
+		{"at":Vector3(-30.5,0.0,27.5),"size":Vector3(8.5,14.0,8.5),"yaw":-0.12},
+		{"at":Vector3(30.5,0.0,28.5),"size":Vector3(7.0,9.2,7.0),"yaw":0.14},
+	]:
+		var tower_at:=tower["at"] as Vector3
+		var tower_size:=tower["size"] as Vector3
+		var tower_root:=Node3D.new()
+		tower_root.position=tower_at
+		tower_root.rotation.y=float(tower["yaw"])
+		root.add_child(tower_root)
+		world.call("_castle_piece",tower_root,"PerimeterWatchTower",CASTLE_TOWER,
+			Vector3.ZERO,tower_size,materials.stone)
+		world.call("_box",tower_root,"TowerOxbloodBand",Vector3(0,tower_size.y*0.68,-3.65),
+			Vector3(tower_size.x*0.76,0.52,0.32),materials.tether,false)
 	# Asymmetric occupied bays, all beyond the relay/camera circulation ring.
-	for side: float in [-1.0,1.0]:
-		if side<0:
-			_install(BOILER,root,Vector3(-34,0.15,21),7.0,0.35)
-		else:
-			world.call("_place_local_prop",root,"wagon",Vector3(34,0.15,21),2.4,16)
-		world.call("_place_local_prop",root,"crate",Vector3(side*31.5,0.15,20),1.15,side*12)
-		world.call("_place_local_prop",root,"barrel",Vector3(side*33,0.15,17.5),1.25,side*28)
-		world.call("_place_local_prop",root,"workbench",Vector3(side*29,0.15,25),1.1,side*70)
-		world.call("_box",root,"MachineryServiceFoot",Vector3(side*34,-0.05,21),Vector3(6,0.4,7),materials.masonry,false)
+	_install(BOILER,root,Vector3(-34,0.15,19.5),8.8,0.35)
+	_install(BANNER_RIG,root,Vector3(-37,0.15,7.5),6.8,-0.30)
+	_install(WALL_MACHINE,root,Vector3(34,0.15,22.5),6.6,-0.48)
+	world.call("_place_local_prop",root,"wagon",Vector3(32.5,0.15,17.5),2.4,16)
+	world.call("_place_local_prop",root,"workbench",Vector3(-29,0.15,24),1.1,-70)
+	world.call("_place_local_prop",root,"crate",Vector3(-31.5,0.15,18.5),1.15,-12)
+	world.call("_place_local_prop",root,"barrel",Vector3(-33,0.15,16.5),1.25,-28)
+	world.call("_place_local_prop",root,"crate",Vector3(30.0,0.15,19.5),0.95,24)
+	world.call("_place_local_prop",root,"barrel",Vector3(32.0,0.15,20.0),1.15,38)
+	world.call("_box",root,"WestMachineryServiceFoot",Vector3(-34,-0.05,20),Vector3(7,0.4,8),materials.masonry,false)
+	world.call("_box",root,"EastMachineryServiceFoot",Vector3(34,-0.05,22),Vector3(7,0.4,8),materials.masonry,false)
+	world.call("_set_geometry_visibility",root,700.0)
 
 
 func _clear_arena_dressing(world: Node3D) -> void:
