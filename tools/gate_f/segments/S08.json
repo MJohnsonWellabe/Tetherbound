@@ -306,29 +306,28 @@
     {
       "id": "S08-26",
       "title": "walk to the grove's pipwing",
-      "action": "move_to",
+      "action": "move_to_entity",
       "args": {
-        "at": [
-          -334.2,
-          5055.3
-        ],
-        "budget_frames": 3000,
-        "close_enough": 4.0,
+        "entity": "pipwing",
+        "within": 3.0,
+        "budget_frames": 6000,
         "held_budget_frames": 7200,
         "answer_prompts": true
       },
       "expected": "Section E.1 CB-12: 'fight smallest (pipwing/bramblebun class) and largest (meadowhart/tuskroot class) wilds; melee vs ranged movesets'. This is the small half; the large half is the meadowhart below",
-      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all. N10-HARNESS-TESTS-0905, item 10 -- THE ROOT CAUSE OF S08-27, MEASURED. WAS `move_to {at: [-334.2, 5055.3], close_enough: 4.0}`, i.e. the AUTHORED CENTRE of spawn order 4020 in data/config/bands/band4_upper_meadows_ironwood/spawns.json. Standing exactly on that centre, `tools/gate_f/probe_grove_pipwing_engage.gd` reads the live world and finds the cluster's four pipwings at 9.70, 10.89, 11.69 and 12.98 m -- and `encounter_director.gd::_engageable()` searches `engage_range`, which is 6.00 m. NOTHING is engageable at this waypoint, on any run, and a walk allowed to stop 4.0 m short makes the worst case 13.70 m. The scatter is deterministic (`_pick_clear_spot(centre, radius 15.1, rng seeded from hash(\"wild_spawn_4020\"))`) and independent of the world seed, so this failed identically every time: W03-S08-FREEZE-0904 measured zero combat events in 768 of 773 sampled rows here, and W21-HARNESS-FIGHTS-0904 independently got `S08-29 FAIL chip_to_floor: no live enemy to chip` and `S08-31 input_context=world`. It is NOT an encounter-director defect: the director offers what is within reach, and nothing was. `move_to_entity` walks to the nearest live body of the named species and stops `within` 3.0 m of it, which is inside engage range with margin. SECOND, SEPARATE FINDING at the same site, fixed in operator_harness.gd rather than here: `data/config/spawn_tables.json` set `roll_new_worlds` true on 2026-09-02, nothing in the Gate F rig ever set `TB_WORLD_SEED`, and every synthetic seed builder boots a NEW GAME -- so this cluster's SPECIES was being re-rolled from the `meadows_air` table on every run. Measured on three boots of this exact site: galecrest, duskhush (night-gated, `visible` false by day and therefore never engageable at all), and -- pinned to seed 0 -- the authored pipwing. The harness now pins TB_WORLD_SEED=0, which is what spawn_tables.json's own text asks for."
     },
     {
       "id": "S08-27",
       "title": "engage the pipwing",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "settle_frames": 30
       },
-      "expected": "CB-12's small-body case"
+      "expected": "CB-12's small-body case",
+      "observation": "N10-HARNESS-TESTS-0905, brief item 9. WAS a bare `press interact`. `encounter_director.gd` offers \"Engage <name>\" only when a creature is deployed AND a live, visible wild body is inside `engage_range` (6 m, data/config/combat.json `flow.engage_range`); `interaction_activate()` returns without doing anything when `_engageable()` is null, so a bare press on an empty flank is indistinguishable from one that started a fight. This refuses and names what the arbiter was actually offering -- the single line that would have saved two lanes a run each at this site."
     },
     {
       "id": "S08-28",
@@ -404,19 +403,16 @@
     {
       "id": "S08-35",
       "title": "walk to the meadowhart herd",
-      "action": "move_to",
+      "action": "move_to_entity",
       "args": {
-        "at": [
-          12.3,
-          5561.2
-        ],
+        "entity": "meadowhart",
+        "within": 3.0,
         "budget_frames": 36000,
-        "close_enough": 5.0,
         "held_budget_frames": 10800,
         "answer_prompts": true
       },
       "expected": "the high pasture herd; section L.4's riding row needs a Meadowhart in the belt",
-      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all. N10-HARNESS-TESTS-0905, item 10's class, second site. WAS `move_to {at: [12.3, 5561.2], close_enough: 5.0}` -- the authored centre of spawn order 4033 (meadowhart x5, radius 16.2 m). Same shape as S08-26 exactly: the director offers an engage only inside 6.0 m and the cluster's bodies scatter across the whole 16.2 m radius, so whether S08-38 finds anything to press depends on where the seeded scatter happened to drop one. UNLIKE S08-26 this has NOT been observed failing -- W21-HARNESS-FIGHTS-0904's run reached the meadowhart and chipped it (18 swings, 9.3/175.8 HP left, caught at S08-45) -- so this is not a repair of a measured failure but the removal of a coin flip: `move_to_entity` walks to the nearest live body and stops 3.0 m from it, which is inside engage range every time. `tests/test_gate_f_harness_predicates.gd` is what found this second site."
     },
     {
       "id": "S08-36",
@@ -441,12 +437,14 @@
     {
       "id": "S08-38",
       "title": "engage a meadowhart",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "settle_frames": 30
       },
-      "expected": "Section E.1 CB-12's large-body case"
+      "expected": "Section E.1 CB-12's large-body case",
+      "observation": "N10-HARNESS-TESTS-0905, brief item 9. WAS a bare `press interact`. `encounter_director.gd` offers \"Engage <name>\" only when a creature is deployed AND a live, visible wild body is inside `engage_range` (6 m, data/config/combat.json `flow.engage_range`); `interaction_activate()` returns without doing anything when `_engageable()` is null, so a bare press on an empty flank is indistinguishable from one that started a fight. This refuses and names what the arbiter was actually offering -- the single line that would have saved two lanes a run each at this site."
     },
     {
       "id": "S08-39",
@@ -952,12 +950,14 @@
     {
       "id": "S08-78",
       "title": "challenge Captain Halder",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "expect_prompt": "Challenge",
+        "check_provider": false,
+        "settle_frames": 30
       },
-      "expected": "Section E.1 CB-04: 'S08: captain_field, captain_ridge, captain_riverwatch'"
+      "expected": "Section E.1 CB-04: 'S08: captain_field, captain_ridge, captain_riverwatch'",
+      "observation": "N10-HARNESS-TESTS-0905, brief item 9. WAS a bare `press interact`. `interact_with` presses only when the arbiter has a LIVE prompt whose own text is the challenge `trainer_npc.gd::_prompt_for` builds from data/config/trainers.json (\"Challenge %s\"), and otherwise FAILs naming what it saw. A bare press cannot tell a live challenge from no offer at all."
     },
     {
       "id": "S08-79",
@@ -1096,12 +1096,14 @@
     {
       "id": "S08-89",
       "title": "challenge Captain Oreth",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "expect_prompt": "Challenge",
+        "check_provider": false,
+        "settle_frames": 30
       },
-      "expected": "Section E.1 CB-04's second band 4 captain"
+      "expected": "Section E.1 CB-04's second band 4 captain",
+      "observation": "N10-HARNESS-TESTS-0905, brief item 9. WAS a bare `press interact`. `interact_with` presses only when the arbiter has a LIVE prompt whose own text is the challenge `trainer_npc.gd::_prompt_for` builds from data/config/trainers.json (\"Challenge %s\"), and otherwise FAILs naming what it saw. A bare press cannot tell a live challenge from no offer at all."
     },
     {
       "id": "S08-90",
@@ -1262,12 +1264,14 @@
     {
       "id": "S08-101",
       "title": "challenge the ridgeline patrol",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "expect_prompt": "Challenge",
+        "check_provider": false,
+        "settle_frames": 30
       },
-      "expected": "the second of the journey's two named optional trainers"
+      "expected": "the second of the journey's two named optional trainers",
+      "observation": "N10-HARNESS-TESTS-0905, brief item 9. WAS a bare `press interact`. `interact_with` presses only when the arbiter has a LIVE prompt whose own text is the challenge `trainer_npc.gd::_prompt_for` builds from data/config/trainers.json (\"Challenge %s\"), and otherwise FAILs naming what it saw. A bare press cannot tell a live challenge from no offer at all."
     },
     {
       "id": "S08-102",
@@ -1351,12 +1355,14 @@
     {
       "id": "S08-107",
       "title": "challenge Captain Vess",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "expect_prompt": "Challenge",
+        "check_provider": false,
+        "settle_frames": 30
       },
-      "expected": "Section E.1 CB-04's third band 4 captain"
+      "expected": "Section E.1 CB-04's third band 4 captain",
+      "observation": "N10-HARNESS-TESTS-0905, brief item 9. WAS a bare `press interact`. `interact_with` presses only when the arbiter has a LIVE prompt whose own text is the challenge `trainer_npc.gd::_prompt_for` builds from data/config/trainers.json (\"Challenge %s\"), and otherwise FAILs naming what it saw. A bare press cannot tell a live challenge from no offer at all."
     },
     {
       "id": "S08-108",

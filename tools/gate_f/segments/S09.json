@@ -293,12 +293,14 @@
     {
       "id": "S09-24",
       "title": "challenge Watchman Corr",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "expect_prompt": "Challenge",
+        "check_provider": false,
+        "settle_frames": 30
       },
-      "expected": "the approach's first required fight"
+      "expected": "the approach's first required fight",
+      "observation": "N10-HARNESS-TESTS-0905, brief item 9. WAS a bare `press interact`. `interact_with` presses only when the arbiter has a LIVE prompt whose own text is the challenge `trainer_npc.gd::_prompt_for` builds from data/config/trainers.json (\"Challenge %s\"), and otherwise FAILs naming what it saw. A bare press cannot tell a live challenge from no offer at all."
     },
     {
       "id": "S09-25",
@@ -447,12 +449,14 @@
     {
       "id": "S09-34",
       "title": "challenge Warder Ness",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "expect_prompt": "Challenge",
+        "check_provider": false,
+        "settle_frames": 30
       },
-      "expected": "the approach's second required fight"
+      "expected": "the approach's second required fight",
+      "observation": "N10-HARNESS-TESTS-0905, brief item 9. WAS a bare `press interact`. `interact_with` presses only when the arbiter has a LIVE prompt whose own text is the challenge `trainer_npc.gd::_prompt_for` builds from data/config/trainers.json (\"Challenge %s\"), and otherwise FAILs naming what it saw. A bare press cannot tell a live challenge from no offer at all."
     },
     {
       "id": "S09-35",

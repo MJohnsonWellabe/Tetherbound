@@ -13,9 +13,13 @@ const S06_SEED := preload("res://tools/gate_f/build_s06_entry_synthetic.gd")
 const ITEM_DB := preload("res://autoload/item_db.gd")
 const INVENTORY := preload("res://autoload/inventory.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
+const SPAWN_TABLES := preload("res://scripts/combat/spawn_tables.gd")
+const CHAPTER_CURVE := preload("res://scripts/creatures/chapter_curve.gd")
 
 const SEGMENTS := "res://tools/gate_f/segments/"
 const TERRAIN := "res://data/config/terrain_playground.json"
+const COMBAT := "res://data/config/combat.json"
+const BANDS := "res://data/config/bands"
 ## Where committed Gate F telemetry lives. Absent from the CI checkout, which
 ## sparse-checks out `!/ralph/` -- see `_route_row_counts`.
 const REPORTS := "res://ralph/reports"
@@ -135,6 +139,97 @@ func test_no_gate3_walk_leg_is_scripted_across_an_authored_terrain_carve() -> vo
 					% [segment, str(leg["id"]), float(leg["from"].x), float(leg["from"].y),
 						float(leg["to"].x), float(leg["to"].y), gap, str(carve["id"]),
 						float(carve["depth"]), 2.0 * float(carve["block"])])
+
+
+
+# --- item 10: a waypoint that cannot reach what it is aimed at --------------
+
+## `S08-26` walked to spawn order 4020's authored `centre` and `S08-27` pressed
+## `interact` there. `encounter_director.gd::_engageable()` searches
+## `engage_range` (6 m); `_pick_clear_spot` scatters that cluster's four bodies
+## across its authored `radius` (15.1 m) and, measured live, put the nearest at
+## 9.70 m. There was never anything to engage, on any run, which is why two
+## lanes reproduced the same silence by two different methods. A step that
+## needs to reach a creature has to walk to the CREATURE (`move_to_entity`),
+## not to the middle of where its cluster was authored.
+func test_no_gate3_walk_aims_at_a_spawn_centre_it_cannot_engage_from() -> void:
+	var engage := _engage_range()
+	assert_true(engage > 0.0, "data/config/combat.json has no flow.engage_range to check against")
+	var clusters := _spawn_clusters()
+	assert_true(clusters.size() > 50, "found only %d spawn clusters; the table did not load" % clusters.size())
+	for segment in ["S06", "S07", "S08", "S09"]:
+		for raw: Variant in (_segment(segment).get("steps", []) as Array):
+			var step := raw as Dictionary
+			if str(step.get("action", "")) != "move_to":
+				continue
+			var at: Array = (step.get("args", {}) as Dictionary).get("at", []) as Array
+			if at.size() < 2:
+				continue
+			var here := Vector2(float(at[0]), float(at[1]))
+			for cluster: Dictionary in clusters:
+				if here.distance_to(cluster["centre"]) > 0.5:
+					continue
+				assert_true(float(cluster["radius"]) <= engage,
+					("%s %s walks to (%.1f, %.1f), which is the authored centre of spawn order %d "
+					+ "(%s x%d, radius %.1f m). The director only offers an engage inside %.1f m, and "
+					+ "the cluster's bodies scatter across that whole radius, so standing on the centre "
+					+ "reaches nothing. Use move_to_entity.")
+					% [segment, str(step.get("id", "")), here.x, here.y, int(cluster["order"]),
+						str(cluster["species"]), int(cluster["count"]), float(cluster["radius"]), engage])
+
+
+## Item 9. A step whose own title says it engages or challenges must be
+## `interact_with`: that verb presses only when the arbiter has a live prompt
+## whose text is the one the step means, and names what it saw otherwise. A
+## bare `press interact` cannot tell a live offer from no offer, which is how
+## S08-27 banked sixteen green presses into an unengaged world.
+func test_no_gate3_engage_or_challenge_step_is_a_bare_press() -> void:
+	for segment in ["S06", "S07", "S08", "S09"]:
+		for raw: Variant in (_segment(segment).get("steps", []) as Array):
+			var step := raw as Dictionary
+			if str(step.get("action", "")) != "press":
+				continue
+			var args: Dictionary = step.get("args", {}) as Dictionary
+			if str(args.get("control", "")) != "interact":
+				continue
+			var title := str(step.get("title", "")).to_lower()
+			var engages := title.contains("engage") or title.contains("challenge") \
+				or title.contains("fight ")
+			assert_false(engages,
+				("%s %s (\"%s\") is a bare `press interact`. An engage or a challenge has to be "
+				+ "`interact_with` with the prompt text it means, or a press into nothing reads as a "
+				+ "pass.") % [segment, str(step.get("id", "")), str(step.get("title", ""))])
+
+
+## The other half of the same site, and the reason `operator_harness.gd` pins
+## `TB_WORLD_SEED`. `data/config/spawn_tables.json` set `roll_new_worlds` true
+## on 2026-09-02, so a new game rolls a seed and every cluster naming a `table`
+## re-draws its species from it. Seed 0 is the authored world and nothing else
+## is. This exercises the real roller.
+func test_only_the_authored_seed_gives_the_segments_the_species_they_name() -> void:
+	var cfg: Dictionary = SPAWN_TABLES.config()
+	var entries := _spawn_entries()
+	assert_false(entries.is_empty(), "no spawn entries to roll")
+	var authored: Dictionary = SPAWN_TABLES.plan_for(entries, 0, cfg, CHAPTER_CURVE.config(), [])
+	assert_true(authored.is_empty(),
+		"seed 0 must not enter the roller at all -- that is what makes it the authored world")
+	var moved := 0
+	for seed_value in [1, 7, 12345, 2129586928]:
+		var plan: Dictionary = SPAWN_TABLES.plan_for(entries, seed_value, cfg,
+			CHAPTER_CURVE.config(), [])
+		for entry: Dictionary in entries:
+			var order := int(entry.get("order", -1))
+			if not plan.has(order):
+				continue
+			if str((plan[order] as Dictionary).get("species", "")) != str(entry.get("species", "")):
+				moved += 1
+	assert_true(moved > 0,
+		("a rolled seed must be able to change the species standing at an authored cluster -- if it "
+		+ "cannot, this test is not measuring the thing operator_harness.gd pins the seed for"))
+	assert_true(bool(SPAWN_TABLES.rolls_new_worlds(cfg)),
+		("spawn_tables.json's `roll_new_worlds` is false again. If a new game no longer rolls, say so "
+		+ "in operator_harness.gd::_pin_world_seed's own note rather than leaving it claiming a hazard "
+		+ "that no longer exists."))
 
 
 # --- helpers ----------------------------------------------------------------
@@ -284,3 +379,46 @@ func _shortest_healthy_route(segment: String) -> int:
 		if shortest < 0 or rows < shortest:
 			shortest = rows
 	return shortest
+
+
+func _engage_range() -> float:
+	var raw: Variant = _read_json(COMBAT)
+	if not raw is Dictionary:
+		return 0.0
+	return float(((raw as Dictionary).get("flow", {}) as Dictionary).get("engage_range", 0.0))
+
+
+## Every spawn entry in the merged table -- the per-band files plus the root
+## one -- exactly as `encounter_director.gd` reads them.
+func _spawn_entries() -> Array:
+	var out: Array = []
+	var paths: Array[String] = ["res://data/config/spawns.json"]
+	var bands := DirAccess.open(BANDS)
+	if bands != null:
+		for band in bands.get_directories():
+			paths.append("%s/%s/spawns.json" % [BANDS, band])
+	for path in paths:
+		var raw: Variant = _read_json(path)
+		if not raw is Dictionary:
+			continue
+		for entry: Variant in ((raw as Dictionary).get("spawns", []) as Array):
+			if entry is Dictionary:
+				out.append(entry)
+	return out
+
+
+func _spawn_clusters() -> Array:
+	var out: Array = []
+	for entry: Dictionary in _spawn_entries():
+		var centre: Array = entry.get("centre", []) as Array
+		if centre.size() < 3:
+			continue
+		out.append({
+			"order": int(entry.get("order", -1)),
+			"species": str(entry.get("species", "")),
+			"count": int(entry.get("count", 1)),
+			"radius": float(entry.get("radius", 0.0)),
+			"centre": Vector2(float(centre[0]), float(centre[2])),
+		})
+	return out
+
