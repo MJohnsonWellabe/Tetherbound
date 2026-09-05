@@ -585,9 +585,17 @@ func _the_legendary_stepped_out_and_the_garrison_withdrew() -> void:
 		if machine != null:
 			var box := AABB()
 			var seeded := false
-			for child in machine.find_children("*", "VisualInstance3D", true, false):
-				var here: AABB = (child as VisualInstance3D).get_aabb()
-				here = (child as Node3D).global_transform * here
+			# MESHES ONLY. `Light3D` is a `VisualInstance3D` too, and the
+			# machine's `CoreLight` is an omni of range 26 -- so a
+			# `VisualInstance3D` sweep merges a 52 m cube into the machine's
+			# "footprint" and swallows the whole chamber. Measured: a creature
+			# standing 10.8 m off the axis on the chamber floor, correctly
+			# clear of a 6.2 m plinth, was reported as inside the machine.
+			for child in machine.find_children("*", "MeshInstance3D", true, false):
+				var mesh := child as MeshInstance3D
+				if mesh.mesh == null:
+					continue
+				var here: AABB = mesh.global_transform * mesh.get_aabb()
 				box = here if not seeded else box.merge(here)
 				seeded = true
 			if seeded:
