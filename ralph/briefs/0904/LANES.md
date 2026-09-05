@@ -65,6 +65,10 @@ Owner noticed the session count didn't match my reports. Root cause: 5 lanes (W0
 Separately, 5 lanes had genuinely gone stale 4+ hours with NO replacement running: W02-HARNESS-CONTEXT, W03-S08-FREEZE, W16-LOFT-BED, W20-SMALL-FIXES, W21-HARNESS-FIGHTS — all hit their 5h limit hours ago (reset already passed) and were sitting untouched. Given the owner flagged this directly, resumed all 5 at once (departing from the normal 1-2/sweep trickle, since the owner surfaced the actual backlog size).
 main also moved: PR #42 merged — **W00-ICONS is now on main**. PR #45 (consolidated: icons+contracts+progression+portraits+companion+bands2-5) is open, still blocked only on the pre-existing finale regression. PR #44 is Codex's own draft PR for Cloudreach, unrelated to this batch, explicitly not ready to merge.
 
+## 09:16 UTC: W05 confirmed done and archived; no replacement needed (already at cap)
+Verified W05-TREELINE's report before archiving: real red→green regression fix (`smoke_aggression` fail named the exact blocking collider, then passed), an honestly quantified new tradeoff (tighter tree colliders let a player clip ~0.69m into the largest trunks vs 0.23m on main — flagged for landing/playtest, not hidden), clean handoff note. Archived.
+Went to pick a one-in-one-out replacement and found **W08-DIALOGUE-CAMERA finisher and W20-SMALL-FIXES are ALREADY running** — neither was resumed by this coordinator; something else (likely the parallel process already seen driving W24-LANDING) brought them back independently. Running now: W06, W07, W08-finisher, W14, W20, plus W24-LANDING — 5 lanes, already at the top of the 4-5 cap. No replacement resumed for W05's slot since the cap is already met from elsewhere.
+
 ## Sweep 08:55Z
 All 4 running lanes checked, none finished, none crashed — no action needed. W05: pushed `457f179f`, waiting on `test_veg_corridor` + 2 files. W06: running, re-verifying smokes after its resume, waiting on a persistence render. W07: running, final render+smoke in flight, drafting its report — closest to done. W14: idle-live, waiting on an incremental `move_back` probe result.
 
