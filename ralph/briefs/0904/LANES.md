@@ -65,6 +65,13 @@ Owner noticed the session count didn't match my reports. Root cause: 5 lanes (W0
 Separately, 5 lanes had genuinely gone stale 4+ hours with NO replacement running: W02-HARNESS-CONTEXT, W03-S08-FREEZE, W16-LOFT-BED, W20-SMALL-FIXES, W21-HARNESS-FIGHTS — all hit their 5h limit hours ago (reset already passed) and were sitting untouched. Given the owner flagged this directly, resumed all 5 at once (departing from the normal 1-2/sweep trickle, since the owner surfaced the actual backlog size).
 main also moved: PR #42 merged — **W00-ICONS is now on main**. PR #45 (consolidated: icons+contracts+progression+portraits+companion+bands2-5) is open, still blocked only on the pre-existing finale regression. PR #44 is Codex's own draft PR for Cloudreach, unrelated to this batch, explicitly not ready to merge.
 
+## 11:45 UTC: PR #51 merged + W06, W13, W10-finisher all confirmed done
+**PR #51 merged — W20-SMALL-FIXES landed on main** (`f8a47ee4`), per W24-LANDING's own status (not idle — it was between turns when the owner flagged it as "not moving"). W24 also logged a `smoke_playground` flake (frame-pacing drift) as unrelated to W20.
+**W06-FINALE DONE** — three rounds of judge verdicts, real commit history including an honest revert of an attempted render. Archived.
+**W13-PROGRESSION-FEED DONE** — its earlier 9 commits had already landed via the batch merge; this session did exactly the follow-up asked of it (documented the save_format API mismatch finding thoroughly, with an explicit warning that the 5 orphaned tests have never executed their bodies). Archived.
+**W10-TRAINER-RULES finisher DONE** — 15 new smoke tests green, a real fix (disengage binding race in the combat input guard), two honest edge-case findings recorded rather than hidden. Archived.
+21/24 lanes done now. Still running/idle-recent: W03, W05 (rebase fix), W11-finisher, W14, W21, plus W24-LANDING.
+
 ## 11:38 UTC: W16 and W02 both confirmed done
 **W16-LOFT-BED DONE** — real fix (stair reaches the loft, mattress collider centred, two blind-judged tunables), thorough honest limitations (asset/rig gaps correctly deferred, one bug found in another file's comment but not touched since out of ownership). Archived.
 **W02-HARNESS-CONTEXT DONE** — real root-cause fix for the input-context misresolve, red→green on the exact reproduction (S08-93, S07-57 flips), 53 tests green, root cause written up. Archived. Also confirms CL-H14's freeze did NOT reproduce on this commit — a side-observation for the coordinator, noted here.
