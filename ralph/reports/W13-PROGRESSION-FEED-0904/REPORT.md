@@ -354,4 +354,9 @@ Branch `ralph/W13-PROGRESSION-FEED-0904`, pushed.
 17795e4f  feat: progression presenters — strip ticks, moment banner, Team screen tasks
 a64d4144  test: smoke_progression_feedback — the four bond actions and the banner
 7ebc4608  docs: CURRENT_STATE CL-W6 rewritten; progression capture tool
+94a84c5f  docs: W13-PROGRESSION-FEED report and round-1 contact sheet
+aea5887b  fix: round-2 blind-judge defects — banner collision, strip overflow, tick plate
+14f4c84c  fix: round-2 judge — banner chrome per kind, level-up headline, bond pip
 ```
+
+**Head of branch: `14f4c84c`.** Pushed to `origin/ralph/W13-PROGRESSION-FEED-0904`.
