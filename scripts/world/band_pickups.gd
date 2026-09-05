@@ -89,15 +89,43 @@ const NUDGE_BEARINGS := 12
 ## with hue as its only variable: "grade is carried entirely by a colour with
 ## no key attached to it, so a player learns 'different colour' and never
 ## learns 'worth more'... it needs something structural per tier, not another
-## hue." A tier now differs in size, in medallion size, in glow strength and
+## hue." A tier differs in size, in medallion size, in glow strength and
 ## (Rare) in silhouette, so the ladder survives a frame where the hue does not.
+## Round 2 confirmed the ladder then reads in the right direction ("frame 3
+## holds the most valuable one, and everything says so at once").
+##
+## The absolute numbers came DOWN in round 3, and this is the correction of a
+## regression this file caused. Round 1 could not measure scale because the
+## capture kept the trainer out of frame; round 2 put him in and measured the
+## family at "furniture, not pickups" -- the Rare at roughly knee-to-thigh
+## height and two and a half metres across, "the same visual weight as the
+## black boulder beside it", so "a player would expect to climb on it or mine
+## it, not palm it". Growing the tiers to build the ladder is what pushed it
+## there. The steps are kept (~1.2x per tier, which is what round 2 read
+## correctly) and the whole family is scaled down under them, so Good lands
+## near a third of a metre and Rare near two thirds.
+##
+## This is NOT the case `CLAUDE.md`'s "resolve relative-scale defects by
+## growing the smaller side, never by shrinking" covers. That owner directive
+## (2026-09-01) is about CREATURES standing against the 1.80 m trainer, and
+## the smaller side here is the trainer -- growing him to make a sweet look
+## hand-sized would break the creature band the directive exists to protect.
+## The candy's own base size lives in `data/items/items.json`
+## (`world_model_scale`), which this lane does not own; this multiplier is the
+## lever that is in scope.
 const CANDY_LOOK := {
-	"good_candy": {"tint": Color(0.80, 1.0, 0.80), "badge": Color(0.24, 0.72, 0.40), "emission": 0.30, "scale": 1.0, "wings": false},
-	"great_candy": {"tint": Color(0.62, 0.76, 1.0), "badge": Color(0.22, 0.46, 0.92), "emission": 0.65, "scale": 1.18, "wings": false},
-	"rare_candy": {"tint": Color(1.0, 0.80, 0.30), "badge": Color(1.0, 0.78, 0.16), "emission": 1.70, "scale": 1.40, "wings": true},
+	"good_candy": {"tint": Color(0.80, 1.0, 0.80), "badge": Color(0.24, 0.72, 0.40), "emission": 0.30, "scale": 0.34, "wings": false},
+	"great_candy": {"tint": Color(0.62, 0.76, 1.0), "badge": Color(0.22, 0.46, 0.92), "emission": 0.65, "scale": 0.42, "wings": false},
+	"rare_candy": {"tint": Color(1.0, 0.80, 0.30), "badge": Color(1.0, 0.78, 0.16), "emission": 1.70, "scale": 0.52, "wings": true},
 }
 ## Per-tier mushroom look. Stamina is the shipped orange (ASSET_LEDGER), so it
 ## keeps a neutral tint; Speed goes blue; Wild goes redder and broader.
+## The mushrooms are NOT rescaled. Round 2 measured both at "around knee
+## height on the trainer, roughly half a metre... exactly as something you
+## bend down and pick", and called them the only objects in the sheet whose
+## noun it did not have to guess at. They are the size the candy is being
+## brought toward, so touching them would be undoing the one thing that was
+## already right.
 const MUSHROOM_LOOK := {
 	"speed_mushroom": {"tint": Color(0.60, 0.72, 1.0), "scale": Vector3.ONE},
 	"stamina_mushroom": {"tint": Color(1.0, 1.0, 1.0), "scale": Vector3.ONE},
