@@ -434,7 +434,8 @@ Branch `ralph/W21-HARNESS-FIGHTS-0904`, from `origin/main` at `ef16544f`.
 | `01dfdc5c` | the segment rewrite and `tests/test_gate_f_segments.gd` (CL-H1, CL-H2, CL-H7) |
 | `96b315e9` | the challenge-approach tolerance fix and its test (found by the S07 run) |
 | `1d8a4fd0` | this report, the four runs' written verdicts, and the `docs/CURRENT_STATE.md` rows |
-| **`b443129be9ea143d0c2183aeb2ad9bc5e3c17846`** | this line: the final commit on this branch |
+| `208ca0b6805799710abc550620bccf391e0116ab` | this commit table |
+| **the commit that added this row** | the final commit on this branch — it changes nothing but this table, and its hash is in the lane summary and in `git log -1 ralph/W21-HARNESS-FIGHTS-0904` |
 
 No pull request was opened, per COMMON.md — the coordinator lands this.
 
