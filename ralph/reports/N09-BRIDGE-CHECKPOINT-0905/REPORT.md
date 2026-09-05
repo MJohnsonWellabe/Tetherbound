@@ -516,6 +516,23 @@ is not about this checkpoint at all.
     settle it — which is how this lane's item 2 came to exist. One paragraph, in a file this
     lane deliberately did not touch.
 
+11. **Twelve scripts on `main` are missing their `.uid` sidecars.** A first
+    `godot --headless --import` in a clean container generates
+    `autoload/realm_heart_state.gd.uid`, `scripts/world/cloudreach_world.gd.uid`,
+    `scripts/world/realm_gate.gd.uid`, `scripts/world/realm_heart_shrine.gd.uid`,
+    `tests/smoke_cloudreach_foundation.gd.uid`, `tests/smoke_cloudreach_transition.gd.uid`,
+    `tests/test_cloudreach_chapter_data.gd.uid`, `tests/test_cloudreach_world_data.gd.uid`,
+    `tests/test_meadows_cloudreach_handoff.gd.uid`, `tests/test_realm_heart_state.gd.uid`,
+    `tests/test_realm_world_components.gd.uid` and
+    `tools/capture_cloudreach_foundation.gd.uid` as untracked files. The repo tracks `.uid`
+    sidecars everywhere else (this lane's own `tools/_capture_w22_bridge_signpost.gd.uid`
+    is one), so these twelve Cloudreach/realm-heart scripts landed without theirs. Godot
+    mints a fresh random UID per machine, so every clean checkout produces twelve different
+    untracked files and any two lanes that commit them collide. **Deleted rather than
+    committed here** — they are generated output for files outside this lane's ownership,
+    and committing another lane's sidecars with UIDs minted in this container is worse than
+    leaving the gap. It belongs to whoever owns the Cloudreach scripts.
+
 Round 2's judge also ranks the rigid flat banners, the dirt-splat road, the guard's idle
 and weapon, the absent notice board and the row-1 framing. All of those are either art that
 must be made or files outside this lane; its own §5 table splits each one. `JUDGE2.md` is
