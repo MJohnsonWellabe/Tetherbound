@@ -1364,6 +1364,19 @@ static func _predict_frames(steps: Array) -> int:
 				# Its own ceiling, same as a walk's `budget_frames`: the step
 				# cannot run longer than this whatever the fight does.
 				total += int(args.get("budget_frames", 9000))
+			"chip_to_floor":
+				# W21-HARNESS-FIGHTS-0904, routed to this lane: no case existed,
+				# so the catch-all below priced a step that can spend fifteen
+				# swings at thirty settle frames each at ONE frame. Same rule as
+				# `press`/`press_until` above and below it -- the full budget,
+				# never the early exit the predictive stop usually takes --
+				# because the cost gate has to be able to refuse a segment it
+				# cannot afford in the worst case. Defaults mirror
+				# `_step_chip_to_floor`'s own (`max_presses` 15, `settle_frames`
+				# 30), so a step that names neither is priced at what it can
+				# actually cost: 15 * 34 = 510 frames, not 1.
+				total += maxi(1, int(args.get("max_presses", 15))) \
+					* (int(args.get("settle_frames", 30)) + 4)
 			"press_until":
 				# RIG-F2. Priced at its FULL budget, never at the early exit --
 				# same rule `move_to`'s walk budget follows. A step that usually
@@ -2614,6 +2627,15 @@ func _step_fight(args: Dictionary, step_id: String) -> String:
 	var quiet := 0
 	var spent := 0
 	var ended := ""
+	# W21-HARNESS-FIGHTS-0904, routed to this lane. Did this step ever see a
+	# fight at all? `S06-64` and `S06-74` both reported
+	# `fought 239 frames: 0 quick ... ended because no fight running for 240
+	# frames` and PASSED -- a step whose entire job is to play a fight to its
+	# end reporting success because there was never a fight to play. The only
+	# reason those two read as failures in that run at all is that the lane
+	# had put separate `combat_running` asserts in front of them; a segment
+	# without those asserts would have banked the absence as coverage.
+	var saw_fight := false
 
 	while spent < budget:
 		if not _blocked.is_empty():
@@ -2624,6 +2646,8 @@ func _step_fight(args: Dictionary, step_id: String) -> String:
 
 		var fighting := bool(manager.call("is_fighting"))
 		var battle := director != null and bool(director.call("trainer_battle_active"))
+		if fighting or battle:
+			saw_fight = true
 		if not fighting and not battle:
 			quiet += 1
 			if quiet >= quiet_needed:
@@ -2698,6 +2722,15 @@ func _step_fight(args: Dictionary, step_id: String) -> String:
 	_emit("note", {"observation": "fight step %s: %s" % [step_id, line]})
 	if until_flag != "" and not (_probe.call("flags") as Array).has(until_flag):
 		return "FAIL " + line
+	# An absence is not a result. The one case where never seeing a fight is
+	# still honest evidence is a named `until_flag` that is already set --
+	# the fight this step was scripted for has demonstrably been won, by an
+	# earlier step or before the save was taken -- and that case has already
+	# returned above if the flag is missing.
+	if not saw_fight and until_flag == "":
+		return ("FAIL " + line + " -- and no fight was EVER observed: `is_fighting()` and "
+			+ "`trainer_battle_active()` were false on every frame this step ran, so there was "
+			+ "nothing here to play. Whatever was supposed to start this fight did not.")
 	return line
 
 
