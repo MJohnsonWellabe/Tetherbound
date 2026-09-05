@@ -14,6 +14,8 @@
     ],
     "yaw_deg": 0.0,
     "floor_clearance": 0.5,
+    "_comment_interior_conduit_energy": "N05-WORLD-DRESSING-0905. Emission on the live teal runs INSIDE the roofed rooms -- the floor conduits and the line a `lit` trim girder carries (`stronghold.gd::_interior_live_material`). W06-FINALE-0904's judges read the 1.4-energy runs in the Legendary Chamber as cyan bars / debug draws; W06 measured this teal clipping to white at 2.2 and holding its hue at 1.15. 0.9 keeps it a colour. Exterior runs keep `exterior_conduit_energy`; the machine's crown and ring lamps keep the full 1.4 because they are the room's light source.",
+    "interior_conduit_energy": 0.9,
     "wall_thickness": 1.2,
     "skirt": 18.0,
     "ramp_run": 40.0,
@@ -689,6 +691,58 @@
       "energy": 1.05,
       "range": 30.0,
       "colour": "#7d8a99"
+    },
+    {
+      "_comment": "N05-WORLD-DRESSING-0905, W06-FINALE-0904's three blind judges on the Legendary Chamber: 'single-key with crushed blacks', 'teal-on-teal-on-olive with one green accent; there is no warm note anywhere to give the green somewhere to be green against', 'the chamber has almost no value structure, and the creature is lost in it'. The room's two grey-blue omnis above and the machine's teal core are all cool. This is the warm FILL: one shadowless omni high inside the doorway wall (the +x wall, the way the player walks in), in the same brazier-warm the courtyard's own fill uses, wide enough to reach the machine and the west wall. It opens the blacks and puts a second hue family in the room so the teal reads as teal against something. TUNABLE.",
+      "at": [
+        -19.0,
+        90.2
+      ],
+      "y": 9.0,
+      "energy": 1.4,
+      "range": 30.0,
+      "attenuation": 1.1,
+      "colour": "#d9a06a"
+    },
+    {
+      "_comment": "N05-WORLD-DRESSING-0905. The judges: 'no contact shadow under the machine or the bound/freed creature', 'at distance you cannot tell there is a creature there at all'. A SHADOW-CASTING spot over the bound creature's stand (`marks.legendary_stand`, chamber offset [0, 6] -> local [-32, 96.2]), placed behind and above it relative to the reveal stand the player reads it from (`marks.reveal_stand`, offset [0, -10]), so the shadow falls toward the player and the warm rim lifts the body's silhouette off the far wall. `stronghold.gd::_build_lights` turns `type: spot` + `shadow: true` into a SpotLight3D with shadows -- the only shadowed light in the building, and one shadow map rather than an omni's six. Lighting/rim contrast, not an asset change, per the brief. TUNABLE.",
+      "type": "spot",
+      "at": [
+        -30.0,
+        101.5
+      ],
+      "y": 14.0,
+      "aim": [
+        -32.0,
+        96.2
+      ],
+      "aim_y": 1.2,
+      "angle": 32.0,
+      "energy": 3.5,
+      "range": 20.0,
+      "attenuation": 0.8,
+      "shadow": true,
+      "colour": "#ffe3bd"
+    },
+    {
+      "_comment": "N05-WORLD-DRESSING-0905. The machine's own contact shadow: a second shadowed spot, high on the doorway side, raking the machine's base (`chambers.legendary_chamber.at` -> local [-32, 90.2]) from the south-east so the 15 m body throws a shadow across the floor to the north-west, which the reveal stand sees to the left of the plinth, and so the faces the player looks at get a key with a direction instead of the flat teal wash from the core. TUNABLE.",
+      "type": "spot",
+      "at": [
+        -21.0,
+        82.0
+      ],
+      "y": 20.0,
+      "aim": [
+        -32.0,
+        90.2
+      ],
+      "aim_y": 1.0,
+      "angle": 38.0,
+      "energy": 2.6,
+      "range": 32.0,
+      "attenuation": 0.9,
+      "shadow": true,
+      "colour": "#ffd9a8"
     }
   ],
   "_comment_hall_occupation": "T1-HALL-REBUILD (2026-08-30), HALL_DESIGN_2026-08-30.md §6. THE LAYER THAT DIED WITH THE CASTLE. `landmark.gd` was the only caller of `stronghold_occupation.gd`, so retiring the detached castle (T1-HALL, `playground_world.gd`) took the game's entire garrison camp, brazier row and tether-lamp set out of the world along with it -- the merged Hall inherited the architecture and none of the occupation. This block is that vocabulary re-authored at the merged site, in THIS file's own local frame (x lateral, z depth, origin `site.at`, `yaw_deg` 0), not a second copy of `stronghold_occupation.json` (which still describes the retired castle's plinth-relative coordinates and is left alone as that building's history). Technique -- basket proportions, flame-without-stick, two-summed-sines flicker -- is ported from `stronghold_occupation.gd` per the design's own instruction to read it rather than extend it. Frames of reference per placement: `on_floor` sits a thing on the complex's own built floor (`_floor_y`, the yards); `on_causeway` sits it on the approach ramp's own sampled surface at that z; `on_ground` sits it on the real terrain (the boulders at the skirt foot). RESERVED-COLOUR DISCIPLINE: oxblood (#7a2430/#5a2a2e) and teal are Team Tether only; brass (#8a6f3a) appears only on Tether fittings; the Hall's own stone/timber palette uses none of the three.",

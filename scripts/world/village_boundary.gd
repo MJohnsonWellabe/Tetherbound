@@ -69,6 +69,48 @@ const CONFIG_PATH := "res://data/config/village_boundary.json"
 ## than the previous few centimetres. TUNABLE (`wall.vault_guard_m`).
 const VAULT_GUARD_DEFAULT_M := 1.0
 
+## N05-WORLD-DRESSING-0905 (W08-DIALOGUE-CAMERA-0904's fence finding, blind
+## judge on the Halda two-shot: "a post of one fence run passes bodily through
+## the rails of another at a different angle", "a second post floats clear of
+## the terrain with visible ground beneath it", "a rail ends in mid-air").
+## Measured before touching anything (`tools/_probe_village_fence.gd`, 13
+## panels within 40 m of Halda's stand): posts floating on 6 of 13 panels,
+## worst 0.48 m of daylight under a foot, worst 1.06 m of post buried, and the
+## nearest two panel ENDS a median 0.71 m and worst 1.54 m apart.
+##
+## Two causes, both in how a panel was laid rather than in the outline:
+##
+##   1. `_build_fence` rounded each edge to a whole number of 6.15 m panels
+##      and then spaced them at `length / count` -- so on the 14.76 m edge
+##      behind Halda ([37,-2] -> [30,11]) two fixed-length panels were laid
+##      7.38 m apart, leaving 1.23 m of nothing between them and 0.6 m short
+##      of the corner, while on a short edge the same rounding put a 6.15 m
+##      panel across a 4.4 m edge and drove its ends through both neighbouring
+##      runs. A rail cannot both end in mid-air and stab through the next run
+##      unless the panels are the wrong length for their edge, and they were.
+##      `panel_fit` keeps the rounding but STRETCHES each panel along its own
+##      edge to exactly `length / count`, so consecutive panels meet end to
+##      end and the last one ends on the vertex, where the next edge's first
+##      panel begins. The count is chosen so the stretch stays as near x1.0 as
+##      any whole number of panels allows (never past x0.707 / x1.414 once an
+##      edge holds two or more) -- a 20% longer rail on a rustic field fence
+##      is invisible; a rail with a metre of air in it is not.
+##   2. A panel sat at the ground height under its own CENTRE, dead level, so
+##      on any slope one end floated and the other was buried by half the
+##      drop across 6 m. `panel_pitch` tilts the panel along its own run so
+##      both end posts stand on the ground they are over (`sink_m` below it,
+##      as before); the middle of a panel can still deviate slightly on a
+##      curved slope, and that is the size of error a real fence has.
+##
+## Both are pure functions so `tests/test_village_boundary.gd` can check them
+## against the real outline without booting a world. The collision boxes are
+## unchanged: they were already sized from the whole footprint's lowest and
+## highest ground, and are not what any player sees.
+## The worst stretch `panel_fit` can hand back once an edge holds two or more
+## panels: the crossover between k and k+1 panels is at sqrt((k+1)/k), largest
+## at k = 1. Asserted by tests/test_village_boundary.gd against the real outline.
+const MAX_PANEL_STRETCH := 1.4143
+
 var _config: Dictionary = {}
 var _gates: Array[Node3D] = []
 var _all_open := false
@@ -89,6 +131,41 @@ static func outline(config: Dictionary) -> PackedVector2Array:
 		if raw is Array and (raw as Array).size() >= 2:
 			out.append(Vector2(float(raw[0]), float(raw[1])))
 	return out
+
+
+## How many panels an edge of `length` metres takes so that they meet END TO
+## END -- no gap, no crossing -- and how far each is stretched along the edge
+## to do it. `step` is the laid length of every panel; `stretch` is `step`
+## over the prefab's own `panel_length`.
+static func panel_fit(length: float, panel_length: float) -> Dictionary:
+	var unit := maxf(panel_length, 0.5)
+	var nearest: int = maxi(int(round(length / unit)), 1)
+	# Of one panel fewer, the rounded count and one more, take whichever leaves
+	# the panels closest to their own length -- in log terms, so a x0.8
+	# squeeze and a x1.25 stretch count as the same distortion. With two or
+	# more panels this is never worse than x0.707 / x1.414 (the crossover
+	# between k and k+1 panels is at sqrt((k+1)/k)); a single panel on an edge
+	# shorter than itself simply shrinks to fit, because the alternative --
+	# overhanging both neighbouring edges -- is the crossing the judge saw.
+	var count := nearest
+	var best := INF
+	for candidate: int in [maxi(nearest - 1, 1), nearest, nearest + 1]:
+		var distortion := absf(log(length / (float(candidate) * unit)))
+		if distortion < best - 0.000001:
+			best = distortion
+			count = candidate
+	var step := length / float(count)
+	return {"count": count, "step": step, "stretch": step / unit}
+
+
+## The tilt, in radians about the panel's own across-axis, that puts a panel's
+## +X end `ground_end` and its -X end `ground_start` both on the ground: the
+## slope of the ground along the panel's run. Positive when the +X end is
+## uphill.
+static func panel_pitch(ground_start: float, ground_end: float, length: float) -> float:
+	if length <= 0.01:
+		return 0.0
+	return atan2(ground_end - ground_start, length)
 
 
 static func load_config() -> Dictionary:
@@ -218,14 +295,18 @@ func _build_fence(world: Node3D, prefabs: RefCounted, points: PackedVector2Array
 		if length < 0.01:
 			continue
 		var direction := span / length
-		var count: int = maxi(int(round(length / panel_length)), 1)
-		var step := length / float(count)
+		# Panels meet end to end and the last one ends on the vertex -- see
+		# `panel_fit`'s header for the two W08 fence findings this answers.
+		var fit := panel_fit(length, panel_length)
+		var count: int = fit["count"]
+		var step: float = fit["step"]
+		var stretch: float = fit["stretch"]
 		for p in count:
 			var centre := from + direction * (step * (float(p) + 0.5))
 			if _inside_a_gate(centre, gates, clear):
 				continue
 			if _build_panel(world, prefabs, prefab, centre, direction, step,
-					courses, course_rise, sink, total_height, bury, samples, vault_guard, built):
+					courses, course_rise, sink, total_height, bury, samples, vault_guard, built, stretch):
 				built += 1
 	if built == 0:
 		push_error("the village boundary built no fence at all; the settlement is open")
@@ -262,13 +343,19 @@ func _fence_total_height(prefabs: RefCounted, prefab: String, courses: int, cour
 ## than a reported gap.
 func _build_panel(world: Node3D, prefabs: RefCounted, prefab: String, centre: Vector2,
 		direction: Vector2, length: float, courses: int, course_rise: float,
-		sink: float, total_height: float, bury: float, samples: int, vault_guard: float, index: int) -> bool:
+		sink: float, total_height: float, bury: float, samples: int, vault_guard: float, index: int,
+		stretch: float = 1.0) -> bool:
 	var ground: float = float(world.call("ground_height_at", centre.x, centre.y))
 	if is_nan(ground):
 		return false
 
 	var lowest := ground
 	var highest := ground
+	# The ground under each END post, for the pitch. The first and last
+	# samples below ARE the two ends (t = -0.5 and +0.5); a NaN there falls
+	# back to the centre so a panel half off the terrain still lays level.
+	var ground_start := ground
+	var ground_end := ground
 	for s in samples:
 		var t: float = -0.5 + float(s) / float(samples - 1)
 		var probe := centre + direction * (length * t)
@@ -277,6 +364,10 @@ func _build_panel(world: Node3D, prefabs: RefCounted, prefab: String, centre: Ve
 			continue
 		lowest = minf(lowest, g)
 		highest = maxf(highest, g)
+		if s == 0:
+			ground_start = g
+		if s == samples - 1:
+			ground_end = g
 
 	# `rotation.y = θ` carries local +X onto (cos θ, -sin θ) — measured, not
 	# assumed (`road_gate.gd`'s own `tools/_probe_gate_leaf_axis.gd` note). The
@@ -286,8 +377,15 @@ func _build_panel(world: Node3D, prefabs: RefCounted, prefab: String, centre: Ve
 
 	var panel := Node3D.new()
 	panel.name = "FencePanel_%d" % index
-	panel.position = Vector3(centre.x, ground - sink, centre.y)
-	panel.rotation.y = yaw
+	# Seated at the mean of its two END posts' ground and pitched along its run
+	# so both posts stand on the ground (`panel_pitch`); stretched along its
+	# run so it meets its neighbours end to end (`panel_fit`). `rotation` is
+	# YXZ: the Z (pitch) turn is applied in the panel's own frame first, then
+	# the yaw carries local +X onto the edge direction, so a positive pitch
+	# lifts the +X end -- the one `ground_end` was sampled under.
+	panel.position = Vector3(centre.x, (ground_start + ground_end) * 0.5 - sink, centre.y)
+	panel.rotation = Vector3(0.0, yaw, panel_pitch(ground_start, ground_end, length))
+	panel.scale = Vector3(stretch, 1.0, 1.0)
 	add_child(panel)
 
 	for course in courses:
