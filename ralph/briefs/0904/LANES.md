@@ -65,6 +65,17 @@ Owner noticed the session count didn't match my reports. Root cause: 5 lanes (W0
 Separately, 5 lanes had genuinely gone stale 4+ hours with NO replacement running: W02-HARNESS-CONTEXT, W03-S08-FREEZE, W16-LOFT-BED, W20-SMALL-FIXES, W21-HARNESS-FIGHTS — all hit their 5h limit hours ago (reset already passed) and were sitting untouched. Given the owner flagged this directly, resumed all 5 at once (departing from the normal 1-2/sweep trickle, since the owner surfaced the actual backlog size).
 main also moved: PR #42 merged — **W00-ICONS is now on main**. PR #45 (consolidated: icons+contracts+progression+portraits+companion+bands2-5) is open, still blocked only on the pre-existing finale regression. PR #44 is Codex's own draft PR for Cloudreach, unrelated to this batch, explicitly not ready to merge.
 
+## 15:05 UTC: N02-VEGETATION confirmed done; rest checked, none stalled
+**N02-VEGETATION DONE** — all 3 deliverables, 92 tests green, smoke A/B clean against main.
+Notably disciplined: deliberately did NOT edit `docs/CURRENT_STATE.md` even though it's
+tempting real estate, specifically to avoid a guaranteed conflict with the other 12 lanes in
+this wave that would also want to touch it — left this report as the record instead. Also
+found (and precisely routed to N12, the correct owner) that Cloudreach's own commits landed
+12 test/tool scripts without `.uid` sidecars, a real gap in that landing, not a convention
+change. Archived. Checked all other running lanes (N05, N06, N07, N08, N09, N10, N12) —
+all genuinely active (updated within the last 2 minutes, real task progress), none stalled.
+5/13 follow-up lanes done now (N01, N02, N03, N04, N11); 8 running.
+
 ## 15:03 UTC: N04-DIALOGUE-PORTRAITS confirmed done — the critical finding is fixed
 **N04-DIALOGUE-PORTRAITS DONE** — two full blind-judge rounds with real measured evidence
 (hue-angle stability, colour-bleed pixel counts, ΔE pair distances), the critical "every NPC
