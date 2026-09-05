@@ -528,4 +528,19 @@ tree. Numbers in `contrast-stats-before.csv` / `contrast-stats-after.csv`.
 
 ## 12. Final state
 
-COMMIT_PLACEHOLDER
+**Branch:** `ralph/N13-NIGHT-RESUME-0905`, based on `origin/main` @ `f8a47ee4`.
+
+Commits, oldest first:
+
+- `f1b2c7de6 N13-NIGHT-RESUME: restore W15's exported-build probe, add the day/night curve instrument`
+- `4d8437434 N13-NIGHT-RESUME: make the passive clock's blend readable, and a red test for CL-O2`
+- `55fd5ae47 N13-NIGHT-RESUME: night was brighter than day; make it 54% of day, and shoot the comparison`
+- `5fa4a81b9 N13-NIGHT-RESUME: correct the light metric, revert the brightness change, fix is_dark()'s window`
+- `0f77851b1 N13-NIGHT-RESUME: hold the night instead of touching it`
+- `e88a4f352 N13-NIGHT-RESUME: night_end 2.0 -> 1.0, giving the dawn ramp back the hour I took`
+- `a7fb4c5e7 N13-NIGHT-RESUME: report, decision D87, CURRENT_STATE and GAMEPLAY_SYSTEMS`
+- `ecf749836 N13-NIGHT-RESUME: blind mode for the contact sheet, and the new test's uid sidecar`
+
+**CL-O2 / OP-0904-2 is root-caused and partly fixed. It is NOT closed** — §5's
+clock-persistence half is the larger one and belongs to `save_game.gd` /
+`game_state.gd`. The night row in `docs/CURRENT_STATE.md` says the same.
