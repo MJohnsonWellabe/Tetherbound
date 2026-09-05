@@ -38,6 +38,9 @@ const CHARACTER_MODEL := preload("res://scripts/characters/character_model.gd")
 const NPC_RANKS := preload("res://scripts/characters/npc_ranks.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+## For `speaker_identity()` only: the table every trainer's own conversation
+## already lives in is where its portrait is written down.
+const DIALOGUE_RUNNER := preload("res://scripts/story/dialogue_runner.gd")
 
 const CONFIG_PATH := "res://data/config/trainers.json"
 
@@ -241,7 +244,16 @@ func _on_challenged(spec: Dictionary) -> void:
 		conversation = str(spec.get("defeated", ""))
 	if conversation == "":
 		return
-	if not bool(panel.call("start", conversation)):
+	# N04-DIALOGUE-PORTRAITS. The two generic refusals are ONE conversation
+	# shared by every trainer, so their JSON can only name a neutral speaker
+	# ("Trainer") and a neutral plate. This node knows which body the player
+	# is standing in front of, so it hands the panel that trainer's own name
+	# and face for the duration -- the same plate the trainer's own challenge
+	# line already wears. Per-trainer conversations carry their own fields
+	# and get nothing laid over them.
+	var identity: Dictionary = speaker_identity(spec) \
+		if conversation in [NO_USABLE_CREATURE_CONVERSATION, NO_ALLY_DEPLOYED_CONVERSATION] else {}
+	if not bool(panel.call("start", conversation, identity)):
 		return
 
 	# Remembered rather than acted on now: the challenge is the WORDS, and the
@@ -514,6 +526,28 @@ static func below_challenge_level(spec: Dictionary, party: RefCounted) -> bool:
 	if need <= 0 or party == null:
 		return false
 	return party_high_level(party) < need
+## Who this trainer is on the dialogue panel: `{"speaker": <name>,
+## "portrait": <res:// plate>}`, laid over a SHARED conversation (the generic
+## refusals) that cannot name its speaker itself. The plate is the one the
+## trainer's own `challenge` conversation wears in `data/dialogue/` (falling
+## back to `defeated`), so a trainer's face is written down in exactly one
+## place and the refusal can never disagree with the challenge that follows
+## it. A key is left out rather than set to "" when the table has nothing,
+## which the panel reads as "use the line's own field". Static and pure for
+## the same reason `conversation_for()` is.
+static func speaker_identity(spec: Dictionary) -> Dictionary:
+	var identity := {}
+	var name := str(spec.get("name", ""))
+	if name != "":
+		identity["speaker"] = name
+	for key: String in ["challenge", "defeated"]:
+		var entry: Variant = DIALOGUE_RUNNER.table().get(str(spec.get(key, "")))
+		if entry is Dictionary:
+			var portrait := str((entry as Dictionary).get("portrait", ""))
+			if portrait != "":
+				identity["portrait"] = portrait
+				break
+	return identity
 
 
 ## One of the trainer's creatures, built from its table entry.

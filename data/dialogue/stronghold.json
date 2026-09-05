@@ -6,6 +6,7 @@
   "_comment_order": "Spec sec28's order is not optional: the READOUT (`stronghold_reveal`) sits on the arena threshold so the player learns what is at the far end of the cables BEFORE the Warden speaks and before the fight; then his dialogue; then the battle; only then the chamber conversations.",
 
   "_comment_portraits": "2026-09-04 portrait contract: the Warden speaks with warden.png (the file is produced by another lane; the panel leaves the frame empty until it lands). The readout, the duty board and the chamber narration are what the PLAYER reads and sees, so they carry the player's own portrait -- the only one the contract gives a first-person beat.",
+  "_comment_portraits": "N04-DIALOGUE-PORTRAITS, 2026-09-05: Warden Aldis now wears `warden.png`, the plate W04-PORTRAITS rendered from the installed Warden body (D81's eight-name contract), in all three of his conversations -- he was the last named speaker in the game still drawn with the player's face. The four narration beats (`stronghold_chamber` and the three after it, 'Chamber Five') plus 'Tether Readout' and 'Tether Duty Board' are what the PLAYER reads and sees, second person, and keep `trainer.png` as the deliberate first-person stand-in the finale lane chose (ralph/W06-FINALE-0904's own `_comment_portraits` says the same); tests/test_dialogue_portraits.gd carves out exactly those three bodiless speakers by name, nothing else in this file. The room and the machine still have no face of their own; that stays owner-gated art, and no generation was spent guessing at it.",
 
   "_comment_warden": "Spec sec33, and it survives the cut whole: he believes separation prevents chaos, he confirms the readout rather than denying it, he says a version of 'you don't understand what these barriers are holding apart', and he does not recant when he loses. He never says 'you cannot stop me'.",
 
@@ -65,7 +66,7 @@
     "stronghold_warden_realm_reward": {
       "_comment": "Cloudreach Phase 1. Automatic first-victory handoff. The flags are granted by the Warden trainer row before this opens, so closing the panel early cannot lose either entitlement and a full satchel cannot block them.",
       "speaker": "Warden Aldis",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/warden.png",
       "lines": [
         "You won. Take the Realm Key — it opens the Storm Road beyond the village.",
         "And take the Heart of Meadows home. Place it at the old shrine; its strength will carry you into Cloudreach."
