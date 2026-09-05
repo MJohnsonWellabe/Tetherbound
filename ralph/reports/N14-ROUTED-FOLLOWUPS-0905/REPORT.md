@@ -573,4 +573,28 @@ JUDGE_catch.md            _sheet_catch_ab.png
 
 ## 11. Commits
 
-<!-- FINAL-COMMIT -->
+Branch `ralph/N14-ROUTED-FOLLOWUPS-0905`, pushed to `origin`. Four merge commits (N04, N07, N09,
+N13, in the brief's order) then:
+
+```
+89f51150  N14 item 2: persist the day/night clock across saves, loads and realm crossings
+fc5a13f1  N14 item 3: un-bury the three stuck pickup sites; item 5 §6/§10
+8bde59a3  N14 item 1: shadow_max_distance 420 -> 220; item 6: spread three close hair pairs
+279e0c15  N14 item 6: extend the mask-by-region hair recolour to the villager_male rig
+72998064  N14 item 4: finish the catch-seal composite (all four of N07's routed findings)
+a85def1e  N14 item 5 §3, item 7, and the other half of N07's "trapezoid on the ground"
+1d6f8884  N14: lane report, checkpoint before/after sheet, place5 stand rendered
+```
+
+The final commit on the branch is the one that adds this line and `JUDGE_catch.md`; its hash is
+stated in the lane's closing summary.
+
+### One note on the working tree, for the landing lane
+
+A `godot --headless --import` in this container generates 15 untracked `.uid` sidecars for scripts
+this lane did not write — 12 for the Cloudreach commits on `main` (`04d844d0`, `3f9e1a14`,
+`47ca2e12`), and one each for `test_telegraph_glow.gd`, `tools/_capture_vfx_polish_0905.gd` (N07)
+and `tools/_probe_n09_checkpoint.gd` (N09). They are **deleted locally, not committed**, which is
+the same call N02 and N07 each made and recorded. This lane's own five new scripts DO carry
+committed sidecars. The underlying gap — 248 of 249 test scripts carry a tracked sidecar and these
+do not — is still N12-REPO-HYGIENE's, and is still open.
