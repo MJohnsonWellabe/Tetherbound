@@ -1531,47 +1531,17 @@ func _collect(node: Node, into: Array[MeshInstance3D]) -> void:
 ##
 ## Returns how many instances came back, so the caller can log a real number
 ## rather than an intention. Safe to call twice: the second call is a no-op.
-##
-## CL-E12: `within` makes this PARTIAL. Pass a list of
-## `{"centre": Vector2, "radius": float}` discs and only the instances the
-## drain took inside one of them come back; everything else stays held for a
-## later call. Empty (the default) is the whole-map heal SG46 has always
-## done, byte for byte -- the chapter's `legendary_freed` sweep does not know
-## this argument exists.
-##
-## Why a disc list and not a station id: this node has no idea what a drain
-## station is and should not learn. `terrain_playground.json`'s `drains` block
-## is `meadow_healing.gd`'s to read, and what it hands down is the geometry --
-## which is also all the drain itself ever was, since `drain_factor()` is a
-## field over positions and `scatter_rules._thin_by_drain` filtered on that
-## field alone. A placement inside the disc is a placement that station took.
-##
-## The whole-map contract is preserved exactly: with no filter the partition
-## below puts every entry in `restore` and `_drained` still ends empty, so
-## `regrown_count()`, `drained_count()` and the second-call no-op all behave
-## as they did. With a filter, `_regrown` ACCUMULATES rather than being
-## replaced, so two partial heals report the total that has actually grown
-## back rather than only the last one's share.
-func restore_drained(within: Array = []) -> int:
+func restore_drained() -> int:
 	if _drained.is_empty():
 		return 0
 	var by_model: Dictionary = {}
-	var held: Dictionary = {}
 	for layer_name: String in _drained.keys():
 		for entry: Variant in (_drained[layer_name] as Array):
 			var placement: Dictionary = entry
-			if not _inside_any(placement.get("position", Vector3.ZERO), within):
-				if not held.has(layer_name):
-					held[layer_name] = []
-				(held[layer_name] as Array).append(placement)
-				continue
 			var model := str(placement["model"])
 			if not by_model.has(model):
 				by_model[model] = []
 			(by_model[model] as Array).append(placement)
-	if by_model.is_empty():
-		_drained = held
-		return 0
 	var before := _placed
 	for model: String in by_model.keys():
 		_build_batch(model, by_model[model])
@@ -1580,26 +1550,9 @@ func restore_drained(within: Array = []) -> int:
 	# all of this healing's models are queued, same as `build()`'s own loop.
 	if _instancer != null:
 		_instancer.call("update_mmis", true)
-	_regrown += _placed - before
-	_drained = held
-	return _placed - before
-
-
-## Is this placement inside one of the healing discs? An EMPTY list means "no
-## filter", not "no discs" -- the whole-map heal is the default and must not
-## be turned into a no-op by an argument it never passes.
-func _inside_any(position: Vector3, discs: Array) -> bool:
-	if discs.is_empty():
-		return true
-	var spot := Vector2(position.x, position.z)
-	for raw: Variant in discs:
-		var disc: Dictionary = raw
-		var radius := float(disc.get("radius", 0.0))
-		if radius <= 0.0:
-			continue
-		if spot.distance_to(disc.get("centre", Vector2.ZERO) as Vector2) <= radius:
-			return true
-	return false
+	_regrown = _placed - before
+	_drained.clear()
+	return _regrown
 
 
 ## How many instances the drain is currently holding out of the world — the
