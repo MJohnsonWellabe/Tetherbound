@@ -1,0 +1,764 @@
+{
+  "rows": [
+    {
+      "faint_rate": 0.0,
+      "foe_level": 4,
+      "kind": "wild",
+      "lead_lost": 0.0995243708516421,
+      "max_hit_frac": 0.0836406885473816,
+      "party_lost": 0.0239817761088293,
+      "per_species": {
+        "bramblebun": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.115047072839389,
+          "max_hit_frac": 0.0633177756266117,
+          "party_lost": 0.0277221862263587,
+          "prep_rate": 0.0,
+          "seconds": 6.94374999999999,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "brooktail": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.120799920342971,
+          "max_hit_frac": 0.0674129479554444,
+          "party_lost": 0.0291084145404749,
+          "prep_rate": 0.0,
+          "seconds": 7.43333333333332,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "duskhush": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.0532630510536376,
+          "max_hit_frac": 0.0389514094509788,
+          "party_lost": 0.0128344701334066,
+          "prep_rate": 0.0,
+          "seconds": 5.89999999999999,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "galecrest": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.100404576148436,
+          "max_hit_frac": 0.0640361286441338,
+          "party_lost": 0.0241938737707074,
+          "prep_rate": 0.0,
+          "seconds": 6.00416666666666,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "meadowhart": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.107123701766592,
+          "max_hit_frac": 0.0592674984509289,
+          "party_lost": 0.025812940184721,
+          "prep_rate": 0.0,
+          "seconds": 7.43333333333332,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "mosshell": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.249911381015307,
+          "max_hit_frac": 0.0692845861779055,
+          "party_lost": 0.0602196098832064,
+          "prep_rate": 0.0,
+          "seconds": 11.551388888889,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "mudsnout": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.116279077163003,
+          "max_hit_frac": 0.0645162915620419,
+          "party_lost": 0.0280190547380729,
+          "prep_rate": 0.0,
+          "seconds": 7.43333333333332,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "paddlenewt": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.151469699215005,
+          "max_hit_frac": 0.0836406885473816,
+          "party_lost": 0.0364987227024108,
+          "prep_rate": 0.0,
+          "seconds": 7.43333333333332,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "pipwing": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.041649551902354,
+          "max_hit_frac": 0.0454057774606836,
+          "party_lost": 0.0100360366029768,
+          "prep_rate": 0.0,
+          "seconds": 4.38333333333333,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "reedwing": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.115352309339342,
+          "max_hit_frac": 0.0632408384843178,
+          "party_lost": 0.0277957371902028,
+          "prep_rate": 0.0,
+          "seconds": 7.43333333333332,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "trailpup": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.130030813382873,
+          "max_hit_frac": 0.0711524090700591,
+          "party_lost": 0.0313327261163548,
+          "prep_rate": 0.0,
+          "seconds": 7.43333333333332,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        }
+      },
+      "prep_rate": 0.0,
+      "region": "band1_lower_meadows",
+      "row": "band1 wild (median L4)",
+      "seconds": 6.51234359359355,
+      "stall_rate": 0.0,
+      "team_level": 3,
+      "win_rate": 1.0
+    },
+    {
+      "faint_rate": 0.0,
+      "foe_level": 4,
+      "foe_levels": [
+        4
+      ],
+      "heal_between_rounds": false,
+      "kind": "trainer_floor",
+      "lead_lost": 0.114373545982467,
+      "max_hit_frac": 0.0629851516172933,
+      "party_lost": 0.0275598905981848,
+      "prep_rate": 0.0,
+      "region": "band1_lower_meadows",
+      "row": "band1 floor: trainer_mira",
+      "seconds": 7.00902777777776,
+      "stall_rate": 0.0,
+      "team_level": 3,
+      "trainer": "trainer_mira",
+      "win_rate": 1.0
+    },
+    {
+      "faint_rate": 0.0,
+      "foe_level": 7,
+      "kind": "wild",
+      "lead_lost": 0.088821268695738,
+      "max_hit_frac": 0.055081995286903,
+      "party_lost": 0.0214027153483706,
+      "per_species": {
+        "burrowback": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.118983212072982,
+          "max_hit_frac": 0.0447410695481606,
+          "party_lost": 0.028670653511562,
+          "prep_rate": 0.0,
+          "seconds": 8.72083333333332,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "duskhush": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.0506803373601942,
+          "max_hit_frac": 0.0275309986383105,
+          "party_lost": 0.0122121294843841,
+          "prep_rate": 0.0,
+          "seconds": 6.44166666666665,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "meadowhart": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.0774204662170866,
+          "max_hit_frac": 0.0420828557158833,
+          "party_lost": 0.0186555340282136,
+          "prep_rate": 0.0,
+          "seconds": 7.52916666666665,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "mudsnout": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.0843602242992286,
+          "max_hit_frac": 0.0458485098292721,
+          "party_lost": 0.0203277648913804,
+          "prep_rate": 0.0,
+          "seconds": 7.43333333333332,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "nightburrow": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.152681433670757,
+          "max_hit_frac": 0.055081995286903,
+          "party_lost": 0.0367907069086162,
+          "prep_rate": 0.0,
+          "seconds": 10.4833333333334,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "trailpup": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.094248459047793,
+          "max_hit_frac": 0.0504133368527458,
+          "party_lost": 0.0227104720597092,
+          "prep_rate": 0.0,
+          "seconds": 7.43333333333332,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        }
+      },
+      "prep_rate": 0.0,
+      "region": "band2_stone_and_root",
+      "row": "band2 wild (median L7)",
+      "seconds": 7.58539540816323,
+      "stall_rate": 0.0,
+      "team_level": 9,
+      "win_rate": 1.0
+    },
+    {
+      "faint_rate": 0.0,
+      "foe_level": 9,
+      "foe_levels": [
+        9,
+        9
+      ],
+      "heal_between_rounds": false,
+      "kind": "trainer_floor",
+      "lead_lost": 0.2128548961254,
+      "max_hit_frac": 0.0468061701162781,
+      "party_lost": 0.0512903364157591,
+      "prep_rate": 0.0,
+      "region": "band2_stone_and_root",
+      "row": "band2 floor: quarry_picket_dorn",
+      "seconds": 18.9527777777778,
+      "stall_rate": 0.0,
+      "team_level": 9,
+      "trainer": "quarry_picket_dorn",
+      "win_rate": 1.0
+    },
+    {
+      "faint_rate": 0.0,
+      "foe_level": 10,
+      "kind": "wild",
+      "lead_lost": 0.074020989115862,
+      "max_hit_frac": 0.0582076549163326,
+      "party_lost": 0.0178363829194848,
+      "per_species": {
+        "bramblebun": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.0737120988112329,
+          "max_hit_frac": 0.0401738654804268,
+          "party_lost": 0.017761951520779,
+          "prep_rate": 0.0,
+          "seconds": 7.43333333333332,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "brooktail": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.0783396768973484,
+          "max_hit_frac": 0.0426649621009495,
+          "party_lost": 0.0188770305776743,
+          "prep_rate": 0.0,
+          "seconds": 7.97638888888887,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "burrowback": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.109413250876606,
+          "max_hit_frac": 0.0399854638061497,
+          "party_lost": 0.0263646387654472,
+          "prep_rate": 0.0,
+          "seconds": 9.97291666666666,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "duskhush": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.0454939318230825,
+          "max_hit_frac": 0.0247472070276734,
+          "party_lost": 0.0109623932103813,
+          "prep_rate": 0.0,
+          "seconds": 7.40069444444443,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "galecrest": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.0757120689979034,
+          "max_hit_frac": 0.0419724966945804,
+          "party_lost": 0.0182438720476876,
+          "prep_rate": 0.0,
+          "seconds": 7.43333333333332,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "meadowhart": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.101478220424041,
+          "max_hit_frac": 0.0375335680752823,
+          "party_lost": 0.0244525832347086,
+          "prep_rate": 0.0,
+          "seconds": 8.99166666666665,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "mosshell": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.158714209850248,
+          "max_hit_frac": 0.0436037081780334,
+          "party_lost": 0.0382443879157224,
+          "prep_rate": 0.0,
+          "seconds": 13.5333333333335,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "mudsnout": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.0743844792335047,
+          "max_hit_frac": 0.0410530083837261,
+          "party_lost": 0.0179239708996397,
+          "prep_rate": 0.0,
+          "seconds": 7.75277777777776,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "paddlenewt": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.0966647866592989,
+          "max_hit_frac": 0.0530537251767065,
+          "party_lost": 0.0232927196769395,
+          "prep_rate": 0.0,
+          "seconds": 7.46527777777776,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "pipwing": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.0264195557423327,
+          "max_hit_frac": 0.0289614879507297,
+          "party_lost": 0.00636615801020065,
+          "prep_rate": 0.0,
+          "seconds": 4.83055555555555,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "reedwing": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.0750228020116369,
+          "max_hit_frac": 0.0399275298698323,
+          "party_lost": 0.0180777836172619,
+          "prep_rate": 0.0,
+          "seconds": 7.77361111111109,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "riftfrill": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.159721112693843,
+          "max_hit_frac": 0.0582076549163326,
+          "party_lost": 0.0384870151069502,
+          "prep_rate": 0.0,
+          "seconds": 10.0590277777778,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "stormtrail": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.111425324911427,
+          "max_hit_frac": 0.0412285448094236,
+          "party_lost": 0.0268494758822716,
+          "prep_rate": 0.0,
+          "seconds": 9.69374999999999,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "trailpup": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.0829549043023584,
+          "max_hit_frac": 0.0448976823785675,
+          "party_lost": 0.0199891335668333,
+          "prep_rate": 0.0,
+          "seconds": 7.49722222222221,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        }
+      },
+      "prep_rate": 0.0,
+      "region": "band3_the_river_lock",
+      "row": "band3 wild (median L10)",
+      "seconds": 7.6328590785908,
+      "stall_rate": 0.0,
+      "team_level": 12,
+      "win_rate": 1.0
+    },
+    {
+      "faint_rate": 0.0,
+      "foe_level": 8,
+      "foe_levels": [
+        8,
+        8
+      ],
+      "heal_between_rounds": false,
+      "kind": "trainer_floor",
+      "lead_lost": 0.142690093374641,
+      "max_hit_frac": 0.0389242635527775,
+      "party_lost": 0.034383155030034,
+      "prep_rate": 0.0,
+      "region": "band3_the_river_lock",
+      "row": "band3 floor: relay_picket_hess",
+      "seconds": 16.4666666666666,
+      "stall_rate": 0.0,
+      "team_level": 12,
+      "trainer": "relay_picket_hess",
+      "win_rate": 1.0
+    },
+    {
+      "faint_rate": 0.0,
+      "foe_level": 12,
+      "kind": "wild",
+      "lead_lost": 0.0678016036903208,
+      "max_hit_frac": 0.0407545453026181,
+      "party_lost": 0.0163377358289929,
+      "per_species": {
+        "burrowback": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.097761990411968,
+          "max_hit_frac": 0.0355644313608285,
+          "party_lost": 0.0235571061233658,
+          "prep_rate": 0.0,
+          "seconds": 10.4833333333334,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "duskhush": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.0396698021896563,
+          "max_hit_frac": 0.02200262607468,
+          "party_lost": 0.00955898847943523,
+          "prep_rate": 0.0,
+          "seconds": 7.43333333333332,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "galecrest": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.0683846502730352,
+          "max_hit_frac": 0.0374767867311603,
+          "party_lost": 0.0164782289814543,
+          "prep_rate": 0.0,
+          "seconds": 7.43333333333332,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "meadowhart": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.0909511929427471,
+          "max_hit_frac": 0.0335939841005772,
+          "party_lost": 0.021915950106686,
+          "prep_rate": 0.0,
+          "seconds": 9.57499999999999,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "mudsnout": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.0861834039057155,
+          "max_hit_frac": 0.0362865092341183,
+          "party_lost": 0.0207670852784856,
+          "prep_rate": 0.0,
+          "seconds": 8.51249999999998,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "pipwing": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.0232206686830982,
+          "max_hit_frac": 0.0257745466806418,
+          "party_lost": 0.00559534185134895,
+          "prep_rate": 0.0,
+          "seconds": 5.11805555555555,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "stormtrail": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.0989014961881345,
+          "max_hit_frac": 0.0367401466606567,
+          "party_lost": 0.0238316858284661,
+          "prep_rate": 0.0,
+          "seconds": 10.4833333333334,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "trailpup": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.080642148373037,
+          "max_hit_frac": 0.0407545453026181,
+          "party_lost": 0.0194318429814547,
+          "prep_rate": 0.0,
+          "seconds": 8.28333333333332,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        }
+      },
+      "prep_rate": 0.0,
+      "region": "band4_upper_meadows_ironwood",
+      "row": "band4 wild (median L12)",
+      "seconds": 7.8935185185185,
+      "stall_rate": 0.0,
+      "team_level": 15,
+      "win_rate": 1.0
+    },
+    {
+      "faint_rate": 0.0,
+      "foe_level": 13,
+      "foe_levels": [
+        13,
+        13
+      ],
+      "heal_between_rounds": false,
+      "kind": "trainer_floor",
+      "lead_lost": 0.201216282635065,
+      "max_hit_frac": 0.0370105020665892,
+      "party_lost": 0.048485851237365,
+      "prep_rate": 0.0,
+      "region": "band4_upper_meadows_ironwood",
+      "row": "band4 floor: pasture_drover_juno",
+      "seconds": 21.075,
+      "stall_rate": 0.0,
+      "team_level": 15,
+      "trainer": "pasture_drover_juno",
+      "win_rate": 1.0
+    },
+    {
+      "faint_rate": 0.0,
+      "foe_level": 15,
+      "kind": "wild",
+      "lead_lost": 0.0760368946367428,
+      "max_hit_frac": 0.0389403515611804,
+      "party_lost": 0.0183221432859621,
+      "per_species": {
+        "burrowback": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.100897212679683,
+          "max_hit_frac": 0.0340708896376827,
+          "party_lost": 0.0243125813685984,
+          "prep_rate": 0.0,
+          "seconds": 10.675,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "duskhush": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.0382005961853534,
+          "max_hit_frac": 0.0210502094856162,
+          "party_lost": 0.00920496293622972,
+          "prep_rate": 0.0,
+          "seconds": 7.43333333333332,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "galecrest": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.064784209288826,
+          "max_hit_frac": 0.0357721507834476,
+          "party_lost": 0.015610652840681,
+          "prep_rate": 0.0,
+          "seconds": 7.43333333333332,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "meadowhart": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.0876200815847649,
+          "max_hit_frac": 0.0321031275783451,
+          "party_lost": 0.0211132726710277,
+          "prep_rate": 0.0,
+          "seconds": 10.4833333333334,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "mudsnout": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.0956313624760211,
+          "max_hit_frac": 0.0349854603216246,
+          "party_lost": 0.0230437018014509,
+          "prep_rate": 0.0,
+          "seconds": 9.61666666666665,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "pipwing": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.0294290191566417,
+          "max_hit_frac": 0.0246632306337125,
+          "party_lost": 0.00709132991726305,
+          "prep_rate": 0.0,
+          "seconds": 5.79583333333332,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        },
+        "trailpup": {
+          "faint_rate": 0.0,
+          "lead_lost": 0.10726688976168,
+          "max_hit_frac": 0.0389403515611804,
+          "party_lost": 0.0258474433160674,
+          "prep_rate": 0.0,
+          "seconds": 9.30416666666665,
+          "stall_rate": 0.0,
+          "win_rate": 1.0
+        }
+      },
+      "prep_rate": 0.0,
+      "region": "band5_stronghold_approach",
+      "row": "band5 wild (median L15)",
+      "seconds": 8.76650641025642,
+      "stall_rate": 0.0,
+      "team_level": 17,
+      "win_rate": 1.0
+    },
+    {
+      "faint_rate": 0.0,
+      "foe_level": 15,
+      "foe_levels": [
+        15,
+        15
+      ],
+      "heal_between_rounds": false,
+      "kind": "trainer_floor",
+      "lead_lost": 0.136278795417073,
+      "max_hit_frac": 0.0341255921084865,
+      "party_lost": 0.0328382639559211,
+      "prep_rate": 0.0,
+      "region": "band5_stronghold_approach",
+      "row": "band5 floor: stronghold_outer_watch",
+      "seconds": 19.5611111111111,
+      "stall_rate": 0.0,
+      "team_level": 17,
+      "trainer": "stronghold_outer_watch",
+      "win_rate": 1.0
+    },
+    {
+      "faint_rate": 0.0,
+      "foe_level": 8,
+      "foe_levels": [
+        7,
+        8
+      ],
+      "heal_between_rounds": true,
+      "kind": "tournament",
+      "lead_lost": 0.215671669361753,
+      "max_hit_frac": 0.0604506242180637,
+      "party_lost": 0.0519690769546392,
+      "prep_rate": 0.0,
+      "region": "band1_lower_meadows",
+      "row": "tournament: quarter_mira",
+      "seconds": 16.8180555555555,
+      "stall_rate": 0.0,
+      "team_level": 5,
+      "trainer": "tournament_quarter_mira",
+      "win_rate": 1.0
+    },
+    {
+      "faint_rate": 0.0,
+      "foe_level": 9,
+      "foe_levels": [
+        9,
+        9
+      ],
+      "heal_between_rounds": true,
+      "kind": "tournament",
+      "lead_lost": 0.343349411516488,
+      "max_hit_frac": 0.0668831634830629,
+      "party_lost": 0.0827347979557801,
+      "prep_rate": 0.0,
+      "region": "band1_lower_meadows",
+      "row": "tournament: semi_tam",
+      "seconds": 22.3208333333336,
+      "stall_rate": 0.0,
+      "team_level": 5,
+      "trainer": "tournament_semi_tam",
+      "win_rate": 1.0
+    },
+    {
+      "faint_rate": 0.0,
+      "foe_level": 11,
+      "foe_levels": [
+        10,
+        10,
+        11
+      ],
+      "heal_between_rounds": true,
+      "kind": "tournament",
+      "lead_lost": 0.709339053265184,
+      "max_hit_frac": 0.0683367737583864,
+      "party_lost": 0.170925073075948,
+      "prep_rate": 0.75,
+      "region": "band1_lower_meadows",
+      "row": "tournament: final_oskar",
+      "seconds": 38.5722222222225,
+      "stall_rate": 0.0,
+      "team_level": 5,
+      "trainer": "tournament_final_oskar",
+      "win_rate": 1.0
+    },
+    {
+      "faint_rate": 0.0,
+      "foe_level": 19,
+      "foe_levels": [
+        18,
+        19,
+        19
+      ],
+      "heal_between_rounds": false,
+      "kind": "hall",
+      "lead_lost": 0.455887128877258,
+      "max_hit_frac": 0.0545165616875658,
+      "party_lost": 0.109852320211388,
+      "prep_rate": 0.0,
+      "region": "band5_stronghold_approach",
+      "row": "hall: stronghold_elite",
+      "seconds": 44.2965277777782,
+      "stall_rate": 0.0,
+      "team_level": 19,
+      "trainer": "stronghold_elite",
+      "win_rate": 1.0
+    },
+    {
+      "faint_rate": 0.0,
+      "foe_level": 20,
+      "foe_levels": [
+        18,
+        18,
+        19,
+        19,
+        20
+      ],
+      "heal_between_rounds": false,
+      "kind": "hall",
+      "lead_lost": 0.712626270605093,
+      "max_hit_frac": 0.0804868815403502,
+      "party_lost": 0.171717173639782,
+      "prep_rate": 0.5,
+      "region": "band5_stronghold_approach",
+      "row": "hall: warden_aldis",
+      "seconds": 61.697916666667,
+      "stall_rate": 0.0,
+      "team_level": 19,
+      "trainer": "warden_aldis",
+      "win_rate": 1.0
+    }
+  ],
+  "seeds": 24
+}

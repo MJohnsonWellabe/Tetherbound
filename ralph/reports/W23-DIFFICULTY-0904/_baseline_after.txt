@@ -1,0 +1,51 @@
+== combat baseline: 24 seeds per row, pilot = attack on cooldown, dodge nothing, no items ==
+   party: terrapup, bramblebun, mudsnout, pipwing, trailpup
+row                                 team   foe |    win    sec  lead% party%  faint   prep maxhit
+                                     lvl   lvl |   rate   mean   lost   lost   rate   rate   frac
+-------------------------------------------------------------------------------------------------------
+band1 wild (median L4)                 3     4 |   100%    6.5    21%     5%     0%     0%   0.13
+band1 floor: trainer_mira              3     4 |   100%    7.0    29%     7%     0%     0%   0.13
+  practice_trainer                     3     3 |   100%   13.7    47%    11%     0%     0%   0.13
+  trainer_oskar                        3     7 |   100%   23.6   100%    28%   100%   100%   0.22
+  trainer_tam                          3     6 |   100%   13.4    47%    11%     0%     0%   0.14
+  south_bridge_grunt                   3    12 |   100%   22.8   100%    29%   100%   100%   0.21
+  tournament_quarter_mira              3     8 |   100%   17.4    83%    20%     0%   100%   0.15
+  tournament_semi_tam                  3     9 |   100%   22.6   100%    28%   100%   100%   0.23
+  tournament_final_oskar               3    11 |   100%   38.3   100%    53%   100%   100%   0.24
+  old_champion_bram                    3     7 |   100%   16.7    74%    18%     0%   100%   0.14
+  shepherd_the_rise                    3     4 |   100%   15.3    68%    16%     0%    54%   0.15
+  wanderer_trail_camp                  3     7 |   100%   13.5    48%    12%     0%     0%   0.14
+band2 wild (median L7)                 9     7 |   100%    7.6    18%     4%     0%     0%   0.09
+band2 floor: quarry_picket_dorn        9     9 |   100%   19.1    62%    15%     0%     0%   0.10
+  warrens_watch_pell                   9    11 |   100%   25.9    75%    18%     0%    96%   0.10
+  band2_outrider_kest                  9    12 |   100%   19.5    55%    13%     0%     0%   0.10
+  night_watch_farro                    9    13 |   100%   18.0    59%    14%     0%     0%   0.12
+band3 wild (median L10)               12    10 |   100%    7.6    16%     4%     0%     0%   0.09
+band3 floor: relay_picket_hess        12     8 |   100%   16.5    44%    11%     0%     0%   0.08
+  relay_picket_orrin                  12     9 |   100%   15.6    35%     8%     0%     0%   0.08
+  relay_officer_dell                  12    10 |   100%   32.9    97%    24%    33%   100%   0.10
+  relay_captain                       12    12 |   100%   28.6    76%    18%     0%   100%   0.11
+  captain_riverwatch                  12    15 |   100%   38.2   100%    30%   100%   100%   0.14
+band4 wild (median L13)               15    13 |   100%    8.2    15%     4%     0%     0%   0.07
+band4 floor: pasture_drover_juno      15    13 |   100%   21.0    56%    13%     0%     0%   0.08
+  captain_field                       15    15 |   100%   32.0    72%    17%     0%    83%   0.09
+  captain_ridge                       15    16 |   100%   27.4    55%    13%     0%     0%   0.09
+  patrol_ridgeline                    15    14 |   100%   19.5    49%    12%     0%     0%   0.08
+  lost_creature_rue                   15    15 |   100%   21.8    60%    15%     0%     0%   0.09
+band5 wild (median L15)               17    15 |   100%    8.8    16%     4%     0%     0%   0.06
+band5 floor: stronghold_outer_watc    17    15 |   100%   19.5    38%     9%     0%     0%   0.07
+  stronghold_patrol                   17    16 |   100%   22.5    62%    15%     0%     0%   0.08
+  stronghold_courtyard                17    17 |   100%   41.0   100%    25%   100%   100%   0.11
+  stronghold_elite                    17    19 |   100%   47.1   100%    26%   100%   100%   0.14
+  warden_aldis                        17    20 |   100%   62.4   100%    36%   100%   100%   0.19
+  stronghold_checkpoint               17    16 |   100%   37.0    74%    18%     0%   100%   0.05
+tournament: quarter_mira               5     8 |   100%   16.8    68%    16%     0%    12%   0.13
+tournament: semi_tam                   5     9 |   100%   21.5    97%    23%    50%   100%   0.14
+tournament: final_oskar                5    11 |   100%   37.6   100%    45%   100%   100%   0.20
+hall: stronghold_elite                19    19 |   100%   46.5    98%    24%    42%   100%   0.09
+hall: warden_aldis                    19    20 |   100%   61.3   100%    31%   100%   100%   0.18
+-------------------------------------------------------------------------------------------------------
+   41 rows in 4.8s wall clock
+   faint = at least one party member knocked out; prep = a potion or a revive would be needed after (lead under 30% or fainted)
+wrote ralph/reports/W23-DIFFICULTY-0904/_baseline_after.json
+smoke_combat_baseline: OK (41 rows, 24 seeds each)

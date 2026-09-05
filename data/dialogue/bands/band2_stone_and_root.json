@@ -3,7 +3,7 @@
   "conversations": {
     "quarry_dorn_challenge": {
       "speaker": "Dorn",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/grunt_b.png",
       "lines": [
         "Seams are company ground. Have been since before your village had an opinion about it.",
         "You want stone out of them, you're a problem I'm paid to have. Let's get it over with."
@@ -11,7 +11,7 @@
     },
     "quarry_dorn_defeated": {
       "speaker": "Dorn",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/grunt_b.png",
       "lines": [
         "Take your stone. It's not the stone anyone up the line actually cares about.",
         "And don't thank me. I'd have stopped you if I could have."
@@ -19,7 +19,7 @@
     },
     "warrens_pell_challenge": {
       "speaker": "Pell",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/grunt_c.png",
       "lines": [
         "That hole behind me is ours. We cut it, we hold it, and nobody local goes down it.",
         "Dorn let you past. Dorn's soft. I'd back my three against your whole string."
@@ -27,7 +27,7 @@
     },
     "warrens_pell_defeated": {
       "speaker": "Pell",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/grunt_c.png",
       "lines": [
         "Fine. Go down. You'll last about as long as the last one who did.",
         "Something's been living in there since long before we started digging, and it doesn't care whose badge you're not wearing.",
@@ -36,7 +36,7 @@
     },
     "band2_kest_challenge": {
       "speaker": "Kest",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/grunt_a.png",
       "lines": [
         "You cleared the warrens and kept walking. Most don't.",
         "Doesn't matter to me why. You're still on the wrong side of this road."
@@ -44,7 +44,7 @@
     },
     "band2_kest_defeated": {
       "speaker": "Kest",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/grunt_a.png",
       "lines": [
         "Go on, then. Not like I'm the last one you'll run into between here and the river.",
         "Tell whoever's paying you attention that the seams don't end at the warrens door."
@@ -52,7 +52,7 @@
     },
     "night_watch_farro_challenge": {
       "speaker": "Tether Grunt",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/grunt.png",
       "_comment": "T3-ACTIVITIES, spec sec6's 'Night Watch: investigate nighttime activity and introduce Duskhush'. Old Bram's own shape reused rather than a separate giver NPC: the first line is the flag `revealed_by` waits on (a player who has not walked up on him at night has not found the activity yet, same as Old Bram staying out of the log until met), and the fight itself is the introduction -- his team is the flavour text. CI-TRAINER-CENSUS, 2026-08-30: speaker/`name` moved from 'Farro' to 'Tether Grunt' (band2_stone_and_root/trainers.json's own `_comment_ci_trainer_census`); the dialogue keeps its own voice unchanged.",
       "lines": [
         {
@@ -68,7 +68,7 @@
     },
     "night_watch_farro_defeated": {
       "speaker": "Tether Grunt",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/grunt.png",
       "lines": [
         "Fine. FINE. Not like the readings were any good with you standing in them anyway.",
         "The gear's rigged to run after dark because Duskhush roost thick through here and daylight traffic kept scattering them before the instruments finished. That's the whole secret you just fought me for.",

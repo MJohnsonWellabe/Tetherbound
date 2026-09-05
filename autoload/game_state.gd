@@ -28,6 +28,7 @@ const CREATURE_CONDITION := preload("res://scripts/creatures/creature_condition.
 ## OWNER-0901-BOND-MILESTONES: distance/landmark/rest-night crediting for the
 ## bond ladder's "travelling"/"visiting"/"resting" tasks.
 const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
+const PROGRESSION_FEED := preload("res://scripts/creatures/progression_feed.gd")
 
 const ITEM_DB := preload("res://autoload/item_db.gd")
 const INVENTORY := preload("res://autoload/inventory.gd")
@@ -489,6 +490,7 @@ func reset_for_new_game() -> void:
 	day = 1
 	pending_build = ""
 	_pending_world_message = ""
+	PROGRESSION_FEED.clear()
 	pending_catch = null
 	placed_buildings = []
 	farm_plots = []
@@ -757,6 +759,33 @@ func take_pending_world_message() -> String:
 	var text := _pending_world_message
 	_pending_world_message = ""
 	return text
+
+
+# --- the progression feed (PROGRESSION-VISIBLE, prompt 73, D76) ---------------
+##
+## The same queue-plus-revision shape as the world message above, for every
+## progression change: XP, levels, bond credits, bond milestones. The storage
+## is `scripts/creatures/progression_feed.gd`'s static log, because the
+## producers are RefCounted creatures with no tree to reach this autoload
+## through -- these are the `Game`-shaped handles for anything that already
+## talks to `Game`. Presenters poll `progression_feed_revision()` and read
+## `peek_progression_events(seq)` past their own cursor; nothing in
+## production takes (drains) the log, so several readers share it.
+
+func push_progression_event(kind: String, creature: RefCounted, payload: Dictionary = {}) -> Dictionary:
+	return PROGRESSION_FEED.push(kind, creature, payload)
+
+
+func progression_feed_revision() -> int:
+	return PROGRESSION_FEED.revision()
+
+
+func peek_progression_events(after_seq: int) -> Array:
+	return PROGRESSION_FEED.peek_since(after_seq)
+
+
+func take_progression_events() -> Array:
+	return PROGRESSION_FEED.drain()
 
 
 # --- creature-bed recovery (Gate A) -----------------------------------------

@@ -23,6 +23,7 @@ const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 ## OWNER-0901-BOND-MILESTONES. Bond as an ordered ladder of concrete tasks
 ## instead of a bare 0-100 meter -- see bond_milestones.gd's own header.
 const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
+const FEED := preload("res://scripts/creatures/progression_feed.gd")
 
 var species_id: String = ""
 var display_name: String = ""
@@ -531,9 +532,16 @@ func set_level(new_level: int, cfg: Dictionary) -> void:
 	hp = max_hp
 
 
+## PROGRESSION-VISIBLE (prompt 73, D76): this is the single place XP arrives
+## and levels change through play, so it is the single place the progression
+## feed hears about either. Every awarder (victory, trainer bonus, Warrens
+## bonus, rest bonus) reaches the feed through here without being edited;
+## a multi-level jump pushes ONE `level_up` with `levels_gained > 1`.
 func gain_xp(amount: int, cfg: Dictionary) -> int:
 	if amount <= 0:
 		return 0
+	var old_level := level
+	var before := _stat_snapshot()
 	xp += amount
 
 	var cap := int(cfg.get("level", {}).get("cap", level))
@@ -543,7 +551,82 @@ func gain_xp(amount: int, cfg: Dictionary) -> int:
 		level += 1
 		levels_gained += 1
 		_apply_level_stats(cfg)
+	FEED.push("xp_gained", self, {
+		"amount": amount, "xp": xp, "xp_to_next": xp_to_next(cfg), "level": level,
+	})
+	if levels_gained > 0:
+		_announce_level_up(old_level, before, cfg, "xp")
 	return levels_gained
+
+
+## Gain whole levels directly -- the candy path (addendum §B). Clamped to the
+## configured cap; returns how many levels were actually gained so a caller
+## can say "+1 of +3, level cap" instead of silently spending the item. Kept
+## apart from `set_level()` on purpose: that one is the spawn/story jump
+## (refills hp, zeroes xp, announces nothing), this one is a real level-up
+## the player caused -- it keeps the hp FRACTION and the xp already banked
+## toward the next level, exactly like `gain_xp`'s own loop, and it speaks
+## through the same `level_up` event so candy and combat share one feedback
+## language.
+func gain_levels(count: int, cfg: Dictionary) -> int:
+	if count <= 0:
+		return 0
+	var cap := int(cfg.get("level", {}).get("cap", 50))
+	var old_level := level
+	var target := clampi(level + count, 1, cap)
+	var gained := target - old_level
+	if gained <= 0:
+		return 0
+	var before := _stat_snapshot()
+	level = target
+	_apply_level_stats(cfg)
+	_announce_level_up(old_level, before, cfg, "candy")
+	return gained
+
+
+func _stat_snapshot() -> Dictionary:
+	return {"max_hp": max_hp, "attack": attack, "defence": defence}
+
+
+## The one `level_up` event a level change produces, with WHAT CHANGED in
+## it: stat deltas, whether the second trait is revealed, and where the
+## creature stands against its evolution gate. `trait_unlocked` reads the
+## real gate (`revealed_trait_secondary`), so it is only ever true when
+## there is a second trait to show. Evolution is read off progression.json's
+## own `evolution` block: `evolution_level_reached` when this jump crossed
+## the level requirement, `evolution_ready` when level AND bond are both met
+## (the heartstone is inventory state, not the creature's, and is left to
+## the Team screen's own evolve check).
+func _announce_level_up(old_level: int, before: Dictionary, cfg: Dictionary, source: String) -> void:
+	var req: Dictionary = cfg.get("evolution", {}).get(species_id, {})
+	var level_needed := int(req.get("level", 0))
+	var level_reached := level_needed > 0 and old_level < level_needed and level >= level_needed
+	var nodes := bond_nodes(cfg)
+	var ready := level_needed > 0 and level >= level_needed \
+			and nodes >= int(req.get("bond_tier", 0))
+	FEED.push("level_up", self, {
+		"old_level": old_level,
+		"new_level": level,
+		"levels_gained": level - old_level,
+		"hp_delta": max_hp - float(before.get("max_hp", max_hp)),
+		"attack_delta": attack - float(before.get("attack", attack)),
+		"defence_delta": defence - float(before.get("defence", defence)),
+		"trait_unlocked": revealed_trait_secondary(cfg) != "",
+		"evolution_ready": ready,
+		"evolution_level_reached": level_reached,
+		"xp": xp,
+		"xp_to_next": xp_to_next(cfg),
+		"source": source,
+	})
+
+
+## Bond's "fighting together" task, credited by `combat_manager.gd`'s victory
+## loop for every member that fought. Routed through
+## `bond_milestones.credit()` so the win ticks the feed like every other
+## bond action; a method here rather than a preload in combat_manager.gd so
+## that file's diff stays one line.
+func credit_battle_fought() -> void:
+	BOND_MILESTONES.credit_battle(self)
 
 
 ## --- evolution (R4.6) --------------------------------------------------------

@@ -8,7 +8,7 @@
   "conversations": {
     "trainer_no_usable_creature": {
       "speaker": "Trainer",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/villager_male.png",
       "lines": [
         "Your creature can't fight like this. Get it back on its feet first — a bed will do it, or something to revive it on the spot.",
         "Come find me again once you've got something to send out."
@@ -16,7 +16,7 @@
     },
     "trainer_no_ally_deployed": {
       "speaker": "Trainer",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/villager_male.png",
       "lines": [
         "You haven't got anything out. Call one of your team out first.",
         "Come find me again once you've got something to send out."
@@ -24,7 +24,7 @@
     },
     "trainer_practice_challenge": {
       "speaker": "Bryn",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/bryn.png",
       "lines": [
         "You've got one at your heel and no idea what it can do yet. That's the same place everyone starts.",
         "Two of mine, one at a time. Beat them both and you'll know something you can't be told."
@@ -32,7 +32,7 @@
     },
     "trainer_practice_defeated": {
       "speaker": "Bryn",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/bryn.png",
       "lines": [
         "Both of them, and you barely stopped to think about it. Good.",
         "I've nothing left to teach you out here. Try the folk down by the square — they don't go easy."
@@ -40,7 +40,7 @@
     },
     "relay_hess_challenge": {
       "speaker": "Hess",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/grunt_b.png",
       "lines": [
         "Road's closed past this post. It's been closed since before you could walk it, and there's a reason for that.",
         "You want through, you go through me first. That's procedure, not a grudge."
@@ -48,7 +48,7 @@
     },
     "relay_hess_defeated": {
       "speaker": "Hess",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/grunt_b.png",
       "lines": [
         "Logged and reported. That's all I can do from a picket.",
         "Go on up if you're going. You'll find people up there who outrank my opinion of you."
@@ -56,7 +56,7 @@
     },
     "relay_orrin_challenge": {
       "speaker": "Orrin",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/grunt_c.png",
       "lines": [
         "Hess radioed. Second post, same answer — I'd rather turn you round than write you up.",
         "You people always think a closed road is somebody being unkind. It isn't. Stand ready."
@@ -64,7 +64,7 @@
     },
     "relay_orrin_defeated": {
       "speaker": "Orrin",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/grunt_c.png",
       "lines": [
         "Fair. I'll not pretend otherwise.",
         "Whatever you think you'll find at the top of this road — it's work, that's all. It's just work."
@@ -72,7 +72,7 @@
     },
     "relay_dell_challenge": {
       "speaker": "Officer Dell",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/officer_a.png",
       "lines": [
         "Two pickets down and you walked up the service road like it was market day. Impressive. Also unacceptable.",
         "I run this station's duty roster, not its policy. But I do keep its perimeter. Three of mine."
@@ -80,7 +80,7 @@
     },
     "relay_dell_defeated": {
       "speaker": "Officer Dell",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/officer_a.png",
       "lines": [
         "Beaten cleanly, at my own post. I'll not dress that up in the log.",
         "The Captain's at the console. Say what you like to him — he's better at this part than I am."
@@ -88,7 +88,7 @@
     },
     "relay_captain_challenge": {
       "speaker": "Captain Vance",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/captain_a.png",
       "lines": [
         "This station is necessary, and it stays.",
         "Every road you found closed, we closed on purpose. Your village is safer for it.",
@@ -97,7 +97,7 @@
     },
     "relay_captain_defeated_greeting": {
       "speaker": "Captain Vance",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/captain_a.png",
       "lines": [
         "Station's yours. I won't stop you, and I won't apologise.",
         "Take our prisoner too. They only ever asked questions.",
@@ -106,7 +106,7 @@
     },
     "stronghold_patrol_challenge": {
       "speaker": "Patrolman Verrick",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/grunt.png",
       "lines": [
         "Nobody walks the works. That's the whole of my orders.",
         "Turn round or take the fight. It's a long way in, and it only gets worse."
@@ -114,7 +114,7 @@
     },
     "stronghold_patrol_defeated": {
       "speaker": "Patrolman Verrick",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/grunt.png",
       "lines": [
         "Fine. You're better than the orders account for.",
         "Three of us stand between here and the Warden, and none of us fields less than the last. Bring your whole five, not just your best.",
@@ -123,7 +123,7 @@
     },
     "stronghold_courtyard_challenge": {
       "speaker": "Warder Solene",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/officer.png",
       "lines": [
         "You saw what we pulled out of the quarry. You saw the lines going in. And you came anyway.",
         "Three of mine. If you don't have three worth sending out, this is where you find that out."
@@ -131,7 +131,7 @@
     },
     "stronghold_courtyard_defeated": {
       "speaker": "Warder Solene",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/officer.png",
       "lines": [
         "Three, and you didn't lose one. All right.",
         "Keeper Hald holds the shutter into the chamber approach. He won't talk to you the way I did."
@@ -139,7 +139,7 @@
     },
     "stronghold_elite_challenge": {
       "speaker": "Keeper Hald",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/captain.png",
       "lines": [
         "The shutter behind me stays down while I'm standing. That isn't a threat, it's the wiring.",
         "The Warden doesn't want you dead. He wants you to understand. I'd rather you didn't get the chance."
@@ -147,7 +147,7 @@
     },
     "stronghold_elite_defeated": {
       "speaker": "Keeper Hald",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/captain.png",
       "lines": [
         "It's open. I can't hold it shut from the floor.",
         "Rest your five first. He fields more than I do, and he'll wait -- he always thinks people will listen if he waits."
@@ -155,7 +155,7 @@
     },
     "captain_field_challenge": {
       "speaker": "Captain Halder",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/captain_a.png",
       "lines": [
         "Far as the pasture, no further. Eleven years I've held this posting.",
         "No trick to this ground, and none to mine. Whoever's strongest walks off it.",
@@ -164,7 +164,7 @@
     },
     "captain_field_defeated": {
       "speaker": "Captain Halder",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/captain_a.png",
       "lines": [
         "Clean. No arguing with clean.",
         "Take it — that's the rule and I'd not be worth the badge if I bent it.",
@@ -173,7 +173,7 @@
     },
     "captain_ridge_challenge": {
       "speaker": "Captain Vess",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/captain_b.png",
       "lines": [
         "Careful. This crosswind's taken better-footed than you off it.",
         "They call the ridge line cruel. Up here, a wall's the kindest thing we've built.",
@@ -182,7 +182,7 @@
     },
     "captain_ridge_defeated": {
       "speaker": "Captain Vess",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/captain_b.png",
       "lines": [
         "You read the gusts. Most don't bother.",
         "The Ridge Sigil, then. I'd sooner it went to someone who watches the sky.",
@@ -191,7 +191,7 @@
     },
     "captain_riverwatch_challenge": {
       "speaker": "Captain Oreth",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/captain_b.png",
       "lines": [
         "Riverwatch. We keep the low ground — where everything ends up.",
         "You'll think the barriers are wrong. Stand a season in this draw and you'll thank whoever set them.",
@@ -200,7 +200,7 @@
     },
     "captain_riverwatch_defeated": {
       "speaker": "Captain Oreth",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/captain_b.png",
       "lines": [
         "A plan, then. Good.",
         "One more sigil. The Hall approach reads all three or none — no bargaining with a lock.",
@@ -209,7 +209,7 @@
     },
     "patrol_ridgeline_challenge": {
       "speaker": "Tether Patrol",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/grunt_b.png",
       "lines": [
         "Ridge road's not on the closed list, but that doesn't mean you're waved through.",
         "Halder and Vess get the paperwork. I get the ones who wander off it."
@@ -217,7 +217,7 @@
     },
     "patrol_ridgeline_defeated": {
       "speaker": "Tether Patrol",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/grunt_b.png",
       "lines": [
         "Fine. You're not the one I was posted to stop anyway.",
         "Watch the ruin overhead — something's denned in it that isn't ours."
@@ -225,7 +225,7 @@
     },
     "pasture_drover_juno_challenge": {
       "speaker": "Juno",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/juno.png",
       "lines": [
         "Everyone who comes up this road is walking toward Halder whether they know it or not.",
         "Beat mine first. Cheaper lesson than his."
@@ -233,7 +233,7 @@
     },
     "pasture_drover_juno_defeated": {
       "speaker": "Juno",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/juno.png",
       "lines": [
         "Good. You'll want that against a Captain, not just against me.",
         "Field's just up the road. Go find out if it was enough."

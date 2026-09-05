@@ -149,6 +149,29 @@ continuous scene (`scenes/world/meadows_playground.tscn`, root script
 - Tests: not itemized individually in the inventory pass beyond save-format
   coverage of bond milestones — not yet documented.
 
+## Companion presence (the deployed creature's reactions)
+
+- Rule: D83 — companion reactions are procedural over the model pivot and
+  yield to everything; addendum section E / owner directive C section 5.
+- Scripts: `scripts/creatures/companion_presence.gd` (the layer),
+  `scripts/creatures/follower_creature.gd` (builds and ticks it, and reads
+  `gait_scale()`), `scripts/creatures/creature_animator.gd::play_if_exists`.
+- Data: `data/config/companion_presence.json` — every threshold, cooldown,
+  distance and amplitude, including the bond scaling block.
+- Hooks: one call at `combat_manager.gd::_begin_resolve("won")` (the result
+  beat) and one per care branch in `scripts/ui/tab_backpack.gd`
+  (feed/heal/revive), both through `get_tree().call_group()` on
+  `companion_presence`. A future progression feed calls
+  `on_event("bond_milestone")`; until it exists the layer polls
+  `bond_nodes()`.
+- Camp sources: anything whose script is `campfire_glow.gd`,
+  `creature_bed.gd` or `player_bed.gd`, plus anything in the
+  `companion_camp` group (the opt-in seam for new camp furniture).
+- Tests: `tests/test_companion_presence.gd` (26 tests) over a real rigged
+  follower body; frames and the blind verdict in
+  `ralph/reports/W12-COMPANION-0904/`, capture tool
+  `tools/_capture_companion_moments.gd`.
+
 ## Satiety
 
 - Rule: CLAUDE.md hard rule — light satiety only, slow drain, food

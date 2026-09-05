@@ -26,6 +26,9 @@ const CATCH := preload("res://scripts/combat/catch_math.gd")
 const THROW_AIM := preload("res://scripts/combat/throw_aim.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const FLASH := preload("res://scripts/combat/impact_flash.gd")
+## W09-VFX (CL-A2): the hit spark, body flash, KO puff, catch sparkle and
+## level-up flourish. One door; see scripts/vfx/combat_vfx.gd.
+const VFX := preload("res://scripts/vfx/combat_vfx.gd")
 const TELEGRAPH_GLOW := preload("res://scripts/combat/telegraph_glow.gd")
 const TARGET_MARKER := preload("res://scripts/combat/target_marker.gd")
 ## A ranged move's visible travel. Presentation only -- the hit is still
@@ -854,6 +857,8 @@ func _resolve_player_strike() -> void:
 		_moves.power(move_id), type_mult
 	)
 	var killed: bool = _enemy.take_damage(damage)
+	# W09-VFX: damage over the bar, so the spark can be sized to the blow.
+	var hit_fraction: float = damage / maxf(1.0, float(_enemy.max_hp))
 	_wild.call("add_impulse", facing, float(_pending_move.get("lunge", 3.6)) * 0.4)
 	_wild.call("play_faint" if killed else "play_hit")
 	# Ranged moves draw their travel, and the impact waits for it to land. A
@@ -880,9 +885,9 @@ func _resolve_player_strike() -> void:
 	var shot := PROJECTILE.launch(host, muzzle, target, vfx)
 	if shot != null:
 		var landing: Vector3 = target
-		shot.connect("arrived", func() -> void: _flash_at(landing, not is_quick, tint))
+		shot.connect("arrived", func() -> void: _flash_at(landing, not is_quick, tint, _wild, hit_fraction))
 	else:
-		_flash_at(_wild.call("centre"), not is_quick, tint)
+		_flash_at(_wild.call("centre"), not is_quick, tint, _wild, hit_fraction)
 
 	# Energy is earned by CONNECTING, not by pressing. That is what makes
 	# positioning matter to the charged attack rather than only to survival.
@@ -924,7 +929,7 @@ func _award_victory() -> void:
 		# Prompt 67's history, recorded where the facts already are. This loop
 		# already skips a fainted member ("it did not fight"), so the same rule
 		# decides what counts as a battle fought -- one definition, one place.
-		member.set("battles_fought", int(member.get("battles_fought")) + 1)
+		member.credit_battle_fought()  # battles_fought += 1 via bond_milestones.credit(), which ticks the feed
 		if levels_gained > 0:
 			member.set("levels_gained_with_you",
 				int(member.get("levels_gained_with_you")) + levels_gained)
@@ -1209,7 +1214,9 @@ func _on_enemy_strike() -> void:
 	var killed: bool = creature.take_damage(damage)
 	_ally_body.call("add_impulse", facing, float(cfg.get("lunge", 3.4)) * 0.4)
 	_ally_body.call("play_faint" if killed else "play_hit")
-	_flash_at(_ally_body.call("centre"), false)
+	# W09-VFX: the foe's blow carries its own element's hue, sized to the bite it took.
+	_flash_at(_ally_body.call("centre"), false, VFX.tint_for_type(_moves.type_of(_enemy.move_quick)),
+		_ally_body, damage / maxf(1.0, float(creature.max_hp)))
 
 	hit_effectiveness.emit(false, TYPE_CHART.classify(type_mult))
 	hit_landed.emit(false, damage)
@@ -1263,18 +1270,24 @@ func _handle_active_faint() -> void:
 ## you. Before this the only per-move visual difference in the entire game was
 ## a three-colour hairline on a HUD button, so a Water creature and an Air
 ## creature landing a blow produced the identical orange ring.
-func _flash_at(where: Vector3, charged: bool, tint: Variant = null) -> void:
-	var cfg: Dictionary = MATH.config().get("impact", {})
-	if not bool(cfg.get("enabled", true)):
-		return
-	var key := "charged" if charged else "quick"
-	var spec: Dictionary = cfg.get(key, {})
+## W09-VFX (CL-A2): `struck` is the body the blow landed on and
+## `damage_fraction` the damage over its max HP. Both damage sites pass them,
+## and this is the ONE place the spark, the body flash and -- when the blow
+## emptied the bar -- the KO puff are fired from; `combat_vfx.gd` reads the
+## struck instance's `fainted` flag here rather than needing a hook of its own.
+func _flash_at(where: Vector3, charged: bool, tint: Variant = null, struck: Node3D = null, damage_fraction: float = 0.0) -> void:
 	# Parented into the WORLD, not to this manager. CombatManager is a plain
 	# Node, and a Node3D hung under one is outside the 3D transform chain: the
 	# burst was created correctly twelve times in a row and rendered none of
 	# them. The arena is a Node3D that already exists for exactly the length of
 	# the fight, so it also cleans these up on its way out.
 	var host: Node = _arena if _arena != null else _player.get_parent()
+	VFX.hit(host, where, tint, charged, struck, damage_fraction)
+	var cfg: Dictionary = MATH.config().get("impact", {})
+	if not bool(cfg.get("enabled", true)):
+		return
+	var key := "charged" if charged else "quick"
+	var spec: Dictionary = cfg.get(key, {})
 	# The move's elemental hue when it has one, warmed halfway toward the
 	# config's own impact colour so a hit still reads as a HIT rather than as a
 	# coloured light -- the brightness of the burst is what sells contact, and a
@@ -1469,6 +1482,8 @@ func _finish_catch() -> void:
 			if orb.has_method("seal"):
 				orb.call("seal")
 			_catch_flash("caught", orb.global_position)
+			# W09-VFX: the seal is a reward, not only a verdict.
+			VFX.catch_success(_arena if _arena != null else _player.get_parent(), orb.global_position)
 		catch_resolved.emit(true, _catch_index)
 		_begin_resolve(OUTCOME_CAUGHT)
 		return
@@ -1539,6 +1554,14 @@ func _begin_resolve(outcome: String) -> void:
 		return
 	_outcome = outcome
 	state = State.RESOLVING
+	# W12-COMPANION-0904. The result beat: the fight is decided and nothing is
+	# piloting the ally body any more, but the arena still stands and the
+	# creature is still where it won. `companion_presence.gd`'s guard lets its
+	# victory reaction (and only that one) run during this pause -- celebrating
+	# after `_finish()` would mean celebrating back beside the trainer with the
+	# fight already gone.
+	if outcome == "won":
+		get_tree().call_group(&"companion_presence", "on_event", "victory")
 	var flow: Dictionary = MATH.config().get("flow", {})
 	_resolve_timer = float(flow.get("run_delay", 0.5)) if outcome == "fled" \
 		else float(flow.get("faint_pause", 1.6))
