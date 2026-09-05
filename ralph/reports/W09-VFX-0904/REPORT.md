@@ -1,10 +1,11 @@
 # W09-VFX — combat and reward VFX (CL-A2) — lane report
 
 Branch: `ralph/W09-VFX-0904`, from `origin/main` at `ef16544f`.
-**Last code commit: `75a0241b`** (round-3 fixes). Everything after it is this report and its
-evidence; the head of the branch when this line was written is `663f9271`, and the commit that
-adds the line is its child, so the branch head is one commit ahead of any hash quotable here.
-Verify with `git log --oneline origin/main..ralph/W09-VFX-0904`.
+**Last code commit: `75a0241b`** (round-3 fixes). Everything after it is evidence and this
+report, landing as one commit per addition so each is individually reviewable. **This report's
+own commit is necessarily one past whatever hash is written here** (writing a hash into a file
+cannot name the commit that saves the edit); run `git log --oneline -1 origin/ralph/W09-VFX-0904`
+for the true head. At the time this line was written that head was `4dbb3855`.
 
 ## What the player sees
 
@@ -60,13 +61,27 @@ which was free on every creature mesh.
 | `godot --headless --path . --script tests/smoke_boss.gd` | rc=0 |
 | `godot --headless --path . --script tests/smoke_trainer_battle.gd` | `trainer battle: OK`, rc=0 |
 | `godot --headless --path . --script tests/smoke_catching.gd` | `catching: OK`, rc=0 |
-| `godot --headless --path . --script tests/smoke_combat_camera.gd` | rc=0 |
+| `godot --headless --path . --script tests/smoke_combat_camera.gd` (after round 3, first run) | **rc=1**, one attempt: "the second production encounter would not start" |
+| same command, immediate re-run, no code changed | rc=0 |
 
-`ERROR:` set across the five smokes: only `ERROR: Parameter "material" is null` from
+`ERROR:` set across every smoke run, both the mid-session pass and the final re-run against
+`663f9271`: only `ERROR: Parameter "material" is null` from
 `creature_body.gd::_build_model ← apply_size_multiplier ← encounter_director._make_alpha`
-at world boot (2, 0, 1, 2, 1 occurrences) — the known-benign alpha-resize line
+at world boot (1–3 occurrences each run) — the known-benign alpha-resize line
 `docs/AGENT_WORKFLOW.md` §6 documents as count-unstable; it fires before any fight and
 before any VFX node exists. No `SCRIPT ERROR`. The distinct set did not grow.
+
+**`smoke_combat_camera`'s one red run is the harness, not this lane.** That smoke presses no
+attack button at all — it drives the camera rig through engage/switch/aim/flee/re-engage —
+so none of `combat_manager.gd`'s five VFX hooks execute during it; nothing this lane touches
+runs in that test. It failed once, on `_prove_a_second_entry_exit_cycle`'s re-engage of the
+same wild creature after a flee ("the second production encounter would not start"), with the
+same benign error set as every green run. An immediate re-run of the identical command against
+the identical commit passed (rc=0). The docs already name this class of defect —
+`docs/CURRENT_STATE.md` §4 and `AGENT_WORKFLOW.md` both carry harness re-engage/timing races
+that are not this lane's to fix — and this run is filed as one more instance, not chased
+further, since a second run of the same binary cannot itself be nondeterministic from a code
+change that was not made between the two runs.
 
 The unit test drives a real `combat_manager.gd::_on_enemy_strike()` (hit cone, rolled
 damage, `take_damage`, faint handling) on a bare manager with stand-in bodies, and asserts
