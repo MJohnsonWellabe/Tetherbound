@@ -258,20 +258,40 @@ func _shoot(stand: Dictionary) -> void:
 	_player.velocity = Vector3.ZERO
 	var to := target - stand_at
 	_rig.set("yaw", atan2(-to.x, -to.z))
-	_rig.set("pitch", -atan2(maxf(stand_at.y + 1.4 - target.y, 0.0), maxf(distance, 0.01)) * 0.5)
-	for i in POSE_PHYSICS_FRAMES:
-		await physics_frame
-	for i in POSE_DRAW_FRAMES:
-		await process_frame
-
-	var camera := root.get_camera_3d()
+	var pitch := -atan2(maxf(stand_at.y + 1.4 - target.y, 0.0), maxf(distance, 0.01)) * 0.5
+	var camera: Camera3D = null
+	# On a ridge the boom can put the lens under the slope behind the player
+	# (the first BEFORE pass lost the wind-ridge stand to exactly that, a
+	# 26 cm burial). A steeper pitch lifts the lens; step it until the camera
+	# clears its own ground, and record the pitch used.
+	for attempt in 4:
+		_rig.set("pitch", pitch)
+		for i in POSE_PHYSICS_FRAMES:
+			await physics_frame
+		for i in POSE_DRAW_FRAMES:
+			await process_frame
+		camera = root.get_camera_3d()
+		if camera == null:
+			break
+		var under := float(_world.call("ground_height_at", camera.global_position.x, camera.global_position.z))
+		if is_nan(under) or camera.global_position.y > under + 0.3:
+			break
+		pitch -= 0.14
 	if camera == null:
 		_failures.append("%s: no current camera" % name)
 		return
-	CAPTURE_CHECK.require(self, camera)
+	# `warn_only`, not `require`: a refused frame here would end the whole
+	# run (it quits the tree), and the log carries the problem either way; a
+	# stand with a problem is still counted as a failure in the exit code.
+	var problems: Array[String] = CAPTURE_CHECK.warn_only(self, camera)
+	for problem: String in problems:
+		_failures.append("%s: %s" % [name, problem])
 	var grass := _grass_verdict(camera)
 	if grass.begins_with("NO GRASS"):
 		_failures.append("%s: %s" % [name, grass])
+	if not problems.is_empty():
+		grass += "  CAPTURE CHECK: " + "; ".join(problems)
+	grass += "  (rig pitch %.2f)" % pitch
 
 	await process_frame
 	await RenderingServer.frame_post_draw
