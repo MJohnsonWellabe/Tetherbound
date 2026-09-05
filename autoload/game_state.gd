@@ -157,6 +157,24 @@ var _objective_is_posed: bool = false
 ## Nothing advances it yet; M10's day/night cycle will.
 var day: int = 1
 
+## N14-ROUTED-FOLLOWUPS, from N13-NIGHT-RESUME §5: the hour of day, carried
+## across everything that destroys and rebuilds the world scene.
+##
+## `world_look.gd` owns the live clock, but it is a node in the scene, so a
+## Continue, a `enter_realm()` crossing and a title-screen Load all threw it
+## away and rebuilt it at 08:00 -- N13 measured a player being able to run for
+## hours without the world ever reaching hour 22, because every transition
+## restarted the 350-second walk to nightfall. `Game` outlives those rebuilds,
+## so it is where the number waits.
+##
+## `CLOCK_UNSET` (negative) means "no carried clock, open at the authored
+## morning": a New Game, or a save written before VERSION 19. That distinction
+## is the whole reason this lives here rather than in a `static var` on
+## `world_look.gd` -- a static would survive New Game too, and start a fresh
+## run at whatever hour the last one ended at.
+const CLOCK_UNSET := -1.0
+var clock_elapsed_seconds: float = CLOCK_UNSET
+
 ## What the build menu last armed, or an empty string. The building system reads
 ## this when there is one; until then it is the honest end of the build screen.
 var pending_build: String = ""
@@ -488,6 +506,9 @@ func reset_for_new_game() -> void:
 	_objective_is_posed = false
 
 	day = 1
+	# N14: a fresh run opens at the authored morning, whatever hour the last
+	# one ended at. This is the half N13 could not do from `world_look.gd`.
+	clock_elapsed_seconds = CLOCK_UNSET
 	pending_build = ""
 	_pending_world_message = ""
 	PROGRESSION_FEED.clear()
@@ -972,6 +993,7 @@ func save_game(slot: int) -> bool:
 	_sync_placed_building_state()
 	_sync_death_satchel_state()
 	_sync_harvest_state()
+	_sync_clock_state()
 	return bool(save_system.call("save", self, slot))
 
 
@@ -1005,6 +1027,11 @@ func enter_realm(realm_id: String, entry_id: String = "") -> bool:
 	_sync_placed_building_state()
 	_sync_death_satchel_state()
 	_sync_harvest_state()
+	# N14: the crossing rebuilds the scene, which destroys the live clock. Read
+	# it off the outgoing world BEFORE `change_scene_to_file()` so the arriving
+	# `world_look.gd::_ready()` picks the same hour up instead of snapping the
+	# player back to morning for having walked through a gate.
+	_sync_clock_state()
 	current_realm = realm_id
 	pending_realm_entry = entry_id
 	saved_player_pose = {}
@@ -1078,6 +1105,27 @@ func _sync_harvest_state() -> void:
 			node.call("sync_state_to_game", self)
 
 
+## N14-ROUTED-FOLLOWUPS, from N13-NIGHT-RESUME §5. Read the live day/night
+## clock off the world before anything that destroys it (a save write, a realm
+## crossing), through the same "by group" seam the three syncs above use --
+## `Game` has no direct handle on `world_look.gd`, and a scene with no world at
+## all (a test harness, the title screen) must still save cleanly.
+##
+## Leaves `clock_elapsed_seconds` alone when there is no live clock to read, so
+## a save written from the title screen keeps whatever hour the last world
+## reported rather than silently rewriting it to the unset sentinel.
+func _sync_clock_state() -> void:
+	if not is_inside_tree():
+		return
+	var tree := get_tree()
+	if tree == null:
+		return
+	for node in tree.get_nodes_in_group("day_cycle"):
+		if node.has_method("elapsed_seconds"):
+			clock_elapsed_seconds = float(node.call("elapsed_seconds"))
+			return
+
+
 ## Load `slot` onto this live state and tell the world to rebuild whatever it
 ## placed. Returns whether a save was actually applied.
 ##
@@ -1105,11 +1153,29 @@ func load_game(slot: int) -> bool:
 	for node in get_tree().get_nodes_in_group("progression_restore"):
 		if node.has_method("restore_progression_from_game"):
 			node.call("restore_progression_from_game", self)
+	# N14: the same two-path problem the pose below has. A title-screen Continue
+	# rebuilds the scene, and the new `world_look.gd::_ready()` picks the hour
+	# up off `clock_elapsed_seconds` on its own; a MID-SESSION load leaves the
+	# world standing, so the restored hour has to be pushed into the live clock
+	# here or the sky would keep running from wherever the abandoned session had
+	# got to.
+	_restore_clock_to_world()
 	# Mid-session loads can apply immediately. A title-screen load has no Player
 	# yet; player_controller.gd calls apply_loaded_player_pose() from _ready(), so
 	# the same saved dictionary is applied once the world exists.
 	apply_loaded_player_pose()
 	return true
+
+
+func _restore_clock_to_world() -> void:
+	if clock_elapsed_seconds < 0.0 or not is_inside_tree():
+		return
+	var tree := get_tree()
+	if tree == null:
+		return
+	for node in tree.get_nodes_in_group("day_cycle"):
+		if node.has_method("resume_at_elapsed"):
+			node.call("resume_at_elapsed", clock_elapsed_seconds)
 
 
 ## RG7. Capture exact trainer position/facing and camera view before each save.

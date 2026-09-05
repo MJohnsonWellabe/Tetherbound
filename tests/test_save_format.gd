@@ -60,6 +60,12 @@ class FakeGame:
 	## walked to somewhere else.
 	var world_seed: int = 0
 	var saved_player_pose: Dictionary = {}
+	## N14 / VERSION 19. The day/night clock in elapsed seconds, or a negative
+	## number for "no carried clock -- open at the authored morning". Present on
+	## the fake for the same reason `world_seed` is: the whole point of the key
+	## is that it round-trips, so a fake that did not carry it would let a saver
+	## which dropped it pass.
+	var clock_elapsed_seconds: float = -1.0
 	var map: RefCounted = null
 	var progression: RefCounted = null
 	## Cloudreach Phase 1 / VERSION 17.
@@ -1331,3 +1337,93 @@ func test_a_pre_gamef4_save_migrates_base_stats_from_species_json() -> void:
 	creature.gain_xp(int(creature.call("xp_to_next", cfg)), cfg)
 	assert_true(float(creature.get("max_hp")) > 10.0,
 		"GAME-F4: a migrated creature's first level-up collapsed its stats toward the class default of 1.0")
+
+
+## --- the day/night clock across a save (N14-ROUTED-FOLLOWUPS, VERSION 19) ------
+##
+## N13-NIGHT-RESUME §5 root-caused the owner's "There is no night time" report
+## and found the clock had no memory of any kind: `save_game.gd` had no clock
+## key at all (`grep -in "elapsed\|hour\|clock"` over its 1013 lines returned
+## three comments about respawn timers and nothing else), so every Continue
+## rebuilt the world at 08:00 and the player walked the 350 seconds to nightfall
+## again. These three tests cover the format half of the fix.
+##
+## All three go through `saver.save()` / `saver.load_slot()` -- the saver's real
+## API. N01-SAVE-FORMAT found five tests in this file that had been green for
+## days without a single assertion running because they called `save_game()` /
+## `load_game()`, which this class has never had; GDScript aborts the method on
+## a nonexistent call and `run_tests.gd` only reads the empty `failures` list
+## afterwards. Not reintroducing that is the point of naming it here.
+
+## The whole finding, in one round trip: save at an hour that is not morning,
+## reload, and the hour must survive.
+func test_the_hour_survives_a_save_and_reload() -> void:
+	var written := _game(false)
+	# 19:40 on `art.json`'s 600-second day: late enough to be a different look
+	# from 08:00, and deliberately NOT a keyframe hour, so a loader that snapped
+	# to the nearest authored preset instead of restoring the real elapsed time
+	# would fail this.
+	var evening := 600.0 * (19.0 + 40.0 / 60.0) / 24.0
+	written.clock_elapsed_seconds = evening
+	assert_true(saver.save(written, 1))
+
+	var read := _game(false)
+	assert_true(read.clock_elapsed_seconds < 0.0,
+		"the fixture already holds a clock; a loader that ignored the file would pass")
+	assert_true(saver.load_slot(read, 1))
+	assert_almost_eq(read.clock_elapsed_seconds, evening, 0.001,
+		"the clock did not survive the save: a Continue puts the player back at 08:00 and night never falls")
+
+
+## A save written before VERSION 19 has no memory of the hour, and the migration
+## must say so rather than invent one -- the sentinel opens that save at the
+## authored morning, exactly as the old build did.
+func test_a_pre_clock_save_loads_with_no_carried_hour() -> void:
+	var written := _game(false)
+	written.clock_elapsed_seconds = 480.0
+	assert_true(saver.save(written, 1))
+
+	var raw := _read_slot_json(1)
+	assert_true(raw.has("clock_elapsed_seconds"), "VERSION 19 must write the clock key")
+	raw.erase("clock_elapsed_seconds")
+	raw["version"] = 18
+	_write_slot_json(1, raw)
+
+	var read := _game(false)
+	read.clock_elapsed_seconds = 123.0
+	assert_true(saver.load_slot(read, 1))
+	assert_true(read.clock_elapsed_seconds < 0.0,
+		"a VERSION 18 save must migrate to 'no carried clock', not to hour 123")
+
+
+## The file is trusted no further than any other save field. A corrupt clock
+## must fall back to the sentinel, not restore the world to hour NaN.
+func test_a_corrupt_clock_falls_back_to_no_carried_hour() -> void:
+	for junk: Variant in ["nineteen", null, {"hour": 19}, [19.0], true]:
+		var written := _game(false)
+		written.clock_elapsed_seconds = 480.0
+		assert_true(saver.save(written, 1))
+		var raw := _read_slot_json(1)
+		raw["clock_elapsed_seconds"] = junk
+		_write_slot_json(1, raw)
+
+		var read := _game(false)
+		assert_true(saver.load_slot(read, 1), "a corrupt clock must not refuse the whole save")
+		assert_true(read.clock_elapsed_seconds < 0.0,
+			"a corrupt clock (%s) restored as something other than the sentinel" % [junk])
+
+
+func _read_slot_json(slot: int) -> Dictionary:
+	var file := FileAccess.open(saver.slot_path(slot), FileAccess.READ)
+	assert_true(file != null, "slot %d was never written" % slot)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	return parsed as Dictionary if typeof(parsed) == TYPE_DICTIONARY else {}
+
+
+func _write_slot_json(slot: int, data: Dictionary) -> void:
+	var file := FileAccess.open(saver.slot_path(slot), FileAccess.WRITE)
+	assert_true(file != null, "could not rewrite slot %d" % slot)
+	if file != null:
+		file.store_string(JSON.stringify(data, "\t"))
