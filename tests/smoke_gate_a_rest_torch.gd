@@ -83,6 +83,7 @@ func _run() -> void:
 	await _exercise_repeated_torch()
 	await _exercise_player_rest(bedroll, bed, party)
 	await _exercise_bedroll_without_tent_overhead()
+	await _walk_up_the_loft_stair_and_sleep()
 	_report()
 
 
@@ -392,6 +393,150 @@ func _joy_event_for(action: String, pressed: bool) -> InputEvent:
 			out.axis_value = motion.axis_value if pressed else 0.0
 			return out
 	return null
+
+
+## CL-G12, the owner: *"I've never been able to sleep in the loft bed."*
+##
+## Every existing check on that bed TELEPORTS onto the loft —
+## `smoke_home_sleep.gd::_stand_beside()` sets `global_position` to the bed
+## marker plus 1.5 m and lets it drop, and `smoke_gate_b_continuous`'s sleep
+## beat does the same — so the passing tests were the finding, not a
+## contradiction: the harness reached the bed by a path the player does not
+## have. Driven up the stair instead, a real body froze on the top tread for
+## 700 consecutive frames (`tools/gate_f/probe_loft_bed_climb.gd`).
+##
+## So this leg uses no teleport at all after the one that puts the body on
+## the house's own ground floor: from there it holds the stick at the stair
+## foot, at the stair head, and at the bed, exactly as a player does, and
+## then presses the real interact button on whatever the arbiter is actually
+## offering. It fails if the body cannot climb, if the bed is not what wins
+## the prompt when it gets there, or if pressing it does not pass the night.
+const LOFT_WALK_FRAMES := 900
+
+
+func _walk_up_the_loft_stair_and_sleep() -> void:
+	var house: Node3D = _world.get_node_or_null(^"GrandpaHouse") as Node3D
+	if house == null:
+		_fail("the Meadows stood up no GrandpaHouse; the loft bed cannot be reached")
+		return
+	# `set_sleep_enabled` shares the front door's own beat gate, and the
+	# director was put in `free_play` at the top of this run — but a beat set
+	# directly does not re-run `_refresh_door_gate()` until its next frame, so
+	# read the prompt's state rather than assuming it.
+	var prompt: Node3D = house.get_node_or_null(^"SleepPrompt") as Node3D
+	if prompt == null:
+		_fail("the loft bed carries no Sleep interactable at all")
+		return
+	for i in 10:
+		await physics_frame
+	if not bool(prompt.get("enabled")):
+		_fail("the loft bed's Sleep prompt is disabled in free play")
+		return
+
+	# The only teleport: onto the ground floor, where the opening leaves the
+	# player. Everything after this is stick input.
+	var start: Vector3 = house.global_transform * Vector3(1.4, 0.4, 1.2)
+	_player.global_position = start
+	_player.velocity = Vector3.ZERO
+	for i in 20:
+		await physics_frame
+
+	var reached_foot := await _hold_stick_at(house.call("marker", "stairs_bottom"), 0.45)
+	if not reached_foot:
+		_fail("a body on the ground floor holding the stick at the stair foot never arrived")
+		return
+	var reached_loft := await _hold_stick_at(house.call("marker", "stairs_top"), 0.9)
+	var loft_top: float = float(house.get_script().get_script_constant_map()["LOFT_TOP"])
+	var local: Vector3 = house.global_transform.affine_inverse() * _player.global_position
+	if not reached_loft or local.y < loft_top - 0.15:
+		_fail("a body holding the stick at the stair head could not climb onto the loft "
+			+ "(ended at house-local %s, loft floor is y=%.2f)"
+			% [str(local.snapped(Vector3.ONE * 0.01)), loft_top])
+		return
+	print("climbed the loft stair on stick input alone: house-local %s"
+		% str(local.snapped(Vector3.ONE * 0.01)))
+
+	if not await _hold_stick_at(house.call("marker", "bed"), 1.6):
+		_fail("a body on the loft holding the stick at the bed never got within 1.6m of it")
+		return
+	if not await _wait_provider(prompt):
+		_fail("standing at the loft bed after walking there, the game offers '%s', not the bed"
+			% str(_arbiter.call("prompt")))
+		return
+
+	var progression: RefCounted = _game.get("progression")
+	progression.call("set_flag", "player_slept_at_home", false)
+	var day_before := int(_game.get("day"))
+	await _tap("interact")
+	# night_rest.gd's fade is 1.2s and the night passes at its midpoint.
+	for i in 150:
+		await physics_frame
+	var day_after := int(_game.get("day"))
+	if day_after <= day_before:
+		_fail("pressing interact at the loft bed, walked to on foot, did not pass the night "
+			+ "(day %d -> %d)" % [day_before, day_after])
+	else:
+		print("slept in Grandpa's loft bed after walking up the stair: day %d -> %d"
+			% [day_before, day_after])
+
+
+## Hold the stick straight at a world point until the body is within
+## `close_enough` metres of it horizontally. No navigator, no detours: the
+## question is whether the route is walkable at all, which is exactly the
+## question `tools/gate_f/probe_fence_corner_trailgate_0903.gd` settled for
+## the TrailGate corner.
+func _hold_stick_at(point: Vector3, close_enough: float) -> bool:
+	var rig := _world.get_node_or_null(^"CameraRig") as Node3D
+	for i in LOFT_WALK_FRAMES:
+		var to := point - _player.global_position
+		if Vector2(to.x, to.z).length() <= close_enough:
+			_release_stick()
+			for j in 6:
+				await physics_frame
+			return true
+		to.y = 0.0
+		var direction := to.normalized()
+		if rig != null:
+			var basis: Basis = rig.call("planar_basis")
+			direction = basis.inverse() * direction
+		_push_stick(Vector2(clampf(direction.x, -1.0, 1.0), clampf(direction.z, -1.0, 1.0)))
+		await physics_frame
+	_release_stick()
+	for j in 6:
+		await physics_frame
+	return Vector2(point.x - _player.global_position.x,
+		point.z - _player.global_position.z).length() <= close_enough
+
+
+func _push_stick(stick: Vector2) -> void:
+	_axis("move_right", clampf(stick.x, 0.0, 1.0))
+	_axis("move_left", clampf(-stick.x, 0.0, 1.0))
+	_axis("move_back", clampf(stick.y, 0.0, 1.0))
+	_axis("move_forward", clampf(-stick.y, 0.0, 1.0))
+
+
+func _release_stick() -> void:
+	_push_stick(Vector2.ZERO)
+
+
+func _axis(action: String, strength: float) -> void:
+	var name_key := StringName(action)
+	if not InputMap.has_action(name_key):
+		return
+	if strength <= 0.001:
+		Input.action_release(name_key)
+	else:
+		Input.action_press(name_key, strength)
+	for event in InputMap.action_get_events(name_key):
+		var motion := event as InputEventJoypadMotion
+		if motion == null:
+			continue
+		var out := InputEventJoypadMotion.new()
+		out.device = 0
+		out.axis = motion.axis
+		out.axis_value = signf(motion.axis_value) * strength
+		Input.parse_input_event(out)
+		return
 
 
 func _teleport_to(at: Vector3) -> void:

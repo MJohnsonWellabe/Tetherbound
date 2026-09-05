@@ -292,3 +292,77 @@ as its brief instructed and said so.
 the lane needs to re-run its own probe on current `main`), W10 (7-line stub). W02, W03, W06,
 W07, W08, W11, W14, W15, W16, W21 have no `REPORT.md` — W16 woke at 09:52 and W08 at 09:40,
 so more may close. Next free decision number is **D87**; D85 stays reserved for W05.
+
+## 2026-09-05 13:15 UTC — cycle 10: the wave closed; eight lanes land, W06 held
+
+Nine lanes closed reports between 11:45 and 12:06 after the long silence. Eight are on
+`ralph/LAND-0904-8` as one branch and one CI run; **W06-FINALE is held out on evidence.**
+
+| Lane | State |
+|---|---|
+| W02-HARNESS-CONTEXT, W03-S08-FREEZE, W07-WARRENS, W08-DIALOGUE-CAMERA, W14-RIDING, W16-LOFT-BED | landing |
+| W11-ALPHA-PINS | landing, after a save-version collision with Cloudreach |
+| W05-TREELINE | **landing — it rebased and it passes** |
+| W06-FINALE | **held: Cloudreach's ninth conversation breaks its own dialogue budget** |
+| W10-TRAINER-RULES | 274 lines but still one unfilled placeholder |
+| W15-NIGHT, W21-HARNESS-FIGHTS | no `REPORT.md` |
+
+### W05-TREELINE passes — and the earlier rejection was too broad
+
+It rebased onto `590741fe` and `smoke_aggression` now exits 0 on the merged tree, with no
+entombment line. That confirms the refined reading rather than the flat one: the failure was
+its five-hour-stale base meeting today's `main`, not a broken fix. The collider decoupling
+stands as written. **This lane was rejected twice by this desk; the first rejection was
+right, the second was stated more confidently than the evidence supported, and the fix for
+that was the rebase, not a code change.** Decision record lands as **D85**.
+
+### W11-ALPHA-PINS — Cloudreach wins the version number
+
+Both lanes authored save `VERSION 17`: Cloudreach for realms and Realm Hearts, W11 for the
+alpha pin set. Per the owner's standing rule Cloudreach keeps 17 and **the pin set became
+18**, with W11's step renamed `_migrate_v16` → `_migrate_v17` and stamping 18.
+`_migrate_to_current` dispatches `_migrate_v<version>` in a loop, so a v16 save now runs
+realms and then pins — the chain is intact and `test_save_format` is 56/282/0.
+
+One near-miss worth recording: the first splice of that resolution **dropped Cloudreach's
+`return migrated`**, because the line sat outside the conflict region. Caught by diffing the
+function against `origin/main` before committing. A conflict hunk's boundaries are not the
+function's boundaries.
+
+### W06-FINALE is held, and it is a real design collision
+
+Its new `tests/test_stronghold_dialogue_budget.gd` caps the stronghold ending at
+`MAX_FILE_CHARS := 2000` and enumerates the conversations it measures. W06 cut its branch
+before Cloudreach added `stronghold_warden_realm_reward`, so it measures eight; the file on
+`main` carries nine. Adding the ninth id makes the ending **2112 characters against its own
+2000 budget**.
+
+The landing lane tried the mechanical fix and it does not work. Worse, the arithmetic that
+said it would was wrong: a hand count put the total at 1946, comfortably inside, but the
+test's own `_chars` measures 2112 — the hand count was 166 characters light because it read
+only plain-string lines. **The test was right and the shortcut was wrong.**
+
+Raising the budget or trimming Cloudreach's handoff is a design decision about how wordy the
+Meadows ending may be. That is the lane's and the owner's call, not the landing lane's, so
+W06 goes back with this finding rather than landing on a constant this desk chose.
+
+### For the owner: a D81 regression in Cloudreach's data
+
+`stronghold_warden_realm_reward` gives Warden Aldis
+`res://assets/ui/portraits/trainer.png`, while `stronghold_warden_challenge` correctly uses
+`warden.png`. The Warden delivers his victory speech wearing the player's face — the exact
+defect W04-PORTRAITS closed as D81. It is Cloudreach's data and the standing rule is that
+Cloudreach wins, so nothing was changed; flagged because it is player-facing and one field
+wide.
+
+### Verified on the merged eight-lane tree
+
+Two clean import passes. Eleven unit files, **0 failed** throughout: `test_alpha_pins`
+24/154, `test_save_format` 56/282, `test_map_baker` 7/13, `test_conversation_camera` 23/100,
+`test_riding_saddle` 7/15, `test_loft_bed_reachable` 6/14, `test_scatter_rules`
+38/1,019,854, `test_veg_corridor` 9/1,537,510, `test_band_vegetation` 5/142,
+`test_scatter_perf_budget` 3/6, `test_terrain_bake_freshness` 3/8. Smokes on the same tree
+with W06 still present: `smoke_playground`, `smoke_traversal`, `smoke_aggression`,
+`smoke_relay_station` and `smoke_alpha_pins` all exit 0.
+
+Next free decision number after D85 is **D87** (D86 is W22's; D79 and D82 stay reserved).
