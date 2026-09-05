@@ -1,7 +1,7 @@
 # W02-HARNESS-CONTEXT-0904 — CL-H13: the Gate F harness's `input_context` "misresolves" to `build_catalogue`
 
 Branch `ralph/W02-HARNESS-CONTEXT-0904`, from `origin/main` at `ef16544f`.
-Final commit: **see the last section** (filled in at the end of the lane).
+Final commit: the branch head — see §8.
 
 ## 1. Root cause, in one paragraph
 
@@ -142,7 +142,7 @@ Exit 0 = CLEAN, 2 = FLIPPED. `blind` injects exactly as `press` did before this 
 | Oreth | **weak** | **guarded** | 13 / 3 / 1 | **`world`** | **CLEAN — `S08-93` refused by name:** `'combat_charged' is not live in input_context 'world'; its binding JoyAxis:4:1.0 would fire build_shortcut here instead` |
 | Oreth | weak_backed (1 HP lead, bench fit) | blind | 78 / 0 / 1 | `combat` | CLEAN — the lead faints but the trainer battle continues through the bench; LT lands in `combat` |
 | Vance | fit | blind | 76 / 0 / 0 | **`build_catalogue`** | **FLIPPED at `S07-57`, frame 2039** — the challenge was refused — `can_challenge()` false with the lead present, unfainted and the captain unbeaten leaves its `ally_body == null` clause (no creature out after the load; the state `S08-09a`'s `creature_recall` press exists to prevent) as the only reason left — so all sixty-six `combat_quick` presses landed inert in `world`, then LT |
-| Vance | fit | guarded | VANCE_GUARDED_FIT_ROW |
+| Vance | fit | guarded | 72 / 1 / 0 | `world` | CLEAN — this time the challenge was accepted (the earlier blind refusal was load-timing: same seed, same state, `can_challenge()` true on the rerun), the full three-creature fight ran with two send-out beats, `S07-57` landed in `combat` and was live; the battle ended at frame 2248 inside `S07-58` and the guard refused press 7 of 10: `6 of 10 combat_quick presses landed before the refusal` | |
 | Vance | **weak** | **blind** | 76 / 0 / 0 | **`build_catalogue`** | **FLIPPED at `S07-57`, frame 2032** — fight starts during the challenge dialogue (frame 75), lost by 183, `world` from 184; BAND3's exact shape |
 | Vance | **weak** | **guarded** | 9 / 7 / 0 | **`world`** | **CLEAN — `S07-57` refused by name** (and the six blind `combat_quick` blocks refused as inert, each at its first press) |
 
@@ -216,4 +216,21 @@ commit in this container.
 
 ## 8. Final state
 
-FINAL_PLACEHOLDER
+Branch `ralph/W02-HARNESS-CONTEXT-0904`, pushed. Commits, oldest first:
+
+| commit | content |
+|---|---|
+| `7b63af46` | the press guard in `operator_harness.gd` + four `test_gate_f_rig.gd` tests (seen red, then green 53/0) |
+| `7a674996` | `probe_press_context_flip.gd` + `docs/decisions/D74` |
+| `78ff8478` | probe: `weak` / `weak_backed` lead states (the deterministic reproduction) |
+| `289a0362` | `CURRENT_STATE.md` P1 row and `GATE2_GATE3_CLOSURE_PLAN.md` CL-H13 row rewritten to fixed |
+| `1a8384d3`, `34b23865`, and the head commit carrying this section | this report |
+
+**Final commit: the branch head** (`git log -1 origin/ralph/W02-HARNESS-CONTEXT-0904`); the last
+code change is `78ff8478`, the last harness change `7b63af46`. Acceptance per the brief: the
+three named sites no longer flip on the same commit (Oreth/Riverwatch: blind FLIPPED at
+`S08-93` → guarded CLEAN with `S08-93` refused by name; Vance: blind FLIPPED at `S07-57` twice
+→ guarded CLEAN with `S07-57` refused by name or, with a fight running, live and harmless);
+`test_gate_f_rig.gd` green; root cause written (§1); both status rows rewritten. No pull request
+was opened; the coordinator lands this branch. CI on the `ralph/**` push is the coordinator's
+to read — a run under five minutes verified nothing.
