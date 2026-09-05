@@ -246,4 +246,5 @@ validation rounds), `_unit_*.log`, `_test_band_pickups.log`, `_test_band_pickups
 
 ## Final commit
 
-PLACEHOLDER_COMMIT
+`3534c343f8058040acb1a9b730c2294278e9a3f1` on branch `ralph/W18-DENSITY-B4-B5-0904` (this line names the commit that precedes it;
+the report-only commit that records this hash is its immediate child).
