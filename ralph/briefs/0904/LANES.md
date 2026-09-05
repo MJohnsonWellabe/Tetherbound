@@ -9,7 +9,7 @@
 | W06-FINALE | session_011dc79BSyvBztH3GpBaBjvV | ralph/W06-FINALE-0904 | fable | resumed 01:06Z (wave 2) |
 | W07-WARRENS | session_01NeCvGYwgAdi7goARi5rK6a | ralph/W07-WARRENS-0904 | fable | resumed 01:06Z (wave 2) |
 | W08-DIALOGUE-CAMERA | session_01GA5iSWYCMh9qLDa7CJgq9r | ralph/W08-DIALOGUE-CAMERA-0904 | opus | PAUSED (hit 5h limit 21:xx; partial push kept) |
-| W09-VFX | session_01LnkDeQzoUy8KHqVtFcPoxt | ralph/W09-VFX-0904 | fable | PAUSED (hit 5h limit 21:xx; partial push kept) |
+| W09-VFX | session_01LnkDeQzoUy8KHqVtFcPoxt | ralph/W09-VFX-0904 | fable | resumed 01:11Z (backfill for W19) |
 | W10-TRAINER-RULES | session_01CtPiTG6K4LV4Z2nYNAfRz3 | ralph/W10-TRAINER-RULES-0904 | opus | PAUSED (hit 5h limit 21:xx; partial push kept) |
 | W11-ALPHA-PINS | session_01Rc8p5dXWaQMP4Bs1Frjcdd | ralph/W11-ALPHA-PINS-0904 | opus | PAUSED (hit 5h limit 21:xx; partial push kept) |
 | W12-COMPANION | session_01GwmYsvBJgk8LZjAcncw6Uj | ralph/W12-COMPANION-0904 | fable | resumed 01:06Z (wave 2) |
@@ -19,7 +19,7 @@
 | W16-LOFT-BED | session_01EHxzFs2VaZmn7b6UHWYyeg | ralph/W16-LOFT-BED-0904 | opus | PAUSED (hit 5h limit 21:xx; partial push kept) |
 | W17-DENSITY-B2-B3 | session_013yknopk7xZdMbGWHEgWokR | ralph/W17-DENSITY-B2-B3-0904 | fable | resumed 01:06Z (wave 2) |
 | W18-DENSITY-B4-B5 | session_01JDyZNRegueK2qa9YNZnXvC | ralph/W18-DENSITY-B4-B5-0904 | fable | resumed 01:06Z (wave 2) |
-| W19-CONTRACTS | session_01AHh7dCnebbJAjjWTCEJ7oS | ralph/W19-CONTRACTS-0904 | fable | resumed 01:06Z (wave 2) |
+| W19-CONTRACTS | session_01AHh7dCnebbJAjjWTCEJ7oS | ralph/W19-CONTRACTS-0904 | fable | DONE 01:09Z — report pushed, awaiting landing |
 | W20-SMALL-FIXES | session_01UUtrNg1WUDF1qA7XabKfaG | ralph/W20-SMALL-FIXES-0904 | opus | PAUSED (hit 5h limit 21:xx; partial push kept) |
 | W21-HARNESS-FIGHTS | session_01654XjihMdSzNkv2qoKUJez | ralph/W21-HARNESS-FIGHTS-0904 | opus | PAUSED (hit 5h limit 21:xx; partial push kept) |
 | W22-BRIDGE-SIGNPOST | session_01JsXprpxn5HzVvCoubWsYS8 | ralph/W22-BRIDGE-SIGNPOST-0904 | fable | PAUSED (hit 5h limit 21:xx; partial push kept) |
