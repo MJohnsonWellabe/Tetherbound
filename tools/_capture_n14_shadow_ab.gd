@@ -60,6 +60,17 @@ const VIEWPOINTS := [
 		"actor": Vector2(-1.0, 1313.5),
 	},
 	{
+		# N09's routed §9 stand, `tools/_capture_band1_places.gd`'s own
+		# `place5-bridge-approach`, at the coordinates THIS lane moved it to.
+		# Kept in step with that file by hand; if the two ever disagree, that
+		# file is the one that ships.
+		"name": "place5-bridge-approach",
+		"eye": Vector2(-6.0, 1319.0), "eye_h": 3.0,
+		"target": Vector2(7.0, 1329.0), "target_h": 1.6,
+		"horizon": 0.38, "fov": 70.0,
+		"actor": Vector2(-4.5, 1316.5),
+	},
+	{
 		"name": "village-square-signpost",
 		"eye": Vector2(7.8, -9.2), "eye_h": 1.7,
 		"target": Vector2(13.5, -6.9), "target_h": 1.5,
@@ -141,6 +152,11 @@ func _run() -> void:
 			_variants = VARIANTS_BIAS
 		elif arg == "--ship-round":
 			_variants = VARIANTS_SHIP
+		elif arg == "--as-is":
+			# One pass at whatever the tree currently says: an "after" sheet for
+			# the changes that are not lighting (the lantern's z, the gate
+			# threshold's material, the re-sited place5 stand).
+			_variants = [{"name": "as-shipped", "ambient_mult": 1.0, "reach": 220.0}]
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_out_dir))
 
 	var packed: PackedScene = load(SCENE)
