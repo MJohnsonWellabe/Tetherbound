@@ -1,4 +1,5 @@
 {
+  "_comment_w18_density": "W18-DENSITY-B4-B5, 2026-09-04 (CL-O4). Orders 4103-4112 add ten clusters / 29 creatures with an authored habitat reason each, at the stretches the chainage census found thin (the stand's rock foot and far side, the pasture west of the road, the deep branch to Rue, the climb's shoulder, the run-out by day and by night, the seam). No alpha is added (spawn_tables.json's per-region alpha cap and 400m separation are already spent by the authored ones); levels resolve from chapter_curve.json's band, never here; the herd bull, the Galecrest alpha, Stormtrail and the rocky-shoulder den are untouched.",
   "_comment": "BAND-SPLIT. Band-local spawns for band4_upper_meadows_ironwood. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because encounter_director.gd seeds each cluster's scatter, level roll, IVs, traits and shiny draw from it (hash(\"wild_spawn_%d\" % order)), so changing a number moves creatures and rerolls them. A new entry in this band takes an unused order in this band's reserved range 4000-4999, which no other band can collide with; do not renumber an existing one.",
   "_comment_aspect_variant_0830": "T3-CREATURES, from the owner's creature-expansion brief. This entry is an ASPECT VARIANT -- a rare individual whose environmental exposure changed its typing, authored as a species in data/creatures/species.json with a `variant_of` back-link. Read the brief's 'Spawn Protection Rules' section before touching count, gates or placement: its stated failure mode is exact -- 'Avoid a situation where the player walks through one clearing and sees Sparkit + Cindercub + Shadelet + Frostclaw + Nightburrow. That would destroy the rarity.' RARITY HERE IS HEADCOUNT, NOT PROBABILITY. This director does not roll a species per encounter; every cluster names its own and spawns it deterministically at load, so the brief's percentages are translated into how MANY individuals exist, WHERE, and behind WHICH gates. The chapter holds 881 wild creatures across 261 clusters, so one individual is 0.11% of the world. `respawn_seconds` overrides the table's global 45s so a rare encounter does not become a farmable resource a minute after it is beaten.",
   "spawns": [
@@ -1148,6 +1149,136 @@
       },
       "_why": "T5-CADENCE. The herd bull of the Highfield, and the second beat inside T4-REGIONS' 1161m dead run (arc 1703, on the eastern sweep). Band 4 holds 30 meadowhart and all four of its existing alphas sit in the WESTERN third -- the entire eastern half of the longest band in the chapter had no exceptional individual at all.",
       "_why_alpha": "Fun-rebuild §12's own example of a beat that satisfies the cadence without any fight being required: 'a visible herd on a ridge'. Meadowhart is spec §3's named riding creature, so a visibly larger bull standing over the band's biggest herd is the one silhouette in the Upper Meadows a player is most likely to change direction for -- which is exactly what §12 asks a cadence beat to be. Scale 1.35 and level_bonus 4 match order 4075's tree-line elder, the band's own convention for a solitary temptation, rather than inventing a third pair of numbers. It is a second individual of a species already here rather than a new one: T4-REGIONS' second-ranked chapter gap (zero new species in bands 4 and 5) is a ROSTER question owned by the creature lane, and this lane deliberately did not reach into species.json or the spawn tables to answer it."
+    },
+    {
+      "order": 4103,
+      "species": "burrowback",
+      "table": "meadows_rock",
+      "count": 3,
+      "centre": [
+        -330.0,
+        0.0,
+        5030.0
+      ],
+      "radius": 14.0,
+      "_why_w18_density": "W18-DENSITY. The Ironwood stand's rock foot: burrowback dig where the stone breaks the roots, 60m from the grove's alpha, so the stand has an ordinary fight as well as its guardian."
+    },
+    {
+      "order": 4104,
+      "species": "pipwing",
+      "table": "meadows_air",
+      "count": 3,
+      "centre": [
+        -390.0,
+        0.0,
+        5030.0
+      ],
+      "radius": 12.0,
+      "_why_w18_density": "W18-DENSITY. A roost in the ironwood crowns on the stand's far side, the habitat reason for walking round the back of the trees."
+    },
+    {
+      "order": 4105,
+      "species": "meadowhart",
+      "table": "meadows_open",
+      "count": 3,
+      "centre": [
+        -60.0,
+        0.0,
+        5560.0
+      ],
+      "radius": 18.0,
+      "_why_w18_density": "W18-DENSITY. The pasture's second herd below Halder, 70m west of the herd at order 4033: the riding species is met twice on the pasture, once each side of the road."
+    },
+    {
+      "order": 4106,
+      "species": "trailpup",
+      "table": "meadows_open",
+      "count": 3,
+      "centre": [
+        -190.0,
+        0.0,
+        5700.0
+      ],
+      "radius": 16.0,
+      "_why_w18_density": "W18-DENSITY. On the trail out to Rue's patrol (-300,5870): the deep branch had nothing alive between the road and the trainer; a trailpup pack makes the branch a walk through habitat, not a corridor."
+    },
+    {
+      "order": 4107,
+      "species": "galecrest",
+      "table": "meadows_air",
+      "count": 3,
+      "centre": [
+        -300.0,
+        0.0,
+        5905.0
+      ],
+      "radius": 14.0,
+      "_why_w18_density": "W18-DENSITY. Circling above Rue's lost-creature ground, 35m past the trainer: the branch's own aggressor line, so the Rare candy there is guarded twice."
+    },
+    {
+      "order": 4108,
+      "species": "mudsnout",
+      "table": "meadows_open",
+      "count": 3,
+      "centre": [
+        -120.0,
+        0.0,
+        6250.0
+      ],
+      "radius": 16.0,
+      "_why_w18_density": "W18-DENSITY. The high pasture's western wallow, opposite the herd (order 4051) across the road: the pasture loop reads as grazed ground on both sides."
+    },
+    {
+      "order": 4109,
+      "species": "burrowback",
+      "table": "meadows_rock",
+      "count": 3,
+      "centre": [
+        -150.0,
+        0.0,
+        6400.0
+      ],
+      "radius": 12.0,
+      "_why_w18_density": "W18-DENSITY. The rest-free ridge climb's rock shoulder (spine 2400-2600m held two thin clusters): burrowback dug in under the new stone node, a fight on the climb where P-4.1 forbids a rest."
+    },
+    {
+      "order": 4110,
+      "species": "duskhush",
+      "count": 3,
+      "centre": [
+        -120.0,
+        0.0,
+        6700.0
+      ],
+      "radius": 16.0,
+      "time": "night",
+      "_why_w18_density": "W18-DENSITY. The run-out at night: the band's approach to the Broken Tower had no night population; a duskhush roost gives the last kilometre a different face after dark."
+    },
+    {
+      "order": 4111,
+      "species": "pipwing",
+      "table": "meadows_air",
+      "count": 3,
+      "centre": [
+        90.0,
+        0.0,
+        6900.0
+      ],
+      "radius": 14.0,
+      "_why_w18_density": "W18-DENSITY. Pipwing over the last meadow below the tower, the run-out's day population (spine 3000-3100m held one cluster)."
+    },
+    {
+      "order": 4112,
+      "species": "galecrest",
+      "table": "meadows_air",
+      "count": 2,
+      "centre": [
+        -55.0,
+        0.0,
+        6985.0
+      ],
+      "radius": 14.0,
+      "_why_w18_density": "W18-DENSITY. The seam's sentries: two galecrest at the band 5 boundary so the approach's aggressor line is announced from the band 4 side (spine 3400m held nothing)."
     }
   ],
   "_comment_why_so_few": "WILD-ECOLOGY. This band held ONE cluster (the Meadowhart herd below) across z 4760-7000 -- 2240m, the longest region in the chapter and the one the probe measures as its longest single travel leg. Prompt 60's population rule is 'still prevalent enough that wanting another creature does not require a barren search', and one herd over 2.2km is the barren search. The seven entries added below sit on the spine's own points so the ecology is met by walking the route, not by leaving it. Levels are resolved from chapter_curve.json's band for this z ([11, 14]), never set here.",

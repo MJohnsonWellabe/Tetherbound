@@ -1,0 +1,228 @@
+{
+ "sites": [
+  {
+   "id": "harvest_4032_ironwood",
+   "pos": [
+    -150.0,
+    4905.0
+   ]
+  },
+  {
+   "id": "harvest_4033_wood",
+   "pos": [
+    -195.0,
+    4925.0
+   ]
+  },
+  {
+   "id": "harvest_4034_fiber",
+   "pos": [
+    -230.0,
+    4990.0
+   ]
+  },
+  {
+   "id": "harvest_4035_stone",
+   "pos": [
+    -320.0,
+    5020.0
+   ]
+  },
+  {
+   "id": "harvest_4036_berries",
+   "pos": [
+    -250.0,
+    4900.0
+   ]
+  },
+  {
+   "id": "harvest_4037_fiber",
+   "pos": [
+    -120.0,
+    5440.0
+   ]
+  },
+  {
+   "id": "harvest_4038_wood",
+   "pos": [
+    -100.0,
+    5395.0
+   ]
+  },
+  {
+   "id": "harvest_4039_stone",
+   "pos": [
+    100.0,
+    5470.0
+   ]
+  },
+  {
+   "id": "harvest_4040_berries",
+   "pos": [
+    200.0,
+    5520.0
+   ]
+  },
+  {
+   "id": "harvest_4041_ironwood",
+   "pos": [
+    300.0,
+    5740.0
+   ]
+  },
+  {
+   "id": "harvest_4042_fiber",
+   "pos": [
+    451.0,
+    5901.7
+   ]
+  },
+  {
+   "id": "harvest_4043_stone",
+   "pos": [
+    480.0,
+    5860.0
+   ]
+  },
+  {
+   "id": "harvest_4044_wood",
+   "pos": [
+    420.0,
+    6070.0
+   ]
+  },
+  {
+   "id": "harvest_4045_berries",
+   "pos": [
+    -58.0,
+    6270.0
+   ]
+  },
+  {
+   "id": "harvest_4046_stone",
+   "pos": [
+    -140.0,
+    6390.0
+   ]
+  },
+  {
+   "id": "harvest_4047_ironwood",
+   "pos": [
+    -296.5,
+    6542.0
+   ]
+  },
+  {
+   "id": "harvest_4048_fiber",
+   "pos": [
+    -150.0,
+    6690.0
+   ]
+  },
+  {
+   "id": "harvest_4049_wood",
+   "pos": [
+    102.0,
+    6870.0
+   ]
+  },
+  {
+   "id": "harvest_4050_stone",
+   "pos": [
+    -30.0,
+    6960.0
+   ]
+  },
+  {
+   "id": "harvest_5009_ironwood",
+   "pos": [
+    -118.3,
+    7151.0
+   ]
+  },
+  {
+   "id": "harvest_5010_stone",
+   "pos": [
+    -135.0,
+    7318.0
+   ]
+  },
+  {
+   "id": "spawn_4103_burrowback",
+   "pos": [
+    -330.0,
+    5030.0
+   ]
+  },
+  {
+   "id": "spawn_4104_pipwing",
+   "pos": [
+    -390.0,
+    5030.0
+   ]
+  },
+  {
+   "id": "spawn_4105_meadowhart",
+   "pos": [
+    -60.0,
+    5560.0
+   ]
+  },
+  {
+   "id": "spawn_4106_trailpup",
+   "pos": [
+    -190.0,
+    5700.0
+   ]
+  },
+  {
+   "id": "spawn_4107_galecrest",
+   "pos": [
+    -300.0,
+    5905.0
+   ]
+  },
+  {
+   "id": "spawn_4108_mudsnout",
+   "pos": [
+    -120.0,
+    6250.0
+   ]
+  },
+  {
+   "id": "spawn_4109_burrowback",
+   "pos": [
+    -150.0,
+    6400.0
+   ]
+  },
+  {
+   "id": "spawn_4110_duskhush",
+   "pos": [
+    -120.0,
+    6700.0
+   ]
+  },
+  {
+   "id": "spawn_4111_pipwing",
+   "pos": [
+    90.0,
+    6900.0
+   ]
+  },
+  {
+   "id": "spawn_4112_galecrest",
+   "pos": [
+    -55.0,
+    6985.0
+   ]
+  },
+  {
+   "id": "spawn_5023_burrowback",
+   "pos": [
+    -118.0,
+    7185.0
+   ]
+  }
+ ]
+}

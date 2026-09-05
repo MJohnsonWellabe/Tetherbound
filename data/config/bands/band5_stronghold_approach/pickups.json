@@ -1,0 +1,155 @@
+{
+  "_why": "W18-DENSITY-B4-B5, 2026-09-04 (CL-O4 density half; addendum sections B/C; owner directive 2026-09-04-C sections 2-3). Band 5 is short on purpose (D70) and P-5.3 keeps its ROAD untouched, so every candy here sits off the road's own line at a place the band already names -- the outer watch, the danger beat, the scorched pocket P-5.2 announces, the Sigil gate's wing, the dell behind the waystop, the doorstep alpha -- and the only on-road entries are three basic supplies (a potion at the mouth, a potion before the checkpoint, the road watch's dropped candy) per the directive's 'main routes: occasional basic supplies'. Nothing is authored inside the waystop clearing (R-5: nothing at the waystop heals for free; R-1: three things and nothing else). Recovery arrives before Corr, before the alpha pack and before Ness, not after. docs/decisions/D74 records why pickups are allowed where P-5.3 said 'not a cache'. Loaded by scripts/world/band_pickups.gd, persisted by `id`; every position probed on the real world (tools/_probe_band_density.gd).",
+  "pickups": [
+    {
+      "id": "b5_candy_road_watch_drop",
+      "item": "good_candy",
+      "pos": [
+        -5.0,
+        7275.0
+      ],
+      "tier": "critical",
+      "why": "The road watch's abandoned drop (props.json order 5002), on the road: the band's one critical-path candy, a Good where Team Tether left in a hurry."
+    },
+    {
+      "id": "b5_candy_seam_west_shoulder",
+      "item": "good_candy",
+      "pos": [
+        -110.0,
+        7050.0
+      ],
+      "tier": "side",
+      "why": "65m west of the road at the seam, between the burrowback and duskhush clusters (orders 5016/5007): the first side-ground of the approach, Good."
+    },
+    {
+      "id": "b5_candy_outer_watch_flank",
+      "item": "good_candy",
+      "pos": [
+        -106.0,
+        7176.7
+      ],
+      "tier": "side",
+      "why": "Behind Watchman Corr's outer watch (trainers `stronghold_outer_watch`, props order 5000), 45m off the road: the occupation's own supply spill, Good."
+    },
+    {
+      "id": "b5_candy_west_drained_shoulder",
+      "item": "good_candy",
+      "pos": [
+        -140.0,
+        7300.0
+      ],
+      "tier": "side",
+      "why": "The west shoulder where the drained ground runs out toward the flank, above the meadowhart three (order 5019): side exploration on the approach, Good."
+    },
+    {
+      "id": "b5_candy_scorched_pocket_lip",
+      "item": "good_candy",
+      "pos": [
+        135.0,
+        7365.0
+      ],
+      "tier": "side",
+      "why": "The scorched pocket's south lip, 55m east of the road: a Good on the way into the detour P-5.2 announces, so the pocket pays from its edge inward."
+    },
+    {
+      "id": "b5_candy_east_flock_roost",
+      "item": "good_candy",
+      "pos": [
+        185.0,
+        7235.0
+      ],
+      "tier": "side",
+      "why": "The pipwing flock's roost (order 5018) on the east flank, the far way round to the pocket: ordinary side ground, Good."
+    },
+    {
+      "id": "b5_candy_waystop_dell",
+      "item": "good_candy",
+      "pos": [
+        -70.0,
+        7420.0
+      ],
+      "tier": "side",
+      "why": "The dell behind the waystop, 55m outside its clearing (R-5/R-1 keep the clearing itself untouched): a Good for the player who walks the edges before committing to the Hall."
+    },
+    {
+      "id": "b5_candy_alpha_galecrest_pack",
+      "item": "great_candy",
+      "pos": [
+        -50.0,
+        7268.0
+      ],
+      "tier": "detour",
+      "why": "Behind the alpha Galecrest pack of three at (-25,7255) -- the encounter contract's 'danger beat', the largest aggressive cluster in the chapter: a Great guarded by the band's hardest ordinary fight."
+    },
+    {
+      "id": "b5_candy_scorched_pocket_heart",
+      "item": "great_candy",
+      "pos": [
+        150.0,
+        7325.0
+      ],
+      "tier": "detour",
+      "why": "The heart of the scorched pocket beside the Sunstone (121,7336) and the TM (140,7300): P-5.2's announced detour is the band's one sanctioned point of interest, and it pays a Great."
+    },
+    {
+      "id": "b5_candy_sigil_gate_wing",
+      "item": "great_candy",
+      "pos": [
+        115.0,
+        7390.0
+      ],
+      "tier": "detour",
+      "why": "At the Sigil gate's east wing on the near side, 40m off the road: the payoff of three captains stands here, and a Great beside it says the wall was worth walking up to."
+    },
+    {
+      "id": "b5_candy_doorstep_alpha",
+      "item": "rare_candy",
+      "pos": [
+        -48.0,
+        7492.0
+      ],
+      "tier": "secret",
+      "why": "Beside the doorstep alpha (order 5015's promoted first member, R-3: the strongest wild in the chapter, in silhouette against the Hall), outside its 18m radius and outside the waystop's clearing: the band's single Rare, at its hardest optional encounter."
+    },
+    {
+      "id": "b5_potion_outer_watch_mouth",
+      "item": "potion_large",
+      "pos": [
+        -108.0,
+        7118.0
+      ],
+      "tier": "critical",
+      "why": "At the mouth, 30m before Watchman Corr: basic supplies before the approach's first fight and the alpha pack 130m behind him."
+    },
+    {
+      "id": "b5_revive_before_alpha_pack",
+      "item": "revive",
+      "pos": [
+        -70.0,
+        7230.0
+      ],
+      "tier": "side",
+      "why": "35m off the road, 50m before the alpha Galecrest pack: a revive found before the danger beat, not after it."
+    },
+    {
+      "id": "b5_mushroom_wild_scorched",
+      "item": "wild_mushroom",
+      "pos": [
+        160.0,
+        7355.0
+      ],
+      "tier": "detour",
+      "why": "On the scorched pocket's drained ground: the pocket's stronger supply, an attack buff for the gauntlet a player is walking toward."
+    },
+    {
+      "id": "b5_potion_before_checkpoint",
+      "item": "potion_small",
+      "pos": [
+        102.0,
+        7395.0
+      ],
+      "tier": "critical",
+      "why": "On the road 60m before Warder Ness at the checkpoint: the last basic supply before the waystop decision, found before the fight it supports."
+    }
+  ]
+}

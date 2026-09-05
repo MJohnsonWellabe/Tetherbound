@@ -1,4 +1,5 @@
 {
+  "_comment_w18_density": "W18-DENSITY-B4-B5, 2026-09-04 (CL-O4). Two nodes, both off the road (P-5.3, D74), both at places the band already names: an ironwood behind the outer watch and stone on the west shoulder. D70 says band 5 is short on purpose and its density is a crescendo of occupation, not a repeat of band 1 -- so the approach gains a resource decision on each flank and nothing on its road.",
   "_comment": "BAND-SPLIT. Band-local nodes for band5_stronghold_approach. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because the merged array order is the order harvest nodes are added to the scene tree. A new entry in this band takes an unused order in this band's reserved range 5000-5999, which no other band can collide with; do not renumber an existing one.",
   "_comment_bare": "BAND5-CONTENT. Prompt 66: 'the approach must still contain Meadows ecology and resource decisions. It should not become an empty faction corridor.' This file was empty -- every band3/4/5 harvest table is -- and Band 5 is the chapter's LAST chance to say the Meadows still grows something before the Hall swallows the frame entirely. Two groups: one node early, at the mouth the player enters through, so the region does not open as pure faction corridor; five around `the_waystop` (vegetation.json order 5000, props.json order 5001, map_landmarks.json), the final preparation clearing, so a player who stops there to build has the wood/stone/fiber to do it with rather than a bare lawn with a bench on it. Models/amounts follow the established band1/band2 vocabulary -- no new asset.",
   "nodes": [
@@ -95,6 +96,32 @@
       "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
       "model_scale": 0.85,
       "_why_t3_pickups": "Owner directive 2026-08-29, and owner-direction section 15's 'final preparation opportunity'. Beside the off-spine galecrest hunting pocket (spawns.json order 5021, 'well clear of the checkpoint and the doorstep gauntlet') in the last stretch before the Hall -- one more reason to walk the edges of the approach before committing to the gauntlet."
+    },
+    {
+      "order": 5009,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [
+        -118.3,
+        7151.0
+      ],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
+      "model_scale": 0.28,
+      "_why_w18_density": "W18-DENSITY. Off the road behind the outer watch (P-5.3 keeps the road itself untouched; D74): the watch felled its firewood from one ironwood and left the rest standing -- the approach's only ironwood, so a player can still restock the tier before the Hall."
+    },
+    {
+      "order": 5010,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stone",
+      "at": [
+        -135.0,
+        7318.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.0,
+      "_why_w18_density": "W18-DENSITY. The west shoulder's drained stone, off the road above the meadowhart three (order 5019); the approach keeps a resource decision on its flank, not on its road (D70/D74)."
     }
   ]
 }
