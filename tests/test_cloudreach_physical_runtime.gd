@@ -79,11 +79,11 @@ func test_all_seven_encounter_ids_are_guarded_and_circuit_uses_real_battles() ->
 func test_every_chapter_pickup_and_camp_retains_canonical_identity() -> void:
 	var data := RULES.read(RUNTIME.DATA_PATH)
 	var chapter := RULES.read(RUNTIME.CHAPTER_PATH)
-	assert_eq(chapter["pickups"].size(), 19)
+	assert_eq(chapter["pickups"].size(), 178)
 	assert_eq(data["pickup_overrides"].size(), 19)
 	for spec: Dictionary in chapter["pickups"]:
-		assert_true(data["pickup_overrides"].has(spec["id"]))
-		assert_true(RULES.vec(data["pickup_overrides"][spec["id"]]).is_finite())
+		var authored: Variant = data["pickup_overrides"].get(spec["id"], spec["position"])
+		assert_true(RULES.vec(authored).is_finite())
 		assert_true(spec["persistent"] and spec["one_time"])
 	assert_eq(chapter["camping_contract"]["camps"].size(), 5)
 	var specs := RULES.npc_specs(chapter, RULES.read(RUNTIME.NPC_PATH), FLAGS.new())

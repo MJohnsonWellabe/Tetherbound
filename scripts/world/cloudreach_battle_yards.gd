@@ -33,9 +33,15 @@ func build(world: Node3D) -> void:
 		floor_mesh.add_child(body)
 		world.call("register_runtime_surface",{"kind":"ellipse","centre":Vector2(centre.x,centre.z),"half":Vector2.ONE*radius,"height":centre.y})
 		var entry:=centre-outward*(radius-2.0)
-		world.call("_segment_box",self,str(spec.id)+"_yard_entry",road,entry,5.0,0.45,materials.upland,true)
+		# Voss's summit road lands on a broad cap at a diagonal to the yard axis.
+		# Its normal route projection is 4.4m off that axis, so the old 2.5m
+		# half-width could miss both the connector and the yard disc. A per-yard
+		# width keeps the authored route, trainer, and clearing fixed while making
+		# the whole landing cap join the walkable approach.
+		var entry_width:=float(spec.get("entry_width_m",5.0))
+		world.call("_segment_box",self,str(spec.id)+"_yard_entry",road,entry,entry_width,0.45,materials.upland,true)
 		world.call("_path_ribbon",self,str(spec.id)+"_worn_entry",road,centre,4.5,absi(str(spec.id).hash()))
-		world.call("register_runtime_surface",{"kind":"segment","a":road,"b":entry,"half_width":2.5})
+		world.call("register_runtime_surface",{"kind":"segment","a":road,"b":entry,"half_width":entry_width*0.5})
 		(world.get("_cover_exclusions") as Array).append({"kind":"ellipse","centre":centre,"half":Vector2.ONE*14.0,"rotation":0.0})
 		(world.get("_cover_patches") as Array).append({"kind":"ellipse","centre":centre,"half":Vector2.ONE*18.0,"inner_clear_fraction":0.79,"seed":absi(str(spec.id).hash()),"dry":false})
 		for rim_index in 7:

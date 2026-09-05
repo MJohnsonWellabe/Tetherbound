@@ -25,6 +25,8 @@ const WILD_STRATUM_TOLERANCE := 4.0
 
 class CliffWild:
 	extends "res://scripts/creatures/wild_creature.gd"
+	const PEACEFUL_LEASH_MARGIN_M := 2.0
+	var _peaceful_leash_recoveries := 0
 
 	# Main intentionally accepts its last random candidate when all eight
 	# clearance attempts fail. On a cliff, that fallback is a fall, not roaming.
@@ -51,6 +53,27 @@ class CliffWild:
 				velocity.z = 0.0
 				_target = global_position
 				_pause_left = 0.3
+
+	func _physics_process(delta: float) -> void:
+		super._physics_process(delta)
+		# Endpoint/path validation constrains requested wandering, but physics can
+		# still slide a peaceful body off its high-roost shelf. Once it lands on
+		# another valid lower stratum, the director's below-ground recovery quite
+		# correctly leaves it there; over sustained play that carried one roost
+		# creature ~1.5 km into the authored summit road. Its already-validated
+		# home is the residency contract. Re-seat only nonaggressive, noncombat
+		# bodies that physics has carried beyond their small wander disc.
+		if engaged or aggressive or not is_alive() or not home.is_finite() \
+				or global_position.distance_to(home) <= _wander_radius + PEACEFUL_LEASH_MARGIN_M:
+			return
+		if place_on_ground(home):
+			_target = home
+			_returning_home = false
+			_stuck_frames = 0
+			_peaceful_leash_recoveries += 1
+
+	func peaceful_leash_recoveries() -> int:
+		return _peaceful_leash_recoveries
 
 var realm_world: Node
 var chapter: Dictionary = {}

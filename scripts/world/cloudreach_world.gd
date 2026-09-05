@@ -393,9 +393,25 @@ func _build_regions() -> void:
 		var node := Node3D.new()
 		node.name = _safe_name(str(spec.get("id", "Region")))
 		root.add_child(node)
+		var summit_region := str(spec.get("id", "")) == "summit_final_stronghold"
 		var region_mass := _mesa(node, "CliffMass", centre, size, _materials["cliff"],
-			_materials["upland_dry"] if int(spec.get("order", 0)) >= 5 else _materials["upland"], true,
-			int(spec.get("order", 0)))
+			_materials["upland_dry"] if int(spec.get("order", 0)) >= 5 else _materials["upland"],
+			not summit_region, int(spec.get("order", 0)))
+		if summit_region:
+			# The eroded outer ring falls as much as 48 m below the y=1160 crown.
+			# Its former whole-mass trimesh therefore crossed the authored final
+			# road at a 48-degree face around t=.465 and stopped an ordinary held
+			# stick. Keep that tall geology as the summit silhouette, while the
+			# authored road, loop, landing caps and arena retain the real edge/fall
+			# contract. This thin inset support closes only the intended join from
+			# the road's y=1160 landing to the arena approach; it creates no route
+			# around the ascent and has no tall geological side to intercept it.
+			var crown := _segment_box(node, "SummitWalkableCrown",
+				Vector3(100.0, 1160.0, 5350.0), Vector3(100.0, 1160.0, 5376.0),
+				12.0, 0.42, _materials["upland_dry"], true)
+			var crown_visual := crown.get_child(0) as MeshInstance3D
+			if crown_visual != null:
+				crown_visual.visible = false
 		_add_cliff_strata(node, centre, size, top)
 		_add_satellite_crags(node, centre, size, top, int(spec.get("order", 0)))
 		_add_wind_vegetation(node,
@@ -1402,13 +1418,21 @@ func _build_landmarks() -> void:
 		landmark.position = at
 		root.add_child(landmark)
 		var settlement := str(spec.get("category", "")) == "settlement"
+		var landmark_id := str(spec.get("id", ""))
 		var ledge_size := Vector3(92.0, 100.0, 86.0) if settlement else Vector3(46.0, 72.0, 44.0)
-		if str(spec.get("id", "")) == "sky_shrine_heartstone":
+		if landmark_id == "sky_shrine_heartstone":
 			# The old 72 m cap stopped in the air above its parent highland crown.
 			# Carry this exceptional Fly-only pinnacle down into the cloud valley.
 			ledge_size = Vector3(132.0, at.y + 210.0, 126.0)
+		# These authored roads terminate at their landmark centres. The 72m-tall
+		# convex geological colliders met the incoming ramps below their crowns,
+		# turning intended grounded joins into steep walls. Keep the visible
+		# cliff masses, but let their thin level crowns / route landing supports
+		# own collision at the authored elevations.
+		var ledge_collision := not settlement and landmark_id not in [
+			"old_wind_observatory", "summit_eyrie_stronghold", "waterward_overlook"]
 		var ledge:=_mesa(landmark, "LandmarkLedge", Vector3(0.0, -ledge_size.y * 0.5 + 0.10, 0.0), ledge_size,
-			_materials["cliff"], _materials["upland_dry"] if at.y>=700.0 else _materials["upland"], not settlement, _landmark_count + 31)
+			_materials["cliff"], _materials["upland_dry"] if at.y>=700.0 else _materials["upland"], ledge_collision, _landmark_count + 31)
 		if settlement:
 			(ledge.get_node("StratifiedCliffBody") as MeshInstance3D).visible=false
 			_build_articulated_settlement_skirt(landmark,at.y>=700.0)
@@ -1416,6 +1440,25 @@ func _build_landmarks() -> void:
 			# inside that level approach while the geological skirt extends farther.
 			_box(landmark, "SettlementWalkableTerrace", Vector3(0, -0.22, 0),
 				Vector3(48, 0.44, 48), _materials["upland_dry"], true).visible = false
+		elif landmark_id == "old_wind_observatory":
+			_box(landmark, "ObservatoryWalkableCrown", Vector3(0, -0.22, 0),
+				Vector3(38, 0.44, 36), _materials["upland_dry"], true).visible = false
+		elif landmark_id == "waterward_overlook":
+			# The restored-winds route terminates on this exact crown. Its former
+			# 72m convex ledge met the rising loop well below the top and stopped a
+			# held stick 17.6m before the authored endpoint. Keep that tall mass as
+			# silhouette. Two thin, route-aligned crown leaves overlap the final
+			# portion of each sloped loop edge; a flat slab here would itself create
+			# a step wall below the y=1110 vertex. Their narrow widths preserve the
+			# intended fall edges on either side of the overlook.
+			var west_crown := _segment_box(landmark, "OverlookWalkableCrown",
+				Vector3(-8.0, -2.4, -28.0), Vector3.ZERO, 22.0, 0.44,
+				_materials["upland_dry"], true)
+			var east_crown := _segment_box(landmark, "OverlookWalkableCrownEast",
+				Vector3(27.7, 3.35, 4.3), Vector3.ZERO, 12.0, 0.44,
+				_materials["upland_dry"], true)
+			west_crown.get_child(0).visible = false
+			east_crown.get_child(0).visible = false
 		_surfaces.append({"kind": "rect", "centre": Vector2(at.x, at.z), "half": Vector2(17.0, 17.0), "height": at.y})
 		_cover_patches.append({"kind": "ellipse", "centre": at, "half": Vector2(25.5,25.5) if settlement else Vector2(16.5, 15.5),
 			# Settlement lanes are protected by their actual building, yard and
@@ -1424,7 +1467,6 @@ func _build_landmarks() -> void:
 			"height_scale": 0.58 if settlement else 1.0,
 			"seed": _landmark_count * 71 + 809,
 			"dry": at.y >= 790.0})
-		var landmark_id := str(spec.get("id", ""))
 		var identity := (landmark_id + " " + str(spec.get("category", ""))).to_lower()
 		if landmark_id == "realm_gate_crag":
 			_build_realm_gate_crag(landmark)
@@ -1981,12 +2023,19 @@ func _build_summit_stronghold(root: Node3D) -> void:
 	# Two articulated wings and a high gate bridge replace the solid cuboid that
 	# filled the whole final-approach frame. The open central throat is readable
 	# from the road and gives the eventual pre-boss route a physical entrance.
+	# The authored diagonal ascent reaches x=+9.5 while its capsule head is still
+	# below crown height. At the former +/-13.5 positions that put it under the
+	# east wing's x=6 edge and stopped it against the underside. Align the wings
+	# with the existing +/-24 towers so the visible and physical throat both
+	# clear the unchanged road. The summit-overlook circuit then leaves this
+	# throat through the two side wings: articulate each wall around that exact
+	# authored crossing instead of leaving a solid box across a bidirectional
+	# production route.
 	for side: float in [-1.0, 1.0]:
-		_box(root, "SummitWing", Vector3(side * 13.5, 13.0, 0.0),
-			Vector3(15.0, 26.0, 34.0), _materials["stone"], true).visible = false
-		_castle_piece(root, "SummitMasonryWing", CASTLE_WALL, Vector3(side * 13.5, 0, 0),
-			Vector3(15, 28, 34), _materials["stone"])
-		_box(root, "WingButtress", Vector3(side * 22.0, 7.5, 8.0),
+		var portal_z := -1.5 if side < 0.0 else 7.5
+		_build_summit_route_wing(root, side, portal_z)
+		var buttress_z := 9.0 if side < 0.0 else -9.0
+		_box(root, "WingButtress", Vector3(side * 22.0, 7.5, buttress_z),
 			Vector3(4.0, 15.0, 10.0), _materials["cliff_mid"], true)
 	_box(root, "GateBridge", Vector3(0.0, 25.0, 0.0),
 		Vector3(14.0, 7.0, 34.0), _materials["stone_light"], true).visible = false
@@ -2024,6 +2073,30 @@ func _build_summit_stronghold(root: Node3D) -> void:
 	_box(root, "TetherCrown", Vector3(0.0, 47.0, -3.0),
 		Vector3(29.0, 2.2, 24.0), _materials["masonry_trim"], false)
 	_develop_stronghold_spaces(root)
+
+
+func _build_summit_route_wing(root: Node3D, side: float, portal_z: float) -> void:
+	const WING_HALF_DEPTH := 17.0
+	const PORTAL_HALF_WIDTH := 5.0
+	const PORTAL_CLEAR_HEIGHT := 8.0
+	var portal_min := portal_z - PORTAL_HALF_WIDTH
+	var portal_max := portal_z + PORTAL_HALF_WIDTH
+	for span: Vector2 in [Vector2(-WING_HALF_DEPTH, portal_min), Vector2(portal_max, WING_HALF_DEPTH)]:
+		var depth := span.y - span.x
+		var centre_z := (span.x + span.y) * 0.5
+		_box(root, "SummitWing", Vector3(side * 18.5, 13.0, centre_z),
+			Vector3(15.0, 26.0, depth), _materials["stone"], true).visible = false
+		_castle_piece(root, "SummitMasonryWing", CASTLE_WALL,
+			Vector3(side * 18.5, 0.0, centre_z), Vector3(15.0, 28.0, depth), _materials["stone"])
+	# Retain the wing's tall silhouette and collision above the authored route,
+	# while leaving controller-height clearance at the actual ground crossing.
+	var lintel_height := 28.0 - PORTAL_CLEAR_HEIGHT
+	_box(root, "SummitWingLintel",
+		Vector3(side * 18.5, PORTAL_CLEAR_HEIGHT + lintel_height * 0.5, portal_z),
+		Vector3(15.0, lintel_height, PORTAL_HALF_WIDTH * 2.0), _materials["stone"], true).visible = false
+	_castle_piece(root, "SummitMasonryWingLintel", CASTLE_WALL,
+		Vector3(side * 18.5, PORTAL_CLEAR_HEIGHT, portal_z),
+		Vector3(15.0, lintel_height, PORTAL_HALF_WIDTH * 2.0), _materials["stone"])
 
 
 func _develop_stronghold_spaces(root: Node3D) -> void:

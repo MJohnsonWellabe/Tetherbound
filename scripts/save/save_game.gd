@@ -318,6 +318,10 @@ func save(game: Object, slot: int) -> bool:
 	if file == null:
 		return false
 	file.store_string(JSON.stringify(data, "\t"))
+	# A save may be loaded again immediately from the same UI/session. Close the
+	# writer before reporting success so that read never observes a buffered or
+	# partially flushed JSON document.
+	file.close()
 	return true
 
 
