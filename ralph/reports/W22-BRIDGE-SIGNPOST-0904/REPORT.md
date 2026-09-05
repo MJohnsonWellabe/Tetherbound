@@ -19,7 +19,7 @@ closure plan CL-B3's in-rules half (the South Bridge as a held crossing from the
 | `tests/smoke_traversal.gd` | `_assert_south_bridge_held()` before the gate walk, `_assert_south_bridge_stood_down()` after it |
 | `tools/_capture_w22_bridge_signpost.gd` | new: one-load world capture of the three `_capture_band1_signpost_legibility` stands (read from that tool's own `VIEWPOINTS`) plus four bridge stands |
 | `tools/_capture_bridge_deck_isolated.gd` | new: §7 step 1, the deck/rail and a four-arm signpost on a bare bench |
-| `docs/decisions/D74-the-south-bridge-is-held-from-the-approach.md` | new |
+| `docs/decisions/D86-the-south-bridge-is-held-from-the-approach.md` | new |
 | `docs/VISUAL_BIBLE.md` §4a, `docs/CURRENT_STATE.md` | status |
 | `ralph/reports/W22-BRIDGE-SIGNPOST-0904/` | this report, `JUDGE.md`, `JUDGE_PROMPT.md`, `_sheet_signpost_ab.png`, `_sheet_bridge_ab.png` |
 
@@ -102,8 +102,8 @@ __W22_VERDICT_BLOCK__
   pixels tall at either version, as it was before. The bench frames carry the letterform
   comparison.
 - No Meshy brief written: the judge did not fail the deck or the signpost twice.
-- The barricade never crosses the deck (D74 §1); the sentry is dressing, not a fight (D74 §3).
-- The Old Mill Crossing inherits the rope rail through the shared recipe (D74 §4) and was not
+- The barricade never crosses the deck (D86 §1); the sentry is dressing, not a fight (D86 §3).
+- The Old Mill Crossing inherits the rope rail through the shared recipe (D86 §4) and was not
   re-rendered here.
 - The full unit suite was not run (the brief did not ask for it); the named tests and both
   smokes were.

@@ -1,4 +1,4 @@
-# D74 — The South Bridge is held from the approach, and the deck is railed with rope
+# D86 — The South Bridge is held from the approach, and the deck is railed with rope
 
 **Date:** 2026-09-04 · **Decided by:** lane W22-BRIDGE-SIGNPOST-0904, under the
 COMMON rule that a lane makes the smallest defensible call and records it rather

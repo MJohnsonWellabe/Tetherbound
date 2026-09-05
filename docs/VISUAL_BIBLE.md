@@ -262,7 +262,7 @@ weathered brown; the rail colliders are unchanged. In front of the generated che
 (`south_bridge.gd::_build_occupation`): two staked oxblood sigil banners, crossed-timber
 barricade frames on both shoulders with crates and a barrel against the archway, a post
 lantern with the faint `tether_teal`, and a posted grunt (`south_bridge_dressing.json`, no
-prompt) who stands down when the gate is opened — D74. Verdict: __W22_VERDICT__
+prompt) who stands down when the gate is opened — D86. Verdict: __W22_VERDICT__
 
 ## 5. Owner decisions that bound visual work
 
