@@ -206,7 +206,7 @@ build is 20–50 minutes under software GL and every question here is about the 
 geometry and colour, not how it composites against grass). Events are pushed through the
 real producers, so the frames show what the shipped code draws.
 
-Contact sheets: `shots/_sheet_round1.png` and `shots/_sheet_round2.png`
+Contact sheets: `shots/_sheet_round1.png`, `_sheet_round2.png` and `_sheet_round3.png`
 (level-up banner, bond-milestone banner, strip mid bond-tick, Team screen).
 
 Measured before the render: the banner plate's crop median luminance **31.6** against the
@@ -254,6 +254,51 @@ its own `BG_DEEP` plate; the capture waits for the reveal to land. Measured afte
 core reads **(224, 177, 72) on a (9, 12, 15) plate — 9.85:1**, against ~1.3:1 unplated in
 round 1.
 
+**Round 2** — `JUDGE_ROUND2.md`, sheet `_sheet_round2.png`, judged by a **fresh** agent with
+no knowledge of round 1. It confirmed the three fixes held, in its own words: *"Not
+truncated, no run-together. Biscuit, Moss, Ridge, Pip, Kite all fit"*; the only overlapping
+pairs it could find were *"both in the bottom-left HUD"* (the pre-existing HP/FOOD chips, not
+the banner); and the tick tag dropped off its illegibility list entirely. It then found three
+more things that are mine, all fixed in a third pass:
+
+4. **The two banner types were the same picture** — it pixel-diffed them at 1.07% differing,
+   *"none of them in the plate's border, headline or second line"*. A level-up now takes a
+   **teal** plate and title (the colour levelling already wears on the XP sliver and the
+   combat HUD's line); a bond node keeps **amber**. Re-measured: 9.33% of the frame differs,
+   and the plate border samples 1,814 teal / 0 amber pixels on the level-up against 84 amber
+   / 0 teal on the milestone.
+5. **A level-up collapsed into an existing plate was demoted to the smallest, dimmest line**
+   (*"the level-up should not be the thing hidden in tier three"* — raised in both rounds). A
+   `level_up` now takes the headline from a non-level-up when it joins, and the displaced
+   moment moves to the also-line rather than being dropped. That line also moved up from
+   `FONT_TINY` to `FONT_LABEL`, which the judge measured at 11 px.
+6. **The bond pip sat immediately left of the HP pill**, so the judge read the (full,
+   because healthy) pill as the bond meter and called it a contradiction of the number beside
+   it. The pip moved to the text side of the row, next to the name.
+
+It also caught a second **capture** defect rather than a code one: with only 40 frames between
+the two banner shots, the second event landed inside the 5 s collapse window and *joined the
+first plate*, so both frames photographed the same banner. The capture now waits past
+`moment_collapse_seconds + moment_seconds` between events. That is why the round-2 sheet's
+two banners looked identical even where the code already differed.
+
+**The ceiling, recorded.** The round-3 frames (`_sheet_round3.png`) were **not** put to a
+fourth judge — the brief's stop rule is two rounds, and rounds 1 and 2 each moved real things.
+Everything still open on round 2's list is outside this lane's ownership and is HUD-wide
+rather than progression-specific: body type across the whole HUD running at 10–14 px against
+a ~20 px handheld floor, the persistent HUD breaching the 5% safe area on all four edges, the
+HP/FOOD readout plates drawn on top of the bars they label, `Tired · Fed · Restless` lit
+identically on every roster card, the roster's uninformative rings glyph and level bars, and
+the keyboard-only HUD hints on a controller-first target. Those want a HUD-wide pass (CL-B4's
+territory), not more edits from here.
+
+**One judge finding checked and rejected.** Round 2 reported that in `strip_bond_tick.png`
+the `+bond · fed` toast sits level with Ridge while "the creature that ticked to 2/5 is
+Moss". The toast is on the right row: Moss's tick was the *previous* frame's event (her meal
+completed her feeding task, which is why she reads 2/5), and the frame's own credit goes to
+Ridge. `smoke_progression_feedback` asserts this behaviourally, per creature index, and
+passes — the judge inferred the actor from the bond numbers rather than from what ticked.
+
 **Not mine, left alone and reported up** (the judge found these too, and they are outside
 this lane's ownership): the whole HUD is anchored to roughly a 1% margin rather than 5% (the
 HP/FOOD plates 53 px inside the left edge, the minimap 3 px past the top) — that is CL-B4's
@@ -271,7 +316,7 @@ None of those are touched by this diff.
 | The evidence template for the segment records the two bond actions and the level-up by name | The smoke prints them by name and label; the block is quoted above |
 | **Fails if** only the final bond-up becomes visible | Every credit ticks; `bond_near` fires at the configured remaining count |
 | **Fails if** a level changes in data and the player must open a menu | The banner is on the world HUD, plus the combat HUD's own line |
-| **Fails if** the banner covers combat controls or steals focus | Asserted: hidden and queued during a fight, flushed after; a passive `PanelContainer` on `LAYER_HUD` with `MOUSE_FILTER_IGNORE`, held while any story modal is open |
+| **Fails if** the banner covers combat controls or steals focus | Asserted: hidden and queued during a fight, flushed after; a passive `PanelContainer` on `LAYER_HUD` with `MOUSE_FILTER_IGNORE`, held while any story modal is open, and now placed below the objective hint card's live bottom edge |
 | **Fails if** any new test passes by reading a script's source | No new test opens a `.gd` file; the one that used to (`test_level_up_announcement`) was rewritten to run the builder, and was seen red for the right reason |
 
 ## 6. Known limitations and what was deliberately not done
@@ -309,4 +354,9 @@ Branch `ralph/W13-PROGRESSION-FEED-0904`, pushed.
 17795e4f  feat: progression presenters — strip ticks, moment banner, Team screen tasks
 a64d4144  test: smoke_progression_feedback — the four bond actions and the banner
 7ebc4608  docs: CURRENT_STATE CL-W6 rewritten; progression capture tool
+94a84c5f  docs: W13-PROGRESSION-FEED report and round-1 contact sheet
+aea5887b  fix: round-2 blind-judge defects — banner collision, strip overflow, tick plate
+14f4c84c  fix: round-2 judge — banner chrome per kind, level-up headline, bond pip
 ```
+
+**Head of branch: `14f4c84c`.** Pushed to `origin/ralph/W13-PROGRESSION-FEED-0904`.

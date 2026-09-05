@@ -103,7 +103,15 @@ func _run() -> void:
 	await _shoot("banner_level_up")
 
 	# 2. A real bond milestone: the meal that completes Moss's feeding task.
-	for i in 40:
+	#
+	# The wait is long ON PURPOSE and must stay longer than
+	# progression_feedback.json's `moment_collapse_seconds` (5s) plus
+	# `moment_seconds` (3s): inside that window a second Moment JOINS the
+	# plate already up instead of raising its own, which is the shipped
+	# behaviour but meant these two frames were photographs of the same
+	# banner. Round 2's judge measured them as 98.9% identical and was right
+	# about the frames, though not about the code.
+	for i in 620:
 		await process_frame
 	var feeds_target := 0
 	for entry: Variant in BOND.milestones(BOND.config()):
@@ -116,8 +124,9 @@ func _run() -> void:
 	await _shoot("banner_milestone")
 
 	# 3. The strip mid-tick, with no banner over it: another meal, shot inside
-	#    the tick's own hold.
-	for i in 200:
+	#    the tick's own hold. Again past the collapse window, so the banner
+	#    from frame 2 is down and the strip is photographed alone.
+	for i in 620:
 		await process_frame
 	BOND.credit_feed(members[2])
 	# ROUND 1 capture defect: shot 3 frames after the credit, which was inside

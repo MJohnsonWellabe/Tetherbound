@@ -22,7 +22,7 @@ const UI_TOKENS := preload("res://scripts/ui/ui_tokens.gd")
 
 const GRAPHIC_SIZE := Vector2(220.0, 28.0)
 ## Room for the milestone progress line underneath the graphic.
-const CAPTION_HEIGHT := 26.0
+const CAPTION_HEIGHT := 32.0
 
 const NODE_RADIUS := 5.0
 const LINE_WIDTH := 3.0
@@ -87,8 +87,11 @@ func _draw() -> void:
 				draw_arc(center, NODE_RADIUS + 1.0, -TAU * 0.25, -TAU * 0.25 + TAU * _next_progress,
 					24, UI_TOKENS.WARNING, 3.0, true)
 
-	var caption_pos := Vector2(0.0, GRAPHIC_SIZE.y + UI_TOKENS.FONT_TINY)
+	# BLIND-JUDGE ROUND 2: this caption measured ~9px on a 1280x800 frame and
+	# the judge misread "NEXT" as "NEHT" and ran "FED TOGETHER" together.
+	# FONT_LABEL is the glance tier the rest of the HUD reads at.
+	var caption_pos := Vector2(0.0, GRAPHIC_SIZE.y + UI_TOKENS.FONT_LABEL)
 	draw_string(
 		_font, caption_pos, _caption, HORIZONTAL_ALIGNMENT_LEFT, -1.0,
-		UI_TOKENS.FONT_TINY, UI_TOKENS.TEXT_SECONDARY
+		UI_TOKENS.FONT_LABEL, UI_TOKENS.TEXT_SECONDARY
 	)
