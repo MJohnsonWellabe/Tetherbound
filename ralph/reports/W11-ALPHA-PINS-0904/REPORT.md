@@ -160,6 +160,11 @@ godot --headless --path . --script tests/run_tests.gd
 → 1837 tests, 3723851 assertions, 4 failed   (~26 min)
 ```
 
+Run **twice**: once when the save-format change landed, and again at the end against the
+finished tree, after the three `tab_map.gd` marker revisions. Identical both times — same
+count, same assertions, same four failures. (A third run was started and killed: it was
+launched before the last marker edit and would have measured a tree that never existed.)
+
 **All four failures are pre-existing on `main` and none is reachable from this diff.**
 
 | Failing test | Why it is not this lane's |
@@ -416,3 +421,36 @@ every one of them is about the map screen this lane only added a marker to):
   control-hint rows so it reads as a third row of keybinds.
 * Zoom is bound to `[Minus]`/`[Equal]` with no pad binding, on a controller-first project.
 
+---
+
+## 8. Final state
+
+| | |
+|---|---|
+| Branch | `ralph/W11-ALPHA-PINS-0904` |
+| Files in the diff | 15, all inside the ownership list |
+| Lane test | `test_alpha_pins.gd` — 24 tests, 154 assertions, 0 failed |
+| Lane smoke | `smoke_alpha_pins.gd` — pins at 275.0 m walking in from 550 m, 0 errors |
+| Named tests | `test_save_format` 55/271/0, `test_map_baker` 7/13/0, `test_map_icons` 6/35/0, `test_map_fog` 5/18/0, `test_map_zoom_persistence` 3/9/0 |
+| Named smokes | `smoke_save_persistence` PASS, `smoke_wild_streaming` PASS — 0 `^ERROR:`, 0 `SCRIPT ERROR` in either |
+| Full suite | 1837 tests, 3,723,851 assertions, 4 failed — all four pre-existing on `main` |
+| Frame | `_sheet_alpha_pin.png`, 1280×800, one contact sheet as COMMON.md allows |
+| Blind judge | three rounds; the third confirms the pin separates from the player marker **in greyscale, by silhouette** |
+
+**The acceptance criterion, item by item:**
+
+| Brief | Evidence |
+|---|---|
+| a probe drives a body to 300 m of a Band 1/2 alpha and the pin appears | `smoke_alpha_pins` walks a real `CharacterBody3D` in from 550 m and pins Band 2's order 2011 at **275.0 m** on a real clock |
+| on minimap **and** full map | both renderers filter on `MapState.ALPHA_MARKER_PREFIX`, read from that one const; the smoke asserts the entry both screens iterate, and the frame shows the full map drawing it |
+| survives save/load | `save_game.gd` VERSION 17 top-level `alpha_pins`; proved by a real file round-trip into a **discarded and rebuilt** `MapState`, and watched fail when the write was replaced with `[]` |
+| clears on KO | firing `wild_once_2011` clears it within one tick, it does not re-pin while the player stands there, and it does not return on reload; watched fail when `unpin_alpha` was stubbed |
+| one 1280×800 full-map frame with a pin | `_sheet_alpha_pin.png`, produced by the real `AlphaPins` node's own `_process` in the shipped world scene (no `hand-driven tick()` line in the run log) |
+| a code-blind judge confirms the pin is legible | round 3: found unprompted, *"nothing else on the map is red"*, separable from the player marker in **greyscale by silhouette**, label readable with a measured 13 px clearance |
+
+Also verified beyond the brief: the pin **survives leaving** — the capture asserts the count
+does not drop when the player walks 850 m out of the radius, and reports `1 pin(s) still set
+from 850 m away`. Only the once-flag clears it, which is the directive's actual promise and
+which no unit test covers from a live world.
+
+**Final commit:** see the branch tip; this report's own commit is the last one.
