@@ -50,7 +50,6 @@ static func config_fingerprint() -> int:
 static func fingerprint_for_source(source: String) -> int:
 	# Keep the committed Linux fingerprint valid on Windows without rebaking.
 	var mixed := source.replace("\r\n", "\n").hash() + int(CONFIG_PATH.hash())
-	var mixed := normalised_text(file.get_as_text()).hash() + int(CONFIG_PATH.hash())
 	# Masked to 53 bits for the same reason `scatter_bake.gd` masks its own
 	# fingerprint: this number is written into manifest.json and read back
 	# through `JSON.parse_string`, which has no integer type -- every number
