@@ -732,6 +732,7 @@ class FlatWorld:
 ## still block everything inside SCATTER_CLEARANCE_M, which is not the same
 ## thing as "there is nothing here".
 class BlobScatter:
+	extends Node3D
 	var blocked_radius: float = 0.0
 	var asked: Array[Vector3] = []
 

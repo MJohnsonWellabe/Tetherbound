@@ -136,17 +136,39 @@ func _start_mira_battle_through_dialogue() -> void:
 ## `creature_recall` (RB) instead. B is `hotbar_1`/`build_cancel` now and
 ## disengages nothing, so this pressed a button with no bearing on the fight
 ## and reported the fight still running -- which it correctly was.
+## UPDATED by the landing lane, 2026-09-05, for owner directive 2026-09-04-B
+## amendment A-1, implemented by lane W10-TRAINER-RULES: *"you shouldn't be able
+## to leave a fight with another character once it's started. still should be
+## able to with a wild creature."*
+##
+## This step used to press RB and require the trainer fight to END. That is now
+## exactly the behaviour the directive forbids, so the press is kept and the
+## expectation is INVERTED: RB must be refused, and the fight must still be
+## running afterwards. `combat_manager.gd::can_flee()` returns
+## `not _enemy_owned`, and `smoke_trainer_battle.gd` covers the refusal message.
+##
+## The camera half of this test is what it was always for, so the fight is then
+## ended the only way a trainer fight can end other than the party fainting —
+## resolving it as won — and the orbit assertions below run unchanged against
+## that exit instead of against a flee that is no longer allowed to happen.
 func _prove_combat_exit_restores_orbit() -> void:
 	await _press_button(JOY_BUTTON_RIGHT_SHOULDER)
+	for i in 30:
+		await physics_frame
+	if not bool(_manager.call("is_fighting")):
+		_fail("RB ended a TRAINER fight: owner directive 2026-09-04-B A-1 says a "
+			+ "trainer fight cannot be left once it has started")
+		return
+	_manager.call("_begin_resolve", "won")
 	for i in 180:
 		if not bool(_manager.call("is_fighting")):
 			break
 		await physics_frame
 	if bool(_manager.call("is_fighting")):
-		_fail("physical RB did not disengage the trainer battle")
+		_fail("the trainer battle never resolved after being won")
 		return
 	if _rig.get("_target") != _player or not _rig.is_processing() or not _camera.current:
-		_fail("fleeing the trainer battle did not restore the exploration camera")
+		_fail("winning the trainer battle did not restore the exploration camera")
 	await _assert_raw_orbit_changes("exploration after trainer battle")
 
 
