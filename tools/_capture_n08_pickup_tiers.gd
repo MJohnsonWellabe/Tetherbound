@@ -32,8 +32,10 @@ extends SceneTree
 ## The trainer stands in every frame (it is the rig's own target), so scale
 ## is judged against the 1.80 m body rather than guessed. The candies' idle
 ## spin is frozen at a bearing that shows the Rare's wings side-on to the
-## lens; a still cannot show motion, and a frame that happened to catch the
-## wings edge-on would be evidence of the phase, not the look.
+## lens (the wrapper's long axis, which the wings follow, is its local x;
+## a yaw equal to the stand's bearing lays it across the sightline); a still
+## cannot show motion, and a frame that happened to catch the wings edge-on
+## would be evidence of the phase, not the look.
 ##
 ## Frames go to `res://shots/n08_pickup_tiers/<tag>/`; only a contact sheet
 ## is committed (AGENT_WORKFLOW.md §8). A per-frame log with the grass
@@ -68,17 +70,26 @@ const LINEUP := [
 	{"id": "n08_lineup_shroom", "item": "stamina_mushroom"},
 ]
 
-## Stands. `lineup` stands aim at the line-up centre from `from` metres
-## south; `pickup` stands aim at an authored `BandPickup_<id>` from `from`
-## metres along `bearing` (degrees, 0 = camera south of it looking north,
-## the same convention as `_capture_w18_pickups.gd`).
+## Stands. Distances are PLAYER distances; the rig's boom puts the lens
+## about 5 m further back, and the log records where the lens actually was.
+## `lineup` stands look north at the line from `from` metres south of it;
+## `pickup` stands look at an authored `BandPickup_<id>` from `from` metres
+## along `bearing` (degrees, 0 = camera south of it looking north, the same
+## convention as `_capture_w18_pickups.gd`).
+##
+## The rig looks THROUGH the trainer, so a target on the sightline is a
+## target behind his back (the first pass hid the Great candy exactly so).
+## Every stand therefore aims `AIM_SIDE_M` to the right of what it is
+## photographing: the subject sits left of centre and the body stands beside
+## it as the 1.80 m ruler, not over it.
+const AIM_SIDE_M := 3.4
 const STANDS := [
-	{"name": "01-lineup-7m", "lineup": true, "from": 7.0, "why": "the four side by side at deciding distance; the tier is the only variable"},
-	{"name": "02-lineup-14m", "lineup": true, "from": 14.0, "why": "the same line at noticing distance: does the hierarchy survive where no crest resolves?"},
-	{"name": "03-lineup-3m", "lineup": true, "from": 3.0, "why": "arrival range: do the parts read as parts of the object, and does anything float?"},
-	{"name": "04-b4-good-south-paddock-7m", "id": "b4_candy_highfield_south_paddock", "from": 7.0, "bearing": 200.0, "why": "W18's Good, authored ground"},
-	{"name": "05-b4-great-wind-ridge-7m", "id": "b4_candy_wind_ridge_crest", "from": 7.0, "bearing": 200.0, "why": "W18's Great, authored ground"},
-	{"name": "06-b4-rare-herd-bull-7m", "id": "b4_candy_herd_bull_highfield", "from": 7.0, "bearing": 200.0, "why": "W18's Rare, authored ground"},
+	{"name": "01-lineup-cam7m", "lineup": true, "from": 2.4, "why": "the four side by side, lens ~7 m: the distance a player decides from; the tier is the only variable"},
+	{"name": "02-lineup-cam12m", "lineup": true, "from": 7.0, "why": "the same line, lens ~12 m: does the hierarchy survive where no crest resolves?"},
+	{"name": "03-lineup-cam17m", "lineup": true, "from": 12.0, "why": "lens ~17 m, the distance a player notices a find from"},
+	{"name": "04-b4-good-south-paddock", "id": "b4_candy_highfield_south_paddock", "from": 2.4, "bearing": 200.0, "why": "W18's Good, authored ground, lens ~7 m"},
+	{"name": "05-b4-great-wind-ridge", "id": "b4_candy_wind_ridge_crest", "from": 2.4, "bearing": 200.0, "why": "W18's Great, authored ground, lens ~7 m"},
+	{"name": "06-b4-rare-herd-bull", "id": "b4_candy_herd_bull_highfield", "from": 2.4, "bearing": 200.0, "why": "W18's Rare, authored ground, lens ~7 m"},
 ]
 
 var _world: Node = null
@@ -156,7 +167,7 @@ func _stage_lineup() -> void:
 			_failures.append("line-up: %s did not place (%s)" % [str(spec["id"]), str(outcome)])
 			continue
 		_staged.append(node)
-		_freeze_spin(node, PI * 0.5)
+		_freeze_spin(node, 0.0)
 		var item := str(spec["item"])
 		_log.append("staged %-18s %-16s at %s  glow x%s  parts %s  crest %s%s" % [
 			str(spec["id"]), item, str(node.global_position),
@@ -205,8 +216,8 @@ func _loader_has(method: String) -> bool:
 
 ## A still cannot show the idle spin, and a frame that caught the wings
 ## end-on would be evidence of the phase, not the look. Freeze every candy at
-## `yaw` so the Rare's wings span the frame's x axis (the player looks north,
-## so a wing along world x is side-on to the lens).
+## `yaw`: the wrapper's long axis is its local x, so a yaw equal to the
+## stand's bearing lays the wings across the sightline, side-on to the lens.
 func _freeze_spin(node: Node3D, yaw: float) -> void:
 	if node.has_meta("tier_spin"):
 		var tween: Tween = node.get_meta("tier_spin") as Tween
@@ -220,22 +231,28 @@ func _freeze_spin(node: Node3D, yaw: float) -> void:
 
 func _shoot(stand: Dictionary) -> void:
 	var name := str(stand["name"])
-	var target := Vector3.ZERO
-	var stand_at := Vector3.ZERO
+	var subject := Vector3.ZERO
 	var distance := float(stand["from"])
+	var bearing := 0.0
 	if bool(stand.get("lineup", false)):
 		var ground := float(_world.call("ground_height_at", LINEUP_CENTRE.x, LINEUP_CENTRE.y))
-		target = Vector3(LINEUP_CENTRE.x, ground, LINEUP_CENTRE.y)
-		stand_at = target + Vector3(0.0, 0.0, distance)
+		subject = Vector3(LINEUP_CENTRE.x, ground, LINEUP_CENTRE.y)
 	else:
 		var node := _world.get_node_or_null(NodePath("BandPickup_%s" % str(stand["id"]))) as Node3D
 		if node == null:
 			_failures.append("%s: no BandPickup_%s in the world" % [name, str(stand["id"])])
 			return
-		_freeze_spin(node, deg_to_rad(float(stand.get("bearing", 0.0))) + PI * 0.5)
-		target = node.global_position
-		var bearing := deg_to_rad(float(stand.get("bearing", 0.0)))
-		stand_at = target + Vector3(sin(bearing) * distance, 0.0, cos(bearing) * distance)
+		bearing = deg_to_rad(float(stand.get("bearing", 0.0)))
+		_freeze_spin(node, bearing)
+		subject = node.global_position
+	# The sightline runs from the stand toward the subject; the aim point is
+	# `AIM_SIDE_M` to the right of the subject along that line's perpendicular,
+	# and the player stands `distance` back from the AIM point, so the body
+	# is beside the subject in frame rather than in front of it.
+	var toward := Vector3(-sin(bearing), 0.0, -cos(bearing))
+	var right := Vector3(-toward.z, 0.0, toward.x)
+	var target := subject + right * AIM_SIDE_M
+	var stand_at := target - toward * distance
 	stand_at.y = float(_world.call("ground_height_at", stand_at.x, stand_at.z)) + 0.1
 	_player.global_position = stand_at
 	_player.velocity = Vector3.ZERO
@@ -263,8 +280,8 @@ func _shoot(stand: Dictionary) -> void:
 	if image == null or image.save_png(path) != OK:
 		_failures.append("%s: no image / save_png failed" % name)
 		return
-	_log.append("%-30s %-6s dist=%4.1fm  eye %s -> %s\n%-30s %s\n%-30s %s" % [
-		name, _tag, distance, str(camera.global_position), str(target), grass, "", str(stand["why"]), "", path])
+	_log.append("%-30s %-6s dist=%4.1fm  eye %s -> %s\n%-30s %s\n%-30s %s\n%-30s %s" % [
+		name, _tag, distance, str(camera.global_position), str(target), "", grass, "", str(stand["why"]), "", path])
 	_write_log()
 	print("[n08-capture] %s -> %s | %s" % [name, path, grass])
 
