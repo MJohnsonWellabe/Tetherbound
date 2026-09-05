@@ -25,7 +25,10 @@ S09's outer watch ran out before the panel closed, left `input_context` on
 `tools/gate_f/segments/S06.json`, `S06C.json`, `S07.json`, `S07C.json`, `S08.json`,
 `S08C.json`, `S09.json`, `S09C.json` — three uniform changes plus one one-line fix:
 
-1. **21 counted combat blocks → `fight_until_resolved`.** It presses `combat_quick` only
+1. **43 counted `press combat_quick` blocks → 23 `fight_until_resolved` steps.** More
+   blocks than fights, because a fight split across two or three counted blocks (with a
+   scripted `party_cycle` or `combat_charged` wedged between them) collapses into one
+   predicate step. `fight_until_resolved` presses `combat_quick` only
    while the action machine reads READY, presses `party_cycle` once when the pilot drops
    below 35 % of max HP, and stops only when both `is_fighting()` and
    `trainer_battle_active()` have been false for `quiet_frames`. Every trainer fight also
@@ -40,7 +43,8 @@ S09's outer watch ran out before the panel closed, left `input_context` on
    and after every swing and stops **before** the swing whose worst plausible roll could
    reach the floor. Same predicate-not-press-count rule, applied to the half of combat that
    must *not* end.
-3. **21 challenge conversations → `advance_dialogue_until_closed`**, which reads
+3. **20 counted challenge conversations → `advance_dialogue_until_closed`** (a 21st, S07-51,
+   already was one — G3-BAND3 had converted that one alone). It reads
    `dialogue_runner.gd::line()` and stops the moment the panel closes.
 4. **A recovery ladder in front of every fight, and a post-faint switch behind it.**
    The ladder is `wait_until world → open_menu backpack → focus_item {item: "revive"} →
@@ -319,6 +323,11 @@ walkable here.
 | `tools/gate_f/segments/S09.json` | 79 → 102 steps. Corr and the checkpoint. |
 | `tools/gate_f/segments/S09C.json` | 44 → 67 steps. |
 | `tests/test_gate_f_segments.gd` | **new**, 7 tests. |
+
+Counted precisely, across the eight files: **43** `press combat_quick` blocks removed, **23**
+`fight_until_resolved` and **4** `chip_to_floor` steps added, **20** counted challenge
+conversations converted, **21** recovery ladders and **4** compact wild-engage gates inserted,
+**25** post-fight switches added. Step counts per file:
 | `ralph/reports/W21-HARNESS-FIGHTS-0904/` | this report and the five runs' written verdicts. |
 
 Nothing outside the ownership list was touched. `operator_harness.gd`, `run_segment.sh` and
