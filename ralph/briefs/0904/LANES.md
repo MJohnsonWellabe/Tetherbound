@@ -136,9 +136,25 @@ number is **D87**.
 
 `main` is `2cd711eb`; `git merge-base --is-ancestor b510043f origin/main` confirms the
 landing. **CI run 33953926952 finished green on every one of its eighteen non-skipped
-jobs**, 23 minutes, code jobs executed, no re-runs. That includes
-`verify-gate-evidence-shard` (success 08:20:04), so the owner directive's waiver on the
-intermittent finale was available but **not used** — this landing did not need it. It also
+jobs**, 23 minutes, code jobs executed, no re-runs.
+
+**Correction, 08:22 UTC — the waiver *was* relied on.** I wrote above, and in the #48 merge
+commit, that `verify-gate-evidence-shard` passed and so the owner directive's waiver on the
+intermittent finale went unused. That is wrong. It passed on the **push** run at 08:20:04
+and **failed on the pull_request run 33953949833 at 08:20:41** for the identical commit
+`b510043f`, with the identical `FAIL: exploration never came back after 'warden_aldis''s
+fight`. I merged at 08:2x having read only the push run's result. The merge was still
+correct under the directive — that shard is explicitly waivable — but it was a waived
+landing, not an unconditionally green one, and the merge commit on `main` overstates it.
+
+**This is the strongest evidence yet that the finale is nondeterministic and not
+commit-caused.** Two separate commits now show a split verdict across their own paired runs:
+`d7d7df06` failed on push and passed on pull_request; `b510043f` passed on push and failed
+on pull_request. A commit-level cause cannot produce opposite results on the same tree. The
+log shows the finale running to completion — the Warden falls, the tether releases, 1156
+plants return, the roster decision resolves, the objective chain terminates — and only then
+the exploration-return check fails, which fits a race on the dialogue panel rather than a
+broken sequence. `tests/smoke_gate_e_finale.gd` is W06-FINALE's file. It also
 includes `verify-combat-shard` (success 08:11:12), which was held binding rather than
 waived because it is the job W05 broke deterministically and W22 moves world geometry near
 the South Bridge. It passed on both runs.

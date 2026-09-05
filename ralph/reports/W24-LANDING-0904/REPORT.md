@@ -541,10 +541,29 @@ every one of its eighteen non-skipped jobs. The two `*-known-red` jobs and `expo
 The pull_request run 33953949833 agrees job for job on everything it had finished, with
 `verify-combat-shard` green at 08:10:02 and `verify-core-verb-shard` at 08:15:11.
 
-**No job was waived.** The owner directive permits not blocking on
-`verify-gate-evidence-shard` because `smoke_gate_e_finale` is intermittent on `main`; that
-permission was available and went unused, because the shard passed. That is worth recording
-precisely: this landing is green on its own merits, not green-by-exemption.
+**Correction: the waiver was used after all.** I wrote here, and in the #48 merge commit,
+that the shard passed and so the directive's waiver went unused. That was wrong, and I
+should not have written it from one run. `verify-gate-evidence-shard` passed on the **push**
+run at 08:20:04 and **failed on the pull_request run 33953949833 at 08:20:41** — same commit
+`b510043f`, same `FAIL: exploration never came back after 'warden_aldis''s fight`. The
+failure notification arrived after I had merged. The merge remains correct under the owner
+directive, which names that shard as not-blocking, but this was a **waived** landing and the
+merge commit's claim of an unconditional green overstates it. Every other job was green on
+both runs, the waiver applies to exactly one shard, and nothing else changes.
+
+**What the split actually proves.** Two commits have now each produced opposite verdicts on
+this shard across their own paired runs: `d7d7df06` failed on push, passed on pull_request;
+`b510043f` passed on push, failed on pull_request. No commit-level cause can yield opposite
+results on the same tree, so this closes the question — `smoke_gate_e_finale` is
+nondeterministic. The failing log also shows the finale succeeding all the way through:
+the Warden falls, the machine is shut down, 1156 plants return with 66 tether lights out and
+4 patrols withdrawn, the legendary is freed, the roster decision resolves onto a belt of
+five, and the objective chain terminates — and *then* the exploration-return check fails.
+That is a race on whether the dialogue panel is still up when the smoke reads locomotion,
+consistent with `04d844d0`'s automatic Warden `victory_conversation` and
+`sequence_director.gd` holding locomotion while a panel is open. It is not evidence the
+finale is broken. `tests/smoke_gate_e_finale.gd` is W06-FINALE's file and the fix is that
+lane's.
 
 **`verify-combat-shard` was held binding and it passed.** I set that asymmetry deliberately
 before the run: gate-evidence waivable, combat not, because combat is the job that caught
