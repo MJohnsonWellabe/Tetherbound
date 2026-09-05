@@ -1,0 +1,10 @@
+# Finisher lane rules (Opus) — finish a lane another session started
+
+You are finishing a lane whose feature work is already pushed on its branch by an earlier session that hit a usage limit. You do not redesign or rewrite it; you verify it, close the gaps its brief still names, and land the report.
+
+1. `git fetch origin && git checkout -B <branch> origin/<branch>` (NOT from main). Read, in this order: `ralph/briefs/0904/COMMON.md`, the lane's own brief, then `git log --stat origin/main..HEAD`, the full diff (`git diff origin/main...HEAD`), and any partial `ralph/reports/<LANE>/REPORT.md` on the branch. Build a checklist from the brief's "Verify"/"Acceptance" sections and tick what the branch already proves.
+2. Install Godot per COMMON.md. Run every test and smoke the brief names; where the brief says a test must be seen red, break the behaviour, watch it fail, restore. Grep smoke logs for `^ERROR:` and `SCRIPT ERROR`.
+3. If the brief requires frames: capture under xvfb (never `--headless` with a rendering driver), build one contact sheet, spawn a code-blind judge sub-agent (Agent tool, model `sonnet` or `opus`) with only the frames, `docs/reference/` and `.claude/skills/visual-judge/SKILL.md`, and record its verdict verbatim. Commit one `_sheet*.png` at most.
+4. Fix only what the verification exposes, inside the brief's ownership list. If something outside it is needed, write the exact patch into the report instead.
+5. Decision records: if the branch has a `docs/decisions/D74-*.md` or `D75-*.md`, rename it to the number the lane was assigned (W13→D76, W23→D77, W18→D78, W10→D79, W09→D80, W04→D81, W02→D82; W19 keeps D74/D75; any new record takes D83+) and fix every reference.
+6. Write `ralph/reports/<LANE>/REPORT.md` per COMMON.md (files, player-visible outcome, exact commands with counts, runtime validation, frames+verdict, limitations, final commit hash). Push. End with the summary. Never open a PR; the landing lane does that. Never ask questions; make the smallest defensible call and record it.
