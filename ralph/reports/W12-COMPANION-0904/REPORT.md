@@ -185,9 +185,95 @@ produced **no `ERROR:` lines at all**.
 
 ---
 
-## 6. Frames and the blind verdict
+## 6. Frames and the blind verdicts
 
-*(filled in below)*
+Three moments, each shot as a **pair** from one fixed camera a fixed interval
+of reaction apart, in the real Meadows with the real deployed follower, by
+`tools/_capture_companion_moments.gd` under xvfb at 1280x720 on the
+Compatibility renderer. A pair rather than a single still because that is the
+one thing a still cannot answer on its own: a creature mid-idle and a creature
+mid-reaction photograph identically. The tool prints the measured pixel
+difference between each pair's halves, so "it is moving" is a number.
+
+Both rounds were judged by a **code-blind** sub-agent given only the frames,
+`docs/reference/` and the visual-judge skill, and told nothing about what had
+changed or what the answer should be. Both verdicts are worth reading; the
+second is harsher than the first and is the more useful of the two.
+
+### Round 1 (`_sheet.png`)
+
+| Pair | Pixels differing across 0.35 s |
+|---|---|
+| acknowledgment | 8.97 % |
+| hurt | **0.00 %** |
+| camp | **0.00 %** |
+
+The verdict, in its own words: **acknowledgment was "the only pair where the
+creature is doing something situational"** — a legible head turn onto the
+trainer — and the acceptance criterion asks for exactly one such moment. It
+then named two defects and one instrument defect, all three real:
+
+1. **hurt read as "lying down, resting, or nosing at something on the
+   ground", not injured.** An 11 degree pitch on the model pivot tips the
+   whole animal nose-down, which is a crouch.
+2. **camp read as "companion following player, standing still".** 0.45 of the
+   species rest roll is a 20 degree tilt, not a lying pose. The campfire was
+   also behind the camera, "a two-centimetre sliver of orange... cropped by
+   the HUD".
+3. **the hurt and camp pairs were pixel-identical.** The pause that makes a
+   sub-second pose photographable also stops the idle, so the instrument could
+   only ever show life in the states that move the pivot. "A 2.5m animal held
+   perfectly rigid while the grass in front of it animates reads as a prop."
+
+### Round 2 (`_sheet_round2.png`), after acting on all three
+
+| Pair | Pixels differing across 0.35 s | Round 1 |
+|---|---|---|
+| acknowledgment | 9.67 % | 8.97 % |
+| hurt | **13.18 %** | 0.00 % |
+| camp | 7.29 % | 0.00 % |
+
+The instrument defect is fixed and measured: the idle now advances between
+exposures at the layer's own speed scale, which the log records as `x1.00`
+walking, `x0.78` hurt and `x0.50` at camp. The campfire is in the shot.
+
+**And the round 2 critic found a real bug my round 2 change introduced**,
+which is the single most valuable thing either judge produced:
+
+> "the creature is half inside the hillside... what is on screen is a head and
+> a paw lying detached in a meadow"
+
+Deepening the camp roll exposed a sign error in how a rolled pose is grounded.
+Rolling a body either way dips its lower corner by about a radius, so the
+correction is a **lift in both directions** — `+radius * |sin(roll)|`. Written
+signed, a negative roll turns that lift into a dip, and terrapup's own
+`rest_roll_deg` is **-45**, so at 0.85 of it the pivot fell **0.75 m of a
+2.3 m animal**. Fixed in commit `5eaa4e07`, pinned by a test that was seen red
+at exactly that 0.75 m.
+
+**`creature_body.gd::play_rest()` carries the same signed form** for the
+creature-bed pose, so the two negative-roll species (terrapup, trailpup) have
+the same latent dip when they sleep in a bed. That file is outside this lane's
+ownership list and was not touched. **Routing note for the coordinator.**
+
+### What the judges say is still not solved
+
+Round 2, on the hurt state: it reads **alert, not injured** — ears erect, eye
+wide and bright, head level with the shoulder line, no limb favoured, and the
+party strip still showing a full green health bar in the same frame. This is
+an honest ceiling and the rig inventory explains it: there is no wince, no
+limp, no pant, no closed-eye clip and no facial rig anywhere in the roster, so
+the hurt state is carried by a slower gait and a periodic flinch — **both of
+which are motion, and a still frame cannot show either.** The 13.18 % pair
+difference is the only evidence of them available in this medium.
+
+Round 2 also lists a long tail of environment findings that are **not this
+lane's** and are not claimed as such: no cast shadows under creature or
+trainer, no landmark on any horizon, one repeated sapling for a tree line,
+a non-animating campfire flame that emits no light, a flat-lying flower
+instance, a terrain splat seam, and a party-strip panel too transparent to
+read against grass. Those belong to the world, lighting and HUD lanes; they
+are recorded here because the frames are the evidence for them.
 
 ---
 
