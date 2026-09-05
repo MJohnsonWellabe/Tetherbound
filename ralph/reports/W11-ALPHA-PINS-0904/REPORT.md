@@ -160,6 +160,11 @@ godot --headless --path . --script tests/run_tests.gd
 → 1837 tests, 3723851 assertions, 4 failed   (~26 min)
 ```
 
+Run **twice**: once when the save-format change landed, and again at the end against the
+finished tree, after the three `tab_map.gd` marker revisions. Identical both times — same
+count, same assertions, same four failures. (A third run was started and killed: it was
+launched before the last marker edit and would have measured a tree that never existed.)
+
 **All four failures are pre-existing on `main` and none is reachable from this diff.**
 
 | Failing test | Why it is not this lane's |
@@ -333,6 +338,71 @@ capture now walks the player 850 m back down the corridor before opening the map
 separates the two marks by roughly 50 px — and is better evidence anyway, because the
 directive's whole point is that the pin stays after the player leaves.
 
+### Rounds two and three — what the judge changed about the marker
+
+Three blind rounds were run, each with a fresh 1280x800 frame and a judge told nothing
+about what had changed. Each round moved something, so none was a wasted round.
+
+**Round 2** (after the player marker was moved off the pin) found the mark unprompted —
+*"the oxblood disc at (631,341) … nothing else on the map is red"* — and separated it
+easily from the flag and house pins, *"those being line silhouettes against a filled
+disc."* But it failed the harder test it set itself: against the **player** marker it
+could separate the alpha *"barely, and only by hue … strip the colour and the two are the
+same object."* Two filled discs of similar footprint, 35 px apart on one axis. It also
+measured the label starting 5 px from the plate, *"the glyph and the letterform fuse into
+one shape"*, and noted the legend printed *Alpha* in the same neutral grey as every place
+row — *"the one place where the game explains its symbol set throws away the red coding
+entirely."*
+
+Hue alone is the weakest channel there is: it fails for a colour-blind player and on a
+handheld panel in daylight. So three changes went into `tab_map.gd`, all inside this lane's
+ownership: the alpha plate became a **nine-point starburst rosette** behind the disc, the
+label offset went 8 px → 15 px, and `_legend_entry()` gained an optional `tint` defaulting
+to the colour it always used (so every existing caller is untouched) with the alpha row
+passing `UITokens.DANGER`.
+
+**Round 3** was the one that mattered, because the judge tested it the right way — it
+converted the frame to greyscale and looked at 1:1. The rosette was still too timid:
+*"The spikes are 2–3 px long on a 22 px disc. At 1:1 they read as anti-aliasing fuzz, not
+as a shape … remove colour and I would not confidently tell you which one is the danger."*
+So the badge gained a **size class** as well as a contour — spikes to 1.72× the plate
+radius over a 0.58 core, roughly twice the player pin's footprint — and the label offset
+went to 26 px to clear them.
+
+The final round's verdict on the decisive question, recorded verbatim:
+
+> **Greyscale, at 1:1 — the honest answer: yes** […] Converted to L and viewed unscaled, I
+> *can* separate them by silhouette: the alpha is a spiked star, the player is a plain ring
+> with a tail. The spikes survive greyscale. **So this is not a colour-only distinction,
+> and that is a genuine pass on the decisive question.**
+
+and on the label:
+
+> measured, the rosette's rightmost red pixel is x=645 and the label's first stroke is
+> x=659 — a 13 px gap, about half a marker width. It does **not** fuse with the marker
+> geometrically, and the text is readable at full size.
+
+It also kept, as things worth keeping: *"the two pin forms themselves — the ring-and-teardrop
+and the spiked rosette — are well drawn at this pixel size and, importantly, they do survive
+greyscale as distinct silhouettes."*
+
+**The ceiling this lane stops at, and the two residual marker findings it did not fix:**
+
+1. *"In greyscale 'ALPHA TRAILPUP' collapses to L≈136 while 'GRANDPA'S HOUSE' and 'THE
+   VILLAGE' sit at L=255 — the danger label becomes the dimmest text on the screen."* True,
+   and the fix (give the label its weight through a white core or heavier outline rather
+   than through hue) is a change to the shared `_draw_string_legible` treatment that every
+   map label uses, not to the alpha path alone. Left for whoever owns the map screen's type.
+2. *"The alpha's silhouette is contaminated"* by the mossy path end-cap filling the notches
+   between the lower spikes. The dark backing rosette is already drawn one step larger than
+   the red one; making it larger still starts to read as a shadow blob. A real fix wants the
+   terrain under a threat pin knocked back, which is the same fog/value work item as (1)
+   in the list below.
+
+Three rounds, three real movements, and the acceptance question answered yes. Stopping here
+per COMMON.md rather than spending a fourth world boot on residuals that belong to the map
+screen's own palette and type work.
+
 **Judge findings that stand and are NOT this lane's to fix** (recorded for the coordinator;
 every one of them is about the map screen this lane only added a marker to):
 
@@ -351,3 +421,61 @@ every one of them is about the map screen this lane only added a marker to):
   control-hint rows so it reads as a third row of keybinds.
 * Zoom is bound to `[Minus]`/`[Equal]` with no pad binding, on a controller-first project.
 
+---
+
+## 8. Final state
+
+| | |
+|---|---|
+| Branch | `ralph/W11-ALPHA-PINS-0904` |
+| Files in the diff | 19, all inside the ownership list (see §1) |
+| Lane test | `test_alpha_pins.gd` — 24 tests, 154 assertions, 0 failed |
+| Lane smoke | `smoke_alpha_pins.gd` — pins at 275.0 m walking in from 550 m, 0 errors |
+| Named tests | `test_save_format` 55/271/0, `test_map_baker` 7/13/0, `test_map_icons` 6/35/0, `test_map_fog` 5/18/0, `test_map_zoom_persistence` 3/9/0 |
+| Named smokes | `smoke_save_persistence` PASS, `smoke_wild_streaming` PASS — 0 `^ERROR:`, 0 `SCRIPT ERROR` in either |
+| Full suite | 1837 tests, 3,723,851 assertions, 4 failed — all four pre-existing on `main` |
+| Frame | `_sheet_alpha_pin.png`, 1280×800, one contact sheet as COMMON.md allows |
+| Blind judge | three rounds; the third confirms the pin separates from the player marker **in greyscale, by silhouette** |
+
+**The acceptance criterion, item by item:**
+
+| Brief | Evidence |
+|---|---|
+| a probe drives a body to 300 m of a Band 1/2 alpha and the pin appears | `smoke_alpha_pins` walks a real `CharacterBody3D` in from 550 m and pins Band 2's order 2011 at **275.0 m** on a real clock |
+| on minimap **and** full map | both renderers filter on `MapState.ALPHA_MARKER_PREFIX`, read from that one const; the smoke asserts the entry both screens iterate, and the frame shows the full map drawing it |
+| survives save/load | `save_game.gd` VERSION 17 top-level `alpha_pins`; proved by a real file round-trip into a **discarded and rebuilt** `MapState`, and watched fail when the write was replaced with `[]` |
+| clears on KO | firing `wild_once_2011` clears it within one tick, it does not re-pin while the player stands there, and it does not return on reload; watched fail when `unpin_alpha` was stubbed |
+| one 1280×800 full-map frame with a pin | `_sheet_alpha_pin.png`, produced by the real `AlphaPins` node's own `_process` in the shipped world scene (no `hand-driven tick()` line in the run log) |
+| a code-blind judge confirms the pin is legible | round 3: found unprompted, *"nothing else on the map is red"*, separable from the player marker in **greyscale by silhouette**, label readable with a measured 13 px clearance |
+
+Also verified beyond the brief: the pin **survives leaving** — the capture asserts the count
+does not drop when the player walks 850 m out of the radius, and reports `1 pin(s) still set
+from 850 m away`. Only the once-flag clears it, which is the directive's actual promise and
+which no unit test covers from a live world.
+
+**Final commit:** `913848ca` on `ralph/W11-ALPHA-PINS-0904` — the last commit before this
+line was written. A report cannot contain its own hash, so the tip is the commit that
+carries this correction; `git log -1 origin/ralph/W11-ALPHA-PINS-0904` names it. The last
+commit touching **shipped code** (as opposed to the report, the sheet or the capture tools)
+is `5a40b79b`.
+
+**Full file list**, `git diff --name-status origin/main...HEAD`:
+
+```
+A  assets/ui/icons/map/alpha.png            A  tests/smoke_alpha_pins.gd
+A  assets/ui/icons/map/alpha.png.import     A  tests/smoke_alpha_pins.gd.uid
+M  autoload/map_state.gd                    A  tests/test_alpha_pins.gd
+A  data/config/map.json                     A  tests/test_alpha_pins.gd.uid
+A  ralph/reports/W11-ALPHA-PINS-0904/REPORT.md
+A  ralph/reports/W11-ALPHA-PINS-0904/_sheet_alpha_pin.png
+M  scripts/save/save_game.gd                A  tools/_capture_alpha_pin_map.gd
+M  scripts/ui/minimap.gd                    A  tools/_probe_alpha_pin_process.gd
+M  scripts/ui/tab_map.gd                    A  tools/gen_alpha_pin_icon.py
+A  scripts/world/alpha_pins.gd
+A  scripts/world/alpha_pins.gd.uid
+M  scripts/world/playground_world.gd
+```
+
+Nothing outside the brief's ownership list. The `.uid` sidecars are for this lane's own
+three new scripts, which is how every other script in `tests/` and `scripts/world/` is
+tracked on `main`.
