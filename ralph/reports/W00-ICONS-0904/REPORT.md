@@ -1,7 +1,9 @@
 # W00-ICONS-0904 — the six missing item icons
 
 Branch: `ralph/W00-ICONS-0904` (from `origin/main` @ `ef16544f`).
-Final commit: _(filled in below)_.
+Final code commit: `ddf23399` (round 4 icons + script). The branch tip is
+the report commit on top of it; the six PNGs, their `.import` files and
+`tools/gen_item_icons.py` are unchanged after `ddf23399`.
 
 ## Files changed
 
@@ -15,8 +17,8 @@ Final commit: _(filled in below)_.
   existing set was NOT re-rendered; `git diff --stat origin/main -- assets/ui/icons/`
   shows only the 12 additions).
 - The six matching `.png.import` files, produced by `godot --headless --path . --import`.
-- `ralph/reports/W00-ICONS-0904/REPORT.md`, `_sheet_r1.png` (this report and the
-  one blind-judge contact sheet).
+- `ralph/reports/W00-ICONS-0904/REPORT.md`, `_sheet_r1.png` .. `_sheet_r4.png`
+  (this report and one contact sheet per blind-judge round).
 
 Not touched: `data/items/items.json`, every existing icon, anything outside the
 ownership list. Godot's import run also drops untracked `*.uid` / `.import`
@@ -44,18 +46,20 @@ colour applies, lifted to the shared `TINT_PEAK`).
 
 | Command | Result |
 |---|---|
-| `godot --headless --path . --script tests/run_tests.gd -- --only=test_item_icons.gd` | 7 tests, 276 assertions, 0 failed (first attempt) |
+| `godot --headless --path . --script tests/run_tests.gd -- --only=test_item_icons.gd` | 7 tests, 276 assertions, 0 failed (first attempt, and again after each of rounds 2, 3 and 4 with a fresh `--import`) |
 | Red check: `rare_candy.png` + `.import` moved aside, same command | 2 failed, both naming `rare_candy` (`..._icon_field_whose_file_exists`, `..._icon_loads_as_a_texture`); files restored |
 | `--only=test_items_data.gd` | file does not exist in `tests/`; not run |
-| `godot --headless --path . --script tests/smoke_art.gd` | exit 0, `art: OK`; `grep -E '^ERROR:|SCRIPT ERROR'` on the log: 0 lines |
+| `godot --headless --path . --script tests/smoke_art.gd` (run 3x: round 1, round 2, round 4 icons) | exit 0, `art: OK` every time. `grep -E '^ERROR:\|SCRIPT ERROR'`: 0 lines on run 1; 1 line on runs 2 and 4, `ERROR: Parameter "material" is null` from `creature_body.gd::_build_model` via the encounter director's alpha resize, the non-deterministic known-benign line `docs/AGENT_WORKFLOW.md` §"known-benign" records at 0-3 per run. Not icon-related; the set did not grow. |
 
 ## Runtime validation
 
 - `godot --headless --path . --import` twice (warm-up, then with the PNGs present);
   the six `.import` files were generated and the textures load as `Texture2D` in
   the test above.
-- Inspected all six PNGs at 4x, 64 px, 32 px and 19 px on a dark tile
-  (`_sheet_r1.png`, top row; bottom row is six existing icons for context).
+- Inspected all six PNGs at 4x, 64 px, 32 px and 19 px on a dark tile after
+  every round (`_sheet_r*.png`, top row; bottom row is six existing icons for
+  context), plus my own intermediate previews between rounds 3 and 4 that
+  caught two ear-like wing placements before they reached a judge.
 
 ## Blind judge (code-blind sub-agent, opus, given only the sheet, `docs/reference/`, board 17 and the visual-judge skill)
 
@@ -122,9 +126,46 @@ not sent to the judge), no clearance ring, no interior cutout; Stamina down
 to two unequal, offset rings; Wild's ticks removed (the brief names the
 broad cap as its mark); Great's star enlarged.
 
-### Round 4 (`_sheet_r4.png`)
+### Round 4 (`_sheet_r4.png`) -- final
 
-_(filled in below)_
+Verdict, condensed: the judge cut all twelve 19 px thumbnails out of the
+sheet, shuffled them under a sealed seed and classified them cold: **12 / 12
+correct class, no cross-class errors**, against a field including three
+round orbs and two round-bottomed flasks. "No icon reads as a face, an
+animal, or a creature." Candy tiers distinct at 64 px and 19 px "in value
+alone (checked desaturated)"; silhouette overlays confirm Good and Great share
+their outline pixel-for-pixel and Rare is that outline plus two flares, i.e.
+the brief literally. Mushrooms read "exactly as briefed" at 64 and 32 px.
+Construction, value ceiling (every tint peaks at 223) and 19 px ink coverage
+(36-44 % vs the existing 39-49 %) "measurably" the same system as the shipped
+set. **"Shippable as an inventory icon set for a first playable: yes."**
+
+Defects it names, all polish, none a silhouette or tint change; recorded here
+as the ceiling this lane stopped at:
+
+1. Candy family is short in the 64 px tile (37 px tall vs 50-55 for the
+   rest); scale up ~25 %.
+2. Rare Candy has zero margin at 19 px; pull the flares in ~2 px.
+3. Speed's crown dot and Stamina's large ring notch the dome outline at
+   19 px; inset cap marks 2 px from the rim.
+4. Stamina's small ring fills solid at 19 px; two matched larger rings with a
+   thinner wall.
+5. Candy ink mass runs backwards down the ladder (Good 19 % > Rare 14 % >
+   Great 11 % pure tint at 64 px); thicken the darts or shrink Great's star.
+6. Good's wrapper slits are 1-2 px specks below 32 px.
+7. For the owner, not a brief violation: the brief's marking assignment
+   (dots on Speed, plain broad cap on Wild) is the reverse of board 17, where
+   Speed is the plain glossy blue cap and Wild is the red-with-white-spots
+   amanita. Every judge round flagged it. This lane followed the brief.
+8. Rare at 64-176 px still reads "award/rosette before sweet" (a starred gold
+   disc with upswept flares is badge grammar); no longer confused with the
+   Orbs at 19 px, where it filed correctly as a candy.
+
+Not acted on: the lane spent four judged rounds against a one-hour brief and
+the acceptance criterion now holds; 1-6 are a sizing pass on shapes the judge
+calls "already right", and 1 and 2 pull against each other (a 25 % larger
+candy puts Rare's flares back on the tile edge unless they are also pulled
+in), so they want one deliberate pass rather than a fifth round here.
 
 ## CI
 
@@ -170,6 +211,18 @@ Two things the brief did not know, both verified rather than assumed:
   terrain and scatter re-bake before anything lands green.
 
 ## Known limitations / deliberately not done
+
+- The blind judge's round-4 polish list above (candy family short in the
+  tile, Rare's flares at the 19 px edge, cap marks notching the dome, ink mass
+  inverted down the candy ladder) is the ceiling this lane stopped at with the
+  acceptance criterion met.
+- Three hue collisions the judges measured come from `items.json` tints this
+  lane does not own: Rare Candy `#e0a92e` ~ Greater Orb's mean tint; Stamina
+  Shroom `#d98a2e` ~ Prime Orb's; Great Candy `#3f6fd0` ~ Speed Shroom
+  `#4a7fd6`. The silhouettes carry the difference; the owner may want to nudge
+  the candy tints (board 17 gives Great a periwinkle, not the Speed blue).
+- The brief's mushroom marking assignment reverses board 17 (see round 4,
+  item 7). Followed the brief; flagged for the owner.
 
 - The six candy/mushroom icons were the only change; `verify-unit-tests (3)` on
   `main` was red for exactly these six missing files, so nothing else in that job
