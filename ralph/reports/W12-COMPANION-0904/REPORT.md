@@ -175,9 +175,23 @@ that its *count* varies with how many alpha creatures streamed in and must not
 be the bar. The distinct set did not grow.
 
 `4 resources still in use at exit` in `smoke_catching` is an exit-time message
-printed after the smoke had already reported its pass. It was checked against
-unmodified `main` rather than assumed: a `git worktree` at `ef16544f` was
-imported and the same smoke run there. *(Result recorded below.)*
+printed after the smoke had already reported its pass. **It is pre-existing
+noise, not this lane's**, and that was established rather than assumed: a
+`git worktree` at `ef16544f` was imported and the same smoke run twice on each
+side.
+
+| Run | `material is null` | `4 resources still in use` | `No vertices were added` |
+|---|---|---|---|
+| branch, run 1 | 1 | **1** | 0 |
+| branch, run 2 | 1 | **0** | 4 |
+| `main` `ef16544f`, run 1 | 0 | **0** | 0 |
+| `main` `ef16544f`, run 2 | 0 | **1** | 2 |
+
+The message appears once on each side and is absent once on each side. Every
+one of these lines varies run to run on unmodified `main`, which is exactly
+what `docs/AGENT_WORKFLOW.md` section 6 warns about when it says the count is
+not the bar and the distinct set is. All four runs reported
+`catching: OK — a throw can be aimed, missed, and landed.`
 
 `smoke_combat` is the one that matters most of the five. The victory hook is a
 call inside `_begin_resolve()`, on the path every won fight takes, and that run
