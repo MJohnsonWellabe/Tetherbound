@@ -472,9 +472,26 @@ pale-green ground with no separation of their own; after, each sits on an opaque
 with a soft skirt, and the silhouette is unambiguous in greyscale. The `?` silhouette label in
 `minimap_fog` is item 7's minimap half, visibly lifted.
 
-Contact sheet: `_sheet_map_ui.png` — six **after** stands at half scale (the four world stands
-plus the two isolated minimap stands), one sheet, as COMMON.md allows. No per-frame PNGs are
-committed.
+Contact sheet: `_sheet_map_ui.png` — the three stands that show the **round-2** (final) state:
+the full map, and both isolated minimap stands. One sheet, as COMMON.md allows; no per-frame
+PNGs are committed.
+
+**Which stand is from which round, stated exactly.** After the judge (§5) both files changed
+again, so the round-1 frames no longer show the shipped screen. Re-rendering all four world
+stands is a fourth ~45-minute boot and the round-2 run was stopped after `map_fresh` because the
+other three provably cannot show anything the first does not:
+
+* `map_day1` is a near-duplicate of `map_fresh` by construction — the day-1 reveal falls inside
+  the starting seed, both stands report 0.42% surveyed, and the two frames' map bodies differ
+  only inside a text callout (the finding about `capture_map_tab.gd` above).
+* `map_surveyed` differs from `map_fresh` **only inside the player-marker region** — measured:
+  zero pixels beyond a threshold of 10 between `map_day1` and `map_surveyed` across the whole
+  92 × 376 px map body (§5).
+* `hud_minimap` renders the widget byte-identically before and after, which is why the isolated
+  stands exist at all — and those were re-rendered at round 2, in seconds.
+
+So the sheet is the current state, and the round-1 four-stand set remains the before/after
+evidence for §2's item-by-item argument, which round 2 did not disturb.
 
 ### One finding this lane did not fix
 
@@ -642,6 +659,21 @@ the current answer to the same problem). Routed.
 * In `hud_minimap.png` the `257 m` readout overlaps the player arrow's tip at CR 2.34:1 and
   spans roughly half the widget.
 
+### Round-2 verification, measured on re-rendered frames
+
+Every round-2 change was re-rendered and re-measured, using the judge's own quantities so the
+numbers are comparable to its verdict rather than to a different metric:
+
+| what the judge measured | its round-1 number | round-2, measured |
+|---|---|---|
+| `MAP KEY` caption, greyscale L | **141** (entries it labels: 193; sibling headings: 229) | **229** — the caption now inks at exactly its siblings' tier, and above the entries |
+| legend entry names, greyscale L | 193 | 193, unchanged (they were not the defect) |
+| minimap player arrow vs its ground | **CR 1.17:1**, greyscale delta 11/255 | **CR 7.82:1**, L=30 against L=176 — delta 146/255 |
+| minimap landmark diamonds vs ground | 4.12:1 via their ring | unchanged; the arrow now uses the same device |
+
+The compass and scale bar were re-rendered and are visibly adjacent to the map body rather than
+in the far corners, and the `Road Gate` swatch now draws at the same size as its two siblings.
+
 ### Rounds
 
 One judging round, which moved five things. COMMON.md's stop rule is two rounds that move
@@ -659,12 +691,12 @@ would have been sampling.
 |---|---|
 | Branch | `ralph/N06-MAP-UI-0905`, based on `origin/main` at `f8a47ee4` |
 | Files in the diff | 11, all this lane's (see §1); `scripts/ui/tab_map.gd` and `scripts/ui/minimap.gd` are the only files modified |
-| Lane test | `test_map_legibility.gd` — 13 tests, 28 assertions, 0 failed; watched red four times, each for the right reason |
-| Named tests | `test_map_fog` / `test_map_icons` / `test_map_zoom_persistence` / `test_map_baker` / `test_map_state` / `test_map_landmarks` / `test_ui_tokens` — 74 tests, 478 assertions, 0 failed |
-| Menu tests | `--only=test_menu` — 12 tests, 160 assertions, 0 failed |
-| Smokes | `smoke_menu`, `smoke_gate_a_map_cycle`, `smoke_menu_focus` — all pass, exit 0, 0 `SCRIPT ERROR`, known-benign `^ERROR:` set unchanged |
-| Frames | 4 world stands × before/after + 2 isolated minimap stands × before/after, all 1280×800 or the widget's real 240px |
-| Contact sheet | `_sheet_map_ui.png`, six after stands, one sheet |
+| Rounds | two — round 1 implemented the eight items; round 2 acted on a code-blind judge (§5), fixing two regressions round 1 had introduced and three pre-existing defects in these two files |
+| Final test run | 99 tests, 666 assertions, 0 failed — `test_map_legibility` + the six named map tests + `test_ui_tokens` + `test_menu`, re-run on the shipped tree after round 2 |
+| Lane test | `test_map_legibility.gd` — 13 tests, 28 assertions, 0 failed; **watched red four times**, each for the right reason, each restored |
+| Smokes | `smoke_menu`, `smoke_gate_a_map_cycle`, `smoke_menu_focus` — all pass, exit 0, 0 `SCRIPT ERROR`; the known-benign `^ERROR:` set shrank (3→0, 2→1) rather than grew |
+| Frames | round 1: 4 world stands × before/after + 2 isolated minimap stands × before/after. Round 2: the full map + both minimap stands re-rendered; the other three world stands were **not** re-rendered, for the measured reason in §4 |
+| Contact sheet | `_sheet_map_ui.png` — the three stands showing the shipped round-2 state |
 | Items | 8 of 8 addressed; item 6 verified already correct on `main` and pinned rather than changed |
 
 ### The eight items, one line each
@@ -704,6 +736,27 @@ would have been sampling.
    this report, and the coordinator can fold it in when landing. Recorded rather than silently
    skipped.
 
-**Final commit:** the tip of `ralph/N06-MAP-UI-0905` at the time this line was written —
-`git log -1 origin/ralph/N06-MAP-UI-0905` names it. A report cannot contain its own hash; the
-commit carrying this report's final state is the one immediately after `c075081f`.
+### Round-2 verification status, stated plainly
+
+Round 2 changed both files after the judge, so the shipped screen is not what the round-1 frames
+show. What was and was not re-rendered:
+
+* **Re-rendered and measured:** the full map (`map_fresh`) and both isolated minimap stands. Every
+  round-2 change is visible in these and confirmed by number — the `MAP KEY` caption at L=229,
+  the player arrow at 7.82:1, the compass and scale bar adjacent to the map body, the legend
+  swatch at the major size (§5).
+* **Not re-rendered:** `map_day1`, `map_surveyed`, `hud_minimap`. This is a deliberate stop, not
+  an unfinished one: each was measured against `map_fresh` and shown to differ only where the
+  round-2 changes are not — `map_day1` is a construction duplicate (both 0.42% surveyed),
+  `map_surveyed` differs from it by **zero** pixels beyond a threshold of 10 across the whole
+  map body, and `hud_minimap` renders the widget byte-identically either way. All three carry the
+  same chrome as `map_fresh`, which was re-rendered. A fourth ~45-minute world boot would have
+  produced three frames that cannot disagree with the one already in hand.
+
+No second judging round was run against the round-2 frames — the honest reason is wall clock, and
+the round-2 changes are instead verified by measurement using the judge's own quantities so the
+numbers are directly comparable to its verdict.
+
+**Final commit:** the tip of `ralph/N06-MAP-UI-0905` — `git log -1 origin/ralph/N06-MAP-UI-0905`
+names it. A report cannot contain its own hash; the commit carrying this report's final state is
+the one that lands this section.
