@@ -25,8 +25,8 @@
       "id": "b5_candy_outer_watch_flank",
       "item": "good_candy",
       "pos": [
-        -105.0,
-        7175.0
+        -106.0,
+        7176.7
       ],
       "tier": "side",
       "why": "Behind Watchman Corr's outer watch (trainers `stronghold_outer_watch`, props order 5000), 45m off the road: the occupation's own supply spill, Good."
@@ -75,7 +75,7 @@
       "id": "b5_candy_alpha_galecrest_pack",
       "item": "great_candy",
       "pos": [
-        -52.0,
+        -50.0,
         7268.0
       ],
       "tier": "detour",
@@ -145,7 +145,7 @@
       "id": "b5_potion_before_checkpoint",
       "item": "potion_small",
       "pos": [
-        100.0,
+        102.0,
         7395.0
       ],
       "tier": "critical",

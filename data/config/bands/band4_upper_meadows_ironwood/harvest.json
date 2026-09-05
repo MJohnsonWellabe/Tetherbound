@@ -398,8 +398,8 @@
       "amount": 4,
       "label": "Cut fiber",
       "at": [
-        450.0,
-        5900.0
+        451.0,
+        5901.7
       ],
       "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
       "model_scale": 1.2,
@@ -437,7 +437,7 @@
       "amount": 3,
       "label": "Pick berries",
       "at": [
-        -60.0,
+        -58.0,
         6270.0
       ],
       "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
@@ -463,8 +463,8 @@
       "amount": 3,
       "label": "Fell an ironwood",
       "at": [
-        -300.0,
-        6540.0
+        -296.5,
+        6542.0
       ],
       "model": "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
       "model_scale": 0.3,
@@ -489,7 +489,7 @@
       "amount": 4,
       "label": "Gather deadwood",
       "at": [
-        100.0,
+        102.0,
         6870.0
       ],
       "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",

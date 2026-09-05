@@ -15,7 +15,7 @@
       "id": "b4_candy_oldgrowth_wallow_bend",
       "item": "good_candy",
       "pos": [
-        -300.0,
+        -298.0,
         4975.0
       ],
       "tier": "critical",
@@ -175,8 +175,8 @@
       "id": "b4_candy_galecrest_alpha_crag",
       "item": "great_candy",
       "pos": [
-        -432.0,
-        5172.0
+        -433.7,
+        5173.0
       ],
       "tier": "detour",
       "why": "On the crag the Galecrest alpha (order 4001, level +3) circles, past its 20m radius: the deepest point of the old-growth swing, a Great for walking to the west edge of the band."
@@ -205,8 +205,8 @@
       "id": "b4_candy_wind_ridge_crest",
       "item": "great_candy",
       "pos": [
-        462.0,
-        5895.0
+        463.0,
+        5896.7
       ],
       "tier": "detour",
       "why": "The wind ridge traverse's crest (loop `wind_ridge_traverse`, the highest ground in the Meadows): the loop is the band's biggest detour and MACRO_LAYOUT wants it sparse so the vista lands -- one Great, not a scatter."
@@ -275,8 +275,8 @@
       "id": "b4_candy_herd_bull_highfield",
       "item": "rare_candy",
       "pos": [
-        441.0,
-        5828.0
+        442.0,
+        5829.7
       ],
       "tier": "secret",
       "why": "Beside the herd bull (order 4101, alpha Meadowhart level +4, P-4.3's kept block) on the Highfield: the band's landmark encounter and its riding temptation in one place, so the Rare sits where the roster question is asked."
@@ -285,7 +285,7 @@
       "id": "b4_candy_watchtower_spur_corner",
       "item": "rare_candy",
       "pos": [
-        -333.0,
+        -331.0,
         6580.0
       ],
       "tier": "secret",
@@ -295,7 +295,7 @@
       "id": "b4_potion_oldgrowth_swing",
       "item": "potion_small",
       "pos": [
-        -250.0,
+        -248.0,
         4930.0
       ],
       "tier": "side",

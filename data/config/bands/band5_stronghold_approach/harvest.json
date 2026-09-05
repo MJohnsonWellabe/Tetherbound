@@ -103,8 +103,8 @@
       "amount": 3,
       "label": "Fell an ironwood",
       "at": [
-        -120.0,
-        7150.0
+        -118.3,
+        7151.0
       ],
       "model": "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
       "model_scale": 0.28,

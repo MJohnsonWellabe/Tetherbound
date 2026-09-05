@@ -307,7 +307,12 @@ func _validate_site(id: String, at: Vector2, spine: Array, prompts: Array, z_lo:
 	if float(pad[1]) > MAX_PAD_SPREAD_M:
 		problems.append("pad spread %.1f m" % float(pad[1]))
 	if scatter:
-		problems.append("inside solid scatter")
+		var clear := _nearest_clear(at, ground if not is_nan(ground) else float(pad[0]))
+		if clear.is_empty():
+			problems.append("inside solid scatter, nothing clear within %.0f m" % SUGGEST_RADII_M[-1])
+		else:
+			problems.append("inside solid scatter; nearest clear ground [%.1f, %.1f]" % [
+				(clear["at"] as Vector2).x, (clear["at"] as Vector2).y])
 	if river > 0.0:
 		problems.append("river factor %.2f" % river)
 	if at.y < z_lo - 1.0 or at.y > z_hi + 1.0:
@@ -319,6 +324,24 @@ func _validate_site(id: String, at: Vector2, spine: Array, prompts: Array, z_lo:
 		tag, id, at.x, at.y, ground, float(pad[1]), float(pad[2]), "Y" if scatter else "n", lateral,
 		nearest if nearest < INF else -1.0, nearest_what, ("" if problems.is_empty() else "  <- " + ", ".join(problems))])
 	return problems.is_empty()
+
+
+## The nearest spot around `at` that `has_solid_scatter_near` calls clear, so a
+## failing site can be moved in one round rather than guessed at again.
+## Rings of 12 bearings at 2/4/6/8 m; {} when every ring is blocked.
+const SUGGEST_RADII_M: Array[float] = [2.0, 4.0, 6.0, 8.0]
+
+
+func _nearest_clear(at: Vector2, h: float) -> Dictionary:
+	if _vegetation == null or not _vegetation.has_method("has_solid_scatter_near"):
+		return {}
+	for r: float in SUGGEST_RADII_M:
+		for i in 12:
+			var a := TAU * float(i) / 12.0
+			var spot := at + Vector2(cos(a), sin(a)) * r
+			if not bool(_vegetation.call("has_solid_scatter_near", Vector3(spot.x, h, spot.y), SCATTER_MARGIN)):
+				return {"at": spot, "r": r}
+	return {}
 
 
 ## --- geometry -----------------------------------------------------------------
