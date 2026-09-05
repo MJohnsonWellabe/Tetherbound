@@ -65,6 +65,14 @@ Owner noticed the session count didn't match my reports. Root cause: 5 lanes (W0
 Separately, 5 lanes had genuinely gone stale 4+ hours with NO replacement running: W02-HARNESS-CONTEXT, W03-S08-FREEZE, W16-LOFT-BED, W20-SMALL-FIXES, W21-HARNESS-FIGHTS — all hit their 5h limit hours ago (reset already passed) and were sitting untouched. Given the owner flagged this directly, resumed all 5 at once (departing from the normal 1-2/sweep trickle, since the owner surfaced the actual backlog size).
 main also moved: PR #42 merged — **W00-ICONS is now on main**. PR #45 (consolidated: icons+contracts+progression+portraits+companion+bands2-5) is open, still blocked only on the pre-existing finale regression. PR #44 is Codex's own draft PR for Cloudreach, unrelated to this batch, explicitly not ready to merge.
 
+## 13:15 UTC: 23/24 lanes done — only W21 still running
+Real time had jumped ~90 min unattended again. Verified five more against their actual REPORT.md tails before archiving:
+- **W03-S08-FREEZE DONE** — root-caused CL-H14's walker stall (pre-FENCE-CORNER detour logic), fix verified, S08-22 passes at 839.5m. Also flagged a repo-wide tidiness gap (7 untracked derived textures from other lanes' assets, inconsistent with the convention of committing them) for the coordinator, not fixed itself since not its ownership.
+- **W11-ALPHA-PINS finisher DONE** — thorough real red→green demonstrations throughout (watched fail when a fix was stubbed, watched fail when a save write was replaced with `[]`), touches `save_game.gd` (worth noting alongside W13's routed save_game.gd finding for whoever lands both).
+- **W05-TREELINE DONE for real this time** — rebased onto current main (`590741fe`), the same collider commit (`835f45e2`) resolves BOTH the original 53.7m stall and the new 42m one found on the first landing attempt, honest tradeoff still documented.
+- **W14-RIDING DONE** — all 3 owner items verified live via real transforms/collision data (not screenshots), honest deferrals (per-species not per-instance saddle fit, no new rideable species, no seated animation clip per the no-Meshy-without-reference rule), and a useful process note about a test-harness false positive it root-caused (D75).
+**23 of 24 lanes are now done. Only W21-HARNESS-FIGHTS is still running.**
+
 ## 11:45 UTC: PR #51 merged + W06, W13, W10-finisher all confirmed done
 **PR #51 merged — W20-SMALL-FIXES landed on main** (`f8a47ee4`), per W24-LANDING's own status (not idle — it was between turns when the owner flagged it as "not moving"). W24 also logged a `smoke_playground` flake (frame-pacing drift) as unrelated to W20.
 **W06-FINALE DONE** — three rounds of judge verdicts, real commit history including an honest revert of an attempted render. Archived.
