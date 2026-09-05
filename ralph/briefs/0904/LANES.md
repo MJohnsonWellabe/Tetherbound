@@ -40,3 +40,4 @@ All 24 lanes hit the 5-hour session limit around 21:10–21:25 UTC; 17 had pushe
 Queued for Opus finishers when Fable lanes free slots: W02, W20, W21 (all ~50%). Fable stays on the low-done lanes: W07, W12 active; W15, W03, W05, W16, W14 next as slots free. Rules for finishers: ralph/briefs/0904/FINISHER.md.
 
 Coordinator sweep cadence: every 10 minutes (in-session cron 5caf037b). Landing PR #42 "Land W00-ICONS" opened by W24 01:23Z; W24 also restored the Linux bake-manifest fingerprints that Codex commit f2dd20e4 clobbered with Windows ones (this is why lanes saw freshness checks red in their own CI).
+- Sweep 01:33Z: no new lane done. PR #42 CI in progress (2 runs, jobs queued/in progress). 13 sessions working (6 Fable + 7 Opus), W01/W09/W17 idle-live on capture monitors. No limit hits.
