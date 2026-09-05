@@ -105,3 +105,93 @@ Adjacent files, same command with `--only=test_pickup_glow.gd,test_item_cache_pi
 `SCRIPT ERROR` (AGENT_WORKFLOW §6): the distinct set is `ERROR: Parameter "material" is
 null` alone (2 lines; the known alpha-build noise whose count varies), zero
 `SCRIPT ERROR`. The set did not grow.
+
+## Visual: three code-blind rounds against `main`, same stands, same eye positions
+
+**Method.** `tools/_capture_n08_pickup_tiers.gd` stands Good, Great, Rare and a Stamina
+Shroom 1.3 m apart on the `band1_open` ground at (0, 693) — through the loader's own
+`place_one()`, so nothing about the look is staged, only where they stand — and shoots
+them through the **gameplay camera** (the grass check refuses a frame the ring is not
+dressing) with the lens ~7 / 12 / 17 m away and the 1.80 m trainer beside them as the
+ruler. Then W18's three Highfield placements in band 4 at ~9 m. The `main` frames come
+from `main`'s own loader swapped in for that run (the capture tool calls the loader
+dynamically so it parses against both), and every after-frame was shot from the same
+logged eye position. Each round's judge was a fresh `opus` sub-agent given only the two
+frame sets, `docs/reference/` and the visual-judge skill, told nothing about what
+differed or which was newer; the sets were labelled P and Q, never before/after.
+Verdicts committed in full: `JUDGE-round1-lineup.md`, `JUDGE-round2-lineup.md`,
+`JUDGE-round3-lineup.md`; one sheet per round, `_sheet-round<N>.png` (P above, Q below).
+
+**What `main` looks like, judged for the first time.** W17's round-3 scale correction
+shipped unrendered; this is its first blind read. The judge could not find the Good at
+7 m at all (*"a green shape, on green grass, inside a green glow… I would not call this
+found, I would call it inferred from the light"*), read the Rare as *"a pale cream lobed
+mass… nearly the same brightness and hue as the sunlit grass"* whose only surviving part
+at 12 m was *"two disembodied white slivers"* (the wings), ranked the four by size and
+hue alone, and at 17 m saw *"three coloured light patches and one mushroom"*. Hue was the
+only channel the objects themselves carried, exactly as W17 round 2 and W18 round 1 had
+said.
+
+**Round 1** (`e5066175`: star/crown crests, a white ground ring on Great and Rare, upswept
+wings, amber Rare, per-tier glow radius, spin). *"Q is the better set, but by a narrow and
+specific margin… it wins on the one thing that matters most in this test — an object that
+is still an object at 12 m"*: the amber Rare *"survives… a small but distinct orange nub"*
+where `main`'s *"has dissolved into its own yellow glow"*. But the ring was read as *"the
+exact signature of an editor selection gizmo or a HUD decal"* — pure white, constant
+stroke — and, on two of four objects, *"a marker language applied to half a set teaches
+the wrong rule"*; the white crown spikes read as *"the mesh's normals are inverted at the
+top"*; the Good was still invisible.
+
+**Round 2** (`06e5a5c1`: ring on every candy in its own colour and stepping with the
+tier, three tier-coloured sparkles on Great and Rare, gold crown and wings, brighter
+Good). *"Which makes the hierarchy more legible: Q, clearly… the object hue, the ring hue
+and the size all increase together left to right, so the ramp green → blue → gold → amber
+is one statement instead of three."* At 12 m *"Q-3 is still an orange object you can
+rank, while P-3 at the same distance is a pale smear with two white shards floating in
+it."* The Rare's recolour moved it *"from 'artefact' to 'plant'"* and gave it a family
+with the mushroom's amber. Still named: the ring hit the frame's white point (RGB 231,
+above the clouds' 207) and *"a perfect bright ellipse at the frame's white point around
+a prop is the visual language of a targeting reticle"*; the wing still *"a hard-edged
+flat plane"*; the Good *"an invisible object wearing a light"*; and the mushroom, which
+is not a candy and has no ring, read to the judge as the fourth tier left unmarked. (It
+is the other pickup family, tinted per board 17 and untouched by this lane; the judge
+could not know that, and a player standing over both families will see the same thing,
+which is worth the coordinator's attention rather than a fix here.)
+
+**Round 3** (`56d7feee`) answers the round-2 list inside this lane's file: the ring's
+emission 0.9 → 0.25 on a darkened tier colour, so it sits under the sky value; the wings
+shorter, taller and 2.4× thicker in the plain tier gold, fins rather than blades, rooted
+deeper; the Good lighter and minty at emission 0.8 (Great raised to 0.9 to keep the
+glow ladder monotonic); sparkles a little larger. Its verdict is in the section below.
+
+**What the judges named that is not this lane's, routed to the coordinator:**
+
+- The shared highlight's mote reads as *"a hard-edged rectangle… an unfaded billboard
+  quad meeting the terrain"* (both rounds, every set including `main`) and as a flat
+  quad through the mushroom cap; `pickup_glow.gd` / `shaders/pickup_glow.gdshader`.
+- No contact shadow under any pickup; pickups sit on a *lighter* patch. Same file.
+- A bush grows through the herd-bull Rare (band 4) and through the staged Rare on the
+  `band1_open` ground: W18's own finding that `has_solid_scatter_near` sees collision
+  batches, not bushes; `vegetation.gd`.
+- The mushroom's near-white stems are the frame's brightest value and duplicate the
+  meadow's white parasol flowers; `mushroom_pickup.glb` / `MUSHROOM_LOOK`.
+- Scale: the round-2 judge measured nothing in the line as palmable (Good ≈0.4 m long,
+  Rare ≈0.8 m with wings, the mushroom 0.9 m tall) and asked for 0.15–0.30 m. W17 set the
+  candy family at 0.34/0.42/0.52 after its own round-2 judge, and the mushrooms are the
+  size that judge called right; this lane did not move either, because shrinking the
+  family halves every channel that survives distance and the two verdicts disagree. The
+  owner's call.
+- `candy_pickup.glb`'s own silhouette: both judges, like W17's and W18's, say a lobed
+  wrapper with no facets reads as a fungus or a creature, never as a made thing.
+  ASSET_LEDGER already records it; no generation was spent.
+
+## Decision for the landing lane (a decision number is theirs to assign)
+
+**A candy tier is an additive part count, not a hue.** Every candy wears the family's
+two marks (a crest on the crown, a coloured ring on the ground, both in the tier's
+colour); Great adds a star crest and sparkles; Rare adds a crown crest and wings. Size,
+emission and the shared highlight's radius step with the tier. Rare's glow is amber, not
+cream, because the meadow already owns cream. No candy hovers: finds stay on the ground
+(owner directive 2026-08-30, board 17's "fits in world, not UI-looking"); they turn
+slowly instead. `parts_for`, `crest_for` and `glow_scale_for` in `band_pickups.gd` are
+the queries a test pins; `tests/test_band_pickups.gd` refuses a flatter ladder.
