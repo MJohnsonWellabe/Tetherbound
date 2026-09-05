@@ -1,98 +1,77 @@
-# Cloudreach Phase 2 — code-blind visual verdict
+# Visual judgment — Cloudreach Phase 2
 
-## Scope
+## Overall read
 
-This is an environment-only judgment of the supplied contact sheet and six individual Cloudreach frames against the supplied Tetherbound key art and five Palworld screenshots. Creatures are deliberately deferred, so their absence is not counted as a defect. No gameplay interface is visible enough to judge, and static images cannot establish popping or motion quality.
+The six frames establish a coherent sky-island route: blue sky, warm earth, green grass, stylized trees, bridges, and a stronghold that can be recognized from a distance. The route landmarks are legible, especially the tower in frame 01, the hanging causeway in frame 02, the ravine geometry in frame 03, the roost in frame 04, the cliffhold in frame 05, and the gate in frame 06.
 
-## Overall verdict
+The presentation is not yet at the reference bar. It reads as a sparse greybox-like environment with finished-looking materials applied to large simple forms. The key art and Palworld references use layered vegetation, varied ground dressing, inhabited spaces, and many small scale cues to make a place feel authored and alive. Here, long empty sightlines and repeated straight-edged islands expose the construction more than the destination.
 
-Cloudreach has the start of a readable identity: bright open sky, suspended land, long crossings, and progressively larger destination silhouettes. The green/tan/blue palette is coherent across all six frames, and the oxblood accents remain reserved for the final hostile-looking structure in **06-summit-final-approach**.
+## Specific findings
 
-The environment does not yet meet either reference bar. At contact-sheet size it reads as a sequence of prototype platforms made from enlarged primitive landforms, straight corridors, repeated trees, and uniform grass. The references read as inhabited, naturally accumulated places with strong foreground/midground/background layering. Cloudreach currently reads as an obstacle route suspended in a sky void. The gap is not fine polish; it is visible world construction, material scale, and atmosphere.
+### 1. Silhouette and small-size readability
 
-## Thumbnail readability
+- **01-arrival-first-reveal.png:** The tower is a clear arrival landmark and the foreground tree gives useful framing. At contact-sheet size, however, the trainer is a tiny dark vertical mark in a large bright grass corridor, and the repeated narrow grass blades merge into a noisy texture field. The path, tree, and tower remain identifiable; the ground detail does not.
+- **02-broken-causeways.png:** The bridge and its four dark posts read immediately, but the player is visually fused with the bridge center and the broken gap is mostly an empty grey void. The suspended bell frame is a good readable accent, though its small hanging pieces disappear at reduced size.
+- **03-windscar-ravine.png:** The huge jagged underside of the floating landmass dominates the frame. It reads as a repeating geometric cutout rather than a ravine with a designed focal point; the player and bridge are subordinate to the silhouette.
+- **04-high-roost-before-fly.png:** The roost silhouette is clear, but its dark vertical posts compete with the trainer and the long straight grass banks create a corridor with little visual hierarchy. The tiny distant floating object in the upper-left sky is too indistinct to read as an intentional landmark.
+- **05-upper-cloudreach-cliffhold.png:** The cliffhold is the strongest large-scale silhouette in the set. The foreground is an uninterrupted bright plane, so the trainer has little contextual contrast and the scene lacks the small forms that would make the fortress feel occupied or approached.
+- **06-summit-final-approach.png:** The gate is immediately legible and appropriately imposing. The lower half is dominated by tall grass that hides the trainer's legs and breaks the otherwise strong entrance read.
 
-- **01-arrival-first-reveal:** The large foreground tree and central vessel-shaped tower survive at small size, giving this frame the clearest arrival composition. The trainer's dark legs remain visible, but the white shirt merges with the pale path and tower. Grass blades turn the entire lower half into even visual noise rather than readable meadow masses.
-- **02-broken-causeways:** The bridge deck and four posts make the route readable, but the thin rope rails disappear. The player and bridge are backed by a nearly featureless tan slab, flattening the focal hierarchy. The hanging-bead gate is identifiable only at full size.
-- **03-windscar-ravine:** The foreground bridge, tree, and enormous background arches are separable, but the arches dominate as a repeating sawtooth pattern. Small trees on the upper rim read as identical marks rather than vegetation, which makes the plateau feel miniature.
-- **04-high-roost-before-fly:** The straight ramp and pavilion are readable, but the roost is only a dark rectangular frame. At small size the tree is the only authored-looking natural cluster; the rest collapses into three bands—grass corridor, empty sky, grey-brown structure.
-- **05-upper-cloudreach-cliffhold:** The cliff-top tower has the most distinctive silhouette in the survey. Its scale is not supported by secondary details, however, so it reads as an enlarged low-detail object rather than a colossal inhabited place. The pale distant causeways almost disappear into the sky.
-- **06-summit-final-approach:** The fortress entrance and twin round towers make a strong danger silhouette, and the oxblood trim helps. The trainer's lower body is swallowed by uniform grass and the dark trench/reflection immediately in front, while cropping the tower tops weakens the final-destination reveal.
+### 2. Colour and value structure
 
-## Frame-specific defects
+The shared blue-sky/green-grass/warm-earth palette is compatible with the bright, inviting side of the Meadows key art. The value range is generally clear: dark tree trunks and bridge posts separate from light grass and sky, and the oxblood accents on the final gate read as deliberate danger/faction colour.
 
-### 01-arrival-first-reveal
+The ground colours are too close across all six frames. Large green and tan surfaces repeat with little local variation, so the route does not develop the key art's succession of meadow, woodland, water, settlement, and stone values. Frame 05 is especially washed into tan/green midtones; frame 04 has a broad pale sky and bright path that flatten the roost. The references retain saturated focal colours while also providing darker foliage masses and richer blue/green depth around them.
 
-- The road is a ruler-straight strip with nearly parallel grass borders and evenly spaced trees. Against the key art's curving paths, clustered groves, fences, rocks, water, and settlement layers, this reads as generated placement rather than an authored arrival.
-- The large tree provides a useful foreground frame, but the middle and far distance have almost no comparable overlap. The tower and pale rear platform sit in the same value range, so the intended destination has little depth behind it.
-- Grass density is uniform across path and verge, and individual blades are high-contrast against a blurry mottled ground texture. This makes the foreground busy without making it rich.
-- Tiny pale marks floating to the tower's left and a short bright horizontal mark above it read as unintegrated geometry or capture artefacts.
+### 3. Intentionality and world authorship
 
-### 02-broken-causeways
+There are good authored gestures: the lone framing tree in 01, the hanging bells in 02, the ravine crossing in 03, and the gate treatment in 06. But the repeated tree scale, repeated grass-wall treatment, regular path edges, and large unbroken terrain slabs make the scatter feel systemically stamped. The contact sheet shows the same narrow, rectangular travel corridor reappearing in multiple locations.
 
-- The exposed cliffs look like clean horizontal cutaways: a green cap over broad, sharply bounded brown bands. The repeated granular material does not describe erosion, strata, broken rock, or weathering.
-- The immense tan wall behind the bridge is blank at the trainer's scale. It blocks the horizon without giving the eye cracks, ledges, vegetation pockets, waterfalls, ruins, or any other scale cues.
-- Identical dark posts and almost invisible ropes make the bridge read as a construction test. Its shadow and support do not convincingly tie it into either cliff edge.
-- The single gate with hanging shapes is a welcome focal prop, but it has no surrounding path dressing or repeated visual language to make it feel like part of a culture or traversal system.
+The key art and Palworld references use clustering: shrubs and trees form irregular groups, clearings interrupt density, rocks and flowers provide foreground/midground scale, and structures sit in a lived-in context. These frames need more deliberate pockets of contrast and occupation around the route landmarks.
 
-### 03-windscar-ravine
+### 4. Lighting and grounding
 
-- The distant plateau edge repeats pointed arch cut-outs at regular intervals. At contact-sheet size this becomes an unmistakable procedural zigzag, unlike the irregular, geologically layered silhouettes in the key art and Palworld plateau reference.
-- The plateau top is extremely flat and the rim trees repeat at almost the same size and spacing. The trainer ruler makes those trees look toy-small while the arch spans feel hundreds of metres wide; there is not enough intermediate detail to reconcile those scales.
-- The bridge ropes vanish against the background and the far landing is visually ambiguous. The route does not have the edge contrast or constructed detail needed for immediate traversal readability.
-- The large foreground tree obscures the middle landing instead of framing it, leaving no clear secondary landmark beyond the bridge.
+The sunny daytime intent is readable, and the large trees and bridge posts cast shadows that help place them. The lighting is still very evenly exposed across the open terrain. Frame 01's grass corridor, frame 04's ramp, and frame 05's foreground plateau receive broad, nearly uniform light with little sculpting of local form.
 
-### 04-high-roost-before-fly
+The trainer is grounded by a visible shadow in several shots, but tall grass intersects/occludes the lower body in 06 and partially in 01/04. The bridge and terrain edges in 02 and 03 have strong dark undersides, but the abrupt light-to-dark transitions emphasize the faceted geometry rather than natural depth.
 
-- The route is another long, symmetrical green corridor with equal-height walls and even grass strips. Repeating this composition after 01 makes Cloudreach feel assembled from traversal lanes rather than explored as a place.
-- The roost pavilion is a roof slab on dark posts with an almost black interior. It lacks perch, nesting, wind, ritual, habitation, or mechanical detail that would let the silhouette communicate “high roost.”
-- A tiny isolated object in the upper-left sky and a thin comb-like diagonal line to the pavilion's upper right read as stray or unresolved distant geometry.
-- The sky implies bright midday, but the long hard player shadow and very dark pavilion do not match the broadly flat terrain lighting seen elsewhere in the survey. Objects feel lit individually rather than sharing a strong environmental light direction.
+### 5. Horizon and depth
 
-### 05-upper-cloudreach-cliffhold
+The sky islands communicate vertical traversal, but the pale horizon and grey-blue empty gaps repeatedly erase distance. In 02, 03, and 05, background landmasses appear as flat, low-detail slabs behind a large void; this reads as missing atmospheric depth rather than an intentional far vista. Frame 03's distant underside is especially dominant and visually noisy.
 
-- The cliffhold's stacked tower and curling route are the survey's strongest unique landmark, but the huge surrounding rock mass has almost no human-scale articulation. There are no stairs, doors, railings, windows, retaining structures, paths, or vegetation pockets to sell its size or purpose.
-- A narrow black vertical crack and adjacent dark triangular shapes on the cliff face read as open seams or intersecting geometry rather than intentional geology.
-- The cliff changes from pale tan to dark brown along an extremely clean horizontal boundary. That boundary competes with the landmark and reinforces the appearance of a cut block.
-- The foreground is mostly enlarged blurry ground texture. The background bridges are so desaturated that they look untextured and merge into the pale void, producing distance by erasure rather than layered atmosphere.
+Depth is strongest in 01, where the path, tree line, tower, and receding sky structure form a readable sequence. It is weakest in 05, where the cliffhold fills the center while the foreground and surrounding landforms remain broad, blank planes. The references use layered hills, foliage masses, and atmospheric colour shifts to keep far distance legible without leaving it empty.
 
-### 06-summit-final-approach
+### 6. Interface and framing
 
-- The fortress is monumental relative to the 1.80 m trainer, but its blank cylindrical walls and oversized repeated surface facets make it feel like a small toy castle scaled up. The flat oxblood rectangles look attached panels rather than banners, structural braces, or machinery.
-- The close crop removes the tower tops and any wider summit context. A final approach should reveal the destination and its relationship to the landscape; this frame instead presents a wall.
-- Uniform grass intersects the straight-edged water/trench area and covers the trainer's boots. The dark rectangular cut beneath the player, hard water boundaries, and submerged-looking grass read as geometry/placement defects.
-- The entrance is a readable void, but it has no threshold dressing, approach path, steps, guards' infrastructure, damage, light spill, or other signs that this is an occupied final location.
+No gameplay interface is visible in these frames, so there is no safe-area or hierarchy defect to assess. As environmental captures, the centered trainer framing is consistent but repetitive: all six shots place the player near the center while the landmark changes. More off-axis compositions would better show route scale and make the landmark reveal feel authored rather than catalogued.
 
-## Cross-frame rubric findings
+### 7. Artefacts and visible construction defects
 
-**Colour and value:** The regional palette is consistent and the final oxblood accent is correctly reserved for danger. What is missing is the references' value range: sunlit warm planes, deep but coloured shade, cool water or haze, bright flowers, and dark focal landmarks. Most Cloudreach terrain occupies the same olive/tan mid-values while the sky consumes a large bright-blue area.
+- **01-arrival-first-reveal.png:** Grass blades form conspicuous isolated vertical lines across the foreground and appear too uniformly upright; the field reads as a texture/scatter layer rather than meadow growth.
+- **02-broken-causeways.png:** The causeway exposes a hard rectangular bridge underside and straight cut terrain walls. The empty gap under the bridge is a severe construction read, with no supporting depth cues beyond the flat pale background.
+- **03-windscar-ravine.png:** The underside of the distant landmass has repeated triangular/jagged cutouts and flat polygon bands. These edges look like an exposed mesh construction rather than naturally eroded rock.
+- **04-high-roost-before-fly.png:** The straight-sided embankments and repeated grass strips create visible parallel seams. A thin, faint diagonal line in the sky near the roost also reads as an unintended artifact or construction guide.
+- **05-upper-cloudreach-cliffhold.png:** The cliffhold and background islands show large faceted surfaces with abrupt material/value changes. The black/dark underside beneath the upper platform is visually harsh and does not resolve as a naturally shadowed rock face.
+- **06-summit-final-approach.png:** The grass visibly grows through/over the foreground edge and obscures the trainer's lower body. The gate's large flat wall planes and repeated hex-like surface pattern are conspicuous at this distance.
 
-**Intentionality:** Repeated tree forms, near-uniform scale, regular rim spacing, straight parallel paths, flat vegetation density, and recurring horizontal cliff bands are visible in **01, 03, and 04**. **02, 05, and 06** each introduce one landmark, but surrounding space is too empty to make those landmarks feel embedded in a designed place.
+### 8. Scale agreement
 
-**Lighting:** All frames communicate a bright day, but the terrain is mostly flat-lit. Shadows rarely carve the landforms or anchor vegetation. **04** has a conspicuously hard, long player shadow while **01** and **03** feel much more ambient, so the contact sheet lacks a stable light character.
+The trainer provides a useful ruler. The gate in 06 and the cliffhold in 05 feel substantially larger than a person, which supports their role as destination landmarks. The bridge posts in 02/03 are also plausibly oversized for a dramatic crossing. The tree in 01 has a believable trunk-to-trainer relationship, though the repeated smaller trees in the middle distance collapse into decorative markers rather than a convincing forest scale.
 
-**Horizon and depth:** The key art and Palworld references layer foreground foliage, midground routes and settlements, distant ridges, and atmospheric mountains. Cloudreach often has one foreground platform, one distant platform, and a pale empty void between them. **03** and **05** especially need multiple depth layers rather than simply fading distant geometry toward white.
+The main scale problem is environmental context: the broad floating slabs, voids, and uniform grass banks are so large and empty that the trainer feels like a reference doll placed on a test surface. In 04 the roost ramp is wide enough to read as a monumental approach, but without rails, stones, vegetation variation, or other human-scale cues its width feels arbitrary. This is a context and dressing problem visible in stills, not a problem with the trainer's nominal height.
 
-**Scale agreement:** The trainer, paths, bridge widths, and nearby trees are broadly compatible, but the monumental landforms are not supported by smaller construction or erosion detail. In **03**, tiny repeated rim trees beside colossal identical arches make the terrain look miniaturized. In **05** and **06**, the same coarse surface treatment spans trainer-scale ground and fortress-scale masses, collapsing the intended size difference.
+## Three largest separations from the references
 
-**Artefacts:** The clearest still-frame defects are the suspended pale marks in **01**, stray sky geometry/line in **04**, black cliff seams in **05**, and grass/water/trench intersections in **06**.
-
-## Three ranked gaps from the references
-
-1. **Authored, lived-in world density.** The key art and Palworld screenshots use clustered foliage, rocks, flowers, fences, paths, structures, water, clearings, and habitation traces to make every route feel situated. **01** and **04** are straight vegetation-lined corridors; **02** and **05** place a single landmark against broad blank masses; **06** has no occupied threshold language. Cloudreach needs designed clusters, negative-space clearings, route-side stories, and secondary scale cues.
-2. **Finished landform and landmark vocabulary.** The references use irregular geological silhouettes and architecture assembled from readable parts. The repeated arch teeth in **03**, banded cutaway cliffs in **02/05**, skeletal roost in **04**, and blank enlarged castle cylinders in **06** still read as blockout geometry. Surface noise cannot replace rock structure, constructed edges, doors, stairs, rails, supports, or landmark-specific detail.
-3. **Lighting, material, and atmospheric depth.** The references separate planes with warm/cool light, cast shadow, haze, water, and distinct material response. In **01** the rear island merges with the tower; in **03** the plateau becomes a flat strip; in **05** the background is nearly erased; across the sheet the same olive/tan mid-values and mottled materials flatten scale. Cloudreach needs a deliberate light direction, coloured shade, controlled fog falloff, material-scale correction, and several visible distance layers.
+1. **Authored density and lived-in scale:** The Meadows key art and Palworld frames layer trees, shrubs, flowers, rocks, paths, structures, and activity into foreground, middle ground, and distance. These frames leave broad blank grass/stone slabs and repeat narrow grass strips; this is most obvious in **04-high-roost-before-fly.png** and **05-upper-cloudreach-cliffhold.png**.
+2. **Natural terrain/depth language:** The references use rounded hills, cliffs with believable layering, atmospheric distance, and varied silhouettes. **03-windscar-ravine.png** and **02-broken-causeways.png** expose flat polygon bands, repeated triangular cutouts, and pale empty voids that read as constructed floating geometry.
+3. **Environmental focal richness:** The references make a landmark an event through surrounding context and contrast. **06-summit-final-approach.png** has a strong gate, but the scene is mostly a wall, tall grass, and sky; **01-arrival-first-reveal.png** has a good tower/tree composition but lacks the settlement, rock, flower, and terrain layering that gives the key art its inviting arrival.
 
 ## Bar questions
 
-**A. Do these frames read as belonging to the world in `tetherbound-meadows-keyart.png`? — No.**
+### A. Do these frames read as belonging to the world in \`docs/reference/tetherbound-meadows-keyart.png\`?
 
-The bright blue sky, natural green/brown base palette, large distant landmarks, and danger-only oxblood provide some family resemblance. What sinks it is the shift from the key art's stylised naturalism and cozy, inhabited landscape to sparse modular platforms, straight lanes, repeated vegetation, cut-block geology, and largely blank structures. The mood is open and bright, but not yet welcoming, mysterious, or lived in.
+**No.** They share the key art's sunny blue-green palette, stylized trees, warm earth, and readable landmark intent. The gap is the environment's authored richness: the key art is a lush, varied, inhabited natural world, while these captures are sparse floating platforms with exposed faceted construction and very little local variation. The fixable portion is substantial—scatter density, clustered vegetation, flowers/rocks, ground colour variation, landmark context, composition, and atmospheric layering. The remaining gap would require more convincing authored terrain/material/prop art for the cliffs, vegetation, and destination spaces.
 
-**B. Beside the five Palworld screenshots, would someone say these are trying to be the same kind of game? — No.**
+### B. Shown beside \`docs/reference/palworld-0*.jpg\`, would someone say these are trying to be the same kind of game?
 
-Ignoring the deliberately absent creatures, Palworld's environments still communicate an open-world creature adventure through varied human-scale terrain, dense natural dressing, structures embedded in landscape, deep horizons, inhabited activity, and event-ready clearings. These Cloudreach frames instead communicate an early third-person platforming or traversal prototype. The trainer and camera establish the genre viewpoint, but the world around them does not yet provide the ecological density or authored context needed to imply the same kind of game.
-
-**Fixable through scene, composition, and rendering changes:** cluster and vary the existing trees and grass; carve irregular clearings and cliff silhouettes; break straight routes; add secondary props and habitation traces; correct material texel scale; strengthen path edges; create foreground/midground/background layers; tune fog and colour separation; establish consistent directional light and coloured shadow; repair the visible seams and grass/water intersections; choose wider destination-reveal compositions.
-
-**Not fixable by scatter or lighting alone:** the frames do not show a finished environment-art vocabulary for natural cliff faces, constructed causeway edges and supports, a communicative roost, or detailed monumental fortress architecture. If no richer pieces exist beyond what is visible here, those forms require new or substantially reworked environment art. Creature art is outside this pass and is not part of this verdict.
+**Yes.** The third-person framing, bright stylized natural palette, traversal landmarks, oversized destination structures, and readable human-scale avatar place the captures in the same broad kind of creature-adventure world. The comparison would immediately expose a quality gap in environmental density, terrain richness, and sense of a lived-in game space; Palworld's frames also derive energy from active encounters and populated spaces, which is outside what these environment-only captures show. The scene-level gap is fixable through density, clustering, depth, colour/value variation, and stronger compositions; bespoke creature/character appeal is not judged here because the requested batch intentionally contains no creature frames.

@@ -144,3 +144,13 @@ Exact resume: retain the current grass/trees/sky/real-chasm foundation; replace 
 primitive landforms and landmarks with irregular strata, terraces, built edges/supports,
 human-scale detail clusters, and multiple distance layers; repair the visible seams and summit
 grass/trench intersection; then recapture the same six views for external ChatGPT acceptance.
+
+## Cloudreach irregular-strata corrective pass — 2026-09-04
+
+The procedural cliff body's high and low rings now rise and fall independently around every
+region and satellite crag instead of forming ruler-flat horizontal bands. Walkable crowns remain
+level, preserving traversal and collision. Foundation smoke and the six-view GPU capture passed;
+the final local GTX 1060 samples measured **215–756 draws** and **2.86–8.44 ms** at 1280×720.
+Creatures remain deferred. The new code-blind result is **Meadows art direction: No / Palworld
+game category: Yes**. The category bar is a genuine improvement; the art-direction failure means
+this remains an evidence-backed visual correction, not Phase 2 acceptance.

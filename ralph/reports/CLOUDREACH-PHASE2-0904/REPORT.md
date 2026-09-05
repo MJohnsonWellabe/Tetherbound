@@ -21,12 +21,12 @@ complete.
 
 | View | Draw calls | Primitives | Objects | Measured frame time |
 | --- | ---: | ---: | ---: | ---: |
-| Arrival reveal | 704 | 1,057,747 | 704 | 4.54 ms |
-| Broken Causeways | 756 | 902,634 | 756 | 4.33 ms |
-| Windscar Ravine | 730 | 1,120,070 | 730 | 4.44 ms |
-| High Roost before Fly | 215 | 347,926 | 215 | 3.05 ms |
-| Upper Cloudreach / Cliffhold | 502 | 1,029,743 | 502 | 4.27 ms |
-| Summit approach | 467 | 6,479,973 | 467 | 8.49 ms |
+| Arrival reveal | 704 | 1,057,747 | 704 | 4.32 ms |
+| Broken Causeways | 756 | 902,634 | 756 | 4.16 ms |
+| Windscar Ravine | 730 | 1,120,070 | 730 | 4.20 ms |
+| High Roost before Fly | 215 | 347,926 | 215 | 2.86 ms |
+| Upper Cloudreach / Cliffhold | 502 | 1,029,743 | 502 | 4.08 ms |
+| Summit approach | 467 | 6,479,973 | 467 | 8.44 ms |
 
 The highest recorded draw count is below the Hall reference ceiling of 4,000 draws. The
 engine-reported instantaneous FPS was not treated as evidence because it includes capture-start
@@ -71,20 +71,21 @@ The grass, flowers, asset trees, grounded cliff ribbons, bridge gaps, Meadows cl
 trails, and stronger summit silhouette materially improve the previous evidence set. They do not
 yet supply the natural accumulation, human-scale construction, geology, or atmospheric depth in
 the references. Creatures were deliberately excluded from this pass and were not used as a reason
-for failure. Neither required bar passed:
+for failure. The broad game-category bar now passes, but the project's own art-direction bar does
+not, so the environment is still unaccepted:
 
 - Belongs to the world of the Tetherbound Meadows key art: **No**
-- Looks like the same kind of game as the Palworld references: **No**
+- Looks like the same kind of game as the Palworld references: **Yes**
 
 The reviewer identified these three largest reference gaps:
 
-1. Authored, lived-in world density: clustered foliage, rocks, flowers, built edges, route-side
-   stories, negative-space clearings, habitation traces, and intermediate scale cues.
-2. Finished landform and landmark vocabulary: irregular geology and readable constructed parts
-   instead of banded cutaway slabs, repeated arch teeth, skeletal pavilions, and enlarged primitive
-   fortress masses.
-3. Lighting, material, and atmospheric depth: stable warm/cool separation, coloured shade,
-   corrected material scale, controlled haze, and several overlapping distance layers.
+1. Authored density and lived-in scale: clustered vegetation, rocks, built edges, route-side
+   stories, negative-space clearings, and intermediate scale cues, especially at High Roost and
+   Cliffhold.
+2. Natural terrain and depth language: believable cliff layering, atmospheric distance, and
+   varied silhouettes instead of exposed polygon bands, repeated underside teeth, and pale voids.
+3. Environmental focal richness: landmark context, contrast, and surrounding scale detail so the
+   summit gate and arrival tower read as events rather than isolated objects on broad slabs.
 
 The full code-blind critique is preserved in `JUDGE.md`. Final visual acceptance remains with an
 external ChatGPT review.

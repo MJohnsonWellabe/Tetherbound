@@ -637,3 +637,20 @@ route-side stories, and secondary-scale habitation clusters. Fix the visible sea
 grass/trench intersection, widen the destination reveals, and build several overlapping distance
 layers before recapturing the same six views for external ChatGPT review. Do not advance to Phase
 3 content or call Phase 2 complete until that environment review passes.
+
+## 2026-09-04 — Cloudreach checkpoint 6 / irregular cliff-strata profile
+
+Branch: `codex/cloudreach-cliffs`, continuing from checkpoint `61e24cedb`. The shared procedural
+mesa builder no longer holds its high and low geological rings at perfectly constant elevations.
+Each generated region mass and satellite crag now receives deterministic, independently phased
+vertical strata variation while its walkable crown remains level. This directly reduces the
+clean horizontal cutaway signature without changing routes, top-surface collision, or the
+creature-deferred scope.
+
+`tests/smoke_cloudreach_foundation.gd` passes after the change. A fresh six-view Windows/OpenGL3
+capture and contact sheet also pass. The local GTX 1060 samples remain **215–756 draws** and
+**2.86–8.44 ms** measured frame time at 1280×720. External visual acceptance remains required;
+this bounded corrective pass does not complete Phase 2 or the biome. The new code-blind verdict
+is **Meadows art direction: No / Palworld game category: Yes**. The latter is real progress, but
+the former remains the controlling visual failure: authored density, natural terrain/depth, and
+landmark-context richness are still below the reference.

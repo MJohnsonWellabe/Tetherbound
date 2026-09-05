@@ -1,5 +1,5 @@
 {
-  "captured_at_utc": "2026-09-05T02:35:23",
+  "captured_at_utc": "2026-09-05T02:42:41",
   "display_server": "Windows",
   "engine": "4.7-stable (official)",
   "resolution": [
@@ -11,7 +11,7 @@
   "views": [
     {
       "draw_calls": 704,
-      "measured_frame_ms": 4.54,
+      "measured_frame_ms": 4.32,
       "objects": 704,
       "primitives": 1057747,
       "reported_fps": 1.0,
@@ -29,7 +29,7 @@
     },
     {
       "draw_calls": 756,
-      "measured_frame_ms": 4.33,
+      "measured_frame_ms": 4.16,
       "objects": 756,
       "primitives": 902634,
       "reported_fps": 58.0,
@@ -47,7 +47,7 @@
     },
     {
       "draw_calls": 730,
-      "measured_frame_ms": 4.44,
+      "measured_frame_ms": 4.2,
       "objects": 730,
       "primitives": 1120070,
       "reported_fps": 58.0,
@@ -65,10 +65,10 @@
     },
     {
       "draw_calls": 215,
-      "measured_frame_ms": 3.05,
+      "measured_frame_ms": 2.86,
       "objects": 215,
       "primitives": 347926,
-      "reported_fps": 86.0,
+      "reported_fps": 88.6,
       "stand": [
         330.0,
         587.700012207031,
@@ -83,10 +83,10 @@
     },
     {
       "draw_calls": 502,
-      "measured_frame_ms": 4.27,
+      "measured_frame_ms": 4.08,
       "objects": 502,
       "primitives": 1029743,
-      "reported_fps": 86.0,
+      "reported_fps": 107.0,
       "stand": [
         -400.0,
         780.200012207031,
@@ -101,10 +101,10 @@
     },
     {
       "draw_calls": 467,
-      "measured_frame_ms": 8.49,
+      "measured_frame_ms": 8.44,
       "objects": 467,
       "primitives": 6479973,
-      "reported_fps": 93.0,
+      "reported_fps": 86.0,
       "stand": [
         100.0,
         1160.19995117188,

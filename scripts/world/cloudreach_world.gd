@@ -1236,10 +1236,18 @@ func _mesa(
 			size.y * 0.5, sin(angle) * size.z * 0.47 * irregular)
 		var upper_push := 1.02 + 0.10 * sin(float(i * 5 + seed_value * 19))
 		var lower_push := 0.84 + 0.08 * cos(float(i * 9 + seed_value * 7))
+		# A constant Y per ring made every kilometre-scale face read as a clean
+		# geological cutaway. Offset the strata independently around the perimeter
+		# so the material transitions follow an eroded, rising/falling shelf line.
+		# The playable crown stays level; only the visual wall profile changes.
+		var upper_jitter := sin(float(i * 11 + seed_value * 5)) * size.y * 0.045
+		upper_jitter += cos(float(i * 5 + seed_value * 13)) * size.y * 0.018
+		var lower_jitter := sin(float(i * 7 + seed_value * 17)) * size.y * 0.038
+		lower_jitter += cos(float(i * 13 + seed_value * 3)) * size.y * 0.014
 		top_ring.append(top_point)
-		upper_ring.append(Vector3(top_point.x * upper_push, size.y * 0.20,
+		upper_ring.append(Vector3(top_point.x * upper_push, size.y * 0.20 + upper_jitter,
 			top_point.z * upper_push))
-		lower_ring.append(Vector3(top_point.x * lower_push, -size.y * 0.20,
+		lower_ring.append(Vector3(top_point.x * lower_push, -size.y * 0.20 + lower_jitter,
 			top_point.z * lower_push))
 		bottom_ring.append(Vector3(top_point.x * (0.66 + 0.06 * sin(float(i * 3 + seed_value))),
 			-size.y * 0.5, top_point.z * (0.66 + 0.05 * cos(float(i * 5 - seed_value)))))
