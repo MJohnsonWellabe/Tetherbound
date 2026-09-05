@@ -121,23 +121,53 @@ func test_the_dark_window_does_not_open_before_the_light_has_actually_gone() -> 
 			+ "entire dusk/dawn blend'") % [hour, share * 100.0])
 
 
-## The shape of the curve, not just its extremes. `world_look.gd` blends
-## continuously between the two keyframes bracketing the current hour, so where
-## the darkest point LANDS says whether the night is a night or just the long
-## ramp down into dawn -- it belongs inside the window, not pressed against an
-## edge of it.
-func test_the_darkest_moment_lands_inside_the_dark_window_not_on_its_edge() -> void:
-	var darkest_hour := -1.0
-	var darkest := INF
-	for hour: float in _dark_hours():
+## The shape of the curve, not just its extremes -- and the finding a blind
+## critic produced that no number had.
+##
+## `world_look.gd::_apply_blended()` lerps continuously between the two keyframes
+## bracketing the current hour, so a keyframe standing ALONE is arrived at for one
+## instant and left again immediately. `night` stood alone at hour 0: the look
+## NIGHT-LIGHT tuned across three judged rounds was drawn at full strength for one
+## instant of a 600-second day, and every other dark hour was a lerp back toward
+## golden or dawn.
+##
+## Shown seven hours of one day from one camera, shuffled, lettered and told
+## nothing, a code-blind critic named exactly ONE frame as night -- hour 0 -- and
+## said of hour 22 "a player would say it has got dark, not it is night". No value
+## inside the night preset can fix a preset that is never held, which is why this
+## is a test about the SHAPE of the curve and not about any tuned number.
+const NIGHT_HELD_SECONDS_MIN := 45.0
+
+
+func test_the_night_look_is_held_across_the_middle_of_the_night_not_merely_touched() -> void:
+	var held_hours := 0.0
+	var best_hours := 0.0
+	var last := -1.0
+	for step in int(24.0 / STEP) * 2:
+		# Two laps, so a run that straddles midnight is measured whole rather
+		# than cut in half by the wrap.
+		var hour := fposmod(step * STEP, 24.0)
+		if not _cycle.is_dark(hour):
+			last = -1.0
+			held_hours = 0.0
+			continue
 		var total := _total_at(hour)
-		if total < darkest:
-			darkest = total
-			darkest_hour = hour
-	var from: float = float(_cycle.dark_from_hour)
-	var span := _dark_span_hours()
-	var position: float = fposmod(darkest_hour - from, 24.0) / span
-	assert_between(position, 0.1, 0.9,
-		("the darkest moment of the night is hour %.1f, %.0f%% of the way through a dark "
-		+ "window that runs %.1f -> %.1f; a night whose darkest point sits on the window's "
-		+ "edge is a transition, not a night") % [darkest_hour, position * 100.0, from, from + span])
+		# Exact, not a tolerance. A genuinely HELD look blends between two
+		# keyframes carrying identical values, so every sample inside it is the
+		# same float; a tolerance instead measures "the curve happens to be flat
+		# here", which near a lone keyframe it briefly is -- sun, ambient and
+		# exposure move in opposite directions across it and cancel to under 1%
+		# for a step or two either side, which is not the same thing at all and
+		# passed an earlier draft of this test on the very data it exists to fail.
+		if last >= 0.0 and absf(total - last) <= 0.000001:
+			held_hours += STEP
+			best_hours = maxf(best_hours, held_hours)
+		else:
+			held_hours = 0.0
+		last = total
+	var seconds := best_hours / 24.0 * float(_cycle.day_length_seconds)
+	assert_true(seconds >= NIGHT_HELD_SECONDS_MIN,
+		("the night look holds still for %.1f in-game hours = %.0f real seconds; a keyframe "
+		+ "with no second hour is reached for an instant and left, so the tuned night is "
+		+ "never actually on screen. At least %.0f seconds of it should be")
+		% [best_hours, seconds, NIGHT_HELD_SECONDS_MIN])

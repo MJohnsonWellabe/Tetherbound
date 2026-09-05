@@ -384,7 +384,7 @@ func apply_time(name: String) -> void:
 		name = DEFAULT_TIME
 	_time = name
 
-	var over: Dictionary = times.get(name, {})
+	var over: Dictionary = _preset_over(_config, name)
 	var sun_cfg := _merged("sun", over)
 	var sky_cfg := _merged("sky", over)
 	var env_cfg := _merged("environment", over)
@@ -497,6 +497,50 @@ static func _merged_from(config: Dictionary, section: String, over: Dictionary) 
 	return base
 
 
+## N13-NIGHT-RESUME. One `times` entry, HELD between two hours.
+##
+## `_apply_blended()` lerps continuously between the two keyframes bracketing the
+## current hour, which means a keyframe standing alone is reached for exactly one
+## instant and left again immediately. `night` stood alone at hour 0, so the only
+## moment the game ever drew the night look NIGHT-LIGHT and NIGHT-LEGIBILITY
+## tuned was that instant of a 600-second day -- every other dark hour was a lerp
+## back toward golden or dawn. A code-blind critic, shown seven hours of one day
+## from one camera and told nothing, picked exactly one frame as night and called
+## the hour either side of it "it's got dark, not it is night". That is the look
+## half of "there is no night time" and it is a shape problem, not a tuning one:
+## no value in the night preset can fix a preset that is never held.
+##
+## Holding it needs a second keyframe carrying the same values, and writing those
+## values twice is how the two copies silently disagree later -- which this file's
+## own `_merged()` comment already warns about for exactly this reason. So an
+## entry may instead say `"same_as": "<other entry>"` and inherit it whole,
+## overriding whatever it names on top (nothing does today; the affordance is
+## there so a held night can still differ in one key without a second full copy).
+## `hour` is always the entry's own.
+static func _preset_over(config: Dictionary, name: String) -> Dictionary:
+	var times: Dictionary = config.get("times", {})
+	var entry: Dictionary = times.get(name, {})
+	if typeof(entry) != TYPE_DICTIONARY:
+		return {}
+	var base_name := str((entry as Dictionary).get("same_as", ""))
+	# Self-reference and dangling names degrade to the entry as written rather
+	# than recursing or erroring: a typo in art.json should cost one keyframe's
+	# inheritance, not the whole day.
+	if base_name == "" or base_name == name or not times.has(base_name):
+		return entry
+	var resolved: Dictionary = (times[base_name] as Dictionary).duplicate(true)
+	for key: String in (entry as Dictionary).keys():
+		if key == "same_as":
+			continue
+		var value: Variant = (entry as Dictionary)[key]
+		if typeof(value) == TYPE_DICTIONARY and typeof(resolved.get(key)) == TYPE_DICTIONARY:
+			for inner: String in (value as Dictionary).keys():
+				(resolved[key] as Dictionary)[inner] = (value as Dictionary)[inner]
+		else:
+			resolved[key] = value
+	return resolved
+
+
 ## N13-NIGHT-RESUME (CL-O2, OP-0904-2 "There is no night time"). The sun, sky
 ## and environment the PASSIVE CLOCK asks for at `hour` -- the blend
 ## `_apply_blended()` installs, not the snap `apply_time()` installs.
@@ -524,9 +568,8 @@ static func blended_config_at(config: Dictionary, cycle: RefCounted, hour: float
 	var from_name: String = str(interp.get("from", DEFAULT_TIME))
 	var to_name: String = str(interp.get("to", from_name))
 	var t: float = float(interp.get("t", 0.0))
-	var times: Dictionary = config.get("times", {})
-	var from_over: Dictionary = times.get(from_name, {})
-	var to_over: Dictionary = times.get(to_name, {})
+	var from_over: Dictionary = _preset_over(config, from_name)
+	var to_over: Dictionary = _preset_over(config, to_name)
 	return {
 		"from": from_name,
 		"to": to_name,

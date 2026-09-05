@@ -49,6 +49,26 @@ def luma(hex_colour, fallback):
     return 0.2126 * r + 0.7152 * g + 0.0722 * b
 
 
+def preset_over(config, name):
+    """Mirrors world_look.gd::_preset_over -- resolves a `same_as` alias entry."""
+    times = config.get("times", {})
+    entry = times.get(name, {})
+    if not isinstance(entry, dict):
+        return {}
+    base_name = str(entry.get("same_as", ""))
+    if not base_name or base_name == name or base_name not in times:
+        return entry
+    resolved = json.loads(json.dumps(times[base_name]))
+    for key, value in entry.items():
+        if key == "same_as":
+            continue
+        if isinstance(value, dict) and isinstance(resolved.get(key), dict):
+            resolved[key].update(value)
+        else:
+            resolved[key] = value
+    return resolved
+
+
 def merged(config, section, over):
     base = dict(config.get(section, {}))
     base.update(over.get(section, {}))
@@ -133,9 +153,10 @@ def main() -> int:
     for step in range(48):
         hour = step * 0.5
         frm, to, t = interpolate_at(kfs, hour)
-        sun = blend(merged(config, "sun", times.get(frm, {})), merged(config, "sun", times.get(to, {})), t)
-        env = blend(merged(config, "environment", times.get(frm, {})),
-                    merged(config, "environment", times.get(to, {})), t)
+        from_over, to_over = preset_over(config, frm), preset_over(config, to)
+        sun = blend(merged(config, "sun", from_over), merged(config, "sun", to_over), t)
+        env = blend(merged(config, "environment", from_over),
+                    merged(config, "environment", to_over), t)
         sun_e = float(sun.get("energy", 1.25)) * luma(sun.get("colour"), "#ffffff")
         # See the module docstring: the sky share is dead weight under Compatibility.
         amb_e = float(env.get("ambient_energy", 1.0)) * (
