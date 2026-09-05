@@ -987,6 +987,59 @@ func _assert_south_bridge_held(world: Node, failures: Array[String]) -> void:
 	if bridge.get_node_or_null(^"Occupation/Sentries/Bridge Sentry") == null:
 		failures.append("nobody is posted at the South Bridge while it is shut")
 	print("  South Bridge, held:  %d rail posts, %d banners, sentry posted" % [posts, banners])
+	_assert_the_checkpoint_narrows_the_road_without_closing_it(bridge, failures)
+
+
+## N09-BRIDGE-CHECKPOINT-0905 / D87 §1. The barricade frames now stand IN the
+## roadway rather than beside it, and the rule that replaced D86 §1's old
+## "|z| >= 1.5m" coordinate has exactly two halves: the barricade may narrow
+## the road, and it may never close it. Both are asked of the REAL physics
+## space rather than of a coordinate, because a coordinate is what went stale
+## the first time.
+##
+## The positive control is the point of the pair. A shape query that finds
+## nothing proves nothing on its own -- Terrain3D runs in Dynamic/Game here, so
+## "clear" and "no collision shapes loaded yet" look identical -- so the same
+## sphere is asked at the barricade's own beam first, where it MUST be blocked.
+## If that control comes back clear the query is not seeing the world, and this
+## says so instead of passing.
+const PLAYER_RADIUS := 0.4
+const BARRICADE_BEAM_Y := 0.66
+
+
+func _assert_the_checkpoint_narrows_the_road_without_closing_it(bridge: Node3D, failures: Array[String]) -> void:
+	var space: PhysicsDirectSpaceState3D = bridge.get_world_3d().direct_space_state
+	if space == null:
+		return
+	var sphere := SphereShape3D.new()
+	sphere.radius = PLAYER_RADIUS
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.shape = sphere
+	query.collide_with_areas = false
+	var before := failures.size()
+	for side in ["A", "B"]:
+		var frame: Node3D = bridge.get_node_or_null("Occupation/Barricade_%s" % side) as Node3D
+		if frame == null:
+			continue  # the barricade-exists check above already reported it
+		# In the barricade, at its own beam height: the control.
+		query.transform = Transform3D(Basis(), bridge.global_transform * Vector3(
+			frame.position.x, frame.position.y + BARRICADE_BEAM_Y, frame.position.z))
+		if space.intersect_shape(query, 1).is_empty():
+			failures.append(("barricade %s is not solid to a %.2fm probe at its own beam "
+				+ "-- either it has no collider or this query is not seeing the world, and "
+				+ "the road-clear check below cannot be trusted either") % [side, PLAYER_RADIUS])
+			continue
+		# The same sphere on the road's centreline, level with that barricade.
+		query.transform = Transform3D(Basis(), bridge.global_transform * Vector3(
+			frame.position.x, frame.position.y + BARRICADE_BEAM_Y, 0.0))
+		if not space.intersect_shape(query, 1).is_empty():
+			failures.append(("barricade %s closes the road: a %.2fm probe on the centreline "
+				+ "is blocked. The checkpoint narrows the way through, it never seals it "
+				+ "(D87 §1) -- the gate leaf is the one thing that shuts this road") % [
+				side, PLAYER_RADIUS])
+	if failures.size() == before:
+		print("  South Bridge, road:  barricades solid, %.1fm centreline probe walks the gap" % (
+			PLAYER_RADIUS * 2.0))
 
 
 ## Once the crossing is genuinely open the body that would contradict an

@@ -128,6 +128,9 @@ const CAP_HEIGHT := 0.13
 ## R7.1-visual round 2 tuned are unchanged.
 const ARM_TAPER := 0.92
 const ARM_TIP_LENGTH := 0.14
+## Clear board left between the post's own surface and the first letter, so a
+## name starts on wood rather than against the trunk. See `_add_arm`.
+const LABEL_POST_MARGIN := 0.03
 
 var _placed := 0
 
@@ -327,7 +330,32 @@ func _add_arm(label: String, origin: Vector2, next: Vector2, index: int) -> void
 	# Local +Z maps to world +X at yaw +90°, so a face turned -90° looks along
 	# -X and runs its text post-to-tip; +90° looks along +X and runs tip-to-
 	# post. One of each, a hair proud of the plank so they do not z-fight.
-	var fit := _label_scale(label)
+	# N09-BRIDGE-CHECKPOINT-0905. The landing judge on W22's own signpost
+	# frames: "Both columns also clip the last character ('Relay Statio')
+	# because the label runs under the post." That is a real defect and this is
+	# where it comes from. `_label_scale()` used to fit and centre the text
+	# against a board running 0..ARM_LENGTH, but the plank's near end is
+	# `z_axis` -- where the POST's centreline falls in this arm's frame -- and
+	# `z_axis` is not 0 and is not even the same for two arms: each arm mounts
+	# at its own golden-angle point on the post's circumference, so `z_axis` =
+	# -(mount . bearing) sweeps the whole range +-ARM_MOUNT_RADIUS (0.16 m).
+	# On an arm whose mount sits on the FAR side of the post from its own
+	# bearing, `z_axis` is positive and the post's own 0.09 m-radius trunk
+	# reaches out to z_axis + POST_RADIUS = 0.25 -- well past the z = 0.084 the
+	# old fixed fit started the text at. The first letters were behind the
+	# post, and on the face whose text runs tip-to-post (see the block above:
+	# each face reads left-to-right from its own side) that is the LAST letters
+	# that disappear, which is exactly the "Relay Statio" the judge read.
+	#
+	# So the fit is taken against the board a reader can actually SEE on this
+	# particular arm -- from the post's own surface plus a small margin, out to
+	# the start of the point -- and the text is centred on that span rather
+	# than on the whole nominal arm length. Nothing moves in the mesh; this is
+	# where two numbers on a Label3D come from.
+	var body_start := z_axis + POST_RADIUS + LABEL_POST_MARGIN
+	var visible_span := maxf(ARM_LENGTH - body_start, ARM_LENGTH * 0.5)
+	var fit := _label_scale(label, visible_span)
+	var label_centre_z := ARM_LENGTH - visible_span * 0.5
 	for side in [-1.0, 1.0]:
 		var text := Label3D.new()
 		text.text = label
@@ -353,7 +381,7 @@ func _add_arm(label: String, origin: Vector2, next: Vector2, index: int) -> void
 		# independent of this specific station's actual bug.
 		text.double_sided = false
 		text.rotation.y = side * PI * 0.5
-		text.position = Vector3(side * (ARM_THICKNESS * 0.5 + 0.006), 0.0, ARM_LENGTH * 0.5)
+		text.position = Vector3(side * (ARM_THICKNESS * 0.5 + 0.006), 0.0, label_centre_z)
 		# W22-BRIDGE-SIGNPOST-0904: cream ink with a dark edge, board 18's own
 		# lettering on its own dark planks (see PLANK_COLOUR). The outline's
 		# job is unchanged -- hold the letters against whatever is behind the
@@ -386,7 +414,37 @@ func _add_arm(label: String, origin: Vector2, next: Vector2, index: int) -> void
 		# would have thinned the outline to ~3% of the em -- the letters would
 		# render sharper (the actual fix above) but lose the contrast edge
 		# GF-B-013 tuned against the sky and dark structures these labels cross.
-		text.outline_size = 12
+		#
+		# N09-BRIDGE-CHECKPOINT-0905: 12 -> 18, ~12.5 % of the em. This is the
+		# "increase glyph weight in that material" half of the landing judge's
+		# legibility finding, and the arithmetic behind it is the CANCELLATION
+		# the judge measured without naming: it read cream-to-board contrast at
+		# 3.0:1 in the studio turntables but about 1.3:1 in every in-world row.
+		# Both numbers are right and they are the same effect. Rendered, the
+		# board sits at #b67c55 (relative luminance 0.250), the cream ink at
+		# 0.842 and this dark edge at 0.013 -- so the cream carries 2.97:1
+		# against the board and the edge carries 4.79:1, in OPPOSITE
+		# directions. At a gameplay stand the whole glyph band is 7-10 px tall,
+		# every letter is subpixel, and one screen pixel averages cream, edge
+		# and board together: at 12 px of outline on a 144 pt face the dark
+		# edge already outweighs the cream core roughly 2:1 by area, and the
+		# mean of the three lands within a whisker of the board itself. That is
+		# the 1.3:1.
+		#
+		# The two ways out are to shrink the edge until the cream core wins, or
+		# to grow it until the dark mass wins. Growing it is the one that
+		# survives downsampling: a thin bright stroke on a mid board loses to
+		# coverage no matter how bright it is, while dark mass keeps its
+		# contrast as the pixel gets bigger. 18 moves the edge-to-core area
+		# ratio to roughly 3:1, so a word at distance resolves as a dark mark
+		# ON the board (the edge's own 4.79:1) instead of averaging into it,
+		# and near-field it still reads as board 18's cream lettering with a
+		# dark edge -- which is the whole point of not flipping the polarity
+		# back. It stays well under the ~21 % of the em GF-B-013 measured as
+		# the flood point, where the edge closes the counter of an `o` and the
+		# word becomes one blob; that ruling is the ceiling on this dial and it
+		# is not being reopened.
+		text.outline_size = 18
 		text.outline_modulate = INK_OUTLINE_COLOUR
 		arm.add_child(text)
 
@@ -397,7 +455,11 @@ func _add_arm(label: String, origin: Vector2, next: Vector2, index: int) -> void
 ## Meadow" straight off both ends of the board. Fitting to whichever of height
 ## or width binds first means a new destination name can be any length and the
 ## sign stays a sign.
-func _label_scale(label: String) -> float:
+##
+## N09-BRIDGE-CHECKPOINT-0905: `span` is the length of board this particular
+## arm actually shows past its post, not `ARM_LENGTH` -- see `_add_arm`'s own
+## comment for why those differ and what it cost when they did not.
+func _label_scale(label: String, span: float = ARM_LENGTH) -> float:
 	# GF-B-013: 0.62 -> 0.68 of the board's depth. The remaining third is the
 	# margin above and below the text; at 0.62 with a 4px outline instead of a
 	# 10px one there is more clear board than the letters need.
@@ -410,7 +472,7 @@ func _label_scale(label: String) -> float:
 	# 0.86 keeps a margin of board visible at each end rather than filling it
 	# edge to edge.
 	var glyphs := maxf(1.0, float(label.length()) * 0.55 * float(LABEL_FONT_SIZE))
-	var by_width := (ARM_LENGTH * 0.86) / glyphs
+	var by_width := (span * 0.86) / glyphs
 	return minf(by_height, by_width)
 
 

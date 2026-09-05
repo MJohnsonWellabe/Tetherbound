@@ -179,3 +179,56 @@ func test_lettering_is_lighter_than_the_board_it_sits_on() -> void:
 				"%s: ink %.2f vs board %.2f" % [arm.name, label.modulate.get_luminance(), mat.albedo_color.get_luminance()])
 			assert_true(label.outline_modulate.get_luminance() < label.modulate.get_luminance(),
 				"%s: outline is not darker than the ink" % arm.name)
+
+
+## N09-BRIDGE-CHECKPOINT-0905. W22's landing judge: "Both columns also clip
+## the last character ('Relay Statio') because the label runs under the post."
+##
+## Each arm mounts at its own golden-angle point on the post's circumference,
+## so the post's centreline falls at a DIFFERENT z in every arm's own frame --
+## anywhere in +-ARM_MOUNT_RADIUS -- and on an arm whose mount sits on the far
+## side of the post from its own bearing the trunk reaches out past where a
+## label fitted to a fixed 0..ARM_LENGTH board starts. This asks the built
+## signpost the reader's question directly: on every arm, on both faces, is
+## the whole word on visible board?
+##
+## The plank mesh itself supplies the post end (its own minimum z IS the post
+## centreline, `_pointed_plank_mesh(z_axis)`), so this cannot drift with a
+## constant.
+func test_no_label_runs_under_the_post() -> void:
+	var font_size: int = SIGNPOST.LABEL_FONT_SIZE
+	for arm in _arms():
+		var verts: PackedVector3Array = _plank(arm).mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+		var post_axis_z := INF
+		for v in verts:
+			post_axis_z = minf(post_axis_z, v.z)
+		var trunk_face := post_axis_z + SIGNPOST.POST_RADIUS
+		for label in _labels(arm):
+			var text_width := float(label.text.length()) * 0.55 * float(font_size) * label.pixel_size
+			var near_edge := label.position.z - text_width * 0.5
+			var far_edge := label.position.z + text_width * 0.5
+			assert_true(near_edge >= trunk_face,
+				"%s: '%s' starts at z %.3f, inside the post's face at %.3f" % [
+					arm.name, label.text, near_edge, trunk_face])
+			assert_true(far_edge <= SIGNPOST.ARM_LENGTH,
+				"%s: '%s' ends at z %.3f, past the board's %.3f" % [
+					arm.name, label.text, far_edge, SIGNPOST.ARM_LENGTH])
+
+
+## The outline is the contrast carrier at gameplay distance (see
+## `signpost.gd`'s own `outline_size` comment: cream core and dark edge pull
+## in opposite directions, and at 7-10 px of glyph band the edge is what
+## survives). It only does that job while it is a real fraction of the em --
+## and only stays letters while it is under the ~21 % flood point GF-B-013
+## measured, where the edge closes an `o`'s counter.
+func test_the_ink_outline_is_weighted_between_its_two_known_limits() -> void:
+	var font_size: float = float(SIGNPOST.LABEL_FONT_SIZE)
+	for arm in _arms():
+		for label in _labels(arm):
+			var em_fraction := float(label.outline_size) / font_size
+			assert_true(em_fraction >= 0.10,
+				"%s: outline is %.1f%% of the em, too thin to carry the word at distance" % [
+					arm.name, em_fraction * 100.0])
+			assert_true(em_fraction < 0.21,
+				"%s: outline is %.1f%% of the em, past the counter-flood point" % [
+					arm.name, em_fraction * 100.0])
