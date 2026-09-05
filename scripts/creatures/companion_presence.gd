@@ -163,6 +163,14 @@ var _anim_player: AnimationPlayer = null
 var _anim_speed_held := false
 var _look: LookAtModifier3D = null
 var _look_skeleton: Skeleton3D = null
+## Where a hurt creature's head hangs: a point on the ground just ahead of its
+## own feet, which the head bone is aimed at instead of at the trainer. A
+## whole-body forward pitch was tried first and a code-blind critic read it as
+## "lying down, resting, or nosing at something on the ground" rather than as
+## injured -- tipping the entire animal nose-down is a crouch, not a hung head.
+## Drooping the HEAD while the body stays standing is the read that was wanted,
+## and the rig has the bone for it.
+var _droop_target: Node3D = null
 
 ## What fired, for tests and for the report: name -> count.
 var fired: Dictionary = {}
@@ -762,8 +770,11 @@ func _drive_continuous(delta: float) -> void:
 	if _hurt:
 		var cfg: Dictionary = _cfg.get(HURT, {})
 		_hold_pivot()
+		# A small sink and a slight nose-down only: the readable part of this
+		# state is the HUNG HEAD (`_update_look` aims the head bone at the
+		# ground marker while hurt) and the slower gait, not a tipped body.
 		_apply_pivot({
-			"pitch": deg_to_rad(float(cfg.get("head_low_deg", 11.0))),
+			"pitch": deg_to_rad(float(cfg.get("body_pitch_deg", 3.0))),
 			"y": -float(cfg.get("sink_fraction", 0.03)) * _height(),
 			"x": 0.0, "yaw": 0.0, "roll": 0.0, "scale": 0.0,
 		})
@@ -903,6 +914,16 @@ func _update_look(leader: Node3D) -> void:
 		return
 	var to := _gpos(leader) - _gpos(_body)
 	to.y = 0.0
+	# A hurt creature hangs its head instead of holding the trainer's eye --
+	# and does so whether or not the trainer is near, which is what makes the
+	# state readable at a glance from any angle. Camp keeps the greeting: a
+	# resting creature that still looks up at you is the warmer read.
+	var droop: bool = _hurt and not _camp and _state == ""
+	if droop and _droop_target != null:
+		_look.target_node = _look.get_path_to(_droop_target)
+		_set_look(true)
+		return
+	_look.target_node = _look.get_path_to(leader)
 	_set_look(_standing() and to.length() <= float(cfg.get("radius", 7.0)))
 
 
@@ -917,6 +938,16 @@ func _build_look(cfg: Dictionary, leader: Node3D) -> void:
 	var bone := skeleton.find_bone(str(cfg.get("bone", "head")))
 	if bone < 0:
 		return
+	if _droop_target == null:
+		var marker := Node3D.new()
+		marker.name = "CompanionDroopTarget"
+		_body.add_child(marker)
+		var hurt_cfg: Dictionary = _cfg.get(HURT, {})
+		marker.position = Vector3(
+			0.0,
+			float(hurt_cfg.get("droop_height_fraction", 0.18)) * _height(),
+			float(hurt_cfg.get("droop_forward_radii", 2.2)) * _radius())
+		_droop_target = marker
 	var look := LookAtModifier3D.new()
 	look.name = "CompanionLook"
 	skeleton.add_child(look)

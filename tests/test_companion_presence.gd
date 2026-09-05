@@ -326,7 +326,19 @@ func test_low_hp_slows_the_gait_lowers_the_head_and_flinches() -> void:
 	_presence.call("tick", TICK)
 	assert_true(bool(_presence.call("is_hurt")), "under 30% HP reads as hurt")
 	assert_true(float(_presence.call("gait_scale")) < 0.9, "the hurt gait is slower")
-	assert_false(_pivot().transform.is_equal_approx(rest), "the head-low pose moved the pivot")
+	assert_false(_pivot().transform.is_equal_approx(rest), "the hurt stance moved the pivot")
+	# The readable half of this state is the HUNG HEAD, not a tipped body: the
+	# head bone is aimed at a ground marker ahead of the creature's own feet
+	# rather than at the trainer.
+	var droop := _body.find_children("CompanionDroopTarget", "Node3D", false, false)
+	assert_eq(droop.size(), 1, "the droop marker exists")
+	assert_true((droop[0] as Node3D).position.y < 0.6 * float(_body.call("body_height")),
+		"and it sits low, so the head hangs rather than lifts")
+	var look := _pivot().find_children("CompanionLook", "LookAtModifier3D", true, false)
+	assert_eq(look.size(), 1)
+	var aimed: Node = (look[0] as LookAtModifier3D).get_node_or_null((look[0] as LookAtModifier3D).target_node)
+	assert_eq(aimed, droop[0], "a hurt creature hangs its head instead of holding the trainer's eye")
+	assert_true(bool(_presence.call("is_looking")), "and the modifier is actually active")
 	assert_true(float(_presence.call("anim_speed_scale")) < 1.0, "the idle plays slower")
 	# A flinch arrives inside the configured window: the rig's own `hit` clip.
 	# The trainer paces meanwhile so no acknowledgment can start and hide the
@@ -349,6 +361,10 @@ func test_low_hp_slows_the_gait_lowers_the_head_and_flinches() -> void:
 	assert_almost_eq(float(_presence.call("gait_scale")), 1.0, 0.0001)
 	assert_true(_pivot().transform.is_equal_approx(rest), "the pivot is back at rest once healed")
 	assert_almost_eq(float(_presence.call("anim_speed_scale")), 1.0, 0.0001)
+	var look_again := _pivot().find_children("CompanionLook", "LookAtModifier3D", true, false)
+	var target_now: Node = (look_again[0] as LookAtModifier3D).get_node_or_null(
+		(look_again[0] as LookAtModifier3D).target_node)
+	assert_eq(target_now, _leader, "a healed creature looks back at the trainer")
 
 
 func test_hunger_reads_as_tired_too() -> void:
@@ -372,7 +388,12 @@ func test_settles_beside_a_lit_campfire_and_stands_up_to_move() -> void:
 	_tick_seconds(float(_cfg()["camp"]["settle_seconds"]) + 0.5)
 	assert_true(bool(_presence.call("is_camped")), "after standing a moment it settles")
 	assert_false(_pivot().transform.is_equal_approx(rest), "the rest pose rolled/sank the pivot")
-	assert_true(_pivot().rotation.z != 0.0 or _pivot().position.y < 0.0, "rolled toward its species rest pose")
+	# Rolled far enough to read as LYING, not merely tilted: round 1 shipped
+	# 0.45 of the species roll and a code-blind critic saw a creature standing
+	# beside a fire.
+	var roll_deg := absf(rad_to_deg(_pivot().rotation.z))
+	assert_true(roll_deg > 30.0, "rolled %.1f degrees toward its species rest pose" % roll_deg)
+	assert_true(_pivot().position.y < 0.0, "and sank into the bedding")
 	assert_true(float(_presence.call("anim_speed_scale")) < 1.0, "the idle slows to a resting pace")
 	# The trainer walks off: the follower must be able to stand and go.
 	_leader.position += Vector3(30.0, 0.0, 0.0)

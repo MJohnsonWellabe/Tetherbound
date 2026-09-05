@@ -215,13 +215,24 @@ func _shoot_camp() -> void:
 	var fire: Node3D = CAMPFIRE.new()
 	fire.name = "CompanionCampfire"
 	_world.add_child(fire)
-	var spot := _player.global_position + Vector3(2.5, 0.0, 1.0)
+	# Between the creature and the camera's eye, so the fire is IN the shot:
+	# round 1 put it behind the lens and the critic saw "a two-centimetre
+	# sliver of orange at the very bottom edge, cropped by the HUD".
+	var toward := _body.global_position - _player.global_position
+	toward.y = 0.0
+	toward = toward.normalized() if toward.length() > 0.1 else Vector3.FORWARD
+	var spot := _player.global_position + toward * 3.0 \
+		+ toward.rotated(Vector3.UP, PI * 0.5) * 2.2
 	spot.y = float(_world.call("ground_height_at", spot.x, spot.z))
 	fire.global_position = spot
 	fire.call("build_real")
-	for i in 40:
+	# The creature has to STOP before it can settle -- the layer does not even
+	# scan for a camp while it is closing the gap -- so give it real frames.
+	for i in 120:
 		_frames += 1
 		await physics_frame
+		if bool(_presence.call("is_camp_near")):
+			break
 	if not bool(_presence.call("is_camp_near")):
 		print("FAIL: the campfire is not seen as a camp source; 03 will not show a rest pose")
 	for i in 240:
@@ -259,12 +270,39 @@ func _shoot_pair(name: String) -> void:
 	var ticks := int(PAIR_SECONDS / PAIR_TICK)
 	for i in ticks:
 		_presence.call("tick", PAIR_TICK)
+	# Advance the creature's own AnimationPlayer by hand as well. The pause that
+	# makes a sub-second pose photographable also stops the idle, and round 1
+	# paid for that: the hurt and camp pairs came back PIXEL-IDENTICAL and a
+	# code-blind critic correctly called the creature "a prop, not a companion"
+	# on that evidence. The continuous states (hurt, camp) hold a fixed pose
+	# over a playing clip, so without this the instrument could only ever show
+	# life in the states that move the pivot.
+	_advance_animation(PAIR_SECONDS)
 	await _await_process(RENDER_SETTLE_FRAMES, "render settle B for %s" % name)
 	var b := await _screenshot("%s/%s-b.png" % [OUT_DIR, name])
 	paused = was_paused
 	if a != null and b != null:
 		print("[pair] %s: %.3f%% of pixels differ across %.2fs of reaction" % [
 			name, _difference_percent(a, b), PAIR_SECONDS])
+
+
+## Steps the creature's AnimationPlayer forward while the tree is paused, at
+## whatever speed scale the presence layer has set on it (a resting or hurt
+## creature idles slower, and the pair should show that rather than hide it).
+func _advance_animation(seconds: float) -> void:
+	if _body == null or not is_instance_valid(_body):
+		return
+	var pivot: Node3D = _body.call("model_pivot") as Node3D
+	if pivot == null:
+		return
+	var players: Array[Node] = pivot.find_children("*", "AnimationPlayer", true, false)
+	if players.is_empty():
+		print("FAIL: the creature has no AnimationPlayer; the pair cannot show it moving")
+		return
+	var player := players[0] as AnimationPlayer
+	print("[anim] '%s' advanced %.2fs at speed x%.2f" % [
+		player.current_animation, seconds, player.speed_scale])
+	player.advance(seconds * player.speed_scale)
 
 
 ## Fraction of pixels that changed between two frames, as a percentage. The
