@@ -1,7 +1,7 @@
 # N05-WORLD-DRESSING-0905 — the fence behind Halda, Bram's bar wall, the courtyard's stand-down, the chamber's light
 
 Branch `ralph/N05-WORLD-DRESSING-0905`, from `origin/main` at `f8a47ee4`. Final code commit
-**`__FINAL_COMMIT__`**; the commits after it carry this report, one contact sheet, the blind
+**`da51813b`**; the commits after it carry this report, one contact sheet, the blind
 verdict and the `docs/CURRENT_STATE.md` rows, and change no behaviour. No pull request opened.
 
 Sources: W08-DIALOGUE-CAMERA-0904 (fence, inn) and W06-FINALE-0904 (courtyard trainer, chamber).
@@ -109,7 +109,14 @@ solid enters the door lane, stands where Bram does, or stands in front of the co
 middle where the player talks to him.
 
 Frames: `_sheet_dressing.png` row 3 (29.0% of the frame changed at the across-the-bar
-stand). Judged blind in `JUDGE_DRESSING.md` (§4).
+stand). Judged blind in `JUDGE_DRESSING.md` (§4); its four inn findings (sign text 1.8× its
+board, periodic bottles, a plank through the stock shelf, no lamp in frame) were fixed in
+data afterwards and confirmed in one further render of that stand (`shots/n05_after3`, not
+committed, read by eye): the lettering sits inside the board and reads dark on wood, each
+shelf carries a different count at uneven pitch with one bottle on its side, the west
+shelves end clear of the stock shelf, and a candle stands on the counter end. Not
+re-judged — the coordinator's 15:58 instruction was to converge, and this is stated as an
+eye-read rather than a verdict.
 
 ### 2.3 The courtyard gauntlet trainer after the world changes (W06 finding)
 
@@ -336,7 +343,7 @@ names (per the brief: one round, focused, no re-litigating the rest of the room)
 ## 5. Tests and smokes
 
 All commands from the repo root with `export PATH=$HOME/godot-bin:$PATH`, on the tree at
-`__FINAL_COMMIT__` unless stated.
+`da51813b` unless stated.
 
 | command | result |
 |---|---|
@@ -388,6 +395,11 @@ on `main`); the set did not grow.
 ## 7. Commits
 
 ```
+ab49a00a N05: chamber blind verdict recorded; the row is partly fixed, not fixed
+da51813b N05 inn: sign fits its board, uneven bottle stock, west shelves clear the stock shelf, a candle in frame; dressing verdict
+de2f4946 N05: chamber sheet from the spot-fill re-render; the wall ceiling recorded
+4ef379e3 N05: chamber contact sheet (interim; replaced by the spot-fill re-render)
+7d02d1c7 N05 report: chamber numbers and the per-mesh omni cap finding
 614b9151 N05 report: frames, piers, render log, routed sidecars
 b42b730e N05: the chamber fill is a spot (omnis are capped per mesh); uid sidecars; dressing contact sheet
 86c13af0 N05: fence join numbers from the corrected probe; traversal smoke result
@@ -395,5 +407,7 @@ b42b730e N05: the chamber fill is a spot (omnis are capped per mesh); uid sideca
 ff70d6df N05 capture: a Warden Arena stand
 998bc89e N05: log each tower pier; trim the capture to the judged stands
 6932968f N05 dressing: fence panels meet and sit on the ground, the inn's bar wall, the chamber's light-bars, piers, fill and shadows
-<the report/sheet/verdict commits after these carry no behaviour>
 ```
+
+Code, data and tests last change at `da51813b`; the commits above it carry the report, the
+two contact sheets, the two verdicts and the `docs/CURRENT_STATE.md` rows.
