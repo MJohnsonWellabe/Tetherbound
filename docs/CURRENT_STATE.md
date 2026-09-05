@@ -486,3 +486,65 @@ Sky Shrine that grants the separate upper-route unlock, and save/load coverage f
 that continue the stronghold, boss/reward/aftermath/Water setup and final full-route acceptance
 phases. The referenced Cloudreach concept board remains absent; use the directive's written
 visual language and document the missing reference rather than inventing a replacement.
+
+## 2026-09-04 — Cloudreach checkpoint 3 / visual-foundation exit
+
+Branch: `codex/cloudreach-cliffs`, continuing from checkpoint `3f9e1a141`. This checkpoint is a
+tested **prototype/massing handoff only**. It is not a finished Cloudreach environment, not a
+completed Phase 2, and not visual acceptance.
+
+The Cloudreach builder now replaces the first pass's region boxes with tapered low-poly mesa
+masses, distinct upland caps, irregular route-support shelves, satellite crags, a cooler cloud
+horizon, clustered cloud-bank silhouettes, approved Quaternius nature-family trees/rocks, batched
+bridge deck planks, differentiated bridge materials, and larger first-pass settlement, Sky Shrine,
+wayfinder, and summit silhouettes. A production-scene capture harness records six third-person
+chapter views and representative renderer counters. Evidence lives in
+`ralph/reports/CLOUDREACH-PHASE2-0904/`.
+
+The capture on Windows/OpenGL3 at 1280x720 using an NVIDIA GTX 1060 3GB recorded **197–1,684 draw
+calls**, **65,265–334,480 primitives**, and **1.93–5.44 ms measured frame time** across the six
+views (24 frames/view). The highest draw count remains below the Hall reference ceiling of 4,000.
+`tests/smoke_cloudreach_foundation.gd`, direct parsing of `cloudreach_world.gd`, and the complete
+physical Meadows -> Cloudreach -> Meadows transition smoke all pass. The transition still prints
+the pre-existing Meadows Terrain3D no-mipmap/deprecation warnings.
+
+The mandatory code-blind visual judge rejected the result on both bars:
+
+- belongs to the world of the Tetherbound Meadows key art: **No**;
+- looks like the same kind of game as the Palworld references: **No**.
+
+That failure is correct and must not be softened. Cloudreach is currently procedural world
+massing made from cliff cylinders, route/slab geometry, cloud meshes, and sparse instanced nature
+props. It does **not** yet use or reproduce the Meadows presentation stack: Terrain3D-painted
+surfaces, the dense procedural grass/flower/ground-cover layers, regional scatter density,
+habitat prop clusters, creature/NPC activity, or content-aware HUD/world systems. The reviewer
+described the result as a sparse floating-platform prototype, with repeated construction geometry,
+flat materials/lighting, weak landmark identity, no creature-led life, broken Cloudreach context
+in the Meadows HUD copy, and insufficient depth/scale cues. The full critique is preserved in
+`ralph/reports/CLOUDREACH-PHASE2-0904/JUDGE.md`; final visual acceptance remains external.
+
+Owner follow-up after seeing the sheet: creature presence is deliberately deferred and is **not**
+a blocker for this environment pass. Exact resume point: do not advance the biome as though Phase
+2 passed. First port the Meadows procedural grass, flowers, and ground-cover approach to
+Cloudreach; give the procedural cliffs the same terrain/material language as the Meadows; densely
+place the approved existing tree/rock assets; and iterate lighting, composition, depth, and
+landmark silhouettes against the reference art. Preserve the suspended/vertical route design and
+budget the surface dressing with MultiMesh/streaming where appropriate. Remove Meadows-only
+objective/tutorial leakage from the evidence presentation, but do not divert this pass into
+creature implementation. Recompose the six named reveals around unmistakable arrival, causeway,
+Windscar, High Roost, Cliffhold, and summit silhouettes, then recapture the same six views,
+remeasure, and repeat the code-blind visual review. Only continue to Phase 3 content after the
+environment review materially closes the reported gaps. The named Cloudreach concept board is
+still absent from the repo/local workspaces and remains a disclosed input gap.
+
+The wrap also includes a **data-only Phase 3 contract**,
+`data/config/cloudreach_chapter.json`, with focused coverage in
+`tests/test_cloudreach_chapter_data.gd`: **16 tests / 729 assertions / 0 failures**. It authors the
+three-act Storm Anchor story spine, Fly/Sky Shrine/counterweight progression, installed-body NPC
+roles, replaceable encounter/trainer contracts, persistent pickups/resources/camps, map/audio
+requirements, Captain Veyra finale, Cloudreach Heart + Water Realm Key rewards, Waterward reveal,
+and durable aftermath. Nothing consumes this file at runtime yet. Do not interpret data presence
+as implemented content. A separate read-only systems audit is preserved at
+`ralph/reports/CLOUDREACH-PHASE3-AUDIT-0904/REPORT.md`; it routes the next agent through the
+required realm-aware persistence, vertical 3D placement, dialogue-effect, catalogue injection,
+map isolation, and gameplay-scene wiring seams before live content is spawned.

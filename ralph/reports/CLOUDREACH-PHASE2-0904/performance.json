@@ -1,0 +1,121 @@
+{
+  "captured_at_utc": "2026-09-05T00:24:15",
+  "display_server": "Windows",
+  "engine": "4.7-stable (official)",
+  "resolution": [
+    1280,
+    720
+  ],
+  "sample_frames_per_view": 24,
+  "video_adapter": "NVIDIA GeForce GTX 1060 3GB",
+  "views": [
+    {
+      "draw_calls": 1684,
+      "measured_frame_ms": 5.44,
+      "objects": 2253,
+      "primitives": 334480,
+      "reported_fps": 1.0,
+      "stand": [
+        0.0,
+        105.199996948242,
+        -260.0
+      ],
+      "target": [
+        -80.0,
+        145.0,
+        120.0
+      ],
+      "view": "01-arrival-first-reveal"
+    },
+    {
+      "draw_calls": 1305,
+      "measured_frame_ms": 4.36,
+      "objects": 1874,
+      "primitives": 267420,
+      "reported_fps": 59.0,
+      "stand": [
+        -320.0,
+        300.200012207031,
+        1040.0
+      ],
+      "target": [
+        -60.0,
+        410.0,
+        1695.0
+      ],
+      "view": "02-broken-causeways"
+    },
+    {
+      "draw_calls": 776,
+      "measured_frame_ms": 3.04,
+      "objects": 1345,
+      "primitives": 201903,
+      "reported_fps": 59.0,
+      "stand": [
+        -90.0,
+        465.200012207031,
+        2385.0
+      ],
+      "target": [
+        -520.0,
+        455.0,
+        2720.0
+      ],
+      "view": "03-windscar-ravine"
+    },
+    {
+      "draw_calls": 197,
+      "measured_frame_ms": 1.93,
+      "objects": 766,
+      "primitives": 65265,
+      "reported_fps": 59.0,
+      "stand": [
+        330.0,
+        587.700012207031,
+        3282.5
+      ],
+      "target": [
+        1110.0,
+        1060.0,
+        2940.0
+      ],
+      "view": "04-high-roost-before-fly"
+    },
+    {
+      "draw_calls": 630,
+      "measured_frame_ms": 2.82,
+      "objects": 1199,
+      "primitives": 107818,
+      "reported_fps": 134.2,
+      "stand": [
+        -720.0,
+        700.200012207031,
+        3680.0
+      ],
+      "target": [
+        -260.0,
+        855.0,
+        4090.0
+      ],
+      "view": "05-upper-cloudreach-cliffhold"
+    },
+    {
+      "draw_calls": 454,
+      "measured_frame_ms": 2.37,
+      "objects": 1023,
+      "primitives": 90651,
+      "reported_fps": 141.0,
+      "stand": [
+        -180.0,
+        900.200012207031,
+        4720.0
+      ],
+      "target": [
+        100.0,
+        1190.0,
+        5350.0
+      ],
+      "view": "06-summit-final-approach"
+    }
+  ]
+}
