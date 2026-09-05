@@ -230,5 +230,7 @@ on a clean checkout of my branch and on `main`'s own run 33932088359.
 | `f26681ec` | Re-render all 34 in one pass, fix the stale contact sheet |
 | `f26681ec`+ | One lens, the shipping ground, clean framing (judge round 2) |
 
-Branch `ralph/W04-PORTRAITS-0904`. Final commit hash recorded at the end of this
-file after the last push.
+| `5ea816e6` | This report, the round-3 verdict, the D74 findings |
+
+**Branch:** `ralph/W04-PORTRAITS-0904`, pushed to `origin`.
+**Final commit:** `5ea816e6`.
