@@ -201,12 +201,14 @@
     {
       "id": "S07-18",
       "title": "challenge the band 2 outrider",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "expect_prompt": "Challenge",
+        "check_provider": false,
+        "settle_frames": 30
       },
-      "expected": "an optional trainer standing on the route between bands; section D counts trainer encounters per route"
+      "expected": "an optional trainer standing on the route between bands; section D counts trainer encounters per route",
+      "observation": "N10-HARNESS-TESTS-0905, brief item 9. WAS a bare `press interact`. `interact_with` presses only when the interaction arbiter has a LIVE prompt and only when that prompt's own text is the one this step means -- `trainer_npc.gd::_prompt_for` builds it from data/config/trainers.json's `challenge` template, \"Challenge %s\" -- and otherwise FAILs naming what it actually saw and how far the intended entity is. A bare press cannot tell a live challenge offer from no offer at all, which is how S08-27 reported a green press into an unengaged world and cost two lanes a run each to diagnose. check_provider false: the prompt belongs to a prompt child of the NPC, and matching on the text the player reads is the stronger check."
     },
     {
       "id": "S07-19",
@@ -356,12 +358,14 @@
     {
       "id": "S07-28",
       "title": "challenge Hess",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "expect_prompt": "Challenge",
+        "check_provider": false,
+        "settle_frames": 30
       },
-      "expected": "the first rung of the relay ladder"
+      "expected": "the first rung of the relay ladder",
+      "observation": "N10-HARNESS-TESTS-0905, brief item 9. WAS a bare `press interact`. `interact_with` presses only when the interaction arbiter has a LIVE prompt and only when that prompt's own text is the one this step means -- `trainer_npc.gd::_prompt_for` builds it from data/config/trainers.json's `challenge` template, \"Challenge %s\" -- and otherwise FAILs naming what it actually saw and how far the intended entity is. A bare press cannot tell a live challenge offer from no offer at all, which is how S08-27 reported a green press into an unengaged world and cost two lanes a run each to diagnose. check_provider false: the prompt belongs to a prompt child of the NPC, and matching on the text the player reads is the stronger check."
     },
     {
       "id": "S07-29",
@@ -461,12 +465,14 @@
     {
       "id": "S07-35",
       "title": "challenge Orrin",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "expect_prompt": "Challenge",
+        "check_provider": false,
+        "settle_frames": 30
       },
-      "expected": "the second rung of the relay ladder"
+      "expected": "the second rung of the relay ladder",
+      "observation": "N10-HARNESS-TESTS-0905, brief item 9. WAS a bare `press interact`. `interact_with` presses only when the interaction arbiter has a LIVE prompt and only when that prompt's own text is the one this step means -- `trainer_npc.gd::_prompt_for` builds it from data/config/trainers.json's `challenge` template, \"Challenge %s\" -- and otherwise FAILs naming what it actually saw and how far the intended entity is. A bare press cannot tell a live challenge offer from no offer at all, which is how S08-27 reported a green press into an unengaged world and cost two lanes a run each to diagnose. check_provider false: the prompt belongs to a prompt child of the NPC, and matching on the text the player reads is the stronger check."
     },
     {
       "id": "S07-36",
@@ -597,12 +603,14 @@
     {
       "id": "S07-44",
       "title": "challenge Officer Dell",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "expect_prompt": "Challenge",
+        "check_provider": false,
+        "settle_frames": 30
       },
-      "expected": "the ladder's third rung, inside the compound"
+      "expected": "the ladder's third rung, inside the compound",
+      "observation": "N10-HARNESS-TESTS-0905, brief item 9. WAS a bare `press interact`. `interact_with` presses only when the interaction arbiter has a LIVE prompt and only when that prompt's own text is the one this step means -- `trainer_npc.gd::_prompt_for` builds it from data/config/trainers.json's `challenge` template, \"Challenge %s\" -- and otherwise FAILs naming what it actually saw and how far the intended entity is. A bare press cannot tell a live challenge offer from no offer at all, which is how S08-27 reported a green press into an unengaged world and cost two lanes a run each to diagnose. check_provider false: the prompt belongs to a prompt child of the NPC, and matching on the text the player reads is the stronger check."
     },
     {
       "id": "S07-45",
@@ -687,12 +695,14 @@
     {
       "id": "S07-50",
       "title": "challenge the Relay Captain",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "expect_prompt": "Challenge",
+        "check_provider": false,
+        "settle_frames": 30
       },
-      "expected": "Section E.5 objective 18/27's own target"
+      "expected": "Section E.5 objective 18/27's own target",
+      "observation": "N10-HARNESS-TESTS-0905, brief item 9. WAS a bare `press interact`. `interact_with` presses only when the interaction arbiter has a LIVE prompt and only when that prompt's own text is the one this step means -- `trainer_npc.gd::_prompt_for` builds it from data/config/trainers.json's `challenge` template, \"Challenge %s\" -- and otherwise FAILs naming what it actually saw and how far the intended entity is. A bare press cannot tell a live challenge offer from no offer at all, which is how S08-27 reported a green press into an unengaged world and cost two lanes a run each to diagnose. check_provider false: the prompt belongs to a prompt child of the NPC, and matching on the text the player reads is the stronger check."
     },
     {
       "id": "S07-51",

@@ -223,12 +223,14 @@
     {
       "id": "S06-18",
       "title": "challenge Dorn",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "expect_prompt": "Challenge",
+        "check_provider": false,
+        "settle_frames": 30
       },
-      "expected": "a band 2 trainer on the approach"
+      "expected": "a band 2 trainer on the approach",
+      "observation": "N10-HARNESS-TESTS-0905, brief item 9. WAS a bare `press interact`. `interact_with` presses only when the interaction arbiter has a LIVE prompt and only when that prompt's own text is the one this step means -- `trainer_npc.gd::_prompt_for` builds it from data/config/trainers.json's `challenge` template, \"Challenge %s\" -- and otherwise FAILs naming what it actually saw and how far the intended entity is. A bare press cannot tell a live challenge offer from no offer at all, which is how S08-27 reported a green press into an unengaged world and cost two lanes a run each to diagnose. check_provider false: the prompt belongs to a prompt child of the NPC, and matching on the text the player reads is the stronger check."
     },
     {
       "id": "S06-19",
@@ -631,12 +633,14 @@
     {
       "id": "S06-60",
       "title": "engage what is in the hall",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "settle_frames": 30
       },
-      "expected": "Section E.1 CB-05: 'Warrens fight (enclosed geometry) | inside Burrow Warrens chambers'"
+      "expected": "Section E.1 CB-05: 'Warrens fight (enclosed geometry) | inside Burrow Warrens chambers'",
+      "observation": "N10-HARNESS-TESTS-0905, brief item 9. WAS a bare `press interact`. `encounter_director.gd` offers \"Engage <name>\" only when a creature is deployed and a live wild body is inside `engage_range` (6 m, data/config/combat.json `flow.engage_range`); `interaction_activate()` returns without doing anything when `_engageable()` is null, so a bare press on an empty flank is indistinguishable from a press that started a fight. This one refuses and says what the arbiter was actually offering. That is the single line that would have diagnosed S08-27."
     },
     {
       "id": "S06-61",
@@ -788,12 +792,14 @@
     {
       "id": "S06-72",
       "title": "face the Warren Guardian",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "settle_frames": 30
       },
-      "expected": "Section E.1 CB-04: 'S06: ... warrens guardian'. Section D RT-07's midpoint"
+      "expected": "Section E.1 CB-04: 'S06: ... warrens guardian'. Section D RT-07's midpoint",
+      "observation": "N10-HARNESS-TESTS-0905, brief item 9. WAS a bare `press interact`. `encounter_director.gd` offers \"Engage <name>\" only when a creature is deployed and a live wild body is inside `engage_range` (6 m, data/config/combat.json `flow.engage_range`); `interaction_activate()` returns without doing anything when `_engageable()` is null, so a bare press on an empty flank is indistinguishable from a press that started a fight. This one refuses and says what the arbiter was actually offering. That is the single line that would have diagnosed S08-27."
     },
     {
       "id": "S06-73",
