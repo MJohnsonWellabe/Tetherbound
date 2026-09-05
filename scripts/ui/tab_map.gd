@@ -471,6 +471,10 @@ func _legend_entry(icon_name: String, label_text: String, tint: Color = UITokens
 
 	var icon := TextureRect.new()
 	icon.texture = _icon_texture(icon_name)
+	# The swatch carries the row's colour as well as its word, so the legend
+	# teaches the code the map is actually using rather than printing every
+	# marker in the same neutral grey.
+	icon.modulate = tint
 	icon.custom_minimum_size = Vector2(24, 24)
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
@@ -793,10 +797,10 @@ func _draw_alpha_pin_labels(canvas: Control, map_rect: Rect2, map_state: RefCoun
 		# 15 px, not 8: at 8 the first letter began five pixels from the plate's
 		# edge and the glyph and the letterform fused into one shape at 100%.
 		# The starburst above also reaches further out than the old disc did.
-		var baseline := point + Vector2(half + 15.0, CANVAS_LABEL_FONT_SIZE * 0.36)
+		var baseline := point + Vector2(half + 26.0, CANVAS_LABEL_FONT_SIZE * 0.36)
 		var alignment := HORIZONTAL_ALIGNMENT_LEFT
 		if baseline.x + width > canvas.size.x - 8.0:
-			baseline.x = point.x - half - 15.0 - width
+			baseline.x = point.x - half - 26.0 - width
 			alignment = HORIZONTAL_ALIGNMENT_LEFT
 			if baseline.x < 8.0:
 				continue
@@ -856,11 +860,20 @@ func _draw_icon(canvas: Control, map_rect: Rect2, entry: Dictionary, alpha: floa
 		# as a hazard rosette at a glance and, unlike a disc, nothing else on
 		# this screen has that outline at any size.
 		plate = Color(UITokens.DANGER.darkened(0.35), 0.94)
+		# Round two of the blind pass moved the mark from "found only by its red
+		# label" to "found instantly", but the rosette was still too timid to
+		# survive GREYSCALE: 2-3 px of serration on a 22 px disc reads as
+		# anti-aliasing at 1:1, and the judge, looking at the frame with colour
+		# removed, could not say which of the two round marks on that axis was
+		# the danger. So the badge now differs in SIZE CLASS as well as contour
+		# -- spikes reaching 1.55x the disc, a core at 0.58 of that, which is a
+		# serrated form roughly twice the player pin's footprint. Hue is now the
+		# third cue, not the only one.
 		var spike := marker_size * plate_scale
 		canvas.draw_colored_polygon(
-			_alpha_starburst(point, spike + 6.0), Color(0.02, 0.03, 0.04, 0.85))
+			_alpha_starburst(point, spike * 1.72), Color(0.02, 0.03, 0.04, 0.9))
 		canvas.draw_colored_polygon(
-			_alpha_starburst(point, spike + 4.0), Color(UITokens.DANGER, 0.95))
+			_alpha_starburst(point, spike * 1.55), Color(UITokens.DANGER, 0.95))
 	canvas.draw_circle(point, marker_size * plate_scale, plate)
 	canvas.draw_texture_rect(tex, Rect2(point - size * 0.5, size), false, Color(1, 1, 1, alpha))
 
@@ -1221,7 +1234,7 @@ func _alpha_starburst(centre: Vector2, radius: float) -> PackedVector2Array:
 	const SPIKES := 9
 	var points := PackedVector2Array()
 	for index in SPIKES * 2:
-		var r := radius if index % 2 == 0 else radius * 0.62
+		var r := radius if index % 2 == 0 else radius * 0.58
 		var angle := TAU * float(index) / float(SPIKES * 2) - TAU * 0.25
 		points.append(centre + Vector2(cos(angle), sin(angle)) * r)
 	return points
