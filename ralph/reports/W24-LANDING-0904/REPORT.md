@@ -624,3 +624,19 @@ lanes closing at once. They had not.
 
 **No lane has pushed anything since W13 at 03:06 UTC.** Every lane that has produced a
 closeable report is now on `main`.
+
+### Process note from this cycle
+
+`git checkout <branch>` **fails, and can be easy to miss in a compound command, when that
+branch is already checked out in another worktree.** `ralph/W24-LANDING-0904` lives in
+`/home/user/wt-land`, so the checkout in the main repo did nothing, and cycle 7's ledger
+commit landed on `ralph/LAND-0904-5` — the already-merged landing branch — while
+`git push origin ralph/W24-LANDING-0904` pushed the unchanged local ref and reported
+success. PR #49 was briefly open against a branch that did not contain the work its body
+described. Caught by the repository's unpushed-commits stop hook, not by anything I did.
+
+The repair was a fast-forward of `ralph/W24-LANDING-0904` to the commit and a reset of
+`ralph/LAND-0904-5` back to `origin`. Nothing incorrect reached `main`, and PR #48's merge
+was never at risk. **Check `git branch -vv` or `git worktree list` before assuming a
+checkout succeeded**, and read what a push actually pushed rather than trusting that a
+`-u <branch>` refspec pushes the working tree.
