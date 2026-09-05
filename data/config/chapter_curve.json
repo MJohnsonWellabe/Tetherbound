@@ -52,12 +52,12 @@
       "name": "Upper Meadows / Ironwood",
       "z_to": 7000.0,
       "team": {"enter": 15, "exit": 17, "expected_members": 5},
-      "wild_band": [11, 14],
+      "wild_band": [11, 15],
       "trainer_levels": [13, 16],
       "tools": ["ironwood recipes", "sigils", "riding in earnest", "Tuskroot"],
       "xp_sources": ["regional captains", "ironwood ecology", "optional detours"],
       "temptations": "The Meadowhart cluster up here is the traversal creature met at a level that can actually fight, which is prompt 67's 'traversal must not create a dead slot' -- a mount picked up at level 2 in a level-14 region would have been exactly that dead slot.",
-      "tuning": "The corridor's longest single leg (Ironwood grove to the Sigil gate) so the ecology has room to vary without a wall. The 28-minute travel figure this note used to cite came from tools/_probe_pacing.py before its stale site coordinates were fixed; the leg measures ~7 minutes ridden. `enter` corrected 13 -> 15 (G3-ECONOMY-0903, see the file-level `_comment_measurement`): the corrected pacing probe's Band 1/3 fix compounds forward through every later band. Worth a look by whoever owns this band: `wild_band`'s own ceiling (14) now sits BELOW the corrected entry level (15) -- the field here is already trivial to a team that just arrived, not only by the region's own exit. Not changed here (BAND4 is authoring spawns against this number right now); flagged for the coordinator to route, same as Band 2's identical finding above."
+      "tuning": "The corridor's longest single leg (Ironwood grove to the Sigil gate) so the ecology has room to vary without a wall. The 28-minute travel figure this note used to cite came from tools/_probe_pacing.py before its stale site coordinates were fixed; the leg measures ~7 minutes ridden. `enter` corrected 13 -> 15 (G3-ECONOMY-0903, see the file-level `_comment_measurement`): the corrected pacing probe's Band 1/3 fix compounds forward through every later band. Wild ceiling 14 -> 15 (W23-DIFFICULTY, CL-G8, D77): the corrected entry level is 15, and a field whose best creature is already a level under a team that has just arrived is not opposition on arrival. Widened from the TOP, the floor kept (D69's rule read for levels: the end that was right does not move) -- the band's floor 11 still gives a fresh arrival something beatable, and 15 stays under the region's exit (17) and under its captains (13-16). Band 2's identical finding is NOT applied: its ceiling is pinned at 8 by the Warrens' weakest resident (9), which must stay strictly above the field, and burrow_warrens.json is not this file's to move; the exact diff is in ralph/reports/W23-DIFFICULTY-0904/REPORT.md."
     },
     {
       "id": "band5_stronghold_approach",
@@ -72,6 +72,23 @@
       "tuning": "Wild top (17) stays under the Warden's ace (20) and under the elite (19): the approach is drained, occupied land, not a place that out-levels the boss it leads to. `enter`/`exit` corrected 16/20 -> 17/21 (G3-ECONOMY-0903): the corrected probe still fights the Warden at L19, one below his ace, exactly as this note wants -- the exit figure (21) is the level AFTER his own team's xp is banked, a result of winning, not a pre-fight advantage. Nothing about 'stays under the ace' stopped being true; only the recorded arrival number was stale."
     }
   ],
+
+  "difficulty": {
+    "_comment": "W23-DIFFICULTY (docs/decisions/D77). The chapter's BASELINE danger, as targets tests/smoke_combat_baseline.gd measures the shipped numbers against with a scripted pilot (attack on cooldown, chase, dodge nothing, no items) at each region's `team.enter` level. Owner-reproduced 2026-09-04: 'beating creatures and other trainers is way too easy'. Every value here is a target band, TUNABLE, and moving one is a decision to record, not a number to nudge until the smoke goes green. `party` is the typical five the pilot brings (the starter plus the four most-fielded Band 1 species); `potion_below_fraction` is the lead health under which a fight is scored as having needed a potion.",
+    "party": ["terrapup", "bramblebun", "mudsnout", "pipwing", "trailpup"],
+    "potion_below_fraction": 0.3,
+    "_comment_wild": "An ordinary wild at band entry (the region's spawn table at the band's median level, count-weighted) costs the lead this fraction of its health -- a real dent that adds up over a leg and makes the camp worth reaching, never a wall. Band 1 is exempt: the opening meadow's [2,6] band is the most-tested stretch in the repo and its median wild out-levels the level-3 arrival by design (the tutorial reads it, the practice fight teaches it).",
+    "wild_lead_hp_cost": [0.15, 0.30],
+    "wild_cost_exempt_regions": ["band1_lower_meadows"],
+    "_comment_trainer_floor": "The band's weakest non-gate trainer, fought unprepared by the whole party at the band's entry level, costs the LEAD this fraction of its health -- about half, so the next trainer in the band is a real question of rest, a potion or a switch (the smoke also prints how often a potion or a revive would be needed afterwards, `prep`, but with combat.json's 10% damage variance that rate is nearly binary per matchup and is reported, not asserted). This is D77's reading of the brief's 'lost one time in four without preparation'. It is NOT a full-five wipe rate: with the manager's auto-switch-on-faint a loss means five creatures down, and a band's WEAKEST trainer that wipes an equal-level five one run in four makes its strongest a wall and the tournament unwinnable at its own entry level. `min_win_rate` guards exactly that: the floor may hurt, it may not wall.",
+    "trainer_floor_lead_hp_cost": [0.25, 0.80],
+    "trainer_floor_min_win_rate": 0.75,
+    "_comment_gates": "The village tournament must stay winnable at its own `entry.min_level` (smoke_tournament_bracket.gd wins it); the Warden must stay winnable at the level the pacing probe says the team reaches him, and must cost the party no less than the elite before him (W-1). `max_single_hit_fraction` is G-3's fails-if: no profile's hit may take a full-health creature of the region's entry level in one blow, and 0.5 leaves the ace's telegraph a two-hit lesson rather than a one-hit one.",
+    "tournament_min_win_rate": 0.75,
+    "warden_level": 19,
+    "warden_min_win_rate": 0.5,
+    "max_single_hit_fraction": 0.5
+  },
 
   "five_slot": {
     "_comment": "CLAUDE.md: five creatures total, no storage, no reserve, no sixth slot. Nothing here adds one. These are the numbers that decide whether the cap is a LIVE decision late in the chapter or a rule the player last thought about in hour one, and tests/test_chapter_curve.gd enforces each against the regions above.",

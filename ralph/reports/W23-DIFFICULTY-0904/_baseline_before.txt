@@ -1,0 +1,37 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+
+== combat baseline: 24 seeds per row, pilot = attack on cooldown, dodge nothing, no items ==
+   party: terrapup, bramblebun, mudsnout, pipwing, trailpup
+
+row                                 team   foe |    win    sec  lead% party%  faint maxhit
+                                     lvl   lvl |   rate   mean   lost   lost   rate   frac
+------------------------------------------------------------------------------------------------
+band1 wild (median L4)                 3     4 |   100%    6.5    10%     2%     0%   0.08
+band1 floor: trainer_mira              3     4 |   100%    7.0    11%     3%     0%   0.06
+band2 wild (median L7)                 9     7 |   100%    7.6     9%     2%     0%   0.06
+band2 floor: quarry_picket_dorn        9     9 |   100%   19.0    21%     5%     0%   0.05
+band3 wild (median L10)               12    10 |   100%    7.6     7%     2%     0%   0.06
+band3 floor: relay_picket_hess        12     8 |   100%   16.5    14%     3%     0%   0.04
+band4 wild (median L12)               15    12 |   100%    7.9     7%     2%     0%   0.04
+band4 floor: pasture_drover_juno      15    13 |   100%   21.1    20%     5%     0%   0.04
+band5 wild (median L15)               17    15 |   100%    8.8     8%     2%     0%   0.04
+band5 floor: stronghold_outer_watc    17    15 |   100%   19.6    14%     3%     0%   0.03
+tournament: quarter_mira               5     8 |   100%   16.8    22%     5%     0%   0.06
+tournament: semi_tam                   5     9 |   100%   22.3    34%     8%     0%   0.07
+tournament: final_oskar                5    11 |   100%   38.6    71%    17%     0%   0.07
+hall: stronghold_elite                19    19 |   100%   44.3    46%    11%     0%   0.05
+hall: warden_aldis                    19    20 |   100%   61.7    71%    17%     0%   0.08
+------------------------------------------------------------------------------------------------
+   15 rows in 2.5s wall clock
+
+smoke_combat_baseline: FAILED (9):
+  - band1 floor: trainer_mira: the unprepared pilot loses 0% of the time; the target is 10-45% (difficulty.trainer_floor_loss_rate)
+  - band2 wild (median L7): an ordinary wild costs the lead 9% of its health; the target is 15-30% (chapter_curve.json difficulty.wild_lead_hp_cost)
+  - band2 floor: quarry_picket_dorn: the unprepared pilot loses 0% of the time; the target is 10-45% (difficulty.trainer_floor_loss_rate)
+  - band3 wild (median L10): an ordinary wild costs the lead 7% of its health; the target is 15-30% (chapter_curve.json difficulty.wild_lead_hp_cost)
+  - band3 floor: relay_picket_hess: the unprepared pilot loses 0% of the time; the target is 10-45% (difficulty.trainer_floor_loss_rate)
+  - band4 wild (median L12): an ordinary wild costs the lead 7% of its health; the target is 15-30% (chapter_curve.json difficulty.wild_lead_hp_cost)
+  - band4 floor: pasture_drover_juno: the unprepared pilot loses 0% of the time; the target is 10-45% (difficulty.trainer_floor_loss_rate)
+  - band5 wild (median L15): an ordinary wild costs the lead 8% of its health; the target is 15-30% (chapter_curve.json difficulty.wild_lead_hp_cost)
+  - band5 floor: stronghold_outer_watch: the unprepared pilot loses 0% of the time; the target is 10-45% (difficulty.trainer_floor_loss_rate)
