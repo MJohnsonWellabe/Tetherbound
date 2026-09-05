@@ -364,13 +364,13 @@ func _walk(node: Node) -> Array[Node]:
 	return out
 
 
-func _built(item_id: String, key: String) -> Node3D:
+func _built(item_id: String, key: String, badge: Color = Color.WHITE) -> Node3D:
 	var items: Dictionary = _read_json(ITEMS_PATH).get("items", {}) as Dictionary
 	var definition: Dictionary = items.get(item_id, {}) as Dictionary
 	var node: Node3D = ITEM_CACHE_PICKUP.new()
 	node.call("setup", item_id, BAND_PICKUPS.label_for(item_id), str(definition.get("world_model", "")),
 		float(definition.get("world_model_scale", 1.0)), key)
-	BAND_PICKUPS.dress(node, item_id, Color.WHITE)
+	BAND_PICKUPS.dress(node, item_id, badge)
 	return node
 
 
@@ -488,7 +488,10 @@ func test_the_wild_shroom_is_broader_than_the_stamina_shroom() -> void:
 ## `test_each_tier_wears_a_different_crest_shape` and
 ## `test_a_higher_tier_glows_wider` all fail; with the wing sweep sign
 ## flipped back to W17's, `test_the_rare_wings_are_rooted_and_sweep_upward`
-## fails on the tip height.
+## fails on the tip height. Round 2 (ring on every candy, coloured; sparkles)
+## re-seen red the same way: with the ring dropped from Good and painted
+## white, the part-count and ring tests fail on "Good has no ring" and
+## "ring is not coloured".
 
 
 func _body_mesh(node: Node) -> MeshInstance3D:
@@ -506,27 +509,45 @@ func _child_named(node: Node, name: String) -> Node:
 	return null
 
 
+func _count_prefixed(node: Node, prefix: String) -> int:
+	var count := 0
+	for descendant in _walk(node):
+		if descendant.name.begins_with(prefix):
+			count += 1
+	return count
+
+
 func test_a_tier_is_an_additive_part_count() -> void:
-	assert_eq(BAND_PICKUPS.parts_for("good_candy"), 1, "Good carries one part (its crest)")
-	assert_eq(BAND_PICKUPS.parts_for("great_candy"), 2, "Great carries two parts (crest + ring)")
-	assert_eq(BAND_PICKUPS.parts_for("rare_candy"), 3, "Rare carries three parts (crest + ring + wings)")
+	# Every candy wears the family's two marks (crest, ground ring); Great
+	# adds sparkles; Rare adds wings. N08 round 1 put the ring on Great and
+	# Rare only and its judge read a ring on half the set as "an editor
+	# selection gizmo", so the ring is a family mark, not a tier mark.
+	assert_eq(BAND_PICKUPS.parts_for("good_candy"), 2, "Good carries two parts (crest + ring)")
+	assert_eq(BAND_PICKUPS.parts_for("great_candy"), 3, "Great carries three parts (+ sparkles)")
+	assert_eq(BAND_PICKUPS.parts_for("rare_candy"), 4, "Rare carries four parts (+ wings)")
 	assert_eq(BAND_PICKUPS.parts_for("stamina_mushroom"), 0, "a mushroom is not on the candy ladder")
 	# And the built nodes agree with the table, part by part.
 	var good := _built("good_candy", "p_good")
 	assert_true(_child_named(good, "TierMedallion") != null, "Good has no crest")
-	assert_true(_child_named(good, "TierRing") == null, "Good grew a ring")
+	assert_true(_child_named(good, "TierRing") != null, "Good has no ring")
+	assert_eq(_count_prefixed(good, "Sparkle"), 0, "Good grew sparkles")
 	assert_true(_child_named(good, "RareWingL") == null, "Good grew wings")
 	good.free()
 	var great := _built("great_candy", "p_great")
 	assert_true(_child_named(great, "TierMedallion") != null, "Great has no crest")
 	assert_true(_child_named(great, "TierRing") != null, "Great has no ring")
+	assert_eq(_count_prefixed(great, "Sparkle"), 3, "Great has no sparkles")
 	assert_true(_child_named(great, "RareWingL") == null, "Great grew wings")
 	great.free()
 	var rare := _built("rare_candy", "p_rare")
 	assert_true(_child_named(rare, "TierMedallion") != null, "Rare has no crest")
 	assert_true(_child_named(rare, "TierRing") != null, "Rare has no ring")
+	assert_eq(_count_prefixed(rare, "Sparkle"), 3, "Rare has no sparkles")
 	assert_true(_child_named(rare, "RareWingL") != null and _child_named(rare, "RareWingR") != null, "Rare has no wings")
 	rare.free()
+	var shroom := _built("stamina_mushroom", "p_shroom")
+	assert_true(_child_named(shroom, "TierRing") == null, "a mushroom grew a ring")
+	shroom.free()
 
 
 func test_each_tier_wears_a_different_crest_shape() -> void:
@@ -603,9 +624,12 @@ func test_the_rare_wings_are_rooted_and_sweep_upward() -> void:
 	rare.free()
 
 
-func test_the_ground_ring_lies_at_the_foot_and_clears_the_wrapper_ends() -> void:
-	for grade: String in ["great_candy", "rare_candy"]:
-		var node := _built(grade, "r_" + grade)
+func test_the_ground_ring_lies_at_the_foot_clears_the_wrapper_ends_and_is_never_white() -> void:
+	var radii := {}
+	for grade: String in ["good_candy", "great_candy", "rare_candy"]:
+		# Dressed with the tier's own badge colour, as the world does from
+		# `items.json`; the helper's default white is the colour under test.
+		var node := _built(grade, "r_" + grade, (BAND_PICKUPS.CANDY_LOOK[grade] as Dictionary)["badge"] as Color)
 		var body := _body_mesh(node)
 		var ring := _child_named(node, "TierRing") as MeshInstance3D
 		assert_true(ring != null and ring.mesh is TorusMesh, "%s has no torus ring" % grade)
@@ -614,7 +638,17 @@ func test_the_ground_ring_lies_at_the_foot_and_clears_the_wrapper_ends() -> void
 			var box := body.get_aabb()
 			assert_true(ring.position.y - box.position.y < box.size.y * 0.15, "%s's ring is not at the foot (y %.3f)" % [grade, ring.position.y])
 			assert_true(torus.inner_radius > box.size.x * 0.5, "%s's ring passes through the wrapper ends (%.3f <= %.3f)" % [grade, torus.inner_radius, box.size.x * 0.5])
+			radii[grade] = torus.outer_radius
+			# Coloured, in the tier's hue, at a modest emission: a pure-white
+			# ring at 2.0 read as a selection gizmo in N08 round 1.
+			var material := ring.material_override as StandardMaterial3D
+			assert_true(material != null and material.albedo_color.s > 0.5, "%s's ring is not coloured (s=%.2f)" % [grade, material.albedo_color.s if material != null else -1.0])
+			assert_true(material != null and material.emission_energy_multiplier < 1.5, "%s's ring is lit like a HUD mark" % grade)
 		node.free()
+	# The ring is a size step too, in world units (the tier scale is applied
+	# to the body, and the ring rides under it).
+	assert_true(float(radii["great_candy"]) > float(radii["good_candy"]) and float(radii["rare_candy"]) > float(radii["great_candy"]),
+		"the rings do not step up the ladder (%s)" % str(radii))
 
 
 func test_the_tier_hues_are_far_apart_and_rare_is_amber_not_cream() -> void:

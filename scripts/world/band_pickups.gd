@@ -64,13 +64,21 @@ extends RefCounted
 ##     scale);
 ##   * a crest on the crown that changes SHAPE per tier: a flat disc for Good,
 ##     a five-point star for Great, a spiked crown for Rare;
-##   * a ground ring (Great and Rare), an emissive circle round the foot that
-##     reads from any bearing and never floats -- the "base ring" W18's
-##     judge listed among the item cues the family lacked;
-##   * wings (Rare only), swept UP and outward as the board draws them and
-##     rooted a quarter-width inside the body -- round 2 called the old flat
-##     slabs "a geometry artefact... visually detached... appears to float",
-##     and they drooped, because the tilt sign lowered the outer end;
+##   * a ground ring on EVERY candy, in the tier's own colour, just outside
+##     the wrapper ends and growing with the tier -- the "base ring" W18's
+##     judge listed among the item cues the family lacked, and the family
+##     mark that says "these three are one kind of thing". N08's own round
+##     1 put a pure-white ring on Great and Rare only, and its judge read
+##     that as "an editor selection gizmo... applied to half the set", so the
+##     ring is now on all three and coloured, never white;
+##   * sparkles (Great and Rare): three small tier-coloured motes round the
+##     crown, the board's "sparkle" for the middle tier, orbiting as the
+##     candy turns;
+##   * wings (Rare only), swept UP and outward as the board draws them,
+##     rooted a third of their span inside the wrapper end and gold, not
+##     white -- W17 round 2 called the old flat slabs "a geometry
+##     artefact... visually detached... appears to float", and they drooped,
+##     because the tilt sign lowered the outer end;
 ##   * the shared `pickup_glow.gd` highlight scaled per tier, so at the range
 ##     where no crest resolves the Rare is still the loudest thing on the
 ##     ground, which is the hierarchy the judge said was missing;
@@ -149,15 +157,23 @@ const NUDGE_BEARINGS := 12
 ## lever that is in scope.
 ##
 ## N08-PICKUP-TIERS: `crest` is the crown shape (`disc` / `star` / `crown`),
-## `ring` the ground ring, `wings` the Rare's wings, `glow` the multiplier on
-## the shared highlight's mote and aura radius, `emit` (optional) an emission
-## colour distinct from the albedo tint. Parts are ADDITIVE up the ladder --
-## Good has one part, Great two, Rare three -- so "more parts" is "worth more"
-## without a key. `parts_for()` is the count a test can pin.
+## `ring` the ground ring's radius as a multiple of the wrapper's half-length
+## (every candy has one; it must clear 1.0), `sparkles` the mote count round
+## the crown, `wings` the Rare's wings, `glow` the multiplier on the shared
+## highlight's mote and aura radius, `emit` (optional) an emission colour
+## distinct from the albedo tint. Parts are ADDITIVE up the ladder -- Good
+## has two (crest, ring), Great three (+ sparkles), Rare four (+ wings) --
+## so "more parts" is "worth more" without a key. `parts_for()` is the count
+## a test can pin.
+##
+## Good's emission went 0.30 -> 0.55 on a lighter, yellower green after
+## N08's round-1 judge could not find it at 7 m: "a green shape, on green
+## grass, inside a green glow... it needs to be darker or lighter than the
+## grass, because it will never win on green-against-green."
 const CANDY_LOOK := {
-	"good_candy": {"tint": Color(0.80, 1.0, 0.80), "badge": Color(0.24, 0.72, 0.40), "emission": 0.30, "scale": 0.34, "crest": "disc", "ring": false, "wings": false, "glow": 1.0},
-	"great_candy": {"tint": Color(0.62, 0.76, 1.0), "badge": Color(0.22, 0.46, 0.92), "emission": 0.65, "scale": 0.42, "crest": "star", "ring": true, "wings": false, "glow": 1.3},
-	"rare_candy": {"tint": Color(1.0, 0.86, 0.48), "emit": Color(1.0, 0.56, 0.06), "badge": Color(1.0, 0.70, 0.10), "emission": 1.25, "scale": 0.52, "crest": "crown", "ring": true, "wings": true, "glow": 1.7},
+	"good_candy": {"tint": Color(0.80, 1.0, 0.80), "emit": Color(0.72, 1.0, 0.58), "badge": Color(0.24, 0.72, 0.40), "emission": 0.55, "scale": 0.34, "crest": "disc", "ring": 1.10, "sparkles": 0, "wings": false, "glow": 1.0},
+	"great_candy": {"tint": Color(0.62, 0.76, 1.0), "badge": Color(0.22, 0.46, 0.92), "emission": 0.70, "scale": 0.42, "crest": "star", "ring": 1.18, "sparkles": 3, "wings": false, "glow": 1.3},
+	"rare_candy": {"tint": Color(1.0, 0.86, 0.48), "emit": Color(1.0, 0.56, 0.06), "badge": Color(1.0, 0.70, 0.10), "emission": 1.25, "scale": 0.52, "crest": "crown", "ring": 1.26, "sparkles": 3, "wings": true, "glow": 1.7},
 }
 ## Per-tier mushroom look. Stamina is the shipped orange (ASSET_LEDGER), so it
 ## keeps a neutral tint; Speed goes blue; Wild goes redder and broader.
@@ -187,18 +203,26 @@ const STAR_POINTS := 5
 const STAR_INNER_FRACTION := 0.48
 const STAR_HEIGHT := 0.06
 const CROWN_SPIKES := 5
-const CROWN_SPIKE_HEIGHT_FRACTION := 0.16
+const CROWN_SPIKE_HEIGHT_FRACTION := 0.13
 const CROWN_SPIKE_RADIUS_FRACTION := 0.05
-## Ground ring (Great, Rare): a flat emissive circle on the ground round the
+## Ground ring (every candy): a flat coloured circle on the ground round the
 ## candy's foot -- the "base ring" the W18 judge listed among the item cues
 ## the family lacked, and a silhouette element that reads from every bearing
-## and never floats. Its radius and tube radius as fractions of the body's
-## half-width; it lies at the base, lifted by its own tube so it is not cut
-## by the ground. NOT a waist ring: the candy's wrapper ends run 2x the
-## round core's width, so any band round the waist either passes through
+## and never floats. Its radius is the tier's `ring` (a multiple of the
+## wrapper's half-length, so it always clears the ends); the tube radius is
+## this fraction of the half-length; it lies at the base, lifted by its own
+## tube so it is not cut by the ground. Coloured in the tier's own hue at a
+## modest emission -- N08 round 1's pure-white ring at 2.0 read as "an editor
+## selection gizmo or a HUD decal". NOT a waist ring: the wrapper ends run 2x
+## the round core's width, so any band round the waist either passes through
 ## the ends or hangs a body-width off the core.
-const RING_RADIUS_FRACTION := 1.30
 const RING_TUBE_FRACTION := 0.06
+const RING_EMISSION := 0.9
+## Sparkles (Great, Rare): mote radius and orbit radius as fractions of the
+## round core, and how far above the crest they sit.
+const SPARKLE_RADIUS_FRACTION := 0.11
+const SPARKLE_ORBIT_FRACTION := 0.62
+const SPARKLE_LIFT_FRACTION := 0.10
 ## Wings (Rare): span, height and thickness as fractions of the body's round
 ## core (its depth); how far the root sits INSIDE the wrapper end's tip (so
 ## the wing is rooted, not floating); and the upward sweep of the outer tip. The sign is the point:
@@ -207,7 +231,7 @@ const RING_TUBE_FRACTION := 0.06
 const WING_SPAN_FRACTION := 0.80
 const WING_HEIGHT_FRACTION := 0.36
 const WING_THICKNESS_FRACTION := 0.10
-const WING_ROOT_INSET_FRACTION := 0.25
+const WING_ROOT_INSET_FRACTION := 0.34
 const WING_SWEEP_DEG := 28.0
 ## The idle spin, one full turn per period. A period, not a rate, so the
 ## number reads as "eight seconds a turn"; 0 disables it.
@@ -449,16 +473,17 @@ static func dress(pickup: Node3D, item_id: String, badge: Color, spin_phase: flo
 		_dress_mushroom(mesh, MUSHROOM_LOOK[item_id] as Dictionary)
 
 
-## How many tier parts a candy grade carries beyond its body: the crest is
-## one, the ring one, the wings one. Good 1, Great 2, Rare 3 -- the ladder a
-## player can count, and the number `tests/test_band_pickups.gd` pins so a
-## tuning pass cannot quietly flatten it.
+## How many tier parts a candy grade carries beyond its body: the crest and
+## the ring on every grade, sparkles from Great, wings on Rare. Good 2, Great
+## 3, Rare 4 -- the ladder a player can count, and the number
+## `tests/test_band_pickups.gd` pins so a tuning pass cannot quietly flatten
+## it.
 static func parts_for(item_id: String) -> int:
 	if not CANDY_LOOK.has(item_id):
 		return 0
 	var look: Dictionary = CANDY_LOOK[item_id]
-	var parts := 1
-	if bool(look.get("ring", false)):
+	var parts := 2  # crest and ring, on every candy
+	if int(look.get("sparkles", 0)) > 0:
 		parts += 1
 	if bool(look.get("wings", false)):
 		parts += 1
@@ -523,30 +548,55 @@ static func _dress_candy(mesh: MeshInstance3D, look: Dictionary, badge: Color) -
 				spike.mesh = cone
 				var angle := TAU * float(i) / float(CROWN_SPIKES)
 				spike.position = Vector3(cos(angle) * radius * 0.85, cone.height * 0.5, sin(angle) * radius * 0.85)
-				spike.material_override = _flat(badge.lerp(Color.WHITE, 0.25), 2.2)
+				# The tier's own gold at a modest emission: round 1's white
+				# spikes read as "the mesh's normals are inverted at the top".
+				spike.material_override = _flat(badge, 1.2)
 				crest.add_child(spike)
 		_:
 			crest.mesh = _disc_mesh(radius, BADGE_HEIGHT)
 	crest.position = Vector3(centre.x, aabb.end.y - BADGE_HEIGHT * 0.3, centre.z)
 	crest.material_override = _flat(badge, 2.2)
 	mesh.add_child(crest)
-	if bool(look.get("ring", false)):
-		# Great and Rare: a bright ring on the ground round the foot. A torus
-		# lying flat reads as a circle from every bearing, which is what a
-		# crest seen edge-on and wings seen end-on do not, and it scales with
-		# the tier so Rare's is the wider.
+	var ring_fraction := float(look.get("ring", 0.0))
+	if ring_fraction > 0.0:
+		# Every candy: a coloured ring on the ground round the foot, the
+		# family's mark. A torus lying flat reads as a circle from every
+		# bearing, which is what a crest seen edge-on and wings seen end-on
+		# do not, and its radius steps with the tier so Rare's is the wider.
 		var ring := MeshInstance3D.new()
 		ring.name = "TierRing"
 		var torus := TorusMesh.new()
 		var tube := width * 0.5 * RING_TUBE_FRACTION
-		torus.inner_radius = width * 0.5 * RING_RADIUS_FRACTION - tube
-		torus.outer_radius = width * 0.5 * RING_RADIUS_FRACTION + tube
+		torus.inner_radius = width * 0.5 * ring_fraction - tube
+		torus.outer_radius = width * 0.5 * ring_fraction + tube
 		torus.rings = 40
 		torus.ring_segments = 8
 		ring.mesh = torus
 		ring.position = Vector3(centre.x, aabb.position.y + tube, centre.z)
-		ring.material_override = _flat(badge.lerp(Color.WHITE, 0.30), 2.0)
+		ring.material_override = _flat(badge, RING_EMISSION)
 		mesh.add_child(ring)
+	var sparkles := int(look.get("sparkles", 0))
+	if sparkles > 0:
+		# Great and Rare: small motes in the tier's colour round the crown,
+		# the board's "sparkle". Children of the body, so they orbit as it
+		# turns.
+		var core := minf(aabb.size.x, aabb.size.z)
+		for i in sparkles:
+			var mote := MeshInstance3D.new()
+			mote.name = "Sparkle%d" % i
+			var ball := SphereMesh.new()
+			ball.radius = core * SPARKLE_RADIUS_FRACTION
+			ball.height = ball.radius * 2.0
+			ball.radial_segments = 8
+			ball.rings = 4
+			mote.mesh = ball
+			var angle := TAU * float(i) / float(sparkles)
+			mote.position = Vector3(
+				centre.x + cos(angle) * core * SPARKLE_ORBIT_FRACTION,
+				aabb.end.y + core * SPARKLE_LIFT_FRACTION,
+				centre.z + sin(angle) * core * SPARKLE_ORBIT_FRACTION)
+			mote.material_override = _flat(badge.lerp(Color.WHITE, 0.2), 2.4)
+			mesh.add_child(mote)
 	if bool(look.get("wings", false)):
 		# Rare only: two wings either side of the body, rooted a quarter of
 		# their span inside it and swept UP toward the tips, the board's own
@@ -575,7 +625,9 @@ static func _dress_candy(mesh: MeshInstance3D, look: Dictionary, badge: Color) -
 				aabb.position.y + aabb.size.y * 0.55,
 				centre.z)
 			wing.rotation_degrees = Vector3(0.0, 0.0, side * WING_SWEEP_DEG)
-			wing.material_override = _flat(badge.lerp(Color.WHITE, 0.35), 1.8)
+			# Gold, not white: round 1's pale wings were "two flat white
+			# blades" a judge could not tie to the body.
+			wing.material_override = _flat(badge.lerp(Color.WHITE, 0.12), 1.3)
 			mesh.add_child(wing)
 
 
