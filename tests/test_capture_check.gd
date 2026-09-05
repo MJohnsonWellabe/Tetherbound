@@ -184,3 +184,52 @@ func test_fit_distance_reports_no_fit_when_nothing_fits() -> void:
 	var d: float = CAPTURE_CHECK.fit_distance(focus, Vector3(0.0, 0.0, 1.0), 1.6, 0.9, FOV, SIZE, subjects,
 		0.06, 3.0, 10.0)
 	assert_eq(d, -1.0)
+
+
+func test_a_subject_hidden_inside_another_subjects_silhouette_is_refused() -> void:
+	# A trainer 10 m out, dead centre, and a looming companion 5 m out whose
+	# box covers the trainer's entirely: both are "on screen", both are big
+	# enough, and the trainer cannot be seen. W01 run 2's fight frame.
+	var problems: Array[String] = CAPTURE_CHECK.readable_problems(_camera(), FOV, SIZE, [
+		{"name": "trainer", "aabb": _standing_box(10.0)},
+		{"name": "companion", "aabb": AABB(Vector3(-1.2, -1.0, -6.2), Vector3(2.4, 2.4, 2.4))},
+	])
+	assert_eq(problems.size(), 1, str(problems))
+	assert_true(problems[0].contains("overlap on screen"), problems[0])
+
+
+func test_two_subjects_side_by_side_do_not_count_as_overlapping() -> void:
+	var problems: Array[String] = CAPTURE_CHECK.readable_problems(_camera(), FOV, SIZE, [
+		{"name": "trainer", "aabb": _standing_box(6.0, -1.2)},
+		{"name": "companion", "aabb": AABB(Vector3(0.2, -1.0, -7.2), Vector3(2.4, 2.4, 2.4))},
+	])
+	assert_eq(problems.size(), 0, str(problems))
+
+
+func test_a_subject_that_fills_the_frame_is_a_close_up_not_a_scene() -> void:
+	# A 2.8 m body four metres out is ~56% of the frame's height and still
+	# wholly inside the frame, so only the cap can refuse it.
+	var box := AABB(Vector3(-0.6, -1.0, -4.4), Vector3(1.2, 2.8, 0.8))
+	var problems: Array[String] = CAPTURE_CHECK.readable_problems(_camera(), FOV, SIZE,
+		[{"name": "companion", "aabb": box}], {"max_height_frac": 0.5})
+	assert_eq(problems.size(), 1, str(problems))
+	assert_true(problems[0].contains("close-up"), problems[0])
+	# Without the cap the same frame is accepted: the cap is opt-in.
+	assert_eq(CAPTURE_CHECK.readable_problems(_camera(), FOV, SIZE, [{"name": "companion", "aabb": box}]).size(), 0)
+
+
+func test_fit_distance_backs_off_further_when_a_height_cap_is_given() -> void:
+	var focus := Vector3(0.0, 0.0, -20.0)
+	var subjects := [
+		{"name": "trainer", "aabb": AABB(focus + Vector3(-4.4, 0.0, -0.4), Vector3(0.8, 1.8, 0.8))},
+		{"name": "ally", "aabb": AABB(focus + Vector3(-1.2, 0.0, 1.0), Vector3(2.4, 2.4, 2.4))},
+	]
+	var bearing := Vector3(0.0, 0.0, 1.0)
+	var plain: float = CAPTURE_CHECK.fit_distance(focus, bearing, 1.6, 0.9, FOV, SIZE, subjects)
+	var capped: float = CAPTURE_CHECK.fit_distance(focus, bearing, 1.6, 0.9, FOV, SIZE, subjects,
+		0.06, 3.0, 30.0, 0.25, 0.4)
+	assert_true(plain > 0.0 and capped > 0.0, "both solves find a distance")
+	assert_true(capped > plain, "the cap pushes the eye further out than the bare fit (%.2f vs %.2f)" % [capped, plain])
+	var cam: Transform3D = CAPTURE_CHECK.camera_transform_at(focus, bearing, capped, 1.6, 0.9)
+	var ally: Dictionary = CAPTURE_CHECK.projected_rect(cam, FOV, SIZE, subjects[1]["aabb"])
+	assert_true((ally["rect"] as Rect2).size.y <= SIZE.y * 0.4 + 0.5, "at the capped distance the ally is under the cap")

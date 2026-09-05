@@ -84,9 +84,15 @@ const FOV := 70.0
 const HORIZON := 0.30
 ## Fight frame: the eye stands this high above the fighters' ground and looks
 ## at a point this high above their centroid.
-const FIGHT_EYE_H := 1.9
-const FIGHT_LOOK_UP := 0.9
+## Run 2 of this lane, at 1.9 m: the fighters had closed to touching and the
+## front one hid the back one on any ground-level bearing. A higher eye
+## looking down separates bodies that stand in a line.
+const FIGHT_EYE_H := 3.2
+const FIGHT_LOOK_UP := 0.8
 const FIGHT_MARGIN := 0.08
+## No fighter may fill more than this of the frame: run 2's first fit put the
+## companion at 69% with the fight behind it.
+const FIGHT_MAX_HEIGHT_FRAC := 0.5
 const FIGHT_D_MIN := 4.0
 const FIGHT_D_MAX := 26.0
 ## How many physics ticks the trainer stands beside the wild before engaging,
@@ -119,6 +125,9 @@ var _director: Node = null
 var _manager: Node = null
 var _companion: Node3D = null
 var _weather: Node = null
+## Wilds already fought for a fight frame this run, so a refused frame retries
+## against a different opponent at the next stand rather than the same one.
+var _fought: Array[Node3D] = []
 var _failures: Array[String] = []
 var _manifest: Array = []
 var _rejected: Array = []
@@ -292,6 +301,13 @@ func _run() -> void:
 				await process_frame
 
 			var name := "band%d_%05dm" % [band_index, int(round(arc))]
+			# Every canvas layer goes dark for a road frame: run 2 caught the
+			# flee's "You backed off." toast (a layer beside PlaygroundHUD) in
+			# the next road shot. The fight frame keeps its HUD -- nameplates
+			# and level tags are part of what 2.15 asked the strip to show.
+			var layers := _hide_canvas_layers()
+			for i in 2:
+				await process_frame
 			var subjects := _road_subjects()
 			var problems := _frame_problems(subjects, [_player, _companion])
 			var record := {
@@ -308,6 +324,7 @@ func _run() -> void:
 						name, stand_xz.x, stand_xz.y, _companion_species(), _out_dir, name])
 			else:
 				_reject(name, record, problems)
+			_restore_canvas_layers(layers)
 			arc += _step
 
 			if not fight_done:
@@ -498,11 +515,11 @@ func _road_subjects() -> Array:
 ## Every reason not to save this frame: the world checks `capture_check`
 ## already runs for every tool (grass bound, terrain streaming here, camera
 ## above ground and outside geometry, weather pinned) plus the readable check.
-func _frame_problems(subjects: Array, ignore_bodies: Array) -> Array[String]:
+func _frame_problems(subjects: Array, ignore_bodies: Array, readable_opts: Dictionary = {}) -> Array[String]:
 	_check_projection_once()
 	_freeze_weather("before the shutter")
 	var out: Array[String] = CAPTURE_CHECK.problems(self, _camera, "clear", null, ignore_bodies)
-	out.append_array(CAPTURE_CHECK.readable_problems_for_camera(_camera, subjects))
+	out.append_array(CAPTURE_CHECK.readable_problems_for_camera(_camera, subjects, readable_opts))
 	return out
 
 
@@ -543,6 +560,21 @@ func _describe_subjects(subjects: Array) -> Array:
 	return out
 
 
+func _hide_canvas_layers() -> Dictionary:
+	var saved: Dictionary = {}
+	for child in _world.get_children():
+		if child is CanvasLayer:
+			saved[child] = (child as CanvasLayer).visible
+			(child as CanvasLayer).visible = false
+	return saved
+
+
+func _restore_canvas_layers(saved: Dictionary) -> void:
+	for child: Variant in saved.keys():
+		if is_instance_valid(child) and child != _world.get_node_or_null(^"PlaygroundHUD"):
+			(child as CanvasLayer).visible = bool(saved[child])
+
+
 func _reject(name: String, record: Dictionary, problems: Array[String]) -> void:
 	record["problems"] = problems
 	_rejected.append(record)
@@ -568,10 +600,10 @@ func _save(name: String) -> bool:
 ## --- the fight frame --------------------------------------------------------
 
 ## One real fight per band, entered the way a player enters one and left the
-## way a player leaves one. Returns true once a fight was ENTERED near this
-## stand -- whether or not its frame survived the check -- so a band gets one
-## attempt, not one per stand. Returns false when no wild was near enough,
-## which lets the next stand try.
+## way a player leaves one. Returns true once a fight FRAME was saved, so the
+## band is done; false when no untried wild was near enough or the frame was
+## refused, which lets the next stand try again against a different opponent
+## (a refused frame is still recorded and still fails the run).
 ##
 ## Structured so cleanup cannot be skipped: nothing between `begin` and
 ## `_end_fight` returns early. A frame that fails its check is refused and
@@ -581,6 +613,7 @@ func _shoot_fight(band_index: int, band_id: String, stand_xz: Vector2, look_xz: 
 	var wild := _nearest_wild(stand, _fight_search)
 	if wild == null:
 		return false
+	_fought.append(wild)
 	var species := str(wild.get("species_id"))
 	print("[fight] band %d: nearest wild is %s at %.1f m from the stand" % [
 		band_index, species, stand.distance_to(wild.global_position)])
@@ -610,7 +643,7 @@ func _shoot_fight(band_index: int, band_id: String, stand_xz: Vector2, look_xz: 
 	if entered_by == "":
 		_failures.append("band %d: could not enter a fight with %s (not fighting after %d interact presses, " % [
 			band_index, species, ENGAGE_ATTEMPTS] + "interaction_activate() and _start_fight())")
-		return true
+		return false
 
 	for i in _frames(FIGHT_ENGAGE_SETTLE):
 		await physics_frame
@@ -632,7 +665,8 @@ func _shoot_fight(band_index: int, band_id: String, stand_xz: Vector2, look_xz: 
 			break
 		var focus := _ground_centroid(subjects)
 		var d: float = CAPTURE_CHECK.fit_distance(focus, candidate["bearing"], FIGHT_EYE_H, FIGHT_LOOK_UP,
-			FOV, _camera.get_viewport().get_visible_rect().size, subjects, FIGHT_MARGIN, FIGHT_D_MIN, FIGHT_D_MAX)
+			FOV, _camera.get_viewport().get_visible_rect().size, subjects, FIGHT_MARGIN, FIGHT_D_MIN, FIGHT_D_MAX,
+			0.25, FIGHT_MAX_HEIGHT_FRAC)
 		if d < 0.0:
 			if best_bearing == "":
 				best_problems = ["no distance between %.0f and %.0f m fits all three fighters from the %s" % [
@@ -647,7 +681,7 @@ func _shoot_fight(band_index: int, band_id: String, stand_xz: Vector2, look_xz: 
 		subjects = _fight_subjects(wild)
 		for i in 2:
 			await process_frame
-		var problems := _frame_problems(subjects, [_player, _companion, wild])
+		var problems := _frame_problems(subjects, [_player, _companion, wild], {"max_height_frac": FIGHT_MAX_HEIGHT_FRAC})
 		print("[fight] %s at %.1f m: %s" % [str(candidate["label"]), d,
 			"fits and reads" if problems.is_empty() else str(problems)])
 		if problems.is_empty():
@@ -675,7 +709,7 @@ func _shoot_fight(band_index: int, band_id: String, stand_xz: Vector2, look_xz: 
 	await _end_fight(band_index)
 	_camera.global_transform = saved_pose
 	_camera.make_current()
-	return true
+	return framed
 
 
 func _nearest_wild(from: Vector3, within: float) -> Node3D:
@@ -683,7 +717,7 @@ func _nearest_wild(from: Vector3, within: float) -> Node3D:
 	var best_distance := within
 	for entry: Variant in _director.call("wild_creatures"):
 		var body := entry as Node3D
-		if body == null or not is_instance_valid(body) or not body.visible:
+		if body == null or not is_instance_valid(body) or not body.visible or _fought.has(body):
 			continue
 		if body.has_method("is_alive") and not bool(body.call("is_alive")):
 			continue
@@ -728,9 +762,13 @@ func _fighting() -> bool:
 	return _manager != null and bool(_manager.call("is_fighting"))
 
 
-## Bearings to try, in order: broadside to the ally->wild axis (both fighters
-## in profile, the trainer standing aside to one side of the arena), then the
-## quarter angles from behind the ally, then straight behind the trainer.
+## Bearings to try, in order. The three subjects make a triangle: the ally
+## and the wild along one axis, the trainer standing aside. Run 2 showed that
+## a broadside (fighters in profile) puts the trainer either in front of the
+## fight or behind it, so the FRONT quarters go first -- the eye past the
+## wild, on the trainer's side, looking back along the axis: the small wild
+## nearest, the taller companion behind it, the trainer off to the side.
+## Broadsides and rear quarters follow.
 func _fight_bearings() -> Array:
 	var ally_pos := _companion.global_position if (_companion != null and is_instance_valid(_companion)) else _player.global_position
 	var enemy: Node3D = _manager.call("enemy_body") as Node3D
@@ -747,6 +785,8 @@ func _fight_bearings() -> Array:
 	if trainer_side.dot(side) < 0.0:
 		side = -side
 	return [
+		{"label": "front-quarter-trainer-side", "bearing": (side + axis).normalized()},
+		{"label": "front-quarter-far-side", "bearing": (-side + axis).normalized()},
 		{"label": "broadside-trainer-side", "bearing": side},
 		{"label": "broadside-far-side", "bearing": -side},
 		{"label": "rear-quarter-trainer-side", "bearing": (side - axis).normalized()},

@@ -484,6 +484,13 @@ const READABLE_MIN_HEIGHT_FRAC := 0.12
 ## quarter of its box cropped by the frame edge is still a subject; one with
 ## half of it gone is not.
 const READABLE_MIN_INSIDE_FRAC := 0.75
+## Two subjects whose projected boxes overlap by more than this fraction of
+## the smaller box's area are reported: the one behind is, to a viewer, not
+## in the frame. Run 2 of W01-ROUTE-STRIP saved a fight frame whose trainer's
+## whole box sat inside the companion's silhouette while the occlusion rays
+## slipped past the companion's (narrower) collider -- the rays answer "is a
+## wall in the way", this answers "is another subject in the way".
+const READABLE_MAX_OVERLAP_FRAC := 0.5
 ## Near plane for the pure projection. Same order as a real Camera3D's default.
 const READABLE_NEAR := 0.05
 
@@ -535,6 +542,9 @@ static func projected_rect(cam: Transform3D, fov_deg: float, size: Vector2,
 ## `opts`:
 ##   min_height_frac  -- override `READABLE_MIN_HEIGHT_FRAC`
 ##   min_inside_frac  -- override `READABLE_MIN_INSIDE_FRAC`
+##   max_height_frac  -- a subject taller than this fraction of the frame is
+##                       too close to read as part of a scene (0 = no cap)
+##   max_overlap_frac -- override `READABLE_MAX_OVERLAP_FRAC`
 ##   space            -- a `PhysicsDirectSpaceState3D`; when given, two rays
 ##                       (camera -> box centre, camera -> three-quarter height)
 ##                       must not BOTH be stopped by something that is not the
@@ -553,8 +563,11 @@ static func readable_problems(cam: Transform3D, fov_deg: float, size: Vector2,
 		return out
 	var min_height := float(opts.get("min_height_frac", READABLE_MIN_HEIGHT_FRAC))
 	var min_inside := float(opts.get("min_inside_frac", READABLE_MIN_INSIDE_FRAC))
+	var max_height := float(opts.get("max_height_frac", 0.0))
+	var max_overlap := float(opts.get("max_overlap_frac", READABLE_MAX_OVERLAP_FRAC))
 	var space: Variant = opts.get("space", null)
 	var frame := Rect2(Vector2.ZERO, size)
+	var rects: Array = []
 	for entry: Variant in subjects:
 		var subject: Dictionary = entry if entry is Dictionary else {}
 		var name := str(subject.get("name", "subject"))
@@ -574,6 +587,10 @@ static func readable_problems(cam: Transform3D, fov_deg: float, size: Vector2,
 		if height_frac < min_height:
 			out.append(("'%s' is only %.1f%% of the frame's height (%.0f px); %.0f%% is the " +
 				"floor for a readable silhouette") % [name, height_frac * 100.0, rect.size.y, min_height * 100.0])
+		if max_height > 0.0 and height_frac > max_height:
+			out.append("'%s' fills %.0f%% of the frame's height; over %.0f%% it is a close-up, not a subject in a scene" % [
+				name, height_frac * 100.0, max_height * 100.0])
+		rects.append({"name": name, "rect": rect})
 		var visible := frame.intersection(rect)
 		var inside_frac := 0.0
 		if rect.get_area() > 0.0:
@@ -587,6 +604,18 @@ static func readable_problems(cam: Transform3D, fov_deg: float, size: Vector2,
 			if blocker != "":
 				out.append("'%s' is hidden behind '%s' from this camera -- present in the world, unreadable in the frame" % [
 					name, blocker])
+	if max_overlap > 0.0:
+		for i in rects.size():
+			for j in range(i + 1, rects.size()):
+				var a: Rect2 = rects[i]["rect"]
+				var b: Rect2 = rects[j]["rect"]
+				var smaller := minf(a.get_area(), b.get_area())
+				if smaller <= 0.0:
+					continue
+				var shared := a.intersection(b).get_area() / smaller
+				if shared > max_overlap:
+					out.append("'%s' and '%s' overlap on screen by %.0f%% of the smaller one -- one is hiding the other" % [
+						str(rects[i]["name"]), str(rects[j]["name"]), shared * 100.0])
 	return out
 
 
@@ -657,10 +686,15 @@ static func _collect_rids(node: Node, into: Array[RID]) -> void:
 ## the bound is a max over eight corners of several boxes, and a 0.25 m step
 ## is finer than any framing difference a judge could see.
 ##
+## `max_height_frac`, when positive, keeps stepping out past the first fit
+## until no subject is taller than that fraction of the frame: the first fit
+## puts the nearest body at the safe-area edge, which for a looming companion
+## is a close-up with the scene behind it (W01 run 2: 69% of the frame).
+##
 ## Returns -1.0 when no distance in [`d_min`, `d_max`] fits everything.
 static func fit_distance(focus: Vector3, bearing: Vector3, height: float, look_up: float,
 		fov_deg: float, size: Vector2, subjects: Array, margin_frac := 0.06,
-		d_min := 3.0, d_max := 30.0, step := 0.25) -> float:
+		d_min := 3.0, d_max := 30.0, step := 0.25, max_height_frac := 0.0) -> float:
 	var flat := Vector3(bearing.x, 0.0, bearing.z)
 	if flat.length() < 0.001:
 		return -1.0
@@ -676,6 +710,9 @@ static func fit_distance(focus: Vector3, bearing: Vector3, height: float, look_u
 				continue
 			var projected := projected_rect(cam, fov_deg, size, subject["aabb"])
 			if bool(projected["behind"]) or not safe.encloses(projected["rect"]):
+				all_in = false
+				break
+			if max_height_frac > 0.0 and (projected["rect"] as Rect2).size.y > size.y * max_height_frac:
 				all_in = false
 				break
 		if all_in:
