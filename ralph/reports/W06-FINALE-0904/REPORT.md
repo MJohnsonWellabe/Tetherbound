@@ -254,11 +254,31 @@ Numbers decided before the render, measured on fixed crops:
 
 ## 6. Branch and head commit
 
-Branch **`ralph/W06-FINALE-0904`**, head **`HEAD_PLACEHOLDER`**. No pull request was opened,
-per COMMON.
+Branch **`ralph/W06-FINALE-0904`**.
+
+The last commit carrying code, data, docs or evidence is **`41a9b01b`**; every result in
+§3 was produced by running against that tree. The branch **head** is the commit that adds
+this finalised report on top of it — it differs from `41a9b01b` by this file alone, and
+`git log -1 --format=%h origin/ralph/W06-FINALE-0904` gives it. No pull request was
+opened, per COMMON.
 
 ## 7. Commits
 
 ```
-COMMITS_PLACEHOLDER
+41a9b01b finale: record the smoke ERROR set in the report
+33fe98e8 finale: record the visual ceiling in CURRENT_STATE and the report
+ea79e2ba finale: round-3 blind judge verdict and the recorded ceiling
+f28fc030 Revert "finale: render the draw itself, from the creature to the machine's crown"
+f4191d0e finale: round-2 blind judge verdict, sheet, and what the lane did with it
+63b14e3f finale: render the draw itself, from the creature to the machine's crown
+7445518f finale smoke: the machine's footprint test counted its own light
+105b074c finale: round-1 blind judge verdict and contact sheet
+5fc7f00c finale: settle the ending position when the ceremony resolves, not after it
+f1f84e76 finale: the restraint rings read teal, and the withdrawal reaches the siphons
+ad95db4d finale: the freed legendary's ending position is set, not left to a tween
+1faef27e finale: hold the bound creature on the dais; step it clear of the machine's plinth
+bb1cccc1 finale: CURRENT_STATE rows for CL-W7/CL-O8/CL-G5; causeway stand in the climax capture
+1103a5dd finale: stage the legendary inside the machine; the garrison stands down (CL-O8, CL-G5)
+87e36533 finale: cut the stronghold dialogue to a handheld budget (CL-W7)
+<this report's own commit, which is the head — this file only>
 ```
