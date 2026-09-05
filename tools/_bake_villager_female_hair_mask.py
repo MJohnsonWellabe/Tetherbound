@@ -16,11 +16,18 @@ How the mask is found, so it can be re-baked if the rig or its texture changes:
      `head_end`, `headfront`, weight > 0.5) is rasterised in UV space, and so is
      every ponytail triangle. That is the HEAD REGION: hair, face, ears, neck.
   2. Inside that region a texel is HAIR when it is dark and warm-brown
-     (luma < 70, R >= G >= B, R - B > 8): the painted hair is near-black brown
-     (median luma 23) and skin is pink (luma > 100), so the two do not overlap.
-  3. Connected components under 1500 texels are dropped. Those are pupils,
-     lashes and eyebrows -- dark, warm, inside the head region, and not hair.
-  4. The kept texels get a value, not just a bit: clamp(luma / 28, 0, 1) ^ 0.7.
+     (luma < 70, R >= G >= B, R - B > 8, R - G > 5): the painted hair is
+     near-black brown (median luma 23) and skin is pink (luma > 100), so the
+     two do not overlap; the R - G floor keeps the hood's dark OLIVE shadow
+     (R ~ G) out, which otherwise creeps in at the collar.
+  3. A connected component is kept when it is at least 1500 texels, OR when it
+     covers at least half of its own UV island. The first keeps the crown and
+     the big falls; the second keeps the small islands that are entirely hair
+     -- the side-lock in front of the ear and the tips, which a code-blind
+     judge found still brown on a silver head -- while still dropping pupils,
+     lashes and eyebrows, which are small dark features INSIDE a face island
+     and never cover half of it.
+  4. The kept texels get a value, not just a bit: clamp(luma / 36, 0, 1) ^ 0.85.
      `StandardMaterial3D` mixes `detail_albedo` over the body texture by this
      value, so a crevice the painter darkened stays darker in the new colour
      and the hair keeps its painted shading instead of flattening to a swatch.
@@ -60,9 +67,14 @@ HEAD_BONES = ("head", "head_end", "headfront")
 HEAD_WEIGHT = 0.5
 HAIR_LUMA_MAX = 70.0
 HAIR_MIN_WARMTH = 8
+HAIR_MIN_RED_OVER_GREEN = 5
 MIN_COMPONENT_TEXELS = 1500
-SHADE_REFERENCE_LUMA = 28.0
-SHADE_GAMMA = 0.7
+MIN_ISLAND_FRACTION = 0.5
+# Tuned by the plates judge: 28 / 0.7 clamped ~40% of hair texels to full
+# colour and flattened the strands ("a latex cap with cracks over it");
+# 36 / 0.85 keeps the painted strand contrast in the new colour.
+SHADE_REFERENCE_LUMA = 36.0
+SHADE_GAMMA = 0.85
 GUTTER_DILATION = 12
 
 
@@ -129,11 +141,23 @@ def main():
 
     r, g, b = rgb[..., 0], rgb[..., 1], rgb[..., 2]
     luma = 0.299 * r + 0.587 * g + 0.114 * b
-    hair_like = (luma < HAIR_LUMA_MAX) & (r >= g) & (g >= b) & ((r - b) > HAIR_MIN_WARMTH)
+    hair_like = ((luma < HAIR_LUMA_MAX) & (r >= g) & (g >= b)
+                 & ((r - b) > HAIR_MIN_WARMTH) & ((r - g) > HAIR_MIN_RED_OVER_GREEN))
     candidate = region & hair_like
     labels, count = ndimage.label(candidate)
     sizes = ndimage.sum(candidate, labels, range(1, count + 1))
-    kept = np.isin(labels, np.where(sizes >= MIN_COMPONENT_TEXELS)[0] + 1)
+    island_labels, island_count = ndimage.label(region)
+    island_sizes = ndimage.sum(region, island_labels, range(1, island_count + 1))
+    keep_ids = []
+    for index in range(count):
+        if sizes[index] >= MIN_COMPONENT_TEXELS:
+            keep_ids.append(index + 1)
+            continue
+        component = labels == index + 1
+        island = np.bincount(island_labels[component]).argmax()
+        if island > 0 and sizes[index] / island_sizes[island - 1] >= MIN_ISLAND_FRACTION:
+            keep_ids.append(index + 1)
+    kept = np.isin(labels, keep_ids)
 
     shade = np.clip(luma / SHADE_REFERENCE_LUMA, 0.0, 1.0) ** SHADE_GAMMA
     mask = np.where(kept, shade, 0.0)
@@ -147,8 +171,7 @@ def main():
     Image.fromarray((mask * 255.0 + 0.5).astype(np.uint8), "L").save(OUT, optimize=True)
     print("head region %d texels, hair candidates %d, kept %d in %d components; mean mask value over hair %.2f; "
           "dilated %d gutter texels"
-          % (region.sum(), candidate.sum(), kept.sum(), int((sizes >= MIN_COMPONENT_TEXELS).sum()),
-             float(mask[kept].mean()), dilated))
+          % (region.sum(), candidate.sum(), kept.sum(), len(keep_ids), float(mask[kept].mean()), dilated))
     print("wrote", os.path.relpath(OUT, ROOT))
 
 
