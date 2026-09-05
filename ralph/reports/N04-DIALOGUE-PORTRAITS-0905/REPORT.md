@@ -212,3 +212,36 @@ sent back:
 - **The speaker identity is passed only for the two generic refusals.** Every other
   trainer conversation carries its own fields. `encounter_director.gd`'s victory-conversation
   start (`04d844d0`) passes no identity and needs none — that conversation is per-trainer data.
+
+### Round 2 (refined mask) — what moved, and the ceiling
+
+- **Plates** (`JUDGE_VERDICT_plates_round2.md`): "every head in row B holds a single hue from
+  crown to tips, including the side-lock in front of the ear and the tips at the jaw" (hue
+  angle stable within ~5° per head); "no colour bleed from hair onto skin or clothing
+  anywhere in the sheet" — skin, cloak, shirt and eye ink match row A to under 0.4/255 over
+  15,000+ pixels. The only out-of-colour pixels are a 2×3 px skin/hair antialias cluster at
+  the widow's peak and a 2–3 px seam on the inner right side-lock, both present identically
+  in the before row and only exposed once the hair stopped being brown. Relative hair
+  contrast is now 63–65% of the original (was ~76% flatter in round 1): a lifted shadow floor
+  on the light tints, "a tone-curve problem, not a lost-detail problem". Pair table at 72 px:
+  ranger/Rae ΔE 7.7, Mira/ranger 10.1, Tam/Halda 11.8 — the same three close pairs, data.
+- **In-game** (`JUDGE_VERDICT_ingame_round2.md`): Halda's world hair is "clean. This is the
+  best-rendered thing in either frame … no seams, no patches of a foreign colour, no thin
+  dark lines" (a scan of ~1700 hair pixels found warm hits only on the antialiased silhouette
+  against grass); plate and world "same colour family and same shape"; "two clearly different
+  people"; names correct; "neither is the player". The flat neutral-grey region over her
+  right cheek and mouth samples (131,130,129) — the same value W04's frame carries in the same
+  place (this lane measured (75,74,30) at one fixed cheek window in both W04's frame and its
+  own; unchanged) — so it is the shared-rig texture artefact plus a hard shadow terminator,
+  not the recolour. Oskar's in-world hair clipping to black is the male rig, untouched here.
+- **Ceiling.** Two rounds moved the mechanism from "seams + brown patches + flat" to "one hue
+  crown to tips, no bleed, strands kept at two-thirds contrast". What is left is not
+  reachable inside this brief: eyebrows (a look decision), hue spacing (data owned
+  elsewhere), silhouette (one hair mesh — "seven identical silhouettes is the ceiling this row
+  is up against"), and the shared rig's own face artefacts. Stopping here per COMMON.
+
+## Final state
+
+Branch `ralph/N04-DIALOGUE-PORTRAITS-0905`, based on `origin/main` @ `f8a47ee4`. Last content
+commit **`8b886220`** (this report's own commit is the branch head immediately after it).
+Every command above reproduces on that branch after `godot --headless --path . --import`.
