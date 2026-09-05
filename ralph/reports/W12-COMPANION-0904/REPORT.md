@@ -346,15 +346,32 @@ are recorded here because the frames are the evidence for them.
 ### Untracked files this lane deliberately did not commit
 
 `godot --headless --path . --import` (which COMMON.md instructs every lane to
-run once) generates 58 import artifacts that are untracked on `main`:
-34 `.import` sidecars, 7 extracted textures and 17 `.uid` files. They belong
-to the pickup-art lane's assets (candy, mushroom, potion, revive flower,
-saddle, bridge, signpost) and to other lanes' new scripts. **None are this
-lane's work**, and committing them would put another lane's binaries on this
-branch and hand its owner a conflict. Left untracked; the coordinator should
-expect them from any lane that imports, and they regenerate on demand. This
-is the "a file outside your ownership list" case COMMON.md says to report
-rather than touch.
+run once) generates **58 artifacts that are untracked on `main`**: 34
+`.import` sidecars, 7 extracted textures and 17 `.uid` files. **None are this
+lane's work.** They belong to the pickup-art assets (candy, mushroom, potion
+plant, revive flower, riding saddle, bridge section, signpost) and to other
+lanes' new scripts. Left untracked deliberately: committing another lane's
+binaries from this branch hands its owner a conflict, and COMMON.md says to
+report a file outside the ownership list rather than touch it.
+
+**This is a real repo gap, not just noise, and it needs routing.** Checked
+rather than assumed:
+
+- the repository **does** track import sidecars as a convention —
+  `git ls-files` counts **904** `.import` files and **982** `.uid` files;
+- the *source* assets are tracked on `main`
+  (`assets/props/candy_pickup/candy_pickup.glb`,
+  `assets/creatures/tetherbound/candy_pickup/reference/front.png`, and so on);
+- their sidecars are on **no branch at all** — `origin/main`,
+  `origin/claude/codex-merge-meadows-finish-dq12jj`,
+  `origin/claude/meadows-final-progression-directive-0904` and
+  `origin/ralph/VISUAL-LOOP-0904` each carry **zero** of them.
+
+So whichever lane added those assets committed the sources without the
+sidecars Godot generates for them. Every lane that imports will keep
+regenerating the same 58 files and keep seeing a dirty tree. **The lane that
+owns those assets should commit its own sidecars**; this lane is reporting it,
+not fixing it.
 
 ### Limitations of the feature itself
 
