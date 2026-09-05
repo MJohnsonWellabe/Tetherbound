@@ -1,591 +1,536 @@
 # TETHERBOUND — MULTIPLAYER DIRECTIVE
 
-**Status:** Future architectural directive. Do not implement networking until the current Meadows and Cloudreach completion work is finished and integrated to `main`.
+**Status:** Canonical future implementation directive. **Do not start this work until Cloudreach Cliffs and the remaining Meadows completion work are finished, integrated, and `main` is stable.** Once this pass begins, however, it does **not** stop at architecture. The pass must end with playable 1–4 player co-op.
 
-## 1. Target
+## 1. Product target
 
-Tetherbound should eventually support **Valheim-style 1–4 player cooperative worlds**:
+Tetherbound will support **Valheim-style private 1–4 player cooperative worlds**:
 
-- one player creates/hosts a world;
+- one player creates or loads and hosts a world;
 - up to three friends may join;
 - the host/server is authoritative for shared world state;
-- each player controls their own trainer and their own team of up to five creatures;
-- players explore, gather, build, fight, catch, progress, and defeat bosses together;
-- the same game must remain fully playable solo.
+- each player brings and owns their own trainer, inventory, Heart power choice, and team of up to five creatures;
+- players explore, gather, build, fight, catch, progress, travel between biomes, and defeat bosses together;
+- the same world remains fully playable solo when no friends are connected;
+- this is not an MMO, public-server game, competitive PvP game, or large-session target.
 
-This is **not** an MMO target, not a large public-server target, and not competitive PvP.
-
-The design goal is small-group private co-op.
+**Networking is part of the first multiplayer pass.** The architecture split is only the first phase of that pass.
 
 ## 2. Timing
 
-The intended sequence is:
+Execution order:
 
 1. finish Cloudreach Cliffs;
-2. finish/close the remaining Meadows work;
-3. stabilize `main`;
-4. perform the multiplayer architecture split;
-5. add networking and 1–4 player co-op;
-6. continue later biome development on the multiplayer-compatible architecture.
+2. finish/close remaining Meadows work;
+3. stabilize and verify `main`;
+4. execute this multiplayer directive from start to finish;
+5. do not resume later biome expansion until 1–4 player co-op is playable and proven.
 
-Do not attempt to retrofit multiplayer piecemeal while Cloudreach or Meadows are still moving heavily.
+## 3. Non-negotiable architecture
 
-## 3. Current architectural fact
+The current game is single-player-first and mixes player-specific and world-specific state through the global `Game` singleton. Multiplayer must preserve working systems while separating ownership into two domains.
 
-The current game is single-player-first. A single global `Game` autoload owns player-specific and world-specific state together, including party, inventory, progression, map state, and other persistent state. This is clean for single player but is the primary seam that must be split for multiplayer.
+### WorldState — host/server authoritative
 
-The multiplayer conversion should **preserve working gameplay systems** rather than rewrite them for theoretical purity.
-
-## 4. Required architectural split
-
-Before serious networking work, separate persistent/runtime state conceptually into two domains.
-
-### Shared WorldState
-
-Server-authoritative state shared by everyone in the hosted world, including where appropriate:
+Includes, where applicable:
 
 - world seed;
 - biome/world unlocks;
 - day/night and weather;
-- world progression;
+- story/world progression;
 - boss defeat state;
 - chapter/realm state;
 - shared NPC/world-event state;
 - built structures;
-- opened shortcuts;
-- bridges/gates;
+- opened shortcuts, bridges, gates;
 - harvested/felled persistent world objects;
 - persistent world pickups;
 - encounter/world spawn state where persistence is intended;
-- shrine/realm-heart placement if that is world-level;
-- shared quest/world flags;
-- other state that describes **what has happened to this world**.
+- shrine / Realm Heart placement;
+- shared main quest/world flags;
+- other state describing **what has happened to this world**.
 
-### PlayerState
+### PlayerState — one per player
 
-One instance per connected player, including where appropriate:
+Includes, where applicable:
 
 - trainer identity/customization;
-- player position/pose when saving;
+- player position/pose;
 - party of up to five creatures;
-- creature levels;
-- bond;
-- traits/individuality;
-- inventory/hotbar;
-- personal equipment;
+- creature levels, bond, traits, individuality;
+- inventory/hotbar/equipment;
 - personal stamina/vitals;
 - active Realm Heart power;
-- personal map discovery if retained as personal;
-- personal quest/task UI state where appropriate;
-- player-specific unlock/tutorial flags;
-- other state that describes **this player's character and team**.
+- personal map discovery;
+- personal tutorial and creature/team task state;
+- other state describing **this player's trainer and team**.
 
-The multiplayer implementation must stop assuming `Game.party`, `Game.inventory`, `Game.player_position`, etc. refer to the one player in existence.
+The final multiplayer implementation must no longer assume `Game.party`, `Game.inventory`, player position, active creature, etc. refer to the only player in existence.
 
-Do not necessarily rename/rewrite every API at once. Introduce clean ownership boundaries and adapters so working game logic can migrate safely.
+Use adapters/migration layers where useful. Do not rewrite working systems only for theoretical purity.
 
-## 5. Authority model
+## 4. Authority model
 
 Use a **host/server-authoritative model**.
 
-The server/host decides the truth for shared gameplay events, including:
+The server decides truth for:
 
-- enemy/wild creature existence;
-- combat outcomes;
-- damage;
+- enemies and wild-creature existence;
+- damage and combat outcomes;
 - catches;
-- loot/pickups;
+- loot and pickups;
 - resource depletion;
 - trainer/boss defeat;
 - building placement;
-- world gates;
-- story/world progression;
+- world gates and story progression;
 - day/night/weather;
-- other shared state.
+- shared saves;
+- other consequential shared state.
 
-Clients send player intent/input and receive authoritative results/state.
+Clients send intent/input and receive authoritative results/state. Do not trust clients for important game state simply because it is easier.
 
-Do not build a trust-the-client model for important state simply because it is easier initially.
+## 5. Settled product rules — owner decisions 2026-09-04
+
+All questions are resolved. These are implementation requirements, not defaults.
+
+1. **Portable trainers/teams: YES.** A player may bring their trainer, five-creature team, inventory, and personal progression into different hosted worlds, Valheim-style.
+2. **World story progression is shared.** Bosses, realm gates, bridges, Heart placement, major chapter state, and realm unlocks belong to the world.
+3. **A player may join a world that is farther ahead.** They may participate immediately; do not hard-lock the session because their personal progress is behind.
+4. **Wild catch ownership: first successful catch wins.** The first player who successfully catches the wild creature owns it. UI/state must make this clear and race-safe.
+5. **Ordinary physical world pickups are shared/first-come.** A candy, potion, revive, etc. disappears for everyone when collected unless explicitly authored as a per-player reward.
+6. **Boss and mandatory personal rewards are per participating player.** The world changes once, but each participating player receives mandatory personal progression rewards. Do not require repeating one-time bosses for every friend.
+7. **Friends may use each other's crafting stations, buildings, and storage by default.** Shared transactions must be concurrency-safe and duplication-proof.
+8. **Friendly fire is OFF.** Players cannot damage each other's trainers or creatures in normal co-op.
+9. **Sleep/night skip is Valheim-style.** All currently connected, non-incapacitated players must be sleeping/ready before night advances.
+10. **Solo host play is always allowed.** A world works normally with only the host present.
+11. **Dedicated servers are NOT required for the first multiplayer release.** Player-hosted worlds first; keep the architecture capable of headless hosting later where practical.
+12. **No host migration initially.** If the host leaves, the session ends safely, saves, and returns clients cleanly. Host migration can be reconsidered later.
+13. **Map discovery is personal.** Fog-of-war belongs to each player. A map-sharing mechanic may be added later, but discovery is not globally automatic.
+14. **Main world/chapter quests are shared.** Tutorials, creature/team goals, and appropriate side tasks may remain personal.
+15. **Major encounter loot rule:** world state changes once; every participating player receives required personal progression rewards.
+16. **Players may be in different biomes at the same time.** The final multiplayer architecture must support this. A temporary same-realm limitation is acceptable only during intermediate development, never as the final pass result.
+17. **Item trading is allowed.** Provide a safe transfer/drop mechanism without duplication exploits.
+18. **Creature trading is NOT part of the initial multiplayer implementation.** Do not add it during this pass.
+19. **Friends can revive downed players.** Add a co-op revive window/interaction before the existing full death/recovery flow where practical. One player's death must never softlock/reset the entire shared world.
+20. **Difficulty scaling uses encounter composition/mechanics plus modest stat scaling.** Do not merely multiply HP by player count.
 
 ## 6. Session model
 
-Target flow:
+Required player flow:
 
-1. Host chooses **Start World** or **Load World**.
-2. Host may play alone immediately.
-3. Host may invite up to three friends.
-4. Joining players enter the host's currently active world.
-5. The host/server owns the world save.
-6. Each player retains their own persistent trainer/team save.
-7. Friends may leave and rejoin later without losing their personal progression.
-8. The world continues to exist as the host's world even when friends are absent.
+1. Host chooses Start World or Load World.
+2. Host may immediately play solo.
+3. Host can invite/connect up to three friends.
+4. Joining players enter the host's active persistent world with their own portable trainer/team save.
+5. Host owns the world save.
+6. Each player owns their own player save.
+7. Friends may leave and rejoin later without losing personal progression.
+8. Client late-join must reconstruct the authoritative world state correctly.
+9. If the host exits, world and player state save safely and the session ends cleanly.
 
-LAN/direct-IP/Steam-style invite implementation is an engineering choice to settle during the multiplayer pass. Product intent is the experience above, not a specific matchmaking vendor yet.
+Initial transport/invite implementation may be LAN/direct-IP or another practical Godot-compatible player-hosted solution. The pass must provide a usable host/join flow, not merely low-level networking APIs.
 
 ## 7. Solo compatibility
 
-Single-player must remain a first-class mode.
+Do not maintain separate multiplayer and single-player gameplay implementations.
 
-The networking architecture should make solo effectively a one-player hosted session or use the same authority boundaries without requiring an external server process.
+Solo should use the same authority/state boundaries as a one-player hosted session wherever practical. Single-player menus may pause locally if the session truly contains one player, but multiplayer clients opening UI must **not pause the shared simulation**.
 
-Do not maintain two divergent gameplay implementations for solo and multiplayer.
+Current scene-tree-pausing panels are an explicit conversion target.
 
 ## 8. Player and creature replication
 
-Every connected player must be able to see:
+Every player must reliably see other players'
 
-- the other trainers;
-- their movement;
-- their currently deployed creature;
+- trainer movement;
+- orientation and important animations;
+- deployed active creature;
 - creature movement/animation;
 - attacks and combat results;
+- catching attempts/results;
 - riding;
 - Fly traversal;
+- gathering actions;
 - building actions;
-- gathering interactions;
-- relevant emotes/relationship feedback;
-- deaths/revives;
-- other high-value visible gameplay.
+- relevant bond/relationship reactions;
+- downed/revive/death states.
 
-Replication must prioritize responsive local control while preserving server authority.
+Favor responsive local input while preserving server authority.
 
-## 9. Combat target
+## 9. Multiplayer combat
 
-Multiplayer combat should preserve Tetherbound's core identity:
+Tetherbound's identity remains:
 
+- trainers do not personally fight;
 - each player directly pilots their active creature;
-- the human trainer still does not personally fight;
-- multiple players may have creatures deployed in the same encounter;
-- bosses should support multiple simultaneously piloted creatures;
-- encounter scaling should account for party size without simply multiplying HP excessively.
+- multiple players may deploy one active creature each into the same fight;
+- the five-creature limit remains **per player**;
+- bosses must support multiple simultaneously piloted creatures;
+- target late-game experience includes **four trainers + four directly controlled creatures fighting one major boss together**.
 
-Late-game co-op should be able to create moments such as:
+Scale encounters through additional enemies, better composition, targeting/aggression, coordination mechanics, and modest HP/damage scaling. Four-player fights should be more interesting, not four times longer.
 
-> four trainers + four directly controlled creatures fighting one major boss together.
+### Wild catches
 
-The five-creature limit remains **per player**, not five creatures shared across the server.
+The server arbitrates catch attempts. First successful catch owns the creature. Later simultaneous attempts must resolve consistently with no duplicate creature creation and clear feedback to all players.
 
-## 10. Building
+## 10. Shared world interactions
 
-Building should be shared world content by default.
+### Building
 
-Expected behavior:
+- structures are WorldState;
+- server approves placement/destruction;
+- everyone sees changes immediately;
+- collision/nav consequences replicate;
+- friends can use each other's buildings/crafting stations/storage by default.
 
-- structures placed by any permitted player exist in the host world;
-- other players see them immediately;
-- persistence belongs to WorldState;
-- placement authority is server-side;
-- collision/nav/state updates replicate;
-- permissions may later limit who can modify/destroy structures.
+### Storage
 
-## 11. Gathering and resources
+Shared storage needs server-authoritative transaction locking/versioning so two players cannot withdraw the same item.
 
-Default direction:
+### Gathering
 
-- persistent world resource depletion/state belongs to the server;
-- gathered items are awarded to the player who gathered them unless an authored shared reward says otherwise;
-- world pickups cannot be independently collected four times unless specifically designed as per-player rewards;
-- item duplication due to race conditions is a blocker.
+- world depletion is authoritative shared state;
+- gathered item goes to the player who successfully gathered it;
+- race conditions must never duplicate yields.
 
-## 12. Realm Hearts
+### Pickups
 
-Default direction:
+- ordinary physical pickups are shared/first-come;
+- persistent collection state belongs to the world;
+- explicitly authored mandatory personal rewards can grant to each eligible player.
 
-- **Heart placement/shrine completion is world progression**;
-- **equipped Heart power is player-specific**;
-- players in the same world may equip different unlocked Heart powers;
-- only one Heart power may be active per player at a time.
+### Item trading
 
-This preserves the Valheim-like shrine progression while allowing each trainer to choose their own active benefit.
+Implement safe player-to-player item transfer/drop behavior with authoritative transactions.
 
-## 13. Death and recovery
+Creature trading is excluded.
 
-Default direction:
+## 11. Realm Hearts
 
-- each player's death state is personal;
-- dropped satchel/recovery object belongs to that player unless deliberately made shareable;
-- other players should be able to assist/revive where design supports it;
-- one player's death should not reset or softlock the entire encounter/world.
+- Heart placement/shrine completion = shared WorldState;
+- unlocked Heart powers become available to eligible players according to world progression;
+- equipped Heart power = PlayerState;
+- players in the same world may equip different unlocked powers;
+- one active Heart power per player at a time.
+
+## 12. Death and revive
+
+Implement a co-op downed/revive flow:
+
+- a player can become downed;
+- another connected player can revive them within the allowed window/interaction;
+- if not revived, the existing full death/recovery consequences occur;
+- each player's dropped recovery state remains personal;
+- one player's death cannot reset or softlock shared encounters/world progression.
+
+## 13. Sleep and pause
+
+### Sleep
+
+Night advances only when every currently connected non-incapacitated player is sleeping/ready.
+
+### Pause
+
+Multiplayer menus cannot pause the shared world. Convert existing global scene-tree pause assumptions so each client can open menus without freezing other players. Solo may retain true pause when only one player is connected.
 
 ## 14. Save architecture
 
-Multiplayer conversion requires separating current save content into:
+Split persistence into:
 
-### World save
-
-Owned by host/server:
+### World save — host owned
 
 - seed;
-- world progression;
+- story/world progression;
 - biome unlocks;
 - bosses;
 - world pickups;
-- builds;
+- structures/storage/world-object state;
 - felled/harvested persistent state;
 - shared NPC/state changes;
-- shrine placement;
+- shrine/Heart placement;
 - shortcuts/gates;
-- other shared state.
+- shared quest state.
 
-### Player save
+### Player save — portable
 
-Owned by each player:
-
-- trainer;
-- party;
-- creatures;
-- inventory;
-- bond/levels;
+- trainer identity;
+- party/creatures;
+- inventory/hotbar/equipment;
+- bond/levels/traits;
 - active Heart power;
-- personal settings/progression where applicable;
-- other player-specific state.
+- personal map discovery;
+- personal tutorial/team state.
 
-Old single-player saves must be migrated safely rather than discarded if practical.
+Migrate existing single-player saves safely where practical. Never silently destroy an old save.
 
-## 15. Join/leave/reconnect requirements
+Autosave responsibility must be explicit so world and player files cannot partially overwrite each other into inconsistent state.
 
-The system must eventually support:
+## 15. Different-biome concurrency
 
-- host starts solo and friend joins later;
-- friend leaves during ordinary exploration;
-- friend disconnects unexpectedly;
-- friend reconnects;
-- client joins a world with already-built structures and changed world state;
-- client joins while host is in a later biome;
-- player state is restored correctly;
-- active encounter ownership resolves safely on disconnect;
-- no item duplication or progression rollback on reconnect.
+The final pass must permit players to occupy different biomes/realms simultaneously.
 
-## 16. World progression philosophy
+This affects:
 
-Default recommendation: **major realm progression is world-level**, matching Valheim.
+- world scene ownership/streaming;
+- simulation/culling;
+- per-player cameras;
+- encounter ownership;
+- realm transitions;
+- replication interest management;
+- performance.
 
-Examples:
+Do not solve multiplayer permanently by tethering all players to one camera or requiring one realm.
 
-- Warden defeated;
-- Cloudreach unlocked;
-- boss defeated;
-- shrine Heart placed;
-- permanent bridge opened;
-- realm gate unlocked.
+## 16. Map and quests
 
-All players currently participating receive the experience/rewards appropriate to the event, while the world itself permanently records the change.
+### Map
 
-Player-specific creature growth, inventory, bond, etc. remain personal.
+Fog/discovery is personal PlayerState. Do not reveal the host's whole discovered map to joining players automatically.
 
-## 17. Multiplayer difficulty scaling
+### Quests
 
-Do not simply multiply enemy HP by player count.
+- main chapter/world objectives = shared WorldState;
+- tutorials, creature/team objectives, and selected side goals = personal PlayerState;
+- joining a world farther ahead does not prevent participation.
 
-Scaling should consider a combination of:
+## 17. First multiplayer pass must end playable
 
-- additional enemy count;
-- encounter composition;
-- enemy aggression/targeting;
-- mechanics that require spatial coordination;
-- modest HP/damage scaling;
-- boss behavior changes where worthwhile.
+The first multiplayer pass is complete only when the game is genuinely playable with **1, 2, 3, and 4 players**.
 
-A 4-player fight should be more interesting, not merely four times longer.
+The architecture vertical slice is a checkpoint, not the finish line.
 
-## 18. Networking scope for first release
+### Minimum playable multiplayer experience
 
-The first multiplayer milestone should prove only the core loop:
+At minimum, prove in a hosted real-game world that players can:
 
-1. host a Meadows world;
-2. friend joins;
-3. both players move reliably;
-4. both deploy creatures;
-5. both fight one shared wild encounter;
-6. gathering/loot resolves without duplication;
-7. one player places a structure and both see it;
-8. save/reload world and players;
-9. reconnect successfully.
+1. host/load a world;
+2. join with up to three friends/clients;
+3. move independently and see one another reliably;
+4. deploy and directly control their own creatures;
+5. fight shared wild encounters;
+6. catch using the first-successful-catch rule;
+7. fight at least one trainer encounter together;
+8. fight at least one major/boss encounter together;
+9. gather without duplication;
+10. collect shared pickups correctly;
+11. build and use shared structures;
+12. use shared storage safely;
+13. trade items;
+14. down/revive another player;
+15. sleep and advance night correctly;
+16. open menus without freezing other players;
+17. ride and use Fly while other players remain active;
+18. transition independently between Meadows and Cloudreach;
+19. remain in different biomes simultaneously;
+20. save world and each player's portable character/team;
+21. disconnect and reconnect;
+22. late-join an already-modified world;
+23. host plays solo when nobody else is connected;
+24. host exits and session saves/ends safely.
 
-Only after this vertical slice is stable should networking be expanded across all systems/biomes.
+Do not call the pass complete after only a two-player movement demo.
 
-## 19. Conversion sequence
+## 18. Implementation sequence
 
-Recommended implementation order after Cloudreach + Meadows are complete:
+### M0 — Audit and tests
 
-### M0 — Audit and contract
+- inventory every single-player assumption;
+- classify all persistent/runtime state as world/player/session/transient;
+- define RPC/authority boundaries;
+- write core multiplayer regression tests;
+- produce a conversion map, not another speculative rewrite plan.
 
-- inventory every current assumption of one global player;
-- classify state as world/player/session/transient;
-- document RPC/authority boundaries;
-- write multiplayer tests before broad conversion.
-
-### M1 — State separation
+### M1 — State/save separation
 
 - introduce PlayerState;
-- separate WorldState from player-owned state;
-- preserve current single-player behavior;
-- migrate saves.
+- isolate WorldState;
+- migrate current `Game.*` call sites safely;
+- split saves;
+- preserve solo behavior;
+- migrate old saves.
 
 ### M2 — Networking shell
 
-- host/join;
-- player IDs;
-- spawn/despawn trainers;
+- host/join UI;
+- peer/player IDs;
+- trainer spawn/despawn;
 - authority assignment;
-- reconnect basics.
+- join/leave/reconnect foundation;
+- one-player hosted mode.
 
-### M3 — Movement and interaction
+### M3 — Player/world verbs
 
-- player movement;
-- interaction;
-- inventory transaction authority;
+- movement replication;
+- interaction authority;
 - gathering;
-- building.
+- pickups;
+- inventory transactions;
+- building;
+- shared storage;
+- item transfer;
+- local-only UI ownership/no global multiplayer pause.
 
 ### M4 — Creatures and combat
 
 - creature ownership;
-- deployment;
-- movement;
-- attacks;
-- switching;
-- shared encounters;
-- catches;
-- defeat/revive;
-- boss multiplayer.
+- deploy/recall/switch;
+- piloted movement;
+- attacks/damage;
+- wild encounters;
+- first-successful catches;
+- trainer encounters;
+- boss encounters;
+- defeat/down/revive;
+- multiplayer scaling.
 
-### M5 — World progression
+### M5 — Shared progression
 
-- objectives;
-- NPCs;
-- bosses;
-- gates;
+- NPC/story triggers;
+- shared objectives;
+- bosses/gates;
 - Realm Hearts;
-- realm transitions;
-- world-state persistence.
+- world-state changes;
+- mandatory per-player rewards;
+- personal quest/tutorial separation.
 
-### M6 — Complete-system conversion
+### M6 — Travel/full-system coverage
 
 - riding;
 - Fly;
-- camps/rest;
+- camps/rest/sleep voting;
+- map/fog;
 - trading;
 - farming;
-- maps;
-- pickups;
-- remaining systems.
+- biome transitions;
+- simultaneous multi-biome occupancy;
+- remaining gameplay systems.
 
 ### M7 — Reliability and shipping
 
-- disconnect/reconnect;
+- 1/2/3/4-player end-to-end runs;
 - late join;
-- host migration decision;
-- save corruption protection;
-- latency tests;
+- disconnect/reconnect;
+- host exit;
+- save consistency;
+- race/duplication testing;
+- latency/jitter testing;
+- separated-biome testing;
 - target-hardware performance;
-- 1/2/3/4-player end-to-end runs.
+- regression of solo Meadows + Cloudreach.
 
-## 20. Outstanding product decisions
+The orchestrator must continue through M7 in the same multiplayer goal unless blocked by a genuinely external dependency.
 
-These are the main questions that should be decided before or during M0. Recommended defaults are included so work can proceed if the owner does not care strongly.
+## 19. Current-system risks that must be addressed
 
-### Q1 — Can a player's character/team travel between different hosted worlds?
+Explicitly inspect and convert:
 
-**Recommended: yes, like Valheim.** A player owns their trainer/team/inventory and can join another friend's world with them.
-
-Alternative: world-bound characters, which is simpler for progression integrity but less convenient.
-
-### Q2 — Is world story progression shared?
-
-**Recommended: yes.** Bosses, realm gates, bridges, Heart placement, and major story outcomes belong to the world.
-
-### Q3 — What happens when a player joins a world farther ahead than their personal progression?
-
-**Recommended:** allow them to join and participate, but preserve their personal creature/team state. Avoid hard-locking the session because one friend is behind.
-
-Whether they automatically receive world-level unlock rewards requires a specific rule.
-
-### Q4 — Who gets a wild creature catch?
-
-This is the most important unresolved combat rule.
-
-Options:
-
-A. first player to successfully catch it owns it;
-B. encounter initiator has catch rights;
-C. explicit claim/roll system;
-D. each player receives an independent catch opportunity from the same encounter.
-
-**Recommended starting point: A**, with clear UI and no duplication. Revisit if it creates bad friend-group behavior.
-
-### Q5 — Are ordinary world pickups shared or personal?
-
-**Recommended:** physical world pickups are shared/first-come; authored major quest rewards may be granted per participating player.
-
-### Q6 — Can friends use each other's crafting stations/buildings/storage?
-
-**Recommended:** yes by default for a private co-op world, with optional ownership/permission controls later.
-
-Storage needs explicit shared transaction locking to prevent duplication.
-
-### Q7 — Can players damage each other's creatures?
-
-**Recommended: no friendly fire by default.** PvP is outside current scope.
-
-### Q8 — How does sleeping work?
-
-**Recommended Valheim-style rule:** advancing the night requires all currently connected non-incapacitated players to be sleeping/ready.
-
-### Q9 — How does pausing work?
-
-A hosted multiplayer world cannot globally pause when one client opens a menu.
-
-**Required direction:** UI must stop local input without pausing the shared simulation. Solo may still pause if implemented through session awareness.
-
-This is an important retrofit area because several current panels pause the scene tree.
-
-### Q10 — Can the host play when nobody else is present?
-
-**Yes. Non-negotiable.** A multiplayer-capable world must remain a normal solo world.
-
-### Q11 — Dedicated servers?
-
-**Recommended: not for first multiplayer release.** Start with player-hosted worlds. Keep architecture capable of a headless authoritative server later if practical.
-
-### Q12 — Host migration if host quits?
-
-**Recommended: not required initially.** If the host leaves, the session ends safely and saves. Consider host migration later only if demand justifies complexity.
-
-### Q13 — Shared map exploration?
-
-Options:
-
-- personal fog-of-war;
-- globally shared map discovery;
-- personal by default with an explicit map-sharing mechanic.
-
-**Recommended: personal discovery with a later sharing option**, preserving exploration.
-
-### Q14 — Personal vs shared quests
-
-**Recommended:** major chapter/world objectives are shared world objectives; tutorials, creature/team goals, and some side tasks may be personal.
-
-### Q15 — Loot from bosses and major encounters
-
-**Recommended:** world state changes once, but each participating player receives the personal progression rewards they need. Never force four friends to repeat a one-time boss four times for four copies of a mandatory personal reward.
-
-### Q16 — Can one player enter another biome while others remain elsewhere?
-
-**Recommended: yes**, if the world/streaming/network architecture supports it. Do not force a permanent tether radius merely for convenience.
-
-For the first implementation milestone, temporarily constraining players to one loaded realm may be acceptable if clearly documented as a networking limitation, not the final design.
-
-### Q17 — Trading between players?
-
-**Recommended: yes eventually**, via explicit item transfer UI or safe drop/pickup mechanics. Not required for the first multiplayer vertical slice.
-
-### Q18 — Creature trading?
-
-Open design question. Because Tetherbound's five-creature rule and emotional permanence are central, creature transfer between players has larger consequences than item trading.
-
-**Recommended: defer until after core multiplayer works.**
-
-## 21. Important current-system risks
-
-The multiplayer pass must explicitly inspect these current single-player assumptions:
-
-- global `Game` state combines world and player state;
-- save file currently combines world and player persistence;
-- world input assumes one local controlled player;
+- global `Game` combines world and player state;
+- current save combines world/player persistence;
+- player/world input assumes one local player;
 - several UI panels pause the scene tree;
-- combat systems may assume one active controlled creature;
+- combat managers may assume one active controlled creature;
 - EncounterDirector may assume one encounter owner;
-- story/SequenceDirector may assume one player trigger;
-- map/progression state may assume one viewer;
-- building/storage transactions currently do not need concurrency control;
-- one continuous world scene was designed for one camera/player;
-- terrain/scatter visibility and streaming/culling behavior must be validated with separated players;
-- riding/Fly authority must be defined per player;
-- autosave ownership must be divided between world and player saves.
+- SequenceDirector/story triggers may assume one triggering player;
+- map/progression assumes one viewer;
+- building/storage do not currently need concurrency controls;
+- the world/visibility architecture was designed around one camera;
+- riding/Fly authority is currently single-player;
+- autosave ownership is currently singular;
+- terrain/scatter/culling must cope with separated players in different locations/biomes.
 
-These are conversion tasks, not reasons to abandon the existing architecture.
+These are conversion tasks, not reasons to discard the existing architecture.
 
-## 22. Performance target
+## 20. Performance
 
-Multiplayer must continue to respect the ROG Ally / target-hardware budget.
-
-Do not assume four players means four times every expensive visual/system cost.
+Multiplayer must still respect the target hardware, including the ROG Ally.
 
 Profile:
 
-- additional player models;
-- additional deployed creatures;
-- replicated combat VFX;
+- 4 trainer models;
+- 4 active creatures;
+- additional combat AI/enemies;
+- VFX replication;
 - network serialization;
-- AI/encounter counts;
-- separated-player world visibility;
-- world streaming/culling;
-- builds and persistent objects.
+- structures/world persistence;
+- multiple widely separated player interest zones;
+- separate-biome simulation;
+- host CPU cost.
 
-## 23. Testing requirements
+Use interest management and server simulation discipline. Do not simply simulate/render the entire game world at full fidelity for every peer.
 
-Create automated and runtime tests for at least:
+## 21. Testing and acceptance
 
-- 1-player hosted session;
-- 2-player join/leave;
-- 4-player connection;
-- authoritative inventory changes;
-- simultaneous pickup race;
-- simultaneous storage access;
-- building replication;
-- creature deployment ownership;
-- shared combat;
-- catch ownership;
-- boss progression;
-- Heart shrine/world state;
-- personal Heart power state;
-- world save/reload;
-- player save/reload;
-- late join;
-- reconnect after disconnect;
-- disconnect during combat;
-- disconnect while mounted/flying;
-- solo save migration;
-- no regression to offline solo play.
+Create automated and runtime coverage for at least:
 
-## 24. Definition of multiplayer done
+- 1-player host mode;
+- 2-player join/leave/reconnect;
+- 3-player session;
+- 4-player session;
+- portable player save joining a different world;
+- shared world progression;
+- first-successful catch race;
+- pickup race;
+- storage concurrency;
+- item trading;
+- friendly-fire rejection;
+- all-player sleep requirement;
+- non-pausing multiplayer UI;
+- down/revive/full death;
+- shared trainer encounter;
+- shared boss encounter;
+- mandatory per-player boss rewards;
+- building replication/persistence;
+- riding/Fly replication;
+- simultaneous different-biome play;
+- host exit save safety;
+- solo regression after multiplayer conversion.
 
-Multiplayer is not done because two players can appear in the same scene.
+A multiplayer feature is not done because two local windows visually move. Prove authoritative state and persistence.
 
-It is done when 1–4 players can reliably:
+## 22. Branch / orchestration model
 
-- host/join;
-- bring their own trainer/team;
-- explore together;
-- split up where supported;
-- fight together;
-- catch without duplication;
-- gather;
-- build;
-- use camps;
-- progress story/world state;
-- defeat bosses;
-- use Realm Hearts;
-- travel between completed biomes;
-- save;
-- leave;
-- reconnect;
-- continue the world later;
-- and still play the exact same world solo.
+This is a large conversion. Use the repo's established orchestration rules:
 
-All important state must survive save/load and disconnects without duplication, rollback, corruption, or world-state disagreement.
+- senior orchestrator owns architecture, authority boundaries, integration, sequencing, and final acceptance;
+- lower-tier agents handle bounded investigations, migrations, tests, individual system conversions, race-condition probes, and documentation;
+- independent file/system ownership may run in parallel;
+- tightly coupled central state/network files must serialize;
+- branch from current `main`;
+- land verified PRs continuously;
+- re-verify integrated `main` after each major multiplayer wave;
+- never accumulate a giant unmerged networking branch for the whole project.
 
-## 25. Core principles
+## 23. Definition of done
 
-- **Valheim-style private co-op is the target.**
-- **1–4 players.**
-- **Host/server authoritative.**
-- **World belongs to the host/server; trainer/team belongs to the player.**
-- **Five creatures per player.**
-- **Solo remains first-class.**
-- **One gameplay implementation, not separate solo/multiplayer games.**
-- **Preserve working systems; refactor ownership, not everything.**
-- **No trust-the-client shortcuts for valuable state.**
-- **No item/catch duplication.**
-- **Do not begin this conversion until Cloudreach and the Meadows completion pass are finished.**
+The multiplayer conversion is DONE only when:
+
+- normal solo play still works;
+- a player can host a persistent world;
+- up to three friends can join;
+- portable trainers/teams work across hosted worlds;
+- players can move independently;
+- each can deploy/control their own creature;
+- shared combat works;
+- first-successful wild catch ownership works;
+- gathering/pickups are authoritative and duplication-safe;
+- shared building/storage works;
+- item trading works;
+- friendly fire is off;
+- co-op revive works;
+- all-player sleep works;
+- menus do not pause multiplayer simulation;
+- shared main progression works;
+- personal map discovery works;
+- Realm Heart shared/personal split works;
+- boss rewards are granted correctly per participating player;
+- riding and Fly replicate;
+- players can occupy different biomes simultaneously;
+- world save and portable player saves work;
+- late join/reconnect works;
+- host exit saves and terminates safely;
+- 1/2/3/4-player evidence exists;
+- Meadows and Cloudreach remain playable end to end;
+- completed work is integrated on `main`.
+
+**Do not stop at multiplayer-ready architecture. Build playable multiplayer.**
