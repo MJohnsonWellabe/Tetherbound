@@ -68,13 +68,32 @@ extends Node3D
 ##
 ## ## What this file does NOT own
 ##
-## No collider, no interaction, no spawn, no progression flag, no navigation.
-## It is presentation hung off `landmark.gd` after the castle is standing, and
-## the five-space route inside `stronghold.gd` — which is a different building
-## entirely, sited south of this one — is untouched by it. `plinth: true`
-## entries sit on the courtyard slab that already has `landmark.gd`'s own
-## `PlinthBody` under it, so nothing here can drop a prop through the floor or
-## put one in the ramp's 6m width.
+## No collider, no interaction, no spawn, no navigation. It is presentation
+## hung off `landmark.gd` after the castle is standing, and the five-space
+## route inside `stronghold.gd` — which is a different building entirely,
+## sited south of this one — is untouched by it. `plinth: true` entries sit on
+## the courtyard slab that already has `landmark.gd`'s own `PlinthBody` under
+## it, so nothing here can drop a prop through the floor or put one in the
+## ramp's 6m width.
+##
+## ## The withdrawal (CL-G5, W06-FINALE-0904)
+##
+## T1-HALL-REBUILD retired `landmark.gd`'s castle, so `build()` above no longer
+## runs in the shipped world: the garrison the player actually sees is
+## `stronghold.gd::_build_occupation()`'s, re-authored at the merged Hall with
+## the same node vocabulary (HallBraziers, GateSconces, GateSentries,
+## GarrisonCamp, RelayHub). Neither placement ever reacted to
+## `legendary_freed`, so the Hall stayed lit and manned after the player broke
+## the thing it was guarding. `watch_withdrawal()` is the answer, kept HERE
+## because this file is the occupation's owner: given any root that carries
+## that vocabulary it watches the flag (polling `revision`, the store's own
+## idiom -- see meadow_healing.gd) and, once, withdraws the garrison per
+## `stronghold_occupation.json`'s `withdrawal` block: the sentries and the
+## camp leave (hidden), the fires, sconces, lamps and relay hub go dark (every
+## light off, every emissive surface unlit, every flame gone). The baskets,
+## brackets and hardware stay -- an abandoned post, not a demolished one.
+## Hung off the stronghold by `stronghold_climax.gd::_watch_the_garrison()`,
+## which is why it also fires on a load that already carries the flag.
 
 const CONFIG_PATH := "res://data/config/stronghold_occupation.json"
 const TORCH_PROP := preload("res://scripts/world/torch_prop.gd")
@@ -117,6 +136,14 @@ var _time: float = 0.0
 var _plinth_top: float = 4.2
 var _ramp_run: float = 11.0
 
+## Withdrawal state (see the header's last section).
+var _withdraw_root: Node = null
+var _withdraw_progression: RefCounted = null
+var _withdraw_flag := "legendary_freed"
+var _withdraw_revision: int = -1
+var _withdrawn: bool = false
+var _withdraw_report: Dictionary = {}
+
 
 ## `plinth_top` is landmark.gd's own PLINTH_TOP — the courtyard floor's local
 ## y, and the height every `plinth: true` entry is snapped to. `site_origin`
@@ -147,6 +174,7 @@ func build(world: Node, plinth_top: float, site_origin: Vector3,
 
 
 func _process(delta: float) -> void:
+	_poll_withdrawal()
 	_time += delta
 	# Two summed sines rather than one, so the fire reads as fire and not as a
 	# mechanical strobe. Each light is offset by its own index so a row of
@@ -541,6 +569,122 @@ func _terrain_y(world: Node, site_origin: Vector3, x: float, z: float) -> float:
 	if is_nan(ground):
 		return NAN
 	return ground - site_origin.y
+
+
+## --- the withdrawal (CL-G5) --------------------------------------------------
+
+## Watch `root` (a node carrying the garrison vocabulary -- the shipped Hall is
+## `stronghold.gd`'s node) and withdraw its garrison once the flag is set. A
+## flag already set when this is called withdraws immediately, without a
+## transition: a loaded save has been this way since before Continue.
+func watch_withdrawal(root: Node) -> void:
+	if _config.is_empty():
+		_config = _load_json(CONFIG_PATH)
+	_withdraw_root = root
+	var cfg: Dictionary = _config.get("withdrawal", {}) as Dictionary
+	_withdraw_flag = str(cfg.get("flag", "legendary_freed"))
+	var game := get_node_or_null(^"/root/Game")
+	_withdraw_progression = game.get("progression") as RefCounted if game != null else null
+	if _withdraw_progression != null and bool(_withdraw_progression.call("has", _withdraw_flag)):
+		withdraw()
+		return
+	set_process(true)
+
+
+func _poll_withdrawal() -> void:
+	if _withdrawn or _withdraw_root == null or _withdraw_progression == null:
+		return
+	var revision := int(_withdraw_progression.get("revision"))
+	if revision == _withdraw_revision:
+		return
+	_withdraw_revision = revision
+	if bool(_withdraw_progression.call("has", _withdraw_flag)):
+		withdraw()
+
+
+## The garrison stands down. Once; idempotent; drivable by a test without a
+## boss fight. Returns what it did, by count.
+func withdraw() -> Dictionary:
+	if _withdrawn:
+		return _withdraw_report
+	_withdrawn = true
+	var cfg: Dictionary = _config.get("withdrawal", {}) as Dictionary
+	var report := {"withdrawn": 0, "darkened": 0, "lights_out": 0, "flames_out": 0, "surfaces_unlit": 0}
+	if _withdraw_root == null:
+		_withdraw_report = report
+		return report
+	for holder_name: Variant in (cfg.get("withdraw", ["GateSentries", "GarrisonCamp", "Checkpoint"]) as Array):
+		var holder := _withdraw_root.find_child(str(holder_name), false, false)
+		if holder == null or not holder is Node3D:
+			continue
+		(holder as Node3D).visible = false
+		report["withdrawn"] = int(report["withdrawn"]) + 1
+	for holder_name: Variant in (cfg.get("darken", ["HallBraziers", "GateSconces", "RelayHub", "Braziers", "TetherLamps"]) as Array):
+		var holder := _withdraw_root.find_child(str(holder_name), false, false)
+		if holder == null:
+			continue
+		_darken(holder, report)
+		report["darkened"] = int(report["darkened"]) + 1
+	_withdraw_report = report
+	print("[occupation] the garrison withdrew: %d groups gone, %d dark (%d lights out, %d flames out, %d surfaces unlit)" % [
+		int(report["withdrawn"]), int(report["darkened"]), int(report["lights_out"]),
+		int(report["flames_out"]), int(report["surfaces_unlit"])])
+	if not is_processing_withdrawal_needed():
+		set_process(not _lights.is_empty())
+	return report
+
+
+func is_processing_withdrawal_needed() -> bool:
+	return not _withdrawn
+
+
+func withdrawn() -> bool:
+	return _withdrawn
+
+
+func withdrawal_report() -> Dictionary:
+	return _withdraw_report
+
+
+## Everything under `holder` that gives off light stops: lights are hidden
+## (hidden rather than zeroed, because `stronghold.gd::_flicker_fires` and
+## this file's own flicker both rewrite energy every frame), flame and ember
+## nodes are hidden, and emissive surfaces get an unlit copy of their material
+## as a per-surface override so no shared resource elsewhere in the world is
+## repainted. The iron, the brackets and the hardware stay where they are.
+func _darken(holder: Node, report: Dictionary) -> void:
+	var stack: Array[Node] = [holder]
+	while not stack.is_empty():
+		var node: Node = stack.pop_back()
+		if node is Light3D:
+			(node as Light3D).visible = false
+			report["lights_out"] = int(report["lights_out"]) + 1
+			continue
+		var lowered := node.name.to_lower()
+		if node is GPUParticles3D or node is CPUParticles3D \
+				or lowered.contains("flame") or lowered.contains("ember") or lowered.contains("smoke"):
+			if node is Node3D:
+				(node as Node3D).visible = false
+				report["flames_out"] = int(report["flames_out"]) + 1
+			continue
+		if node is MeshInstance3D:
+			report["surfaces_unlit"] = int(report["surfaces_unlit"]) + _unlight(node as MeshInstance3D)
+		stack.append_array(node.get_children())
+
+
+func _unlight(instance: MeshInstance3D) -> int:
+	var changed := 0
+	if instance.mesh == null:
+		return 0
+	for surface in instance.mesh.get_surface_count():
+		var source := instance.get_active_material(surface)
+		if source is BaseMaterial3D and (source as BaseMaterial3D).emission_enabled:
+			var copy := (source as BaseMaterial3D).duplicate() as BaseMaterial3D
+			copy.emission_enabled = false
+			copy.emission_energy_multiplier = 0.0
+			instance.set_surface_override_material(surface, copy)
+			changed += 1
+	return changed
 
 
 ## --- plumbing ------------------------------------------------------------------
