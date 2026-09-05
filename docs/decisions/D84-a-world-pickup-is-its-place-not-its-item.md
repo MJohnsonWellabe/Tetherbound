@@ -1,4 +1,4 @@
-# D74 — A world pickup is its place, not its item; recovery arrives before attrition
+# D84 — A world pickup is its place, not its item; recovery arrives before attrition
 
 **Decided:** 2026-09-04, lane W17-DENSITY-B2-B3, under the standing rule that small
 design calls are recorded here rather than asked (`docs/00_START_HERE.md`).

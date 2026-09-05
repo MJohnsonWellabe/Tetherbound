@@ -55,7 +55,7 @@ findables for those two bands, and verifies CL-E2's prop half.
 | `tools/_contact_sheet.gd` | **new** — contact-sheet compositor (no ImageMagick or Pillow in this container) |
 | `docs/WORLD_AND_CONTENT.md` | §6/§7 tables: spawn, harvest and pickup counts, plus per-km density |
 | `docs/CURRENT_STATE.md` | one CL-O4 row in §3 for the bands 2–3 density half |
-| `docs/decisions/D74-a-world-pickup-is-its-place-not-its-item.md` | **new** |
+| `docs/decisions/D84-a-world-pickup-is-its-place-not-its-item.md` | **new** |
 | `ralph/reports/W17-DENSITY-B2-B3-0904/` | this report, both judge verdicts, two contact sheets, census outputs |
 
 Not touched: `vegetation.json`, `trainers.json`, `items.json`, band 1/4/5 files,
@@ -301,7 +301,7 @@ Commits on the branch, oldest first:
 |---|---|
 | `434ec537` | the pickup loader, the placement-keyed once-flag, the one hook, both `pickups.json`, `test_band_pickups.gd` — pushed early, because the bands 4–5 lane consumes it |
 | `18f64ba8` | the wild and harvest density for bands 2 and 3 |
-| `78e03ae7` | the density census tool, the pickup capture tool, the doc updates and D74 |
+| `78e03ae7` | the density census tool, the pickup capture tool, the doc updates and D84 |
 | `22db5969` | report draft and census outputs |
 | `a2f1d23d` | the smoke rows |
 | `dce55d63` | the contact-sheet compositor |
