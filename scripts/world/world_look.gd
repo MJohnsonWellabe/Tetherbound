@@ -230,19 +230,38 @@ func _report_daynight_config() -> void:
 	push_warning("DAYNIGHT-CONFIG day_length_seconds=%.1f dark_from=%.1f dark_to=%.1f keyframes=%s" % [
 		float(_cycle.get("day_length_seconds")), float(_cycle.get("dark_from_hour")),
 		float(_cycle.get("dark_to_hour")), str(_cycle.call("keyframe_names"))])
-	# The comparison no probe in this project has ever made: the light the clock
-	# asks for at the darkest hour of the night against the light it asks for at
-	# midday, both read through the SAME blend the running game uses.
+	# The comparison no probe in this project has ever made, dumped whole: what
+	# the clock asks the renderer for at every half hour of a full day, read
+	# through the SAME blend the running game uses. Synchronous, in `_ready()`,
+	# on purpose -- `playground_world.gd::_report_for_export_check()` quits the
+	# process at the end of ITS `_ready()`, before a single `_process` tick, so
+	# under `--verify-export` this is the only window an exported build has to
+	# say anything. The whole curve fits in it; a rendered night frame does not,
+	# and that limit is real: the pixel half of this evidence has to come from
+	# `tools/gate_f/probe_daynight_contrast.gd` under a binary that keeps
+	# running.
+	push_warning("DAYNIGHT-CURVE hour,blend,t,sun_x_exposure,ambient_x_exposure,total,dark")
+	for step in 48:
+		var hour := step * 0.5
+		var budget: Dictionary = light_budget_at(_config, _cycle, hour)
+		push_warning("DAYNIGHT-CURVE %.1f,%s->%s,%.2f,%.3f,%.3f,%.3f,%s" % [
+			hour, budget.from, budget.to, float(budget.t), float(budget.direct),
+			float(budget.ambient), float(budget.total),
+			"dark" if bool(_cycle.call("is_dark", hour)) else ""])
 	var darkest := _darkest_dark_hour()
 	var night := light_budget_at(_config, _cycle, darkest)
 	var noon := light_budget_at(_config, _cycle, _brightest_lit_hour())
+	var middle := _middle_of_the_dark_window()
+	var mid_night := light_budget_at(_config, _cycle, middle)
 	push_warning("DAYNIGHT-CONFIG asked-for light: darkest dark hour %.1f -> direct %.3f + ambient %.3f = %.3f" % [
 		darkest, float(night.direct), float(night.ambient), float(night.total)])
+	push_warning("DAYNIGHT-CONFIG asked-for light: middle of the night, hour %.1f -> %.3f" % [
+		middle, float(mid_night.total)])
 	push_warning("DAYNIGHT-CONFIG asked-for light: brightest lit hour %.1f -> direct %.3f + ambient %.3f = %.3f" % [
 		_brightest_lit_hour(), float(noon.direct), float(noon.ambient), float(noon.total)])
-	push_warning("DAYNIGHT-CONFIG night/day light ratio = %.3f%s" % [
-		float(night.total) / maxf(0.0001, float(noon.total)),
-		"  <-- night asks for MORE light than day" if float(night.total) > float(noon.total) else ""])
+	push_warning("DAYNIGHT-CONFIG midnight/midday light ratio = %.3f%s" % [
+		float(mid_night.total) / maxf(0.0001, float(noon.total)),
+		"  <-- night asks for MORE light than day" if float(mid_night.total) > float(noon.total) else ""])
 
 
 ## N13-NIGHT-RESUME. Every VERIFY_INTERVAL real seconds while the clock runs.
@@ -296,6 +315,14 @@ func _darkest_dark_hour() -> float:
 
 func _brightest_lit_hour() -> float:
 	return _extreme_hour(false)
+
+
+## The dark window wraps past midnight, so its middle is the midpoint of the
+## wrapped span rather than the average of its two endpoints.
+func _middle_of_the_dark_window() -> float:
+	var from: float = float(_cycle.get("dark_from_hour"))
+	var span: float = fposmod(float(_cycle.get("dark_to_hour")) - from, 24.0)
+	return fposmod(from + span * 0.5, 24.0)
 
 
 func _extreme_hour(dark: bool) -> float:
@@ -530,13 +557,26 @@ static func blended_config_at(config: Dictionary, cycle: RefCounted, hour: float
 ## `_apply_environment()`'s own comment states it and measured it), so only the
 ## `(1 - ambient_sky_contribution)` explicit-colour share is real light on the
 ## renderer the game actually ships.
+##
+## Both terms are weighted by their own COLOUR's luminance, which is not a
+## refinement -- it is the difference between this function being right and being
+## backwards. Night's light is a dark blue (`ambient_colour` #3d50a3, Rec.709
+## luma 0.32) and day's is near-white (#9db3c6, 0.69), so an energy read without
+## its colour says night is the brighter of the two and a rendered frame says the
+## opposite. Measured, on the frames `tools/gate_f/probe_daynight_contrast.gd`
+## shot: mean luma 29.5 at midnight against 114.5 at midday, a ratio of 0.26,
+## while the colour-blind version of this arithmetic put the same pair at 1.13.
+## An instrument that disagrees with the renderer that hard is not measuring the
+## picture, and this one is only worth anything because it now tracks it.
 static func light_budget_at(config: Dictionary, cycle: RefCounted, hour: float) -> Dictionary:
 	var blended: Dictionary = blended_config_at(config, cycle, hour)
 	var env: Dictionary = blended.environment
 	var exposure := float(env.get("exposure", 1.0))
-	var direct := float((blended.sun as Dictionary).get("energy", 1.25)) * exposure
+	var direct := float((blended.sun as Dictionary).get("energy", 1.25)) * exposure \
+		* _luma(_as_colour((blended.sun as Dictionary).get("colour"), "#ffffff"))
 	var ambient := float(env.get("ambient_energy", 1.0)) \
-		* (1.0 - float(env.get("ambient_sky_contribution", 0.55))) * exposure
+		* (1.0 - float(env.get("ambient_sky_contribution", 0.55))) * exposure \
+		* _luma(_as_colour(env.get("ambient_colour"), "#9fb4c6"))
 	return {
 		"direct": direct,
 		"ambient": ambient,
@@ -626,6 +666,13 @@ static func _lerp_degrees(a: float, b: float, t: float) -> float:
 ## `_blend_dict` above); every other caller still passes art.json's own hex
 ## string. Centralised so `_apply_sun/_apply_sky/_apply_environment` never
 ## have to know which they were handed.
+## Rec.709 luma of a light's colour, 0..1. Same weighting `tools/frame_stats.py`
+## and every earlier measurement in this project use, so the numbers stay on one
+## scale.
+static func _luma(colour: Color) -> float:
+	return 0.2126 * colour.r + 0.7152 * colour.g + 0.0722 * colour.b
+
+
 static func _as_colour(value: Variant, fallback: String = "#ffffff") -> Color:
 	if value is Color:
 		return value

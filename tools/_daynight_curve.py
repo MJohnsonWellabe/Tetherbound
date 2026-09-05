@@ -14,16 +14,39 @@ rather than an argument.
 
     python3 tools/_daynight_curve.py [path/to/art.json]
 
-Columns: the in-game hour, the two keyframes bracketing it and the blend fraction, the
-directional light's energy, the ambient energy, the tonemap exposure, and the two products
-that matter -- energy x exposure -- which is what reaches the ACES curve. `dark` is
-`day_cycle.gd::is_dark()`, i.e. what every gameplay system (torches, camp fill lights, the
-creature emission floor) switches on.
+Columns: the in-game hour, the two keyframes bracketing it and the blend fraction, then what
+`world_look.gd::_apply_environment` actually installs on the Environment. `sun*exp` and
+`amb*exp` are the products that reach the ACES curve, because `tonemap_exposure` multiplies
+the linear value before the tonemapper -- so a preset that halves its light and doubles its
+exposure has changed nothing about how bright the frame is.
+
+Both light columns are weighted by their own colour's Rec.709 luma, and the ambient column
+is the COMPATIBILITY-renderer ambient, not the raw `ambient_energy`.
+`project.godot` ships `renderer/rendering_method="gl_compatibility"`, and under Compatibility
+sky radiance does not reach the terrain at all (D06, and `_apply_environment`'s own comment
+says so and measured it) -- so only the `(1 - ambient_sky_contribution)` share of the ambient,
+the explicit-colour half, is real light on the shipped renderer.
+
+`dark` is `day_cycle.gd::is_dark()`, i.e. what every gameplay system (torches, camp fill
+lights, the creature emission floor) switches on.
 """
 import json
 import sys
 
 ANGLE_KEYS = {"yaw_deg"}
+
+
+def luma(hex_colour, fallback):
+    """Rec.709 luma of a light's colour, 0..1 -- see world_look.gd::_luma.
+
+    Not a refinement: night's light is a dark blue and day's is near-white, so an
+    energy read WITHOUT its colour reports night as the brighter of the two and a
+    rendered frame reports the opposite.
+    """
+    value = hex_colour if isinstance(hex_colour, str) and hex_colour.startswith("#") else fallback
+    value = value.lstrip("#")
+    r, g, b = (int(value[i:i + 2], 16) / 255.0 for i in (0, 2, 4))
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b
 
 
 def merged(config, section, over):
@@ -104,7 +127,7 @@ def main() -> int:
     print("keyframes: " + ", ".join("%s@%.0f" % (n, h) for h, n in kfs))
     print()
     header = "%5s %5s  %-16s %5s | %6s %6s %6s | %7s %7s | %4s"
-    print(header % ("hour", "real_s", "blend", "t", "sun_e", "amb_e", "expos", "sun*exp", "amb*exp", "dark"))
+    print(header % ("hour", "real_s", "blend", "t", "sun_e", "amb*c", "expos", "sun*exp", "amb*exp", "dark"))
     print("-" * 92)
     rows = []
     for step in range(48):
@@ -113,8 +136,11 @@ def main() -> int:
         sun = blend(merged(config, "sun", times.get(frm, {})), merged(config, "sun", times.get(to, {})), t)
         env = blend(merged(config, "environment", times.get(frm, {})),
                     merged(config, "environment", times.get(to, {})), t)
-        sun_e = float(sun.get("energy", 1.25))
-        amb_e = float(env.get("ambient_energy", 1.0))
+        sun_e = float(sun.get("energy", 1.25)) * luma(sun.get("colour"), "#ffffff")
+        # See the module docstring: the sky share is dead weight under Compatibility.
+        amb_e = float(env.get("ambient_energy", 1.0)) * (
+            1.0 - float(env.get("ambient_sky_contribution", 0.55))) * luma(
+                env.get("ambient_colour"), "#9fb4c6")
         expo = float(env.get("exposure", 1.0))
         dark = is_dark(config, hour)
         rows.append((hour, sun_e * expo, amb_e * expo, dark))
@@ -137,8 +163,27 @@ def main() -> int:
         darkest[0], darkest[1], darkest[2], darkest[1] + darkest[2]))
     print("  brightest lit hour %.1f: direct %.3f + ambient %.3f = %.3f" % (
         brightest[0], brightest[1], brightest[2], brightest[1] + brightest[2]))
-    print("  darkest/brightest = %.3f  (1.000 would mean night asks for exactly as much light as day)" % (
+    print("  darkest/brightest = %.3f  (1.000 would mean the darkest moment of the night asks"
+          " for exactly as much light as the brightest moment of the day)" % (
         (darkest[1] + darkest[2]) / (brightest[1] + brightest[2])))
+    print()
+    # The comparison the owner is actually making, and the one no probe ever made:
+    # the keyframe called "night" against the keyframe called "day", each on its own hour.
+    named = {name: h for h, name in kfs}
+    if "night" in named and "day" in named:
+        for label in ("night", "day"):
+            hour = named[label]
+            row = [r for r in rows if abs(r[0] - hour) < 1e-6]
+            if row:
+                print("  hour %4.1f (the '%s' keyframe, no blend): direct %.3f + ambient %.3f = %.3f" % (
+                    hour, label, row[0][1], row[0][2], row[0][1] + row[0][2]))
+        night_row = [r for r in rows if abs(r[0] - named["night"]) < 1e-6][0]
+        day_row = [r for r in rows if abs(r[0] - named["day"]) < 1e-6][0]
+        ratio = (night_row[1] + night_row[2]) / (day_row[1] + day_row[2])
+        print("  night / day = %.3f -- %s" % (
+            ratio,
+            "night asks for MORE light than day" if ratio > 1.0
+            else "night asks for %.0f%% of day's light" % (ratio * 100.0)))
     return 0
 
 
