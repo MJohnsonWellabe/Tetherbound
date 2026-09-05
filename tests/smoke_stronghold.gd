@@ -16,8 +16,9 @@ extends SceneTree
 ##   * every one of the five has a floor the player actually stands on
 ##   * they are traversable IN ORDER: pushed from each space toward the next,
 ##     the player arrives — including the corner into the Legendary Chamber
-##   * the one door is shut before the elite falls and open after, so the
-##     Warden Arena is genuinely behind the gauntlet
+##   * OP-0905-14: EVERY chamber's exit is shut before its own trainer falls
+##     and open after, so each fight in the gauntlet is genuinely mandatory,
+##     not just the Warden's
 ##   * each gauntlet trainer is placed in its own space and is challengeable
 ##   * the recovery point is a real creature bed and really revives and heals
 ##   * the Legendary Chamber holds the machine massing, at the board's scale,
@@ -59,7 +60,22 @@ const ENTRANCE_PUSH_FRAMES := 950
 ## thing in the item that is not tunable, and a test that read the order out of
 ## the same config the builder reads could not catch it being reordered.
 const ROUTE := ["outer_works", "courtyard", "tether_approach", "warden_arena", "legendary_chamber"]
-const ELITE_FLAG := "defeated_stronghold_elite"
+const STRONGHOLD_CONFIG := "res://data/config/stronghold.json"
+
+## OP-0905-14 (owner playtest 2026-09-05): "in the stronghold, you should have
+## to fight every npc to advance to the next." Hard-coded HERE on purpose,
+## same reasoning as `ROUTE` above: this is not a tunable, it is the whole
+## point of the directive, so a test that only read "whichever hops the live
+## config happens to gate" could pass just as happily on a config that quietly
+## lost a shutter as on one that has all four -- which is exactly the gap that
+## let three of these four gates go unbuilt in the first place. Keyed by
+## "from>to" against `_gate_flag()`'s own two-argument shape.
+const EXPECTED_GATES := {
+	"outer_works>courtyard": "defeated_stronghold_patrol",
+	"courtyard>tether_approach": "defeated_stronghold_courtyard",
+	"tether_approach>warden_arena": "defeated_stronghold_elite",
+	"warden_arena>legendary_chamber": "defeated_warden",
+}
 
 var _failures: Array[String] = []
 
@@ -91,8 +107,10 @@ func _run() -> void:
 		print("stronghold FAIL: no Game autoload with a progression store")
 		quit(1)
 		return
-	# A fresh stronghold, whatever a save left behind.
-	progression.call("set_flag", ELITE_FLAG, false)
+	# A fresh stronghold, whatever a save left behind — every shutter down,
+	# not just the elite's (OP-0905-14: every chamber's exit is gated now).
+	for flag in _all_gate_flags():
+		progression.call("set_flag", flag, false)
 
 	print("stronghold stands at %.0f, %.1f, %.0f" % [
 		hold.global_position.x, hold.global_position.y, hold.global_position.z])
@@ -372,34 +390,48 @@ func _the_machine_stands_in_the_legendary_chamber(hold: Node3D) -> void:
 
 
 ## The route, walked. From each space's centre, push toward the next and check
-## the player gets there — the doorway between them is either cut or it is not.
-## The shutter into the Warden Arena is checked BOTH ways round on the way past.
+## the player gets there — the doorway between them is either cut or it is
+## not. OP-0905-14: EVERY hop is checked against `EXPECTED_GATES`, its own
+## hard-coded flag (empty for none) — same reasoning `ROUTE` above already
+## gives: the four-chamber gauntlet is the directive itself, not a tunable, so
+## a check that only read "whichever hops the live config happens to gate"
+## could pass just as happily on a config that quietly lost a shutter as on
+## the real one. `_gate_flag()` still does the live reading (so a hop's
+## ACTUAL behaviour, not just its config entry, is what gets pushed against),
+## but every mismatch against `EXPECTED_GATES` fails loudly before that push
+## ever happens.
 func _the_route_is_traversable_in_order(player: CharacterBody3D, hold: Node3D,
 		progression: RefCounted) -> void:
-	if bool(hold.call("door_is_open", ELITE_FLAG)):
-		_fail("the way into the Warden Arena was already open before the elite fell")
+	for flag in _all_gate_flags():
+		if bool(hold.call("door_is_open", flag)):
+			_fail("the shutter gated by '%s' was already open before it was earned" % flag)
 
 	for i in ROUTE.size() - 1:
 		var from_id: String = ROUTE[i]
 		var to_id: String = ROUTE[i + 1]
 		var from: Vector3 = hold.call("marker", from_id)
 		var to: Vector3 = hold.call("marker", to_id)
-		var gated := to_id == "warden_arena"
+		var flag := _gate_flag(from_id, to_id)
+		var expected := str(EXPECTED_GATES.get("%s>%s" % [from_id, to_id], ""))
+		if flag != expected:
+			_fail("expected '%s -> %s' to carry gated_by_flag '%s', found '%s'" % [
+				from_id, to_id, expected, flag])
+		var gated := flag != ""
 
 		if gated:
-			# Shut: pushing at it must NOT reach the arena.
+			# Shut: pushing at it must NOT reach the next chamber.
 			await _put_down(player, from + Vector3(0.0, 1.2, 0.0))
 			await _push(player, (to - from).normalized())
 			var blocked := player.global_position.distance_to(to)
 			print("  %s -> %s with the shutter down: ended %.1fm short" % [from_id, to_id, blocked])
 			if blocked < 6.0:
-				_fail("the player reached the Warden Arena with the shutter still down")
-			# Beaten, the way beating the elite beats it.
-			progression.call("set_flag", ELITE_FLAG)
+				_fail("the player reached '%s' with the shutter still down" % to_id)
+			# Beaten, the way beating that chamber's own trainer beats it.
+			progression.call("set_flag", flag)
 			for f in 8:
 				await process_frame
-			if not bool(hold.call("door_is_open", ELITE_FLAG)):
-				_fail("the shutter did not lift once the elite's defeat flag was set")
+			if not bool(hold.call("door_is_open", flag)):
+				_fail("the shutter did not lift once '%s' was set" % flag)
 
 		await _put_down(player, from + Vector3(0.0, 1.2, 0.0))
 		await _push(player, (to - from).normalized())
@@ -487,3 +519,37 @@ func _progression_config() -> Dictionary:
 		return {}
 	var parsed: Variant = JSON.parse_string(file.get_as_text())
 	return parsed as Dictionary if parsed is Dictionary else {}
+
+
+## OP-0905-14: read the gate straight from the same config the builder reads,
+## rather than hard-coding which hops are gated — a test that assumed only
+## the Warden's door carried a flag is exactly the gap that let the other
+## three shutters go unbuilt in the first place.
+func _stronghold_config() -> Dictionary:
+	var file := FileAccess.open(STRONGHOLD_CONFIG, FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	return parsed as Dictionary if parsed is Dictionary else {}
+
+
+## The flag gating the passage FROM `from_id` TO `to_id`, or "" if that hop
+## carries no `gated_by_flag` at all.
+func _gate_flag(from_id: String, to_id: String) -> String:
+	for entry: Variant in _stronghold_config().get("passages", []):
+		var passage: Dictionary = entry as Dictionary
+		if str(passage.get("from", "")) == from_id and str(passage.get("to", "")) == to_id:
+			return str(passage.get("gated_by_flag", ""))
+	return ""
+
+
+## Every flag any passage in the config is gated by, so `_run()` can put the
+## stronghold back into its fully-shut starting state regardless of how many
+## shutters exist.
+func _all_gate_flags() -> Array[String]:
+	var flags: Array[String] = []
+	for entry: Variant in _stronghold_config().get("passages", []):
+		var flag := str((entry as Dictionary).get("gated_by_flag", ""))
+		if flag != "" and not flags.has(flag):
+			flags.append(flag)
+	return flags

@@ -275,19 +275,21 @@
       "_role": "Sec8: tether mechanism, freeing sequence, voluntary join, release ceremony. Built AROUND the machine. World box x[218.0,246.0] z[-197.4,-169.4] -- directly behind the castle's own plinth (z[-154.4,-134.4]), 15m clear of it."
     }
   ],
-  "_comment_passages": "One spine, in route order, no branches. `gated_by_flag` is the complex's ONE door: a Tether blast shutter across the way into the Warden Arena that lifts when the elite in front of it has been beaten. Deliberately NOT an `item_gate.gd` gate -- that class is a carried KEY operating the world, `SF34`'s three Sigils are the carried keys that open the Hall APPROACH from outside, and nothing in here hands out a key. 'You have beaten the thing standing in the doorway' is already a fact the SB9 flag store remembers across saves, which is the same call `burrow_warrens.gd` made for its vault door and for the same reason.",
+  "_comment_passages": "One spine, in route order, no branches. OP-0905-14 (owner playtest 2026-09-05): 'in the stronghold, you should have to fight every npc to advance to the next' -- so `gated_by_flag` is no longer the complex's ONE door, it is EVERY chamber's exit: a Tether blast shutter across the way OUT of a chamber that lifts only once the trainer standing in that chamber has been beaten. Deliberately NOT an `item_gate.gd` gate -- that class is a carried KEY operating the world, `SF34`'s three Sigils are the carried keys that open the Hall APPROACH from outside, and nothing in here hands out a key. 'You have beaten the thing standing in this room' is already a fact the SB9 flag store remembers across saves, which is the same call `burrow_warrens.gd` made for its vault door and for the same reason. Each flag matches the trainer occupying the chamber the passage LEAVES (`_place_gauntlet()`'s own placement, mirrored in `data/config/bands/band5_stronghold_approach/trainers.json`'s `defeat_flag` rows): the patrol holds outer_works, the courtyard officer holds courtyard, the elite holds tether_approach, the Warden holds warden_arena. Backtracking is never blocked -- a chamber's own shutter is the ONE you just walked through, already open because its flag is already set, so the route only ever locks forward.",
   "passages": [
     {
       "from": "outer_works",
       "to": "courtyard",
       "width": 4.0,
-      "height": 4.5
+      "height": 4.5,
+      "gated_by_flag": "defeated_stronghold_patrol"
     },
     {
       "from": "courtyard",
       "to": "tether_approach",
       "width": 3.6,
-      "height": 4.0
+      "height": 4.0,
+      "gated_by_flag": "defeated_stronghold_courtyard"
     },
     {
       "from": "tether_approach",
@@ -300,7 +302,8 @@
       "from": "warden_arena",
       "to": "legendary_chamber",
       "width": 5.0,
-      "height": 6.0
+      "height": 6.0,
+      "gated_by_flag": "defeated_warden"
     }
   ],
   "_comment_trim": "Team Tether hardware bolted onto old stone. `band` is a horizontal girder run along one wall of a chamber at `y` above the floor; `pillar` is an upright brace at an `offset` from the chamber centre. Oxblood by default (`site.tether_trim`, palette.json's reserved faction colour); `lit: true` swaps to the reserved teal with emission, which marks a run that is CARRYING something.",

@@ -1122,9 +1122,11 @@ func _build_passages() -> void:
 			_build_door(flag, centre, along_x, width, height)
 
 
-## The complex's one door: a Tether blast shutter filling a passage, gone for
-## good once `flag` is set. No prompt, no UI, no key -- a mechanism, the same
-## way the warrens' vault door and SC14's bridge are.
+## A Tether blast shutter filling a passage, gone for good once `flag` is set.
+## OP-0905-14: every chamber's exit carries one of these now, not just the way
+## into the Warden Arena, so the player fights every NPC in the complex to
+## advance. No prompt, no UI, no key -- a mechanism, the same way the warrens'
+## vault door and SC14's bridge are.
 func _build_door(flag: String, centre: Vector3, along_x: bool, width: float, height: float) -> void:
 	var size := Vector3(0.7, height, width) if along_x else Vector3(width, height, 0.7)
 	var colour := Color(str(_config.get("site", {}).get("door_colour", "#3a3f3c")))
@@ -4394,8 +4396,10 @@ func _sync_doors() -> void:
 			mesh.visible = not open
 
 
-## Whether the way into the Warden Arena is open. False before the elite in
-## front of it has been beaten.
+## Whether the shutter carrying `flag` is open (raised). With `flag` blank,
+## whether ANY shutter in the complex is still down. False for a given flag
+## until the trainer occupying the chamber that shutter guards has been
+## beaten.
 func door_is_open(flag: String = "") -> bool:
 	if _doors.is_empty():
 		return true
