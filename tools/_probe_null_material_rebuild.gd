@@ -43,14 +43,20 @@ func _run() -> void:
 	body.set_script(CREATURE_BODY)
 	root.add_child(body)
 	body.call("setup", species_id, false)
-	if timing == "next-frame":
-		await process_frame
+	# Let `_ready()` build the body -- `@onready` fields are not set until the
+	# tree has run its first frame, and a body in the real game is always
+	# dressed AFTER it has been built.
+	await process_frame
 	print("PROBE START: %s x%.2f (%s): set_alpha then apply_size_multiplier" % [species_id, multiplier, timing])
 	body.call("set_alpha", true)
 	var held: Array[Material] = []
 	if timing == "hold-materials":
 		_hold(body.call("model_pivot") as Node, held)
 		print("holding %d materials across the rebuild" % held.size())
+	if timing == "next-frame":
+		# A frame between dressing and resizing lets the rendering server
+		# process the dressed instances before their art is freed.
+		await process_frame
 	body.call("apply_size_multiplier", multiplier)
 	# A second rebuild through the same path, now from a body that has already
 	# been dressed as an alpha (rim duplicates, aura) -- the state the guardian
