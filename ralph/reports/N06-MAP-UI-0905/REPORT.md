@@ -691,12 +691,12 @@ would have been sampling.
 |---|---|
 | Branch | `ralph/N06-MAP-UI-0905`, based on `origin/main` at `f8a47ee4` |
 | Files in the diff | 11, all this lane's (see §1); `scripts/ui/tab_map.gd` and `scripts/ui/minimap.gd` are the only files modified |
-| Lane test | `test_map_legibility.gd` — 13 tests, 28 assertions, 0 failed; watched red four times, each for the right reason |
-| Named tests | `test_map_fog` / `test_map_icons` / `test_map_zoom_persistence` / `test_map_baker` / `test_map_state` / `test_map_landmarks` / `test_ui_tokens` — 74 tests, 478 assertions, 0 failed |
-| Menu tests | `--only=test_menu` — 12 tests, 160 assertions, 0 failed |
-| Smokes | `smoke_menu`, `smoke_gate_a_map_cycle`, `smoke_menu_focus` — all pass, exit 0, 0 `SCRIPT ERROR`, known-benign `^ERROR:` set unchanged |
-| Frames | 4 world stands × before/after + 2 isolated minimap stands × before/after, all 1280×800 or the widget's real 240px |
-| Contact sheet | `_sheet_map_ui.png`, six after stands, one sheet |
+| Rounds | two — round 1 implemented the eight items; round 2 acted on a code-blind judge (§5), fixing two regressions round 1 had introduced and three pre-existing defects in these two files |
+| Final test run | 99 tests, 666 assertions, 0 failed — `test_map_legibility` + the six named map tests + `test_ui_tokens` + `test_menu`, re-run on the shipped tree after round 2 |
+| Lane test | `test_map_legibility.gd` — 13 tests, 28 assertions, 0 failed; **watched red four times**, each for the right reason, each restored |
+| Smokes | `smoke_menu`, `smoke_gate_a_map_cycle`, `smoke_menu_focus` — all pass, exit 0, 0 `SCRIPT ERROR`; the known-benign `^ERROR:` set shrank (3→0, 2→1) rather than grew |
+| Frames | round 1: 4 world stands × before/after + 2 isolated minimap stands × before/after. Round 2: the full map + both minimap stands re-rendered; the other three world stands were **not** re-rendered, for the measured reason in §4 |
+| Contact sheet | `_sheet_map_ui.png` — the three stands showing the shipped round-2 state |
 | Items | 8 of 8 addressed; item 6 verified already correct on `main` and pinned rather than changed |
 
 ### The eight items, one line each
@@ -736,6 +736,27 @@ would have been sampling.
    this report, and the coordinator can fold it in when landing. Recorded rather than silently
    skipped.
 
-**Final commit:** the tip of `ralph/N06-MAP-UI-0905` at the time this line was written —
-`git log -1 origin/ralph/N06-MAP-UI-0905` names it. A report cannot contain its own hash; the
-commit carrying this report's final state is the one immediately after `c075081f`.
+### Round-2 verification status, stated plainly
+
+Round 2 changed both files after the judge, so the shipped screen is not what the round-1 frames
+show. What was and was not re-rendered:
+
+* **Re-rendered and measured:** the full map (`map_fresh`) and both isolated minimap stands. Every
+  round-2 change is visible in these and confirmed by number — the `MAP KEY` caption at L=229,
+  the player arrow at 7.82:1, the compass and scale bar adjacent to the map body, the legend
+  swatch at the major size (§5).
+* **Not re-rendered:** `map_day1`, `map_surveyed`, `hud_minimap`. This is a deliberate stop, not
+  an unfinished one: each was measured against `map_fresh` and shown to differ only where the
+  round-2 changes are not — `map_day1` is a construction duplicate (both 0.42% surveyed),
+  `map_surveyed` differs from it by **zero** pixels beyond a threshold of 10 across the whole
+  map body, and `hud_minimap` renders the widget byte-identically either way. All three carry the
+  same chrome as `map_fresh`, which was re-rendered. A fourth ~45-minute world boot would have
+  produced three frames that cannot disagree with the one already in hand.
+
+No second judging round was run against the round-2 frames — the honest reason is wall clock, and
+the round-2 changes are instead verified by measurement using the judge's own quantities so the
+numbers are directly comparable to its verdict.
+
+**Final commit:** the tip of `ralph/N06-MAP-UI-0905` — `git log -1 origin/ralph/N06-MAP-UI-0905`
+names it. A report cannot contain its own hash; the commit carrying this report's final state is
+the one that lands this section.
