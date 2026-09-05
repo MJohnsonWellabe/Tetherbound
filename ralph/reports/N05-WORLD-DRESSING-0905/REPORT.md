@@ -1,7 +1,7 @@
 # N05-WORLD-DRESSING-0905 — the fence behind Halda, Bram's bar wall, the courtyard's stand-down, the chamber's light
 
 Branch `ralph/N05-WORLD-DRESSING-0905`, from `origin/main` at `f8a47ee4`. Final code commit
-**`__FINAL_COMMIT__`**; the commits after it carry this report, one contact sheet, the blind
+**`da51813b`**; the commits after it carry this report, one contact sheet, the blind
 verdict and the `docs/CURRENT_STATE.md` rows, and change no behaviour. No pull request opened.
 
 Sources: W08-DIALOGUE-CAMERA-0904 (fence, inn) and W06-FINALE-0904 (courtyard trainer, chamber).
@@ -109,7 +109,14 @@ solid enters the door lane, stands where Bram does, or stands in front of the co
 middle where the player talks to him.
 
 Frames: `_sheet_dressing.png` row 3 (29.0% of the frame changed at the across-the-bar
-stand). Judged blind in `JUDGE_DRESSING.md` (§4).
+stand). Judged blind in `JUDGE_DRESSING.md` (§4); its four inn findings (sign text 1.8× its
+board, periodic bottles, a plank through the stock shelf, no lamp in frame) were fixed in
+data afterwards and confirmed in one further render of that stand (`shots/n05_after3`, not
+committed, read by eye): the lettering sits inside the board and reads dark on wood, each
+shelf carries a different count at uneven pitch with one bottle on its side, the west
+shelves end clear of the stock shelf, and a candle stands on the counter end. Not
+re-judged — the coordinator's 15:58 instruction was to converge, and this is stated as an
+eye-read rather than a verdict.
 
 ### 2.3 The courtyard gauntlet trainer after the world changes (W06 finding)
 
@@ -314,12 +321,29 @@ names (per the brief: one round, focused, no re-litigating the rest of the room)
   garrison stands down, the fortress does not visibly react" beyond the missing trainer.
   That is W06-FINALE's unlanded withdrawal (braziers, camp, lamps), not this lane's.
 - **Chamber sheet** (`_sheet_chamber.png`: W06's two chamber stands, the creature, the
-  Warden Arena): verdict in `JUDGE_CHAMBER.md`. __JUDGE_CHAMBER_SUMMARY__
+  Warden Arena): verdict in `JUDGE_CHAMBER.md`. The judge identified B as "a
+  lighting/dressing pass applied in B" and ruled point by point; the brief asked for
+  exactly what changed and what did not, so here it is in the judge's own numbers:
+
+  | defect | verdict |
+  |---|---|
+  | **cyan light-bars** | **Row 1 "B is much better, and it is the only place in the sheet where the fix is convincing"**: the 38 px luma-220 slabs become 5–6 px strips under a housing that "reads as intentional mounted lighting". Row 2's ceiling diagonal likewise (7,301 → 1,273 cyan px). **Not fixed:** the floor conduits (row 2's floor strip and stub, row 3's stub, all three row-4 strips) are "a recolour, not a fix" — luma 218 → 166, still unmounted, still ending in mid-air; the girder housing "renders at exactly RGB (0,0,0) … it is not dark hardware, it is a hole"; the line still ends in a square cut. The nine 222-luma cage bars around the creature are "the brightest object in either frame" and read as debug draws too — those are `stronghold_climax.gd`'s (W06's file), unchanged and not this lane's. |
+  | **contact shadows** | **Tie, both fail:** "Neither column has a contact shadow anywhere." Floor under the creature is equal to or brighter than beside it in both columns (B lifted the ground it stands on); the machine base meets the floor with a bright rim and no occlusion. The two shadowed spots are in the scene (`tools/_probe_legendary_chamber.gd` lists them, `shadow true`) and produced no readable shadow: the creature's own shadowless `ContainmentLight` (W06's file, 2.34 at 2 m) floods the floor under it, and the floor mesh is at the omni cap. **Not achieved.** |
+  | **value / single-key** | Fill reaches "the near floor, the creature and the machine base, and does not reach the walls or the ceiling at all" (row 2 deltas: floor +8.0, machine base +8.1, torso +9.2, walls +2.0 / 0.0 / −0.2). Dead-black (luma<20 and featureless) 6.3% → 3.6% (row 2), 5.7% → 4.1% (row 3), 2.4% → 2.4% (row 1). **A second hue family is established:** teal share of saturated pixels 32→17%, 26→13%, 47→25% (rows 1–3), warm olive 32→50%, 37→63%, 17→43%. The chamber sits inside the key art's own night-panel budget in both columns; the Warden Arena (row 4, luma<5 25–29%) is the outlier and got no fill — its floor went 22.6 → 19.0 because the conduits dimmed. **Partly achieved (floor, machine, creature); walls not.** |
+  | **wall slabs / black gaps** | **Row 2 "B is clearly better, and this is the single most convincing fix in the sheet"**: the 34 × 330 px slot at x 102–136 (mean luma 9.1, 69% under 5) is continuous masonry in B (21.3, 8%) — that is the PointyTower pier. Row 1: two 3 px seams gone, but overlapping slabs whose courses do not meet remain in both. **Rows 3 and 4 not fixed**: full-height slots at row 3 x 1186–1201 and row 4 x 336–352 / 896–916 render at absolute 0 in both columns and got slightly darker in B. By position those are the oxblood `trim` **pillars** (0.7 m, full height, at chamber offsets ±12/±10) — the same `_tether_material()` as the girder housing the judge called "a hole". The oxblood hardware's documented emission value-floor (0.55, `_stone_shader_material` does pass it) is not reaching the screen; that is a material finding for the whole Hall, outside what this lane could close in one round. |
+  | **creature legibility** | Row 2: the creature is identifiable in both (the antler crown, Δ17–18 vs the wall); torso vs wall Δ4.5 → **Δ10.1**, torso vs floor Δ8.4 → Δ3.6 — "B trades one for the other". Row 3: the stand named for the creature shows no creature in either column (the machine occludes it) — a staging defect in W06's climax file, not lighting. **Partly achieved.** |
+
+  Bar questions, scoped: A **no for both, "B is materially closer"**; B **no for both**.
+  The judge's fixable-now list (propagate the girder treatment to the floor conduits with a
+  bracket at each end, a non-black housing material, a common floor line and lower emission
+  for the cage bars, extend the fill into the arena, contact darkening as a decal) is carried
+  into §6 as routed work rather than attempted here, per the coordinator's instruction to
+  converge.
 
 ## 5. Tests and smokes
 
 All commands from the repo root with `export PATH=$HOME/godot-bin:$PATH`, on the tree at
-`__FINAL_COMMIT__` unless stated.
+`da51813b` unless stated.
 
 | command | result |
 |---|---|
@@ -344,6 +368,17 @@ on `main`); the set did not grow.
   quarter-disc is enclosed in a square pier a little larger than it.
 - **Warm light in a Team Tether room** is the Hall's own fire language (the courtyard fill
   is the same colour); no teal was added anywhere and none removed from the machine.
+- **What the chamber round did NOT close, in the judge's words (§4):** the floor conduits
+  are recoloured, not mounted; no contact shadow registers under the machine or the creature;
+  the fill does not reach the walls; the oxblood hardware (girder housings and the trim
+  pillars) renders as absolute black, which is the remaining "black slab" in rows 3 and 4.
+  Next owner of `stronghold.gd`: give the floor conduits the `_lit_girder` treatment with a
+  bracket at each end (the pattern is written and judged); find out why `_tether_material`'s
+  0.55 emission floor does not reach the screen through `hall_stone.gdshader` (the shader
+  reads `emission_energy`, and it is set); add contact darkening as a floor decal under the
+  machine and the `legendary_stand` mark rather than relying on a shadowed spot that a
+  shadowless 2 m omni washes out; extend the fill into the Warden Arena. The cage bars and
+  the creature stand are `stronghold_climax.gd` (W06's).
 - **W06 and W08 are not landed.** When they land, W06's `smoke_gate_e_finale.gd` and
   `stronghold_climax.gd` staging (the creature inside the machine) will change what the
   chamber stands show; the lights here were aimed at the `legendary_stand` mark the
@@ -360,6 +395,11 @@ on `main`); the set did not grow.
 ## 7. Commits
 
 ```
+ab49a00a N05: chamber blind verdict recorded; the row is partly fixed, not fixed
+da51813b N05 inn: sign fits its board, uneven bottle stock, west shelves clear the stock shelf, a candle in frame; dressing verdict
+de2f4946 N05: chamber sheet from the spot-fill re-render; the wall ceiling recorded
+4ef379e3 N05: chamber contact sheet (interim; replaced by the spot-fill re-render)
+7d02d1c7 N05 report: chamber numbers and the per-mesh omni cap finding
 614b9151 N05 report: frames, piers, render log, routed sidecars
 b42b730e N05: the chamber fill is a spot (omnis are capped per mesh); uid sidecars; dressing contact sheet
 86c13af0 N05: fence join numbers from the corrected probe; traversal smoke result
@@ -367,5 +407,7 @@ b42b730e N05: the chamber fill is a spot (omnis are capped per mesh); uid sideca
 ff70d6df N05 capture: a Warden Arena stand
 998bc89e N05: log each tower pier; trim the capture to the judged stands
 6932968f N05 dressing: fence panels meet and sit on the ground, the inn's bar wall, the chamber's light-bars, piers, fill and shadows
-<the report/sheet/verdict commits after these carry no behaviour>
 ```
+
+Code, data and tests last change at `da51813b`; the commits above it carry the report, the
+two contact sheets, the two verdicts and the `docs/CURRENT_STATE.md` rows.
