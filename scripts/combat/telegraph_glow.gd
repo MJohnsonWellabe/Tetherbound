@@ -22,11 +22,21 @@ const PULSE_PERIOD := 0.32
 ## cut off mid-pulse the instant the strike lands — an abrupt disappearance
 ## reads as a rendering glitch, not as "the warning is over."
 const FADE_TAIL := 0.12
+## N07-VFX-POLISH (D87): the ring is a mark on the ground at the foe's feet,
+## and it is depth-tested again (see `_material`), so it needs to sit a hair
+## above the terrain it marks or the terrain wins the depth test along the
+## whole ring. `global_position` is the creature's origin, which
+## `creature_body.gd::_fit` puts at the feet.
+const GROUND_LIFT := 0.08
 
 var _life: float = 0.0
 var _duration: float = 0.55
 var _radius: float = 1.1
-var _colour: Color = Color("#ff5a3c")
+## Follows combat.json `telegraph.colour`. N07-VFX-POLISH (D87): magenta -- a
+## colour the meadow and the reward layer do not use -- not the red the
+## reserved Team Tether oxblood band sits in, and not the reward gold a blind
+## round read as "a dropped coin".
+var _colour: Color = Color("#ff40e6")
 
 var _ring: MeshInstance3D = null
 var _ring_mesh: ImmediateMesh = null
@@ -40,7 +50,12 @@ static func begin(parent: Node, at: Vector3, colour: Color, radius: float, durat
 	glow._radius = radius
 	glow._duration = duration
 	parent.add_child(glow)
-	glow.global_position = at
+	# Same guard `vfx_burst.gd::spawn` carries: a unit fixture hosts the ring
+	# under a bare Node3D with no tree, where `global_position` has no meaning.
+	if glow.is_inside_tree():
+		glow.global_position = at + Vector3.UP * GROUND_LIFT
+	else:
+		glow.position = at + Vector3.UP * GROUND_LIFT
 	return glow
 
 
@@ -83,7 +98,20 @@ func _material() -> StandardMaterial3D:
 	# `telegraph_started` is actually reaching `_on_enemy_telegraph`
 	# (combat_manager.gd) at all for this creature/attack, before touching
 	# this file's own drawing code again.
-	material.no_depth_test = true
+	#
+	# N07-VFX-POLISH (D87), 2026-09-05: RE-RENDERED with the ring drawing, and
+	# `true` turned out to be the defect W09's blind judge reported as "a dull
+	# oxblood torus across the creature's chest" on the FRIENDLY creature. The
+	# ring is at the foe's feet; the foe stands beyond the ally from the combat
+	# camera; without a depth test the ring is painted straight through the
+	# ally's back (before-frames `05-telegraph` / `06-telegraph-behind`,
+	# `ralph/reports/N07-VFX-POLISH-0905/`). A mark on the ground is exactly
+	# the case `alpha_aura.gd` and W09's round-3 level-up rings keep depth
+	# testing for: the far half passes behind the creature it belongs to, and
+	# the near half does not draw over a body standing in front. `GROUND_LIFT`
+	# keeps the terrain from winning the test. The `impact_flash.gd` argument
+	# (a burst BETWEEN two intersecting bodies) never applied to a ground ring.
+	material.no_depth_test = false
 	return material
 
 
