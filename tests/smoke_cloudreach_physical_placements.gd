@@ -27,7 +27,7 @@ func _run() -> void:
 	for spec: Dictionary in data["landing_objectives"] + data["ground_triggers"]:
 		_check(world, spec["id"], RULES.vec(spec["position"]))
 	for spec: Dictionary in chapter["pickups"]:
-		_check(world, spec["id"], RULES.vec(data["pickup_overrides"][spec["id"]]))
+		_check(world, spec["id"], RULES.vec(data["pickup_overrides"].get(spec["id"], spec["position"])))
 	for spec: Dictionary in chapter["camping_contract"]["camps"]:
 		_check(world, spec["id"], RULES.vec(spec["position"]))
 	for spec: Dictionary in RULES.npc_specs(chapter, RULES.read(PHYSICAL.NPC_PATH), game.progression, data.get("npc_position_overrides", {})):
