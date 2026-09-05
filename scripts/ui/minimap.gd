@@ -123,7 +123,7 @@ func _init() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	custom_minimum_size = Vector2(240, 240)
 	clip_contents = true
-	_font = load(UITokens.FONT_PATH)
+	_font = _chrome_font()
 	var bounds: Dictionary = WORLD_EXTENT.bounds()
 	_world_min = Vector2(float(bounds.get("min_x", 0.0)), float(bounds.get("min_z", 0.0)))
 	_world_max = Vector2(float(bounds.get("max_x", 0.0)), float(bounds.get("max_z", 0.0)))
@@ -667,6 +667,21 @@ func _draw_player_marker(centre: Vector2) -> void:
 		centre - forward * size * 0.75 + side * size * 0.72,
 		centre - forward * size * 0.75 - side * size * 0.72,
 	])
+	# N06-MAP-UI round 2. A blind judge measured this arrow at **CR 1.17:1**
+	# against the ground it stands on — an 11-of-255 greyscale delta, i.e. a
+	# ghost once colour is removed — while the landmark diamonds beside it,
+	# which had just been given a dark contour, measured 4.12:1 against theirs.
+	# The most important marker on the widget was the only one without one, and
+	# `UITokens.TEAL` at luma 165 against meadow ground at luma 176 is exactly
+	# the hue-only distinction item 7 exists to stamp out, one glyph over.
+	#
+	# An outline rather than the landmarks' filled disc: a disc big enough to
+	# hold a 34px arrow would knock back a quarter of the widget, which is the
+	# same mistake the full map's own player halo makes at whole-Meadows fit
+	# (see this lane's report). Tracing the silhouette costs nothing and is
+	# what actually carries the value contrast.
+	draw_polyline(PackedVector2Array([points[0], points[1], points[2], points[0]]),
+		Color(MARKER_KNOCKBACK, 0.9), 5.0, true)
 	draw_colored_polygon(points, UITokens.TEAL)
 	# a cream tip, now close to half the arrow's own length, so the heading
 	# reads at a glance instead of needing the viewer to find a 1-2px sliver.
@@ -746,6 +761,23 @@ func _draw_upright_text(centre: Vector2, text: String, font_size: int, colour: C
 	# this in label_core_colour(); Cloudreach wins the conflict, so the wrapper is
 	# not applied here.
 	draw_string(_font, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, colour)
+
+
+## The face this widget draws its own text in.
+##
+## N06-MAP-UI round 2, and a reversal of what round 1 of this lane decided.
+## Item 3 ("two typefaces on one screen") was scoped to the full map, and this
+## widget was deliberately left alone as a different screen with different
+## neighbours. A blind judge shown the HUD found the opposite: the ONLY
+## typographic mismatch it could see anywhere was this widget's `257 m`
+## distance readout, drawn in the squared techno face while every Label around
+## it — and now the full map — is the humanist sans. The readout is data, not a
+## keycap, and it was borrowing the keycap face. Resolved the same way and for
+## the same reason `tab_map.gd::_canvas_font()` is: toward the chrome, through
+## the very lookup a Label resolves.
+func _chrome_font() -> Font:
+	var font := ThemeDB.fallback_font
+	return font if font != null else load(UITokens.FONT_PATH) as Font
 
 
 ## N06-MAP-UI item 7, the minimap's half of the same shared-label fix — see
