@@ -391,13 +391,65 @@ func _sync_pickups_and_camps() -> void:
 		var rest := REST.new()
 		rest.name = id
 		add_child(rest)
-		rest.build({"at": [at.x, at.z], "height": at.y, "label": "Rest at " + id.replace("_", " "), "craft": true, "radius": 3.2})
+		var rest_spec := camp_rest_spec(spec, at)
+		rest.build(rest_spec)
+		# rest_point.gd's authored-data API is shared with the Meadows props
+		# clusters, whose parent is at the world origin. Cloudreach camps are
+		# mounted below this runtime at their own world position, so correct the
+		# child bed's global transform after the shared build call; otherwise its
+		# world-coordinate `at` would be applied twice. The decorative trainer
+		# bed remains a local camp prop, deliberately separate from this pad.
+		_place_camp_creature_bed(rest, spec, at)
 		var bed_path := "res://assets/props/quaternius_fantasy/Bed_Twin1.gltf"
 		if ResourceLoader.exists(bed_path):
 			var bed_scene := load(bed_path) as PackedScene
 			if bed_scene != null:
-				rest.add_child(bed_scene.instantiate())
+				var trainer_bed := bed_scene.instantiate() as Node3D
+				if trainer_bed != null:
+					# Keep the installed human/trainer bed as camp dressing, but
+					# give it its own side of the fire so it cannot overlap the
+					# creature pad or either interaction prompt.
+					trainer_bed.position = Vector3(-1.8, 0.0, -1.2)
+					rest.add_child(trainer_bed)
 		_placements[id] = rest
+
+
+## Build the common authored-rest payload. Creature recovery is opt-in from
+## chapter data so a future camp that offers only player rest/craft cannot gain
+## a hidden party-healing bed merely by reusing this runtime path.
+static func camp_rest_spec(camp: Dictionary, resolved: Vector3) -> Dictionary:
+	var id := str(camp.get("id", "camp"))
+	var payload := {
+		"at": [resolved.x, resolved.z],
+		"height": resolved.y,
+		"label": "Rest at " + id.replace("_", " "),
+		"craft": true,
+		"radius": 3.2,
+	}
+	var services: Variant = camp.get("services", [])
+	var bed: Variant = camp.get("creature_bed", {})
+	if services is Array and (services as Array).has("creature_recovery") \
+			and bed is Dictionary and not (bed as Dictionary).is_empty():
+		payload["creature_bed"] = (bed as Dictionary).duplicate(true)
+	return payload
+
+
+func _place_camp_creature_bed(rest: Node3D, camp: Dictionary, resolved: Vector3) -> void:
+	var services: Variant = camp.get("services", [])
+	var raw: Variant = camp.get("creature_bed", {})
+	if not services is Array or not (services as Array).has("creature_recovery") \
+			or not raw is Dictionary or (raw as Dictionary).is_empty():
+		return
+	var bed_at: Variant = (raw as Dictionary).get("at", [])
+	if not bed_at is Array or (bed_at as Array).size() < 2:
+		return
+	var bed_world := _resolve(str(camp.get("id", "camp")) + "_creature_bed",
+		Vector3(float((bed_at as Array)[0]), resolved.y, float((bed_at as Array)[1])))
+	if bed_world == Vector3.INF:
+		return
+	var bed := rest.get_node_or_null(^"CampCreatureBed") as Node3D
+	if bed != null:
+		bed.global_position = bed_world
 
 
 func _sync_npcs() -> void:

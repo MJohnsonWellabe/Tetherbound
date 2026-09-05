@@ -671,11 +671,11 @@
     "satiety_policy": "reuse_existing_slow_nonlethal_drain",
     "purpose": "Safe recovery and preparation points spaced across long vertical routes; no starvation death or extreme drain.",
     "camps": [
-      {"id": "galefoot_waycamp", "region_id": "gate_lower_cliffs", "position": [-280.0, 180.0, 520.0], "requires_flag": "", "services": ["save", "rest", "cook", "creature_recovery"], "safe_radius_m": 28.0},
-      {"id": "west_causeway_refuge", "region_id": "broken_causeways", "position": [-760.0, 400.0, 2050.0], "requires_flag": "causeway_survivors_reconnected", "services": ["save", "rest", "cook", "creature_recovery"], "safe_radius_m": 22.0},
-      {"id": "windscar_flight_aerie_camp", "region_id": "windscar_ravine", "position": [388.0, 610.0, 3258.0], "requires_flag": "windscar_aerie_prepared", "services": ["save", "rest", "cook", "creature_recovery", "fly_rest"], "safe_radius_m": 24.0},
-      {"id": "cliffhold_commons", "region_id": "upper_cloudreach", "position": [-340.0, 830.0, 3970.0], "requires_flag": "cloudreach_upper_route_unlocked", "services": ["save", "rest", "cook", "creature_recovery", "trade"], "safe_radius_m": 32.0},
-      {"id": "summit_bivouac", "region_id": "summit_final_stronghold", "position": [-520.0, 1080.0, 5300.0], "requires_flag": "cloudreach_upper_anchors_disabled", "services": ["save", "rest", "cook", "creature_recovery"], "safe_radius_m": 20.0}
+      {"id": "galefoot_waycamp", "region_id": "gate_lower_cliffs", "position": [-280.0, 180.0, 520.0], "requires_flag": "", "services": ["save", "rest", "cook", "creature_recovery"], "safe_radius_m": 28.0, "creature_bed": {"at": [-276.5, 523.0], "yaw_deg": 35.0, "bed_index": -21}},
+      {"id": "west_causeway_refuge", "region_id": "broken_causeways", "position": [-760.0, 400.0, 2050.0], "requires_flag": "causeway_survivors_reconnected", "services": ["save", "rest", "cook", "creature_recovery"], "safe_radius_m": 22.0, "creature_bed": {"at": [-756.5, 2053.0], "yaw_deg": 125.0, "bed_index": -22}},
+      {"id": "windscar_flight_aerie_camp", "region_id": "windscar_ravine", "position": [388.0, 610.0, 3258.0], "requires_flag": "windscar_aerie_prepared", "services": ["save", "rest", "cook", "creature_recovery", "fly_rest"], "safe_radius_m": 24.0, "creature_bed": {"at": [391.5, 3261.0], "yaw_deg": 215.0, "bed_index": -23}},
+      {"id": "cliffhold_commons", "region_id": "upper_cloudreach", "position": [-340.0, 830.0, 3970.0], "requires_flag": "cloudreach_upper_route_unlocked", "services": ["save", "rest", "cook", "creature_recovery", "trade"], "safe_radius_m": 32.0, "creature_bed": {"at": [-336.5, 3973.0], "yaw_deg": 305.0, "bed_index": -24}},
+      {"id": "summit_bivouac", "region_id": "summit_final_stronghold", "position": [-520.0, 1080.0, 5300.0], "requires_flag": "cloudreach_upper_anchors_disabled", "services": ["save", "rest", "cook", "creature_recovery"], "safe_radius_m": 20.0, "creature_bed": {"at": [-516.5, 5303.0], "yaw_deg": 65.0, "bed_index": -25}}
     ]
   },
   "map_navigation": {
