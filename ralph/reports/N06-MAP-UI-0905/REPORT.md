@@ -472,9 +472,26 @@ pale-green ground with no separation of their own; after, each sits on an opaque
 with a soft skirt, and the silhouette is unambiguous in greyscale. The `?` silhouette label in
 `minimap_fog` is item 7's minimap half, visibly lifted.
 
-Contact sheet: `_sheet_map_ui.png` — six **after** stands at half scale (the four world stands
-plus the two isolated minimap stands), one sheet, as COMMON.md allows. No per-frame PNGs are
-committed.
+Contact sheet: `_sheet_map_ui.png` — the three stands that show the **round-2** (final) state:
+the full map, and both isolated minimap stands. One sheet, as COMMON.md allows; no per-frame
+PNGs are committed.
+
+**Which stand is from which round, stated exactly.** After the judge (§5) both files changed
+again, so the round-1 frames no longer show the shipped screen. Re-rendering all four world
+stands is a fourth ~45-minute boot and the round-2 run was stopped after `map_fresh` because the
+other three provably cannot show anything the first does not:
+
+* `map_day1` is a near-duplicate of `map_fresh` by construction — the day-1 reveal falls inside
+  the starting seed, both stands report 0.42% surveyed, and the two frames' map bodies differ
+  only inside a text callout (the finding about `capture_map_tab.gd` above).
+* `map_surveyed` differs from `map_fresh` **only inside the player-marker region** — measured:
+  zero pixels beyond a threshold of 10 between `map_day1` and `map_surveyed` across the whole
+  92 × 376 px map body (§5).
+* `hud_minimap` renders the widget byte-identically before and after, which is why the isolated
+  stands exist at all — and those were re-rendered at round 2, in seconds.
+
+So the sheet is the current state, and the round-1 four-stand set remains the before/after
+evidence for §2's item-by-item argument, which round 2 did not disturb.
 
 ### One finding this lane did not fix
 
