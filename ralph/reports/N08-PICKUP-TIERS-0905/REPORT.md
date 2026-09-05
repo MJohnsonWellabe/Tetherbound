@@ -226,13 +226,28 @@ inspection, not by a third blind pass.
   **a bush growing through it** — W18's own finding, unchanged, because the site validator
   cannot see non-colliding scatter (`vegetation.gd`, not this lane). No sheet is committed
   for them (one sheet per judged round; there was no judged round).
-- **`smoke_playground` on the round-3 loader has not run on an idle box.** It passed on the
-  round-1 loader (`smoke: OK`, 101 pickups, the `ERROR:` set unchanged). On the round-2
-  loader it ran beside a software-GL render and failed the chop-swing timing check
-  (`impact at 0.86 of 0.625s (want ~0.60)`; the earlier, lighter-loaded run printed 0.78
-  against the same 0.80 ceiling) — a load-sensitive gate-A check that touches nothing this
-  lane changed, but it is a red run and is recorded as one. A chained idle rerun was
-  armed; its log was not in hand when this report was written.
+- **`smoke_playground`'s chop-swing timing check flakes on this box on `main` and on
+  this branch alike, and the branch does not move it.** The check
+  (`tests/smoke_playground.gd`, "the gather resolved N through the swing, well past the
+  0.60 impact pose") fails above 0.80. Every run, same box, headless, one at a time
+  unless noted:
+
+  | loader | runs (fraction of the swing) | verdict |
+  |---|---|---|
+  | `main` (`f8a47ee4`) | 0.71 · **0.81** | 1 of 2 red |
+  | this branch, round 1 | 0.78 (beside a render) | green |
+  | this branch, round 2 | **0.86** (beside a render) | red |
+  | this branch, round 3 | **0.84** · **0.81** (spin off) · 0.76 | 2 of 3 red |
+
+  A headless world frame is tens of milliseconds, so the fraction moves in steps that
+  size; `main` itself lands on both sides of the ceiling. Everything else in every run
+  is green: `placed 101 band pickups`, the `ERROR:` set is `Parameter "material" is
+  null` alone, zero `SCRIPT ERROR`, and every other gate-A step prints its expected
+  line. The check is the pre-existing flake CI's `RETRIES: 3` hides, not a regression
+  from this loader; it is recorded here because a red run is a red run.
+- **Unit tests on the idle box, final loader:** `--only=test_band_pickups.gd,
+  test_pickup_glow.gd,test_item_cache_pickup.gd` — **56 tests, 26,063 assertions, 0
+  failed.**
 - **No CI run has verified the branch.** Every commit up to the report carries
   `[skip ci]` as a checkpoint; the commit that records this report carries no marker, so
   the push that lands it is the first CI run, and its result is not in this report. The
