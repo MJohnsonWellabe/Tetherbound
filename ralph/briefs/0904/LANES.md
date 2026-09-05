@@ -65,6 +65,17 @@ Owner noticed the session count didn't match my reports. Root cause: 5 lanes (W0
 Separately, 5 lanes had genuinely gone stale 4+ hours with NO replacement running: W02-HARNESS-CONTEXT, W03-S08-FREEZE, W16-LOFT-BED, W20-SMALL-FIXES, W21-HARNESS-FIGHTS — all hit their 5h limit hours ago (reset already passed) and were sitting untouched. Given the owner flagged this directly, resumed all 5 at once (departing from the normal 1-2/sweep trickle, since the owner surfaced the actual backlog size).
 main also moved: PR #42 merged — **W00-ICONS is now on main**. PR #45 (consolidated: icons+contracts+progression+portraits+companion+bands2-5) is open, still blocked only on the pre-existing finale regression. PR #44 is Codex's own draft PR for Cloudreach, unrelated to this batch, explicitly not ready to merge.
 
+## 14:44 UTC: first 3 of 13 follow-up lanes confirmed done
+Verified against real REPORT.md tails (not self-summaries) before archiving:
+**N01-SAVE-FORMAT** — all 5 tests fixed, full suite green; also found and reported (without
+fixing, correctly outside ownership) a second instance of the exact same false-pass bug class
+in `tests/test_shiny.gd` (5 more silently-passing tests). **N03-CREATURE-BODY** — both bugs
+fixed (CL-G7 teardown + play_rest signed-roll), 2007 tests pass, honestly scoped (didn't touch
+`character_model.gd`'s different teardown path, didn't reopen the -45° tuning question).
+**N11-TERRAIN-BAKE** — bake verified fresh, then proactively merged forward against the
+just-landed PR #52 and re-verified on the new base without being asked to. All three archived.
+10 lanes remain running (N02, N04, N05, N06, N07, N08, N09, N10, N12, N13).
+
 ## 14:30 UTC: PR #52 merged — 20/24 original lanes now on main
 **PR #52 merged** (`4acd59ff`): eight lanes landed in one batch — W02, W03, W05, W07, W08, W11,
 W14, W16. Combined with earlier landings, **20 of the 24 original lanes are now on `main`.**
