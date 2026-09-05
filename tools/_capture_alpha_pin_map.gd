@@ -134,9 +134,15 @@ func _run() -> void:
 	# Hold the body at the stand point for the whole wait. A one-shot assignment
 	# cannot tell "the node never ticked" apart from "something moved the body
 	# back", and those want different fixes.
-	var until := Time.get_ticks_msec() + 6000
+	# Hold until the node's own _process pins it, counted in FRAMES rather than
+	# wall time. Wall time is the wrong unit here and cost a run: the engine
+	# clamps its idle delta, so under software GL a frame credits about 0.115 s
+	# of delta however long it actually took. Six seconds of wall clock was four
+	# frames, 0.46 s of delta — a hair under `check_interval_s` — and the pin
+	# that never appeared looked exactly like a broken feature. Measured with a
+	# sentinel: `_elapsed` moved -1000.0 -> -999.0771 across 8 frames.
 	var frames := 0
-	while Time.get_ticks_msec() < until:
+	while frames < 60 and int(map_state.call("alpha_pin_count")) == 0:
 		player.global_position = STAND
 		await process_frame
 		frames += 1
