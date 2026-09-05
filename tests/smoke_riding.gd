@@ -29,6 +29,8 @@ extends SceneTree
 ##   8. the interact press dismounts, and the trainer is visible and grounded
 ##   9. despawning the mount mid-ride does not strand the player
 ##  10. mounting is refused while a fight is running
+##  11. a ride ended by a NON-combat modal (an armed build ghost, here) resumes
+##      following once the modal clears, so the "Ride" offer comes back
 ##
 ## 3, 5 and 6 are OP-0904-3, the owner's own three riding items from the shipped
 ## build; the saddle rule that is his third is `tests/smoke_riding_saddle.gd`,
@@ -104,6 +106,7 @@ func _run() -> void:
 	await _the_stick_moves_the_creature()
 	await _the_mount_sprints()
 	await _the_mount_jumps()
+	await _a_build_ghost_does_not_strand_the_mount()
 	await _dismounts_and_gives_the_body_back()
 	await _despawning_the_mount_does_not_strand_the_player()
 	# R8.5 before the mid-fight check on purpose: that check deliberately leaves
@@ -488,6 +491,77 @@ func _the_mount_jumps() -> void:
 		_fail("the jump ended the ride")
 	print("jump: the mount rose %.2f m (asked %.2f) and the rider rose %.2f with it"
 		% [rise, asked, rider_rise])
+
+
+## `riding_controller.gd::dismount()`'s own claim: `set_following(true)` is
+## skipped ONLY when combat took the mount, because the combat manager is
+## about to drive the same body -- every OTHER modal `_riding_allowed()` folds
+## in (a conversation, the naming prompt, the starter picker, a screen fade,
+## and an armed build ghost, `sequence_director.gd::_refresh_lockout()`'s own
+## `building` case) is not that, and the mount should be walking beside the
+## player again the moment the modal clears rather than left `_following ==
+## false` forever with nothing left to notice.
+##
+## An armed build ghost is the cheapest of that set to drive from a test:
+## `Game.pending_build` is a single autoload string, no dialogue box or fade
+## timer needed, and `_refresh_lockout()` reads it every frame exactly the way
+## it reads a real ghost armed from `build_menu.gd::_pick()`.
+func _a_build_ghost_does_not_strand_the_mount() -> void:
+	if not bool(_riding.call("is_mounted")):
+		_fail("not mounted; the build-ghost interruption cannot be tested")
+		return
+	var body: Node3D = _riding.call("mount_body")
+	var game := root.get_node_or_null(^"/root/Game")
+	if game == null:
+		_fail("no Game autoload; the build-ghost interruption cannot be tested")
+		return
+
+	game.set("pending_build", "test_ghost_piece")
+	for i in 10:
+		await physics_frame
+	if bool(_riding.call("is_mounted")):
+		_fail("still mounted with a build ghost armed; the modal lockout did not end the ride")
+		game.set("pending_build", "")
+		return
+	if not is_instance_valid(body):
+		_fail("the mount was freed by the build-ghost interruption; nothing left to check")
+		game.set("pending_build", "")
+		return
+
+	# The modal clears. On the OLD, buggy code this changes nothing: dismount()
+	# gated `set_following(true)` on the FULL `_riding_allowed()`, which the
+	# ghost had already made false at the moment dismount() ran a few frames
+	# back, so `_following` latched false right there and nothing here was ever
+	# listening to notice the ghost went away. On the fixed code `dismount()`
+	# already decided to resume following the instant the ghost interrupted the
+	# ride (narrowly gated on combat, which this is not) -- clearing the ghost
+	# just lets the world (and this test) catch up to what the mount is already
+	# doing.
+	game.set("pending_build", "")
+	for i in 30:
+		await physics_frame
+
+	if not bool(body.call("is_following")):
+		_fail("the mount never resumed following after a non-combat modal (build ghost) ended its ride; it is stranded exactly as riding_controller.gd's own dismount() comment warns against")
+		return
+	if body.collision_layer != 0:
+		_fail("the mount is following again but its collision layer (%d) never went back to 0; it would wall the trainer in" % body.collision_layer)
+
+	# And the offer is back: walk up to it and ask.
+	await _stand_beside_the_mount()
+	var offer: Dictionary = _riding.call("interaction_offer", _player.global_position)
+	if offer.is_empty():
+		_fail("standing next to the mount after a build-ghost interruption offers no prompt at all")
+	elif not str(offer.get("label", "")).begins_with("Ride"):
+		_fail("standing next to the mount after a build-ghost interruption offers '%s', not a Ride prompt"
+			% str(offer.get("label")))
+	else:
+		print("build-ghost interruption: the mount resumed following and 'Ride' is offered again")
+
+	# Leave the world exactly as `_dismounts_and_gives_the_body_back()` expects
+	# to find it: mounted again, ready for the ordinary dismount check next.
+	if not bool(_riding.call("mount")):
+		_fail("could not remount after the build-ghost interruption check")
 
 
 ## Peak horizontal speed the mount reaches with `held` pressed alongside a
