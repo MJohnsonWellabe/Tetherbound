@@ -325,6 +325,6 @@ Branch `ralph/W16-LOFT-BED-0904`. Three commits:
   two blind-judged numbers (`lying_lift_for` 0.080 m, `BED_LIE_REACH` 1.40)
 
 This report and the `CURRENT_STATE.md` rows sit in a docs commit on top of `60714b24`;
-the branch tip is recorded in the push line below. Every number and every verdict in this
+the branch tip is `f565ffc9`. Every number and every verdict in this
 report was produced on the tree at `60714b24`.
-No pull request opened, per the lane rules.
+Pushed to `origin/ralph/W16-LOFT-BED-0904`. No pull request opened, per the lane rules.
