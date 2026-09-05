@@ -101,6 +101,11 @@ Warden's pre-fight speech is 1547 characters; budget 350`, `the stronghold's spo
 5343 characters; budget 2000` — and green after. It measures the **merged dialogue table**,
 not the file's source text, so no assertion can pass by grepping.
 
+`^ERROR:` across all four smoke logs of that run is the known-benign set and did not grow:
+`ERROR: Parameter "material" is null.` (18, off the alpha creature builds — the count is
+known to vary run to run and is not the bar) and one `3 resources still in use at exit`.
+No `SCRIPT ERROR` in any of the four.
+
 **What the smokes actually exercise** (not source greps):
 
 - `smoke_stronghold` measures the bound body against the machine mesh's own measured void:
