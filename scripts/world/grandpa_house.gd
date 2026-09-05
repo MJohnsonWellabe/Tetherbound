@@ -85,12 +85,33 @@ const DOOR_H := 2.3
 ## The loft covers the west half; the east half is open to the ceiling so the
 ## stair has headroom and the ground floor gets height over the door.
 const LOFT_W := 4.6
+## Loft slab thickness, and the height of its WALKING SURFACE. Named, because
+## the difference between `FLOOR_H` (the slab's underside, and the height the
+## flight used to stop at) and `LOFT_TOP` (the floor a player actually stands
+## on) is the whole of CL-G12 — see `_build_stairs()`.
+const LOFT_SLAB_T := 0.25
+const LOFT_TOP := FLOOR_H + LOFT_SLAB_T
+## How far south of the stair opening the loft rail begins. The player capsule
+## is 0.4 m in radius (`scenes/player/player.tscn`), so a body walking off the
+## top tread sweeps that far either side of its own centre; anything standing
+## on the loft floor inside that sweep is something the exit lane collides
+## with. One radius plus a hand's margin.
+const LOFT_RAIL_CLEAR_OF_STAIR := 0.5
 
 ## The flight, as named numbers rather than as locals inside the loop that
 ## lays the treads. PT-03's handrail has to sit ON the pitch line those
 ## numbers describe, and a rail that re-derives the pitch by eye is a rail
 ## parallel to nothing in particular.
-const STAIR_STEPS := 10
+## CL-G12. Eleven, not ten. The flight used to climb `STAIR_STEPS` risers of
+## `FLOOR_H / STAIR_STEPS` — i.e. it stopped at the loft slab's UNDERSIDE and
+## left a 0.25 m unmarked lip between the top tread and the floor it serves.
+## Ten risers to `LOFT_TOP` instead would be 0.345 m each, five millimetres
+## inside `player_controller.gd`'s 0.35 m `STEP_HEIGHT` budget, which is no
+## budget at all; eleven is 0.314 m, shallower than the 0.32 m the flight
+## already had. The run is unchanged, so the flight's footprint — which
+## `smoke_opening.gd` measures and `_build_furniture()` keeps clear — is
+## exactly where it was.
+const STAIR_STEPS := 11
 const STAIR_RUN := 3.4
 const STAIR_WIDTH := 1.2
 ## Handrail height above the nosing line, metres. Picked so the raked rail
@@ -120,7 +141,20 @@ var _sleep_prompt: Node3D = null
 
 
 func marker(name_key: String) -> Vector3:
-	return _markers.get(name_key, global_position)
+	return _markers.get(name_key, _anchor(Vector3.ZERO))
+
+
+## `to_global`, but survives being asked off-tree.
+##
+## `Node3D.get_global_transform()` asserts `is_inside_tree()`, so a house built
+## outside a live SceneTree — which is the only kind `tests/run_tests.gd` can
+## build, since `Engine.get_main_loop()` is null for that runner's whole life
+## (see `tests/test_party_seam.gd`'s note) — filled every marker with an engine
+## error and a zero transform. The house is never rotated or scaled by its
+## placer (`playground_world.gd::_build_settlement` sets `position` only), so
+## the off-tree answer is exact rather than approximate.
+func _anchor(local: Vector3) -> Vector3:
+	return to_global(local) if is_inside_tree() else position + local
 
 
 ## The world root calls this once terrain is solid; everything is positioned
@@ -136,18 +170,24 @@ func build(camera_rig: Node, player: Node3D) -> void:
 	_build_interior_area()
 	_build_door_gate()
 
-	_markers["bed"] = to_global(Vector3(-INNER_W * 0.5 + 1.3, FLOOR_H + 0.55, -INNER_D * 0.5 + 1.6))
-	_markers["grandpa"] = to_global(Vector3(-2.4, 0.0, 1.2))
+	_markers["bed"] = _anchor(Vector3(-INNER_W * 0.5 + 1.3, FLOOR_H + 0.55, -INNER_D * 0.5 + 1.6))
+	_markers["grandpa"] = _anchor(Vector3(-2.4, 0.0, 1.2))
 	# The kit grid centres the doorway on z=0 (it was 0.6 in the hand-built
 	# shell); everything that walks to the door reads it from here.
-	_markers["door"] = to_global(Vector3(INNER_W * 0.5 + WALL_T + 1.2, 0.0, 0.0))
+	_markers["door"] = _anchor(Vector3(INNER_W * 0.5 + WALL_T + 1.2, 0.0, 0.0))
 	# Far enough out that the starter row (which stands `forward` metres from
 	# this point TOWARD the door) clears the east wall with room to walk around.
-	_markers["outside"] = to_global(Vector3(INNER_W * 0.5 + WALL_T + 7.5, 0.0, 1.0))
+	_markers["outside"] = _anchor(Vector3(INNER_W * 0.5 + WALL_T + 7.5, 0.0, 1.0))
 	# The stair line, for anything that has to NAVIGATE the house rather than
 	# teleport through it — the smoke test walks these as waypoints.
-	_markers["stairs_top"] = to_global(Vector3(0.5, FLOOR_H, -INNER_D * 0.5 + 0.6))
-	_markers["stairs_bottom"] = to_global(Vector3(4.0, 0.12, -INNER_D * 0.5 + 0.6))
+	# CL-G12: ON the loft slab, not on the top tread. This marker named
+	# (0.5, FLOOR_H, ...) — a point three tenths of a metre east of the loft
+	# edge and a quarter-metre below the floor — so anything that "walked to
+	# the stair head" arrived at the exact spot a real body wedges on, and
+	# stopped there satisfied.
+	_markers["stairs_top"] = _anchor(Vector3(-INNER_W * 0.5 + LOFT_W - 0.7, LOFT_TOP,
+		-INNER_D * 0.5 + 0.6))
+	_markers["stairs_bottom"] = _anchor(Vector3(4.0, 0.12, -INNER_D * 0.5 + 0.6))
 
 
 ## The exterior: one kit prefab, same composer, same recipes file, same
@@ -261,18 +301,48 @@ func _build_shell() -> void:
 		Vector3(wall_mid_x, DOOR_H + (wall_h - DOOR_H) * 0.5, 0))
 
 	# Loft floor over the west half; timber edge beam where it ends — south of
-	# the stair opening only. The beam's top sits proud of the loft floor, and
-	# a CharacterBody3D cannot step UP a ledge: run it across the stair head
-	# and the loft is a cell. (Found by the smoke test, frozen at the top step.)
-	_box(Vector3(LOFT_W, 0.25, INNER_D),
-		Vector3(-half_w + LOFT_W * 0.5, FLOOR_H + 0.125, 0), COL_FLOOR)
+	# the stair opening only. An earlier cut ran the beam across the stair head
+	# and the loft became a cell (the smoke test found the player frozen at the
+	# top step), which was answered by SHORTENING it.
+	#
+	# CL-G12: shortening was half the answer. The beam's top still stood 0.15 m
+	# PROUD of the loft floor, so it was a lip lying across the one line a body
+	# walks to get off the stair — and `probe_loft_bed_climb.gd` measured
+	# exactly that, `_try_step_up`'s second gate (advance 0.25 m with the
+	# capsule raised 0.35 m) refusing against this box while the body sat
+	# wedged on the top tread. It is dropped here so its TOP is flush with the
+	# loft walking surface and its 0.4 m depth hangs BELOW the slab, which is
+	# where an edge beam belongs anyway: it now reads from the ground floor,
+	# where the loft edge is actually looked at, instead of tripping the storey
+	# above.
+	_box(Vector3(LOFT_W, LOFT_SLAB_T, INNER_D),
+		Vector3(-half_w + LOFT_W * 0.5, FLOOR_H + LOFT_SLAB_T * 0.5, 0), COL_FLOOR)
 	_box(Vector3(0.25, 0.4, 4.2),
-		Vector3(-half_w + LOFT_W, FLOOR_H + 0.2, 0.6), COL_TIMBER)
+		Vector3(-half_w + LOFT_W, LOFT_TOP - 0.2, 0.6), COL_TIMBER)
 	# Loft rail so the drop reads intentional — over the SOUTH stretch only.
 	# The first cut of this rail ran the whole loft edge and fenced the stairs
 	# off; the smoke test found the player pacing the loft forever.
-	_box(Vector3(0.12, 0.9, 4.2),
-		Vector3(-half_w + LOFT_W - 0.06, FLOOR_H + 0.25 + 0.45, 0.6), COL_TIMBER)
+	#
+	# Height derived rather than declared (CL-G12). `_build_stair_rail()`'s own
+	# comment records why it matters that the raked rail arrives within ~0.1 m
+	# of this cap — that near-match is what makes the two read as ONE rail
+	# turning a corner — and the raked rail's head lands at one rise plus
+	# `RAIL_ABOVE_NOSING` over the loft floor, whatever the flight's pitch is.
+	# It was a hardcoded 0.9 that happened to match a ten-tread flight stopping
+	# at `FLOOR_H`; written as the arithmetic it was always standing in for, it
+	# still matches now the flight climbs the last 0.25 m.
+	# ...and its north end stops clear of the stair opening for the same reason
+	# the beam was shortened: it is a 1.2 m wall standing ON the loft floor at
+	# the loft edge, and a body stepping off the top tread occupies its own
+	# centre plus a capsule radius, so a rail that reaches the stair's own
+	# south edge is a rail the exit lane runs into. It used to start at
+	# z = -1.5, exactly that edge.
+	var loft_rail_h := LOFT_TOP / float(STAIR_STEPS) + RAIL_ABOVE_NOSING
+	var rail_z0 := -INNER_D * 0.5 + 0.6 + STAIR_WIDTH * 0.5 + LOFT_RAIL_CLEAR_OF_STAIR
+	var rail_z1 := INNER_D * 0.5
+	_box(Vector3(0.12, loft_rail_h, rail_z1 - rail_z0),
+		Vector3(-half_w + LOFT_W - 0.06, LOFT_TOP + loft_rail_h * 0.5,
+			(rail_z0 + rail_z1) * 0.5), COL_TIMBER)
 
 	# Flat interior ceiling under the kit roof. Solid so neither the player
 	# nor the camera ends up inside the roof shell. COL_FLOOR, not tiles: a
@@ -287,8 +357,14 @@ func _build_shell() -> void:
 
 
 func _build_stairs() -> void:
-	# Straight run against the north wall, climbing westward to the loft edge.
-	var step_rise := FLOOR_H / float(STAIR_STEPS)
+	# Straight run against the north wall, climbing westward to the loft FLOOR
+	# — `LOFT_TOP`, not `FLOOR_H`. See CL-G12 on `STAIR_STEPS`: a flight that
+	# stops at the slab's underside is a flight that does not reach the storey
+	# it serves, and the 0.25 m left over was only ever crossable by
+	# `player_controller.gd::_try_step_up`, which the loft edge beam then
+	# denied (`probe_loft_bed_climb.gd` caught the body frozen on the top
+	# tread for 700 consecutive frames, `moved/30f=0.00m`).
+	var step_rise := LOFT_TOP / float(STAIR_STEPS)
 	var step_depth := STAIR_RUN / float(STAIR_STEPS)
 	var start_x := -INNER_W * 0.5 + LOFT_W + STAIR_RUN
 	var stair_z := -INNER_D * 0.5 + 0.6
@@ -347,7 +423,7 @@ func _build_stair_rail(start_x: float, stair_z: float, step_rise: float, step_de
 	# The head newel, standing on the loft where the loft rail ends. The
 	# vertical accent matters as much as the diagonal: it is what turns "the
 	# rail simply stops" into "the rail arrives somewhere".
-	var loft_top := FLOOR_H + 0.25
+	var loft_top := LOFT_TOP
 	var head_cap := head_y + 0.10
 	# Deeper in z than the foot newel so it reaches back to the loft rail's own
 	# north face: the rail line and the flight line are 0.11m apart, and a
@@ -457,7 +533,28 @@ func _bed_mattress_collider(at: Vector3) -> void:
 	var aabb := mesh.get_aabb()
 	var mattress_h := 0.3
 	var size := Vector3(aabb.size.x * FURNITURE_SCALE, mattress_h, aabb.size.z * FURNITURE_SCALE)
-	_collider(size, at + Vector3(0, mattress_h * 0.5, 0))
+	# W16-LOFT-BED: centred on the MESH, not on `at`.
+	#
+	# `BedTwin.obj`'s own AABB is not centred on its origin — it runs z −1.529
+	# … 2.730 in mesh space, a centre 0.601 off. `_furnish` draws the mesh at
+	# `at`, so the bed a player sees runs `at.z` −0.765 … +1.365 once
+	# `FURNITURE_SCALE` is applied — while this collider, built from
+	# `aabb.size` alone and hung on `at`, ran `at.z` ±1.065. The blocker was
+	# 0.30 m toward the headboard of the bed it stands for: a strip of open
+	# air past the footboard read as solid, and a strip of real mattress at
+	# the foot end read as empty. That is invisible until something tries to
+	# LIE on it — a code-blind judge, given a ladder of positions along the
+	# bed, put the body's head *inside the headboard* at the placement this
+	# collider's own footprint says is centred, and picked the rung 0.20 m
+	# toward the footboard instead. Correcting the collider is what lets the
+	# staging point (`sequence_director.gd::BED_LIE_REACH`) land there while
+	# the capsule still rests on real mattress.
+	#
+	# X and Z only. The height is deliberately NOT the mesh's (see above): a
+	# body resting on this box must land at mattress height, not headboard
+	# height, so the box keeps its base at `at.y` and its capped 0.3 m.
+	var centre := aabb.get_center() * FURNITURE_SCALE
+	_collider(size, at + Vector3(centre.x, mattress_h * 0.5, centre.z))
 
 
 ## Clutter, through the same loader with a friendlier name at the call site:

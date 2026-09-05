@@ -27,7 +27,11 @@ const PLAYER_SCENE := preload("res://scenes/player/player.tscn")
 
 const SETTLE_FRAMES := 40
 const CAMERA_SETTLE_FRAMES := 90
-const BED_LIE_REACH := 1.5
+## Read from the director rather than copied, so this tool cannot drift from
+## the beat it exists to photograph (it was a hardcoded 1.5 while the shipped
+## value moved to 1.20 — a capture tool that stages its own numbers is a tool
+## that photographs a game nobody plays).
+const DIRECTOR_PATH := "res://scripts/story/sequence_director.gd"
 
 
 func _init() -> void:
@@ -65,12 +69,19 @@ func _run() -> void:
 	# Exactly sequence_director.gd::_spawn_the_cast()'s own WAKE staging: the
 	# bed marker, offset toward the foot of the bed by BED_LIE_REACH, then the
 	# body posed lying.
+	var director_script := load(DIRECTOR_PATH) as GDScript
+	var reach := float(director_script.get_script_constant_map().get("BED_LIE_REACH", 1.2))
 	var bed: Vector3 = house.call("marker", "bed")
-	player.global_position = Vector3(bed.x, bed.y + 0.05, bed.z + BED_LIE_REACH)
+	player.global_position = Vector3(bed.x, bed.y + 0.05, bed.z + reach)
 	player.velocity = Vector3.ZERO
-	var model := player.get_node_or_null(^"Model")
+	var model := player.get_node_or_null(^"Model") as Node3D
 	if model != null and model.has_method("set_lying"):
 		model.call("set_lying", true)
+		# `sequence_director.gd::_refresh_lying_lift()` applies exactly this
+		# every frame the body is lying: the art pivots around the character's
+		# FEET, so an unlifted lying body is bisected by the surface it rests
+		# on. See that function for the measurement.
+		model.position.y = float(director_script.call("lying_lift_for", model))
 	else:
 		push_error("no trainer Model / set_lying — cannot reproduce the wake pose")
 
