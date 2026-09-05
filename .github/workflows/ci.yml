@@ -1874,6 +1874,78 @@ jobs:
   # six shard jobs by hand every time, and so a future job rename or an
   # accidentally-dropped `needs:` entry is a visible CI failure instead of a
   # silent gap in the fence.
+  # Stage B Wave 0 lane 0.F. docs/specs/MP_NET_HARNESS_CONTRACT.md §10: runs
+  # every tests/smoke_net_*.gd whose header declares `# peers: 2` through
+  # tools/net/run_net_smoke.sh -- two real, isolated headless Godot processes
+  # per smoke, coordinated over a TCP control channel
+  # (tests/helpers/net_harness.gd + tools/net/peer_runner.gd), each in its own
+  # XDG_DATA_HOME. `# peers: 3`/`# peers: 4` smokes are nightly/owner-kit only
+  # (`verify-multiplayer-wide`, not created by this lane) and do not run here.
+  # RETRIES: 1 -- a net smoke that only passes on retry is a finding, same
+  # rule AGENT_WORKFLOW.md §5 already holds every other smoke to.
+  verify-multiplayer-shard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ralph/
+            !/docs/
+            !/shots/
+            !/assets_raw/
+            !/archive/
+      - uses: ./.github/actions/setup-godot
+      - name: Discover peers:2 net smokes
+        id: discover
+        run: |
+          set -uo pipefail
+          files=""
+          for f in tests/smoke_net_*.gd; do
+            [ -f "$f" ] || continue
+            if head -5 "$f" | grep -qE '^#\s*peers:\s*2\s*$'; then
+              files="$files $f"
+            fi
+          done
+          echo "found:${files}"
+          echo "files=${files}" >> "$GITHUB_OUTPUT"
+      - name: Run net smokes
+        if: ${{ !cancelled() && steps.discover.outputs.files != '' }}
+        env:
+          RETRIES: 1
+        run: |
+          set -uo pipefail
+          status=0
+          for f in ${{ steps.discover.outputs.files }}; do
+            name="$(basename "$f" .gd)"
+            name="${name#smoke_net_}"
+            n=0
+            until [ "$n" -ge "$RETRIES" ]; do
+              n=$((n + 1))
+              echo "::group::smoke_net_${name}.gd attempt ${n}/${RETRIES}"
+              if tools/net/run_net_smoke.sh "$name" --out=/tmp/net-ci; then
+                echo "::endgroup::"
+                continue 2
+              fi
+              echo "::endgroup::"
+              echo "smoke_net_${name}.gd failed on attempt ${n}/${RETRIES}"
+            done
+            status=1
+          done
+          exit "$status"
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: net-smoke-runs
+          path: /tmp/net-ci/
+          retention-days: 14
+          if-no-files-found: ignore
+
   verify-solo-regression:
     runs-on: ubuntu-latest
     timeout-minutes: 5
