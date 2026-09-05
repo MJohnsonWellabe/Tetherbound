@@ -83,7 +83,7 @@ const ALPHA_MARKER_PREFIX := MAP_STATE.ALPHA_MARKER_PREFIX
 ## into the page chrome (1.16:1), so it is lifted onto the cool panel ramp far
 ## enough to be a surface, while staying fully opaque so `test_map_fog.gd`'s
 ## spec-§16 contract ("does not reveal everything automatically") is untouched.
-const FOG_UNDISCOVERED := Color(0.227, 0.314, 0.361, 1.0)
+const FOG_UNDISCOVERED := Color(0.02, 0.02, 0.03, 1.0)  ## Cloudreach's value: the owner's standing rule is that Cloudreach wins a conflict, and N06-MAP-UI's lighter blue-grey contested it.
 const FOG_DISCOVERED := Color(0.0, 0.0, 0.0, 0.0)
 
 ## N06-MAP-UI items 7 and 8, the minimap's half. The full map's own
@@ -742,7 +742,10 @@ func _draw_upright_text(centre: Vector2, text: String, font_size: int, colour: C
 	top_left.y = clampf(top_left.y, MARGIN, maxf(MARGIN, size.y - text_size.y - MARGIN))
 	var baseline := top_left + Vector2(0.0, text_size.y - _font.get_descent(font_size))
 	draw_string_outline(_font, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, UITokens.OUTLINE_SIZE, UITokens.OUTLINE)
-	draw_string(_font, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, label_core_colour(colour))
+	# Cloudreach's line: it draws the passed colour directly. N06-MAP-UI wrapped
+	# this in label_core_colour(); Cloudreach wins the conflict, so the wrapper is
+	# not applied here.
+	draw_string(_font, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, colour)
 
 
 ## N06-MAP-UI item 7, the minimap's half of the same shared-label fix — see
