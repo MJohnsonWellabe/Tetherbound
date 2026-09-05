@@ -1,6 +1,9 @@
 # W08-DIALOGUE-CAMERA-0904 — the conversation push-in
 
-Branch `ralph/W08-DIALOGUE-CAMERA-0904`. Final commit **`a05a0c9d`**.
+Branch `ralph/W08-DIALOGUE-CAMERA-0904`. Final code commit **`2d8de7e6`** — every
+test, smoke and frame below was produced on it; the commits after it are this
+report, the contact sheet and the `docs/CURRENT_STATE.md` row, and change no
+behaviour. Verify with `git log --oneline origin/main..ralph/W08-DIALOGUE-CAMERA-0904`.
 Finisher session: the feature commit `c5a381bd` was already on the branch; this
 session verified it, found it inert in the running game, fixed that and three
 further defects, and gathered the evidence.
@@ -275,5 +278,6 @@ Per FINISHER.md rule 4. Each was found by the blind judge on real frames.
 
 ---
 
-Branch `ralph/W08-DIALOGUE-CAMERA-0904`, final commit `a05a0c9d`.
+Branch `ralph/W08-DIALOGUE-CAMERA-0904`, final code commit `2d8de7e6`, followed
+only by the docs commits carrying this report and the status row.
 No pull request opened; the landing lane does that.
