@@ -229,8 +229,27 @@ arena pair, the siphon, the approach) and a ninth is dropped silently on exactly
 surfaces the "crushed blacks" verdict was about. Spots are budgeted separately and the
 room had none, so the fill is now a wide spot (85°, 2.4, range 36) thrown from the
 doorway wall across the room; that is the state committed and in `stronghold.json`'s own
-comment. The four chamber/arena stands were re-rendered on it (`shots/n05_after2`) —
-__AFTER2_NUMBERS__
+comment. The four chamber/arena stands were re-rendered on it (`shots/n05_after2`, the frames in
+`_sheet_chamber.png` and the ones the judge saw):
+
+| stand | blown pale-cyan px | pixels under luma 20 | mean luma |
+|---|---|---|---|
+| C-01 face-on | 15,659 → 3,419 | 31.1% → **29.4%** | 36.7 → 36.8 |
+| C-03 door corner | 11,865 → 6,033 | 44.8% → **39.4%** | 33.4 → 34.7 |
+| C-02 creature | 241 → 238 | 44.5% → **38.9%** | 30.3 → 34.7 |
+
+Creature crop vs surround, C-02: 42.0 vs 33.6 (+8.5) → **50.2 vs 39.3 (+10.9)**; creature
+crop C-03: 53.7 → 61.0; machine front C-01: 41.1 → 47.5. **The walls still barely moved**
+(C-01 right wall 25.2 → 26.0, C-03 far wall 25.2 → 25.5). So of the judges' four chamber
+findings this lane's data changes answer the light-bars and the wall slabs directly, give
+the machine and the creature a directional key and a shadow, and open the crushed blacks by
+five to six points of the frame — not the room's walls. **That is the recorded ceiling for
+this lane:** whatever keeps a 2.4-energy 85° spot from lifting a 30 m stone wall by more
+than a luma point on this renderer (the weathered `hall_stone.gdshader` face at grazing
+angles, a second per-object cap, or software GL itself) needs a look at the wall material
+or the room's ambient, which is `world_look.gd`'s global setting and not this lane's to
+reach into. Per the coordinator's 15:58 instruction no further render rounds were spent on
+it; the gap is stated here rather than closed.
 
 ## 3. Runtime validation and frames
 
