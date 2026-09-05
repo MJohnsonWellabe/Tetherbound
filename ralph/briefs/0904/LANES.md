@@ -65,6 +65,15 @@ Owner noticed the session count didn't match my reports. Root cause: 5 lanes (W0
 Separately, 5 lanes had genuinely gone stale 4+ hours with NO replacement running: W02-HARNESS-CONTEXT, W03-S08-FREEZE, W16-LOFT-BED, W20-SMALL-FIXES, W21-HARNESS-FIGHTS — all hit their 5h limit hours ago (reset already passed) and were sitting untouched. Given the owner flagged this directly, resumed all 5 at once (departing from the normal 1-2/sweep trickle, since the owner surfaced the actual backlog size).
 main also moved: PR #42 merged — **W00-ICONS is now on main**. PR #45 (consolidated: icons+contracts+progression+portraits+companion+bands2-5) is open, still blocked only on the pre-existing finale regression. PR #44 is Codex's own draft PR for Cloudreach, unrelated to this batch, explicitly not ready to merge.
 
+## 10:44 UTC: Big landing progress + two corrections
+**PR #48 MERGED — W01-ROUTE-STRIP and W22-BRIDGE-SIGNPOST are on `main`.** PR #49 (ledger/docs repair) and PR #50 (report cleanup for W01/W09) also merged. `main` is now at `590741fe`.
+
+**Correction: W05 is NOT actually done — reopened again.** The parallel W24-LANDING process re-tested W05's fix against CURRENT `main` (not the 5-hour-stale base W05 verified against) and found the walk-blocking entombment reappears at a *different* location (42.33, -66.54, fails at 116.1m) — possibly W05's collider change interacting with something landed since. W24 correctly refined its own initial flat rejection into a precise instruction rather than staying vague. My earlier archive of W05 was premature — I'd verified it against its own base, not the merge target. Unarchived W05 again and sent it the exact rebase-and-reverify instruction.
+
+**W20-SMALL-FIXES was blocked on two cross-lane routing questions** (a `vegetation.gd` additive outside its ownership, and item-recipe deletions overlapping W21's scope). Resolved both using this session's established pattern (document as a routed finding rather than touch out-of-ownership files; take the small in-ownership deletions itself with a clear note for W21 to confirm) and sent it to finish rather than stay stuck.
+
+**New backlog lane W16-LOFT-BED is running** — resumed independently (not by this coordinator), consistent with the parallel-process pattern already noted. Currently running: W06, W07, W08-finisher, W14, W16, W20 (fixing routing now), W05 (fixing rebase now) — above the 4-5 cap because of this external activity, not because this coordinator added them.
+
 ## Sweep 10:37Z
 W06-FINALE checked: reverting an experimental column change, re-running the finale smoke on head. Still genuinely active. No action needed.
 
