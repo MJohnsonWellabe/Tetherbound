@@ -168,7 +168,8 @@ each a real run, and only one of them freezes:
 | Start | Walker | Result |
 |---|---|---|
 | the loaded segment path (save → `load_game` → settle → walk) | legacy | **FROZEN** at (−164.12, −9.13, 4334.56), 747.6 m short |
-| the loaded segment path | live | arrives — 839.5 m, 0 held (segment run) |
+| the loaded segment path, identical probe and instrumentation | live | **arrives** — 11,185 walking frames, 0 held, 4.9 m short of the waypoint |
+| the loaded segment path, via the segment itself | live | **arrives** — 839.5 m, 10,907 walking frames, 0 held |
 | `(-152, -2.15, 4238)`, `probe_ironwood_approach.gd`'s own stance | legacy | arrives, 10,771 frames, 4.8 m short |
 | `(-152, -2.15, 4238)` | live | arrives, 11,014 frames, 4.9 m short |
 | `(-152, -4.53, 4238)`, the entry save's own settled height | legacy | arrives (6,000-frame budget, past the thicket at z 4674) |
@@ -186,6 +187,29 @@ result.** A teleported body is depenetrated to the nearest free space and walks
 away; only a body pressed into the trunk by its own motion is stuck. A walker
 that gets through terrain like this only when it happens to miss the trap is not
 a working walker, which is what §5's fix addresses.
+
+### 4.1 What the live walker does on the identical path
+
+The fourth arm of the matrix is the same probe, the same save, the same
+10,800-frame settle and the same deployed creature as the frozen run, with the
+walker as the **only** variable. It arrives. Read against the frozen run's log,
+column for column, through the thicket band (z 4325–4350):
+
+| | legacy walker | live walker |
+|---|---|---|
+| frames spent in the band | ran out the budget | 647 |
+| tree colliders contacted in the band | 1, head-on, terminally | **78** |
+| longest run of zero displacement | **unbounded** — 43,000 frames to the end of the budget | **39 frames** (0.65 s), at (−180.52, 4329.06) |
+| `_recovering` frames in the band | the mechanism does not exist in that version | **112** |
+| x range walked through the band | pinned at −164.11 | −188.62 … −175.70 |
+
+So the live walker is not avoiding the trees — it touches them **78 times** in
+the same 25 m of z, gets stopped repeatedly, and each time gets off again
+within two thirds of a second, with FENCE-CORNER's one-shot retreat
+(`_recovering`) firing for 112 of those frames. That is the fix working in
+exactly the terrain that produced CL-H14. The two tracks run 12–24 m apart
+through the band because their detour decisions diverge from the first obstacle
+onward, which is the same effect §4 measures at the start of the leg.
 
 ## 5. What fixed it, and when
 
@@ -225,6 +249,7 @@ at `(-152.0, -4.53, 4238.0)` with no drift warning.
 | 4 | `probe_s08_freeze_repro.gd --mode=loaded --deploy --settle=10800 --budget=45000 --stop-on-freeze --navigator=…legacy_navigator.gd` | **`arrived=false`, pinned at `(-164.12, -9.13, 4334.56)`, 747.6 m short — CL-H14 reproduced** |
 | 5 | same as 4 but `--mode=isolated --budget=12000` | `arrived=true walked=10771 froze_at=-1`, 4.8 m short |
 | 6 | same as 5 but `--start=-152.0,-4.532708,4238.0 --budget=6000` | no freeze; past the thicket, 397.1 m short at budget end (z 4674) |
+| 6b | as 4, but with the **live** walker (`--navigator` omitted) | **`arrived=true walked=11185 held=0 froze_at=-1`**, 4.9 m short — the controlled A/B's second arm, §4.1 |
 | 7 | `tools/gate_f/run_segment.sh --run-dir <run> <S08 steps 1–37>` — S08-22 **plus 12 steps** | **32 pass, 1 fail, 4 delegated, `complete: true`.** S08-22: *"walked 839.5 m to (-345, 5060) in 10907 walking frames (0 held)"*. The one failure is not this leg — §8 |
 | 8 | three runs of a candidate synthetic regression smoke (teleport to 14 m short, to 2.6 m short, and onto the pin) | all three **refused to pass**, correctly: the legacy walker escapes every teleported start. Reported in §4 and the file was removed rather than committed — §7 |
 
@@ -312,8 +337,17 @@ content / encounter-director lane, not this one.
 - Commits: `05a99435` (the differential probe and the frozen pre-fix walker),
   `033f6add` (the root cause, the ledger rows and this report), and the commit
   carrying this line.
-- Nothing outside the ownership list was touched. The 59 untracked
-  `assets/**/*.png.import` files in the working tree are Godot's own import
-  cache from running the engine here; they were left uncommitted deliberately.
+- Nothing outside the ownership list was touched. 58 files are left untracked in
+  the working tree, deliberately, and none of them are this lane's:
+  **51** are `.import`/`.uid` artefacts Godot wrote for *other lanes'* assets and
+  scripts when this session ran `--import` (regenerated on any import, and the
+  repo already tracks 432 `.png.import` and 969 `.gd.uid`, so the omissions are
+  those lanes' to make good), and **7** are source images under `assets/props/`
+  and `assets/environment/team_tether/` that were in the checkout before this
+  session started (timestamps predate the first command run here) and belong to
+  the pickup/saddle asset work landed in `9c14e5a7`. Committing another lane's
+  un-reviewed assets onto this branch is exactly what the ownership rule is for,
+  so this is flagged for the coordinator instead. The `.uid` files for this
+  lane's own two scripts **are** committed.
 - Acceptance: **S08-22 arrives** (row 7, 839.5 m, 0 held, plus 12 steps past
   it); the root cause is §3; both ledger rows are rewritten.
