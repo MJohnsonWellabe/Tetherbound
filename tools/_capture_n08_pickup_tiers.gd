@@ -253,9 +253,21 @@ func _shoot(stand: Dictionary) -> void:
 	var right := Vector3(-toward.z, 0.0, toward.x)
 	var target := subject + right * AIM_SIDE_M
 	var stand_at := target - toward * distance
-	stand_at.y = float(_world.call("ground_height_at", stand_at.x, stand_at.z)) + 0.1
+	var ground_at_stand := float(_world.call("ground_height_at", stand_at.x, stand_at.z))
+	if is_nan(ground_at_stand):
+		_failures.append("%s: no ground under the stand at %s" % [name, str(stand_at)])
+		return
+	stand_at.y = ground_at_stand + 0.1
+	# A 5 km jump outruns Terrain3D's camera-following collision (the rig is
+	# what it follows, and the rig lerps): the body fell through unloaded
+	# ground and the world's fall guard put it back in band 1, so the first
+	# pass photographed band-1 grass for the band-4 stands. The body's own
+	# physics is off for the whole shoot (it never needs to move itself) and
+	# the rig is snapped to the stand so the terrain streams where the lens is.
+	_player.set_physics_process(false)
 	_player.global_position = stand_at
 	_player.velocity = Vector3.ZERO
+	_rig.global_position = stand_at + Vector3.UP * 1.6
 	var to := target - stand_at
 	_rig.set("yaw", atan2(-to.x, -to.z))
 	var pitch := -atan2(maxf(stand_at.y + 1.4 - target.y, 0.0), maxf(distance, 0.01)) * 0.5
@@ -266,6 +278,7 @@ func _shoot(stand: Dictionary) -> void:
 	# clears its own ground, and record the pitch used.
 	for attempt in 4:
 		_rig.set("pitch", pitch)
+		_player.global_position = stand_at
 		for i in POSE_PHYSICS_FRAMES:
 			await physics_frame
 		for i in POSE_DRAW_FRAMES:
@@ -300,8 +313,11 @@ func _shoot(stand: Dictionary) -> void:
 	if image == null or image.save_png(path) != OK:
 		_failures.append("%s: no image / save_png failed" % name)
 		return
-	_log.append("%-30s %-6s dist=%4.1fm  eye %s -> %s\n%-30s %s\n%-30s %s\n%-30s %s" % [
-		name, _tag, distance, str(camera.global_position), str(target), "", grass, "", str(stand["why"]), "", path])
+	var lens_m := camera.global_position.distance_to(subject)
+	if lens_m > distance + 12.0:
+		_failures.append("%s: the lens is %.0f m from the subject; the rig did not arrive" % [name, lens_m])
+	_log.append("%-30s %-6s player %4.1fm, lens %4.1fm  eye %s -> subject %s  body %s\n%-30s %s\n%-30s %s\n%-30s %s" % [
+		name, _tag, distance, lens_m, str(camera.global_position), str(subject), str(_player.global_position), "", grass, "", str(stand["why"]), "", path])
 	_write_log()
 	print("[n08-capture] %s -> %s | %s" % [name, path, grass])
 
