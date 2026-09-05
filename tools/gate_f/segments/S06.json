@@ -335,12 +335,14 @@
     {
       "id": "S06-18",
       "title": "challenge Dorn",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "expect_prompt": "Challenge",
+        "check_provider": false,
+        "settle_frames": 30
       },
-      "expected": "a band 2 trainer on the approach"
+      "expected": "a band 2 trainer on the approach",
+      "observation": "N10-HARNESS-TESTS-0905, brief item 9. WAS a bare `press interact`. `interact_with` presses only when the interaction arbiter has a LIVE prompt and only when that prompt's own text is the one this step means -- `trainer_npc.gd::_prompt_for` builds it from data/config/trainers.json's `challenge` template, \"Challenge %s\" -- and otherwise FAILs naming what it actually saw and how far the intended entity is. A bare press cannot tell a live challenge offer from no offer at all, which is how S08-27 reported a green press into an unengaged world and cost two lanes a run each to diagnose. check_provider false: the prompt belongs to a prompt child of the NPC, and matching on the text the player reads is the stronger check."
     },
     {
       "id": "S06-19",
@@ -525,14 +527,110 @@
     },
     {
       "id": "S06-30",
-      "title": "Section L.3 band 2 crafting has no authored site -- and the beat below is not this segment's",
+      "title": "Section L.3 band 2 crafting: the protocol names no site, but the world authored one",
       "action": "note",
       "args": {
-        "text": "Section L.3 requires 'S06 orb_greater + reinforced tools -- each paid at real cost'. Section B's S06 span does not mention crafting and the protocol names no crafting site in band 2, so the workbench below is placed by the player at the quarry, where the tier material is. RECORDED as the transcriber's siting of a requirement section L.3 states and section B's span omits. CL-H8 VERDICT, 2026-09-04, decided by one live probe (tools/_probe_workbench_context.gd) rather than by argument: the workbench beat below (S06-31..S06-49) SHOULD BE REMOVED, and it is NOT masking a game defect. The reason it was in doubt: S06's own run recorded `build_catalogue` never releasing input after a workbench interact, and S08 hit the same stuck context by a different route, so the beat might have been the only thing photographing a real shared-UI bug in build_menu.gd / craft_panel.gd / game_menu.gd. It is not. Driven through the real nodes in a live world and read through the harness's own resolver (scripts/debug/gate_f_probe.gd::input_context), the whole sequence is clean: world -> open the catalogue -> build_catalogue -> close it -> world -> place a real workbench through build_placer.gd -> world -> interact its CraftInteractable -> panel:<craft_panel.gd>, NOT build_catalogue -> cancel -> world. The interact does not even enter the catalogue context; it opens the craft panel, and every context releases. So S06's stuck catalogue belongs to CL-H13 (the harness input path resolving against a context the action does not belong to, seen at three independent sites) and not to the workbench, and removing this beat hides nothing. WHAT THIS COMMIT DID AND DID NOT DO: only this step is edited. S06-31..S06-49 are lane W21-HARNESS-FIGHTS territory (it owns S06.json except this step), so the deletion is handed to it with the verdict rather than made across an ownership line -- see ralph/reports/W20-SMALL-FIXES-0904/REPORT.md. Whoever removes them: section L.3's crafting requirement still needs a home, and the honest one is a segment whose band has an authored crafting site, not a workbench conjured at the quarry."
+        "text": "Section L.3 requires 'S06 orb_greater + reinforced tools -- each paid at real cost'. Section B's S06 span does not mention crafting and the protocol names no crafting site in band 2, so the workbench below is placed by the player at the quarry, where the tier material is. RECORDED as the transcriber's siting of a requirement section L.3 states and section B's span omits. CL-H8 VERDICT, 2026-09-04, decided by one live probe (tools/_probe_workbench_context.gd) rather than by argument: the workbench beat below (S06-31..S06-49) SHOULD BE REMOVED, and it is NOT masking a game defect. The reason it was in doubt: S06's own run recorded `build_catalogue` never releasing input after a workbench interact, and S08 hit the same stuck context by a different route, so the beat might have been the only thing photographing a real shared-UI bug in build_menu.gd / craft_panel.gd / game_menu.gd. It is not. Driven through the real nodes in a live world and read through the harness's own resolver (scripts/debug/gate_f_probe.gd::input_context), the whole sequence is clean: world -> open the catalogue -> build_catalogue -> close it -> world -> place a real workbench through build_placer.gd -> world -> interact its CraftInteractable -> panel:<craft_panel.gd>, NOT build_catalogue -> cancel -> world. The interact does not even enter the catalogue context; it opens the craft panel, and every context releases. So S06's stuck catalogue belongs to CL-H13 (the harness input path resolving against a context the action does not belong to, seen at three independent sites) and not to the workbench, and removing this beat hides nothing. WHAT W20 DID AND DID NOT DO, and what closed it: W20 edited only this step, because S06-31..S06-49 were another lane's territory, and handed the deletion on with the verdict (ralph/reports/W20-SMALL-FIXES-0904/REPORT.md). N10-HARNESS-TESTS-0905 carried it out. S06-31..S06-49 are DELETED and section L.3's crafting requirement is rehomed to band 2's own authored crafting site -- the `ranger_camp` cluster's `craft_at` anvil -- in steps S06-30a..S06-30l immediately below, which is exactly the home this note said the requirement needed and could not find. The claim in this step's title that band 2 'has no authored crafting site' is what changed: it was true of the protocol's own text and is not true of the shipped world, where scripts/world/rest_point.gd stands a real CraftInteractable at every authored camp that carries one."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
+
+      "id": "S06-30a",
+      "title": "CL-H8: the invented workbench beat is gone; L.3 moves to band 2's authored anvil",
+      "action": "note",
+      "args": {
+        "text": "CL-H8 CLOSED, N10-HARNESS-TESTS-0905. Steps S06-31..S06-49 stood here: open the pause shell, cycle to Build, arm a Workbench, PLACE it at the player's feet in the Old Quarry, interact it, craft, close. They are gone. They were a transcriber's invention, and W20-SMALL-FIXES-0904 proved it by live probe rather than by argument (tools/_probe_workbench_context.gd, driving the real nodes and reading the harness's own resolver): world -> open the catalogue -> build_catalogue -> close it -> world -> place a real workbench through build_placer.gd -> world -> interact its CraftInteractable -> panel:craft_panel.gd -> cancel -> world. The workbench interact never enters build_catalogue at all, so the 'stuck catalogue' this beat was scripted around is not a game defect this beat was photographing; it belongs to CL-H13, the harness's own input path resolving against a context the action does not belong to. Removing the beat hides nothing. WHAT REPLACES IT, because section L.3's requirement ('S06 orb_greater + reinforced tools -- each paid at real cost') is real and survives the deletion: band 2 DOES have an authored crafting site, which is what S06-30's own note said this beat needed and could not find. data/config/bands/band2_stone_and_root/props.json's `ranger_camp` cluster carries a `rest` block with `craft_at: [-259.6, 2257.4]` and `craft_label: \"Craft at the ranger's anvil\"`, stood up as a real CraftInteractable by scripts/world/rest_point.gd (T5-CADENCE; tests/smoke_authored_camps.gd already asserts that an authored camp offers craft as well as rest). The camp is on the `ranger_camp_spur` loop between the quarry and the Warrens mouth and is a named map landmark (`band2_ranger_camp`, 'Abandoned Ranger Camp'). So the crafting is done where the game authored a place to do it, on rootstone the player broke out at the quarry one step earlier, instead of at a workbench conjured on the spot."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S06-30b",
+      "title": "leave the quarry along the band 2 spine",
+      "action": "move_to",
+        "at": [
+          330.0,
+          1950.0
+        ],
+        "budget_frames": 12000,
+        "close_enough": 6.0,
+        "held_budget_frames": 10800,
+        "answer_prompts": true
+      "expected": "data/config/terrain_playground.json's band 2 spine (trail.bands), walked rather than cut across",
+      "observation": "N10-HARNESS-TESTS-0905. MEASURED, not routed: a single straight `move_to` from the quarry at (403, 1794) to the ranger camp does NOT go. Run today on this branch it burned all 30,000 walking frames with 0 held and stopped 734.2 m short at (340.0, 4.0, 1834.0), and the route trace shows why: 544 play-seconds inside a 78 m x 66 m band with `dead_travel_m` climbing to 1,986 m. That is W21-HARNESS-FIGHTS-0904's S06-50 signature at the same place (it logged 711 s and 1,258 m of dead travel at (336.2, 1.3, 1820.6), 14 m from where this stopped) -- and it settles that lane's own hypothesis: the pin is NOT the just-placed workbench confusing navigator state. There is no workbench any more; this branch deleted S06-38 with the rest of the invented beat, and the body still cannot leave the quarry on that bearing. It is the Old Quarry's own exit. THE FIX IS THE AUTHORED ROUTE, not a bigger budget: `data/config/terrain_playground.json`'s `trail.bands[band2_stone_and_root]` spine runs (400,1800) -> (330,1950) -> (180,2050) -> (20,2130) -> (-150,2210) -> (-310,2320) -> (-420,2470), and the ranger camp sits on the `ranger_camp_spur` loop that leaves that spine at (-150,2210) and rejoins it at (-310,2320). These legs walk it. Nothing teleports and no terrain moved."
+      "id": "S06-30b1",
+      "title": "follow the spine north-west",
+          180.0,
+          2050.0
+      "expected": "data/config/terrain_playground.json's band 2 spine (trail.bands), walked rather than cut across"
+      "id": "S06-30b2",
+      "title": "follow the spine past the corridor's midpoint",
+          20.0,
+          2130.0
+      "id": "S06-30b3",
+      "title": "reach the ranger camp spur's own junction",
+          -150.0,
+          2210.0
+      "observation": "terrain_playground.json's `trail.loops` says the ranger_camp_spur leaves the spine here."
+      "id": "S06-30b4",
+      "title": "walk the spur to the anvil",
+          -259.6,
+          2257.4
+        "close_enough": 2.5,
+      "observation": "the camp's CraftInteractable at data/config/bands/band2_stone_and_root/props.json's `ranger_camp.rest.craft_at`."
+      "id": "S06-30c",
+      "title": "open the ranger's anvil",
+      "action": "interact_with",
+        "expect_prompt": "Craft",
+        "check_provider": false,
+        "settle_frames": 30
+      "expected": "the authored camp's craft prompt opens craft_panel.gd and it takes the input-owner group",
+      "observation": "interact_with, not a bare `press interact`: this presses only when the arbiter has a LIVE prompt and only when that prompt's own text is the craft offer, so a rest prompt, a wandering creature's engage offer or no prompt at all reports what it saw instead of firing `interact` into the world. check_provider false because the prompt is a child of the RestPoint, not of a named entity this step can look up."
+      "id": "S06-30d",
+      "title": "let the craft panel open",
+      "action": "wait",
+        "seconds": 2
+      "expected": "Section E.4 lists the craft panel as one of the surfaces the matrix crosses"
+      "id": "S06-30e",
+      "title": "the craft panel focuses a recipe",
+      "action": "assert",
+        "check": "focus_owned"
+      "expected": "without focus the panel cannot be driven on a pad at all"
+      "id": "S06-30f",
+      "title": "craft the greater orb",
+      "action": "press",
+        "control": "ui_accept",
+        "hold": "tap"
+      "expected": "Section L.3: 'S06 orb_greater + reinforced tools -- each paid at real cost'. The inventory snapshot on the `craft` event is the evidence the cost was paid",
+      "observation": "data/recipes/recipes_rootstone.json prices orb_greater at 4 rootstone / 3 wood / 3 fiber -- the rootstone comes from S06-28's own gathering at the quarry, which is why this beat sits after it and not before."
+      "id": "S06-30g",
+      "title": "let the craft resolve",
+      "expected": "the `craft` event carries the full slot snapshot"
+      "id": "S06-30h",
+      "title": "focus the next recipe",
+      "action": "focus_move",
+        "direction": "down",
+        "times": 1
+      "expected": "AMBIGUITY RECORDED: the protocol names the recipes but not their order in the panel; a focus_move that does not land FAILs rather than crafting the wrong thing"
+      "id": "S06-30i",
+      "title": "craft the reinforced tool",
+      "expected": "Section L.3's second band 2 recipe, paid at the real cost",
+      "observation": "recipes_rootstone.json's `reinforce_axe`/`reinforce_pickaxe`, 3 rootstone / 2 wood each."
+      "id": "S06-30j",
+      "id": "S06-30k",
+      "title": "leave the craft panel",
+        "control": "menu_cancel",
+      "expected": "Section L.6 T01's shape: the surface hands the world back"
+      "id": "S06-30l",
+      "title": "the world owns input again",
+        "check": "input_context",
+        "equals": "world"
+      "expected": "input_context is back to 'world'; section E.3 step 6's target is input leakage after a surface closes"
+      "id": "S06-49a",
+      "title": "rejoin the spine where the camp spur ends",
+          -310.0,
+          2320.0
+      "observation": "terrain_playground.json's `trail.loops`: the ranger_camp_spur rejoins the band 2 spine at (-310, 2320). N10-HARNESS-TESTS-0905 added this so S06-50's walk to the Warrens mouth follows the authored trail instead of cutting across, the same correction its own quarry-exit leg needed."
       "id": "S06-50",
       "title": "walk to the Warrens mouth anchor",
       "action": "move_to",
@@ -769,12 +867,14 @@
     {
       "id": "S06-60",
       "title": "engage what is in the hall",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "settle_frames": 30
       },
-      "expected": "Section E.1 CB-05: 'Warrens fight (enclosed geometry) | inside Burrow Warrens chambers'"
+      "expected": "Section E.1 CB-05: 'Warrens fight (enclosed geometry) | inside Burrow Warrens chambers'",
+      "observation": "N10-HARNESS-TESTS-0905, brief item 9. WAS a bare `press interact`. `encounter_director.gd` offers \"Engage <name>\" only when a creature is deployed and a live wild body is inside `engage_range` (6 m, data/config/combat.json `flow.engage_range`); `interaction_activate()` returns without doing anything when `_engageable()` is null, so a bare press on an empty flank is indistinguishable from a press that started a fight. This one refuses and says what the arbiter was actually offering. That is the single line that would have diagnosed S08-27."
     },
     {
       "id": "S06-61",
@@ -1046,12 +1146,14 @@
     {
       "id": "S06-72",
       "title": "face the Warren Guardian",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "settle_frames": 30
       },
-      "expected": "Section E.1 CB-04: 'S06: ... warrens guardian'. Section D RT-07's midpoint"
+      "expected": "Section E.1 CB-04: 'S06: ... warrens guardian'. Section D RT-07's midpoint",
+      "observation": "N10-HARNESS-TESTS-0905, brief item 9. WAS a bare `press interact`. `encounter_director.gd` offers \"Engage <name>\" only when a creature is deployed and a live wild body is inside `engage_range` (6 m, data/config/combat.json `flow.engage_range`); `interaction_activate()` returns without doing anything when `_engageable()` is null, so a bare press on an empty flank is indistinguishable from a press that started a fight. This one refuses and says what the arbiter was actually offering. That is the single line that would have diagnosed S08-27."
     },
     {
       "id": "S06-73",

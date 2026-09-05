@@ -1210,10 +1210,10 @@
       "action": "assert",
       "args": {
         "check": "route_rows_at_least",
-        "rows": 1200
+        "rows": 970
       },
       "expected": "Section C.2",
-      "observation": "2.14/G3-HARNESS-0904. 3000 described a ~1500 s segment at the schema's own 2 Hz (Section C.2), sized against a run whose Pond leg (S05-32x's own predecessor) burned 543 s frozen in the basin. With that walker defect fixed (2.9) and the workaround waypoint retired, re-derived from real runs at this SHA rather than one number: route.csv held 1349 rows at this checkpoint on GATE2-EVIDENCE-0903's own original reference run, 1720 on a full run to the South Bridge with S05-32x retired, and 1353 on a run that hit the S05-33/Old-Bram-detour stall this same session found (a live, open defect -- see G3-HARNESS-0904's report; the trace itself ran correctly through that stall, same as it did through the Pond one). 1200 sits safely below every real measurement gathered rather than pinned to any one run's ceiling, so this keeps proving the trace ran without going flaky on ordinary run-to-run variance or on a segment that stops early for an unrelated, honestly-reported reason."
+      "observation": "CL-H4 / 2.14, N10-HARNESS-TESTS-0905. WAS 1200, and before that 3000. The 3000 was sized against a run whose Pond leg burned 543 s frozen in the basin; the 1200 that replaced it was picked to sit below three cited runs and lands at 98.8% of the shortest completion this segment has ever recorded (1214 rows), which is not headroom at all. RE-DERIVED BY THE S02-60 METHOD: 80% of the SHORTEST healthy completion on record. Counts taken from every committed S05/telemetry/route.csv under ralph/reports/, filtered exactly as S02-60 filtered (the 2026-08-25/27 pair, 1.86 and 1.78 rows per play second on a different clock, excluded rather than averaged in). Four healthy completions remain -- 1214 (gate-f-run-20260828T183531Z), 1248 (gate-f-leg-s05), 1379 (gate-f-run-20260831T185555Z) and 1531 (gate-f-full) -- and the shortest is 1214. 80% of 1214 is 971.2, so 970 = 485 play seconds. That carries ~20% headroom while still failing every broken shape on record, including the 89-row derail in gate-f-run-20260828T183531Z/S05-superseded-1, the 0-row trace in gate-f-leg-s05/S05-superseded-1 and the 1-row boot-only trace a refused segment writes."
     },
     {
       "id": "S05-61",

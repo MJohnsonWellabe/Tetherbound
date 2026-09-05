@@ -93,7 +93,17 @@ const PARTY: Array[Dictionary] = [
 const SATCHEL: Array[Dictionary] = [
 	{"id": "potion_large", "n": 2},
 	{"id": "potion_small", "n": 6},
-	{"id": "revive", "n": 1},
+	# N10-HARNESS-TESTS-0905. WAS 1, against a segment that scripts THREE fights
+	# (Dorn at S06-22, the Warrens chamber, the Warrens guardian). W21-HARNESS-
+	# FIGHTS-0904 put a by-identity Revive ladder in front of every one of them
+	# and measured what a single Revive buys: the first recovery spends it and
+	# every later `focus_item {item: "revive"}` FAILs naming an empty bag -- a
+	# step reporting a defect in the recovery ladder when the real answer is that
+	# the seed was never stocked for the segment it seeds. One per scripted fight
+	# plus one spare for the wild-encounter faint that same lane measured
+	# mid-walk in S09 (a burrowback fainted the lead at t=388.8 s, nowhere near a
+	# scripted fight). Same convention as `seed_s09_exit.gd`'s own 4.
+	{"id": "revive", "n": 4},
 	{"id": "berries", "n": 8},
 	{"id": "orb_basic", "n": 6},
 	{"id": "wood", "n": 16},

@@ -856,10 +856,10 @@
       "action": "assert",
       "args": {
         "check": "route_rows_at_least",
-        "rows": 480
+        "rows": 420
       },
       "expected": "Section C.2",
-      "observation": "2.14/G3-HARNESS-0904. 1200 described a ~600 s segment at the schema's own 2 Hz (Section C.2); this segment runs ~267 s on the shipped tournament flow (TOURNAMENT-FLOW-0903 and GATE2-EVIDENCE-0903's harness fixes both landed since 1200 was set). Re-derived from a real run at this SHA: route.csv held 520 rows at this assert's own checkpoint (t=263.75s). 480 keeps a margin below that measured value rather than pinning to the ceiling, so ordinary run-to-run timing variance does not flake it."
+      "observation": "CL-H4 / 2.14, N10-HARNESS-TESTS-0905. WAS 480, and before that 1200. The 1200 was transcribed, not derived (it described a ~600 s segment at the schema's own 2 Hz, Section C.2); the 480 that replaced it was derived from a single run -- 520 rows at this assert's own checkpoint -- and sits at 92% of the shortest completion ever recorded for this segment, which is a flake waiting for one slow run. RE-DERIVED BY THE S02-60 METHOD, which is the whole point of this pass: 80% of the SHORTEST healthy completion on record, so the check keeps failing a recorder that stopped without grading pacing (S04-59's distance and S04-62's dead travel do that). Counts taken from every committed S04/telemetry/route.csv under ralph/reports/, filtered exactly as S02-60 filtered: the 2026-08-25/27 pair record 1.61-1.59 rows per play second, a different clock, and are excluded rather than averaged in. Six healthy completions remain -- 526, 528, 575, 623, 637 and 658 rows -- and the shortest is 526 (gate-f-run5-chain; gate-f-run-20260828T183531Z's 528 is the run whose own checkpoint read 520). 80% of 526 is 420.8, so 420. That carries ~20% headroom for run-to-run variance while still failing every broken shape on record, including the 164-row aborted attempt in gate-f-run-20260828T183531Z/S04-superseded-1 and the 1-row boot-only trace a refused segment writes."
     },
     {
       "id": "S04-62",
