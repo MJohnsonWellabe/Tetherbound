@@ -77,8 +77,57 @@ const TIERS: Array[String] = ["critical", "side", "detour", "secret"]
 ## bearing is not knowable here -- so the answer is a wider berth from anything
 ## solid, not a sightline test against one guessed camera.
 const SCATTER_CLEARANCE_M := 1.6
-const NUDGE_RADII_M: Array[float] = [2.0, 3.5, 5.0]
+## N14-ROUTED-FOLLOWUPS, from N02-VEGETATION §7. The list stopped at 5.0, and
+## three authored Rare/candy sites are genuinely enclosed at that budget:
+## `b4_candy_herd_bull_highfield` (442, 5830), `b4_candy_wind_ridge_crest`
+## (463, 5897) and `b5_candy_alpha_galecrest_pack` (-50, 7268) all warned
+## `sits inside solid scatter and no spot within 5m was clear; move it` on
+## every boot. N02's own framing: *"the site validator is not failing to notice
+## these three; the nudge search is failing to solve them… give those three
+## sites a wider nudge budget or re-author them."*
+##
+## Widening is safe rather than merely cheap, and the search ORDER is why:
+## `_clear_spot()` walks these radii smallest-first and returns on the first
+## clear bearing, so appending larger rings cannot move a site that already
+## resolves -- a site that clears at 2.0 m still clears at 2.0 m. The 22 sites
+## that nudge today are provably untouched by this line. (Held by
+## `tests/test_band_pickups.gd::test_the_search_takes_the_smallest_ring_that_clears`,
+## because it is the property a future widening could break.)
+##
+## What widening alone did NOT do is fix the three. It solved two of them, at
+## 8.0 m and 6.5 m -- long enough that the find no longer stands where its
+## authored `_why` says it does -- and left `b4_candy_wind_ridge_crest`
+## unsolved. So the three were RE-AUTHORED as well, against measurements from
+## `tools/_probe_n14_pickup_ground.gd`, which asks
+## `vegetation.gd::has_solid_scatter_near()` over a 0.5 m grid instead of this
+## ring-and-bearing sample. Measured before and after, through
+## `tests/smoke_playground.gd`: **101 placed / 22 nudged / 3 unclear ->
+## 101 placed / 22 nudged / 0 unclear** -- the nudge count is unchanged, which
+## is the point: no site is now relying on the new rings.
+##
+## The rings stay widened anyway, as headroom with a warning attached rather
+## than a silent cliff at 5 m. 8.0 is the ceiling because a pickup carries an
+## authored `_why` about the place it sits in, and walking it further than that
+## trades the reason for the tidiness of a zero; anything unsolvable at 8 m
+## should be re-authored, and the warning below now says so by name.
+##
+## Known limit, found while measuring and NOT fixed here: this search samples
+## 12 bearings on a handful of discrete rings, so it can step straight over
+## clear ground it never asks about. `b5_candy_alpha_galecrest_pack` had clear
+## ground 0.5 m away and was walked 6.5 m, because the smallest ring is 2.0 m;
+## `b4_candy_wind_ridge_crest` had clear ground at 4.7 m on a bearing between
+## two samples and was called unsolvable. A finer first ring would place better
+## AND closer to authored -- but it would move all 22 currently-nudged sites,
+## which is a re-verification of the whole set rather than a drive-by.
+const NUDGE_RADII_M: Array[float] = [2.0, 3.5, 5.0, 6.5, 8.0]
 const NUDGE_BEARINGS := 12
+
+## Past this, a nudge has stopped being a nudge: the pickup is far enough from
+## the coordinate someone wrote a `_why` for that the `_why` may no longer be
+## true. Not an error -- a placed-but-moved find still plays -- but it is worth
+## a line in the boot log so the next person to read `pickups.json` knows the
+## authored number and the standing number are not the same.
+const NUDGE_NOTE_ABOVE_M := 5.0
 
 ## Per-tier candy look. `tint` multiplies the wrapper texture; `badge` is the
 ## medallion's own colour (overridden by the item's `colour` from items.json
@@ -284,9 +333,17 @@ static func place_all(world: Node3D, vegetation: Node3D) -> Dictionary:
 		var stood: Vector3 = spot["at"]
 		if bool(spot["nudged"]):
 			stats["nudged"] += 1
+			# N14: report the long ones. A 2 m step off a trunk is housekeeping;
+			# a 6.5 or 8 m walk is far enough that the site's authored `_why`
+			# deserves a re-read, and silence about it is how three sites sat
+			# unclear on `main` for a wave without anyone reconciling them.
+			var moved := float(spot.get("moved_m", 0.0))
+			if moved > NUDGE_NOTE_ABOVE_M:
+				push_warning("band pickup '%s' authored at %.0f, %.0f stands %.1fm away -- the only clear ground within %.0fm; re-author it if its `_why` is about the exact spot" % [
+					id, at.x, at.y, moved, NUDGE_RADII_M[-1]])
 		if not bool(spot["clear"]):
 			stats["unclear"] += 1
-			push_warning("band pickup '%s' at %.0f, %.0f sits inside solid scatter and no spot within %.0fm was clear; move it" % [
+			push_warning("band pickup '%s' at %.0f, %.0f sits inside solid scatter and no spot within %.0fm was clear; RE-AUTHOR its coordinates -- the nudge search cannot solve it" % [
 				id, at.x, at.y, NUDGE_RADII_M[-1]])
 		if not is_nan(float(pickup["y"])):
 			stood.y = float(pickup["y"])
@@ -310,9 +367,12 @@ static func _clear_spot(world: Node3D, vegetation: Node3D, at: Vector2) -> Dicti
 		return {}
 	var here := Vector3(at.x, ground, at.y)
 	if vegetation == null or not vegetation.has_method("has_solid_scatter_near"):
-		return {"at": here, "nudged": false, "clear": true}
+		return {"at": here, "nudged": false, "clear": true, "moved_m": 0.0}
 	if not bool(vegetation.call("has_solid_scatter_near", here, SCATTER_CLEARANCE_M)):
-		return {"at": here, "nudged": false, "clear": true}
+		return {"at": here, "nudged": false, "clear": true, "moved_m": 0.0}
+	# Smallest ring first, and return on the first clear bearing: a site that
+	# resolves at 2 m must keep resolving at 2 m however many larger rings are
+	# appended to NUDGE_RADII_M. See that constant's own note.
 	for radius: float in NUDGE_RADII_M:
 		for step in NUDGE_BEARINGS:
 			var bearing := TAU * float(step) / float(NUDGE_BEARINGS)
@@ -322,8 +382,8 @@ static func _clear_spot(world: Node3D, vegetation: Node3D, at: Vector2) -> Dicti
 				continue
 			var there := Vector3(candidate.x, candidate_ground, candidate.y)
 			if not bool(vegetation.call("has_solid_scatter_near", there, SCATTER_CLEARANCE_M)):
-				return {"at": there, "nudged": true, "clear": true}
-	return {"at": here, "nudged": false, "clear": false}
+				return {"at": there, "nudged": true, "clear": true, "moved_m": radius}
+	return {"at": here, "nudged": false, "clear": false, "moved_m": 0.0}
 
 
 static func _badge_colour(game: Node, item_id: String) -> Color:

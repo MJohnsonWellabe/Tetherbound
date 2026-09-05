@@ -397,7 +397,25 @@ const BARRICADE_YAW_A := 6.0
 const BARRICADE_YAW_B := 8.0
 const BARRICADE_LENGTH := 1.8
 const LANTERN_BACK := 1.5
-const LANTERN_SIDE := 2.0
+## 2.0 -> 2.6, N14-ROUTED-FOLLOWUPS on N09-BRIDGE-CHECKPOINT's routed finding
+## §6. Round 2's blind judge, on the checkpoint's own PLAYED stand: *"In row 1 a
+## black iron lamp post passes vertically straight through her silhouette and
+## cuts her in half."* The lantern stood at crossing-local (-10.5, +2.0) and the
+## posted sentry at (-10.8, +1.6) -- nearly collinear from the played camera at
+## (-16.4, -1.9), so the post ate the body. N09 measured that +2.6 clears her and
+## did not ship it, for a reason worth repeating rather than quietly dropping:
+## it could not verify the number without another full world render it did not
+## have the budget for, and *"this lane would be claiming a fix it had not seen"*.
+## It has now been rendered and seen -- see this lane's report and contact sheet.
+##
+## Moved rather than the sentry, because the sentry's own position carries a
+## paragraph of reasoning in `south_bridge_dressing.json::_why_here` (1.8m in
+## front of the archway, clear of the smoke walk and the road's half-width,
+## inside the staked banners, 8.0m from the challenger and outside his 4.2m
+## prompt radius). The lantern's position carries none; it is the cheap half of
+## the pair to move, and 0.6m further out keeps it inside the banners at
+## z = +-2.7.
+const LANTERN_SIDE := 2.6
 const LANTERN_POST_H := 2.15
 const OCCUPATION_TIMBER := Color("#4a3520")
 const OCCUPATION_IRON := Color("#2b2a2e")

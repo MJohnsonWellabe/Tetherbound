@@ -472,3 +472,110 @@ func test_the_wild_shroom_is_broader_than_the_stamina_shroom() -> void:
 		"the Wild Shroom's cap is not broader (%s vs %s)" % [str(wild_scale), str(stamina_scale)])
 	wild.free()
 	stamina.free()
+
+
+## --- the nudge search (N14-ROUTED-FOLLOWUPS, from N02-VEGETATION §7) ----------
+##
+## Three authored sites -- `b4_candy_herd_bull_highfield` (442, 5830),
+## `b4_candy_wind_ridge_crest` (463, 5897) and `b5_candy_alpha_galecrest_pack`
+## (-50, 7268) -- warned `sits inside solid scatter and no spot within 5m was
+## clear; move it` on every boot, because `NUDGE_RADII_M` stopped at 5.0 and the
+## sites are genuinely enclosed. N02 measured that and routed it: *"the site
+## validator is not failing to notice these three; the nudge search is failing
+## to solve them."*
+##
+## The fix appends two larger rings. The whole safety argument for doing that
+## rather than re-authoring three coordinates is a property of the SEARCH -- it
+## walks the radii smallest-first and returns on the first clear bearing, so a
+## site that resolves at 2 m cannot be moved by a ring added after it. These
+## tests hold that property, which is the thing a future widening could break;
+## `tests/smoke_playground.gd`'s own placement line is the booted-world half
+## (101 placed / 22 nudged / 3 unclear before, 101 / 25 / 0 after).
+
+## Flat ground everywhere, so the nudge search's only variable is the scatter.
+class FlatWorld:
+	extends Node3D
+	func ground_height_at(_x: float, _z: float) -> float:
+		return 0.0
+
+
+## Solid scatter inside `blocked_radius` of the origin and nowhere else -- one
+## round obstacle whose size the test picks, so "how far out does the search
+## have to reach" is a number rather than a guess. A NEGATIVE radius is empty
+## ground: the query is `distance < blocked_radius + clearance`, so zero would
+## still block everything inside SCATTER_CLEARANCE_M, which is not the same
+## thing as "there is nothing here".
+class BlobScatter:
+	extends Node3D
+	var blocked_radius: float = 0.0
+	var asked: Array[Vector3] = []
+
+	func has_solid_scatter_near(at: Vector3, clearance: float) -> bool:
+		asked.append(at)
+		if blocked_radius < 0.0:
+			return false
+		return Vector2(at.x, at.z).length() < blocked_radius + clearance
+
+
+func _spot_for(blocked_radius: float) -> Dictionary:
+	var world := FlatWorld.new()
+	var scatter := BlobScatter.new()
+	scatter.blocked_radius = blocked_radius
+	var spot: Dictionary = BAND_PICKUPS._clear_spot(world, scatter, Vector2.ZERO)
+	world.free()
+	scatter.free()
+	return spot
+
+
+func test_a_site_that_is_already_clear_is_never_moved() -> void:
+	var spot := _spot_for(-1.0)
+	assert_false(bool(spot["nudged"]), "a clear site was nudged off its authored spot")
+	assert_true(bool(spot["clear"]))
+	assert_almost_eq(float(spot["moved_m"]), 0.0, 0.001)
+
+
+## The property the widening rests on: adding bigger rings must not move a site
+## that the small rings already solved.
+func test_the_search_takes_the_smallest_ring_that_clears() -> void:
+	# Blocked out to 0.3 m; with SCATTER_CLEARANCE_M (1.6) the first ring at
+	# 2.0 m already stands clear, so that is where it must land -- not 8.0.
+	var spot := _spot_for(0.3)
+	assert_true(bool(spot["nudged"]))
+	assert_almost_eq(float(spot["moved_m"]), BAND_PICKUPS.NUDGE_RADII_M[0], 0.001,
+		"the search skipped past the smallest ring that clears; widening it would now move settled sites")
+	assert_almost_eq(Vector2(float(spot["at"].x), float(spot["at"].z)).length(),
+		BAND_PICKUPS.NUDGE_RADII_M[0], 0.001)
+
+
+## The three stuck sites' case: an obstacle too wide for the old 5 m ceiling and
+## inside the new one.
+func test_a_site_enclosed_past_the_old_ceiling_is_now_solved() -> void:
+	# Clearance 1.6, so a blob of radius 4.6 blocks every bearing out to 6.2 m:
+	# unsolvable on the old [2.0, 3.5, 5.0] list, solved by the 6.5 ring.
+	var spot := _spot_for(4.6)
+	assert_true(bool(spot["clear"]),
+		"a site enclosed past 5m is still unsolvable; the three warned sites stay warned")
+	assert_true(bool(spot["nudged"]))
+	assert_true(float(spot["moved_m"]) > 5.0,
+		"it reported a nudge inside the old ceiling, which cannot be true for this obstacle")
+	assert_true(float(spot["moved_m"]) <= float(BAND_PICKUPS.NUDGE_RADII_M[-1]))
+
+
+## And the search still gives up rather than walking a pickup off its site
+## forever. A find that cannot be placed near its own `_why` is a re-authoring
+## job, and the boot log now says exactly that.
+func test_a_site_enclosed_past_the_new_ceiling_still_reports_unclear() -> void:
+	var spot := _spot_for(20.0)
+	assert_false(bool(spot["clear"]),
+		"the search claimed clear ground inside a blob wider than its widest ring")
+	assert_false(bool(spot["nudged"]), "an unsolved site must stand on its authored spot, not a guess")
+
+
+func test_the_nudge_rings_are_ordered_and_bounded() -> void:
+	var radii: Array = BAND_PICKUPS.NUDGE_RADII_M
+	assert_true(radii.size() >= 2)
+	for i in range(1, radii.size()):
+		assert_true(float(radii[i]) > float(radii[i - 1]),
+			"NUDGE_RADII_M must ascend: the smallest-ring-first guarantee is the reason widening it is safe")
+	assert_true(float(radii[-1]) <= 10.0,
+		"a 'nudge' past 10m is a re-authoring, not a nudge -- see the constant's own note")

@@ -102,6 +102,16 @@ const VARIANTS_BIAS := [
 	{"name": "I-reach-120", "ambient_mult": 1.0, "reach": 120.0},
 ]
 
+## Round 3, the evidence sheet. Rounds 1 and 2 settled it: the reach is the
+## knob (bias at 420 changes nothing, 220 and 120 both restore the shadow), and
+## 220 is both `_apply_sun`'s own code default and the value the project shipped
+## before T1-HALL-4 raised it to 420 for the fortress crenellations. This pair
+## is the before/after a blind judge is given.
+const VARIANTS_SHIP := [
+	{"name": "A-shipped-420", "ambient_mult": 1.0, "reach": 420.0},
+	{"name": "B-reach-220", "ambient_mult": 1.0, "reach": 220.0},
+]
+
 static var _out_dir: String = DEFAULT_OUT_DIR
 static var _only: PackedStringArray = []
 static var _variants: Array = VARIANTS
@@ -129,6 +139,8 @@ func _run() -> void:
 			_out_dir = arg.substr("--out=".length())
 		elif arg == "--bias-round":
 			_variants = VARIANTS_BIAS
+		elif arg == "--ship-round":
+			_variants = VARIANTS_SHIP
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_out_dir))
 
 	var packed: PackedScene = load(SCENE)
