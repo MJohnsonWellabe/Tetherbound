@@ -147,6 +147,14 @@ static func hit(host: Node, at: Vector3, tint: Variant, charged: bool, struck: N
 		return null
 	ensure_watcher(host)
 	var colour: Color = (tint as Color) if tint is Color else default_colour()
+	# The move colours in moves.json are the HUD's swatches -- pale tan, pale
+	# blue -- and a pale mote on sunlit grass was judged invisible (round 1:
+	# "no hot colour anywhere"). Saturate the element for the spark; a
+	# deliberately near-white type (air) stays near-white because there is
+	# little saturation to multiply.
+	var boost: float = float(config().get("tint_saturation", 1.0))
+	if boost != 1.0:
+		colour = Color.from_hsv(colour.h, clampf(colour.s * boost, 0.0, 1.0), colour.v, colour.a)
 	var spark: Node3D = null
 	var knocked_out: bool = _is_fainted(struck)
 

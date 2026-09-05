@@ -299,10 +299,18 @@ func test_the_spark_is_tinted_by_the_moves_type() -> void:
 	assert_eq(VFX.tint_for_type("no_such_type"), null, "an unmapped type falls back to the caller's default")
 	var expected := Color(str(VFX.config().get("type_colours", {}).get("water", "")))
 	assert_eq(water, expected, "the tint is the colour vfx.json maps for the type")
+	# The spark carries the move's HUE, saturated for the field (vfx.json
+	# `tint_saturation`): a water hit is a bluer blue, never a different colour.
 	var spark: Node3D = VFX.hit(_arena, Vector3.ZERO, water, false, _wild, 0.1)
-	assert_true(spark != null and spark.call("colour") == water, "the spark carries the move's colour")
+	assert_true(spark != null, "a tinted hit spawns a spark")
+	if spark != null:
+		var got: Color = spark.call("colour")
+		assert_almost_eq(got.h, (water as Color).h, 0.02, "the spark keeps the move's hue")
+		assert_true(got.s >= (water as Color).s - 0.001, "saturation is boosted, never washed out")
 	var plain: Node3D = VFX.hit(_arena, Vector3.ZERO, null, false, _wild, 0.1)
-	assert_true(plain != null and plain.call("colour") == VFX.default_colour(), "no tint means the default colour")
+	assert_true(plain != null, "an untinted hit spawns a spark")
+	if plain != null:
+		assert_almost_eq((plain.call("colour") as Color).h, VFX.default_colour().h, 0.02, "no tint means the default hue")
 
 
 func test_a_sealed_catch_bursts() -> void:
