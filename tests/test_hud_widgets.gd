@@ -41,8 +41,9 @@ func _make_strip() -> Control:
 
 func test_build_makes_five_fixed_rows() -> void:
 	var strip := _make_strip()
-	assert_eq(strip.get_child_count(), 2,
-		"expected the roster stack plus OP21-12's cycle banner directly under the widget")
+	assert_eq(strip.get_child_count(), 3,
+		"expected the roster stack, OP21-12's cycle banner and PROGRESSION-VISIBLE's "
+		+ "tick-label holder directly under the widget")
 	assert_eq(strip._list.get_child_count(), PARTY_STRIP.SLOTS, "the row list does not hold five children")
 	assert_eq(strip._rows.size(), PARTY_STRIP.SLOTS)
 	assert_eq(strip._count_label.text, "TEAM  0 / 5")

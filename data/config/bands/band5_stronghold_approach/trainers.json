@@ -177,6 +177,7 @@
       "facing_deg": 180.0,
       "challenge": "stronghold_warden_challenge",
       "defeated": "stronghold_warden_defeated",
+      "victory_conversation": "stronghold_warden_realm_reward",
       "_comment_team": "A FULL team of five -- the only trainer in the chapter who fields one, and the first time the player's own five-creature limit is met by an equal. Three types across the five so no single answer sweeps it: two Ground, one Water, one Air, and a Ground ace. ALL TUNABLE.",
       "_comment_w1_w2_w3": "GATE3_ENCOUNTER_CONTRACTS.md W-1/W-2/W-3, G3-ENCOUNTERS-0903 (Fable). W-1: shipped 16/17/17/18/20 opened two levels SOFTER than Hald's own weakest (18) -- a player who just beat 18/19/19, rested, and opened the chapter's climax against a 16 and two 17s. Raised to 18/18/19/19/20 (sum 94, +38 over Hald's 56): no member below the elite's floor, the ace still the chapter's highest, still inside band5's [15,20] window (data/config/chapter_curve.json, owned by G3-ECONOMY -- not edited here). W-2: send-out order is now the doctrine, not an accident of authoring order -- the first four are the four behaviour profiles the region's captains/elite already taught the player, one each, so a prepared player recognises each as it comes out; the fifth is the one telegraph in the chapter worth reading, Earth Fist's own cone from the Warrens guardian (G-9), on the ace. W-3: TM-tier quicks on this team only (rock_throw/aqua_shot/wind_blade, each 15-20% harder than the species move and on-type) -- G-4's *fails if* is that nothing below the Warden carries one, so the step into this arena is felt in the first exchange, not before it. `combat` blocks are G-3's five reusable profiles (WALL/DIVER/CURRENT/CHARGER/ACE per the region's own captains), computed off combat.json's `enemy` defaults; they are inert until G-2's `set_engaged()` merge ships on the encounter lane's own branch (G-2's own contract: absent behaviour is unchanged, and an override only ever reaches the body that authored it), so authoring them here ahead of that merge is safe.",
       "team": [
@@ -262,7 +263,10 @@
             "count": 4
           }
         ],
-        "flags": [],
+        "flags": [
+          "realm_key_cloudreach",
+          "realm_heart_meadows_earned"
+        ],
         "xp_bonus": 400
       },
       "_comment_defeat_flag": "R8.4 waits on exactly this id: data/config/stronghold_climax.json gates the tether machine shut until it is set, so a player who sprints past him cannot reach the Legendary Chamber's lever with the boss still standing. Spec sec28's order is not optional and this flag is where that is enforced. SG44's world event reads `legendary_freed`, not this.",

@@ -19,6 +19,7 @@ extends RefCounted
 ## Stamina and health remain exactly as before: they do not decay on their own.
 
 var max_stamina: float = 100.0
+var _base_max_stamina: float = 100.0
 var max_health: float = 100.0
 var max_satiety: float = 100.0
 
@@ -60,7 +61,8 @@ var _critical_move_speed_scale: float = 0.92
 
 func configure(config: Dictionary) -> void:
 	var stamina_cfg: Dictionary = config.get("stamina", {})
-	max_stamina = float(stamina_cfg.get("max", 100.0))
+	_base_max_stamina = float(stamina_cfg.get("max", 100.0))
+	max_stamina = _base_max_stamina
 	_sprint_drain = float(stamina_cfg.get("sprint_drain_per_second", 12.0))
 	_jump_cost = float(stamina_cfg.get("jump_cost", 8.0))
 	_regen = float(stamina_cfg.get("regen_per_second", 18.0))
@@ -78,6 +80,15 @@ func configure(config: Dictionary) -> void:
 
 	stamina = max_stamina
 	health = max_health
+
+
+## Recompute capacity from the authored baseline, never from the already-
+## modified value.  Preserving fill fraction makes equip/unequip deterministic
+## and prevents swapping a Heart from becoming a free stamina refill.
+func set_stamina_capacity_multiplier(multiplier: float) -> void:
+	var fraction := stamina_fraction()
+	max_stamina = _base_max_stamina * maxf(1.0, multiplier)
+	stamina = max_stamina * fraction
 
 
 ## D29. Kept separate from configure() so movement.json stays the sole owner

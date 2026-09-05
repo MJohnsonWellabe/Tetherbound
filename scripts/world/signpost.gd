@@ -88,6 +88,47 @@ const ARM_START_HEIGHT := 2.05
 ## GF-B-013 tuned (outline as a fraction of the em) is unchanged.
 const LABEL_FONT_SIZE := 144
 
+## W22-BRIDGE-SIGNPOST-0904, prompt 74 §7: wood tones tuned AGAINST A RENDER,
+## not guessed. Board 18's "Directional (Multi)" panel was sampled directly
+## (crop medians, `docs/art/reference/18_Signpost_Bridge_Modular_Props.png`):
+## its planks are a rich mid-brown, #85593a-#946240 (H25 S57 V52-58), its
+## post #906134 (H29 S64 V57), and its lettering is CREAM on that dark wood.
+## The isolated day render of the old values (`tools/
+## _capture_bridge_deck_isolated.gd`) measured the lit face of a `#c8a874`
+## plank at #ffdf9d -- pale, near-white, roughly 1.3x the albedo in the sun --
+## and the `#6b4a2f` post at #8c6442, so both albedos below are the board's
+## own rendered targets divided by that same measured 1.3x lift. The planks
+## darkening from cream to the board's brown is what forces the ink swap in
+## `_add_arm()`: dark ink on a dark board is unreadable, and the board's own
+## answer is pale lettering with a dark edge.
+const POST_COLOUR := Color("#6e4a28")
+const PLANK_COLOUR := Color("#724b31")
+const ROPE_COLOUR := Color("#8a7448")
+const INK_COLOUR := Color("#f4ecd8")
+const INK_OUTLINE_COLOUR := Color("#2a1a10")
+
+## The rope-wrapped band every variant on board 18 carries near the top of
+## the post: three stacked coils in the gap between the topmost arm's upper
+## edge and the post cap. Torus coils rather than a banded cylinder so the
+## silhouette actually reads as wound rope at the distance a sign is read.
+const ROPE_COILS := 3
+const ROPE_COIL_PITCH := 0.036
+const ROPE_TUBE_RADIUS := 0.02
+## A small pointed cap on the post's crown, as the board draws it -- the
+## post no longer ends in a flat sawn disc.
+const CAP_HEIGHT := 0.13
+
+## The arm is ONE pointed plank (board 18: wide at the post, pointed at the
+## tip) rather than a flat box with a separate cone bolted to its end. The
+## body runs from the post to `ARM_LENGTH`, tapering in height to
+## `ARM_TAPER` of `ARM_HEIGHT` by its far end, then the tip runs on
+## `ARM_TIP_LENGTH` further to a point on the plank's centreline. The tip
+## reaches to ARM_LENGTH + 0.14, within a centimetre of where the old cone's
+## apex sat (ARM_LENGTH + 0.06 + 0.072), so the arm-to-arm clearances
+## R7.1-visual round 2 tuned are unchanged.
+const ARM_TAPER := 0.92
+const ARM_TIP_LENGTH := 0.14
+
 var _placed := 0
 
 
@@ -119,10 +160,13 @@ func build(world: Node, at: Vector2, routes_override: Variant = null) -> void:
 	post.mesh = post_mesh
 	post.position = Vector3(0.0, POST_HEIGHT * 0.5, 0.0)
 	var post_mat := StandardMaterial3D.new()
-	post_mat.albedo_color = Color("#6b4a2f")
-	post_mat.roughness = 0.85
+	post_mat.albedo_color = POST_COLOUR
+	post_mat.roughness = 0.8
 	post_mesh.material = post_mat
 	add_child(post)
+
+	_build_rope_band(post_mat)
+	_build_cap(post_mat)
 
 	var body := StaticBody3D.new()
 	body.name = "Post_Collision"
@@ -229,37 +273,37 @@ func _add_arm(label: String, origin: Vector2, next: Vector2, index: int) -> void
 	arm.rotation.y = yaw
 	add_child(arm)
 
+	# W22-BRIDGE-SIGNPOST-0904: the plank's own near end is pulled back to the
+	# post's axis rather than starting at the mount point, and a short bracket
+	# block bridges the mount offset, so an arm mounted around the post's
+	# circumference reads as bolted to it instead of hovering a few
+	# centimetres off its surface. `z_axis` is where the post's centreline
+	# falls in this arm's own frame (local +Z is the route bearing).
+	var z_axis := -(mount.x * bearing.x + mount.y * bearing.y)
 	var plank := MeshInstance3D.new()
-	var plank_mesh := BoxMesh.new()
-	plank_mesh.size = Vector3(ARM_THICKNESS, ARM_HEIGHT, ARM_LENGTH)
-	plank.mesh = plank_mesh
-	# The arm points AWAY from the post along the route's own bearing, so the
-	# plank sits centred on that offset rather than through the post.
-	plank.position = Vector3(0.0, 0.0, ARM_LENGTH * 0.5)
+	plank.name = "Plank"
+	plank.mesh = _pointed_plank_mesh(z_axis)
 	var plank_mat := StandardMaterial3D.new()
-	plank_mat.albedo_color = Color("#c8a874")
-	plank_mat.roughness = 0.8
-	plank_mesh.material = plank_mat
+	plank_mat.albedo_color = PLANK_COLOUR
+	plank_mat.roughness = 0.82
+	plank.mesh.surface_set_material(0, plank_mat)
 	arm.add_child(plank)
 
-	# R7.1-visual round 1: the critic named the plank "a plain flat rectangle
-	# with no arrowhead... doesn't function as pointing to anything." A
-	# 3-sided cylinder is a triangular prism — cheapest possible primitive
-	# that reads as a point rather than a blunt end. Smaller and closer to
-	# the post than the first attempt (round 2 found it projecting far enough
-	# forward, at ARM_LENGTH + 0.4*height, to visually land on a neighbouring
-	# arm's billboarded text at some viewing angles).
-	var head := MeshInstance3D.new()
-	var head_mesh := CylinderMesh.new()
-	head_mesh.top_radius = 0.0
-	head_mesh.bottom_radius = ARM_HEIGHT * 0.45
-	head_mesh.height = ARM_HEIGHT * 0.6
-	head_mesh.radial_segments = 3
-	head_mesh.material = plank_mat
-	head.mesh = head_mesh
-	head.rotation.x = deg_to_rad(-90.0)
-	head.position = Vector3(0.0, 0.0, ARM_LENGTH + ARM_HEIGHT * 0.25)
-	arm.add_child(head)
+	var bracket := MeshInstance3D.new()
+	bracket.name = "Bracket"
+	var bracket_mesh := BoxMesh.new()
+	bracket_mesh.size = Vector3(ARM_THICKNESS * 2.4, ARM_HEIGHT * 0.5, ARM_MOUNT_RADIUS + POST_RADIUS)
+	bracket.mesh = bracket_mesh
+	var bracket_mat := StandardMaterial3D.new()
+	bracket_mat.albedo_color = Color("#3a2618")
+	bracket_mat.roughness = 0.9
+	bracket.material_override = bracket_mat
+	# From the post axis out to the mount point, in the arm's frame: the mount
+	# vector's along-bearing part is `-z_axis`, its across part the rest.
+	var across := mount.x * (-bearing.y) + mount.y * bearing.x
+	bracket.position = Vector3(across * 0.5, 0.0, z_axis * 0.5)
+	bracket.rotation.y = atan2(across, z_axis) if absf(across) + absf(z_axis) > 0.001 else 0.0
+	arm.add_child(bracket)
 
 	# R9.4: the label is PAINTED ON THE PLANK'S TWO BROAD FACES, once each.
 	#
@@ -310,7 +354,11 @@ func _add_arm(label: String, origin: Vector2, next: Vector2, index: int) -> void
 		text.double_sided = false
 		text.rotation.y = side * PI * 0.5
 		text.position = Vector3(side * (ARM_THICKNESS * 0.5 + 0.006), 0.0, ARM_LENGTH * 0.5)
-		text.modulate = Color("#241a10")
+		# W22-BRIDGE-SIGNPOST-0904: cream ink with a dark edge, board 18's own
+		# lettering on its own dark planks (see PLANK_COLOUR). The outline's
+		# job is unchanged -- hold the letters against whatever is behind the
+		# plank -- it is just the other way up now that the board is dark.
+		text.modulate = INK_COLOUR
 		# R7.1-visual round 1: 0 meant letters vanished wherever a label
 		# crossed a dark background (a roof, a shadow) — the critic called
 		# this out directly. A light outline holds the dark ink readable
@@ -339,7 +387,7 @@ func _add_arm(label: String, origin: Vector2, next: Vector2, index: int) -> void
 		# render sharper (the actual fix above) but lose the contrast edge
 		# GF-B-013 tuned against the sky and dark structures these labels cross.
 		text.outline_size = 12
-		text.outline_modulate = Color("#f4ecd8")
+		text.outline_modulate = INK_OUTLINE_COLOUR
 		arm.add_child(text)
 
 
@@ -353,13 +401,115 @@ func _label_scale(label: String) -> float:
 	# GF-B-013: 0.62 -> 0.68 of the board's depth. The remaining third is the
 	# margin above and below the text; at 0.62 with a 4px outline instead of a
 	# 10px one there is more clear board than the letters need.
-	var by_height := (ARM_HEIGHT * 0.68) / float(LABEL_FONT_SIZE)
+	# W22-BRIDGE-SIGNPOST-0904: the plank body now tapers to `ARM_TAPER` of
+	# its height at the far end (`_pointed_plank_mesh`), so the fit is taken
+	# against the body's SHALLOWEST section -- the one the last letters of a
+	# long name actually sit on -- rather than the full height at the post.
+	var by_height := (ARM_HEIGHT * ARM_TAPER * 0.68) / float(LABEL_FONT_SIZE)
 	# 0.55 em is a serviceable mean advance for mixed-case Latin text; the
 	# 0.86 keeps a margin of board visible at each end rather than filling it
 	# edge to edge.
 	var glyphs := maxf(1.0, float(label.length()) * 0.55 * float(LABEL_FONT_SIZE))
 	var by_width := (ARM_LENGTH * 0.86) / glyphs
 	return minf(by_height, by_width)
+
+
+## One pointed plank, built as a closed flat-shaded ArrayMesh in the arm's
+## own frame: x is thickness, y height, z runs from the post (`z_axis`,
+## behind the mount point) out along the route bearing. Profile, in the y-z
+## plane: full `ARM_HEIGHT` at the post end, `ARM_TAPER` of it at
+## `ARM_LENGTH`, then a point on the centreline `ARM_TIP_LENGTH` further out.
+##
+## `_label_scale()` keeps its rectangular-board assumption honestly: the
+## label spans at most 0.86 of `ARM_LENGTH` centred on its midpoint, which
+## is entirely inside the tapered BODY (z in [0, ARM_LENGTH]) and never on
+## the tip, and the height fit is taken at the body's shallow end.
+func _pointed_plank_mesh(z_axis: float) -> ArrayMesh:
+	var half_t := ARM_THICKNESS * 0.5
+	var h0 := ARM_HEIGHT * 0.5
+	var h1 := ARM_HEIGHT * ARM_TAPER * 0.5
+	var z0 := minf(z_axis, 0.0)
+	var z1 := ARM_LENGTH
+	var z2 := ARM_LENGTH + ARM_TIP_LENGTH
+
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for side: float in [1.0, -1.0]:
+		var x := side * half_t
+		# The broad face is a pentagon; fan it from the post-end top corner.
+		# Winding flips with the side so both faces look outward.
+		var ring: Array[Vector3] = [
+			Vector3(x, h0, z0), Vector3(x, h1, z1), Vector3(x, 0.0, z2),
+			Vector3(x, -h1, z1), Vector3(x, -h0, z0)]
+		if side < 0.0:
+			ring.reverse()
+		for i in range(1, ring.size() - 1):
+			_tri(st, ring[0], ring[i], ring[i + 1])
+	# Top edge: the tapering body, then the tip's upper bevel.
+	_quad(st, Vector3(-half_t, h0, z0), Vector3(-half_t, h1, z1), Vector3(half_t, h1, z1), Vector3(half_t, h0, z0))
+	_quad(st, Vector3(-half_t, h1, z1), Vector3(-half_t, 0.0, z2), Vector3(half_t, 0.0, z2), Vector3(half_t, h1, z1))
+	# Bottom edge, mirrored.
+	_quad(st, Vector3(half_t, -h0, z0), Vector3(half_t, -h1, z1), Vector3(-half_t, -h1, z1), Vector3(-half_t, -h0, z0))
+	_quad(st, Vector3(half_t, -h1, z1), Vector3(half_t, 0.0, z2), Vector3(-half_t, 0.0, z2), Vector3(-half_t, -h1, z1))
+	# The post end.
+	_quad(st, Vector3(half_t, h0, z0), Vector3(-half_t, h0, z0), Vector3(-half_t, -h0, z0), Vector3(half_t, -h0, z0))
+	st.generate_normals()
+	return st.commit()
+
+
+func _tri(st: SurfaceTool, a: Vector3, b: Vector3, c: Vector3) -> void:
+	st.add_vertex(a)
+	st.add_vertex(b)
+	st.add_vertex(c)
+
+
+func _quad(st: SurfaceTool, a: Vector3, b: Vector3, c: Vector3, d: Vector3) -> void:
+	_tri(st, a, b, c)
+	_tri(st, a, c, d)
+
+
+## Three rope coils wound round the post just above the topmost arm. The
+## topmost arm's upper edge is at ARM_START_HEIGHT + ARM_HEIGHT/2; the coils
+## sit in the air between that and the cap, never on a plank.
+func _build_rope_band(_post_mat: StandardMaterial3D) -> void:
+	var rope_mat := StandardMaterial3D.new()
+	rope_mat.albedo_color = ROPE_COLOUR
+	rope_mat.roughness = 1.0
+	var holder := Node3D.new()
+	holder.name = "RopeBand"
+	var bottom := ARM_START_HEIGHT + ARM_HEIGHT * 0.5 + 0.035
+	holder.position = Vector3(0.0, bottom, 0.0)
+	add_child(holder)
+	for i in ROPE_COILS:
+		var coil := MeshInstance3D.new()
+		coil.name = "Coil%d" % i
+		var torus := TorusMesh.new()
+		torus.inner_radius = POST_RADIUS - ROPE_TUBE_RADIUS * 0.4
+		torus.outer_radius = POST_RADIUS + ROPE_TUBE_RADIUS * 1.6
+		torus.rings = 24
+		torus.ring_segments = 8
+		coil.mesh = torus
+		coil.material_override = rope_mat
+		coil.position = Vector3(0.0, ROPE_TUBE_RADIUS + i * ROPE_COIL_PITCH, 0.0)
+		# A real wrap climbs; a hair of roll per coil keeps the three from
+		# reading as one machined ridge.
+		coil.rotation = Vector3(deg_to_rad(4.0), float(i) * 0.9, 0.0)
+		holder.add_child(coil)
+
+
+## The post's pointed crown.
+func _build_cap(post_mat: StandardMaterial3D) -> void:
+	var cap := MeshInstance3D.new()
+	cap.name = "Cap"
+	var cone := CylinderMesh.new()
+	cone.top_radius = 0.0
+	cone.bottom_radius = POST_RADIUS * 1.35
+	cone.height = CAP_HEIGHT
+	cone.radial_segments = 6
+	cap.mesh = cone
+	cap.material_override = post_mat
+	cap.position = Vector3(0.0, POST_HEIGHT + CAP_HEIGHT * 0.5 - 0.01, 0.0)
+	add_child(cap)
 
 
 func _load_paths_config() -> Dictionary:

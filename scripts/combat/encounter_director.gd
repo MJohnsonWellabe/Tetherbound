@@ -2183,6 +2183,9 @@ func _send_out_next_creature() -> bool:
 	# G-2, before the fight can open. A trainer creature with no `combat` block
 	# in trainers.json carries an empty dictionary and fights exactly as it did.
 	body.set("combat_override", creature.get("combat_override"))
+	# W23-DIFFICULTY (D77): a trainer's body fights off `combat.json`'s
+	# `enemy_trainer` baseline under its own `combat` block; a wild never does.
+	body.set("trainer_owned", true)
 	body.call("set_shiny", bool(creature.get("shiny")))
 	body.set("aggressive", false)
 	body.call("configure", MATH.config().get("wild", {}))
@@ -2291,6 +2294,25 @@ func _finish_trainer_battle(won: bool) -> void:
 	_set_exploration_active(true)
 	if won:
 		_record_trainer_defeat(spec)
+		call_deferred("_present_trainer_victory", spec)
+
+
+## Optional data-driven post-victory story beat.  Most trainers need only the
+## ordinary reward toast; realm bosses can name what changed immediately after
+## the fight instead of requiring the player to interact with the defeated NPC
+## a second time and possibly miss a chapter-critical grant.
+func _present_trainer_victory(spec: Dictionary) -> void:
+	var conversation := str(spec.get("victory_conversation", ""))
+	if conversation == "":
+		return
+	var panel := get_tree().get_first_node_in_group("dialogue_panel")
+	if panel == null or not panel.has_method("start"):
+		push_warning("trainer '%s' has victory dialogue but no dialogue panel is available" % str(spec.get("id", "")))
+		return
+	if bool(panel.call("is_open")):
+		push_warning("trainer '%s' victory dialogue found the panel busy" % str(spec.get("id", "")))
+		return
+	panel.call("start", conversation)
 
 
 ## SB9's flag, and SC15's payout hook.

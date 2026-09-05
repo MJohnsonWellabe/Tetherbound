@@ -1,0 +1,26 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+terrapup | clips=["attack(0.96s)", "faint(1.54s)", "hit(0.54s)", "idle(3.04s)", "run(0.79s)", "walk(1.38s)"] | bones=15 head/neck=["neck", "head"]
+ripplet | clips=["attack(0.96s)", "faint(1.54s)", "hit(0.54s)", "idle(3.04s)", "run(0.79s)", "walk(1.38s)"] | bones=14 head/neck=["neck", "head"]
+galewisp | clips=["attack(0.96s)", "faint(1.54s)", "hit(0.54s)", "idle(3.04s)", "run(0.79s)", "walk(1.38s)"] | bones=15 head/neck=["neck", "head"]
+bramblebun | clips=["attack(0.96s)", "faint(1.54s)", "hit(0.54s)", "idle(3.04s)", "run(0.79s)", "walk(1.38s)"] | bones=15 head/neck=["neck", "head"]
+mudsnout | clips=["attack(0.96s)", "faint(1.54s)", "hit(0.54s)", "idle(3.04s)", "run(0.79s)", "walk(1.38s)"] | bones=15 head/neck=["neck", "head"]
+trailpup | clips=["attack(0.96s)", "faint(1.54s)", "hit(0.54s)", "idle(3.04s)", "run(0.79s)", "walk(1.38s)"] | bones=15 head/neck=["neck", "head"]
+burrowback | clips=["attack(0.96s)", "faint(1.54s)", "hit(0.54s)", "idle(3.04s)", "run(0.79s)", "walk(1.38s)"] | bones=15 head/neck=["neck", "head"]
+meadowhart | clips=["attack(0.96s)", "faint(1.54s)", "hit(0.54s)", "idle(3.04s)", "run(0.79s)", "walk(1.38s)"] | bones=15 head/neck=["neck", "head"]
+tuskroot | clips=["attack(0.96s)", "faint(1.54s)", "hit(0.54s)", "idle(3.04s)", "run(0.79s)", "walk(1.38s)"] | bones=15 head/neck=["neck", "head"]
+paddlenewt | clips=["attack(0.96s)", "faint(1.54s)", "hit(0.54s)", "idle(3.04s)", "run(0.79s)", "walk(1.38s)"] | bones=15 head/neck=["neck", "head"]
+mosshell | clips=["attack(0.96s)", "faint(1.54s)", "hit(0.54s)", "idle(3.04s)", "run(0.79s)", "walk(1.38s)"] | bones=15 head/neck=["neck", "head"]
+brooktail | clips=["attack(0.96s)", "faint(1.54s)", "hit(0.54s)", "idle(3.04s)", "run(0.79s)", "walk(1.38s)"] | bones=16 head/neck=["neck", "head"]
+galecrest | clips=["attack(0.96s)", "faint(1.54s)", "hit(0.54s)", "idle(3.04s)", "run(0.79s)", "walk(1.38s)"] | bones=20 head/neck=["neck", "head"]
+duskhush | clips=["attack(0.96s)", "faint(1.54s)", "hit(0.54s)", "idle(3.04s)", "run(0.79s)", "walk(1.38s)"] | bones=19 head/neck=["neck", "head"]
+pipwing | clips=["attack(0.96s)", "faint(1.54s)", "hit(0.54s)", "idle(3.04s)", "run(0.79s)", "walk(1.38s)"] | bones=19 head/neck=["neck", "head"]
+reedwing | clips=["attack(0.96s)", "faint(1.54s)", "hit(0.54s)", "idle(3.04s)", "run(0.79s)", "walk(1.38s)"] | bones=19 head/neck=["neck", "head"]
+veridian | clips=["attack(0.96s)", "faint(1.54s)", "hit(0.54s)", "idle(3.04s)", "run(0.79s)", "walk(1.38s)"] | bones=16 head/neck=["neck", "head"]
+nightburrow -> shares creature_burrowback_lod0.glb
+stormtrail -> shares creature_trailpup_lod0.glb
+riftfrill -> shares creature_paddlenewt_lod0.glb
+ashtusk -> shares creature_tuskroot_lod0.glb
+sparkit | clips=["attack(0.96s)", "faint(1.54s)", "hit(0.54s)", "idle(3.04s)", "run(0.79s)", "walk(1.38s)"] | bones=15 head/neck=["neck", "head"]
+cindercub | clips=["attack(0.96s)", "faint(1.54s)", "hit(0.54s)", "idle(3.04s)", "run(0.79s)", "walk(1.38s)"] | bones=16 head/neck=["neck", "head"]
+shadelet | clips=["attack(0.96s)", "faint(1.54s)", "hit(0.54s)", "idle(3.04s)", "run(0.79s)", "walk(1.38s)"] | bones=15 head/neck=["neck", "head"]
+frostclaw | clips=["attack(0.96s)", "faint(1.54s)", "hit(0.54s)", "idle(3.04s)", "run(0.79s)", "walk(1.38s)"] | bones=16 head/neck=["neck", "head"]

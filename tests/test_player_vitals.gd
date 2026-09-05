@@ -47,6 +47,22 @@ func test_starts_full() -> void:
 	assert_true(_vitals.can_sprint())
 
 
+func test_realm_power_can_double_capacity_without_changing_the_fill_fraction() -> void:
+	_vitals.tick(2.5, true)
+	assert_almost_eq(_vitals.stamina, 75.0, 0.001)
+	_vitals.set_stamina_capacity_multiplier(2.0)
+	assert_almost_eq(_vitals.max_stamina, 200.0, 0.001)
+	assert_almost_eq(_vitals.stamina, 150.0, 0.001)
+	assert_almost_eq(_vitals.stamina_fraction(), 0.75, 0.001)
+
+
+func test_realm_power_capacity_can_return_to_baseline() -> void:
+	_vitals.set_stamina_capacity_multiplier(2.0)
+	_vitals.set_stamina_capacity_multiplier(1.0)
+	assert_almost_eq(_vitals.max_stamina, 100.0, 0.001)
+	assert_almost_eq(_vitals.stamina, 100.0, 0.001)
+
+
 func test_sprinting_drains_stamina() -> void:
 	_vitals.tick(1.0, true)
 	assert_almost_eq(_vitals.stamina, 90.0, 0.001)

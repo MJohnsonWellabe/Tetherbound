@@ -1,0 +1,3 @@
+GATEF-METRIC band=band1_lower_meadows metres=2403 minutes=10.0 met=172 worst_gap_m=142 gather=35 key=1 tm=2 trainer=4 wild=130
+GATEF-METRIC band=band2_stone_and_root metres=2653 minutes=11.1 met=100 worst_gap_m=165 gather=23 trainer=2 wild=75
+GATEF-METRIC band=band3_the_river_lock metres=2375 minutes=9.9 met=117 worst_gap_m=163 gather=22 trainer=5 wild=90

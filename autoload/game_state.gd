@@ -28,12 +28,14 @@ const CREATURE_CONDITION := preload("res://scripts/creatures/creature_condition.
 ## OWNER-0901-BOND-MILESTONES: distance/landmark/rest-night crediting for the
 ## bond ladder's "travelling"/"visiting"/"resting" tasks.
 const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
+const PROGRESSION_FEED := preload("res://scripts/creatures/progression_feed.gd")
 
 const ITEM_DB := preload("res://autoload/item_db.gd")
 const INVENTORY := preload("res://autoload/inventory.gd")
 const PARTY := preload("res://autoload/party.gd")
 const MAP_STATE := preload("res://autoload/map_state.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
+const REALM_HEART_STATE := preload("res://autoload/realm_heart_state.gd")
 const PLAYER_EQUIPMENT := preload("res://scripts/player/player_equipment.gd")
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 const BOOT_LOG := preload("res://scripts/boot/boot_log.gd")
@@ -73,6 +75,20 @@ var map: RefCounted = null
 ## see `autoload/progression_state.gd`'s own header for the full contract.
 ## Instantiated in `_ready()`, same as `map` above.
 var progression: RefCounted = null
+
+## Cloudreach Phase 1.  Realm Heart selection outlives scene transitions just
+## like progression and map state, while remaining a composed RefCounted so
+## Game stays the project's single autoload.
+var realm_hearts: RefCounted = null
+
+## Which world scene a Continue or realm transition should enter.  Pose saves
+## carry the same id so coordinates from one realm are never applied to another.
+var current_realm: String = "meadows"
+
+## Authored arrival anchor requested by a realm gate. It survives the
+## transition autosave so Continue after a crash lands at the destination
+## gate, then the destination world consumes it and writes a settled autosave.
+var pending_realm_entry: String = ""
 
 ## SB11. Reads `progression`'s flags against `data/progression/objectives.json`
 ## to answer "what is the one tracked Main Story line" and "what does the
@@ -461,6 +477,9 @@ func reset_for_new_game() -> void:
 	map = MAP_STATE.new()
 	map.configure(_map_landmarks_config())
 	progression = PROGRESSION_STATE.new()
+	realm_hearts = REALM_HEART_STATE.new()
+	current_realm = "meadows"
+	pending_realm_entry = ""
 	quest_log = QUEST_LOG.new()
 	objective_text = quest_log.call("tracked_text", progression)
 	objective_hint = quest_log.call("tracked_hint", progression)
@@ -471,6 +490,7 @@ func reset_for_new_game() -> void:
 	day = 1
 	pending_build = ""
 	_pending_world_message = ""
+	PROGRESSION_FEED.clear()
 	pending_catch = null
 	placed_buildings = []
 	farm_plots = []
@@ -741,6 +761,33 @@ func take_pending_world_message() -> String:
 	return text
 
 
+# --- the progression feed (PROGRESSION-VISIBLE, prompt 73, D76) ---------------
+##
+## The same queue-plus-revision shape as the world message above, for every
+## progression change: XP, levels, bond credits, bond milestones. The storage
+## is `scripts/creatures/progression_feed.gd`'s static log, because the
+## producers are RefCounted creatures with no tree to reach this autoload
+## through -- these are the `Game`-shaped handles for anything that already
+## talks to `Game`. Presenters poll `progression_feed_revision()` and read
+## `peek_progression_events(seq)` past their own cursor; nothing in
+## production takes (drains) the log, so several readers share it.
+
+func push_progression_event(kind: String, creature: RefCounted, payload: Dictionary = {}) -> Dictionary:
+	return PROGRESSION_FEED.push(kind, creature, payload)
+
+
+func progression_feed_revision() -> int:
+	return PROGRESSION_FEED.revision()
+
+
+func peek_progression_events(after_seq: int) -> Array:
+	return PROGRESSION_FEED.peek_since(after_seq)
+
+
+func take_progression_events() -> Array:
+	return PROGRESSION_FEED.drain()
+
+
 # --- creature-bed recovery (Gate A) -----------------------------------------
 
 func _tick_creature_bed_recovery(delta: float) -> void:
@@ -928,6 +975,59 @@ func save_game(slot: int) -> bool:
 	return bool(save_system.call("save", self, slot))
 
 
+func current_realm_scene() -> String:
+	if realm_hearts == null:
+		return ""
+	return str(realm_hearts.call("scene_for_realm", current_realm))
+
+
+func can_enter_realm(realm_id: String) -> bool:
+	if realm_hearts == null or progression == null:
+		return false
+	var scene := str(realm_hearts.call("scene_for_realm", realm_id))
+	if scene == "":
+		return false
+	var key_flag := str(realm_hearts.call("entry_key_for_realm", realm_id))
+	return key_flag == "" or bool(progression.call("has", key_flag))
+
+
+## Cross a real realm boundary.  The transition autosave deliberately bypasses
+## `save_game()`'s pose capture: after `current_realm` changes, a pose captured
+## from the outgoing scene would be labelled as the destination and could drop
+## the player at a valid but unrelated coordinate on Continue.
+func enter_realm(realm_id: String, entry_id: String = "") -> bool:
+	if not can_enter_realm(realm_id):
+		return false
+	var scene := str(realm_hearts.call("scene_for_realm", realm_id))
+	if not ResourceLoader.exists(scene):
+		push_error("realm '%s' points at missing scene %s" % [realm_id, scene])
+		return false
+	_sync_placed_building_state()
+	_sync_death_satchel_state()
+	_sync_harvest_state()
+	current_realm = realm_id
+	pending_realm_entry = entry_id
+	saved_player_pose = {}
+	if save_system != null:
+		save_system.call("save", self, autosave_slot())
+	get_tree().change_scene_to_file(scene)
+	return true
+
+
+func pending_entry_for(realm_id: String) -> String:
+	return pending_realm_entry if realm_id == current_realm else ""
+
+
+## Called only after the destination world has placed Player on its authored
+## anchor. Clearing first and using the normal save path records the correct
+## destination pose; a crash before this point retains the pending anchor.
+func complete_realm_entry(realm_id: String) -> bool:
+	if realm_id != current_realm:
+		return false
+	pending_realm_entry = ""
+	return save_game(autosave_slot())
+
+
 ## R3.1-remainder. A placed storage chest's own contents live on the live
 ## scene node (`storage_state.gd`), not in `placed_buildings` — `save_game
 ## .gd` deliberately never touches the scene tree (see its own header), so
@@ -1026,6 +1126,7 @@ func _capture_player_pose() -> void:
 		rig = player.get_parent().get_node_or_null(^"CameraRig")
 	var facing := model.global_rotation.y if model != null else player.global_rotation.y
 	saved_player_pose = {
+		"realm": current_realm,
 		"position": [player.global_position.x, player.global_position.y, player.global_position.z],
 		"model_yaw": facing,
 		"camera_yaw": float(rig.get("yaw")) if rig != null else facing,
@@ -1036,7 +1137,11 @@ func _capture_player_pose() -> void:
 ## Apply a loaded pose if both the data and Player exist. False is the normal
 ## pre-world/title-screen case, not an error; Player._ready retries it.
 func apply_loaded_player_pose() -> bool:
+	if pending_realm_entry != "":
+		return false
 	if saved_player_pose.is_empty():
+		return false
+	if str(saved_player_pose.get("realm", "meadows")) != current_realm:
 		return false
 	var player := _find_player()
 	if player == null:

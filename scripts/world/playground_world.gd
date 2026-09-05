@@ -45,6 +45,7 @@ const VILLAGE_BOUNDARY := preload("res://scripts/world/village_boundary.gd")
 const KEY_PICKUP := preload("res://scripts/world/key_pickup.gd")
 const TM_PICKUP := preload("res://scripts/world/tm_pickup.gd")
 const ITEM_CACHE_PICKUP := preload("res://scripts/world/item_cache_pickup.gd")
+const BAND_PICKUPS := preload("res://scripts/world/band_pickups.gd")
 const CART_REPAIR := preload("res://scripts/world/cart_repair.gd")
 const RIVER_NEST_CLEAR := preload("res://scripts/world/river_nest_clear.gd")
 const WORLD_PERIMETER := preload("res://scripts/world/world_perimeter.gd")
@@ -56,10 +57,13 @@ const RIVER := preload("res://scripts/world/river.gd")
 const SEVERED_SPOKES := preload("res://scripts/world/severed_spokes.gd")
 const RIFT_COLLAPSE := preload("res://scripts/world/rift_collapse.gd")
 const MEADOW_HEALING := preload("res://scripts/world/meadow_healing.gd")
+const REALM_HEART_SHRINE := preload("res://scripts/world/realm_heart_shrine.gd")
+const REALM_GATE := preload("res://scripts/world/realm_gate.gd")
 const STRONGHOLD := preload("res://scripts/world/stronghold.gd")
 const STRONGHOLD_CLIMAX := preload("res://scripts/world/stronghold_climax.gd")
 const PLAYER_DEATH := preload("res://scripts/world/player_death.gd")
 const BOOT_LOG := preload("res://scripts/boot/boot_log.gd")
+const REALM_TRANSITIONS_CONFIG := "res://data/config/realm_transitions.json"
 
 ## SA7: on `paths.routes`' "toward the rocky rise" leg (`[10,-10] -> [45,-22]`,
 ## the same road `landmark.gd`'s stronghold silhouette sits beyond), a stone's
@@ -1160,6 +1164,11 @@ func _build_settlement() -> void:
 	add_child(signpost)
 	signpost.call("build", self, SIGNPOST_AT)
 
+	# Cloudreach Phase 1: the reusable Heart socket in the village and the
+	# permanent keyed realm arch at Storm Road. Both read/write central durable
+	# state; rebuilding this scene cannot duplicate either reward.
+	_build_realm_handoff()
+
 	_build_trailhead_signposts()
 
 	# T1-HALL (2026-08-30): the detached castle silhouette this call built at
@@ -1244,6 +1253,7 @@ func _build_settlement() -> void:
 	_place_farm_plots()
 	_place_tms()
 	_place_item_caches()
+	_place_band_pickups()
 	_place_sunstone()
 	_build_burrow_warrens()
 	_build_stronghold()
@@ -1487,6 +1497,17 @@ func _spawn_item_cache(item_id: String) -> void:
 		model_and_scale[0], model_and_scale[1])
 
 
+## W17-DENSITY-B2-B3. The authored per-band findables (candy, revives,
+## potions, mushrooms) from `data/config/bands/<band>/pickups.json`, stood up
+## through the same `item_cache_pickup.gd` seam `_place_item_caches()` uses,
+## keyed on their own authored id. `band_pickups.gd` owns the reading, the
+## ground/scatter siting and the tier look; this is the one hook.
+func _place_band_pickups() -> void:
+	var stats: Dictionary = BAND_PICKUPS.place_all(self, _vegetation)
+	print("[playground] placed %d band pickups (%d already taken, %d nudged off scatter, %d unclear, %d without ground)" % [
+		int(stats["placed"]), int(stats["taken"]), int(stats["nudged"]), int(stats["unclear"]), int(stats["no_ground"])])
+
+
 ## D71/T3-SUNSTONE: the Sunstone, a one-time physical pickup exactly like
 ## `castle_gate_key` above (`KEY_PICKUP`, not a bespoke class) -- see
 ## `SUNSTONE_AT`'s own comment for why this item is a ground pickup rather
@@ -1715,8 +1736,92 @@ func _place_player() -> void:
 
 	_player.global_position = Vector3(spawn.x, ground + SPAWN_CLEARANCE, spawn.z)
 	_spawn_position = _player.global_position
+
+	# A realm return has its own authored arrival on the accessible side of the
+	# Storm Road arch. Keep `_spawn_position` at home so an ordinary later death
+	# still returns to Grandpa's house rather than turning a transition into a
+	# new permanent death checkpoint.
+	var game := get_node_or_null(^"/root/Game")
+	var pending := str(game.call("pending_entry_for", "meadows")) if game != null and game.has_method("pending_entry_for") else ""
+	if pending != "":
+		var transition_cfg := _load_realm_transition_config()
+		var entries: Dictionary = transition_cfg.get("meadows_entries", {})
+		var entry: Variant = entries.get(pending, {})
+		if entry is Dictionary:
+			var raw: Variant = (entry as Dictionary).get("position", [])
+			if raw is Array and (raw as Array).size() >= 2:
+				var x := float(raw[0])
+				var z := float(raw[1])
+				var arrival_ground := ground_height_at(x, z)
+				if not is_nan(arrival_ground):
+					# Terrain3D streams its Dynamic/Game collision around the render
+					# camera. A cross-realm arrival can be kilometres from the scene
+					# default, so hold gravity until the snapped camera has driven a
+					# few physics updates at the destination.
+					_player.set_physics_process(false)
+					_player.global_position = Vector3(x, arrival_ground + SPAWN_CLEARANCE, z)
+					_player.velocity = Vector3.ZERO
+					var yaw := deg_to_rad(float((entry as Dictionary).get("facing_yaw_deg", 180.0)))
+					var model := _player.get_node_or_null(^"Model") as Node3D
+					if model != null:
+						model.rotation.y = yaw
+					_camera_rig.set("yaw", yaw)
+					_settle_meadows_realm_arrival.call_deferred(game, _player, x, z)
 	if _camera_rig != null and _camera_rig.has_method("set_target"):
 		_camera_rig.call("set_target", _player)
 	print("[playground] spawned at %.1f, %.1f, %.1f" % [
 		_player.global_position.x, _player.global_position.y, _player.global_position.z
 	])
+
+
+func _settle_meadows_realm_arrival(game: Node, player: CharacterBody3D, x: float, z: float) -> void:
+	# The world build following `_place_player()` is synchronous, so these are
+	# the first real collision-streaming beats at the remote arrival site.
+	for _frame in 4:
+		await get_tree().physics_frame
+	if is_instance_valid(player):
+		var arrival_ground := ground_height_at(x, z)
+		if not is_nan(arrival_ground):
+			player.global_position = Vector3(x, arrival_ground + SPAWN_CLEARANCE, z)
+		player.velocity = Vector3.ZERO
+		player.set_physics_process(true)
+		player.reset_physics_interpolation()
+	if is_instance_valid(game):
+		game.call("complete_realm_entry", "meadows")
+
+
+func _build_realm_handoff() -> void:
+	var config := _load_realm_transition_config()
+	var shrine_spec: Dictionary = config.get("meadows_heart_shrine", {})
+	var shrine_at: Variant = shrine_spec.get("position", [])
+	if shrine_at is Array and (shrine_at as Array).size() >= 2:
+		var shrine_ground := ground_height_at(float(shrine_at[0]), float(shrine_at[1]))
+		if not is_nan(shrine_ground):
+			var shrine: Node3D = REALM_HEART_SHRINE.new()
+			shrine.name = "MeadowsRealmHeartShrine"
+			shrine.position = Vector3(float(shrine_at[0]), shrine_ground, float(shrine_at[1]))
+			shrine.rotation.y = deg_to_rad(float(shrine_spec.get("yaw_deg", 0.0)))
+			shrine.call("setup", "meadows", "Heart of Meadows")
+			add_child(shrine)
+
+	var gate_spec: Dictionary = config.get("meadows_cloudreach_gate", {})
+	var gate_at: Variant = gate_spec.get("position", [])
+	if gate_at is Array and (gate_at as Array).size() >= 2:
+		var gate_ground := ground_height_at(float(gate_at[0]), float(gate_at[1]))
+		if not is_nan(gate_ground):
+			var gate: Node3D = REALM_GATE.new()
+			gate.name = "CloudreachRealmGate"
+			gate.position = Vector3(float(gate_at[0]), gate_ground, float(gate_at[1]))
+			gate.rotation.y = deg_to_rad(float(gate_spec.get("yaw_deg", 0.0)))
+			gate.call("setup", "cloudreach", str(gate_spec.get("destination_entry_id", "cloudreach_arrival_from_meadows")),
+				"Cloudreach Cliffs", "realm_key_cloudreach", "realm_gate_cloudreach_unlocked")
+			add_child(gate)
+
+
+func _load_realm_transition_config() -> Dictionary:
+	var file := FileAccess.open(REALM_TRANSITIONS_CONFIG, FileAccess.READ)
+	if file == null:
+		push_error("realm transition config missing: %s" % REALM_TRANSITIONS_CONFIG)
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	return parsed as Dictionary if parsed is Dictionary else {}

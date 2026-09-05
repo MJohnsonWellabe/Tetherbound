@@ -371,14 +371,20 @@ func _load_slot(slot: int) -> void:
 	if game == null or not bool(game.call("load_game", slot)):
 		_status.text = "That save could not be loaded."
 		return
-	_enter_world("Loading Meadows…")
+	_enter_world("Loading realm…")
 
 
 func _enter_world(message: String) -> void:
 	_status.text = message
 	_set_buttons_disabled(true)
 	await get_tree().process_frame
-	get_tree().change_scene_to_file(WORLD_SCENE)
+	var game := get_node_or_null(^"/root/Game")
+	var scene := WORLD_SCENE
+	if game != null and game.has_method("current_realm_scene"):
+		var configured := str(game.call("current_realm_scene"))
+		if configured != "":
+			scene = configured
+	get_tree().change_scene_to_file(scene)
 
 
 func _show_main() -> void:

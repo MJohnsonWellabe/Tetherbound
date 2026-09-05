@@ -3,7 +3,7 @@
   "conversations": {
     "river_nest_doss_challenge": {
       "speaker": "Doss",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/doss.png",
       "_comment": "CI-TRAINER-CENSUS, 2026-08-30. T3-ACTIVITIES, spec sec6's 'River Nest: aggressive Water/Air creatures block a fishing location'. No `flag:`/`give:` effect here on purpose -- `river_nest_clear.gd` owns the actual gather-and-hand-over check (item_gate.gd, the same contract cart_repair.gd uses for Broken Cart) and only opens the dialogue panel to report the result; this is what a player sees before they are carrying everything. Same one-character-is-the-giver shape Old Bram established: the first line is the flag `revealed_by` waits on.",
       "lines": [
         "Don't bother casting past the bend. Been trying to get that pair to settle for a week and they've decided the whole nest is theirs now.",
@@ -12,7 +12,7 @@
     },
     "river_nest_doss_defeated": {
       "speaker": "Doss",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/doss.png",
       "lines": [
         "That'll hold them. First quiet water I've seen off that bend all week.",
         "Cast wherever you like now. I mean it -- you earned the spot more than I did."

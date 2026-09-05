@@ -1,0 +1,755 @@
+{
+  "_comment": "Phase 3 chapter-data contract for Cloudreach Cliffs. This is the authored content spine and integration contract; it does not claim that dialogue files, runtime encounters, resource items, bespoke audio, or final creature art already exist. Coordinates use the realm-local [x, y, z] space defined by data/config/cloudreach_world.json.",
+  "schema_version": 1,
+  "realm_id": "cloudreach",
+  "world_contract": "res://data/config/cloudreach_world.json",
+  "story_problem": {
+    "antagonist": "team_tether",
+    "network_name": "Storm Anchor network",
+    "regional_effects": [
+      "ancestral_wind_routes_pinned",
+      "wind_bottled_for_extraction",
+      "locals_stranded",
+      "causeway_travel_broken"
+    ],
+    "escalation_truth": "The lower anchors feed a summit extraction engine that bottles Cloudreach's ancestral winds.",
+    "resolution": "Disable the network, defeat its captain, restore the winds, and reveal the Waterward route."
+  },
+  "persistent_flags": {
+    "entry": [
+      "realm_key_cloudreach",
+      "cloudreach_chapter_started"
+    ],
+    "act_i": [
+      "cloudreach_crisis_learned",
+      "storm_anchor_lower_west_mapped",
+      "storm_anchor_lower_east_mapped",
+      "cloudreach_lower_anchors_investigated",
+      "causeway_survivors_reconnected",
+      "windscar_aerie_prepared",
+      "cloudreach_act_i_complete"
+    ],
+    "act_ii": [
+      "fly_traversal_unlocked",
+      "sky_shrine_reached",
+      "storm_anchor_engine_truth_learned",
+      "cloudreach_upper_route_unlocked",
+      "cloudreach_act_ii_complete"
+    ],
+    "act_iii": [
+      "storm_anchor_upper_west_disabled",
+      "storm_anchor_upper_east_disabled",
+      "storm_anchor_summit_feed_disabled",
+      "cloudreach_upper_anchors_disabled",
+      "summit_extraction_engine_reached",
+      "captain_veyra_defeated",
+      "storm_anchor_network_disabled",
+      "cloudreach_winds_restored",
+      "realm_heart_cloudreach_earned",
+      "realm_key_water",
+      "waterward_route_revealed",
+      "cloudreach_chapter_complete"
+    ]
+  },
+  "acts": [
+    {
+      "id": "act_i_arrival_and_aerie",
+      "order": 1,
+      "title": "The Stilled Roads",
+      "entry_flags": ["realm_key_cloudreach"],
+      "completion_flag": "cloudreach_act_i_complete",
+      "objectives": [
+        {
+          "id": "cloudreach_arrive",
+          "flag_id": "cloudreach_chapter_started",
+          "label": "Enter Cloudreach and find the waycamp.",
+          "how": "Follow the rising road from the realm gate to the first camp.",
+          "region_id": "gate_lower_cliffs",
+          "requires_flags": ["realm_key_cloudreach"],
+          "completion_event": "arrival_anchor_reached"
+        },
+        {
+          "id": "cloudreach_learn_crisis",
+          "flag_id": "cloudreach_crisis_learned",
+          "label": "Ask why the cliff roads have gone still.",
+          "how": "Speak with Warden Aila at Galefoot Waycamp.",
+          "region_id": "gate_lower_cliffs",
+          "requires_flags": ["cloudreach_chapter_started"],
+          "completion_event": "dialogue:cloudreach_aila_arrival_complete"
+        },
+        {
+          "id": "cloudreach_investigate_lower_anchors",
+          "flag_id": "cloudreach_lower_anchors_investigated",
+          "label": "Trace the Storm Anchors along the broken roads.",
+          "how": "Inspect both lower anchor sites; the task feed reports the count without marking a GPS route.",
+          "region_id": "broken_causeways",
+          "requires_flags": ["cloudreach_crisis_learned"],
+          "count_flags": [
+            "storm_anchor_lower_west_mapped",
+            "storm_anchor_lower_east_mapped"
+          ],
+          "completion_event": "all_count_flags_set"
+        },
+        {
+          "id": "cloudreach_reconnect_survivors",
+          "flag_id": "causeway_survivors_reconnected",
+          "label": "Open a safe line through the Broken Causeways.",
+          "how": "Clear the anchor picket and ring the Three Bells signal for the stranded travelers.",
+          "region_id": "broken_causeways",
+          "requires_flags": ["cloudreach_lower_anchors_investigated"],
+          "completion_event": "three_bells_safe_route_signaled"
+        },
+        {
+          "id": "cloudreach_prepare_aerie",
+          "flag_id": "windscar_aerie_prepared",
+          "label": "Prepare the Windscar Flight Aerie.",
+          "how": "Bring gale fiber, clear the ravine threat, and restore the launch perch.",
+          "region_id": "windscar_ravine",
+          "requires_flags": ["causeway_survivors_reconnected"],
+          "completion_event": "windscar_aerie_restored"
+        },
+        {
+          "id": "cloudreach_act_i_finish",
+          "flag_id": "cloudreach_act_i_complete",
+          "label": "Meet Keeper Maela at the restored aerie.",
+          "how": "Return to the launch perch when your team is ready for the flight trial.",
+          "region_id": "windscar_ravine",
+          "requires_flags": ["windscar_aerie_prepared"],
+          "completion_event": "dialogue:cloudreach_maela_flight_trial_ready"
+        }
+      ]
+    },
+    {
+      "id": "act_ii_fly_and_revelation",
+      "order": 2,
+      "title": "The Road Above",
+      "entry_flags": ["cloudreach_act_i_complete"],
+      "completion_flag": "cloudreach_act_ii_complete",
+      "objectives": [
+        {
+          "id": "cloudreach_earn_fly",
+          "flag_id": "fly_traversal_unlocked",
+          "label": "Complete the Windscar flight trial.",
+          "how": "Pilot the active fly-capable creature through the aerie's wind gates.",
+          "region_id": "windscar_ravine",
+          "requires_flags": ["cloudreach_act_i_complete"],
+          "completion_event": "flight_trial_completed"
+        },
+        {
+          "id": "cloudreach_reach_sky_shrine",
+          "flag_id": "sky_shrine_reached",
+          "label": "Fly to the Sky Shrine above Windscar.",
+          "how": "Use the newly opened wind route; the sheer High Roost has no grounded entrance.",
+          "region_id": "high_roost_sky_shrine",
+          "requires_flags": ["fly_traversal_unlocked"],
+          "completion_event": "landmark:sky_shrine_heartstone_reached"
+        },
+        {
+          "id": "cloudreach_learn_engine_truth",
+          "flag_id": "storm_anchor_engine_truth_learned",
+          "label": "Read the wind record held by the shrine.",
+          "how": "Restore the shrine's three vanes and listen to the path of the stolen wind.",
+          "region_id": "high_roost_sky_shrine",
+          "requires_flags": ["sky_shrine_reached"],
+          "completion_event": "dialogue:cloudreach_sora_storm_engine_truth"
+        },
+        {
+          "id": "cloudreach_release_ground_route",
+          "flag_id": "cloudreach_upper_route_unlocked",
+          "label": "Release the grounded counterweight road.",
+          "how": "Turn the Sky Shrine windlass; it lowers a separate stair through Windscar for grounded travel.",
+          "region_id": "high_roost_sky_shrine",
+          "requires_flags": ["storm_anchor_engine_truth_learned"],
+          "completion_event": "sky_shrine_counterweight_released"
+        },
+        {
+          "id": "cloudreach_act_ii_finish",
+          "flag_id": "cloudreach_act_ii_complete",
+          "label": "Return by air and take the new road toward Cliffhold.",
+          "how": "The flight route remains useful, but the summit path now has a grounded connection.",
+          "region_id": "windscar_ravine",
+          "requires_flags": ["cloudreach_upper_route_unlocked"],
+          "completion_event": "counterweight_road_entered"
+        }
+      ]
+    },
+    {
+      "id": "act_iii_summit_and_restoration",
+      "order": 3,
+      "title": "The Storm Anchor",
+      "entry_flags": ["cloudreach_act_ii_complete"],
+      "completion_flag": "cloudreach_chapter_complete",
+      "objectives": [
+        {
+          "id": "cloudreach_disable_upper_anchors",
+          "flag_id": "cloudreach_upper_anchors_disabled",
+          "label": "Disable the upper Storm Anchors.",
+          "how": "Find the two plateau anchors and the summit feed; use terrain cover and creature switching to break each defense.",
+          "region_id": "upper_cloudreach",
+          "requires_flags": ["cloudreach_act_ii_complete"],
+          "count_flags": [
+            "storm_anchor_upper_west_disabled",
+            "storm_anchor_upper_east_disabled",
+            "storm_anchor_summit_feed_disabled"
+          ],
+          "completion_event": "all_count_flags_set"
+        },
+        {
+          "id": "cloudreach_reach_extraction_engine",
+          "flag_id": "summit_extraction_engine_reached",
+          "label": "Reach the summit extraction engine.",
+          "how": "Follow the exposed summit road after the last feed line goes dark.",
+          "region_id": "summit_final_stronghold",
+          "requires_flags": ["cloudreach_upper_anchors_disabled"],
+          "completion_event": "summit_arena_threshold_crossed"
+        },
+        {
+          "id": "cloudreach_defeat_captain_veyra",
+          "flag_id": "captain_veyra_defeated",
+          "label": "Defeat Captain Veyra at the Eye of the Anchor.",
+          "how": "Use lee zones, reposition through crosswinds, and switch creatures when Veyra changes pressure.",
+          "region_id": "summit_final_stronghold",
+          "requires_flags": ["summit_extraction_engine_reached"],
+          "completion_event": "encounter:captain_veyra_storm_anchor_won"
+        },
+        {
+          "id": "cloudreach_break_network",
+          "flag_id": "storm_anchor_network_disabled",
+          "label": "Break the extraction engine's hold on the wind.",
+          "how": "Pilot a creature through the collapsing wind lanes and strike the exposed relay cores.",
+          "region_id": "summit_final_stronghold",
+          "requires_flags": ["captain_veyra_defeated"],
+          "completion_event": "summit_engine_relays_disabled"
+        },
+        {
+          "id": "cloudreach_witness_restoration",
+          "flag_id": "cloudreach_winds_restored",
+          "label": "Return to the summit overlook as the winds return.",
+          "how": "Meet the Cloudreach delegation after the freed routes reconnect the settlements.",
+          "region_id": "summit_final_stronghold",
+          "requires_flags": ["storm_anchor_network_disabled"],
+          "completion_event": "aftermath:cloudreach_winds_restored"
+        },
+        {
+          "id": "cloudreach_claim_reward",
+          "flag_id": "cloudreach_chapter_complete",
+          "label": "Claim the Cloudreach Heart and look Waterward.",
+          "how": "Accept the realm's Heart and the key carried up the restored Waterward route.",
+          "region_id": "summit_final_stronghold",
+          "requires_flags": ["cloudreach_winds_restored"],
+          "grants_flags": [
+            "realm_heart_cloudreach_earned",
+            "realm_key_water",
+            "waterward_route_revealed"
+          ],
+          "completion_event": "dialogue:cloudreach_aila_final_reward_complete"
+        }
+      ]
+    }
+  ],
+  "side_chains": [
+    {
+      "id": "three_bells_against_silence",
+      "title": "Three Bells Against Silence",
+      "category": "exploration",
+      "giver_npc_id": "bridgekeeper_orrin",
+      "revealed_by": "cloudreach_crisis_learned",
+      "completion_flag": "side_three_bells_complete",
+      "persistence": "save",
+      "steps": [
+        {"id": "find_lower_bell", "flag_id": "side_bell_lower_found", "region_id": "broken_causeways", "requires_flags": [], "label": "Find the bell beside the first broken span."},
+        {"id": "ring_windscar_bell", "flag_id": "side_bell_windscar_rung", "region_id": "windscar_ravine", "requires_flags": ["side_bell_lower_found"], "label": "Reach and ring the Windscar bell."},
+        {"id": "ring_high_roost_bell", "flag_id": "side_three_bells_complete", "region_id": "high_roost_sky_shrine", "requires_flags": ["side_bell_windscar_rung", "fly_traversal_unlocked"], "label": "Fly to the final bell at the High Perches."}
+      ],
+      "visible_state_change": "Three Bells Bridge gains moving travelers and audible route signals after Fly unlock and completion."
+    },
+    {
+      "id": "packs_on_the_wrong_side",
+      "title": "Packs on the Wrong Side",
+      "category": "affected_locals",
+      "giver_npc_id": "courier_neri",
+      "revealed_by": "causeway_survivors_reconnected",
+      "completion_flag": "side_stranded_couriers_complete",
+      "persistence": "save",
+      "steps": [
+        {"id": "recover_abandoned_pack", "flag_id": "side_courier_pack_recovered", "region_id": "broken_causeways", "requires_flags": [], "label": "Recover the pack left at the west ropeway."},
+        {"id": "deliver_medicine", "flag_id": "side_courier_medicine_delivered", "region_id": "windscar_ravine", "requires_flags": ["side_courier_pack_recovered"], "label": "Carry the medicine to the ravine shelter."},
+        {"id": "report_to_neri", "flag_id": "side_stranded_couriers_complete", "region_id": "gate_lower_cliffs", "requires_flags": ["side_courier_medicine_delivered"], "label": "Tell Neri the shelter is supplied."}
+      ],
+      "visible_state_change": "The stranded pair relocates from the ravine shelter to Galefoot Waycamp."
+    },
+    {
+      "id": "aeries_of_cloudreach",
+      "title": "Aeries of Cloudreach",
+      "category": "fly_exploration",
+      "giver_npc_id": "naturalist_sora",
+      "revealed_by": "fly_traversal_unlocked",
+      "completion_flag": "side_aeries_complete",
+      "persistence": "save",
+      "steps": [
+        {"id": "survey_high_perches", "flag_id": "side_aerie_high_perches_surveyed", "region_id": "high_roost_sky_shrine", "requires_flags": ["fly_traversal_unlocked"], "label": "Survey the High Perches from the air."},
+        {"id": "survey_observatory_updraft", "flag_id": "side_aerie_observatory_surveyed", "region_id": "upper_cloudreach", "requires_flags": ["cloudreach_upper_route_unlocked"], "label": "Find the updraft above the Old Wind Observatory."},
+        {"id": "survey_waterward_roost", "flag_id": "side_aeries_complete", "region_id": "summit_final_stronghold", "requires_flags": ["side_aerie_high_perches_surveyed", "side_aerie_observatory_surveyed"], "label": "Reach the hidden roost below Waterward Overlook."}
+      ],
+      "visible_state_change": "Surveyed aeries gain landing markers and become readable Fly rest points."
+    },
+    {
+      "id": "the_cliff_circuit",
+      "title": "The Cliff Circuit",
+      "category": "trainer_completion",
+      "giver_npc_id": "young_trainer_tavi",
+      "revealed_by": "cloudreach_act_i_complete",
+      "completion_flag": "side_cliff_circuit_complete",
+      "persistence": "save",
+      "steps": [
+        {"id": "beat_lower_pair", "flag_id": "side_cliff_circuit_lower", "region_id": "gate_lower_cliffs", "requires_flags": [], "label": "Defeat the two lower-cliff circuit trainers."},
+        {"id": "beat_windscar_pair", "flag_id": "side_cliff_circuit_windscar", "region_id": "windscar_ravine", "requires_flags": ["side_cliff_circuit_lower"], "label": "Defeat the Windscar circuit trainers."},
+        {"id": "beat_tavi", "flag_id": "side_cliff_circuit_complete", "region_id": "upper_cloudreach", "requires_flags": ["side_cliff_circuit_windscar", "cloudreach_upper_route_unlocked"], "label": "Defeat Tavi at Cliffhold's upper ring."}
+      ],
+      "visible_state_change": "The completed circuit board displays the player's team mark and unlocks a rematch tier."
+    }
+  ],
+  "npcs": [
+    {
+      "id": "warden_aila",
+      "name": "Warden Aila",
+      "roles": ["arrival_guide", "affected_local", "late_story_npc"],
+      "region_id": "gate_lower_cliffs",
+      "position": [-275.0, 180.0, 520.0],
+      "body_profile": "local_historian",
+      "portrait_profile": "local_historian",
+      "dialogue_ids": ["cloudreach_aila_arrival", "cloudreach_aila_act_two", "cloudreach_aila_final_reward"],
+      "progression_relevance": "Introduces the crisis, tracks reconnection of the settlements, and grants the post-climax rewards."
+    },
+    {
+      "id": "healer_iven",
+      "name": "Iven",
+      "roles": ["local_resident", "camp_support"],
+      "region_id": "gate_lower_cliffs",
+      "position": [-320.0, 180.0, 540.0],
+      "body_profile": "innkeeper",
+      "portrait_profile": "innkeeper",
+      "dialogue_ids": ["cloudreach_iven_waycamp", "cloudreach_iven_after_restoration"],
+      "progression_relevance": "Teaches recovery planning and explains why safe camps matter on the vertical route."
+    },
+    {
+      "id": "bridgekeeper_orrin",
+      "name": "Orrin",
+      "roles": ["bridge_watch", "memorable_side_character"],
+      "region_id": "broken_causeways",
+      "position": [-500.0, 338.0, 1300.0],
+      "body_profile": "wandering_trainer",
+      "portrait_profile": "wandering_trainer",
+      "dialogue_ids": ["cloudreach_orrin_bridge", "cloudreach_orrin_three_bells", "cloudreach_orrin_route_open"],
+      "progression_relevance": "Explains the bell route, witnesses the broken causeways, and gives the Three Bells side chain."
+    },
+    {
+      "id": "courier_neri",
+      "name": "Neri",
+      "roles": ["cliff_traveler", "affected_local"],
+      "region_id": "broken_causeways",
+      "position": [-790.0, 400.0, 2040.0],
+      "body_profile": "courier",
+      "portrait_profile": "courier",
+      "dialogue_ids": ["cloudreach_neri_stranded", "cloudreach_neri_pack_return"],
+      "progression_relevance": "Makes the stopped travel network personal and starts the stranded-courier side chain."
+    },
+    {
+      "id": "keeper_maela",
+      "name": "Keeper Maela",
+      "roles": ["flight_mentor", "trainer"],
+      "region_id": "windscar_ravine",
+      "position": [395.0, 610.0, 3245.0],
+      "body_profile": "creature_caretaker",
+      "portrait_profile": "creature_caretaker",
+      "dialogue_ids": ["cloudreach_maela_aerie", "cloudreach_maela_flight_trial", "cloudreach_maela_fly_unlocked"],
+      "progression_relevance": "Owns the aerie restoration, flight trial, and functional Fly unlock."
+    },
+    {
+      "id": "naturalist_sora",
+      "name": "Sora",
+      "roles": ["late_story_npc", "memorable_side_character"],
+      "region_id": "high_roost_sky_shrine",
+      "position": [1100.0, 1050.0, 2950.0],
+      "body_profile": "field_researcher",
+      "portrait_profile": "field_researcher",
+      "dialogue_ids": ["cloudreach_sora_shrine", "cloudreach_sora_storm_engine_truth", "cloudreach_sora_aeries"],
+      "progression_relevance": "Interprets the shrine record, reveals the summit engine, and gives the Fly exploration chain."
+    },
+    {
+      "id": "trader_kelm",
+      "name": "Kelm",
+      "roles": ["local_resident", "resource_trader"],
+      "region_id": "upper_cloudreach",
+      "position": [-360.0, 830.0, 3980.0],
+      "body_profile": "trader",
+      "portrait_profile": "trader",
+      "dialogue_ids": ["cloudreach_kelm_cliffhold", "cloudreach_kelm_resource_tier"],
+      "progression_relevance": "Introduces Cloudreach material uses and restocks preparation supplies without becoming a factory loop."
+    },
+    {
+      "id": "young_trainer_tavi",
+      "name": "Tavi",
+      "roles": ["trainer", "local_resident"],
+      "region_id": "upper_cloudreach",
+      "position": [-180.0, 875.0, 4100.0],
+      "body_profile": "young_trainer",
+      "portrait_profile": "young_trainer",
+      "dialogue_ids": ["cloudreach_tavi_circuit", "cloudreach_tavi_challenge", "cloudreach_tavi_defeated"],
+      "progression_relevance": "Owns the trainer-completion side chain and its final regional challenge."
+    },
+    {
+      "id": "defector_rusk",
+      "name": "Rusk",
+      "roles": ["cliff_traveler", "antagonist_faction_witness"],
+      "region_id": "upper_cloudreach",
+      "position": [420.0, 920.0, 4490.0],
+      "body_profile": "former_tether_member",
+      "portrait_profile": "former_tether_member",
+      "dialogue_ids": ["cloudreach_rusk_observatory", "cloudreach_rusk_upper_anchor_warning"],
+      "progression_relevance": "Explains how to interrupt the summit feed without rewriting the shrine's discovery."
+    },
+    {
+      "id": "officer_voss",
+      "name": "Officer Voss",
+      "roles": ["antagonist_representative", "trainer"],
+      "region_id": "summit_final_stronghold",
+      "position": [300.0, 1080.0, 5100.0],
+      "body_profile": "officer_b",
+      "portrait_profile": "officer_b",
+      "dialogue_ids": ["cloudreach_voss_challenge", "cloudreach_voss_defeated"],
+      "progression_relevance": "Commands the summit approach and teaches the final fight's positional pressure."
+    },
+    {
+      "id": "captain_veyra",
+      "name": "Captain Veyra",
+      "roles": ["primary_antagonist", "final_trainer"],
+      "region_id": "summit_final_stronghold",
+      "position": [100.0, 1160.0, 5350.0],
+      "body_profile": "captain_b",
+      "portrait_profile": "captain_b",
+      "dialogue_ids": ["cloudreach_veyra_prebattle", "cloudreach_veyra_phase_change", "cloudreach_veyra_defeated"],
+      "progression_relevance": "Commands the Storm Anchor network and is the named final opponent."
+    }
+  ],
+  "trainer_ladder": [
+    {
+      "id": "trainer_ila_lower_ring",
+      "name": "Ila",
+      "region_id": "gate_lower_cliffs",
+      "body_profile": "rival_trainer",
+      "rank": "local",
+      "level_band": [19, 21],
+      "mechanics": ["basic_switching", "ledge_spacing"],
+      "defeat_flag": "defeated_cloudreach_ila",
+      "optional": true,
+      "team_contract": {"selection_key": "cloudreach.trainer.ila", "replaceable": true, "slots": [{"role": "fast_opener", "placeholder_species": "sparkit", "level": 19}, {"role": "air_finisher", "placeholder_species": "pipwing", "level": 21}]}
+    },
+    {
+      "id": "trainer_orrin_bridge_watch",
+      "name": "Orrin",
+      "region_id": "broken_causeways",
+      "body_profile": "wandering_trainer",
+      "rank": "local",
+      "level_band": [21, 23],
+      "mechanics": ["narrow_arena", "forced_reposition"],
+      "defeat_flag": "defeated_cloudreach_orrin",
+      "optional": true,
+      "team_contract": {"selection_key": "cloudreach.trainer.orrin", "replaceable": true, "slots": [{"role": "bridge_controller", "placeholder_species": "galewisp", "level": 21}, {"role": "durable_anchor", "placeholder_species": "bramblebun", "level": 23}]}
+    },
+    {
+      "id": "tether_lieutenant_senn",
+      "name": "Lieutenant Senn",
+      "region_id": "broken_causeways",
+      "body_profile": "grunt_c",
+      "rank": "grunt",
+      "level_band": [22, 24],
+      "mechanics": ["anchor_pulse", "switch_pressure"],
+      "defeat_flag": "defeated_cloudreach_senn",
+      "optional": false,
+      "team_contract": {"selection_key": "cloudreach.trainer.senn", "replaceable": true, "slots": [{"role": "disruptor", "placeholder_species": "shadelet", "level": 22}, {"role": "pursuer", "placeholder_species": "galecrest", "level": 24}]}
+    },
+    {
+      "id": "keeper_maela_trial",
+      "name": "Keeper Maela",
+      "region_id": "windscar_ravine",
+      "body_profile": "creature_caretaker",
+      "rank": "mentor",
+      "level_band": [23, 25],
+      "mechanics": ["crosswind_lanes", "movement_test", "recovery_window"],
+      "defeat_flag": "completed_cloudreach_maela_trial_battle",
+      "optional": false,
+      "team_contract": {"selection_key": "cloudreach.trainer.maela", "replaceable": true, "slots": [{"role": "wind_tutor", "placeholder_species": "galewisp", "level": 23}, {"role": "flight_ace", "placeholder_species": "galecrest", "level": 25}]}
+    },
+    {
+      "id": "young_trainer_tavi_upper_ring",
+      "name": "Tavi",
+      "region_id": "upper_cloudreach",
+      "body_profile": "young_trainer",
+      "rank": "ace",
+      "level_band": [26, 29],
+      "mechanics": ["three_creature_composition", "counter_switching", "elevation_control"],
+      "defeat_flag": "defeated_cloudreach_tavi",
+      "optional": true,
+      "team_contract": {"selection_key": "cloudreach.trainer.tavi", "replaceable": true, "slots": [{"role": "terrain_controller", "placeholder_species": "frostclaw", "level": 26}, {"role": "switch_punisher", "placeholder_species": "sparkit", "level": 28}, {"role": "air_ace", "placeholder_species": "galecrest", "level": 29}]}
+    },
+    {
+      "id": "officer_voss_summit_approach",
+      "name": "Officer Voss",
+      "region_id": "summit_final_stronghold",
+      "body_profile": "officer_b",
+      "rank": "elite",
+      "level_band": [29, 31],
+      "mechanics": ["gust_hazards", "positional_denial", "aggressive_switching"],
+      "defeat_flag": "defeated_cloudreach_voss",
+      "optional": false,
+      "team_contract": {"selection_key": "cloudreach.trainer.voss", "replaceable": true, "slots": [{"role": "edge_denial", "placeholder_species": "galewisp", "level": 29}, {"role": "heavy_pressure", "placeholder_species": "frostclaw", "level": 30}, {"role": "switching_ace", "placeholder_species": "shadelet", "level": 31}]}
+    },
+    {
+      "id": "captain_veyra_storm_anchor",
+      "name": "Captain Veyra",
+      "region_id": "summit_final_stronghold",
+      "body_profile": "captain_b",
+      "rank": "captain",
+      "level_band": [31, 34],
+      "mechanics": ["wind", "positioning", "switching", "recovery_planning"],
+      "defeat_flag": "captain_veyra_defeated",
+      "optional": false,
+      "team_contract": {"selection_key": "cloudreach.final.captain_veyra", "replaceable": true, "slots": [{"role": "crosswind_controller", "placeholder_species": "galewisp", "level": 31}, {"role": "positional_pursuer", "placeholder_species": "frostclaw", "level": 32}, {"role": "summit_ace", "placeholder_species": "galecrest", "level": 34}]}
+    }
+  ],
+  "encounter_tables": [
+    {
+      "id": "cloudreach_lower_wild",
+      "region_ids": ["gate_lower_cliffs"],
+      "level_range": [18, 22],
+      "selection_key": "cloudreach.wild.lower",
+      "replaceable": true,
+      "catchable": true,
+      "entries": [
+        {"role": "air_scout", "placeholder_species": "pipwing", "weight": 4},
+        {"role": "ledge_forager", "placeholder_species": "sparkit", "weight": 3},
+        {"role": "rare_updraft_guard", "placeholder_species": "galecrest", "weight": 1}
+      ]
+    },
+    {
+      "id": "cloudreach_causeway_wild",
+      "region_ids": ["broken_causeways"],
+      "level_range": [20, 25],
+      "selection_key": "cloudreach.wild.causeways",
+      "replaceable": true,
+      "catchable": true,
+      "entries": [
+        {"role": "bridge_ambusher", "placeholder_species": "shadelet", "weight": 2},
+        {"role": "air_patrol", "placeholder_species": "galewisp", "weight": 4},
+        {"role": "stone_hold", "placeholder_species": "bramblebun", "weight": 3}
+      ]
+    },
+    {
+      "id": "cloudreach_windscar_wild",
+      "region_ids": ["windscar_ravine"],
+      "level_range": [22, 27],
+      "selection_key": "cloudreach.wild.windscar",
+      "replaceable": true,
+      "catchable": true,
+      "entries": [
+        {"role": "wind_controller", "placeholder_species": "galewisp", "weight": 4},
+        {"role": "ravine_pursuer", "placeholder_species": "frostclaw", "weight": 2},
+        {"role": "flight_candidate", "placeholder_species": "galecrest", "weight": 2}
+      ]
+    },
+    {
+      "id": "cloudreach_high_roost_wild",
+      "region_ids": ["high_roost_sky_shrine"],
+      "level_range": [24, 28],
+      "selection_key": "cloudreach.wild.high_roost",
+      "replaceable": true,
+      "catchable": true,
+      "requires_unlock": "fly_traversal_unlocked",
+      "entries": [
+        {"role": "perch_flock", "placeholder_species": "pipwing", "weight": 4},
+        {"role": "shrine_guard", "placeholder_species": "galecrest", "weight": 2},
+        {"role": "rare_glider", "placeholder_species": "reedwing", "weight": 1}
+      ]
+    },
+    {
+      "id": "cloudreach_upper_wild",
+      "region_ids": ["upper_cloudreach"],
+      "level_range": [26, 31],
+      "selection_key": "cloudreach.wild.upper",
+      "replaceable": true,
+      "catchable": true,
+      "requires_unlock": "cloudreach_upper_route_unlocked",
+      "entries": [
+        {"role": "plateau_hunter", "placeholder_species": "frostclaw", "weight": 3},
+        {"role": "storm_charger", "placeholder_species": "sparkit", "weight": 3},
+        {"role": "night_ledge_stalker", "placeholder_species": "shadelet", "weight": 2}
+      ]
+    },
+    {
+      "id": "cloudreach_summit_wild",
+      "region_ids": ["summit_final_stronghold"],
+      "level_range": [29, 33],
+      "selection_key": "cloudreach.wild.summit",
+      "replaceable": true,
+      "catchable": true,
+      "requires_unlock": "cloudreach_upper_route_unlocked",
+      "entries": [
+        {"role": "summit_sentinel", "placeholder_species": "galecrest", "weight": 2},
+        {"role": "engine_scavenger", "placeholder_species": "shadelet", "weight": 2},
+        {"role": "cold_front_hunter", "placeholder_species": "frostclaw", "weight": 2}
+      ]
+    }
+  ],
+  "pickups": [
+    {"id": "cr_pickup_lower_good_candy", "item_id": "good_candy", "count": 1, "region_id": "gate_lower_cliffs", "position": [-350.0, 180.0, 500.0], "placement": "abandoned_pack", "persistent": true, "one_time": true, "requires_unlock": ""},
+    {"id": "cr_pickup_lower_potion", "item_id": "potion_small", "count": 2, "region_id": "gate_lower_cliffs", "position": [250.0, 220.0, 680.0], "placement": "cliff_edge_cache", "persistent": true, "one_time": true, "requires_unlock": ""},
+    {"id": "cr_pickup_lower_revive", "item_id": "revive", "count": 1, "region_id": "gate_lower_cliffs", "position": [450.0, 260.0, 820.0], "placement": "overhang", "persistent": true, "one_time": true, "requires_unlock": ""},
+    {"id": "cr_pickup_bridge_good_candy", "item_id": "good_candy", "count": 1, "region_id": "broken_causeways", "position": [-470.0, 340.0, 1290.0], "placement": "broken_bridge_end", "persistent": true, "one_time": true, "requires_unlock": ""},
+    {"id": "cr_pickup_west_great_candy", "item_id": "great_candy", "count": 1, "region_id": "broken_causeways", "position": [-1000.0, 400.0, 1600.0], "placement": "ruined_watchpost", "persistent": true, "one_time": true, "requires_unlock": ""},
+    {"id": "cr_pickup_arch_large_potion", "item_id": "potion_large", "count": 1, "region_id": "broken_causeways", "position": [300.0, 500.0, 1900.0], "placement": "ruined_watchpost", "persistent": true, "one_time": true, "requires_unlock": ""},
+    {"id": "cr_pickup_west_wind_tm", "item_id": "tm_wind_blade", "count": 1, "region_id": "broken_causeways", "position": [-1250.0, 440.0, 1750.0], "placement": "dangerous_cliff_ledge", "persistent": true, "one_time": true, "requires_unlock": ""},
+    {"id": "cr_pickup_windscar_great_candy", "item_id": "great_candy", "count": 1, "region_id": "windscar_ravine", "position": [-430.0, 460.0, 2770.0], "placement": "cave_overhang", "persistent": true, "one_time": true, "requires_unlock": ""},
+    {"id": "cr_pickup_aerie_revive", "item_id": "revive", "count": 1, "region_id": "windscar_ravine", "position": [160.0, 560.0, 3350.0], "placement": "aerie_supply", "persistent": true, "one_time": true, "requires_unlock": ""},
+    {"id": "cr_pickup_aerie_stamina", "item_id": "stamina_mushroom", "count": 2, "region_id": "windscar_ravine", "position": [520.0, 650.0, 3300.0], "placement": "launch_ledge", "persistent": true, "one_time": true, "requires_unlock": "fly_traversal_unlocked"},
+    {"id": "cr_pickup_shrine_rare_candy", "item_id": "rare_candy", "count": 1, "region_id": "high_roost_sky_shrine", "position": [1120.0, 1060.0, 3000.0], "placement": "shrine_offering", "persistent": true, "one_time": true, "requires_unlock": "fly_traversal_unlocked"},
+    {"id": "cr_pickup_perches_heavenfall", "item_id": "tm_heavenfall", "count": 1, "region_id": "high_roost_sky_shrine", "position": [900.0, 1000.0, 2720.0], "placement": "fly_only_pocket", "persistent": true, "one_time": true, "requires_unlock": "fly_traversal_unlocked"},
+    {"id": "cr_pickup_shrine_revive", "item_id": "revive", "count": 2, "region_id": "high_roost_sky_shrine", "position": [1400.0, 1180.0, 3300.0], "placement": "high_value_ledge", "persistent": true, "one_time": true, "requires_unlock": "fly_traversal_unlocked"},
+    {"id": "cr_pickup_upper_great_candy", "item_id": "great_candy", "count": 1, "region_id": "upper_cloudreach", "position": [-900.0, 760.0, 4200.0], "placement": "abandoned_pack", "persistent": true, "one_time": true, "requires_unlock": "cloudreach_upper_route_unlocked"},
+    {"id": "cr_pickup_observatory_potion", "item_id": "potion_large", "count": 2, "region_id": "upper_cloudreach", "position": [450.0, 930.0, 4520.0], "placement": "ruined_watchpost", "persistent": true, "one_time": true, "requires_unlock": "cloudreach_upper_route_unlocked"},
+    {"id": "cr_pickup_upper_rare_candy", "item_id": "rare_candy", "count": 1, "region_id": "upper_cloudreach", "position": [850.0, 1100.0, 4750.0], "placement": "fly_only_pocket", "persistent": true, "one_time": true, "requires_unlock": "fly_traversal_unlocked"},
+    {"id": "cr_pickup_upper_aerial_tm", "item_id": "tm_aerial_flash", "count": 1, "region_id": "upper_cloudreach", "position": [-650.0, 860.0, 4600.0], "placement": "dangerous_upper_ledge", "persistent": true, "one_time": true, "requires_unlock": "cloudreach_upper_route_unlocked"},
+    {"id": "cr_pickup_waterward_rare_candy", "item_id": "rare_candy", "count": 1, "region_id": "summit_final_stronghold", "position": [-420.0, 1110.0, 5650.0], "placement": "summit_reward", "persistent": true, "one_time": true, "requires_unlock": "cloudreach_upper_route_unlocked"},
+    {"id": "cr_pickup_summit_revive", "item_id": "revive", "count": 2, "region_id": "summit_final_stronghold", "position": [480.0, 1250.0, 5500.0], "placement": "preboss_cache", "persistent": true, "one_time": true, "requires_unlock": "cloudreach_upper_route_unlocked"}
+  ],
+  "resource_tier": {
+    "id": "cloudreach_tier_2",
+    "implementation_status": "contract_requires_item_and_recipe_definitions",
+    "design_rule": "Useful preparation and compact upgrades, never a factory chain.",
+    "resources": [
+      {"id": "windworn_heartwood", "display_name": "Windworn Heartwood", "kind": "wood", "gather_method": "axe", "region_ids": ["broken_causeways", "upper_cloudreach"], "uses": ["bridge_repair", "camp_upgrade"]},
+      {"id": "cliffglass_ore", "display_name": "Cliffglass Ore", "kind": "ore", "gather_method": "pickaxe", "region_ids": ["windscar_ravine", "upper_cloudreach", "summit_final_stronghold"], "uses": ["cloudreach_tools", "wind_resistant_gear"]},
+      {"id": "gale_fiber", "display_name": "Gale Fiber", "kind": "fiber", "gather_method": "knife", "region_ids": ["gate_lower_cliffs", "broken_causeways", "windscar_ravine"], "uses": ["aerie_repair", "rope_bridge_kit"]},
+      {"id": "skyplume", "display_name": "Skyplume", "kind": "creature_drop", "gather_method": "encounter_reward", "region_ids": ["windscar_ravine", "high_roost_sky_shrine", "upper_cloudreach"], "uses": ["fly_stamina_food", "bond_gift"]},
+      {"id": "sunleaf", "display_name": "Sunleaf", "kind": "alpine_herb", "gather_method": "hand", "region_ids": ["high_roost_sky_shrine", "upper_cloudreach"], "uses": ["recovery_tonic", "weather_resistance_food"]},
+      {"id": "cloudberry", "display_name": "Cloudberry", "kind": "food", "gather_method": "hand", "region_ids": ["gate_lower_cliffs", "upper_cloudreach"], "uses": ["satiety_food", "bond_food"]}
+    ],
+    "nodes": [
+      {"id": "cr_node_gale_fiber_gate", "resource_id": "gale_fiber", "region_id": "gate_lower_cliffs", "position": [180.0, 210.0, 620.0], "amount": 3, "respawn_policy": "world_day_regrow"},
+      {"id": "cr_node_cloudberry_waycamp", "resource_id": "cloudberry", "region_id": "gate_lower_cliffs", "position": [-400.0, 175.0, 570.0], "amount": 4, "respawn_policy": "world_day_regrow"},
+      {"id": "cr_node_heartwood_west", "resource_id": "windworn_heartwood", "region_id": "broken_causeways", "position": [-1080.0, 390.0, 1500.0], "amount": 4, "respawn_policy": "world_day_regrow"},
+      {"id": "cr_node_gale_fiber_bridge", "resource_id": "gale_fiber", "region_id": "broken_causeways", "position": [-420.0, 350.0, 1420.0], "amount": 3, "respawn_policy": "world_day_regrow"},
+      {"id": "cr_node_cliffglass_ravine", "resource_id": "cliffglass_ore", "region_id": "windscar_ravine", "position": [-600.0, 420.0, 2900.0], "amount": 3, "respawn_policy": "world_day_regrow"},
+      {"id": "cr_node_skyplume_aerie", "resource_id": "skyplume", "region_id": "windscar_ravine", "position": [500.0, 640.0, 3220.0], "amount": 2, "respawn_policy": "encounter_cycle"},
+      {"id": "cr_node_sunleaf_shrine", "resource_id": "sunleaf", "region_id": "high_roost_sky_shrine", "position": [1200.0, 1080.0, 3100.0], "amount": 3, "respawn_policy": "world_day_regrow"},
+      {"id": "cr_node_skyplume_perches", "resource_id": "skyplume", "region_id": "high_roost_sky_shrine", "position": [850.0, 980.0, 2800.0], "amount": 2, "respawn_policy": "encounter_cycle"},
+      {"id": "cr_node_heartwood_upper", "resource_id": "windworn_heartwood", "region_id": "upper_cloudreach", "position": [-850.0, 780.0, 4300.0], "amount": 5, "respawn_policy": "world_day_regrow"},
+      {"id": "cr_node_cloudberry_cliffhold", "resource_id": "cloudberry", "region_id": "upper_cloudreach", "position": [-500.0, 820.0, 4100.0], "amount": 4, "respawn_policy": "world_day_regrow"},
+      {"id": "cr_node_cliffglass_observatory", "resource_id": "cliffglass_ore", "region_id": "upper_cloudreach", "position": [520.0, 900.0, 4450.0], "amount": 4, "respawn_policy": "world_day_regrow"},
+      {"id": "cr_node_cliffglass_summit", "resource_id": "cliffglass_ore", "region_id": "summit_final_stronghold", "position": [-350.0, 1080.0, 5200.0], "amount": 5, "respawn_policy": "world_day_regrow"}
+    ]
+  },
+  "camping_contract": {
+    "satiety_policy": "reuse_existing_slow_nonlethal_drain",
+    "purpose": "Safe recovery and preparation points spaced across long vertical routes; no starvation death or extreme drain.",
+    "camps": [
+      {"id": "galefoot_waycamp", "region_id": "gate_lower_cliffs", "position": [-280.0, 180.0, 520.0], "requires_flag": "", "services": ["save", "rest", "cook", "creature_recovery"], "safe_radius_m": 28.0},
+      {"id": "west_causeway_refuge", "region_id": "broken_causeways", "position": [-760.0, 400.0, 2050.0], "requires_flag": "causeway_survivors_reconnected", "services": ["save", "rest", "cook", "creature_recovery"], "safe_radius_m": 22.0},
+      {"id": "windscar_flight_aerie_camp", "region_id": "windscar_ravine", "position": [400.0, 610.0, 3250.0], "requires_flag": "windscar_aerie_prepared", "services": ["save", "rest", "cook", "creature_recovery", "fly_rest"], "safe_radius_m": 24.0},
+      {"id": "cliffhold_commons", "region_id": "upper_cloudreach", "position": [-340.0, 830.0, 3970.0], "requires_flag": "cloudreach_upper_route_unlocked", "services": ["save", "rest", "cook", "creature_recovery", "trade"], "safe_radius_m": 32.0},
+      {"id": "summit_bivouac", "region_id": "summit_final_stronghold", "position": [-520.0, 1080.0, 5300.0], "requires_flag": "cloudreach_upper_anchors_disabled", "services": ["save", "rest", "cook", "creature_recovery"], "safe_radius_m": 20.0}
+    ]
+  },
+  "map_navigation": {
+    "region_landmarks": [
+      {"region_id": "gate_lower_cliffs", "landmark_id": "realm_gate_crag", "navigation_role": "arrival_orientation", "unlock_event": "region_entered"},
+      {"region_id": "broken_causeways", "landmark_id": "three_bells_bridge", "navigation_role": "causeway_spine", "unlock_event": "region_entered"},
+      {"region_id": "windscar_ravine", "landmark_id": "windscar_beacon", "navigation_role": "ravine_axis", "unlock_event": "region_entered"},
+      {"region_id": "high_roost_sky_shrine", "landmark_id": "sky_shrine_heartstone", "navigation_role": "fly_only_destination", "unlock_event": "fly_traversal_unlocked"},
+      {"region_id": "upper_cloudreach", "landmark_id": "cliffhold_settlement", "navigation_role": "upper_hub", "unlock_event": "cloudreach_upper_route_unlocked"},
+      {"region_id": "summit_final_stronghold", "landmark_id": "summit_eyrie_stronghold", "navigation_role": "final_approach", "unlock_event": "cloudreach_upper_anchors_disabled"}
+    ],
+    "unlock_events": [
+      {"flag_id": "fly_traversal_unlocked", "reveals_landmark_ids": ["sky_shrine_heartstone", "high_roost_perches"], "world_change": "High-altitude wind-route markers become visible."},
+      {"flag_id": "cloudreach_upper_route_unlocked", "reveals_landmark_ids": ["cliffhold_settlement", "old_wind_observatory"], "world_change": "The counterweight stair is shown as a grounded route."},
+      {"flag_id": "waterward_route_revealed", "reveals_landmark_ids": ["waterward_overlook"], "world_change": "The Waterward route and future realm direction appear after the finale."}
+    ],
+    "fly_route_readability": "Use perch silhouettes, cloth streamers, airborne motes, and aligned updraft columns; the minimap supports but never replaces these cues."
+  },
+  "audio_atmosphere": {
+    "cues": [
+      {"id": "cloudreach_wind", "role": "wind", "source": "res://assets/audio/ambience/wind_low.wav", "replaceable": false, "implementation_status": "installed"},
+      {"id": "cloudreach_exposed_cliff", "role": "exposed_cliff", "source": "res://assets/audio/ambience/wind_high.wav", "replaceable": false, "implementation_status": "installed"},
+      {"id": "cloudreach_bridge_creaks", "role": "bridge_creaks", "source": "", "replaceable": true, "implementation_status": "optional_bespoke_asset_needed", "non_blocking": true},
+      {"id": "cloudreach_distant_birds", "role": "distant_bird_calls", "source": "res://assets/audio/ambience/meadow_birds.wav", "replaceable": true, "implementation_status": "installed_placeholder"},
+      {"id": "cloudreach_high_silence", "role": "high_altitude_silence", "source": "", "replaceable": false, "implementation_status": "mix_only", "mix_instruction": "Duck birds and low ambience while preserving intermittent high wind."},
+      {"id": "cloudreach_settlement", "role": "settlement", "source": "res://assets/audio/ambience/ironwood_canopy.wav", "replaceable": true, "implementation_status": "installed_placeholder"},
+      {"id": "cloudreach_anchor_drone", "role": "boss_zone_escalation", "source": "res://assets/audio/ambience/tether_drone.wav", "replaceable": false, "implementation_status": "installed"},
+      {"id": "cloudreach_final_music", "role": "boss_music", "source": "res://assets/audio/music/music_warden.wav", "replaceable": true, "implementation_status": "installed_placeholder"}
+    ],
+    "aftermath_mix_change": "After cloudreach_winds_restored, remove anchor drone layers, restore distant calls, and replace oppressive gust pulses with open route wind."
+  },
+  "progression_feedback": {
+    "xp_visible": true,
+    "level_progress_visible": true,
+    "level_up_celebration": true,
+    "bond_progress_visible": true,
+    "bond_milestone_celebration": true,
+    "bond_ui_understandable": true,
+    "shared_actions": ["camp_recovery", "feeding", "trainer_victories", "fly_route_completion"],
+    "fly_bond_rule": "Completing an authored Fly route grants a small bond event to the actively piloted fly-capable creature, subject to the normal bond cap."
+  },
+  "final_encounter": {
+    "id": "captain_veyra_storm_anchor",
+    "display_name": "The Eye of the Anchor",
+    "captain_npc_id": "captain_veyra",
+    "region_id": "summit_final_stronghold",
+    "arena_landmark_id": "summit_eyrie_stronghold",
+    "requires_flags": ["cloudreach_upper_anchors_disabled", "summit_extraction_engine_reached"],
+    "stakes": "Veyra is forcing the ancestral wind routes through the summit engine; another extraction cycle will leave Cloudreach's settlements isolated.",
+    "preboss_approach": "A visible dead-wind corridor, disabled upper feeds, retreating wildlife, Team Tether banners, and a final recovery camp build toward the arena.",
+    "arena_identity": "A circular summit deck divided by rotating crosswinds, three lee pockets, and exposed relay lanes; falling is prevented by recovery currents rather than invisible instant death.",
+    "mechanic_tags": ["wind", "positioning", "switching", "recovery_planning", "movement_skill"],
+    "hp_strategy": "normal_progression_not_hp_sponge",
+    "phases": [
+      {"id": "crosswind_command", "trigger": "encounter_start", "mechanics": ["rotating_crosswind_lanes", "lee_pocket_positioning", "captain_counter_switch"]},
+      {"id": "anchor_overload", "trigger": "captain_team_half_defeated", "mechanics": ["relay_arc_positional_denial", "short_recovery_windows", "forced_team_switch_decisions"]},
+      {"id": "break_the_eye", "trigger": "captain_team_defeated", "mechanics": ["pilot_creature_through_collapsing_wind", "strike_three_exposed_relays", "avoid_summit_gust_sweeps"]}
+    ],
+    "opposition_contract": {
+      "selection_key": "cloudreach.final.captain_veyra",
+      "replaceable": true,
+      "art_status": "installed_species_placeholders",
+      "captain_body_profile": "captain_b",
+      "slots": [
+        {"role": "crosswind_controller", "placeholder_species": "galewisp", "level": 31},
+        {"role": "positional_pursuer", "placeholder_species": "frostclaw", "level": 32},
+        {"role": "summit_ace", "placeholder_species": "galecrest", "level": 34}
+      ]
+    },
+    "failure_recovery": "A loss returns the player to Summit Bivouac with world-state flags intact and no duplicated one-time rewards.",
+    "victory_flag": "captain_veyra_defeated"
+  },
+  "rewards": {
+    "completion_flag": "cloudreach_chapter_complete",
+    "grants": [
+      {"id": "cloudreach_heart", "kind": "realm_heart", "flag_id": "realm_heart_cloudreach_earned", "definition_status": "power_definition_intentionally_deferred"},
+      {"id": "water_realm_key", "kind": "realm_key", "flag_id": "realm_key_water", "definition_status": "entitlement_not_consumable"},
+      {"id": "waterward_reveal", "kind": "map_unlock", "flag_id": "waterward_route_revealed", "definition_status": "future_realm_not_enterable_until_implemented"}
+    ],
+    "completion_feedback": ["chapter_banner", "reward_summary", "heart_received_message", "waterward_map_reveal"]
+  },
+  "aftermath": {
+    "required_flag": "cloudreach_winds_restored",
+    "state_changes": [
+      {"id": "anchors_freed", "system": "storm_anchors", "change": "All disabled anchors switch from bottled teal pulses to open natural wind trails."},
+      {"id": "causeway_travel_resumes", "system": "npc_population", "change": "Travelers and couriers occupy reopened waypoints across the lower and upper roads."},
+      {"id": "settlements_reconnect", "system": "dialogue", "change": "Galefoot and Cliffhold NPCs receive post-restoration dialogue states."},
+      {"id": "audio_opens", "system": "audio", "change": "The tether drone falls silent and distant bird calls return to the summit mix."},
+      {"id": "fly_routes_stabilize", "system": "traversal", "change": "Restored wind-route markers and recovery currents remain available after victory."},
+      {"id": "waterward_route_visible", "system": "map", "change": "Waterward Overlook reveals the future Water-biome route without making that biome enterable."}
+    ],
+    "return_dialogue_ids": ["cloudreach_aila_after_restoration", "cloudreach_orrin_route_open", "cloudreach_maela_after_restoration", "cloudreach_kelm_after_restoration"],
+    "save_contract": "Boss victory, rewards, disabled anchors, restored ambience, NPC relocation, and Waterward reveal persist across save/load and Meadows return travel."
+  }
+}
