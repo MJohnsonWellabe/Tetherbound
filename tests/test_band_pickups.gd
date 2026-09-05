@@ -472,3 +472,193 @@ func test_the_wild_shroom_is_broader_than_the_stamina_shroom() -> void:
 		"the Wild Shroom's cap is not broader (%s vs %s)" % [str(wild_scale), str(stamina_scale)])
 	wild.free()
 	stamina.free()
+
+
+## --- N08-PICKUP-TIERS (2026-09-05): the ladder is more than hue -----------
+##
+## Two code-blind judges read the tiers off hue alone and could not (W17
+## round 2: "what separates them is size, colour hue, and the number of side
+## attachments -- all three changing at once"; W18 round 1: "the only
+## difference between the two objects I can find is hue... far too subtle to
+## tell apart in play", and inverted). The tests below pin the structural
+## ladder so a tuning pass cannot quietly flatten it back to a tint.
+##
+## Seen red first (N08 report): with the crest kind, the ring and the glow
+## multiplier stripped back to W17's table, `test_a_tier_is_an_additive_part_count`,
+## `test_each_tier_wears_a_different_crest_shape` and
+## `test_a_higher_tier_glows_wider` all fail; with the wing sweep sign
+## flipped back to W17's, `test_the_rare_wings_are_rooted_and_sweep_upward`
+## fails on the tip height.
+
+
+func _body_mesh(node: Node) -> MeshInstance3D:
+	for descendant in _walk(node):
+		if descendant is MeshInstance3D and descendant.name != "TierMedallion" and descendant.name != "TierRing" \
+				and not descendant.name.begins_with("RareWing") and not descendant.name.begins_with("CrownSpike"):
+			return descendant as MeshInstance3D
+	return null
+
+
+func _child_named(node: Node, name: String) -> Node:
+	for descendant in _walk(node):
+		if descendant.name == name:
+			return descendant
+	return null
+
+
+func test_a_tier_is_an_additive_part_count() -> void:
+	assert_eq(BAND_PICKUPS.parts_for("good_candy"), 1, "Good carries one part (its crest)")
+	assert_eq(BAND_PICKUPS.parts_for("great_candy"), 2, "Great carries two parts (crest + ring)")
+	assert_eq(BAND_PICKUPS.parts_for("rare_candy"), 3, "Rare carries three parts (crest + ring + wings)")
+	assert_eq(BAND_PICKUPS.parts_for("stamina_mushroom"), 0, "a mushroom is not on the candy ladder")
+	# And the built nodes agree with the table, part by part.
+	var good := _built("good_candy", "p_good")
+	assert_true(_child_named(good, "TierMedallion") != null, "Good has no crest")
+	assert_true(_child_named(good, "TierRing") == null, "Good grew a ring")
+	assert_true(_child_named(good, "RareWingL") == null, "Good grew wings")
+	good.free()
+	var great := _built("great_candy", "p_great")
+	assert_true(_child_named(great, "TierMedallion") != null, "Great has no crest")
+	assert_true(_child_named(great, "TierRing") != null, "Great has no ring")
+	assert_true(_child_named(great, "RareWingL") == null, "Great grew wings")
+	great.free()
+	var rare := _built("rare_candy", "p_rare")
+	assert_true(_child_named(rare, "TierMedallion") != null, "Rare has no crest")
+	assert_true(_child_named(rare, "TierRing") != null, "Rare has no ring")
+	assert_true(_child_named(rare, "RareWingL") != null and _child_named(rare, "RareWingR") != null, "Rare has no wings")
+	rare.free()
+
+
+func test_each_tier_wears_a_different_crest_shape() -> void:
+	var kinds := {}
+	for grade: String in ["good_candy", "great_candy", "rare_candy"]:
+		kinds[grade] = BAND_PICKUPS.crest_for(grade)
+	assert_eq(kinds["good_candy"], "disc")
+	assert_eq(kinds["great_candy"], "star")
+	assert_eq(kinds["rare_candy"], "crown")
+	assert_eq(BAND_PICKUPS.crest_for("wild_mushroom"), "", "a mushroom wears no crest")
+	# The shapes are real geometry, not a label: Good's crest is a cylinder,
+	# Great's a built star (an ArrayMesh with the star's own vertex count),
+	# Rare's a cylinder wearing spikes.
+	var good := _built("good_candy", "c_good")
+	var good_crest := _child_named(good, "TierMedallion") as MeshInstance3D
+	assert_true(good_crest.mesh is CylinderMesh, "Good's crest is not a disc")
+	assert_eq(good_crest.get_child_count(), 0, "Good's disc grew children")
+	good.free()
+	var great := _built("great_candy", "c_great")
+	var great_crest := _child_named(great, "TierMedallion") as MeshInstance3D
+	assert_true(great_crest.mesh is ArrayMesh, "Great's crest is not a built star")
+	if great_crest.mesh is ArrayMesh:
+		var faces := (great_crest.mesh as ArrayMesh).get_faces()
+		# Ten outline edges, each a top fan triangle, a bottom fan triangle
+		# and a two-triangle wall: 40 triangles, 120 vertices.
+		assert_eq(faces.size(), BAND_PICKUPS.STAR_POINTS * 2 * 4 * 3, "the star's triangle count is off")
+	great.free()
+	var rare := _built("rare_candy", "c_rare")
+	var rare_crest := _child_named(rare, "TierMedallion") as MeshInstance3D
+	assert_true(rare_crest.mesh is CylinderMesh, "Rare's crown has no disc")
+	var spikes := 0
+	for child in rare_crest.get_children():
+		if child.name.begins_with("CrownSpike"):
+			spikes += 1
+	assert_eq(spikes, BAND_PICKUPS.CROWN_SPIKES, "Rare's crown has the wrong number of spikes")
+	rare.free()
+
+
+func test_a_higher_tier_glows_wider() -> void:
+	# The shared highlight's radius steps with the tier, so at the range
+	# where no crest resolves the Rare is still the loudest thing on the
+	# ground -- the hierarchy W18's judge called inverted.
+	var good := BAND_PICKUPS.glow_scale_for("good_candy")
+	var great := BAND_PICKUPS.glow_scale_for("great_candy")
+	var rare := BAND_PICKUPS.glow_scale_for("rare_candy")
+	assert_true(great > good, "Great's highlight is not wider than Good's (%s vs %s)" % [str(great), str(good)])
+	assert_true(rare > great, "Rare's highlight is not wider than Great's (%s vs %s)" % [str(rare), str(great)])
+	assert_almost_eq(BAND_PICKUPS.glow_scale_for("revive"), 1.0, 0.0001, "a non-candy is scaled")
+
+
+func test_the_rare_wings_are_rooted_and_sweep_upward() -> void:
+	# Round 2 on the old wings: "hard-edged, flat, untextured quads at
+	# inconsistent angles; the right-hand one is visually detached from the
+	# body with a gap between them... appears to float." Each wing's box now
+	# overlaps the body's, and each tip sits higher than its root -- the
+	# board's sweep, and the opposite of the old droop.
+	var rare := _built("rare_candy", "w_rare")
+	var body := _body_mesh(rare)
+	assert_true(body != null, "no body mesh")
+	var body_box := body.get_aabb()
+	for name: String in ["RareWingL", "RareWingR"]:
+		var wing := _child_named(rare, name) as MeshInstance3D
+		assert_true(wing != null, "%s missing" % name)
+		if wing == null:
+			continue
+		var wing_box := wing.transform * wing.get_aabb()
+		assert_true(wing_box.intersects(body_box), "%s does not overlap the body (%s vs %s)" % [name, str(wing_box), str(body_box)])
+		var outward := 1.0 if wing.position.x > body_box.get_center().x else -1.0
+		var half_span := wing.get_aabb().size.x * 0.5
+		var tip := wing.transform * Vector3(outward * half_span, 0.0, 0.0)
+		var root := wing.transform * Vector3(-outward * half_span, 0.0, 0.0)
+		assert_true(tip.y > root.y + 0.01, "%s's tip (%.3f) is not above its root (%.3f): the wing droops" % [name, tip.y, root.y])
+		assert_true(absf(tip.x - body_box.get_center().x) > absf(root.x - body_box.get_center().x), "%s does not point outward" % name)
+	rare.free()
+
+
+func test_the_ground_ring_lies_at_the_foot_and_clears_the_wrapper_ends() -> void:
+	for grade: String in ["great_candy", "rare_candy"]:
+		var node := _built(grade, "r_" + grade)
+		var body := _body_mesh(node)
+		var ring := _child_named(node, "TierRing") as MeshInstance3D
+		assert_true(ring != null and ring.mesh is TorusMesh, "%s has no torus ring" % grade)
+		if ring != null and ring.mesh is TorusMesh:
+			var torus := ring.mesh as TorusMesh
+			var box := body.get_aabb()
+			assert_true(ring.position.y - box.position.y < box.size.y * 0.15, "%s's ring is not at the foot (y %.3f)" % [grade, ring.position.y])
+			assert_true(torus.inner_radius > box.size.x * 0.5, "%s's ring passes through the wrapper ends (%.3f <= %.3f)" % [grade, torus.inner_radius, box.size.x * 0.5])
+		node.free()
+
+
+func test_the_tier_hues_are_far_apart_and_rare_is_amber_not_cream() -> void:
+	# The W18 judge: Rare's cream "collides with the frame's existing white
+	# cup flowers". The emission colour is what the eye reads in shade and at
+	# distance (it adds; the albedo multiplies into the wrapper), so that is
+	# the colour pinned: three hues at least 60 degrees apart, and Rare's a
+	# saturated amber rather than a pale gold that clips to cream.
+	var hues := {}
+	for grade: String in ["good_candy", "great_candy", "rare_candy"]:
+		var node := _built(grade, "h_" + grade)
+		var material := _body_mesh(node).material_override as StandardMaterial3D
+		assert_true(material != null and material.emission_enabled, "%s has no emission" % grade)
+		hues[grade] = material.emission.h * 360.0
+		if grade == "rare_candy":
+			assert_true(material.emission.s > 0.85, "Rare's emission is not saturated (s=%.2f), it will clip to cream" % material.emission.s)
+			assert_between(material.emission.h * 360.0, 20.0, 45.0, "Rare's emission is not amber (%.0f deg)" % (material.emission.h * 360.0))
+			assert_true(material.albedo_color.v > 0.8, "Rare's albedo went dark; multiplied into the wrapper it goes olive")
+		node.free()
+	var grades := hues.keys()
+	for i in grades.size():
+		for j in range(i + 1, grades.size()):
+			var a := float(hues[grades[i]])
+			var b := float(hues[grades[j]])
+			var apart := minf(absf(a - b), 360.0 - absf(a - b))
+			assert_true(apart >= 60.0, "%s and %s are only %.0f degrees of hue apart" % [str(grades[i]), str(grades[j]), apart])
+
+
+func test_a_candy_dressed_off_tree_is_phased_but_not_spinning() -> void:
+	# Off a tree there is no tween to make, and the loader must not try: a
+	# unit-built candy keeps its phase (so the still capture can freeze it)
+	# and no `tier_spin`.
+	var node := _built("good_candy", "s_good")
+	assert_true(node.has_meta("tier_spinner"), "no spinner recorded")
+	assert_false(node.has_meta("tier_spin"), "a tween was made with no tree")
+	var spinner := node.get_node_or_null(NodePath(str(node.get_meta("tier_spinner")))) as Node3D
+	assert_true(spinner != null, "the recorded spinner is not a child of the pickup")
+	node.free()
+	var shroom := _built("stamina_mushroom", "s_shroom")
+	assert_false(shroom.has_meta("tier_spinner"), "a mushroom was given a spin")
+	shroom.free()
+	# The phase is a pure function of the placement id: the same world boots
+	# to the same angles, and two neighbours never turn in step.
+	var a := BAND_PICKUPS.spin_phase_for("b4_candy_herd_bull_highfield")
+	assert_almost_eq(a, BAND_PICKUPS.spin_phase_for("b4_candy_herd_bull_highfield"), 0.0001, "phase is not deterministic")
+	assert_between(a, 0.0, TAU, "phase out of range")
+	assert_true(absf(a - BAND_PICKUPS.spin_phase_for("b4_candy_wind_ridge_crest")) > 0.05, "two ids share a phase")
