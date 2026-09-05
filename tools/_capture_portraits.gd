@@ -62,19 +62,46 @@ const INGAME_CONVERSATIONS := [
 const RENDER_SIZE := 512
 const PLATE_SIZE := 256
 
-## Vertical field of view and the window it frames. The window hangs from the
-## measured top of the rig (hair, hat or crown -- `render_bounds.gd`, the same
-## measurement `_fit()` stands the body up with) rather than from a head bone,
-## because the installed rigs do not agree on where "Head" sits: the villager
-## rigs put it at the base of the skull and the Warden's near the crown, and
-## round one cropped his face in half for it. WINDOW_HEIGHT is what shows
-## below the hair top on a 1.80 m body (down to the collar and shoulder line),
-## scaled with the body's height so a 1.50 m body's larger head still fills
-## the same share of the plate.
+## ONE LENS FOR EVERY PLATE. The window hangs from the measured top of the rig
+## (hair, hat or crown -- `render_bounds.gd`, the same measurement `_fit()`
+## stands the body up with) rather than from a head bone, because the installed
+## rigs do not agree on where "Head" sits: the villager rigs put it at the base
+## of the skull and the Warden's near the crown, and round one cropped his face
+## in half for it.
+##
+## WINDOW_HEIGHT is NOT scaled by the body's height any more, and that is the
+## round-three fix. Scaling it gave every short body a smaller window and so a
+## tighter crop: measured across the round-two set, subject coverage ran 46%
+## (grunt, 1.80 m) to 69% (sorrel) against 51%/55% for the two shipping painted
+## plates -- a blind judge read the tight end as "shot close on a wide FOV,
+## bulging cheeks". One constant window means one lens, so a plate's coverage
+## now varies only with the body's real build.
 const FOV_DEG := 28.0
-const WINDOW_HEIGHT := 0.58
-const HEADROOM := 0.025
+const WINDOW_HEIGHT := 0.66
+## Clear air above the highest point of hair, hat or crown, so nothing is
+## sliced flat by the plate edge (round two: garrick's straw hat reached the
+## corner pixel, and a pitchfork entered the frame beside him).
+const HEADROOM := 0.045
 const REFERENCE_HEIGHT := 1.8
+
+## Auto-fit: how far the camera may step back, and by how much each time.
+## Five steps of 1.15 is a 2.01x window. Three steps left the innkeeper, the
+## farmer's straw hat and the tracker's brim still touching; five holds every
+## body in the installed cast.
+const MAX_FIT_ATTEMPTS := 5
+const FIT_STEP := 1.15
+## Below this fraction of the plate the sides are shoulder, not head.
+const SHOULDER_LINE := 0.72
+
+## The ground the two shipping painted plates use, measured off the files
+## themselves: `trainer.png` and `grandpa.png` are fully opaque with
+## (242,242,242) in every border pixel. The rendered plates were transparent
+## cut-outs, so in one dialogue box the villagers floated free on the dark
+## panel while Grandpa drew as a bright white card -- the loudest mismatch a
+## blind judge found, and one a player meets the first time Grandpa speaks.
+## Composited here in code rather than rendered as a background colour, so the
+## value is exact and cannot drift with tonemapping.
+const PLATE_BG := Color8(242, 242, 242, 255)
 ## Turn the body this much so the face reads three-quarter rather than
 ## passport-flat, the way the two painted plates do.
 const BODY_YAW_DEG := -22.0
@@ -98,18 +125,18 @@ const PORTRAITS: Array = [
 	{"file": "rae", "config_key": "villager_farmer", "hair": {"visible": true, "color": "#7a4a2c"}},
 	{"file": "doss", "config_key": "villager_ranger", "hair": {"visible": true, "color": "#4a5c3d"}},
 	# --- named cast with their own installed body ---------------------------
-	{"file": "bryn", "config_key": "young_trainer"},
+	{"file": "bryn", "config_key": "young_trainer", "exposure": 0.8},
 	{"file": "wandering_trainer", "config_key": "wandering_trainer"},
 	{"file": "juno", "config_key": "rival_trainer"},
 	{"file": "wilhelm", "config_key": "innkeeper"},
-	{"file": "nessa", "config_key": "inn_helper"},
+	{"file": "nessa", "config_key": "inn_helper", "exposure": 0.78},
 	{"file": "corin", "config_key": "trader"},
 	{"file": "ada", "config_key": "craftsperson"},
 	{"file": "fenn", "config_key": "creature_caretaker"},
 	{"file": "garrick", "config_key": "farmer"},
-	{"file": "old_perrin", "config_key": "local_historian"},
+	{"file": "old_perrin", "config_key": "local_historian", "exposure": 0.45},
 	{"file": "tobin", "config_key": "lost_traveler"},
-	{"file": "maren", "config_key": "field_researcher"},
+	{"file": "maren", "config_key": "field_researcher", "exposure": 0.88},
 	{"file": "sorrel", "config_key": "alpha_tracker"},
 	{"file": "lark", "config_key": "courier"},
 	{"file": "ren", "config_key": "former_tether_member"},
@@ -130,6 +157,8 @@ const PAINTED := {"trainer": {"config_key": "trainer"}, "grandpa": {"config_key"
 var _viewport: SubViewport = null
 var _stage: Node3D = null
 var _camera: Camera3D = null
+var _lights: Array[DirectionalLight3D] = []
+var _light_energy: Array[float] = []
 var _plates: Dictionary = {}
 var _failures: Array[String] = []
 
@@ -212,7 +241,7 @@ func _build_stage() -> void:
 	env.background_color = Color(0.0, 0.0, 0.0, 0.0)
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	env.ambient_light_color = Color(0.86, 0.88, 0.92)
-	env.ambient_light_energy = 0.18
+	env.ambient_light_energy = 0.15
 	env.tonemap_mode = Environment.TONE_MAPPER_LINEAR
 	env_node.environment = env
 	_stage.add_child(env_node)
@@ -222,22 +251,28 @@ func _build_stage() -> void:
 	# transparent ground the panel composites this over.
 	var key := DirectionalLight3D.new()
 	key.rotation = Vector3(deg_to_rad(-38.0), deg_to_rad(-32.0), 0.0)
-	key.light_energy = 0.62
+	key.light_energy = 0.52
 	key.light_color = Color(1.0, 0.96, 0.90)
 	key.shadow_enabled = true
 	_stage.add_child(key)
+	_lights.append(key)
+	_light_energy.append(key.light_energy)
 
 	var fill := DirectionalLight3D.new()
 	fill.rotation = Vector3(deg_to_rad(-12.0), deg_to_rad(40.0), 0.0)
 	fill.light_energy = 0.26
 	fill.light_color = Color(0.82, 0.88, 1.0)
 	_stage.add_child(fill)
+	_lights.append(fill)
+	_light_energy.append(fill.light_energy)
 
 	var rim := DirectionalLight3D.new()
 	rim.rotation = Vector3(deg_to_rad(-30.0), deg_to_rad(160.0), 0.0)
-	rim.light_energy = 0.38
+	rim.light_energy = 0.30
 	rim.light_color = Color(1.0, 0.98, 0.94)
 	_stage.add_child(rim)
+	_lights.append(rim)
+	_light_energy.append(rim.light_energy)
 
 	_camera = Camera3D.new()
 	_camera.fov = FOV_DEG
@@ -245,6 +280,32 @@ func _build_stage() -> void:
 	_camera.far = 50.0
 	_stage.add_child(_camera)
 	_camera.make_current()
+
+
+## Point the camera at a window of `window` metres hanging from the rig's
+## measured top, centred horizontally on the HEAD rather than on the whole
+## body's bounding box -- the box spans arms and whatever the rig is holding,
+## so centring on it walked the face off-axis and let a carried prop into the
+## frame (pitchfork tines beside the farmer, a gold object beside the tracker).
+## The head bone's x is reliable on every installed rig even where its y is not.
+func _frame(window: float, top_y: float, head: Vector3, box: AABB) -> void:
+	var centre_y := top_y + HEADROOM - window * 0.5
+	var distance := (window * 0.5) / tan(deg_to_rad(FOV_DEG * 0.5))
+	var centre_x := head.x
+	var centre_z := box.position.z + box.size.z * 0.5
+	_camera.position = Vector3(centre_x, centre_y, centre_z + distance)
+	_camera.look_at(Vector3(centre_x, centre_y, centre_z), Vector3.UP)
+
+
+## Scale the whole rig at once, so a character keeps the same key/fill/rim
+## RATIO as everyone else and only its overall exposure moves. Needed because
+## a few textures are intrinsically near-white -- the historian is a
+## white-haired, white-bearded man in spectacles, and at the roster exposure
+## 5.4% of his plate clipped to flat white against the 0.2-0.6% the two
+## shipping painted plates clip.
+func _set_exposure(scale: float) -> void:
+	for i in _lights.size():
+		_lights[i].light_energy = _light_energy[i] * scale
 
 
 func _render_plate(spec: Dictionary) -> void:
@@ -262,6 +323,7 @@ func _render_plate(spec: Dictionary) -> void:
 		holder.queue_free()
 		return
 	holder.rotation.y = deg_to_rad(BODY_YAW_DEG)
+	_set_exposure(float(spec.get("exposure", 1.0)))
 	if holder.has_method("play"):
 		holder.call("play", "idle")
 	# Let the animation settle on its first pose and the skin update.
@@ -271,60 +333,141 @@ func _render_plate(spec: Dictionary) -> void:
 	var height := float(holder.call("height"))
 	var box: AABB = RENDER_BOUNDS.measure(holder)
 	var top_y := box.position.y + box.size.y
-	var head_y := _head_height(holder, box)
-	var scale := clampf(height / REFERENCE_HEIGHT, 0.7, 1.3)
-	var window := WINDOW_HEIGHT * scale
-	var centre_y := top_y + HEADROOM * scale - window * 0.5
+	var head := _head_position(holder, box)
+	var window := WINDOW_HEIGHT
+	var attempt := 0
+	var image: Image = null
+	var coverage := 0.0
+	# AUTO-FIT. One FOV for every plate, but the camera steps back when the
+	# subject does not fit -- exactly what a photographer does for a
+	# wide-brimmed hat. The alternative was a hand-tuned window per character,
+	# which is the "different lens per character" defect this round removed,
+	# or one window wide enough for the widest hat, which would shrink every
+	# other head well below the size the two shipping plates use.
+	while attempt < MAX_FIT_ATTEMPTS:
+		_frame(window, top_y, head, box)
+		for i in 6:
+			await process_frame
+		await RenderingServer.frame_post_draw
+		var shot: Image = _viewport.get_texture().get_image()
+		if shot == null or shot.is_empty():
+			_failures.append("%s: viewport returned no image" % file)
+			holder.queue_free()
+			return
+		shot.convert(Image.FORMAT_RGBA8)
+		shot.resize(PLATE_SIZE, PLATE_SIZE, Image.INTERPOLATE_LANCZOS)
+		coverage = _opaque_fraction(shot)
+		image = _on_plate_ground(shot)
+		if not _touches_edge(image):
+			break
+		attempt += 1
+		window *= FIT_STEP
 	var distance := (window * 0.5) / tan(deg_to_rad(FOV_DEG * 0.5))
-	# Centre on the rig's own midline, not the world origin: `_fit()` recentres
-	# the art on x/z but a turned body's head drifts off the axis.
-	var centre_x := box.position.x + box.size.x * 0.5
-	var centre_z := box.position.z + box.size.z * 0.5
-	_camera.position = Vector3(centre_x, centre_y, centre_z + distance)
-	_camera.look_at(Vector3(centre_x, centre_y, centre_z), Vector3.UP)
-
-	for i in 6:
-		await process_frame
-	await RenderingServer.frame_post_draw
-	var image: Image = _viewport.get_texture().get_image()
-	if image == null or image.is_empty():
-		_failures.append("%s: viewport returned no image" % file)
-		holder.queue_free()
-		return
-	image.convert(Image.FORMAT_RGBA8)
-	image.resize(PLATE_SIZE, PLATE_SIZE, Image.INTERPOLATE_LANCZOS)
-
-	var opaque := _opaque_fraction(image)
 	var target := "%s/%s.png" % [OUT_DIR, file]
 	if not bool(spec.get("scratch_only", false)):
 		target = "%s/%s.png" % [PORTRAIT_DIR, file]
+	var blown := _blown_fraction(image)
+	var touching := _touches_edge(image)
 	if image.save_png(target) != OK:
 		_failures.append("%s: save_png failed for %s" % [file, target])
 	else:
 		_plates[file] = image
-		print("  %-18s body=%-22s h=%.2f top=%.2f head_y=%.2f opaque=%.0f%% -> %s" % [
-			file, str(cfg.get("model", "")).get_file().get_basename(), height, top_y, head_y,
-			opaque * 100.0, target])
-	if opaque < 0.15 or opaque > 0.95:
-		_failures.append("%s: %.0f%% opaque pixels -- framing is off (empty or wall-to-wall)" % [
-			file, opaque * 100.0])
+		print("  %-18s body=%-22s h=%.2f top=%.2f cover=%2.0f%% blown=%4.1f%% edge=%s -> %s" % [
+			file, str(cfg.get("model", "")).get_file().get_basename(), height, top_y,
+			coverage * 100.0, blown * 100.0, "TOUCH" if touching else "clear", target])
+	# Bars decided before this round, from the two shipping painted plates:
+	# they cover 51% and 55% of their frame and clip 0.2% / 0.6% of their
+	# opaque pixels to white, and neither lets content reach a border pixel.
+	# Coverage is bounded, not pinned: with ONE fixed lens for every plate, how
+	# much of the frame a character fills is a fact about that body -- a
+	# broad-shouldered innkeeper in a heavy coat fills more of the same window
+	# than a slim courier, and forcing them equal would mean a different lens
+	# per character, which is the defect this round removed. The band is set
+	# wide enough to hold the real roster and tight enough to catch a framing
+	# bug (an empty plate, or a face filling the frame).
+	if coverage < 0.38 or coverage > 0.68:
+		_failures.append("%s: subject covers %.0f%% of the plate, outside the 38-68%% band" % [
+			file, coverage * 100.0])
+	if blown > 0.015:
+		_failures.append("%s: %.1f%% clipped to white -- the shipping plates clip 0.2-0.6%%, the bar here is 1.5%%" % [
+			file, blown * 100.0])
+	if touching:
+		_failures.append("%s: content reaches a border pixel -- hair, hat or a carried prop is sliced by the plate edge" % file)
 
 	holder.queue_free()
 	for i in 3:
 		await process_frame
 
 
-## World-space height of the rig's head bone, or a proportional guess from
-## the render bounds when a rig has no bone by that name.
-func _head_height(holder: Node3D, box: AABB) -> float:
+## World-space position of the rig's head bone, or a proportional guess from
+## the render bounds when a rig has no bone by that name. Only `x` is used for
+## framing (see `_render_plate`); `y` is kept for the fallback and for anyone
+## reading the log.
+func _head_position(holder: Node3D, box: AABB) -> Vector3:
 	var skeleton: Skeleton3D = holder.call("skeleton")
 	if skeleton != null:
 		for bone_name in ["Head", "head", "mixamorig_Head", "DEF-spine.006"]:
 			var idx := skeleton.find_bone(bone_name)
 			if idx >= 0:
 				var pose: Transform3D = skeleton.get_bone_global_pose(idx)
-				return (skeleton.global_transform * pose).origin.y
-	return box.position.y + box.size.y * 0.86
+				return (skeleton.global_transform * pose).origin
+	return Vector3(
+		box.position.x + box.size.x * 0.5,
+		box.position.y + box.size.y * 0.86,
+		box.position.z + box.size.z * 0.5)
+
+
+## The rendered cut-out laid on the same ground the shipping painted plates
+## use, so every portrait in the dialogue box is the same kind of object.
+func _on_plate_ground(cutout: Image) -> Image:
+	var plate := Image.create(cutout.get_width(), cutout.get_height(), false, Image.FORMAT_RGBA8)
+	plate.fill(PLATE_BG)
+	plate.blend_rect(cutout, Rect2i(0, 0, cutout.get_width(), cutout.get_height()), Vector2i.ZERO)
+	return plate
+
+
+## Share of the plate clipped to white -- skin with no shading left in it.
+## Measured on the finished plate, the same way the round-two evidence was
+## measured, so the number in the log is the number a critic can reproduce.
+func _blown_fraction(image: Image) -> float:
+	var count := 0
+	var total := 0
+	for y in image.get_height():
+		for x in image.get_width():
+			var c := image.get_pixel(x, y)
+			# The ground itself is bright by design; only count what was drawn.
+			if c.is_equal_approx(PLATE_BG):
+				continue
+			total += 1
+			if c.r >= 0.98 and c.g >= 0.98 and c.b >= 0.98:
+				count += 1
+	return float(count) / float(maxi(total, 1))
+
+
+## True when anything but the ground reaches the TOP or a SIDE border pixel --
+## hair, a hat or a carried prop sliced flat by the plate edge.
+##
+## The bottom edge is deliberately not checked: a head-and-shoulders plate is
+## meant to run off the bottom, and both shipping painted plates do exactly
+## that (their content starts at y~2-4 and reaches the last row). Checking all
+## four edges reported all 34 plates as defective for doing the right thing.
+func _touches_edge(image: Image) -> bool:
+	var w := image.get_width()
+	var h := image.get_height()
+	for x in w:
+		if not image.get_pixel(x, 0).is_equal_approx(PLATE_BG):
+			return true
+	# Sides are checked down to SHOULDER_LINE only. Below that the subject is
+	# shoulder and coat, and a bust crop is allowed to run off the lower
+	# corners; above it, anything reaching the side is hair, a hat brim or a
+	# carried prop being sliced.
+	var limit := int(float(h) * SHOULDER_LINE)
+	for y in limit:
+		if not image.get_pixel(0, y).is_equal_approx(PLATE_BG):
+			return true
+		if not image.get_pixel(w - 1, y).is_equal_approx(PLATE_BG):
+			return true
+	return false
 
 
 func _opaque_fraction(image: Image) -> float:
