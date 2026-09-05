@@ -42,8 +42,19 @@
       "spill_offset_m": 0.9,
       "open_seconds": 1.4
     },
-    "_comment_wall_tint_lerp": "W07-WARRENS-0904. `_material()` pulled every interior stone albedo 0.75 toward near-white #fff2e0; under the new dark ambient the pools alone light the walls and a ~0.85 albedo blows out beside each one. 0.6 keeps the stone warm and lets a pool read as a pool.",
-    "wall_tint_lerp": 0.6
+    "_comment_wall_tint_lerp": "W07-WARRENS-0904. `_material()` pulled every interior stone albedo 0.75 toward near-white #fff2e0; under the new dark ambient the pools alone light the walls and a ~0.85 albedo blows out beside each one. 0.6 keeps the stone warm and lets a pool read as a pool. Round 2: 0.6 still read as pale flat granite under the pools; 0.45.",
+    "wall_tint_lerp": 0.45,
+    "_comment_exterior_faces": "W07-WARRENS-0904. Which chamber walls get the exterior earth skin (`_clad_exterior_face`). The hall's -z face is visible from the approach between the mound's boulders and read as grey ashlar blocks in the before frame; now earth like the mouth's front.",
+    "exterior_faces": [
+      [
+        "mouth",
+        "-z"
+      ],
+      [
+        "hall",
+        "-z"
+      ]
+    ]
   },
   "_comment_mound": "BAND2-63-WARRENS. The cave stands in ground that does not cover it (see `_comment_resiting`), so what a player sees from the road is the cave's own rock mass standing proud of the meadow -- and the first capture round showed exactly what that is without help: a grey rectangular slab, six metres tall, in a field. This is the outcrop that makes it a knoll instead. Deterministic boulders from the nature family the corridor is already scattered with (`Rock_Medium_1..3`, the same models `vegetation.json` uses), set around the perimeter and over the roof so the silhouette breaks up and the mass reads as stone in the ground rather than a building. Seeded, never random: the same rock stands in the same place every boot, which is the determinism promise the rest of the world keeps. `skip_front_m` keeps the DOORWAY clear and nothing else -- it was 9m, which left the whole front of the cave as a bare flat rectangle standing in a field, and the blind critic called it exactly that: a textured plane with straight cut edges reading as unfinished blocking geometry. At 6m the rock runs across the front too and the opening reads as a hole in a rock face. `tint` multiplies the boulders' own albedo toward the cave's rock colour, because the nature pack's rocks ship a cool mint-grey that the same critic read as 'a heap of enormous cabbages' beside this cave's warm dark stone. ALL TUNABLE.",
   "mound": {
@@ -494,13 +505,14 @@
     {
       "at": [
         0.0,
-        3.0
+        2.2
       ],
       "y": 2.4,
-      "energy": 2.6,
-      "range": 8.5,
+      "energy": 1.7,
+      "range": 6.0,
       "colour": "#dde7ef",
-      "_why": "daylight bounce at the mouth"
+      "_why": "daylight bounce just inside the mouth, tight so the chamber's back falls off; casts, so the fringe and jambs shape it (round 2)",
+      "shadow": true
     },
     {
       "at": [
@@ -519,10 +531,11 @@
         20.5
       ],
       "y": 3.3,
-      "energy": 2.4,
-      "range": 9.0,
+      "energy": 3.0,
+      "range": 8.0,
       "colour": "#d8c19c",
-      "_why": "the hall's one key, off-centre"
+      "_why": "the hall's one key, off-centre, casting (round 2: the bays, ribs and roots give it something to throw)",
+      "shadow": true
     },
     {
       "at": [
@@ -695,7 +708,9 @@
       "reveal": "#46392e",
       "rib": "#2e2621",
       "corbel": "#2e2621"
-    }
+    },
+    "_comment_frame_the_mouth": "W07-WARRENS-0904 round 2. The outer mouth carried the same jamb-and-lintel reveal as every interior doorway and the blind judge read it from outside as 'a doorway on a wall, not a hole in the ground'. Off: the mouth is a raw cut in the rock under the root fringe.",
+    "frame_the_mouth": false
   },
   "_comment_spawns": "The warrens' own population, spawned through encounter_director.gd's `spawn_wild()` so these are ORDINARY wild creatures -- same engage prompt, same fight, same catching, same respawn. No second combat mode exists and none is wanted. `aggressive: true` overrides the species' own temperament for THESE bodies only (species.json still has Burrowback and Mudsnout as non-aggressive animals out in the meadow): a creature defending the tunnel it lives in comes at you, the same one grazing a field does not. `level` overrides the wild band roll (progression.json) -- the warrens is Band 2 content and its residents are above the field's. Ground species only, from the existing roster; no new species and no new meshes (Sec20, D23). Tuskroot is deliberately absent for the same reason spawns.json leaves it out: D20 makes it the EVOLVED form, obtainable only by evolving a caught Mudsnout.",
   "_comment_spawns_sh47": "SH47/D42 LEVELS LOWERED: mouth 10->9, hall 12->10, warren 11->10, den 13->11, and the guardian 18->14 below. Still TUNABLE, and the shape is unchanged -- the residents still climb as you go deeper and the guardian is still well above them. What moved is the STEP UP FROM BAND 1. Band 1's gate trainer (Oskar) fields levels 6 and 7 and spec Sec3 recommends a team of 5-8 at the bridge; arriving here at 7 to meet a 13 in the den and an 18 at the bottom was an eleven-level gulf, and tools/_probe_pacing.py measured what a player actually did about it: 25 wild fights against level-2-to-6 field creatures before daring to go in, 19 minutes of Sec11's `bad grind` bolted onto the front of the chapter's best dungeon. Clearing the warrens is on Sec11's GOOD list and nothing about it is cut -- the fights are the same fights, the deposits the same deposits, the heartstone still behind the guardian. They now sit where a player who played Band 1 actually is.",
@@ -1087,7 +1102,7 @@
       "res://assets/environment/stylized_nature/DeadTree_2.gltf",
       "res://assets/environment/stylized_nature/DeadTree_3.gltf"
     ],
-    "tint": "#4a3524",
+    "tint": "#9a7a58",
     "pieces": [
       {
         "chamber": "mouth",
@@ -1108,19 +1123,37 @@
       {
         "chamber": "mouth",
         "offset": [
-          0.0,
-          -6.9
+          -0.9,
+          -6.6
         ],
         "model": 1,
-        "scale": 0.26,
+        "scale": 0.5,
         "dir": [
-          0.0,
+          0.15,
           -1.0,
-          -0.4
+          -0.25
         ],
-        "tip_y": 2.5,
+        "tip_y": 2.15,
+        "roll_deg": 30.0,
         "exterior": true,
-        "_why": "the fringe over the mouth from outside -- roots hanging over a dug hole"
+        "_why": "round 2: the round-1 fringe (scale 0.26) was a twig in the frame; two half-scale crowns now hang over the cut, tips at 2.15 m so the 3.0 m opening keeps a 2.1 m walk-through"
+      },
+      {
+        "chamber": "mouth",
+        "offset": [
+          1.1,
+          -6.5
+        ],
+        "model": 0,
+        "scale": 0.48,
+        "dir": [
+          -0.2,
+          -1.0,
+          -0.2
+        ],
+        "tip_y": 2.2,
+        "roll_deg": -40.0,
+        "exterior": true
       },
       {
         "chamber": "hall",
@@ -1277,7 +1310,8 @@
         "tip_y": 2.7
       }
     ],
-    "_comment_tip_y": "Tilted crowns droop their side branches 0.3-0.5 m below the tip point; smoke run 1 measured four pieces at 1.56-1.83 m. Every interior tip now sits >= 2.7 m so the lowest branch clears 1.9 m (the smoke's bar)."
+    "_comment_tip_y": "Tilted crowns droop their side branches 0.3-0.5 m below the tip point; smoke run 1 measured four pieces at 1.56-1.83 m. Every interior tip now sits >= 2.7 m so the lowest branch clears 1.9 m (the smoke's bar).",
+    "_comment_tint_round2": "Round 2: #4a3524 multiplied on the bark photo went near-black and every crown read as a scribble (after1 frames 02/04/05). Lighter and warmer so branches read as root wood."
   },
   "fungus": {
     "_comment": "W07-WARRENS-0904. Installed Mushroom meshes, albedo wired into emission at `glow_colour` (the cave's own pale green against the heartstone's red at the end), one small omni per cluster. `between` entries sit in the two unlit passages as beacons -- navigation stays readable with no torch.",
@@ -1289,9 +1323,9 @@
     "bracket_models": [
       "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf"
     ],
-    "glow_colour": "#9fe3b0",
-    "emission": 1.5,
-    "light_energy": 0.9,
+    "glow_colour": "#7fd89a",
+    "emission": 0.55,
+    "light_energy": 0.7,
     "light_range": 4.5,
     "clusters": [
       {
@@ -1386,7 +1420,8 @@
         "count": 4,
         "spread": 0.7
       }
-    ]
+    ],
+    "_comment_round2": "Round 2: at emission 1.5 the pale caps blew out to white blobs (after1 frame 03). Emission 0.55 on a darkened albedo: green glow, not a white flare."
   },
   "litter": {
     "_comment": "W07-WARRENS-0904. Dead leaf litter from the installed flat Plant meshes, retinted; counts per chamber, most where the wind reaches.",
@@ -1394,10 +1429,9 @@
     "seed": 906,
     "models": [
       "res://assets/environment/stylized_nature/Plant_7.gltf",
-      "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
-      "res://assets/environment/stylized_nature/Clover_1.gltf"
+      "res://assets/environment/stylized_nature/Plant_7_Big.gltf"
     ],
-    "tint": "#6a5030",
+    "tint": "#8a6a3a",
     "scale": [
       0.5,
       1.1
@@ -1408,7 +1442,8 @@
       "warren": 5,
       "den": 6,
       "vault": 3
-    }
+    },
+    "_comment_round2": "Round 2: Clover_1's texture multiplied to magenta discs (after1 frame 02); dropped. Tint warmer."
   },
   "haze": {
     "_comment": "W07-WARRENS-0904. Unshaded additive gradient cards: `pool` billboards at each light, `shaft` crossed quads under the den's spot, `doorway` a card facing INTO the cave (back-face culled) so daylight reads from inside and the mouth stays a hole from outside. `alpha` is the card's peak.",
@@ -1419,30 +1454,15 @@
         "chamber": "mouth",
         "offset": [
           0.0,
-          -2.0
+          -2.5
         ],
-        "y": 1.7,
+        "y": 1.6,
         "size": [
-          6.5,
-          3.4
+          4.2,
+          2.8
         ],
         "colour": "#dfe8f2",
-        "alpha": 0.32
-      },
-      {
-        "kind": "pool",
-        "chamber": "mouth",
-        "offset": [
-          0.0,
-          -3.0
-        ],
-        "y": 2.2,
-        "size": [
-          5.0,
-          5.0
-        ],
-        "colour": "#dde7ef",
-        "alpha": 0.18
+        "alpha": 0.26
       },
       {
         "kind": "pool",
@@ -1451,13 +1471,13 @@
           -2.5,
           -1.5
         ],
-        "y": 3.0,
+        "y": 3.1,
         "size": [
-          6.0,
-          6.0
+          3.0,
+          3.0
         ],
         "colour": "#d8c19c",
-        "alpha": 0.16
+        "alpha": 0.28
       },
       {
         "kind": "pool",
@@ -1466,13 +1486,13 @@
           3.0,
           3.0
         ],
-        "y": 2.8,
+        "y": 2.9,
         "size": [
-          7.0,
-          7.0
+          3.5,
+          3.5
         ],
         "colour": "#d9a05c",
-        "alpha": 0.16
+        "alpha": 0.26
       },
       {
         "kind": "pool",
@@ -1481,13 +1501,28 @@
           0.0,
           0.0
         ],
-        "y": 2.6,
+        "y": 2.8,
         "size": [
-          4.5,
-          4.5
+          2.6,
+          2.6
         ],
         "colour": "#b09a6a",
-        "alpha": 0.14
+        "alpha": 0.24
+      },
+      {
+        "kind": "pool",
+        "chamber": "warren",
+        "offset": [
+          0.0,
+          0.0
+        ],
+        "y": 2.5,
+        "size": [
+          2.6,
+          2.6
+        ],
+        "colour": "#93a8b8",
+        "alpha": 0.2
       },
       {
         "kind": "shaft",
@@ -1498,13 +1533,14 @@
         ],
         "y": 2.45,
         "size": [
-          2.4,
+          2.0,
           4.6
         ],
         "colour": "#bfe0e6",
-        "alpha": 0.28
+        "alpha": 0.3
       }
-    ]
+    ],
+    "_comment_round2": "Round 2: after1 showed 5-7 m billboards the camera stands inside, which lift a whole frame evenly instead of reading as a halo at a distance. Halos are now 2.6-3.5 m, denser, one per pool, and the mouth pool card (the camera's own position at stand 02) is gone."
   },
   "deposit_glow": {
     "_comment": "W07-WARRENS-0904. A small amber omni over each rootstone seam: the band's own material glows in the walls.",

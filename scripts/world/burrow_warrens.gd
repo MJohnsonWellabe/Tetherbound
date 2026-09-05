@@ -521,7 +521,11 @@ func _build_chambers() -> void:
 			# `_build_wall`/`_wall_piece` with the default `exterior=false`
 			# and is byte-for-byte unaffected -- the interior render the
 			# owner already judged good never runs through this branch.
-			var wall_is_exterior := id == "mouth" and side == "-z"
+			# W07-WARRENS-0904: `site.exterior_faces` lists [chamber, side]
+			# pairs whose OUTER face the approach can see between the mound's
+			# boulders (the hall's front wall showed as grey ashlar to the right
+			# of the mouth in the before frames). Default: the mouth's front.
+			var wall_is_exterior := _face_is_exterior(id, side)
 			_build_wall(id, centre, size, height, side, opening, wall_is_exterior)
 			# T1-WARRENS-EXT, owner+judge evidence "the mouth facade is a flat
 			# wall with a rectangular hole". `_build_passages()` records BOTH
@@ -553,6 +557,15 @@ func _build_chambers() -> void:
 
 ## The opening (if any) in one side of one chamber: {width, height}, or {} for
 ## a solid wall. Derived from the passage table rather than authored twice.
+func _face_is_exterior(chamber_id: String, side: String) -> bool:
+	var faces: Array = _config.get("site", {}).get("exterior_faces", [["mouth", "-z"]])
+	for entry: Variant in faces:
+		var pair: Array = entry as Array
+		if pair.size() == 2 and str(pair[0]) == chamber_id and str(pair[1]) == side:
+			return true
+	return false
+
+
 func _opening_on(chamber_id: String, side: String) -> Dictionary:
 	for entry: Variant in _config.get("passages", []):
 		var passage: Dictionary = entry as Dictionary
@@ -3702,7 +3715,10 @@ func _glow_fungus(node: Node, glow: Color, emission: float) -> void:
 					var copy: StandardMaterial3D = source.duplicate() as StandardMaterial3D
 					if copy == null:
 						continue
-					copy.albedo_color = copy.albedo_color * glow.lerp(Color.WHITE, 0.35)
+					# Round 2: the caps' own texture is near-white, and lit by the
+					# pools it blew out; the albedo goes toward the glow, darkened,
+					# and the emission carries the glow.
+					copy.albedo_color = copy.albedo_color * glow.darkened(0.35)
 					copy.emission_enabled = true
 					copy.emission = glow
 					copy.emission_energy_multiplier = emission
