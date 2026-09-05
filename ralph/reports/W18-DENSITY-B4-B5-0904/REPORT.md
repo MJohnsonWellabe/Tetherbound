@@ -270,6 +270,19 @@ a change to `vegetation.gd`'s query surface and outside this lane's file list.
 - **`props.json` was not touched in either band.** Nothing in the W18 brief asked for the
   prop half (that is CL-E2's, in W17's lane, for band 3).
 
+- **A pre-existing repo gap this lane found but did not fix, routed to the coordinator.** A
+  local `godot --headless --path . --import` on a fresh checkout of this branch generates 56
+  untracked artifacts that the repo's own convention says should be committed (it tracks 904
+  `*.import` and 969 `*.gd.uid` files): `.import` sidecars and extracted textures for the
+  pickup/saddle/bridge assets under `assets/props/` and `assets/creatures/tetherbound/*/reference/`
+  (added by commit `9c14e5a7`), and `.gd.uid` files for eight `tests/` scripts and nine
+  `tools/` scripts added by other lanes. They are deterministic outputs of assets already in
+  the tree, and a fresh clone regenerates them, so nothing is broken — but the lanes that
+  added those files did not commit their sidecars. This lane committed only the two that are
+  its own (`tools/_probe_band_density.gd.uid`, `tools/_capture_w18_pickups.gd.uid`) and left
+  the rest alone rather than writing into other lanes' directories, per the common brief's
+  file-ownership rule.
+
 ## Logs in this directory
 
 `_baseline_probe.log` (before), `_probe_r1.log` / `_probe_r2.log` / `_probe_r3.log` (site
