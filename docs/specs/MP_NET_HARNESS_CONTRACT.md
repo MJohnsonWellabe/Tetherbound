@@ -187,7 +187,13 @@ Every heartbeat each peer sends `state_hash`: the FNV/`hash()` of
 `JSON.stringify(<world save dictionary>, "", true)` with the fast-changing keys removed
 (`clock_elapsed_seconds`, `player_pose`, `satiety`, and every per-player key — the detector
 compares **world** state, which every peer must agree on; player state is by construction
-different per peer, and `satiety` drains with wall time like the clock does). **`world_seed` is
+different per peer, and `satiety` drains with wall time like the clock does). Concretely, against
+today's v22 keys: **hashed** — `progression`, `placed_buildings`, `farm_plots`, `death_satchels`,
+`harvested_vegetation`, `felled_vegetation`, `day`; **excluded** — `party`, `inventory`, `hotbar`,
+`satiety`, `map`, `realm_maps`, `alpha_pins`, `player_pose`, `clock_elapsed_seconds`,
+`current_realm`, `pending_realm_entry`, `realm_hearts`, `version`; `world_seed` is erased from the
+hashed dictionary and asserted separately against the pin. From Wave 1 the hashed set is
+exactly `WorldState.save_data()` and the list above retires. **`world_seed` is
 pinned**: `spawn_tables.json`'s `roll_new_worlds` gives every independent boot a random seed, so
 the coordinator sets one `TB_WORLD_SEED` for every peer in a run (default `"0"`) and the peer
 normalises the saved field to it for hashing only. Both amendments come from lane 0.F's real
