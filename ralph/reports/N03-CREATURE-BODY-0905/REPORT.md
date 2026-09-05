@@ -198,7 +198,35 @@ godot --headless --path . --script tests/run_tests.gd -- --only=test_creature_re
 30 tests, 164 assertions, 0 failed
 ```
 
-Full suite, same command without `--only`: __UNIT_FULL__
+Full suite, same command without `--only`: 
+
+```
+godot --headless --path . --script tests/run_tests.gd
+2007 tests, 3765640 assertions, 0 failed        (38m23s, exit 0)
+```
+
+**A finding from that log, routed rather than fixed here.** The full-suite log
+still carries **22** `Parameter "material" is null.` lines — none from
+`creature_body.gd`. Every backtrace bottoms out in a test freeing a
+`scripts/world/felled_resource.gd` node directly: 8 from
+`test_felled_resource.gd`'s `after_each()` and 14 from `test_harvest_permanence.gd`'s
+`veg.free()` calls. Reproduced with those two files alone (27 tests, 0 failed,
+22 lines). It is the same engine mechanism this lane fixed in the body — a
+MeshInstance3D that is the only holder of its override material
+(`felled_resource.gd`'s rubble `chunk.material_override` and the woodpile/bundle
+`set_surface_override_material` duplicates) freed while the server still has a
+pending update for it. It is not the CL-G7 line the band reports counted (that
+was one per **world boot**, from the guardian; these appear only in the unit
+suite, and the game frees a gathered pickup through `queue_free()`), and
+`felled_resource.gd` is the harvest lane's file, so it is not touched here. The
+one-line shape of the fix is the same as `_release_art()`: clear the overrides
+before the node dies — for a node the caller frees, in
+`_notification(NOTIFICATION_PREDELETE)`. Recorded in `docs/CURRENT_STATE.md` §3's
+CL-G7 row as an open cousin.
+
+The other `^ERROR:` kinds in the suite log (107 `get_node()` absolute-path,
+60 `data.tree` null, three deliberate bad-JSON parses, two deliberate unknown-id
+lookups) are pre-existing and unrelated to this lane; none grew.
 
 ### Runtime validation, on the real world
 
