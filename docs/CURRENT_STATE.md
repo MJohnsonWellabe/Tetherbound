@@ -49,6 +49,9 @@ is the evidence; `ralph/briefs/0904/LANES.md` is the per-lane ledger):
 | #45 | `fdf70ab4` | W19-CONTRACTS, W13-PROGRESSION-FEED, W04-PORTRAITS, W12-COMPANION, W18-DENSITY-B4-B5, W17-DENSITY-B2-B3, W09-VFX, W23-DIFFICULTY — one consolidated branch, one verification pass |
 | #46 | `504c7b55` | this section's record of the wave (no code) |
 | #48 | `2cd711eb` | W01-ROUTE-STRIP, W22-BRIDGE-SIGNPOST |
+| #49 | `8e9ece36` | landing ledger through cycle 7, plus two repairs to this file (no code) |
+| #50 | `590741fe` | W01's and W09's closed reports, cycle-8 ledger (no code) |
+| #51 | *open* | **W20-SMALL-FIXES** |
 
 PR #43 was opened and closed as superseded by #45. Verification on the merged tree before
 #45: two imports with no `SCRIPT ERROR`/`Parse Error`; 658 tests / 3,399,284 assertions,
@@ -72,8 +75,18 @@ placed; `smoke_gate_b_continuous` OK. #45 merged on CI run 33949277496, green on
   D74/D75 W19, D76 W13, D77 W23, D78 W18, D80 W09, D81 W04, D83 W12, D84 W17. D79 is
   reserved for W10 and D82 for W02. W22 later took D86 (PR #48); D85 is unused
   because W05 did not land, so the next free number is D87.
-- **PR #47 was opened for W05-TREELINE and closed unmerged: the lane breaks
-  `smoke_aggression`.** The walk to the wild creature stops at **53.7 m**, deterministically —
+- **W05-TREELINE is still off `main` after two rounds, and the reason is now narrower than
+  it first looked.** Its round-2 fix decouples collider growth from mesh growth and
+  **passes on the lane's own base** (`ef16544f`); on **current `main`** the player instead
+  penetrates the trunk at (42.33, −66.54), trips
+  `player_controller.gd::_recover_if_entombed` and is teleported 116.1 m away. Both baselines
+  are measured in the landing container: current `main` alone passes `smoke_aggression` (twice
+  now, first attempt each time), `main` + W05 fails. Whether the cause is W05 alone or W05
+  against everything that landed today is **not established**, because the lane's base is five
+  hours stale. The lane is asked to rebase onto current `main` and re-run its own probe
+  (`tools/_probe_walk_block_0905.gd`) and the smoke there, not to accept a verdict it cannot
+  reproduce. Its decision record renumbers D74 → **D85** on the landing side.
+- **Round 1, for the record: PR #47 was opened for W05-TREELINE and closed unmerged.** The walk to the wild creature stops at **53.7 m**, deterministically —
   `main` alone passes and `main` + W05 fails in the same container back to back, and both CI
   runs on the landing head agree. This is *not* the flake that smoke's own header documents:
   that one sits at 44.1 / 38.0 / 45.1 m and was traced to the `Terrain3D` node. The likely
@@ -84,10 +97,26 @@ placed; `smoke_gate_b_continuous` OK. #45 merged on CI run 33949277496, green on
   owns the fix; `ralph/LAND-0904-4` holds the prepared landing. On the same tree the
   benign-engine-error set was checked against `main` and is identical, so W05 is exonerated
   on that point.
-- **Still off `main` from that wave:** W05 (rejected on the evidence above) and W10 (its
+- **Two standing owner instructions, 2026-09-05 ~09:00 UTC.** *"You need to be consolidating
+  lanes so we don't have five separate CIs trying to happen at once in GitHub"* — every
+  landing from here is one branch, one CI run, one PR, ledger included on the landing branch;
+  two open landing PRs is a defect. And *"if there are merge conflicts with cloudreach,
+  whatever it is doing should win"* — Cloudreach takes the conflicting side unconditionally.
+  The second supersedes this lane's earlier flag that `04d844d0`, `3f9e1a14` and `47ca2e12`
+  build Cloudreach Cliffs on `main` against CLAUDE.md's Biome 2 bar; that was raised for the
+  owner and is not the landing lane's to act on.
+- **W20-SMALL-FIXES verified on the merged tree** (PR #51): its six named test files all
+  0-failed, two of them exercising *more* than the lane claimed because the merged tree
+  carries other lanes' data (`test_chapter_curve` 22/520 against its 20/465,
+  `test_band_content` 6/1,339 against its 6/1,147); `smoke_relay_station`, `smoke_playground`
+  and `smoke_aggression` all exit 0. Its `docs/acceptance/MEADOWS_EXIT_CRITERION.md` edit
+  corrects B2's three-passes-stale 1.08:1 to a measured 1.618:1 and marks B4 **half** closed
+  (contact shadows done, embedded-on-slope still open) rather than closing it.
+- **Still off `main` from that wave:** W05 (see below) and W10 (its
   report is a seven-line skeleton with an unfilled placeholder and no test results);
-  W02, W06, W07, W08, W11, W14, W15, W20 and W21 have pushed no report of their own —
-  W07 has judge sheets but no `REPORT.md`. No lane has pushed anything since 03:06 UTC.
+  W02, W03, W06, W07, W08, W11, W14, W15, W16 and W21 have pushed no report of their own —
+  W07 has judge sheets but no `REPORT.md`. The wave resumed at 08:39 after a five-hour
+  silence and lanes are still pushing.
   W17 and W23 were independently re-verified by the landing lane before landing; W05's
   re-bake and its `vegetation.json` edit will need the bake-freshness pair re-run on
   whatever tree eventually lands it.
