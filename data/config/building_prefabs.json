@@ -6559,6 +6559,7 @@
     },
     "south_bridge": {
       "_why": "SC14, spec 3 Gate 1. The same timber-deck-on-stone-abutments language as `footbridge` above (bible sec12), stretched to carry the south gully's 14m clear span instead of a 0.7m stream channel: seven deck slabs from -7 to +7, a stone landing on each rim at +-8, and the kit's exterior border capping each approach. Nothing new -- every module is one the settlement already stands on (D24, one village family). scripts/world/south_bridge.gd owns where it sits, what height it sits at and the gate across it; this is only the span. Deliberately NOT a scaled copy of `footbridge`: a prefab scaled 2.3x would scale its plank thickness and rail height with it, and the result reads as a toy bridge photographed close up.",
+      "_why_w22_deck": "W22-BRIDGE-SIGNPOST-0904, prompt 74 §7 (board 18, 'Bridge Plank & Rail'). Step 1 rendered this recipe in isolation (tools/_capture_bridge_deck_isolated.gd): the deck was seven kit floor slabs with their plank grain running ALONG the span, railed by fourteen `Prop_WoodenFence_Single` picket panels -- a farm fence stood on a bridge. Board 18 draws planks laid ACROSS the deck with visible seams, a single rope rail with wrapped knots at each squared post, and posts standing on stone-block footings. Closed here by (a) yawing each `Floor_WoodDark` slab a quarter turn so the kit's own plank seams run across the walking direction (no new asset; same slab), (b) retiring the fence panels in favour of the `rail` block below, which `scripts/world/gated_crossing.gd::_build_rail` turns into squared timber posts on stone footings, two sagging hemp ropes between them and rope wraps at every post, and (c) a `retint` that dulls the kit's orange-leaning `MI_WoodTrim` toward the board's own weathered brown (#7b573f swatch, sampled). The `colliders` below are UNTOUCHED: the rail colliders still run +-8.6 at z=+-0.95, so the gate seals exactly as before -- this is dressing, the mechanism is unchanged. Both gated crossings (South Bridge and the Old Mill Crossing) share this recipe and so both carry the rope rail, which is what board 18 intends ('used for small bridges, repairs, and world connection').",
       "modules": [
         {
           "module": "Floor_WoodDark",
@@ -6567,7 +6568,8 @@
             0.1,
             0.0
           ],
-          "_why": "timber deck, seven kit floor slabs spanning the gully"
+          "_why": "timber deck, seven kit floor slabs spanning the gully",
+          "yaw_deg": 90.0
         },
         {
           "module": "Floor_WoodDark",
@@ -6575,7 +6577,8 @@
             -4.0,
             0.1,
             0.0
-          ]
+          ],
+          "yaw_deg": 90.0
         },
         {
           "module": "Floor_WoodDark",
@@ -6583,7 +6586,8 @@
             -2.0,
             0.1,
             0.0
-          ]
+          ],
+          "yaw_deg": 90.0
         },
         {
           "module": "Floor_WoodDark",
@@ -6591,7 +6595,8 @@
             0.0,
             0.1,
             0.0
-          ]
+          ],
+          "yaw_deg": 90.0
         },
         {
           "module": "Floor_WoodDark",
@@ -6599,7 +6604,8 @@
             2.0,
             0.1,
             0.0
-          ]
+          ],
+          "yaw_deg": 90.0
         },
         {
           "module": "Floor_WoodDark",
@@ -6607,7 +6613,8 @@
             4.0,
             0.1,
             0.0
-          ]
+          ],
+          "yaw_deg": 90.0
         },
         {
           "module": "Floor_WoodDark",
@@ -6615,162 +6622,8 @@
             6.0,
             0.1,
             0.0
-          ]
-        },
-        {
-          "module": "Prop_WoodenFence_Single",
-          "at": [
-            -6.0,
-            0.12,
-            0.95
           ],
-          "_why": "rails, the kit fence at deck height"
-        },
-        {
-          "module": "Prop_WoodenFence_Single",
-          "at": [
-            -4.0,
-            0.12,
-            0.95
-          ]
-        },
-        {
-          "module": "Prop_WoodenFence_Single",
-          "at": [
-            -2.0,
-            0.12,
-            0.95
-          ]
-        },
-        {
-          "module": "Prop_WoodenFence_Single",
-          "at": [
-            0.0,
-            0.12,
-            0.95
-          ]
-        },
-        {
-          "module": "Prop_WoodenFence_Single",
-          "at": [
-            2.0,
-            0.12,
-            0.95
-          ]
-        },
-        {
-          "module": "Prop_WoodenFence_Single",
-          "at": [
-            4.0,
-            0.12,
-            0.95
-          ]
-        },
-        {
-          "module": "Prop_WoodenFence_Single",
-          "at": [
-            6.0,
-            0.12,
-            0.95
-          ]
-        },
-        {
-          "module": "Prop_WoodenFence_Single",
-          "at": [
-            -6.0,
-            0.12,
-            -0.95
-          ],
-          "yaw_deg": 180.0
-        },
-        {
-          "module": "Prop_WoodenFence_Single",
-          "at": [
-            -4.0,
-            0.12,
-            -0.95
-          ],
-          "yaw_deg": 180.0
-        },
-        {
-          "module": "Prop_WoodenFence_Single",
-          "at": [
-            -2.0,
-            0.12,
-            -0.95
-          ],
-          "yaw_deg": 180.0
-        },
-        {
-          "module": "Prop_WoodenFence_Single",
-          "at": [
-            0.0,
-            0.12,
-            -0.95
-          ],
-          "yaw_deg": 180.0
-        },
-        {
-          "module": "Prop_WoodenFence_Single",
-          "at": [
-            2.0,
-            0.12,
-            -0.95
-          ],
-          "yaw_deg": 180.0
-        },
-        {
-          "module": "Prop_WoodenFence_Single",
-          "at": [
-            4.0,
-            0.12,
-            -0.95
-          ],
-          "yaw_deg": 180.0
-        },
-        {
-          "module": "Prop_WoodenFence_Single",
-          "at": [
-            6.0,
-            0.12,
-            -0.95
-          ],
-          "yaw_deg": 180.0
-        },
-        {
-          "module": "Prop_WoodenFence_Single",
-          "at": [
-            -8.0,
-            0.12,
-            0.95
-          ],
-          "_why": "the parapet carries on over each stone landing, which is also what stops a player stepping onto the deck from the side PAST the gate -- see the rail colliders below"
-        },
-        {
-          "module": "Prop_WoodenFence_Single",
-          "at": [
-            8.0,
-            0.12,
-            0.95
-          ]
-        },
-        {
-          "module": "Prop_WoodenFence_Single",
-          "at": [
-            -8.0,
-            0.12,
-            -0.95
-          ],
-          "yaw_deg": 180.0
-        },
-        {
-          "module": "Prop_WoodenFence_Single",
-          "at": [
-            8.0,
-            0.12,
-            -0.95
-          ],
-          "yaw_deg": 180.0
+          "yaw_deg": 90.0
         },
         {
           "module": "Floor_UnevenBrick",
@@ -6808,6 +6661,27 @@
           "yaw_deg": 90.0
         }
       ],
+      "rail": {
+        "_why": "Read by gated_crossing.gd::_build_rail, in the prefab's own local metres. Posts every `post_every` from `from` to `to` inclusive at z=+-`z`; the top rope at `height`, a second at `lower_height`; each span sags `sag` at mid-span. Footings are the stone blocks under each post.",
+        "from": -8.0,
+        "to": 8.0,
+        "post_every": 2.0,
+        "z": 0.95,
+        "height": 0.95,
+        "lower_height": 0.5,
+        "sag": 0.09,
+        "post_size": 0.16,
+        "footing_size": 0.32,
+        "footing_height": 0.16,
+        "rope_radius": 0.026,
+        "lower_rope_radius": 0.02,
+        "edge_beam": true
+      },
+      "retint": {
+        "MI_WoodTrim": {
+          "color": "#cfd6d4"
+        }
+      },
       "colliders": [
         {
           "at": [
