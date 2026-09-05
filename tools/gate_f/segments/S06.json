@@ -392,20 +392,86 @@
     },
     {
       "id": "S06-30b",
-      "title": "walk the ranger camp spur to the anvil",
+      "title": "leave the quarry along the band 2 spine",
+      "action": "move_to",
+      "args": {
+        "at": [
+          330.0,
+          1950.0
+        ],
+        "budget_frames": 12000,
+        "close_enough": 6.0,
+        "held_budget_frames": 10800,
+        "answer_prompts": true
+      },
+      "expected": "data/config/terrain_playground.json's band 2 spine (trail.bands), walked rather than cut across",
+      "observation": "N10-HARNESS-TESTS-0905. MEASURED, not routed: a single straight `move_to` from the quarry at (403, 1794) to the ranger camp does NOT go. Run today on this branch it burned all 30,000 walking frames with 0 held and stopped 734.2 m short at (340.0, 4.0, 1834.0), and the route trace shows why: 544 play-seconds inside a 78 m x 66 m band with `dead_travel_m` climbing to 1,986 m. That is W21-HARNESS-FIGHTS-0904's S06-50 signature at the same place (it logged 711 s and 1,258 m of dead travel at (336.2, 1.3, 1820.6), 14 m from where this stopped) -- and it settles that lane's own hypothesis: the pin is NOT the just-placed workbench confusing navigator state. There is no workbench any more; this branch deleted S06-38 with the rest of the invented beat, and the body still cannot leave the quarry on that bearing. It is the Old Quarry's own exit. THE FIX IS THE AUTHORED ROUTE, not a bigger budget: `data/config/terrain_playground.json`'s `trail.bands[band2_stone_and_root]` spine runs (400,1800) -> (330,1950) -> (180,2050) -> (20,2130) -> (-150,2210) -> (-310,2320) -> (-420,2470), and the ranger camp sits on the `ranger_camp_spur` loop that leaves that spine at (-150,2210) and rejoins it at (-310,2320). These legs walk it. Nothing teleports and no terrain moved."
+    },
+    {
+      "id": "S06-30b1",
+      "title": "follow the spine north-west",
+      "action": "move_to",
+      "args": {
+        "at": [
+          180.0,
+          2050.0
+        ],
+        "budget_frames": 12000,
+        "close_enough": 6.0,
+        "held_budget_frames": 10800,
+        "answer_prompts": true
+      },
+      "expected": "data/config/terrain_playground.json's band 2 spine (trail.bands), walked rather than cut across"
+    },
+    {
+      "id": "S06-30b2",
+      "title": "follow the spine past the corridor's midpoint",
+      "action": "move_to",
+      "args": {
+        "at": [
+          20.0,
+          2130.0
+        ],
+        "budget_frames": 12000,
+        "close_enough": 6.0,
+        "held_budget_frames": 10800,
+        "answer_prompts": true
+      },
+      "expected": "data/config/terrain_playground.json's band 2 spine (trail.bands), walked rather than cut across"
+    },
+    {
+      "id": "S06-30b3",
+      "title": "reach the ranger camp spur's own junction",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -150.0,
+          2210.0
+        ],
+        "budget_frames": 12000,
+        "close_enough": 6.0,
+        "held_budget_frames": 10800,
+        "answer_prompts": true
+      },
+      "expected": "data/config/terrain_playground.json's band 2 spine (trail.bands), walked rather than cut across",
+      "observation": "terrain_playground.json's `trail.loops` says the ranger_camp_spur leaves the spine here."
+    },
+    {
+      "id": "S06-30b4",
+      "title": "walk the spur to the anvil",
       "action": "move_to",
       "args": {
         "at": [
           -259.6,
           2257.4
         ],
-        "budget_frames": 30000,
+        "budget_frames": 12000,
         "close_enough": 2.5,
         "held_budget_frames": 10800,
         "answer_prompts": true
       },
-      "expected": "the camp's CraftInteractable at data/config/bands/band2_stone_and_root/props.json's `ranger_camp.rest.craft_at`",
-      "observation": "~808 m from the quarry arrival at (403,1794). Budgeted at 30,000 frames (500 s), about 2.5x the ~200 s a clean 4 m/s walk costs, on the same generous-budget convention S06-50 follows. answer_prompts ON for the same reason S06-50 gives."
+      "expected": "data/config/terrain_playground.json's band 2 spine (trail.bands), walked rather than cut across",
+      "observation": "the camp's CraftInteractable at data/config/bands/band2_stone_and_root/props.json's `ranger_camp.rest.craft_at`."
     },
     {
       "id": "S06-30c",
@@ -506,6 +572,23 @@
         "equals": "world"
       },
       "expected": "input_context is back to 'world'; section E.3 step 6's target is input leakage after a surface closes"
+    },
+    {
+      "id": "S06-49a",
+      "title": "rejoin the spine where the camp spur ends",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -310.0,
+          2320.0
+        ],
+        "budget_frames": 12000,
+        "close_enough": 6.0,
+        "held_budget_frames": 10800,
+        "answer_prompts": true
+      },
+      "expected": "data/config/terrain_playground.json's band 2 spine (trail.bands), walked rather than cut across",
+      "observation": "terrain_playground.json's `trail.loops`: the ranger_camp_spur rejoins the band 2 spine at (-310, 2320). N10-HARNESS-TESTS-0905 added this so S06-50's walk to the Warrens mouth follows the authored trail instead of cutting across, the same correction its own quarry-exit leg needed."
     },
     {
       "id": "S06-50",
