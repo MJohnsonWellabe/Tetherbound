@@ -659,3 +659,143 @@ The repair was a fast-forward of `ralph/W24-LANDING-0904` to the commit and a re
 was never at risk. **Check `git branch -vv` or `git worktree list` before assuming a
 checkout succeeded**, and read what a push actually pushed rather than trusting that a
 `-u <branch>` refspec pushes the working tree.
+
+---
+
+## Cycle 8 — 2026-09-05 09:05 UTC — four lanes woke; W05 rejected again
+
+### Two owner instructions that change how this lane works
+
+**"You need to be consolidating lanes so we don't have five separate CIs trying to happen at
+once in GitHub."** Every landing from here is one branch, one CI run, one PR, regardless of
+how unrelated the lanes are. I had already opened `ralph/LAND-0904-6` for W05 alone when
+this arrived; I folded the other ready lanes into that same branch rather than opening a
+second, and put this cycle's ledger update on it too instead of taking my usual separate
+ledger PR. **Two open landing PRs is now a defect.** Cycles 1–7 opened five PRs (#42, #43,
+#45, #46, #48, #49) and the peak overlap was two; that is what this instruction is
+correcting.
+
+**"If there are merge conflicts with cloudreach, whatever it is doing should win."**
+Cloudreach takes the conflicting side, unconditionally, with no case-by-case judgement from
+me. Cycle 8's three conflicts were the scatter manifest fingerprint and two docs, none of
+them Cloudreach, so nothing needed reversing; the rule stands for future cycles. Worth noting
+alongside the earlier flag that `04d844d0`, `3f9e1a14` and `47ca2e12` build Cloudreach
+Cliffs on `main` against CLAUDE.md's Biome 2 bar — that flag was raised for the owner and
+this instruction supersedes any instinct to act on it.
+
+### The lanes woke
+
+After five hours forty minutes of silence, four lanes pushed between 08:39 and 08:54.
+W01 and W09 closed their reports; both lanes' code was already on `main` (#48 and #45), so
+those are documentation landings and carry no code. W14 pushed probe commits and still has no
+`REPORT.md`, so it stays untouched. W05 pushed a real fix.
+
+### W05-TREELINE, rejection 2 — the right method, the wrong fix
+
+This is worth writing up properly because the lane did good work and still has to do more.
+
+It diagnosed rather than guessed. `tools/_probe_walk_block_0905.gd` walks the same line with
+the same held input and names the blocker: `CommonTree_1_Collision`, a trunk cylinder of
+r = 1.21 m whose axis sits 1.61 m from the line — a 0.40 m gap, narrower than the player.
+That instance carried r = 0.89 m before the lane. It then confirmed placements had not moved
+(825,979 kept either side) and correctly identified the mechanism: `vegetation.gd::
+_make_collision_shape` sizes the trunk cylinder as `collision_radius × placement scale`, so
+growing the mesh grew the obstacle.
+
+Its fix decouples the two, scaling `collision_radius` down by exactly the factor `scale_max`
+went up — trees 0.6 → 0.435, grove 1.1 → 0.7. The invariant it claims is real and I checked
+it: 0.6 × 1.45 = 0.435 × 2.0 = 0.87, so the widest collider in the world is identical to the
+widest one `main` already ships, and every other instance's collider is strictly smaller than
+before. It also measured, rather than assumed, that both radii sit inside the visible trunk
+(`tools/_probe_trunk_radius_0905.gd`: CommonTree 0.741 m at scale 1.0, TwistedTree_2
+1.351 m). It even wrote down the cost it expected — "a player brushing the very largest
+trunks can clip a little further into the bark than before."
+
+**That cost is the failure.** On `main` + W05 @ `457f179f`, after two clean import passes:
+
+```
+[player] entombed at 42.33, 0.79, -66.54 -- recovering to -25.40, 4.93, -15.60
+aggression FAIL: stood 116.1m from Galecrest for 900 frames without pressing anything
+                 and it never attacked
+```
+
+The walk no longer stops at 53.7 m. The player penetrates the trunk at essentially the spot
+the lane's own probe named — (42.33, −66.54) against (40.54, −65.82) — trips
+`player_controller.gd::_recover_if_entombed`, and is teleported to (−25.40, 4.93, −15.60),
+116.1 m from the target, so the aggression check never gets its chance. A collider strictly
+inside the bark means the player can enter the bark, and the engine's own unstick then fires.
+The fix trades a wall for a pit, at the same coordinates.
+
+**Not a flake, and not the documented one.** `smoke_aggression`'s header documents a
+38–45 m flake traced to the `Terrain3D` node; this is 116.1 m with an explicit entombment
+line, which is a different family. And `main` passes this smoke: `verify-combat-shard` was
+green at 08:11:12 on `b510043f`, now `main`'s ancestor, so the baseline is established by CI
+on a direct ancestor rather than by assertion.
+
+**What would satisfy both constraints.** Scaling the radius down globally cannot: any factor
+that clears the walk line also lets the player into the trunk somewhere else, because the two
+requirements pull on the same number. What can: holding the collider at a fixed absolute
+radius independent of placement scale, so a large tree keeps a normal-width trunk collider
+rather than a shrunken one; or leaving `collision_radius` alone and moving or dropping the
+single placement that sits on the corridor. Either way the lane's own probe gives it the
+instance and should be re-run after the change, confirming the gap exceeds the player's width
+rather than inferring it. **Shrinking the trees back is not an option** — CLAUDE.md says grow,
+never shrink, and the visual gain is the lane's whole purpose.
+
+I could not reach the lane by peer message — `ListAgents` shows no live sessions — so the
+rejection is recorded in PR #50's body where the lane and the owner will both find it.
+
+Housekeeping done on the landing side and preserved for the eventual landing: its decision
+record is renumbered D74 → **D85** (D74 is W19's Burrowback record; D85 was originally
+allocated to W05 and is free), the rename survives a re-merge of the lane's newer commits,
+and the branch carries no placeholders with its diff inside its ownership. `ralph/LAND-0904-6`
+was built with W05, verified, and rebuilt without it.
+
+### What is on PR #50
+
+`main` + W01's closed report + W09's closed report + this ledger entry. Docs only, no code,
+no data, no bake — the `changes` gate should skip every code job, which is a conditional
+skip rather than a run that verified nothing.
+
+### Ledger
+
+Still off `main`: **W05** (rejected twice, evidence above), **W10** (skeleton report),
+**W14** (no report, probe commits only), and W02, W06, W07, W08, W11, W15, W20, W21 (no
+report). D85 returns to W05 when it lands; next free for a new lane is **D87**.
+
+### W05, refined — the lane's report and my run are both right
+
+The lane's round-2 report claims `smoke_aggression` is **OK** after its fix. I measured a
+FAIL. Both are true, and the difference is the base.
+
+W05's branch is cut from `origin/main` at **`ef16544f`**, which predates everything landed
+today — W22's bridge dressing, W01, W17/W18's density work, W12, W13, W04, W09, W19, W23.
+The lane verified its fix against that base and got a genuine red→green pair, with the test
+seen failing for the right reason first. That is good practice and I am not disputing it.
+
+I verified against **current `main`**, which is what landing actually means, and got the
+entombment at (42.33, −66.54) and the 116.1 m failure.
+
+Both baselines are now measured rather than inferred, in this container:
+
+| Tree | `smoke_aggression` | Notes |
+|---|---|---|
+| current `main` (this branch, docs-only delta) | **OK**, exit 0, first attempt | run 09:12 UTC |
+| current `main` + W05 @ `457f179f` | **FAIL** — entombed at (42.33, −66.54), recovered to (−25.40, 4.93, −15.60), 116.1 m | run 08:58 UTC, two clean imports first |
+| W05's own base + W05 | OK, per the lane's report | not re-run here |
+
+I also checked the premise I had been asserting from CI rather than from the workflow:
+`smoke_aggression` **is** in `verify-combat-shard` (`.github/workflows/ci.yml:1132`), so the
+green combat shard on `b510043f` was a real baseline. Note it runs with `RETRIES: 2`, so CI
+tolerates one retry there; my local runs are single-attempt, which is the stricter reading.
+
+**What this changes.** My cycle-8 wording — "the fix trades a wall for a pit" — describes the
+mechanism correctly but assigns the cause too confidently. The entombment is real and it is
+W05's collider change interacting with *something*; whether that something is W05 alone or
+W05 combined with a change that landed today is not established, because the lane's base is
+five hours stale. The lane is not being asked to accept a verdict it cannot reproduce: it is
+being asked to **rebase onto current `main` and re-run its own probe and smoke there**. If it
+passes on current `main`, it lands; if it entombs, its probe will name what it hits now, and
+that may not be a tree.
+
+This is the more useful instruction and it replaces the flat rejection in PR #50's body.
