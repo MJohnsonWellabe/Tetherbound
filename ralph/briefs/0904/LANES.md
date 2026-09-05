@@ -65,6 +65,16 @@ Owner noticed the session count didn't match my reports. Root cause: 5 lanes (W0
 Separately, 5 lanes had genuinely gone stale 4+ hours with NO replacement running: W02-HARNESS-CONTEXT, W03-S08-FREEZE, W16-LOFT-BED, W20-SMALL-FIXES, W21-HARNESS-FIGHTS — all hit their 5h limit hours ago (reset already passed) and were sitting untouched. Given the owner flagged this directly, resumed all 5 at once (departing from the normal 1-2/sweep trickle, since the owner surfaced the actual backlog size).
 main also moved: PR #42 merged — **W00-ICONS is now on main**. PR #45 (consolidated: icons+contracts+progression+portraits+companion+bands2-5) is open, still blocked only on the pre-existing finale regression. PR #44 is Codex's own draft PR for Cloudreach, unrelated to this batch, explicitly not ready to merge.
 
+## 16:53 UTC: N06-MAP-UI nudged — stuck fighting a hung render, substance already done
+Checked N06 directly: its report already shows all 8 map-legibility items fixed with real
+before/after measurements (fog contrast 1.16:1 -> 2.08:1 and reversed direction, legend
+swatches through the real marker pass, unified typeface, containerized callouts, north/scale
+indicators added, danger-label greyscale spread 120->15/255, marker silhouette knock-back) and
+a complete "Final state" section — but its live task_summary was "Force-stop the render",
+same stuck-render symptom N05/N08 had earlier. Nudged with the same message: stop chasing the
+round-2 confirmation render, kill it if it won't die, document the gap honestly, push the
+final commit. Still running as of this entry — not yet archived.
+
 ## 16:40 UTC: N05-WORLD-DRESSING and N08-PICKUP-TIERS both confirmed done — all 13 original lanes closed
 **N05**, final `da51813b`: fixed the fence gap behind Halda (panels now fit end-to-end and
 pitch to the slope), dressed the previously-bare inn bar (shelves, bottles, sign, keg, lantern
