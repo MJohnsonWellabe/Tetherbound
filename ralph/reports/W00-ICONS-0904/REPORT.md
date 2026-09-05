@@ -104,6 +104,26 @@ brief fixes the tier markers and tints are `items.json`'s).
 
 ### Round 3 (`_sheet_r3.png`)
 
+Verdict, condensed: mushrooms "unambiguous" at every size, Speed "the
+strongest icon in the set"; Good and Great read as wrapped sweets down to
+19 px; ink coverage 37-46 % against the existing set's 38-48 %, "a clean
+match"; the candy value ladder "works". In a shuffled, unlabelled sort of all
+twelve 19 px thumbnails, eleven landed in the right class and **Rare Candy
+filed with the Orbs**: the clearance ring cut around the sweet and the
+feather split through the small wings made both read as hollow loops, so it
+read as a medal with ribbon loops. Stamina's three rings smeared into one
+band at 19 px; Wild's four end ticks read as chipping. Verdict: "shippable
+with defects 1 and 2 [Rare's wings and twists] fixed first"; the rest polish.
+
+Acted on (round 4): Rare's wings solid, rooted on the sweet's sides behind
+the fans and flaring outward past them (the first round-4 draft rose them
+off the top of the ball, which read as a cat's ears in my own check and was
+not sent to the judge), no clearance ring, no interior cutout; Stamina down
+to two unequal, offset rings; Wild's ticks removed (the brief names the
+broad cap as its mark); Great's star enlarged.
+
+### Round 4 (`_sheet_r4.png`)
+
 _(filled in below)_
 
 ## CI
