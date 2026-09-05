@@ -65,6 +65,9 @@ Owner noticed the session count didn't match my reports. Root cause: 5 lanes (W0
 Separately, 5 lanes had genuinely gone stale 4+ hours with NO replacement running: W02-HARNESS-CONTEXT, W03-S08-FREEZE, W16-LOFT-BED, W20-SMALL-FIXES, W21-HARNESS-FIGHTS — all hit their 5h limit hours ago (reset already passed) and were sitting untouched. Given the owner flagged this directly, resumed all 5 at once (departing from the normal 1-2/sweep trickle, since the owner surfaced the actual backlog size).
 main also moved: PR #42 merged — **W00-ICONS is now on main**. PR #45 (consolidated: icons+contracts+progression+portraits+companion+bands2-5) is open, still blocked only on the pre-existing finale regression. PR #44 is Codex's own draft PR for Cloudreach, unrelated to this batch, explicitly not ready to merge.
 
+## Sweep 13:56Z
+All 13 N0x lanes confirmed RUNNING (launched 0.2-1.0 min ago at check time). W24-LANDING is IDLE but not stuck — between its own scheduled check-ins (next at 13:58), working PR #52 (8 lanes: W02/W03/W05/W07/W08/W11/W14/W16). One real item flagged for a human: **W06-FINALE's ending dialogue is 112 chars over its own `MAX_FILE_CHARS` (2000) budget** because Cloudreach's 9th stronghold conversation (added after W06 set that budget) wasn't checked against it. W24 correctly held rather than raising the constant itself — that's a design call (keep W06's deliberate handheld-readability cap and trim Cloudreach's ending text, or decide the cap should flex for this content) that needs the owner, not a coordinator guess on dialogue content not yet reviewed here.
+
 ## 13:38 UTC: 0905 follow-up wave launched — 13 new lanes for routed findings
 Owner asked to launch the work the 0904 lanes documented as unfinished/routed. Extracted every
 concrete finding from all 24 lane reports (via a research agent plus a manual second pass for
