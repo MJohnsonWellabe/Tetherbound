@@ -1,6 +1,6 @@
 extends "res://tests/test_case.gd"
 
-## PROGRESSION-VISIBLE (docs/prompts/73 §4, D74): the progression feed.
+## PROGRESSION-VISIBLE (docs/prompts/73 §4, D76): the progression feed.
 ##
 ## Every kind in §2.1 is pushed exactly once by its single source; a 3-level
 ## jump is ONE `level_up` with `levels_gained == 3`; a non-active party
@@ -151,7 +151,7 @@ func test_set_level_is_the_silent_spawn_jump() -> void:
 	var c := _creature()
 	c.set_level(12, CFG)
 	assert_eq(FEED.events().size(), 0,
-		"set_level is the starter/trainer/trade spawn path and must not announce (D74 §3)")
+		"set_level is the starter/trainer/trade spawn path and must not announce (D76 §3)")
 
 
 # --- the bond kinds: one source, bond_milestones.credit --------------------

@@ -761,7 +761,7 @@ func take_pending_world_message() -> String:
 	return text
 
 
-# --- the progression feed (PROGRESSION-VISIBLE, prompt 73, D74) ---------------
+# --- the progression feed (PROGRESSION-VISIBLE, prompt 73, D76) ---------------
 ##
 ## The same queue-plus-revision shape as the world message above, for every
 ## progression change: XP, levels, bond credits, bond milestones. The storage

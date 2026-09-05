@@ -11,7 +11,7 @@ needs to be a big thing. Not just when the bond goes up but also while trying to
 
 ## 1. The decision, recorded before the code
 
-`docs/decisions/D74-bond-ladder-is-unordered-and-progression-has-one-feed.md`, committed
+`docs/decisions/D76-bond-ladder-is-unordered-and-progression-has-one-feed.md`, committed
 first (`36381450`), per prompt 73 §2.4 and `docs/00_START_HERE.md`'s rule that open design
 questions are decided by the orchestrator rather than queued for the owner.
 
@@ -41,14 +41,14 @@ questions are decided by the orchestrator rather than queued for the owner.
 | `tests/test_candy_progression_safety.gd` | 11 tests over candy and the level cap |
 | `tests/smoke_progression_feedback.gd` | The runtime proof (§4) |
 | `tools/_capture_progression_feedback_0904.gd` | The four visual frames |
-| `docs/decisions/D74-…md` | The decision above |
+| `docs/decisions/D76-…md` | The decision above |
 
 **Changed**
 
 | File | Change |
 |---|---|
 | `scripts/creatures/creature_instance.gd` | `gain_xp()` pushes `xp_gained` and, on a level, **one** `level_up` carrying stat deltas, `trait_unlocked`, `evolution_ready`/`evolution_level_reached`; new `gain_levels()` is the candy path through the same event; new `credit_battle_fought()` so the manager's diff stays one line |
-| `scripts/creatures/bond_milestones.gd` | `tier()` unordered (D74); `current()` is now nearest-to-done; new `task_rows`, `remaining_text`, `benefit_text`, `next_benefit_text`, `is_near`, `strip_fields`; **`credit()` is the only writer of a bond counter** and pushes `bond_credit` / `bond_near` / `bond_milestone` |
+| `scripts/creatures/bond_milestones.gd` | `tier()` unordered (D76); `current()` is now nearest-to-done; new `task_rows`, `remaining_text`, `benefit_text`, `next_benefit_text`, `is_near`, `strip_fields`; **`credit()` is the only writer of a bond counter** and pushes `bond_credit` / `bond_near` / `bond_milestone` |
 | `autoload/game_state.gd` | `push_progression_event` / `peek_progression_events` / `take_progression_events` / `progression_feed_revision` beside `push_world_message`; the feed is cleared on a new game |
 | `scripts/combat/combat_manager.gd` | **One line** — the `battles_fought` increment routes through `credit_battle_fought()` |
 | `scripts/ui/tab_backpack.gd` | Candy uses `gain_levels()`; new static `candy_result_line()` says "+1 of +3 — that's the level cap, 50" instead of silently wasting the item |
@@ -58,7 +58,7 @@ questions are decided by the orchestrator rather than queued for the owner.
 | `scripts/ui/tab_creatures.gd` | Every bond task against its target with one `NEXT` and the rest `DONE`/plain, the next node's benefit, and `N EXP to Lv M · evolves at Lv 15` |
 | `scripts/ui/bond_meter.gd` | The node being worked toward draws a warm arc for its task's progress |
 | `tools/audio/gen_sfx.py`, `data/config/audio.json` | Two generated cues (`level_up`, `bond_milestone`) and the `progression` block mapping the cue ids to them on the UI bus |
-| `tests/test_bond.gd` | Tier assertions rewritten for D74; new coverage of `bond_near`, `bond_milestone` benefit text, task rows, and the evolution gate reading "any three" |
+| `tests/test_bond.gd` | Tier assertions rewritten for D76; new coverage of `bond_near`, `bond_milestone` benefit text, task rows, and the evolution gate reading "any three" |
 | `tests/test_level_up_announcement.gd` | **Rewritten**: every test now runs `_set_xp_line()` against a stub manager with a real creature really awarded through `gain_xp`, and reads the rendered Label back. The old file asserted on the *source text* of the function — prompt 33's false-positive shape |
 | `tests/test_hud_widgets.gd` | The strip now has a third fixed child (the tick-label holder) |
 | `docs/CURRENT_STATE.md` | The CL-W6 row rewritten in place |
@@ -107,7 +107,7 @@ godot --headless --path . --script tests/run_tests.gd -- --only=test_save_format
 ```
 
 `test_save_format` is in the second run and passes: no persisted field changed, so no
-migration was needed (D74 §1).
+migration was needed (D76 §1).
 
 ### Seen red first
 
@@ -239,7 +239,7 @@ and told nothing about what changed or what was hoped for.
 Branch `ralph/W13-PROGRESSION-FEED-0904`, pushed.
 
 ```
-36381450  docs: D74 — unordered bond ladder and one progression feed
+36381450  docs: D76 — unordered bond ladder and one progression feed
 9f573f13  feat: progression feed core — xp/level/bond events from one source each
 14919605  audio: level_up and bond_milestone cues for the progression feed
 17795e4f  feat: progression presenters — strip ticks, moment banner, Team screen tasks

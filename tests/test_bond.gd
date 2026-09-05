@@ -172,10 +172,10 @@ func test_every_shipped_species_has_a_best_creature_ability() -> void:
 			"%s has no Best Creature ability" % species_id)
 
 
-# --- bond_milestones.gd: bond as a ladder of tasks (OWNER-0901, D74) --------
+# --- bond_milestones.gd: bond as a ladder of tasks (OWNER-0901, D76) --------
 ##
 ## Owner playtest 2026-09-01: "I don't understand bond. It just goes up. It
-## needs to be a task." D74 (2026-09-04): the ladder is UNORDERED -- a node is
+## needs to be a task." D76 (2026-09-04): the ladder is UNORDERED -- a node is
 ## earned when ANY task completes, so every one of the five actions reads the
 ## moment it lands, and the "next" the UI points at is the incomplete task
 ## closest to done. These pin that rule: a tier only moves when a task is
@@ -199,7 +199,7 @@ func test_a_later_task_alone_earns_a_node_d74() -> void:
 	# CFG's SECOND milestone (landmarks) met while its first (battles) is not.
 	creature.landmarks_visited_together = 1
 	assert_eq(BOND_MILESTONES.tier(creature, CFG), 1,
-		"D74: a completed task is a node whatever its position in the list -- "
+		"D76: a completed task is a node whatever its position in the list -- "
 		+ "under the old ordered rule this read 0 and the landmark was invisible")
 
 
@@ -267,7 +267,7 @@ func test_task_rows_mark_done_and_exactly_one_next() -> void:
 
 
 func test_evolution_gate_reads_any_three_nodes() -> void:
-	# progression.json: mudsnout needs bond_tier 3. Under D74 that is any three.
+	# progression.json: mudsnout needs bond_tier 3. Under D76 that is any three.
 	var cfg := PROGRESSION.config()
 	var needed := int(cfg.get("evolution", {}).get("mudsnout", {}).get("bond_tier", 0))
 	assert_eq(needed, 3, "sanity: the shipped gate is three nodes")

@@ -1180,7 +1180,7 @@ func _on_exited(outcome: String) -> void:
 	_outcome_left = 2.5
 
 
-## PROGRESSION-VISIBLE (prompt 73, D74): the fight's award, read off the
+## PROGRESSION-VISIBLE (prompt 73, D76): the fight's award, read off the
 ## progression feed rather than the manager's `last_xp_award` dict. The feed
 ## is the single source of every `xp_gained` / `level_up` (pushed inside
 ## `creature_instance.gain_xp()`), so this line says exactly what the party

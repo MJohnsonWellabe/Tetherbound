@@ -147,7 +147,7 @@
   },
 
   "progression": {
-    "_comment": "PROGRESSION-VISIBLE (docs/prompts/73 §2.2, D74). Which generated sfx answers each Moment on the progression feed -- the cue ids data/config/progression_feedback.json's `sound_cues` names resolve here to a file under sfx.dir, the same indirection `combat.effectiveness_sound` uses. Played on the UI bus by the world HUD's moment banner (playground_hud.gd), so the level-up is heard at one level wherever the creature stands. Ticks (an ordinary xp or bond credit) are deliberately silent: the directive's own rule is that ordinary gains are subtle and milestones are loud.",
+    "_comment": "PROGRESSION-VISIBLE (docs/prompts/73 §2.2, D76). Which generated sfx answers each Moment on the progression feed -- the cue ids data/config/progression_feedback.json's `sound_cues` names resolve here to a file under sfx.dir, the same indirection `combat.effectiveness_sound` uses. Played on the UI bus by the world HUD's moment banner (playground_hud.gd), so the level-up is heard at one level wherever the creature stands. Ticks (an ordinary xp or bond credit) are deliberately silent: the directive's own rule is that ordinary gains are subtle and milestones are loud.",
     "level_up": "level_up",
     "bond_milestone": "bond_milestone",
     "bus": "UI"

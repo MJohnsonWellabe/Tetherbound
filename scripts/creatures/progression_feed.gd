@@ -1,6 +1,6 @@
 extends RefCounted
 
-## PROGRESSION-VISIBLE (docs/prompts/73, D74): the one progression feed.
+## PROGRESSION-VISIBLE (docs/prompts/73, D76): the one progression feed.
 ##
 ## Every progression change -- XP, a level, a bond credit, a bond milestone --
 ## is pushed here by its single source of truth, and every presenter (the

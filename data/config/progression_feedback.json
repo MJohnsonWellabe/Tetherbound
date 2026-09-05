@@ -1,5 +1,5 @@
 {
-  "_comment": "PROGRESSION-VISIBLE (docs/prompts/73, D74). Every number the progression feed's presenters read: how close to a milestone counts as 'near', how long a tick / near pulse / moment banner lives, how two moments collapse, where the banner sits inside the safe area, and which sound cue a moment plays. Read by scripts/creatures/progression_feed.gd::config(); nothing else parses this file. ALL TUNABLE.",
+  "_comment": "PROGRESSION-VISIBLE (docs/prompts/73, D76). Every number the progression feed's presenters read: how close to a milestone counts as 'near', how long a tick / near pulse / moment banner lives, how two moments collapse, where the banner sits inside the safe area, and which sound cue a moment plays. Read by scripts/creatures/progression_feed.gd::config(); nothing else parses this file. ALL TUNABLE.",
 
   "_comment_near": "Per bond task: how many units short of the target counts as 'near' -- the party strip pip starts its slow pulse and the Team screen row says what is left. Keys are the task field names bond_milestones.json uses. `xp_fights` is the XP version: a creature is near a level when the XP still needed is at most this many level-matched wild wins' worth (progression.gd::xp_award_for at the creature's own level).",
   "near": {

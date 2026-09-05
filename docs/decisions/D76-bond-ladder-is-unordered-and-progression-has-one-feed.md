@@ -1,4 +1,4 @@
-# D74 — The bond ladder is unordered, and progression speaks through one feed
+# D76 — The bond ladder is unordered, and progression speaks through one feed
 
 **Date:** 2026-09-04 · **Decided by:** lane W13-PROGRESSION-FEED, under
 `docs/prompts/73-PROGRESSION-VISIBLE-bond-and-level-feedback.md` §2.4 ("a decision to

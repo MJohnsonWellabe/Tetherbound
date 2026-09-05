@@ -532,7 +532,7 @@ func set_level(new_level: int, cfg: Dictionary) -> void:
 	hp = max_hp
 
 
-## PROGRESSION-VISIBLE (prompt 73, D74): this is the single place XP arrives
+## PROGRESSION-VISIBLE (prompt 73, D76): this is the single place XP arrives
 ## and levels change through play, so it is the single place the progression
 ## feed hears about either. Every awarder (victory, trainer bonus, Warrens
 ## bonus, rest bonus) reaches the feed through here without being edited;

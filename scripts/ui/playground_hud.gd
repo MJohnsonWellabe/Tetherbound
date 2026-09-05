@@ -97,7 +97,7 @@ const ICON_STAMINA := "res://assets/ui/icons/hud/stamina_bolt.png"
 const ICON_CREATURES := "res://assets/ui/icons/hud/creatures_paw.png"
 
 const PARTY_STRIP_SCRIPT := "res://scripts/ui/party_strip.gd"
-## PROGRESSION-VISIBLE (prompt 73, D74): the feed the moment banner and the
+## PROGRESSION-VISIBLE (prompt 73, D76): the feed the moment banner and the
 ## strip's xp/bond fields read, and the cue player for a Moment.
 const PROGRESSION_FEED := preload("res://scripts/creatures/progression_feed.gd")
 const BOND_MILESTONES_HUD := preload("res://scripts/creatures/bond_milestones.gd")

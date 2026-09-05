@@ -10,7 +10,7 @@ extends RefCounted
 ## neither of those changed: this file only decides how a node is EARNED,
 ## not what it buys (that stays in progression.json's own `bond` block).
 ##
-## D74 (PROGRESSION-VISIBLE, 2026-09-04): the ladder is UNORDERED. D70 shipped
+## D76 (PROGRESSION-VISIBLE, 2026-09-04): the ladder is UNORDERED. D70 shipped
 ## it ordered -- tier N only once the first N tasks were done in sequence --
 ## and under that rule a creature fed ten meals before its fiftieth battle
 ## showed no bond progress at all from those meals. The owner's directive of
@@ -73,7 +73,7 @@ static func _done(creature: RefCounted, m: Dictionary) -> bool:
 	return _counter(creature, str(m.get("task", ""))) >= float(m.get("target", 0))
 
 
-## How many milestones `creature` has completed, in ANY order (D74).
+## How many milestones `creature` has completed, in ANY order (D76).
 static func tier(creature: RefCounted, cfg: Dictionary) -> int:
 	if creature == null:
 		return 0
