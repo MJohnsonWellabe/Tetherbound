@@ -284,7 +284,9 @@ The halo fix turned out to be the smaller half of N07's "hard-edged trapezoid on
 rendered frame still showed a straight-edged translucent band lying across the grass, and it is
 `orb.gd`'s **trail**: one `TRIANGLE_STRIP` two vertices wide, so its alpha fell away along its
 length and **not at all across its width** — a ribbon with two hard straight sides. Now three
-vertices wide, a lit spine between two zero-alpha edges.
+vertices wide, a lit spine between two zero-alpha edges. (This helped substantially but did not
+close the finding — see the blind judge below, which found a further straight edge that is neither
+the trail nor the halo.)
 
 **Verified:** `test_combat_vfx.gd` 13 tests / 77 assertions, 0 failed, with four new bounds tests
 holding the arithmetic each change was argued from — **all four seen red on the shipped values**.
@@ -293,7 +295,57 @@ holding the arithmetic each change was argued from — **all four seen red on th
 caught creature reaching `Game.party`.
 
 Frames re-rendered through the same harness N07 used (`tools/_capture_vfx_polish_0905.gd`);
-before/after sheet at `_sheet_catch_ab.png`, blind verdict in `JUDGE_catch.md`.
+before/after sheet at `_sheet_catch_ab.png` (A = N07's shipped seal, B = this lane's).
+
+### Blind judge on the catch: a PARTIAL pass, and it corrects two things above
+
+Full verdict in `JUDGE_catch.md`. **The effect is a decisive win and the camera is a regression.**
+Both halves are recorded because the second one contradicts what this report would otherwise have
+claimed.
+
+**The effect — ship B.** The judge measured the orb's own perimeter contrast, which is the one
+thing the shot has to deliver:
+
+| | seal | success |
+|---|---|---|
+| A median edge contrast | 0.071 | 0.088 |
+| **B** | **0.367** | **0.410** |
+| A perimeter with contrast < 0.05 ("invisible") | 44% | 39% |
+| **B** | **6%** | **21%** |
+
+*"A 4-5x improvement in the legibility of the one object the shot is about… in row A the orb is a
+grey-tan smudge easily mistaken for a rock; in row B it reads as a distinct disc/dome with a defined
+rim."* It also confirmed the burst retune by measurement: the ground wash reaches **2.7x further in
+energy** in A than in B. In A the orb is literally *darker than the ground it sits on* (147 vs 166).
+
+**The camera — the judge prefers A, and it is right.** *"Row B's camera sits lower and closer.
+The creature's eye moves from fully inside frame… to bounding box reaching y=0, i.e. clipped by the
+top edge of the frame. All background depth cues visible in row A are gone."* Its verdict:
+**"Ship B's effect, A's camera."**
+
+This is a real cost of the `resolve_camera` change and it is **not fixed here**. The change did what
+it was for — it got the lens out of the ally, which is what W09's judge called "indistinguishable
+from a bug" — and in buying that it traded the creature's face and the backdrop's depth. Both the
+old framing and the new one have a defect; the new one's is smaller and the subject is now legible,
+which is why it ships. **The right answer is a third framing** that keeps B's standoff and pitch and
+recovers A's headroom, and it needs one more render cycle. Recorded as open.
+
+**And it corrects the paragraph above.** The trail was *a* hard straight edge and softening it
+helped a great deal — the judge measured the median step across the line at **−28.8 L in A against
+−5.8 L in B**, a five-fold reduction — but it did **not** remove the finding. There is still one
+long straight unfeathered edge, in all four tiles, and the judge identified it precisely:
+*"the near border of a large translucent ground-hugging quad that carries the warm ground wash"*,
+fitted at `y = 683.6 − 0.0871·x`, RMS residual 2.1 px over 760 px, **59% of frame width**, dropping
+57 luminance levels across two pixel rows. So the claim "now three vertices wide" is true of the
+trail and **is not the whole of N07's routed finding**. The remaining quad is not the trail, not the
+halo and not the burst — it is a third thing, and it is still open.
+
+**Two more from the same verdict, neither this lane's and both real:** B's dark ground ellipse
+*"reads as a scorch decal, not as light or shadow"* — concentric and directionless where the key
+light is upper-left, so a real contact shadow would be offset and tighter; and in **both** rows
+92-94% of the frame's brightest mass is the creature's white shoulder plates and **under 1% is on
+the orb**, with a 57,000-pixel flat spike at exactly R=231. The composition sends the eye to the
+opposite corner from the subject in every tile.
 
 ---
 
@@ -473,6 +525,17 @@ really would have appeared.
 - **One crate casts no shadow in either column.** Recorded in §1; the judge's diagnosis
   ("cast-shadow disabled per-mesh") may be an artefact of its control region comparing dirt against
   grass, and acting on an unverified diagnosis is worse than recording it.
+- **Item 4's `resolve_camera` costs the creature's face.** The blind judge prefers the OLD framing
+  and says so with a measurement (the eye's bounding box now touches y=0). The change still ships,
+  because it fixes a defect a previous judge called "indistinguishable from a bug" and the subject
+  is now legible — but "B's effect, A's camera" is the judge's own prescription and it needs one
+  more render cycle. **Open.**
+- **The straight ground-quad edge survives item 4.** Softening the trail cut the step five-fold
+  (−28.8 L → −5.8 L) but there is still one unfeathered straight edge across 59% of the frame in
+  every tile, and it is a third thing — not the trail, not the halo, not the burst. **Open.**
+- **The catch composite's brightest mass is on the creature, not the orb** (92-94% vs under 1%, in
+  both rows), and the ground ellipse "reads as a scorch decal, not as light or shadow". Neither is
+  this lane's file and both are real.
 - **The nudge search's ring-and-bearing sampling** steps over clear ground, see §3. A finer first
   ring would place better and closer to authored, and moves all 22 nudged sites.
 - **`tools/_capture_n14_shadow_ab.gd` duplicates `place5-bridge-approach`'s coordinates** from
