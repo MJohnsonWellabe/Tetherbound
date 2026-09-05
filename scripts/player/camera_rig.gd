@@ -286,12 +286,41 @@ func _process(delta: float) -> void:
 		# Look input is ignored for the duration, and the accumulated mouse
 		# motion is DROPPED rather than kept: a mouse moved across a whole
 		# conversation would otherwise be replayed as one flick the frame the
-		# box closes.
+		# box closes. The shot itself is driven on the physics tick below.
 		_mouse_delta = Vector2.ZERO
-		_conversation_follow(delta)
 		return
 	_apply_look(delta)
 	_follow(delta)
+
+
+## The conversation push-in, and only the push-in.
+##
+## It is driven here rather than from `_process` because THE IDLE TICK IS NOT
+## THE RIG'S TO RELY ON WHILE A DIALOGUE BOX IS UP.
+## `scripts/story/sequence_director.gd` ends its per-frame gate with
+## `_camera_rig.set_process(not panel)` — the rig has never had a suspend of its
+## own, so the director switches the whole idle tick off for the length of every
+## conversation, deliberately, to stop the stick look and the follow.
+##
+## Driving the blend from `_process` therefore advanced it for exactly one frame
+## and then froze it: measured on the real village with
+## `tools/_capture_dialogue_camera.gd --dry-run`, the rig reported
+## `in_conv yes  blend 0.056  arm 5.18  fov 69.7` at every sample from t+0 to
+## t+48 — a push-in that had engaged and then never moved. Nothing in the unit
+## suite could see it, because a detached rig stepped by hand is never suspended
+## by a director that is not there.
+##
+## The physics tick is the right home for it beyond just being the one that
+## still runs: `dialogue_panel.gd` reads its advance input on the physics tick
+## and `interaction_arbiter.gd` recomputes there, so the shot now ticks on the
+## same clock as the box it exists for.
+func _physics_process(delta: float) -> void:
+	if not (_talk_active or _talk_leaving):
+		return
+	if _target == null or not is_instance_valid(_target):
+		_target = null
+		return
+	_conversation_follow(delta)
 
 
 ## CONTROLLER-MAP: R3 (or Home) swings the camera back behind whatever it is

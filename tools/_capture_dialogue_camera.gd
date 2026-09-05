@@ -83,8 +83,18 @@ func _init() -> void:
 	_run()
 
 
+## `--dry-run`: drive the identical player walk, button press and push-in, print
+## the identical numbers, and skip only the PNG writes. Headless, so it costs a
+## world build instead of a world build plus software-GL rasterisation, and it
+## answers every question about the WIRING (does the press land, does the box
+## open, does the rig push in, which shot, how far) without answering the one
+## question about the PICTURE. Used to iterate before spending a real capture.
+var _dry_run: bool = false
+
+
 func _run() -> void:
-	if DisplayServer.get_name() == "headless":
+	_dry_run = OS.get_cmdline_user_args().has("--dry-run")
+	if DisplayServer.get_name() == "headless" and not _dry_run:
 		print("headless has no renderer; run this under xvfb-run")
 		quit(1)
 		return
@@ -167,6 +177,13 @@ func _capture_stand(stand: Dictionary, world: Node, rig: Node3D, camera: Camera3
 	# because a trainer photographed from behind their own back is not the shot.
 	var toward := npc.global_position - player.global_position
 	player.rotation = Vector3(0.0, atan2(toward.x, toward.z), 0.0)
+	# The rig has to be teleported WITH the player, not left to catch up.
+	# `camera_rig.gd::_follow` closes a gap at a lag-limited speed, which is
+	# right for a camera and wrong for a 35m jump between stands: measured on
+	# the first run of this tool, the second stand photographed the trainer from
+	# 30m away because the arm was still travelling. Put on the trainer's own
+	# orbit first, then let `_follow` do the last few centimetres.
+	rig.global_position = player.global_position + Vector3.UP * 1.75
 	if rig.has_method("_recentre_behind_target"):
 		rig.call("_recentre_behind_target")
 
@@ -181,15 +198,32 @@ func _capture_stand(stand: Dictionary, world: Node, rig: Node3D, camera: Camera3
 	var prompt := str(arbiter.call("prompt")) if arbiter.has_method("prompt") else ""
 	if not bool(arbiter.call("activate")):
 		_failures.append("%s: the arbiter refused to activate (prompt was '%s')" % [label, prompt])
+		await _reset(panel)
 		return
-	for _i in BLEND_FRAMES:
+	for i in BLEND_FRAMES:
 		await physics_frame
+		if i % 12 == 0:
+			# The blend, sampled rather than only reported at the end. A shot
+			# that engages and then never moves reads identically to a finished
+			# one in a single end-of-window line — which is how the push-in
+			# shipped frozen at five per cent. `idle` is printed because that is
+			# the switch that froze it: `sequence_director.gd` turns the rig's
+			# idle tick off for the whole conversation, so these rows are the
+			# evidence that the blend no longer depends on it.
+			print("      t+%02d  in_conv %s  blend %.3f  arm %.2f  fov %.1f  idle %s" % [
+				i,
+				"yes" if bool(rig.call("is_in_conversation")) else "no",
+				float(rig.call("conversation_blend")),
+				rig.get("spring_length"), camera.fov,
+				"on" if (rig as Node).is_processing() else "off"])
 
 	if not bool(panel.call("is_open")):
 		_failures.append("%s: pressing the prompt did not open a conversation" % label)
+		await _reset(panel)
 		return
 	if rig.has_method("is_in_conversation") and not bool(rig.call("is_in_conversation")):
 		_failures.append("%s: the conversation opened but the camera never pushed in" % label)
+		await _reset(panel)
 		return
 	var shot: Dictionary = rig.call("conversation_shot") if rig.has_method("conversation_shot") else {}
 	print("  %-24s prompt '%s'  arm %.2fm  fov %.1f  fallback %s" % [
@@ -198,8 +232,19 @@ func _capture_stand(stand: Dictionary, world: Node, rig: Node3D, camera: Camera3
 
 	await _shoot("%s-conversation" % label, player, camera, npc)
 
-	# Put the world back so the next stand starts from the exploration camera.
-	panel.call("close")
+	await _reset(panel)
+
+
+## Put the world back so the next stand starts from the exploration camera.
+##
+## Reached from every exit including the failing ones. A stand that gave up with
+## the box still on screen used to poison the two after it: the dialogue panel
+## owns input while it is open, so `interaction_arbiter.gd` is disabled and the
+## next stand reports an empty prompt — which is how one real defect at the
+## first stand was reported three times over.
+func _reset(panel: Node) -> void:
+	if bool(panel.call("is_open")):
+		panel.call("close")
 	for _i in BLEND_FRAMES:
 		await physics_frame
 
@@ -223,16 +268,17 @@ func _find_npc(world: Node, who: String) -> Node3D:
 func _shoot(name: String, player: Node3D, camera: Camera3D, npc: Node3D) -> void:
 	for _i in POSE_FRAMES:
 		await process_frame
-	await RenderingServer.frame_post_draw
-	var image := root.get_texture().get_image()
-	if image == null:
-		_failures.append("%s: the viewport returned no image" % name)
-		return
-	var path := "%s/%s.png" % [OUT_DIR, name]
-	if image.save_png(path) != OK:
-		_failures.append("%s: save_png failed" % name)
-		return
-	_written.append(path)
+	if not _dry_run:
+		await RenderingServer.frame_post_draw
+		var image := root.get_texture().get_image()
+		if image == null:
+			_failures.append("%s: the viewport returned no image" % name)
+			return
+		var path := "%s/%s.png" % [OUT_DIR, name]
+		if image.save_png(path) != OK:
+			_failures.append("%s: save_png failed" % name)
+			return
+		_written.append(path)
 
 	# Two numbers decided before the render, printed so the report can quote
 	# them rather than describe the picture: how much of the frame's height the

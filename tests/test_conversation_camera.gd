@@ -22,9 +22,11 @@ extends "res://tests/test_case.gd"
 ## "how much space is behind the camera" — is injected through
 ## `set_occlusion_probe_for_tests`. Everything else is the rig's own code: the
 ## same `enter_conversation`, the same blend, the same restore the game runs.
-## `tests/smoke_conversation_camera.gd` runs the same cycle against real physics
-## in the booted playground, indoors and out; this file is the half that can
-## never be skipped.
+## `tools/_capture_dialogue_camera.gd` runs the same cycle against real physics
+## in the booted playground, indoors and out, by pressing the interaction button
+## for real and photographing whatever the rig ends up looking at. That one needs
+## a renderer and half an hour, so it is evidence a lane gathers rather than
+## something every push runs; this file is the half that can never be skipped.
 
 const RIG := preload("res://scripts/player/camera_rig.gd")
 const CONVERSATION := preload("res://scripts/player/conversation_camera.gd")
@@ -239,7 +241,7 @@ func test_the_shot_owns_the_camera_while_the_box_is_up() -> void:
 	var framed: float = _rig.yaw
 	_rig.yaw = framed + 1.2
 	_rig.rotation = Vector3(_rig.pitch, _rig.yaw, 0.0)
-	_rig._process(STEP)
+	_rig._physics_process(STEP)
 	assert_almost_eq(_rig.yaw, framed, 0.001,
 		"look input must not be able to drag the camera off the conversation")
 
@@ -268,6 +270,97 @@ func test_a_fight_taking_the_camera_beats_a_conversation_still_blending() -> voi
 		"the borrowed pose must be handed back before the new target takes over")
 	assert_almost_eq(_camera.fov, 70.0, 0.02)
 	ally.free()
+
+
+func test_the_push_in_survives_the_idle_tick_being_switched_off() -> void:
+	# The defect this locks out, and it is the one that made a shipped push-in
+	# do nothing at all: `scripts/story/sequence_director.gd` gates the rig with
+	# `_camera_rig.set_process(not panel)`, so for the whole length of every
+	# conversation the rig's idle tick is OFF by design — that is how the stick
+	# look and the follow are suspended while you read. A blend living on
+	# `_process` therefore advanced one frame and froze five per cent in.
+	_rig.set_occlusion_probe_for_tests(_clear_room)
+	assert_true(_rig.enter_conversation(_speaker, CONVERSATION.config()))
+	_rig.set_process(false)
+
+	for _i in MAX_STEPS:
+		# Only the tick a suspended rig still gets. `_process` is not called at
+		# all here, exactly as the running game does not call it.
+		_rig._physics_process(STEP)
+		if is_equal_approx(float(_rig.conversation_blend()), 1.0):
+			break
+	assert_almost_eq(float(_rig.conversation_blend()), 1.0, 0.001,
+		"the push-in must finish with the rig's idle tick switched off")
+	assert_almost_eq(_rig.spring_length, float(CONVERSATION.config()["distance"]), 0.02)
+
+
+## --- who the push-in decides it is talking to -------------------------------
+
+## A stand-in for `interaction_arbiter.gd` with the ONE behaviour that matters
+## here: `activate()` calls the provider's own `interaction_activate` first and
+## emits `activated` only afterwards, exactly as the real arbiter does.
+class Arbiter extends Node:
+	signal activated(provider: Object)
+
+	var current: Object = null
+	var on_activate: Callable = Callable()
+
+	func _ready() -> void:
+		add_to_group("interaction_arbiter")
+
+	func winning_provider() -> Object:
+		return current
+
+	func activate() -> bool:
+		if current == null:
+			return false
+		# The villager's `interaction_activate` opens the dialogue panel, which
+		# is what pushes the camera in. It happens BEFORE the signal.
+		if on_activate.is_valid():
+			on_activate.call()
+		activated.emit(current)
+		return true
+
+
+func test_the_push_in_frames_the_person_being_activated_not_the_one_before() -> void:
+	# The defect this locks out: reading the speaker from the `activated` signal
+	# meant the first conversation of a session had no speaker at all (nothing
+	# had been activated yet) and every later one framed the PREVIOUS villager.
+	# `tools/_capture_dialogue_camera.gd` reported it as "the conversation opened
+	# but the camera never pushed in".
+	var tree := Node.new()
+	var arbiter := Arbiter.new()
+	tree.add_child(arbiter)
+	arbiter.notification(Node.NOTIFICATION_READY)
+
+	var watcher: Node = _rig.get_node_or_null(^"ConversationCamera")
+	assert_ne(watcher, null, "the rig must build its own push-in watcher")
+	# The watcher finds the arbiter through the group, which needs a live tree;
+	# this suite has none, so it is handed over the same way `_bind_arbiter`
+	# would have found it.
+	watcher.set("_arbiter", arbiter)
+
+	arbiter.current = _speaker
+	assert_eq(watcher.call("current_speaker"), _speaker,
+		"the speaker must be read from the arbiter's LIVE winner, mid-activate")
+
+	# And the stale remembered provider must never win over the live one.
+	var stale := Villager.new()
+	watcher.call("note_activation_for_tests", stale)
+	assert_eq(watcher.call("current_speaker"), _speaker,
+		"a provider remembered from the last conversation must not be framed")
+
+	stale.free()
+	arbiter.free()
+	tree.free()
+
+
+func test_with_no_arbiter_the_remembered_provider_is_still_used() -> void:
+	# A conversation opened by a story beat rather than a button press has no
+	# live winner to read, and must still frame whoever was last walked up to.
+	var watcher: Node = _rig.get_node_or_null(^"ConversationCamera")
+	watcher.call("note_activation_for_tests", _speaker)
+	assert_eq(watcher.call("current_speaker"), _speaker)
 
 
 ## --- the walled fixture -----------------------------------------------------
@@ -338,7 +431,9 @@ func test_the_fallback_config_replaces_the_shot_and_drops_its_own_key() -> void:
 ## survived four more seconds of a follow that cannot run here".
 func _settle_until_blended(weight: float) -> void:
 	for _i in MAX_STEPS:
-		_rig._process(STEP)
+		# The push-in is driven on the physics tick — see `camera_rig.gd`'s
+		# `_physics_process` for why it cannot live on the idle one.
+		_rig._physics_process(STEP)
 		if is_equal_approx(float(_rig.conversation_blend()), weight):
 			return
 	assert_true(false, "the conversation blend never reached %.1f" % weight)

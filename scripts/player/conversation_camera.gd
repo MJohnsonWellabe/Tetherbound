@@ -93,7 +93,11 @@ func _process(delta: float) -> void:
 
 
 func _bind_arbiter() -> void:
-	var node := get_tree().get_first_node_in_group(ARBITER_GROUP) if get_tree() != null else null
+	# `get_tree()` is not merely null outside the tree, it PRINTS — and this is
+	# now reachable from `current_speaker()`, which a detached rig calls.
+	if not is_inside_tree():
+		return
+	var node := get_tree().get_first_node_in_group(ARBITER_GROUP)
 	if node == null:
 		return
 	_arbiter = node
@@ -125,7 +129,7 @@ func begin(speaker: Node3D = null) -> bool:
 	var rig := _rig()
 	if rig == null or not rig.has_method("enter_conversation"):
 		return false
-	var who := speaker if speaker != null else resolve_speaker(_last_provider)
+	var who := speaker if speaker != null else current_speaker()
 	if who == null:
 		return false
 	_active = bool(rig.call("enter_conversation", who, config()))
@@ -138,6 +142,38 @@ func end() -> void:
 	var rig := _rig()
 	if rig != null and rig.has_method("exit_conversation"):
 		rig.call("exit_conversation")
+
+
+## Who this conversation is with, ASKED AT THE MOMENT THE BOX GOES UP rather
+## than remembered from the `activated` signal.
+##
+## This ordering is not a detail, it is the whole reason the push-in works.
+## `interaction_arbiter.gd::activate()` calls `provider.interaction_activate()`
+## FIRST and emits `activated` afterwards — and `interaction_activate` on a
+## villager opens the dialogue panel synchronously, which is what calls in here.
+## So at this instant `activated` has not been emitted yet: `_last_provider`
+## still holds the PREVIOUS conversation's speaker, and is null on the first one
+## of the session. Reading it here meant the push-in silently never engaged on
+## the first villager you ever spoke to and framed the wrong person after that —
+## which is exactly what `tools/_capture_dialogue_camera.gd` caught ("the
+## conversation opened but the camera never pushed in").
+##
+## `winning_provider()` is the arbiter's own live answer to "whose prompt is on
+## screen", already public for `combat_hud.gd`, and during `activate()` it IS
+## the provider being fired. The remembered `_last_provider` stays as the
+## fallback for a conversation opened by something other than a button press (a
+## story beat), where there is no live winner to read.
+func current_speaker() -> Node3D:
+	if _arbiter == null or not is_instance_valid(_arbiter):
+		# A conversation can open on an earlier frame than the half-second bind
+		# poll in `_process` has got to — the opening beat starts one before the
+		# player has taken a step.
+		_bind_arbiter()
+	if _arbiter != null and is_instance_valid(_arbiter) and _arbiter.has_method("winning_provider"):
+		var live := resolve_speaker(_arbiter.call("winning_provider") as Node3D)
+		if live != null:
+			return live
+	return resolve_speaker(_last_provider)
 
 
 func is_pushed_in() -> bool:
