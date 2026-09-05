@@ -1121,6 +1121,20 @@ func test_v2_save_migrates_with_a_fresh_progression_store() -> void:
 
 
 ## --- the tournament across a save (26-RG19) -----------------------------------
+##
+## N01-SAVE-FORMAT, 2026-09-05. The five tests in this section (the three
+## bracket tests, `test_condition_survives_a_save` and
+## `test_a_pre_condition_save_loads_at_the_configured_start`) were green from
+## the day they landed (d409939e) without a single one of their assertions
+## ever running. They called `saver.save_game()` / `saver.load_game()` -- the
+## `Game` autoload's method names, which `save_game.gd` has never had (its API
+## is `save()` / `load_slot()`). GDScript aborts a method on a nonexistent
+## call, `run_tests.gd` only reads the `failures` list afterwards, and an
+## aborted method has an empty one -- so each printed `ok` beside a SCRIPT
+## ERROR nobody grepped for. The pre-condition test also opened
+## `save_0.json`; the saver writes `slot_0.json`. Every test below now uses
+## the saver's real API and was seen red for the right reason before this
+## comment was written (see `ralph/reports/N01-SAVE-FORMAT-0905/REPORT.md`).
 
 ## 26-RG19's own acceptance list: "save/load does not duplicate rewards or
 ## regress to pre-tournament objective." The bracket is nothing but flags and
@@ -1189,14 +1203,29 @@ func test_condition_survives_a_save() -> void:
 	# expected persisted post-rest value remains the intentionally non-max 88.
 	creature.set("happiness", 76.0)
 	CONDITION.note_rest_completed(creature, CONDITION.config())
+
+	# `note_rest_completed` pays its own mood (`happiness.on_rest_completed`,
+	# clamped at the meter's max), so the file is asked to carry what the
+	# creature holds NOW, not the 88 set two lines up -- the original
+	# assertion against 88.0 would have gone red the first time this test
+	# actually ran. Both values must also differ from `creature_instance.gd`'s
+	# own defaults (70 / 55), or a loader that dropped the keys would pass.
+	var fed_before := float(creature.get("nourishment"))
+	var happy_before := float(creature.get("happiness"))
+	var rest_left_before := float(creature.get("rested_seconds_left"))
+	assert_true(rest_left_before > 0.0, "the fixture never started the rest clock; the test proves nothing")
+	assert_true(absf(fed_before - 70.0) > 1.0 and absf(happy_before - 55.0) > 1.0,
+		"the fixture matches the class defaults; a loader that ignored the file would pass")
 	assert_true(saver.save(game, 0))
 
 	var loaded := _game()
 	assert_true(saver.load_slot(loaded, 0))
 	var back: RefCounted = loaded.party.at(0)
-	assert_almost_eq(float(back.get("nourishment")), 91.0, 0.001, "the team came back hungry")
-	assert_almost_eq(float(back.get("happiness")), 88.0, 0.001, "the team came back miserable")
+	assert_almost_eq(float(back.get("nourishment")), fed_before, 0.001, "the team came back hungry")
+	assert_almost_eq(float(back.get("happiness")), happy_before, 0.001, "the team came back miserable")
 	assert_true(bool(back.get("rested")), "a rested team came back tired")
+	assert_almost_eq(float(back.get("rested_seconds_left")), rest_left_before, 0.001,
+		"the rest clock did not survive; 'rested' would lapse on the wrong schedule")
 
 
 ## A save written before the condition model existed loads as a creature that
@@ -1206,6 +1235,10 @@ func test_a_pre_condition_save_loads_at_the_configured_start() -> void:
 	assert_true(saver.save(game, 0))
 
 	# Rewrite the slot as VERSION 12: the format immediately before D68.
+
+	# Through `slot_path()`, not a hand-built name: the original
+	# `"%ssave_0.json"` never matched the saver's `slot_%d.json`, so the
+	# rewrite below opened nothing and the test aborted there.
 	var path: String = saver.slot_path(0)
 	var file := FileAccess.open(path, FileAccess.READ)
 	var data: Dictionary = JSON.parse_string(file.get_as_text()) as Dictionary
@@ -1220,6 +1253,11 @@ func test_a_pre_condition_save_loads_at_the_configured_start() -> void:
 	out.close()
 
 	var loaded := _game()
+
+	# Dirty the in-memory creature first, so "came back at the configured
+	# start" cannot be the loader leaving the party it found alone.
+	loaded.party.at(0).set("nourishment", 3.0)
+	loaded.party.at(0).set("happiness", 2.0)
 	assert_true(saver.load_slot(loaded, 0), "a version 12 save no longer loads at all")
 	var back: RefCounted = loaded.party.at(0)
 	var cfg: Dictionary = CONDITION.config()
