@@ -65,6 +65,20 @@ Owner noticed the session count didn't match my reports. Root cause: 5 lanes (W0
 Separately, 5 lanes had genuinely gone stale 4+ hours with NO replacement running: W02-HARNESS-CONTEXT, W03-S08-FREEZE, W16-LOFT-BED, W20-SMALL-FIXES, W21-HARNESS-FIGHTS — all hit their 5h limit hours ago (reset already passed) and were sitting untouched. Given the owner flagged this directly, resumed all 5 at once (departing from the normal 1-2/sweep trickle, since the owner surfaced the actual backlog size).
 main also moved: PR #42 merged — **W00-ICONS is now on main**. PR #45 (consolidated: icons+contracts+progression+portraits+companion+bands2-5) is open, still blocked only on the pre-existing finale regression. PR #44 is Codex's own draft PR for Cloudreach, unrelated to this batch, explicitly not ready to merge.
 
+## 16:03 UTC: N07-VFX-POLISH confirmed done
+4 commits, final `c01a5c18` on `ralph/N07-VFX-POLISH-0905`. Telegraph ring recoloured to
+magenta `#ff40e6` (25°+ of hue from both reserved Team Tether oxbloods, measured) and made
+depth-tested so it no longer paints through the player's own creature standing in front of it
+— fixes W09's judge-flagged "dull oxblood torus across the creature's chest". Catch seal flash
+resized from a 2.76m disc (123% of the resolve camera's frame height, read as khaki) to a 1.0m
+gold bloom around the 0.42m orb, matching W09's sparkle. Two blind judge rounds; a real
+regression test added. Honestly scoped: seal is only "half met" — the composite still shows
+impact_flash.gd's hard spikes, vfx.json's mote cloud burying the orb, and orb.gd's own
+hard-edged ground quad, none reachable from the config this lane owns — all routed, not
+papered over. Archived. 9/13 done (N01-N04, N07, N09, N11-N13); 4 running (N05, N06, N08, N10).
+N08 is close (round-3 render, last frame, tests chain on exit); N05 chamber re-render + judge
+running; N06/N10 still mid-work, actively pushing.
+
 ## 16:00 UTC: N09-BRIDGE-CHECKPOINT confirmed done — checkpoint still overall DO NOT SHIP, honestly reported
 9 commits, final `996eba53` on `ralph/N09-BRIDGE-CHECKPOINT-0905`. Closed all 3 of the landing
 judge's do-not-ship items with two independent blind judge rounds: barricades moved into the
