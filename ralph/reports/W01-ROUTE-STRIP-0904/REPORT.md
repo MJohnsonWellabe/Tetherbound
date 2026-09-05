@@ -236,8 +236,12 @@ ac22de7e route strip: a fight frame needs daylight between the two fighters
 caf370a7 W01-ROUTE-STRIP: code-blind verdict on the run-7 frames, verbatim
 61648f6b W01-ROUTE-STRIP: contact sheet from run 8 (fighters separated with a clear gap, 0 refused)
 2c995b3c W01-ROUTE-STRIP: final report and round-4 code-blind verdict
+f713c00e W01-ROUTE-STRIP: record this report's own final commit hash
 ```
 
-Final commit hash for this report: **2c995b3c**.
+Last code+evidence commit (the state everything above was measured against): **61648f6b**.
+This report and the round-4 verdict landed at **2c995b3c**; the branch tip, after this
+line was corrected to name that hash, is **f713c00e**. `git log --oneline -3` on
+`ralph/W01-ROUTE-STRIP-0904` is the authoritative check.
 
 Branch: `ralph/W01-ROUTE-STRIP-0904`, pushed to `origin` after every commit above.
