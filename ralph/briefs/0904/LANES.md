@@ -404,6 +404,53 @@ Owner noticed the session count didn't match my reports. Root cause: 5 lanes (W0
 Separately, 5 lanes had genuinely gone stale 4+ hours with NO replacement running: W02-HARNESS-CONTEXT, W03-S08-FREEZE, W16-LOFT-BED, W20-SMALL-FIXES, W21-HARNESS-FIGHTS — all hit their 5h limit hours ago (reset already passed) and were sitting untouched. Given the owner flagged this directly, resumed all 5 at once (departing from the normal 1-2/sweep trickle, since the owner surfaced the actual backlog size).
 main also moved: PR #42 merged — **W00-ICONS is now on main**. PR #45 (consolidated: icons+contracts+progression+portraits+companion+bands2-5) is open, still blocked only on the pre-existing finale regression. PR #44 is Codex's own draft PR for Cloudreach, unrelated to this batch, explicitly not ready to merge.
 
+## 16:25 UTC: N10-HARNESS-TESTS confirmed done — a real gameplay bug and a world-seed bug found
+9 commits, final `cdd87e15` on `ralph/N10-HARNESS-TESTS-0905`. All 13 named items closed, verified
+item-by-item in a real acceptance table. **Two findings worth flagging beyond its own scope:**
+(1) **every Gate F run since 2026-09-02 played a randomly-rolled world** — nothing pinned
+`TB_WORLD_SEED`, so every recorded Gate 3 encounter verdict in that window was gathered against
+unnamed species clusters; this lane pins the seed going forward but says explicitly "anyone
+quoting a band's encounter evidence from that window should re-check it." (2) **a real,
+unrouted gameplay bug**: the party can freeze solid for 880 real seconds at the Warrens
+protocol anchor with zero recovery — `dead_travel_m` pinned at exactly 0.00, `_recover_if_entombed`
+never fires, because the anchor point and the built Warrens mouth are ~150m apart. Routed to
+whoever owns `burrow_warrens.gd`. **Also: N10 re-ran `test_terrain_bake_freshness.gd` on a clean
+branch off main and got 0 failures** — contradicting this wave's own COMMON.md, which states
+it's red on `main`. N11-TERRAIN-BAKE already re-baked assuming it was red; worth a fast check at
+landing time whether N11's re-bake was a real fix or a no-op against an already-fresh manifest.
+Honestly scoped: did NOT run the 4 segments end-to-end (~230k frames predicted for S06 alone;
+one real S06 run was done as the reproduction, the rest verified via unit/smoke suites) — named
+as this lane's own outstanding debt, to land alongside W21. Archived. 10/13 original N0x done
+(N01-N04, N07, N09-N13); 3 running (N05, N06, N08); N14 (new, 14th lane) just started.
+**W24-LANDING has moved on to consolidating the 0905 follow-up wave itself** — now on a new
+branch `ralph/CONSOLIDATE-0905`, auditing merge conflicts with import+unit tests running.
+
+## 16:20 UTC: N14-ROUTED-FOLLOWUPS launched (Opus) — consolidates all launchable routed findings
+Owner asked for one Opus lane to finish the remaining follow-up work the 9 done 0905 lanes left
+routed. Extracted every Bucket-A item (no new art, no Meshy, no invented design call) from
+N02, N04, N07, N09, N12 and N13's reports into one brief:
+`ralph/briefs/0905-followup/N14-ROUTED-FOLLOWUPS.md`. Priority order: (1) **shadows are off
+everywhere in the game** — N09's judge, unprompted: "the loudest defect in the picture... turn
+on shadow casting for the directional light and give the props a contact/AO term. No new
+asset. Highest value per hour on this list by a wide margin" — `world_look.gd`, affects every
+frame; (2) day/night clock persistence — the actual remaining half of the owner's OP-0904-2
+complaint N13 didn't close; (3) 3 stuck vegetation pickup sites; (4) catch-seal VFX composite
+cleanup (impact_flash.gd spikes, vfx.json motes, orb.gd halo falloff, resolve_camera position);
+(5) South Bridge blockout slab material, barricade silhouette, lantern/sentry overlap,
+npc_ranks.json stale comment; (6) NPC hair-hue spacing + extending N04's mask-recolour
+technique to villager_male.png; (7) low-priority cleanup. Explicitly excluded and listed as
+Bucket-B (not attempted): the checkpoint's walkable-around verges (needs a fence asset + D86
+reopened), the gate's blue banners (needs an asset regen), the lantern's reserved daylight
+cyan (D86), signpost board size, eyebrows (a "look" per N04, owner's call).
+**Flagged, not fixed:** N04, N07, N09 and N13 each independently wrote a `docs/decisions/D87-*`
+file — four different decisions, same number, because each lane's brief said D87 was next free
+and none knew the others were running concurrently. N14 is told to leave all four alone and
+take D91; **whoever lands this wave needs to renumber three of the four D87s.**
+Since N04/N07/N09/N13 aren't landed yet and N14 edits files three of them already touched, its
+brief opens by merging those four branches into its own starting point first, so it isn't
+guessing at post-landing state. Session `session_01UGJzbaEsNhsYLL6tEhRGKi`,
+`ralph/N14-ROUTED-FOLLOWUPS-0905`, Opus.
+
 ## 16:03 UTC: N07-VFX-POLISH confirmed done
 4 commits, final `c01a5c18` on `ralph/N07-VFX-POLISH-0905`. Telegraph ring recoloured to
 magenta `#ff40e6` (25°+ of hue from both reserved Team Tether oxbloods, measured) and made
