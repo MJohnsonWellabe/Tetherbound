@@ -85,9 +85,10 @@ shots written, none failed, rc=0, both rounds.
 
 Two rounds, both captured by `tools/_capture_vfx_moments.gd` under
 `xvfb-run -a -s "-screen 0 1280x720x24" godot --path . --rendering-driver opengl3 --resolution 1280x720`,
-day/clear pinned and frozen, the tree paused for every shutter. Ten frames a round (five
-moments x HUD/clean), 0 failed, rc=0 both times. Sheets: `_sheet_round1.png`,
-`_sheet_round2.png`. Verdicts: `JUDGE_round1.md`, `JUDGE_round2.md`.
+day/clear pinned and frozen, the tree paused for every shutter. Ten frames each for rounds 1 and 2
+(five moments x HUD/clean) and eight for round 3 (`--only=hit,ko`, the two acceptance moments
+plus the control), 0 failed and rc=0 every time. Sheets: `_sheet_round1.png`,
+`_sheet_round2.png`, `_sheet_round3.png`. Verdicts: `JUDGE_round1.md`, `JUDGE_round2.md`.
 
 **Round 1** — the judge (blind, opus, given only the sheet, the frames and `docs/reference/`)
 said the effects were invisible at the size the eye reads them, that there was no hot colour
@@ -119,6 +120,34 @@ For scale, the number that opened this file's case: the blind critic counted 10 
 pixels at `combat/05-quick-attack-lands` and 24,623 at `palworld-01`. `04-catch-success` is
 excluded from the table because the catch resolve camera cuts to an orb close-up, so it shares
 no framing with the control.
+
+**Round 3** — the round-2 judge ranked one defect above all others and it had a geometry fix
+rather than a tuning fix, so a third and final round was taken; `JUDGE_round2.md` records the
+verdict, what was this lane's, what was routed elsewhere, and why the round was justified
+against `COMMON.md`'s two-round guidance. The four changes: streaks soft on every edge with a
+round head, near-black halos, the rim returned to being a rim (`rim_flat_mix` 0.38 → 0.10,
+hit-flash `flat_mix` 0.7 → 0.3), and the flourish split so its rings and motes are
+depth-tested while its beam is not.
+
+| Round-3 clean frame | bright-warm | near-white | combined, over the control |
+|---|---|---|---|
+| `00-squared-up` (control) | 8,345 | 13,263 | - |
+| `01-hit-spark` | 14,690 | 15,648 | **+8,730** |
+| `02-knockout` | 15,346 | 10,654 | +4,392 |
+| `03-level-up` | 24,930 | 1,273 | (camera moved; see below) |
+
+Read those against round 2 carefully, because two of the numbers went **down and that is the
+fix working**. The spark is now born near-white (`heat` 0.92) so its pixels moved out of the
+bright-warm bucket and into near-white — deliberate, and exactly the judge's ask for a mark in
+a colour the meadow does not contain. `02`'s warm count fell from 34,857 to 15,346 because the
+flat gold flood over the whole body is gone; that flood was the judge's second-ranked defect
+and this lane's own round-2 regression. Only `00`, `01` and `02` share a camera, so only their
+comparisons are like-for-like; `03` is shot 22 ticks later, by which point the fight's camera
+has moved to a different vista, so its count is reported but not differenced.
+
+Round 3's frames are the ones in `_sheet_round3.png`. They are **not** blind-judged: both
+allowed judge rounds were spent, and the changes are recorded here with their measurements and
+their reasoning rather than with a third verdict.
 
 ## Perf
 
