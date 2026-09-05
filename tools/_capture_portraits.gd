@@ -121,8 +121,16 @@ const PORTRAITS: Array = [
 	{"file": "mira", "config_key": "villager_farmer"},
 	{"file": "tam", "config_key": "villager_smith"},
 	{"file": "villager_ranger", "config_key": "villager_ranger"},
-	{"file": "halda", "config_key": "villager_ranger", "hair": {"visible": true, "color": "#8f8f96"}},
-	{"file": "rae", "config_key": "villager_farmer", "hair": {"visible": true, "color": "#7a4a2c"}},
+	# N14-ROUTED-FOLLOWUPS, 2026-09-05: these two hexes are DUPLICATES of the
+	# same people's `hair.color` in `data/config/village_npcs.json`, and the
+	# duplication is a real trap -- a plate is a pre-rendered PNG, so changing
+	# the world's hair colour without changing this line leaves the portrait
+	# showing the old head forever, with nothing failing. Held by
+	# `tests/test_dialogue_portraits.gd::test_the_portrait_tool_agrees_with_the_world_about_hair`.
+	# Halda #8f8f96 -> #63636e and Rae #7a4a2c -> #a8663f are the hue-spacing
+	# pass N04's judge asked for; both plates were re-rendered.
+	{"file": "halda", "config_key": "villager_ranger", "hair": {"visible": true, "color": "#63636e"}},
+	{"file": "rae", "config_key": "villager_farmer", "hair": {"visible": true, "color": "#a8663f"}},
 	{"file": "doss", "config_key": "villager_ranger", "hair": {"visible": true, "color": "#4a5c3d"}},
 	# --- named cast with their own installed body ---------------------------
 	{"file": "bryn", "config_key": "young_trainer", "exposure": 0.8},

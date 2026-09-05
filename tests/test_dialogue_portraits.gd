@@ -335,3 +335,46 @@ func test_every_trainer_in_the_table_has_a_face_of_its_own_for_the_refusals() ->
 		assert_ne(str(identity.get("speaker", "")), "", "trainer '%s' has no name for the refusal" % id)
 		checked += 1
 	assert_true(checked >= 20, "expected the whole trainer table, checked %d" % checked)
+
+
+## --- the portrait tool and the world must agree about hair (N14) -------------
+##
+## `tools/_capture_portraits.gd::PORTRAITS` carries a literal `hair.color` for
+## the named villagers who override their config's default, and the same hex
+## lives on that person's own entry in `data/config/village_npcs.json`. A plate
+## is a PRE-RENDERED PNG, so if the two ever disagree the world shows one head
+## and the dialogue panel shows another, indefinitely, with nothing failing --
+## which is exactly the shape of defect W04 and N04 have each spent a lane on.
+##
+## Found while retuning Rae's and Halda's hair for N04's routed hue-spacing
+## finding: changing `village_npcs.json` alone would have left both plates
+## rendering the old colour.
+func test_the_portrait_tool_agrees_with_the_world_about_hair() -> void:
+	var tool_source := FileAccess.get_file_as_string("res://tools/_capture_portraits.gd")
+	assert_true(tool_source != "", "could not read the portrait tool")
+
+	var parsed: Variant = JSON.parse_string(
+		FileAccess.get_file_as_string("res://data/config/village_npcs.json"))
+	assert_true(typeof(parsed) == TYPE_DICTIONARY, "village_npcs.json did not parse")
+	var villagers: Array = (parsed as Dictionary).get("villagers", []) as Array
+	var checked := 0
+	for raw: Variant in villagers:
+		var villager: Dictionary = raw
+		var hair: Variant = villager.get("hair")
+		if typeof(hair) != TYPE_DICTIONARY or not (hair as Dictionary).has("color"):
+			continue
+		var name := str(villager.get("name", ""))
+		var file := name.to_lower()
+		# Only the people the tool actually renders a named plate for.
+		var marker := '{"file": "%s"' % file
+		if not tool_source.contains(marker):
+			continue
+		var line := tool_source.substr(tool_source.find(marker))
+		line = line.substr(0, line.find("\n"))
+		var colour := str((hair as Dictionary)["color"])
+		assert_true(line.contains(colour),
+			"the portrait tool renders %s's plate with a different hair colour than the world gives %s: the world says %s, the tool's line is %s" % [
+				name, name, colour, line])
+		checked += 1
+	assert_true(checked >= 2,
+		"this test matched no villager at all; it would pass whatever the tool said")

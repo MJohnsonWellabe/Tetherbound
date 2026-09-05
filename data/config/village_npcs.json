@@ -251,8 +251,9 @@
       "config_key": "villager_ranger",
       "hair": {
         "visible": true,
-        "color": "#8f8f96",
-        "_comment": "Iron grey, distinct from farmer (#5c3a22), smith (#8a8578), ranger (#7a3c22) and Bryn (#c9a86a) so the sixth body on this rig does not read as one of the others wandered north out of the square."
+        "color": "#63636e",
+        "_comment": "Iron grey, distinct from farmer (#5c3a22), smith (#8a8578), ranger (#7a3c22) and Bryn (#c9a86a) so the sixth body on this rig does not read as one of the others wandered north out of the square.",
+        "_comment_hue_spacing_n14": "N14-ROUTED-FOLLOWUPS, 2026-09-05, on N04-DIALOGUE-PORTRAITS's routed finding. Once N04 made the per-NPC hair colour actually VISIBLE on the plates (the mask-by-region recolour), its blind judge measured three pairs still close enough to read as the same person at speaking distance -- deltaE at 72px: ranger/Rae 5.4, Tam/Halda 8.9, Mira/Rae 8.3. N04's own framing: these were 'chosen when they were invisible'. Spread here by VALUE inside each colour's own family, not by picking new hues -- the family each of these people belongs to was a deliberate call and is not being reopened. Measured as CIE76 deltaE on the raw swatches (the judge's at-72px numbers are the same ordering, compressed by the render): the closest pair goes 8.45 -> 15.19, and the bar is the 15.19 that ranger-vs-Mira already sat at WITHOUT being flagged. Every pair now meets it. Halda: #8f8f96 -> #63636e. Hue is identical (240 degrees) and this is still the iron grey the line above describes -- value 0.59 -> 0.43 and saturation 0.05 -> 0.10, i.e. iron rather than pewter. Darkening HER rather than the smith's silver because Tam's #8a8578 is the lighter, warmer of the two, and separating a grey pair is a value job: vs Tam 12.21 -> 19.44."
       },
       "position": [
         23.5,
@@ -446,7 +447,8 @@
       "config_key": "villager_farmer",
       "hair": {
         "visible": true,
-        "color": "#7a4a2c"
+        "color": "#a8663f",
+        "_comment_hue_spacing_n14": "N14-ROUTED-FOLLOWUPS, 2026-09-05, on N04-DIALOGUE-PORTRAITS's routed finding. Once N04 made the per-NPC hair colour actually VISIBLE on the plates (the mask-by-region recolour), its blind judge measured three pairs still close enough to read as the same person at speaking distance -- deltaE at 72px: ranger/Rae 5.4, Tam/Halda 8.9, Mira/Rae 8.3. N04's own framing: these were 'chosen when they were invisible'. Spread here by VALUE inside each colour's own family, not by picking new hues -- the family each of these people belongs to was a deliberate call and is not being reopened. Measured as CIE76 deltaE on the raw swatches (the judge's at-72px numbers are the same ordering, compressed by the render): the closest pair goes 8.45 -> 15.19, and the bar is the 15.19 that ranger-vs-Mira already sat at WITHOUT being flagged. Every pair now meets it. Rae: #7a4a2c -> #a8663f. Hue 23.1 -> 22.3 degrees and saturation 0.64 -> 0.62 are unchanged to within rounding; only VALUE moves, 0.48 -> 0.66, so she is the light auburn of the three browns rather than the middle one. She was in TWO of the three flagged pairs (with the ranger at 5.4 and with Mira at 8.3), so moving her alone answers both: vs ranger 8.45 -> 17.68, vs Mira 11.21 -> 27.04."
       },
       "position": [
         -205.0,
