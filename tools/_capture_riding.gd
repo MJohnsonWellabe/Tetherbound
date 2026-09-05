@@ -36,9 +36,15 @@ const FOV := 48.0
 ## Where the camera stands, in metres, in the mount's own frame: back, up and
 ## to one side. Close enough that a 2 m animal and a 1.8 m rider fill the frame
 ## and a judge can see a knee.
-const EYE_BEHIND := 4.6
+## A three-quarter angle, not the original behind-heavy framing: at this
+## relocation spot (`_onto_open_ground`'s own header in `smoke_riding.gd`
+## tells the story) the mount ends up close enough to the workshop's forge
+## yard that a purely-behind camera looks straight into a wall. Verified by
+## rendering, not assumed -- the side angle below was the one frame of the
+## first pass that actually showed the animal.
+const EYE_BEHIND := 2.5
 const EYE_UP := 2.1
-const EYE_SIDE := 3.2
+const EYE_SIDE := 4.8
 const SIDE_EYE_BEHIND := 0.4
 const SIDE_EYE_SIDE := 5.4
 
