@@ -301,6 +301,11 @@ content / encounter-director lane, not this one.
 ## 10. Final state
 
 - Branch: `ralph/W03-S08-FREEZE-0904`
-- Final commit: see the branch tip; recorded in the lane summary.
+- Commits: `05a99435` (the differential probe and the frozen pre-fix walker),
+  `033f6add` (the root cause, the ledger rows and this report), and the commit
+  carrying this line.
+- Nothing outside the ownership list was touched. The 59 untracked
+  `assets/**/*.png.import` files in the working tree are Godot's own import
+  cache from running the engine here; they were left uncommitted deliberately.
 - Acceptance: **S08-22 arrives** (row 7, 839.5 m, 0 held, plus 12 steps past
   it); the root cause is §3; both ledger rows are rewritten.
