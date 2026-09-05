@@ -190,7 +190,7 @@ func _run() -> void:
 	await _pull_the_lever()
 	await _the_full_belt_takes_the_decision()
 	_the_decision_is_recorded()
-	_the_region_answers()
+	await _the_region_answers()
 	await _the_meadows_acknowledges_it()
 	_report()
 
@@ -555,6 +555,16 @@ func _the_legendary_is_inside_the_machine() -> void:
 ## garrison has stood down (CL-G5): the sentries and the camp gone, every
 ## fire and lamp on the gate face dark.
 func _the_legendary_stepped_out_and_the_garrison_withdrew() -> void:
+	# The ending is where the sequence LEAVES it, so let the sequence finish:
+	# the machinery-fails lines are still on screen when the region answers.
+	for i in SEQUENCE_FRAMES:
+		if str(_climax.get("_stage")) == "done":
+			break
+		await physics_frame
+		if bool(_panel.call("is_open")):
+			await _press("interact")
+	if str(_climax.get("_stage")) != "done":
+		_fail("the climax never finished its sequence; it is stuck at stage '%s'" % str(_climax.get("_stage")))
 	var legendary: Node3D = _climax.call("legendary_body") as Node3D
 	var measure: Dictionary = _climax.call("cage_measure")
 	if legendary != null and not measure.is_empty():
@@ -731,7 +741,7 @@ func _the_region_answers() -> void:
 	print("the region answered: %d plants back, %d tether lights out, %d barriers open, %d patrols withdrawn"
 		% [int(report.get("regrown", 0)), int(report.get("lights_killed", 0)),
 			int(report.get("barriers_opened", 0)), int(report.get("patrols_withdrawn", 0))])
-	_the_legendary_stepped_out_and_the_garrison_withdrew()
+	await _the_legendary_stepped_out_and_the_garrison_withdrew()
 
 
 ## The last beat prompt 69 names, and the one the chapter had no way to reach:

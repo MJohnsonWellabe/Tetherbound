@@ -65,6 +65,9 @@ var _withdrawal: Node = null
 var _freed_spot: Vector3 = Vector3.ZERO
 var _cage_measure: Dictionary = {}
 var _step_tween: Tween = null
+## Where the freed creature is MEANT to end up, whatever the animation did.
+## `_freed_spot` until the join offer picks a spot in front of the player.
+var _settle_target: Vector3 = Vector3.ZERO
 
 var _stage: String = ""
 var _pending_conversation: String = ""
@@ -687,6 +690,14 @@ func _advance() -> void:
 			# is §28's order: join, then the five-creature decision, then the
 			# machinery.
 			if not _ceremony_pending() and not _panel_busy():
+				# HERE, not only on the way out of STAGE_FAILURE: the ceremony
+				# PAUSES THE TREE, and a paused tree freezes the step-out
+				# tween mid-flight. Measured: the creature sat at 2.6 m off
+				# the machine's axis and 2.02 m up -- on the plinth, in the
+				# air, for the whole of the chapter's last conversation --
+				# because the walk it was halfway through never resumed
+				# before the ending was read.
+				_settle_position()
 				_stage = STAGE_FAILURE
 				_start(str((_config.get("machine", {}) as Dictionary).get("failure_conversation", "")))
 		STAGE_FAILURE:
@@ -755,12 +766,14 @@ func _step_out(freed: Dictionary, immediate: bool) -> void:
 	if _legendary == null or _cage_measure.is_empty():
 		return
 	if immediate:
+		_settle_target = _freed_spot
 		_legendary.global_position = _freed_spot
 		_landed()
 		return
 	if _step_tween != null and _step_tween.is_valid():
 		_step_tween.kill()
 	_set_body_physics(false)
+	_settle_target = _freed_spot
 	var seconds := maxf(0.1, float(freed.get("step_out_seconds", 2.4)))
 	var from := _legendary.global_position
 	# Down off the dais first, then across the floor: two legs so it does not
@@ -790,7 +803,9 @@ func _settle_position() -> void:
 		return
 	if _step_tween != null and _step_tween.is_valid():
 		_step_tween.kill()
-	_legendary.global_position = _freed_spot
+	# Wherever the sequence was taking it: the spot in front of the player if
+	# the join offer chose one, otherwise the spot it stepped out to.
+	_legendary.global_position = _settle_target if _settle_target != Vector3.ZERO else _freed_spot
 	_landed()
 
 
@@ -850,6 +865,7 @@ func _approach_player() -> void:
 	if _step_tween != null and _step_tween.is_valid():
 		_step_tween.kill()
 	_set_body_physics(false)
+	_settle_target = target
 	_step_tween = create_tween()
 	_step_tween.tween_property(_legendary, "global_position", target,
 		maxf(0.1, float(freed.get("approach_seconds", 2.0)))) \
