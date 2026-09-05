@@ -12,10 +12,18 @@ extends SceneTree
 ## loader actually stood up (`BandPickup_<id>`), so a placement the loader
 ## nudged off scatter is framed where it really is, not where the file says.
 ## Eye 7 m back at 2.1 m up, looking at the pickup's own foot: the distance a
-## player sees a find from when deciding whether to walk to it. The player
-## body is parked beside the eye so the frame carries the game's scale
-## reference. Frames go to `res://shots_band_pickups/`; only a contact sheet
-## is ever committed (AGENT_WORKFLOW.md §8).
+## player sees a find from when deciding whether to walk to it.
+##
+## The player body stands IN FRAME, 3.4 m ahead of the eye and 1.5 m to one
+## side of the sightline, which is roughly where a third-person camera holds
+## it. Round 1 parked it beside the EYE, so it fell outside the frustum in all
+## six frames, and the judge's report names that as its own defect: "no 1.80 m
+## ruler is present in any frame, and the pickups read oversized... a survey
+## meant to judge pickup scale needs to put them in shot." The lateral offset
+## keeps the body off the pickup rather than in front of it.
+##
+## Frames go to `res://shots_band_pickups/`; only a contact sheet is ever
+## committed (AGENT_WORKFLOW.md §8).
 
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
@@ -28,6 +36,9 @@ const EYE_DISTANCE := 7.0
 const EYE_HEIGHT := 2.1
 const TARGET_HEIGHT := 0.35
 const ACTOR_CLEARANCE := 0.4
+## How far ahead of the eye, and how far off the sightline, the player stands.
+const ACTOR_AHEAD_M := 3.4
+const ACTOR_SIDE_M := 1.5
 
 ## name, pickup id, bearing (degrees, world) the eye sits AT relative to the
 ## pickup, time of day.
@@ -102,8 +113,11 @@ func _run() -> void:
 		camera.global_position = eye
 		camera.look_at(target, Vector3.UP)
 		if player != null:
-			var side := Vector2(cos(bearing), -sin(bearing)) * 1.6
-			var park := eye_xz + side
+			# Forward is eye -> pickup; right is that turned 90 degrees. The
+			# body stands ahead of the eye and to the right, facing the find.
+			var forward := (Vector2(node.global_position.x, node.global_position.z) - eye_xz).normalized()
+			var right := Vector2(forward.y, -forward.x)
+			var park := eye_xz + forward * ACTOR_AHEAD_M + right * ACTOR_SIDE_M
 			player.global_position = Vector3(park.x, field.height_at(park.x, park.y) + ACTOR_CLEARANCE, park.y)
 			var away := target - player.global_position
 			player.rotation = Vector3(0.0, atan2(away.x, away.z), 0.0)
