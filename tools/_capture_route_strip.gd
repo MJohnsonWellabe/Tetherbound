@@ -96,10 +96,17 @@ const FIGHT_MARGIN := 0.08
 ## No fighter may fill more than this of the frame: run 2's first fit put the
 ## companion at 69% with the fight behind it.
 const FIGHT_MAX_HEIGHT_FRAC := 0.5
-## And none may be smaller than this. Run 3 framed a mudsnout at 14.5% -- it
-## passed every other rule and the judge reported it as unreadable and
-## ambiguous with a background prop. A bearing that cannot satisfy both
-## bounds is skipped rather than shot.
+## And nobody may be smaller than this. Run 3 framed a mudsnout at 14.5% --
+## it passed every other rule and the code-blind judge reported it as
+## unreadable and ambiguous with a background prop.
+##
+## Run 4 then showed what the two bounds together really constrain, and it is
+## not the camera: with a 0.95 m mudsnout beside a 2.30 m Terrapup, all seven
+## bearings reported no distance at all, at three separate stands. A subject
+## 1.8 m tall reaches 18 % of a 70-degree frame only within about 7 m, and
+## three bodies spread across an 11 m arena do not fit that close. The frame
+## was not badly aimed; the MATCHUP was unphotographable. That is why
+## `_best_opponent()` picks by size.
 const FIGHT_MIN_HEIGHT_FRAC := 0.18
 const FIGHT_D_MIN := 4.0
 const FIGHT_D_MAX := 26.0
@@ -568,6 +575,25 @@ func _describe_subjects(subjects: Array) -> Array:
 	return out
 
 
+## The one-shot toast strip, cleared before a fight shutter.
+##
+## A road frame hides every canvas layer, so the toast cannot reach it. A
+## FIGHT frame deliberately keeps the HUD -- 2.15 asks for the nameplate and
+## level tag -- and the toast lives inside that same HUD
+## (`playground_hud.gd::_show_hotbar_message`, a label with its own expiry),
+## so run 4's third-stand fight frame came back with "You backed off." across
+## the middle of it: the message from the PREVIOUS stand's flee, still inside
+## its display window. Hidden rather than blanked, so nothing is written into
+## the HUD's own state and the label reappears on its own terms afterwards.
+func _clear_toast() -> void:
+	var hud: Node = _world.get_node_or_null(^"PlaygroundHUD")
+	if hud == null:
+		return
+	var label: Node = hud.get("_hotbar_message")
+	if label is CanvasItem:
+		(label as CanvasItem).visible = false
+
+
 func _hide_canvas_layers() -> Dictionary:
 	var saved: Dictionary = {}
 	for child in _world.get_children():
@@ -618,7 +644,7 @@ func _save(name: String) -> bool:
 ## recorded, and the flee still runs.
 func _shoot_fight(band_index: int, band_id: String, stand_xz: Vector2, look_xz: Vector2) -> bool:
 	var stand := Vector3(stand_xz.x, _field.height_at(stand_xz.x, stand_xz.y), stand_xz.y)
-	var wild := _nearest_wild(stand, _fight_search)
+	var wild := _best_opponent(stand, _fight_search)
 	if wild == null:
 		return false
 	_fought.append(wild)
@@ -692,6 +718,7 @@ func _shoot_fight(band_index: int, band_id: String, stand_xz: Vector2, look_xz: 
 		subjects = _fight_subjects(wild)
 		for i in 2:
 			await process_frame
+		_clear_toast()
 		var problems := _frame_problems(subjects, [_player, _companion, wild], {
 			"max_height_frac": FIGHT_MAX_HEIGHT_FRAC, "min_height_frac": FIGHT_MIN_HEIGHT_FRAC})
 		print("[fight] %s at %.1f m: %s" % [str(candidate["label"]), d,
@@ -724,9 +751,21 @@ func _shoot_fight(band_index: int, band_id: String, stand_xz: Vector2, look_xz: 
 	return framed
 
 
-func _nearest_wild(from: Vector3, within: float) -> Node3D:
+## The wild this band's fight frame is taken against: the TALLEST live one
+## within range, nearest first among equals -- not simply the nearest.
+##
+## Run 4's finding, and it is a framing law rather than a preference. The two
+## fighters are photographed together, so their declared heights set how big
+## each can be in one frame: a 0.95 m mudsnout beside a 2.3 m Terrapup cannot
+## both clear the size floor and share a frame with the trainer at any
+## distance. Choosing the tallest candidate (band 1 carries galecrest at
+## 2.10 m and meadowhart at 2.05 m beside bramblebun at 1.00 m) makes the
+## matchup framable -- and a fight between two creatures of comparable size
+## is also the fight Bar B is asking to see.
+func _best_opponent(from: Vector3, within: float) -> Node3D:
 	var best: Node3D = null
-	var best_distance := within
+	var best_height := -1.0
+	var best_distance := INF
 	for entry: Variant in _director.call("wild_creatures"):
 		var body := entry as Node3D
 		if body == null or not is_instance_valid(body) or not body.visible or _fought.has(body):
@@ -736,10 +775,24 @@ func _nearest_wild(from: Vector3, within: float) -> Node3D:
 		var flat := body.global_position
 		flat.y = from.y
 		var d := flat.distance_to(from)
-		if d < best_distance:
+		if d > within:
+			continue
+		var height := _declared_height(body)
+		if height > best_height + 0.01 or (absf(height - best_height) <= 0.01 and d < best_distance):
 			best = body
+			best_height = height
 			best_distance = d
+	if best != null:
+		print("[fight] opponent chosen: %s, %.2f m tall, %.0f m away (tallest live wild in range)" % [
+			str(best.get("species_id")), best_height, best_distance])
 	return best
+
+
+func _declared_height(body: Node3D) -> float:
+	var species_id := str(body.get("species_id"))
+	if species_id != "" and SPECIES.has(species_id):
+		return float((SPECIES.placeholder(species_id) as Dictionary).get("height", 1.0))
+	return 1.0
 
 
 ## The player's own door in first (`interact`, read by the arbiter and handed

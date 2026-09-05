@@ -270,3 +270,23 @@ func test_fit_distance_with_both_bounds_still_solves_a_fair_matchup() -> void:
 	for subject: Dictionary in subjects:
 		var r: Rect2 = CAPTURE_CHECK.projected_rect(cam, FOV, SIZE, subject["aabb"])["rect"]
 		assert_between(r.size.y / SIZE.y, 0.18, 0.5, "%s sits between the two bounds" % subject["name"])
+
+
+func test_both_bounds_together_can_make_a_matchup_unphotographable() -> void:
+	# W01 run 4, stated as geometry: a 0.95 m opponent beside a 2.30 m
+	# companion and a 1.80 m trainer spread across an arena. No distance
+	# frames them all with nobody under 18% and nobody over 50%, and the tool
+	# must say so rather than shoot the frame anyway. Replacing the opponent
+	# with a comparably sized one solves it -- which is the fix the strip made.
+	var focus := Vector3(0.0, 0.0, -20.0)
+	var trainer := {"name": "trainer", "aabb": AABB(focus + Vector3(-6.4, 0.0, 0.0), Vector3(0.8, 1.8, 0.8))}
+	var ally := {"name": "ally", "aabb": AABB(focus + Vector3(-1.15, 0.0, 0.0), Vector3(2.3, 2.3, 2.3))}
+	var small := {"name": "mudsnout", "aabb": AABB(focus + Vector3(1.6, 0.0, 0.0), Vector3(0.95, 0.95, 0.95))}
+	var tall := {"name": "galecrest", "aabb": AABB(focus + Vector3(1.6, 0.0, 0.0), Vector3(1.3, 2.1, 1.3))}
+	var bearing := Vector3(0.0, 0.0, 1.0)
+	assert_eq(CAPTURE_CHECK.fit_distance(focus, bearing, 2.4, 0.8, FOV, SIZE, [trainer, ally, small],
+		0.08, 4.0, 26.0, 0.25, 0.5, 0.18), -1.0,
+		"the small opponent cannot be photographed with these two at any distance")
+	var solved: float = CAPTURE_CHECK.fit_distance(focus, bearing, 2.4, 0.8, FOV, SIZE, [trainer, ally, tall],
+		0.08, 4.0, 26.0, 0.25, 0.5, 0.18)
+	assert_true(solved > 0.0, "a comparably sized opponent is framable (%.2f m)" % solved)
