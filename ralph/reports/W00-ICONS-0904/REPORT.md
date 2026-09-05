@@ -44,10 +44,10 @@ colour applies, lifted to the shared `TINT_PEAK`).
 
 | Command | Result |
 |---|---|
-| `godot --headless --path . --script tests/run_tests.gd -- --only=test_item_icons.gd` | 7 tests, 276 assertions, 0 failed (first attempt) |
+| `godot --headless --path . --script tests/run_tests.gd -- --only=test_item_icons.gd` | 7 tests, 276 assertions, 0 failed (first attempt, and again after each of rounds 2, 3 and 4 with a fresh `--import`) |
 | Red check: `rare_candy.png` + `.import` moved aside, same command | 2 failed, both naming `rare_candy` (`..._icon_field_whose_file_exists`, `..._icon_loads_as_a_texture`); files restored |
 | `--only=test_items_data.gd` | file does not exist in `tests/`; not run |
-| `godot --headless --path . --script tests/smoke_art.gd` | exit 0, `art: OK`; `grep -E '^ERROR:|SCRIPT ERROR'` on the log: 0 lines |
+| `godot --headless --path . --script tests/smoke_art.gd` (run 3x: round 1, round 2, round 4 icons) | exit 0, `art: OK` every time. `grep -E '^ERROR:\|SCRIPT ERROR'`: 0 lines on run 1; 1 line on runs 2 and 4, `ERROR: Parameter "material" is null` from `creature_body.gd::_build_model` via the encounter director's alpha resize, the non-deterministic known-benign line `docs/AGENT_WORKFLOW.md` §"known-benign" records at 0-3 per run. Not icon-related; the set did not grow. |
 
 ## Runtime validation
 
