@@ -30,6 +30,16 @@ established colour for an attack that cannot be blocked and must be moved off �
 game has no shields, so that is every wind-up. `tests/test_telegraph_glow.gd` holds the ring
 at least 25° of hue from every reserved oxblood.
 
+**The ceiling, recorded.** The round-2 judge, blind to which sheet was newer, called the
+magenta ring's placement "the better read, decisively" and confirmed it is not the
+reserved family — and then asked for the board's own oxblood hue (341°) raised in value,
+which is exactly the family the brief and `palette.json` exclude. Its other objection,
+that magenta "contradicts the amber `! incoming` HUD line", is fair and is routed: if the
+ring stays magenta, `combat_hud.gd`'s wind-up line could take the same hue so mark and text
+agree (`scripts/ui/`, not this lane's). Once the reserved reds, the reward golds, the tan
+coats, the element tints, the violet flowers and the reserved teal are taken, the wheel
+leaves roughly 285–313° for a warning nobody else is using; that is where the ring sits.
+
 **Not a move-type colour**, although the brief allowed one: `telegraph_glow.gd::begin()`
 is handed a colour by `combat_manager.gd::_on_enemy_telegraph()`, which knows only the
 beat's length; the wild creature's pending move type never reaches either. Wiring it would
@@ -51,12 +61,15 @@ judge asked for unprompted.
 2.4 m from the orb with a 50° field of view (2.24 m of frame height), so it covered the
 frame edge to edge and, at saturation 0.34 mixed over grass, read as the "flat khaki disc"
 W09's judge described. It is now `#ffc94a` (hue 42°, saturation 0.71 — the same gold
-family as the `catch_burst` sparkle W09 layered on top), radius 0.5, strength 1.0, 0.75 s:
-a 1.0 m bloom, 45 % of the frame height, around a 0.42 m orb. It lasts longer than the
-original, not shorter: the round-1 judge found a 0.45 s cut buried under the sparkle's
-dark-haloed motes at birth and faded to 12 % by the time they had flown clear, leaving the
-orb "unsupported"; at 0.75 s the ring is still at 38 % opacity and 0.55 m sixteen ticks in,
-around a clean orb, and never reaches the frame edge. Only the `caught` block moved; `strike`
+family as the `catch_burst` sparkle W09 layered on top), radius 0.5, strength 1.0, 0.45 s:
+a 1.0 m bloom, 45 % of the frame height, around a 0.42 m orb, gone a fifth of a second
+sooner so the sparkle owns the rest of the second. A 0.75 s cut was tried in round 2 so the
+ring would still frame the orb once the sparkle's motes had flown clear; the round-2 judge
+ranked the orb's legibility above the ring's persistence and read the lingering
+camera-facing ring over the orb as "a ghost … glassware", while the round-1 judge had
+called the 0.45 s cut's sixteen-tick orb "the best orb in either sheet".
+`impact_flash.gd` draws its ring without a depth test in front of whatever it plays on, so
+every extra tenth of a second veils the orb for a tenth of a second: short wins. Only the `caught` block moved; `strike`
 and `breakout` are sized for their own moments and are not this lane's.
 
 **The spikes stay spikes.** `impact_flash.gd` draws nine hard-edged radial triangles in its
