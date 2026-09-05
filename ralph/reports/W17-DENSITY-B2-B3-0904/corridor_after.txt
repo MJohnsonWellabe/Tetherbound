@@ -1,0 +1,7 @@
+GATEF-METRIC band=band1_lower_meadows metres=2403 minutes=10.0 met=172 worst_gap_m=100 gather=35 key=1 tm=2 trainer=4 wild=130
+GATEF-METRIC band=band2_stone_and_root metres=2653 minutes=11.1 met=133 worst_gap_m=141 gather=38 trainer=2 wild=93
+GATEF-METRIC band=band3_the_river_lock metres=2375 minutes=9.9 met=127 worst_gap_m=118 gather=28 trainer=5 wild=94
+GATEF-METRIC band=band4_upper_meadows_ironwood metres=3436 minutes=14.3 met=200 worst_gap_m=156 gather=23 landmark=1 tm=1 trainer=3 wild=172
+GATEF-METRIC band=band5_stronghold_approach metres=651 minutes=2.7 met=53 worst_gap_m=64 gather=2 trainer=3 wild=48
+GATEF-METRIC band=CHAPTER metres=11519 minutes=48.0 met=685 worst_gap_m=156 worst_gap_at_m=8141 worst_gap_band=band4_upper_meadows_ironwood tail_m=16 gather=126 key=1 landmark=1 tm=3 trainer=17 wild=537
+GATEF-METRIC band=GROUNDING wilds=1018 underground=0 pct=0.0 worst_m=0
