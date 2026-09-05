@@ -129,7 +129,49 @@ godot --headless --path . --script tools/gate_f/probe_press_context_flip.gd -- \
 Exit 0 = CLEAN, 2 = FLIPPED. `blind` injects exactly as `press` did before this lane;
 `guarded` calls the harness's own `_resolve_press()` before each press, as `press` does now.
 
-RESULTS_TABLE_PLACEHOLDER
+**Results, all on commit `78ff8478` (probe) / `7b63af46` (guard), same seeds, same container:**
+
+| site | lead state | mode | landed / refused / fights started | final `input_context` | verdict |
+|---|---|---|---|---|---|
+| Oreth | fit | blind | 78 / 0 / 1 | `combat` | CLEAN — the three-creature fight outlasts the whole shape, LT lands in `combat` and is read as `combat_charged` |
+| Oreth | fit | guarded | 78 / 0 / 1 | `combat` | CLEAN — nothing refused: every press was live where it landed |
+| Oreth | fainted | blind | 78 / 0 / 0 | `narrative_modal` | CLEAN — `can_challenge()` refused, the 12 interact presses cycle the "no usable creature" line open/closed and end with it OPEN, so the combat presses land inert in the dialogue |
+| Oreth | fainted | guarded | 13 / 3 / 0 | `narrative_modal` | CLEAN — `S08-92/93/94` refused as inert in `narrative_modal` (the finding BAND4 was missing: "0 quick, no fight running", said at the step) |
+| Oreth | undeployed | blind | 78 / 0 / 0 | `narrative_modal` | CLEAN — same parity as `fainted` |
+| Oreth | **weak** (1 HP lead, bench fainted) | **blind** | 78 / 0 / 1 | **`build_catalogue`** | **FLIPPED at `S08-93`, frame 1665** — fight lost by frame 163, `world` from 164, forty inert `combat_quick` presses, then LT |
+| Oreth | **weak** | **guarded** | 13 / 3 / 1 | **`world`** | **CLEAN — `S08-93` refused by name:** `'combat_charged' is not live in input_context 'world'; its binding JoyAxis:4:1.0 would fire build_shortcut here instead` |
+| Oreth | weak_backed (1 HP lead, bench fit) | blind | 78 / 0 / 1 | `combat` | CLEAN — the lead faints but the trainer battle continues through the bench; LT lands in `combat` |
+| Vance | fit | blind | 76 / 0 / 0 | **`build_catalogue`** | **FLIPPED at `S07-57`, frame 2039** — the challenge was refused — `can_challenge()` false with the lead present, unfainted and the captain unbeaten leaves its `ally_body == null` clause (no creature out after the load; the state `S08-09a`'s `creature_recall` press exists to prevent) as the only reason left — so all sixty-six `combat_quick` presses landed inert in `world`, then LT |
+| Vance | fit | guarded | VANCE_GUARDED_FIT_ROW |
+| Vance | **weak** | **blind** | 76 / 0 / 0 | **`build_catalogue`** | **FLIPPED at `S07-57`, frame 2032** — fight starts during the challenge dialogue (frame 75), lost by 183, `world` from 184; BAND3's exact shape |
+| Vance | **weak** | **guarded** | 9 / 7 / 0 | **`world`** | **CLEAN — `S07-57` refused by name** (and the six blind `combat_quick` blocks refused as inert, each at its first press) |
+
+The two flips, frame by frame (columns: `input_context`, `is_fighting`, `trainer_battle_active`, arbiter `enabled`, catalogue `is_open`, actions the game reads as just-pressed):
+
+| run | frame | step | context | fight | battle | arbiter | catalogue | just-pressed |
+|---|---|---|---|---|---|---|---|---|
+| Oreth / weak / blind | 55 | S08-90 | combat | true | true | false | false | |
+| | 163 | S08-90 | locked | false | false | false | false | |
+| | 164 | S08-90 | world | false | false | true | false | |
+| | 1664 | S08-93 | world | false | false | true | false | **build_shortcut + map_zoom_out + build_rotate_left** |
+| | 1665 | S08-93 | **build_catalogue** | false | false | true | **true** | |
+| Vance / weak / blind | 75 | S07-51 | combat | true | true | false | false | |
+| | 183 | S07-52 | locked | false | false | false | false | |
+| | 184 | S07-52 | world | false | false | true | false | |
+| | 2031 | S07-57 | world | false | false | true | false | **build_shortcut + map_zoom_out + build_rotate_left** |
+| | 2032 | S07-57 | **build_catalogue** | false | false | true | **true** | |
+
+Two things the trace settles beyond the headline. First, the game's guards hold: in the
+`fit` runs LT lands while `is_fighting` is true and the arbiter is disabled, and only
+`combat_charged` is acted on; in the send-out beat (`locked`) nothing world-side reads it.
+Second, the `combat_charged` half of the harness's "both halves" injection is read one frame
+BEFORE the physical half — `Input.action_press()` marks the named action pressed on the frame
+of the call, the parsed event is flushed at the next frame's start — which is why the flip
+frame shows the three siblings without the action the step named. Harmless, but worth knowing
+when reading any harness trace.
+
+Not committed, per the evidence-hygiene rule: the per-frame CSVs and logs (12 runs, ~1 MB).
+Every number above is reproducible from the commands.
 
 ### Segment runs through the real harness (logic lane)
 
