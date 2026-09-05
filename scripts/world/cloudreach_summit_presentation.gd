@@ -76,18 +76,21 @@ func build(world: Node3D) -> void:
 		model.position=-Vector3(bounds.get_center().x,bounds.position.y,bounds.get_center().z)*factor
 		mount.add_child(model)
 		_relays[str(relay.id)] = mount
-		# Match the real housing footprint. Both actor and ordinary SpringArm now
-		# respect it; camera/actor penetration is not hidden by a fixture angle.
-		var housing:=StaticBody3D.new()
-		housing.name="RelayHousingCollision"
-		var housing_shape:=CollisionShape3D.new()
-		var housing_cylinder:=CylinderShape3D.new()
-		housing_cylinder.radius=maxf(bounds.size.x,bounds.size.z)*factor*0.52
-		housing_cylinder.height=3.0
-		housing_shape.shape=housing_cylinder
-		housing_shape.position.y=1.5
-		housing.add_child(housing_shape)
-		mount.add_child(housing)
+		# The crown relay is deliberately centred over the arena's only authored
+		# approach. Keep its visible machinery intact, but leave that housing
+		# non-colliding so the same narrow centreline remains a real entrance and
+		# post-finale exit. Side housings retain their honest physical footprint.
+		if str(relay.id) != "crown":
+			var housing:=StaticBody3D.new()
+			housing.name="RelayHousingCollision"
+			var housing_shape:=CollisionShape3D.new()
+			var housing_cylinder:=CylinderShape3D.new()
+			housing_cylinder.radius=maxf(bounds.size.x,bounds.size.z)*factor*0.52
+			housing_cylinder.height=3.0
+			housing_shape.shape=housing_cylinder
+			housing_shape.position.y=1.5
+			housing.add_child(housing_shape)
+			mount.add_child(housing)
 		world.call("_cylinder", self, "RelayMount_"+str(relay.id), machinery_at+Vector3.UP*0.15, 2.4, 0.10, paving)
 		var tangent:=Vector3(outward.z,0,-outward.x)
 		var core_at:=relay_at+outward*0.5+tangent*1.35

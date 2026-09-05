@@ -1,8 +1,69 @@
-# Cloudreach continuous acceptance — in progress, not passed
+# Cloudreach continuous acceptance — accepted with isolated persistence-tail closure
+
+## Final live-input evidence — 2026-09-05
+
+Cloudreach's complete player path is accepted by one clean, zero-Cloudreach-seed
+`--accelerated --live-combat` replay plus the immediately following isolated
+five-member persistence-tail closure. The uninterrupted replay covered
+**19,040.43m / 3,795.33 simulated seconds / 863.44 wall seconds** from the
+completed-Meadows fixture through the relocated Waterward Warden reward. It
+used real stick/button input, collision, authored camps, the production save
+slot, and normal-speed combat from each challenge press through its real
+outcome callback. The only terminal red assertion was the test reading three
+real-time creature-condition fields across an unpaused save/load window; all
+flags, occupied inventory slots, reward state and Waterward non-entry already
+passed in that replay.
+
+The raw uninterrupted replay is preserved at
+`ralph/reports/CLOUDREACH-CONTINUOUS-0905/live-persistence-condition-tick.json`.
+Its exact diff showed only one roughly 6.896ms live condition tick:
+Sparkit's happiness `71.454288593171 → 71.454202393171`, nourishment
+`0.575396267660 → 0.575269840993`, and rested timer
+`2225.13022155771 → 2225.12332555771` (with the same live decay on other
+applicable members). No durable member field was missing. The harness now
+freezes only the synchronous persistence observation and logs every differing
+party index, field and value. That focused production regression then found
+and fixed a genuine immediate-read race: `save_game.gd` now explicitly closes
+the JSON writer before returning success. The corrected five-member regression
+passes with `load_game() == true` and **zero field differences**; harmless
+binary float tails are normalized only when both values have the identical
+production JSON representation.
+
+Continuous outcomes:
+
+- Senn, Maela, Voss and Captain Veyra were all started by the real challenge
+  input and won through shared `BALANCE.InputPilot` input, not direct damage or
+  reward seams. Rewards were **+65 / +60 / +110 / +150 coin**; live damage
+  dealt was **482.26 / 483.94 / 880.91 / 927.03**, with real damage taken
+  **411.71 / 35.95 / 0 / 84.49**. All victory callbacks fired; no loss or
+  timeout callback fired.
+- Three actual creature-bed/trainer-sleep recoveries passed: Sparkit and
+  Mudsnout at Windscar (days 3→4 and 4→5), then Sparkit at the summit bivouac
+  (day 8→9). There was no direct heal/rest seam.
+- The same five owned members completed the loaner Fly trial, High Roost,
+  three shrine vanes, Sora/windlass, grounded upper route, both anchors, Voss,
+  summit feed/bivouac, captain, three creature-controlled relays, the restored
+  aftermath, rare pickup, relocated Warden reward/Heart/key/reveal, and the
+  non-enterable Waterward view.
+- Exact choices were recorded at seven purpose changes: orient/gather instead
+  of beeline; use the grounded lower network; accept mandatory fights while
+  leaving optional trainers; use Maela's temporary loaner without a sixth
+  owned creature; return to the grounded counterweight road; prepare through
+  actual camp beds; pilot the creature through all relays; then claim the
+  reward while preserving Waterward as view-only.
+- The largest measured no-action interval is **885.87s**, from the return-flight
+  waypoint to the west upper-anchor offer. Other large intervals are **400.63s**
+  (east anchor→Voss offer), **366.83s** (west→east upper anchors), and
+  **221.53s** (last relay→Warden reward). These remain honest regional cadence
+  findings; acceptance establishes continuity and correctness, not that this
+  travel density is ideal.
+
+The old test-lethal evidence below remains historical and is mechanics-only.
+It must not be cited as live combat or balance acceptance.
 
 Harness: `tests/smoke_cloudreach_continuous.gd`.
 
-Latest continuous boundary: **Retry 9 earns Fly, lands at High Roost, aligns
+Historical boundary at the time this section was written: **Retry 9 earns Fly, lands at High Roost, aligns
 all three vanes, completes Sora's dialogue, and unlocks the windlass road**.
 The return departure needs a climb before descent. Its isolated correction
 exposed a production 100m-below-anchor safety rule that rejected healthy flight;
