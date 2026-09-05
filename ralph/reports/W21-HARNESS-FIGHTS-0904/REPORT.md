@@ -439,3 +439,52 @@ Branch `ralph/W21-HARNESS-FIGHTS-0904`, from `origin/main` at `ef16544f`.
 
 No pull request was opened, per COMMON.md — the coordinator lands this.
 
+---
+
+## CI on this branch
+
+Run 4040 on `01dfdc5c` (the segment rewrite) is the completed one; run 4291 on `96b315e9`
+was cancelled by the next push, and run 4299 on the final head is the one the coordinator
+should read. **A run under five minutes verified nothing**, so: 4040's code jobs really ran —
+`verify-gate-b-core` 14 min, `verify-combat-shard` 33 min, `verify-gate-a-ui-build-shard`
+24 min, `verify-veg-corridor` 11 min, `verify-harvest` 3 min, `verify-scatter-rules` 7 min —
+all green, alongside four reds and four jobs cancelled when the next push superseded the run.
+
+**All four reds are pre-existing on this branch's base and none of them can be this lane's.**
+Proven rather than asserted, two ways:
+
+1. `git diff --name-only ef16544f..HEAD` touches only `tools/gate_f/segments/S0*.json`,
+   `tests/test_gate_f_segments.gd`, `docs/CURRENT_STATE.md` and this report directory —
+   **zero** of `vegetation.json`, `terrain_playground.json`, `data/scatter/`, `data/terrain/`
+   or `assets/ui/icons/`, which are the only inputs the four checks read.
+2. The four tests were run on this branch and on a clean worktree of the base commit
+   `ef16544f`, and gave **the identical result on both**:
+
+```
+godot --headless --path <tree> --script tests/run_tests.gd \
+  -- --only=test_terrain_bake_freshness.gd,test_scatter_perf_budget.gd,test_item_icons.gd
+
+  branch 00729c1e : 13 tests, 290 assertions, 4 failed
+  base   ef16544f : 13 tests, 290 assertions, 4 failed
+      FAIL test_item_icons.gd :: test_every_item_has_an_icon_field_whose_file_exists
+      FAIL test_item_icons.gd :: test_every_item_icon_loads_as_a_texture
+      FAIL test_scatter_perf_budget.gd :: test_playground_bake_is_committed_and_fresh
+      FAIL test_terrain_bake_freshness.gd :: test_playground_terrain_bake_is_committed_and_fresh
+```
+
+`test_item_icons.gd` is the six candy/mushroom icons COMMON.md names as another lane's and
+tells this one not to touch. The two bake-freshness checks are the committed
+`data/terrain/playground` and `data/scatter/playground` bakes being stale against the live
+config — `docs/GATE3_EXECUTION_PLAN.md` assigns both to **nobody**: *"coordinator bakes once,
+after the merge."*
+
+One thing for the coordinator to expect, because it will look like a change and is not:
+adding `tests/test_gate_f_segments.gd` **reshuffles the unit-test shards**. The item-icons
+red has moved out of `verify-unit-tests (3)` — where COMMON.md says to expect it — and into
+`verify-unit-tests (1)`, which now also carries the scatter-bake check; `verify-unit-tests (2)`
+carries the terrain-bake one (`470 tests, 271041 assertions, 1 failed`). Shard **(3)** is
+green on this branch. The set of failing *tests* is unchanged; only which shard reports them
+moved.
+
+This branch was **not** rebased. `main` moved to `f8a47ee4` while this lane ran; COMMON.md
+forbids a rebase and the coordinator lands the merge.
