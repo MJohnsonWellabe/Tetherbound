@@ -69,7 +69,7 @@ The teal is meant to be faint by day; the number confirms it is present and smal
 | `... --only=test_crossing_failsafe_placement.gd,test_river_crossings_stay_open.gd,test_item_gate.gd,test_signpost_geometry.gd` | 26 tests, 184 assertions, 0 failed |
 | `godot --headless --path . --script tests/smoke_traversal.gd` (run 1) | **FAIL, and a real finding**: "the South Bridge flies 1 banner(s); a held crossing flies two" — the second `CheckpointBanner` holder was auto-renamed by the tree. Everything else passed: 18 rail posts, sentry posted while shut, locked walk −5.0 m, unlocked +22.9 m, sentry stood down after opening, Old Mill Crossing −8.0 / +23.7 m |
 | `godot --headless --path . --script tests/smoke_traversal.gd` (run 2, banners numbered) | **OK** — "18 rail posts, 2 banners, sentry posted"; locked −5.0 m / unlocked +22.9 m; "sentry stood down, barricade still standing"; Old Mill Crossing −8.0 / +23.7 m; the Sigil Gate, river and doors unchanged. Log errors: one known-benign `Parameter "material" is null`, no `SCRIPT ERROR` |
-| `godot --headless --path . --script tests/smoke_gate_b_continuous.gd` (core) | **OK** — "gate B continuous (CORE): OK — a fresh save walked opening, road gate, village tools and tournament readiness in order", 544 s. Log errors: two known-benign `Parameter "material" is null` and one exit-time `4 resources still in use at exit` — __W22_LEAK_BASELINE__ |
+| `godot --headless --path . --script tests/smoke_gate_b_continuous.gd` (core) | **OK** — "gate B continuous (CORE): OK — a fresh save walked opening, road gate, village tools and tournament readiness in order", 544 s. Log errors: two known-benign `Parameter "material" is null` and one exit-time `4 resources still in use at exit` — confirmed baseline by lane W24-LANDING: the identical line appears on `origin/main` at `504c7b55` in the same smoke, so the known-benign set did not grow |
 
 `^ERROR:` / `SCRIPT ERROR` in the traversal log: one `ERROR: Parameter "material" is null.`
 (the known-benign headless one recorded by G3-BAND5-0903), zero `SCRIPT ERROR`. The set did
@@ -90,7 +90,26 @@ not grow.
 - Verdict (`JUDGE.md`, code-blind, given only the sheets, the frames under neutral A/B names,
   `docs/reference/`, board 18 and the visual-judge skill — see `JUDGE_PROMPT.md`):
 
-__W22_VERDICT_BLOCK__
+_The lane left this block unfilled and never committed a verdict; the sheets and
+`JUDGE_PROMPT.md` are here but `JUDGE.md` was not. Lane W24-LANDING ran the round at landing
+time on the lane's own four questions, per the owner directive of 2026-09-05 02:24 UTC. Full
+verdict: `JUDGE.md` beside this report._
+
+**Call: not shippable for a first playable — but the remaining work is scene and material
+work, not new art.** The judge identified the after column as the finished pass without
+being told which was which, and split the result: **ship the bridge deck and rail** once the
+value fixes land (silhouette, plank orientation and deck colour already match board 18, the
+deck sampling `(127, 90, 61)` against the reference's `(127, 91, 68)`); **do not ship the
+signpost**, which is the right model and unreadable at gameplay distance (glyph cap height
+5–7 px, text-to-board contrast about 1.3:1 in world rows, against 3.0–11.6:1 in the studio
+turntables); **do not ship the checkpoint dressing**, whose "held" read is carried by
+untextured blockout barricades that sit beside the road rather than across it, with a guard
+wearing none of the faction's red.
+
+The approach dressing does work where it is shot properly: red banners at `#90392b` against
+board 18's `#993633`, and 22.1 % of the pixels in `bridge-approach-played` changed. It fails
+from the far bank, where tower stonework occludes the red and the gate's own blue banners
+still fly beside it.
 
 ## Known limitations, and what was deliberately not done
 
