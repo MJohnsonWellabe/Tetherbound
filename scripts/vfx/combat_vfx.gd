@@ -220,7 +220,7 @@ static func level_up(body: Node3D, levels: int = 1) -> Node3D:
 		"duration": spec.get("duration", 1.5),
 		"colour": spec.get("colour", "#ffd77a"),
 		"rim_power": spec.get("rim_power", 2.2),
-		"flat_mix": 0.12,
+		"flat_mix": spec.get("rim_flat_mix", 0.12),
 	}
 	GLOW.attach(body, GLOW.Mode.PULSE, glow_spec, float(spec.get("rim_strength", 0.9)))
 	return flourish

@@ -71,6 +71,15 @@ func mesh_count() -> int:
 	return _meshes.size()
 
 
+## For the perf probe only: lift the overlay off every mesh (or put it back)
+## without ending the glow, so one paused frame can be counted with and
+## without this effect and nothing else different.
+func suspend(off: bool) -> void:
+	for mesh: Variant in _meshes:
+		if mesh is MeshInstance3D and is_instance_valid(mesh):
+			(mesh as MeshInstance3D).material_overlay = null if off else _material
+
+
 ## Every drawable MeshInstance3D of the body: the loaded model under the pivot,
 ## or the capsule fallback nodes directly under the body. A mesh that already
 ## carries someone else's overlay is left to them.

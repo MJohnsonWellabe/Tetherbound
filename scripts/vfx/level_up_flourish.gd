@@ -159,8 +159,10 @@ func _redraw() -> void:
 		var angle: float = TAU * offset + u * 2.4 + float(i * i) * 0.31
 		var swell: float = 1.15 - 0.5 * t
 		var centre := Vector3(cos(angle) * _radius * swell, rise * (0.05 + t * 1.1), sin(angle) * _radius * swell)
-		var alpha: float = sin(t * PI) * 0.9
+		var alpha: float = sin(t * PI) * 0.95
 		var size: float = mote_size * (0.7 + 0.5 * (1.0 - t))
+		var dark := _colour.darkened(0.55)
+		_disc(centre, right * size * 1.45, up * size * 1.45, Color(dark.r, dark.g, dark.b, alpha * 0.6))
 		_disc(centre, right * size, up * size, Color(_colour.r, _colour.g, _colour.b, alpha))
 
 	_mesh.surface_end()
@@ -169,23 +171,43 @@ func _redraw() -> void:
 func _beam(right: Vector3, width: float, height: float, alpha: float) -> void:
 	if alpha <= 0.001:
 		return
-	# Two nested bands: a wide soft one and a narrow bright one. Each is a
-	# fan of quads whose alpha falls off toward the sides and toward the top.
-	for pass_index in 2:
-		var w: float = width if pass_index == 0 else width * 0.35
-		var a: float = alpha * (0.55 if pass_index == 0 else 1.0)
-		var colour := Color(_beam_colour.r, _beam_colour.g, _beam_colour.b, a)
-		var edge := Color(_beam_colour.r, _beam_colour.g, _beam_colour.b, 0.0)
-		var top_mid := Color(_beam_colour.r, _beam_colour.g, _beam_colour.b, a * 0.1)
-		var base_l := right * -w
-		var base_r := right * w
-		var top := Vector3.UP * height
-		# left half
-		_tri(base_l, edge, Vector3.ZERO, colour, top + base_l, edge)
-		_tri(Vector3.ZERO, colour, top, top_mid, top + base_l, edge)
-		# right half
-		_tri(Vector3.ZERO, colour, base_r, edge, top + base_r, edge)
-		_tri(Vector3.ZERO, colour, top + base_r, edge, top, top_mid)
+	# A column: a solid core band whose alpha holds across its whole width and
+	# fades only with height, flanked by two strips that fade to nothing at
+	# the sides. (The first version fanned every quad from one opaque point at
+	# the feet, which is a faint triangle, not a beam -- round 1 could not see
+	# it at all.)
+	var core_w: float = width * 0.42
+	var colour := Color(_beam_colour.r, _beam_colour.g, _beam_colour.b, alpha)
+	var mid := Color(_beam_colour.r, _beam_colour.g, _beam_colour.b, alpha * 0.55)
+	var faint := Color(_beam_colour.r, _beam_colour.g, _beam_colour.b, 0.0)
+	var steps := 4
+	for i in steps:
+		var y0: float = height * float(i) / float(steps)
+		var y1: float = height * float(i + 1) / float(steps)
+		# Bright through the body's own height, fading out above it.
+		var a0: float = 1.0 - pow(float(i) / float(steps), 2.0)
+		var a1: float = 1.0 - pow(float(i + 1) / float(steps), 2.0)
+		var c0 := Color(colour.r, colour.g, colour.b, colour.a * a0)
+		var c1 := Color(colour.r, colour.g, colour.b, colour.a * a1)
+		var m0 := Color(mid.r, mid.g, mid.b, mid.a * a0)
+		var m1 := Color(mid.r, mid.g, mid.b, mid.a * a1)
+		var l0 := right * -width + Vector3.UP * y0
+		var l1 := right * -width + Vector3.UP * y1
+		var cl0 := right * -core_w + Vector3.UP * y0
+		var cl1 := right * -core_w + Vector3.UP * y1
+		var cr0 := right * core_w + Vector3.UP * y0
+		var cr1 := right * core_w + Vector3.UP * y1
+		var r0 := right * width + Vector3.UP * y0
+		var r1 := right * width + Vector3.UP * y1
+		# left strip
+		_tri(l0, faint, cl0, m0, cl1, m1)
+		_tri(l0, faint, cl1, m1, l1, faint)
+		# core
+		_tri(cl0, c0, cr0, c0, cr1, c1)
+		_tri(cl0, c0, cr1, c1, cl1, c1)
+		# right strip
+		_tri(cr0, m0, r0, faint, r1, faint)
+		_tri(cr0, m0, r1, faint, cr1, m1)
 
 
 func _tri(p0: Vector3, c0: Color, p1: Vector3, c1: Color, p2: Vector3, c2: Color) -> void:

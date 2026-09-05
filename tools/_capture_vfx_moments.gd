@@ -14,6 +14,9 @@ extends SceneTree
 ##
 ## SHOT LIST (each shot twice: `-hud.png` as the game draws it, `-clean.png`
 ## with every CanvasLayer hidden):
+##   00-squared-up     the fight open, nothing landing: the baseline the
+##                     frame-energy probe (tools/_probe_vfx_frame_energy.gd)
+##                     subtracts from the shots below
 ##   01-hit-spark      a quick attack landing: combat.json's ring plus the new
 ##                     spark spray and the body flash on the struck creature
 ##   02-knockout       the blow that empties the bar: the KO puff off the
@@ -50,7 +53,9 @@ const PUFF_BITE_TICKS := 6
 ## ticks and began a tick after the strike; the fight's own resolve pause is
 ## 1.6 s, after which the winner is put away.
 const LEVEL_UP_GAP_TICKS := 22
-const CATCH_BITE_TICKS := 5
+## Later into the seal than the spark: catching.json's own white flash owns
+## the first third of a second and the gold sparkle is what is left after it.
+const CATCH_BITE_TICKS := 16
 const CATCH_RESOLVE_BOUND := 900
 const RECOVERY_SETTLE_FRAMES := 20
 const AIM_SETTLE_FRAMES := 15
@@ -59,10 +64,6 @@ const RENDER_SETTLE_FRAMES := 2
 const FLEE_BOUND := 90
 ## Where `tools/perf_render_stats.gd` stands for `band1_open`.
 const BAND1_OPEN := Vector3(0.0, 0.0, 700.0)
-## Ticks for every effect to have expired after a peak sample (the longest is
-## the flourish at 90 ticks, but the fight's resolve hides the ally at 96 --
-## the baseline is taken inside the same fight before that where possible).
-const EXPIRE_TICKS := 60
 
 var _world: Node = null
 var _player: CharacterBody3D = null
@@ -197,6 +198,12 @@ func _run_fight_moments() -> void:
 		print("FAIL: could not engage the practice wild creature")
 		return
 
+	# 00: the same fight and camera with nothing landing yet -- the baseline
+	# the frame-energy probe subtracts, so the effect is measured rather
+	# than the creature's own bright coat.
+	_aim_at_fight(wild)
+	await _shoot_pair("00-squared-up")
+
 	# 01: a landed quick attack, shot at the spark's peak.
 	if _wanted("hit"):
 		var landed := await _land_a_quick_attack(wild)
@@ -311,10 +318,24 @@ func _note_effects(shot: String) -> void:
 	print("[effects] %s: %s" % [shot, ", ".join(PackedStringArray(names))])
 
 
+## Aimed from a point stepped SIDEWAYS of the ally, always. Round 1's
+## `_aim_camera_clear` ray test passed (the ray to the bramblebun's centre
+## cleared the ally's collider over its head) while the frame still had the
+## small struck creature hidden behind Terrapup's own head -- the collider is
+## smaller than the model. A player nudges the stick to see around their own
+## creature; this always does.
+const SIDE_STEP_M := 3.0
+
 func _aim_at_fight(wild: Node3D) -> void:
 	var ally: Node3D = _director.call("ally_body") as Node3D
-	if ally != null and wild != null and is_instance_valid(wild):
-		_aim_camera_clear(ally.global_position, wild.global_position, ally)
+	if ally == null or wild == null or not is_instance_valid(wild):
+		return
+	var to := wild.global_position - ally.global_position
+	to.y = 0.0
+	if to.length() < 0.01:
+		return
+	var side := to.normalized().rotated(Vector3.UP, PI * 0.5) * SIDE_STEP_M
+	_aim_camera(ally.global_position + side, wild.global_position)
 
 
 ## --- the catch --------------------------------------------------------------
@@ -424,6 +445,15 @@ func _aim_throw_at(wild: Node3D) -> void:
 
 ## --- perf ------------------------------------------------------------------
 
+## The layer's structural cost, measured the only way that isolates it: at
+## the effect's peak the tree is PAUSED, the frame is counted once with every
+## VFX node drawing and once with them all lifted (bursts and the flourish
+## hidden, the body-glow overlays taken off their meshes), then they are put
+## back. Same fight, same camera, same tick -- the difference is this lane
+## and nothing else. A first version sampled "after the effects expired"
+## instead and reported +699k primitives for a fourteen-mote spark: the fight
+## and the camera had moved between the two samples and the number was the
+## view changing, not the spark.
 func _run_perf() -> void:
 	print("")
 	print("=== perf: draw-call delta with a fight running at band1_open ===")
@@ -439,20 +469,14 @@ func _run_perf() -> void:
 		print("FAIL: could not engage near band1_open; perf not measured")
 		return
 
-	# Spark peak vs. the same fight with the effects expired.
 	if await _land_a_quick_attack(wild):
 		var spark := await _wait_for_effect(VFX.NAME_HIT_SPARK)
 		if spark != null:
 			await _await_physics(SPARK_BITE_TICKS, "spark peak")
 		_aim_at_fight(wild)
-		var peak := await _sample("spark peak")
-		await _await_physics(EXPIRE_TICKS, "effects expiring")
-		_aim_at_fight(wild)
-		var base := await _sample("spark expired")
-		_print_delta("hit spark + body flash", peak, base)
+		await _sample_pair("hit spark + body flash")
 	await _await_physics(RECOVERY_SETTLE_FRAMES, "recovery settle")
 
-	# KO puff + level-up flourish peak vs. the same view once they expire.
 	if bool(_manager.call("is_fighting")):
 		_stage_the_knockout()
 		if await _land_a_quick_attack(wild):
@@ -460,27 +484,60 @@ func _run_perf() -> void:
 			if puff != null:
 				await _await_physics(PUFF_BITE_TICKS, "puff peak")
 			_aim_at_fight(wild)
-			var peak := await _sample("knockout + level-up peak")
-			# The fight resolves and puts the winner away at 1.6 s; the
-			# baseline is the same camera once everything has expired, which
-			# by then is the post-fight view of the same spot.
-			await _await_physics(EXPIRE_TICKS * 2, "effects expiring")
-			var base := await _sample("knockout + level-up expired")
-			_print_delta("ko puff + level-up flourish + rim glow", peak, base)
+			await _sample_pair("ko puff + level-up flourish + rim glow (+ spark tail)")
 	await _flee_if_fighting()
 
 
-## One structural sample, tree PAUSED so the effect stays exactly where it is
-## while the renderer draws it.
-func _sample(label: String) -> Array:
+## Every node this lane draws, right now: bursts under the arena, the
+## flourish and glows on the two bodies.
+func _vfx_nodes() -> Array:
+	var out: Array = []
+	var arena: Node3D = _manager.call("arena") as Node3D
+	if arena != null:
+		for child in arena.get_children():
+			if child.name == VFX.NAME_HIT_SPARK or child.name == VFX.NAME_KO_PUFF or child.name == VFX.NAME_CATCH_BURST:
+				out.append(child)
+	for body: Variant in [_director.call("ally_body"), _manager.call("enemy_body")]:
+		if body is Node and is_instance_valid(body):
+			for child in (body as Node).get_children():
+				if child.name == "LevelUpFlourish" or child.name == "BodyGlow":
+					out.append(child)
+	return out
+
+
+func _set_vfx_drawing(nodes: Array, on: bool) -> void:
+	for node: Variant in nodes:
+		if not is_instance_valid(node):
+			continue
+		if node.has_method("suspend"):
+			node.call("suspend", not on)
+		elif node is Node3D:
+			(node as Node3D).visible = on
+
+
+func _sample_pair(label: String) -> void:
+	var nodes := _vfx_nodes()
+	var names: Array = []
+	for node: Variant in nodes:
+		names.append(str(node.name))
+	print("[perf] %s: %d VFX nodes alive (%s)" % [label, nodes.size(), ", ".join(PackedStringArray(names))])
 	var was_paused := paused
 	paused = true
+	var with_vfx := await _sample("%s, VFX drawing" % label)
+	_set_vfx_drawing(nodes, false)
+	var without := await _sample("%s, VFX lifted" % label)
+	_set_vfx_drawing(nodes, true)
+	paused = was_paused
+	_print_delta(label, with_vfx, without)
+
+
+## One structural sample of the current (paused) frame.
+func _sample(label: String) -> Array:
 	await _await_process(RENDER_SETTLE_FRAMES, "render settle (%s)" % label)
 	await RenderingServer.frame_post_draw
 	var draws := RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
 	var prims := RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME)
 	var objects := RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_OBJECTS_IN_FRAME)
-	paused = was_paused
 	print("[perf] %s: draw_calls=%d primitives=%d objects=%d" % [label, draws, prims, objects])
 	return [draws, prims, objects]
 

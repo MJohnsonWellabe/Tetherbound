@@ -208,6 +208,16 @@ func _redraw() -> void:
 	var grow: float = float(_spec.get("grow", 0.0))
 	var streak_length: float = float(_spec.get("streak_length", 2.5))
 	var drop: float = 0.5 * gravity * _life * _life
+	# `heat`: how white-hot a particle is born before cooling to its tint. A
+	# pure tan mote on sunlit olive grass was measured invisible (round 1);
+	# born near-white and cooling to the element's colour it reads as a spark
+	# and still says which element it was.
+	var heat: float = clampf(float(_spec.get("heat", 0.0)), 0.0, 1.0)
+	var body_colour: Color = _colour.lerp(_core_colour, heat * (1.0 - minf(u * 1.6, 1.0)))
+	# `halo`: a darker, slightly larger disc drawn behind each mote so it keeps
+	# an edge against a bright ground as well as a dark one. 0 turns it off.
+	var halo: float = clampf(float(_spec.get("halo", 0.0)), 0.0, 1.0)
+	var halo_colour: Color = _colour.darkened(0.55)
 
 	_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
 
@@ -231,14 +241,20 @@ func _redraw() -> void:
 		# Later-index particles fade a touch earlier, so the spray thins
 		# rather than vanishing all at once.
 		var alpha: float = fade * (0.7 + 0.3 * _rand(i, 5))
-		var colour := Color(_colour.r, _colour.g, _colour.b, alpha)
+		var colour := Color(body_colour.r, body_colour.g, body_colour.b, alpha)
 		if streak:
 			var velocity: Vector3 = direction * speed * _scale * (1.0 - u)
 			velocity.y -= gravity * _life
 			var tail_dir: Vector3 = velocity.normalized() if velocity.length() > 0.001 else direction
 			var tail: Vector3 = position - tail_dir * size * streak_length
+			if halo > 0.0:
+				_streak(position, tail, size * 0.7, forward,
+					Color(halo_colour.r, halo_colour.g, halo_colour.b, alpha * halo))
 			_streak(position, tail, size * 0.45, forward, colour)
 		else:
+			if halo > 0.0:
+				_disc(position, right * size * 1.45, up * size * 1.45,
+					Color(halo_colour.r, halo_colour.g, halo_colour.b, alpha * halo))
 			_disc(position, right * size, up * size, colour)
 	_mesh.surface_end()
 
