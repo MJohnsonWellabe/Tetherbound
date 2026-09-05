@@ -118,6 +118,7 @@ var _field: RefCounted = null
 var _director: Node = null
 var _manager: Node = null
 var _companion: Node3D = null
+var _weather: Node = null
 var _failures: Array[String] = []
 var _manifest: Array = []
 var _rejected: Array = []
@@ -184,14 +185,12 @@ func _run() -> void:
 	# world through `current_scene`; a script-booted tree has none unless told.
 	current_scene = _world
 
-	var weather: Node = _world.get_node_or_null(^"WorldWeather")
-	if weather != null and weather.has_method("set_weather"):
-		weather.call("set_weather", "clear")
-		weather.set_process(false)
-		weather.set_physics_process(false)
+	_weather = _world.find_child("WorldWeather", true, false)
+	_freeze_weather("at boot")
 
 	for i in _frames(SETTLE_FRAMES):
 		await physics_frame
+	_freeze_weather("after the boot settle")
 
 	var rig: Node = _world.get_node_or_null(^"CameraRig")
 	if rig != null:
@@ -220,6 +219,7 @@ func _run() -> void:
 		look.call("set_clock_frozen", true)
 	if look != null and look.has_method("apply_time"):
 		look.call("apply_time", _time)
+	_freeze_weather("after the clock pin")
 	var terrain: Node = _world.get_node_or_null(^"Terrain")
 	if terrain != null and terrain.has_method("set_camera"):
 		terrain.call("set_camera", _camera)
@@ -234,6 +234,7 @@ func _run() -> void:
 		return
 
 	var written := 0
+	var attempted := 0
 	var band_index := 0
 	for entry: Variant in bands:
 		band_index += 1
@@ -253,8 +254,11 @@ func _run() -> void:
 		var arc := 0.0
 		var fight_done := not _fight
 		while arc <= total:
-			if _max > 0 and written >= _max:
+			# The cap counts stands ATTEMPTED, not frames saved: a bounded
+			# smoke whose frames are all refused must still stop.
+			if _max > 0 and attempted >= _max:
 				break
+			attempted += 1
 			var stand_xz := _point_at(line, arc)
 			var look_xz := _point_at(line, minf(total, arc + LOOK_AHEAD_M))
 			if look_xz.distance_to(stand_xz) < 1.0:
@@ -311,7 +315,7 @@ func _run() -> void:
 		if not fight_done and _fight:
 			_failures.append("band %d (%s): no fight frame -- no wild within %.0f m of any stand walked" % [
 				band_index, band_id, _fight_search])
-		if _max > 0 and written >= _max:
+		if _max > 0 and attempted >= _max:
 			break
 
 	_finish(written)
@@ -338,6 +342,26 @@ func _finish(written: int) -> void:
 		for fail_line in _failures:
 			print("FAIL: %s" % fail_line)
 	quit(1 if (not _failures.is_empty() or not _rejected.is_empty()) else 0)
+
+
+## Pin the weather to clear and FREEZE it, and say whether it was found
+## ticking. Run 1 of this lane refused all 62 frames on `capture_check`'s
+## "WorldWeather is still processing" line even though the pin was made at
+## boot exactly as the old strip made it -- so the pin is re-applied before
+## every shutter and each application reports what it found, so the log says
+## which step thawed it rather than leaving the next reader to guess.
+func _freeze_weather(when: String) -> void:
+	if _weather == null or not is_instance_valid(_weather):
+		if when == "at boot":
+			_failures.append("no WorldWeather node; the weather cannot be pinned")
+		return
+	var was_ticking := _weather.is_processing() or _weather.is_physics_processing()
+	if _weather.has_method("set_weather") and str(_weather.call("weather")) != "clear":
+		_weather.call("set_weather", "clear")
+	_weather.set_process(false)
+	_weather.set_physics_process(false)
+	if was_ticking and when != "at boot":
+		print("[weather] WorldWeather was ticking %s; frozen again" % when)
 
 
 ## --- the companion ---------------------------------------------------------
@@ -476,6 +500,7 @@ func _road_subjects() -> Array:
 ## above ground and outside geometry, weather pinned) plus the readable check.
 func _frame_problems(subjects: Array, ignore_bodies: Array) -> Array[String]:
 	_check_projection_once()
+	_freeze_weather("before the shutter")
 	var out: Array[String] = CAPTURE_CHECK.problems(self, _camera, "clear", null, ignore_bodies)
 	out.append_array(CAPTURE_CHECK.readable_problems_for_camera(_camera, subjects))
 	return out
@@ -793,6 +818,12 @@ func _end_fight(band_index: int) -> void:
 	if _fighting():
 		_failures.append("band %d: the fight did not end after %d flee presses; the walk continues in combat state" % [
 			band_index, presses])
+	# The fight ends on a physics tick; `sequence_director.gd::_refresh_lockout`
+	# hands the arbiter back from `_process`. Read the context only once a
+	# render frame has run, or a world that IS back reads as 'locked' (run 1).
+	for i in 2:
+		await process_frame
+	await physics_frame
 	var context := _input_context()
 	if context != "world":
 		_failures.append("band %d: input context after the flee is '%s', not 'world'" % [band_index, context])
