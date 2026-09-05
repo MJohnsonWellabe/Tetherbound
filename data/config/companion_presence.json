@@ -52,12 +52,12 @@
     "droop_forward_radii": 2.2
   },
   "camp": {
-    "_comment": "Within `radius` of a camp source (a lit campfire's campfire_glow.gd overlay, a creature_bed.gd or player_bed.gd, or anything in the `companion_camp` group) and standing for `settle_seconds`: rolls toward its species' rest pose (rest_roll_deg * roll_fraction; 0 opts out as in creature_body.play_rest), sinks a little, and idles at half speed. Stands back up the moment it has to move or the trainer leaves. `roll_fraction` was 0.45 in round 1 and a code-blind critic read the result as a creature simply standing next to a fire -- a 20-degree tilt is not a lying pose. 0.85 lands close to the bed pose creature_bed.gd already ships, which reads unambiguously as lying.",
+    "_comment": "Within `radius` of a camp source (a lit campfire's campfire_glow.gd overlay, a creature_bed.gd or player_bed.gd, or anything in the `companion_camp` group) and standing for `settle_seconds`: tilts toward its species' rest pose (rest_roll_deg * roll_fraction; 0 opts out entirely), grounds that tilt, and idles at half speed. Stands back up the moment it has to move or the trainer leaves. ROLL_FRACTION IS DELIBERATELY MODEST AND THIS IS THE LANE'S RECORDED CEILING. Rolling a STANDING model about the pivot at its own feet is not a lie-down; it is a felled-tree tilt, and the deeper it goes the more of the body swings below the ground plane. 0.45 was read by a code-blind critic as a creature merely standing beside a fire; 0.85 buried it -- 'a head and a paw lying detached in a meadow' -- and a third critic still read it as buried after the grounding SIGN was fixed, because 0.85 leaves 0.21m of the low side underground even when correctly lifted. A convincing rest needs an authored lie-down clip, and tools/_capture_companion_rig_inventory.gd says no rig in the roster has one. 0.35 is a visible settle whose low side is provably at or above ground for every species that opts in, which is the honest thing to ship until such a clip exists. `sink_fraction` is 0 for the same reason: sinking is exactly the failure mode here. tests/test_companion_presence.gd asserts the geometry rather than trusting it to look right.",
     "radius": 6.0,
     "settle_seconds": 2.0,
     "scan_every_s": 2.0,
-    "roll_fraction": 0.85,
-    "sink_fraction": 0.09,
+    "roll_fraction": 0.35,
+    "sink_fraction": 0.0,
     "anim_speed_scale": 0.5,
     "script_suffixes": [
       "campfire_glow.gd",

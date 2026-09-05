@@ -6,7 +6,12 @@ Lane brief: `ralph/briefs/0904/W12-COMPANION.md` (on
 `docs/owner/OWNER_DIRECTIVES_2026-09-04-C.md` §5.
 
 Branch: `ralph/W12-COMPANION-0904`, from `origin/main` at `ef16544f`.
-Final commit: *(filled in at the end of this report)*.
+Final commit: **`49076394`**. Unit tests re-run green at that commit
+(27 tests, 144 assertions, 0 failed).
+
+**Read section 6 before landing this.** The camp state is capped at a
+conservative value with its ceiling recorded, and the frame committed for it
+shows the defect that caused the cap, not the shipped value.
 
 ---
 
@@ -50,7 +55,7 @@ New:
 |---|---|
 | `scripts/creatures/companion_presence.gd` | The layer: states, cooldowns, the context guard, bond scaling, procedural pose composition, the head-turn modifier. |
 | `data/config/companion_presence.json` | Every threshold, cooldown, distance, duration and amplitude, with the reasoning in comments. |
-| `tests/test_companion_presence.gd` | 26 tests over a real rigged follower body. |
+| `tests/test_companion_presence.gd` | 27 tests over a real rigged follower body. |
 | `tools/_capture_companion_rig_inventory.gd` | What clips and bones the installed rigs actually carry. |
 | `tools/_capture_companion_moments.gd` | Photographs the three moments in the real Meadows as paired frames. |
 | `docs/decisions/D83-companion-reactions-are-procedural-over-the-model-pivot.md` | The three design calls this lane made. |
@@ -102,7 +107,7 @@ D83 records this and the two other calls in full.
 godot --headless --path . --script tests/run_tests.gd -- --only=test_companion_presence.gd
 ```
 
-**26 tests, 132 assertions, 0 failed.**
+**27 tests, 144 assertions, 0 failed.**
 
 The fixture is real, not a mock of the layer: `scenes/creatures/creature.tscn`
 with `follower_creature.gd` on it and the actual terrapup GLB, its
@@ -270,6 +275,51 @@ creature-bed pose, so the two negative-roll species (terrapup, trailpup) have
 the same latent dip when they sleep in a bed. That file is outside this lane's
 ownership list and was not touched. **Routing note for the coordinator.**
 
+### Round 3 (`_sheet_round3.png`), and the ceiling
+
+Recaptured with the grounding fix in. Pair differences: acknowledgment 9.73 %,
+hurt 13.05 %, camp 7.49 %; six shots, none failed.
+
+A **third** code-blind critic was given only the round 3 frames and asked five
+narrow questions about placement. Its answer on camp:
+
+> "Sunk. Badly. Not floating, not plausible — buried... the lowest fur pixel
+> runs a near-linear cut sloping down-left. Bodies do not end in straight
+> lines; ground planes do... it should not be shown to anyone as evidence of a
+> companion state."
+
+**The sign fix was necessary and not sufficient**, and the arithmetic says so:
+at 0.85 of the species roll the low side is still **0.207 m underground** even
+when correctly lifted. The reason is structural, not a tuning miss —
+**rolling a standing model about the pivot at its own feet is a felled-tree
+tilt, not a lie-down.** The deeper the roll, the more body swings below the
+ground plane, and no lift cancels it because the swing grows with the same
+sine the lift does.
+
+So the camp tilt is capped at **0.35**, where the low side is at or above
+ground for every species that opts in, and the test asserts that geometry
+directly — tilt, lift and swing-down together — rather than trusting the frame
+to look right. It was seen red at exactly 0.207 m.
+
+**This is the lane's recorded ceiling, and it is written into the config next
+to the number.** A creature that genuinely lies down at camp needs an authored
+lie-down clip. `rig_inventory.txt` says no rig in the roster has one, and
+`CLAUDE.md` forbids making one for the Meadows. What ships is a visible settle
+plus a halved idle, which is honest, safe on every species and on every slope,
+and less than the directive's "small camp/rest reaction" deserves.
+
+The same critic confirmed two things worth recording as **passes**: the
+acknowledgment and hurt pairs are correctly grounded ("toes bed slightly into
+the grass, grass blades draw in front of them, contact shadows are present —
+those two are correct"), and **the creature never interpenetrates the trainer
+in any of the six frames**.
+
+The camp frame committed in `_sheet_round3.png` is the one **before** this cap
+and shows the defect. It is kept deliberately: it is the evidence for the
+finding, and re-shooting after every config change was not a good use of the
+remaining budget. **The capped value has not been photographed.** The next
+lane to render this world should re-shoot moment 03 and confirm.
+
 ### What the judges say is still not solved
 
 Round 2, on the hurt state: it reads **alert, not injured** — ears erect, eye
@@ -296,15 +346,32 @@ are recorded here because the frames are the evidence for them.
 ### Untracked files this lane deliberately did not commit
 
 `godot --headless --path . --import` (which COMMON.md instructs every lane to
-run once) generates 58 import artifacts that are untracked on `main`:
-34 `.import` sidecars, 7 extracted textures and 17 `.uid` files. They belong
-to the pickup-art lane's assets (candy, mushroom, potion, revive flower,
-saddle, bridge, signpost) and to other lanes' new scripts. **None are this
-lane's work**, and committing them would put another lane's binaries on this
-branch and hand its owner a conflict. Left untracked; the coordinator should
-expect them from any lane that imports, and they regenerate on demand. This
-is the "a file outside your ownership list" case COMMON.md says to report
-rather than touch.
+run once) generates **58 artifacts that are untracked on `main`**: 34
+`.import` sidecars, 7 extracted textures and 17 `.uid` files. **None are this
+lane's work.** They belong to the pickup-art assets (candy, mushroom, potion
+plant, revive flower, riding saddle, bridge section, signpost) and to other
+lanes' new scripts. Left untracked deliberately: committing another lane's
+binaries from this branch hands its owner a conflict, and COMMON.md says to
+report a file outside the ownership list rather than touch it.
+
+**This is a real repo gap, not just noise, and it needs routing.** Checked
+rather than assumed:
+
+- the repository **does** track import sidecars as a convention —
+  `git ls-files` counts **904** `.import` files and **982** `.uid` files;
+- the *source* assets are tracked on `main`
+  (`assets/props/candy_pickup/candy_pickup.glb`,
+  `assets/creatures/tetherbound/candy_pickup/reference/front.png`, and so on);
+- their sidecars are on **no branch at all** — `origin/main`,
+  `origin/claude/codex-merge-meadows-finish-dq12jj`,
+  `origin/claude/meadows-final-progression-directive-0904` and
+  `origin/ralph/VISUAL-LOOP-0904` each carry **zero** of them.
+
+So whichever lane added those assets committed the sources without the
+sidecars Godot generates for them. Every lane that imports will keep
+regenerating the same 58 files and keep seeing a dirty tree. **The lane that
+owns those assets should commit its own sidecars**; this lane is reporting it,
+not fixing it.
 
 ### Limitations of the feature itself
 
