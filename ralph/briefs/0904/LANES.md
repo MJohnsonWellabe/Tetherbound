@@ -65,6 +65,9 @@ Owner noticed the session count didn't match my reports. Root cause: 5 lanes (W0
 Separately, 5 lanes had genuinely gone stale 4+ hours with NO replacement running: W02-HARNESS-CONTEXT, W03-S08-FREEZE, W16-LOFT-BED, W20-SMALL-FIXES, W21-HARNESS-FIGHTS — all hit their 5h limit hours ago (reset already passed) and were sitting untouched. Given the owner flagged this directly, resumed all 5 at once (departing from the normal 1-2/sweep trickle, since the owner surfaced the actual backlog size).
 main also moved: PR #42 merged — **W00-ICONS is now on main**. PR #45 (consolidated: icons+contracts+progression+portraits+companion+bands2-5) is open, still blocked only on the pre-existing finale regression. PR #44 is Codex's own draft PR for Cloudreach, unrelated to this batch, explicitly not ready to merge.
 
+## Sweep 11:24Z
+W05 checked: real progress on the rebase — `smoke_aggression` now 4/4 green against current main, bake test green too, still running a hypothesis test on the remaining question. Not done yet but on track. No other action needed this cycle.
+
 ## 11:12 UTC: W07 and W20 both confirmed done
 **W07-WARRENS DONE** — thorough, honest report: real measured sky-leak fix (14,959→2,564 px), explicit deference to the owner's newest directive over the judge's rubric where they disagreed (CLAUDE.md precedence correctly applied), clean final commit. Archived.
 **W20-SMALL-FIXES DONE** — 10 items fixed, 6 test suites green. Notably it solved its `vegetation.gd` cross-ownership problem better than the routing fallback I'd suggested: moved the filter logic into its own owned file instead, leaving `vegetation.gd` byte-identical to main. Left W21's owned deletion (`S06-31`...`S06-49`) as a routed finding rather than touching it. Archived. Queued (not force-fired, since W21 is actively RUNNING) a relay of that finding to W21 for whenever it's next between turns.
