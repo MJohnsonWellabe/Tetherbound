@@ -39,6 +39,40 @@ half-finished source edits from that attempt in this checkpoint.
 - 25 pull requests to date. PRs #20–#25 (2026-09-02) landed the visual-parity program
   and the last lanes. Before that the loop landed branches via fast-forward without PRs.
 
+**The 2026-09-04/05 lane wave, landed by W24-LANDING** (`ralph/reports/W24-LANDING-0904/REPORT.md`
+is the evidence; `ralph/briefs/0904/LANES.md` is the per-lane ledger):
+
+| PR | Merge commit | Lanes landed |
+|---|---|---|
+| #42 | `c5a16dfb` | W00-ICONS, plus the bake-manifest repair below |
+| #45 | `fdf70ab4` | W19-CONTRACTS, W13-PROGRESSION-FEED, W04-PORTRAITS, W12-COMPANION, W18-DENSITY-B4-B5, W17-DENSITY-B2-B3, W09-VFX, W23-DIFFICULTY — one consolidated branch, one verification pass |
+
+PR #43 was opened and closed as superseded by #45. Verification on the merged tree before
+#45: two imports with no `SCRIPT ERROR`/`Parse Error`; 658 tests / 3,399,284 assertions,
+0 failed across every merged lane's owned tests; the progression and HUD set re-run at
+158 / 2,521 after W13's round-2 UI fix; `smoke_playground` OK with all 101 band pickups
+placed; `smoke_gate_b_continuous` OK. #45 merged on CI run 33949277496, green on every job.
+
+- **The bake manifests were repaired, not re-baked.** `f2dd20e4` rewrote only the
+  `config_fingerprint` line of `data/terrain/playground/manifest.json` and
+  `data/scatter/playground/manifest.json` while changing no bake input, so both freshness
+  guards read the committed bakes as stale and `main` went red on four jobs. #42 restores
+  the two fingerprints from `90efc0d5`, which is what a re-bake against the unchanged config
+  writes; both guards pass. W05-TREELINE and W18 reached the same diagnosis independently.
+- **`smoke_gate_e_finale` is flaky on `main`, not broken.** It failed four times (two `main`
+  runs, a landing branch, and a locally built tree byte-identical to `origin/main`) and then
+  passed on run 33949277496 for the same commit that failed on that commit's push run. The
+  likely mechanism: `04d844d0` gave the Warden an automatic `victory_conversation`, and
+  `sequence_director.gd` holds locomotion while a dialogue panel is open, so the smoke's
+  check races the panel. `tests/smoke_gate_e_finale.gd` is W06-FINALE's file.
+- **Nine decision records, uniquely numbered** after eight lanes each opened a D74:
+  D74/D75 W19, D76 W13, D77 W23, D78 W18, D80 W09, D81 W04, D83 W12, D84 W17. D79 is
+  reserved for W10 and D82 for W02; later lanes take D85 onward.
+- **Still off `main` from that wave:** W05, W01, W10 and W22 (reports carry unfilled
+  placeholders); W02, W06, W07, W08, W11, W14, W15, W20 and W21 (no report pushed). W17 and
+  W23 were independently re-verified by the landing lane before landing; W05's re-bake and
+  its `vegetation.json` edit will need the bake-freshness pair re-run on whatever tree lands it.
+
 ## 2. Verified system status
 
 Method: 1728 unit tests (`tests/run_tests.gd`, 28.5 min, **0 failures**) and the
