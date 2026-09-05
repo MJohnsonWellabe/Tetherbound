@@ -335,12 +335,12 @@
       "order": 1000,
       "name": "trail_camp",
       "rest": {
-        "_why": "T5-CADENCE, closing T4-REGIONS' third-ranked chapter gap (ralph/reports/REGION_AUDIT_2026-08-30.md: 'Camps are set dressing'). This is the best-dressed camp in the game -- 18 props, a bed, a lit bonfire, a bench and a stool -- and it is a named map landmark (`band1_trail_camp`), and until this block it could not be used for anything. The audit's exit-criterion verdict for band 1's camp/recovery row was FAIL, with the reason written as 'a map landmark that promises rest and delivers scenery'. `scripts/world/rest_point.gd` is what reads this; the offer it stands up is the SAME one the player-built Camp makes, not a better one.\n\nSITED at the fire, 1.6m east of it, because the fire is what makes this read as a camp from the trail and because that is exactly where `camp.gd` hangs its own rest prompt relative to its own fire. The fire ring is ~2.1m across (campfire_stone_ring at scale 1.05), so 1.6m clears the stones.",
+        "_why": "T5-CADENCE, closing T4-REGIONS' third-ranked chapter gap (ralph/reports/REGION_AUDIT_2026-08-30.md: 'Camps are set dressing'). This is the best-dressed camp in the game -- 18 props, a bed, a lit bonfire, a bench and a stool -- and it is a named map landmark (`band1_trail_camp`), and until this block it could not be used for anything. The audit's exit-criterion verdict for band 1's camp/recovery row was FAIL, with the reason written as 'a map landmark that promises rest and delivers scenery'. `scripts/world/rest_point.gd` is what reads this; the offer it stands up is the SAME one the player-built Camp makes, not a better one.\n\nOP-0905-08 (owner playtest 2026-09-05: 'You can't rest at the camp right by Gil'). The original siting -- 1.6m east of the fire, radius 3.2 -- put the fire and stool in reach but left the Bench (3.95m away) and the camp_bed (3.26m away) OUTSIDE the circle: exactly the two pieces of furniture a player standing at Gil's camp actually walks up to, so the natural place to try to rest offered nothing. RE-SITED to the cluster's own midpoint (roughly fire/camp_bed/Bench/Stool) with a radius wide enough to cover the whole dressed clearing -- fire 1.63m, camp_bed 1.53m, Stool 0.67m, Bench 2.67m, the informal tree-log seat 3.85m, all now inside. `craft_at` and the creature_bed keep their own authored positions and, per `rest_point.gd`, their own independent trigger circles (the creature bed's own 'Rest a Creature' prompt is fixed at 2.6m and never reads this radius at all), so widening this circle does not move or merge either offer -- it only fixes which patch of ground answers 'Rest until morning'.",
         "at": [
-          345.6,
-          935.4
+          344.3,
+          936.6
         ],
-        "radius": 3.2,
+        "radius": 4.6,
         "label": "Rest until morning",
         "craft_at": [
           342.4,

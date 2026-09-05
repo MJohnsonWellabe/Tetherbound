@@ -44,6 +44,11 @@ extends Node3D
 
 const CONFIG_PATH := "res://data/config/burrow_warrens.json"
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
+## OP-0905-18: the vault prize is a heartstone, the one evolution catalyst
+## that does not travel through item_cache_pickup.gd/key_pickup.gd's shared
+## pickup seam. A no-op for anything the prize config ever names that is not
+## a known evolution catalyst.
+const PROGRESSION_FEED := preload("res://scripts/creatures/progression_feed.gd")
 ## Read for its group and meta names only -- see `_build_approach_apron`.
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 
@@ -2938,6 +2943,7 @@ func _on_prize_taken() -> void:
 		game.call("push_world_message", "No room in the satchel for it.")
 		return
 	inventory.call("add", item, 1)
+	PROGRESSION_FEED.announce_catalyst_pickup(item)
 	var progression := _progression()
 	if progression != null:
 		progression.call("set_flag", str(prize.get("flag", "")))
@@ -3022,6 +3028,17 @@ func _spawn_population(director: Node) -> void:
 					var body_instance: Object = body.get("instance")
 					if body_instance != null:
 						body_instance.set("nickname", label)
+				# OP-0905-11, owner playtest 2026-09-05: "My alpha looked the
+				# exact same as a regular trail pup." A spawn entry may carry
+				# its own `alpha` block -- today, only the vault's Elder
+				# Trailpup -- and when it does this dresses the body exactly
+				# the way `_dress_the_guardian()` dresses the guardian, through
+				# the same shared `_dress_alpha()` helper, so a named resident
+				# reads as the exceptional animal its nickname already claims
+				# rather than one more ordinary body wearing a name tag.
+				var alpha_spec: Variant = spec.get("alpha", {})
+				if alpha_spec is Dictionary and not (alpha_spec as Dictionary).is_empty():
+					_dress_alpha(body, alpha_spec as Dictionary, label)
 				_population.append(body)
 
 	var guardian: Dictionary = _config.get("guardian", {})
@@ -3136,15 +3153,34 @@ func _spawn_population(director: Node) -> void:
 ## keeps its Earth Fist. That is the bug encounter_director.gd:463 already
 ## documents, not to be reintroduced here.
 func _dress_the_guardian(spec: Dictionary) -> void:
-	var nickname := str(spec.get("nickname", ""))
-	var instance: Object = _guardian.get("instance")
+	_dress_alpha(_guardian, spec, str(spec.get("nickname", "")))
+
+
+## OP-0905-11, owner playtest 2026-09-05: "My alpha looked the exact same as a
+## regular trail pup." `_dress_the_guardian()` above was the ONLY place in this
+## file that ran the alpha-presentation steps (`_comment_guardian_alpha`'s own
+## three/four calls), so a spawn entry's own `alpha` block -- the vault's Elder
+## Trailpup -- was dressed with nothing but a name. This is that dressing,
+## factored out so both callers run the identical sequence: the guardian
+## (`_dress_the_guardian()`, unchanged behaviour) and any ordinary spawn whose
+## data carries an `alpha` block (`_spawn_population()`).
+##
+## `body` is the spawned Node3D (guardian or resident), `spec` is the `alpha`
+## block itself (or the guardian's own top-level dict, which carries the same
+## keys), and `nickname` is written on separately because the guardian's own
+## name lives in `spec` while a resident's already came from the outer spawn
+## entry's `nickname` field, one level up from `spec` here.
+func _dress_alpha(body: Node3D, spec: Dictionary, nickname: String = "") -> void:
+	if body == null:
+		return
+	var instance: Object = body.get("instance")
 	if nickname != "":
-		_guardian.set("display_name", nickname)
+		body.set("display_name", nickname)
 		if instance != null:
 			instance.set("nickname", nickname)
 
-	# Per-instance, never a species edit: the meadow's own burrowbacks keep
-	# `species.json`'s `tremor_roll`.
+	# Per-instance, never a species edit: an ordinary body of the same species
+	# keeps whatever `species.json` gives it.
 	if instance != null:
 		var quick := str(spec.get("signature_quick", ""))
 		if quick != "":
@@ -3157,19 +3193,32 @@ func _dress_the_guardian(spec: Dictionary) -> void:
 	# rebuilds the art from the species look, which would discard the dressing
 	# if `set_alpha()` had already applied it.
 	var scale := float(spec.get("scale", spec.get("art_scale", 1.0)))
-	if not is_equal_approx(scale, 1.0) and _guardian.has_method("apply_size_multiplier"):
-		_guardian.call("apply_size_multiplier", scale)
-	if _guardian.has_method("set_alpha"):
-		_guardian.call("set_alpha", true)
+	if not is_equal_approx(scale, 1.0) and body.has_method("apply_size_multiplier"):
+		body.call("apply_size_multiplier", scale)
+	if body.has_method("set_alpha"):
+		body.call("set_alpha", true)
 	# AFTER set_alpha(), because it edits the per-body material duplicates that
 	# call creates.
-	_let_the_guardian_carry_its_own_light(
+	_wire_alpha_self_light(body,
 		float(spec.get("glow_energy", 0.0)), float(spec.get("rim", 0.0)),
 		Color(str(spec.get("glow_tint", "#ffffff"))))
-	_stand_the_guardian_in_its_own_light(spec.get("aura_light", {}) as Dictionary)
+	# OP-0905-11's other half: a species with no authored `_alpha.png`
+	# colourway (trailpup has none -- checked, assets/creatures/tetherbound/
+	# trailpup/ carries no `*_alpha` texture) falls back, inside
+	# `set_alpha()`/`_refresh_shiny_tint()`, to its ordinary `vivid` texture,
+	# so the coat itself does not change at all: the rim and the mote aura
+	# above still apply, but a player who has not memorised the rim's exact
+	# strength sees the same trail pup. `tint`, present only when a spec
+	# author has one to give (the vault's dust-pale coat), is the one
+	# additional lever CLAUDE.md still allows for a colourway-less species: a
+	# material TINT rather than a new texture or mesh.
+	var tint_str := str(spec.get("tint", ""))
+	if tint_str != "":
+		_tint_alpha_coat(body, Color(tint_str))
+	_stand_alpha_in_its_own_light(body, spec.get("aura_light", {}) as Dictionary)
 	# Same marker `_make_alpha()` sets, so anything asking "is this an alpha"
 	# gets one answer for the field and the dungeon alike.
-	_guardian.set_meta("alpha", true)
+	body.set_meta("alpha", true)
 
 
 ## JUDGE-3 sec1e: at player distance in the den the dressed guardian was "a
@@ -3216,11 +3265,16 @@ func _dress_the_guardian(spec: Dictionary) -> void:
 ## finally has a light to work with, so the boss runs it at full strength --
 ## on its own duplicates only, never on the shared alpha material, so field
 ## alphas keep their 0.65 identity tell. 0 leaves set_alpha()'s value alone.
-func _let_the_guardian_carry_its_own_light(
-		energy: float, rim: float = 0.0, tint: Color = Color.WHITE) -> void:
-	if (energy <= 0.0 and rim <= 0.0) or _guardian == null:
+## OP-0905-11: generalised from `_let_the_guardian_carry_its_own_light` so any
+## dressed alpha (not only the guardian) can carry the same self-light. `body`
+## replaces the old hard-coded `_guardian` reference; behaviour for the
+## guardian is unchanged, `_dress_the_guardian()` still calls this through
+## `_dress_alpha()` with `_guardian` as `body`.
+func _wire_alpha_self_light(
+		body: Node3D, energy: float, rim: float = 0.0, tint: Color = Color.WHITE) -> void:
+	if (energy <= 0.0 and rim <= 0.0) or body == null:
 		return
-	var model: Node = _guardian.get_node_or_null(^"Model")
+	var model: Node = body.get_node_or_null(^"Model")
 	if model != null:
 		_wire_self_light(model, energy, rim, tint)
 
@@ -3237,19 +3291,54 @@ func _let_the_guardian_carry_its_own_light(
 ## object must read in a dim room" move, scoped to the one object. Colour
 ## defaults to creature_body.gd's ALPHA_AURA_COLOUR so the light and the motes
 ## tell one story. No shadow: one small warm accent, not a scene key.
-func _stand_the_guardian_in_its_own_light(cfg: Dictionary) -> void:
-	if _guardian == null or cfg.is_empty():
+## OP-0905-11: generalised from `_stand_the_guardian_in_its_own_light` the same
+## way `_wire_alpha_self_light` was above; the guardian's own aura is unchanged
+## (it is still parented to `_guardian` via `_dress_the_guardian()`'s call).
+func _stand_alpha_in_its_own_light(body: Node3D, cfg: Dictionary) -> void:
+	if body == null or cfg.is_empty():
 		return
 	var energy := float(cfg.get("energy", 0.0))
 	if energy <= 0.0:
 		return
 	var light := OmniLight3D.new()
-	light.name = "GuardianAuraLight"
+	light.name = "AlphaAuraLight"
 	light.light_energy = energy
 	light.omni_range = float(cfg.get("range", 7.0))
 	light.light_color = Color(str(cfg.get("colour", "#ffd479")))
 	light.position = Vector3(0.0, float(cfg.get("y", 1.6)), 0.0)
-	_guardian.add_child(light)
+	body.add_child(light)
+
+
+## OP-0905-11: the other half of `_dress_alpha()`'s coat lever, for a species
+## with no authored `_alpha.png` colourway (see `_dress_alpha()`'s own
+## comment). Same duplicate-once-then-mutate discipline as `_wire_self_light`
+## below: each surface material is duplicated exactly once per body (tagged
+## `_alpha_coat_tint`) and its albedo multiplied by `tint` -- a colour
+## MULTIPLY, not a repaint, so the painted texture's own shading survives
+## underneath, the same "tint is temperature, not a repaint" rule
+## `_wire_self_light`'s own `glow_tint` already follows.
+func _tint_alpha_coat(body: Node3D, tint: Color) -> void:
+	var model: Node = body.get_node_or_null(^"Model")
+	if model != null:
+		_tint_node(model, tint)
+
+
+func _tint_node(node: Node, tint: Color) -> void:
+	if node is MeshInstance3D:
+		var instance := node as MeshInstance3D
+		var mesh: Mesh = instance.mesh
+		for surface in (mesh.get_surface_count() if mesh != null else 0):
+			var source: Material = instance.get_active_material(surface)
+			if not (source is BaseMaterial3D):
+				continue
+			var material := source as BaseMaterial3D
+			if not material.resource_name.ends_with("_alpha_coat_tint"):
+				material = material.duplicate() as BaseMaterial3D
+				material.resource_name += "_alpha_coat_tint"
+				instance.set_surface_override_material(surface, material)
+			material.albedo_color = material.albedo_color * tint
+	for child in node.get_children():
+		_tint_node(child, tint)
 
 
 func _wire_self_light(
@@ -3264,9 +3353,9 @@ func _wire_self_light(
 			var material := source as BaseMaterial3D
 			if material.albedo_texture == null:
 				continue
-			if not material.resource_name.ends_with("_guardian_glow"):
+			if not material.resource_name.ends_with("_alpha_glow"):
 				material = material.duplicate() as BaseMaterial3D
-				material.resource_name += "_guardian_glow"
+				material.resource_name += "_alpha_glow"
 				instance.set_surface_override_material(surface, material)
 			if energy > 0.0:
 				material.emission_enabled = true
