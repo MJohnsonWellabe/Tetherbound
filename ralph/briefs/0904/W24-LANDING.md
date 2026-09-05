@@ -17,3 +17,9 @@ Branch: `ralph/LAND-0904` (a consolidation branch you re-create from `origin/mai
 **Owns:** the landing branches, `ralph/briefs/0904/LANES.md`, `docs/CURRENT_STATE.md` §1, `ralph/reports/W24-LANDING-0904/`, merge-conflict resolutions, a re-bake on a merged tree. Nothing else. Never rewrite history on a lane branch, never force-push, never push to `main` directly, never merge a red or incomplete run, never land a lane without its report.
 
 **When nothing is ready** end your turn with a one-paragraph status (what is done, what is close, what is blocked). You will be woken again on a schedule; each wake is a new cycle. You are done only when every lane in the ledger is landed or explicitly recorded as abandoned by the coordinator.
+
+## Addendum 2026-09-05 01:15 UTC — decision-number collisions
+
+Eight lanes each created a decision file numbered **D74** (W02, W04, W09, W10, W13, W18, W19, W23) and W19 also created **D75**. The filenames differ (`D74-<slug>.md`) so git will not conflict, but the numbers must be unique. When you land them, renumber in this fixed order and fix every reference (grep the lane's diff for `D74`/`D75`): W19 keeps D74 (Burrowback) and D75 (level-gate rule); W13 → D76; W23 → D77; W18 → D78; W10 → D79; W09 → D80 (that lane has been told to do its own); W04 → D81; W02 → D82. Any later lane that adds a decision takes D83 onward. Record the mapping in your report.
+
+Also: W19-CONTRACTS is complete (report pushed, docs only) — land it in your first batch. W23-DIFFICULTY's report says "smoke results pending"; it is not done until those smokes are shown green on the branch.
