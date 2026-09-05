@@ -145,8 +145,9 @@
   },
   "telegraph": {
     "_comment": "R9.4-remainder-9-combat: the wind-up's own visual event. A blind critic covering the HUD's '! incoming' text found the frame indistinguishable from ordinary standing \u2014 this is a pulsing warning ring at the opponent's feet for the exact length of its wind-up beat, so the read survives with the text covered. ALL tunable presentation; nothing here touches the AI's actual telegraph duration (enemy.telegraph).",
+    "_why_colour_0905": "N07-VFX-POLISH (D87): #ff5a3c (hue 9, sat 0.76) sat inside the band palette.json reserves for Team Tether (#6b2a20 hue 8 / #7a2430 hue 352, both sat 0.70) and W09-VFX's blind judge read it, at partial opacity over fur and grass, as 'a dull oxblood torus' on the FRIENDLY creature. Now the same amber family as UITokens.WARNING (#e8b74a, hue 41) that combat_hud.gd already paints the '!  incoming' line in for this very beat -- one event, one colour, HUD and ground -- 30 degrees of hue clear of the reserved band. The 'on the friendly' half of that finding was telegraph_glow.gd drawing without a depth test through the ally's back; fixed there. Colour only here; radius untouched.",
     "enabled": true,
-    "colour": "#ff5a3c",
+    "colour": "#ffbe47",
     "radius": 1.1
   },
   "effect_banner": {

@@ -108,26 +108,53 @@ func _run_telegraph_moment() -> void:
 	if mine != null:
 		mine.hp = mine.max_hp
 
-	var glow := await _wait_for_telegraph()
+	# The rig applies `yaw` in `_process`, which a paused tree never runs, so
+	# an aim set at the shutter is an aim the frame never sees (the first
+	# before-round shot 05 and 06 identical for exactly this reason). Aim
+	# from the side NOW and keep re-aiming through the wait, so the camera has
+	# arrived before the beat starts.
+	_aim_at_fight(wild)
+	var glow := await _wait_for_telegraph(wild)
 	if glow == null:
 		print("FAIL: no TelegraphGlow appeared within %d ticks; 05/06 cannot show the wind-up" % TELEGRAPH_WAIT_BOUND)
 	else:
 		await _await_physics(TELEGRAPH_BITE_TICKS, "letting the ring open")
-		if is_instance_valid(glow):
-			print("[telegraph] colour=%s radius=%.2f duration=%.2f life=%.3f" % [
-				(glow.get("_colour") as Color).to_html(false), float(glow.get("_radius")),
-				float(glow.get("_duration")), float(glow.get("_life"))])
-		else:
-			print("FAIL: the TelegraphGlow expired before the shutter")
+		_print_glow(glow, "05")
 	_note_effects_named("05-telegraph")
 	if bool(_manager.call("is_fighting")) and is_instance_valid(wild):
-		# 06 first, from wherever the combat camera already is; 05 re-aims.
-		await _shoot_pair_to("06-telegraph-behind")
-		_aim_at_fight(wild)
 		await _shoot_pair_to("05-telegraph")
+	# 06: the combat camera's own view from behind the ally, at the start of
+	# the ring's NEXT pulse (PULSE_PERIOD 0.32 s) so it is as bright as 05 was.
+	# The yaw needs an unpaused process frame to land; those cost up to eight
+	# ticks each under llvmpipe, so wait on the ring's own clock rather than
+	# counting ticks.
+	if glow != null and is_instance_valid(glow) and bool(_manager.call("is_fighting")):
+		var ally: Node3D = _director.call("ally_body") as Node3D
+		if ally != null:
+			_aim_camera(_player.global_position, ally.global_position)
+		await _await_process(1, "letting the behind-aim land")
+		var guard := 0
+		while is_instance_valid(glow) and guard < 40:
+			var life := float(glow.get("_life"))
+			var phase: float = fmod(life, 0.32)
+			if life >= 0.30 and phase <= 0.09:
+				break
+			guard += 1
+			_frame_count += 1
+			await physics_frame
+		if is_instance_valid(glow):
+			_print_glow(glow, "06")
+			_note_effects_named("06-telegraph-behind")
+			await _shoot_pair_to("06-telegraph-behind")
+		else:
+			print("FAIL: the ring expired before 06-telegraph-behind could be shot")
 
 	# The control: the same side framing with the beat over and nothing
 	# drawing under the wild creature.
+	# Same lesson as above: aim from the side first, then let the settle
+	# frames carry the yaw to the rig before the shutter.
+	if is_instance_valid(wild):
+		_aim_at_fight(wild)
 	var waited := 0
 	while waited < 60 and _live_telegraph() != null:
 		waited += 1
@@ -135,8 +162,9 @@ func _run_telegraph_moment() -> void:
 		await physics_frame
 	await _await_physics(RECOVERY_SETTLE_FRAMES, "recovery settle")
 	if bool(_manager.call("is_fighting")) and is_instance_valid(wild):
-		_note_effects_named("07-telegraph-control")
 		_aim_at_fight(wild)
+		await _await_process(1, "letting the side-aim land")
+		_note_effects_named("07-telegraph-control")
 		await _shoot_pair_to("07-telegraph-control")
 
 	await _flee_if_fighting()
@@ -153,7 +181,7 @@ func _live_telegraph() -> Node:
 	return null
 
 
-func _wait_for_telegraph() -> Node:
+func _wait_for_telegraph(wild: Node3D) -> Node:
 	var waited := 0
 	while waited < TELEGRAPH_WAIT_BOUND and bool(_manager.call("is_fighting")):
 		var found := _live_telegraph()
@@ -163,10 +191,22 @@ func _wait_for_telegraph() -> Node:
 			return found
 		waited += 1
 		_frame_count += 1
+		if waited % 10 == 0 and is_instance_valid(wild):
+			_aim_at_fight(wild)
 		if waited % 30 == 0:
 			print("[frame %4d] waiting for the wind-up (%d/%d)" % [_frame_count, waited, TELEGRAPH_WAIT_BOUND])
 		await physics_frame
 	return null
+
+
+func _print_glow(glow: Node, shot: String) -> void:
+	if not is_instance_valid(glow):
+		print("FAIL: the TelegraphGlow expired before shot %s" % shot)
+		return
+	print("[telegraph %s] colour=%s radius=%.2f duration=%.2f life=%.3f at=%s" % [
+		shot, (glow.get("_colour") as Color).to_html(false), float(glow.get("_radius")),
+		float(glow.get("_duration")), float(glow.get("_life")),
+		str((glow as Node3D).global_position)])
 
 
 ## The inherited `_note_effects` lists arena children by name; the telegraph
