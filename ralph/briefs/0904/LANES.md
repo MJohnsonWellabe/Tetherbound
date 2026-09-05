@@ -95,3 +95,31 @@ lanes take D85 onward.
 
 **Not landed:** W05, W01, W10, W22 (reports still carry placeholders); W02, W06, W07, W08,
 W11, W14, W15, W20, W21 (no report). W05 and W23 were pre-verified by this lane.
+
+## 2026-09-05 08:00 UTC — W05 rejected, W01+W22 in PR #48
+
+| PR | State | Lanes |
+|---|---|---|
+| #42 `c5a16dfb` | merged | W00 + the bake-manifest repair |
+| #45 `fdf70ab4` | merged | W19, W13, W04, W12, W18, W17, W09, W23 |
+| #46 `504c7b55` | merged | CURRENT_STATE §1 record |
+| #47 | **closed, not merged** | W05-TREELINE — breaks `smoke_aggression` |
+| #48 | open | W01-ROUTE-STRIP, W22-BRIDGE-SIGNPOST |
+
+**W05-TREELINE is blocked on its own change.** `smoke_aggression` fails at **53.7 m**,
+deterministically, on `main` + W05 and passes on `main` alone — same container, back to
+back, and both CI runs agree. It is not the flake the smoke's header documents (that one
+sits at 44.1 / 38.0 / 45.1 m and was traced to Terrain3D, not a tree). Likely cause: the
+lane raises `trees.scale_max` 1.45 → 2.0 and heroes to 2.2–2.7, and colliders scale with the
+mesh, so a wider trunk now sits on a line the walk used to pass — placements are unchanged.
+**The lane must fix this before it can land**; a physics query at the frozen position will
+name the blocking body. Branch `ralph/LAND-0904-4` holds the prepared landing.
+
+**For whoever owns the capture tooling:** two independent blind judges, on W05 and W22,
+flagged `place5-bridge-approach` as shot at ~1.05 m camera height with no figure in frame.
+`tools/_capture_band1_places.gd`'s viewpoint list needs one fix; two lanes have now spent
+evidence on unusable frames.
+
+**Remaining lanes:** W10 has a skeleton report with no test results (not landable);
+W02, W06, W07, W08, W11, W14, W15, W20, W21 have pushed no report. Next free decision
+number is **D87**.

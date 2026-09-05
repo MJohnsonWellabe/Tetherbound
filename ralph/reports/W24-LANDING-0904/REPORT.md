@@ -419,3 +419,92 @@ actually compares against a baseline when it appears to.
 Landed: #42 (`c5a16dfb`), #45 (`fdf70ab4`), #46 (`504c7b55`), and #47 open for W05.
 Still off `main`: W01, W10, W22 (reports carry unfilled placeholders) and W02, W06, W07,
 W08, W11, W14, W15, W20, W21 (no report pushed). No lane has closed a report since 03:10 UTC.
+
+## Cycle 6 — W05 rejected on evidence; W01 + W22 up as PR #48
+
+### W05-TREELINE: NOT LANDED. It breaks `smoke_aggression`, and it is this lane's change.
+
+PR #47 was opened, verified on everything else, and then **closed without merging**. The
+combat shard failed:
+
+```
+aggression FAIL: stood 53.7m from Galecrest for 900 frames without pressing anything and it never attacked
+```
+
+`smoke_aggression.gd:166` walks the trainer toward the aggressor until within 10 m, then
+stands. The walk dies at 53.7 m.
+
+| Tree | Result |
+|---|---|
+| `origin/main` @ `504c7b55` | **`aggression: OK`** |
+| `main` + W05 (PR #47's head) | **FAIL at 53.7 m** |
+| the same branch in CI, both runs | FAIL, `failed on attempt 2/2` each |
+
+Both local runs were in the same container, same Godot, back to back, and the only content
+difference is W05's — the branch's other commits are a decision renumber, a report pointer
+and a `.uid`. The eight-lane batch without W05 passed `verify-combat-shard` on run
+33949277496.
+
+**Not the known flake, and I said the opposite earlier in this session before checking.**
+`smoke_aggression.gd`'s header documents a walk-goes-dead history for this exact species,
+investigated 2026-08-13, CI signature **44.1 / 38.0 / 45.1 m**, cause traced to a Terrain3D
+snag rather than any tree collider. I read that and reported it as exonerating W05. It is
+not: ours is **53.7 m every time, to the decimal, across two machines and three runs**. A
+random snag does not stop at one distance repeatedly. The header's investigation was of a
+different occurrence.
+
+**Likely mechanism** (for the lane, not diagnosed further here): the lane raises
+`trees.scale_max` 1.45 → 2.0 and `trees.heroes` to 2.2–2.7, and colliders scale with the
+mesh. Placements are unchanged — both bakes report 825,979 kept / 3,883 drained, which is the
+lane's own proof — so this is not a moved tree but a wider one on a line the walk used to
+pass. It matters past the test: the scripted walk holds `move_forward` dead straight, but a
+player walks that route too.
+
+`data/config/vegetation.json` and the bake are W05's owned files, so this goes back as
+"not landed, reason" rather than being fixed here. Everything else about the lane verified
+clean (both bake guards, `test_scatter_rules` 38 / 1,019,854, `test_veg_corridor`
+9 / 1,537,510, `test_band_vegetation` 5 / 142, imports, `smoke_playground`). The branch
+`ralph/LAND-0904-4` is left in place so a fixed W05 re-lands from it. Evidence is on PR #47.
+
+### PR #48 — W01-ROUTE-STRIP + W22-BRIDGE-SIGNPOST
+
+Verified on the merged tree: `test_signpost_geometry` 6 / 101 / 0 and the four-file crossing
+set 26 / 184 / 0 (both matching W22 exactly); `test_capture_check` **21 / 47 / 0** and
+`test_route_strip_subject_boxes` 10 / 22 / 0; `smoke_traversal` OK with W22's own assertions
+(`18 rail posts, 2 banners, sentry posted`, then `sentry stood down, barricade still
+standing`); **`smoke_aggression` OK**; imports clean; benign error set unchanged
+(`material` ×3).
+
+`smoke_aggression` was run here deliberately. After W05, a lane that moves world geometry
+near a route does not get the benefit of the doubt.
+
+**W01's report undercounts itself:** it claims 18 tests / 39 assertions where the branch
+carries 21 / 47 plus a second test file (10 more) it never mentions. `main` holds 3 of those
+functions and the branch 21, so the lane added 18 and wrote the report after 15. More tests
+than claimed, all passing.
+
+### The judge round W22 never ran
+
+Committed at `ralph/reports/W22-BRIDGE-SIGNPOST-0904/JUDGE.md`, on the lane's own four
+questions, judge not told which column was new — **it named the after column as the finished
+pass unprompted**. Call: *not shippable for a first playable, but the remaining work is scene
+and material work, not new art.* Ship the bridge deck and rail after value fixes; do not ship
+the signpost (glyph cap height 5–7 px at ~1.3:1 in world frames — "until a player can read a
+destination from the path, this prop is decoration"); do not ship the checkpoint dressing
+(untextured blockout barricades beside the road with ~4 m of clear track between them, a
+guard wearing none of the faction's red, and the gate still flying its blue banners beside
+the new red ones). Landed anyway per the directive: the diff improves what is there and the
+gap is now in the repository rather than waiting to be found in play.
+
+Its other two tokens were filled only where that could be done without speaking for the lane
+— the leak baseline with this lane's measurement against `main`, the final hash as a fact of
+the branch.
+
+### A defect that belongs to neither lane
+
+W22's judge and W05's judge, independently and from different frames, both flagged
+`place5-bridge-approach` as shot from a camera at roughly 1.05 m rather than the game's
+~2.8 m rig, with no player figure in shot and over half the frame out-of-focus ground. Two
+lanes, two judges, one broken capture stand. That is a defect in the capture tooling's
+viewpoint list, not in either lane's art, and it wants one fix rather than two workarounds —
+`tools/_capture_band1_places.gd`'s `VIEWPOINTS`.
