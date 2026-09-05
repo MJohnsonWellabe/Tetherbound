@@ -65,6 +65,14 @@ Owner noticed the session count didn't match my reports. Root cause: 5 lanes (W0
 Separately, 5 lanes had genuinely gone stale 4+ hours with NO replacement running: W02-HARNESS-CONTEXT, W03-S08-FREEZE, W16-LOFT-BED, W20-SMALL-FIXES, W21-HARNESS-FIGHTS — all hit their 5h limit hours ago (reset already passed) and were sitting untouched. Given the owner flagged this directly, resumed all 5 at once (departing from the normal 1-2/sweep trickle, since the owner surfaced the actual backlog size).
 main also moved: PR #42 merged — **W00-ICONS is now on main**. PR #45 (consolidated: icons+contracts+progression+portraits+companion+bands2-5) is open, still blocked only on the pre-existing finale regression. PR #44 is Codex's own draft PR for Cloudreach, unrelated to this batch, explicitly not ready to merge.
 
+## 15:03 UTC: N04-DIALOGUE-PORTRAITS confirmed done — the critical finding is fixed
+**N04-DIALOGUE-PORTRAITS DONE** — two full blind-judge rounds with real measured evidence
+(hue-angle stability, colour-bleed pixel counts, ΔE pair distances), the critical "every NPC
+shows the player's portrait" bug fixed and confirmed in-world, honest ceiling stated (eyebrows,
+hair-hue spacing, silhouette variety all correctly named as out of this brief's reach), routed
+findings recorded (D87 for the hair-hue-collision data). Archived. N08-PICKUP-TIERS still
+mid-round-2, not done yet. 4/13 follow-up lanes done now (N01, N03, N04, N11); 9 running.
+
 ## 14:44 UTC: first 3 of 13 follow-up lanes confirmed done
 Verified against real REPORT.md tails (not self-summaries) before archiving:
 **N01-SAVE-FORMAT** — all 5 tests fixed, full suite green; also found and reported (without
