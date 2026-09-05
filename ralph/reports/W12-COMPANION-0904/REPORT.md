@@ -6,7 +6,11 @@ Lane brief: `ralph/briefs/0904/W12-COMPANION.md` (on
 `docs/owner/OWNER_DIRECTIVES_2026-09-04-C.md` §5.
 
 Branch: `ralph/W12-COMPANION-0904`, from `origin/main` at `ef16544f`.
-Final commit: *(filled in at the end of this report)*.
+Final commit: **`7086b639`** (this report's own commit follows it).
+
+**Read section 6 before landing this.** The camp state is capped at a
+conservative value with its ceiling recorded, and the frame committed for it
+shows the defect that caused the cap, not the shipped value.
 
 ---
 
@@ -269,6 +273,51 @@ at exactly that 0.75 m.
 creature-bed pose, so the two negative-roll species (terrapup, trailpup) have
 the same latent dip when they sleep in a bed. That file is outside this lane's
 ownership list and was not touched. **Routing note for the coordinator.**
+
+### Round 3 (`_sheet_round3.png`), and the ceiling
+
+Recaptured with the grounding fix in. Pair differences: acknowledgment 9.73 %,
+hurt 13.05 %, camp 7.49 %; six shots, none failed.
+
+A **third** code-blind critic was given only the round 3 frames and asked five
+narrow questions about placement. Its answer on camp:
+
+> "Sunk. Badly. Not floating, not plausible — buried... the lowest fur pixel
+> runs a near-linear cut sloping down-left. Bodies do not end in straight
+> lines; ground planes do... it should not be shown to anyone as evidence of a
+> companion state."
+
+**The sign fix was necessary and not sufficient**, and the arithmetic says so:
+at 0.85 of the species roll the low side is still **0.207 m underground** even
+when correctly lifted. The reason is structural, not a tuning miss —
+**rolling a standing model about the pivot at its own feet is a felled-tree
+tilt, not a lie-down.** The deeper the roll, the more body swings below the
+ground plane, and no lift cancels it because the swing grows with the same
+sine the lift does.
+
+So the camp tilt is capped at **0.35**, where the low side is at or above
+ground for every species that opts in, and the test asserts that geometry
+directly — tilt, lift and swing-down together — rather than trusting the frame
+to look right. It was seen red at exactly 0.207 m.
+
+**This is the lane's recorded ceiling, and it is written into the config next
+to the number.** A creature that genuinely lies down at camp needs an authored
+lie-down clip. `rig_inventory.txt` says no rig in the roster has one, and
+`CLAUDE.md` forbids making one for the Meadows. What ships is a visible settle
+plus a halved idle, which is honest, safe on every species and on every slope,
+and less than the directive's "small camp/rest reaction" deserves.
+
+The same critic confirmed two things worth recording as **passes**: the
+acknowledgment and hurt pairs are correctly grounded ("toes bed slightly into
+the grass, grass blades draw in front of them, contact shadows are present —
+those two are correct"), and **the creature never interpenetrates the trainer
+in any of the six frames**.
+
+The camp frame committed in `_sheet_round3.png` is the one **before** this cap
+and shows the defect. It is kept deliberately: it is the evidence for the
+finding, and re-shooting after every config change was not a good use of the
+remaining budget. **The capped value has not been photographed.** The next
+lane to render this world should re-shoot moment 03 and confirm.
 
 ### What the judges say is still not solved
 
