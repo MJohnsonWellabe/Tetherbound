@@ -20,7 +20,7 @@ Branch: `ralph/W09-VFX-0904` (from `origin/main` at `ef16544f`). Final commit: _
 - **A level-up is a picture.** For 1.5 s the creature that levelled stands in a column of
   light, two rings rise from its feet past its crown, gold motes climb around it and its body
   takes a gold rim. It plays on the deployed creature; a bench member levelling from the party
-  share gets the HUD line only (D74 §4).
+  share gets the HUD line only (D80 §4).
 
 `data/config/vfx.json` holds every tunable; `enabled: false` is the whole revert.
 
@@ -38,7 +38,7 @@ Branch: `ralph/W09-VFX-0904` (from `origin/main` at `ef16544f`). Final commit: _
 | `tests/test_combat_vfx.gd` | new — 8 tests, 52 assertions |
 | `tools/_capture_vfx_moments.gd` | new — stages the fight, shoots 00–04, measures perf at band1_open |
 | `tools/_probe_vfx_frame_energy.gd` | new — bright-warm / near-white / gold pixel counts per frame |
-| `docs/decisions/D74-…md` | new — mesh-based not particles; overlay not material edit; KO from the damage hook; bench level-ups have no body |
+| `docs/decisions/D80-…md` | new — mesh-based not particles; overlay not material edit; KO from the damage hook; bench level-ups have no body |
 | `docs/CURRENT_STATE.md` | CL-A2 row |
 | `ralph/reports/W09-VFX-0904/` | this report, `_sheet_round1.png`, `_sheet_round2.png`, `JUDGE_round1.md`, `JUDGE_round2.md` |
 
@@ -91,12 +91,12 @@ _(filled from the round-2 `[perf] DELTA` lines)_
 
 ## Known limitations and what was deliberately not done
 
-- Bench level-ups (party share) show no world flourish; D74 §4. Tunable `bench_on_trainer`
+- Bench level-ups (party share) show no world flourish; D80 §4. Tunable `bench_on_trainer`
   exists but is off and unimplemented on the trainer body by design.
 - Level-ups are found by polling until `Game.progression_feed` lands (another lane). The
   seam is `combat_vfx.gd::on_progression_event()`; `min_gap` makes a poll detection and a
   feed event one flourish.
-- No GPUParticles3D/CPUParticles3D (D74 §1). No new meshes, textures or generations.
+- No GPUParticles3D/CPUParticles3D (D80 §1). No new meshes, textures or generations.
 - Frames are software GL: composition, scale, colour relationships and presence are what
   they can prove; fine lighting is not.
 - The catch sparkle competes with `catching.json`'s existing white seal flash for its first

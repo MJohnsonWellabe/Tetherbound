@@ -1,4 +1,4 @@
-# D74 — Combat VFX are mesh-based, and the level-up flourish rides the deployed body
+# D80 — Combat VFX are mesh-based, and the level-up flourish rides the deployed body
 
 **Date:** 2026-09-04 · **Decided by:** lane W09-VFX, inside CL-A2 (funded by the owner
 2026-09-04: *"Yes"* to combat and reward VFX). Small calls the brief left open, recorded
