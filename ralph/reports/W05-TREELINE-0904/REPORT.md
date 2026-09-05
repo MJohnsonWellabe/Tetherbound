@@ -306,18 +306,38 @@ The probe also prints the geometry the report's numbers depend on: Galecrest spa
 distance is roughly twice that, which is not a distance this walk can report from a stall
 anywhere on the line unless the creature had wandered far from its spawn.
 
-**What I think happened, offered as a hypothesis and not as a claim about anyone's care.**
-The reported stall coordinate (42.33, −66.54) is **1.93 m** from the coordinate this lane's
-*own* pre-fix failure stalled at (40.54, −65.82), and 5.1 m from the walk's start — the same
-small thicket immediately south of it. That is the signature of the **pre-fix** state, not of
-a new blocker. The collider fix landed in `835f45e2`, one commit after the scale change in
-`46a6d195`; a tree that carried `46a6d195` but not `835f45e2` reproduces the original block
-in exactly that thicket. **Worth confirming which commit the failing tree contained before
-treating this as an open defect.** If it did contain `835f45e2`, the second candidate is the
-walk's documented intermittency: `smoke_aggression.gd`'s own header records this exact walk
-stalling on CI at 44.1 m, 38.0 m and 45.1 m with a ~7 % residual rate, which is why its
-unstick escape exists at all — so a single red run on a historically flaky walk is worth a
-re-run before it is attributed.
+**What happened — tested, not hypothesised.** The reported stall coordinate
+(42.33, −66.54) is **1.93 m** from the coordinate this lane's *own* pre-fix failure stalled
+at (40.54, −65.82), and 5.1 m from the walk's start: the same small thicket immediately
+south of it. So I reconstructed the pre-fix state on **current `main`** and ran the walk
+against it. `835f45e2` changed nothing in any config except two numbers, so reverting them
+in a scratch worktree at this branch's head (`trees.collision_radius` 0.435 → 0.6,
+`grove` 0.70 → 1.1), re-importing and re-baking, rebuilds the pre-fix world exactly:
+
+```
+worktree at bce49c68, collision_radius reverted to pre-835f45e2
+=== stalled 120 frames (dump 1) ===
+player=(40.542370, 0.802263, -65.821121)  dist_to_galecrest=53.70 m  on_wall=true  vel=(0,0,0)
+  test_move 0.5 m BLOCKED by CommonTree_1_Collision (StaticBody3D)
+  test_move 1.0 m BLOCKED by CommonTree_1_Collision (StaticBody3D)
+  test_move 2.0 m BLOCKED by CommonTree_1_Collision (StaticBody3D)
+```
+
+**On current `main`, the same walk stalls in that thicket with the collider fix reverted and
+walks straight through with it applied.** Same merged tree, same bake inputs, same everything
+else; the only variable is the two numbers `835f45e2` changed. That makes the blocking
+behaviour a pure function of whether `835f45e2` is present, and it means a tree carrying
+`46a6d195` without `835f45e2` reproduces the reported failure in the reported place.
+
+**So the most probable reading of the second report is that the failing tree did not contain
+`835f45e2`** — the two commits are adjacent and easy to split on. I cannot check another
+session's checkout, so I state that as the likeliest cause rather than a certainty, and I am
+not suggesting carelessness: this lane pushed the scale change and the collider fix
+separately, which is what made the split possible. If the failing tree *did* contain
+`835f45e2`, the remaining candidate is the walk's documented intermittency —
+`smoke_aggression.gd`'s own header records it stalling on CI at 44.1 m, 38.0 m and 45.1 m
+with a ~7 % residual rate, which is why its unstick escape exists — against which the 4/4
+green above is the counter-evidence.
 
 **Repeated, because one green run is not an answer to a red one on a walk with this
 walk's history.** `smoke_aggression` was run **four times** on the merged tree and passed
@@ -389,8 +409,9 @@ rather than something to fix from here.
 
 ## 9. Final state
 
-Branch `ralph/W05-TREELINE-0904`. Scale change and first bake `46a6d195`; collider fix
-`835f45e2` with its bake fingerprint `3da6a956`. **`smoke_aggression` is green, the four
+Branch `ralph/W05-TREELINE-0904`, merged onto current `main` (`590741fe`) as `359abae3`.
+Scale change and first bake `46a6d195`; **collider fix `835f45e2` — the commit the branch
+must contain, and the one whose absence reproduces both reported failures**. **`smoke_aggression` is green, the four
 named test files are green, and the bake is fresh.** The one red left in anything this
 lane ran is `test_playground_terrain_bake_is_committed_and_fresh`, which fails identically
 on `origin/main` and belongs to the coordinator's terrain re-bake window (§5).
