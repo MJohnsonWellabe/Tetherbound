@@ -1,0 +1,197 @@
+{
+  "blocked": "",
+  "captures": {
+    "absent": 0,
+    "delegated": [
+      "GF-14-COMBAT-04b",
+      "GF-08-QUARRY-01",
+      "GF-16-GATHER-02",
+      "GF-09-WARRENS-01",
+      "GF-09-WARRENS-02",
+      "GF-14-COMBAT-05",
+      "GF-09-WARRENS-03"
+    ],
+    "delegated_to": "S06C",
+    "owes": [],
+    "planned": 0,
+    "present": 0,
+    "rows": []
+  },
+  "complete": false,
+  "cost": {
+    "frame_cost_s": 0.016789,
+    "reprices": [
+      {
+        "at": "boot:title",
+        "budget_remaining_s": 14399.3,
+        "frame_cost_s": 0.006498,
+        "frames_remaining": 163161,
+        "predicted_remaining_s": 1060.7,
+        "step_index": 3,
+        "wall_spent_s": 0.7,
+        "was_frame_cost_s": 0.005939
+      },
+      {
+        "armed": "in-play sample over budget: 489341 s predicted against 14039 s left. Armed, not blocked -- an in-play price is an average over a window and a scene stand-up inside one is a construction, not a per-frame cost. The next window decides.",
+        "at": "in-play",
+        "budget_remaining_s": 14039.3,
+        "frame_cost_s": 2.999809,
+        "frames_remaining": 163124,
+        "observed_window_s": 2.999809,
+        "predicted_remaining_s": 489340.8,
+        "samples": 1,
+        "step_index": 8,
+        "wall_spent_s": 360.7,
+        "was_frame_cost_s": 0.006498
+      },
+      {
+        "armed": "in-play sample over budget: 246029 s predicted against 14037 s left. Armed, not blocked -- an in-play price is an average over a window and a scene stand-up inside one is a construction, not a per-frame cost. The next window decides.",
+        "at": "in-play",
+        "budget_remaining_s": 14037.3,
+        "frame_cost_s": 1.50823,
+        "frames_remaining": 163124,
+        "observed_window_s": 0.016652,
+        "predicted_remaining_s": 246028.6,
+        "samples": 2,
+        "step_index": 8,
+        "wall_spent_s": 362.7,
+        "was_frame_cost_s": 2.999809
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14035.3,
+        "frame_cost_s": 0.016652,
+        "frames_remaining": 163124,
+        "observed_window_s": 0.016561,
+        "predicted_remaining_s": 2716.4,
+        "samples": 3,
+        "step_index": 8,
+        "wall_spent_s": 364.7,
+        "was_frame_cost_s": 1.50823
+      }
+    ]
+  },
+  "derailed": "",
+  "derailed_at": "",
+  "derails": [],
+  "disk": {
+    "applies": false
+  },
+  "disk_actual": {
+    "frame_bytes": 0,
+    "largest_evidence_png_bytes": 0,
+    "preflight_self_test_png_bytes": 0,
+    "shot_bytes": 0,
+    "total_bytes": 0
+  },
+  "evidence_lane": "logic",
+  "frames": {
+    "absent": 0,
+    "absent_reasons": {},
+    "baseline_hz": 0.0,
+    "delegated_windows": [
+      {
+        "hz": 0.5,
+        "label": "band 1 -> band 2, the arrival side of the South Bridge cut",
+        "step": "S06-12a"
+      },
+      {
+        "hz": 0.5,
+        "label": "band 2 -> band 3, exit toward the river",
+        "step": "S06-83a"
+      }
+    ],
+    "written": 0
+  },
+  "git_check": "not run",
+  "harness_errors": [],
+  "preflight": {
+    "allow_no_capture": false,
+    "boot_cost_s": 0.47,
+    "capture_available": false,
+    "capture_lane": "S06C",
+    "capture_requested": false,
+    "cost_rechecks": 897,
+    "delegated_captures": 7,
+    "display_server": "headless",
+    "evidence_lane": "logic",
+    "freeze_record": {
+      "claim": "headless (--headless, no rendering driver)",
+      "from": "ralph/reports/gate-f-run-W21-S06/RUN_METADATA.json",
+      "key": "lanes.logic.display_server",
+      "lane": "logic"
+    },
+    "measured_frame_cost_s": 0.005939,
+    "measured_frame_cost_s_in_scene": 0.016789,
+    "planned_captures": 0,
+    "predicted_frames": 163194,
+    "predicted_segment_cost_s": 969.2,
+    "predicted_segment_cost_s_in_scene": 2182.5,
+    "record_baseline_hz": 0.0,
+    "reprices": [
+      {
+        "at": "boot:title",
+        "budget_remaining_s": 14399.3,
+        "frame_cost_s": 0.006498,
+        "frames_remaining": 163161,
+        "predicted_remaining_s": 1060.7,
+        "step_index": 3,
+        "wall_spent_s": 0.7,
+        "was_frame_cost_s": 0.005939
+      },
+      {
+        "armed": "in-play sample over budget: 489341 s predicted against 14039 s left. Armed, not blocked -- an in-play price is an average over a window and a scene stand-up inside one is a construction, not a per-frame cost. The next window decides.",
+        "at": "in-play",
+        "budget_remaining_s": 14039.3,
+        "frame_cost_s": 2.999809,
+        "frames_remaining": 163124,
+        "observed_window_s": 2.999809,
+        "predicted_remaining_s": 489340.8,
+        "samples": 1,
+        "step_index": 8,
+        "wall_spent_s": 360.7,
+        "was_frame_cost_s": 0.006498
+      },
+      {
+        "armed": "in-play sample over budget: 246029 s predicted against 14037 s left. Armed, not blocked -- an in-play price is an average over a window and a scene stand-up inside one is a construction, not a per-frame cost. The next window decides.",
+        "at": "in-play",
+        "budget_remaining_s": 14037.3,
+        "frame_cost_s": 1.50823,
+        "frames_remaining": 163124,
+        "observed_window_s": 0.016652,
+        "predicted_remaining_s": 246028.6,
+        "samples": 2,
+        "step_index": 8,
+        "wall_spent_s": 362.7,
+        "was_frame_cost_s": 2.999809
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14035.3,
+        "frame_cost_s": 0.016652,
+        "frames_remaining": 163124,
+        "observed_window_s": 0.016561,
+        "predicted_remaining_s": 2716.4,
+        "samples": 3,
+        "step_index": 8,
+        "wall_spent_s": 364.7,
+        "was_frame_cost_s": 1.50823
+      }
+    ],
+    "verdict": "not required",
+    "why": "segment declares no captures and no continuous record"
+  },
+  "run_id": "gate-f-run-W21-S06",
+  "segment": "S06",
+  "sha": "01dfdc5c995bb3de920a3f79e7e4b57b9ac80d32",
+  "steps": {
+    "delegated": 11,
+    "fail": 19,
+    "pass": 106,
+    "ran": 142,
+    "refused": 0,
+    "skipped": 6,
+    "total": 142
+  },
+  "uncommittable": []
+}
