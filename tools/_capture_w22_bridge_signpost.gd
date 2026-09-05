@@ -33,6 +33,32 @@ const PARK_DISTANCE := 12.0
 const FOV := 70.0
 const DEFAULT_HORIZON := 0.30
 
+## The village square's four-arm JUNCTION signpost (`playground_world.gd`'s
+## `SIGNPOST_AT`, (13.5, -7.0)) at the distance a player actually reads one
+## from. The three stands above are trailhead posts seen from the road, where
+## a single arm is a few dozen pixels tall -- fine for "is it there", useless
+## for "is the lettering legible and does the arm read as a fingerpost". These
+## two are the reading stands the owner asked for.
+const SIGN_VIEWPOINTS := [
+	{
+		# Three metres out, eye at standing height, looking at the arm stack.
+		"name": "junction-sign-read",
+		"eye": Vector2(10.6, -7.6), "eye_h": 1.7,
+		"target": Vector2(13.5, -7.0), "target_h": 1.65,
+		"fov": 50.0,
+		"actor": Vector2(9.6, -8.4),
+	},
+	{
+		# The walk-up: six metres back on the square, the whole post in frame
+		# against the settlement behind it.
+		"name": "junction-sign-walkup",
+		"eye": Vector2(7.8, -9.2), "eye_h": 1.7,
+		"target": Vector2(13.5, -6.9), "target_h": 1.5,
+		"fov": 60.0,
+		"actor": Vector2(7.0, -9.8),
+	},
+]
+
 ## The South Bridge crossing centre is (8, 1330) with the village to the
 ## north (smaller z); the locked leaf stands at local x = -8.5 (world z =
 ## 1321.5) and the checkpoint archway half a metre nearer the village. The
@@ -92,6 +118,8 @@ func _init() -> void:
 func _viewpoints() -> Array:
 	var all: Array = []
 	for entry: Variant in SIGNPOST_TOOL.VIEWPOINTS:
+		all.append(entry)
+	for entry: Variant in SIGN_VIEWPOINTS:
 		all.append(entry)
 	for entry: Variant in BRIDGE_VIEWPOINTS:
 		all.append(entry)
