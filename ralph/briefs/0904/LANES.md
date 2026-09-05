@@ -28,3 +28,13 @@
 ## Wave 2 — 2026-09-05 01:06 UTC
 All 24 lanes hit the 5-hour session limit around 21:10–21:25 UTC; 17 had pushed partial work. Owner asked for ten Fable lanes resumed from their own context and the rest paused. Resumed via session-bound triggers: W00, W01, W04, W06, W07, W12, W13, W17, W18, W19. Paused (branches keep their partial pushes): W02, W03, W05, W08, W09, W10, W11, W14, W15, W16, W20, W21, W22, W23.
 | W24-LANDING | session_01ET2eBuXAGLAXGCf9VDvfU5 | ralph/LAND-0904-n | fable | running (landing lane, woken hourly at :00 UTC) |
+
+## Wave 3 — 2026-09-05 01:14 UTC — Opus finishers on paused lanes over half done
+| Lane | Finisher session | Branch | Model |
+|---|---|---|---|
+| W23-DIFFICULTY | session_011G7sea7KWnW1TxeJHSCzNG | ralph/W23-DIFFICULTY-0904 | opus |
+| W10-TRAINER-RULES | session_0114Ld2q5oMUr8MEcebhADPW | ralph/W10-TRAINER-RULES-0904 | opus |
+| W11-ALPHA-PINS | session_015ktwaQtArbBejtFrVHaAbR | ralph/W11-ALPHA-PINS-0904 | opus |
+| W08-DIALOGUE-CAMERA | session_01W3PYtSyEg9qrLkp7NEb4ty | ralph/W08-DIALOGUE-CAMERA-0904 | opus |
+| W22-BRIDGE-SIGNPOST | session_015gFJnm7kJjKThCfeQ1UjTx | ralph/W22-BRIDGE-SIGNPOST-0904 | opus |
+Queued for Opus finishers when Fable lanes free slots: W02, W20, W21 (all ~50%). Fable stays on the low-done lanes: W07, W12 active; W15, W03, W05, W16, W14 next as slots free. Rules for finishers: ralph/briefs/0904/FINISHER.md.
