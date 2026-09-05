@@ -1,0 +1,20 @@
+{
+  "_comment": "Stage B Wave 0 lane 0.F net harness budgets, docs/specs/MP_NET_HARNESS_CONTRACT.md §8. Read by tests/helpers/net_harness.gd::_init_budgets(); missing keys fall back to that file's own defaults, so a partial edit here is safe. Only `test_budgets` -- 2.A owns any session-related keys this file grows later.",
+  "test_budgets": {
+    "step_budget_frames": 3000,
+    "_comment_step_budget_frames": "Default per-step budget, contract §4/§6, physics frames.",
+    "hello_budget_s": 180,
+    "_comment_hello_budget_s": "Wall-clock seconds every peer has to connect and say hello after launch. Spike S2 (ralph/reports/MP-0D-SPIKE-HOSTCOST-0905/) measured a cold Meadows boot at ~85s per peer; both peers boot concurrently on one runner, so 180s is real margin, not the raw number doubled blind.",
+    "smoke_step_budget_s_2peer": 300,
+    "_comment_smoke_step_budget_s_2peer": "Wall-clock seconds of STEPS a 2-peer smoke may spend, timed from the moment launch()'s hello wait succeeds -- separate from hello_budget_s on purpose, so a slow boot cannot eat into what a smoke's own assertions need.",
+    "smoke_step_budget_s_wide": 1500,
+    "_comment_smoke_step_budget_s_wide": "Same, for 3/4-peer runs -- nightly/owner-kit only, never PR CI (contract §10); spike S2 measured four full boots at 12.85 GB, which does not fit beside PR CI on a 16 GB runner.",
+    "heartbeat_frames": 60,
+    "_comment_heartbeat_frames": "Physics frames between peer heartbeats, contract §3/§7.",
+    "desync_frames": 240,
+    "_comment_desync_frames": "Consecutive frames of no common state_hash before the desync detector fails the run, contract §7.",
+    "near_tolerance_rest_m": 1.5,
+    "near_tolerance_motion_m": 4.0,
+    "_comment_near_tolerance": "Position tolerances for the `near` assert and movement smokes, contract §8 -- provisional until 2.C measures interpolation lag."
+  }
+}

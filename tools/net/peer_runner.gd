@@ -57,6 +57,7 @@ extends SceneTree
 const GATE_F_HARNESS := preload("res://tools/gate_f/operator_harness.gd")
 const PROBE := preload("res://scripts/debug/gate_f_probe.gd")
 const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
+const SPAWN_TABLES := preload("res://scripts/combat/spawn_tables.gd")
 
 const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
@@ -69,33 +70,25 @@ const HEARTBEAT_FRAMES := 60
 ## the coordinator is not up".
 const CONNECT_BUDGET_FRAMES := 600
 
-## Contract §7: the world-save keys excluded from the desync hash because they
-## are expected to differ per peer/instant rather than agree ("player state is
-## by construction different per peer"). ONE list, in one place -- read back by
-## `tests/helpers/net_harness.gd` (by preloading this file) for NET_RUN.json,
-## rather than copied a second time there.
-const STATE_HASH_EXCLUDED_KEYS: Array[String] = ["clock_elapsed_seconds", "player_pose"]
+## Contract §7 as amended (`f090076c`, from this lane's own findings): the
+## world-save keys actually HASHED, against today's v22 save format. An
+## allowlist rather than an exclude-list on purpose -- the contract's own
+## words are "From Wave 1 the hashed set is exactly `WorldState.save_data()`
+## and the list above retires", i.e. this list is the thing that gets
+## REPLACED wholesale, not patched; keeping only what should be hashed makes
+## that swap a one-line change instead of an audit of everything NOT to hash.
+## Printed into `NET_RUN.json` by `tests/helpers/net_harness.gd` (by preloading
+## this file) rather than copied a second time there.
+const HASHED_KEYS: Array[String] = ["progression", "placed_buildings", "farm_plots",
+	"death_satchels", "harvested_vegetation", "felled_vegetation", "day"]
 
-## NOT part of the contract's own list (§7 names exactly the two keys above).
-## Added after 0.F's own verification hit a measured, reproducible flake:
-## `satiety` (`autoload/game_state.gd`) drains continuously with real elapsed
-## time, the same way `clock_elapsed_seconds` itself does -- so hashing its
-## leaf FLOAT rather than the elapsed-time input that produces it occasionally
-## catches two independently-scheduled OS processes a fraction of a second
-## apart and reads a real, harmless timing gap as a desync. Measured live on
-## two save files that agreed on every OTHER field: 99.7202222222249 vs
-## 99.7868888888909. Contract §6 already says two processes "cannot be
-## frame-locked" for a `race` step; the same fact applies to wall time between
-## any two continuously-draining stats, not only to steps.
-##
-## Flagged for the contract's owner rather than folded into
-## `STATE_HASH_EXCLUDED_KEYS` silently: `MP_NET_HARNESS_CONTRACT.md`'s own
-## rule is "fix the harness or amend this document in the same commit -- never
-## both silently", and lane 0.F does not own that file. Kept as its own
-## constant (also printed into `NET_RUN.json`, separately labelled) so the
-## deviation is visible evidence, not a quiet rewrite of §7's list -- see the
-## lane report's findings for the reconciliation this needs.
-const WAVE0_PROVISIONAL_EXCLUDED_KEYS: Array[String] = ["satiety"]
+## Contract §7's own excluded list, restated here only for `NET_RUN.json`'s
+## benefit (evidence of what was deliberately left out, not consulted by
+## `_compute_state_hash` -- that function keeps `HASHED_KEYS` and drops
+## everything else, so this list is not the mechanism, just the record).
+const EXCLUDED_KEYS: Array[String] = ["party", "inventory", "hotbar", "satiety", "map",
+	"realm_maps", "alpha_pins", "player_pose", "clock_elapsed_seconds", "current_realm",
+	"pending_realm_entry", "realm_hearts", "version"]
 
 ## A save slot outside the game's own UI range. `scripts/save/save_game.gd`'s
 ## SLOT_COUNT is 5 (slots 0..4); nothing under `scripts/ui` ever writes slot 4,
@@ -117,6 +110,9 @@ var _physics_count := 0
 ## signal or an async branch sets and a loop elsewhere reads.
 var _rx_state := {"quit": false, "quit_code": 0}
 var _held_actions := {}
+## `input_contexts.json`, expanded, loaded once and reused -- same shape
+## `operator_harness.gd::_press_guard` caches, via the same static loader.
+var _input_contexts := {}
 
 
 func _initialize() -> void:
@@ -398,16 +394,28 @@ func _press_edge(action: String, pressed: bool) -> Dictionary:
 	return {"ok": true}
 
 
-## Ported from `operator_harness.gd::_inject`: one idle frame with the control
-## held BEFORE any physics frame (every menu polls
-## `Input.is_action_just_pressed` from `_process`, which is idle), then the
-## held physics frames, then the release edge, then one more idle+physics
-## frame so a release-edge reader sees it too.
+## Adapted from `operator_harness.gd::_inject`, with one deliberate
+## divergence found and measured while fixing item 3 of the Opus review:
+## that file's own ordering puts one IDLE frame between the press and the
+## first physics frame, because every MENU it drives polls
+## `Input.is_action_just_pressed` from `_process`. Measured live here that the
+## same ordering starves a `_physics_process`-polled action instead:
+## `Input.is_action_just_pressed("jump")` read true immediately after
+## `_press_edge`, then **false** after a single `await process_frame` -- the
+## flag is scoped to the frame the event was parsed in and had already
+## expired by the time `player_controller.gd::_try_jump()`'s own
+## `_physics_process` callback ran, so `jump` silently never fired
+## (`_jump_buffered_for` never got zeroed, `try_spend_jump()` never even
+## reached). Menu focus is not yet in this file's scope (no menu step exists
+## in Wave 0's vocabulary) and every gameplay action `peer_runner.gd` drives
+## (`jump`, movement, `interact`) is read from `_physics_process`, so the
+## physics frame goes first here; if a menu-focused action needs this file
+## later, gate the idle-frame placement on the control rather than reverting
+## this wholesale.
 func _inject(action: String, frames: int) -> Dictionary:
 	var down := _press_edge(action, true)
 	if not bool(down.get("ok", false)):
 		return down
-	await process_frame
 	for i in maxi(1, frames):
 		await physics_frame
 	var up := _press_edge(action, false)
@@ -416,11 +424,30 @@ func _inject(action: String, frames: int) -> Dictionary:
 	return {"ok": bool(up.get("ok", false)), "why": str(up.get("why", ""))}
 
 
+## CL-H13, ported: `GATE_F_HARNESS._resolve_press`/`_load_input_contexts` are
+## both `static` and read only `data/config/input_contexts.json` plus the live
+## InputMap, so reusing them by preload is the same call as
+## `_physical_binding`'s -- not a second copy of the collision rule that
+## `input_contexts.json`'s own header exists to keep singular. Resolved
+## against the LIVE `input_context` every call, not cached: a fight can end
+## mid-sequence and change what a control means (see that file's own comment
+## on the same guard).
+func _press_guard(action: String) -> Dictionary:
+	if _input_contexts.is_empty():
+		_input_contexts = GATE_F_HARNESS._load_input_contexts()
+	var context := str(_probe.call("input_context"))
+	return GATE_F_HARNESS._resolve_press(action, context, "", _input_contexts)
+
+
 func _step_press(args: Dictionary) -> Dictionary:
 	var action := str(args.get("action", ""))
 	var times := int(args.get("times", 1))
 	var gap := int(args.get("gap_frames", 18))
 	for i in maxi(1, times):
+		var guard := _press_guard(action)
+		if not bool(guard.get("ok", true)):
+			return {"verdict": "ERROR", "detail": "inert press, measuring nothing: %s"
+				% str(guard.get("why", ""))}
 		var r := await _inject(action, 1)
 		if not bool(r.get("ok", false)):
 			return {"verdict": "ERROR", "detail": "press '%s' could not be injected: %s"
@@ -428,12 +455,51 @@ func _step_press(args: Dictionary) -> Dictionary:
 		if i < times:
 			for g in gap:
 				await physics_frame
+	var confirm: Dictionary = args.get("confirm", {}) as Dictionary
+	if not confirm.is_empty():
+		# Item 3 (review): a transient effect (a jump's airtime is ~14
+		# physics frames measured live, ~0.23s) cannot be caught by the
+		# COORDINATOR polling `probe` once per network round trip -- each
+		# round trip costs real wall clock the peer's own physics does not
+		# wait for, so by the time a second or third probe comes back the
+		# jump has already landed. Watched HERE instead, locally, one
+		# physics_frame per iteration with no round trip, so the window is
+		# real physics frames, not however long TCP + JSON happened to take.
+		var result := await _confirm_after_press(confirm)
+		if not bool(result.get("ok", false)):
+			return {"verdict": "FAIL", "detail": str(result.get("detail", ""))}
+		return {"verdict": "PASS", "detail": "pressed '%s' x%d; %s" % [action, times, str(result.get("detail", ""))]}
 	return {"verdict": "PASS", "detail": "pressed '%s' x%d" % [action, times]}
+
+
+## `confirm: {check, within_frames}` on a `press` step -- a same-process,
+## frame-by-frame watch for an effect the press is claimed to cause, run right
+## here rather than via repeated `probe` calls (see `_step_press`'s own
+## comment on why that would miss it). Extensible: `check` is a small `match`,
+## not a special case wired only for jump.
+func _confirm_after_press(confirm: Dictionary) -> Dictionary:
+	var check := str(confirm.get("check", ""))
+	var within := maxi(1, int(confirm.get("within_frames", 40)))
+	match check:
+		"left_floor":
+			var player := _probe.call("player") as Node3D
+			if player == null or not player.has_method("is_on_floor"):
+				return {"ok": false, "detail": "no live player (or no is_on_floor) to watch"}
+			for i in within:
+				await physics_frame
+				if not bool(player.call("is_on_floor")):
+					return {"ok": true, "detail": "left the floor %d physics frames after the press" % (i + 1)}
+			return {"ok": false, "detail": "never left the floor within %d physics frames of the press" % within}
+		_:
+			return {"ok": false, "detail": "unknown confirm check '%s'" % check}
 
 
 func _step_hold(args: Dictionary) -> Dictionary:
 	var action := str(args.get("action", ""))
 	var frames := int(args.get("frames", 0))
+	var guard := _press_guard(action)
+	if not bool(guard.get("ok", true)):
+		return {"verdict": "ERROR", "detail": "inert hold, measuring nothing: %s" % str(guard.get("why", ""))}
 	var down := _press_edge(action, true)
 	if not bool(down.get("ok", false)):
 		return {"verdict": "ERROR", "detail": "hold '%s' could not be injected: %s"
@@ -596,12 +662,29 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			return [p.x, p.y, p.z]
 		"input_context":
 			return str(_probe.call("input_context"))
+		"on_floor":
+			var floor_player := _probe.call("player") as Node3D
+			if floor_player == null or not floor_player.has_method("is_on_floor"):
+				return null
+			return bool(floor_player.call("is_on_floor"))
 		"state_hash":
 			return _compute_state_hash()
+		"world_seed":
+			# The RESOLVED seed -- what `spawn_tables.gd::resolve_seed()`
+			# actually hands every spawn lookup, honoring `TB_WORLD_SEED` --
+			# not the raw per-process roll `game_state.gd::new_game()` stores.
+			# This is what the boot smoke asserts against the pin
+			# (contract §7 amended: "asserted separately against the pin").
+			var wgame := root.get_node_or_null(^"Game")
+			if wgame == null:
+				return null
+			return int(SPAWN_TABLES.resolve_seed(int(wgame.get("world_seed"))))
 		"session":
 			# Wave 0 honesty (contract §1): no Session API exists to host/join
-			# yet, so this is a stub shape, not a fabricated peer list.
-			return {"is_server": _role == "host", "peer_id": 0, "peers": [], "realm": "meadows"}
+			# yet at all. Reviewed finding: `is_server`/`peer_id`/`realm`
+			# above were invented shape with nothing behind them; `available`
+			# is the only honest field until Wave 2.
+			return {"available": false}
 		_:
 			return null
 
@@ -615,49 +698,43 @@ func _execute_probe(msg: Dictionary) -> Variant:
 ## than re-deriving the dictionary a second way. Each peer's `user://` is
 ## already isolated by its own `XDG_DATA_HOME` (contract §2), so this can
 ## never collide with a real save slot or another peer's.
-func _compute_state_hash() -> int:
+## `null` on any failure -- NEVER `0`. `0` is a legal `hash()` output (astronomically
+## unlikely but real), so a peer that could not produce a hash at all must be
+## distinguishable from a peer whose real state happened to hash to zero. The
+## coordinator (`net_harness.gd::_handle_peer_line`) treats a `null` heartbeat
+## `state_hash` as `ERROR: state hash unavailable`, a harness fault (exit 2),
+## never as a silent "hashes agree" or a quiet desync.
+func _compute_state_hash() -> Variant:
 	var game := root.get_node_or_null(^"Game")
 	if game == null:
-		return 0
+		return null
 	var save_system: Variant = game.get("save_system")
 	if save_system == null:
-		return 0
+		return null
 	if not bool(save_system.call("save", game, HASH_SCRATCH_SLOT)):
-		return 0
+		return null
 	var path := str(save_system.call("slot_path", HASH_SCRATCH_SLOT))
 	if not FileAccess.file_exists(path):
-		return 0
+		return null
 	var f := FileAccess.open(path, FileAccess.READ)
+	if f == null:
+		return null
 	var text := f.get_as_text()
 	f.close()
 	var parsed = JSON.parse_string(text)
 	if typeof(parsed) != TYPE_DICTIONARY:
-		return 0
-	var data: Dictionary = parsed
-	for k in STATE_HASH_EXCLUDED_KEYS:
-		data.erase(k)
-	for k in WAVE0_PROVISIONAL_EXCLUDED_KEYS:
-		data.erase(k)
-	# Wave 0 has no Session to negotiate a shared seed yet (contract §1):
-	# `data/config/spawn_tables.json`'s `roll_new_worlds` ships true (owner
-	# directive D-0830-1), so a fresh New Game rolls its own `world_seed` at
-	# random per process. `tests/helpers/net_harness.gd::_spawn_peer` pins
-	# every peer in a run to the SAME `TB_WORLD_SEED`, but
-	# `spawn_tables.gd::resolve_seed()`'s own docstring is explicit that the
-	# override applies "at the point of use", not to the raw value
-	# `game_state.gd::new_game()` rolls and stores -- so the two peers' saved
-	# `world_seed` genuinely differ (measured live: 490178442 vs 736055304)
-	# even though everything that field's roll actually FEEDS (every spawn
-	# table lookup) already resolves identically via the pinned override --
-	# confirmed live: with the pin in place, `world_seed` was the ONLY key
-	# that ever differed between two independently-booted peers. Normalizing
-	# it here, for hashing only, says "the value every peer is actually
-	# resolving to" rather than "which process's RNG happened to roll it",
-	# without touching the live Game node or the save a player would load.
-	if data.has("world_seed"):
-		var pinned := OS.get_environment("TB_WORLD_SEED").strip_edges()
-		if not pinned.is_empty() and pinned.is_valid_int():
-			data["world_seed"] = int(pinned)
+		return null
+	var full: Dictionary = parsed
+	# Allowlist, not exclude-list -- see HASHED_KEYS's own comment. `world_seed`
+	# is not in either list: contract §7 (amended) says it is ERASED from the
+	# hashed dictionary entirely and asserted separately against the pin
+	# (`probe world_seed`, resolved through `spawn_tables.gd::resolve_seed()`
+	# so it reads what every peer's spawns actually use, not the raw per-process
+	# roll `game_state.gd::new_game()` stores -- see that probe's own comment).
+	var data := {}
+	for k in HASHED_KEYS:
+		if full.has(k):
+			data[k] = full[k]
 	return hash(JSON.stringify(data, "", true))
 
 
