@@ -241,3 +241,70 @@ rather than assigning the position once, so "the node never ticked" and "somethi
 the body back" cannot be confused, and it cross-checks with a hand-driven `tick()` so a
 failure says whether the logic or the processing is at fault.
 
+### The blind judge
+
+A sub-agent was spawned with the Agent tool (model `opus`) and given **only** the frame,
+`docs/reference/` and `.claude/skills/visual-judge/SKILL.md`. It was told nothing about
+what had changed, what the mark was, or what verdict was wanted — it was asked to say
+whether it could find a distinct point-of-interest mark *without being told where to look*,
+and whether that mark was legible. Its verdict, recorded as given:
+
+> Scanning the frame, the one thing that jumps out of an otherwise entirely cyan-and-slate
+> screen is the salmon-red word pair **ALPHA TRAILPUP**, roughly at frame centre […]
+> Every warm pixel in the image — 2,107 of 1,024,000 — falls in a single band […]
+>
+> And critically: **the pin itself is not the warm mark.** At pixel zoom the pin is a cyan
+> teardrop, core RGB(54,214,203), inside a white ring. […]
+>
+> **The text: yes, readable** […] Brightest glyph pixels are RGB(231,96,91), which is
+> 5.22:1 against the panel field — comfortably readable at 1280×800. It reads clearly at
+> 35% scale too.
+>
+> **The icon: no.** […] Its dominant colour is cyan — the same cyan as the active-tab
+> underline […] The "A" of ALPHA TRAILPUP physically overlaps the pin's white ring.
+
+**The judge is right about what is in the frame and wrong about the cause, and the cause is
+mine.** I measured the same pixels rather than take either reading on trust:
+
+```
+top colours around the marker (55x55 px window):
+  (5,5,7)         x1190   the surveyed corridor
+  (54,214,203)    x122    cyan
+  (68,32,32)      x61     UITokens.DANGER.darkened(0.35) — the alpha plate
+  (108,49,48)     x49     the same plate, lit edge
+  (242,245,242)   x38     alpha.png's own glyph colour
+```
+
+The dark-red plate **is** there — `(68,32,32)` and `(108,49,48)` are
+`UITokens.DANGER.darkened(0.35)`, drawn by the one branch in `tab_map.gd::_draw_icon()`
+that only alpha markers take. The cyan teardrop sitting on top of it is the **player
+marker**: `tab_map.gd::_draw_map()` calls `_draw_player()` *after* the icon pass, and the
+capture had the player standing 120 m from the pin — which at the whole-Meadows fit is
+about **seven pixels**. The player marker covered the alpha glyph, and the judge, correctly
+describing what it saw, read the covering mark as the pin and concluded the pin had no
+distinct silhouette. It also concluded the screen has "no player-position marker", which is
+the same fact from the other side.
+
+So the judge's finding is real as a *frame* defect and is not evidence about the icon. The
+capture now walks the player 850 m back down the corridor before opening the map, which
+separates the two marks by roughly 50 px — and is better evidence anyway, because the
+directive's whole point is that the pin stays after the player leaves.
+
+**Judge findings that stand and are NOT this lane's to fix** (recorded for the coordinator;
+every one of them is about the map screen this lane only added a marker to):
+
+* Fog is inverted — the surveyed corridor renders at RGB(5,5,7), *darker* than the
+  unexplored field at RGB(17,26,31), and the two differ by only 1.16:1. The ground the
+  player earned is the blackest thing on screen. This is the single largest defect on the
+  screen and it is `tab_map.gd`'s fog pass, not the pin.
+* The map legend draws every entry as a near-identical pale glyph, so the new *Alpha* row
+  teaches nothing next to *Grandpa's House*. Legend swatches should be the marker art at
+  the colour and size it actually draws.
+* Two typefaces on one screen: the panel chrome is a humanist sans, everything drawn
+  *inside* the map canvas is a condensed techno face.
+* The DISCOVERED REGIONS / DESTINATIONS columns are drawn onto the map canvas with no
+  container; at 3% surveyed they miss the terrain, at 40% they will not.
+* No north indicator, no scale bar, and the footer sandwiches the legend between two
+  control-hint rows so it reads as a third row of keybinds.
+* Zoom is bound to `[Minus]`/`[Equal]` with no pad binding, on a controller-first project.
+
