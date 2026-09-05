@@ -185,9 +185,14 @@ Exit codes mirror Gate F and the unit runner: `0` all checks passed; `1` a check
 
 Every heartbeat each peer sends `state_hash`: the FNV/`hash()` of
 `JSON.stringify(<world save dictionary>, "", true)` with the fast-changing keys removed
-(`clock_elapsed_seconds`, `player_pose`, and every per-player key — the detector compares
-**world** state, which every peer must agree on; player state is by construction different per
-peer). Before Wave 1 lands the dictionary is `Game.save_system.save()`'s; from Wave 1 it is
+(`clock_elapsed_seconds`, `player_pose`, `satiety`, and every per-player key — the detector
+compares **world** state, which every peer must agree on; player state is by construction
+different per peer, and `satiety` drains with wall time like the clock does). **`world_seed` is
+pinned**: `spawn_tables.json`'s `roll_new_worlds` gives every independent boot a random seed, so
+the coordinator sets one `TB_WORLD_SEED` for every peer in a run (default `"0"`) and the peer
+normalises the saved field to it for hashing only. Both amendments come from lane 0.F's real
+runs (`ralph/reports/MP-0F-NET-HARNESS-0905/`); from Wave 2 the seed is the host's and arrives
+in the handshake, and the pin becomes a harness convenience rather than a correctness patch. Before Wave 1 lands the dictionary is `Game.save_system.save()`'s; from Wave 1 it is
 `WorldState.save_data()`; the key exclusion list lives in one place in the harness and is
 printed in `NET_RUN.json`.
 
