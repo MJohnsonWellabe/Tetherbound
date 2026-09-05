@@ -166,7 +166,7 @@ func _walk_the_stair() -> void:
 	var bed: Vector3 = _house.call("marker", "bed")
 	print("  start: %s" % str(_player.global_position.snapped(Vector3.ONE * 0.01)))
 
-	if not await _hold_toward("stair foot", bottom, 420, 1.0):
+	if not await _hold_toward("stair foot", bottom, 900, 0.45):
 		_failures.append("a body holding the stick at the stair foot never arrived")
 	# Held at the stair head until the body is actually ON the loft slab --
 	# a horizontal-distance arrival fires halfway up the flight, which is how
