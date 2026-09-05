@@ -178,4 +178,4 @@ screenshot.
 ## Final commit and branch
 
 Branch: `ralph/W14-RIDING-0904`
-Commit: `9a91e0be` (`fix(riding): the smoke test's own relocation was driving into a low roof`) plus the render/report commit that follows.
+Final commit: `ee37c7a8` (`docs(riding): the lane report, and a camera-framing note for the capture tool`)
