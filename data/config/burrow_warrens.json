@@ -12,6 +12,8 @@
     "yaw_deg": 315.0,
     "_comment_clear_radius": "BAND2-63-WARRENS. Matches the authored clearing in bands/band2_stone_and_root/vegetation.json (order 2002) and is applied at BUILD time by burrow_warrens.gd::_clear_the_ground_the_cave_stands_on(), because that authored clearing cannot take effect until the coordinator re-bakes (GATE_D_LANE_CONTRACT.md sec4) and until then the stale bake stands a tree in the doorway. Keep the two numbers the same: when the re-bake lands, the runtime pass has nothing left to remove and this becomes a no-op rather than a second, disagreeing opinion about where the wood stops.",
     "clear_radius_m": 30.0,
+    "_comment_hero_clear_radius": "THIRD-PASS-0906, JUDGE-round2.md 'the red tree': a CherryBlossom_3 hero tree from the band scatter (data/config/vegetation.json's own `grove.heroes`/`water_edge` layers, per this file's own `_comment_crest_trees_second_pass`) stands within ~25m of the mouth and out-competes it for the eye in every exterior frame. `clear_radius_m` above stays 30 because it is synced to the AUTHORED clearing in bands/band2_stone_and_root/vegetation.json (that comment's own 'keep the two numbers the same' rule) -- this is a SEPARATE, wider, general clear (not species-filtered: `vegetation.gd::clear_area()` has no species hook and adding one for one hero tree is not this pass's to build) applied ADDITIONALLY by `_clear_the_ground_the_cave_stands_on()`, so the 30m number that has to agree with the band file is untouched. 55m covers the judge's own '~25m' sighting with margin. 0 disables.",
+    "hero_clear_radius_m": 55.0,
     "_comment_apron_fan": "EXT-04-APRON, judge evidence '04-warrens-approach reads as a flat grey rock pile on lawn'. `burrow_warrens.gd::_build_approach_apron()`'s own worn-dirt ramp used one fixed width (first passage width + 1.6, ~4.6m) top to bottom -- barely wider than the doorway, so grass ran to within a metre of the mound's own boulders either side of the walk and the burrow read as sitting ON the lawn rather than IN it. A trodden apron at a real den mouth fans: feet spread wide right at the threshold and narrow into one line further off. `apron_mouth_width_m` is that wide end, at the doorway; `apron_far_width_m` is the narrow end, six metres out, and is deliberately the OLD fixed value so the far end of the ramp is unchanged. The grass-clear radius scales with the wider end automatically (`_build_approach_apron()`'s own comment). ALL TUNABLE.",
     "apron_mouth_width_m": 8.0,
     "apron_far_width_m": 4.6,
@@ -183,11 +185,11 @@
     "throat_tint": "#241a12",
     "_why_throat_curve": "SECOND-PASS-0906: the tube's OWN walls bend sideways partway along its length (`_throat_curve_offset()`'s own header has the full mechanism) -- zero at both ends, so neither the fixed exterior arch nor the fixed interior doorway move. Kept under `arch_width_m`'s own half-width (2.5m) by design so the walk corridor's own centreline never leaves the tube's interior; only the far side of the bend, away from a walking player's own line, ever crosses a wall. 0 disables (a straight tube, the old shape).",
     "throat_curve_amplitude_m": 1.6,
-    "_why_lip": "A raised earth lip ring around the opening -- an extruded tube along the arch's own profile, jittered (`lip_jitter_m`) so it reads as dug rather than a mathematically perfect ellipse.",
-    "lip_thickness_m": 0.6,
-    "lip_jitter_m": 0.12,
-    "_why_collar": "SECOND-PASS-0906, brief item 3: 'end it in an earth collar that wraps the mouth chamber's doorway box so no grey box edge or metal frame is visible'. `_build_bank_doorway_collar()`'s own twin of the lip ring above, at the throat's INNER end instead of the outer -- sized a hair larger than the arch so it hugs OVER the structural doorway box's own edges.",
-    "collar_thickness_m": 0.8,
+    "_why_lip": "A raised earth lip ring around the opening -- an extruded tube along the arch's own profile, jittered (`lip_jitter_m`) so it reads as dug rather than a mathematically perfect ellipse. THIRD-PASS-0906, JUDGE-round2.md sec3 item 3 ('make the lip ring chunkier and irregular'): thickness 0.6->0.9 and jitter 0.12->0.25 (now applied radially as well as vertically, `_build_bank_lip_ring()`'s own comment), plus the tube's own per-segment radius variance widened to +/-35%.",
+    "lip_thickness_m": 0.9,
+    "lip_jitter_m": 0.25,
+    "_why_collar": "SECOND-PASS-0906, brief item 3: 'end it in an earth collar that wraps the mouth chamber's doorway box so no grey box edge or metal frame is visible'. `_build_bank_doorway_collar()`'s own twin of the lip ring above, at the throat's INNER end instead of the outer -- sized a hair larger than the arch so it hugs OVER the structural doorway box's own edges. THIRD-PASS-0906: thickness 0.8->1.0, same chunkier/irregular treatment as the lip ring.",
+    "collar_thickness_m": 1.0,
     "_why_material": "The bank's own material (`shaders/earth_bank.gdshader`): a slope+height blend between the meadow's own grass texture (gentle upper surfaces, so the bank reads as a grassy hump continuous with the field) and the terrain's own wet-earth texture (steep and low surfaces). `grass_tint` matches the terrain's own grass tint exactly (terrain_playground.json); `earth_tint` stays near-white for the same reason that file's own `damp` entry does -- the wet-earth photo already carries its target colour, a tint would only wash it out. `earth_colour` (below) is a SEPARATE, deliberately darker multiply used by the small hand-placed earth props beside the mouth (lip, warren-hole lips, half-buried stones' collar, spoil), which sit in shadow close to the camera rather than lit broadly like the bank's own crest.",
     "grass_tint": "#e9dfc0",
     "earth_tint": "#f0ece4",
@@ -321,84 +323,97 @@
         "_why": "over the vault chamber's own bulge, far side of the site from the mouth"
       }
     ],
-    "_comment_roots": "Roots over the mouth and out of the dug face -- tapered tubes wearing the installed TwistedTree bark photo (no new asset). Local offsets on the dug face; `droop_deg` measured from straight down.",
+    "_comment_roots": "Roots over the mouth and out of the dug face -- tapered tubes wearing the installed TwistedTree bark photo (no new asset). Local offsets on the dug face; `droop_deg` measured from straight down. THIRD-PASS-0906, JUDGE-round2.md sec3 item 2 ('two exposed root masses ... bursting from the face beside the mouth'): the previous 12 entries were thin (radius 0.06-0.16) and mostly spread across the whole face/flank, so nothing read as a MASS. Replaced with two explicit 5-tube clusters flanking the mouth, outside the arch's own half-width (`arch_width_m`*0.5+`arch_margin_m`=3.1) so they sit on solid dug face rather than in the open throat, at roughly double the old radius (0.13-0.26) so each cluster reads as one torn-open root mass rather than five separate sticks. The two thin 'snagged over the top' roots the judge specifically liked (near the crest, further out at z=-5.8/-6.2) are kept verbatim.",
     "roots": [
       {
-        "offset": [
-          -2.0,
-          -3.2
-        ],
-        "length_m": 2.8,
-        "radius_m": 0.14,
-        "bends": 3,
-        "yaw_deg": -10.0,
-        "droop_deg": 60.0
-      },
-      {
-        "offset": [
-          2.4,
-          -2.8
-        ],
-        "length_m": 3.2,
-        "radius_m": 0.12,
-        "bends": 3,
-        "yaw_deg": 15.0,
-        "droop_deg": 55.0
-      },
-      {
-        "offset": [
-          0.0,
-          -4.6
-        ],
-        "length_m": 2.2,
-        "radius_m": 0.1,
-        "bends": 2,
-        "yaw_deg": 0.0,
-        "droop_deg": 70.0
-      },
-      {
-        "offset": [
-          -4.2,
-          -0.8
-        ],
-        "length_m": 1.8,
-        "radius_m": 0.08,
-        "bends": 2,
-        "yaw_deg": -35.0,
-        "droop_deg": 50.0
-      },
-      {
-        "offset": [
-          4.6,
-          -0.4
-        ],
-        "length_m": 2.0,
-        "radius_m": 0.09,
-        "bends": 2,
-        "yaw_deg": 40.0,
-        "droop_deg": 52.0
-      },
-      {
-        "offset": [
-          -6.4,
-          2.4
-        ],
+        "offset": [-8.8, -1.0],
         "length_m": 3.4,
-        "radius_m": 0.16,
+        "radius_m": 0.22,
         "bends": 3,
-        "yaw_deg": -60.0,
-        "droop_deg": 65.0
+        "yaw_deg": -70.0,
+        "droop_deg": 58.0,
+        "_why": "left root mass, tube 1 of 5"
       },
       {
-        "offset": [
-          6.8,
-          2.8
-        ],
+        "offset": [-7.6, -2.6],
         "length_m": 3.0,
-        "radius_m": 0.13,
+        "radius_m": 0.2,
         "bends": 3,
-        "yaw_deg": 55.0,
-        "droop_deg": 62.0
+        "yaw_deg": -50.0,
+        "droop_deg": 55.0,
+        "_why": "left root mass, tube 2 of 5"
+      },
+      {
+        "offset": [-6.4, -0.6],
+        "length_m": 2.6,
+        "radius_m": 0.17,
+        "bends": 2,
+        "yaw_deg": -85.0,
+        "droop_deg": 60.0,
+        "_why": "left root mass, tube 3 of 5"
+      },
+      {
+        "offset": [-5.6, -3.4],
+        "length_m": 2.8,
+        "radius_m": 0.15,
+        "bends": 2,
+        "yaw_deg": -30.0,
+        "droop_deg": 65.0,
+        "_why": "left root mass, tube 4 of 5"
+      },
+      {
+        "offset": [-8.0, -4.2],
+        "length_m": 2.2,
+        "radius_m": 0.13,
+        "bends": 2,
+        "yaw_deg": -110.0,
+        "droop_deg": 62.0,
+        "_why": "left root mass, tube 5 of 5"
+      },
+      {
+        "offset": [8.8, -1.0],
+        "length_m": 3.4,
+        "radius_m": 0.22,
+        "bends": 3,
+        "yaw_deg": 70.0,
+        "droop_deg": 58.0,
+        "_why": "right root mass, tube 1 of 5"
+      },
+      {
+        "offset": [7.6, -2.6],
+        "length_m": 3.0,
+        "radius_m": 0.2,
+        "bends": 3,
+        "yaw_deg": 50.0,
+        "droop_deg": 55.0,
+        "_why": "right root mass, tube 2 of 5"
+      },
+      {
+        "offset": [6.4, -0.6],
+        "length_m": 2.6,
+        "radius_m": 0.17,
+        "bends": 2,
+        "yaw_deg": 85.0,
+        "droop_deg": 60.0,
+        "_why": "right root mass, tube 3 of 5"
+      },
+      {
+        "offset": [5.6, -3.4],
+        "length_m": 2.8,
+        "radius_m": 0.15,
+        "bends": 2,
+        "yaw_deg": 30.0,
+        "droop_deg": 65.0,
+        "_why": "right root mass, tube 4 of 5"
+      },
+      {
+        "offset": [8.0, -4.2],
+        "length_m": 2.2,
+        "radius_m": 0.13,
+        "bends": 2,
+        "yaw_deg": 110.0,
+        "droop_deg": 62.0,
+        "_why": "right root mass, tube 5 of 5"
       },
       {
         "offset": [
@@ -409,7 +424,8 @@
         "radius_m": 0.07,
         "bends": 2,
         "yaw_deg": -5.0,
-        "droop_deg": 75.0
+        "droop_deg": 75.0,
+        "_why": "thin stick snagged over the top -- JUDGE-round2.md liked this pair, kept as-is"
       },
       {
         "offset": [
@@ -420,43 +436,11 @@
         "radius_m": 0.06,
         "bends": 2,
         "yaw_deg": 5.0,
-        "droop_deg": 78.0
-      },
-      {
-        "offset": [
-          -8.6,
-          4.6
-        ],
-        "length_m": 3.6,
-        "radius_m": 0.15,
-        "bends": 3,
-        "yaw_deg": -90.0,
-        "droop_deg": 58.0
-      },
-      {
-        "offset": [
-          8.8,
-          5.0
-        ],
-        "length_m": 3.4,
-        "radius_m": 0.14,
-        "bends": 3,
-        "yaw_deg": 85.0,
-        "droop_deg": 60.0
-      },
-      {
-        "offset": [
-          0.0,
-          6.2
-        ],
-        "length_m": 2.6,
-        "radius_m": 0.1,
-        "bends": 2,
-        "yaw_deg": 180.0,
-        "droop_deg": 68.0
+        "droop_deg": 78.0,
+        "_why": "thin stick snagged over the top -- kept as-is"
       }
     ],
-    "_comment_claw_scrapes": "Thin dark claw-scrape decals beside the main mouth -- quads standing slightly proud of the dug-face surface. Local offsets.",
+    "_comment_claw_scrapes": "Thin dark claw-scrape decals beside the main mouth -- quads standing slightly proud of the dug-face surface. Local offsets. THIRD-PASS-0906, JUDGE-round2.md sec3 item 4 ('scatter ... two claw scrapes across it [the trodden threshold]'): the last two entries sit further out, on the flatter walked apron rather than the steep dug face (`_bank_height_at()` reads ~0 there, so `_build_claw_scrapes()`'s own surface-normal placement lays them flat against the ground like a real drag mark), longer and wider than the face-mounted scrapes to read at walking distance.",
     "claw_scrapes": [
       {
         "offset": [
@@ -502,6 +486,20 @@
         "yaw_deg": 30.0,
         "width_m": 0.1,
         "length_m": 1.3
+      },
+      {
+        "offset": [-1.6, -4.2],
+        "yaw_deg": -18.0,
+        "width_m": 0.14,
+        "length_m": 1.8,
+        "_why": "on the trodden threshold, not the face"
+      },
+      {
+        "offset": [1.2, -5.0],
+        "yaw_deg": 24.0,
+        "width_m": 0.13,
+        "length_m": 1.6,
+        "_why": "on the trodden threshold, not the face"
       }
     ],
     "_comment_crest_trees": "Two DeadTree leaning on the crest and one TwistedTree at the bank's own shoulder, so the site reads as a dark-mouthed hill with a tree on it from the approach road (~60m out). Local offsets, seated on the bank's own analytic surface.",
@@ -624,29 +622,99 @@
         "_why": "the back foot, beyond the den -- the far side of the site from the mouth"
       }
     ],
-    "_comment_spoil_mounds": "EXT-07-EARTHWORK item 3, kept: squashed earth heaps below the mouth -- the dug-out material a burrow would throw up. Local offsets, in front of the throat.",
+    "_comment_face_outcrops": "THIRD-PASS-0906, JUDGE-round2.md sec3 item 2: 'no rock outcrop breaking the slope ... the whole bank is one flat khaki-brown value from base to crest'. `accent_boulders` above only ever sits at the FOOT (flat meadow terrain); these sit ON the bank's own sculpted surface (`_build_bank_face_outcrops()`) and are sunk 40-60% of scale INTO it along the surface normal, so they read as protruding from the dug face and flanks rather than dropped beside them. 7 pieces, within the brief's own 6-9.",
+    "face_outcrops": [
+      {
+        "model": "Rock_Medium_1",
+        "offset": [-7.5, -2.0],
+        "scale": 1.6,
+        "yaw_deg": 35.0,
+        "sink_m": 0.75,
+        "_why": "left of the mouth, on the dug face itself"
+      },
+      {
+        "model": "Rock_Medium_2",
+        "offset": [7.2, -1.5],
+        "scale": 1.5,
+        "yaw_deg": -40.0,
+        "sink_m": 0.7,
+        "_why": "right of the mouth, mirrors the left face outcrop"
+      },
+      {
+        "model": "Rock_Medium_3",
+        "offset": [-4.6, -5.4],
+        "scale": 1.3,
+        "yaw_deg": 100.0,
+        "sink_m": 0.6,
+        "_why": "lower on the left face, near the foot"
+      },
+      {
+        "model": "Rock_Medium_1",
+        "offset": [5.0, -5.0],
+        "scale": 1.4,
+        "yaw_deg": -110.0,
+        "sink_m": 0.65,
+        "_why": "lower on the right face, near the foot"
+      },
+      {
+        "model": "Rock_Medium_2",
+        "offset": [-9.0, 3.0],
+        "scale": 1.2,
+        "yaw_deg": 60.0,
+        "sink_m": 0.55,
+        "_why": "left shoulder, close to the mouth"
+      },
+      {
+        "model": "Rock_Medium_3",
+        "offset": [-15.0, 10.0],
+        "scale": 2.0,
+        "yaw_deg": -20.0,
+        "sink_m": 0.9,
+        "_why": "left flank, near the warren chamber's own bulge"
+      },
+      {
+        "model": "Rock_Medium_1",
+        "offset": [14.0, 14.0],
+        "scale": 1.9,
+        "yaw_deg": 140.0,
+        "sink_m": 0.85,
+        "_why": "right flank, near the hall's own bulge"
+      }
+    ],
+    "_comment_spoil_mounds": "EXT-07-EARTHWORK item 3, kept: squashed earth heaps below the mouth -- the dug-out material a burrow would throw up. Local offsets, in front of the throat. THIRD-PASS-0906, JUDGE-round2.md sec3 item 4 ('the mouth's spoil fan spills onto it [the threshold]'): offsets moved inward from z=-8.2/-7.6 (just past the apron's own outer edge, `site.apron_run_m`=7.5) to z=-5.8/-5.2 (inside it), scale/squash widened so the spill visibly reaches across the trodden ground rather than stopping just short of it. No collider (unchanged), so overlapping the walk apron's own footprint is not a walkability concern.",
     "spoil_mounds": [
       {
         "model": "Rock_Medium_2",
         "offset": [
-          -4.6,
-          -8.2
+          -4.8,
+          -5.8
         ],
-        "scale": 2.6,
-        "squash_y": 0.4,
+        "scale": 2.9,
+        "squash_y": 0.36,
         "yaw_deg": -12.0
       },
       {
         "model": "Rock_Medium_1",
         "offset": [
-          5.1,
-          -7.6
+          5.2,
+          -5.2
         ],
-        "scale": 2.4,
-        "squash_y": 0.42,
+        "scale": 2.7,
+        "squash_y": 0.38,
         "yaw_deg": 22.0
       }
     ],
+    "_comment_rubble": "THIRD-PASS-0906, JUDGE-round2.md sec3 items 2/4: loose rubble (`_build_bank_rubble()`) -- small pebbles and worn path stones -- scattered at the foot of the dug face, around each spoil fan, and across the trodden threshold, so the ground in front of the mouth reads as disturbed dirt rather than swept flagstone. 26 pieces, within the brief's own 20-30.",
+    "rubble_models": [
+      "res://assets/environment/stylized_nature/Pebble_Round_1.gltf",
+      "res://assets/environment/stylized_nature/Pebble_Round_2.gltf",
+      "res://assets/environment/stylized_nature/Pebble_Round_3.gltf",
+      "res://assets/environment/stylized_nature/RockPath_Round_Small_1.gltf",
+      "res://assets/environment/stylized_nature/RockPath_Round_Small_2.gltf"
+    ],
+    "rubble_count": 26,
+    "rubble_scale": [0.18, 0.42],
+    "rubble_sink_m": 0.05,
     "_comment_skirt": "The site skirt's flora/rock split (`_build_site_skirt()`), unchanged in shape -- now reads its own numbers from `bank` instead of the removed `mound`. `skirt_sink_min_m`/`skirt_sink_m` raised so the rock half shares the half-buried treatment the foot boulders above get.",
     "skirt_rock_models": [
       "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
@@ -1089,7 +1157,8 @@
     "name": "Warren Guardian",
     "nickname": "Warren Guardian",
     "_comment_scale_second_pass": "SECOND-PASS-0906, judge evidence 'the guardian is dog-sized... roughly a third to a half the size it needs to be' (against the den doorway and the implied 1.80m trainer). 1.35 -> 1.7 per CLAUDE.md's own scale directive (creatures stand taller than the 1.80m trainer; grow the smaller side, never shrink the other). At 1.7x, burrowback's own placeholder height (1.7m, data/creatures/species.json) puts the guardian's body at 2.89m -- 1.6x the trainer -- and `tests/smoke_warrens.gd::_the_population_and_the_guardian_are_placed()` asserts `body_height()` against this exact number, so a future retune of either value is caught automatically. Checked against the hall->den passage it wanders near (`passages` above: 3.2m wide x 3.4m high): 2.89m clears the 3.4m ceiling by 0.51m and the guardian's own scaled radius (0.616 x 1.7 = 1.05m, 2.1m across) clears the 3.2m width with room either side.",
-    "scale": 1.7,
+    "_comment_scale_third_pass": "THIRD-PASS-0906, JUDGE-round2.md sec 'guardian scale': 'the guardian does not read as a threat... shoulder height is roughly a third of the doorway height and only modestly taller than the crate... smaller than the trainer ruler this project uses'. 1.7 -> 1.9, still growing the smaller side per CLAUDE.md. At 1.9x the body is 1.7*1.9=3.23m (1.79x the 1.80m trainer, up from 1.6x) and the scaled radius is 0.616*1.9=1.17m (2.34m across). Checked against the SAME hall->den passage (3.2m wide x 3.4m high, the tightest space it can reach while wandering -- the gated den->vault passage is narrower still, but it is shut until the guardian is already gone and never has to fit a live guardian through it): 3.23m clears the 3.4m ceiling by 0.17m and 2.34m clears the 3.2m width with 0.43m either side. The den's own ceiling (4.8m) and `guardian.wander_radius` (1.5m, keeps it inside the den) are both comfortably clear.",
+    "scale": 1.9,
     "signature_move": "earth_fist",
     "wander_radius": 1.5,
     "glow_energy": 1.2,

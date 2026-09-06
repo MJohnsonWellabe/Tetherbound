@@ -80,6 +80,7 @@ func _run() -> void:
 	_the_crest_reads_as_a_landmark(warrens)
 	_the_mouth_frontage_has_no_flat_slab_edge(warrens)
 	_the_throat_is_at_least_8m_and_hides_the_interior(world, warrens)
+	_the_hero_clear_radius_is_wide_enough_for_the_red_tree()
 
 	_finish()
 
@@ -406,6 +407,38 @@ func _the_throat_is_at_least_8m_and_hides_the_interior(world: Node, warrens: Nod
 	if not earth_names.has(owner_name):
 		_fail(("the off-centre throat ray was stopped by '%s', not one of the throat's own earth pieces %s -- " +
 			"it is hitting a structural wall, meaning the curve is not actually occluding it") % [owner_name, str(earth_names)])
+
+
+## THIRD-PASS-0906, JUDGE-round2.md sec3 item 5 ("the red tree"): a
+## CherryBlossom hero tree from the band scatter stands close enough to the
+## mouth to steal the eye in every exterior frame; the fix is
+## `site.hero_clear_radius_m`, a wider general clear
+## (`_clear_the_ground_the_cave_stands_on()`) applied at build time in
+## addition to the existing `clear_radius_m`. This FIXTURE's own `FlatWorld`
+## has no `Vegetation` node and therefore no scatter to count a CherryBlossom
+## instance against (the brief's own fallback for exactly this case) -- what
+## it CAN and does assert is that the config value itself is wide enough to
+## reach a hero tree the judge measured at ~25m out, with margin, and that it
+## is strictly wider than the ordinary `clear_radius_m` (otherwise it is a
+## no-op, not a fix).
+func _the_hero_clear_radius_is_wide_enough_for_the_red_tree() -> void:
+	var file := FileAccess.open("res://data/config/burrow_warrens.json", FileAccess.READ)
+	if file == null:
+		_fail("burrow_warrens.json will not open (hero clear radius check)")
+		return
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		_fail("burrow_warrens.json did not parse as an object (hero clear radius check)")
+		return
+	var site: Dictionary = (parsed as Dictionary).get("site", {})
+	var base_radius := float(site.get("clear_radius_m", 0.0))
+	var hero_radius := float(site.get("hero_clear_radius_m", 0.0))
+	print("[fixture] hero clear radius: %.0fm (base clear_radius_m %.0fm) -- no scatter in this flat fixture to count a CherryBlossom against, asserting the config value only" % [
+		hero_radius, base_radius])
+	if hero_radius < 50.0:
+		_fail("site.hero_clear_radius_m is %.0fm; the judge measured the red tree at ~25m out and asked for enough margin to clear it -- expected >=50m" % hero_radius)
+	if hero_radius <= base_radius:
+		_fail("site.hero_clear_radius_m (%.0fm) is not wider than site.clear_radius_m (%.0fm); it would be a no-op on top of the existing clearing" % [hero_radius, base_radius])
 
 
 func _finish() -> void:

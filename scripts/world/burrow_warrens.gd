@@ -293,7 +293,9 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null, director
 	_build_bank_roots_and_scrapes()
 	_build_bank_crest_trees()
 	_build_accent_boulders()
+	_build_bank_face_outcrops()
 	_build_spoil_mounds()
+	_build_bank_rubble()
 	_dress_mound_with_growth()
 	_tag_exterior_children(exterior_from)
 	_build_deposits()
@@ -508,11 +510,28 @@ func _floor_material(exterior := false) -> StandardMaterial3D:
 	# fixing the sandiness. 0.42 reads as packed dirt DARKER than the wall
 	# above it without emptying the histogram -- between round 2's beach and
 	# round 3's hole.
-	m.albedo_color = (_apron_colour() if exterior else _floor_colour()).lerp(
+	var albedo := (_apron_colour() if exterior else _floor_colour()).lerp(
 		ROCK_TINT, 0.05 if exterior else 0.42)
+	# THIRD-PASS-0906, JUDGE-round2.md sec3 item 4 ("the apron in front of the
+	# mouth reads as pale flagstone"): darken the dirt_path material the
+	# exterior branch above already swapped in (comment just above), toward
+	# genuinely disturbed dirt rather than a sunlit paved path -- 0.55x per
+	# the brief, with a small warm boost (R up, B down) so it darkens toward
+	# earth rather than toward flat grey. The INTERIOR floor (chamber floors,
+	# `_floor_colour()`) is untouched -- OP-0905-09's own verdict on that
+	# branch stands.
+	if exterior:
+		albedo = Color(albedo.r * 0.55 * 1.08, albedo.g * 0.55, albedo.b * 0.55 * 0.92, albedo.a)
+	m.albedo_color = albedo
 	m.normal_enabled = true
 	m.normal_texture = DIRT_PATH_NORMAL if exterior else FLOOR_NORMAL
-	m.normal_scale = 1.8
+	# THIRD-PASS-0906: a stronger normal scale on the exterior branch is this
+	# StandardMaterial's own proxy for "roughen it" -- it has no shader hook
+	# for the bank's own macro noise mask, so exaggerating the installed dirt
+	# photo's own bump depth is what is available here; the rubble/claw-scrape
+	# geometry scattered across this same ground (`_build_bank_rubble()`,
+	# `claw_scrapes`) does the rest of that job.
+	m.normal_scale = 2.4 if exterior else 1.8
 	m.uv1_triplanar = true
 	m.uv1_scale = Vector3.ONE * FLOOR_UV_SCALE
 	if exterior:
@@ -678,6 +697,36 @@ func _opening_on(chamber_id: String, side: String) -> Dictionary:
 			return {"width": float(own[0]), "height": float(own[1])}
 		return {"width": float(first.get("width", 3.0)), "height": float(first.get("height", 3.0))}
 	return {}
+
+
+## The world-independent LOCAL centre of the passage opening between two named
+## chambers, in the same (mid, lateral) construction `_build_passages()`
+## already does for the wall cut itself -- duplicated rather than read back
+## off `_doorways` because that array is keyed by geometry, not by chamber
+## pair, and this needs to name a SPECIFIC passage (the guardian's own
+## entrance, never the gated branch). Returns null if no passage connects the
+## two chambers.
+func _door_center_between(a_id: String, b_id: String) -> Variant:
+	if not _chambers.has(a_id) or not _chambers.has(b_id):
+		return null
+	for entry: Variant in _config.get("passages", []):
+		var passage: Dictionary = entry as Dictionary
+		var from := str(passage.get("from", ""))
+		var to := str(passage.get("to", ""))
+		if not ((from == a_id and to == b_id) or (from == b_id and to == a_id)):
+			continue
+		var side := _side_toward(from, to)
+		var along_x := side == "+x" or side == "-x"
+		var a := _local_of((_chambers[from] as Dictionary).get("at", []))
+		var b := _local_of((_chambers[to] as Dictionary).get("at", []))
+		var a_size := _size_of((_chambers[from] as Dictionary).get("size", []))
+		var b_size := _size_of((_chambers[to] as Dictionary).get("size", []))
+		var a_edge: float = (a.x + signf(b.x - a.x) * a_size.x * 0.5) if along_x else (a.z + signf(b.z - a.z) * a_size.y * 0.5)
+		var b_edge: float = (b.x - signf(b.x - a.x) * b_size.x * 0.5) if along_x else (b.z - signf(b.z - a.z) * b_size.y * 0.5)
+		var mid: float = (a_edge + b_edge) * 0.5
+		var lateral := a.z if along_x else a.x
+		return Vector3(mid, 0.0, lateral) if along_x else Vector3(lateral, 0.0, mid)
+	return null
 
 
 func _first_passage() -> Dictionary:
@@ -1238,6 +1287,21 @@ func _clear_the_ground_the_cave_stands_on() -> void:
 	if removed > 0:
 		print("[warrens] cleared %d scattered trees/rocks inside the %.0fm site radius and the chambers" % [
 			removed, radius])
+	# THIRD-PASS-0906, JUDGE-round2.md "the red tree": a CherryBlossom hero
+	# tree from the band scatter stands close enough to the mouth to steal the
+	# eye in every exterior frame (site.hero_clear_radius_m's own comment has
+	# the full reasoning for why this is a SECOND, wider pass rather than
+	# raising `radius` itself). `clear_area()` has no species filter, so this
+	# clears everything in the wider ring, not just hero trees -- an empty
+	# ring around a dungeon mouth is the accepted trade for "nothing competes
+	# with the landmark", and the bank's own two hand-placed crest trees
+	# (`_build_bank_crest_trees()`) are built directly by this file, not by
+	# the vegetation bake, so they are untouched by this call either way.
+	var hero_radius := float(_config.get("site", {}).get("hero_clear_radius_m", 0.0))
+	if hero_radius > radius:
+		var hero_removed := int(vegetation.call("clear_area", global_position, hero_radius))
+		print("[warrens] hero clearing: removed %d more scattered pieces out to %.0fm (was %.0fm) so no background tree competes with the mound" % [
+			hero_removed, hero_radius, radius])
 
 
 ## --- the earth bank ---------------------------------------------------------
@@ -1757,6 +1821,11 @@ func _bank_material() -> ShaderMaterial:
 	mat.set_shader_parameter("normal_strength", float(bank.get("normal_strength", 1.1)))
 	mat.set_shader_parameter("noise_freq_m", float(bank.get("surface_noise_freq_m", 0.06)))
 	mat.set_shader_parameter("noise_amount", float(bank.get("surface_noise_amount", 0.12)))
+	# THIRD-PASS-0906 (finding 1, "ribbed primitive"/"single flat khaki value"):
+	# the macro bare-earth-patch field, see the shader's own header.
+	mat.set_shader_parameter("macro_noise_freq_m", float(bank.get("macro_noise_freq_m", 0.045)))
+	mat.set_shader_parameter("macro_noise_amount", float(bank.get("macro_noise_amount", 0.15)))
+	mat.set_shader_parameter("macro_patch_strength", float(bank.get("macro_patch_strength", 0.35)))
 	mat.set_shader_parameter("moist_darken", float(bank.get("moist_darken", 0.35)))
 	var moist_tint := Color(str(bank.get("moist_tint", "#8c8073")))
 	mat.set_shader_parameter("moist_tint", Vector3(moist_tint.r, moist_tint.g, moist_tint.b))
@@ -1765,10 +1834,11 @@ func _bank_material() -> ShaderMaterial:
 
 
 func _bank_add_vertex(st: SurfaceTool, v: Vector3, crest_for_norm: float,
-		moist_sources: Array, moist_radius: float) -> void:
+		moist_sources: Array, moist_radius: float, normal: Vector3) -> void:
 	var frac := clampf((v.y - global_position.y - _floor_y) / crest_for_norm, 0.0, 1.0)
 	var moist := _bank_moisture_at(v.x, v.z, moist_sources, moist_radius)
 	st.set_color(Color(frac, moist, 0.0))
+	st.set_normal(normal)
 	st.add_vertex(v)
 
 
@@ -1877,6 +1947,42 @@ func _build_bank() -> void:
 		grid[ix] = col
 	_bank_crest_world_y = global_position.y + crest_y
 
+	# THIRD-PASS-0906, judge evidence "a regular diagonal stripe pattern...
+	# reads as a tent/dune". `st.generate_normals()` (removed below) has no
+	# index buffer to merge against here -- every triangle in this grid is
+	# added as three brand-new vertices (see the two `_bank_add_vertex()`
+	# triples per quad just below), so it can only ever average a FACE normal
+	# per triangle and hand each of that triangle's own three corners the
+	# SAME flat value: exactly the faceted look the judge is describing, and
+	# because every quad splits on the identical diagonal, the facets tile
+	# into a regular stripe rather than reading as generic low-poly noise.
+	# This computes one SMOOTH normal per grid point instead, straight off
+	# the height field's own local slope via a central difference against
+	# its immediate grid neighbours (clamped at the grid's own edges) --
+	# continuous surface curvature, not a per-triangle average -- and
+	# `_bank_add_vertex()` now writes it explicitly per vertex. `generate_
+	# normals()` must NOT run after this: it would recompute the flat
+	# per-triangle average right back over these and undo the fix.
+	var normals: Array = []
+	normals.resize(nx + 1)
+	for ix in nx + 1:
+		var ncol: Array = []
+		ncol.resize(nz + 1)
+		var ixm := maxi(ix - 1, 0)
+		var ixp := mini(ix + 1, nx)
+		for iz in nz + 1:
+			var izm := maxi(iz - 1, 0)
+			var izp := mini(iz + 1, nz)
+			var xm: Vector3 = grid[ixm][iz]
+			var xp: Vector3 = grid[ixp][iz]
+			var zm: Vector3 = grid[ix][izm]
+			var zp: Vector3 = grid[ix][izp]
+			var tangent_x := xp - xm
+			var tangent_z := zp - zm
+			var n := tangent_z.cross(tangent_x)
+			ncol[iz] = n.normalized() if n.length() > 0.0001 else Vector3.UP
+		normals[ix] = ncol
+
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	for ix in nx:
@@ -1885,6 +1991,10 @@ func _build_bank() -> void:
 			var b: Vector3 = grid[ix + 1][iz]
 			var c: Vector3 = grid[ix + 1][iz + 1]
 			var d: Vector3 = grid[ix][iz + 1]
+			var na: Vector3 = normals[ix][iz]
+			var nb: Vector3 = normals[ix + 1][iz]
+			var nc: Vector3 = normals[ix + 1][iz + 1]
+			var nd: Vector3 = normals[ix][iz + 1]
 			# T1-WARRENS-CRASH. A real gap in the grid deep inside the arch's
 			# own notch, not just a zeroed height there: the apron ramp
 			# (`_build_approach_apron()`) and the `mouth` chamber's own floor
@@ -1908,13 +2018,15 @@ func _build_bank() -> void:
 			var qz := (a.z + b.z + c.z + d.z) * 0.25
 			if _bank_notch_open_factor(qx, qz) > 0.5 or _bank_walk_clear_factor(qx, qz) > 0.5:
 				continue
-			_bank_add_vertex(st, a, crest_for_norm, moist_sources, moist_radius)
-			_bank_add_vertex(st, c, crest_for_norm, moist_sources, moist_radius)
-			_bank_add_vertex(st, b, crest_for_norm, moist_sources, moist_radius)
-			_bank_add_vertex(st, a, crest_for_norm, moist_sources, moist_radius)
-			_bank_add_vertex(st, d, crest_for_norm, moist_sources, moist_radius)
-			_bank_add_vertex(st, c, crest_for_norm, moist_sources, moist_radius)
-	st.generate_normals()
+			_bank_add_vertex(st, a, crest_for_norm, moist_sources, moist_radius, na)
+			_bank_add_vertex(st, c, crest_for_norm, moist_sources, moist_radius, nc)
+			_bank_add_vertex(st, b, crest_for_norm, moist_sources, moist_radius, nb)
+			_bank_add_vertex(st, a, crest_for_norm, moist_sources, moist_radius, na)
+			_bank_add_vertex(st, d, crest_for_norm, moist_sources, moist_radius, nd)
+			_bank_add_vertex(st, c, crest_for_norm, moist_sources, moist_radius, nc)
+	# NOT st.generate_normals() -- see the header comment above the `normals`
+	# grid: this mesh already carries explicit smooth per-vertex normals, and
+	# generate_normals() would overwrite them with flat per-triangle ones.
 	var mesh := st.commit()
 
 	var instance := MeshInstance3D.new()
@@ -2025,17 +2137,46 @@ func _throat_curve_offset(z: float, z_front: float, z_back: float) -> float:
 	return amp * clampf(rise * fall, 0.0, 1.0)
 
 
+## THIRD-PASS-0906, JUDGE-round2.md sec3 item 3 ("ragged mouth"): "the throat's
+## cross-section must not be an identical repeated ellipse -- vary radius
+## +/-0.2m along its length". A per-ring radial scale, applied ONLY to the
+## ARC portion of the throat's fixed (rx, spring_h, arch_h) profile -- never
+## to the two vertical jambs. That restriction is load-bearing, not
+## conservatism: `_build_throat_shell()`'s own two jamb points define the
+## walk corridor's actual width, and `_throat_curve_offset()` already shifts
+## the WHOLE ring sideways by up to `throat_curve_amplitude_m` at some z
+## (its own header explains why that is safe ALONE, keeping the centreline
+## inside the tube). Scaling a jamb INWARD at the same z the curve pushes
+## the ring furthest compounds the two: measured directly (a fixture
+## capsule-cast regression this pass first shipped with the whole profile
+## scaled) at z roughly `_mouth_outer_z()-3` -- where the curve sits at its
+## own peak AND an early version of this bite happened to land -- the two
+## together pinched the left jamb to within 0.15m of the centreline, sealing
+## a player capsule dropped at the entrance marker (which sits at exactly
+## that z) on the spot. `arc_u` (0 at the left spring point, 1 at the
+## right) parameterises the ARC alone; `edge_fade` additionally relaxes the
+## effect to exactly 0 at both of the arc's own ends, so even the arc's own
+## connection points to the (always-rigid) jambs are undisturbed. Only the
+## crown, well above spring height, actually moves.
+func _throat_profile_scale(arc_u: float, z: float, z_front: float, z_back: float) -> float:
+	var bank := _bank_cfg()
+	var seed := float(bank.get("seed", 63220))
+	var span := maxf(z_back - z_front, 0.001)
+	var t := clampf((z - z_front) / span, 0.0, 1.0)
+	var fade := 1.0 - _smooth01((t - 0.82) / 0.18)
+	var edge_fade := _smooth01(arc_u / 0.18) * _smooth01((1.0 - arc_u) / 0.18)
+	var slow := sin(z * 0.55 + seed * 0.017) * 0.6 + sin(z * 1.3 - seed * 0.031) * 0.4
+	var deviation := clampf(slow, -1.0, 1.0) * 0.08
+	for bite_centre: float in [0.28, 0.5, 0.72]:
+		var d := absf(arc_u - bite_centre)
+		deviation -= 0.24 * clampf(1.0 - d / 0.08, 0.0, 1.0)
+	return 1.0 + deviation * fade * edge_fade
+
+
 func _build_throat_shell(holder: Node3D, z_front: float, z_back: float,
 		rx: float, spring_h: float, arch_h: float) -> void:
 	var arc_segments := 10
-	var profile: Array[Vector2] = []
-	profile.append(Vector2(-rx, 0.0))
-	profile.append(Vector2(-rx, spring_h))
-	for s in arc_segments + 1:
-		var t := PI - PI * float(s) / float(arc_segments)
-		profile.append(Vector2(rx * cos(t), spring_h + (arch_h - spring_h) * sin(t)))
-	profile.append(Vector2(rx, spring_h))
-	profile.append(Vector2(rx, 0.0))
+	var point_count := arc_segments + 5  # 2 jamb points either side of the arc
 
 	var steps := maxi(int((z_back - z_front) / 0.6), 2)
 	var rings: Array = []
@@ -2043,8 +2184,20 @@ func _build_throat_shell(holder: Node3D, z_front: float, z_back: float,
 		var z: float = lerpf(z_front, z_back, float(iz) / float(steps))
 		var curve_x := _throat_curve_offset(z, z_front, z_back)
 		var ring: Array[Vector3] = []
-		for p: Vector2 in profile:
-			ring.append(Vector3(p.x + curve_x, _floor_y + p.y, z))
+		# The two LEFT jamb points -- floor and spring -- always exactly the
+		# fixed shape, never perturbed (see this function's own header).
+		ring.append(Vector3(-rx + curve_x, _floor_y, z))
+		ring.append(Vector3(-rx + curve_x, _floor_y + spring_h, z))
+		for s in arc_segments + 1:
+			var t_arc := PI - PI * float(s) / float(arc_segments)
+			var arc_u := float(s) / float(arc_segments)
+			var pscale := _throat_profile_scale(arc_u, z, z_front, z_back)
+			var px := rx * cos(t_arc) * pscale
+			var py := spring_h + (arch_h - spring_h) * sin(t_arc) * pscale
+			ring.append(Vector3(px + curve_x, _floor_y + py, z))
+		# The two RIGHT jamb points -- also always exactly the fixed shape.
+		ring.append(Vector3(rx + curve_x, _floor_y + spring_h, z))
+		ring.append(Vector3(rx + curve_x, _floor_y, z))
 		rings.append(ring)
 
 	var st := SurfaceTool.new()
@@ -2052,7 +2205,7 @@ func _build_throat_shell(holder: Node3D, z_front: float, z_back: float,
 	for iz in steps:
 		var ring_a: Array = rings[iz]
 		var ring_b: Array = rings[iz + 1]
-		for i in profile.size() - 1:
+		for i in point_count - 1:
 			var a: Vector3 = ring_a[i]
 			var b: Vector3 = ring_a[i + 1]
 			var c: Vector3 = ring_b[i + 1]
@@ -2190,10 +2343,15 @@ func _build_bank_lip_ring(holder: Node3D, bank: Dictionary, z0: float, rx: float
 	for s in top_segments + 1:
 		var t := PI * float(s) / float(top_segments)
 		var y: float = spring_h + (arch_h - spring_h) * sin(t) * 1.08
-		path.append(Vector3(lip_rx * cos(t), _floor_y + y + rng.randf_range(-jitter, jitter), z0))
+		# THIRD-PASS-0906 (finding 3, "make the lip ring chunkier and
+		# irregular"): jitter now perturbs the ring RADIALLY as well as
+		# vertically -- a vertical-only wobble on a circular path still traces
+		# a smooth ellipse in plan; both together are what breaks it.
+		path.append(Vector3((lip_rx + rng.randf_range(-jitter, jitter)) * cos(t),
+			_floor_y + y + rng.randf_range(-jitter, jitter), z0))
 	var radii: PackedFloat32Array = []
 	for i in path.size():
-		radii.append(thickness * 0.5 * (1.0 + rng.randf_range(-0.2, 0.2)))
+		radii.append(thickness * 0.5 * (1.0 + rng.randf_range(-0.35, 0.35)))
 	var mesh := _tube_mesh(path, radii, 8, false)
 	var instance := MeshInstance3D.new()
 	instance.name = "MouthLip"
@@ -2227,7 +2385,10 @@ func _build_bank_doorway_collar(holder: Node3D, bank: Dictionary, z_back: float,
 	for s in top_segments + 1:
 		var t := PI * float(s) / float(top_segments)
 		var y: float = spring_h + (arch_h - spring_h) * sin(t) * 1.12
-		path.append(Vector3(collar_rx * cos(t), _floor_y + y + rng.randf_range(-jitter, jitter), z_back))
+		# THIRD-PASS-0906: the lip ring's own twin fix -- radial jitter too,
+		# not just vertical (see that function's own comment).
+		path.append(Vector3((collar_rx + rng.randf_range(-jitter, jitter)) * cos(t),
+			_floor_y + y + rng.randf_range(-jitter, jitter), z_back))
 	# Down both jambs to the floor, same as the lip ring's own vertical
 	# flanks, so the collar reads as a continuous ring rather than an arch
 	# that stops short of the ground either side of the doorway. `path[0]`
@@ -2241,7 +2402,7 @@ func _build_bank_doorway_collar(holder: Node3D, bank: Dictionary, z_back: float,
 	path.append(Vector3(-collar_rx, _floor_y, z_back))
 	var radii: PackedFloat32Array = []
 	for i in path.size():
-		radii.append(thickness * 0.5 * (1.0 + rng.randf_range(-0.2, 0.2)))
+		radii.append(thickness * 0.5 * (1.0 + rng.randf_range(-0.35, 0.35)))
 	var mesh := _tube_mesh(path, radii, 8, false)
 	var instance := MeshInstance3D.new()
 	instance.name = "DoorwayCollar"
@@ -2685,6 +2846,133 @@ func _build_accent_boulders() -> void:
 	if placed > 0:
 		print("[warrens] placed %d accent boulders at the bank's own foot" % placed)
 
+
+## THIRD-PASS-0906, JUDGE-round2.md sec3 item 2 ("nothing breaks the slope"):
+## "no rock outcrop breaking the slope ... the whole bank is one flat khaki-
+## brown value from base to crest". `_build_accent_boulders()` above only ever
+## sits at the FOOT (`_site_ground()`, the flat meadow terrain); an outcrop
+## meant to protrude FROM the dug face or a flank has to sit on the bank's own
+## sculpted surface instead (`_bank_height_at()`/`_bank_normal_at()`, the same
+## surface roots and warren holes already build against), sunk INTO it along
+## the surface normal rather than straight down so it reads as embedded in
+## the slope rather than dropped onto it. Read from `bank.face_outcrops`;
+## empty list is a no-op. Moss-tinting is not a separate step -- `_wear_the_
+## cave_stone(..., exterior=true, ...)` already routes every exterior rock
+## through the boulder-stain shader, which moss-tints whatever faces upward
+## (`moss_normal_min`/`moss_strength`, bank config) on every rock this
+## outcrop touches, this one included.
+func _build_bank_face_outcrops() -> void:
+	var bank := _bank_cfg()
+	var entries: Array = bank.get("face_outcrops", [])
+	if entries.is_empty() or _bank_bumps.is_empty():
+		return
+	var holder := Node3D.new()
+	holder.name = "FaceOutcrops"
+	add_child(holder)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(bank.get("seed", 63220)) + 2201
+	var tint := Color(str(bank.get("tint", "#ffffff")))
+	var variation := float(bank.get("tint_variation", 0.0))
+	var placed := 0
+	for entry_v: Variant in entries:
+		if not entry_v is Dictionary:
+			continue
+		var spec: Dictionary = entry_v as Dictionary
+		var model_name := str(spec.get("model", ""))
+		if model_name.is_empty():
+			continue
+		var packed: PackedScene = load(
+			"res://assets/environment/stylized_nature/%s.gltf" % model_name) as PackedScene
+		if packed == null:
+			push_warning("face outcrop names a model that does not load: %s" % model_name)
+			continue
+		var art: Node3D = packed.instantiate() as Node3D
+		if art == null:
+			continue
+		var offset := _local_of(spec.get("offset", [0.0, 0.0]))
+		var normal := _bank_normal_at(offset.x, offset.z)
+		var base := _site_ground(offset)
+		var surface_y: float = (base if not is_nan(base) else _floor_y) + _bank_height_at(offset.x, offset.z)
+		var sink := float(spec.get("sink_m", 0.6))
+		art.position = Vector3(offset.x, surface_y, offset.z) - normal * sink
+		art.rotation = Vector3(0.0, deg_to_rad(float(spec.get("yaw_deg", 0.0))), 0.0)
+		art.scale = Vector3.ONE * float(spec.get("scale", 1.6))
+		holder.add_child(art)
+		_keep_rock_out_of_the_rooms(art)
+		_wear_the_cave_stone(art, tint, true, variation, rng, art.global_position.y)
+		placed += 1
+	if placed > 0:
+		print("[warrens] %d rock outcrops protruding from the dug face and flanks" % placed)
+
+
+## THIRD-PASS-0906, JUDGE-round2.md sec3 items 2/4: loose rubble -- small worn
+## pebbles and path stones, the debris a dug burrow throws down -- scattered
+## across three zones so the face's own foot and the trodden threshold read
+## as the same disturbed ground rather than two unrelated dressings: the foot
+## of the dug face, around each spoil fan (`bank.spoil_mounds`), and across
+## the apron in front of the mouth (finding 4's own "scatter rubble/pebbles
+## ... across it"). No collider and a shallow sink, same rule every other
+## ground-level piece on this outcrop keeps -- a pebble a player can catch a
+## foot on is a bug, and it does not want a boulder's own dark-earth collar.
+func _build_bank_rubble() -> void:
+	var bank := _bank_cfg()
+	var models := _load_models(bank.get("rubble_models", []))
+	var count := int(bank.get("rubble_count", 0))
+	if models.is_empty() or count <= 0 or _bank_bumps.is_empty():
+		return
+	var holder := Node3D.new()
+	holder.name = "Rubble"
+	add_child(holder)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(bank.get("seed", 63220)) + 2801
+	var tint := Color(str(bank.get("tint", "#ffffff")))
+	var variation := float(bank.get("tint_variation", 0.0))
+	var scale_range: Array = bank.get("rubble_scale", [0.18, 0.4])
+	var low := float(scale_range[0]) if scale_range.size() > 0 else 0.18
+	var high := float(scale_range[1]) if scale_range.size() > 1 else 0.4
+	var sink := float(bank.get("rubble_sink_m", 0.05))
+	var site: Dictionary = _config.get("site", {})
+	var z0 := _mouth_outer_z()
+	var face_reach := float(bank.get("face_half_width_m", 9.0)) + 8.0
+	var apron_half := maxf(float(site.get("apron_mouth_width_m", 8.0)),
+		float(site.get("apron_far_width_m", 4.6))) * 0.5
+	var apron_run := float(site.get("apron_run_m", 6.0))
+	var spoil_entries: Array = bank.get("spoil_mounds", [])
+	var placed := 0
+	for i in count:
+		var local: Vector3
+		var zone := rng.randi() % 3
+		if zone == 0:
+			# the foot of the dug face
+			local = Vector3(rng.randf_range(-face_reach, face_reach), 0.0,
+				z0 - rng.randf_range(1.0, 9.0))
+		elif zone == 1 and not spoil_entries.is_empty():
+			# around a spoil fan
+			var spec: Dictionary = spoil_entries[rng.randi() % spoil_entries.size()] as Dictionary
+			var centre := _local_of(spec.get("offset", [0.0, 0.0]))
+			local = Vector3(centre.x + rng.randf_range(-2.2, 2.2), 0.0,
+				centre.z + rng.randf_range(-2.0, 1.5))
+		else:
+			# across the trodden threshold
+			local = Vector3(rng.randf_range(-apron_half, apron_half), 0.0,
+				z0 - rng.randf_range(0.5, apron_run))
+		if _inside_footprint(local):
+			continue
+		var ground := _site_ground(local)
+		if is_nan(ground):
+			continue
+		var art: Node3D = models[rng.randi() % models.size()].instantiate() as Node3D
+		if art == null:
+			continue
+		var draw := rng.randf_range(low, high)
+		art.position = Vector3(local.x, ground - sink, local.z)
+		art.rotation = Vector3(0.0, rng.randf_range(-PI, PI), 0.0)
+		art.scale = Vector3.ONE * draw
+		holder.add_child(art)
+		_wear_the_cave_stone(art, tint, true, variation, rng, art.global_position.y)
+		placed += 1
+	if placed > 0:
+		print("[warrens] scattered %d rubble pieces across the face foot, spoil fans and threshold" % placed)
 
 
 ## CONTENT-0828. What turns these rooms from boxes into a cave.
@@ -4128,6 +4416,19 @@ func _spawn_population(director: Node) -> void:
 		_guardian_seen_alive = true
 		_dress_the_guardian(guardian)
 		_markers["guardian"] = _guardian.global_position
+		# THIRD-PASS-0906, JUDGE-round2.md 'guardian scale': the guardian's
+		# idle facing was never set (spawn_wild's own default), so it could
+		# just as easily be caught facing a wall as facing the room. It
+		# should face the way a den boss actually would -- toward whatever
+		# lets it into the fight, the hall->den passage every player walks
+		# through to reach it -- not toward the gated, shut vault branch.
+		var entrance_door: Variant = _door_center_between(g_chamber, "hall")
+		if entrance_door != null:
+			var facing := (entrance_door as Vector3) - Vector3(g_centre.x + g_offset.x, 0.0, g_centre.z + g_offset.z)
+			facing.y = 0.0
+			if facing.length() > 0.01:
+				_guardian.rotation.y = atan2(facing.x, facing.z)
+				print("[warrens] guardian idle faces the den's entrance passage (yaw %.1f deg)" % rad_to_deg(_guardian.rotation.y))
 	# AFTER dressing: `apply_size_multiplier()` rebuilds the guardian's art,
 	# and a layer bit set on the old art dies with it (W07-WARRENS-0904).
 	for body: Node3D in _population:
@@ -5186,6 +5487,41 @@ func _glow_the_deposit(spec: Dictionary, at: Vector3) -> void:
 ## a fresh dig. Deterministic rejection sampling over the bank's own
 ## bounding box, same seeded-RNG promise every other scatter in this file
 ## keeps.
+## THIRD-PASS-0906: the SAME low-frequency hash noise
+## `shaders/earth_bank.gdshader::value_noise()`/`hash2()` sample for their own
+## macro bare-earth patches, reimplemented here (GDScript has no access to
+## shader code) so growth placement and the material's own patchy dirt AGREE
+## on where a patch falls -- a grass tuft planted on ground the shader is
+## about to paint bare earth is the "uniform top" defect wearing a different
+## costume. World-space (`to_global`) to match the shader's own
+## `world_vertex_coords` sampling exactly.
+func _hash2(x: float, z: float) -> float:
+	var v := sin(x * 127.1 + z * 311.7) * 43758.5453123
+	return v - floor(v)
+
+
+func _value_noise2(x: float, z: float) -> float:
+	var ix: float = floor(x)
+	var iz: float = floor(z)
+	var fx: float = x - ix
+	var fz: float = z - iz
+	var a := _hash2(ix, iz)
+	var b := _hash2(ix + 1.0, iz)
+	var c := _hash2(ix, iz + 1.0)
+	var d := _hash2(ix + 1.0, iz + 1.0)
+	var ux: float = fx * fx * (3.0 - 2.0 * fx)
+	var uz: float = fz * fz * (3.0 - 2.0 * fz)
+	return lerp(lerp(a, b, ux), lerp(c, d, ux), uz)
+
+
+func _macro_patch_strength(local_x: float, local_z: float) -> float:
+	var bank := _bank_cfg()
+	var freq := float(bank.get("macro_noise_freq_m", 0.045))
+	var world := to_global(Vector3(local_x, 0.0, local_z))
+	var n := _value_noise2(world.x * freq, world.z * freq) * 2.0 - 1.0
+	return clampf(smoothstep(0.15, 0.55, n), 0.0, 1.0)
+
+
 func _dress_mound_with_growth() -> void:
 	var bank := _bank_cfg()
 	var cfg: Dictionary = bank.get("growth", {})
@@ -5242,6 +5578,15 @@ func _dress_mound_with_growth() -> void:
 		var normal := _bank_normal_at(x, z)
 		var slope := acos(clampf(normal.dot(Vector3.UP), -1.0, 1.0))
 		if slope > max_slope:
+			continue
+		# THIRD-PASS-0906, JUDGE-round2.md sec3 item 2 ("grass tufts vary by
+		# the same macro noise so the top is patchy, not uniform"). Thinning
+		# probabilistically by the SAME macro field the shader paints its own
+		# bare-earth patches with (`_macro_patch_strength()`'s own header) so
+		# the two agree: a tuft is less likely to land exactly where the
+		# material is about to go bare.
+		var patch := _macro_patch_strength(x, z)
+		if patch > 0.0 and rng.randf() < patch * 0.85:
 			continue
 		var base := _site_ground(Vector3(x, 0.0, z))
 		var y: float = (base if not is_nan(base) else _floor_y) + h - sink

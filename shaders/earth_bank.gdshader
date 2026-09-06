@@ -65,6 +65,21 @@ uniform float earth_roughness : hint_range(0.0, 1.0) = 0.97;
 uniform float noise_freq_m : hint_range(0.005, 0.5) = 0.06;
 uniform float noise_amount : hint_range(0.0, 0.5) = 0.12;
 
+// THIRD-PASS-0906, judge evidence "the bank ... reads as a tiled/striated
+// material on a simple displaced shape". A second, much LOWER-frequency
+// noise field than `noise_freq_m` above (1/macro_noise_freq_m is ~18-25m
+// per the brief, an order of magnitude broader than the fine surface grain)
+// that (a) modulates albedo value by +/-macro_noise_amount so no two
+// ten-metre patches of the bank read as the identical flat tone, and (b)
+// pushes the earth/grass blend toward bare dirt in the noise's own positive
+// lobe -- irregular blotches of exposed earth breaking up the grassy top,
+// masked by the SAME field rather than a second, disagreeing pattern.
+// `macro_patch_strength` is how far a patch can push `earth_w`; 0 disables
+// the patch half while leaving the albedo modulation intact.
+uniform float macro_noise_freq_m : hint_range(0.01, 0.2) = 0.045;
+uniform float macro_noise_amount : hint_range(0.0, 0.5) = 0.15;
+uniform float macro_patch_strength : hint_range(0.0, 1.0) = 0.35;
+
 // SECOND-PASS-0906: the dark "moist band" the brief asks for within 2m of
 // every warren hole and the mouth. `_build_bank()` writes this per-vertex
 // (COLOR.g, 0 far / 1 at the opening's own rim) because the shader has no
@@ -168,6 +183,17 @@ void fragment() {
 	float shade = 1.0 + n * noise_amount;
 	grass_c *= shade;
 	earth_c *= shade;
+
+	// THIRD-PASS-0906: the macro field (see its own header above). `patch`
+	// only ever RAISES earth_w (max(), never lowers it) -- the dug face stays
+	// fully earth regardless of what the macro noise says there, and only the
+	// grassy top (where earth_w started low) can gain a bare patch.
+	float macro_n = value_noise(world_pos.xz * macro_noise_freq_m) * 2.0 - 1.0;
+	float macro_shade = 1.0 + macro_n * macro_noise_amount;
+	grass_c *= macro_shade;
+	earth_c *= macro_shade;
+	float patch = smoothstep(0.15, 0.55, macro_n) * macro_patch_strength;
+	earth_w = clamp(max(earth_w, patch), 0.0, 1.0);
 
 	// The moist band around every opening: darkens AND cools toward
 	// `moist_tint` so a hole's own rim reads as freshly turned, wet ground
