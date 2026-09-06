@@ -14,6 +14,12 @@ signal recovery_requested(body: CharacterBody3D, camp_id: String, safe_position:
 
 const CONFIG_PATH := "res://data/config/cloudreach_finale.json"
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
+const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
+
+## D97, Stage B lane 6.E. A summit relay going dark is a fact about CLOUDREACH,
+## whichever realm the peer that broke it happens to be standing in. Never
+## `Game.current_realm`.
+const REALM_ID := "cloudreach"
 
 var config: Dictionary = {}
 var phase := "dormant"
@@ -91,6 +97,19 @@ func restore_progression_from_game(game: Node) -> void:
 
 func _has(flag: String) -> bool:
 	return _progression != null and bool(_progression.call("has", flag))
+
+
+## Submit one relay's world flag through `Game.ledger`, and hand back
+## `world_ledger.gd`'s verdict shape -- always, never null. A process with no
+## transport (a unit fixture, `tests/test_cloudreach_finale.gd`) answers
+## `offline`, and the caller keeps its old local write there.
+func _write_relay_flag(flag: String) -> Dictionary:
+	var transport := LEDGER_CLAIM.transport(self)
+	if transport == null:
+		return {"ok": false, "kind": "set_world_flag", "peer": 0, "code": "offline",
+			"reason": "", "pending": false, "delta": {"seq": 0, "realm": "", "ops": []}}
+	return transport.call("submit",
+		{"kind": "set_world_flag", "realm": REALM_ID, "id": flag, "value": true})
 
 
 func _prerequisites() -> bool:
@@ -241,7 +260,25 @@ func strike_relay(id: String, body: CharacterBody3D) -> bool:
 		if _prompts.has(id) and _prompts[id].interaction_offer(body.global_position).is_empty():
 			return false
 		var network_was_disabled := _has(str(config["network_flag"]))
-		_progression.call("set_flag", str(relay["flag_id"]))
+		# D103, lane 6.E. "A relay went dark" is the canonical world fact -- it
+		# was a local `set_flag`, so two players at the summit could each hold a
+		# different count of how many of the three were still lit. Submitted as
+		# an intent; the host commits it once and every peer applies the delta.
+		#
+		# A client's verdict is `pending`: nothing has gone dark YET, so this
+		# answers false and emits nothing. `_process`'s existing revision poll
+		# lands on `sync_progression()` when the delta arrives, which is the same
+		# path a save load already takes -- and `sync_progression()`, not this
+		# press, is what the arena's presentation is actually drawn from.
+		var verdict := _write_relay_flag(str(relay["flag_id"]))
+		if bool(verdict.get("pending", false)):
+			return false
+		if not bool(verdict.get("ok", false)):
+			if str(verdict.get("code", "")) != "offline":
+				return false
+			# No transport at all (a unit fixture, a capture tool): the old
+			# local write, unchanged.
+			_progression.call("set_flag", str(relay["flag_id"]))
 		sync_progression()
 		relay_disabled.emit(id)
 		if not network_was_disabled and _has(str(config["network_flag"])):

@@ -65,6 +65,9 @@ const REALM_HEART_SHRINE := preload("res://scripts/world/realm_heart_shrine.gd")
 const REMOTE_PRESENTATION := preload("res://scripts/net/remote_presentation.gd")
 ## Lane 3.B. The pickup race smoke stands a real one of these and presses it.
 const ITEM_CACHE_PICKUP := preload("res://scripts/world/item_cache_pickup.gd")
+## Lane 6.E. The berry bed the farm-race smoke contests.
+const FARM_PLOT := preload("res://scripts/world/farm_plot.gd")
+const FARM_LOGIC := preload("res://scripts/world/farm_logic.gd")
 ## Lane 5.C's two arms read the same authored cluster list the shipping node
 ## reads, rather than a second copy of the same loop.
 const ALPHA_PINS := preload("res://scripts/world/alpha_pins.gd")
@@ -198,6 +201,17 @@ var _pickup_refusals: Array = []
 ## the other legal shape of a lost race, and the one delta-driven removal
 ## produces most of the time. See `smoke_net_pickup_race.gd`.
 var _pickup_press: String = ""
+
+## Lane 6.E's farm race. Same shape as the pickup arms above and for the same
+## reasons: the node is real `farm_plot.gd`, the press is the prompt's own
+## `activated` signal, and the refusal is read off BOTH the transport (a
+## client's, a round trip later) and this peer's own submit.
+var _farm_node: Node3D = null
+var _farm_index: int = -1
+var _farm_realm: String = "meadows"
+var _farm_crop: String = "berries"
+var _farm_press: String = ""
+var _farm_refusals: Array = []
 
 ## Lane 3.E. The verdict of this peer's last trade or drop arm, and every
 ## refusal sentence the ledger has sent it since the last one, so the smoke can
@@ -451,6 +465,10 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_pickup_stand(args)
 		"pickup_take":
 			out = _step_pickup_take(args)
+		"farm_stand":
+			out = await _step_farm_stand(args)
+		"farm_pick":
+			out = _step_farm_pick(args)
 		"deploy_creature":
 			out = await _step_deploy_creature(args)
 		"build_place":
@@ -1075,9 +1093,129 @@ func _on_pickup_refused(code: String, reason: String) -> void:
 	_pickup_refusals.append({"code": code, "reason": reason})
 
 
+# --- lane 6.E: one ripe berry bed, two hands ---------------------------------
+
+
+## Stand a real `farm_plot.gd` at the same index on every peer, with a crop
+## already ripe on it, so both processes are pressing THE SAME bed.
+##
+## SETUP, and it is worth naming: the bed's `{state, ripe_on_day}` record is
+## written here with `Game.set_farm_plot()` -- the direct write lane 6.E's audit
+## records as the one farm mutation with NO ledger op to carry it
+## (`ralph/reports/MP-6E-CLOUDREACH-0906/REPORT.md`). That is the harness
+## planting a crop, not the feature under test. What the smoke measures is the
+## PICK, which is a `harvest` intent, and a failure there is the feature.
+##
+## A high index deliberately: `data/config/farm.json` numbers the farmhouse's
+## real beds from 0, and this must contest its own bed rather than one the world
+## already stood.
+func _step_farm_stand(args: Dictionary) -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		return {"verdict": "ERROR", "detail": "no /root/Game"}
+	if _farm_node != null and is_instance_valid(_farm_node):
+		_farm_node.queue_free()
+		_farm_node = null
+	_farm_index = int(args.get("index", 90))
+	_farm_realm = str(args.get("realm", "meadows"))
+	_farm_crop = str(args.get("crop_item", "berries"))
+	var config := {
+		"grow_days": 1,
+		"yield": int(args.get("yield", 3)),
+		"seed_item": "berry_seeds",
+		"crop_item": _farm_crop,
+	}
+	var node: Node3D = FARM_PLOT.new()
+	node.name = "SmokeFarmPlot"
+	root.add_child(node)
+	node.call("setup", _farm_index, config, _farm_realm)
+	_farm_node = node
+	_farm_press = ""
+	_farm_refusals = []
+	node.connect("harvest_refused", _on_farm_refused)
+	# Ripe as of today, on every peer, so both name the same crop cycle: the
+	# claim id is `farm:<realm>:<index>#<ripe_on_day>` and a bed whose ripening
+	# day differed between peers would be two different crops, which would prove
+	# nothing about a race.
+	game.call("set_farm_plot", _farm_index,
+		{"state": FARM_LOGIC.SOWN, "ripe_on_day": int(game.get("day"))})
+	var transport: Node = game.get("ledger") as Node
+	if transport != null and not transport.is_connected("intent_refused", _on_intent_refused):
+		transport.connect("intent_refused", _on_intent_refused)
+	await physics_frame
+	return {"verdict": "PASS", "detail": "bed %d is ripe ('%s')"
+		% [_farm_index, str(node.call("claim_flag"))]}
+
+
+## Pick it. The prompt's own `activated` signal, and -- like `pickup_take` --
+## `at_unix_ms` ARMS the press and answers immediately so both peers can press
+## at one shared instant with both intents in flight before either delta lands.
+func _step_farm_pick(args: Dictionary) -> Dictionary:
+	if _farm_node == null or not is_instance_valid(_farm_node):
+		return {"verdict": "ERROR", "detail": "no farm bed standing; run farm_stand first"}
+	var at := float(args.get("at_unix_ms", 0.0))
+	if at > 0.0:
+		_press_farm_at.call_deferred(at)
+		return {"verdict": "PASS", "detail": "armed bed %d for %.0f" % [_farm_index, at]}
+	return _press_farm()
+
+
+func _press_farm_at(at_unix_ms: float) -> void:
+	while Time.get_unix_time_from_system() * 1000.0 < at_unix_ms:
+		await physics_frame
+	_press_farm()
+
+
+func _press_farm() -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	if game == null or _farm_node == null or not is_instance_valid(_farm_node):
+		_farm_press = "gone"
+		return {"verdict": "PASS", "detail": "the bed was gone when the press landed"}
+	# "Already picked" is read off the WORLD FLAG, not off the node: a bed whose
+	# claim committed earlier in this same frame is still a perfectly valid
+	# node, and a harness that trusted the node would report a submission that
+	# never happened.
+	if _farm_claimed(game):
+		_farm_press = "gone"
+		return {"verdict": "PASS", "detail": "bed %d was already picked" % _farm_index}
+	var prompt := _farm_node.get_node_or_null(^"Interactable")
+	if prompt == null:
+		return {"verdict": "ERROR", "detail": "the bed has no Interactable to press"}
+	prompt.emit_signal("activated")
+	_farm_press = "submitted"
+	return {"verdict": "PASS", "detail": "picked bed %d" % _farm_index}
+
+
+## This peer's own pick was refused, reported by the bed itself (the host path).
+func _on_farm_refused(code: String, reason: String) -> void:
+	_farm_refusals.append({"code": code, "reason": reason})
+
+
+## Does THIS peer's world say some claim on this bed has committed? Asked by
+## prefix, not by exact id, so the answer does not depend on the two peers
+## agreeing about which day the crop ripened.
+func _farm_claimed(game: Node) -> bool:
+	var world: Variant = game.get("world")
+	var flags: Variant = (world as RefCounted).get("flags") if world != null else null
+	if flags == null:
+		return false
+	var prefix := "farm:%s:%d#" % [_farm_realm, _farm_index]
+	for raw: Variant in ((flags as RefCounted).call("all_set") as Array):
+		if str(raw).begins_with(prefix):
+			return true
+	return false
+
+
 ## The same refusal, reported by the transport (the client path, and the only
 ## one that survives the prop being freed by the winner's delta).
 func _on_intent_refused(kind: String, code: String, reason: String, _detail: Dictionary) -> void:
+	if kind == "harvest":
+		# Lane 6.E. A CLIENT's refusal arrives here a round trip later; a host's
+		# arrives on the bed's own `harvest_refused`. Both surfaces, because
+		# neither one alone sees both paths -- the same pair `pickup_stand`
+		# already connects, and for the same measured reason.
+		_farm_refusals.append({"code": code, "reason": reason})
+		return
 	if kind != "claim_pickup":
 		return
 	_pickup_refusals.append({"code": code, "reason": reason})
@@ -3044,6 +3182,26 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"satchel": _storage_counts(kgame.get("inventory") as RefCounted),
 				"press": _pickup_press,
 				"refusals": _pickup_refusals.duplicate(true),
+			}
+		"farm":
+			# Lane 6.E. Everything the farm-race smoke asserts on, read off this
+			# peer's own live objects: which bed and which crop cycle, what the
+			# WORLD says about the claim, what the bed's own record now holds,
+			# what this peer's satchel holds, and its press/refusals.
+			var fgame := root.get_node_or_null(^"Game")
+			if fgame == null or _farm_index < 0:
+				return null
+			var fplot: Dictionary = fgame.call("farm_plot_at", _farm_index)
+			return {
+				"index": _farm_index,
+				"crop": _farm_crop,
+				"flag": str(_farm_node.call("claim_flag")) if _farm_node != null \
+					and is_instance_valid(_farm_node) else "",
+				"claimed": _farm_claimed(fgame),
+				"state": FARM_LOGIC.state_of(fplot, int(fgame.get("day"))),
+				"satchel": _storage_counts(fgame.get("inventory") as RefCounted),
+				"press": _farm_press,
+				"refusals": _farm_refusals.duplicate(true),
 			}
 		"trade":
 			# Lane 3.E. Everything the trade smoke asserts on, read off this

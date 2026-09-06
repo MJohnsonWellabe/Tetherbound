@@ -37,10 +37,45 @@ extends Node3D
 ## player sows it again, which is the whole difference between a farm and a
 ## bush -- and why the state has to be saved (`game_state.gd::farm_plots`)
 ## rather than rebuilt from nothing on load the way a respawn timer can be.
+##
+## ## Stage B Wave 6 lane 6.E: PICKING is a claim; tilling and sowing are not
+##
+## D103. Picking a ripe bed paid the crop straight into this peer's satchel and
+## wrote the bed back to TILLED locally. Two players reaching for the same ripe
+## bed therefore each got the full yield. Picking now submits a `harvest`
+## INTENT -- the same kind `harvest_node.gd` uses -- against a flag that names
+## THIS CROP CYCLE:
+##
+##     farm:<realm>:<plot index>#<ripe_on_day>
+##
+## The day the crop ripened is part of the id on purpose. A farm bed is the one
+## gather point in this game that comes back, so a flag naming only the bed
+## would refuse the second crop it ever grew; a flag naming the bed AND the
+## cycle is claimed exactly once per crop and is fresh again the moment the bed
+## is re-sown. The host commits the first claim and refuses the rest in one
+## sentence the loser can read.
+##
+## The bed's own `{state, ripe_on_day}` record is NOT replicated, and that is a
+## known gap rather than an oversight: `WorldState` has no farm op and
+## `world_ledger.gd`/`world_state.gd` are outside this lane's file list. What
+## closes most of it anyway is that the committed flag reaches every peer, so
+## every peer returns that bed to TILLED off the delta -- see
+## `_on_delta_applied`. Tilling and sowing remain local writes; the residual and
+## the op that would close it are written down in
+## `ralph/reports/MP-6E-CLOUDREACH-0906/REPORT.md`.
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const HARVEST_LOGIC := preload("res://scripts/world/harvest_logic.gd")
 const FARM_LOGIC := preload("res://scripts/world/farm_logic.gd")
+const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
+
+## The host refused this peer's pick, with one sentence a player can act on.
+## The mirror of `item_cache_pickup.gd::claim_refused`, and it exists for the
+## same reason: a HOST that loses a race is refused synchronously inside
+## `submit()`, where nothing on the transport ever fires -- `intent_refused` is
+## only emitted for the peer a `_rpc_verdict` was addressed to. Without this a
+## losing host would be observable only as a bed that quietly stayed ripe.
+signal harvest_refused(code: String, reason: String)
 
 ## The nature kit again (D24: one nature family). The ripe bush is the SAME
 ## model `data/config/harvest.json`'s two wild berry nodes use -- a farmed
@@ -101,9 +136,20 @@ var _drawn_state: String = ""
 var _drawn_label: String = ""
 var _materials: Dictionary = {}
 
+## D97. The realm this BED belongs to, stamped on every intent it raises. Set by
+## whoever places the plots; never read off `Game.current_realm`, which from
+## Wave 6 is the local player's realm and not the record's.
+var _realm: String = "meadows"
 
-func setup(index: int, config: Dictionary) -> void:
+## The claim this peer has with the host: `{"flag", "slot"}`. Empty whenever
+## nothing is in flight. NOTHING local moves while it is set -- no crop, no tool
+## wear, no state change.
+var _claim: Dictionary = {}
+
+
+func setup(index: int, config: Dictionary, realm_id: String = "meadows") -> void:
 	_index = index
+	_realm = realm_id if not realm_id.is_empty() else "meadows"
 	_grow_days = maxi(1, int(config.get("grow_days", 1)))
 	_yield = maxi(1, int(config.get("yield", 3)))
 	_seed_id = str(config.get("seed_item", "berry_seeds"))
@@ -131,6 +177,7 @@ func _ready() -> void:
 	# So a hoe swing finds this the same way an axe swing finds a tree
 	# (`harvest_logic.gd::GROUP`).
 	add_to_group(HARVEST_LOGIC.GROUP)
+	LEDGER_CLAIM.listen(self, _on_delta_applied)
 
 
 ## The prompt has to answer for the CURRENT day and the CURRENT satchel, and
@@ -376,10 +423,101 @@ func _harvest(game: Node, inventory: RefCounted, items: RefCounted) -> void:
 		# satchel capacity, so the prompt stays green and a press on a full
 		# satchel produced nothing a player could tell apart from a dropped
 		# press. Now speaks, matching `harvest_node.gd`'s own fix.
+		#
+		# Still LOCAL and still ahead of the intent: `world_ledger.gd`'s own
+		# header says the host cannot see a client's satchel, so "is there room"
+		# is a question only the pressing peer can answer.
 		game.call("push_world_message", "Satchel is full.")
 		return
-	inventory.call("add", _crop_id, amount)
-	var required_slot := int(gathered["required_slot"])
-	if required_slot >= 0:
-		inventory.call("damage_tool", required_slot)
-	game.call("set_farm_plot", _index, FARM_LOGIC.harvested(_plot()))
+	if not _claim.is_empty():
+		# A press while this peer's own claim is still with the host. Waiting is
+		# the honest answer; submitting again would only lose to itself.
+		return
+	# Recorded BEFORE the submit, because solo and host commit in-process and
+	# `submit()` emits the delta before it returns -- `_on_delta_applied` has
+	# already run by the time the next line finishes.
+	_claim = {"flag": claim_flag(), "slot": int(gathered["required_slot"])}
+	var verdict := LEDGER_CLAIM.submit(self, {
+		"kind": "harvest",
+		"realm": _realm,
+		"flag": _claim["flag"],
+		"item": _crop_id,
+		"amount": amount,
+	})
+	if not LEDGER_CLAIM.in_flight(verdict):
+		# Refused outright (someone else picked this crop, or there is no
+		# transport). `ledger_claim.gd` has already shown the sentence.
+		_claim = {}
+		if str(verdict.get("code", "")) != "offline":
+			harvest_refused.emit(str(verdict.get("code", "")), str(verdict.get("reason", "")))
+		if str(verdict.get("code", "")) == "offline":
+			# No transport at all: a unit fixture or a capture tool. The old
+			# local path, unchanged, for the same reason every other consumer
+			# keeps one -- a farm that grows crops and refuses to pay them is
+			# worse than one written locally in a process with nobody to tell.
+			inventory.call("add", _crop_id, amount)
+			var slot := int(gathered["required_slot"])
+			if slot >= 0:
+				inventory.call("damage_tool", slot)
+			game.call("set_farm_plot", _index, FARM_LOGIC.harvested(_plot()))
+
+
+## The world fact "this crop cycle has been picked". Realm-qualified and
+## cycle-qualified: see the header for why the ripening day is part of the id.
+func claim_flag() -> String:
+	return claim_flag_for(_realm, _index, int(_plot().get("ripe_on_day", 0)))
+
+
+static func claim_flag_for(realm: String, index: int, ripe_on_day: int) -> String:
+	return "farm:%s:%d#%d" % [realm, index, ripe_on_day]
+
+
+## Every claim id this bed could ever mint, so a peer that did NOT press can
+## still recognise its neighbour's committed pick without having to agree about
+## which day the crop ripened.
+func claim_prefix() -> String:
+	return "farm:%s:%d#" % [_realm, _index]
+
+
+## A committed delta landed on this peer, host or client.
+##
+## Two halves, and the order matters. The DELTA is checked first: any peer whose
+## delta carries a claim on this bed returns the bed to worked soil, which is
+## what keeps six beds looking the same on two screens without a farm op in
+## `WorldState`. Only then is this peer's own `_claim` consulted, for the half
+## no delta carries -- the tool it wore down. Written the other way round, a
+## guard on `_claim` alone would drop the mirror on every peer but the presser
+## (the ordering lane 3.B paid for, in `ledger_rpc.gd::_rpc_delta`).
+##
+## The crop itself is NOT added here: `harvest`'s item grant is a player-scope
+## op addressed to the winning peer, and `ledger_rpc.gd::_apply_player_ops`
+## already put it in their satchel.
+func _on_delta_applied(delta: Dictionary) -> void:
+	if _index < 0:
+		return
+	var prefix := claim_prefix()
+	var claimed := ""
+	for raw: Variant in (delta.get("ops", []) as Array):
+		if typeof(raw) != TYPE_DICTIONARY:
+			continue
+		var op := raw as Dictionary
+		if str(op.get("scope", "")) != "world" or str(op.get("op", "")) != "flag":
+			continue
+		var id := str(op.get("id", ""))
+		if id.begins_with(prefix) and bool(op.get("value", true)):
+			claimed = id
+			break
+	if claimed.is_empty():
+		return
+	var game := _game()
+	if game != null:
+		game.call("set_farm_plot", _index, FARM_LOGIC.harvested(_plot()))
+	if _claim.is_empty() or str(_claim.get("flag", "")) != claimed:
+		return
+	var slot := int(_claim.get("slot", -1))
+	_claim = {}
+	if slot >= 0 and game != null:
+		var inventory: RefCounted = game.get("inventory")
+		if inventory != null:
+			inventory.call("damage_tool", slot)
+	_refresh()

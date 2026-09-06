@@ -4,6 +4,37 @@ extends RefCounted
 ## Owns no saved state. World interactions emit events only after their physical
 ## action succeeds; this adapter checks story prerequisites, not physical access.
 ## Counts are named durable flags, never an incrementing counter.
+##
+## ## Stage B Wave 6 lane 6.E: the flags this file sets are WORLD facts
+##
+## D103. Every id this file writes -- an act completion, a boss defeat, a storm
+## anchor going dark, a route unlocking, a side-chain step -- is `world` in
+## `data/progression/flag_scopes.json`. Written straight onto
+## `progression` they land in `WorldState.flags` on whichever peer happened to
+## run the code, and nothing crosses the wire: two players standing in
+## Cloudreach would disagree about whether the counterweight road is down.
+##
+## So `dispatch()` and `reconcile()` now take an optional `writer` -- a
+## `Callable(flag: String) -> Dictionary` returning `world_ledger.gd`'s verdict
+## shape. `realm_chapter_events.gd` supplies one that submits a `set_world_flag`
+## intent stamped with the REALM'S OWN id (D97; never `Game.current_realm`,
+## which from Wave 6 is whichever realm the local player is standing in). The
+## host commits it; every peer applies the delta.
+##
+## The writer is OPTIONAL and its absence is not a fallback nobody takes: this
+## file is pure and node-free (D02), `tests/test_realm_chapter_progression.gd`
+## drives it against a bare `ProgressionState` with no scene tree and no `Game`,
+## and that path must keep writing locally or every rule in this file becomes
+## untestable without booting a world.
+##
+## ## `pending` is not `changed`
+##
+## A client's submit returns `pending`: the host has not answered yet, so the
+## flag is NOT set and `changed` stays false -- a caller that spends a repair
+## cost on `changed` must not spend it on a maybe. The result carries `pending`
+## separately so a caller can tell "the host said no" from "the host has not
+## said anything yet" and settle its own half when the delta lands
+## (`cloudreach_physical_runtime.gd::_on_delta_applied`).
 
 static func flags_hold(progression: RefCounted, flags: Array) -> bool:
 	for flag: String in flags:
@@ -13,12 +44,14 @@ static func flags_hold(progression: RefCounted, flags: Array) -> bool:
 
 
 static func _result() -> Dictionary:
-	return {"accepted": false, "changed": false, "completed_ids": [], "granted_flags": []}
+	return {"accepted": false, "changed": false, "pending": false,
+		"completed_ids": [], "granted_flags": []}
 
 
 ## event is an authored completion_event, count:<authored count flag>, or
 ## side:<authored chain id>:<authored step id>. Unknown events cannot set flags.
-static func dispatch(progression: RefCounted, chapter: Dictionary, event: String) -> Dictionary:
+static func dispatch(progression: RefCounted, chapter: Dictionary, event: String,
+		writer: Callable = Callable()) -> Dictionary:
 	var result := _result()
 	if progression == null or event.is_empty():
 		return result
@@ -31,14 +64,14 @@ static func dispatch(progression: RefCounted, chapter: Dictionary, event: String
 			var counts: Array = objective.get("count_flags", [])
 			if event.begins_with("count:") and counts.has(event.trim_prefix("count:")):
 				result["accepted"] = true
-				_set_flag(progression, event.trim_prefix("count:"), result)
+				_set_flag(progression, event.trim_prefix("count:"), result, writer)
 			if str(objective.get("completion_event", "")) != event:
 				continue
 			# A counter objective cannot be completed by sending its aggregate event.
 			if not counts.is_empty() and not flags_hold(progression, counts):
 				continue
 			result["accepted"] = true
-			_complete(progression, objective, result)
+			_complete(progression, objective, result, writer)
 	for chain: Dictionary in chapter.get("side_chains", []):
 		if not _revealed(progression, chain):
 			continue
@@ -46,15 +79,16 @@ static func dispatch(progression: RefCounted, chapter: Dictionary, event: String
 			var step_event := str(step.get("completion_event", "side:%s:%s" % [chain["id"], step["id"]]))
 			if step_event == event and flags_hold(progression, step.get("requires_flags", [])):
 				result["accepted"] = true
-				_complete(progression, step, result)
-	_merge(result, reconcile(progression, chapter))
+				_complete(progression, step, result, writer)
+	_merge(result, reconcile(progression, chapter, writer))
 	return result
 
 
 ## Called after load or an external progression revision. Recovers aggregate
 ## counts and missing entitlement flags, but never invents a story event, boss
 ## win, restoration witness, or reward conversation from an earlier milestone.
-static func reconcile(progression: RefCounted, chapter: Dictionary) -> Dictionary:
+static func reconcile(progression: RefCounted, chapter: Dictionary,
+		writer: Callable = Callable()) -> Dictionary:
 	var result := _result()
 	for act: Dictionary in chapter.get("acts", []):
 		if not flags_hold(progression, act.get("entry_flags", [])):
@@ -65,23 +99,50 @@ static func reconcile(progression: RefCounted, chapter: Dictionary) -> Dictionar
 			var counts: Array = objective.get("count_flags", [])
 			var already_complete := bool(progression.call("has", str(objective["flag_id"])))
 			if already_complete or (not counts.is_empty() and flags_hold(progression, counts)):
-				_complete(progression, objective, result)
+				_complete(progression, objective, result, writer)
 	return result
 
 
-static func _complete(progression: RefCounted, objective: Dictionary, result: Dictionary) -> void:
+static func _complete(progression: RefCounted, objective: Dictionary, result: Dictionary,
+		writer: Callable = Callable()) -> void:
 	# Entitlements are flags, not inventory consumables. Apply them before the
 	# completion marker and repair missing ones safely when replaying an old save.
 	for reward: String in objective.get("grants_flags", []):
-		if _set_flag(progression, reward, result):
+		if _set_flag(progression, reward, result, writer):
 			result["granted_flags"].append(reward)
-	if _set_flag(progression, str(objective["flag_id"]), result):
+	if _set_flag(progression, str(objective["flag_id"]), result, writer):
 		result["completed_ids"].append(str(objective["id"]))
 
 
-static func _set_flag(progression: RefCounted, flag: String, result: Dictionary) -> bool:
+## Write one chapter flag, and answer whether the world NOW says it.
+##
+## With a `writer` this submits an intent and takes the ledger's word for it:
+##   * `ok`      -- committed here and now (solo, or the host). The flag is set.
+##   * `pending` -- a client, waiting on the host. NOTHING is set locally, and
+##                  `result["pending"]` says so; the committed delta is what
+##                  eventually sets it, and `reconcile()` (driven by the
+##                  `progression_restore` sweep and by the revision poll in
+##                  `realm_chapter_events.gd`) finishes the aggregates then.
+##   * `offline` -- there is no transport at all (a bare fixture, a capture
+##                  tool, an early boot frame). The old local write still
+##                  happens, for the same reason lane 5.A kept it: a chapter
+##                  that emits events and changes nothing is worse than one
+##                  written locally in a process that has nobody to tell.
+##   * anything else -- a real refusal. Nothing is written.
+static func _set_flag(progression: RefCounted, flag: String, result: Dictionary,
+		writer: Callable = Callable()) -> bool:
 	if flag.is_empty() or bool(progression.call("has", flag)):
 		return false
+	if writer.is_valid():
+		var verdict: Dictionary = writer.call(flag)
+		if bool(verdict.get("ok", false)):
+			result["changed"] = true
+			return true
+		if bool(verdict.get("pending", false)):
+			result["pending"] = true
+			return false
+		if str(verdict.get("code", "")) != "offline":
+			return false
 	progression.call("set_flag", flag)
 	result["changed"] = true
 	return true
@@ -89,6 +150,7 @@ static func _set_flag(progression: RefCounted, flag: String, result: Dictionary)
 
 static func _merge(into: Dictionary, other: Dictionary) -> void:
 	into["changed"] = bool(into["changed"]) or bool(other["changed"])
+	into["pending"] = bool(into.get("pending", false)) or bool(other.get("pending", false))
 	into["completed_ids"].append_array(other["completed_ids"])
 	into["granted_flags"].append_array(other["granted_flags"])
 
