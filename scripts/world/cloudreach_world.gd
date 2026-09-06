@@ -855,17 +855,100 @@ func _line_eased_height(world_point: Vector3, natural_y: float, lines: Array[Dic
 ## world XZ point: authored height inside the cap radius, then eased down to
 ## meet any road/deck within reach (R2). `_mesa` emits its crown rings from
 ## exactly this function and shoulders conform to it, so the three agree.
+## OWNER 2026-09-06: "that completely flat green ground shouldn't exist".
+##
+## Only a `CliffMass` mesa got an eroded crown (`_mesa`'s `eroded_crown`);
+## every other crown emitted a single fan from one apex vertex to its rim,
+## which is a mathematically flat disc. That is the owner's flat green ground
+## and the same root as the blind judge's "a perfectly flat, edge-lit green
+## plane" (CLOUDREACH-GROUND-0906 JUDGE-after2, defect 3).
+##
+## The relief goes in the HEIGHT MODEL rather than in the mesh emitters,
+## because `_mesa` builds its visible crown AND its collision copy from
+## `_crown_height_at`, and every shoulder conforms to the same function
+## (`_walkable_height`). One change moves all three together; a change in the
+## emitters would move the render away from the collider and reopen exactly
+## the hole/sink class OP-0905-24/25 closed.
+##
+## It is suppressed to nothing wherever something authored owns the ground:
+##
+##   * inside a settlement clearance -- buildings sit at an authored y;
+##   * approaching the rim, so the crown still meets its cliff edge cleanly
+##     and the eroded shelf line below it is unchanged;
+##   * near any road or deck line -- and that one is free, because the caller
+##     hands this to `_line_eased_height`, which lerps to the road's own
+##     height within `reach + LINE_EASE_M` and so flattens the relief back out
+##     under the player's feet wherever a route actually runs.
+##
+## Amplitude scales with the crown's own radius: a 30 m landing pad reads as a
+## pad, and only the wide crowns that fill a frame get metres of roll.
+func _crown_relief_at(pad: Dictionary, world_point: Vector3,
+		lines: Array[Dictionary] = [] as Array[Dictionary]) -> float:
+	var cfg: Dictionary = _crown_relief_config()
+	if cfg.is_empty():
+		return 0.0
+	var centre: Vector3 = pad["position"]
+	var flat_radius := maxf(float(pad.get("flat_radius", 0.0)), 1.0)
+	if flat_radius < float(cfg.get("min_radius_m", 40.0)):
+		return 0.0
+	var r := Vector2(world_point.x - centre.x, world_point.z - centre.z).length()
+	var rim_fade := clampf(float(cfg.get("rim_fade_fraction", 0.78)), 0.0, 0.99)
+	if r >= flat_radius:
+		return 0.0
+	var edge := 1.0
+	if r > flat_radius * rim_fade:
+		edge = 1.0 - smoothstep(0.0, 1.0, (r - flat_radius * rim_fade) / maxf(flat_radius * (1.0 - rim_fade), 0.01))
+	if edge <= 0.0:
+		return 0.0
+	if bool(cfg.get("respect_settlements", true)) and _inside_settlement_clearance(world_point):
+		return 0.0
+	# Roads and bridge decks own their own height. `_crown_height_at`'s caller
+	# flattens the relief back out near them for free through
+	# `_line_eased_height`, but `_emit_mesa_top` has no such easing, so the
+	# suppression lives here where both paths get it. Without it a region
+	# crown would roll straight through an authored road ribbon, which is the
+	# hole/sink class OP-0905-24/25 closed.
+	if not lines.is_empty():
+		var nearest := _nearest_route_line(world_point, lines)
+		var d: float = nearest["distance"]
+		if not is_inf(d):
+			var reach: float = float(nearest["half_width"]) + LINE_PIN_MARGIN_M
+			if d < reach:
+				return 0.0
+			if d < reach + LINE_EASE_M:
+				edge *= smoothstep(0.0, 1.0, (d - reach) / LINE_EASE_M)
+	var reference := maxf(float(cfg.get("reference_radius_m", 150.0)), 1.0)
+	var amplitude := float(cfg.get("amplitude_m", 4.5)) * minf(1.0, flat_radius / reference)
+	var long_m := maxf(float(cfg.get("long_wavelength_m", 74.0)), 1.0)
+	var short_m := maxf(float(cfg.get("short_wavelength_m", 31.0)), 1.0)
+	var short_mix := clampf(float(cfg.get("short_amplitude_fraction", 0.34)), 0.0, 1.0)
+	# Deterministic and continuous across mesa boundaries: sampled in WORLD xz,
+	# not in the pad's local frame, so two crowns that touch do not step where
+	# they meet.
+	var long_wave := sin(world_point.x / long_m) * cos(world_point.z / long_m * 1.13)
+	var short_wave := sin(world_point.z / short_m * 1.07 + 2.1) * cos(world_point.x / short_m + 0.7)
+	return amplitude * edge * lerpf(long_wave, short_wave, short_mix)
+
+
+func _crown_relief_config() -> Dictionary:
+	var cfg: Dictionary = _visual_config.get("crown_relief", {})
+	if not bool(cfg.get("enabled", true)):
+		return {}
+	return cfg
+
+
 func _crown_height_at(pad: Dictionary, world_point: Vector3, lines: Array[Dictionary]) -> float:
 	var centre: Vector3 = pad["position"]
 	var r := Vector2(world_point.x - centre.x, world_point.z - centre.z).length()
+	var natural := centre.y + _crown_relief_at(pad, world_point, lines)
 	if r <= float(pad["cap_radius"]):
-		return centre.y
+		return natural
 	# Up as well as down: a road that leaves the pad climbing stands above the
 	# flat disc past the cap, and if the crown stayed flat the walker would be
 	# carried on the invisible ribbon box 0.3-0.7 m above the visible crown
 	# (probe, round 1: ~350 pad samples). The crown is the road's surface
 	# wherever the road runs over it.
-	return _line_eased_height(world_point, centre.y, lines, false, 0.0)
+	return _line_eased_height(world_point, natural, lines, false, 0.0)
 
 
 func _nearest_pad(world_point: Vector3, pads: Array[Dictionary]) -> Dictionary:
@@ -3137,8 +3220,30 @@ func _mesa(
 	var crown := Vector3(0.0, size.y * 0.5 + 0.03, 0.0)
 	if rugged_crown:
 		crown.y -= minf(size.y*0.09,9.0)
+	# The relief context for a NON-flat crown (a region CliffMass, a ledge, a
+	# shelf). Built once and handed to BOTH the visible crown and its collision
+	# copy below, so the two are emitted from identical geometry -- the R1
+	# guarantee this file already makes for the flat crowns.
+	var crown_relief: Dictionary = {}
+	if flat_rings.is_empty() and not _crown_relief_config().is_empty():
+		var crown_span := 0.0
+		for point: Vector3 in top_ring:
+			crown_span = maxf(crown_span, Vector2(point.x, point.z).length())
+		var crown_world := root.global_position + Vector3(0.0, crown.y, 0.0)
+		crown_relief = {
+			"basis": Basis(Vector3.UP, root.rotation.y),
+			"origin": root.global_position,
+			"pad": {"position": crown_world, "flat_radius": crown_span,
+				"cap_radius": crown_span * 0.5},
+			"lines": _lines_near(root.global_position.x - crown_span - 12.0,
+				root.global_position.x + crown_span + 12.0,
+				root.global_position.z - crown_span - 12.0,
+				root.global_position.z + crown_span + 12.0),
+			"step_m": float(_crown_relief_config().get("mesh_step_m", 7.0)),
+			"max_steps": int(_crown_relief_config().get("max_steps", 26)),
+		}
 	if flat_rings.is_empty():
-		_emit_mesa_top(top_tool, sides, eroded_crown, crown, core_ring, top_ring)
+		_emit_mesa_top(top_tool, sides, eroded_crown, crown, core_ring, top_ring, crown_relief)
 	else:
 		_emit_flat_crown(top_tool, sides, crown, flat_rings, top_ring)
 	top_tool.generate_normals()
@@ -3188,7 +3293,7 @@ func _mesa(
 		var collision_tool := SurfaceTool.new()
 		collision_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 		if flat_rings.is_empty():
-			_emit_mesa_top(collision_tool, sides, eroded_crown, crown, core_ring, top_ring)
+			_emit_mesa_top(collision_tool, sides, eroded_crown, crown, core_ring, top_ring, crown_relief)
 		else:
 			_emit_flat_crown(collision_tool, sides, crown, flat_rings, top_ring)
 		# A bare, zero-thickness crown edge is a known character-controller trap:
@@ -3238,16 +3343,94 @@ func _emit_mesa_skirt(tool: SurfaceTool, sides: int, top_ring: Array[Vector3], d
 ## intermediate contour). Shared by the visible top mesh and its collision
 ## copy so the two can never drift apart.
 func _emit_mesa_top(tool: SurfaceTool, sides: int, eroded_crown: bool, crown: Vector3,
-		core_ring: Array[Vector3], top_ring: Array[Vector3]) -> void:
+		core_ring: Array[Vector3], top_ring: Array[Vector3],
+		relief: Dictionary = {}) -> void:
+	var lift := Vector3.UP * 0.03
+	if eroded_crown:
+		_emit_crown_fan(tool, sides, crown, core_ring, lift, relief)
+		_emit_crown_strip(tool, sides, core_ring, top_ring, lift, relief)
+	else:
+		_emit_crown_fan(tool, sides, crown, top_ring, lift, relief)
+
+
+## An apex-to-ring cap, SUBDIVIDED rather than fanned.
+##
+## Both crown profiles used to reach their first contour in a single triangle
+## per side: a fan from one apex vertex straight out to a ring 50-200 m away.
+## However the height model varies across that span, the mesh cannot show it --
+## three vertices describe a plane. That is why the crowns rendered as flat
+## discs however much relief the height model carried, and it is the geometry
+## behind the owner's "completely flat green ground".
+func _emit_crown_fan(tool: SurfaceTool, sides: int, apex: Vector3, ring: Array[Vector3],
+		lift: Vector3, relief: Dictionary) -> void:
+	var steps := _crown_steps(apex, ring, relief)
+	var inner: Array[Vector3] = []
+	for i in sides:
+		inner.append(apex)
+	for step in range(1, steps + 1):
+		var t := float(step) / float(steps)
+		var outer: Array[Vector3] = []
+		for i in sides:
+			var point := apex.lerp(ring[i], t)
+			outer.append(_with_crown_relief(point, relief, t))
+		if step == 1:
+			for i in sides:
+				var next := (i + 1) % sides
+				_add_surface_triangle(tool, apex, outer[next] + lift, outer[i] + lift)
+		else:
+			_emit_crown_strip(tool, sides, inner, outer, lift, {})
+		inner = outer
+	# The outermost ring must land EXACTLY on the authored contour, so the
+	# crown still meets the cliff face it was built against.
+	_emit_crown_strip(tool, sides, inner, ring, lift, {})
+
+
+## Ring to ring. `relief` empty means the rings arrive already displaced.
+func _emit_crown_strip(tool: SurfaceTool, sides: int, inner: Array[Vector3],
+		outer: Array[Vector3], lift: Vector3, relief: Dictionary) -> void:
+	var a := inner
+	var b := outer
+	if not relief.is_empty():
+		var steps := _crown_steps(inner[0], outer, relief)
+		var previous := inner
+		for step in range(1, steps + 1):
+			var t := float(step) / float(steps)
+			var current: Array[Vector3] = []
+			for i in sides:
+				current.append(_with_crown_relief(inner[i].lerp(outer[i], t), relief, 1.0 - t)
+					if step < steps else outer[i])
+			_emit_crown_strip(tool, sides, previous, current, lift, {})
+			previous = current
+		return
 	for i in sides:
 		var next := (i + 1) % sides
-		if eroded_crown:
-			_add_surface_triangle(tool, crown, core_ring[next] + Vector3.UP * 0.03, core_ring[i] + Vector3.UP * 0.03)
-			_add_surface_triangle(tool, core_ring[i] + Vector3.UP * 0.03, core_ring[next] + Vector3.UP * 0.03, top_ring[i] + Vector3.UP * 0.03)
-			_add_surface_triangle(tool, top_ring[i] + Vector3.UP * 0.03, core_ring[next] + Vector3.UP * 0.03, top_ring[next] + Vector3.UP * 0.03)
-		else:
-			_add_surface_triangle(tool, crown, top_ring[next] + Vector3.UP * 0.03,
-				top_ring[i] + Vector3.UP * 0.03)
+		_add_surface_triangle(tool, a[i] + lift, a[next] + lift, b[i] + lift)
+		_add_surface_triangle(tool, b[i] + lift, a[next] + lift, b[next] + lift)
+
+
+## How many rings a band needs so its quads are roughly `step_m` across. A band
+## no wider than one step keeps its single strip, so a small ledge is untouched.
+func _crown_steps(inner_point: Vector3, outer_ring: Array[Vector3], relief: Dictionary) -> int:
+	if relief.is_empty():
+		return 1
+	var span := 0.0
+	for point: Vector3 in outer_ring:
+		span = maxf(span, Vector2(point.x - inner_point.x, point.z - inner_point.z).length())
+	var step_m := maxf(float(relief.get("step_m", 7.0)), 1.0)
+	return clampi(int(ceilf(span / step_m)), 1, int(relief.get("max_steps", 26)))
+
+
+## A local-space crown vertex, displaced by the world-space relief field.
+## `blend` fades the displacement out as the vertex approaches the authored
+## contour so the band still closes on the geometry it was built against.
+func _with_crown_relief(local: Vector3, relief: Dictionary, blend: float) -> Vector3:
+	if relief.is_empty():
+		return local
+	var basis: Basis = relief["basis"]
+	var origin: Vector3 = relief["origin"]
+	var world: Vector3 = origin + basis * local
+	var offset := _crown_relief_at(relief["pad"], world, relief["lines"])
+	return local + Vector3.UP * offset * clampf(blend, 0.0, 1.0)
 
 
 ## A flat pad/landmark crown: an apex fan to the innermost (cap) ring, then
