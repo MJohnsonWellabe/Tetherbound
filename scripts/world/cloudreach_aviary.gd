@@ -17,6 +17,13 @@ const ROPE_COILS: Array[PackedScene] = [
 const CRATE := preload("res://assets/props/quaternius_fantasy/Crate_Wooden.gltf")
 const BARREL := preload("res://assets/props/quaternius_fantasy/Barrel.gltf")
 const SONGBIRD := preload("res://assets/creatures/plumberry/ollie-the-songbird.glb")
+## A highland roost, not a berry orchard: bone, slate, chalk and pewter. The
+## warm buff that was here first measured (171,153,131) in the summit frame --
+## inside the flesh-tone band, which is what made a 0.85 m bird read as a pale
+## blob rather than as a bird. Every entry is now neutral or cool.
+const BIRD_PALETTE: Array[Color] = [
+	Color("#d9d6cc"), Color("#7d8489"), Color("#9aa0a2"), Color("#eae7de"), Color("#5f676c"),
+]
 const BOUNDS := preload("res://scripts/world/building_prefabs.gd")
 
 ## D111 -- OP-0906-05: the Summit Stronghold should read as a domed aviary
@@ -640,8 +647,10 @@ static func _build_interior(root: Node3D, spec: Dictionary, dome: Dictionary,
 
 	# --- real log perches, not bare cylinders -----------------------------
 	# The existing `_build_furniture` perches are 0.14 m beams 12-24 m up; at
-	# the judge's distance they are hairlines. These are readable roosts at
-	# standing height and mid height, on the installed Kenney survival logs.
+	# the judge's distance they are hairlines. These are readable roosts on the
+	# installed Kenney survival logs, straddling the 9 m drum crown: the summit
+	# camera looks UP at the dome from outside that wall, so a perch below it is
+	# hidden and one above it reads against the sky through the lattice.
 	var logs: Array = []
 	var log_spec: Dictionary = interior_spec.get("log_perches", {})
 	for i in int(log_spec.get("count", 7)):
@@ -656,8 +665,28 @@ static func _build_interior(root: Node3D, spec: Dictionary, dome: Dictionary,
 		var placed := _install_prop(interior_root, scene, "AviaryLogPerch", at, length,
 			angle + PI * 0.5, true)
 		logs.append(placed)
-		# A perch off the ground needs a leg and a lashing, or it floats.
-		if height > 0.4:
+		# A perch off the ground needs holding up, or it floats. Below the drum
+		# crown it stands on a leg; above it there is no wall left to stand on,
+		# so it hangs from the lattice on two ropes -- which is also the only
+		# interior dressing the summit-approach camera can see, since that
+		# camera looks UP at the dome from outside a 9 m drum wall and the
+		# floor of the cage is hidden behind it.
+		if height > drum_height:
+			var dome_radius: float = float(dome["sphere_radius"])
+			var dome_centre_y: float = float(dome["sphere_centre_y"])
+			for lean: float in [-1.0, 1.0]:
+				var tangent := Vector3(cos(angle + PI * 0.5), 0.0, sin(angle + PI * 0.5))
+				var end := at + tangent * lean * length * 0.4
+				# Land the hanger ON the dome sphere rather than at a guessed
+				# height: solve the sphere for the anchor's own horizontal
+				# radius, so the rope ends exactly on the lattice instead of
+				# stopping short inside it or poking out through it.
+				var anchor_flat := Vector3(end.x, 0.0, end.z) * 1.02
+				var flat_radius := anchor_flat.length()
+				var rise := sqrt(maxf(dome_radius * dome_radius - flat_radius * flat_radius, 0.0))
+				var anchor_at := anchor_flat + Vector3.UP * (dome_centre_y + rise)
+				_cylinder_between(interior_root, "AviaryPerchHanger", end, anchor_at, 0.06, rope)
+		elif height > 0.4:
 			var foot := Vector3(at.x, 0.0, at.z)
 			_cylinder_between(interior_root, "AviaryPerchLeg", foot,
 				at - Vector3.UP * 0.15, 0.16, timber)
@@ -690,6 +719,14 @@ static func _build_interior(root: Node3D, spec: Dictionary, dome: Dictionary,
 				sin(phi) * (rz - crown_inset))
 		var bird := _install_prop(interior_root, SONGBIRD, "AviaryRoostingBird", at,
 			bird_height, rng.randf_range(0.0, TAU), false)
+		# `ollie-the-songbird` is a plumberry bird: at 0.85 m against grey stone
+		# its own pink plumage rendered as a salmon blob in the first summit
+		# frame of this round, not as a bird. The owner's standing correction
+		# says to recolour rather than to go looking for another asset, so each
+		# copy takes one flat colour from a small highland roost palette -- a
+		# clean silhouette at reading distance and a mixed roost rather than
+		# nine identical birds.
+		_recolour_bird(bird, BIRD_PALETTE[i % BIRD_PALETTE.size()])
 		birds.append(bird)
 
 	# --- cables and hanging tackle: the "no cables" half of the verdict ----
@@ -781,6 +818,22 @@ static func _build_interior(root: Node3D, spec: Dictionary, dome: Dictionary,
 
 	return {"logs": logs, "birds": birds, "cables": cables, "cloths": cloths,
 		"lanterns": lanterns, "floor": floor_node, "root": interior_root}
+
+
+## Flatten one static bird copy to a single plumage colour. The source texture
+## is dropped rather than tinted: multiplying a grey onto pink plumage gives
+## muted pink, and at this size the silhouette is doing all the work anyway.
+static func _recolour_bird(bird: Node3D, plumage: Color) -> void:
+	for node: Node in bird.find_children("*", "MeshInstance3D", true, false):
+		var mesh_instance := node as MeshInstance3D
+		if mesh_instance.mesh == null:
+			continue
+		for surface in mesh_instance.mesh.get_surface_count():
+			var flat := StandardMaterial3D.new()
+			flat.albedo_color = plumage
+			flat.roughness = 0.9
+			flat.metallic = 0.0
+			mesh_instance.set_surface_override_material(surface, flat)
 
 
 ## Height-normalised prop placement, matching the `_install` pattern the

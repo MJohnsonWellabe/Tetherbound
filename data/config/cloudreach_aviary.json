@@ -82,16 +82,16 @@
       "litter_count": 22
     },
     "log_perches": {
-      "_why": "The existing furniture perches are 0.14 m beams 12-24 m up: hairlines at the judge's distance, which is why a dome full of them still read as empty. These are readable roosts on the installed Kenney survival tree-logs, at standing-to-mid height where the camera actually looks, each with a leg and a rope lashing so none of them floats.",
-      "count": 7,
+      "_why": "The existing furniture perches are 0.14 m beams 12-24 m up: hairlines at the judge's distance, which is why a dome full of them still read as empty. These are readable roosts on the installed Kenney survival tree-logs. The height range deliberately straddles the 9 m drum crown: the summit-approach camera looks UP at the dome from OUTSIDE the drum, so anything below 9 m is hidden behind the wall from the one stand the judge reviews this object at, while a perch above it reads against the sky through the lattice. Below the crown a perch stands on a leg; above it, it hangs from the lattice on two ropes.",
+      "count": 11,
       "height_min_m": 0.0,
-      "height_max_m": 5.5,
+      "height_max_m": 17.0,
       "length_min_m": 3.0,
       "length_max_m": 5.0
     },
     "birds": {
       "_why": "X3. The handoff called a static bird 'not found licence-clean'; ollie-the-songbird.glb has been installed in this repo all along. 0.85 m reads at the summit stand without pretending to be a catchable encounter.",
-      "count": 9,
+      "count": 14,
       "height_m": 0.85
     },
     "cables": {

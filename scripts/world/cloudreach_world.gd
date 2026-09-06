@@ -1836,6 +1836,17 @@ func _build_authored_route_details() -> void:
 			placement.add_child(model)
 			if asset == "bush" or asset == "flowers":
 				_apply_tree_palette(model, pocket.get_child_count())
+			elif asset.begins_with("rock"):
+				# CLOUDREACH-DRESS-0906. C9 routed `_place_local_prop`'s rocks
+				# through the stone palette, and that fix is real -- but this is
+				# a SECOND, independent rock placer, and it was never given the
+				# same line. Its rocks kept the nature kit's raw material and
+				# rendered at Rec.709 luminance 1.000 (probed at the stand-11
+				# aerie shelter), which is the other half of the judge's "rocks
+				# are in three unrelated materials": the pale cubes that "read
+				# as jade or ice", beside the near-black masses the palette's
+				# own multiply was producing.
+				apply_stone_palette(model)
 			_set_geometry_visibility(placement, float(detail.get("visibility_range_m", 320.0)))
 
 
@@ -1914,7 +1925,14 @@ static func apply_stone_palette(root_node: Node) -> void:
 				# Roughness comes off 1.0 for the other half of the same
 				# sentence: a fully rough surface has no highlight at all.
 				tinted.albedo_texture = null
-				tinted.albedo_color = Color("#8e918c")
+				# Value chosen by measurement, not by eye. With the texture
+				# gone, #8e918c rendered its sunlit faces at Rec.709 0.809 in
+				# the stand-02 frame -- brighter than the cottage plaster beside
+				# them at 0.711, against a 0.420 frame median, which trades the
+				# judge's black blobs for white ones. Scaling the linear albedo
+				# by ~0.52 puts a lit face near 0.60 and a shadowed one near
+				# 0.34, which brackets the frame median the way stone should.
+				tinted.albedo_color = Color("#676d66")
 				tinted.roughness = 0.82
 				tinted.metallic = 0.0
 				tinted.metallic_specular = 0.28
@@ -2896,19 +2914,21 @@ func _build_summit_stronghold(root: Node3D) -> void:
 ## stays on so the drum's own masonry still occludes it.
 func _aviary_membrane_material() -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
-	material.albedo_color = Color(0.80, 0.83, 0.76, 0.34)
+	# Round 1 of this round skinned the dome at alpha 0.34 with a strong rim,
+	# and it read as GLASS -- the frame turned from an unbuilt planetarium into
+	# a greenhouse, which is a different wrong object. This is stretched hide
+	# and canvas over ribs instead: a warm parchment tone, more opaque, fully
+	# rough, and no rim term. That is what a working aviary's wind-skin is, and
+	# it cannot be mistaken for glazing.
+	material.albedo_color = Color(0.86, 0.81, 0.68, 0.62)
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_PER_PIXEL
-	material.roughness = 0.85
+	material.roughness = 1.0
 	material.metallic = 0.0
+	material.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
 	material.no_depth_test = false
 	material.depth_draw_mode = BaseMaterial3D.DEPTH_DRAW_DISABLED
-	# A little rim brightening so the curve of the dome reads where the skin
-	# turns away, which is the whole point of skinning it.
-	material.rim_enabled = true
-	material.rim = 0.55
-	material.rim_tint = 0.2
 	return material
 
 

@@ -12,9 +12,9 @@ extends SceneTree
 
 const SCENE := preload("res://scenes/world/cloudreach_cliffs.tscn")
 # tools/_capture_cloudreach_cliff_options.gd, view "11-aerie-ground-connection".
-const STAND := Vector2(373.0, 3262.5356)
-const TARGET := Vector3(400.0, 614.0, 3250.0)
-const PITCH_DEG := -5.0
+var STAND := Vector2(373.0, 3262.5356)
+var TARGET := Vector3(400.0, 614.0, 3250.0)
+var PITCH_DEG := -5.0
 const SPRING_M := 5.8
 const FOV := 70.0
 const VIEW := Vector2(1280.0, 800.0)
@@ -25,6 +25,12 @@ func _init() -> void:
 
 
 func _run() -> void:
+	# `--stand=06` re-points the reconstruction at the summit approach view.
+	for arg in OS.get_cmdline_user_args():
+		if arg == "--stand=06":
+			STAND = Vector2(100.0, 5290.0)
+			TARGET = Vector3(100.0, 1215.0, 5350.0)
+			PITCH_DEG = 18.0
 	var game := root.get_node_or_null(^"Game")
 	if game != null and game.has_method("reset_for_new_game"):
 		game.call("reset_for_new_game")
@@ -135,6 +141,7 @@ func _run() -> void:
 	for probe: Dictionary in [
 		{"label": "LEFT blob  (x 130-260, y 345-455)", "rect": Rect2(130, 345, 130, 110)},
 		{"label": "RIGHT blob (x 880-1010, y 275-365)", "rect": Rect2(880, 275, 130, 90)},
+		{"label": "06 lumber pile (x 850-1015, y 500-550)", "rect": Rect2(850, 500, 165, 50)},
 	]:
 		print("--- %s" % probe["label"])
 		var hits: Array[Dictionary] = []

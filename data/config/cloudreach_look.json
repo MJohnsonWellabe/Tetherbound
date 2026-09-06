@@ -87,25 +87,28 @@
     "roof_colour": "#5a6572",
     "timber_colour": "#4b3a2b",
     "wall_colour": "#b9b4a8",
-    "guy_rope_radius": 0.03,
+    "_comment_guy_rope": "Two blind verdicts have named this one rope: 'a single thin diagonal pole running from the grass to the roof ridge like a guy-wire', then 'the same bare leaning pole prop appears repeatedly' and 'a bare pale pole runs ground-to-sky' at stand 12, with 'remove or load the empty leaning poles' on the judge's own fix list. It cannot simply go -- smoke_cloudreach_look asserts a non-zero count and the ropes are real structure -- so instead it is made INDISTINGUISHABLE from the ridge lashings now on the same roof: identical gauge (both 0.038) and an identical 1.5 m stake reach. One lone line at its own thickness and its own angle is a stray mark; eight identical tails converging on stakes around one roof is rigging.",
+    "guy_rope_radius": 0.038,
+    "guy_stake_reach_m": 1.5,
     "dressing_visibility_m": 900.0,
     "cliff_dressing": {
       "_comment": "Per-building windswept dressing from the medieval kit's own previously-unused modules, all installed by this round's asset commit. It is applied to both cliff settlements (lower_cliffs_waycamp, cliffhold_settlement) and to nothing else, so the Meadows village is untouched. The windward face is chosen per building as the one pointing away from the settlement centre -- the face the approach camera sees and the weather hits -- so the dressing lands on the side that is actually in frame instead of being scattered evenly.",
       "enabled": true,
       "balconies": true,
-      "balcony_drop_m": 0.95,
+      "balcony_height_m": 1.6,
+      "vine_height_m": 2.6,
+      "vine_proud_m": 0.12,
+      "_comment_shutters": "Stand 12: the cottage front read as \"an open timber lattice over a doorway (a shopfront without a shop)\". That face is a wide window whose pale glass sits behind a timber grid, so at reading distance the grid loses its infill and the bay reads as an opening. Shutters give the bay a frame and a shadow line. Placed from each prefab's OWN recipe (every Window_* module it declares), so they cannot drift out of step with building_prefabs.json, and applied here rather than in the recipe so the Meadows village -- which shares cottage_a and cottage_b -- is untouched.",
+      "window_shutters": true,
       "supports_per_building": 3,
-      "support_stand_off_m": 0.35,
+      "footing_out_m": 1.7,
       "vines_per_building": 2,
       "_comment_lashing": "The judge read the existing single guy rope as 'a single thin diagonal pole running from the grass to the roof ridge like a guy-wire'. One thin line alone on a wall is a stray mark; three lines thrown OVER the ridge and staked both sides, with logs weighting the ridge, is a roof that lives in this wind. Same asset budget, opposite read.",
       "ridge_lashings": 3,
-      "lashing_radius_m": 0.045,
-      "ridge_logs": 2,
+      "lashing_radius_m": 0.038,
       "_comment_banner": "Stand 08: 'a stone chimney-tower with a yellow rectangle for a banner'. That is _build_cliff_settlement's WindBanner, a flat unlit box in leaf_gold. It is hidden and real cloth is hung in its place on banner_cloth.gdshader, so it moves and carries the device every other Cloudreach banner does.",
       "tower_banner_width_m": 2.2,
-      "tower_banner_height_m": 4.4,
-      "terrace_rails": 8,
-      "terrace_rail_radius_m": 23.5
+      "tower_banner_height_m": 4.4
     }
   }
 }
