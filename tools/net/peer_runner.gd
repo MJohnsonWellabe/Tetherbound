@@ -1609,12 +1609,36 @@ func _step_engage_wild(args: Dictionary) -> Dictionary:
 	var manager := _combat_manager()
 	if manager == null or not bool(manager.call("is_fighting")):
 		return {"verdict": "FAIL", "detail": "the engage press did not start a fight"}
-	var id := str(manager.call("encounter_id"))
-	if id.is_empty():
-		return {"verdict": "FAIL",
-			"detail": "a fight started but it is not bound to an encounter record"}
-	return {"verdict": "PASS", "detail": "engaged %s as encounter %s"
-		% [str(body.get("species_id")), id]}
+	# Lane 7.A fix. The binding is POLLED, not read once.
+	#
+	# On the HOST the encounter record exists the moment the press lands, so a
+	# single read was correct for every smoke written before this one -- all of
+	# which engage from peer 0. On a CLIENT it cannot be: the intent goes to
+	# the host, `submit()` answers `{"ok": false, "pending": true}`, and the
+	# record comes back a round trip later. Reading `encounter_id()` once and
+	# calling an empty string a failure is the "pending is not a refusal" trap,
+	# and it reported as "a fight started but it is not bound to an encounter
+	# record" -- which reads like the encounter protocol failing rather than
+	# like this arm being host-only. Measured on
+	# `smoke_net_host_exit_saves.gd`'s first client-side engage; see
+	# MP-7A-RELIABILITY-0906 finding F2.
+	#
+	# A budget rather than a fixed wait so the host path still returns on its
+	# first poll and costs nothing.
+	var bind_budget := maxi(1, int(args.get("bind_budget_frames", 600)))
+	var id := ""
+	for i in bind_budget:
+		id = str(manager.call("encounter_id"))
+		if not id.is_empty():
+			return {"verdict": "PASS", "detail": "engaged %s as encounter %s (bound after %d frame(s))"
+				% [str(body.get("species_id")), id, i]}
+		if not bool(manager.call("is_fighting")):
+			return {"verdict": "FAIL",
+				"detail": "the fight ended before it was ever bound to an encounter record"}
+		await physics_frame
+	return {"verdict": "FAIL",
+		"detail": "a fight started but it was never bound to an encounter record within %d frames"
+			% bind_budget}
 
 
 ## Stand the trainer at a point. The travel itself, not a game action.
@@ -2530,6 +2554,43 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			return bool(floor_player.call("is_on_floor"))
 		"state_hash":
 			return _compute_state_hash()
+		"party":
+			# Contract §5's `party` probe, "the Gate F `party_state()` shape".
+			# Named in the contract from Wave 0 and first needed here: lane
+			# 7.A's reconnect row has to compare the character that came back
+			# against the one that left, and `assert party_size` can only
+			# compare against a number this file would have to hard-code.
+			return _probe.call("party_state")
+		"world_snapshot":
+			# `Game.world_snapshot()` -- EXACTLY the payload the host puts on
+			# the wire in `session.gd::_rpc_snapshot`, asked of whichever peer
+			# is being probed. On the host it is the truth; on a late joiner it
+			# is what that joiner would itself now serialise, after the four
+			# live-scene sync seams have run.
+			#
+			# This, and not the merged save file, is the honest world-vs-world
+			# comparison: the save file's `progression` key is world flags
+			# MERGED WITH the local player's own, so two peers holding
+			# identical worlds legitimately differ there, and a smoke diffing
+			# it would report a divergence that is not one.
+			var wsgame := root.get_node_or_null(^"Game")
+			if wsgame == null or not wsgame.has_method("world_snapshot"):
+				return {}
+			return wsgame.call("world_snapshot")
+		"save_dict":
+			# Contract §5: "the full world save dictionary -- large, for
+			# diffing a late joiner against the host in 7.A". The WHOLE
+			# dictionary, not the hashed subset: the hash answers "do these
+			# agree", and this answers "on which key do they not", which is
+			# the difference between a smoke that reports a divergence and one
+			# that reports a divergence AND says where.
+			#
+			# `world_seed` is left in rather than erased the way
+			# `_compute_state_hash()` erases it. The seed is pinned identically
+			# across a run (net_harness.gd::_spawn_peer sets TB_WORLD_SEED), so
+			# it is a key that SHOULD match, and hiding it here would hide the
+			# one case where it does not.
+			return _save_dictionary()
 		"world_seed":
 			# The RESOLVED seed -- what `spawn_tables.gd::resolve_seed()`
 			# actually hands every spawn lookup, honoring `TB_WORLD_SEED` --
@@ -3126,6 +3187,36 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			if asave == null:
 				return null
 			return FileAccess.file_exists(str(asave.call("slot_path", int(agame.call("autosave_slot")))))
+		"autosave_dict":
+			# Lane 7.A. The AUTOSAVE FILE, re-read off disk. Deliberately not
+			# `save_dict`: that probe SAVES first and reads back what it just
+			# wrote, so it always reflects live memory and could never fail a
+			# "did the exit actually write this?" assertion. `saved_world_
+			# buildings` is the same shape for lane 3.C's explicit `save_world`
+			# scratch slot; the host's own `leave()` writes the AUTOSAVE slot,
+			# which is a different file and is the one §17 item 24 is about.
+			#
+			# `{}` and not `null` when there is no file: a caller can tell
+			# "nothing written" from "no answer" by asking `is_empty()`,
+			# without `int(null)` aborting the check around it.
+			var adgame := root.get_node_or_null(^"Game")
+			if adgame == null:
+				return {}
+			var adsys: Variant = adgame.get("save_system")
+			if adsys == null:
+				return {}
+			var adpath := str(adsys.call("slot_path", int(adgame.call("autosave_slot"))))
+			if not FileAccess.file_exists(adpath):
+				return {}
+			var adf := FileAccess.open(adpath, FileAccess.READ)
+			if adf == null:
+				return {}
+			var adtext := adf.get_as_text()
+			adf.close()
+			var adparsed: Variant = JSON.parse_string(adtext)
+			if typeof(adparsed) != TYPE_DICTIONARY:
+				return {}
+			return adparsed as Dictionary
 		"worlds_dir_entries":
 			# D100's `user://worlds/` -- the host-owned world save directory.
 			# It does not exist for anybody yet (the split is a later lane), so
@@ -3155,27 +3246,43 @@ func _execute_probe(msg: Dictionary) -> Variant:
 ## coordinator (`net_harness.gd::_handle_peer_line`) treats a `null` heartbeat
 ## `state_hash` as `ERROR: state hash unavailable`, a harness fault (exit 2),
 ## never as a silent "hashes agree" or a quiet desync.
-func _compute_state_hash() -> Variant:
+## The whole save dictionary this process would write right now, re-read off
+## disk. Contract §5's `save_dict` probe and `_compute_state_hash()` share this
+## one function deliberately: a lane that diffs two peers key by key and a
+## detector that hashes a subset of the same keys must be reading the SAME
+## bytes, or a green hash beside a red diff is unexplainable.
+##
+## Returns `{}` (never `null`) on any failure so a caller can tell "no keys"
+## from "no answer" by asking `is_empty()` -- `int(null)` is 0 in GDScript and
+## a probe that answered `null` here would abort a comparison rather than fail
+## it (lane 7.A's own trap list).
+func _save_dictionary() -> Dictionary:
 	var game := root.get_node_or_null(^"Game")
 	if game == null:
-		return null
+		return {}
 	var save_system: Variant = game.get("save_system")
 	if save_system == null:
-		return null
+		return {}
 	if not bool(save_system.call("save", game, HASH_SCRATCH_SLOT)):
-		return null
+		return {}
 	var path := str(save_system.call("slot_path", HASH_SCRATCH_SLOT))
 	if not FileAccess.file_exists(path):
-		return null
+		return {}
 	var f := FileAccess.open(path, FileAccess.READ)
 	if f == null:
-		return null
+		return {}
 	var text := f.get_as_text()
 	f.close()
-	var parsed = JSON.parse_string(text)
+	var parsed: Variant = JSON.parse_string(text)
 	if typeof(parsed) != TYPE_DICTIONARY:
+		return {}
+	return parsed as Dictionary
+
+
+func _compute_state_hash() -> Variant:
+	var full := _save_dictionary()
+	if full.is_empty():
 		return null
-	var full: Dictionary = parsed
 	# Allowlist, not exclude-list -- see HASHED_KEYS's own comment. `world_seed`
 	# is not in either list: contract §7 (amended) says it is ERASED from the
 	# hashed dictionary entirely and asserted separately against the pin

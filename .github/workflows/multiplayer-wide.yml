@@ -1,0 +1,159 @@
+name: Multiplayer wide (3/4 peers)
+
+# Stage B Wave 7 lane 7.A. `docs/specs/MP_NET_HARNESS_CONTRACT.md` §8 and §10.
+#
+# THE 3- AND 4-PEER NET SMOKES, AND ONLY THOSE. They are here, in a workflow of
+# their own, rather than as another job in `ci.yml`, for one measured reason:
+#
+#   spike S2 (`ralph/reports/MP-0D-SPIKE-HOSTCOST-0905/`) measured FOUR
+#   concurrent Meadows boots at 12.85 GB, which does not fit beside PR CI on a
+#   16 GB runner.
+#
+# So contract §10 is explicit: smokes declaring `# peers: 3` or `# peers: 4`
+# "run only from the `workflow_dispatch` job `verify-multiplayer-wide` and from
+# the owner kit". `ci.yml`'s `verify-multiplayer-shard` discovers `# peers: 2`
+# exactly and can never pick these up.
+#
+# A separate FILE and not a second job in `ci.yml` because the nightly half of
+# that gate needs a `schedule:` trigger, and `ci.yml` has ~58 jobs -- adding
+# `schedule:` there would run the entire matrix every night to get these two
+# smokes. Nothing here fires on `pull_request`, by construction: there is no
+# `pull_request` trigger in this file at all.
+
+on:
+  workflow_dispatch:
+    inputs:
+      peers:
+        description: "Which wide smokes to run"
+        required: false
+        default: "both"
+        type: choice
+        options: ["both", "3", "4"]
+  schedule:
+    # 03:20 UTC nightly. Off the hour deliberately -- GitHub queues scheduled
+    # workflows hardest at :00, and a run that waits an hour for a runner is a
+    # run whose result arrives after everybody has stopped looking.
+    - cron: "20 3 * * *"
+
+concurrency:
+  # Never two of these at once on one account: each holds up to four full
+  # Meadows worlds in memory, and two overlapping runs is the 25 GB nobody has.
+  group: multiplayer-wide
+  cancel-in-progress: false
+
+env:
+  # Same pin as ci.yml. See docs/decisions/D01-godot-version-and-renderer.md.
+  GODOT_VERSION: 4.7-stable
+
+jobs:
+  verify-multiplayer-wide:
+    runs-on: ubuntu-latest
+    # A 4-peer run is four cold Meadows builds (~85 s each, spike S2) plus a
+    # step phase budgeted at 1,500 s (`data/config/multiplayer.json`
+    # ::test_budgets.smoke_step_budget_s_wide), and the 3-peer run before it.
+    # 60 is that plus margin for a slower runner; it is an ESTIMATE built from
+    # measured build costs, and the first real run should correct it in either
+    # direction.
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ralph/
+            !/docs/
+            !/shots/
+            !/assets_raw/
+            !/archive/
+      - uses: ./.github/actions/setup-godot
+      - name: Report the runner's memory before anything boots
+        run: |
+          set -uo pipefail
+          echo "spike S2 measured four concurrent Meadows boots at 12.85 GB."
+          free -g || true
+          nproc || true
+      - name: Discover peers:3 / peers:4 net smokes
+        id: discover
+        run: |
+          set -uo pipefail
+          want="${{ inputs.peers || 'both' }}"
+          files=""
+          count=0
+          for f in tests/smoke_net_*.gd; do
+            [ -f "$f" ] || continue
+            n=""
+            head -5 "$f" | grep -qE '^#[[:space:]]*peers:[[:space:]]*3$' && n=3
+            head -5 "$f" | grep -qE '^#[[:space:]]*peers:[[:space:]]*4$' && n=4
+            [ -n "$n" ] || continue
+            if [ "$want" != "both" ] && [ "$want" != "$n" ]; then
+              continue
+            fi
+            files="$files ${f}:${n}"
+            count=$((count + 1))
+          done
+          echo "found (${count}):${files}"
+          # The same floor `verify-multiplayer-shard` keeps, for the same
+          # reason: a header lost in a rebase must fail this job rather than
+          # make it silently green having stood up no peer at all. Regenerated
+          # from the files on disk, never incremented:
+          #
+          #   for f in tests/smoke_net_*.gd; do
+          #     head -5 "$f" | grep -qE '^#[[:space:]]*peers:[[:space:]]*[34]$' && echo "$f"
+          #   done | wc -l
+          if [ "$want" = "both" ] && [ "$count" -lt 2 ]; then
+            echo "::error::expected at least 2 tests/smoke_net_*.gd files declaring '# peers: 3' or '# peers: 4', found ${count}"
+            exit 1
+          fi
+          # Named registration, on top of the count -- discovery alone would
+          # let a smoke drop out by losing its header and be covered by
+          # whatever else happens to be in the directory.
+          if [ "$want" = "both" ]; then
+            for required in \
+              tests/smoke_net_three_peer_session.gd \
+              tests/smoke_net_four_peer_session.gd
+            do
+              case " $files " in
+                *" ${required}:"*) ;;
+                *)
+                  echo "::error::${required} is not being discovered as a wide net smoke"
+                  exit 1
+                  ;;
+              esac
+            done
+          fi
+          echo "files=${files}" >> "$GITHUB_OUTPUT"
+      - name: Run the wide net smokes
+        if: ${{ !cancelled() && steps.discover.outputs.files != '' }}
+        run: |
+          set -uo pipefail
+          status=0
+          # Ordered smallest first: a 3-peer failure is cheaper to read than a
+          # 4-peer one, and if the box cannot hold three it will not hold four.
+          for entry in $(printf '%s\n' ${{ steps.discover.outputs.files }} | sort -t: -k2,2n); do
+            f="${entry%%:*}"
+            n="${entry##*:}"
+            name="$(basename "$f" .gd)"
+            name="${name#smoke_net_}"
+            echo "::group::smoke_net_${name}.gd (${n} peers)"
+            # No RETRIES loop, deliberately, and not the shard's 1 either: a
+            # wide run that passes on a second attempt is a finding about the
+            # box or about the session, and re-running it would cost another
+            # four world builds to hide exactly that.
+            if ! tools/net/run_net_smoke.sh "$name" --peers="$n" --out=/tmp/net-wide; then
+              echo "smoke_net_${name}.gd FAILED at ${n} peers"
+              status=1
+            fi
+            echo "::endgroup::"
+            echo "--- memory after ${name} ---"
+            free -g || true
+          done
+          exit "$status"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: net-smoke-wide-runs
+          path: /tmp/net-wide/
+          retention-days: 14
+          if-no-files-found: ignore

@@ -108,6 +108,48 @@ var _fatal_reason := ""
 ## step wall clock"). 0 until `launch()` sets it.
 var _step_phase_deadline_ms := 0.0
 
+## Contract §9. `{delay_ms, jitter_ms, loss_pct}` when this run routes every
+## joiner through `tools/net/udp_proxy.gd`, `{}` when it does not.
+##
+## Set from the environment (`TB_NET_CONDITIONS="delay=150,jitter=30,loss=1"`)
+## so ANY existing smoke can be re-run under latency without editing the
+## smoke -- which is exactly what lane 7.A needs: the jitter verdict has to be
+## the same file's verdict, run twice, or it is not a comparison. A smoke may
+## also set `net_conditions` itself before `launch()`.
+var net_conditions: Dictionary = {}
+## target ENet port -> {pid, listen_port}. One proxy per host port; a run with
+## three joiners dialling one host shares one proxy, the way three clients on
+## a real link share one link.
+var _proxies: Dictionary = {}
+var _proxy_listen_next := 0
+
+
+## `TB_NET_CONDITIONS="delay=150,jitter=30,loss=1"`. Any missing field is 0,
+## and an empty/absent variable leaves `net_conditions` exactly as the smoke
+## left it, so an explicit in-smoke setting is never silently erased.
+func _read_net_conditions_env() -> void:
+	var raw := OS.get_environment("TB_NET_CONDITIONS").strip_edges()
+	if raw.is_empty():
+		return
+	var parsed := {}
+	for token in raw.split(",", false):
+		var pair := str(token).split("=", true, 1)
+		if pair.size() != 2:
+			continue
+		var key := pair[0].strip_edges().to_lower()
+		var value := float(pair[1].strip_edges())
+		match key:
+			"delay", "delay_ms": parsed["delay_ms"] = value
+			"jitter", "jitter_ms": parsed["jitter_ms"] = value
+			"loss", "loss_pct": parsed["loss_pct"] = value
+	if parsed.is_empty():
+		return
+	net_conditions = {
+		"delay_ms": float(parsed.get("delay_ms", 0.0)),
+		"jitter_ms": float(parsed.get("jitter_ms", 0.0)),
+		"loss_pct": float(parsed.get("loss_pct", 0.0)),
+	}
+
 
 func _init_budgets() -> void:
 	_budgets = {
@@ -158,6 +200,7 @@ func _init_budgets() -> void:
 func launch(peer_count: int, scene: String, extra_args: Array = [],
 		per_peer_args: Dictionary = {}) -> bool:
 	_init_budgets()
+	_read_net_conditions_env()
 	_scene_for_run = scene
 	_peer_count_for_run = peer_count
 
@@ -173,6 +216,15 @@ func launch(peer_count: int, scene: String, extra_args: Array = [],
 	var offset := _port_offset_from_run_id(_run_id)
 	var control_base := _env_int("TB_NET_CONTROL_BASE", CONTROL_BASE_PORT + offset)
 	var enet_base := _env_int("TB_NET_ENET_BASE", ENET_BASE_PORT + offset)
+	# Contract §9's proxies live inside this run's own port stride (20 wide,
+	# see `_port_offset_from_run_id`), above the four ENet ports it can hand
+	# out, so a latency run never collides with a concurrent clean one.
+	_proxy_listen_next = enet_base + 10
+	if not net_conditions.is_empty():
+		print("coordinator: net_conditions active -- delay %.0f ms, jitter %.0f ms, loss %.1f%% (contract §9)"
+			% [float(net_conditions.get("delay_ms", 0.0)),
+			   float(net_conditions.get("jitter_ms", 0.0)),
+			   float(net_conditions.get("loss_pct", 0.0))])
 
 	_peers.clear()
 	for i in peer_count:
@@ -492,9 +544,85 @@ func _send_to(p: Dictionary, msg: Dictionary) -> void:
 ## (contract §4 default 3000) -- converted to the wall-clock bound the
 ## coordinator itself can actually wait on (contract §3: "budget_frames plus
 ## 5s of wall clock").
+## Start (or reuse) a `tools/net/udp_proxy.gd` in front of `target_port` and
+## return the port a joiner should dial instead. 0 if it could not be started.
+##
+## The proxy is a separate headless process for the same reason the peers are:
+## it must keep pumping while the coordinator is blocked, and a coordinator
+## that relayed packets from inside its own `_pump_once()` would inject its own
+## scheduling into the very thing it is measuring.
+func _proxy_for(target_port: int) -> int:
+	if _proxies.has(target_port):
+		return int((_proxies[target_port] as Dictionary).get("listen_port", 0))
+	var listen_port := _proxy_listen_next
+	_proxy_listen_next += 1
+	var exe := OS.get_executable_path()
+	var args := [
+		"--headless", "--path", ProjectSettings.globalize_path("res://"),
+		"--script", "res://tools/net/udp_proxy.gd", "--",
+		"--listen-port=%d" % listen_port,
+		"--target-host=127.0.0.1", "--target-port=%d" % target_port,
+		"--delay-ms=%.0f" % float(net_conditions.get("delay_ms", 0.0)),
+		"--jitter-ms=%.0f" % float(net_conditions.get("jitter_ms", 0.0)),
+		"--loss-pct=%.2f" % float(net_conditions.get("loss_pct", 0.0)),
+		# Same literal argv token every peer carries, so `run_net_smoke.sh`'s
+		# `pgrep -f "TB_NET_RUN_ID=<id>"` sweep reaps the proxy too.
+		"TB_NET_RUN_ID=%s" % _run_id,
+	]
+	var parts: Array[String] = [_shq(exe)]
+	for a in args:
+		parts.append(_shq(str(a)))
+	var log_path := _run_dir.path_join("udp-proxy-%d.log" % listen_port)
+	var pid := OS.create_process("/bin/sh", ["-c",
+		"exec %s >%s 2>&1" % [" ".join(parts), _shq(log_path)]])
+	if pid <= 0:
+		return 0
+	_proxies[target_port] = {"pid": pid, "listen_port": listen_port, "log": log_path}
+	print("coordinator: udp_proxy pid=%d relaying 127.0.0.1:%d -> 127.0.0.1:%d (log %s)"
+		% [pid, listen_port, target_port, log_path])
+	# Wait for the bind rather than assuming it. A second headless Godot takes
+	# a second or two to reach `_initialize()`, and a joiner that starts
+	# dialling a port nothing is listening on yet is relying on ENet's connect
+	# retries to cover a startup race -- which works right up until the box is
+	# loaded and it does not, and the failure reads as "the join timed out"
+	# rather than "the proxy was not up".
+	#
+	# The probe is a bind attempt from here: while the port is free THIS
+	# process can take it, and the frame it cannot is the frame the proxy has
+	# it. The socket is closed immediately either way.
+	var deadline := Time.get_ticks_msec() + 15000
+	while Time.get_ticks_msec() < deadline:
+		var probe_sock := PacketPeerUDP.new()
+		var free := probe_sock.bind(listen_port) == OK
+		probe_sock.close()
+		if not free:
+			print("coordinator: udp_proxy bound udp/%d" % listen_port)
+			return listen_port
+		await process_frame
+		_pump_once()
+	print("coordinator: udp_proxy never bound udp/%d within 15 s; see %s" % [listen_port, log_path])
+	return 0
+
+
 func step(peer: int, action: String, args := {}, budget: int = -1) -> Dictionary:
 	if budget < 0:
 		budget = int(_budgets.get("step_budget_frames", DEFAULT_STEP_BUDGET_FRAMES))
+	# Contract §9: "Clients join the proxy port instead of the host's."
+	# Interposed HERE rather than by rewriting the host's `hello` -- every
+	# smoke reads `hello.enet_port` for BOTH the `host` step's bind and the
+	# `join` step's dial, so a rewritten hello would put the proxy's port
+	# under the listen server and there would be nothing to forward to.
+	# Rewriting only the join argument leaves every existing smoke correct
+	# under latency with no edit to the smoke.
+	if action == "join" and not net_conditions.is_empty():
+		args = (args as Dictionary).duplicate(true)
+		var target := int(args.get("port", 0))
+		if target > 0:
+			var listen := await _proxy_for(target)
+			if listen > 0:
+				args["port"] = listen
+			else:
+				_fatal_reason = "ERROR: could not start udp_proxy for target port %d" % target
 	var p: Dictionary = _peers[peer]
 	var id := "s%d" % _next_step_id
 	_next_step_id += 1
@@ -730,6 +858,12 @@ func finish() -> int:
 		if pid > 0 and OS.is_process_running(pid):
 			OS.kill(pid)
 
+	for key in _proxies.keys():
+		var proxy: Dictionary = _proxies[key]
+		var proxy_pid := int(proxy.get("pid", -1))
+		if proxy_pid > 0 and OS.is_process_running(proxy_pid):
+			OS.kill(proxy_pid)
+
 	_write_run_json()
 	_write_summary()
 
@@ -765,6 +899,10 @@ func _write_run_json() -> void:
 		"state_hash_hashed_keys": PEER_RUNNER.HASHED_KEYS,
 		"state_hash_excluded_keys": PEER_RUNNER.EXCLUDED_KEYS,
 		"budgets": _budgets,
+		# Contract §9: the jitter verdict is only comparable to the clean one
+		# if the run says which it was. `{}` is the clean run.
+		"net_conditions": net_conditions,
+		"proxies": _proxies.values(),
 	}
 	var f := FileAccess.open(_run_dir.path_join("NET_RUN.json"), FileAccess.WRITE)
 	if f:
@@ -774,7 +912,13 @@ func _write_run_json() -> void:
 
 func _write_summary() -> void:
 	var lines := ["# Net smoke run %s" % _run_id, "", "Scene: %s" % _scene_for_run,
-		"Peers: %d" % _peers.size(), ""]
+		"Peers: %d" % _peers.size(),
+		"Net conditions: %s" % ("clean (no proxy)" if net_conditions.is_empty()
+			else "delay %.0f ms / jitter %.0f ms / loss %.1f%%" % [
+				float(net_conditions.get("delay_ms", 0.0)),
+				float(net_conditions.get("jitter_ms", 0.0)),
+				float(net_conditions.get("loss_pct", 0.0))]),
+		""]
 	for entry in _peers:
 		var p: Dictionary = entry
 		lines.append("- peer %d (%s) pid=%s exited=%s unexpected_exit=%s" % [
