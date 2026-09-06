@@ -18,7 +18,8 @@
     "apron_mouth_width_m": 8.0,
     "apron_far_width_m": 4.6,
     "_comment_apron_run_ext06": "EXT-06-STAIN, third exterior pass, reviewer instruction 'a visibly dark soil apron 6-8m out from the mouth, with the ground carpet suppressed there'. `burrow_warrens.gd::_build_approach_apron()`'s own `run` (how far out the ramp travels) was a bare 6.0 with no config hook at all -- this gives it one and raises it into the asked band. Both halves of the existing mechanism scale off it automatically: the dark `_floor_box` ramp itself reaches further out, and the `CLEAR_RADIUS_META` circle that suppresses the runtime grass carpet (the same mechanism the '[warrens] planted N pieces of ground cover' log line already reports on) grows with it too, because that circle's own radius formula is `Vector2(mouth_width, run).length()`. Extending the existing lever, not building a second one. ALL TUNABLE.",
-    "apron_run_m": 7.5,
+    "_why_apron_run_post6": "POST-ROUND-6-0906: 7.5 -> 8.0 so the ramp reaches the throat's outer end (throat_depth_m 8) and hands off to the threshold fan there, with its far end held 0.15m above the terrain (burrow_warrens.gd::_build_approach_apron) so it no longer z-fights the rising ground -- the 'white strip' of JUDGE-round6.md 03.",
+    "apron_run_m": 8.0,
     "_comment_apron_colour": "EXT-05-GROUND, second blind pass on EXT-04-APRON's own fan: '04-warrens-approach-day reads as uniform light-grey boulders on lawn'. The apron ramp (`_build_approach_apron()`) was drawing `site.floor_colour` through `_floor_material(exterior=true)`'s own 0.12 lerp toward the near-white `ROCK_TINT` -- a lerp tuned to keep the INTERIOR floor from crushing a dim room's own histogram (see `_floor_material`'s header), which has nothing to protect out here in daylight and just made the worn path read as pale dirt rather than trodden ground. `floor_colour` itself is untouched -- it is the interior chambers' own floor colour too, and the interior is not this pass's to change (owner verdict: interior good). `apron_colour` is a NEW, exterior-only value: `_floor_material()` now reads it in place of `floor_colour` when `exterior=true`, and `_boulder_soil_collar()` below reuses it too, so the apron and the dirt collar at every ground-contact boulder's foot are the one dark worn-earth colour rather than two disagreeing browns. TUNABLE.",
     "apron_colour": "#2b2118",
     "floor_clearance": 0.35,
@@ -185,7 +186,7 @@
     "surface_noise_freq_m": 0.06,
     "surface_noise_amount": 0.12,
     "_why_moist": "SECOND-PASS-0906: the 'darker moist band within 2m of every hole and the mouth' the brief asks for. `_build_bank()`'s grid loop writes this per-vertex (COLOR.g) as an inverse-distance falloff to the mouth arch centre and every `warren_holes` entry; the shader darkens and cools `earth_tint` by it. 0 disables (an unconfigured site is unaffected).",
-    "moist_radius_m": 2.0,
+    "moist_radius_m": 3.0,
     "moist_darken": 0.35,
     "moist_tint": "#8c8073",
     "_why_face": "The approach-facing dug cliff. `face_slope_deg` (55-65 asked, 60 shipped) is the actual local slope of the cut near the mouth -- steeper than the natural 20-30 degree cone falloff everywhere else, which is what makes the mouth read as DUG rather than eroded. `face_half_width_m`/`face_transition_m` are how wide the cut is and how much it softens into the natural flank either side.",
@@ -196,7 +197,10 @@
     "_why_arch": "The real dug mouth: an elliptical arch cut into the dug face. 5.0m wide x 3.8m tall clears a 1.7x Burrowback guardian (CLAUDE.md's own scale rule) with room either side for a 1.80m trainer walking beside it. `arch_spring_frac` is where the vertical jambs stop and the rounded crown begins (as a fraction of `arch_height_m`), so the throat's cross-section reads as a proper arch, not a full ellipse down to the floor. `throat_depth_m` is how deep the dark tunnel runs before it meets the existing `mouth` chamber's own doorway cut; `throat_overlap_m` carries the decorative shell slightly PAST that cut so there is never a gap a player could see daylight, or fall, through, without moving the chamber/passage code this pass does not own. `site.mouth_opening` (unchanged block, see above) is now [5.0, 3.8] to match this arch exactly.",
     "arch_width_m": 5.0,
     "arch_height_m": 3.8,
-    "arch_margin_m": 0.6,
+    "_why_arch_margin_post6": "POST-ROUND-6-0906: 0.6 -> 1.1 so the notch clears the flared outer ring (`throat_flare`) and the throat's own wall thickness; the notch now follows the throat's bend (burrow_warrens.gd::_bank_notch_open_factor).",
+    "arch_margin_m": 1.1,
+    "_why_throat_flare": "POST-ROUND-6-0906, JUDGE-round6.md 03: the mouth measured about lamp-post height (2.5-3m) against the 2.6m post. The outer ring flares 18% (5.9 x 4.5m) and settles to the fixed doorway by 45% of the way in (burrow_warrens.gd::_throat_flare); the brow is sized to the flared ring. Widens only.",
+    "throat_flare": 0.18,
     "arch_spring_frac": 0.55,
     "_why_throat_depth": "SECOND-PASS-0906, judge evidence 'the interior's grey box walls and doorway show straight through the throat'. 6.0 -> 8.0 (brief: '~8m') for a genuinely deep dark tunnel; `throat_curve_amplitude_m` below is what actually stops the straight sightline (extra depth alone only makes a longer straight pipe).",
     "throat_depth_m": 8.0,
@@ -205,9 +209,11 @@
     "throat_tint": "#3a2a1d",
     "_why_throat_glow": "ROUND-4-0906, JUDGE-round3.md finding 4 ('the entrance is full black ... no depth cue'): a warm low OmniLight3D `throat_glow_depth_m` inside the throat's outer end (burrow_warrens.gd::_build_throat_glow), shadowless, energy/range per the brief, so the opening reads as a hole with depth. 0 energy disables.",
     "_why_throat_glow_round5": "ROUND-5-0906, JUDGE-round4.md 03 ('the mouth is not warm-lit; light appears only far down the corridor'): brought forward to 1.8m inside the brow and pushed to 2.2 / 7.5m so the brow's own inner faces and the sill catch it.",
-    "throat_glow_energy": 2.2,
-    "throat_glow_range_m": 7.5,
-    "throat_glow_depth_m": 1.8,
+    "_why_throat_glow_round6": "ROUND-6-0906, JUDGE-round5.md 00/03 ('the warm light is a spot on the hill, not light from the hole'): 7.5m reached the dome face above the brow. 4.5m at attenuation 2.2, 2.4m inside, keeps it in the hole and on the sill.",
+    "throat_glow_energy": 2.4,
+    "throat_glow_range_m": 4.5,
+    "throat_glow_depth_m": 2.4,
+    "throat_glow_attenuation": 2.2,
     "throat_glow_height_m": 1.1,
     "throat_glow_colour": "#ffb877",
     "_why_throat_curve": "SECOND-PASS-0906: the tube's OWN walls bend sideways partway along its length (`_throat_curve_offset()`'s own header has the full mechanism) -- zero at both ends, so neither the fixed exterior arch nor the fixed interior doorway move. Kept under `arch_width_m`'s own half-width (2.5m) by design so the walk corridor's own centreline never leaves the tube's interior; only the far side of the bend, away from a walking player's own line, ever crosses a wall. 0 disables (a straight tube, the old shape).",
@@ -230,15 +236,18 @@
     "threshold_fan_near_pad_m": 1.6,
     "_why_threshold_colour_round5": "ROUND-5-0906: the diagnostic render showed the pale strip in front of the mouth is the terrain's own baked dirt-path texture -- the approach road, pale tan under software GL -- arriving at the threshold, not the apron (which is inside the throat). #4a3a2c against that road gave JUDGE-round4.md its 'hard straight edge between the pale texture and the dark brown ground'; a mid trodden tone reads as the same road turning damp and churned at the den rather than a second material.",
     "threshold_colour": "#6e5b45",
+    "threshold_berm_m": 0.3,
     "_why_material": "The bank's own material (`shaders/earth_bank.gdshader`): a slope+height blend between the meadow's own grass texture (gentle upper surfaces, so the bank reads as a grassy hump continuous with the field) and the terrain's own wet-earth texture (steep and low surfaces). `grass_tint` matches the terrain's own grass tint exactly (terrain_playground.json); `earth_tint` stays near-white for the same reason that file's own `damp` entry does -- the wet-earth photo already carries its target colour, a tint would only wash it out. `earth_colour` (below) is a SEPARATE, deliberately darker multiply used by the small hand-placed earth props beside the mouth (lip, warren-hole lips, half-buried stones' collar, spoil), which sit in shadow close to the camera rather than lit broadly like the bank's own crest.",
     "grass_tint": "#e9dfc0",
     "_why_grass_brightness": "ROUND-4-0906: crop medians off the round-4 render put the meadow's rendered ground at (112,125,102) and the bank's grass at (40,44,35) -- 2.8x darker, the 'uniformly dark-olive hill' of every verdict so far. Multiplies `grass_tint` past 1.0 (burrow_warrens.gd::_bank_material) so the mound's grass meets the field it stands in; earth/spoil are untouched. Measured, not guessed; re-measure after any terrain palette change.",
     "grass_brightness": 2.4,
+    "_why_earth_brightness": "ROUND-5-0906: see grass_brightness -- the round-5 render measured the bank's flanks unchanged at (40,44,35) because nearly all of the dome sat above slope_blend_low_deg 32 and drew earth. The slope band moves to 42/58 so the settled dome reads as grass (earth stays on the dug face, in the spoil mask and on the moist rims), and the earth that remains is lifted 1.5x -- still darker than the grass.",
+    "earth_brightness": 1.5,
     "earth_tint": "#f0ece4",
     "grass_uv_scale": 0.27,
     "earth_uv_scale": 0.25,
-    "slope_blend_low_deg": 32.0,
-    "slope_blend_high_deg": 48.0,
+    "slope_blend_low_deg": 42.0,
+    "slope_blend_high_deg": 58.0,
     "height_blend_low_frac": 0.12,
     "height_blend_high_frac": 0.3,
     "earth_colour": "#6b5640",
@@ -256,7 +265,9 @@
     "stain_height_m": 0.85,
     "stain_softness_m": 0.5,
     "moss_normal_min": 0.5,
-    "moss_strength": 0.75,
+    "_why_moss_strength_round5": "ROUND-5-0906: at 0.75 every upward rock face rendered as a flat plate of saturated green -- JUDGE-round4.md's 'flat green tops ... crates'. 0.45 keeps moss a stain over the stone, not a coat of paint.",
+    "moss_strength": 0.45,
+    "macro_patch_strength": 0.25,
     "_why_outcrop_tilt": "ROUND-5-0906, JUDGE-round4.md 01/02 ('a stack of boxes ... flat green tops, hard facets, right-angles to each other'): pitch/roll of up to this many degrees per face outcrop (burrow_warrens.gd::_build_bank_face_outcrops), so no two share a level top or a right angle.",
     "outcrop_tilt_deg": 22.0,
     "_why_lamp": "OP-0905-09: no metal Team Tether door frame at the mouth any more. The Team Tether presence the required-dungeon list still asks for (`_comment_dressing` below, unchanged) is a lamp post and a staked cable beside the opening instead, so the mouth reads warm-lit from the road rather than fitted with a door.",
@@ -266,12 +277,16 @@
     "lamp_forward_m": 9.8,
     "lamp_colour": "#ffcf8a",
     "lamp_energy": 2.0,
+    "lamp_bulb_colour": "#ff9a3c",
+    "lamp_bulb_emission": 7.0,
+    "_why_lamp_collar": "ROUND-6-0906: Team Tether's reserved oxblood, on the one Team Tether object at the threshold (JUDGE-round5.md: 'no Team Tether identity').",
+    "lamp_collar_colour": "#6b1d1d",
     "lamp_range_m": 9.0,
     "_comment_mouth_flora": "A small fern/bush cluster beside the arch -- the 'life growing at the mouth' the old rock/fern jambs gave, without the rock jambs. Local offsets, same convention as every other placement in this file.",
     "_why_mouth_flora_round5": "ROUND-5-0906, JUDGE-round4.md 03 ('oversized fern fronds ~1.5m long; jungle, not meadow, and they crowd the arch'): scales roughly halved.",
     "mouth_flora": [
       {
-        "model": "Fern_1",
+        "model": "Grass_Wide_Short",
         "offset": [
           -3.8,
           -1.4
@@ -289,7 +304,7 @@
         "yaw_deg": 70.0
       },
       {
-        "model": "Fern_1",
+        "model": "Grass_Wide_Short",
         "offset": [
           4.0,
           -1.5
@@ -314,8 +329,8 @@
           -6.5,
           -1.6
         ],
-        "radius_x_m": 1.0,
-        "radius_z_m": 0.8,
+        "radius_x_m": 1.4,
+        "radius_z_m": 1.1,
         "fan_length_m": 2.2,
         "_why": "left of the main mouth, on the dug face itself"
       },
@@ -324,8 +339,8 @@
           6.2,
           -1.1
         ],
-        "radius_x_m": 0.9,
-        "radius_z_m": 0.75,
+        "radius_x_m": 1.3,
+        "radius_z_m": 1.0,
         "fan_length_m": 2.0,
         "_why": "right of the main mouth, mirrored but independently sized"
       },
@@ -561,7 +576,7 @@
         "scale": 1.7,
         "lean_deg": 2.0,
         "yaw_deg": 55.0,
-        "sink_m": 0.4,
+        "sink_m": 0.7,
         "_why": "on the crown bump's own peak, right behind the arch -- the tallest, most road-visible point of the mound's silhouette"
       },
       {
@@ -573,7 +588,7 @@
         "scale": 1.55,
         "lean_deg": -3.0,
         "yaw_deg": 150.0,
-        "sink_m": 0.4,
+        "sink_m": 0.7,
         "_why": "paired with CommonTree_1 across the crown bump so the peak reads as a crowned hilltop, not a single stray tree"
       },
       {
@@ -684,28 +699,8 @@
       }
     ],
     "_comment_spoil_mounds": "EXT-07-EARTHWORK item 3, kept: squashed earth heaps below the mouth -- the dug-out material a burrow would throw up. Local offsets, in front of the throat. THIRD-PASS-0906, JUDGE-round2.md sec3 item 4 ('the mouth's spoil fan spills onto it [the threshold]'): offsets moved inward from z=-8.2/-7.6 (just past the apron's own outer edge, `site.apron_run_m`=7.5) to z=-5.8/-5.2 (inside it), scale/squash widened so the spill visibly reaches across the trodden ground rather than stopping just short of it. No collider (unchanged), so overlapping the walk apron's own footprint is not a walkability concern.",
-    "spoil_mounds": [
-      {
-        "model": "Rock_Medium_2",
-        "offset": [
-          -4.8,
-          -5.8
-        ],
-        "scale": 2.9,
-        "squash_y": 0.36,
-        "yaw_deg": -12.0
-      },
-      {
-        "model": "Rock_Medium_1",
-        "offset": [
-          5.2,
-          -5.2
-        ],
-        "scale": 2.7,
-        "squash_y": 0.38,
-        "yaw_deg": 22.0
-      }
-    ],
+    "_why_spoil_mounds_round6": "ROUND-6-0906: emptied. The two squashed Rock_Medium 'spoil mounds' beside the throat read, in JUDGE-round5.md 03, as 'flat brown discs on stems ... mushroom caps or tables' once the carved face stood behind them. The spoil read now comes from the COLOR.b mask, the threshold fan's berm and the re-clustered boulders. Empty list is a no-op in _build_spoil_mounds().",
+    "spoil_mounds": [],
     "_comment_rubble": "THIRD-PASS-0906, JUDGE-round2.md sec3 items 2/4: loose rubble (`_build_bank_rubble()`) -- small pebbles and worn path stones -- scattered at the foot of the dug face, around each spoil fan, and across the trodden threshold, so the ground in front of the mouth reads as disturbed dirt rather than swept flagstone. 26 pieces, within the brief's own 20-30.",
     "rubble_models": [
       "res://assets/environment/stylized_nature/Pebble_Round_1.gltf",

@@ -1124,7 +1124,13 @@ func _build_approach_apron() -> void:
 		var far := to_global(Vector3(0.0, 0.0, outer_z - run))
 		var height := float(_world.call("ground_height_at", far.x, far.z))
 		if not is_nan(height):
-			end_local = height - global_position.y
+			# POST-ROUND-6-0906, JUDGE-round6.md 03 ("a hard-edged white strip
+			# on the ground across the threshold"): the ramp's far end used to
+			# land EXACTLY on the terrain, and the terrain here rises toward
+			# the approach (tools/_probe_warrens_threshold_ground.gd: +0.68m
+			# at the throat's outer end), so the last metres of ramp were
+			# coplanar with it and z-fought. The end now sits a step above.
+			end_local = height - global_position.y + 0.15
 	for i in steps:
 		var t := (float(i) + 0.5) / float(steps)
 		var z := outer_z - t * run
@@ -1575,6 +1581,15 @@ func _bank_notch_open_factor(x: float, z: float) -> float:
 	var inner_z := z0 + overlap
 	var outer_z := z0 - depth
 	var soften := 1.8
+	# POST-ROUND-6-0906, JUDGE-round6.md 00/03 ("two bright vertical slits in
+	# the face of the mound directly above the arch ... gaps in the mound
+	# shell showing lit terrain behind"): the notch is the THROAT's footprint,
+	# so it follows the throat's own bend (`_throat_curve_offset()`) instead
+	# of running straight down x=0 while the tube swings 1.6m sideways --
+	# the old straight cut left the bend's outer wall inside earth the walk
+	# corridor then had to clear with its own, wider factor, which is what
+	# opened a 9m slot in the dome above the tube.
+	var cx := _throat_curve_offset(z, outer_z, inner_z)
 	# T1-WARRENS-HALL-BLOCK, 2026-09-06. The OUTER edge (into the open
 	# approach, where the throat shell's own visible geometry and the apron
 	# already own the ground) keeps the original short `soften` -- nothing
@@ -1597,7 +1612,7 @@ func _bank_notch_open_factor(x: float, z: float) -> float:
 		soften_here = inner_soften
 	elif z < outer_z:
 		dz = outer_z - z
-	var x_factor := 1.0 - _smooth01((absf(x) - (arch_half - edge_soft)) / edge_soft)
+	var x_factor := 1.0 - _smooth01((absf(x - cx) - (arch_half - edge_soft)) / edge_soft)
 	var z_factor := 1.0 - _smooth01(dz / soften_here)
 	return clampf(x_factor * z_factor, 0.0, 1.0)
 
@@ -1664,8 +1679,15 @@ func _bank_walk_clear_factor(x: float, z: float) -> float:
 	# enough that `max(notch, walk_clear)` in `_bank_height_at()` never dips
 	# to the notch's own value early and re-admits height before the wall's
 	# own thickness has passed.
-	var inner := z0
-	var inner_edge_soft := 0.3
+	# POST-ROUND-6-0906: this used to reach `z0`, i.e. the whole length of
+	# the throat, 11m wide -- and inside the throat span the earth it cleared
+	# is earth BESIDE and ABOVE the tube, where no player can stand: that
+	# clearing was the open slot in the dome JUDGE-round6.md saw as "slits"
+	# above the arch. Inside the throat the notch (now following the tube's
+	# own bend) alone keeps the tube's interior clear; this factor owns the
+	# open approach outside the tube's outer end.
+	var inner := z0 - float(_bank_cfg().get("throat_depth_m", 6.0))
+	var inner_edge_soft := 0.6
 	var edge_soft := 1.8
 	var x_factor := 1.0 - _smooth01((absf(x) - (half_w - edge_soft)) / edge_soft)
 	var z_factor := 1.0
@@ -1823,6 +1845,34 @@ func _bank_skirts_from_config(bank: Dictionary) -> Array:
 			"amp": float(spec.get("skirt_height_m", 0.22 + 0.25 * draw)),
 			"radius": maxf(float(spec.get("skirt_radius_m", 1.9 * draw)), 0.3),
 		})
+	# ROUND-6-0906, JUDGE-round5.md 00/03 ("trunks emerge from the dome with
+	# no root flare, no soil disturbance") and 01 ("boulders sit on the grass
+	# with no ground contact ... the cluster floats"): the same displaced-earth
+	# cone under every crest tree (a root mound) and every accent boulder,
+	# so each stands IN the surface rather than on it. `skirt_height_m` /
+	# `skirt_radius_m` per entry override the scale-derived defaults.
+	for entry_v: Variant in bank.get("crest_trees", []):
+		if not entry_v is Dictionary:
+			continue
+		var spec: Dictionary = entry_v as Dictionary
+		var offset := _local_of(spec.get("offset", [0.0, 0.0]))
+		var draw := float(spec.get("scale", 1.0))
+		out.append({
+			"cx": offset.x, "cz": offset.z,
+			"amp": float(spec.get("skirt_height_m", 0.45 + 0.3 * draw)),
+			"radius": maxf(float(spec.get("skirt_radius_m", 2.2 * draw)), 0.3),
+		})
+	for entry_v: Variant in bank.get("accent_boulders", []):
+		if not entry_v is Dictionary:
+			continue
+		var spec: Dictionary = entry_v as Dictionary
+		var offset := _local_of(spec.get("offset", [0.0, 0.0]))
+		var draw := float(spec.get("scale", 3.0))
+		out.append({
+			"cx": offset.x, "cz": offset.z,
+			"amp": float(spec.get("skirt_height_m", 0.15 + 0.22 * draw)),
+			"radius": maxf(float(spec.get("skirt_radius_m", 1.6 * draw)), 0.3),
+		})
 	return out
 
 
@@ -1905,6 +1955,14 @@ func _bank_spoil_at(x: float, z: float) -> float:
 ## assumed flat plane -- the rule every other piece of this outcrop's
 ## placement already keeps).
 func _bank_height_at(x: float, z: float) -> float:
+	return _bank_height_shaped(x, z, false)
+
+
+## POST-ROUND-6-0906: the same field with the notch/walk-corridor opening
+## ignored (`unnotched`), i.e. the earth mass as it would stand if nothing
+## had been dug through it -- what `_build_bank()`'s cap draws OVER the
+## throat so the dome is closed above the tube (see the cap pass there).
+func _bank_height_shaped(x: float, z: float, unnotched: bool) -> float:
 	# ROUND-4-0906: the secondary dig-mounds AND the crown bump ride INSIDE
 	# the pre-carve mass. The crown used to be added after the carve (the
 	# SECOND-PASS comment further down records why: with only the union in
@@ -1926,7 +1984,7 @@ func _bank_height_at(x: float, z: float) -> float:
 	# T1-WARRENS-HALL-BLOCK. Both factors are "how open is this point", so
 	# whichever wants MORE open wins -- never multiplied or summed (either
 	# would let one factor undo the other's own guarantee).
-	var settled := clampf(maxf(open_factor, walk_clear), 0.0, 1.0)
+	var settled := 0.0 if unnotched else clampf(maxf(open_factor, walk_clear), 0.0, 1.0)
 	h = lerp(h, 0.0, settled)
 	# The noise bump is additive-only everywhere ELSE (see its own header),
 	# but inside either opened region that same "only ever adds" rule would
@@ -2026,7 +2084,17 @@ func _bank_material() -> ShaderMaterial:
 	# against more dark.
 	var grass_brightness := float(bank.get("grass_brightness", 1.0))
 	mat.set_shader_parameter("grass_tint", Vector3(grass_tint.r, grass_tint.g, grass_tint.b) * grass_brightness)
-	mat.set_shader_parameter("earth_tint", Vector3(earth_tint.r, earth_tint.g, earth_tint.b))
+	# ROUND-5-0906: the round-5 render measured the bank's flanks at the SAME
+	# (40,44,35) as round 4 despite `grass_brightness` -- because at this
+	# site's own slopes (a 10m dome over a 13m radius peaks near 50 degrees)
+	# almost every visible square metre sat above `slope_blend_low_deg` and
+	# was drawing EARTH, so the grass tint never reached the frame. Two
+	# levers, both in config: the slope band moves up so the settled dome is
+	# grass and only the dug face and the spoil mask are earth, and
+	# `earth_brightness` lifts the earth that remains (still darker than the
+	# grass, no longer a third of the meadow's value).
+	var earth_brightness := float(bank.get("earth_brightness", 1.0))
+	mat.set_shader_parameter("earth_tint", Vector3(earth_tint.r, earth_tint.g, earth_tint.b) * earth_brightness)
 	mat.set_shader_parameter("grass_uv_scale", float(bank.get("grass_uv_scale", 0.27)))
 	mat.set_shader_parameter("earth_uv_scale", float(bank.get("earth_uv_scale", 0.25)))
 	mat.set_shader_parameter("slope_low_deg", float(bank.get("slope_blend_low_deg", 32.0)))
@@ -2298,6 +2366,8 @@ func _build_bank() -> void:
 	instance.material_override = _bank_material()
 	add_child(instance)
 	instance.create_trimesh_collision()
+	_make_trimesh_two_sided(instance)
+	_build_bank_cap(min_x, min_z, step, nx, nz, crest_for_norm, moist_sources, moist_radius)
 
 	# The site skirt (flora/rock scatter thinning out from the bank's own
 	# foot) is unchanged in shape, just reads its numbers from `bank` now.
@@ -2319,6 +2389,120 @@ func _build_bank() -> void:
 	print("[warrens] earth bank %.0fx%.0fm, crest %.1fm above the mouth (%.1fx the 1.8m trainer); chamber clearance past the required 1.5m: %s (worst %.1fm)" % [
 		max_x - min_x, max_z - min_z, crest_local, crest_local / 1.8,
 		", ".join(report), worst_margin])
+
+
+## POST-ROUND-6-0906, JUDGE-round6.md 00/03: the dome was OPEN above the
+## throat. A heightfield cannot be both the floor a player walks on inside
+## the tube and the earth roof over it, so wherever the notch opens the
+## bank, this draws a second surface -- the bank's own un-notched height
+## (`_bank_height_shaped(..., true)`), never lower than the throat shell's
+## crown -- over the tube, so the dome is closed above it and the two
+## "slits" either side of the arch are earth. Same grid, same material,
+## same vertex data as the bank; quads that would lie entirely on the tube
+## roof out where the face is lower than the tube (the protruding outer
+## few metres) are skipped, so the cap begins where the bank's own face
+## rises past the tube and drapes down onto its crown there. Its trimesh
+## collider means a player walking over the crest no longer drops into a
+## pit onto the tube's roof.
+func _build_bank_cap(min_x: float, min_z: float, step: float, nx: int, nz: int,
+		crest_for_norm: float, moist_sources: Array, moist_radius: float) -> void:
+	var bank := _bank_cfg()
+	var z0 := _mouth_outer_z()
+	var z_front := z0 - float(bank.get("throat_depth_m", 6.0))
+	var z_back := z0 + float(bank.get("throat_overlap_m", 0.4))
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var quads := 0
+	for ix in nx:
+		for iz in nz:
+			var qx := min_x + (float(ix) + 0.5) * step
+			var qz := min_z + (float(iz) + 0.5) * step
+			if _bank_notch_open_factor(qx, qz) <= 0.02 and _bank_walk_clear_factor(qx, qz) <= 0.02:
+				continue
+			if qz < z_front - 0.5:
+				continue
+			var corners: Array[Vector3] = []
+			var normals: Array[Vector3] = []
+			var above := 0
+			for offset: Vector2 in [Vector2(0, 0), Vector2(1, 0), Vector2(1, 1), Vector2(0, 1)]:
+				var x := min_x + (float(ix) + offset.x) * step
+				var z := min_z + (float(iz) + offset.y) * step
+				var roof := _throat_crown_height(z, z_front, z_back) + 0.06
+				var hu := _bank_height_shaped(x, z, true)
+				if hu > roof:
+					above += 1
+				var base := _site_ground(Vector3(x, 0.0, z))
+				if is_nan(base):
+					base = _floor_y
+				corners.append(Vector3(x, base + maxf(hu, roof), z))
+				normals.append(_bank_normal_shaped(x, z, true))
+			if above == 0:
+				continue
+			_bank_add_vertex(st, corners[0], crest_for_norm, moist_sources, moist_radius, normals[0])
+			_bank_add_vertex(st, corners[2], crest_for_norm, moist_sources, moist_radius, normals[2])
+			_bank_add_vertex(st, corners[1], crest_for_norm, moist_sources, moist_radius, normals[1])
+			_bank_add_vertex(st, corners[0], crest_for_norm, moist_sources, moist_radius, normals[0])
+			_bank_add_vertex(st, corners[3], crest_for_norm, moist_sources, moist_radius, normals[3])
+			_bank_add_vertex(st, corners[2], crest_for_norm, moist_sources, moist_radius, normals[2])
+			quads += 1
+	if quads == 0:
+		return
+	var cap := MeshInstance3D.new()
+	cap.name = "BankCap"
+	cap.mesh = st.commit()
+	cap.material_override = _bank_material()
+	add_child(cap)
+	cap.create_trimesh_collision()
+	_make_trimesh_two_sided(cap)
+	print("[warrens] bank cap closes the dome over the throat (%d quads)" % quads)
+
+
+## POST-ROUND-6-0906. `create_trimesh_collision()` builds a ONE-SIDED
+## ConcavePolygonShape3D (`backface_collision` false): it collides along the
+## triangles' own face normals only. The bank grid's winding puts those
+## normals on the underside -- which is why the enclosure rays cast UP from
+## the chambers always found it, and why the fixture's first ray cast DOWN
+## onto the new cap went straight through to the throat. A heightfield a
+## player can walk over from above and that must also read as a roof from
+## below has to collide from both sides.
+func _make_trimesh_two_sided(instance: MeshInstance3D) -> void:
+	for shape_node: Node in instance.find_children("*", "CollisionShape3D", true, false):
+		var concave := (shape_node as CollisionShape3D).shape as ConcavePolygonShape3D
+		if concave != null:
+			concave.backface_collision = true
+
+
+func _bank_normal_shaped(x: float, z: float, unnotched: bool) -> Vector3:
+	var d := 0.35
+	var hl := _bank_height_shaped(x - d, z, unnotched)
+	var hr := _bank_height_shaped(x + d, z, unnotched)
+	var hd := _bank_height_shaped(x, z - d, unnotched)
+	var hu := _bank_height_shaped(x, z + d, unnotched)
+	return Vector3(hl - hr, 2.0 * d, hd - hu).normalized()
+
+
+## The throat shell's highest point at one z, in local Y -- the arch crown
+## (`arch_height_m`, the profile's own +8% wobble ceiling) times the outer
+## flare (`_throat_flare()`).
+func _throat_crown_height(z: float, z_front: float, z_back: float) -> float:
+	var arch_h := float(_bank_cfg().get("arch_height_m", 3.8))
+	return _floor_y + arch_h * 1.1 * _throat_flare(z, z_front, z_back)
+
+
+## POST-ROUND-6-0906, JUDGE-round6.md 03 ("the mouth reads as roughly 2.5-3m,
+## about lamp-post height -- not a hole dug by a creature 3.2m at the
+## shoulder"): the opening flares by `throat_flare` at its outer end and
+## settles back to the fixed doorway size by ~45% of the way in, so the
+## mouth a player sees is bigger than the door it leads to -- the way a dug
+## entrance wears wider at the lip. Applied to jambs and arc alike (only
+## ever >= 1, so it can only widen the walk corridor, never pinch it).
+func _throat_flare(z: float, z_front: float, z_back: float) -> float:
+	var amount := float(_bank_cfg().get("throat_flare", 0.0))
+	if amount <= 0.0:
+		return 1.0
+	var span := maxf(z_back - z_front, 0.001)
+	var t := clampf((z - z_front) / span, 0.0, 1.0)
+	return 1.0 + amount * (1.0 - _smooth01(t / 0.45))
 
 
 ## The mouth: a dark throat (`_build_throat_shell()`) meeting the existing
@@ -2354,7 +2538,8 @@ func _build_bank_mouth() -> void:
 	_build_bank_mouth_flora(holder, bank)
 	# ROUND-4-0906, JUDGE-round3.md finding 4 ("the mouth is a black cutout").
 	_build_throat_glow(holder, bank, z_front, z_back)
-	_build_mouth_brow(holder, bank, z_front, rx, arch_h, spring_h)
+	var flare0 := _throat_flare(z_front, z_front, z_back)
+	_build_mouth_brow(holder, bank, z_front, rx * flare0, arch_h * flare0, spring_h * flare0)
 	_build_threshold_fan(holder, bank, z_front)
 
 
@@ -2450,21 +2635,23 @@ func _build_throat_shell(holder: Node3D, z_front: float, z_back: float,
 	for iz in steps + 1:
 		var z: float = lerpf(z_front, z_back, float(iz) / float(steps))
 		var curve_x := _throat_curve_offset(z, z_front, z_back)
+		# POST-ROUND-6-0906: the outer flare (`_throat_flare()`, >= 1 only).
+		var flare := _throat_flare(z, z_front, z_back)
 		var ring: Array[Vector3] = []
 		# The two LEFT jamb points -- floor and spring -- always exactly the
-		# fixed shape, never perturbed (see this function's own header).
-		ring.append(Vector3(-rx + curve_x, _floor_y, z))
-		ring.append(Vector3(-rx + curve_x, _floor_y + spring_h, z))
+		# fixed shape (times the flare), never perturbed inward.
+		ring.append(Vector3(-rx * flare + curve_x, _floor_y, z))
+		ring.append(Vector3(-rx * flare + curve_x, _floor_y + spring_h * flare, z))
 		for s in arc_segments + 1:
 			var t_arc := PI - PI * float(s) / float(arc_segments)
 			var arc_u := float(s) / float(arc_segments)
 			var pscale := _throat_profile_scale(arc_u, z, z_front, z_back)
-			var px := rx * cos(t_arc) * pscale
-			var py := spring_h + (arch_h - spring_h) * sin(t_arc) * pscale
+			var px := rx * cos(t_arc) * pscale * flare
+			var py := (spring_h + (arch_h - spring_h) * sin(t_arc) * pscale) * flare
 			ring.append(Vector3(px + curve_x, _floor_y + py, z))
 		# The two RIGHT jamb points -- also always exactly the fixed shape.
-		ring.append(Vector3(rx + curve_x, _floor_y + spring_h, z))
-		ring.append(Vector3(rx + curve_x, _floor_y, z))
+		ring.append(Vector3(rx * flare + curve_x, _floor_y + spring_h * flare, z))
+		ring.append(Vector3(rx * flare + curve_x, _floor_y, z))
 		rings.append(ring)
 
 	var st := SurfaceTool.new()
@@ -2724,12 +2911,27 @@ func _build_bank_lamp_and_cable(holder: Node3D, bank: Dictionary, z0: float, rx:
 
 	var bulb := MeshInstance3D.new()
 	var bulb_mesh := SphereMesh.new()
-	bulb_mesh.radius = 0.09
-	bulb_mesh.height = 0.18
+	bulb_mesh.radius = 0.11
+	bulb_mesh.height = 0.22
 	bulb.mesh = bulb_mesh
-	bulb.material_override = _material(lamp_colour, 3.0)
+	# ROUND-6-0906, JUDGE-round5.md 03 ("an unlit black pole with a white
+	# sphere -- no glow, no colour, no Team Tether identity"): the bulb burns
+	# a deeper amber at higher emission so it reads lit in daylight, and the
+	# post carries a Team Tether oxblood collar -- the reserved danger colour,
+	# on the one object at this threshold that IS Team Tether.
+	var bulb_colour := Color(str(bank.get("lamp_bulb_colour", "#ff9a3c")))
+	bulb.material_override = _material(bulb_colour, float(bank.get("lamp_bulb_emission", 7.0)))
 	bulb.position = lamp.position
 	post.add_child(bulb)
+	var collar := MeshInstance3D.new()
+	var collar_mesh := CylinderMesh.new()
+	collar_mesh.top_radius = 0.085
+	collar_mesh.bottom_radius = 0.085
+	collar_mesh.height = 0.28
+	collar.mesh = collar_mesh
+	collar.material_override = _material(Color(str(bank.get("lamp_collar_colour", "#6b1d1d"))))
+	collar.position = Vector3(0.0, -post_h * 0.5 + 1.55, 0.0)
+	post.add_child(collar)
 
 	# The cable: staked into the bank behind the post and running low to the
 	# post's own base, a sag rather than a taut line so it reads as run
@@ -2767,7 +2969,11 @@ func _build_throat_glow(holder: Node3D, bank: Dictionary, z_front: float, z_back
 	light.light_color = Color(str(bank.get("throat_glow_colour", "#ffb877")))
 	light.light_energy = energy
 	light.omni_range = float(bank.get("throat_glow_range_m", 6.0))
-	light.omni_attenuation = 1.4
+	# ROUND-6-0906, JUDGE-round5.md 00/03 ("a large yellow-green oval on the
+	# dome face ... the light that should come out of the mouth is instead
+	# painted on the hill above it"): a steeper falloff so the glow stays in
+	# the hole and on the sill instead of reaching the dome above the brow.
+	light.omni_attenuation = float(bank.get("throat_glow_attenuation", 2.2))
 	light.shadow_enabled = false
 	light.position = Vector3(_throat_curve_offset(z, z_front, z_back),
 		_floor_y + float(bank.get("throat_glow_height_m", 1.1)), z)
@@ -2823,7 +3029,11 @@ func _build_mouth_brow(holder: Node3D, bank: Dictionary, z_front: float, rx: flo
 		var turf := Node3D.new()
 		turf.name = "BrowTurf"
 		holder.add_child(turf)
-		var turf_names := ["Grass_Wide_Tall", "Grass_Common_Tall", "Fern_1"]
+		# Wide tufts and fern only: the round-5 frame caught the taller
+		# Grass_Common_Tall blades backlit above the brow as two black spikes.
+		# ROUND-6-0906 (JUDGE-round5.md: "tropical ferns and aloe/agave clumps
+		# sitting on top of all of it"): meadow grass only, short.
+		var turf_names := ["Grass_Wide_Short", "Grass_Wispy_Tall", "Grass_Common_Short"]
 		for i in turf_count:
 			var t := lerpf(0.1, 0.9, float(i) / float(maxi(turf_count - 1, 1))) + rng.randf_range(-0.04, 0.04)
 			var angle := PI * t
@@ -2840,7 +3050,7 @@ func _build_mouth_brow(holder: Node3D, bank: Dictionary, z_front: float, rx: flo
 			var lean := Vector3(cos(angle), 0.0, -0.4).normalized()
 			tuft.rotation = Vector3(deg_to_rad(rng.randf_range(10.0, 30.0)) * lean.z,
 				rng.randf_range(-PI, PI), -deg_to_rad(rng.randf_range(15.0, 40.0)) * lean.x)
-			tuft.scale = Vector3.ONE * rng.randf_range(0.7, 1.25)
+			tuft.scale = Vector3.ONE * rng.randf_range(0.55, 0.9)
 			turf.add_child(tuft)
 			_dress_skirt_flora(tuft)
 
@@ -2904,7 +3114,10 @@ func _build_threshold_fan(holder: Node3D, bank: Dictionary, z_front: float) -> v
 	rng.seed = int(bank.get("seed", 63220)) + 3401
 	var rings := 5
 	var spokes := 22
-	var centre_z := z_front + 0.5
+	# Starts 0.2m INSIDE the throat's outer end so it runs under the apron
+	# ramp's own last box (the ramp ends above it) rather than leaving a
+	# sliver of bare terrain between the two.
+	var centre_z := z_front + 0.2
 	var lift := 0.07
 	# Rows of points from the opening (row 0, under the brow) outward to the
 	# fan's far rim; each row is an arc of `spokes` points across the fan's
@@ -2921,11 +3134,22 @@ func _build_threshold_fan(holder: Node3D, bank: Dictionary, z_front: float) -> v
 			# the rim bows outward in the middle and is jittered so it reads
 			# as a worn patch, not a trapezoid
 			var bow := (1.0 - u * u) * length * 0.18 * t
-			var jit := rng.randf_range(-0.35, 0.35) * t
-			var x := u * half + rng.randf_range(-0.15, 0.15) * t
+			# ROUND-6-0906, JUDGE-round5.md 03 ("a flat brown plane with a
+			# razor-straight diagonal edge ... level, no mounding, no lip"):
+			# a ragged rim (up to a metre of jitter at the far edge) and a
+			# low berm -- the middle rows lift into a shallow heap that
+			# falls back to grade at the rim, so the fan reads as earth
+			# thrown and settled, not a decal.
+			var jit := rng.randf_range(-0.9, 0.9) * t
+			var x := u * half + rng.randf_range(-0.5, 0.5) * t
 			var z := centre_z - dist - bow + jit
 			var base := _site_ground(Vector3(x, 0.0, z))
-			var y: float = (base if not is_nan(base) else _floor_y) + _bank_height_at(x, z) + lift
+			var berm := 0.0
+			if r > 0 and r < rings:
+				var across_w := 1.0 - u * u
+				berm = float(bank.get("threshold_berm_m", 0.3)) * sin(PI * t) * (0.55 + 0.45 * across_w) \
+					* (1.0 + rng.randf_range(-0.3, 0.3))
+			var y: float = (base if not is_nan(base) else _floor_y) + _bank_height_at(x, z) + lift + berm
 			row.append(Vector3(x, y, z))
 		rows.append(row)
 	var st := SurfaceTool.new()
@@ -3449,7 +3673,9 @@ func _cap_outcrop_with_growth(holder: Node3D, art: Node3D, offset: Vector3, norm
 	var box := _bounds_of(art)
 	if box.size == Vector3.ZERO:
 		return
-	var names := ["Grass_Wide_Tall", "Fern_1", "Grass_Common_Tall", "Grass_Wide_Tall"]
+	# ROUND-6-0906: meadow grass only -- the ferns read as house plants
+	# (JUDGE-round5.md 03).
+	var names := ["Grass_Wide_Short", "Grass_Wispy_Tall", "Grass_Common_Short", "Grass_Wide_Short"]
 	# ROUND-5-0906 (JUDGE-round4.md: "grass tufts along the rock tops are
 	# single identical clumps at similar spacing"): 1-4 tufts, not always 4,
 	# at a wider scale spread.

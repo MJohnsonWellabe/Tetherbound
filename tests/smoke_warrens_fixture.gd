@@ -84,6 +84,7 @@ func _run() -> void:
 	_the_skyline_is_a_cluster_of_mounds(warrens)
 	_the_face_above_the_mouth_is_steep(warrens)
 	_the_threshold_and_the_heaps_read_as_spoil(warrens)
+	_the_dome_is_closed_above_the_throat(warrens)
 
 	_finish()
 
@@ -566,6 +567,41 @@ func _the_threshold_and_the_heaps_read_as_spoil(warrens: Node3D) -> void:
 		_fail("the settled crest behind the doorway is marked as spoil (%.2f); the mask is leaking onto the grassy top" % at_crest)
 	if not mounds.is_empty() and lobes < mounds.size() - 1:
 		_fail("only %d of %d secondary mounds have a raw throw lobe; the heaps will read as grown, not thrown" % [lobes, mounds.size()])
+
+
+## POST-ROUND-6-0906, JUDGE-round6.md 00/03 ("two bright vertical slits in
+## the face of the mound directly above the arch ... gaps in the mound shell
+## showing lit terrain behind"): the notch that lets the throat through the
+## bank left the dome OPEN above the tube. Rays straight down over the
+## throat, either side of its centreline and a few metres in from its outer
+## end, must now hit earth (the bank or its cap) ABOVE the throat's own
+## crown, never the tube itself or the ground.
+func _the_dome_is_closed_above_the_throat(warrens: Node3D) -> void:
+	var space := (warrens as Node3D).get_world_3d().direct_space_state
+	var bank := warrens.call("_bank_cfg") as Dictionary
+	var z0: float = float(warrens.call("_mouth_outer_z"))
+	var depth := float(bank.get("throat_depth_m", 6.0))
+	var arch_h := float(bank.get("arch_height_m", 3.8))
+	var floor_y := float(warrens.get("_floor_y"))
+	var checked := 0
+	var open: Array[String] = []
+	for x_off: float in [-2.0, 0.0, 2.0]:
+		for z in [z0 - depth * 0.45, z0 - depth * 0.2, z0 - 0.4]:
+			var from := warrens.to_global(Vector3(x_off, 60.0, z))
+			var to := warrens.to_global(Vector3(x_off, floor_y - 1.0, z))
+			var hit := space.intersect_ray(PhysicsRayQueryParameters3D.create(from, to))
+			checked += 1
+			var collider: Node = hit.get("collider", null) as Node
+			var owner: Node = collider.get_parent() if collider != null else null
+			var owner_name := str(owner.name) if owner != null else "nothing"
+			var hit_local_y: float = warrens.to_local(hit.get("position", to)).y if not hit.is_empty() else -INF
+			var earth := owner_name == "Bank" or owner_name == "BankCap"
+			if not earth or hit_local_y < floor_y + arch_h * 0.9:
+				open.append("x=%+.1f z=%+.1f -> %s at y=%.1f" % [x_off, z, owner_name, hit_local_y])
+	print("[fixture] dome over the throat: %d rays down, %d open (%s)" % [
+		checked, open.size(), ", ".join(open) if not open.is_empty() else "all land on earth above the tube"])
+	if not open.is_empty():
+		_fail("the dome is open above the throat at %d of %d points: %s" % [open.size(), checked, ", ".join(open)])
 
 
 func _finish() -> void:
