@@ -46,13 +46,13 @@ extends SceneTree
 ##      moves the variable a polling loop reads. `_rx_state` below is that box
 ##      for this file's own two flags (`quit`, `quit_code`).
 ##   2. Every real id worth knowing is logged with the honest number, not a
-##      guess -- `hello`'s `pid` and this peer's own control-channel index are
-##      both logged verbatim. There is no real ENet peer id yet: Wave 0 has no
-##      Session to host/join (contract §1), so `probe session` reports a
-##      Wave-0-honest stub (see `_execute_probe`) rather than inventing one.
-##   3. (spawner authority set before tree entry) does not apply until Wave 2
-##      hands this a real `MultiplayerSpawner`; noted here so it is not
-##      forgotten when it does.
+##      guess -- `hello`'s `pid`, `enet_port` and this peer's own
+##      control-channel index are all logged verbatim, and from Wave 2 so is the
+##      real ENet peer id (`probe session`, which reads the live
+##      `scripts/net/session.gd` rather than the Wave-0 stub it replaced).
+##   3. (spawner authority set before tree entry) does not apply until a lane
+##      hands this a real `MultiplayerSpawner` -- 2.C owns the rigs; noted here
+##      so it is not forgotten when it does.
 
 const GATE_F_HARNESS := preload("res://tools/gate_f/operator_harness.gd")
 const PROBE := preload("res://scripts/debug/gate_f_probe.gd")
@@ -69,6 +69,13 @@ const HEARTBEAT_FRAMES := 60
 ## spike's own FRAME_BUDGET for "this should be instant; anything longer means
 ## the coordinator is not up".
 const CONNECT_BUDGET_FRAMES := 600
+
+## Contract §4's default per-step budget, for the Wave 2 net steps that poll
+## (`join`, `expect_peers`, `wait_flag`). Named here rather than read from
+## `tests/helpers/net_harness.gd` -- that file is the COORDINATOR's, runs in a
+## different process, and a peer that preloaded it to borrow one number would
+## be importing the whole coordinator into every peer.
+const NET_STEP_BUDGET_FRAMES := 3000
 
 ## Contract §7 as amended (`f090076c`, from this lane's own findings): the
 ## world-save keys actually HASHED, against today's v22 save format. An
@@ -141,7 +148,12 @@ func _initialize() -> void:
 		quit(2)
 		return
 
+	# `enet_port` is in the hello because a smoke has no other way to learn it:
+	# the coordinator hands peer i `enet_base + i` (net_harness.gd::launch) from
+	# a run-id-derived offset, and a `join` step needs the HOST's number, not
+	# its own. Reported by the peer that owns it rather than recomputed.
 	_send({"type": "hello", "peer": _peer_index, "role": _role, "pid": OS.get_process_id(),
+		"enet_port": _enet_port,
 		"godot_version": String(Engine.get_version_info().get("string", "")),
 		"main_sha": _git_sha()})
 
@@ -301,9 +313,9 @@ func _send_heartbeat() -> void:
 		"t": Time.get_ticks_msec() / 1000.0, "pos": pos,
 		"context": str(_probe.call("input_context")),
 		"state_hash": _compute_state_hash(),
-		# No real Session yet (Wave 0, contract §1) -- honestly empty rather
-		# than fabricated.
-		"session_peers": []})
+		# Wave 2: a real `Session` exists, so this is the real registry --
+		# `[]` only when this process has no session at all.
+		"session_peers": _session_peer_ids()})
 
 
 # --- step vocabulary --------------------------------------------------------
@@ -330,6 +342,16 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_move_to(args)
 		"assert":
 			out = _step_assert(args)
+		"host":
+			out = await _step_host(args)
+		"join":
+			out = await _step_join(args)
+		"leave":
+			out = await _step_leave(args)
+		"expect_peers":
+			out = await _step_expect_peers(args)
+		"wait_flag":
+			out = await _step_wait_flag(args)
 		_:
 			out = {"verdict": "ERROR", "detail": "unknown action '%s'" % action}
 	out["frames_used"] = _physics_count - before
@@ -594,6 +616,143 @@ func _step_move_to(args: Dictionary) -> Dictionary:
 		% [x, z, gap, close]}
 
 
+# --- net steps (contract §4, made real by Wave 2 lane 2.A) --------------------
+
+## The live `/root/Game/Session`, or null in a process whose Game never mounted
+## one (the `loopback` scene still has the autoload, so in practice this is only
+## null if the autoload itself failed).
+func _session() -> Node:
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		return null
+	return game.get("session") as Node
+
+
+func _session_peer_ids() -> Array:
+	var sess := _session()
+	if sess == null or not bool(sess.call("is_active")):
+		return []
+	var ids: Array = []
+	for row: Variant in (sess.call("peers") as Array):
+		ids.append(int((row as Dictionary).get("peer_id", 0)))
+	return ids
+
+
+func _step_host(args: Dictionary) -> Dictionary:
+	var sess := _session()
+	if sess == null:
+		return {"verdict": "ERROR", "detail": "no Session mounted on /root/Game"}
+	var port := int(args.get("port", _enet_port))
+	var cap := int(args.get("max_peers", 0))
+	var ok := bool(sess.call("host", port, cap))
+	if not ok:
+		return {"verdict": "FAIL", "detail": "Session.host(%d) refused (port already bound?)" % port}
+	# Contract §4: `host` passes when Session.host() returned OK AND
+	# multiplayer.is_server(). Both, not either -- a bound socket with no
+	# server-side MultiplayerAPI would satisfy the first and nothing else.
+	if not get_multiplayer().is_server():
+		return {"verdict": "FAIL", "detail": "Session.host(%d) bound but multiplayer.is_server() is false" % port}
+	return {"verdict": "PASS", "detail": "hosting udp/%d as peer %d" % [port, get_multiplayer().get_unique_id()]}
+
+
+func _step_join(args: Dictionary) -> Dictionary:
+	var sess := _session()
+	if sess == null:
+		return {"verdict": "ERROR", "detail": "no Session mounted on /root/Game"}
+	var ip := str(args.get("host", "127.0.0.1"))
+	var port := int(args.get("port", 0))
+	if port <= 0:
+		return {"verdict": "ERROR", "detail": "join step needs the host's enet port in args.port"}
+	var summary: Dictionary = (args.get("character", {}) as Dictionary)
+	if not bool(sess.call("join", ip, port, summary)):
+		return {"verdict": "FAIL", "detail": "Session.join(%s, %d) could not open a client socket" % [ip, port]}
+	# Contract §4: `join` passes when the handshake COMPLETED -- the world
+	# snapshot applied, not merely a socket connected. `Session` exposes that as
+	# `snapshot_ready()`, polled here a frame at a time (nothing in session.gd
+	# is a coroutine; see that file's `_box` comment).
+	var budget := int(args.get("budget_frames", NET_STEP_BUDGET_FRAMES))
+	for i in maxi(1, budget):
+		if bool(sess.call("handshake_failed")):
+			return {"verdict": "FAIL", "detail": "Session.join(%s, %d) refused after %d frames" % [ip, port, i]}
+		if bool(sess.call("is_active")) and bool(sess.call("snapshot_ready")):
+			return {"verdict": "PASS",
+				"detail": "joined %s:%d as peer %d after %d frames; snapshot applied; %d peer(s) in registry"
+				% [ip, port, get_multiplayer().get_unique_id(), i, int(sess.call("peer_count"))]}
+		await physics_frame
+	return {"verdict": "FAIL", "detail": "Session.join(%s, %d) never applied a snapshot within %d frames"
+		% [ip, port, budget]}
+
+
+func _step_leave(args: Dictionary) -> Dictionary:
+	var sess := _session()
+	if sess == null:
+		return {"verdict": "ERROR", "detail": "no Session mounted on /root/Game"}
+	if not bool(sess.call("is_active")):
+		return {"verdict": "FAIL", "detail": "no active session to leave"}
+	var was_host := bool(sess.call("is_host"))
+	sess.call("leave", str(args.get("reason", "left")))
+	# A leaving HOST holds its socket open for CLOSE_FLUSH_FRAMES so the
+	# reliable `session_ended` broadcast lands, so "left" is `is_active()` going
+	# false, not the call returning. The peer keeps running for probes
+	# afterwards (contract §4) -- this step must never quit the process.
+	var budget := int(args.get("budget_frames", 600))
+	for i in maxi(1, budget):
+		if not bool(sess.call("is_active")):
+			return {"verdict": "PASS", "detail": "%s left cleanly after %d frames"
+				% ["host" if was_host else "client", i]}
+		await physics_frame
+	return {"verdict": "FAIL", "detail": "%s session was still active %d frames after leave()"
+		% ["host" if was_host else "client", budget]}
+
+
+func _step_expect_peers(args: Dictionary) -> Dictionary:
+	var want := int(args.get("count", -1))
+	if want < 0:
+		return {"verdict": "ERROR", "detail": "expect_peers needs args.count"}
+	var budget := int(args.get("budget_frames", NET_STEP_BUDGET_FRAMES))
+	var have := -1
+	for i in maxi(1, budget):
+		var sess := _session()
+		have = int(sess.call("peer_count")) if sess != null else -1
+		if have == want:
+			return {"verdict": "PASS", "detail": "registry reports %d peer(s) after %d frames" % [have, i]}
+		await physics_frame
+	return {"verdict": "FAIL", "detail": "registry reports %d peer(s), wanted %d" % [have, want]}
+
+
+## Contract §4's `wait_flag`: a world or player flag becomes set within budget.
+## `scope` picks the store -- "any" (the merged view every gameplay reader
+## already uses), "world" or "player".
+func _step_wait_flag(args: Dictionary) -> Dictionary:
+	var flag := str(args.get("flag", ""))
+	if flag.is_empty():
+		return {"verdict": "ERROR", "detail": "wait_flag needs args.flag"}
+	var scope := str(args.get("scope", "any"))
+	var budget := int(args.get("budget_frames", NET_STEP_BUDGET_FRAMES))
+	for i in maxi(1, budget):
+		if _flag_is_set(flag, scope):
+			return {"verdict": "PASS", "detail": "flag %s (%s) set after %d frames" % [flag, scope, i]}
+		await physics_frame
+	return {"verdict": "FAIL", "detail": "flag %s (%s) never set within %d frames" % [flag, scope, budget]}
+
+
+func _flag_is_set(flag: String, scope: String) -> bool:
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		return false
+	var store: Variant = null
+	match scope:
+		"world":
+			store = game.call("world_flags") if game.has_method("world_flags") else null
+		"player":
+			store = game.call("player_flags") if game.has_method("player_flags") else null
+		_:
+			store = game.get("progression")
+	if store == null:
+		return false
+	return bool((store as RefCounted).call("has", flag))
+
+
 ## Semantics ported verbatim from `operator_harness.gd::_step_assert`'s own
 ## cases -- the exact comparisons and messages, not re-derived, for the same
 ## reason this whole file reads state through `gate_f_probe.gd` rather than a
@@ -679,12 +838,75 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			if wgame == null:
 				return null
 			return int(SPAWN_TABLES.resolve_seed(int(wgame.get("world_seed"))))
+		"remote_trainers":
+			# Lane 2.C. Every OTHER peer's body as this process sees it:
+			# the nodes `scripts/net/trainer_spawn.gd` spawned under D97's
+			# authored `Spawned/Trainers` container, keyed by the real peer id
+			# (which is a large random 32-bit number, never an index — ENet
+			# spike finding 2), with the position this process is actually
+			# drawing them at and the nameplate text it is actually showing.
+			# `tests/smoke_net_movement_two_peers.gd` compares that position
+			# against the owner's own reported position.
+			var seen := {}
+			for body in get_nodes_in_group(&"remote_trainer"):
+				if not is_instance_valid(body) or not (body is Node3D):
+					continue
+				var b: Node3D = body
+				var plate := b.get_node_or_null(^"Nameplate") as Label3D
+				seen[str(int(b.get("peer_id")))] = {
+					"pos": [b.global_position.x, b.global_position.y, b.global_position.z],
+					"name": "" if plate == null else str(plate.text),
+					"mine": b.is_multiplayer_authority(),
+					"visible": b.visible,
+					"anim": str(b.get("net_anim_state")),
+					"sprinting": bool(b.get("net_sprinting")),
+					"carried": bool(b.get("net_carried")),
+				}
+			return seen
 		"session":
-			# Wave 0 honesty (contract §1): no Session API exists to host/join
-			# yet at all. Reviewed finding: `is_server`/`peer_id`/`realm`
-			# above were invented shape with nothing behind them; `available`
-			# is the only honest field until Wave 2.
-			return {"available": false}
+			# Wave 2 (lane 2.A): a real `scripts/net/session.gd` exists, so
+			# every field here is read off it. `available` stays as the first
+			# key a reader checks -- false now means "no Session node", not
+			# "no Session API".
+			var sess := _session()
+			if sess == null:
+				return {"available": false}
+			return {
+				"available": true,
+				"active": bool(sess.call("is_active")),
+				"mode": str(sess.call("mode")),
+				"is_host": bool(sess.call("is_host")),
+				"peer_id": int(sess.call("local_peer_id")),
+				"peer_count": int(sess.call("peer_count")),
+				"snapshot_ready": bool(sess.call("snapshot_ready")),
+				"registry_fingerprint": int(sess.call("registry_fingerprint")),
+				"rows": sess.call("peers"),
+				# The port this peer was assigned by the harness, so a joining
+				# peer can be told where to connect without the coordinator
+				# having to remember what it handed out.
+				"enet_port": _enet_port,
+			}
+		"autosave_exists":
+			# D100's client-never-writes-the-world assertion. Reads the real
+			# file under THIS peer's own XDG_DATA_HOME (contract §2), so a host
+			# and a client can be compared directly.
+			var agame := root.get_node_or_null(^"Game")
+			if agame == null:
+				return null
+			var asave: Variant = agame.get("save_system")
+			if asave == null:
+				return null
+			return FileAccess.file_exists(str(asave.call("slot_path", int(agame.call("autosave_slot")))))
+		"worlds_dir_entries":
+			# D100's `user://worlds/` -- the host-owned world save directory.
+			# It does not exist for anybody yet (the split is a later lane), so
+			# a client asserting 0 here is a FORWARD assertion: it is written
+			# now so the day the host starts writing that directory, a client
+			# that also starts writing it fails this smoke rather than shipping.
+			if not DirAccess.dir_exists_absolute("user://worlds"):
+				return []
+			var listed: PackedStringArray = DirAccess.get_directories_at("user://worlds")
+			return Array(listed)
 		_:
 			return null
 
