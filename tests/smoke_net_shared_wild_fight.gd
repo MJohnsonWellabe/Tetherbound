@@ -79,6 +79,12 @@ const SWINGS := 5
 ## delay / 30 ms jitter) rather than only loopback.
 const REFUSAL_POLLS := 40
 
+## How many times to re-read both peers' opponent hp before calling them
+## divergent. Replication of the record's hp is not instantaneous and this smoke
+## must not pretend it is; see the assertion's own comment for the measurement
+## that forced this. A pair that agrees on the first read costs one poll.
+const HP_CONVERGE_POLLS := 40
+
 
 func _initialize() -> void:
 	_run()
@@ -235,13 +241,39 @@ func _run() -> void:
 		check(host_hp < hp_before - 0.001,
 			"peer %d landed a blow on the shared opponent within %d swings: %.1f -> %.1f on the host"
 				% [mover, swings, hp_before, host_hp])
-		var guest_hp := float((await _encounter(1)).get("opponent_hp", -1.0))
 		# §3: the record's hp is THE hit points, and both peers render it. A
 		# client that decremented its own copy "for responsiveness" would
 		# diverge here by exactly one blow.
+		#
+		# CONVERGENCE, not instantaneous equality -- and the difference is the
+		# whole claim rather than a softened one. Measured under the harness
+		# proxy at 150 ms delay / 30 ms jitter / 1 % loss: host 96.698 against
+		# guest 104.595, because a single read of the guest taken immediately
+		# after the host's is a read of a value one round trip behind. Asserting
+		# equality there is asserting ZERO LATENCY, which no session on a real
+		# LAN provides and which this smoke is not entitled to demand.
+		#
+		# What host authority actually promises is that the number the guest
+		# ends up drawing is the HOST'S number, not one it computed itself. So
+		# the guest is polled until it agrees, and the assertion still fails --
+		# loudly, with the final gap -- if it never does. A client that
+		# decremented its own copy would sit at a different value forever and
+		# fail this on the last poll exactly as it failed on the first.
+		#
+		# The host is re-read every iteration on purpose: the fight is live, so
+		# a host value that moved mid-poll would otherwise look like a guest
+		# that failed to catch up.
+		var guest_hp := -1.0
+		var hp_polls := 0
+		while hp_polls < HP_CONVERGE_POLLS:
+			hp_polls += 1
+			host_hp = float((await _encounter(0)).get("opponent_hp", -1.0))
+			guest_hp = float((await _encounter(1)).get("opponent_hp", -1.0))
+			if absf(guest_hp - host_hp) < 0.001:
+				break
 		check(absf(guest_hp - host_hp) < 0.001,
-			"both peers draw the same health bar after it (host %.3f, guest %.3f)"
-				% [host_hp, guest_hp])
+			"both peers draw the same health bar after it, within %d poll(s) (host %.3f, guest %.3f, gap %.3f)"
+				% [hp_polls, host_hp, guest_hp, absf(guest_hp - host_hp)])
 		hp_before = host_hp
 
 	# --- §5: peer 1 swings at peer 0's creature -------------------------------
