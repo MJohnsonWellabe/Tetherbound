@@ -751,9 +751,10 @@ func _nearest_route_line(world_point: Vector3, lines: Array[Dictionary]) -> Dict
 		var b: Vector3 = line["b"]
 		var flat := Vector2(b.x - a.x, b.z - a.z)
 		var len2 := flat.length_squared()
-		var t := 0.0
+		var t_raw := 0.0
 		if len2 > 0.0001:
-			t = clampf(((world_point.x - a.x) * flat.x + (world_point.z - a.z) * flat.y) / len2, 0.0, 1.0)
+			t_raw = ((world_point.x - a.x) * flat.x + (world_point.z - a.z) * flat.y) / len2
+		var t := clampf(t_raw, 0.0, 1.0)
 		var proj := Vector2(a.x + flat.x * t, a.z + flat.y * t)
 		var d := Vector2(world_point.x, world_point.z).distance_to(proj)
 		# Rank by how far INSIDE a line's own width the point sits, not by raw
@@ -763,7 +764,15 @@ func _nearest_route_line(world_point: Vector3, lines: Array[Dictionary]) -> Dict
 		# collider actually on top there.
 		var h := lerpf(a.y, b.y, t)
 		var half_width := float(line["half_width"])
-		if d < half_width + LINE_PIN_MARGIN_M:
+		# A line COVERS a point only within its own length (a box, not a
+		# capsule): with rounded ends the flat pad->join stub kept "covering"
+		# the road up to 4.5 m past the join at pad height, and as the highest
+		# covering line it held the summit ledge's crown flat over the
+		# descending ribbon there -- a 0.7 m step the summit walk stuck on
+		# (round 8). Past an end the line still eases (below), never pins.
+		var overrun := 0.5 / maxf(sqrt(len2), 0.5)
+		var within_length := t_raw >= -overrun and t_raw <= 1.0 + overrun
+		if within_length and d < half_width + LINE_PIN_MARGIN_M:
 			if h > pinned_h:
 				pinned = true
 				pinned_h = h
@@ -993,8 +1002,10 @@ func _build_routes() -> void:
 			# anywhere -- the former 13 m square's corners reached 9.3 m out,
 			# past the join, and stood a real step above the still-climbing
 			# ribbon on every diagonal approach (summit road, probe-confirmed).
+			# Collision only: the disc sits wholly under the (now everywhere
+			# collidable) crown, so drawing it can only z-fight with it.
 			_disc(root, "%s_LedgeCap%d" % [_safe_name(str(spec.get("id", "Route"))), i],
-				pad - Vector3.UP * 0.44, landing_size * 0.41 - 0.05, 0.84, landing_top, true)
+				pad - Vector3.UP * 0.44, landing_size * 0.41 - 0.05, 0.84, landing_top, true).get_child(0).visible = false
 			_add_landing_nature(root, points, i, pad, landing_size,
 				i * 43 + absi(str(spec.get("id", "Route")).hash()))
 			_cover_patches.append({"kind":"ellipse","centre":pad,"half":Vector2.ONE*landing_size*0.40,
@@ -2368,6 +2379,11 @@ func _place_local_prop(parent: Node3D, asset: String, at: Vector3, height: float
 	placement.add_child(model)
 	if asset == "bush" or asset == "flowers":
 		_apply_tree_palette(model, parent.get_child_count())
+	elif asset.begins_with("rock"):
+		# The roadside/landmark rocks placed through this path (authored route
+		# details, the summit gate flanks) were missed by the first stone
+		# retint and still rendered wax-white in the round-2 frames.
+		apply_stone_palette(model)
 	_set_geometry_visibility(placement, 480.0)
 
 
@@ -2982,11 +2998,16 @@ func _mesa(
 			"flat_radius": flat_top_radius_m, "cap_radius": cap}
 		crown_lines = _lines_near(world_anchor.x - flat_top_radius_m - 12.0, world_anchor.x + flat_top_radius_m + 12.0,
 			world_anchor.z - flat_top_radius_m - 12.0, world_anchor.z + flat_top_radius_m + 12.0)
-		# Ring radii between the cap and the rim, ~3 m apart, so a road's
-		# straight slope is reproduced without a kink at the cap edge.
-		var ring_count := maxi(1, int(ceilf((flat_top_radius_m - cap) / 3.0)))
+		# Ring radii from a 2 m hub out to the rim, ~1.8 m apart, so every
+		# quad is near-square. The first version fanned the apex straight out
+		# to the cap ring (0.8 m x 6.5 m slivers): under the shipped renderer
+		# those slivers shaded as alternating light/dark spokes from the
+		# trainer's feet (blind verdict rounds 1 and 2, 05-upper-cloudreach-
+		# cliffhold). Heights still come from `_crown_height_at` per ring.
+		var hub := minf(2.0, cap)
+		var ring_count := maxi(1, int(ceilf((flat_top_radius_m - hub) / 1.8)))
 		for ring_index in ring_count:
-			flat_ring_radii.append(lerpf(cap, flat_top_radius_m, float(ring_index) / float(ring_count)))
+			flat_ring_radii.append(lerpf(hub, flat_top_radius_m, float(ring_index) / float(ring_count)))
 			flat_rings.append([] as Array[Vector3])
 	for i in sides:
 		var angle := TAU * float(i) / float(sides)
