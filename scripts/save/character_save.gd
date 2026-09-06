@@ -49,7 +49,7 @@ const ENVELOPE_KEYS: Array[String] = [
 ## The v22 keys this half owns under their own names.
 const STATE_KEYS: Array[String] = [
 	"party", "inventory", "hotbar", "satiety", "player_pose", "pending_realm_entry",
-	"realm_hearts", "realm_maps",
+	"realm_hearts", "realm_maps", "skills",
 ]
 
 ## v22 keys this half owns but does NOT store, because they are recoverable

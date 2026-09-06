@@ -49,6 +49,12 @@
       "map_tuning_path": "res://data/config/stormwood_atmosphere.json",
       "display_name": "The Stormwood",
       "scene": "res://scenes/world/stormwood.tscn"
+    },
+    "water": {
+      "map_world_path": "res://data/config/water_world.json",
+      "display_name": "Water Archipelago",
+      "scene": "res://scenes/world/water_archipelago.tscn",
+      "entry_key_flag": "realm_key_water"
     }
   }
 }

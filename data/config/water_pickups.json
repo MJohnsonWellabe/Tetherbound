@@ -1,0 +1,6362 @@
+{
+  "schema_version": 1,
+  "realm_id": "water",
+  "status": "authored_placements_not_runtime_spawned",
+  "_comment": "200 item pickups and160 harvest nodes. Candidate positions use production water_heightfield,6m grid flood-filled from safe landings with quarter-edge dry/slope checks. This is analytic placement evidence, not a body traversal or rendered density pass. Runtime must retain claim policies, exclusion zones and stable IDs. Authored paths currently need grading; these positions exclude disconnected gentle summits.",
+  "validation": {
+    "heightfield_sha256": "e7a6f5fb2354486716d8a2d70b6779c094ac2ec5c84cf2f3e7b3f8774001668d",
+    "world_config_sha256": "b6e944c4f3be86aabf801a87ff86d3cc434c777d44870a18bb8f4a19f839fb3a",
+    "grid_step_m": 6,
+    "minimum_height_m": 0.8,
+    "maximum_slope_deg": 35,
+    "safe_landing_clearance_m": 12,
+    "npc_and_trainer_clearance_m": 10,
+    "minimum_placement_separation_m": 5.99,
+    "off_main_route_definition": "At least15m horizontal distance from every main-path land-route segment.",
+    "off_main_route_actual": 200,
+    "seed": 486221,
+    "runtime_proven": false
+  },
+  "planned_item_registrations": [
+    {
+      "id": "reef_stone",
+      "kind": "resource"
+    },
+    {
+      "id": "driftwood",
+      "kind": "resource"
+    },
+    {
+      "id": "reed_fiber",
+      "kind": "resource"
+    },
+    {
+      "id": "tide_bloom",
+      "kind": "resource"
+    },
+    {
+      "id": "sluice_metal",
+      "kind": "resource"
+    },
+    {
+      "id": "skill_candy_i",
+      "kind": "skill_candy"
+    },
+    {
+      "id": "skill_candy_ii",
+      "kind": "skill_candy"
+    },
+    {
+      "id": "skill_candy_iii",
+      "kind": "skill_candy"
+    }
+  ],
+  "census": {
+    "pickups": 200,
+    "harvest": 160,
+    "pickup_categories": {
+      "gear_story": 6,
+      "creature_candy": 72,
+      "food": 24,
+      "potion": 40,
+      "tonic": 10,
+      "revive": 20,
+      "orb": 12,
+      "skill_candy": 12,
+      "tm": 4
+    },
+    "pickup_item_counts": {
+      "torch": 2,
+      "good_candy": 42,
+      "cloudreach_trail_preserve": 16,
+      "potion_small": 16,
+      "attack_tonic": 4,
+      "potion_large": 24,
+      "revive": 20,
+      "great_candy": 24,
+      "orb_prime": 4,
+      "swift_tonic": 6,
+      "skill_candy_i": 7,
+      "hide_boots": 3,
+      "orb_greater": 8,
+      "tm_aqua_shot": 1,
+      "travel_pack": 1,
+      "berries": 8,
+      "skill_candy_ii": 4,
+      "tm_tidal_burst": 1,
+      "rare_candy": 6,
+      "tm_riptide_lance": 1,
+      "skill_candy_iii": 1,
+      "tm_leviathan_surge": 1
+    },
+    "harvest_item_counts": {
+      "reed_fiber": 42,
+      "driftwood": 38,
+      "reef_stone": 36,
+      "tide_bloom": 24,
+      "sluice_metal": 20
+    },
+    "by_island": {
+      "first_shore": {
+        "pickups": 22,
+        "harvest": 20,
+        "landing_connected_sample_count": 2554
+      },
+      "reedhaven": {
+        "pickups": 22,
+        "harvest": 24,
+        "landing_connected_sample_count": 2587
+      },
+      "brine_steps": {
+        "pickups": 20,
+        "harvest": 18,
+        "landing_connected_sample_count": 2897
+      },
+      "shellwatch": {
+        "pickups": 20,
+        "harvest": 18,
+        "landing_connected_sample_count": 2904
+      },
+      "tidal_cradle": {
+        "pickups": 20,
+        "harvest": 12,
+        "landing_connected_sample_count": 259
+      },
+      "salt_crown": {
+        "pickups": 22,
+        "harvest": 18,
+        "landing_connected_sample_count": 5454
+      },
+      "sluice_isle": {
+        "pickups": 20,
+        "harvest": 20,
+        "landing_connected_sample_count": 6825
+      },
+      "veilfall": {
+        "pickups": 14,
+        "harvest": 6,
+        "landing_connected_sample_count": 86
+      },
+      "lantern_cove": {
+        "pickups": 8,
+        "harvest": 4,
+        "landing_connected_sample_count": 35
+      },
+      "gull_rest": {
+        "pickups": 6,
+        "harvest": 2,
+        "landing_connected_sample_count": 27
+      },
+      "drowned_garden": {
+        "pickups": 14,
+        "harvest": 12,
+        "landing_connected_sample_count": 2059
+      },
+      "deep_watch": {
+        "pickups": 12,
+        "harvest": 6,
+        "landing_connected_sample_count": 1826
+      }
+    }
+  },
+  "pickups": [
+    {
+      "id": "water:first_shore:pickup:001",
+      "island_id": "first_shore",
+      "category": "gear_story",
+      "item_id": "torch",
+      "quantity": 1,
+      "position": [
+        -30.0,
+        31.3198,
+        -54.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 49.358,
+      "sampled_slope_deg": 8.251,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:first_shore:pickup:002",
+      "island_id": "first_shore",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        -144.0,
+        15.6642,
+        18.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 73.216,
+      "sampled_slope_deg": 10.034,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:first_shore:pickup:003",
+      "island_id": "first_shore",
+      "category": "food",
+      "item_id": "cloudreach_trail_preserve",
+      "quantity": 1,
+      "position": [
+        60.0,
+        12.5209,
+        -156.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 184.103,
+      "sampled_slope_deg": 5.396,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:first_shore:pickup:004",
+      "island_id": "first_shore",
+      "category": "potion",
+      "item_id": "potion_small",
+      "quantity": 1,
+      "position": [
+        -72.0,
+        14.7691,
+        132.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 53.643,
+      "sampled_slope_deg": 9.324,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:first_shore:pickup:005",
+      "island_id": "first_shore",
+      "category": "tonic",
+      "item_id": "attack_tonic",
+      "quantity": 1,
+      "position": [
+        96.0,
+        1.2742,
+        138.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 53.458,
+      "sampled_slope_deg": 6.115,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:first_shore:pickup:006",
+      "island_id": "first_shore",
+      "category": "food",
+      "item_id": "cloudreach_trail_preserve",
+      "quantity": 1,
+      "position": [
+        126.0,
+        17.5807,
+        -48.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 153.513,
+      "sampled_slope_deg": 10.981,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:first_shore:pickup:007",
+      "island_id": "first_shore",
+      "category": "potion",
+      "item_id": "potion_large",
+      "quantity": 1,
+      "position": [
+        -138.0,
+        12.0095,
+        -108.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 66.595,
+      "sampled_slope_deg": 3.143,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:first_shore:pickup:008",
+      "island_id": "first_shore",
+      "category": "food",
+      "item_id": "cloudreach_trail_preserve",
+      "quantity": 1,
+      "position": [
+        42.0,
+        32.1174,
+        36.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 45.265,
+      "sampled_slope_deg": 29.898,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:first_shore:pickup:009",
+      "island_id": "first_shore",
+      "category": "revive",
+      "item_id": "revive",
+      "quantity": 1,
+      "position": [
+        -48.0,
+        12.0221,
+        -168.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 122.293,
+      "sampled_slope_deg": 1.592,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:first_shore:pickup:010",
+      "island_id": "first_shore",
+      "category": "creature_candy",
+      "item_id": "great_candy",
+      "quantity": 1,
+      "position": [
+        162.0,
+        12.2226,
+        54.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 104.466,
+      "sampled_slope_deg": 3.946,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:first_shore:pickup:011",
+      "island_id": "first_shore",
+      "category": "creature_candy",
+      "item_id": "great_candy",
+      "quantity": 1,
+      "position": [
+        12.0,
+        9.4123,
+        120.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 20.047,
+      "sampled_slope_deg": 16.599,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:first_shore:pickup:012",
+      "island_id": "first_shore",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        48.0,
+        27.2025,
+        -72.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 120.234,
+      "sampled_slope_deg": 10.471,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:first_shore:pickup:013",
+      "island_id": "first_shore",
+      "category": "revive",
+      "item_id": "revive",
+      "quantity": 1,
+      "position": [
+        -144.0,
+        0.8162,
+        96.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 104.853,
+      "sampled_slope_deg": 11.762,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:first_shore:pickup:014",
+      "island_id": "first_shore",
+      "category": "orb",
+      "item_id": "orb_prime",
+      "quantity": 1,
+      "position": [
+        -72.0,
+        26.5545,
+        54.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 22.006,
+      "sampled_slope_deg": 10.622,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:first_shore:pickup:015",
+      "island_id": "first_shore",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        126.0,
+        12.0462,
+        -120.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 210.67,
+      "sampled_slope_deg": 2.157,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:first_shore:pickup:016",
+      "island_id": "first_shore",
+      "category": "creature_candy",
+      "item_id": "great_candy",
+      "quantity": 1,
+      "position": [
+        0.0,
+        20.5538,
+        -120.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 115.138,
+      "sampled_slope_deg": 11.549,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:first_shore:pickup:017",
+      "island_id": "first_shore",
+      "category": "creature_candy",
+      "item_id": "great_candy",
+      "quantity": 1,
+      "position": [
+        -168.0,
+        12.0221,
+        -48.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 71.777,
+      "sampled_slope_deg": 1.592,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:first_shore:pickup:018",
+      "island_id": "first_shore",
+      "category": "potion",
+      "item_id": "potion_small",
+      "quantity": 1,
+      "position": [
+        108.0,
+        22.7031,
+        18.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 86.337,
+      "sampled_slope_deg": 11.511,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:first_shore:pickup:019",
+      "island_id": "first_shore",
+      "category": "potion",
+      "item_id": "potion_large",
+      "quantity": 1,
+      "position": [
+        -72.0,
+        18.5713,
+        -108.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 57.727,
+      "sampled_slope_deg": 11.267,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:first_shore:pickup:020",
+      "island_id": "first_shore",
+      "category": "tonic",
+      "item_id": "swift_tonic",
+      "quantity": 1,
+      "position": [
+        174.0,
+        12.0423,
+        -6.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 147.143,
+      "sampled_slope_deg": 2.072,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:first_shore:pickup:021",
+      "island_id": "first_shore",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        102.0,
+        18.8499,
+        78.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 39.844,
+      "sampled_slope_deg": 11.328,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:first_shore:pickup:022",
+      "island_id": "first_shore",
+      "category": "potion",
+      "item_id": "potion_large",
+      "quantity": 1,
+      "position": [
+        -102.0,
+        23.3467,
+        -30.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 15.357,
+      "sampled_slope_deg": 11.44,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:reedhaven:pickup:001",
+      "island_id": "reedhaven",
+      "category": "skill_candy",
+      "item_id": "skill_candy_i",
+      "quantity": 1,
+      "position": [
+        66.0,
+        18.9588,
+        374.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 113.427,
+      "sampled_slope_deg": 5.499,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "character_once",
+      "registration": "planned",
+      "glow_colour": "#17121c",
+      "tier_marking": "I",
+      "presentation": "Black glow plus readable tier marking; actor/icon integration pending."
+    },
+    {
+      "id": "water:reedhaven:pickup:002",
+      "island_id": "reedhaven",
+      "category": "gear_story",
+      "item_id": "hide_boots",
+      "quantity": 1,
+      "position": [
+        -30.0,
+        8.752,
+        548.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 70.381,
+      "sampled_slope_deg": 11.412,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:reedhaven:pickup:003",
+      "island_id": "reedhaven",
+      "category": "tonic",
+      "item_id": "swift_tonic",
+      "quantity": 1,
+      "position": [
+        -150.0,
+        13.3261,
+        458.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 87.204,
+      "sampled_slope_deg": 4.636,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:reedhaven:pickup:004",
+      "island_id": "reedhaven",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        -114.0,
+        12.0158,
+        308.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 64.121,
+      "sampled_slope_deg": 0.928,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:reedhaven:pickup:005",
+      "island_id": "reedhaven",
+      "category": "orb",
+      "item_id": "orb_greater",
+      "quantity": 1,
+      "position": [
+        90.0,
+        12.3816,
+        578.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 49.498,
+      "sampled_slope_deg": 3.098,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:reedhaven:pickup:006",
+      "island_id": "reedhaven",
+      "category": "revive",
+      "item_id": "revive",
+      "quantity": 1,
+      "position": [
+        156.0,
+        12.7434,
+        470.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 46.865,
+      "sampled_slope_deg": 3.883,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:reedhaven:pickup:007",
+      "island_id": "reedhaven",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        -42.0,
+        22.5413,
+        416.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 24.108,
+      "sampled_slope_deg": 3.363,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:reedhaven:pickup:008",
+      "island_id": "reedhaven",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        18.0,
+        1.1827,
+        272.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 18.974,
+      "sampled_slope_deg": 6.116,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:reedhaven:pickup:009",
+      "island_id": "reedhaven",
+      "category": "food",
+      "item_id": "cloudreach_trail_preserve",
+      "quantity": 1,
+      "position": [
+        54.0,
+        18.0659,
+        476.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 38.058,
+      "sampled_slope_deg": 9.692,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:reedhaven:pickup:010",
+      "island_id": "reedhaven",
+      "category": "potion",
+      "item_id": "potion_small",
+      "quantity": 1,
+      "position": [
+        -132.0,
+        12.0158,
+        554.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 137.86,
+      "sampled_slope_deg": 0.928,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:reedhaven:pickup:011",
+      "island_id": "reedhaven",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        162.0,
+        12.0083,
+        374.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 142.375,
+      "sampled_slope_deg": 0.706,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:reedhaven:pickup:012",
+      "island_id": "reedhaven",
+      "category": "potion",
+      "item_id": "potion_small",
+      "quantity": 1,
+      "position": [
+        108.0,
+        12.0047,
+        302.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 110.635,
+      "sampled_slope_deg": 2.654,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:reedhaven:pickup:013",
+      "island_id": "reedhaven",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        -162.0,
+        12.0083,
+        374.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 66.143,
+      "sampled_slope_deg": 0.706,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:reedhaven:pickup:014",
+      "island_id": "reedhaven",
+      "category": "food",
+      "item_id": "cloudreach_trail_preserve",
+      "quantity": 1,
+      "position": [
+        18.0,
+        12.0083,
+        614.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 93.764,
+      "sampled_slope_deg": 0.698,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:reedhaven:pickup:015",
+      "island_id": "reedhaven",
+      "category": "creature_candy",
+      "item_id": "great_candy",
+      "quantity": 1,
+      "position": [
+        -78.0,
+        19.1267,
+        488.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 52.607,
+      "sampled_slope_deg": 5.447,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:reedhaven:pickup:016",
+      "island_id": "reedhaven",
+      "category": "revive",
+      "item_id": "revive",
+      "quantity": 1,
+      "position": [
+        -12.0,
+        11.913,
+        344.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 35.547,
+      "sampled_slope_deg": 11.76,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:reedhaven:pickup:017",
+      "island_id": "reedhaven",
+      "category": "creature_candy",
+      "item_id": "great_candy",
+      "quantity": 1,
+      "position": [
+        -78.0,
+        12.0158,
+        596.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 137.752,
+      "sampled_slope_deg": 0.925,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:reedhaven:pickup:018",
+      "island_id": "reedhaven",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        -54.0,
+        12.1113,
+        278.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 39.938,
+      "sampled_slope_deg": 1.975,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:reedhaven:pickup:019",
+      "island_id": "reedhaven",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        102.0,
+        18.0376,
+        428.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 94.172,
+      "sampled_slope_deg": 5.72,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:reedhaven:pickup:020",
+      "island_id": "reedhaven",
+      "category": "potion",
+      "item_id": "potion_small",
+      "quantity": 1,
+      "position": [
+        36.0,
+        17.4861,
+        542.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 25.048,
+      "sampled_slope_deg": 5.801,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:reedhaven:pickup:021",
+      "island_id": "reedhaven",
+      "category": "orb",
+      "item_id": "orb_greater",
+      "quantity": 1,
+      "position": [
+        -108.0,
+        17.0863,
+        410.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 24.686,
+      "sampled_slope_deg": 5.834,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:reedhaven:pickup:022",
+      "island_id": "reedhaven",
+      "category": "revive",
+      "item_id": "revive",
+      "quantity": 1,
+      "position": [
+        18.0,
+        23.2277,
+        410.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 67.945,
+      "sampled_slope_deg": 2.495,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:brine_steps:pickup:001",
+      "island_id": "brine_steps",
+      "category": "skill_candy",
+      "item_id": "skill_candy_i",
+      "quantity": 1,
+      "position": [
+        372.0,
+        40.1194,
+        552.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 72.998,
+      "sampled_slope_deg": 27.997,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "character_once",
+      "registration": "planned",
+      "glow_colour": "#17121c",
+      "tier_marking": "I",
+      "presentation": "Black glow plus readable tier marking; actor/icon integration pending."
+    },
+    {
+      "id": "water:brine_steps:pickup:002",
+      "island_id": "brine_steps",
+      "category": "tm",
+      "item_id": "tm_aqua_shot",
+      "quantity": 1,
+      "position": [
+        594.0,
+        14.1023,
+        654.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 148.067,
+      "sampled_slope_deg": 15.74,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:brine_steps:pickup:003",
+      "island_id": "brine_steps",
+      "category": "potion",
+      "item_id": "potion_large",
+      "quantity": 1,
+      "position": [
+        534.0,
+        18.6437,
+        774.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 48.066,
+      "sampled_slope_deg": 22.331,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:brine_steps:pickup:004",
+      "island_id": "brine_steps",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        372.0,
+        70.473,
+        672.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 46.98,
+      "sampled_slope_deg": 16.54,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:brine_steps:pickup:005",
+      "island_id": "brine_steps",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        276.0,
+        13.475,
+        762.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 66.269,
+      "sampled_slope_deg": 13.952,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:brine_steps:pickup:006",
+      "island_id": "brine_steps",
+      "category": "orb",
+      "item_id": "orb_greater",
+      "quantity": 1,
+      "position": [
+        516.0,
+        13.0918,
+        510.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 217.969,
+      "sampled_slope_deg": 12.553,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:brine_steps:pickup:007",
+      "island_id": "brine_steps",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        246.0,
+        13.4498,
+        630.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 54.306,
+      "sampled_slope_deg": 13.867,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:brine_steps:pickup:008",
+      "island_id": "brine_steps",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        432.0,
+        12.6241,
+        840.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 36.823,
+      "sampled_slope_deg": 10.248,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:brine_steps:pickup:009",
+      "island_id": "brine_steps",
+      "category": "potion",
+      "item_id": "potion_large",
+      "quantity": 1,
+      "position": [
+        480.0,
+        63.3097,
+        624.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 129.088,
+      "sampled_slope_deg": 21.747,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:brine_steps:pickup:010",
+      "island_id": "brine_steps",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        456.0,
+        63.3097,
+        720.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 30.175,
+      "sampled_slope_deg": 21.747,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:brine_steps:pickup:011",
+      "island_id": "brine_steps",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        372.0,
+        40.1194,
+        768.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 34.7,
+      "sampled_slope_deg": 27.997,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:brine_steps:pickup:012",
+      "island_id": "brine_steps",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        282.0,
+        12.2407,
+        540.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 42.68,
+      "sampled_slope_deg": 7.17,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:brine_steps:pickup:013",
+      "island_id": "brine_steps",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        426.0,
+        12.6792,
+        480.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 162.275,
+      "sampled_slope_deg": 10.572,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:brine_steps:pickup:014",
+      "island_id": "brine_steps",
+      "category": "creature_candy",
+      "item_id": "great_candy",
+      "quantity": 1,
+      "position": [
+        582.0,
+        12.0196,
+        570.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 209.944,
+      "sampled_slope_deg": 18.429,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:brine_steps:pickup:015",
+      "island_id": "brine_steps",
+      "category": "orb",
+      "item_id": "orb_prime",
+      "quantity": 1,
+      "position": [
+        528.0,
+        42.4224,
+        696.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 73.473,
+      "sampled_slope_deg": 27.844,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:brine_steps:pickup:016",
+      "island_id": "brine_steps",
+      "category": "potion",
+      "item_id": "potion_large",
+      "quantity": 1,
+      "position": [
+        450.0,
+        43.3466,
+        552.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 140.853,
+      "sampled_slope_deg": 27.756,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:brine_steps:pickup:017",
+      "island_id": "brine_steps",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        294.0,
+        34.0876,
+        690.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 32.385,
+      "sampled_slope_deg": 27.913,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:brine_steps:pickup:018",
+      "island_id": "brine_steps",
+      "category": "creature_candy",
+      "item_id": "great_candy",
+      "quantity": 1,
+      "position": [
+        408.0,
+        70.473,
+        612.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 88.561,
+      "sampled_slope_deg": 16.54,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:brine_steps:pickup:019",
+      "island_id": "brine_steps",
+      "category": "potion",
+      "item_id": "potion_large",
+      "quantity": 1,
+      "position": [
+        588.0,
+        12.2533,
+        732.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 102.702,
+      "sampled_slope_deg": 7.304,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:brine_steps:pickup:020",
+      "island_id": "brine_steps",
+      "category": "potion",
+      "item_id": "potion_large",
+      "quantity": 1,
+      "position": [
+        330.0,
+        12.0196,
+        822.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 53.806,
+      "sampled_slope_deg": 18.429,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:shellwatch:pickup:001",
+      "island_id": "shellwatch",
+      "category": "gear_story",
+      "item_id": "travel_pack",
+      "quantity": 1,
+      "position": [
+        302.0,
+        46.0747,
+        1210.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 71.123,
+      "sampled_slope_deg": 21.521,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:shellwatch:pickup:002",
+      "island_id": "shellwatch",
+      "category": "orb",
+      "item_id": "orb_greater",
+      "quantity": 1,
+      "position": [
+        386.0,
+        55.2475,
+        1120.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 46.549,
+      "sampled_slope_deg": 17.301,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:shellwatch:pickup:003",
+      "island_id": "shellwatch",
+      "category": "potion",
+      "item_id": "potion_small",
+      "quantity": 1,
+      "position": [
+        194.0,
+        30.0717,
+        1150.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 92.078,
+      "sampled_slope_deg": 23.434,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:shellwatch:pickup:004",
+      "island_id": "shellwatch",
+      "category": "revive",
+      "item_id": "revive",
+      "quantity": 1,
+      "position": [
+        476.0,
+        12.5557,
+        1030.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 142.712,
+      "sampled_slope_deg": 8.685,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:shellwatch:pickup:005",
+      "island_id": "shellwatch",
+      "category": "potion",
+      "item_id": "potion_small",
+      "quantity": 1,
+      "position": [
+        278.0,
+        13.94,
+        952.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 48.549,
+      "sampled_slope_deg": 13.523,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:shellwatch:pickup:006",
+      "island_id": "shellwatch",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        164.0,
+        12.1674,
+        1024.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 65.502,
+      "sampled_slope_deg": 5.518,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:shellwatch:pickup:007",
+      "island_id": "shellwatch",
+      "category": "potion",
+      "item_id": "potion_small",
+      "quantity": 1,
+      "position": [
+        500.0,
+        12.039,
+        1162.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 105.168,
+      "sampled_slope_deg": 3.06,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:shellwatch:pickup:008",
+      "island_id": "shellwatch",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        398.0,
+        12.02,
+        1288.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 55.749,
+      "sampled_slope_deg": 13.164,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:shellwatch:pickup:009",
+      "island_id": "shellwatch",
+      "category": "potion",
+      "item_id": "potion_large",
+      "quantity": 1,
+      "position": [
+        392.0,
+        12.2072,
+        952.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 35.462,
+      "sampled_slope_deg": 5.987,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:shellwatch:pickup:010",
+      "island_id": "shellwatch",
+      "category": "potion",
+      "item_id": "potion_large",
+      "quantity": 1,
+      "position": [
+        278.0,
+        55.9292,
+        1072.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 23.176,
+      "sampled_slope_deg": 16.85,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:shellwatch:pickup:011",
+      "island_id": "shellwatch",
+      "category": "revive",
+      "item_id": "revive",
+      "quantity": 1,
+      "position": [
+        206.0,
+        12.1225,
+        1264.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 181.264,
+      "sampled_slope_deg": 4.891,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:shellwatch:pickup:012",
+      "island_id": "shellwatch",
+      "category": "food",
+      "item_id": "berries",
+      "quantity": 1,
+      "position": [
+        290.0,
+        12.2392,
+        1300.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 128.252,
+      "sampled_slope_deg": 6.321,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:shellwatch:pickup:013",
+      "island_id": "shellwatch",
+      "category": "potion",
+      "item_id": "potion_large",
+      "quantity": 1,
+      "position": [
+        362.0,
+        45.2282,
+        1036.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 67.592,
+      "sampled_slope_deg": 21.777,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:shellwatch:pickup:014",
+      "island_id": "shellwatch",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        416.0,
+        15.7624,
+        1204.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 25.901,
+      "sampled_slope_deg": 28.312,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:shellwatch:pickup:015",
+      "island_id": "shellwatch",
+      "category": "food",
+      "item_id": "cloudreach_trail_preserve",
+      "quantity": 1,
+      "position": [
+        140.0,
+        12.3457,
+        1096.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 85.435,
+      "sampled_slope_deg": 7.271,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:shellwatch:pickup:016",
+      "island_id": "shellwatch",
+      "category": "food",
+      "item_id": "berries",
+      "quantity": 1,
+      "position": [
+        458.0,
+        25.9432,
+        1102.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 117.945,
+      "sampled_slope_deg": 22.806,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:shellwatch:pickup:017",
+      "island_id": "shellwatch",
+      "category": "potion",
+      "item_id": "potion_small",
+      "quantity": 1,
+      "position": [
+        266.0,
+        57.3052,
+        1144.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 69.453,
+      "sampled_slope_deg": 15.856,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:shellwatch:pickup:018",
+      "island_id": "shellwatch",
+      "category": "orb",
+      "item_id": "orb_prime",
+      "quantity": 1,
+      "position": [
+        158.0,
+        12.016,
+        1210.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 160.527,
+      "sampled_slope_deg": 18.057,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:shellwatch:pickup:019",
+      "island_id": "shellwatch",
+      "category": "orb",
+      "item_id": "orb_greater",
+      "quantity": 1,
+      "position": [
+        236.0,
+        26.9356,
+        1012.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 19.329,
+      "sampled_slope_deg": 23.013,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:shellwatch:pickup:020",
+      "island_id": "shellwatch",
+      "category": "revive",
+      "item_id": "revive",
+      "quantity": 1,
+      "position": [
+        236.0,
+        34.7424,
+        1204.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 125.359,
+      "sampled_slope_deg": 23.52,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:tidal_cradle:pickup:001",
+      "island_id": "tidal_cradle",
+      "category": "skill_candy",
+      "item_id": "skill_candy_ii",
+      "quantity": 1,
+      "position": [
+        562.0,
+        12.7788,
+        1680.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 45.712,
+      "sampled_slope_deg": 28.14,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "character_once",
+      "registration": "planned",
+      "glow_colour": "#17121c",
+      "tier_marking": "II",
+      "presentation": "Black glow plus readable tier marking; actor/icon integration pending."
+    },
+    {
+      "id": "water:tidal_cradle:pickup:002",
+      "island_id": "tidal_cradle",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        556.0,
+        1.1444,
+        1320.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 38.435,
+      "sampled_slope_deg": 20.916,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:tidal_cradle:pickup:003",
+      "island_id": "tidal_cradle",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        568.0,
+        28.5921,
+        1410.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 16.035,
+      "sampled_slope_deg": 34.403,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:tidal_cradle:pickup:004",
+      "island_id": "tidal_cradle",
+      "category": "orb",
+      "item_id": "orb_greater",
+      "quantity": 1,
+      "position": [
+        586.0,
+        1.4562,
+        1758.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 35.854,
+      "sampled_slope_deg": 27.277,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:tidal_cradle:pickup:005",
+      "island_id": "tidal_cradle",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        508.0,
+        1.9094,
+        1374.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 31.981,
+      "sampled_slope_deg": 25.614,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:tidal_cradle:pickup:006",
+      "island_id": "tidal_cradle",
+      "category": "potion",
+      "item_id": "potion_small",
+      "quantity": 1,
+      "position": [
+        616.0,
+        29.4265,
+        1686.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 25.727,
+      "sampled_slope_deg": 34.558,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:tidal_cradle:pickup:007",
+      "island_id": "tidal_cradle",
+      "category": "food",
+      "item_id": "cloudreach_trail_preserve",
+      "quantity": 1,
+      "position": [
+        544.0,
+        0.8495,
+        1728.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 16.544,
+      "sampled_slope_deg": 6.115,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:tidal_cradle:pickup:008",
+      "island_id": "tidal_cradle",
+      "category": "creature_candy",
+      "item_id": "great_candy",
+      "quantity": 1,
+      "position": [
+        580.0,
+        11.4007,
+        1362.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 34.901,
+      "sampled_slope_deg": 27.082,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:tidal_cradle:pickup:009",
+      "island_id": "tidal_cradle",
+      "category": "food",
+      "item_id": "berries",
+      "quantity": 1,
+      "position": [
+        592.0,
+        30.7692,
+        1668.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 49.403,
+      "sampled_slope_deg": 34.786,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:tidal_cradle:pickup:010",
+      "island_id": "tidal_cradle",
+      "category": "food",
+      "item_id": "cloudreach_trail_preserve",
+      "quantity": 1,
+      "position": [
+        586.0,
+        10.614,
+        1704.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 16.247,
+      "sampled_slope_deg": 26.348,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:tidal_cradle:pickup:011",
+      "island_id": "tidal_cradle",
+      "category": "potion",
+      "item_id": "potion_large",
+      "quantity": 1,
+      "position": [
+        544.0,
+        3.3716,
+        1698.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 34.062,
+      "sampled_slope_deg": 21.527,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:tidal_cradle:pickup:012",
+      "island_id": "tidal_cradle",
+      "category": "potion",
+      "item_id": "potion_large",
+      "quantity": 1,
+      "position": [
+        556.0,
+        3.0842,
+        1350.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 20.482,
+      "sampled_slope_deg": 5.262,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:tidal_cradle:pickup:013",
+      "island_id": "tidal_cradle",
+      "category": "food",
+      "item_id": "berries",
+      "quantity": 1,
+      "position": [
+        574.0,
+        20.0698,
+        1386.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 24.675,
+      "sampled_slope_deg": 32.054,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:tidal_cradle:pickup:014",
+      "island_id": "tidal_cradle",
+      "category": "revive",
+      "item_id": "revive",
+      "quantity": 1,
+      "position": [
+        526.0,
+        3.8784,
+        1386.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 17.534,
+      "sampled_slope_deg": 17.093,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:tidal_cradle:pickup:015",
+      "island_id": "tidal_cradle",
+      "category": "potion",
+      "item_id": "potion_large",
+      "quantity": 1,
+      "position": [
+        580.0,
+        16.7357,
+        1686.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 35.191,
+      "sampled_slope_deg": 30.593,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:tidal_cradle:pickup:016",
+      "island_id": "tidal_cradle",
+      "category": "creature_candy",
+      "item_id": "great_candy",
+      "quantity": 1,
+      "position": [
+        562.0,
+        3.6523,
+        1710.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 16.767,
+      "sampled_slope_deg": 11.582,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:tidal_cradle:pickup:017",
+      "island_id": "tidal_cradle",
+      "category": "creature_candy",
+      "item_id": "great_candy",
+      "quantity": 1,
+      "position": [
+        520.0,
+        1.0337,
+        1356.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 15.885,
+      "sampled_slope_deg": 6.115,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:tidal_cradle:pickup:018",
+      "island_id": "tidal_cradle",
+      "category": "potion",
+      "item_id": "potion_large",
+      "quantity": 1,
+      "position": [
+        574.0,
+        1.6179,
+        1740.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 15.332,
+      "sampled_slope_deg": 6.115,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:tidal_cradle:pickup:019",
+      "island_id": "tidal_cradle",
+      "category": "potion",
+      "item_id": "potion_large",
+      "quantity": 1,
+      "position": [
+        574.0,
+        22.9261,
+        1668.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 54.135,
+      "sampled_slope_deg": 33.023,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:tidal_cradle:pickup:020",
+      "island_id": "tidal_cradle",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        598.0,
+        23.2401,
+        1686.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 30.459,
+      "sampled_slope_deg": 33.117,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:salt_crown:pickup:001",
+      "island_id": "salt_crown",
+      "category": "skill_candy",
+      "item_id": "skill_candy_i",
+      "quantity": 1,
+      "position": [
+        6.0,
+        56.7837,
+        2316.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 79.076,
+      "sampled_slope_deg": 25.446,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "character_once",
+      "registration": "planned",
+      "glow_colour": "#17121c",
+      "tier_marking": "I",
+      "presentation": "Black glow plus readable tier marking; actor/icon integration pending."
+    },
+    {
+      "id": "water:salt_crown:pickup:002",
+      "island_id": "salt_crown",
+      "category": "tm",
+      "item_id": "tm_tidal_burst",
+      "quantity": 1,
+      "position": [
+        6.0,
+        15.9044,
+        2124.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 98.883,
+      "sampled_slope_deg": 16.541,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:salt_crown:pickup:003",
+      "island_id": "salt_crown",
+      "category": "gear_story",
+      "item_id": "hide_boots",
+      "quantity": 1,
+      "position": [
+        42.0,
+        34.5511,
+        2466.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 196.155,
+      "sampled_slope_deg": 25.55,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:salt_crown:pickup:004",
+      "island_id": "salt_crown",
+      "category": "potion",
+      "item_id": "potion_small",
+      "quantity": 1,
+      "position": [
+        366.0,
+        21.9424,
+        2340.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 139.756,
+      "sampled_slope_deg": 21.698,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:salt_crown:pickup:005",
+      "island_id": "salt_crown",
+      "category": "creature_candy",
+      "item_id": "great_candy",
+      "quantity": 1,
+      "position": [
+        306.0,
+        40.6455,
+        2226.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 111.308,
+      "sampled_slope_deg": 26.129,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:salt_crown:pickup:006",
+      "island_id": "salt_crown",
+      "category": "food",
+      "item_id": "berries",
+      "quantity": 1,
+      "position": [
+        210.0,
+        19.6014,
+        2094.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 47.565,
+      "sampled_slope_deg": 20.203,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:salt_crown:pickup:007",
+      "island_id": "salt_crown",
+      "category": "tonic",
+      "item_id": "attack_tonic",
+      "quantity": 1,
+      "position": [
+        186.0,
+        51.9024,
+        2460.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 60.062,
+      "sampled_slope_deg": 25.949,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:salt_crown:pickup:008",
+      "island_id": "salt_crown",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        138.0,
+        92.9764,
+        2346.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 45.58,
+      "sampled_slope_deg": 8.99,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:salt_crown:pickup:009",
+      "island_id": "salt_crown",
+      "category": "potion",
+      "item_id": "potion_small",
+      "quantity": 1,
+      "position": [
+        180.0,
+        81.7479,
+        2232.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 68.059,
+      "sampled_slope_deg": 18.186,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:salt_crown:pickup:010",
+      "island_id": "salt_crown",
+      "category": "potion",
+      "item_id": "potion_large",
+      "quantity": 1,
+      "position": [
+        -66.0,
+        16.2747,
+        2220.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 76.973,
+      "sampled_slope_deg": 17.023,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:salt_crown:pickup:011",
+      "island_id": "salt_crown",
+      "category": "revive",
+      "item_id": "revive",
+      "quantity": 1,
+      "position": [
+        120.0,
+        12.1037,
+        2562.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 171.016,
+      "sampled_slope_deg": 4.353,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:salt_crown:pickup:012",
+      "island_id": "salt_crown",
+      "category": "food",
+      "item_id": "cloudreach_trail_preserve",
+      "quantity": 1,
+      "position": [
+        -66.0,
+        14.8748,
+        2412.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 197.347,
+      "sampled_slope_deg": 14.966,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:salt_crown:pickup:013",
+      "island_id": "salt_crown",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        294.0,
+        12.5715,
+        2514.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 48.388,
+      "sampled_slope_deg": 8.407,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:salt_crown:pickup:014",
+      "island_id": "salt_crown",
+      "category": "creature_candy",
+      "item_id": "great_candy",
+      "quantity": 1,
+      "position": [
+        252.0,
+        74.5432,
+        2328.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 40.454,
+      "sampled_slope_deg": 21.308,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:salt_crown:pickup:015",
+      "island_id": "salt_crown",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        102.0,
+        12.4396,
+        2064.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 117.038,
+      "sampled_slope_deg": 7.614,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:salt_crown:pickup:016",
+      "island_id": "salt_crown",
+      "category": "potion",
+      "item_id": "potion_large",
+      "quantity": 1,
+      "position": [
+        72.0,
+        70.067,
+        2226.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 20.715,
+      "sampled_slope_deg": 22.744,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:salt_crown:pickup:017",
+      "island_id": "salt_crown",
+      "category": "tonic",
+      "item_id": "swift_tonic",
+      "quantity": 1,
+      "position": [
+        -102.0,
+        12.2645,
+        2316.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 141.89,
+      "sampled_slope_deg": 6.272,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:salt_crown:pickup:018",
+      "island_id": "salt_crown",
+      "category": "food",
+      "item_id": "cloudreach_trail_preserve",
+      "quantity": 1,
+      "position": [
+        366.0,
+        12.1571,
+        2442.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 50.618,
+      "sampled_slope_deg": 5.135,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:salt_crown:pickup:019",
+      "island_id": "salt_crown",
+      "category": "revive",
+      "item_id": "revive",
+      "quantity": 1,
+      "position": [
+        312.0,
+        0.9415,
+        2118.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 23.27,
+      "sampled_slope_deg": 6.115,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:salt_crown:pickup:020",
+      "island_id": "salt_crown",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        396.0,
+        12.043,
+        2244.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 169.458,
+      "sampled_slope_deg": 3.046,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:salt_crown:pickup:021",
+      "island_id": "salt_crown",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        276.0,
+        31.5012,
+        2418.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 35.591,
+      "sampled_slope_deg": 30.703,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:salt_crown:pickup:022",
+      "island_id": "salt_crown",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        210.0,
+        12.9512,
+        2550.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 111.047,
+      "sampled_slope_deg": 10.148,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:sluice_isle:pickup:001",
+      "island_id": "sluice_isle",
+      "category": "creature_candy",
+      "item_id": "rare_candy",
+      "quantity": 1,
+      "position": [
+        1012.0,
+        62.1235,
+        2900.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 97.727,
+      "sampled_slope_deg": 28.812,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:sluice_isle:pickup:002",
+      "island_id": "sluice_isle",
+      "category": "tm",
+      "item_id": "tm_riptide_lance",
+      "quantity": 1,
+      "position": [
+        754.0,
+        14.8172,
+        2708.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 123.097,
+      "sampled_slope_deg": 15.439,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:sluice_isle:pickup:003",
+      "island_id": "sluice_isle",
+      "category": "gear_story",
+      "item_id": "torch",
+      "quantity": 1,
+      "position": [
+        958.0,
+        36.0238,
+        2768.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 110.105,
+      "sampled_slope_deg": 27.697,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:sluice_isle:pickup:004",
+      "island_id": "sluice_isle",
+      "category": "tonic",
+      "item_id": "swift_tonic",
+      "quantity": 1,
+      "position": [
+        814.0,
+        12.8289,
+        3236.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 68.812,
+      "sampled_slope_deg": 9.979,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:sluice_isle:pickup:005",
+      "island_id": "sluice_isle",
+      "category": "tonic",
+      "item_id": "attack_tonic",
+      "quantity": 1,
+      "position": [
+        1072.0,
+        32.488,
+        3008.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 135.071,
+      "sampled_slope_deg": 26.946,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:sluice_isle:pickup:006",
+      "island_id": "sluice_isle",
+      "category": "creature_candy",
+      "item_id": "great_candy",
+      "quantity": 1,
+      "position": [
+        850.0,
+        111.8374,
+        3014.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 83.695,
+      "sampled_slope_deg": 12.71,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:sluice_isle:pickup:007",
+      "island_id": "sluice_isle",
+      "category": "food",
+      "item_id": "cloudreach_trail_preserve",
+      "quantity": 1,
+      "position": [
+        718.0,
+        49.5874,
+        3104.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 88.503,
+      "sampled_slope_deg": 29.042,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:sluice_isle:pickup:008",
+      "island_id": "sluice_isle",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        610.0,
+        17.6193,
+        2858.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 71.589,
+      "sampled_slope_deg": 19.32,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:sluice_isle:pickup:009",
+      "island_id": "sluice_isle",
+      "category": "creature_candy",
+      "item_id": "great_candy",
+      "quantity": 1,
+      "position": [
+        742.0,
+        94.1659,
+        2954.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 85.124,
+      "sampled_slope_deg": 22.705,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:sluice_isle:pickup:010",
+      "island_id": "sluice_isle",
+      "category": "food",
+      "item_id": "berries",
+      "quantity": 1,
+      "position": [
+        610.0,
+        23.4935,
+        3014.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 166.769,
+      "sampled_slope_deg": 23.674,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:sluice_isle:pickup:011",
+      "island_id": "sluice_isle",
+      "category": "potion",
+      "item_id": "potion_small",
+      "quantity": 1,
+      "position": [
+        994.0,
+        6.8093,
+        3158.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 62.242,
+      "sampled_slope_deg": 19.47,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:sluice_isle:pickup:012",
+      "island_id": "sluice_isle",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        814.0,
+        75.1573,
+        2816.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 50.939,
+      "sampled_slope_deg": 27.367,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:sluice_isle:pickup:013",
+      "island_id": "sluice_isle",
+      "category": "tonic",
+      "item_id": "attack_tonic",
+      "quantity": 1,
+      "position": [
+        1078.0,
+        12.1587,
+        2792.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 187.51,
+      "sampled_slope_deg": 5.321,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:sluice_isle:pickup:014",
+      "island_id": "sluice_isle",
+      "category": "potion",
+      "item_id": "potion_large",
+      "quantity": 1,
+      "position": [
+        874.0,
+        12.177,
+        2678.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 187.316,
+      "sampled_slope_deg": 5.54,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:sluice_isle:pickup:015",
+      "island_id": "sluice_isle",
+      "category": "potion",
+      "item_id": "potion_large",
+      "quantity": 1,
+      "position": [
+        1126.0,
+        12.382,
+        2906.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 208.262,
+      "sampled_slope_deg": 7.457,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:sluice_isle:pickup:016",
+      "island_id": "sluice_isle",
+      "category": "creature_candy",
+      "item_id": "great_candy",
+      "quantity": 1,
+      "position": [
+        892.0,
+        108.1804,
+        2906.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 21.072,
+      "sampled_slope_deg": 15.725,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:sluice_isle:pickup:017",
+      "island_id": "sluice_isle",
+      "category": "potion",
+      "item_id": "potion_large",
+      "quantity": 1,
+      "position": [
+        964.0,
+        78.6468,
+        3044.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 22.071,
+      "sampled_slope_deg": 26.768,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:sluice_isle:pickup:018",
+      "island_id": "sluice_isle",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        862.0,
+        64.4948,
+        3128.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 15.434,
+      "sampled_slope_deg": 28.639,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:sluice_isle:pickup:019",
+      "island_id": "sluice_isle",
+      "category": "revive",
+      "item_id": "revive",
+      "quantity": 1,
+      "position": [
+        706.0,
+        22.7132,
+        2804.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 38.179,
+      "sampled_slope_deg": 30.365,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:sluice_isle:pickup:020",
+      "island_id": "sluice_isle",
+      "category": "creature_candy",
+      "item_id": "great_candy",
+      "quantity": 1,
+      "position": [
+        922.0,
+        12.0188,
+        3236.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 106.762,
+      "sampled_slope_deg": 18.936,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:veilfall:pickup:001",
+      "island_id": "veilfall",
+      "category": "creature_candy",
+      "item_id": "rare_candy",
+      "quantity": 1,
+      "position": [
+        428.0,
+        1.4539,
+        3828.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 45.228,
+      "sampled_slope_deg": 6.116,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:veilfall:pickup:002",
+      "island_id": "veilfall",
+      "category": "creature_candy",
+      "item_id": "rare_candy",
+      "quantity": 1,
+      "position": [
+        338.0,
+        1.5017,
+        3774.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 49.388,
+      "sampled_slope_deg": 16.58,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:veilfall:pickup:003",
+      "island_id": "veilfall",
+      "category": "gear_story",
+      "item_id": "hide_boots",
+      "quantity": 1,
+      "position": [
+        374.0,
+        1.1704,
+        3792.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 16.668,
+      "sampled_slope_deg": 6.115,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:veilfall:pickup:004",
+      "island_id": "veilfall",
+      "category": "tonic",
+      "item_id": "swift_tonic",
+      "quantity": 1,
+      "position": [
+        344.0,
+        5.3678,
+        3804.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 20.056,
+      "sampled_slope_deg": 30.989,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:veilfall:pickup:005",
+      "island_id": "veilfall",
+      "category": "revive",
+      "item_id": "revive",
+      "quantity": 1,
+      "position": [
+        404.0,
+        1.2896,
+        3810.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 19.973,
+      "sampled_slope_deg": 6.115,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:veilfall:pickup:006",
+      "island_id": "veilfall",
+      "category": "creature_candy",
+      "item_id": "great_candy",
+      "quantity": 1,
+      "position": [
+        404.0,
+        4.1901,
+        3834.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 21.732,
+      "sampled_slope_deg": 24.727,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:veilfall:pickup:007",
+      "island_id": "veilfall",
+      "category": "food",
+      "item_id": "berries",
+      "quantity": 1,
+      "position": [
+        356.0,
+        0.82,
+        3780.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 35.681,
+      "sampled_slope_deg": 6.116,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:veilfall:pickup:008",
+      "island_id": "veilfall",
+      "category": "orb",
+      "item_id": "orb_greater",
+      "quantity": 1,
+      "position": [
+        416.0,
+        5.8279,
+        3846.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 34.58,
+      "sampled_slope_deg": 32.468,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:veilfall:pickup:009",
+      "island_id": "veilfall",
+      "category": "orb",
+      "item_id": "orb_prime",
+      "quantity": 1,
+      "position": [
+        344.0,
+        1.9106,
+        3786.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 35.975,
+      "sampled_slope_deg": 6.116,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:veilfall:pickup:010",
+      "island_id": "veilfall",
+      "category": "creature_candy",
+      "item_id": "great_candy",
+      "quantity": 1,
+      "position": [
+        440.0,
+        2.0639,
+        3828.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 57.196,
+      "sampled_slope_deg": 26.95,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:veilfall:pickup:011",
+      "island_id": "veilfall",
+      "category": "food",
+      "item_id": "cloudreach_trail_preserve",
+      "quantity": 1,
+      "position": [
+        416.0,
+        1.6691,
+        3822.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 32.82,
+      "sampled_slope_deg": 6.115,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:veilfall:pickup:012",
+      "island_id": "veilfall",
+      "category": "potion",
+      "item_id": "potion_large",
+      "quantity": 1,
+      "position": [
+        416.0,
+        2.7262,
+        3834.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 33.7,
+      "sampled_slope_deg": 6.116,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:veilfall:pickup:013",
+      "island_id": "veilfall",
+      "category": "creature_candy",
+      "item_id": "great_candy",
+      "quantity": 1,
+      "position": [
+        356.0,
+        2.5823,
+        3798.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 19.762,
+      "sampled_slope_deg": 6.115,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:veilfall:pickup:014",
+      "island_id": "veilfall",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        404.0,
+        2.3776,
+        3822.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 20.853,
+      "sampled_slope_deg": 6.116,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:lantern_cove:pickup:001",
+      "island_id": "lantern_cove",
+      "category": "skill_candy",
+      "item_id": "skill_candy_i",
+      "quantity": 1,
+      "position": [
+        -260.0,
+        1.6213,
+        140.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 228.729,
+      "sampled_slope_deg": 19.022,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "character_once",
+      "registration": "planned",
+      "glow_colour": "#17121c",
+      "tier_marking": "I",
+      "presentation": "Black glow plus readable tier marking; actor/icon integration pending."
+    },
+    {
+      "id": "water:lantern_cove:pickup:002",
+      "island_id": "lantern_cove",
+      "category": "skill_candy",
+      "item_id": "skill_candy_i",
+      "quantity": 1,
+      "position": [
+        -326.0,
+        18.7614,
+        158.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 296.357,
+      "sampled_slope_deg": 13.085,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "character_once",
+      "registration": "planned",
+      "glow_colour": "#17121c",
+      "tier_marking": "I",
+      "presentation": "Black glow plus readable tier marking; actor/icon integration pending."
+    },
+    {
+      "id": "water:lantern_cove:pickup:003",
+      "island_id": "lantern_cove",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        -296.0,
+        7.7654,
+        140.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 261.635,
+      "sampled_slope_deg": 18.468,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:lantern_cove:pickup:004",
+      "island_id": "lantern_cove",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        -266.0,
+        1.0864,
+        116.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 224.479,
+      "sampled_slope_deg": 6.115,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:lantern_cove:pickup:005",
+      "island_id": "lantern_cove",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        -278.0,
+        3.3921,
+        140.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 245.182,
+      "sampled_slope_deg": 8.937,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:lantern_cove:pickup:006",
+      "island_id": "lantern_cove",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        -308.0,
+        13.2874,
+        152.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 277.471,
+      "sampled_slope_deg": 18.498,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:lantern_cove:pickup:007",
+      "island_id": "lantern_cove",
+      "category": "tonic",
+      "item_id": "swift_tonic",
+      "quantity": 1,
+      "position": [
+        -284.0,
+        3.3564,
+        128.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 245.799,
+      "sampled_slope_deg": 8.638,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:lantern_cove:pickup:008",
+      "island_id": "lantern_cove",
+      "category": "potion",
+      "item_id": "potion_large",
+      "quantity": 1,
+      "position": [
+        -290.0,
+        6.8317,
+        146.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 258.584,
+      "sampled_slope_deg": 17.775,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:gull_rest:pickup:001",
+      "island_id": "gull_rest",
+      "category": "skill_candy",
+      "item_id": "skill_candy_i",
+      "quantity": 1,
+      "position": [
+        -58.0,
+        16.5994,
+        828.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 319.732,
+      "sampled_slope_deg": 31.976,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "character_once",
+      "registration": "planned",
+      "glow_colour": "#17121c",
+      "tier_marking": "I",
+      "presentation": "Black glow plus readable tier marking; actor/icon integration pending."
+    },
+    {
+      "id": "water:gull_rest:pickup:002",
+      "island_id": "gull_rest",
+      "category": "skill_candy",
+      "item_id": "skill_candy_ii",
+      "quantity": 1,
+      "position": [
+        -52.0,
+        3.6197,
+        804.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 295.295,
+      "sampled_slope_deg": 15.459,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "character_once",
+      "registration": "planned",
+      "glow_colour": "#17121c",
+      "tier_marking": "II",
+      "presentation": "Black glow plus readable tier marking; actor/icon integration pending."
+    },
+    {
+      "id": "water:gull_rest:pickup:003",
+      "island_id": "gull_rest",
+      "category": "creature_candy",
+      "item_id": "great_candy",
+      "quantity": 1,
+      "position": [
+        -64.0,
+        23.8788,
+        840.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 333.118,
+      "sampled_slope_deg": 26.388,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:gull_rest:pickup:004",
+      "island_id": "gull_rest",
+      "category": "food",
+      "item_id": "cloudreach_trail_preserve",
+      "quantity": 1,
+      "position": [
+        -64.0,
+        6.9475,
+        810.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 305.682,
+      "sampled_slope_deg": 26.89,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:gull_rest:pickup:005",
+      "island_id": "gull_rest",
+      "category": "food",
+      "item_id": "cloudreach_trail_preserve",
+      "quantity": 1,
+      "position": [
+        -64.0,
+        13.7692,
+        822.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 316.6,
+      "sampled_slope_deg": 31.145,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:gull_rest:pickup:006",
+      "island_id": "gull_rest",
+      "category": "revive",
+      "item_id": "revive",
+      "quantity": 1,
+      "position": [
+        -58.0,
+        9.6528,
+        816.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 308.691,
+      "sampled_slope_deg": 29.75,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:drowned_garden:pickup:001",
+      "island_id": "drowned_garden",
+      "category": "skill_candy",
+      "item_id": "skill_candy_i",
+      "quantity": 1,
+      "position": [
+        1320.0,
+        17.9475,
+        2198.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 749.462,
+      "sampled_slope_deg": 16.978,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "character_once",
+      "registration": "planned",
+      "glow_colour": "#17121c",
+      "tier_marking": "I",
+      "presentation": "Black glow plus readable tier marking; actor/icon integration pending."
+    },
+    {
+      "id": "water:drowned_garden:pickup:002",
+      "island_id": "drowned_garden",
+      "category": "skill_candy",
+      "item_id": "skill_candy_ii",
+      "quantity": 1,
+      "position": [
+        1158.0,
+        41.732,
+        2270.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 646.115,
+      "sampled_slope_deg": 13.152,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "character_once",
+      "registration": "planned",
+      "glow_colour": "#17121c",
+      "tier_marking": "II",
+      "presentation": "Black glow plus readable tier marking; actor/icon integration pending."
+    },
+    {
+      "id": "water:drowned_garden:pickup:003",
+      "island_id": "drowned_garden",
+      "category": "creature_candy",
+      "item_id": "rare_candy",
+      "quantity": 1,
+      "position": [
+        1284.0,
+        20.6073,
+        2324.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 660.132,
+      "sampled_slope_deg": 18.263,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:drowned_garden:pickup:004",
+      "island_id": "drowned_garden",
+      "category": "revive",
+      "item_id": "revive",
+      "quantity": 1,
+      "position": [
+        1068.0,
+        12.8739,
+        2174.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 578.811,
+      "sampled_slope_deg": 9.448,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:drowned_garden:pickup:005",
+      "island_id": "drowned_garden",
+      "category": "revive",
+      "item_id": "revive",
+      "quantity": 1,
+      "position": [
+        1206.0,
+        32.3913,
+        2156.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 641.618,
+      "sampled_slope_deg": 18.191,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:drowned_garden:pickup:006",
+      "island_id": "drowned_garden",
+      "category": "food",
+      "item_id": "cloudreach_trail_preserve",
+      "quantity": 1,
+      "position": [
+        1182.0,
+        12.3675,
+        2390.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 549.44,
+      "sampled_slope_deg": 6.896,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:drowned_garden:pickup:007",
+      "island_id": "drowned_garden",
+      "category": "revive",
+      "item_id": "revive",
+      "quantity": 1,
+      "position": [
+        1056.0,
+        12.0993,
+        2294.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 590.181,
+      "sampled_slope_deg": 4.183,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:drowned_garden:pickup:008",
+      "island_id": "drowned_garden",
+      "category": "potion",
+      "item_id": "potion_small",
+      "quantity": 1,
+      "position": [
+        1134.0,
+        12.1666,
+        2102.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 554.366,
+      "sampled_slope_deg": 5.115,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:drowned_garden:pickup:009",
+      "island_id": "drowned_garden",
+      "category": "orb",
+      "item_id": "orb_greater",
+      "quantity": 1,
+      "position": [
+        1290.0,
+        12.0344,
+        2114.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 669.63,
+      "sampled_slope_deg": 2.745,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:drowned_garden:pickup:010",
+      "island_id": "drowned_garden",
+      "category": "creature_candy",
+      "item_id": "great_candy",
+      "quantity": 1,
+      "position": [
+        1242.0,
+        43.7967,
+        2240.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 709.635,
+      "sampled_slope_deg": 11.047,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:drowned_garden:pickup:011",
+      "island_id": "drowned_garden",
+      "category": "revive",
+      "item_id": "revive",
+      "quantity": 1,
+      "position": [
+        1350.0,
+        12.0672,
+        2276.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 737.796,
+      "sampled_slope_deg": 3.579,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:drowned_garden:pickup:012",
+      "island_id": "drowned_garden",
+      "category": "potion",
+      "item_id": "potion_large",
+      "quantity": 1,
+      "position": [
+        1104.0,
+        12.108,
+        2360.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 542.352,
+      "sampled_slope_deg": 4.332,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:drowned_garden:pickup:013",
+      "island_id": "drowned_garden",
+      "category": "food",
+      "item_id": "cloudreach_trail_preserve",
+      "quantity": 1,
+      "position": [
+        1140.0,
+        35.8714,
+        2198.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 636.173,
+      "sampled_slope_deg": 16.914,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:drowned_garden:pickup:014",
+      "island_id": "drowned_garden",
+      "category": "potion",
+      "item_id": "potion_small",
+      "quantity": 1,
+      "position": [
+        1212.0,
+        34.1043,
+        2318.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 626.833,
+      "sampled_slope_deg": 17.635,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:deep_watch:pickup:001",
+      "island_id": "deep_watch",
+      "category": "skill_candy",
+      "item_id": "skill_candy_ii",
+      "quantity": 1,
+      "position": [
+        1284.0,
+        40.7022,
+        3494.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 506.059,
+      "sampled_slope_deg": 20.349,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "character_once",
+      "registration": "planned",
+      "glow_colour": "#17121c",
+      "tier_marking": "II",
+      "presentation": "Black glow plus readable tier marking; actor/icon integration pending."
+    },
+    {
+      "id": "water:deep_watch:pickup:002",
+      "island_id": "deep_watch",
+      "category": "skill_candy",
+      "item_id": "skill_candy_iii",
+      "quantity": 1,
+      "position": [
+        1398.0,
+        41.6145,
+        3542.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 619.154,
+      "sampled_slope_deg": 19.868,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "character_once",
+      "registration": "planned",
+      "glow_colour": "#17121c",
+      "tier_marking": "III",
+      "presentation": "Black glow plus readable tier marking; actor/icon integration pending."
+    },
+    {
+      "id": "water:deep_watch:pickup:003",
+      "island_id": "deep_watch",
+      "category": "creature_candy",
+      "item_id": "rare_candy",
+      "quantity": 1,
+      "position": [
+        1290.0,
+        12.0354,
+        3632.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 620.648,
+      "sampled_slope_deg": 3.205,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:deep_watch:pickup:004",
+      "island_id": "deep_watch",
+      "category": "creature_candy",
+      "item_id": "rare_candy",
+      "quantity": 1,
+      "position": [
+        1338.0,
+        12.0686,
+        3356.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 455.557,
+      "sampled_slope_deg": 4.205,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:deep_watch:pickup:005",
+      "island_id": "deep_watch",
+      "category": "tm",
+      "item_id": "tm_leviathan_surge",
+      "quantity": 1,
+      "position": [
+        1464.0,
+        12.0222,
+        3410.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 591.183,
+      "sampled_slope_deg": 4.967,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:deep_watch:pickup:006",
+      "island_id": "deep_watch",
+      "category": "creature_candy",
+      "item_id": "great_candy",
+      "quantity": 1,
+      "position": [
+        1494.0,
+        12.0988,
+        3506.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 669.202,
+      "sampled_slope_deg": 4.875,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:deep_watch:pickup:007",
+      "island_id": "deep_watch",
+      "category": "revive",
+      "item_id": "revive",
+      "quantity": 1,
+      "position": [
+        1374.0,
+        43.2639,
+        3446.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 537.458,
+      "sampled_slope_deg": 18.883,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:deep_watch:pickup:008",
+      "island_id": "deep_watch",
+      "category": "creature_candy",
+      "item_id": "great_candy",
+      "quantity": 1,
+      "position": [
+        1248.0,
+        1.0638,
+        3404.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 415.461,
+      "sampled_slope_deg": 6.115,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:deep_watch:pickup:009",
+      "island_id": "deep_watch",
+      "category": "potion",
+      "item_id": "potion_small",
+      "quantity": 1,
+      "position": [
+        1392.0,
+        12.0882,
+        3638.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 685.781,
+      "sampled_slope_deg": 4.668,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:deep_watch:pickup:010",
+      "island_id": "deep_watch",
+      "category": "food",
+      "item_id": "berries",
+      "quantity": 1,
+      "position": [
+        1224.0,
+        12.3081,
+        3566.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 529.83,
+      "sampled_slope_deg": 7.581,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:deep_watch:pickup:011",
+      "island_id": "deep_watch",
+      "category": "creature_candy",
+      "item_id": "good_candy",
+      "quantity": 1,
+      "position": [
+        1464.0,
+        12.0222,
+        3590.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 700.014,
+      "sampled_slope_deg": 4.967,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    },
+    {
+      "id": "water:deep_watch:pickup:012",
+      "island_id": "deep_watch",
+      "category": "revive",
+      "item_id": "revive",
+      "quantity": 1,
+      "position": [
+        1206.0,
+        12.0285,
+        3482.0
+      ],
+      "off_main_route": true,
+      "main_route_distance_m": 449.158,
+      "sampled_slope_deg": 12.341,
+      "placement_reason": "Landing-connected shore detour rewards preparation before the next crossing.",
+      "claim_policy": "existing_world_pickup_policy",
+      "registration": "installed"
+    }
+  ],
+  "harvest": [
+    {
+      "id": "water:first_shore:harvest:001",
+      "island_id": "first_shore",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        18.0,
+        35.1772,
+        -18.0
+      ],
+      "sampled_slope_deg": 3.673,
+      "main_route_distance_m": 62.278,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:first_shore:harvest:002",
+      "island_id": "first_shore",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        -24.0,
+        1.6395,
+        168.0
+      ],
+      "sampled_slope_deg": 31.748,
+      "main_route_distance_m": 24.371,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:first_shore:harvest:003",
+      "island_id": "first_shore",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        -12.0,
+        30.4814,
+        66.0
+      ],
+      "sampled_slope_deg": 27.838,
+      "main_route_distance_m": 15.238,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:first_shore:harvest:004",
+      "island_id": "first_shore",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        6.0,
+        12.0423,
+        -174.0
+      ],
+      "sampled_slope_deg": 2.072,
+      "main_route_distance_m": 156.55,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:first_shore:harvest:005",
+      "island_id": "first_shore",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        72.0,
+        29.0917,
+        -24.0
+      ],
+      "sampled_slope_deg": 9.634,
+      "main_route_distance_m": 107.133,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:first_shore:harvest:006",
+      "island_id": "first_shore",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        48.0,
+        1.1827,
+        162.0
+      ],
+      "sampled_slope_deg": 6.116,
+      "main_route_distance_m": 34.953,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:first_shore:harvest:007",
+      "island_id": "first_shore",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        78.0,
+        17.895,
+        -108.0
+      ],
+      "sampled_slope_deg": 11.084,
+      "main_route_distance_m": 166.453,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:first_shore:harvest:008",
+      "island_id": "first_shore",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        138.0,
+        12.0095,
+        108.0
+      ],
+      "sampled_slope_deg": 3.143,
+      "main_route_distance_m": 74.504,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:first_shore:harvest:009",
+      "island_id": "first_shore",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        -90.0,
+        12.0166,
+        -150.0
+      ],
+      "sampled_slope_deg": 1.421,
+      "main_route_distance_m": 94.434,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:first_shore:harvest:010",
+      "island_id": "first_shore",
+      "item_id": "tide_bloom",
+      "yield": 2,
+      "position": [
+        -30.0,
+        34.8152,
+        -6.0
+      ],
+      "sampled_slope_deg": 4.385,
+      "main_route_distance_m": 18.061,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "A coastal flower patch reached by a deliberate detour."
+    },
+    {
+      "id": "water:first_shore:harvest:011",
+      "island_id": "first_shore",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        -96.0,
+        17.4006,
+        96.0
+      ],
+      "sampled_slope_deg": 10.917,
+      "main_route_distance_m": 60.979,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:first_shore:harvest:012",
+      "island_id": "first_shore",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        -120.0,
+        5.732,
+        60.0
+      ],
+      "sampled_slope_deg": 13.33,
+      "main_route_distance_m": 68.314,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:first_shore:harvest:013",
+      "island_id": "first_shore",
+      "item_id": "tide_bloom",
+      "yield": 2,
+      "position": [
+        150.0,
+        12.1484,
+        -84.0
+      ],
+      "sampled_slope_deg": 3.386,
+      "main_route_distance_m": 196.235,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "A coastal flower patch reached by a deliberate detour."
+    },
+    {
+      "id": "water:first_shore:harvest:014",
+      "island_id": "first_shore",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        6.0,
+        28.6909,
+        -78.0
+      ],
+      "sampled_slope_deg": 9.835,
+      "main_route_distance_m": 92.302,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:first_shore:harvest:015",
+      "island_id": "first_shore",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        -126.0,
+        16.1826,
+        -66.0
+      ],
+      "sampled_slope_deg": 10.355,
+      "main_route_distance_m": 31.074,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:first_shore:harvest:016",
+      "island_id": "first_shore",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        -96.0,
+        25.0739,
+        18.0
+      ],
+      "sampled_slope_deg": 11.121,
+      "main_route_distance_m": 29.341,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:first_shore:harvest:017",
+      "island_id": "first_shore",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        -162.0,
+        0.9897,
+        54.0
+      ],
+      "sampled_slope_deg": 7.483,
+      "main_route_distance_m": 104.27,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:first_shore:harvest:018",
+      "island_id": "first_shore",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        90.0,
+        22.2713,
+        -66.0
+      ],
+      "sampled_slope_deg": 11.544,
+      "main_route_distance_m": 148.166,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:first_shore:harvest:019",
+      "island_id": "first_shore",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        168.0,
+        12.0221,
+        -48.0
+      ],
+      "sampled_slope_deg": 1.592,
+      "main_route_distance_m": 174.501,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:first_shore:harvest:020",
+      "island_id": "first_shore",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        -114.0,
+        12.0316,
+        132.0
+      ],
+      "sampled_slope_deg": 1.855,
+      "main_route_distance_m": 92.033,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:reedhaven:harvest:001",
+      "island_id": "reedhaven",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        138.0,
+        1.2742,
+        536.0
+      ],
+      "sampled_slope_deg": 6.115,
+      "main_route_distance_m": 19.106,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:reedhaven:harvest:002",
+      "island_id": "reedhaven",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        48.0,
+        15.3411,
+        320.0
+      ],
+      "sampled_slope_deg": 5.701,
+      "main_route_distance_m": 63.781,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:reedhaven:harvest:003",
+      "island_id": "reedhaven",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        -18.0,
+        22.367,
+        488.0
+      ],
+      "sampled_slope_deg": 3.335,
+      "main_route_distance_m": 15.696,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:reedhaven:harvest:004",
+      "island_id": "reedhaven",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        114.0,
+        14.1494,
+        356.0
+      ],
+      "sampled_slope_deg": 5.253,
+      "main_route_distance_m": 138.13,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:reedhaven:harvest:005",
+      "island_id": "reedhaven",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        108.0,
+        7.5434,
+        488.0
+      ],
+      "sampled_slope_deg": 10.976,
+      "main_route_distance_m": 34.324,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:reedhaven:harvest:006",
+      "island_id": "reedhaven",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        -162.0,
+        12.0083,
+        506.0
+      ],
+      "sampled_slope_deg": 0.706,
+      "main_route_distance_m": 125.886,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:reedhaven:harvest:007",
+      "island_id": "reedhaven",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        -84.0,
+        15.0541,
+        542.0
+      ],
+      "sampled_slope_deg": 5.627,
+      "main_route_distance_m": 98.87,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:reedhaven:harvest:008",
+      "island_id": "reedhaven",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        174.0,
+        12.0083,
+        422.0
+      ],
+      "sampled_slope_deg": 0.698,
+      "main_route_distance_m": 98.033,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:reedhaven:harvest:009",
+      "island_id": "reedhaven",
+      "item_id": "tide_bloom",
+      "yield": 2,
+      "position": [
+        -96.0,
+        15.5096,
+        356.0
+      ],
+      "sampled_slope_deg": 5.737,
+      "main_route_distance_m": 18.501,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "A coastal flower patch reached by a deliberate detour."
+    },
+    {
+      "id": "water:reedhaven:harvest:010",
+      "island_id": "reedhaven",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        66.0,
+        12.0083,
+        278.0
+      ],
+      "sampled_slope_deg": 0.706,
+      "main_route_distance_m": 66.0,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:reedhaven:harvest:011",
+      "island_id": "reedhaven",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        -36.0,
+        0.8771,
+        608.0
+      ],
+      "sampled_slope_deg": 6.116,
+      "main_route_distance_m": 121.375,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:reedhaven:harvest:012",
+      "island_id": "reedhaven",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        -174.0,
+        12.0083,
+        422.0
+      ],
+      "sampled_slope_deg": 0.698,
+      "main_route_distance_m": 86.094,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:reedhaven:harvest:013",
+      "island_id": "reedhaven",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        -120.0,
+        14.8554,
+        500.0
+      ],
+      "sampled_slope_deg": 5.564,
+      "main_route_distance_m": 89.196,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:reedhaven:harvest:014",
+      "island_id": "reedhaven",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        48.0,
+        13.2686,
+        584.0
+      ],
+      "sampled_slope_deg": 4.578,
+      "main_route_distance_m": 53.875,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:reedhaven:harvest:015",
+      "island_id": "reedhaven",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        24.0,
+        20.5458,
+        368.0
+      ],
+      "sampled_slope_deg": 4.851,
+      "main_route_distance_m": 78.326,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:reedhaven:harvest:016",
+      "island_id": "reedhaven",
+      "item_id": "tide_bloom",
+      "yield": 2,
+      "position": [
+        60.0,
+        21.7658,
+        434.0
+      ],
+      "sampled_slope_deg": 4.065,
+      "main_route_distance_m": 74.862,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "A coastal flower patch reached by a deliberate detour."
+    },
+    {
+      "id": "water:reedhaven:harvest:017",
+      "island_id": "reedhaven",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        -102.0,
+        18.0376,
+        452.0
+      ],
+      "sampled_slope_deg": 5.72,
+      "main_route_distance_m": 45.424,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:reedhaven:harvest:018",
+      "island_id": "reedhaven",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        6.0,
+        15.0541,
+        572.0
+      ],
+      "sampled_slope_deg": 5.627,
+      "main_route_distance_m": 67.155,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:reedhaven:harvest:019",
+      "island_id": "reedhaven",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        -54.0,
+        19.7169,
+        374.0
+      ],
+      "sampled_slope_deg": 5.234,
+      "main_route_distance_m": 24.677,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:reedhaven:harvest:020",
+      "island_id": "reedhaven",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        18.0,
+        23.3028,
+        452.0
+      ],
+      "sampled_slope_deg": 3.073,
+      "main_route_distance_m": 34.833,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:reedhaven:harvest:021",
+      "island_id": "reedhaven",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        -72.0,
+        14.3035,
+        320.0
+      ],
+      "sampled_slope_deg": 5.334,
+      "main_route_distance_m": 24.981,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:reedhaven:harvest:022",
+      "island_id": "reedhaven",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        -138.0,
+        12.0837,
+        338.0
+      ],
+      "sampled_slope_deg": 1.774,
+      "main_route_distance_m": 61.679,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:reedhaven:harvest:023",
+      "island_id": "reedhaven",
+      "item_id": "tide_bloom",
+      "yield": 2,
+      "position": [
+        -48.0,
+        19.6013,
+        512.0
+      ],
+      "sampled_slope_deg": 5.28,
+      "main_route_distance_m": 53.072,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "A coastal flower patch reached by a deliberate detour."
+    },
+    {
+      "id": "water:reedhaven:harvest:024",
+      "island_id": "reedhaven",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        138.0,
+        14.0567,
+        404.0
+      ],
+      "sampled_slope_deg": 5.2,
+      "main_route_distance_m": 111.305,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:brine_steps:harvest:001",
+      "island_id": "brine_steps",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        342.0,
+        12.0244,
+        492.0
+      ],
+      "sampled_slope_deg": 13.611,
+      "main_route_distance_m": 109.968,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:brine_steps:harvest:002",
+      "island_id": "brine_steps",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        336.0,
+        39.224,
+        612.0
+      ],
+      "sampled_slope_deg": 34.409,
+      "main_route_distance_m": 16.891,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:brine_steps:harvest:003",
+      "island_id": "brine_steps",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        498.0,
+        12.0244,
+        828.0
+      ],
+      "sampled_slope_deg": 13.611,
+      "main_route_distance_m": 63.405,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:brine_steps:harvest:004",
+      "island_id": "brine_steps",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        540.0,
+        35.3532,
+        618.0
+      ],
+      "sampled_slope_deg": 27.993,
+      "main_route_distance_m": 149.167,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:brine_steps:harvest:005",
+      "island_id": "brine_steps",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        432.0,
+        77.4344,
+        666.0
+      ],
+      "sampled_slope_deg": 4.812,
+      "main_route_distance_m": 77.783,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:brine_steps:harvest:006",
+      "island_id": "brine_steps",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        504.0,
+        37.4976,
+        570.0
+      ],
+      "sampled_slope_deg": 28.05,
+      "main_route_distance_m": 186.975,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:brine_steps:harvest:007",
+      "island_id": "brine_steps",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        240.0,
+        12.0477,
+        702.0
+      ],
+      "sampled_slope_deg": 3.738,
+      "main_route_distance_m": 87.286,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:brine_steps:harvest:008",
+      "island_id": "brine_steps",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        432.0,
+        42.0059,
+        774.0
+      ],
+      "sampled_slope_deg": 27.879,
+      "main_route_distance_m": 18.118,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:brine_steps:harvest:009",
+      "island_id": "brine_steps",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        402.0,
+        60.4126,
+        720.0
+      ],
+      "sampled_slope_deg": 28.0,
+      "main_route_distance_m": 18.611,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:brine_steps:harvest:010",
+      "island_id": "brine_steps",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        324.0,
+        37.1868,
+        738.0
+      ],
+      "sampled_slope_deg": 28.048,
+      "main_route_distance_m": 15.863,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:brine_steps:harvest:011",
+      "island_id": "brine_steps",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        468.0,
+        17.8385,
+        504.0
+      ],
+      "sampled_slope_deg": 21.564,
+      "main_route_distance_m": 178.7,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:brine_steps:harvest:012",
+      "island_id": "brine_steps",
+      "item_id": "tide_bloom",
+      "yield": 2,
+      "position": [
+        486.0,
+        64.4434,
+        672.0
+      ],
+      "sampled_slope_deg": 21.094,
+      "main_route_distance_m": 83.487,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "A coastal flower patch reached by a deliberate detour."
+    },
+    {
+      "id": "water:brine_steps:harvest:013",
+      "island_id": "brine_steps",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        324.0,
+        30.8043,
+        564.0
+      ],
+      "sampled_slope_deg": 27.528,
+      "main_route_distance_m": 36.571,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:brine_steps:harvest:014",
+      "island_id": "brine_steps",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        294.0,
+        34.7542,
+        636.0
+      ],
+      "sampled_slope_deg": 27.959,
+      "main_route_distance_m": 27.214,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:brine_steps:harvest:015",
+      "island_id": "brine_steps",
+      "item_id": "tide_bloom",
+      "yield": 2,
+      "position": [
+        390.0,
+        22.259,
+        510.0
+      ],
+      "sampled_slope_deg": 24.821,
+      "main_route_distance_m": 116.128,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "A coastal flower patch reached by a deliberate detour."
+    },
+    {
+      "id": "water:brine_steps:harvest:016",
+      "island_id": "brine_steps",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        486.0,
+        30.1864,
+        780.0
+      ],
+      "sampled_slope_deg": 27.423,
+      "main_route_distance_m": 16.798,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:brine_steps:harvest:017",
+      "island_id": "brine_steps",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        552.0,
+        12.2924,
+        534.0
+      ],
+      "sampled_slope_deg": 7.721,
+      "main_route_distance_m": 232.834,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:brine_steps:harvest:018",
+      "island_id": "brine_steps",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        504.0,
+        42.0059,
+        738.0
+      ],
+      "sampled_slope_deg": 27.879,
+      "main_route_distance_m": 25.249,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:shellwatch:harvest:001",
+      "island_id": "shellwatch",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        206.0,
+        33.5675,
+        1078.0
+      ],
+      "sampled_slope_deg": 23.552,
+      "main_route_distance_m": 20.717,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:shellwatch:harvest:002",
+      "island_id": "shellwatch",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        344.0,
+        25.5645,
+        1258.0
+      ],
+      "sampled_slope_deg": 22.716,
+      "main_route_distance_m": 59.917,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:shellwatch:harvest:003",
+      "island_id": "shellwatch",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        422.0,
+        20.3937,
+        1006.0
+      ],
+      "sampled_slope_deg": 20.728,
+      "main_route_distance_m": 84.907,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:shellwatch:harvest:004",
+      "island_id": "shellwatch",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        476.0,
+        12.1674,
+        1216.0
+      ],
+      "sampled_slope_deg": 5.518,
+      "main_route_distance_m": 49.359,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:shellwatch:harvest:005",
+      "island_id": "shellwatch",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        332.0,
+        62.3418,
+        1156.0
+      ],
+      "sampled_slope_deg": 10.765,
+      "main_route_distance_m": 18.207,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:shellwatch:harvest:006",
+      "island_id": "shellwatch",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        410.0,
+        40.6879,
+        1066.0
+      ],
+      "sampled_slope_deg": 22.849,
+      "main_route_distance_m": 94.263,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:shellwatch:harvest:007",
+      "island_id": "shellwatch",
+      "item_id": "sluice_metal",
+      "yield": 2,
+      "position": [
+        302.0,
+        41.2683,
+        1018.0
+      ],
+      "sampled_slope_deg": 22.74,
+      "main_route_distance_m": 18.145,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Discarded Team Tether maintenance material in occupied territory."
+    },
+    {
+      "id": "water:shellwatch:harvest:008",
+      "island_id": "shellwatch",
+      "item_id": "sluice_metal",
+      "yield": 2,
+      "position": [
+        140.0,
+        12.1311,
+        1156.0
+      ],
+      "sampled_slope_deg": 5.008,
+      "main_route_distance_m": 122.83,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Discarded Team Tether maintenance material in occupied territory."
+    },
+    {
+      "id": "water:shellwatch:harvest:009",
+      "island_id": "shellwatch",
+      "item_id": "sluice_metal",
+      "yield": 2,
+      "position": [
+        446.0,
+        29.4139,
+        1156.0
+      ],
+      "sampled_slope_deg": 23.372,
+      "main_route_distance_m": 80.635,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Discarded Team Tether maintenance material in occupied territory."
+    },
+    {
+      "id": "water:shellwatch:harvest:010",
+      "island_id": "shellwatch",
+      "item_id": "sluice_metal",
+      "yield": 2,
+      "position": [
+        266.0,
+        24.5054,
+        1252.0
+      ],
+      "sampled_slope_deg": 22.432,
+      "main_route_distance_m": 123.263,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Discarded Team Tether maintenance material in occupied territory."
+    },
+    {
+      "id": "water:shellwatch:harvest:011",
+      "island_id": "shellwatch",
+      "item_id": "tide_bloom",
+      "yield": 2,
+      "position": [
+        338.0,
+        0.9752,
+        940.0
+      ],
+      "sampled_slope_deg": 6.115,
+      "main_route_distance_m": 20.841,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "A coastal flower patch reached by a deliberate detour."
+    },
+    {
+      "id": "water:shellwatch:harvest:012",
+      "island_id": "shellwatch",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        356.0,
+        46.2295,
+        1204.0
+      ],
+      "sampled_slope_deg": 21.472,
+      "main_route_distance_m": 21.314,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:shellwatch:harvest:013",
+      "island_id": "shellwatch",
+      "item_id": "tide_bloom",
+      "yield": 2,
+      "position": [
+        224.0,
+        12.1674,
+        964.0
+      ],
+      "sampled_slope_deg": 5.518,
+      "main_route_distance_m": 60.355,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "A coastal flower patch reached by a deliberate detour."
+    },
+    {
+      "id": "water:shellwatch:harvest:014",
+      "island_id": "shellwatch",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        500.0,
+        12.039,
+        1078.0
+      ],
+      "sampled_slope_deg": 3.06,
+      "main_route_distance_m": 166.318,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:shellwatch:harvest:015",
+      "island_id": "shellwatch",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        332.0,
+        58.6227,
+        1078.0
+      ],
+      "sampled_slope_deg": 18.235,
+      "main_route_distance_m": 20.655,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:shellwatch:harvest:016",
+      "island_id": "shellwatch",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        350.0,
+        11.7264,
+        988.0
+      ],
+      "sampled_slope_deg": 26.203,
+      "main_route_distance_m": 24.289,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:shellwatch:harvest:017",
+      "island_id": "shellwatch",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        356.0,
+        12.1311,
+        1300.0
+      ],
+      "sampled_slope_deg": 5.008,
+      "main_route_distance_m": 87.251,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:shellwatch:harvest:018",
+      "island_id": "shellwatch",
+      "item_id": "tide_bloom",
+      "yield": 2,
+      "position": [
+        302.0,
+        65.076,
+        1114.0
+      ],
+      "sampled_slope_deg": 5.544,
+      "main_route_distance_m": 23.293,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "A coastal flower patch reached by a deliberate detour."
+    },
+    {
+      "id": "water:tidal_cradle:harvest:001",
+      "island_id": "tidal_cradle",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        562.0,
+        8.3663,
+        1368.0
+      ],
+      "sampled_slope_deg": 23.819,
+      "main_route_distance_m": 21.813,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:tidal_cradle:harvest:002",
+      "island_id": "tidal_cradle",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        532.0,
+        1.681,
+        1710.0
+      ],
+      "sampled_slope_deg": 17.101,
+      "main_route_distance_m": 33.625,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:tidal_cradle:harvest:003",
+      "island_id": "tidal_cradle",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        544.0,
+        0.8495,
+        1332.0
+      ],
+      "sampled_slope_deg": 6.115,
+      "main_route_distance_m": 22.203,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:tidal_cradle:harvest:004",
+      "island_id": "tidal_cradle",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        556.0,
+        6.7271,
+        1692.0
+      ],
+      "sampled_slope_deg": 21.279,
+      "main_route_distance_m": 35.712,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:tidal_cradle:harvest:005",
+      "island_id": "tidal_cradle",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        568.0,
+        3.413,
+        1344.0
+      ],
+      "sampled_slope_deg": 11.219,
+      "main_route_distance_m": 33.599,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:tidal_cradle:harvest:006",
+      "island_id": "tidal_cradle",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        562.0,
+        2.4919,
+        1332.0
+      ],
+      "sampled_slope_deg": 28.432,
+      "main_route_distance_m": 33.512,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:tidal_cradle:harvest:007",
+      "island_id": "tidal_cradle",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        568.0,
+        7.998,
+        1698.0
+      ],
+      "sampled_slope_deg": 23.314,
+      "main_route_distance_m": 26.768,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:tidal_cradle:harvest:008",
+      "island_id": "tidal_cradle",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        574.0,
+        14.5899,
+        1374.0
+      ],
+      "sampled_slope_deg": 29.397,
+      "main_route_distance_m": 31.468,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:tidal_cradle:harvest:009",
+      "island_id": "tidal_cradle",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        568.0,
+        6.1025,
+        1356.0
+      ],
+      "sampled_slope_deg": 20.055,
+      "main_route_distance_m": 30.611,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:tidal_cradle:harvest:010",
+      "island_id": "tidal_cradle",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        586.0,
+        21.9342,
+        1380.0
+      ],
+      "sampled_slope_deg": 32.711,
+      "main_route_distance_m": 18.179,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:tidal_cradle:harvest:011",
+      "island_id": "tidal_cradle",
+      "item_id": "tide_bloom",
+      "yield": 2,
+      "position": [
+        604.0,
+        18.7362,
+        1698.0
+      ],
+      "sampled_slope_deg": 31.519,
+      "main_route_distance_m": 17.304,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "A coastal flower patch reached by a deliberate detour."
+    },
+    {
+      "id": "water:tidal_cradle:harvest:012",
+      "island_id": "tidal_cradle",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        562.0,
+        17.7226,
+        1392.0
+      ],
+      "sampled_slope_deg": 31.07,
+      "main_route_distance_m": 15.84,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:salt_crown:harvest:001",
+      "island_id": "salt_crown",
+      "item_id": "sluice_metal",
+      "yield": 2,
+      "position": [
+        132.0,
+        50.5487,
+        2154.0
+      ],
+      "sampled_slope_deg": 26.045,
+      "main_route_distance_m": 22.442,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Discarded Team Tether maintenance material in occupied territory."
+    },
+    {
+      "id": "water:salt_crown:harvest:002",
+      "island_id": "salt_crown",
+      "item_id": "sluice_metal",
+      "yield": 2,
+      "position": [
+        60.0,
+        69.8039,
+        2382.0
+      ],
+      "sampled_slope_deg": 22.819,
+      "main_route_distance_m": 113.189,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Discarded Team Tether maintenance material in occupied territory."
+    },
+    {
+      "id": "water:salt_crown:harvest:003",
+      "island_id": "salt_crown",
+      "item_id": "sluice_metal",
+      "yield": 2,
+      "position": [
+        240.0,
+        32.2132,
+        2172.0
+      ],
+      "sampled_slope_deg": 30.765,
+      "main_route_distance_m": 35.967,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Discarded Team Tether maintenance material in occupied territory."
+    },
+    {
+      "id": "water:salt_crown:harvest:004",
+      "island_id": "salt_crown",
+      "item_id": "sluice_metal",
+      "yield": 2,
+      "position": [
+        -36.0,
+        12.043,
+        2484.0
+      ],
+      "sampled_slope_deg": 3.077,
+      "main_route_distance_m": 247.744,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Discarded Team Tether maintenance material in occupied territory."
+    },
+    {
+      "id": "water:salt_crown:harvest:005",
+      "island_id": "salt_crown",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        114.0,
+        62.8802,
+        2436.0
+      ],
+      "sampled_slope_deg": 24.462,
+      "main_route_distance_m": 122.384,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:salt_crown:harvest:006",
+      "island_id": "salt_crown",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        48.0,
+        12.0168,
+        2544.0
+      ],
+      "sampled_slope_deg": 16.942,
+      "main_route_distance_m": 219.913,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:salt_crown:harvest:007",
+      "island_id": "salt_crown",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        366.0,
+        12.1571,
+        2178.0
+      ],
+      "sampled_slope_deg": 5.135,
+      "main_route_distance_m": 100.922,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:salt_crown:harvest:008",
+      "island_id": "salt_crown",
+      "item_id": "tide_bloom",
+      "yield": 2,
+      "position": [
+        78.0,
+        85.2489,
+        2304.0
+      ],
+      "sampled_slope_deg": 16.148,
+      "main_route_distance_m": 35.563,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "A coastal flower patch reached by a deliberate detour."
+    },
+    {
+      "id": "water:salt_crown:harvest:009",
+      "island_id": "salt_crown",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        204.0,
+        77.83,
+        2388.0
+      ],
+      "sampled_slope_deg": 20.028,
+      "main_route_distance_m": 22.506,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:salt_crown:harvest:010",
+      "island_id": "salt_crown",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        6.0,
+        37.479,
+        2196.0
+      ],
+      "sampled_slope_deg": 25.898,
+      "main_route_distance_m": 32.498,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:salt_crown:harvest:011",
+      "island_id": "salt_crown",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        312.0,
+        33.5916,
+        2298.0
+      ],
+      "sampled_slope_deg": 30.867,
+      "main_route_distance_m": 106.567,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:salt_crown:harvest:012",
+      "island_id": "salt_crown",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        246.0,
+        71.9217,
+        2256.0
+      ],
+      "sampled_slope_deg": 22.187,
+      "main_route_distance_m": 83.767,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:salt_crown:harvest:013",
+      "island_id": "salt_crown",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        66.0,
+        40.6455,
+        2154.0
+      ],
+      "sampled_slope_deg": 26.129,
+      "main_route_distance_m": 47.993,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:salt_crown:harvest:014",
+      "island_id": "salt_crown",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        -6.0,
+        43.2828,
+        2382.0
+      ],
+      "sampled_slope_deg": 26.218,
+      "main_route_distance_m": 143.286,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:salt_crown:harvest:015",
+      "island_id": "salt_crown",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        96.0,
+        29.9902,
+        2502.0
+      ],
+      "sampled_slope_deg": 24.689,
+      "main_route_distance_m": 158.85,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:salt_crown:harvest:016",
+      "island_id": "salt_crown",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        192.0,
+        92.0031,
+        2298.0
+      ],
+      "sampled_slope_deg": 10.273,
+      "main_route_distance_m": 21.764,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:salt_crown:harvest:017",
+      "island_id": "salt_crown",
+      "item_id": "tide_bloom",
+      "yield": 2,
+      "position": [
+        -48.0,
+        29.6184,
+        2280.0
+      ],
+      "sampled_slope_deg": 24.598,
+      "main_route_distance_m": 77.269,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "A coastal flower patch reached by a deliberate detour."
+    },
+    {
+      "id": "water:salt_crown:harvest:018",
+      "island_id": "salt_crown",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        -48.0,
+        12.7758,
+        2160.0
+      ],
+      "sampled_slope_deg": 9.418,
+      "main_route_distance_m": 90.7,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:sluice_isle:harvest:001",
+      "island_id": "sluice_isle",
+      "item_id": "sluice_metal",
+      "yield": 2,
+      "position": [
+        616.0,
+        12.0508,
+        3122.0
+      ],
+      "sampled_slope_deg": 3.387,
+      "main_route_distance_m": 127.959,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Discarded Team Tether maintenance material in occupied territory."
+    },
+    {
+      "id": "water:sluice_isle:harvest:002",
+      "island_id": "sluice_isle",
+      "item_id": "sluice_metal",
+      "yield": 2,
+      "position": [
+        1090.0,
+        12.177,
+        3110.0
+      ],
+      "sampled_slope_deg": 5.549,
+      "main_route_distance_m": 135.208,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Discarded Team Tether maintenance material in occupied territory."
+    },
+    {
+      "id": "water:sluice_isle:harvest:003",
+      "island_id": "sluice_isle",
+      "item_id": "sluice_metal",
+      "yield": 2,
+      "position": [
+        694.0,
+        0.9393,
+        3194.0
+      ],
+      "sampled_slope_deg": 6.115,
+      "main_route_distance_m": 25.124,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Discarded Team Tether maintenance material in occupied territory."
+    },
+    {
+      "id": "water:sluice_isle:harvest:004",
+      "island_id": "sluice_isle",
+      "item_id": "sluice_metal",
+      "yield": 2,
+      "position": [
+        652.0,
+        47.3128,
+        2936.0
+      ],
+      "sampled_slope_deg": 28.95,
+      "main_route_distance_m": 78.302,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Discarded Team Tether maintenance material in occupied territory."
+    },
+    {
+      "id": "water:sluice_isle:harvest:005",
+      "island_id": "sluice_isle",
+      "item_id": "sluice_metal",
+      "yield": 2,
+      "position": [
+        568.0,
+        12.177,
+        2936.0
+      ],
+      "sampled_slope_deg": 5.54,
+      "main_route_distance_m": 142.449,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Discarded Team Tether maintenance material in occupied territory."
+    },
+    {
+      "id": "water:sluice_isle:harvest:006",
+      "island_id": "sluice_isle",
+      "item_id": "sluice_metal",
+      "yield": 2,
+      "position": [
+        808.0,
+        106.7768,
+        2900.0
+      ],
+      "sampled_slope_deg": 16.683,
+      "main_route_distance_m": 32.875,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Discarded Team Tether maintenance material in occupied territory."
+    },
+    {
+      "id": "water:sluice_isle:harvest:007",
+      "island_id": "sluice_isle",
+      "item_id": "sluice_metal",
+      "yield": 2,
+      "position": [
+        796.0,
+        74.185,
+        3080.0
+      ],
+      "sampled_slope_deg": 31.058,
+      "main_route_distance_m": 83.565,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Discarded Team Tether maintenance material in occupied territory."
+    },
+    {
+      "id": "water:sluice_isle:harvest:008",
+      "island_id": "sluice_isle",
+      "item_id": "sluice_metal",
+      "yield": 2,
+      "position": [
+        694.0,
+        63.9706,
+        3026.0
+      ],
+      "sampled_slope_deg": 28.68,
+      "main_route_distance_m": 155.9,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Discarded Team Tether maintenance material in occupied territory."
+    },
+    {
+      "id": "water:sluice_isle:harvest:009",
+      "island_id": "sluice_isle",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        874.0,
+        47.3128,
+        2762.0
+      ],
+      "sampled_slope_deg": 28.95,
+      "main_route_distance_m": 103.345,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:sluice_isle:harvest:010",
+      "island_id": "sluice_isle",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        946.0,
+        74.8437,
+        2846.0
+      ],
+      "sampled_slope_deg": 27.417,
+      "main_route_distance_m": 44.916,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:sluice_isle:harvest:011",
+      "island_id": "sluice_isle",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        958.0,
+        94.2356,
+        2960.0
+      ],
+      "sampled_slope_deg": 22.68,
+      "main_route_distance_m": 32.882,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:sluice_isle:harvest:012",
+      "island_id": "sluice_isle",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        682.0,
+        12.1587,
+        2732.0
+      ],
+      "sampled_slope_deg": 5.321,
+      "main_route_distance_m": 53.13,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:sluice_isle:harvest:013",
+      "island_id": "sluice_isle",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        946.0,
+        12.4249,
+        2696.0
+      ],
+      "sampled_slope_deg": 7.767,
+      "main_route_distance_m": 173.455,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:sluice_isle:harvest:014",
+      "island_id": "sluice_isle",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        1024.0,
+        12.2792,
+        2738.0
+      ],
+      "sampled_slope_deg": 6.619,
+      "main_route_distance_m": 173.654,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:sluice_isle:harvest:015",
+      "island_id": "sluice_isle",
+      "item_id": "tide_bloom",
+      "yield": 2,
+      "position": [
+        772.0,
+        22.4161,
+        3158.0
+      ],
+      "sampled_slope_deg": 30.757,
+      "main_route_distance_m": 18.972,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "A coastal flower patch reached by a deliberate detour."
+    },
+    {
+      "id": "water:sluice_isle:harvest:016",
+      "island_id": "sluice_isle",
+      "item_id": "tide_bloom",
+      "yield": 2,
+      "position": [
+        628.0,
+        0.8503,
+        2786.0
+      ],
+      "sampled_slope_deg": 6.115,
+      "main_route_distance_m": 25.235,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "A coastal flower patch reached by a deliberate detour."
+    },
+    {
+      "id": "water:sluice_isle:harvest:017",
+      "island_id": "sluice_isle",
+      "item_id": "tide_bloom",
+      "yield": 2,
+      "position": [
+        1024.0,
+        38.92,
+        3086.0
+      ],
+      "sampled_slope_deg": 28.165,
+      "main_route_distance_m": 72.529,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "A coastal flower patch reached by a deliberate detour."
+    },
+    {
+      "id": "water:sluice_isle:harvest:018",
+      "island_id": "sluice_isle",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        1012.0,
+        40.0052,
+        2822.0
+      ],
+      "sampled_slope_deg": 28.311,
+      "main_route_distance_m": 115.062,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:sluice_isle:harvest:019",
+      "island_id": "sluice_isle",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        898.0,
+        89.8257,
+        3068.0
+      ],
+      "sampled_slope_deg": 24.108,
+      "main_route_distance_m": 47.382,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:sluice_isle:harvest:020",
+      "island_id": "sluice_isle",
+      "item_id": "tide_bloom",
+      "yield": 2,
+      "position": [
+        922.0,
+        38.1173,
+        3164.0
+      ],
+      "sampled_slope_deg": 28.047,
+      "main_route_distance_m": 39.353,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "A coastal flower patch reached by a deliberate detour."
+    },
+    {
+      "id": "water:veilfall:harvest:001",
+      "island_id": "veilfall",
+      "item_id": "sluice_metal",
+      "yield": 2,
+      "position": [
+        422.0,
+        2.9551,
+        3840.0
+      ],
+      "sampled_slope_deg": 11.204,
+      "main_route_distance_m": 40.124,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Discarded Team Tether maintenance material in occupied territory."
+    },
+    {
+      "id": "water:veilfall:harvest:002",
+      "island_id": "veilfall",
+      "item_id": "sluice_metal",
+      "yield": 2,
+      "position": [
+        338.0,
+        2.7468,
+        3792.0
+      ],
+      "sampled_slope_deg": 6.115,
+      "main_route_distance_m": 33.469,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Discarded Team Tether maintenance material in occupied territory."
+    },
+    {
+      "id": "water:veilfall:harvest:003",
+      "island_id": "veilfall",
+      "item_id": "sluice_metal",
+      "yield": 2,
+      "position": [
+        434.0,
+        1.4276,
+        3828.0
+      ],
+      "sampled_slope_deg": 13.905,
+      "main_route_distance_m": 51.212,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Discarded Team Tether maintenance material in occupied territory."
+    },
+    {
+      "id": "water:veilfall:harvest:004",
+      "island_id": "veilfall",
+      "item_id": "sluice_metal",
+      "yield": 2,
+      "position": [
+        428.0,
+        2.2534,
+        3834.0
+      ],
+      "sampled_slope_deg": 15.364,
+      "main_route_distance_m": 45.668,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Discarded Team Tether maintenance material in occupied territory."
+    },
+    {
+      "id": "water:veilfall:harvest:005",
+      "island_id": "veilfall",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        428.0,
+        0.9332,
+        3822.0
+      ],
+      "sampled_slope_deg": 6.115,
+      "main_route_distance_m": 44.788,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:veilfall:harvest:006",
+      "island_id": "veilfall",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        410.0,
+        4.9955,
+        3840.0
+      ],
+      "sampled_slope_deg": 29.356,
+      "main_route_distance_m": 28.156,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:lantern_cove:harvest:001",
+      "island_id": "lantern_cove",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        -254.0,
+        0.8006,
+        134.0
+      ],
+      "sampled_slope_deg": 6.115,
+      "main_route_distance_m": 220.811,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:lantern_cove:harvest:002",
+      "island_id": "lantern_cove",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        -302.0,
+        10.552,
+        146.0
+      ],
+      "sampled_slope_deg": 19.181,
+      "main_route_distance_m": 269.553,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:lantern_cove:harvest:003",
+      "island_id": "lantern_cove",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        -290.0,
+        5.2153,
+        134.0
+      ],
+      "sampled_slope_deg": 15.626,
+      "main_route_distance_m": 253.717,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:lantern_cove:harvest:004",
+      "island_id": "lantern_cove",
+      "item_id": "tide_bloom",
+      "yield": 2,
+      "position": [
+        -320.0,
+        16.6385,
+        152.0
+      ],
+      "sampled_slope_deg": 15.974,
+      "main_route_distance_m": 288.439,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "A coastal flower patch reached by a deliberate detour."
+    },
+    {
+      "id": "water:gull_rest:harvest:001",
+      "island_id": "gull_rest",
+      "item_id": "tide_bloom",
+      "yield": 2,
+      "position": [
+        -58.0,
+        6.5035,
+        810.0
+      ],
+      "sampled_slope_deg": 26.147,
+      "main_route_distance_m": 303.197,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "A coastal flower patch reached by a deliberate detour."
+    },
+    {
+      "id": "water:gull_rest:harvest:002",
+      "island_id": "gull_rest",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        -64.0,
+        4.3065,
+        804.0
+      ],
+      "sampled_slope_deg": 19.803,
+      "main_route_distance_m": 300.253,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:drowned_garden:harvest:001",
+      "island_id": "drowned_garden",
+      "item_id": "tide_bloom",
+      "yield": 2,
+      "position": [
+        1224.0,
+        12.272,
+        2090.0
+      ],
+      "sampled_slope_deg": 6.161,
+      "main_route_distance_m": 605.2,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "A coastal flower patch reached by a deliberate detour."
+    },
+    {
+      "id": "water:drowned_garden:harvest:002",
+      "island_id": "drowned_garden",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        1254.0,
+        12.0993,
+        2384.0
+      ],
+      "sampled_slope_deg": 4.183,
+      "main_route_distance_m": 593.863,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:drowned_garden:harvest:003",
+      "island_id": "drowned_garden",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        1092.0,
+        10.2446,
+        2240.0
+      ],
+      "sampled_slope_deg": 24.141,
+      "main_route_distance_m": 648.386,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:drowned_garden:harvest:004",
+      "island_id": "drowned_garden",
+      "item_id": "tide_bloom",
+      "yield": 2,
+      "position": [
+        1266.0,
+        27.8391,
+        2168.0
+      ],
+      "sampled_slope_deg": 19.036,
+      "main_route_distance_m": 690.411,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "A coastal flower patch reached by a deliberate detour."
+    },
+    {
+      "id": "water:drowned_garden:harvest:005",
+      "island_id": "drowned_garden",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        1158.0,
+        25.377,
+        2336.0
+      ],
+      "sampled_slope_deg": 19.102,
+      "main_route_distance_m": 585.951,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:drowned_garden:harvest:006",
+      "island_id": "drowned_garden",
+      "item_id": "tide_bloom",
+      "yield": 2,
+      "position": [
+        1296.0,
+        27.8391,
+        2258.0
+      ],
+      "sampled_slope_deg": 19.036,
+      "main_route_distance_m": 721.611,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "A coastal flower patch reached by a deliberate detour."
+    },
+    {
+      "id": "water:drowned_garden:harvest:007",
+      "island_id": "drowned_garden",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        1194.0,
+        45.7441,
+        2210.0
+      ],
+      "sampled_slope_deg": 8.283,
+      "main_route_distance_m": 676.728,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:drowned_garden:harvest:008",
+      "island_id": "drowned_garden",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        1110.0,
+        24.2081,
+        2300.0
+      ],
+      "sampled_slope_deg": 19.026,
+      "main_route_distance_m": 600.597,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:drowned_garden:harvest:009",
+      "island_id": "drowned_garden",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        1116.0,
+        19.2058,
+        2150.0
+      ],
+      "sampled_slope_deg": 17.686,
+      "main_route_distance_m": 582.871,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:drowned_garden:harvest:010",
+      "island_id": "drowned_garden",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        1326.0,
+        12.0344,
+        2150.0
+      ],
+      "sampled_slope_deg": 2.745,
+      "main_route_distance_m": 720.485,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:drowned_garden:harvest:011",
+      "island_id": "drowned_garden",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        1182.0,
+        17.9043,
+        2114.0
+      ],
+      "sampled_slope_deg": 16.95,
+      "main_route_distance_m": 594.072,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:drowned_garden:harvest:012",
+      "island_id": "drowned_garden",
+      "item_id": "tide_bloom",
+      "yield": 2,
+      "position": [
+        1254.0,
+        36.1711,
+        2288.0
+      ],
+      "sampled_slope_deg": 16.776,
+      "main_route_distance_m": 673.912,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "A coastal flower patch reached by a deliberate detour."
+    },
+    {
+      "id": "water:deep_watch:harvest:001",
+      "island_id": "deep_watch",
+      "item_id": "reed_fiber",
+      "yield": 3,
+      "position": [
+        1320.0,
+        40.4006,
+        3560.0
+      ],
+      "sampled_slope_deg": 20.499,
+      "main_route_distance_m": 579.814,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "Reachable reed patch on dry coastal ground."
+    },
+    {
+      "id": "water:deep_watch:harvest:002",
+      "island_id": "deep_watch",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        1410.0,
+        12.0354,
+        3368.0
+      ],
+      "sampled_slope_deg": 3.205,
+      "main_route_distance_m": 523.407,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:deep_watch:harvest:003",
+      "island_id": "deep_watch",
+      "item_id": "reef_stone",
+      "yield": 2,
+      "position": [
+        1434.0,
+        32.2133,
+        3476.0
+      ],
+      "sampled_slope_deg": 23.066,
+      "main_route_distance_m": 603.197,
+      "registration": "planned",
+      "gather_action": "pickaxe",
+      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+    },
+    {
+      "id": "water:deep_watch:harvest:004",
+      "island_id": "deep_watch",
+      "item_id": "tide_bloom",
+      "yield": 2,
+      "position": [
+        1314.0,
+        30.4886,
+        3416.0
+      ],
+      "sampled_slope_deg": 23.272,
+      "main_route_distance_m": 472.097,
+      "registration": "planned",
+      "gather_action": "hand",
+      "placement_reason": "A coastal flower patch reached by a deliberate detour."
+    },
+    {
+      "id": "water:deep_watch:harvest:005",
+      "island_id": "deep_watch",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        1344.0,
+        53.883,
+        3500.0
+      ],
+      "sampled_slope_deg": 2.232,
+      "main_route_distance_m": 551.225,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "id": "water:deep_watch:harvest:006",
+      "island_id": "deep_watch",
+      "item_id": "driftwood",
+      "yield": 3,
+      "position": [
+        1368.0,
+        30.3195,
+        3590.0
+      ],
+      "sampled_slope_deg": 23.286,
+      "main_route_distance_m": 633.615,
+      "registration": "planned",
+      "gather_action": "axe",
+      "placement_reason": "Salvage timber placed back from the landing approach."
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "_comment": "Starting Water presentation tuning against the owner Veilfall board. Installed terrain family reused. These are unjudged initial numbers, not visual acceptance.",
+  "terrain": {
+    "rock_gradient": 0.65,
+    "shore_band_height_m": 3.0,
+    "_comment": "Slope rise/run above 0.65 exposes pale rock; lowest three metres use warm shore earth. Vegetation and stone silhouettes must carry island identity.",
+    "textures": [
+      {"name":"grass","albedo":"res://assets/environment/terrain/stylised/meadow_grass_Color.png","normal":"res://assets/environment/terrain/stylised/meadow_grass_NormalGL.png","uv_scale":0.27,"normal_depth":0.25,"tint":"#e9dfc0"},
+      {"name":"shore","albedo":"res://assets/environment/terrain/stylised/dirt_path_Color.png","normal":"res://assets/environment/terrain/stylised/dirt_path_NormalGL.png","uv_scale":0.25,"normal_depth":0.18,"tint":"#e2ceb0"},
+      {"name":"rock","albedo":"res://assets/environment/terrain/stylised/rock_scree_Color.png","normal":"res://assets/environment/terrain/stylised/rock_scree_NormalGL.png","uv_scale":0.16,"normal_depth":0.30,"tint":"#f0e8d6"}
+    ]
+  },
+  "water": {
+    "_comment":"Existing Compatibility-safe water shader uses a baked height texture for shoreline foam, never depth readback. Whole realm height texture spacing4m initially; shore detail assessed in actual frames.",
+    "height_texture_spacing_m":4.0,
+    "deep_colour":"#1c5261",
+    "shallow_colour":"#7aad94",
+    "depth_falloff":3.0,
+    "alpha_deep":0.9,
+    "alpha_shallow":0.45,
+    "foam_depth":0.4,
+    "wave_strength":0.25
+  },
+  "view": {
+    "_comment":"The first shore must show Veilfall at roughly4km, so camera far clip exceeds realm extent. Dense ground vegetation remains local and baked.",
+    "camera_far_m":6500.0,
+    "sun_energy":1.1,
+    "ambient_energy":0.6
+  }
+}

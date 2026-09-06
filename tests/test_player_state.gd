@@ -22,6 +22,19 @@ func before_each() -> void:
 
 # --- what a fresh player is --------------------------------------------------
 
+func test_skills_are_personal_survive_save_and_reset_without_historical_xp() -> void:
+	player.skills.add_xp("running", 150.0)
+	var other := PLAYER_STATE.new()
+	assert_eq(other.skills.level("running"), 0)
+	other.load_data(player.save_data())
+	assert_eq(other.skills.level("running"), 1)
+	assert_false(other.skills.revealed)
+	other.load_data({"realm":"cloudreach"})
+	assert_true(other.skills.revealed)
+	assert_eq(other.skills.level("running"), 0)
+	other.reset()
+	assert_false(other.skills.revealed)
+
 func test_a_fresh_player_starts_in_the_meadows_with_an_empty_bar() -> void:
 	assert_eq(player.realm, "meadows")
 	assert_eq(player.pending_realm_entry, "")
@@ -133,9 +146,9 @@ func test_save_data_carries_the_player_half_of_the_v22_keys() -> void:
 	var data: Dictionary = player.save_data()
 	for key: String in ["character_id", "display_name", "party", "inventory",
 			"hotbar", "satiety", "player_pose", "realm", "pending_realm_entry",
-			"realm_hearts", "realm_maps", "flags"]:
+			"realm_hearts", "realm_maps", "skills", "flags"]:
 		assert_true(data.has(key), "local.save_data() is missing '%s'" % key)
-	assert_eq(data.keys().size(), 12, "and nothing else -- got %s" % str(data.keys()))
+	assert_eq(data.keys().size(), 13, "and nothing else -- got %s" % str(data.keys()))
 
 
 func test_save_data_carries_no_world_key() -> void:

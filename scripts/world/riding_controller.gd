@@ -505,6 +505,9 @@ func _physics_process(delta: float) -> void:
 	# The one line that is riding. Everything else about how the creature moves
 	# is the creature's, unchanged.
 	_mount.call("request_move", direction.normalized(), ride_speed_now())
+	var skills_game := get_node_or_null("/root/Game")
+	if skills_game != null and skills_game.get("local") != null and _mount.has_method("request_riding_handling"):
+		_mount.call("request_riding_handling", 1.0 + float(skills_game.get("local").skills.handling_bonus()))
 
 
 ## --- R8.5: the tier above Meadowhart ----------------------------------------

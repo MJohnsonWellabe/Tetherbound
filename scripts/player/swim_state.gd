@@ -40,6 +40,13 @@ func reach_land(position: Vector3) -> void:
 	revision += 1
 
 
+func leave_water() -> void:
+	mode = Mode.LAND
+	_resume_mode = Mode.LAND
+	drowning = false
+	revision += 1
+
+
 func pause_for_combat() -> void:
 	if mode == Mode.COMBAT_PAUSED or mode == Mode.LAND:
 		return
@@ -74,8 +81,11 @@ func advance(peer_id: int, delta: float, stamina: float, capacity: float,
 			return result
 	if delta <= 0.0 or capacity <= 0.0:
 		return result
+	var previous_fraction := stamina_fraction
 	stamina_fraction = clampf(stamina / capacity, 0.0, 1.0)
 	if mode == Mode.LAND or mode == Mode.COMBAT_PAUSED:
+		if drowning or not is_equal_approx(previous_fraction, stamina_fraction):
+			revision += 1
 		drowning = false
 		return result
 	var available := clampf(stamina, 0.0, capacity)

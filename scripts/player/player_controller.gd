@@ -19,10 +19,14 @@ const TOOL_HOLD := preload("res://scripts/player/tool_hold.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const FLY := preload("res://scripts/player/fly_controller.gd")
 const ENVIRONMENT_VELOCITY := preload("res://scripts/world/environment_velocity_modifiers.gd")
+const SKILLS_ACTIVITY := preload("res://scripts/player/skills_activity.gd")
+var _skills_activity: RefCounted
 
 var _environment_velocity := ENVIRONMENT_VELOCITY.new()
 
 var fly_controller: Node = null
+## Installed by aquatic realms; shares owner movement and remote presentation.
+var swim_controller: Node = null
 
 signal landed(impact_speed: float, damage: float)
 signal died()
@@ -218,11 +222,24 @@ func _load_vitals_config() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	var running_efficiency := 1.0
+	var activity_before := global_position
+	var skills_game := get_node_or_null("/root/Game")
+	if skills_game != null:
+		var personal: RefCounted = skills_game.get("local")
+		if personal != null:
+			personal.skills.enter_realm(personal.realm)
+			running_efficiency = personal.skills.efficiency("running")
+			if _skills_activity == null:
+				_skills_activity = SKILLS_ACTIVITY.new(personal.skills)
 	_sync_realm_heart_power()
 	if fly_controller != null:
 		fly_controller.call("apply_pending_load")
 	if _carried:
 		_ride(delta)
+		if _skills_activity != null and Input.get_vector("move_left", "move_right", "move_forward", "move_back") != Vector2.ZERO:
+			var moved := global_position - activity_before
+			_skills_activity.record_movement("riding", moved, moved, delta, _max_speed)
 		return
 	# RG5 (owner playtest, 2026-08-18): "when the building menu is up, pressing
 	# directions and pressing a still controls the character too as the menu."
@@ -235,7 +252,17 @@ func _physics_process(delta: float) -> void:
 	# (`build_placer.gd`, `interaction_arbiter.gd`); this was the one that
 	# never had, despite being the most obviously affected by a leak.
 	var input_owned := INPUT_OWNER.current(get_tree()) != null
+	if swim_controller != null and bool(swim_controller.call("physics_step", delta, input_owned, not _locomotion_enabled)):
+		_sprinting = false
+		_jump_buffered_for = INF
+		_fall_speed = 0.0
+		_was_on_floor = is_on_floor()
+		vitals.tick_satiety(delta)
+		return
 	if fly_controller != null and bool(fly_controller.call("physics_step", delta, input_owned or not _locomotion_enabled)):
+		if _skills_activity != null:
+			var moved := global_position - activity_before
+			_skills_activity.record_movement("flying", moved, moved, delta, _max_speed, input_owned or not _locomotion_enabled)
 		_sprinting = false
 		_jump_buffered_for = INF
 		_was_on_floor = is_on_floor()
@@ -267,7 +294,9 @@ func _physics_process(delta: float) -> void:
 	if fly_controller != null:
 		fly_controller.call("observe_ground")
 
-	vitals.tick(delta, _sprinting and velocity.length() > 0.5)
+	vitals.tick(delta, _sprinting and velocity.length() > 0.5, running_efficiency)
+	if _skills_activity != null and _sprinting:
+		_skills_activity.record_movement("running", global_position - before, _wanted_dir, delta, _sprint_speed)
 	vitals.tick_satiety(delta)
 
 
