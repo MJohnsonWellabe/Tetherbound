@@ -357,8 +357,25 @@ func _build_materials() -> void:
 	_materials["weathered_timber"]=timber
 	var geology := ShaderMaterial.new()
 	geology.shader = GEOLOGY_SHADER
-	geology.set_shader_parameter("rock_texture", preload("res://assets/environment/terrain/Rock030_Color.jpg"))
-	geology.set_shader_parameter("rock_normal", preload("res://assets/environment/terrain/Rock030_NormalGL.jpg"))
+	# CLIFF-ART-0906: every uniform of cloudreach_cliff.gdshader is TUNABLE
+	# from `visual.geology` (data/config/cloudreach_visual.json). The
+	# defaults below are the shipped tan-hoodoo look the blind judges read
+	# as off-board ("banded tan hoodoos vs the board's grey-green granite");
+	# the config carries the candidate palettes so a look can be A/B'd by
+	# data alone. Textures are paths; colours are "#rrggbb"; floats as-is.
+	var geo_cfg: Dictionary = _visual_config.get("geology", {})
+	var rock_albedo := str(geo_cfg.get("albedo", "res://assets/environment/terrain/Rock030_Color.jpg"))
+	var rock_normal := str(geo_cfg.get("normal", "res://assets/environment/terrain/Rock030_NormalGL.jpg"))
+	geology.set_shader_parameter("rock_texture", load(rock_albedo))
+	geology.set_shader_parameter("rock_normal", load(rock_normal))
+	for colour_key: String in ["stone_light", "stone_dark", "strata_ochre_tint", "ledge_moss_tint"]:
+		if geo_cfg.has(colour_key):
+			var c := Color(str(geo_cfg[colour_key]))
+			geology.set_shader_parameter(colour_key, Vector3(c.r, c.g, c.b))
+	for float_key: String in ["texture_scale", "strata_period_m", "strata_strength", "strata_ochre_strength",
+			"ledge_moss_strength", "ledge_lighten", "ledge_normal_threshold", "crevice_strength", "crevice_scale"]:
+		if geo_cfg.has(float_key):
+			geology.set_shader_parameter(float_key, float(geo_cfg[float_key]))
 	for key: String in ["cliff", "cliff_high", "cliff_mid", "cliff_deep"]:
 		_materials[key] = geology
 	var trail := ShaderMaterial.new()
@@ -3259,6 +3276,26 @@ func _build_crown_outcrops(parent: Node3D, size: Vector3, seed_value: int) -> vo
 		_set_geometry_visibility(rock,1500.0)
 
 
+var _crag_kit_cache: Array = []
+var _crag_kit_loaded := false
+
+## CLIFF-ART-0906. The optional modular cliff kit for the embedded outcrops,
+## from `visual.geology.crag_kit` (an array of res:// scene paths). Empty
+## means the shipped Quaternius boulders.
+func _crag_kit() -> Array:
+	if _crag_kit_loaded:
+		return _crag_kit_cache
+	_crag_kit_loaded = true
+	var geo_cfg: Dictionary = _visual_config.get("geology", {})
+	for raw in (geo_cfg.get("crag_kit", []) as Array):
+		var scene := load(str(raw)) as PackedScene
+		if scene != null:
+			_crag_kit_cache.append(scene)
+		else:
+			push_warning("cloudreach geology.crag_kit: cannot load %s" % str(raw))
+	return _crag_kit_cache
+
+
 func _build_embedded_rock_shelves(parent: Node3D, size: Vector3, seed_value: int,
 		mass_label: String) -> void:
 	# Production-family outcrops break the generated cliff skin into recognizable
@@ -3273,8 +3310,22 @@ func _build_embedded_rock_shelves(parent: Node3D, size: Vector3, seed_value: int
 			22.0 if monumental else 14.0,78.0 if monumental else 52.0)
 		width*=0.82+0.18*sin(float(i)*2.17+seed_value)
 		var height := width * (0.35 + float(i % 2) * 0.14)
-		var rock := NATURE_ROCKS[posmod(i + seed_value, NATURE_ROCKS.size())].instantiate() as Node3D
-		apply_stone_palette(rock)
+		# CLIFF-ART-0906 option C: `visual.geology.crag_kit` names a list of
+		# modular cliff meshes (Kenney Nature Kit `cliff_*`, CC0) to stand in
+		# for the Quaternius boulders as the embedded outcrops -- stepped,
+		# faceted ledge blocks instead of rounded stones. They wear the same
+		# geology shader as the mass, so the palette is one decision.
+		var kit := _crag_kit()
+		var rock: Node3D
+		if kit.is_empty():
+			rock = NATURE_ROCKS[posmod(i + seed_value, NATURE_ROCKS.size())].instantiate() as Node3D
+			apply_stone_palette(rock)
+		else:
+			rock = (kit[posmod(i + seed_value, kit.size())] as PackedScene).instantiate() as Node3D
+			# Kenney blocks are unit cubes with the face on +z; a 0..1 box
+			# scaled to width/height reads as a cut ledge, so let them be a
+			# little squarer than a boulder.
+			height = width * (0.42 + float(i % 2) * 0.16)
 		var bounds_tool := BUILDING_PREFABS.new()
 		var bounds: AABB = bounds_tool.combined_aabb(rock)
 		rock.scale = Vector3(width, height, width * 0.70) / bounds.size
