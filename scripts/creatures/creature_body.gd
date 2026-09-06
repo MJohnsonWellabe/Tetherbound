@@ -993,6 +993,50 @@ static var _field_scale := 1.0
 static var _field_bright_info: Dictionary = {}
 const FIELD_DEGREEN_GAP := 0.35
 
+## OP-0905-03 (docs/owner/OWNER_PLAYTEST_2026-09-05.md, "Bramblebun colour is
+## awful"). The raw `factor := 1.0 + strength` multiply below used to apply
+## straight to `albedo_color` uncapped: at Bramblebun's shipped `field_emission`
+## 2.5 that is a 3.5x push on R/B (~3.24x on G after `field_degreen`). Direct
+## inspection (`tools/_probe_field_bright_values.gd`) shows these species'
+## un-brightened `albedo_color` is a flat white (1,1,1) tint over a textured
+## base -- the "material_vivid" colourway swap paints colour entirely through
+## the texture, not the tint -- so this multiply scales the WHOLE coat
+## texture. At 3.5x, Bramblebun's own texture (measured mean R=0.4932) lands
+## at a mean of ~1.73 on its brightest channel, deep in ACES's highlight-
+## compression range where nearly the entire coat clips toward white: exactly
+## the "flat, washed-out, texture crushed" the owner's playtest named.
+##
+## `_soft_knee_bright()` replaces the raw multiply with a curve that is the
+## IDENTITY for `factor <= FIELD_BRIGHT_KNEE` (1.0 -- the only value a species
+## with `field_emission` 0 can ever produce, so every species that never opts
+## into this lever keeps its exact shipped look) and bends smoothly --
+## C1-continuous at the seam, so there is no visible kink as a creature's own
+## `field_emission` first takes effect -- toward `creatures_visual.json`'s
+## `field_bright_ceiling` as the raw factor grows, asymptotically approaching
+## it but never reaching it (so two different strengths, e.g. day vs. a
+## dimmer night `_field_scale`, always produce two genuinely different
+## outputs, never the same clipped ceiling value -- `set_field_brightness_scale()`
+## depends on that for a live creature to actually dim at night). See
+## `creature_visual.gd::field_bright_ceiling()`'s own comment for why the
+## default (1.75) sits ABOVE 1.0 rather than below it: this architecture's
+## baseline tint IS 1.0, not a <1 base colour, so a sub-1.0 ceiling would
+## darken every brightened species below its own normal shipped look.
+const FIELD_BRIGHT_KNEE := 1.0
+
+
+## Pure curve, no I/O -- kept free of `VISUAL.field_bright_ceiling()`'s own
+## file read so `tools/_probe_field_bright_values.gd` can sweep a ceiling
+## value against a fixed factor without touching the config file. `span` is
+## guarded away from zero/negative (a `field_bright_ceiling` at or below
+## `FIELD_BRIGHT_KNEE` in a hand-edited config) rather than asserting, so a
+## bad config value degrades to "compress hard toward the ceiling immediately"
+## instead of a divide-by-zero crash.
+static func _soft_knee_bright(factor: float, ceiling: float) -> float:
+	if factor <= FIELD_BRIGHT_KNEE:
+		return factor
+	var span := maxf(ceiling - FIELD_BRIGHT_KNEE, 0.0001)
+	return ceiling - span * exp(-(factor - FIELD_BRIGHT_KNEE) / span)
+
 
 ## Called by `world_look.gd` on each look change, exactly like
 ## `set_emission_floor_scale()` above -- rescales every material this body class
@@ -1012,17 +1056,27 @@ static func _apply_field_bright_values(info: Dictionary) -> void:
 	var strength: float = float(info["strength"]) * _field_scale
 	var degreen: float = float(info["degreen"])
 	var factor := 1.0 + strength
-	# Green gets the same push as red/blue minus a FIXED gap -- see this
-	# section's own header comment for why the gap no longer scales with
-	# `strength`/`_field_scale`. degreen=0 leaves this equal to `factor`,
-	# unchanged from before this lever existed.
-	var g_factor := maxf(factor - degreen * FIELD_DEGREEN_GAP, 0.0)
+	# OP-0905-03: the raw multiply is compressed through the soft-knee ceiling
+	# BEFORE the degreen gap is taken out, not after -- see FIELD_BRIGHT_KNEE's
+	# own header comment for why a ceiling is needed at all. Green still gets
+	# the same FIXED, strength-independent gap red/blue always had
+	# (`FIELD_DEGREEN_GAP`), but subtracted from the already-compressed
+	# brightness rather than the raw factor: taking it from the raw factor
+	# first and THEN compressing both through the same curve would let the gap
+	# collapse toward nothing once red/blue saturate near the ceiling (both
+	# inputs land in the curve's near-flat tail together), quietly re-opening
+	# the "candy pink"/grass-hued-moss defect `field_degreen` exists to fix.
+	# Subtracting after compression keeps the gap a real, fixed difference in
+	# the OUTPUT tint no matter how hard red/blue are pushed.
+	var ceiling := VISUAL.field_bright_ceiling()
+	var bright := _soft_knee_bright(factor, ceiling)
+	var g_bright := maxf(bright - degreen * FIELD_DEGREEN_GAP, 0.0)
 	var albedo: Color = info["orig_albedo"]
 	var new_albedo := Color(
-		albedo.r * factor, albedo.g * g_factor, albedo.b * factor, albedo.a)
+		albedo.r * bright, albedo.g * g_bright, albedo.b * bright, albedo.a)
 	material.albedo_color = new_albedo
 	if material.emission_enabled:
-		material.emission_energy_multiplier = float(info["orig_emission_mult"]) * factor
+		material.emission_energy_multiplier = float(info["orig_emission_mult"]) * bright
 	# `_night_floor_material()` above duplicates whichever material is active
 	# at BUILD time and only ever revisits its OWN `emission_energy_multiplier`
 	# afterwards (`set_emission_floor_scale()`'s loop) -- if this exact material
