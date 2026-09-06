@@ -106,8 +106,14 @@ or an explicit getter/setter pair), each a one-liner into `local` or `world`:
 - `all_set()`: union.
 - `revision`: `world.flags.revision + local.flags.revision` — the existing `Game._process` poll
   redraws the objective line on either store moving.
-- `save_data()` / `load_data()`: **not provided**; callers that want to persist go through the
-  two savers. A call is a `push_error` so a missed site is loud.
+- `save_data()` / `load_data()`: **provided, and they must be** — corrected 2026-09-06 by lane
+  1.B against the code. `scripts/save/save_game.gd:313` persists flags with
+  `progression_obj.call("save_data")` and `:392` restores them with `load_data`; that file is
+  1.C's, not 1.B's, and it must keep writing today's v22 dictionary meanwhile. A `push_error`
+  there would stop every save in the game from recording a flag. So `save_data()` returns the
+  union (byte-identical to the flat store's old payload) and `load_data()` splits the flat list
+  by scope, replacing both stores wholesale. **1.C deletes both** once the two savers own
+  persistence.
 
 `progression_feed.gd` loses its `static var`s: the five statics become instance fields, the
 static methods become instance methods, and `Game.push_progression_event()` /
@@ -197,8 +203,8 @@ Until 2.A exists, `is_host()` is a stub returning true.
    the writer-site literals from a fixture list it keeps beside the table.
 3. `tests/test_merged_progression.gd`: `has` sees both stores; `set_flag` routes by scope; an
    unscoped id pushes an error and lands in world; `revision` moves when either store moves.
-4. Full unit suite green; `verify-solo-regression`'s 46 smokes green on first attempt;
-   `tools/run_all_smokes.sh` on the lane head with its summary in the report, every red explained.
+4. Full unit suite green and the fence's 62 characterization tests present; the smokes the
+   change reaches (see the plan §7 — CI is the gate, a lane does not sweep).
 5. No player-facing behaviour changes in solo. The report lists every place a forwarding property
    was bypassed for an explicit store, with the reason.
 
@@ -214,3 +220,12 @@ Until 2.A exists, `is_host()` is a stub returning true.
 - `SceneTree.paused` cannot be observed by a unit test (`Engine.get_main_loop()` is null under
   `run_tests.gd`); D-MP8 coverage is `smoke_menu` / `smoke_post_modal_control` and the new
   `smoke_net_menu_does_not_freeze_peer`.
+
+## 7. Handed to lane 1.C by 1.B
+
+- **`int(<whatever arrived>)` is not a coercion in GDScript** — `int([])` aborts the load
+  halfway and leaves a half-restored world. 1.B fixed this in `WorldState.load_data`;
+  `save_game.gd` carries the same shape in several places. Guard each read by type before
+  coercing.
+- The merged view's `save_data`/`load_data` (§2) are 1.C's to delete, together with the
+  top-level `alpha_pins` key that `Game.save_game()` still emits for v22 compatibility.
