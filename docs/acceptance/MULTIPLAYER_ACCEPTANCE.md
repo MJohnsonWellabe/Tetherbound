@@ -1,6 +1,6 @@
 # Multiplayer acceptance — Stage B
 
-**Status:** in progress. **Contract:** `docs/MULTIPLAYER_DIRECTIVE.md` §17 (the twenty-four
+**Status:** in progress. Automated column: 22 of 24 §17 rows have named evidence; rows 8 and 18/19 do not, and row 21 is partial. Owner column: nothing signed off yet. **Contract:** `docs/MULTIPLAYER_DIRECTIVE.md` §17 (the twenty-four
 minimum-experience items), §21 (reliability), §23 (the human half). **Filled in by:** Fable, from
 CI runs and the owner's own LAN session. **Last updated:** 2026-09-06.
 
@@ -27,13 +27,13 @@ two people in it, or that a friend's creature reads as theirs. Those are the own
 | # | Item | Automated evidence | Owner |
 |---|---|---|---|
 | 1 | Host / load a world | `smoke_net_host_join_leave` | ☐ |
-| 2 | Join with up to three | `smoke_net_host_join_leave` (2 peers); **3/4-peer runs owed** — nightly/owner-kit only, never PR CI (S2: four boots = 12.85 GB) | ☐ |
+| 2 | Join with up to three | `smoke_net_three_peer_session` — 22/22 checks, first attempt, three processes in one session — and `smoke_net_four_peer_session` — 32/32, first attempt. Both `verify-multiplayer-wide` only (`workflow_dispatch` + nightly), never PR CI: four concurrent Meadows measured **12.54 GB** here against spike S2's 12.85 GB (−2.4 %) | ☐ |
 | 3 | Move independently and see one another | `smoke_net_movement_two_peers` — 0.55 m in motion, 0.00 m at rest, against 4.0/1.5 m budgets | ☐ |
 | 4 | Deploy and control own creatures | `smoke_net_deploy_two_creatures` — asserts authority, not just presence | ☐ |
 | 5 | Shared wild encounters | `smoke_net_shared_wild_fight` | ☐ |
-| 6 | First-successful-catch rule | `test_catch_arbitration` (pure, deterministic) **and `smoke_net_catch_race`** — two peers throw at one wild creature at a shared wall-clock instant; exactly one is granted, the loser is refused `already_resolving` with a sentence, and creatures owned across both peers rise by exactly the winner's own `caught` bit. The **full-belt half is still owed**: the host's roll is genuinely random and nothing can pin it over the wire, so a catch landing into five owned creatures is asserted only as an invariant a breakout satisfies vacuously | ☐ |
-| 7 | A trainer encounter together | *lane 4.D in flight* | ☐ |
-| 8 | A boss encounter together | *lane 4.D in flight* | ☐ |
+| 6 | First-successful-catch rule | `test_catch_arbitration` (pure, deterministic) **and `smoke_net_catch_race`** — **45 assertions, 0 failures**, green twice from a clean tree: two peers throw at one wild creature at a shared wall-clock instant, exactly one is granted, the loser is refused `already_resolving` with a sentence, and creatures owned across both peers rise by exactly the winner's own `caught` bit. The **full-belt half is still owed**: the host's roll is genuinely random and nothing can pin it over the wire, so a catch landing into five owned creatures is asserted only as an invariant a breakout satisfies vacuously | ☐ |
+| 7 | A trainer encounter together | `smoke_net_boss_rewards_each_participant` — 30 checks, peer 0 challenges Bryn through `begin_trainer_battle()`, peer 1 joins in progress, the `defeat_flag` is written **once for the world** and lands on both peers, and each peer gains Bryn's authored 20 coin + 1 potion **undivided**. Passed on attempt 3; attempts 1–2 were failures of this lane's own new harness arm (findings F4, F5), not of game code | ☐ |
+| 8 | A boss encounter together | **owed.** The multi-participant payout path is the same one row 7 proves, and `smoke_boss` / `smoke_gate_e_finale` / `smoke_cloudreach_finale` are green solo — but **no net smoke has ever put two pilots in the Warden fight**. Row 7's evidence is not borrowed for this row | ☐ |
 | 9 | Gather without duplication | `smoke_net_pickup_race` | ☐ |
 | 10 | Shared pickups | `smoke_net_pickup_race` | ☐ |
 | 11 | Build and use shared structures | `smoke_net_shared_building` — includes the host-save-and-reload half | ☐ |
@@ -41,21 +41,21 @@ two people in it, or that a friend's creature reads as theirs. Those are the own
 | 13 | Trade items | `smoke_net_trade` — conservation across both peers | ☐ |
 | 14 | Down / revive another player | `smoke_net_revive` | ☐ |
 | 15 | Sleep and advance night | `smoke_net_sleep_vote` | ☐ |
-| 16 | Menus without freezing others | `smoke_net_menu_does_not_freeze_peer` — solo still truly pauses; in a session the tree is **not** paused (D102), the other player keeps walking, gathering through the ledger, building and jumping throughout, and the player holding the panel is stood down by `input_owner.gd` and gets the world back on close. Run with the panel on the host and on the client. **This needed a code fix**: the six panels still set `get_tree().paused = true` unconditionally | ☐ |
-| 17 | Ride and Fly while others act | *lanes 6.B / 6.C not started* | ☐ |
+| 16 | Menus without freezing others | `smoke_net_menu_does_not_freeze_peer` — **61 assertions, 0 failures**, green twice from a clean tree. Solo still truly pauses; in a session the tree is **not** paused (D102), the other player keeps walking, gathering through the ledger, building and jumping throughout, and the player holding the panel is stood down by `input_owner.gd` and gets the world back on close. Run with the panel on the host and on the client. **This needed a code fix**: all six panels still set `get_tree().paused = true` unconditionally and `pause_local` did not exist | ☐ |
+| 17 | Ride and Fly while others act | `smoke_net_riding` — 43 assertions, 0 failures, first attempt: the rider sits **0.00 m** from the authored seat in motion and at rest, wears the saddle its owner built, and stays mounted through five rounds while peer 1 builds, drops, picks up, walks and starts its own fight. `smoke_net_fly` — 46/0, first attempt: peer 1 is airborne four rounds while peer 0 builds, drops, picks up and engages a wild, and a forged landing anchor 500 m from the host's position is refused | ☐ |
 | 18 | Transition independently | **HELD** — built by 6.A, refusal re-instated: the shell boot freezes the host past 15 s (D97) | ☐ |
 | 19 | Different biomes simultaneously | **HELD** — same cause as 18; the machinery is built and measured, the door is shut (D97) | ☐ |
-| 20 | Save world + portable characters | `test_world_save_format` (15 tests, 90 assertions), `test_character_save_format` (16/83), `test_legacy_slot_split_never_touches_the_original` (10/44), `test_split_key_coverage_equals_v22` (9/40), `test_save_format` (59/354), and `smoke_net_host_join_leave`, which now asserts the host wrote a world file, the client wrote none, and the client wrote exactly one character file — its own | ☐ |
-| 21 | Disconnect and reconnect | *lane 7.A not started* | ☐ |
-| 22 | Late-join a modified world | *lane 7.A not started* | ☐ |
+| 20 | Save world + portable characters | `test_world_save_format`, `test_character_save_format`, `test_legacy_slot_split_never_touches_the_original`, `test_split_key_coverage_equals_v22` and `test_save_format` run as one shard on the integrated head: **90 tests, 527 assertions, 0 failed** (2026-09-06, `--only=save_format`). Plus `smoke_net_host_join_leave`, which asserts the host wrote a world file, the client wrote none, and the client wrote exactly one character file — its own | ☐ |
+| 21 | Disconnect and reconnect | `smoke_net_reconnect_keeps_character` — 23/23 checks. **Partial:** 7.A wrote it while the character save did not exist, so it asserts the session-side restore only. Lane 1.C has since written `user://characters/<id>/character.json`; re-pointing this smoke at the file is owed (see §"Known-open") | ☐ |
+| 22 | Late-join a modified world | `smoke_net_late_join_modified_world` — 21/21 checks; the assertion is a **whole-world diff** of both peers' `Game.world_snapshot()`, empty, not a spot-check | ☐ |
 | 23 | Host plays solo when alone | Solo **is** a one-peer session through the same funnel; every solo smoke is this row's evidence | ☐ |
-| 24 | Host exits, session saves/ends | `smoke_net_host_join_leave` — asserts the host wrote its world and the client wrote none | ☐ |
+| 24 | Host exits, session saves/ends | `smoke_net_host_join_leave` — asserts the host wrote its world and the client wrote none — **and `smoke_net_host_exit_saves` under load**, 27/27 checks: the host quits mid-fight and both peers' last changes read back off the autosave file | ☐ |
 
 ## §21 — reliability
 
 | Item | Evidence | Owner |
 |---|---|---|
-| Latency / jitter | *lane 7.A* — `shared_wild_fight` and the catch race under 150 ms delay / 30 ms jitter | ☐ |
+| Latency / jitter | **RAN, and something broke.** 7.A drove three smokes through the harness UDP proxy at 150 ms delay / 30 ms jitter / 1 % loss. Two pass fully. `smoke_net_shared_wild_fight` keeps the friendly-fire **safety** but loses the refusal **message** to the striker — an early `STRIKE_SETTLE` read (finding F7). Recorded and characterised, deliberately **not** tuned | ☐ |
 | No duplication under races | `test_world_ledger_races` — 24 tests, 136 assertions, each interleaving seen red first | ☐ |
 | Desync detector quiet through every net smoke | contract §7 hashed keys, asserted in `two_peers_boot` | ☐ |
 | **Target hardware frame time on the Ally** | **owner-measured only.** `fps.json` from the kickoff, host-side, with a second player connected | ☐ |
@@ -95,6 +95,18 @@ Recorded here so a reader does not have to infer them from silence:
   running `bash -n` over it.
 
 - **A catch into a full belt is not proven over the wire.** See row 6.
+
+- **The reconnect smoke does not yet read the character file.** `smoke_net_reconnect_keeps_character`
+  was written (lane 7.A) while `user://characters/` did not exist; lane 1.C wrote it hours later on a
+  parallel branch. The smoke asserts the session-side restore and says so in its own header. Pointing
+  it at the file on disk is a small, named piece of work, and row 21 stays **partial** until it is done.
+
+- **Friendly fire loses its refusal message under 150 ms jitter** — the safety holds, the sentence
+  does not arrive (7.A finding F7, an early `STRIKE_SETTLE` read). Deliberately not tuned: a timing
+  constant moved to make one run green is how a real ordering defect gets buried.
+
+- **No net smoke has ever put two pilots in the Warden fight** (row 8). The payout path row 7 proves
+  is shared, and that is an argument, not evidence.
 
 ## The verdict
 
