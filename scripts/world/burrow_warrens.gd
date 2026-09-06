@@ -2014,7 +2014,18 @@ func _bank_material() -> ShaderMaterial:
 	mat.set_shader_parameter("earth_albedo", WET_EARTH_ALBEDO)
 	var grass_tint := Color(str(bank.get("grass_tint", "#e9dfc0")))
 	var earth_tint := Color(str(bank.get("earth_tint", "#5a4a36")))
-	mat.set_shader_parameter("grass_tint", Vector3(grass_tint.r, grass_tint.g, grass_tint.b))
+	# ROUND-4-0906: measured on the round-4 frames (02-knoll-from-outside,
+	# crop medians): the meadow's own rendered ground reads (112,125,102)
+	# while the bank's grass, the SAME photo through this tint, read
+	# (40,44,35) -- 2.8x darker, which is the "uniformly dark-olive hill" of
+	# three verdicts. Terrain3D paints that photo blended with its paler
+	# textures and its own brightness; a colour string cannot exceed 1.0, so
+	# `grass_brightness` multiplies the tint past it to meet the field the
+	# mound stands in. The spoil/earth terms are untouched, so the dark
+	# displaced earth now contrasts against a grassy mound instead of
+	# against more dark.
+	var grass_brightness := float(bank.get("grass_brightness", 1.0))
+	mat.set_shader_parameter("grass_tint", Vector3(grass_tint.r, grass_tint.g, grass_tint.b) * grass_brightness)
 	mat.set_shader_parameter("earth_tint", Vector3(earth_tint.r, earth_tint.g, earth_tint.b))
 	mat.set_shader_parameter("grass_uv_scale", float(bank.get("grass_uv_scale", 0.27)))
 	mat.set_shader_parameter("earth_uv_scale", float(bank.get("earth_uv_scale", 0.25)))

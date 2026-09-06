@@ -226,6 +226,8 @@
     "threshold_colour": "#4a3a2c",
     "_why_material": "The bank's own material (`shaders/earth_bank.gdshader`): a slope+height blend between the meadow's own grass texture (gentle upper surfaces, so the bank reads as a grassy hump continuous with the field) and the terrain's own wet-earth texture (steep and low surfaces). `grass_tint` matches the terrain's own grass tint exactly (terrain_playground.json); `earth_tint` stays near-white for the same reason that file's own `damp` entry does -- the wet-earth photo already carries its target colour, a tint would only wash it out. `earth_colour` (below) is a SEPARATE, deliberately darker multiply used by the small hand-placed earth props beside the mouth (lip, warren-hole lips, half-buried stones' collar, spoil), which sit in shadow close to the camera rather than lit broadly like the bank's own crest.",
     "grass_tint": "#e9dfc0",
+    "_why_grass_brightness": "ROUND-4-0906: crop medians off the round-4 render put the meadow's rendered ground at (112,125,102) and the bank's grass at (40,44,35) -- 2.8x darker, the 'uniformly dark-olive hill' of every verdict so far. Multiplies `grass_tint` past 1.0 (burrow_warrens.gd::_bank_material) so the mound's grass meets the field it stands in; earth/spoil are untouched. Measured, not guessed; re-measure after any terrain palette change.",
+    "grass_brightness": 2.4,
     "earth_tint": "#f0ece4",
     "grass_uv_scale": 0.27,
     "earth_uv_scale": 0.25,
