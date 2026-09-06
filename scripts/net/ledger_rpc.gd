@@ -53,8 +53,15 @@ const HOST_PEER_ID := SESSION.HOST_PEER_ID
 signal delta_applied(delta: Dictionary)
 
 ## The host said no. `reason` is one player-facing sentence; `code` is the
-## machine tag (`world_ledger.gd`'s header lists them).
-signal intent_refused(kind: String, code: String, reason: String)
+## machine tag (`world_ledger.gd`'s header lists them). `detail` is the whole
+## verdict, for the refusals that carry a number the loser needs -- today
+## `stale_revision`, which names the `container` and the `revision` the host
+## actually holds so the caller can re-quote it instead of guessing.
+##
+## Godot lets a handler take FEWER arguments than the signal emits, so the
+## three-argument handlers written before `detail` existed keep working
+## untouched; nothing has to care about a field it does not read.
+signal intent_refused(kind: String, code: String, reason: String, detail: Dictionary)
 
 var ledger: RefCounted = null
 
@@ -133,8 +140,10 @@ func _rpc_intent(intent: Dictionary) -> void:
 	var sender := multiplayer.get_remote_sender_id()
 	var verdict := _commit_here(intent, sender)
 	if not bool(verdict.get("ok", false)):
-		rpc_id(sender, "_rpc_verdict", str(verdict.get("kind", "")),
-			str(verdict.get("code", "")), str(verdict.get("reason", "")))
+		# The whole verdict crosses, not three strings pulled out of it. A
+		# refusal that carries a number the loser needs (`stale_revision`) is
+		# useless if the transport flattens it on the way.
+		rpc_id(sender, "_rpc_verdict", verdict)
 
 
 ## Host -> everyone. A committed delta. This is the only thing that changes a
@@ -153,8 +162,19 @@ func _rpc_delta(delta: Dictionary) -> void:
 
 ## Host -> the one peer whose intent was refused.
 @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
-func _rpc_verdict(kind: String, code: String, reason: String) -> void:
-	intent_refused.emit(kind, code, reason)
+func _rpc_verdict(verdict: Dictionary) -> void:
+	var code := str(verdict.get("code", ""))
+	var reason := str(verdict.get("reason", ""))
+	# A refusal that names a container's current revision is applied to this
+	# peer's own ledger before anyone is told about it. Otherwise a joiner that
+	# has never seen a write to that chest keeps quoting 0 against a host
+	# holding N, and is refused for the rest of the session (lane 3.D, F2).
+	if code == "stale_revision" and verdict.has("container") and verdict.has("revision"):
+		_ensure_ledger()
+		if ledger != null:
+			ledger.call("adopt_storage_revision",
+				str(verdict.get("container", "")), int(verdict.get("revision", 0)))
+	intent_refused.emit(str(verdict.get("kind", "")), code, reason, verdict)
 	var game := _game()
 	if game != null and not reason.is_empty():
 		game.call("push_world_message", reason)

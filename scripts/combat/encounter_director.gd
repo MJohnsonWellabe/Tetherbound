@@ -59,7 +59,27 @@ const WILD_SCRIPT := preload("res://scripts/creatures/wild_creature.gd")
 ## The player's own creature walks around the world now instead of appearing for a
 ## fight, so it gets the follower subclass rather than the bare body.
 const FOLLOWER_SCRIPT := preload("res://scripts/creatures/follower_creature.gd")
+## Stage B lane 4.B: the replicated proxy every OTHER peer draws for a deployed
+## creature, and the outbound proxy its owner pushes state through. Its own
+## header carries the ownership rules.
+const REMOTE_CREATURE_SCRIPT := preload("res://scripts/creatures/remote_creature.gd")
 const OPENING_CONFIG := "res://data/config/opening.json"
+
+## Where lane 2.A mounts the session: a `Node` child of the `Game` autoload
+## (the one-autoload rule). Identical in every process, which is what makes
+## this node's RPCs resolve at all -- `EncounterDirector` sits at the same
+## path under the world scene on every peer.
+const SESSION_PATH := ^"/root/Game/Session"
+## D95's reliable channel. Declared here rather than imported from
+## `scripts/net/session.gd` because that file belongs to another lane; the
+## number is the wire contract, and a mismatch is a dropped intent.
+const CHANNEL_LEDGER := 1
+## D97's authored spawn container for creature bodies, relative to the world
+## scene root. Authored in `meadows_playground.tscn` and
+## `cloudreach_cliffs.tscn`, never built here, so a spawn that arrives while a
+## peer is still running its procedural world build finds a `spawn_path` that
+## already exists.
+const CREATURE_SPAWNER_PATH := ^"Spawned/CreatureSpawner"
 
 signal prompt_changed(text: String)
 
@@ -119,6 +139,32 @@ var _wild_creatures: Array[Node3D] = []
 var _engaged_with: Node3D = null
 var _ally_body: Node3D = null
 var _ally: RefCounted = null
+
+## --- Stage B lane 4.B: one deployed creature PER OWNER -----------------------
+##
+## `_ally_body` above is still exactly what it was: the body THIS process
+## pilots, built locally, driven by `follower_creature.gd`, untouched by the
+## session. Solo therefore plays byte-for-byte as it did.
+##
+## What is new is that in a live multi-peer session every peer's deployed
+## creature also gets a REPLICATED PROXY, spawned by the host through D97's
+## authored `CreatureSpawner` with the owner's authority set inside the spawn
+## function. On the owner that proxy is invisible and pushes the local body's
+## transform onto the wire; on everyone else it is the body they actually see.
+## That is lane 2.C's trainer shape (`scripts/net/trainer_spawn.gd`), applied
+## to creatures rather than a second design.
+##
+## Nothing here runs at all until a second peer is in the session.
+var _session: Node = null
+var _creature_spawner: MultiplayerSpawner = null
+## peer id -> the proxy node standing for that peer's deployed creature. Host
+## side only; a client receives its copies through the spawner and never
+## indexes them here.
+var _creature_proxies: Dictionary = {}
+## HOST TRUTH: peer id -> {species_id, shiny, character_id} for every peer that
+## currently has a creature out. The host is the only process that holds this,
+## and it is what a late joiner's proxies are rebuilt from.
+var _deployed_by: Dictionary = {}
 ## OWNER-0901-CREATURE-GRASS-VISIBILITY-V2. Resolved once in `_ready()` for
 ## `_scatter_clear_spot()`'s spawn-siting check. `Vegetation` is a runtime
 ## child `playground_world.gd::_dress_the_meadow()` adds by name, not a saved
@@ -319,7 +365,77 @@ func _ready() -> void:
 	# post-yield, rather than at the top, so the lookup runs after the world
 	# has actually dressed the meadow instead of racing it.
 	_vegetation = get_parent().get_node_or_null(^"Vegetation")
+	_wire_creature_replication()
 	await _spawn_creatures()
+
+
+## Stage B lane 4.B. Wire this director to the session and to D97's authored
+## `CreatureSpawner`, on EVERY peer.
+##
+## Every peer wires `spawn_function`, host and client alike: it is what turns
+## the host's `spawn(data)` into a node locally, on each side (the same rule
+## `trainer_spawn.gd::_ready()` states). Nothing is spawned here -- see
+## `_is_host()` for why a spawn before a real peer exists is a phantom that
+## breaks the session on join.
+func _wire_creature_replication() -> void:
+	var world := get_parent()
+	if world != null:
+		_creature_spawner = world.get_node_or_null(CREATURE_SPAWNER_PATH) as MultiplayerSpawner
+	if _creature_spawner != null:
+		_creature_spawner.spawn_function = _spawn_deployed_creature
+
+	_session = get_node_or_null(SESSION_PATH)
+	if _session == null:
+		return
+	if _session.has_signal("peer_joined") \
+			and not _session.is_connected("peer_joined", _on_net_peer_joined):
+		_session.connect("peer_joined", _on_net_peer_joined)
+	if _session.has_signal("peer_left") \
+			and not _session.is_connected("peer_left", _on_net_peer_left):
+		_session.connect("peer_left", _on_net_peer_left)
+	if _session.has_signal("session_ended") \
+			and not _session.is_connected("session_ended", _on_net_session_ended):
+		_session.connect("session_ended", _on_net_session_ended)
+
+
+## Whether THIS process is the host of a real, LIVE session.
+##
+## Read `scripts/net/trainer_spawn.gd::_is_host()`'s comment in full before
+## changing this; it carries the whole account of the defect that cost this
+## project a day. The short of it: Godot installs an `OfflineMultiplayerPeer`
+## by default, under which `multiplayer.is_server()` is **true** and
+## `get_unique_id()` is **1** with no session at all, so any guard shaped "am
+## I the server" passes in every headless test, capture tool and editor run.
+## `Session.is_host()` alone is not enough either -- it is deliberately true
+## when there is no session, because that is the honest answer for the D100
+## autosave sites. Both questions together mean exactly `_mode == "host"`.
+##
+## Asked fresh at every call rather than cached, because this node is built
+## before anybody hosts or joins and outlives the peer swap.
+func _is_host() -> bool:
+	if not is_inside_tree() or _session == null:
+		return false
+	if not _session.has_method("is_active") or not _session.has_method("is_host"):
+		return false
+	return bool(_session.call("is_active")) and bool(_session.call("is_host"))
+
+
+## True once there is somebody else in the session. Below this nothing in this
+## lane spawns, replicates or announces anything at all, which is what keeps
+## solo identical.
+func _is_multi_peer() -> bool:
+	if _session == null or not _session.has_method("is_multi_peer"):
+		return false
+	return bool(_session.call("is_active")) and bool(_session.call("is_multi_peer"))
+
+
+## This process's own peer id. 1 with no session and on the host (spike
+## finding 2: only the listen server is 1; a joiner is a large random 32-bit
+## number). Re-read rather than cached, for `_is_host()`'s reason.
+func _local_peer_id() -> int:
+	if _session != null and _session.has_method("local_peer_id"):
+		return int(_session.call("local_peer_id"))
+	return 1
 
 
 ## How many physics frames to keep trying to stand the wild creature on the ground.
@@ -1034,13 +1150,29 @@ func _spawn_ally_body(creature: RefCounted) -> bool:
 	# terrain — or inside the trainer, which is the overlap that once launched
 	# the player off the playground at 500 m/s.
 	_ally_body = CREATURE_SCENE.instantiate()
+	# Stage B lane 4.B. The NAME is no longer the key to "the deployed
+	# creature": `creature_body.gd::DEPLOYED_GROUP` plus `is_local_deployment()`
+	# is, because one hardcoded name cannot address one creature per owner and
+	# a session has one per player. This string survives only as a legacy alias
+	# for `scripts/build/build_placer.gd::_bodies_that_are_not_buildings()`,
+	# which is another lane's file this wave and still looks the node up by
+	# name; the handover to move it onto the group is recorded in
+	# `ralph/reports/MP-4B-CREATURES-0906/REPORT.md`. Every other peer's
+	# creature is a `remote_creature.gd` proxy named `AllyCreature_<peer id>`
+	# under `Spawned/Creatures`, so no two bodies ever contend for one name.
 	_ally_body.name = "AllyCreature"
 	_ally_body.set_script(FOLLOWER_SCRIPT)
 	_ally_body.visible = false
 	get_parent().add_child(_ally_body)
 	_ally_body.call("setup", creature.species_id, bool(creature.get("shiny")))
 	_ally_body.call("configure_following", _follower_config())
+	# ITS OWN trainer, not "the player": in a session every peer has a body
+	# standing in this world, and `_player` is this process's own rig -- which
+	# is exactly the trainer this process's creature belongs to. A peer's
+	# creature is followed home by that peer's own director, in that peer's own
+	# process, so the leader is right by construction on every side.
 	_ally_body.set("leader", _player)
+	_ally_body.set("owner_peer_id", _local_peer_id())
 
 	# Behind the trainer's right shoulder, which is where it will settle anyway.
 	var spot := _player.global_position - _player.global_basis.z * 2.4 + _player.global_basis.x * 1.2
@@ -1049,7 +1181,288 @@ func _spawn_ally_body(creature: RefCounted) -> bool:
 	_ally_body.visible = true
 	_ally_body.call("face_towards", _player.global_position)
 	_ally_body.call("set_following", true)
+	_announce_deployment(creature)
 	return true
+
+
+# --- Stage B lane 4.B: replicating the deployed creature ----------------------
+
+## Tell the session this process has a creature out, so the host can stand up a
+## proxy of it for everybody else. A no-op in solo and in a one-peer session,
+## which is the whole of why nothing below changes single-player behaviour.
+func _announce_deployment(creature: RefCounted) -> void:
+	if not _is_multi_peer():
+		return
+	var row := {
+		"species_id": str(creature.get("species_id")),
+		"shiny": bool(creature.get("shiny")),
+		"character_id": _local_character_id(),
+	}
+	if _is_host():
+		_host_set_deployed(_local_peer_id(), row)
+		return
+	rpc_id(1, "_rpc_creature_deployed", row)
+
+
+## The mirror: this process put its creature away.
+func _announce_recall() -> void:
+	if not _is_multi_peer():
+		return
+	if _is_host():
+		_host_clear_deployed(_local_peer_id())
+		return
+	rpc_id(1, "_rpc_creature_recalled")
+
+
+## Client -> host, ledger channel. A peer reporting what it has out.
+##
+## The host does not take the peer's word for anything but the SPECIES it
+## deployed: position, and every number a fight turns on, stay host truth
+## (`docs/specs/MP_ENCOUNTER_PROTOCOL.md` §2). This is the one fact only the
+## owner can know, because its party is its own (D100).
+@rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_creature_deployed(row: Dictionary) -> void:
+	if not _is_host():
+		return
+	_host_set_deployed(multiplayer.get_remote_sender_id(), row)
+
+
+@rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_creature_recalled() -> void:
+	if not _is_host():
+		return
+	_host_clear_deployed(multiplayer.get_remote_sender_id())
+
+
+func _host_set_deployed(peer_id: int, row: Dictionary) -> void:
+	if peer_id == 0:
+		return
+	_deployed_by[peer_id] = row.duplicate(true)
+	_despawn_creature_proxy(peer_id)
+	_spawn_creature_proxy(peer_id)
+
+
+func _host_clear_deployed(peer_id: int) -> void:
+	_deployed_by.erase(peer_id)
+	_despawn_creature_proxy(peer_id)
+
+
+## One proxy per peer that has a creature out, including the host's own --
+## a client has to see the host's creature just as much as the other way
+## round. Idempotent; safe to call on every join.
+func _reconcile_creature_proxies() -> void:
+	if not _is_host() or _creature_spawner == null:
+		return
+	# The host's own deployment was never announced while it was alone in the
+	# session (there was nobody to announce it to), so record it now.
+	if _ally != null and _ally_body != null and is_instance_valid(_ally_body):
+		_deployed_by[_local_peer_id()] = {
+			"species_id": str(_ally.get("species_id")),
+			"shiny": bool(_ally.get("shiny")),
+			"character_id": _local_character_id(),
+		}
+	var live := _session_peer_ids()
+	for peer_id in _deployed_by.keys().duplicate():
+		if not live.has(int(peer_id)):
+			_host_clear_deployed(int(peer_id))
+			continue
+		if not _creature_proxies.has(peer_id):
+			_spawn_creature_proxy(int(peer_id))
+	for held in _creature_proxies.keys().duplicate():
+		if not _deployed_by.has(held):
+			_despawn_creature_proxy(int(held))
+
+
+func _spawn_creature_proxy(peer_id: int) -> void:
+	if not _is_host() or _creature_spawner == null or _creature_proxies.has(peer_id):
+		return
+	var row: Dictionary = _deployed_by.get(peer_id, {})
+	if row.is_empty():
+		return
+	var at := _proxy_spawn_position(peer_id)
+	var data := {
+		"peer_id": peer_id,
+		"species_id": str(row.get("species_id", "")),
+		"shiny": bool(row.get("shiny", false)),
+		"character_id": str(row.get("character_id", "")),
+		"at": [at.x, at.y, at.z],
+	}
+	print("[creatures] spawning %s's creature '%s' at (%.1f, %.1f)"
+		% [peer_id, str(data["species_id"]), at.x, at.z])
+	var node: Node = _creature_spawner.spawn(data)
+	if node != null:
+		_creature_proxies[peer_id] = node
+
+
+func _despawn_creature_proxy(peer_id: int) -> void:
+	var node: Variant = _creature_proxies.get(peer_id)
+	_creature_proxies.erase(peer_id)
+	if node is Node and is_instance_valid(node):
+		# Freeing on the host is what the spawner replicates as a despawn.
+		(node as Node).queue_free()
+
+
+## Where a proxy stands before its first replicated position arrives: beside
+## the trainer body that owns it, so a joiner never sees a creature flash in at
+## the origin. The owner's own trainer body is the `remote_trainer` node
+## carrying that peer id (lane 2.C); the host's own is its local rig.
+func _proxy_spawn_position(peer_id: int) -> Vector3:
+	if peer_id == _local_peer_id() and _player != null and is_instance_valid(_player):
+		return _player.global_position
+	if is_inside_tree():
+		var tree := get_tree()
+		if tree != null:
+			for body in tree.get_nodes_in_group(&"remote_trainer"):
+				if body is Node3D and is_instance_valid(body) \
+						and int((body as Node3D).get("peer_id")) == peer_id:
+					return (body as Node3D).global_position
+	if _player != null and is_instance_valid(_player):
+		return _player.global_position
+	return Vector3.ZERO
+
+
+## THE ONE PLACE a deployed creature's authority is set. Runs on EVERY peer,
+## identically, before the node is added to the tree.
+##
+## Setting authority after tree entry raises nothing and silently changes it on
+## the calling peer only -- authority is not a replicated property (ENet spike
+## finding 3, and `trainer_spawn.gd::_spawn_trainer()`'s own header). A body
+## that exists with the wrong authority looks like a FROZEN creature, not like
+## an error, which is why `tests/smoke_net_deploy_two_creatures.gd` asserts the
+## authority and not merely the presence.
+func _spawn_deployed_creature(data: Variant) -> Node:
+	var d: Dictionary = data if data is Dictionary else {}
+	var peer_id := int(d.get("peer_id", 0))
+	var node := CREATURE_SCENE.instantiate()
+	node.set_script(REMOTE_CREATURE_SCRIPT)
+	# One name per owner, a pure function of the peer id, so the same node has
+	# the same name in every process and two bodies can never contend for one.
+	node.name = "AllyCreature_%d" % peer_id
+	node.set("owner_peer_id", peer_id)
+	node.set("owner_character_id", str(d.get("character_id", "")))
+	# Read back by `remote_creature.gd::_ready()`, which calls `setup()` after
+	# `super()` -- the same instantiate/enter-tree/setup ordering
+	# `_spawn_ally_body()` uses on the local body.
+	node.set("deploy_species", str(d.get("species_id", "")))
+	node.set("deploy_shiny", bool(d.get("shiny", false)))
+	var at: Variant = d.get("at", [])
+	if at is Array and (at as Array).size() == 3:
+		var a: Array = at
+		(node as Node3D).position = Vector3(float(a[0]), float(a[1]), float(a[2]))
+		node.set("net_position", (node as Node3D).position)
+	# Built here rather than authored into `creature.tscn`, because that scene
+	# is also every one of the ~900 wild creatures in the chapter and none of
+	# them may carry a synchronizer. Constructed identically on every peer,
+	# before `add_child`, so the spawn packet carries matching sync ids.
+	var sync := MultiplayerSynchronizer.new()
+	sync.name = "Sync"
+	sync.root_path = ^".."
+	sync.replication_config = _creature_replication_config()
+	node.add_child(sync)
+	if peer_id != 0:
+		# Recursive by default, which is what is wanted: the child
+		# `MultiplayerSynchronizer` has to carry the same authority or its
+		# deltas are refused at the far end.
+		node.set_multiplayer_authority(peer_id)
+	print("[creatures] built %s for peer %d, authority %d (this peer is %d)"
+		% [node.name, peer_id, node.get_multiplayer_authority(), multiplayer.get_unique_id()])
+	return node
+
+
+## Position and yaw, every tick. Nothing else needs to cross the wire: the
+## animator derives its gait from the velocity the interpolation produces, and
+## every number a FIGHT turns on is host truth rather than a replicated
+## property (`docs/specs/MP_ENCOUNTER_PROTOCOL.md` §3).
+func _creature_replication_config() -> SceneReplicationConfig:
+	var cfg := SceneReplicationConfig.new()
+	for path in [^".:net_position", ^".:net_yaw"]:
+		cfg.add_property(path)
+		cfg.property_set_spawn(path, true)
+		cfg.property_set_replication_mode(path, SceneReplicationConfig.REPLICATION_MODE_ALWAYS)
+	return cfg
+
+
+func _session_peer_ids() -> Array:
+	var out: Array = []
+	if _session == null or not _session.has_method("peers"):
+		return out
+	var raw: Variant = _session.call("peers")
+	if not (raw is Array):
+		return out
+	for entry in (raw as Array):
+		if entry is Dictionary:
+			var row: Dictionary = entry
+			out.append(int(row.get("peer_id", row.get("id", 0))))
+		elif entry is int or entry is float:
+			out.append(int(entry))
+	return out
+
+
+func _local_character_id() -> String:
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return ""
+	var local: Variant = game.get("local")
+	if local == null:
+		return ""
+	return str((local as RefCounted).get("character_id"))
+
+
+## A join is the first moment the host may spawn anything at all: before it
+## there is no live peer under the spawner and a body spawned without one is
+## the phantom `_is_host()` exists to prevent. Reconciling here covers the
+## joiner AND the host's own already-standing creature in one idempotent pass.
+func _on_net_peer_joined(_peer_id: int, _character_id: Variant = null) -> void:
+	if not _is_host():
+		return
+	_reconcile_creature_proxies()
+
+
+func _on_net_peer_left(peer_id: int, _reason: Variant = null) -> void:
+	if not _is_host():
+		return
+	_host_clear_deployed(int(peer_id))
+
+
+## The mirror of the boot-time defect (`trainer_spawn.gd::_on_session_ended`).
+## When the session ends the multiplayer peer goes back to the offline default,
+## and any body still tracked by the spawner is a spawn held under a peer that
+## is not the one it was made under. Drop them all, on host and client alike.
+func _on_net_session_ended(_reason: Variant = null) -> void:
+	_creature_proxies.clear()
+	_deployed_by.clear()
+	if _creature_spawner == null:
+		return
+	var root := _creature_spawner.get_node_or_null(_creature_spawner.spawn_path)
+	if root == null:
+		return
+	for child in root.get_children():
+		child.queue_free()
+
+
+## Every deployed creature standing in this world right now -- this process's
+## own and every other peer's proxy. THE replacement for looking a single
+## hardcoded node name up in the scene root.
+func deployed_bodies() -> Array:
+	var out: Array = []
+	if not is_inside_tree():
+		return out
+	var tree := get_tree()
+	if tree == null:
+		return out
+	for node in tree.get_nodes_in_group(&"deployed_creature"):
+		if is_instance_valid(node):
+			out.append(node)
+	return out
+
+
+## The deployed body belonging to `peer_id`, or null. The local player's own
+## body answers for the local peer id; everyone else's is their proxy.
+func deployed_body_for(peer_id: int) -> Node3D:
+	for node in deployed_bodies():
+		if node is Node3D and int((node as Node3D).get("owner_peer_id")) == peer_id:
+			return node as Node3D
+	return null
 
 
 func _follower_config() -> Dictionary:
@@ -1266,6 +1679,7 @@ func dismiss_active_creature() -> bool:
 	_ally_body.queue_free()
 	_ally_body = null
 	_ally = null
+	_announce_recall()
 	return true
 
 
@@ -1723,18 +2137,63 @@ func _tick_streaming() -> void:
 	_stream_clusters()
 
 
+## Stage B lane 4.B. A cluster is awake if ANY occupant of this realm is near
+## it, not if the local player is.
+##
+## This used to read `_player.global_position` alone. With two players in one
+## realm that starves whoever is not the host: the wild creatures around the
+## second player never tick, so the meadow they are standing in is empty of
+## anything that moves, notices them or can be fought -- and it reads as a
+## dead world rather than as a bug, because a creature that never ticks also
+## never falls over.
+##
+## The union is the local player plus every replicated trainer body standing
+## in this scene (lane 2.C's `remote_trainer` group). Being in this tree is
+## what "in this realm" means: D97 gives each realm its own world scene and
+## its own `Spawned/Trainers` container, so a peer in another realm has no
+## body here at all. In solo the group is empty and the answer is the local
+## player's position exactly as before.
 func _stream_clusters() -> void:
-	var player_pos := _player.global_position
+	var occupants := _realm_occupant_positions()
 	var margin := _activation_radius_margin()
 	for cluster: Dictionary in _clusters:
 		var centre: Vector3 = cluster["centre"]
 		var radius: float = cluster["radius"]
-		var should_be_active := player_pos.distance_to(centre) <= radius + margin
+		var reach := radius + margin
+		var should_be_active := false
+		for at: Vector3 in occupants:
+			if at.distance_to(centre) <= reach:
+				should_be_active = true
+				break
 		if should_be_active == bool(cluster["active"]):
 			continue
 		cluster["active"] = should_be_active
 		for wild: Node3D in (cluster["members"] as Array[Node3D]):
 			_set_wild_active(wild, should_be_active)
+
+
+## Where the people in this realm are standing. The local player first,
+## because in solo it is the only entry and this must stay one distance test
+## per cluster there.
+##
+## The local peer's OWN outbound trainer proxy is deliberately not filtered
+## out: it sits on top of `_player` by construction (`remote_trainer.gd`
+## keeps it co-located), so including it costs one extra distance test and
+## can never change an answer -- where filtering it would mean asking each
+## body whether it is ours, per body, per frame.
+func _realm_occupant_positions() -> Array[Vector3]:
+	var out: Array[Vector3] = []
+	if _player != null and is_instance_valid(_player):
+		out.append(_player.global_position)
+	if not is_inside_tree():
+		return out
+	var tree := get_tree()
+	if tree == null:
+		return out
+	for body in tree.get_nodes_in_group(&"remote_trainer"):
+		if body is Node3D and is_instance_valid(body):
+			out.append((body as Node3D).global_position)
+	return out
 
 
 func _set_wild_active(wild: Node3D, active: bool) -> void:

@@ -140,3 +140,56 @@ func test_storage_never_holds_a_creature_id() -> void:
 	for id in db.ids():
 		assert_ne(db.kind(str(id)), "creature",
 			"items.json defines a 'creature' kind; storage_state.gd must never be handed one")
+
+
+# --- D103, lane 3.D: previewing a transfer without making it -------------------
+
+func test_preview_deposit_changes_neither_side() -> void:
+	player.add("wood", 10)
+	var preview: Dictionary = chest.preview_deposit(player, "wood", 6)
+	# The whole point: the ledger has not committed anything yet, so the player
+	# still has all ten and the chest is still empty.
+	assert_eq(player.count("wood"), 10)
+	assert_eq(chest.inventory.count("wood"), 0)
+	assert_eq(int(preview.get("moved", -1)), 6)
+	assert_eq(int(preview.get("leftover", -1)), 0)
+	assert_eq(_count_in(preview.get("state", []), "wood"), 6)
+
+
+func test_preview_deposit_refuses_the_same_shortfall_deposit_does() -> void:
+	player.add("wood", 3)
+	var preview: Dictionary = chest.preview_deposit(player, "wood", 10)
+	assert_eq(int(preview.get("moved", -1)), 0)
+	assert_eq(int(preview.get("leftover", -1)), 10)
+	assert_eq(_count_in(preview.get("state", []), "wood"), 0)
+
+
+func test_preview_withdraw_changes_neither_side() -> void:
+	player.add("wood", 8)
+	chest.deposit(player, "wood", 8)
+	var preview: Dictionary = chest.preview_withdraw(player, "wood", 5)
+	assert_eq(chest.inventory.count("wood"), 8)
+	assert_eq(player.count("wood"), 0)
+	assert_eq(int(preview.get("moved", -1)), 5)
+	assert_eq(_count_in(preview.get("state", []), "wood"), 3)
+
+
+func test_a_previewed_state_is_what_load_data_produces() -> void:
+	# The array a `storage_txn` intent carries has to be the same array the
+	# committed delta loads back, or a chest would draw one thing and the world
+	# record hold another.
+	player.add("wood", 10)
+	var preview: Dictionary = chest.preview_deposit(player, "wood", 6)
+	chest.load_data(preview.get("state", []))
+	assert_eq(chest.inventory.count("wood"), 6)
+	assert_eq(chest.save_data(), preview.get("state", []))
+
+
+## Total of `id` across a `save_data()`-shaped array — by item identity, never
+## by slot number (CLAUDE.md).
+func _count_in(state: Variant, id: String) -> int:
+	var total := 0
+	for entry: Variant in (state as Array):
+		if typeof(entry) == TYPE_DICTIONARY and str((entry as Dictionary).get("id", "")) == id:
+			total += int((entry as Dictionary).get("n", 0))
+	return total

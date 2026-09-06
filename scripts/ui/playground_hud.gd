@@ -783,6 +783,10 @@ var _creature_icon: TextureRect = null
 var _creature_hp_value_label: Label = null
 var _creature_header_out_last := false ## -1-state forces the first header write
 var _creature_header_has_creature_last := false
+## Stage B lane 4.B. The local player's own deployed creature body, cached
+## across frames (see `_local_deployed_creature()`); null until one is out and
+## re-resolved the frame after the cached node is freed.
+var _local_deployed_cache: Node3D = null
 
 ## T3-INSTALL, B1: the active creature's tonic buffs (`creature_instance.gd::
 ## apply_buff`/`active_buffs`) had no HUD indicator anywhere -- a player could
@@ -1518,12 +1522,40 @@ func _update_creature_block() -> void:
 ## the one real source of truth this file has for "is the selected creature
 ## actually standing in the world," unchanged from the header's own long
 ## comment.
+##
+## Stage B lane 4.B: this used to find a node called "AllyCreature" in the
+## scene root. That name was the key to "the deployed creature", and a single
+## hardcoded name cannot address one creature PER OWNER -- which is what a
+## session has. The question is now asked of the body itself, through
+## `creature_body.gd::DEPLOYED_GROUP` and `is_local_deployment()`, so this HUD
+## keeps showing THIS player's own creature and never another player's.
 func _active_creature_is_out(has_creature: bool) -> bool:
 	if not has_creature:
 		return false
-	var world := get_tree().get_current_scene()
-	var ally: Node = world.get_node_or_null(^"AllyCreature") if world != null else null
-	return ally != null and is_instance_valid(ally)
+	return _local_deployed_creature() != null
+
+
+## The deployed creature body THIS process pilots, or null.
+##
+## Cached across frames and re-resolved only when the cached node has gone
+## away, because both callers run per frame and a group walk per frame per
+## caller is work this file was not doing before.
+func _local_deployed_creature() -> Node3D:
+	if _local_deployed_cache != null and is_instance_valid(_local_deployed_cache):
+		return _local_deployed_cache
+	_local_deployed_cache = null
+	if not is_inside_tree():
+		return null
+	var tree := get_tree()
+	if tree == null:
+		return null
+	for node in tree.get_nodes_in_group(&"deployed_creature"):
+		if not is_instance_valid(node) or not (node is Node3D):
+			continue
+		if node.has_method("is_local_deployment") and bool(node.call("is_local_deployment")):
+			_local_deployed_cache = node as Node3D
+			return _local_deployed_cache
+	return null
 
 
 func _update_creature_header(has_creature: bool) -> void:
@@ -2491,9 +2523,11 @@ func _ensure_minimap_baked() -> void:
 ## rather than read off a private field. `minimap.gd` derives its separate
 ## travel heading from successive real positions after movement resolution.
 ## Both use the project convention `forward(yaw) = (sin(yaw), 0, cos(yaw))`.
-## `creature_pos` is the follower creature's
-## position when `encounter_director.gd` has spawned one (named "AllyCreature" in
-## the world, per that file), else null.
+## `creature_pos` is the LOCAL player's own follower creature's position when
+## `encounter_director.gd` has deployed one, else null. Found through
+## `_local_deployed_creature()` rather than by node name: lane 4.B gives every
+## peer in a session its own deployed body, and the minimap must plot this
+## player's creature rather than whichever one happens to be in the tree first.
 func _update_minimap() -> void:
 	if _minimap == null or not _minimap_baked or _player == null:
 		return
@@ -2506,10 +2540,9 @@ func _update_minimap() -> void:
 			yaw = atan2(basis.z.x, basis.z.z)
 
 	var creature_pos: Variant = null
-	if world != null:
-		var follower := world.get_node_or_null(^"AllyCreature")
-		if follower != null and is_instance_valid(follower) and follower is Node3D:
-			creature_pos = (follower as Node3D).global_position
+	var follower := _local_deployed_creature()
+	if follower != null:
+		creature_pos = follower.global_position
 
 	_minimap.call("update_view", _player.global_position, yaw, creature_pos)
 

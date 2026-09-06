@@ -1937,13 +1937,40 @@ jobs:
           done
           echo "found (${count}):${files}"
           # Review item 6: a renamed/deleted header must not make this shard
-          # go green without actually running a peer -- fewer than the two
-          # smokes this lane ships (the boot smoke and its negative control)
-          # fails the job outright rather than silently skipping the run step.
-          if [ "$count" -lt 2 ]; then
-            echo "::error::expected at least 2 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
+          # go green without actually running a peer -- fewer than the smokes
+          # the tree actually ships fails the job outright rather than
+          # silently skipping the run step.
+          #
+          # The floor is raised with each lane that adds one, so a header lost
+          # in a rebase is caught here rather than discovered as a shard that
+          # ran nothing. Wave 0 shipped 2 (the boot smoke and its negative
+          # control); Wave 2 added host/join/leave and movement; lane 3.D added
+          # storage_concurrency; lane 4.B added deploy_two_creatures.
+          if [ "$count" -lt 6 ]; then
+            echo "::error::expected at least 6 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
             exit 1
           fi
+          # Named registration, on top of the count. Discovery alone would let a
+          # smoke drop out of CI by losing its `# peers: 2` header in a rebase
+          # and nobody would notice, because the count is satisfied by whatever
+          # else happens to be in the directory. Each lane that ships a net
+          # smoke adds its file here.
+          for required in \
+            tests/smoke_net_two_peers_boot.gd \
+            tests/smoke_net_host_join_leave.gd \
+            tests/smoke_net_movement_two_peers.gd \
+            tests/smoke_net_peer_death.gd \
+            tests/smoke_net_storage_concurrency.gd \
+            tests/smoke_net_deploy_two_creatures.gd
+          do
+            case " $files " in
+              *" $required "*) ;;
+              *)
+                echo "::error::${required} is not being discovered as a 'peers: 2' net smoke"
+                exit 1
+                ;;
+            esac
+          done
           echo "files=${files}" >> "$GITHUB_OUTPUT"
       - name: Run net smokes
         if: ${{ !cancelled() && steps.discover.outputs.files != '' }}
