@@ -854,7 +854,13 @@ func _walkable_height(world_point: Vector3, natural_y: float, lines: Array[Dicti
 	var flat_radius: float = pad["flat_radius"]
 	if r >= flat_radius + PAD_EASE_M:
 		return eased
-	var crown_top := _crown_height_at(pad, world_point, lines) + 0.03
+	# 0.01 above the crown's rendered surface height, i.e. 2 cm UNDER its
+	# +0.03 top: a shoulder pinned exactly onto the crown z-fought with it as
+	# light dry-turf bands across a green pad wherever a dry route's shoulder
+	# crossed a green route's crown (05-upper-cloudreach-cliffhold, scratch
+	# capture after round 2). The crown is the drawn surface inside its disc;
+	# the collider difference is 2 cm.
+	var crown_top := _crown_height_at(pad, world_point, lines) + 0.01
 	if r <= flat_radius:
 		return crown_top
 	return lerpf(crown_top, eased, (r - flat_radius) / PAD_EASE_M)
