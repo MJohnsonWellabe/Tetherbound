@@ -169,6 +169,37 @@ Prove:
 #### Anti-grind rule
 Drive to broad playable multiplayer first. Do not spend the whole pass perfecting one edge case while basic co-op is absent elsewhere. After two serious approaches to one narrow issue produce neither material improvement nor new causal evidence, change strategy or hand it to a fresh focused lane.
 
+#### Status — 2026-09-06: the implementation scope is COMPLETE, the exit criteria are NOT MET
+
+(Old internal numbering, per this section's own naming note above: "Stage B" below is the
+execution plan's multiplayer stage, not this roadmap's Stage B/Water.)
+
+Every item in "Minimum implementation scope" above is built and every one of the twenty-four §17
+rows in `docs/acceptance/MULTIPLAYER_ACCEPTANCE.md` names a run, on branch
+`claude/tetherbound-roadmap-next-jrcjs8` @ `ad383219`. **Stage B stays open**, and precisely three
+things hold it there. None of them is code:
+
+1. **The exit criterion is a person, not a test.** It names an OUTSIDE TESTER hosting and three
+   friends joining without developer intervention. No automated evidence can satisfy that sentence.
+   The owner column of the acceptance file is entirely unsigned, and §23 also wants the owner's own
+   LAN session and an Ally frame-time measurement, both recorded in `docs/owner/`.
+2. **`verify-multiplayer-shard` has never completed a CI run.** Cancelled seven times, because
+   `ci.yml` sets `cancel-in-progress` for every non-`main` ref and that job takes ~45 minutes. All
+   net-smoke evidence to date is from local two-process runs — real, but not CI.
+3. **It is not on `main`.** PR #63 is open.
+
+The "Evidence bar" list above is met by automated runs with one honest gap: a **shared Cloudreach
+encounter** has no net smoke of its own. Cloudreach's own world mutations go through the ledger
+(lane 6.E) and two peers demonstrably fight in different biomes at once
+(`smoke_net_split_realms`), but nobody has put two pilots into one Cloudreach fight.
+
+The to-do list is `docs/owner/STAGE_B_HANDOFF_2026-09-06.md`. Read the acceptance file's
+"Known-open" list before treating this workstream's evidence bar as met: scaling and the
+Warden-arena staging were fixed at the very end of the pass, and the list names what is still
+carried deliberately. This workstream's own exit is Stage 0's exit criteria below, not a
+separate audit stage -- the two-biome audit gate this note used to point at was removed in
+this file's 2026-09-06 renumbering.
+
 ### Workstream 3 — Meadows visual sweep
 
 **Directive:** `docs/owner/MEADOWS_VISUAL_SWEEP_GOAL_2026-09-06.md` — grass,

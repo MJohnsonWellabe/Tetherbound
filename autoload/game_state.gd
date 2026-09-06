@@ -38,6 +38,9 @@ const PROGRESSION_FEED := preload("res://scripts/creatures/progression_feed.gd")
 const WORLD_STATE := preload("res://autoload/world_state.gd")
 const PLAYER_STATE := preload("res://autoload/player_state.gd")
 const MERGED_PROGRESSION := preload("res://autoload/merged_progression.gd")
+## OP-0905-20: `enter_realm()`'s own loading-screen overlay. See that file's
+## header for why it is a plain RefCounted helper rather than a scene/autoload.
+const LOADING_OVERLAY := preload("res://scripts/ui/loading_overlay.gd")
 ## T3-ENCOUNTER. Only for `reset_for_new_game()`'s world-seed decision; the
 ## roll itself lives in `encounter_director.gd`, which is where the spawn table
 ## is.
@@ -1318,6 +1321,39 @@ func current_realm_scene() -> String:
 	return str(realm_hearts.call("scene_for_realm", current_realm))
 
 
+## D97's interim refusal is GONE, 2026-09-06, and directive rule 16 is open:
+## two players can stand in different biomes at the same time.
+##
+## Lane 6.A built the crossing itself -- the registry learns where each peer
+## is, the realm being left despawns that peer's body while its world is still
+## up, and `realm_shells.gd` stands a headless shell for any occupied realm the
+## host is not in. That machinery was always sound. What shut the door again
+## was its cost: `add_child()` runs the world root's `_ready()`, and that
+## `_ready()` was the entire world build inside one call on the host every
+## other player depends on. Measured with `tools/net/_probe_6a_shell.gd` on a
+## 4 vCPU box, a shell held a single frame for 21.9 s (Cloudreach) and 30.5 s
+## (the Meadows), and both of the lane's net smokes died with
+## "peer silent (peer 0, no heartbeat for >15 s)" at exactly that call.
+##
+## What re-opens it is not a removed guard but a shell that BUILDS ACROSS
+## FRAMES: `scripts/world/shell_build_budget.gd` bounds how much world
+## building either world root may do in one frame, and `realm_shells.gd` reads
+## the scene off the loader thread instead of blocking on `load()`. Measured
+## again on the same box, same probe:
+##
+##   Cloudreach shell   worst held frame 21.9 s -> 1.1 s, worst 60-frame
+##                      window 22.8 s -> 4.4 s
+##   Meadows shell      worst held frame 30.5 s -> 7.4 s, worst 60-frame
+##                      window 41.2 s -> 9.9 s
+##
+## The Meadows' remaining 7.4 s is one indivisible Terrain3D region-data load
+## and is a stated, measured limitation rather than a fixed one -- see
+## `ralph/reports/MP-REALM-REOPEN-0906/REPORT.md`.
+##
+## Opening this door is TWO edits and they belong together: these lines, and
+## the `# peers: 2` headers on `tests/smoke_net_split_realms.gd` and
+## `tests/smoke_net_realm_owner_disconnect_mid_fight.gd`. Both were done
+## together, and both smokes were run locally before either was made.
 func can_enter_realm(realm_id: String) -> bool:
 	if realm_hearts == null or progression == null:
 		return false
@@ -1332,21 +1368,67 @@ func can_enter_realm(realm_id: String) -> bool:
 ## `save_game()`'s pose capture: after `current_realm` changes, a pose captured
 ## from the outgoing scene would be labelled as the destination and could drop
 ## the player at a valid but unrelated coordinate on Continue.
-func enter_realm(realm_id: String, entry_id: String = "") -> bool:
-	if not can_enter_realm(realm_id):
+##
+## ## Directive rule 16, lifted (Wave 6 lane 6.A)
+##
+## This used to REFUSE outright in a multi-peer session -- D97's interim rule,
+## because a crossing rebuilds only this peer's scene and the host would have
+## gone on simulating one realm for two players standing in different ones.
+## The refusal is gone. What replaces it is not a removed guard but
+## `Session.announce_realm()` below and the three things it drives:
+##
+##   1. the host's registry learns where this peer now is, and every peer's
+##      copy of it does (`peer_registry.gd::set_realm` -> `_broadcast_registry`);
+##   2. `trainer_spawn.gd` in the realm being LEFT despawns this peer's body,
+##      while that world is still standing, so nobody there is left drawing a
+##      trainer who has gone;
+##   3. `realm_shells.gd` stands up a headless shell for the realm being
+##      entered if the host is not itself in it, and folds down -- through the
+##      host's own world save -- any realm this leaves empty.
+##
+## The call is made BEFORE `change_scene_to_file()` for step 2's sake. It is
+## also made before the transition autosave is skipped or taken, so a client
+## crossing a boundary never depends on having written anything.
+##
+## A client swapping its own world scene does NOT leave the session: nothing
+## here touches the peer, and `Session` is a child of this autoload rather
+## than of any scene, so it outlives the swap unchanged.
+##
+## OP-0905-20: shows a full-screen "Loading <realm>…" overlay
+## (`scripts/ui/loading_overlay.gd`) before the blocking
+## `change_scene_to_file()` below, and removes it once the destination scene
+## has drawn a frame. That overlay wait is why this is now a coroutine —
+## every existing call site either discards the return value (`realm_gate.gd`)
+## or is a test double that never awaits it, so calling this without `await`
+## remains safe; only a NEW caller that reads the returned `bool` needs one.
+##
+## `bypass_gate`: debug teleport's own cross-realm escape hatch
+## (`debug_teleport_to`/OP-0905-21) — the debug list deliberately does not
+## require the destination's entry-key flag, so it calls this with
+## `bypass_gate = true`. Every other caller leaves it false and gets the
+## normal `can_enter_realm()` check.
+func enter_realm(realm_id: String, entry_id: String = "", bypass_gate: bool = false) -> bool:
+	if realm_hearts == null:
 		return false
-	# D97's interim rule, which lane 6.A lifts once the host runs a headless
-	# realm shell per occupied realm. Until then a crossing rebuilds only THIS
-	# peer's scene, and the host would go on simulating one realm for two
-	# players standing in different ones -- so it is refused out loud rather
-	# than half-done. Solo is unaffected: `is_multi_peer()` is false with one
-	# peer, which is what a solo session is.
-	if is_multi_peer():
-		push_world_message("Travelling between realms is closed while others are in your world.")
+	if not bypass_gate and not can_enter_realm(realm_id):
 		return false
 	var scene := str(realm_hearts.call("scene_for_realm", realm_id))
+	if scene == "":
+		return false
 	if not ResourceLoader.exists(scene):
 		push_error("realm '%s' points at missing scene %s" % [realm_id, scene])
+		return false
+	var leaving := current_realm
+	if leaving == realm_id:
+		# Not a crossing, and in a multi-peer session it is worse than a
+		# no-op. A same-realm call would rebuild THIS peer's scene -- taking
+		# every remote trainer body it had received down with it -- while
+		# announcing nothing, because a realm change from X to X is not one.
+		# The host would therefore never despawn and respawn anything, and
+		# this peer would be left permanently unable to see the people
+		# standing next to it. Nothing in the game does this (`realm_gate.gd`
+		# is the only caller and always names the other side), so refusing is
+		# free; leaving it open is not.
 		return false
 	_sync_placed_building_state()
 	_sync_death_satchel_state()
@@ -1360,11 +1442,50 @@ func enter_realm(realm_id: String, entry_id: String = "") -> bool:
 	bind_realm_map()
 	pending_realm_entry = entry_id
 	saved_player_pose = {}
+	# Rule 16's ordering. Before the save and before the scene swap: the host
+	# has to take this peer out of the world it is leaving while that world is
+	# still standing on every peer that can see it.
+	announce_realm(leaving, realm_id)
 	# D100: the transition autosave is a WORLD write, so only the host makes it.
 	if save_system != null and is_host():
 		save_system.call("save", self, autosave_slot())
-	get_tree().change_scene_to_file(scene)
+	var tree := get_tree()
+	if tree == null:
+		return false
+	var display_name := str((realm_hearts.call("realm", realm_id) as Dictionary).get("display_name", realm_id))
+	var overlay := await LOADING_OVERLAY.present(tree, "Loading %s…" % display_name)
+	tree.change_scene_to_file(scene)
+	await LOADING_OVERLAY.dismiss(tree, overlay)
 	return true
+
+
+## The realm-change seam, in one place so `enter_realm()` is the only caller
+## that has to know a `Session` may not exist. Solo and session-less crossings
+## are unchanged by construction: `session.gd::announce_realm()` returns
+## immediately when there is no live session.
+func announce_realm(from_realm: String, to_realm: String) -> void:
+	if session == null or not session.has_method("announce_realm"):
+		return
+	session.call("announce_realm", from_realm, to_realm)
+
+
+## Which realm a peer is standing in. `current_realm` answers that for the
+## LOCAL player only, and D97 is explicit that nothing authoritative may read
+## it for anybody else -- from Wave 6 two peers stand in two realms at once.
+func realm_of_peer(peer_id: int) -> String:
+	if session == null or not session.has_method("realm_of"):
+		return current_realm
+	return str(session.call("realm_of", peer_id))
+
+
+## The host's live realm shells, or an empty report on a client or solo.
+func realm_shell_report() -> Dictionary:
+	if session == null or not session.has_method("realms"):
+		return {}
+	var realms: Variant = session.call("realms")
+	if not (realms is Node) or not (realms as Node).has_method("report"):
+		return {}
+	return (realms as Node).call("report")
 
 
 func pending_entry_for(realm_id: String) -> String:
@@ -1405,6 +1526,17 @@ func restore_realm_maps(payloads: Dictionary) -> void:
 ## `PlayerState.map_for()`, which owns the per-realm extent.
 func _ensure_realm_map(realm_id: String) -> RefCounted:
 	return local.call("map_for", realm_id)
+
+
+## OP-0905-27: read-only lookup for a realm's `MapState` instance, for a
+## VIEWER that must not disturb `map` — the single active-realm alias every
+## other system (minimap, fog writers, HUD) reads. `bind_realm_map()` is the
+## right call when something is actually entering a realm; this is the right
+## call when the full map tab only wants to look at a realm the player is not
+## currently standing in. One-line wrapper so `scripts/ui/tab_map.gd` never
+## has to reach for the underscore-named `_ensure_realm_map` across files.
+func realm_map_for(realm_id: String) -> RefCounted:
+	return _ensure_realm_map(realm_id)
 
 
 ## Called only after the destination world has placed Player on its authored
@@ -1946,7 +2078,78 @@ func debug_teleport_destinations() -> Array[Dictionary]:
 			_debug_teleport_add(out, str(landmark.get("display_name", "")), landmark.get("position", Vector2.ZERO))
 	for spoke: Dictionary in _debug_teleport_spokes():
 		_debug_teleport_add(out, str(spoke.get("display_name", "")), spoke.get("position", Vector2.ZERO))
+	_debug_teleport_add_other_realm(out)
 	return out
+
+
+## OP-0905-21: the list above only ever named places in the realm the player
+## already stands in, so a player who had not yet found the physical gate had
+## no menu path to Cloudreach at all. Debug teleport is a settings-only
+## escape hatch (`set_debug_teleport`), so this deliberately does NOT require
+## `realm_key_cloudreach` the way a real gate crossing would — the point is to
+## reach the second realm before earning it. Rows are labelled with the
+## destination realm's own display name ("Cloudreach Cliffs — Galefoot
+## Landing") so a crossing reads as a crossing, not as "a place already here".
+func _debug_teleport_add_other_realm(out: Array[Dictionary]) -> void:
+	if realm_hearts == null:
+		return
+	var other_realm := "cloudreach" if current_realm != "cloudreach" else "meadows"
+	if str(realm_hearts.call("scene_for_realm", other_realm)) == "":
+		return
+	var other_map := _ensure_realm_map(other_realm)
+	if other_map == null:
+		return
+	var other_display := str((realm_hearts.call("realm", other_realm) as Dictionary).get("display_name", other_realm))
+	var entry_id := _debug_teleport_entry_id_for(other_realm)
+	for region: Dictionary in (other_map.regions() as Array):
+		_debug_teleport_add_crossing(out, other_realm, other_display, str(region.get("display_name", "")), region.get("centre", Vector2.ZERO), entry_id)
+	for landmark: Dictionary in (other_map.landmarks() as Array):
+		if bool(landmark.get("dynamic", false)):
+			continue
+		_debug_teleport_add_crossing(out, other_realm, other_display, str(landmark.get("display_name", "")), landmark.get("position", Vector2.ZERO), entry_id)
+
+
+## The authored arrival id `enter_realm()` should carry for a debug crossing
+## INTO `realm_id`. This only seeds the destination world's own initial
+## placement/orientation (the same anchor a real gate crossing would use) —
+## `debug_teleport_to`'s cross-realm path immediately overrides x/z with the
+## actually-chosen destination once that placement has settled, so this does
+## not need to be the nearest anchor to that destination, only a valid one.
+func _debug_teleport_entry_id_for(realm_id: String) -> String:
+	if realm_id == "cloudreach":
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_world.json"))
+		if typeof(parsed) == TYPE_DICTIONARY:
+			var points: Dictionary = (parsed as Dictionary).get("transition_points", {})
+			var entry: Dictionary = points.get("meadows_entry", {})
+			return str(entry.get("id", ""))
+	elif realm_id == "meadows":
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/realm_transitions.json"))
+		if typeof(parsed) == TYPE_DICTIONARY:
+			var entries: Variant = (parsed as Dictionary).get("meadows_entries", {})
+			if entries is Dictionary and not (entries as Dictionary).is_empty():
+				return str((entries as Dictionary).keys()[0])
+	return ""
+
+
+## Same dedupe rule as `_debug_teleport_add`, scoped to entries already
+## tagged with `realm_id` — Cloudreach's world-scale coordinates (hundreds to
+## thousands of metres) are never going to collide with a Meadows position by
+## accident, but scoping the check is what makes that true by construction
+## rather than by the two ranges happening not to overlap today.
+func _debug_teleport_add_crossing(out: Array[Dictionary], realm_id: String, realm_display: String, display_name: String, position: Vector2, entry_id: String) -> void:
+	if display_name.is_empty():
+		return
+	for existing: Dictionary in out:
+		if str(existing.get("realm", "")) != realm_id:
+			continue
+		if (existing.get("position", Vector2.ZERO) as Vector2).distance_to(position) <= DEBUG_TELEPORT_DEDUPE_RADIUS:
+			return
+	out.append({
+		"display_name": "%s — %s" % [realm_display, display_name],
+		"position": position,
+		"realm": realm_id,
+		"entry_id": entry_id,
+	})
 
 
 func _debug_teleport_add(out: Array[Dictionary], display_name: String, position: Vector2) -> void:
@@ -2007,9 +2210,56 @@ func _debug_teleport_spokes() -> Array[Dictionary]:
 ## OPEN mid-fight (`game_menu.gd::open()`), so the combat check here is a
 ## second, redundant guard for whichever future caller reaches this some
 ## other way.
-func debug_teleport_to(x: float, z: float) -> bool:
+## `realm_id`/`entry_id` are additive (OP-0905-21): every existing caller —
+## including the tests that call this with exactly two floats and read the
+## `bool` back synchronously — passes neither, `realm_id` stays `""`, the
+## branch below is never taken, and the function returns exactly as it always
+## did with no `await` ever reached on that path. Only a genuine realm
+## crossing takes the coroutine branch.
+func debug_teleport_to(x: float, z: float, realm_id: String = "", entry_id: String = "") -> bool:
 	if _debug_teleport_combat_running():
 		return false
+	if realm_id != "" and realm_id != current_realm:
+		return await _debug_teleport_cross_realm(x, z, realm_id, entry_id)
+	var player := _find_player()
+	if player == null:
+		return false
+	var world := _debug_teleport_world()
+	if world == null:
+		return false
+	var ground: float = float(world.call("ground_height_at", x, z))
+	if is_nan(ground):
+		return false
+	player.global_position = Vector3(x, ground + DEBUG_TELEPORT_CLEARANCE, z)
+	if player is CharacterBody3D:
+		(player as CharacterBody3D).velocity = Vector3.ZERO
+	return true
+
+
+## OP-0905-21's cross-realm half. `enter_realm(..., bypass_gate = true)` skips
+## the entry-key check and shows the OP-0905-20 loading overlay, then places
+## the player on the destination's own AUTHORED arrival anchor — the same
+## placement a real gate crossing performs. That placement is not the debug
+## destination the player picked, and on the Meadows side it is followed a
+## few physics frames later by a settle coroutine
+## (`playground_world.gd::_settle_meadows_realm_arrival`) that re-asserts the
+## anchor position and only then calls `complete_realm_entry()`. Overriding
+## x/z before that settle finishes would just lose the race and get silently
+## overwritten back to the gate, so this waits for `pending_entry_for` to
+## clear — the same "arrival is done" signal both realms' world scripts
+## already report through — before grounding the player at the chosen (x, z)
+## with the arrived world's own `ground_height_at`, exactly as the
+## same-realm path above does.
+func _debug_teleport_cross_realm(x: float, z: float, realm_id: String, entry_id: String) -> bool:
+	if not await enter_realm(realm_id, entry_id, true):
+		return false
+	var tree := get_tree()
+	if tree == null:
+		return false
+	var settle_frames := 0
+	while pending_entry_for(realm_id) != "" and settle_frames < 240:
+		await tree.physics_frame
+		settle_frames += 1
 	var player := _find_player()
 	if player == null:
 		return false

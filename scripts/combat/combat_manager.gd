@@ -153,6 +153,13 @@ var _ally_body: Node3D = null
 var _camera_rig: Node = null
 var _arena: Node3D = null
 
+## OP-0905-17: the smoothed extra-distance `_update_combat_camera_framing()`
+## adds on top of `camera.distance` this physics tick. Persisted across frames
+## (rather than recomputed from scratch each tick) so `camera.framing.lag`
+## has something to ease FROM; reset to 0.0 whenever the camera is fully
+## released so a later fight does not inherit a wide frame from this one's end.
+var _camera_framing_extra: float = 0.0
+
 ## OP23-02: the point `_open_arena()` already asked `_arena_bounds()` about
 ## when it sized this fight's radius. `_combat_camera_profile()` re-asks the
 ## same question at the same point rather than at `_ally_body`'s own
@@ -549,10 +556,73 @@ func _arena_bounds(centre: Vector3) -> float:
 
 
 func _midpoint(cfg: Dictionary) -> Vector3:
+	var spots := _staging_spots(cfg)
+	return (spots[0] + spots[1]) * 0.5
+
+
+## How coarsely `_staging_reach()` walks the staging back out of a wall. Half a
+## metre is well under the fighters' own body radii, so a spot found at this
+## resolution is not one a body then overlaps the wall from.
+const CONTAIN_STEP_M := 0.5
+
+
+## The two spots the fight forms on, in front of the player along the line they
+## engaged down: their creature at `deploy_offset`, the opponent `separation`
+## past it. Taken as ONE piece so `_open_arena()` and `_place_fighters()` cannot
+## disagree about where the fight is.
+func _staging_spots(cfg: Dictionary) -> Array[Vector3]:
 	var forward := _forward_axis()
 	var deploy := float(cfg.get("deploy_offset", 2.6))
 	var separation := float(cfg.get("separation", 5.0))
-	return _player.global_position + forward * (deploy + separation * 0.5)
+	var full := deploy + separation
+	var scale := 1.0
+	if full > 0.01:
+		scale = _staging_reach(_player.global_position, forward, full) / full
+	return [
+		_player.global_position + forward * (deploy * scale),
+		_player.global_position + forward * (full * scale),
+	]
+
+
+## How far in front of `from` the fight may form before it leaves the room it is
+## being held in. `want` back unchanged whenever no room claims `from`, which is
+## every square metre of the open meadow.
+##
+## MP-F1-F2 finding F2, measured in the Warden Arena. The staging above is
+## `deploy_offset + separation` -- ~7.6 m with the shipped `arena` block -- in
+## front of wherever the player engaged. The Warden stands 5 m from that room's
+## back wall, so a fight taken up beside him formed 4-5 m OUTSIDE it, at
+## z 7666-7668 where the sweep below found no floor collider at all:
+##
+##     z 7663.0   claim 6.172   terrain -1.568   arena_r  0.50   slab collider
+##     z 7664.0   claim 6.172   terrain -1.605   arena_r -1.00   slab collider
+##     z 7666.0   claim 6.172   terrain -1.664   arena_r -1.00   NO COLLIDER
+##     z 7668.0   claim 6.172   terrain -1.767   arena_r -1.00   NO COLLIDER
+##
+## `stronghold.gd::built_floor_height_at()` still CLAIMS those metres -- its
+## margin is deliberately 10 m so that a fight which has drifted past a wall is
+## not told its floor is the meadow far below -- so `place_on_ground()` seated
+## every body at the room's floor height of 6.172 and
+## `creature_body._physics_process()`, which grounds on `is_on_floor()` and not
+## on anybody's claim, dropped them ~8 m. Measured: the boss finished at -1.767
+## with both piloted creatures still falling from 6.172, and every swing missed.
+##
+## The claim margin is not the bug and is not narrowed here; the stronghold's own
+## comment says so and names the owner of the other half outright: "containing
+## that drift is `combat_manager.gd`'s own arena-bounds job and stays there."
+## This is that. `_arena_bounds()` is already exactly the question -- it answers
+## the room's affordable radius inside a chamber and -1.0 everywhere else -- so a
+## fight started outdoors, or in a passage between two chambers, walks none of
+## this and is byte-for-byte the fight it was.
+func _staging_reach(from: Vector3, forward: Vector3, want: float) -> float:
+	if want <= 0.0 or _arena_bounds(from) <= 0.0:
+		return want
+	var reach := want
+	while reach > CONTAIN_STEP_M:
+		if _arena_bounds(from + forward * reach) > 0.0:
+			return reach
+		reach -= CONTAIN_STEP_M
+	return reach
 
 
 func _forward_axis() -> Vector3:
@@ -573,9 +643,12 @@ func _forward_axis() -> Vector3:
 ## "a state" and "a separate scene".
 func _place_fighters() -> void:
 	var cfg: Dictionary = MATH.config().get("arena", {})
+	# Taken BEFORE anything is placed: `_forward_axis()` reads the opponent's
+	# current position, and `_place()` below moves it.
 	var forward := _forward_axis()
-	var ally_spot := _player.global_position + forward * float(cfg.get("deploy_offset", 2.6))
-	var wild_spot := ally_spot + forward * float(cfg.get("separation", 5.0))
+	var spots := _staging_spots(cfg)
+	var ally_spot: Vector3 = spots[0]
+	var wild_spot: Vector3 = spots[1]
 
 	_ally_body.visible = true
 	_place(_ally_body, ally_spot)
@@ -690,11 +763,25 @@ func _take_camera() -> void:
 ## of them) gets the flat profile completely unchanged.
 func _combat_camera_profile() -> Dictionary:
 	var profile: Dictionary = (MATH.config().get("camera", {}) as Dictionary).duplicate()
-	var distance := float(profile.get("distance", 4.6))
+	var distance := float(profile.get("distance", 6.0))
 	profile["shoulder_offset"] = _combat_shoulder_offset(
 		distance, float(profile.get("pitch_start_deg", -25.0)))
-	if _arena == null:
+	var clearance := _room_clearance()
+	if clearance < 0.0:
 		return profile
+	profile["shoulder_offset"] = 0.0
+	profile["distance"] = minf(distance, maxf(1.5, clearance))
+	return profile
+
+
+## The most distance the room around the current fight can afford, or -1.0 if
+## no room claims it -- the same query `_combat_camera_profile()`'s own
+## takeover shrink used before this was pulled out, now shared with
+## `_update_combat_camera_framing()` below so the per-frame OP-0905-17 widening
+## has the identical tight-room ceiling the takeover shrink already enforces.
+func _room_clearance() -> float:
+	if _arena == null:
+		return -1.0
 	var points: Array[Vector3] = [_arena_centre]
 	for body in [_player, _wild, _ally_body]:
 		if body is Node3D:
@@ -704,11 +791,7 @@ func _combat_camera_profile() -> Dictionary:
 		var here := _arena_bounds(at)
 		if here >= 0.0 and (clearance < 0.0 or here < clearance):
 			clearance = here
-	if clearance < 0.0:
-		return profile
-	profile["shoulder_offset"] = 0.0
-	profile["distance"] = minf(distance, maxf(1.5, clearance))
-	return profile
+	return clearance
 
 
 ## VISUAL-CENSUS-2026-08-31 defects 121/122: the flat `shoulder_offset` above
@@ -767,7 +850,112 @@ func _combat_shoulder_offset(distance: float, pitch_start_deg: float) -> float:
 	return clampf(needed, SHOULDER_MIN_M, SHOULDER_MAX_M)
 
 
+## OP-0905-17 (owner playtest 2026-09-05): "the fighting camera sucks. I think
+## it is too zoomed in." The raised `camera.distance`/`fov`/`height` in
+## combat.json widen the base shot; this is what keeps it widening further as
+## the fight itself demands more room, every ACTIVE tick (`_tick_active()`
+## calls this directly, not just from the discrete `_take_camera()` takeover
+## points) rather than only at the moments the camera changes target:
+##
+##   * the two fighters can spread far apart across an 11m arena with neither
+##     switching creatures nor re-entering an aim, and a flat base distance
+##     tuned for the OPENING gap crops one of them out as they separate;
+##   * an alpha, a burrow guardian or the Warden's ace is scaled well past a
+##     normal creature (`creature_body.gd::apply_size_multiplier()`) and the
+##     same base distance that frames a normal fight crops a body that big.
+##
+## `camera_rig.gd::_follow()` already owns the LAST leg of getting to whatever
+## `_distance` this writes -- `move_toward(spring_length, _distance,
+## _recover_speed * delta)` -- so this only ever needs to update that one
+## field, read here by the same reflection the production smokes already use
+## on this rig's other "private" fields (`smoke_combat_camera.gd`'s own
+## `_rig.get("_target")`/`_rig.set("yaw", ...)`), rather than re-running the
+## whole `set_target()` takeover: THAT resets `_retarget_lag` on every call,
+## which is spent once easing onto a brand-new target and must not be pinned
+## back to its start value every physics tick a fight is merely continuing.
+##
+## Smoothed with `camera.framing.lag` (`_camera_framing_extra` is the eased
+## state, not the raw target) so the frame breathes as the gap changes rather
+## than snapping every tick, and always capped by `_room_clearance()` -- a
+## tight Stronghold gauntlet room's own shrink is the ceiling this widening can
+## never punch through, exactly like the takeover shrink in
+## `_combat_camera_profile()` above.
+func _update_combat_camera_framing(delta: float) -> void:
+	if _camera_rig == null or _ally_body == null or not is_instance_valid(_ally_body):
+		return
+	# Only while the rig is actually following the piloted creature. Throw aim
+	# re-points it at the trainer (`throw_aim.gd::arm()`) and the catch
+	# resolution close-up re-points it at the orb (`_show_resolve_camera()`) --
+	# both already own the shot for as long as they hold the target, and this
+	# must not fight either of them for `_distance`.
+	if _camera_rig.get("_target") != _ally_body:
+		return
+	var cfg: Dictionary = MATH.config().get("camera", {}) as Dictionary
+	var base_distance := float(cfg.get("distance", 6.0))
+	var framing: Dictionary = cfg.get("framing", {}) as Dictionary
+	if not bool(framing.get("enabled", true)):
+		_camera_framing_extra = 0.0
+		_camera_rig.set("_distance", base_distance)
+		return
+	var target_extra := _combat_camera_framing_target(framing)
+	var lag := maxf(float(framing.get("lag", 4.0)), 0.01)
+	var weight := 1.0 - exp(-lag * delta)
+	_camera_framing_extra = lerpf(_camera_framing_extra, target_extra, weight)
+	var desired := base_distance + _camera_framing_extra
+	var clearance := _room_clearance()
+	if clearance >= 0.0:
+		desired = minf(desired, maxf(1.5, clearance))
+	_camera_rig.set("_distance", desired)
+
+
+## The extra distance the current moment of the fight calls for, uncapped by
+## smoothing (that is `_update_combat_camera_framing()`'s job) but capped by
+## `max_extra_distance` itself: the separation term and the size term are two
+## independent reasons to widen, not a reason each to widen past the config's
+## own ceiling.
+func _combat_camera_framing_target(framing: Dictionary) -> float:
+	var max_extra := float(framing.get("max_extra_distance", 4.0))
+	var extra := 0.0
+	if _wild != null and is_instance_valid(_wild):
+		var ally_flat := Vector2(_ally_body.global_position.x, _ally_body.global_position.z)
+		var wild_flat := Vector2(_wild.global_position.x, _wild.global_position.z)
+		var measured := ally_flat.distance_to(wild_flat)
+		var reference := float(framing.get("separation_reference_m", 4.0))
+		var per_metre := float(framing.get("extra_distance_per_metre", 0.55))
+		extra = clampf((measured - reference) * per_metre, 0.0, max_extra)
+	var size_extra := maxf(
+		_size_framing_extra(_ally_body, framing), _size_framing_extra(_wild, framing))
+	return clampf(extra + size_extra, 0.0, max_extra)
+
+
+## Alphas, guardians and the Warden's ace are scaled well past the 1x a normal
+## creature ships at (`creature_body.gd::apply_size_multiplier()` multiplies
+## the body's gameplay `_height`/`_radius` in place rather than setting node
+## `scale`, per that function's own comment, so the multiplier is never stored
+## anywhere on the body itself). `creature_species.gd::placeholder().height` is
+## the UNSCALED baseline `apply_size_multiplier()` scaled up FROM, so dividing
+## the body's current, reflected `_height` by that baseline recovers the same
+## multiplier without the body needing to remember it separately.
+func _size_framing_extra(body: Node3D, framing: Dictionary) -> float:
+	if body == null or not is_instance_valid(body):
+		return 0.0
+	var species_id := str(body.get("species_id"))
+	if species_id == "":
+		return 0.0
+	var base_height := float((SPECIES.placeholder(species_id) as Dictionary).get("height", 1.0))
+	var current_height := float(body.get("_height"))
+	if base_height <= 0.0 or current_height <= 0.0:
+		return 0.0
+	var scale_mult := current_height / base_height
+	var threshold := float(framing.get("size_scale_threshold", 1.3))
+	if scale_mult <= threshold:
+		return 0.0
+	var per_scale := float(framing.get("size_extra_per_scale", 1.2))
+	return clampf((scale_mult - 1.0) * per_scale, 0.0, float(framing.get("max_extra_distance", 4.0)))
+
+
 func _release_camera() -> void:
+	_camera_framing_extra = 0.0
 	if _camera_rig == null or not _camera_rig.has_method("set_target"):
 		return
 	_camera_rig.call("set_target", _player, {})
@@ -858,6 +1046,13 @@ func _tick_active(delta: float) -> void:
 	_switch_lockout = maxf(0.0, _switch_lockout - delta)
 	if _buffer_left <= 0.0:
 		_buffered_attack = ""
+
+	# OP-0905-17: framing runs every ACTIVE tick, not just at the discrete
+	# takeover points `_take_camera()` fires from -- the fighters' separation
+	# and either one's size can change continuously through a fight, and the
+	# frame is meant to breathe with that rather than snap only when a switch
+	# or an aim re-takes the camera.
+	_update_combat_camera_framing(delta)
 
 	# OWNER PLAYTEST 2026-09-02 finding #6: aiming a catch is too hard because
 	# the target keeps moving at normal combat speed through the whole window.

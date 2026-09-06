@@ -46,6 +46,19 @@ extends Node
 ## satchel owns input at that moment) are QUEUED and fire when the context
 ## clears, expiring after `guard.pending_expiry_s`.
 ##
+## REMOTE BODIES (Stage B lane 6.D). `remote_creature.gd` -- the body ANOTHER
+## peer's creature wears in this process -- attaches one of these too, and calls
+## `set_remote(true)`. That flag turns off exactly the guards that are about
+## what THIS player is doing on THIS screen: the local combat manager, riding,
+## the interact arbiter, an open panel and an armed build ghost say nothing at
+## all about the friend whose creature this is, and leaving them in meant a
+## friend's creature froze mid-reaction every time the local player opened their
+## satchel. The guards that are about the BODY -- no body, hidden, no leader --
+## are kept, because those are still true of it. Nothing else changes: the
+## reactions, the cooldowns and the config are the same layer, and a remote
+## creature has no party of ours to read, so `_creature()` is null there and the
+## bond poll and the hurt state simply have nothing to report.
+##
 ## BOND. `creature_instance.bond_nodes()` (0-5 milestones) shortens the
 ## acknowledgment delay and cooldown, adds hops and height to the victory
 ## reaction, unlocks the roar and the walk-up. A bond node completing is
@@ -190,6 +203,27 @@ func setup(body: Node3D, cfg: Dictionary = {}) -> void:
 		add_to_group(GROUP)
 
 
+## Lane 6.D: this layer is riding another peer's creature, so the guards that
+## describe the local player's screen do not apply to it. See the header.
+var remote := false
+
+
+func set_remote(value: bool) -> void:
+	remote = value
+	# OUT of the group, and this is the half that matters. `GROUP` is how the
+	# LOCAL fight and the LOCAL satchel reach every companion at once
+	# (`get_tree().call_group(GROUP, "on_event", "victory")`), and a remote
+	# creature sitting in it would celebrate the local player's win as though it
+	# were its owner's. A remote presence is ticked directly by the body that
+	# owns it (`remote_creature.gd::_follow`) and addressed directly by
+	# `remote_presentation.gd::_react`, so it needs no group at all.
+	if value:
+		if is_in_group(GROUP):
+			remove_from_group(GROUP)
+	elif not is_in_group(GROUP) and _body != null:
+		add_to_group(GROUP)
+
+
 ## For tests: the guard's three witnesses, handed in rather than searched for.
 func set_context(combat_manager: Node, riding: Node, arbiter: Node, game: Node = null) -> void:
 	_combat_manager = combat_manager
@@ -330,6 +364,10 @@ func blocked_reason() -> String:
 		return "hidden"
 	if _leader() == null:
 		return "no_leader"
+	if remote:
+		# Everything below this line is a fact about the LOCAL player's screen,
+		# and none of it is a fact about the peer who owns this creature.
+		return ""
 	if _combat_manager != null and is_instance_valid(_combat_manager):
 		if _combat_manager.has_method("is_aiming") and bool(_combat_manager.call("is_aiming")):
 			return "aiming"
@@ -399,6 +437,12 @@ func _leader() -> Node3D:
 func _creature() -> RefCounted:
 	if creature_override != null:
 		return creature_override
+	if remote:
+		# `Game.party` is THIS player's five. A remote body's creature belongs
+		# to somebody else and this process holds no instance for it, so the
+		# honest answer is "none" -- never the local player's active creature,
+		# which would droop a friend's creature because ours is hurt.
+		return null
 	if _game == null or not is_instance_valid(_game):
 		return null
 	var party: Variant = _game.get("party")

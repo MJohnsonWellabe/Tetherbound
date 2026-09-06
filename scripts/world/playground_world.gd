@@ -13,12 +13,17 @@ extends Node3D
 ## time and nothing should: per the owner's direction the terrain is authored
 ## macro geography, not a procedural seed.
 
+## D97 / lane 6.A: the realm this world IS. Named rather than repeated as a
+## literal because from Wave 6 it is an authority answer -- the per-realm
+## spawners and synchronizer visibility filters key on it.
+const REALM_ID := "meadows"
 const DATA_DIR := "res://data/terrain/playground"
 const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
 const VEGETATION := preload("res://scripts/world/vegetation.gd")
 const DROPPED_ITEM_SPAWNER := preload("res://scripts/world/dropped_item_spawner.gd")
 const TRADE_OFFER := preload("res://scripts/ui/trade_offer.gd")
 const PERF_CONFIG := preload("res://scripts/world/performance_config.gd")
+const SHELL_BUILD := preload("res://scripts/world/shell_build_budget.gd")
 const STRUCTURE_VISIBILITY_RANGE := preload("res://scripts/world/structure_visibility_range.gd")
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 const WATER := preload("res://scripts/world/water.gd")
@@ -59,9 +64,9 @@ const MILL_CROSSING := preload("res://scripts/world/mill_crossing.gd")
 const RIVER := preload("res://scripts/world/river.gd")
 const SEVERED_SPOKES := preload("res://scripts/world/severed_spokes.gd")
 const RIFT_COLLAPSE := preload("res://scripts/world/rift_collapse.gd")
+const RIFT_CROSSING := preload("res://scripts/world/rift_crossing.gd")
 const MEADOW_HEALING := preload("res://scripts/world/meadow_healing.gd")
 const REALM_HEART_SHRINE := preload("res://scripts/world/realm_heart_shrine.gd")
-const REALM_GATE := preload("res://scripts/world/realm_gate.gd")
 const STRONGHOLD := preload("res://scripts/world/stronghold.gd")
 const STRONGHOLD_CLIMAX := preload("res://scripts/world/stronghold_climax.gd")
 const PLAYER_DEATH := preload("res://scripts/world/player_death.gd")
@@ -498,12 +503,48 @@ const SPAWN_CLEARANCE := 2.0
 ## the encounter director, riding — stays a per-process singleton keyed on the
 ## local rig, which is the simplification D101 buys. `local_rig()` and
 ## `local_camera_rig()` below are the public door onto them.
+## D97 / Wave 6 lane 6.A. SIMULATION-ONLY MODE -- this world as a headless
+## realm shell on the host, standing so the host stays authoritative over a
+## realm nobody in this process can see.
+##
+## Set by `realm_shells.gd::_stand_up()` on the instance BEFORE `add_child()`,
+## because `add_child()` is what runs `_ready()` and `_ready()` is what reads
+## it. Set afterwards it would build the whole visual meadow first and then
+## apologise -- which is exactly the post-hoc free spike S2 measured and D97
+## was amended to reject: freeing after `_ready()` recovered 30 % of frame
+## time but only 1.2 % of memory, because the 385,333-prop scatter and
+## Terrain3D's resident data were already built.
+##
+## What a shell keeps: the heightfield and its collision, the encounter
+## director and combat manager, world records, pickups, gates and NPC
+## triggers, the authored `Spawned` containers and their spawners, and -- per
+## D97's amendment -- `DialoguePanel`, `NamePrompt` and `StarterPicker`, which
+## `sequence_director.gd` calls every frame and which produced 13,000+
+## "previously freed instance" errors when S2 freed them.
+##
+## What it drops: grass, water, weather, audio, the HUDs, the sun, the
+## environment and the visual half of the vegetation scatter. See
+## `_shell_strip()`.
+@export var simulation_only: bool = false
+## The realm this shell stands for, stamped by `realm_shells.gd`. Empty in an
+## ordinary world -- which reads its realm from `REALM_ID` like everything
+## else -- and only ever used for logging here.
+@export var shell_realm: String = ""
+
 @onready var _player: CharacterBody3D = $Player
 @onready var _camera_rig: Node3D = $CameraRig
 @onready var _camera: Camera3D = $CameraRig/Camera3D
 
 var _terrain: Node3D = null
 var _vegetation: Node3D = null
+
+## D97 / lane MP-REALM-REOPEN. The time slice this world builds in when it is
+## a headless realm shell on somebody else's host. Inert -- every `await` on
+## it resumes in the same frame -- when `simulation_only` is false, which is
+## every case a player is actually standing here. See
+## `scripts/world/shell_build_budget.gd`.
+var _shell_build: RefCounted = null
+var _shell_ready := false
 var _spawn_position: Vector3 = Vector3.ZERO
 
 ## WORLD-ART aerial-fade pass, 2026-09-02. The terrain material this world
@@ -576,6 +617,101 @@ func local_camera_rig() -> Node3D:
 	return _camera_rig
 
 
+## The realm this world stands for, shell or not. `trainer_spawn.gd` asks so
+## it can spawn only the peers who are actually standing here, and so the
+## bodies it spawns are only replicated to the peers who can see them.
+func world_realm() -> String:
+	return shell_realm if not shell_realm.is_empty() else REALM_ID
+
+
+## D97's "no grass, water rendering, VFX, HUD or audio", applied to the nodes
+## this scene AUTHORS rather than builds. Runs at the very top of `_ready()`,
+## before any of them has had a `_ready()` of its own.
+##
+## Every one of these is a correctness problem in a shell, not only a cost:
+## the scene is a sibling of the host's own world under the SAME tree root
+## (see `realm_shells.gd`'s header for why it has to be), so a second
+## `WorldEnvironment` fights the host's, a second `DirectionalLight3D` adds
+## its light to the host's meadow, a second `current` `Camera3D` takes the
+## viewport, and both HUD `CanvasLayer`s draw straight over the host's screen.
+##
+## `WorldLook` goes too, and that one is worth naming: it is in the
+## `day_cycle` group, and `game_state.gd::_sync_clock_state()` takes the FIRST
+## member it finds. A shell that kept its own clock could hand the host's save
+## the shell's hour.
+##
+## `DialoguePanel`, `NamePrompt` and `StarterPicker` deliberately STAY (D97,
+## amended after spike S2): `sequence_director.gd` calls them every frame and
+## freeing them produced 13,000+ "previously freed instance" errors.
+##
+## `SequenceDirector` itself goes, and that is a small deviation from D97
+## worth stating. D97 keeps the three panels BECAUSE the director calls them;
+## freeing the director instead satisfies the same constraint from the other
+## end -- nothing calls a freed panel, because nothing calls them at all --
+## and it closes a hole the panels-only rule leaves open: a `DialoguePanel` is
+## a `CanvasLayer`, and a shell that ran a story beat would draw a dialogue
+## box over the screen of a player standing in a realm the beat is not
+## happening in.
+##
+## Nothing is lost by it. Story beats are per-player and the peer actually
+## standing in this realm runs its own `SequenceDirector` in its own scene;
+## the shell exists to be authoritative about the world, not to narrate to
+## nobody. Nothing in either world scene looks the director up -- it points at
+## other nodes and nothing points at it (grepped, not assumed) -- so its
+## absence is inert. `scripts/story/sequence_director.gd` belongs to lane 5.A
+## and is not touched.
+func _shell_strip() -> void:
+	for path: String in [
+		"WorldEnvironment", "Sun", "WorldLook", "WorldWeather", "WorldAudio",
+		"PlaygroundHUD", "CombatHUD", "SequenceDirector",
+	]:
+		var node := get_node_or_null(NodePath(path))
+		if node != null:
+			node.get_parent().remove_child(node)
+			node.queue_free()
+
+	# The camera STAYS. Terrain3D decides which regions keep resident
+	# collision from the camera it was handed (spike S2 item 5 confirmed a
+	# distant second camera builds collision where it points), and a shell
+	# with no camera is a shell whose simulated bodies fall through the world.
+	# It simply must not be the one the viewport draws from.
+	var cam := get_node_or_null(^"CameraRig/Camera3D") as Camera3D
+	if cam != null:
+		cam.current = false
+
+	# The local rig has no player behind it here. Left in the tree because
+	# half this scene addresses it by `NodePath("../Player")` from the editor
+	# (`EncounterDirector`, `WorldWeather`, `RidingController`,
+	# `SequenceDirector`), and a null there is a crash rather than a saving --
+	# but stopped, hidden, and taken off every collision layer, so it neither
+	# reads the host's input nor shoves the remote bodies standing around it.
+	var rig := get_node_or_null(^"Player") as CharacterBody3D
+	if rig != null:
+		rig.process_mode = Node.PROCESS_MODE_DISABLED
+		rig.visible = false
+		rig.collision_layer = 0
+		rig.collision_mask = 0
+	print("[playground] simulation-only shell for realm '%s': no grass, water, weather, audio, HUD, sun or environment"
+		% (shell_realm if not shell_realm.is_empty() else "meadows"))
+
+
+## Where this shell should keep its resident terrain collision. Called by
+## `realm_shells.gd` with the average position of the peers actually standing
+## in it -- a shell has no player of its own to follow, and Terrain3D's
+## dynamic collision follows the camera.
+##
+## Also re-centres the scatter's collision streaming bubble, which is what
+## `_process()` does for the player in an ordinary world.
+func track_simulation_focus(at: Vector3) -> void:
+	if not simulation_only:
+		return
+	if _camera_rig != null and is_instance_valid(_camera_rig):
+		_camera_rig.global_position = at
+	if _vegetation != null and is_instance_valid(_vegetation) \
+			and _vegetation.has_method("update_collision_streaming"):
+		_vegetation.call("update_collision_streaming", at)
+
+
 func _reapply_look_after_ground_materials() -> void:
 	var look := get_node_or_null(^"WorldLook")
 	if look == null:
@@ -588,13 +724,20 @@ func _reapply_look_after_ground_materials() -> void:
 
 
 func _ready() -> void:
+	# FIRST, before any build work and before the DROPPED_ITEM_SPAWNER /
+	# TRADE_OFFER attach below: `_shell_strip()` frees the nodes whose
+	# `_ready()` would otherwise draw a second HUD over the host's screen,
+	# install a second WorldEnvironment, or add a second directional light to
+	# the world the host is actually looking at.
+	if simulation_only:
+		_shell_strip()
 	var perf_cfg := PERF_CONFIG.config()
 	# D107, lane 3.E. The two nodes item trading needs standing in every
 	# process before anybody presses anything: the spawner that draws a
 	# committed `item_dropped` op as a stack on the ground, and the offer
 	# transport, whose node path has to be identical on both peers or its RPCs
 	# do not resolve at all. Both are idempotent.
-	DROPPED_ITEM_SPAWNER.attach(self, "meadows")
+	DROPPED_ITEM_SPAWNER.attach(self, REALM_ID)
 	TRADE_OFFER.attach(get_node_or_null(^"/root/Game"))
 
 	if perf_cfg.has("collision_stream_interval_s"):
@@ -603,12 +746,23 @@ func _ready() -> void:
 	# RG7. Mid-session Load restores persistent flags into an already-built
 	# Meadows scene; this world owns reconciling its authored one-shot props.
 	add_to_group("progression_restore")
+	# D97 / lane MP-REALM-REOPEN. A shell builds in slices; a real arrival does
+	# not. `begin(self, false)` makes every `await` below resume in the same
+	# frame, so a player walking in still gets a finished world before its
+	# first frame, exactly as it always did.
+	_shell_build = SHELL_BUILD.new()
+	_shell_build.call("begin", self, simulation_only)
 	BOOT_LOG.phase("playground: _ready start, building Terrain3D node")
 	_terrain = _build_terrain()
 	if _terrain == null:
 		BOOT_LOG.line("playground: terrain build FAILED (see push_error above); world will not stand up")
 		return
 	BOOT_LOG.phase("playground: terrain node created, waiting for Terrain3DData")
+	# D97 / lane MP-REALM-REOPEN. Split from the data-directory assignment
+	# below on purpose: in a shell that assignment is a single indivisible
+	# ~7.5 s engine call, and it must not have to share a heartbeat window
+	# with the node build that precedes it.
+	await _shell_build.call("step", "terrain_node")
 
 	# data_directory MUST be set after the node is in the tree and a frame has
 	# passed. Terrain3D builds its Terrain3DData on first frame, and assigning
@@ -620,11 +774,14 @@ func _ready() -> void:
 	_terrain.set("data_directory", DATA_DIR)
 	await get_tree().process_frame
 	BOOT_LOG.phase("playground: terrain data_directory assigned")
+	await _shell_build.call("step", "terrain_data")
 
 	_apply_dynamic_collision()
+	await _shell_build.call("step", "terrain_collision")
 
 	_apply_ground_materials()
 	BOOT_LOG.phase("playground: ground materials/shader applied")
+	await _shell_build.call("step", "ground_materials")
 	_reapply_look_after_ground_materials()
 
 	# Terrain3D needs a camera to decide which regions to keep resident. Without
@@ -640,23 +797,49 @@ func _ready() -> void:
 	if game != null and game.has_method("apply_loaded_player_pose"):
 		game.call("apply_loaded_player_pose")
 	BOOT_LOG.phase("playground: player placed on terrain")
-	_dress_the_meadow()
+	await _shell_build.call("step", "player_placed")
+	await _dress_the_meadow()
 	BOOT_LOG.phase("playground: vegetation scatter built (instance/batch count above)")
-	_build_water()
-	BOOT_LOG.phase("playground: water built (pond, stream, reeds — counts above)")
-	_build_settlement()
+	await _shell_build.call("step", "vegetation")
+	# D97: no water RENDERING in a shell. The heightfield's water_level and
+	# stream_factor are read straight off the terrain by everything that cares
+	# (`playground_heightfield.gd`), so a shell without a Water node still
+	# knows where the pond is; it simply does not draw it.
+	if not simulation_only:
+		_build_water()
+		BOOT_LOG.phase("playground: water built (pond, stream, reeds — counts above)")
+	await _build_settlement()
 	BOOT_LOG.phase("playground: settlement (house, village, signpost, landmark, perimeter, harvest nodes) built")
+	await _shell_build.call("step", "settlement")
 	# CL-W1. The whole hook: `alpha_pins.gd` self-ticks and shares no state with
 	# anything here — see its own header for why it is not part of the encounter
 	# director. Added after the player is placed so its `../Player` lookup finds
 	# a body already standing on the terrain.
 	add_child(ALPHA_PINS.new())
-	_capture_mouse_if_free()
-	get_window().focus_entered.connect(_capture_mouse_if_free)
+	# A shell must never touch the mouse: `get_window()` is the REAL window
+	# even for a world that is not the current scene, so an unguarded capture
+	# here takes the pointer away from the player standing in the host's own
+	# realm.
+	if not simulation_only:
+		_capture_mouse_if_free()
+		get_window().focus_entered.connect(_capture_mouse_if_free)
 	_report_for_export_check()
 	BOOT_LOG.phase("playground: _ready complete, waiting for first frame")
+	var profile := str(_shell_build.call("summary"))
+	if not profile.is_empty():
+		print("[playground] shell build %s" % profile)
+	_shell_ready = true
 	await get_tree().process_frame
 	BOOT_LOG.phase("playground: first frame presented")
+
+
+## D97 / lane MP-REALM-REOPEN. False while a SHELL is still building itself
+## across frames, true the moment its `_ready()` finishes. Always true for a
+## world a player is actually standing in. `realm_shells.gd::report()` carries
+## it and the net smokes wait on it. See `cloudreach_world.gd` for the full
+## note; the contract is identical.
+func shell_build_complete() -> bool:
+	return _shell_ready or not simulation_only
 
 
 ## Sets dynamic collision (mode, radius, shape size) and reads every value
@@ -708,6 +891,12 @@ var _collision_stream_elapsed: float = 0.0
 
 
 func _process(delta: float) -> void:
+	# A shell's streaming bubble follows the peers standing in it, not the
+	# disabled local rig parked on the authored spawn -- `realm_shells.gd`
+	# drives that through `track_simulation_focus()`. Left to run here, this
+	# would drag the bubble back to the spawn twice a second.
+	if simulation_only:
+		return
 	if _vegetation == null or _player == null:
 		return
 	_collision_stream_elapsed += delta
@@ -1082,6 +1271,11 @@ func _build_texture_list() -> Object:
 ## nothing and processes nothing unless enabled -- so this costs a node and a
 ## config read on a boot that is not using it.
 func _stand_up_the_grass_field() -> void:
+	# D97: no grass in a shell, and skipped at BUILD time rather than freed
+	# after -- see `simulation_only`'s own comment for what S2 measured about
+	# the difference.
+	if simulation_only:
+		return
 	if not GRASS_FIELD.is_enabled():
 		return
 	if _terrain == null:
@@ -1101,8 +1295,13 @@ func _dress_the_meadow() -> void:
 	var config := _load_terrain_config()
 	_vegetation = VEGETATION.new()
 	_vegetation.name = "Vegetation"
+	# D97's amendment names "the visual half of vegetation" as part of the
+	# skip-build flag. Set BEFORE `add_child`/`build`, for the same reason
+	# this world's own flag is set before `add_child`.
+	_vegetation.set("simulation_only", simulation_only)
 	add_child(_vegetation)
-	_vegetation.call("build", float(config.get("world_size", 512)), _terrain)
+	await _vegetation.call("build", float(config.get("world_size", 512)), _terrain, _shell_build)
+	await _shell_build.call("breathe")
 	# COLL1 / §8.3: build() only streamed collision in around the world
 	# ORIGIN (see vegetation.gd::_add_collision), so any prop near the actual
 	# spawn point that is not also near (0,0,0) would otherwise be a hologram
@@ -1119,6 +1318,7 @@ func _dress_the_meadow() -> void:
 	var game := get_node_or_null(^"/root/Game")
 	if game != null and _vegetation.has_method("restore_from_game"):
 		_vegetation.call("restore_from_game", game)
+	await _shell_build.call("breathe")
 	_stand_up_the_grass_field()
 	var stats: Dictionary = _vegetation.call("stats")
 	print("[playground] scattered %d props in %d batches (%d harvestable, %d already chopped, %d/%d collision resident)" % [
@@ -1152,13 +1352,15 @@ func _build_settlement() -> void:
 		# Door on the east wall faces the village square.
 		add_child(house)
 		house.call("build", _camera_rig, _player)
+		await _shell_build.call("breathe")
 		STRUCTURE_VISIBILITY_RANGE.apply(house, "grandpa_house")
 		BOOT_LOG.phase("settlement: grandpa house")
 
 	var village: Node3D = VILLAGE.new()
 	village.name = "Village"
 	add_child(village)
-	village.call("build")
+	await village.call("build", _shell_build)
+	await _shell_build.call("breathe")
 	STRUCTURE_VISIBILITY_RANGE.apply(village, "village")
 	BOOT_LOG.phase("settlement: village")
 
@@ -1166,6 +1368,7 @@ func _build_settlement() -> void:
 	props.name = "Props"
 	add_child(props)
 	props.call("build")
+	await _shell_build.call("breathe")
 	STRUCTURE_VISIBILITY_RANGE.apply(props, "props")
 	BOOT_LOG.phase("settlement: props")
 
@@ -1173,6 +1376,7 @@ func _build_settlement() -> void:
 	village_npcs.name = "VillageNPCs"
 	add_child(village_npcs)
 	village_npcs.call("build", _player)
+	await _shell_build.call("breathe")
 	BOOT_LOG.phase("settlement: village NPCs")
 
 	# R8.1: the people who challenge you. After the villagers, so a trainer
@@ -1187,6 +1391,7 @@ func _build_settlement() -> void:
 	relay_npcs.name = "RelayNPCs"
 	add_child(relay_npcs)
 	relay_npcs.call("build", _player, VILLAGE_NPCS.RELAY_CONFIG_PATH)
+	await _shell_build.call("breathe")
 
 	# WORLD-CONTENT: the Pond fisher (docs/specs/BAND1_ROUTE_CONTRACT.md place
 	# 3), a third list for the same placer -- see PondNPCs config's own header
@@ -1195,11 +1400,13 @@ func _build_settlement() -> void:
 	pond_npcs.name = "PondNPCs"
 	add_child(pond_npcs)
 	pond_npcs.call("build", _player, VILLAGE_NPCS.POND_CONFIG_PATH)
+	await _shell_build.call("breathe")
 
 	var trainers: Node3D = TRAINER_NPCS.new()
 	trainers.name = "Trainers"
 	add_child(trainers)
 	trainers.call("build", _player)
+	await _shell_build.call("breathe")
 
 	# TOURNAMENT-1: the bracket board, in the north field behind the square.
 	# After the trainers so it stands in a settlement that is already built --
@@ -1210,18 +1417,22 @@ func _build_settlement() -> void:
 	tournament.name = "Tournament"
 	add_child(tournament)
 	tournament.call("build", self)
+	await _shell_build.call("breathe")
 
 	var signpost: Node3D = SIGNPOST.new()
 	signpost.name = "Signpost"
 	add_child(signpost)
 	signpost.call("build", self, SIGNPOST_AT)
+	await _shell_build.call("breathe")
 
 	# Cloudreach Phase 1: the reusable Heart socket in the village and the
 	# permanent keyed realm arch at Storm Road. Both read/write central durable
 	# state; rebuilding this scene cannot duplicate either reward.
 	_build_realm_handoff()
+	await _shell_build.call("breathe")
 
 	_build_trailhead_signposts()
+	await _shell_build.call("breathe")
 
 	# T1-HALL (2026-08-30): the detached castle silhouette this call built at
 	# `landmark.gd`'s own `SITE` (150,7595) retired. The owner's directive is
@@ -1234,14 +1445,19 @@ func _build_settlement() -> void:
 	# instantiated from here again.
 
 	_build_road_gate()
+	await _shell_build.call("breathe")
 	_build_sigil_gate()
+	await _shell_build.call("breathe")
 	_build_broken_cart()
+	await _shell_build.call("breathe")
 	_build_river_nest_clear()
+	await _shell_build.call("breathe")
 
 	var watchtower: Node3D = WATCHTOWER_LANDMARK.new()
 	watchtower.name = "RuinedWatchtower"
 	add_child(watchtower)
 	watchtower.call("build", self, WATCHTOWER_AT, WATCHTOWER_FACING_DEG)
+	await _shell_build.call("breathe")
 
 	# SC14: the South Bridge over the south gully, and the leaf across it.
 	# After the road gate so the two gates build in the order the player meets
@@ -1251,6 +1467,7 @@ func _build_settlement() -> void:
 	south_bridge.name = "SouthBridge"
 	add_child(south_bridge)
 	south_bridge.call("build", self)
+	await _shell_build.call("breathe")
 
 	# SD16: the Old Quarry past it — foundations and the Tether conduit run.
 	# Its Rootstone deposits are ordinary `harvest.json` nodes and stand up in
@@ -1260,6 +1477,7 @@ func _build_settlement() -> void:
 	quarry.name = "OldQuarry"
 	add_child(quarry)
 	quarry.call("build", self)
+	await _shell_build.call("breathe")
 
 	# SE23: the Tether Relay Station further along the same bearing the
 	# quarry's conduit run leaves on. After the quarry because that is the
@@ -1271,6 +1489,7 @@ func _build_settlement() -> void:
 	relay.name = "TetherRelay"
 	add_child(relay)
 	relay.call("build", self)
+	await _shell_build.call("breathe")
 	# SE21: the river that divides the deeper Meadows. Only its recovery
 	# volumes are built here -- the channel is terrain (the bake cut it) and
 	# the water is the water layer's.
@@ -1278,12 +1497,14 @@ func _build_settlement() -> void:
 	river.name = "River"
 	add_child(river)
 	river.call("build", self)
+	await _shell_build.call("breathe")
 
 	# SE22: the Old Mill Crossing, the one authored way over that river.
 	var mill_crossing: Node3D = MILL_CROSSING.new()
 	mill_crossing.name = "MillCrossing"
 	add_child(mill_crossing)
 	mill_crossing.call("build", self)
+	await _shell_build.call("breathe")
 	STRUCTURE_VISIBILITY_RANGE.apply(mill_crossing, "mill_crossing")
 
 	# SA4: the severed outward roads. Before the boundary ring because they
@@ -1293,6 +1514,7 @@ func _build_settlement() -> void:
 	spokes.name = "SeveredSpokes"
 	add_child(spokes)
 	spokes.call("build", self)
+	await _shell_build.call("breathe")
 	STRUCTURE_VISIBILITY_RANGE.apply(spokes, "severed_spokes")
 	print("[playground] severed spokes standing: %s" % ", ".join(spokes.call("built")))
 
@@ -1300,6 +1522,7 @@ func _build_settlement() -> void:
 	perimeter.name = "WorldPerimeter"
 	add_child(perimeter)
 	perimeter.call("build", self, _player, _spawn_position)
+	await _shell_build.call("breathe")
 
 	_place_harvest_nodes()
 	_place_farm_plots()
@@ -1308,8 +1531,11 @@ func _build_settlement() -> void:
 	_place_band_pickups()
 	_place_sunstone()
 	_build_burrow_warrens()
+	await _shell_build.call("breathe")
 	_build_stronghold()
+	await _shell_build.call("breathe")
 	_build_stronghold_climax()
+	await _shell_build.call("breathe")
 
 	# SG44: the first Tether Rift collapses. Sky only -- a distant,
 	# non-enterable view past the storm road's seam, built last because it
@@ -1319,6 +1545,17 @@ func _build_settlement() -> void:
 	rift.name = "RiftCollapse"
 	add_child(rift)
 	rift.call("build", self)
+	await _shell_build.call("breathe")
+
+	# OP-0905-15/D110: the ground half of the same seam. No arch, no key
+	# prompt -- once the flag above lands, this rebuilds the storm road's own
+	# collapsed bridge and opens the one Area3D that is the actual realm
+	# boundary into Cloudreach. Reads `RiftCollapse`'s own config file for its
+	# timings; does not touch or depend on the node itself.
+	var crossing: Node3D = RIFT_CROSSING.new()
+	crossing.name = "RiftCrossing"
+	add_child(crossing)
+	crossing.call("build", self)
 
 	# SG46 / D41: and the local half of the same event -- the meadow itself is
 	# freed. After everything it heals (the vegetation, the relay, the pylon
@@ -1327,6 +1564,7 @@ func _build_settlement() -> void:
 	healing.name = "MeadowHealing"
 	add_child(healing)
 	healing.call("build", self)
+	await _shell_build.call("breathe")
 
 	var placer := BUILD_PLACER.new()
 	placer.name = "BuildPlacer"
@@ -1339,6 +1577,7 @@ func _build_settlement() -> void:
 	death.name = "PlayerDeath"
 	add_child(death)
 	death.call("build", self, _player, _spawn_position)
+	await _shell_build.call("breathe")
 
 
 ## OF10-remainder: one small fingerpost per entry in `paths.trailheads`,
@@ -1733,7 +1972,10 @@ func _place_farm_plots() -> void:
 		plot.name = "Plot%d" % placed
 		plot.position = Vector3(x, ground, z)
 		root.add_child(plot)
-		plot.call("setup", placed, config)
+		# D97, lane 6.E: the bed's realm comes from the WORLD that placed it, so
+		# the claim it raises when it is picked is filed against this world and
+		# not against whichever realm the local player happens to be standing in.
+		plot.call("setup", placed, config, world_realm())
 		placed += 1
 	print("[playground] placed %d farm plots" % placed)
 
@@ -1842,6 +2084,12 @@ func _settle_meadows_realm_arrival(game: Node, player: CharacterBody3D, x: float
 		game.call("complete_realm_entry", "meadows")
 
 
+## OP-0905-15/D110: the keyed realm arch this used to also build at
+## `meadows_cloudreach_gate` (`realm_transitions.json`) is gone. The Storm
+## Road's own rebuilt span (`rift_crossing.gd`, built alongside `RiftCollapse`
+## below) is the crossing now; `meadows_cloudreach_gate` stays authored in
+## that config only so `meadows_entries.meadows_cloudreach_gate_return` next
+## to it keeps naming the Meadows-side arrival point for the return trip.
 func _build_realm_handoff() -> void:
 	var config := _load_realm_transition_config()
 	var shrine_spec: Dictionary = config.get("meadows_heart_shrine", {})
@@ -1855,19 +2103,6 @@ func _build_realm_handoff() -> void:
 			shrine.rotation.y = deg_to_rad(float(shrine_spec.get("yaw_deg", 0.0)))
 			shrine.call("setup", "meadows", "Heart of Meadows")
 			add_child(shrine)
-
-	var gate_spec: Dictionary = config.get("meadows_cloudreach_gate", {})
-	var gate_at: Variant = gate_spec.get("position", [])
-	if gate_at is Array and (gate_at as Array).size() >= 2:
-		var gate_ground := ground_height_at(float(gate_at[0]), float(gate_at[1]))
-		if not is_nan(gate_ground):
-			var gate: Node3D = REALM_GATE.new()
-			gate.name = "CloudreachRealmGate"
-			gate.position = Vector3(float(gate_at[0]), gate_ground, float(gate_at[1]))
-			gate.rotation.y = deg_to_rad(float(gate_spec.get("yaw_deg", 0.0)))
-			gate.call("setup", "cloudreach", str(gate_spec.get("destination_entry_id", "cloudreach_arrival_from_meadows")),
-				"Cloudreach Cliffs", "realm_key_cloudreach", "realm_gate_cloudreach_unlocked")
-			add_child(gate)
 
 
 func _load_realm_transition_config() -> Dictionary:

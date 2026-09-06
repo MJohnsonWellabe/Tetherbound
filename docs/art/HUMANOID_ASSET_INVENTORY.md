@@ -109,6 +109,20 @@ Do **not** create a new task saying the Warden still has a painted face, lacks a
 
 If a future playtest finds a new Warden visual defect, reproduce that specific current defect against the installed board-16 model rather than reopening the obsolete board-06 problem.
 
+## Known limit: the shared NPC faces (OP-0905-07, 2026-09-05)
+
+Owner: "Gil's face looks terrible." Gil (`wanderer_trail_camp`, band 1) and Old
+Bram share the `wandering_trainer` body (`data/config/art.json`) and the same
+dialogue portrait `assets/ui/portraits/wandering_trainer.png`. The face is a small,
+low-resolution UV island with painted-on eyes and no shading falloff -- a property
+of the multi-image-to-3D pipeline every `T1-NPC-CAST` humanoid body came from, first
+diagnosed on a different NPC in `ralph/reports/T1-WORLD/VERDICT-2026-08-30.md`. It is
+not a per-NPC regression and cannot be fixed in code or material without a new
+head/texture, which under `CLAUDE.md` needs owner-supplied reference art for the
+shared body (a new bake affects every NPC wearing it). Triage future "NPC X's face
+looks bad" reports against this note; the fix is an art task with reference art,
+tracked as the open half of OP-0905-07.
+
 ## Reference priority for humans
 
 For current humanoid work:

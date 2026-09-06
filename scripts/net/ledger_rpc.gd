@@ -42,6 +42,12 @@ extends Node
 
 const WORLD_LEDGER := preload("res://scripts/net/world_ledger.gd")
 const SESSION := preload("res://scripts/net/session.gd")
+## OP-0905-18: a no-op unless the granted item is a known evolution catalyst.
+## Called from `_apply_player_ops()`'s `item_grant` case, which is already
+## filtered to ops addressed to THIS peer -- the announcement must not fire for
+## every peer who merely sees the world flag change, only the one who actually
+## received the item.
+const PROGRESSION_FEED := preload("res://scripts/creatures/progression_feed.gd")
 
 const NODE_NAME := "LedgerRpc"
 const CHANNEL_LEDGER := SESSION.CHANNEL_LEDGER
@@ -206,6 +212,7 @@ func _apply_player_ops(delta: Dictionary) -> void:
 				if inv != null:
 					(inv as RefCounted).call("add", str(op.get("item", "")),
 						int(op.get("count", 1)))
+				PROGRESSION_FEED.announce_catalyst_pickup(str(op.get("item", "")))
 			"item_take":
 				var satchel: Variant = (local as RefCounted).get("inventory")
 				if satchel != null:

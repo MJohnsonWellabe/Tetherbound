@@ -82,8 +82,15 @@ func test_reports_separate_live_acceptance_from_mechanics_only_evidence_and_exac
 
 func test_observatory_join_uses_thin_crown_and_regression_has_no_post_spawn_warp() -> void:
 	var world_source := FileAccess.get_file_as_string(WORLD_PATH)
-	assert_true(world_source.contains("\"old_wind_observatory\", \"summit_eyrie_stronghold\""),
-		"the tall observatory geology still owns collision")
+	# CLOUDREACH-GROUND-0906: the crown-only landmark list is gone -- every
+	# landmark now collides on its own rendered crown (R1, visual = collision),
+	# clamped onto the road network by `_walkable_height`, and the regression
+	# guard for "tall geology owns collision" is smoke_cloudreach_ground_truth's
+	# 0-holes / <=1 % mismatch probe rather than a source string.
+	assert_true(world_source.contains("func _walkable_height("),
+		"the tall observatory geology still owns collision (no road-network height clamp)")
+	assert_true(FileAccess.file_exists("res://tests/smoke_cloudreach_ground_truth.gd"),
+		"the ground-truth probe that guards crown collision is missing")
 	assert_true(world_source.contains("\"ObservatoryWalkableCrown\""),
 		"the grounded observatory endpoint has no thin crown support")
 	var smoke := FileAccess.get_file_as_string(OBSERVATORY_SMOKE_PATH)
@@ -125,7 +132,10 @@ func test_summit_join_keeps_tall_geology_visual_and_real_stick_path_supported() 
 		"the tall summit-region erosion still blocks the authored ascent")
 	assert_true(world_source.contains("\"SummitWalkableCrown\""),
 		"the summit landing does not join the arena approach on a thin support")
-	assert_true(world_source.contains("Vector3(side * 18.5, 13.0, centre_z)"),
+	# D111 (CLOUDREACH-GROUND-0906): the route wings dropped to WING_HEIGHT so
+	# they sit under the aviary dome; the throat clearance itself is proven by
+	# smoke_cloudreach_summit_road walking the diagonal.
+	assert_true(world_source.contains("Vector3(side * 18.5, WING_HEIGHT * 0.5 - 1.0, centre_z)"),
 		"the stronghold's physical throat still overlaps the diagonal road")
 	var smoke:=FileAccess.get_file_as_string(SUMMIT_SMOKE_PATH)
 	assert_true(smoke.contains("await _walk(target)"),
@@ -284,8 +294,10 @@ func test_deployed_companion_cadence_is_zero_seed_real_input_forward_evidence() 
 
 func test_waterward_overlook_join_uses_thin_crown_and_real_input() -> void:
 	var world_source:=FileAccess.get_file_as_string(WORLD_PATH)
-	assert_true(world_source.contains('"summit_eyrie_stronghold", "waterward_overlook"'),
-		"the tall Waterward landmark geology still owns collision")
+	# CLOUDREACH-GROUND-0906: see the observatory test above -- the overlook's
+	# two sloped crown strips collide per vertex and follow the roads.
+	assert_true(world_source.contains('"OverlookWalkableCrownEast"'),
+		"the tall Waterward landmark geology still owns collision (no east crown strip)")
 	assert_true(world_source.contains('"OverlookWalkableCrown"'),
 		"the Waterward route endpoint has no thin crown support")
 	var smoke:=FileAccess.get_file_as_string(WATERWARD_OVERLOOK_SMOKE_PATH)

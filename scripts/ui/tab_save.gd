@@ -76,8 +76,13 @@ func poll() -> void:
 		var slot_name := "Slot %d (Autosave)" % (i + 1) if i == 0 else "Slot %d" % (i + 1)
 		if bool(game.call("has_save", i)):
 			var info: Dictionary = game.call("save_slot_info", i)
-			label.text = "%s — Day %s, %s creatures" % [
-				slot_name, str(info.get("day", "?")), str(info.get("party_size", "?"))
+			# D100: a slot written by an older build is marked until it is
+			# opened once, because opening it is what splits it into a world
+			# file and a character file. Marked, never hidden and never
+			# refused -- an old save still loads exactly as it always did.
+			var legacy := " (Legacy)" if bool(info.get("legacy", false)) else ""
+			label.text = "%s%s — Day %s, %s creatures" % [
+				slot_name, legacy, str(info.get("day", "?")), str(info.get("party_size", "?"))
 			]
 		else:
 			label.text = "%s — empty" % slot_name

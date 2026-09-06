@@ -200,6 +200,27 @@ var _field: RefCounted = null
 
 ## The live Terrain3D node passed to `build()`, and the three sub-objects the
 ## instancer swap needs from it.
+## D97 / Wave 6 lane 6.A. "The visual half of vegetation", skipped -- what
+## `playground_world.gd::simulation_only` hands down when this scatter is
+## being built inside a headless realm shell on the host.
+##
+## Skipped: the Terrain3DMeshAsset registration (which LOADS every one of the
+## ~42 scattered models) and the per-model MultiMesh transform arrays handed
+## to the instancer. Kept: the placements themselves, the harvest points, the
+## soft-occluder census and the streamed collision -- a shell has to hold the
+## ground and the gather points its occupants act on, and the host's own
+## `world_ledger.gd` verdicts are stamped against them.
+##
+## Set BEFORE `build()`, from `_dress_the_meadow()`.
+var simulation_only: bool = false
+## Mesh ids in simulation-only mode, where nothing is registered with
+## Terrain3D and there is therefore no real id to read back. Only
+## `_instance_positions` is keyed by it, and it needs a STABLE, DISTINCT
+## number per model -- collapsing every model onto one bucket (which is what
+## leaving `mesh_id` at -1 would do) would make every position lookup wrong.
+var _sim_mesh_ids: Dictionary = {}
+var _next_sim_mesh_id: int = 0
+
 var _terrain: Node = null
 var _instancer: Object = null
 var _assets: Object = null
@@ -353,7 +374,14 @@ func _load_performance_overrides() -> void:
 		COLLISION_STREAM_CELL = maxf(1.0, float(cfg["collision_stream_cell_m"]))
 
 
-func build(world_size: float, terrain: Node) -> void:
+## `slicer` is `scripts/world/shell_build_budget.gd`, handed down by
+## `playground_world.gd` when this scatter is being built inside a headless
+## REALM SHELL on somebody's host (D97). It bounds how much of this build one
+## frame may do, so the host keeps drawing for the players already in the
+## session instead of holding a frame for the whole scatter. Null -- which is
+## every ordinary boot, and every test -- makes each `await` below resume in
+## the same frame, so nothing about a real build changes.
+func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 	_load_performance_overrides()
 	for child in get_children():
 		child.queue_free()
@@ -366,6 +394,8 @@ func build(world_size: float, terrain: Node) -> void:
 	_t_collision_ms = 0
 	_tints.clear()
 	_mesh_ids.clear()
+	_sim_mesh_ids.clear()
+	_next_sim_mesh_id = 0
 	_instance_positions.clear()
 	_soft_occluder_positions.clear()
 	_soft_occluder_radii.clear()
@@ -468,8 +498,10 @@ func build(world_size: float, terrain: Node) -> void:
 		print("[vegetation] grass field is on; %d placements across %d layers left unbuilt (%s)" % [
 			dropped, suppressed.size(), ", ".join(suppressed.keys())])
 
+	await _breathe(slicer)
 	_mark_harvestable(by_layer)
 	var t_mark1 := Time.get_ticks_msec()
+	await _breathe(slicer)
 
 	# Grouped by MODEL rather than by layer: two layers sharing a mesh should
 	# share one instancer mesh id, or the draw-call saving is thrown away by
@@ -493,16 +525,22 @@ func build(world_size: float, terrain: Node) -> void:
 	# is exactly the boot-time loop being fixed, not a place to add a second
 	# one.
 	var t_group1 := Time.get_ticks_msec()
-	_register_mesh_assets(by_model.keys())
+	# The visual half, skipped in a realm shell: `_make_mesh_asset()` LOADS
+	# each model, so this loop is where the scatter's mesh memory actually
+	# comes from. `_build_batch()` skips the matching transform arrays.
+	if not simulation_only:
+		_register_mesh_assets(by_model.keys())
 	var t_assets1 := Time.get_ticks_msec()
 
 	for model: String in by_model.keys():
-		_build_batch(model, by_model[model])
+		await _build_batch(model, by_model[model], slicer)
+		await _breathe(slicer)
 	var t_batches1 := Time.get_ticks_msec()
 	# One rebuild of the instancer's live MultiMeshInstance3Ds after every
 	# batch is queued, not one per model -- `add_transforms()` below is
 	# called with `update=false` for exactly this reason.
-	_instancer.call("update_mmis", true)
+	if not simulation_only:
+		_instancer.call("update_mmis", true)
 	var t_mmis1 := Time.get_ticks_msec()
 	_warn_about_shared_models(by_layer)
 	# Idempotent, and repeated here because a scatter can be built before
@@ -1099,10 +1137,30 @@ func _make_mesh_asset(model_path: String) -> Object:
 ## Colour jitter needs its own RNG stream per model, seeded the same way the
 ## old MultiMesh path seeded it, so a jittered layer's palette spread is
 ## unchanged by this swap.
-func _build_batch(model_path: String, placements: Array) -> void:
-	var mesh_id := _mesh_id_for(model_path)
-	if mesh_id < 0:
+## Let a frame out if the shell build budget says this one is spent. A null
+## slicer -- every non-shell build -- returns without ever suspending, so the
+## `await`s on it resume in the same frame.
+func _breathe(slicer: RefCounted) -> void:
+	if slicer == null:
 		return
+	await slicer.call("breathe")
+
+
+func _build_batch(model_path: String, placements: Array, slicer: RefCounted = null) -> void:
+	# In a shell nothing is registered with Terrain3D, so there is no real
+	# mesh id to ask for -- and asking would load the model, which is the
+	# whole cost being skipped. A local counter stands in, purely as the key
+	# `_instance_positions` needs.
+	var mesh_id := -1
+	if simulation_only:
+		if not _sim_mesh_ids.has(model_path):
+			_sim_mesh_ids[model_path] = _next_sim_mesh_id
+			_next_sim_mesh_id += 1
+		mesh_id = int(_sim_mesh_ids[model_path])
+	else:
+		mesh_id = _mesh_id_for(model_path)
+		if mesh_id < 0:
+			return
 
 	var layer_cfg := _layer_for(model_path)
 	var jitter := float(layer_cfg.get("colour_jitter", 0.0))
@@ -1111,14 +1169,31 @@ func _build_batch(model_path: String, placements: Array) -> void:
 	if use_colour:
 		jitter_rng.seed = hash(model_path)
 
+	# Sized to nothing in a shell: this array and its `PackedColorArray` are
+	# the per-instance memory the MultiMesh path costs, and the loop below
+	# skips filling them. The loop itself still runs -- the harvest points it
+	# spawns are gameplay, not rendering.
 	var transforms: Array[Transform3D] = []
-	transforms.resize(placements.size())
 	var colours := PackedColorArray()
-	if use_colour:
-		colours.resize(placements.size())
+	if not simulation_only:
+		transforms.resize(placements.size())
+		if use_colour:
+			colours.resize(placements.size())
 
 	for i in placements.size():
+		# Every 512th placement, not every one: a shell's biggest model batch
+		# runs to tens of thousands of these and an `await` per iteration
+		# would cost more than the work it is slicing. 512 is small enough
+		# that no single stretch between yields is long.
+		if slicer != null and i % 512 == 0:
+			await _breathe(slicer)
 		var placement: Dictionary = placements[i]
+		if simulation_only:
+			if placement.has("harvest_item"):
+				var t_hs0 := Time.get_ticks_msec()
+				_spawn_harvest_point(placement)
+				_t_harvest_ms += Time.get_ticks_msec() - t_hs0
+			continue
 		var basis := Basis(Vector3.UP, float(placement["yaw"]))
 		# scatter_rules.gd only sets "normal" for layers that opted into
 		# align_to_slope (rocks) — everything else stays world-up.
@@ -1141,7 +1216,8 @@ func _build_batch(model_path: String, placements: Array) -> void:
 	# individual calls today and the measured cause of the boot-time cost
 	# this swap exists to remove), and `update_mmis(true)` runs once after
 	# every model in `build()`'s loop rather than once per model here.
-	_instancer.call("add_transforms", mesh_id, transforms, colours, false)
+	if not simulation_only:
+		_instancer.call("add_transforms", mesh_id, transforms, colours, false)
 
 	var known: PackedVector3Array = _instance_positions.get(mesh_id, PackedVector3Array())
 	for i in placements.size():
@@ -1828,6 +1904,15 @@ func clear_felled(key: String) -> void:
 ## of once per instance.
 func _remove_render_instance(mesh_id: int, position: Vector3, update: bool = true) -> void:
 	if mesh_id < 0 or _instancer == null:
+		return
+	# Nothing was ever RENDERED in a realm shell, so there is nothing to
+	# remove -- and `mesh_id` here is `_sim_mesh_ids`' own local counter, not a
+	# Terrain3D asset id, so handing it over produces
+	# `Terrain3DInstancer::remove_instances: Mesh ID out of range` once per
+	# cleared instance. Found by the lane's own shell measurement
+	# (`tools/net/_probe_6a_shell.gd --mode=shell`): `clear_area()` runs during
+	# `_build_settlement()`, for every building pad, on every boot.
+	if simulation_only:
 		return
 	_instancer.call("remove_instances", position, {
 		"asset_id": mesh_id,

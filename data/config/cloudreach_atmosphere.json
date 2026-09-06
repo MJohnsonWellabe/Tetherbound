@@ -18,5 +18,12 @@
   "finale_music_gain": 0.65,
   "settlement_radius_m": 95.0,
   "settlement_height_tolerance_m": 25.0,
-  "settlements": [[-275.0, 180.0, 520.0], [320.0, 850.0, 4190.0]]
+  "settlements": [[-275.0, 180.0, 520.0], [320.0, 850.0, 4190.0]],
+  "distant_fog": {
+    "_comment": "CLOUDREACH-LOOK-0906 owner addendum: 'floating islands read as flat grey unrendered slabs (fog flattens them)'. The render fog Environment lives in scenes/world/cloudreach_cliffs.tscn and is re-applied every frame by world_look.gd from data/config/art.json's time-of-day presets plus cloudreach_visual.json's own fog_density_add delta (that file is owned by a concurrent pass in this same visual sweep, so it is not touched here). This block is read directly by scripts/world/cloudreach_look.gd instead: fog_depth_begin/fog_depth_curve are properties WorldLook never writes, so setting them once keeps 0-fog_depth_begin_m completely clear; fog_density_scale/aerial_perspective_scale are reapplied every frame AFTER WorldLook's own write, the same 'reapply on top of the owner' pattern WorldLook itself uses for weather. Target: a region/landmark 400-900 m out keeps at least 35% of its local contrast instead of washing to flat grey.",
+    "fog_depth_begin_m": 260.0,
+    "fog_depth_curve": 0.6,
+    "fog_density_scale": 0.55,
+    "aerial_perspective_scale": 0.7
+  }
 }

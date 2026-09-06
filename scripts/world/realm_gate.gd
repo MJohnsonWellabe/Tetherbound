@@ -8,8 +8,16 @@ extends Node3D
 ## flag and takes one deliberate interaction; entering takes the next.
 ##
 ## `Game.enter_realm(destination_realm, destination_entry_id)` owns scene
-## transition/loading.  This component only proves the gate state, changes its
-## physical presentation, and asks Game to travel.
+## transition/loading, including the OP-0905-20 "Loading <realm>…" overlay it
+## shows before the blocking scene swap.  This component only proves the gate
+## state, changes its physical presentation, and asks Game to travel.
+##
+## `enter_realm()` is a coroutine (it awaits the overlay). `try_enter()` below
+## fires it via `game.call(...)` without `await` and never reads its return —
+## exactly the "issuing the request is Game's job to see through" contract its
+## own header already states, and precisely the shape a fire-and-forget
+## coroutine call supports: it runs to completion in the background whether or
+## not the caller awaits it.
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 
@@ -25,6 +33,9 @@ const OPEN := Color("a8e9d1")
 @export var destination_realm: String = "cloudreach"
 @export var destination_entry_id: String = "meadows_gate"
 @export var destination_label: String = "Cloudreach Cliffs"
+## Stage B lane 5.A. A realm key and a realm unlock are WORLD facts.
+const STORY_LEDGER := preload("res://scripts/story/story_ledger.gd")
+
 @export var key_flag: String = "realm_key_cloudreach"
 @export var unlock_flag: String = "realm_gate_cloudreach_unlocked"
 @export var interaction_radius: float = 4.0
@@ -86,14 +97,20 @@ func _process(_delta: float) -> void:
 		_refresh(game)
 
 
+## Stage B lane 5.A: the WORLD's store, never the merged view. `realm_key_*` and
+## `realm_gate_*_unlocked` are world flags (D99) -- the Warden falls once and the
+## realm opens once, for everybody -- so a player who was not in the room reads
+## the same open gate as the one who was.
+## `game` is used again, so it loses its underscore. Lane 5.A prefixed it when
+## the read moved to the tree walk, and the prefix was honest at the time --
+## but it also made "this function ignores what you passed it" look deliberate
+## rather than like the defect it turned into.
 func has_key(game: Node) -> bool:
-	var progression := _progression(game)
-	return progression != null and key_flag != "" and bool(progression.call("has", key_flag))
+	return key_flag != "" and STORY_LEDGER.world_flag(self, key_flag, game)
 
 
 func is_unlocked(game: Node) -> bool:
-	var progression := _progression(game)
-	return progression != null and unlock_flag != "" and bool(progression.call("has", unlock_flag))
+	return unlock_flag != "" and STORY_LEDGER.world_flag(self, unlock_flag, game)
 
 
 ## Writes the durable unlock only when the key entitlement exists.  The key is
@@ -102,10 +119,18 @@ func is_unlocked(game: Node) -> bool:
 func try_unlock(game: Node) -> bool:
 	if is_unlocked(game):
 		return true
-	var progression := _progression(game)
-	if progression == null or not has_key(game) or unlock_flag == "":
+	if not has_key(game) or unlock_flag == "":
 		return false
-	progression.call("set_flag", unlock_flag)
+	# Stage B lane 5.A. A realm opens once, for the world: committed through the
+	# ledger so the friend standing at the same gate walks through it too. A
+	# client's verdict is `pending` and the gate re-poses on the delta
+	# (`restore_progression_from_game` through the `progression_restore` group),
+	# so this returns `is_unlocked()` -- the honest answer to "is it open NOW".
+	var verdict := STORY_LEDGER.set_world_flag(self, unlock_flag)
+	if not bool(verdict.get("ok", false)) and not bool(verdict.get("pending", false)):
+		var progression := _progression(game)
+		if progression != null:
+			progression.call("set_flag", unlock_flag)
 	return is_unlocked(game)
 
 

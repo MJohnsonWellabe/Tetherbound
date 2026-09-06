@@ -400,6 +400,25 @@ func _enemy_config_for_this_body() -> Dictionary:
 
 ## --- combat ---------------------------------------------------------------
 
+## Re-read `combat_override` into the live fight. A no-op while not engaged --
+## `set_engaged(true)` below reads it for itself.
+##
+## `set_engaged()` snapshots `_enemy_config_for_this_body()` once, when the fight
+## opens, which is right for every authored override: `combat_override` is set
+## before the body ever enters a fight and never moves again. §10's participant
+## scaling is the one thing that moves it afterwards -- a second player joining
+## shortens this creature's attack cooldown mid-fight (D112) -- and without this
+## the new number would sit on the instance and never be read.
+##
+## Only the config is re-read. `_cooldown`, `_beat_left` and `_intent` are the
+## swing already in flight and are deliberately left alone: the shorter cooldown
+## takes effect from the NEXT swing, not by cutting short the one the player is
+## currently reading.
+func refresh_combat_profile() -> void:
+	if engaged:
+		_combat_cfg = _enemy_config_for_this_body()
+
+
 ## Called by the combat manager when a fight opens and closes.
 func set_engaged(value: bool, opponent: Node3D = null) -> void:
 	engaged = value

@@ -313,6 +313,14 @@ const ACTION_CONTEXT := {
 	# `open_action` -- "by the pause shell itself deciding whether to open"
 	# per this section's header comment.
 	"game_menu": "menu",
+	# OP-0905-27: L3/R3, read by `tab_map.gd` only while the full map tab is
+	# the shown tab (tree already paused, same as the rest of "menu"). The
+	# same physical buttons are `sprint`/`camera_recenter` in "exploration"
+	# and `backpack_assign`/`backpack_split` on the satchel tab -- classified
+	# "menu" here because tab_map.gd's own gating, like backpack_assign's, is
+	# "this tab is open", not "unpaused".
+	"map_realm_prev": "menu",
+	"map_realm_next": "menu",
 }
 
 
@@ -352,9 +360,18 @@ func test_every_joypad_bound_action_is_classified() -> void:
 ## only while that tab is open, tree paused). One is never live while the
 ## other is; a real close verb was kept off this button for exactly that
 ## reason ("Menu could not also close it").
+##
+## `map_realm_prev`/`backpack_assign` (joypad button 7, both "menu") and
+## `map_realm_next`/`backpack_split` (joypad button 8, both "menu") are the
+## third and fourth: `tab_map.gd` reads L3/R3 only while the full map tab is
+## shown, and `tab_backpack.gd` reads `backpack_assign`/`backpack_split` only
+## while the satchel tab is shown -- exactly one tab is ever open at a time,
+## so the two readers never race for the same press.
 const ALLOWED_SAME_CONTEXT_PAIRS := [
 	["ui_accept", "menu_confirm"],
 	["game_menu", "backpack_drop"],
+	["map_realm_prev", "backpack_assign"],
+	["map_realm_next", "backpack_split"],
 ]
 
 

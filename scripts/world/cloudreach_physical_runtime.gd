@@ -2,6 +2,24 @@ extends Node3D
 
 ## Full physical chapter adapter. Configure after adding to a realm scene.
 ## Dialogue queue and modal input ownership stay in CloudreachChapter.
+##
+## ## Stage B Wave 6 lane 6.E: the three flags this file wrote itself
+##
+## D103. A shrine vane aligning, a Cloudreach captain falling and that win being
+## paid for were three `set_flag` calls straight onto `Game.progression`. The
+## first two are WORLD facts (`flag_scopes.json`) and landed in `WorldState.flags`
+## on whichever peer ran the code; the third is a per-player receipt
+## (`cloudreach_payout:`) that nobody else could see. All three now submit an
+## intent through `Game.ledger` -- `set_world_flag` and `grant_player_flag` --
+## stamped with the realm `"cloudreach"` rather than `Game.current_realm` (D97:
+## from Wave 6 the local player's realm is not the record's realm).
+##
+## **A repair cost is spent when the claim COMMITS, never when it is submitted.**
+## `activate()` submits, and on a client gets `pending` -- the host has not
+## answered. Nothing is spent, nothing is announced, and the interaction settles
+## later in `_on_delta_applied()` when the committed delta carries the spec's
+## own `completion_flag`. That ordering is the whole reason a lost race costs
+## the loser nothing: the prompt simply stays lit.
 signal interaction_completed(id: String)
 signal trial_progress(gates_passed: int, gate_count: int)
 signal placement_failed(id: String, position: Vector3)
@@ -15,6 +33,16 @@ const REST := preload("res://scripts/world/rest_point.gd")
 const CACHE := preload("res://scripts/world/item_cache_pickup.gd")
 const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
 const NPCS := preload("res://scripts/world/village_npcs.gd")
+const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
+const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
+
+## D97. Every intent this file submits is filed against Cloudreach, because that
+## is the realm the RECORD belongs to. Never `Game.current_realm`.
+const REALM_ID := "cloudreach"
+
+## The world flag the flight trial commits. Named here because `_on_delta_applied`
+## has to recognise it without re-reading the interaction that started the trial.
+const TRIAL_UNLOCK_FLAG := "fly_traversal_unlocked"
 const DATA_PATH := "res://data/config/cloudreach_physical_runtime.json"
 const CHAPTER_PATH := "res://data/config/cloudreach_chapter.json"
 const NPC_PATH := "res://data/config/cloudreach_npc_runtime.json"
@@ -46,6 +74,10 @@ var _topic_root: Node3D
 var _build_content := true
 var _registered_flight_ids: Array[String] = []
 var _pylon_material: StandardMaterial3D
+## Interactions whose claim is with the host: `completion_flag -> {id, spec}`.
+## NOTHING local has changed for any of these -- no cost spent, no message, no
+## `interaction_completed`. `_on_delta_applied()` settles them.
+var _pending_interactions: Dictionary = {}
 
 
 ## ground_resolver(Vector3) returns Vector3 on the intended walkable surface or
@@ -66,6 +98,7 @@ func configure(player: CharacterBody3D, fly: Node, event_adapter: Callable,
 	chapter = RULES.read(CHAPTER_PATH)
 	npc_runtime = RULES.read(NPC_PATH)
 	add_to_group("progression_restore")
+	LEDGER_CLAIM.listen(self, _on_delta_applied)
 	if _fly != null:
 		_register_flight()
 		if not _fly.is_connected("landed", _on_landed):
@@ -192,22 +225,107 @@ func activate(id: String) -> bool:
 		_message("Bring %d %s to finish this repair." % [int(cost["count"]), str(cost["item_id"]).replace("_", " ")])
 		return false
 	var changed := false
+	var pending := false
 	if spec.has("set_physical_flag"):
 		var flag := str(spec["set_physical_flag"])
 		if not (npc_runtime.get("physical_state_flags", []) as Array).has(flag):
 			return false
-		_flags.call("set_flag", flag)
-		changed = true
+		var verdict := _write_flag(flag)
+		changed = bool(verdict.get("ok", false))
+		pending = bool(verdict.get("pending", false))
+		if not changed and not pending and str(verdict.get("code", "")) == "offline":
+			# No transport at all (a capture fixture, an early boot frame).
+			# The old local write, unchanged, for the same reason lane 5.A kept
+			# its own: an interaction that changes nothing is worse.
+			_flags.call("set_flag", flag)
+			changed = true
 	else:
-		changed = bool(_emit(str(spec.get("event", ""))).get("changed", false))
+		var result := _emit(str(spec.get("event", "")))
+		changed = bool(result.get("changed", false))
+		pending = bool(result.get("pending", false))
 	if not changed:
+		if pending:
+			# A client. The host has not answered: spend nothing, say nothing,
+			# emit nothing. `_on_delta_applied` settles this the moment the
+			# committed delta carries the spec's own completion flag, and a
+			# claim the host refuses simply leaves the prompt lit.
+			var completion := str(spec.get("completion_flag", ""))
+			if not completion.is_empty():
+				_pending_interactions[completion] = {
+					"kind": "interaction", "id": id, "spec": spec,
+				}
 		return false
+	_settle_interaction(id, spec)
+	return true
+
+
+## This peer's own half of a committed interaction: the repair cost, the line on
+## screen, the signal, the repaint. Runs exactly once per interaction, on the
+## peer that pressed -- on the host and solo straight out of `activate()`, on a
+## client out of `_on_delta_applied()` a round trip later.
+func _settle_interaction(id: String, spec: Dictionary) -> void:
+	var cost: Dictionary = spec.get("cost", {})
 	if not cost.is_empty():
-		inventory.call("remove", cost["item_id"], int(cost["count"]))
+		var inventory: RefCounted = _game.get("inventory") if _game != null else null
+		if inventory != null:
+			inventory.call("remove", cost["item_id"], int(cost["count"]))
 	interaction_completed.emit(id)
 	_message(str(spec["label"]).split(" (")[0] + " — complete")
 	sync_progression()
-	return true
+
+
+## A committed delta landed on this peer, host or client. The only thing this
+## node wants from one is "did the claim I have outstanding commit" -- the
+## world's own copy of the flag is applied by `WorldState.apply_delta()`, and
+## every prompt repaints off `sync_progression()` either way.
+##
+## ORDERING, the trap lane 3.B paid for: `ledger_rpc.gd::_rpc_delta` sweeps the
+## `progression_restore` group BEFORE it emits `delta_applied`, so by the time
+## this runs `restore_progression_from_game()` has already re-posed this node.
+## The pending ticket is therefore checked against the DELTA, not against
+## whether the flag happens to be set now -- a guard written the other way round
+## would drop the winner's own cost and message on clients only.
+func _on_delta_applied(delta: Dictionary) -> void:
+	if _pending_interactions.is_empty():
+		return
+	for completion: String in _pending_interactions.keys().duplicate():
+		if not LEDGER_CLAIM.sets_world_flag(delta, completion):
+			continue
+		var ticket: Dictionary = _pending_interactions[completion]
+		_pending_interactions.erase(completion)
+		match str(ticket.get("kind", "interaction")):
+			"landing":
+				# The bond credit's eligibility was decided at LANDING time --
+				# whether Maela's loaner carried this flight is a fact about the
+				# flight, and a round trip later `_fly` has already forgotten it.
+				if bool(ticket.get("bond", false)):
+					_award_fly_route_bond()
+				_message(str(ticket.get("message", "")))
+			"trial":
+				if bool(ticket.get("bond", false)):
+					_award_fly_route_bond()
+				_message("Fly unlocked. Follow the rising currents to the Sky Shrine.")
+			_:
+				_settle_interaction(str(ticket["id"]), ticket["spec"] as Dictionary)
+
+
+## Submit one Cloudreach flag as an intent and hand back `world_ledger.gd`'s
+## verdict shape, always. The kind follows D99's scope table -- a world fact is
+## `set_world_flag`, a personal receipt (`cloudreach_payout:`) is
+## `grant_player_flag` addressed to whoever asked.
+func _write_flag(flag: String) -> Dictionary:
+	var transport := LEDGER_CLAIM.transport(self)
+	if transport == null:
+		return {"ok": false, "kind": "set_world_flag", "peer": 0, "code": "offline",
+			"reason": "", "pending": false, "delta": {"seq": 0, "realm": "", "ops": []}}
+	var scope := PROGRESSION_STATE.scope_of(flag)
+	if scope == "":
+		push_error("unscoped Cloudreach flag: %s" % flag)
+	if scope == PROGRESSION_STATE.SCOPE_PLAYER:
+		return transport.call("submit",
+			{"kind": "grant_player_flag", "realm": REALM_ID, "id": flag})
+	return transport.call("submit",
+		{"kind": "set_world_flag", "realm": REALM_ID, "id": flag, "value": true})
 
 
 func _start_trial() -> bool:
@@ -237,15 +355,32 @@ func _on_landed(at: Vector3, _species_id: String) -> void:
 			var result := _emit("flight_trial_completed")
 			if result.get("changed", false):
 				_credit_fly_route_bond()
-			_cancel_trial("Fly unlocked. Follow the rising currents to the Sky Shrine." if result.get("changed", false) else "Trial complete; return to Maela.")
+			elif bool(result.get("pending", false)):
+				# A client: the unlock is with the host. Credit nothing and
+				# promise nothing; `_on_delta_applied` says the line and pays
+				# the bond when `fly_traversal_unlocked` actually commits.
+				_pending_interactions[TRIAL_UNLOCK_FLAG] = {
+					"kind": "trial", "bond": _fly_bond_eligible(),
+				}
+			_cancel_trial("" if bool(result.get("pending", false))
+				else ("Fly unlocked. Follow the rising currents to the Sky Shrine."
+					if result.get("changed", false) else "Trial complete; return to Maela."))
 		else:
 			_cancel_trial("Land after all three wind gates. Return to the launch marker to retry.")
 	for spec: Dictionary in config.get("landing_objectives", []):
 		if RULES.available(_flags, spec) and RULES.in_landing(at, spec) \
 			and (not spec.has("approach_position") or _air_approaches.has(spec["id"])):
-			if _emit(spec["event"]).get("changed", false):
+			var landed := _emit(spec["event"])
+			var line := "Landing recorded: " + str(spec["id"]).replace("_", " ")
+			if landed.get("changed", false):
 				_credit_fly_route_bond()
-				_message("Landing recorded: " + str(spec["id"]).replace("_", " "))
+				_message(line)
+			elif bool(landed.get("pending", false)):
+				var completion := str(spec.get("completion_flag", ""))
+				if not completion.is_empty():
+					_pending_interactions[completion] = {
+						"kind": "landing", "bond": _fly_bond_eligible(), "message": line,
+					}
 	_flight_observed = false
 	_air_approaches.clear()
 	sync_progression()
@@ -255,11 +390,21 @@ func _on_landed(at: Vector3, _species_id: String) -> void:
 ## a newly committed canonical completion event. Repeated landing/load cannot
 ## farm this small existing travel-task credit or invent a sixth bond task.
 func _credit_fly_route_bond() -> void:
-	# Maela's safety carrier is not owned and must not quietly credit an unrelated
-	# active party member as though that creature performed the flight.
-	if _fly != null and _fly.has_method("last_flight_used_mentor_loaner") \
-			and bool(_fly.call("last_flight_used_mentor_loaner")):
+	if not _fly_bond_eligible():
 		return
+	_award_fly_route_bond()
+
+
+## Maela's safety carrier is not owned and must not quietly credit an unrelated
+## active party member as though that creature performed the flight. Read as its
+## own question so a claim that commits a round trip later can be settled
+## against the answer the FLIGHT gave, not against whatever `_fly` says by then.
+func _fly_bond_eligible() -> bool:
+	return not (_fly != null and _fly.has_method("last_flight_used_mentor_loaner") \
+		and bool(_fly.call("last_flight_used_mentor_loaner")))
+
+
+func _award_fly_route_bond() -> void:
 	var party: RefCounted = _game.get("party") if _game != null else null
 	var creature: RefCounted = party.call("active") if party != null else null
 	if creature != null and not bool(creature.get("fainted")):
@@ -313,10 +458,25 @@ func encounter_won(id: String) -> bool:
 		if not _emit("encounter:captain_veyra_storm_anchor_won").get("accepted", false):
 			return false
 	else:
-		_flags.call("set_flag", defeat_flag)
+		# A Cloudreach trainer falls once, for the world (D103). A client's
+		# submit is `pending`; the committed delta writes the flag on every peer
+		# and `sync_progression()` runs again off the revision poll in
+		# `_physics_process`, so nothing here has to wait for it.
+		var defeat := _write_flag(defeat_flag)
+		if not bool(defeat.get("ok", false)) and not bool(defeat.get("pending", false)) \
+				and str(defeat.get("code", "")) == "offline":
+			_flags.call("set_flag", defeat_flag)
 	var payout_flag := "cloudreach_payout:" + id
 	if not bool(_flags.call("has", payout_flag)) and _reward.is_valid() and bool(_reward.call(id)):
-		_flags.call("set_flag", payout_flag)
+		# A PLAYER receipt (`cloudreach_payout:` is player-scoped in
+		# `flag_scopes.json`): granted to the peer that asked, not to the world.
+		# The reward itself has already been paid by `_reward` -- this only
+		# records that it was, so the pending case is the same "the host will
+		# write it" as everything else here.
+		var receipt := _write_flag(payout_flag)
+		if not bool(receipt.get("ok", false)) and not bool(receipt.get("pending", false)) \
+				and str(receipt.get("code", "")) == "offline":
+			_flags.call("set_flag", payout_flag)
 	for event: String in RULES.circuit_events(_flags, config):
 		_emit(event)
 	encounter_recorded.emit(id, first)
@@ -641,6 +801,8 @@ func _resolve(id: String, at: Vector3) -> Vector3:
 
 
 func _message(message: String) -> void:
+	if message.is_empty():
+		return
 	if _game != null and _game.has_method("push_world_message"):
 		_game.call("push_world_message", message)
 

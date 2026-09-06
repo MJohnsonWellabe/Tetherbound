@@ -340,7 +340,10 @@ func _build_teleport_row(entry: Dictionary) -> Control:
 	button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	button.focus_mode = Control.FOCUS_ALL
 	button.text = "  %s" % display_name
-	button.pressed.connect(func() -> void: _on_teleport(display_name, position))
+	# OP-0905-21: the row hands the WHOLE entry through, not just x/z — a
+	# realm-crossing row (`GameState._debug_teleport_add_other_realm`) carries
+	# `realm`/`entry_id` fields a bare Vector2 has no room for.
+	button.pressed.connect(func() -> void: _on_teleport(entry))
 	button.focus_entered.connect(func() -> void: _keep_visible(button))
 	_teleport_rows.append({"display_name": display_name, "position": position, "button": button})
 	return button
@@ -350,11 +353,25 @@ func _build_teleport_row(entry: Dictionary) -> Control:
 ## teleport, close the menu"): the whole point is testing the destination
 ## from inside the world, not from behind a paused screen. Combat is checked
 ## by `debug_teleport_to` itself, not here — see that function's own header.
-func _on_teleport(display_name: String, position: Vector2) -> void:
+##
+## A realm-crossing entry (`entry.realm` set and different from where the
+## player stands) awaits the call: `debug_teleport_to`'s cross-realm path is
+## a real coroutine (it shows the OP-0905-20 loading overlay and waits on the
+## destination's own arrival), unlike the plain same-realm move below, which
+## still returns synchronously and needs no `await`.
+func _on_teleport(entry: Dictionary) -> void:
 	var game := state()
 	if game == null:
 		return
-	if not bool(game.call("debug_teleport_to", position.x, position.y)):
+	var display_name := str(entry.get("display_name", "?"))
+	var position: Vector2 = entry.get("position", Vector2.ZERO)
+	var realm_id := str(entry.get("realm", ""))
+	var ok: bool
+	if realm_id != "" and realm_id != str(game.get("current_realm")):
+		ok = await game.call("debug_teleport_to", position.x, position.y, realm_id, str(entry.get("entry_id", "")))
+	else:
+		ok = bool(game.call("debug_teleport_to", position.x, position.y))
+	if not ok:
 		say("Could not teleport to %s." % display_name)
 		return
 	if menu != null:

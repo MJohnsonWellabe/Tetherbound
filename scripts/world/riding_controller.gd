@@ -296,6 +296,25 @@ func _riding_allowed() -> bool:
 	return true
 
 
+## The combat half of `_riding_allowed()`, split out for `dismount()`: was a
+## fight (wild or trainer) the reason this ride is ending? Deliberately NOT
+## the arbiter's `enabled` flag, which also covers a build ghost armed, a
+## fade, a conversation, the naming prompt and the starter picker -- every one
+## of those clears on its own a frame or two later, and the mount should be
+## walking beside the player again the moment it does, not left `_following ==
+## false` until something else notices. Combat is the one case where the
+## combat manager is about to drive this body itself and `set_following(true)`
+## would fight it for control.
+func _combat_took_the_mount() -> bool:
+	if _manager != null and is_instance_valid(_manager) and bool(_manager.call("is_fighting")):
+		return true
+	if _encounter != null and is_instance_valid(_encounter) \
+			and _encounter.has_method("trainer_battle_active") \
+			and bool(_encounter.call("trainer_battle_active")):
+		return true
+	return false
+
+
 ## --- mounting ---------------------------------------------------------------
 
 ## Get on. Returns whether it happened, so a caller driving this from a test can
@@ -362,10 +381,26 @@ func dismount() -> bool:
 	if _player != null and is_instance_valid(_player):
 		_player.call("set_carrier", null)
 		_player.global_position = _dismount_spot(body if alive else null)
-	if alive and body.has_method("set_following") and _riding_allowed():
-		# Straight back to walking beside you. Skipped when a fight is what
+	if alive and body.has_method("set_following") and not _combat_took_the_mount():
+		# Straight back to walking beside you. Skipped ONLY when a fight is what
 		# ended the ride: the combat manager is about to drive this same body,
 		# and `_set_exploration_active(false)` has already said so.
+		#
+		# This has to be `_combat_took_the_mount()`, not the full
+		# `_riding_allowed()` the comment above used to say and then didn't do:
+		# `_riding_allowed()` also goes false for a build ghost armed, a fade,
+		# an open conversation, the naming prompt or the starter picker — every
+		# modal `sequence_director.gd::_refresh_lockout()` covers, not just
+		# combat — because `_physics_process()` calls `dismount()` the instant
+		# any of those becomes true (the "not _riding_allowed(): dismount()"
+		# branch above). Gating `set_following` on that same broad check meant
+		# any one of those non-combat modals left the mount with `_following`
+		# stuck false and collision layer 0 forever (`follower_creature.gd`
+		# clears both when following stops) -- stranded exactly like a
+		# despawned creature, except it never despawned, so the "Ride" offer
+		# never came back either: `_mountable_body()` still finds it, but
+		# `interaction_offer()`'s prompt never re-triggers a walk that never
+		# resumes. Only combat legitimately hands this body to someone else.
 		body.call("set_following", true)
 	if _camera_rig != null and is_instance_valid(_camera_rig) and _camera_rig.has_method("set_target"):
 		_camera_rig.call("set_target", _player, {})
@@ -658,7 +693,13 @@ func _refresh_worn_saddle() -> void:
 		_detach_saddle(body)
 
 
-func _attach_saddle(body: Node3D, species_id: String) -> void:
+## Static since Stage B lane 6.B, and unchanged otherwise. A creature standing
+## in a REMOTE peer's process wears the saddle its owner fitted, and
+## `remote_creature.gd` has no riding controller of its own to ask -- the local
+## one belongs to the local player and answers about the local player's mount.
+## Neither of these two functions ever read a field, so making them static is
+## the whole of what sharing them costs.
+static func _attach_saddle(body: Node3D, species_id: String) -> void:
 	if body == null or not is_instance_valid(body):
 		return
 	_detach_saddle(body)
@@ -679,7 +720,7 @@ func _attach_saddle(body: Node3D, species_id: String) -> void:
 	body.add_child(visual)
 
 
-func _detach_saddle(body: Node3D) -> void:
+static func _detach_saddle(body: Node3D) -> void:
 	if body == null or not is_instance_valid(body):
 		return
 	var existing := body.get_node_or_null(SADDLE_NODE)
@@ -690,6 +731,28 @@ func _detach_saddle(body: Node3D) -> void:
 		# would rename the new one `RideSaddle2` -- which `_refresh_worn_saddle`
 		# would then never see and would re-add forever.
 		existing.name = "RideSaddleRemoved"
+
+
+## Put this species' saddle on `body`, or take it off, to match `worn`. The one
+## door a body that is not this peer's own mount comes through -- Stage B lane
+## 6.B: what the owner fitted has to be visible on every peer's copy of the
+## animal, and "fitted" is a flag in the OWNER's progression store that nobody
+## else can read. So the owner replicates the answer and every viewer applies
+## it here, through the same attach the local mount uses.
+##
+## `saddle_belongs_on()` still gates it, so a species the craft was not for
+## (the legendary, whose `requires_item` is empty) never wears one even if a
+## peer says it should.
+static func set_worn_saddle(body: Node3D, worn: bool) -> void:
+	if body == null or not is_instance_valid(body):
+		return
+	var species_id := str(body.get("species_id"))
+	var wanted := worn and saddle_belongs_on(species_id)
+	var already := body.get_node_or_null(SADDLE_NODE) != null
+	if wanted and not already:
+		_attach_saddle(body, species_id)
+	elif already and not wanted:
+		_detach_saddle(body)
 
 
 ## The slope, in degrees, the current mount treats as floor. The trainer's own

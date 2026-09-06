@@ -49,5 +49,8 @@
 
   "_comment_max_events": "How many feed events the log keeps. Presenters read by sequence number and never drain, so this only bounds memory; 64 is far past anything one fight produces (five creatures x two events).",
   "max_events": 64,
-  "fly_route_bond_meters": 25.0
+  "fly_route_bond_meters": 25.0,
+
+  "_comment_catalyst_pickup_template": "OP-0905-18: the discoverability note progression_feed.gd::catalyst_pickup_text() builds when a pickup script hands it a known evolution catalyst (heartstone, sunstone). %s/%d slots, in order: the item's display name, the level gate, the bond tier gate, the pre-evolution species' display name ('Mudsnout is one'). Read once per pickup; not read by anything else. TUNABLE.",
+  "catalyst_pickup_template": "%s: held against a creature that has grown enough (Lv %d, bond tier %d), it finishes what it was becoming. %s is one."
 }

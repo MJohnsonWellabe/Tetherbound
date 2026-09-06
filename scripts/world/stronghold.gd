@@ -1122,9 +1122,11 @@ func _build_passages() -> void:
 			_build_door(flag, centre, along_x, width, height)
 
 
-## The complex's one door: a Tether blast shutter filling a passage, gone for
-## good once `flag` is set. No prompt, no UI, no key -- a mechanism, the same
-## way the warrens' vault door and SC14's bridge are.
+## A Tether blast shutter filling a passage, gone for good once `flag` is set.
+## OP-0905-14: every chamber's exit carries one of these now, not just the way
+## into the Warden Arena, so the player fights every NPC in the complex to
+## advance. No prompt, no UI, no key -- a mechanism, the same way the warrens'
+## vault door and SC14's bridge are.
 func _build_door(flag: String, centre: Vector3, along_x: bool, width: float, height: float) -> void:
 	var size := Vector3(0.7, height, width) if along_x else Vector3(width, height, 0.7)
 	var colour := Color(str(_config.get("site", {}).get("door_colour", "#3a3f3c")))
@@ -2768,6 +2770,9 @@ const BRAZIER_FLAME_LIFT := 0.13
 const BRAZIER_FLAME_SCALE := 0.95
 const FLICKER_AMOUNT := 0.26
 const FLICKER_SPEED := 7.0
+## OP-0905-19: how far a wall-mounted torch's bracket reaches out from the
+## wall it is bolted to (see `_wall_torch`).
+const WALL_TORCH_DEPTH := 0.28
 
 var _fires: Array[OmniLight3D] = []
 var _fire_energy: Array[float] = []
@@ -2991,8 +2996,14 @@ func _build_hall_fire() -> void:
 		# Godot's own value, so a brazier that does not ask is unchanged.
 		light.omni_attenuation = float(spec.get("attenuation", 1.0))
 		light.shadow_enabled = false
-		light.position = Vector3(0.0, _bowl_rim(float(spec.get("scale", 2.1)))
-			+ BRAZIER_FLAME_LIFT * float(spec.get("scale", 2.1)), 0.0)
+		if str(spec.get("mount", "floor")) == "wall":
+			# `_wall_torch` already places `node`'s own origin exactly at the
+			# flame (see its header) -- unlike a floor basket, there is no
+			# rim to add.
+			light.position = Vector3.ZERO
+		else:
+			light.position = Vector3(0.0, _bowl_rim(float(spec.get("scale", 2.1)))
+				+ BRAZIER_FLAME_LIFT * float(spec.get("scale", 2.1)), 0.0)
 		node.add_child(light)
 		var energy := float(spec.get("energy", 2.9))
 		light.light_energy = energy
@@ -3006,6 +3017,8 @@ func _build_hall_fire() -> void:
 
 
 func _brazier(holder: Node3D, spec: Dictionary, index: int) -> Node3D:
+	if str(spec.get("mount", "floor")) == "wall":
+		return _wall_torch(holder, spec, index)
 	var at := _local_of(spec.get("at", []))
 	var scale_factor := float(spec.get("scale", 2.1))
 	var y := _floor_y
@@ -3046,6 +3059,82 @@ func _brazier(holder: Node3D, spec: Dictionary, index: int) -> Node3D:
 
 func _bowl_rim(scale_factor: float) -> float:
 	return (BRAZIER_POST_H + BRAZIER_BOWL_H) * scale_factor
+
+
+## A torch mounted on a short iron bracket bolted to a room's own wall --
+## OP-0905-19 (owner playtest 2026-09-05: "The hall needs to be lit by
+## torches"). The three roofed inner rooms on the route (`tether_approach`,
+## `warden_arena`, `legendary_chamber`) had only their cool ambient omnis
+## before this, nothing warm of their own. Kept deliberately separate from
+## the floor `_brazier` above: there is no floor clearance to spare in the
+## Warden's arena (its own room comment calls it "deliberately the emptiest
+## room ... a floor, a height and nothing to trip over"), and a basket
+## planted in a doorway sightline would just re-create OP-0905-16 for a
+## torch instead of the machine.
+##
+## `spec.at` is the FLAME's own point (a little inset from the wall face so
+## the bracket has somewhere to sit behind it, not the wall surface itself);
+## `spec.y` is the flame's height above the floor; `spec.yaw_deg` is which
+## way the torch faces INTO the room, in this file's own `facing_deg`
+## convention (`rotation.y = deg_to_rad(yaw_deg)`; local +Z is the bracket's
+## own forward, so 0 keeps it facing local +z, 90 turns it to face +x, and so
+## on -- the same math `tools/_probe_tether_machine_facing.gd` documents for
+## `machine.facing_deg`). The returned node's own origin sits exactly at the
+## flame, so `_build_hall_fire`'s light needs no further vertical offset the
+## way a floor brazier's rim does.
+func _wall_torch(holder: Node3D, spec: Dictionary, index: int) -> Node3D:
+	var at := _local_of(spec.get("at", []))
+	var y := _floor_y + float(spec.get("y", 1.9))
+	var yaw := deg_to_rad(float(spec.get("yaw_deg", 0.0)))
+	var scale_factor := float(spec.get("scale", 0.85))
+
+	var mount := Node3D.new()
+	mount.name = "WallTorch_%d" % index
+	mount.position = Vector3(at.x, y, at.z)
+	mount.rotation.y = yaw
+	holder.add_child(mount)
+
+	var iron := StandardMaterial3D.new()
+	iron.albedo_color = IRON_COLOUR
+	iron.roughness = 0.8
+	iron.metallic = 0.4
+
+	# The bracket: a short arm reaching back toward the wall (local -Z, the
+	# mount's own back) so the torch it holds stands proud of the stone.
+	var bracket := MeshInstance3D.new()
+	bracket.name = "Bracket"
+	var bracket_mesh := BoxMesh.new()
+	bracket_mesh.size = Vector3(0.10, 0.10, WALL_TORCH_DEPTH) * scale_factor
+	bracket_mesh.material = iron
+	bracket.mesh = bracket_mesh
+	bracket.position = Vector3(0.0, 0.0, -WALL_TORCH_DEPTH * 0.5 * scale_factor)
+	mount.add_child(bracket)
+
+	# The ring the brand sits through, same iron.
+	var ring := MeshInstance3D.new()
+	ring.name = "Ring"
+	var ring_mesh := TorusMesh.new()
+	ring_mesh.inner_radius = 0.05 * scale_factor
+	ring_mesh.outer_radius = 0.09 * scale_factor
+	ring_mesh.rings = 6
+	ring_mesh.ring_segments = 8
+	ring_mesh.material = iron
+	ring.mesh = ring_mesh
+	ring.rotation.x = deg_to_rad(90.0)
+	mount.add_child(ring)
+
+	# The torch itself, kept whole (stick and all -- a sconce carries its
+	# brand the way a hand would, unlike a basket's flame-without-a-stick)
+	# and shifted so its own authored flame point lands exactly on the
+	# mount's origin, which is `spec.y` above the floor.
+	var torch: Node3D = TORCH_PROP.new()
+	var flame_scale := scale_factor * BRAZIER_FLAME_SCALE
+	torch.scale = Vector3.ONE * flame_scale
+	var flame_local_y := float(torch.call("flame_local_position").y) * flame_scale
+	torch.position = Vector3(0.0, -flame_local_y, 0.0)
+	mount.add_child(torch)
+
+	return mount
 
 
 func _add_basket(into: Node3D, scale_factor: float) -> void:
@@ -3666,24 +3755,38 @@ func _tint_node(node: Node, colour: Color) -> void:
 ## see their own removal note. Net -1 against the prior count, so the
 ## ceiling itself did not need to move; live count prints below either way.
 const EXTERIOR_OMNI_BUDGET := 22
+## Whether a local (x,z) point falls inside one of the Hall's own ROOFED
+## chambers (an open chamber, like the courtyard, does not count -- a light
+## there is still exterior). Shared by `_report_light_budget` for both the
+## authored `lights`/`lights_flanks` entries and, since OP-0905-19 put real
+## flickering fires inside three formerly-unlit rooms, the built `_fires`
+## themselves -- before that item every flickering fire WAS exterior by
+## construction, which is no longer true.
+func _is_roofed(at: Vector2) -> bool:
+	for id: String in _chambers:
+		var chamber: Dictionary = _chambers[id]
+		if bool(chamber.get("open", false)):
+			continue
+		var centre := _local_of(chamber.get("at", []))
+		var half := _size_of(chamber.get("size", [])) * 0.5 + Vector2(_wall_t, _wall_t)
+		if absf(at.x - centre.x) <= half.x and absf(at.y - centre.z) <= half.y:
+			return true
+	return false
+
+
 func _report_light_budget() -> void:
-	var exterior := _fires.size()
+	var exterior_fires := 0
+	for fire in _fires:
+		var local: Vector3 = to_local(fire.global_position)
+		if not _is_roofed(Vector2(local.x, local.z)):
+			exterior_fires += 1
+	var exterior := exterior_fires
 	for entry: Variant in _config.get("lights", []) + _config.get("lights_flanks", []):
 		var at := _local_of((entry as Dictionary).get("at", []))
-		var roofed := false
-		for id: String in _chambers:
-			var chamber: Dictionary = _chambers[id]
-			if bool(chamber.get("open", false)):
-				continue
-			var centre := _local_of(chamber.get("at", []))
-			var half := _size_of(chamber.get("size", [])) * 0.5 + Vector2(_wall_t, _wall_t)
-			if absf(at.x - centre.x) <= half.x and absf(at.z - centre.z) <= half.y:
-				roofed = true
-				break
-		if not roofed:
+		if not _is_roofed(Vector2(at.x, at.z)):
 			exterior += 1
 	print("[stronghold] %d exterior omni light(s) at the Hall (budget %d), %d of them flickering fires" % [
-		exterior, EXTERIOR_OMNI_BUDGET, _fires.size()])
+		exterior, EXTERIOR_OMNI_BUDGET, exterior_fires])
 	if exterior > EXTERIOR_OMNI_BUDGET:
 		push_warning("the Hall stands %d exterior omni lights, over the design's budget of %d" % [
 			exterior, EXTERIOR_OMNI_BUDGET])
@@ -4027,6 +4130,20 @@ func _build_machine() -> void:
 	_machine = Node3D.new()
 	_machine.name = "TetherMachinePlaceholder" if placeholder else "TetherMachine"
 	_machine.position = Vector3(centre.x, _floor_y, centre.z)
+	# OP-0905-16 (owner playtest 2026-09-05): "You can't see the legendary
+	# when you enter the chamber. The machine needs to be turned." The
+	# installed mesh's cage is not rotationally symmetric -- one side is an
+	# open archway, the rest is solid pillar and back wall -- and it shipped
+	# facing an arbitrary direction. `tools/_probe_tether_machine_facing.gd`
+	# measured the open side by bucketing the cage-void-height ring geometry
+	# into yaw slices and finding the widest empty run: -101.2 deg turns that
+	# open side onto the chamber's own +x wall, which is the doorway the
+	# player actually enters through (see `legendary_chamber`'s `_role` in
+	# stronghold.json). Applied to both the real mesh and the primitive
+	# fallback below (whose ring is symmetric, so this is a no-op for it, but
+	# keeping one code path means the fallback never silently drifts back to
+	# unrotated if the model path is ever skipped).
+	_machine.rotation.y = deg_to_rad(float(spec.get("facing_deg", 0.0)))
 	add_child(_machine)
 
 	var height := float(spec.get("height", 15.0))
@@ -4394,8 +4511,10 @@ func _sync_doors() -> void:
 			mesh.visible = not open
 
 
-## Whether the way into the Warden Arena is open. False before the elite in
-## front of it has been beaten.
+## Whether the shutter carrying `flag` is open (raised). With `flag` blank,
+## whether ANY shutter in the complex is still down. False for a given flag
+## until the trainer occupying the chamber that shutter guards has been
+## beaten.
 func door_is_open(flag: String = "") -> bool:
 	if _doors.is_empty():
 		return true

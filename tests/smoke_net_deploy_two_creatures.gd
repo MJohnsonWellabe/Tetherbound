@@ -126,7 +126,7 @@ func _run() -> void:
 
 		# The other player's creature: present, owned by them, carrying THEIR
 		# authority, and actually drawn.
-		var theirs := _proxy_for(bodies, other_id)
+		var theirs := _creature_proxy_for(bodies, other_id)
 		check(not theirs.is_empty(),
 			"peer %d holds a replicated body for peer %d's creature" % [viewer, other_id])
 		if not theirs.is_empty():
@@ -144,7 +144,7 @@ func _run() -> void:
 		# This peer's own outbound proxy: same node in every process, its own
 		# authority, and deliberately NOT drawn -- the owner already has a real
 		# creature standing in that spot.
-		var own_proxy := _proxy_for(bodies, mine_id)
+		var own_proxy := _creature_proxy_for(bodies, mine_id)
 		check(not own_proxy.is_empty(),
 			"peer %d holds its own outbound creature proxy" % viewer)
 		if not own_proxy.is_empty():
@@ -169,7 +169,14 @@ func _rows_where(bodies: Dictionary, key: String, value: Variant) -> Array:
 
 ## The replicated proxy (never the local piloted body) belonging to `peer_id`,
 ## or {} when there is none.
-func _proxy_for(bodies: Dictionary, peer_id: int) -> Dictionary:
+##
+## Named `_creature_proxy_for` rather than `_proxy_for`: the base class
+## (`net_harness.gd`) already declares `_proxy_for(target_port: int) -> int`,
+## its own unrelated udp_proxy helper for Contract §9's simulated network
+## conditions. Two independently-developed lanes gave two unrelated helpers
+## the same name, and a same-named override with a mismatched signature is a
+## GDScript PARSE ERROR -- this file failed to load at all until renamed.
+func _creature_proxy_for(bodies: Dictionary, peer_id: int) -> Dictionary:
 	for name in bodies.keys():
 		var row: Variant = bodies[name]
 		if not (row is Dictionary):

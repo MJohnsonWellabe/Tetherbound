@@ -71,6 +71,20 @@ const STRIKE_SETTLE := 15
 ## retry budget.
 const SWINGS := 5
 
+## How many times to ask peer 1 for the host's verdict on its friendly swing
+## before calling it lost. Each poll is a coordinator round trip to the peer, so
+## this is generous in wall-clock without being a fixed wait: a refusal that
+## arrives on the first poll costs one, and the assertion below still fails if
+## none ever arrives. Sized so the loop outlasts 7.A's jitter profile (150 ms
+## delay / 30 ms jitter) rather than only loopback.
+const REFUSAL_POLLS := 40
+
+## How many times to re-read both peers' opponent hp before calling them
+## divergent. Replication of the record's hp is not instantaneous and this smoke
+## must not pretend it is; see the assertion's own comment for the measurement
+## that forced this. A pair that agrees on the first read costs one poll.
+const HP_CONVERGE_POLLS := 40
+
 
 func _initialize() -> void:
 	_run()
@@ -204,6 +218,32 @@ func _run() -> void:
 			# creature, so neither is ever in the other's arc here.
 			var side := -NEAR_Z if mover == 0 else NEAR_Z
 			var stand := opponent + Vector3(0.0, 0.0, side)
+			# FINDING F10, in the smoke that never got its fix. A JOINER is
+			# bound by `encounter_director.gd::join_encounter()` to
+			# `nearest_live_wild()` -- whichever ambient creature happened to be
+			# closest when it joined -- and wild bodies are not replicated, so
+			# how far that stand-in sits from where the host holds the real
+			# opponent is decided by the seeded spawn table. Its own combat
+			# manager then keeps pulling its creature back toward that
+			# stand-in, and a swing aimed at the host's opponent misses.
+			#
+			# Measured: under 150 ms delay / 30 ms jitter / 1 % loss, one run in
+			# three had peer 1 unable to land a blow in five swings
+			# (104.5 -> 104.5 on the host) while peer 0 landed one immediately.
+			# That is F10 exactly, and `smoke_net_shared_boss` already fixes it
+			# this way; this smoke predates the arm.
+			#
+			# It changes no outcome: protocol §2 resolves every strike against
+			# HOST positions, which is what makes the drift cosmetic to begin
+			# with, and this is what wild replication will do for free when it
+			# lands. The arm refuses on the host, where that body IS the
+			# authoritative one.
+			if mover != 0:
+				var seated: Dictionary = await step(mover, "place_stand_in",
+					{"at": [opponent.x, opponent.y, opponent.z], "settle": PLACE_SETTLE})
+				check(str(seated.get("verdict", "")) == "PASS",
+					"peer %d's local stand-in was moved onto the host's opponent (%s)"
+						% [mover, str(seated.get("detail", ""))])
 			var placed: Dictionary = await step(mover, "place_creature",
 				{"at": [stand.x, stand.y, stand.z],
 				 "face": [opponent.x, opponent.y, opponent.z], "settle": PLACE_SETTLE})
@@ -227,13 +267,39 @@ func _run() -> void:
 		check(host_hp < hp_before - 0.001,
 			"peer %d landed a blow on the shared opponent within %d swings: %.1f -> %.1f on the host"
 				% [mover, swings, hp_before, host_hp])
-		var guest_hp := float((await _encounter(1)).get("opponent_hp", -1.0))
 		# §3: the record's hp is THE hit points, and both peers render it. A
 		# client that decremented its own copy "for responsiveness" would
 		# diverge here by exactly one blow.
+		#
+		# CONVERGENCE, not instantaneous equality -- and the difference is the
+		# whole claim rather than a softened one. Measured under the harness
+		# proxy at 150 ms delay / 30 ms jitter / 1 % loss: host 96.698 against
+		# guest 104.595, because a single read of the guest taken immediately
+		# after the host's is a read of a value one round trip behind. Asserting
+		# equality there is asserting ZERO LATENCY, which no session on a real
+		# LAN provides and which this smoke is not entitled to demand.
+		#
+		# What host authority actually promises is that the number the guest
+		# ends up drawing is the HOST'S number, not one it computed itself. So
+		# the guest is polled until it agrees, and the assertion still fails --
+		# loudly, with the final gap -- if it never does. A client that
+		# decremented its own copy would sit at a different value forever and
+		# fail this on the last poll exactly as it failed on the first.
+		#
+		# The host is re-read every iteration on purpose: the fight is live, so
+		# a host value that moved mid-poll would otherwise look like a guest
+		# that failed to catch up.
+		var guest_hp := -1.0
+		var hp_polls := 0
+		while hp_polls < HP_CONVERGE_POLLS:
+			hp_polls += 1
+			host_hp = float((await _encounter(0)).get("opponent_hp", -1.0))
+			guest_hp = float((await _encounter(1)).get("opponent_hp", -1.0))
+			if absf(guest_hp - host_hp) < 0.001:
+				break
 		check(absf(guest_hp - host_hp) < 0.001,
-			"both peers draw the same health bar after it (host %.3f, guest %.3f)"
-				% [host_hp, guest_hp])
+			"both peers draw the same health bar after it, within %d poll(s) (host %.3f, guest %.3f, gap %.3f)"
+				% [hp_polls, host_hp, guest_hp, absf(guest_hp - host_hp)])
 		hp_before = host_hp
 
 	# --- §5: peer 1 swings at peer 0's creature -------------------------------
@@ -294,11 +360,36 @@ func _run() -> void:
 	check(str(friendly.get("verdict", "")) == "PASS",
 		"peer 1's swing at its teammate reached the host (%s)" % str(friendly.get("detail", "")))
 
-	var refusal: Dictionary = ((await _encounter(1)).get("refusal", {}) as Dictionary)
+	# POLLED, not read once after a fixed settle. This was a flake and a jitter
+	# failure and they were the same defect.
+	#
+	# The refusal is the HOST's answer and it comes back over the wire, so the
+	# only thing `STRIKE_SETTLE` frames buys is "probably long enough on
+	# loopback". Measured: this smoke ran 5 of 7 on one branch against 6 of 7 on
+	# its untouched base, and under 7.A's proxy at 150 ms delay / 30 ms jitter
+	# / 1 % loss it lost the refusal MESSAGE every time while the safety itself
+	# held (7.A finding F7, recorded and deliberately not tuned). Both were one
+	# read landing before the answer arrived.
+	#
+	# This is a fix at the cause and NOT a widened tolerance: the assertion
+	# still fails if the refusal never comes, if it comes with the wrong code,
+	# or if it comes without a sentence. What it no longer does is fail because
+	# a round trip took longer than a quarter of a second. Same shape as the
+	# `engage` binding poll in `peer_runner.gd::_step_engage` -- on a client,
+	# `submit()` answers `{"ok": false, "pending": true}` and the verdict
+	# follows a round trip later, so a single read of a host's answer is the
+	# "pending is not a refusal" trap wearing a different hat.
+	var refusal: Dictionary = {}
+	var refusal_polls := 0
+	while refusal_polls < REFUSAL_POLLS:
+		refusal_polls += 1
+		refusal = ((await _encounter(1)).get("refusal", {}) as Dictionary)
+		if not str(refusal.get("code", "")).is_empty():
+			break
 	# HALF ONE: the host said no, out loud, with the code §5 names.
 	check(str(refusal.get("code", "")) == "friendly_target",
-		"the host refused it with `friendly_target` (got code '%s', reason '%s')"
-			% [str(refusal.get("code", "")), str(refusal.get("reason", ""))])
+		"the host refused it with `friendly_target` after %d poll(s) (got code '%s', reason '%s')"
+			% [refusal_polls, str(refusal.get("code", "")), str(refusal.get("reason", ""))])
 	check(not str(refusal.get("reason", "")).is_empty(),
 		"and gave the striker a sentence a player can be shown")
 

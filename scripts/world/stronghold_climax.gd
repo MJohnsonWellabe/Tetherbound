@@ -507,11 +507,23 @@ func _measure_cage(stage: Dictionary) -> Dictionary:
 func _clear_of_the_machine(mark: Vector3, stage: Dictionary) -> Vector3:
 	var axis: Vector3 = _cage_measure["axis"]
 	var flat := Vector3(mark.x - axis.x, 0.0, mark.z - axis.z)
-	var want := _clear_distance(Vector2(flat.x, flat.z), stage)
 	if flat.length() < 0.01:
 		# A mark on the axis has no bearing of its own; walk out the way the
 		# player came in, which is the chamber's own doorway side.
 		flat = Vector3(cos(deg_to_rad(_stronghold_yaw_deg())), 0.0, -sin(deg_to_rad(_stronghold_yaw_deg())))
+	# OP-0905-16 gave the machine its own `facing_deg` (stronghold.gd's
+	# `_build_machine`), so `plinth_bins` -- measured by `_to_machine`, which
+	# stops walking the parent chain AT the machine and so is expressed in
+	# the machine's own ROTATED local frame -- no longer lines up with a
+	# bearing taken in world space. Un-rotate `flat` by the machine's total
+	# world yaw before binning it, so the plinth reach looked up is the one
+	# actually facing this bearing rather than whatever used to be there
+	# before the machine turned. The OUTPUT direction stays the world-space
+	# `flat` -- only the lookup needs the machine's own frame.
+	var machine: Node3D = _stronghold.call("machine") as Node3D \
+		if _stronghold != null and _stronghold.has_method("machine") else null
+	var local_flat := flat.rotated(Vector3.UP, -machine.global_rotation.y) if machine != null else flat
+	var want := _clear_distance(Vector2(local_flat.x, local_flat.z), stage)
 	if flat.length() >= want:
 		return mark
 	var out := axis + flat.normalized() * want
@@ -552,8 +564,15 @@ func freed_clearance() -> float:
 	if _cage_measure.is_empty() or _legendary == null:
 		return 0.0
 	var axis: Vector3 = _cage_measure["axis"]
-	var flat := Vector2(_legendary.global_position.x - axis.x, _legendary.global_position.z - axis.z)
-	return _clear_distance(flat, (_config.get("legendary", {}) as Dictionary).get("stage", {}) as Dictionary)
+	var flat := Vector3(_legendary.global_position.x - axis.x, 0.0, _legendary.global_position.z - axis.z)
+	# Same machine-local-frame correction as `_clear_of_the_machine` -- see
+	# its header. `plinth_bins` is measured in the machine's own rotated
+	# frame; this caller's bearing starts in world space.
+	var machine: Node3D = _stronghold.call("machine") as Node3D \
+		if _stronghold != null and _stronghold.has_method("machine") else null
+	var local_flat := flat.rotated(Vector3.UP, -machine.global_rotation.y) if machine != null else flat
+	return _clear_distance(Vector2(local_flat.x, local_flat.z),
+		(_config.get("legendary", {}) as Dictionary).get("stage", {}) as Dictionary)
 
 
 ## A mesh's transform into the machine node's own frame, composed by walking

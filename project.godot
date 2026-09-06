@@ -70,6 +70,22 @@ pointing/emulate_touch_from_mouse=false
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
+; HALL-STAGING-0906 (OP-0905-19, "the hall should be lit by torches"). The
+; Compatibility renderer caps the OMNI lights one mesh may take at this value
+; and silently drops the rest. A Hall room floor is ONE slab per chamber
+; (stronghold.gd::_build_chambers) and the approach room's slab is inside the
+; range of ~13 omnis (its two ambients, four wall torches, the arena pair, the
+; courtyard fill, four yard braziers), so at 8 the wall torches lost the draw
+; on exactly the surface the player stands on: two blind judges read warm
+; ceilings over dead-black floors with "no visible source". 16 lets every
+; practical in a room reach its own floor. The per-object light loop costs a
+; little fragment time only where that many ranges overlap, i.e. indoors.
+limits/opengl/max_lights_per_object=16
+; Same round. The Hall stands ~50 omnis (16 authored, 4 flank, 25 fires, the
+; machine core, the cage, two sentry lamps) inside one compact frustum, so the
+; default 32 renderable lights dropped an arbitrary subset every frame -- the
+; interior torches among them, whichever the sort favoured.
+limits/opengl/max_renderable_lights=64
 ; Shadows are the single defect that killed the previous prototype. Godot gives
 ; real directional shadows out of the box; these are just the defaults made
 ; explicit so nobody has to guess what they were.
@@ -182,6 +198,26 @@ map_zoom_out={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":45,"pressed":false,"script":null)
 , Object(InputEventJoypadMotion,"device":-1,"axis":4,"axis_value":1.0,"script":null)
+]
+}
+; OP-0905-27: the full map's realm selector (scripts/ui/tab_map.gd). LB/RB
+; (button 9/10) already mean "previous/next MENU TAB" (menu_tab_left/right,
+; game_menu.gd) — reusing them here would fire both a realm switch AND a tab
+; change off the same press. L3/R3 (stick click, button 7/8) sit unclaimed
+; while the map tab is open: `sprint`/`camera_recenter` are the same physical
+; buttons in world play, and `backpack_assign`/`backpack_split` reuse them the
+; same context-scoped way for the satchel tab, so tab_map.gd reading them only
+; while it is the shown tab is the established pattern, not a new one.
+map_realm_prev={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":44,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":7,"pressed":false,"script":null)
+]
+}
+map_realm_next={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":46,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":8,"pressed":false,"script":null)
 ]
 }
 creature_recall={

@@ -4,12 +4,19 @@ extends Node
 ## the ordinary locomotion tick while deployed; it never carries/hides it.
 ## World-authored AABBs are true 3D volumes, including progression restrictions.
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const ANCHOR_ARBITER := preload("res://scripts/net/fly_anchor_arbiter.gd")
 const CONFIG_PATH := "res://data/config/fly_traversal.json"
+const SESSION_PATH := ^"/root/Game/Session"
 
 signal state_changed(state: String)
 signal landed(position: Vector3, species_id: String)
 signal recovered(reason: String)
 signal denied(reason: String)
+## Stage B lane 6.C. The host answered a landing-anchor proposal. `ok` false
+## carries the host's `reason`; the smoke and the HUD both read this rather
+## than polling, because a refusal is a thing that HAPPENED and polling a
+## boolean cannot tell one refusal from two.
+signal anchor_decided(ok: bool, anchor: Vector3, code: String, reason: String)
 
 var state := "grounded"
 var last_denial := ""
@@ -36,6 +43,55 @@ var _saved_shape_position := Vector3.ZERO
 var _grip_bones: Array = []
 var _bird_skeleton: Skeleton3D
 var _presentation: Dictionary = {}
+## --- Stage B lane 6.C: the anchor the host has to agree to ------------------
+##
+## `safe_anchor` above is the COMMITTED anchor and its meaning has not changed:
+## it is the place `recover_to_anchor()` will drop this trainer, and the place
+## `can_launch()` insists exists before a glide may start. What changed is who
+## is allowed to write it. Solo, and on the host, nothing at all changed --
+## there is no second process with an opinion, and the host's own position IS
+## the host's position, so validating it against itself would only add a way to
+## fail. On a CLIENT the value below is a proposal until the host answers, and
+## the anchor that finally lands here is the host's own, off the host's ground.
+var _anchor_pending := false
+## The claim currently with the host, kept so a verdict can be matched to what
+## it was about and a late answer to a superseded proposal can be ignored.
+var _anchor_pending_claim := Vector3.INF
+## Whether the outstanding proposal is a LANDING (a glide that just ended)
+## rather than an ordinary step onto new ground while walking. Only a refused
+## landing pulls the player back: a walking client whose anchor the host does
+## not like keeps walking, because it never left the ground the host is
+## simulating it on.
+var _anchor_pending_is_landing := false
+## Seconds since the outstanding proposal was sent, so a host that never
+## answers (a packet lost, a host mid-scene-swap) frees the client to ask
+## again rather than wedging it in "pending" for the session. `pending` is not
+## a refusal and is never treated as one.
+var _anchor_pending_for := 0.0
+## Counters and the last text, for the net smoke and for a HUD line. Nothing
+## branches on them.
+var _anchor_proposals := 0
+var _anchor_accepts := 0
+var _anchor_refusals := 0
+var _anchor_last_code := ""
+## Whether the anchor currently committed was granted by the HOST, as opposed
+## to written locally while this process was solo or the host itself.
+##
+## This exists because of a real hole the net smoke found on its first run. A
+## peer boots solo, walks around, and writes itself an anchor -- correctly,
+## because there is nobody else to ask. It then JOINS. The committed anchor is
+## now a client-authored one, and `_propose_anchor()`'s movement rate limit
+## would never re-offer it: the player is standing where they were, well inside
+## `resubmit_m`, so the pre-session anchor would quietly survive the join and
+## remain this client's recovery point for the whole session. Which is the
+## exact authority hole §2 closes, reached by waiting rather than by lying.
+var _anchor_host_granted := false
+## Set for exactly one frame by the touchdown branch of `physics_step()`, and
+## consumed by the next `_propose_anchor()`. It is the whole difference between
+## "this client just came out of the sky here" -- which the host must agree to,
+## and which is pulled back when it does not -- and "this client walked eight
+## metres", which is ordinary movement the host is already simulating.
+var _touched_down := false
 
 
 func setup(player: CharacterBody3D, rig: Node3D, model: Node3D) -> void:
@@ -123,6 +179,21 @@ func last_flight_used_mentor_loaner() -> bool:
 func can_launch() -> String:
 	if _player == null or _player.is_on_floor():
 		return "Jump, then press Jump again to deploy Fly."
+	return launch_blockers()
+
+
+## Everything `can_launch()` asks EXCEPT "are you off the ground yet".
+##
+## Split out for Stage B lane 6.C's net smoke, which has to find somewhere a
+## launch would be legal BEFORE it jumps -- a peer that boots inside Grandpa's
+## farmhouse has a ceiling over it, and every launch attempt there is refused
+## for "no room overhead" while `can_launch()`, asked from the ground, only
+## ever says "jump first". A harness that re-implemented the overhead check to
+## find a clear spot would be a second copy of it, so the harness asks THIS
+## instead and the game keeps one answer.
+func launch_blockers() -> String:
+	if _player == null:
+		return "No trainer to launch."
 	if bool(_player.call("is_carried")) or not bool(_player.call("locomotion_enabled")):
 		return "Fly is unavailable while riding or in combat."
 	if not _unlocked() and not (_trial_enabled and _trial.has_point(_player.global_position)):
@@ -133,6 +204,14 @@ func can_launch() -> String:
 		return "Rest before launching: not enough stamina."
 	if safe_anchor == Vector3.INF or safe_realm != _realm():
 		return "Touch down on safe ground before launching."
+	# Lane 6.C. A client whose landing the host has not answered yet still
+	# holds the PREVIOUS granted anchor, so every check above passes and it
+	# could launch again from ground nobody has agreed to -- and then claim
+	# that ground as its recovery point for the rest of the session. Waiting is
+	# not a refusal and does not read as one; it is the one frame or two the
+	# round trip takes.
+	if _anchor_pending:
+		return "Steady -- your landing is still being confirmed."
 	var query := PhysicsShapeQueryParameters3D.new()
 	query.shape = _flight_shape()
 	query.transform = _player.global_transform.translated(Vector3.UP * float(config.get("collision_height_m", 4.5)) * 0.5)
@@ -144,6 +223,8 @@ func can_launch() -> String:
 
 
 func physics_step(delta: float, input_owned: bool) -> bool:
+	if _anchor_pending:
+		_anchor_pending_for += delta
 	if not is_flying():
 		if not input_owned and Input.is_action_just_pressed("jump") and not _player.is_on_floor():
 			var reason := can_launch()
@@ -219,6 +300,10 @@ func physics_step(delta: float, input_owned: bool) -> bool:
 	if _player.is_on_floor():
 		var species_id := str(_creature.get("species_id")) if _creature != null else ""
 		_finish("grounded")
+		# Lane 6.C: the ONE call to `observe_ground()` that is a landing rather
+		# than a step. On a client the anchor it proposes is the one the host
+		# can pull back from.
+		_touched_down = true
 		observe_ground()
 		landed.emit(_player.global_position, species_id)
 	# Cloudreach intentionally descends hundreds of metres between authored
@@ -248,11 +333,165 @@ func _restricted_reason(from: Vector3, to: Vector3) -> String:
 	return ""
 
 
+## Take note of the ground under the trainer's feet. Called every physics frame
+## by `player_controller.gd`, and once more the instant a glide touches down.
+##
+## Stage B lane 6.C split this in two without changing what it means. Solo and
+## on the host it is the same unconditional line it always was. On a CLIENT the
+## ground under this peer's feet is a PROPOSAL: it goes to the host, and only
+## the host's answer writes `safe_anchor`. See `_anchor_is_the_hosts_to_give()`.
 func observe_ground() -> void:
-	if not is_flying() and _player.is_on_floor() and not bool(_player.call("is_carried")):
-		safe_anchor = _player.global_position
+	if is_flying() or not _player.is_on_floor() or bool(_player.call("is_carried")):
+		return
+	_set_state("grounded")
+	var here := _player.global_position
+	if not _anchor_is_the_hosts_to_give():
+		safe_anchor = here
 		safe_realm = _realm()
-		_set_state("grounded")
+		# Deliberately NOT `true`. Solo and on the host this flag is never read
+		# (the branch above is the only one that runs), but a peer that later
+		# joins somebody else's session arrives holding an anchor it wrote
+		# itself, and the flag is how `_propose_anchor()` knows to offer it up
+		# rather than sit on it.
+		_anchor_host_granted = false
+		return
+	_propose_anchor(here)
+
+
+# --- Stage B lane 6.C: the host decides where a client may land ---------------
+
+## Is somebody else the authority on where this trainer is standing?
+##
+## Asked of the SESSION, and re-asked every time. Never `multiplayer.is_server()`:
+## with no session Godot installs an `OfflineMultiplayerPeer` under which
+## `is_server()` is **true** and `get_unique_id()` is **1**, so a solo player
+## would answer "I am the host" and a client that cached the answer at `setup()`
+## -- long before anybody joined -- would answer it forever.
+func _anchor_is_the_hosts_to_give() -> bool:
+	var session := _session()
+	if session == null:
+		return false
+	return bool(session.call("is_active")) and bool(session.call("is_multi_peer")) \
+		and not bool(session.call("is_host"))
+
+
+## `/root/Game/Session`, resolved through the tree rather than through `_game`
+## when it has to be. `_game` is captured in `setup()`, which runs while the
+## player rig is being built, and a node that is not yet in the tree cannot
+## resolve an absolute path -- so a null `_game` must fall through to the tree
+## rather than be read as "there is no session", which would silently give a
+## client back the authority this whole section takes away from it.
+func _session() -> Node:
+	var session: Node = null
+	if _game != null and is_instance_valid(_game):
+		session = _game.get_node_or_null(^"Session")
+	if session == null:
+		var loop := Engine.get_main_loop()
+		if loop is SceneTree:
+			session = (loop as SceneTree).root.get_node_or_null(SESSION_PATH)
+	if session == null or not session.has_method("is_host"):
+		return null
+	return session
+
+
+## This peer's own outbound trainer proxy -- the node the host holds a copy of,
+## and therefore the only thing in this process with a line to the host's own
+## opinion of where this trainer is. Resolved by AUTHORITY out of the group
+## rather than by name: the node's name is `trainer_spawn.gd`'s business, and
+## the local peer id is exactly what authority already encodes.
+func _own_proxy() -> Node:
+	var loop := Engine.get_main_loop()
+	if not (loop is SceneTree):
+		return null
+	for body in (loop as SceneTree).get_nodes_in_group(&"remote_trainer"):
+		if is_instance_valid(body) and (body as Node).is_multiplayer_authority():
+			return body
+	return null
+
+
+## Send one landing-anchor proposal, or decide there is nothing worth asking.
+##
+## Rate-limited by MOVEMENT rather than by a clock: an anchor is only worth
+## re-asking about once the player has actually walked away from the one the
+## host already granted. A trainer standing still asks once and then never
+## again, and a trainer crossing a field asks about every `resubmit_m` of it.
+func _propose_anchor(here: Vector3) -> void:
+	var landing := _touched_down
+	_touched_down = false
+	if _anchor_pending:
+		# `pending` is not a refusal. Wait for the answer, unless the host has
+		# had long enough that the packet is more likely lost than late.
+		if _anchor_pending_for < float(_anchor_config().get("pending_timeout_s", 5.0)):
+			return
+		_anchor_pending = false
+	if not landing and _anchor_host_granted and safe_realm == _realm() \
+			and safe_anchor != Vector3.INF \
+			and here.distance_to(safe_anchor) < float(_anchor_config().get("resubmit_m", 8.0)):
+		return
+	var proxy := _own_proxy()
+	if proxy == null or not proxy.has_method("request_landing_anchor"):
+		# No session body to ask through yet (a spawn that has not landed, a
+		# peer mid-join). The anchor stays whatever the host last granted;
+		# `can_launch()` already refuses a launch with none, which is the
+		# correct behaviour rather than a silent local grant.
+		return
+	_anchor_pending = true
+	_anchor_pending_claim = here
+	_anchor_pending_is_landing = landing
+	_anchor_pending_for = 0.0
+	_anchor_proposals += 1
+	proxy.call("request_landing_anchor", here, _realm())
+
+
+## The host answered. Called by this peer's own trainer proxy; public so a
+## headless test can drive the same door without a session.
+##
+## A refused LANDING is the only branch that moves the player, and it moves
+## them to the anchor the host has already granted -- which is by construction
+## a place the host said yes to. A refused proposal made while merely walking
+## changes nothing at all: the player never left ground the host is already
+## simulating them on, so there is nothing to put right.
+func apply_anchor_verdict(ok: bool, anchor: Vector3, code: String, reason: String) -> void:
+	var was_landing := _anchor_pending_is_landing
+	_anchor_pending = false
+	_anchor_pending_is_landing = false
+	_anchor_pending_claim = Vector3.INF
+	_anchor_pending_for = 0.0
+	_anchor_last_code = code
+	if ok:
+		_anchor_accepts += 1
+		safe_anchor = anchor
+		safe_realm = _realm()
+		_anchor_host_granted = true
+		anchor_decided.emit(true, anchor, code, reason)
+		return
+	_anchor_refusals += 1
+	_deny(reason)
+	anchor_decided.emit(false, anchor, code, reason)
+	if was_landing:
+		recover_to_anchor(reason)
+
+
+## What the smoke and the HUD read. Deliberately a snapshot rather than the
+## live fields, so a caller cannot write one of them by accident.
+func anchor_report() -> Dictionary:
+	return {
+		"anchor": [safe_anchor.x, safe_anchor.y, safe_anchor.z] if safe_anchor != Vector3.INF else [],
+		"realm": safe_realm,
+		"pending": _anchor_pending,
+		"host_granted": _anchor_host_granted,
+		"host_validated": _anchor_is_the_hosts_to_give(),
+		"proposals": _anchor_proposals,
+		"accepts": _anchor_accepts,
+		"refusals": _anchor_refusals,
+		"last_code": _anchor_last_code,
+		"last_denial": last_denial,
+	}
+
+
+func _anchor_config() -> Dictionary:
+	var block: Variant = config.get("landing_anchor", {})
+	return block if block is Dictionary else {}
 
 
 func set_recovery_anchor(position: Vector3, realm: String) -> bool:
@@ -371,19 +610,58 @@ func apply_pending_load() -> void:
 	_set_state("recovery")
 
 
-func _build_visual(capability: Dictionary) -> void:
-	_presentation = capability
+## `fly_traversal.json`, parsed, without an instance. Stage B lane 6.C needs
+## two blocks of it on a body that has no fly controller of its own -- a remote
+## trainer's carrier pose, and the host's landing tolerances -- and reading the
+## file in a second place is how two readings of one file start to disagree.
+static func shared_config() -> Dictionary:
+	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
+	return raw if raw is Dictionary else {}
+
+
+## The hanging pose the trainer's arms are put in under a carrier.
+static func hang_pose() -> Dictionary:
+	var block: Variant = shared_config().get("hang_pose", {})
+	return block if block is Dictionary else {}
+
+
+## The host's landing-anchor tolerances; see `fly_anchor_arbiter.gd`.
+static func landing_anchor_config() -> Dictionary:
+	var block: Variant = shared_config().get("landing_anchor", {})
+	return block if block is Dictionary else {}
+
+
+## The species of the creature currently carrying this trainer, or "" when
+## nobody is. Stage B lane 6.C reads it to tell every OTHER peer which bird to
+## draw over their friend's head -- the picture on a remote body is built from
+## the same `fly_capability` block this one is, so the two cannot drift.
+func carrier_species_id() -> String:
+	return str(_creature.get("species_id")) if _creature != null else ""
+
+
+## Build the carrier's art, parented to nothing, and hand it back.
+##
+## Static and unparented on purpose. Stage B lane 6.C needs exactly this node
+## over a REMOTE trainer's head -- `remote_trainer.gd` has no fly controller,
+## no `_player` and no business growing a second copy of this code -- and the
+## surest way for a friend's carrier to end up a different size, a different
+## height or a different bird from the one its owner is hanging off is for two
+## files to build it. So there is one builder and two callers.
+##
+## Returns null when the capability names no model or the model is missing,
+## which is the same silence `_build_visual()` has always kept: a species with
+## no art hangs the trainer from nothing rather than crashing the flight.
+static func make_carrier_art(capability: Dictionary) -> Node3D:
 	var path := str(capability.get("model", ""))
 	if path.is_empty() or not ResourceLoader.exists(path):
-		return
+		return null
 	var scene := load(path) as PackedScene
 	if scene == null:
-		return
-	_visual = Node3D.new()
-	_visual.name = "FlyCompanionPresentation"
-	_player.add_child(_visual)
+		return null
+	var visual := Node3D.new()
+	visual.name = "FlyCompanionPresentation"
 	var art := scene.instantiate() as Node3D
-	_visual.add_child(art)
+	visual.add_child(art)
 	var bounds := AABB()
 	var first := true
 	for mesh: Node in art.find_children("*", "MeshInstance3D", true, false):
@@ -396,10 +674,7 @@ func _build_visual(capability: Dictionary) -> void:
 		art.scale *= scale_factor
 		art.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * scale_factor
 	var offset: Array = capability.get("feet_offset", [0.0, 2.45, 0.0])
-	_visual.position = Vector3(float(offset[0]), float(offset[1]), float(offset[2]))
-	_grip_bones = capability.get("grip_bones", [])
-	var skeletons := art.find_children("*", "Skeleton3D", true, false)
-	_bird_skeleton = skeletons[0] as Skeleton3D if not skeletons.is_empty() else null
+	visual.position = Vector3(float(offset[0]), float(offset[1]), float(offset[2]))
 	for animation: Node in art.find_children("*", "AnimationPlayer", true, false):
 		var player := animation as AnimationPlayer
 		if bool(capability.get("procedural_wing_pose", false)):
@@ -409,6 +684,27 @@ func _build_visual(capability: Dictionary) -> void:
 		if player.has_animation(clip):
 			player.get_animation(clip).loop_mode = Animation.LOOP_LINEAR
 			player.play(clip)
+	return visual
+
+
+## The skeleton inside a node `make_carrier_art()` built, or null. Shared for
+## the same reason the builder is: the wing pose and the grip alignment both
+## need it, here and on a remote body.
+static func carrier_skeleton(visual: Node3D) -> Skeleton3D:
+	if visual == null or not is_instance_valid(visual):
+		return null
+	var skeletons := visual.find_children("*", "Skeleton3D", true, false)
+	return skeletons[0] as Skeleton3D if not skeletons.is_empty() else null
+
+
+func _build_visual(capability: Dictionary) -> void:
+	_presentation = capability
+	_visual = make_carrier_art(capability)
+	if _visual == null:
+		return
+	_player.add_child(_visual)
+	_grip_bones = capability.get("grip_bones", [])
+	_bird_skeleton = carrier_skeleton(_visual)
 
 
 func _flight_shape() -> CapsuleShape3D:
@@ -421,38 +717,55 @@ func _flight_shape() -> CapsuleShape3D:
 ## Align actual installed leg joints with the trainer's posed wrists. Species
 ## can replace their art/socket names without changing movement or ownership.
 func _align_grip() -> void:
-	if _bird_skeleton == null or _model == null or not _model.has_method("skeleton") or _grip_bones.size() != 2:
+	align_carrier_grip(_visual, _bird_skeleton, _model, _grip_bones)
+
+
+## Static and shared with `remote_trainer.gd`, for `make_carrier_art()`'s
+## reason. A friend's carrier whose feet are not on their friend's wrists is
+## the exact "two bodies drifting apart" this wave was given, one rig smaller.
+static func align_carrier_grip(visual: Node3D, rig: Skeleton3D, model: Node,
+		grip_bones: Array) -> void:
+	if visual == null or not is_instance_valid(visual) or rig == null \
+			or model == null or not model.has_method("skeleton") or grip_bones.size() != 2:
 		return
-	var trainer: Skeleton3D = _model.call("skeleton")
+	var trainer: Skeleton3D = model.call("skeleton")
 	if trainer == null:
 		return
 	var hands := Vector3.ZERO
 	var feet := Vector3.ZERO
 	for i in 2:
 		var hand := trainer.find_bone("LeftHand" if i == 0 else "RightHand")
-		var foot := _bird_skeleton.find_bone(str(_grip_bones[i]))
+		var foot := rig.find_bone(str(grip_bones[i]))
 		if hand < 0 or foot < 0:
 			return
 		hands += trainer.to_global(trainer.get_bone_global_pose(hand).origin) * 0.5
-		feet += _bird_skeleton.to_global(_bird_skeleton.get_bone_global_pose(foot).origin) * 0.5
-	_visual.global_position += hands - feet
+		feet += rig.to_global(rig.get_bone_global_pose(foot).origin) * 0.5
+	visual.global_position += hands - feet
 
 
 func _pose_bird() -> void:
-	if _bird_skeleton == null or not bool(_presentation.get("procedural_wing_pose", false)):
+	pose_carrier_wings(_bird_skeleton, _presentation, flight_seconds)
+
+
+## One wingbeat, at `seconds` into the flight. Static and shared with
+## `remote_trainer.gd` for `make_carrier_art()`'s reason: a friend's carrier
+## flapping to a second implementation's rhythm is a friend's carrier that
+## looks wrong, and nobody would ever find out which of the two was.
+static func pose_carrier_wings(rig: Skeleton3D, capability: Dictionary, seconds: float) -> void:
+	if rig == null or not is_instance_valid(rig) or not bool(capability.get("procedural_wing_pose", false)):
 		return
-	var flap := sin(flight_seconds * float(_presentation.get("wing_flap_frequency", 2.2)) * TAU) * float(_presentation.get("wing_flap_amplitude", 0.16))
+	var flap := sin(seconds * float(capability.get("wing_flap_frequency", 2.2)) * TAU) * float(capability.get("wing_flap_amplitude", 0.16))
 	for side: String in ["l", "r"]:
 		for section: String in ["upper", "fore"]:
-			var bone := _bird_skeleton.find_bone("wing_%s_%s" % [section, side])
-			var next := _bird_skeleton.find_bone("wing_%s_%s" % ["fore" if section == "upper" else "tip", side])
+			var bone := rig.find_bone("wing_%s_%s" % [section, side])
+			var next := rig.find_bone("wing_%s_%s" % ["fore" if section == "upper" else "tip", side])
 			if bone < 0 or next < 0:
 				continue
-			var side_sign := signf(_bird_skeleton.get_bone_global_rest(bone).origin.x)
-			var parent := _bird_skeleton.get_bone_parent(bone)
-			var parent_basis := _bird_skeleton.get_bone_global_pose(parent).basis if parent >= 0 else Basis.IDENTITY
-			var rest := _bird_skeleton.get_bone_rest(bone).basis
-			var axis := _bird_skeleton.get_bone_rest(next).origin.normalized()
+			var side_sign := signf(rig.get_bone_global_rest(bone).origin.x)
+			var parent := rig.get_bone_parent(bone)
+			var parent_basis := rig.get_bone_global_pose(parent).basis if parent >= 0 else Basis.IDENTITY
+			var rest := rig.get_bone_rest(bone).basis
+			var axis := rig.get_bone_rest(next).origin.normalized()
 			var desired := (parent_basis.inverse() * Vector3(side_sign, flap, 0.0)).normalized()
 			var aim := Quaternion((rest * axis).normalized(), desired)
-			_bird_skeleton.set_bone_pose_rotation(bone, aim * rest.get_rotation_quaternion())
+			rig.set_bone_pose_rotation(bone, aim * rest.get_rotation_quaternion())

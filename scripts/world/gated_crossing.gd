@@ -40,6 +40,9 @@ const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const ITEM_GATE := preload("res://scripts/world/item_gate.gd")
 const SEVERED_SPOKES := preload("res://scripts/world/severed_spokes.gd")
 const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
+## Stage B lane 5.A. A crossing is a WORLD fact: whoever spends the key, the
+## bridge is open for everybody, at once and for good.
+const STORY_LEDGER := preload("res://scripts/story/story_ledger.gd")
 
 ## Which `crossings[]` entry this is, what opens it, and the flag that
 ## remembers it was opened. Set by a subclass through `_init`; a bare
@@ -168,10 +171,36 @@ func build(world: Node3D) -> void:
 
 	# SB10: a gate the player already opened stays open across a reload — the
 	# flag is the source of truth, not the fresh `_open := false` above.
+	#
+	# Stage B lane 5.A: and it is the WORLD's flag, not the merged view's. A
+	# crossing another player unlocked has to read as open here, and a personal
+	# flag must never be able to open one.
+	add_to_group("progression_restore")
+	STORY_LEDGER.listen(self, _on_delta_applied)
 	var game := get_node_or_null(^"/root/Game")
-	var progression: RefCounted = game.get("progression") if game != null else null
-	if progression != null and _gate.is_open(progression):
+	if game != null:
+		restore_progression_from_game(game)
+
+
+## The `progression_restore` seam: a save load, a joiner's world snapshot, or a
+## world delta somebody else committed. Idempotent -- `_unlock()` returns
+## immediately once `_open` is set.
+func restore_progression_from_game(_game: Node) -> void:
+	if _open:
+		return
+	if STORY_LEDGER.world_flag(self, flag_id):
 		_unlock()
+
+
+## `ledger_rpc.gd::_commit_here()` does not sweep the `progression_restore`
+## group -- only `_rpc_delta` does -- so the HOST needs this to notice its own
+## commit and a client's. See `story_ledger.gd::listen()` for the full ordering.
+func _on_delta_applied(delta: Dictionary) -> void:
+	if not STORY_LEDGER.delta_sets_world_flag(delta, flag_id):
+		return
+	var game := get_node_or_null(^"/root/Game")
+	if game != null:
+		restore_progression_from_game(game)
 
 
 func is_open() -> bool:
@@ -374,17 +403,46 @@ func _hang_failsafe(world: Node3D, carve: Dictionary, centre: Vector2, across: V
 	spokes.call("_add_carve_failsafe", world, spokes, carve, village_side)
 
 
+## Stage B lane 5.A. The key is PERSONAL (it comes out of one satchel); the open
+## bridge is the WORLD's. So the check and the spend stay here and the flag goes
+## through the ledger, which is what carries it to the other peer.
+##
+## Deliberately NOT `item_gate.try_open()`, which spends and writes in one call:
+## a client's write has to wait for the host's answer, and a call that has
+## already written the flag locally cannot wait for anything. `can_open()` and
+## `spend()` are the same two halves that call always had, told apart so the
+## commit can sit between them.
 func _on_tried() -> void:
 	if _open:
 		return
 	var game := get_node_or_null(^"/root/Game")
 	var inventory: RefCounted = game.get("inventory") if game != null else null
-	var progression: RefCounted = game.get("progression") if game != null else null
-
-	if inventory != null and progression != null and _gate.try_open(inventory, progression):
+	if inventory == null or not _gate.can_open(inventory):
+		_on_locked()
+		return
+	var verdict := STORY_LEDGER.set_world_flag(self, flag_id)
+	if not bool(verdict.get("ok", false)) and not bool(verdict.get("pending", false)):
+		# The host said no, or there is no world to write to. The player keeps
+		# the key: a spend that bought nothing is the one failure a physical-key
+		# gate must never have (`item_gate.gd`'s own all-or-nothing rule).
+		_on_locked()
+		return
+	_gate.spend(inventory)
+	if bool(verdict.get("ok", false)):
 		_unlock()
-	else:
-		_jar()
+	# A client's `pending` verdict opens nothing yet. `_on_delta_applied` does,
+	# the moment the host's committed delta lands -- which is also the path the
+	# OTHER player's leaf swings on.
+
+
+## Called when an interact attempt fails to open the gate. Base behaviour is
+## the plain jar this file's own header explains — no dialogue, no HUD line.
+## OP-0905-13. `south_bridge.gd` overrides this to answer a locked attempt
+## with its own gate's keeper walking up to challenge the player instead of a
+## silent leaf-rattle alone; every other crossing (`mill_crossing.gd`
+## included) keeps this base no-more-than-a-jar behaviour untouched.
+func _on_locked() -> void:
+	_jar()
 
 
 func _unlock() -> void:

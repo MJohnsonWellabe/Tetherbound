@@ -158,9 +158,20 @@ func test_every_round_names_a_distinct_at_ring_flag_and_begin_conversation() -> 
 		conversations.append(begin)
 
 
-## "The final opponent rides a Meadowhart." And Burrowback stays non-rideable
-## -- the owner suggested it and then accepted Meadowhart instead, so a later
-## edit quietly moving the mount is a change to a locked decision.
+## "The final opponent rides a Meadowhart."
+##
+## Burrowback's OWN "stays non-rideable" half of this test is SUPERSEDED, not
+## quietly dropped: `docs/owner/OWNER_DIRECTIVES_2026-09-04...` (C1,
+## `docs/specs/C1_RIDEABLE_ROSTER_FLY_TELEPORT.md` R1-4) is a newer owner
+## directive than the one this test originally pinned ("the owner suggested it
+## and then accepted Meadowhart instead"), and CLAUDE.md's own precedence rule
+## puts the newest owner directive above everything else, including a locked
+## decision recorded here. The owner's later words are explicit: "Burrowback
+## and the grownup mudsnout should be rideable. Terrapup too." Meadowhart
+## staying the tournament's own prize is untouched by that -- it is still the
+## final opponent's own creature and still the chapter's dedicated mount,
+## fastest of the four saddle mounts (R1-4's own table) -- so that half of the
+## claim is unchanged and still asserted below.
 func test_the_final_opponent_fields_the_rideable_meadowhart() -> void:
 	var final_id := str(TOURNAMENT.round_spec("final").get("trainer", ""))
 	var team: Array = TRAINERS.team_of(TRAINERS.trainer(final_id))
@@ -171,8 +182,6 @@ func test_the_final_opponent_fields_the_rideable_meadowhart() -> void:
 		"the final opponent should field a Meadowhart; they field %s" % str(species))
 	assert_false(SPECIES.rideable("meadowhart").is_empty(),
 		"Meadowhart is not rideable in species.json; the tournament's prize points at nothing")
-	assert_true(SPECIES.rideable("burrowback").is_empty(),
-		"Burrowback grew a rideable block; the owner's own suggestion was overruled and it stays non-rideable")
 
 
 ## And the Meadowhart is sent out LAST. The send-out order is the team's own

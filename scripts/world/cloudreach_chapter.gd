@@ -107,7 +107,7 @@ func _process(_delta: float) -> void:
 	# Recover a partially written old save with both individual mappings but
 	# no aggregate flag. The aggregate is always durable, never UI-derived.
 	if _revision != int(progression.get("revision")):
-		CHAPTER_LOGIC.reconcile(progression, _chapter)
+		_reconcile()
 		_sync_prompts()
 	var modal := bool(_panel.call("is_open"))
 	if modal != _dialogue_was_open:
@@ -118,8 +118,23 @@ func _process(_delta: float) -> void:
 
 func restore_progression_from_game(_game: Node) -> void:
 	_revision = -1
-	CHAPTER_LOGIC.reconcile(_game.get("progression"), _chapter)
+	_reconcile()
 	_sync_prompts()
+
+
+## Stage B Wave 6 lane 6.E. Chapter recovery goes through the events adapter,
+## which supplies the ledger writer -- calling `CHAPTER_LOGIC.reconcile()`
+## straight from here would write Cloudreach's world flags onto this peer alone
+## and nowhere else. The direct call survives only for a process that has no
+## adapter yet (an early boot frame, a capture fixture); there it is the same
+## local write it always was.
+func _reconcile() -> void:
+	if _events != null and is_instance_valid(_events):
+		_events.call("reconcile_now")
+		return
+	var game := get_node_or_null(^"/root/Game")
+	if game != null:
+		CHAPTER_LOGIC.reconcile(game.get("progression"), _chapter)
 
 
 ## Public physical-event seam for later Cloudreach acts. Interactions call
@@ -160,7 +175,8 @@ func _physical_ground(at: Vector3) -> Vector3:
 
 func _emit_event(event: String) -> Dictionary:
 	if _events == null:
-		return {"accepted": false, "changed": false, "completed_ids": [], "granted_flags": []}
+		return {"accepted": false, "changed": false, "pending": false,
+			"completed_ids": [], "granted_flags": []}
 	return _events.call("emit_event", event)
 
 
@@ -203,9 +219,16 @@ func _inspect_anchor(spec: Dictionary) -> void:
 	if bool(progression.call("has", flag)):
 		return
 	var result: Dictionary = _emit_event("count:" + flag)
-	var complete := bool(progression.call("has", "cloudreach_lower_anchors_investigated"))
 	if not bool(result.get("accepted", false)):
 		return
+	if bool(result.get("pending", false)):
+		# Stage B lane 6.E. A client: the host has not answered, so nothing has
+		# been inspected yet and there is no count to state. The committed delta
+		# moves the store's revision, which re-poses the prompts through
+		# `_sync_prompts()` -- the same path a save load takes. Saying "1/2" here
+		# would be reporting a write that may still be refused.
+		return
+	var complete := bool(progression.call("has", "cloudreach_lower_anchors_investigated"))
 	game.call("push_world_message", "Storm Anchors inspected: 2/2. Both feed lines lead uphill."
 		if complete else "Storm Anchors inspected: 1/2. A feed line leads uphill.")
 	_sync_prompts()

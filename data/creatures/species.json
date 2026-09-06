@@ -29,6 +29,18 @@
         "kind": "survivability",
         "value": 0.15
       },
+      "_comment_rideable": "C1 R1-4 (docs/specs/C1_RIDEABLE_ROSTER_FLY_TELEPORT.md), owner directive 2026-09-04: 'Burrowback and the grownup mudsnout should be rideable. Terrapup too.' Same shape as Meadowhart's own `_comment_rideable` (see that entry for what every key means); this is the starter's OWN mount, ridden from the saddle mid-Meadows without spending a second slot (R1-6). `ride_speed_multiplier` 1.7 (< Meadowhart's 2.0, per R1-4's table) keeps the chapter's own dedicated mount, not a starter, at the top of the saddle ladder. `mount_offset` MEASURED with a headless (no video driver, no render) mesh-vertex probe against `scripts/characters/render_bounds.gd`'s own skin-collapsed transform (the same maths `creature_body._fit()`/`_bounds()` use), cross-checked against Meadowhart's and Veridian's shipped, owner-approved offsets as calibration: those two are long-necked runners whose HEAD sits well above their backline (measured ratio to height 0.634 and 0.478), while Terrapup is described in this very file as wearing a shell (`_comment_field_emission_0901`: 'its mint shell') -- a domed body whose highest point IS the back, not a raised head/neck. The probe found Terrapup's mid-torso vertices sit close to the model's own full declared height across most of its length (bands centred away from the head consistently measured 0.94-1.00 of height, unlike Meadowhart's 0.72-0.81 in the same bands), confirming the shell reads as the tall part of the silhouette. Offset y=1.95 sits a little under that shell line (ratio 0.848), the same 'a little under' the measured backline Meadowhart's own comment describes, not at its very peak. z=-0.15 keeps the small rearward seat every mount uses (ratio to height close to Meadowhart's/Veridian's own -0.055/-0.073). No `climb_max_slope_deg` -- R1-4: absent, so `_apply_climb_limit()` no-ops and this mount keeps the trainer's own 45 degree floor, same as Meadowhart.",
+      "rideable": {
+        "can_carry": true,
+        "requires_item": "saddle",
+        "mount_offset": [
+          0.0,
+          1.95,
+          -0.15
+        ],
+        "ride_speed_multiplier": 1.7,
+        "dismount_distance": 1.6
+      },
       "placeholder": {
         "colour": "#8a6138",
         "_comment_height_2026_08_31": "Was 2.00m (D19). BACKLOG-VISUAL-STARTER-SCALE/BACKLOG-VISUAL-BADGER-LINE-SCALE (see `_comment_starter_scale_2026_08_31` above): 2.00m rendered taller than the 1.80m trainer AND taller than this line's own adult, Burrowback (1.70m, untouched by this pass) -- a starter should not loom over the player, and a cub should not outsize the adult it is thematically paired with in the census. Dropped to 1.62m, verified by direct re-render (creature_body._fit() at this height is comfortably below its footprint-volume clamp threshold for this model, so the render-measured height equals the declared 1.62m exactly -- checked, not assumed). `radius` dropped by the identical ratio (0.81x) per D12's 'radii scale with height' rule, so the hit cone and catch-accuracy bonus stay tuned relative to the creature's own new size rather than becoming proportionally larger. SUPERSEDED 2026-09-01, see `_comment_height_2026_09_01_correction` below -- kept verbatim as the historical record of what the 08-31 pass did and why, not amended.",
@@ -295,6 +307,18 @@
         "kind": "survivability",
         "value": 0.18
       },
+      "_comment_rideable": "C1 R1-4 (docs/specs/C1_RIDEABLE_ROSTER_FLY_TELEPORT.md), owner directive 2026-09-04: 'Burrowback and the grownup mudsnout should be rideable.' Same shape as Meadowhart's own `_comment_rideable` (see that entry for what every key means). `ride_speed_multiplier` 1.5 is R1-4's own number: the digger that walks, slowest of the four saddle mounts, all still below Meadowhart's 2.0. `mount_offset` MEASURED the same way as Terrapup's (see that species' `_comment_rideable` for the method): a headless (no video driver) mesh-vertex probe through `render_bounds.gd`'s skin-collapsed transform, cross-checked against Meadowhart/Veridian's shipped offsets. Burrowback's own sheet calls it 'broad low silhouette... rock nodules for natural armour' -- a digger that carries its armoured back near its own full standing height rather than a raised head/neck, and the probe agreed: mid-torso bands away from the head measured 0.98-1.00 of the model's declared height (against Meadowhart's 0.72-0.81 in the same bands), i.e. this body's back IS close to the top of its silhouette. Offset y=1.5 sits a little under that armoured back line (ratio 0.882), the same 'a little under' convention Meadowhart's own comment states. z=-0.11 keeps the small rearward seat proportional to this shorter body (ratio to height close to the shipped mounts' -0.055/-0.073). No `climb_max_slope_deg` -- R1-4: absent, trainer's own 45 degrees.",
+      "rideable": {
+        "can_carry": true,
+        "requires_item": "saddle",
+        "mount_offset": [
+          0.0,
+          1.5,
+          -0.11
+        ],
+        "ride_speed_multiplier": 1.5,
+        "dismount_distance": 1.6
+      },
       "placeholder": {
         "colour": "#6c7061",
         "height": 1.7,
@@ -387,6 +411,18 @@
         "id": "tusk_momentum",
         "kind": "energy",
         "value": 0.16
+      },
+      "_comment_rideable": "C1 R1-4 (docs/specs/C1_RIDEABLE_ROSTER_FLY_TELEPORT.md), owner directive 2026-09-04: 'the grownup mudsnout should be rideable' -- Tuskroot is that grownup (see `evolves_from` above), never Mudsnout itself and never Ashtusk, D71's other branch (R1-4's own text: 'Mudsnout is not rideable... Ashtusk... is not rideable either'). Same shape as Meadowhart's own `_comment_rideable` (see that entry for what every key means). `ride_speed_multiplier` 1.8 is R1-4's own number: the big one, second only to Meadowhart's 2.0 among the saddle mounts. `mount_offset` MEASURED the same way as Terrapup's and Burrowback's (see Terrapup's `_comment_rideable` for the method): a headless (no video driver) mesh-vertex probe through `render_bounds.gd`'s skin-collapsed transform, cross-checked against Meadowhart/Veridian's shipped offsets. Tuskroot 'comes at you' low and heavy, tusks forward rather than a raised neck/head, and the probe agreed: mid-torso bands away from either end measured 0.985-1.00 of the model's declared height (against Meadowhart's 0.72-0.81 in the same bands), i.e. this body's back sits close to the top of its own silhouette rather than well under a raised head the way Meadowhart's does. Offset y=1.8 sits a little under that line (ratio 0.837), the same 'a little under' convention Meadowhart's own comment states. z=-0.14 keeps the small rearward seat proportional to this body (ratio to height close to the shipped mounts' -0.055/-0.073). No `climb_max_slope_deg` -- R1-4: absent, trainer's own 45 degrees.",
+      "rideable": {
+        "can_carry": true,
+        "requires_item": "saddle",
+        "mount_offset": [
+          0.0,
+          1.8,
+          -0.14
+        ],
+        "ride_speed_multiplier": 1.8,
+        "dismount_distance": 1.8
       },
       "placeholder": {
         "_comment_colour": "Re-pointed 2026-08-16 at the vivid colourway's deep mature brown (data/creatures/shiny_colourways.json, board: 'Deeper browns + Moss + Mature') so the fallback capsule and every HUD chip that reads this hex agree with what the world now renders -- the menus said mud-brown while the world said something else, which was OF28's own dropped half. Previously sampled from Ground Sheet B's palette row; the vivid pass supersedes that source.",

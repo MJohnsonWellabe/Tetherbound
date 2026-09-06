@@ -26,6 +26,15 @@
     "available_during_trial": true,
     "available_after_unlock": true
   },
+  "landing_anchor": {
+    "_comment": "Stage B lane 6.C. Where a CLIENT is allowed to put its feet down, as MP_ENCOUNTER_PROTOCOL.md Sec2 requires: the host holds the authoritative position, so a client proposes an anchor and the host answers with one off its own ground. scripts/net/fly_anchor_arbiter.gd holds the rule; these are its tolerances. Solo and the host are untouched -- there is no second process with an opinion to reconcile. All TUNABLE.",
+    "max_drift_m": 6.0,
+    "max_height_m": 2.5,
+    "min_normal_y": 0.7071,
+    "probe_m": 6.0,
+    "resubmit_m": 8.0,
+    "pending_timeout_s": 5.0
+  },
   "capabilities": {
     "galecrest": {
       "can_carry": true,

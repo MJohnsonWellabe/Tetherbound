@@ -9,6 +9,7 @@ extends SceneTree
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const CREATURE := preload("res://scripts/creatures/creature_instance.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const MATH := preload("res://scripts/combat/combat_math.gd")
 
 const SETTLE_FRAMES := 300
 const RIGHT_X := JOY_AXIS_RIGHT_X
@@ -52,6 +53,7 @@ func _run() -> void:
 		_report()
 		return
 	await _prove_combat_entry_follow_and_orbit()
+	await _prove_camera_widens_with_separation()
 	await _prove_creature_switch_keeps_the_camera()
 	await _prove_aim_cancel_returns_combat_orbit()
 	await _prove_combat_exit_restores_exploration()
@@ -158,6 +160,62 @@ func _prove_combat_entry_follow_and_orbit() -> void:
 	if rig_travel < 0.3:
 		_fail("the rig did not follow the moving active creature")
 	await _assert_raw_orbit_changes("combat")
+
+
+## OP-0905-17 (owner playtest 2026-09-05): "the fighting camera sucks. I think
+## it is too zoomed in." `combat_manager.gd::_update_combat_camera_framing()`
+## is meant to widen the shot as the two fighters separate, on top of the
+## already-raised base distance. The real wild AI does not hold still at an
+## arbitrary gap, so this drives the real framing function directly against
+## the real ally/wild bodies -- the same private-method access the production
+## smokes already use on this world (`_director.call("_engageable")` above) --
+## rather than fighting the AI for a stable measurement.
+func _prove_camera_widens_with_separation() -> void:
+	var cfg: Dictionary = MATH.config().get("camera", {}) as Dictionary
+	var base_distance := float(cfg.get("distance", 6.0))
+	var max_extra := float((cfg.get("framing", {}) as Dictionary).get("max_extra_distance", 4.0))
+	var ceiling := base_distance + max_extra
+
+	var near_distance := _measure_framing_distance(3.0)
+	var far_distance := _measure_framing_distance(9.0)
+	print("camera framing: near(3m)=%.2f far(9m)=%.2f base=%.2f ceiling=%.2f" % [
+		near_distance, far_distance, base_distance, ceiling])
+	if far_distance - near_distance < 2.0:
+		_fail("camera distance did not grow by ~2m when the fighters separated from 3m to 9m (near=%.2f far=%.2f)" % [
+			near_distance, far_distance])
+	if near_distance > ceiling + 0.05:
+		_fail("camera distance at a 3m gap exceeded base distance + max_extra_distance (near=%.2f ceiling=%.2f)" % [
+			near_distance, ceiling])
+	if far_distance > ceiling + 0.05:
+		_fail("camera distance at a 9m gap exceeded base distance + max_extra_distance (far=%.2f ceiling=%.2f)" % [
+			far_distance, ceiling])
+
+	# Leave the fighters at a normal gap, and give the real per-tick framing a
+	# few physics frames to settle back before the remaining proofs run —
+	# otherwise the switch/aim/exit checks below inherit this test's synthetic
+	# 9m separation.
+	var centre := _player.global_position + Vector3(3.5, 0.0, 0.0)
+	_ally.global_position = centre
+	_wild.global_position = centre + Vector3(2.0, 0.0, 0.0)
+	for i in 30:
+		await physics_frame
+
+
+## Places the wild `gap` metres from the ally along X and drives the real
+## `_update_combat_camera_framing()` in a tight synchronous loop -- no
+## `await physics_frame` between calls, so nothing else (the wild's own AI
+## included) gets a tick to move either body between one call and the next --
+## enough times for `camera.framing.lag`'s exponential smoothing to settle,
+## then returns the rig's own `_distance`: the value
+## `camera_rig.gd::_follow()` chases every real frame with
+## `move_toward(spring_length, _distance, _recover_speed * delta)`.
+func _measure_framing_distance(gap: float) -> float:
+	var centre := _ally.global_position
+	for i in 180:
+		_ally.global_position = centre
+		_wild.global_position = centre + Vector3(gap, 0.0, 0.0)
+		_manager.call("_update_combat_camera_framing", 1.0 / 60.0)
+	return float(_rig.get("_distance"))
 
 
 func _prove_creature_switch_keeps_the_camera() -> void:

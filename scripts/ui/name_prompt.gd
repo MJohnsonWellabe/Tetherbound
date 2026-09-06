@@ -84,6 +84,11 @@ const OUTLINE := Color(0.03, 0.04, 0.05, 0.95)
 const OUTLINE_SIZE := 6
 
 signal confirmed(creature_name: String)
+## Emitted instead of `confirmed` when a CANCELLABLE prompt is backed out of.
+## Naming a creature is mandatory and never emits this (see `open()`); the join
+## screen's address prompt is cancellable, because a player who opened it by
+## mistake has somewhere to go back to.
+signal cancelled()
 
 var _entry: RefCounted = ENTRY.new()
 var _open: bool = false
@@ -101,6 +106,14 @@ var _restore_mouse: int = Input.MOUSE_MODE_CAPTURED
 ## Which surface is live right now. Recomputed from `INPUT_GLYPH.using_gamepad()`
 ## every `_physics_process`, not just at `open()` — see the file header.
 var _using_gamepad: bool = true
+## Set by `open_entry()`. `_cancellable` decides whether B on an EMPTY buffer
+## backs out; `_blank_hint` is what the panel says while the buffer is empty,
+## which is not "every creature gets a name" on a screen that is not naming a
+## creature; `_grid_id` is the row set currently BUILT, so the panel only
+## rebuilds its cells when the grid actually changes.
+var _cancellable: bool = false
+var _blank_hint: String = "every creature gets a name"
+var _grid_id: int = -1
 ## Guards the frame a device switch happens, same reason `_guard` guards the
 ## frame this whole panel opens: the press that just changed `_using_gamepad`
 ## is still this frame's action state, and polling it immediately below would
@@ -119,7 +132,7 @@ func _ready() -> void:
 	_dress()
 	_build_keyboard()
 	_make_text_legible($Root)
-	_field.max_length = ENTRY.MAX_LENGTH
+	_field.max_length = _entry.max_length
 	_field.text_changed.connect(_on_field_text_changed)
 	_field.text_submitted.connect(_on_field_text_submitted)
 	_root.visible = false
@@ -172,7 +185,8 @@ func _build_keyboard() -> void:
 	_labels.clear()
 	_cell_coords.clear()
 
-	var rows: Array = ENTRY.ROWS
+	var rows: Array = _entry.rows()
+	_grid_id = rows.hash()
 	for r in rows.size():
 		var row: Array = rows[r]
 		var line := HBoxContainer.new()
@@ -210,15 +224,43 @@ func is_open() -> bool:
 ## makes confirming immediately, unedited, a harmless no-op instead of the
 ## only way out of the panel being to type an entirely new name.
 func open(subject: String, prefill: String = "") -> void:
-	_entry.reset()
+	open_entry("Name your %s" % subject, prefill, ENTRY.ROWS, ENTRY.MAX_LENGTH,
+		"every creature gets a name", false)
+
+
+## The general form, and the reason lane 2.B did not build a second on-screen
+## keyboard for the join screen. Everything that makes this panel work on a
+## handheld -- the cursor, the wrap, the held-direction repeat, the physical-
+## keyboard swap, the mouse release, the menu deafness -- is device plumbing
+## with nothing creature-specific in it; only the title, the character grid,
+## the length cap, the empty-buffer hint and whether B backs out ever differ.
+## So they are parameters:
+##
+##   * `title_text` is drawn verbatim ("Name your Terrapup", "Host address").
+##   * `grid` is a row set from `name_entry.gd` (`ROWS`, `ADDRESS_ROWS`).
+##   * `cancellable` makes B on an EMPTY buffer close the panel and emit
+##     `cancelled`. B on a non-empty buffer is still backspace, everywhere:
+##     one button, one meaning, and the way out is to clear what you typed.
+func open_entry(title_text: String, prefill: String, grid: Array, cap: int,
+		blank_hint: String, cancellable: bool) -> void:
+	_entry.use_rows(grid, cap)
 	if prefill != "":
 		_entry.text = prefill
+	_cancellable = cancellable
+	_blank_hint = blank_hint
+	_field.max_length = _entry.max_length
+	# The grid on screen is rebuilt only when the ROW SET changed. Rebuilding
+	# seventy panels on every open would be work for nothing on the common
+	# case (the same grid twice), and `_draw()` restyles them anyway.
+	if _entry.rows().hash() != _grid_id:
+		_build_keyboard()
+		_make_text_legible($Root)
 	_open = true
 	_guard = OPEN_GUARD_FRAMES
 	_mode_guard = 0
 	_held = Vector2i.ZERO
 	_repeat_left = 0.0
-	_title.text = "Name your %s" % subject
+	_title.text = title_text
 	_root.visible = true
 	_drawn_cursor = Vector2i(-1, -1)
 	# Hand the cursor back. Nothing had ever asked for it since
@@ -300,6 +342,45 @@ func _set_menu_deaf(held: bool) -> void:
 ## use. Godot's built-in ui_* actions carry the d-pad, the left stick and the
 ## arrow keys at once, which is exactly the set a menu wants.
 
+## OP-0905-01 (owner playtest 2026-09-05: "Inputs and keyboard are not working
+## well again at the beginning"). Naming is the player's very first text entry,
+## and `_last_input_was_gamepad` (`game_state.gd`) SEEDS true whenever a
+## joypad is connected (`not Input.get_connected_joypads().is_empty()`) — true
+## on the owner's own hardware even when they are playing with a keyboard.
+## `_physics_process` below only RE-POLLS that flag once a frame, which is one
+## frame too late for the keystroke that caused the flip: Godot delivers a
+## single InputEvent through `_input()` on every node first, THEN to whichever
+## Control currently has GUI focus, both before this node's next
+## `_physics_process` ever runs. With `_field` still hidden and unfocused
+## (still in gamepad mode) at the moment that first real key arrives, GUI
+## dispatch has nowhere to send it — the character is dropped, not merely
+## delayed, and the player's first keystroke into their own game vanishes.
+## Reacting HERE, in `_input()`, flips `_field` visible and focused before
+## THIS SAME event reaches the GUI dispatch phase that follows `_input()` for
+## every node — so the very keystroke that proves "a physical keyboard is
+## live" is also the first one `_field` actually receives. Checked against the
+## raw event type rather than `INPUT_GLYPH.using_gamepad()` (which reads
+## `Game.last_input_was_gamepad()`, itself only updated by `Game`'s OWN
+## `_input()` — a real update, but this file has no ordering guarantee against
+## another autoload's callback, and does not need one: the classification
+## below is the exact one `game_state.gd::_input()` already uses).
+func _event_says_keyboard_or_mouse(event: InputEvent) -> bool:
+	return event is InputEventKey or event is InputEventMouseButton or event is InputEventMouseMotion
+
+
+func _input(event: InputEvent) -> void:
+	if not _open or not _using_gamepad:
+		return
+	if _guard > 0 or _mode_guard > 0:
+		return
+	if not _event_says_keyboard_or_mouse(event):
+		return
+	_using_gamepad = false
+	_apply_mode()
+	_draw()
+	_mode_guard = OPEN_GUARD_FRAMES
+
+
 func _physics_process(delta: float) -> void:
 	if not _open:
 		return
@@ -324,6 +405,13 @@ func _physics_process(delta: float) -> void:
 		# Enter key `_field` just reacted to — is the exact double-confirm OF25
 		# reported: this panel closing once from `_on_field_text_submitted` and
 		# once from this poll, the second one finding nothing left to close.
+		#
+		# `menu_cancel` is a different key (Escape, not Enter) and `LineEdit`
+		# does nothing with it, so polling it here cannot repeat that bug. Only
+		# a CANCELLABLE prompt reads it at all, so the naming panel's keyboard
+		# half is unchanged.
+		if _cancellable and Input.is_action_just_pressed("menu_cancel"):
+			_cancel()
 		return
 
 	_tick_cursor(delta)
@@ -334,6 +422,14 @@ func _physics_process(delta: float) -> void:
 		# Backspace, not cancel. Naming is mandatory
 		# (docs/specs/OPENING_SEQUENCE.md), so there is nothing to back out to and B
 		# would otherwise be a dead button on the one screen that needs it most.
+		#
+		# A cancellable prompt (lane 2.B's address entry) keeps that exact
+		# meaning while there is anything to delete, and backs out only once
+		# the buffer is empty -- so B never means two things at the same time,
+		# and clearing what you typed is the way out.
+		if _cancellable and _entry.text.is_empty():
+			_cancel()
+			return
 		_entry.backspace()
 		_draw()
 
@@ -390,6 +486,14 @@ func _activate() -> void:
 			_draw()
 
 
+## Back out of a cancellable prompt. Closes exactly the way `_confirm()` does
+## -- the mouse mode, the menu deafness and the panel's own visibility all have
+## to be put back whichever way the player leaves.
+func _cancel() -> void:
+	close()
+	cancelled.emit()
+
+
 func _confirm() -> void:
 	# Typed explicitly rather than inferred. `_entry` is a bare RefCounted — the
 	# grid is loaded by path, not by class — so `sanitised()` has no declared
@@ -423,14 +527,14 @@ func _draw() -> void:
 	var valid: bool = _entry.is_valid()
 	var confirm_glyph := INPUT_GLYPH.icon("confirm")
 	if _using_gamepad:
-		var caret := "_" if _entry.text.length() < ENTRY.MAX_LENGTH else ""
+		var caret := "_" if _entry.text.length() < _entry.max_length else ""
 		_entry_label.text = "%s%s" % [_entry.text, caret]
 		var glyphs := "%s type    %s delete" % [confirm_glyph, INPUT_GLYPH.icon("cancel")]
 		_hint.text = "%s    OK to finish" % glyphs if valid \
-			else "%s    every creature gets a name" % glyphs
+			else "%s    %s" % [glyphs, _blank_hint]
 	else:
-		_hint.text = "%s    finishes the name" % confirm_glyph if valid \
-			else "every creature gets a name"
+		_hint.text = "%s    done" % confirm_glyph if valid \
+			else _blank_hint
 
 	if not _using_gamepad:
 		return  # the grid is hidden; nothing below to restyle
