@@ -25,6 +25,8 @@ const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
 const HARVEST_LOGIC := preload("res://scripts/world/harvest_logic.gd")
 const HOME_PROGRESS := preload("res://scripts/build/home_progress.gd")
+## D103 / Stage B lane 3.B. See `_on_gathered()`: the payout is an intent now.
+const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
 
 ## OW7. The woodpile: three Kenney logs, already in the build and already
 ## ledgered for their log shapes (`water.gd` stands the same mesh on end for
@@ -64,12 +66,20 @@ var _item_id: String = ""
 var _amount: int = 0
 var _felled_key: String = ""
 var _prompt: Node3D = null
+## D97: the realm this pile belongs to, from `vegetation.gd::realm` -- never
+## `Game.current_realm`.
+var _realm_id: String = "meadows"
+## True between submitting a `claim_pickup` and hearing back, and true forever
+## after this pile has been taken. See `item_cache_pickup.gd`'s own fields.
+var _claiming := false
+var _taken := false
 
 
 func setup(spec: Dictionary) -> void:
 	_item_id = str(spec.get("item", "wood"))
 	_amount = int(spec.get("amount", 1))
 	_felled_key = str(spec.get("felled_key", ""))
+	_realm_id = str(spec.get("realm", "meadows"))
 
 	_prompt = INTERACTABLE.new()
 	_prompt.name = "Interactable"
@@ -86,6 +96,7 @@ func setup(spec: Dictionary) -> void:
 	# this into "the pile itself is the affordance, same as every standing
 	# tree and rock outcrop" rather than a per-caller special case here.
 	PICKUP_GLOW.attach(self, _pile_colour(), -1.0, 1.0, _pile_kind())
+	LEDGER_CLAIM.listen(self, _on_delta_applied)
 
 
 ## Read-only identity for a controller route that must collect the specific
@@ -253,7 +264,20 @@ func _mesh_nodes(root: Node) -> Array[Node]:
 ## pickup here (`vegetation_harvest_point.gd::_on_gathered()`). A full
 ## satchel refuses visibly: the pile stays and keeps offering, the same
 ## "your satchel is full" pattern every other gather point in the game uses.
+## D103, Stage B lane 3.B. The pile no longer pays itself out. It submits a
+## `claim_pickup` INTENT naming this exact felled placement, and the committed
+## delta brings back the item (a `player` op, to the one peer who won) and the
+## world flag that says the pile is spent (a `world` op, to everybody). Two
+## players walking up to the same woodpile therefore produce one payout, and the
+## loser sees the pile disappear under the winner rather than paying out twice.
+##
+## The flag id is this pile's own address -- the same `<layer>#<index>` key
+## `vegetation.gd` files it under -- realm-qualified, so two stacked worlds
+## cannot share a pile. Solo commits in-process inside `submit()` and behaves
+## exactly as it did.
 func _on_gathered() -> void:
+	if _taken or _claiming:
+		return
 	var game := get_node_or_null(^"/root/Game")
 	if game == null:
 		push_error("no Game autoload; gathered %s into nothing" % _item_id)
@@ -268,18 +292,65 @@ func _on_gathered() -> void:
 		# wording as `harvest_node.gd`/`key_pickup.gd`'s own fix.
 		game.call("push_world_message", "Satchel is full.")
 		return
-	inventory.call("add", _item_id, _amount)
-	# Owner feedback: the pickup must visibly say what entered the satchel. Use
-	# Game's existing one-shot world-message seam so gathering does not reach
-	# into a HUD node directly.
-	var items: RefCounted = game.get("items")
-	var item_name := str(items.call("item_name", _item_id)) if items != null else _item_id.capitalize()
-	game.call("push_world_message", "+%d %s" % [_amount, item_name])
-	# GATEB-FLAGS: `home_materials_gathered` -- felled wood/stone piles are the
-	# main way the satchel actually fills for the tutorial home, same check as
-	# harvest_node.gd's own gather completion.
-	HOME_PROGRESS.maybe_set_materials_gathered(game)
+	_claiming = true
+	var verdict := LEDGER_CLAIM.submit(self, {
+		"kind": "claim_pickup",
+		"realm": _realm_id,
+		"flag": flag_id(_realm_id, _pile_key()),
+		"item": _item_id,
+		"count": _amount,
+	})
+	if not LEDGER_CLAIM.in_flight(verdict):
+		_claiming = false
 
+
+## The world fact "this felled pile has been taken". Realm-qualified for the
+## same reason `WorldLedger.vegetation_flag()` is, and keyed by the placement
+## address rather than by anything about the pile's contents, so a pile can be
+## claimed exactly once. Static and pure, the seam every other pickup in this
+## lane already offers its callers.
+static func flag_id(realm_id: String, key: String) -> String:
+	return "felled:%s:%s" % [realm_id, key]
+
+
+## This pile's address. `vegetation.gd` always supplies the `<layer>#<index>`
+## key it files the pile under; a standalone fixture that stands one directly
+## has no placement to name, so it falls back to its own position -- still
+## unique, still stable for a pile that never moves, and still one code path
+## rather than a second, ledger-free one.
+func _pile_key() -> String:
+	if not _felled_key.is_empty():
+		return _felled_key
+	return "@%.2f,%.2f,%.2f" % [position.x, position.y, position.z]
+
+
+## The committed delta. Removal is driven from here on every peer, so a lost
+## race looks like the pile going away in somebody else's hands rather than a
+## pile that vanished and paid nothing. The item arrived as the delta's
+## `item_grant`; what is left for the winner is the line that says so.
+func _on_delta_applied(delta: Dictionary) -> void:
+	if _taken:
+		return
+	if not LEDGER_CLAIM.sets_world_flag(delta, flag_id(_realm_id, _pile_key())):
+		return
+	_taken = true
+	if _claiming:
+		var game := get_node_or_null(^"/root/Game")
+		if game != null:
+			# Owner feedback: the pickup must visibly say what entered the
+			# satchel. Use Game's existing one-shot world-message seam so
+			# gathering does not reach into a HUD node directly.
+			var items: RefCounted = game.get("items")
+			var item_name := str(items.call("item_name", _item_id)) if items != null else _item_id.capitalize()
+			game.call("push_world_message", "+%d %s" % [_amount, item_name])
+			# GATEB-FLAGS: `home_materials_gathered` -- felled wood/stone piles
+			# are the main way the satchel actually fills for the tutorial home,
+			# same check as harvest_node.gd's own gather completion.
+			HOME_PROGRESS.maybe_set_materials_gathered(game)
+	_claiming = false
+
+	# The world's own "chopped but not yet gathered" record, dropped on every
+	# peer, so a save never carries an entry for a pile that is gone.
 	var vegetation := get_parent()
 	if vegetation != null and vegetation.has_method("clear_felled") and not _felled_key.is_empty():
 		vegetation.call("clear_felled", _felled_key)
@@ -313,6 +384,7 @@ func _ready() -> void:
 	# scripts drew it (`harvest_logic.gd::GROUP`) -- the same convention the
 	# standing point and the authored tutorial spots both already follow.
 	add_to_group(HARVEST_LOGIC.GROUP)
+	LEDGER_CLAIM.listen(self, _on_delta_applied)
 
 
 ## Gather this pickup, the same as pressing the interact prompt on it.

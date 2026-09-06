@@ -23,6 +23,9 @@ extends Node3D
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
 const TM_DB := preload("res://scripts/creatures/tm_db.gd")
+## D103 / Stage B lane 3.B. See `_on_picked_up()`: this TM is claimed through
+## the world ledger now, not written here.
+const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
 
 ## progression_state flag ids for TMs live in this namespace so a TM id and
 ## an unrelated objective/completion flag can never collide in the one flat
@@ -38,10 +41,18 @@ const FLAG_PREFIX := "tm:"
 var _tm_id: String = ""
 var _tms: RefCounted = null
 var _prompt: Node3D = null
+## D97: the realm this TM's RECORD belongs to, stamped on the intent rather than
+## read from `Game.current_realm`. `tm:<id>` is not itself realm-qualified (it
+## never was); the default names the one realm that plants TMs today.
+var _realm_id: String = "meadows"
+## True between submitting a `claim_pickup` and hearing back.
+var _claiming := false
+var _taken := false
 
 
-func setup(tm_id: String) -> void:
+func setup(tm_id: String, realm_id: String = "meadows") -> void:
 	_tm_id = tm_id
+	_realm_id = realm_id
 	add_to_group("progression_restore")
 	_tms = TM_DB.load_default()
 	_build_visual()
@@ -52,6 +63,7 @@ func setup(tm_id: String) -> void:
 	_prompt.call("configure", "Learn %s" % str(_tms.call("display_name", _tm_id)), 2.4, true)
 	_prompt.connect("activated", _on_picked_up)
 	add_child(_prompt)
+	LEDGER_CLAIM.listen(self, _on_delta_applied)
 	var game := get_node_or_null(^"/root/Game")
 	if was_taken(game, _tm_id):
 		_deactivate()
@@ -69,7 +81,17 @@ func restore_progression_from_game(game: Node) -> void:
 		_deactivate()
 
 
+## Stable per-TM flag id, pure, so a caller can predict it without a live Game
+## autoload -- the same seam `key_pickup.gd::flag_id()` and
+## `item_cache_pickup.gd::flag_id()` already give theirs, and now also what
+## lane 3.B's `claim_pickup` intent quotes so the ledger never has to learn a
+## fourth id scheme.
+static func flag_id(tm_id: String) -> String:
+	return FLAG_PREFIX + tm_id
+
+
 func _deactivate() -> void:
+	_taken = true
 	# Disable immediately; queue_free alone leaves one actionable frame.
 	if _prompt != null and is_instance_valid(_prompt):
 		_prompt.call("set_enabled", false)
@@ -276,7 +298,18 @@ func _orb_material(colour: Color) -> StandardMaterial3D:
 	return mat
 
 
+## D103, Stage B lane 3.B. The satchel write and the `tm:<id>` flag are the
+## ledger's now: a `claim_pickup` INTENT goes up and the committed delta brings
+## both halves back. Nothing here changes until it lands, so two players
+## pressing on the same orb produce one TM and the loser watches it keep
+## spinning where it stood. Solo still commits in-process inside `submit()`.
+##
+## The room check stays ahead of the intent -- only this peer can see its own
+## satchel -- and the flag is still deliberately not written on that path: a TM
+## that is still in the world must not be recorded as taken.
 func _on_picked_up() -> void:
+	if _taken or _claiming:
+		return
 	var game := get_node_or_null(^"/root/Game")
 	if game == null:
 		push_error("no Game autoload; a TM was found but has nowhere to go")
@@ -286,14 +319,40 @@ func _on_picked_up() -> void:
 		push_error("no inventory; a TM was found but has nowhere to go")
 		return
 	if not bool(inventory.call("has_room_for", _tm_id, 1)):
-		# Refused, visibly, same as key_pickup.gd/harvest_node.gd: the disc
+		# Refused, visibly, same as key_pickup.gd/harvest_node.gd: the orb
 		# stays planted and keeps offering rather than vanishing into a full
-		# satchel. The flag below is deliberately NOT set on this path -- a
-		# TM that is still in the world must not be recorded as taken.
+		# satchel.
 		game.call("push_world_message", "Satchel is full.")
 		return
-	inventory.call("add", _tm_id, 1)
-	var progression: RefCounted = game.get("progression")
-	if progression != null:
-		progression.call("set_flag", FLAG_PREFIX + _tm_id)
-	_deactivate()
+	_claiming = true
+	var verdict := LEDGER_CLAIM.submit(self, {
+		"kind": "claim_pickup",
+		"realm": _realm_id,
+		"flag": flag_id(_tm_id),
+		"item": _tm_id,
+		"count": 1,
+	})
+	if not LEDGER_CLAIM.in_flight(verdict):
+		_claiming = false
+
+
+## Removal is driven by the delta, not by the intent. See
+## `item_cache_pickup.gd::_on_delta_applied()`.
+func _on_delta_applied(delta: Dictionary) -> void:
+	if not LEDGER_CLAIM.sets_world_flag(delta, flag_id(_tm_id)):
+		return
+	# `_taken` is checked after the flag, not before it: on a client
+	# `ledger_rpc.gd::_rpc_delta` runs the `progression_restore` sweep before it
+	# emits `delta_applied`, so this node can already be deactivated by the time
+	# we arrive and the claim still has to be closed out.
+	_claiming = false
+	if not _taken:
+		_deactivate()
+
+
+## The transport is an autoload child at an identical path in every process, so
+## it is already there when this node enters the tree. Connected here as well as
+## in `setup()` because a caller that sets the node up BEFORE adding it to the
+## tree would otherwise never hear a delta at all -- `listen()` is idempotent.
+func _ready() -> void:
+	LEDGER_CLAIM.listen(self, _on_delta_applied)

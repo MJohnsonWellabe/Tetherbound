@@ -278,34 +278,68 @@ func _place_building(intent: Dictionary, peer_id: int, realm: String) -> Diction
 	var id := str(intent.get("id", ""))
 	if id.is_empty():
 		return _refuse("place_building", peer_id, "malformed", "That structure has no identity to record.")
+	var txn := str(intent.get("txn_id", ""))
+	if not txn.is_empty() and _seen_txns.has(txn):
+		return _refuse("place_building", peer_id, "duplicate",
+			"That structure was already placed.")
+	# The HOST mints the uid, here, once, and every peer applies the one that
+	# arrives on the op. A client minting its own would produce two identities
+	# for one structure the moment two peers placed in the same tick.
+	var uid := "b%d" % int(world.get("next_building_uid"))
 	var op := {
 		"op": "building_add",
 		"scope": "world",
 		"realm": realm,
+		"uid": uid,
 		"id": id,
 		"position": _position(intent.get("position")),
 		"yaw_deg": float(intent.get("yaw_deg", 0.0)),
 		"paid": bool(intent.get("paid", true)),
 	}
-	return _commit([op], "place_building", peer_id, realm)
+	if not txn.is_empty():
+		op["txn_id"] = txn
+	var verdict := _commit([op], "place_building", peer_id, realm)
+	# Echoed so the presser can match THIS answer to the ticket it raised. Two
+	# placements in flight inside one round trip otherwise pop the wrong ticket
+	# and charge the wrong press (lane 3.C, F3).
+	verdict["uid"] = uid
+	if not txn.is_empty():
+		verdict["txn_id"] = txn
+	return verdict
 
 
-## Removal by index into `placed_buildings`, which is the address
-## `build_placer.gd` already stashes as node metadata and already removes by.
-## Ordered delta application keeps every peer's indices in step; a stable id per
-## record is lane 3.C's call to make, and would be a save-format change.
+## By `uid`, not by index. Lane 3.C measured why: a client submits `dismantle`
+## for index N, another peer's removal below N commits while that intent is in
+## flight, and the host applies it against a renumbered array -- taking down the
+## NEIGHBOUR. The realm guard cannot catch it, because after the renumber the
+## index is perfectly valid, just wrong. An identity does not move when the
+## array does.
 func _dismantle(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
-	var index := int(intent.get("index", -1))
+	var txn := str(intent.get("txn_id", ""))
+	if not txn.is_empty() and _seen_txns.has(txn):
+		return _refuse("dismantle", peer_id, "duplicate", "That structure was already taken down.")
 	var buildings: Array = world.get("placed_buildings") as Array
+	var uid := str(intent.get("uid", ""))
+	var index := -1
+	if not uid.is_empty():
+		index = int(world.call("building_index_of", uid))
+	else:
+		# Only for a caller not yet taught uids. No shipping code takes it.
+		index = int(intent.get("index", -1))
 	if index < 0 or index >= buildings.size():
 		return _refuse("dismantle", peer_id, "gone", "That structure is already gone.")
 	var record: Dictionary = buildings[index] as Dictionary
 	if str(record.get("realm", "meadows")) != realm:
-		# Two peers in two realms, both holding index 4. Refusing is the only
-		# safe answer: the record at that index is not the one being pointed at.
 		return _refuse("dismantle", peer_id, "gone", "That structure is already gone.")
-	return _commit([{"op": "building_remove", "scope": "world", "realm": realm, "index": index}],
-		"dismantle", peer_id, realm)
+	var op := {"op": "building_remove", "scope": "world", "realm": realm,
+		"uid": str(record.get("uid", "")), "index": index}
+	if not txn.is_empty():
+		op["txn_id"] = txn
+	var verdict := _commit([op], "dismantle", peer_id, realm)
+	verdict["uid"] = str(record.get("uid", ""))
+	if not txn.is_empty():
+		verdict["txn_id"] = txn
+	return verdict
 
 
 ## Optimistic concurrency for a chest (D103, lane 3.D). The caller quotes the

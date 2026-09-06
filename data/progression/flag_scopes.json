@@ -120,6 +120,8 @@
       "pickup:",
       "tm:",
       "harvest_node:",
+      "vegetation:",
+      "felled:",
       "wild_once_",
       "warrens_once_"
     ]

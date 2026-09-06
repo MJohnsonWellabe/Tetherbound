@@ -1062,6 +1062,21 @@ func sync_state_to_game(game: Node) -> void:
 		(buildings[index] as Dictionary)["state"] = state.call("save_data")
 
 
+## The stable record id at `index`, or "" when there is no such record. The one
+## place this file turns a position back into an identity.
+func _building_uid_at(index: int) -> String:
+	if index < 0:
+		return ""
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return ""
+	var buildings: Variant = game.get("placed_buildings")
+	if not (buildings is Array) or index >= (buildings as Array).size():
+		return ""
+	var record: Variant = (buildings as Array)[index]
+	return str((record as Dictionary).get("uid", "")) if record is Dictionary else ""
+
+
 ## Controller-first removal transaction. The caller supplies an explicitly
 ## targeted player-built root (the centre-screen ray does that in production),
 ## which also makes the economic/save transaction independently testable.
@@ -1115,10 +1130,16 @@ func dismantle_piece(game: Node, target: Node3D) -> bool:
 		push_error("no Game.ledger to submit a dismantle through")
 		return false
 	var realm := WORLD_RECORDS.active(game)
-	var ticket := {"index": index, "realm": realm, "id": id, "refund": refund.duplicate(true)}
+	# By uid, not by index: an index names a POSITION in `placed_buildings`, and
+	# another peer's dismantle below this one renumbers the array while this
+	# intent is in flight, so the host would take down the neighbour. The uid
+	# names the record itself and does not move.
+	var uid := _building_uid_at(index)
+	var ticket := {"index": index, "uid": uid, "realm": realm, "id": id,
+		"refund": refund.duplicate(true)}
 	_pending_dismantles.append(ticket)
 	var verdict: Dictionary = transport.call("submit",
-		{"kind": "dismantle", "realm": realm, "index": index})
+		{"kind": "dismantle", "realm": realm, "uid": uid, "index": index})
 	if bool(verdict.get("ok", false)) or bool(verdict.get("pending", false)):
 		# `ok`: the delta already landed and `_uproot_from_delta` has already
 		# taken the piece down, paid the refund and said so. `pending`: a
