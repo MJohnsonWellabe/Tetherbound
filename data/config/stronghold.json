@@ -903,6 +903,27 @@
         "energy": 20.0,
         "range": 24.0,
         "attenuation": 1.0
+      },
+      {
+        "mount": "wall",
+        "at": [-45.4, 84.2],
+        "y": 6.5,
+        "yaw_deg": -90.0,
+        "scale": 1.4,
+        "energy": 16.0,
+        "range": 20.0,
+        "attenuation": 1.0,
+        "_comment": "TETHER-MACHINE-0906 re-judge (2026-09-06): even at energy 20/range 24, the floor-height (y 1.9) pair only carries the wall's lower third -- the blind critic still read the machine's upper two-thirds (the uprights and the hanging orb above head height, the room's own tallest and most dramatic mass) fading to near-black against an equally dark wall, 'especially above head height where the drama of the shot should be strongest'. This pair mirrors the floor pair's x/z exactly, at 6.5 m -- inside the crown-relief zone the machine's own uprights occupy per stronghold_climax.gd's bound-legendary read (crown ~8.9 m) -- so the same wall is lit across the height the object actually stands in, not just at ankle height. TUNABLE."
+      },
+      {
+        "mount": "wall",
+        "at": [-45.4, 96.2],
+        "y": 6.5,
+        "yaw_deg": -90.0,
+        "scale": 1.4,
+        "energy": 16.0,
+        "range": 20.0,
+        "attenuation": 1.0
       }
     ],
     "_comment_gate_source": "Brazier BASKETS with no light of their own, standing where `lights`/`lights_flanks` already authors a source. The T1-ARCH gate recipe lit the curtain convincingly and put nothing in the frame that could be doing the lighting; these are that missing source, and they cost zero omnis because the light is already there. The Warden Arena pair (W-4) is the same trick applied inside the Hall: `EXTERIOR_OMNI_BUDGET` was already spent to 21 of 22 before this pass (`stronghold.gd::_report_light_budget`'s own count), so a THIRD real omni pair here would have pushed the Hall over its design ceiling for two props that only need to read as fire, not to actually light the room -- the arena's own two ambient sky-fill `lights` entries at [-8,90.2]/[8,90.2] already do that job.",
