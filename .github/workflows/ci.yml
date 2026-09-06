@@ -1918,7 +1918,18 @@ jobs:
     # from measured build costs, not a measurement of this shard: the first real
     # run is what should correct it, in either direction. A shard that finishes
     # in 32 minutes does not need 45.
-    timeout-minutes: 45
+    #
+    # 52 adds the two acceptance-item smokes below it, measured end to end on a
+    # 4-core box on 2026-09-06: `menu_does_not_freeze_peer` 2 min 45 s (two
+    # Meadows builds and eight measured walks), `catch_race` 2 min 23 s (two
+    # Meadows builds, one fight, one wobble). Five minutes plus the same margin.
+    #
+    # It is still an estimate rather than a measurement OF THE SHARD, and for a
+    # blunter reason than the paragraph above admits: until the discovery fix in
+    # this same block landed, this job was a bash syntax error and had never run
+    # a single net smoke. Nothing here has ever been timed against a real green
+    # run. The first one is what should correct this number.
+    timeout-minutes: 52
     needs: changes
     if: needs.changes.outputs.code == 'true'
     steps:
@@ -1973,28 +1984,19 @@ jobs:
           # restated the lanes before them, and the block had accumulated four
           # duplicated fragments before lane 2.B noticed. The roster is the
           # record; prose about it only rots.
-          if [ "$count" -lt 20 ]; then
-            echo "::error::expected at least 20 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
-          # ran nothing. Wave 0 shipped 2 (the boot smoke and its negative
-          # control); Wave 2 added host/join/leave and movement; lane 3.D added
-          # storage_concurrency; lane 4.B added deploy_two_creatures; lane 3.C
-          # added shared_building; lane 3.B added pickup_race; lane 5.C added
-          # fog_is_personal; lane 6.A added split_realms and
-          # realm_owner_disconnect_mid_fight -- the two most expensive smokes
-          # in the shard, because directive rule 16 costs five world builds
-          # between them (see each smoke's own header).
-          #
-          # The number is the TRUE count of files declaring the header, not a
-          # lane's guess at it -- every lane raises it by one and a merge of
-          # several at once has to be reconciled against the directory rather
-          # than against whichever lane's line won the conflict.
-          # Lane 6.A regenerated this from the FILES ON DISK rather than
-          # incrementing the previous line, which is what the shard's own
-          # comment above asks for: five lanes are adding smokes into this
-          # wave at once and an incremented guess reconciles to whichever
-          # lane's conflict resolution won, not to the tree.
-          if [ "$count" -lt 20 ]; then
-            echo "::error::expected at least 20 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
+          # THE UNCLOSED `if` THIS REPLACES. Until 2026-09-06 these lines were
+          # two count-floor tests, one nested inside the other, with a single
+          # `fi` between them -- so the outer `if` was never closed and the
+          # whole step was a bash syntax error ("unexpected end of file").
+          # `verify-multiplayer-shard` therefore ran ZERO net smokes on every
+          # pull request that reached it, and did it by failing at discovery
+          # rather than by going green, which is the only reason it was not
+          # worse. It is exactly the accident the comment above predicts: four
+          # lanes resolving one conflict in turn, each keeping its own copy.
+          # Reproduce it on any checkout by extracting this `run:` block and
+          # running `bash -n` over it.
+          if [ "$count" -lt 22 ]; then
+            echo "::error::expected at least 22 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
             exit 1
           fi
           # Named registration, on top of the count. Discovery alone would let a
@@ -2005,12 +2007,14 @@ jobs:
           for required in \
             tests/smoke_net_behind_character_joins_ahead_world.gd \
             tests/smoke_net_boss_rewards_each_participant.gd \
+            tests/smoke_net_catch_race.gd \
             tests/smoke_net_deploy_two_creatures.gd \
             tests/smoke_net_fog_is_personal.gd \
             tests/smoke_net_gate_opens_for_both.gd \
             tests/smoke_net_hearts.gd \
             tests/smoke_net_host_join_leave.gd \
             tests/smoke_net_join_by_address.gd \
+            tests/smoke_net_menu_does_not_freeze_peer.gd \
             tests/smoke_net_movement_two_peers.gd \
             tests/smoke_net_peer_death.gd \
             tests/smoke_net_pickup_race.gd \

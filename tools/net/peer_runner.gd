@@ -206,6 +206,30 @@ var _trade_last: Dictionary = {}
 var _trade_refusals: Array = []
 var _trade_wired: bool = false
 
+## Acceptance item 6. Everything this peer's own catch attempt produced, kept
+## apart from the fight's own state on purpose: the LOSER of the race has no
+## decision, no resolution and no orb -- only a refusal -- and a probe that read
+## the outcome off the fight would report the same "nothing happened" for a
+## loser and for a peer whose throw never left the harness.
+var _catch_encounter_id: String = ""
+var _catch_orb_id: String = "orb_basic"
+var _catch_launch: Vector3 = Vector3.ZERO
+var _catch_direction: Vector3 = Vector3.FORWARD
+## "" (never threw), "answered" (the host is this process and arbitrated in the
+## call), or "pending" (a client, waiting for the host). `pending` is NOT a
+## refusal; see `_throw_orb()`.
+var _catch_submit: String = ""
+## The shape `submit_encounter_intent` handed back on this peer's own throw.
+var _catch_local_verdict: Dictionary = {}
+## `combat_manager.gd::catch_resolved` -- emitted only on the peer that actually
+## played a decision, which is the winner and nobody else.
+var _catch_resolutions: Array = []
+## `catch_refused` sentences: what the player was shown.
+var _catch_refusals: Array = []
+## `caught_by_other` -- §8 step 4, the message every OTHER participant gets when
+## somebody's catch lands.
+var _catch_caught_by_other: Array = []
+
 
 func _initialize() -> void:
 	var args := _parse_args()
@@ -513,6 +537,10 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_enter_realm(args)
 		"drop_link":
 			out = await _step_drop_link(args)
+		"menu_toggle":
+			out = await _step_menu_toggle(args)
+		"catch_throw":
+			out = _step_catch_throw(args)
 		_:
 			out = {"verdict": "ERROR", "detail": "unknown action '%s'" % action}
 	out["frames_used"] = _physics_count - before
@@ -2512,6 +2540,209 @@ func _progression_store() -> RefCounted:
 	return game.get("progression") as RefCounted if game != null else null
 
 
+
+# --- acceptance item 16 (D102): a menu does not freeze other players ----------
+#
+# One arm and one probe. The arm presses the REAL button on the REAL pause
+# shell; the probe reads `SceneTree.paused` at the source. Nothing here opens a
+# panel by calling `open()`, for the reason `tests/smoke_menu.gd`'s own header
+# gives: calling the method proves the method works, not that the button
+# reaches it.
+
+## Open or close `Game.menu()` with its configured button, and prove it landed.
+##
+## Deliberately NOT `_step_press`. `_inject`'s own header records that this file
+## puts the PHYSICS frame first because every gameplay action `peer_runner.gd`
+## drives (`jump`, movement, `interact`) is polled from `_physics_process`, and
+## that a menu polled from `_process` needs the opposite ordering -- "if a
+## menu-focused action needs this file later, gate the idle-frame placement on
+## the control rather than reverting this wholesale". This is that gate:
+## `game_menu.gd::_read_actions()` is called from `_process` (line 523) and
+## reads `Input.is_action_just_pressed` for BOTH `open_action` and
+## `close_action`, so an idle frame has to come first or the just-pressed flag
+## has already expired by the time the shell looks.
+##
+## The verdict is read off `is_open()` rather than off the injection returning
+## ok: a press that was delivered and ignored is exactly the failure this arm
+## exists to catch.
+func _step_menu_toggle(args: Dictionary) -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	if game == null or not game.has_method("menu"):
+		return {"verdict": "ERROR", "detail": "no /root/Game with a menu()"}
+	var menu: Variant = game.call("menu")
+	if menu == null:
+		return {"verdict": "ERROR", "detail": "the Game autoload stood up no menu"}
+	var shell: Node = menu
+	var want := bool(args.get("open", true))
+	if bool(shell.call("is_open")) == want:
+		return {"verdict": "PASS",
+			"detail": "the menu was already %s" % ("open" if want else "shut")}
+	var action := str(args.get("action", "game_menu" if want else "menu_cancel"))
+	# B is the BACK button, not a close button: `game_menu.gd`'s own comment on
+	# `close_action` says so, and `data/config/menu.json` binds `menu_cancel` to
+	# it. A tab that has taken the screen for itself -- the Backpack tab's drop
+	# target picker is the one this smoke walks into, because holding the stick
+	# inside the shell is exactly what a player who forgot the panel was up
+	# does -- consumes the first press to back out of ITSELF, and the shell
+	# never sees it. So this presses like a player leaving a menu: again, until
+	# it is out, up to `presses`. Opening needs one and takes one.
+	var presses := maxi(1, int(args.get("presses", 1 if want else 3)))
+	var within := maxi(1, int(args.get("within_frames", 90)))
+	for attempt in presses:
+		var down := _press_edge(action, true)
+		if not bool(down.get("ok", false)):
+			return {"verdict": "ERROR", "detail": "could not inject '%s': %s"
+				% [action, str(down.get("why", ""))]}
+		await process_frame
+		await physics_frame
+		_press_edge(action, false)
+		for i in within:
+			await process_frame
+			await physics_frame
+			if bool(shell.call("is_open")) == want:
+				return {"verdict": "PASS",
+					"detail": "the menu is %s %d frames after press %d of '%s' (context '%s', tree paused=%s)"
+						% ["open" if want else "shut", i + 1, attempt + 1, action,
+							str(_probe.call("input_context")), str(paused)]}
+	return {"verdict": "FAIL",
+		"detail": "%d press(es) of '%s' did not %s the menu within %d frames each (it is still %s, context '%s')"
+			% [presses, action, "open" if want else "close", within,
+				"open" if bool(shell.call("is_open")) else "shut",
+				str(_probe.call("input_context"))]}
+
+
+# --- acceptance item 6: the first-successful-catch rule, over the wire --------
+#
+# Two arms and one probe, and they are the `pickup_take` pattern applied to a
+# fight: the coordinator awaits each verdict before sending the next, so two
+# "throw now" messages are always a round trip apart and the race the item is
+# about cannot form. `at_unix_ms` ARMS the throw and answers immediately, so
+# both peers can be armed and then both throw at one shared wall-clock instant
+# (one machine, contract §2). Lane 3.B's answer, reused rather than reinvented.
+
+## Start listening for everything a catch can tell this peer, before either
+## throw. Idempotent, and separate from the throw so a peer that LOSES -- and
+## therefore never plays a decision -- is still listening when the winner's
+## `caught_by` arrives.
+func _catch_watch() -> void:
+	var manager := _combat_manager()
+	if manager == null:
+		return
+	if not manager.is_connected("catch_resolved", _on_catch_resolved):
+		manager.connect("catch_resolved", _on_catch_resolved)
+	if not manager.is_connected("catch_refused", _on_catch_refused):
+		manager.connect("catch_refused", _on_catch_refused)
+	if not manager.is_connected("caught_by_other", _on_caught_by_other):
+		manager.connect("caught_by_other", _on_caught_by_other)
+
+
+func _on_catch_resolved(success: bool, shakes: int) -> void:
+	_catch_resolutions.append({"caught": success, "shakes": shakes})
+
+
+func _on_catch_refused(reason: String) -> void:
+	_catch_refusals.append(reason)
+
+
+func _on_caught_by_other(peer_id: int, species_id: String) -> void:
+	_catch_caught_by_other.append({"peer": peer_id, "species": species_id})
+
+
+## Throw an orb at the fight's opponent, through the one door
+## `combat_manager.gd` itself submits catches through
+## (`_submit_catch_attempt` -> `submit_encounter_intent`). Same precedent as
+## `_step_strike`: the harness supplies what a controller supplies -- where the
+## throw left the hand, which way it went, and which orb was spent -- and
+## nothing that decides the outcome. The host re-derives the closest approach
+## against its OWN position for the creature and rolls with its own `_rng`
+## (`catch_arbiter.gd`), so nothing here can buy this peer a catch.
+##
+## The one thing this arm sets that a real throw would have set already is
+## `_catch_awaiting_host`. `_on_orb_struck()` sets it on the way into
+## `_submit_catch_attempt()`, and `apply_host_catch_verdict()` drops any answer
+## that arrives while it is false -- so without it the host's reply would be
+## discarded and the smoke would measure silence on both peers. A real orb
+## flight cannot be driven headlessly (`throw_aim.gd` needs an aim, a wind-up
+## and a projectile); the ARBITRATION is what item 6 is about, and everything
+## from `submit_encounter_intent` onward is the shipping path.
+##
+## `args.at_unix_ms` arms instead of throwing. `args.target` is where the
+## thrower aimed, which the coordinator reads off the HOST's record so both
+## peers aim at the same creature.
+func _step_catch_throw(args: Dictionary) -> Dictionary:
+	var director := _encounter_director()
+	var manager := _combat_manager()
+	if director == null or manager == null:
+		return {"verdict": "ERROR", "detail": "no EncounterDirector/CombatManager"}
+	var id := str(manager.call("encounter_id"))
+	if id.is_empty():
+		return {"verdict": "FAIL", "detail": "this peer is not in a networked fight"}
+	var player := _probe.call("player") as Node3D
+	if player == null:
+		return {"verdict": "ERROR", "detail": "no live player to throw from"}
+	var aim: Array = args.get("target", []) as Array
+	if aim.size() != 3:
+		return {"verdict": "ERROR", "detail": "catch_throw needs args.target = [x, y, z]"}
+	_catch_watch()
+	_catch_orb_id = str(args.get("orb_id", "orb_basic"))
+	# `throw.spawn_height` / `spawn_forward` from data/config/catching.json, so
+	# the launch point is the one a real throw would have had.
+	_catch_launch = player.global_position + Vector3(0.0, 1.5, 0.0)
+	var toward := Vector3(float(aim[0]), float(aim[1]), float(aim[2])) - _catch_launch
+	if toward.length_squared() <= 0.000001:
+		return {"verdict": "ERROR", "detail": "catch_throw target is the launch point"}
+	_catch_direction = toward.normalized()
+	_catch_encounter_id = id
+	var at := float(args.get("at_unix_ms", 0.0))
+	if at > 0.0:
+		_throw_orb_at.call_deferred(at)
+		return {"verdict": "PASS", "detail": "armed a throw at %s for %.0f" % [id, at]}
+	return _throw_orb()
+
+
+## Hold until the shared instant, then throw. Detached (`call_deferred`) so the
+## arming step can answer the coordinator straight away; it keeps running
+## because each `await physics_frame` resumes it off the tree's own signal.
+func _throw_orb_at(at_unix_ms: float) -> void:
+	while Time.get_unix_time_from_system() * 1000.0 < at_unix_ms:
+		await physics_frame
+	_throw_orb()
+
+
+func _throw_orb() -> Dictionary:
+	var director := _encounter_director()
+	var manager := _combat_manager()
+	if director == null or manager == null:
+		_catch_submit = "no_manager"
+		return {"verdict": "ERROR", "detail": "no EncounterDirector/CombatManager"}
+	manager.set("_catch_awaiting_host", true)
+	var verdict: Dictionary = director.call("submit_encounter_intent", {
+		"kind": "catch_attempt",
+		"encounter_id": _catch_encounter_id,
+		"launch_point": [_catch_launch.x, _catch_launch.y, _catch_launch.z],
+		"direction": [_catch_direction.x, _catch_direction.y, _catch_direction.z],
+		"orb_id": _catch_orb_id,
+	})
+	_catch_local_verdict = {
+		"ok": bool(verdict.get("ok", false)),
+		"pending": bool(verdict.get("pending", false)),
+		"code": str(verdict.get("code", "")),
+		"reason": str(verdict.get("reason", "")),
+		"caught": bool((verdict.get("delta", {}) as Dictionary).get("caught", false)),
+	}
+	# `pending` is NOT a refusal -- it is what a client's `submit()` returns
+	# while the host answers, and the answer lands later on
+	# `apply_host_catch_verdict()` through `_deliver_encounter_verdict`. Only
+	# the host's own throw is answered here and now, exactly as
+	# `combat_manager.gd::_submit_catch_attempt()` does it.
+	_catch_submit = "pending" if bool(verdict.get("pending", false)) else "answered"
+	if not bool(verdict.get("pending", false)):
+		manager.call("apply_host_catch_verdict", verdict)
+	return {"verdict": "PASS", "detail": "threw at %s (ok=%s pending=%s code=%s)"
+		% [_catch_encounter_id, str(verdict.get("ok", false)),
+			str(verdict.get("pending", false)), str(verdict.get("code", ""))]}
+
+
 func _execute_probe(msg: Dictionary) -> Variant:
 	var what := str(msg.get("what", ""))
 	match what:
@@ -2995,6 +3226,73 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				# peer can be told where to connect without the coordinator
 				# having to remember what it handed out.
 				"enet_port": _enet_port,
+			}
+		"local_pause":
+			# Acceptance item 16 / D102. Everything the "a menu does not freeze
+			# other players" smoke reads, off this process's own live objects.
+			#
+			# `paused` is `SceneTree.paused` on THIS peer, read at the source:
+			# this script IS the SceneTree (see the header), so this is the same
+			# bit the six panels used to set unconditionally, not a frame
+			# counter something was inferred from.
+			#
+			# `multi_peer` is asked of the SESSION and never of `multiplayer`:
+			# under Godot's default `OfflineMultiplayerPeer` a process with no
+			# session at all reports `is_server() == true` and
+			# `get_unique_id() == 1`, so that API cannot tell solo from host.
+			# `Game.is_multi_peer()` is `session.gd::is_multi_peer()` with a null
+			# guard -- `peer_count() > 1`, which is false solo, false before the
+			# session node exists, and false for a one-peer session.
+			var lgame := root.get_node_or_null(^"Game")
+			var lowner := _probe.call("input_owner_node") as Node
+			var lmenu: Variant = lgame.call("menu") if lgame != null \
+				and lgame.has_method("menu") else null
+			return {
+				"paused": paused,
+				"context": str(_probe.call("input_context")),
+				"owner": str(lowner.name) if lowner != null else "",
+				"menu_open": lmenu != null and bool((lmenu as Node).call("is_open")),
+				"multi_peer": lgame != null and lgame.has_method("is_multi_peer") \
+					and bool(lgame.call("is_multi_peer")),
+				"session_peers": _session_peer_ids().size(),
+				"physics_frame": _physics_count,
+			}
+		"catch":
+			# Acceptance item 6. The catch race, from this peer's side.
+			#
+			# `party` is read by SPECIES rather than by slot index (CLAUDE.md:
+			# address inventory by identity, never by slot number), and
+			# `pending` is `Game.pending_catch` -- the release ceremony's seam,
+			# which is where a catch into a FULL belt goes. It is counted beside
+			# the party on purpose: the five-creature limit is a hard rule, and
+			# a conservation check that looked only at `party.size()` would read
+			# a creature parked on that seam as a creature that vanished.
+			var cgame := root.get_node_or_null(^"Game")
+			var cmanager := _combat_manager()
+			var cparty: Variant = cgame.get("party") if cgame != null else null
+			var species: Array = []
+			if cparty != null:
+				for member: Variant in ((cparty as RefCounted).call("members") as Array):
+					species.append(str((member as RefCounted).get("species_id")))
+			var pending: Variant = cgame.get("pending_catch") if cgame != null else null
+			return {
+				"available": cmanager != null,
+				"encounter_id": _catch_encounter_id,
+				"submit": _catch_submit,
+				"verdict": _catch_local_verdict,
+				"resolutions": _catch_resolutions,
+				"refusals": _catch_refusals,
+				"caught_by_other": _catch_caught_by_other,
+				# The manager's own last refusal, the field the player-facing
+				# HUD reads. Reported beside the signal log because a refusal
+				# that set the field but emitted nothing (or the reverse) is a
+				# half-told player.
+				"last_refusal": cmanager.get("last_encounter_refusal") if cmanager != null else {},
+				"party": species,
+				"party_size": species.size(),
+				"party_full": cparty != null and bool((cparty as RefCounted).call("is_full")),
+				"pending": str((pending as RefCounted).get("species_id")) if pending != null else "",
+				"owned": species.size() + (1 if pending != null else 0),
 			}
 		"storage":
 			# Lane 3.D. Everything the concurrency smoke asserts on, read off

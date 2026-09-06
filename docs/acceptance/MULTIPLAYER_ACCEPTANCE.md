@@ -31,7 +31,7 @@ two people in it, or that a friend's creature reads as theirs. Those are the own
 | 3 | Move independently and see one another | `smoke_net_movement_two_peers` — 0.55 m in motion, 0.00 m at rest, against 4.0/1.5 m budgets | ☐ |
 | 4 | Deploy and control own creatures | `smoke_net_deploy_two_creatures` — asserts authority, not just presence | ☐ |
 | 5 | Shared wild encounters | `smoke_net_shared_wild_fight` | ☐ |
-| 6 | First-successful-catch rule | `test_catch_arbitration` (pure, deterministic). **No net smoke** — recorded as owed, not implied | ☐ |
+| 6 | First-successful-catch rule | `test_catch_arbitration` (pure, deterministic) **and `smoke_net_catch_race`** — two peers throw at one wild creature at a shared wall-clock instant; exactly one is granted, the loser is refused `already_resolving` with a sentence, and creatures owned across both peers rise by exactly the winner's own `caught` bit. The **full-belt half is still owed**: the host's roll is genuinely random and nothing can pin it over the wire, so a catch landing into five owned creatures is asserted only as an invariant a breakout satisfies vacuously | ☐ |
 | 7 | A trainer encounter together | *lane 4.D in flight* | ☐ |
 | 8 | A boss encounter together | *lane 4.D in flight* | ☐ |
 | 9 | Gather without duplication | `smoke_net_pickup_race` | ☐ |
@@ -41,7 +41,7 @@ two people in it, or that a friend's creature reads as theirs. Those are the own
 | 13 | Trade items | `smoke_net_trade` — conservation across both peers | ☐ |
 | 14 | Down / revive another player | `smoke_net_revive` | ☐ |
 | 15 | Sleep and advance night | `smoke_net_sleep_vote` | ☐ |
-| 16 | Menus without freezing others | **owed** — no smoke yet | ☐ |
+| 16 | Menus without freezing others | `smoke_net_menu_does_not_freeze_peer` — solo still truly pauses; in a session the tree is **not** paused (D102), the other player keeps walking, gathering through the ledger, building and jumping throughout, and the player holding the panel is stood down by `input_owner.gd` and gets the world back on close. Run with the panel on the host and on the client. **This needed a code fix**: the six panels still set `get_tree().paused = true` unconditionally | ☐ |
 | 17 | Ride and Fly while others act | *lanes 6.B / 6.C not started* | ☐ |
 | 18 | Transition independently | *lane 6.A in flight* | ☐ |
 | 19 | Different biomes simultaneously | *lane 6.A in flight* — the rule-16 bar | ☐ |
@@ -81,6 +81,16 @@ Recorded here so a reader does not have to infer them from silence:
   untouched bases by two independent lanes.
 - **The character save half is not written**, so "portable character" (row 20) is a forward
   assertion rather than a demonstrated behaviour.
+
+- **`verify-multiplayer-shard` ran no net smokes at all until 2026-09-06.** Its "Discover
+  peers:2 net smokes" step carried two nested count-floor `if`s with one `fi` between them —
+  an unclosed `if`, so the whole step was a bash syntax error and the shard failed at discovery
+  before launching a peer. Fixed with this lane's registration edit; every automated cell above
+  that names a `smoke_net_*` is evidence from a local run or from a shard run after that fix,
+  not from one before it. Reproduce on any earlier checkout by extracting that `run:` block and
+  running `bash -n` over it.
+
+- **A catch into a full belt is not proven over the wire.** See row 6.
 
 ## The verdict
 
