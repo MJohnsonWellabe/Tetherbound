@@ -18,7 +18,8 @@
     "_comment": "Rim points are found by walking a raycast outward from each island's authored centre until the crown collider is lost (rim_probe_step_m per step, up to max_search_radius_m, accepting a hit within top_tolerance_m of the authored top). A cross-island line needs a lower platform within max_anchor_distance_m (by at least lower_margin_m); otherwise the line drops to a vertical anchor pylon rooted pylon_drop_m below the rim.",
     "tar_rope_colour": "#2c261f",
     "bollard_size": [0.6, 1.4, 0.6],
-    "rope_radius": 0.16,
+    "_comment_rope_radius_atmos0906": "CLOUDREACH-ATMOS-0906 (C5). The blind judge reported no anchor at all on the floating island at stands 04 and 11. The mooring lines were not missing -- they were 0.16 m of rope read at 800-900 m, well under one pixel at 1280x800. Widened to a hawser, and pylon_drop_m deepened so the vertical anchor a line falls back to when there is no lower platform within max_anchor_distance_m reads as a moored pylon rather than a stub.",
+    "rope_radius": 0.55,
     "rope_segments": 16,
     "sag_fraction": 0.06,
     "lines_min": 2,
@@ -28,7 +29,7 @@
     "rim_probe_step_m": 4.0,
     "max_search_radius_m": 260.0,
     "top_tolerance_m": 60.0,
-    "pylon_drop_m": 22.0
+    "pylon_drop_m": 46.0
   },
   "ground_cover_finish": {
     "_comment": "A second cover layer over the same region/landmark ellipse footprints cloudreach_world.gd already registers (world._cover_patches), placed by real downward raycast against the crown collider instead of the first layer's flat per-ellipse height -- that flat height is why most of the map read as a mown lawn: the crown is an eroded ring that dips/rises tens of metres around it. main_share/far_share/alpine_share split instance_budget_total; per-patch requests are scaled down together if the raw density total would exceed the share.",
