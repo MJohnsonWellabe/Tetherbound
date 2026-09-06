@@ -171,6 +171,17 @@ func storage_revision(container: String) -> int:
 	return int(_storage_revisions.get(container, 0))
 
 
+## Take the host's word for a container's revision, from a `stale_revision`
+## refusal. A client's `_storage_revisions` is otherwise only ever advanced by
+## `apply()` seeing a committed `storage_set`, so a peer that joined after a
+## chest was written has no other way to learn a number it never saw. Host-side
+## this is never called: the host IS the number.
+func adopt_storage_revision(container: String, revision: int) -> void:
+	if container.is_empty():
+		return
+	_storage_revisions[container] = maxi(int(_storage_revisions.get(container, 0)), revision)
+
+
 ## The player-scope ops in `delta` addressed to `peer_id`. Pure and static so
 ## `ledger_rpc.gd` and `tests/test_world_ledger_races.gd` ask the same question
 ## of the same code -- "did this grant actually reach both peers" is then a
@@ -310,8 +321,20 @@ func _storage_txn(intent: Dictionary, peer_id: int, realm: String) -> Dictionary
 	var expected := int(intent.get("expected_revision"))
 	var current := storage_revision(container)
 	if expected != current:
-		return _refuse("storage_txn", peer_id, "stale_revision",
+		# The refusal CARRIES the current revision, and that is not a nicety.
+		# Lane 3.D found the failure it prevents: `_storage_revisions` is
+		# session-scoped and is not in the join snapshot, so a peer that joins
+		# a session where the host has already written a chest reads 0 while
+		# the host holds N. Its write is refused, a refusal commits nothing, so
+		# its local number never moves -- and it is refused again, forever, on a
+		# chest that tells it "someone else changed that container" for the rest
+		# of the session. Telling the loser the number turns both that lockout
+		# and every ordinary lost race into one silent retry.
+		var verdict := _refuse("storage_txn", peer_id, "stale_revision",
 			"Someone else changed that container -- close it and look again.")
+		verdict["container"] = container
+		verdict["revision"] = current
+		return verdict
 	var state: Variant = intent.get("state", [])
 	var op := {
 		"op": "storage_set",
@@ -322,6 +345,20 @@ func _storage_txn(intent: Dictionary, peer_id: int, realm: String) -> Dictionary
 		"state": (state as Array).duplicate(true) if typeof(state) == TYPE_ARRAY else [],
 		"revision": current + 1,
 	}
+	# The submitter's own id rides on the op, so a client can tell "MY write
+	# committed" from "an identical write committed". Without it the only
+	# positive signal a client has is the arriving delta, matched by revision
+	# and contents -- exact unless two peers deposit the same item and count
+	# from the same revision, when the two states are byte-identical and the
+	# loser settles as though it had won, quietly destroying its own items.
+	# `apply()` already records op-level `txn_id`s in `_seen_txns`, so this
+	# also buys `storage_txn` the replay guard the item moves have.
+	var txn := str(intent.get("txn_id", ""))
+	if not txn.is_empty():
+		if _seen_txns.has(txn):
+			return _refuse("storage_txn", peer_id, "duplicate",
+				"That container write was already made.")
+		op["txn_id"] = txn
 	return _commit([op], "storage_txn", peer_id, realm)
 
 

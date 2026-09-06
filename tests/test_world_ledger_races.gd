@@ -333,3 +333,99 @@ func _moved(delta: Variant, peer_id: int, item: String, op_name: String) -> int:
 		if str(op.get("op", "")) == op_name and str(op.get("item", "")) == item:
 			total += int(op.get("count", 0))
 	return total
+
+
+# --- the joiner who could never write a chest ------------------------------------
+
+## Lane 3.D, finding F2. `_storage_revisions` is session-scoped and deliberately
+## not persisted, but it is also not in the join snapshot, and it only ever
+## advances when `apply()` sees a committed `storage_set`. So a peer that joins a
+## session where the host has ALREADY written a chest reads 0 while the host
+## holds N -- and because a refusal commits nothing, its number never moves. It
+## is refused again, and again, on a chest that tells it "someone else changed
+## that container" for the rest of the session.
+##
+## Two ledgers here rather than two peer ids, because that is the actual shape of
+## the bug: the host's revision map and the joiner's are different objects, and
+## the joiner's is empty.
+func test_a_joiner_that_never_saw_a_chest_written_is_not_locked_out_of_it_forever() -> void:
+	var container := "storage:meadows:0"
+	# The host, alone, writes the chest twice before anybody joins.
+	for i in 2:
+		var ok: Dictionary = ledger.call("commit", {"kind": "storage_txn", "realm": "meadows",
+			"container": container, "index": 0,
+			"expected_revision": ledger.call("storage_revision", container), "state": []}, PEER_A)
+		assert_true(ok.get("ok"), "the host's own writes commit")
+	assert_eq(int(ledger.call("storage_revision", container)), 2)
+
+	# A joiner arrives. Its ledger has never seen this container.
+	var joiner_world: RefCounted = WORLD_STATE.new()
+	var joiner: RefCounted = WORLD_LEDGER.new(joiner_world)
+	assert_eq(int(joiner.call("storage_revision", container)), 0,
+		"a joiner starts at 0 for a chest it never saw written -- this is the setup, not the bug")
+
+	# It quotes what it has, and is refused. The refusal must TELL it the number.
+	var refused: Dictionary = ledger.call("commit", {"kind": "storage_txn", "realm": "meadows",
+		"container": container, "index": 0,
+		"expected_revision": joiner.call("storage_revision", container), "state": []}, PEER_B)
+	assert_false(refused.get("ok"), "quoting a stale revision is still refused")
+	assert_eq(str(refused.get("code")), "stale_revision")
+	# `has` before `get`, deliberately. A missing key read through `get()` comes
+	# back as null, and `int(null)` is 0 -- which is ALSO the joiner's stale
+	# number, so the comparison below would be reading its own setup back and
+	# could abort the function rather than fail it. Asserting the key exists
+	# first makes "the refusal carried nothing" a red test instead of a quiet
+	# one three assertions short.
+	assert_true(refused.has("container"),
+		"a stale_revision refusal must name WHICH container it is about")
+	assert_true(refused.has("revision"),
+		"a stale_revision refusal must carry the revision the host holds, or the loser is stuck")
+	assert_eq(str(refused.get("container", "")), container)
+	assert_eq(int(refused.get("revision", -1)), 2,
+		"the refusal carries the revision the host actually holds")
+
+	# Applying that answer is what breaks the loop.
+	joiner.call("adopt_storage_revision",
+		str(refused.get("container", "")), int(refused.get("revision", -1)))
+	assert_eq(int(joiner.call("storage_revision", container)), 2)
+
+	var retry: Dictionary = ledger.call("commit", {"kind": "storage_txn", "realm": "meadows",
+		"container": container, "index": 0,
+		"expected_revision": joiner.call("storage_revision", container), "state": []}, PEER_B)
+	assert_true(retry.get("ok"),
+		"the joiner's very next write lands: a refusal is a 'look again', never a lockout")
+
+
+## Lane 3.D, finding F1. Two peers depositing the SAME item and count from the
+## same revision produce byte-identical candidate states, so a client matching
+## the arriving delta by revision-and-contents cannot tell its own commit from
+## its rival's, and the loser settles as though it had won -- quietly destroying
+## its own items. A `txn_id` on the op makes the winner's commit identifiable,
+## and buys the replay guard the item moves already have.
+func test_two_identical_chest_writes_are_distinguishable_and_a_replay_is_refused() -> void:
+	var container := "storage:meadows:0"
+	var base := {"kind": "storage_txn", "realm": "meadows", "container": container,
+		"index": 0, "expected_revision": 0, "state": []}
+
+	var a := base.duplicate(true)
+	a["txn_id"] = "peer-a-1"
+	var first: Dictionary = ledger.call("commit", a, PEER_A)
+	assert_true(first.get("ok"))
+	var ops: Array = (first.get("delta") as Dictionary).get("ops", [])
+	assert_eq(str((ops[0] as Dictionary).get("txn_id", "")), "peer-a-1",
+		"the committed op names WHOSE write it was")
+
+	# The rival's byte-identical write, from the same revision, still loses.
+	var b := base.duplicate(true)
+	b["txn_id"] = "peer-b-1"
+	var second: Dictionary = ledger.call("commit", b, PEER_B)
+	assert_false(second.get("ok"), "an identical write from a stale revision is still refused")
+	assert_eq(str(second.get("code")), "stale_revision")
+
+	# And a retried delivery of the winner's own intent is refused as a replay,
+	# not applied a second time.
+	var replay := a.duplicate(true)
+	replay["expected_revision"] = 1
+	var again: Dictionary = ledger.call("commit", replay, PEER_A)
+	assert_false(again.get("ok"), "the same txn_id must not commit twice")
+	assert_eq(str(again.get("code")), "duplicate")
