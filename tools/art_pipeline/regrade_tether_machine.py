@@ -38,7 +38,24 @@ Three facts about the shipped asset decide what this tool can and cannot do:
      judge's "grey-green". So the ramp below runs dark blackened iron -> the
      Hall's own granite -> brass on the lit facets.
 
-THE RAMP IS AIMED AT TWO NUMBERS, not one, and round 1 got that wrong. It aimed
+THE RAMP'S RANGE MATTERS MORE THAN ITS MEAN, and two blind rounds are what
+established that. Round 1 aimed the whole ramp at the walls and rendered the
+machine BRIGHTER than its own room ("an asset carrying its own ambient dropped
+into a lit room"). Round 2 aimed the whole ramp at board 15's darkness and
+rendered it IDENTICAL to the wall -- Cohen's d 0.025-0.101 and Bhattacharyya
+0.967-0.988 between machine and wall pixels, with C-03's machine and wall medians
+both 33.8, and boundary contrast falling to Weber 0.037. Verdicts:
+`ralph/reports/TETHER-MACHINE-0906/JUDGE-machine-round{1,2}.md`.
+
+The two bracket the lever. No single flat albedo value both sits in the board's
+dark-stone band and separates from a wall occupying that same band; round 2's ramp
+ran p10/p90 31.3/84.6 and the judge read the result as "flat, undirectional". So
+this ramp keeps round 2's dark end -- the MASS stays in the board's band, which is
+what makes it the board's material -- and lifts the top three stops well clear of
+the wall, so the LIT FACES carry the silhouette. Deep recess to bright brass now
+spans 25 -> 226 in sRGB rather than 28 -> 169.
+
+THE RAMP IS ALSO AIMED AT TWO COLOUR NUMBERS, and round 1 got that wrong. It aimed
 only at the walls, and the blind judge
 (`ralph/reports/TETHER-MACHINE-0906/JUDGE-machine-round1.md`) measured the result
 against the machine's OWN BOARD and found the value had been broken while the hue
@@ -101,12 +118,12 @@ EXTRACTED = os.path.join(REPO, "assets", "environment", "team_tether", "tether_m
 # two are board 15's brass. See the module header for where each number comes
 # from.
 RAMP = [
-    (0.00, "#1c1a17"),   # blackened recess -- board 15 is 67% below luma 70
-    (0.30, "#2c2823"),   # DARK STONE / DARK METAL, the board's base value
-    (0.58, "#433d35"),   # stone_dark #5a554d in shadow: the mass lives here
-    (0.80, "#5f574b"),   # site.stone #6a6157, lit face -- the wall's own tone
-    (0.93, "#7d6733"),   # brass, board 15's BRASS/GOLD, on the lit trim only
-    (1.00, "#a98d55"),   # brass specular on the topmost trim and rune bosses
+    (0.00, "#191714"),   # blackened recess -- board 15 is 64% below luma 70
+    (0.32, "#2b2722"),   # DARK STONE / DARK METAL: the MASS lives down here
+    (0.60, "#4b433a"),   # stone_dark #5a554d in shadow
+    (0.80, "#7b7060"),   # lit face -- must clear the wall, not match it
+    (0.92, "#a98a44"),   # brass, board 15's BRASS/GOLD, on the lit trim
+    (1.00, "#e2c68c"),   # brass specular: the object's own highlight end
 ]
 
 # Percentile window the source luma is mapped through. p2..p98 rather than
