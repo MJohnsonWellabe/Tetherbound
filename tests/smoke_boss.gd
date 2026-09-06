@@ -40,6 +40,7 @@ const SETTLE_FRAMES := 300
 const BATTLE_FRAME_LIMIT := 9000
 ## Frames the climax's own stage machine gets to walk §28's order.
 const SEQUENCE_FRAMES := 900
+const VICTORY_DIALOGUE_FRAMES := 600
 
 var _failures: Array[String] = []
 var _world: Node = null
@@ -372,6 +373,15 @@ func _fight_him() -> void:
 		return
 	print("the boss fight ran and was won: %d creatures, %d frames, %d quick attacks landed, %d missed" % [
 		team_size, frames, _quick_hits, _quick_misses])
+	# Same race as smoke_gate_e_finale.gd's: the Warden's victory conversation is
+	# presented one frame after exploration is re-enabled and re-locks it. Read
+	# it through before asking whether exploration came back.
+	for i in VICTORY_DIALOGUE_FRAMES:
+		if bool(_player.call("locomotion_enabled")):
+			break
+		await physics_frame
+		if bool(_panel.call("is_open")):
+			await _press("interact")
 	if not bool(_player.call("locomotion_enabled")):
 		_fail("exploration never came back after the boss fight")
 
