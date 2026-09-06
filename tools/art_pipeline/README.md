@@ -38,6 +38,21 @@ writes coordinate overlays for retuning them.
 Multi-image-to-3D from the crops above. **Three candidates, cheap tier first**
 (§25). Downloads land in `assets_raw/`, which is gitignored.
 
+### 2b. Tripo fallback — only if Meshy's candidates are inadequate
+
+```bash
+tools/art_pipeline/setup.sh tripo   # once per machine: npm install -g tripo-cli
+tripo login --region ov             # once per machine: interactive, human only
+tools/art_pipeline/tripo.py check
+tools/art_pipeline/tripo.py generate terrapup --candidates 3
+```
+
+Section 3.3 of `TETHERBOUND_3D_ART_PIPELINE.md` has the full rules. Same
+`assets_raw/<species>/tripo_<letter>/` layout as step 2, same ASSET_LEDGER row
+requirement before anything ships, same CLAUDE.md hard rules — they govern
+any AI 3D generation service, not the word "Meshy". Never the default path;
+reach for it only as a comparison or when Meshy is inadequate.
+
 ### 3. Inspect every candidate
 
 ```bash
