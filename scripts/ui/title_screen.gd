@@ -379,6 +379,16 @@ func _enter_world(message: String) -> void:
 	_set_buttons_disabled(true)
 	await get_tree().process_frame
 	var game := get_node_or_null(^"/root/Game")
+	# D95/lane 2.A, deliverable 8: SOLO IS A ONE-PEER SESSION. Both Start New
+	# Game and Load land here, so hosting here is the one place a world becomes
+	# playable -- there is no second, session-less code path into the world for
+	# a multiplayer change to forget about. A failed bind (another Godot already
+	# on the port) is deliberately non-fatal: `Session.host()` warns and returns
+	# false, `is_host()` stays true, and the player gets an ordinary solo game
+	# that simply cannot be joined.
+	var session: Node = game.get("session") if game != null else null
+	if session != null and not bool(session.call("is_active")):
+		session.call("host")
 	var scene := WORLD_SCENE
 	if game != null and game.has_method("current_realm_scene"):
 		var configured := str(game.call("current_realm_scene"))

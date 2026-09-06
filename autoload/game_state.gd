@@ -42,6 +42,7 @@ const MERGED_PROGRESSION := preload("res://autoload/merged_progression.gd")
 ## roll itself lives in `encounter_director.gd`, which is where the spawn table
 ## is.
 const SPAWN_TABLES := preload("res://scripts/combat/spawn_tables.gd")
+const SESSION := preload("res://scripts/net/session.gd")
 
 ## Seeds a sample party and satchel so the screens can be looked at before
 ## gathering and catching exist. Off in a normal run: inventing a starting kit
@@ -63,6 +64,14 @@ const DEMO_FLAG := "--menu-demo"
 var world: RefCounted = null
 var local: RefCounted = null
 var players: Dictionary = {}
+
+## D95/lane 2.A. The live `scripts/net/session.gd`, mounted as `/root/Game/Session`
+## by `_ready()` below. A child of this autoload rather than a second autoload
+## (the one-autoload rule); every process has one, and a process that never
+## hosts or joins simply has an inactive one. Reached as `Game.session` --
+## `is_host()` / `is_multi_peer()` right below are the two questions gameplay
+## code actually asks, and they answer safely even before this is mounted.
+var session: Node = null
 
 ## `Game.progression`, the merged view over `world.flags` and `local.flags`.
 var _merged_progression: RefCounted = null
@@ -683,6 +692,7 @@ func _ready() -> void:
 	if OS.get_cmdline_args().has(DEMO_FLAG):
 		_seed_demo()
 
+	_mount_session()
 	_mount_menu()
 	# After the menu, never before: the menu shell owns the settings file and has
 	# only just read it (docs/decisions/D15).
@@ -730,6 +740,96 @@ func reset_for_new_game() -> void:
 	_travel_pos_valid = false
 
 
+## D95/lane 2.A. The session node, mounted before the menu so anything the menu
+## or a title screen touches on its first frame already has one to ask.
+##
+## PROCESS_MODE_ALWAYS (set in its own `_ready`) for the same reason the menu
+## has it: opening the menu pauses the tree, and a paused session would stop
+## answering the host clock while a player reads their party.
+func _mount_session() -> void:
+	if session != null:
+		return
+	session = SESSION.new()
+	session.name = "Session"
+	add_child(session)
+
+
+## D100's question at all four autosave sites, and D97's at `enter_realm()`:
+## "may THIS process write the world?" True for solo, for a host, and for any
+## process with no session at all (a headless test, a capture tool) -- see
+## `session.gd`'s header for why that last case is a `true` and not a `false`.
+func is_host() -> bool:
+	if session == null:
+		return true
+	return bool(session.call("is_host"))
+
+
+## Whether somebody else is in this session. False solo, and false before the
+## session node exists.
+func is_multi_peer() -> bool:
+	if session == null:
+		return false
+	return bool(session.call("is_multi_peer"))
+
+
+## D100's autosave routing, in one place so the four sites cannot drift apart.
+## The host writes the world (which today, before the save split lands, is the
+## same v22 file that also carries its character); every other peer writes only
+## its own character, which `session.gd::_save_character_here()` documents as
+## nothing to write yet.
+func autosave_here() -> bool:
+	if is_host():
+		return save_game(autosave_slot())
+	session.call("_save_character_here")
+	return false
+
+
+## The world as it goes on the wire to a joiner (`session.gd::_rpc_snapshot`).
+## The four scene-facing sync seams run first, exactly as `save_game()` runs
+## them, or the snapshot would describe the world one build behind the one the
+## host is standing in.
+func world_snapshot() -> Dictionary:
+	_sync_placed_building_state()
+	_sync_death_satchel_state()
+	_sync_harvest_state()
+	_sync_clock_state()
+	return world.call("save_data")
+
+
+## A joiner applying the host's world. `WorldState.load_data()` for the durable
+## half, then the same live-scene reconciliation `load_game()` runs -- a joiner
+## whose Meadows is already standing has to be told which one-shot pickups are
+## gone and which fences exist, not merely handed the data.
+func apply_world_snapshot(data: Dictionary) -> void:
+	world.call("load_data", data)
+	if not is_inside_tree():
+		return
+	var tree := get_tree()
+	if tree == null:
+		return
+	for group in ["build_placer", "player_death", "harvest_state"]:
+		for node in tree.get_nodes_in_group(group):
+			if node.has_method("restore_from_game"):
+				node.call("restore_from_game", self)
+	for node in tree.get_nodes_in_group("progression_restore"):
+		if node.has_method("restore_progression_from_game"):
+			node.call("restore_progression_from_game", self)
+	_restore_clock_to_world()
+
+
+## D105. Host truth for `day` and the clock, arriving on a client. Written
+## straight into this peer's `WorldState` and pushed into the live sky through
+## the same `resume_at_elapsed` seam a loaded save uses -- a client never
+## derives either number itself (`advance_day()` below refuses on a client).
+func apply_host_clock(host_day: int, elapsed: float) -> void:
+	if is_host():
+		return
+	world.set("day", maxi(1, host_day))
+	if elapsed >= 0.0:
+		clock_elapsed_seconds = elapsed
+		_restore_clock_to_world()
+
+
 ## The menu, as a child of the autoload rather than of a world scene.
 ##
 ## PROCESS_MODE_ALWAYS because opening it pauses the tree, and a paused menu
@@ -767,7 +867,13 @@ func _input(event: InputEvent) -> void:
 		_last_input_was_gamepad = false
 
 
+## D105: the day is host truth. `world_look.gd`'s automatic day roll calls this
+## every `day_length_seconds` in EVERY process, so the refusal lives here rather
+## than in that file -- one gate covers the passive roll, `night_rest.gd` and
+## anything later that advances a day, and 2.A owns this file outright.
 func advance_day() -> int:
+	if not is_host():
+		return day
 	return int(world.call("advance_day"))
 
 
@@ -795,7 +901,9 @@ func _tick_autosave(delta: float) -> void:
 	if _autosave_elapsed < _AUTOSAVE_FALLBACK_INTERVAL_S:
 		return
 	_autosave_elapsed = 0.0
-	save_game(autosave_slot())
+	# D100: the world half is the host's to write. A client still reaches here
+	# every 180 s and still saves its own character (nothing, until the split).
+	autosave_here()
 
 
 ## Fog-of-war discovery, throttled to `_DISCOVERY_INTERVAL_S`. Silently does
@@ -1211,6 +1319,15 @@ func can_enter_realm(realm_id: String) -> bool:
 func enter_realm(realm_id: String, entry_id: String = "") -> bool:
 	if not can_enter_realm(realm_id):
 		return false
+	# D97's interim rule, which lane 6.A lifts once the host runs a headless
+	# realm shell per occupied realm. Until then a crossing rebuilds only THIS
+	# peer's scene, and the host would go on simulating one realm for two
+	# players standing in different ones -- so it is refused out loud rather
+	# than half-done. Solo is unaffected: `is_multi_peer()` is false with one
+	# peer, which is what a solo session is.
+	if is_multi_peer():
+		push_world_message("Travelling between realms is closed while others are in your world.")
+		return false
 	var scene := str(realm_hearts.call("scene_for_realm", realm_id))
 	if not ResourceLoader.exists(scene):
 		push_error("realm '%s' points at missing scene %s" % [realm_id, scene])
@@ -1227,7 +1344,8 @@ func enter_realm(realm_id: String, entry_id: String = "") -> bool:
 	bind_realm_map()
 	pending_realm_entry = entry_id
 	saved_player_pose = {}
-	if save_system != null:
+	# D100: the transition autosave is a WORLD write, so only the host makes it.
+	if save_system != null and is_host():
 		save_system.call("save", self, autosave_slot())
 	get_tree().change_scene_to_file(scene)
 	return true
@@ -1280,7 +1398,7 @@ func complete_realm_entry(realm_id: String) -> bool:
 	if realm_id != current_realm:
 		return false
 	pending_realm_entry = ""
-	return save_game(autosave_slot())
+	return autosave_here()
 
 
 ## R3.1-remainder. A placed storage chest's own contents live on the live

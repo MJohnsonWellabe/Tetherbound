@@ -1,5 +1,21 @@
 {
-  "_comment": "Stage B Wave 0 lane 0.F net harness budgets, docs/specs/MP_NET_HARNESS_CONTRACT.md §8. Read by tests/helpers/net_harness.gd::_init_budgets(); missing keys fall back to that file's own defaults, so a partial edit here is safe. Only `test_budgets` -- 2.A owns any session-related keys this file grows later.",
+  "_comment": "Stage B multiplayer config. `test_budgets` is Wave 0 lane 0.F's net harness budgets (docs/specs/MP_NET_HARNESS_CONTRACT.md §8), read by tests/helpers/net_harness.gd::_init_budgets(). `session` is Wave 2 lane 2.A's transport and handshake tunables (D95), read by scripts/net/session.gd::config(). Missing keys fall back to each reader's own defaults, so a partial edit here is safe.",
+  "session": {
+    "port": 27015,
+    "_comment_port": "Default UDP port Session.host() binds and Session.join() dials when a caller names none. D95: direct IP, no relay, no Steam.",
+    "max_peers": 4,
+    "_comment_max_peers": "D95's peer cap: the host plus three joiners. ENetMultiplayerPeer.create_server() takes the number of CLIENTS, so session.gd passes max_peers - 1.",
+    "channel_count": 2,
+    "_comment_channel_count": "D95's two channels: transfer_channel 1 carries ledger/encounter traffic, transfer_channel 2 carries snapshots, so a late-join snapshot never queues behind movement. Godot reserves three system channels of its own beneath these.",
+    "connect_timeout_s": 20.0,
+    "_comment_connect_timeout_s": "Wall-clock seconds Session.join() waits for the ENet connection itself before giving up.",
+    "handshake_timeout_s": 60.0,
+    "_comment_handshake_timeout_s": "Wall-clock seconds a joiner waits for the host's world snapshot after connecting. Generous because the host may be mid-frame on a Meadows scene that spike S2 measured at ~85 s to build.",
+    "reconnect_window_s": 120.0,
+    "_comment_reconnect_window_s": "How long a dropped character id keeps its registry row for a rejoin. Wave 2 keeps the row for the process lifetime and reads this only as the documented intent; the timed eviction lands with Wave 5's downed/revive window.",
+    "clock_sync_interval_s": 1.0,
+    "_comment_clock_sync_interval_s": "D105: how often the host broadcasts `day` and `clock_elapsed_seconds` as host truth. One second is far finer than the 600 s in-game day, so a client's sky never visibly steps."
+  },
   "test_budgets": {
     "step_budget_frames": 3000,
     "_comment_step_budget_frames": "Default per-step budget, contract §4/§6, physics frames.",

@@ -102,7 +102,13 @@ static func pass_the_night(host: Node, game: Node = null) -> int:
 	# R3.1. "Frequent autosave" -- resting is the natural checkpoint this game
 	# already asks the player to return to, the same precedent survival games
 	# with a sleep beat use for it.
-	game.call("save_game", int(game.call("autosave_slot")))
+	#
+	# D100/lane 2.A: routed, not called directly. This is one of the four
+	# autosave sites, and on a client the world half is not this process's to
+	# write -- `Game.autosave_here()` writes the world only when
+	# `Session.is_host()`, and each peer's own character always. Solo is a
+	# one-peer session, so solo behaviour is byte-for-byte what it was.
+	game.call("autosave_here")
 	print("[rest] rested; day %d" % day)
 	return day
 
