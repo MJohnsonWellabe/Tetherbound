@@ -93,12 +93,16 @@ func _process(_delta: float) -> void:
 ## `realm_gate_*_unlocked` are world flags (D99) -- the Warden falls once and the
 ## realm opens once, for everybody -- so a player who was not in the room reads
 ## the same open gate as the one who was.
-func has_key(_game: Node) -> bool:
-	return key_flag != "" and STORY_LEDGER.world_flag(self, key_flag)
+## `game` is used again, so it loses its underscore. Lane 5.A prefixed it when
+## the read moved to the tree walk, and the prefix was honest at the time --
+## but it also made "this function ignores what you passed it" look deliberate
+## rather than like the defect it turned into.
+func has_key(game: Node) -> bool:
+	return key_flag != "" and STORY_LEDGER.world_flag(self, key_flag, game)
 
 
-func is_unlocked(_game: Node) -> bool:
-	return unlock_flag != "" and STORY_LEDGER.world_flag(self, unlock_flag)
+func is_unlocked(game: Node) -> bool:
+	return unlock_flag != "" and STORY_LEDGER.world_flag(self, unlock_flag, game)
 
 
 ## Writes the durable unlock only when the key entitlement exists.  The key is

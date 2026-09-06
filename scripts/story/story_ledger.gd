@@ -52,20 +52,36 @@ const SHARED_PLAYER_FLAG_PREFIXES: Array[String] = [
 
 ## The world's own flag store (`Game.world.flags`), never the merged view.
 ## `null` when there is no `Game`, which every caller has to answer for anyway.
-static func world_flags(node: Node) -> RefCounted:
-	var game := _game(node)
+## `game_override` is honoured before the tree walk, and that is not a test
+## affordance -- it is the fix for a real defect. `realm_gate.gd::state_for(game)`
+## takes a game and passed it nowhere, so every caller handing over an explicit
+## game (a unit test, a probe, a capture tool, anything holding a Game that is
+## not at `/root/Game`) was silently answered from the tree instead, or from
+## nothing at all when there was no tree. That read as a LOCKED gate rather than
+## as an error, which is the worst way for it to fail.
+##
+## The last fallback is `game.progression`, the merged view D98 defines. A gate's
+## flag is world scope, and the merged view is a superset of the world half, so
+## reading it can only ever say yes where the world half would -- and it is all
+## there is on a game that has no world half yet.
+static func world_flags(node: Node, game_override: Node = null) -> RefCounted:
+	var game := game_override if game_override != null else _game(node)
 	if game == null:
 		return null
 	if game.has_method("world_flags"):
 		return game.call("world_flags") as RefCounted
 	var world: Variant = game.get("world")
-	return (world as RefCounted).get("flags") as RefCounted if world != null else null
+	if world != null:
+		var flags: Variant = (world as RefCounted).get("flags")
+		if flags != null:
+			return flags as RefCounted
+	return game.get("progression") as RefCounted
 
 
 ## Does THE WORLD say this happened? The read every gate, bridge, relay and
 ## shrine restore path makes.
-static func world_flag(node: Node, id: String) -> bool:
-	var flags := world_flags(node)
+static func world_flag(node: Node, id: String, game_override: Node = null) -> bool:
+	var flags := world_flags(node, game_override)
 	return flags != null and bool(flags.call("has", id))
 
 

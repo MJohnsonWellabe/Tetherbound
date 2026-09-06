@@ -1953,46 +1953,22 @@ jobs:
           # the tree actually ships fails the job outright rather than
           # silently skipping the run step.
           #
-          # The floor is raised with each lane that adds one, so a header lost
-          # in a rebase is caught here rather than discovered as a shard that
-          # ran nothing.
-          #
-          # The number is the TRUE count of files declaring the header, not a
-          # lane's guess at it. It is REGENERATED from the files on disk at
-          # every landing, never incremented from whatever the previous line
-          # said -- several lanes add a smoke at once, and a bumped guess
-          # reconciles to the wrong number:
+          # The floor is the TRUE count of files declaring the header, not a
+          # lane's guess at it, and it is REGENERATED from the files on disk at
+          # every landing rather than incremented from whatever the previous
+          # line said -- several lanes add a smoke at once, and a bumped guess
+          # reconciles to whichever lane's conflict resolution won:
           #
           #   for f in tests/smoke_net_*.gd; do
           #     head -5 "$f" | grep -qE '^#[[:space:]]*peers:[[:space:]]*2$' && echo "$f"
           #   done | wc -l
           #
-          # The `for required in` roster below is the authority the count has to
-          # match. This comment deliberately does not list which lane added
-          # which smoke: four lanes resolving this same conflict in turn each
-          # restated the lanes before them, and the block had accumulated four
-          # duplicated fragments before lane 2.B noticed. The roster is the
+          # The `for required in` roster below is the authority the count must
+          # match. This comment deliberately does not narrate which lane added
+          # which smoke: lanes resolving this same conflict in turn each
+          # restated the lanes before them, and the block accumulated four
+          # duplicated fragments before anyone noticed. The roster is the
           # record; prose about it only rots.
-          if [ "$count" -lt 18 ]; then
-            echo "::error::expected at least 18 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
-          # ran nothing. Wave 0 shipped 2 (the boot smoke and its negative
-          # control); Wave 2 added host/join/leave and movement; lane 3.D added
-          # storage_concurrency; lane 4.B added deploy_two_creatures; lane 3.C
-          # added shared_building; lane 3.B added pickup_race; lane 5.C added
-          # fog_is_personal; lane 6.A added split_realms and
-          # realm_owner_disconnect_mid_fight -- the two most expensive smokes
-          # in the shard, because directive rule 16 costs five world builds
-          # between them (see each smoke's own header).
-          #
-          # The number is the TRUE count of files declaring the header, not a
-          # lane's guess at it -- every lane raises it by one and a merge of
-          # several at once has to be reconciled against the directory rather
-          # than against whichever lane's line won the conflict.
-          # Lane 6.A regenerated this from the FILES ON DISK rather than
-          # incrementing the previous line, which is what the shard's own
-          # comment above asks for: five lanes are adding smokes into this
-          # wave at once and an incremented guess reconciles to whichever
-          # lane's conflict resolution won, not to the tree.
           if [ "$count" -lt 18 ]; then
             echo "::error::expected at least 18 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
             exit 1
