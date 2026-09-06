@@ -157,3 +157,68 @@ covers.)
 silhouette, the maroon `TwistedTree` root masses, and the apron/throat sliver —
 were all still unrendered when the directive arrived. They go into the next sheet,
 and the blind judge names what is left rather than this file guessing at it.
+
+## Round 2 — measured on the round-1 re-render
+
+Rec.709 medians, same capture, before/after round 1:
+
+| frame | median Y (r0 → r1) | floor-band Y | what moved |
+|---|---|---|---|
+| 03-mouth | 54.8 → 51.8 | 48.3 → 46.2 | collar occlusion landed |
+| 04-hall-dressing | **24.6 → 52.8** | 92.4 → 101.6 | `interior_cladding_colour`: earth reads as a wall, not a hole |
+| 05-hall-from-the-doorway | **123.2 → 73.7** | 159.1 → 159.3 | mushrooms stopped being the subject; the floor did not move |
+| 07-den-dressing | 43.1 → 46.6 | 74.0 → 87.7 | ditto, den passage |
+
+The maroon root masses are gone and the collar is no longer cream. Two things
+the re-render still shows, both fixed this round:
+
+**1. The collar traded a sawtooth for a pipe.** Round 1 cut `brow_noise_m` to
+0.16 and `brow_lobe_freq` to 0.06 and the collar came back *smooth* — a rounded
+band of near-uniform thickness, which is precisely the W5 gap ("reads as tubes"),
+just olive instead of chocolate. Grain and lobes are put back between the two
+extremes (~27 cycles and ~6 broad lobes, against round 0's 54 and 11). The
+structural change is in code, not config: `width_scale` now drives the crest's
+**proud** offset as well as its radial one, so a lobe pushes out *and* forward and
+the crest **line** wanders in z. A crest line that runs true along the arch is what
+reads as a pipe from 16 m, whatever the thickness is doing.
+
+**2. The pale sliver survived the round-1 fix — the measurement corrected the
+guess.** Cropped and sampled at the throat's right foot in `03-mouth.png`: a flat
+near-white wedge at RGB **[162,157,134]**, and it is the **bank's own surface**
+where `_bank_notch_open_factor()` stops holding the mound open, caught at a
+grazing angle. Round 1 measured the apron ramp against the throat *shell*
+(2.95 m) when the bare, un-mounded ground actually runs to the *notch's* edge
+(`arch_width_m * 0.5 + arch_margin_m` = 3.60 m, plus its own 0.6 m taper ≈ 4.2 m),
+so the ramp still stopped 0.4 m short at each foot. It is measured against the
+notch now (`_mouth_notch_half_width()`), which is the thing that actually decides
+where the mound stops.
+
+The tonal half is the same root cause as the collar: `earth_tint` #f0ece4 at
+`earth_brightness` 1.5 is tuned for the broad sunlit dug face, and *any* small
+piece of bank caught at a grazing angle reads white at that value. Rather than
+repaint a mound a previous lane judged over six rounds, this uses the mechanism
+that already exists for it — the damp band around every opening. `moist_radius_m`
+3.0 → 4.5 and `moist_darken` 0.35 → 0.55, which is also the SECOND-PASS brief's
+own words ("a darker moist band within 2 m of every hole and the mouth").
+
+## The guardian is not floating — measured, not assumed
+
+`06-den-and-guardian` reads as though the boss hovers. It does not, and the new
+`tools/_probe_warrens_guardian_stance.gd` says so on a real boot of the real scene:
+
+```
+PROBE floor plane y = 4.148
+PROBE guardian origin y = 4.149  (origin - floor = 0.001)
+PROBE is CharacterBody3D, on_floor=true velocity=(0.0, 0.0, 0.0)
+PROBE collider Collision shape=CapsuleShape3D origin_y=5.934 (1.786 above floor)
+```
+
+The body is on the floor, at rest, its origin a millimetre above the floor plane.
+What reads as a hover is the **mesh's own feet sitting above its origin**, magnified
+by the 3.57 m scale — a creature-mesh matter, which `docs/HANDOFF_2026-09-06.md`
+§4.3 W4 puts under "creature art locked / owner call" and this lane's brief
+explicitly fences off ("do not touch creature meshes or `creature_visual.gd`").
+**Left alone deliberately, and recorded here with the numbers so whoever owns it
+does not have to re-derive them.** Note the probe's visual-AABB line is not
+evidence of anything: it merges the *rest-pose* bounds of skinned meshes, which is
+why it reports a nonsensical 16 m span.

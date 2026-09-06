@@ -1461,13 +1461,21 @@ func _build_approach_apron() -> void:
 	# never allowed to be narrower than the throat shell standing on it. Both
 	# feet close for every value of `throat_flare` and every taper, including
 	# the ones a later tuning pass picks.
+	# ROUND 2: the first fix here used the THROAT SHELL's own half-width and
+	# the sliver survived it, which is the measurement correcting the guess.
+	# The gap is not bounded by the tube: `_bank_notch_open_factor()` opens
+	# the mound across `arch_width_m * 0.5 + arch_margin_m` (3.60 m) plus its
+	# own 0.6 m `edge_soft` taper, so the bare, un-mounded ground at the
+	# tube's foot runs out to ~4.2 m while the tube itself is 2.95 m. The
+	# ramp is measured against the NOTCH now, which is the thing that
+	# actually decides where the mound stops.
 	var throat_pad := 0.5
 	for i in steps:
 		var t := (float(i) + 0.5) / float(steps)
 		var z := outer_z - t * run
 		var top: float = lerpf(_floor_y, end_local, t)
 		var width := maxf(lerpf(mouth_width, far_width, t),
-			_throat_half_width_at(z) * 2.0 + throat_pad)
+			_mouth_notch_half_width() * 2.0 + throat_pad)
 		# Same dirt as the chambers' own floors, but the EXTERIOR tint -- this
 		# ramp is OUTDOORS, in daylight, beside textured terrain and the
 		# mound's own boulders. T1-WARRENS-EXT: the interior-tuned lerp read
@@ -1502,14 +1510,25 @@ func _build_approach_apron() -> void:
 
 
 ## The throat shell's own half-width at `z` -- `arch_width_m` * 0.5 times the
-## outer flare `_build_throat_shell()` applies at that z. The apron ramp reads
-## it so the ground under the tube is never narrower than the tube.
+## outer flare `_build_throat_shell()` applies at that z.
 func _throat_half_width_at(z: float) -> float:
 	var bank := _bank_cfg()
 	var z0 := _mouth_outer_z()
 	var z_front := z0 - float(bank.get("throat_depth_m", 6.0))
 	var z_back := z0 + float(bank.get("throat_overlap_m", 0.4))
 	return float(bank.get("arch_width_m", 5.0)) * 0.5 * _throat_flare(z, z_front, z_back)
+
+
+## How far either side of the centreline `_bank_notch_open_factor()` holds the
+## mound fully open at the mouth, including its own edge taper -- i.e. how wide
+## the bare ground at the throat's foot actually is. Always at least the flared
+## shell's own half-width, so this can only ever be the wider of the two.
+func _mouth_notch_half_width() -> float:
+	var bank := _bank_cfg()
+	var notch := float(bank.get("arch_width_m", 5.0)) * 0.5 \
+		+ float(bank.get("arch_margin_m", 0.6)) + 0.6
+	var z0 := _mouth_outer_z()
+	return maxf(notch, _throat_half_width_at(z0 - float(bank.get("throat_depth_m", 6.0))))
 
 func _build_lights() -> void:
 	for entry: Variant in _config.get("lights", []):
@@ -3473,8 +3492,14 @@ func _build_brow_earth_ring(holder: Node3D, bank: Dictionary, rim: Array,
 		for j in across + 1:
 			var t := float(j) / float(across)
 			# Quadratic Bezier: rim -> proud crest -> tucked back into the bank.
+			# ROUND 2: `width_scale` drives the crest's PROUD offset as well as
+			# its radial one. Scaling only the radius moves the collar's
+			# thickness while its crest line still runs true along the arch,
+			# which is the single thing that reads as "tube" from 16 m; with
+			# both, a lobe pushes out and forward together and the crest line
+			# itself wanders in z.
 			var p0 := Vector2(0.0, 0.0)
-			var p1 := Vector2(lip_out * width_scale, -lip_proud * end_taper)
+			var p1 := Vector2(lip_out * width_scale, -lip_proud * end_taper * width_scale)
 			var p2 := Vector2((lip_out + lip_flare) * width_scale, lip_back)
 			var omt := 1.0 - t
 			var b := p0 * (omt * omt) + p1 * (2.0 * omt * t) + p2 * (t * t)
