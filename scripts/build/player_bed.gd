@@ -20,6 +20,7 @@ const BUILD_PIECE := preload("res://scripts/build/build_piece.gd")
 const CAMP_TENT := preload("res://scripts/build/camp_tent.gd")
 const AUDIO_CUES := preload("res://scripts/ui/audio_cues.gd")
 const CAMP_FILL_LIGHT := preload("res://scripts/world/camp_fill_light.gd")
+const NIGHT_REST := preload("res://scripts/world/night_rest.gd")
 
 ## CAMP-SHELTER-0903, owner playtest 2026-09-03 item 7: "You should have to
 ## have the tent over your head to sleep." Duplicated from
@@ -42,6 +43,10 @@ const MESH_PATH := "res://assets/props/generated_camp/camp_bed.glb"
 ## raw offset applies directly.
 const BED_SINK := 0.215
 
+## The fade timing, kept here because `tools/gate_f/probe_rest_cycle_e2e.gd`
+## and `tests/helpers/gate_b_tail_segment.gd` both document their waits against
+## "player_bed.gd's own fade". The fade itself is `night_rest.gd`'s now, and
+## this is the same 1.2 s it uses -- if one moves, move both.
 const FADE_SECONDS := 1.2
 
 var _piece: Node3D = null
@@ -92,9 +97,20 @@ func _tent_overhead() -> bool:
 	return false
 
 
-## Rest: fade out, new day, everyone healed, fade in. The fade is the same
-## two-node canvas the opening's wake uses, built here because a bedroll can
-## exist in a world with no sequence director.
+## Rest: fade out, new day, everyone healed, fade in.
+##
+## The fade and the night itself both live in `night_rest.gd` now. They used to
+## be copied out here, and the copy had drifted: it wrote
+## `player_slept_at_home` through the MERGED progression view rather than the
+## sleeper's own store, and it called `save_game()` directly rather than going
+## through D100's `autosave_here()` routing -- so on a client the bedroll would
+## have written the host's world. Two definitions of "what a night costs" is
+## exactly the defect `night_rest.gd` was created to end; this file simply had
+## never been moved onto it.
+##
+## Going through `NIGHT_REST.rest()` is also what gets this bedroll D105's
+## sleep vote for free: solo it is byte-for-byte the same fade and the same
+## night, and with a second player in the session it casts a vote instead.
 func _on_rest() -> void:
 	var game := get_node_or_null(^"/root/Game")
 	if game == null:
@@ -106,56 +122,20 @@ func _on_rest() -> void:
 	# bedroll a tent was later dismantled from stops sleeping, and (the flip
 	# side, for save compatibility) a bedroll placed before this rule existed
 	# starts working the moment a tent goes up over it, with no migration.
+	#
+	# Checked HERE and not in `night_rest.gd` because it is this buildable's
+	# rule: an authored trail camp and Grandpa's bed have no tent and are not
+	# supposed to need one.
 	if not _tent_overhead():
 		game.call("push_world_message", "You need a tent over the bedroll to rest here")
 		AUDIO_CUES.play(&"ui_error")
 		return
 
-	var layer := CanvasLayer.new()
-	layer.layer = 15
-	var rect := ColorRect.new()
-	rect.color = Color(0, 0, 0, 0)
-	rect.set_anchors_preset(Control.PRESET_FULL_RECT)
-	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	layer.add_child(rect)
-	add_child(layer)
-
-	var tween := create_tween()
-	tween.tween_property(rect, "color:a", 1.0, FADE_SECONDS * 0.5)
-	tween.tween_callback(func() -> void: _pass_the_night(game))
-	tween.tween_interval(0.4)
-	tween.tween_property(rect, "color:a", 0.0, FADE_SECONDS * 0.5)
-	tween.tween_callback(layer.queue_free)
+	NIGHT_REST.rest(self)
 
 
+## Kept as the direct-call seam `tests/smoke_gateb_flags.gd` drives (it calls
+## this method by name to pass a night without the interact prompt), delegating
+## to the one shared definition rather than carrying a second copy of it.
 func _pass_the_night(game: Node) -> void:
-	var day := int(game.call("advance_day"))
-	# GATEB-FLAGS: `player_slept_at_home`, data/progression/objectives.json's
-	# ladder. Set here, on the actual completed rest, not on the interact
-	# prompt firing -- the objective asks for the sleep itself, not the
-	# attempt to start one.
-	var progression: RefCounted = game.get("progression")
-	if progression != null:
-		progression.call("set_flag", "player_slept_at_home")
-	# Gate A creature-bed contract: sleep completes only pals physically put
-	# to bed. Non-resting party members keep their current HP, which is the
-	# meaningful preparation tradeoff the bed is supposed to create.
-	game.call("complete_creature_bed_rests")
-	# The trainer too — find them by the vitals they carry.
-	var world := get_parent()
-	var player := world.get_node_or_null(^"Player")
-	if player != null:
-		var vitals: RefCounted = player.get("vitals")
-		if vitals != null and vitals.has_method("rest"):
-			vitals.call("rest")
-	# "rest to morning" (R5.1) — by group rather than a direct reference, so a
-	# bedroll in a scene with no day/night setup (a test scene, say) still
-	# rests fine with nothing to reset.
-	for look: Node in get_tree().get_nodes_in_group("day_cycle"):
-		if look.has_method("reset_to_morning"):
-			look.call("reset_to_morning")
-	# R3.1. "Frequent autosave" — resting is the natural checkpoint this game
-	# already asks the player to return to, the same precedent survival games
-	# with a sleep beat use for it.
-	game.call("save_game", int(game.call("autosave_slot")))
-	print("[player_bed] rested; day %d" % day)
+	NIGHT_REST.pass_the_night(self, game)

@@ -63,6 +63,9 @@ const SPAWN_TABLES := preload("res://scripts/combat/spawn_tables.gd")
 const STORAGE_CONTAINER := preload("res://scripts/build/storage_container.gd")
 ## Lane 3.B. The pickup race smoke stands a real one of these and presses it.
 const ITEM_CACHE_PICKUP := preload("res://scripts/world/item_cache_pickup.gd")
+## Lane 5.D: the real bedroll and the real tent it needs over it.
+const PLAYER_BED := preload("res://scripts/build/player_bed.gd")
+const CAMP_TENT := preload("res://scripts/build/camp_tent.gd")
 
 const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
@@ -145,6 +148,8 @@ var _storage_refusals: Array = []
 ## "pending", so what actually happened is read afterwards off the world flag
 ## and the satchel, never off this verdict alone.
 var _pickup_node: Node3D = null
+## Lane 5.D: the bedroll this peer stood, so `sleep_press` presses the same one.
+var _bedroll: Node3D = null
 var _pickup_id: String = ""
 var _pickup_item: String = ""
 var _pickup_realm: String = "meadows"
@@ -410,6 +415,10 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_build_place(args)
 		"save_world":
 			out = _step_save_world(args)
+		"sleep_stand":
+			out = await _step_sleep_stand(args)
+		"sleep_press":
+			out = _step_sleep_press(args)
 		_:
 			out = {"verdict": "ERROR", "detail": "unknown action '%s'" % action}
 	out["frames_used"] = _physics_count - before
@@ -631,6 +640,69 @@ func _storage_record_counts(game: Node, index: int) -> Dictionary:
 		var id := str(stack.get("id", ""))
 		out[id] = int(out.get(id, 0)) + int(stack.get("n", 0))
 	return out
+
+
+# --- lane 5.D: sleep is a vote -------------------------------------------------
+#
+# Two arms and two probes. Nothing here simulates the vote: the bedroll is a
+# real `player_bed.gd`, the tent over it is a real `camp_tent.gd` (CAMP-SHELTER-
+# 0903 refuses a bedroll with no roof, and this smoke is not about that rule),
+# and the press is the bedroll's own `Interactable.activated` -- the exact
+# signal a controller press fires. From there it is shipping code all the way:
+# `player_bed.gd::_on_rest` -> `night_rest.gd::rest()` -> the vote.
+
+
+## Stand a bedroll with a tent over it, at this peer's own feet.
+##
+## At the PLAYER's position rather than at the origin: `camp_tent.gd::
+## contains_point` is a real footprint test, and two nodes that merely share a
+## coordinate the player is nowhere near would still satisfy it -- but a bedroll
+## under the terrain is a worse thing to hand the rest path than one the player
+## is standing on. Both are added to `placed_building` with the `building_id`
+## meta a real placement would carry, because `_tent_overhead()` reads exactly
+## those two things off whatever else is standing.
+func _step_sleep_stand(_args: Dictionary) -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		return {"verdict": "ERROR", "detail": "no /root/Game"}
+	if _bedroll != null and is_instance_valid(_bedroll):
+		_bedroll.queue_free()
+		_bedroll = null
+	var player := _probe.call("player") as Node3D
+	var at := player.global_position if player != null else Vector3.ZERO
+
+	var tent: Node3D = CAMP_TENT.new()
+	tent.name = "SmokeTent"
+	root.add_child(tent)
+	tent.global_position = at
+	tent.call("build_real")
+	tent.add_to_group("placed_building")
+	tent.set_meta("building_id", "tent")
+
+	var bed: Node3D = PLAYER_BED.new()
+	bed.name = "SmokeBedroll"
+	root.add_child(bed)
+	bed.global_position = at
+	bed.call("build_real")
+	bed.add_to_group("placed_building")
+	bed.set_meta("building_id", "bedroll")
+	_bedroll = bed
+	await physics_frame
+	return {"verdict": "PASS", "detail": "bedroll + tent at (%.1f, %.1f, %.1f)" % [at.x, at.y, at.z]}
+
+
+## Press it. The signal, not the private method, so a change that broke the
+## wiring between the prompt and the rest would fail here rather than be routed
+## around. A second press on the same bedroll is how a player withdraws a vote,
+## and this arm sends whatever it is told to send.
+func _step_sleep_press(_args: Dictionary) -> Dictionary:
+	if _bedroll == null or not is_instance_valid(_bedroll):
+		return {"verdict": "ERROR", "detail": "no bedroll standing; run sleep_stand first"}
+	var prompt := _bedroll.get_node_or_null(^"Interactable")
+	if prompt == null:
+		return {"verdict": "ERROR", "detail": "the bedroll has no Interactable to press"}
+	prompt.emit_signal("activated")
+	return {"verdict": "PASS", "detail": "pressed the bedroll"}
 
 
 # --- lane 3.B: one pickup, two hands ------------------------------------------
@@ -1305,6 +1377,39 @@ func _execute_probe(msg: Dictionary) -> Variant:
 					"carried": bool(b.get("net_carried")),
 				}
 			return seen
+		"day":
+			# Stage B lane 5.D. `Game.day` on this peer, which under D105 is
+			# host truth on every process. The whole negative half of
+			# `smoke_net_sleep_vote.gd` is this number NOT moving while only
+			# one of two players is in a bed.
+			var dgame := root.get_node_or_null(^"Game")
+			return null if dgame == null else int(dgame.get("day"))
+		"sleep_vote":
+			# Stage B lane 5.D. What this process believes about the vote:
+			# whether it has mounted `night_rest.gd`'s `SleepVote` node at all,
+			# whether THIS peer is lying down, who it thinks is still up, and
+			# the replicated `sleeping` field off every registry row. The last
+			# one is the host's actual tally as every peer received it.
+			var sgame := root.get_node_or_null(^"Game")
+			if sgame == null:
+				return null
+			var ssession: Node = sgame.get("session") as Node
+			var vote: Node = null if ssession == null else ssession.get_node_or_null(^"SleepVote")
+			var marks := {}
+			if ssession != null:
+				for raw: Variant in (ssession.call("peers") as Array):
+					if typeof(raw) != TYPE_DICTIONARY:
+						continue
+					var srow: Dictionary = raw
+					if not srow.has("peer_id"):
+						continue
+					marks[str(int(srow["peer_id"]))] = bool(srow.get("sleeping", false))
+			return {
+				"mounted": vote != null,
+				"sleeping_here": vote != null and bool(vote.call("is_sleeping_here")),
+				"awake": [] if vote == null else vote.call("awake_names"),
+				"registry_sleeping": marks,
+			}
 		"deployed_creatures":
 			# Stage B lane 4.B. Every DEPLOYED creature body this process is
 			# holding, keyed by NODE NAME -- because there are three of them in

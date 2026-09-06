@@ -1946,9 +1946,10 @@ jobs:
           # ran nothing. Wave 0 shipped 2 (the boot smoke and its negative
           # control); Wave 2 added host/join/leave and movement; lane 3.D added
           # storage_concurrency; lane 4.B added deploy_two_creatures; lane 3.C
-          # added shared_building; lane 3.B added pickup_race.
-          if [ "$count" -lt 8 ]; then
-            echo "::error::expected at least 8 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
+          # added shared_building; lane 3.B added pickup_race; lane 5.D added
+          # sleep_vote.
+          if [ "$count" -lt 9 ]; then
+            echo "::error::expected at least 9 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
             exit 1
           fi
           # Named registration, on top of the count. Discovery alone would let a
@@ -1964,7 +1965,8 @@ jobs:
             tests/smoke_net_storage_concurrency.gd \
             tests/smoke_net_deploy_two_creatures.gd \
             tests/smoke_net_shared_building.gd \
-            tests/smoke_net_pickup_race.gd
+            tests/smoke_net_pickup_race.gd \
+            tests/smoke_net_sleep_vote.gd
           do
             case " $files " in
               *" $required "*) ;;
