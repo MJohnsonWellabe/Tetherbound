@@ -77,3 +77,48 @@ deleted — restoring them is two edits that belong together, both named in
 
 **Not a quarantine.** The smokes are not failing while the feature ships; the feature is withdrawn
 and its tests are withdrawn with it.
+
+
+## The measurement the hold was waiting for — 2026-09-06
+
+Taken after the hold, with `tools/net/_probe_6a_shell.gd` (lane 6.A's own probe, which had never
+been run) and a three-phase timing probe. **The first diagnosis in the section above was wrong
+about the mechanism**, and the correction changes what the fix has to be.
+
+**Shell cost, Cloudreach, skip-build mode:**
+
+```
+boot (load+instantiate+add_child+240 physics frames)   24.0 s
+static                                               1,289 MB  (world alone 1,264 MB)
+median frame 13.8 ms, p95 20.7 ms
+full Meadows boot for comparison                       43.0 s, 2,800 MB
+```
+
+**Where those 24 seconds actually go:**
+
+```
+load_ms=3387   instantiate_ms=6   add_child_ms=0
+```
+
+`add_child` returns in **zero** milliseconds. The world root's `_ready()` reaches its first
+`await` immediately, so Godot runs it as a coroutine and the build really does spread across
+frames — the section above assumed `add_child` ran the whole build synchronously, and it does not.
+
+So there is exactly **one** hard synchronous block, `load()` at 3.4 s, and the remaining ~20 s is
+the host building the shell a slice at a time while trying to stay responsive. The net harness's
+15 s heartbeat window dies somewhere in that spread, which means the host's frames get heavy
+enough during the build to starve a heartbeat that only needs to go out every 60 frames.
+
+**What the fix therefore is, and is not.** It is not "make `add_child` asynchronous" — that is
+already true. It is:
+
+1. `ResourceLoader.load_threaded_request()` / `load_threaded_get()` for the 3.4 s `load()`, which
+   is the only true freeze and the only part a player would feel as a hang;
+2. then find the heavy slices between the world root's existing awaits and break them up, because
+   a host that stutters for twenty seconds when a friend crosses is still bad even though it is
+   not frozen. The p95 of 20.7 ms is the *settled* frame time and says nothing about the build
+   itself — that is the number the retry has to capture.
+
+**Budget to come in under:** the shell is 1,289 MB beside a host already holding a full world, and
+S2 put four concurrent boots at 12.85 GB. Two realms on one host is affordable; the question the
+retry answers is whether it is affordable *while staying responsive*.
