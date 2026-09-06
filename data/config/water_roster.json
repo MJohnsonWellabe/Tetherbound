@@ -1,0 +1,586 @@
+{
+  "schema_version": 1,
+  "realm": "water",
+  "status": "phase0_draft_not_runtime_registered",
+  "reference_board": "res://docs/reference/boards-2026-09-06/water-realm-creature-roster-board.png",
+  "_comment": "Owner board visually inspected 2026-09-06. Twelve species exactly five swim mounts. Draft data does not register species or implement traversal.",
+  "_comment_stats": "All numbers are initial role tuning on the existing species base-stat scale. Chapter levels supply strength; boss phases must not be replaced by HP inflation. Mosshell existing stats preserved.",
+  "_comment_type": "All use existing dominant water type. Dragon stone swamp and song traits do not add types.",
+  "_comment_art": "Generate only after broad playability: Aquaryn then Abyssal Guardian then Mosshell then others. Paddlenewt newt bodies do not supply the final dragon serpent monitor or legendary silhouette; Ripplet otter is not a toad and Burrowback badger is not a crab. Placeholder status is explicit.",
+  "species": {
+    "cannonback": {
+      "display_name": "Cannonback",
+      "epithet": "The Shell Sentinel",
+      "type": "water",
+      "base_hp": 140.0,
+      "base_attack": 19.0,
+      "base_defence": 27.0,
+      "catch_rate": 0.3,
+      "aggressive": false,
+      "moves": {
+        "quick": "aqua_shot",
+        "charged": "tidal_burst"
+      },
+      "combat_role": "ranged_anchor",
+      "first_habitat": "first_shore",
+      "swim_mount": {
+        "compatible": true,
+        "_comment": "False means never a swim mount including Tidecoil and the captive legendary. Wild bodies never wear a saddle.",
+        "requires_item": "swim_saddle",
+        "requires_personal_flag": "water_swim_stone_earned",
+        "speed_mps": 6.3,
+        "stamina_capacity": 210,
+        "stamina_drain_per_s": 1.8,
+        "stamina_owner": "creature_instance",
+        "_comment_tuning": "BUILD_WATER section 8 starting values. Dedicated persistent traversal stamina not combat energy. Rider anchor requires installed-mesh measurement."
+      },
+      "catalogue_action": "add_species_on_integration",
+      "placeholder": {
+        "source_species": "mosshell",
+        "source_definition": "res://data/creatures/species.json#species/mosshell/placeholder",
+        "model": "res://assets/creatures/tetherbound/mosshell/models/creature_mosshell_lod0.glb",
+        "source_height_m": 1.4,
+        "target_height_m": 2.5,
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "presentation_intent": "Slate shell cream belly ochre rim",
+        "replacement_model": "res://assets/creatures/tetherbound/cannonback/models/creature_cannonback_lod0.glb",
+        "replacement_binding": "res://data/creatures/species.json#species/cannonback/placeholder/model",
+        "status": "installed_mesh_placeholder_unrendered",
+        "_comment": "Source mesh path and animation keys are installed facts. Planned replacement destination may not exist. Silhouette and saddle fitting require real engine evidence; no final board fidelity claimed."
+      }
+    },
+    "riptusk": {
+      "display_name": "Riptusk",
+      "epithet": "The River Reaver",
+      "type": "water",
+      "base_hp": 138.0,
+      "base_attack": 29.0,
+      "base_defence": 20.0,
+      "catch_rate": 0.25,
+      "aggressive": true,
+      "moves": {
+        "quick": "pack_bite",
+        "charged": "riptide_rush"
+      },
+      "combat_role": "shore_bruiser",
+      "first_habitat": "brine_steps",
+      "swim_mount": {
+        "compatible": false,
+        "_comment": "False means never a swim mount including Tidecoil and the captive legendary. Wild bodies never wear a saddle."
+      },
+      "catalogue_action": "add_species_on_integration",
+      "placeholder": {
+        "source_species": "tuskroot",
+        "source_definition": "res://data/creatures/species.json#species/tuskroot/placeholder",
+        "model": "res://assets/creatures/tetherbound/tuskroot/models/creature_tuskroot_lod0.glb",
+        "source_height_m": 2.15,
+        "target_height_m": 2.7,
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "presentation_intent": "Slate hide ivory tusks ochre spines",
+        "replacement_model": "res://assets/creatures/tetherbound/riptusk/models/creature_riptusk_lod0.glb",
+        "replacement_binding": "res://data/creatures/species.json#species/riptusk/placeholder/model",
+        "status": "installed_mesh_placeholder_unrendered",
+        "_comment": "Source mesh path and animation keys are installed facts. Planned replacement destination may not exist. Silhouette and saddle fitting require real engine evidence; no final board fidelity claimed."
+      }
+    },
+    "aquaryn": {
+      "display_name": "Aquaryn",
+      "epithet": "The Tidal Dragon",
+      "type": "water",
+      "base_hp": 154.0,
+      "base_attack": 30.0,
+      "base_defence": 24.0,
+      "catch_rate": 0.16,
+      "aggressive": true,
+      "moves": {
+        "quick": "aqua_shot",
+        "charged": "riptide_lance"
+      },
+      "combat_role": "alpha_mobile_duelist",
+      "first_habitat": "tidal_cradle",
+      "swim_mount": {
+        "compatible": true,
+        "_comment": "False means never a swim mount including Tidecoil and the captive legendary. Wild bodies never wear a saddle.",
+        "requires_item": "swim_saddle",
+        "requires_personal_flag": "water_swim_stone_earned",
+        "speed_mps": 10,
+        "stamina_capacity": 200,
+        "stamina_drain_per_s": 2,
+        "stamina_owner": "creature_instance",
+        "_comment_tuning": "BUILD_WATER section 8 starting values. Dedicated persistent traversal stamina not combat energy. Rider anchor requires installed-mesh measurement."
+      },
+      "catalogue_action": "add_species_on_integration",
+      "placeholder": {
+        "source_species": "paddlenewt",
+        "source_definition": "res://data/creatures/species.json#species/paddlenewt/placeholder",
+        "model": "res://assets/creatures/tetherbound/paddlenewt/models/creature_paddlenewt_lod0.glb",
+        "source_height_m": 1.15,
+        "target_height_m": 3.1,
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "presentation_intent": "White chest blue back turquoise fins orange crests",
+        "replacement_model": "res://assets/creatures/tetherbound/aquaryn/models/creature_aquaryn_lod0.glb",
+        "replacement_binding": "res://data/creatures/species.json#species/aquaryn/placeholder/model",
+        "status": "installed_mesh_placeholder_unrendered",
+        "_comment": "Source mesh path and animation keys are installed facts. Planned replacement destination may not exist. Silhouette and saddle fitting require real engine evidence; no final board fidelity claimed."
+      },
+      "named_encounter": {
+        "level": 49,
+        "id": "water_aquaryn_alpha",
+        "reward_on_catch_or_defeat": "water_swim_stone_earned",
+        "catchable": true
+      },
+      "meshy_priority": 1
+    },
+    "tidecoil": {
+      "display_name": "Tidecoil",
+      "epithet": "The Abyss Serpent",
+      "type": "water",
+      "base_hp": 165.0,
+      "base_attack": 33.0,
+      "base_defence": 20.0,
+      "catch_rate": 0.12,
+      "aggressive": true,
+      "moves": {
+        "quick": "splash_snap",
+        "charged": "leviathan_surge"
+      },
+      "combat_role": "late_apex_surface_sweeper",
+      "first_habitat": "deep_watch",
+      "swim_mount": {
+        "compatible": false,
+        "_comment": "False means never a swim mount including Tidecoil and the captive legendary. Wild bodies never wear a saddle."
+      },
+      "catalogue_action": "add_species_on_integration",
+      "placeholder": {
+        "source_species": "paddlenewt",
+        "source_definition": "res://data/creatures/species.json#species/paddlenewt/placeholder",
+        "model": "res://assets/creatures/tetherbound/paddlenewt/models/creature_paddlenewt_lod0.glb",
+        "source_height_m": 1.15,
+        "target_height_m": 3.4,
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "presentation_intent": "Navy scales coral fin edges",
+        "replacement_model": "res://assets/creatures/tetherbound/tidecoil/models/creature_tidecoil_lod0.glb",
+        "replacement_binding": "res://data/creatures/species.json#species/tidecoil/placeholder/model",
+        "status": "installed_mesh_placeholder_unrendered",
+        "_comment": "Source mesh path and animation keys are installed facts. Planned replacement destination may not exist. Silhouette and saddle fitting require real engine evidence; no final board fidelity claimed."
+      },
+      "named_encounter": {
+        "level": 54,
+        "id": "water_tidecoil_apex",
+        "catchable": true,
+        "mount_prohibited": true
+      }
+    },
+    "mirejaw": {
+      "display_name": "Mirejaw",
+      "epithet": "The Depth Stalker",
+      "type": "water",
+      "base_hp": 125.0,
+      "base_attack": 28.0,
+      "base_defence": 18.0,
+      "catch_rate": 0.3,
+      "aggressive": true,
+      "moves": {
+        "quick": "splash_snap",
+        "charged": "undertow"
+      },
+      "combat_role": "ambush_counterattacker",
+      "first_habitat": "reedhaven",
+      "swim_mount": {
+        "compatible": false,
+        "_comment": "False means never a swim mount including Tidecoil and the captive legendary. Wild bodies never wear a saddle."
+      },
+      "catalogue_action": "add_species_on_integration",
+      "placeholder": {
+        "source_species": "paddlenewt",
+        "source_definition": "res://data/creatures/species.json#species/paddlenewt/placeholder",
+        "model": "res://assets/creatures/tetherbound/paddlenewt/models/creature_paddlenewt_lod0.glb",
+        "source_height_m": 1.15,
+        "target_height_m": 2.1,
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "presentation_intent": "Spotted charcoal taupe body muted coral gills",
+        "replacement_model": "res://assets/creatures/tetherbound/mirejaw/models/creature_mirejaw_lod0.glb",
+        "replacement_binding": "res://data/creatures/species.json#species/mirejaw/placeholder/model",
+        "status": "installed_mesh_placeholder_unrendered",
+        "_comment": "Source mesh path and animation keys are installed facts. Planned replacement destination may not exist. Silhouette and saddle fitting require real engine evidence; no final board fidelity claimed."
+      }
+    },
+    "torrentoad": {
+      "display_name": "Torrentoad",
+      "epithet": "The Bog Bouncer",
+      "type": "water",
+      "base_hp": 118.0,
+      "base_attack": 26.0,
+      "base_defence": 18.0,
+      "catch_rate": 0.4,
+      "aggressive": true,
+      "moves": {
+        "quick": "ripple_jab",
+        "charged": "riptide_rush"
+      },
+      "combat_role": "burst_gap_closer",
+      "first_habitat": "reedhaven",
+      "swim_mount": {
+        "compatible": false,
+        "_comment": "False means never a swim mount including Tidecoil and the captive legendary. Wild bodies never wear a saddle."
+      },
+      "catalogue_action": "add_species_on_integration",
+      "placeholder": {
+        "source_species": "ripplet",
+        "source_definition": "res://data/creatures/species.json#species/ripplet/placeholder",
+        "model": "res://assets/creatures/tetherbound/ripplet/models/creature_ripplet_lod0.glb",
+        "source_height_m": 2.15,
+        "target_height_m": 2.2,
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "presentation_intent": "Teal brow cream belly orange feet",
+        "replacement_model": "res://assets/creatures/tetherbound/torrentoad/models/creature_torrentoad_lod0.glb",
+        "replacement_binding": "res://data/creatures/species.json#species/torrentoad/placeholder/model",
+        "status": "installed_mesh_placeholder_unrendered",
+        "_comment": "Source mesh path and animation keys are installed facts. Planned replacement destination may not exist. Silhouette and saddle fitting require real engine evidence; no final board fidelity claimed."
+      }
+    },
+    "cragclaw": {
+      "display_name": "Cragclaw",
+      "epithet": "The Stone Sheller",
+      "type": "water",
+      "base_hp": 138.0,
+      "base_attack": 21.0,
+      "base_defence": 29.0,
+      "catch_rate": 0.32,
+      "aggressive": false,
+      "moves": {
+        "quick": "shell_bash",
+        "charged": "tremor_roll"
+      },
+      "combat_role": "defensive_counter_bruiser",
+      "first_habitat": "brine_steps",
+      "swim_mount": {
+        "compatible": false,
+        "_comment": "False means never a swim mount including Tidecoil and the captive legendary. Wild bodies never wear a saddle."
+      },
+      "catalogue_action": "add_species_on_integration",
+      "placeholder": {
+        "source_species": "burrowback",
+        "source_definition": "res://data/creatures/species.json#species/burrowback/placeholder",
+        "model": "res://assets/creatures/tetherbound/burrowback/models/creature_burrowback_lod0.glb",
+        "source_height_m": 1.7,
+        "target_height_m": 2.2,
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "presentation_intent": "Rust claws grey stone moss shell",
+        "replacement_model": "res://assets/creatures/tetherbound/cragclaw/models/creature_cragclaw_lod0.glb",
+        "replacement_binding": "res://data/creatures/species.json#species/cragclaw/placeholder/model",
+        "status": "installed_mesh_placeholder_unrendered",
+        "_comment": "Source mesh path and animation keys are installed facts. Planned replacement destination may not exist. Silhouette and saddle fitting require real engine evidence; no final board fidelity claimed."
+      }
+    },
+    "riverdrake": {
+      "display_name": "Riverdrake",
+      "epithet": "The Current Stalker",
+      "type": "water",
+      "base_hp": 118.0,
+      "base_attack": 28.0,
+      "base_defence": 18.0,
+      "catch_rate": 0.3,
+      "aggressive": true,
+      "moves": {
+        "quick": "tail_splash",
+        "charged": "riptide_rush"
+      },
+      "combat_role": "flanking_skirmisher",
+      "first_habitat": "shellwatch",
+      "swim_mount": {
+        "compatible": true,
+        "_comment": "False means never a swim mount including Tidecoil and the captive legendary. Wild bodies never wear a saddle.",
+        "requires_item": "swim_saddle",
+        "requires_personal_flag": "water_swim_stone_earned",
+        "speed_mps": 9.2,
+        "stamina_capacity": 160,
+        "stamina_drain_per_s": 2,
+        "stamina_owner": "creature_instance",
+        "_comment_tuning": "BUILD_WATER section 8 starting values. Dedicated persistent traversal stamina not combat energy. Rider anchor requires installed-mesh measurement."
+      },
+      "catalogue_action": "add_species_on_integration",
+      "placeholder": {
+        "source_species": "paddlenewt",
+        "source_definition": "res://data/creatures/species.json#species/paddlenewt/placeholder",
+        "model": "res://assets/creatures/tetherbound/paddlenewt/models/creature_paddlenewt_lod0.glb",
+        "source_height_m": 1.15,
+        "target_height_m": 2.5,
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "presentation_intent": "Blue back pale chest orange fin tips",
+        "replacement_model": "res://assets/creatures/tetherbound/riverdrake/models/creature_riverdrake_lod0.glb",
+        "replacement_binding": "res://data/creatures/species.json#species/riverdrake/placeholder/model",
+        "status": "installed_mesh_placeholder_unrendered",
+        "_comment": "Source mesh path and animation keys are installed facts. Planned replacement destination may not exist. Silhouette and saddle fitting require real engine evidence; no final board fidelity claimed."
+      }
+    },
+    "sirenseal": {
+      "display_name": "Sirenseal",
+      "epithet": "The Songweaver",
+      "type": "water",
+      "base_hp": 116.0,
+      "base_attack": 23.0,
+      "base_defence": 20.0,
+      "catch_rate": 0.35,
+      "aggressive": false,
+      "moves": {
+        "quick": "aqua_shot",
+        "charged": "undertow"
+      },
+      "combat_role": "ranged_controller",
+      "first_habitat": "salt_crown",
+      "swim_mount": {
+        "compatible": true,
+        "_comment": "False means never a swim mount including Tidecoil and the captive legendary. Wild bodies never wear a saddle.",
+        "requires_item": "swim_saddle",
+        "requires_personal_flag": "water_swim_stone_earned",
+        "speed_mps": 8.5,
+        "stamina_capacity": 180,
+        "stamina_drain_per_s": 2,
+        "stamina_owner": "creature_instance",
+        "_comment_tuning": "Orchestrator audit decision: capacity180 replaces155 so the698.47m final sheltered route is analytically survivable at level0. Speed8.5 and drain2 unchanged. Dedicated persistent traversal stamina; actual crossing and mount fitting remain unproven."
+      },
+      "catalogue_action": "add_species_on_integration",
+      "placeholder": {
+        "source_species": "brooktail",
+        "source_definition": "res://data/creatures/species.json#species/brooktail/placeholder",
+        "model": "res://assets/creatures/tetherbound/brooktail/models/creature_brooktail_lod0.glb",
+        "source_height_m": 1.05,
+        "target_height_m": 2.2,
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "presentation_intent": "Ivory throat slate body dusty lilac fins",
+        "replacement_model": "res://assets/creatures/tetherbound/sirenseal/models/creature_sirenseal_lod0.glb",
+        "replacement_binding": "res://data/creatures/species.json#species/sirenseal/placeholder/model",
+        "status": "installed_mesh_placeholder_unrendered",
+        "_comment": "Source mesh path and animation keys are installed facts. Planned replacement destination may not exist. Silhouette and saddle fitting require real engine evidence; no final board fidelity claimed."
+      }
+    },
+    "mangrove_monitor": {
+      "display_name": "Mangrove Monitor",
+      "epithet": "The Shore Runner",
+      "type": "water",
+      "base_hp": 108.0,
+      "base_attack": 27.0,
+      "base_defence": 17.0,
+      "catch_rate": 0.38,
+      "aggressive": true,
+      "moves": {
+        "quick": "splash_snap",
+        "charged": "trailblaze_pounce"
+      },
+      "combat_role": "shore_flanker",
+      "first_habitat": "reedhaven",
+      "swim_mount": {
+        "compatible": false,
+        "_comment": "False means never a swim mount including Tidecoil and the captive legendary. Wild bodies never wear a saddle."
+      },
+      "catalogue_action": "add_species_on_integration",
+      "placeholder": {
+        "source_species": "paddlenewt",
+        "source_definition": "res://data/creatures/species.json#species/paddlenewt/placeholder",
+        "model": "res://assets/creatures/tetherbound/paddlenewt/models/creature_paddlenewt_lod0.glb",
+        "source_height_m": 1.15,
+        "target_height_m": 2.3,
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "presentation_intent": "Olive mottling ochre face stripe dark bark body",
+        "replacement_model": "res://assets/creatures/tetherbound/mangrove_monitor/models/creature_mangrove_monitor_lod0.glb",
+        "replacement_binding": "res://data/creatures/species.json#species/mangrove_monitor/placeholder/model",
+        "status": "installed_mesh_placeholder_unrendered",
+        "_comment": "Source mesh path and animation keys are installed facts. Planned replacement destination may not exist. Silhouette and saddle fitting require real engine evidence; no final board fidelity claimed."
+      }
+    },
+    "mosshell": {
+      "display_name": "Mosshell",
+      "epithet": "The Living Island",
+      "type": "water",
+      "base_hp": 130.0,
+      "base_attack": 12.0,
+      "base_defence": 26.0,
+      "catch_rate": 0.4,
+      "aggressive": false,
+      "moves": {
+        "quick": "shell_bash",
+        "charged": "tremor_roll"
+      },
+      "combat_role": "endurance_tank",
+      "first_habitat": "tidal_cradle",
+      "swim_mount": {
+        "compatible": true,
+        "_comment": "False means never a swim mount including Tidecoil and the captive legendary. Wild bodies never wear a saddle.",
+        "requires_item": "swim_saddle",
+        "requires_personal_flag": "water_swim_stone_earned",
+        "speed_mps": 6.8,
+        "stamina_capacity": 240,
+        "stamina_drain_per_s": 1.7,
+        "stamina_owner": "creature_instance",
+        "_comment_tuning": "BUILD_WATER section 8 starting values. Dedicated persistent traversal stamina not combat energy. Rider anchor requires installed-mesh measurement."
+      },
+      "catalogue_action": "extend_existing_species",
+      "placeholder": {
+        "source_species": "mosshell",
+        "source_definition": "res://data/creatures/species.json#species/mosshell/placeholder",
+        "model": "res://assets/creatures/tetherbound/mosshell/models/creature_mosshell_lod0.glb",
+        "source_height_m": 1.4,
+        "target_height_m": 1.4,
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "presentation_intent": "Preserve Meadows body initially board vegetation waterfall requires replacement",
+        "replacement_model": "res://assets/creatures/tetherbound/mosshell/models/creature_mosshell_lod0.glb",
+        "replacement_binding": "res://data/creatures/species.json#species/mosshell/placeholder/model",
+        "status": "installed_mesh_placeholder_unrendered",
+        "_comment": "Source mesh path and animation keys are installed facts. Planned replacement destination may not exist. Silhouette and saddle fitting require real engine evidence; no final board fidelity claimed."
+      },
+      "_comment_existing": "Preserve global mosshell identity stats catch rate moves and presentation. Extend its compatibility rather than create a duplicate. Replacing the existing model affects Meadows too and requires cross-biome regression. Current height preserved; rider fitting remains unproven.",
+      "meshy_priority": 3
+    },
+    "abyssal_guardian": {
+      "display_name": "Abyssal Guardian",
+      "epithet": "The Deep Watcher",
+      "type": "water",
+      "base_hp": 178.0,
+      "base_attack": 34.0,
+      "base_defence": 27.0,
+      "catch_rate": 0.08,
+      "aggressive": false,
+      "moves": {
+        "quick": "aqua_shot",
+        "charged": "leviathan_surge"
+      },
+      "combat_role": "legendary_burst_controller",
+      "first_habitat": "veilfall",
+      "swim_mount": {
+        "compatible": false,
+        "_comment": "False means never a swim mount including Tidecoil and the captive legendary. Wild bodies never wear a saddle."
+      },
+      "catalogue_action": "add_species_on_integration",
+      "placeholder": {
+        "source_species": "paddlenewt",
+        "source_definition": "res://data/creatures/species.json#species/paddlenewt/placeholder",
+        "model": "res://assets/creatures/tetherbound/paddlenewt/models/creature_paddlenewt_lod0.glb",
+        "source_height_m": 1.15,
+        "target_height_m": 3.8,
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "presentation_intent": "Near black indigo pale throat restrained cyan accents",
+        "replacement_model": "res://assets/creatures/tetherbound/abyssal_guardian/models/creature_abyssal_guardian_lod0.glb",
+        "replacement_binding": "res://data/creatures/species.json#species/abyssal_guardian/placeholder/model",
+        "status": "installed_mesh_placeholder_unrendered",
+        "_comment": "Source mesh path and animation keys are installed facts. Planned replacement destination may not exist. Silhouette and saddle fitting require real engine evidence; no final board fidelity claimed."
+      },
+      "named_encounter": {
+        "level": 55,
+        "id": "water_captive_guardian",
+        "acquisition": "post_release_existing_five_slot_ceremony",
+        "wild_catch_enabled": false,
+        "mount_prohibited": true
+      },
+      "meshy_priority": 2
+    }
+  }
+}

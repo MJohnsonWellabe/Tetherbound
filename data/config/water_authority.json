@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "_comment": "Water Phase0 authority contract, owner-approved implementation direction 2026-09-06. This file does not itself implement replication or grant any flags. Use the existing session, ledger, encounter host and portable character architecture; tests must prove each row with real peers.",
+  "realm": "water",
+  "personal_state": {
+    "skills": {"owner": "PlayerState", "portable": true, "legacy_snapshot": true, "world_snapshot": false, "_comment": "XP, reveal and candy changes belong to the trainer. Missing legacy data starts at zero, with reveal inferred only from legitimately reached later realms."},
+    "swim_stone": {"owner": "PlayerState.flags", "flag": "water_swim_stone_earned", "portable": true, "grant_source": "host_alpha_completion", "_comment": "Shared Alpha resolution fans out one durable entitlement to eligible participants; later eligible arrivals claim from resolved Stone, not a respawned boss."},
+    "swim_recipe": {"owner": "PlayerState.flags", "flag": "water_swim_saddle_recipe_learned", "portable": true, "requires": ["water_swim_stone_earned"]},
+    "skill_candy": {"owner": "PlayerState.inventory", "consume": "local_identity_transaction", "world_pickup": "host_claim_pickup", "_comment": "The first world pickup claimant owns the item under existing pickup rules. Spending cannot affect another character; full tier must fit before item removal."},
+    "swim_pose": {"owner": "PlayerState.pose", "portable": true, "fields": ["version", "realm", "mode", "surface_y", "human_stamina_fraction", "safe_landing", "active_index"], "_comment": "Index only describes current party slot in the same atomic character snapshot. Persistent mount resource is on the creature instance, so rearranging party cannot transfer endurance."},
+    "mount_stamina": {"owner": "CreatureInstance", "portable_with_party": true, "field": "swim_stamina_fraction", "default": 1.0, "_comment": "Fraction clamped 0..1, capacity comes from species config. Dedicated traversal resource, never combat energy. Each duplicate species keeps its own value."}
+  },
+  "world_state": {
+    "entry_key": {"flag": "realm_key_water", "scope": "world", "earned_from": "stormwood_finale", "consumed_by": "water_unlock_gate", "_comment": "Old Cloudreach reward is migrated by Stormwood before Water sees it. Never accept the old key merely by matching its string."},
+    "entry_unlock": {"flag": "realm_gate_water_unlocked", "scope": "world", "reusable": true, "_comment": "Every peer can use an opened world gate. Key spending and unlock share one delta."},
+    "docks": {"scope": "world", "prefix": "water_dock_", "authority": "host", "prerequisites": "water_world.json+dock objectives"},
+    "pumps": {"scope": "world", "prefix": "water_pump_", "authority": "host"},
+    "alpha": {"scope": "world", "flag": "water_aquaryn_resolved", "authority": "EncounterHost", "completion_modes": ["defeated", "caught"], "_comment": "Resolution and reward attribution follow one shared encounter. A successful catch and defeat cannot independently grant two rewards."},
+    "finale": {"scope": "world", "flags": ["water_captain_nerissa_defeated", "water_tether_disabled", "water_guardian_freed", "water_currents_restored"], "authority": "host", "ordered": true},
+    "relic": {"scope": "existing_RealmHeartState_contract", "id": "water", "display_name": "Tideglass Compass", "power": "tidal_guard", "incoming_damage_multiplier": 0.9, "_comment": "10 percent incoming damage reduction, owner settled and tunable. Preserve existing personal relic ownership vs world ceremony semantics and single-active-power selection."}
+  },
+  "transactions": {
+    "water_unlock_gate": {
+      "transport": "existing_ledger_rpc",
+      "validator": "WorldLedger",
+      "realm": "stormwood",
+      "host_required": true,
+      "checks": ["sender present in stormwood", "sender near authored gate", "world has realm_key_water", "world gate not unlocked", "Stormwood finale granted the Water key"],
+      "atomic_world_ops": [{"flag": "realm_key_water", "value": false}, {"flag": "realm_gate_water_unlocked", "value": true}],
+      "duplicate_policy": "idempotent_success_if_already_open",
+      "_comment": "No pair of independently submitted set_world_flag calls; the game must never save between spending a key and opening its gate. Realm on record is explicit, never host local realm."
+    },
+    "water_dock_action": {
+      "transport": "existing_ledger_rpc",
+      "validator": "host_authored_dock_contract",
+      "checks": ["sender realm water", "known dock id", "sender within interaction range", "authored world prerequisites", "personal ingredient proof under existing portable-inventory trust model"],
+      "_comment": "Never accept arbitrary client flag ids or a client claimed completion. Existing movement and inventory ownership remains intact; extend typed intentions for consequential Water state."
+    },
+    "skills_summary": {
+      "transport": "existing_owned_trainer_proxy_or_session_rpc",
+      "sender": "character_owner",
+      "consumer": "host_catch_arbitration",
+      "checks": ["sender matches peer authority", "exact five skill ids", "finite integer levels within configured cap", "monotonic revision within session"],
+      "_comment": "Portable characters are owner-authored in the existing game. This bounded summary shares their benefit, not arbitrary XP instructions; host exclusively computes and rolls catch outcomes. Do not read unpopulated Game.players."
+    }
+  },
+  "replication": {
+    "trainer_proxy": {"fields": ["aquatic_mode", "surface_y", "drowning", "swim_stamina_fraction"], "owner": "existing trainer peer authority", "late_join": "spawn properties", "_comment": "Owner simulates ordinary traversal like ground movement; every peer receives swimming and drowning state. Remote visuals do not damage or move the owner's character."},
+    "mounted_swimmer": {"fields": ["net_riding", "net_mount_offset", "net_mount_position", "aquatic_mode", "mount_swim_stamina_fraction"], "anchor": "existing owner creature proxy", "_comment": "Rider draws from the mount after interpolation, never independent drifting transforms."},
+    "water_combat": {"authority": "existing EncounterHost", "traversal": "COMBAT_PAUSED", "stamina_drain": false, "stamina_regeneration": false, "drowning_damage": false, "resume": "validate mount and encounter outcome"},
+    "island_residency": {"initial_collision_mode": 3, "terrain3d_mode_name": "FULL_GAME", "fallback": "union_of_occupied_island_colliders", "_comment": "Mode3 is a testable initial choice, not measured performance acceptance. Average peer camera collision is insufficient for separate islands."}
+  },
+  "required_peer_scenarios": [
+    "two human swimmers on separate islands",
+    "human drowning observed by remote peer",
+    "mounted swimmer with synchronized seated rider",
+    "one swimming peer while other fights in water",
+    "two clients race a dock unlock",
+    "Alpha defeat and catch both grant unique Swim Stone",
+    "Skill Candy belongs only to claimant and chosen skill",
+    "disconnect and reconnect mid-crossing without stamina reset",
+    "host in Meadows while client swims in Water",
+    "late join reconstructs Veilfall pumps and legendary aftermath"
+  ]
+}
