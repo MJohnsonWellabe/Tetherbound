@@ -363,6 +363,17 @@ func _build_rim() -> void:
 const UNASSIGNED := -1
 const AUTHORED_STRONGHOLD_REST := -2
 
+## ONE rest panel per PROCESS, and that is the right scope today.
+##
+## Stage B lane 5.D revisited this against lane 3.D's finding F4 on the
+## identical pattern in `storage_container.gd`
+## (`ralph/reports/MP-3D-STORAGE-0906/REPORT.md`), and AGREES with it. `static`
+## is process-global, and Stage B gives one process exactly one local player
+## with one screen; a second peer is a second PROCESS with its own static, so
+## two players opening two different creature beds never share this panel. It
+## is re-pointed at whichever bed opened it, which is correct while only one bed
+## can be open. It becomes a real hazard the day one process drives two local
+## players (split-screen), where it would have to become per-player.
 static var _panel: CanvasLayer = null
 var _piece: Node3D = null
 var _build_index: int = UNASSIGNED
@@ -431,6 +442,20 @@ func build_index() -> int:
 	return _build_index
 
 
+## Which of THIS PROCESS'S five is lying in this bed, or -1.
+##
+## Deliberately local, and a known Stage B gap rather than an oversight: it asks
+## `Game.party`, which is this peer's own team, so in a co-op session two
+## players can each bed a creature down in the SAME shared bed and each see only
+## their own. Nobody's rest is stolen -- `complete_creature_bed_rests()` runs on
+## each peer's own process over its own party (D105's night, `night_rest.gd`) --
+## so the consequence is cosmetic, not a lost overnight recovery.
+##
+## Closing it needs REPLICATED bed occupancy: a ledger intent that claims a bed
+## by `container_key`-style identity the way lane 3.D claims a chest, refused
+## when somebody else already holds it. That is creature-ownership replication
+## (lane 4.B) plus a ledger op, not a rest-path change, so lane 5.D recorded it
+## instead of guessing at it. See `ralph/reports/MP-5D-SLEEP-0906/REPORT.md`.
 func occupant_index() -> int:
 	if _build_index == UNASSIGNED:
 		return -1
