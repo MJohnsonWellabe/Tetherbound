@@ -61,6 +61,9 @@ const SPAWN_TABLES := preload("res://scripts/combat/spawn_tables.gd")
 ## Lane 3.D. The real shipping chest, driven by its real submit path -- these
 ## arms replace the panel's presses, not the container's ledger conversation.
 const STORAGE_CONTAINER := preload("res://scripts/build/storage_container.gd")
+const TRADE_OFFER := preload("res://scripts/ui/trade_offer.gd")
+const DROPPED_ITEM := preload("res://scripts/world/dropped_item.gd")
+const DROPPED_ITEM_SPAWNER := preload("res://scripts/world/dropped_item_spawner.gd")
 
 const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
@@ -131,6 +134,13 @@ var _storage_last: Dictionary = {}
 ## says "pending", and the host's `stale_revision` answer arrives later on
 ## `storage_container.gd`'s own `storage_refused` signal.
 var _storage_refusals: Array = []
+
+## Lane 3.E. The verdict of this peer's last trade or drop arm, and every
+## refusal sentence the ledger has sent it since the last one, so the smoke can
+## assert that a loser was TOLD rather than silently dropped.
+var _trade_last: Dictionary = {}
+var _trade_refusals: Array = []
+var _trade_wired: bool = false
 
 
 func _initialize() -> void:
@@ -373,6 +383,16 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = _step_storage_transfer(args)
 		"deploy_creature":
 			out = await _step_deploy_creature(args)
+		"trade_offer":
+			out = _step_trade_offer(args)
+		"trade_accept":
+			out = _step_trade_accept(args)
+		"trade_decline":
+			out = _step_trade_decline(args)
+		"item_drop":
+			out = _step_item_drop(args)
+		"item_pickup":
+			out = _step_item_pickup(args)
 		_:
 			out = {"verdict": "ERROR", "detail": "unknown action '%s'" % action}
 	out["frames_used"] = _physics_count - before
@@ -474,6 +494,148 @@ func _step_storage_transfer(args: Dictionary) -> Dictionary:
 	return {"verdict": "PASS", "detail": "%s %d %s: ok=%s pending=%s code='%s'"
 		% [direction, n, item, str(verdict.get("ok", false)), str(verdict.get("pending", false)),
 			str(verdict.get("code", ""))]}
+
+
+# --- lane 3.E: item trading and dropped stacks --------------------------------
+#
+# Five arms and one probe, standing in for the Give row on the satchel's drop
+# confirmation and the interact prompt on a stack lying on the ground.
+# Everything they touch is shipping code: `trade_offer.gd`'s real offer /
+# accept, the real `transfer_item` and `drop_item` intents through the real
+# `Game.ledger`, and a real `dropped_item.gd` spawned by the real
+# `dropped_item_spawner.gd` off the committed delta. What the harness supplies
+# is only what a player supplies -- which row was pressed, and at whom.
+#
+# `storage_grant` is reused to stock a satchel; there is no second way to put
+# items in a bag and adding one would be a second thing to keep true.
+
+## Offer a stack to another peer. `to` is the other peer's real id, which the
+## smoke reads out of the `session` probe rather than guessing (peer ids are
+## large random 32-bit numbers, never indices).
+func _step_trade_offer(args: Dictionary) -> Dictionary:
+	var transport := _trade()
+	if transport == null:
+		return {"verdict": "ERROR", "detail": "no TradeOffer transport"}
+	var answer: Dictionary = transport.call("offer", int(args.get("to", 0)),
+		str(args.get("item", "")), int(args.get("n", 0)))
+	_trade_last = answer
+	return {"verdict": "PASS" if bool(answer.get("ok", false)) else "FAIL",
+		"detail": "offer %d %s to %d: ok=%s reason='%s'"
+			% [int(args.get("n", 0)), str(args.get("item", "")), int(args.get("to", 0)),
+				str(answer.get("ok", false)), str(answer.get("reason", ""))]}
+
+
+## Say yes to the offer this peer is holding.
+func _step_trade_accept(_args: Dictionary) -> Dictionary:
+	var transport := _trade()
+	if transport == null:
+		return {"verdict": "ERROR", "detail": "no TradeOffer transport"}
+	var waiting: Dictionary = transport.call("incoming")
+	if waiting.is_empty():
+		return {"verdict": "FAIL", "detail": "no incoming offer to accept"}
+	var answer: Dictionary = transport.call("accept")
+	_trade_last = answer
+	return {"verdict": "PASS" if bool(answer.get("ok", false)) else "FAIL",
+		"detail": "accept %s: ok=%s reason='%s'"
+			% [str(waiting.get("txn_id", "")), str(answer.get("ok", false)),
+				str(answer.get("reason", ""))]}
+
+
+func _step_trade_decline(_args: Dictionary) -> Dictionary:
+	var transport := _trade()
+	if transport == null:
+		return {"verdict": "ERROR", "detail": "no TradeOffer transport"}
+	var answer: Dictionary = transport.call("decline")
+	_trade_last = answer
+	return {"verdict": "PASS", "detail": "declined: reason='%s'" % str(answer.get("reason", ""))}
+
+
+## Drop a stack on the ground, the same `drop_item` intent
+## `tab_backpack.gd::_drop()` submits.
+func _step_item_drop(args: Dictionary) -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		return {"verdict": "ERROR", "detail": "no /root/Game"}
+	var transport: Node = game.get("ledger") as Node
+	if transport == null:
+		return {"verdict": "ERROR", "detail": "no Game.ledger to submit through"}
+	var item := str(args.get("item", ""))
+	var n := int(args.get("n", 0))
+	var txn := str(args.get("txn_id", ""))
+	if txn.is_empty():
+		txn = "drop:%d:%d:%d" % [_local_peer_id_or_host(), Time.get_ticks_usec(), randi()]
+	var verdict: Dictionary = transport.call("submit", {
+		"kind": "drop_item", "realm": DROPPED_ITEM_SPAWNER.realm_of(self),
+		"txn_id": txn, "item": item, "count": n,
+		"position": args.get("position", [0.0, 0.0, 0.0]),
+	})
+	_trade_last = verdict
+	if not bool(verdict.get("ok", false)) and not bool(verdict.get("pending", false)):
+		return {"verdict": "FAIL", "detail": "drop refused: %s / %s"
+			% [str(verdict.get("code", "")), str(verdict.get("reason", ""))]}
+	return {"verdict": "PASS", "detail": "drop %d %s (txn %s): ok=%s pending=%s"
+		% [n, item, txn, str(verdict.get("ok", false)), str(verdict.get("pending", false))]}
+
+
+## Pick the nearest dropped stack up, through the real `dropped_item.gd`. `txn`
+## picks a specific one when the smoke needs to be sure which.
+func _step_item_pickup(args: Dictionary) -> Dictionary:
+	var target: Node3D = null
+	var want := str(args.get("txn", ""))
+	for node in get_nodes_in_group(DROPPED_ITEM.GROUP):
+		if not is_instance_valid(node) or not (node is Node3D):
+			continue
+		if want.is_empty() or str(node.call("txn_id")) == want:
+			target = node
+			break
+	if target == null:
+		return {"verdict": "FAIL", "detail": "no dropped stack to pick up"}
+	var verdict: Dictionary = target.call("pick_up")
+	_trade_last = verdict
+	if not bool(verdict.get("ok", false)) and not bool(verdict.get("pending", false)):
+		return {"verdict": "FAIL", "detail": "pickup refused: %s / %s"
+			% [str(verdict.get("code", "")), str(verdict.get("reason", ""))]}
+	return {"verdict": "PASS", "detail": "picked up %s: ok=%s pending=%s"
+		% [str(target.call("item_id")), str(verdict.get("ok", false)),
+			str(verdict.get("pending", false))]}
+
+
+## The offer transport, mounted on first ask and wired once to the ledger's
+## refusal signal so a refusal this peer was sent is visible to the smoke.
+func _trade() -> Node:
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		return null
+	var transport: Node = TRADE_OFFER.attach(game)
+	if transport != null and not _trade_wired:
+		_trade_wired = true
+		var ledger: Node = game.get("ledger") as Node
+		if ledger != null:
+			ledger.connect("intent_refused", func(kind: String, code: String, reason: String) -> void:
+				_trade_refusals.append("%s/%s: %s" % [kind, code, reason]))
+	return transport
+
+
+func _local_peer_id_or_host() -> int:
+	var sess := _session()
+	return int(sess.call("local_peer_id")) if sess != null else 1
+
+
+## `{id: count}` for every dropped stack this process is drawing. The net
+## smoke's conservation check adds this to both satchels: an item on the ground
+## still exists, and a drop that lost it would show up here as a shortfall
+## rather than as a passing test.
+func _dropped_counts() -> Dictionary:
+	var out := {}
+	for node in get_nodes_in_group(DROPPED_ITEM.GROUP):
+		if not is_instance_valid(node):
+			continue
+		var n := int(node.call("count"))
+		if n <= 0:
+			continue
+		var id := str(node.call("item_id"))
+		out[id] = int(out.get(id, 0)) + n
+	return out
 
 
 ## `{id: count}` for every stack an inventory holds -- addressed by item
@@ -1134,6 +1296,28 @@ func _execute_probe(msg: Dictionary) -> Variant:
 					"reason": str(_storage_last.get("reason", "")),
 				},
 				"refusals": _storage_refusals.duplicate(),
+			}
+		"trade":
+			# Lane 3.E. Everything the trade smoke asserts on, read off this
+			# peer's own live objects: what its satchel holds, what it is
+			# drawing on the ground, the offer it has out or waiting, and the
+			# refusals the host has sent it.
+			var tgame := root.get_node_or_null(^"Game")
+			if tgame == null:
+				return null
+			var toffer: Node = TRADE_OFFER.attach(tgame)
+			return {
+				"satchel": _storage_counts(tgame.get("inventory") as RefCounted),
+				"dropped": _dropped_counts(),
+				"outgoing": toffer.call("outgoing") if toffer != null else {},
+				"incoming": toffer.call("incoming") if toffer != null else {},
+				"last": {
+					"ok": bool(_trade_last.get("ok", false)),
+					"pending": bool(_trade_last.get("pending", false)),
+					"code": str(_trade_last.get("code", "")),
+					"reason": str(_trade_last.get("reason", "")),
+				},
+				"refusals": _trade_refusals.duplicate(),
 			}
 		"placed_building_count":
 			var pgame := root.get_node_or_null(^"Game")

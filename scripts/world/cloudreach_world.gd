@@ -12,6 +12,8 @@ const CONFIG_PATH := "res://data/config/cloudreach_world.json"
 const VISUAL_CONFIG_PATH := "res://data/config/cloudreach_visual.json"
 const REALM_ID := "cloudreach"
 const CHAPTER_RUNTIME := preload("res://scripts/world/cloudreach_chapter.gd")
+const DROPPED_ITEM_SPAWNER := preload("res://scripts/world/dropped_item_spawner.gd")
+const TRADE_OFFER := preload("res://scripts/ui/trade_offer.gd")
 const REALM_GATE := preload("res://scripts/world/realm_gate.gd")
 const GROUND_COVER := preload("res://scripts/world/cloudreach_ground_cover.gd")
 const RESOURCE_PATCH := preload("res://scripts/world/cloudreach_resource_patch.gd")
@@ -141,6 +143,14 @@ func _visual_rock_mass(parent: Node3D,label: String,base: Vector3,size: Vector3,
 
 func _ready() -> void:
 	add_to_group("progression_restore")
+	# D107, lane 3.E. The two nodes item trading needs standing in every
+	# process before anybody presses anything: the spawner that draws a
+	# committed `item_dropped` op as a stack on the ground, and the offer
+	# transport, whose node path has to be identical on both peers or its RPCs
+	# do not resolve at all. Both are idempotent.
+	DROPPED_ITEM_SPAWNER.attach(self, REALM_ID)
+	TRADE_OFFER.attach(get_node_or_null(^"/root/Game"))
+
 	_config = _read_json(CONFIG_PATH)
 	_visual_config = _read_json(VISUAL_CONFIG_PATH)
 	var look := get_node_or_null(^"WorldLook")

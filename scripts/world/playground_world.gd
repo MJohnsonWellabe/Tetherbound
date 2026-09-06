@@ -16,6 +16,8 @@ extends Node3D
 const DATA_DIR := "res://data/terrain/playground"
 const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
 const VEGETATION := preload("res://scripts/world/vegetation.gd")
+const DROPPED_ITEM_SPAWNER := preload("res://scripts/world/dropped_item_spawner.gd")
+const TRADE_OFFER := preload("res://scripts/ui/trade_offer.gd")
 const PERF_CONFIG := preload("res://scripts/world/performance_config.gd")
 const STRUCTURE_VISIBILITY_RANGE := preload("res://scripts/world/structure_visibility_range.gd")
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
@@ -587,6 +589,14 @@ func _reapply_look_after_ground_materials() -> void:
 
 func _ready() -> void:
 	var perf_cfg := PERF_CONFIG.config()
+	# D107, lane 3.E. The two nodes item trading needs standing in every
+	# process before anybody presses anything: the spawner that draws a
+	# committed `item_dropped` op as a stack on the ground, and the offer
+	# transport, whose node path has to be identical on both peers or its RPCs
+	# do not resolve at all. Both are idempotent.
+	DROPPED_ITEM_SPAWNER.attach(self, "meadows")
+	TRADE_OFFER.attach(get_node_or_null(^"/root/Game"))
+
 	if perf_cfg.has("collision_stream_interval_s"):
 		COLLISION_STREAM_INTERVAL = maxf(0.05, float(perf_cfg["collision_stream_interval_s"]))
 

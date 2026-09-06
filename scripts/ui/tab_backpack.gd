@@ -43,6 +43,11 @@ const TEACHING := preload("res://scripts/creatures/teaching.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
+## Stage B Wave 3 lane 3.E. The two consumers of D107's item intents: the offer
+## conversation a Give row starts, and the realm a Drop is stamped with (read
+## off the world it is happening in, never off a global -- D97).
+const TRADE_OFFER := preload("res://scripts/ui/trade_offer.gd")
+const DROPPED_ITEM_SPAWNER := preload("res://scripts/world/dropped_item_spawner.gd")
 
 ## OW1. Owner, after playing: "I can't move things in my inventory. There's no
 ## separate hot bar section. I can't move anything into it."
@@ -76,6 +81,13 @@ const USE_ACTION := "interact"
 
 ## Discard the focused stack, after a confirm -- destructive, so it gets one.
 const DROP_ACTION := "backpack_drop"
+
+## Rows the drop confirmation is built with: "Drop it", up to MAX_GIVE_ROWS
+## "Give to <player>", and "Cancel". `MAX_GIVE_ROWS` is one short of the
+## session's four-player ceiling (`docs/specs`, `session.gd`'s header) because a
+## player is never offered the chance to give something to themselves.
+const MAX_GIVE_ROWS := 3
+const CONFIRM_ROW_COUNT := MAX_GIVE_ROWS + 2
 
 ## Halve the focused stack into the first empty slot. Non-destructive (both
 ## halves stay in the satchel), so unlike Use and Drop this applies on the
@@ -230,6 +242,13 @@ var _target_rows: Array = []
 var _confirm_panel: VBoxContainer = null
 var _confirm_header: Label = null
 var _confirm_rows: Array = []
+
+## What each confirm row DOES, parallel to `_confirm_rows`: `{"kind": "drop"}`,
+## `{"kind": "give", "peer": int}` or `{"kind": "cancel"}`. Read rather than
+## inferred from the index, because lane 3.E made the row list variable -- solo
+## still shows exactly the two rows it always showed, and a session shows one
+## Give row per other player between them.
+var _confirm_actions: Array = []
 
 
 func build() -> void:
@@ -754,9 +773,19 @@ func _player_vitals() -> RefCounted:
 	return player.get("vitals") as RefCounted if player != null else null
 
 
-## Two rows, built once for the same focus-survival reason as the target
-## panel above: "Drop it" and "Cancel". Fixed shape, unlike the target panel's
-## five creature rows, because a drop confirmation has nothing to list.
+## Built once for the same focus-survival reason as the target panel above.
+##
+## Solo this is still exactly two rows, "Drop it" and "Cancel", and behaves
+## exactly as it did before Stage B. In a session the middle of the list grows
+## one "Give to <player>" row per other player, so the destructive verb and the
+## generous one are offered in the same place -- and no new input action had to
+## be invented for Give, which matters on a pad where every face button is spoken
+## for (see `DROP_ACTION`'s own comment on what the last collision cost).
+##
+## The buttons are built once at the maximum and shown or hidden by
+## `_refresh_confirm_panel`, rather than created and freed per open: a row freed
+## while it holds focus is the exact failure the target panel above was written
+## to avoid.
 func _build_confirm_panel() -> VBoxContainer:
 	var panel := VBoxContainer.new()
 	panel.add_theme_constant_override("separation", 8)
@@ -767,7 +796,7 @@ func _build_confirm_panel() -> VBoxContainer:
 	_confirm_header.custom_minimum_size = Vector2(500, 0)
 	panel.add_child(_confirm_header)
 
-	for i in 2:
+	for i in CONFIRM_ROW_COUNT:
 		var button := Button.new()
 		button.custom_minimum_size = Vector2(300, 64)
 		button.clip_text = true
@@ -1520,16 +1549,42 @@ func _refresh_confirm_panel() -> void:
 		)
 		_confirm_header.text = "Drop %s? This cannot be undone." % what
 
-	if _confirm_rows.size() >= 2:
-		_confirm_rows[0].text = "Drop it"
-		_confirm_rows[1].text = "Cancel"
+	_confirm_actions = [{"kind": "drop"}]
+	for row: Dictionary in _trade_partners():
+		if _confirm_actions.size() >= MAX_GIVE_ROWS + 1:
+			break
+		_confirm_actions.append({"kind": "give", "peer": int(row.get("peer_id", 0)),
+			"name": str(row.get("name", ""))})
+	_confirm_actions.append({"kind": "cancel"})
+
+	for i in _confirm_rows.size():
+		var button: Button = _confirm_rows[i]
+		if i >= _confirm_actions.size():
+			button.visible = false
+			continue
+		var action: Dictionary = _confirm_actions[i]
+		button.visible = true
+		match str(action.get("kind", "")):
+			"drop":
+				button.text = "Drop it"
+			"give":
+				button.text = "Give to %s" % str(action.get("name", "them"))
+			_:
+				button.text = "Cancel"
 
 
-## Row 0 is "Drop it", row 1 is "Cancel" -- see _build_confirm_panel().
+## What the pressed row does, read off `_confirm_actions` rather than off the
+## index -- see `_build_confirm_panel()`.
 func _on_confirm_row(index: int) -> void:
 	if _confirming < 0:
 		return
-	if index != 0:
+	if index < 0 or index >= _confirm_actions.size():
+		say("")
+		_end_confirm()
+		return
+	var action: Dictionary = _confirm_actions[index]
+	var kind := str(action.get("kind", "cancel"))
+	if kind == "cancel":
 		say("")
 		_end_confirm()
 		return
@@ -1545,12 +1600,123 @@ func _on_confirm_row(index: int) -> void:
 
 	var id := str(stack.get("id", ""))
 	var n := int(stack.get("n", 0))
-	inventory.call("drop_slot", _confirming)
-	if n > 1:
-		say("Dropped %d %s." % [n, str(db.call("item_name", id))])
+	if kind == "give":
+		_give(id, n, int(action.get("peer", 0)), str(action.get("name", "them")), db)
 	else:
-		say("Dropped %s." % str(db.call("item_name", id)))
+		_drop(id, n, db)
 	_end_confirm()
+
+
+## D107, lane 3.E. Dropping is a `drop_item` INTENT, not a delete.
+##
+## Before Stage B this called `inventory.gd::drop_slot()`, which deleted the
+## stack outright -- and that file's own comment said why ("in case a future
+## world-pickup entity wants to spawn from it; none exists yet"). One now does:
+## the ledger commits an `item_take` addressed to this peer and an
+## `item_dropped` scene op, and `dropped_item_spawner.gd` draws the stack on the
+## ground on every peer off that same delta.
+##
+## NOTHING is removed here. The take is a `player` op addressed to this peer and
+## `ledger_rpc.gd::_apply_player_ops()` applies it when the delta lands -- inside
+## `submit()` solo and on a host, and when `_rpc_delta` arrives on a client. A
+## satchel emptied here as well would charge the player twice.
+##
+## Solo behaves exactly as it did: `submit()` is the host path, it commits in
+## process, and the satchel is lighter before this function returns. The one
+## deliberate change is WHICH slot pays -- `inventory.gd::remove()` addresses the
+## stack by item identity, smallest stack first, which is the rule CLAUDE.md
+## makes non-negotiable and which the old slot-indexed delete broke.
+func _drop(id: String, n: int, db: RefCounted) -> void:
+	var game := state()
+	var transport: Node = game.get("ledger") as Node if game != null else null
+	if transport == null:
+		say("The world is not ready yet.")
+		return
+	var verdict: Dictionary = transport.call("submit", {
+		"kind": "drop_item",
+		"realm": DROPPED_ITEM_SPAWNER.realm_of(get_tree()),
+		"txn_id": _mint_drop_txn(),
+		"item": id,
+		"count": n,
+		"position": _drop_position(),
+	})
+	if not bool(verdict.get("ok", false)) and not bool(verdict.get("pending", false)):
+		# A refusal names one sentence a player can act on; an empty one would
+		# leave the press looking like it did nothing.
+		var reason := str(verdict.get("reason", ""))
+		say(reason if not reason.is_empty() else "That could not be dropped.")
+		return
+	var what := str(db.call("item_name", id)) if db != null else id
+	if n > 1:
+		say("Dropped %d %s." % [n, what])
+	else:
+		say("Dropped %s." % what)
+
+
+## D107, lane 3.E. Offering a stack to another player.
+##
+## This only SENDS the offer; `trade_offer.gd` submits the `transfer_item`
+## intent if and when the other player accepts, and nothing leaves this satchel
+## before then. CLAUDE.md: items only. A creature is not addressable from this
+## screen and `transfer_item` cannot carry one.
+func _give(id: String, n: int, peer_id: int, who: String, db: RefCounted) -> void:
+	var transport: Node = TRADE_OFFER.attach(state())
+	if transport == null:
+		say("The world is not ready yet.")
+		return
+	var answer: Dictionary = transport.call("offer", peer_id, id, n)
+	if not bool(answer.get("ok", false)):
+		var reason := str(answer.get("reason", ""))
+		say(reason if not reason.is_empty() else "That could not be offered.")
+		return
+	var what := str(db.call("item_name", id)) if db != null else id
+	if n > 1:
+		say("Offered %d %s to %s." % [n, what, who])
+	else:
+		say("Offered %s to %s." % [what, who])
+
+
+## Every OTHER player in this session, as `{"peer_id", "name"}` rows. Empty solo
+## -- which is what keeps the confirm panel showing exactly the two rows it has
+## always shown when nobody else is in the world.
+func _trade_partners() -> Array:
+	var out: Array = []
+	var game := state()
+	if game == null:
+		return out
+	var session: Variant = game.get("session")
+	if session == null or not bool((session as Node).call("is_active")):
+		return out
+	var local := int((session as Node).call("local_peer_id"))
+	for raw: Variant in ((session as Node).call("peers") as Array):
+		var row := raw as Dictionary
+		var peer_id := int(row.get("peer_id", 0))
+		if peer_id == 0 or peer_id == local:
+			continue
+		var shown := str(row.get("display_name", "")).strip_edges()
+		out.append({"peer_id": peer_id, "name": shown if not shown.is_empty() else "Player %d" % peer_id})
+	return out
+
+
+## Where the stack lands: the player's own feet. Read off the live body rather
+## than off a saved position, because a drop happens where the player is
+## standing at the moment they press it. `WorldState` stores positions as plain
+## arrays so they survive JSON, and the intent is going to cross the wire.
+func _drop_position() -> Array:
+	var at := DROPPED_ITEM_SPAWNER.drop_origin(get_tree())
+	return [at.x, at.y, at.z]
+
+
+## Unique per drop. The ledger refuses a repeated `txn_id` with `duplicate`, so
+## this is what makes a double-press or a resent intent impossible to cash twice.
+func _mint_drop_txn() -> String:
+	var game := state()
+	var peer := 1
+	if game != null:
+		var session: Variant = game.get("session")
+		if session != null:
+			peer = int((session as Node).call("local_peer_id"))
+	return "drop:%d:%d:%d" % [peer, Time.get_ticks_usec(), randi()]
 
 
 func _read_confirm_cancel() -> void:
