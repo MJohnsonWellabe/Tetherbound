@@ -83,9 +83,29 @@
   },
   "settlement_materials": {
     "_comment": "Recolours the same Quaternius medieval prefabs the Meadows village uses -- duplicated materials, textures kept, classified by mesh/material name keyword (roof/tile, wood/beam/trim/corner/door/frame, else wall) -- so the two villages read as different places instead of literally the same houses moved uphill.",
+    "_comment_c8": "CLOUDREACH-DRESS-0906 / C8. The recolour alone did not separate these cottages from the Meadows village -- the blind judge still read stands 02/08/12 as the same houses moved uphill. timber_colour moved from #8a7d6a to #4b3a2b for a reason the judge stated exactly: it called the front of the cottage at 12 'an open timber lattice over a doorway'. Wall_Plaster_WoodGrid is a HALF-TIMBERED wall, not an opening (probed against the kit: both its primitives span the wall's full 0.00-3.12 m height, so there is no hole), but at #8a7d6a the timber sat within about 0.11 luminance of the #b9b4a8 plaster behind it, the infill stopped reading, and the eye filled the empty grid cells with shadow. Dark weathered oak on pale plaster is what makes half-timbering read as half-timbering rather than as a shopfront frame.",
     "roof_colour": "#5a6572",
-    "timber_colour": "#8a7d6a",
+    "timber_colour": "#4b3a2b",
     "wall_colour": "#b9b4a8",
-    "guy_rope_radius": 0.03
+    "guy_rope_radius": 0.03,
+    "dressing_visibility_m": 900.0,
+    "cliff_dressing": {
+      "_comment": "Per-building windswept dressing from the medieval kit's own previously-unused modules, all installed by this round's asset commit. It is applied to both cliff settlements (lower_cliffs_waycamp, cliffhold_settlement) and to nothing else, so the Meadows village is untouched. The windward face is chosen per building as the one pointing away from the settlement centre -- the face the approach camera sees and the weather hits -- so the dressing lands on the side that is actually in frame instead of being scattered evenly.",
+      "enabled": true,
+      "balconies": true,
+      "balcony_drop_m": 0.95,
+      "supports_per_building": 3,
+      "support_stand_off_m": 0.35,
+      "vines_per_building": 2,
+      "_comment_lashing": "The judge read the existing single guy rope as 'a single thin diagonal pole running from the grass to the roof ridge like a guy-wire'. One thin line alone on a wall is a stray mark; three lines thrown OVER the ridge and staked both sides, with logs weighting the ridge, is a roof that lives in this wind. Same asset budget, opposite read.",
+      "ridge_lashings": 3,
+      "lashing_radius_m": 0.045,
+      "ridge_logs": 2,
+      "_comment_banner": "Stand 08: 'a stone chimney-tower with a yellow rectangle for a banner'. That is _build_cliff_settlement's WindBanner, a flat unlit box in leaf_gold. It is hidden and real cloth is hung in its place on banner_cloth.gdshader, so it moves and carries the device every other Cloudreach banner does.",
+      "tower_banner_width_m": 2.2,
+      "tower_banner_height_m": 4.4,
+      "terrace_rails": 8,
+      "terrace_rail_radius_m": 23.5
+    }
   }
 }

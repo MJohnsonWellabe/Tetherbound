@@ -59,6 +59,69 @@
     "alpha_deg": 78.0,
     "_why": "a handful of translucent wind-veil panels just above the drum crown, between ribs on the leeward-reading side, so the dome is open air everywhere else -- not a solid shell."
   },
+  "membrane": {
+    "_why": "CLOUDREACH-DRESS-0906 / C7 lever (b). The blind judge read the dome as 'a rusted-iron ribbed cage, open lattice ... an unbuilt planetarium frame or a giant birdcage on a ruined fort'. An open lattice has no surface, so at reading distance the dome is only its own wireframe and the eye finishes it as scaffold. This skins a BAND of the meridian gaps -- from the rim (0.0) to 0.62 of the way up each rib -- with a translucent membrane on the same sphere the ribs use, so the ribs read as the structure of something. Deliberately a band and not a full skin: above to_rib_fraction the crown stays open lattice and the oculus stays a real hole, so it is still an aviary rather than a roof. skip_every_nth_gap leaves one gap in four unskinned; those torn panels are what stop a skinned dome reading as solid, and they keep sky in the silhouette. rib_inset_m holds the membrane just inside the rib centreline so the ribs stay proud of it from outside.",
+    "enabled": true,
+    "from_rib_fraction": 0.0,
+    "to_rib_fraction": 0.62,
+    "skip_every_nth_gap": 4,
+    "rows": 4,
+    "columns": 3,
+    "rib_inset_m": 0.12
+  },
+  "interior": {
+    "_why": "CLOUDREACH-DRESS-0906 / C7 lever (a) and X3. The same verdict: 'There is nothing inside it, no machinery, no cables, no glow, no ground treatment -- the trainer stands under a lattice on the same felt ground.' Every asset below was already vendored in the repo and is installed by this round's asset commit; the songbird is an EXISTING creature mesh reused as a static prop, which is not a new creature mesh (D23 s20). Nothing here collides: the drum interior stays exactly as walkable as it was, and the only things over the throat walk are the hanging cables.",
+    "enabled": true,
+    "seed": 110607,
+    "floor": {
+      "_why": "The 'no ground treatment' half. A swept keeper's floor inset from the wall, plus mucked-out straw heaps banked toward the wall -- the heaps matter more than the disc, because a bare disc is just a second flat plane in a frame the judge already called felt.",
+      "enabled": true,
+      "inset_m": 1.2,
+      "thickness_m": 0.12,
+      "height_m": 0.09,
+      "litter_count": 22
+    },
+    "log_perches": {
+      "_why": "The existing furniture perches are 0.14 m beams 12-24 m up: hairlines at the judge's distance, which is why a dome full of them still read as empty. These are readable roosts on the installed Kenney survival tree-logs, at standing-to-mid height where the camera actually looks, each with a leg and a rope lashing so none of them floats.",
+      "count": 7,
+      "height_min_m": 0.0,
+      "height_max_m": 5.5,
+      "length_min_m": 3.0,
+      "length_max_m": 5.0
+    },
+    "birds": {
+      "_why": "X3. The handoff called a static bird 'not found licence-clean'; ollie-the-songbird.glb has been installed in this repo all along. 0.85 m reads at the summit stand without pretending to be a catchable encounter.",
+      "count": 9,
+      "height_m": 0.85
+    },
+    "cables": {
+      "_why": "The 'no cables' half: handling lines from the oculus ring down to the drum crown, each landing on a coil of installed rope or chain so the line has a reason to exist.",
+      "count": 8,
+      "sag_m": 2.4,
+      "radius_m": 0.07,
+      "segments": 7,
+      "twist_rad": 0.55
+    },
+    "hanging_cloth": {
+      "_why": "Wind cloth on the existing banner_cloth.gdshader (through the hookup's 'cloth' material), hung inside the wall so it moves against the membrane.",
+      "count": 6,
+      "width_m": 2.6,
+      "height_m": 5.2
+    },
+    "wall_lanterns": {
+      "_why": "The 'no glow' half. The existing lantern boxes are emissive but light nothing, and an emissive quad under a bright sky is just a pale square. These are the installed Lantern_Wall prop with a real OmniLight behind it, offset inward so it rakes the floor and the membrane rather than the stone it is bolted to.",
+      "count": 6,
+      "height_m": 4.6,
+      "prop_height_m": 1.1,
+      "colour": "#ffb15c",
+      "energy": 2.6,
+      "range_m": 16.0
+    },
+    "stores": {
+      "_why": "Keeper's crates and barrels against the wall, outside the throat walk.",
+      "count": 8
+    }
+  },
   "furniture": {
     "perch_count": 10,
     "perch_length_min_m": 4.0,
