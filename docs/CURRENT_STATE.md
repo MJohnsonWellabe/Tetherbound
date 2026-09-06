@@ -27,8 +27,9 @@ on the branch with a green named test; nothing here is an Ally reproduction.
 | OP-0905-07 Gil's face | **asset limit**, recorded | `docs/art/HUMANOID_ASSET_INVENTORY.md` §Known limit; needs owner reference art |
 | OP-0905-16/-19 machine turned; Hall torches | landed | `smoke_stronghold`: facing -101.2°, doorway sightline 13.6 m clear, 14 wall torches |
 | OP-0905-09 Warrens exterior | in flight (earth bank built; hall-walk regression being fixed) | `smoke_warrens_fixture` OK; `smoke_warrens` one red |
-| OP-0905-23/-24/-25 Cloudreach grass, holes, sinking | in flight | ground-truth probe 561→270 holes so far; walk smokes are the bar |
-| OP-0906-01..05 Cloudreach look; aviary stronghold | in flight | blind before-verdict `ralph/reports/CLOUDREACH-LOOK-0906/JUDGE-before.md` |
+| OP-0905-24/-25 Cloudreach holes, sinking | landed (branch `claude/cloudreach-ground-0906`) | `smoke_cloudreach_ground_truth`: 0 holes, 26 sinks/floats of 30,922 samples (0.08 %; was 0 / 819 of 3,782 = 21.7 % on the WIP); `smoke_cloudreach_arrival_walk` OK, `smoke_cloudreach_summit_road` PASS, `smoke_cloudreach_causeway_crossing` PASS; `ralph/reports/CLOUDREACH-GROUND-0906/REPORT.md` |
+| OP-0905-23 / OP-0906-01..04 Cloudreach look | in flight | blind before-verdict `ralph/reports/CLOUDREACH-LOOK-0906/JUDGE-before.md`; after-verdict in `ralph/reports/CLOUDREACH-GROUND-0906/` |
+| OP-0906-05 aviary stronghold | landed in the world (D111 hookup) | `smoke_cloudreach_finale` PASS, `smoke_cloudreach_production_integration` PASS, `smoke_cloudreach_summit_road` PASS, `smoke_cloudreach_aviary` PASS |
 
 Process finding (OP-0906-06): a Meadows world boot is ~3.3 GB and 100 s uncontended; four
 at once OOM-kill each other on a 15 GB box. A 3-slot throttle now wraps `godot` here, and
