@@ -33,7 +33,7 @@ const RULES := preload("res://scripts/world/scatter_rules.gd")
 class CountingVegetation extends "res://scripts/world/vegetation.gd":
 	var batches: Array[String] = []
 
-	func _build_batch(model_path: String, placements: Array) -> void:
+	func _build_batch(model_path: String, placements: Array, _slicer: RefCounted = null) -> void:
 		batches.append(model_path)
 		_placed += placements.size()
 
