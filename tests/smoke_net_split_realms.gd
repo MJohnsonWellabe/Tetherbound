@@ -1,6 +1,21 @@
 extends "res://tests/helpers/net_harness.gd"
 
-# peers: 2
+## HELD, 2026-09-06, and NOT quarantined -- the distinction matters.
+##
+## This smoke is not failing while the feature it covers still ships. The
+## feature was WITHDRAWN: `game_state.gd::can_enter_realm()` re-instates D97's
+## multi-peer refusal, because this smoke measured the host freezing for longer
+## than the harness's 15 s heartbeat window at
+## `realm_shells.gd`'s synchronous `add_child` -- the whole world build, inside
+## one frame, on the machine everybody else depends on. A test for a door that
+## is deliberately shut cannot pass, so its `# peers: 2` header is removed and
+## CI stops discovering it.
+##
+## Restoring it is two edits and they belong together: delete the
+## `is_multi_peer()` lines in `can_enter_realm()`, and put the header back.
+## Do not do either alone.
+
+#  peers-held: HELD, header removed on purpose; see the note below
 
 ## Stage B Wave 6 lane 6.A. THE player-visible outcome of the lane, and of
 ## directive rule 16: **two people in different biomes at the same time.**

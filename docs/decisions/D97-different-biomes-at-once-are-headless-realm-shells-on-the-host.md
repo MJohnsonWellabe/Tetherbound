@@ -31,3 +31,49 @@ because the 385,333-prop scatter and Terrain3D's resident data were already buil
 story panels (`DialoguePanel`, `NamePrompt`, `StarterPicker`) stay in a shell —
 `sequence_director.gd` calls them every frame. The shell's memory budget is set in Wave 6 only
 after a spike measures the skip-build variant; the interim same-realm limitation stands until then.
+
+
+## Built, measured, and held — 2026-09-06
+
+Lane 6.A built all of this: the registry learns where each peer stands, the realm being left
+despawns that peer's body while its world is still up, `scripts/net/realm_shells.gd` stands a
+headless shell for any occupied realm the host is not in and folds one down through the host's own
+world save when a realm empties, and `game_state.gd::enter_realm()` announces the crossing before
+`change_scene_to_file()` so nobody is left drawing a trainer who has gone. That machinery is sound
+and is left in the tree.
+
+**The interim refusal is re-instated anyway, because of what the shell costs.**
+
+`realm_shells.gd` does `packed.instantiate()` and then a synchronous `tree.root.add_child(node)`.
+`add_child` is what runs the world root's `_ready()`, and that `_ready()` is the entire world
+build. `simulation_only` is set before the call, exactly as intended, and still does not bring it
+under the net harness's 15-second heartbeat window. Both of the lane's own smokes die at that one
+call:
+
+```
+split_realms                        PASS: the host holds no realm shell while everybody is in one realm
+                                    PASS: the Cloudreach route is open before anyone tries to walk it
+                                    FAIL: peer 1 crossed into Cloudreach (peer 0, no heartbeat for >15 s)
+realm_owner_disconnect_mid_fight    PASS: the Cloudreach route is open before the host tries to walk it
+                                    FAIL: the host crossed into Cloudreach (peer 0, no heartbeat for >15 s)
+```
+
+Every other assertion in both smokes passes. The failure is isolated to standing the shell up, and
+it happens whether the **client** crosses (host shells the realm being entered) or the **host**
+crosses (host shells the realm being left occupied).
+
+**Why that is a hold and not a test problem.** In a smoke it is a timeout. In a real session it is
+the host freezing for tens of seconds the moment a friend walks into Cloudreach — every other
+player stalled, mid-fight, on a machine they do not control. That is worse for everyone than not
+having realm transitions at all, which is what the refusal restores.
+
+**The retry does not start over.** `realm_shells.gd` already instruments `boot_ms` and the
+static-memory delta around the `add_child` site; nobody has yet seen those numbers, because the
+lane left both smokes to CI and never ran them. Spike S2's figures are the budget to come in under
+(~85 s cold, 2,783 MB). The shape of the fix is standing the shell up **across frames** rather than
+inside one, and the two smokes are held with their `# peers: 2` headers removed rather than
+deleted — restoring them is two edits that belong together, both named in
+`can_enter_realm()`'s comment.
+
+**Not a quarantine.** The smokes are not failing while the feature ships; the feature is withdrawn
+and its tests are withdrawn with it.

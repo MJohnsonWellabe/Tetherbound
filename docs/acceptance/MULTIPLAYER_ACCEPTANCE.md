@@ -43,8 +43,8 @@ two people in it, or that a friend's creature reads as theirs. Those are the own
 | 15 | Sleep and advance night | `smoke_net_sleep_vote` | ☐ |
 | 16 | Menus without freezing others | **owed** — no smoke yet | ☐ |
 | 17 | Ride and Fly while others act | *lanes 6.B / 6.C not started* | ☐ |
-| 18 | Transition independently | *lane 6.A in flight* | ☐ |
-| 19 | Different biomes simultaneously | *lane 6.A in flight* — the rule-16 bar | ☐ |
+| 18 | Transition independently | **HELD** — built by 6.A, refusal re-instated: the shell boot freezes the host past 15 s (D97) | ☐ |
+| 19 | Different biomes simultaneously | **HELD** — same cause as 18; the machinery is built and measured, the door is shut (D97) | ☐ |
 | 20 | Save world + portable characters | `test_world_save_format`, `test_save_format` (59 tests). **The character half is not yet written** — lane 1.C deferred; a client writes no character file today | ☐ |
 | 21 | Disconnect and reconnect | *lane 7.A not started* | ☐ |
 | 22 | Late-join a modified world | *lane 7.A not started* | ☐ |
