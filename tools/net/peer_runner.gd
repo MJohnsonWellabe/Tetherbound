@@ -61,6 +61,8 @@ const SPAWN_TABLES := preload("res://scripts/combat/spawn_tables.gd")
 ## Lane 3.D. The real shipping chest, driven by its real submit path -- these
 ## arms replace the panel's presses, not the container's ledger conversation.
 const STORAGE_CONTAINER := preload("res://scripts/build/storage_container.gd")
+## Lane 3.B. The pickup race smoke stands a real one of these and presses it.
+const ITEM_CACHE_PICKUP := preload("res://scripts/world/item_cache_pickup.gd")
 
 const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
@@ -131,6 +133,26 @@ var _storage_last: Dictionary = {}
 ## says "pending", and the host's `stale_revision` answer arrives later on
 ## `storage_container.gd`'s own `storage_refused` signal.
 var _storage_refusals: Array = []
+## Lane 3.B. The pickup `pickup_stand` planted in this process, and the verdict
+## its last `pickup_take` came back with. A client's `submit()` only ever says
+## "pending", so what actually happened is read afterwards off the world flag
+## and the satchel, never off this verdict alone.
+var _pickup_node: Node3D = null
+var _pickup_id: String = ""
+var _pickup_item: String = ""
+var _pickup_realm: String = "meadows"
+## Refusals this peer's own pickup reported, off `item_cache_pickup.gd`'s own
+## `claim_refused` -- which fires whether the host refused us synchronously
+## (we ARE the host and lost) or a round trip later (we are a client).
+var _pickup_refusals: Array = []
+## What this peer's press actually found: "" (never pressed), "submitted" (the
+## world had not yet recorded the find as taken, so `activated` reached
+## `_on_picked_up` and an intent really went out), or "gone" (somebody else's
+## claim had already committed and the delta had taken the prop down before this
+## press landed). The second is not a failure -- it is
+## the other legal shape of a lost race, and the one delta-driven removal
+## produces most of the time. See `smoke_net_pickup_race.gd`.
+var _pickup_press: String = ""
 
 
 func _initialize() -> void:
@@ -371,6 +393,10 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = _step_storage_grant(args)
 		"storage_transfer":
 			out = _step_storage_transfer(args)
+		"pickup_stand":
+			out = await _step_pickup_stand(args)
+		"pickup_take":
+			out = _step_pickup_take(args)
 		"deploy_creature":
 			out = await _step_deploy_creature(args)
 		_:
@@ -508,6 +534,133 @@ func _storage_record_counts(game: Node, index: int) -> Dictionary:
 		var id := str(stack.get("id", ""))
 		out[id] = int(out.get(id, 0)) + int(stack.get("n", 0))
 	return out
+
+
+# --- lane 3.B: one pickup, two hands ------------------------------------------
+#
+# Two arms and one probe. Everything they touch is shipping code: the prop is a
+# real `item_cache_pickup.gd`, the press is its own `Interactable.activated`
+# signal (the exact seam a controller press fires), and the claim goes through
+# the real `Game.ledger`. What the harness supplies is only what a player
+# supplies -- standing in front of it, and pressing.
+
+
+## Stand a real cache pickup, at the same id on every peer, so both processes
+## are pressing THE SAME find. No model path: the prop's geometry is not what
+## this smoke is about, and `item_cache_pickup.gd` falls back to a plain box.
+func _step_pickup_stand(args: Dictionary) -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		return {"verdict": "ERROR", "detail": "no /root/Game"}
+	if _pickup_node != null and is_instance_valid(_pickup_node):
+		_pickup_node.queue_free()
+		_pickup_node = null
+	_pickup_id = str(args.get("id", "net_race_cache"))
+	_pickup_item = str(args.get("item", "berries"))
+	_pickup_realm = str(args.get("realm", "meadows"))
+	var node: Node3D = ITEM_CACHE_PICKUP.new()
+	node.name = "SmokePickup"
+	root.add_child(node)
+	node.call("setup", _pickup_item, "Take", "", 1.0, _pickup_id, _pickup_realm,
+		int(args.get("count", 1)))
+	_pickup_node = node
+	_pickup_refusals = []
+	_pickup_press = ""
+	# BOTH refusal surfaces, because neither one alone sees both paths.
+	#
+	# A host that loses the race is refused synchronously inside `submit()`, and
+	# the only thing that reports that is the prop's own `claim_refused`.
+	#
+	# A CLIENT hears `already_taken` a round trip later -- and by then the
+	# winner's delta has usually already reached it and freed the prop, taking
+	# that signal's connection with it. So the client's refusal is only
+	# observable on the TRANSPORT, which is an autoload child and outlives any
+	# prop. (The player still sees it either way: `ledger_rpc.gd::_rpc_verdict`
+	# pushes the sentence to `Game` before it emits, and that is not a node
+	# connection.) `_rpc_verdict` is addressed to the one peer whose intent it
+	# was, so anything arriving on the transport here is ours.
+	node.connect("claim_refused", _on_pickup_refused)
+	var transport: Node = game.get("ledger") as Node
+	if transport != null and not transport.is_connected("intent_refused", _on_intent_refused):
+		transport.connect("intent_refused", _on_intent_refused)
+	await physics_frame
+	if not is_instance_valid(_pickup_node):
+		# `setup()` frees the prop outright when the flag already says taken.
+		return {"verdict": "PASS", "detail": "'%s' was already taken; nothing stands" % _pickup_id}
+	return {"verdict": "PASS", "detail": "stood '%s' (%s)" % [_pickup_id, _pickup_item]}
+
+
+## Press it. The signal, not the private method: `interactable.gd::activated`
+## is what a real interact press emits, so a change that broke the wiring
+## between the prompt and the claim would fail here rather than be routed
+## around.
+##
+## `at_unix_ms` is what makes a two-peer race REPRODUCIBLE rather than a
+## coin-flip on packet order. The coordinator talks to each peer over its own
+## TCP control socket, one after the other and awaiting each verdict before it
+## sends the next, so two "press now" messages are always a round trip apart --
+## and a pickup is REMOVED by the winner's delta, so the second peer would
+## routinely find nothing left to press and the smoke would assert nothing.
+## Given a deadline this arm SCHEDULES the press and answers immediately, so
+## both peers can be armed and then both press at the same instant off the
+## wall clock they share (one machine, contract §2). Everything about the press
+## itself is the shipping path.
+func _step_pickup_take(args: Dictionary) -> Dictionary:
+	if _pickup_node == null or not is_instance_valid(_pickup_node):
+		return {"verdict": "ERROR", "detail": "no pickup standing; run pickup_stand first"}
+	var at := float(args.get("at_unix_ms", 0.0))
+	if at > 0.0:
+		_press_pickup_at.call_deferred(at)
+		return {"verdict": "PASS", "detail": "armed '%s' for %.0f" % [_pickup_id, at]}
+	return _press_pickup()
+
+
+## Hold until the shared instant, then press. Started detached (`call_deferred`)
+## so the arming step can answer the coordinator straight away; it keeps running
+## because each `await physics_frame` resumes it off the tree's own signal.
+func _press_pickup_at(at_unix_ms: float) -> void:
+	while Time.get_unix_time_from_system() * 1000.0 < at_unix_ms:
+		await physics_frame
+	_press_pickup()
+
+
+func _press_pickup() -> Dictionary:
+	# "Already gone" is read off the WORLD, not off the node. `_deactivate()`
+	# calls `queue_free()`, which is deferred to the end of the frame, so a prop
+	# taken down by a delta that landed EARLIER IN THIS SAME FRAME still passes
+	# `is_instance_valid` -- the press reaches it and its own `_taken` guard
+	# swallows it silently, and a harness that trusted the node would report a
+	# submission that never happened. `was_taken()` is the prop's own public
+	# static over the same flag the delta carries, so this asks exactly the
+	# question `_on_picked_up` is about to ask itself.
+	var game := root.get_node_or_null(^"Game")
+	var already := game != null and bool(ITEM_CACHE_PICKUP.was_taken(
+		game, _pickup_item, _pickup_id, _pickup_realm))
+	if already or _pickup_node == null or not is_instance_valid(_pickup_node):
+		# Not an error: somebody else's claim already committed and the delta
+		# took this prop down, which is exactly what a lost race looks like.
+		_pickup_press = "gone"
+		return {"verdict": "PASS", "detail": "'%s' was already gone when the press landed" % _pickup_id}
+	var prompt := _pickup_node.get_node_or_null(^"Interactable")
+	if prompt == null:
+		return {"verdict": "ERROR", "detail": "the pickup has no Interactable to press"}
+	prompt.emit_signal("activated")
+	_pickup_press = "submitted"
+	return {"verdict": "PASS", "detail": "pressed '%s'" % _pickup_id}
+
+
+## This peer's own claim was refused, reported by the prop itself (the host
+## path). See `pickup_stand`.
+func _on_pickup_refused(code: String, reason: String) -> void:
+	_pickup_refusals.append({"code": code, "reason": reason})
+
+
+## The same refusal, reported by the transport (the client path, and the only
+## one that survives the prop being freed by the winner's delta).
+func _on_intent_refused(kind: String, code: String, reason: String, _detail: Dictionary) -> void:
+	if kind != "claim_pickup":
+		return
+	_pickup_refusals.append({"code": code, "reason": reason})
 
 
 func _step_boot(args: Dictionary) -> Dictionary:
@@ -1134,6 +1287,27 @@ func _execute_probe(msg: Dictionary) -> Variant:
 					"reason": str(_storage_last.get("reason", "")),
 				},
 				"refusals": _storage_refusals.duplicate(),
+			}
+		"pickup":
+			# Lane 3.B. Everything the pickup-race smoke asserts on, read off
+			# this peer's own live objects: whether the prop is still standing,
+			# whether the WORLD says the find is claimed, what this peer's
+			# satchel holds, and the verdict/refusals of its own press.
+			var kgame := root.get_node_or_null(^"Game")
+			if kgame == null:
+				return null
+			var kflag := ITEM_CACHE_PICKUP.flag_id(_pickup_item, _pickup_id, _pickup_realm)
+			var kworld: Variant = kgame.get("world")
+			var kflags: Variant = (kworld as RefCounted).get("flags") if kworld != null else null
+			return {
+				"id": _pickup_id,
+				"item": _pickup_item,
+				"flag": kflag,
+				"standing": _pickup_node != null and is_instance_valid(_pickup_node),
+				"claimed": kflags != null and bool((kflags as RefCounted).call("has", kflag)),
+				"satchel": _storage_counts(kgame.get("inventory") as RefCounted),
+				"press": _pickup_press,
+				"refusals": _pickup_refusals.duplicate(true),
 			}
 		"placed_building_count":
 			var pgame := root.get_node_or_null(^"Game")

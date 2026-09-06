@@ -1945,9 +1945,10 @@ jobs:
           # in a rebase is caught here rather than discovered as a shard that
           # ran nothing. Wave 0 shipped 2 (the boot smoke and its negative
           # control); Wave 2 added host/join/leave and movement; lane 3.D added
-          # storage_concurrency; lane 4.B added deploy_two_creatures.
-          if [ "$count" -lt 6 ]; then
-            echo "::error::expected at least 6 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
+          # storage_concurrency; lane 4.B added deploy_two_creatures; lane 3.B
+          # added pickup_race.
+          if [ "$count" -lt 7 ]; then
+            echo "::error::expected at least 7 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
             exit 1
           fi
           # Named registration, on top of the count. Discovery alone would let a
@@ -1961,7 +1962,8 @@ jobs:
             tests/smoke_net_movement_two_peers.gd \
             tests/smoke_net_peer_death.gd \
             tests/smoke_net_storage_concurrency.gd \
-            tests/smoke_net_deploy_two_creatures.gd
+            tests/smoke_net_deploy_two_creatures.gd \
+            tests/smoke_net_pickup_race.gd
           do
             case " $files " in
               *" $required "*) ;;
