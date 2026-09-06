@@ -1133,6 +1133,22 @@ func _icon_texture(icon_name: String) -> Texture2D:
 	return tex
 
 
+## THE LOCAL PLAYER'S MAP, and in multiplayer that is the whole point.
+##
+## `Game.map` forwards to `PlayerState.map_for(realm)` for the LOCAL player
+## (`docs/specs/MP_STATE_SEAM.md` §2), so everything this tab draws -- the fog
+## texture, the discovered landmarks and regions, the alpha pins, the objective
+## marker -- is what THIS trainer has personally found. A joiner opening the map
+## in a world whose host has walked every band sees their own fog: the host's
+## `MapState` is not in the join snapshot (`session.gd::_rpc_snapshot` sends
+## `WorldState.save_data()`, which has no map payload), so there is no route by
+## which it could arrive.
+##
+## What IS shared arrives as world state and is drawn only through it: a
+## landmark whose visibility is gated on a world flag, an alpha pin that clears
+## because somebody beat that alpha (`alpha_pins.gd`). This tab reads neither
+## directly -- it draws whatever the local `MapState` holds, and that object is
+## the one place the two are already reconciled.
 func _map_state() -> RefCounted:
 	var game := state()
 	return game.get("map") if game != null else null

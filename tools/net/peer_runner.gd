@@ -61,6 +61,9 @@ const SPAWN_TABLES := preload("res://scripts/combat/spawn_tables.gd")
 ## Lane 3.D. The real shipping chest, driven by its real submit path -- these
 ## arms replace the panel's presses, not the container's ledger conversation.
 const STORAGE_CONTAINER := preload("res://scripts/build/storage_container.gd")
+## Lane 5.C's two arms read the same authored cluster list the shipping node
+## reads, rather than a second copy of the same loop.
+const ALPHA_PINS := preload("res://scripts/world/alpha_pins.gd")
 
 const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
@@ -373,6 +376,12 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = _step_storage_transfer(args)
 		"deploy_creature":
 			out = await _step_deploy_creature(args)
+		"alpha_pin":
+			out = _step_alpha_pin(args)
+		"alpha_clear":
+			out = _step_alpha_clear(args)
+		"explore_at":
+			out = await _step_explore_at(args)
 		_:
 			out = {"verdict": "ERROR", "detail": "unknown action '%s'" % action}
 	out["frames_used"] = _physics_count - before
@@ -915,6 +924,130 @@ func _encounter_director() -> Node:
 	return current_scene.get_node_or_null(^"EncounterDirector")
 
 
+# --- lane 5.C: personal fog, personal pins, a shared clear ---------------------
+#
+# Two arms and one probe. Between them they stand in for the two things a
+# player does with an alpha -- walk close enough to notice it, and beat it --
+# without needing a 300 m hike or a live fight in a smoke that is about state
+# ownership rather than about either.
+#
+# Both go through shipping code. `alpha_pin` calls the same `MapState.pin_alpha`
+# the real `AlphaPins._process()` calls, with a real authored cluster read from
+# `alpha_pins.gd::build_clusters()`; the harness supplies only the proximity the
+# player would have supplied by walking there. `alpha_clear` calls the shipping
+# `AlphaPins.clear_alpha()`, which submits a `set_world_flag` intent through the
+# real `Game.ledger`. Neither invents a rule.
+
+## Stand this peer's trainer at (x, z) and let the game's OWN discovery tick
+## lift the fog there. Returns once the tick has certainly sampled the new
+## position.
+##
+## WHY THE POSITION IS SUPPLIED RATHER THAN WALKED TO, measured rather than
+## assumed. `smoke_net_movement_two_peers.gd`'s own header records it: a fresh
+## boot starts inside Grandpa's farmhouse in the opening beat, and forward from
+## the spawn is a wall about three metres away, so a peer holding full stick for
+## 300 frames travels 2.71 m -- entirely inside the 45 m circle
+## `map_landmarks.json` reveals at boot. The first run of
+## `smoke_net_fog_is_personal.gd` measured exactly that: 4428 cells before the
+## walk and 4428 after. Walking further is a question about where a net smoke
+## STARTS (the movement smoke assigns it to whichever lane teaches the harness
+## to seed a post-opening save), not about whether fog is personal.
+##
+## So the harness supplies the standing position, exactly as `alpha_pin` above
+## supplies the proximity, and nothing else: the REVEAL is
+## `game_state.gd::_process`'s own `map.mark_visited(here)` on its own
+## `_DISCOVERY_INTERVAL_S` clock, over the local player's own `MapState`. The
+## body is placed the same way `operator_harness.gd::_step_teleport` places it,
+## ground height included, so it lands on real terrain rather than under it.
+func _step_explore_at(args: Dictionary) -> Dictionary:
+	var player := _probe.call("player") as Node3D
+	if player == null:
+		return {"verdict": "ERROR", "detail": "no live Player to stand anywhere"}
+	var at: Array = args.get("at", []) as Array
+	if at.size() < 2:
+		return {"verdict": "ERROR", "detail": "explore_at needs at:[x,z]"}
+	var world: Node = _probe.call("world") as Node
+	var y := player.global_position.y
+	if world != null and world.has_method("ground_height_at"):
+		y = float(world.call("ground_height_at", float(at[0]), float(at[1]))) + 1.0
+	player.global_position = Vector3(float(at[0]), y, float(at[1]))
+	if player is CharacterBody3D:
+		(player as CharacterBody3D).velocity = Vector3.ZERO
+	var rig := _probe.call("camera_rig") as Node3D
+	if rig != null:
+		rig.global_position = player.global_position
+	# `_DISCOVERY_INTERVAL_S` is 0.5 s, so 60 physics frames is one interval at
+	# the nominal rate; the default is four of them, which is slack enough that
+	# a slow headless process still gets sampled and short enough that a fog
+	# system that has stopped ticking still shows up as zero new cells.
+	for i in maxi(1, int(args.get("settle", 240))):
+		await physics_frame
+	return {"verdict": "PASS", "detail": "stood at (%.0f, %.0f), y=%.1f" % [float(at[0]), float(at[1]), y]}
+
+
+## Make sure the authored alpha at `order` is pinned on THIS peer's own map.
+##
+## ALREADY PINNED IS THE BEST OUTCOME, not a failure, and that distinction is a
+## measured one. `pin_alpha()` returns true only when it pins something NEW, so
+## the first version of this arm reported FAIL on a peer standing at the cluster
+## -- because the shipping `AlphaPins` node's own 300 m proximity tick had
+## already pinned it, which is the feature working. What the caller wants to
+## know is whether this peer holds the pin, so that is what is reported, with
+## the detail naming which of the two put it there.
+func _step_alpha_pin(args: Dictionary) -> Dictionary:
+	var order := int(args.get("order", -1))
+	if order < 0:
+		return {"verdict": "ERROR", "detail": "alpha_pin needs args.order"}
+	var map: Variant = _local_map()
+	if map == null:
+		return {"verdict": "ERROR", "detail": "no Game.map on this peer"}
+	var state: RefCounted = map
+	if bool(state.call("is_alpha_pinned", order)):
+		return {"verdict": "PASS",
+			"detail": "order %d was already pinned by AlphaPins' own proximity tick" % order}
+	for cluster: Dictionary in ALPHA_PINS.build_clusters():
+		if int(cluster.get("order", -1)) != order:
+			continue
+		var at: Vector2 = cluster.get("position", Vector2.ZERO)
+		state.call("pin_alpha", order, str(cluster.get("species", "")),
+			str(cluster.get("display_name", "")), Vector3(at.x, 0.0, at.y), "alpha")
+		var held := bool(state.call("is_alpha_pinned", order))
+		return {"verdict": "PASS" if held else "FAIL",
+			"detail": "pinned order %d here; map holds it: %s" % [order, str(held)]}
+	return {"verdict": "ERROR", "detail": "no authored alpha cluster with order %d" % order}
+
+
+## Beat the alpha at `order` -- the WORLD half, through the ledger.
+func _step_alpha_clear(args: Dictionary) -> Dictionary:
+	var order := int(args.get("order", -1))
+	if order < 0:
+		return {"verdict": "ERROR", "detail": "alpha_clear needs args.order"}
+	var pins := _alpha_pins_node()
+	if pins == null:
+		return {"verdict": "ERROR", "detail": "no AlphaPins node in this scene"}
+	var submitted := bool(pins.call("clear_alpha", order))
+	return {"verdict": "PASS" if submitted else "FAIL",
+		"detail": "clear_alpha(%d) submitted=%s" % [order, str(submitted)]}
+
+
+## The `AlphaPins` node `playground_world.gd` drops into the world. It is added
+## with `add_child(ALPHA_PINS.new())` and therefore carries an engine-assigned
+## name, so it is found by the method it owns rather than by a name that is not
+## authored anywhere and would silently change.
+func _alpha_pins_node() -> Node:
+	if current_scene == null:
+		return null
+	for child in current_scene.get_children():
+		if child.has_method("clear_alpha") and child.has_method("tick"):
+			return child
+	return null
+
+
+func _local_map() -> Variant:
+	var game := root.get_node_or_null(^"Game")
+	return game.get("map") if game != null else null
+
+
 func _step_wait_flag(args: Dictionary) -> Dictionary:
 	var flag := str(args.get("flag", ""))
 	if flag.is_empty():
@@ -1030,6 +1163,28 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			if wgame == null:
 				return null
 			return int(SPAWN_TABLES.resolve_seed(int(wgame.get("world_seed"))))
+		"map_fog":
+			# Lane 5.C. What THIS peer has personally discovered: revealed fog
+			# cells, discovered landmarks, and pinned alphas, off `Game.map` --
+			# which is `PlayerState.map_for(realm)` for the LOCAL player. The
+			# raw cell COUNT rather than the fraction, because the assertion is
+			# "unchanged by what the other peer did", and a fraction rounds two
+			# different maps onto the same number.
+			var fog_map: Variant = _local_map()
+			if fog_map == null:
+				return null
+			var fog_state: RefCounted = fog_map
+			var revealed := 0
+			for byte in (fog_state.call("visited_bytes") as PackedByteArray):
+				if byte != 0:
+					revealed += 1
+			return {
+				"cells": revealed,
+				"grid": [int(fog_state.call("cell_grid_x")), int(fog_state.call("cell_grid_z"))],
+				"landmarks": int(fog_state.call("discovered_landmark_count")),
+				"alpha_pins": int(fog_state.call("alpha_pin_count")),
+				"revision": int(fog_state.get("revision")),
+			}
 		"remote_trainers":
 			# Lane 2.C. Every OTHER peer's body as this process sees it:
 			# the nodes `scripts/net/trainer_spawn.gd` spawned under D97's
