@@ -96,6 +96,8 @@ func _run() -> void:
 	_quieten_the_residents(warrens)
 	await _the_cave_is_enclosed(world, player, warrens)
 	_no_daylight_leaks(world, warrens)
+	_the_bank_encloses_every_chamber(world, warrens)
+	_the_mouth_arch_is_open(world, warrens)
 	await _the_room_has_its_own_dark(player, warrens)
 	_the_room_dressing_is_clear_of_the_walk(warrens)
 	await _the_branch_is_shut_until_the_guardian_falls(player, warrens, progression)
@@ -788,6 +790,63 @@ func _no_daylight_leaks(world: Node, warrens: Node3D) -> void:
 	print("daylight leak check: %d rays, %d leaks" % [checked, leaks])
 
 
+## OP-0905-09. The old mound never claimed to enclose anything -- the cave's
+## own boxes did that job. The new earth bank claims to, chamber by chamber
+## (`burrow_warrens.gd::_build_bank()`'s own `_bank_chamber_bumps()`), so this
+## proves the claim from OUTSIDE the geometry rather than trusting the print
+## line: a ray straight up from every chamber's own marker must hit something
+## that belongs to the warrens (the bank, an earth cap, or a ceiling slab) --
+## never open sky -- before it travels a very generous 200m.
+func _the_bank_encloses_every_chamber(world: Node, warrens: Node3D) -> void:
+	var space := (world as Node3D).get_world_3d().direct_space_state
+	var exclude: Array[RID] = []
+	for body in world.find_children("*", "CharacterBody3D", true, false):
+		exclude.append((body as CharacterBody3D).get_rid())
+	var checked := 0
+	for id: String in warrens.call("chamber_ids"):
+		var at: Vector3 = warrens.call("marker", id)
+		var query := PhysicsRayQueryParameters3D.create(at, at + Vector3.UP * 200.0)
+		query.exclude = exclude
+		var hit := space.intersect_ray(query)
+		checked += 1
+		var collider: Node = hit.get("collider", null) as Node
+		if hit.is_empty() or collider == null or not warrens.is_ancestor_of(collider):
+			_fail("chamber '%s' is not enclosed: a ray straight up from its own marker reached open sky" % id)
+	print("bank enclosure check: %d chambers, all covered from directly above" % checked)
+
+
+## The mouth is a real cut, not a wall with a hole painted on it: a ray from
+## 12m in front of the mouth, at roughly eye height, aimed at the mouth
+## chamber's own floor marker must travel almost the whole distance before it
+## hits anything -- if the earth bank's own dug face or throat blocks it
+## early, the arch is not actually open.
+func _the_mouth_arch_is_open(world: Node, warrens: Node3D) -> void:
+	var space := (world as Node3D).get_world_3d().direct_space_state
+	var exclude: Array[RID] = []
+	for body in world.find_children("*", "CharacterBody3D", true, false):
+		exclude.append((body as CharacterBody3D).get_rid())
+	var mouth: Vector3 = warrens.call("marker", "mouth")
+	var approach: Vector3 = warrens.to_global(Vector3(0.0, 1.6, warrens.to_local(mouth).z - 12.0))
+	var ground := float(world.call("ground_height_at", approach.x, approach.z)) if world.has_method("ground_height_at") else NAN
+	var origin: Vector3 = approach if is_nan(ground) else Vector3(approach.x, ground + 1.6, approach.z)
+	var target := mouth + Vector3.UP * 1.0
+	var full := origin.distance_to(target)
+	var query := PhysicsRayQueryParameters3D.create(origin, target)
+	query.exclude = exclude
+	var hit := space.intersect_ray(query)
+	if hit.is_empty():
+		print("mouth arch check: clear line from %.1fm out straight to the mouth chamber" % full)
+		return
+	var collider: Node = hit.get("collider", null) as Node
+	var hit_distance := origin.distance_to(hit.get("position", origin))
+	if hit_distance < full - 2.0:
+		_fail("the mouth arch is blocked %.1fm short of the mouth chamber by %s" % [
+			full - hit_distance, "no collider" if collider == null else str(collider.get_path())])
+	else:
+		print("mouth arch check: reached %.1fm of %.1fm before hitting %s" % [
+			hit_distance, full, "nothing" if collider == null else str(collider.get_path())])
+
+
 func _has_layer(node: Node) -> bool:
 	return node is GeometryInstance3D and ((node as GeometryInstance3D).layers & INTERIOR_LAYER_BIT) != 0
 
@@ -832,6 +891,13 @@ func _the_room_has_its_own_dark(player: CharacterBody3D, warrens: Node3D) -> voi
 	var mound: Node = warrens.get_node_or_null(^"Mound")
 	if mound != null:
 		_geometry_under(mound, exterior_named)
+	# OP-0905-09: the mound was replaced by one earth-bank mesh plus its own
+	# mouth dressing -- same exterior-layer promise, new node names.
+	for holder_name: String in ["Bank", "BankMouth", "SiteSkirt", "WarrenHoles",
+			"BankRoots", "ClawScrapes", "CrestTrees", "AccentBoulders", "SpoilMounds", "MoundGrowth"]:
+		var bank_holder: Node = warrens.get_node_or_null(NodePath(holder_name))
+		if bank_holder != null:
+			_geometry_under(bank_holder, exterior_named)
 	for child in warrens.get_children():
 		if str(child.name).begins_with("ExteriorEarthSkin"):
 			_geometry_under(child, exterior_named)
