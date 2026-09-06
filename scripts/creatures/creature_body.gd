@@ -314,6 +314,16 @@ func has_model() -> bool:
 ## announces itself, and the thing doing the finding asks the tree.
 const AUDIO_GROUP := &"creature_voice"
 
+## Stage B lane 4.B. Every body that is somebody's DEPLOYED creature -- the
+## local player's `follower_creature.gd` and every other peer's
+## `remote_creature.gd` proxy -- joins this group. A wild creature never does.
+##
+## It exists because `_ally_body.name = "AllyCreature"` was the lookup key for
+## "the deployed creature" and a single hardcoded name cannot address one
+## creature PER OWNER. The group plus `is_local_deployment()` is the key now;
+## the name is no longer asked a question it cannot answer.
+const DEPLOYED_GROUP := &"deployed_creature"
+
 
 func _ready() -> void:
 	_load_config()

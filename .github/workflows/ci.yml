@@ -1937,11 +1937,18 @@ jobs:
           done
           echo "found (${count}):${files}"
           # Review item 6: a renamed/deleted header must not make this shard
-          # go green without actually running a peer -- fewer than the two
-          # smokes this lane ships (the boot smoke and its negative control)
-          # fails the job outright rather than silently skipping the run step.
-          if [ "$count" -lt 2 ]; then
-            echo "::error::expected at least 2 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
+          # go green without actually running a peer -- fewer than the smokes
+          # the tree actually ships fails the job outright rather than
+          # silently skipping the run step.
+          #
+          # The floor is raised with each lane that adds one, so a header lost
+          # in a rebase is caught here rather than discovered as a shard that
+          # ran nothing. Wave 0 shipped 2 (the boot smoke and its negative
+          # control); Wave 2 added host/join/leave and movement; Stage B lane
+          # 4.B adds deploy_two_creatures, which is this shard's assertion
+          # that every deployed creature belongs to exactly one player.
+          if [ "$count" -lt 5 ]; then
+            echo "::error::expected at least 5 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
             exit 1
           fi
           echo "files=${files}" >> "$GITHUB_OUTPUT"
