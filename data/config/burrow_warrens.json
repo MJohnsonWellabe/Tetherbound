@@ -19,6 +19,8 @@
     "_comment_earth_clad_passages": "WARRENS-ART-0906 (W3). The passages are the other half of the stone box: they carry no masonry dressing at all (they are not in `_build_structure()`'s chamber list), so an unclad passage is a bare grey tube between two lined rooms. Clad, they are earth wall to wall and ceiling -- the dug link the fiction wants. `true` clads every passage; a list of \"from>to\" keys clads only those.",
     "earth_clad_passages": true,
     "interior_cladding_m": 0.15,
+    "_comment_interior_cladding_colour": "WARRENS-ART-0906 round 1, measured on this lane's own first render before any judge was spawned. `exterior_cladding_colour` (#4a3a2a) is tuned for a surface in FULL DAYLIGHT that also has to survive the mouth dome's shadow. Underground the same albedo is the wrong end of that problem -- the cave is lit by low authored pools and a carried torch, and the stone this skin covers is `rock` lerped 45% toward a near-white tint -- so the earth-clad hall bay came back at a frame median of 24.6 (`shots/warrens_63/04-hall-dressing.png`), earth so dark it reads as a hole rather than a wall. This is that value authored separately, ~1.5x, still plainly earth and still darker than the ashlar it sits against. Remove the key and every interior skin goes back to the exterior colour exactly. The mouth chamber's own skin uses this too, deliberately: round 6 read the mouth as a black cutout and a near-black earth lining is the same read.",
+    "interior_cladding_colour": "#6f5840",
     "at": [
       -357.0,
       2610.0
@@ -243,16 +245,19 @@
     "brow_thickness_m": 0.85,
     "brow_arc_segments": 22,
     "brow_across_segments": 7,
-    "brow_lip_out_m": 0.8,
-    "brow_lip_proud_m": 0.62,
-    "brow_lip_flare_m": 1.5,
-    "brow_lip_back_m": 1.3,
-    "brow_noise_m": 0.4,
-    "brow_noise_freq": 0.9,
-    "brow_lobe_amount": 0.45,
-    "brow_lobe_freq": 0.22,
+    "_why_brow_round1": "WARRENS-ART-0906 round 1, measured on the lane's own first render (`shots/warrens_63/03-mouth.png`, 01-knoll) before any judge was spawned. Three defects, all in this block. (1) SIZE: `brow_lip_out_m` 0.8 + `brow_lip_flare_m` 1.5, times a `brow_lobe_amount` 0.45 width scale, put up to 3.3m of collar around a 5.9m arch -- a hood, not a rim. Halved. (2) SILHOUETTE: `brow_lobe_freq` 0.22 against the code's own `u * 100` sampling gave ~11 lobes around the arch and `brow_noise_freq` 0.9 against `u * 60` gave ~54, which together read as a sawtooth/torn-paper edge. Both dropped to a handful of broad lobes and ~17 cycles of grain. (3) VALUE: the collar rendered as the BRIGHTEST object at the entrance, a cream ring around a black hole -- the bank's `earth_tint` (#f0ece4 at `earth_brightness` 1.5) is tuned to lift the sunlit dug FACE against a pale meadow, and a hole's rim is not a sunlit face. Fixed with baked contact occlusion in COLOR.a (`brow_occlusion_*`, and the shader's own `v_occlusion`) rather than by moving `earth_tint`, which the whole mound shares and which a previous lane judged: the ramp is darkest at the rim and reaches exactly 1.0 at the outer edge, so the collar and the mound still match where they touch.",
+    "brow_lip_out_m": 0.45,
+    "brow_lip_proud_m": 0.4,
+    "brow_lip_flare_m": 0.75,
+    "brow_lip_back_m": 0.9,
+    "brow_noise_m": 0.16,
+    "brow_noise_freq": 0.28,
+    "brow_lobe_amount": 0.3,
+    "brow_lobe_freq": 0.06,
     "brow_moist": 0.9,
     "brow_spoil_outer": 0.35,
+    "brow_occlusion_min": 0.34,
+    "brow_occlusion_curve": 2.2,
     "brow_turf": 8,
     "brow_root_clear_m": 2.3,
     "_why_brow_root_meshes": "WARRENS-ART-0906 (W5). `brow_roots` (five tapered bark TUBES drooping into the opening) is replaced by real installed meshes hung crown-first off the arch, the same 'a bare branching crown IS a root mass' trick `roots.pieces` already uses inside the cave. `at_deg` is the arch angle (0 right spring, 90 crown, 180 left spring), `radial_m` how far out of the rim the piece hangs, `drop_m` how far its crown reaches below the rim line -- clamped so no tip ever comes below `brow_root_clear_m`.",
@@ -288,7 +293,7 @@
         "_why": "right of the crown, smaller, so the pair is not a mirror"
       },
       {
-        "model": "res://assets/environment/stylized_nature/TwistedTree_2.gltf",
+        "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
         "at_deg": 145.0,
         "radial_m": 0.1,
         "z_m": 0.25,
@@ -485,7 +490,7 @@
         "_why": "thin stick snagged over the top -- kept as-is"
       }
     ],
-    "_comment_root_masses": "WARRENS-ART-0906 (W5). The real meshes that replace the ten face tubes above. Two placement modes: an entry with `dir` is aimed crown-first OUT of the bank surface along that cave-local direction (`out_m` proud of it) so only the bare branching crown is in the frame and its trunk runs back into the earth -- the same trick `roots.pieces` uses inside the cave; an entry without `dir` is seated on the surface with `yaw_deg`/`tilt_deg` and sunk `sink_m` along the surface normal, a stump or a log half-buried in the spoil. Everything wears `root_tint`, carries no collider, and sits outside the arch's own half-width (`arch_width_m`*0.5 + `arch_margin_m` = 3.6 at the current numbers) so nothing stands in the throat. All models are already installed: DeadTree/TwistedTree from the nature megakit, stump/log from `assets/environment/nature/`, `tree-log` from `assets/props/kenney_survival/`.",
+    "_comment_root_masses": "WARRENS-ART-0906 (W5). ROUND 1, measured on this lane's own first render: the three `TwistedTree_*` entries came back as DARK MAROON BLOBS beside the arch (`shots/warrens_63/03-mouth.png`, `01-knoll-from-outside.png`). TwistedTree ships `Leaves_TwistedTree`, the pack's crimson autumn texture -- it is the SAME asset and the SAME texture that produced the \"red tree\" the previous lane spent three judge rounds chasing (`ralph/reports/WARRENS-EXT-0906/REPORT.md`, \"Root causes found and fixed this lane\"), and `_tint_rock()` multiplying a root-brown over crimson only makes it darker crimson. A root mass has no leaves at all, so the fix is not a retexture: every entry is now `DeadTree_*`, which carries `Bark_DeadTree` and nothing else. Do not put a TwistedTree or a CommonTree in this list. The real meshes that replace the ten face tubes above. Two placement modes: an entry with `dir` is aimed crown-first OUT of the bank surface along that cave-local direction (`out_m` proud of it) so only the bare branching crown is in the frame and its trunk runs back into the earth -- the same trick `roots.pieces` uses inside the cave; an entry without `dir` is seated on the surface with `yaw_deg`/`tilt_deg` and sunk `sink_m` along the surface normal, a stump or a log half-buried in the spoil. Everything wears `root_tint`, carries no collider, and sits outside the arch's own half-width (`arch_width_m`*0.5 + `arch_margin_m` = 3.6 at the current numbers) so nothing stands in the throat. All models are already installed: DeadTree/TwistedTree from the nature megakit, stump/log from `assets/environment/nature/`, `tree-log` from `assets/props/kenney_survival/`.",
     "root_masses": [
       {
         "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
@@ -504,7 +509,7 @@
         "_why": "the LEFT root mass -- one crown bursting out of the dug face where five tubes used to be"
       },
       {
-        "model": "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
+        "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
         "offset": [
           -6.2,
           -3.2
@@ -548,7 +553,7 @@
         "_why": "the RIGHT root mass, a different model from the left one so the pair is not a mirror"
       },
       {
-        "model": "res://assets/environment/stylized_nature/TwistedTree_1.gltf",
+        "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
         "offset": [
           6.4,
           -3.0
@@ -833,6 +838,7 @@
   },
   "_comment_chambers_heights": "BAND2-63-WARRENS lowered every ceiling by 0.6-1.2m (mouth 4.2->3.6, hall 5.0->4.2, warren 4.0->3.4, den 6.0->4.8, vault 4.0->3.4). At this site most of the cave's mass stands ABOVE the meadow (see `_comment_resiting`), so every metre of ceiling is a metre of grey slab on the skyline; the first capture round showed a six-metre wall. They are still taller than the player and taller than the guardian, and the den is still the tallest room in the cave -- the shape of the place is unchanged, it is just not a tower any more. `lights[].y` moved with the two ceilings it would otherwise have poked through. TUNABLE.",
   "_comment_chambers": "Local metres: x is lateral, +z is depth into the hill; `at` is the chamber centre, `size` is [width, depth], `height` is floor-to-ceiling. Chambers connected by a passage MUST share the axis the passage runs on (the wall opener splits one wall, it does not cut diagonals). `branch: true` marks the optional deep branch -- it is not on the way to anything.",
+  "_comment_chamber_heights_owner_0906": "OWNER DIRECTIVE 2026-09-06, on this lane's own first render of the den: 'the interior looks a little cramped for that creature. should be taller.' The den guardian is a Burrowback at 3.57 m (measured, `ralph/reports/WARRENS-EXT-0906/REPORT.md`) and the den ceiling was 4.8 m -- 1.2 m of air over its head, and `interior_structure.rib_drop_m` 0.34 takes a third of that back, so the boss stood shoulder-to-beam in its own chamber. Per CLAUDE.md's own scale rule ('resolve relative-scale defects by growing the smaller side, never by shrinking'), the ROOM grew, not the creature: den 4.8 -> 7.0 (the guardian is now 51% of its own room's height with 3.4 m over it), hall 4.2 -> 5.6, warren and vault 3.4 -> 4.0, and the hall->den passage 3.4 -> 4.4 so the boss's own doorway is no longer shorter than the boss (round 6 measured its shoulder at 85-90% of that door). The MOUTH is deliberately unchanged at 3.6: its height is tied to the exterior arch (`bank.arch_height_m` 3.8) and the throat, and moving it moves the front door the last six judge rounds settled. Two knock-ons were re-authored with it, both below: `roots.pieces.tip_y` per chamber (a root crown authored to hang just under a 4.2 m ceiling is a floating bush under a 5.6 m one, and its trunk has to stay buried in the slab), and the `lights` y/range/energy for the four rooms that grew. The mound over each room follows automatically -- `_bank_chamber_bumps()` derives its cone height from the chamber's own height plus `clearance_m` + `safety_m`, so the enclosure promise holds by construction and the fixture re-measures it.",
   "chambers": [
     {
       "id": "mouth",
@@ -856,7 +862,7 @@
         14.0,
         12.0
       ],
-      "height": 4.2
+      "height": 5.6
     },
     {
       "id": "warren",
@@ -868,7 +874,7 @@
         10.0,
         9.0
       ],
-      "height": 3.4
+      "height": 4.0
     },
     {
       "id": "den",
@@ -880,7 +886,7 @@
         16.0,
         14.0
       ],
-      "height": 4.8
+      "height": 7.0
     },
     {
       "id": "vault",
@@ -892,7 +898,7 @@
         8.0,
         8.0
       ],
-      "height": 3.4,
+      "height": 4.0,
       "branch": true
     }
   ],
@@ -908,19 +914,19 @@
       "from": "hall",
       "to": "warren",
       "width": 2.6,
-      "height": 2.8
+      "height": 3.2
     },
     {
       "from": "hall",
       "to": "den",
       "width": 3.2,
-      "height": 3.4
+      "height": 4.4
     },
     {
       "from": "den",
       "to": "vault",
       "width": 2.4,
-      "height": 2.8,
+      "height": 3.2,
       "gated": true
     }
   ],
@@ -959,9 +965,9 @@
         -2.5,
         20.5
       ],
-      "y": 3.3,
-      "energy": 3.0,
-      "range": 8.0,
+      "y": 4.4,
+      "energy": 3.8,
+      "range": 9.5,
       "colour": "#d8c19c",
       "_why": "the hall's one key, off-centre, casting (round 2: the bays, ribs and roots give it something to throw)",
       "shadow": true
@@ -971,9 +977,9 @@
         5.5,
         25.5
       ],
-      "y": 2.4,
+      "y": 3.0,
       "energy": 0.7,
-      "range": 6.0,
+      "range": 7.0,
       "colour": "#8fa3b5",
       "_why": "cool fill on the dressing corner"
     },
@@ -982,9 +988,9 @@
         -16.0,
         22.0
       ],
-      "y": 2.8,
+      "y": 3.2,
       "energy": 1.2,
-      "range": 7.5,
+      "range": 8.0,
       "colour": "#93a8b8",
       "_why": "the warren, dim and cool"
     },
@@ -993,9 +999,9 @@
         0.0,
         40.0
       ],
-      "y": 4.0,
-      "energy": 0.45,
-      "range": 15.0,
+      "y": 5.6,
+      "energy": 0.55,
+      "range": 17.0,
       "colour": "#6f7f92",
       "_why": "den fill (CONTENT-0828), lowered"
     },
@@ -1004,9 +1010,9 @@
         3.0,
         43.0
       ],
-      "y": 3.1,
-      "energy": 2.4,
-      "range": 12.0,
+      "y": 4.6,
+      "energy": 3.4,
+      "range": 14.0,
       "colour": "#d9a05c",
       "shadow": true,
       "_why": "den warm key over the guardian's half (T1-LIGHT), lifted"
@@ -1016,8 +1022,8 @@
         3.0,
         46.0
       ],
-      "y": 1.8,
-      "energy": 1.3,
+      "y": 2.4,
+      "energy": 1.4,
       "range": 8.0,
       "colour": "#c9814a",
       "_why": "den backlight (0829)"
@@ -1027,7 +1033,7 @@
         3.0,
         44.0
       ],
-      "y": 1.0,
+      "y": 1.2,
       "energy": 1.1,
       "range": 8.0,
       "colour": "#e2a868",
@@ -1038,7 +1044,7 @@
         15.0,
         40.0
       ],
-      "y": 3.2,
+      "y": 3.6,
       "energy": 1.1,
       "range": 9.0,
       "colour": "#b09a6a",
@@ -1049,7 +1055,7 @@
         11.8,
         40.0
       ],
-      "y": 2.6,
+      "y": 2.8,
       "energy": 0.3,
       "range": 6.0,
       "colour": "#6f7f92",
@@ -1611,7 +1617,7 @@
           -1.0,
           0.2
         ],
-        "tip_y": 3.0
+        "tip_y": 4.4
       },
       {
         "chamber": "hall",
@@ -1626,7 +1632,7 @@
           -1.0,
           -0.15
         ],
-        "tip_y": 3.1,
+        "tip_y": 4.5,
         "roll_deg": 60.0
       },
       {
@@ -1642,7 +1648,7 @@
           -1.0,
           -0.4
         ],
-        "tip_y": 3.2
+        "tip_y": 4.6
       },
       {
         "chamber": "hall",
@@ -1657,7 +1663,7 @@
           -0.25,
           0.1
         ],
-        "tip_y": 3.0,
+        "tip_y": 4.4,
         "_why": "a wall root, thrust through the west wall"
       },
       {
@@ -1673,7 +1679,7 @@
           -1.0,
           0.3
         ],
-        "tip_y": 2.7
+        "tip_y": 3.3
       },
       {
         "chamber": "den",
@@ -1688,7 +1694,7 @@
           -1.0,
           0.3
         ],
-        "tip_y": 3.4
+        "tip_y": 5.6
       },
       {
         "chamber": "den",
@@ -1703,7 +1709,7 @@
           -1.0,
           0.1
         ],
-        "tip_y": 3.3,
+        "tip_y": 5.5,
         "roll_deg": 110.0
       },
       {
@@ -1719,7 +1725,7 @@
           -1.0,
           -0.2
         ],
-        "tip_y": 3.5
+        "tip_y": 5.7
       },
       {
         "chamber": "den",
@@ -1734,7 +1740,7 @@
           -0.3,
           -1.0
         ],
-        "tip_y": 3.2,
+        "tip_y": 5.4,
         "_why": "a wall root through the den's back wall"
       },
       {
@@ -1750,7 +1756,7 @@
           -1.0,
           0.2
         ],
-        "tip_y": 2.7
+        "tip_y": 3.3
       }
     ],
     "_comment_tip_y": "Tilted crowns droop their side branches 0.3-0.5 m below the tip point; smoke run 1 measured four pieces at 1.56-1.83 m. Every interior tip now sits >= 2.7 m so the lowest branch clears 1.9 m (the smoke's bar).",
@@ -1764,43 +1770,43 @@
     "species": [
       {
         "model": "res://assets/environment/stylized_nature/Mushroom_Common.gltf",
-        "albedo": "#cbd4c2",
+        "albedo": "#9aa693",
         "glow": "#7fd89a",
-        "emission": 0.55,
-        "scale_mul": 1.35,
-        "_why": "the original dome, kept as the filler between the profiled species and grown a third so it reads at cluster distance"
+        "emission": 0.3,
+        "scale_mul": 1.0,
+        "_why": "the original dome, kept as the filler between the profiled species. ROUND 1: every species is now scaled so its NATIVE height lands near 0.46 m at a cluster scale of 1.0 -- Common is 0.46 m native, so 1.0. Before this the three species were 0.62 / 0.57 / 0.61 m at wildly different multipliers and the Oyster's own multi-cap mesh made its clusters read as a stand of parasols."
       },
       {
         "model": "res://assets/environment/stylized_nature/Mushroom_RedCap.gltf",
-        "albedo": "#ded0b6",
+        "albedo": "#a89a83",
         "glow": "#8fe0b4",
-        "emission": 0.6,
-        "scale_mul": 0.62,
+        "emission": 0.32,
+        "scale_mul": 0.5,
         "_why": "the cap-and-stem profile the verdict asked for. The pack's own red is dropped for bone -- a red toadstool under a green beacon reads as the pickup"
       },
       {
         "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
-        "albedo": "#c6cddb",
+        "albedo": "#959bA8",
         "glow": "#8fcde6",
-        "emission": 0.45,
-        "scale_mul": 0.34,
+        "emission": 0.24,
+        "scale_mul": 0.26,
         "_why": "gilled shelves, the silhouette with actual undersides; a cool blue-grey second glow so the cave is not one green"
       }
     ],
     "bracket_species": [
       {
         "model": "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf",
-        "albedo": "#d7c6a6",
+        "albedo": "#a2947b",
         "glow": "#8fe0b4",
-        "emission": 0.55,
+        "emission": 0.3,
         "scale_mul": 1.0
       },
       {
         "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
-        "albedo": "#c6cddb",
+        "albedo": "#959bA8",
         "glow": "#8fcde6",
-        "emission": 0.45,
-        "scale_mul": 0.5,
+        "emission": 0.24,
+        "scale_mul": 0.38,
         "_why": "the oyster is a shelf fungus; on a wall it is the same mesh doing the job it is shaped for"
       }
     ],
@@ -1918,6 +1924,7 @@
         "spread": 0.7
       }
     ],
+    "_comment_round1_w1": "WARRENS-ART-0906 round 1, measured on this lane's own first render (`shots/warrens_63/05-hall-from-the-doorway.png`) before any judge was spawned. The mouth->hall beacon cluster came back as a stand of pale mint parasols filling the frame, brighter than the floor they stand on (frame floor-band median RGB [185,156,114]; the caps read above 200 in all three channels). Two causes. SCALE: the three species carried multipliers picked per-species by eye, and the Oyster mesh is a multi-cap cluster, so four instances put twelve caps in a 3 m passage. Every `scale_mul` is now derived from the model's own native height so all three land near 0.46 m at a cluster scale of 1.0. VALUE: `emission` roughly halved and every `albedo` tint dropped about a quarter -- these are glowing fungus in a dark cave, and they have to sit UNDER the lit floor in value or they stop being a light source and become the subject. The 2026-09-04 round-2 note below made the same correction in the same direction and is kept as the record of it.",
     "_comment_round2": "Round 2: at emission 1.5 the pale caps blew out to white blobs (after1 frame 03). Emission 0.55 on a darkened albedo: green glow, not a white flare."
   },
   "litter": {

@@ -621,7 +621,7 @@ func _build_chambers() -> void:
 			var t := _interior_cladding_m()
 			under_box.size = Vector3(size.x + _wall_t * 2.0, t, size.y + _wall_t * 2.0)
 			under.mesh = under_box
-			under.material_override = _cladding_material()
+			under.material_override = _interior_cladding_material()
 			under.position = Vector3(centre.x, _floor_y + height - t * 0.5, centre.z)
 			under.name = "CeilingEarthUnderside_%s" % id
 			add_child(under)
@@ -880,6 +880,9 @@ func _build_earth_clad_bays() -> void:
 		var depth := _bay_clear_depth(id, start, want, sign_, along_x)
 		if depth <= 0.2:
 			continue
+		if depth < want - 0.01:
+			print("[warrens] earth-clad bay %s/%s clipped %.2fm -> %.2fm by a doorway"
+				% [id, from_side, want, depth])
 		var mid: float = start - sign_ * depth * 0.5
 		# The two side walls, `depth` in from the end wall.
 		for s in [-1.0, 1.0]:
@@ -896,7 +899,7 @@ func _build_earth_clad_bays() -> void:
 				at = Vector3(mid, _floor_y + height * 0.5,
 					centre.z + s * (size.y * 0.5 - thickness * 0.5))
 			skin.mesh = box
-			skin.material_override = _cladding_material()
+			skin.material_override = _interior_cladding_material()
 			skin.position = at
 			skin.name = "BayEarthSkin_%s_%d" % [id, int(s)]
 			add_child(skin)
@@ -907,7 +910,7 @@ func _build_earth_clad_bays() -> void:
 			lid_box.size = Vector3(size.x, thickness, depth) if along_x \
 				else Vector3(depth, thickness, size.y)
 			lid.mesh = lid_box
-			lid.material_override = _cladding_material()
+			lid.material_override = _interior_cladding_material()
 			lid.position = Vector3(centre.x if along_x else mid,
 				_floor_y + height - thickness * 0.5,
 				mid if along_x else centre.z)
@@ -915,7 +918,7 @@ func _build_earth_clad_bays() -> void:
 			add_child(lid)
 			placed += 1
 	if placed > 0:
-		print("[warrens] %d earth-clad bay surfaces" % placed)
+		print("[warrens] %d earth-clad bay surfaces across %d bay(s)" % [placed, entries.size()])
 
 
 ## Is `side` the end wall of an authored bay on `chamber_id`?
@@ -941,15 +944,23 @@ func _bay_clear_depth(chamber_id: String, start: float, want: float,
 	var chamber: Dictionary = _chambers.get(chamber_id, {})
 	var centre := _local_of(chamber.get("at", []))
 	var size := _size_of(chamber.get("size", []))
-	var half_across: float = (size.x * 0.5 if along_x else size.y * 0.5) + _wall_t
+	# The opening centres `_build_passages()` records sit on the chamber's own
+	# rectangle edge (`a_edge`/`b_edge`), NOT on the wall box's outer face, so
+	# this compares against the half-size and not the half-size plus a wall
+	# thickness -- off by `_wall_t`, the test rejects every real doorway and
+	# the clip silently never fires.
+	var half_across: float = size.x * 0.5 if along_x else size.y * 0.5
 	var pad := 0.35
 	var limit := want
 	for entry_v: Variant in _openings:
 		var opening: Dictionary = entry_v as Dictionary
+		# `_openings.along_x` describes the HOLE, not the tunnel: true means
+		# the hole's width runs along x, i.e. it is cut in a -z/+z wall. This
+		# bay's `along_x` describes its END wall the same way, so its SIDE
+		# walls are the other pair and the holes worth checking are the ones
+		# whose flag is the opposite of the bay's.
 		var hole_along_x := bool(opening.get("along_x", false))
-		# A doorway in a SIDE wall of this bay has its hole running along the
-		# bay's own run axis (`along_x` here means the bay runs along z).
-		if hole_along_x != along_x:
+		if hole_along_x == along_x:
 			continue
 		var at: Vector3 = opening.get("centre", Vector3.ZERO)
 		var across: float = (at.x - centre.x) if along_x else (at.z - centre.z)
@@ -957,6 +968,8 @@ func _bay_clear_depth(chamber_id: String, start: float, want: float,
 			continue  # not in one of this bay's side walls
 		var along: float = at.z if along_x else at.x
 		var reach := (start - along) * sign_
+		if reach <= 0.0:
+			continue  # behind the bay's own end wall; not in its run
 		var near := reach - float(opening.get("width", 2.5)) * 0.5 - pad
 		if near < limit:
 			limit = maxf(near, 0.0)
@@ -975,7 +988,7 @@ func _clad_interior_face(wall: MeshInstance3D, size: Vector3, piece_at: Vector3,
 	var box := BoxMesh.new()
 	box.size = Vector3(size.x, size.y, thickness) if along_x else Vector3(thickness, size.y, size.z)
 	skin.mesh = box
-	skin.material_override = _cladding_material()
+	skin.material_override = _interior_cladding_material()
 	skin.position = piece_at + inward * (_wall_t * 0.5 + thickness * 0.5)
 	skin.name = "InteriorEarthSkin_%s" % wall.get_instance_id()
 	add_child(skin)
@@ -1053,6 +1066,45 @@ func _cladding_material() -> StandardMaterial3D:
 	m.roughness = 0.98
 	m.albedo_texture = FLOOR_ALBEDO
 	m.albedo_color = Color(str(site.get("exterior_cladding_colour")))
+	m.normal_enabled = true
+	m.normal_texture = FLOOR_NORMAL
+	m.normal_scale = 1.8
+	m.uv1_triplanar = true
+	m.uv1_scale = Vector3.ONE * FLOOR_UV_SCALE
+	m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	_materials[key] = m
+	return m
+
+
+
+## WARRENS-ART-0906. The INTERIOR twin of `_cladding_material()`.
+##
+## `site.exterior_cladding_colour` (#4a3a2a) is tuned for a surface in FULL
+## DAYLIGHT that also has to survive the mouth dome's own shadow -- see
+## `_cladding_material()`'s header and the ROUND 12 note it carries about the
+## apron's own #2b2118 going to black out there. Underground it is the wrong
+## end of the same problem: the cave is lit by low authored pools and a carried
+## torch, the stone this skin replaces is `_rock()` lerped 45% toward a
+## near-white tint, and measured on this lane's own first render the earth-clad
+## hall bay came back at a frame median of 24.6
+## (`shots/warrens_63/04-hall-dressing.png`) -- earth so dark it reads as a
+## hole rather than as a wall.
+##
+## `site.interior_cladding_colour` is that value, authored separately. Absent,
+## this returns `_cladding_material()` unchanged, so a site that never sets it
+## keeps exactly the surface it had. `_clad_exterior_face()` is deliberately
+## NOT routed through here: it is the one skin that really is outdoors.
+func _interior_cladding_material() -> StandardMaterial3D:
+	var site: Dictionary = _config.get("site", {})
+	if not site.has("interior_cladding_colour"):
+		return _cladding_material()
+	var key := "cladding_interior"
+	if _materials.has(key):
+		return _materials[key]
+	var m := StandardMaterial3D.new()
+	m.roughness = 0.98
+	m.albedo_texture = FLOOR_ALBEDO
+	m.albedo_color = Color(str(site.get("interior_cladding_colour")))
 	m.normal_enabled = true
 	m.normal_texture = FLOOR_NORMAL
 	m.normal_scale = 1.8
@@ -1177,7 +1229,7 @@ func _clad_passage_face(clad: bool, wall_size: Vector3, wall_at: Vector3,
 	box.size = Vector3(wall_size.x, height, thickness) if along_x \
 		else Vector3(thickness, height, wall_size.z)
 	skin.mesh = box
-	skin.material_override = _cladding_material()
+	skin.material_override = _interior_cladding_material()
 	var at := wall_at
 	if along_x:
 		at.z -= s * (_wall_t * 0.5 + thickness * 0.5)
@@ -1201,7 +1253,7 @@ func _clad_passage_ceiling(clad: bool, centre: Vector3, length: float, width: fl
 	box.size = Vector3(length, thickness, width) if along_x \
 		else Vector3(width, thickness, length)
 	lid.mesh = box
-	lid.material_override = _cladding_material()
+	lid.material_override = _interior_cladding_material()
 	lid.position = Vector3(centre.x, _floor_y + height - thickness * 0.5, centre.z)
 	lid.name = "PassageEarthCeiling_%d_%d" % [int(centre.x * 10.0), int(centre.z * 10.0)]
 	add_child(lid)
@@ -1390,11 +1442,32 @@ func _build_approach_apron() -> void:
 			# at the throat's outer end), so the last metres of ramp were
 			# coplanar with it and z-fought. The end now sits a step above.
 			end_local = height - global_position.y + 0.15
+	# WARRENS-ART-0906, the leftover named in `docs/HANDOFF_2026-09-06.md` §5.2
+	# and `ralph/reports/WARRENS-EXT-0906/REPORT.md` ("a thin pale sliver
+	# remains at the tube's right foot", `_sheet_final.png` frame 03).
+	# Measured, not guessed: the ramp tapers from `apron_mouth_width_m` (8.0)
+	# at the dome-face doorway to `apron_far_width_m` (4.6) at the throat's
+	# OUTER end, so its half-width there is 2.30 m -- while the throat shell
+	# at that same z is FLARED (`throat_flare` 0.18) to a half-width of
+	# 2.5 * 1.18 = 2.95 m. The ramp is 0.65 m narrower than the hole it ends
+	# in, at both feet, and what shows in that gap is raw terrain: pale grass
+	# ground inside a dark tube, which is the sliver. The taper's own reading
+	# ("the trample spreads wide at the threshold and narrows further off",
+	# this function's header) is not what the numbers do here either -- the
+	# WIDE end is the doorway, 8 m inside the throat, and the narrow end is
+	# the threshold. The threshold fan is what actually spreads outside.
+	#
+	# Fixed by construction rather than by re-tuning a width: the ramp is
+	# never allowed to be narrower than the throat shell standing on it. Both
+	# feet close for every value of `throat_flare` and every taper, including
+	# the ones a later tuning pass picks.
+	var throat_pad := 0.5
 	for i in steps:
 		var t := (float(i) + 0.5) / float(steps)
 		var z := outer_z - t * run
 		var top: float = lerpf(_floor_y, end_local, t)
-		var width := lerpf(mouth_width, far_width, t)
+		var width := maxf(lerpf(mouth_width, far_width, t),
+			_throat_half_width_at(z) * 2.0 + throat_pad)
 		# Same dirt as the chambers' own floors, but the EXTERIOR tint -- this
 		# ramp is OUTDOORS, in daylight, beside textured terrain and the
 		# mound's own boulders. T1-WARRENS-EXT: the interior-tuned lerp read
@@ -1426,6 +1499,17 @@ func _build_approach_apron() -> void:
 			Vector2(mouth_width, run).length() * 0.5 + APRON_CLEAR_MARGIN)
 	apron.add_to_group(GRASS_FIELD.CLEAR_GROUP)
 
+
+
+## The throat shell's own half-width at `z` -- `arch_width_m` * 0.5 times the
+## outer flare `_build_throat_shell()` applies at that z. The apron ramp reads
+## it so the ground under the tube is never narrower than the tube.
+func _throat_half_width_at(z: float) -> float:
+	var bank := _bank_cfg()
+	var z0 := _mouth_outer_z()
+	var z_front := z0 - float(bank.get("throat_depth_m", 6.0))
+	var z_back := z0 + float(bank.get("throat_overlap_m", 0.4))
+	return float(bank.get("arch_width_m", 5.0)) * 0.5 * _throat_flare(z, z_front, z_back)
 
 func _build_lights() -> void:
 	for entry: Variant in _config.get("lights", []):
@@ -3369,6 +3453,8 @@ func _build_brow_earth_ring(holder: Node3D, bank: Dictionary, rim: Array,
 	var crest := maxf(_bank_height_at(0.0, mid_at.z), 1.0)
 	var moist_max := float(bank.get("brow_moist", 0.9))
 	var spoil_outer := float(bank.get("brow_spoil_outer", 0.35))
+	var occl_min := float(bank.get("brow_occlusion_min", 0.42))
+	var occl_curve := maxf(float(bank.get("brow_occlusion_curve", 2.2)), 0.1)
 
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
@@ -3398,12 +3484,33 @@ func _build_brow_earth_ring(holder: Node3D, bank: Dictionary, rim: Array,
 			var fade := sin(PI * t)
 			var n := detail.get_noise_2d(u * 60.0, t * 14.0)
 			var push := n * noise_m * fade * end_taper
-			var radial := b.x + push
+			# Never inward of the rim: at small `t` the Bezier's own radial is
+			# only a few centimetres and a negative noise sample can outrun it,
+			# which would put earth a few centimetres inside the opening a
+			# player walks through and coplanar with the throat shell's wall.
+			var radial := maxf(b.x + push, 0.0)
 			var v := at + Vector3(out.x * radial, out.y * radial, b.y + push * 0.35)
 			var frac := clampf((v.y - _floor_y) / crest, 0.0, 1.0)
 			var moist: float = moist_max * (1.0 - smoothstep(0.0, 0.7, t))
 			var spoil: float = lerpf(1.0, spoil_outer, t)
-			st.set_color(Color(frac, moist, spoil))
+			# COLOR.a is baked contact occlusion (see the shader's own
+			# `v_occlusion` header). The collar is the rim of a hole and its
+			# inner face sits in that hole's shadow, but the Compatibility
+			# renderer has no AO to put it there: without this the collar
+			# rendered as a cream ring around a black opening, the brightest
+			# thing at the entrance. Darkest at the rim, 1.0 by the outer
+			# edge where the collar meets the mound, so the two surfaces still
+			# match where they touch. The jamb feet are lifted back toward
+			# open sky by `end_taper` -- the ground beside a jamb is not in
+			# the hole.
+			# A power curve, not a smoothstep: it must reach exactly 1.0 at
+			# t=1 (so the collar and the mound match where they touch, with
+			# no value step at the seam) while staying low across the middle
+			# of the section, which is the part actually facing the camera.
+			var shade_t := pow(t, occl_curve)
+			var occl: float = lerpf(occl_min, 1.0, shade_t)
+			occl = lerpf(1.0, occl, end_taper)
+			st.set_color(Color(frac, moist, spoil, occl))
 			st.add_vertex(v)
 	for i in rows - 1:
 		for j in across:

@@ -127,11 +127,28 @@ varying float v_height_frac;
 varying float v_moist;
 // ROUND-4-0906: the raw-spoil mask `_build_bank()` writes to COLOR.b.
 varying float v_spoil;
+// WARRENS-ART-0906: baked contact occlusion, COLOR.a. The Compatibility
+// renderer has no SSAO and no light volumes (`burrow_warrens.json`'s own
+// `_comment_w07_room` says so), so nothing in the engine darkens the inside
+// of a concave form -- and the mouth's earth collar is exactly that: the rim
+// of a hole, whose inner face should sit in the hole's own shadow and which
+// instead rendered as the BRIGHTEST thing at the entrance, a cream ring
+// around a black opening (60m approach frame, first render of this pass).
+// `_build_brow_earth_ring()` writes a ramp here, dark at the rim and 1.0 at
+// the outer edge where the collar dies into the mound.
+//
+// This is a no-op for every surface that existed before it. `_build_bank()`
+// and `_build_bank_cap()` both write their vertex colour through
+// `_bank_add_vertex()`, whose `Color(frac, moist, spoil)` leaves alpha at
+// Godot's own default of 1.0, so `v_occlusion` is 1.0 across the whole mound
+// and the multiply below changes nothing there.
+varying float v_occlusion;
 
 void vertex() {
 	v_height_frac = COLOR.r;
 	v_moist = COLOR.g;
 	v_spoil = COLOR.b;
+	v_occlusion = COLOR.a;
 }
 
 // Cheap triplanar: three axis-projected samples of the same installed photo,
@@ -229,6 +246,9 @@ void fragment() {
 	earth_c = mix(earth_c, earth_c * spoil_tint, spoil * spoil_darken);
 
 	vec3 albedo = mix(grass_c, earth_c, earth_w);
+	// Baked contact occlusion, see `v_occlusion` above. 1.0 everywhere the
+	// mesh does not author it, so this line is free for the mound itself.
+	albedo *= clamp(v_occlusion, 0.0, 1.0);
 	ALBEDO = albedo;
 	ROUGHNESS = mix(grass_roughness, earth_roughness, earth_w);
 
