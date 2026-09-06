@@ -47,11 +47,14 @@ var flags: RefCounted = null
 
 var placed_buildings: Array = []
 
-## Mints `uid` for the next placed building. Monotonic and SAVED, so an id is
-## never reused after a dismantle -- a reused id would let a stale in-flight
-## `dismantle` take down the structure that inherited it, which is the whole
-## class of bug the uid exists to close. Only a host ever mints; a client
-## receives the uid on the committed `building_add` op.
+## Mints `uid` for the next placed building. Monotonic WITHIN a session, so an
+## id is never reused while an intent naming it could still be in flight --
+## reuse is the whole class of bug the uid exists to close. Not saved: it is
+## rebuilt from the records on load (see `load_data`), which keeps the world
+## file's key set exactly what D100 partitions it into.
+##
+## Only a host ever mints; a client receives the uid on the committed
+## `building_add` op.
 var next_building_uid: int = 1
 var farm_plots: Array = []
 var death_satchels: Array = []
@@ -230,7 +233,6 @@ func save_data() -> Dictionary:
 		"clock_elapsed_seconds": clock_elapsed_seconds,
 		"world_seed": world_seed,
 		"placed_buildings": placed_buildings.duplicate(true),
-		"next_building_uid": next_building_uid,
 		"farm_plots": farm_plots.duplicate(true),
 		"death_satchels": death_satchels.duplicate(true),
 		"harvested_vegetation": harvested_vegetation.duplicate(true),
@@ -248,9 +250,14 @@ func load_data(data: Dictionary) -> void:
 	clock_elapsed_seconds = _finite_clock(data.get("clock_elapsed_seconds"))
 	world_seed = _int(data.get("world_seed"), 0)
 	placed_buildings = _array(data.get("placed_buildings", []))
-	next_building_uid = _int(data.get("next_building_uid"), 1)
-	# A world saved before uids existed, or one whose counter is behind its
-	# records, is repaired here rather than at every read site.
+	# The counter is DERIVED from the records rather than saved, so the world
+	# file keeps exactly the ten keys D100 partitions it into -- adding an
+	# eleventh would break the contract that the world and character key sets
+	# together equal the v22 set, which `test_world_state.gd` enforces. Deriving
+	# is sufficient because a uid only has to be unique among LIVE records and
+	# against intents in flight, and no intent survives a reload. This also
+	# repairs a world saved before uids existed.
+	next_building_uid = 1
 	_migrate_building_uids()
 	farm_plots = _array(data.get("farm_plots", []))
 	death_satchels = _array(data.get("death_satchels", []))
