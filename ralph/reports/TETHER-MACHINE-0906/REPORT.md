@@ -159,12 +159,53 @@ doorway-to-legendary sightline: 13.6m, clear
 stronghold smoke test passed
 ```
 
-## What would actually close H6
+## What would actually close H6 — start here, do not repeat the analysis
 
-1. **Chamber lighting** (Hall dressing lane): put a lit surface behind the machine
-   in the C-02 and C-03 stands. T-03 shows this alone gets 2.5x the figure-ground.
-2. **The board's mesh and material set** (owner decision, currently: keep the
-   installed asset): chains, brass banding, runic inlay, a containment ring with
-   depth, clamps, and a real emissive tether core. The build carries three of the
-   board's features and none of its six named key materials — 0.00% teal on the
-   structure against the board's 18.06%.
+**Do the cheap one first, and re-judge before touching the mesh.**
+
+### 1. Chamber lighting and staging (Hall dressing lane) — cheapest, and measured
+
+Put a LIT surface behind the machine in the C-02 and C-03 stands. This is not a
+guess: T-03 already does it and scores **Michelson 0.652** against those frames'
+0.234/0.303, with the same mesh and the same albedo. Either add wall torches on the
+run the C-02/C-03 cameras face, or move the stands. Also reframe — all three stands
+currently clip the machine (C-02/C-03 off the top edge, T-03 on three sides), so it
+never completes its own silhouette once in the set, and add a stand with the 1.80 m
+trainer in it so the rubric's scale criterion can be applied at all.
+**Re-judge after this alone.** It may be enough, and it costs no art.
+
+### 2. Only if that fails: the mesh
+
+The owner's standing decision (2026-09-06) is to KEEP the installed Meshy asset, so
+this needs a fresh owner call before anyone starts. If it is ever authorised:
+
+- **Do not re-author the whole object procedurally.** That was tried this lane and
+  rejected on sight as a "cubes stacked together version". Primitives assembled to
+  the board's proportions lose the surface the owner values.
+- **The tractable subset is the four board features that are pure ADDITIONS**, none
+  of which requires touching the existing mesh: hanging **chains** from the crown to
+  the ring, **brass banding** at the silhouette breaks, a **containment ring with
+  real depth** to replace the current zero-thickness white quad, and an **emissive
+  tether core**. Those are the four the judges name most often, and each can be a
+  separate small GLB placed against the existing mesh rather than a replacement.
+- **The teal core is the single biggest miss**: 0.00% teal on the structure against
+  the board's 18.06%. On the board it is the brightest thing in the image.
+- **Constraints anything new must respect**, all verified this lane:
+  - `machine.facing_deg` -101.2 (OP-0905-16) is the owner's own playtest fix. The
+    archway's outward normal in the model's glTF frame is `Ry(+101.2 deg)*(1,0,0)`
+    = **(-0.194, 0, -0.981)**, i.e. -Z rotated 11.2 deg about +Y.
+  - `machine.height` 15.0 and `_fit_to_height` divides by the mesh's own measured
+    `bounds.size.y`, so author at 15.0 m to keep scale 1.0.
+  - **Never put a Light3D inside the GLB.** `Light3D` extends `VisualInstance3D`, so
+    `stronghold.gd::_visual_bounds` folds its range into the bounds `_fit_to_height`
+    divides by, silently rescaling the machine.
+  - `smoke_stronghold` raycasts doorway->captive and fails if the mesh blocks it, and
+    `stronghold_climax.gd::_measure_cage` reads the dais and crown off the highest and
+    lowest geometry within `axis_probe_radius` 1.0 m of the axis. New geometry near
+    the axis MOVES where the bound creature stands.
+  - D24: the board licenses the MACHINE, not its prisoner. D23 §20 forbids a new
+    creature mesh at any credit balance. The ring stays empty.
+
+### 3. Do not spend another round on albedo
+
+Three grades bracket and exhaust it (see the table above). The lever is done.
