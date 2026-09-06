@@ -1346,3 +1346,44 @@ light pools were tuned against an albedo that no longer exists. The geology laye
 correction are rendered but **not blind-judged**. `smoke_warrens` was last run in full at
 `2905e2ae`; the four commits after it are covered by `smoke_warrens_fixture` and renders
 only. No CI run was dispatched from this lane.
+
+## Meadows Hall interior art — HALL-ART-0906 (2026-09-06)
+
+`claude/art-hall-round-0906`, off `claude/second-biome-art-plan-470zru`. Closes
+the Hall half of `docs/HANDOFF_2026-09-06.md` §4.2 — H1, H2, H3, H4, H5, H7, H8
+— plus X1 and both §5.2 Hall leftovers. **H6 was not touched**: the tether
+machine and `stronghold.json`'s `machine` block are outside this diff.
+
+Two blind verdicts on the same three stands, in
+`ralph/reports/HALL-ART-0906/` with the full round write-up. The after-verdict
+**stops naming** four things the before-verdict measured: the empty brick boxes
+(H2), the flat untextured doorway in both T-01 and T-02 (H5), the missing torch
+fixture (H1 — which it had listed under *needs art that is not in the build*),
+and T-02's white wedge. Measured on the judged frames: floor-band medians
+20.6/18.6/11.9 → 24.2/21.1/23.3, the floor band's crushed-black share
+18.6/31.6/34.6 % → 8.1/15.4/9.8 %, and shadow-tier R/B **13.8/10.2/4.9 →
+9.6/4.3/2.2** — under the ~10 bar on every frame. The brightest object in T-01
+and T-02 is now a torch, not a machine panel.
+
+Green on the shipped tree, first attempt: `smoke_stronghold` (87 dressing props,
+0 dropped inside the arena ring; per-room omnis 6/10/10 against the cap of 16;
+exterior budget unchanged at 21 of 22) and `test_stronghold_warden_arena`
+(3 tests, 35 assertions, 0 failed).
+
+**Not verified, and it should not be treated as settled:** the final tuning round
+— glow-card energy, the siphon cap, the elite's rim height, the arena ambients'
+height and the east torch pair's offset — answers the after-verdict's own
+findings but **was never rendered**; its capture was killed mid-boot when the
+lane was told to land. Every one of those five values moves a measured quantity
+in the direction the verdict asked for and none adds a light or changes geometry,
+but the next session should re-render T-01..T-03 before relying on any of them.
+`ralph/reports/HALL-ART-0906/REPORT.md` names all five in a table.
+
+Still open and belonging elsewhere, all located with the new
+`tools/_probe_hall_frame_geometry.gd` rather than guessed at: T-02's "flat unlit
+maroon plane" is `StrongholdClimax/TetherReadout/Panel` at 2.9 m from the arena's
+entrance stand, T-03's "floating white chevron" is that lane's
+`ContainmentVFX/RestraintRing0` at emission ×1.15 seen edge-on, and the T-03 hero
+mass is H6. Both judges also noted, correctly, that no creature and no Warden is
+in frame — these three stands are shot pre-fight by design, so that is a
+capture-set question rather than an art one.
