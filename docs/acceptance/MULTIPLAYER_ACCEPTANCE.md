@@ -215,6 +215,17 @@ Recorded here so a reader does not have to infer them from silence:
   and is what wild replication will do for free when it lands. **The underlying binding is
   unchanged**: any future smoke that has a joiner swing needs the same arm, or the same lottery.
 
+- **§10 scales a TRAINER'S creature and nothing else — a shared WILD fight scales nothing.** Lane
+  MP-F1-F2's finding N1, verified at merge: `_scale_opponent_for_the_session()` sits behind
+  `if opponent_owned:` in `encounter_director.gd`, which is the scope lane 4.D shipped. So two
+  players ganging up on a wild creature fight it at its authored numbers, while the same two
+  players fighting a trainer meet the multiplier. §10's own words are about "an encounter", and
+  `encounter_host.gd::scaling_for()` is not trainer-specific — so this is a gap, not a design the
+  code states. **It is not a bug to be quietly fixed, because a scaled wild is also a harder CATCH
+  at the same `hp_fraction`**, and catching is how a player builds their team of five. Whether a
+  wild creature gets harder when a friend joins is the owner's call, and it is the last question
+  standing between "the mechanisms all work" and "co-op is balanced".
+
 ## The verdict
 
 Stage B is done when **every row above reads PASS**, solo Meadows and Cloudreach still play end to

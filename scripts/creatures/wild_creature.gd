@@ -407,7 +407,7 @@ func _enemy_config_for_this_body() -> Dictionary:
 ## opens, which is right for every authored override: `combat_override` is set
 ## before the body ever enters a fight and never moves again. §10's participant
 ## scaling is the one thing that moves it afterwards -- a second player joining
-## shortens this creature's attack cooldown mid-fight (D100) -- and without this
+## shortens this creature's attack cooldown mid-fight (D112) -- and without this
 ## the new number would sit on the instance and never be read.
 ##
 ## Only the config is re-read. `_cooldown`, `_beat_left` and `_intent` are the

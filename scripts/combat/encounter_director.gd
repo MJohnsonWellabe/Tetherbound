@@ -405,7 +405,7 @@ var _has_trainer_battle_anchor: bool = false
 ## is in here exactly like the one that was there from the first send-out.
 var _trainer_battle_participants: Dictionary = {}
 
-## D100 / §10. The UNSCALED numbers §10's multiplier is always derived FROM, and
+## D112 / §10. The UNSCALED numbers §10's multiplier is always derived FROM, and
 ## the creature they were taken off.
 ##
 ## §10 re-derives its row every time `participants` changes, so the multiplier is
@@ -415,7 +415,7 @@ var _trainer_battle_participants: Dictionary = {}
 ## exactly once; the moment it is asked a second time the multiplier squares.
 ##
 ## Keeping the authored numbers here rather than re-deriving them from the
-## species curve is D100's decision and its reasoning is there: a trainer's
+## species curve is D112's decision and its reasoning is there: a trainer's
 ## creature is NOT a pure function of species and level (`trainers.json` authors
 ## `level_bonus`, `stat_bonus`, `body_scale`, a per-member `combat` block and a
 ## shiny roll), so re-deriving would quietly discard everything the encounter
@@ -1849,7 +1849,7 @@ func _host_after_encounter_change(encounter_id: String, author_peer_id: int = 0)
 	if rec.is_empty():
 		return
 	_encounter = rec
-	# D100 / §10: `participants` may have just changed, and the record's row was
+	# D112 / §10: `participants` may have just changed, and the record's row was
 	# re-stamped with it. The creature standing in the fight has to move with it
 	# -- a join that makes the record say 1.1 and leaves the body swinging at its
 	# authored numbers is the defect this is here to close. Cheap on the strike
@@ -2902,7 +2902,7 @@ func _start_fight(wild: Node3D, opponent_owned: bool = false) -> void:
 	_engaged_with = wild
 	_set_exploration_active(false)
 	_open_encounter_if_networked(wild, opponent_owned)
-	# D100 / §10, and the ORDER is the fix: the record has to exist before the
+	# D112 / §10, and the ORDER is the fix: the record has to exist before the
 	# scaler can read a participant count off it. Trainer-owned opponents only,
 	# which is the scope lane 4.D shipped -- see `_scale_opponent_for_the_session`.
 	if opponent_owned:
@@ -3408,7 +3408,7 @@ func _send_out_next_creature() -> bool:
 	# §10's multiplier is deliberately NOT applied here. It is read off the
 	# encounter record, and the record is not opened or resumed until
 	# `_start_fight()` below -- so a call at this point reads an identity row and
-	# reaches nothing, which is exactly what it did until D100. `_start_fight()`
+	# reaches nothing, which is exactly what it did until D112. `_start_fight()`
 	# scales the creature once the record behind it is live.
 
 	var body: Node3D = CREATURE_SCENE.instantiate()
@@ -3479,7 +3479,7 @@ func _send_out_next_creature() -> bool:
 ##
 ## Solo returns on the first line, so a solo trainer battle is byte-for-byte the
 ## fight it was.
-## WHERE IT IS CALLED FROM, and why it moved (D100, finding F1 of
+## WHERE IT IS CALLED FROM, and why it moved (D112, finding F1 of
 ## `ralph/reports/MP-ROWS-8-21-0906/REPORT.md`).
 ##
 ## This used to be called once, from `_send_out_next_creature()`, immediately
@@ -3529,7 +3529,7 @@ func _scale_opponent_for_the_session(creature: RefCounted) -> void:
 		# The row has not moved since it was last written. `join`, `leave` and
 		# every landed strike all come through here.
 		return
-	# ALWAYS base x row, never live x row. This is the whole of D100: the same
+	# ALWAYS base x row, never live x row. This is the whole of D112: the same
 	# creature is scaled again on every participant change, and a multiplier
 	# folded into an already-scaled number squares itself on the second call.
 	creature.set("attack", float(_scaling_base.get("attack", 0.0)) * stat)
@@ -4046,7 +4046,7 @@ func _close_trainer_encounter() -> void:
 	var id := str(_encounter.get("encounter_id", ""))
 	_encounter = {}
 	_trainer_battle_participants = {}
-	# D100: the battle is over and its opponent is gone, so the base it was
+	# D112: the battle is over and its opponent is gone, so the base it was
 	# scaled from goes with it rather than waiting for the next fight to notice.
 	_forget_scaling_base()
 	if id.is_empty():

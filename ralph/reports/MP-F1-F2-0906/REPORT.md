@@ -336,7 +336,23 @@ authored numbers today. Whether that should change is a design question (a wild
 creature is also catchable, and a scaled one is a harder catch at the same
 `hp_fraction`), and answering it is not this lane's to make.
 
-### N2 — `tests/smoke_arena_contain.gd` was not registered in CI at all.
+### N2 — WRONG, corrected at merge. `smoke_arena_contain` IS registered in CI.
+
+> **Correction (merge review, 2026-09-06).** This finding is factually wrong and
+> its recommended follow-up must not be actioned. `smoke_arena_contain` is
+> registered in `verify-owner-regressions-shard` at `ci.yml:1476` as
+> `env: { SMOKE: arena_contain, RETRIES: 1 }`, and it ran and passed in CI run
+> 4471 ("Verify arena_contain", 13:34:48–13:35:57). The F2 regression DOES gate.
+>
+> The mistake is instructive: that shard passes the BARE smoke name through a
+> `SMOKE` env var, so `grep smoke_arena_contain ci.yml` returns nothing while
+> `grep arena_contain ci.yml` finds it. Acting on the recommendation would have
+> registered the smoke a second time and run it twice per CI run for no reason.
+>
+> The original text follows, kept because the reasoning about scheduling cost is
+> still sound if anyone ever does move it into a different shard.
+
+### N2 (original, superseded) — `tests/smoke_arena_contain.gd` was not registered in CI at all.
 
 It is named in no `ci.yml` step, so the OP21-25 containment proof — and, until
 this lane's edit, nothing else — gated nothing. This lane registered its own new
