@@ -16,6 +16,13 @@
     "clock_sync_interval_s": 1.0,
     "_comment_clock_sync_interval_s": "D105: how often the host broadcasts `day` and `clock_elapsed_seconds` as host truth. One second is far finer than the 600 s in-game day, so a client's sky never visibly steps."
   },
+  "encounter": {
+    "_comment": "Stage B Wave 4 lane 4.C. The encounter host's two tolerances (docs/specs/MP_ENCOUNTER_PROTOCOL.md \u00a711), read by scripts/net/encounter_host.gd::config() and scripts/net/catch_arbiter.gd. Both were fixed in the lane brief BEFORE implementation, so no bar here was discovered by running until something passed.",
+    "strike_latency_tolerance_ms": 250,
+    "_comment_strike_latency_tolerance_ms": "\u00a75 step 3. How far BACK IN HOST TIME a strike may be tested against the opponent's position. A player on a 60 ms link swung at where the creature visibly was and must land it, so the window has to cover a full round trip plus a frame or two of jitter; 250 ms covers a 120 ms one-way link. Past that the tolerance starts landing hits against a position a quarter-second stale, which reads to the OTHER players as a ghost hit on empty grass -- the failure this number is bounded to avoid, not link quality.",
+    "catch_arbitration_window_ms": 6000,
+    "_comment_catch_arbitration_window_ms": "\u00a78. How long ONE peer's committed catch attempt holds the encounter in `catching` before the claim lapses. It is a BACKSTOP, not the refusal window: a second attempt is refused with `already_resolving` until the first RESOLVES, and the winner releases the claim as soon as the wobble ends. The number only decides how long a thrower who disconnected mid-wobble can wedge everyone else's fight. catching.json's own sequence is absorb 0.45 + first_shake_delay 0.9 + 3 x shake_interval 0.85 + settle_pause 0.8 = ~4.7 s, so 6000 ms outlasts the longest honest attempt with margin and still frees the fight inside a couple of seconds of a disconnect."
+  },
   "test_budgets": {
     "step_budget_frames": 3000,
     "_comment_step_budget_frames": "Default per-step budget, contract §4/§6, physics frames.",

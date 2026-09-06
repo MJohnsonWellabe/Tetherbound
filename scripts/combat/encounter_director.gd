@@ -63,6 +63,16 @@ const FOLLOWER_SCRIPT := preload("res://scripts/creatures/follower_creature.gd")
 ## creature, and the outbound proxy its owner pushes state through. Its own
 ## header carries the ownership rules.
 const REMOTE_CREATURE_SCRIPT := preload("res://scripts/creatures/remote_creature.gd")
+## Stage B lane 4.C. The two pure arbiters this node is the transport for --
+## `ledger_rpc.gd` is to `world_ledger.gd` exactly what this node is to these.
+## No rule from either file is repeated here: if a refusal reason lives in two
+## files, the two files eventually disagree.
+const ENCOUNTER_HOST_SCRIPT := preload("res://scripts/net/encounter_host.gd")
+const CATCH_ARBITER_SCRIPT := preload("res://scripts/net/catch_arbiter.gd")
+## For `host_move_profile()` only -- the ONE copy of what a move reaches, so the
+## host rebuilding a peer's named move cannot disagree with what that peer's own
+## manager built for itself.
+const COMBAT_MANAGER := preload("res://scripts/combat/combat_manager.gd")
 const OPENING_CONFIG := "res://data/config/opening.json"
 
 ## Where lane 2.A mounts the session: a `Node` child of the `Game` autoload
@@ -165,6 +175,38 @@ var _creature_proxies: Dictionary = {}
 ## currently has a creature out. The host is the only process that holds this,
 ## and it is what a late joiner's proxies are rebuilt from.
 var _deployed_by: Dictionary = {}
+
+## --- Stage B lane 4.C: the encounter, and who decides it ---------------------
+##
+## `docs/specs/MP_ENCOUNTER_PROTOCOL.md`. Two players fight one opponent
+## together, the host decides every outcome, and exactly one player can win a
+## catch.
+##
+## HOST ONLY: the two arbiters. Both are pure `RefCounted`s that never touch the
+## tree, `multiplayer` or `Game`, which is what lets
+## `tests/test_encounter_host_rejects_friendly_strike.gd` and
+## `tests/test_catch_arbitration.gd` prove the two rules that matter with no
+## networking at all. They are constructed on every peer and simply never
+## consulted off the host -- a null check per call would be a second way to ask
+## "am I the host" and the answer to that question has exactly one home
+## (`_is_host()`).
+var _encounter_host: RefCounted = null
+var _catch_arbiter: RefCounted = null
+
+## THIS peer's live fight: the record it is rendering. On the host it is the
+## same Dictionary the arbiter holds; on a client it is the last copy the host
+## broadcast. Empty when this peer is not in a networked fight.
+var _encounter: Dictionary = {}
+
+## Host-side: how long since the opponent's position was last sampled into the
+## record (§5 step 3's history). Sampling every physics frame would put 60
+## entries a second into a 250 ms window for no accuracy the connect test can
+## use; a sample every other frame covers the window with ~7 entries.
+var _encounter_sample_countdown: int = 0
+
+## Host-side: the peer whose catch is currently being performed, so §8 step 4
+## can tell everybody ELSE who got it.
+var _catch_claimant: int = 0
 ## OWNER-0901-CREATURE-GRASS-VISIBILITY-V2. Resolved once in `_ready()` for
 ## `_scatter_clear_spot()`'s spawn-siting check. `Vegetation` is a runtime
 ## child `playground_world.gd::_dress_the_meadow()` adds by name, not a saved
@@ -1197,6 +1239,10 @@ func _announce_deployment(creature: RefCounted) -> void:
 		"species_id": str(creature.get("species_id")),
 		"shiny": bool(creature.get("shiny")),
 		"character_id": _local_character_id(),
+		# Stage B lane 4.C. The creature's COMBAT CARD, announced once with the
+		# species rather than quoted per swing -- see `_creature_card_for()` for
+		# why the host needs it and why this is the only honest place to get it.
+		"card": _creature_card(creature),
 	}
 	if _is_host():
 		_host_set_deployed(_local_peer_id(), row)
@@ -1260,6 +1306,7 @@ func _reconcile_creature_proxies() -> void:
 			"species_id": str(_ally.get("species_id")),
 			"shiny": bool(_ally.get("shiny")),
 			"character_id": _local_character_id(),
+			"card": _creature_card(_ally),
 		}
 	var live := _session_peer_ids()
 	for peer_id in _deployed_by.keys().duplicate():
@@ -1438,6 +1485,453 @@ func _on_net_session_ended(_reason: Variant = null) -> void:
 		return
 	for child in root.get_children():
 		child.queue_free()
+
+
+# --- Stage B lane 4.C: the encounter transport --------------------------------
+#
+# `docs/specs/MP_ENCOUNTER_PROTOCOL.md` §4. Intents up, the record down, all
+# reliable on `CHANNEL_LEDGER` (D95), all answered with `world_ledger.gd`'s
+# verdict shape so no caller branches on the type of the answer.
+#
+# There is ONE entry point (`submit_encounter_intent`) and the host runs its own
+# intents through it exactly as a client's arrive -- the shape
+# `ledger_rpc.gd::_commit_here()` uses, for its reason: a "host fast path" is a
+# second copy of the rules, and the copy nobody ever tests against a peer.
+
+## Whether THIS process arbitrates the fight. Asked fresh every call, never
+## cached, for `_is_host()`'s reason -- and it goes through `_is_host()` rather
+## than `multiplayer.is_server()`, which is TRUE with no session at all.
+func is_encounter_host() -> bool:
+	return _is_host()
+
+
+## This process's own peer id, for the manager to compare a host decision
+## against. 1 solo and on the listen server; a large random 32-bit number on a
+## joiner.
+func local_encounter_peer_id() -> int:
+	return _local_peer_id()
+
+
+## The record this peer is rendering, or {}. Read by the net harness probe.
+func encounter_record() -> Dictionary:
+	return _encounter
+
+
+## THE ONE DOOR. Host and solo-in-a-session commit here and now; a client sends
+## and gets a pending verdict, and the real answer arrives later on
+## `_rpc_encounter_verdict`.
+func submit_encounter_intent(intent: Dictionary) -> Dictionary:
+	if _is_host():
+		return _host_commit_encounter(intent, _local_peer_id())
+	if not _can_encounter_rpc():
+		return _encounter_pending(intent, false, "You are not connected to this world.")
+	rpc_id(1, "_rpc_encounter_intent", intent)
+	return _encounter_pending(intent, true, "")
+
+
+## Client -> host. Never trusted with a decision: the sender id comes from the
+## transport and not from the payload, so a peer cannot strike "as" somebody
+## else -- the same rule `ledger_rpc.gd::_rpc_intent()` states.
+@rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_encounter_intent(intent: Dictionary) -> void:
+	if not _is_host():
+		return
+	var sender := multiplayer.get_remote_sender_id()
+	var verdict := _host_commit_encounter(intent, sender)
+	if not bool(verdict.get("ok", false)):
+		# The whole verdict crosses, not three strings pulled out of it.
+		rpc_id(sender, "_rpc_encounter_verdict", verdict)
+		return
+	if str(intent.get("kind", "")) == "strike_intent" \
+			or str(intent.get("kind", "")) == "catch_attempt":
+		# An accepted strike or throw carries numbers only its own author needs
+		# (the damage it did, the wobble it earned). Everybody else gets the
+		# record.
+		rpc_id(sender, "_rpc_encounter_verdict", verdict)
+
+
+## Host -> the one peer whose intent it answers.
+@rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_encounter_verdict(verdict: Dictionary) -> void:
+	_deliver_encounter_verdict(verdict)
+
+
+## Host -> every participant. §3: this is the hit points, and the only thing
+## that changes a client's copy of them.
+@rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_encounter_record(rec: Dictionary) -> void:
+	_encounter = rec
+	if _manager != null:
+		_manager.call("apply_encounter_record", rec)
+
+
+## Host -> the one peer whose creature the opponent hit (§5's other half).
+@rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_encounter_enemy_hit(encounter_id: String, payload: Dictionary) -> void:
+	if _manager == null or str(_encounter.get("encounter_id", "")) != encounter_id:
+		return
+	_manager.call("apply_host_enemy_hit", payload)
+
+
+## Host -> everybody who did NOT win the catch. §8 step 4: their HUD says who
+## got it rather than their fight silently ending.
+@rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_encounter_caught_by(encounter_id: String, peer_id: int, species_id: String) -> void:
+	if _manager == null or str(_encounter.get("encounter_id", "")) != encounter_id:
+		return
+	_manager.call("note_caught_by", peer_id, species_id)
+
+
+func _deliver_encounter_verdict(verdict: Dictionary) -> void:
+	if _manager == null:
+		return
+	match str(verdict.get("kind", "")):
+		"strike_intent":
+			if bool(verdict.get("ok", false)):
+				_manager.call("apply_host_strike_verdict", verdict.get("delta", {}))
+			else:
+				_manager.call("note_encounter_refusal", verdict)
+		"catch_attempt":
+			_manager.call("apply_host_catch_verdict", verdict)
+		_:
+			if not bool(verdict.get("ok", false)):
+				_manager.call("note_encounter_refusal", verdict)
+
+
+# --- the host's side ------------------------------------------------------------
+
+## Every intent §4 names, arbitrated. `peer_id` is who asked -- the requesting
+## peer for a remote intent, this process for its own.
+func _host_commit_encounter(intent: Dictionary, peer_id: int) -> Dictionary:
+	_ensure_encounter_arbiters()
+	var kind := str(intent.get("kind", ""))
+	var encounter_id := str(intent.get("encounter_id", ""))
+	match kind:
+		"engage":
+			return _host_engage(intent, peer_id)
+		"strike_intent":
+			return _host_strike(intent, peer_id)
+		"catch_attempt":
+			return _host_catch(intent, peer_id)
+		"catch_finished":
+			return _host_catch_finished(intent, peer_id)
+		"disengage":
+			var out: Dictionary = _encounter_host.call("leave", encounter_id, peer_id)
+			_host_after_encounter_change(encounter_id)
+			return out
+	return {"ok": false, "kind": kind, "peer": peer_id, "code": "unknown_intent",
+		"reason": "That is not something a fight knows how to do.", "pending": false,
+		"delta": {}}
+
+
+## §6. `engage` with an `encounter_id` joins a live fight; without one it mints
+## a record for the fight the host is already standing in.
+func _host_engage(intent: Dictionary, peer_id: int) -> Dictionary:
+	var encounter_id := str(intent.get("encounter_id", ""))
+	if encounter_id.is_empty():
+		return {"ok": false, "kind": "engage", "peer": peer_id, "code": "malformed",
+			"reason": "That fight did not say which fight it was.", "pending": false,
+			"delta": {}}
+	var verdict: Dictionary = _encounter_host.call("join", encounter_id, peer_id,
+		"", str(intent.get("character_id", "")))
+	if bool(verdict.get("ok", false)):
+		_host_after_encounter_change(encounter_id)
+	return verdict
+
+
+## §5. The host takes its OWN position for both bodies, rebuilds the move from
+## its own config, and rolls with its own `_rng`.
+func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
+	var encounter_id := str(intent.get("encounter_id", ""))
+	var striker := deployed_body_for(peer_id)
+	if striker == null:
+		return {"ok": false, "kind": "strike_intent", "peer": peer_id,
+			"code": "not_participant", "reason": "You have nothing out to fight with.",
+			"pending": false, "delta": {}}
+	var wild := _engaged_with
+	if wild == null or not is_instance_valid(wild):
+		return {"ok": false, "kind": "strike_intent", "peer": peer_id,
+			"code": "unknown_encounter", "reason": "That fight is over.",
+			"pending": false, "delta": {}}
+
+	# The move the peer NAMED, built from the host's own numbers and the host's
+	# own two body radii. A peer cannot post itself a longer reach.
+	var card: Dictionary = _creature_card_for(peer_id)
+	var slot := str(intent.get("slot", "quick"))
+	var move: Dictionary = COMBAT_MANAGER.host_move_profile(
+		_manager.get("_moves") as RefCounted,
+		"player_quick" if slot == "quick" else "player_charged",
+		str(intent.get("move_id", "")),
+		_body_radius(striker), _body_radius(wild))
+
+	# The host's own position for the striking creature, never the intent's.
+	var host_intent := intent.duplicate()
+	host_intent["move"] = move
+	var view := {
+		"now_ms": Time.get_ticks_msec(),
+		"origin": striker.call("centre"),
+		"bodies": _encounter_body_rows(),
+	}
+	var verdict: Dictionary = _encounter_host.call("validate_strike", host_intent, peer_id, view)
+	if not bool(verdict.get("ok", false)):
+		return verdict
+	var delta: Dictionary = verdict["delta"]
+	if not bool(delta.get("hit", false)):
+		return verdict
+
+	var rolled: Dictionary = _manager.call("host_roll_damage", card,
+		str(intent.get("move_id", "")), float(move.get("power", 9.0)))
+	if rolled.is_empty():
+		return verdict
+	delta.merge(rolled, true)
+	_encounter_host.call("set_opponent_hp", encounter_id,
+		float(rolled.get("hp", 0.0)), float(rolled.get("hp_max", 1.0)))
+	if bool(rolled.get("killed", false)):
+		_encounter_host.call("set_phase", encounter_id, "resolving")
+	_host_after_encounter_change(encounter_id, peer_id)
+	return verdict
+
+
+## §8, entirely delegated: `catch_arbiter.gd` owns the race and the roll, this
+## function owns only handing it host truth.
+func _host_catch(intent: Dictionary, peer_id: int) -> Dictionary:
+	var encounter_id := str(intent.get("encounter_id", ""))
+	var wild := _engaged_with
+	var opponent: Dictionary = (_encounter_host.call("record", encounter_id)
+		as Dictionary).get("opponent", {}) as Dictionary
+	if opponent.is_empty() or wild == null or not is_instance_valid(wild):
+		return {"ok": false, "kind": "catch_attempt", "peer": peer_id,
+			"code": "unknown_encounter", "reason": "That fight is over.",
+			"pending": false, "delta": {}}
+	var hp_max := maxf(1.0, float(opponent.get("hp_max", 1.0)))
+	var verdict: Dictionary = _catch_arbiter.call("attempt", encounter_id, peer_id, {
+		"kind": str(_encounter_host.call("kind", encounter_id)),
+		"phase": str(_encounter_host.call("phase", encounter_id)),
+		"opponent_fainted": float(opponent.get("hp", 0.0)) <= 0.0,
+		"species_id": str(opponent.get("species_id", "")),
+		"hp_fraction": float(opponent.get("hp", 0.0)) / hp_max,
+		"body_radius": _body_radius(wild),
+		# The HOST's own position for the creature. Never the thrower's.
+		"target_position": wild.call("centre"),
+		"launch_point": intent.get("launch_point", []),
+		"direction": intent.get("direction", []),
+		"orb_id": str(intent.get("orb_id", "")),
+		"roll": _encounter_roll(),
+	}, Time.get_ticks_msec())
+	if bool(verdict.get("ok", false)):
+		_catch_claimant = peer_id
+		_encounter_host.call("set_phase", encounter_id, "catching")
+		_host_after_encounter_change(encounter_id)
+	return verdict
+
+
+## The winner's wobble ended. On a catch the record goes `resolving` and §8 step
+## 4's `caught_by` goes to everybody else; on a breakout the fight goes back to
+## `active` and anybody may throw again.
+func _host_catch_finished(intent: Dictionary, peer_id: int) -> Dictionary:
+	var encounter_id := str(intent.get("encounter_id", ""))
+	_catch_arbiter.call("release", encounter_id, peer_id)
+	var caught := bool(intent.get("caught", false))
+	if caught:
+		_encounter_host.call("set_phase", encounter_id, "resolving")
+		_catch_claimant = 0
+		for other: int in (_encounter_host.call("participants_of", encounter_id) as Array):
+			if other == peer_id:
+				continue
+			if _can_encounter_rpc():
+				rpc_id(other, "_rpc_encounter_caught_by", encounter_id, peer_id,
+					str(intent.get("species_id", "")))
+	else:
+		_catch_claimant = 0
+		if str(_encounter_host.call("phase", encounter_id)) == "catching":
+			_encounter_host.call("set_phase", encounter_id, "active")
+	_host_after_encounter_change(encounter_id)
+	return {"ok": true, "kind": "catch_finished", "peer": peer_id, "code": "",
+		"reason": "", "pending": false, "delta": {"caught": caught}}
+
+
+## §5, the opponent's swing. Which PARTICIPANT the host's opponent just hit, or
+## {} for a swing that connected with nobody. Tested against the host's own copy
+## of each participant's deployed body -- never a client's report of where it is.
+func host_pick_struck_participant(encounter_id: String, cfg: Dictionary,
+		origin: Vector3, facing: Vector3) -> Dictionary:
+	_ensure_encounter_arbiters()
+	var best: Dictionary = {}
+	var best_distance := INF
+	for peer_id: int in (_encounter_host.call("participants_of", encounter_id) as Array):
+		var body := deployed_body_for(peer_id)
+		if body == null or not is_instance_valid(body):
+			continue
+		var at: Vector3 = body.call("centre")
+		if not MATH.move_connects(cfg, origin, facing, at):
+			continue
+		var distance := origin.distance_to(at)
+		if distance < best_distance:
+			best_distance = distance
+			best = {"peer_id": peer_id, "card": _creature_card_for(peer_id)}
+	return best
+
+
+## Deliver a blow the host rolled to the peer whose creature took it.
+func host_deliver_enemy_hit(encounter_id: String, peer_id: int, payload: Dictionary) -> void:
+	if peer_id == _local_peer_id():
+		if _manager != null:
+			_manager.call("apply_host_enemy_hit", payload)
+		return
+	if _can_encounter_rpc():
+		rpc_id(peer_id, "_rpc_encounter_enemy_hit", encounter_id, payload)
+
+
+## The record changed, so everybody in it is told. §3: nothing else is
+## authoritative, so this is the only broadcast a participant's HUD needs.
+func _host_after_encounter_change(encounter_id: String, author_peer_id: int = 0) -> void:
+	var rec: Dictionary = _encounter_host.call("record", encounter_id)
+	if rec.is_empty():
+		return
+	_encounter = rec
+	if _manager != null:
+		# When the host is the AUTHOR of the change, the hit reaction is left to
+		# the strike render that follows a moment later
+		# (`apply_host_strike_verdict`), or the body flinches twice for one blow.
+		_manager.call("apply_encounter_record", rec, author_peer_id == _local_peer_id())
+	if not _can_encounter_rpc() or not _is_multi_peer():
+		return
+	for peer_id: int in (_encounter_host.call("participants_of", encounter_id) as Array):
+		if peer_id == _local_peer_id():
+			continue
+		rpc_id(peer_id, "_rpc_encounter_record", rec)
+
+
+## §5 step 3's history, taken on the host's own clock from the host's own body.
+func _tick_encounter(_delta: float) -> void:
+	if not _is_host() or _encounter.is_empty():
+		return
+	var encounter_id := str(_encounter.get("encounter_id", ""))
+	if encounter_id.is_empty() or _engaged_with == null or not is_instance_valid(_engaged_with):
+		return
+	_encounter_sample_countdown -= 1
+	if _encounter_sample_countdown > 0:
+		return
+	_encounter_sample_countdown = 2
+	_encounter_host.call("note_opponent_position", encounter_id,
+		_engaged_with.call("centre"), Time.get_ticks_msec())
+
+
+func _ensure_encounter_arbiters() -> void:
+	if _encounter_host == null:
+		_encounter_host = ENCOUNTER_HOST_SCRIPT.new(_local_peer_id())
+	if _catch_arbiter == null:
+		_catch_arbiter = CATCH_ARBITER_SCRIPT.new()
+
+
+## The host's own die for a catch. Deliberately the MANAGER's `_rng`, not a
+## second generator: §5 and §8 both say "the host's `_rng`", and two generators
+## in one process would make "the host rolled it" ambiguous.
+func _encounter_roll() -> float:
+	if _manager == null:
+		return 0.5
+	var rng: Variant = _manager.get("_rng")
+	if rng == null:
+		return 0.5
+	return float((rng as RandomNumberGenerator).randf())
+
+
+## Every deployed body the host holds, as the plain rows `encounter_host.gd`
+## tests ownership against (4.B's H5). Node names appear nowhere: the owner is
+## read off the body.
+func _encounter_body_rows() -> Array:
+	var rows: Array = []
+	for node in deployed_bodies():
+		if not (node is Node3D) or not is_instance_valid(node):
+			continue
+		var body: Node3D = node
+		# A peer's own outbound proxy stands in the same spot as the body it
+		# mirrors (4.B's finding F3: three bodies per peer, two sharing an
+		# owner). Including both would be harmless -- they resolve to the same
+		# owner -- but the trainer rows below would then be outnumbered, so the
+		# invisible mirror is skipped and the piloted body is the one row.
+		if not body.visible:
+			continue
+		rows.append({
+			"owner_peer_id": int(body.get("owner_peer_id")),
+			"position": body.call("centre") if body.has_method("centre") else body.global_position,
+			"role": "creature",
+		})
+	for node in get_tree().get_nodes_in_group(&"remote_trainer"):
+		if not (node is Node3D) or not is_instance_valid(node):
+			continue
+		var trainer: Node3D = node
+		rows.append({
+			"owner_peer_id": int(trainer.get("peer_id")),
+			"position": trainer.global_position,
+			"role": "trainer",
+		})
+	if _player != null and is_instance_valid(_player):
+		rows.append({"owner_peer_id": _local_peer_id(),
+			"position": _player.global_position, "role": "trainer"})
+	return rows
+
+
+## The COMBAT CARD of a peer's deployed creature, as the host holds it.
+##
+## FINDING, recorded here rather than in a report alone: the protocol's §5 step
+## 4 says the host rolls damage, and does not say where the host gets the
+## STRIKER's attack stat. It cannot come from the intent -- that would be a peer
+## authoring half of its own damage, which is the same class of thing §2
+## forbids for positions. And it cannot be read off the creature, because a
+## peer's party is its own (D100) and the host has never seen it.
+##
+## So it comes from 4.B's deployment announcement, extended: a peer announces
+## what it has out ONCE, when it deploys, and the card rides along with the
+## species. Announced once at deploy rather than quoted per swing is what makes
+## it un-tunable mid-fight.
+func _creature_card_for(peer_id: int) -> Dictionary:
+	if peer_id == _local_peer_id() and _ally != null:
+		return _creature_card(_ally)
+	var row: Dictionary = _deployed_by.get(peer_id, {}) as Dictionary
+	return row.get("card", {}) as Dictionary
+
+
+func _creature_card(creature: RefCounted) -> Dictionary:
+	if creature == null:
+		return {}
+	var cfg: Dictionary = PROGRESSION.config()
+	return {
+		"level": int(creature.get("level")),
+		"attack": float(creature.call("effective_attack", cfg)),
+		"defence": float(creature.call("effective_defence", cfg)),
+		"creature_type": str(creature.get("creature_type")),
+		"secondary_type": str(creature.get("secondary_type")),
+		"move_quick": str(creature.get("move_quick")),
+		"move_charged": str(creature.get("move_charged")),
+		"hp": float(creature.get("hp")),
+		"max_hp": float(creature.get("max_hp")),
+	}
+
+
+static func _body_radius(body: Node3D) -> float:
+	if body != null and body.has_method("body_radius"):
+		return float(body.call("body_radius"))
+	return 0.5
+
+
+## Whether an rpc on this node can reach anybody. False solo and in every
+## headless test, where `rpc()` with no peer is an error rather than a no-op --
+## `ledger_rpc.gd::_can_rpc()`'s reason, restated because that file is another
+## lane's.
+func _can_encounter_rpc() -> bool:
+	if not is_inside_tree():
+		return false
+	var api := multiplayer
+	return api != null and api.has_multiplayer_peer()
+
+
+func _encounter_pending(intent: Dictionary, pending: bool, reason: String) -> Dictionary:
+	return {
+		"ok": false, "kind": str(intent.get("kind", "")), "peer": _local_peer_id(),
+		"code": "pending" if pending else "offline", "reason": reason,
+		"pending": pending, "delta": {},
+	}
 
 
 ## Every deployed creature standing in this world right now -- this process's
@@ -1911,6 +2405,7 @@ func interaction_activate() -> void:
 func _process(delta: float) -> void:
 	_tick_respawn(delta)
 	_tick_trainer_battle(delta)
+	_tick_encounter(delta)
 	_sync_spawn_gates()
 	# After the gate sync, not before: a gate that just opened calls
 	# `creature_body.gd::_on_visibility_changed()` via `wild.visible = true`,
@@ -2337,6 +2832,137 @@ func _start_fight(wild: Node3D, opponent_owned: bool = false) -> void:
 		return
 	_engaged_with = wild
 	_set_exploration_active(false)
+	_open_encounter_if_networked(wild, opponent_owned)
+
+
+## Stage B lane 4.C. Stand a host-arbitrated encounter record up behind the
+## fight that just started, and tell the world it exists so a second player can
+## join it (§6).
+##
+## HOST ONLY, and that is a scope statement rather than an oversight. 4.B's
+## handover H1: Terrain3D FULL_GAME collision is unimplemented and wild
+## creatures are not replicated, so a CLIENT's wilds are its own local
+## simulation and the host has never heard of the one it is standing in front
+## of. There is therefore nothing for the host to mint a record ABOUT. A
+## client's own fight against its own wild is left exactly as it was before this
+## lane -- local, unarbitrated, and unchanged -- and what a client CAN do is
+## join a fight the host is holding, which is §6 and the thing two players
+## actually do. When wild replication lands, minting from a client's `engage`
+## becomes one more branch here.
+##
+## Solo is not merely unaffected: `_is_multi_peer()` is false, so not one line
+## below runs.
+func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
+	if not _is_multi_peer() or not _is_host():
+		return
+	_ensure_encounter_arbiters()
+	var instance: Variant = wild.get("instance")
+	if instance == null:
+		return
+	var at: Vector3 = wild.call("centre")
+	var rec: Dictionary = _encounter_host.call("open", _local_peer_id(),
+		_encounter_realm(),
+		"trainer" if opponent_owned else "wild",
+		{
+			"species_id": str((instance as RefCounted).get("species_id")),
+			"display_name": str((instance as RefCounted).get("display_name")),
+			"level": int((instance as RefCounted).get("level")),
+			"hp": float((instance as RefCounted).get("hp")),
+			"hp_max": float((instance as RefCounted).get("max_hp")),
+			"position": [at.x, at.y, at.z],
+		},
+		"", _local_character_id())
+	_encounter = rec
+	_encounter_sample_countdown = 0
+	_manager.call("bind_encounter", self, str(rec["encounter_id"]), str(rec["kind"]))
+	if _can_encounter_rpc():
+		rpc("_rpc_encounter_opened", rec)
+
+
+## D97: the realm this fight belongs to, stamped explicitly. Never a global
+## "current realm" -- from Wave 6 two peers stand in two realms at once and a
+## record stamped with whichever one the host happens to be in files a
+## Cloudreach fight in the Meadows.
+func _encounter_realm() -> String:
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return "meadows"
+	var realm := str(game.get("current_realm"))
+	return realm if not realm.is_empty() else "meadows"
+
+
+## Host -> everybody in the session. §3's "a non-participant in the same realm
+## receives only enough to draw the bodies": this is the announcement that a
+## fight EXISTS and can be joined. It is not the authoritative record for
+## anybody who is not in it, and nothing here binds a manager.
+@rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_encounter_opened(rec: Dictionary) -> void:
+	_joinable_encounters[str(rec.get("encounter_id", ""))] = rec
+
+
+## Every fight this peer has been told about and is not in. Keyed by id, so a
+## re-announcement replaces rather than duplicates.
+var _joinable_encounters: Dictionary = {}
+
+
+## Fights this peer could join right now, newest announcement last.
+func joinable_encounters() -> Array:
+	var out: Array = []
+	for id: Variant in _joinable_encounters.keys():
+		out.append(_joinable_encounters[id])
+	return out
+
+
+## §6. Join a fight already running. No reset, no re-intro camera for anyone
+## already in it: the only thing that happens on the host is that this peer is
+## added to `participants`.
+##
+## The body this peer FIGHTS BESIDE is its own nearest wild, and that is a
+## stand-in, not the opponent -- see `_open_encounter_if_networked()`'s note on
+## 4.B's H1. Everything that decides an outcome comes off the record and off the
+## host: the hit points this peer's HUD draws, whether its swings connect,
+## whether its orb catches. The stand-in is what its creature stands next to and
+## what the camera frames, and when wild replication lands it stops being a
+## stand-in without anything here changing.
+func join_encounter(encounter_id: String) -> bool:
+	if encounter_id.is_empty() or _manager == null:
+		return false
+	if bool(_manager.call("is_fighting")):
+		return false
+	if _ally == null or _ally_body == null or not is_instance_valid(_ally_body):
+		return false
+	var stand_in := nearest_live_wild()
+	if stand_in == null:
+		push_warning("no creature here to stand in for encounter '%s'" % encounter_id)
+		return false
+	var party_obj := _party()
+	var best: RefCounted = party_obj.call("best") if party_obj != null else null
+	if not bool(_manager.call("begin", _player, stand_in, _ally_body, _fight_party(),
+			_camera_rig, best, false)):
+		return false
+	_engaged_with = stand_in
+	_set_exploration_active(false)
+	_manager.call("bind_encounter", self, encounter_id,
+		str((_joinable_encounters.get(encounter_id, {}) as Dictionary).get("kind", "wild")))
+	submit_encounter_intent({"kind": "engage", "encounter_id": encounter_id,
+		"character_id": _local_character_id()})
+	return true
+
+
+## The nearest wild creature this peer could fight, or null. Public because the
+## join path and the net harness both need the same answer, and two copies of
+## "which creature is nearest" would eventually differ.
+func nearest_live_wild() -> Node3D:
+	var best: Node3D = null
+	var best_distance := INF
+	for wild: Node3D in _wild_creatures:
+		if not is_instance_valid(wild) or not wild.visible or not bool(wild.call("is_alive")):
+			continue
+		var distance: float = _player.global_position.distance_to(wild.global_position)
+		if distance < best_distance:
+			best_distance = distance
+			best = wild
+	return best
 
 
 ## Who is IN this fight: the creature standing beside the trainer first,
@@ -2394,6 +3020,20 @@ func _on_combat_exited(outcome: String) -> void:
 		return
 
 	_set_exploration_active(true)
+	# Stage B lane 4.C. The fight is over for THIS peer. The manager has already
+	# sent `disengage` from `_finish()` -- §9's "a disconnect, a downed trainer
+	# and walking away are the same event" -- so all that is left here is to
+	# stop rendering a record this peer is no longer in. On the host the record
+	# itself survives until its last participant leaves, which is exactly what
+	# keeps a second player's fight running when the first one dies.
+	var finished_id := str(_encounter.get("encounter_id", ""))
+	_encounter = {}
+	if _is_host() and not finished_id.is_empty() and _encounter_host != null:
+		if str(_encounter_host.call("phase", finished_id)) == "done":
+			_encounter_host.call("forget", finished_id)
+			_catch_arbiter.call("forget", finished_id)
+		_joinable_encounters.erase(finished_id)
+
 	var wild := _engaged_with
 	_engaged_with = null
 
