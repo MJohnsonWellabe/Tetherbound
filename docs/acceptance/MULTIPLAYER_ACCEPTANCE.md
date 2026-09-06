@@ -1,6 +1,8 @@
 # Multiplayer acceptance — Stage B
 
-**Status:** in progress. Automated column: 21 of the 24 §17 rows name a run; rows 8, 18 and 19 do not, and row 21 is partial. Owner column: nothing signed off yet. **Contract:** `docs/MULTIPLAYER_DIRECTIVE.md` §17 (the twenty-four
+**Status:** in progress. Automated column: 22 of the 24 §17 rows name a run; rows 18 and 19 do not.
+Row 8 now names one (`smoke_net_shared_boss`) and row 21 is no longer partial — it reads the
+character file off disk. Owner column: nothing signed off yet. **Contract:** `docs/MULTIPLAYER_DIRECTIVE.md` §17 (the twenty-four
 minimum-experience items), §21 (reliability), §23 (the human half). **Filled in by:** Fable, from
 CI runs and the owner's own LAN session. **Last updated:** 2026-09-06.
 
@@ -33,7 +35,7 @@ two people in it, or that a friend's creature reads as theirs. Those are the own
 | 5 | Shared wild encounters | `smoke_net_shared_wild_fight` | ☐ |
 | 6 | First-successful-catch rule | `test_catch_arbitration` (pure, deterministic) **and `smoke_net_catch_race`** — **45 assertions, 0 failures**, green twice from a clean tree: two peers throw at one wild creature at a shared wall-clock instant, exactly one is granted, the loser is refused `already_resolving` with a sentence, and creatures owned across both peers rise by exactly the winner's own `caught` bit. The **full-belt half is still owed**: the host's roll is genuinely random and nothing can pin it over the wire, so a catch landing into five owned creatures is asserted only as an invariant a breakout satisfies vacuously | ☐ |
 | 7 | A trainer encounter together | `smoke_net_boss_rewards_each_participant` — 30 checks, peer 0 challenges Bryn through `begin_trainer_battle()`, peer 1 joins in progress, the `defeat_flag` is written **once for the world** and lands on both peers, and each peer gains Bryn's authored 20 coin + 1 potion **undivided**. Passed on attempt 3; attempts 1–2 were failures of this lane's own new harness arm (findings F4, F5), not of game code | ☐ |
-| 8 | A boss encounter together | **owed.** The multi-participant payout path is the same one row 7 proves, and `smoke_boss` / `smoke_gate_e_finale` / `smoke_cloudreach_finale` are green solo — but **no net smoke has ever put two pilots in the Warden fight**. Row 7's evidence is not borrowed for this row | ☐ |
+| 8 | A boss encounter together | `smoke_net_shared_boss` — **81 assertions, 0 failures, green three times consecutively from a clean tree.** Two real processes, both piloting a creature, in **`warden_aldis`**'s own fight, at his own placed body inside the stronghold. It asserts what a BOSS is different about and nothing row 7 asserts (no coin, no potion, no item receipt): the record is stamped `kind: "boss"`; both peers are participants in **ONE** record (peer 1's `bound_id` is peer 0's, and peer 1 runs no trainer battle of its own, holds no battle id and has no roster to send out) and it is still that same record after a round change; the boss's HP is **host truth** and both peers' strikes reduce the same number, equal on both to the thousandth; **never HP × players** (§10 / D-MP12) at the two moments it could fire — when the second player ARRIVES, and when the next creature is SENT OUT with two participants — against the authored value and the multiplier the smoke reads out of `data/config/multiplayer.json` itself, plus the config row named as carrying only the two allowed keys; the climax's three world flags (`defeated_warden` and the Warden's two `reward.flags`) land on **both** peers with **no** per-participant receipt, which is `world_facts()` committing them once for the world rather than once per person; and a pilot's swing at its teammate's creature is refused `friendly_target` with the sentence arriving back at the striker, the teammate and the boss both untouched over a window the boss itself did not act in. **Still owed on this row:** the WALK — the Warden Arena's dialogue, the machine gate and the legendary chamber stay `smoke_boss`'s solo ground. And §10's OTHER two clauses (the modest stat multiplier and the shorter attack cooldown) reach **nothing** on this tree, in any trainer or boss battle: finding F1, measured, printed by the smoke and deliberately not asserted in either direction | ☐ |
 | 9 | Gather without duplication | `smoke_net_pickup_race` | ☐ |
 | 10 | Shared pickups | `smoke_net_pickup_race` | ☐ |
 | 11 | Build and use shared structures | `smoke_net_shared_building` — includes the host-save-and-reload half | ☐ |
@@ -46,7 +48,7 @@ two people in it, or that a friend's creature reads as theirs. Those are the own
 | 18 | Transition independently | **HELD** — built by 6.A, refusal re-instated: the shell boot freezes the host past 15 s (D97) | ☐ |
 | 19 | Different biomes simultaneously | **HELD** — same cause as 18; the machinery is built and measured, the door is shut (D97) | ☐ |
 | 20 | Save world + portable characters | `test_world_save_format`, `test_character_save_format`, `test_legacy_slot_split_never_touches_the_original`, `test_split_key_coverage_equals_v22` and `test_save_format` run as one shard on the integrated head: **90 tests, 527 assertions, 0 failed** (2026-09-06, `--only=save_format`). Plus `smoke_net_host_join_leave`, which asserts the host wrote a world file, the client wrote none, and the client wrote exactly one character file — its own | ☐ |
-| 21 | Disconnect and reconnect | `smoke_net_reconnect_keeps_character` — 23/23 checks. **Partial:** 7.A wrote it while the character save did not exist, so it asserts the session-side restore only. Lane 1.C has since written `user://characters/<id>/character.json`; re-pointing this smoke at the file is owed (see §"Known-open") | ☐ |
+| 21 | Disconnect and reconnect | `smoke_net_reconnect_keeps_character` — **53 assertions, 0 failures, green twice from a clean tree.** Re-pointed at the FILE. A peer earns a party (through `party_seam.gd`, the opening's own door), a satchel and a **PLAYER-scoped** flag; writes `user://characters/<id>/character.json` through `Game.autosave_here()`; loses its link (`drop_link`, then the same two calls `_on_server_disconnected()` makes); has its **in-memory character blanked** with the game's own loader so the file is the only copy on the machine; and comes back by the same character id with all three restored, equal to the file key for key, satiety included — having been provably blank one step earlier. One registry row under a new ENet peer id, and the world change made while it was away arrives with the fresh snapshot. **Negative control:** the same drop and blanking, rejoining as a character id that has no file, and the peer correctly comes back empty. **This needed two code fixes** (`ralph/reports/MP-ROWS-8-21-0906/REPORT.md` findings F6, F7): `character_save.gd::apply()` had no caller — every peer wrote the file and nothing ever read one back — and `join()` never told `PlayerState` which character it was joining as, so the write and the read addressed two different names for one trainer | ☐ |
 | 22 | Late-join a modified world | `smoke_net_late_join_modified_world` — 21/21 checks; the assertion is a **whole-world diff** of both peers' `Game.world_snapshot()`, empty, not a spot-check | ☐ |
 | 23 | Host plays solo when alone | Solo **is** a one-peer session through the same funnel; every solo smoke is this row's evidence | ☐ |
 | 24 | Host exits, session saves/ends | `smoke_net_host_join_leave` — asserts the host wrote its world and the client wrote none — **and `smoke_net_host_exit_saves` under load**, 27/27 checks: the host quits mid-fight and both peers' last changes read back off the autosave file | ☐ |
@@ -96,17 +98,58 @@ Recorded here so a reader does not have to infer them from silence:
 
 - **A catch into a full belt is not proven over the wire.** See row 6.
 
-- **The reconnect smoke does not yet read the character file.** `smoke_net_reconnect_keeps_character`
-  was written (lane 7.A) while `user://characters/` did not exist; lane 1.C wrote it hours later on a
-  parallel branch. The smoke asserts the session-side restore and says so in its own header. Pointing
-  it at the file on disk is a small, named piece of work, and row 21 stays **partial** until it is done.
+- **Row 21's file half — CLOSED, 2026-09-06** (kept in this list because it is where the item was
+  carried open). `smoke_net_reconnect_keeps_character` now reads the character
+  file: the peer's in-memory character is blanked between the write and the rejoin, so the party,
+  satchel and player-scoped flag that come back can only have come off
+  `user://characters/<id>/character.json`, and a negative control rejoining as an unsaved id comes
+  back empty. It needed two production fixes, recorded as findings F6 and F7 of
+  `ralph/reports/MP-ROWS-8-21-0906/REPORT.md` (not 7.A's own F7 below, which is a different lane's
+  numbering):
+  `character_save.gd::apply()` had no caller at all, and `Session.join()` never stamped the joined
+  `character_id` onto `PlayerState` — so `_save_character_here()` wrote the file under a freshly
+  minted `peer-<pid>-<usec>` id that no later join could find.
+
+- **`reconnect_window_s` is documented intent, not a timer** (7.A's finding, carried forward and
+  still true). `multiplayer.json` says 120 s and that Wave 2 "reads this only as the documented
+  intent"; the code does neither — `_on_peer_disconnected()` removes the registry row immediately, so
+  the row is gone before any window could expire and `peer_registry.gd::add()`'s
+  carry-the-realm-forward branch can never fire for a real disconnect. Nothing is broken for the
+  player (the rejoiner re-announces its realm in its own hello) and the smoke rejoins well inside
+  120 s, so it is honest under either reading.
 
 - **Friendly fire loses its refusal message under 150 ms jitter** — the safety holds, the sentence
   does not arrive (7.A finding F7, an early `STRIKE_SETTLE` read). Deliberately not tuned: a timing
   constant moved to make one run green is how a real ordering defect gets buried.
 
-- **No net smoke has ever put two pilots in the Warden fight** (row 8). The payout path row 7 proves
-  is shared, and that is an argument, not evidence.
+- **§10's stat multiplier and attack cooldown reach nothing.** Row 8's own claim — *never HP ×
+  players* — holds and is asserted. The other two thirds of §10 / D-MP12 are not applied to any
+  creature in any trainer or boss battle: `encounter_director.gd::_scale_opponent_for_the_session()`
+  runs at send-out, BEFORE the record is opened or resumed, so the first creature finds no record
+  and every later one finds a participant list that §9 emptied at the round boundary — an identity
+  row. Measured on the Warden twice (burrowback 27.750/42.550, galecrest 51.800/27.750, each exactly
+  its authored number, with the record beside them saying `stat_multiplier` 1.1). Not fixed by row 8:
+  the scaler multiplies in place with no unscaled base kept, so moving the call without deciding
+  where that base lives compounds the multiplier round over round. `test_encounter_rewards.gd` tests
+  the TABLE and the RECORD; nothing has ever asserted the multiplier reaches a creature. See
+  `ralph/reports/MP-ROWS-8-21-0906/REPORT.md` finding F1.
+
+- **Two pilots in the Warden fight is proven; the WALK to him is not.** Row 8 drives `warden_aldis`
+  through `begin_trainer_battle()` — the same call `stronghold_climax.gd` makes, and
+  `stronghold_climax.json`'s own words are "there is no boss combat mode and there is no boss
+  script". The Warden Arena's dialogue, the machine gate behind him and the legendary chamber remain
+  `smoke_boss.gd`'s solo ground and no net smoke enters them.
+
+- **Contract §7's `state_hash` cannot agree once two peers hold different PLAYER-scoped flags.**
+  `HASHED_KEYS` includes `progression`, which `save_game.gd` writes as the world's flags MERGED with
+  the local player's own — `peer_runner.gd`'s own `world_snapshot` comment says a smoke diffing it
+  "would report a divergence that is not one". Measured by row 21, whose client holds a player-scoped
+  flag on purpose: `state hashes never agreed across peers within 600 frames` while both peers'
+  `Game.world_snapshot()` were identical key for key. The background desync detector did not fire, so
+  it is a false red in an explicit assertion rather than a harness fault. Not fixed: splitting
+  `progression` for the hash is a §7 change reaching nine smokes. Row 21 asserts the whole-world diff
+  instead; `smoke_net_behind_character_joins_ahead_world`, the other smoke built on divergent player
+  flags, asks for no hash equality either. Finding F5.
 
 ## The verdict
 
