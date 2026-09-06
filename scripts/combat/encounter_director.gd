@@ -69,6 +69,10 @@ const REMOTE_CREATURE_SCRIPT := preload("res://scripts/creatures/remote_creature
 ## files, the two files eventually disagree.
 const ENCOUNTER_HOST_SCRIPT := preload("res://scripts/net/encounter_host.gd")
 const CATCH_ARBITER_SCRIPT := preload("res://scripts/net/catch_arbiter.gd")
+## Lane 4.D. What a beaten trainer owes, as plain intents -- pure, so the
+## arithmetic (and above all the division that does NOT happen) is asserted
+## against no world at all in `tests/test_encounter_rewards.gd`.
+const ENCOUNTER_REWARDS := preload("res://scripts/net/encounter_rewards.gd")
 ## For `host_move_profile()` only -- the ONE copy of what a move reaches, so the
 ## host rebuilding a peer's named move cannot disagree with what that peer's own
 ## manager built for itself.
@@ -385,6 +389,21 @@ var _trainer_sent: int = 0
 ## challenge instead of creeping across the room between creatures.
 var _trainer_battle_anchor: Vector3 = Vector3.ZERO
 var _has_trainer_battle_anchor: bool = false
+
+## Stage B Wave 4 lane 4.D. WHO FOUGHT THIS TRAINER -- every peer that has been
+## in this battle's encounter record at any point since it began, host included.
+##
+## FINDING, recorded at the code rather than only in a report:
+## `combat_manager.gd::_finish()` submits `disengage` at the end of EVERY round,
+## which is right for a wild fight and is also what happens between two of a
+## trainer's creatures. So "who is in the record right now", asked at the moment
+## the last creature falls, is very nearly nobody -- the winner has just left it.
+## The accumulated set is the honest answer to "who fought this trainer", it is
+## what §7 means by "every participant", and it is what gets paid.
+##
+## Also §6's "arriving late costs nothing": a peer that joined for the ace alone
+## is in here exactly like the one that was there from the first send-out.
+var _trainer_battle_participants: Dictionary = {}
 
 
 func _ready() -> void:
@@ -1753,11 +1772,24 @@ func _host_catch_finished(intent: Dictionary, peer_id: int) -> Dictionary:
 ## §5, the opponent's swing. Which PARTICIPANT the host's opponent just hit, or
 ## {} for a swing that connected with nobody. Tested against the host's own copy
 ## of each participant's deployed body -- never a client's report of where it is.
+##
+## Lane 4.D, §10 and 4.C's handover H6: the geometry is decided here and the
+## CHOICE between the participants the swing reached is decided by
+## `encounter_host.gd::pick_struck()`, which prefers whoever has been hit least
+## so far. Nearest-only was the honest one-opponent behaviour and it is also
+## exactly what §10 names as the failure -- "one player tanking by standing
+## still" -- because two players fighting one creature meant whoever stepped
+## closest absorbed the whole fight while the other watched.
+##
+## The count is taken HERE, at the pick, rather than after the damage roll,
+## because on this path a pick IS a hit: `move_connects` is the miss test, and
+## both branches of `combat_manager.gd::_host_resolve_enemy_strike_for_a_
+## participant()` deal damage once a participant has been picked. Counting
+## later would mean counting in two places.
 func host_pick_struck_participant(encounter_id: String, cfg: Dictionary,
 		origin: Vector3, facing: Vector3) -> Dictionary:
 	_ensure_encounter_arbiters()
-	var best: Dictionary = {}
-	var best_distance := INF
+	var candidates: Array = []
 	for peer_id: int in (_encounter_host.call("participants_of", encounter_id) as Array):
 		var body := deployed_body_for(peer_id)
 		if body == null or not is_instance_valid(body):
@@ -1765,11 +1797,13 @@ func host_pick_struck_participant(encounter_id: String, cfg: Dictionary,
 		var at: Vector3 = body.call("centre")
 		if not MATH.move_connects(cfg, origin, facing, at):
 			continue
-		var distance := origin.distance_to(at)
-		if distance < best_distance:
-			best_distance = distance
-			best = {"peer_id": peer_id, "card": _creature_card_for(peer_id)}
-	return best
+		candidates.append({"peer_id": peer_id, "distance": origin.distance_to(at)})
+	var best: Dictionary = _encounter_host.call("pick_struck", encounter_id, candidates)
+	if best.is_empty():
+		return {}
+	var struck := int(best.get("peer_id", 0))
+	_encounter_host.call("note_struck", encounter_id, struck)
+	return {"peer_id": struck, "card": _creature_card_for(struck)}
 
 
 ## Deliver a blow the host rolled to the peer whose creature took it.
@@ -1815,6 +1849,8 @@ func _tick_encounter(_delta: float) -> void:
 	_encounter_sample_countdown = 2
 	_encounter_host.call("note_opponent_position", encounter_id,
 		_engaged_with.call("centre"), Time.get_ticks_msec())
+	if trainer_battle_active():
+		_note_trainer_participants(encounter_id)
 
 
 func _ensure_encounter_arbiters() -> void:
@@ -2860,23 +2896,49 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 	if instance == null:
 		return
 	var at: Vector3 = wild.call("centre")
+	var opponent := {
+		"species_id": str((instance as RefCounted).get("species_id")),
+		"display_name": str((instance as RefCounted).get("display_name")),
+		"level": int((instance as RefCounted).get("level")),
+		"hp": float((instance as RefCounted).get("hp")),
+		"hp_max": float((instance as RefCounted).get("max_hp")),
+		"owner_npc": str(_trainer_spec.get("id", "")) if opponent_owned else "",
+		"position": [at.x, at.y, at.z],
+	}
+	# Lane 4.D. The trainer's NEXT creature is the same fight, not a new one: a
+	# record minted per round would drop a joiner between rounds and pay them
+	# for none of a boss they fought two thirds of. `set_opponent()` carries the
+	# participants across; only a battle that has no live record yet mints one.
+	var live_id := str(_encounter.get("encounter_id", ""))
+	if opponent_owned and _resume_trainer_encounter(live_id) \
+			and bool(_encounter_host.call("set_opponent", live_id, opponent)):
+		_encounter = _encounter_host.call("record", live_id)
+		_encounter_sample_countdown = 0
+		_manager.call("bind_encounter", self, live_id, str(_encounter.get("kind", "trainer")))
+		_host_after_encounter_change(live_id)
+		_note_trainer_participants(live_id)
+		return
 	var rec: Dictionary = _encounter_host.call("open", _local_peer_id(),
 		_encounter_realm(),
-		"trainer" if opponent_owned else "wild",
-		{
-			"species_id": str((instance as RefCounted).get("species_id")),
-			"display_name": str((instance as RefCounted).get("display_name")),
-			"level": int((instance as RefCounted).get("level")),
-			"hp": float((instance as RefCounted).get("hp")),
-			"hp_max": float((instance as RefCounted).get("max_hp")),
-			"position": [at.x, at.y, at.z],
-		},
+		_encounter_kind(opponent_owned),
+		opponent,
 		"", _local_character_id())
 	_encounter = rec
 	_encounter_sample_countdown = 0
 	_manager.call("bind_encounter", self, str(rec["encounter_id"]), str(rec["kind"]))
+	if opponent_owned:
+		_note_trainer_participants(str(rec["encounter_id"]))
 	if _can_encounter_rpc():
 		rpc("_rpc_encounter_opened", rec)
+
+
+## §3's `kind`. A boss is DATA, not a code path: `trainers.json`'s `boss_ranks`
+## decides, one encounter record covers all three, and the only thing being a
+## boss changes is what the record says it is.
+func _encounter_kind(opponent_owned: bool) -> String:
+	if not opponent_owned:
+		return "wild"
+	return "boss" if TRAINERS.is_boss(_trainer_spec) else "trainer"
 
 
 ## D97: the realm this fight belongs to, stamped explicitly. Never a global
@@ -3247,6 +3309,7 @@ func begin_trainer_battle(spec: Dictionary, trainer: Node3D = null) -> bool:
 	_trainer_node = trainer
 	_trainer_send_delay = 0.0
 	_trainer_cleanup_delay = 0.0
+	_trainer_battle_participants = {}
 	# Taken BEFORE the first round places anyone, so it is where the player was
 	# actually standing when they accepted — not where the first fight's
 	# `_stand_the_trainer_aside()` will shortly put them. See
@@ -3290,6 +3353,7 @@ func _send_out_next_creature() -> bool:
 			(_player as CharacterBody3D).velocity = Vector3.ZERO
 
 	var creature: RefCounted = _trainer_queue.pop_front()
+	_scale_opponent_for_the_session(creature)
 
 	var body: Node3D = CREATURE_SCENE.instantiate()
 	# Numbered off a counter that only ever goes up, never off `_trainer_fallen`
@@ -3330,6 +3394,60 @@ func _send_out_next_creature() -> bool:
 		_trainer_body = null
 		return false
 	return true
+
+
+## §10 / D-MP12. What a trainer's creature costs when more than one person is
+## fighting it.
+##
+## Composition first, health second, and NEVER HP x players: this function does
+## not read `hp` or `max_hp` and does not write them. A boss with four times the
+## health is four times as LONG, not four times as interesting, and that is the
+## one scaling knob §10 forbids outright.
+##
+## What it does write is the modest end of §10:
+##
+##   * `attack` and `defence` -- `creature_instance.gd`'s own multipliers, which
+##     `effective_attack`/`effective_defence` fold in, so one number reaches
+##     both sides of the damage roll and nothing else has to know;
+##   * `attack_cooldown` on the per-creature `combat_override` -- the other half
+##     of composition for an opponent that is ONE body. It swings more often
+##     because there is more than one thing to swing at, and
+##     `encounter_host.gd::pick_struck()` spreads those swings across the
+##     participants instead of letting whoever stands closest absorb all of
+##     them.
+##
+## It is NOT a level bump. Spec §11 / D30: a level is a real level and the world
+## does not move to meet you. D-MP12 scales by how many people turned up, which
+## is a different axis from scaling to how strong they are, and that distinction
+## only survives if nothing here touches a level.
+##
+## Solo returns on the first line, so a solo trainer battle is byte-for-byte the
+## fight it was.
+func _scale_opponent_for_the_session(creature: RefCounted) -> void:
+	if creature == null or not _is_multi_peer() or not _is_host() \
+			or _encounter_host == null:
+		return
+	var encounter_id := str(_encounter.get("encounter_id", ""))
+	if encounter_id.is_empty():
+		return
+	var row: Dictionary = _encounter_host.call("scaling", encounter_id)
+	var stat := float(row.get("stat_multiplier", 1.0))
+	var cooldown := float(row.get("attack_cooldown_multiplier", 1.0))
+	if is_equal_approx(stat, 1.0) and is_equal_approx(cooldown, 1.0):
+		return
+	creature.set("attack", float(creature.get("attack")) * stat)
+	creature.set("defence", float(creature.get("defence")) * stat)
+	if is_equal_approx(cooldown, 1.0):
+		return
+	# G-2's per-creature override is where a trainer's creature already says how
+	# it fights, so the swing rate is written there rather than into a second
+	# channel `wild_creature.gd::configure()` would have to learn about.
+	var override: Dictionary = (creature.get("combat_override") as Dictionary).duplicate(true)
+	var base := float(override.get("attack_cooldown",
+		float((MATH.config().get("enemy_trainer", {}) as Dictionary).get("attack_cooldown",
+			float((MATH.config().get("wild", {}) as Dictionary).get("attack_cooldown", 1.4))))))
+	override["attack_cooldown"] = maxf(0.1, base * cooldown)
+	creature.set("combat_override", override)
 
 
 ## Beside the trainer, a stride toward the player — so their creature comes
@@ -3419,6 +3537,11 @@ func _finish_trainer_battle(won: bool) -> void:
 	if won:
 		_record_trainer_defeat(spec)
 		call_deferred("_present_trainer_victory", spec)
+	# NOW the battle's one encounter record is over, and not one creature
+	# earlier. Cleared after the payout because §7 pays the people who fought
+	# it, and dropped from the joinable list because a fight nobody can join is
+	# a fight nobody should be offered.
+	_close_trainer_encounter()
 
 
 ## Optional data-driven post-victory story beat.  Most trainers need only the
@@ -3447,6 +3570,8 @@ func _present_trainer_victory(spec: Dictionary) -> void:
 ## needs nothing here: it was awarded per creature felled, by the ordinary
 ## victory award, while the battle was still running.
 func _record_trainer_defeat(spec: Dictionary) -> void:
+	if _record_trainer_defeat_for_the_session(spec):
+		return
 	var flag := str(spec.get("defeat_flag", ""))
 	var progression := _progression()
 	if progression == null:
@@ -3526,6 +3651,230 @@ func _pay_trainer_reward(spec: Dictionary) -> void:
 
 	if not won.is_empty():
 		game.call("push_world_message", "%s's reward: %s" % [str(spec.get("name", "Trainer")), ", ".join(won)])
+
+
+# --- §7: the world fact once, the personal reward per participant ---------------
+#
+# The whole of lane 4.D in one sentence: **a trainer beaten by two people is
+# beaten once for the world, and pays both of them.**
+#
+# The two halves are deliberately different mechanisms, because they are
+# different facts:
+#
+#   * the WORLD half is a `set_world_flag` intent per fact, committed once by
+#     the host and mirrored to everybody. A second peer arriving later finds the
+#     trainer already beaten because that is what the world says, and
+#     `world_ledger.gd` answers a re-commit with `code: "noop"` rather than an
+#     error a player is shown;
+#   * the PERSONAL half is a `reward_grant` per component, addressed to every
+#     participant, guarded per participant per source by
+#     `world_ledger.gd::reward_flag()`. Nothing is divided by how many people
+#     turned up (§7) -- a fight that pays half as much for having a friend along
+#     teaches people to play alone.
+#
+# XP is the one component that cannot be an op: a peer's party is its own
+# (D100), the host has never seen it, and the host must not pretend to add a
+# level to somebody else's creature. So the ledger holds the RECEIPT and the
+# host TELLS each newly-paid participant, who applies the bonus to its own
+# party. The guard is durable; the payment is a message.
+
+
+## True when this defeat has been handled as a session's, so
+## `_record_trainer_defeat()`'s solo body must not also run.
+##
+## Solo returns false on the first line and not one line below it runs, so
+## nothing a solo player has ever seen changes here.
+func _record_trainer_defeat_for_the_session(spec: Dictionary) -> bool:
+	if not _is_multi_peer():
+		return false
+	var realm := _encounter_realm()
+	# D103/D99: a trainer's defeat is a WORLD fact and the only way a world fact
+	# may change is an intent -- `alpha_pins.gd::clear_alpha()` is the precedent.
+	# Submitted whether this peer is the host or a client, because either can be
+	# the one who won: a client's trainer battle is still its own local fight
+	# (4.C's F1) and the flag it produces is still the world's.
+	for fact: Variant in ENCOUNTER_REWARDS.world_facts(spec, realm):
+		_submit_reward_intent(fact as Dictionary)
+	if not _is_host() or _encounter_host == null:
+		# On a client the personal half is this peer paying itself for a fight
+		# it ran itself, which is exactly what the solo path already does
+		# correctly. Fall through to it rather than growing a second copy.
+		return false
+	var participants: Array = ENCOUNTER_REWARDS.unique_peers(
+		_trainer_battle_participants.keys())
+	if participants.is_empty():
+		return false
+	_pay_every_participant(spec, realm, participants)
+	return true
+
+
+## §7's personal half. One `reward_grant` per component, each addressed to every
+## participant; the ledger hands back `paid` -- the participants who had not
+## already been paid for that source -- and those are the people who are told.
+##
+## Deliberately NOT gated on whether the defeat flag was already set. The solo
+## path uses that flag as its anti-farm guard because solo there is only ever
+## one player; here the guard is the per-participant receipt, and reading the
+## world flag instead would refuse to pay a second player for a trainer their
+## friend had beaten earlier -- who is exactly the person §7 exists to pay.
+func _pay_every_participant(spec: Dictionary, realm: String, participants: Array) -> void:
+	var paid_any: Dictionary = {}
+	for raw: Variant in ENCOUNTER_REWARDS.grants(spec, realm, participants):
+		var verdict: Dictionary = _submit_reward_intent(raw as Dictionary)
+		if not bool(verdict.get("ok", false)):
+			continue
+		for peer: Variant in (verdict.get("paid", []) as Array):
+			paid_any[int(peer)] = true
+	if paid_any.is_empty():
+		return
+	var payload := {
+		"trainer": str(spec.get("name", "Trainer")),
+		"xp": ENCOUNTER_REWARDS.xp_bonus(spec),
+		"line": _trainer_reward_line(spec),
+	}
+	for peer: Variant in paid_any.keys():
+		_tell_participant_they_were_paid(int(peer), payload)
+
+
+## The one line a newly-paid participant is shown, built from the AUTHORED
+## payout rather than from what landed.
+##
+## That is a stated difference from the solo path, which reads back the leftover
+## `inventory.add()` returned and can therefore say "the satchel was full". The
+## ledger's `item_grant` op does not carry a leftover back to the host, and
+## inventing one here would mean the host describing the contents of somebody
+## else's satchel -- which it has never seen (D100). Naming what the trainer
+## owed is the honest thing the host actually knows.
+func _trainer_reward_line(spec: Dictionary) -> String:
+	var game := get_node_or_null(^"/root/Game")
+	var catalogue: RefCounted = game.get("items") if game != null else null
+	var won: Array[String] = []
+	var coins := TRAINERS.reward_coins(spec)
+	if coins > 0:
+		won.append("%d %s" % [coins,
+			str(catalogue.call("item_name", "coin")) if catalogue != null else "coin"])
+	for entry: Variant in TRAINERS.reward_items(spec):
+		if typeof(entry) != TYPE_DICTIONARY:
+			continue
+		var id := str((entry as Dictionary).get("id", ""))
+		var count := int((entry as Dictionary).get("count", 1))
+		if id.is_empty() or count <= 0:
+			continue
+		won.append("%d %s" % [count,
+			str(catalogue.call("item_name", id)) if catalogue != null else id])
+	if won.is_empty():
+		return ""
+	return "%s's reward: %s" % [str(spec.get("name", "Trainer")), ", ".join(won)]
+
+
+## Host -> one participant. The local host applies it in-process for the reason
+## `ledger_rpc.gd::_commit_here()` gives about its own local player: one code
+## path, and no "the host is special" branch to rot.
+func _tell_participant_they_were_paid(peer_id: int, payload: Dictionary) -> void:
+	if peer_id == _local_peer_id():
+		_apply_trainer_reward(payload)
+		return
+	if _can_encounter_rpc():
+		rpc_id(peer_id, "_rpc_trainer_reward", payload)
+
+
+@rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_trainer_reward(payload: Dictionary) -> void:
+	_apply_trainer_reward(payload)
+
+
+## The half of a reward only the peer that owns the party can apply. The items
+## and the flags arrived as ledger ops; this is the XP and the line about it.
+func _apply_trainer_reward(payload: Dictionary) -> void:
+	var xp := int(payload.get("xp", 0))
+	if xp > 0:
+		var party := _party()
+		if party != null:
+			var cfg: Dictionary = PROGRESSION.config()
+			for i in int(party.call("size")):
+				var member: RefCounted = party.call("at", i)
+				if member != null and not bool(member.get("fainted")):
+					member.call("gain_xp", xp, cfg)
+	var line := str(payload.get("line", ""))
+	if line.is_empty():
+		return
+	var game := get_node_or_null(^"/root/Game")
+	if game != null:
+		game.call("push_world_message", line)
+
+
+## `Game.ledger` -- lane 3.A's transport, mounted at an identical path in every
+## process. A verdict is ALWAYS returned in `world_ledger.gd`'s shape so no
+## caller branches on the type of the answer.
+func _submit_reward_intent(intent: Dictionary) -> Dictionary:
+	if intent.is_empty():
+		return {"ok": false, "pending": false, "code": "malformed", "paid": []}
+	var game := get_node_or_null(^"/root/Game")
+	var ledger: Node = game.get("ledger") as Node if game != null else null
+	if ledger == null or not ledger.has_method("submit"):
+		return {"ok": false, "pending": false, "code": "offline", "paid": []}
+	return ledger.call("submit", intent)
+
+
+## Remember everybody who is in this trainer battle's record right now. Called
+## while a round is LIVE -- the round teardown empties the record's own list, so
+## sampling after the win would find nobody. See `_trainer_battle_participants`.
+func _note_trainer_participants(encounter_id: String) -> void:
+	if _encounter_host == null or encounter_id.is_empty():
+		return
+	for peer_id: int in (_encounter_host.call("participants_of", encounter_id) as Array):
+		_trainer_battle_participants[peer_id] = true
+
+
+## The same fight, one creature later: bring `encounter_id` back to `active` and
+## put the people who are still fighting this trainer back in it. False when
+## there is no such record to resume, which sends the caller down the mint path.
+##
+## Both halves exist because of one line in somebody else's file:
+## `combat_manager.gd::_finish()` submits `disengage` at the end of EVERY round,
+## which is correct for a wild fight and is also what a trainer's creature
+## fainting looks like from inside the manager. So by the time the next creature
+## steps up, §9 has emptied the record's participant list and marked it `done`.
+## That `done` describes a round boundary, not the end of the battle -- the
+## battle is still running, `trainer_battle_active()` is still true, and the
+## alternative is minting a fresh record per creature, which drops a joiner
+## between rounds and pays them for none of a boss they fought two thirds of.
+##
+## Only peers the session still holds are re-seated: somebody who disconnected
+## mid-battle is remembered for the payout, because they fought it, but is not
+## put back into a fight they cannot be in. `join()` is idempotent by contract
+## and does not re-stamp `joined_seq`, so a re-seat cannot make anybody look
+## like a later or an earlier arrival than they were.
+func _resume_trainer_encounter(encounter_id: String) -> bool:
+	if _encounter_host == null or encounter_id.is_empty():
+		return false
+	if (_encounter_host.call("record", encounter_id) as Dictionary).is_empty():
+		return false
+	if str(_encounter_host.call("phase", encounter_id)) != "active":
+		_encounter_host.call("set_phase", encounter_id, "active")
+	var live := _session_peer_ids()
+	_encounter_host.call("join", encounter_id, _local_peer_id(), "", _local_character_id())
+	for peer: Variant in _trainer_battle_participants.keys():
+		var peer_id := int(peer)
+		if peer_id == _local_peer_id() or not live.has(peer_id):
+			continue
+		_encounter_host.call("join", encounter_id, peer_id, "", "")
+	return true
+
+
+## The battle is over: stop holding its record and stop advertising it.
+func _close_trainer_encounter() -> void:
+	var id := str(_encounter.get("encounter_id", ""))
+	_encounter = {}
+	_trainer_battle_participants = {}
+	if id.is_empty():
+		return
+	_joinable_encounters.erase(id)
+	if _is_host() and _encounter_host != null:
+		_encounter_host.call("close", id)
+		_encounter_host.call("forget", id)
+		if _catch_arbiter != null:
+			_catch_arbiter.call("forget", id)
 
 
 func _clear_fallen_bodies() -> void:

@@ -83,6 +83,67 @@ static func catch_arbitration_window_ms() -> int:
 	return int(config().get("catch_arbitration_window_ms", 6000))
 
 
+## §10 / D-MP12. What `participant_count` people fighting one opponent costs
+## the opponent, from `multiplayer.json`'s `encounter.scaling.by_participants`.
+##
+## Composition first, health second, and **never HP x players**: there is no
+## hp key in the table and none is read here, so the failure §10 names outright
+## -- a boss with four times the health being four times as LONG rather than
+## four times as interesting -- is not reachable by editing config.
+##
+## A count of 1 is the identity row, so a solo player's fight is untouched by
+## every line of this. A count above the largest row clamps to it: a five-player
+## session is scaled as four, never as unscaled, which is the direction a
+## missing row has to fail in.
+##
+## Returns `{"stat_multiplier": float, "attack_cooldown_multiplier": float}`,
+## always populated, so no caller branches on a missing key. There is
+## deliberately no `opponents_extra`: §10's third clause is "extra opponents or
+## roles WHERE THE ENCOUNTER DEFINES THEM", and on this tree no encounter does
+## -- `combat_manager.gd` holds one opponent body and a trainer's roster is
+## authored and finite. The composition half that IS implementable is
+## `pick_struck()` below, plus the cooldown. `multiplayer.json` carries the same
+## reasoning where a future edit has to read it.
+static func scaling_for(participant_count: int) -> Dictionary:
+	var identity := {"stat_multiplier": 1.0, "attack_cooldown_multiplier": 1.0}
+	# No `maxi(1, ...)` clamp here, deliberately, and 4.C's F7 is the precedent:
+	# break S of this lane's break/fail/revert set removed it and every
+	# assertion stayed green, because a count of 0 (or a negative one) looks up
+	# a row the table does not have and falls through to the identity below --
+	# which is the answer the clamp was written to produce. A line no test can
+	# turn red is a line that is not enforcing anything, so it is gone rather
+	# than left standing as if it were protection. The BEHAVIOUR is still
+	# pinned, by `test_a_count_of_zero_or_less_is_read_as_one_player`.
+	var count := participant_count
+	var table: Variant = config().get("scaling", {})
+	if not (table is Dictionary):
+		return identity
+	var rows: Variant = (table as Dictionary).get("by_participants", {})
+	if not (rows is Dictionary) or (rows as Dictionary).is_empty():
+		return identity
+	var by_count: Dictionary = rows as Dictionary
+	# Clamp DOWNWARD to the largest authored row rather than falling back to the
+	# identity: a count the table does not name is a bigger group than anybody
+	# tuned for, and answering "no scaling at all" there would make the fight
+	# get easier the more people joined.
+	var highest := 0
+	for key: Variant in by_count.keys():
+		highest = maxi(highest, int(key))
+	if highest <= 0:
+		return identity
+	var wanted := str(mini(count, highest))
+	if not by_count.has(wanted):
+		return identity
+	var row: Variant = by_count[wanted]
+	if not (row is Dictionary):
+		return identity
+	return {
+		"stat_multiplier": maxf(0.01, float((row as Dictionary).get("stat_multiplier", 1.0))),
+		"attack_cooldown_multiplier":
+			maxf(0.01, float((row as Dictionary).get("attack_cooldown_multiplier", 1.0))),
+	}
+
+
 ## Live encounters, `encounter_id` -> record (§3). Only the host ever writes
 ## this map through `open`/`join`/`strike`/`leave`; a client holds one record it
 ## was handed, in `encounter_director.gd`, and never mutates it.
@@ -128,6 +189,7 @@ func open(peer_id: int, realm: String, kind: String, opponent: Dictionary,
 	}
 	encounters[id] = record
 	_add_participant(record, peer_id, creature_uid, character_id)
+	_restamp_scaling(record)
 	return record
 
 
@@ -154,6 +216,11 @@ func join(encounter_id: String, peer_id: int, creature_uid: String = "",
 	_add_participant(record, peer_id, creature_uid, character_id)
 	seq += 1
 	record["seq"] = seq
+	# §10: re-derived whenever `participants` changes, a mid-fight join
+	# included. The record carries the answer so every participant's process
+	# reads the same one rather than each recomputing it from its own idea of
+	# who is in the fight.
+	_restamp_scaling(record)
 	return _ok("engage", peer_id, {"encounter_id": encounter_id, "joined": true})
 
 
@@ -169,6 +236,11 @@ func leave(encounter_id: String, peer_id: int) -> Dictionary:
 	participants.erase(peer_id)
 	seq += 1
 	record["seq"] = seq
+	# A leaver stops being a target and stops being scaled for. Both halves are
+	# the same §10 sentence -- re-derived when `participants` changes -- and the
+	# fight is deliberately NOT reset by either (§9).
+	(record.get("struck_counts", {}) as Dictionary).erase(peer_id)
+	_restamp_scaling(record)
 	if participants.is_empty():
 		record["phase"] = "done"
 	return _ok("disengage", peer_id,
@@ -210,6 +282,30 @@ func set_opponent_hp(encounter_id: String, hp: float, hp_max: float) -> void:
 	opponent["hp_max"] = maxf(1.0, hp_max)
 	seq += 1
 	rec["seq"] = seq
+
+
+## Lane 4.D. The SAME fight, against their next creature.
+##
+## A trainer battle is one encounter that happens to have several creatures in
+## it -- `encounter_director.gd::_trainer_battle_anchor`'s own header says so --
+## and §7 pays "every participant" of that one encounter. Minting a fresh record
+## per round would quietly drop a joiner between rounds: they joined round one's
+## record and the win is recorded against round three's, so the person who
+## fought two thirds of the boss is paid for none of it.
+##
+## So a round change swaps the OPPONENT and keeps everything else: the id, the
+## participants, their `joined_seq`, the phase. The position history is cleared
+## with the opponent it described, because a strike tested against where the
+## previous creature was standing is a ghost hit on a body that has left the
+## field.
+func set_opponent(encounter_id: String, opponent: Dictionary) -> bool:
+	var rec: Dictionary = encounters.get(encounter_id, {})
+	if rec.is_empty() or str(rec.get("phase", "")) == "done":
+		return false
+	rec["opponent"] = _opponent_row(opponent)
+	seq += 1
+	rec["seq"] = seq
+	return true
 
 
 ## Record where the host's own opponent body is, right now, on the host's clock.
@@ -431,6 +527,101 @@ func _retro_window_applies(move: Dictionary, host_origin: Vector3, intent: Dicti
 	var claimed := to_vec3(intent["origin"])
 	var reach := float(move.get("range", 2.6))
 	return host_origin.distance_to(claimed) <= maxf(0.1, reach)
+
+
+# --- §10: scaling, and who the opponent swings at ---------------------------------
+
+## The scaling row this fight is running under right now. Read off the RECORD,
+## so a participant's process and the host agree by construction rather than by
+## each recomputing it from its own idea of who is in the fight.
+func scaling(encounter_id: String) -> Dictionary:
+	var rec: Dictionary = encounters.get(encounter_id, {})
+	if rec.is_empty():
+		return scaling_for(1)
+	var row: Variant = rec.get("scaling", {})
+	if row is Dictionary and not (row as Dictionary).is_empty():
+		return row as Dictionary
+	return scaling_for(1)
+
+
+func participant_count(encounter_id: String) -> int:
+	var rec: Dictionary = encounters.get(encounter_id, {})
+	if rec.is_empty():
+		return 0
+	return (rec["participants"] as Dictionary).size()
+
+
+## §5 / §10: which of the participants a connecting swing actually lands on.
+##
+## `candidates` is every participant the host's own geometry says the swing
+## reached, as `{"peer_id": int, "distance": float}` rows -- the caller does the
+## cone test against the bodies it holds, this file decides between the results.
+##
+## The policy is **least-struck first**, ties broken by distance. §10's own
+## words: targeting is spread across participants "rather than one player
+## tanking by standing still". Nearest-only is exactly that failure -- two
+## players fighting one opponent means whoever steps closest absorbs the entire
+## fight, and the other one is watching. Spreading it is the composition half of
+## scaling, and it is why a second player makes the fight harder for BOTH of
+## them without the opponent having a single extra hit point.
+##
+## With one candidate this returns that candidate, so a solo fight and a fight
+## where the swing reached only one person behave exactly as they did before.
+func pick_struck(encounter_id: String, candidates: Array) -> Dictionary:
+	if candidates.is_empty():
+		return {}
+	if candidates.size() == 1:
+		return candidates[0] as Dictionary
+	var counts: Dictionary = _struck_counts(encounter_id)
+	var best: Dictionary = {}
+	var best_hits := -1
+	var best_distance := INF
+	for raw: Variant in candidates:
+		if typeof(raw) != TYPE_DICTIONARY:
+			continue
+		var row := raw as Dictionary
+		var peer_id := int(row.get("peer_id", 0))
+		var hits := int(counts.get(peer_id, 0))
+		var distance := float(row.get("distance", INF))
+		if best.is_empty() or hits < best_hits \
+				or (hits == best_hits and distance < best_distance):
+			best = row
+			best_hits = hits
+			best_distance = distance
+	return best
+
+
+## Record that `peer_id` took the opponent's swing, so the next one prefers
+## somebody else. Called only when a blow actually LANDS: a swing that reached
+## a player and rolled a miss has not shared the pressure around and must not
+## count as if it had.
+func note_struck(encounter_id: String, peer_id: int) -> void:
+	var counts := _struck_counts(encounter_id)
+	if counts.is_empty() and not encounters.has(encounter_id):
+		return
+	counts[peer_id] = int(counts.get(peer_id, 0)) + 1
+
+
+## How many of the opponent's blows this participant has taken in this fight.
+## Public because the spread policy is only worth having if a test can see it
+## work, and reading it back is how `tests/test_encounter_rewards.gd` does that.
+func struck_count(encounter_id: String, peer_id: int) -> int:
+	return int(_struck_counts(encounter_id).get(peer_id, 0))
+
+
+func _struck_counts(encounter_id: String) -> Dictionary:
+	var rec: Dictionary = encounters.get(encounter_id, {})
+	if rec.is_empty():
+		return {}
+	if not rec.has("struck_counts"):
+		rec["struck_counts"] = {}
+	return rec["struck_counts"] as Dictionary
+
+
+## Re-derive §10's row from the record's own participant count. One place, so a
+## future third way of changing `participants` cannot forget it.
+func _restamp_scaling(rec: Dictionary) -> void:
+	rec["scaling"] = scaling_for((rec["participants"] as Dictionary).size())
 
 
 # --- §8's phase, driven by catch_arbiter.gd ---------------------------------------

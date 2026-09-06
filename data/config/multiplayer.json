@@ -31,6 +31,27 @@
   },
   "encounter": {
     "_comment": "Stage B Wave 4 lane 4.C. The encounter host's two tolerances (docs/specs/MP_ENCOUNTER_PROTOCOL.md \u00a711), read by scripts/net/encounter_host.gd::config() and scripts/net/catch_arbiter.gd. Both were fixed in the lane brief BEFORE implementation, so no bar here was discovered by running until something passed.",
+    "scaling": {
+      "_comment": "Stage B Wave 4 lane 4.D. \u00a710 / D-MP12 scaling, re-derived every time `participants` changes. Composition FIRST, health second. Every number here was fixed in the lane brief BEFORE a line was implemented, so no bar was discovered by running until something passed. Read by scripts/net/encounter_host.gd::scaling_for().",
+      "_comment_never_hp": "There is deliberately NO hp multiplier and no key a future edit can use as one. A boss with four times the health is four times as LONG, not four times as interesting -- it is the one scaling knob \u00a710 forbids outright, so it is absent rather than present-and-set-to-1.0 where somebody would eventually 'just try 1.5'.",
+      "_comment_shape": "Keyed by participant count as a string, because JSON has no integer keys. A count above the largest row clamps to it: a five-player session is scaled as four, not as unscaled. A count of 1 -- every solo game -- is all-identity, so nothing a solo player fights is touched by any line here.",
+      "by_participants": {
+        "1": {"stat_multiplier": 1.0, "attack_cooldown_multiplier": 1.0},
+        "2": {"stat_multiplier": 1.1, "attack_cooldown_multiplier": 0.85},
+        "3": {"stat_multiplier": 1.15, "attack_cooldown_multiplier": 0.75},
+        "4": {"stat_multiplier": 1.2, "attack_cooldown_multiplier": 0.7}
+      },
+      "_comment_no_opponents_extra": "\u00a710's 'extra opponents OR ROLES **where the encounter defines them**' is NOT a key here, and lane 4.D shipped it that way deliberately rather than shipping a knob nothing honours. Following the code and saying so: combat_manager.gd holds ONE opponent body (`_enemy`), so two creatures cannot stand on the field at once; and a trainer's roster is authored and finite, so the only two ways to field more were to invent creatures for them (CLAUDE.md forbids new creatures for the Meadows, and inventing roster entries is a design decision no lane may make alone) or to re-send a creature that has already fainted, which is worse than not doing it. What §10 asks for on this tree, and what IS implemented, is the other two thirds of the same sentence: targeting spread across participants (encounter_host.gd::pick_struck) and a modest stat multiplier. See MP-4D-REWARDS-0906's handover H1.",
+      "_comment_not_levels": "The multiplier is deliberately not a level bump. Spec \u00a711 / D30: a level is a real level and the world does not move to meet you. D-MP12 scales by how many people turned up, which is a different axis from scaling to how strong they are, and the distinction only survives if nothing here touches a level.",
+      "_comment_stat_multiplier": "The modest one. Applied to the opponent's ATTACK and DEFENCE only (creature_instance.gd's own floats), never to hp or max_hp. 1.10 at two players is deliberately small: the composition change above is the fight getting harder, and this is only the edge that stops a second player's damage from halving every telegraph window.",
+      "_comment_attack_cooldown_multiplier": "The other half of composition for an opponent that is ONE body: it swings more often because there is more than one thing to swing at. 0.85 at two players is ~18% more swings, spread across participants by the host's own targeting, so the pressure a solo player felt is preserved per-player instead of being divided by the number of friends who turned up."
+    },
+    "reward": {
+      "_comment": "\u00a77. The world fact happens once; the personal reward happens per participant. These are not tuning knobs -- they are the contract written down where a future edit has to argue with it, and scripts/net/encounter_rewards.gd asserts them rather than reading them as options.",
+      "divide_by_participants": false,
+      "_comment_divide_by_participants": "FALSE, and \u00a77 says why: a fight that pays half as much for having a friend along teaches people to play alone. Every participant receives the trainer's AUTHORED coins, items and xp_bonus in full. The replay guard is world_ledger.gd::reward_flag(source, peer_id), so a reward pays once per participant per source and never twice.",
+      "_comment_late_join": "\u00a76: arriving late costs nothing. `joined_seq` is recorded on the record and is deliberately NOT read by the payout -- the alternative is teammates racing to tag in before some cut-off, which is a worse game than the exploit it would prevent."
+    },
     "strike_latency_tolerance_ms": 250,
     "_comment_strike_latency_tolerance_ms": "\u00a75 step 3. How far BACK IN HOST TIME a strike may be tested against the opponent's position. A player on a 60 ms link swung at where the creature visibly was and must land it, so the window has to cover a full round trip plus a frame or two of jitter; 250 ms covers a 120 ms one-way link. Past that the tolerance starts landing hits against a position a quarter-second stale, which reads to the OTHER players as a ghost hit on empty grass -- the failure this number is bounded to avoid, not link quality.",
     "catch_arbitration_window_ms": 6000,
