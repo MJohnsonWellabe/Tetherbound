@@ -184,6 +184,17 @@ func _run() -> void:
 			var guardian: Node3D = warrens.call("guardian") as Node3D
 			if guardian != null and is_instance_valid(guardian):
 				target = guardian.global_position + Vector3.UP * 0.6
+			# ROUND-5-0906: the guardian's peaceful idle turns to WATCH a
+			# player inside its notice range (wild_creature.gd::_tick_peaceful)
+			# -- that is what a player walking into the den actually sees.
+			# With the player parked 600m away for the other frames, three
+			# blind rounds photographed whatever direction its 1.5m wander
+			# had last left it facing (a flank, then its rear). The hidden,
+			# physics-off player stands at the camera's own eye for this
+			# frame only, so the boss faces the frame the way it faces a
+			# player; it is parked again right after.
+			if player != null:
+				player.global_position = eye
 		camera.global_position = eye
 		camera.look_at(target, Vector3.UP)
 		var interior := bool(view.get("local", false)) and not bool(view.get("ground", false))
@@ -212,6 +223,10 @@ func _run() -> void:
 				str(env.background_mode) if env != null else "?"])
 
 		var image := root.get_texture().get_image()
+		if bool(view.get("aim_guardian", false)) and player != null:
+			var park := Vector2(-373.0, 2476.0) + Vector2(600.0, 600.0)
+			var park_y := float(world.call("ground_height_at", park.x, park.y))
+			player.global_position = Vector3(park.x, park_y + 0.2, park.y)
 		if image == null:
 			failures.append("%s: viewport returned no image" % name_value)
 			continue

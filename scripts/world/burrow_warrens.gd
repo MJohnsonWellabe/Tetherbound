@@ -2026,7 +2026,17 @@ func _bank_material() -> ShaderMaterial:
 	# against more dark.
 	var grass_brightness := float(bank.get("grass_brightness", 1.0))
 	mat.set_shader_parameter("grass_tint", Vector3(grass_tint.r, grass_tint.g, grass_tint.b) * grass_brightness)
-	mat.set_shader_parameter("earth_tint", Vector3(earth_tint.r, earth_tint.g, earth_tint.b))
+	# ROUND-5-0906: the round-5 render measured the bank's flanks at the SAME
+	# (40,44,35) as round 4 despite `grass_brightness` -- because at this
+	# site's own slopes (a 10m dome over a 13m radius peaks near 50 degrees)
+	# almost every visible square metre sat above `slope_blend_low_deg` and
+	# was drawing EARTH, so the grass tint never reached the frame. Two
+	# levers, both in config: the slope band moves up so the settled dome is
+	# grass and only the dug face and the spoil mask are earth, and
+	# `earth_brightness` lifts the earth that remains (still darker than the
+	# grass, no longer a third of the meadow's value).
+	var earth_brightness := float(bank.get("earth_brightness", 1.0))
+	mat.set_shader_parameter("earth_tint", Vector3(earth_tint.r, earth_tint.g, earth_tint.b) * earth_brightness)
 	mat.set_shader_parameter("grass_uv_scale", float(bank.get("grass_uv_scale", 0.27)))
 	mat.set_shader_parameter("earth_uv_scale", float(bank.get("earth_uv_scale", 0.25)))
 	mat.set_shader_parameter("slope_low_deg", float(bank.get("slope_blend_low_deg", 32.0)))
@@ -2823,7 +2833,9 @@ func _build_mouth_brow(holder: Node3D, bank: Dictionary, z_front: float, rx: flo
 		var turf := Node3D.new()
 		turf.name = "BrowTurf"
 		holder.add_child(turf)
-		var turf_names := ["Grass_Wide_Tall", "Grass_Common_Tall", "Fern_1"]
+		# Wide tufts and fern only: the round-5 frame caught the taller
+		# Grass_Common_Tall blades backlit above the brow as two black spikes.
+		var turf_names := ["Grass_Wide_Tall", "Fern_1", "Grass_Wide_Tall"]
 		for i in turf_count:
 			var t := lerpf(0.1, 0.9, float(i) / float(maxi(turf_count - 1, 1))) + rng.randf_range(-0.04, 0.04)
 			var angle := PI * t
@@ -2840,7 +2852,7 @@ func _build_mouth_brow(holder: Node3D, bank: Dictionary, z_front: float, rx: flo
 			var lean := Vector3(cos(angle), 0.0, -0.4).normalized()
 			tuft.rotation = Vector3(deg_to_rad(rng.randf_range(10.0, 30.0)) * lean.z,
 				rng.randf_range(-PI, PI), -deg_to_rad(rng.randf_range(15.0, 40.0)) * lean.x)
-			tuft.scale = Vector3.ONE * rng.randf_range(0.7, 1.25)
+			tuft.scale = Vector3.ONE * rng.randf_range(0.55, 0.9)
 			turf.add_child(tuft)
 			_dress_skirt_flora(tuft)
 
