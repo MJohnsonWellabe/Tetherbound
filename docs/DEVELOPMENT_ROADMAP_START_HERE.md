@@ -22,8 +22,9 @@ Read and execute:
 `docs/MULTIPLAYER_DIRECTIVE.md` (what), then
 `docs/specs/STAGE_B_MULTIPLAYER_EXECUTION_PLAN.md` (how, in what order, by which tier).
 
-Stage A closed on 2026-09-05 with PR #54 (`main` at `55c64aaa`, no open PRs), so Stage B's
-Wave 0 is the current lane.
+Stage A closed on 2026-09-05 with PR #54 (`main` at `55c64aaa`); Stage B's Wave 0 landed as
+PR #58 (`main` at `d72580b5`, 2026-09-06). Wave 1 (state and save separation) is the current
+lane; its briefs are under `ralph/briefs/MP-W1/`.
 
 The multiplayer pass is not architecture-only. It must end with a genuinely playable host/join co-op game across the existing content.
 

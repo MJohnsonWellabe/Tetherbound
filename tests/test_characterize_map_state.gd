@@ -2,13 +2,16 @@ extends "res://tests/test_case.gd"
 
 ## STAGE B 0.E — characterization fence for autoload/map_state.gd.
 ##
-## Pins today's behaviour ahead of Wave 1's 1.B, which re-homes `grid_x()`/
-## `grid_z()`/`origin()` off `static var`s and onto a per-player/per-world
-## extent. `test_the_static_extent_is_the_same_object_across_two_instances`
-## below is the one that makes that hazard visible as a DELIBERATE test
-## change when 1.B fixes it -- today it is expected to pass (both instances
-## share the one static grid); 1.B flipping it to "instances can differ" is
-## the point of the refactor, not a regression.
+## Pins today's behaviour. Wave 1 lane 1.B re-homed `grid_x()`/`grid_z()`/
+## `origin()` off `static var`s and onto a per-instance extent, and the one
+## test in this file whose expected value that CHANGED is the last one,
+## `test_two_instances_can_now_hold_two_different_extents` (was
+## `test_the_static_extent_is_the_same_object_across_two_instances`). 0.E wrote
+## the original assertion to be changed here rather than to quietly stop being
+## true; the change is the evidence the hazard is gone, not a regression.
+##
+## Lane 1.B also added `alpha_pins` to `save_data()`, which is why the key-set
+## test below names ten keys and not the nine 0.E pinned -- see its own comment.
 
 const MAP_STATE := preload("res://autoload/map_state.gd")
 const LANDMARKS_PATH := "res://data/config/map_landmarks.json"
@@ -37,12 +40,21 @@ func _map() -> RefCounted:
 
 # --- save_data(): the exact key set -----------------------------------------
 
-func test_save_data_has_exactly_these_nine_keys() -> void:
+## SECOND DELIBERATE EXPECTED-VALUE CHANGE, lane 1.B: nine keys became ten.
+##
+## `MP_STATE_SEAM.md` §2 moved the alpha-pin set from a top-level v22 save key
+## into each realm map's own `save_data()`, where the fog and the landmarks it
+## is drawn beside already live -- one top-level key could only ever describe
+## whichever map happened to be active, which is wrong the moment fog is per
+## player and per realm. `alpha_pin_save_data()` remains as the accessor, and
+## `Game.save_game()` still emits the v22 top-level `alpha_pins` key off the
+## active map, so `save_game.gd` and lane 1.C see no change.
+func test_save_data_has_exactly_these_ten_keys() -> void:
 	var m := _map()
 	var data: Dictionary = m.save_data()
 	var expected := [
 		"visited_b64", "grid_x", "grid_z", "cell", "origin_x", "origin_z",
-		"landmarks", "dynamic_markers", "regions",
+		"landmarks", "dynamic_markers", "regions", "alpha_pins",
 	]
 	var actual: Array = data.keys()
 	assert_eq(actual.size(), expected.size(),
@@ -208,27 +220,51 @@ func test_remove_dynamic_marker_removes_it_and_bumps_revision() -> void:
 		assert_ne(str(entry.get("id", "")), "camp_1")
 
 
-# --- the process-global hazard: grid_x()/grid_z()/origin() are static ------
+# --- the process-global hazard, RESOLVED by Wave 1 lane 1.B -----------------
 
-func test_the_static_extent_is_the_same_object_across_two_instances() -> void:
-	# THIS is the hazard 1.B's world/player split has to reckon with:
-	# grid_x()/grid_z()/origin() are `static var`s on the SCRIPT, not instance
-	# state, so every MapState instance in the same process -- today, one per
-	# player is not even a concept yet -- necessarily agrees on the same grid.
-	# Pinned here as a deliberate, expected-to-pass characterization: if a
-	# future per-player world state needs a DIFFERENT extent per instance
-	# (a resized Cloudreach-style world alongside an unresized Meadows one,
-	# say), this assertion is exactly the one 1.B must consciously change,
-	# not one that quietly stops being true.
+func test_two_instances_can_now_hold_two_different_extents() -> void:
+	# THE ONE DELIBERATE EXPECTED-VALUE CHANGE IN THIS FILE, made by lane 1.B
+	# and predicted by lane 0.E when it wrote the original assertion.
+	#
+	# Until 1.B, `grid_x()`/`grid_z()`/`origin()` read three `static var`s on
+	# the SCRIPT: one grid for the whole process, so every MapState necessarily
+	# agreed, and `cloudreach_map_state.gd` had to override five accessors to
+	# describe a differently-shaped world without touching them. The original
+	# test asserted that agreement ("grid_x is process-global (static), not
+	# per-instance") and was written to be changed here, not to quietly stop
+	# being true.
+	#
+	# `MP_STATE_SEAM.md` §2 moved the extent onto the instance, because a
+	# per-player map for two realms at once cannot share one grid. So: two
+	# UNCONFIGURED instances still agree -- both lazily derive the same Meadows
+	# extent from `world_extent.gd`, which is why nothing that never heard of
+	# `set_extent()` changed -- and an instance told a different extent no
+	# longer drags the other one with it. That second half is the evidence the
+	# hazard is gone, and it is exactly what the old assertion forbade.
 	var a := MAP_STATE.new()
 	var b := MAP_STATE.new()
-	assert_eq(a.grid_x(), b.grid_x(), "grid_x is process-global (static), not per-instance")
+	assert_eq(a.grid_x(), b.grid_x(), "two unconfigured maps still derive the same default grid")
 	assert_eq(a.grid_z(), b.grid_z())
 	assert_eq(a.origin(), b.origin())
-	# And it really is the SAME static storage, not just two equal numbers:
-	# mutating the underlying world extent a caller-visible way is out of
-	# scope for a unit test, so the strongest test available headlessly is
-	# that both instances agree on grid dimensions derived only once and
-	# cached at the class level (`_ensure_extent()`'s own `if _grid_x > 0`
-	# early-out comment).
-	assert_eq(MAP_STATE.grid_x(), a.grid_x(), "the static accessor and an instance's own agree")
+
+	var default_grid_x: int = a.grid_x()
+	var default_origin: Vector2 = a.origin()
+	var default_cell: float = a.cell_size()
+
+	# Cloudreach's shape, declared the way `configure_cloudreach()` declares it.
+	b.set_extent(Vector2(-1600.0, -500.0), 400, 813, 8.0)
+	assert_eq(b.grid_x(), 400, "the instance told an extent reports that extent")
+	assert_eq(b.grid_z(), 813)
+	assert_eq(b.origin(), Vector2(-1600.0, -500.0))
+	assert_almost_eq(b.cell_size(), 8.0, 0.0001)
+
+	assert_eq(a.grid_x(), default_grid_x,
+		"the OTHER instance is untouched -- this is the assertion the static version could not make")
+	assert_eq(a.origin(), default_origin)
+	assert_almost_eq(a.cell_size(), default_cell, 0.0001)
+
+	# And a third, still-unconfigured instance derives the default rather than
+	# inheriting whatever the last configured map happened to set.
+	var c := MAP_STATE.new()
+	assert_eq(c.grid_x(), default_grid_x, "a fresh map is not contaminated by a configured one")
+	assert_eq(c.origin(), default_origin)

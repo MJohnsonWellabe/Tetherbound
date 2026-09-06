@@ -72,9 +72,17 @@ static func pass_the_night(host: Node, game: Node = null) -> int:
 	# one down and sleeps has done that lesson in full. Clearing the objective
 	# only for the buildable would be the same "walk to a camp and be refused"
 	# defect in a different costume.
-	var progression: RefCounted = game.get("progression")
-	if progression != null:
-		progression.call("set_flag", "player_slept_at_home")
+	#
+	# MP_STATE_SEAM.md §3: written to THE SLEEPER'S OWN store, named explicitly
+	# (`Game.player_flags()`), not through the merged view. The actor here is
+	# "whoever bedded down", and from Wave 5 this runs host-side over every peer
+	# in a bed (D105, sleep is a vote) -- routing one write by scope would then
+	# credit the host's rest to the host alone. Solo there is exactly one player
+	# and this is byte-for-byte today's behaviour.
+	var sleeper_flags: RefCounted = game.call("player_flags") if game.has_method("player_flags") \
+		else game.get("progression") as RefCounted
+	if sleeper_flags != null:
+		sleeper_flags.call("set_flag", "player_slept_at_home")
 	# Gate A creature-bed contract: sleep completes only pals physically put
 	# to bed. Non-resting party members keep their current HP, which is the
 	# meaningful preparation tradeoff the bed is supposed to create.

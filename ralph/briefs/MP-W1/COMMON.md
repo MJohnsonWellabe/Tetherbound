@@ -19,8 +19,13 @@ and your own row before your brief. `docs/AGENT_WORKFLOW.md` §4 (completion con
   writes `user://`. Other lanes share the 4-core box: `--only=` while developing, sequential
   smokes, the full suite only when your brief says so.
 - **Seen red first.** Every new test is broken deliberately once and the failure recorded as a
-  break/fail/revert triple. A test that never went red does not ship.
-- **`smoke_playground`'s distinct `^ERROR:` set** on your tree must equal your base's.
+  break/fail/revert triple. A test that never went red does not ship. Once each — do not sample.
+- **Proportionate proof (owner instruction, 2026-09-06).** CI is the gate. Run the unit tests
+  your change touches and **three to six** smokes chosen for what it reaches; add
+  `smoke_playground` only if you touched world, spawn, creature or encounter code, and read its
+  `^ERROR:` set once. Engine exit-time notices (`resources still in use at exit`, leaked
+  `ObjectDB` instances) are not findings and are never compared across runs. A smoke that fails
+  identically on your base is one routed sentence, not an investigation.
 - **Report** at `ralph/reports/<LANE>-0905/REPORT.md` in the repo's format (H1, header block with
   lane/branch/base sha, `| Item | Verdict |`, commands with counts, triples, findings). If the
   tooling refuses a `.md`, put the full text in your final message.

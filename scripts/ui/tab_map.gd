@@ -989,13 +989,21 @@ func _map_rect_for_canvas(canvas_size: Vector2) -> Rect2:
 	return Rect2(centre - size * 0.5, size)
 
 
+## Wave 1 lane 1.B: `grid_x()`/`grid_z()`/`origin()` are per INSTANCE now (a
+## Cloudreach map and a Meadows map describe differently-shaped worlds in one
+## process), so the fallback reads the map it was handed rather than one
+## process-global answer. A null map -- a caller drawing before `Game.map` is
+## bound -- still gets the default Meadows grid, from a throwaway instance that
+## derives it exactly as the old statics did.
 static func bounds_for_map(map_state: RefCounted) -> Dictionary:
 	if map_state != null and map_state.has_method("world_bounds"):
 		return map_state.call("world_bounds")
-	var origin := MAP_STATE.origin()
+	var grid: RefCounted = map_state if map_state != null else MAP_STATE.new()
+	var origin: Vector2 = grid.call("origin")
+	var cell: float = float(grid.call("cell_size"))
 	return {"min_x": origin.x, "min_z": origin.y,
-		"max_x": origin.x + MAP_STATE.CELL * MAP_STATE.grid_x(),
-		"max_z": origin.y + MAP_STATE.CELL * MAP_STATE.grid_z()}
+		"max_x": origin.x + cell * int(grid.call("cell_grid_x")),
+		"max_z": origin.y + cell * int(grid.call("cell_grid_z"))}
 
 
 ## Same two colours `scripts/ui/minimap.gd` fogs with (its own `FOG_UNDISCOVERED`/

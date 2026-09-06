@@ -11,11 +11,22 @@ extends RefCounted
 ## log with a revision counter, exactly what `Game.push_world_message()` /
 ## `take_pending_world_message()` already do for a one-line toast.
 ##
-## Static rather than a node on purpose. The producers are `RefCounted`
-## instances (`creature_instance.gd::gain_xp`) with no scene tree to reach
-## `Game` through, and the unit suite runs without the autoload at all;
-## `autoload/game_state.gd` exposes the same queue beside `push_world_message`
-## for anything that already talks to `Game`.
+## THE LOG IS PER PLAYER (Wave 1 lane 1.B, `MP_STATE_SEAM.md` §2). It used to
+## be five `static var`s -- one log for the whole process -- which is fine while
+## there is one player and wrong the moment there are two: peer A's XP banner
+## would read peer B's level-ups. The four log fields are now instance state on
+## `PlayerState.feed`.
+##
+## The static ENTRY POINTS below stay, and that is deliberate rather than a
+## half-finished refactor. The producers are `RefCounted` instances
+## (`creature_instance.gd::gain_xp`, `bond_milestones.gd`) with no scene tree to
+## reach `Game` through, and the unit suite runs with no autoload and no
+## SceneTree at all (`Engine.get_main_loop()` is null for the life of
+## `run_tests.gd`). Each static resolves `active()` -- the local player's feed
+## when there is a `Game`, a process-local fallback instance when there is not --
+## and calls the instance method. Anything that already holds a specific feed
+## (`Game.push_progression_event`, and from Wave 3 a host writing a peer's)
+## calls the instance methods directly and never goes through `active()`.
 ##
 ## Presenters keep their own cursor (the `seq` of the last event they acted
 ## on) and call `peek_since()`; nothing in production drains, so four readers
@@ -36,11 +47,60 @@ extends RefCounted
 const CONFIG_PATH := "res://data/config/progression_feedback.json"
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 
+## Config, not state: one immutable read of a data file, identical for every
+## player in the process. The seam's own exemption -- "the pure helpers may stay
+## static; they read config only".
 static var _config: Dictionary = {}
-static var _events: Array = []
-static var _seq: int = 0
-static var _revision: int = 0
-static var _epoch: int = 0
+
+## The log itself, per instance. `PlayerState.feed` owns one.
+var _events: Array = []
+var _seq: int = 0
+var _revision: int = 0
+var _epoch: int = 0
+
+## The local player's feed, HANDED OVER by `Game._ensure_containers()` rather
+## than looked up. There is exactly one local player per process (the execution
+## plan's §2 simplification), so this pointer is a complete answer rather than a
+## transitional one -- and unlike the log it replaces, it is a pointer, not
+## state: two players' events can never land in it.
+##
+## IT MUST NOT BE A LOOKUP. The first cut of this resolved the feed per call
+## through `game()` (`Engine.get_main_loop().root.get_node_or_null("Game")`),
+## and that was wrong twice over. `Engine.get_main_loop()` is null for whole
+## stretches of a headless run -- `test_characterize_game_process_ticks.gd`
+## asserts exactly that for the life of `run_tests.gd` -- so the SAME static
+## call could answer with `Game.local.feed` on one frame and the fallback on the
+## next. A presenter that seeded `_feed_epoch` from one and then polled the other
+## saw the epochs disagree, reset its cursor and its tick counters, and dropped
+## the events it was mounted to show: `smoke_progression_feedback` failed with
+## "the party strip ticked 0 time(s) for the win". It was also a tree walk on a
+## path three presenters poll every frame.
+static var _active: RefCounted = null
+
+## What the statics act on when nothing has handed over a feed -- the unit
+## suite (no autoload, no SceneTree), a tool script, a `RefCounted` producer
+## running before `Game` exists. Built on first use.
+static var _fallback: RefCounted = null
+
+
+## `Game._ensure_containers()` calls this with `local.feed`, once, before any
+## world scene exists. Wave 2 calls it again if the local player is ever rebuilt.
+static func set_active(feed: RefCounted) -> void:
+	_active = feed
+
+
+## Tests only: forget the handed-over feed and fall back again.
+static func clear_active() -> void:
+	_active = null
+
+
+## The feed the static entry points below act on.
+static func active() -> RefCounted:
+	if _active != null:
+		return _active
+	if _fallback == null:
+		_fallback = new()
+	return _fallback
 
 
 ## data/config/progression_feedback.json, cached after the first read.
@@ -71,6 +131,12 @@ static func seconds(key: String, fallback: float, cfg: Dictionary = {}) -> float
 ## Append one event. Returns the stored event (with its `seq`), so a caller
 ## that wants to react to its own push -- a test, mostly -- has the record.
 static func push(kind: String, creature: RefCounted, payload: Dictionary = {}) -> Dictionary:
+	return active().push_event(kind, creature, payload)
+
+
+## The instance form. `Game.push_progression_event()` and `PlayerState` call
+## this directly, because they already know WHICH feed they mean.
+func push_event(kind: String, creature: RefCounted, payload: Dictionary = {}) -> Dictionary:
 	if not enabled(creature):
 		return {}
 	_seq += 1
@@ -113,6 +179,10 @@ static func enabled(creature: RefCounted) -> bool:
 ## Bumps on every push and every drain -- the cheap integer a presenter
 ## compares each frame before doing any work.
 static func revision() -> int:
+	return active().event_revision()
+
+
+func event_revision() -> int:
 	return _revision
 
 
@@ -120,17 +190,29 @@ static func revision() -> int:
 ## presenter that mounts late seeds its cursor from this so it does not replay
 ## history it never saw happen.
 static func latest_seq() -> int:
+	return active().newest_seq()
+
+
+func newest_seq() -> int:
 	return _seq
 
 
 ## A reset/load can reuse a sequence number. Readers compare this first and
 ## discard pending presentations from the previous run before reading again.
 static func epoch() -> int:
+	return active().feed_epoch()
+
+
+func feed_epoch() -> int:
 	return _epoch
 
 
 ## Every event with `seq` strictly greater than `after`, oldest first.
 static func peek_since(after: int) -> Array:
+	return active().events_since(after)
+
+
+func events_since(after: int) -> Array:
 	var out: Array = []
 	for event: Variant in _events:
 		if int((event as Dictionary).get("seq", 0)) > after:
@@ -140,12 +222,20 @@ static func peek_since(after: int) -> Array:
 
 ## A copy of everything currently held, oldest first.
 static func events() -> Array:
+	return active().all_events()
+
+
+func all_events() -> Array:
 	return _events.duplicate(true)
 
 
 ## Take everything and empty the log. Bumps the revision so a presenter
 ## comparing revisions sees the drain as a change too.
 static func drain() -> Array:
+	return active().drain_events()
+
+
+func drain_events() -> Array:
 	var out := _events.duplicate(true)
 	_events.clear()
 	_revision += 1
@@ -154,6 +244,15 @@ static func drain() -> Array:
 
 ## The new-game reset: nothing held, sequence and revision back to zero.
 static func clear() -> void:
+	active().clear_events()
+
+
+## The epoch is the one counter a reset does NOT zero -- it CLIMBS, so a
+## presenter holding a cursor from the previous run sees the number change and
+## discards what it was waiting on. `PlayerState.reset()` therefore clears the
+## feed in place rather than building a new one, which would restart the epoch
+## at 0 and read to a presenter as "nothing was reset".
+func clear_events() -> void:
 	_events.clear()
 	_seq = 0
 	_revision = 0
