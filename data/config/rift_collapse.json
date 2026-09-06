@@ -1,7 +1,7 @@
 {
   "_comment": "SG44 -- the first Tether Rift collapses, seen from inside the Meadows. Spec §27, §28, §30. ALL NUMBERS TUNABLE per CLAUDE.md.",
 
-  "_comment_carveout": "THE CARVE-OUT IS ABSOLUTE AND THIS FILE IS WHERE IT IS EASIEST TO BREAK. CLAUDE.md forbids Biome 2 work until the Meadows passes its exit gate and D23 holds that rule over this step; the spec's own §19 non-goals agree. So everything below is SKY, at 300-460m from the seam -- outside the 512m terrain entirely, past `world_perimeter.gd`'s 235m ring, past the spoke's own 11m-deep carve. No terrain, no collider, no spawn, no species, no interactable, no navigation. The road still ends at the collapsed bridge it has always ended at, and `tests/smoke_boss.gd` walks a body -- at the LEGENDARY's own 55-degree climb limit, the best mobility in the game -- at that seam before and after the flag to prove the barrier holds.",
+  "_comment_carveout": "THE CARVE-OUT STILL HOLDS FOR WHAT THIS FILE OWNS, AND THIS FILE IS WHERE IT IS EASIEST TO BREAK. CLAUDE.md forbids Biome 2 TERRAIN/spawns/species/playable space until the Meadows passes its exit gate and D23 holds that rule over this step; the spec's own §19 non-goals agree. So everything BELOW THIS COMMENT is still SKY, at 300-460m from the seam -- outside the 512m terrain entirely, past `world_perimeter.gd`'s 235m ring, past the spoke's own 11m-deep carve. No terrain, no collider, no spawn, no species, no interactable, no navigation, and `tests/smoke_boss.gd` still asserts the FarCountry view itself carries none of those. What changed is the ROAD ITSELF: `docs/owner/OWNER_PLAYTEST_2026-09-05.md` OP-0905-15 and `docs/decisions/D110-the-rift-collapse-is-the-crossing-to-cloudreach.md` authorise `scripts/world/rift_crossing.gd` -- a SEPARATE file, reading this same `flag` and this file's own `collapse` timings -- to rebuild the storm road's collapsed bridge over its own carve once the Warden falls, with one Area3D past the far rim that is the actual, authored realm boundary into Cloudreach. That crossing is real geometry the player can stand on and a real trigger, and it supersedes D23's 'distant, non-enterable view' carve-out for THIS ONE SEAM ONLY -- it does not touch this file, does not add Biome 2 terrain on the Meadows side, and the pre-flag carve (no span, no trigger) is exactly as impassable as it always was; `tests/smoke_boss.gd` proves both halves.",
 
   "_comment_spoke": "WHICH SPOKE, AND WHY THIS ONE. `storm_road` (spec §1E's 'Electric: old road toward storm country', §29's collapsed bridge), of the seven in terrain_playground.json's `spokes`. Three reasons, in order of weight: (1) its blocker is a BAKED terrain carve -- 11m deep, 65.6-degree walls, plus severed_spokes.gd's own recovery volume -- so the payoff physically cannot open a route, where a rockslide or a sealed gate is props this file could be tempted to move; (2) §30's own list of what a reconnection may look like includes 'a storm wall dissipating', and this is the one spoke the whole map already calls Storm Country, so the effect is the spoke's own vocabulary rather than a new one; (3) SF33 already dressed this seam for exactly this reading -- a live pylon line walking out, a dead one leaning into the gap, and a LIVE pylon alone on the far rim with the roadbed resuming behind it, which is the near-range half of 'the world got bigger' already standing. The far half is what this file adds.",
   "spoke": "storm_road",
@@ -48,6 +48,26 @@
     "reveal_seconds": 7.0,
     "reveal_delay_seconds": 2.5,
     "_comment_load": "A save loaded with `legendary_freed` already set snaps straight to the after state with no animation, the same way every other post-flag world change in this chapter does."
+  },
+
+  "crossing": {
+    "_comment": "OP-0905-15/D110 -- the storm road's own collapsed bridge, rebuilt. Read by `scripts/world/rift_crossing.gd`, a SEPARATE file from this one: it watches this file's OWN `flag` and waits out this file's OWN `collapse.hold_seconds + collapse.dissipate_seconds` before it appears, so the sky event and the ground event stay one motion instead of two schedules that can drift apart. The span's PLACEMENT is never authored here -- it comes from `terrain_playground.json`'s `storm_road` spoke's own carve (centre, axis, half_width, rim), the same ground `severed_spokes.gd` already stood two abutments on. Everything below is sizing and timing only. ALL NUMBERS TUNABLE per CLAUDE.md.",
+    "deck_width": 4.4,
+    "deck_thickness": 0.34,
+    "rail_height": 0.55,
+    "rail_thickness": 0.16,
+    "rail_inset": 0.3,
+    "_comment_margin": "How far past the carve's own half_width+rim the deck's two ends land -- onto solid ground beyond the existing masonry abutments (`severed_spokes.gd` stands those at half_width + rim*0.55), not hovering over the gap.",
+    "abutment_margin_m": 1.5,
+    "_comment_trigger": "The realm boundary itself. Placed past the far abutment, continuing the same bearing the deck runs on, well short of `far_road.from` (~21m short on the storm road's own numbers) so it never overlaps the far kerb dressing `severed_spokes.gd` already lays down there.",
+    "trigger_depth_m": 10.0,
+    "trigger_width_m": 10.0,
+    "trigger_length_m": 6.0,
+    "appear_seconds": 3.0,
+    "_comment_sign": "A plain fingerpost on the far rim, through `severed_spokes.gd`'s own sign builder -- the same object every other spoke's destination sign is. Empty `sign_label` skips it.",
+    "sign_label": "Cloudreach Cliffs",
+    "sign_offset_m": 3.0,
+    "sign_ahead_m": 30.0
   },
 
   "flag": "legendary_freed",

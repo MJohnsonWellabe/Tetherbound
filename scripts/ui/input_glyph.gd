@@ -55,6 +55,14 @@ const GLYPHS := {
 	# uses the exact trigger glyphs the dedicated actions bind.
 	"map_zoom_in": {"gamepad": "xbox_rt.png"},
 	"map_zoom_out": {"gamepad": "xbox_lt.png"},
+	## OP-0905-27: the full map's realm selector (Meadows/Cloudreach Cliffs).
+	## R3 reuses the same PNG `backpack_split` already draws (it genuinely is
+	## R3 on both screens). L3 has no press-glyph in the vendored Kenney pack
+	## either -- `backpack_assign` hits the identical gap right above --
+	## so it stays an empty entry and degrades to the honest "L3" pad-button
+	## text `pad_button_name_for_verb` already produces for that case.
+	"map_realm_next": {"gamepad": "xbox_stick_r_press.png"},
+	"map_realm_prev": {},
 	## The starting torch (owner playtest report: night is too dark, and the
 	## player must have a torch from the beginning). Manual override on top of
 	## `scripts/player/torch.gd`'s own automatic dusk/dawn behaviour.

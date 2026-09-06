@@ -384,7 +384,17 @@ func _on_tried() -> void:
 	if inventory != null and progression != null and _gate.try_open(inventory, progression):
 		_unlock()
 	else:
-		_jar()
+		_on_locked()
+
+
+## Called when an interact attempt fails to open the gate. Base behaviour is
+## the plain jar this file's own header explains — no dialogue, no HUD line.
+## OP-0905-13. `south_bridge.gd` overrides this to answer a locked attempt
+## with its own gate's keeper walking up to challenge the player instead of a
+## silent leaf-rattle alone; every other crossing (`mill_crossing.gd`
+## included) keeps this base no-more-than-a-jar behaviour untouched.
+func _on_locked() -> void:
+	_jar()
 
 
 func _unlock() -> void:

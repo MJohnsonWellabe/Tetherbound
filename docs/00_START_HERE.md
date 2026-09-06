@@ -67,7 +67,8 @@ them were not what they claimed:
 prefix gates in CI.
 
 **If you are picking up an in-flight orchestration session, read
-`docs/HANDOFF_2026-09-03.md` first** — it carries the live lane state, the open PR, and the
+`docs/HANDOFF_2026-09-06.md` first** (the owner-list pass, second-biome state and the art-gap
+closure plan; `docs/HANDOFF_2026-09-03.md` is the previous one) — it carries the live lane state, the open PR, and the
 traps that have already cost this project time.
 
 **If you are starting Gate 3, read `docs/GATE3_COORDINATOR_BRIEF.md` first.** Gate 3 may

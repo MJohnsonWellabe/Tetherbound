@@ -59,9 +59,9 @@ const MILL_CROSSING := preload("res://scripts/world/mill_crossing.gd")
 const RIVER := preload("res://scripts/world/river.gd")
 const SEVERED_SPOKES := preload("res://scripts/world/severed_spokes.gd")
 const RIFT_COLLAPSE := preload("res://scripts/world/rift_collapse.gd")
+const RIFT_CROSSING := preload("res://scripts/world/rift_crossing.gd")
 const MEADOW_HEALING := preload("res://scripts/world/meadow_healing.gd")
 const REALM_HEART_SHRINE := preload("res://scripts/world/realm_heart_shrine.gd")
-const REALM_GATE := preload("res://scripts/world/realm_gate.gd")
 const STRONGHOLD := preload("res://scripts/world/stronghold.gd")
 const STRONGHOLD_CLIMAX := preload("res://scripts/world/stronghold_climax.gd")
 const PLAYER_DEATH := preload("res://scripts/world/player_death.gd")
@@ -1320,6 +1320,16 @@ func _build_settlement() -> void:
 	add_child(rift)
 	rift.call("build", self)
 
+	# OP-0905-15/D110: the ground half of the same seam. No arch, no key
+	# prompt -- once the flag above lands, this rebuilds the storm road's own
+	# collapsed bridge and opens the one Area3D that is the actual realm
+	# boundary into Cloudreach. Reads `RiftCollapse`'s own config file for its
+	# timings; does not touch or depend on the node itself.
+	var crossing: Node3D = RIFT_CROSSING.new()
+	crossing.name = "RiftCrossing"
+	add_child(crossing)
+	crossing.call("build", self)
+
 	# SG46 / D41: and the local half of the same event -- the meadow itself is
 	# freed. After everything it heals (the vegetation, the relay, the pylon
 	# lines, the gates, the trainers), because it walks the world it is given.
@@ -1842,6 +1852,12 @@ func _settle_meadows_realm_arrival(game: Node, player: CharacterBody3D, x: float
 		game.call("complete_realm_entry", "meadows")
 
 
+## OP-0905-15/D110: the keyed realm arch this used to also build at
+## `meadows_cloudreach_gate` (`realm_transitions.json`) is gone. The Storm
+## Road's own rebuilt span (`rift_crossing.gd`, built alongside `RiftCollapse`
+## below) is the crossing now; `meadows_cloudreach_gate` stays authored in
+## that config only so `meadows_entries.meadows_cloudreach_gate_return` next
+## to it keeps naming the Meadows-side arrival point for the return trip.
 func _build_realm_handoff() -> void:
 	var config := _load_realm_transition_config()
 	var shrine_spec: Dictionary = config.get("meadows_heart_shrine", {})
@@ -1855,19 +1871,6 @@ func _build_realm_handoff() -> void:
 			shrine.rotation.y = deg_to_rad(float(shrine_spec.get("yaw_deg", 0.0)))
 			shrine.call("setup", "meadows", "Heart of Meadows")
 			add_child(shrine)
-
-	var gate_spec: Dictionary = config.get("meadows_cloudreach_gate", {})
-	var gate_at: Variant = gate_spec.get("position", [])
-	if gate_at is Array and (gate_at as Array).size() >= 2:
-		var gate_ground := ground_height_at(float(gate_at[0]), float(gate_at[1]))
-		if not is_nan(gate_ground):
-			var gate: Node3D = REALM_GATE.new()
-			gate.name = "CloudreachRealmGate"
-			gate.position = Vector3(float(gate_at[0]), gate_ground, float(gate_at[1]))
-			gate.rotation.y = deg_to_rad(float(gate_spec.get("yaw_deg", 0.0)))
-			gate.call("setup", "cloudreach", str(gate_spec.get("destination_entry_id", "cloudreach_arrival_from_meadows")),
-				"Cloudreach Cliffs", "realm_key_cloudreach", "realm_gate_cloudreach_unlocked")
-			add_child(gate)
 
 
 func _load_realm_transition_config() -> Dictionary:

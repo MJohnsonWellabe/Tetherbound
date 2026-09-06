@@ -218,6 +218,55 @@ continuous scene (`scenes/world/meadows_playground.tscn`, root script
   and species/content tests referenced elsewhere — not yet documented at
   per-system granularity.
 
+### Evolution
+
+OP-0905-18 (`docs/owner/OWNER_PLAYTEST_2026-09-05.md`): "When and how does
+the pig evolve?" — the gate below has been real and unit-tested since R4.6,
+but nothing in the world told the player it existed until this fix. Written
+down here for exactly that reason: the answer, in one place.
+
+- **The one line evolving today: Mudsnout.** `data/config/progression.json`'s
+  `evolution.mudsnout` block is the single source of truth: **level 15**,
+  **bond tier 3** (the third node on the creature's bond ladder, not a raw
+  bond number), and holding a catalyst item. No other shipped species
+  evolves — `evolution.gd::check()` says so plainly ("X does not evolve")
+  for anything without an `evolution.json` entry.
+- **Two destinations, one item picks which.** Holding a **Heartstone**
+  evolves Mudsnout into **Tuskroot** (the primary path,
+  `species.json`'s `evolves_into`); holding a **Sunstone** instead evolves
+  it into **Ashtusk** (`evolves_into_variants`, D71). Holding both at once
+  is refused outright ("you're carrying more than one evolution stone —
+  drop one so the choice is deliberate"); holding neither, once level and
+  bond are met, is refused naming both stones by name.
+- **Where the catalysts are found**, each one-time: the **Heartstone** is
+  the Burrow Warrens' vault prize, past the guardian and off the critical
+  path (`data/config/burrow_warrens.json`'s `prize` block,
+  `scripts/world/burrow_warrens.gd::_on_prize_taken`); the **Sunstone** is a
+  Band 5 ground pickup near the Sigil gate
+  (`scripts/world/playground_world.gd::_place_sunstone`, routed through
+  `scripts/world/key_pickup.gd`), placed there after the owner asked for
+  Ashtusk to be a deliberate creature-slot choice rather than a wild catch
+  (D71 — an evolved form never spawns wild).
+- **How it actually happens**: the player opens the Team tab, focuses an
+  eligible creature, and presses the evolve action (`G` on keyboard; the
+  tab's own hint reads "G  evolve" once every requirement is met). Nothing
+  evolves automatically or off-screen.
+- **How the player is told, now**: (1) the Team tab's detail panel names
+  every requirement the focused creature has NOT yet met, with its current
+  value beside it — "Lv 15 (now 11) · Bond tier 3 (now 2) · needs
+  Heartstone" — not just the level gate the line used to show alone
+  (`scripts/ui/tab_creatures.gd::_evolution_missing_text`); (2) the
+  progression feed (`scripts/creatures/progression_feed.gd`) pushes an
+  `evolution_eligible` moment the first time a creature crosses every gate
+  except the item, and a `catalyst_found` moment the first time the player
+  picks up a Heartstone or Sunstone, naming what it is for; (3) Mira, the
+  village's Meadow Keeper, mentions in her ordinary greeting that a Mudsnout
+  "isn't finished growing" once it is strong, bonded, and holding the right
+  stone (`data/dialogue/village.json`'s `village_mira`).
+- Tests: `tests/test_evolution.gd` (the gate itself),
+  `tests/smoke_evolution.gd` (the real ceremony through the Team tab),
+  `tests/test_progression_feed.gd` (the two new feed events).
+
 ## Creature species / runtime body
 
 - Scripts: `scripts/creatures/creature_body.gd` (1549 lines, the

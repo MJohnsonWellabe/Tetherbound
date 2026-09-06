@@ -63,7 +63,7 @@ it still falls short.
 | Colourway | the installed alpha repaint (`_base_color_alpha.png`), rim, mote aura | Reads as an alpha from the den doorway, before the first exchange |
 | Self-lit against a blind judge | `glow_energy 1.2` under a warm tint, an `aura_light` parented to the body at leg height | Survives the den's own darkness and its own wander; tuned by measurement, not taste |
 | Signature move | `signature_move: earth_fist` (power 1.4, 0.62 s windup, 72° cone), chosen over `earthshatter` because a 360° hit in a 6 m den cannot be stepped around | The move a caught guardian carries into the player's team |
-| Encounter context | the den is the fourth chamber, past four residents at 9–11 and Pell's own warning (*"bigger… knows a heavier trick… one answer won't be enough"*); the vault door only lifts on `warrens_cleared`; the Heartstone is behind it | The fight is gated, foreshadowed, and pays for something the player already wants |
+| Encounter context | the den is the fourth chamber, past 2 mandatory residents at 9–10 (mouth, hall) plus one optional resident on the warren side branch, and Pell's own warning (*"bigger… knows a heavier trick… one answer won't be enough"*); the den itself holds only the guardian; the vault door only lifts on `warrens_cleared`; the Heartstone and the Elder Trailpup alpha are behind it | The fight is gated, foreshadowed, and pays for something the player already wants, without crowding the approach to it |
 | Once only | `once_id` (WARRENS-ONCE): beaten or caught, it does not come back | Owner directive 2026-09-03, finding 9 |
 | Catchable | A guardian is wild, so catching is a legal way to clear the warren | The five-slot rule gets its first real test here |
 
@@ -191,8 +191,11 @@ South Bridge → trailpup/burrowback/duskhush clusters at the seam (wild) → Do
 Ground"*) → the quarry floor, Rootstone seams, the quarry station (resource, detour:
 rim overlook) → potion cache at (350,1968) (resource) → ranger camp spur (detour,
 camp) → Pell at the warrens mouth, 10/10/11 with the Air lesson (trainer) → the
-Warrens: four residents 9–11, the guardian 14, the vault's Elder Trailpup, the
-Heartstone (dungeon, memorable encounter, prize) → undertrail second mouth (shortcut)
+Warrens: 2 mandatory residents at 9–10 plus one optional resident on the warren
+branch (OP-0905-10, owner playtest 2026-09-05, supersedes this section's former
+"four residents 9–11" -- the den now holds only the guardian), the guardian 14,
+the vault's dressed Elder Trailpup alpha, the Heartstone (dungeon, memorable
+encounter, prize) → undertrail second mouth (shortcut)
 → Kest at (0,2980), 12/12 (trainer, "the seams don't end at the door") → Farro's
 night watch and the night-gated duskhush alpha at (70,2900) (optional, night) →
 Nightburrow at (-168,2940) (exceptional alpha, temptation) → the haulage wreck at the

@@ -41,9 +41,13 @@ const VIEWPOINTS := [
 	# looking at one. `_clear_exterior_views()` measures instead -- it rings
 	# the cave, casts at it, and keeps the stands that can actually SEE it.
 	{
+		# ROUND-5-0906: 12m out framed the arch alone and cropped both the
+		# lamp post (the scale reference) and the bank above the opening;
+		# 16m out, aimed a little higher, is where a player actually stops
+		# to look at a den mouth.
 		"name": "03-mouth", "local": true, "ground": true,
-		"eye": Vector2(0.0, -12.0), "eye_h": 1.7,
-		"target": Vector2(0.0, 4.0), "target_h": 1.2,
+		"eye": Vector2(0.0, -16.0), "eye_h": 1.7,
+		"target": Vector2(0.0, -2.0), "target_h": 2.6,
 	},
 	{
 		"name": "04-hall-dressing", "local": true,
@@ -150,7 +154,10 @@ func _run() -> void:
 		if player is CharacterBody3D:
 			(player as CharacterBody3D).velocity = Vector3.ZERO
 
-	var views: Array = _clear_exterior_views(world, warrens)
+	# ROUND-4-0906: the authored approach stand goes first -- it is the frame
+	# the landmark read is judged on.
+	var views: Array = [_approach_stand(world, warrens)]
+	views.append_array(_clear_exterior_views(world, warrens))
 	views.append_array(VIEWPOINTS)
 
 	# A stand-in for the torch. The warrens is authored DARK on purpose -- its
@@ -177,6 +184,17 @@ func _run() -> void:
 			var guardian: Node3D = warrens.call("guardian") as Node3D
 			if guardian != null and is_instance_valid(guardian):
 				target = guardian.global_position + Vector3.UP * 0.6
+			# ROUND-5-0906: the guardian's peaceful idle turns to WATCH a
+			# player inside its notice range (wild_creature.gd::_tick_peaceful)
+			# -- that is what a player walking into the den actually sees.
+			# With the player parked 600m away for the other frames, three
+			# blind rounds photographed whatever direction its 1.5m wander
+			# had last left it facing (a flank, then its rear). The hidden,
+			# physics-off player stands at the camera's own eye for this
+			# frame only, so the boss faces the frame the way it faces a
+			# player; it is parked again right after.
+			if player != null:
+				player.global_position = eye
 		camera.global_position = eye
 		camera.look_at(target, Vector3.UP)
 		var interior := bool(view.get("local", false)) and not bool(view.get("ground", false))
@@ -205,6 +223,10 @@ func _run() -> void:
 				str(env.background_mode) if env != null else "?"])
 
 		var image := root.get_texture().get_image()
+		if bool(view.get("aim_guardian", false)) and player != null:
+			var park := Vector2(-373.0, 2476.0) + Vector2(600.0, 600.0)
+			var park_y := float(world.call("ground_height_at", park.x, park.y))
+			player.global_position = Vector3(park.x, park_y + 0.2, park.y)
 		if image == null:
 			failures.append("%s: viewport returned no image" % name_value)
 			continue
@@ -226,6 +248,29 @@ func _run() -> void:
 		quit(1)
 		return
 	quit(0)
+
+
+## ROUND-4-0906: the view a player actually gets. `_clear_exterior_views()`
+## below finds stands that can see the cave from 26/40m rings, which is a
+## fair survey but never the approach itself. This one is authored: 60m
+## straight out from the throat's outer end along the mouth's own axis (the
+## road in), eye at 1.7m, aimed at the dome above the opening -- the distance
+## at which a landmark either reads or does not.
+func _approach_stand(world: Node, warrens: Node3D) -> Dictionary:
+	var z0: float = float(warrens.call("_mouth_outer_z"))
+	var bank := warrens.call("_bank_cfg") as Dictionary
+	var throat_end: float = z0 - float(bank.get("throat_depth_m", 6.0))
+	var eye_flat: Vector3 = warrens.to_global(Vector3(0.0, 0.0, throat_end - 60.0))
+	var ground := float(world.call("ground_height_at", eye_flat.x, eye_flat.z))
+	var mouth: Vector3 = warrens.call("marker", "mouth")
+	if is_nan(ground):
+		ground = mouth.y
+	var target: Vector3 = warrens.to_global(Vector3(0.0, 0.0, z0))
+	return {
+		"name": "00-approach-60m",
+		"world_eye": Vector3(eye_flat.x, ground + 1.7, eye_flat.z),
+		"world_target": Vector3(target.x, mouth.y + 6.0, target.z),
+	}
 
 
 ## Two exterior stands that can see the cave, found rather than guessed.

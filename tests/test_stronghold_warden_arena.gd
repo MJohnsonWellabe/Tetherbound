@@ -53,11 +53,45 @@ func test_warden_arena_braziers_stand_outside_the_combat_ring() -> void:
 				"a Warden Arena brazier at %s stands inside the 11m combat ring" % str(here))
 	assert_eq(found, 2, "expected 2 brazier baskets near the Warden Arena threshold, found %d" % found)
 
-	# The braziers array itself (real OmniLights, counted against the Hall's
+	# The floor/exterior braziers (real OmniLights, counted against the Hall's
 	# light budget) must be unchanged by this pass -- the whole point of
 	# putting the new pair in `gate_source` instead.
+	#
+	# OP-0905-19 (owner playtest 2026-09-05: "The hall needs to be lit by
+	# torches") separately added 14 WALL-MOUNTED sconces (`mount: "wall"`)
+	# across tether_approach, warden_arena and legendary_chamber -- a
+	# different fixture (bolted to a wall, not an OmniLight standing on the
+	# floor) added for a different reason, not a regression of this budget.
+	# Filtering them out restores the original count this assertion protects;
+	# the block below is the wall sconces' own check.
 	var braziers: Array = config.get("hall_occupation", {}).get("braziers", [])
-	assert_eq(braziers.size(), 11, "hall_occupation.braziers grew; the arena dressing was meant to cost zero omnis")
+	var floor_braziers: Array = braziers.filter(
+		func(b: Variant) -> bool: return str((b as Dictionary).get("mount", "")) != "wall")
+	# HALL-STAGING-0906 round 5: 11 -> 13, the two entrance baskets in the
+	# Warden Arena (see their _comment) -- a deliberate spend, not drift.
+	assert_eq(floor_braziers.size(), 13, "hall_occupation.braziers' floor/exterior fixtures grew; the arena dressing was meant to cost zero omnis")
+
+	# The wall sconces sited in the Warden Arena itself must stand outside the
+	# same 11m combat ring the baskets above are checked against -- bolted to
+	# the long walls at y=1.9m, well clear of the fight floor. Found by the
+	# same 20m proximity-to-arena-centre the brazier baskets above use: the
+	# nearest sconce belonging to a NEIGHBOURING chamber (tether_approach) is
+	# 23.55m out, so 20m cleanly separates "this chamber's own wall" from
+	# everything else without needing a `chamber` field the config does not carry.
+	var wall_in_arena := 0
+	for entry: Variant in braziers:
+		var spec: Dictionary = entry as Dictionary
+		if str(spec.get("mount", "")) != "wall":
+			continue
+		var pos: Array = spec.get("at", [])
+		if pos.size() < 2:
+			continue
+		var here := Vector2(float(pos[0]), float(pos[1]))
+		if here.distance_to(centre) < 20.0:
+			wall_in_arena += 1
+			assert_true(here.distance_to(centre) > 11.0,
+				"a Warden Arena wall torch at %s stands inside the 11m combat ring" % str(here))
+	assert_eq(wall_in_arena, 6, "expected 6 OP-0905-19 wall torches sited in the Warden Arena (two per long wall x 3 thirds), found %d" % wall_in_arena)
 
 
 ## R-2: the mechanism (`_place_readout`) is shared with SG40's reveal; this

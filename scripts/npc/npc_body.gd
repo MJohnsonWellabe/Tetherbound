@@ -127,6 +127,48 @@ func set_player(player: Node3D) -> void:
 	_player = player
 
 
+## OP-0905-13. The one NPC body in the game that actually walks somewhere
+## rather than only turning its head (this file's own header) — the South
+## Bridge's guardian, crossing the deck to challenge a player who tried the
+## locked gate. A straight tween of `global_position` at a walking pace, the
+## same shape `stronghold_climax.gd::_approach_player()` already uses for the
+## freed legendary's own approach: this body is never driven by
+## `move_and_slide` (it is a plain Node3D, not a CharacterBody3D), so there is
+## no physics to fight and nothing to disable.
+##
+## `on_arrived` runs once, after the walk clip has already been swapped back
+## to idle — so a caller opening dialogue in that callback never does it over
+## a body still mid-stride.
+var _walk_tween: Tween = null
+
+
+func walk_to(target: Vector3, speed: float, on_arrived: Callable = Callable()) -> void:
+	cancel_walk()
+	var distance := global_position.distance_to(target)
+	if distance < 0.05:
+		if on_arrived.is_valid():
+			on_arrived.call()
+		return
+	play(clip_for("walk"))
+	_walk_tween = create_tween()
+	_walk_tween.tween_property(self, "global_position", target, distance / maxf(0.1, speed))
+	_walk_tween.tween_callback(func() -> void:
+		play(clip_for("idle"))
+		if on_arrived.is_valid():
+			on_arrived.call())
+
+
+## Stops an in-flight `walk_to()` exactly where the body currently stands.
+## For whatever needs this body to stop moving without finishing the trip —
+## the gate opening by some other path while the guardian is still on his way
+## over, or the scene tearing the crossing down. Safe to call with no walk in
+## flight.
+func cancel_walk() -> void:
+	if _walk_tween != null and _walk_tween.is_valid():
+		_walk_tween.kill()
+	_walk_tween = null
+
+
 func _process(delta: float) -> void:
 	if _player == null or not is_instance_valid(_player):
 		return

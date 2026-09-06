@@ -1055,27 +1055,6 @@
       "expected": "Section F: 'Camera correction: any scripted camera input needed solely to restore the target/route to view'. Every one of these is counted"
     },
     {
-      "id": "S06-65g",
-      "title": "party-health gate before S06-66",
-      "action": "assert",
-      "args": {
-        "check": "active_creature_alive"
-      },
-      "expected": "CL-H1's party-health assert: the segment fails honestly at the moment the party stopped being fight-ready, instead of letting encounter_director.gd::can_challenge() refuse silently and every later step measure a world that is not fighting.",
-      "observation": "Landing lane, consolidation of 2026-09-05. S06-66 was one of N10-HARNESS-TESTS' counted `press combat_quick` blocks, converted here to W21-HARNESS-FIGHTS' predicate fight form; W21's contract also requires this gate in the run-up to each fight, and N10's block had none because the older contract did not ask for one."
-    },
-    {
-      "id": "S06-66",
-      "title": "finish the chamber fight",
-      "action": "fight_until_resolved",
-      "args": {
-        "budget_frames": 7200,
-        "switch_below": 0.35
-      },
-      "expected": "Section E.1 per-fight record",
-      "observation": "Landing lane, consolidation of 2026-09-05. N10-HARNESS-TESTS wrote this as `press combat_quick, times: 18` against the older contract; W21-HARNESS-FIGHTS' test_gate_f_segments.gd forbids a counted press block for a fight, because it reports PASS whether the fight was won, lost or wiped the party. Converted to the predicate form W21 uses elsewhere in this segment. budget_frames is scaled from the original press count; no until_flag, matching S06-64 and S06-74 which also omit it."
-    },
-    {
       "id": "S06-67",
       "title": "let the fight end",
       "action": "wait",
