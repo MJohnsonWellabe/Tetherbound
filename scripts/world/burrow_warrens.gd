@@ -3322,7 +3322,15 @@ func _build_bank_lamp_and_cable(holder: Node3D, bank: Dictionary, z0: float, rx:
 	lamp.light_energy = float(bank.get("lamp_energy", 1.1))
 	lamp.omni_range = float(bank.get("lamp_range_m", 9.0))
 	lamp.shadow_enabled = false
-	lamp.position = Vector3.UP * (post_h * 0.42)
+	# WARRENS-ART-0906 round 3. The omni sat ON the post's own axis, so the
+	# post was lit at zero distance and rendered as a near-white rod whatever
+	# its albedo said -- which is half of why the blind verdict read
+	# "a red-and-white striped pole". Standing the light `lamp_throw_m` out
+	# from the post (toward the road; the bulb and hood stay on the post,
+	# because a light source does not have to be the thing you see) gives the
+	# post grazing light instead of point-blank, and throws the pool where a
+	# player actually walks. 0 reproduces the old position exactly.
+	lamp.position = Vector3(0.0, post_h * 0.42, -float(bank.get("lamp_throw_m", 0.0)))
 	post.add_child(lamp)
 
 	var bulb := MeshInstance3D.new()

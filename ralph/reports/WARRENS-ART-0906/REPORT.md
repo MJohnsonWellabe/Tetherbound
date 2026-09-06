@@ -280,3 +280,39 @@ is this lane's to carry.
   silhouettes, flat leaf cards, off-palette trunks), the ground-cover set, the rock
   set (facet slabs with a painted moss band), and an organic tunnel kit for the
   interior.
+
+## Round 3 — acting on the verdict
+
+W3 done as the verdict asked ("pick ONE wall rock material for the burrow")
+rather than as the handoff asked ("the hall's first bay and the passage walls").
+`site.earth_clad_walls` clads all four walls and the ceiling underside of every
+chamber; the hall's partial bay retires to an empty list. Evidence in the smoke
+output:
+
+```
+[warrens] 38 interior earth skins across 5 walls-clad chamber(s) and the passages
+warrens smoke test passed
+SMOKE_EXIT=0        ERROR lines: 0
+```
+
+The four `03-mouth` defects the verdict named in this lane's files are fixed:
+the lamp (hood, amber bulb at emission 3.2 instead of a white-clipping 7.0,
+oxblood moved from an eye-height ring to a foot collar), the arch roots (three
+thin crowns became two at half again the scale, overlapping, over a lighter
+tint), the boulder moss (`moss_normal_min` 0.5 → 0.22 — that threshold *was* the
+hard edge the judge saw), and the threshold debris (40 → 85).
+
+**A regression this round introduced, recorded rather than hidden:**
+`07-den-dressing` fell from a frame median of 46.6 to **32.0** when the den's
+walls went from pale stone to earth. The material identity is right and the value
+is now wrong; the den's own lights were tuned against a wall albedo that no longer
+exists. `site.interior_cladding_colour` and the den pools are the levers and this
+is the next thing to measure, not something to leave for a reader to discover.
+
+**A second-order defect found while checking the lamp.** The post rendered
+near-white whatever its albedo said, because the lamp's `OmniLight3D` was
+parented at the post's own axis — the post was lit at zero distance. That is half
+of why the verdict read "a red-and-white striped pole": not the colour, the
+lighting. `lamp_throw_m` stands the light 0.45 m out toward the road while the
+bulb and hood stay on the post, since a light source does not have to be the
+thing you see.
