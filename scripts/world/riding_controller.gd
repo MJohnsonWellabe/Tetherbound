@@ -658,7 +658,13 @@ func _refresh_worn_saddle() -> void:
 		_detach_saddle(body)
 
 
-func _attach_saddle(body: Node3D, species_id: String) -> void:
+## Static since Stage B lane 6.B, and unchanged otherwise. A creature standing
+## in a REMOTE peer's process wears the saddle its owner fitted, and
+## `remote_creature.gd` has no riding controller of its own to ask -- the local
+## one belongs to the local player and answers about the local player's mount.
+## Neither of these two functions ever read a field, so making them static is
+## the whole of what sharing them costs.
+static func _attach_saddle(body: Node3D, species_id: String) -> void:
 	if body == null or not is_instance_valid(body):
 		return
 	_detach_saddle(body)
@@ -679,7 +685,7 @@ func _attach_saddle(body: Node3D, species_id: String) -> void:
 	body.add_child(visual)
 
 
-func _detach_saddle(body: Node3D) -> void:
+static func _detach_saddle(body: Node3D) -> void:
 	if body == null or not is_instance_valid(body):
 		return
 	var existing := body.get_node_or_null(SADDLE_NODE)
@@ -690,6 +696,28 @@ func _detach_saddle(body: Node3D) -> void:
 		# would rename the new one `RideSaddle2` -- which `_refresh_worn_saddle`
 		# would then never see and would re-add forever.
 		existing.name = "RideSaddleRemoved"
+
+
+## Put this species' saddle on `body`, or take it off, to match `worn`. The one
+## door a body that is not this peer's own mount comes through -- Stage B lane
+## 6.B: what the owner fitted has to be visible on every peer's copy of the
+## animal, and "fitted" is a flag in the OWNER's progression store that nobody
+## else can read. So the owner replicates the answer and every viewer applies
+## it here, through the same attach the local mount uses.
+##
+## `saddle_belongs_on()` still gates it, so a species the craft was not for
+## (the legendary, whose `requires_item` is empty) never wears one even if a
+## peer says it should.
+static func set_worn_saddle(body: Node3D, worn: bool) -> void:
+	if body == null or not is_instance_valid(body):
+		return
+	var species_id := str(body.get("species_id"))
+	var wanted := worn and saddle_belongs_on(species_id)
+	var already := body.get_node_or_null(SADDLE_NODE) != null
+	if wanted and not already:
+		_attach_saddle(body, species_id)
+	elif already and not wanted:
+		_detach_saddle(body)
 
 
 ## The slope, in degrees, the current mount treats as floor. The trainer's own

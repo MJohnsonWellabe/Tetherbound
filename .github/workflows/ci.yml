@@ -1919,17 +1919,17 @@ jobs:
     # run is what should correct it, in either direction. A shard that finishes
     # in 32 minutes does not need 45.
     #
-    # 52 adds the two acceptance-item smokes below it, measured end to end on a
-    # 4-core box on 2026-09-06: `menu_does_not_freeze_peer` 2 min 45 s (two
-    # Meadows builds and eight measured walks), `catch_race` 2 min 23 s (two
-    # Meadows builds, one fight, one wobble). Five minutes plus the same margin.
+    # 65 = the 45-minute build-cost estimate above, plus the five smokes added
+    # on 2026-09-06, each timed on a 4-core laptop: `menu_does_not_freeze_peer`
+    # 2m45s, `catch_race` 2m23s, `riding` 2m10s-2m30s, `fly` 2m50s -- about
+    # 12 minutes of laptop, and a CI runner is the slower machine.
     #
     # It is still an estimate rather than a measurement OF THE SHARD, and for a
     # blunter reason than the paragraph above admits: until the discovery fix in
     # this same block landed, this job was a bash syntax error and had never run
     # a single net smoke. Nothing here has ever been timed against a real green
-    # run. The first one is what should correct this number.
-    timeout-minutes: 52
+    # run. The first one is what should correct this number, in either direction.
+    timeout-minutes: 65
     needs: changes
     if: needs.changes.outputs.code == 'true'
     steps:
@@ -2001,8 +2001,16 @@ jobs:
           # restated the lanes before them, and the block had accumulated four
           # duplicated fragments before lane 2.B noticed. The roster is the
           # record; prose about it only rots.
-          if [ "$count" -lt 24 ]; then
-            echo "::error::expected at least 24 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
+          # The number is the TRUE count of files declaring the header, not a
+          # lane's guess at it. Regenerated from the FILES ON DISK at every
+          # landing, which is what the shard's own comment above asks for:
+          # several lanes add smokes into one wave and an incremented guess
+          # reconciles to whichever lane's conflict resolution won, not to the
+          # tree. Lane 6.A's `split_realms` and
+          # `realm_owner_disconnect_mid_fight` are NOT counted while their
+          # headers are withdrawn (D97's hold).
+          if [ "$count" -lt 26 ]; then
+            echo "::error::expected at least 26 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
             exit 1
           fi
           # Named registration, on top of the count. Discovery alone would let a
@@ -2016,6 +2024,7 @@ jobs:
             tests/smoke_net_catch_race.gd \
             tests/smoke_net_deploy_two_creatures.gd \
             tests/smoke_net_farm_race.gd \
+            tests/smoke_net_fly.gd \
             tests/smoke_net_fog_is_personal.gd \
             tests/smoke_net_gate_opens_for_both.gd \
             tests/smoke_net_hearts.gd \
@@ -2029,6 +2038,7 @@ jobs:
             tests/smoke_net_pickup_race.gd \
             tests/smoke_net_reconnect_keeps_character.gd \
             tests/smoke_net_revive.gd \
+            tests/smoke_net_riding.gd \
             tests/smoke_net_shared_building.gd \
             tests/smoke_net_shared_wild_fight.gd \
             tests/smoke_net_sleep_vote.gd \

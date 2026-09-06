@@ -898,6 +898,17 @@ func carrier() -> Node3D:
 	return _carrier if _carried else null
 
 
+## Where this trainer is seated, in the carrier's own local frame -- the offset
+## `set_carrier()` was handed, which is the species' `mount_offset`.
+##
+## Public for Stage B lane 6.B and for one reason: every OTHER peer has to seat
+## this rider on their copy of the mount at exactly this offset, or the two
+## bodies interpolate separately and the rider slowly slides off the animal.
+## `_ride()` above is the local half of the same sentence.
+func carry_offset() -> Vector3:
+	return _carry_offset if _carried else Vector3.ZERO
+
+
 ## Is the trainer's own art on screen? Read by tests/smoke_riding.gd, which
 ## exists mostly to prove this is true — including, since OP-0904-3, while the
 ## trainer is sitting on a creature.

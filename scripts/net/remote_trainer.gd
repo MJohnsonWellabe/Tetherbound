@@ -50,6 +50,15 @@ extends CharacterBody3D
 const GROUP := &"remote_trainer"
 
 const PRESENTATION := preload("res://scripts/net/remote_presentation.gd")
+## Stage B lane 6.B/6.C. Riding and Fly are the two verbs that put a trainer
+## somewhere their own legs did not take them, and both are drawn on a remote
+## body out of these three files -- the saddle through the riding controller's
+## own attach, the carrier bird through the fly controller's own builder, and
+## the landing rule through the arbiter. Nothing here re-implements any of them.
+const RIDING := preload("res://scripts/world/riding_controller.gd")
+const FLY := preload("res://scripts/player/fly_controller.gd")
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const ANCHOR_ARBITER := preload("res://scripts/net/fly_anchor_arbiter.gd")
 
 ## Smoothing half-life for the remote's rendered position. Small enough that a
 ## walking trainer is never further behind than lane 2.C's own "seen" budget
@@ -88,6 +97,49 @@ var net_anim_state: String = "idle"
 var net_sprinting: bool = false
 var net_carried: bool = false
 
+## --- Stage B lane 6.B: one player is on their creature ------------------------
+##
+## `net_carried` above already said "this trainer is cargo" -- it is the flag
+## `player_controller.set_carrier()` raises, and lane 2.C replicated it so a
+## carried body would not fight a floor query. It was never enough to DRAW a
+## ride, and the two things it was missing are the two below.
+##
+## Missing 1: which creature. A viewer that only knows "carried" has to guess,
+## and the honest answer is not a guess at all -- the mount is this peer's own
+## deployed creature, and every process already holds exactly one of those per
+## owner (`remote_creature.gd::owner_peer_id`). So `net_riding` is the whole of
+## what has to cross the wire; `_mount_body()` resolves the rest locally, by
+## owner, and never by a node name.
+##
+## Missing 2: WHERE on the creature. The seat is the species' `mount_offset`
+## and it is replicated rather than re-read from the data, because the offset a
+## viewer draws must be the offset the owner is actually sitting at -- a body
+## seated by two different readings of the same file is a rider who slides.
+var net_riding: bool = false
+var net_mount_offset: Vector3 = Vector3.ZERO
+## Whether the owner's deployed creature is wearing the saddle its owner built.
+## Published from the trainer rather than the creature because the creature
+## proxy's replicated set is authored in `encounter_director.gd`, which this
+## lane does not own -- and because "fitted" is a flag in the OWNER's
+## progression store that no other process can read at all (OP-0904-3: what you
+## built has to be visible on the animal).
+var net_creature_saddled: bool = false
+
+## --- Stage B lane 6.C: one player is in the air -------------------------------
+##
+## A flying trainer used to replicate as a trainer falling: `_state_of()` sees
+## a body off the floor with no upward velocity and calls it "fall", and the
+## viewer walked its copy into the ground with `move_and_slide()` because that
+## is what a body with no fly state does. So a friend gliding over Cloudreach
+## read, on every other screen, as a friend who had stepped off a cliff.
+##
+## `net_fly_state` is the controller's own state word, not a re-derivation:
+## "glide", "climb", "descent", "exhausted". `net_fly_species` is the carrier,
+## so every viewer builds the same bird from the same `fly_capability` block.
+var net_flying: bool = false
+var net_fly_state: String = ""
+var net_fly_species: String = ""
+
 ## Lane 6.D. A presentation event was drawn on this body. Emitted on the VIEWER,
 ## never on the owner's own invisible proxy, and counted in `presentation_plays`
 ## so a smoke can assert that a friend's catch produced a picture here without
@@ -107,6 +159,17 @@ var last_effect: String = ""
 
 var _render_position: Vector3 = Vector3.ZERO
 var _has_render: bool = false
+## Viewer side, lanes 6.B/6.C. The last drawn value of each replicated flag, so
+## the pose doors are only called when the answer changes; the mount and the
+## carrier art, so neither is looked up or rebuilt every frame.
+var _rode_last: bool = false
+var _flew_last: bool = false
+var _flew_species: String = ""
+var _fly_seconds: float = 0.0
+var _fly_capability: Dictionary = {}
+var _carrier_art: Node3D = null
+var _carrier_rig: Skeleton3D = null
+var _mount: Node3D = null
 ## Whether this process is this body's authority. Re-read every physics frame
 ## rather than cached once in `_ready()`, and that is deliberate. Authority is
 ## a plain integer compared against `multiplayer.get_unique_id()`, and that id
@@ -130,6 +193,16 @@ var _mask: int = 0
 
 func _ready() -> void:
 	add_to_group(GROUP)
+	# Lane 6.B. Tick AFTER the creature bodies, which run at the default 0.
+	#
+	# A rider's drawn position is read off the mount (`_follow()`), so if this
+	# body ticks first it reads where the animal was LAST frame and the rider
+	# is drawn one frame of the mount's motion out of the saddle. Measured on
+	# `tests/smoke_net_riding.gd`: 0.23-0.33 m adrift while the mount was being
+	# driven, and 0.00 m the moment it stopped -- the signature of an ordering
+	# problem rather than of interpolation. Priority is the honest fix; the
+	# alternative is every reader of this body having to know it is stale.
+	process_physics_priority = 1
 	_layer = collision_layer
 	_mask = collision_mask
 	net_position = global_position
@@ -216,11 +289,74 @@ func _push_from_local_rig() -> void:
 	net_sprinting = _bool_call(rig, &"is_sprinting")
 	net_carried = _bool_call(rig, &"is_carried")
 	net_anim_state = _state_of(rig)
+	_push_ride(rig)
+	_push_flight(rig)
 	# Keep the proxy co-located with the rig it mirrors. Nothing renders it
 	# here, but a probe or a distance check that finds this node should not see
 	# a body parked at the origin.
 	global_position = net_position
 	_ensure_combat_link()
+
+
+# --- lane 6.B, owner side: what the ride looks like from outside ---------------
+
+## Publish the ride. The mount itself is deliberately NOT published: it is this
+## peer's own deployed creature, every process already holds exactly one of
+## those per owner, and a replicated node reference would only be a second way
+## to disagree about which body that is.
+##
+## The saddle is published whether or not a ride is in progress, and that is
+## OP-0904-3's rule rather than an oversight: `riding_controller.gd`'s own
+## header records that the saddle used to be attached on mount and torn off on
+## dismount, which made the visible proof of the craft invisible in every
+## moment a player would look at their creature. It is worn from the fit
+## onwards, and that has to be true on a friend's screen too.
+func _push_ride(rig: Node3D) -> void:
+	var carrier: Node3D = null
+	if rig.has_method("carrier"):
+		carrier = rig.call("carrier") as Node3D
+	var riding := carrier != null and is_instance_valid(carrier)
+	net_riding = riding
+	if riding and rig.has_method("carry_offset"):
+		net_mount_offset = rig.call("carry_offset")
+	var body := _local_deployed_body()
+	# `saddle_is_fitted()` reads the LOCAL progression store, which is this
+	# peer's own -- the only process that can answer the question at all.
+	net_creature_saddled = body != null \
+		and RIDING.saddle_is_fitted(str(body.get("species_id")))
+
+
+## Publish the flight. `is_flying()` and `state` are the controller's own; the
+## carrier species comes through its one public accessor, so a viewer builds
+## the bird from the same capability block the owner is hanging off.
+func _push_flight(rig: Node3D) -> void:
+	var fly: Variant = rig.get("fly_controller")
+	if fly == null or not (fly is Object) or not (fly as Object).has_method("is_flying"):
+		net_flying = false
+		net_fly_state = ""
+		net_fly_species = ""
+		return
+	var controller := fly as Object
+	net_flying = bool(controller.call("is_flying"))
+	net_fly_state = str(controller.get("state")) if net_flying else ""
+	net_fly_species = str(controller.call("carrier_species_id")) if net_flying else ""
+
+
+## The creature body this peer has out, by group rather than through the
+## encounter director -- the same decoupling `remote_creature.gd` keeps, and
+## for its reason: a body's species is a fact about the body.
+func _local_deployed_body() -> Node3D:
+	if not is_inside_tree():
+		return null
+	var tree := get_tree()
+	if tree == null:
+		return null
+	for node in tree.get_nodes_in_group(&"deployed_creature"):
+		if not is_instance_valid(node) or not (node is Node3D):
+			continue
+		if node.has_method("is_local_deployment") and bool(node.call("is_local_deployment")):
+			return node as Node3D
+	return null
 
 
 # --- lane 6.D: the presentation channel -------------------------------------------
@@ -339,6 +475,39 @@ static func _state_of(rig: Node3D) -> String:
 # --- every other peer's side -------------------------------------------------
 
 func _follow(delta: float) -> void:
+	_apply_ride_and_flight(delta)
+	if net_riding:
+		var mount := _mount_body()
+		if mount != null:
+			# THE WHOLE OF LANE 6.B'S FIRST HALF: the rider and the mount are
+			# one thing on this screen, because the rider's transform is READ
+			# OFF the mount rather than interpolated toward a position that
+			# happens to be near it.
+			#
+			# Two bodies each walking toward their own replicated target is two
+			# bodies with two independent errors, and the error is largest
+			# exactly when the mount is moving -- which is the whole time
+			# anybody is watching. The result is a rider who floats a little
+			# behind the animal, sinks into its shoulders on a turn and pops
+			# back when it stops. `player_controller._ride()` does not have that
+			# problem on the owner's screen for the same reason this does not
+			# have it here: it takes the carrier's transform, not a copy of it.
+			global_position = mount.to_global(net_mount_offset)
+			_render_position = global_position
+			velocity = Vector3.ZERO
+			_ground_speed = 0.0
+			# Face the way the mount faces, exactly as the local ride does --
+			# on the MODEL, so the body's own yaw is still whatever the owner
+			# last replicated and dismounting does not spin the trainer.
+			var art := get_node_or_null(^"Model") as Node3D
+			if art != null:
+				art.global_rotation.y = mount.global_rotation.y
+			return
+		# No mount body yet (a creature spawn that has not landed, an owner
+		# whose creature was despawned mid-ride). Fall through and interpolate
+		# toward the replicated position, which is where the owner's rig is:
+		# a rider drawn beside their animal for a frame beats a rider left
+		# standing at the last place the animal was.
 	if not _has_render:
 		_render_position = net_position
 		_has_render = true
@@ -355,10 +524,17 @@ func _follow(delta: float) -> void:
 	_render_position = _render_position.lerp(net_position, weight)
 	rotation.y = lerp_angle(rotation.y, net_yaw, weight)
 
-	if net_carried:
+	if net_carried or net_flying:
 		# A carried trainer's transform belongs to whatever carries them; do
 		# not fight it with a floor query. `player_controller.gd` runs no
 		# locomotion while carried either.
+		#
+		# Lane 6.C adds flight to the same branch, and it is the same sentence:
+		# a gliding trainer's transform belongs to the glide. Driving this body
+		# with `move_and_slide()` toward a target hundreds of metres up a
+		# Cloudreach face would push a ground-shaped capsule through whatever
+		# it clipped on the way, and a flier who snags on a ledge nobody else
+		# can see is worse than a flier who is simply where their owner says.
 		global_position = _render_position
 		velocity = Vector3.ZERO
 		_ground_speed = 0.0
@@ -368,6 +544,228 @@ func _follow(delta: float) -> void:
 	velocity = to / maxf(delta, 0.0001)
 	move_and_slide()
 	_ground_speed = Vector2(velocity.x, velocity.z).length()
+
+
+## The seat, re-applied after every physics tick in the frame has run.
+##
+## The second half of the ordering fix `_ready()`'s `process_physics_priority`
+## is the first half of, and they cover different observers.
+##
+## Priority decides what anything reading this body DURING physics sees, and it
+## is what took the measured seat error from 0.23 m to 0.00 m. This decides
+## what the RENDERER sees: `_process` runs after every physics tick in the
+## frame and before it is drawn, which is the moment a drawn position wants to
+## be settled, and it holds even in a frame that carried no physics tick at all
+## (a rendering frame between two ticks, which at 60 Hz physics and a faster
+## display is most of them).
+##
+## It simulates nothing and owns nothing. `_follow()` is still where the ride
+## is applied; deleting this function costs a frame of smoothness rather than
+## the feature.
+func _process(_delta: float) -> void:
+	if _owned_here == true or not net_riding:
+		return
+	var mount := _mount_body()
+	if mount == null:
+		return
+	global_position = mount.to_global(net_mount_offset)
+	_render_position = global_position
+	var art := get_node_or_null(^"Model") as Node3D
+	if art != null:
+		art.global_rotation.y = mount.global_rotation.y
+
+
+# --- lanes 6.B/6.C, viewer side: the pictures ---------------------------------
+
+## Everything about this body that is a PICTURE of the ride or the flight
+## rather than a position: the seated pose, the saddle on the animal, the
+## carrier bird overhead, the hanging pose under it.
+##
+## Driven off the replicated flags every frame rather than hooked to a
+## transition, for `riding_controller.gd`'s own stated reason: a gate set once
+## when something changed is a gate that is wrong the first time something else
+## touches it -- and here the something else is real. A creature proxy is
+## despawned and respawned by its owner, a body can arrive mid-ride from a
+## `spawn = true` property, and a peer that joins while a friend is already in
+## the air has never seen the transition at all. Each of the three doors below
+## is idempotent, so asking every frame costs a comparison.
+func _apply_ride_and_flight(delta: float) -> void:
+	var art := get_node_or_null(^"Model")
+	if net_riding != _rode_last:
+		_rode_last = net_riding
+		if art != null and art.has_method("set_riding"):
+			# The owner's own trainer is posed by
+			# `player_controller.set_carrier()`; this is the same door, called
+			# from the same fact. Without it a remote rider stands bolt upright
+			# on the creature's back -- which is OP-0904-3 exactly, the owner's
+			# own riding bug, reopened on somebody else's screen.
+			art.call("set_riding", net_riding)
+	RIDING.set_worn_saddle(_mount_body(), net_creature_saddled)
+	_apply_flight_art(art, delta)
+
+
+## The carrier bird, and the trainer hanging off it.
+##
+## Built through `fly_controller.gd`'s own static builder, so a friend's
+## carrier is the same model, the same height and the same wingbeat as the one
+## its owner is looking up at. Rebuilt when the species changes and freed the
+## moment the flight ends -- a bird left behind on a landed trainer is a bird
+## that follows them around the meadow.
+func _apply_flight_art(art: Node, delta: float) -> void:
+	if net_flying:
+		_fly_seconds += delta
+	if net_flying == _flew_last and net_fly_species == _flew_species:
+		if net_flying:
+			FLY.pose_carrier_wings(_carrier_rig, _fly_capability, _fly_seconds)
+			FLY.align_carrier_grip(_carrier_art, _carrier_rig, art,
+				_fly_capability.get("grip_bones", []))
+		return
+	_flew_last = net_flying
+	_flew_species = net_fly_species
+	if is_instance_valid(_carrier_art):
+		_carrier_art.queue_free()
+	_carrier_art = null
+	_carrier_rig = null
+	_fly_capability = {}
+	if art != null and art.has_method("set_fly_hang"):
+		art.call("set_fly_hang", net_flying, FLY.hang_pose())
+	if not net_flying:
+		_fly_seconds = 0.0
+		return
+	_fly_capability = SPECIES.fly_capability(net_fly_species)
+	_carrier_art = FLY.make_carrier_art(_fly_capability)
+	if _carrier_art == null:
+		return
+	add_child(_carrier_art)
+	_carrier_rig = FLY.carrier_skeleton(_carrier_art)
+
+
+## The creature body this trainer is sitting on: the deployed proxy belonging
+## to the SAME peer this body does. Resolved by owner id, never by node name --
+## `encounter_director.gd` names those bodies and this file does not get a vote
+## -- and re-resolved whenever the answer stops being valid, because a creature
+## proxy outlives neither a dismiss nor a realm crossing.
+func _mount_body() -> Node3D:
+	if _mount != null and is_instance_valid(_mount):
+		return _mount
+	_mount = null
+	if peer_id == 0 or not is_inside_tree():
+		return null
+	var tree := get_tree()
+	if tree == null:
+		return null
+	for body in tree.get_nodes_in_group(&"remote_creature"):
+		if body is Node3D and is_instance_valid(body) \
+				and int((body as Node3D).get("owner_peer_id")) == peer_id:
+			_mount = body as Node3D
+			return _mount
+	return null
+
+
+# --- lane 6.C: the host decides where a client may land -----------------------
+#
+# `docs/specs/MP_ENCOUNTER_PROTOCOL.md` §2, applied to a landing.
+# `scripts/net/fly_anchor_arbiter.gd`'s header carries the whole argument for
+# why a Fly anchor is the same shape of problem as a strike; what lives here is
+# only the transport, because this node is the one thing in the project that
+# already exists once per peer, on every peer, with a path the host can address.
+#
+# Both directions are `any_peer` and both check the sender explicitly, rather
+# than leaning on node authority. Authority here belongs to the CLIENT (it is
+# that peer's body), so an `authority` reply from the host would be refused at
+# the far end -- and an `any_peer` call that trusted whoever sent it would let
+# any peer answer for the host. The sender id is checked in both.
+
+## Client -> host. Called by this peer's own `fly_controller.gd` on its own
+## outbound proxy. Silent in solo: `_can_present()` is the same "is there
+## actually a session" guard the presentation channel uses, and with no session
+## `rpc()` on an `OfflineMultiplayerPeer` is an error rather than a no-op.
+func request_landing_anchor(claim: Vector3, realm: String) -> void:
+	if not bool(_owned_here) or not _can_present():
+		return
+	rpc_id(1, "_rpc_request_landing_anchor",
+		[claim.x, claim.y, claim.z], realm)
+
+
+@rpc("any_peer", "call_remote", "reliable")
+func _rpc_request_landing_anchor(claim: Array, realm: String) -> void:
+	var sender := multiplayer.get_remote_sender_id()
+	var params := _anchor_params(sender, claim, realm)
+	var answer: Dictionary = ANCHOR_ARBITER.verdict(params)
+	var anchor: Vector3 = answer.get("anchor", Vector3.ZERO)
+	print("[fly] peer %d claimed a landing at %s -- %s (%s)"
+		% [sender, str(params.get("claim", Vector3.ZERO)),
+			"granted" if bool(answer.get("ok", false)) else "refused",
+			str(answer.get("code", ""))])
+	if sender <= 0:
+		return
+	rpc_id(sender, "_rpc_landing_anchor_verdict", bool(answer.get("ok", false)),
+		[anchor.x, anchor.y, anchor.z], str(answer.get("code", "")),
+		str(answer.get("reason", "")))
+
+
+## Everything the arbiter is handed, gathered here so the rule itself stays a
+## pure function of numbers (see that file's header).
+##
+## The host's own position for this peer is `global_position`, NOT `net_position`
+## -- and the difference is the whole point. `net_position` is what the client
+## SAID; `global_position` is where the host's own `move_and_slide()` in
+## `_follow()` has actually put this body against the host's own collision. §2's
+## rule is that the host tests an intent against its own copy, so it is the
+## host's copy that is read here.
+func _anchor_params(sender: int, claim: Array, realm: String) -> Dictionary:
+	var claimed := Vector3.ZERO
+	if claim.size() == 3:
+		claimed = Vector3(float(claim[0]), float(claim[1]), float(claim[2]))
+	var config: Dictionary = FLY.landing_anchor_config()
+	var ground_y := NAN
+	var normal_y := 0.0
+	var space := get_world_3d().direct_space_state if is_inside_tree() else null
+	if space != null and claim.size() == 3:
+		var depth: float = ANCHOR_ARBITER.probe_depth_m(config)
+		var query := PhysicsRayQueryParameters3D.create(
+			claimed + Vector3.UP * 2.0, claimed + Vector3.DOWN * depth,
+			_mask, [get_rid()])
+		var hit := space.intersect_ray(query)
+		if not hit.is_empty():
+			ground_y = (hit["position"] as Vector3).y
+			normal_y = (hit["normal"] as Vector3).y
+	return {
+		"peer": peer_id,
+		"sender": sender,
+		"claim": claimed,
+		"claim_realm": realm,
+		"host_position": global_position,
+		"host_realm": net_realm,
+		"ground_y": ground_y,
+		"ground_normal_y": normal_y,
+		# The host's swept no-fly volumes are the CLIENT's realm's authoring and
+		# this node has no reader for them; the client already enforces them on
+		# itself every frame of the glide (`fly_controller._restricted_reason`).
+		# Left empty rather than guessed at, and said so rather than implied.
+		"restricted": "",
+		"config": config,
+	}
+
+
+## Host -> client, on the client's own body. Handed straight to the fly
+## controller, which is the only thing that owns `safe_anchor`.
+@rpc("any_peer", "call_remote", "reliable")
+func _rpc_landing_anchor_verdict(ok: bool, anchor: Array, code: String, reason: String) -> void:
+	if multiplayer.get_remote_sender_id() != 1:
+		# Only the host answers. A peer that is not the host sending a verdict
+		# is a peer trying to move somebody else's trainer.
+		return
+	if not bool(_owned_here):
+		return
+	var at := Vector3.ZERO
+	if anchor.size() == 3:
+		at = Vector3(float(anchor[0]), float(anchor[1]), float(anchor[2]))
+	var rig := _local_rig()
+	var fly: Variant = rig.get("fly_controller") if rig != null else null
+	if fly == null or not (fly is Object) or not (fly as Object).has_method("apply_anchor_verdict"):
+		return
+	(fly as Object).call("apply_anchor_verdict", ok, at, code, reason)
 
 
 # --- what `trainer_model.gd` asks a player for -------------------------------
