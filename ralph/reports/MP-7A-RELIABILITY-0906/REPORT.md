@@ -13,16 +13,33 @@ has carried as *"3/4-peer runs owed"* since it was written.
 
 ---
 
+## 0. What a reader should take away
+
+Five smokes that did not exist now run, and four of the five §17/§21 rows this lane owns
+have automated evidence for the first time. Three things are worth reading even if nothing
+else is:
+
+1. **`verify-multiplayer-shard` has been a bash syntax error and has run zero net smokes**
+   (finding F1, fixed here). Any lane citing a green shard cited a job that ran nothing.
+2. **Four concurrent Meadows cost 12.54 GB here**, against spike S2's 12.85 GB — an
+   independent confirmation, 2.4 % apart, of the number the never-on-PR-CI policy rests on.
+3. **The jitter runs broke something**, on the proxy's first ever use against a live
+   handshake: at 150 ms the friendly-fire refusal *message* does not reach the striker,
+   though the safety itself holds (finding F7). It is recorded, characterised, and **not
+   tuned**.
+
+---
+
 ## 0. Verdict table
 
 | # | Item | Verdict | Where |
 |---|---|---|---|
 | 1 | Late join a modified world (row 22) | **PASS** — 21/21 checks, whole-world diff empty | §1 |
-| 2 | Disconnect and reconnect (row 21) | **PASS for what exists** — 25/25 checks; the character-save half is genuinely not written and is stated, not asserted | §2 |
-| 3 | Host exit under load (row 24, loud version) | PENDING_3 | §3 |
-| 4 | Jitter — 150 ms / 30 ms / 1 % | PENDING_4 | §4 |
-| 5 | 3-peer run (row 2) | PENDING_5 | §5 |
-| 6 | 4-peer run (row 2) + memory vs S2's 12.85 GB | PENDING_6 | §6 |
+| 2 | Disconnect and reconnect (row 21) | **PASS for what exists** — 23/23 on the run; the character-save half is genuinely not written and is stated, not asserted | §2 |
+| 3 | Host exit under load (row 24, loud version) | **PASS** — 27/27 checks, host quits mid-fight, both last changes read back off the autosave file | §3 |
+| 4 | Jitter — 150 ms / 30 ms / 1 % | **RAN, AND SOMETHING BROKE** — 3 smokes; 2 pass fully, `shared_wild_fight` loses only the friendly-fire refusal MESSAGE (finding F7, not tuned) | §4 |
+| 5 | 3-peer run (row 2) | **PASS** — 22/22, first run. First time three processes have shared a session | §5 |
+| 6 | 4-peer run (row 2) + memory vs S2's 12.85 GB | **PASS** — 32/32, first run. **12.54 GB** measured against S2's 12.85 GB (−2.4 %) | §6 |
 | 7 | `verify-multiplayer-wide` CI job | **DONE** — new workflow, `workflow_dispatch` + nightly `schedule`, never `pull_request` | §7 |
 
 Findings: §8. Handovers: §9.
@@ -101,8 +118,9 @@ hash beside a red diff is unexplainable.
 tools/net/run_net_smoke.sh reconnect_keeps_character --out=<dir>
 ```
 
-**Verdict: exit 0, 23 checks, 23 passed, 0 failed** on the first run; two further
-checks were added afterwards (see below), so the file now carries 25.
+**Verdict: exit 0, 25 checks, 25 passed, 0 failed.** (First run: 23/23, before two further
+checks were added — see *"One assertion was weak"* below. Both runs green on first
+attempt.)
 
 ### What actually survives a reconnect today
 
@@ -144,6 +162,22 @@ The drop is `drop_link` — the transport closed out from under the session — 
 That is the only path that reaches `session.gd::_on_peer_disconnected()`, and it is what
 a pulled cable does.
 
+### Every command run, for reproduction
+
+```
+tools/net/run_net_smoke.sh late_join_modified_world
+tools/net/run_net_smoke.sh reconnect_keeps_character
+tools/net/run_net_smoke.sh host_exit_saves
+tools/net/run_net_smoke.sh three_peer_session --peers=3
+tools/net/run_net_smoke.sh four_peer_session  --peers=4
+tools/net/run_net_smoke.sh shared_wild_fight
+tools/net/run_net_smoke.sh two_peers_boot
+TB_NET_CONDITIONS="delay=150,jitter=30,loss=1" tools/net/run_net_smoke.sh host_join_leave
+TB_NET_CONDITIONS="delay=150,jitter=30,loss=1" tools/net/run_net_smoke.sh shared_wild_fight
+TB_NET_CONDITIONS="delay=150,jitter=30,loss=1" tools/net/run_net_smoke.sh pickup_race
+~/godot-bin/godot --headless --path . --script tools/net/udp_proxy.gd -- --role=selftest
+```
+
 ### One assertion was weak and was strengthened
 
 The first run's "the rejoiner's party is unchanged" check read `before [] / after []`: a
@@ -152,7 +186,17 @@ no data. It is kept (it would still catch a rejoin that swapped in a different l
 player carrying a party) but it is not on its own evidence. Two checks were added on top:
 the rejoiner's **body position** before and after, compared against the config's at-rest
 tolerance (1.5 m). That is real, non-trivial, per-process data that no snapshot carries
-and that a reset local player would lose. Re-run verdict: PENDING_RECONNECT_RERUN.
+and that a reset local player would lose.
+
+**Re-run verdict: exit 0, 25 checks, 25 passed, 0 failed.**
+
+```
+PASS: the rejoiner's body is where it was, within the at-rest tolerance
+      (0.11 m of 1.50 m; before [-25.400, 6.292, -15.700] / after [-25.400, 6.404, -15.700])
+```
+
+0.11 m of drift across a transport drop and a full rejoin, against the config's 1.5 m
+at-rest budget — and all of that drift is on Y, the body settling on terrain.
 
 Reported honestly rather than quietly fixed: the file as first run had 23 real
 assertions, one of which was over empty data.
@@ -229,19 +273,316 @@ own check text.
 
 ## 4. Jitter — 150 ms delay / 30 ms jitter / 1 % loss
 
-PENDING_4
+### How it is run, and why no smoke was edited to run it
+
+`tools/net/udp_proxy.gd` existed from lane 0.F but had **never been run against a live
+ENet handshake** — its own header says so: *"it has NOT been run against a live two-peer
+ENet handshake, because Wave 0 has no `Session` to host/join through it yet ... 7.A is
+where that integration actually happens"*. Wiring it in was left to *"whichever wave adds
+`net_conditions` to `tests/helpers/net_harness.gd`"*. That is this lane.
+
+`net_conditions` is now in the harness and is read from the environment:
+
+```
+TB_NET_CONDITIONS="delay=150,jitter=30,loss=1" tools/net/run_net_smoke.sh <smoke>
+```
+
+The interposition happens in **one place** — `net_harness.gd::step()` rewrites `args.port`
+on a `join` action and nothing else. Deliberately not by rewriting the host's `hello`:
+every smoke reads `hello.enet_port` for **both** the `host` step's bind and the `join`
+step's dial, so a rewritten hello would put the proxy's port under the listen server and
+leave nothing to forward to. Rewriting only the join argument means **every existing smoke
+runs under latency with no edit to the smoke** — which is what makes the jitter verdict
+comparable to the clean one: it is the same file, run twice.
+
+The coordinator waits for the proxy to actually **bind** before returning the port (it
+tries to bind the port itself; the frame it cannot is the frame the proxy has it), rather
+than relying on ENet's connect retries to paper over a startup race.
+
+### The proxy is measurably interposing
+
+Proven on a cheap smoke before the expensive ones, so a null result could not be mistaken
+for a working link:
+
+| Run | Handshake |
+|---|---|
+| `host_join_leave` clean | joined **after 6–8 frames** |
+| `host_join_leave` at 150/30/1 | joined **after 170 frames** (~2.8 s) |
+
+`TB_NET_CONDITIONS="delay=150,jitter=30,loss=1" tools/net/run_net_smoke.sh host_join_leave`
+→ **exit 0, 22/22 checks pass.** Host, join, registry replication both ways, clean leave,
+D100's client-writes-no-world — all survive the link. `SUMMARY.md` and `NET_RUN.json`
+record the conditions, so a jitter run can never be mistaken for a clean one after the fact.
+
+`tools/net/udp_proxy.gd --role=selftest` also passes here: `sent=200 received=144
+loss_rate=28.0% (configured 20.0%) bad_delay_samples=0`.
+
+### `smoke_net_shared_wild_fight` — clean PASS, jittered FAIL on one assertion
+
+Both run on the same box, same day, same base.
+
+| Run | Command | Result |
+|---|---|---|
+| clean | `tools/net/run_net_smoke.sh shared_wild_fight` | **exit 0**, all checks pass |
+| 150/30/1 | `TB_NET_CONDITIONS="delay=150,jitter=30,loss=1" tools/net/run_net_smoke.sh shared_wild_fight` | **exit 1**, 41 pass / **2 fail** |
+
+**Everything about the fight itself survived the link.** Identical numbers to the clean
+run, to three decimals:
+
+```
+PASS: peer 1 joined the fight already in progress (joined 1:1)
+PASS: the host's record now holds 2 participants (got 2)
+PASS: peer 0 landed a blow on the shared opponent within 1 swings: 112.7 -> 104.0
+PASS: both peers draw the same health bar after it (host 104.012, guest 104.012)
+PASS: peer 1 swung at the opponent (local verdict ok=false code=pending)
+PASS: peer 1 landed a blow on the shared opponent within 1 swings: 104.0 -> 95.8
+PASS: both peers draw the same health bar after it (host 95.789, guest 95.789)
+```
+
+**What broke is the friendly-fire REFUSAL MESSAGE, and only the message:**
+
+```
+PASS: peer 1's swing at its teammate reached the host (local verdict ok=false code=pending)
+FAIL: the host refused it with `friendly_target` (got code '', reason '')
+FAIL: and gave the striker a sentence a player can be shown
+PASS: peer 0's creature took nothing from it (107.873 before, 107.873 after)
+PASS: and the opponent took nothing from it either (95.789 before, 95.789 after)
+```
+
+Clean, the same two lines read `got code 'friendly_target', reason "You can't attack your
+own side."`
+
+So under latency **the safety holds and the explanation does not arrive in time**. The
+teammate takes no damage; the striker is told nothing. That is the two-halves split
+`shared_wild_fight`'s own comment warns about — *"a silent no-op passes this line while
+hiding a targeting bug, which is the whole reason both halves are here"* — landing on the
+half it was written to catch.
+
+**The arithmetic, which is the mechanism.** `STRIKE_SETTLE` is **15 frames = 250 ms**.
+A 150 ms one-way delay is a **300 ms** round trip, up to **360 ms** with jitter. The
+refusal cannot have arrived inside the window. That constant was chosen against the ENet
+spike's **6.9 ms** median loopback RTT.
+
+**Late, or lost?** The evidence says **late**, and the pickup-race run below settles it.
+Two independent reasons:
+
+1. In the same jittered run the client's *other* host round trips completed fine — both
+   `pending` strikes landed and both health bars agreed to three decimals. Those
+   assertions poll in a retry loop; the refusal is read **once**, immediately. A
+   single-shot read is the only assertion in the file that cannot absorb a round trip.
+2. **`smoke_net_pickup_race` at the same 150/30/1 passes 30/30 *including the loser's
+   refusal message*** — `already_taken` with its player-facing sentence, delivered across
+   the same link. The refusal channel is not broken by latency.
+
+**Not tuned.** The lane brief is explicit: *"If something does break, that is the finding;
+do not tune the tolerance until it passes."* `STRIKE_SETTLE` is untouched, and
+`smoke_net_shared_wild_fight.gd` is lane 4.C's file and outside this lane's write set. It
+is recorded as **finding F7** with the one-line experiment that would settle late-vs-lost.
+
+This is a **real result either way.** If it is late, a player on a 150 ms link swings at a
+friend and gets no feedback for a third of a second — a design fact worth knowing before
+the owner's LAN run. If it is lost, it is a defect in the refusal path. Contract §9 exists
+to make exactly this reproducible in a container, and it just did, on its first use.
+
+### The catch path under jitter could not be run
+
+Contract §9 names `smoke_net_catch_race` as the second smoke 7.A runs under latency. **It
+does not exist**, and neither does the arm to write one: there is no `catch` action in
+`peer_runner.gd`'s step vocabulary. `MULTIPLAYER_ACCEPTANCE.md` row 6 already records the
+catch rule as having *"**No net smoke** — recorded as owed, not implied"*, covered only by
+the pure `test_catch_arbitration`.
+
+Rather than invent a substitute and call it the catch path, this lane ran the nearest
+arbitration race that **does** exist — `smoke_net_pickup_race`, the two-peers-one-object
+contest — under the same conditions.
+
+```
+TB_NET_CONDITIONS="delay=150,jitter=30,loss=1" tools/net/run_net_smoke.sh pickup_race
+```
+
+**Verdict: exit 0, 30 checks, 30 passed, 0 failed.** The proxy is interposing here too —
+the joiner took **163 frames** against ~8 clean.
+
+Two peers arm a press at the same wall-clock instant, one object, over a 150 ms link:
+
+```
+PASS: exactly one berries entered the world: 0 before, 1 after (peer 0: 0 -> 1, peer 1: 0 -> 0)
+PASS: exactly one peer walked away with the find
+PASS: peer 1 (the loser) was refused with `already_taken`
+        (refusals: [{ "code": "already_taken", "reason": "Someone else got there first." }])
+PASS: peer 1 (the loser) was given a sentence to show the player, not silence
+PASS: peer 0 (the winner) was not also refused (refusals: [])
+```
+
+**This is the control that settles finding F7.** The pickup path's *arbitration refusal*
+— code **and** player-facing sentence — reaches the losing client intact across the same
+150 ms link on which `shared_wild_fight`'s friendly-fire refusal came back empty. The
+refusal channel itself is not broken by latency. The difference is how the two smokes
+read it: `pickup_race` collects refusals on the transport and polls, `shared_wild_fight`
+reads `refusal.code` **once**, 15 frames (250 ms) after the strike, inside a 300–360 ms
+round trip.
+
+So F7 is **late, not lost**, on this evidence, and the fix belongs in the smoke's timing
+rather than in the refusal path — which is precisely why this lane did not touch either.
+
+Writing the real catch arm is handover **H5**.
 
 ---
 
-## 5. Three peers
+## 5. Three peers — PASS
 
-PENDING_5
+`tests/smoke_net_three_peer_session.gd` (`# peers: 3`). **Nightly / owner-kit only.**
+
+```
+tools/net/run_net_smoke.sh three_peer_session --peers=3 --out=<dir>
+```
+
+**Verdict: exit 0, 22 checks, 22 passed, 0 failed — on the first run.**
+
+Row 2 of `MULTIPLAYER_ACCEPTANCE.md` says *"join with up to three"* and its evidence cell
+has read *"3/4-peer runs owed"* since it was written. **This is the first time three
+Tetherbound processes have been in one session.** Everything before it proved the session
+at exactly two peers, which is the one count at which a whole class of bug cannot appear:
+a registry that replicates to *the* client rather than to *every* client, a broadcast that
+is really an `rpc_id`, `max_peers` arithmetic off by one.
+
+```
+PASS: peer 1 (a client) changed the world (ok=false pending=true code='pending')
+PASS: that client's change committed on the host
+PASS: peer 2 joined a world a CLIENT had already changed (3 peer(s) in registry)
+PASS: peer 0's / peer 1's / peer 2's registry reports 3 peers
+PASS: peer 1's registry matches the host's row for row
+        (["peer-6371-101540825@1", "three-peer-a@563187642", "three-peer-b@1781693912"])
+PASS: peer 2's registry matches the host's row for row
+PASS: peer 2's snapshot carried a world change made by peer 1, not by the host
+PASS: the listen server's own peer id is 1 (got 1)
+PASS: both joiners hold real assigned ENet ids, neither of them 1
+PASS: the two joiners hold DIFFERENT ids ([1, 563187642, 1781693912])
+PASS: contract §7 state_hash agrees across all three peers
+PASS: the desync detector stayed quiet for six seconds with three peers connected
+PASS: peer 1 -- who did not move -- also sees 2 peers
+PASS: peer 1's session is still active after somebody ELSE left
+ALL CHECKS PASSED
+```
+
+Three things here can only be asked at three peers:
+
+- **the registries agree by CONTENT, on all three** — not by count. A regression from
+  `rpc()` to `rpc_id()` in `_broadcast_registry()` is invisible at two peers and leaves one
+  of three stale here;
+- **the second joiner is late relative to the first**, so its snapshot has to carry a world
+  change that travelled *client → host → client*. That is item 22 at three peers, and it is
+  the assertion that would fail if only host-made changes reached a joiner;
+- **one joiner leaving does not disturb the other.** At two peers "somebody left" and "the
+  session ended" are the same event; here they are not, and peer 1 stayed a live client
+  rather than silently becoming a host.
+
+Note `story_flag` from a client answering `ok=false pending=true code='pending'` and the
+smoke passing on it — that is the *"pending is not a refusal"* rule honoured, with the host
+confirming the commit on the next line.
+
+### Memory
+
+Read through the `realm_shells` probe, per peer, into the run's own log:
+
+| peer | VmHWM |
+|---|---|
+| 0 (host) | 3,288,884 kB = **3.14 GB** |
+| 1 | 3,287,900 kB = **3.14 GB** |
+| 2 | 3,286,764 kB = **3.14 GB** |
+| **total** | **9.41 GB** |
+
+Strikingly flat: the host is within 2 MB of its clients, so the listen server costs
+essentially nothing over a client at this peer count. Linear extrapolation to four gives
+**~12.5 GB**, against spike S2's measured **12.85 GB** — the two agree, which is the first
+independent confirmation of S2's number.
+
+Box: 4 cores, 15 GB total, ~10 GB free at launch.
 
 ---
 
-## 6. Four peers, and the memory measurement
+## 6. Four peers, and the memory measurement — PASS
 
-PENDING_6
+`tests/smoke_net_four_peer_session.gd` (`# peers: 4`). **Nightly / owner-kit only.**
+
+```
+tools/net/run_net_smoke.sh four_peer_session --peers=4 --out=<dir>
+```
+
+**Verdict: exit 0, 32 checks, 32 passed, 0 failed — on the first run.**
+
+### The cap admits exactly four
+
+`session.gd::host()` passes `max_peers - 1` to `ENetMultiplayerPeer.create_server()`,
+which counts **clients**. An off-by-one there is invisible at every smaller peer count and
+refuses the last joiner here. It did not:
+
+```
+PASS: THE FOURTH PEER was admitted -- D95's cap is host + three joiners, and
+      `create_server()` counts clients (joined as peer 1375669109 after 7 frames;
+      snapshot applied; 4 peer(s) in registry)
+PASS: the registry holds exactly 4 rows
+      (["four-peer-a@349717751", "four-peer-b@1376501046",
+        "four-peer-c@1375669109", "peer-6869-101908418@1"])
+PASS: peer 1's / peer 2's / peer 3's registry matches the host's row for row
+PASS: all four peer ids are distinct ([1, 349717751, 1376501046, 1375669109])
+PASS: the fourth peer changed the world (ok=false pending=true code='pending')
+PASS: peer 0 / 1 / 2 / 3 received the fourth peer's world change
+PASS: contract §7 state_hash agrees across all four peers
+PASS: the desync detector stayed quiet for six seconds at the full peer cap
+PASS: peer 3 left cleanly
+PASS: peer 0 / 1 / 2 is down to 3 peers and still in the session
+PASS: the vacated slot was reusable -- a peer rejoined to the cap
+PASS: the host is back at 4 peers
+ALL CHECKS PASSED
+```
+
+A world change made by the **last** joiner reaching **all four** peers is the broadcast at
+full width: a regression from `rpc()` to `rpc_id()` passes at two peers, leaves one stale
+at three, and two stale here.
+
+The vacate-and-rejoin at the end is the other cap question: `create_server()`'s client
+count has to *free* a slot as well as allocate one, and a leak there would refuse the
+rejoin.
+
+### THE MEMORY MEASUREMENT
+
+The number this row has been owed. `VmHWM` per peer, read through the `realm_shells`
+probe into the run's own log:
+
+```
+coordinator: FOUR-PEER MEMORY -- peer 0: 3.14 GB, peer 1: 3.14 GB,
+                                peer 2: 3.14 GB, peer 3: 3.13 GB
+coordinator: four-peer total VmHWM 12.54 GB against spike S2's 12.85 GB (contract §8)
+```
+
+| | |
+|---|---|
+| four concurrent Meadows, measured here | **12.54 GB** |
+| spike S2's measurement (`MP-0D-SPIKE-HOSTCOST-0905`) | **12.85 GB** |
+| difference | **−0.31 GB, 2.4 %** |
+
+**S2's number is confirmed independently, on a different box, five days later.** The
+policy that rests on it — contract §8 and §10's *"3/4-peer runs never share a 16 GB runner
+with PR CI"* — is sound, and `verify-multiplayer-wide` is correctly gated.
+
+Two further facts the run makes visible:
+
+- **the host costs the same as a client** (3.14 vs 3.13 GB, a ~10 MB spread across all
+  four). At this peer count the listen server is free; the cost is four Meadows, not one
+  server plus three clients;
+- **the cost is linear in peers**, not super-linear: 3.14 GB × 4 = 12.54 GB exactly, and
+  the 3-peer run's 9.41 GB is the same per-peer figure. So the 16 GB ceiling is a hard
+  wall at four and there is no headroom for a fifth — which is D95's cap anyway.
+
+It is **reported, never asserted**. A threshold here would only make the nightly job flaky
+on a roomier or tighter runner and would teach nobody anything; the smoke asserts only
+that every peer returned a *real* VmHWM, so the line in the log is a measurement rather
+than a zero.
+
+Box: 4 cores, 15 GB total, ~10 GB free at launch — so 12.54 GB fit, with roughly 2 GB to
+spare and nothing else running. This is the honest margin: a CI runner doing anything else
+at the same time would not have made it.
 
 ---
 
@@ -480,6 +821,30 @@ nobody spends this time again. If it is not, it is a genuine gap in §17 item 5.
 
 The smoke now uses the supported shape — host engages, client joins — which is also the
 sharper test of item 24: the peer that quits is the one arbitrating.
+
+### F7 — under 150 ms the friendly-fire refusal does not reach the striker in time (recorded, NOT fixed — the jitter deliverable)
+
+Full detail in §4. In one line: at `delay 150 / jitter 30 / loss 1`,
+`smoke_net_shared_wild_fight` keeps every damage number identical to the clean run to
+three decimals, and loses **only** the refusal message — `got code '', reason ''` where
+clean reads `friendly_target` / *"You can't attack your own side."*
+
+The safety holds; the explanation does not arrive in time. `STRIKE_SETTLE` is **15 frames
+= 250 ms**, against a **300–360 ms** round trip on this link; that constant was chosen
+against the ENet spike's **6.9 ms** loopback RTT. The evidence points to *late*, not
+*lost*: the same client's other host round trips in the same run completed fine, and those
+assertions poll in a retry loop while the refusal is read once.
+
+**The experiment that settles it** (one line, for whoever owns `scripts/net/encounter_host.gd`):
+re-read the client's `encounter` probe a second time, ~60 frames after the strike, in the
+same jittered run. If `refusal.code` is `friendly_target` by then it is late and
+`STRIKE_SETTLE` needs to scale with the link; if it is still empty the refusal is being
+dropped and that is a defect in the refusal path.
+
+Not fixed here on purpose: `smoke_net_shared_wild_fight.gd` is lane 4.C's file,
+`scripts/net/*` beyond this lane's own files is outside the write set, and the brief is
+explicit that a break under jitter is the finding and the tolerance is not to be tuned
+until it passes.
 
 ---
 
