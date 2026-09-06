@@ -2366,6 +2366,7 @@ func _build_bank() -> void:
 	instance.material_override = _bank_material()
 	add_child(instance)
 	instance.create_trimesh_collision()
+	_make_trimesh_two_sided(instance)
 	_build_bank_cap(min_x, min_z, step, nx, nz, crest_for_norm, moist_sources, moist_radius)
 
 	# The site skirt (flora/rock scatter thinning out from the bank's own
@@ -2452,7 +2453,23 @@ func _build_bank_cap(min_x: float, min_z: float, step: float, nx: int, nz: int,
 	cap.material_override = _bank_material()
 	add_child(cap)
 	cap.create_trimesh_collision()
+	_make_trimesh_two_sided(cap)
 	print("[warrens] bank cap closes the dome over the throat (%d quads)" % quads)
+
+
+## POST-ROUND-6-0906. `create_trimesh_collision()` builds a ONE-SIDED
+## ConcavePolygonShape3D (`backface_collision` false): it collides along the
+## triangles' own face normals only. The bank grid's winding puts those
+## normals on the underside -- which is why the enclosure rays cast UP from
+## the chambers always found it, and why the fixture's first ray cast DOWN
+## onto the new cap went straight through to the throat. A heightfield a
+## player can walk over from above and that must also read as a roof from
+## below has to collide from both sides.
+func _make_trimesh_two_sided(instance: MeshInstance3D) -> void:
+	for shape_node: Node in instance.find_children("*", "CollisionShape3D", true, false):
+		var concave := (shape_node as CollisionShape3D).shape as ConcavePolygonShape3D
+		if concave != null:
+			concave.backface_collision = true
 
 
 func _bank_normal_shaped(x: float, z: float, unnotched: bool) -> Vector3:
