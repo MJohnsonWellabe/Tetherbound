@@ -4309,6 +4309,18 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			if benemy != null and is_instance_valid(benemy):
 				var binstance: Variant = (benemy as Node3D).get("instance")
 				if binstance != null:
+					# `attack_cooldown` is the INSTANCE's own G-2 override.
+					# `body_attack_cooldown` is the number the swing timer
+					# actually reads: `wild_creature.gd::set_engaged()` snapshots
+					# `_enemy_config_for_this_body()` into `_combat_cfg` when the
+					# fight opens, which is BEFORE §10's record exists, so an
+					# override written afterwards reaches no swing at all unless
+					# the body is told to re-read it (D100's
+					# `refresh_combat_profile()`). Reported separately because a
+					# smoke that asserted only the first would pass a build in
+					# which the multiplier never reached the fight -- exactly the
+					# class of defect finding F1 was.
+					var bcfg: Dictionary = (benemy as Node3D).get("_combat_cfg") as Dictionary
 					live = {
 						"species_id": str((binstance as RefCounted).get("species_id")),
 						"level": int((binstance as RefCounted).get("level")),
@@ -4318,6 +4330,7 @@ func _execute_probe(msg: Dictionary) -> Variant:
 						"defence": float((binstance as RefCounted).get("defence")),
 						"attack_cooldown": float(((binstance as RefCounted)
 							.get("combat_override") as Dictionary).get("attack_cooldown", 0.0)),
+						"body_attack_cooldown": float(bcfg.get("attack_cooldown", -1.0)),
 					}
 			return {
 				"available": true,

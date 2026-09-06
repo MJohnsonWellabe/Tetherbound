@@ -38,7 +38,7 @@ two people in it, or that a friend's creature reads as theirs. Those are the own
 | 5 | Shared wild encounters | `smoke_net_shared_wild_fight` | ☐ |
 | 6 | First-successful-catch rule | `test_catch_arbitration` (pure, deterministic) **and `smoke_net_catch_race`** — **45 assertions, 0 failures**, green twice from a clean tree: two peers throw at one wild creature at a shared wall-clock instant, exactly one is granted, the loser is refused `already_resolving` with a sentence, and creatures owned across both peers rise by exactly the winner's own `caught` bit. The **full-belt half is still owed**: the host's roll is genuinely random and nothing can pin it over the wire, so a catch landing into five owned creatures is asserted only as an invariant a breakout satisfies vacuously | ☐ |
 | 7 | A trainer encounter together | `smoke_net_boss_rewards_each_participant` — 30 checks, peer 0 challenges Bryn through `begin_trainer_battle()`, peer 1 joins in progress, the `defeat_flag` is written **once for the world** and lands on both peers, and each peer gains Bryn's authored 20 coin + 1 potion **undivided**. Passed on attempt 3; attempts 1–2 were failures of this lane's own new harness arm (findings F4, F5), not of game code | ☐ |
-| 8 | A boss encounter together | `smoke_net_shared_boss` — **81 assertions, 0 failures, green three times consecutively from a clean tree.** Two real processes, both piloting a creature, in **`warden_aldis`**'s own fight, at his own placed body inside the stronghold. It asserts what a BOSS is different about and nothing row 7 asserts (no coin, no potion, no item receipt): the record is stamped `kind: "boss"`; both peers are participants in **ONE** record (peer 1's `bound_id` is peer 0's, and peer 1 runs no trainer battle of its own, holds no battle id and has no roster to send out) and it is still that same record after a round change; the boss's HP is **host truth** and both peers' strikes reduce the same number, equal on both to the thousandth; **never HP × players** (§10 / D-MP12) at the two moments it could fire — when the second player ARRIVES, and when the next creature is SENT OUT with two participants — against the authored value and the multiplier the smoke reads out of `data/config/multiplayer.json` itself, plus the config row named as carrying only the two allowed keys; the climax's three world flags (`defeated_warden` and the Warden's two `reward.flags`) land on **both** peers with **no** per-participant receipt, which is `world_facts()` committing them once for the world rather than once per person; and a pilot's swing at its teammate's creature is refused `friendly_target` with the sentence arriving back at the striker, the teammate and the boss both untouched over a window the boss itself did not act in. **Still owed on this row:** the WALK — the Warden Arena's dialogue, the machine gate and the legendary chamber stay `smoke_boss`'s solo ground. And §10's OTHER two clauses (the modest stat multiplier and the shorter attack cooldown) reach **nothing** on this tree, in any trainer or boss battle: finding F1, measured, printed by the smoke and deliberately not asserted in either direction | ☐ |
+| 8 | A boss encounter together | `smoke_net_shared_boss` — **81 assertions, 0 failures, green three times consecutively from a clean tree.** Two real processes, both piloting a creature, in **`warden_aldis`**'s own fight, at his own placed body inside the stronghold. It asserts what a BOSS is different about and nothing row 7 asserts (no coin, no potion, no item receipt): the record is stamped `kind: "boss"`; both peers are participants in **ONE** record (peer 1's `bound_id` is peer 0's, and peer 1 runs no trainer battle of its own, holds no battle id and has no roster to send out) and it is still that same record after a round change; the boss's HP is **host truth** and both peers' strikes reduce the same number, equal on both to the thousandth; **never HP × players** (§10 / D-MP12) at the two moments it could fire — when the second player ARRIVES, and when the next creature is SENT OUT with two participants — against the authored value and the multiplier the smoke reads out of `data/config/multiplayer.json` itself, plus the config row named as carrying only the two allowed keys; the climax's three world flags (`defeated_warden` and the Warden's two `reward.flags`) land on **both** peers with **no** per-participant receipt, which is `world_facts()` committing them once for the world rather than once per person; and a pilot's swing at its teammate's creature is refused `friendly_target` with the sentence arriving back at the striker, the teammate and the boss both untouched over a window the boss itself did not act in. Since 2026-09-06 it also asserts §10's OTHER two clauses, which finding F1 had measured as reaching nothing and which this smoke could then only print: at two participants the live creature's attack and defence are its authored numbers × `stat_multiplier`, and the **body's own combat config** — the number the swing timer reads, not the one sitting on the instance — is its authored cooldown × `attack_cooldown_multiplier`. **Still owed on this row:** the WALK — the Warden Arena's dialogue, the machine gate and the legendary chamber stay `smoke_boss`'s solo ground | ☐ |
 | 9 | Gather without duplication | `smoke_net_pickup_race` | ☐ |
 | 10 | Shared pickups | `smoke_net_pickup_race` | ☐ |
 | 11 | Build and use shared structures | `smoke_net_shared_building` — includes the host-save-and-reload half | ☐ |
@@ -125,17 +125,24 @@ Recorded here so a reader does not have to infer them from silence:
   does not arrive (7.A finding F7, an early `STRIKE_SETTLE` read). Deliberately not tuned: a timing
   constant moved to make one run green is how a real ordering defect gets buried.
 
-- **§10's stat multiplier and attack cooldown reach nothing.** Row 8's own claim — *never HP ×
-  players* — holds and is asserted. The other two thirds of §10 / D-MP12 are not applied to any
-  creature in any trainer or boss battle: `encounter_director.gd::_scale_opponent_for_the_session()`
-  runs at send-out, BEFORE the record is opened or resumed, so the first creature finds no record
-  and every later one finds a participant list that §9 emptied at the round boundary — an identity
-  row. Measured on the Warden twice (burrowback 27.750/42.550, galecrest 51.800/27.750, each exactly
-  its authored number, with the record beside them saying `stat_multiplier` 1.1). Not fixed by row 8:
-  the scaler multiplies in place with no unscaled base kept, so moving the call without deciding
-  where that base lives compounds the multiplier round over round. `test_encounter_rewards.gd` tests
-  the TABLE and the RECORD; nothing has ever asserted the multiplier reaches a creature. See
-  `ralph/reports/MP-ROWS-8-21-0906/REPORT.md` finding F1.
+- **§10's stat multiplier and attack cooldown reach nothing — CLOSED, 2026-09-06** (kept in this
+  list because it is where the item was carried open). Row 8's own claim — *never HP × players* —
+  always held; the other two thirds of §10 / D-MP12 reached no creature in any trainer or boss
+  battle, because `encounter_director.gd::_scale_opponent_for_the_session()` ran at send-out,
+  BEFORE the record was opened or resumed, so the first creature found no record and every later
+  one found a participant list §9 had emptied at the round boundary — an identity row. Measured on
+  the Warden twice (burrowback 27.750/42.550, galecrest 51.800/27.750, each exactly its authored
+  number, with the record beside them saying `stat_multiplier` 1.1). Fixed by lane MP-F1-F2 and
+  recorded as `docs/decisions/D100-participant-scaling-keeps-an-unscaled-base-on-the-director.md`:
+  the call moved to after the record is live, and an **unscaled base is kept on the director** so a
+  row that is re-derived on every join, leave and landed strike lands on `base × row` rather than
+  compounding. `wild_creature.gd::refresh_combat_profile()` is the other half — the body snapshots
+  its combat config when the fight opens, which is before the record exists, so the shortened
+  cooldown would otherwise have reached no swing. HP is still never multiplied, and is now asserted
+  at every row including the identity. Two new proofs: `tests/smoke_encounter_scaling.gd` (66
+  assertions over three rounds, three participant counts, a join, eleven re-derivations and two
+  leaves; 18 failures on the tree before the fix), and `smoke_net_shared_boss`, tightened from
+  printing those numbers to asserting them. See `ralph/reports/MP-F1-F2-0906/REPORT.md`.
 
 - **Two pilots in the Warden fight is proven; the WALK to him is not.** Row 8 drives `warden_aldis`
   through `begin_trainer_battle()` — the same call `stronghold_climax.gd` makes, and
@@ -154,9 +161,25 @@ Recorded here so a reader does not have to infer them from silence:
   instead; `smoke_net_behind_character_joins_ahead_world`, the other smoke built on divergent player
   flags, asks for no hash equality either. Finding F5.
 
-- **`place_on_ground` puts a creature metres above the floor inside the Warden Arena** (lane
-  MP-ROWS-8-21 finding F2). Worked around in the harness with an `exact` placement argument; **not
-  fixed in the world.** A player deploying inside that arena meets the same geometry.
+- **`place_on_ground` puts a creature metres above the floor inside the Warden Arena — CLOSED in
+  the world, 2026-09-06** (lane MP-ROWS-8-21 finding F2; kept in this list because it is where the
+  item was carried open). The cause was not the ground query: it was that the fight was being
+  STAGED outside the room. `combat_manager.gd::_place_fighters()` forms the whole fight
+  `deploy_offset + separation` (~7.6 m) in front of wherever the player engaged, and the Warden
+  stands 5 m from his arena's back wall, so a challenge taken up beside him formed 4–5 m outside
+  it, at z 7666–7668, where a sweep found **no floor collider at all** — while
+  `stronghold.gd::built_floor_height_at()` still claims those metres (its margin is deliberately
+  10 m). Every body was seated at the room's floor height of 6.172 and then fell ~8 m. Measured on
+  the unfixed tree: the player at y −0.363 and the boss's creature at y −1.241, both outside the
+  room, with the player's own creature still at 6.172 inside it. Fixed where the stronghold's own
+  comment says it belongs — "containing that drift is `combat_manager.gd`'s own arena-bounds job
+  and stays there": the staging is scaled back as one piece when `_arena_bounds()` says the room
+  ends before it does. `_arena_bounds()` answers −1.0 for every square metre of open meadow, so a
+  fight started outdoors is byte-for-byte the fight it was, and the claim margin is untouched.
+  Proven by a new case in `tests/smoke_arena_contain.gd` (21 assertions; 8 failures on the unfixed
+  tree, naming the 6.5 m and 7.4 m drops), which also asserts up front that the room really does
+  end before the unshortened staging span reaches. The harness's `exact` placement argument is
+  unchanged and still works; other smokes now use it.
 
 - **`smoke_net_shared_wild_fight` is flaky on both sides.** The realm-shell lane measured 5 of 7 on
   its own branch against 6 of 7 on its untouched base. That is a flake rate, not a regression, and
