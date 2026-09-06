@@ -1,5 +1,16 @@
 # START HERE — Tetherbound
 
+> **Multi-biome roadmap, 2026-09-06: [`docs/DEVELOPMENT_ROADMAP.md`](DEVELOPMENT_ROADMAP.md)**
+> — the canonical execution sequence above the level of a single chapter:
+> land current Meadows/Cloudreach work, ship 1–4 player multiplayer, run the
+> Meadows visual sweep, then build Stormwood (Biome 3) and Water (Biome 4)
+> back-to-back, then one four-biome product audit and repair pass, then the
+> Beta Ready gate. Start at `docs/DEVELOPMENT_ROADMAP_START_HERE.md` for the
+> current next action. The Meadows-only `docs/ROADMAP.md` below still governs
+> the fine-grained Meadows gates that this file's routing table points to;
+> `docs/DEVELOPMENT_ROADMAP.md` is the layer above it that sequences whole
+> biomes and cross-cutting work (multiplayer, audits, beta).
+
 > **Cloudreach branch scope, 2026-09-05:** the newer owner directive in
 > `docs/biomes/cloudreach/BUILD_CLOUDREACH_CLIFFS_TO_COMPLETION.md` authorizes the
 > second chapter, Cloudreach Cliffs (Air), on `codex/cloudreach-cliffs`. For that
@@ -72,7 +83,8 @@ and which must wait for 2.8's verdict.
 | Hard rules for any change | `CLAUDE.md` |
 | What the finished chapter should feel like | `docs/GAME_VISION.md` |
 | What is true right now (status, known issues, evidence) | `docs/CURRENT_STATE.md` |
-| What to do next, in what order, with what acceptance | `docs/ROADMAP.md` |
+| The cross-biome execution sequence (multiplayer, audits, beta, Biomes 3–8) | `docs/DEVELOPMENT_ROADMAP.md`, entry at `docs/DEVELOPMENT_ROADMAP_START_HERE.md` |
+| What to do next inside the Meadows chapter, in what order, with what acceptance | `docs/ROADMAP.md` |
 | How agents work here (tiers, briefs, CI, testing, renders, done) | `docs/AGENT_WORKFLOW.md` |
 | How a system works, where its code/data/tests are | `docs/GAMEPLAY_SYSTEMS.md` |
 | Where things are in the world and how much content exists | `docs/WORLD_AND_CONTENT.md` |
