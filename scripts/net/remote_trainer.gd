@@ -69,24 +69,56 @@ var net_carried: bool = false
 
 var _render_position: Vector3 = Vector3.ZERO
 var _has_render: bool = false
-var _owned_here: bool = false
+## Whether this process is this body's authority. Re-read every physics frame
+## rather than cached once in `_ready()`, and that is deliberate. Authority is
+## a plain integer compared against `multiplayer.get_unique_id()`, and that id
+## CHANGES under a node's feet: a process with no session runs on Godot's
+## default `OfflineMultiplayerPeer`, where the id is 1, and it becomes a large
+## random number the moment `Session.join()` installs a real peer. A body that
+## decided once at `_ready()` whether it was its own would keep a stale answer
+## across that swap — invisible forever, pushing the wrong rig's state. `null`
+## until the first evaluation so the first pass always applies.
+var _owned_here: Variant = null
 var _ground_speed: float = 0.0
+## The authored collision setup, kept so the owner-side body can give it back
+## if authority ever moves to another peer.
+var _layer: int = 0
+var _mask: int = 0
 
 
 func _ready() -> void:
 	add_to_group(GROUP)
-	_owned_here = is_multiplayer_authority()
+	_layer = collision_layer
+	_mask = collision_mask
 	net_position = global_position
 	_render_position = global_position
 	_has_render = true
 	_apply_nameplate()
-	if _owned_here:
+	_apply_ownership()
+	print("[trainers] %s stands up: authority %d, this peer is %d (%s)"
+		% [name, get_multiplayer_authority(), multiplayer.get_unique_id(),
+			"our own proxy" if bool(_owned_here) else "another player"])
+
+
+## Apply everything that depends on WHOSE body this is. Idempotent, and called
+## again whenever the answer changes.
+func _apply_ownership() -> void:
+	var mine := is_multiplayer_authority()
+	if _owned_here != null and bool(_owned_here) == mine:
+		return
+	_owned_here = mine
+	if mine:
 		# The owner already has a local rig standing in this spot. Drawing a
 		# second trainer inside it, and colliding with it, is the classic
 		# "my own body shoves me around" bug.
 		visible = false
 		collision_layer = 0
 		collision_mask = 0
+	else:
+		visible = true
+		collision_layer = _layer
+		collision_mask = _mask
+	_apply_nameplate()
 
 
 ## The nameplate reads the registry's display name, defensively: the peer
@@ -102,7 +134,7 @@ func _apply_nameplate() -> void:
 	if shown.is_empty():
 		shown = "Trainer %d" % peer_id if peer_id != 0 else "Trainer"
 	plate.text = shown
-	plate.visible = not _owned_here
+	plate.visible = not bool(_owned_here)
 
 
 ## Late name arrival: `trainer_spawn.gd` calls this when the registry finally
@@ -113,7 +145,8 @@ func set_display_name(value: String) -> void:
 
 
 func _physics_process(delta: float) -> void:
-	if _owned_here:
+	_apply_ownership()
+	if bool(_owned_here):
 		_push_from_local_rig()
 		return
 	_follow(delta)
