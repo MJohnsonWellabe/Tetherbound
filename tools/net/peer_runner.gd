@@ -135,7 +135,23 @@ const NET_STEP_BUDGET_FRAMES := 3000
 ## that swap a one-line change instead of an audit of everything NOT to hash.
 ## Printed into `NET_RUN.json` by `tests/helpers/net_harness.gd` (by preloading
 ## this file) rather than copied a second time there.
-const HASHED_KEYS: Array[String] = ["progression", "placed_buildings", "farm_plots",
+## AMENDED 2026-09-06, closing finding F5 (lane MP-ROWS-8-21). This list used to
+## begin with `progression`, and that key is the reason the detector could not
+## work in the one situation co-op actually produces. `save_game.gd` writes
+## `progression` as the world's flags MERGED WITH THE LOCAL PLAYER'S OWN, so two
+## peers holding byte-identical worlds legitimately hash differently the moment
+## either of them earns a personal flag -- a tutorial beat, an opening beat,
+## `player_slept_at_home`. 7.A's reconnect smoke could ask for hash equality only
+## because its joiner happened to hold nothing personal; the moment a smoke gave
+## a client a player-scoped flag ON PURPOSE, the hashes never agreed inside 600
+## frames while the two peers' worlds were identical key for key.
+##
+## `flags` replaces it: contract §7's own promise was "from Wave 1 the hashed set
+## is exactly `WorldState.save_data()`", and `flags` is that dictionary's
+## world-only flag store (D99's scope split). `_compute_state_hash()` now sources
+## from `Game.world_snapshot()` rather than the merged save file, so every key
+## here is a WorldState key and a player key cannot reach the hash by name.
+const HASHED_KEYS: Array[String] = ["flags", "placed_buildings", "farm_plots",
 	"death_satchels", "harvested_vegetation", "felled_vegetation", "day"]
 
 ## Contract §7's own excluded list, restated here only for `NET_RUN.json`'s
@@ -4972,8 +4988,34 @@ func _save_dictionary() -> Dictionary:
 	return parsed as Dictionary
 
 
+## The hashed subset of a world snapshot, as a pure function of it.
+##
+## Split out of `_compute_state_hash()` so the selection can be asserted without
+## standing up two processes: `tests/test_net_state_hash_scope.gd` calls this
+## with a snapshot carrying player-scoped state and proves none of it survives.
+## F5 shipped because nothing could test the selection -- it only existed inside
+## a heartbeat in a subprocess.
+static func hashed_subset(snapshot: Dictionary) -> Dictionary:
+	var data := {}
+	for k in HASHED_KEYS:
+		if snapshot.has(k):
+			data[k] = snapshot[k]
+	return data
+
+
 func _compute_state_hash() -> Variant:
-	var full := _save_dictionary()
+	# `Game.world_snapshot()`, NOT the merged save file -- see HASHED_KEYS's own
+	# comment for finding F5. This is the same payload the host puts on the wire
+	# in `session.gd::_rpc_snapshot`, so the detector now compares exactly what
+	# replication is responsible for keeping equal, and nothing it is not.
+	#
+	# It also drops a scratch save-file write from every heartbeat: the snapshot
+	# runs the same four live-scene sync seams `save_game()` runs, and no longer
+	# needs disk to answer.
+	var hgame := root.get_node_or_null(^"Game")
+	if hgame == null or not hgame.has_method("world_snapshot"):
+		return null
+	var full: Dictionary = hgame.call("world_snapshot")
 	if full.is_empty():
 		return null
 	# Allowlist, not exclude-list -- see HASHED_KEYS's own comment. `world_seed`
@@ -4982,11 +5024,7 @@ func _compute_state_hash() -> Variant:
 	# (`probe world_seed`, resolved through `spawn_tables.gd::resolve_seed()`
 	# so it reads what every peer's spawns actually use, not the raw per-process
 	# roll `game_state.gd::new_game()` stores -- see that probe's own comment).
-	var data := {}
-	for k in HASHED_KEYS:
-		if full.has(k):
-			data[k] = full[k]
-	return hash(JSON.stringify(data, "", true))
+	return hash(JSON.stringify(hashed_subset(full), "", true))
 
 
 # --- misc ---------------------------------------------------------------------

@@ -143,16 +143,19 @@ Recorded here so a reader does not have to infer them from silence:
   script". The Warden Arena's dialogue, the machine gate behind him and the legendary chamber remain
   `smoke_boss.gd`'s solo ground and no net smoke enters them.
 
-- **Contract §7's `state_hash` cannot agree once two peers hold different PLAYER-scoped flags.**
-  `HASHED_KEYS` includes `progression`, which `save_game.gd` writes as the world's flags MERGED with
-  the local player's own — `peer_runner.gd`'s own `world_snapshot` comment says a smoke diffing it
-  "would report a divergence that is not one". Measured by row 21, whose client holds a player-scoped
-  flag on purpose: `state hashes never agreed across peers within 600 frames` while both peers'
-  `Game.world_snapshot()` were identical key for key. The background desync detector did not fire, so
-  it is a false red in an explicit assertion rather than a harness fault. Not fixed: splitting
-  `progression` for the hash is a §7 change reaching nine smokes. Row 21 asserts the whole-world diff
-  instead; `smoke_net_behind_character_joins_ahead_world`, the other smoke built on divergent player
-  flags, asks for no hash equality either. Finding F5.
+- **Contract §7's `state_hash` could not agree once two peers held different PLAYER-scoped flags —
+  CLOSED, 2026-09-06** (kept in this list because it is where the defect was recorded). `HASHED_KEYS`
+  began with `progression`, which `save_game.gd` writes as the world's flags MERGED WITH the local
+  player's own, so two peers with byte-identical worlds hashed differently the moment either earned a
+  personal flag. `_compute_state_hash()` now sources from `Game.world_snapshot()` — contract §7's own
+  promise, "from Wave 1 the hashed set is exactly `WorldState.save_data()`" — and hashes its
+  world-only `flags` store. The selection is a pure static, `peer_runner.gd::hashed_subset()`, so it
+  can be asserted without two processes: `tests/test_net_state_hash_scope.gd`, 6 tests / 26
+  assertions, including the row itself (identical worlds, different personal progress, equal hash)
+  and both halves of the control (a world flag, a building, or a different day still diverges; the
+  per-process `world_seed` roll still never reaches the hash). Four of the six go red on the old key
+  list. The defect went four waves unnoticed because the selection lived inside a heartbeat, inside a
+  subprocess, behind a save file, where nothing could assert on it.
 
 - **`place_on_ground` puts a creature metres above the floor inside the Warden Arena** (lane
   MP-ROWS-8-21 finding F2). Worked around in the harness with an `exact` placement argument; **not
