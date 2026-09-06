@@ -44,34 +44,42 @@ and analytic ground. The kinematic heightfield mode is dropped from lane 4.B's s
 keep Dynamic/Game collision around their own camera. Everything about authority above stands:
 the host still owns every opponent body, every HP value, every strike and every catch.
 
-## Attempted and reverted 2026-09-06 — the amendment costs more than memory
+## Attempted and reverted 2026-09-06 — and the reason recorded here first was wrong
 
 Lane 4.B recorded the FULL_GAME switch as unassigned (handover H1). It was implemented
 (`playground_world.gd` picking the mode on `is_multi_peer() and is_host()`, a host that started
-alone upgrading on `Session.peer_joined`), verified to do exactly what it says in the isolated
-peer boot logs — host mode 1 -> 3 on join, client and solo staying at 1 — **and then reverted,
-because `smoke_net_movement_two_peers` caught what the decision had not anticipated.**
+alone upgrading on `Session.peer_joined`), and confirmed to do exactly that in the isolated peer
+boot logs: host mode 1 -> 3 on join, client and solo staying at 1. `smoke_net_movement_two_peers`
+then went red, and it was reverted.
 
-The measured effect was not the +16.1 MB / 3.06 s S2 priced. From the same spawn, holding the
-stick forward for 300 frames:
+**The first version of this section blamed the switch for changing where players can walk. That
+was wrong, and the correction is the useful part.** Holding the stick forward for 300 frames from
+the same spawn:
 
-| Peer | Collision | Walked |
+| Head | host | client |
 |---|---|---|
-| host | FULL_GAME | **14.52 m** |
-| client | Dynamic/Game | **1.92 m** (0.86 m in CI) |
+| the smoke's documented baseline | 2.71 m | 2.71 m, stable across 90- and 300-frame holds |
+| with the switch | 14.52 m | 1.92 m local, **0.86 m in CI** — FAIL |
+| with the switch reverted | **14.57 m** | 2.66 m — PASS |
 
-The smoke's header documents both peers stopping at **2.71 m**, stable across a 90- and a
-300-frame hold. So whole-map collision does not merely add shapes a player might bump into: it
-changes where a player can walk, and **a host and a client in the same world then disagree about
-their shared geography.** That is a worse defect than the one the switch solves.
+The host's 14.5 m **survives the revert**. So it is not the collision mode; it arrived with the
+Wave 3 consumer lanes or the stable-uid work, and it means something moved the host's world
+geometry near the spawn that nobody asked to move. The client's figure is meanwhile *variable*
+where the smoke documents it as stable — 0.86, 1.92, 2.66 across three runs, against a 2.0 m bar.
 
-It also solves nothing yet. The switch exists so a host can simulate wild bodies anywhere with
-real ground beneath them; wild bodies are still not replicated (H1), and nothing consumes
-host-side positions until lane 4.C lands. So it was pure cost.
+The revert still stands, on its own merits rather than as a fix: the switch buys nothing until
+wild bodies are replicated (H1) and something consumes host-side positions (lane 4.C), so
+carrying it while the above is unexplained adds a variable for no benefit.
 
 **What the next attempt must settle, rather than assume:** this decision's line that "clients keep
-Dynamic/Game collision around their own camera" is the thing under question, not a given. Either
-every peer pays for full collision so the geography is shared, or the divergence is measured and
-bounded and shown to be invisible in play. Land it with wild-body replication, where the benefit
-is real and the asymmetry can be judged against creature behaviour instead of against a trainer's
-walk out of a farmhouse.
+Dynamic/Game collision around their own camera" is the thing under question, not a given. A host
+and a client disagreeing about their shared geography would be a worse defect than the one the
+switch solves, and this attempt did not establish whether the switch causes that — only that
+something else in Wave 3 already moved the host's. Land it with wild-body replication, where the
+benefit is real and the asymmetry can be judged against creature behaviour rather than against a
+trainer's walk out of a farmhouse.
+
+**Method note, because it cost a wrong public claim:** one run's numbers fitted a story, the
+revert made the smoke pass, and the coincidence read as confirmation. A revert that turns a test
+green is not evidence that the reverted change caused what the test measured — the baseline has
+to be run too.
