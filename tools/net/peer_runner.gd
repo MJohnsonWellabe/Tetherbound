@@ -72,6 +72,9 @@ const DROPPED_ITEM_SPAWNER := preload("res://scripts/world/dropped_item_spawner.
 ## Lane 5.D: the real bedroll and the real tent it needs over it.
 const PLAYER_BED := preload("res://scripts/build/player_bed.gd")
 const CAMP_TENT := preload("res://scripts/build/camp_tent.gd")
+## Stage B lane 5.A. How a story trigger reaches the ledger, and how a story
+## restore path asks the WORLD (never the merged view) what has happened.
+const STORY_LEDGER := preload("res://scripts/story/story_ledger.gd")
 
 const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
@@ -460,6 +463,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_stand_by_downed(args)
 		"sleep_stand":
 			out = await _step_sleep_stand(args)
+		"story_flag":
+			out = await _step_story_flag(args)
 		"sleep_press":
 			out = _step_sleep_press(args)
 		_:
@@ -1607,6 +1612,14 @@ func _encounter_director() -> Node:
 	return current_scene.get_node_or_null(^"EncounterDirector")
 
 
+## Lane 5.A. `scenes/world/meadows_playground.tscn`'s own node name, found the
+## same way `_combat_manager()` and `_encounter_director()` find theirs.
+func _sequence_director() -> Node:
+	if current_scene == null:
+		return null
+	return current_scene.get_node_or_null(^"SequenceDirector")
+
+
 # --- lane 5.C: personal fog, personal pins, a shared clear ---------------------
 #
 # Two arms and one probe. Between them they stand in for the two things a
@@ -1922,6 +1935,64 @@ func _downed_state() -> Node:
 	return root.get_node_or_null(^"Game/DownedState")
 
 
+# --- lane 5.A: story flags and the gates that read them ------------------------
+#
+# One arm and one probe. The arm does not invent a story event: it submits the
+# SAME intent the shipping trigger submits (`story_ledger.gd::write_flag()`,
+# which is what `sequence_director.gd::_set_progression_flag`, `road_gate.gd`
+# and `tether_relay.gd` all call), so what the smoke drives is the game's own
+# path to the ledger rather than a test-only shortcut into a flag store.
+
+## Submit one story flag through the ledger and report the verdict. `args.flag`
+## is the id; `args.scope` is optional and only ever narrows -- omitted, D99's
+## table decides, which is the case worth testing.
+func _step_story_flag(args: Dictionary) -> Dictionary:
+	var flag := str(args.get("flag", ""))
+	if flag.is_empty():
+		return {"verdict": "ERROR", "detail": "story_flag needs args.flag"}
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		return {"verdict": "ERROR", "detail": "no /root/Game"}
+	if game.get("ledger") == null:
+		return {"verdict": "ERROR", "detail": "no Game.ledger to submit through"}
+	var scope := str(args.get("scope", ""))
+	var verdict: Dictionary
+	if scope == "world":
+		verdict = STORY_LEDGER.set_world_flag(game, flag)
+	elif scope == "player":
+		verdict = STORY_LEDGER.grant_player_flag(game, flag, args.get("peers", []) as Array)
+	else:
+		verdict = STORY_LEDGER.write_flag(game, flag)
+	var ok := bool(verdict.get("ok", false)) or bool(verdict.get("pending", false))
+	return {
+		"verdict": "PASS" if ok else "FAIL",
+		"detail": "%s: ok=%s pending=%s code='%s' reason='%s'" % [
+			flag, str(verdict.get("ok", false)), str(verdict.get("pending", false)),
+			str(verdict.get("code", "")), str(verdict.get("reason", "")),
+		],
+	}
+
+
+## Which nodes in this peer's world are gates, and whether each is open right
+## now. Reported by NODE, not by flag: "the world says the bridge is open" and
+## "the leaf this process is drawing has actually swung" are two different
+## facts, and a delta that reached `WorldState` without re-posing the scene is
+## exactly the failure that looks identical from the flag alone (lane 3.C's
+## `placed_building_rows` vs `placed_building_nodes` split, same reasoning).
+func _story_gate_rows() -> Array:
+	var rows: Array = []
+	for node in get_nodes_in_group("progression_restore"):
+		if not is_instance_valid(node) or not node.has_method("is_open"):
+			continue
+		var flag: Variant = node.get("flag_id")
+		rows.append({
+			"node": str(node.name),
+			"flag": "" if flag == null else str(flag),
+			"open": bool(node.call("is_open")),
+		})
+	return rows
+
+
 func _execute_probe(msg: Dictionary) -> Variant:
 	var what := str(msg.get("what", ""))
 	match what:
@@ -2133,6 +2204,47 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				if dstatus is Dictionary:
 					drow.merge(dstatus as Dictionary, true)
 			return drow
+		"story":
+			# Lane 5.A. Everything the two story smokes assert on, read off this
+			# peer's own live objects: what THE WORLD says (never the merged
+			# view -- a merged read cannot tell "the world opened this gate"
+			# from "my own store happens to hold the id"), what THIS character
+			# personally holds, whether the opening is still gating them, and
+			# whether the gate NODES in front of them have actually re-posed.
+			#
+			# `args.world_flags` / `args.player_flags` name the ids to report,
+			# so a smoke asks about its own flags rather than this file
+			# carrying a list that goes stale.
+			var story_game := root.get_node_or_null(^"Game")
+			if story_game == null:
+				return null
+			var story_args: Dictionary = msg.get("args", {}) as Dictionary
+			var world_store: Variant = STORY_LEDGER.world_flags(story_game)
+			var local_store: Variant = story_game.call("player_flags") \
+				if story_game.has_method("player_flags") else null
+			var world_out := {}
+			for raw: Variant in (story_args.get("world_flags", []) as Array):
+				world_out[str(raw)] = world_store != null \
+					and bool((world_store as RefCounted).call("has", str(raw)))
+			var player_out := {}
+			for raw: Variant in (story_args.get("player_flags", []) as Array):
+				player_out[str(raw)] = local_store != null \
+					and bool((local_store as RefCounted).call("has", str(raw)))
+			var director := _sequence_director()
+			var story_player := _probe.call("player") as Node3D
+			var story_party: Variant = story_game.get("party")
+			return {
+				"world": world_out,
+				"player": player_out,
+				"beat": "" if director == null else str(director.call("beat")),
+				"world_moved_on": director != null and director.has_method("world_has_moved_on") \
+					and bool(director.call("world_has_moved_on")),
+				"locomotion": story_player != null and story_player.has_method("locomotion_enabled") \
+					and bool(story_player.call("locomotion_enabled")),
+				"context": str(_probe.call("input_context")),
+				"party": 0 if story_party == null else int((story_party as RefCounted).call("size")),
+				"gates": _story_gate_rows(),
+			}
 		"session":
 			# Wave 2 (lane 2.A): a real `scripts/net/session.gd` exists, so
 			# every field here is read off it. `available` stays as the first

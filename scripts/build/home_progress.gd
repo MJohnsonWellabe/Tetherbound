@@ -31,6 +31,9 @@ extends RefCounted
 
 const CONFIG_PATH := "res://data/config/progression.json"
 const WORLD_RECORDS := preload("res://scripts/world/realm_world_records.gd")
+## Stage B lane 5.A. D99's residual grant: a shared camp is everyone's camp, so
+## the flag has to cross the wire rather than stop at this process.
+const STORY_LEDGER := preload("res://scripts/story/story_ledger.gd")
 
 static var _config: Dictionary = {}
 
@@ -215,10 +218,27 @@ static func maybe_set_materials_gathered(game: Node) -> void:
 		_grant(game, "home_materials_gathered")
 
 
-## The one place this file names a store. Falls back to the merged view for a
-## test double that has no `grant_player_flag`, which routes to the same store
-## solo.
+## The one place this file names a store.
+##
+## STAGE B LANE 5.A. `Game.grant_player_flag()` fans a flag out to every
+## `PlayerState` THIS PROCESS holds, which solo is the whole world and in a
+## session is one machine's view of it: the friend across the meadow has their
+## own process and their own store, and nothing was crossing the wire. D99's
+## residual rule is that a shared camp is everyone's camp, so the grant is
+## submitted as a `grant_player_flag` INTENT addressed to every peer in the
+## session -- one commit, applied on each peer to its own local store by
+## `ledger_rpc.gd::_apply_player_ops()`.
+##
+## The two fallbacks below are both still live and both still right:
+##   * no transport (a unit fixture, a capture tool, an early boot frame) ->
+##     `Game.grant_player_flag()`, exactly today's behaviour;
+##   * a test double with no `grant_player_flag` -> the merged view, which
+##     routes a player-scoped id to the same store solo.
 static func _grant(game: Node, flag: String) -> void:
+	if game is Node:
+		var verdict: Dictionary = STORY_LEDGER.write_flag(game as Node, flag)
+		if bool(verdict.get("ok", false)) or bool(verdict.get("pending", false)):
+			return
 	if game.has_method("grant_player_flag"):
 		game.call("grant_player_flag", flag)
 		return

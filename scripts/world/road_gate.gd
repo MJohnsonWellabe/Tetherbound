@@ -28,6 +28,9 @@ const STONE_NORMAL := preload("res://assets/buildings/quaternius_medieval/T_Unev
 const STONE_ROUGHNESS := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_Roughness.png")
 const STONE_TILE := 0.28
 const ITEM_GATE := preload("res://scripts/world/item_gate.gd")
+## Stage B lane 5.A. A gate is a WORLD fact: whoever turns the key, it is open
+## for everybody.
+const STORY_LEDGER := preload("res://scripts/story/story_ledger.gd")
 const SEVERED_SPOKES := preload("res://scripts/world/severed_spokes.gd")
 const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
 
@@ -269,10 +272,39 @@ func build(world: Node3D, at: Vector2, yaw_deg: float) -> void:
 	# SB10: a gate the player already opened stays open across a reload —
 	# `_gate`'s flag is the source of truth, not the fresh `_open := false`
 	# above. Silent: no dialogue, no item to consume, just the resting pose.
+	#
+	# Stage B lane 5.A: and the source of truth is the WORLD's flag store, not
+	# the merged view. A gate is a world fact, so a gate the OTHER player opened
+	# reads as open here, and no personal flag can ever open one.
+	add_to_group("progression_restore")
+	STORY_LEDGER.listen(self, _on_delta_applied)
 	var game := get_node_or_null(^"/root/Game")
-	var progression: RefCounted = game.get("progression") if game != null else null
-	if progression != null and _gate.is_open(progression):
+	if game != null:
+		restore_progression_from_game(game)
+
+
+## The `progression_restore` seam: a save load, a joiner's world snapshot, or a
+## world delta somebody else committed. Idempotent -- `_unlock()` and
+## `open_permanently()` both return immediately once `_open` is set. Silent by
+## design: the unlocked LINE belongs to the player who turned the key
+## (`_on_tried`), and a bystander whose friend opened the gate gets the open
+## gate, not somebody else's dialogue.
+func restore_progression_from_game(_game: Node) -> void:
+	if _open:
+		return
+	if STORY_LEDGER.world_flag(self, flag_id):
 		_unlock()
+
+
+## `ledger_rpc.gd::_commit_here()` does not sweep the `progression_restore`
+## group -- only `_rpc_delta` does -- so the HOST needs this to notice its own
+## commit and a client's. See `story_ledger.gd::listen()` for the full ordering.
+func _on_delta_applied(delta: Dictionary) -> void:
+	if not STORY_LEDGER.delta_sets_world_flag(delta, flag_id):
+		return
+	var game := get_node_or_null(^"/root/Game")
+	if game != null:
+		restore_progression_from_game(game)
 
 
 ## SIGIL-SEAL. Fence the causeway either side of the leaf, out to
@@ -471,13 +503,27 @@ func _on_tried() -> void:
 		return
 	var game := get_node_or_null(^"/root/Game")
 	var inventory: RefCounted = game.get("inventory") if game != null else null
-	var progression: RefCounted = game.get("progression") if game != null else null
 
-	if inventory != null and progression != null and _gate.try_open(inventory, progression):
-		_unlock()
-		_say(unlocked_conversation)
-	else:
+	# Stage B lane 5.A. The key is personal, the open gate is the world's -- so
+	# the check and the spend stay local and the flag goes through the ledger.
+	# See `gated_crossing.gd::_on_tried` for why the two halves of
+	# `item_gate.try_open()` are told apart here.
+	if inventory == null or not _gate.can_open(inventory):
 		_say(locked_conversation)
+		return
+	var verdict := STORY_LEDGER.set_world_flag(self, flag_id)
+	if not bool(verdict.get("ok", false)) and not bool(verdict.get("pending", false)):
+		# Refused, or no world to write to. The player keeps the key.
+		_say(locked_conversation)
+		return
+	_gate.spend(inventory)
+	if bool(verdict.get("ok", false)):
+		_unlock()
+	# A client's `pending` verdict opens nothing yet -- `_on_delta_applied`
+	# does, the moment the host's delta lands. The LINE is said now either way:
+	# it is the answer to this player's press, and holding it back would read as
+	# a dead button on a client.
+	_say(unlocked_conversation)
 
 
 func _unlock() -> void:

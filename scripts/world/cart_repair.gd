@@ -21,6 +21,8 @@ extends Node3D
 const PREFABS := preload("res://scripts/world/building_prefabs.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const ITEM_GATE := preload("res://scripts/world/item_gate.gd")
+## Stage B lane 5.A. A repaired cart is a WORLD fact.
+const STORY_LEDGER := preload("res://scripts/story/story_ledger.gd")
 
 const PREFAB_NAME := "wagon"
 const ITEM_IDS := ["wood", "stone", "fiber"]
@@ -78,16 +80,28 @@ func build(world: Node3D, at: Vector2, yaw_deg: float) -> void:
 	_prompt.connect("activated", _on_tried)
 	add_child(_prompt)
 
-	var game := get_node_or_null(^"/root/Game")
-	var progression: RefCounted = game.get("progression") if game != null else null
-	if progression != null and _gate.is_open(progression):
-		_prompt.call("set_enabled", false)
+	# Stage B lane 5.A: a repaired cart is a WORLD fact (D99), so the pose is
+	# restored from the world's store and re-checked when a delta lands --
+	# a cart the other player fixed is fixed here too.
+	add_to_group("progression_restore")
+	STORY_LEDGER.listen(self, _on_delta_applied)
+	restore_progression_from_game(get_node_or_null(^"/root/Game"))
 
 
 func is_repaired() -> bool:
-	var game := get_node_or_null(^"/root/Game")
-	var progression: RefCounted = game.get("progression") if game != null else null
-	return progression != null and _gate.is_open(progression)
+	return STORY_LEDGER.world_flag(self, FLAG_ID)
+
+
+## The `progression_restore` seam: a save load, a joiner's snapshot, or another
+## peer's delta. Idempotent.
+func restore_progression_from_game(_game: Node) -> void:
+	if _prompt != null and is_instance_valid(_prompt) and is_repaired():
+		_prompt.call("set_enabled", false)
+
+
+func _on_delta_applied(delta: Dictionary) -> void:
+	if STORY_LEDGER.delta_sets_world_flag(delta, FLAG_ID):
+		restore_progression_from_game(get_node_or_null(^"/root/Game"))
 
 
 func _on_tried() -> void:
@@ -95,14 +109,21 @@ func _on_tried() -> void:
 		return
 	var game := get_node_or_null(^"/root/Game")
 	var inventory: RefCounted = game.get("inventory") if game != null else null
-	var progression: RefCounted = game.get("progression") if game != null else null
-	if progression != null:
-		progression.call("set_flag", MET_FLAG)
-	if inventory != null and progression != null and _gate.try_open(inventory, progression):
-		_prompt.call("set_enabled", false)
-		_say(REPAIRED_CONVERSATION)
-	else:
+	# Meeting the cart is a world fact too (`broken_cart_met`), so it is
+	# committed rather than written locally: a friend who walks up second finds
+	# a cart the world has already been introduced to.
+	STORY_LEDGER.write_flag(self, MET_FLAG)
+	if inventory == null or not _gate.can_open(inventory):
 		_say(BROKEN_CONVERSATION)
+		return
+	var verdict := STORY_LEDGER.set_world_flag(self, FLAG_ID)
+	if not bool(verdict.get("ok", false)) and not bool(verdict.get("pending", false)):
+		_say(BROKEN_CONVERSATION)
+		return
+	_gate.spend(inventory)
+	if bool(verdict.get("ok", false)):
+		_prompt.call("set_enabled", false)
+	_say(REPAIRED_CONVERSATION)
 
 
 func _say(conversation_id: String) -> void:

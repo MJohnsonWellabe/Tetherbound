@@ -1947,14 +1947,23 @@ jobs:
           # control); Wave 2 added host/join/leave and movement; lane 3.D added
           # storage_concurrency; lane 4.B added deploy_two_creatures; lane 3.C
           # added shared_building; lane 3.B added pickup_race; lane 5.C added
-          # fog_is_personal.
+          # fog_is_personal; lane 5.A added gate_opens_for_both and
+          # behind_character_joins_ahead_world.
           #
           # The number is the TRUE count of files declaring the header, not a
           # lane's guess at it -- every lane raises it by one and a merge of
           # several at once has to be reconciled against the directory rather
           # than against whichever lane's line won the conflict.
-          if [ "$count" -lt 13 ]; then
-            echo "::error::expected at least 13 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
+          #
+          # 15 was REGENERATED from the files on disk on 2026-09-06 (lane 5.A):
+          #   for f in tests/smoke_net_*.gd; do
+          #     head -5 "$f" | grep -qE '^#[[:space:]]*peers:[[:space:]]*2$' && echo "$f"
+          #   done | wc -l
+          # -- 13 before this lane, 15 with its two. A lane landing beside this
+          # one must re-run that command against the merged tree rather than
+          # incrementing whichever number its own branch happened to see.
+          if [ "$count" -lt 15 ]; then
+            echo "::error::expected at least 15 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
             exit 1
           fi
           # added shared_building; lane 3.B added pickup_race; lane 5.D added
@@ -1971,8 +1980,10 @@ jobs:
           # else happens to be in the directory. Each lane that ships a net
           # smoke adds its file here.
           for required in \
+            tests/smoke_net_behind_character_joins_ahead_world.gd \
             tests/smoke_net_deploy_two_creatures.gd \
             tests/smoke_net_fog_is_personal.gd \
+            tests/smoke_net_gate_opens_for_both.gd \
             tests/smoke_net_host_join_leave.gd \
             tests/smoke_net_movement_two_peers.gd \
             tests/smoke_net_peer_death.gd \

@@ -178,6 +178,22 @@ func set_value(key: String, value: String) -> void:
 	_runner.set_value(key, value)
 
 
+## The effects the lines spoken since the last drain carried, and the reason
+## this panel hands them out rather than acting on them.
+##
+## STAGE B LANE 5.A. A conversation is LOCAL -- the box, the portrait, the
+## button and the camera push-in are one player's screen, and a second player
+## standing in the same meadow neither sees nor is stopped by any of it
+## (directive rule 16). What a line CHANGES is not local: `flag:relay_disabled`
+## is a fact about the world, and it has to be true on both machines or the two
+## players are playing two games.
+##
+## So the split is exactly here. This returns strings; the caller
+## (`sequence_director.gd::_drain_effects`) turns each one into a ledger INTENT,
+## and D99's scope table decides whether it is `set_world_flag` (committed once
+## for everybody) or `grant_player_flag` (addressed to the player who was
+## standing there). Nothing in this file writes a flag, and nothing in it knows
+## a peer exists.
 func drain_effects() -> Array[String]:
 	return _runner.drain_effects()
 
