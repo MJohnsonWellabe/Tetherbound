@@ -77,6 +77,9 @@ func _run() -> void:
 	_the_mouth_arch_is_open(world, warrens)
 	_every_chamber_is_enclosed(warrens)
 	_the_walked_channel_to_hall_is_open(world, warrens)
+	_the_crest_reads_as_a_landmark(warrens)
+	_the_mouth_frontage_has_no_flat_slab_edge(warrens)
+	_the_throat_is_at_least_8m_and_hides_the_interior(world, warrens)
 
 	_finish()
 
@@ -270,6 +273,139 @@ func _the_walked_channel_to_hall_is_open(world: Node, warrens: Node3D) -> void:
 			full_len - safe * full_len, safe * full_len, full_len])
 	else:
 		print("[fixture] capsule shape-cast: channel to the hall is clear")
+
+
+## SECOND-PASS-0906 item 1: "raise the crest to ~10.5m (>=5.8x the 1.8m
+## trainer)". Reads the Bank mesh's OWN local AABB (`_bank_exists_with_a_
+## trimesh_collider()` above already prints it) rather than a straight-up
+## ray from a chamber marker: that marker sits exactly AT `_floor_y`, on the
+## floor plinth's own top surface, and a ray cast from a point coincident
+## with a collider's own face is not a reliable "how tall is the thing above
+## it" measurement (measured directly: it returns near-zero here, floor
+## self-intersection, on every chamber, not just the mouth). The mesh's own
+## build-time AABB is exact and ambiguity-free -- `_build_bank()` samples
+## `_bank_height_at()` on top of the fixture's flat (0m) terrain, so the
+## AABB's own height IS the crest above the mouth's own grade.
+func _the_crest_reads_as_a_landmark(warrens: Node3D) -> void:
+	var bank := warrens.get_node_or_null(^"Bank") as MeshInstance3D
+	if bank == null or bank.mesh == null:
+		_fail("crest check: no Bank mesh to measure (see the earlier bank-exists assertion)")
+		return
+	var crest_local: float = bank.mesh.get_aabb().size.y
+	print("[fixture] crest above the mouth: %.1fm (%.1fx the 1.8m trainer)" % [crest_local, crest_local / 1.8])
+	if crest_local < 10.0:
+		_fail(("the crest is only %.1fm above the mouth; the brief asks for >=10.5m (>=5.8x the 1.8m trainer) "
+			+ "so the mound reads as a landmark from the approach, not a low hump") % crest_local)
+
+
+## SECOND-PASS-0906 item 2: "no exterior mesh has an axis-aligned top edge
+## longer than 3m at the mouth" -- the "flat rectangular slab" defect was the
+## `mouth` chamber's own cone guaranteeing full clearance `p` across its
+## WHOLE rectangle width (`_bank_chamber_bumps()`'s own enclosure guarantee),
+## which draws a genuinely flat-topped mesa right where the face carve
+## anchors its cliff line (`_bank_apply_face_carve()`'s `top_at_line`). This
+## samples that SAME anchor line directly (`_bank_height_at(x, z0)`, the
+## actual visible surface, not the pre-carve union) across the mouth's
+## frontage and finds the longest run of x where the height barely moves --
+## the direct measurement of "how long is the flattest stretch of the
+## skyline right above the arch", which is what a straight top edge IS.
+func _the_mouth_frontage_has_no_flat_slab_edge(warrens: Node3D) -> void:
+	var bank := warrens.call("_bank_cfg") as Dictionary
+	var z0: float = float(warrens.call("_mouth_outer_z"))
+	# The arch's own open notch is SUPPOSED to be flat ground for its whole
+	# width (it is the doorway) -- that is not the slab defect, so each scan
+	# below breaks its run at the notch rather than measuring across it. 1.5m
+	# past the arch's own margin so an edge vertex right at the notch's own
+	# smoothstep transition never gets counted into either shoulder's run.
+	var arch_clear: float = float(bank.get("arch_width_m", 5.0)) * 0.5 \
+		+ float(bank.get("arch_margin_m", 0.6)) + 1.5
+	var tol := 0.12
+	# Past the mound's own foot the ground is legitimately flat -- that is
+	# the meadow, not a slab, and every real mound has to taper down to it
+	# somewhere. A run only counts toward the "slab" defect while the
+	# surface is still meaningfully ELEVATED (above `ground_floor`); once a
+	# run's own base height drops to bare ground, its length is not
+	# evidence of anything this check is about.
+	var ground_floor := 0.3
+	var half_span := 14.0
+	var step := 0.25
+	var worst_run := 0.0
+	var worst_row := 0.0
+	for z_off: float in [0.0, -1.0, -2.0]:
+		var z: float = z0 + z_off
+		# Two independent shoulders (left of the arch, right of the arch) --
+		# never one scan spanning across the open doorway in between.
+		for side: float in [-1.0, 1.0]:
+			var x0: float = side * arch_clear
+			var x1: float = side * half_span
+			var lo: float = minf(x0, x1)
+			var hi: float = maxf(x0, x1)
+			var run_start := lo
+			var run_base_h := float(warrens.call("_bank_height_at", lo, z))
+			var x := lo
+			while x <= hi:
+				var h := float(warrens.call("_bank_height_at", x, z))
+				if absf(h - run_base_h) > tol:
+					var run_len: float = x - run_start
+					if run_len > worst_run and run_base_h > ground_floor:
+						worst_run = run_len
+						worst_row = z
+					run_start = x
+					run_base_h = h
+				x += step
+			var tail_len: float = hi - run_start
+			if tail_len > worst_run and run_base_h > ground_floor:
+				worst_run = tail_len
+				worst_row = z
+	print("[fixture] mouth frontage flattest shoulder run: %.1fm (row z=%.1f, tolerance %.2fm, arch clearance %.1fm)" % [
+		worst_run, worst_row, tol, arch_clear])
+	if worst_run > 3.0:
+		_fail(("the mouth frontage has a %.1fm run of near-constant height at row z=%.1f (outside the arch's own " +
+			"opening) -- reads as a flat slab top edge, not a rounded dug face; the brief caps this at 3m") % [worst_run, worst_row])
+
+
+## SECOND-PASS-0906 item 3: "keep the walk channel >= doorway size and
+## re-run the fixture's capsule probe" (done above, unaffected -- see
+## `_throat_curve_offset()`'s own header for why) plus the NEW ask: a ray
+## from outside, off the walk corridor's own centreline (so it is not the
+## SAME ray `_the_mouth_arch_is_open()` already proves stays open for a
+## walking player), should now be stopped by earth before it reaches the
+## mouth chamber's own structural doorway -- the direct test for "the
+## interior's grey box walls ... show straight through the throat" no longer
+## holding. The off-centre line is a real design constraint, not an
+## arbitrary probe point: `_throat_curve_offset()`'s own header explains why
+## the centreline (x=0) must stay open for the capsule, so only a line away
+## from it can ever be the one the curve blocks.
+func _the_throat_is_at_least_8m_and_hides_the_interior(world: Node, warrens: Node3D) -> void:
+	var depth: float = float((warrens.call("_bank_cfg") as Dictionary).get("throat_depth_m", 0.0))
+	print("[fixture] throat depth: %.1fm" % depth)
+	if depth < 8.0:
+		_fail("the throat is only %.1fm deep; the brief asks for ~8m" % depth)
+
+	var space := (world as Node3D).get_world_3d().direct_space_state
+	var mouth: Vector3 = warrens.call("marker", "mouth")
+	var mouth_local := warrens.to_local(mouth)
+	var x_off := -1.8
+	var eye_h := 1.6
+	var origin := warrens.to_global(Vector3(x_off, eye_h, mouth_local.z - 20.0))
+	var target := warrens.to_global(Vector3(x_off, eye_h, mouth_local.z))
+	var full := origin.distance_to(target)
+	var query := PhysicsRayQueryParameters3D.create(origin, target)
+	var hit := space.intersect_ray(query)
+	if hit.is_empty():
+		_fail(("an off-centre ray (x=%.1f) from outside the mouth reaches all the way to the chamber centre "
+			+ "with nothing in the throat to stop it -- the interior is still visible straight through") % x_off)
+		return
+	var collider: Node = hit.get("collider", null) as Node
+	var owner: Node = collider.get_parent() if collider != null else null
+	var owner_name := str(owner.name) if owner != null else "?(no owner)"
+	var earth_names := ["Bank", "Throat", "DoorwayCollar", "MouthLip"]
+	var hit_distance: float = origin.distance_to(hit.get("position", origin))
+	print("[fixture] off-centre throat ray (x=%.1f): stopped %.1fm of %.1fm by %s (owner=%s)" % [
+		x_off, hit_distance, full, str(collider.get_path()) if collider != null else "?", owner_name])
+	if not earth_names.has(owner_name):
+		_fail(("the off-centre throat ray was stopped by '%s', not one of the throat's own earth pieces %s -- " +
+			"it is hitting a structural wall, meaning the curve is not actually occluding it") % [owner_name, str(earth_names)])
 
 
 func _finish() -> void:

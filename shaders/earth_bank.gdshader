@@ -35,12 +35,43 @@ render_mode cull_disabled, diffuse_lambert, specular_disabled, world_vertex_coor
 uniform sampler2D grass_albedo : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform sampler2D earth_albedo : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 
+// SECOND-PASS-0906, judge evidence "flat-shaded with no visible texture,
+// the only high-detail element in the whole shot is the dead-branch crown".
+// The first version of this shader sampled ALBEDO only -- every vertex
+// normal came straight off `generate_normals()`'s own per-triangle average
+// over a several-metre grid, so no surface DETAIL ever reached the
+// fragment regardless of how sharp the installed photos are. Both normal
+// maps are the SAME installed textures the flat versions already sample
+// (`_bank_earth_material()`/terrain's own grass texture), triplanar-mapped
+// exactly like the albedo above so grain direction never stretches.
+// `source_color` deliberately omitted (these are data, not colour).
+uniform sampler2D grass_normal : hint_normal, filter_linear_mipmap_anisotropic, repeat_enable;
+uniform sampler2D earth_normal : hint_normal, filter_linear_mipmap_anisotropic, repeat_enable;
+uniform float normal_strength : hint_range(0.0, 2.0) = 1.1;
+
 uniform vec3 grass_tint : source_color = vec3(1.0);
 uniform vec3 earth_tint : source_color = vec3(1.0);
 uniform float grass_uv_scale = 0.27;
 uniform float earth_uv_scale = 0.25;
 uniform float grass_roughness : hint_range(0.0, 1.0) = 0.95;
 uniform float earth_roughness : hint_range(0.0, 1.0) = 0.97;
+
+// SECOND-PASS-0906: low-frequency value noise so no two square metres of
+// the dome read as the identical flat tone -- a cheap hash noise (no
+// FastNoiseLite equivalent exists in shader code, and this is exactly the
+// kind of broad, slow-varying variation a hash-and-interpolate gives
+// without a texture lookup) at `noise_freq_m` (metres) modulating albedo by
+// +/-`noise_amount` (0.12 == +/-12%, per the brief).
+uniform float noise_freq_m : hint_range(0.005, 0.5) = 0.06;
+uniform float noise_amount : hint_range(0.0, 0.5) = 0.12;
+
+// SECOND-PASS-0906: the dark "moist band" the brief asks for within 2m of
+// every warren hole and the mouth. `_build_bank()` writes this per-vertex
+// (COLOR.g, 0 far / 1 at the opening's own rim) because the shader has no
+// other way to know where the holes are -- see `_build_bank()`'s own
+// moisture pass.
+uniform float moist_darken : hint_range(0.0, 1.0) = 0.35;
+uniform vec3 moist_tint : source_color = vec3(0.55, 0.5, 0.45);
 
 // Slope blend: 0 degrees is flat ground, 90 is a vertical face. Below
 // `slope_low_deg` the surface is grass regardless of height; above
@@ -59,9 +90,12 @@ uniform float height_low_frac : hint_range(0.0, 1.0) = 0.12;
 uniform float height_high_frac : hint_range(0.0, 1.0) = 0.30;
 
 varying float v_height_frac;
+// SECOND-PASS-0906: the moisture mask `_build_bank()` writes to COLOR.g.
+varying float v_moist;
 
 void vertex() {
 	v_height_frac = COLOR.r;
+	v_moist = COLOR.g;
 }
 
 // Cheap triplanar: three axis-projected samples of the same installed photo,
@@ -74,6 +108,42 @@ vec3 triplanar(sampler2D tex, vec3 world_pos, vec3 blend, float scale) {
 	vec3 yc = texture(tex, world_pos.xz * scale).rgb;
 	vec3 zc = texture(tex, world_pos.xy * scale).rgb;
 	return xc * blend.x + yc * blend.y + zc * blend.z;
+}
+
+// Same triplanar blend, over a tangent-space normal map instead of albedo --
+// each axis sample is re-expanded from [0,1] to [-1,1] and swizzled back
+// into world space before blending, the standard triplanar-normal trick.
+vec3 triplanar_normal(sampler2D tex, vec3 world_pos, vec3 blend, float scale, vec3 world_normal) {
+	// Each axis sample is a tangent-space normal for that projection plane;
+	// swizzled into world axes (x-projection's tangent plane is world YZ, so
+	// its sample's xy maps to world zy, and so on) before blending.
+	vec3 xs = texture(tex, world_pos.yz * scale).rgb * 2.0 - 1.0;
+	vec3 ys = texture(tex, world_pos.xz * scale).rgb * 2.0 - 1.0;
+	vec3 zs = texture(tex, world_pos.xy * scale).rgb * 2.0 - 1.0;
+	vec3 nx = vec3(0.0, xs.y, xs.x);
+	vec3 ny = vec3(ys.x, 0.0, ys.y);
+	vec3 nz = vec3(zs.x, zs.y, 0.0);
+	vec3 n = nx * blend.x + ny * blend.y + nz * blend.z + world_normal;
+	return normalize(n);
+}
+
+// SECOND-PASS-0906: cheap hash-based value noise (no texture lookup, no
+// FastNoiseLite equivalent in shader code) for the low-frequency surface
+// variation the brief asks for. Smoothed with a bilinear lerp between four
+// integer-lattice hash values so it reads as broad relief, not static.
+float hash2(vec2 p) {
+	return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+}
+
+float value_noise(vec2 p) {
+	vec2 i = floor(p);
+	vec2 f = fract(p);
+	float a = hash2(i);
+	float b = hash2(i + vec2(1.0, 0.0));
+	float c = hash2(i + vec2(0.0, 1.0));
+	float d = hash2(i + vec2(1.0, 1.0));
+	vec2 u = f * f * (3.0 - 2.0 * f);
+	return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
 }
 
 void fragment() {
@@ -90,6 +160,37 @@ void fragment() {
 	vec3 grass_c = triplanar(grass_albedo, world_pos, blend, grass_uv_scale) * grass_tint;
 	vec3 earth_c = triplanar(earth_albedo, world_pos, blend, earth_uv_scale) * earth_tint;
 
-	ALBEDO = mix(grass_c, earth_c, earth_w);
+	// Low-frequency relief: one noise sample per axis-projection scale (the
+	// earth's own, since that is the surface the brief names) shared by both
+	// materials so a blended pixel does not show a seam between two
+	// independent noise fields.
+	float n = value_noise(world_pos.xz * noise_freq_m) * 2.0 - 1.0;
+	float shade = 1.0 + n * noise_amount;
+	grass_c *= shade;
+	earth_c *= shade;
+
+	// The moist band around every opening: darkens AND cools toward
+	// `moist_tint` so a hole's own rim reads as freshly turned, wet ground
+	// rather than the same dry dirt as the rest of the face.
+	float moist = clamp(v_moist, 0.0, 1.0);
+	earth_c = mix(earth_c, earth_c * moist_tint, moist * moist_darken);
+
+	vec3 albedo = mix(grass_c, earth_c, earth_w);
+	ALBEDO = albedo;
 	ROUGHNESS = mix(grass_roughness, earth_roughness, earth_w);
+
+	// NORMAL_MAP (Godot's tangent-space slot) needs real per-vertex TANGENT
+	// data to build its TBN basis, and this mesh has none --
+	// `_build_bank()`'s SurfaceTool only ever calls `generate_normals()`, so
+	// feeding NORMAL_MAP here would light off a garbage basis. Everything in
+	// this shader is already WORLD space (`world_vertex_coords` above, see
+	// this file's own header), so `triplanar_normal()` builds its perturbed
+	// normal in world space too and this writes NORMAL directly -- the same
+	// space the slope test above already reads it in, no tangent basis
+	// required. `normal_strength` (0-2) is how far the shading normal leans
+	// toward the sampled detail versus the mesh's own smooth normal.
+	vec3 grass_n = triplanar_normal(grass_normal, world_pos, blend, grass_uv_scale, world_normal);
+	vec3 earth_n = triplanar_normal(earth_normal, world_pos, blend, earth_uv_scale, world_normal);
+	vec3 blended_n = normalize(mix(grass_n, earth_n, earth_w));
+	NORMAL = normalize(mix(world_normal, blended_n, clamp(normal_strength, 0.0, 1.0)));
 }
