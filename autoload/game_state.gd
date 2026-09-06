@@ -30,6 +30,8 @@ const ITEM_DB := preload("res://autoload/item_db.gd")
 const INVENTORY := preload("res://autoload/inventory.gd")
 const BOOT_LOG := preload("res://scripts/boot/boot_log.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
+## Only to hand `local.feed` to its static entry points -- see `_ensure_containers()`.
+const PROGRESSION_FEED := preload("res://scripts/creatures/progression_feed.gd")
 ## D98 / docs/specs/MP_STATE_SEAM.md §1-§2. The two containers this autoload
 ## became a facade over, and the merged flag view that keeps `Game.progression`
 ## one object across both of their stores.
@@ -666,6 +668,10 @@ func _ensure_containers() -> void:
 	# one have to answer from one object.
 	local.flag_reader = _merged_progression
 	local.call("configure", _items)
+	# Hand the local player's feed to `progression_feed.gd`'s static entry
+	# points, which every RefCounted producer and every presenter still calls.
+	# Handed over rather than looked up on demand: see that file's `_active`.
+	PROGRESSION_FEED.set_active(local.feed)
 
 
 func _ready() -> void:

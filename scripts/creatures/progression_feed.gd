@@ -58,25 +58,46 @@ var _seq: int = 0
 var _revision: int = 0
 var _epoch: int = 0
 
-## The feed the static entry points act on when there is no `Game` to find one
-## on -- the unit suite, a tool script, a `RefCounted` producer running before
-## the autoload exists. Built on first use and never shared with a real session:
-## the moment a `Game` is up, `active()` returns `Game.local.feed` instead.
+## The local player's feed, HANDED OVER by `Game._ensure_containers()` rather
+## than looked up. There is exactly one local player per process (the execution
+## plan's §2 simplification), so this pointer is a complete answer rather than a
+## transitional one -- and unlike the log it replaces, it is a pointer, not
+## state: two players' events can never land in it.
+##
+## IT MUST NOT BE A LOOKUP. The first cut of this resolved the feed per call
+## through `game()` (`Engine.get_main_loop().root.get_node_or_null("Game")`),
+## and that was wrong twice over. `Engine.get_main_loop()` is null for whole
+## stretches of a headless run -- `test_characterize_game_process_ticks.gd`
+## asserts exactly that for the life of `run_tests.gd` -- so the SAME static
+## call could answer with `Game.local.feed` on one frame and the fallback on the
+## next. A presenter that seeded `_feed_epoch` from one and then polled the other
+## saw the epochs disagree, reset its cursor and its tick counters, and dropped
+## the events it was mounted to show: `smoke_progression_feedback` failed with
+## "the party strip ticked 0 time(s) for the win". It was also a tree walk on a
+## path three presenters poll every frame.
+static var _active: RefCounted = null
+
+## What the statics act on when nothing has handed over a feed -- the unit
+## suite (no autoload, no SceneTree), a tool script, a `RefCounted` producer
+## running before `Game` exists. Built on first use.
 static var _fallback: RefCounted = null
 
 
-## The feed the static entry points below act on: the LOCAL player's, or the
-## no-Game fallback. There is exactly one local player per process (the
-## execution plan's §2 simplification), so "the local player's feed" is a
-## complete answer rather than a transitional one.
+## `Game._ensure_containers()` calls this with `local.feed`, once, before any
+## world scene exists. Wave 2 calls it again if the local player is ever rebuilt.
+static func set_active(feed: RefCounted) -> void:
+	_active = feed
+
+
+## Tests only: forget the handed-over feed and fall back again.
+static func clear_active() -> void:
+	_active = null
+
+
+## The feed the static entry points below act on.
 static func active() -> RefCounted:
-	var owner := game()
-	if owner != null:
-		var local: Variant = owner.get("local")
-		if local != null:
-			var feed: Variant = (local as Object).get("feed")
-			if feed != null:
-				return feed as RefCounted
+	if _active != null:
+		return _active
 	if _fallback == null:
 		_fallback = new()
 	return _fallback
