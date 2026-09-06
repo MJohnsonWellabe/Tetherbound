@@ -153,6 +153,31 @@ Drive to broad playable multiplayer first. Do not spend the whole pass perfectin
 ### Exit criteria
 An outside tester can launch a host world, invite three friends, move, deploy creatures, fight, gather, build, progress, save and reconnect without developer intervention.
 
+### Status — 2026-09-06: the implementation scope is COMPLETE, the exit criteria are NOT MET
+
+Every item in "Minimum implementation scope" above is built and every one of the twenty-four §17
+rows in `docs/acceptance/MULTIPLAYER_ACCEPTANCE.md` names a run, on branch
+`claude/tetherbound-roadmap-next-jrcjs8` @ `ad383219`. **Stage B stays open**, and precisely three
+things hold it there. None of them is code:
+
+1. **The exit criterion is a person, not a test.** It names an OUTSIDE TESTER hosting and three
+   friends joining without developer intervention. No automated evidence can satisfy that sentence.
+   The owner column of the acceptance file is entirely unsigned, and §23 also wants the owner's own
+   LAN session and an Ally frame-time measurement, both recorded in `docs/owner/`.
+2. **`verify-multiplayer-shard` has never completed a CI run.** Cancelled seven times, because
+   `ci.yml` sets `cancel-in-progress` for every non-`main` ref and that job takes ~45 minutes. All
+   net-smoke evidence to date is from local two-process runs — real, but not CI.
+3. **It is not on `main`.** PR #63 is open.
+
+The "Evidence bar" list above is met by automated runs with one honest gap: a **shared Cloudreach
+encounter** has no net smoke of its own. Cloudreach's own world mutations go through the ledger
+(lane 6.E) and two peers demonstrably fight in different biomes at once
+(`smoke_net_split_realms`), but nobody has put two pilots into one Cloudreach fight.
+
+Do not begin Stage C on the strength of the automated column. Read the acceptance file's
+"Known-open" list first: scaling and the Warden-arena staging were fixed at the very end of the
+pass, and the list names what is still carried deliberately.
+
 After this stage, **do not start Stormwood yet**. Move directly to Stage C.
 
 ---

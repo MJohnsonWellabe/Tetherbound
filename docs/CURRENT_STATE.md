@@ -1,6 +1,86 @@
-# Current state — evidence-backed, 2026-09-02
+# Current state — evidence-backed, 2026-09-06
 
-## Stage B (multiplayer) Waves 1–3 — 2026-09-06, branch `claude/tetherbound-roadmap-next-jrcjs8`
+## Stage B (multiplayer) — the CODE is complete, the OWNER EVIDENCE is not — 2026-09-06, branch `claude/tetherbound-roadmap-next-jrcjs8` @ `ad383219`
+
+**Every one of the twenty-four §17 rows in `docs/acceptance/MULTIPLAYER_ACCEPTANCE.md` now names a
+run.** That file, not this one, is the contract; read it for the per-row evidence and for the
+"Known-open" list, which is where the honest limits live.
+
+What that sentence does NOT mean, stated here because a count is the easiest thing in this project
+to mistake for a verdict:
+
+- **No row's owner column is signed.** Not one. The directive's §23 needs the owner to host a real
+  LAN session, and an outside tester to host for three joiners without developer help, both
+  recorded in `docs/owner/` like a playtest. No CI run can supply either, and Stage B does not
+  close without them.
+- **`verify-multiplayer-shard` has never completed a CI run on this branch.** It has been cancelled
+  seven times — every push kills it, because `ci.yml` sets `cancel-in-progress` for any non-`main`
+  ref and that job takes ~45 minutes. Every net-smoke number cited anywhere is therefore from a
+  LOCAL two-process run. Those are real runs, not claims, but they are not CI evidence and should
+  not be described as such until one shard run finishes.
+- **None of it is on `main`.** PR #63 is open.
+
+### What was built, in the order it will matter to a player
+
+A person starts or loads a world from the title screen and up to three friends join by address or
+off the LAN beacon (`session.gd`, `peer_registry.gd`, the Players tab). Solo is a one-peer session
+through the same funnel, so there is no second implementation to rot. They see each other move
+(0.55 m in motion, 0.00 m at rest, against 4.0/1.5 m budgets), deploy and pilot their own
+creatures, and fight one wild together with the host arbitrating every strike and the health bar
+being one number. A catch race resolves to exactly one owner and tells the loser why. They gather,
+build a camp, share a chest and trade, all through `world_ledger.gd`, which answers every intent
+with a delta or a refusal code a player can be shown. One goes down and the other revives them.
+Menus do not freeze anybody else. Night falls when everyone sleeps. The story advances once for
+the world while tutorials and fog stay personal, and a character behind the world's progress can
+join it and act immediately. One player rides or flies while the others carry on. Two players stand
+in two different biomes at once. A world is host-owned and a character is portable between worlds.
+
+### The three defects worth remembering, because each was invisible in a green run
+
+1. **`OfflineMultiplayerPeer`.** With no session, `multiplayer.is_server()` returns **true** and
+   `get_unique_id()` returns **1**. Any guard shaped "am I the server, if a peer exists" is unsound
+   in this engine and passes in every headless test. Ask the session (`Game.is_multi_peer()`).
+2. **A green run with FEWER assertions is a compile failure passing vacuously.** A GDScript file
+   that fails to parse contributes exactly one failure however many tests it holds; `int(null)` and
+   `bool(null)` abort a function rather than failing it. Check a positive count, never "0 failed".
+   This caught four separate false passes across the stage.
+3. **A fixed-settle read of a HOST verdict is a race, not a wait.** One pattern accounted for three
+   separately-recorded problems: `smoke_net_shared_wild_fight`'s 5-of-7 flake, lane 7.A's finding
+   F7 (under 150 ms jitter the friendly-fire safety held but the refusal MESSAGE never arrived),
+   and a latent red in `smoke_net_shared_boss`'s retry loop, whose exit condition never waited for
+   the refusal it then asserted on. `pending` is the host being asked, not the host saying no.
+
+### Two findings fixed in the game rather than the harness, at the end
+
+- **§10's participant scaling reached nothing.** HP was never multiplied by players — that rule
+  held — but the stat multiplier and attack cooldown never arrived: the scaler ran before the
+  encounter record was live, read an identity multiplier and returned on its own guard. The Warden's
+  creatures fought at their authored numbers while the record was stamped 1.1. No test caught it
+  because every §10 test asserted on the table and on the record and none asserted the multiplier
+  reached a creature. Fixed with an unscaled base kept per opponent (D112);
+  `smoke_encounter_scaling` was 66 assertions / 18 failures before and 0 after.
+- **The Warden's fight formed outside his room.** Recorded first as `place_on_ground` floating a
+  creature; that was the symptom. The staging was leaving the arena, and the floor claim then
+  answered a floor with no collider under it. `smoke_arena_contain`'s new staging case was 21
+  assertions / 8 failures before and 0 after.
+
+### Owed, and not to be quietly absorbed
+
+- `smoke_aggression`'s flake rate is **unmeasured**. Two lanes called it flaky against untouched
+  bases; the attempt to measure it produced nothing, probably eaten by the same
+  `run_net_smoke.sh` `tail -f` that makes a finished run look stuck when its stdout is captured.
+- Wild creature bodies are not replicated: a client's wilds drift from the host's. Lane 4.B chose
+  drift over a frozen meadow and every strike resolves against host positions, which is what keeps
+  it cosmetic — but two people will see creatures in different places. That is a design decision
+  the owner should confirm rather than inherit.
+- The v22 slot file is still written alongside the D100 split; retiring it is its own change.
+
+## Stage B (multiplayer) Waves 1–3 — 2026-09-06 — SUPERSEDED by the entry above
+
+> Kept as the log entry it was. Its "not yet done" paragraph is stale: lanes 3.B–3.D, the save
+> split 1.C, and the realm refusal it describes as held all landed later the same day. Read the
+> entry above for the state, and `docs/acceptance/MULTIPLAYER_ACCEPTANCE.md` for the evidence.
+
 
 **Two people can walk around one Meadows and see each other.** That is Wave 2's deliverable and it
 is measured, not asserted: `tests/smoke_net_movement_two_peers.gd` runs two isolated Godot

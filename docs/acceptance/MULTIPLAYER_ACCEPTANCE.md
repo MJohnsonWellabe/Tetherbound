@@ -194,6 +194,14 @@ Recorded here so a reader does not have to infer them from silence:
   which is the same race, caught, on loopback. Not a widened tolerance: the assertion still fails if
   the refusal never comes, comes with the wrong code, or comes without a sentence.
 
+- **No net smoke puts a pilot into a CLOUDREACH encounter.** The roadmap's evidence bar asks for a
+  "shared Cloudreach encounter" and this is the one item on that list without automated evidence.
+  Verified rather than assumed: in `smoke_net_split_realms` the HOST fights, in the Meadows, while
+  holding Cloudreach as a shell — the client in Cloudreach gathers and crosses but never engages.
+  `smoke_net_realm_owner_disconnect_mid_fight` names the realm but submits no strike there. What is
+  proven is that Cloudreach's own world mutations go through the ledger (lane 6.E) and that two
+  peers occupy two biomes at once; a Cloudreach fight with two pilots in it is owed.
+
 ## The verdict
 
 Stage B is done when **every row above reads PASS**, solo Meadows and Cloudreach still play end to
