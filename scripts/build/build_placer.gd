@@ -27,6 +27,34 @@ extends Node
 ## BG1: this is the ONE placement system, serving both the player's own base
 ## (M8's original purpose) and the OF4 castle rebuild (D28) — there is no
 ## second, landmark-only copy of any of this.
+##
+## ## D103, lane 3.C: a placement is a request, not a write
+##
+## Planting and dismantling are no longer writes this node makes. A press
+## submits a `place_building` / `dismantle` INTENT to `Game.ledger`; the host
+## arbitrates it and the committed DELTA is what plants or uproots the
+## structure — here, on every peer, through `_on_delta_applied` below. That is
+## what makes a structure a CLIENT placed survive the host's save, a reload and
+## a late join: the record went into the host's world, not into the client's
+## own copy of it.
+##
+## Solo is not a second path. Solo IS the host: `submit()` commits in-process,
+## emits the delta before it returns, and this node plants the piece and spends
+## the cost inside the same call the press made — exactly what it did before
+## this lane, in the same frame, with the same sounds.
+##
+## On a CLIENT `submit()` returns `{"ok": false, "pending": true}`. That is not
+## a refusal, and nothing may happen on it: no ghost is planted, no wood is
+## spent, no refund is paid. The delta settles it (`_settle_placement` /
+## `_settle_dismantle`) or `intent_refused` cancels it. A player who pressed
+## Place and lost the race must still be holding their wood.
+##
+## ADDRESSING (lane 3.A left this call to 3.C): a `dismantle` still addresses a
+## structure by its INDEX into `placed_buildings` — the address this file
+## already stashes as `PLACED_INDEX_META` and already removes by. See the lane
+## report (ralph/reports/MP-3C-BUILDING-0906/REPORT.md) for why a stable
+## per-record id, which is the more robust address, is a handover rather than
+## this lane's change.
 
 const CAMP_TENT := preload("res://scripts/build/camp_tent.gd")
 const CAMPFIRE := preload("res://scripts/build/campfire.gd")
@@ -76,6 +104,33 @@ const BUILDING_ID_META := "building_id"
 ## piece's current data belongs on, cheaper than adding a second id field to
 ## the save format just to link a node back to its own record.
 const PLACED_INDEX_META := "placed_index"
+
+## Lane 4.B. Every creature a player has out -- the local player's
+## `follower_creature.gd` and every other peer's `remote_creature.gd` proxy --
+## joins this group, and answers `is_local_deployment()`. It replaced
+## `_ally_body.name = "AllyCreature"`, which could not address one creature PER
+## OWNER; `_bodies_that_are_not_buildings()` below was the last consumer of that
+## legacy alias. Spelt out rather than preloaded from `creature_body.gd`, the
+## same way `playground_hud.gd` and `tools/net/peer_runner.gd` name it -- a
+## placer does not otherwise need the whole creature-body script in memory.
+const DEPLOYED_CREATURE_GROUP := &"deployed_creature"
+
+## D103, lane 3.C. Placements and dismantles this peer has submitted and the
+## host has not yet answered. Empty on a host or solo by the time `submit()`
+## returns: there the delta lands inside the call, so a ticket is pushed and
+## settled without ever surviving the frame. On a CLIENT a ticket is the whole
+## record of a press that has not yet happened -- the cost still unspent, the
+## refund still unpaid -- and `_on_delta_applied` / `_on_intent_refused` are the
+## only two things that may retire one.
+var _pending_placements: Array = []
+var _pending_dismantles: Array = []
+
+## How near an arriving `building_add` has to be to a ticket's own spot to be
+## THAT ticket's structure, in metres. A placement is grid-snapped and the
+## position makes the round trip as three JSON floats, so this only has to
+## absorb the encode; two structures can never legitimately be this close
+## (`_cell_occupied` refuses a second piece in the same cell).
+const PENDING_MATCH_EPSILON := 0.05
 
 ## BG1's original rotate action (project.godot, data/config/menu.json's
 ## "Building" controls group): rotates the armed ghost one FIXED 90-degree
@@ -205,11 +260,41 @@ func _ready() -> void:
 	_player = get_node_or_null(player_path) as Node3D
 	_camera_rig = get_node_or_null(camera_rig_path)
 	add_to_group(BUILD_PLACER_GROUP)
+	_connect_ledger()
 	restore_from_game(_game())
 
 
 func _game() -> Node:
 	return get_node_or_null(^"/root/Game")
+
+
+## D103, lane 3.C. Listen to the transport. Idempotent and safe to call from
+## anywhere: `Game.ledger` is mounted by the autoload's own `_ready`, so a
+## placer built into a scene that boots before it simply reconnects on its
+## first press (`_transport()` calls this).
+func _connect_ledger() -> void:
+	var game := _game()
+	if game == null:
+		return
+	var transport: Node = game.get("ledger") as Node
+	if transport == null:
+		return
+	if not transport.is_connected("delta_applied", _on_delta_applied):
+		transport.connect("delta_applied", _on_delta_applied)
+	if not transport.is_connected("intent_refused", _on_intent_refused):
+		transport.connect("intent_refused", _on_intent_refused)
+
+
+## The transport to submit through, or null when there is none to submit to
+## (a unit-test `GameState` that never ran `_ready`). Connects on the way past,
+## so nothing has to care whether the autoload or the world scene came first.
+func _transport(game: Node) -> Node:
+	if game == null:
+		return null
+	var transport: Node = game.get("ledger") as Node
+	if transport != null:
+		_connect_ledger()
+	return transport
 
 
 func _physics_process(_delta: float) -> void:
@@ -674,24 +759,69 @@ func _open_craft_panel() -> void:
 	_craft_panel.call("open")
 
 
+## D103, lane 3.C. A press is a REQUEST. Nothing here plants anything and
+## nothing here spends anything: the ticket goes on `_pending_placements`, the
+## intent goes to the host, and the committed delta does the rest through
+## `_on_delta_applied`. Solo and host run the identical lines and simply
+## complete inside this call, because `submit()` commits in-process and emits
+## the delta before it returns.
 func _place(game: Node, armed: String) -> void:
-	# Spend first, all-or-nothing; the inventory refuses partial removals.
-	var inventory: RefCounted = game.get("inventory")
-	for requirement: Variant in (game.call("build_cost_for", armed) as Array):
-		var need: Dictionary = requirement
-		if not bool(inventory.call("remove", str(need.get("id", "")), int(need.get("n", 0)))):
-			push_error("could not spend the cost for '%s' after can_afford said yes" % armed)
-			return
-
+	var transport := _transport(game)
+	if transport == null:
+		push_error("no Game.ledger to submit a placement through")
+		return
 	var yaw_deg := _yaw_deg
-	# R3.1-remainder: `register_building` below appends, so the size right
-	# now is the index the new entry is about to occupy.
-	var index := int((game.get("placed_buildings") as Array).size())
-	var placed := _spawn_building(game, armed, yaw_deg, index)
-	placed.global_position = _ghost.global_position
-	# R3.1. The registry, not this node, is what a save actually persists —
-	# see GameState.placed_buildings.
-	game.call("register_building", armed, placed.global_position, yaw_deg, not bool(game.get("free_build")))
+	var spot := _ghost.global_position
+	# D97. The realm an intent is stamped with comes from the thing being
+	# written -- the world this placer is standing in -- and is passed
+	# explicitly, never read back out of a global by the ledger.
+	var realm := WORLD_RECORDS.active(game)
+	# The cost is captured NOW, at the press, not when the delta lands: a
+	# free-build toggle flipped mid-flight must not change what this press
+	# charges. `build_cost_for` is already empty while Free Build is on.
+	var ticket := {
+		"id": armed,
+		"realm": realm,
+		"position": spot,
+		"yaw_deg": yaw_deg,
+		"cost": (game.call("build_cost_for", armed) as Array).duplicate(true),
+		"paid": not bool(game.get("free_build")),
+	}
+	_pending_placements.append(ticket)
+	var verdict: Dictionary = transport.call("submit", {
+		"kind": "place_building",
+		"realm": realm,
+		"id": armed,
+		"position": [spot.x, spot.y, spot.z],
+		"yaw_deg": yaw_deg,
+		"paid": ticket["paid"],
+	})
+	if bool(verdict.get("ok", false)) or bool(verdict.get("pending", false)):
+		# `ok` means the delta already landed and `_on_delta_applied` has
+		# already retired this ticket. `pending` means a client is waiting on
+		# the host, and NOTHING may happen until it answers.
+		return
+	# A synchronous refusal -- a host or solo peer the ledger said no to.
+	_pending_placements.erase(ticket)
+	AUDIO_CUES.play(&"ui_error")
+	var reason := str(verdict.get("reason", ""))
+	if not reason.is_empty():
+		game.call("push_world_message", reason)
+
+
+## The committed half of a placement: the cost, the two sounds and the home
+## flags, run once, on the peer that pressed, when its own structure lands.
+## Every other peer plants the same structure from the same delta and pays
+## nothing -- a placement charges the player who made it.
+func _settle_placement(game: Node, ticket: Dictionary, at: Vector3) -> void:
+	# Spend all-or-nothing; the inventory refuses partial removals.
+	var inventory: RefCounted = game.get("inventory")
+	if inventory != null:
+		for requirement: Variant in (ticket.get("cost", []) as Array):
+			var need: Dictionary = requirement
+			if not bool(inventory.call("remove", str(need.get("id", "")), int(need.get("n", 0)))):
+				push_error("could not spend the cost for '%s' after can_afford said yes"
+					% str(ticket.get("id", "")))
 	# BUILD-FLOW (owner 2026-08-18): selection persists after a successful
 	# placement. The next physics tick moves the same ghost to the next candidate
 	# location; costs and registration still happen once per fresh Place edge.
@@ -701,18 +831,161 @@ func _place(game: Node, armed: String) -> void:
 	# piece actually landing in the world, positional and on SFX. Two sounds for
 	# one press on purpose -- conflating them is why placing a building used to
 	# read as weightless. See tools/audio/gen_sfx.py::build_place_thud.
-	AUDIO_MANAGER.play_at("build_place_thud", placed.global_position)
+	AUDIO_MANAGER.play_at("build_place_thud", at)
 	# GATEB-FLAGS: `home_built`. Checked after every real placement, not just
 	# ones for a "home" piece -- cheap (a handful of dictionary counts) and it
 	# is the only way an out-of-order build (structure piece before the last
 	# required one) still gets recognised the moment it becomes true.
 	HOME_PROGRESS.maybe_set_home_built(game)
 	# OP23-04 / owner directive 2026-08-23: three Creature Beds, one per
-	# tournament entrant. Called here rather than from `creature_bed.gd` because
-	# the count is read off `placed_buildings` and the bed node is spawned
-	# BEFORE `register_building` above -- from inside the bed, its own placement
-	# has not been recorded yet and every count would be one short.
+	# tournament entrant. Read off `placed_buildings`, which the delta has
+	# already appended to by the time this runs.
 	HOME_PROGRESS.maybe_set_creature_beds(game)
+
+
+# --- the ledger conversation ----------------------------------------------------
+
+## D103, lane 3.C. A committed delta landed. EVERY peer runs this, host
+## included, so the structures standing in the scene and the records in
+## `placed_buildings` cannot drift apart -- and so a structure one player put up
+## appears for everybody, which is the whole point of the lane.
+##
+## `WorldState.apply_delta()` has already run by the time this fires, so the
+## records are in place and only the scene half is left to do.
+func _on_delta_applied(delta: Dictionary) -> void:
+	var game := _game()
+	if game == null or not is_inside_tree() or get_parent() == null:
+		return
+	var ops: Array = delta.get("ops", []) as Array
+	# Every `building_add` APPENDS, in order, so the k-th add in a delta
+	# carrying `adds` of them sits at `size - adds + k`. Counted rather than
+	# assumed to be the last entry, so a delta carrying two placements plants
+	# both of them on the right records.
+	var adds := 0
+	for raw: Variant in ops:
+		if typeof(raw) == TYPE_DICTIONARY and str((raw as Dictionary).get("op", "")) == "building_add":
+			adds += 1
+	var buildings: Array = game.get("placed_buildings") as Array
+	var planted := 0
+	for raw: Variant in ops:
+		if typeof(raw) != TYPE_DICTIONARY:
+			continue
+		var op := raw as Dictionary
+		match str(op.get("op", "")):
+			"building_add":
+				_plant_from_delta(game, op, buildings.size() - adds + planted)
+				planted += 1
+			"building_remove":
+				_uproot_from_delta(game, op)
+
+
+## One committed `building_add`, as a structure standing in the world at the
+## record's own index. Drawn only when the record belongs to the realm this
+## placer is showing -- the same filter `restore_from_game` applies, and the
+## reason a Cloudreach fence does not appear in the Meadows.
+func _plant_from_delta(game: Node, op: Dictionary, index: int) -> void:
+	var id := str(op.get("id", ""))
+	if id.is_empty() or index < 0:
+		return
+	var realm := str(op.get("realm", "meadows"))
+	var at := _delta_position(op.get("position"))
+	var yaw_deg := float(op.get("yaw_deg", 0.0))
+	if realm == WORLD_RECORDS.active(game):
+		var placed := _spawn_building(game, id, yaw_deg, index)
+		placed.global_position = at
+	# The ticket is retired whether or not the structure was DRAWN: a player
+	# whose realm changed inside one round trip still paid for their house.
+	var ticket := _take_placement_ticket(id, realm, at)
+	if not ticket.is_empty():
+		_settle_placement(game, ticket, at)
+
+
+## One committed `building_remove`. The node addressed by the record's index
+## goes, and every node above it renumbers -- the same bookkeeping the local
+## dismantle did before this lane, now driven by the delta so every peer
+## renumbers identically and in the same order.
+func _uproot_from_delta(game: Node, op: Dictionary) -> void:
+	var index := int(op.get("index", -1))
+	if index < 0:
+		return
+	var realm := str(op.get("realm", "meadows"))
+	var target: Node3D = null
+	for node in get_tree().get_nodes_in_group(PLACED_GROUP):
+		if not get_parent().is_ancestor_of(node):
+			continue
+		if int(node.get_meta(PLACED_INDEX_META, -1)) == index:
+			target = node as Node3D
+			break
+	if target != null:
+		if target == _dismantle_target:
+			_clear_dismantle_target()
+		target.queue_free()
+	_reindex_placed_nodes(index, game)
+	var ticket := _take_dismantle_ticket(index, realm)
+	if not ticket.is_empty():
+		_settle_dismantle(game, ticket)
+
+
+## The refund, the line and the sound, run once, on the peer that pressed.
+func _settle_dismantle(game: Node, ticket: Dictionary) -> void:
+	var inventory: RefCounted = game.get("inventory")
+	if inventory != null:
+		for requirement: Variant in (ticket.get("refund", []) as Array):
+			var need := requirement as Dictionary
+			inventory.call("add", str(need.get("id", "")), int(need.get("n", 0)))
+	game.call("push_world_message",
+		"Dismantled %s — materials refunded" % str(ticket.get("id", "")).capitalize())
+	AUDIO_CUES.play(&"build_place")
+
+
+## The host said no. `_rpc_verdict` reaches only the peer whose intent it was,
+## so a refusal here is always ours. The sentence is NOT pushed again: the
+## transport already showed it on the way in (`ledger_rpc.gd::_rpc_verdict`),
+## and a host's own refusal was answered synchronously in `_place` /
+## `dismantle_piece`. All that is left is to drop the ticket, which is what
+## keeps the player's wood in their satchel.
+func _on_intent_refused(kind: String, _code: String, _reason: String) -> void:
+	if kind == "place_building" and not _pending_placements.is_empty():
+		_pending_placements.pop_front()
+		AUDIO_CUES.play(&"ui_error")
+	elif kind == "dismantle" and not _pending_dismantles.is_empty():
+		_pending_dismantles.pop_front()
+		AUDIO_CUES.play(&"ui_error")
+
+
+## The ticket this committed placement belongs to, removed from the queue, or
+## `{}` when it is somebody else's structure. Matched on id, realm and spot:
+## a placement is grid-snapped and `_cell_occupied` refuses a second piece in
+## the same cell, so no two live tickets can share a position.
+func _take_placement_ticket(id: String, realm: String, at: Vector3) -> Dictionary:
+	for i in _pending_placements.size():
+		var ticket: Dictionary = _pending_placements[i]
+		if str(ticket.get("id", "")) != id or str(ticket.get("realm", "")) != realm:
+			continue
+		if (ticket.get("position", Vector3.ZERO) as Vector3).distance_to(at) > PENDING_MATCH_EPSILON:
+			continue
+		_pending_placements.remove_at(i)
+		return ticket
+	return {}
+
+
+func _take_dismantle_ticket(index: int, realm: String) -> Dictionary:
+	for i in _pending_dismantles.size():
+		var ticket: Dictionary = _pending_dismantles[i]
+		if int(ticket.get("index", -1)) != index or str(ticket.get("realm", "")) != realm:
+			continue
+		_pending_dismantles.remove_at(i)
+		return ticket
+	return {}
+
+
+func _delta_position(raw: Variant) -> Vector3:
+	if typeof(raw) == TYPE_VECTOR3:
+		return raw as Vector3
+	if typeof(raw) == TYPE_ARRAY and (raw as Array).size() == 3:
+		var a := raw as Array
+		return Vector3(float(a[0]), float(a[1]), float(a[2]))
+	return Vector3.ZERO
 
 
 ## R3.1. Rebuild everything `GameState.placed_buildings` remembers: called
@@ -831,16 +1104,31 @@ func dismantle_piece(game: Node, target: Node3D) -> bool:
 		game.call("push_world_message", "Make room in your satchel before dismantling")
 		return false
 
-	_clear_dismantle_target()
-	buildings.remove_at(index)
-	for requirement: Variant in refund:
-		var need := requirement as Dictionary
-		inventory.call("add", str(need.get("id", "")), int(need.get("n", 0)))
-	target.queue_free()
-	_reindex_placed_nodes(index, game)
-	game.call("push_world_message", "Dismantled %s — materials refunded" % id.capitalize())
-	AUDIO_CUES.play(&"build_place")
-	return true
+	# D103, lane 3.C. Everything above is a LOCAL guard -- a chest with things
+	# in it, a bed with a creature asleep on it, a satchel with no room for the
+	# refund. None of them is the host's to answer, and all of them refuse
+	# before an intent is ever sent. What is left is the record itself, and
+	# that is the host's: `dismantle` goes to the ledger and the committed
+	# delta is what takes the structure down, here and on every other peer.
+	var transport := _transport(game)
+	if transport == null:
+		push_error("no Game.ledger to submit a dismantle through")
+		return false
+	var realm := WORLD_RECORDS.active(game)
+	var ticket := {"index": index, "realm": realm, "id": id, "refund": refund.duplicate(true)}
+	_pending_dismantles.append(ticket)
+	var verdict: Dictionary = transport.call("submit",
+		{"kind": "dismantle", "realm": realm, "index": index})
+	if bool(verdict.get("ok", false)) or bool(verdict.get("pending", false)):
+		# `ok`: the delta already landed and `_uproot_from_delta` has already
+		# taken the piece down, paid the refund and said so. `pending`: a
+		# client waiting on the host, with NOTHING spent or refunded yet.
+		return true
+	_pending_dismantles.erase(ticket)
+	var reason := str(verdict.get("reason", ""))
+	if not reason.is_empty():
+		game.call("push_world_message", reason)
+	return false
 
 
 func _refund_fits(game: Node, inventory: RefCounted, refund: Array) -> bool:
@@ -895,13 +1183,21 @@ func _bodies_that_are_not_buildings() -> Array[RID]:
 	var out: Array[RID] = []
 	if _player is CollisionObject3D and is_instance_valid(_player):
 		out.append((_player as CollisionObject3D).get_rid())
-	# Found by name in the current scene, the same defensive way
-	# `playground_hud.gd::_active_creature_is_out()` finds it -- no coupling to
-	# the encounter director from here.
-	var world := get_tree().get_current_scene()
-	var ally: Node = world.get_node_or_null(^"AllyCreature") if world != null else null
-	if ally is CollisionObject3D and is_instance_valid(ally):
-		out.append((ally as CollisionObject3D).get_rid())
+	# Lane 4.B. Found through `DEPLOYED_CREATURE_GROUP`, the same defensive way
+	# `playground_hud.gd::_local_deployed_creature()` finds it -- no coupling to
+	# the encounter director from here. This used to be
+	# `world.get_node_or_null(^"AllyCreature")`, a single hardcoded name that
+	# could only ever name ONE creature; with a creature deployed per owner it
+	# named at most one player's, and the dismantle ray stopped on everybody
+	# else's. Every deployed body is passed through, local or remote: a
+	# teammate's creature standing between you and your own wall is no more a
+	# wall than yours is.
+	var tree := get_tree()
+	if tree == null:
+		return out
+	for body in tree.get_nodes_in_group(DEPLOYED_CREATURE_GROUP):
+		if body is CollisionObject3D and is_instance_valid(body):
+			out.append((body as CollisionObject3D).get_rid())
 	return out
 
 

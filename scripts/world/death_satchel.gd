@@ -10,6 +10,21 @@ extends Node3D
 ## a placed chest (`storage_container.gd`) already is. `set_slot()` rather
 ## than `add()` because these are the exact stacks the player was carrying,
 ## durability and all, not a fresh deposit that should re-pack or re-stack.
+##
+## ## D104/D-MP10, lane 3.C: a satchel belongs to somebody
+##
+## A satchel carries the character id of the player who died holding it
+## (`WorldState.register_death_satchel`'s `owner` field, persisted since lane
+## 3.A). Only that player may open it. Anyone else reads the owner's NAME on
+## the prompt and, if they press it, is told in one sentence that it is not
+## theirs — a shared world where a friend can walk over and empty the bag you
+## died carrying is not the shared world this game wants.
+##
+## An UNOWNED satchel (`owner == ""`) is open to anybody, and that is not a
+## hole: it is what every satchel in every save written before this lane is,
+## and what a solo player who has never formed a session drops. Solo, the
+## owner and the local id are the same string — usually both empty — so the
+## check passes and the bag opens exactly as it always has.
 
 const STORAGE_STATE := preload("res://scripts/world/storage_state.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
@@ -35,16 +50,36 @@ const GROUP := "death_satchel"
 ## Shared across every satchel the same way `storage_container.gd`'s own
 ## panel is shared across every chest — one screen, re-pointed at whichever
 ## container opened it.
+##
+## Lane 3.C read lane 3.D's finding F4 on the identical pattern in
+## `storage_container.gd` and reaches the same verdict for the same reason, and
+## one more of its own. `static` is process-global; a process still drives
+## exactly ONE local player with one screen, and a second peer is a second
+## PROCESS with its own static. The extra reason here: a satchel now refuses
+## anyone but its owner, and the ONLY player who can reach `_on_open` in this
+## process is the local one — so even a second local player could not open two
+## satchels' worth of somebody else's bag through this field. It becomes a real
+## hazard the day one process drives two local players (split-screen), where
+## two screens would fight over one panel, and it has to become per-player then.
 static var _panel: CanvasLayer = null
 
 var state: RefCounted = null
+
+## D104/D-MP10. The character id of the player who dropped this. Empty means
+## unowned — a legacy record, or a solo player who has never formed a session —
+## and an unowned satchel opens for anybody.
+var owner_character_id: String = ""
 
 
 ## `dropped` is `inventory.gd`'s `drain()` result: an ordered Array of
 ## `{id, n, ...}` stack dicts. `db` is the item database the transfer panel
 ## needs for names/icons, passed in rather than reached for through
 ## `/root/Game` so this stays testable headless the way `storage_state.gd` is.
-func build(dropped: Array, db: RefCounted) -> void:
+## `owner` is the dropping player's character id (D104/D-MP10). Optional and
+## defaulting to "" so every existing caller — and every satchel in a save
+## written before this lane — keeps working as an unowned bag.
+func build(dropped: Array, db: RefCounted, owner: String = "") -> void:
+	owner_character_id = owner
 	state = STORAGE_STATE.new(db)
 	for i in dropped.size():
 		state.inventory.call("set_slot", i, dropped[i])
@@ -56,7 +91,8 @@ func build(dropped: Array, db: RefCounted) -> void:
 ## for an empty slot — see that file's header) instead of from a fresh
 ## `drain()`. `state.load_data` already re-coerces `n`/`durability` back from
 ## JSON's float-only numbers, so this needs no extra conversion of its own.
-func restore(data: Variant, db: RefCounted) -> void:
+func restore(data: Variant, db: RefCounted, owner: String = "") -> void:
+	owner_character_id = owner
 	state = STORAGE_STATE.new(db)
 	state.call("load_data", data)
 	_build_visuals()
@@ -89,7 +125,11 @@ func _build_visuals() -> void:
 	var prompt: Node3D = INTERACTABLE.new()
 	prompt.name = "Interactable"
 	prompt.position = Vector3(0.0, 0.5, 0.6)
-	prompt.call("configure", "Open Satchel", 2.6, true)
+	# D104/D-MP10. Somebody else's bag says whose it is BEFORE it is pressed.
+	# A refusal a player could have read off the prompt is a refusal they
+	# should never have had to earn.
+	prompt.call("configure", "Open Satchel" if can_open() else "%s's Satchel" % owner_name(),
+		2.6, true)
 	prompt.connect("activated", _on_open)
 	add_child(prompt)
 
@@ -106,7 +146,63 @@ func _build_visuals() -> void:
 	PICKUP_GLOW.attach(self, SATCHEL_GLOW_COLOUR)
 
 
+# --- whose bag is this ------------------------------------------------------
+
+## May the player at THIS keyboard open it? True for an unowned satchel and for
+## the owner's own; false for anybody else's.
+func can_open() -> bool:
+	if owner_character_id.is_empty():
+		return true
+	return owner_character_id == _local_character_id()
+
+
+## The one sentence a player who is not the owner is given. Kept here rather
+## than at the two call sites so the prompt and the refusal can never name
+## different people.
+func refusal() -> String:
+	return "That satchel is %s's — only they can open it." % owner_name()
+
+
+## The owner's display name, from the session's peer registry (lane 2.A), which
+## is the one place a character id can be turned into a person. Falls back to
+## "another trainer" for an owner who is not in this session at all: a satchel
+## outlives the session it was dropped in, and a save reloaded solo has a
+## registry with nobody in it.
+func owner_name() -> String:
+	if owner_character_id.is_empty():
+		return "another trainer"
+	var game := get_node_or_null(^"/root/Game")
+	var session: Node = game.get("session") as Node if game != null else null
+	if session != null and session.has_method("registry"):
+		var registry: RefCounted = session.call("registry")
+		if registry != null:
+			var peer_id := int(registry.call("peer_for_character", owner_character_id))
+			if peer_id != 0:
+				var shown := str((registry.call("row", peer_id) as Dictionary).get("display_name", ""))
+				if not shown.is_empty():
+					return shown
+	return "another trainer"
+
+
+## This process's own character id. Read, never minted: `session.gd` mints one
+## when a session is formed, and a satchel must not be the thing that decides a
+## solo player suddenly has an identity.
+func _local_character_id() -> String:
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return ""
+	var local: Variant = game.get("local")
+	if local == null:
+		return ""
+	return str((local as RefCounted).get("character_id"))
+
+
 func _on_open() -> void:
+	if not can_open():
+		var game := get_node_or_null(^"/root/Game")
+		if game != null:
+			game.call("push_world_message", refusal())
+		return
 	if _panel == null or not is_instance_valid(_panel):
 		_panel = STORAGE_PANEL.new()
 		get_tree().root.add_child(_panel)

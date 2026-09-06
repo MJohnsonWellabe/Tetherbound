@@ -106,6 +106,13 @@ const EXCLUDED_KEYS: Array[String] = ["party", "inventory", "hotbar", "satiety",
 ## smoke seeded and is asserting against.
 const HASH_SCRATCH_SLOT := 4
 
+## Lane 3.C. A second scratch slot, for the explicit host save the shared-
+## building smoke asserts against. Separate from `HASH_SCRATCH_SLOT` on
+## purpose: that one is rewritten on EVERY heartbeat, so a smoke reading it
+## back could never say whether it was looking at the save the `save_world`
+## step made or at the one the next heartbeat made a frame later.
+const SAVE_SCRATCH_SLOT := 3
+
 var _role := ""
 var _peer_index := -1
 var _control_port := 0
@@ -373,6 +380,10 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = _step_storage_transfer(args)
 		"deploy_creature":
 			out = await _step_deploy_creature(args)
+		"build_place":
+			out = await _step_build_place(args)
+		"save_world":
+			out = _step_save_world(args)
 		_:
 			out = {"verdict": "ERROR", "detail": "unknown action '%s'" % action}
 	out["frames_used"] = _physics_count - before
@@ -474,6 +485,92 @@ func _step_storage_transfer(args: Dictionary) -> Dictionary:
 	return {"verdict": "PASS", "detail": "%s %d %s: ok=%s pending=%s code='%s'"
 		% [direction, n, item, str(verdict.get("ok", false)), str(verdict.get("pending", false)),
 			str(verdict.get("code", ""))]}
+
+
+# --- lane 3.C: a shared building ----------------------------------------------
+#
+# Two arms and two probes. Everything they touch is shipping code: the placer
+# is the world scene's own real `build_placer.gd`, the intent is its real
+# `place_building`, and the save is the real `save_game.gd`. What the harness
+# supplies is only what a player supplies -- the materials, the armed piece,
+# and the press.
+
+## Arm a piece and press Place, through the world's own real `build_placer.gd`.
+##
+## `_place()` is called directly rather than through an injected `build_place`
+## press for one reason: a press only plants when the GHOST is green, and where
+## a peer happens to spawn in the Meadows decides that. A smoke whose subject is
+## "did a client's record reach the host" must not be able to go red because of
+## the terrain under a spawn point. Everything downstream of the press -- the
+## ticket, the intent, the verdict, the delta, the node -- is the shipping path
+## untouched, and `_ghost_ok` is reported in the detail so a run can still say
+## what the real press would have done.
+func _step_build_place(args: Dictionary) -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		return {"verdict": "ERROR", "detail": "no /root/Game"}
+	var placer: Node = null
+	for node in get_nodes_in_group("build_placer"):
+		placer = node
+		break
+	if placer == null:
+		return {"verdict": "ERROR", "detail": "no build_placer in this peer's world"}
+	var id := str(args.get("id", "floor"))
+	# Free Build so the assertion is about the RECORD, not about whether this
+	# peer's satchel happened to hold enough wood.
+	game.set("free_build", true)
+	game.set("pending_build", id)
+	for i in int(args.get("arm_frames", 30)):
+		await physics_frame
+	var ghost_ok := bool(placer.get("_ghost_ok"))
+	var before := (game.get("placed_buildings") as Array).size()
+	placer.call("_place", game, id)
+	for i in int(args.get("settle_frames", 6)):
+		await physics_frame
+	game.set("pending_build", "")
+	var after := (game.get("placed_buildings") as Array).size()
+	return {"verdict": "PASS", "detail": "pressed Place for '%s' (ghost_ok=%s); records %d -> %d"
+		% [id, str(ghost_ok), before, after]}
+
+
+## Write this peer's world to a save slot, the way an autosave does. On a host
+## that is the world every other peer's records had to reach to be here at all;
+## on a client D100 says it writes nothing of the world, which is why the smoke
+## only ever asks the HOST for one.
+func _step_save_world(_args: Dictionary) -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		return {"verdict": "ERROR", "detail": "no /root/Game"}
+	var save_system: Variant = game.get("save_system")
+	if save_system == null:
+		return {"verdict": "ERROR", "detail": "no Game.save_system"}
+	if not bool(save_system.call("save", game, SAVE_SCRATCH_SLOT)):
+		return {"verdict": "FAIL", "detail": "save to slot %d refused" % SAVE_SCRATCH_SLOT}
+	var path := str(save_system.call("slot_path", SAVE_SCRATCH_SLOT))
+	return {"verdict": "PASS", "detail": "saved slot %d to %s" % [SAVE_SCRATCH_SLOT, path]}
+
+
+## `placed_buildings`, flattened to what a smoke can compare across two
+## processes: the realm, the id and the position, in record order.
+func _building_rows(raw: Variant) -> Array:
+	var out: Array = []
+	if not (raw is Array):
+		return out
+	for entry: Variant in (raw as Array):
+		if typeof(entry) != TYPE_DICTIONARY:
+			continue
+		var record := entry as Dictionary
+		var position: Array = record.get("position", []) as Array
+		out.append({
+			"realm": str(record.get("realm", "meadows")),
+			"id": str(record.get("id", "")),
+			"position": [
+				snappedf(float(position[0]), 0.01) if position.size() == 3 else 0.0,
+				snappedf(float(position[1]), 0.01) if position.size() == 3 else 0.0,
+				snappedf(float(position[2]), 0.01) if position.size() == 3 else 0.0,
+			],
+		})
+	return out
 
 
 ## `{id: count}` for every stack an inventory holds -- addressed by item
@@ -1140,6 +1237,49 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			if pgame == null:
 				return null
 			return (pgame.get("placed_buildings") as Array).size()
+		"placed_building_rows":
+			# Lane 3.C. The RECORDS, flattened so two processes can be compared
+			# directly. What the world says is standing.
+			var rgame := root.get_node_or_null(^"Game")
+			if rgame == null:
+				return null
+			return _building_rows(rgame.get("placed_buildings"))
+		"placed_building_nodes":
+			# Lane 3.C. The live NODES, which is the other half: a record that
+			# arrived but planted nothing means the delta reached `WorldState`
+			# and not `build_placer.gd`, and the two failures look identical
+			# from the record alone.
+			var nout: Array = []
+			for node in get_nodes_in_group("placed_building"):
+				nout.append({
+					"id": str(node.get_meta("building_id", "")),
+					"index": int(node.get_meta("placed_index", -1)),
+					"realm": str(node.get_meta("realm", "")),
+				})
+			return nout
+		"saved_world_buildings":
+			# Lane 3.C, the reload half. `placed_buildings` read back out of the
+			# FILE the `save_world` step wrote -- not out of memory. A record
+			# that is in the host's RAM but not in its save is a record that
+			# does not survive a reload, which is the whole acceptance bar.
+			var sgame2 := root.get_node_or_null(^"Game")
+			if sgame2 == null:
+				return null
+			var ssys: Variant = sgame2.get("save_system")
+			if ssys == null:
+				return null
+			var spath := str(ssys.call("slot_path", SAVE_SCRATCH_SLOT))
+			if not FileAccess.file_exists(spath):
+				return null
+			var sf := FileAccess.open(spath, FileAccess.READ)
+			if sf == null:
+				return null
+			var stext := sf.get_as_text()
+			sf.close()
+			var sparsed: Variant = JSON.parse_string(stext)
+			if typeof(sparsed) != TYPE_DICTIONARY:
+				return null
+			return _building_rows((sparsed as Dictionary).get("placed_buildings", []))
 		"autosave_exists":
 			# D100's client-never-writes-the-world assertion. Reads the real
 			# file under THIS peer's own XDG_DATA_HOME (contract §2), so a host
