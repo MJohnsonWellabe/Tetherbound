@@ -317,3 +317,140 @@ because `opening:` still covers it. That is correct behaviour and it is why
 | `tests/test_map_state.gd` | One line: `MAP_STATE.grid_x()` → `map.grid_x()`. Same numbers, same map; the static accessor no longer exists. |
 | `tests/test_title_new_game.gd` | Built its pristine comparison map through the private `game._map_landmarks_config()`; now asks a fresh `PlayerState` for one. |
 
+## G — Proof
+
+All commands run with `~/godot-bin/godot --headless`, from the worktree, each with its own
+private `XDG_DATA_HOME`. Smokes were run **sequentially**, never in parallel.
+
+### Full unit suite
+
+```
+godot --headless --path . --script tests/run_tests.gd
+  → 2441 tests, 3781499 assertions, 0 failed   (exit 0, 1874 s = 31.2 min)
+```
+
+31.2 min sits inside the fence's stated 28–39 min band. **The 62 characterization tests are all
+present and green** — the exact count lane 0.E's report gives for `--only=characterize` (62 tests
+/ 209 assertions), unchanged by this lane even though two of their expected values moved. 61 of
+the 2441 are this lane's four new files, so the pre-lane suite was 2380.
+
+### Smokes
+
+Two full sequences were run. **Sequence 1** was stopped after 11 smokes when
+`smoke_progression_feedback` failed, so its failure could be diagnosed before the rest of the
+tree moved under it. **Sequence 2** is the one that counts: it ran the whole list on the tree at
+`6732fac0`, and every line below is that smoke's FIRST attempt on that tree.
+
+| smoke | exit | secs | `^ERROR:` lines |
+|---|---:|---:|---:|
+| `smoke_playground` | 0 | 104 | 2 |
+| `smoke_opening` | 0 | 168 | 0 |
+| `smoke_title_new_game` | 0 | 37 | 1 |
+| `smoke_title_load_game` | 0 | 203 | 0 |
+| `smoke_save_persistence` | 0 | 175 | 0 |
+| `smoke_finale_persistence` | 0 | 462 | 8 |
+| `smoke_clock_survives_a_reload` | 0 | 253 | 0 |
+| `smoke_home_sleep` | 0 | 93 | 1 |
+| **`smoke_progression_feedback`** | **1** | 150 | 0 |
+| `smoke_alpha_pins` | 0 | 13 | 0 |
+| `smoke_gate_a_map_cycle` | 0 | 132 | 0 |
+| `smoke_menu` | 0 | 129 | 0 |
+| `smoke_combat` | 0 | 115 | 0 |
+| `smoke_catching` | 0 | 176 | 0 |
+| `smoke_cloudreach_transition` | 0 | 172 | 0 |
+| `smoke_cloudreach_arrival_walk` | 0 | 83 | 0 |
+| `smoke_cloudreach_persistence_tail` | 0 | 5 | 0 |
+| `smoke_gate_b_continuous` (CORE, no flag) | 0 | 220 | 0 |
+
+**17 of 18 exit 0 on the first attempt. No smoke was retried into green.**
+
+Every `^ERROR:` line above is one of two pre-existing engine notices — `Parameter "material" is
+null.` and `N resources still in use at exit.` — and no line anywhere is a seam error. Sequence 1
+produced one extra: `smoke_title_new_game` emitted `unscoped flag: warden_defeated`, which was a
+finding rather than noise (see below) and is gone in sequence 2.
+
+### `smoke_progression_feedback` — the one red, and why it is not this lane's
+
+```
+FAIL: the party strip ticked 0 time(s) for the win; expected the xp tick and the bond tick
+Progression feedback: 1 failure(s)
+```
+
+Attribution, in the order it was established:
+
+1. **Three attempts on this branch**, all with byte-identical output — not a flake.
+2. A first hypothesis (the feed's static entry points resolving to two different objects) was
+   implemented and the smoke re-run: **still red**. The fix was kept anyway, because the defect it
+   removes is real — see `6732fac0` — but it is not this failure.
+3. **The same smoke was run on the untouched base commit `6b71c024`**, in its own worktree
+   (`/home/user/tb-base-check`, imported clean): `BASE EXIT=1`, same single failure, same message.
+
+So `smoke_progression_feedback` is **already red on the Wave 0 branch this lane cut from**. It is
+in **no CI shard** (`grep progression_feedback .github/workflows/ci.yml` → nothing), which is why
+it stayed red unnoticed. This lane did not weaken it, did not touch it, and does not fix it.
+
+**Handing it back:** the failure is a race in `party_strip.gd::_poll_feed()` that predates this
+lane. It advances its cursor (`_feed_seq = newest`) BEFORE the
+`if not progression_feedback_enabled: return` guard, so every event pushed while `combat_hud.gd`
+has the strip disabled (`:269`) is consumed and dropped rather than deferred. The win's `xp_gained`
+and `bond_credit` land in exactly that window — the smoke's own log confirms both reached the feed
+— and the strip never flicks for them, while the meal / discovery / rest ticks later in the same
+smoke all pass. Fixing it means deferring rather than dropping while disabled, which is a
+behaviour change to a presenter and belongs to whoever owns that file, not to a state-seam lane.
+
+### `smoke_playground`'s `^ERROR:` set vs the base commit
+
+`smoke_playground` exits 0 on both trees, and the only content-bearing `^ERROR:` line on either is
+the pre-existing `Parameter "material" is null.` A second line, `N resources still in use at
+exit`, is an intermittent engine teardown notice — seen 2 of 5 lane runs and 0 of 3 base runs, and
+on the LANE tree it appeared in one sequence and not the next. Not chased, on the coordinator's
+instruction: it is printed after the game has already run and exited, it cannot affect a player,
+and the same notice appears in other smokes on both trees. **No deterministic growth in the ERROR
+set.**
+
+### Two fixture defects the scope table exposed
+
+Both are strengthenings, and both are recorded because a reviewer will otherwise read them as
+scope creep:
+
+1. `smoke_title_new_game.gd` seeded `game.progression.set_flag("warden_defeated")` and then
+   asserted New Game had cleared it. **`warden_defeated` is not a flag id this game ever writes** —
+   it is the KEY under it in `stronghold_climax.json`'s `flags` map, whose VALUE is
+   `defeated_warden`. The old spelling seeded a string nothing in the game reads, so the assertion
+   could not have caught a New Game that really did carry the Warden victory across. D99 made it
+   visible (an undeclared id is a `push_error`) and the fixture now uses the real id. Still green.
+2. `test_title_new_game.gd` built its pristine comparison map through the private
+   `Game._map_landmarks_config()`; it now asks a fresh `PlayerState`.
+
+## What this lane did NOT do
+
+* `scripts/save/save_game.gd` is **byte-for-byte unchanged**. So are `project.godot`,
+  `.github/`, `party.gd`, `inventory.gd`, `creature_instance.gd`, `item_db.gd`,
+  `player_equipment.gd` and `quest_log.gd`'s public surface. Verified by `git diff --stat`
+  against the base.
+* **No second autoload.** `WorldState`, `PlayerState` and `MergedProgression` are composed
+  `RefCounted`s in `autoload/`, the same shape as `party.gd` and `inventory.gd`.
+* **No player-facing behaviour changed in solo**, with one deliberate exception recorded above:
+  `smoke_title_new_game`'s fixture now seeds the real Warden flag, which makes an assertion mean
+  what it always claimed to.
+* **Nothing seam §6 pins was "fixed":** `progression_feed::drain()` still bumps `_revision` and
+  not `_epoch`; `inventory::drain()` still returns a compacted array; `SceneTree.paused` is still
+  untestable from a unit test.
+* `docs/CURRENT_STATE.md` and `docs/TECHNICAL_ARCHITECTURE.md` were **not** updated — Wave 1 row
+  1.D owns the ledger.
+
+## For the orchestrator
+
+1. **`smoke_progression_feedback` is red on `6b71c024`** and is in no CI shard. It needs an owner;
+   the diagnosis is in the Proof section. Wave 1's exit criterion should not be blocked on this
+   lane for it.
+2. **`save_game.gd` has the same `int(<whatever arrived>)` fragility** at its `day` / `world_seed`
+   reads that `WorldState.load_data` had — `int([])` aborts a load halfway. Worth handing to 1.C
+   with the save split.
+3. **Twelve residual flag classifications want ratifying** — chiefly `recipe_orb_basic` (world, for
+   consistency with `recipe_saddle`), the three "learned" reveals (world, because they gate chapter
+   progress), and the eleven Cloudreach `side_*` flags (world). All are listed above with the
+   reasoning; none was defaulted.
+4. **Leftover worktree:** `git worktree remove /home/user/tb-base-check` when convenient. This
+   lane's own worktree is `/home/user/tb-lane-1b` on branch `lane-1b-state-seam`, six commits,
+   nothing pushed.
