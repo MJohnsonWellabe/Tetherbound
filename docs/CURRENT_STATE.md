@@ -1387,3 +1387,36 @@ entrance stand, T-03's "floating white chevron" is that lane's
 mass is H6. Both judges also noted, correctly, that no creature and no Warden is
 in frame — these three stands are shot pre-fight by design, so that is a
 capture-set question rather than an art one.
+
+## Legendary Tether Machine restyle — H6, 2026-09-06 (TETHER-MACHINE-0906)
+
+**Half met, and the unmet half is not this asset's texture.** The installed
+`tether_machine.glb` was regraded to the Hall's palette by
+`tools/art_pipeline/regrade_tether_machine.py` (value-keyed albedo ramp: warm dark
+stone → `site.stone` #6a6157 → board 15's own BRASS/GOLD on lit trim, baked
+micro-detail flattened; `roughnessFactor` 0.80 → 0.93). Geometry, UVs and vertex
+count untouched; no Meshy call and no credits spent.
+
+Round 5's "**grey-green** mass in an orange room ... as if it were lit by a
+different scene" is **closed**: two independent blind judges now open with "not a
+palette mismatch. The opposite" (machine median hue 35.5° against wall 27.7°), and
+surface churn is down ~30% (gradient energy 13.32 → 9.37 against the wall's 3.98).
+The "**dark blob you cannot name**" is **not** closed, and round 3 proved why inside
+one frame set — same mesh, same albedo, three cameras: T-03 scores Michelson
+**0.652** against C-02/C-03's 0.234/0.303 purely because it is silhouetted against a
+**torch-lit** wall. That is chamber lighting and staging, not albedo; three grades
+at rendered medL 64.9 / 32.7 / 32.5 against the same wall all failed it.
+
+Two corrections to `HANDOFF_2026-09-06.md` §4.2 H6, both verifiable: the reference
+board is **not** missing (`docs/art/reference/15_Legendary_Tether_Machine.png`), and
+there is **no emissive to cap** — the mesh carries one material, `metallicFactor` 0,
+no `emissiveFactor` and no emissive texture. A roughness change was measured and did
+**not** move the surface read (top-5% saturation 0.426 → 0.425); under
+`gl_compatibility` the specular lobe is negligible and those highlights are baked in
+the albedo. The procedural re-author was prototyped and rejected by the owner
+("I prefer the original 3d asset version"), so it was deleted and the mesh kept.
+
+`smoke_stronghold` green throughout: `bounding 16.6 x 15.0 x 12.0 m`, `machine
+facing: authored -101.2 deg, built rotation.y -101.2 deg`, `doorway-to-legendary
+sightline: 13.6m, clear`. Verdicts, measurements and the exact next steps:
+`ralph/reports/TETHER-MACHINE-0906/` (`REPORT.md`, `JUDGE-machine-round{1,2,3}.md`).
