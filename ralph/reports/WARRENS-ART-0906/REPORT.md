@@ -316,3 +316,76 @@ of why the verdict read "a red-and-white striped pole": not the colour, the
 lighting. `lamp_throw_m` stands the light 0.45 m out toward the road while the
 bulb and hood stay on the post, since a light source does not have to be the
 thing you see.
+
+## Blind verdict round 2 — `JUDGE-round2.md`
+
+Same discipline, fresh agent, told nothing about round 1 or what changed, and
+this time explicitly told **not** to assume a doorway is 2 m (round 1's absolute
+scale figures rested on that wrong premise).
+
+| gap | round 6 (before this lane) | round 1 | round 2 |
+|---|---|---|---|
+| **W1** mushrooms are plain domes | named | not named | **not named, and praised**: "the only object in any interior frame with a designed silhouette: varied cap heights, varied stem lean, overlapping depths, a colour that separates from the room. It reads at thumbnail size. Nothing else indoors does." |
+| **W3** interior reads as a stone box | named | still named, **and the partial cladding's own seam named** | **the material half is gone.** Round 1's "two unrelated rock materials in adjacent rooms … the burrow has no material identity" does not appear. What remains is geometry: "hard 90° extruded prisms … nothing about `04`, `05`, `06` or `07` says *dug*." |
+| **W5** arch reads as tubes | named | not named | **not named, and it opens the verdict**: "`03-mouth` is the best frame in the survey and it is genuinely good. The arch of the earth lip, the tangle of exposed roots hanging into the opening … that is authored composition with a foreground, a threshold and a reveal." |
+| §5.2 tube-foot sliver | recorded | not named | not named (0 bright pixels, measured) |
+
+Round 1's "flat black scribble" root complaint has become round 2's "the tangle
+of exposed roots hanging into the opening", quoted as a thing that works.
+
+**W3's honest status: the material task is done, the geometry task is not, and
+they were never the same task.** The handoff's W3 row is a material instruction
+("extend the earth-clad treatment … corbels and beams stay") and that is
+complete. "The rooms are boxes" is a different and larger thing — round 1 put an
+organic tunnel kit in its *cannot be fixed by scene work* list, and round 2
+agrees by describing extruded prisms with flat ceilings and painted-on beams.
+That needs a kit decision, not a config key.
+
+### Acted on this round
+
+- **The park lamp.** Round 3's hood turned a survey stake into a municipal
+  streetlight — the wrong vocabulary solved twice. The verdict's own remedy
+  ("a lantern, a torch, a marked cairn") was already vendored: `Lantern_Wall`
+  hangs on the existing post, its three textures already installed, one `.gltf`
+  and one `.bin`. Ledger row added. The judge was right that brightness would not
+  fix it and wrong that it needed art the build lacks.
+- **"Two grass tufts hang in open air against the blue sky"** (`03`). Self-
+  inflicted, and worth naming as such: the brow turf was seated with a
+  hand-tuned offset that matched the *old swept-tube* brow, and rounds 1 and 2
+  both moved the collar's reach without moving the turf. It now derives its seat
+  from the same `lip_out`/`lip_proud` the ring is built from, so it cannot drift
+  out of step again.
+
+### "Duplicate chests in three frames" — measured, and not this lane's
+
+The verdict calls it systemic: "`04`, `06` and `07` each contain two copies of
+the chest asset at nearly the same transform, interpenetrating." A crop of `06`
+confirms it exactly — two crates offset by about half a crate, the rear one's lid
+rim and back corner standing proud of the front one.
+
+It is **not** the warrens' dressing list. `data/config/burrow_warrens.json`
+authors no chest at all, and `tools/_probe_warrens_prop_overlaps.gd` (new) builds
+the warrens against the same flat fixture `smoke_warrens_fixture` uses, walks all
+801 placed props and reports every pair closer than 1.4 m: **no Dressing↔Dressing
+pair exists.** The fixture has no playground in it, and the real scene does — so
+the second copy comes from a placer outside these four files (the playground's
+own band-pickup / harvest pass, which is not warrens-aware; `playground_world.gd`
+mentions the warrens only to build it). Handed over with the probe, rather than
+half-fixed from inside the wrong file.
+
+### Still open, and whose
+
+- **The guardian** — the style seam is unchanged and is the verdict's #2. But
+  round 2 *withdraws* round 1's scale finding on its own: "the guardian measures
+  about 4.5–5× the chest's height at the shoulder … It is not the frog-sized-boss
+  failure. Good." Round 1's "dog-sized" rested on the 2 m doorway assumption.
+  W4 / owner call either way.
+- **Exterior light and ground** — the verdict's #1, with numbers: ground median
+  chroma 0.18–0.28 and a brightest-5% of 0.62–0.69 against the references'
+  0.42–0.49 and 0.90–0.94. "A hard blue sky, a sun direction proven by the
+  crate's sharp shadow — and a meadow lit as though it were overcast." W2 and the
+  renderer, Meadows-wide, not this lane.
+- **The interior is boxy** — needs a tunnel kit, per both verdicts.
+- **The prop family** — "photographic-looking wood and metal textures while the
+  world around them is flat-shaded stylised geometry". A re-texture decision for
+  the whole prop family, not a Warrens fix.

@@ -3333,10 +3333,35 @@ func _build_bank_lamp_and_cable(holder: Node3D, bank: Dictionary, z0: float, rx:
 	lamp.position = Vector3(0.0, post_h * 0.42, -float(bank.get("lamp_throw_m", 0.0)))
 	post.add_child(lamp)
 
+	# WARRENS-ART-0906 round 4, blind verdict round 2 on 03-mouth: "a modern
+	# mushroom-shade park lamp on a smooth grey aluminium pole with an
+	# unshaded emissive yellow sphere and a painted red base ... reads as a
+	# municipal streetlight", and in that verdict's own not-fixable-by-scene
+	# list, "it needs to be a different object -- a lantern, a torch, a marked
+	# cairn". Round 3 built the hood that turned a survey stake INTO a park
+	# lamp, which is the wrong vocabulary solved twice. `lamp_head_model` hangs
+	# a real installed prop instead: `Lantern_Wall` out of the fantasy props
+	# family this world already ships (two files, and all three of its textures
+	# were already installed -- see the ASSET_LEDGER row). The emissive sphere
+	# stays but shrinks to a flame inside the lantern's own cage rather than
+	# being the object itself. Unset, the old sphere-and-hood is unchanged.
+	var head_path := str(bank.get("lamp_head_model", ""))
+	var head: Node3D = null
+	if not head_path.is_empty():
+		var packed: PackedScene = load(head_path) as PackedScene
+		if packed != null:
+			head = packed.instantiate() as Node3D
+	if head != null:
+		head.scale = Vector3.ONE * float(bank.get("lamp_head_scale", 0.9))
+		head.position = lamp.position + Vector3(0.0, float(bank.get("lamp_head_y_m", 0.0)), 0.0)
+		head.rotation = Vector3(0.0, deg_to_rad(float(bank.get("lamp_head_yaw_deg", 0.0))), 0.0)
+		head.name = "TetherLampHead"
+		post.add_child(head)
 	var bulb := MeshInstance3D.new()
 	var bulb_mesh := SphereMesh.new()
-	bulb_mesh.radius = 0.11
-	bulb_mesh.height = 0.22
+	var bulb_r := float(bank.get("lamp_bulb_radius_m", 0.11))
+	bulb_mesh.radius = bulb_r
+	bulb_mesh.height = bulb_r * 2.0
 	bulb.mesh = bulb_mesh
 	# ROUND-6-0906, JUDGE-round5.md 03 ("an unlit black pole with a white
 	# sphere -- no glow, no colour, no Team Tether identity"): the bulb burns
@@ -3354,7 +3379,7 @@ func _build_bank_lamp_and_cable(holder: Node3D, bank: Dictionary, z0: float, rx:
 	# bulb, because that is the silhouette the eye knows. `lamp_hood_m` 0
 	# leaves the old bare bulb.
 	var hood_r := float(bank.get("lamp_hood_m", 0.0))
-	if hood_r > 0.0:
+	if hood_r > 0.0 and head == null:
 		var hood := MeshInstance3D.new()
 		var hood_mesh := CylinderMesh.new()
 		hood_mesh.top_radius = hood_r * 0.35
@@ -3672,9 +3697,27 @@ func _build_brow_turf(holder: Node3D, bank: Dictionary, rng: RandomNumberGenerat
 		var tuft: Node3D = packed.instantiate() as Node3D
 		if tuft == null:
 			continue
-		var ring_r := rx + brow_rx_extra * 0.9
-		var y: float = _floor_y + spring_h + (arch_h - spring_h) * sin(angle) + thickness * 0.25
-		tuft.position = Vector3(ring_r * cos(angle), y - 0.1, z_front + rng.randf_range(-0.35, 0.15))
+		# WARRENS-ART-0906 round 4, blind verdict round 2 on 03-mouth: "two
+		# grass tufts hang in open air against the blue sky, detached from any
+		# surface, several metres above the nearest rock." Self-inflicted: the
+		# turf was seated with `rx + brow_rx_extra` and a hand-tuned
+		# `thickness * 0.25` lift, which matched the OLD swept-tube brow.
+		# Round 1 and round 2 both moved the collar's reach, and the tufts
+		# stayed where the tube used to be. They are seated on the collar's own
+		# crest now -- the same `lip_out`/`lip_proud` the ring is actually
+		# built from -- so they follow it whatever a later tuning pass does to
+		# it, which is the only reason this will not drift again.
+		var crest_out := float(bank.get("brow_lip_out_m", thickness * 0.9))
+		var crest_proud := float(bank.get("brow_lip_proud_m", thickness * 0.75))
+		var rise := maxf(arch_h - spring_h, 0.05)
+		# The rim point, plus the ellipse's own outward normal times the
+		# collar's reach: exactly where `_build_brow_earth_ring()` puts its
+		# crest, with no second copy of the maths to drift out of step.
+		var out_dir := Vector2(cos(angle) / maxf(rx, 0.01), sin(angle) / rise).normalized()
+		var rim := Vector2(rx * cos(angle), _floor_y + spring_h + rise * sin(angle))
+		var crest := rim + out_dir * crest_out
+		tuft.position = Vector3(crest.x, crest.y - 0.06,
+			z_front - crest_proud * 0.55 + rng.randf_range(-0.15, 0.1))
 		# lean outward from the ring's own centre so the blades overhang
 		var lean := Vector3(cos(angle), 0.0, -0.4).normalized()
 		tuft.rotation = Vector3(deg_to_rad(rng.randf_range(10.0, 30.0)) * lean.z,
