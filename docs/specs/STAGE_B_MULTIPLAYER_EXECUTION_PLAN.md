@@ -311,18 +311,31 @@ W7  7.A (Opus) ──▶ 7.B ∥ 7.C ──▶ 7.D (Fable)
 
 ## 7. Verification
 
-**Per lane:** named unit tests via `--only=`, named smokes, `smoke_playground` with the `^ERROR:`
-distinct-set check, and for net lanes the named `smoke_net_*` through the harness with the desync
-detector on. Every new unit test and **every new `smoke_net_*` has a negative control**: the smoke
-is run once against the previous wave's head and must fail there (a stubbed ledger must not pass
-`smoke_net_pickup_race`). Tolerances (movement, strike latency, sync distance) are numbers in the
-brief before implementation. Completion reports carry commands and counts; Fable reproduces at
-least one claim per lane.
+**CI is the gate.** A lane proves its own change; the shards prove the rest. Rewritten
+2026-09-06 on the owner's instruction after Wave 1 spent real time on sampling that could not
+have changed a decision.
 
-**Per wave (the PR):** full CI (35–45 min, code jobs confirmed run) including
-`verify-multiplayer-shard` (2-peer smokes, per-peer logs uploaded) and `verify-solo-regression`
-green on first attempt; the full unit suite for any wave touching `game_state.gd` or a save
-format; `run_all_smokes.sh` once on the wave head with its summary in the wave report.
+**Per lane:** the unit tests the change touches (`--only=`), **three to six** smokes chosen for
+what the change actually reaches, and for a net lane its own `smoke_net_*`. Add
+`smoke_playground` only when the change touches world, spawn, creature or encounter code (the
+rule `AGENT_WORKFLOW.md` §6 already states), and read its `^ERROR:` set once — no repeat
+sampling. A new **`smoke_net_*` keeps its negative control** (run against the previous wave's
+head, must fail there): that is the one check that catches a green which proves nothing, and it
+costs one run. New unit tests are still seen red once on a deliberate break. Tolerances are
+numbers in the brief before implementation. Fable reproduces one claim per lane, not all of them.
+
+**Per wave (the PR):** full CI, code jobs confirmed to have run. That is the bar. Add the full
+unit suite only when the wave changed `game_state.gd`, a save format or a flag scope.
+
+**Not evidence, do not chase:** engine exit-time notices (`resources still in use at exit`,
+leaked `ObjectDB` instances, RID allocations at exit) print after the game has run and cannot
+reach a player. Record one line if a new one appears; never sample runs to compare their
+frequency. Likewise a smoke that fails identically on the lane's base is a routed finding in one
+sentence, not an investigation.
+
+**The full 151-smoke sweep runs once per STAGE, not per wave** (`ralph/reports/MP-W0-SMOKE-SWEEP-0906/`
+is Stage B's). Its purpose is to find the ~104 smokes CI never runs and tell Stage C which are
+dead, slow or already broken — a census, not a gate.
 
 **Stage exit (directive §17, §21, §23):** every minimum-experience item has a named smoke:
 
