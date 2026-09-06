@@ -1990,8 +1990,8 @@ jobs:
           # restated the lanes before them, and the block had accumulated four
           # duplicated fragments before lane 2.B noticed. The roster is the
           # record; prose about it only rots.
-          if [ "$count" -lt 21 ]; then
-            echo "::error::expected at least 21 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
+          if [ "$count" -lt 22 ]; then
+            echo "::error::expected at least 22 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
             exit 1
           fi
           # Named registration, on top of the count. Discovery alone would let a
@@ -2003,6 +2003,7 @@ jobs:
             tests/smoke_net_behind_character_joins_ahead_world.gd \
             tests/smoke_net_boss_rewards_each_participant.gd \
             tests/smoke_net_deploy_two_creatures.gd \
+            tests/smoke_net_farm_race.gd \
             tests/smoke_net_fog_is_personal.gd \
             tests/smoke_net_gate_opens_for_both.gd \
             tests/smoke_net_hearts.gd \

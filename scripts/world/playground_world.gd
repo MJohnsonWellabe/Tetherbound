@@ -1892,7 +1892,10 @@ func _place_farm_plots() -> void:
 		plot.name = "Plot%d" % placed
 		plot.position = Vector3(x, ground, z)
 		root.add_child(plot)
-		plot.call("setup", placed, config)
+		# D97, lane 6.E: the bed's realm comes from the WORLD that placed it, so
+		# the claim it raises when it is picked is filed against this world and
+		# not against whichever realm the local player happens to be standing in.
+		plot.call("setup", placed, config, world_realm())
 		placed += 1
 	print("[playground] placed %d farm plots" % placed)
 

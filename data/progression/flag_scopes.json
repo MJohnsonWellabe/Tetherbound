@@ -122,6 +122,7 @@
       "harvest_node:",
       "vegetation:",
       "felled:",
+      "farm:",
       "wild_once_",
       "warrens_once_"
     ]
