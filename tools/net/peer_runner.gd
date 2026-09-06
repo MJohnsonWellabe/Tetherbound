@@ -96,6 +96,7 @@ const SPECIES_DATA := preload("res://scripts/creatures/creature_species.gd")
 const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const CLOUDREACH_SCENE := "res://scenes/world/cloudreach_cliffs.tscn"
+const STORMWOOD_SCENE := "res://scenes/world/stormwood.tscn"
 
 ## Wave 6 lane 6.A. Realm id -> the AUTHORED ROOT NAME of its world scene, and
 ## -> the `boot` step's name for it. The root name is what
@@ -106,10 +107,12 @@ const CLOUDREACH_SCENE := "res://scenes/world/cloudreach_cliffs.tscn"
 const REALM_ROOT_NAMES := {
 	"meadows": "MeadowsPlayground",
 	"cloudreach": "CloudreachCliffs",
+	"stormwood": "Stormwood",
 }
 const REALM_SCENE_NAMES := {
 	"meadows": "world",
 	"cloudreach": "cloudreach",
+	"stormwood": "stormwood",
 }
 
 const DEFAULT_SETTLE_FRAMES := 240
@@ -283,8 +286,9 @@ func _initialize() -> void:
 		return
 
 	_probe = PROBE.new(self)
-	print("peer[%d/%s]: starting scene=%s control_port=%d enet_port=%d xdg_data_home=%s"
-		% [_peer_index, _role, _scene_name, _control_port, _enet_port, OS.get_environment("XDG_DATA_HOME")])
+	print("peer[%d/%s]: starting scene=%s control_port=%d enet_port=%d xdg_data_home=%s user_data_dir=%s"
+		% [_peer_index, _role, _scene_name, _control_port, _enet_port,
+			OS.get_environment("XDG_DATA_HOME"), OS.get_user_data_dir()])
 
 	await _boot_scene(_scene_name, DEFAULT_SETTLE_FRAMES)
 
@@ -300,6 +304,7 @@ func _initialize() -> void:
 	# its own. Reported by the peer that owns it rather than recomputed.
 	_send({"type": "hello", "peer": _peer_index, "role": _role, "pid": OS.get_process_id(),
 		"enet_port": _enet_port,
+		"user_data_dir": OS.get_user_data_dir(),
 		"godot_version": String(Engine.get_version_info().get("string", "")),
 		"main_sha": _git_sha()})
 
@@ -318,6 +323,8 @@ func _boot_scene(which: String, settle: int) -> void:
 			path = TITLE_SCENE
 		elif which == "cloudreach":
 			path = CLOUDREACH_SCENE
+		elif which == "stormwood":
+			path = STORMWOOD_SCENE
 		var packed: PackedScene = load(path)
 		if packed == null:
 			push_error("peer_runner: could not load scene '%s' (%s)" % [which, path])

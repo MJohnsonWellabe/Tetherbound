@@ -18,6 +18,7 @@ var _map: RefCounted
 var _vegetation: Node3D
 var _rootgate: StaticBody3D
 var _revision := -1
+var _build_started_ms := 0
 
 func world_realm() -> String:
 	return REALM_ID
@@ -47,6 +48,7 @@ func entry_anchor(id: String) -> Dictionary:
 	return {}
 
 func _ready() -> void:
+	_build_started_ms = Time.get_ticks_msec()
 	_config = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_world.json"))
 	var player := local_rig() as CharacterBody3D
 	player.process_mode = Node.PROCESS_MODE_DISABLED
@@ -62,17 +64,22 @@ func _ready() -> void:
 		get_node("CameraRig").process_mode = Node.PROCESS_MODE_DISABLED
 		get_node("CameraRig/Camera3D").current = false
 	var budget := SHELL_BUILD.new()
-	budget.call("begin",self,true)
+	budget.call("begin",self,simulation_only)
 	_terrain = ClassDB.instantiate("Terrain3D")
 	_terrain.name = "Terrain"
 	_terrain.set("region_size",256)
 	_terrain.set("vertex_spacing",2.0)
 	add_child(_terrain)
 	await get_tree().process_frame
+	_build_note("terrain attached")
 	_terrain.set("data_directory","res://data/terrain/stormwood")
+	_build_note("terrain regions loaded")
 	_terrain.set("collision_mode",3)
-	_apply_ground_materials()
+	_build_note("collision configured")
+	await _apply_ground_materials(budget)
+	_build_note("materials configured")
 	await budget.call("step","terrain")
+	_build_note("terrain physics settled")
 	_vegetation = VEGETATION.new()
 	_vegetation.name = "Vegetation"
 	_vegetation.set("realm",REALM_ID)
@@ -112,7 +119,12 @@ func _ready() -> void:
 			game.call("complete_realm_entry",REALM_ID)
 	_ready_complete = true
 	add_to_group("progression_restore")
+	print("STORMWOOD BUILD ",budget.call("summary"))
 	print("STORMWOOD READY realm=",REALM_ID," shell=",simulation_only," terrain_regions=",_terrain.get("data").call("get_region_count"))
+
+
+func _build_note(label: String) -> void:
+	print("STORMWOOD BUILD shell=",simulation_only," elapsed_ms=",Time.get_ticks_msec()-_build_started_ms," ",label)
 
 func _process(_delta: float) -> void:
 	if not _ready_complete:
@@ -184,7 +196,7 @@ func _model(parent: Node3D,path: String,at: Vector3,scale_factor: float,yaw: flo
 	model.rotation.y = yaw
 	parent.add_child(model)
 
-func _apply_ground_materials() -> void:
+func _apply_ground_materials(budget: RefCounted) -> void:
 	var source: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_playground.json"))
 	var assets: Object = ClassDB.instantiate("Terrain3DAssets")
 	var i := 0
@@ -199,7 +211,12 @@ func _apply_ground_materials() -> void:
 		texture.set("albedo_color",Color("63887b") if i==0 else Color("737080"))
 		assets.call("set_texture",i,texture)
 		i += 1
+		_build_note("texture %d"%i)
+		await budget.call("breathe")
+	_build_note("assigning terrain assets")
 	_terrain.set("assets",assets)
+	_build_note("terrain assets assigned")
+	await budget.call("breathe")
 	var material: Object = _terrain.get("material")
 	material.set("show_checkered",false)
 	material.set("auto_shader",true)

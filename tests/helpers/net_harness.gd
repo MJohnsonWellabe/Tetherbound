@@ -30,13 +30,11 @@ extends SceneTree
 ## `hello`/`verdict`/`value`/`heartbeat`/`log`; running the desync detector
 ## (§7); and writing `NET_RUN.json`/`SUMMARY.md` into the run directory.
 ##
-## Peers are launched directly with `OS.create_process` from here (contract
-## §2's first option), following spike item 6
-## (`ralph/reports/MP-0C-SPIKE-ENET-0905/REPORT.md`): both `OS.set_environment`
-## before `create_process` and ambient inheritance were proven to work. Each
-## child is wrapped in `/bin/sh -c '... > peer-N.log 2>&1'` so its stdout/
-## stderr lands in the run directory without a second polling process --
-## `OS.create_process` itself has no redirection argument.
+## Peers are launched with `OS.create_process` from here (contract §2's first
+## option), following spike item 6 (`ralph/reports/MP-0C-SPIKE-ENET-0905/REPORT.md`).
+## POSIX uses `/bin/sh -c` for log redirection while Windows invokes Godot's
+## executable directly, assigns each child a distinct APPDATA root, and lets
+## `--log-file` write the per-peer log.
 ##
 ## ## Wire format
 ##
@@ -324,6 +322,15 @@ func _spawn_peer(i: int, role: String, control_port: int, enet_port: int, scene:
 	var project_path := ProjectSettings.globalize_path("res://")
 	var args := [
 		"--headless", "--path", project_path,
+	]
+	if _is_windows():
+		# Godot 4.7 has no --user-data-dir command line option. On Windows its
+		# supported user-data lookup honors APPDATA, so set a fresh APPDATA root
+		# before creating this child. The peer's OS.get_user_data_dir() is then
+		# `<home>/Godot/app_userdata/Tetherbound`, before Game can touch user://.
+		# `--log-file` keeps the returned PID attached to Godot, never a wrapper.
+		args.append_array(["--log-file", log_path])
+	args.append_array([
 		"--script", "res://tools/net/peer_runner.gd", "--",
 		"--role=%s" % role, "--peer=%d" % i,
 		"--control-port=%d" % control_port, "--enet-port=%d" % enet_port,
@@ -332,12 +339,14 @@ func _spawn_peer(i: int, role: String, control_port: int, enet_port: int, scene:
 		# orphan sweep uses `pgrep -f "TB_NET_RUN_ID=<id>"`, and `pgrep -f`
 		# matches a process's COMMAND LINE, not its environment.
 		"TB_NET_RUN_ID=%s" % _run_id,
-	]
+	])
 	for extra in extra_args:
 		args.append(str(extra))
 	# Spike item 6: OS.set_environment() before OS.create_process() reaches the
 	# child. Isolation per peer (contract §2): its own XDG_DATA_HOME.
 	OS.set_environment("XDG_DATA_HOME", home)
+	if _is_windows():
+		OS.set_environment("APPDATA", home)
 	OS.set_environment("TB_NET_RUN_ID", _run_id)
 	# `data/config/spawn_tables.json`'s `roll_new_worlds` ships true (owner
 	# directive D-0830-1), so a fresh New Game rolls itself a random
@@ -353,6 +362,8 @@ func _spawn_peer(i: int, role: String, control_port: int, enet_port: int, scene:
 	# ("two Meadows worlds ... prove the instrument"), not failing on a
 	# divergence Wave 2's Session is what will actually fix.
 	OS.set_environment("TB_WORLD_SEED", OS.get_environment("TB_NET_WORLD_SEED") if not OS.get_environment("TB_NET_WORLD_SEED").is_empty() else "0")
+	if _is_windows():
+		return OS.create_process(exe, args)
 	var parts: Array[String] = [_shq(exe)]
 	for a in args:
 		parts.append(_shq(str(a)))
@@ -388,7 +399,13 @@ func _resolve_run_dir() -> String:
 	# timestamp alone; `_run_id` is already unique per invocation (env or the
 	# microsecond fallback above it).
 	var safe_id := _run_id.replace("/", "_").replace(":", "_").replace(" ", "_")
+	if _is_windows():
+		return OS.get_user_data_dir().path_join("net-runs").path_join("net-run-%s" % safe_id)
 	return "/tmp/net-run-%s" % safe_id
+
+
+func _is_windows() -> bool:
+	return OS.get_name() == "Windows"
 
 
 # =====================================================================
@@ -559,6 +576,11 @@ func _proxy_for(target_port: int) -> int:
 	var exe := OS.get_executable_path()
 	var args := [
 		"--headless", "--path", ProjectSettings.globalize_path("res://"),
+	]
+	var log_path := _run_dir.path_join("udp-proxy-%d.log" % listen_port)
+	if _is_windows():
+		args.append_array(["--log-file", log_path])
+	args.append_array([
 		"--script", "res://tools/net/udp_proxy.gd", "--",
 		"--listen-port=%d" % listen_port,
 		"--target-host=127.0.0.1", "--target-port=%d" % target_port,
@@ -568,13 +590,16 @@ func _proxy_for(target_port: int) -> int:
 		# Same literal argv token every peer carries, so `run_net_smoke.sh`'s
 		# `pgrep -f "TB_NET_RUN_ID=<id>"` sweep reaps the proxy too.
 		"TB_NET_RUN_ID=%s" % _run_id,
-	]
-	var parts: Array[String] = [_shq(exe)]
-	for a in args:
-		parts.append(_shq(str(a)))
-	var log_path := _run_dir.path_join("udp-proxy-%d.log" % listen_port)
-	var pid := OS.create_process("/bin/sh", ["-c",
-		"exec %s >%s 2>&1" % [" ".join(parts), _shq(log_path)]])
+	])
+	var pid := 0
+	if _is_windows():
+		pid = OS.create_process(exe, args)
+	else:
+		var parts: Array[String] = [_shq(exe)]
+		for a in args:
+			parts.append(_shq(str(a)))
+		pid = OS.create_process("/bin/sh", ["-c",
+			"exec %s >%s 2>&1" % [" ".join(parts), _shq(log_path)]])
 	if pid <= 0:
 		return 0
 	_proxies[target_port] = {"pid": pid, "listen_port": listen_port, "log": log_path}
