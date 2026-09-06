@@ -226,6 +226,12 @@ Recorded here so a reader does not have to infer them from silence:
   wild creature gets harder when a friend joins is the owner's call, and it is the last question
   standing between "the mechanisms all work" and "co-op is balanced".
 
+## Handoff
+
+`docs/owner/STAGE_B_HANDOFF_2026-09-06.md` is the to-do list that goes with this file: the one
+owner decision left, the verification gaps ranked, the human half, and the seven traps that cost
+real time in this pass. Read it before picking the work up.
+
 ## The verdict
 
 Stage B is done when **every row above reads PASS**, solo Meadows and Cloudreach still play end to

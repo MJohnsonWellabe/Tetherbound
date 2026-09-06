@@ -174,6 +174,8 @@ encounter** has no net smoke of its own. Cloudreach's own world mutations go thr
 (lane 6.E) and two peers demonstrably fight in different biomes at once
 (`smoke_net_split_realms`), but nobody has put two pilots into one Cloudreach fight.
 
+The to-do list is `docs/owner/STAGE_B_HANDOFF_2026-09-06.md`.
+
 Do not begin Stage C on the strength of the automated column. Read the acceptance file's
 "Known-open" list first: scaling and the Warden-arena staging were fixed at the very end of the
 pass, and the list names what is still carried deliberately.
