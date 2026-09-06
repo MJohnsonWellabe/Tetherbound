@@ -183,3 +183,77 @@ shares a heartbeat window, and reducing it needs Terrain3D streaming, not GDScri
 Budgets live in `data/config/performance.json` (`shell_build_budget_ms`,
 `crossing_build_budget_ms`). Solo play is never sliced: the slicer asks the session first
 and does nothing without one.
+
+## The hold is lifted — 2026-09-06, and my own correction above was wrong
+
+`can_enter_realm()`'s multi-peer refusal is gone. Rows 18 and 19 of
+`docs/acceptance/MULTIPLAYER_ACCEPTANCE.md` name real runs:
+`smoke_net_split_realms` 40 checks / 0 failed, and
+`smoke_net_realm_owner_disconnect_mid_fight` 23 checks / 0 failed.
+
+**The correction in the section above is itself wrong, and this is the third reading of the
+same mechanism.** That section reports `add_child_ms=0` and concludes the shell build already
+spreads across frames, so the fix must not be "make the boot asynchronous". That reading was an
+artifact of *where* the measurement was taken: `tools/net/_probe_6a_shell.gd` calls
+`root.add_child()` from `SceneTree._init()`, before the root window has entered the tree, and
+Godot does not propagate `_ready()` into a node whose parent is not in the tree yet. The build
+was deferred by one frame, not spread over frames — which is exactly why the same probe reads a
+**21.9 s single frame** immediately afterwards, a number the section quotes without reconciling.
+
+`scripts/net/realm_shells.gd` calls `add_child()` from a live tree.
+`tools/net/_probe_addchild_live.gd` (committed, so this is reproducible rather than asserted)
+does the same and measures `LIVE add_child_ms=21037`. **The first diagnosis in this file was
+right about the mechanism.** The shell build did have to be made asynchronous, and now is.
+
+The method lesson, which cost three readings: a probe that measures an engine call from outside
+the condition the real caller is in does not measure that call. `add_child_ms=0` was a true
+number about a situation nothing in the game is ever in.
+
+### What the reopening actually cost
+
+| | before | after |
+|---|---:|---:|
+| Cloudreach shell, worst held frame | 21,947 ms | 1,099 ms |
+| Cloudreach shell, worst 60-physics-frame window | 22.8 s | 4.4 s |
+| Meadows shell, worst held frame | 30,547 ms | 7,443 ms |
+| Meadows shell, worst 60-physics-frame window | 41.2 s | 9.9 s |
+| freeing the outgoing Meadows on the crossing peer | 43,049 ms | 1,931 ms |
+| shell static memory (either realm) | — | unchanged |
+
+The **60-physics-frame window** is the number the feature turns on, not `boot_ms`:
+`tools/net/peer_runner.gd` heartbeats every 60 physics frames and the harness declares a peer
+silent after 15 s without one. A host that needs 22 s to get through 60 frames is a host every
+other player has already lost. `scripts/world/shell_build_budget.gd` is a **time slice**, not a
+step counter, for that reason — cutting a 21 s build into fourteen 1.5 s steps leaves every step
+inside one heartbeat window and changes nothing.
+
+### The larger cost was not the shell at all
+
+`interaction_arbiter.gd::unregister()` was an array `erase()` — a linear scan-and-shift over
+24,461 providers, so tearing a world down was O(n²): **43 seconds in one synchronous engine call
+no slicing can break up.** PERF-2 had fixed the identical O(n²) on the registration side and left
+this one, because until Wave 6 nothing tore a world down mid-session. `_providers` is now a
+derived view of the O(1) `_provider_set`.
+
+**That was a single-player defect too.** Every realm crossing and every quit-to-menu has been
+paying those 43 seconds.
+
+### Still open, carried deliberately
+
+- **One indivisible 7.4 s frame** on a Meadows shell: a single Terrain3D region-data load, one
+  engine call, not script. It is isolated so it never shares a heartbeat window, which is what
+  holds the worst window at 9.9 s against the 15 s limit. 9.9 of 15 is real but not generous; a
+  CI runner ~50 % slower than the measuring box would be at the limit. If the shard ever reports
+  `peer silent` again, this frame is the first suspect and `shell_build_budget_ms` in
+  `data/config/performance.json` is the lever. Reducing it needs Terrain3D streaming.
+- **A shell takes longer in wall-clock than the freeze did** — 42.7 s against ~30 s of held
+  frames. That is the deliberate trade: the host spends most of each frame on the players
+  already in the session. `boot_ms` no longer means anything; `realm_shells.gd::report()`
+  carries `ready`, `build_ms` and `attach_ms` instead.
+- **A client's wild fight is still not host-arbitrated** (lane 4.C handover H1): wild creatures
+  are not replicated, so the host has never heard of the wild a client is standing in front of
+  and mints no encounter record. Two harness arms now accept that as documented behaviour rather
+  than a failure; both revert to strict when wild replication lands.
+
+Full measurements, the five findings and the reproduction commands:
+`ralph/reports/MP-REALM-REOPEN-0906/REPORT.md`.
