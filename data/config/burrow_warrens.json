@@ -188,6 +188,26 @@
     "spoil_mouth_fan_m": 9.0,
     "spoil_mouth_fan_half_width_m": 7.5,
     "spoil_hole_fan_m": 3.2,
+    "_why_fewer_prop_rocks": "WARRENS-ART-0906 round 5, the other half of the owner's 2026-09-06 note ('rather than using plastic prop assets'). With the bank's own surface now carrying strata, mossy ledges and crevice shadow (`geology` below), the scattered Rock_Medium props are no longer needed to say 'rock' and were the thing actually reading as plastic: `face_outcrops` 7 -> 3, `accent_boulders` 8 -> 4, `skirt_count` 70 -> 44. What is kept is the pieces doing compositional work -- the two stones flanking the mouth on the dug face, one high on a flank, and the four that frame the threshold -- rather than an even scatter. The judge's 'half-buried fin rocks ... jammed edge-first into the mound' in frame 02 were among the ones dropped.",
+    "_comment_geology": "WARRENS-ART-0906 round 5. OWNER 2026-09-06: 'the placed rocks on the exterior don't look right. it seems like you can do something more like what we're doing on cloudreach cliffs with the cliffs to make this look better rather than using plastic prop assets.' Both blind rounds had already found it from the pictures alone -- round 1 'flat hard-edged facet slabs with a painted-on moss band ... needs rock forms with real strata', round 2 'the boulders are flat-shaded low-poly slabs with hard facets and visible triangle edges, while the knoll they sit on is a smooth high-resolution blob with a noise texture. Two incompatible rock treatments, adjacent, in the same shot.' The answer is not more props. This bank is already a procedural surface with a shader on it, so the rock goes IN the surface: where the mound is steep enough to be a cut face rather than a settled slope it draws stone with sedimentary banding, mossy ledges and crevice shadow -- the same three moves `shaders/cloudreach_cliff.gdshader` makes, sharing that shader's own Rock030 texture. The PALETTE is deliberately Cloudreach's option A, the grey-green granite the owner picked on 2026-09-06, so the two biomes' stone is one material language instead of tan-vs-grey. Every key maps 1:1 onto a `rock_*` uniform via `_apply_geology()`; `strength` 0 or no block at all reverts the whole layer.",
+    "geology": {
+      "strength": 0.85,
+      "slope_low_deg": 44.0,
+      "slope_high_deg": 60.0,
+      "stone_light": "#8a8f82",
+      "stone_dark": "#464b44",
+      "strata_ochre_tint": "#5d6a5a",
+      "strata_ochre_strength": 0.18,
+      "strata_strength": 0.05,
+      "strata_period_m": 5.0,
+      "ledge_moss_tint": "#4c6b36",
+      "ledge_moss_strength": 0.55,
+      "ledge_lighten": 0.1,
+      "ledge_normal_threshold": 0.55,
+      "crevice_strength": 0.45,
+      "crevice_scale": 0.09,
+      "texture_scale": 0.055
+    },
     "spoil_tint": "#7a6248",
     "spoil_darken": 0.55,
     "height_blend_on": 0.0,
@@ -711,74 +731,87 @@
     "_why_accent_boulders_round5": "ROUND-5-0906: tools/_probe_warrens_threshold_render.gd (a from-above and a side view of the threshold) showed the two front pairs at scale 3.0/2.8 standing 4-5m proud of the ground -- boulders the size of the opening itself, filling the side view of the mouth entirely and reading, per JUDGE-round4.md, as 'stacked boulders or crates'. Dig-spoil is head-high at most: front pairs 1.3-1.7 (roughly 1-1.5m showing), flank pieces 1.8-2.2, each sunk ~40% of its own drawn height.",
     "_why_accent_boulders_round4": "ROUND-4-0906, JUDGE-round3.md finding 2 ('the boulder cluster at the base reads as parked/loose rather than displaced dig-spoil'). Re-clustered as SPOIL: two pairs flanking the threshold fan just outside the mouth (never inside |x| < 5.5 on the approach axis -- the walked corridor and the 03/00 camera stands run down x=0), one below each front warren hole's own fan, one below each flank hole. All now seat on the bank's OWN surface (burrow_warrens.gd::_build_accent_boulders adds _bank_height_at), so a stone can sit half-buried in a heap's slope. `sink_m` buries 60-75% of each piece.",
     "accent_boulders": [
-      {"model": "Rock_Medium_1", "offset": [-7.2, -10.5], "scale": 1.7, "yaw_deg": 25.0, "sink_m": 1.0, "_why": "left of the threshold fan, at the mouth's own spoil edge"},
-      {"model": "Rock_Medium_3", "offset": [-6.0, -14.0], "scale": 1.35, "yaw_deg": 95.0, "sink_m": 0.75, "_why": "further out on the left, the throw trailing off"},
-      {"model": "Rock_Medium_2", "offset": [7.6, -10.0], "scale": 1.6, "yaw_deg": -35.0, "sink_m": 0.9, "_why": "right of the threshold fan"},
-      {"model": "Rock_Medium_1", "offset": [6.4, -13.6], "scale": 1.3, "yaw_deg": -120.0, "sink_m": 0.7, "_why": "further out on the right"},
-      {"model": "Rock_Medium_3", "offset": [-16.0, 1.5], "scale": 1.9, "yaw_deg": 60.0, "sink_m": 1.1, "_why": "below the left flank hole, on the left brow heap's throw lobe"},
-      {"model": "Rock_Medium_2", "offset": [15.5, 4.5], "scale": 1.8, "yaw_deg": -70.0, "sink_m": 1.0, "_why": "below the right flank hole, on the right brow heap's throw lobe"},
-      {"model": "Rock_Medium_1", "offset": [-27.0, 22.0], "scale": 2.2, "yaw_deg": 80.0, "sink_m": 1.3, "_why": "at the warren heap's throw foot, left flank"},
-      {"model": "Rock_Medium_3", "offset": [25.5, 39.0], "scale": 2.1, "yaw_deg": -50.0, "sink_m": 1.2, "_why": "at the vault heap's throw foot, right flank"}
-    ],
+        {
+          "model": "Rock_Medium_1",
+          "offset": [
+            -7.2,
+            -10.5
+          ],
+          "scale": 1.7,
+          "yaw_deg": 25.0,
+          "sink_m": 1.0,
+          "_why": "left of the threshold fan, at the mouth's own spoil edge"
+        },
+        {
+          "model": "Rock_Medium_3",
+          "offset": [
+            -6.0,
+            -14.0
+          ],
+          "scale": 1.35,
+          "yaw_deg": 95.0,
+          "sink_m": 0.75,
+          "_why": "further out on the left, the throw trailing off"
+        },
+        {
+          "model": "Rock_Medium_3",
+          "offset": [
+            -16.0,
+            1.5
+          ],
+          "scale": 1.9,
+          "yaw_deg": 60.0,
+          "sink_m": 1.1,
+          "_why": "below the left flank hole, on the left brow heap's throw lobe"
+        },
+        {
+          "model": "Rock_Medium_1",
+          "offset": [
+            -27.0,
+            22.0
+          ],
+          "scale": 2.2,
+          "yaw_deg": 80.0,
+          "sink_m": 1.3,
+          "_why": "at the warren heap's throw foot, left flank"
+        }
+      ],
     "_comment_face_outcrops": "THIRD-PASS-0906, JUDGE-round2.md sec3 item 2: 'no rock outcrop breaking the slope ... the whole bank is one flat khaki-brown value from base to crest'. `accent_boulders` above only ever sits at the FOOT (flat meadow terrain); these sit ON the bank's own sculpted surface (`_build_bank_face_outcrops()`) and are sunk 40-60% of scale INTO it along the surface normal, so they read as protruding from the dug face and flanks rather than dropped beside them. 7 pieces, within the brief's own 6-9.",
     "face_outcrops": [
-      {
-        "model": "Rock_Medium_1",
-        "offset": [-7.5, -2.0],
-        "scale": 1.6,
-        "yaw_deg": 35.0,
-        "sink_m": 0.75,
-        "_why": "left of the mouth, on the dug face itself"
-      },
-      {
-        "model": "Rock_Medium_2",
-        "offset": [7.2, -1.5],
-        "scale": 1.5,
-        "yaw_deg": -40.0,
-        "sink_m": 0.7,
-        "_why": "right of the mouth, mirrors the left face outcrop"
-      },
-      {
-        "model": "Rock_Medium_3",
-        "offset": [-4.6, -5.4],
-        "scale": 1.3,
-        "yaw_deg": 100.0,
-        "sink_m": 0.6,
-        "_why": "lower on the left face, near the foot"
-      },
-      {
-        "model": "Rock_Medium_1",
-        "offset": [5.0, -5.0],
-        "scale": 1.4,
-        "yaw_deg": -110.0,
-        "sink_m": 0.65,
-        "_why": "lower on the right face, near the foot"
-      },
-      {
-        "model": "Rock_Medium_2",
-        "offset": [-9.0, 3.0],
-        "scale": 1.2,
-        "yaw_deg": 60.0,
-        "sink_m": 0.55,
-        "_why": "left shoulder, close to the mouth"
-      },
-      {
-        "model": "Rock_Medium_3",
-        "offset": [-15.0, 10.0],
-        "scale": 2.0,
-        "yaw_deg": -20.0,
-        "sink_m": 0.9,
-        "_why": "left flank, near the warren chamber's own bulge"
-      },
-      {
-        "model": "Rock_Medium_1",
-        "offset": [14.0, 14.0],
-        "scale": 1.9,
-        "yaw_deg": 140.0,
-        "sink_m": 0.85,
-        "_why": "right flank, near the hall's own bulge"
-      }
-    ],
+        {
+          "model": "Rock_Medium_1",
+          "offset": [
+            -7.5,
+            -2.0
+          ],
+          "scale": 1.6,
+          "yaw_deg": 35.0,
+          "sink_m": 0.75,
+          "_why": "left of the mouth, on the dug face itself"
+        },
+        {
+          "model": "Rock_Medium_2",
+          "offset": [
+            7.2,
+            -1.5
+          ],
+          "scale": 1.5,
+          "yaw_deg": -40.0,
+          "sink_m": 0.7,
+          "_why": "right of the mouth, mirrors the left face outcrop"
+        },
+        {
+          "model": "Rock_Medium_2",
+          "offset": [
+            -9.0,
+            3.0
+          ],
+          "scale": 1.2,
+          "yaw_deg": 60.0,
+          "sink_m": 0.55,
+          "_why": "left shoulder, close to the mouth"
+        }
+      ],
     "_comment_spoil_mounds": "EXT-07-EARTHWORK item 3, kept: squashed earth heaps below the mouth -- the dug-out material a burrow would throw up. Local offsets, in front of the throat. THIRD-PASS-0906, JUDGE-round2.md sec3 item 4 ('the mouth's spoil fan spills onto it [the threshold]'): offsets moved inward from z=-8.2/-7.6 (just past the apron's own outer edge, `site.apron_run_m`=7.5) to z=-5.8/-5.2 (inside it), scale/squash widened so the spill visibly reaches across the trodden ground rather than stopping just short of it. No collider (unchanged), so overlapping the walk apron's own footprint is not a walkability concern.",
     "_why_spoil_mounds_round6": "ROUND-6-0906: emptied. The two squashed Rock_Medium 'spoil mounds' beside the throat read, in JUDGE-round5.md 03, as 'flat brown discs on stems ... mushroom caps or tables' once the carved face stood behind them. The spoil read now comes from the COLOR.b mask, the threshold fan's berm and the re-clustered boulders. Empty list is a no-op in _build_spoil_mounds().",
     "spoil_mounds": [],
@@ -804,7 +837,7 @@
       "res://assets/environment/stylized_nature/Bush_Common.gltf",
       "res://assets/environment/stylized_nature/Grass_Wide_Tall.gltf"
     ],
-    "skirt_count": 70,
+    "skirt_count": 44,
     "skirt_reach_m": 34.0,
     "skirt_scale": [
       0.7,

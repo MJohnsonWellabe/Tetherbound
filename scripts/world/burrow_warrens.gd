@@ -2540,8 +2540,40 @@ func _bank_material() -> ShaderMaterial:
 	var spoil_tint := Color(str(bank.get("spoil_tint", "#7a6248")))
 	mat.set_shader_parameter("spoil_tint", Vector3(spoil_tint.r, spoil_tint.g, spoil_tint.b))
 	mat.set_shader_parameter("spoil_darken", float(bank.get("spoil_darken", 0.55)))
+	_apply_geology(mat, bank)
 	_materials[key] = mat
 	return mat
+
+
+## WARRENS-ART-0906 round 5. OWNER, 2026-09-06: "the placed rocks on the
+## exterior don't look right ... something more like what we're doing on
+## cloudreach cliffs with the cliffs ... rather than using plastic prop assets."
+##
+## `bank.geology` maps 1:1 onto the `rock_*` uniforms `shaders/earth_bank.gdshader`
+## grew for it, exactly the way `cloudreach_visual.json::geology` maps onto
+## `shaders/cloudreach_cliff.gdshader` -- same pattern, same Rock030 texture,
+## and the grey-green granite palette the owner picked for Cloudreach (option A)
+## so the two biomes' stone is one material language. `strength` 0, or no block
+## at all, leaves the bank byte-identical to before this existed.
+func _apply_geology(mat: ShaderMaterial, bank: Dictionary) -> void:
+	var geo: Dictionary = bank.get("geology", {})
+	mat.set_shader_parameter("rock_albedo", ROCK_ALBEDO)
+	mat.set_shader_parameter("rock_normal_map", ROCK_NORMAL)
+	mat.set_shader_parameter("rock_strength", float(geo.get("strength", 0.0)))
+	if geo.is_empty():
+		return
+	mat.set_shader_parameter("rock_uv_scale", float(geo.get("texture_scale", 0.055)))
+	mat.set_shader_parameter("rock_slope_low_deg", float(geo.get("slope_low_deg", 46.0)))
+	mat.set_shader_parameter("rock_slope_high_deg", float(geo.get("slope_high_deg", 62.0)))
+	for key: String in ["strata_period_m", "strata_strength", "strata_ochre_strength",
+			"ledge_moss_strength", "ledge_lighten", "ledge_normal_threshold",
+			"crevice_strength", "crevice_scale"]:
+		if geo.has(key):
+			mat.set_shader_parameter(key, float(geo[key]))
+	for key: String in ["stone_light", "stone_dark", "strata_ochre_tint", "ledge_moss_tint"]:
+		if geo.has(key):
+			var c := Color(str(geo[key]))
+			mat.set_shader_parameter(key, Vector3(c.r, c.g, c.b))
 
 
 func _bank_add_vertex(st: SurfaceTool, v: Vector3, crest_for_norm: float,
