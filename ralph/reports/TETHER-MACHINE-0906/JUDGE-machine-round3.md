@@ -128,3 +128,38 @@ not answerable here. It needs either the chamber's own lighting to put a lit
 surface behind the machine (the Hall dressing lane, and T-03 shows it works), or
 the board's mesh and material set authored (an owner decision, taken 2026-09-06:
 keep the installed asset).
+
+---
+
+## Addendum — the roughness fix MEASURED, and it did not work
+
+Recorded because a negative result is evidence. `roughnessFactor` 0.80 -> 0.93 was
+applied and C-03 re-rendered (`shots/tm_r4`). It moved nothing:
+
+| C-03 machine region | round 3 (rough 0.80) | round 4 (rough 0.93) |
+|---|---|---|
+| top-5% saturation | 0.426 | **0.425** |
+| gradient energy | 9.36 | **9.37** |
+| p95 luma | 113.7 | 110.7 |
+
+**Why:** under `gl_compatibility` (D01) there are no reflection probes and the
+chamber's key is a handful of omnis, so the runtime specular lobe contributes
+almost nothing to these surfaces. The "desaturated blown speculars, double the
+gradient energy" the judge measured are **baked into the Meshy albedo**, not
+produced at runtime. Roughness is the wrong knob for them; the texture is the only
+one, and it is already being flattened.
+
+The change is kept because 0.93 is the correct value — it is what the Hall's own
+masonry uses — but it must not be reported as having fixed the surface read.
+
+What the flattening DID achieve on the same measurements, which is the honest
+scale of the albedo lever on this defect:
+
+| C-03 machine region | shipped | round 1 | round 2 | round 3/4 | wall (target) |
+|---|---|---|---|---|---|
+| top-5% saturation | 0.368 | 0.378 | 0.512 | **0.425** | 0.590 |
+| gradient energy | 13.32 | 10.27 | 7.77 | **9.37** | 3.98 |
+
+Surface churn is down ~30% from shipped and highlight saturation is up, both toward
+the wall. The residual gap is geometric: 7,068 triangles of intersecting shards
+make real edges, and no texture flattens those.
