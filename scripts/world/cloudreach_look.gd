@@ -945,6 +945,7 @@ func _plant_stone_clusters(root: Node3D, centre: Vector3, half: Vector2, cfg: Di
 			var embed := rng.randf_range(embed_min, embed_max)
 			var rock := LOOK_STONES[(c + s) % LOOK_STONES.size()].instantiate() as Node3D
 			rock.name = "LookStone%d_%d" % [c, s]
+			_world.call("apply_stone_palette", rock)
 			rock.position = ground - Vector3.UP * (embed * 1.6 * scale_value)
 			rock.rotation.y = rng.randf_range(0.0, TAU)
 			rock.scale = Vector3.ONE * scale_value

@@ -42,19 +42,19 @@
   },
   "dome": {
     "radius_m": 27.0,
-    "meridian_count": 16,
+    "meridian_count": 24,
     "rib_segments": 5,
     "rib_base_radius_m": 0.35,
     "rib_tip_radius_m": 0.2,
-    "latitude_ring_count": 5,
-    "ring_tube_radius_m": 0.16,
+    "latitude_ring_count": 9,
+    "ring_tube_radius_m": 0.12,
     "oculus_radius_m": 6.0,
     "oculus_ring_tube_radius_m": 0.4,
     "_why": "sphere centred at the drum's top (y=drum.height_m) with the drum's own 27 m radius so the lattice rim lands on the wall crown; apex at 9 + 27 = 36 m (20x the 1.80m trainer) and the dome clears the lowered 14 m route wings everywhere. Ribs stop at the oculus latitude (asin(6/27)~=12.8 deg from the pole) instead of converging to a point, so the top is a genuinely open ring the OccupiedSummitPylon can stand inside rather than a solid spire."
   },
   "veil_panels": {
-    "count": 6,
-    "height_m": 3.6,
+    "count": 4,
+    "height_m": 3.0,
     "base_offset_m": 0.3,
     "alpha_deg": 78.0,
     "_why": "a handful of translucent wind-veil panels just above the drum crown, between ribs on the leeward-reading side, so the dome is open air everywhere else -- not a solid shell."

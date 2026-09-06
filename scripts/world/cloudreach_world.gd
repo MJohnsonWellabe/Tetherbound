@@ -86,6 +86,7 @@ var _surface_index_count := -1
 var _all_route_lines: Array[Dictionary] = []
 var _all_pad_points: Array[Dictionary] = []
 var _all_crown_reference_lines: Array[Dictionary] = []
+var _built_pad_keys: Dictionary = {}
 const SURFACE_CELL_M := 128.0
 
 
@@ -366,7 +367,8 @@ func _build_materials() -> void:
 	trail.set_shader_parameter("dirt_texture", load(str(surface.get("path", {}).get("albedo", "res://assets/environment/terrain/stylised/dirt_path_Color.png"))))
 	_materials["trail"] = trail
 	ENVIRONMENT_MATERIALS.turf_parameters(trail,false)
-	trail.set_shader_parameter("tint",Color("#9b805f"))
+	# Dusty tan rather than pumpkin (blind verdict round 1, defect 13).
+	trail.set_shader_parameter("tint",Color("#9a8c72"))
 	var trail_dry:=trail.duplicate() as ShaderMaterial
 	ENVIRONMENT_MATERIALS.turf_parameters(trail_dry,true)
 	_materials["trail_dry"]=trail_dry
@@ -557,6 +559,7 @@ func _add_wind_vegetation(parent: Node3D, rect: Rect2, top: float, order: int) -
 		var at := Vector3(centre.x + cos(angle) * half.x * radius, top - 0.18,
 			centre.y + sin(angle) * half.y * radius)
 		var rock := NATURE_ROCKS[(i * 2 + order) % NATURE_ROCKS.size()].instantiate() as Node3D
+		apply_stone_palette(rock)
 		rock.name = "BeddedRock%d" % i
 		rock.position = at
 		rock.rotation.y = angle
@@ -938,6 +941,15 @@ func _build_routes() -> void:
 			var pad := points[i]
 			if _bridge_interior_point(str(spec.get("id","")),pad):
 				continue # The continuous deck owns its internal bend, not a flat land cap.
+			# A pad shared by two routes (every route junction) is built ONCE:
+			# two coincident crowns at the same height z-fought as alternating
+			# light/dark wedges in the rendered frames (05-upper-cloudreach-
+			# cliffhold, where windscar_counterweight_pass's green turf met
+			# upper_plateau_circuit's dry turf on the same disc).
+			var pad_key := "%.1f,%.1f" % [pad.x, pad.z]
+			if _built_pad_keys.has(pad_key):
+				continue
+			_built_pad_keys[pad_key] = true
 			var landing_size := maxf(float(landmass.get("landing_size_m", 16.0)),
 				collision_width * 2.25)
 			# Ledge collision matches its own rendered top exactly (see `_mesa`),
@@ -1597,6 +1609,7 @@ func _add_route_edge_nature(parent: Node3D, a: Vector3, b: Vector3,
 			continue
 		var side := -1.0 if (serial + cluster) % 2 == 0 else 1.0
 		var rock := NATURE_ROCKS[(serial + cluster) % NATURE_ROCKS.size()].instantiate() as Node3D
+		apply_stone_palette(rock)
 		rock.name = "RouteRock%03d_%d" % [serial, cluster]
 		rock.position = anchor + right * side * half_width * 0.46 - Vector3.UP * 0.32
 		rock.rotation.y = float(posmod(serial * 17 + cluster * 11, 31)) / 31.0 * TAU
@@ -1709,6 +1722,37 @@ func _route_detail_ground(at: Vector3) -> float:
 ## trees. The source twisted-tree sheet is crimson and the raw common sheet is
 ## fluorescent; both break the project's one-nature-family palette. Surface
 ## overrides preserve the imported meshes, LOD chains, alpha mode and shadows.
+## The stylised Rock_Medium_* kit ships a pale, near-white base colour that
+## reads as wax or ice beside the trainer (blind verdict round 1, defect 7);
+## every instance the world or the look pass places is retinted here to a
+## cool mid-grey with full roughness so it reads as stone.
+## One tinted duplicate per source material, cached: a fresh duplicate per
+## instance (thousands of rocks) raised the headless renderer's
+## `Parameter "material" is null` on every override, the cached one raises
+## nothing (isolated in a 20-rock probe before this was written).
+static var _stone_palette_cache: Dictionary = {}
+
+
+static func apply_stone_palette(root_node: Node) -> void:
+	for mesh_node: Node in root_node.find_children("*", "MeshInstance3D", true, false):
+		var mesh_instance := mesh_node as MeshInstance3D
+		if mesh_instance.mesh == null:
+			continue
+		for surface_index in mesh_instance.mesh.get_surface_count():
+			var base := mesh_instance.mesh.surface_get_material(surface_index)
+			if not (base is StandardMaterial3D):
+				continue
+			var tinted: StandardMaterial3D = _stone_palette_cache.get(base)
+			if tinted == null:
+				tinted = (base as StandardMaterial3D).duplicate() as StandardMaterial3D
+				tinted.albedo_color = Color("#8e918c")
+				tinted.roughness = 1.0
+				tinted.metallic = 0.0
+				tinted.metallic_specular = 0.15
+				_stone_palette_cache[base] = tinted
+			mesh_instance.set_surface_override_material(surface_index, tinted)
+
+
 func _apply_tree_palette(root_node: Node, seed_value: int) -> void:
 	if root_node is MeshInstance3D:
 		var instance := root_node as MeshInstance3D
@@ -2610,13 +2654,21 @@ func _build_summit_stronghold(root: Node3D) -> void:
 			Vector3(4.0, 12.0, 10.0), _materials["cliff_mid"], true)
 	_box(root, "GateThreshold", Vector3(0.0, 0.08, -19.0),
 		Vector3(9.0, 0.16, 12.0), _materials["masonry_trim"], true)
+	# Blind verdict (CLOUDREACH-GROUND-0906 round 1): the drum and arches in
+	# the flat brown "stone" read as untextured rust slabs and the veils as
+	# placeholder glass. The drum, arches and piers now wear the same mossy
+	# masonry family as the kept wings, the veils are fainter, and the iron
+	# is a lit graphite rather than near-black.
+	var aviary_veil := _wind_veil_material()
+	aviary_veil.albedo_color.a = 0.13
+	aviary_veil.emission_energy_multiplier = 0.3
 	var aviary_materials := {
-		"masonry": _materials["masonry"],
-		"stone": _materials["stone"],
+		"masonry": _materials["masonry_trim"],
+		"stone": _materials["masonry"],
 		"timber": _materials["wood"],
-		"iron": _material(Color("#33363b"), 0.62),
+		"iron": _material(Color("#4a4d52"), 0.55),
 		"rope": _materials["rope"],
-		"veil": _materials["wind_veil"],
+		"veil": aviary_veil,
 		"lantern": _emissive_material(Color("#ffb15c"), 2.0),
 	}
 	var aviary: Dictionary = AVIARY.build(root, aviary_materials, _read_json(AVIARY_CONFIG_PATH))
@@ -2637,8 +2689,9 @@ func _build_summit_stronghold(root: Node3D) -> void:
 	# plate spanning the oculus ring (the pylon's own base is narrower than
 	# the 12 m opening).
 	var anchor: Transform3D = aviary.get("pylon_anchor", Transform3D.IDENTITY)
-	var oculus_radius := float(aviary.get("oculus_radius_m", 6.0))
-	_disc(root, "TetherMountPlate", anchor.origin - Vector3.UP * 0.25, oculus_radius + 0.6, 0.5,
+	# A plate the size of the oculus read as a flat black oval in the dome's
+	# crown; a narrow one under the machine keeps the oculus visibly open.
+	_disc(root, "TetherMountPlate", anchor.origin - Vector3.UP * 0.25, 3.2, 0.5,
 		aviary_materials["iron"], false)
 	var summit_pylon := TETHER_PYLON.instantiate() as Node3D
 	summit_pylon.name = "OccupiedSummitPylon"
@@ -2679,7 +2732,10 @@ func _build_summit_route_wing(root: Node3D, side: float, portal_z: float) -> voi
 
 
 func _develop_stronghold_spaces(root: Node3D) -> void:
-	_cover_exclusions.append({"centre": root.global_position + Vector3(0, 0, -25), "half": Vector2(9, 46), "rotation": 0.0})
+	# Half-width 5.5 (was 9): the 18 m bare lane's straight tuft cutoff read
+	# as a hard-edged terrain patch in the final-approach frame; the lane now
+	# hugs the road ribbon and the trail's own feathered edge.
+	_cover_exclusions.append({"centre": root.global_position + Vector3(0, 0, -25), "half": Vector2(5.5, 46), "rotation": 0.0})
 	_cover_exclusions.append({"centre": root.global_position + Vector3(0, 0, 32), "half": Vector2(18, 24), "rotation": 0.0})
 	var court_bounce := OmniLight3D.new()
 	court_bounce.name = "CourtyardSkyBounce"
@@ -3165,6 +3221,7 @@ func _build_crown_outcrops(parent: Node3D, size: Vector3, seed_value: int) -> vo
 		var width:=clampf(size.x*(0.27+0.05*(i%2)),9.0,39.0)
 		var height:=width*(0.7+0.23*(i%3))
 		var rock:=NATURE_ROCKS[posmod(seed_value+i,3)].instantiate() as Node3D
+		apply_stone_palette(rock)
 		var bounds: AABB=BUILDING_PREFABS.new().combined_aabb(rock)
 		rock.scale=Vector3(width,height,width*0.82)/bounds.size
 		rock.rotation.y=angle
@@ -3190,6 +3247,7 @@ func _build_embedded_rock_shelves(parent: Node3D, size: Vector3, seed_value: int
 		width*=0.82+0.18*sin(float(i)*2.17+seed_value)
 		var height := width * (0.35 + float(i % 2) * 0.14)
 		var rock := NATURE_ROCKS[posmod(i + seed_value, NATURE_ROCKS.size())].instantiate() as Node3D
+		apply_stone_palette(rock)
 		var bounds_tool := BUILDING_PREFABS.new()
 		var bounds: AABB = bounds_tool.combined_aabb(rock)
 		rock.scale = Vector3(width, height, width * 0.70) / bounds.size
