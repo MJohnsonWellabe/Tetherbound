@@ -22,8 +22,27 @@ extends Node3D
 ##
 ## Nothing about "several satchels coexist" changes, and nothing may: a hard
 ## rule in CLAUDE.md. Two deaths are two records and two bags, owned or not.
+##
+## ## Stage B lane 4.E: a stage BEFORE death, in a multi-peer session
+##
+## `_on_died` is the one funnel every lethal path in the game already runs
+## through -- `player_controller.gd::_resolve_landing` for a fall and
+## `water.gd::_apply_hazard_damage` for a drowning are its only two emitters --
+## so the downed window is opened here rather than in either of them. That is
+## the smallest place the change can live and still catch every death.
+##
+## `_die_now()` below is this file's ORIGINAL `_on_died` body, moved and not
+## edited. When `downed_state.gd` declines the death -- solo, no session, a
+## headless test, a capture tool -- `_on_died` calls it on the same frame it
+## always did, so a solo death is byte-for-byte what it was. When the window is
+## accepted and then runs out, `downed_state.gd` calls the very same function
+## through the Callable handed to `attach_local`, so the timeout death is the
+## same death too. Nothing about satchels changes in either case, and directive
+## rule 19 is satisfied by construction: going down reaches no encounter, no
+## ledger and no world record, because it reaches nothing but the player.
 
 const DEATH_SATCHEL := preload("res://scripts/world/death_satchel.gd")
+const DOWNED_STATE := preload("res://scripts/player/downed_state.gd")
 const WORLD_RECORDS := preload("res://scripts/world/realm_world_records.gd")
 
 const FADE_SECONDS := 1.2
@@ -46,6 +65,10 @@ var _fallback_home: Vector3 = Vector3.ZERO
 var _satchel_count: int = 0
 var _recovery_camps: Array = []
 var _recovery_ground: Callable = Callable()
+## Lane 4.E's `/root/Game/DownedState`, mounted once and shared by every world.
+## Null in a process with no `Game` autoload, which is a process that dies the
+## way it always did.
+var _downed: Node = null
 
 
 ## World may inject already-resolved authored camps, or the canonical chapter
@@ -70,11 +93,29 @@ func build(world: Node3D, player: CharacterBody3D, spawn_position: Vector3) -> v
 	if not _recovery_ground.is_valid() and world.has_method("ground_height_near"):
 		_recovery_ground = Callable(world, "ground_height_near")
 	add_to_group(GROUP)
+	# Lane 4.E. Mounted under `Game`, not under this node: the RPC path has to
+	# be identical in every process and this component is rebuilt on every
+	# scene change. `attach_local` rebinds it to the rig standing now and hands
+	# it THIS world's death to run when a window closes unanswered.
+	_downed = DOWNED_STATE.mount(get_node_or_null(^"/root/Game"))
+	if _downed != null:
+		_downed.call("attach_local", player, Callable(self, "_die_now"))
 	if player.has_signal("died"):
 		player.connect("died", _on_died)
 
 
+## Lane 4.E. In a multi-peer session this opens a downed window and returns;
+## everything below it runs later, or never. In solo -- and in any process with
+## no session at all -- `request_down()` answers false and the death runs on
+## this frame exactly as it always has.
 func _on_died() -> void:
+	if _downed != null and is_instance_valid(_downed) and bool(_downed.call("request_down")):
+		return
+	_die_now()
+
+
+## The death itself, unchanged from the day it was written.
+func _die_now() -> void:
 	var game := get_node_or_null(^"/root/Game")
 	if game == null:
 		return

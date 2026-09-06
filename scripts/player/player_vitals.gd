@@ -120,6 +120,30 @@ func rest() -> void:
 	_exhausted = false
 
 
+## Stage B lane 4.E. Back on your feet after a teammate's revive.
+##
+## NOT `rest()`. A night's sleep is everything back to full and this
+## deliberately is not: `health_fraction` and `stamina_fraction` come from
+## `data/config/multiplayer.json`'s `downed` block, and they are fractions
+## rather than absolutes so a Heart-raised capacity scales with them instead of
+## handing a bigger player a smaller share.
+##
+## Health is clamped to a floor ABOVE zero on purpose. A revive that landed on
+## exactly 0.0 would leave `is_dead()` true, so the next landing -- or the next
+## frame of hazard damage -- would re-fire `died` and the player would be
+## revived straight back onto the floor, which reads as a revive that did not
+## work rather than as a rounding error.
+##
+## Satiety is untouched: a revive is not a meal, and D29's satiety never had
+## anything to do with dying (CLAUDE.md: no starvation death).
+func revive(health_fraction: float = 0.35, stamina_fraction: float = 0.35) -> void:
+	var health_share := clampf(health_fraction, 0.01, 1.0)
+	health = maxf(minf(max_health, max_health * health_share), minf(max_health, 1.0))
+	stamina = clampf(max_stamina * clampf(stamina_fraction, 0.0, 1.0), 0.0, max_stamina)
+	_exhausted = false
+	_regen_cooldown = 0.0
+
+
 ## True when the player has enough stamina to start or continue sprinting.
 func can_sprint() -> bool:
 	return not _exhausted and stamina > 0.0
