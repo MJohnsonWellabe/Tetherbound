@@ -151,6 +151,13 @@ as `owner-run/<stamp>`. `docs/acceptance/KICKOFF_RUN.md` says what agents do wit
 a run. Open design questions are decided by the orchestrator and recorded in
 `docs/decisions/`; they are not queued for the owner.
 
+For a fast spot-check instead of chapter-acceptance evidence, double-click
+`tools/owner/QUICK_TOUR.cmd`: a breadth-first tour of both shipped biomes (the
+Meadows and Cloudreach Cliffs), capped at ~20 minutes per biome, that hands back
+contact sheets of a handful of locations, a combat moment, the HUD, the menu, a
+creature and the player character, plus a short real play check -- not a
+replacement for KICKOFF, and it pushes nothing.
+
 ## Validation expectations
 
 - Unit: `godot --headless --path . --script tests/run_tests.gd` (≈28 min; use
