@@ -96,11 +96,36 @@ closest pair, `host_join_leave` vs `host_exit_saves`, is deliberately a quiet-ex
 pair per their own headers. Nothing removed. No coverage lost, no assertion weakened, sharding and
 the one real bug fixed — that is the whole change.
 
-**Also confirmed twice this session: pushes from this session's git credentials do not fire the
-`pull_request: synchronize` CI trigger in this repo.** `workflow_dispatch` (manual) is the only way
-this session has found to actually get a run; matches an earlier session's same workaround on a
-different branch (runs 34026997741/34021074221). Anyone continuing this branch from a similar
-session should expect to dispatch CI manually after every push rather than waiting for it.
+**Correction to the note above:** the first two pushes this session (`44cdff76`, `db75bc91`) did not
+fire the `pull_request: synchronize` CI trigger, so `workflow_dispatch` (manual) was used as a
+workaround, matching an earlier session's same workaround on a different branch (runs
+34026997741/34021074221). The THIRD push (`fe5b3bc1`, this section's own commit) DID fire it
+automatically (run 34053109567, `event: "pull_request"`, started 15 s after the push) — so the
+trigger is real but unreliable/latent here, not simply broken. Manually dispatching after a push
+as a safety net, and checking whether an auto-triggered run has already started before doing so
+(to avoid a redundant duplicate consuming a concurrency slot), is the safer default for anyone
+continuing this branch.
+
+**One more real bug found in that same auto-triggered run** (`verify-multiplayer-shard (4)`,
+job 101540419206): `tests/smoke_net_deploy_two_creatures.gd` failed to even PARSE --
+`SCRIPT ERROR: Parse Error: The function signature doesn't match the parent. Parent signature is
+"_proxy_for(int) -> int"`, at line 172. `tests/helpers/net_harness.gd` (the base class every net
+smoke extends) already declares `_proxy_for(target_port: int) -> int` for Contract §9's udp_proxy
+mechanism; `smoke_net_deploy_two_creatures.gd` independently declared its OWN unrelated helper
+under the same name (`_proxy_for(bodies: Dictionary, peer_id: int) -> Dictionary`, finding a
+replicated creature's proxy row) -- two lanes picked the same name for two unrelated things, and a
+same-named override with a mismatched signature is a GDScript parse error, so this file has
+silently contributed zero real coverage until the sharded run's shard-4 startup surfaced it as a
+hard failure. This had ALSO failed the same way in the original 46-minute monolithic run
+(`smoke_net_deploy_two_creatures.gd failed on attempt 1/1`, 17:50:27 UTC) -- missed in that run's
+first pass here because "failed on attempt" doesn't match a `FAIL:`/`FATAL:` grep pattern; a second,
+fuller sweep of that log confirmed it.
+
+**Fixed**: the local, file-scoped helper renamed to `_creature_proxy_for` (its two call sites
+updated to match); `net_harness.gd`'s own `_proxy_for` is untouched, since it is the shared base
+every other net smoke also depends on. Scanned every `func` name in every `tests/smoke_net_*.gd`
+file against every `func` name in `net_harness.gd` programmatically after the fix -- zero remaining
+collisions across all 29 files. `godot --check-only` on the fixed file parses clean.
 
 ### What was built, in the order it will matter to a player
 
