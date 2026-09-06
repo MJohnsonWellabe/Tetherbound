@@ -61,6 +61,8 @@ const SPAWN_TABLES := preload("res://scripts/combat/spawn_tables.gd")
 ## Lane 3.D. The real shipping chest, driven by its real submit path -- these
 ## arms replace the panel's presses, not the container's ledger conversation.
 const STORAGE_CONTAINER := preload("res://scripts/build/storage_container.gd")
+const REALM_HEART_SHRINE := preload("res://scripts/world/realm_heart_shrine.gd")
+const REMOTE_PRESENTATION := preload("res://scripts/net/remote_presentation.gd")
 ## Lane 3.B. The pickup race smoke stands a real one of these and presses it.
 const ITEM_CACHE_PICKUP := preload("res://scripts/world/item_cache_pickup.gd")
 ## Lane 5.C's two arms read the same authored cluster list the shipping node
@@ -144,6 +146,8 @@ var _input_contexts := {}
 ## Lane 3.D. The chest `storage_bind` planted in this process, and the verdict
 ## its last `storage_deposit`/`storage_withdraw` came back with.
 var _storage_chest: Node3D = null
+## Lane 5.B. The shrine this peer is standing at, stood up by `heart_bind`.
+var _heart_shrine: Node3D = null
 var _storage_last: Dictionary = {}
 ## Refusals the chest reported ASYNCHRONOUSLY -- a client's `submit()` only
 ## says "pending", and the host's `stale_revision` answer arrives later on
@@ -462,6 +466,18 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_sleep_stand(args)
 		"sleep_press":
 			out = _step_sleep_press(args)
+		"heart_bind":
+			out = _step_heart_bind(args)
+		"heart_earn":
+			out = _step_heart_earn(args)
+		"heart_place":
+			out = _step_heart_place(args)
+		"heart_activate":
+			out = _step_heart_activate(args)
+		"present_publish":
+			out = _step_present_publish(args)
+		"present_damage":
+			out = _step_present_damage(args)
 		_:
 			out = {"verdict": "ERROR", "detail": "unknown action '%s'" % action}
 	out["frames_used"] = _physics_count - before
@@ -1607,6 +1623,177 @@ func _encounter_director() -> Node:
 	return current_scene.get_node_or_null(^"EncounterDirector")
 
 
+# --- lane 5.B: a Heart is placed once, and worn by whoever wants it -----------
+#
+# Four arms and one probe. Everything they touch is shipping code: the shrine is
+# a real `realm_heart_shrine.gd`, earning submits the same `set_world_flag`
+# intent `alpha_pins.gd::clear_alpha()` submits, placing is the shrine's own
+# `submit_place()` -- the exact call the interact prompt makes -- and activating
+# is `RealmHeartState.activate()`, the call the prompt makes for its second
+# press. What the harness supplies is only what a player supplies: which shrine
+# they walked up to, and which press they made.
+
+## Stand a real shrine in this process, the way `playground_world.gd` stands the
+## authored one: build it, name it, and hand it the Heart it belongs to. Every
+## peer binds its own, because the shrine is a scene node and scene nodes are
+## not replicated -- what is shared is the FLAG the world holds, which is the
+## whole point of the smoke.
+func _step_heart_bind(args: Dictionary) -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		return {"verdict": "ERROR", "detail": "no /root/Game"}
+	if _heart_shrine != null and is_instance_valid(_heart_shrine):
+		_heart_shrine.queue_free()
+		_heart_shrine = null
+	var heart := str(args.get("heart", "meadows"))
+	var shrine: Node3D = REALM_HEART_SHRINE.new()
+	shrine.name = "SmokeRealmHeartShrine"
+	shrine.call("setup", heart, str(args.get("name", "Heart of Meadows")),
+		str(args.get("realm", "meadows")))
+	root.add_child(shrine)
+	_heart_shrine = shrine
+	return {"verdict": "PASS", "detail": "shrine bound to '%s', state %s"
+		% [heart, str(shrine.call("current_state"))]}
+
+
+## Earn the Heart. A world fact like any other, so it goes through the ledger --
+## and it is submitted rather than written so that a CLIENT calling this arm
+## behaves the way a client does (pending, then the delta), instead of the
+## harness quietly writing a flag no host ever saw.
+func _step_heart_earn(args: Dictionary) -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		return {"verdict": "ERROR", "detail": "no /root/Game"}
+	var hearts: Variant = game.get("realm_hearts")
+	var transport: Node = game.get("ledger") as Node
+	if hearts == null or transport == null:
+		return {"verdict": "ERROR", "detail": "no Game.realm_hearts or Game.ledger"}
+	var heart := str(args.get("heart", "meadows"))
+	var flag := str((hearts as RefCounted).call("earned_flag", heart))
+	if flag.is_empty():
+		return {"verdict": "FAIL", "detail": "no earned_flag for heart '%s'" % heart}
+	var verdict: Dictionary = transport.call("submit", {
+		"kind": "set_world_flag", "realm": str(args.get("realm", "meadows")), "id": flag,
+	})
+	if not (bool(verdict.get("ok", false)) or bool(verdict.get("pending", false))):
+		return {"verdict": "FAIL", "detail": "set_world_flag refused: %s / %s"
+			% [str(verdict.get("code", "")), str(verdict.get("reason", ""))]}
+	return {"verdict": "PASS", "detail": "earned '%s' (%s)"
+		% [flag, "committed" if bool(verdict.get("ok", false)) else "pending"]}
+
+
+## Press "Place" at the bound shrine. The shipping call, verdict shape and all:
+## `ok` on the host, `pending` on a client with the host still to answer, and
+## neither is a failure here -- the assertion the smoke makes is what BOTH peers
+## can see afterwards, not what this press returned.
+func _step_heart_place(_args: Dictionary) -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		return {"verdict": "ERROR", "detail": "no /root/Game"}
+	if _heart_shrine == null or not is_instance_valid(_heart_shrine):
+		return {"verdict": "ERROR", "detail": "no shrine bound; call heart_bind first"}
+	var verdict: Dictionary = _heart_shrine.call("submit_place", game)
+	if bool(verdict.get("ok", false)):
+		return {"verdict": "PASS", "detail": "placed here and now"}
+	if bool(verdict.get("pending", false)):
+		return {"verdict": "PASS", "detail": "submitted; the host has still to answer"}
+	return {"verdict": "FAIL", "detail": "submit_place refused: %s / %s"
+		% [str(verdict.get("code", "")), str(verdict.get("reason", ""))]}
+
+
+## Press again: wear the Heart's power, or (with `release`) take it off. This is
+## the PERSONAL half and it deliberately does not go near the ledger.
+func _step_heart_activate(args: Dictionary) -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		return {"verdict": "ERROR", "detail": "no /root/Game"}
+	var hearts: Variant = game.get("realm_hearts")
+	if hearts == null:
+		return {"verdict": "ERROR", "detail": "no Game.realm_hearts"}
+	if bool(args.get("release", false)):
+		(hearts as RefCounted).call("clear_active")
+		return {"verdict": "PASS", "detail": "released"}
+	var heart := str(args.get("heart", "meadows"))
+	if not bool((hearts as RefCounted).call("activate", heart, game.get("progression"))):
+		return {"verdict": "FAIL", "detail": "activate('%s') refused -- not placed here" % heart}
+	return {"verdict": "PASS", "detail": "wearing '%s'" % heart}
+
+
+# --- lane 6.D: a friend's fight is not silent ---------------------------------
+#
+# Two arms and one probe. `present_publish` is the owner pressing publish on its
+# own outbound proxy -- the exact call `remote_creature.gd` /
+# `remote_trainer.gd` make when they notice something -- and `present_damage`
+# drives the SAMPLER instead, by taking hit points off the owner's creature the
+# same way `combat_manager.gd::host_roll_damage()` does, so the whole path from
+# "a number the host wrote" to "a picture on somebody else's screen" is what is
+# under test rather than the RPC alone.
+
+## Publish one presentation event from THIS peer's own outbound proxy.
+func _step_present_publish(args: Dictionary) -> Dictionary:
+	var kind := str(args.get("kind", REMOTE_PRESENTATION.KIND_CATCH))
+	var role := str(args.get("role", "trainer"))
+	var body := _own_proxy(role)
+	if body == null:
+		return {"verdict": "FAIL", "detail": "this peer has no %s proxy of its own to publish from" % role}
+	body.call("broadcast_presentation", kind, args.get("payload", {}))
+	return {"verdict": "PASS", "detail": "%s published '%s'" % [str(body.name), kind]}
+
+
+## Take `fraction` of its maximum off this peer's own creature, through the same
+## `take_damage()` the host rolls into, and let the owner's proxy notice on its
+## next tick. Nothing here touches the wire: the publish is the shipping
+## sampler's, which is the half worth proving.
+func _step_present_damage(args: Dictionary) -> Dictionary:
+	# The director's own `ally_instance()`, which is the object the deployed body
+	# was built around. NOT `Game.party.active()`: `adopt_starter()` stands a
+	# body on a fresh instance without adding it to the party, so `active()` is
+	# null for exactly the peers this arm is used on.
+	var director := _encounter_director()
+	if director == null:
+		return {"verdict": "ERROR", "detail": "no EncounterDirector in this scene"}
+	var creature: Variant = director.call("ally_instance")
+	if creature == null:
+		return {"verdict": "FAIL", "detail": "this peer has no creature out to hurt"}
+	var instance := creature as Object
+	if not instance.has_method("take_damage"):
+		return {"verdict": "ERROR", "detail": "creature instance has no take_damage()"}
+	var before := float(instance.get("hp"))
+	var amount := float(args.get("fraction", 0.25)) * maxf(float(instance.get("max_hp")), 1.0)
+	instance.call("take_damage", amount)
+	return {"verdict": "PASS", "detail": "hp %.1f -> %.1f" % [before, float(instance.get("hp"))]}
+
+
+## This peer's OWN outbound proxy for `role`, i.e. the one body in that group
+## whose authority is this process. That is the only body a peer may publish
+## from, and `broadcast_presentation` refuses any other.
+## The effect nodes lane 6.D's hooks leave behind for a body: the bursts
+## `combat_vfx.gd` parents beside it, and the flourish/glow it parents onto it.
+## Named rather than counted so a failure says WHICH picture is missing.
+func _effect_node_names(body: Node3D) -> Array:
+	var names: Array = []
+	var host: Node = body.get_parent()
+	if host != null:
+		for child in host.get_children():
+			var n := str(child.name)
+			if n.begins_with("HitSpark") or n.begins_with("KoPuff") or n.begins_with("CatchBurst"):
+				names.append(n)
+	for child in body.get_children():
+		var n := str(child.name)
+		if n.begins_with("LevelUpFlourish") or n.begins_with("BodyGlow"):
+			names.append(n)
+	return names
+
+
+func _own_proxy(role: String) -> Node3D:
+	var group: StringName = &"remote_trainer" if role == "trainer" else &"remote_creature"
+	for body in get_nodes_in_group(group):
+		if body is Node3D and is_instance_valid(body) \
+				and (body as Node3D).is_multiplayer_authority():
+			return body as Node3D
+	return null
+
+
 # --- lane 5.C: personal fog, personal pins, a shared clear ---------------------
 #
 # Two arms and one probe. Between them they stand in for the two things a
@@ -1972,6 +2159,74 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"alpha_pins": int(fog_state.call("alpha_pin_count")),
 				"revision": int(fog_state.get("revision")),
 			}
+		"realm_heart":
+			# Lane 5.B. The two halves of a Realm Heart, kept apart on purpose.
+			#
+			# `earned`/`placed` are read off `Game.world.flags` DIRECTLY rather
+			# than through the merged progression view, and that is the
+			# assertion: a placement that landed in this peer's own player
+			# store would still answer `true` through the merged view on the
+			# peer that made it, and `false` on its friend, which is exactly
+			# the bug the ledger route exists to stop. Asking the world store
+			# means "the WORLD says so", on both peers.
+			#
+			# `active` is the personal half, off this process's own
+			# `RealmHeartState`. Two peers reporting two different values here
+			# is the deliverable, not drift.
+			var hgame := root.get_node_or_null(^"Game")
+			if hgame == null:
+				return null
+			var hearts: Variant = hgame.get("realm_hearts")
+			if hearts == null:
+				return null
+			var hargs: Dictionary = (msg.get("args", {}) as Dictionary)
+			var heart := str(hargs.get("heart", "meadows"))
+			var hworld: Variant = hgame.get("world")
+			var hflags: Variant = (hworld as RefCounted).get("flags") if hworld != null else null
+			var earned_id := str((hearts as RefCounted).call("earned_flag", heart))
+			var placed_id := str((hearts as RefCounted).call("placed_flag", heart))
+			var hprog: Variant = hgame.get("progression")
+			return {
+				"heart": heart,
+				"earned_flag": earned_id,
+				"placed_flag": placed_id,
+				"earned_in_world": hflags != null and bool((hflags as RefCounted).call("has", earned_id)),
+				"placed_in_world": hflags != null and bool((hflags as RefCounted).call("has", placed_id)),
+				"earned": hprog != null and bool((hprog as RefCounted).call("has", earned_id)),
+				"placed": hprog != null and bool((hprog as RefCounted).call("has", placed_id)),
+				"active": str((hearts as RefCounted).call("active_id")),
+				"stamina_multiplier": float((hearts as RefCounted).call("stamina_capacity_multiplier")),
+				"shrine_state": "" if _heart_shrine == null or not is_instance_valid(_heart_shrine) \
+					else str(_heart_shrine.call("current_state")),
+			}
+		"remote_presentation":
+			# Lane 6.D. What this process has DRAWN on bodies it does not own,
+			# keyed by node name. `plays` is the counter each body bumps in
+			# `play_presentation()`, `last` the kind it drew, and `effect` the
+			# NAME of the node that draw actually spawned -- which is what "the
+			# hook fired" means here. `effects` is the weaker live scan of what
+			# is standing under the body right now, kept only as a debugging
+			# aid: these effects last a fraction of a second and free
+			# themselves, so an empty `effects` beside a non-empty `effect`
+			# means the picture played and finished, not that it never played.
+			# Nobody judges what it looked like; that is Stage C's bar.
+			var drawn := {}
+			for group: StringName in [&"remote_creature", &"remote_trainer"]:
+				for body in get_nodes_in_group(group):
+					if not is_instance_valid(body) or not (body is Node3D):
+						continue
+					var pbody: Node3D = body
+					if pbody.is_multiplayer_authority():
+						continue
+					drawn[str(pbody.name)] = {
+						"role": "creature" if group == &"remote_creature" else "trainer",
+						"plays": int(pbody.get("presentation_plays")),
+						"last": str(pbody.get("last_presentation")),
+						"effect": str(pbody.get("last_effect")),
+						"effects": _effect_node_names(pbody),
+						"presence": pbody.get_node_or_null(^"Presence") != null,
+					}
+			return drawn
 		"remote_trainers":
 			# Lane 2.C. Every OTHER peer's body as this process sees it:
 			# the nodes `scripts/net/trainer_spawn.gd` spawned under D97's

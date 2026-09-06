@@ -36,7 +36,20 @@ extends CharacterBody3D
 ## contact, genuine planar velocity for the model's lean, and interpolation in
 ## the same step.
 
+## ## Stage B lane 6.D: the picture of somebody else's catch
+##
+## A trainer body that walked around in silence is the same defect
+## `remote_creature.gd`'s header describes, from the trainer's side: sealing a
+## catch throws a sparkle on the local player's screen and nothing at all on
+## their friend's. The owner publishes it here, as a presentation event, and
+## every other peer draws it on this body through
+## `scripts/net/remote_presentation.gd`. It decides nothing -- by the time this
+## body hears about a catch, the host's `catch_arbiter` has already said whose
+## it was.
+
 const GROUP := &"remote_trainer"
+
+const PRESENTATION := preload("res://scripts/net/remote_presentation.gd")
 
 ## Smoothing half-life for the remote's rendered position. Small enough that a
 ## walking trainer is never further behind than lane 2.C's own "seen" budget
@@ -67,6 +80,23 @@ var net_anim_state: String = "idle"
 var net_sprinting: bool = false
 var net_carried: bool = false
 
+## Lane 6.D. A presentation event was drawn on this body. Emitted on the VIEWER,
+## never on the owner's own invisible proxy, and counted in `presentation_plays`
+## so a smoke can assert that a friend's catch produced a picture here without
+## judging what it looked like.
+signal presentation_played(kind: String, payload: Dictionary)
+
+var presentation_plays: int = 0
+var last_presentation: String = ""
+## The NAME of the effect node the last drawn event spawned, or "" when that
+## kind spawns none. Recorded rather than looked for afterwards, and the first
+## run of `tests/smoke_net_hearts.gd` is why: every one of these effects is a
+## fraction of a second long and frees itself, so a test that waits for the
+## packet to land and then scans the scene for a spark finds an empty parent and
+## reports "the hook never fired". The name is the durable proof that a node
+## really was built.
+var last_effect: String = ""
+
 var _render_position: Vector3 = Vector3.ZERO
 var _has_render: bool = false
 ## Whether this process is this body's authority. Re-read every physics frame
@@ -80,6 +110,10 @@ var _has_render: bool = false
 ## until the first evaluation so the first pass always applies.
 var _owned_here: Variant = null
 var _ground_speed: float = 0.0
+## Owner side: this world's `CombatManager`, resolved lazily. Never touched on a
+## viewer -- that manager is running the local player's fight, not this
+## trainer's.
+var _combat: Node = null
 ## The authored collision setup, kept so the owner-side body can give it back
 ## if authority ever moves to another peer.
 var _layer: int = 0
@@ -167,6 +201,75 @@ func _push_from_local_rig() -> void:
 	# here, but a probe or a distance check that finds this node should not see
 	# a body parked at the origin.
 	global_position = net_position
+	_ensure_combat_link()
+
+
+# --- lane 6.D: the presentation channel -------------------------------------------
+
+## Owner side only. `catch_resolved` fires on the peer that threw the orb; in a
+## session its `success` came back from the host (`apply_host_catch_verdict`),
+## so what is published is a picture of the arbiter's answer, never an answer.
+func _ensure_combat_link() -> void:
+	if _combat != null and is_instance_valid(_combat):
+		return
+	_combat = PRESENTATION.find_combat_manager(self)
+	if _combat == null:
+		return
+	if not _combat.is_connected("catch_resolved", _on_local_catch_resolved):
+		_combat.connect("catch_resolved", _on_local_catch_resolved)
+
+
+func _on_local_catch_resolved(success: bool, _shakes: int) -> void:
+	if not success:
+		# A failed catch is the creature breaking out, which is a picture on the
+		# CREATURE, not on the trainer. This lane does not invent one for it.
+		return
+	broadcast_presentation(PRESENTATION.KIND_CATCH)
+
+
+## Publish one presentation event about THIS body to every other peer.
+##
+## Only the owner may call it (an `authority` RPC is refused at the far end
+## otherwise), and it draws nothing here: the owner's proxy is invisible and the
+## owner's own screen already showed the picture. `_can_present()` is what keeps
+## solo a no-op -- with no session `is_multiplayer_authority()` is true for every
+## node and `rpc()` on an `OfflineMultiplayerPeer` is an error, which is the trap
+## this file's authority comment already warns about from the other side.
+func broadcast_presentation(kind: String, payload: Dictionary = {}) -> void:
+	if not PRESENTATION.is_kind(kind) or not bool(_owned_here):
+		return
+	if not _can_present():
+		return
+	rpc("_rpc_presentation", kind, payload)
+
+
+## Owner -> everybody else. Presentation only; see `remote_presentation.gd`.
+@rpc("authority", "call_remote", "reliable")
+func _rpc_presentation(kind: String, payload: Dictionary) -> void:
+	play_presentation(kind, payload)
+
+
+## Draw one event on this body. Public so a headless test can drive it without a
+## session; the counter and the signal are the assertion.
+func play_presentation(kind: String, payload: Dictionary = {}) -> Node:
+	if not PRESENTATION.is_kind(kind):
+		return null
+	presentation_plays += 1
+	last_presentation = kind
+	var spawned := PRESENTATION.play(self, kind, payload)
+	last_effect = str(spawned.name) if spawned != null else ""
+	presentation_played.emit(kind, payload)
+	return spawned
+
+
+func _can_present() -> bool:
+	if not is_inside_tree():
+		return false
+	var api := multiplayer
+	if api == null or not api.has_multiplayer_peer():
+		return false
+	var game := get_node_or_null(^"/root/Game")
+	return game != null and bool(game.call("is_multi_peer"))
 
 
 ## The rig the LOCAL peer drives, through the one door D101 names. Falls back

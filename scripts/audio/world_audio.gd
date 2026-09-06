@@ -20,6 +20,17 @@ extends Node
 ## the project to exactly where it was before this lane, with nothing else
 ## broken.
 ##
+## ## Stage B lane 6.D: somebody else's fight
+##
+## The subscription above is to THIS process's combat manager, and a friend's
+## fight is not in it -- there is nothing local to listen to, so a remote body
+## going down was silent. `on_remote_event()` is the one public entry for that:
+## `scripts/net/remote_presentation.gd` calls it when another peer's body
+## publishes a hit, a knockout, a catch or a level, and it plays the same cues
+## off the same table the local fight uses. Nothing else about this node
+## changes, and it still decides no outcome -- it is handed a picture that has
+## already happened.
+##
 ## ## Ambience is layers, not beds
 ##
 ## Eight looping layers play continuously; what changes per region and per time
@@ -89,7 +100,14 @@ var _village_at: Vector2 = Vector2(NAN, NAN)
 var _in_combat: bool = false
 
 
+## `remote_presentation.gd` finds this node by group rather than by path: the
+## world node that parents it is another lane's file and its name is not that
+## file's business.
+const GROUP := &"world_audio"
+
+
 func _ready() -> void:
+	add_to_group(GROUP)
 	var world := get_parent()
 	if world != null:
 		_player = world.get_node_or_null(PLAYER_NAME) as CharacterBody3D
@@ -540,6 +558,28 @@ func _on_hit_landed(on_enemy: bool, _amount: float) -> void:
 
 func _on_attack_missed(_by_player: bool) -> void:
 	CONFIG.play("attack_miss", "SFX")
+
+
+## Lane 6.D. Something happened on ANOTHER peer's body, `at` metres away.
+##
+## The kinds are `remote_presentation.gd`'s (`hit`, `knockout`, `catch`,
+## `level_up`, `victory`); an unknown one is dropped in silence rather than
+## guessed at. `at` is carried so a future positional mix has the number it
+## needs; today `audio_manager.gd::play()` is a non-positional bus, exactly as
+## it is for the local fight, so the two sound the same.
+func on_remote_event(kind: String, _at: Vector3 = Vector3.ZERO) -> void:
+	match kind:
+		"hit":
+			var table: Dictionary = CONFIG.section("combat").get("effectiveness_sound", {}) as Dictionary
+			CONFIG.play(str(table.get("0", "impact_normal")), "SFX")
+		"knockout":
+			CONFIG.play("damage_taken", "SFX")
+		"catch", "victory":
+			CONFIG.play("combat_win", "SFX")
+		"level_up":
+			# The flourish is the picture; the level itself has no cue of its
+			# own in `audio.json` and this lane does not invent one.
+			pass
 
 
 func _on_orb_shook(index: int) -> void:

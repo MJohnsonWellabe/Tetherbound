@@ -18,6 +18,26 @@ extends Node3D
 ##
 ## All geometry is made from engine primitives.  It deliberately introduces no
 ## second prop family and can be replaced later without changing its state API.
+##
+## ## Stage B lane 5.B: earned and placed are the WORLD's, active is YOURS
+##
+## D103. Setting a Heart into its socket is a consequential world mutation, so
+## it is no longer a write this node makes: it is a `set_world_flag` INTENT
+## submitted to `Game.ledger`, exactly as `alpha_pins.gd::clear_alpha()` submits
+## a beaten alpha. Solo and the host commit it in-process and the delta lands
+## before `submit()` returns; a client is told `pending` and the flag arrives
+## when the host has committed it, at which point `ledger_rpc.gd` sweeps the
+## `progression_restore` group -- which this node joins in `_ready()` -- and the
+## shrine every peer is standing at repaints itself. That is the deliverable:
+## one player places a Heart and BOTH see it placed.
+##
+## ACTIVATING is the opposite and deliberately so. `realm_hearts._active_id`
+## lives on the PLAYER half of the state split (`MP_STATE_SEAM.md` §2:
+## `PlayerState.save_data()` carries `realm_hearts`), it is never submitted to
+## the ledger, and nothing here replicates it. Two peers standing at the same
+## socket can be running two different Heart powers, and that is the point --
+## the Heart is placed in the world once, and each trainer chooses for
+## themselves whether to wear its power.
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 
@@ -35,6 +55,13 @@ const HEART_ACTIVE := Color("d7f59a")
 @export var heart_id: String = "meadows"
 @export var heart_name: String = "Heart of the Meadows"
 @export var interaction_radius: float = 3.6
+## The realm this shrine's RECORD belongs to, stamped onto every intent it
+## submits. D97: never `Game.current_realm` -- from Wave 6 two peers stand in
+## two realms at once and an intent stamped with "whichever realm the local
+## player happens to be in" would file a Cloudreach placement in the Meadows.
+## Empty means "the same id as the Heart", which is what every shrine in the
+## chapter is (`data/config/realm_hearts.json` names one Heart per realm).
+@export var realm_id: String = ""
 
 var _prompt: Node3D = null
 var _heart_visual: Node3D = null
@@ -51,11 +78,19 @@ var _heart_revision := -1
 ## Configure before adding the shrine to the scene tree.  Calling it later is
 ## also safe: the already-built visual and prompt immediately adopt the state of
 ## the new Heart id.
-func setup(p_heart_id: String = "meadows", p_heart_name: String = "Heart of the Meadows") -> void:
+func setup(p_heart_id: String = "meadows", p_heart_name: String = "Heart of the Meadows",
+		p_realm_id: String = "") -> void:
 	heart_id = p_heart_id
 	heart_name = p_heart_name
+	realm_id = p_realm_id
 	if is_inside_tree():
 		refresh_from_game()
+
+
+## The realm every intent from this shrine is stamped with.
+func realm() -> String:
+	var explicit := realm_id.strip_edges()
+	return explicit if not explicit.is_empty() else heart_id
 
 
 func _ready() -> void:
@@ -115,8 +150,7 @@ func _on_activated() -> void:
 
 	match state_for(game):
 		STATE_EARNED_UNPLACED:
-			if bool(hearts.call("place", heart_id, progression)):
-				_announce(game, "%s placed. %s Only one Heart power can be active." % [heart_name, _power_description(hearts)])
+			submit_place(game)
 		STATE_PLACED_INACTIVE:
 			if bool(hearts.call("activate", heart_id, progression)):
 				_announce(game, "%s active. %s Only one Heart power can be active." % [heart_name, _power_description(hearts)])
@@ -126,6 +160,73 @@ func _on_activated() -> void:
 		_:
 			return
 	_refresh(game)
+
+
+## Set this Heart into its socket -- the WORLD half, and the only thing about a
+## Realm Heart that is shared.
+##
+## Returns `world_ledger.gd`'s verdict shape, so a caller never has to branch on
+## the type of the answer: `ok` when it committed here and now (solo, or the
+## host), `pending` while a client waits for the host, and otherwise a refusal
+## whose `reason` is one sentence to show. `pending` is NOT failure and nothing
+## local may move on it -- the delta repaints this shrine on every peer when it
+## lands, which is how the friend standing beside you sees the Heart go in.
+##
+## A process with no ledger mounted at all (a unit fixture, a scene test that
+## never built `Game.ledger`) falls back to the direct write `place()` has
+## always done. That is the pre-Wave-3 path and it is deliberately kept: the
+## alternative is a shrine that silently does nothing in every headless test.
+func submit_place(game: Node) -> Dictionary:
+	var progression := _progression(game)
+	var hearts := _realm_hearts(game)
+	if game == null or progression == null or hearts == null:
+		return _refusal("The world is not ready yet.")
+	var flag := str(hearts.call("placed_flag", heart_id))
+	if flag.is_empty():
+		return _refusal("That Heart has no socket to record.")
+
+	var transport: Node = game.get("ledger") as Node
+	if transport == null or not transport.has_method("submit"):
+		if bool(hearts.call("place", heart_id, progression)):
+			_announce_placed(game, hearts)
+			_refresh(game)
+			return {"ok": true, "kind": "set_world_flag", "peer": 0, "code": "",
+				"reason": "", "pending": false, "delta": {"seq": 0, "realm": realm(), "ops": []}}
+		return _refusal("")
+
+	var verdict: Dictionary = transport.call("submit", {
+		"kind": "set_world_flag",
+		"realm": realm(),
+		"id": flag,
+	})
+	if bool(verdict.get("ok", false)):
+		# Host or solo: `submit()` already applied the delta, so `state_for()`
+		# reads PLACED on the very next line.
+		_announce_placed(game, hearts)
+		_refresh(game)
+		return verdict
+	if bool(verdict.get("pending", false)):
+		# A client. Change NOTHING here: `ledger_rpc.gd` sweeps
+		# `progression_restore` and then emits `delta_applied`, and this shrine
+		# repaints off the sweep.
+		return verdict
+	var reason := str(verdict.get("reason", ""))
+	if not reason.is_empty():
+		_announce(game, reason)
+	return verdict
+
+
+func _announce_placed(game: Node, hearts: RefCounted) -> void:
+	_announce(game, "%s placed. %s Only one Heart power can be active."
+		% [heart_name, _power_description(hearts)])
+
+
+func _refusal(reason: String) -> Dictionary:
+	return {
+		"ok": false, "kind": "set_world_flag", "peer": 0, "code": "offline",
+		"reason": reason, "pending": false,
+		"delta": {"seq": 0, "realm": realm(), "ops": []},
+	}
 
 
 func _refresh(game: Node) -> void:

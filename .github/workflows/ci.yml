@@ -1947,14 +1947,18 @@ jobs:
           # control); Wave 2 added host/join/leave and movement; lane 3.D added
           # storage_concurrency; lane 4.B added deploy_two_creatures; lane 3.C
           # added shared_building; lane 3.B added pickup_race; lane 5.C added
-          # fog_is_personal.
+          # fog_is_personal; lane 5.B added hearts.
           #
           # The number is the TRUE count of files declaring the header, not a
           # lane's guess at it -- every lane raises it by one and a merge of
           # several at once has to be reconciled against the directory rather
           # than against whichever lane's line won the conflict.
-          if [ "$count" -lt 13 ]; then
-            echo "::error::expected at least 13 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
+          # Regenerated from the files actually on disk (14 at the time lane 5.B
+          # landed), not incremented from whatever the previous line said --
+          # several lanes add a smoke at once and a bumped guess reconciles to
+          # the wrong number.
+          if [ "$count" -lt 14 ]; then
+            echo "::error::expected at least 14 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
             exit 1
           fi
           # added shared_building; lane 3.B added pickup_race; lane 5.D added
@@ -1973,6 +1977,7 @@ jobs:
           for required in \
             tests/smoke_net_deploy_two_creatures.gd \
             tests/smoke_net_fog_is_personal.gd \
+            tests/smoke_net_hearts.gd \
             tests/smoke_net_host_join_leave.gd \
             tests/smoke_net_movement_two_peers.gd \
             tests/smoke_net_peer_death.gd \
