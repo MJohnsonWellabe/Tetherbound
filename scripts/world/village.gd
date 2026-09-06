@@ -29,7 +29,15 @@ var _prefabs: RefCounted = null
 var _placed := 0
 
 
-func build() -> void:
+## `slicer` is `scripts/world/shell_build_budget.gd`, handed down by
+## `playground_world.gd` exactly as it hands it to `vegetation.gd`. Each
+## structure is a prefab instantiate plus per-module colliders, a ground-height
+## probe at every corner and, for some, a door and an interior -- heavy enough
+## that on a slow host the whole 25-structure loop was measured as ONE
+## indivisible slice past the shell's 15 s heartbeat budget (`docs/CURRENT_STATE.md`,
+## 2026-09-06). `null` (every non-shell build) makes `_breathe()` a no-op, so
+## single-player boot is unchanged.
+func build(slicer: RefCounted = null) -> void:
 	var file := FileAccess.open(CONFIG_PATH, FileAccess.READ)
 	if file == null:
 		push_error("village.json missing; the settlement is a field")
@@ -57,7 +65,17 @@ func build() -> void:
 		if not entry is Dictionary:
 			continue
 		_place(entry as Dictionary)
+		await _breathe(slicer)
 	print("[village] placed %d structures" % _placed)
+
+
+## `vegetation.gd::_breathe()`'s own pattern, verbatim: `slicer == null` (every
+## non-shell build) returns without ever suspending, so `await`ing this costs a
+## live build nothing.
+func _breathe(slicer: RefCounted) -> void:
+	if slicer == null:
+		return
+	await slicer.call("breathe")
 
 
 ## Tell the runtime ground cover that this structure is standing here.

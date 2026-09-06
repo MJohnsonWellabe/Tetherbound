@@ -1359,7 +1359,7 @@ func _build_settlement() -> void:
 	var village: Node3D = VILLAGE.new()
 	village.name = "Village"
 	add_child(village)
-	village.call("build")
+	await village.call("build", _shell_build)
 	await _shell_build.call("breathe")
 	STRUCTURE_VISIBILITY_RANGE.apply(village, "village")
 	BOOT_LOG.phase("settlement: village")

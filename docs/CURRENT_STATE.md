@@ -41,20 +41,33 @@ both smokes green on a local run: that run predates OP-0905-20 landing on this c
 so the interaction between the two lanes was genuinely new to `claude/tetherbound-roadmap-next-jrcjs8`
 and had never been exercised together before this CI run.
 
-**A second, separate finding surfaced in local reproduction, not yet confirmed on GitHub's own
-runner:** rerunning `smoke_net_realm_owner_disconnect_mid_fight` after the fix, the crossing check
-now passes, but the run went on to trip the harness's 15 s heartbeat-silence guard while the host's
-Meadows shell built — `[playground] shell build 54.8 s wall ... worst held slice 15482 ms (in the
-step following 'vegetation')`. `scripts/world/village.gd::build()` has no internal `breathe()` /
-`await` at all, so its entire construction runs as one indivisible slice inside
+**A second, separate finding surfaced in local reproduction, and partially fixed here — full
+confirmation is blocked by this session's own sandbox, not yet by GitHub's runner:** rerunning
+`smoke_net_realm_owner_disconnect_mid_fight` after the fix, the crossing check passes, but the run
+went on to trip the harness's 15 s heartbeat-silence guard twice in a row while the host's Meadows
+shell built — worst held slice 15,482 ms and 14,039 ms, both attributed to the step following
+`vegetation` (`settlement`). `scripts/world/village.gd::build()` had no internal `breathe()` /
+`await` at all, so its entire 25-structure construction ran as one indivisible slice inside
 `playground_world.gd::_build_settlement()`'s `settlement` step — unlike every other file
-`ralph/reports/MP-REALM-REOPEN-0906/REPORT.md` lists as sliced. On the report's own reference box
-this stayed comfortably under the 15 s budget (never called out as a risk; only the ~5 s Terrain3D
-region load was), so this reads as this session's sandbox being meaningfully slower per-operation
-than that box, not a new regression — but it was not re-verified against GitHub's actual runner
-before this note was written. If `verify-multiplayer-shard` reports `peer silent` on either 6.A
-smoke, `village.gd::build()`'s missing slicing is the first suspect, and the fix is the same
-`breathe()`-between-substeps pattern already used in `playground_world.gd` and `cloudreach_world.gd`.
+`ralph/reports/MP-REALM-REOPEN-0906/REPORT.md` lists as sliced. **Fixed**: `village.gd::build()`
+now takes the same `shell_build_budget.gd` slicer as `vegetation.gd` and calls `breathe()` after
+each structure, following that file's own established pattern.
+
+That fix alone did not close the gap in this sandbox (second run: still 14,039 ms). Timing each of
+the 13 distinct prefab templates village.json places, in isolation with no other Godot process
+running, found the true per-structure cost is small — under 1.4 s for the heaviest (`workshop`),
+under 4 s total for all thirteen, cold. The ~14 s figure only appears inside the full net smoke,
+which runs three concurrent Godot processes (coordinator + 2 peers) competing for this sandbox's 4
+vCPUs alongside the interactive agent session itself — a load `ralph/reports/MP-REALM-REOPEN-0906/
+REPORT.md`'s reference box did not carry, and a GitHub Actions runner (dedicated to the one CI job,
+nothing else scheduled against it) is not expected to either. So the per-structure slicing fix
+ships as a genuine, low-risk correctness improvement regardless, but the specific 14-15 s figure
+reads as this sandbox's own concurrent-process contention, not a cost inherent to the world build.
+Not yet re-verified against GitHub's actual runner before this note was written. If
+`verify-multiplayer-shard` still reports `peer silent` on either 6.A smoke after this fix, the next
+suspect is per-module resource loading inside `building_prefabs.gd::_build_template()` (each
+prefab's first placement loads every module's `.gltf`/`.obj` from disk), which would need the same
+`breathe()` threaded one level deeper, not a different mechanism.
 
 ### What was built, in the order it will matter to a player
 
