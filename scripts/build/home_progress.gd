@@ -135,7 +135,12 @@ static func maybe_set_home_built(game: Node) -> void:
 		return
 	var buildings: Array = game.get("placed_buildings") as Array
 	if home_built(buildings):
-		progression.call("set_flag", "home_built")
+		# D99/D-MP5, MP_STATE_SEAM.md §3: `home_built` is a PLAYER flag granted
+		# to EVERY connected peer the moment the world gains the pieces -- a
+		# shared camp is everyone's camp, and a friend who walked in after the
+		# hut went up must not be sent to build a second one. Solo,
+		# `grant_player_flag` is one write to the local store, exactly as before.
+		_grant(game, "home_built")
 
 
 ## --- OP23-04 / owner directive 2026-08-23: a bed per entrant --------------
@@ -190,7 +195,8 @@ static func maybe_set_creature_beds(game: Node) -> void:
 		return
 	var standing := creature_beds_built(game.get("placed_buildings") as Array)
 	for i in mini(standing, CREATURE_BED_FLAGS.size()):
-		progression.call("set_flag", CREATURE_BED_FLAGS[i])
+		# Granted to every peer, same rule as `home_built` above.
+		_grant(game, CREATURE_BED_FLAGS[i])
 
 
 ## One-line call site for a gathering-completion path.
@@ -205,4 +211,17 @@ static func maybe_set_materials_gathered(game: Node) -> void:
 	if inventory == null or items == null:
 		return
 	if materials_gathered(inventory, items):
-		progression.call("set_flag", "home_materials_gathered")
+		# Granted to every peer, same rule as `home_built` above.
+		_grant(game, "home_materials_gathered")
+
+
+## The one place this file names a store. Falls back to the merged view for a
+## test double that has no `grant_player_flag`, which routes to the same store
+## solo.
+static func _grant(game: Node, flag: String) -> void:
+	if game.has_method("grant_player_flag"):
+		game.call("grant_player_flag", flag)
+		return
+	var progression: RefCounted = game.get("progression")
+	if progression != null:
+		progression.call("set_flag", flag)

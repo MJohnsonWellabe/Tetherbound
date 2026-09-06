@@ -10,8 +10,39 @@ extends Node3D
 ## Wired the same way player_bed.gd/world_perimeter.gd are: a small component
 ## `playground_world.gd` builds and hands the player node to, rather than
 ## logic living inside the world script itself.
+##
+## ## D104/D-MP10, lane 3.C: a satchel belongs to somebody
+##
+## The record a death writes now carries the dying player's CHARACTER ID, and
+## the live node is handed the same id. Only that player may open it; anybody
+## else reads the owner's name on the prompt and is refused in one sentence
+## (`death_satchel.gd::can_open`). The `owner` field has been in
+## `WorldState.register_death_satchel` and in the save since lane 3.A; what was
+## missing was anyone filling it in, which is this.
+##
+## Nothing about "several satchels coexist" changes, and nothing may: a hard
+## rule in CLAUDE.md. Two deaths are two records and two bags, owned or not.
+##
+## ## Stage B lane 4.E: a stage BEFORE death, in a multi-peer session
+##
+## `_on_died` is the one funnel every lethal path in the game already runs
+## through -- `player_controller.gd::_resolve_landing` for a fall and
+## `water.gd::_apply_hazard_damage` for a drowning are its only two emitters --
+## so the downed window is opened here rather than in either of them. That is
+## the smallest place the change can live and still catch every death.
+##
+## `_die_now()` below is this file's ORIGINAL `_on_died` body, moved and not
+## edited. When `downed_state.gd` declines the death -- solo, no session, a
+## headless test, a capture tool -- `_on_died` calls it on the same frame it
+## always did, so a solo death is byte-for-byte what it was. When the window is
+## accepted and then runs out, `downed_state.gd` calls the very same function
+## through the Callable handed to `attach_local`, so the timeout death is the
+## same death too. Nothing about satchels changes in either case, and directive
+## rule 19 is satisfied by construction: going down reaches no encounter, no
+## ledger and no world record, because it reaches nothing but the player.
 
 const DEATH_SATCHEL := preload("res://scripts/world/death_satchel.gd")
+const DOWNED_STATE := preload("res://scripts/player/downed_state.gd")
 const WORLD_RECORDS := preload("res://scripts/world/realm_world_records.gd")
 
 const FADE_SECONDS := 1.2
@@ -34,6 +65,10 @@ var _fallback_home: Vector3 = Vector3.ZERO
 var _satchel_count: int = 0
 var _recovery_camps: Array = []
 var _recovery_ground: Callable = Callable()
+## Lane 4.E's `/root/Game/DownedState`, mounted once and shared by every world.
+## Null in a process with no `Game` autoload, which is a process that dies the
+## way it always did.
+var _downed: Node = null
 
 
 ## World may inject already-resolved authored camps, or the canonical chapter
@@ -58,11 +93,29 @@ func build(world: Node3D, player: CharacterBody3D, spawn_position: Vector3) -> v
 	if not _recovery_ground.is_valid() and world.has_method("ground_height_near"):
 		_recovery_ground = Callable(world, "ground_height_near")
 	add_to_group(GROUP)
+	# Lane 4.E. Mounted under `Game`, not under this node: the RPC path has to
+	# be identical in every process and this component is rebuilt on every
+	# scene change. `attach_local` rebinds it to the rig standing now and hands
+	# it THIS world's death to run when a window closes unanswered.
+	_downed = DOWNED_STATE.mount(get_node_or_null(^"/root/Game"))
+	if _downed != null:
+		_downed.call("attach_local", player, Callable(self, "_die_now"))
 	if player.has_signal("died"):
 		player.connect("died", _on_died)
 
 
+## Lane 4.E. In a multi-peer session this opens a downed window and returns;
+## everything below it runs later, or never. In solo -- and in any process with
+## no session at all -- `request_down()` answers false and the death runs on
+## this frame exactly as it always has.
 func _on_died() -> void:
+	if _downed != null and is_instance_valid(_downed) and bool(_downed.call("request_down")):
+		return
+	_die_now()
+
+
+## The death itself, unchanged from the day it was written.
+func _die_now() -> void:
 	var game := get_node_or_null(^"/root/Game")
 	if game == null:
 		return
@@ -124,16 +177,22 @@ func _drop_satchel(carried: Array, at: Vector3, game: Node) -> void:
 	# its own index into `GameState.death_satchels` from the moment it
 	# exists — the same order `build_placer.gd::_place()` uses (compute the
 	# index the entry is about to occupy, then spawn).
-	var index := int(game.call("register_death_satchel", at))
+	# D104/D-MP10. The realm is passed explicitly rather than left to
+	# `register_death_satchel`'s own fallback, for the same D97 reason every
+	# ledger intent carries one: a record is stamped with the realm of the thing
+	# being written, never with whichever realm some global happens to hold.
+	var realm := WORLD_RECORDS.active(game)
+	var owner := _local_character_id(game)
+	var index := int(game.call("register_death_satchel", at, owner, realm))
 
 	var satchel: Node3D = DEATH_SATCHEL.new()
 	_satchel_count += 1
 	satchel.name = "DeathSatchel_%d" % _satchel_count
 	satchel.position = at
 	satchel.set_meta(SATCHEL_INDEX_META, index)
-	satchel.set_meta("realm", WORLD_RECORDS.active(game))
+	satchel.set_meta("realm", realm)
 	_world.add_child(satchel)
-	satchel.call("build", carried, game.get("items"))
+	satchel.call("build", carried, game.get("items"), owner)
 	# Capture immediately, not only at the next scene/save synchronization.
 	(game.get("death_satchels") as Array)[index]["state"] = satchel.get("state").call("save_data")
 
@@ -204,7 +263,24 @@ func restore_from_game(game: Node) -> void:
 		satchel.set_meta(SATCHEL_INDEX_META, i)
 		satchel.set_meta("realm", WORLD_RECORDS.active(game))
 		_world.add_child(satchel)
-		satchel.call("restore", record.get("state", []), db)
+		# D104/D-MP10. A record written before this lane has no `owner`, and
+		# loads as an unowned bag that opens for whoever finds it -- which is
+		# precisely how it behaved when it was written.
+		satchel.call("restore", record.get("state", []), db, str(record.get("owner", "")))
+
+
+## D104/D-MP10. This process's own character id, read and never minted --
+## `session.gd` mints one when a session is formed, and a death must not be the
+## thing that decides a solo player suddenly has an identity. Solo that leaves
+## the owner empty, which is an unowned satchel, which opens for the one player
+## there is.
+func _local_character_id(game: Node) -> String:
+	if game == null:
+		return ""
+	var local: Variant = game.get("local")
+	if local == null:
+		return ""
+	return str((local as RefCounted).get("character_id"))
 
 
 ## The last-placed bedroll, or the world's own opening spawn point if none

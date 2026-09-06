@@ -72,6 +72,7 @@
         {
           "id": "cloudreach_arrive",
           "flag_id": "cloudreach_chapter_started",
+          "scope": "world",
           "label": "Enter Cloudreach and find the waycamp.",
           "how": "Follow the rising road from the realm gate to the first camp.",
           "region_id": "gate_lower_cliffs",
@@ -81,6 +82,7 @@
         {
           "id": "cloudreach_learn_crisis",
           "flag_id": "cloudreach_crisis_learned",
+          "scope": "world",
           "label": "Ask why the cliff roads have gone still.",
           "how": "Speak with Warden Aila at Galefoot Waycamp.",
           "region_id": "gate_lower_cliffs",
@@ -90,6 +92,7 @@
         {
           "id": "cloudreach_investigate_lower_anchors",
           "flag_id": "cloudreach_lower_anchors_investigated",
+          "scope": "world",
           "label": "Trace the Storm Anchors along the broken roads.",
           "how": "Follow the broken causeway uphill. Inspect the west anchor by Three Bells Bridge, then the east anchor near the skyroad arch.",
           "region_id": "broken_causeways",
@@ -103,6 +106,7 @@
         {
           "id": "cloudreach_reconnect_survivors",
           "flag_id": "causeway_survivors_reconnected",
+          "scope": "world",
           "label": "Open a safe line through the Broken Causeways.",
           "how": "Clear the anchor picket, then ring its route bell so Orrin can signal the stranded travelers.",
           "region_id": "broken_causeways",
@@ -112,6 +116,7 @@
         {
           "id": "cloudreach_prepare_aerie",
           "flag_id": "windscar_aerie_prepared",
+          "scope": "world",
           "label": "Prepare the Windscar Flight Aerie.",
           "how": "Bring gale fiber, clear the ravine threat, and restore the launch perch.",
           "region_id": "windscar_ravine",
@@ -121,6 +126,7 @@
         {
           "id": "cloudreach_act_i_finish",
           "flag_id": "cloudreach_act_i_complete",
+          "scope": "world",
           "label": "Meet Keeper Maela at the restored aerie.",
           "how": "Return to the launch perch when your team is ready for the flight trial.",
           "region_id": "windscar_ravine",
@@ -139,6 +145,7 @@
         {
           "id": "cloudreach_earn_fly",
           "flag_id": "fly_traversal_unlocked",
+          "scope": "world",
           "label": "Complete the Windscar flight trial.",
           "how": "Pilot the active fly-capable creature through the aerie's wind gates.",
           "region_id": "windscar_ravine",
@@ -149,6 +156,7 @@
         {
           "id": "cloudreach_reach_sky_shrine",
           "flag_id": "sky_shrine_reached",
+          "scope": "world",
           "label": "Fly to the Sky Shrine above Windscar.",
           "how": "Use the newly opened wind route; the sheer High Roost has no grounded entrance.",
           "region_id": "high_roost_sky_shrine",
@@ -158,6 +166,7 @@
         {
           "id": "cloudreach_learn_engine_truth",
           "flag_id": "storm_anchor_engine_truth_learned",
+          "scope": "world",
           "label": "Read the wind record held by the shrine.",
           "how": "Restore the shrine's three vanes and listen to the path of the stolen wind.",
           "region_id": "high_roost_sky_shrine",
@@ -172,6 +181,7 @@
         {
           "id": "cloudreach_release_ground_route",
           "flag_id": "cloudreach_upper_route_unlocked",
+          "scope": "world",
           "label": "Release the grounded counterweight road.",
           "how": "Turn the Sky Shrine windlass; it lowers a separate stair through Windscar for grounded travel.",
           "region_id": "high_roost_sky_shrine",
@@ -181,6 +191,7 @@
         {
           "id": "cloudreach_act_ii_finish",
           "flag_id": "cloudreach_act_ii_complete",
+          "scope": "world",
           "label": "Return by air and take the new road toward Cliffhold.",
           "how": "The flight route remains useful, but the summit path now has a grounded connection.",
           "region_id": "windscar_ravine",
@@ -199,6 +210,7 @@
         {
           "id": "cloudreach_disable_upper_anchors",
           "flag_id": "cloudreach_upper_anchors_disabled",
+          "scope": "world",
           "label": "Disable the upper Storm Anchors.",
           "how": "Find the two plateau anchors and the summit feed; use terrain cover and creature switching to break each defense.",
           "region_id": "upper_cloudreach",
@@ -213,6 +225,7 @@
         {
           "id": "cloudreach_reach_extraction_engine",
           "flag_id": "summit_extraction_engine_reached",
+          "scope": "world",
           "label": "Reach the summit extraction engine.",
           "how": "Follow the exposed summit road after the last feed line goes dark.",
           "region_id": "summit_final_stronghold",
@@ -222,6 +235,7 @@
         {
           "id": "cloudreach_defeat_captain_veyra",
           "flag_id": "captain_veyra_defeated",
+          "scope": "world",
           "label": "Defeat Captain Veyra at the Eye of the Anchor.",
           "how": "Use lee zones, reposition through crosswinds, and switch creatures when Veyra changes pressure.",
           "region_id": "summit_final_stronghold",
@@ -231,6 +245,7 @@
         {
           "id": "cloudreach_break_network",
           "flag_id": "storm_anchor_network_disabled",
+          "scope": "world",
           "label": "Break the extraction engine's hold on the wind.",
           "how": "Pilot a creature through the collapsing wind lanes and strike the exposed relay cores.",
           "region_id": "summit_final_stronghold",
@@ -240,6 +255,7 @@
         {
           "id": "cloudreach_witness_restoration",
           "flag_id": "cloudreach_winds_restored",
+          "scope": "world",
           "label": "Return to the summit overlook as the winds return.",
           "how": "Meet the Cloudreach delegation after the freed routes reconnect the settlements.",
           "region_id": "summit_final_stronghold",
@@ -249,6 +265,7 @@
         {
           "id": "cloudreach_claim_reward",
           "flag_id": "cloudreach_chapter_complete",
+          "scope": "world",
           "label": "Claim the Cloudreach Heart and look Waterward.",
           "how": "Accept the realm's Heart and the key carried up the restored Waterward route.",
           "region_id": "summit_final_stronghold",
@@ -271,6 +288,7 @@
       "giver_npc_id": "bridgekeeper_orrin",
       "revealed_by": "cloudreach_crisis_learned",
       "completion_flag": "side_three_bells_complete",
+      "scope": "world",
       "persistence": "save",
       "steps": [
         {"id": "find_lower_bell", "flag_id": "side_bell_lower_found", "region_id": "broken_causeways", "requires_flags": [], "label": "Find the bell beside the first broken span."},
@@ -286,6 +304,7 @@
       "giver_npc_id": "courier_neri",
       "revealed_by": "causeway_survivors_reconnected",
       "completion_flag": "side_stranded_couriers_complete",
+      "scope": "world",
       "persistence": "save",
       "steps": [
         {"id": "recover_abandoned_pack", "flag_id": "side_courier_pack_recovered", "region_id": "broken_causeways", "requires_flags": [], "label": "Recover the pack left at the west ropeway."},
@@ -301,6 +320,7 @@
       "giver_npc_id": "naturalist_sora",
       "revealed_by": "fly_traversal_unlocked",
       "completion_flag": "side_aeries_complete",
+      "scope": "world",
       "persistence": "save",
       "steps": [
         {"id": "survey_high_perches", "flag_id": "side_aerie_high_perches_surveyed", "region_id": "high_roost_sky_shrine", "requires_flags": ["fly_traversal_unlocked"], "label": "Survey the High Perches from the air."},
@@ -316,6 +336,7 @@
       "giver_npc_id": "young_trainer_tavi",
       "revealed_by": "cloudreach_act_i_complete",
       "completion_flag": "side_cliff_circuit_complete",
+      "scope": "world",
       "persistence": "save",
       "steps": [
         {"id": "beat_lower_pair", "flag_id": "side_cliff_circuit_lower", "region_id": "gate_lower_cliffs", "requires_flags": [], "label": "Defeat the two lower-cliff circuit trainers."},

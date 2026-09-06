@@ -1175,13 +1175,21 @@ func _map_rect_for_canvas(canvas_size: Vector2) -> Rect2:
 	return Rect2(centre - size * 0.5, size)
 
 
+## Wave 1 lane 1.B: `grid_x()`/`grid_z()`/`origin()` are per INSTANCE now (a
+## Cloudreach map and a Meadows map describe differently-shaped worlds in one
+## process), so the fallback reads the map it was handed rather than one
+## process-global answer. A null map -- a caller drawing before `Game.map` is
+## bound -- still gets the default Meadows grid, from a throwaway instance that
+## derives it exactly as the old statics did.
 static func bounds_for_map(map_state: RefCounted) -> Dictionary:
 	if map_state != null and map_state.has_method("world_bounds"):
 		return map_state.call("world_bounds")
-	var origin := MAP_STATE.origin()
+	var grid: RefCounted = map_state if map_state != null else MAP_STATE.new()
+	var origin: Vector2 = grid.call("origin")
+	var cell: float = float(grid.call("cell_size"))
 	return {"min_x": origin.x, "min_z": origin.y,
-		"max_x": origin.x + MAP_STATE.CELL * MAP_STATE.grid_x(),
-		"max_z": origin.y + MAP_STATE.CELL * MAP_STATE.grid_z()}
+		"max_x": origin.x + cell * int(grid.call("cell_grid_x")),
+		"max_z": origin.y + cell * int(grid.call("cell_grid_z"))}
 
 
 ## Same two colours `scripts/ui/minimap.gd` fogs with (its own `FOG_UNDISCOVERED`/
@@ -1341,10 +1349,27 @@ func _icon_texture(icon_name: String) -> Texture2D:
 	return tex
 
 
-## The MapState instance for whichever realm the CANVAS is currently drawing
-## (`_display_realm()`) — never `game.map` directly, so that field (the single
-## alias every other system reads as THE active realm) stays untouched by
-## this tab merely looking at a realm the player is not in.
+## THE LOCAL PLAYER'S MAP for whichever realm the CANVAS is currently drawing, and in multiplayer that is the whole point.
+##
+## `Game.map` forwards to `PlayerState.map_for(realm)` for the LOCAL player
+## (`docs/specs/MP_STATE_SEAM.md` §2), so everything this tab draws -- the fog
+## texture, the discovered landmarks and regions, the alpha pins, the objective
+## marker -- is what THIS trainer has personally found. A joiner opening the map
+## in a world whose host has walked every band sees their own fog: the host's
+## `MapState` is not in the join snapshot (`session.gd::_rpc_snapshot` sends
+## `WorldState.save_data()`, which has no map payload), so there is no route by
+## which it could arrive.
+##
+## What IS shared arrives as world state and is drawn only through it: a
+## landmark whose visibility is gated on a world flag, an alpha pin that clears
+## because somebody beat that alpha (`alpha_pins.gd`). This tab reads neither
+## directly -- it draws whatever the local `MapState` holds, and that object is
+## the one place the two are already reconciled.
+##
+## OP-0905-27: the realm the canvas draws is `_display_realm()`, never
+## `game.map` directly -- that field is the single alias every other system
+## reads as THE active realm, and this tab merely LOOKING at a realm the
+## player is not in must not disturb it.
 func _map_state() -> RefCounted:
 	return _realm_map_state(_display_realm())
 

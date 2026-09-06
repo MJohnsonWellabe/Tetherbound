@@ -1,0 +1,56 @@
+{
+  "_comment": "Stage B multiplayer config. `test_budgets` is Wave 0 lane 0.F's net harness budgets (docs/specs/MP_NET_HARNESS_CONTRACT.md §8), read by tests/helpers/net_harness.gd::_init_budgets(). `session` is Wave 2 lane 2.A's transport and handshake tunables (D95), read by scripts/net/session.gd::config(). Missing keys fall back to each reader's own defaults, so a partial edit here is safe.",
+  "downed": {
+    "_comment": "Stage B Wave 4 lane 4.E (D-MP19, directive rule 19). A player who goes down in a MULTI-PEER session is a problem their friend can solve, not the end of the fight. Read by scripts/player/downed_state.gd::_load_config(); a missing key falls back to that file's own default, so a partial edit here is safe. SOLO HAS NO WINDOW AT ALL and there is no key here that can give it one: scripts/world/player_death.gd asks Game.is_multi_peer() first, and a solo death runs exactly the path it ran before this lane.",
+    "window_s": 45.0,
+    "_comment_window_s": "Seconds a downed player stays revivable before the ordinary satchel-drop and respawn runs. Fixed from the movement numbers rather than discovered by running until something passed: data/config/movement.json sprints at 8.6 m/s, so a teammate needs roughly ten seconds to break off the fight they are still in (rule 19 -- one player going down never stops the encounter), twenty to cross the hundred-odd metres a Meadows engagement spreads over, and revive_hold_s on top. 45 s carries that with margin. It is deliberately not 30 (too tight for a friend who is mid-fight, which is the case this feature exists for) and not 90 (a minute and a half face-down is a worse game than dying).",
+    "revive_hold_s": 3.0,
+    "_comment_revive_hold_s": "Seconds a teammate must HOLD interact, standing over the downed player, for the revive to land. Long enough to be a commitment made under pressure -- you are stationary and exposed for all three seconds -- and short enough that it is never a chore. A tap would make the revive free; five seconds would make it a chore.",
+    "revive_radius_m": 2.5,
+    "_comment_revive_radius_m": "Metres between the reviver's own body and the downed body. Tighter than interactable.gd's generous 3.6 m default on purpose: a berry bush may offer itself from across a clearing, but kneeling over a friend is arm's reach plus a step, and the tightness is what makes the reviver's own position a real exposure.",
+    "revive_health_fraction": 0.35,
+    "_comment_revive_health_fraction": "Fraction of max health a revived player stands up with. Not full -- going down has to cost something or it is free -- and not a sliver, because being revived straight into a second knockdown is the worse game. 0.35 is enough to walk out of the fight and eat.",
+    "revive_stamina_fraction": 0.35,
+    "_comment_revive_stamina_fraction": "Same, for stamina: you get up able to move, not able to sprint away for free. Satiety is deliberately NOT touched -- a revive is not a meal, and CLAUDE.md's light-satiety rule means it was never a danger in the first place."
+  },
+  "session": {
+    "port": 27015,
+    "_comment_port": "Default UDP port Session.host() binds and Session.join() dials when a caller names none. D95: direct IP, no relay, no Steam.",
+    "max_peers": 4,
+    "_comment_max_peers": "D95's peer cap: the host plus three joiners. ENetMultiplayerPeer.create_server() takes the number of CLIENTS, so session.gd passes max_peers - 1.",
+    "channel_count": 2,
+    "_comment_channel_count": "D95's two channels: transfer_channel 1 carries ledger/encounter traffic, transfer_channel 2 carries snapshots, so a late-join snapshot never queues behind movement. Godot reserves three system channels of its own beneath these.",
+    "connect_timeout_s": 20.0,
+    "_comment_connect_timeout_s": "Wall-clock seconds Session.join() waits for the ENet connection itself before giving up.",
+    "handshake_timeout_s": 60.0,
+    "_comment_handshake_timeout_s": "Wall-clock seconds a joiner waits for the host's world snapshot after connecting. Generous because the host may be mid-frame on a Meadows scene that spike S2 measured at ~85 s to build.",
+    "reconnect_window_s": 120.0,
+    "_comment_reconnect_window_s": "How long a dropped character id keeps its registry row for a rejoin. Wave 2 keeps the row for the process lifetime and reads this only as the documented intent; the timed eviction lands with Wave 5's downed/revive window.",
+    "clock_sync_interval_s": 1.0,
+    "_comment_clock_sync_interval_s": "D105: how often the host broadcasts `day` and `clock_elapsed_seconds` as host truth. One second is far finer than the 600 s in-game day, so a client's sky never visibly steps."
+  },
+  "encounter": {
+    "_comment": "Stage B Wave 4 lane 4.C. The encounter host's two tolerances (docs/specs/MP_ENCOUNTER_PROTOCOL.md \u00a711), read by scripts/net/encounter_host.gd::config() and scripts/net/catch_arbiter.gd. Both were fixed in the lane brief BEFORE implementation, so no bar here was discovered by running until something passed.",
+    "strike_latency_tolerance_ms": 250,
+    "_comment_strike_latency_tolerance_ms": "\u00a75 step 3. How far BACK IN HOST TIME a strike may be tested against the opponent's position. A player on a 60 ms link swung at where the creature visibly was and must land it, so the window has to cover a full round trip plus a frame or two of jitter; 250 ms covers a 120 ms one-way link. Past that the tolerance starts landing hits against a position a quarter-second stale, which reads to the OTHER players as a ghost hit on empty grass -- the failure this number is bounded to avoid, not link quality.",
+    "catch_arbitration_window_ms": 6000,
+    "_comment_catch_arbitration_window_ms": "\u00a78. How long ONE peer's committed catch attempt holds the encounter in `catching` before the claim lapses. It is a BACKSTOP, not the refusal window: a second attempt is refused with `already_resolving` until the first RESOLVES, and the winner releases the claim as soon as the wobble ends. The number only decides how long a thrower who disconnected mid-wobble can wedge everyone else's fight. catching.json's own sequence is absorb 0.45 + first_shake_delay 0.9 + 3 x shake_interval 0.85 + settle_pause 0.8 = ~4.7 s, so 6000 ms outlasts the longest honest attempt with margin and still frees the fight inside a couple of seconds of a disconnect."
+  },
+  "test_budgets": {
+    "step_budget_frames": 3000,
+    "_comment_step_budget_frames": "Default per-step budget, contract §4/§6, physics frames.",
+    "hello_budget_s": 180,
+    "_comment_hello_budget_s": "Wall-clock seconds every peer has to connect and say hello after launch. Spike S2 (ralph/reports/MP-0D-SPIKE-HOSTCOST-0905/) measured a cold Meadows boot at ~85s per peer; both peers boot concurrently on one runner, so 180s is real margin, not the raw number doubled blind.",
+    "smoke_step_budget_s_2peer": 300,
+    "_comment_smoke_step_budget_s_2peer": "Wall-clock seconds of STEPS a 2-peer smoke may spend, timed from the moment launch()'s hello wait succeeds -- separate from hello_budget_s on purpose, so a slow boot cannot eat into what a smoke's own assertions need.",
+    "smoke_step_budget_s_wide": 1500,
+    "_comment_smoke_step_budget_s_wide": "Same, for 3/4-peer runs -- nightly/owner-kit only, never PR CI (contract §10); spike S2 measured four full boots at 12.85 GB, which does not fit beside PR CI on a 16 GB runner.",
+    "heartbeat_frames": 60,
+    "_comment_heartbeat_frames": "Physics frames between peer heartbeats, contract §3/§7.",
+    "desync_frames": 240,
+    "_comment_desync_frames": "Consecutive frames of no common state_hash before the desync detector fails the run, contract §7.",
+    "near_tolerance_rest_m": 1.5,
+    "near_tolerance_motion_m": 4.0,
+    "_comment_near_tolerance": "Position tolerances for the `near` assert and movement smokes, contract §8 -- provisional until 2.C measures interpolation lag."
+  }
+}

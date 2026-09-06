@@ -135,14 +135,55 @@ var _enabled: bool = true
 func _ready() -> void:
 	add_to_group(GROUP)
 	_player = get_node_or_null(player_path) as Node3D
+	if _player == null:
+		# D101. Every process has exactly ONE local rig, and this node is a
+		# per-process singleton keyed on it: the prompt line, the winner and
+		# the LOS ray all belong to the peer that renders. When the authored
+		# path misses (a world instanced under something else, a shell with no
+		# authored `../Player`), fall back to the local rig rather than to
+		# whatever body happens to be nearby -- a REMOTE trainer must never
+		# become this arbiter's viewer.
+		_player = local_viewer_fallback()
 	_cell_m = maxf(1.0, float(PERF.config().get("interaction_grid_cell_m", 8.0)))
 
 
 ## Late binding, for a player that is not reachable by a fixed path — the
 ## opening scene instances the world, so the arbiter above it cannot name the
 ## body inside it until the tree is up.
+##
+## D101: a remote trainer is refused outright. Nothing in the codebase passes
+## one today, and the failure if something ever did would be silent and awful
+## — every prompt in the world measured from another player's body.
 func set_player(player: Node3D) -> void:
+	if player != null and player.is_in_group(&"remote_trainer"):
+		push_error("interaction_arbiter: refused a remote trainer as the local viewer")
+		return
 	_player = player
+
+
+## The body this arbiter measures from: the local rig, or the piloted creature
+## that has taken over from it (`set_player()` is how combat hands the viewer
+## across). Public so `interactable.gd` does not have to reach into `_player`
+## — D101 deliverable 5.
+func viewer() -> Node3D:
+	if _player != null and is_instance_valid(_player):
+		return _player
+	return local_viewer_fallback()
+
+
+## The local rig through the one door D101 names, with a group fallback for a
+## scene standing without the `Game` autoload.
+func local_viewer_fallback() -> Node3D:
+	var game := get_node_or_null(^"/root/Game")
+	if game != null and game.has_method("local_player"):
+		var rig := game.call("local_player") as Node3D
+		if rig != null and is_instance_valid(rig):
+			return rig
+	if is_inside_tree():
+		var tree := get_tree()
+		if tree != null:
+			return tree.get_first_node_in_group(&"local_player") as Node3D
+	return null
 
 
 func register(provider: Object) -> void:

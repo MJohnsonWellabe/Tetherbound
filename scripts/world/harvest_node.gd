@@ -27,6 +27,9 @@ const IMPORTED_MATERIALS := preload("res://scripts/world/imported_materials.gd")
 const HARVEST_LOGIC := preload("res://scripts/world/harvest_logic.gd")
 const HOME_PROGRESS := preload("res://scripts/build/home_progress.gd")
 const RULES := preload("res://scripts/world/scatter_rules.gd")
+## D103 / Stage B lane 3.B. See `_on_gathered()`: this node is spent through the
+## world ledger now, not by writing its own flag and its own satchel line.
+const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
 
 ## MAT-BLOCKOUT round 2. A blind critic, told nothing about the round-1
 ## retint, still flagged the rootstone deposits: no longer "mint/seafoam"
@@ -78,6 +81,20 @@ var _visual: Node3D = null
 ## to its item id plus its authored `at`, which is exactly as stable for a
 ## fixed, hand-placed spec.
 var _node_id: String = ""
+## D97: the realm this node's RECORD belongs to. Stamped on every intent
+## explicitly; nothing here reads `Game.current_realm`, because from Wave 6 two
+## peers stand in two realms at once. `harvest_node:<id>` is not itself
+## realm-qualified (it never was) -- `order` is globally unique across bands and
+## the fallback carries the authored `at` -- so this only stamps the intent.
+var _realm_id: String = "meadows"
+## True between submitting a `harvest` intent and hearing back, and what this
+## node was going to pay for if it wins: `{"amount": int, "slot": int}`. NOTHING
+## local changes while it is set. The satchel line, the sounds, the tool wear
+## and the `home_materials_gathered` check all wait for the committed delta,
+## which is what makes a lost race cost the loser nothing at all.
+var _claiming := false
+var _claim: Dictionary = {}
+var _taken := false
 
 
 func setup(spec: Dictionary) -> void:
@@ -88,6 +105,7 @@ func setup(spec: Dictionary) -> void:
 	_model_scale = float(spec.get("model_scale", 1.0))
 	var order: Variant = spec.get("order")
 	_node_id = ("order:%s" % str(order)) if order != null else ("%s@%s" % [_item_id, str(spec.get("at", []))])
+	_realm_id = str(spec.get("realm", "meadows"))
 	add_to_group("progression_restore")
 
 	_build_visual()
@@ -97,6 +115,7 @@ func setup(spec: Dictionary) -> void:
 	_prompt.call("configure", _label, 2.4, true)
 	_prompt.connect("activated", _on_gathered)
 	add_child(_prompt)
+	LEDGER_CLAIM.listen(self, _on_delta_applied)
 	var game := get_node_or_null(^"/root/Game")
 	if was_taken(game, _node_id):
 		_deactivate()
@@ -131,6 +150,7 @@ func restore_progression_from_game(game: Node) -> void:
 ## `item_cache_pickup.gd::_deactivate()` already use for their own one-time
 ## finds.
 func _deactivate() -> void:
+	_taken = true
 	if _prompt != null and is_instance_valid(_prompt):
 		_prompt.call("set_enabled", false)
 	if _visual != null:
@@ -354,7 +374,26 @@ func _item_kind() -> String:
 	return str(items.call("kind", _item_id)) if items != null else ""
 
 
+## D103, Stage B lane 3.B. Everything up to the yield is unchanged -- the swing
+## hand-off, the tool gate, the wrong-tool sentence and the full-satchel
+## sentence are all still answered here, because a host cannot see this peer's
+## hand or its satchel and those are the two questions only this peer can
+## answer. What changed is the end: the node no longer adds the item and writes
+## `harvest_node:<id>` itself. It submits a `harvest` INTENT and waits.
+##
+## Nothing local moves until the committed delta lands (`_on_delta_applied()`).
+## That is deliberate and it is the whole race fix: two players pressing the
+## same berry bush inside one round trip produce exactly one payout, and the
+## loser gets the sentence `world_ledger.gd` wrote for it and a bush that is
+## still standing -- not a bush that vanished and paid nothing.
+##
+## Solo behaves exactly as it did: `submit()` on a solo player commits
+## in-process and emits the delta before it returns, so by the time this
+## function ends the satchel has moved and the node is gone, in the same frame
+## as before.
 func _on_gathered(equipped_tool: Variant = null) -> void:
+	if _taken or _claiming:
+		return
 	var game := get_node_or_null(^"/root/Game")
 	if game == null:
 		push_error("no Game autoload; gathered %s into nothing" % _item_id)
@@ -391,7 +430,7 @@ func _on_gathered(equipped_tool: Variant = null) -> void:
 			if not required_tool.is_empty():
 				game.call("push_world_message", "Needs a %s." % str(items.call("item_name", required_tool)))
 		return
-	if not bool(inventory.call("has_room_for", _item_id, actual_amount)):
+	if inventory == null or not bool(inventory.call("has_room_for", _item_id, actual_amount)):
 		# INTERACT-SWEEP-0903: this used to claim "refused, visibly" while doing
 		# nothing a player could actually see -- the prompt staying up is not
 		# feedback about THIS press, it is silence. Now says so, the same as
@@ -399,7 +438,61 @@ func _on_gathered(equipped_tool: Variant = null) -> void:
 		# satchel refusal.
 		game.call("push_world_message", "Satchel is full.")
 		return
-	inventory.call("add", _item_id, actual_amount)
+
+	_claiming = true
+	_claim = {"amount": actual_amount, "slot": required_slot}
+	# D72's flag, unchanged in shape and still the node's own identity -- the
+	# ledger takes it as the intent's `flag` rather than learning a second id
+	# scheme, and writes it once, on the host, for every peer.
+	var verdict := LEDGER_CLAIM.submit(self, {
+		"kind": "harvest",
+		"realm": _realm_id,
+		"flag": flag_id(_node_id),
+		"item": _item_id,
+		"amount": actual_amount,
+	})
+	if not LEDGER_CLAIM.in_flight(verdict):
+		# `already_taken` (a race this peer lost, arbitrated on the host before
+		# the round trip) or an offline transport. The sentence has already been
+		# shown; the node stays standing, nothing was spent, no tool wore down.
+		_claiming = false
+		_claim = {}
+
+
+## The committed delta. Removal is driven from here on every peer, host and
+## solo included, so the node on screen and the flag in `WorldState` cannot
+## drift apart. The item itself arrived as the delta's `item_grant` player op,
+## applied by `ledger_rpc.gd` moments before this fired -- so this only owes the
+## player the FEEDBACK for a gather that was theirs, and owes a peer who merely
+## watched somebody else gather nothing but the removal.
+func _on_delta_applied(delta: Dictionary) -> void:
+	if not LEDGER_CLAIM.sets_world_flag(delta, flag_id(_node_id)):
+		return
+	# The `_taken` guard is deliberately NOT first. On a client `_rpc_delta`
+	# runs `_restore_progression()` -- the same group sweep a mid-session load
+	# uses -- BEFORE it emits `delta_applied`, so this node has already been
+	# deactivated off its own flag by the time we get here. Checking `_taken`
+	# up front would therefore swallow the winner's own "+3 Wood", its gather
+	# sound and its tool wear on every client, and only on clients.
+	if _claiming:
+		_settle()
+		_claiming = false
+		_claim = {}
+	if not _taken:
+		_deactivate()
+
+
+## This peer's own half of a committed gather: what no delta can carry, because
+## a tool's durability and a HUD line live in one player's process. Held back
+## until the commit precisely so a lost race costs nothing -- no wear, no sound,
+## no "+3 Wood" for wood that went to somebody else.
+func _settle() -> void:
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return
+	var inventory: RefCounted = game.get("inventory")
+	var items: RefCounted = game.get("items")
+	var actual_amount := int(_claim.get("amount", 0))
 	# GATEB-FLAGS: `home_materials_gathered` (data/progression/objectives.json).
 	# Checked on every successful gather here, not only wood/stone/fiber ones --
 	# home_progress.gd's own threshold check is what actually cares which ids
@@ -419,23 +512,23 @@ func _on_gathered(equipped_tool: Variant = null) -> void:
 	# right sound with no audio change -- see audio.json's `sfx.gather_sound`.
 	_play_gather_audio(items)
 	# R2.2: only a full-yield gather with the right tool wears it down --
-	# a bare-handed or wrong-tool gather has no tool in play to damage.
-	if required_slot >= 0:
+	# a bare-handed or wrong-tool gather has no tool in play to damage. The
+	# slot was read when the player pressed; it is re-checked here rather than
+	# trusted, because a client's press and its commit are a round trip apart
+	# and the satchel can have been rearranged in between.
+	var required_slot := int(_claim.get("slot", -1))
+	if required_slot >= 0 and inventory != null:
 		inventory.call("damage_tool", required_slot)
-	# D72: gone, not resting. A progression flag (the same store
-	# `key_pickup.gd`/`item_cache_pickup.gd`/`tm_pickup.gd` already write to)
-	# so a reload never brings this node back, then the permanent removal
-	# every other one-time pickup already uses.
-	var progression: RefCounted = game.get("progression")
-	if progression != null and not _node_id.is_empty():
-		progression.call("set_flag", flag_id(_node_id))
-	_deactivate()
 
 
 func _ready() -> void:
 	# So a tool swing can find this without knowing which of the two gather
 	# scripts drew it (`harvest_logic.gd::GROUP`).
 	add_to_group(HARVEST_LOGIC.GROUP)
+	# Also connected in `setup()`; `listen()` is idempotent, and a caller that
+	# sets this node up before adding it to the tree would otherwise never hear
+	# a committed delta.
+	LEDGER_CLAIM.listen(self, _on_delta_applied)
 
 ## Gather this spot, the same as pressing the interact prompt on it.
 ##

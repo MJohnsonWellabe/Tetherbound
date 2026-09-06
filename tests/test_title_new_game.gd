@@ -6,6 +6,12 @@ extends "res://tests/test_case.gd"
 ## joypad event and observes the scene transition.
 
 const GAME_STATE := preload("res://autoload/game_state.gd")
+## Wave 1 lane 1.B: reading `data/config/map_landmarks.json` and building the
+## realm's MapState from it moved off `Game` and onto `PlayerState`, which is
+## what owns the per-realm maps now. This test wants a PRISTINE map configured
+## exactly the way a new game configures one, so it asks a fresh PlayerState
+## for one rather than re-implementing the config read.
+const PLAYER_STATE := preload("res://autoload/player_state.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 
 const TEST_DIR := "user://test_title_new_game_saves/"
@@ -74,8 +80,7 @@ func test_new_game_clears_loaded_progress_but_preserves_save_slots() -> void:
 	# little revealed. What this test is actually about is that a NEW game
 	# discards the LOADED map, so compare against a fresh state's own fraction
 	# rather than against a constant that stopped being true.
-	var pristine: RefCounted = game.map.get_script().new()
-	pristine.configure(game._map_landmarks_config())
+	var pristine: RefCounted = PLAYER_STATE.new().call("map_for", "meadows")
 	assert_almost_eq(game.map.discovered_fraction(), pristine.discovered_fraction())
 	assert_true(game.map.discovered_fraction() < 0.05,
 		"a new game reveals %.2f%% of the world; the seed is the home town, not a head start"

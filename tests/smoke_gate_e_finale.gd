@@ -932,6 +932,8 @@ func _fight_to_the_end(id: String, room: String) -> void:
 		_fail("exploration never came back after '%s''s fight" % id)
 
 
+## Press through a victory conversation if one opens after a fight, and give
+## the lockout one frame to release. Returns as soon as locomotion is back.
 ## The fight is happening where the player started it, not under the building.
 ## Returns true once it has reported a failure, so it reports each fight's
 ## first fall-through and then stops.
@@ -1021,6 +1023,14 @@ func _stalled_report(id: String, room: String, frames: int, ally: Node3D, oppone
 ## back" means anything. A gauntlet fight with no such conversation attached
 ## never opens the panel at all, so this is a no-op there and the assertion
 ## after it is unaffected.
+## A trainer with a `victory_conversation` (the Warden, since 04d844d0) has its
+## dialogue opened by `encounter_director._finish_trainer_battle()` ONE FRAME
+## after it re-enables exploration (`call_deferred("_present_trainer_victory")`),
+## and `sequence_director._refresh_lockout()` holds locomotion while any panel
+## is open. Reading `locomotion_enabled` on the resolving frame therefore raced
+## the panel -- green or red depending on which side of the deferred call the
+## check landed, which was this smoke's documented flake on `main`. The four
+## frames below are what clears that deferred call before the panel is read.
 func _drain_any_victory_dialogue(id: String) -> void:
 	for i in 4:
 		await physics_frame

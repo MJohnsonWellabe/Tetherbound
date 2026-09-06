@@ -34,6 +34,34 @@ extends RefCounted
 ##
 ## Pure logic, no `Node`, no transform — testable headlessly the same way
 ## party.gd and inventory.gd are (tests/test_map_state.gd).
+##
+## ## Everything in this file is ONE PLAYER'S, and nothing in it is static
+##
+## Stage B lane 5.C's finding, recorded here because it is the property the
+## multiplayer experience rests on rather than an implementation detail: a
+## `MapState` is personal. Fog cells, discovered landmarks, discovered regions,
+## dynamic markers and pinned alphas are all instance fields, the instances hang
+## off `PlayerState.maps[realm]` (`autoload/player_state.gd`), and `Game.map`
+## resolves to the LOCAL player's. Discovering the Meadows yourself is most of
+## the early game; a joiner who inherited the host's fog would have that deleted
+## before they took a step. The join snapshot is `WorldState.save_data()`
+## (`scripts/net/session.gd::_rpc_snapshot`) and carries no map payload at all,
+## which is what makes that structural rather than a convention someone can
+## forget: there is no wire on which one peer's fog could reach another.
+##
+## Lane 1.B had already removed the `static var _grid_x/_grid_z/_origin` this
+## file used to cache the extent in. 5.C's job was to judge what, if anything,
+## legitimately stays static, and the answer is NOTHING that holds state. The
+## extent is a property of the WORLD, not of a player — but it is DERIVED, from
+## `world_extent.gd` (or `set_extent()` for Cloudreach), so every peer computes
+## the identical grid from the identical config and a shared cache buys nothing
+## except the hazard of two realms overwriting each other's shape. The only
+## `static func` left here is `alpha_marker_id()`, which is pure string
+## arithmetic over its argument and holds nothing.
+##
+## The ONE world fact this file touches is which alphas have been beaten, and it
+## does not hold that either: the pin is personal, and whether the alpha is
+## cleared is read from the world flag store — see `scripts/world/alpha_pins.gd`.
 
 ## Tunable. `docs/specs/MEADOWS_MACRO_LAYOUT.md` §8.6a recommends 16.0 for the
 ## corridor world (§8.6a's own math: 1 MB/save at CELL 4.0 over 8192x2048m vs
@@ -54,12 +82,26 @@ const WORLD_EXTENT := preload("res://scripts/world/world_extent.gd")
 ## still-512m world produces the exact same 128x128 grid over ±256m these
 ## consts used to hard-code, byte for byte — and the day the corridor config
 ## lands, this is a data change, not another hunt through this file.
-static var _grid_x := -1
-static var _grid_z := -1
-static var _origin := Vector2.ZERO
+##
+## PER INSTANCE since Wave 1 lane 1.B (`MP_STATE_SEAM.md` §2). These were
+## `static var`s, one grid for the whole process, and `cloudreach_map_state.gd`
+## had to override five accessors to describe a differently-shaped world without
+## touching them. Two maps in one process now each carry their own extent, which
+## is what a per-player map for two realms at once requires; the Cloudreach
+## overrides collapse onto `set_extent()` below.
+##
+## Still lazy and still cached: an instance nobody configured derives the
+## Meadows extent from `world_extent.gd` on first ask, exactly as the statics
+## did, so every caller that never heard of `set_extent()` is unaffected.
+var _grid_x := -1
+var _grid_z := -1
+var _origin := Vector2.ZERO
+## The cell size this map's grid is measured in. `CELL` is the Meadows default;
+## Cloudreach sets its own through `set_extent()`.
+var _cell := CELL
 
 
-static func _ensure_extent() -> void:
+func _ensure_extent() -> void:
 	if _grid_x > 0:
 		return
 	var bounds: Dictionary = WORLD_EXTENT.bounds()
@@ -67,22 +109,33 @@ static func _ensure_extent() -> void:
 	var min_z: float = float(bounds.get("min_z", 0.0))
 	_origin = Vector2(min_x, min_z)
 	# ceil, not round/floor: a world extent that is not an exact multiple of
-	# CELL must still be fully covered, never clipped short at the far edge.
-	_grid_x = maxi(1, int(ceil((float(bounds.get("max_x", 0.0)) - min_x) / CELL)))
-	_grid_z = maxi(1, int(ceil((float(bounds.get("max_z", 0.0)) - min_z) / CELL)))
+	# the cell must still be fully covered, never clipped short at the far edge.
+	_grid_x = maxi(1, int(ceil((float(bounds.get("max_x", 0.0)) - min_x) / _cell)))
+	_grid_z = maxi(1, int(ceil((float(bounds.get("max_z", 0.0)) - min_z) / _cell)))
 
 
-static func grid_x() -> int:
+## Declare this map's grid outright, instead of deriving the Meadows one.
+## Called by `cloudreach_map_state.gd::configure_cloudreach()` BEFORE
+## `configure()`, so the lazy derivation above sees a grid already set and
+## leaves it alone -- the same early-out the statics used, per instance.
+func set_extent(p_origin: Vector2, p_grid_x: int, p_grid_z: int, p_cell: float) -> void:
+	_origin = p_origin
+	_grid_x = maxi(1, p_grid_x)
+	_grid_z = maxi(1, p_grid_z)
+	_cell = maxf(0.0001, p_cell)
+
+
+func grid_x() -> int:
 	_ensure_extent()
 	return _grid_x
 
 
-static func grid_z() -> int:
+func grid_z() -> int:
 	_ensure_extent()
 	return _grid_z
 
 
-static func origin() -> Vector2:
+func origin() -> Vector2:
 	_ensure_extent()
 	return _origin
 
@@ -350,7 +403,8 @@ func cell_grid_z() -> int:
 
 
 func cell_size() -> float:
-	return CELL
+	_ensure_extent()
+	return _cell
 
 
 ## Bulk read of the fog bitfield (1 byte per cell, 1 = discovered), for
@@ -397,8 +451,8 @@ func cell_at(ix: int, iz: int) -> bool:
 
 func world_to_cell(world_pos: Vector3) -> Vector2i:
 	var o := origin()
-	var ix := int(floor((world_pos.x - o.x) / CELL))
-	var iz := int(floor((world_pos.z - o.y) / CELL))
+	var ix := int(floor((world_pos.x - o.x) / _cell))
+	var iz := int(floor((world_pos.z - o.y) / _cell))
 	return Vector2i(ix, iz)
 
 
@@ -653,12 +707,20 @@ func save_data() -> Dictionary:
 		"visited_b64": Marshalls.raw_to_base64(_visited),
 		"grid_x": grid_x(),
 		"grid_z": grid_z(),
-		"cell": CELL,
+		"cell": cell_size(),
 		"origin_x": o.x,
 		"origin_z": o.y,
 		"landmarks": _discovered.keys(),
 		"dynamic_markers": markers,
 		"regions": _discovered_regions.keys(),
+		# Wave 1 lane 1.B (`MP_STATE_SEAM.md` §2): the pinned set lives with the
+		# fog and the landmarks it is drawn beside, per realm and per player,
+		# rather than as one top-level save key that only ever described the
+		# active map. `alpha_pin_save_data()` stays as the accessor, and
+		# `save_game.gd` still writes the v22 top-level `alpha_pins` key off the
+		# active map, so the file this build writes is a v22 file with one extra
+		# key inside each realm-map payload -- 1.C migrates the top-level one.
+		"alpha_pins": alpha_pin_save_data(),
 	}
 
 
@@ -691,6 +753,12 @@ func load_data(data: Dictionary) -> void:
 	_current_region_id = ""
 	_pending_region_announcement = ""
 
+	# STRICTLY after the `_dynamic`/`_alpha_pins` clears above, for the same
+	# ordering reason `save_game.gd` restores the top-level pins after the map:
+	# the pins rebuild their own dynamic markers, and clearing afterwards would
+	# throw them away again.
+	alpha_pin_load_data(data.get("alpha_pins", []))
+
 	var b64 := str(data.get("visited_b64", ""))
 	if not b64.is_empty():
 		var raw := Marshalls.base64_to_raw(b64)
@@ -700,7 +768,7 @@ func load_data(data: Dictionary) -> void:
 			var o := origin()
 			var geometry_matches := int(data.get("grid_x", -1)) == grid_x() \
 				and int(data.get("grid_z", -1)) == grid_z() \
-				and is_equal_approx(float(data.get("cell", -1.0)), CELL) \
+				and is_equal_approx(float(data.get("cell", -1.0)), cell_size()) \
 				and is_equal_approx(float(data.get("origin_x", INF)), o.x) \
 				and is_equal_approx(float(data.get("origin_z", INF)), o.y)
 			if geometry_matches and raw.size() == _visited.size():
@@ -812,10 +880,10 @@ func _reveal_cells(world_pos: Vector3, radius: float) -> bool:
 	var gx := grid_x()
 	var gz := grid_z()
 
-	var min_ix := int(floor((cx - radius - o.x) / CELL))
-	var max_ix := int(floor((cx + radius - o.x) / CELL))
-	var min_iz := int(floor((cz - radius - o.y) / CELL))
-	var max_iz := int(floor((cz + radius - o.y) / CELL))
+	var min_ix := int(floor((cx - radius - o.x) / _cell))
+	var max_ix := int(floor((cx + radius - o.x) / _cell))
+	var min_iz := int(floor((cz - radius - o.y) / _cell))
+	var max_iz := int(floor((cz + radius - o.y) / _cell))
 
 	min_ix = clampi(min_ix, 0, gx - 1)
 	max_ix = clampi(max_ix, 0, gx - 1)
@@ -825,11 +893,11 @@ func _reveal_cells(world_pos: Vector3, radius: float) -> bool:
 	var changed := false
 	var radius_sq := radius * radius
 	for iz in range(min_iz, max_iz + 1):
-		var center_z := o.y + (float(iz) + 0.5) * CELL
+		var center_z := o.y + (float(iz) + 0.5) * _cell
 		var dz := center_z - cz
 		var dz_sq := dz * dz
 		for ix in range(min_ix, max_ix + 1):
-			var center_x := o.x + (float(ix) + 0.5) * CELL
+			var center_x := o.x + (float(ix) + 0.5) * _cell
 			var dx := center_x - cx
 			if dx * dx + dz_sq > radius_sq:
 				continue

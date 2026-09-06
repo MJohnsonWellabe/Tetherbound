@@ -16,6 +16,8 @@ extends Node3D
 const DATA_DIR := "res://data/terrain/playground"
 const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
 const VEGETATION := preload("res://scripts/world/vegetation.gd")
+const DROPPED_ITEM_SPAWNER := preload("res://scripts/world/dropped_item_spawner.gd")
+const TRADE_OFFER := preload("res://scripts/ui/trade_offer.gd")
 const PERF_CONFIG := preload("res://scripts/world/performance_config.gd")
 const STRUCTURE_VISIBILITY_RANGE := preload("res://scripts/world/structure_visibility_range.gd")
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
@@ -485,6 +487,17 @@ const COLLISION_SHAPE_SIZE := 64
 ## between the collision bake and the heightfield does not spawn them inside it.
 const SPAWN_CLEARANCE := 2.0
 
+## D101. `$Player` is an instance of `scenes/player/local_rig.tscn` — THIS
+## process's one local rig, in the `local_player` group. `$CameraRig` is that
+## rig's camera: it is authored as a root-level sibling only because
+## `camera_rig.gd::_ready()` sets `top_level = true` and follows the player by
+## code, so the two are one rig however the tree is drawn. Other peers'
+## trainers live under `Spawned/Trainers` and are never reachable from either
+## of these paths, so every subsystem below that keys on the camera or the
+## player — the terrain, the grass field, scatter streaming, weather, the HUD,
+## the encounter director, riding — stays a per-process singleton keyed on the
+## local rig, which is the simplification D101 buys. `local_rig()` and
+## `local_camera_rig()` below are the public door onto them.
 @onready var _player: CharacterBody3D = $Player
 @onready var _camera_rig: Node3D = $CameraRig
 @onready var _camera: Camera3D = $CameraRig/Camera3D
@@ -550,6 +563,19 @@ static func set_aerial_fade_colour(colour: Color) -> void:
 ## saved evening: this re-push snapped 19:40 back to `golden`'s 18:00 on every
 ## boot. `reapply_current_look()` pushes the same look off the live clock
 ## instead of writing to it.
+## D101 deliverable 5 — the one door onto this process's local rig and its
+## camera. `scripts/net/trainer_spawn.gd` asks for it when it needs a spawn
+## anchor, and anything else that needs "the player" in a world that may also
+## hold remote trainer bodies should ask here (or `Game.local_player()`)
+## rather than by node name.
+func local_rig() -> CharacterBody3D:
+	return _player
+
+
+func local_camera_rig() -> Node3D:
+	return _camera_rig
+
+
 func _reapply_look_after_ground_materials() -> void:
 	var look := get_node_or_null(^"WorldLook")
 	if look == null:
@@ -563,6 +589,14 @@ func _reapply_look_after_ground_materials() -> void:
 
 func _ready() -> void:
 	var perf_cfg := PERF_CONFIG.config()
+	# D107, lane 3.E. The two nodes item trading needs standing in every
+	# process before anybody presses anything: the spawner that draws a
+	# committed `item_dropped` op as a stack on the ground, and the offer
+	# transport, whose node path has to be identical on both peers or its RPCs
+	# do not resolve at all. Both are idempotent.
+	DROPPED_ITEM_SPAWNER.attach(self, "meadows")
+	TRADE_OFFER.attach(get_node_or_null(^"/root/Game"))
+
 	if perf_cfg.has("collision_stream_interval_s"):
 		COLLISION_STREAM_INTERVAL = maxf(0.05, float(perf_cfg["collision_stream_interval_s"]))
 

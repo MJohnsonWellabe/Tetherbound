@@ -36,6 +36,31 @@ extends Node
 ## with no transform because it has no place in the world — it reads the
 ## player's.
 ##
+## ## Which half is personal and which half is the world's (Stage B lane 5.C)
+##
+## Both halves live here and they are not the same kind of fact.
+##
+## **Finding an alpha is PERSONAL.** The pin is a `MapState` entry, `MapState`
+## hangs off `PlayerState.maps[realm]`, and `_map()` below resolves the LOCAL
+## player's. Two trainers in one world are at different stages of finding the
+## same sixteen clusters, and that is correct rather than a desync: the 300 m
+## proximity test measures THIS player's distance, so a pin appears when THIS
+## player has been near enough to have plausibly noticed. A joiner arriving into
+## a host who has walked the whole corridor starts with none of them pinned. So
+## does the intro line (`INTRO_FLAG`): it is a player-scope flag, it is written
+## through the merged view, and `progression_state.scope_of()` routes it to the
+## joining player's own store, so their first pin still says it once.
+##
+## **Beating one is the WORLD's.** `wild_once_<order>` is a `world` prefix in
+## `data/progression/flag_scopes.json`, and it has to be: the authored alpha is
+## one creature standing in one place, and once anybody has caught or beaten it,
+## it is gone for everyone. So the pin CLEARS for every player once one of them
+## wins, even the player who never found it, because there is no longer anything
+## there to find. `_once_cleared()` reads that from the world store explicitly
+## rather than through the merged view, and `clear_alpha()` writes it the only
+## way a world fact may be written — as a `set_world_flag` intent through the
+## ledger (D103), never as a direct `set_flag` on this peer.
+##
 ## ## Persistence
 ##
 ## Not here. `MapState` holds the pinned set (`pin_alpha`/`unpin_alpha`) and
@@ -258,8 +283,74 @@ func _progression() -> RefCounted:
 	return game.get("progression") if game != null else null
 
 
+## The WORLD flag store (`Game.world.flags`), or null when there is no `Game` --
+## a unit test standing this node up alone, a tool scene. Named explicitly
+## rather than reached through `Game.progression`: `wild_once_<order>` is a
+## world-scope id, a client only ever receives it as a committed ledger delta
+## (`world_state.gd::apply_delta`), and asking the world store directly is what
+## makes "one peer beat it, so it is beaten" a fact about the world rather than
+## a coincidence of the merged view happening to see both halves.
+func _world_flags() -> RefCounted:
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return null
+	var world: Variant = game.get("world")
+	return (world as RefCounted).get("flags") as RefCounted if world != null else null
+
+
+## The ledger transport (`Game.ledger`), or null before it is mounted.
+func _ledger() -> Node:
+	var game := get_node_or_null(^"/root/Game")
+	return game.get("ledger") as Node if game != null else null
+
+
+## Record that the alpha at `order` has been caught or beaten -- the WORLD half.
+##
+## Submitted as a `set_world_flag` intent, which is the only way a world fact may
+## change (D103): solo and the host commit it in-process and the delta lands
+## immediately; a client gets `{"ok": false, "pending": true}` and the flag
+## arrives when the host has committed it, at which point EVERY peer's
+## `_prune_cleared()` drops the pin on its next tick. Returns whether the intent
+## was accepted or is pending -- false only when there is no ledger to submit to.
+##
+## HANDOVER, and it is why this is a public method with no caller in this file:
+## the writer today is `encounter_director.gd::_mark_once_cleared()`, which sets
+## the flag straight onto the merged view. That file belongs to another lane and
+## 5.C does not touch it, so on a client a beaten alpha still clears only that
+## client's pin. Pointing that one call at this method closes it; nothing else
+## has to move.
+func clear_alpha(order: int) -> bool:
+	var ledger := _ledger()
+	if ledger == null or not ledger.has_method("submit"):
+		return false
+	var verdict: Dictionary = ledger.call("submit", {
+		"kind": "set_world_flag",
+		"realm": _realm(),
+		"id": _once_flag_for(order),
+	})
+	return bool(verdict.get("ok", false)) or bool(verdict.get("pending", false))
+
+
+func _realm() -> String:
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return "meadows"
+	var realm: Variant = game.get("current_realm")
+	return str(realm) if typeof(realm) == TYPE_STRING and not str(realm).is_empty() else "meadows"
+
+
+## Has this alpha already been caught or beaten, BY ANYBODY?
+##
+## The world store answers when there is one; the merged view is the fallback for
+## a process that has no `Game` (a unit test driving this node directly). Both
+## give the same answer in solo -- `wild_once_` routes to the world store either
+## way -- so the explicit read changes no solo behaviour and only removes the
+## possibility of a client's own local store answering for the world's.
 func _once_cleared(id: String) -> bool:
 	if id.is_empty():
 		return false
+	var world_flags: RefCounted = _world_flags()
+	if world_flags != null:
+		return bool(world_flags.call("has", id))
 	var progression: RefCounted = _progression()
 	return progression != null and bool(progression.call("has", id))

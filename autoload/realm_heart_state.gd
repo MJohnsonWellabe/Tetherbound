@@ -57,7 +57,15 @@ func place(id: String, progression: RefCounted) -> bool:
 	var flag := str(spec.get("placed_flag", ""))
 	if flag == "" or progression == null:
 		return false
-	progression.call("set_flag", flag)
+	# MP_STATE_SEAM.md §3: placing a Heart is a WORLD fact, and it is written to
+	# the world store BY NAME rather than routed by scope, so a client cannot
+	# record it locally from Wave 3. `progression` is normally the merged view
+	# (`merged_progression.gd`), which carries `world_flags`; a caller that hands
+	# over one flat store -- every unit test in test_realm_heart_state.gd -- has
+	# no such field and gets exactly the store it passed, as before.
+	var store: Variant = progression.get("world_flags")
+	var target: RefCounted = store as RefCounted if store != null else progression
+	target.call("set_flag", flag)
 	return true
 
 

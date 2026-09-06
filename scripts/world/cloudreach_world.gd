@@ -12,6 +12,8 @@ const CONFIG_PATH := "res://data/config/cloudreach_world.json"
 const VISUAL_CONFIG_PATH := "res://data/config/cloudreach_visual.json"
 const REALM_ID := "cloudreach"
 const CHAPTER_RUNTIME := preload("res://scripts/world/cloudreach_chapter.gd")
+const DROPPED_ITEM_SPAWNER := preload("res://scripts/world/dropped_item_spawner.gd")
+const TRADE_OFFER := preload("res://scripts/ui/trade_offer.gd")
 const REALM_GATE := preload("res://scripts/world/realm_gate.gd")
 const GROUND_COVER := preload("res://scripts/world/cloudreach_ground_cover.gd")
 const RESOURCE_PATCH := preload("res://scripts/world/cloudreach_resource_patch.gd")
@@ -64,6 +66,12 @@ const BRIDGE_KIT:=preload("res://scripts/world/cloudreach_bridge_kit.gd")
 const AVIARY := preload("res://scripts/world/cloudreach_aviary.gd")
 const AVIARY_CONFIG_PATH := "res://data/config/cloudreach_aviary.json"
 
+## D101. `$Player` is an instance of `scenes/player/local_rig.tscn` — this
+## process's one local rig, in the `local_player` group — and `$CameraRig` is
+## its camera, authored as a root-level sibling because `camera_rig.gd` sets
+## `top_level = true` and follows by code. Remote peers' trainers stand under
+## `Spawned/Trainers` and are reachable from neither path. `local_rig()` and
+## `local_camera_rig()` below are the public door.
 @onready var _player: CharacterBody3D = $Player
 @onready var _camera_rig: Node3D = $CameraRig
 
@@ -88,6 +96,16 @@ var _all_pad_points: Array[Dictionary] = []
 var _all_crown_reference_lines: Array[Dictionary] = []
 var _built_pad_keys: Dictionary = {}
 const SURFACE_CELL_M := 128.0
+
+
+## D101 deliverable 5 — the one door onto this process's local rig and its
+## camera. Same contract as `playground_world.gd::local_rig()`.
+func local_rig() -> CharacterBody3D:
+	return _player
+
+
+func local_camera_rig() -> Node3D:
+	return _camera_rig
 
 
 func _build_horizon_ranges() -> void:
@@ -131,6 +149,14 @@ func _visual_rock_mass(parent: Node3D,label: String,base: Vector3,size: Vector3,
 
 func _ready() -> void:
 	add_to_group("progression_restore")
+	# D107, lane 3.E. The two nodes item trading needs standing in every
+	# process before anybody presses anything: the spawner that draws a
+	# committed `item_dropped` op as a stack on the ground, and the offer
+	# transport, whose node path has to be identical on both peers or its RPCs
+	# do not resolve at all. Both are idempotent.
+	DROPPED_ITEM_SPAWNER.attach(self, REALM_ID)
+	TRADE_OFFER.attach(get_node_or_null(^"/root/Game"))
+
 	_config = _read_json(CONFIG_PATH)
 	_visual_config = _read_json(VISUAL_CONFIG_PATH)
 	var look := get_node_or_null(^"WorldLook")

@@ -12,6 +12,9 @@ const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
 ## OP-0905-18: a no-op unless `_item_id` is a known evolution catalyst.
 const PROGRESSION_FEED := preload("res://scripts/creatures/progression_feed.gd")
+## D103 / Stage B lane 3.B. See `_on_picked_up()`: this key is claimed through
+## the world ledger now, not written here.
+const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
 
 const FLAG_PREFIX := "pickup:"
 ## Compatibility for saves written before physical pickups recorded their own
@@ -23,6 +26,16 @@ var _label: String = ""
 var _shape: String = "key"
 var _visual: Node3D = null
 var _prompt: Node3D = null
+## D97: the realm this key's RECORD belongs to. Every ledger intent carries one
+## explicitly and nothing here reads `Game.current_realm` -- two peers can stand
+## in two realms at once, so the realm has to come from the thing being written.
+## `pickup:<item>` is not itself realm-qualified (it never was), so this only
+## stamps the intent; the default matches the one realm that places keys today.
+var _realm_id: String = "meadows"
+## True between submitting a `claim_pickup` and hearing back. See
+## `item_cache_pickup.gd`'s own field for what it is for.
+var _claiming := false
+var _taken := false
 
 
 ## `shape` picks the primitive `_build_visual()` builds: "key" (default, the
@@ -35,10 +48,12 @@ var _prompt: Node3D = null
 ## `burrow_warrens.gd::_build_prize`'s own gem, stripped of the plinth and
 ## room light that prop's DARK CHAMBER specifically needed and this one, sitting
 ## in open daylight, does not.
-func setup(item_id: String, label: String, shape: String = "key") -> void:
+func setup(item_id: String, label: String, shape: String = "key",
+		realm_id: String = "meadows") -> void:
 	_item_id = item_id
 	_label = label
 	_shape = shape
+	_realm_id = realm_id
 	add_to_group("progression_restore")
 	# The shaft lies along local +X with no yaw ever applied at the call
 	# site (`playground_world.gd` sets `position` only) — so on the road
@@ -68,6 +83,7 @@ func setup(item_id: String, label: String, shape: String = "key") -> void:
 	_prompt.call("configure", _label, 2.4, true)
 	_prompt.connect("activated", _on_picked_up)
 	add_child(_prompt)
+	LEDGER_CLAIM.listen(self, _on_delta_applied)
 	var game := get_node_or_null(^"/root/Game")
 	if was_taken(game, _item_id):
 		_deactivate()
@@ -98,6 +114,7 @@ func restore_progression_from_game(game: Node) -> void:
 
 
 func _deactivate() -> void:
+	_taken = true
 	if _prompt != null and is_instance_valid(_prompt):
 		_prompt.call("set_enabled", false)
 	PICKUP_GLOW.detach(self)
@@ -225,7 +242,22 @@ func _item_colour() -> Color:
 	return items.call("colour", _item_id) if items != null else Color(0.75, 0.65, 0.2)
 
 
+## D103, Stage B lane 3.B. The satchel write and the `pickup:<id>` flag are the
+## ledger's now: a `claim_pickup` INTENT goes up, and the committed delta
+## carries both halves back -- the flag to every peer, the item to the one peer
+## who won. Nothing here changes until that delta lands, so two players reaching
+## the same key produce one key, and the loser sees it stay on the ground.
+##
+## Solo is unchanged in behaviour and in code path: a solo player is a host with
+## nobody to tell, so `submit()` commits in-process and `_on_delta_applied()`
+## has already run by the time this returns.
+##
+## The room check stays here, ahead of the intent: only this peer can see its
+## own satchel, and a full one must still refuse visibly rather than spending
+## the world's only copy of a key.
 func _on_picked_up() -> void:
+	if _taken or _claiming:
+		return
 	var game := get_node_or_null(^"/root/Game")
 	if game == null:
 		push_error("no Game autoload; a key was found but has nowhere to go")
@@ -240,11 +272,43 @@ func _on_picked_up() -> void:
 		# already speaks; this now matches them instead of asserting it did.
 		game.call("push_world_message", "Satchel is full.")
 		return
-	inventory.call("add", _item_id, 1)
-	var progression: RefCounted = game.get("progression")
-	if progression != null:
-		progression.call("set_flag", flag_id(_item_id))
-	# OP-0905-18: a no-op for every item that is not a known evolution
+	_claiming = true
+	var verdict := LEDGER_CLAIM.submit(self, {
+		"kind": "claim_pickup",
+		"realm": _realm_id,
+		"flag": flag_id(_item_id),
+		"item": _item_id,
+		"count": 1,
+	})
+	if not LEDGER_CLAIM.in_flight(verdict):
+		_claiming = false
+
+
+## Removal is driven by the delta, not by the intent -- see the header on
+## `item_cache_pickup.gd::_on_delta_applied()`, which this deliberately mirrors
+## rather than answering the same question a second way.
+func _on_delta_applied(delta: Dictionary) -> void:
+	if not LEDGER_CLAIM.sets_world_flag(delta, flag_id(_item_id)):
+		return
+	# `_taken` is checked after the flag, not before it: on a client
+	# `ledger_rpc.gd::_rpc_delta` runs the `progression_restore` sweep before it
+	# emits `delta_applied`, so this node can already be deactivated by the time
+	# we arrive and the claim still has to be closed out.
+	# OP-0905-18: the catalyst line belongs to the peer whose claim this was,
+	# not to everyone the delta reaches, so it is read off `_claiming` before
+	# that is cleared. A no-op for every item that is not a known evolution
 	# catalyst (heartstone/sunstone) -- see progression_feed.gd's own comment.
-	PROGRESSION_FEED.announce_catalyst_pickup(_item_id)
-	_deactivate()
+	var was_mine := _claiming
+	_claiming = false
+	if was_mine:
+		PROGRESSION_FEED.announce_catalyst_pickup(_item_id)
+	if not _taken:
+		_deactivate()
+
+
+## The transport is an autoload child at an identical path in every process, so
+## it is already there when this node enters the tree. Connected here as well as
+## in `setup()` because a caller that sets the node up BEFORE adding it to the
+## tree would otherwise never hear a delta at all -- `listen()` is idempotent.
+func _ready() -> void:
+	LEDGER_CLAIM.listen(self, _on_delta_applied)

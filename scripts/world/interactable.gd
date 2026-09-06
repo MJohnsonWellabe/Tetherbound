@@ -203,12 +203,32 @@ func _has_line_of_sight(from: Vector3) -> bool:
 	# endpoint trimming (High Roost's raised dais reproduces this). Ignore only
 	# the arbiter's actual querying collision body, including a piloted creature;
 	# do not ignore unrelated actors or weaken real wall/floor occlusion.
+	# D101: the exclusion is the LOCAL rig's own body (or the creature it is
+	# currently piloting), asked for through the arbiter's public `viewer()`
+	# rather than by reaching into its `_player` field. That mattered the
+	# moment remote trainers began standing in the same scene: a private field
+	# read cannot be given a "never a remote body" rule, and `viewer()` can —
+	# it is the same one-local-rig-per-process seam D101 keeps everything on.
+	# The `is_equal_approx(from)` guard below is unchanged and still does the
+	# real work: only the body the ray actually starts inside is excluded.
 	if is_instance_valid(_arbiter):
-		var viewer := _arbiter.get("_player") as CollisionObject3D
+		var viewer := _local_viewer() as CollisionObject3D
 		if is_instance_valid(viewer) and viewer.is_inside_tree() \
 				and viewer.global_position.is_equal_approx(from):
 			query.exclude = [viewer.get_rid()]
 	return space.intersect_ray(query).is_empty()
+
+
+## The local peer's viewing body. `interaction_arbiter.gd::viewer()` is the
+## door (D101 deliverable 5); older arbiters without it fall back to the field
+## this used to read, so a partially updated tree degrades to the previous
+## behaviour rather than losing the exclusion entirely.
+func _local_viewer() -> Node3D:
+	if not is_instance_valid(_arbiter):
+		return null
+	if _arbiter.has_method("viewer"):
+		return _arbiter.call("viewer") as Node3D
+	return _arbiter.get("_player") as Node3D
 
 
 func interaction_activate() -> void:
