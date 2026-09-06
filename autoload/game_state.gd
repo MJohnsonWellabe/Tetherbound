@@ -43,6 +43,7 @@ const MERGED_PROGRESSION := preload("res://autoload/merged_progression.gd")
 ## is.
 const SPAWN_TABLES := preload("res://scripts/combat/spawn_tables.gd")
 const SESSION := preload("res://scripts/net/session.gd")
+const LEDGER_RPC := preload("res://scripts/net/ledger_rpc.gd")
 
 ## Seeds a sample party and satchel so the screens can be looked at before
 ## gathering and catching exist. Off in a normal run: inventing a starting kit
@@ -72,6 +73,14 @@ var players: Dictionary = {}
 ## `is_host()` / `is_multi_peer()` right below are the two questions gameplay
 ## code actually asks, and they answer safely even before this is mounted.
 var session: Node = null
+
+## D103/lane 3.A. The live `scripts/net/ledger_rpc.gd`, mounted as
+## `/root/Game/Session/LedgerRpc` beside the session. Every consequential world
+## mutation goes through `Game.ledger.submit(intent)`; solo and host commit it
+## in place, a client sends it and waits for the delta. Null only in a process
+## that never mounted a session (a pure unit test, which should be talking to
+## `WorldLedger` directly).
+var ledger: Node = null
 
 ## `Game.progression`, the merged view over `world.flags` and `local.flags`.
 var _merged_progression: RefCounted = null
@@ -752,6 +761,13 @@ func _mount_session() -> void:
 	session = SESSION.new()
 	session.name = "Session"
 	add_child(session)
+	# D103/lane 3.A. The ledger transport is mounted here, with the session,
+	# rather than by whichever consumer happens to submit the first intent.
+	# Its RPCs only resolve because every process holds it at the identical
+	# path (`/root/Game/Session/LedgerRpc`), and a node that appears when the
+	# first pickup is touched would not be at that path on a peer that has not
+	# touched one yet. `attach()` is idempotent.
+	ledger = LEDGER_RPC.attach(self)
 
 
 ## D100's question at all four autosave sites, and D97's at `enter_realm()`:
