@@ -693,7 +693,22 @@ func _run() -> void:
 		boss_after = float((post.get("record", {}) as Dictionary).get("hp", -1.0))
 		victim_after = float((await _encounter(0)).get("my_creature_hp", -1.0))
 		refusal = (await _boss(1)).get("refusal", {}) as Dictionary
-		clean = str(friendly.get("verdict", "")) == "PASS" and struck_after == struck_before
+		# The refusal's ARRIVAL is part of `clean`, not merely something read
+		# once the swing looked good. Without this the loop exits the moment the
+		# swing lands cleanly, and if the host's answer has not made the round
+		# trip inside `STRIKE_SETTLE` frames the assertion below reads an empty
+		# refusal and fails -- with a message that reads like the host declining
+		# to refuse rather than like a read that was early.
+		#
+		# This is the same defect `smoke_net_shared_wild_fight` carried: there
+		# it was an unguarded single read, here it is a loop whose exit
+		# condition forgot the thing it is waiting for. That one pattern
+		# accounted for both that smoke's 5-of-7 flake AND lane 7.A's finding F7
+		# (under 150 ms jitter the friendly-fire SAFETY held but the MESSAGE
+		# never arrived), so it is worth being strict about in both.
+		clean = str(friendly.get("verdict", "")) == "PASS" \
+			and struck_after == struck_before \
+			and not str(refusal.get("code", "")).is_empty()
 
 	check(guest_at != Vector3.INF and host_creature_at != Vector3.INF,
 		"the host holds a position for both pilots' creatures (peer 1's %s / peer 0's %s)"
