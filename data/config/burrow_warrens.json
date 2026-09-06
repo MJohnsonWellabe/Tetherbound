@@ -151,12 +151,28 @@
     "safety_m": 0.7,
     "blend_k": 1.1,
     "_why_crest_boost": "SECOND-PASS-0906, judge evidence 'smaller than the tree beside it ... no landmark silhouette here at all'. The chamber cones above size the dome purely for CLEARANCE (each chamber's own ceiling + `clearance_m` + `safety_m`), which at this site's own ceiling heights (3.4-4.8m) never asked for a mound taller than ~7-8m -- correct for enclosure, short of a landmark. `crest_boost_m` is ADDED to every chamber's own `p` in `_bank_chamber_bumps()`, so it can only ever give MORE clearance than the guarantee needs, never less; the brief's own '>=10.5m, >=5.8x the 1.8m trainer' bar is what 3.5m of boost clears against this site's own tallest chamber (den).",
-    "crest_boost_m": 3.5,
+    "_why_crest_boost_round4": "ROUND-4-0906, JUDGE-round3.md 'a single smooth ridge': `crest_boost_m` lifts EVERY chamber's plateau uniformly, which is exactly what drew a 55m-wide flat ridge at 10-12m with one crown -- measured on the height field (tests/smoke_warrens_fixture.gd now prints the skyline's local maxima). 3.5 -> 1.5 drops the plateau so the crown and the new `mounds` below stand proud of it; the crest itself is kept at ~15m by `crown_amplitude_m` 8 -> 10.5. The enclosure guarantee (top + clearance + safety) is untouched by either.",
+    "crest_boost_m": 1.5,
     "_why_crown": "SECOND-PASS-0906, judge evidence 'a single flat brown slab with a hard, straight top edge'. Diagnosed directly (a throwaway height-field probe, not assumed): past the notch's own width, `_bank_union_height()`'s `mouth` cone barely reaches in Z (its taper is centred on the CHAMBER's own far centre, not the doorway), so the union height a metre or two either side of the arch is already ~0 -- and `_bank_apply_face_carve()`'s `min(h, plane)` can only ever LOWER a tall `h` to match a shorter `plane`, never raise a near-zero `h` to meet a taller one, so the shoulders beside the arch were reading as bare ground plus noise with no intentional shape at all (the actual 'flat, textureless' slab). `_bank_crown_bump()` is a second, ADDITIVE-ONLY dome centred `crown_offset_z_m` behind the doorway (into the hill, the 'rounded dome behind' the brief asks for), added in TWO places: inside `_bank_apply_face_carve()`'s own `top_at_line` (so the cliff's anchor line itself is not flat) AND, separately, added directly in `_bank_height_at()` AFTER the carve (scaled by the same `(1-settled)` the noise bump uses, so it fills in the shoulders' own missing mass without ever re-admitting height into the open doorway corridor a player walks through). `crown_radius_x_m` is wide enough that the shoulders keep sloping continuously out past `face_half_width_m` instead of dropping to flat zero a metre off the arch; `crown_radius_z_m` a little wider still so the bump reads as one continuous mass with the mound rising behind it, not a second, separate hump.",
-    "crown_amplitude_m": 8.0,
+    "crown_amplitude_m": 10.5,
     "crown_offset_z_m": 4.0,
     "crown_radius_x_m": 13.0,
     "crown_radius_z_m": 16.0,
+    "_why_mounds": "ROUND-4-0906, JUDGE-round3.md finding 1 ('no landmark silhouette: one smooth ridge'). Secondary dig-mounds / spoil heaps, read by burrow_warrens.gd::_bank_mounds_from_config() -- see _bank_mound_term()'s own header for the shape (asymmetric dome, elongated along `yaw_deg`, longer `throw_radius_m` on the throw side than `back_radius_m` on the hole side, `across_radius_m` sideways, `bare_throw` how strongly its throw lobe reads as raw spoil). ADDITIVE ONLY on top of the chamber cones; folded in BEFORE the face carve so a heap at the face is cut to the same plane. Positions are LOCAL (x, z), z0 = 1 is the dome-face doorway, -z is the way out. The two brow heaps flank the mouth (their throw lobes point out and down toward the threshold, the direction a digger throws), the warren and vault heaps sit over those chambers' own bulges where their warren holes are, the back heap closes the far side. TUNABLE: the fixture asserts >=3 skyline maxima with >=1m prominence.",
+    "mounds": [
+      {"offset": [-13.5, 4.0], "height_m": 5.2, "yaw_deg": -150.0, "throw_radius_m": 9.0, "back_radius_m": 5.5, "across_radius_m": 6.5, "bare_throw": 0.85, "_why": "left brow heap, thrown out-left toward the threshold"},
+      {"offset": [13.5, 6.0], "height_m": 4.6, "yaw_deg": 150.0, "throw_radius_m": 8.5, "back_radius_m": 5.0, "across_radius_m": 6.0, "bare_throw": 0.8, "_why": "right brow heap, mirrored but smaller"},
+      {"offset": [-21.0, 25.0], "height_m": 6.5, "yaw_deg": -105.0, "throw_radius_m": 10.0, "back_radius_m": 6.0, "across_radius_m": 7.5, "bare_throw": 0.7, "_why": "over the warren chamber's bulge, thrown outward off the left flank -- the tallest secondary peak"},
+      {"offset": [19.0, 40.0], "height_m": 5.4, "yaw_deg": 95.0, "throw_radius_m": 9.0, "back_radius_m": 6.0, "across_radius_m": 6.5, "bare_throw": 0.7, "_why": "over the vault's bulge, thrown outward off the right flank"},
+      {"offset": [-3.0, 53.0], "height_m": 6.0, "yaw_deg": 165.0, "throw_radius_m": 11.0, "back_radius_m": 6.5, "across_radius_m": 8.0, "bare_throw": 0.6, "_why": "the back heap beyond the den, thrown away from the site"}
+    ],
+    "_why_spoil": "ROUND-4-0906, JUDGE-round3.md findings 2/4 ('nothing shows directional throw of earth', 'no spoil fan'). `spoil_mouth_fan_m` is how far the raw-earth fan spills out past the throat's outer end over the threshold (widening to `spoil_mouth_fan_half_width_m`); `spoil_hole_fan_m` the fan below every warren hole. Both write the COLOR.b mask _bank_spoil_at() feeds shaders/earth_bank.gdshader (`spoil_tint`/`spoil_darken`: darker, un-grassed) and keep the growth scatter off it. `height_blend_on` 0 turns the shader's crest-fraction earth band off: it painted the whole grade-level skirt of the grid as pale earth (the 'flagstone patio' / 'washed-out ground plane' of rounds 2-3); earth now comes from slope, moisture and spoil only.",
+    "spoil_mouth_fan_m": 9.0,
+    "spoil_mouth_fan_half_width_m": 7.5,
+    "spoil_hole_fan_m": 3.2,
+    "spoil_tint": "#7a6248",
+    "spoil_darken": 0.55,
+    "height_blend_on": 0.0,
     "_why_noise": "Low-frequency FastNoiseLite relief so the dome is not a mathematical blob. ADDITIVE ONLY in the code (never subtracted), so this can add character to the surface but never eat into the clearance guarantee above.",
     "noise_amplitude_m": 0.6,
     "noise_freq": 0.05,
@@ -172,7 +188,8 @@
     "moist_tint": "#8c8073",
     "_why_face": "The approach-facing dug cliff. `face_slope_deg` (55-65 asked, 60 shipped) is the actual local slope of the cut near the mouth -- steeper than the natural 20-30 degree cone falloff everywhere else, which is what makes the mouth read as DUG rather than eroded. `face_half_width_m`/`face_transition_m` are how wide the cut is and how much it softens into the natural flank either side.",
     "face_half_width_m": 9.0,
-    "face_slope_deg": 60.0,
+    "_why_face_slope_round4": "ROUND-4-0906: 60 -> 52. With the crown bump now carved with the rest of the face (burrow_warrens.gd::_bank_height_at), the face beside the opening is 7-9m tall at the doorway plane; at 60 degrees it reached the ground ~4.5m out and left the 8m throat standing 3.5m proud of the bank like a culvert. 52 degrees brings the foot of the face to within ~1.5m of the throat's outer brow, still a dug bank (the fixture asserts >=40 measured), not a walk-up slope.",
+    "face_slope_deg": 52.0,
     "face_transition_m": 4.0,
     "_why_arch": "The real dug mouth: an elliptical arch cut into the dug face. 5.0m wide x 3.8m tall clears a 1.7x Burrowback guardian (CLAUDE.md's own scale rule) with room either side for a 1.80m trainer walking beside it. `arch_spring_frac` is where the vertical jambs stop and the rounded crown begins (as a fraction of `arch_height_m`), so the throat's cross-section reads as a proper arch, not a full ellipse down to the floor. `throat_depth_m` is how deep the dark tunnel runs before it meets the existing `mouth` chamber's own doorway cut; `throat_overlap_m` carries the decorative shell slightly PAST that cut so there is never a gap a player could see daylight, or fall, through, without moving the chamber/passage code this pass does not own. `site.mouth_opening` (unchanged block, see above) is now [5.0, 3.8] to match this arch exactly.",
     "arch_width_m": 5.0,
@@ -182,7 +199,14 @@
     "_why_throat_depth": "SECOND-PASS-0906, judge evidence 'the interior's grey box walls and doorway show straight through the throat'. 6.0 -> 8.0 (brief: '~8m') for a genuinely deep dark tunnel; `throat_curve_amplitude_m` below is what actually stops the straight sightline (extra depth alone only makes a longer straight pipe).",
     "throat_depth_m": 8.0,
     "throat_overlap_m": 0.4,
-    "throat_tint": "#241a12",
+    "_why_throat_tint_round4": "ROUND-4-0906: lifted from #241a12 so the new throat glow below has a wall to land on -- a light on near-black albedo shows nothing, and the judge's 'full black cutout' was partly this tint. Still the darkest earth on the site.",
+    "throat_tint": "#3a2a1d",
+    "_why_throat_glow": "ROUND-4-0906, JUDGE-round3.md finding 4 ('the entrance is full black ... no depth cue'): a warm low OmniLight3D `throat_glow_depth_m` inside the throat's outer end (burrow_warrens.gd::_build_throat_glow), shadowless, energy/range per the brief, so the opening reads as a hole with depth. 0 energy disables.",
+    "throat_glow_energy": 1.2,
+    "throat_glow_range_m": 6.0,
+    "throat_glow_depth_m": 2.6,
+    "throat_glow_height_m": 1.1,
+    "throat_glow_colour": "#ffb877",
     "_why_throat_curve": "SECOND-PASS-0906: the tube's OWN walls bend sideways partway along its length (`_throat_curve_offset()`'s own header has the full mechanism) -- zero at both ends, so neither the fixed exterior arch nor the fixed interior doorway move. Kept under `arch_width_m`'s own half-width (2.5m) by design so the walk corridor's own centreline never leaves the tube's interior; only the far side of the bend, away from a walking player's own line, ever crosses a wall. 0 disables (a straight tube, the old shape).",
     "throat_curve_amplitude_m": 1.6,
     "_why_lip": "A raised earth lip ring around the opening -- an extruded tube along the arch's own profile, jittered (`lip_jitter_m`) so it reads as dug rather than a mathematically perfect ellipse. THIRD-PASS-0906, JUDGE-round2.md sec3 item 3 ('make the lip ring chunkier and irregular'): thickness 0.6->0.9 and jitter 0.12->0.25 (now applied radially as well as vertically, `_build_bank_lip_ring()`'s own comment), plus the tube's own per-segment radius variance widened to +/-35%.",
@@ -190,6 +214,16 @@
     "lip_jitter_m": 0.25,
     "_why_collar": "SECOND-PASS-0906, brief item 3: 'end it in an earth collar that wraps the mouth chamber's doorway box so no grey box edge or metal frame is visible'. `_build_bank_doorway_collar()`'s own twin of the lip ring above, at the throat's INNER end instead of the outer -- sized a hair larger than the arch so it hugs OVER the structural doorway box's own edges. THIRD-PASS-0906: thickness 0.8->1.0, same chunkier/irregular treatment as the lip ring.",
     "collar_thickness_m": 1.0,
+    "_why_brow": "ROUND-4-0906, JUDGE-round3.md finding 4/6 ('no visible worn dirt lip, root mass'; 'dead branches read as clutter'). The throat's OUTER end (the ring a player walks through -- the lip ring above sits 8m in, at the dome face) gets its own worn earth brow and `brow_roots` tapered bark tubes hanging from its crown INTO the opening, tips above `brow_root_clear_m` (burrow_warrens.gd::_build_mouth_brow). 0 thickness disables.",
+    "brow_thickness_m": 1.1,
+    "brow_jitter_m": 0.3,
+    "brow_roots": 5,
+    "brow_root_clear_m": 2.3,
+    "_why_threshold": "ROUND-4-0906, JUDGE-round3.md finding 4 ('a threshold of trodden dark earth with a spoil fan spilling onto it'). The apron ramp (`site.apron_run_m`) ends INSIDE the throat, so the ground right outside the opening was plain meadow. `threshold_fan_m` lays a trodden-earth fan that far out from the throat's outer end (burrow_warrens.gd::_build_threshold_fan), `threshold_fan_half_width_m` wide at its far rim, in `threshold_colour`; it also clears the runtime grass under it. 0 disables.",
+    "threshold_fan_m": 8.0,
+    "threshold_fan_half_width_m": 7.0,
+    "threshold_fan_near_pad_m": 1.6,
+    "threshold_colour": "#4a3a2c",
     "_why_material": "The bank's own material (`shaders/earth_bank.gdshader`): a slope+height blend between the meadow's own grass texture (gentle upper surfaces, so the bank reads as a grassy hump continuous with the field) and the terrain's own wet-earth texture (steep and low surfaces). `grass_tint` matches the terrain's own grass tint exactly (terrain_playground.json); `earth_tint` stays near-white for the same reason that file's own `damp` entry does -- the wet-earth photo already carries its target colour, a tint would only wash it out. `earth_colour` (below) is a SEPARATE, deliberately darker multiply used by the small hand-placed earth props beside the mouth (lip, warren-hole lips, half-buried stones' collar, spoil), which sit in shadow close to the camera rather than lit broadly like the bank's own crest.",
     "grass_tint": "#e9dfc0",
     "earth_tint": "#f0ece4",
@@ -213,11 +247,12 @@
     "stain_height_m": 0.85,
     "stain_softness_m": 0.5,
     "moss_normal_min": 0.5,
-    "moss_strength": 0.6,
+    "moss_strength": 0.75,
     "_why_lamp": "OP-0905-09: no metal Team Tether door frame at the mouth any more. The Team Tether presence the required-dungeon list still asks for (`_comment_dressing` below, unchanged) is a lamp post and a staked cable beside the opening instead, so the mouth reads warm-lit from the road rather than fitted with a door.",
-    "lamp_side_m": 5.0,
+    "_why_lamp_round4": "ROUND-4-0906: `lamp_forward_m` 1.2 stood the post 1.2m outside the DOME-FACE doorway, which after the throat grew to 8m was a point ON the 60-degree dug face with metres of earth over it -- the lamp was buried in the bank and never appeared in a frame. 9.8 puts it 1.8m outside the throat's outer end, at the threshold, where it is the 1.9m scale reference the judge asked for; `lamp_side_m` 3.9 stands it just clear of the opening's brow.",
+    "lamp_side_m": 3.9,
     "lamp_post_height_m": 2.6,
-    "lamp_forward_m": 1.2,
+    "lamp_forward_m": 9.8,
     "lamp_colour": "#ffcf8a",
     "lamp_energy": 1.1,
     "lamp_range_m": 9.0,
@@ -565,62 +600,16 @@
       }
     ],
     "_comment_accent_boulders": "EXT-08-EARTHMOUND item 2, kept: 4-6 large half-buried boulders as accents, now at the bank's own FOOT (where the mesh meets the meadow) rather than its old shoulder. `sink_m` buries roughly 60-75% of each piece's own drawn height.",
+    "_why_accent_boulders_round4": "ROUND-4-0906, JUDGE-round3.md finding 2 ('the boulder cluster at the base reads as parked/loose rather than displaced dig-spoil'). Re-clustered as SPOIL: two pairs flanking the threshold fan just outside the mouth (never inside |x| < 5.5 on the approach axis -- the walked corridor and the 03/00 camera stands run down x=0), one below each front warren hole's own fan, one below each flank hole. All now seat on the bank's OWN surface (burrow_warrens.gd::_build_accent_boulders adds _bank_height_at), so a stone can sit half-buried in a heap's slope. `sink_m` buries 60-75% of each piece.",
     "accent_boulders": [
-      {
-        "model": "Rock_Medium_1",
-        "offset": [
-          -10.0,
-          -9.0
-        ],
-        "scale": 3.2,
-        "yaw_deg": 25.0,
-        "sink_m": 2.0,
-        "_why": "left of the throat, at the front foot of the dug face"
-      },
-      {
-        "model": "Rock_Medium_2",
-        "offset": [
-          9.0,
-          -8.5
-        ],
-        "scale": 3.0,
-        "yaw_deg": -35.0,
-        "sink_m": 1.85,
-        "_why": "right of the throat, mirrors the left foot boulder"
-      },
-      {
-        "model": "Rock_Medium_3",
-        "offset": [
-          -24.0,
-          18.0
-        ],
-        "scale": 2.8,
-        "yaw_deg": 80.0,
-        "sink_m": 1.75,
-        "_why": "left flank foot, near the warren chamber's own bulge"
-      },
-      {
-        "model": "Rock_Medium_1",
-        "offset": [
-          23.0,
-          38.0
-        ],
-        "scale": 2.9,
-        "yaw_deg": -50.0,
-        "sink_m": 1.8,
-        "_why": "right flank foot, near the vault chamber's own bulge"
-      },
-      {
-        "model": "Rock_Medium_2",
-        "offset": [
-          0.0,
-          54.0
-        ],
-        "scale": 2.6,
-        "yaw_deg": 15.0,
-        "sink_m": 1.6,
-        "_why": "the back foot, beyond the den -- the far side of the site from the mouth"
-      }
+      {"model": "Rock_Medium_1", "offset": [-7.2, -10.5], "scale": 3.0, "yaw_deg": 25.0, "sink_m": 1.9, "_why": "left of the threshold fan, at the mouth's own spoil edge"},
+      {"model": "Rock_Medium_3", "offset": [-6.0, -14.0], "scale": 2.3, "yaw_deg": 95.0, "sink_m": 1.4, "_why": "further out on the left, the throw trailing off"},
+      {"model": "Rock_Medium_2", "offset": [7.6, -10.0], "scale": 2.8, "yaw_deg": -35.0, "sink_m": 1.75, "_why": "right of the threshold fan"},
+      {"model": "Rock_Medium_1", "offset": [6.4, -13.6], "scale": 2.2, "yaw_deg": -120.0, "sink_m": 1.35, "_why": "further out on the right"},
+      {"model": "Rock_Medium_3", "offset": [-16.0, 1.5], "scale": 2.6, "yaw_deg": 60.0, "sink_m": 1.6, "_why": "below the left flank hole, on the left brow heap's throw lobe"},
+      {"model": "Rock_Medium_2", "offset": [15.5, 4.5], "scale": 2.4, "yaw_deg": -70.0, "sink_m": 1.5, "_why": "below the right flank hole, on the right brow heap's throw lobe"},
+      {"model": "Rock_Medium_1", "offset": [-27.0, 22.0], "scale": 2.8, "yaw_deg": 80.0, "sink_m": 1.7, "_why": "at the warren heap's throw foot, left flank"},
+      {"model": "Rock_Medium_3", "offset": [25.5, 39.0], "scale": 2.7, "yaw_deg": -50.0, "sink_m": 1.65, "_why": "at the vault heap's throw foot, right flank"}
     ],
     "_comment_face_outcrops": "THIRD-PASS-0906, JUDGE-round2.md sec3 item 2: 'no rock outcrop breaking the slope ... the whole bank is one flat khaki-brown value from base to crest'. `accent_boulders` above only ever sits at the FOOT (flat meadow terrain); these sit ON the bank's own sculpted surface (`_build_bank_face_outcrops()`) and are sunk 40-60% of scale INTO it along the surface normal, so they read as protruding from the dug face and flanks rather than dropped beside them. 7 pieces, within the brief's own 6-9.",
     "face_outcrops": [
@@ -1173,10 +1162,17 @@
       "lunge": 6.5,
       "cone_degrees": 72.0
     },
+    "_comment_bearing_round4": "ROUND-4-0906, JUDGE-round3.md finding 3 ('curled, low posture ... reads as defensive/small'). The burrowback rig has no alert idle (six clips: idle/walk/run/attack/hit/faint -- tools/_probe_burrowback_clips.gd), so burrow_warrens.gd::_give_the_guardian_an_alert_bearing() adds a per-body SkeletonModifier3D that pitches neck/head/spine UP on top of the idle (negative = up, measured with tools/_probe_burrowback_pose_sign.gd) and blends out the moment the guardian has an opponent, so no combat clip is altered. `aura_light.y` 1.4 -> 2.2 so the raised back plates catch the light. Presentation only.",
+    "bearing": {
+      "neck_pitch_deg": -30.0,
+      "head_pitch_deg": -12.0,
+      "spine_pitch_deg": -7.0,
+      "blend_seconds": 0.6
+    },
     "aura_light": {
       "energy": 2.6,
       "range": 8.0,
-      "y": 1.4,
+      "y": 2.2,
       "colour": "#ffd479"
     }
   },
