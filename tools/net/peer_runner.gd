@@ -648,6 +648,9 @@ func _building_rows(raw: Variant) -> Array:
 				snappedf(float(position[2]), 0.01) if position.size() == 3 else 0.0,
 			],
 		})
+	return out
+
+
 # --- lane 3.E: item trading and dropped stacks --------------------------------
 #
 # Five arms and one probe, standing in for the Give row on the satchel's drop
@@ -2201,6 +2204,7 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"satchel": _storage_counts(kgame.get("inventory") as RefCounted),
 				"press": _pickup_press,
 				"refusals": _pickup_refusals.duplicate(true),
+			}
 		"trade":
 			# Lane 3.E. Everything the trade smoke asserts on, read off this
 			# peer's own live objects: what its satchel holds, what it is
