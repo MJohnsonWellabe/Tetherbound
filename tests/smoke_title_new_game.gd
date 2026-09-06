@@ -33,7 +33,15 @@ func _run() -> void:
 	game.day = 9
 	game.inventory.add("berries", 7)
 	game.party.add(game.make_creature("terrapup", "Old Run"))
-	game.progression.set_flag("warden_defeated")
+	# Wave 1 lane 1.B: this used to seed `"warden_defeated"`, which is not a flag
+	# id this game ever writes -- it is the KEY under it in
+	# `stronghold_climax.json`'s `flags` map, whose VALUE is `defeated_warden`.
+	# The old spelling seeded a string nothing else in the game reads, so the
+	# assertion below could not have caught a New Game that really did carry the
+	# Warden victory over. D99's scope table made it visible (an undeclared id is
+	# a push_error), and the fix is the real id, which makes the check mean what
+	# its failure message says.
+	game.progression.set_flag("defeated_warden")
 	game.placed_buildings = [{"id": "tent", "position": [1.0, 0.0, 1.0], "yaw_deg": 0.0}]
 
 	var packed := load(TITLE_SCENE) as PackedScene
@@ -94,7 +102,7 @@ func _run() -> void:
 		_fail("Start New Game carried day, inventory, or party state into Meadows")
 	# The opening is allowed to set its own fresh-boot flags while world _ready()
 	# runs.  What must be gone are the exact old-run values seeded above.
-	if game.progression.has("warden_defeated"):
+	if game.progression.has("defeated_warden"):
 		_fail("Start New Game carried the old Warden victory into Meadows")
 	for raw: Variant in game.placed_buildings:
 		if typeof(raw) == TYPE_DICTIONARY and str((raw as Dictionary).get("id", "")) == "tent":

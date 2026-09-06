@@ -77,3 +77,100 @@ func load_data(data: Dictionary) -> void:
 			if typeof(id) == TYPE_STRING and not (id as String).is_empty():
 				_flags[id] = true
 	revision += 1
+
+
+# --- flag scopes (D99, docs/specs/MP_STATE_SEAM.md §3) -----------------------
+##
+## Which store a flag id belongs in: the world's (`WorldState.flags`) or one
+## player's (`PlayerState.flags`). `autoload/merged_progression.gd` routes every
+## `set_flag()` through this, and `tests/test_flag_scopes.gd` proves no id any
+## shipped writer site or objective names resolves to "".
+##
+## The table is DATA (`data/progression/flag_scopes.json`) rather than a match
+## statement here, for the same reason `objectives.json` is data: the
+## classification is a design decision the owner and Fable make, and a design
+## decision that lives in a script is one nobody can review without reading
+## GDScript. Cached in a `static var` because it is immutable config, the same
+## exemption `progression_feed.gd::config()` keeps -- it is not per-player
+## state and cannot differ between two players in one process.
+
+const FLAG_SCOPES_PATH := "res://data/progression/flag_scopes.json"
+
+const SCOPE_WORLD := "world"
+const SCOPE_PLAYER := "player"
+
+static var _scope_ids: Dictionary = {}
+## [prefix, scope] pairs, longest prefix first, so the first match IS the
+## longest match and `scope_of` needs no second pass.
+static var _scope_prefixes: Array = []
+static var _scopes_loaded: bool = false
+
+
+## `"world"`, `"player"`, or `""` for an id the table does not name.
+##
+## Exact id first, then the longest matching prefix. `""` is a real answer and
+## the caller decides what to do with it -- `merged_progression.gd` pushes an
+## error and writes to the world store so the game does not stall, and the test
+## guarantees shipped data never takes that path.
+static func scope_of(id: String) -> String:
+	_ensure_scopes()
+	if id.is_empty():
+		return ""
+	var exact: Variant = _scope_ids.get(id, "")
+	if str(exact) != "":
+		return str(exact)
+	for entry: Variant in _scope_prefixes:
+		var pair := entry as Array
+		if id.begins_with(str(pair[0])):
+			return str(pair[1])
+	return ""
+
+
+## Every id the table names outright, for the test's coverage sweep.
+static func scoped_ids() -> Array:
+	_ensure_scopes()
+	return _scope_ids.keys()
+
+
+## Every [prefix, scope] pair, longest prefix first.
+static func scoped_prefixes() -> Array:
+	_ensure_scopes()
+	return _scope_prefixes.duplicate(true)
+
+
+## Forget the parsed table. Tests only -- a `static var` cache outlives one
+## test's fixture, and a test that swaps the file needs a way to say so.
+static func reload_scopes() -> void:
+	_scopes_loaded = false
+	_scope_ids = {}
+	_scope_prefixes = []
+
+
+static func _ensure_scopes() -> void:
+	if _scopes_loaded:
+		return
+	_scopes_loaded = true
+	_scope_ids = {}
+	_scope_prefixes = []
+	var file := FileAccess.open(FLAG_SCOPES_PATH, FileAccess.READ)
+	if file == null:
+		push_error("flag scope table missing: %s" % FLAG_SCOPES_PATH)
+		return
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		push_error("flag scope table is not valid JSON: %s" % FLAG_SCOPES_PATH)
+		return
+	for scope: String in [SCOPE_WORLD, SCOPE_PLAYER]:
+		var block: Variant = (parsed as Dictionary).get(scope, {})
+		if not block is Dictionary:
+			continue
+		for raw: Variant in ((block as Dictionary).get("ids", []) as Array):
+			if typeof(raw) == TYPE_STRING and not (raw as String).is_empty():
+				_scope_ids[raw as String] = scope
+		for raw: Variant in ((block as Dictionary).get("prefixes", []) as Array):
+			if typeof(raw) == TYPE_STRING and not (raw as String).is_empty():
+				_scope_prefixes.append([raw as String, scope])
+	# Longest first, so the first `begins_with` hit is the longest match:
+	# `opening:beat:` must win over `opening:`.
+	_scope_prefixes.sort_custom(func(a: Array, b: Array) -> bool:
+		return str(a[0]).length() > str(b[0]).length())

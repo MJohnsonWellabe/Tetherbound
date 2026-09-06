@@ -88,7 +88,9 @@ func test_mark_visited_reveals_a_plausible_area_and_returns_true() -> void:
 	# OW5E: `GRID` (a single ±256m-square scalar) is gone — `map_state.gd`
 	# derives a non-square, non-origin-centred grid from the world's own
 	# extent now (`grid_x()`/`grid_z()`, see that file's own comment on why).
-	var revealed := int(round(map.discovered_fraction() * float(MAP_STATE.grid_x() * MAP_STATE.grid_z())))
+	# Wave 1 lane 1.B: the extent is per instance now, so the grid this asserts
+	# against is THIS map's, not a process-global one. Same numbers, same map.
+	var revealed := int(round(map.discovered_fraction() * float(map.grid_x() * map.grid_z())))
 	assert_between(float(revealed), ideal * 0.85, ideal * 1.15,
 		"revealed cell count %d is not plausible for a %.0fm radius (expected ~%.0f)" % [revealed, map.reveal_radius, ideal])
 

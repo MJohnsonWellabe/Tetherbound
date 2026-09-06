@@ -18,9 +18,6 @@ extends Node
 ## in scenes nobody has written yet.
 
 const MENU_SCENE := "res://scenes/ui/game_menu.tscn"
-const SPECIES_PATH := "res://data/creatures/species.json"
-const MAP_LANDMARKS_PATH := "res://data/config/map_landmarks.json"
-const CREATURE_INSTANCE := preload("res://scripts/creatures/creature_instance.gd")
 const CREATURE_PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const HOME_RECOVERY := preload("res://scripts/creatures/home_recovery.gd")
 ## RG19-spec/D68. Rested/fed/happy, ticked here for every party member.
@@ -28,77 +25,166 @@ const CREATURE_CONDITION := preload("res://scripts/creatures/creature_condition.
 ## OWNER-0901-BOND-MILESTONES: distance/landmark/rest-night crediting for the
 ## bond ladder's "travelling"/"visiting"/"resting" tasks.
 const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
-const PROGRESSION_FEED := preload("res://scripts/creatures/progression_feed.gd")
 
 const ITEM_DB := preload("res://autoload/item_db.gd")
 const INVENTORY := preload("res://autoload/inventory.gd")
-const PARTY := preload("res://autoload/party.gd")
-const MAP_STATE := preload("res://autoload/map_state.gd")
-const CLOUDREACH_MAP_STATE := preload("res://scripts/world/cloudreach_map_state.gd")
-const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
-const REALM_HEART_STATE := preload("res://autoload/realm_heart_state.gd")
-const PLAYER_EQUIPMENT := preload("res://scripts/player/player_equipment.gd")
-const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 const BOOT_LOG := preload("res://scripts/boot/boot_log.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
+## Only to hand `local.feed` to its static entry points -- see `_ensure_containers()`.
+const PROGRESSION_FEED := preload("res://scripts/creatures/progression_feed.gd")
+## D98 / docs/specs/MP_STATE_SEAM.md §1-§2. The two containers this autoload
+## became a facade over, and the merged flag view that keeps `Game.progression`
+## one object across both of their stores.
+const WORLD_STATE := preload("res://autoload/world_state.gd")
+const PLAYER_STATE := preload("res://autoload/player_state.gd")
+const MERGED_PROGRESSION := preload("res://autoload/merged_progression.gd")
 ## T3-ENCOUNTER. Only for `reset_for_new_game()`'s world-seed decision; the
 ## roll itself lives in `encounter_director.gd`, which is where the spawn table
 ## is.
 const SPAWN_TABLES := preload("res://scripts/combat/spawn_tables.gd")
-## R7.6. Only for `fresh()`/`sanitised()` — the shape of a farm bed is that
-## file's business, and this autoload should not carry a second opinion about
-## what a valid plot dictionary looks like.
-const FARM_LOGIC := preload("res://scripts/world/farm_logic.gd")
 
 ## Seeds a sample party and satchel so the screens can be looked at before
 ## gathering and catching exist. Off in a normal run: inventing a starting kit
 ## would be inventing content the opening sequence owns.
 const DEMO_FLAG := "--menu-demo"
 
-var items: RefCounted = null
-var inventory: RefCounted = null
-var party: RefCounted = null
+## D98 / docs/specs/MP_STATE_SEAM.md §1. What has happened to this WORLD, and
+## who THIS TRAINER is. Every state property below this line is a one-line
+## forwarding property into one of them, so all 390 `Game.<field>` sites the
+## assumption inventory counts keep working under their old names and types.
+##
+## `Game.party` permanently means "the LOCAL player's party" -- every process
+## keeps exactly one local player (the execution plan's §2 simplification), so
+## that is a settled meaning rather than a transitional one.
+##
+## `players` is the host's map of peer id -> PlayerState, holding itself under
+## peer id 1. Empty until Wave 2 stands up a session; only authority-side code
+## ever addresses it.
+var world: RefCounted = null
+var local: RefCounted = null
+var players: Dictionary = {}
+
+## `Game.progression`, the merged view over `world.flags` and `local.flags`.
+var _merged_progression: RefCounted = null
+
+## The one immutable item catalogue in the process. Stays on `Game` (the seam's
+## "Game keeps" list) rather than moving to a container, because there is one
+## per PROCESS, not one per world or one per player.
+##
+## The setter exists so a caller that swaps the catalogue -- `test_recipes.gd`
+## builds a bare `GAME_STATE.new()` and assigns `items` before `inventory` --
+## also re-points the local player, which needs it to answer `hotbar_can_hold`.
+var items: RefCounted:
+	get:
+		return _items
+	set(value):
+		_items = value
+		if local != null:
+			local.call("configure", value)
+var _items: RefCounted = null
+
+var inventory: RefCounted:
+	get:
+		return local.inventory if local != null else null
+	set(value):
+		if local != null:
+			local.inventory = value
+
+var party: RefCounted:
+	get:
+		return local.party if local != null else null
+	set(value):
+		if local != null:
+			local.party = value
 
 ## R7.7. The trainer's five armour slots (scripts/player/player_equipment.gd)
 ## -- reachable the same way `equipped_tool` is (a plain autoload field), and
 ## deliberately NOT persisted through save_game.gd, matching `equipped_tool`'s
 ## own precedent: it resets each session and the player re-equips, the same
 ## as re-picking a tool off the hotbar.
-var player_equipment: RefCounted = null
+var player_equipment: RefCounted:
+	get:
+		return local.equipment if local != null else null
+	set(value):
+		if local != null:
+			local.equipment = value
 
 ## D33's one map database — fog-of-war, landmark discovery, dynamic markers.
 ## See `autoload/map_state.gd`'s own header for why there is exactly one of
 ## these. Configured from `data/config/map_landmarks.json` in `_ready()`, the
 ## same "load+parse a data file" pattern `_species()` below already uses.
-var map: RefCounted = null
-## The public map remains the active consumer interface. Inactive realm maps
-## retain their own fog/landmarks; never reconfigure one grid for another realm.
-var _realm_map_instances: Dictionary = {}
+## The map of the realm the LOCAL player is standing in. Inactive realm maps
+## retain their own fog/landmarks and their own EXTENT -- `map_state.gd` lost
+## its `static var _grid_x/_grid_z/_origin` this lane, so two maps in one
+## process can describe two differently-shaped worlds.
+##
+## The setter re-homes the ACTIVE realm's map (`smoke_alpha_pins.gd` swaps in a
+## bare `MapState` that way); the instances themselves live on the player
+## (`PlayerState.maps`), which is what "personal fog" means from Wave 3.
+var map: RefCounted:
+	get:
+		return local.call("map") if local != null else null
+	set(value):
+		if local != null:
+			(local.maps as Dictionary)[local.realm] = value
 
 ## SB9. The flag store behind objective/completion/world-state tracking —
 ## see `autoload/progression_state.gd`'s own header for the full contract.
 ## Instantiated in `_ready()`, same as `map` above.
-var progression: RefCounted = null
+var progression: RefCounted:
+	get:
+		return _merged_progression
+	set(value):
+		# A caller handing over ONE flat store (several unit tests do) gets the
+		# pre-split behaviour back exactly: both halves become that object, so
+		# every read and every routed write lands in the store they passed.
+		if world != null:
+			world.flags = value
+		if local != null:
+			local.flags = value
+		if _merged_progression != null:
+			_merged_progression.world_flags = value
+			_merged_progression.player_flags = value
 
 ## Cloudreach Phase 1.  Realm Heart selection outlives scene transitions just
 ## like progression and map state, while remaining a composed RefCounted so
 ## Game stays the project's single autoload.
-var realm_hearts: RefCounted = null
+var realm_hearts: RefCounted:
+	get:
+		return local.hearts if local != null else null
+	set(value):
+		if local != null:
+			local.hearts = value
 
 ## Which world scene a Continue or realm transition should enter.  Pose saves
 ## carry the same id so coordinates from one realm are never applied to another.
-var current_realm: String = "meadows"
+var current_realm: String:
+	get:
+		return local.realm if local != null else "meadows"
+	set(value):
+		if local != null:
+			local.realm = value
 
 ## Authored arrival anchor requested by a realm gate. It survives the
 ## transition autosave so Continue after a crash lands at the destination
 ## gate, then the destination world consumes it and writes a settled autosave.
-var pending_realm_entry: String = ""
+var pending_realm_entry: String:
+	get:
+		return local.pending_realm_entry if local != null else ""
+	set(value):
+		if local != null:
+			local.pending_realm_entry = value
 
 ## SB11. Reads `progression`'s flags against `data/progression/objectives.json`
 ## to answer "what is the one tracked Main Story line" and "what does the
 ## two-list quest log show" — see its own header. Instantiated in `_ready()`,
 ## same as `map`/`progression` above.
-var quest_log: RefCounted = null
+var quest_log: RefCounted:
+	get:
+		return local.quest_log if local != null else null
+	set(value):
+		if local != null:
+			local.quest_log = value
 
 ## What the HUD's objective pointer shows right now. Kept in step with
 ## `progression`'s flags by `_process()` below (recomputed only when
@@ -108,7 +194,12 @@ var quest_log: RefCounted = null
 ## to show something `data/progression/objectives.json` does not (a capture
 ## tool posing a demo objective, e.g.) and sticks until the next real flag
 ## change recomputes it.
-var objective_text: String = ""
+var objective_text: String:
+	get:
+		return local.objective_text if local != null else ""
+	set(value):
+		if local != null:
+			local.objective_text = value
 
 ## OBJECTIVE-HINT-ON-HUD (`HIST-036`, OP23-04). The HOW that goes with
 ## `objective_text`'s WHAT — `quest_log.gd::tracked_hint()`, with its
@@ -120,7 +211,12 @@ var objective_text: String = ""
 ## for the opening ladder only, so every beat past tournament entry has none,
 ## and so does a chapter that is finished. A drawing caller must render an
 ## empty hint as NOTHING — never as a blank line under the objective.
-var objective_hint: String = ""
+var objective_hint: String:
+	get:
+		return local.objective_hint if local != null else ""
+	set(value):
+		if local != null:
+			local.objective_hint = value
 
 ## `progression.revision` last seen by `_process()` — see `objective_text`'s
 ## own comment.
@@ -159,7 +255,12 @@ var _objective_is_posed: bool = false
 ## In-game day, counted from 1. The release ledger and "time with you" on the
 ## ceremony screen both need a clock that is not wall time, and this is it.
 ## Nothing advances it yet; M10's day/night cycle will.
-var day: int = 1
+var day: int:
+	get:
+		return world.day if world != null else 1
+	set(value):
+		if world != null:
+			world.day = value
 
 ## N14-ROUTED-FOLLOWUPS, from N13-NIGHT-RESUME §5: the hour of day, carried
 ## across everything that destroys and rebuilds the world scene.
@@ -177,11 +278,21 @@ var day: int = 1
 ## `world_look.gd` -- a static would survive New Game too, and start a fresh
 ## run at whatever hour the last one ended at.
 const CLOCK_UNSET := -1.0
-var clock_elapsed_seconds: float = CLOCK_UNSET
+var clock_elapsed_seconds: float:
+	get:
+		return world.clock_elapsed_seconds if world != null else CLOCK_UNSET
+	set(value):
+		if world != null:
+			world.clock_elapsed_seconds = value
 
 ## What the build menu last armed, or an empty string. The building system reads
 ## this when there is one; until then it is the honest end of the build screen.
-var pending_build: String = ""
+var pending_build: String:
+	get:
+		return local.pending_build if local != null else ""
+	set(value):
+		if local != null:
+			local.pending_build = value
 
 ## OF20. A one-line toast for a world node that just refused something (wrong
 ## tool, satchel full) and has no HUD handle of its own to say so through —
@@ -201,7 +312,12 @@ var _pending_world_message: String = ""
 ## keeps reopening the Team screen until the ceremony has emptied it — the
 ## player cannot walk around owning six. Set by the encounter director, cleared
 ## only by `tab_creatures.gd`'s ceremony.
-var pending_catch: RefCounted = null
+var pending_catch: RefCounted:
+	get:
+		return local.pending_catch if local != null else null
+	set(value):
+		if local != null:
+			local.pending_catch = value
 
 ## R3.1. Every build piece the player has planted, as data — `{id, position:
 ## [x,y,z], yaw_deg}` — independent of whatever scene node currently renders
@@ -210,7 +326,12 @@ var pending_catch: RefCounted = null
 ## placement. `yaw_deg` joined in the save format's VERSION 2 (see
 ## `scripts/save/save_game.gd`); every building placed before that defaults
 ## to facing 0.
-var placed_buildings: Array = []
+var placed_buildings: Array:
+	get:
+		return world.placed_buildings if world != null else []
+	set(value):
+		if world != null:
+			world.placed_buildings = value
 
 ## R7.6. What each bed of the berry farm is doing — `{state, ripe_on_day}` per
 ## entry, in the order `data/config/farm.json` lists its plots.
@@ -234,7 +355,12 @@ var placed_buildings: Array = []
 ## Read and written only through `farm_plot_at()`/`set_farm_plot()` below, so
 ## the "grow the array to fit" rule lives in one place — a save written when
 ## the farm had four beds must not error the day it has six.
-var farm_plots: Array = []
+var farm_plots: Array:
+	get:
+		return world.farm_plots if world != null else []
+	set(value):
+		if world != null:
+			world.farm_plots = value
 
 ## The five action slots, as item ids — NOT satchel indices.
 ##
@@ -254,7 +380,12 @@ var farm_plots: Array = []
 ## coincidence of bag order.
 ##
 ## `HOTBAR_KINDS_ALLOWED` is the material rule, applied at assignment time.
-var hotbar: Array[String] = ["", "", "", "", ""]
+var hotbar: Array[String]:
+	get:
+		return local.hotbar if local != null else ([] as Array[String])
+	set(value):
+		if local != null:
+			local.hotbar = value
 
 ## Item kinds that may occupy an action slot — an allow-list, not a refusal
 ## list. Owner board (docs/reference/owner-board-2026-08-15-systems-and-castle
@@ -270,8 +401,8 @@ var hotbar: Array[String] = ["", "", "", "", ""]
 ## single field press) and `armor` — has no use-path in `_use_hotbar_slot()`
 ## at all, so assigning one used to load the bar with a dead button that only
 ## ever answers "is not something you can use here."
-const HOTBAR_KINDS_ALLOWED := ["tool", "consumable", "food"]
-const HOTBAR_SLOTS := 5
+const HOTBAR_KINDS_ALLOWED := PLAYER_STATE.HOTBAR_KINDS_ALLOWED
+const HOTBAR_SLOTS := PLAYER_STATE.HOTBAR_SLOTS
 
 ## The tool the trainer is holding, as an item id, or "" for empty-handed.
 ##
@@ -285,7 +416,12 @@ const HOTBAR_SLOTS := 5
 ## posture, not progression — the satchel that actually holds the tools is what
 ## persists, and loading a game with empty hands is both harmless and the
 ## expected reading of "you just arrived".
-var equipped_tool: String = ""
+var equipped_tool: String:
+	get:
+		return local.equipped_tool if local != null else ""
+	set(value):
+		if local != null:
+			local.equipped_tool = value
 
 ## R3.2. Every death satchel the player has left in the world, as data —
 ## `{position: [x,y,z], state: [...]}` — the same "registry, not the scene
@@ -298,7 +434,12 @@ var equipped_tool: String = ""
 ## `scripts/save/save_game.gd`) — a save written before this has none, and
 ## migrates to an empty list, the same "no fog trail predates the map"
 ## answer VERSION 1 -> 2 gave `map`.
-var death_satchels: Array = []
+var death_satchels: Array:
+	get:
+		return world.death_satchels if world != null else []
+	set(value):
+		if world != null:
+			world.death_satchels = value
 
 ## HARVEST-ALL / D60. Every vegetation harvest point (a scattered tree or
 ## rock, `scripts/world/vegetation_harvest_point.gd`) the player has
@@ -311,7 +452,12 @@ var death_satchels: Array = []
 ## (see `scripts/save/save_game.gd`) — a save written before this has none,
 ## and migrates to `{}`, the same "no fog trail predates the map" answer
 ## VERSION 1 -> 2 gave `map`.
-var harvested_vegetation: Dictionary = {}
+var harvested_vegetation: Dictionary:
+	get:
+		return world.harvested_vegetation if world != null else {}
+	set(value):
+		if world != null:
+			world.harvested_vegetation = value
 
 ## T3-ENCOUNTER. Which world this save's rolled wild population is.
 ##
@@ -327,7 +473,12 @@ var harvested_vegetation: Dictionary = {}
 ## every existing save already knows. A new game takes a real seed only when
 ## `data/config/spawn_tables.json`'s `roll_new_worlds` says so (it ships false);
 ## `TB_WORLD_SEED` in the environment overrides this for one process either way.
-var world_seed: int = 0
+var world_seed: int:
+	get:
+		return world.world_seed if world != null else 0
+	set(value):
+		if world != null:
+			world.world_seed = value
 
 ## RG9. Every chopped placement whose felled pickup has NOT yet been gathered
 ## -- `{"<layer>#<index>": {"item": String, "amount": int, "position":
@@ -339,13 +490,23 @@ var world_seed: int = 0
 ## write, the same split `harvested_vegetation` above uses. Joined the save
 ## format at VERSION 11 (see `scripts/save/save_game.gd`) — a save written
 ## before this has none, and migrates to `{}`.
-var felled_vegetation: Dictionary = {}
+var felled_vegetation: Dictionary:
+	get:
+		return world.felled_vegetation if world != null else {}
+	set(value):
+		if world != null:
+			world.felled_vegetation = value
 
 ## RG7. The last captured player/world pose. Transform data stays OUT of the
 ## ordinary long-lived gameplay state; this dictionary is only the save/load
 ## seam so a slot can return the trainer to the exact place and view it wrote.
 ## Shape: {position:[x,y,z], model_yaw, camera_yaw, camera_pitch}.
-var saved_player_pose: Dictionary = {}
+var saved_player_pose: Dictionary:
+	get:
+		return local.pose if local != null else {}
+	set(value):
+		if local != null:
+			local.pose = value
 
 ## R3.1. Save/load logic — `scripts/save/save_game.gd`. A plain RefCounted,
 ## same split as `party`/`inventory` above, so it is testable without a scene
@@ -358,6 +519,13 @@ var save_system: RefCounted = null
 ## and this wraps rather than duplicates so there stays exactly one player
 ## lookup, not two that can drift apart.
 func find_player() -> Node3D:
+	return local_player()
+
+
+## D-MP7. The rig the LOCAL peer drives. `find_player()` above stays as the name
+## fifteen-plus call sites already know; 2.C rebinds this to the local rig when
+## remote trainers start standing in the same scene, and the alias follows it.
+func local_player() -> Node3D:
 	return _find_player()
 
 
@@ -367,7 +535,12 @@ func find_player() -> Node3D:
 ## a `Player`, so in practice this is exercised by headless callers (tests,
 ## a save/load invoked before the world scene exists) rather than by real
 ## play. See `save_game.gd`'s header for the full seam this backs.
-var satiety: float = 100.0
+var satiety: float:
+	get:
+		return local.satiety if local != null else 100.0
+	set(value):
+		if local != null:
+			local.satiety = value
 
 ## DEVELOPMENT CONVENIENCE, AND IT IS MEANT TO BE DELETED.
 ##
@@ -469,6 +642,38 @@ var _last_input_was_gamepad: bool = not Input.get_connected_joypads().is_empty()
 const _MOTION_DEADZONE := 0.5
 
 
+## The containers are built HERE rather than in `_ready()` because several unit
+## tests instantiate this script directly (`test_recipes.gd`: `GAME_STATE.new()`,
+## never added to a tree, so `_ready()` never runs) and then read and write the
+## forwarding properties. A facade whose backing objects only appear on
+## `_ready()` would hand those callers null for every field.
+func _init() -> void:
+	_ensure_containers()
+
+
+## Idempotent: builds `world`, `local` and the merged flag view if they are not
+## there yet, and points the merged view at the two live stores.
+func _ensure_containers() -> void:
+	if world == null:
+		world = WORLD_STATE.new()
+	if local == null:
+		local = PLAYER_STATE.new()
+	if _merged_progression == null:
+		_merged_progression = MERGED_PROGRESSION.new(world.flags, local.flags)
+	else:
+		_merged_progression.world_flags = world.flags
+		_merged_progression.player_flags = local.flags
+	# The map and the Realm Hearts ask about flags across BOTH stores: a
+	# Cloudreach landmark gated on a world flag and a hint gated on a personal
+	# one have to answer from one object.
+	local.flag_reader = _merged_progression
+	local.call("configure", _items)
+	# Hand the local player's feed to `progression_feed.gd`'s static entry
+	# points, which every RefCounted producer and every presenter still calls.
+	# Handed over rather than looked up on demand: see that file's `_active`.
+	PROGRESSION_FEED.set_active(local.feed)
+
+
 func _ready() -> void:
 	BOOT_LOG.line("Game autoload: _ready start (first autoload, before any world scene)")
 	items = ITEM_DB.new()
@@ -492,41 +697,26 @@ func _ready() -> void:
 func reset_for_new_game() -> void:
 	if items == null:
 		items = ITEM_DB.new()
-	inventory = INVENTORY.new(items)
-	party = PARTY.new()
-	player_equipment = PLAYER_EQUIPMENT.new()
-	player_equipment.call("configure", items)
-	progression = PROGRESSION_STATE.new()
-	realm_hearts = REALM_HEART_STATE.new()
-	current_realm = "meadows"
-	_realm_map_instances.clear()
-	map = null
+	_ensure_containers()
+	# Both containers reset IN PLACE rather than being replaced: the merged flag
+	# view and `progression_feed`'s epoch counter both hold on across a New Game,
+	# and re-pointing them on every reset is one more thing to get wrong. Each
+	# `reset()` rebuilds exactly what this function used to rebuild by hand.
+	world.call("reset")
+	local.call("reset")
+	players.clear()
 	bind_realm_map()
-	pending_realm_entry = ""
-	quest_log = QUEST_LOG.new()
 	objective_text = quest_log.call("tracked_text", progression)
 	objective_hint = quest_log.call("tracked_hint", progression)
 	_last_progression_revision = int(progression.get("revision"))
 	_last_hint_device_was_gamepad = _last_input_was_gamepad
 	_objective_is_posed = false
 
-	day = 1
-	# N14: a fresh run opens at the authored morning, whatever hour the last
-	# one ended at. This is the half N13 could not do from `world_look.gd`.
-	clock_elapsed_seconds = CLOCK_UNSET
-	pending_build = ""
+	# `day`, the clock, the build/catch holds, the hotbar, the two world-record
+	# dictionaries, the pose and satiety are all cleared by `world.reset()` /
+	# `local.reset()` above -- including `local.feed.clear()`, which is the
+	# new-game reset `PROGRESSION_FEED.clear()` used to be.
 	_pending_world_message = ""
-	PROGRESSION_FEED.clear()
-	pending_catch = null
-	placed_buildings = []
-	farm_plots = []
-	hotbar = ["", "", "", "", ""]
-	equipped_tool = ""
-	death_satchels = []
-	harvested_vegetation = {}
-	felled_vegetation = {}
-	saved_player_pose = {}
-	satiety = 100.0
 	# T3-ENCOUNTER. A new run gets a new world only when the data says so, and
 	# `roll_new_worlds` ships false -- so today this resets to 0, the authored
 	# world, and every existing smoke test that starts a fresh game sees exactly
@@ -578,8 +768,7 @@ func _input(event: InputEvent) -> void:
 
 
 func advance_day() -> int:
-	day += 1
-	return day
+	return int(world.call("advance_day"))
 
 
 ## R7.6. The state of farm bed `index`, or a fresh fallow one.
@@ -590,19 +779,11 @@ func advance_day() -> int:
 ## unworked ground rather than as an out-of-range error. Same forgiving shape
 ## `_array_to_inventory` already gives a satchel that changed size.
 func farm_plot_at(index: int) -> Dictionary:
-	if index < 0:
-		return FARM_LOGIC.fresh()
-	if index >= farm_plots.size():
-		return FARM_LOGIC.fresh()
-	return FARM_LOGIC.sanitised(farm_plots[index])
+	return world.call("farm_plot_at", index)
 
 
 func set_farm_plot(index: int, plot: Dictionary) -> void:
-	if index < 0:
-		return
-	while farm_plots.size() <= index:
-		farm_plots.append(FARM_LOGIC.fresh())
-	farm_plots[index] = FARM_LOGIC.sanitised(plot)
+	world.call("set_farm_plot", index, plot)
 
 
 ## PT-23 fallback autosave. Separate from the rest of `_process()` so a test
@@ -773,6 +954,44 @@ func set_objective(text: String, world_pos: Variant = null) -> void:
 		map.remove_dynamic_marker("objective")
 
 
+# --- naming a flag store explicitly (MP_STATE_SEAM.md §3, last paragraph) ----
+##
+## Four writer sites must NOT go through `Game.progression`, because the ACTOR
+## is not simply "whoever is local right now" and scope routing alone would put
+## the flag in a store that is right today and wrong with a second player in the
+## session. They name a store through these three instead, and Waves 3/5 change
+## the bodies here rather than hunting the call sites again.
+
+## The world's store. `realm_heart_state.place()` writes through this so a
+## client cannot record a Heart placement locally from Wave 3.
+func world_flags() -> RefCounted:
+	return world.flags if world != null else null
+
+
+## One player's store -- the local one, which is the only one that exists
+## before Wave 2. `peer_id` 0 means "local"; from Wave 2 a host passes a real
+## peer id and gets that peer's.
+func player_flags(peer_id: int = 0) -> RefCounted:
+	if peer_id != 0 and players.has(peer_id):
+		return (players[peer_id] as Object).get("flags") as RefCounted
+	return local.flags if local != null else null
+
+
+## D99/D-MP5: home and creature-bed flags are PLAYER flags granted to EVERY
+## connected peer when the world gains the pieces -- a shared camp is
+## everyone's camp. Solo, that is exactly one store and exactly today's
+## behaviour; from Wave 3 this fans out a per-peer delta and the call sites
+## (`home_progress.gd`) do not change.
+func grant_player_flag(id: String, value: bool = true) -> void:
+	if local != null:
+		local.flags.call("set_flag", id, value)
+	for peer_id: Variant in players.keys():
+		var peer: Object = players[peer_id]
+		var store: Object = peer.get("flags") if peer != null else null
+		if store != null and store != local.flags:
+			store.call("set_flag", id, value)
+
+
 ## OF20. Any world node with no HUD handle of its own queues its one-line
 ## refusal here; see `_pending_world_message`'s own comment for why this
 ## exists instead of the node reaching for the HUD directly.
@@ -802,19 +1021,19 @@ func take_pending_world_message() -> String:
 func push_progression_event(kind: String, creature: RefCounted, payload: Dictionary = {}) -> Dictionary:
 	if creature != null and (party == null or not (party.call("members") as Array).has(creature)):
 		return {}
-	return PROGRESSION_FEED.push(kind, creature, payload)
+	return local.feed.call("push_event", kind, creature, payload)
 
 
 func progression_feed_revision() -> int:
-	return PROGRESSION_FEED.revision()
+	return int(local.feed.call("event_revision"))
 
 
 func peek_progression_events(after_seq: int) -> Array:
-	return PROGRESSION_FEED.peek_since(after_seq)
+	return local.feed.call("events_since", after_seq)
 
 
 func take_progression_events() -> Array:
-	return PROGRESSION_FEED.drain()
+	return local.feed.call("drain_events")
 
 
 # --- creature-bed recovery (Gate A) -----------------------------------------
@@ -898,15 +1117,7 @@ func complete_creature_bed_rests() -> int:
 ## whose v1 migration writes the same safe 0.0 default onto old entries —
 ## the read side (`build_placer.gd::restore_from_game`) tolerates both.
 func register_building(id: String, position: Vector3, yaw_deg: float = 0.0, paid: bool = true) -> void:
-	placed_buildings.append({
-		"realm": current_realm,
-		"id": id,
-		"position": [position.x, position.y, position.z],
-		"yaw_deg": yaw_deg,
-		# BUILD-REMOVE: Free Build placements must not become a material faucet.
-		# Missing on legacy saves means paid (the only pre-Free-Build economy).
-		"paid": paid,
-	})
+	world.call("register_building", id, position, yaw_deg, paid, current_realm)
 
 
 ## R3.2. `player_death.gd::_drop_satchel` calls this once, right before it
@@ -916,13 +1127,12 @@ func register_building(id: String, position: Vector3, yaw_deg: float = 0.0, paid
 ## so `sync_state_to_game`/`restore_from_game` can find their way back to it
 ## without a position-based search (the same role `PLACED_INDEX_META` plays
 ## for a placed building).
-func register_death_satchel(position: Vector3) -> int:
-	death_satchels.append({
-		"realm": current_realm,
-		"position": [position.x, position.y, position.z],
-		"state": [],
-	})
-	return death_satchels.size() - 1
+## D104/D-MP10 added `owner` and an explicit `realm`. Both default to today's
+## behaviour: no owner recorded (what `realm_world_records.normalized()` stamps
+## on a legacy record) and the local player's realm.
+func register_death_satchel(position: Vector3, owner: String = "", realm: String = "") -> int:
+	return int(world.call("register_death_satchel", position, owner,
+		realm if realm != "" else current_realm))
 
 
 ## --- the hotbar ------------------------------------------------------------
@@ -935,12 +1145,7 @@ func register_death_satchel(position: Vector3) -> int:
 ## refused rather than allowed: a slot naming something `items.json` has never
 ## heard of can only ever draw blank and refuse on press.
 func hotbar_can_hold(item_id: String) -> bool:
-	if item_id.is_empty():
-		return false
-	var definition := items.call("definition", item_id) as Dictionary
-	if definition.is_empty():
-		return false
-	return HOTBAR_KINDS_ALLOWED.has(str(items.call("kind", item_id)))
+	return bool(local.call("hotbar_can_hold", item_id))
 
 
 ## Put `item_id` on `slot`. Passing "" clears the slot. Returns false (and
@@ -952,26 +1157,13 @@ func hotbar_can_hold(item_id: String) -> bool:
 ## and both spend from the same stack, which reads as a bug the first time a
 ## player presses the one they think is a spare.
 func assign_hotbar(slot: int, item_id: String) -> bool:
-	if slot < 0 or slot >= HOTBAR_SLOTS:
-		return false
-	if item_id.is_empty():
-		hotbar[slot] = ""
-		return true
-	if not hotbar_can_hold(item_id):
-		return false
-	for i in HOTBAR_SLOTS:
-		if hotbar[i] == item_id:
-			hotbar[i] = ""
-	hotbar[slot] = item_id
-	return true
+	return bool(local.call("assign_hotbar", slot, item_id))
 
 
 ## The slot `item_id` occupies, or -1. Lets the backpack mark which of its
 ## tiles are already bound without duplicating the search.
 func hotbar_slot_of(item_id: String) -> int:
-	if item_id.is_empty():
-		return -1
-	return hotbar.find(item_id)
+	return int(local.call("hotbar_slot_of", item_id))
 
 
 ## Fill any empty slots from what the satchel is actually carrying, in bag
@@ -983,18 +1175,7 @@ func hotbar_slot_of(item_id: String) -> int:
 ## of "the hotbar mirrored satchel slots 0-4" is "the first few usable things
 ## you were carrying", minus the wood and stone that used to clog it.
 func autofill_hotbar() -> void:
-	for slot in HOTBAR_SLOTS:
-		if not hotbar[slot].is_empty():
-			continue
-		for index in int(inventory.get("SLOT_COUNT")):
-			var stack: Dictionary = inventory.call("stack_at", index)
-			if stack.is_empty():
-				continue
-			var id := str(stack.get("id", ""))
-			if not hotbar_can_hold(id) or hotbar.has(id):
-				continue
-			hotbar[slot] = id
-			break
+	local.call("autofill_hotbar")
 
 
 ## Write `slot`. Returns whether it succeeded.
@@ -1060,51 +1241,36 @@ func pending_entry_for(realm_id: String) -> String:
 ## configuring the minimap/atmosphere; pass Player.global_position to sync
 ## Cloudreach progression-gated navigation. This does not authorize travel,
 ## change scenes, grant flags, or change current_realm.
+## The maps themselves live on the local player (`PlayerState.maps`), so
+## "personal fog" is already true of the storage; `Game.map` is the active
+## realm's, which is what every existing caller means by it.
 func bind_realm_map(realm_id: String = "", player_position: Variant = null) -> RefCounted:
 	var selected := current_realm if realm_id.is_empty() else realm_id
-	var selected_map := _ensure_realm_map(selected)
+	var selected_map: RefCounted = local.call("map_for", selected)
 	if selected_map == null:
 		return null
-	map = selected_map
-	if map.has_method("sync_navigation") and player_position is Vector3:
-		map.call("sync_navigation", progression, player_position)
-	return map
+	if selected_map.has_method("sync_navigation") and player_position is Vector3:
+		selected_map.call("sync_navigation", progression, player_position)
+	return selected_map
 
 
 ## SaveGame owns the file; Game owns these two live map instances. The legacy
 ## `map` field remains an active-map compatibility alias in the serialized file.
 func save_realm_maps() -> Dictionary:
-	var payloads: Dictionary = {}
-	for realm_id: String in ["meadows", "cloudreach"]:
-		payloads[realm_id] = _ensure_realm_map(realm_id).call("save_data")
-	return payloads
+	return local.call("map_payloads")
 
 
 ## Load after progression so Cloudreach reads the same canonical flag object.
 ## Reuse existing instances: an already-mounted minimap can retain its handle.
 func restore_realm_maps(payloads: Dictionary) -> void:
-	for realm_id: String in ["meadows", "cloudreach"]:
-		var payload: Variant = payloads.get(realm_id, {})
-		_ensure_realm_map(realm_id).call("load_data", payload if payload is Dictionary else {})
+	local.call("load_map_payloads", payloads)
 	bind_realm_map()
 
 
+## Kept as the name several callers already know; the building itself moved to
+## `PlayerState.map_for()`, which owns the per-realm extent.
 func _ensure_realm_map(realm_id: String) -> RefCounted:
-	if realm_id not in ["meadows", "cloudreach"]:
-		return null # Waterward is a distant vista, not an implemented map.
-	if _realm_map_instances.has(realm_id):
-		return _realm_map_instances[realm_id]
-	var instance: RefCounted
-	if realm_id == "cloudreach":
-		instance = CLOUDREACH_MAP_STATE.new()
-		var world_data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_world.json"))
-		var chapter_data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_chapter.json"))
-		instance.call("configure_cloudreach", world_data, chapter_data, progression)
-	else:
-		instance = MAP_STATE.new()
-		instance.call("configure", _map_landmarks_config())
-	_realm_map_instances[realm_id] = instance
-	return instance
+	return local.call("map_for", realm_id)
 
 
 ## Called only after the destination world has placed Player on its authored
@@ -1198,7 +1364,7 @@ func _sync_clock_state() -> void:
 func load_game(slot: int) -> bool:
 	if not bool(save_system.call("load_slot", self, slot)):
 		return false
-	PROGRESSION_FEED.clear()
+	local.feed.call("clear_events")
 	for node in get_tree().get_nodes_in_group("build_placer"):
 		if node.has_method("restore_from_game"):
 			node.call("restore_from_game", self)
@@ -1757,39 +1923,7 @@ func _debug_teleport_combat_running() -> bool:
 ## Build a live creature from a species id. Party membership still goes through
 ## `party.add`, which is the only thing that knows about the cap.
 func make_creature(species_id: String, nickname: String = "") -> RefCounted:
-	var definition := _species(species_id)
-	if definition.is_empty():
-		push_warning("unknown species: %s" % species_id)
-		return null
-	var creature: RefCounted = CREATURE_INSTANCE.from_species(species_id, definition)
-	creature.nickname = nickname
-	return creature
-
-
-## The parsed contents of `data/config/map_landmarks.json`, or `{}` if it is
-## missing or malformed — `MapState.configure()` already treats an empty
-## config as "no landmarks, default tuning", so there is nothing extra to
-## guard here.
-func _map_landmarks_config() -> Dictionary:
-	var file := FileAccess.open(MAP_LANDMARKS_PATH, FileAccess.READ)
-	if file == null:
-		return {}
-	var parsed: Variant = JSON.parse_string(file.get_as_text())
-	return parsed as Dictionary if typeof(parsed) == TYPE_DICTIONARY else {}
-
-
-func _species(species_id: String) -> Dictionary:
-	var file := FileAccess.open(SPECIES_PATH, FileAccess.READ)
-	if file == null:
-		return {}
-	var parsed: Variant = JSON.parse_string(file.get_as_text())
-	if typeof(parsed) != TYPE_DICTIONARY:
-		return {}
-	var table: Variant = (parsed as Dictionary).get("species", {})
-	if typeof(table) != TYPE_DICTIONARY:
-		return {}
-	var entry: Variant = (table as Dictionary).get(species_id, {})
-	return entry as Dictionary if typeof(entry) == TYPE_DICTIONARY else {}
+	return local.call("make_creature", species_id, nickname)
 
 
 ## Everything the party and satchel screens need to be worth looking at, and

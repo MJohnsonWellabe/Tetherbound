@@ -1,9 +1,16 @@
 extends "res://autoload/map_state.gd"
 
-## Same production MapState API and discovery payload, but instance-owned realm
-## extent and 3D discovery. Never mutates Meadows' static grid/cache or save.
+## Same production MapState API and discovery payload, but its own realm extent
+## and 3D discovery.
+##
+## Wave 1 lane 1.B: the base class's extent is per instance now, so the six
+## overrides this file used to carry to describe a differently-shaped world
+## (`cell_grid_x`, `cell_grid_z`, `cell_size`, `world_to_cell`, `cell_at`,
+## `is_discovered`) have collapsed into one `set_extent()` call in
+## `configure_cloudreach()` below, and `_cell` is the base class's field rather
+## than a second copy shadowing it. There is no longer a "Meadows static grid"
+## for this class to be careful not to mutate: each map owns its own.
 var _bounds: Dictionary = {}
-var _cell := 8.0
 var _world_data: Dictionary = {}
 var _chapter_data: Dictionary = {}
 var _progression: RefCounted
@@ -24,6 +31,13 @@ func configure_cloudreach(world: Dictionary, chapter: Dictionary, progression: R
 	_discovery_radius = float(tuning.get("landmark_discovery_radius_m", 35.0))
 	_height_tolerance = float(tuning.get("landmark_height_tolerance_m", 12.0))
 	_bounds = world.get("realm", {}).get("world_bounds", {})
+	# BEFORE `configure()`: the base class derives the Meadows extent lazily and
+	# early-outs once a grid is set, so declaring ours first is what stops it.
+	set_extent(
+		Vector2(float(_bounds.get("min_x", -1600)), float(_bounds.get("min_z", -500))),
+		maxi(1, ceili((float(_bounds.get("max_x", 1600)) - float(_bounds.get("min_x", -1600))) / _cell)),
+		maxi(1, ceili((float(_bounds.get("max_z", 6000)) - float(_bounds.get("min_z", -500))) / _cell)),
+		_cell)
 	var definitions: Array = []
 	for landmark: Dictionary in world.get("landmarks", []):
 		var entry := landmark.duplicate(true)
@@ -32,11 +46,9 @@ func configure_cloudreach(world: Dictionary, chapter: Dictionary, progression: R
 		entry["discover_radius"] = 0.0
 		entry["silhouette"] = false
 		definitions.append(entry)
+	# `configure()` sizes `_visited` from the extent set above, so the explicit
+	# resize this used to need is gone with the overrides.
 	configure({"landmarks": definitions, "regions": [], "minimap_span_m": 160.0})
-	_visited.resize(cell_grid_x() * cell_grid_z())
-	_visited.fill(0)
-	_visited_count = 0
-	_mark_fog_dirty_all()
 	for region: Dictionary in world.get("regions", []):
 		var at: Array = region["position"]
 		_region_defs[str(region["id"])] = {"display_name": region["display_name"],
@@ -51,32 +63,12 @@ func map_display_name() -> String:
 	return "Cloudreach Cliffs"
 
 
-func cell_grid_x() -> int:
-	return maxi(1, ceili((float(_bounds.get("max_x", 1600)) - float(_bounds.get("min_x", -1600))) / _cell))
-
-
-func cell_grid_z() -> int:
-	return maxi(1, ceili((float(_bounds.get("max_z", 6000)) - float(_bounds.get("min_z", -500))) / _cell))
-
-
-func cell_size() -> float:
-	return _cell
-
-
-func world_to_cell(at: Vector3) -> Vector2i:
-	return Vector2i(floori((at.x - float(_bounds.get("min_x", -1600))) / _cell),
-		floori((at.z - float(_bounds.get("min_z", -500))) / _cell))
-
-
-func cell_at(x: int, z: int) -> bool:
-	return x >= 0 and z >= 0 and x < cell_grid_x() and z < cell_grid_z() \
-		and _visited[z * cell_grid_x() + x] == 1
-
-
-func is_discovered(at: Vector3) -> bool:
-	var cell := world_to_cell(at)
-	return cell_at(cell.x, cell.y)
-
+## `cell_grid_x()`, `cell_grid_z()`, `cell_size()`, `world_to_cell()`,
+## `cell_at()` and `is_discovered()` lived here only to reach a per-realm extent
+## the base class kept in `static var`s. The base class holds that extent per
+## instance now and `set_extent()` above declares ours, so the inherited
+## implementations are already correct for Cloudreach and the six copies are
+## gone.
 
 func discovered_fraction() -> float:
 	return float(_visited_count) / maxf(1, _visited.size())
@@ -227,9 +219,10 @@ func reveal_all() -> void:
 
 
 func save_data() -> Dictionary:
+	# The grid descriptor keys the base class writes describe THIS realm now
+	# (`set_extent()`), so only the realm tag is still this class's to add.
 	var data := super.save_data()
-	data.merge({"realm_id": "cloudreach", "grid_x": cell_grid_x(), "grid_z": cell_grid_z(),
-		"cell": _cell, "origin_x": _bounds.get("min_x", -1600), "origin_z": _bounds.get("min_z", -500)}, true)
+	data["realm_id"] = "cloudreach"
 	return data
 
 
@@ -237,6 +230,7 @@ func load_data(data: Dictionary) -> void:
 	_discovered.clear()
 	_discovered_regions.clear()
 	_dynamic.clear()
+	_alpha_pins.clear()
 	_visited.fill(0)
 	_visited_count = 0
 	_current_region_id = ""
@@ -261,5 +255,8 @@ func load_data(data: Dictionary) -> void:
 			var p: Array = entry.get("position", [])
 			if p.size() == 2:
 				_dynamic[str(entry.get("id", ""))] = {"icon": entry.get("icon", ""), "position": Vector2(float(p[0]), float(p[1]))}
+	# Same ordering the base class keeps: the pins rebuild their own dynamic
+	# markers, so they are restored after everything that clears `_dynamic`.
+	alpha_pin_load_data(data.get("alpha_pins", []))
 	_mark_fog_dirty_all()
 	revision += 1
