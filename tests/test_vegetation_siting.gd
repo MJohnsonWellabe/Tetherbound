@@ -43,6 +43,9 @@ class CountingVegetation extends "res://scripts/world/vegetation.gd":
 	func _build_batch(model_path: String, placements: Array, _slicer: RefCounted = null) -> void:
 		batches.append(model_path)
 		_placed += placements.size()
+	func _build_batch(model_path: String, placements: Array, _slicer: RefCounted = null) -> void:
+		batches.append(model_path)
+		_placed += placements.size()
 
 
 func _veg() -> Node3D:
