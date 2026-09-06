@@ -58,6 +58,9 @@ const GATE_F_HARNESS := preload("res://tools/gate_f/operator_harness.gd")
 const PROBE := preload("res://scripts/debug/gate_f_probe.gd")
 const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
 const SPAWN_TABLES := preload("res://scripts/combat/spawn_tables.gd")
+## Lane 3.D. The real shipping chest, driven by its real submit path -- these
+## arms replace the panel's presses, not the container's ledger conversation.
+const STORAGE_CONTAINER := preload("res://scripts/build/storage_container.gd")
 
 const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
@@ -120,6 +123,14 @@ var _held_actions := {}
 ## `input_contexts.json`, expanded, loaded once and reused -- same shape
 ## `operator_harness.gd::_press_guard` caches, via the same static loader.
 var _input_contexts := {}
+## Lane 3.D. The chest `storage_bind` planted in this process, and the verdict
+## its last `storage_deposit`/`storage_withdraw` came back with.
+var _storage_chest: Node3D = null
+var _storage_last: Dictionary = {}
+## Refusals the chest reported ASYNCHRONOUSLY -- a client's `submit()` only
+## says "pending", and the host's `stale_revision` answer arrives later on
+## `storage_container.gd`'s own `storage_refused` signal.
+var _storage_refusals: Array = []
 
 
 func _initialize() -> void:
@@ -352,9 +363,148 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_expect_peers(args)
 		"wait_flag":
 			out = await _step_wait_flag(args)
+		"storage_place":
+			out = _step_storage_place(args)
+		"storage_bind":
+			out = await _step_storage_bind(args)
+		"storage_grant":
+			out = _step_storage_grant(args)
+		"storage_transfer":
+			out = _step_storage_transfer(args)
 		_:
 			out = {"verdict": "ERROR", "detail": "unknown action '%s'" % action}
 	out["frames_used"] = _physics_count - before
+	return out
+
+
+# --- lane 3.D: a shared chest -------------------------------------------------
+#
+# Four arms and one probe, standing in for the storage panel's two presses.
+# Everything they touch is shipping code: `place_building` and `storage_txn` go
+# through the real `Game.ledger`, the chest is a real `storage_container.gd`,
+# and the transfer is its real `submit_deposit`/`submit_withdraw`. What the
+# harness supplies is only what a panel supplies -- which row was pressed, and
+# the revision the player was looking at when they pressed it.
+
+## Plant a chest RECORD through the ledger. Host-side: the delta carries it to
+## every peer, so the record lands at the SAME index everywhere, which is the
+## address `storage_container.gd::container_key()` is derived from.
+func _step_storage_place(args: Dictionary) -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		return {"verdict": "ERROR", "detail": "no /root/Game"}
+	var transport: Node = game.get("ledger") as Node
+	if transport == null:
+		return {"verdict": "ERROR", "detail": "no Game.ledger to submit through"}
+	var verdict: Dictionary = transport.call("submit", {
+		"kind": "place_building", "realm": str(args.get("realm", "meadows")),
+		"id": "storage", "position": [0.0, 0.0, 0.0], "yaw_deg": 0.0, "paid": false,
+	})
+	if not bool(verdict.get("ok", false)):
+		return {"verdict": "FAIL", "detail": "place_building refused: %s / %s"
+			% [str(verdict.get("code", "")), str(verdict.get("reason", ""))]}
+	var buildings: Array = game.get("placed_buildings") as Array
+	return {"verdict": "PASS", "detail": "chest record at index %d" % (buildings.size() - 1)}
+
+
+## Stand a real chest node on that record, the way `build_placer.gd` does when
+## it restores one: build it, stamp it with the record address, and hand it the
+## record's saved contents (which is how a JOINER's chest arrives already
+## holding what the host put in it).
+func _step_storage_bind(args: Dictionary) -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		return {"verdict": "ERROR", "detail": "no /root/Game"}
+	var index := int(args.get("index", -1))
+	var realm := str(args.get("realm", "meadows"))
+	if _storage_chest != null and is_instance_valid(_storage_chest):
+		_storage_chest.queue_free()
+		_storage_chest = null
+	var chest: Node3D = STORAGE_CONTAINER.new()
+	chest.name = "SmokeStorage"
+	root.add_child(chest)
+	chest.call("build_real")
+	chest.set_meta(STORAGE_CONTAINER.PLACED_INDEX_META, index)
+	chest.set_meta(STORAGE_CONTAINER.REALM_META, realm)
+	var buildings: Array = game.get("placed_buildings") as Array
+	if index >= 0 and index < buildings.size():
+		var record: Dictionary = buildings[index] as Dictionary
+		if record.has("state"):
+			var state: RefCounted = chest.get("state")
+			if state != null:
+				state.call("load_data", record.get("state"))
+	chest.connect("storage_refused", func(reason: String) -> void:
+		_storage_refusals.append(reason))
+	_storage_chest = chest
+	_storage_last = {}
+	_storage_refusals = []
+	await physics_frame
+	return {"verdict": "PASS", "detail": "bound %s" % str(chest.call("container_key"))}
+
+
+## Put items in this peer's own satchel, so it has something to deposit.
+func _step_storage_grant(args: Dictionary) -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		return {"verdict": "ERROR", "detail": "no /root/Game"}
+	var satchel: RefCounted = game.get("inventory")
+	if satchel == null:
+		return {"verdict": "ERROR", "detail": "no Game.inventory"}
+	var item := str(args.get("item", ""))
+	var n := int(args.get("n", 0))
+	var leftover := int(satchel.call("add", item, n))
+	return {"verdict": "PASS", "detail": "granted %d %s (%d did not fit)" % [n - leftover, item, leftover]}
+
+
+## One row press. `revision` is what the player was looking at; omit it (or -1)
+## and the container reads the live one, which is what the panel does.
+func _step_storage_transfer(args: Dictionary) -> Dictionary:
+	if _storage_chest == null or not is_instance_valid(_storage_chest):
+		return {"verdict": "ERROR", "detail": "no chest bound; run storage_bind first"}
+	var direction := str(args.get("direction", "deposit"))
+	var item := str(args.get("item", ""))
+	var n := int(args.get("n", 0))
+	var revision := int(args.get("revision", -1))
+	_storage_refusals = []
+	var verdict: Dictionary = _storage_chest.call(
+		"submit_deposit" if direction == "deposit" else "submit_withdraw", item, n, revision)
+	_storage_last = verdict
+	return {"verdict": "PASS", "detail": "%s %d %s: ok=%s pending=%s code='%s'"
+		% [direction, n, item, str(verdict.get("ok", false)), str(verdict.get("pending", false)),
+			str(verdict.get("code", ""))]}
+
+
+## `{id: count}` for every stack an inventory holds -- addressed by item
+## identity, never by slot number (CLAUDE.md).
+func _storage_counts(inv: RefCounted) -> Dictionary:
+	var out := {}
+	if inv == null:
+		return out
+	for i in int(inv.call("slot_count")):
+		var stack: Dictionary = inv.call("stack_at", i)
+		if stack.is_empty():
+			continue
+		var id := str(stack.get("id", ""))
+		out[id] = int(out.get(id, 0)) + int(stack.get("n", 0))
+	return out
+
+
+## The same map, read out of a `placed_buildings` record's `state` array --
+## what the WORLD says the chest holds, as opposed to what the live node does.
+func _storage_record_counts(game: Node, index: int) -> Dictionary:
+	var out := {}
+	var buildings: Array = game.get("placed_buildings") as Array
+	if index < 0 or index >= buildings.size():
+		return out
+	var raw: Variant = (buildings[index] as Dictionary).get("state", [])
+	if typeof(raw) != TYPE_ARRAY:
+		return out
+	for entry: Variant in (raw as Array):
+		if typeof(entry) != TYPE_DICTIONARY:
+			continue
+		var stack := entry as Dictionary
+		var id := str(stack.get("id", ""))
+		out[id] = int(out.get(id, 0)) + int(stack.get("n", 0))
 	return out
 
 
@@ -886,6 +1036,39 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				# having to remember what it handed out.
 				"enet_port": _enet_port,
 			}
+		"storage":
+			# Lane 3.D. Everything the concurrency smoke asserts on, read off
+			# this peer's own live objects: the revision it would quote next,
+			# what its chest node holds, what the world record holds, what its
+			# satchel holds, and the verdict of its last transfer.
+			var sgame := root.get_node_or_null(^"Game")
+			if sgame == null or _storage_chest == null or not is_instance_valid(_storage_chest):
+				return null
+			var skey := str(_storage_chest.call("container_key"))
+			var sindex := int(_storage_chest.call("placed_index"))
+			var stransport: Node = sgame.get("ledger") as Node
+			var sbook: Variant = stransport.get("ledger") if stransport != null else null
+			var sstate: RefCounted = _storage_chest.get("state")
+			return {
+				"container": skey,
+				"index": sindex,
+				"revision": int((sbook as RefCounted).call("storage_revision", skey)) if sbook != null else -1,
+				"chest": _storage_counts(sstate.get("inventory") if sstate != null else null),
+				"record": _storage_record_counts(sgame, sindex),
+				"satchel": _storage_counts(sgame.get("inventory") as RefCounted),
+				"last": {
+					"ok": bool(_storage_last.get("ok", false)),
+					"pending": bool(_storage_last.get("pending", false)),
+					"code": str(_storage_last.get("code", "")),
+					"reason": str(_storage_last.get("reason", "")),
+				},
+				"refusals": _storage_refusals.duplicate(),
+			}
+		"placed_building_count":
+			var pgame := root.get_node_or_null(^"Game")
+			if pgame == null:
+				return null
+			return (pgame.get("placed_buildings") as Array).size()
 		"autosave_exists":
 			# D100's client-never-writes-the-world assertion. Reads the real
 			# file under THIS peer's own XDG_DATA_HOME (contract §2), so a host
