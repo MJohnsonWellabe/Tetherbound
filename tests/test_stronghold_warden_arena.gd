@@ -67,7 +67,9 @@ func test_warden_arena_braziers_stand_outside_the_combat_ring() -> void:
 	var braziers: Array = config.get("hall_occupation", {}).get("braziers", [])
 	var floor_braziers: Array = braziers.filter(
 		func(b: Variant) -> bool: return str((b as Dictionary).get("mount", "")) != "wall")
-	assert_eq(floor_braziers.size(), 11, "hall_occupation.braziers' floor/exterior fixtures grew; the arena dressing was meant to cost zero omnis")
+	# HALL-STAGING-0906 round 5: 11 -> 13, the two entrance baskets in the
+	# Warden Arena (see their _comment) -- a deliberate spend, not drift.
+	assert_eq(floor_braziers.size(), 13, "hall_occupation.braziers' floor/exterior fixtures grew; the arena dressing was meant to cost zero omnis")
 
 	# The wall sconces sited in the Warden Arena itself must stand outside the
 	# same 11m combat ring the baskets above are checked against -- bolted to
