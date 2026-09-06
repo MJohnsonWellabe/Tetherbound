@@ -228,7 +228,8 @@
     "threshold_fan_m": 8.0,
     "threshold_fan_half_width_m": 7.0,
     "threshold_fan_near_pad_m": 1.6,
-    "threshold_colour": "#4a3a2c",
+    "_why_threshold_colour_round5": "ROUND-5-0906: the diagnostic render showed the pale strip in front of the mouth is the terrain's own baked dirt-path texture -- the approach road, pale tan under software GL -- arriving at the threshold, not the apron (which is inside the throat). #4a3a2c against that road gave JUDGE-round4.md its 'hard straight edge between the pale texture and the dark brown ground'; a mid trodden tone reads as the same road turning damp and churned at the den rather than a second material.",
+    "threshold_colour": "#6e5b45",
     "_why_material": "The bank's own material (`shaders/earth_bank.gdshader`): a slope+height blend between the meadow's own grass texture (gentle upper surfaces, so the bank reads as a grassy hump continuous with the field) and the terrain's own wet-earth texture (steep and low surfaces). `grass_tint` matches the terrain's own grass tint exactly (terrain_playground.json); `earth_tint` stays near-white for the same reason that file's own `damp` entry does -- the wet-earth photo already carries its target colour, a tint would only wash it out. `earth_colour` (below) is a SEPARATE, deliberately darker multiply used by the small hand-placed earth props beside the mouth (lip, warren-hole lips, half-buried stones' collar, spoil), which sit in shadow close to the camera rather than lit broadly like the bank's own crest.",
     "grass_tint": "#e9dfc0",
     "_why_grass_brightness": "ROUND-4-0906: crop medians off the round-4 render put the meadow's rendered ground at (112,125,102) and the bank's grass at (40,44,35) -- 2.8x darker, the 'uniformly dark-olive hill' of every verdict so far. Multiplies `grass_tint` past 1.0 (burrow_warrens.gd::_bank_material) so the mound's grass meets the field it stands in; earth/spoil are untouched. Measured, not guessed; re-measure after any terrain palette change.",
@@ -611,16 +612,17 @@
       }
     ],
     "_comment_accent_boulders": "EXT-08-EARTHMOUND item 2, kept: 4-6 large half-buried boulders as accents, now at the bank's own FOOT (where the mesh meets the meadow) rather than its old shoulder. `sink_m` buries roughly 60-75% of each piece's own drawn height.",
+    "_why_accent_boulders_round5": "ROUND-5-0906: tools/_probe_warrens_threshold_render.gd (a from-above and a side view of the threshold) showed the two front pairs at scale 3.0/2.8 standing 4-5m proud of the ground -- boulders the size of the opening itself, filling the side view of the mouth entirely and reading, per JUDGE-round4.md, as 'stacked boulders or crates'. Dig-spoil is head-high at most: front pairs 1.3-1.7 (roughly 1-1.5m showing), flank pieces 1.8-2.2, each sunk ~40% of its own drawn height.",
     "_why_accent_boulders_round4": "ROUND-4-0906, JUDGE-round3.md finding 2 ('the boulder cluster at the base reads as parked/loose rather than displaced dig-spoil'). Re-clustered as SPOIL: two pairs flanking the threshold fan just outside the mouth (never inside |x| < 5.5 on the approach axis -- the walked corridor and the 03/00 camera stands run down x=0), one below each front warren hole's own fan, one below each flank hole. All now seat on the bank's OWN surface (burrow_warrens.gd::_build_accent_boulders adds _bank_height_at), so a stone can sit half-buried in a heap's slope. `sink_m` buries 60-75% of each piece.",
     "accent_boulders": [
-      {"model": "Rock_Medium_1", "offset": [-7.2, -10.5], "scale": 3.0, "yaw_deg": 25.0, "sink_m": 1.9, "_why": "left of the threshold fan, at the mouth's own spoil edge"},
-      {"model": "Rock_Medium_3", "offset": [-6.0, -14.0], "scale": 2.3, "yaw_deg": 95.0, "sink_m": 1.4, "_why": "further out on the left, the throw trailing off"},
-      {"model": "Rock_Medium_2", "offset": [7.6, -10.0], "scale": 2.8, "yaw_deg": -35.0, "sink_m": 1.75, "_why": "right of the threshold fan"},
-      {"model": "Rock_Medium_1", "offset": [6.4, -13.6], "scale": 2.2, "yaw_deg": -120.0, "sink_m": 1.35, "_why": "further out on the right"},
-      {"model": "Rock_Medium_3", "offset": [-16.0, 1.5], "scale": 2.6, "yaw_deg": 60.0, "sink_m": 1.6, "_why": "below the left flank hole, on the left brow heap's throw lobe"},
-      {"model": "Rock_Medium_2", "offset": [15.5, 4.5], "scale": 2.4, "yaw_deg": -70.0, "sink_m": 1.5, "_why": "below the right flank hole, on the right brow heap's throw lobe"},
-      {"model": "Rock_Medium_1", "offset": [-27.0, 22.0], "scale": 2.8, "yaw_deg": 80.0, "sink_m": 1.7, "_why": "at the warren heap's throw foot, left flank"},
-      {"model": "Rock_Medium_3", "offset": [25.5, 39.0], "scale": 2.7, "yaw_deg": -50.0, "sink_m": 1.65, "_why": "at the vault heap's throw foot, right flank"}
+      {"model": "Rock_Medium_1", "offset": [-7.2, -10.5], "scale": 1.7, "yaw_deg": 25.0, "sink_m": 1.0, "_why": "left of the threshold fan, at the mouth's own spoil edge"},
+      {"model": "Rock_Medium_3", "offset": [-6.0, -14.0], "scale": 1.35, "yaw_deg": 95.0, "sink_m": 0.75, "_why": "further out on the left, the throw trailing off"},
+      {"model": "Rock_Medium_2", "offset": [7.6, -10.0], "scale": 1.6, "yaw_deg": -35.0, "sink_m": 0.9, "_why": "right of the threshold fan"},
+      {"model": "Rock_Medium_1", "offset": [6.4, -13.6], "scale": 1.3, "yaw_deg": -120.0, "sink_m": 0.7, "_why": "further out on the right"},
+      {"model": "Rock_Medium_3", "offset": [-16.0, 1.5], "scale": 1.9, "yaw_deg": 60.0, "sink_m": 1.1, "_why": "below the left flank hole, on the left brow heap's throw lobe"},
+      {"model": "Rock_Medium_2", "offset": [15.5, 4.5], "scale": 1.8, "yaw_deg": -70.0, "sink_m": 1.0, "_why": "below the right flank hole, on the right brow heap's throw lobe"},
+      {"model": "Rock_Medium_1", "offset": [-27.0, 22.0], "scale": 2.2, "yaw_deg": 80.0, "sink_m": 1.3, "_why": "at the warren heap's throw foot, left flank"},
+      {"model": "Rock_Medium_3", "offset": [25.5, 39.0], "scale": 2.1, "yaw_deg": -50.0, "sink_m": 1.2, "_why": "at the vault heap's throw foot, right flank"}
     ],
     "_comment_face_outcrops": "THIRD-PASS-0906, JUDGE-round2.md sec3 item 2: 'no rock outcrop breaking the slope ... the whole bank is one flat khaki-brown value from base to crest'. `accent_boulders` above only ever sits at the FOOT (flat meadow terrain); these sit ON the bank's own sculpted surface (`_build_bank_face_outcrops()`) and are sunk 40-60% of scale INTO it along the surface normal, so they read as protruding from the dug face and flanks rather than dropped beside them. 7 pieces, within the brief's own 6-9.",
     "face_outcrops": [
