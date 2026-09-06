@@ -881,6 +881,10 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"snapshot_ready": bool(sess.call("snapshot_ready")),
 				"registry_fingerprint": int(sess.call("registry_fingerprint")),
 				"rows": sess.call("peers"),
+				# The port this peer was assigned by the harness, so a joining
+				# peer can be told where to connect without the coordinator
+				# having to remember what it handed out.
+				"enet_port": _enet_port,
 			}
 		"autosave_exists":
 			# D100's client-never-writes-the-world assertion. Reads the real

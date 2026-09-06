@@ -48,10 +48,23 @@ extends "res://tests/helpers/net_harness.gd"
 ## says it is before it is not "seen".
 const NEAR_REST_M := 1.5
 const NEAR_MOTION_M := 4.0
-## The walk each peer takes. `stick` at full deflection is ~4.2 m/s of walk
-## speed (`data/config/movement.json`), so 300 physics frames is comfortably
-## past 20 m even with the opening beat's settle.
-const WALK_M := 20.0
+## The walk each peer takes.
+##
+## This was 20 m on the assumption that 300 frames of full stick at the walk
+## speed in `data/config/movement.json` would cover it. Measured on the merged
+## Wave 2 tree, both peers stop at **2.71 m** — the same figure lane 0.F's boot
+## smoke recorded for a 90-frame hold, and identical between a 90- and a
+## 300-frame hold, which is the signature of a wall rather than of a budget. A
+## fresh boot starts inside Grandpa's farmhouse in the opening beat, and forward
+## from the spawn is a wall about three metres away.
+##
+## 2 m is still a discriminating proof and that is why it is the bar: the
+## watcher has to track a body that moved 2.71 m to within `NEAR_REST_M` of
+## 1.5 m. If replication were dead the gap would be the full 2.71 m and this
+## fails. Walking a longer line is a question about where the smoke starts,
+## not about whether movement replicates, and it belongs to whichever lane
+## teaches the net harness to seed a post-opening save.
+const WALK_M := 2.0
 const WALK_FRAMES := 300
 ## Frames to let the last packets land and the interpolation converge before
 ## the at-rest comparison. Roughly ten half-lives.
@@ -82,6 +95,23 @@ func _run() -> void:
 	if not have_session:
 		quit(await finish())
 		return
+
+	# Actually form the session. This smoke was written before lane 2.A landed,
+	# so it could only assert that a Session class existed; with 2.A merged the
+	# two processes must really host and join, or every check below reads "0
+	# remote bodies" and means only that nobody ever connected.
+	var hosted: Dictionary = await step(0, "host", {})
+	check(str(hosted.get("verdict", "")) == "PASS",
+		"peer 0 hosted a world (%s)" % str(hosted.get("detail", "")))
+	var host_session = await probe(0, "session")
+	var port := int((host_session as Dictionary).get("enet_port", 0)) if host_session is Dictionary else 0
+	var joined: Dictionary = await step(1, "join", {"host": "127.0.0.1", "port": port})
+	check(str(joined.get("verdict", "")) == "PASS",
+		"peer 1 joined peer 0's world on port %d (%s)" % [port, str(joined.get("detail", ""))])
+	for i in 2:
+		var seen: Dictionary = await step(i, "expect_peers", {"count": 2})
+		check(str(seen.get("verdict", "")) == "PASS",
+			"peer %d's registry holds both players (%s)" % [i, str(seen.get("detail", ""))])
 
 	# Both peers must be standing in each other's world before either walks:
 	# one body per peer, on every peer, including each peer's own invisible
