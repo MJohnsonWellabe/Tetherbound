@@ -3112,13 +3112,17 @@ func _build_threshold_fan(holder: Node3D, bank: Dictionary, z_front: float) -> v
 	var far_half := float(bank.get("threshold_fan_half_width_m", 7.0))
 	var rng := RandomNumberGenerator.new()
 	rng.seed = int(bank.get("seed", 63220)) + 3401
-	var rings := 5
+	# POST-ROUND-6-0906: 5 rows at up to 1.8m spacing let the terrain (its
+	# own 1m mesh) bulge up through the fan between rows -- the pale patch
+	# right of the mouth in the dome-closed verification frame. 12 rows and
+	# a 0.12m lift keep the fan on top of the ground it follows.
+	var rings := 12
 	var spokes := 22
 	# Starts 0.2m INSIDE the throat's outer end so it runs under the apron
 	# ramp's own last box (the ramp ends above it) rather than leaving a
 	# sliver of bare terrain between the two.
 	var centre_z := z_front + 0.2
-	var lift := 0.07
+	var lift := 0.12
 	# Rows of points from the opening (row 0, under the brow) outward to the
 	# fan's far rim; each row is an arc of `spokes` points across the fan's
 	# width at that distance, so the mesh is a regular strip grid with a
