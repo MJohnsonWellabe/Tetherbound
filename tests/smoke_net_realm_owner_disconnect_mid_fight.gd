@@ -105,6 +105,17 @@ func _run() -> void:
 			"peer %d's registry holds both players (%s)" % [i, str(seen.get("detail", ""))])
 	# --- end of the copied handshake block ------------------------------------
 
+	# Cloudreach is key-gated in the ordinary way (`realm_hearts.json` gives it
+	# `entry_key_flag = "realm_key_cloudreach"`), in solo exactly as in a
+	# session. That gate is not what this smoke is about, so it is opened here
+	# as setup -- without it the crossing below reports "enter_realm refused"
+	# and reads like lane 6.A never landed.
+	var route: Dictionary = await step(0, "story_flag",
+		{"flag": "realm_key_cloudreach", "scope": "world"})
+	check(str(route.get("verdict", "")) == "PASS",
+		"the Cloudreach route is open before the host tries to walk it (%s)"
+			% str(route.get("detail", "")))
+
 	# 2. World state whose only realm is the one about to be left unhosted.
 	var planted: Dictionary = await step(1, "storage_place", {"realm": MEADOWS})
 	check(str(planted.get("verdict", "")) == "PASS",

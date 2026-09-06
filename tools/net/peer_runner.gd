@@ -440,7 +440,7 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"wait_context":
 			out = await _step_wait_context(args)
 		"storage_place":
-			out = _step_storage_place(args)
+			out = await _step_storage_place(args)
 		"storage_bind":
 			out = await _step_storage_bind(args)
 		"storage_grant":
@@ -538,13 +538,28 @@ func _step_storage_place(args: Dictionary) -> Dictionary:
 	var transport: Node = game.get("ledger") as Node
 	if transport == null:
 		return {"verdict": "ERROR", "detail": "no Game.ledger to submit through"}
+	var before_count := (game.get("placed_buildings") as Array).size()
 	var verdict: Dictionary = transport.call("submit", {
 		"kind": "place_building", "realm": str(args.get("realm", "meadows")),
 		"id": "storage", "position": [0.0, 0.0, 0.0], "yaw_deg": 0.0, "paid": false,
 	})
-	if not bool(verdict.get("ok", false)):
+	# `pending` is NOT a refusal -- it is what a CLIENT's submit always returns
+	# while the host has still to answer (`world_ledger.gd`'s verdict shape).
+	# Treating it as failure made this arm usable only on the host, which is
+	# exactly backwards for a smoke about a client writing world state, and it
+	# is what made lane 6.A's disconnect smoke report "place_building refused:
+	# pending" with an empty reason.
+	var pending := bool(verdict.get("pending", false))
+	if not bool(verdict.get("ok", false)) and not pending:
 		return {"verdict": "FAIL", "detail": "place_building refused: %s / %s"
 			% [str(verdict.get("code", "")), str(verdict.get("reason", ""))]}
+	if pending:
+		# Wait for the host's delta to land rather than reporting a record this
+		# peer cannot yet see: the caller's next probe would otherwise race it.
+		for _i in 600:
+			await physics_frame
+			if (game.get("placed_buildings") as Array).size() > before_count:
+				break
 	var buildings: Array = game.get("placed_buildings") as Array
 	return {"verdict": "PASS", "detail": "chest record at index %d" % (buildings.size() - 1)}
 

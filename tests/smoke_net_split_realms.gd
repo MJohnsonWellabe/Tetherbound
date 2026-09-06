@@ -65,6 +65,8 @@ const REALM_STEP_BUDGET_S := 1200.0
 
 const MEADOWS := "meadows"
 const CLOUDREACH := "cloudreach"
+## The story flag `realm_hearts.json` requires before Cloudreach will open.
+const CLOUDREACH_KEY_FLAG := "realm_key_cloudreach"
 
 
 func _initialize() -> void:
@@ -125,6 +127,27 @@ func _run() -> void:
 	check(shells_before is Dictionary and (_shell_realms(shells_before)).is_empty(),
 		"the host holds no realm shell while everybody is in one realm (holds %s)"
 			% str(_shell_realms(shells_before)))
+
+	# Cloudreach is key-gated in the ordinary way: `realm_hearts.json` gives it
+	# `entry_key_flag = "realm_key_cloudreach"`, and `can_enter_realm()` refuses
+	# without it in SOLO exactly as in a session. That gate is not what this
+	# smoke is about -- it is about whether a multi-peer session still refuses a
+	# crossing the player has otherwise earned -- so the key is granted here as
+	# setup. Without it the smoke reports "enter_realm refused" and reads like
+	# lane 6.A's work never landed, which is what it did on its first local run.
+	#
+	# Granted as an ordinary world flag through the ledger, on the host, so both
+	# peers hold it: the gate is a world fact about the route being open, not a
+	# personal one.
+	var keyed: Dictionary = await step(0, "story_flag",
+		{"flag": CLOUDREACH_KEY_FLAG, "scope": "world"})
+	check(str(keyed.get("verdict", "")) == "PASS",
+		"the Cloudreach route is open before anyone tries to walk it (%s)"
+			% str(keyed.get("detail", "")))
+	for i in 2:
+		var seen: Dictionary = await step(i, "wait_flag", {"id": CLOUDREACH_KEY_FLAG})
+		check(str(seen.get("verdict", "")) == "PASS",
+			"peer %d sees the Cloudreach route open (%s)" % [i, str(seen.get("detail", ""))])
 
 	# 1. The client crosses. `enter_realm` is the game's own door; the step
 	#    fails loudly if it is still refused.
