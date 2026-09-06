@@ -9,6 +9,7 @@ on the branch with a green named test; nothing here is an Ally reproduction.
 
 | Item | Status | Evidence |
 |---|---|---|
+| CI on the merged branch | **green** (run 4449 on 9ca36cd2: unit shards 1-4, every verify shard incl. stronghold, warrens, cloudreach_arrival_walk, gate_e_finale; only the two KNOWN RED jobs red) | https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/34021074221 |
 | Cloudreach did not build on `main` (typed loop over `times` threw in `_ready`) | **fixed** (ported from the multiplayer lane, 18ea9410) | `smoke_cloudreach_foundation` OK (was SCRIPT ERROR at cloudreach_world.gd:138) |
 | OP-0905-14 stronghold: fight every NPC to advance | landed | `smoke_stronghold` gates all four passages blocked→open; red on old data |
 | OP-0905-17 combat camera too zoomed in | landed | `smoke_combat_camera` near=6.00 far=8.75 m; base 4.6→6.0, fov 62→68 |
