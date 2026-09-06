@@ -414,6 +414,22 @@ static func prompts() -> Dictionary:
 	return config().get("prompts", {}) as Dictionary
 
 
+## Stage B Wave 4 lane 4.D. Is this trainer a BOSS, in the sense
+## `docs/specs/MP_ENCOUNTER_PROTOCOL.md` §3's `kind` means it?
+##
+## Answered from `trainers.json`'s `boss_ranks` against the spec's own `rank`,
+## because §1 is explicit that a boss is DATA and not a code path: one encounter
+## record covers wild, trainer and boss, and the only thing being a boss changes
+## is what the record says it is. Promoting a captain is a data edit, never a
+## branch in `encounter_director.gd`.
+static func is_boss(spec: Dictionary) -> bool:
+	var rank := str(spec.get("rank", ""))
+	if rank.is_empty():
+		return false
+	var ranks: Variant = config().get("boss_ranks", [])
+	return ranks is Array and (ranks as Array).has(rank)
+
+
 static func team_of(spec: Dictionary) -> Array:
 	var team: Variant = spec.get("team", [])
 	return team as Array if team is Array else []

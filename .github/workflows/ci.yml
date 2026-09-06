@@ -1960,8 +1960,8 @@ jobs:
           #   for f in tests/smoke_net_*.gd; do
           #     head -5 "$f" | grep -qE '^#[[:space:]]*peers:[[:space:]]*2$' && echo "$f"
           #   done | wc -l
-          if [ "$count" -lt 16 ]; then
-            echo "::error::expected at least 16 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
+          if [ "$count" -lt 17 ]; then
+            echo "::error::expected at least 17 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
             exit 1
           fi
           # added shared_building; lane 3.B added pickup_race; lane 5.D added
@@ -1972,6 +1972,10 @@ jobs:
           # added shared_wild_fight.
           # storage_concurrency; lane 4.B added deploy_two_creatures; lane 3.E
           # added trade.
+          # storage_concurrency; lane 4.B added deploy_two_creatures; lane 4.D
+          # added boss_rewards_each_participant. The floor above was REGENERATED
+          # from the files on disk (14), not incremented from whatever number
+          # this line's neighbours happened to carry through the merge.
           # Named registration, on top of the count. Discovery alone would let a
           # smoke drop out of CI by losing its `# peers: 2` header in a rebase
           # and nobody would notice, because the count is satisfied by whatever
@@ -1979,6 +1983,7 @@ jobs:
           # smoke adds its file here.
           for required in \
             tests/smoke_net_behind_character_joins_ahead_world.gd \
+            tests/smoke_net_boss_rewards_each_participant.gd \
             tests/smoke_net_deploy_two_creatures.gd \
             tests/smoke_net_fog_is_personal.gd \
             tests/smoke_net_hearts.gd \

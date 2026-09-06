@@ -78,6 +78,11 @@ const CAMP_TENT := preload("res://scripts/build/camp_tent.gd")
 ## restore path asks the WORLD (never the merged view) what has happened.
 const STORY_LEDGER := preload("res://scripts/story/story_ledger.gd")
 
+
+## Lane 4.D. The trainer table, read the way the game reads it.
+const NET_TRAINERS := preload("res://scripts/world/trainer_npc.gd")
+const NET_REWARDS := preload("res://scripts/net/encounter_rewards.gd")
+
 const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const CLOUDREACH_SCENE := "res://scenes/world/cloudreach_cliffs.tscn"
@@ -465,6 +470,10 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = _step_go_down(args)
 		"stand_by_downed":
 			out = await _step_stand_by_downed(args)
+		"trainer_battle":
+			return await _step_trainer_battle(args)
+		"win_trainer_battle":
+			return await _step_win_trainer_battle(args)
 		"sleep_stand":
 			out = await _step_sleep_stand(args)
 		"story_flag":
@@ -2180,6 +2189,177 @@ func _story_gate_rows() -> Array:
 	return rows
 
 
+# --- lane 4.D: one trainer, two players, two rewards ---------------------------
+#
+# Two arms and one probe. The battle is started through the same
+# `begin_trainer_battle()` `trainer_npc.gd` calls when a player presses the
+# challenge prompt, and it is WON by real strikes through
+# `submit_encounter_intent()` -- the one door `combat_manager.gd` itself
+# submits through. What the harness supplies is only what a controller
+# supplies: where the creature stands and which way the swing faced.
+
+
+## Take up a named trainer's challenge.
+##
+## The teleport is the same one `_step_engage_wild` and `smoke_combat_camera`
+## use, and for the reason `smoke_aggression.gd`'s header documents: a scripted
+## walk across the Meadows dies against a Terrain3D snag, and a smoke that fails
+## there is reporting on terrain rather than on what it is testing.
+func _step_trainer_battle(args: Dictionary) -> Dictionary:
+	var director := _encounter_director()
+	if director == null:
+		return {"verdict": "ERROR", "detail": "no EncounterDirector in this scene"}
+	var trainer_id := str(args.get("trainer", "practice_trainer"))
+	var spec: Dictionary = NET_TRAINERS.trainer(trainer_id)
+	if spec.is_empty():
+		return {"verdict": "ERROR", "detail": "trainers.json has no trainer '%s'" % trainer_id}
+	var body: Node3D = _trainer_body_named(trainer_id)
+	var player := _probe.call("player") as Node3D
+	if player == null:
+		return {"verdict": "ERROR", "detail": "no live player"}
+	if body != null:
+		player.global_position = body.global_position + Vector3(2.0, 0.0, 2.0)
+		player.velocity = Vector3.ZERO
+		for i in 20:
+			await physics_frame
+	if not bool(director.call("can_challenge", spec)):
+		return {"verdict": "FAIL", "detail": "'%s' will not take the challenge (already beaten: %s, nothing out: %s)"
+			% [trainer_id, str(NET_TRAINERS.already_beaten(spec, _progression_store())),
+				str(director.call("no_usable_ally"))]}
+	if not bool(director.call("begin_trainer_battle", spec, body)):
+		return {"verdict": "FAIL", "detail": "begin_trainer_battle('%s') refused" % trainer_id}
+	for i in maxi(0, int(args.get("settle", 45))):
+		await physics_frame
+	var manager := _combat_manager()
+	if manager == null or not bool(manager.call("is_fighting")):
+		return {"verdict": "FAIL", "detail": "the challenge did not start a fight"}
+	return {"verdict": "PASS", "detail": "challenged %s; bound to encounter '%s' (%d creatures to come)"
+		% [trainer_id, str(manager.call("encounter_id")),
+			int(director.call("trainer_creatures_left"))]}
+
+
+## Fight the trainer's whole team and win it, through the production strike
+## path. `smoke_trainer_battle.gd`'s own loop, with the presses replaced by real
+## `strike_intent` submissions so the HOST arbitrates every blow.
+##
+## The player's own creature is topped up between swings -- exactly what
+## `smoke_trainer_battle.gd` does, and for the same reason: this arm is testing
+## the payout at the end of a won battle, not the player's ability to survive
+## one, and a creature that faints ends the battle in a LOSS and tests nothing.
+func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
+	var director := _encounter_director()
+	var manager := _combat_manager()
+	if director == null or manager == null:
+		return {"verdict": "ERROR", "detail": "no EncounterDirector/CombatManager"}
+	if not bool(director.call("trainer_battle_active")):
+		return {"verdict": "FAIL", "detail": "no trainer battle is running"}
+	# PHYSICS FRAMES, not loop iterations, and bounded by the budget the
+	# coordinator actually sent. The first version of this arm counted
+	# iterations and burned ~24 frames inside each one, so a "2400" ceiling was
+	# really 57,600 frames and the coordinator's own wall-clock deadline
+	# expired first -- reported as "no verdict", which says nothing about the
+	# battle. Leaving a margin below the budget means this arm answers with a
+	# real verdict instead of being cut off.
+	var budget := maxi(120, int(args.get("budget_frames", 2400)) - 240)
+	## How often a swing is submitted. There is no cooldown to respect on this
+	## path -- `submit_encounter_intent` goes straight to host arbitration --
+	## so this is only the time the body needs to be placed and settle.
+	var stride := maxi(4, int(args.get("stride", 20)))
+	var swings := 0
+	var frames := 0
+	var creatures_seen := {}
+	while bool(director.call("trainer_battle_active")) and frames < budget:
+		await physics_frame
+		frames += 1
+		if not bool(manager.call("is_fighting")):
+			# The beat between their creatures. Nothing to do but let it pass.
+			continue
+		if frames % stride != 0:
+			continue
+		var mine: Variant = manager.call("active_creature")
+		if mine != null:
+			# Exactly what `smoke_trainer_battle.gd` does, for its reason: this
+			# arm is testing the payout at the end of a won battle, not the
+			# player's ability to survive one, and a creature that faints ends
+			# the battle in a LOSS and tests nothing.
+			(mine as RefCounted).set("hp", float((mine as RefCounted).get("max_hp")))
+		var opponent: Variant = manager.call("enemy_body")
+		var body: Variant = director.call("ally_body")
+		if opponent == null or not is_instance_valid(opponent) \
+				or body == null or not is_instance_valid(body):
+			continue
+		creatures_seen[str((opponent as Node3D).name)] = true
+		var target: Vector3 = (opponent as Node3D).call("centre")
+		var stand := target + Vector3(1.1, 0.0, 0.0)
+		if (body as Node3D).has_method("place_on_ground"):
+			(body as Node3D).call("place_on_ground", stand)
+		else:
+			(body as Node3D).global_position = stand
+		for i in 4:
+			await physics_frame
+			frames += 1
+		if not bool(manager.call("quick_ready")):
+			continue
+		# The real BUTTON, not a hand-built `strike_intent`.
+		#
+		# FINDING, and it is why this arm looks different from
+		# `_step_strike`: submitting the intent directly does land the host's
+		# damage -- the record's hit points drop and both peers draw the same
+		# bar -- but nothing ever performs the KILL, because
+		# `apply_host_strike_verdict()` is what turns a host verdict into a
+		# faint and only `combat_manager.gd::_submit_strike_intent()` calls it.
+		# Measured: 108 direct submissions against Bryn's first creature, its
+		# bar at the floor, and the battle still running. `_step_strike` exists
+		# to say what a MODIFIED client could say (a swing aimed at a
+		# teammate), which no button can produce; this arm needs a fight to
+		# actually finish, so it presses the button a player presses and the
+		# whole production path -- manager, host arbitration, verdict,
+		# faint -- runs.
+		var pressed := await _inject("combat_quick", 1)
+		if not bool(pressed.get("ok", false)):
+			return {"verdict": "ERROR", "detail": "press 'combat_quick' could not be injected: %s"
+				% str(pressed.get("why", ""))}
+		frames += 3
+		swings += 1
+	if bool(director.call("trainer_battle_active")):
+		return {"verdict": "FAIL",
+			"detail": "the battle never resolved in %d frames (%d swings, %d of their creatures met, %d still queued)"
+				% [frames, swings, creatures_seen.size(), int(director.call("trainer_creatures_left"))]}
+	# The payout is committed from `_finish_trainer_battle()` and the deltas
+	# have to cross to the other peer before anybody asks about them.
+	for i in maxi(0, int(args.get("settle", 120))):
+		await physics_frame
+	return {"verdict": "PASS", "detail": "battle won in %d frames / %d swings against %d of their creatures"
+		% [frames, swings, creatures_seen.size()]}
+
+
+## The placed body of a named trainer, or null. Asked of the placer's own
+## `body_for()`, which reads the `trainer_id` META rather than a node name --
+## `trainer_npc.gd::_spawn()` names the node after the DISPLAY name ("Bryn"),
+## so matching by name would find the wrong person the moment two trainers
+## share one.
+##
+## Null is a legal answer and the caller treats it as one: `begin_trainer_battle`
+## documents a null trainer body, and a scene that placed nobody is a scene
+## where `can_challenge()` is about to say so in words.
+func _trainer_body_named(trainer_id: String) -> Node3D:
+	var world := get_current_scene()
+	if world == null:
+		return null
+	for node in world.find_children("*", "Node3D", true, false):
+		if not is_instance_valid(node) or not node.has_method("body_for"):
+			continue
+		var body: Variant = node.call("body_for", trainer_id)
+		if body != null and is_instance_valid(body):
+			return body as Node3D
+	return null
+
+
+func _progression_store() -> RefCounted:
+	var game := root.get_node_or_null(^"Game")
+	return game.get("progression") as RefCounted if game != null else null
+
+
 func _execute_probe(msg: Dictionary) -> Variant:
 	var what := str(msg.get("what", ""))
 	match what:
@@ -2430,6 +2610,77 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				var mb: Vector3 = (mine_body as Node3D).global_position
 				out["my_creature_pos"] = [mb.x, mb.y, mb.z]
 			return out
+		"trainer_reward":
+			# Lane 4.D. Everything `smoke_net_boss_rewards_each_participant`
+			# asserts on, read off this peer's own live objects.
+			#
+			# The three questions are deliberately answered from three
+			# different stores, because §7 says they are three different
+			# facts and collapsing them would hide the bug this lane exists
+			# to prevent:
+			#
+			#   * `world_flags` -- `Game.world.flags`, the WORLD half (D99).
+			#     The defeat flag lives here and it is set once, for everybody.
+			#   * `receipts` -- `world_ledger.gd::reward_flag(source, peer)`,
+			#     also world-scoped, one per participant per source. This is
+			#     what proves the PERSONAL half happened per person rather
+			#     than once for the fight.
+			#   * `satchel` and `party_xp` -- this peer's OWN inventory and
+			#     party (D100: a peer's party is its own), which is where a
+			#     payout that was announced but never landed shows up.
+			var rgame := root.get_node_or_null(^"Game")
+			if rgame == null:
+				return null
+			# Probe arguments arrive under `args`, not at the top level
+			# (`net_harness.gd::probe()` sends `{"type","id","what","args"}`).
+			var rargs: Dictionary = msg.get("args", {}) as Dictionary
+			var rtrainer := str(rargs.get("trainer", "practice_trainer"))
+			var rspec: Dictionary = NET_TRAINERS.trainer(rtrainer)
+			var rworld: Variant = rgame.get("world")
+			var rflags: Variant = (rworld as RefCounted).get("flags") if rworld != null else null
+			var rsession: Node = rgame.get("session") as Node
+			var rpeers: Array = []
+			if rsession != null and rsession.has_method("peers"):
+				for raw: Variant in (rsession.call("peers") as Array):
+					if typeof(raw) == TYPE_DICTIONARY and (raw as Dictionary).has("peer_id"):
+						rpeers.append(int((raw as Dictionary)["peer_id"]))
+			var receipts := {}
+			for source: Variant in rargs.get("sources", [NET_REWARDS.source_for(rtrainer, "coins")]):
+				var per := {}
+				for pid: Variant in rpeers:
+					var receipt := "reward:%s:%d" % [str(source), int(pid)]
+					per[str(int(pid))] = rflags != null \
+						and bool((rflags as RefCounted).call("has", receipt))
+				receipts[str(source)] = per
+			var rinv: Variant = rgame.get("inventory")
+			var satchel := {}
+			for item: Variant in rargs.get("items", ["coin", "potion_small"]):
+				satchel[str(item)] = 0 if rinv == null \
+					else int((rinv as RefCounted).call("count", str(item)))
+			var rparty: Variant = rgame.get("party")
+			var xp_total := 0
+			if rparty != null:
+				for i in int((rparty as RefCounted).call("size")):
+					var member: Variant = (rparty as RefCounted).call("at", i)
+					if member != null:
+						xp_total += int((member as RefCounted).get("xp"))
+			var rdirector := _encounter_director()
+			return {
+				"trainer": rtrainer,
+				"defeat_flag": str(rspec.get("defeat_flag", "")),
+				"beaten": rflags != null and not str(rspec.get("defeat_flag", "")).is_empty() \
+					and bool((rflags as RefCounted).call("has", str(rspec.get("defeat_flag", "")))),
+				"can_challenge": rdirector != null \
+					and bool(rdirector.call("can_challenge", rspec)),
+				"battle_active": rdirector != null \
+					and bool(rdirector.call("trainer_battle_active")),
+				"receipts": receipts,
+				"satchel": satchel,
+				"party_xp": xp_total,
+				"local_peer_id": 0 if rsession == null or not rsession.has_method("local_peer_id") \
+					else int(rsession.call("local_peer_id")),
+				"session_peers": rpeers,
+			}
 		"downed":
 			# Lane 4.E. Everything the down/revive smoke asserts on, read off
 			# this peer's own live objects: whether IT is downed and for how
