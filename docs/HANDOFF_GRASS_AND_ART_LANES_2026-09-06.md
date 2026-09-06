@@ -32,6 +32,40 @@ Nobody is holding these branches. Every session was archived on the owner's inst
 | `claude/art-cloudreach-dressing-0906` | C6, C7, C8, X3 | wrapped on instruction; `ralph/reports/CLOUDREACH-DRESS-0906/REPORT.md` |
 | `claude/art-tether-machine-0906` | H6 | wrapped on instruction; `ralph/reports/TETHER-MACHINE-0906/REPORT.md` |
 
+### What each finished lane actually concluded
+
+Written after their reports landed. **Read the reports themselves** — these are one-line
+summaries of documents that carry the measurements.
+
+- **Warrens** (`c11c729c`, `ralph/reports/WARRENS-ART-0906/REPORT.md`) — **W1 mushrooms
+  CLOSED** and praised by the blind judge ("the only object in any interior frame with a
+  designed silhouette... it reads at thumbnail size"); **W5 burrow arch CLOSED**, the
+  mouth frame called "the best frame in the survey"; the tube-foot pale sliver CLOSED and
+  measured, 219 bright pixels to 0. **W3 is half open**: the material half is done, the
+  geometry half is not — the rooms are still "hard 90 degree extruded prisms, nothing
+  says *dug*". It left the threshold terrain strip alone deliberately: it is the terrain's
+  own baked road, not a defect it should paper over.
+- **Cloudreach atmosphere** (`37f3a8ec`, `CLOUDREACH-ATMOS-0906/REPORT.md`, plus
+  `EVIDENCE.md` and four judge rounds) — four render rounds against C4, C5 and C3.
+- **Cloudreach dressing** (`7137efb9`, `CLOUDREACH-DRESS-0906/REPORT.md`) — **C6, C7 and
+  C8 are NOT closed by its own stated bar**; it asked the blind judge the three questions
+  directly and got three noes. It is explicit about what measurably changed versus what
+  did not, which is worth more than a claimed pass.
+- **Tether machine** (`f9224ded`, `TETHER-MACHINE-0906/REPORT.md`) — **the style-mismatch
+  half of H6 is closed; the unreadable-silhouette half is not, and three measured rounds
+  show it is not closeable from this asset's textures.** It also found that the older
+  handoff was wrong on a second point: there is no emissive to cap — the GLB carries one
+  material at `metallicFactor 0`. Its recommendation is to keep the original mesh and fix
+  the lighting; the plan is in its report.
+
+**A correction to the lane briefs I wrote, from the dressing lane:** my brief listed
+`Torch_Metal`, `Cage_Small`, `Chain_Coil`, `Lantern_Wall`, `Banner_1/2`,
+`CandleStick_Stand`, `Barrel_Holder`, `Rope_2/3`, `WeaponStand`, `Dummy`, `Cauldron` and
+the `Stall_*` pieces as already installed. **They were not** — they are vendored, not
+installed, and the installed sixteen are a different set. The reservoir figures in §4 are
+right; the installed/vendored split in that one brief was not. Check
+`assets/props/quaternius_fantasy/` before assuming any specific prop is importable.
+
 All five lanes branched from `claude/second-biome-art-plan-470zru`, so that one merges
 first. **Trust each lane's own REPORT.md over this table** — they were written at the
 moment each lane stopped and this was written before they finished. If a report is
