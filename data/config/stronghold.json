@@ -642,9 +642,9 @@
         60.0
       ],
       "y": 5.0,
-      "energy": 0.54,
+      "energy": 0.9,
       "range": 14.0,
-      "colour": "#7fd8c4"
+      "colour": "#c4a67e"
     },
     {
       "_comment": "OP-0905-19: energy cut ~40% (0.7 -> 0.42), same reason as the pair above.",
@@ -653,9 +653,9 @@
         68.0
       ],
       "y": 5.0,
-      "energy": 0.42,
+      "energy": 0.9,
       "range": 12.0,
-      "colour": "#8fa6b8"
+      "colour": "#c4a67e"
     },
     {
       "_comment": "OP-0905-19: energy cut ~40% (1.45 -> 0.87) now that Warden Arena carries its own wall torches (hall_occupation.braziers), so the warm sconces read as key.",
@@ -664,9 +664,9 @@
         90.2
       ],
       "y": 8.0,
-      "energy": 0.87,
+      "energy": 0.9,
       "range": 24.0,
-      "colour": "#8fa6b8"
+      "colour": "#c4a67e"
     },
     {
       "_comment": "OP-0905-19: energy cut ~40% (1.45 -> 0.87), same reason as its pair above.",
@@ -675,9 +675,9 @@
         90.2
       ],
       "y": 8.0,
-      "energy": 0.87,
+      "energy": 0.9,
       "range": 24.0,
-      "colour": "#8fa6b8"
+      "colour": "#c4a67e"
     },
     {
       "_comment": "OP-0905-19: energy cut ~40% (1.05 -> 0.63) now that the Legendary Chamber carries its own wall torches (hall_occupation.braziers), so the warm sconces (and the existing warm SPOT fills) read as key against this cool omni.",
@@ -686,9 +686,9 @@
         78.0
       ],
       "y": 12.0,
-      "energy": 0.63,
+      "energy": 0.9,
       "range": 30.0,
-      "colour": "#8f8a80"
+      "colour": "#c4a67e"
     },
     {
       "_comment": "OP-0905-19: energy cut ~40% (1.05 -> 0.63), same reason as its pair above.",
@@ -697,9 +697,9 @@
         102.0
       ],
       "y": 12.0,
-      "energy": 0.63,
+      "energy": 0.9,
       "range": 30.0,
-      "colour": "#8f8a80"
+      "colour": "#c4a67e"
     },
     {
       "_comment": "N05-WORLD-DRESSING-0905, W06-FINALE-0904's three blind judges on the Legendary Chamber: 'single-key with crushed blacks', 'teal-on-teal-on-olive with one green accent; there is no warm note anywhere to give the green somewhere to be green against', 'the chamber has almost no value structure, and the creature is lost in it'. The room's two grey-blue omnis above and the machine's teal core are all cool. This is the warm FILL, high inside the doorway wall (the +x wall, the way the player walks in), in the same brazier-warm the courtyard's own fill uses, thrown across the room at the machine and the west wall so the teal reads as teal against something. A SPOT, not an omni, and measured into that shape: the first pass was a shadowless omni and moved the chamber's walls by nothing at all (right wall mean luma 25.2 -> 25.3, far wall 25.2 -> 25.2 on the same stand) while lifting the machine and creature -- the Compatibility renderer caps the OMNI lights a single mesh may take at rendering/limits/opengl/max_lights_per_object (8), the chamber's 41 m wall slabs already touch eight (two room omnis, the core, the containment light, the arena pair, the siphon, the approach), and a ninth omni is silently dropped on exactly the surfaces that needed it. Spots are counted on their own budget, and this room had none. TUNABLE.",
@@ -922,10 +922,10 @@
         ],
         "y": 1.9,
         "yaw_deg": 90.0,
-        "scale": 0.85,
-        "energy": 1.7,
-        "range": 8.5,
-        "attenuation": 1.3
+        "scale": 1.25,
+        "energy": 6.5,
+        "range": 18.0,
+        "attenuation": 1.0
       },
       {
         "_comment": "OP-0905-19. Wall sconce, tether_approach west wall, north of centre.",
@@ -936,10 +936,10 @@
         ],
         "y": 1.9,
         "yaw_deg": 90.0,
-        "scale": 0.85,
-        "energy": 1.7,
-        "range": 8.5,
-        "attenuation": 1.3
+        "scale": 1.25,
+        "energy": 6.5,
+        "range": 18.0,
+        "attenuation": 1.0
       },
       {
         "_comment": "OP-0905-19. Wall sconce, tether_approach east wall, south of centre.",
@@ -950,10 +950,10 @@
         ],
         "y": 1.9,
         "yaw_deg": -90.0,
-        "scale": 0.85,
-        "energy": 1.7,
-        "range": 8.5,
-        "attenuation": 1.3
+        "scale": 1.25,
+        "energy": 6.5,
+        "range": 18.0,
+        "attenuation": 1.0
       },
       {
         "_comment": "OP-0905-19. Wall sconce, tether_approach east wall, north of centre.",
@@ -964,10 +964,10 @@
         ],
         "y": 1.9,
         "yaw_deg": -90.0,
-        "scale": 0.85,
-        "energy": 1.7,
-        "range": 8.5,
-        "attenuation": 1.3
+        "scale": 1.25,
+        "energy": 6.5,
+        "range": 18.0,
+        "attenuation": 1.0
       },
       {
         "_comment": "OP-0905-19. Wall sconce, Warden Arena west wall, south third. The arena floor itself stays clear (its own `_role` calls it 'deliberately the emptiest room... a floor, a height and nothing to trip over') -- these are bolted to the walls, nothing stands on the fight floor.",
@@ -978,10 +978,10 @@
         ],
         "y": 1.9,
         "yaw_deg": 90.0,
-        "scale": 0.85,
-        "energy": 1.7,
-        "range": 8.5,
-        "attenuation": 1.3
+        "scale": 1.25,
+        "energy": 6.5,
+        "range": 18.0,
+        "attenuation": 1.0
       },
       {
         "_comment": "OP-0905-19. Wall sconce, Warden Arena west wall, centre third.",
@@ -992,10 +992,10 @@
         ],
         "y": 1.9,
         "yaw_deg": 90.0,
-        "scale": 0.85,
-        "energy": 1.7,
-        "range": 8.5,
-        "attenuation": 1.3
+        "scale": 1.25,
+        "energy": 6.5,
+        "range": 18.0,
+        "attenuation": 1.0
       },
       {
         "_comment": "OP-0905-19. Wall sconce, Warden Arena west wall, north third.",
@@ -1006,10 +1006,10 @@
         ],
         "y": 1.9,
         "yaw_deg": 90.0,
-        "scale": 0.85,
-        "energy": 1.7,
-        "range": 8.5,
-        "attenuation": 1.3
+        "scale": 1.25,
+        "energy": 6.5,
+        "range": 18.0,
+        "attenuation": 1.0
       },
       {
         "_comment": "OP-0905-19. Wall sconce, Warden Arena east wall, south third.",
@@ -1020,10 +1020,10 @@
         ],
         "y": 1.9,
         "yaw_deg": -90.0,
-        "scale": 0.85,
-        "energy": 1.7,
-        "range": 8.5,
-        "attenuation": 1.3
+        "scale": 1.25,
+        "energy": 6.5,
+        "range": 18.0,
+        "attenuation": 1.0
       },
       {
         "_comment": "OP-0905-19. Wall sconce, Warden Arena east wall, centre third.",
@@ -1034,10 +1034,10 @@
         ],
         "y": 1.9,
         "yaw_deg": -90.0,
-        "scale": 0.85,
-        "energy": 1.7,
-        "range": 8.5,
-        "attenuation": 1.3
+        "scale": 1.25,
+        "energy": 6.5,
+        "range": 18.0,
+        "attenuation": 1.0
       },
       {
         "_comment": "OP-0905-19. Wall sconce, Warden Arena east wall, north third.",
@@ -1048,10 +1048,10 @@
         ],
         "y": 1.9,
         "yaw_deg": -90.0,
-        "scale": 0.85,
-        "energy": 1.7,
-        "range": 8.5,
-        "attenuation": 1.3
+        "scale": 1.25,
+        "energy": 6.5,
+        "range": 18.0,
+        "attenuation": 1.0
       },
       {
         "_comment": "OP-0905-19. Wall sconce, Legendary Chamber south wall, west of the machine's own axis. Kept off the doorway (+x) and back (-x) walls, on the two side walls flanking the machine instead, so nothing here competes with the OP-0905-16 doorway-to-legendary sightline.",
@@ -1062,10 +1062,10 @@
         ],
         "y": 1.9,
         "yaw_deg": 0.0,
-        "scale": 0.85,
-        "energy": 2.4,
-        "range": 11.0,
-        "attenuation": 1.15
+        "scale": 1.25,
+        "energy": 6.5,
+        "range": 18.0,
+        "attenuation": 1.0
       },
       {
         "_comment": "OP-0905-19. Wall sconce, Legendary Chamber south wall, east of the machine's own axis.",
@@ -1076,10 +1076,10 @@
         ],
         "y": 1.9,
         "yaw_deg": 0.0,
-        "scale": 0.85,
-        "energy": 2.4,
-        "range": 11.0,
-        "attenuation": 1.15
+        "scale": 1.25,
+        "energy": 6.5,
+        "range": 18.0,
+        "attenuation": 1.0
       },
       {
         "_comment": "OP-0905-19. Wall sconce, Legendary Chamber north wall, west of the machine's own axis.",
@@ -1090,10 +1090,10 @@
         ],
         "y": 1.9,
         "yaw_deg": 180.0,
-        "scale": 0.85,
-        "energy": 2.4,
-        "range": 11.0,
-        "attenuation": 1.15
+        "scale": 1.25,
+        "energy": 6.5,
+        "range": 18.0,
+        "attenuation": 1.0
       },
       {
         "_comment": "OP-0905-19. Wall sconce, Legendary Chamber north wall, east of the machine's own axis.",
@@ -1104,10 +1104,10 @@
         ],
         "y": 1.9,
         "yaw_deg": 180.0,
-        "scale": 0.85,
-        "energy": 2.4,
-        "range": 11.0,
-        "attenuation": 1.15
+        "scale": 1.25,
+        "energy": 6.5,
+        "range": 18.0,
+        "attenuation": 1.0
       }
     ],
     "_comment_gate_source": "Brazier BASKETS with no light of their own, standing where `lights`/`lights_flanks` already authors a source. The T1-ARCH gate recipe lit the curtain convincingly and put nothing in the frame that could be doing the lighting; these are that missing source, and they cost zero omnis because the light is already there. The Warden Arena pair (W-4) is the same trick applied inside the Hall: `EXTERIOR_OMNI_BUDGET` was already spent to 21 of 22 before this pass (`stronghold.gd::_report_light_budget`'s own count), so a THIRD real omni pair here would have pushed the Hall over its design ceiling for two props that only need to read as fire, not to actually light the room -- the arena's own two ambient sky-fill `lights` entries at [-8,90.2]/[8,90.2] already do that job.",
@@ -2266,7 +2266,8 @@
         "valve_at": 0.7,
         "bracket_pitch": 3
       }
-    ]
+    ],
+    "_comment_wall_torches_0906b": "Interior stands T-01..T-03 (tools/_capture_stronghold_climax.gd, 2026-09-06) rendered the three inner rooms near-black at 2.4 energy / 11 m: a 24x26x11 m room swallows a torch tuned for a yard. Raised to 6.5 / 18 m / attenuation 1.0 and the prop to 1.25 so the flame itself reads; the rooms' cool ambients warmed below. Torches are the key light of the Hall's interior now (OP-0905-19)."
   },
   "_comment_machine": "PLACEHOLDER MASSING, AND IT MUST NOT BE MISTAKEN FOR THE ASSET. The Tether Machine has an owner-supplied board (docs/art/reference/15_Legendary_Tether_Machine.png, 2026-08-11) and is one of the three hero objects D24 reserves a Meshy generation for. The agent that built this route had no Meshy access, so what stands here is primitives plus the Tether materials, sized to the board's own ~15m scale bar, and the seam is left deliberately obvious: `placeholder: true` below, a name of `TetherMachinePlaceholder` in the scene tree, and no attempt at the board's surfacing. Replacing it is a one-object swap into `machine.model` -- the chamber, the lighting and the markers around it are all real and are what this item actually delivered. AND THE STANDING WARNING FROM THE BACKLOG: the board draws a legendary bound inside the containment ring because that is what the machine DOES to legendaries. The board licenses the MACHINE, never its occupant. Sec20/D23 forbid a new creature mesh at any credit balance, so the bound creature is an existing roster body or VFX placed by R8.4 -- there is no creature in this block and none may be added to it.",
   "machine": {
