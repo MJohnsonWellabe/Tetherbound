@@ -113,7 +113,7 @@ godot --headless --path . --check-only --script tests/smoke_net_deploy_two_creat
 | `godot --headless --path . --script tests/smoke_playground.gd` | **PASS** — printed `smoke: OK`, exit 0 |
 | `godot --headless --path . --script tests/smoke_creature_control.gd` | **PASS** — `creature control: OK — dismissed, recalled, swapped, and refused mid-fight.`, exit 0 |
 | `godot --headless --path . --script tests/smoke_wild_streaming.gd` | **PASS** — `wild streaming: OK — distant clusters sleep, near ones tick, engaged/fainting/respawning are never touched, and a round trip changes nothing about a creature's identity.`, exit 0 |
-| `godot --headless --path . --script tests/smoke_aggression.gd` | SMOKE_AGGRESSION_RESULT |
+| `godot --headless --path . --script tests/smoke_aggression.gd` | **FAILED once, then passed on a re-run. Recorded as a finding, not as a pass — see F6.** |
 | `tools/net/run_net_smoke.sh deploy_two_creatures --out=/tmp/net-local` | **PASS on the first run**, 33 checks, `ALL CHECKS PASSED`, exit 0 (run `net-20260906T033512Z-3387`) |
 
 `smoke_wild_streaming` is the one that matters most for item 5: it is the existing assertion
@@ -181,6 +181,51 @@ which is the same moment in the spawn packet's life that `remote_trainer.tscn`'s
 synchronizer occupies. The replicated set is `net_position` and `net_yaw` only; nothing a
 fight turns on is a replicated property (`MP_ENCOUNTER_PROTOCOL.md` §3).
 
+### F6 — `smoke_aggression` failed once on this branch, then passed. That is a finding.
+
+Reported as 1-fail-then-green rather than as "green", because a retry that turns 0-for-1 into
+a pass is a finding on this project by rule, and because the failure was real output rather
+than a crash.
+
+| Tree | Run | Result |
+|---|---|---|
+| this branch `0d8efcc8` | 1 | **FAIL** — `stood 116.1m from Galecrest for 900 frames without pressing anything and it never attacked`, preceded by `[player] entombed at 42.33, 0.79, -66.54 -- recovering to -25.40, 4.95, -15.70` |
+| base `dd00081c`, untouched | 1 | **`aggression: OK`** — `Galecrest started the fight on its own, from 9.0m` |
+| this branch `0d8efcc8` | 2 | **`aggression: OK`** — `Galecrest started the fight on its own, from 8.8m` |
+
+The base run was done specifically to answer "did this lane break it", before writing any
+verdict. What the three runs actually show is that the run is **not deterministic** — the
+peaceful half alone reports 16.3 m, 16.8 m and 12.9 m of stand-off distance across them — so
+one green base run does not exonerate the branch and one red branch run does not convict it.
+
+What the failure is: the smoke's scripted walk to Galecrest holds `move_forward` dead straight
+for up to 4000 frames. `tests/smoke_aggression.gd`'s own header documents that walk going dead
+against a Terrain3D snag, investigated 2026-08-13, with a CI signature of 44.1 / 38.0 / 45.1 m
+and a residual rate the header calls out explicitly; `ralph/reports/W24-LANDING-0904/REPORT.md`
+records a second occurrence, and `docs/CURRENT_STATE.md:535` names its coordinate as
+**(42.33, −66.54)** — the exact position this run printed. The new part is only the tail: the
+walk stalled long enough for `player_controller.gd::_recover_if_entombed()` to fire and rewind
+the trainer to a breadcrumb 116 m away, which is why the failure line says 116.1 m rather than
+the ~40 m the header's signature quotes.
+
+Why it is not this lane's, stated as reasoning and not as assertion. In a process with no
+autoloads (which is how this smoke runs), `_session` is null, so `_is_host()` and
+`_is_multi_peer()` are both false and nothing in this lane spawns, announces or replicates
+anything. `_realm_occupant_positions()` reduces to `[player]` because the `remote_trainer`
+group is empty, so `_stream_clusters()` performs the same one distance test per cluster it
+performed before. `follower_creature.gd` gains a group membership and two fields and no
+locomotion change; its `collision_layer = 0 if value else 1` in `set_following()` is untouched,
+which is the one thing in this lane's blast radius that could plausibly block a trainer. The
+walk that dies is the trainer's own, against terrain, with the creature deliberately
+non-colliding.
+
+**Handover H7:** this is not fixed here and this lane does not own it. It belongs with whoever
+owns the walk — either `tests/smoke_aggression.gd`'s escape logic (its `UNSTICK_STEER_RAD`
+escape clearly did not save this run) or the terrain snag itself. What would settle it is a
+flake-rate run of the same smoke on `main` (`tools/flake_rate.sh`), which this lane did not do
+because the anti-grind rule caps it at two attempts on one narrow defect and this one is
+neither narrow nor this lane's.
+
 ### F5 — a coroutine reached through `Object.call()` does not hand back its result
 
 `tools/net/peer_runner.gd::_step_deploy_creature()` reads the outcome off
@@ -222,6 +267,10 @@ not happened.
   the refusal; this lane owns the fact that the question can now be asked.
 * **H6 — `combat_manager.gd` was not touched.** It is 4.C's file and serialized after this lane.
   `_start_fight()` still passes `_ally_body` — the local body — into `begin()`, unchanged.
+* **H7 — `smoke_aggression`'s walk to Galecrest.** F6: red once on this branch, green on the
+  base and green on a re-run of the branch, at a coordinate `docs/CURRENT_STATE.md` already
+  names for this smoke. Not this lane's, not fixed here, and the reasoning for both statements
+  is in F6 rather than asserted. Goes to whoever owns that walk.
 
 ---
 
