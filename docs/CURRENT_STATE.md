@@ -69,6 +69,39 @@ suspect is per-module resource loading inside `building_prefabs.gd::_build_templ
 prefab's first placement loads every module's `.gltf`/`.obj` from disk), which would need the same
 `breathe()` threaded one level deeper, not a different mechanism.
 
+**Update, 2026-09-06 (later still): `verify-multiplayer-shard` completed a real 46-minute run on
+GitHub's own runner for the first time ever** (run 34049435929, commit `ac6c752e`, dispatched
+manually — see below). Both 6.A smokes passed; the enter_realm and village.gd fixes above are
+confirmed on real CI evidence, not just local runs. Exactly one of ~29 net smokes failed:
+`smoke_net_riding.gd`, "peer 1 started a fight WHILE peer 0 rode: ... peer 1 ERROR (no verdict)".
+Root cause: `race()`'s per-call deadline defaults to `step_budget_frames` (3000 frames, ~55 s
+wall-clock) unless a race entry names its own `budget_frames`. Peer 1's `engage_wild` call passed
+`require_record: false` — documented behavior for a CLIENT's wild fight (4.C H1: wilds are not
+replicated, so the record never binds) — which makes `_step_engage_wild()` GUARANTEED, every run,
+to spend its full 20 + settle(240) + bind_budget(600) = 860 physics frames before returning. That
+is only ~3.5x the 3000-frame default at nominal speed, thin next to how generously this file's
+own `fly`/`shared_boss` cousins budget a step whose cost is known up front. Reproduced locally
+(twice: red without the fix, green with it — `smoke_net_riding: 43 assertions, 0 failures`).
+**Fixed** by passing an explicit `budget_frames: 6000` on that one race entry — the clock widened,
+not the claim; `_all_passed(round_five)` still requires the fight to actually start.
+
+**Also, per owner direction after this run's 46-minute wall-clock (job 101530442523, 17:45–18:31
+UTC, ~29 two-process net smokes sequential in one job): `verify-multiplayer-shard` is now a 5-way
+matrix.** A new `discover-net-smokes` job holds the existing floor/roster check unchanged and
+publishes the file list; the matrix shards it round-robin (`index % 5`), which happens to land the
+two heaviest smokes (`realm_owner_disconnect_mid_fight`, `split_realms`) on different shards
+without any hand-tuning. Surveyed all 29 net smokes for genuine duplicates first (owner's second
+ask) — every one has a distinct player-visible claim tied to a distinct lane/directive item; the
+closest pair, `host_join_leave` vs `host_exit_saves`, is deliberately a quiet-exit/mid-fight-exit
+pair per their own headers. Nothing removed. No coverage lost, no assertion weakened, sharding and
+the one real bug fixed — that is the whole change.
+
+**Also confirmed twice this session: pushes from this session's git credentials do not fire the
+`pull_request: synchronize` CI trigger in this repo.** `workflow_dispatch` (manual) is the only way
+this session has found to actually get a run; matches an earlier session's same workaround on a
+different branch (runs 34026997741/34021074221). Anyone continuing this branch from a similar
+session should expect to dispatch CI manually after every push rather than waiting for it.
+
 ### What was built, in the order it will matter to a player
 
 A person starts or loads a world from the title screen and up to three friends join by address or

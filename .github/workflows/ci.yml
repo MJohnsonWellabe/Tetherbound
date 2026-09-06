@@ -1926,34 +1926,21 @@ jobs:
   # (`verify-multiplayer-wide`, not created by this lane) and do not run here.
   # RETRIES: 1 -- a net smoke that only passes on retry is a finding, same
   # rule AGENT_WORKFLOW.md §5 already holds every other smoke to.
-  verify-multiplayer-shard:
+  # SPLIT 2026-09-06 (owner direction): this used to be verify-multiplayer-shard
+  # itself, run once as a plain job. It was 46 minutes on run 34049435929
+  # because ~29 two-process net smokes ran SEQUENTIALLY in that one job -- the
+  # whole point of splitting it into `discover-net-smokes` (this job, floor and
+  # roster check only, no Godot) plus a 5-way `verify-multiplayer-shard` matrix
+  # below is to run those smokes in PARALLEL instead. Same discovery script,
+  # same floor and named roster, moved rather than duplicated: the matrix jobs
+  # below read this job's `files` output and slice it, they do not re-discover.
+  discover-net-smokes:
     runs-on: ubuntu-latest
-    # Was 25, which the thirteen Wave 2-5 smokes filled in 20 (run 34015409321).
-    # Lane 6.A's two rule-16 smokes add four to five Meadows-class WORLD BUILDS
-    # between them -- a realm crossing is a scene swap on the crossing peer and
-    # a shell stand-up on the host, and neither is free. Measured on lane 6.A's
-    # box (ralph/reports/MP-6A-REALMS-0906/REPORT.md §4): a full Meadows 65 s, a
-    # Meadows shell 46 s, a full Cloudreach 56 s, a Cloudreach shell 32 s. That
-    # is +11 to +13 minutes, which does not fit in 25.
-    #
-    # 45 is 20 + that, plus margin for a slower runner. It is an ESTIMATE built
-    # from measured build costs, not a measurement of this shard: the first real
-    # run is what should correct it, in either direction. A shard that finishes
-    # in 32 minutes does not need 45.
-    #
-    # 65 = the 45-minute build-cost estimate above, plus the five smokes added
-    # on 2026-09-06, each timed on a 4-core laptop: `menu_does_not_freeze_peer`
-    # 2m45s, `catch_race` 2m23s, `riding` 2m10s-2m30s, `fly` 2m50s -- about
-    # 12 minutes of laptop, and a CI runner is the slower machine.
-    #
-    # It is still an estimate rather than a measurement OF THE SHARD, and for a
-    # blunter reason than the paragraph above admits: until the discovery fix in
-    # this same block landed, this job was a bash syntax error and had never run
-    # a single net smoke. Nothing here has ever been timed against a real green
-    # run. The first one is what should correct this number, in either direction.
-    timeout-minutes: 65
+    timeout-minutes: 5
     needs: changes
     if: needs.changes.outputs.code == 'true'
+    outputs:
+      files: ${{ steps.discover.outputs.files }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -1966,7 +1953,6 @@ jobs:
             !/shots/
             !/assets_raw/
             !/archive/
-      - uses: ./.github/actions/setup-godot
       - name: Discover peers:2 net smokes
         id: discover
         run: |
@@ -2040,6 +2026,14 @@ jobs:
           # and nobody would notice, because the count is satisfied by whatever
           # else happens to be in the directory. Each lane that ships a net
           # smoke adds its file here.
+          #
+          # Surveyed 2026-09-06 for genuine duplicates before this shard was
+          # split (owner direction): every one of these 29 has a distinct
+          # player-visible claim tied to a distinct lane/directive item --
+          # `host_join_leave` (a quiet host exit) and `host_exit_saves` (host
+          # exits MID-FIGHT) look like a pair but are deliberately different
+          # scenarios per their own headers, and no other pair is even that
+          # close. None dropped.
           for required in \
             tests/smoke_net_behind_character_joins_ahead_world.gd \
             tests/smoke_net_boss_rewards_each_participant.gd \
@@ -2080,14 +2074,74 @@ jobs:
             esac
           done
           echo "files=${files}" >> "$GITHUB_OUTPUT"
+
+  verify-multiplayer-shard:
+    runs-on: ubuntu-latest
+    # 5-way matrix, 2026-09-06 (owner direction, after the 46-minute sequential
+    # run above). Each shard gets every 5th file from discover-net-smokes'
+    # alphabetical list (index % 5), which happens to split the two heaviest
+    # smokes -- `realm_owner_disconnect_mid_fight` (Meadows + Cloudreach + a
+    # Meadows SHELL) and `split_realms` (five world builds, "the most
+    # expensive net smoke in the shard by a wide margin" per its own header)
+    # -- onto different shards (index 17 -> shard 3, index 25 -> shard 1)
+    # rather than stacking both behind one runner. 29 smokes / 5 shards is a
+    # plain round-robin, not weighted by measured cost, because no per-smoke
+    # timing exists yet for this tree's shards -- the first real run is what
+    # should correct the split if one shard runs hot next to the others.
+    #
+    # 30 minutes per shard is an ESTIMATE, not a measurement of any one shard:
+    # the old job's 65-minute ceiling covered every smoke in one sequence, and
+    # even the heaviest single shard now carries at most a third of that
+    # sequence's content. Generous on purpose, same as the old ceiling was, and
+    # for the same reason -- correct it from a real green run, not a guess.
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5]
+    timeout-minutes: 30
+    needs:
+      - changes
+      - discover-net-smokes
+    if: needs.changes.outputs.code == 'true'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ralph/
+            !/docs/
+            !/shots/
+            !/assets_raw/
+            !/archive/
+      - uses: ./.github/actions/setup-godot
+      - name: Select this shard's net smokes
+        id: select
+        env:
+          ALL_FILES: ${{ needs.discover-net-smokes.outputs.files }}
+          SHARD: ${{ matrix.shard }}
+          SHARD_COUNT: 5
+        run: |
+          set -uo pipefail
+          i=0
+          mine=""
+          for f in $ALL_FILES; do
+            if [ $(( i % SHARD_COUNT )) -eq $(( SHARD - 1 )) ]; then
+              mine="$mine $f"
+            fi
+            i=$((i + 1))
+          done
+          echo "shard ${SHARD}/${SHARD_COUNT}: ${mine}"
+          echo "files=${mine}" >> "$GITHUB_OUTPUT"
       - name: Run net smokes
-        if: ${{ !cancelled() && steps.discover.outputs.files != '' }}
+        if: ${{ !cancelled() && steps.select.outputs.files != '' }}
         env:
           RETRIES: 1
         run: |
           set -uo pipefail
           status=0
-          for f in ${{ steps.discover.outputs.files }}; do
+          for f in ${{ steps.select.outputs.files }}; do
             name="$(basename "$f" .gd)"
             name="${name#smoke_net_}"
             n=0
@@ -2107,7 +2161,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: net-smoke-runs
+          name: net-smoke-runs-${{ matrix.shard }}
           path: /tmp/net-ci/
           retention-days: 14
           if-no-files-found: ignore

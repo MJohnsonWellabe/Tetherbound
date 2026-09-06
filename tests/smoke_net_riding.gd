@@ -237,10 +237,22 @@ func _run() -> void:
 	# (`riding_controller._riding_allowed()` stands down for a running
 	# `CombatManager`), so this is also the test that peer 1's fight is peer
 	# 1's -- peer 0 must still be on their animal at the end of it.
+	#
+	# `budget_frames: 6000` on peer 1's entry, found red in CI (run 34049435929,
+	# "peer 1 ERROR (no verdict)") against race()'s own 3000-frame/~55s default.
+	# `require_record: false` below is DOCUMENTED to mean the record never binds
+	# for a client's wild fight (4.C H1), so `_step_engage_wild` is GUARANTEED,
+	# every run, to spend its full 20 + settle(240) + bind_budget(600) = 860
+	# physics frames before returning -- not a worst case, the only case. 3000
+	# frames is only ~3.5x that at nominal speed, thin margin next to how
+	# generously this file's own fly/shared_boss cousins budget a step whose
+	# cost is known up front (`smoke_net_fly.gd`, `smoke_net_shared_boss.gd`).
+	# The fix widens the CLOCK, not the CLAIM: `_all_passed(round_five)` still
+	# requires peer 1's fight to actually start and be observed to.
 	var round_five: Array = await race([
 		{"peer": 0, "action": "stick", "args": {"stick": "left", "x": 0.0, "y": -1.0, "frames": 150}},
 		{"peer": 1, "action": "engage_wild",
-			"args": {"settle": 240, "require_record": false}},
+			"args": {"settle": 240, "require_record": false}, "budget_frames": 6000},
 	])
 	_check(_all_passed(round_five),
 		"peer 1 started a fight WHILE peer 0 rode: %s" % _verdicts(round_five))
