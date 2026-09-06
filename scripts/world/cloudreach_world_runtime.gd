@@ -14,6 +14,7 @@ const DEATH := preload("res://scripts/world/player_death.gd")
 const COMBAT_HUD := preload("res://scenes/combat/combat_hud.tscn")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const FALL_RECOVERY := preload("res://scripts/world/fall_recovery.gd")
+const LOOK := preload("res://scripts/world/cloudreach_look.gd")
 var world: Node3D
 var player: CharacterBody3D
 var chapter: Node
@@ -54,6 +55,14 @@ func mount(owner_world: Node3D, chapter_node: Node, realm_map: RefCounted) -> vo
 	chapter = chapter_node
 	navigation = realm_map
 	player = world.get_node("Player")
+	# CLOUDREACH-LOOK-0906: post-build visual dressing (rope rails, mooring,
+	# a raycast-placed second ground-cover layer, trees/stones, cliffside
+	# settlement recolour). A separate node so it never touches world-build
+	# code; see scripts/world/cloudreach_look.gd for the full contract.
+	var look := LOOK.new()
+	look.name = "CloudreachLook"
+	world.add_child(look)
+	look.call("dress", world)
 	var game := get_node("/root/Game")
 	var placer := PLACER.new()
 	placer.name = "BuildPlacer"
