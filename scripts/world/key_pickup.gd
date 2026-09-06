@@ -10,6 +10,8 @@ extends Node3D
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 ## OP-0830-3: the one shared pickup highlight. See scripts/world/pickup_glow.gd.
 const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
+## OP-0905-18: a no-op unless `_item_id` is a known evolution catalyst.
+const PROGRESSION_FEED := preload("res://scripts/creatures/progression_feed.gd")
 
 const FLAG_PREFIX := "pickup:"
 ## Compatibility for saves written before physical pickups recorded their own
@@ -242,4 +244,7 @@ func _on_picked_up() -> void:
 	var progression: RefCounted = game.get("progression")
 	if progression != null:
 		progression.call("set_flag", flag_id(_item_id))
+	# OP-0905-18: a no-op for every item that is not a known evolution
+	# catalyst (heartstone/sunstone) -- see progression_feed.gd's own comment.
+	PROGRESSION_FEED.announce_catalyst_pickup(_item_id)
 	_deactivate()

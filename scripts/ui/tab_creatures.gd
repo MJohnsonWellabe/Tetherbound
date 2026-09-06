@@ -1179,12 +1179,9 @@ func _describe(index: int, cfg: Dictionary) -> void:
 	# 121" as a second HP line. Spelling it out removes the collision without
 	# touching the shared font.
 	_detail_xp.text = "EXP  %d / %d" % [xp, xp_needed]
-	var evolution_requirement: Dictionary = cfg.get("evolution", {}).get(str(creature.get("species_id")), {})
-	if not evolution_requirement.is_empty():
-		_detail_xp.text += " · Evolution at Lv %d + Bond %d + catalyst" % [int(evolution_requirement.get("level", 0)), int(evolution_requirement.get("bond_tier", 0))]
 	_detail_xp_bar.value = 0.0 if xp_needed <= 0 else clampf(float(xp) / float(xp_needed), 0.0, 1.0) * 100.0
 	if _detail_xp_next != null:
-		_detail_xp_next.text = _xp_next_line(creature, cfg)
+		_detail_xp_next.text = _xp_next_line(creature, cfg, _inventory())
 
 	_fill_move_row(
 		str(creature.get("move_quick")), "QUICK", creature_type,
@@ -1298,9 +1295,14 @@ static func _bond_row_text(row: Dictionary) -> String:
 	return "          %s" % counter
 
 
-## "34 EXP to Lv 9   ·   evolves at Lv 15" -- how close the next level is and
-## the level at which anything changes (prompt 73 §2.3).
-static func _xp_next_line(creature: RefCounted, cfg: Dictionary) -> String:
+## "34 EXP to Lv 9   ·   Lv 15 (now 9)  ·  Bond tier 3 (now 1)  ·  needs
+## Heartstone" -- how close the next level is, and (OP-0905-18: the owner
+## reached the midgame never having learned Mudsnout evolves at all) every
+## unmet evolution requirement named explicitly with the creature's current
+## value beside it, not just the level gate the old line quoted alone.
+## `inventory` is optional -- null reads as "no item available", same
+## direction `evolution.gd::check()` already reads it.
+static func _xp_next_line(creature: RefCounted, cfg: Dictionary, inventory: RefCounted = null) -> String:
 	var level := int(creature.get("level"))
 	var cap := int(cfg.get("level", {}).get("cap", 50))
 	var parts: Array[String] = []
@@ -1311,10 +1313,40 @@ static func _xp_next_line(creature: RefCounted, cfg: Dictionary) -> String:
 		if PROGRESSION_FEED.xp_near(creature, cfg):
 			parts.append("one fight away")
 	var req: Dictionary = cfg.get("evolution", {}).get(str(creature.get("species_id")), {})
-	var evolve_level := int(req.get("level", 0))
-	if evolve_level > 0:
-		parts.append("evolves at Lv %d" % evolve_level if level < evolve_level else "evolution level met")
+	if not req.is_empty():
+		var missing := _evolution_missing_text(creature, cfg, inventory)
+		parts.append(missing if missing != "" else "ready to evolve")
 	return "   ·   ".join(parts)
+
+
+## Every evolution requirement `creature` has not yet met, current value
+## alongside each gate: "Lv 15 (now 11)  ·  Bond tier 3 (now 2)  ·  needs
+## Heartstone". "" once level, bond and catalyst are all met (the "G  evolve"
+## hint in `_describe()` already covers that case) or the species does not
+## evolve at all. Reads `evolution.gd::requirements()` -- the same source
+## `_read_evolve()`'s own eligibility check uses -- so this can never name a
+## gate the real check does not also enforce.
+static func _evolution_missing_text(creature: RefCounted, cfg: Dictionary, inventory: RefCounted) -> String:
+	var req: Dictionary = EVOLUTION.requirements(str(creature.get("species_id")), cfg, inventory)
+	if req.is_empty():
+		return ""
+	var parts: Array[String] = []
+	var level := int(creature.get("level"))
+	var level_needed := int(req.get("level", 0))
+	if level < level_needed:
+		parts.append("Lv %d (now %d)" % [level_needed, level])
+	var bond_tier := int(creature.call("bond_nodes"))
+	var bond_needed := int(req.get("bond_tier", 0))
+	if bond_tier < bond_needed:
+		parts.append("Bond tier %d (now %d)" % [bond_needed, bond_tier])
+	if bool(req.get("ambiguous", false)):
+		parts.append("carrying more than one evolution stone")
+	else:
+		var item_id := str(req.get("item_id", ""))
+		var has_item := item_id != "" and inventory != null and int(inventory.call("count", item_id)) >= 1
+		if item_id != "" and not has_item:
+			parts.append("needs %s" % item_id.capitalize())
+	return "  ·  ".join(parts)
 
 
 func _fill_move_row(

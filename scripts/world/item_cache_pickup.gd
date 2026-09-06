@@ -26,6 +26,8 @@ extends Node3D
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
+## OP-0905-18: a no-op unless `_item_id` is a known evolution catalyst.
+const PROGRESSION_FEED := preload("res://scripts/creatures/progression_feed.gd")
 
 const FLAG_PREFIX := "cache:"
 
@@ -176,4 +178,5 @@ func _on_picked_up() -> void:
 	var progression: RefCounted = game.get("progression")
 	if progression != null:
 		progression.call("set_flag", flag_id(_item_id, _placement_id, _realm_id))
+	PROGRESSION_FEED.announce_catalyst_pickup(_item_id)
 	_deactivate()
