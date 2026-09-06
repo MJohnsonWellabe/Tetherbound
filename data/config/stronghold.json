@@ -492,7 +492,7 @@
       "y": 5.0,
       "energy": 2.5,
       "range": 14.0,
-      "colour": "#c4a67e"
+      "colour": "#7d8cab"
     },
     {
       "_comment": "OP-0905-19: energy cut ~40% (0.7 -> 0.42), same reason as the pair above.",
@@ -500,7 +500,7 @@
       "y": 5.0,
       "energy": 2.5,
       "range": 12.0,
-      "colour": "#c4a67e"
+      "colour": "#7d8cab"
     },
     {
       "_comment": "OP-0905-19: energy cut ~40% (1.45 -> 0.87) now that Warden Arena carries its own wall torches (hall_occupation.braziers), so the warm sconces read as key. HALL-STAGING-0906 round 3: back up to 1.6 (warm #c4a67e) -- with max_lights_per_object raised the torches reach the floor, but the arena is 24 x 26 x 11 m and its near floor measured luma 2.0 from the entrance; the torches stay the key, this is the base the floor needs to read as stone.",
@@ -508,7 +508,7 @@
       "y": 8.0,
       "energy": 4.0,
       "range": 24.0,
-      "colour": "#c4a67e"
+      "colour": "#7d8cab"
     },
     {
       "_comment": "OP-0905-19: energy cut ~40% (1.45 -> 0.87), same reason as its pair above.",
@@ -516,7 +516,7 @@
       "y": 8.0,
       "energy": 4.0,
       "range": 24.0,
-      "colour": "#c4a67e"
+      "colour": "#7d8cab"
     },
     {
       "_comment": "OP-0905-19: energy cut ~40% (1.05 -> 0.63) now that the Legendary Chamber carries its own wall torches (hall_occupation.braziers), so the warm sconces (and the existing warm SPOT fills) read as key against this cool omni. HALL-STAGING-0906 round 3: 1.3 for the same floor-base reason as the arena pair; the core light was cut to 1.9 in the same round so this warm base now beats the teal.",
@@ -524,7 +524,7 @@
       "y": 12.0,
       "energy": 3.0,
       "range": 30.0,
-      "colour": "#c4a67e"
+      "colour": "#7d8cab"
     },
     {
       "_comment": "OP-0905-19: energy cut ~40% (1.05 -> 0.63), same reason as its pair above.",
@@ -532,7 +532,7 @@
       "y": 12.0,
       "energy": 3.0,
       "range": 30.0,
-      "colour": "#c4a67e"
+      "colour": "#7d8cab"
     },
     {
       "_comment": "N05-WORLD-DRESSING-0905, W06-FINALE-0904's three blind judges on the Legendary Chamber: 'single-key with crushed blacks', 'teal-on-teal-on-olive with one green accent; there is no warm note anywhere to give the green somewhere to be green against', 'the chamber has almost no value structure, and the creature is lost in it'. The room's two grey-blue omnis above and the machine's teal core are all cool. This is the warm FILL, high inside the doorway wall (the +x wall, the way the player walks in), in the same brazier-warm the courtyard's own fill uses, thrown across the room at the machine and the west wall so the teal reads as teal against something. A SPOT, not an omni, and measured into that shape: the first pass was a shadowless omni and moved the chamber's walls by nothing at all (right wall mean luma 25.2 -> 25.3, far wall 25.2 -> 25.2 on the same stand) while lifting the machine and creature -- the Compatibility renderer caps the OMNI lights a single mesh may take at rendering/limits/opengl/max_lights_per_object (8), the chamber's 41 m wall slabs already touch eight (two room omnis, the core, the containment light, the arena pair, the siphon, the approach), and a ninth omni is silently dropped on exactly the surfaces that needed it. Spots are counted on their own budget, and this room had none. TUNABLE.",
@@ -858,6 +858,27 @@
         "at": [-28.0, 103.6],
         "y": 1.9,
         "yaw_deg": 180.0,
+        "scale": 1.6,
+        "energy": 12.0,
+        "range": 18.0,
+        "attenuation": 1.0
+      },
+      {
+        "mount": "wall",
+        "at": [-45.4, 84.2],
+        "y": 1.9,
+        "yaw_deg": -90.0,
+        "scale": 1.6,
+        "energy": 12.0,
+        "range": 18.0,
+        "attenuation": 1.0,
+        "_comment": "HALL-STAGING-0906 round 6: the Legendary Chamber's -x wall (x -46) had no torch; from the doorway stand the right half of the frame was Y 9-16 and the teal conduit keyed the room. Two more sconces, 0.6 m proud like the rest."
+      },
+      {
+        "mount": "wall",
+        "at": [-45.4, 96.2],
+        "y": 1.9,
+        "yaw_deg": -90.0,
         "scale": 1.6,
         "energy": 12.0,
         "range": 18.0,
@@ -1884,5 +1905,6 @@
       "offset": [6.0, 0.0],
       "_why": "OP-0905-16, 2026-09-05 ('You can't see the legendary when you enter the chamber. The machine needs to be turned.'). WAS [0.0, 6.0] -- +6m in the chamber's local DEPTH (z), which put the freed creature off to the side of the machine rather than between it and the player. The doorway is this chamber's +x wall (see `machine_foot`'s own note, and `passages`: warden_arena sits at greater x than legendary_chamber); this mark's bearing now points the same way, so the freed legendary steps out toward +x -- between the machine and the doorway the player walks in through. Same bearing `machine_foot` already uses; `stronghold_climax.gd::_clear_of_the_machine` still corrects the actual STANDING DISTANCE against the machine's measured (and, since OP-0905-16, rotated) plinth on this bearing, so only the direction is authored here."
     }
-  ]
+  ],
+  "_comment_room_ambients_cool_0906": "HALL-STAGING-0906 round 6, the round-5 blind verdict's first fix: 'the ambient/fill is warm red, so nothing reads as fire -- it reads as a room made of hot brick' (shadow tier R/B 19 against the key art's night panel at 0.30). The six roofed-room ambients (lights[6..11]) go from brazier-warm #c4a67e to slate #7d8cab at the same energies: the torches stay the only warm thing, the stone comes back toward the key art's grey granite, and the teal has a cool field to belong to."
 }
