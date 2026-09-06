@@ -154,6 +154,15 @@ Recorded here so a reader does not have to infer them from silence:
   instead; `smoke_net_behind_character_joins_ahead_world`, the other smoke built on divergent player
   flags, asks for no hash equality either. Finding F5.
 
+- **`place_on_ground` puts a creature metres above the floor inside the Warden Arena** (lane
+  MP-ROWS-8-21 finding F2). Worked around in the harness with an `exact` placement argument; **not
+  fixed in the world.** A player deploying inside that arena meets the same geometry.
+
+- **`smoke_net_shared_wild_fight` is flaky on both sides.** The realm-shell lane measured 5 of 7 on
+  its own branch against 6 of 7 on its untouched base. That is a flake rate, not a regression, and
+  it was recorded rather than tuned around — but it means a single green run of that smoke is not
+  evidence, and a single red one is not a finding.
+
 ## The verdict
 
 Stage B is done when **every row above reads PASS**, solo Meadows and Cloudreach still play end to
