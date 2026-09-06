@@ -44,19 +44,34 @@ and analytic ground. The kinematic heightfield mode is dropped from lane 4.B's s
 keep Dynamic/Game collision around their own camera. Everything about authority above stands:
 the host still owns every opponent body, every HP value, every strike and every catch.
 
-**Implemented 2026-09-06**, after lane 4.B's handover H1 recorded the amendment as unassigned and
-declined to make a world-boot change from a creature-ownership lane. `playground_world.gd` now
-picks `COLLISION_FULL_GAME` when `Game.is_multi_peer()` **and** `Game.is_host()`, and a host that
-started alone upgrades on `Session.peer_joined` -- the 3.06 s rebuild lands while the joiner is
-still applying the world snapshot. The gate is `is_multi_peer()` rather than `is_host()` on
-purpose: `is_host()` is deliberately true for solo, for a headless test and for a capture tool
-(see `session.gd`'s own reasoning), and answering yes to any of those would spend 16.1 MB and
-three seconds on every single-player boot for nothing. Clients are untouched and keep
-Dynamic/Game around their own camera.
+## Attempted and reverted 2026-09-06 — the amendment costs more than memory
 
-What this does **not** do, so the gap stays visible: wild creature bodies are still not replicated
-to clients, so a client's wilds remain its own local simulation and drift from the host's. Lane
-4.B deliberately did not freeze them -- a frozen meadow reads worse than drift -- and
-`MP_ENCOUNTER_PROTOCOL.md` §2 already requires the host to resolve strikes against its own
-positions, which is what makes the drift cosmetic rather than a correctness bug. Replicating them
-is a later lane's work.
+Lane 4.B recorded the FULL_GAME switch as unassigned (handover H1). It was implemented
+(`playground_world.gd` picking the mode on `is_multi_peer() and is_host()`, a host that started
+alone upgrading on `Session.peer_joined`), verified to do exactly what it says in the isolated
+peer boot logs — host mode 1 -> 3 on join, client and solo staying at 1 — **and then reverted,
+because `smoke_net_movement_two_peers` caught what the decision had not anticipated.**
+
+The measured effect was not the +16.1 MB / 3.06 s S2 priced. From the same spawn, holding the
+stick forward for 300 frames:
+
+| Peer | Collision | Walked |
+|---|---|---|
+| host | FULL_GAME | **14.52 m** |
+| client | Dynamic/Game | **1.92 m** (0.86 m in CI) |
+
+The smoke's header documents both peers stopping at **2.71 m**, stable across a 90- and a
+300-frame hold. So whole-map collision does not merely add shapes a player might bump into: it
+changes where a player can walk, and **a host and a client in the same world then disagree about
+their shared geography.** That is a worse defect than the one the switch solves.
+
+It also solves nothing yet. The switch exists so a host can simulate wild bodies anywhere with
+real ground beneath them; wild bodies are still not replicated (H1), and nothing consumes
+host-side positions until lane 4.C lands. So it was pure cost.
+
+**What the next attempt must settle, rather than assume:** this decision's line that "clients keep
+Dynamic/Game collision around their own camera" is the thing under question, not a given. Either
+every peer pays for full collision so the geography is shared, or the divergence is measured and
+bounded and shown to be invisible in play. Land it with wild-body replication, where the benefit
+is real and the asymmetry can be judged against creature behaviour instead of against a trainer's
+walk out of a farmhouse.
