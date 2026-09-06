@@ -66,8 +66,16 @@ them were not what they claimed:
 `smoke_gate_b_continuous` now drives ~25 minutes of continuous play, and its reliable
 prefix gates in CI.
 
-**If you are picking up an in-flight orchestration session, read
-`docs/HANDOFF_2026-09-06.md` first** (the owner-list pass, second-biome state and the art-gap
+**If you are picking up the art-gap work, read
+[`docs/HANDOFF_GRASS_AND_ART_LANES_2026-09-06.md`](HANDOFF_GRASS_AND_ART_LANES_2026-09-06.md)
+first.** It carries the six unlanded art branches, the owner directions that override the
+older plan (use the art already in the repo; no Meshy), and the one problem still open:
+the ground the player stands on at Cloudreach still renders as flat painted green. It
+lists what has already been ruled out with evidence, so the next reader does not repeat
+six-minute renders that have already been spent.
+
+**For the art-gap closure plan itself, read
+`docs/HANDOFF_2026-09-06.md`** (the owner-list pass, second-biome state and the art-gap
 closure plan; `docs/HANDOFF_2026-09-03.md` is the previous one) — it carries the live lane state, the open PR, and the
 traps that have already cost this project time.
 

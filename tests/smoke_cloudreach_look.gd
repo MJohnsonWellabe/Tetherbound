@@ -90,11 +90,11 @@ func _run() -> void:
 
 	if failures.is_empty():
 		var grid: Dictionary = look.call("cover_fill_grid")
-		print("  turf fill: %d cells considered at %.1f m spacing, %.0f m reach; %d probed, %d were turf, %d tufts at density x%.2f, %d ms" % [
-			int(grid.get("cells_considered", 0)), float(grid.get("spacing_m", 0.0)),
-			float(grid.get("reach_m", 0.0)), int(look.call("cover_fill_probe_count")),
-			int(look.call("cover_fill_cell_count")), int(look.call("cover_fill_count")),
-			float(grid.get("density_scale", 1.0)), int(look.call("cover_fill_msec"))])
+		print("  turf fill: %d turf surfaces, %d triangles, %d m2 of turf; %d plantable, %d tufts at density x%.2f, %d ms" % [
+			int(grid.get("surfaces", 0)), int(look.call("cover_fill_cell_count")),
+			int(grid.get("turf_area_m2", 0)), int(grid.get("turf_triangles", 0)),
+			int(look.call("cover_fill_count")), float(grid.get("density_scale", 1.0)),
+			int(look.call("cover_fill_msec"))])
 		print(("CLOUDREACH LOOK OK bridges_rails=%d posts=%d moorings=%d cover_main=%d cover_far=%d " +
 			"cover_alpine=%d cover_fill=%d trees=%d stones=%d settlement_overrides=%d guy_ropes=%d") % [
 			rope_sides.size(), int(look.call("bridge_post_count")), mooring.size(),

@@ -124,6 +124,8 @@ var _cover_counts_by_index: Array[int] = []
 var _ellipse_patches_cache: Array = []
 var _tree_positions: Array[Vector3] = []
 var _route_bounds_cache: Array = []
+var _cover_fill_surfaces := 0
+var _cover_fill_area := 0.0
 
 
 func dress(world: Node3D) -> void:
@@ -755,7 +757,13 @@ func _dress_turf_fill(root: Node3D, ellipse_patches: Array, cfg: Dictionary, bud
 	var far_visibility := float(fill.get("far_visibility_range_m", float(cfg.get("far_visibility_range_m", 900.0))))
 	var scale_min := float(fill.get("scale_min", 0.52))
 	var scale_max := float(fill.get("scale_max", 0.95))
+	# An absolute cap wins over the share when it is set: the fill covers every
+	# turf surface in the realm now, not a skirt around each patch, so its size
+	# is set by how much turf there IS and not by a fraction of the ellipse
+	# pass's budget.
 	var cap := maxi(0, int(float(budget) * share))
+	if fill.has("instance_cap"):
+		cap = maxi(0, int(fill["instance_cap"]))
 	if cap <= 0:
 		return
 
@@ -770,92 +778,85 @@ func _dress_turf_fill(root: Node3D, ellipse_patches: Array, cfg: Dictionary, bud
 	var cells: Array = []
 	var desired := 0.0
 
-	# PASS 1 -- find the turf. Every cell within `reach_m` of a patch rim is
-	# probed once, and the ones standing on walkable turf are kept with the
-	# density factor their distance from that rim earns.
-	for patch_index in ellipse_patches.size():
-		var patch: Dictionary = ellipse_patches[patch_index]
-		var centre: Vector3 = patch.get("centre", Vector3.ZERO)
-		var half: Vector2 = patch.get("half", Vector2.ONE)
-		var dry := bool(patch.get("dry", false))
-		var col_lo := int(floor((centre.x - half.x - reach) / spacing))
-		var col_hi := int(ceil((centre.x + half.x + reach) / spacing))
-		var row_lo := int(floor((centre.z - half.y - reach) / spacing))
-		var row_hi := int(ceil((centre.z + half.y + reach) / spacing))
-		for row in range(row_lo, row_hi + 1):
-			for col in range(col_lo, col_hi + 1):
-				var key := row * 1000003 + col
-				if seen.has(key):
-					continue
-				var cell := Vector2((float(col) + 0.5) * spacing, (float(row) + 0.5) * spacing)
-				# Inside a registered ellipse the pass above already planted at
-				# full density; planting again would double it and read as a ring.
-				var d := Vector2(cell.x - centre.x, cell.y - centre.z)
-				var norm := Vector2(d.x / maxf(half.x, 0.01), d.y / maxf(half.y, 0.01)).length()
-				if norm <= 1.0:
-					seen[key] = true
-					continue
-				var edge := (norm - 1.0) * maxf(half.x, half.y)
-				if edge > reach:
-					continue
-				seen[key] = true
-				# The two AREA predicates are asked ONCE for the cell rather
-				# than once per tuft: an exclusion zone and a settlement
-				# clearance are both far larger than a `grid_spacing_m` cell,
-				# so asking them a dozen times inside one is a dozen times the
-				# cost for the same answer. `_near_route` stays per tuft below
-				# -- a route is narrower than a cell and a cell-level answer
-				# would clear-cut its whole width.
-				var cell_probe := Vector3(cell.x, centre.y, cell.y)
-				if _excluded(cell_probe) or bool(_world.call("_inside_settlement_clearance", cell_probe)):
-					continue
-				probe_casts += 1
-				var probe_hit := _raycast_down(cell, centre.y)
-				if not _is_turf_top(probe_hit):
-					continue
-				_cover_fill_cells += 1
-				var factor := 1.0
-				if edge > fade_start:
-					factor = lerpf(1.0, distant_factor, clampf((edge - fade_start) / fade_span, 0.0, 1.0))
-				cells.append({"at": cell, "y": (probe_hit.get("position") as Vector3).y,
-					"factor": factor, "dry": dry})
-				desired += (density + far_density) * cell_area * factor
+	# PASS 1 -- read the turf off the GEOMETRY, not off a guessed grid.
+	#
+	# OWNER 2026-09-06: "there should be nowhere you can stand that doesn't
+	# have grass or isn't a bare dirt patch or mud pit or something else. it
+	# cannot just be plain green painted on a parking lot."
+	#
+	# That is an invariant, and a grid cannot hold it. Two grid shapes were
+	# tried and both failed for the same underlying reason -- a downward
+	# raycast needs a height to start from, the only hint available is the
+	# nearest authored patch, and across a realm with ~1000 m of vertical range
+	# that hint is wrong often enough that the ray misses the ground entirely.
+	# A skirt around each patch left everything beyond its reach bare (33,527
+	# turf cells); one grid over the union box found LESS turf, not more
+	# (7,548), because the shared hint was wrong more often.
+	#
+	# So this walks the world's own turf SURFACES and scatters over their
+	# triangles. A triangle is ground that exists, at a height that is known,
+	# with an area that is exactly computable -- no hint, no miss, and coverage
+	# proportional to area by construction. A surface counts as turf when its
+	# material IS one of the world's turf materials (object identity against
+	# `_materials`, not a name match), and a triangle is skipped only when it
+	# is too steep to stand on.
+	var surfaces := _collect_turf_triangles()
+	_cover_fill_cells = surfaces.size()
+	var min_normal_y := clampf(float(fill.get("min_normal_y", 0.55)), -1.0, 1.0)
+	var buried_tolerance := maxf(0.02, float(fill.get("buried_tolerance_m", 0.25)))
+	for raw: Variant in surfaces:
+		var tri: Dictionary = raw
+		var normal_y := float(tri["normal_y"])
+		if normal_y < min_normal_y:
+			continue
+		var area := float(tri["area"])
+		if area <= 0.01:
+			continue
+		cells.append(tri)
+		desired += (density + far_density) * area
+	probe_casts = cells.size()
 
-	# PASS 2 -- plant. The budget is scaled ONCE across every cell found rather
-	# than spent first-come-first-served: stopping at a cap mid-sweep would
-	# leave whatever patches came later in the list with no fill at all, which
-	# is a new hard edge in place of the one this exists to remove.
+	# PASS 2 -- plant. The budget is scaled ONCE across every triangle found
+	# rather than spent first-come-first-served: stopping at a cap mid-sweep
+	# would leave whatever surfaces came later with no grass at all, which is
+	# the very thing this pass exists to make impossible.
 	var scale_factor := 1.0 if desired <= 0.0 else minf(1.0, float(cap) / desired)
 	var near_transforms: Array[Transform3D] = []
 	var dry_transforms: Array[Transform3D] = []
 	var far_transforms: Array[Transform3D] = []
 	for raw: Variant in cells:
-		var cell_data: Dictionary = raw
-		var at_cell: Vector2 = cell_data["at"]
-		var probe_y := float(cell_data["y"])
-		var factor := float(cell_data["factor"]) * scale_factor
-		var dry_cell := bool(cell_data["dry"])
-		var wanted := density * cell_area * factor
-		var wanted_far := far_density * cell_area * factor
+		var tri: Dictionary = raw
+		var a: Vector3 = tri["a"]
+		var b: Vector3 = tri["b"]
+		var c: Vector3 = tri["c"]
+		var area := float(tri["area"])
+		var dry_tri := bool(tri["dry"])
+		var wanted := density * area * scale_factor
+		var wanted_far := far_density * area * scale_factor
 		var target := int(wanted) + (1 if rng.randf() < fmod(wanted, 1.0) else 0)
 		var target_far := int(wanted_far) + (1 if rng.randf() < fmod(wanted_far, 1.0) else 0)
 		for i in target + target_far:
-			var at := Vector2(at_cell.x + rng.randf_range(-0.5, 0.5) * spacing,
-				at_cell.y + rng.randf_range(-0.5, 0.5) * spacing)
-			var placed: Variant = _fill_tuft(at, probe_y, extra_clear, rng, scale_min, scale_max)
+			# Uniform over the triangle: the sqrt keeps the sample from
+			# bunching at vertex `a`, which a plain (u, v) pair does.
+			var u := rng.randf()
+			var v := rng.randf()
+			var su := sqrt(u)
+			var point := a + (b - a) * (1.0 - su) + (c - a) * (v * su)
+			var placed: Variant = _fill_tuft_at(point, extra_clear, rng, scale_min, scale_max,
+				buried_tolerance)
 			if placed == null:
 				continue
 			var xform: Transform3D = placed
 			if i < target:
-				if dry_cell:
+				if dry_tri:
 					dry_transforms.append(xform)
 				else:
 					near_transforms.append(xform)
 			else:
 				far_transforms.append(xform)
 
-	_cover_fill_grid = {"cells_considered": seen.size(), "spacing_m": spacing, "reach_m": reach,
-		"density_scale": scale_factor}
+	_cover_fill_grid = {"turf_triangles": cells.size(), "surfaces": _cover_fill_surfaces,
+		"turf_area_m2": int(_cover_fill_area), "density_scale": scale_factor}
 	_cover_fill_count += _commit_tufts(root, "CoverFillMain", near_transforms, tuft_mesh,
 		main_material, near_visibility)
 	_cover_fill_count += _commit_tufts(root, "CoverFillDry", dry_transforms, tuft_mesh,
@@ -904,6 +905,118 @@ func _commit_tufts(parent: Node3D, label: String, transforms: Array[Transform3D]
 	instances.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 	parent.add_child(instances)
 	return transforms.size()
+
+
+## Every triangle of every surface in the world whose material IS one of the
+## world's turf materials, in world space, with its area and facing.
+##
+## Identity, not names: `_materials["upland"]` and `["upland_dry"]` are the two
+## materials `cloudreach_world.gd` hands `_mesa` as a crown's `top_material`,
+## so a surface either was built as turf or it was not. That is why this cannot
+## drift the way the old `_is_turf_top` name test did -- that accepted exactly
+## one collider name (`Collision`) and so silently refused every ridge, terrace
+## and walkable crown in the realm.
+##
+## Read off the VISIBLE mesh rather than the collider, because the visible mesh
+## is what the player sees as green: a surface drawn with the grass material
+## and carrying no grass IS the defect, whatever its collider happens to be
+## called.
+func _collect_turf_triangles() -> Array:
+	var turf: Array = []
+	for key: String in ["upland", "upland_dry"]:
+		if _materials.has(key):
+			turf.append(_materials[key])
+	if turf.is_empty():
+		return []
+	var out: Array = []
+	_cover_fill_surfaces = 0
+	_cover_fill_area = 0.0
+	var meshes: Array = []
+	_collect_mesh_instances(_world, meshes)
+	for raw: Variant in meshes:
+		var mi: MeshInstance3D = raw
+		var mesh: Mesh = mi.mesh
+		if mesh == null:
+			continue
+		var xform := mi.global_transform
+		for surface in mesh.get_surface_count():
+			# `material_override` FIRST. The ledge caps -- the flat discs a
+			# player actually stands on at a landmark -- carry their turf
+			# material there rather than per surface, so reading only the
+			# surface material saw "(none)" and skipped exactly the flat green
+			# planes this pass exists to cover.
+			var material: Material = mi.material_override
+			if material == null:
+				material = mi.get_surface_override_material(surface)
+			if material == null:
+				material = mesh.surface_get_material(surface)
+			if material == null or not turf.has(material):
+				continue
+			var arrays: Array = mesh.surface_get_arrays(surface)
+			if arrays.size() <= Mesh.ARRAY_VERTEX:
+				continue
+			var verts: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+			var indices: PackedInt32Array = PackedInt32Array()
+			if arrays.size() > Mesh.ARRAY_INDEX and arrays[Mesh.ARRAY_INDEX] != null:
+				indices = arrays[Mesh.ARRAY_INDEX]
+			var indexed := indices.size() > 0
+			var count := indices.size() if indexed else verts.size()
+			var dry: bool = material == _materials.get("upland_dry")
+			_cover_fill_surfaces += 1
+			var i := 0
+			while i + 2 < count:
+				var a: Vector3 = xform * verts[indices[i] if indexed else i]
+				var b: Vector3 = xform * verts[indices[i + 1] if indexed else i + 1]
+				var c: Vector3 = xform * verts[indices[i + 2] if indexed else i + 2]
+				i += 3
+				var cross := (b - a).cross(c - a)
+				var area := cross.length() * 0.5
+				if area <= 0.01:
+					continue
+				_cover_fill_area += area
+				out.append({"a": a, "b": b, "c": c, "area": area,
+					"normal_y": absf(cross.normalized().y), "dry": dry})
+	return out
+
+
+func _collect_mesh_instances(node: Node, out: Array) -> void:
+	if node is MeshInstance3D:
+		out.append(node)
+	for child in node.get_children():
+		_collect_mesh_instances(child, out)
+
+
+## One tuft at a world-space point that is already ON a turf triangle. No
+## raycast and no height hint -- that is the whole reason this pass reads
+## geometry instead of gridding.
+func _fill_tuft_at(point: Vector3, extra_clear: float, rng: RandomNumberGenerator,
+		scale_min: float, scale_max: float, buried_tolerance: float = 0.25) -> Variant:
+	if _excluded(point) or _near_route(point, extra_clear):
+		return null
+	if bool(_world.call("_inside_settlement_clearance", point)):
+		return null
+	# BURIED CHECK. A turf triangle is not necessarily the surface a player
+	# stands on: this world stacks ledges, ridge shoulders and crowns at the
+	# same xz, and `smoke_cloudreach_ground_truth` already counts ~900 samples
+	# "buried under visible geometry". Scattering over every turf triangle
+	# therefore plants a lot of grass INSIDE the rock, under whatever is
+	# actually on top -- which looks exactly like planting no grass at all,
+	# and is why the flat green plane at 05-upper-cloudreach-cliffhold stayed
+	# flat and green through three different placement strategies.
+	#
+	# One ray straight down from just overhead answers it: if something is in
+	# the way, this triangle is not the visible ground here.
+	var hit := _raycast_down(Vector2(point.x, point.z), point.y, 60.0, 1.0)
+	if hit.is_empty():
+		return null
+	var top: Vector3 = hit.get("position")
+	if top.y > point.y + buried_tolerance:
+		return null
+	var scale_value := rng.randf_range(scale_min, scale_max)
+	var width_scale := rng.randf_range(1.6, 2.3)
+	var basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU)).scaled(
+		Vector3(width_scale, scale_value, width_scale))
+	return Transform3D(basis, point + Vector3.UP * 0.02)
 
 
 func _tuft_material(base: Color, tip: Color) -> ShaderMaterial:
