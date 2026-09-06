@@ -6,6 +6,21 @@ extends RefCounted
 ## existing progression flag store.  The one piece that is not a set of facts
 ## is the player's current choice: exactly one Heart power may be active.  This
 ## small composed state object owns that selection and nothing scene-specific.
+##
+## ## Stage B lane 5.B: which half of this is shared
+##
+## `earned_flag` and `placed_flag` are WORLD flags (`data/progression/flag_scopes.json`),
+## so under D103 the shipping way to set one is a `set_world_flag` intent through
+## `Game.ledger` -- `realm_heart_shrine.gd::submit_place()` is the only place in
+## the game that does it, and `place()` below is the direct write it falls back
+## to in a process that has no ledger (every unit fixture). A NEW caller that
+## reaches for `place()` in shipping code is writing the world without the host,
+## which is the thing D103 exists to stop; submit the intent instead.
+##
+## `_active_id` is the opposite: it is per player, it lives on the PLAYER half of
+## the state split (`PlayerState.save_data()` carries `realm_hearts`), and
+## nothing replicates it. Two peers in one world holding two different active
+## Hearts is correct behaviour, not drift.
 
 const CONFIG_PATH := "res://data/config/realm_hearts.json"
 
@@ -42,19 +57,36 @@ func entry_key_for_realm(id: String) -> String:
 	return str(realm(id).get("entry_key_flag", ""))
 
 
+## The world flag that records this Heart as earned, or "" for an unknown Heart.
+func earned_flag(id: String) -> String:
+	return str(heart(id).get("earned_flag", ""))
+
+
+## The world flag that records this Heart as set into its socket, or "" for an
+## unknown Heart. `realm_heart_shrine.gd` quotes it as the `id` of the
+## `set_world_flag` intent it submits, so the flag name has one source.
+func placed_flag(id: String) -> String:
+	return str(heart(id).get("placed_flag", ""))
+
+
 func is_earned(id: String, progression: RefCounted) -> bool:
-	return _has_story_flag(progression, str(heart(id).get("earned_flag", "")))
+	return _has_story_flag(progression, earned_flag(id))
 
 
 func is_placed(id: String, progression: RefCounted) -> bool:
-	return _has_story_flag(progression, str(heart(id).get("placed_flag", "")))
+	return _has_story_flag(progression, placed_flag(id))
 
 
+## Write the placed flag DIRECTLY. Shipping code does not call this: placing a
+## Heart is a world mutation and goes through `realm_heart_shrine.gd::submit_place()`,
+## which submits a `set_world_flag` intent so the host is the one writer and both
+## peers see the Heart go in. This remains the applier for a process with no
+## ledger at all -- every unit fixture in `tests/test_realm_heart_state.gd`.
 func place(id: String, progression: RefCounted) -> bool:
 	var spec := heart(id)
 	if spec.is_empty() or not is_earned(id, progression):
 		return false
-	var flag := str(spec.get("placed_flag", ""))
+	var flag := placed_flag(id)
 	if flag == "" or progression == null:
 		return false
 	# MP_STATE_SEAM.md §3: placing a Heart is a WORLD fact, and it is written to
