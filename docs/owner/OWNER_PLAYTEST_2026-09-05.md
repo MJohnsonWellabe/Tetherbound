@@ -94,3 +94,27 @@ Constraint for this pass: a separate lane is converting the game to multiplayer
 
 Nothing in this file is implemented by recording it. Closure evidence is tracked in
 `docs/CURRENT_STATE.md`.
+
+## Addendum — 2026-09-06 (same session, verbatim)
+
+> do we need to boot the whole world for everything? can you not just boot the
+> specific area they're working in?
+>
+> can we get something going on finishing the look of realm two? grass needs to be
+> finished, trees and stones probably need to be better, air islands should be roped
+> in. bridges should have rope rails on the sides. I'm sure a quick visual review
+> will surface more
+>
+> continue the work of those three agents but holy shit speed it up a bit
+>
+> we should make the final stronghold look more like a domed aviary than a castle.
+> but still keep some rustic stone elements
+
+| Id | Item | Kind |
+|---|---|---|
+| OP-0906-01 | Cloudreach grass must be finished (every walkable surface) | visual |
+| OP-0906-02 | Cloudreach trees and stones should be better | visual |
+| OP-0906-03 | Air islands should be roped in (moored/tethered) | visual/design |
+| OP-0906-04 | Bridges should have rope rails on the sides | visual |
+| OP-0906-05 | The Cloudreach final stronghold reads as a domed aviary, not a castle, keeping some rustic stone | **design decision** |
+| OP-0906-06 | Process: iterate with the smallest boot that exercises the area; full boots once, at the end | process |
