@@ -15,6 +15,18 @@ extends CanvasLayer
 ## spec §15 (not the warm build theme) — rows keep their two-column transfer
 ## layout and all mechanics untouched, just drawn with slot boxes, item icons
 ## and the shared font/colour tokens instead of bare `Label`/`Button` defaults.
+##
+## ## D103, lane 3.D: this screen no longer writes the chest
+##
+## A press submits a `storage_txn` intent through `storage_container.gd` and
+## then draws whatever came back. Solo and on a host that is the same frame, so
+## the screen behaves exactly as it always has. On a CLIENT the answer arrives
+## later: the press changes NOTHING here, and the rows are redrawn from the
+## chest's `storage_changed` signal once the write actually commits — a panel
+## that showed the deposit immediately would be showing the player a chest that
+## may be about to refuse them. A refusal (`stale_revision`: somebody else
+## changed this chest first) is shown in the message row under the title, where
+## the player is already looking, rather than swallowed.
 
 const UITokens := preload("res://scripts/ui/ui_tokens.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
@@ -23,6 +35,7 @@ const ROW_ICON_PX := 24
 var game: Node = null
 
 var _root: Control = null
+var _message: Label = null
 var _deposit_column: VBoxContainer = null
 var _withdraw_column: VBoxContainer = null
 var _deposit_rows: Array[Button] = []
@@ -50,7 +63,11 @@ func is_open() -> bool:
 ## `chest` is a storage_container.gd instance — its own `state` (storage_state.gd)
 ## is what actually holds the chest's items.
 func open(chest: Node) -> void:
+	if _chest != chest:
+		_disconnect_chest()
 	_chest = chest
+	_connect_chest()
+	_set_message("")
 	if _open:
 		_refresh()
 		return
@@ -85,6 +102,7 @@ func close() -> void:
 		INPUT_OWNER.set_world_hud_visible(get_tree(), true)
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		get_tree().paused = false
+	_disconnect_chest()
 	_chest = null
 
 
@@ -157,6 +175,17 @@ func _build_shell() -> void:
 	title.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 	outer.add_child(title)
 
+	# D103, lane 3.D. Where a refusal lands. Hidden until there is something to
+	# say, so the panel is unchanged in the ordinary case.
+	_message = Label.new()
+	_message.text = ""
+	_message.visible = false
+	_message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_message.custom_minimum_size = Vector2(640, 0)
+	_message.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_message.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
+	outer.add_child(_message)
+
 	var columns := HBoxContainer.new()
 	columns.add_theme_constant_override("separation", 24)
 	outer.add_child(columns)
@@ -225,12 +254,14 @@ func _refresh() -> void:
 			focus_side = "withdraw"
 			focus_index = withdraw_at
 
+	# D103, lane 3.D. `state.deposit()`/`state.withdraw()` are NOT called here
+	# any more: a chest can be open in two processes at once, and the last one
+	# to write it would otherwise silently overwrite the other. The container
+	# submits the intent; this screen only redraws.
 	_rebuild_side(_deposit_column, _deposit_rows, db, player_inventory, func(id: String, n: int) -> void:
-		state.call("deposit", player_inventory, id, n)
-		_refresh())
+		_transfer("deposit", id, n))
 	_rebuild_side(_withdraw_column, _withdraw_rows, db, chest_inventory, func(id: String, n: int) -> void:
-		state.call("withdraw", player_inventory, id, n)
-		_refresh())
+		_transfer("withdraw", id, n))
 
 	var restored := false
 	if focus_side == "deposit" and focus_index < _deposit_rows.size():
@@ -309,8 +340,9 @@ func _rebuild_side(
 		row.add_child(label)
 
 		button.pressed.connect(func() -> void:
-			on_press.call(item_id, have)
-			_refresh())
+			# One redraw per press, from whichever of the two paths in
+			# `_transfer()` actually resolved it -- not two.
+			on_press.call(item_id, have))
 		column.add_child(button)
 		rows.append(button)
 
@@ -320,6 +352,77 @@ func _rebuild_side(
 		empty.add_theme_font_size_override("font_size", UITokens.FONT_BODY)
 		empty.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
 		column.add_child(empty)
+
+
+## D103, lane 3.D. One press, one intent.
+##
+## The verdict decides what the player sees. `ok` means it committed in this
+## process (solo, or this peer is the host) and the chest already holds the new
+## contents, so redraw. `pending` means the host has not answered: redraw
+## NOTHING, or this screen would show a deposit that may still be refused --
+## `_on_storage_changed` draws it when the delta lands. Anything else is a
+## refusal with a sentence to show.
+func _transfer(direction: String, item_id: String, n: int) -> void:
+	if _chest == null or not is_instance_valid(_chest):
+		return
+	_set_message("")
+	var verdict: Dictionary = _chest.call(
+		"submit_deposit" if direction == "deposit" else "submit_withdraw", item_id, n)
+	if bool(verdict.get("ok", false)):
+		_refresh()
+		return
+	if bool(verdict.get("pending", false)):
+		_set_message("Waiting for the world to accept that…")
+		return
+	_set_message(str(verdict.get("reason", "")))
+
+
+## `has_signal` first: this panel is also opened by a UI survey against a bare
+## stand-in node (`tests/smoke_station_panels_hide_world_hud.gd`), and a screen
+## that errored on anything that is not a real chest would be asserting about
+## its fixture rather than about itself.
+func _connect_chest() -> void:
+	if _chest == null or not is_instance_valid(_chest):
+		return
+	if _chest.has_signal("storage_changed") and not _chest.is_connected("storage_changed", _on_storage_changed):
+		_chest.connect("storage_changed", _on_storage_changed)
+	if _chest.has_signal("storage_refused") and not _chest.is_connected("storage_refused", _on_storage_refused):
+		_chest.connect("storage_refused", _on_storage_refused)
+
+
+func _disconnect_chest() -> void:
+	if _chest == null or not is_instance_valid(_chest):
+		return
+	if _chest.has_signal("storage_changed") and _chest.is_connected("storage_changed", _on_storage_changed):
+		_chest.disconnect("storage_changed", _on_storage_changed)
+	if _chest.has_signal("storage_refused") and _chest.is_connected("storage_refused", _on_storage_refused):
+		_chest.disconnect("storage_refused", _on_storage_refused)
+
+
+## The chest's committed contents changed -- this peer's own write landing, or
+## somebody else's. Either way the rows are redrawn from the chest, never from
+## a local guess about what it should now hold.
+func _on_storage_changed() -> void:
+	if not _open:
+		return
+	_set_message("")
+	_refresh()
+
+
+func _on_storage_refused(reason: String) -> void:
+	if not _open:
+		return
+	_set_message(reason)
+	# The chest is whatever the host says it is; a refused write means this
+	# screen was drawing a stale one.
+	_refresh()
+
+
+func _set_message(text: String) -> void:
+	if _message == null or not is_instance_valid(_message):
+		return
+	_message.text = text
+	_message.visible = not text.is_empty()
 
 
 ## `id`'s 64px silhouette from `data/items/items.json`'s own `icon` field, or
