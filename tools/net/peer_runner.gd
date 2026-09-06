@@ -838,6 +838,31 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			if wgame == null:
 				return null
 			return int(SPAWN_TABLES.resolve_seed(int(wgame.get("world_seed"))))
+		"remote_trainers":
+			# Lane 2.C. Every OTHER peer's body as this process sees it:
+			# the nodes `scripts/net/trainer_spawn.gd` spawned under D97's
+			# authored `Spawned/Trainers` container, keyed by the real peer id
+			# (which is a large random 32-bit number, never an index — ENet
+			# spike finding 2), with the position this process is actually
+			# drawing them at and the nameplate text it is actually showing.
+			# `tests/smoke_net_movement_two_peers.gd` compares that position
+			# against the owner's own reported position.
+			var seen := {}
+			for body in get_nodes_in_group(&"remote_trainer"):
+				if not is_instance_valid(body) or not (body is Node3D):
+					continue
+				var b: Node3D = body
+				var plate := b.get_node_or_null(^"Nameplate") as Label3D
+				seen[str(int(b.get("peer_id")))] = {
+					"pos": [b.global_position.x, b.global_position.y, b.global_position.z],
+					"name": "" if plate == null else str(plate.text),
+					"mine": b.is_multiplayer_authority(),
+					"visible": b.visible,
+					"anim": str(b.get("net_anim_state")),
+					"sprinting": bool(b.get("net_sprinting")),
+					"carried": bool(b.get("net_carried")),
+				}
+			return seen
 		"session":
 			# Wave 2 (lane 2.A): a real `scripts/net/session.gd` exists, so
 			# every field here is read off it. `available` stays as the first

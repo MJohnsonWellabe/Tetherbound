@@ -1,0 +1,31 @@
+[gd_scene load_steps=2 format=3]
+
+; D101 -- the LOCAL peer's rig, one per process.
+;
+; Inherits scenes/player/player.tscn rather than re-authoring it, so the body,
+; its collision capsule, the fallback capsule art and the runtime-fitted
+; trainer model stay in exactly one place. What this scene ADDS is identity:
+; membership of the `local_player` group, which is what tells every lookup
+; outside autoload/game_state.gd apart from the REMOTE trainer bodies that
+; scenes/player/remote_trainer.tscn stands up under `Spawned/Trainers` once a
+; second peer joins. A remote body is never in this group.
+;
+; The camera is bound, not parented. `camera_rig.gd::_ready()` sets
+; `top_level = true` (its own comment: "the arm follows the player by code,
+; not by parenting"), so the rig's SpringArm3D is authored as the world root's
+; `CameraRig` and reached through `player_controller.gd`'s `camera_rig_path`.
+; It is still one-per-process and still part of THIS rig -- a remote trainer
+; has no camera and no input at all. Reparenting the node under the player
+; would be transform-identical but would break the 246 call sites that reach
+; `<world>/CameraRig` across tests/ and tools/, which is outside this lane;
+; `playground_world.gd::local_camera_rig()` is the door that keeps the pairing
+; explicit and single-sourced instead.
+;
+; The HUD binding is the third leg: scenes/ui/playground_hud.tscn carries
+; `player_path = NodePath("../Player")`, which resolves to this instance
+; because both world scenes instance this scene AS the node named `Player` at
+; their root.
+
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1_player"]
+
+[node name="Player" groups=["local_player"] instance=ExtResource("1_player")]

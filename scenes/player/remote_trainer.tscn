@@ -1,0 +1,89 @@
+[gd_scene load_steps=6 format=3]
+
+; D101 -- another peer's trainer, standing in this process's world.
+;
+; Model, animation state, nameplate, synchronizer. No camera, no
+; FlyController, no `player_controller.gd`: input and the camera belong to the
+; peer that renders, and that peer's own body is `scenes/player/local_rig.tscn`.
+;
+; Spawned only through `scripts/net/trainer_spawn.gd`, into D97's authored
+; `Spawned/Trainers` container, so a spawn arriving during a peer's procedural
+; world build always finds a path that already exists.
+
+[ext_resource type="Script" path="res://scripts/net/remote_trainer.gd" id="1_remote"]
+[ext_resource type="Script" path="res://scripts/player/trainer_model.gd" id="2_model"]
+
+[sub_resource type="CapsuleShape3D" id="Shape_1"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="CapsuleMesh" id="Mesh_1"]
+radius = 0.4
+height = 1.8
+
+; The replicated set, lane 2.C deliverable 4: position, yaw, animation state,
+; sprint, carried. `net_position` and `net_yaw` go every tick because they are
+; what the body is interpolated toward; the three discrete ones are sent on
+; change (replication_mode 2) because they are flags, not curves.
+;
+; `spawn = true` on all five so a peer that joins mid-session sees a trainer
+; who is already sprinting as sprinting, rather than as an idle body at the
+; origin for one tick.
+[sub_resource type="SceneReplicationConfig" id="Repl_1"]
+properties/0/path = NodePath(".:net_position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:net_yaw")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:net_anim_state")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:net_sprinting")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+properties/4/path = NodePath(".:net_carried")
+properties/4/spawn = true
+properties/4/replication_mode = 2
+
+[node name="RemoteTrainer" type="CharacterBody3D" groups=["remote_trainer"]]
+floor_max_angle = 0.7854
+floor_snap_length = 0.4
+script = ExtResource("1_remote")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("Shape_1")
+
+; Same script the local rig's model uses, so a remote trainer is fitted with
+; the same rigged humanoid from data/config/art.json and animates from the
+; same clips. It reads its player through `player_path`; the root above
+; answers `ground_speed()`, `is_sprinting()` and `is_carried()` for it.
+[node name="Model" type="Node3D" parent="."]
+script = ExtResource("2_model")
+player_path = NodePath("..")
+
+[node name="Body" type="MeshInstance3D" parent="Model"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+mesh = SubResource("Mesh_1")
+
+[node name="Nose" type="MeshInstance3D" parent="Model"]
+transform = Transform3D(0.35, 0, 0, 0, 0.35, 0, 0, 0, 0.35, 0, 1.35, 0.42)
+mesh = SubResource("Mesh_1")
+
+; The name over the head. Filled from the peer registry's display name by
+; `remote_trainer.gd::_apply_nameplate()`, which reads that registry
+; defensively -- a spawn can arrive a frame before the registry row does.
+[node name="Nameplate" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.15, 0)
+billboard = 1
+no_depth_test = true
+fixed_size = true
+pixel_size = 0.0016
+outline_size = 14
+font_size = 48
+text = "Trainer"
+
+[node name="Sync" type="MultiplayerSynchronizer" parent="."]
+root_path = NodePath("..")
+replication_config = SubResource("Repl_1")

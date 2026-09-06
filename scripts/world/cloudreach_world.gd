@@ -62,6 +62,12 @@ const WORLD_RUNTIME := preload("res://scripts/world/cloudreach_world_runtime.gd"
 const ENVIRONMENT_MATERIALS:=preload("res://scripts/world/cloudreach_environment_materials.gd")
 const BRIDGE_KIT:=preload("res://scripts/world/cloudreach_bridge_kit.gd")
 
+## D101. `$Player` is an instance of `scenes/player/local_rig.tscn` — this
+## process's one local rig, in the `local_player` group — and `$CameraRig` is
+## its camera, authored as a root-level sibling because `camera_rig.gd` sets
+## `top_level = true` and follows by code. Remote peers' trainers stand under
+## `Spawned/Trainers` and are reachable from neither path. `local_rig()` and
+## `local_camera_rig()` below are the public door.
 @onready var _player: CharacterBody3D = $Player
 @onready var _camera_rig: Node3D = $CameraRig
 
@@ -82,6 +88,16 @@ var _realm_map: RefCounted
 var _surface_cells: Dictionary = {}
 var _surface_index_count := -1
 const SURFACE_CELL_M := 128.0
+
+
+## D101 deliverable 5 — the one door onto this process's local rig and its
+## camera. Same contract as `playground_world.gd::local_rig()`.
+func local_rig() -> CharacterBody3D:
+	return _player
+
+
+func local_camera_rig() -> Node3D:
+	return _camera_rig
 
 
 func _build_horizon_ranges() -> void:
