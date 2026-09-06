@@ -29,6 +29,7 @@ const SCENE := "res://scenes/world/meadows_playground.tscn"
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const DIALOGUE_RUNNER := preload("res://scripts/story/dialogue_runner.gd")
+const RIFT_CROSSING := preload("res://scripts/world/rift_crossing.gd")
 
 const WARDEN_ID := "warden_aldis"
 const FREED_FLAG := "legendary_freed"
@@ -110,7 +111,7 @@ func _run() -> void:
 	await _fight_him()
 	_he_stays_beaten()
 
-	_the_horizon_before_the_warden()
+	await _the_horizon_before_the_warden()
 	await _free_the_legendary()
 	_the_legendary_joined_the_party()
 	await _the_rift_collapses_and_the_barrier_holds()
@@ -557,6 +558,15 @@ func _rift() -> Node:
 	return _world.get_node_or_null(^"RiftCollapse")
 
 
+func _rift_crossing() -> Node:
+	return _world.get_node_or_null(^"RiftCrossing")
+
+
+## OP-0905-15/D110. Before the flag there is neither span nor trigger over
+## the storm road's carve -- the SAME probe `_the_rift_collapses_and_the_
+## barrier_holds` drives after the flag is walked here first, and must not
+## get across, proving the pre-flag carve is exactly as impassable as D23's
+## own carve-out always required.
 func _the_horizon_before_the_warden() -> void:
 	var rift := _rift()
 	if rift == null:
@@ -567,6 +577,18 @@ func _the_horizon_before_the_warden() -> void:
 		_fail("nothing is standing on the horizon past the seam before the Warden; there is nothing to collapse")
 	if float(_horizon_before.get("far_cover", 0.0)) > 0.0:
 		_fail("the far country is already visible before the Warden falls; the payoff is spent on a fresh boot")
+	var crossing := _rift_crossing()
+	if crossing == null:
+		_fail("the world built no RiftCrossing node; the storm road can never rebuild")
+		return
+	var before: Dictionary = await _probe_the_seam(rift)
+	var before_travel := float(before.get("along", 0.0))
+	if before_travel > BARRIER_LIMIT_M:
+		_fail("a %.0f-degree probe walked %.1f m past the storm road's end BEFORE the flag; the crossing opened early"
+			% [PROBE_CLIMB_DEG, before_travel])
+	else:
+		print("SG44: before the flag, a %.0f-degree probe made only %.1f m past the seam (still blocked)"
+			% [PROBE_CLIMB_DEG, before_travel])
 
 
 ## Spec §27/§28/§30 and the carve-out that comes with them, in one place: the
@@ -606,22 +628,35 @@ func _the_rift_collapses_and_the_barrier_holds() -> void:
 		if flat.length() < 240.0:
 			_fail("part of the far view stands %.0fm from the origin, inside the world boundary" % flat.length())
 
+	# OP-0905-15/D110: the payoff is no longer "still cannot cross" -- it is
+	# the rebuilt span existing and being walkable. The 900-frame wait above
+	# already covers `rift_collapse.json`'s `collapse.hold_seconds +
+	# dissipate_seconds` (10.2s) plus its own `crossing.appear_seconds`
+	# (3.0s), so the span has finished animating in by the time this runs.
+	var crossing := _rift_crossing()
+	if crossing == null:
+		_fail("the world built no RiftCrossing node; the storm road never rebuilds")
+	else:
+		var deck := crossing.find_child("CrossingDeckBody", true, false)
+		if deck == null or not deck is StaticBody3D:
+			_fail("the rift crossing has no CrossingDeckBody; the span never appeared after the collapse")
+		var trigger := crossing.find_child("RiftCrossingTrigger", true, false)
+		if trigger == null or not trigger is Area3D:
+			_fail("the rift crossing has no RiftCrossingTrigger past the far rim")
+		if not bool(crossing.call("span_ready")):
+			_fail("the rift crossing reports its own span is not ready yet")
+
 	# And the walking probe: a body at the LEGENDARY's climb limit, driven at
-	# the seam, still does not get across. Same shape SC14/SE21 used.
+	# the seam, now DOES get across -- the rebuilt span is a real, walkable
+	# crossing, not a second painted view. Same shape SC14/SE21 used.
 	var probe: Dictionary = await _probe_the_seam(rift)
 	var travelled := float(probe.get("along", 0.0))
-	var dropped := float(probe.get("drop", 0.0))
-	if travelled > BARRIER_LIMIT_M:
-		_fail("a %.0f-degree probe walked %.1f m past the storm road's end after the collapse; the region is enterable"
+	if travelled <= BARRIER_LIMIT_M:
+		_fail("a %.0f-degree probe made only %.1f m past the storm road's end after the collapse; the rebuilt span is not walkable"
 			% [PROBE_CLIMB_DEG, travelled])
 	else:
-		# The drop is printed rather than asserted on: whether the body ends up
-		# on the channel floor or wedged against its 65-degree wall is a detail
-		# of one capsule against one carve, and both are the barrier working.
-		# What is asserted is the only thing that matters -- it did not reach
-		# the far roadbed, which starts ~19m out.
-		print("SG44: the barrier holds -- a %.0f-degree probe made %.1f m past the seam (fell %.1f m; the far rim is %.1f m out)"
-			% [PROBE_CLIMB_DEG, travelled, dropped, BARRIER_LIMIT_M])
+		print("SG44: the rebuilt span holds -- a %.0f-degree probe walked %.1f m past the seam onto the far roadbed"
+			% [PROBE_CLIMB_DEG, travelled])
 
 
 ## Drive a real body, on real collision, straight down the road past the seam.
