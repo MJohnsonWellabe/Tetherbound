@@ -10,6 +10,18 @@ extends Node3D
 ## Wired the same way player_bed.gd/world_perimeter.gd are: a small component
 ## `playground_world.gd` builds and hands the player node to, rather than
 ## logic living inside the world script itself.
+##
+## ## D104/D-MP10, lane 3.C: a satchel belongs to somebody
+##
+## The record a death writes now carries the dying player's CHARACTER ID, and
+## the live node is handed the same id. Only that player may open it; anybody
+## else reads the owner's name on the prompt and is refused in one sentence
+## (`death_satchel.gd::can_open`). The `owner` field has been in
+## `WorldState.register_death_satchel` and in the save since lane 3.A; what was
+## missing was anyone filling it in, which is this.
+##
+## Nothing about "several satchels coexist" changes, and nothing may: a hard
+## rule in CLAUDE.md. Two deaths are two records and two bags, owned or not.
 
 const DEATH_SATCHEL := preload("res://scripts/world/death_satchel.gd")
 const WORLD_RECORDS := preload("res://scripts/world/realm_world_records.gd")
@@ -124,16 +136,22 @@ func _drop_satchel(carried: Array, at: Vector3, game: Node) -> void:
 	# its own index into `GameState.death_satchels` from the moment it
 	# exists — the same order `build_placer.gd::_place()` uses (compute the
 	# index the entry is about to occupy, then spawn).
-	var index := int(game.call("register_death_satchel", at))
+	# D104/D-MP10. The realm is passed explicitly rather than left to
+	# `register_death_satchel`'s own fallback, for the same D97 reason every
+	# ledger intent carries one: a record is stamped with the realm of the thing
+	# being written, never with whichever realm some global happens to hold.
+	var realm := WORLD_RECORDS.active(game)
+	var owner := _local_character_id(game)
+	var index := int(game.call("register_death_satchel", at, owner, realm))
 
 	var satchel: Node3D = DEATH_SATCHEL.new()
 	_satchel_count += 1
 	satchel.name = "DeathSatchel_%d" % _satchel_count
 	satchel.position = at
 	satchel.set_meta(SATCHEL_INDEX_META, index)
-	satchel.set_meta("realm", WORLD_RECORDS.active(game))
+	satchel.set_meta("realm", realm)
 	_world.add_child(satchel)
-	satchel.call("build", carried, game.get("items"))
+	satchel.call("build", carried, game.get("items"), owner)
 	# Capture immediately, not only at the next scene/save synchronization.
 	(game.get("death_satchels") as Array)[index]["state"] = satchel.get("state").call("save_data")
 
@@ -204,7 +222,24 @@ func restore_from_game(game: Node) -> void:
 		satchel.set_meta(SATCHEL_INDEX_META, i)
 		satchel.set_meta("realm", WORLD_RECORDS.active(game))
 		_world.add_child(satchel)
-		satchel.call("restore", record.get("state", []), db)
+		# D104/D-MP10. A record written before this lane has no `owner`, and
+		# loads as an unowned bag that opens for whoever finds it -- which is
+		# precisely how it behaved when it was written.
+		satchel.call("restore", record.get("state", []), db, str(record.get("owner", "")))
+
+
+## D104/D-MP10. This process's own character id, read and never minted --
+## `session.gd` mints one when a session is formed, and a death must not be the
+## thing that decides a solo player suddenly has an identity. Solo that leaves
+## the owner empty, which is an unowned satchel, which opens for the one player
+## there is.
+func _local_character_id(game: Node) -> String:
+	if game == null:
+		return ""
+	var local: Variant = game.get("local")
+	if local == null:
+		return ""
+	return str((local as RefCounted).get("character_id"))
 
 
 ## The last-placed bedroll, or the world's own opening spawn point if none
