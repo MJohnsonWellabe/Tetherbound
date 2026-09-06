@@ -80,6 +80,14 @@ signal orb_shook(index: int)
 ## `_active_index`. Distinct from `state_changed` (still emitted alongside it)
 ## so the HUD can react to "who is out" without diffing the whole state.
 signal creature_switched(index: int)
+## Stage B lane 4.C. The host refused something this player asked for, with the
+## machine tag and the one player-facing sentence `world_ledger.gd`'s verdict
+## shape carries. Separate from `catch_refused` (which predates it and has six
+## existing listeners that take one argument) so no existing connection breaks.
+signal encounter_refused(code: String, reason: String)
+## §8 step 4. Somebody else won the catch on the creature this player was
+## fighting. Their HUD says who got it rather than their fight silently ending.
+signal caught_by_other(peer_id: int, species_id: String)
 
 enum State { INACTIVE, ACTIVE, RESOLVING }
 
@@ -213,6 +221,46 @@ var _target_marker: Node3D = null
 
 var _rng := RandomNumberGenerator.new()
 
+## --- Stage B Wave 4 lane 4.C: the encounter link -----------------------------
+##
+## `docs/specs/MP_ENCOUNTER_PROTOCOL.md`. NULL SOLO, and that is the whole of
+## why single-player combat is byte-for-byte what it was: every gate below is
+## `if _encounter_link != null`, so with no session there is not one extra
+## branch taken on the path from a button press to a health bar.
+##
+## When a session IS live the link is `encounter_director.gd` -- the transport,
+## exactly as `ledger_rpc.gd` is the transport for the world ledger. This file
+## never touches `multiplayer`, never asks `multiplayer.is_server()` (the
+## `OfflineMultiplayerPeer` trap: with no session that is TRUE and
+## `get_unique_id()` is 1, so every headless test, capture tool and editor run
+## would take the host branch), and never mints an id. It submits what the
+## player did and renders what the host says happened.
+##
+## §3: the record's `hp` is THE hit points. In a session nothing in this file
+## calls `_enemy.take_damage()` -- the host's number is WRITTEN to `_enemy.hp`,
+## because a bar that un-drops is worse than a bar that lags.
+var _encounter_link: Node = null
+var _encounter_id: String = ""
+
+## The record's `kind` ("wild" | "trainer" | "boss"). Held only so this file can
+## report it back with a catch intent; the refusal itself is the host's (§8),
+## and `_enemy_owned` remains the local, solo answer to the same question.
+var _encounter_kind: String = ""
+
+## §8. A throw whose orb has landed and whose outcome is with the host. A
+## separate phase rather than a flag, so `_tick_catch_resolution()` cannot walk
+## into the wobble on a decision that has not been made.
+var _catch_awaiting_host: bool = false
+
+## The last record `seq` this process applied, so a delta that arrives late or
+## twice cannot walk the health bar backwards.
+var _encounter_seq: int = 0
+
+## The last refusal this process was given: `{"kind", "code", "reason"}`. Read
+## by the HUD and by `tools/net/peer_runner.gd`'s probe -- the net smoke asserts
+## the `friendly_target` refusal WAS issued, not merely that no damage landed.
+var last_encounter_refusal: Dictionary = {}
+
 ## D30 named-move lookup, loaded once. Read-only after construction, so one
 ## instance shared for the life of the manager is fine — the same choice
 ## `_rng` above already makes.
@@ -239,6 +287,40 @@ func _ready() -> void:
 
 func throw_aim() -> Node:
 	return _throw
+
+
+## --- Stage B lane 4.C: joining this fight to a session -----------------------
+
+## Bind this manager to a host-arbitrated encounter. `link` is the transport
+## (`encounter_director.gd`); `encounter_id` is the host-minted id of the record
+## this fight renders.
+##
+## Called by the director immediately after `begin()` when -- and only when --
+## there is a real, live, multi-peer session. Nothing calls it solo, so nothing
+## solo changes.
+func bind_encounter(link: Node, encounter_id: String, kind: String) -> void:
+	_encounter_link = link
+	_encounter_id = encounter_id
+	_encounter_kind = kind
+
+
+func unbind_encounter() -> void:
+	_encounter_link = null
+	_encounter_id = ""
+	_encounter_kind = ""
+	_catch_awaiting_host = false
+
+
+## The record this fight is rendering, or "" solo. Read by the director and by
+## the net harness probe; nothing branches on it inside this file except the
+## submit paths.
+func encounter_id() -> String:
+	return _encounter_id
+
+
+## True when the outcome of this fight is somebody else's to decide.
+func is_networked() -> bool:
+	return _encounter_link != null
 
 
 func active_creature() -> RefCounted:
@@ -835,11 +917,103 @@ func _resolve_player_strike() -> void:
 	if creature == null or _enemy == null or _ally_body == null or _wild == null:
 		return
 
+	# Stage B lane 4.C, protocol §5. In a session THIS PROCESS DOES NOT DECIDE.
+	# What the player did -- the move, where they were, which way they faced --
+	# goes to the host, and the answer comes back through
+	# `apply_host_strike_verdict()`. The intent deliberately carries no damage
+	# number and no target: that asymmetry is the protocol.
+	#
+	# Note what is NOT gated on being a client. The HOST submits through this
+	# same door too, and its own intent is arbitrated by literally the same
+	# lines a remote peer's is (`ledger_rpc.gd::_commit_here()`'s reasoning). A
+	# "host fast path" here would be a second copy of the rules that eventually
+	# disagrees with the first, and it would be the copy nobody ever tests
+	# against a second peer.
+	if _encounter_link != null:
+		_submit_strike_intent()
+		return
+
 	var origin: Vector3 = _ally_body.call("centre")
 	var facing: Vector3 = _ally_body.call("facing")
 	var target: Vector3 = _wild.call("centre")
 
-	if not MATH.move_connects(_pending_move, origin, facing, target):
+	_perform_player_strike(MATH.move_connects(_pending_move, origin, facing, target))
+
+
+## §5. Send what the player did. `origin` is this process's own position for its
+## own creature -- which the host uses ONLY for the latency tolerance, never to
+## decide the hit (`encounter_host.gd::_retro_window_applies()` is the one line
+## that reads it, and a lying origin can only ever cost this player its
+## tolerance).
+func _submit_strike_intent() -> void:
+	var origin: Vector3 = _ally_body.call("centre")
+	var facing: Vector3 = _ally_body.call("facing")
+	var creature := active_creature()
+	var is_quick: bool = bool(_pending_move.get("is_quick", false))
+	var verdict: Dictionary = _encounter_link.call("submit_encounter_intent", {
+		"kind": "strike_intent",
+		"encounter_id": _encounter_id,
+		# The move is named, not described. The host rebuilds the profile from
+		# its OWN `combat.json` and its own two body radii
+		# (`host_move_profile()`), so a peer cannot post itself a longer reach.
+		"slot": "quick" if is_quick else "charged",
+		"move_id": str(creature.move_quick if is_quick else creature.move_charged),
+		"origin": [origin.x, origin.y, origin.z],
+		"facing": [facing.x, facing.y, facing.z],
+	})
+	# `pending` is the ordinary answer on a CLIENT: the host has not spoken yet,
+	# nothing is drawn and nothing is decremented until it does (§3), and the
+	# answer arrives later through `apply_host_strike_verdict()`.
+	#
+	# On the HOST the answer is already here, because the host arbitrated its
+	# own intent in the line above. It has to be rendered from here or it is
+	# never rendered at all: the record broadcast would still move the health
+	# bar, so the bug this branch prevents is the subtle one -- the host's own
+	# blows landing silently, with no spark, no projectile and no `hit_landed`,
+	# while a client's looked normal.
+	if bool(verdict.get("pending", false)):
+		return
+	if bool(verdict.get("ok", false)):
+		apply_host_strike_verdict(verdict.get("delta", {}) as Dictionary)
+	else:
+		note_encounter_refusal(verdict)
+
+
+## The host has answered a `strike_intent` this process submitted.
+##
+## `payload` is the accepted delta plus the numbers the host rolled:
+## `{"hit": bool, "damage": float, "hp": float, "hp_max": float, "killed": bool}`.
+## A refusal never arrives here -- it goes to `_note_encounter_refusal()` -- so
+## this function is only ever the performance of a decision already made.
+func apply_host_strike_verdict(payload: Dictionary) -> void:
+	if state != State.ACTIVE:
+		return
+	if payload.has("hp") and _enemy != null:
+		# §3: WRITTEN, not decremented. `take_damage()` here would apply the
+		# host's blow on top of whatever the record broadcast already set, and
+		# the bar would drop twice for one hit.
+		_enemy.hp = clampf(float(payload["hp"]), 0.0, float(_enemy.max_hp))
+	_perform_player_strike(bool(payload.get("hit", false)),
+		float(payload.get("damage", 0.0)), bool(payload.get("killed", false)))
+
+
+## The performance of a strike, and -- solo -- the decision too.
+##
+## `connected` is whether it landed: solo that is this process's own
+## `move_connects` on the line above; in a session it is the host's, tested
+## against the host's own positions. `damage`/`killed` are supplied in a session
+## and rolled here solo, so there is exactly ONE copy of the impact, the spark,
+## the projectile, the energy gain and the two signals.
+func _perform_player_strike(connected: bool, damage_override: float = -1.0,
+		killed_override: bool = false) -> void:
+	var creature := active_creature()
+	if creature == null or _enemy == null or _ally_body == null or _wild == null:
+		return
+	var origin: Vector3 = _ally_body.call("centre")
+	var facing: Vector3 = _ally_body.call("facing")
+	var target: Vector3 = _wild.call("centre")
+
+	if not connected:
 		attack_missed.emit(true)
 		state_changed.emit()
 		return
@@ -858,12 +1032,18 @@ func _resolve_player_strike() -> void:
 	var type_mult: float = TYPE_CHART.multiplier_dual(
 		_moves.type_of(move_id), str(_enemy.creature_type), str(_enemy.get("secondary_type"))
 	)
-	var damage: float = MATH.rolled_damage(
-		float(_pending_move.get("power", 9.0)),
-		creature.effective_attack(cfg), _enemy.effective_defence(cfg), _rng.randf(),
-		_moves.power(move_id), type_mult
-	)
-	var killed: bool = _enemy.take_damage(damage)
+	# Solo this is the decision. In a session the host already rolled it with
+	# ITS `_rng` and the number arrived with the verdict; re-rolling here would
+	# give every peer a different fight.
+	var damage: float = damage_override
+	var killed: bool = killed_override
+	if damage_override < 0.0:
+		damage = MATH.rolled_damage(
+			float(_pending_move.get("power", 9.0)),
+			creature.effective_attack(cfg), _enemy.effective_defence(cfg), _rng.randf(),
+			_moves.power(move_id), type_mult
+		)
+		killed = _enemy.take_damage(damage)
 	# W09-VFX: damage over the bar, so the spark can be sized to the blow.
 	var hit_fraction: float = damage / maxf(1.0, float(_enemy.max_hp))
 	_wild.call("add_impulse", facing, float(_pending_move.get("lunge", 3.6)) * 0.4)
@@ -907,6 +1087,206 @@ func _resolve_player_strike() -> void:
 	if killed:
 		_award_victory()
 		_begin_resolve("won")
+
+
+## --- Stage B lane 4.C: the host's half, and the record's ---------------------
+
+## A host or a client was told no. One place, so the HUD's sentence and the
+## print a log has to be read against cannot drift apart.
+##
+## `friendly_target` is the one this lane exists for and it is deliberately NOT
+## silent: §5 says a silent no-op would pass a weaker test while hiding a
+## targeting bug, and a player who cannot tell "I swung at my friend" from "the
+## game dropped my input" will conclude the second.
+func note_encounter_refusal(verdict: Dictionary) -> void:
+	var code := str(verdict.get("code", ""))
+	var reason := str(verdict.get("reason", ""))
+	last_encounter_refusal = {"kind": str(verdict.get("kind", "")), "code": code,
+		"reason": reason}
+	print("[encounter] %s refused: %s (%s)" % [str(verdict.get("kind", "")), code, reason])
+	if code == "friendly_target":
+		attack_missed.emit(true)
+	if not reason.is_empty():
+		catch_refused.emit(reason) if str(verdict.get("kind", "")) == "catch_attempt" \
+			else encounter_refused.emit(code, reason)
+	state_changed.emit()
+
+
+## The host's copy of the record landed. §3: this is where a participant's HUD
+## gets its hit points, and the ONLY place a client's opponent HP changes.
+##
+## Deliberately tolerant of arriving out of order or twice: `seq` is the host's
+## commit counter and an older record is dropped rather than applied backwards,
+## which is what stops a late packet from un-dropping the bar.
+## `quiet` suppresses only the hit REACTION, never the number. The host applies
+## its own strike's record change on the way through `_host_strike()` and then
+## renders the strike properly a moment later, so without this the body would
+## flinch twice for one blow.
+func apply_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
+	if _encounter_link == null or str(rec.get("encounter_id", "")) != _encounter_id:
+		return
+	var incoming := int(rec.get("seq", 0))
+	if incoming < _encounter_seq:
+		return
+	_encounter_seq = incoming
+	var opponent: Dictionary = rec.get("opponent", {}) as Dictionary
+	if _enemy != null and opponent.has("hp"):
+		var hp_max := maxf(1.0, float(opponent.get("hp_max", _enemy.max_hp)))
+		var hp := clampf(float(opponent["hp"]), 0.0, hp_max)
+		var dropped: bool = hp < float(_enemy.hp) - 0.001
+		_enemy.max_hp = hp_max
+		_enemy.hp = hp
+		if dropped and not quiet and _wild != null and hp > 0.0:
+			# Somebody else's blow. The body reacts so a teammate's hits are
+			# visible rather than the bar moving on its own.
+			_wild.call("play_hit")
+		state_changed.emit()
+	var phase := str(rec.get("phase", "active"))
+	if phase == "done" and state == State.ACTIVE:
+		# §9: the fight ended for this participant because the record says so --
+		# somebody else landed the last blow, or won the catch.
+		_begin_resolve("lost" if float(opponent.get("hp", 1.0)) > 0.0 else "won")
+
+
+## §8 step 4. Another participant won the catch. This player's fight ends, and
+## their HUD says WHO got it rather than silently stopping.
+func note_caught_by(peer_id: int, species: String) -> void:
+	if state != State.ACTIVE and state != State.RESOLVING:
+		return
+	caught_by_other.emit(peer_id, species)
+	if state == State.ACTIVE:
+		_begin_resolve("fled")
+
+
+# --- what the HOST asks of this manager ------------------------------------------
+
+## §5 steps 4-5, run on the host for ANY participant's strike -- its own
+## included. `card` is the striker's creature as the host holds it (announced at
+## deploy time, never per-swing: see `encounter_director.gd::_creature_card()`).
+##
+## Returns `{"damage", "killed", "hp", "hp_max", "type_mult"}`. The opponent is
+## `_enemy`, the host's own live instance, so `take_damage()` here IS the record
+## and there is no second copy of the number to keep in step.
+func host_roll_damage(card: Dictionary, move_id: String, move_power: float) -> Dictionary:
+	if _enemy == null:
+		return {}
+	var cfg: Dictionary = PROGRESSION.config()
+	var type_mult: float = TYPE_CHART.multiplier_dual(
+		_moves.type_of(move_id), str(_enemy.creature_type), str(_enemy.get("secondary_type"))
+	)
+	var damage: float = MATH.rolled_damage(
+		move_power,
+		maxf(1.0, float(card.get("attack", 1.0))),
+		_enemy.effective_defence(cfg),
+		_rng.randf(),
+		_moves.power(move_id),
+		type_mult
+	)
+	var killed: bool = _enemy.take_damage(damage)
+	return {"damage": damage, "killed": killed, "hp": _enemy.hp,
+		"hp_max": _enemy.max_hp, "type_mult": type_mult}
+
+
+## The move profile the HOST tests a strike against: its own `combat.json`, its
+## own move database, and the two bodies' own radii.
+##
+## Static, and the instance path below delegates to it, so there is exactly one
+## copy of "what a quick attack reaches". A peer therefore cannot post itself a
+## longer reach by describing its own move in the intent -- it names the move,
+## and this decides what the move is.
+static func host_move_profile(moves: RefCounted, block: String, move_id: String,
+		mine: float, theirs: float) -> Dictionary:
+	var profile: Dictionary = MATH.config().get(block, {}).duplicate()
+	if not move_id.is_empty() and moves != null:
+		var move: Dictionary = moves.call("move", move_id)
+		for key in ["range", "cone_degrees", "windup", "recovery", "cooldown", "lunge"]:
+			if move.has(key):
+				profile[key] = float(move[key])
+		profile["vfx"] = move.get("vfx", {})
+		profile["move_id"] = move_id
+	return floor_reach_for_bodies(profile, mine, theirs)
+
+
+## §5's other half, on the host: the opponent picks a target among the
+## PARTICIPANTS rather than always swinging at whoever engaged first.
+##
+## Returns true when the blow was resolved against somebody else's creature and
+## delivered to them; false when the host's own creature is the target, in which
+## case `_on_enemy_strike()` falls through to the ordinary local path -- so the
+## solo code below stays the one copy of what being hit looks like.
+##
+## The host tests the swing against ITS OWN copy of each participant's deployed
+## body (4.B's `deployed_body_for()`), and rolls with its own `_rng` against the
+## defence on that participant's announced card. Nothing here reads a client's
+## report of anything.
+func _host_resolve_enemy_strike_for_a_participant(cfg: Dictionary, origin: Vector3,
+		facing: Vector3) -> bool:
+	var pick: Dictionary = _encounter_link.call("host_pick_struck_participant",
+		_encounter_id, cfg, origin, facing)
+	if pick.is_empty():
+		# Nobody in the arc. Reported as a miss by the host, for everybody: a
+		# swing that connects with nobody is still a swing that happened.
+		attack_missed.emit(false)
+		state_changed.emit()
+		return true
+	if int(pick.get("peer_id", 0)) == int(_encounter_link.call("local_encounter_peer_id")):
+		return false
+
+	var card: Dictionary = pick.get("card", {}) as Dictionary
+	var prog_cfg: Dictionary = PROGRESSION.config()
+	var move_id := str(_enemy.move_quick)
+	var type_mult: float = TYPE_CHART.multiplier_dual(
+		_moves.type_of(move_id), str(card.get("creature_type", "")),
+		str(card.get("secondary_type", ""))
+	)
+	var damage: float = MATH.rolled_damage(
+		float(cfg.get("power", 8.0)),
+		_enemy.effective_attack(prog_cfg),
+		maxf(1.0, float(card.get("defence", 1.0))),
+		_rng.randf(), _moves.power(move_id), type_mult
+	)
+	_encounter_link.call("host_deliver_enemy_hit", _encounter_id,
+		int(pick.get("peer_id", 0)), {
+			"damage": damage,
+			"type_mult": type_mult,
+			"move_id": move_id,
+			"lunge": float(cfg.get("lunge", 3.4)),
+		})
+	return true
+
+
+## The host's opponent hit THIS player's creature. The decision is already made;
+## everything here is the performance of it, and it is deliberately the same
+## presentation the solo path plays (`_flash_at`, the two signals, the faint
+## handling) so being in a session does not change what a blow looks like.
+func apply_host_enemy_hit(payload: Dictionary) -> void:
+	if state != State.ACTIVE or _ally_body == null:
+		return
+	var creature := active_creature()
+	if creature == null:
+		return
+	var damage := float(payload.get("damage", 0.0))
+	var move_id := str(payload.get("move_id", ""))
+	var killed: bool = creature.take_damage(damage)
+	var facing: Vector3 = _ally_body.call("facing")
+	_ally_body.call("add_impulse", -facing, float(payload.get("lunge", 3.4)) * 0.4)
+	_ally_body.call("play_faint" if killed else "play_hit")
+	_flash_at(_ally_body.call("centre"), false, VFX.tint_for_type(_moves.type_of(move_id)),
+		_ally_body, damage / maxf(1.0, float(creature.max_hp)))
+	hit_effectiveness.emit(false, TYPE_CHART.classify(float(payload.get("type_mult", 1.0))))
+	hit_landed.emit(false, damage)
+	state_changed.emit()
+	if killed:
+		CONDITION.note_faint(creature, CONDITION.config())
+		_handle_active_faint()
+
+
+## The opponent's body and instance, for the host to read its own truth off.
+## `enemy_body()` already exists; this is the other half.
+func opponent_hp_pair() -> Array:
+	if _enemy == null:
+		return [0.0, 1.0]
+	return [_enemy.hp, _enemy.max_hp]
 
 
 ## --- progression (D30) ------------------------------------------------------
@@ -1201,6 +1581,13 @@ func _with_reach_for_the_bodies(move: Dictionary) -> Dictionary:
 	if _wild.has_method("body_radius"):
 		theirs = float(_wild.call("body_radius"))
 
+	return floor_reach_for_bodies(move, mine, theirs)
+
+
+## The reach floor itself, static so the host's own profile builder
+## (`host_move_profile()`) and this instance path are one copy rather than two
+## that eventually disagree about what a quick attack reaches.
+static func floor_reach_for_bodies(move: Dictionary, mine: float, theirs: float) -> Dictionary:
 	var clearance: float = float(MATH.config().get("enemy", {}).get("body_clearance", 1.35))
 	var adjusted := move.duplicate()
 	adjusted["range"] = maxf(float(move.get("range", 2.6)), (mine + theirs) * clearance + 0.5)
@@ -1247,6 +1634,22 @@ func _on_enemy_strike() -> void:
 
 	_wild.call("add_impulse", facing, float(cfg.get("lunge", 3.4)))
 	_wild.call("play_attack")
+
+	# Stage B lane 4.C, protocol §2 and §5, and 4.B's handover H1.
+	#
+	# On a CLIENT this body is a local stand-in: Terrain3D FULL_GAME collision
+	# is unimplemented and wild creatures are not replicated, so this process's
+	# wilds are its own simulation and have already drifted from the host's.
+	# Letting one of them decide that this player just took eleven damage would
+	# be a peer authoring an outcome from a position no other process holds --
+	# exactly what §2 forbids, and in the direction that hurts the player.
+	# The host swings for everybody; the answer arrives at
+	# `apply_host_enemy_hit()`.
+	if _encounter_link != null:
+		if not bool(_encounter_link.call("is_encounter_host")):
+			return
+		if _host_resolve_enemy_strike_for_a_participant(cfg, origin, facing):
+			return
 
 	if not MATH.move_connects(cfg, origin, facing, target):
 		attack_missed.emit(false)
@@ -1420,6 +1823,17 @@ func _on_orb_struck(_target: Node3D, offset: float) -> void:
 	if _wild != null and _wild.has_method("body_radius"):
 		radius = float(_wild.call("body_radius"))
 
+	# Stage B lane 4.C, protocol §8. In a session THIS PROCESS DOES NOT DECIDE
+	# whether the creature was caught, and it does not get to decide how close
+	# the orb passed either: the host re-derives the closest approach from the
+	# launch parameters with its OWN position for the creature
+	# (`catch_arbiter.gd`), rolls with its own `_rng`, and arbitrates the race.
+	# `offset` above -- this process's own measurement, taken against this
+	# process's own body -- is deliberately NOT sent.
+	if _encounter_link != null:
+		_submit_catch_attempt()
+		return
+
 	# The decision, made once. Everything after this dramatises it.
 	#
 	# R4.9: the orb id has to be the one `throw_aim.gd` actually SPENT for
@@ -1441,9 +1855,18 @@ func _on_orb_struck(_target: Node3D, offset: float) -> void:
 		)
 		if not bool(decision["caught"]):
 			_tutorial_catch_failures += 1
-	_catch_succeeded = bool(decision["caught"])
-	_catch_shakes_total = int(decision["shakes"])
-	_catch_chance_resolved = float(decision["chance"])
+	_play_catch_decision(decision)
+
+
+## The performance of a catch decision, whoever made it: this process solo, or
+## the host in a session. One copy, so a networked catch and a solo one are the
+## same beat -- same flash, same absorb, same camera glide, same wobble.
+func _play_catch_decision(decision: Dictionary) -> void:
+	if _wild == null or _enemy == null:
+		return
+	_catch_succeeded = bool(decision.get("caught", false))
+	_catch_shakes_total = int(decision.get("shakes", 0))
+	_catch_chance_resolved = float(decision.get("chance", 0.0))
 	_catch_index = 0
 
 	# The performance: a flash says the throw landed, the creature is drawn in
@@ -1472,6 +1895,69 @@ func _on_orb_struck(_target: Node3D, offset: float) -> void:
 	# for a strike over ground the drop raycast never finds, not the schedule.
 	_catch_timer = absorb + 2.5
 	state_changed.emit()
+
+
+## §8. Send the shot that was taken -- where it left the hand, which way it
+## went, and which orb was actually spent -- and wait.
+##
+## `throw_aim.gd::last_launch()` is the source for all three because
+## `_release()` is the one place they exist: `origin` has had `_spawn_forward`
+## added and `forward` has been through the launch assist, and re-deriving
+## either here would describe a different throw from the one in the air.
+func _submit_catch_attempt() -> void:
+	var launch: Dictionary = _throw.call("last_launch")
+	if launch.is_empty():
+		# No throw was recorded, so there is nothing honest to arbitrate. The
+		# orb is already spent; say so rather than resolving a catch off a
+		# guess.
+		catch_refused.emit("that throw got lost")
+		_throw.call("clear_orb")
+		_take_camera()
+		state_changed.emit()
+		return
+	_catch_awaiting_host = true
+	var intent := {
+		"kind": "catch_attempt",
+		"encounter_id": _encounter_id,
+		"launch_point": launch.get("launch_point", []),
+		"direction": launch.get("direction", []),
+		"orb_id": str(launch.get("orb_id", "")),
+	}
+	var verdict: Dictionary = _encounter_link.call("submit_encounter_intent", intent)
+	# The host's own throw is arbitrated in that call and answered here; a
+	# client's `pending` answer arrives later on the same function. Same reason
+	# the strike path above does it: without this the host would win a race and
+	# never see the wobble.
+	if not bool(verdict.get("pending", false)):
+		apply_host_catch_verdict(verdict)
+
+
+## The host has arbitrated the throw. On `ok` the delta is
+## `catch_math.gd::resolve()`'s own decision -- `caught`, `chance`, `shakes` --
+## made once, on the host, and everything from here is the performance of it,
+## which is byte-for-byte the sequence the solo path plays.
+##
+## On a refusal the orb is still spent (§8 step 5: "the orb is spent either
+## way") and the player is told which of the three things happened: somebody
+## else's orb got there first, it is not a creature that can be caught, or the
+## fight had already moved on.
+func apply_host_catch_verdict(verdict: Dictionary) -> void:
+	if not _catch_awaiting_host:
+		return
+	_catch_awaiting_host = false
+	if not bool(verdict.get("ok", false)):
+		note_encounter_refusal(verdict)
+		_throw.call("clear_orb")
+		if _wild != null and _wild.has_method("play_breakout"):
+			_wild.call("play_breakout", 0.2)
+		elif _wild != null:
+			_wild.visible = true
+		if _target_marker != null and is_instance_valid(_target_marker):
+			_target_marker.visible = true
+		_take_camera()
+		state_changed.emit()
+		return
+	_play_catch_decision(verdict.get("delta", {}) as Dictionary)
 
 
 func _on_orb_missed(message: String) -> void:
@@ -1540,6 +2026,20 @@ func _finish_catch() -> void:
 	_catch_phase = CatchPhase.NONE
 	var cfg: Dictionary = CATCH.config().get("resolve", {})
 	var orb: Node3D = _throw.call("resting_orb")
+
+	# §8. The wobble is over, so the fight stops being held for this thrower --
+	# either it goes `resolving` because they won it, or it goes back to
+	# `active` and anybody may throw again. Reported rather than inferred: the
+	# host cannot see a client's animation finish, and
+	# `catch_arbitration_window_ms` is the backstop for the case where this
+	# message never arrives, not the schedule.
+	if _encounter_link != null:
+		_encounter_link.call("submit_encounter_intent", {
+			"kind": "catch_finished",
+			"encounter_id": _encounter_id,
+			"caught": _catch_succeeded,
+			"species_id": str(_enemy.species_id) if _enemy != null else "",
+		})
 
 	if _catch_succeeded:
 		# The seal: the orb blooms warm and stays glowing, the camera stays on
@@ -1642,6 +2142,17 @@ func _begin_resolve(outcome: String) -> void:
 
 func _finish() -> void:
 	state = State.INACTIVE
+
+	# §9. Leaving is `disengage`: the fight survives if anybody else is still in
+	# it, and it is the LAST participant leaving that ends it -- with the HP it
+	# has, because a creature that heals instantly because everyone walked away
+	# is an exploit. Submitted before the link is dropped, obviously.
+	if _encounter_link != null:
+		_encounter_link.call("submit_encounter_intent", {
+			"kind": "disengage", "encounter_id": _encounter_id,
+		})
+		unbind_encounter()
+	_encounter_seq = 0
 
 	_throw.call("disarm")
 	if _ally_body != null:

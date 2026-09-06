@@ -429,3 +429,97 @@ func test_two_identical_chest_writes_are_distinguishable_and_a_replay_is_refused
 	var again: Dictionary = ledger.call("commit", replay, PEER_A)
 	assert_false(again.get("ok"), "the same txn_id must not commit twice")
 	assert_eq(str(again.get("code")), "duplicate")
+
+
+# --- the neighbour that used to get taken down -----------------------------------
+
+## Lane 3.C, finding F2. Under index addressing this is the bug: peer B submits
+## `dismantle` for index 2, peer A's dismantle of index 0 commits while B's
+## intent is in flight, and the host then applies B's against a renumbered
+## array. The realm guard cannot catch it -- after the renumber index 2 is a
+## perfectly VALID index, just the wrong record -- so the wrong structure comes
+## down. A uid names the record itself and does not move when the array does.
+func test_a_dismantle_in_flight_takes_down_its_own_structure_not_the_renumbered_neighbour() -> void:
+	var uids: Array = []
+	for i in 4:
+		var placed: Dictionary = ledger.call("commit", {"kind": "place_building",
+			"realm": "meadows", "id": "fence", "position": [float(i), 0.0, 0.0]}, PEER_A)
+		assert_true(placed.get("ok"), "each placement commits")
+		assert_true(placed.has("uid"), "a placement verdict names the record it made")
+		uids.append(str(placed.get("uid", "")))
+	assert_eq(int(world.call("building_index_of", str(uids[2]))), 2)
+
+	# Peer B is looking at the structure that is currently index 2 and decides
+	# to take it down. Meanwhile peer A takes down index 0 first.
+	var target: String = str(uids[2])
+	var first: Dictionary = ledger.call("commit",
+		{"kind": "dismantle", "realm": "meadows", "uid": str(uids[0])}, PEER_A)
+	assert_true(first.get("ok"), "peer A's dismantle commits")
+
+	# The array has renumbered under peer B: its structure is now at index 1.
+	assert_eq(int(world.call("building_index_of", target)), 1,
+		"the target moved -- this is the renumber that used to cause the bug")
+
+	var second: Dictionary = ledger.call("commit",
+		{"kind": "dismantle", "realm": "meadows", "uid": target}, PEER_B)
+	assert_true(second.get("ok"), "peer B's dismantle still commits")
+
+	# The survivors must be exactly uids 1 and 3. Under index addressing peer
+	# B's stale index 2 would have removed uid 3 and left uid 2 standing.
+	var left: Array = []
+	for record: Variant in (world.get("placed_buildings") as Array):
+		if record is Dictionary:
+			left.append(str((record as Dictionary).get("uid", "")))
+	assert_eq(left.size(), 2, "two structures survive")
+	assert_true(left.has(str(uids[1])), "the untouched neighbour is still standing")
+	assert_true(left.has(str(uids[3])), "the structure nobody asked to remove is still standing")
+	assert_false(left.has(target), "the structure peer B actually pointed at is gone")
+
+
+## A uid is never reused after a dismantle. If it were, a stale intent naming a
+## dead structure would find the one that inherited its id -- reintroducing the
+## same class of bug the uid was added to close.
+func test_a_uid_is_never_reused_after_a_dismantle() -> void:
+	var first: Dictionary = ledger.call("commit", {"kind": "place_building",
+		"realm": "meadows", "id": "fence", "position": [0.0, 0.0, 0.0]}, PEER_A)
+	var uid := str(first.get("uid", ""))
+	assert_true(ledger.call("commit",
+		{"kind": "dismantle", "realm": "meadows", "uid": uid}, PEER_A).get("ok"))
+	var second: Dictionary = ledger.call("commit", {"kind": "place_building",
+		"realm": "meadows", "id": "fence", "position": [1.0, 0.0, 0.0]}, PEER_A)
+	assert_true(second.has("uid"))
+	assert_true(str(second.get("uid", "")) != uid,
+		"the next structure gets a fresh identity, not the dead one's")
+
+	# And the stale intent finds nothing rather than the newcomer.
+	var stale: Dictionary = ledger.call("commit",
+		{"kind": "dismantle", "realm": "meadows", "uid": uid}, PEER_B)
+	assert_false(stale.get("ok"), "a dismantle naming a dead uid is refused")
+	assert_eq(str(stale.get("code")), "gone")
+	assert_eq((world.get("placed_buildings") as Array).size(), 1,
+		"and it removed nothing")
+
+
+## Lane 3.C, finding F3. Two placements in flight inside one round trip: the
+## verdicts must be distinguishable, or a refusal pops the front ticket rather
+## than the refused one and the wrong press pays.
+func test_a_placement_verdict_names_the_ticket_it_answers() -> void:
+	var a: Dictionary = ledger.call("commit", {"kind": "place_building", "realm": "meadows",
+		"id": "fence", "position": [0.0, 0.0, 0.0], "txn_id": "press-a"}, PEER_A)
+	var b: Dictionary = ledger.call("commit", {"kind": "place_building", "realm": "meadows",
+		"id": "fence", "position": [1.0, 0.0, 0.0], "txn_id": "press-b"}, PEER_A)
+	assert_true(a.get("ok"))
+	assert_true(b.get("ok"))
+	assert_true(a.has("txn_id") and b.has("txn_id"),
+		"a placement verdict echoes the ticket it answers")
+	assert_eq(str(a.get("txn_id", "")), "press-a")
+	assert_eq(str(b.get("txn_id", "")), "press-b")
+	assert_true(str(a.get("uid", "")) != str(b.get("uid", "")),
+		"and the two structures are separate records")
+
+	# A replayed press does not build a second structure.
+	var replay: Dictionary = ledger.call("commit", {"kind": "place_building", "realm": "meadows",
+		"id": "fence", "position": [0.0, 0.0, 0.0], "txn_id": "press-a"}, PEER_A)
+	assert_false(replay.get("ok"), "the same press must not build twice")
+	assert_eq(str(replay.get("code")), "duplicate")
+	assert_eq((world.get("placed_buildings") as Array).size(), 2)

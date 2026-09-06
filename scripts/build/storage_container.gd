@@ -133,15 +133,34 @@ func placed_index() -> int:
 	return int(get_meta(PLACED_INDEX_META, -1))
 
 
-## The key every peer quotes for this chest's revision. Derived from the record
-## address, so two processes looking at the same chest name it the same thing
-## without having to exchange an id of their own.
+## The key every peer quotes for this chest's revision. Derived from the
+## record's STABLE uid, so two processes looking at the same chest name it the
+## same thing without exchanging an id of their own -- and, unlike the index
+## this used to use, keep naming it the same thing after somebody dismantles a
+## structure below it. Under index addressing a chest inherited the revision
+## counter of whatever key it renumbered onto, and its owner met a spurious
+## "someone else changed that container" on the next honest write.
 func container_key() -> String:
-	return container_key_for(realm(), placed_index())
+	return container_key_for(realm(), building_uid())
 
 
-static func container_key_for(container_realm: String, index: int) -> String:
-	return "storage:%s:%d" % [container_realm, index]
+## This chest's stable record id, or "" for a chest no placer planted.
+func building_uid() -> String:
+	var index := placed_index()
+	if index < 0:
+		return ""
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return ""
+	var buildings: Variant = game.get("placed_buildings")
+	if not (buildings is Array) or index >= (buildings as Array).size():
+		return ""
+	var record: Variant = (buildings as Array)[index]
+	return str((record as Dictionary).get("uid", "")) if record is Dictionary else ""
+
+
+static func container_key_for(container_realm: String, uid: String) -> String:
+	return "storage:%s:%s" % [container_realm, uid]
 
 
 # --- the two transfers ------------------------------------------------------------
@@ -192,6 +211,7 @@ func _submit(direction: String, item_id: String, n: int, expected_revision: int 
 		"realm": realm(),
 		"container": container,
 		"index": placed_index(),
+		"uid": building_uid(),
 		"expected_revision": expected,
 		"state": preview.get("state", []),
 	})

@@ -73,6 +73,8 @@ extends Node3D
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const HARVEST_LOGIC := preload("res://scripts/world/harvest_logic.gd")
+## D103 / Stage B lane 3.B. See `_on_gathered()`: the chop is an intent now.
+const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
 
 var _item_id: String = ""
 var _amount: int = 0
@@ -84,6 +86,13 @@ var _prompt: Node3D = null
 ## just this node in that case, see its own comment.
 var _harvest_layer: String = ""
 var _harvest_index: int = -1
+## D97: the realm this placement belongs to, stamped on the intent explicitly.
+## `vegetation.gd` passes its own (`vegetation.gd::realm`); nothing here reads
+## `Game.current_realm`.
+var _realm_id: String = "meadows"
+## True between submitting a `deplete_vegetation` intent and hearing back, so a
+## second press inside one round trip cannot submit a second chop.
+var _claiming := false
 
 
 ## RG9: no resource prop is built here any more -- the woodpile OW7 built on
@@ -98,6 +107,7 @@ func setup(spec: Dictionary) -> void:
 	_amount = int(spec.get("amount", 2))
 	_harvest_layer = str(spec.get("harvest_layer", ""))
 	_harvest_index = int(spec.get("harvest_index", -1))
+	_realm_id = str(spec.get("realm", "meadows"))
 	var prompt_height := float(spec.get("prompt_height", 1.4))
 
 	_prompt = INTERACTABLE.new()
@@ -134,6 +144,8 @@ func resource_amount() -> int:
 ## nowhere to go simply waits on the ground, same as any other gather point
 ## the satchel has no room for.
 func _on_gathered(equipped_tool: Variant = null) -> void:
+	if _claiming:
+		return
 	var game := get_node_or_null(^"/root/Game")
 	if game == null:
 		push_error("no Game autoload; chopped %s into nothing" % _item_id)
@@ -160,25 +172,46 @@ func _on_gathered(equipped_tool: Variant = null) -> void:
 			game.call("push_world_message", "Needs a %s." % str(items.call("item_name", required_tool)))
 		return
 	var required_slot: int = int(gathered["required_slot"])
+
+	if _harvest_layer.is_empty():
+		# A standalone test, or a caller that predates HARVEST-ALL/RG9: there
+		# is no placement to name in an intent, so nothing to tell the world
+		# about. Just remove this node's own marker, exactly as before.
+		if required_slot >= 0:
+			inventory.call("damage_tool", required_slot)
+		queue_free()
+		return
+
+	# D103, Stage B lane 3.B. The chop is a `deplete_vegetation` INTENT now.
+	# It carries no item: RG9 already moved the payout to the felled pile this
+	# chop stands, so the ledger arbitrates only WHO FELLED THE TREE. The
+	# committed delta carries two halves -- a durable world flag
+	# (`WorldLedger.vegetation_flag`) so a reload cannot resurrect the bush, and
+	# a `scene` op only `vegetation.gd` can apply, because the live record is a
+	# base64 bitset whose byte length has to line up with the running layer.
+	# `vegetation.gd::_on_delta_applied()` is what actually takes the placement
+	# down, on every peer, off that op -- never this node, and never the intent.
+	_claiming = true
+	var verdict := LEDGER_CLAIM.submit(self, {
+		"kind": "deplete_vegetation",
+		"realm": _realm_id,
+		"layer": _harvest_layer,
+		"index": _harvest_index,
+	})
+	if not LEDGER_CLAIM.in_flight(verdict):
+		# Somebody else felled this one first. `ledger_claim.gd` has already
+		# said so; the tree is about to disappear under this player anyway
+		# (the winner's delta reaches this peer too), which is the honest
+		# picture of what happened.
+		_claiming = false
+		return
+	# The tool wore down because the swing HAPPENED, win or lose. Held-back
+	# wear is what `harvest_node.gd` does, and it is right there because the
+	# node is still standing to be gathered again; here the placement is on its
+	# way out on every peer regardless of who won, and a swing that connected
+	# with a tree somebody else felled in the same second is still a swing.
 	if required_slot >= 0:
 		inventory.call("damage_tool", required_slot)
-
-	# HARVEST-ALL/D60: chopped stays chopped. The tree/rock's own render
-	# instance and collider go with it (vegetation.gd::harvest_permanently,
-	# called inside fell() below), not just this marker -- there is no
-	# respawn any more. The parent IS the Vegetation node (vegetation.gd::
-	# _spawn_harvest_point add_child()s this directly), so no separate
-	# reference has to be threaded in.
-	var vegetation := get_parent()
-	if vegetation != null and vegetation.has_method("fell") and not _harvest_layer.is_empty():
-		vegetation.call("fell", _harvest_layer, _harvest_index, actual_amount)
-	else:
-		# A standalone test, or a caller that predates HARVEST-ALL/RG9:
-		# nothing to tell the world about, so just remove this node's own
-		# marker. No felled pickup stands in this fallback path -- a caller
-		# in this shape (no `vegetation.gd` parent at all) has nowhere for
-		# one to make sense.
-		queue_free()
 
 
 func _ready() -> void:

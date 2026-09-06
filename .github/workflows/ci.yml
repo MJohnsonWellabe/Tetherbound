@@ -1945,23 +1945,45 @@ jobs:
           # in a rebase is caught here rather than discovered as a shard that
           # ran nothing. Wave 0 shipped 2 (the boot smoke and its negative
           # control); Wave 2 added host/join/leave and movement; lane 3.D added
-          # storage_concurrency; lane 4.B added deploy_two_creatures.
-          if [ "$count" -lt 6 ]; then
-            echo "::error::expected at least 6 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
+          # storage_concurrency; lane 4.B added deploy_two_creatures; lane 3.C
+          # added shared_building; lane 3.B added pickup_race; lane 5.C added
+          # fog_is_personal.
+          #
+          # The number is the TRUE count of files declaring the header, not a
+          # lane's guess at it -- every lane raises it by one and a merge of
+          # several at once has to be reconciled against the directory rather
+          # than against whichever lane's line won the conflict.
+          if [ "$count" -lt 13 ]; then
+            echo "::error::expected at least 13 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
             exit 1
           fi
+          # added shared_building; lane 3.B added pickup_race; lane 5.D added
+          # sleep_vote.
+          # added shared_building; lane 3.B added pickup_race; lane 4.E added
+          # revive.
+          # storage_concurrency; lane 4.B added deploy_two_creatures; lane 4.C
+          # added shared_wild_fight.
+          # storage_concurrency; lane 4.B added deploy_two_creatures; lane 3.E
+          # added trade.
           # Named registration, on top of the count. Discovery alone would let a
           # smoke drop out of CI by losing its `# peers: 2` header in a rebase
           # and nobody would notice, because the count is satisfied by whatever
           # else happens to be in the directory. Each lane that ships a net
           # smoke adds its file here.
           for required in \
-            tests/smoke_net_two_peers_boot.gd \
+            tests/smoke_net_deploy_two_creatures.gd \
+            tests/smoke_net_fog_is_personal.gd \
             tests/smoke_net_host_join_leave.gd \
             tests/smoke_net_movement_two_peers.gd \
             tests/smoke_net_peer_death.gd \
+            tests/smoke_net_pickup_race.gd \
+            tests/smoke_net_revive.gd \
+            tests/smoke_net_shared_building.gd \
+            tests/smoke_net_shared_wild_fight.gd \
+            tests/smoke_net_sleep_vote.gd \
             tests/smoke_net_storage_concurrency.gd \
-            tests/smoke_net_deploy_two_creatures.gd
+            tests/smoke_net_trade.gd \
+            tests/smoke_net_two_peers_boot.gd
           do
             case " $files " in
               *" $required "*) ;;

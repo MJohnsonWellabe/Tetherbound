@@ -34,6 +34,34 @@ extends RefCounted
 ##
 ## Pure logic, no `Node`, no transform — testable headlessly the same way
 ## party.gd and inventory.gd are (tests/test_map_state.gd).
+##
+## ## Everything in this file is ONE PLAYER'S, and nothing in it is static
+##
+## Stage B lane 5.C's finding, recorded here because it is the property the
+## multiplayer experience rests on rather than an implementation detail: a
+## `MapState` is personal. Fog cells, discovered landmarks, discovered regions,
+## dynamic markers and pinned alphas are all instance fields, the instances hang
+## off `PlayerState.maps[realm]` (`autoload/player_state.gd`), and `Game.map`
+## resolves to the LOCAL player's. Discovering the Meadows yourself is most of
+## the early game; a joiner who inherited the host's fog would have that deleted
+## before they took a step. The join snapshot is `WorldState.save_data()`
+## (`scripts/net/session.gd::_rpc_snapshot`) and carries no map payload at all,
+## which is what makes that structural rather than a convention someone can
+## forget: there is no wire on which one peer's fog could reach another.
+##
+## Lane 1.B had already removed the `static var _grid_x/_grid_z/_origin` this
+## file used to cache the extent in. 5.C's job was to judge what, if anything,
+## legitimately stays static, and the answer is NOTHING that holds state. The
+## extent is a property of the WORLD, not of a player — but it is DERIVED, from
+## `world_extent.gd` (or `set_extent()` for Cloudreach), so every peer computes
+## the identical grid from the identical config and a shared cache buys nothing
+## except the hazard of two realms overwriting each other's shape. The only
+## `static func` left here is `alpha_marker_id()`, which is pure string
+## arithmetic over its argument and holds nothing.
+##
+## The ONE world fact this file touches is which alphas have been beaten, and it
+## does not hold that either: the pin is personal, and whether the alpha is
+## cleared is read from the world flag store — see `scripts/world/alpha_pins.gd`.
 
 ## Tunable. `docs/specs/MEADOWS_MACRO_LAYOUT.md` §8.6a recommends 16.0 for the
 ## corridor world (§8.6a's own math: 1 MB/save at CELL 4.0 over 8192x2048m vs

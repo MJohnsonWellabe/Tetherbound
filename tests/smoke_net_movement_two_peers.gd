@@ -59,11 +59,23 @@ const NEAR_MOTION_M := 4.0
 ##
 ## This was 20 m on the assumption that 300 frames of full stick at the walk
 ## speed in `data/config/movement.json` would cover it. Measured on the merged
-## Wave 2 tree, both peers stop at **2.71 m** — the same figure lane 0.F's boot
-## smoke recorded for a 90-frame hold, and identical between a 90- and a
-## 300-frame hold, which is the signature of a wall rather than of a budget. A
-## fresh boot starts inside Grandpa's farmhouse in the opening beat, and forward
-## from the spawn is a wall about three metres away.
+## Wave 2 tree, both peers stopped at **2.71 m** — the signature of a wall
+## rather than a budget: a fresh boot starts inside Grandpa's farmhouse in the
+## opening beat, and forward from the spawn is a wall about three metres away.
+##
+## **That symmetry no longer holds, and reading this comment as though it did
+## cost an hour of wrong diagnosis on 2026-09-06.** Measured at `adba6b6c`, the
+## last head whose multiplayer shard went green:
+##
+##     peer 0 (host)   14.52 m
+##     peer 1 (client)  2.71 m
+##
+## The host walks out; the client still stops at the wall. Nobody set out to
+## change that and it is not understood. It is recorded here rather than
+## smoothed over because the smoke passes either way — 14.52 clears a 2 m bar
+## as easily as 2.71 does — so the divergence is invisible unless someone reads
+## the numbers. The client is the one that sits near the bar, which is why this
+## smoke goes red on the client and never on the host.
 ##
 ## 2 m is still a discriminating proof and that is why it is the bar: the
 ## watcher has to track a body that moved 2.71 m to within `NEAR_REST_M` of

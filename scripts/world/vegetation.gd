@@ -46,6 +46,10 @@ const HARVEST_POINT := preload("res://scripts/world/vegetation_harvest_point.gd"
 const FELLED_RESOURCE := preload("res://scripts/world/felled_resource.gd")
 const BAKE := preload("res://scripts/world/scatter_bake.gd")
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
+## D103 / Stage B lane 3.B. The world ledger arbitrates who fells a placement;
+## this file applies the LIVE half of the committed delta. See
+## `_on_delta_applied()` for why that half cannot be a `world` op.
+const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
 
 ## SCAT1: which bake this world's placements load from, in `data/scatter/<name>/`.
 ## The playground is the only world with a bake; anything else falls back to
@@ -145,6 +149,13 @@ var _felled: Dictionary = {}
 ## can be ABSENT from `_harvested` entirely on this build, e.g. a config edit
 ## that dropped it — this dict answers "how many, if at all" in one lookup).
 var _harvest_layer_counts: Dictionary = {}
+## D97. The realm this scatter belongs to, stamped on every
+## `deplete_vegetation` intent and on every flag this file reads back. Settable
+## rather than read from `Game.current_realm`: from Wave 6 two peers stand in
+## two realms at once, so "which world is this bush in" has to be a property of
+## the bush, not of whoever is looking at it. The Meadows is the only world that
+## builds a scatter today, which is why the default is what it is.
+var realm: String = "meadows"
 ## "<layer>#<index>" -> {"mesh_id": int, "position": Vector3}. Built once per
 ## harvestable placement in `_spawn_harvest_point()`. `harvest_permanently()`
 ## uses this to find the exact render instance to remove and is the only
@@ -494,6 +505,9 @@ func build(world_size: float, terrain: Node) -> void:
 	_instancer.call("update_mmis", true)
 	var t_mmis1 := Time.get_ticks_msec()
 	_warn_about_shared_models(by_layer)
+	# Idempotent, and repeated here because a scatter can be built before
+	# `Game.ledger` exists -- see `_ready()`.
+	LEDGER_CLAIM.listen(self, _on_delta_applied)
 
 	print(("[vegetation] boot phases (ms): placements=%d mark_harvestable=%d group_by_model=%d " +
 		"register_mesh_assets=%d build_batches_total=%d (of which harvest_points[%d nodes]=%d, " +
@@ -1183,6 +1197,9 @@ func _spawn_harvest_point(placement: Dictionary) -> void:
 		"label": "Chop",
 		"harvest_layer": layer_name,
 		"harvest_index": index,
+		# D97: the placement's own realm, for the `deplete_vegetation` intent
+		# this point submits. Never `Game.current_realm`.
+		"realm": realm,
 	})
 	# HARVEST-ALL: `harvest_permanently()`'s only way to find this instance's
 	# render mesh id/position and this node again, without scanning every
@@ -1792,7 +1809,7 @@ func _spawn_felled(key: String, item: String, amount: int, at: Vector3) -> void:
 	var felled := FELLED_RESOURCE.new()
 	felled.position = at
 	add_child(felled)
-	felled.call("setup", {"item": item, "amount": amount, "felled_key": key})
+	felled.call("setup", {"item": item, "amount": amount, "felled_key": key, "realm": realm})
 	_felled[key] = {"item": item, "amount": amount, "position": [at.x, at.y, at.z]}
 
 
@@ -1849,6 +1866,88 @@ func _remove_collision_instance(key: String) -> void:
 		return
 
 
+func _ready() -> void:
+	# The transport is mounted at an identical path in every process
+	# (`ledger_rpc.gd::attach`), and `listen()` is idempotent, so this is also
+	# re-run at the end of `build()` for the case where the scatter is stood up
+	# before `Game.ledger` exists.
+	LEDGER_CLAIM.listen(self, _on_delta_applied)
+
+
+## D103, Stage B lane 3.B. A committed `deplete_vegetation` delta, on every peer
+## including the one that chopped and including a solo player.
+##
+## This is the ONE two-part fact in the ledger, and the split is not
+## bookkeeping. The durable half is an ordinary `world` flag
+## (`WorldLedger.vegetation_flag`), applied by `WorldState.apply_delta()` like
+## every other world fact. The LIVE half cannot be: `_harvested` is a base64
+## bitset whose byte length `restore_from_game()` checks against the running
+## layer before it will trust a byte of it, and only this node knows that
+## length -- so a pure state object writing it would hand every peer a bitset
+## its own scatter would then discard. Hence the `scene` op, and hence this
+## handler.
+##
+## `fell()` does the rest, unchanged: the render instance, the collider, the
+## gather point and the felled pickup that pays out. The amount comes from the
+## placement's OWN `_harvest_lookup` record rather than riding the op, and that
+## is exact rather than a guess: `harvest_logic.gather()` returns either 0 (a
+## refusal the chopper catches before it ever submits) or
+## `item_db.harvest_yield(item, base, true, false)`, which returns `base` --
+## the layer's authored `harvest_amount`, which is what `_harvest_lookup`
+## already holds. So every peer stands the same pile the chopper would have.
+func _on_delta_applied(delta: Dictionary) -> void:
+	for raw: Variant in LEDGER_CLAIM.scene_ops_named(delta, "veg_deplete"):
+		var op := raw as Dictionary
+		if str(op.get("realm", "")) != realm:
+			# Two stacked worlds can hold the same layer name and the same
+			# index. A placement is only ours if the realm agrees.
+			continue
+		var layer_name := str(op.get("layer", ""))
+		var index := int(op.get("index", -1))
+		if layer_name.is_empty() or index < 0:
+			continue
+		var info: Dictionary = _harvest_lookup.get("%s#%d" % [layer_name, index], {})
+		fell(layer_name, index, int(info.get("amount", 0)))
+
+
+## Every placement the WORLD FLAGS say is felled, applied on top of whatever the
+## bitset already said. Lane 3.A's `vegetation_flag` is the durable half of a
+## committed chop and the only half that survives the one case
+## `restore_from_game()` deliberately cannot trust: a saved bitset whose byte
+## length no longer matches this build's layer is discarded wholesale, and
+## without this a reload after a config edit or a seed bump would stand every
+## chopped tree back up. Read straight off `WorldState.flags` rather than
+## through `Game.progression`, because that merged view routes by the scope
+## table and these ids are minted at runtime, one per felled placement.
+##
+## Iterates the flags that are SET, not every placement in the world: a Meadows
+## scatter is tens of thousands of placements and the set is bounded by what has
+## actually been chopped.
+func _restore_felled_flags(game: Object) -> void:
+	if game == null:
+		return
+	var world: Variant = game.get("world")
+	if world == null:
+		return
+	var flags: Variant = (world as RefCounted).get("flags")
+	if flags == null:
+		return
+	var prefix := "vegetation:%s:" % realm
+	for raw: Variant in ((flags as RefCounted).call("all_set") as Array):
+		var id := str(raw)
+		if not id.begins_with(prefix):
+			continue
+		var body := id.substr(prefix.length())
+		var split := body.rfind("#")
+		if split <= 0:
+			continue
+		var layer_name := body.substr(0, split)
+		var index := body.substr(split + 1).to_int()
+		if not _harvested.has(layer_name) or index < 0:
+			continue
+		harvest_permanently(layer_name, index)
+
+
 ## Applies whatever a save remembers as permanently chopped, on top of the
 ## fresh scatter `build()` always draws — mirrors `build_placer.gd`'s own
 ## `restore_from_game()`, called once after boot and again by
@@ -1863,6 +1962,9 @@ func _remove_collision_instance(key: String) -> void:
 func restore_from_game(game: Object) -> void:
 	if game == null:
 		return
+	# Lane 3.B: the ledger's own durable record first, and unconditionally --
+	# it is the half that survives a bitset this build cannot line up.
+	_restore_felled_flags(game)
 	var saved: Variant = game.get("harvested_vegetation")
 	if typeof(saved) != TYPE_DICTIONARY:
 		return

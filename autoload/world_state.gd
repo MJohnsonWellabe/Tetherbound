@@ -46,6 +46,16 @@ var clock_elapsed_seconds: float = CLOCK_UNSET
 var flags: RefCounted = null
 
 var placed_buildings: Array = []
+
+## Mints `uid` for the next placed building. Monotonic WITHIN a session, so an
+## id is never reused while an intent naming it could still be in flight --
+## reuse is the whole class of bug the uid exists to close. Not saved: it is
+## rebuilt from the records on load (see `load_data`), which keeps the world
+## file's key set exactly what D100 partitions it into.
+##
+## Only a host ever mints; a client receives the uid on the committed
+## `building_add` op.
+var next_building_uid: int = 1
 var farm_plots: Array = []
 var death_satchels: Array = []
 var harvested_vegetation: Dictionary = {}
@@ -99,10 +109,32 @@ func advance_day() -> int:
 ## the local player happens to be in" would file a Cloudreach fence in the
 ## Meadows. `Game.register_building()` passes `local.realm`, which is exactly
 ## what `current_realm` meant before.
+## `uid` is the record's STABLE address, and the reason it exists is a race
+## lanes 3.C and 3.D each hit from opposite directions. Addressing a structure
+## by its index into this array is correct only until somebody dismantles a
+## structure below it: a `dismantle` intent already in flight then names a
+## VALID index that is no longer the right record, and the host takes down the
+## neighbour. The same renumber moves a chest's storage key onto another
+## chest's revision counter. An index is a position; a uid is an identity, and
+## only an identity survives the array changing under it.
+##
+## Empty `uid` mints the next one, which is what a host and a solo player do.
+## A client passes the uid that arrived on the committed op, so every peer's
+## record carries the same identity.
 func register_building(id: String, position: Vector3, yaw_deg: float = 0.0,
-		paid: bool = true, realm: String = "meadows") -> void:
+		paid: bool = true, realm: String = "meadows", uid: String = "") -> String:
+	var assigned := uid
+	if assigned.is_empty():
+		assigned = "b%d" % next_building_uid
+		next_building_uid += 1
+	else:
+		# Keep the counter ahead of anything applied from a delta or a load, so
+		# this peer can never mint an id that is already in use.
+		var n := int(assigned.substr(1)) if assigned.begins_with("b") else 0
+		next_building_uid = maxi(next_building_uid, n + 1)
 	placed_buildings.append({
 		"realm": realm,
+		"uid": assigned,
 		"id": id,
 		"position": [position.x, position.y, position.z],
 		"yaw_deg": yaw_deg,
@@ -111,6 +143,36 @@ func register_building(id: String, position: Vector3, yaw_deg: float = 0.0,
 		"paid": paid,
 	})
 	revision += 1
+	return assigned
+
+
+## The index of the record with `uid`, or -1. The one place an identity becomes
+## a position, so nothing else has to know that `placed_buildings` is an array.
+func building_index_of(uid: String) -> int:
+	if uid.is_empty():
+		return -1
+	for i in placed_buildings.size():
+		var record: Variant = placed_buildings[i]
+		if record is Dictionary and str((record as Dictionary).get("uid", "")) == uid:
+			return i
+	return -1
+
+
+## Give every legacy record a uid, in array order, and put the counter past the
+## highest. Runs identically on every peer over identical data -- a joiner gets
+## the host's already-migrated snapshot, so the two cannot disagree.
+func _migrate_building_uids() -> void:
+	var highest := 0
+	for record: Variant in placed_buildings:
+		if record is Dictionary:
+			var uid := str((record as Dictionary).get("uid", ""))
+			if uid.begins_with("b"):
+				highest = maxi(highest, int(uid.substr(1)))
+	for record: Variant in placed_buildings:
+		if record is Dictionary and str((record as Dictionary).get("uid", "")).is_empty():
+			highest += 1
+			(record as Dictionary)["uid"] = "b%d" % highest
+	next_building_uid = maxi(next_building_uid, highest + 1)
 
 
 ## D104/D-MP10: a death satchel is a world entity with an OWNER. Only the owner
@@ -188,6 +250,15 @@ func load_data(data: Dictionary) -> void:
 	clock_elapsed_seconds = _finite_clock(data.get("clock_elapsed_seconds"))
 	world_seed = _int(data.get("world_seed"), 0)
 	placed_buildings = _array(data.get("placed_buildings", []))
+	# The counter is DERIVED from the records rather than saved, so the world
+	# file keeps exactly the ten keys D100 partitions it into -- adding an
+	# eleventh would break the contract that the world and character key sets
+	# together equal the v22 set, which `test_world_state.gd` enforces. Deriving
+	# is sufficient because a uid only has to be unique among LIVE records and
+	# against intents in flight, and no intent survives a reload. This also
+	# repairs a world saved before uids existed.
+	next_building_uid = 1
+	_migrate_building_uids()
 	farm_plots = _array(data.get("farm_plots", []))
 	death_satchels = _array(data.get("death_satchels", []))
 	harvested_vegetation = _dictionary(data.get("harvested_vegetation", {}))
@@ -278,17 +349,31 @@ func _apply_op(op: Dictionary) -> bool:
 			# site, so a delta and a solo placement can never disagree about it.
 			register_building(str(op.get("id", "")), _op_position(op.get("position")),
 				float(op.get("yaw_deg", 0.0)), bool(op.get("paid", true)),
-				str(op.get("realm", "meadows")))
+				str(op.get("realm", "meadows")), str(op.get("uid", "")))
 			return true
 		"building_remove":
-			var index := int(op.get("index", -1))
+			# By uid when the op carries one, which is every op the ledger mints
+			# now. The index fallback is only for a delta minted before uids
+			# existed; it is not a path any live code takes.
+			var index := building_index_of(str(op.get("uid", "")))
+			if index < 0:
+				if op.has("uid"):
+					return false
+				index = int(op.get("index", -1))
 			if index < 0 or index >= placed_buildings.size():
 				return false
 			placed_buildings.remove_at(index)
 			revision += 1
 			return true
 		"storage_set":
-			var slot := int(op.get("index", -1))
+			# Same rule as building_remove: identity first, position only as a
+			# fallback for a delta minted before uids existed. A chest addressed
+			# by index inherits its neighbour's contents after a dismantle.
+			var slot := building_index_of(str(op.get("uid", "")))
+			if slot < 0:
+				if op.has("uid"):
+					return false
+				slot = int(op.get("index", -1))
 			if slot < 0 or slot >= placed_buildings.size():
 				return false
 			var record: Dictionary = placed_buildings[slot] as Dictionary

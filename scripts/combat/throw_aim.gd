@@ -61,6 +61,24 @@ var _cooldown: float = 0.0
 var _guard: float = 0.0
 var _thrown_orb_id: String = ""
 
+## Stage B lane 4.C. The launch PARAMETERS of the throw that is in the air,
+## recorded at the instant of release: `{"launch_point", "direction", "orb_id"}`.
+##
+## `docs/specs/MP_ENCOUNTER_PROTOCOL.md` §8. In a session the host re-derives the
+## orb's closest approach itself, with `orb.gd::closest_approach_ahead(
+## launch_point, direction, host_target_position)` and its OWN position for the
+## creature -- so what the thrower has to send is the two values that describe
+## the shot it took, and nothing about where the shot ended up. They are
+## recorded here rather than recomputed by the caller because `_release()` is
+## the one place they exist: `origin` has already had `_spawn_forward` added to
+## it and `forward` has already been through `_launch_direction()`'s assist, and
+## a caller re-deriving either would be re-deriving a different throw.
+##
+## `orb_id` rides along for R4.9's reason, restated by §8: the satchel has
+## already lost that orb by the time the strike resolves, so the host must be
+## told which one was actually spent rather than re-querying "best available".
+var _last_launch: Dictionary = {}
+
 var _speed: float = 17.0
 var _gravity: float = 14.0
 var _spawn_height: float = 1.5
@@ -228,6 +246,13 @@ func _spend_orb() -> bool:
 ## the one the orb in flight actually is.
 func thrown_orb_id() -> String:
 	return _thrown_orb_id
+
+
+## The launch parameters of the throw currently in the air (see `_last_launch`).
+## Empty before the first release of the session. A copy, so a consumer that
+## stuffs it into an intent dictionary cannot reach back into this node's state.
+func last_launch() -> Dictionary:
+	return _last_launch.duplicate()
 
 
 func _inventory() -> RefCounted:
@@ -558,6 +583,11 @@ func _release() -> void:
 	for body: Node3D in _pass_through:
 		if body != null and is_instance_valid(body):
 			ignore.append(body)
+	_last_launch = {
+		"launch_point": [origin.x, origin.y, origin.z],
+		"direction": [forward.x, forward.y, forward.z],
+		"orb_id": _thrown_orb_id,
+	}
 	_orb.call("launch", origin, forward, _speed, _target, ignore)
 	# The trainer throws rather than standing there. Their model is on a child
 	# node, so this reaches past the body to the thing that animates.
