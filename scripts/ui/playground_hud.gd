@@ -1387,7 +1387,13 @@ func _build_creature_buff_row() -> void:
 
 	for i in _max_buff_chips:
 		var chip := Panel.new()
-		chip.mouse_filter = Control.MOUSE_FILTER_PASS  ## needs to receive the tooltip
+		# MOUSE_FILTER_IGNORE like every other Control this HUD builds (the
+		# header contract, and what smoke_mouse_look.gd enforces): a PASS chip
+		# put three Panels back into GUI input's path and turned that guard red
+		# on main (found 2026-09-06). The cost is the buff tooltip on mouse
+		# hover, which a controller-first HUD never showed anyway; the chip's
+		# label carries the buff's name instead.
+		chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		chip.custom_minimum_size = Vector2(BUFF_CHIP_SIZE, BUFF_CHIP_SIZE)
 		var box := StyleBoxFlat.new()
 		box.bg_color = UITokens.TEAL

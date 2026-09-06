@@ -88,12 +88,55 @@ func test_the_chapter_fields_a_handful_of_alphas() -> void:
 		% [found.size(), _cluster_count(), float(found.size()) / float(_cluster_count()) * 100.0])
 
 
+## PROMPT-71, ORIGINAL: band 1 has no alpha at all -- the opening meadow's
+## baseline stays gentle, and the first wild creature a player meets must not
+## be an oversized one.
+##
+## SUPERSEDED IN PART by OWNER PLAYTEST OP-0905-06 (2026-09-05), verbatim:
+## "Isn't there supposed to be an alpha at the pond? Shouldn't I be directed
+## to go there?" -- CLAUDE.md's precedence puts the newest owner directive
+## ahead of a prompt's original framing, so band 1 now fields one alpha (the
+## pond mosshell, order 1900; see its own `_why_alpha`). What this test still
+## protects is prompt 71's REAL intent, not its literal "zero" count: the
+## opening practice meadow itself -- the first few minutes out of Grandpa's
+## house -- stays free of an oversized wild. Two checks stand in for that:
+## every band 1 alpha sits well clear of the village centre (the pond alpha
+## is ~500m out, nowhere near the opening walk), and none of them is the
+## first cluster a player reaches walking the road out of the village --
+## proven by ORDER (the low, single/double-digit orders are the village's
+## immediate surroundings; see order 0/1/10/12 above, all under z=100) and by
+## POSITION (all of those early clusters sit under 100m out; the pond alpha
+## is hundreds of metres further along).
+const VILLAGE_CENTRE := Vector2(6.0, -22.0)
+const TUTORIAL_ALPHA_CLEARANCE_M := 350.0
+
+
 func test_the_tutorial_meadow_has_no_alpha() -> void:
 	for row: Variant in _alphas():
-		assert_ne(str((row as Dictionary)["band"]), "band1_lower_meadows",
-			"band 1 has an alpha. It is the opening meadow -- prompt 71 keeps that "
-			+ "baseline gentle, and the first wild creature a player meets must not "
-			+ "be an oversized one")
+		if str((row as Dictionary)["band"]) != "band1_lower_meadows":
+			continue
+		var entry: Dictionary = (row as Dictionary)["entry"]
+		var centre: Array = entry.get("centre", [0.0, 0.0, 0.0])
+		var pos := Vector2(float(centre[0]), float(centre[2]))
+		var distance := pos.distance_to(VILLAGE_CENTRE)
+		assert_true(distance >= TUTORIAL_ALPHA_CLEARANCE_M,
+			("band 1's alpha at order %s sits %.0fm from the village centre; OP-0905-06 asks "
+			+ "for an alpha at the pond, not in the opening practice meadow -- keep it at "
+			+ "least %.0fm out") % [str(entry.get("order")), distance, TUTORIAL_ALPHA_CLEARANCE_M])
+		# Not the first thing on the road either: the earliest-authored clusters
+		# (order 0/1/10/12, all under z=100 -- see the ordering probed in this
+		# file's own header) are the village's immediate surroundings. An alpha
+		# with one of those low orders, or sitting that close in, would be the
+		# very first wild creature a player meets -- exactly what prompt 71
+		# forbids even after OP-0905-06.
+		assert_true(int(entry.get("order", 0)) > 100,
+			"band 1's alpha at order %s is a low-order cluster -- that is the road's "
+			% str(entry.get("order")) + "immediate village surroundings, not the pond, "
+			+ "and would be the first wild creature on the walk out")
+		assert_true(abs(float(centre[2])) >= 100.0,
+			"band 1's alpha at order %s sits within 100m of the village on the z axis -- "
+			% str(entry.get("order")) + "too close to be anything but the first cluster "
+			+ "on the road")
 
 
 func test_every_alpha_is_a_bonus_over_its_band_not_an_absolute_level() -> void:

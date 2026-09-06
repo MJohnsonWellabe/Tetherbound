@@ -535,13 +535,15 @@ func test_every_band_has_an_always_reachable_alpha_or_elder() -> void:
 
 func test_band1_clears_the_roster_temptation_floor() -> void:
 	var by_order := _band_spawns_by_order("band1_lower_meadows")
-	# Elder Mosshell: mechanical (`elder`), a curiosity-discoverable pond
-	# hollow, catchable, "the whole temptation" per its own `_why_d1`.
-	assert_true(by_order.has(1900), "Band 1 order 1900 (the elder Mosshell) is missing")
+	# Alpha Mosshell: mechanical (`alpha`, converted from `elder` 2026-09-05 per
+	# OP-0905-06's own owner playtest -- "Isn't there supposed to be an alpha at
+	# the pond?"), sited on the pond's own shore, catchable, "the whole
+	# temptation" per its own `_why_op0905_06_alpha`.
+	assert_true(by_order.has(1900), "Band 1 order 1900 (the pond's alpha Mosshell) is missing")
 	assert_eq(str(by_order.get(1900, {}).get("species", "")), "mosshell",
-		"Band 1 order 1900 must stay the elder Mosshell -- the region's mechanically-tagged roster temptation")
-	assert_true(by_order.get(1900, {}).has("elder"),
-		"Band 1 order 1900 lost its `elder` block -- it is the region's only always-reachable mechanical temptation")
+		"Band 1 order 1900 must stay Mosshell -- the region's mechanically-tagged roster temptation")
+	assert_true(by_order.get(1900, {}).has("alpha"),
+		"Band 1 order 1900 lost its `alpha` block -- it is the region's only always-reachable mechanical temptation")
 	# Meadowhart herd: prose-only, but its own `_why_d1` is explicit --
 	# "otherwise unseen in Band 1 ... the species the tournament final's mount
 	# and the saddle recipe already made them want", sited 220m off-spine so

@@ -231,16 +231,19 @@ func test_standing_on_a_band_two_alpha_pins_exactly_that_cluster() -> void:
 		"the full map must say WHICH alpha, and say it the way the nameplate will")
 
 
-func test_the_elder_pins_under_its_authored_title() -> void:
+func test_the_pond_alpha_pins_under_its_authored_title() -> void:
+	# order 1900, mosshell, converted `elder` -> `alpha` (OP-0905-06, 2026-09-05:
+	# owner playtest "Isn't there supposed to be an alpha at the pond? Shouldn't
+	# I be directed to go there?"), authored centre [-318, 0, 505] -- the pond's
+	# own eastern shore, moved from the west hollow this test used to pin at.
 	var game: RefCounted = _game()
-	# order 1900, mosshell, `elder.title` "Elder", authored centre [-490, 0, 555].
-	_pin_within(game.map, game.progression, Vector2(-490.0, 555.0))
+	_pin_within(game.map, game.progression, Vector2(-318.0, 505.0))
 	assert_true(bool(game.map.call("is_alpha_pinned", 1900)))
 	for pin: Dictionary in (game.map.call("alpha_pins") as Array):
 		if int(pin.get("order", 0)) == 1900:
-			assert_eq(str(pin.get("display_name")), "Elder Mosshell")
+			assert_eq(str(pin.get("display_name")), "Alpha Mosshell")
 			return
-	_fail("the elder cluster pinned but is not in alpha_pins()")
+	_fail("the pond alpha cluster pinned but is not in alpha_pins()")
 
 
 func test_pinning_the_same_cluster_twice_is_a_no_op() -> void:

@@ -82,3 +82,23 @@ static func contact_shadow_core_fraction() -> float:
 
 static func contact_shadow_edge_power() -> float:
 	return float(contact_shadow().get("edge_power", 1.6))
+
+
+## OP-0905-03 ("Bramblebun colour is awful", docs/owner/OWNER_PLAYTEST_2026-09-05.md).
+## The soft-knee ceiling `creature_body.gd::_soft_knee_bright()` compresses the
+## `field_emission`/`field_degreen` multiply toward, so a species pushed hard
+## for grass-separation (Bramblebun's shipped 2.5 -> a raw 3.5x/3.24x multiply)
+## lands as a real brightening instead of an ACES-clipped, texture-crushing
+## wash of near-white. See that function's own comment for why 1.75 (not the
+## sub-1.0 value first floated for this key) is the right default for THIS
+## architecture: these materials' un-brightened tint is already a flat white
+## (1,1,1) over a textured base, so any ceiling below 1.0 would darken every
+## brightened species below its own normal shipped look. TUNABLE -- re-measure
+## against `tools/_probe_grass_separation.gd`'s render-based sweep before
+## treating 1.75 as settled; this session could only verify it numerically
+## (`tools/_probe_field_bright_values.gd`), not against a real render.
+const DEFAULT_FIELD_BRIGHT_CEILING := 1.75
+
+
+static func field_bright_ceiling() -> float:
+	return float(config().get("field_bright_ceiling", DEFAULT_FIELD_BRIGHT_CEILING))

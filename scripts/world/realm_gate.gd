@@ -8,8 +8,16 @@ extends Node3D
 ## flag and takes one deliberate interaction; entering takes the next.
 ##
 ## `Game.enter_realm(destination_realm, destination_entry_id)` owns scene
-## transition/loading.  This component only proves the gate state, changes its
-## physical presentation, and asks Game to travel.
+## transition/loading, including the OP-0905-20 "Loading <realm>…" overlay it
+## shows before the blocking scene swap.  This component only proves the gate
+## state, changes its physical presentation, and asks Game to travel.
+##
+## `enter_realm()` is a coroutine (it awaits the overlay). `try_enter()` below
+## fires it via `game.call(...)` without `await` and never reads its return —
+## exactly the "issuing the request is Game's job to see through" contract its
+## own header already states, and precisely the shape a fire-and-forget
+## coroutine call supports: it runs to completion in the background whether or
+## not the caller awaits it.
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 

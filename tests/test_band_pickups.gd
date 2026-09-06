@@ -48,10 +48,11 @@ const MIN_SEPARATION_M := 4.5
 ## Seam slack: a band's spine polyline is the extent, and a placement a few
 ## metres past its first or last point is still that band's.
 const EXTENT_SLACK_M := 25.0
-## The bands the density lanes authored (W17: bands 2-3; W18: bands 4-5); the
-## test is chapter-wide but asserts these are not empty so a silently unread
-## file cannot pass.
-const AUTHORED_BANDS: Array[String] = ["band2_stone_and_root", "band3_the_river_lock", "band4_upper_meadows_ironwood", "band5_stronghold_approach"]
+## The bands the density lanes authored (W17: bands 2-3; W18: bands 4-5;
+## W17-DENSITY-B1, 2026-09-05, answering OP-0905-04: band 1); the test is
+## chapter-wide but asserts these are not empty so a silently unread file
+## cannot pass.
+const AUTHORED_BANDS: Array[String] = ["band1_lower_meadows", "band2_stone_and_root", "band3_the_river_lock", "band4_upper_meadows_ironwood", "band5_stronghold_approach"]
 
 
 ## A stand-in for `/root/Game` carrying the real flag store, the real item db

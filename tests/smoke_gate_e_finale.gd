@@ -74,9 +74,6 @@ const FLOOR_CHECK_EVERY := 300
 const WALK_FRAMES := 700
 ## Frames the climax's stage machine gets to walk its own order.
 const SEQUENCE_FRAMES := 900
-## How long a post-fight victory conversation may hold locomotion before the
-## "exploration came back" check gives up (a conversation is a few presses).
-const VICTORY_DIALOGUE_FRAMES := 600
 ## Frames spent resting at the recovery point. The bed heals over
 ## `progression.json`'s `creature_bed.full_heal_seconds` (120s), so this is
 ## deliberately a PARTIAL rest: what is under test is that the bed accepts a
@@ -939,20 +936,9 @@ func _fight_to_the_end(id: String, room: String) -> void:
 	# check landed, which was this smoke's documented flake on `main`
 	# (CURRENT_STATE §1). A player reads the line and presses interact; do the
 	# same, bounded, and only then ask whether exploration came back.
-	await _read_any_victory_conversation()
+	await _drain_any_victory_dialogue(id)
 	if not bool(_player.call("locomotion_enabled")):
 		_fail("exploration never came back after '%s''s fight" % id)
-
-
-## Press through a victory conversation if one opens after a fight, and give
-## the lockout one frame to release. Returns as soon as locomotion is back.
-func _read_any_victory_conversation() -> void:
-	for i in VICTORY_DIALOGUE_FRAMES:
-		if bool(_player.call("locomotion_enabled")):
-			return
-		await physics_frame
-		if bool(_panel.call("is_open")):
-			await _press("interact")
 
 
 ## The fight is happening where the player started it, not under the building.
@@ -1031,6 +1017,35 @@ func _stalled_report(id: String, room: String, frames: int, ally: Node3D, oppone
 		opponent.global_position.y - ally.global_position.y,
 		str(_manager.call("quick_ready")), int(_manager.get("state")),
 		_quick_hits - hits_at_start, _quick_misses - misses_at_start]
+
+
+## Some trainers carry a `victory_conversation` (band5_stronghold_approach's
+## Warden entry: "stronghold_warden_realm_reward", the Cloudreach realm-reward
+## handoff) that `encounter_director.gd::_finish_trainer_battle()` re-enables
+## exploration and THEN opens with `call_deferred("_present_trainer_victory",
+## spec)`. `sequence_director.gd::_refresh_lockout()` disables locomotion again
+## while that panel is up, so a fight that ends into one of these has to have
+## it read and closed, the same way `_read_the_reveal_before_he_speaks` and the
+## belt ceremony above drain a real conversation, before "exploration came
+## back" means anything. A gauntlet fight with no such conversation attached
+## never opens the panel at all, so this is a no-op there and the assertion
+## after it is unaffected.
+func _drain_any_victory_dialogue(id: String) -> void:
+	for i in 4:
+		await physics_frame
+	if _panel == null or not bool(_panel.call("is_open")):
+		return
+	var heard := str(_panel.call("runner").call("conversation_id"))
+	var presses := 0
+	while bool(_panel.call("is_open")) and presses < 60:
+		await _press("interact")
+		presses += 1
+	if bool(_panel.call("is_open")):
+		_fail("'%s''s victory conversation ('%s') never closed after %d presses"
+			% [id, heard, presses])
+		return
+	print("  drained '%s''s victory conversation ('%s') before checking exploration"
+		% [id, heard])
 
 
 func _disconnect_fight_signals() -> void:

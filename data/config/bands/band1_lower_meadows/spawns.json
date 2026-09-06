@@ -183,7 +183,7 @@
       "_comment_ecology_0903": "BAND1-ECOLOGY-0903, docs/ROADMAP.md task 2.5, confirming rather than re-authoring: this is the bridge approach's temptation creature, already pinned by tests/test_spawns_data.gd::test_band1_clears_the_roster_temptation_floor, and this pass's own trainer-side note (south_bridge_grunt's `_comment_ecology_0903` in trainers.json) names why it belongs specifically at THIS place -- the last wild thing the player sees before Team Tether closes the free road behind them.",
       "_why_worldlife_0903": "BAND1_ROUTE_CONTRACT.md, the Bridge approach row: 'the Meadowhart pair already off-route (136m) moved to 40m so it is seen before it can be fought'. Moved along the same arc position (~2320m, the final approach to South Bridge) from 136m lateral to 40m -- still off the direct line (the point of the beat, per `_why_d1` below: finding it costs leaving the road), but now inside the range a player glancing sideways from the road actually notices before deciding whether to detour and fight it, rather than a herd invisible unless already sought out. Checked clear of the nearest on-route clusters at this arc: order 1044's Pipwing (~73m away) and order 1043's Mudsnout (~101m away), both well outside either disc. Species, count and level band untouched; wander left at wild_creature.gd's plain default (the fix here is visibility by siting, not by movement -- a wider wander would let it drift back toward the road and be fought before it is properly seen, which is the opposite of this row's ask). SUPERSEDED for lateral offset by `_why_g3band1_0904` below.",
       "_why_d1": "BAND1-D1 optional detour, coordinated with prompt 30's approved 'Meadowhart Herd' beat rather than inventing a separate quest. Deliberately OFF the spine (the route here runs (330,1130)-(180,1200)-(30,1250), swinging back toward South Bridge; the spine's own x at z=1230 is ~70) so finding the herd costs a real decision to leave the direct line to the bridge, not a glance sideways -- tools/_probe_band1_cadence.py measures the lateral offset at ~220m, clearly off-route rather than borderline -- SUPERSEDED for lateral offset first by `_why_worldlife_0903` above (40m, not 220m/136m) and now by `_why_g3band1_0904` below; the species/mount-desire reasoning still holds. Meadowhart is otherwise unseen in Band 1 -- SH47 sited the band 2 herd just past the bridge for the rideable-in-stride fix, not as an early sighting -- so this is the only place in the band a player can lay eyes on (and, since it is wild and not trainer-owned, legally catch) the species the tournament final's mount and the saddle recipe already made them want. Same wild_band [2,6] as every other cluster in the file; nothing about being a detour makes it a different creature.",
-      "_why_g3band1_0904": "G3-BAND1-FINISH-0904, ROADMAP 2.12: gate 2.5's own acceptance asks for 'at least one roster decision in play' on the direct route, and GATE2-EVIDENCE-0903/REPORT.md section 5 measured that the played route -- straight from tournament victory to the South Bridge, no detour taken -- produced mid-fight rotation but 'no catch and no roster replacement'. That is the two prior sitings working exactly as authored: `_why_worldlife_0903`'s 40m and `_why_d1`'s 220m are BOTH built on the premise that the herd should cost a deliberate detour to reach, and a disc of radius 22 centred 40m off the route's nearest segment ((-40,1310)-(8,1330)) never puts a single wild individual's scatter draw within 18m of the walkable line -- confirmed by the same perpendicular-distance arithmetic `_why_worldlife_0903` used, not re-guessed. Moved along the SAME perpendicular from the SAME nearest route point, 40m -> 12m: the disc (radius unchanged at 22) now runs from -10m to +34m of the route centreline, so part of the herd's own scatter draw can land ON the walkable line a player actually takes, while the centre itself still sits visibly off to the side rather than in the road -- a player walking straight through is now genuinely likely to meet it, not merely glimpse it before choosing to leave the road. This supersedes the 'costs leaving the road' framing in `_why_worldlife_0903`/`_why_d1` for THIS cluster specifically -- the coordinator's own contract for 2.12 asks for the direct route to meet a temptation, not for this beat to keep costing a detour -- and does not touch order 1900 (the elder Mosshell), which stays the region's deliberately-curiosity-gated temptation exactly as PW2 authored it. Species, count, radius and level band untouched."
+      "_why_g3band1_0904": "G3-BAND1-FINISH-0904, ROADMAP 2.12: gate 2.5's own acceptance asks for 'at least one roster decision in play' on the direct route, and GATE2-EVIDENCE-0903/REPORT.md section 5 measured that the played route -- straight from tournament victory to the South Bridge, no detour taken -- produced mid-fight rotation but 'no catch and no roster replacement'. That is the two prior sitings working exactly as authored: `_why_worldlife_0903`'s 40m and `_why_d1`'s 220m are BOTH built on the premise that the herd should cost a deliberate detour to reach, and a disc of radius 22 centred 40m off the route's nearest segment ((-40,1310)-(8,1330)) never puts a single wild individual's scatter draw within 18m of the walkable line -- confirmed by the same perpendicular-distance arithmetic `_why_worldlife_0903` used, not re-guessed. Moved along the SAME perpendicular from the SAME nearest route point, 40m -> 12m: the disc (radius unchanged at 22) now runs from -10m to +34m of the route centreline, so part of the herd's own scatter draw can land ON the walkable line a player actually takes, while the centre itself still sits visibly off to the side rather than in the road -- a player walking straight through is now genuinely likely to meet it, not merely glimpse it before choosing to leave the road. This supersedes the 'costs leaving the road' framing in `_why_worldlife_0903`/`_why_d1` for THIS cluster specifically -- the coordinator's own contract for 2.12 asks for the direct route to meet a temptation, not for this beat to keep costing a detour -- and did not touch order 1900 at the time (the elder Mosshell, since converted to the pond's alpha and relocated -- see order 1900's own `_why_op0905_06_alpha`, 2026-09-05). Species, count, radius and level band untouched."
     },
     {
       "order": 1006,
@@ -327,6 +327,8 @@
         387.6
       ],
       "radius": 14.2,
+      "wander_radius": 20.0,
+      "_why_worldlife_0905": "OP-0905-05 (owner playtest: 'very few creatures after I leave the village and run towards bridge'). Extends the proven wander_radius(20) treatment BAND1_ROUTE_CONTRACT.md's WORLD-LIFE slice already applied to the Long Field rotation (orders 1003/1004/1027/1029/1030/1032/1034/1035) to this Rise-stretch cluster: an ordinary road-adjacent density-rotation entry with no other composition constraint on it, at the same 15m lateral those clusters sit at. Species/count/level/table untouched; encounter_director.gd hands this cluster the same road-clearance check the others already get.",
       "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~550m arc, 15m lateral, right side of the spine.",
       "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being mudsnout -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up mudsnout exactly as before."
     },
@@ -341,6 +343,8 @@
         386.3
       ],
       "radius": 15.6,
+      "wander_radius": 20.0,
+      "_why_worldlife_0905": "OP-0905-05 (owner playtest: 'very few creatures after I leave the village and run towards bridge'). Same wander_radius(20) extension as order 1015's own note -- an ordinary road-adjacent density-rotation entry with no other composition constraint. Species/count/level/table untouched; encounter_director.gd hands this cluster the same road-clearance check.",
       "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~605m arc, 27m lateral, left side of the spine.",
       "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being pipwing -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up pipwing exactly as before."
     },
@@ -394,6 +398,8 @@
         643.4
       ],
       "radius": 15.6,
+      "wander_radius": 20.0,
+      "_why_worldlife_0905": "OP-0905-05 (owner playtest: 'very few creatures after I leave the village and run towards bridge'). Same wander_radius(20) extension as order 1015's own note -- an ordinary road-adjacent density-rotation entry with no other composition constraint. Species/count/level/table untouched; encounter_director.gd hands this cluster the same road-clearance check.",
       "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~935m arc, 27m lateral, left side of the spine.",
       "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being bramblebun -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up bramblebun exactly as before."
     },
@@ -408,6 +414,8 @@
         604.4
       ],
       "radius": 17.0,
+      "wander_radius": 20.0,
+      "_why_worldlife_0905": "OP-0905-05 (owner playtest: 'very few creatures after I leave the village and run towards bridge'). Same wander_radius(20) extension as order 1015's own note -- an ordinary road-adjacent density-rotation entry with no other composition constraint. Species/count/level/table untouched; encounter_director.gd hands this cluster the same road-clearance check.",
       "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~990m arc, 39m lateral, right side of the spine.",
       "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being mudsnout -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up mudsnout exactly as before."
     },
@@ -422,6 +430,8 @@
         674.3
       ],
       "radius": 14.2,
+      "wander_radius": 20.0,
+      "_why_worldlife_0905": "OP-0905-05 (owner playtest: 'very few creatures after I leave the village and run towards bridge'). Same wander_radius(20) extension as order 1015's own note -- an ordinary road-adjacent density-rotation entry with no other composition constraint. Species/count/level/table untouched; encounter_director.gd hands this cluster the same road-clearance check.",
       "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~1045m arc, 15m lateral, left side of the spine.",
       "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being pipwing -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up pipwing exactly as before."
     },
@@ -436,6 +446,8 @@
         653.2
       ],
       "radius": 15.6,
+      "wander_radius": 20.0,
+      "_why_worldlife_0905": "OP-0905-05 (owner playtest: 'very few creatures after I leave the village and run towards bridge'). Same wander_radius(20) extension as order 1015's own note -- an ordinary road-adjacent density-rotation entry with no other composition constraint. Species/count/level/table untouched; encounter_director.gd hands this cluster the same road-clearance check.",
       "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~1100m arc, 27m lateral, right side of the spine.",
       "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being galecrest -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up galecrest exactly as before."
     },
@@ -450,6 +462,8 @@
         733.9
       ],
       "radius": 17.0,
+      "wander_radius": 20.0,
+      "_why_worldlife_0905": "OP-0905-05 (owner playtest: 'very few creatures after I leave the village and run towards bridge'). Same wander_radius(20) extension as order 1015's own note -- an ordinary road-adjacent density-rotation entry with no other composition constraint. Species/count/level/table untouched; encounter_director.gd hands this cluster the same road-clearance check.",
       "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~1155m arc, 39m lateral, left side of the spine.",
       "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being bramblebun -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up bramblebun exactly as before."
     },
@@ -480,6 +494,8 @@
         786.0
       ],
       "radius": 15.6,
+      "wander_radius": 20.0,
+      "_why_worldlife_0905": "OP-0905-05 (owner playtest: 'very few creatures after I leave the village and run towards bridge'). Same wander_radius(20) extension as order 1015's own note -- an ordinary road-adjacent density-rotation entry with no other composition constraint. Species/count/level/table untouched; encounter_director.gd hands this cluster the same road-clearance check.",
       "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~1320m arc, 27m lateral, left side of the spine.",
       "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being pipwing -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up pipwing exactly as before."
     },
@@ -526,6 +542,8 @@
         842.5
       ],
       "radius": 15.6,
+      "wander_radius": 20.0,
+      "_why_worldlife_0905": "OP-0905-05 (owner playtest: 'very few creatures after I leave the village and run towards bridge'). Same wander_radius(20) extension as order 1015's own note -- an ordinary road-adjacent density-rotation entry with no other composition constraint. Species/count/level/table untouched; encounter_director.gd hands this cluster the same road-clearance check.",
       "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~1540m arc, 27m lateral, right side of the spine.",
       "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being pipwing -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up pipwing exactly as before."
     },
@@ -556,6 +574,8 @@
         923.1
       ],
       "radius": 14.2,
+      "wander_radius": 20.0,
+      "_why_worldlife_0905": "OP-0905-05 (owner playtest: 'very few creatures after I leave the village and run towards bridge'). Same wander_radius(20) extension as order 1015's own note -- an ordinary road-adjacent density-rotation entry with no other composition constraint. Species/count/level/table untouched; encounter_director.gd hands this cluster the same road-clearance check.",
       "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~1650m arc, 15m lateral, right side of the spine.",
       "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being galecrest -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up galecrest exactly as before."
     },
@@ -602,6 +622,8 @@
         1094.7
       ],
       "radius": 14.2,
+      "wander_radius": 20.0,
+      "_why_worldlife_0905": "OP-0905-05 (owner playtest: 'very few creatures after I leave the village and run towards bridge'). Same wander_radius(20) extension as order 1015's own note -- an ordinary road-adjacent density-rotation entry with no other composition constraint. Species/count/level/table untouched; encounter_director.gd hands this cluster the same road-clearance check.",
       "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~1870m arc, 15m lateral, left side of the spine.",
       "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being pipwing -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up pipwing exactly as before."
     },
@@ -616,6 +638,8 @@
         1163.3
       ],
       "radius": 15.6,
+      "wander_radius": 20.0,
+      "_why_worldlife_0905": "OP-0905-05 (owner playtest: 'very few creatures after I leave the village and run towards bridge'). Same wander_radius(20) extension as order 1015's own note -- an ordinary road-adjacent density-rotation entry with no other composition constraint. Species/count/level/table untouched; encounter_director.gd hands this cluster the same road-clearance check.",
       "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~1925m arc, 27m lateral, right side of the spine.",
       "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being galecrest -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up galecrest exactly as before."
     },
@@ -630,6 +654,8 @@
         1126.8
       ],
       "radius": 17.0,
+      "wander_radius": 20.0,
+      "_why_worldlife_0905": "OP-0905-05 (owner playtest: 'very few creatures after I leave the village and run towards bridge'). Same wander_radius(20) extension as order 1015's own note -- an ordinary road-adjacent density-rotation entry with no other composition constraint. Species/count/level/table untouched; encounter_director.gd hands this cluster the same road-clearance check.",
       "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~1980m arc, 39m lateral, left side of the spine.",
       "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being bramblebun -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up bramblebun exactly as before."
     },
@@ -644,6 +670,8 @@
         1199.0
       ],
       "radius": 14.2,
+      "wander_radius": 20.0,
+      "_why_worldlife_0905": "OP-0905-05 (owner playtest: 'very few creatures after I leave the village and run towards bridge'). Same wander_radius(20) extension as order 1015's own note -- an ordinary road-adjacent density-rotation entry with no other composition constraint. Species/count/level/table untouched; encounter_director.gd hands this cluster the same road-clearance check.",
       "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~2035m arc, 15m lateral, right side of the spine.",
       "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being mudsnout -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up mudsnout exactly as before."
     },
@@ -658,6 +686,8 @@
         1180.9
       ],
       "radius": 15.6,
+      "wander_radius": 20.0,
+      "_why_worldlife_0905": "OP-0905-05 (owner playtest: 'very few creatures after I leave the village and run towards bridge'). Same wander_radius(20) extension as order 1015's own note -- an ordinary road-adjacent density-rotation entry with no other composition constraint. Species/count/level/table untouched; encounter_director.gd hands this cluster the same road-clearance check.",
       "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~2090m arc, 27m lateral, left side of the spine.",
       "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being pipwing -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up pipwing exactly as before."
     },
@@ -672,6 +702,8 @@
         1260.9
       ],
       "radius": 17.0,
+      "wander_radius": 20.0,
+      "_why_worldlife_0905": "OP-0905-05 (owner playtest: 'very few creatures after I leave the village and run towards bridge'). Same wander_radius(20) extension as order 1015's own note -- an ordinary road-adjacent density-rotation entry with no other composition constraint. Species/count/level/table untouched; encounter_director.gd hands this cluster the same road-clearance check.",
       "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~2145m arc, 39m lateral, right side of the spine.",
       "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being galecrest -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up galecrest exactly as before."
     },
@@ -686,6 +718,8 @@
         1227.0
       ],
       "radius": 14.2,
+      "wander_radius": 20.0,
+      "_why_worldlife_0905": "OP-0905-05 (owner playtest: 'very few creatures after I leave the village and run towards bridge'). Same wander_radius(20) extension as order 1015's own note -- an ordinary road-adjacent density-rotation entry with no other composition constraint. Species/count/level/table untouched; encounter_director.gd hands this cluster the same road-clearance check.",
       "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~2200m arc, 15m lateral, left side of the spine.",
       "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being bramblebun -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up bramblebun exactly as before."
     },
@@ -700,6 +734,8 @@
         1288.3
       ],
       "radius": 15.6,
+      "wander_radius": 20.0,
+      "_why_worldlife_0905": "OP-0905-05 (owner playtest: 'very few creatures after I leave the village and run towards bridge'). Same wander_radius(20) extension as order 1015's own note -- an ordinary road-adjacent density-rotation entry with no other composition constraint. Species/count/level/table untouched; encounter_director.gd hands this cluster the same road-clearance check.",
       "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~2255m arc, 27m lateral, right side of the spine.",
       "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being mudsnout -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up mudsnout exactly as before."
     },
@@ -714,6 +750,8 @@
         1274.0
       ],
       "radius": 17.0,
+      "wander_radius": 20.0,
+      "_why_worldlife_0905": "OP-0905-05 (owner playtest: 'very few creatures after I leave the village and run towards bridge'). Same wander_radius(20) extension as order 1015's own note -- an ordinary road-adjacent density-rotation entry with no other composition constraint. Species/count/level/table untouched; encounter_director.gd hands this cluster the same road-clearance check.",
       "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~2310m arc, 39m lateral, left side of the spine.",
       "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being pipwing -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up pipwing exactly as before."
     },
@@ -793,20 +831,18 @@
       "species": "mosshell",
       "count": 1,
       "centre": [
-        -490.0,
+        -318.0,
         0.0,
-        555.0
+        505.0
       ],
       "radius": 0.0,
-      "elder": {
-        "title": "Elder",
-        "body_scale": 1.35,
+      "alpha": {
         "level_bonus": 4,
-        "wander_radius": 1.5,
-        "notice_range": 20.0
+        "scale": 1.35
       },
-      "_comment_ecology_0903": "BAND1-ECOLOGY-0903, docs/ROADMAP.md task 2.5, confirming rather than re-authoring: this is the Pond pocket's temptation creature, already pinned by tests/test_spawns_data.gd::test_band1_clears_the_roster_temptation_floor. The Pond's trainer slot is deliberately NOT a battle: docs/specs/BAND1_ROUTE_CONTRACT.md place 3 names the fisher (Nan, data/config/bands/band1_lower_meadows/pond_npc.json) as 'dialogue only, no fight', so the lush reference is not disturbed and does not compete with this elder for the player's attention. Nan's own greeting ('quiet out here since the company came through... even the fish keep low these days') is this place's 'reason to be standing there' -- watching water that has gone strange, which is the exact shape docs/prompts/60-WILD-ecology-journey.md and this task's own notification use as the model for a real reason, even though she carries no team. See order 12's `_comment_ecology_0903_temptation` (the practice meadow) for how this reads against the chapter's other three places.",
-      "_why_d1": "PW2 / prompt 62's 'at least one less-common/special temptation', and band1's only elder. SITE: a damp hollow west of the pond, found by tools/_probe_elder_site.gd rather than picked -- 0.83m of relief over 10m so the encounter arena forms on flat ground, 3.9m above the water line so it is not IN the pond, 96m from the pond centre (mosshell habitat: every other mosshell in band1 is pond-side) and 75m lateral from the nearest authored route. That last number is the point: tools/_probe_band1_cadence.py counts anything past 60m lateral as an optional detour rather than corridor cadence, so this is something a player finds by being curious about a low green hollow off the pond loop, not something the road walks them into. Prompt 30's rule that some optional content should be discoverable through curiosity rather than a quest giver, and its rule not to pre-label every secret, are why this gets no map landmark. DIFFERENTIATION: PW2 requires a behavioural distinction and says stats and scale cannot be the only one. `notice_range` 20 against the shared default of 9 means it stops and turns to watch the player from more than twice the usual distance -- and wild_creature.gd's own comment calls that stop-and-look 'the only cue the game gives that the creature is engageable', so this reads before combat starts, which is exactly PW2's readability rule. `wander_radius` 1.5 against 7 means it holds its ground instead of drifting: an old animal that owns this hollow. Both are existing configure() tunables, not new machinery. LEVEL: +4 on whatever band1's own curve rolls, not a pinned number -- an elder should stay relative to its region when chapter_curve.json moves. Against a post-tournament team that has just beaten a level 10-11 final, that is a real fight and not a wall, which is PW2's own 'keep early Band 1 encounters appropriately approachable'. CATCHABLE, deliberately: it is a wild, so the five-creature squeeze this creates is the whole temptation. Nothing on the wild path changes to make that true."
+      "_comment_ecology_0903": "BAND1-ECOLOGY-0903, docs/ROADMAP.md task 2.5, confirming rather than re-authoring: this is the Pond pocket's temptation creature, already pinned by tests/test_spawns_data.gd::test_band1_clears_the_roster_temptation_floor. The Pond's trainer slot is deliberately NOT a battle: docs/specs/BAND1_ROUTE_CONTRACT.md place 3 names the fisher (Nan, data/config/bands/band1_lower_meadows/pond_npc.json) as 'dialogue only, no fight', so the lush reference is not disturbed and does not compete with this alpha for the player's attention. Nan's own greeting now names it directly (data/dialogue/bands/band1_lower_meadows.json `pond_fisher_greeting`), which is this place's 'reason to be standing there' -- watching the big one in the shallows, the exact shape docs/prompts/60-WILD-ecology-journey.md and this task's own notification use as the model for a real reason, even though she carries no team. See order 12's `_comment_ecology_0903_temptation` (the practice meadow) for how this reads against the chapter's other three places.",
+      "_why_alpha": "OWNER PLAYTEST OP-0905-06 (2026-09-05), verbatim: 'Isn't there supposed to be an alpha at the pond? Shouldn't I be directed to go there?' -- a direct owner correction that supersedes PW2's original 'elder' framing below. Converted from the `elder` mechanism to the ordinary `alpha` one every other band uses (see band2 order 2006/2011/2012, band3 order 3002, band5 order 5001 for the same shape: `level_bonus`/`scale`, nothing else): `encounter_director.gd::_make_alpha()` now swaps this individual to the `*_alpha` colourway and rims its silhouette (CREATURE-IDENTITY-2), which the plain elder framing never got, and `alpha_pins.gd` marks it on the world map the moment the player is within `map.json`'s 300m radius (owner directive D-0904B-1) under the display name 'Alpha Mosshell' -- the direction the owner asked for, on the map itself rather than only in an NPC's line. `level_bonus` (4) and `scale` (1.35) are the exact numbers PW2 authored for the elder; only the mechanism and the nameplate prefix changed, not the fight's difficulty. MOVED from the damp hollow 75m off-route (the elder's original curiosity-gated site, kept as a candy find -- see data/config/bands/band1_lower_meadows/pickups.json `b1_candy_pond_hollow`) to the pond's own eastern shore, 24m from the landmark centre `map_landmarks.json` names for The Pond ([-342,507], radius 55) and clear of the reedwing cluster (order 11, 22m away, outside its own 15m placement disc). Ground-probed dry: 3.33m above `water.level` (-17.0) at the real heightfield, the same margin PW2's own hollow used (3.9m) and Nan's own camp uses (3.02m) -- on the FAR shore from the road, which bends through (-430,510)-(-330,590) on the pond's west/south side, so a player walking the pond loop from the road side sees the alpha across the water before crossing to it, rather than finding it already at their feet. `wander_radius`/`notice_range` are NOT carried over from the elder block: no per-entry passthrough exists for ordinary `alpha` clusters (`_make_alpha()` reads only `level_bonus`/`scale`; the elder's generic passthrough was `_apply_elder()`'s own mechanism), and every other authored alpha in the chapter already reads as distinct through the colourway/rim/scale CREATURE-IDENTITY-2 gives it rather than a bespoke stand-still radius, so this now matches that convention instead of keeping a one-off. CATCHABLE, unchanged: it is still a wild, so the five-creature squeeze remains the whole temptation.",
+      "_why_d1": "HISTORICAL -- PW2 / prompt 62's original 'at least one less-common/special temptation' framing, superseded for mechanism and site by `_why_op0905_06_alpha` above but kept for the reasoning that still holds. SITE (original, no longer current): a damp hollow west of the pond, found by tools/_probe_elder_site.gd rather than picked -- 0.83m of relief over 10m so the encounter arena forms on flat ground, 3.9m above the water line so it is not IN the pond, 96m from the pond centre (mosshell habitat: every other mosshell in band1 is pond-side) and 75m lateral from the nearest authored route. Prompt 30's rule that some optional content should be discoverable through curiosity rather than a quest giver, and its rule not to pre-label every secret, are why this still gets no PERMANENT map landmark entry (`map_landmarks.json`) even though the 300m proximity pin now advertises it up close. LEVEL: +4 on whatever band1's own curve rolls, not a pinned number -- an alpha should stay relative to its region when chapter_curve.json moves. Against a post-tournament team that has just beaten a level 10-11 final, that is a real fight and not a wall, which is PW2's own 'keep early Band 1 encounters appropriately approachable'."
     },
     {
       "order": 1050,
@@ -987,6 +1023,84 @@
       "radius": 10.0,
       "wander_radius": 20.0,
       "_why_worldlife_0903": "BAND1_ROUTE_CONTRACT.md, the Gate Meadow row: 'a herd of 4-5 Trailpups grazing on the road shoulder within 15m'. No cluster stood in the Gate Meadow's own arc window (0-450m) at anything like that closeness before this -- the nearest content is order 1006/1007's own density-rotation pair 25-45m away. Sited at arc~130m (past the VP9 capture stand's own pinned clutter near the gate, before order 1007), 9m off the spine -- the closest any cluster in this file sits to the road, matching 'on the shoulder' rather than merely 'near it'. Checked clear of every neighbour at this arc: order 1006 (52m), order 10 (36m), order 1007 (27m), order 1008 (59m), order 1051 (47m), all well outside the combined discs. wander_radius 20 (against wild_creature.gd's 7m default) is what makes a herd standing this close actually read as grazing rather than a static prop, per BAND1_ROUTE_INVESTIGATION.md's own root-cause finding; encounter_director.gd hands this cluster a road-clearance check alongside the wider disc so it can graze across the shoulder without a wander target ever landing on the painted trail. Trailpup is not aggressive (species.json), so this does not add an aggressive wanderer to the Gate Meadow. Level band ordinary (band1's [2,6] wild_band, same as every non-pinned cluster); no starter species."
+    },
+    {
+      "order": 1080,
+      "species": "mudsnout",
+      "count": 3,
+      "centre": [
+        -225.7,
+        0.0,
+        314.0
+      ],
+      "radius": 12.0,
+      "wander_radius": 20.0,
+      "_why_worldlife_0905_gap": "OP-0905-05 (owner playtest: 'very few creatures after I leave the village and run towards bridge'). `tools/_probe_band1_cadence.py`-style arc projection against terrain_playground.json trail.bands[0] found this the band's largest gap with nothing within 30m of the road: 119.5m between order 1012 (pipwing, arc 385) and order 1014 (bramblebun, arc 504.5). New cluster at the gap's own midpoint (arc~445), 12m off the spine -- inside the route contract's 15m 'road-adjacent' band -- halving the gap to ~60m either side. Mudsnout (Ground) chosen over an Air species: `tests/test_spawn_tables.gd::test_a_rolled_world_is_still_the_ground_dominant_meadows` runs on a thin margin chapter-wide (T5-CAMPS' own note records it), so every new band-1 cluster in this pass is Ground rather than risk it. Checked clear of every existing cluster centre at this arc by >30m beyond combined disc radii (nearest is order 1012's pipwing, 34m clear). Level rolls on band1's own [2,6] wild_band; no table, no gate -- an ordinary ambient population like the rotation either side of it."
+    },
+    {
+      "order": 1081,
+      "species": "trailpup",
+      "count": 3,
+      "centre": [
+        -235.9,
+        0.0,
+        643.4
+      ],
+      "radius": 12.0,
+      "wander_radius": 20.0,
+      "_why_worldlife_0905_gap": "OP-0905-05, same cadence pass as order 1080's own note. Second-largest gap: 110m between order 1022 (bramblebun, arc 935) and order 1024 (pipwing, arc 1045). New cluster at the gap's own midpoint (arc~970), 12m off the spine. Trailpup (Ground) for the same ground-dominant-margin reason as order 1080. Checked clear of every existing cluster centre by >10m beyond combined disc radii (nearest is order 1022's bramblebun); the -12m offset side was tried first and rejected (4.6m clearance from order 1023) before this +12m side, which clears by 10.5m. Level rolls on band1's own [2,6] wild_band; no table, no gate."
+    },
+    {
+      "order": 1082,
+      "species": "mudsnout",
+      "count": 2,
+      "centre": [
+        118.9,
+        0.0,
+        1207.7
+      ],
+      "radius": 12.0,
+      "wander_radius": 20.0,
+      "_why_worldlife_0905_gap": "OP-0905-05, same cadence pass as order 1080's own note. Third-largest gap: 110m between order 1040 (pipwing, arc 2090) and order 1042 (bramblebun, arc 2200). New cluster at the gap's own midpoint (arc~2130), 12m off the spine, on the Bridge approach stretch BAND1_ROUTE_CONTRACT.md's place 5 asks not to go quiet again after the Long Field. Mudsnout (Ground) for the ground-dominant-margin reason. Checked clear of every existing cluster centre by >15m beyond combined disc radii (nearest is order 1040's pipwing). Level rolls on band1's own [2,6] wild_band; no table, no gate."
+    },
+    {
+      "order": 1083,
+      "species": "bramblebun",
+      "count": 2,
+      "centre": [
+        -128.2,
+        0.0,
+        261.2
+      ],
+      "radius": 12.0,
+      "wander_radius": 20.0,
+      "_why_worldlife_0905_gap": "OP-0905-05, same cadence pass as order 1080's own note. Fourth-largest gap: 110m between order 1010 (bramblebun, arc 275) and order 1012 (pipwing, arc 385). New cluster at the gap's own midpoint (arc~330), 12m off the spine, in the Gate Meadow's own back half where BAND1_ROUTE_CONTRACT.md's place 1 asks the first stretch not to read as empty. Bramblebun (Ground) for the ground-dominant-margin reason. Checked clear of every existing cluster centre by >20m beyond combined disc radii (nearest is order 1011's mudsnout). Level rolls on band1's own [2,6] wild_band; no table, no gate."
+    },
+    {
+      "order": 1084,
+      "species": "bramblebun",
+      "count": 3,
+      "centre": [
+        266.2,
+        0.0,
+        1173.0
+      ],
+      "radius": 12.0,
+      "wander_radius": 20.0,
+      "_why_worldlife_0905_gap": "OP-0905-05, same cadence pass as order 1080's own note. Fifth-largest gap: 110m between order 1037 (galecrest, arc 1925) and order 1039 (mudsnout, arc 2035). New cluster at the gap's own midpoint (arc~1980), 12m off the spine -- the -12m offset side was used here (not +12m, which overlapped order 1038's own disc by ~2m) and clears every existing cluster centre by >20m beyond combined disc radii. Bramblebun (Ground) for the ground-dominant-margin reason. Level rolls on band1's own [2,6] wild_band; no table, no gate."
+    },
+    {
+      "order": 1085,
+      "species": "trailpup",
+      "count": 2,
+      "centre": [
+        -400.2,
+        0.0,
+        440.7
+      ],
+      "radius": 12.0,
+      "wander_radius": 20.0,
+      "_why_worldlife_0905_gap": "OP-0905-05, same cadence pass as order 1080's own note. Sixth gap: 109.9m between order 1016 (pipwing, arc 605) and order 1018 (bramblebun, arc 715, Creek Hollow's own open-basin catch). New cluster at the gap's own midpoint (arc~660), 12m off the spine, on the descent toward the Pond turn-off. Trailpup (Ground) for the ground-dominant-margin reason. Checked clear of every existing cluster centre by >28m beyond combined disc radii (nearest is order 1018's bramblebun). Level rolls on band1's own [2,6] wild_band; no table, no gate."
     }
   ]
 }

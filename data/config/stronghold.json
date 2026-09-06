@@ -8,14 +8,11 @@
   "_comment_stone_skirt": "T1-HALL-REBUILD (2026-08-30), HALL_DESIGN_2026-08-30.md §5's foundation tier -- the darkest step on the ladder (skirt < works walls < DarkRock < LightRock < coping), at the coarser 0.22 tile so the foundation reads as BIGGER blocks than the wall above it. It is worn by a facing skin (`stronghold.gd::_build_skirt_facing`), not by the skirt slab itself: each chamber's floor slab IS its skirt (one box 18m deep whose top face is the room's walkable floor), so retinting the slab would repaint five interiors. Before this the building's whole visible plinth rendered as yard cobble seen edge-on, at a smaller stone scale than the wall standing on it -- the exact scale collision §5 resolves with a stated ladder.",
   "site": {
     "boiler_smoke_enabled": false,
-    "at": [
-      8.0,
-      7560.0
-    ],
+    "at": [8.0, 7560.0],
     "yaw_deg": 0.0,
     "floor_clearance": 0.5,
-    "_comment_interior_conduit_energy": "N05-WORLD-DRESSING-0905. Emission on the live teal runs INSIDE the roofed rooms -- the floor conduits and the line a `lit` trim girder carries (`stronghold.gd::_interior_live_material`). W06-FINALE-0904's judges read the 1.4-energy runs in the Legendary Chamber as cyan bars / debug draws; W06 measured this teal clipping to white at 2.2 and holding its hue at 1.15. 0.9 keeps it a colour. Exterior runs keep `exterior_conduit_energy`; the machine's crown and ring lamps keep the full 1.4 because they are the room's light source.",
-    "interior_conduit_energy": 0.9,
+    "_comment_interior_conduit_energy": "N05-WORLD-DRESSING-0905. Emission on the live teal runs INSIDE the roofed rooms -- the floor conduits and the line a `lit` trim girder carries (`stronghold.gd::_interior_live_material`). W06-FINALE-0904's judges read the 1.4-energy runs in the Legendary Chamber as cyan bars / debug draws; W06 measured this teal clipping to white at 2.2 and holding its hue at 1.15. 0.9 keeps it a colour. Exterior runs keep `exterior_conduit_energy`; the machine's crown and ring lamps keep the full 1.4 because they are the room's light source. HALL-STAGING-0906 round 2: with the wall torches finally lighting the rooms, the blind judge still read the 0.9 floor runs as the KEY light in all three roofed rooms ('teal functions as key light, not accent'); 0.5 puts them under the torches, still clearly live.",
+    "interior_conduit_energy": 0.5,
     "wall_thickness": 1.2,
     "skirt": 18.0,
     "ramp_run": 40.0,
@@ -76,113 +73,68 @@
     "_comment_height": "ROUND 2: 10.0 -> 12.0, see `_comment_round2` -- the height is now set by the CABLE, not by the pylon. Original reasoning, still true: against the quarry spur run's 4.6m. This is the trunk that feeds the Hall and it should out-scale every spur the player has met; 10.0 is also the measured floor for cable clearance (see `_comment_approach_pylons_measured`) rather than a number picked for drama. `_build_pylons` scales the one GLB uniformly, so a 10m pylon is a 4.6m pylon at 2.17x -- heavier as well as taller, which is the correct read for a trunk.",
     "list": [
       {
-        "at": [
-          -40.0,
-          7010.0
-        ],
+        "at": [-40.0, 7010.0],
         "lit": true,
         "_why": "the first one, standing at the band boundary where the trail enters at (0,7000) -- the player crests into Band 5 and the line is ALREADY there, running away from them toward something they cannot see yet. That is the whole navigational job: the direction is answered before the question is asked."
       },
       {
-        "at": [
-          -37.71,
-          7045.4
-        ],
+        "at": [-37.71, 7045.4],
         "lit": true
       },
       {
-        "at": [
-          -35.43,
-          7080.7
-        ],
+        "at": [-35.43, 7080.7],
         "lit": true
       },
       {
-        "at": [
-          -33.14,
-          7116.1
-        ],
+        "at": [-33.14, 7116.1],
         "lit": true,
         "_why": "abreast of Watchman Corr's outer watch (bands/band5_stronghold_approach/trainers.json order 5005, (-68,7140)) -- the first Team Tether body and the first Team Tether machinery in the same 40m, so the faction reads as one thing that both stands on this ground and takes from it."
       },
       {
-        "at": [
-          -30.86,
-          7151.4
-        ],
+        "at": [-30.86, 7151.4],
         "lit": true
       },
       {
-        "at": [
-          -28.57,
-          7186.8
-        ],
+        "at": [-28.57, 7186.8],
         "lit": true
       },
       {
-        "at": [
-          -26.29,
-          7222.1
-        ],
+        "at": [-26.29, 7222.1],
         "lit": true
       },
       {
-        "at": [
-          -24.0,
-          7257.5
-        ],
+        "at": [-24.0, 7257.5],
         "lit": true,
         "_why": "the middle of the run and the middle of the region. The trail's own waypoint (80,7370) swings 100m EAST of here, so this is the stretch where the road and the line visibly diverge and the line is the one that keeps pointing at the Hall -- a bearing, not a handrail."
       },
       {
-        "at": [
-          -21.71,
-          7292.9
-        ],
+        "at": [-21.71, 7292.9],
         "lit": true
       },
       {
-        "at": [
-          -19.43,
-          7328.2
-        ],
+        "at": [-19.43, 7328.2],
         "lit": true
       },
       {
-        "at": [
-          -17.14,
-          7363.6
-        ],
+        "at": [-17.14, 7363.6],
         "lit": true
       },
       {
-        "at": [
-          -14.86,
-          7398.9
-        ],
+        "at": [-14.86, 7398.9],
         "lit": true,
         "_why": "level with the three-Sigil gate's own latitude, z=7400. The gate itself sits at (63.6,7400) -- ON the road, after this lane moved it there (playground_world.gd SIGIL_GATE_AT) -- so the line passes 78m WEST of it. That separation is the point rather than an accident: the road's gate is the thing the player has to open, and the machinery runs past it untouched on its own bearing. Team Tether's power was never stopped by the door they make everybody else use."
       },
       {
-        "at": [
-          -12.57,
-          7434.3
-        ],
+        "at": [-12.57, 7434.3],
         "lit": true
       },
       {
-        "at": [
-          -10.29,
-          7469.6
-        ],
+        "at": [-10.29, 7469.6],
         "lit": true,
         "_why": "in sight of `the_waystop` (props.json order 5001, (-25,7460)), 17.6m outside its 14m clearing. A player who stops at the last camp to sort their five looks up at the thing they are about to walk into. Deliberately just outside the clearing so it frames the camp rather than standing in it."
       },
       {
-        "at": [
-          -8.0,
-          7505.0
-        ],
+        "at": [-8.0, 7505.0],
         "lit": true,
         "_why": "the last one before the works, 55.6m short of the outer works' centre and clear of the skirt. The run does not stop -- it arrives."
       }
@@ -191,12 +143,7 @@
   "_comment_approach_drain": "BAND5-CONTENT, prompt 66's environmental storytelling clause. The full reasoning, and an honest statement of the half of the effect this does NOT own, is in `scripts/world/approach_drain_skin.gd`'s header. The short version: `terrain_playground.json`'s `drains.stations` holds seven entries, four at the quarry (z~1790) and three at the relay (z~3749), and NONE in Band 5 -- so the drained ground got weaker the closer the player walked to the machine draining it. `bounds` is the corridor the fifteen `approach_pylons` run through, with margin; the skin's alpha is `playground_heightfield.drain_factor()` itself, so it paints exactly where a station says and NOTHING anywhere else. It therefore renders nothing today and says so in the build log: `drains.stations` is a file no Gate D lane may edit (GATE_D_LANE_CONTRACT §5), so the Band 5 stations are REQUESTED in this lane's report the same way a `density_scale` is, and this is shipped ahead of them so that granting the request is one edit to one data file rather than an edit plus a code change.",
   "approach_drain": {
     "enabled": true,
-    "bounds": [
-      -62.0,
-      6990.0,
-      14.0,
-      7548.0
-    ],
+    "bounds": [-62.0, 6990.0, 14.0, 7548.0],
     "cell": 4.0,
     "lift": 0.09,
     "tint": "#bfb6a0",
@@ -209,85 +156,57 @@
   "chambers": [
     {
       "id": "outer_works",
-      "at": [
-        0.0,
-        0.0
-      ],
-      "size": [
-        20.0,
-        24.0
-      ],
+      "at": [0.0, 0.0],
+      "size": [20.0, 24.0],
       "height": 8.0,
       "open": true,
       "_role": "Sec8: patrol trainer, visible Team Tether industrial intrusion. World box x[129.8,153.8] z[-225.4,-205.4]."
     },
     {
       "id": "courtyard",
-      "at": [
-        0.0,
-        32.0
-      ],
-      "size": [
-        22.0,
-        28.0
-      ],
+      "at": [0.0, 32.0],
+      "size": [22.0, 28.0],
       "height": 9.0,
       "open": true,
       "_role": "Sec8: trainer fight, environmental storytelling. World box x[159.8,187.8] z[-226.4,-204.4]."
     },
     {
       "id": "tether_approach",
-      "at": [
-        0.0,
-        64.0
-      ],
-      "size": [
-        16.0,
-        18.0
-      ],
+      "at": [0.0, 64.0],
+      "size": [16.0, 18.0],
       "height": 6.5,
       "_role": "Sec8: elite trainer, recovery opportunity. Roofed, and the first space that is more machine than masonry. World box x[196.8,214.8] z[-223.4,-207.4]."
     },
     {
       "id": "warden_arena",
-      "at": [
-        0.0,
-        90.2
-      ],
-      "size": [
-        24.0,
-        26.0
-      ],
+      "at": [0.0, 90.2],
+      "size": [24.0, 26.0],
       "height": 11.0,
       "_role": "Sec8: dialogue, multi-Creature boss trainer battle (R8.3 fights it; this item only builds the room and the way in). Deliberately the emptiest room in the complex -- a floor, a height and nothing to trip over. World box x[219.0,245.0] z[-227.4,-203.4]."
     },
     {
       "id": "legendary_chamber",
-      "at": [
-        -32.0,
-        90.2
-      ],
-      "size": [
-        28.0,
-        28.0
-      ],
+      "at": [-32.0, 90.2],
+      "size": [28.0, 28.0],
       "height": 22.0,
       "_role": "Sec8: tether mechanism, freeing sequence, voluntary join, release ceremony. Built AROUND the machine. World box x[218.0,246.0] z[-197.4,-169.4] -- directly behind the castle's own plinth (z[-154.4,-134.4]), 15m clear of it."
     }
   ],
-  "_comment_passages": "One spine, in route order, no branches. `gated_by_flag` is the complex's ONE door: a Tether blast shutter across the way into the Warden Arena that lifts when the elite in front of it has been beaten. Deliberately NOT an `item_gate.gd` gate -- that class is a carried KEY operating the world, `SF34`'s three Sigils are the carried keys that open the Hall APPROACH from outside, and nothing in here hands out a key. 'You have beaten the thing standing in the doorway' is already a fact the SB9 flag store remembers across saves, which is the same call `burrow_warrens.gd` made for its vault door and for the same reason.",
+  "_comment_passages": "One spine, in route order, no branches. OP-0905-14 (owner playtest 2026-09-05): 'in the stronghold, you should have to fight every npc to advance to the next' -- so `gated_by_flag` is no longer the complex's ONE door, it is EVERY chamber's exit: a Tether blast shutter across the way OUT of a chamber that lifts only once the trainer standing in that chamber has been beaten. Deliberately NOT an `item_gate.gd` gate -- that class is a carried KEY operating the world, `SF34`'s three Sigils are the carried keys that open the Hall APPROACH from outside, and nothing in here hands out a key. 'You have beaten the thing standing in this room' is already a fact the SB9 flag store remembers across saves, which is the same call `burrow_warrens.gd` made for its vault door and for the same reason. Each flag matches the trainer occupying the chamber the passage LEAVES (`_place_gauntlet()`'s own placement, mirrored in `data/config/bands/band5_stronghold_approach/trainers.json`'s `defeat_flag` rows): the patrol holds outer_works, the courtyard officer holds courtyard, the elite holds tether_approach, the Warden holds warden_arena. Backtracking is never blocked -- a chamber's own shutter is the ONE you just walked through, already open because its flag is already set, so the route only ever locks forward.",
   "passages": [
     {
       "from": "outer_works",
       "to": "courtyard",
       "width": 4.0,
-      "height": 4.5
+      "height": 4.5,
+      "gated_by_flag": "defeated_stronghold_patrol"
     },
     {
       "from": "courtyard",
       "to": "tether_approach",
       "width": 3.6,
-      "height": 4.0
+      "height": 4.0,
+      "gated_by_flag": "defeated_stronghold_courtyard"
     },
     {
       "from": "tether_approach",
@@ -300,7 +219,8 @@
       "from": "warden_arena",
       "to": "legendary_chamber",
       "width": 5.0,
-      "height": 6.0
+      "height": 6.0,
+      "gated_by_flag": "defeated_warden"
     }
   ],
   "_comment_trim": "Team Tether hardware bolted onto old stone. `band` is a horizontal girder run along one wall of a chamber at `y` above the floor; `pillar` is an upright brace at an `offset` from the chamber centre. Oxblood by default (`site.tether_trim`, palette.json's reserved faction colour); `lit: true` swaps to the reserved teal with emission, which marks a run that is CARRYING something.",
@@ -314,18 +234,12 @@
     {
       "chamber": "outer_works",
       "kind": "pillar",
-      "offset": [
-        -7.0,
-        -8.0
-      ]
+      "offset": [-7.0, -8.0]
     },
     {
       "chamber": "outer_works",
       "kind": "pillar",
-      "offset": [
-        7.0,
-        -8.0
-      ]
+      "offset": [7.0, -8.0]
     },
     {
       "chamber": "courtyard",
@@ -342,18 +256,12 @@
     {
       "chamber": "courtyard",
       "kind": "pillar",
-      "offset": [
-        -8.0,
-        0.0
-      ]
+      "offset": [-8.0, 0.0]
     },
     {
       "chamber": "courtyard",
       "kind": "pillar",
-      "offset": [
-        8.0,
-        0.0
-      ]
+      "offset": [8.0, 0.0]
     },
     {
       "chamber": "tether_approach",
@@ -384,34 +292,22 @@
     {
       "chamber": "warden_arena",
       "kind": "pillar",
-      "offset": [
-        -10.0,
-        -10.0
-      ]
+      "offset": [-10.0, -10.0]
     },
     {
       "chamber": "warden_arena",
       "kind": "pillar",
-      "offset": [
-        10.0,
-        -10.0
-      ]
+      "offset": [10.0, -10.0]
     },
     {
       "chamber": "warden_arena",
       "kind": "pillar",
-      "offset": [
-        -10.0,
-        10.0
-      ]
+      "offset": [-10.0, 10.0]
     },
     {
       "chamber": "warden_arena",
       "kind": "pillar",
-      "offset": [
-        10.0,
-        10.0
-      ]
+      "offset": [10.0, 10.0]
     },
     {
       "chamber": "legendary_chamber",
@@ -430,34 +326,22 @@
     {
       "chamber": "legendary_chamber",
       "kind": "pillar",
-      "offset": [
-        -12.0,
-        -12.0
-      ]
+      "offset": [-12.0, -12.0]
     },
     {
       "chamber": "legendary_chamber",
       "kind": "pillar",
-      "offset": [
-        12.0,
-        -12.0
-      ]
+      "offset": [12.0, -12.0]
     },
     {
       "chamber": "legendary_chamber",
       "kind": "pillar",
-      "offset": [
-        -12.0,
-        12.0
-      ]
+      "offset": [-12.0, 12.0]
     },
     {
       "chamber": "legendary_chamber",
       "kind": "pillar",
-      "offset": [
-        12.0,
-        12.0
-      ]
+      "offset": [12.0, 12.0]
     }
   ],
   "_comment_interior_structure": "CONTENT-0828B. Owner playtest 2026-08-28 sec4a: 'burrow warrens and the castle are the lame looking locations. basically everywhere we had to build an under ground or build a building.' He named a CLASS of space rather than two sites, so the answer is a shared method -- scripts/world/interior_structure.gd, which burrow_warrens.json consumes from the same file with a different vocabulary. That file's header carries the mechanism; the short version is that a chamber assembled from six flat boxes has exactly two scales of incident (the room, and its props) where the meadow outside has five or six, and the missing MIDDLE scale is why an interior reads as blockout however good its texture is. The five passes supply it: a vertical member at a repeating pitch along every wall (`bays`), a jointed band at mid-height (`course`), ceiling ribs landed on the same divisions so wall and roof read as one structure (`ribs`), a jamb-and-lintel frame around every cut opening (`reveals`), and a post in each internal corner (`corners`). None of it is solid, none of it enters a doorway, and none of it reaches further into a room than interior_structure.gd's MAX_PROJECT_M -- half the metre `combat_arena_bounds_at()` reserves from every wall, so the Warden fight keeps the arena it was tuned against. `enabled: false` turns the whole pass off. ALL TUNABLE.",
@@ -518,10 +402,7 @@
   "lights_flanks": [
     {
       "_comment": "West flank fire 1/2 -- outer_works' own half.",
-      "at": [
-        -13.0,
-        -2.0
-      ],
+      "at": [-13.0, -2.0],
       "y": 4.5,
       "energy": 2.8,
       "range": 18.0,
@@ -529,10 +410,7 @@
     },
     {
       "_comment": "West flank fire 2/2 -- the yards' joint, reaching courtyard's front half.",
-      "at": [
-        -13.5,
-        22.0
-      ],
+      "at": [-13.5, 22.0],
       "y": 5.0,
       "energy": 2.8,
       "range": 18.0,
@@ -540,10 +418,7 @@
     },
     {
       "_comment": "East flank fire 1/2 -- outer_works' own half.",
-      "at": [
-        13.0,
-        -2.0
-      ],
+      "at": [13.0, -2.0],
       "y": 4.5,
       "energy": 2.8,
       "range": 18.0,
@@ -551,10 +426,7 @@
     },
     {
       "_comment": "East flank fire 2/2 -- the yards' joint.",
-      "at": [
-        13.5,
-        22.0
-      ],
+      "at": [13.5, 22.0],
       "y": 5.0,
       "energy": 2.8,
       "range": 18.0,
@@ -565,10 +437,7 @@
   "lights": [
     {
       "_comment": "T1-ARCH exterior fire 1/4, spread across the curtain's own width. VP-HALL-FIX (night): this is one of the two `gate_source` points with a real basket standing at it, so it is the pair that got the night-legibility budget -- y/range/energy up and `attenuation` added so the pool climbs the gate face and reaches the great tower's banner instead of stopping at the ground, without a new omni (same 18-light budget).",
-      "at": [
-        -8.0,
-        -13.0
-      ],
+      "at": [-8.0, -13.0],
       "y": 6.2,
       "energy": 3.3,
       "range": 24.0,
@@ -577,10 +446,7 @@
     },
     {
       "_comment": "T1-ARCH exterior fire 2/4.",
-      "at": [
-        -3.0,
-        -13.0
-      ],
+      "at": [-3.0, -13.0],
       "y": 4.5,
       "energy": 2.6,
       "range": 16.0,
@@ -588,10 +454,7 @@
     },
     {
       "_comment": "T1-ARCH exterior fire 3/4.",
-      "at": [
-        3.0,
-        -13.0
-      ],
+      "at": [3.0, -13.0],
       "y": 4.5,
       "energy": 2.6,
       "range": 16.0,
@@ -599,10 +462,7 @@
     },
     {
       "_comment": "T1-ARCH exterior fire 4/4. VP-HALL-FIX (night): the other `gate_source` basket point -- same night-legibility bump as fire 1/4 above.",
-      "at": [
-        8.0,
-        -13.0
-      ],
+      "at": [8.0, -13.0],
       "y": 6.2,
       "energy": 3.3,
       "range": 24.0,
@@ -611,10 +471,7 @@
     },
     {
       "_comment": "T1-ARCH sky fill -- the castle's own counterweight so the wall reads as fire-against-sky rather than as one warm flood. High and south of the wall, wide and weak, shadowless like every other light in this file. VP-HALL-FIX: energy up 2.2 -> 2.8 -- at night this is the ONLY light reaching the upper gate towers at all, so it has to do double duty as the sun's stand-in, not merely the day's cool counterweight.",
-      "at": [
-        0.0,
-        -30.0
-      ],
+      "at": [0.0, -30.0],
       "y": 20.0,
       "energy": 2.8,
       "range": 45.0,
@@ -622,10 +479,7 @@
     },
     {
       "_comment": "VP-HALL-FIX (night): was a near-dead 0.35-energy grey ambient that did nothing after dark -- 'stronghold-courtyard-night' crushed to black around it. Retuned to a real warm fill, sited a few metres from the inner bailey's own brazier (`hall_occupation.braziers`, at [6.4,30.6]) so it reads as that fire's glow reaching the yard rather than an unexplained light. Same entry, same budget slot -- no new omni.",
-      "at": [
-        0.0,
-        32.0
-      ],
+      "at": [0.0, 32.0],
       "y": 6.5,
       "energy": 1.7,
       "range": 28.0,
@@ -633,77 +487,59 @@
       "colour": "#e0975a"
     },
     {
-      "at": [
-        0.0,
-        60.0
-      ],
+      "_comment": "OP-0905-19: energy cut ~40% (0.9 -> 0.54) now that tether_approach carries its own wall torches (hall_occupation.braziers), so the warm sconces read as key and this cool ambient stays fill rather than washing them out.",
+      "at": [0.0, 60.0],
       "y": 5.0,
-      "energy": 0.9,
+      "energy": 2.5,
       "range": 14.0,
-      "colour": "#7fd8c4"
+      "colour": "#7d8cab"
     },
     {
-      "at": [
-        0.0,
-        68.0
-      ],
+      "_comment": "OP-0905-19: energy cut ~40% (0.7 -> 0.42), same reason as the pair above.",
+      "at": [0.0, 68.0],
       "y": 5.0,
-      "energy": 0.7,
+      "energy": 2.5,
       "range": 12.0,
-      "colour": "#8fa6b8"
+      "colour": "#7d8cab"
     },
     {
-      "at": [
-        -8.0,
-        90.2
-      ],
+      "_comment": "OP-0905-19: energy cut ~40% (1.45 -> 0.87) now that Warden Arena carries its own wall torches (hall_occupation.braziers), so the warm sconces read as key. HALL-STAGING-0906 round 3: back up to 1.6 (warm #c4a67e) -- with max_lights_per_object raised the torches reach the floor, but the arena is 24 x 26 x 11 m and its near floor measured luma 2.0 from the entrance; the torches stay the key, this is the base the floor needs to read as stone.",
+      "at": [-8.0, 90.2],
       "y": 8.0,
-      "energy": 1.45,
+      "energy": 4.0,
       "range": 24.0,
-      "colour": "#8fa6b8"
+      "colour": "#7d8cab"
     },
     {
-      "at": [
-        8.0,
-        90.2
-      ],
+      "_comment": "OP-0905-19: energy cut ~40% (1.45 -> 0.87), same reason as its pair above.",
+      "at": [8.0, 90.2],
       "y": 8.0,
-      "energy": 1.45,
+      "energy": 4.0,
       "range": 24.0,
-      "colour": "#8fa6b8"
+      "colour": "#7d8cab"
     },
     {
-      "at": [
-        -32.0,
-        78.0
-      ],
+      "_comment": "OP-0905-19: energy cut ~40% (1.05 -> 0.63) now that the Legendary Chamber carries its own wall torches (hall_occupation.braziers), so the warm sconces (and the existing warm SPOT fills) read as key against this cool omni. HALL-STAGING-0906 round 3: 1.3 for the same floor-base reason as the arena pair; the core light was cut to 1.9 in the same round so this warm base now beats the teal.",
+      "at": [-32.0, 78.0],
       "y": 12.0,
-      "energy": 1.05,
+      "energy": 3.0,
       "range": 30.0,
-      "colour": "#7d8a99"
+      "colour": "#7d8cab"
     },
     {
-      "at": [
-        -32.0,
-        102.0
-      ],
+      "_comment": "OP-0905-19: energy cut ~40% (1.05 -> 0.63), same reason as its pair above.",
+      "at": [-32.0, 102.0],
       "y": 12.0,
-      "energy": 1.05,
+      "energy": 3.0,
       "range": 30.0,
-      "colour": "#7d8a99"
+      "colour": "#7d8cab"
     },
     {
       "_comment": "N05-WORLD-DRESSING-0905, W06-FINALE-0904's three blind judges on the Legendary Chamber: 'single-key with crushed blacks', 'teal-on-teal-on-olive with one green accent; there is no warm note anywhere to give the green somewhere to be green against', 'the chamber has almost no value structure, and the creature is lost in it'. The room's two grey-blue omnis above and the machine's teal core are all cool. This is the warm FILL, high inside the doorway wall (the +x wall, the way the player walks in), in the same brazier-warm the courtyard's own fill uses, thrown across the room at the machine and the west wall so the teal reads as teal against something. A SPOT, not an omni, and measured into that shape: the first pass was a shadowless omni and moved the chamber's walls by nothing at all (right wall mean luma 25.2 -> 25.3, far wall 25.2 -> 25.2 on the same stand) while lifting the machine and creature -- the Compatibility renderer caps the OMNI lights a single mesh may take at rendering/limits/opengl/max_lights_per_object (8), the chamber's 41 m wall slabs already touch eight (two room omnis, the core, the containment light, the arena pair, the siphon, the approach), and a ninth omni is silently dropped on exactly the surfaces that needed it. Spots are counted on their own budget, and this room had none. TUNABLE.",
       "type": "spot",
-      "at": [
-        -19.0,
-        90.2
-      ],
+      "at": [-19.0, 90.2],
       "y": 12.0,
-      "aim": [
-        -34.0,
-        90.2
-      ],
+      "aim": [-34.0, 90.2],
       "aim_y": 4.0,
       "angle": 85.0,
       "energy": 2.4,
@@ -714,15 +550,9 @@
     {
       "_comment": "N05-WORLD-DRESSING-0905. The judges: 'no contact shadow under the machine or the bound/freed creature', 'at distance you cannot tell there is a creature there at all'. A SHADOW-CASTING spot over the bound creature's stand (`marks.legendary_stand`, chamber offset [0, 6] -> local [-32, 96.2]), placed behind and above it relative to the reveal stand the player reads it from (`marks.reveal_stand`, offset [0, -10]), so the shadow falls toward the player and the warm rim lifts the body's silhouette off the far wall. `stronghold.gd::_build_lights` turns `type: spot` + `shadow: true` into a SpotLight3D with shadows -- the only shadowed light in the building, and one shadow map rather than an omni's six. Lighting/rim contrast, not an asset change, per the brief. TUNABLE.",
       "type": "spot",
-      "at": [
-        -30.0,
-        101.5
-      ],
+      "at": [-30.0, 101.5],
       "y": 14.0,
-      "aim": [
-        -32.0,
-        96.2
-      ],
+      "aim": [-32.0, 96.2],
       "aim_y": 1.2,
       "angle": 32.0,
       "energy": 3.5,
@@ -734,15 +564,9 @@
     {
       "_comment": "N05-WORLD-DRESSING-0905. The machine's own contact shadow: a second shadowed spot, high on the doorway side, raking the machine's base (`chambers.legendary_chamber.at` -> local [-32, 90.2]) from the south-east so the 15 m body throws a shadow across the floor to the north-west, which the reveal stand sees to the left of the plinth, and so the faces the player looks at get a key with a direction instead of the flat teal wash from the core. TUNABLE.",
       "type": "spot",
-      "at": [
-        -21.0,
-        82.0
-      ],
+      "at": [-21.0, 82.0],
       "y": 20.0,
-      "aim": [
-        -32.0,
-        90.2
-      ],
+      "aim": [-32.0, 90.2],
       "aim_y": 1.0,
       "angle": 38.0,
       "energy": 2.6,
@@ -750,6 +574,15 @@
       "attenuation": 0.9,
       "shadow": true,
       "colour": "#ffd9a8"
+    },
+    {
+      "_comment": "OP-0905-16 follow-up (blind judge on the doorway frame C-02, 2026-09-06): the bound legendary's dark coat sat value-matched against the machine core and the back wall, so from the doorway it read as 'absence with antlers'. A warm fill inside the cage void at chest height, where the three spots (aimed at floor and stand heights) never reach. Eighth omni in this room -- the Compatibility cap; do not add a ninth without retiring one.",
+      "at": [-32.0, 90.2],
+      "y": 5.4,
+      "energy": 2.6,
+      "range": 7.5,
+      "attenuation": 1.1,
+      "colour": "#ffc98a"
     }
   ],
   "_comment_hall_occupation": "T1-HALL-REBUILD (2026-08-30), HALL_DESIGN_2026-08-30.md §6. THE LAYER THAT DIED WITH THE CASTLE. `landmark.gd` was the only caller of `stronghold_occupation.gd`, so retiring the detached castle (T1-HALL, `playground_world.gd`) took the game's entire garrison camp, brazier row and tether-lamp set out of the world along with it -- the merged Hall inherited the architecture and none of the occupation. This block is that vocabulary re-authored at the merged site, in THIS file's own local frame (x lateral, z depth, origin `site.at`, `yaw_deg` 0), not a second copy of `stronghold_occupation.json` (which still describes the retired castle's plinth-relative coordinates and is left alone as that building's history). Technique -- basket proportions, flame-without-stick, two-summed-sines flicker -- is ported from `stronghold_occupation.gd` per the design's own instruction to read it rather than extend it. Frames of reference per placement: `on_floor` sits a thing on the complex's own built floor (`_floor_y`, the yards); `on_causeway` sits it on the approach ramp's own sampled surface at that z; `on_ground` sits it on the real terrain (the boulders at the skirt foot). RESERVED-COLOUR DISCIPLINE: oxblood (#7a2430/#5a2a2e) and teal are Team Tether only; brass (#8a6f3a) appears only on Tether fittings; the Hall's own stone/timber palette uses none of the three.",
@@ -759,10 +592,7 @@
     "braziers": [
       {
         "_comment": "Causeway pair 1, west kerb.",
-        "at": [
-          -3.9,
-          -24.0
-        ],
+        "at": [-3.9, -24.0],
         "on_causeway": true,
         "scale": 2.1,
         "energy": 2.9,
@@ -771,10 +601,7 @@
       },
       {
         "_comment": "Causeway pair 1, east kerb.",
-        "at": [
-          3.9,
-          -24.0
-        ],
+        "at": [3.9, -24.0],
         "on_causeway": true,
         "scale": 2.1,
         "energy": 2.9,
@@ -783,10 +610,7 @@
       },
       {
         "_comment": "Causeway pair 2, west kerb -- two thirds of the way down the 40m climb; the pair spacing spreads the lit stretch over the whole causeway rather than clustering both pairs near the gate, which is what the first night frame showed.",
-        "at": [
-          -3.9,
-          -40.0
-        ],
+        "at": [-3.9, -40.0],
         "on_causeway": true,
         "scale": 2.1,
         "energy": 2.9,
@@ -795,10 +619,7 @@
       },
       {
         "_comment": "Causeway pair 2, east kerb.",
-        "at": [
-          3.9,
-          -40.0
-        ],
+        "at": [3.9, -40.0],
         "on_causeway": true,
         "scale": 2.1,
         "energy": 2.9,
@@ -807,10 +628,7 @@
       },
       {
         "_comment": "The garrison camp's own fire, in the outer_works yard. Clear of the patrol trainer's stand at (-5,6) and of the gate/passage lane x[-4,4].",
-        "at": [
-          -8.4,
-          -1.0
-        ],
+        "at": [-8.4, -1.0],
         "on_floor": true,
         "scale": 2.3,
         "energy": 3.0,
@@ -819,10 +637,7 @@
       {
         "_comment": "The inner bailey's fire, beside the relay hub. Clear of the courtyard trainer's stand at (-4,36).",
         "_comment_round6": "ROUND-6 (2026-09-02), item 1's final reach pass: range 15->18, energy 2.7->3.2 -- this is the yard's own central fire and the last modest push after the corner braziers' attenuation fix to clear the >=12 frame-mean bar (measured 11.05 with the corner fix alone, one render short).",
-        "at": [
-          6.4,
-          30.6
-        ],
+        "at": [6.4, 30.6],
         "on_floor": true,
         "scale": 2.1,
         "energy": 3.2,
@@ -832,10 +647,7 @@
         "_comment": "VP-HALL-FIX-3 (2026-09-02), courtyard corner brazier 1/4, NW. `stronghold-courtyard-night` measured 2.84/255 with one central fire (the inner bailey's, above) trying to cover a 22x28 yard alone -- these four hug the four corners instead of adding more energy to the same spot. Against the west curtain, north of the hoarding/stairs, clear of the fight floor x[-5,5] z[24,42] and the trainer stand (-4,36) radius.",
         "_comment_round5": "ROUND-5 (code-blind judge on round-4 frames): 'the new lights are small hot spots that don't spread across the yard' and native-exposure frame mean was still 2.84->3.58 against a stated target of >=12. Owner-authorised x3 energy / x1.5 range on these four exactly (2.2->6.6, 13.0->19.5) -- attenuation is left at 1.4 (still pools near the bowl rather than washing flat) so the extra energy grows the POOL each brazier throws instead of just brightening its hottest pixel.",
         "_comment_round6": "ROUND-6 (2026-09-02), DIAGNOSTIC-FIRST. A single OmniLight3D dropped at the courtyard centre (energy 20, range 30, DEFAULT attenuation 1.0) lit the floor to a warm, clearly-readable RGB in one render, proving the floor material was never the defect -- the SHAPE of these braziers' own falloff was. `attenuation: 1.4` concentrates a light's contribution close to the bowl (see `_build_hall_fire()`'s own header); round-5's x3 energy bump rode that same steep curve and only grew the hottest pixel, not the pool, which is why three rounds of raising energy barely moved the frame mean. attenuation 1.4 -> 1.0 (the diagnostic's own shape) first at range 22.0 measured frame mean 11.05, then 25.0 measured 12.21 -- past the >=12 bar, but `_build_hall_fire`'s own flicker (+-26% per bowl, `FLICKER_AMOUNT`) reproduces render-to-render and a second capture at the SAME config read 11.49, under the bar on an unlucky flicker phase. 25.0 -> 27.0 for margin above the bar rather than chasing a lucky frame. Energy is UNCHANGED from round 5's 6.6 throughout this round: every gain here is reach (attenuation, range), never another energy multiply.",
-        "at": [
-          -9.4,
-          20.0
-        ],
+        "at": [-9.4, 20.0],
         "on_floor": true,
         "scale": 1.9,
         "energy": 6.6,
@@ -844,10 +656,7 @@
       },
       {
         "_comment": "Courtyard corner brazier 2/4, SW -- against the west curtain, south end, lighting the doorway toward tether_approach.",
-        "at": [
-          -9.4,
-          44.0
-        ],
+        "at": [-9.4, 44.0],
         "on_floor": true,
         "scale": 1.9,
         "energy": 6.6,
@@ -856,10 +665,7 @@
       },
       {
         "_comment": "Courtyard corner brazier 3/4, NE -- against the east curtain, north end.",
-        "at": [
-          9.4,
-          20.0
-        ],
+        "at": [9.4, 20.0],
         "on_floor": true,
         "scale": 1.9,
         "energy": 6.6,
@@ -868,10 +674,7 @@
       },
       {
         "_comment": "Courtyard corner brazier 4/4, SE -- against the east curtain, south end.",
-        "at": [
-          9.4,
-          44.0
-        ],
+        "at": [9.4, 44.0],
         "on_floor": true,
         "scale": 1.9,
         "energy": 6.6,
@@ -882,14 +685,203 @@
         "_comment": "ROUND-5, NPC-stand practical light. The courtyard trainer ('stronghold_courtyard', stronghold.json's own `gauntlet` list) stands at local (-4,36); a judge read faces as unreadable at night even after the corner braziers. This is a small torch beside the stand itself rather than another yard-scale fire -- 3m off the trainer's own position (-7.0 vs -4.0), on the WEST side (outside the fight floor's x[-5,5] band, so it never stands in the arena), close enough to actually light a face. Costs 1 omni; paid for by dropping the two flank sky-fill lights below (see their own removal note).",
         "_comment_round6": "ROUND-6, same diagnostic finding as the corner braziers above: attenuation 1.3 -> 1.0, range 9.0 -> 11.0, so this fire's own pool actually reaches the trainer's stand 3m away instead of concentrating on the bowl itself.",
         "_comment_round7": "VP-HALL-FIX ITEM3 (2026-09-02). Correct metric this round: not the whole frame, the 3m-radius disc AROUND THE TRAINER'S OWN STAND (-4,36) -- median luminance there must clear 20. This torch sits exactly 3m from that stand (dx 3.0), so the disc's FAR edge can sit up to roughly 6-7m from the torch (the far corner of the disc, e.g. (-1,39)), well inside `range` 11.0 but far enough down the falloff at the old `energy` 3.4 to miss a 20-luminance median. Position and `range`/`attenuation` are unchanged (round 6 already spread this fire's pool correctly, and the torch must stay west of x=-5 to stay clear of the fight floor per the block's own placement note); `energy` 3.4 -> 6.6 -- the SAME energy the four courtyard corner braziers already carry -- nearly doubles the light actually reaching the disc without widening its reach (range is unchanged, so the rest of the 22x28 yard gains nothing new from this fire; only the pool already centred on the trainer gets brighter).",
-        "at": [
-          -7.0,
-          36.0
-        ],
+        "at": [-7.0, 36.0],
         "on_floor": true,
         "scale": 1.5,
         "energy": 6.6,
         "range": 11.0,
+        "attenuation": 1.0
+      },
+      {
+        "at": [-9.0, 79.6],
+        "on_floor": true,
+        "scale": 1.9,
+        "energy": 12.0,
+        "range": 22.0,
+        "attenuation": 1.0,
+        "_comment": "HALL-STAGING-0906 round 5. Two baskets flanking the Warden Arena's entrance from tether_approach (the -z wall, doorway at x 0), 14.4 m from the ring centre so clear of the 11 m fight floor. Three blind rounds measured the arena's near floor at luma 0.6-4.8 from the doorway: the six wall torches hang on the +-x walls 11.4 m out and the room is 24 x 26 x 11 m, so nothing warm reached the floor the player walks in on. Energy 12 for the same ACES-toe reason as the wall torches."
+      },
+      {
+        "at": [9.0, 79.6],
+        "on_floor": true,
+        "scale": 1.9,
+        "energy": 12.0,
+        "range": 22.0,
+        "attenuation": 1.0
+      },
+      {
+        "_comment": "OP-0905-19 (owner playtest 2026-09-05: 'The hall needs to be lit by torches'). Wall sconce, tether_approach west wall, south of the room's own centre -- one of a flanking pair.",
+        "mount": "wall",
+        "at": [-7.4, 63.0],
+        "y": 1.9,
+        "yaw_deg": 90.0,
+        "scale": 1.6,
+        "energy": 12.0,
+        "range": 18.0,
+        "attenuation": 1.0
+      },
+      {
+        "_comment": "OP-0905-19. Wall sconce, tether_approach west wall, north of centre.",
+        "mount": "wall",
+        "at": [-7.4, 70.0],
+        "y": 1.9,
+        "yaw_deg": 90.0,
+        "scale": 1.6,
+        "energy": 12.0,
+        "range": 18.0,
+        "attenuation": 1.0
+      },
+      {
+        "_comment": "OP-0905-19. Wall sconce, tether_approach east wall, south of centre.",
+        "mount": "wall",
+        "at": [7.4, 63.0],
+        "y": 1.9,
+        "yaw_deg": -90.0,
+        "scale": 1.6,
+        "energy": 12.0,
+        "range": 18.0,
+        "attenuation": 1.0
+      },
+      {
+        "_comment": "OP-0905-19. Wall sconce, tether_approach east wall, north of centre.",
+        "mount": "wall",
+        "at": [7.4, 70.0],
+        "y": 1.9,
+        "yaw_deg": -90.0,
+        "scale": 1.6,
+        "energy": 12.0,
+        "range": 18.0,
+        "attenuation": 1.0
+      },
+      {
+        "_comment": "OP-0905-19. Wall sconce, Warden Arena west wall, south third. The arena floor itself stays clear (its own `_role` calls it 'deliberately the emptiest room... a floor, a height and nothing to trip over') -- these are bolted to the walls, nothing stands on the fight floor.",
+        "mount": "wall",
+        "at": [-11.4, 82.2],
+        "y": 1.9,
+        "yaw_deg": 90.0,
+        "scale": 1.6,
+        "energy": 12.0,
+        "range": 18.0,
+        "attenuation": 1.0
+      },
+      {
+        "_comment": "OP-0905-19. Wall sconce, Warden Arena west wall, centre third.",
+        "mount": "wall",
+        "at": [-11.4, 90.2],
+        "y": 1.9,
+        "yaw_deg": 90.0,
+        "scale": 1.6,
+        "energy": 12.0,
+        "range": 18.0,
+        "attenuation": 1.0
+      },
+      {
+        "_comment": "OP-0905-19. Wall sconce, Warden Arena west wall, north third.",
+        "mount": "wall",
+        "at": [-11.4, 98.2],
+        "y": 1.9,
+        "yaw_deg": 90.0,
+        "scale": 1.6,
+        "energy": 12.0,
+        "range": 18.0,
+        "attenuation": 1.0
+      },
+      {
+        "_comment": "OP-0905-19. Wall sconce, Warden Arena east wall, south third.",
+        "mount": "wall",
+        "at": [11.4, 82.2],
+        "y": 1.9,
+        "yaw_deg": -90.0,
+        "scale": 1.6,
+        "energy": 12.0,
+        "range": 18.0,
+        "attenuation": 1.0
+      },
+      {
+        "_comment": "OP-0905-19. Wall sconce, Warden Arena east wall, centre third.",
+        "mount": "wall",
+        "at": [11.4, 90.2],
+        "y": 1.9,
+        "yaw_deg": -90.0,
+        "scale": 1.6,
+        "energy": 12.0,
+        "range": 18.0,
+        "attenuation": 1.0
+      },
+      {
+        "_comment": "OP-0905-19. Wall sconce, Warden Arena east wall, north third.",
+        "mount": "wall",
+        "at": [11.4, 98.2],
+        "y": 1.9,
+        "yaw_deg": -90.0,
+        "scale": 1.6,
+        "energy": 12.0,
+        "range": 18.0,
+        "attenuation": 1.0
+      },
+      {
+        "_comment": "OP-0905-19. Wall sconce, Legendary Chamber south wall, west of the machine's own axis. Kept off the doorway (+x) and back (-x) walls, on the two side walls flanking the machine instead, so nothing here competes with the OP-0905-16 doorway-to-legendary sightline.",
+        "mount": "wall",
+        "at": [-36.0, 76.8],
+        "y": 1.9,
+        "yaw_deg": 0.0,
+        "scale": 1.6,
+        "energy": 12.0,
+        "range": 18.0,
+        "attenuation": 1.0
+      },
+      {
+        "_comment": "OP-0905-19. Wall sconce, Legendary Chamber south wall, east of the machine's own axis.",
+        "mount": "wall",
+        "at": [-28.0, 76.8],
+        "y": 1.9,
+        "yaw_deg": 0.0,
+        "scale": 1.6,
+        "energy": 12.0,
+        "range": 18.0,
+        "attenuation": 1.0
+      },
+      {
+        "_comment": "OP-0905-19. Wall sconce, Legendary Chamber north wall, west of the machine's own axis.",
+        "mount": "wall",
+        "at": [-36.0, 103.6],
+        "y": 1.9,
+        "yaw_deg": 180.0,
+        "scale": 1.6,
+        "energy": 12.0,
+        "range": 18.0,
+        "attenuation": 1.0
+      },
+      {
+        "_comment": "OP-0905-19. Wall sconce, Legendary Chamber north wall, east of the machine's own axis.",
+        "mount": "wall",
+        "at": [-28.0, 103.6],
+        "y": 1.9,
+        "yaw_deg": 180.0,
+        "scale": 1.6,
+        "energy": 12.0,
+        "range": 18.0,
+        "attenuation": 1.0
+      },
+      {
+        "mount": "wall",
+        "at": [-45.4, 84.2],
+        "y": 1.9,
+        "yaw_deg": -90.0,
+        "scale": 1.6,
+        "energy": 12.0,
+        "range": 18.0,
+        "attenuation": 1.0,
+        "_comment": "HALL-STAGING-0906 round 6: the Legendary Chamber's -x wall (x -46) had no torch; from the doorway stand the right half of the frame was Y 9-16 and the teal conduit keyed the room. Two more sconces, 0.6 m proud like the rest."
+      },
+      {
+        "mount": "wall",
+        "at": [-45.4, 96.2],
+        "y": 1.9,
+        "yaw_deg": -90.0,
+        "scale": 1.6,
+        "energy": 12.0,
+        "range": 18.0,
         "attenuation": 1.0
       }
     ],
@@ -897,35 +889,23 @@
     "gate_source": [
       {
         "_comment": "W-4 (GATE3_ENCOUNTER_CONTRACTS.md sec5.2), Warden Arena threshold, west jamb. Both of this pair sit outside the 11m combat ring (distance from the arena centre (0,90.2) is 14.06m) and clear of the door's own 3.4m passage width, flanking the entry the player has just walked through rather than the ring or the Warden's own end wall -- the far wall behind `warden_stand` stays comparatively dark, which is what the arena's own re-measured silhouette contrast needs.",
-        "at": [
-          -8.5,
-          79.0
-        ],
+        "at": [-8.5, 79.0],
         "on_floor": true,
         "scale": 1.9
       },
       {
         "_comment": "W-4, Warden Arena threshold, east jamb -- mirrors the west brazier above.",
-        "at": [
-          8.5,
-          79.0
-        ],
+        "at": [8.5, 79.0],
         "on_floor": true,
         "scale": 1.9
       },
       {
-        "at": [
-          -8.0,
-          -13.0
-        ],
+        "at": [-8.0, -13.0],
         "on_floor": true,
         "scale": 2.3
       },
       {
-        "at": [
-          8.0,
-          -13.0
-        ],
+        "at": [8.0, -13.0],
         "on_floor": true,
         "scale": 2.3
       }
@@ -934,20 +914,14 @@
     "gate_sconces": [
       {
         "_comment": "West gate tower.",
-        "at": [
-          -10.6,
-          -12.6
-        ],
+        "at": [-10.6, -12.6],
         "scale": 3.0,
         "y": 6.0,
         "emission": 3.6
       },
       {
         "_comment": "East gate tower.",
-        "at": [
-          10.6,
-          -12.6
-        ],
+        "at": [10.6, -12.6],
         "scale": 3.0,
         "y": 6.0,
         "emission": 3.6
@@ -961,10 +935,7 @@
     "gate_sentries": [
       {
         "_comment": "West gate post sentry, on the causeway deck 0.7m in front of the west jamb's proud face, 1.5m west of the arch's own centreline -- the whole body (0.64m wide) stands clear of the jamb stone (|x| >= 2.0) and silhouettes against the open doorway behind it from the gate-face stand. Lit by the west `gate_sconces` light (5.4m) and the west `gate_source` brazier pair.",
-        "at": [
-          -1.5,
-          -14.9
-        ],
+        "at": [-1.5, -14.9],
         "on_causeway": true,
         "y": 0.0,
         "facing_deg": 0.0,
@@ -978,10 +949,7 @@
       },
       {
         "_comment": "East gate post sentry, mirrored: 1.5m east of the arch's own centreline, on the causeway deck 0.7m in front of the east jamb's proud face. Lit by the east `gate_sconces` light (5.4m) and the east `gate_source` brazier pair.",
-        "at": [
-          1.5,
-          -14.9
-        ],
+        "at": [1.5, -14.9],
         "on_causeway": true,
         "y": 0.0,
         "facing_deg": 0.0,
@@ -1001,10 +969,7 @@
       "rail_height_m": 1.0,
       "_comment_rail_pitch": "RETIRED as an authored value. `stronghold.gd::_build_causeway_dressing` now derives the spacing from `Prop_WoodenFence_Single`'s own measured length at the fitted height (2.06m native x, scaled), because an authored pitch of 2.6 against a fitted panel of 2.7 overlapped every panel with its neighbour.",
       "brazier_pier_m": 0.8,
-      "banner_pairs": [
-        -19.0,
-        -31.0
-      ],
+      "banner_pairs": [-19.0, -31.0],
       "pier_height_m": 3.4
     },
     "_comment_camp": "The garrison camp in the gatehouse yard -- the board's Inner Yard stalls with a hostile owner. Same prop family the retired castle's checkpoint used (`generated_camp` tents/firewood, `kenney_survival` bedroll, `quaternius_fantasy` crates/barrel), so this is the Meadows' one camp vocabulary rather than a new one. Every entry sits on the yard's own built floor. THE CLEARANCES THIS LIST OBEYS, because a prop that blocks the route is worse than no prop: the gate/passage lane x[-4.5,4.5] stays empty end to end, the patrol trainer's stand (-5,6) keeps a 5m radius, and nothing sits closer than 1m to the yard walls at x=+-10.",
@@ -1014,10 +979,7 @@
       {
         "model": "camp_tent",
         "dir": "res://assets/props/generated_camp",
-        "at": [
-          -8.0,
-          -6.4
-        ],
+        "at": [-8.0, -6.4],
         "yaw_deg": 28.0,
         "scale": 1.0,
         "on_floor": true
@@ -1025,10 +987,7 @@
       {
         "model": "camp_tent",
         "dir": "res://assets/props/generated_camp",
-        "at": [
-          7.8,
-          -7.2
-        ],
+        "at": [7.8, -7.2],
         "yaw_deg": -34.0,
         "scale": 0.94,
         "on_floor": true
@@ -1036,10 +995,7 @@
       {
         "model": "camp_firewood",
         "dir": "res://assets/props/generated_camp",
-        "at": [
-          -7.0,
-          1.4
-        ],
+        "at": [-7.0, 1.4],
         "yaw_deg": -40.0,
         "scale": 1.0,
         "on_floor": true
@@ -1047,20 +1003,14 @@
       {
         "model": "bedroll",
         "dir": "res://assets/props/kenney_survival",
-        "at": [
-          -8.6,
-          -3.6
-        ],
+        "at": [-8.6, -3.6],
         "yaw_deg": 70.0,
         "scale": 1.0,
         "on_floor": true
       },
       {
         "model": "Crate_Wooden",
-        "at": [
-          8.6,
-          2.6
-        ],
+        "at": [8.6, 2.6],
         "yaw_deg": 14.0,
         "scale": 1.0,
         "on_floor": true,
@@ -1068,10 +1018,7 @@
       },
       {
         "model": "Crate_Wooden",
-        "at": [
-          8.4,
-          4.0
-        ],
+        "at": [8.4, 4.0],
         "yaw_deg": -22.0,
         "scale": 1.0,
         "on_floor": true,
@@ -1079,100 +1026,70 @@
       },
       {
         "model": "Barrel",
-        "at": [
-          7.2,
-          5.4
-        ],
+        "at": [7.2, 5.4],
         "yaw_deg": 0.0,
         "scale": 1.0,
         "on_floor": true
       },
       {
         "model": "Workbench",
-        "at": [
-          8.2,
-          -2.4
-        ],
+        "at": [8.2, -2.4],
         "yaw_deg": -90.0,
         "scale": 1.0,
         "on_floor": true
       },
       {
         "model": "Crate_Wooden",
-        "at": [
-          8.7,
-          22.4
-        ],
+        "at": [8.7, 22.4],
         "yaw_deg": 14.0,
         "scale": 1.0,
         "on_floor": true
       },
       {
         "model": "Crate_Wooden",
-        "at": [
-          9.2,
-          24.1
-        ],
+        "at": [9.2, 24.1],
         "yaw_deg": -22.0,
         "scale": 0.92,
         "on_floor": true
       },
       {
         "model": "FarmCrate_Empty",
-        "at": [
-          8.4,
-          25.9
-        ],
+        "at": [8.4, 25.9],
         "yaw_deg": 48.0,
         "scale": 1.0,
         "on_floor": true
       },
       {
         "model": "Barrel",
-        "at": [
-          9.0,
-          29.4
-        ],
+        "at": [9.0, 29.4],
         "yaw_deg": 0.0,
         "scale": 1.0,
         "on_floor": true
       },
       {
         "model": "Barrel",
-        "at": [
-          8.3,
-          30.9
-        ],
+        "at": [8.3, 30.9],
         "yaw_deg": 0.0,
         "scale": 0.95,
         "on_floor": true
       },
       {
         "model": "Workbench",
-        "at": [
-          8.8,
-          34.9
-        ],
+        "at": [8.8, 34.9],
         "yaw_deg": -90.0,
         "scale": 1.0,
         "on_floor": true
       },
       {
         "model": "Anvil_Log",
-        "at": [
-          8.6,
-          37.9
-        ],
+        "at": [8.6, 37.9],
         "yaw_deg": -74.0,
         "scale": 1.0,
         "on_floor": true
       },
       {
         "model": "Bucket_Wooden_1",
-        "at": [
-          9.1,
-          39.6
-        ],
+        "at": [9.1, 39.6],
         "yaw_deg": 0.0,
         "scale": 1.0,
         "on_floor": true
@@ -1180,10 +1097,7 @@
       {
         "model": "camp_tent",
         "dir": "res://assets/props/generated_camp",
-        "at": [
-          -8.3,
-          32.8
-        ],
+        "at": [-8.3, 32.8],
         "yaw_deg": 62.0,
         "scale": 0.96,
         "on_floor": true
@@ -1191,100 +1105,70 @@
       {
         "model": "camp_firewood",
         "dir": "res://assets/props/generated_camp",
-        "at": [
-          -8.8,
-          37.4
-        ],
+        "at": [-8.8, 37.4],
         "yaw_deg": -18.0,
         "scale": 1.0,
         "on_floor": true
       },
       {
         "model": "FarmCrate_Empty",
-        "at": [
-          -8.8,
-          23.0
-        ],
+        "at": [-8.8, 23.0],
         "yaw_deg": -36.0,
         "scale": 1.0,
         "on_floor": true
       },
       {
         "model": "Crate_Wooden",
-        "at": [
-          -8.4,
-          25.2
-        ],
+        "at": [-8.4, 25.2],
         "yaw_deg": 20.0,
         "scale": 0.9,
         "on_floor": true
       },
       {
         "model": "Barrel",
-        "at": [
-          -9.0,
-          27.9
-        ],
+        "at": [-9.0, 27.9],
         "yaw_deg": 0.0,
         "scale": 1.0,
         "on_floor": true
       },
       {
         "model": "Bench",
-        "at": [
-          -8.6,
-          41.0
-        ],
+        "at": [-8.6, 41.0],
         "yaw_deg": 90.0,
         "scale": 1.0,
         "on_floor": true
       },
       {
         "model": "Crate_Wooden",
-        "at": [
-          -4.9,
-          43.6
-        ],
+        "at": [-4.9, 43.6],
         "yaw_deg": -8.0,
         "scale": 1.0,
         "on_floor": true
       },
       {
         "model": "Rope_1",
-        "at": [
-          -6.1,
-          44.1
-        ],
+        "at": [-6.1, 44.1],
         "yaw_deg": 30.0,
         "scale": 1.0,
         "on_floor": true
       },
       {
         "model": "Barrel",
-        "at": [
-          4.7,
-          43.8
-        ],
+        "at": [4.7, 43.8],
         "yaw_deg": 0.0,
         "scale": 1.0,
         "on_floor": true
       },
       {
         "model": "Bag",
-        "at": [
-          5.8,
-          43.0
-        ],
+        "at": [5.8, 43.0],
         "yaw_deg": -52.0,
         "scale": 1.0,
         "on_floor": true
       },
       {
         "model": "Crate_Wooden",
-        "at": [
-          -0.2,
-          -21.0
-        ],
+        "at": [-0.2, -21.0],
         "yaw_deg": 14.0,
         "scale": 1.0,
         "on_causeway": true,
@@ -1292,50 +1176,35 @@
       },
       {
         "model": "FarmCrate_Empty",
-        "at": [
-          4.3,
-          -23.5
-        ],
+        "at": [4.3, -23.5],
         "yaw_deg": -28.0,
         "scale": 1.0,
         "on_causeway": true
       },
       {
         "model": "Barrel",
-        "at": [
-          -0.3,
-          -26.0
-        ],
+        "at": [-0.3, -26.0],
         "yaw_deg": 0.0,
         "scale": 1.0,
         "on_causeway": true
       },
       {
         "model": "Barrel",
-        "at": [
-          4.2,
-          -27.2
-        ],
+        "at": [4.2, -27.2],
         "yaw_deg": 0.0,
         "scale": 0.95,
         "on_causeway": true
       },
       {
         "model": "Bag",
-        "at": [
-          4.4,
-          -33.0
-        ],
+        "at": [4.4, -33.0],
         "yaw_deg": 52.0,
         "scale": 1.0,
         "on_causeway": true
       },
       {
         "model": "Crate_Wooden",
-        "at": [
-          -0.4,
-          -34.5
-        ],
+        "at": [-0.4, -34.5],
         "yaw_deg": -24.0,
         "scale": 0.92,
         "on_causeway": true,
@@ -1344,40 +1213,28 @@
       {
         "model": "camp_firewood",
         "dir": "res://assets/props/generated_camp",
-        "at": [
-          4.2,
-          -37.5
-        ],
+        "at": [4.2, -37.5],
         "yaw_deg": 36.0,
         "scale": 1.0,
         "on_causeway": true
       },
       {
         "model": "Rope_1",
-        "at": [
-          -0.2,
-          -39.0
-        ],
+        "at": [-0.2, -39.0],
         "yaw_deg": 18.0,
         "scale": 1.0,
         "on_causeway": true
       },
       {
         "model": "Bucket_Wooden_1",
-        "at": [
-          4.3,
-          -41.5
-        ],
+        "at": [4.3, -41.5],
         "yaw_deg": 0.0,
         "scale": 1.0,
         "on_causeway": true
       },
       {
         "model": "FarmCrate_Empty",
-        "at": [
-          -0.3,
-          -43.5
-        ],
+        "at": [-0.3, -43.5],
         "yaw_deg": 40.0,
         "scale": 0.95,
         "on_causeway": true,
@@ -1387,10 +1244,7 @@
     "_comment_relay_hub": "Design §6.4: one `relay_apparatus.glb` in the inner bailey as the Hall's own distribution hub, fitted to ~4m because board 14 draws a squat machine that is never taller than a hall. Fenced by four short tether girders in the reserved oxblood, the same fitting language the interior trim already speaks. Sited east of the courtyard's centre line so it is clear of both the trainer's stand (-4,36) and the x=0 passage lane, and so the player meets it side-on walking through.",
     "relay_hub": {
       "model": "res://assets/environment/team_tether/relay_apparatus.glb",
-      "at": [
-        6.4,
-        27.4
-      ],
+      "at": [6.4, 27.4],
       "yaw_deg": -24.0,
       "height": 4.0,
       "fence_radius_m": 3.2,
@@ -1411,10 +1265,7 @@
     "_comment_stairs": "Design §4 tier 2: a flight against the courtyard's north-east interior corner, reading as the way up to the parapet without being one. Dressing, no collider -- same trade as the hoarding. Clear of the x=0 doorway lane and 14m from the courtyard trainer's stand. AUTHORED IN METRES rather than built from the kit's `Stairs_Exterior_*` modules: fitting a 2.0 x 1.20 x 2.08 stair block to a 4.6m rise scales its PLAN 3.8x too, and the first render had the flight driving straight through the courtyard's east wall and out the far side. `_fit_to_height` is right for a machine that only has to be a certain height and wrong for anything whose footprint matters.",
     "stairs": {
       "chamber": "courtyard",
-      "at": [
-        8.6,
-        22.0
-      ],
+      "at": [8.6, 22.0],
       "steps": 8,
       "rise_m": 0.55,
       "tread_m": 0.62,
@@ -1467,10 +1318,7 @@
           "scale_max": 3.4,
           "tint": "#2c5220",
           "clump_spread": 0.42,
-          "skip": [
-            -3.2,
-            3.2
-          ]
+          "skip": [-3.2, 3.2]
         },
         {
           "model": "Prop_Vine2",
@@ -1488,10 +1336,7 @@
           "scale_max": 3.4,
           "tint": "#22421a",
           "clump_spread": 0.42,
-          "skip": [
-            -3.2,
-            3.2
-          ]
+          "skip": [-3.2, 3.2]
         },
         {
           "model": "Prop_Vine1",
@@ -1675,10 +1520,7 @@
           "scale_max": 3.4,
           "tint": "#2c5220",
           "clump_spread": 0.42,
-          "skip": [
-            -3.2,
-            3.2
-          ]
+          "skip": [-3.2, 3.2]
         },
         {
           "model": "Prop_Vine2",
@@ -1798,10 +1640,7 @@
     "retrofit": [
       {
         "model": "rift_siphon_wall_machine",
-        "at": [
-          -10.6,
-          26.0
-        ],
+        "at": [-10.6, 26.0],
         "yaw_deg": -90,
         "lift": 0.0,
         "core_energy": 2.4,
@@ -1810,10 +1649,7 @@
       },
       {
         "model": "rift_siphon_wall_machine",
-        "at": [
-          7.6,
-          63.0
-        ],
+        "at": [7.6, 63.0],
         "yaw_deg": 90,
         "lift": 0.0,
         "core_energy": 2.6,
@@ -1822,10 +1658,7 @@
       },
       {
         "model": "rift_siphon_wall_machine",
-        "at": [
-          -11.6,
-          82.5
-        ],
+        "at": [-11.6, 82.5],
         "yaw_deg": -90,
         "lift": 0.0,
         "core_energy": 3.0,
@@ -1835,131 +1668,89 @@
       },
       {
         "model": "team_tether_boiler_chimney",
-        "at": [
-          8.4,
-          21.0
-        ],
+        "at": [8.4, 21.0],
         "yaw_deg": 90,
         "lift": 0.0
       },
       {
         "model": "team_tether_boiler_chimney",
-        "at": [
-          -8.2,
-          7.4
-        ],
+        "at": [-8.2, 7.4],
         "yaw_deg": -90,
         "lift": 0.0
       },
       {
         "model": "team_tether_scaffold_tower",
-        "at": [
-          -7.4,
-          -13.43
-        ],
+        "at": [-7.4, -13.43],
         "yaw_deg": 0,
         "lift": 0.0,
         "on_causeway": true
       },
       {
         "model": "team_tether_scaffold_tower",
-        "at": [
-          7.4,
-          -13.43
-        ],
+        "at": [7.4, -13.43],
         "yaw_deg": 0,
         "lift": 0.0,
         "on_causeway": true
       },
       {
         "model": "team_tether_scaffold_tower",
-        "at": [
-          -10.2,
-          20.5
-        ],
+        "at": [-10.2, 20.5],
         "yaw_deg": -90,
         "lift": 0.0
       },
       {
         "model": "team_tether_scaffold_tower",
-        "at": [
-          10.2,
-          42.0
-        ],
+        "at": [10.2, 42.0],
         "yaw_deg": 90,
         "lift": 0.0
       },
       {
         "model": "team_tether_banner_rig",
-        "at": [
-          -3.2,
-          -12.98
-        ],
+        "at": [-3.2, -12.98],
         "yaw_deg": 0,
         "lift": 3.6,
         "on_causeway": true
       },
       {
         "model": "team_tether_banner_rig",
-        "at": [
-          3.2,
-          -12.98
-        ],
+        "at": [3.2, -12.98],
         "yaw_deg": 0,
         "lift": 3.6,
         "on_causeway": true
       },
       {
         "model": "team_tether_banner_rig",
-        "at": [
-          -11.98,
-          24.0
-        ],
+        "at": [-11.98, 24.0],
         "yaw_deg": -90,
         "lift": 4.2
       },
       {
         "model": "team_tether_banner_rig",
-        "at": [
-          11.98,
-          44.0
-        ],
+        "at": [11.98, 44.0],
         "yaw_deg": 90,
         "lift": 4.2
       },
       {
         "model": "team_tether_banner_rig",
-        "at": [
-          -10.98,
-          -6.0
-        ],
+        "at": [-10.98, -6.0],
         "yaw_deg": -90,
         "lift": 3.4
       },
       {
         "model": "team_tether_banner_rig",
-        "at": [
-          -10.65,
-          30.5
-        ],
+        "at": [-10.65, 30.5],
         "yaw_deg": -90,
         "lift": 4.0
       },
       {
         "model": "team_tether_banner_rig",
-        "at": [
-          10.65,
-          20.5
-        ],
+        "at": [10.65, 20.5],
         "yaw_deg": 90,
         "lift": 4.0
       },
       {
         "model": "team_tether_banner_rig",
-        "at": [
-          -11.65,
-          95.0
-        ],
+        "at": [-11.65, 95.0],
         "yaw_deg": -90,
         "lift": 5.0
       }
@@ -1968,10 +1759,7 @@
     "retrofit_skyline": [
       {
         "model": "team_tether_scaffold_tower",
-        "at": [
-          -10.4,
-          17.6
-        ],
+        "at": [-10.4, 17.6],
         "yaw_deg": -90,
         "lift": 18.79,
         "_why": "mounted on the west gate/mid-wall tower's own top (module at [-11.1,15.0] scale 3.6).",
@@ -1980,10 +1768,7 @@
       },
       {
         "model": "team_tether_boiler_chimney",
-        "at": [
-          10.6,
-          -12.6
-        ],
+        "at": [10.6, -12.6],
         "yaw_deg": 90,
         "lift": 15.54,
         "_why": "planted on the east gate tower's roof (module at [10.6,-12.6] scale 3.0) -- the closest, most prominent tower in the 400m/200m frame, so the break in its skyline is the one those stands cannot miss.",
@@ -1992,10 +1777,7 @@
       },
       {
         "model": "team_tether_banner_rig",
-        "at": [
-          -10.6,
-          -12.6
-        ],
+        "at": [-10.6, -12.6],
         "yaw_deg": 0,
         "lift": 15.54,
         "_why": "a tattered banner pole standing above the west gate tower's own roof (module at [-10.6,-12.6] scale 3.0), front toward -z (yaw 0) so it reads against the sky from the approach rather than edge-on.",
@@ -2041,11 +1823,16 @@
         "valve_at": 0.7,
         "bracket_pitch": 3
       }
-    ]
+    ],
+    "_comment_wall_torches_0906b": "Interior stands T-01..T-03 (tools/_capture_stronghold_climax.gd, 2026-09-06) rendered the three inner rooms near-black at 2.4 energy / 11 m: a 24x26x11 m room swallows a torch tuned for a yard. Raised to 6.5 / 18 m / attenuation 1.0 and the prop to 1.25 so the flame itself reads; the rooms' cool ambients warmed below. Torches are the key light of the Hall's interior now (OP-0905-19).",
+    "_comment_wall_torches_approach_0906": "HALL-STAGING-0906 round 2: the approach room's pairs moved from z 60/68 to 63/70. From the entrance (z 57) a torch 3 m ahead on a wall 7.85 m out is 69 degrees off-axis -- outside any frame -- so the judge saw 'warmth with no visible source'; at 6 and 13 m ahead both pairs are in the walk's field of view, and the far pair lights the doorway to warden_arena.",
+    "_comment_wall_torches_proud_0906": "HALL-STAGING-0906 round 4: every wall torch's flame point now stands 0.6 m off its wall (was 0.15) and the brand is scaled 1.6 (was 1.25). The interior_structure bays project 0.36 m every 3.6 m, so a 0.15 m-proud flame seen along the wall -- the angle every doorway stand and every walk-through sees it at -- was hidden behind the pilaster beside it; two blind rounds read 'warm light with no visible source'. Energy 12 (was 6.5): ACES' toe at the night exposure swallowed 6.5, see art.json's _comment_night_light."
   },
   "_comment_machine": "PLACEHOLDER MASSING, AND IT MUST NOT BE MISTAKEN FOR THE ASSET. The Tether Machine has an owner-supplied board (docs/art/reference/15_Legendary_Tether_Machine.png, 2026-08-11) and is one of the three hero objects D24 reserves a Meshy generation for. The agent that built this route had no Meshy access, so what stands here is primitives plus the Tether materials, sized to the board's own ~15m scale bar, and the seam is left deliberately obvious: `placeholder: true` below, a name of `TetherMachinePlaceholder` in the scene tree, and no attempt at the board's surfacing. Replacing it is a one-object swap into `machine.model` -- the chamber, the lighting and the markers around it are all real and are what this item actually delivered. AND THE STANDING WARNING FROM THE BACKLOG: the board draws a legendary bound inside the containment ring because that is what the machine DOES to legendaries. The board licenses the MACHINE, never its occupant. Sec20/D23 forbid a new creature mesh at any credit balance, so the bound creature is an existing roster body or VFX placed by R8.4 -- there is no creature in this block and none may be added to it.",
   "machine": {
     "placeholder": false,
+    "_comment_facing": "OP-0905-16: 'You can't see the legendary when you enter the chamber. The machine needs to be turned.' Measured by tools/_probe_tether_machine_facing.gd -- the installed cage's open archway sits at yaw 258.8 deg in the model's own frame (a 6-slice-wide empty run against 8 solid slices everywhere else), and rotation.y = deg_to_rad(-101.2) turns that open side onto the chamber's +x wall, the doorway the player enters through from warden_arena. TUNABLE only if the mesh is regenerated -- re-run the probe first.",
+    "facing_deg": -101.2,
     "model": "res://assets/environment/team_tether/tether_machine.glb",
     "chamber": "legendary_chamber",
     "height": 15.0,
@@ -2054,8 +1841,9 @@
     "ring_pillars": 8,
     "core_radius": 1.9,
     "core_light": {
-      "energy": 3.2,
-      "range": 26.0
+      "energy": 1.9,
+      "range": 22.0,
+      "_comment": "HALL-STAGING-0906 round 2: the core was the Legendary Chamber's key at 3.2/26 -- a blind judge read the room as \"a teal machine room with one candle in the corner\". The torch rows are the key now; the core is the accent that says the machine is live."
     },
     "_scale_note": "15m against the board's own 0-20m bar. base_radius/ring_radius are read off the same board's plan proportions (the containment ring is a little under half the total height across), not invented -- but they are TUNABLE and will be replaced wholesale by the real mesh's own extents.",
     "_comment_seam_closed": "SEAM CLOSED 2026-08-16. The owner authorised the generation and the key came from the Ralph art-lane Routine. Meshy multi-image-to-3D, refine tier, from four crops of board 15 cut by tools/art_pipeline/crop_prop_views.py -- and the front and side crops had the BOUND LEGENDARY LIFTED OUT of them first, because D24 licenses the machine and not its prisoner and image-to-3D follows its pictures rather than its negative prompt. `height` below is still the authority: stronghold.gd fits the mesh to it by its own visual bounds. The primitive massing under `base_radius`/`ring_radius`/`core_radius` is kept as the fallback the code still takes when `model` is empty or missing, and as the record of what the chamber was built around."
@@ -2063,10 +1851,7 @@
   "_comment_recovery": "SG38's recovery opportunity, and Sec8 puts it in the Tether Chamber Approach -- past the elite, before the Warden. It is `scripts/build/creature_bed.gd`, the SAME object R4.8 already ships as a buildable, placed here instead of built by the player: `home_recovery.gd::rest` heals a party member fully (reviving a fainted one) and grants progression.gd's rest XP. Reusing it rather than inventing a stronghold-only heal is the whole point -- a player who has built a bed at home already knows exactly what this is.",
   "recovery": {
     "chamber": "tether_approach",
-    "offset": [
-      -5.0,
-      4.0
-    ],
+    "offset": [-5.0, 4.0],
     "facing_deg": 90.0
   },
   "_comment_gauntlet": "SG38. Sec8 and Sec12 between them ask for a patrol trainer at the Outer Works, a courtyard fight, an elite before the Tether Chamber, and 2-4 battles across the five spaces. Three is what stands here, and the fourth fight in the building is the Warden himself (R8.3). Every one of them is an ORDINARY entry in data/config/trainers.json -- same table, same teams, same SC15 reward schema, same defeat flags, same encounter_director.begin_trainer_battle() -- carrying `placed_by: \"stronghold\"` so trainer_npc.gd's own placer skips them and this file's layout decides where they stand. That is the only reason a position appears here rather than in trainers.json: a room's coordinates belong to the room. Every offset is deliberately OFF the doorway-to-doorway line through its space: a trainer standing in the middle of the way through is a body the player has to walk around before they have even been challenged.",
@@ -2074,28 +1859,19 @@
     {
       "trainer": "stronghold_patrol",
       "chamber": "outer_works",
-      "offset": [
-        -5.0,
-        6.0
-      ],
+      "offset": [-5.0, 6.0],
       "facing_deg": 90.0
     },
     {
       "trainer": "stronghold_courtyard",
       "chamber": "courtyard",
-      "offset": [
-        -4.0,
-        4.0
-      ],
+      "offset": [-4.0, 4.0],
       "facing_deg": 90.0
     },
     {
       "trainer": "stronghold_elite",
       "chamber": "tether_approach",
-      "offset": [
-        2.0,
-        5.0
-      ],
+      "offset": [2.0, 5.0],
       "facing_deg": 180.0,
       "_why": "GATE-F-LEG-S10AB, 2026-08-31. WAS offset [4.5, 5.0], facing_deg 90. `tether_approach` is the narrowest room on the route -- 16 m wide against the outer works' 20 and the courtyard's 22 -- and [4.5,5.0] put the elite at world x 12.5, 3.5 m from its east wall, facing straight into it. `data/config/combat.json`'s `arena.separation` is 5.0, so a fight staged on his own front had nowhere to put the second body and pushed it through the wall: measured by `tests/smoke_gate_e_finale.gd`, both combatants formed at world (18.4, 0.68) -- outside the building, 5.5 m BELOW the floor they were standing on, on the terrain under it. x 4.5 -> 2.0 moves him to world x 10, six metres off either wall, and facing_deg 90 -> 180 turns him down the room's own 18 m depth to face the passage the player walks in through, which is what the Warden's own facing_deg already does in his arena. Nothing else moves: he keeps his z, so he still stands in front of the Tether blast shutter, and he stays 7 m clear of the recovery bed's own prompt at world (3,7628). The two other gauntlet trainers keep facing_deg 90 -- their rooms are wide enough that it costs nothing there."
     }
@@ -2105,43 +1881,30 @@
     {
       "id": "warden_stand",
       "chamber": "warden_arena",
-      "offset": [
-        0.0,
-        8.0
-      ]
+      "offset": [0.0, 8.0]
     },
     {
       "id": "warden_challenge",
       "chamber": "warden_arena",
-      "offset": [
-        0.0,
-        -8.0
-      ]
+      "offset": [0.0, -8.0]
     },
     {
       "id": "reveal_stand",
       "chamber": "legendary_chamber",
-      "offset": [
-        0.0,
-        -10.0
-      ]
+      "offset": [0.0, -10.0]
     },
     {
       "id": "machine_foot",
       "chamber": "legendary_chamber",
-      "offset": [
-        7.0,
-        0.0
-      ],
+      "offset": [7.0, 0.0],
       "_why": "GATE-F-LEG-S10AB, 2026-08-31. WAS [0.0, 0.0] -- the chamber centre, which is the machine's own AXIS, not its foot. `stronghold_climax.gd::_place_machine_prompt()` hangs the \"Shut down the tether machine\" interactable on this mark, `stronghold_climax.json`'s `site.prompt_radius` is 4.2 m, and this file's own `machine.base_radius` is 5.6 -- so the prompt sat at the centre of a solid cylinder the player can never come within 5.6 m of. 5.6 > 4.2: the interaction could not be offered from anywhere in the room, by construction. Measured in play, S10b's walk stopped 7.2 m from this mark against the machine's face, `legendary_freed` was never set, and objective 25/27 -- freeing the legendary, the chapter's second-to-last beat -- was unreachable. +7.0 in local x puts the mark 1.4 m clear of the base cylinder on the side the player enters from (the legendary_chamber's doorway is its +x wall, world x about -9.4), which is where a control at the FOOT of a machine belongs and what this mark is named for. It shipped because the one test that covers the beat, `tests/smoke_gate_e_finale.gd::_pull_the_lever`, called `interaction_activate()` on the prompt directly and only ever checked its `enabled` flag -- so it proved the Warden gate and never the distance. That test now asks the prompt for a real offer from where the player is standing."
     },
     {
       "id": "legendary_stand",
       "chamber": "legendary_chamber",
-      "offset": [
-        0.0,
-        6.0
-      ]
+      "offset": [6.0, 0.0],
+      "_why": "OP-0905-16, 2026-09-05 ('You can't see the legendary when you enter the chamber. The machine needs to be turned.'). WAS [0.0, 6.0] -- +6m in the chamber's local DEPTH (z), which put the freed creature off to the side of the machine rather than between it and the player. The doorway is this chamber's +x wall (see `machine_foot`'s own note, and `passages`: warden_arena sits at greater x than legendary_chamber); this mark's bearing now points the same way, so the freed legendary steps out toward +x -- between the machine and the doorway the player walks in through. Same bearing `machine_foot` already uses; `stronghold_climax.gd::_clear_of_the_machine` still corrects the actual STANDING DISTANCE against the machine's measured (and, since OP-0905-16, rotated) plinth on this bearing, so only the direction is authored here."
     }
-  ]
+  ],
+  "_comment_room_ambients_cool_0906": "HALL-STAGING-0906 round 6, the round-5 blind verdict's first fix: 'the ambient/fill is warm red, so nothing reads as fire -- it reads as a room made of hot brick' (shadow tier R/B 19 against the key art's night panel at 0.30). The six roofed-room ambients (lights[6..11]) go from brazier-warm #c4a67e to slate #7d8cab at the same energies: the torches stay the only warm thing, the stone comes back toward the key art's grey granite, and the teal has a cool field to belong to."
 }

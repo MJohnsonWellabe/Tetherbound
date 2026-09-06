@@ -63,6 +63,8 @@ const MASONRY_SHADER := preload("res://shaders/cloudreach_masonry.gdshader")
 const WORLD_RUNTIME := preload("res://scripts/world/cloudreach_world_runtime.gd")
 const ENVIRONMENT_MATERIALS:=preload("res://scripts/world/cloudreach_environment_materials.gd")
 const BRIDGE_KIT:=preload("res://scripts/world/cloudreach_bridge_kit.gd")
+const AVIARY := preload("res://scripts/world/cloudreach_aviary.gd")
+const AVIARY_CONFIG_PATH := "res://data/config/cloudreach_aviary.json"
 
 ## D101. `$Player` is an instance of `scenes/player/local_rig.tscn` — this
 ## process's one local rig, in the `local_player` group — and `$CameraRig` is
@@ -105,6 +107,10 @@ var _cover_exclusions: Array[Dictionary] = []
 var _realm_map: RefCounted
 var _surface_cells: Dictionary = {}
 var _surface_index_count := -1
+var _all_route_lines: Array[Dictionary] = []
+var _all_pad_points: Array[Dictionary] = []
+var _all_crown_reference_lines: Array[Dictionary] = []
+var _built_pad_keys: Dictionary = {}
 const SURFACE_CELL_M := 128.0
 
 
@@ -475,8 +481,25 @@ func _build_materials() -> void:
 	_materials["weathered_timber"]=timber
 	var geology := ShaderMaterial.new()
 	geology.shader = GEOLOGY_SHADER
-	geology.set_shader_parameter("rock_texture", preload("res://assets/environment/terrain/Rock030_Color.jpg"))
-	geology.set_shader_parameter("rock_normal", preload("res://assets/environment/terrain/Rock030_NormalGL.jpg"))
+	# CLIFF-ART-0906: every uniform of cloudreach_cliff.gdshader is TUNABLE
+	# from `visual.geology` (data/config/cloudreach_visual.json). The
+	# defaults below are the shipped tan-hoodoo look the blind judges read
+	# as off-board ("banded tan hoodoos vs the board's grey-green granite");
+	# the config carries the candidate palettes so a look can be A/B'd by
+	# data alone. Textures are paths; colours are "#rrggbb"; floats as-is.
+	var geo_cfg: Dictionary = _visual_config.get("geology", {})
+	var rock_albedo := str(geo_cfg.get("albedo", "res://assets/environment/terrain/Rock030_Color.jpg"))
+	var rock_normal := str(geo_cfg.get("normal", "res://assets/environment/terrain/Rock030_NormalGL.jpg"))
+	geology.set_shader_parameter("rock_texture", load(rock_albedo))
+	geology.set_shader_parameter("rock_normal", load(rock_normal))
+	for colour_key: String in ["stone_light", "stone_dark", "strata_ochre_tint", "ledge_moss_tint"]:
+		if geo_cfg.has(colour_key):
+			var c := Color(str(geo_cfg[colour_key]))
+			geology.set_shader_parameter(colour_key, Vector3(c.r, c.g, c.b))
+	for float_key: String in ["texture_scale", "strata_period_m", "strata_strength", "strata_ochre_strength",
+			"ledge_moss_strength", "ledge_lighten", "ledge_normal_threshold", "crevice_strength", "crevice_scale"]:
+		if geo_cfg.has(float_key):
+			geology.set_shader_parameter(float_key, float(geo_cfg[float_key]))
 	for key: String in ["cliff", "cliff_high", "cliff_mid", "cliff_deep"]:
 		_materials[key] = geology
 	var trail := ShaderMaterial.new()
@@ -485,7 +508,8 @@ func _build_materials() -> void:
 	trail.set_shader_parameter("dirt_texture", load(str(surface.get("path", {}).get("albedo", "res://assets/environment/terrain/stylised/dirt_path_Color.png"))))
 	_materials["trail"] = trail
 	ENVIRONMENT_MATERIALS.turf_parameters(trail,false)
-	trail.set_shader_parameter("tint",Color("#9b805f"))
+	# Dusty tan rather than pumpkin (blind verdict round 1, defect 13).
+	trail.set_shader_parameter("tint",Color("#9a8c72"))
 	var trail_dry:=trail.duplicate() as ShaderMaterial
 	ENVIRONMENT_MATERIALS.turf_parameters(trail_dry,true)
 	_materials["trail_dry"]=trail_dry
@@ -676,6 +700,7 @@ func _add_wind_vegetation(parent: Node3D, rect: Rect2, top: float, order: int) -
 		var at := Vector3(centre.x + cos(angle) * half.x * radius, top - 0.18,
 			centre.y + sin(angle) * half.y * radius)
 		var rock := NATURE_ROCKS[(i * 2 + order) % NATURE_ROCKS.size()].instantiate() as Node3D
+		apply_stone_palette(rock)
 		rock.name = "BeddedRock%d" % i
 		rock.position = at
 		rock.rotation.y = angle
@@ -685,10 +710,370 @@ func _add_wind_vegetation(parent: Node3D, rect: Rect2, top: float, order: int) -
 		_set_geometry_visibility(rock, float(nature.get("rock_visibility_range_m", 820.0)))
 
 
+## Every ground route's own polyline, gathered before any shoulder is built so
+## a shoulder vertex can be tested against every *other* route's actual road
+## (see `_walkable_height`) instead of a per-segment "near this hub" guess.
+## Replaces the earlier fork/hub-apron
+## heuristic entirely (CAUSEWAY-HUB-0906): that guess had to fully disable an
+## entire segment's shoulder collision near a detected sharp fork, which
+## over-excluded far more of the shoulder than the crossing road actually
+## covered, leaving real holes. Per-vertex clipping only drops the exact
+## vertices that sit on or near another route's own road, wherever that
+## happens along the network -- an ordinary crossing needs no special
+## detection at all.
+func _collect_all_route_lines() -> void:
+	# The ground-truth road network every walkable crown and shoulder conforms
+	# to (R2, CLOUDREACH-GROUND-0906). It is the REAL ribbon/deck geometry, not
+	# the authored polyline: `_build_routes` shortens every ribbon to the pad's
+	# cap edge (`_landing_join`) and leaves the cap itself flat, so the surface a
+	# walker actually stands on is `pad -> join` flat at pad height, then
+	# `join -> join` on a steeper straight than centre-to-centre. Easing a crown
+	# or shoulder toward the centre-to-centre polyline instead left it 0.5-2 m
+	# under the ribbon at every climbing pad rim (measured by the ground-truth
+	# probe: 661 of 819 mismatches sat on pad crowns), which is the "walking
+	# half in the ground" the owner reported. Bridge decks are joined the same
+	# way `_build_bridges` joins them (0.75 fraction) and count as routes.
+	_all_route_lines.clear()
+	_all_pad_points.clear()
+	var landmass: Dictionary = _visual_config.get("landmass", {})
+	for raw: Variant in _config.get("routes", []):
+		if not raw is Dictionary:
+			continue
+		var spec := raw as Dictionary
+		if str(spec.get("traversal_mode", "ground")) != "ground":
+			continue
+		var route_id := str(spec.get("id", "Route"))
+		var width := float(spec.get("width_m", 7.5))
+		var collision_width := minf(width, float(landmass.get("path_collision_width_m", 7.0)))
+		var half_width := collision_width * 0.5
+		var landing_size := maxf(float(landmass.get("landing_size_m", 16.0)), collision_width * 2.25)
+		var cap_half := landing_size * 0.41
+		var flat_radius := landing_size * float(landmass.get("landing_flat_fraction", 0.82))
+		var points: Array[Vector3] = []
+		for point: Variant in spec.get("polyline", []):
+			points.append(_vec3(point))
+		for i in points.size() - 1:
+			for section: Dictionary in _ground_sections_for_segment(route_id, points[i], points[i + 1]):
+				var section_a: Vector3 = section["a"]
+				var section_b: Vector3 = section["b"]
+				if section_a.is_equal_approx(points[i]):
+					section_a = _landing_join(points[i], points[i + 1], cap_half)
+					_append_route_line(route_id, points[i], section_a, half_width)
+				if section_b.is_equal_approx(points[i + 1]):
+					section_b = _landing_join(points[i + 1], points[i], cap_half)
+					_append_route_line(route_id, section_b, points[i + 1], half_width)
+				_append_route_line(route_id, section_a, section_b, half_width)
+		for pad: Vector3 in points:
+			if not _bridge_interior_point(route_id, pad):
+				_all_pad_points.append({"position": pad, "flat_radius": flat_radius,
+					"cap_radius": _pad_cap_radius(pad, cap_half)})
+	for raw: Variant in _config.get("bridges", []):
+		if not raw is Dictionary:
+			continue
+		var bridge := raw as Dictionary
+		var profile: Array = bridge.get("deck_profile", bridge.get("endpoints", []))
+		if profile.size() < 2:
+			continue
+		var cap_half := float(landmass.get("landing_size_m", 16.0)) * 0.41
+		var deck_half_width := float(bridge.get("width_m", 3.2)) * 0.5
+		var deck_id := "bridge:%s" % str(bridge.get("id", "Bridge"))
+		var stone_bridge := str(bridge.get("type", "")).contains("stone")
+		for i in profile.size() - 1:
+			var a := _vec3(profile[i])
+			var b := _vec3(profile[i + 1])
+			if i == 0:
+				a = _landing_join(a, b, cap_half, 0.75)
+			if i == profile.size() - 2:
+				b = _landing_join(b, a, cap_half, 0.75)
+			# Matches `_build_bridge_section`'s deck lift for stone paving.
+			var lift := _segment_basis(a, b).y * (0.2 if stone_bridge else 0.0)
+			_append_route_line(deck_id, a + lift, b + lift, deck_half_width)
+	# Landmark ledges are flat crowns too (see `_build_landmarks`): a shoulder
+	# running onto one conforms to it exactly as to a landing pad.
+	for raw: Variant in _config.get("landmarks", []):
+		if not raw is Dictionary:
+			continue
+		var spec := raw as Dictionary
+		var landmark_id := str(spec.get("id", ""))
+		var at := _vec3(spec.get("position", []))
+		if landmark_id == "waterward_overlook":
+			# Its two route-aligned hidden crown strips (see `_build_landmarks`)
+			# are the floor here; the landing pad crown and shoulders conform
+			# to them exactly as to a road.
+			_append_route_line("crown:" + landmark_id, at + Vector3(-8.0, -2.4, -28.0), at, 16.0)
+			_append_route_line("crown:" + landmark_id, at + Vector3(27.7, 3.35, 4.3), at, 13.0)
+		if str(spec.get("category", "")) == "settlement":
+			# `SettlementWalkableTerrace` (48x48, flat at the landmark height)
+			# is the floor; shoulders running onto it rise to meet it.
+			_append_route_line("crown:" + landmark_id, at + Vector3(-24.0, 0.0, 0.0),
+				at + Vector3(24.0, 0.0, 0.0), 24.0)
+			continue
+		var ledge_size := Vector3(46.0, 72.0, 44.0)
+		if landmark_id == "sky_shrine_heartstone":
+			ledge_size = Vector3(132.0, at.y + 210.0, 126.0)
+		var ledge_y := -0.08 if landmark_id == "old_wind_observatory" else 0.10
+		if landmark_id == "old_wind_observatory":
+			# `ObservatoryWalkableCrown` (38x36, flat at the landmark height) is
+			# the floor on top of this ledge; register it as a wide reference
+			# surface so the ledge crown and shoulders sit flush under it.
+			_append_route_line("crown:" + landmark_id, at + Vector3(-19.0, 0.0, 0.0),
+				at + Vector3(19.0, 0.0, 0.0), 18.0)
+		_all_pad_points.append({
+			"position": Vector3(at.x, at.y + ledge_y, at.z),
+			"flat_radius": minf(ledge_size.x, ledge_size.z) * 0.47,
+			"cap_radius": _landmark_cap_radius(landmark_id),
+		})
+	_all_crown_reference_lines = _all_route_lines
+
+
+## A landing pad's flat cap radius -- zero on the waterward overlook, whose
+## hidden crown strips slope straight through the pad centre (a flat cap
+## there stood 0.2-0.8 m under the strip the walker is actually on).
+func _pad_cap_radius(pad: Vector3, default_cap: float) -> float:
+	for raw: Variant in _config.get("landmarks", []):
+		if raw is Dictionary and str((raw as Dictionary).get("id", "")) == "waterward_overlook" \
+				and _vec3((raw as Dictionary).get("position", [])).is_equal_approx(pad):
+			return 0.0
+	return default_cap
+
+
+## The radius inside which a landmark ledge's crown stays flat at its authored
+## height: the half-extent of its hidden walkable-crown box where one exists
+## (`ObservatoryWalkableCrown`, 38x36), else the ordinary landing cap.
+func _landmark_cap_radius(landmark_id: String) -> float:
+	if landmark_id == "old_wind_observatory":
+		return 18.0
+	if landmark_id == "waterward_overlook":
+		return 0.0
+	return float(_visual_config.get("landmass", {}).get("landing_size_m", 16.0)) * 0.41
+
+
+func _append_route_line(route_id: String, a: Vector3, b: Vector3, half_width: float) -> void:
+	if Vector2(b.x - a.x, b.z - a.z).length_squared() < 0.01:
+		return
+	_all_route_lines.append({
+		"route_id": route_id,
+		"a": a,
+		"b": b,
+		"half_width": half_width,
+		"min_x": minf(a.x, b.x), "max_x": maxf(a.x, b.x),
+		"min_z": minf(a.z, b.z), "max_z": maxf(a.z, b.z),
+	})
+
+
+## Widest lateral influence any road/deck line has on a walkable vertex:
+## pinned inside half_width + 1 m, eased back to natural over the next 6 m.
+const LINE_PIN_MARGIN_M := 1.0
+const LINE_EASE_M := 6.0
+const PAD_EASE_M := 6.0
+
+
+## The nearest point (XZ) on any road ribbon or bridge deck line and that
+## line's walking-surface height there. `lines` is normally
+## `_all_route_lines`; callers with a spatially culled subset pass it instead.
+func _nearest_route_line(world_point: Vector3, lines: Array[Dictionary]) -> Dictionary:
+	var best_d := INF
+	var best_h := 0.0
+	var best_half_width := 0.0
+	# Among the lines whose own width covers the point, the HIGHEST is the
+	# collider the walker actually stands on (a climbing ribbon leaving a
+	# settlement terrace, the overlook's east strip over its west strip near
+	# their shared centre); it wins outright over the "most inside" ranking.
+	var pinned := false
+	var pinned_h := -INF
+	var pinned_d := 0.0
+	var pinned_half_width := 0.0
+	for line: Dictionary in lines:
+		var reach: float = float(line["half_width"]) + LINE_PIN_MARGIN_M + LINE_EASE_M
+		if world_point.x < float(line["min_x"]) - reach or world_point.x > float(line["max_x"]) + reach \
+				or world_point.z < float(line["min_z"]) - reach or world_point.z > float(line["max_z"]) + reach:
+			continue
+		var a: Vector3 = line["a"]
+		var b: Vector3 = line["b"]
+		var flat := Vector2(b.x - a.x, b.z - a.z)
+		var len2 := flat.length_squared()
+		var t_raw := 0.0
+		if len2 > 0.0001:
+			t_raw = ((world_point.x - a.x) * flat.x + (world_point.z - a.z) * flat.y) / len2
+		var t := clampf(t_raw, 0.0, 1.0)
+		var proj := Vector2(a.x + flat.x * t, a.z + flat.y * t)
+		var d := Vector2(world_point.x, world_point.z).distance_to(proj)
+		# Rank by how far INSIDE a line's own width the point sits, not by raw
+		# centreline distance: a wide hidden crown box (the observatory's 38 m
+		# square, the overlook's sloped strips) must win over a narrow ribbon
+		# that happens to run closer to its centre, because that box is the
+		# collider actually on top there.
+		var h := lerpf(a.y, b.y, t)
+		var half_width := float(line["half_width"])
+		# A line COVERS a point only within its own length (a box, not a
+		# capsule): with rounded ends the flat pad->join stub kept "covering"
+		# the road up to 4.5 m past the join at pad height, and as the highest
+		# covering line it held the summit ledge's crown flat over the
+		# descending ribbon there -- a 0.7 m step the summit walk stuck on
+		# (round 8). Past an end the line still eases (below), never pins.
+		var overrun := 0.5 / maxf(sqrt(len2), 0.5)
+		var within_length := t_raw >= -overrun and t_raw <= 1.0 + overrun
+		if within_length and d < half_width + LINE_PIN_MARGIN_M:
+			if h > pinned_h:
+				pinned = true
+				pinned_h = h
+				pinned_d = d
+				pinned_half_width = half_width
+		if d - half_width < best_d - best_half_width or is_inf(best_d):
+			best_d = d
+			best_h = h
+			best_half_width = half_width
+	if pinned:
+		return {"distance": pinned_d, "height": pinned_h, "half_width": pinned_half_width}
+	return {"distance": best_d, "height": best_h, "half_width": best_half_width}
+
+
+## R2: a walkable vertex within reach of a road ribbon / bridge deck takes
+## that line's height (plus `lift`) inside half_width + 1 m and eases back to
+## `natural_y` over the next 6 m, so along any road corridor the surface IS the
+## road and a walker never meets a step at a crown rim or shoulder edge.
+## `down_only` (crowns) never raises the vertex above its authored height.
+func _line_eased_height(world_point: Vector3, natural_y: float, lines: Array[Dictionary],
+		down_only: bool, lift: float) -> float:
+	var nearest := _nearest_route_line(world_point, lines)
+	var d: float = nearest["distance"]
+	if is_inf(d):
+		return natural_y
+	var reach: float = float(nearest["half_width"]) + LINE_PIN_MARGIN_M
+	var target: float = float(nearest["height"]) + lift
+	var eased := natural_y
+	if d < reach:
+		eased = target
+	elif d < reach + LINE_EASE_M:
+		eased = lerpf(target, natural_y, (d - reach) / LINE_EASE_M)
+	return minf(natural_y, eased) if down_only else eased
+
+
+## The rendered (and collided -- R1) height of a flat pad/landmark crown at a
+## world XZ point: authored height inside the cap radius, then eased down to
+## meet any road/deck within reach (R2). `_mesa` emits its crown rings from
+## exactly this function and shoulders conform to it, so the three agree.
+func _crown_height_at(pad: Dictionary, world_point: Vector3, lines: Array[Dictionary]) -> float:
+	var centre: Vector3 = pad["position"]
+	var r := Vector2(world_point.x - centre.x, world_point.z - centre.z).length()
+	if r <= float(pad["cap_radius"]):
+		return centre.y
+	# Up as well as down: a road that leaves the pad climbing stands above the
+	# flat disc past the cap, and if the crown stayed flat the walker would be
+	# carried on the invisible ribbon box 0.3-0.7 m above the visible crown
+	# (probe, round 1: ~350 pad samples). The crown is the road's surface
+	# wherever the road runs over it.
+	return _line_eased_height(world_point, centre.y, lines, false, 0.0)
+
+
+func _nearest_pad(world_point: Vector3, pads: Array[Dictionary]) -> Dictionary:
+	var best: Dictionary = {}
+	var best_inside := INF
+	for pad: Dictionary in pads:
+		var centre: Vector3 = pad["position"]
+		var inside := Vector2(world_point.x - centre.x, world_point.z - centre.z).length() \
+			- float(pad["flat_radius"])
+		if inside < best_inside:
+			best_inside = inside
+			best = pad
+	return best
+
+
+## The shared clamp for every shoulder (ridge) vertex: first toward any road
+## or deck line, then onto any pad/landmark crown whose disc it lies on (it
+## takes the crown's own top height there) or eases to over the 6 m past the
+## crown rim. Shoulder, crown and ribbon thereby meet within centimetres
+## wherever they overlap, instead of stepping.
+func _walkable_height(world_point: Vector3, natural_y: float, lines: Array[Dictionary],
+		pads: Array[Dictionary]) -> float:
+	var eased := _line_eased_height(world_point, natural_y, lines, false, 0.03)
+	var pad := _nearest_pad(world_point, pads)
+	if pad.is_empty():
+		return eased
+	var centre: Vector3 = pad["position"]
+	var r := Vector2(world_point.x - centre.x, world_point.z - centre.z).length()
+	var flat_radius: float = pad["flat_radius"]
+	if r >= flat_radius + PAD_EASE_M:
+		return eased
+	# 0.01 above the crown's rendered surface height, i.e. 2 cm UNDER its
+	# +0.03 top: a shoulder pinned exactly onto the crown z-fought with it as
+	# light dry-turf bands across a green pad wherever a dry route's shoulder
+	# crossed a green route's crown (05-upper-cloudreach-cliffhold, scratch
+	# capture after round 2). The crown is the drawn surface inside its disc;
+	# the collider difference is 2 cm.
+	var crown_top := _crown_height_at(pad, world_point, lines) + 0.01
+	if r <= flat_radius:
+		return crown_top
+	return lerpf(crown_top, eased, (r - flat_radius) / PAD_EASE_M)
+
+
+## Height of this route's own ribbon/cap surface under a point on its line.
+func _own_route_height(route_id: String, world_point: Vector3, fallback_y: float) -> float:
+	var best_d := INF
+	var best_h := fallback_y
+	for line: Dictionary in _all_route_lines:
+		if str(line["route_id"]) != route_id:
+			continue
+		var a: Vector3 = line["a"]
+		var b: Vector3 = line["b"]
+		var flat := Vector2(b.x - a.x, b.z - a.z)
+		var len2 := flat.length_squared()
+		var t := 0.0
+		if len2 > 0.0001:
+			t = clampf(((world_point.x - a.x) * flat.x + (world_point.z - a.z) * flat.y) / len2, 0.0, 1.0)
+		var d := Vector2(world_point.x, world_point.z).distance_to(Vector2(a.x + flat.x * t, a.z + flat.y * t))
+		if d < best_d:
+			best_d = d
+			best_h = lerpf(a.y, b.y, t)
+	return best_h
+
+
+## The lines/pads that can influence any vertex inside an XZ rectangle --
+## a per-ridge cull so the per-vertex clamp stays cheap.
+func _lines_near(min_x: float, max_x: float, min_z: float, max_z: float) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	for line: Dictionary in _all_route_lines:
+		var reach: float = float(line["half_width"]) + LINE_PIN_MARGIN_M + LINE_EASE_M
+		if float(line["max_x"]) + reach < min_x or float(line["min_x"]) - reach > max_x \
+				or float(line["max_z"]) + reach < min_z or float(line["min_z"]) - reach > max_z:
+			continue
+		out.append(line)
+	return out
+
+
+func _pads_near(min_x: float, max_x: float, min_z: float, max_z: float) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	for pad: Dictionary in _all_pad_points:
+		var centre: Vector3 = pad["position"]
+		var reach: float = float(pad["flat_radius"]) + PAD_EASE_M
+		if centre.x + reach < min_x or centre.x - reach > max_x \
+				or centre.z + reach < min_z or centre.z - reach > max_z:
+			continue
+		out.append(pad)
+	return out
+
+
+## True when a point lies inside any road/deck line's or pad's influence zone
+## (used to densify the shoulder mesh only where the clamp can bend it).
+func _near_walkable_feature(world_point: Vector3, lines: Array[Dictionary],
+		pads: Array[Dictionary], margin: float) -> bool:
+	var nearest := _nearest_route_line(world_point, lines)
+	if not is_inf(float(nearest["distance"])) \
+			and float(nearest["distance"]) < float(nearest["half_width"]) + LINE_PIN_MARGIN_M + LINE_EASE_M + margin:
+		return true
+	for pad: Dictionary in pads:
+		var centre: Vector3 = pad["position"]
+		if Vector2(world_point.x - centre.x, world_point.z - centre.z).length() \
+				< float(pad["flat_radius"]) + PAD_EASE_M + margin:
+			return true
+	return false
+
+
 func _build_routes() -> void:
 	var root := Node3D.new()
 	root.name = "AuthoredRoutes"
 	add_child(root)
+	_collect_all_route_lines()
 	for raw: Variant in _config.get("routes", []):
 		if not raw is Dictionary:
 			continue
@@ -712,24 +1097,71 @@ func _build_routes() -> void:
 			var pad := points[i]
 			if _bridge_interior_point(str(spec.get("id","")),pad):
 				continue # The continuous deck owns its internal bend, not a flat land cap.
+			# A pad shared by two routes (every route junction) is built ONCE:
+			# two coincident crowns at the same height z-fought as alternating
+			# light/dark wedges in the rendered frames (05-upper-cloudreach-
+			# cliffhold, where windscar_counterweight_pass's green turf met
+			# upper_plateau_circuit's dry turf on the same disc).
+			var pad_key := "%.1f,%.1f" % [pad.x, pad.z]
+			if _built_pad_keys.has(pad_key):
+				continue
+			_built_pad_keys[pad_key] = true
 			var landing_size := maxf(float(landmass.get("landing_size_m", 16.0)),
 				collision_width * 2.25)
+			# Ledge collision matches its own rendered top exactly (see `_mesa`),
+			# so the visible mesa is the real footprint instead of a
+			# silhouette-only shell floating over a much smaller flat cap.
+			# Flattened (no radius jitter) out to `landing_flat_fraction` of
+			# landing_size -- comfortably past every authored approach's join
+			# point -- so a bridge or ramp reaching the pad from any angle
+			# always finds solid, level crown instead of occasionally clipping
+			# a jittered dip in the mesa's outer rim (CAUSEWAY-HUB-0906). This
+			# also means every pad, including a bridge's own endpoint, now
+			# collides on its own crown rather than relying solely on the cap
+			# box below.
+			var landing_flat_radius := landing_size \
+				* float(landmass.get("landing_flat_fraction", 0.82))
+			# A bridge's own deck-endpoint pad USED to keep mesa collision
+			# disabled entirely, relying on its flat `LedgeCap%d` box (below)
+			# alone -- the ring of crown between that small box and the
+			# mesa's own (much larger) flat radius was bare, uncollidable air
+			# (CLOUDREACH-CROWN-0906 ground truth: 93 of 98 holes network-wide
+			# sat exactly there). The deck's collision height there is an
+			# independently authored point on the deck profile, so a residual
+			# few centimetres to a few tens of centimetres of mismatch between
+			# it and this pad's own crown is ordinary -- but R2 now clips this
+			# crown's own height toward that SAME deck (`_mesa`'s
+			# `flat_top_radius_m` apron, via `_crown_height_at`, which
+			# treats bridge decks as routes for this taper), so the mismatch
+			# the disabled collision was working around is closed at its
+			# source. Always collide the crown now, everywhere, closing the
+			# ring; the LedgeCap box stays (`pad - 0.44`, always below the
+			# crown's own `pad + 0.03`) so it can never poke back above it.
 			_mesa(root, "%s_Ledge%d" % [_safe_name(str(spec.get("id", "Route"))), i],
 			pad - Vector3.UP * 22.0, Vector3(landing_size * 1.5, 44.0, landing_size * 1.5),
-				_materials["cliff"], landing_top, false,
-				i * 19 + absi(str(spec.get("id", "Route")).hash()))
-			# A shallow walkable cap bridges the several sloped path boxes meeting
-			# here. The irregular cliff below carries the silhouette; this cap keeps
-			# the joint from exposing a sky crack at player eye height.
-			_box(root, "%s_LedgeCap%d" % [_safe_name(str(spec.get("id", "Route"))), i],
-				pad - Vector3.UP * 0.42, Vector3(landing_size * 0.82, 0.84, landing_size * 0.82),
-				landing_top, true)
+				_materials["cliff"], landing_top, true,
+				i * 19 + absi(str(spec.get("id", "Route")).hash()), false, landing_flat_radius,
+				_pad_cap_radius(pad, landing_size * 0.41))
+			# A shallow walkable cap under the crown's flat centre. It is a DISC
+			# of the cap radius (the same radius the crown stays flat inside and
+			# every ribbon reaches at pad height via `_landing_join`), held
+			# 0.05 m under the crown, so it can never stand above the crown
+			# anywhere -- the former 13 m square's corners reached 9.3 m out,
+			# past the join, and stood a real step above the still-climbing
+			# ribbon on every diagonal approach (summit road, probe-confirmed).
+			# Collision only: the disc sits wholly under the (now everywhere
+			# collidable) crown, so drawing it can only z-fight with it.
+			_disc(root, "%s_LedgeCap%d" % [_safe_name(str(spec.get("id", "Route"))), i],
+				pad - Vector3.UP * 0.44, landing_size * 0.41 - 0.05, 0.84, landing_top, true).get_child(0).visible = false
 			_add_landing_nature(root, points, i, pad, landing_size,
 				i * 43 + absi(str(spec.get("id", "Route")).hash()))
 			_cover_patches.append({"kind":"ellipse","centre":pad,"half":Vector2.ONE*landing_size*0.40,
 				"inner_clear_fraction":0.38,"seed":i*137+absi(str(spec.id).hash()),"dry":false})
+			# The mesa's crown vertex sits at local y = size.y*0.5 + 0.03, i.e.
+			# pad.y + 0.03 world -- match that here so ground_height_at() (used
+			# by spawns/arrivals) doesn't disagree with the real, solid surface.
 			_surfaces.append({"kind": "rect", "centre": Vector2(pad.x, pad.z),
-				"half": Vector2.ONE * landing_size * 0.41, "height": pad.y})
+				"half": Vector2.ONE * landing_size * 0.41, "height": pad.y + 0.03})
 		for i in points.size() - 1:
 			var route_label := "%s_%d" % [_safe_name(str(spec.get("id", "Route"))), i]
 			var sections := _ground_sections_for_segment(str(spec.get("id", "")),
@@ -821,6 +1253,7 @@ func _build_route_shoulders(root: Node3D, spec: Dictionary, points: Array[Vector
 	shoulder_root.name = "%sCliffShoulders" % route_name
 	root.add_child(shoulder_root)
 	var landmass: Dictionary = _visual_config.get("landmass", {})
+	var route_id := str(spec.get("id", "Route"))
 	var serial := 0
 	for segment_index in points.size() - 1:
 		var original_a := points[segment_index]
@@ -834,9 +1267,14 @@ func _build_route_shoulders(root: Node3D, spec: Dictionary, points: Array[Vector
 		for section: Dictionary in sections:
 			var a: Vector3 = section["a"]
 			var b: Vector3 = section["b"]
+			# Every shoulder collides (see `_route_ridge`): its walkable top
+			# is clamped per vertex onto any road ribbon, bridge deck or
+			# pad/landmark crown within reach (`_walkable_height`), rather than
+			# an entire segment near a detected "hub" going collision-free.
 			_route_ridge(shoulder_root, "Ridge%03d" % serial, a, b, half_width,
 				segment_index + int(spec.get("order", 0)) * 17 + serial,
-				_materials["upland_dry"] if route_is_dry else _materials["upland"], landmass)
+				_materials["upland_dry"] if route_is_dry else _materials["upland"], landmass,
+				route_id)
 			_add_route_edge_nature(shoulder_root, a, b, half_width, serial)
 			var cover_config: Dictionary = _visual_config.get("ground_cover", {})
 			var cover_chunks := maxi(1, int(ceilf(a.distance_to(b)
@@ -976,18 +1414,27 @@ func _resource_position(authored: Vector3) -> Vector3:
 
 
 func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
-		half_width: float, seed_value: int, top_material: Material, config: Dictionary) -> void:
+		half_width: float, seed_value: int, top_material: Material, config: Dictionary,
+		self_route_id: String = "") -> void:
 	var flat := Vector3(b.x - a.x, 0.0, b.z - a.z)
 	if flat.length_squared() < 0.01:
 		return
 	var forward := flat.normalized()
 	var right := Vector3.UP.cross(forward).normalized()
 	var spacing := float(config.get("route_station_spacing_m", 48.0))
-	var station_count := clampi(int(ceilf(flat.length() / maxf(spacing, 8.0))) + 1, 3, 28)
+	var station_count := clampi(int(ceilf(flat.length() / maxf(spacing, 6.0))) + 1, 3, 48)
+	# Every road/deck line and pad/landmark crown that can bend this ridge's
+	# walkable top (R2), culled once per ridge so the per-vertex clamp is cheap.
+	var reach := half_width * 1.2 + 12.0
+	var lines := _lines_near(minf(a.x, b.x) - reach, maxf(a.x, b.x) + reach,
+		minf(a.z, b.z) - reach, maxf(a.z, b.z) + reach)
+	var pads := _pads_near(minf(a.x, b.x) - reach, maxf(a.x, b.x) + reach,
+		minf(a.z, b.z) - reach, maxf(a.z, b.z) + reach)
 	var left_top: Array[Vector3] = []
 	var right_top: Array[Vector3] = []
 	var left_track: Array[Vector3] = []
 	var right_track: Array[Vector3] = []
+	var centres: Array[Vector3] = []
 	var left_upper: Array[Vector3] = []
 	var right_upper: Array[Vector3] = []
 	var left_shelf_lip: Array[Vector3] = []
@@ -999,15 +1446,30 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 	for i in station_count:
 		var t := float(i) / float(station_count - 1)
 		var centre := a.lerp(b, t)
+		# The crest follows this route's OWN ribbon/cap surface (flat inside the
+		# pad cap, then the join-to-join slope -- `_collect_all_route_lines`),
+		# not the centre-to-centre polyline the ribbon is shortened from; the
+		# two differ by up to slope x cap radius right where a road meets its
+		# pad, which is exactly where walkers were stepping/sinking.
+		if self_route_id != "":
+			centre.y = _own_route_height(self_route_id, centre, centre.y)
+		centres.append(centre)
 		var irregular := 0.84 + 0.18 * sin(float(i * 13 + seed_value * 7))
 		irregular += 0.08 * cos(float(i * 5 + seed_value * 3))
-		var width_here := half_width * irregular
+		# Every segment starts and ends at a landing pad (or a landmark), whose
+		# own crown is flat. Taper the outward flare and the vertical drop back
+		# to the flat track over the first/last couple of stations so the
+		# shoulder grows out of the pad/landmark surface instead of stepping
+		# away from it. 0.53 (the track's own half-width fraction) is still >=
+		# the half_width*0.5 minimum this collider is required to cover.
+		var edge_taper := smoothstep(0.0, 4.0, float(mini(i, station_count - 1 - i)))
+		var width_here := half_width * lerpf(0.53, irregular, edge_taper)
 		var left := centre - right * width_here
 		var right_edge := centre + right * width_here
 		left_track.append(centre - right * half_width * 0.53)
 		right_track.append(centre + right * half_width * 0.53)
-		left.y -= 4.0 + 9.0 * (1.0 + sin(float(i) * 1.71 + seed_value))
-		right_edge.y -= 4.0 + 9.0 * (1.0 + cos(float(i) * 2.13 + seed_value))
+		left.y -= (4.0 + 9.0 * (1.0 + sin(float(i) * 1.71 + seed_value))) * edge_taper
+		right_edge.y -= (4.0 + 9.0 * (1.0 + cos(float(i) * 2.13 + seed_value))) * edge_taper
 		var depth_mix := 0.5 + 0.5 * sin(float(i * 11 + seed_value * 17))
 		var depth := maxf(centre.y - float(config.get("geology_base_y", -210.0)),
 			lerpf(float(config.get("route_cliff_depth_min_m", 36.0)),
@@ -1053,26 +1515,75 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 		left_bottom.append(Vector3(centre.x, centre.y - depth, centre.z) - right * foot_width)
 		right_bottom.append(Vector3(centre.x, centre.y - depth * 0.94, centre.z) + right * foot_width * 1.15)
 
+	# R1 + R2 (CLOUDREACH-GROUND-0906): the walkable top -- flat crest track
+	# plus the slopes out to the true outer edge -- is ONE grid of rows, seven
+	# vertices wide (outer edge, track edge, half track, crest, ...), every
+	# vertex passed through `_walkable_height` so it conforms to any road
+	# ribbon, bridge deck or pad/landmark crown within reach. A station
+	# interval that lies inside such a feature's influence zone is subdivided
+	# to ~4 m rows: the clamp is only ever evaluated at vertices, and with
+	# 16 m stations the straight interpolation between a pinned station inside
+	# a pad disc and a free one outside carried the road's rise back over the
+	# flat crown (probe: 0.2-1.3 m over most pad crowns). The rendered top
+	# mesh, the wall's upper attachment edge and the collision copy all come
+	# from these same rows, so they can never drift apart.
+	var rows: Array = []
+	var row_station: Array[float] = []
+	for i in station_count - 1:
+		var pieces := 1
+		var margin := half_width * 0.6
+		if _near_walkable_feature(centres[i], lines, pads, margin) \
+				or _near_walkable_feature(centres[i + 1], lines, pads, margin):
+			pieces = clampi(int(ceilf(centres[i].distance_to(centres[i + 1]) / 4.0)), 1, 12)
+		for piece in pieces:
+			row_station.append(float(i) + float(piece) / float(pieces))
+	row_station.append(float(station_count - 1))
+	for station_t: float in row_station:
+		var i := mini(int(floor(station_t)), station_count - 2)
+		var f := station_t - float(i)
+		var row: Array[Vector3] = []
+		var lt := left_top[i].lerp(left_top[i + 1], f)
+		var ltr := left_track[i].lerp(left_track[i + 1], f)
+		var c := centres[i].lerp(centres[i + 1], f)
+		var rtr := right_track[i].lerp(right_track[i + 1], f)
+		var rt := right_top[i].lerp(right_top[i + 1], f)
+		for raw: Vector3 in [lt, ltr, ltr.lerp(c, 0.5), c, rtr.lerp(c, 0.5), rtr, rt]:
+			row.append(Vector3(raw.x, _walkable_height(raw, raw.y, lines, pads), raw.z))
+		rows.append(row)
+	# Walls hang from the rows' outer vertices (no separate station-only edge).
+	var wall_left_top: Array[Vector3] = []
+	var wall_right_top: Array[Vector3] = []
+	for row_index in rows.size():
+		var row: Array[Vector3] = rows[row_index]
+		wall_left_top.append(row[0])
+		wall_right_top.append(row[6])
+
 	var mesh := ArrayMesh.new()
 	var top_tool := SurfaceTool.new()
 	top_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 	top_tool.set_material(top_material)
-	for i in station_count - 1:
-		_add_surface_triangle(top_tool, left_track[i], left_track[i + 1], right_track[i])
-		_add_surface_triangle(top_tool, right_track[i], left_track[i + 1], right_track[i + 1])
-		_add_surface_triangle(top_tool, left_top[i], left_top[i + 1], left_track[i])
-		_add_surface_triangle(top_tool, left_track[i], left_top[i + 1], left_track[i + 1])
-		_add_surface_triangle(top_tool, right_track[i], right_track[i + 1], right_top[i])
-		_add_surface_triangle(top_tool, right_top[i], right_track[i + 1], right_top[i + 1])
+	_emit_shoulder_top(top_tool, rows)
 	top_tool.generate_normals()
 	top_tool.commit(mesh)
 
 	var upper_tool := SurfaceTool.new()
 	upper_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 	upper_tool.set_material(_materials["cliff_high"])
+	# The first wall band attaches to every top row (so the walkable top and
+	# the cliff face stay stitched where the top was densified/clamped); its
+	# lower edge is interpolated on the station-spaced upper ring.
+	for row_index in rows.size() - 1:
+		var s0 := row_station[row_index]
+		var s1 := row_station[row_index + 1]
+		var i0 := mini(int(floor(s0)), station_count - 2)
+		var i1 := mini(int(floor(s1)), station_count - 2)
+		var lu0 := left_upper[i0].lerp(left_upper[i0 + 1], s0 - float(i0))
+		var lu1 := left_upper[i1].lerp(left_upper[i1 + 1], s1 - float(i1))
+		var ru0 := right_upper[i0].lerp(right_upper[i0 + 1], s0 - float(i0))
+		var ru1 := right_upper[i1].lerp(right_upper[i1 + 1], s1 - float(i1))
+		_add_geological_face(upper_tool, wall_left_top[row_index + 1], wall_left_top[row_index], lu1, lu0, -right, -right, 5.0)
+		_add_geological_face(upper_tool, wall_right_top[row_index], wall_right_top[row_index + 1], ru0, ru1, right, right, 5.0)
 	for i in station_count - 1:
-		_add_geological_face(upper_tool, left_top[i + 1], left_top[i], left_upper[i + 1], left_upper[i], -right, -right, 5.0)
-		_add_geological_face(upper_tool, right_top[i], right_top[i + 1], right_upper[i], right_upper[i + 1], right, right, 5.0)
 		# Wide, shallow rock planes catch light above a recessed wall. They are
 		# intermediate cliff structure, not tiny dressing scattered on the face.
 		_add_geological_face(upper_tool, left_upper[i + 1], left_upper[i], left_shelf_lip[i + 1], left_shelf_lip[i], -right, -right, 2.0)
@@ -1087,11 +1598,13 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 		_add_geological_face(deep_tool, left_lower[i + 1], left_lower[i], left_bottom[i + 1], left_bottom[i], -right, -right, 15.0)
 		_add_geological_face(deep_tool, right_lower[i], right_lower[i + 1], right_bottom[i], right_bottom[i + 1], right, right, 15.0)
 	# End faces prevent the ribbon's first/last station reading as a sliced box.
-	_add_surface_triangle(deep_tool, left_top[0], right_top[0], left_bottom[0])
-	_add_surface_triangle(deep_tool, left_bottom[0], right_top[0], right_bottom[0])
+	var first_row: Array[Vector3] = rows[0]
+	var last_row: Array[Vector3] = rows[rows.size() - 1]
 	var last := station_count - 1
-	_add_surface_triangle(deep_tool, left_top[last], left_bottom[last], right_top[last])
-	_add_surface_triangle(deep_tool, left_bottom[last], right_bottom[last], right_top[last])
+	_add_surface_triangle(deep_tool, first_row[0], first_row[6], left_bottom[0])
+	_add_surface_triangle(deep_tool, left_bottom[0], first_row[6], right_bottom[0])
+	_add_surface_triangle(deep_tool, last_row[0], left_bottom[last], last_row[6])
+	_add_surface_triangle(deep_tool, left_bottom[last], right_bottom[last], last_row[6])
 	deep_tool.generate_normals()
 	deep_tool.commit(mesh)
 
@@ -1101,6 +1614,38 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 	ridge.visibility_range_end = 1900.0
 	ridge.visibility_range_end_margin = 160.0
 	parent.add_child(ridge)
+
+	# The cliff-shoulder rock formation flanking the road (out to half_width)
+	# used to be visual-only: grass is planted on it, so it reads as walkable
+	# ground, but stepping onto it fell straight through. Its trimesh collider
+	# is built from the SAME rows as the visible top (R1), so the collider can
+	# never float above or sink below what the player sees; the crest sits on
+	# the route's own ribbon height, matching the narrower `Ground%d` road
+	# ribbon collision where the two overlap.
+	var collision_mesh := ArrayMesh.new()
+	var collision_tool := SurfaceTool.new()
+	collision_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	_emit_shoulder_top(collision_tool, rows)
+	collision_tool.commit(collision_mesh)
+	var body := StaticBody3D.new()
+	body.name = "Collision"
+	var shape_node := CollisionShape3D.new()
+	shape_node.shape = collision_mesh.create_trimesh_shape()
+	body.add_child(shape_node)
+	ridge.add_child(body)
+
+
+## The ridge's crest and shoulders as one quad grid: `rows` is a list of
+## seven-vertex cross-sections (outer left edge ... crest ... outer right
+## edge). Shared by the visible top mesh and its collision copy so the two can
+## never drift apart.
+func _emit_shoulder_top(tool: SurfaceTool, rows: Array) -> void:
+	for row_index in rows.size() - 1:
+		var row_a: Array[Vector3] = rows[row_index]
+		var row_b: Array[Vector3] = rows[row_index + 1]
+		for column in row_a.size() - 1:
+			_add_surface_triangle(tool, row_a[column], row_b[column], row_a[column + 1])
+			_add_surface_triangle(tool, row_a[column + 1], row_b[column], row_b[column + 1])
 
 
 func _add_surface_triangle(tool: SurfaceTool, a: Vector3, b: Vector3, c: Vector3) -> void:
@@ -1222,6 +1767,7 @@ func _add_route_edge_nature(parent: Node3D, a: Vector3, b: Vector3,
 			continue
 		var side := -1.0 if (serial + cluster) % 2 == 0 else 1.0
 		var rock := NATURE_ROCKS[(serial + cluster) % NATURE_ROCKS.size()].instantiate() as Node3D
+		apply_stone_palette(rock)
 		rock.name = "RouteRock%03d_%d" % [serial, cluster]
 		rock.position = anchor + right * side * half_width * 0.46 - Vector3.UP * 0.32
 		rock.rotation.y = float(posmod(serial * 17 + cluster * 11, 31)) / 31.0 * TAU
@@ -1334,6 +1880,37 @@ func _route_detail_ground(at: Vector3) -> float:
 ## trees. The source twisted-tree sheet is crimson and the raw common sheet is
 ## fluorescent; both break the project's one-nature-family palette. Surface
 ## overrides preserve the imported meshes, LOD chains, alpha mode and shadows.
+## The stylised Rock_Medium_* kit ships a pale, near-white base colour that
+## reads as wax or ice beside the trainer (blind verdict round 1, defect 7);
+## every instance the world or the look pass places is retinted here to a
+## cool mid-grey with full roughness so it reads as stone.
+## One tinted duplicate per source material, cached: a fresh duplicate per
+## instance (thousands of rocks) raised the headless renderer's
+## `Parameter "material" is null` on every override, the cached one raises
+## nothing (isolated in a 20-rock probe before this was written).
+static var _stone_palette_cache: Dictionary = {}
+
+
+static func apply_stone_palette(root_node: Node) -> void:
+	for mesh_node: Node in root_node.find_children("*", "MeshInstance3D", true, false):
+		var mesh_instance := mesh_node as MeshInstance3D
+		if mesh_instance.mesh == null:
+			continue
+		for surface_index in mesh_instance.mesh.get_surface_count():
+			var base := mesh_instance.mesh.surface_get_material(surface_index)
+			if not (base is StandardMaterial3D):
+				continue
+			var tinted: StandardMaterial3D = _stone_palette_cache.get(base)
+			if tinted == null:
+				tinted = (base as StandardMaterial3D).duplicate() as StandardMaterial3D
+				tinted.albedo_color = Color("#8e918c")
+				tinted.roughness = 1.0
+				tinted.metallic = 0.0
+				tinted.metallic_specular = 0.15
+				_stone_palette_cache[base] = tinted
+			mesh_instance.set_surface_override_material(surface_index, tinted)
+
+
 func _apply_tree_palette(root_node: Node, seed_value: int) -> void:
 	if root_node is MeshInstance3D:
 		var instance := root_node as MeshInstance3D
@@ -1411,7 +1988,15 @@ func _build_bridge_section(bridge: Node3D, spec: Dictionary, a: Vector3, b: Vect
 	var count := clampi(int(ceilf(length / 4.5)), 8, 72)
 	var bridge_type := str(spec.get("type", "rope_suspension"))
 	var stone_bridge := bridge_type.contains("stone")
-	_segment_box(bridge, "WalkableDeck", a, b, width, 0.42,
+	# Stone-bridge paving (the batched planks below, visible only for this
+	# type) sits 0.2 m proud of the authored deck line -- 0.12 m of instance
+	# offset plus half its own 0.16 m thickness. Lift the deck collider to
+	# meet that visible top exactly instead of leaving a 0.2 m step at the
+	# real walking surface. The rope/wood deck's own visible top (from
+	# BRIDGE_KIT's thin floor modules) sits only ~0.045 m proud, already
+	# inside tolerance, so it is left on the authored line.
+	var deck_lift := _segment_basis(a, b).y * (0.2 if stone_bridge else 0.0)
+	_segment_box(bridge, "WalkableDeck", a + deck_lift, b + deck_lift, width, 0.42,
 		_materials["stone"] if stone_bridge else _materials["wood"], true)
 	if not stone_bridge:
 		BRIDGE_KIT.build_deck(bridge,a,b,width)
@@ -1570,15 +2155,44 @@ func _build_landmarks() -> void:
 			# The old 72 m cap stopped in the air above its parent highland crown.
 			# Carry this exceptional Fly-only pinnacle down into the cloud valley.
 			ledge_size = Vector3(132.0, at.y + 210.0, 126.0)
-		# These authored roads terminate at their landmark centres. The 72m-tall
-		# convex geological colliders met the incoming ramps below their crowns,
-		# turning intended grounded joins into steep walls. Keep the visible
-		# cliff masses, but let their thin level crowns / route landing supports
-		# own collision at the authored elevations.
-		var ledge_collision := not settlement and landmark_id not in [
-			"old_wind_observatory", "summit_eyrie_stronghold", "waterward_overlook"]
-		var ledge:=_mesa(landmark, "LandmarkLedge", Vector3(0.0, -ledge_size.y * 0.5 + 0.10, 0.0), ledge_size,
-			_materials["cliff"], _materials["upland_dry"] if at.y>=700.0 else _materials["upland"], ledge_collision, _landmark_count + 31)
+		# `_mesa`'s collider is now built from its own crown surface only, not a
+		# hull spanning the full crown-to-base height -- so it can no longer
+		# meet an incoming ramp below the crown as a steep wall (the reason
+		# these landmarks previously ran with collision disabled, relying
+		# solely on their hidden flat "WalkableCrown" boxes). Enable it for
+		# old_wind_observatory and summit_eyrie_stronghold too, closing the
+		# walk-through gap between that small crown-box footprint and the
+		# much larger visible cliff mass around it; the crown boxes stay and
+		# still own the authored route elevation, and the ledge's crown
+		# (local y=-0.08+0.03=-0.05) sits 0.05 m under ObservatoryWalkableCrown's
+		# flat top (local y=0) so it never pokes above it.
+		#
+		# waterward_overlook stays excluded: its two route-aligned crowns
+		# slope to different heights (down to local y=-2.4 on one side, up to
+		# +3.35 on the other) to match the specific incoming ramp without a
+		# step, and no single flat ledge height can sit under both without
+		# either sinking implausibly far below the western approach or
+		# resurfacing above the eastern one -- exactly the "flat slab creates
+		# a step" conflict the crown boxes exist to avoid.
+		# waterward_overlook now collides too: its crown rings follow the two
+		# hidden sloped crown strips per vertex (`_crown_height_at` with the
+		# strips registered as reference surfaces), so the old "no single flat
+		# height fits both" conflict no longer applies -- and its visible crown
+		# used to float up to 1 m above the strips (ground-truth probe).
+		var ledge_collision := not settlement
+		var ledge_y := -0.08 if landmark_id == "old_wind_observatory" else 0.10
+		# Flatten every landmark crown's radius the same way a landing pad's
+		# is flattened (see `_mesa`'s `flat_top_radius_m`), so an authored
+		# route/ramp reaching a crown footprint never meets a jittered dip
+		# short of the true collision surface. waterward_overlook is excluded:
+		# its two route-aligned crown boxes intentionally slope to different
+		# heights on either side of this mesa (see below), and flattening the
+		# mesa crown here would only change its unrelated visible silhouette,
+		# not fix or affect that residual.
+		var ledge_flat_radius := minf(ledge_size.x, ledge_size.z) * 0.47
+		var ledge:=_mesa(landmark, "LandmarkLedge", Vector3(0.0, -ledge_size.y * 0.5 + ledge_y, 0.0), ledge_size,
+			_materials["cliff"], _materials["upland_dry"] if at.y>=700.0 else _materials["upland"], ledge_collision,
+			_landmark_count + 31, false, ledge_flat_radius, _landmark_cap_radius(landmark_id))
 		if settlement:
 			(ledge.get_node("StratifiedCliffBody") as MeshInstance3D).visible=false
 			_build_articulated_settlement_skirt(landmark,at.y>=700.0)
@@ -1597,11 +2211,19 @@ func _build_landmarks() -> void:
 			# portion of each sloped loop edge; a flat slab here would itself create
 			# a step wall below the y=1110 vertex. Their narrow widths preserve the
 			# intended fall edges on either side of the overlook.
+			# Widened (not lengthened, so the authored a->b slope/height at every
+			# station along each crown is unchanged) to reach more of the
+			# visible ledge disc around them and shrink the walk-through gap
+			# beyond their edges. A single flat collider still cannot cover
+			# the whole disc here without conflicting with one crown or the
+			# other -- see the comment above -- so some of the visible edge
+			# past these wider strips is still an intentional/unfixed fall;
+			# tracked as a known limitation.
 			var west_crown := _segment_box(landmark, "OverlookWalkableCrown",
-				Vector3(-8.0, -2.4, -28.0), Vector3.ZERO, 22.0, 0.44,
+				Vector3(-8.0, -2.4, -28.0), Vector3.ZERO, 32.0, 0.44,
 				_materials["upland_dry"], true)
 			var east_crown := _segment_box(landmark, "OverlookWalkableCrownEast",
-				Vector3(27.7, 3.35, 4.3), Vector3.ZERO, 12.0, 0.44,
+				Vector3(27.7, 3.35, 4.3), Vector3.ZERO, 26.0, 0.44,
 				_materials["upland_dry"], true)
 			west_crown.get_child(0).visible = false
 			east_crown.get_child(0).visible = false
@@ -1904,6 +2526,11 @@ func _place_local_prop(parent: Node3D, asset: String, at: Vector3, height: float
 	placement.add_child(model)
 	if asset == "bush" or asset == "flowers":
 		_apply_tree_palette(model, parent.get_child_count())
+	elif asset.begins_with("rock"):
+		# The roadside/landmark rocks placed through this path (authored route
+		# details, the summit gate flanks) were missed by the first stone
+		# retint and still rendered wax-white in the round-2 frames.
+		apply_stone_palette(model)
 	_set_geometry_visibility(placement, 480.0)
 
 
@@ -2166,58 +2793,77 @@ func _build_sky_shrine(root: Node3D) -> void:
 
 
 func _build_summit_stronghold(root: Node3D) -> void:
-	# Two articulated wings and a high gate bridge replace the solid cuboid that
-	# filled the whole final-approach frame. The open central throat is readable
-	# from the road and gives the eventual pre-boss route a physical entrance.
-	# The authored diagonal ascent reaches x=+9.5 while its capsule head is still
-	# below crown height. At the former +/-13.5 positions that put it under the
-	# east wing's x=6 edge and stopped it against the underside. Align the wings
-	# with the existing +/-24 towers so the visible and physical throat both
-	# clear the unchanged road. The summit-overlook circuit then leaves this
-	# throat through the two side wings: articulate each wall around that exact
-	# authored crossing instead of leaving a solid box across a bidirectional
-	# production route.
+	# D111 / OP-0906-05: the Summit Stronghold is a domed aviary in rustic
+	# stone, not a castle keep. The keep massing (UpperKeep + cornices, the
+	# four SummitWatchtowers, the Crenellation row, TetherCrown, GateBridge and
+	# the SummitGatehouse castle piece) is gone; `cloudreach_aviary.gd` builds a
+	# low masonry drum, four arches, a lattice dome and aviary furniture from
+	# `data/config/cloudreach_aviary.json`. Kept: the two articulated route
+	# wings (the throat's load-bearing collision -- the summit-overlook circuit
+	# leaves this stronghold through their portals), their buttresses, the
+	# gate threshold, the corner tether pylons and the banners.
+	#
+	# The drum is a circle of radius 27 m -- wider than the wings' outer face
+	# (x = +-26) -- so the ring stands clear of both wings instead of being
+	# cut into fragments by them (a 22x20 ellipse had its wall running through
+	# the east wing's z 7.5 portal band); its throat arches at +-x open onto
+	# the wing portals, and the dome (same 27 m radius, apex 36 m) clears the
+	# lowered wing tops everywhere.
 	for side: float in [-1.0, 1.0]:
 		var portal_z := -1.5 if side < 0.0 else 7.5
 		_build_summit_route_wing(root, side, portal_z)
 		var buttress_z := 9.0 if side < 0.0 else -9.0
-		_box(root, "WingButtress", Vector3(side * 22.0, 7.5, buttress_z),
-			Vector3(4.0, 15.0, 10.0), _materials["cliff_mid"], true)
-	_box(root, "GateBridge", Vector3(0.0, 25.0, 0.0),
-		Vector3(14.0, 7.0, 34.0), _materials["stone_light"], true).visible = false
-	_castle_piece(root, "SummitGatehouse", CASTLE_GATE, Vector3(0, 0, -14),
-		Vector3(27, 34, 7), _materials["stone_light"])
-	_box(root, "UpperKeep", Vector3(0.0, 36.0, -3.0),
-		Vector3(24.0, 15.0, 22.0), _materials["masonry"], true)
-	for band in [29.0, 35.0, 42.0]:
-		_box(root, "UpperKeepCornice", Vector3(0, band, -3), Vector3(25.0, 0.7, 23.0), _materials["masonry_trim"], false)
+		_box(root, "WingButtress", Vector3(side * 22.0, 6.0, buttress_z),
+			Vector3(4.0, 12.0, 10.0), _materials["cliff_mid"], true)
 	_box(root, "GateThreshold", Vector3(0.0, 0.08, -19.0),
 		Vector3(9.0, 0.16, 12.0), _materials["masonry_trim"], true)
-	for corner in [Vector3(-24.0, 17.0, -20.0), Vector3(24.0, 17.0, -20.0), Vector3(-24.0, 17.0, 20.0), Vector3(24.0, 17.0, 20.0)]:
-		_castle_piece(root, "SummitWatchtower", CASTLE_TOWER, corner - Vector3.UP * 17,
-			Vector3(13, 39, 13), _materials["stone"])
+	# Blind verdict (CLOUDREACH-GROUND-0906 round 1): the drum and arches in
+	# the flat brown "stone" read as untextured rust slabs and the veils as
+	# placeholder glass. The drum, arches and piers now wear the same mossy
+	# masonry family as the kept wings, the veils are fainter, and the iron
+	# is a lit graphite rather than near-black.
+	var aviary_veil := _wind_veil_material()
+	aviary_veil.albedo_color.a = 0.13
+	aviary_veil.emission_energy_multiplier = 0.3
+	var aviary_materials := {
+		"masonry": _materials["masonry_trim"],
+		"stone": _materials["masonry"],
+		"timber": _materials["wood"],
+		"iron": _material(Color("#4a4d52"), 0.55),
+		"rope": _materials["rope"],
+		"veil": aviary_veil,
+		"lantern": _emissive_material(Color("#ffb15c"), 2.0),
+	}
+	var aviary: Dictionary = AVIARY.build(root, aviary_materials, _read_json(AVIARY_CONFIG_PATH))
+	# Corner tether pylons: they stood on the watchtower tops; they now stand
+	# on the ground at the four corners outside the drum, flanking the wings.
+	for corner in [Vector3(-24.0, 0.0, -20.5), Vector3(24.0, 0.0, -20.5), Vector3(-24.0, 0.0, 20.5), Vector3(24.0, 0.0, 20.5)]:
 		var pylon := TETHER_PYLON.instantiate() as Node3D
 		var bounds_tool := BUILDING_PREFABS.new()
 		var bounds: AABB = bounds_tool.combined_aabb(pylon)
 		var scale_value := 6.5 / maxf(bounds.size.y, 0.01)
 		pylon.scale = Vector3.ONE * scale_value
-		pylon.position = corner + Vector3.UP * 22 - Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * scale_value
+		pylon.position = corner - Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * scale_value
 		root.add_child(pylon)
-	for x in [-10.0, -3.3, 3.3, 10.0]:
-		_box(root, "Crenellation", Vector3(x, 45.0, -3.0),
-			Vector3(3.5, 3.5, 24.0), _materials["masonry"], false)
+	# Banners hang on the wings' south gables, facing the approach.
 	for side: float in [-1.0, 1.0]:
-		_hang_cloudreach_banner(root,Vector3(side*8.5,22.0,-17.3),Vector2(3.8,11.0),PI)
+		_hang_cloudreach_banner(root,Vector3(side*18.5,7.5,-17.3),Vector2(3.0,8.0),PI)
+	# Team Tether's machine stands in the dome's open oculus, on an iron mount
+	# plate spanning the oculus ring (the pylon's own base is narrower than
+	# the 12 m opening).
+	var anchor: Transform3D = aviary.get("pylon_anchor", Transform3D.IDENTITY)
+	# A plate the size of the oculus read as a flat black oval in the dome's
+	# crown; a narrow one under the machine keeps the oculus visibly open.
+	_disc(root, "TetherMountPlate", anchor.origin - Vector3.UP * 0.25, 3.2, 0.5,
+		aviary_materials["iron"], false)
 	var summit_pylon := TETHER_PYLON.instantiate() as Node3D
 	summit_pylon.name = "OccupiedSummitPylon"
 	var pylon_bounds_tool := BUILDING_PREFABS.new()
 	var pylon_bounds: AABB = pylon_bounds_tool.combined_aabb(summit_pylon)
 	var pylon_scale := 18.0 / maxf(pylon_bounds.size.y, 0.01)
 	summit_pylon.scale = Vector3.ONE * pylon_scale
-	summit_pylon.position = Vector3(0, 47.0, -3) - Vector3(pylon_bounds.get_center().x, pylon_bounds.position.y, pylon_bounds.get_center().z) * pylon_scale
+	summit_pylon.position = anchor.origin - Vector3(pylon_bounds.get_center().x, pylon_bounds.position.y, pylon_bounds.get_center().z) * pylon_scale
 	root.add_child(summit_pylon)
-	_box(root, "TetherCrown", Vector3(0.0, 47.0, -3.0),
-		Vector3(29.0, 2.2, 24.0), _materials["masonry_trim"], false)
 	_develop_stronghold_spaces(root)
 
 
@@ -2225,18 +2871,21 @@ func _build_summit_route_wing(root: Node3D, side: float, portal_z: float) -> voi
 	const WING_HALF_DEPTH := 17.0
 	const PORTAL_HALF_WIDTH := 5.0
 	const PORTAL_CLEAR_HEIGHT := 8.0
+	# Lowered from 26/28 m (a keep's curtain wall) to sit under the aviary
+	# dome: the wing is the drum's east/west gate block now, not a castle wall.
+	const WING_HEIGHT := 14.0
 	var portal_min := portal_z - PORTAL_HALF_WIDTH
 	var portal_max := portal_z + PORTAL_HALF_WIDTH
 	for span: Vector2 in [Vector2(-WING_HALF_DEPTH, portal_min), Vector2(portal_max, WING_HALF_DEPTH)]:
 		var depth := span.y - span.x
 		var centre_z := (span.x + span.y) * 0.5
-		_box(root, "SummitWing", Vector3(side * 18.5, 13.0, centre_z),
-			Vector3(15.0, 26.0, depth), _materials["stone"], true).visible = false
+		_box(root, "SummitWing", Vector3(side * 18.5, WING_HEIGHT * 0.5 - 1.0, centre_z),
+			Vector3(15.0, WING_HEIGHT - 2.0, depth), _materials["stone"], true).visible = false
 		_castle_piece(root, "SummitMasonryWing", CASTLE_WALL,
-			Vector3(side * 18.5, 0.0, centre_z), Vector3(15.0, 28.0, depth), _materials["stone"])
-	# Retain the wing's tall silhouette and collision above the authored route,
+			Vector3(side * 18.5, 0.0, centre_z), Vector3(15.0, WING_HEIGHT, depth), _materials["stone"])
+	# Retain the wing's silhouette and collision above the authored route,
 	# while leaving controller-height clearance at the actual ground crossing.
-	var lintel_height := 28.0 - PORTAL_CLEAR_HEIGHT
+	var lintel_height := WING_HEIGHT - PORTAL_CLEAR_HEIGHT
 	_box(root, "SummitWingLintel",
 		Vector3(side * 18.5, PORTAL_CLEAR_HEIGHT + lintel_height * 0.5, portal_z),
 		Vector3(15.0, lintel_height, PORTAL_HALF_WIDTH * 2.0), _materials["stone"], true).visible = false
@@ -2246,7 +2895,10 @@ func _build_summit_route_wing(root: Node3D, side: float, portal_z: float) -> voi
 
 
 func _develop_stronghold_spaces(root: Node3D) -> void:
-	_cover_exclusions.append({"centre": root.global_position + Vector3(0, 0, -25), "half": Vector2(9, 46), "rotation": 0.0})
+	# Half-width 5.5 (was 9): the 18 m bare lane's straight tuft cutoff read
+	# as a hard-edged terrain patch in the final-approach frame; the lane now
+	# hugs the road ribbon and the trail's own feathered edge.
+	_cover_exclusions.append({"centre": root.global_position + Vector3(0, 0, -25), "half": Vector2(5.5, 46), "rotation": 0.0})
 	_cover_exclusions.append({"centre": root.global_position + Vector3(0, 0, 32), "half": Vector2(18, 24), "rotation": 0.0})
 	var court_bounce := OmniLight3D.new()
 	court_bounce.name = "CourtyardSkyBounce"
@@ -2255,17 +2907,10 @@ func _develop_stronghold_spaces(root: Node3D) -> void:
 	court_bounce.light_energy = 2.0
 	court_bounce.omni_range = 25.0
 	root.add_child(court_bounce)
+	# The watchtower masonry courses, splayed bases, tower banners and the
+	# gatehouse buttress courses went with the keep (D111); the rear
+	# courtyard arcade, braziers, props and approach edges stay.
 	for side: float in [-1.0, 1.0]:
-		for z in [-20.0, 20.0]:
-			for band in [2.0, 9.0, 21.0, 33.0]:
-				_box(root, "TowerMasonryCourse", Vector3(side * 24.0, band, z), Vector3(14.0, 0.8, 14.0), _materials["masonry_trim"], false)
-			_box(root, "TowerSplayedBase", Vector3(side * 24.0, 1.6, z), Vector3(16, 3.2, 16), _materials["masonry"], false)
-		for z in [-23.8, 23.8]:
-			_hang_cloudreach_banner(root,Vector3(side*15,17,z),Vector2(3.2,10),PI if z<0 else 0.0)
-			_box(root, "BannerCrossbar", Vector3(side * 15, 22.2, z), Vector3(4, 0.35, 0.5), _materials["wood"], false)
-		for step in 4:
-			_box(root, "GateButtressCourse", Vector3(side * (8.7 + step * 0.25), 1.4 + step * 3, -19.0),
-				Vector3(2.4 - step * 0.3, 2.8, 3.5), _materials["masonry_trim"], false)
 		_castle_piece(root, "RearCourtyardArcade", CASTLE_GATE, Vector3(side * 12.5, 0, 22.0), Vector3(15, 12, 3.5), _materials["stone_light"])
 		_place_local_prop(root, "crate", Vector3(side * 16.5, 0.15, 29), 1.1, side * 20)
 		_place_local_prop(root, "barrel", Vector3(side * 18.0, 0.15, 31), 1.3, side * 40)
@@ -2417,6 +3062,36 @@ func _box(parent: Node, label: String, centre: Vector3, size: Vector3, material:
 	return root
 
 
+## A flat collidable disc (cylinder), used where a square box's corners would
+## poke past a circular crown's flat cap.
+func _disc(parent: Node, label: String, centre: Vector3, radius: float, height: float,
+		material: Material, collision: bool) -> Node3D:
+	var root := Node3D.new()
+	root.name = label
+	root.position = centre
+	parent.add_child(root)
+	var mesh := MeshInstance3D.new()
+	var cylinder := CylinderMesh.new()
+	cylinder.top_radius = radius
+	cylinder.bottom_radius = radius
+	cylinder.height = height
+	cylinder.radial_segments = 32
+	mesh.mesh = cylinder
+	mesh.material_override = material
+	root.add_child(mesh)
+	if collision:
+		var body := StaticBody3D.new()
+		body.name = "Collision"
+		var shape_node := CollisionShape3D.new()
+		var shape := CylinderShape3D.new()
+		shape.radius = radius
+		shape.height = height
+		shape_node.shape = shape
+		body.add_child(shape_node)
+		root.add_child(body)
+	return root
+
+
 func _mesa(
 		parent: Node,
 		label: String,
@@ -2426,7 +3101,9 @@ func _mesa(
 		top_material: Material,
 		collision: bool,
 		seed_value: int,
-		rugged_crown: bool = false
+		rugged_crown: bool = false,
+		flat_top_radius_m: float = 0.0,
+		cap_radius_m: float = -1.0
 	) -> Node3D:
 	var root := Node3D.new()
 	root.name = label
@@ -2447,16 +3124,92 @@ func _mesa(
 	var upper_ring: Array[Vector3] = []
 	var lower_ring: Array[Vector3] = []
 	var bottom_ring: Array[Vector3] = []
+	var yaw_basis := Basis(Vector3.UP, root.rotation.y)
+	# A flat crown (landing pad / landmark ledge): its walkable disc is the
+	# authored height inside `cap_radius_m`, then, ring by ring out to
+	# `flat_top_radius_m`, each vertex takes `_crown_height_at` -- eased down
+	# to any road ribbon or bridge deck within reach (R2). The visible top and
+	# the collider are emitted from these same rings (R1).
+	var crown_pad: Dictionary = {}
+	var crown_lines: Array[Dictionary] = []
+	var flat_rings: Array = []
+	var flat_ring_radii: Array[float] = []
+	if flat_top_radius_m > 0.0:
+		var world_anchor := root.global_position
+		# `cap_radius_m` < 0: default (half the flat radius); 0: no flat cap at
+		# all -- every ring follows the reference surfaces (the waterward
+		# overlook, whose hidden crown strips slope right through its centre).
+		var cap := cap_radius_m if cap_radius_m >= 0.0 else flat_top_radius_m * 0.5
+		cap = clampf(cap, 0.5, flat_top_radius_m - 0.5)
+		crown_pad = {"position": Vector3(world_anchor.x, world_anchor.y + size.y * 0.5, world_anchor.z),
+			"flat_radius": flat_top_radius_m, "cap_radius": cap}
+		crown_lines = _lines_near(world_anchor.x - flat_top_radius_m - 12.0, world_anchor.x + flat_top_radius_m + 12.0,
+			world_anchor.z - flat_top_radius_m - 12.0, world_anchor.z + flat_top_radius_m + 12.0)
+		# Ring radii from a 2 m hub out to the rim, ~1.8 m apart, so every
+		# quad is near-square. The first version fanned the apex straight out
+		# to the cap ring (0.8 m x 6.5 m slivers): under the shipped renderer
+		# those slivers shaded as alternating light/dark spokes from the
+		# trainer's feet (blind verdict rounds 1 and 2, 05-upper-cloudreach-
+		# cliffhold). Heights still come from `_crown_height_at` per ring.
+		var hub := minf(2.0, cap)
+		var ring_count := maxi(1, int(ceilf((flat_top_radius_m - hub) / 1.8)))
+		for ring_index in ring_count:
+			flat_ring_radii.append(lerpf(hub, flat_top_radius_m, float(ring_index) / float(ring_count)))
+			flat_rings.append([] as Array[Vector3])
 	for i in sides:
 		var angle := TAU * float(i) / float(sides)
 		var irregular := 0.87 + 0.10 * sin(angle * 3.0 + float(seed_value))
 		irregular += 0.055 * cos(angle * 7.0 - float(seed_value) * 0.7)
-		var top_point := Vector3(cos(angle) * size.x * 0.47 * irregular,
-			size.y * 0.5, sin(angle) * size.z * 0.47 * irregular)
-		if rugged_crown:
-			top_point.y -= minf(size.y*0.12,13.0)*(0.8+0.4*sin(angle*3.0+seed_value))
-		elif eroded_crown:
-			top_point.y -= (0.52 + 0.48 * sin(angle * 3.0 + seed_value * 0.8)) * minf(size.y * 0.15, 48.0)
+		var top_point: Vector3
+		if flat_top_radius_m > 0.0:
+			# A landing pad or landmark ledge's walkable disc: a plain circle
+			# at a fixed radius, no horizontal jitter, so its crown polygon
+			# always fully covers the disc an incoming ramp/bridge/route is
+			# authored to reach. A jittered radius can dip narrower than that
+			# disc at some angles, leaving the true collision surface (the
+			# crown) short of where a deck or ribbon actually meets it --
+			# CAUSEWAY-HUB-0906. Jitter still shows just outside this radius,
+			# on the descending cliff wall below the crown.
+			#
+			# R2 (CLOUDREACH-CROWN-0906): an approach that has not finished
+			# climbing by the time it reaches this rim otherwise meets a flat,
+			# already-at-height crown as a real wall (arrival-road /
+			# summit-road, both confirmed by probe: the stuck point sat right
+			# at/just past this exact rim, against a route OR an overlapping
+			# landmark ledge sharing the same authored junction). Ease this
+			# rim vertex's height DOWN toward the height of any route ribbon
+			# or bridge deck within reach of it (`_crown_height_at`, which
+			# also matches a still-climbing stretch of THIS pad's own
+			# approach) -- never up, so nothing outside a real approach ever
+			# rises. The crown's apex (`_emit_mesa_top`'s `crown` point) stays
+			# pinned to the exact authored height regardless, so only the
+			# rim -- and, by the fan's own linear interpolation, a narrowing
+			# wedge of the disc facing the eased approach -- ever eases; the
+			# rest of the disc, and every other angle around the rim, is
+			# untouched and exactly as flat as before.
+			# `centre` is `root`'s POSITION, which for a landmark ledge (parented
+			# under a landmark node already offset to its authored world spot)
+			# is only local to that parent, not the world coordinates route
+			# lines are authored in. `root.global_position` is the real world
+			# anchor regardless of parentage.
+			var world_anchor := root.global_position
+			var rim_world := world_anchor + yaw_basis * Vector3(cos(angle) * flat_top_radius_m, 0.0, sin(angle) * flat_top_radius_m)
+			var eased_world_y := _crown_height_at(crown_pad, rim_world, crown_lines)
+			top_point = Vector3(cos(angle) * flat_top_radius_m, eased_world_y - world_anchor.y,
+				sin(angle) * flat_top_radius_m)
+			for ring_index in flat_rings.size():
+				var ring_radius: float = flat_ring_radii[ring_index]
+				var ring_world := world_anchor + yaw_basis * Vector3(cos(angle) * ring_radius, 0.0, sin(angle) * ring_radius)
+				var ring_y := _crown_height_at(crown_pad, ring_world, crown_lines)
+				(flat_rings[ring_index] as Array).append(Vector3(cos(angle) * ring_radius,
+					ring_y - world_anchor.y, sin(angle) * ring_radius))
+		else:
+			top_point = Vector3(cos(angle) * size.x * 0.47 * irregular,
+				size.y * 0.5, sin(angle) * size.z * 0.47 * irregular)
+			if rugged_crown:
+				top_point.y -= minf(size.y*0.12,13.0)*(0.8+0.4*sin(angle*3.0+seed_value))
+			elif eroded_crown:
+				top_point.y -= (0.52 + 0.48 * sin(angle * 3.0 + seed_value * 0.8)) * minf(size.y * 0.15, 48.0)
 		core_ring.append(Vector3(cos(angle) * size.x * 0.32, size.y * 0.5,
 			sin(angle) * size.z * 0.32))
 		var upper_push := 1.04 + 0.18 * sin(angle * 4.0 + seed_value)
@@ -2482,15 +3235,10 @@ func _mesa(
 	var crown := Vector3(0.0, size.y * 0.5 + 0.03, 0.0)
 	if rugged_crown:
 		crown.y -= minf(size.y*0.09,9.0)
-	for i in sides:
-		var next := (i + 1) % sides
-		if eroded_crown:
-			_add_surface_triangle(top_tool, crown, core_ring[next] + Vector3.UP * 0.03, core_ring[i] + Vector3.UP * 0.03)
-			_add_surface_triangle(top_tool, core_ring[i] + Vector3.UP * 0.03, core_ring[next] + Vector3.UP * 0.03, top_ring[i] + Vector3.UP * 0.03)
-			_add_surface_triangle(top_tool, top_ring[i] + Vector3.UP * 0.03, core_ring[next] + Vector3.UP * 0.03, top_ring[next] + Vector3.UP * 0.03)
-		else:
-			_add_surface_triangle(top_tool, crown, top_ring[next] + Vector3.UP * 0.03,
-				top_ring[i] + Vector3.UP * 0.03)
+	if flat_rings.is_empty():
+		_emit_mesa_top(top_tool, sides, eroded_crown, crown, core_ring, top_ring)
+	else:
+		_emit_flat_crown(top_tool, sides, crown, flat_rings, top_ring)
 	top_tool.generate_normals()
 	top_tool.commit(mesh)
 
@@ -2526,23 +3274,101 @@ func _mesa(
 		_build_embedded_rock_shelves(root, size, seed_value, label)
 
 	if collision:
-		var points := PackedVector3Array()
-		for point: Vector3 in top_ring:
-			points.append(point)
-		for point: Vector3 in bottom_ring:
-			points.append(point)
+		# Collide with the mesa's own rendered top surface, not a convex hull
+		# spanning the full crown-to-base height. A hull built from top_ring
+		# and bottom_ring floats above concave dips and sinks below bumps in
+		# the (possibly eroded/rugged) crown, and -- for tall masses -- its
+		# deep side walls can cross an authored road passing through the
+		# footprint below the crown, blocking a held stick. The walkable
+		# surface is only ever the crown; nothing below it is meant to be
+		# stood on, so only the crown geometry needs a collider.
+		var collision_mesh := ArrayMesh.new()
+		var collision_tool := SurfaceTool.new()
+		collision_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+		if flat_rings.is_empty():
+			_emit_mesa_top(collision_tool, sides, eroded_crown, crown, core_ring, top_ring)
+		else:
+			_emit_flat_crown(collision_tool, sides, crown, flat_rings, top_ring)
+		# A bare, zero-thickness crown edge is a known character-controller trap:
+		# approaching from a slightly lower, similar-height surface (a bridge
+		# deck or ramp meeting this mesa) can wall against the paper-thin rim
+		# instead of registering as the small ordinary step it visually is
+		# (CAUSEWAY-HUB-0906). A shallow skirt below the rim gives that edge
+		# real thickness to climb, without reaching deep enough to cross a
+		# road passing well below the crown the way the old full-depth hull did.
+		#
+		# Kept at, not above, the player controller's own ~0.35 m step-up
+		# allowance (`STEP_HEIGHT` in player_controller.gd). A taller skirt
+		# (an earlier version used 2 m) stops being a helpful "real thickness"
+		# and becomes an unclimbable wall of its own wherever the approaching
+		# ground is still legitimately below the crown by more than a step --
+		# e.g. a road still finishing its climb right up to a landing pad,
+		# which a fixed-radius flat disc can reach into no matter how the
+		# taper toward it is tuned. A short skirt cannot fully hide a paper
+		# edge either, but the residual is a step, not a wall.
+		_emit_mesa_skirt(collision_tool, sides, top_ring, 0.3)
+		collision_tool.commit(collision_mesh)
 		var body := StaticBody3D.new()
 		body.name = "Collision"
 		var shape_node := CollisionShape3D.new()
-		if eroded_crown:
-			shape_node.shape = mesh.create_trimesh_shape()
-		else:
-			var shape := ConvexPolygonShape3D.new()
-			shape.points = points
-			shape_node.shape = shape
+		shape_node.shape = collision_mesh.create_trimesh_shape()
 		body.add_child(shape_node)
 		root.add_child(body)
 	return root
+
+
+## A shallow vertical rim just below the crown's outer edge, giving the
+## otherwise paper-thin top surface real thickness to climb where a lower
+## approach meets it -- collision-only, the visible wall is unchanged.
+func _emit_mesa_skirt(tool: SurfaceTool, sides: int, top_ring: Array[Vector3], depth: float) -> void:
+	for i in sides:
+		var next := (i + 1) % sides
+		var top_a: Vector3 = top_ring[i] + Vector3.UP * 0.03
+		var top_b: Vector3 = top_ring[next] + Vector3.UP * 0.03
+		var bottom_a := top_a - Vector3.UP * depth
+		var bottom_b := top_b - Vector3.UP * depth
+		_add_surface_triangle(tool, top_a, bottom_a, top_b)
+		_add_surface_triangle(tool, top_b, bottom_a, bottom_b)
+
+
+## The mesa's crown surface: a flat/eroded/rugged fan from `crown` across
+## `top_ring` (and, for the eroded-crown profile, through `core_ring` as an
+## intermediate contour). Shared by the visible top mesh and its collision
+## copy so the two can never drift apart.
+func _emit_mesa_top(tool: SurfaceTool, sides: int, eroded_crown: bool, crown: Vector3,
+		core_ring: Array[Vector3], top_ring: Array[Vector3]) -> void:
+	for i in sides:
+		var next := (i + 1) % sides
+		if eroded_crown:
+			_add_surface_triangle(tool, crown, core_ring[next] + Vector3.UP * 0.03, core_ring[i] + Vector3.UP * 0.03)
+			_add_surface_triangle(tool, core_ring[i] + Vector3.UP * 0.03, core_ring[next] + Vector3.UP * 0.03, top_ring[i] + Vector3.UP * 0.03)
+			_add_surface_triangle(tool, top_ring[i] + Vector3.UP * 0.03, core_ring[next] + Vector3.UP * 0.03, top_ring[next] + Vector3.UP * 0.03)
+		else:
+			_add_surface_triangle(tool, crown, top_ring[next] + Vector3.UP * 0.03,
+				top_ring[i] + Vector3.UP * 0.03)
+
+
+## A flat pad/landmark crown: an apex fan to the innermost (cap) ring, then
+## quad strips ring to ring out to `top_ring` (the rim). Shared by the visible
+## top mesh and its collision copy (R1). Every ring vertex already carries its
+## `_crown_height_at` height (R2), so the strips reproduce a road's slope
+## piecewise-linearly across the disc instead of stepping at the rim.
+func _emit_flat_crown(tool: SurfaceTool, sides: int, crown: Vector3, rings: Array,
+		top_ring: Array[Vector3]) -> void:
+	var lift := Vector3.UP * 0.03
+	var chain: Array = rings.duplicate()
+	chain.append(top_ring)
+	var inner: Array = chain[0]
+	for i in sides:
+		var next := (i + 1) % sides
+		_add_surface_triangle(tool, crown, inner[next] + lift, inner[i] + lift)
+	for ring_index in chain.size() - 1:
+		var a_ring: Array = chain[ring_index]
+		var b_ring: Array = chain[ring_index + 1]
+		for i in sides:
+			var next := (i + 1) % sides
+			_add_surface_triangle(tool, a_ring[i] + lift, a_ring[next] + lift, b_ring[i] + lift)
+			_add_surface_triangle(tool, b_ring[i] + lift, a_ring[next] + lift, b_ring[next] + lift)
 
 
 func _overlaps_battle_yard(at: Vector3, size: Vector3) -> bool:
@@ -2563,6 +3389,7 @@ func _build_crown_outcrops(parent: Node3D, size: Vector3, seed_value: int) -> vo
 		var width:=clampf(size.x*(0.27+0.05*(i%2)),9.0,39.0)
 		var height:=width*(0.7+0.23*(i%3))
 		var rock:=NATURE_ROCKS[posmod(seed_value+i,3)].instantiate() as Node3D
+		apply_stone_palette(rock)
 		var bounds: AABB=BUILDING_PREFABS.new().combined_aabb(rock)
 		rock.scale=Vector3(width,height,width*0.82)/bounds.size
 		rock.rotation.y=angle
@@ -2571,6 +3398,26 @@ func _build_crown_outcrops(parent: Node3D, size: Vector3, seed_value: int) -> vo
 		for mesh: MeshInstance3D in rock.find_children("*","MeshInstance3D",true,false):
 			mesh.material_override=_materials["cliff"]
 		_set_geometry_visibility(rock,1500.0)
+
+
+var _crag_kit_cache: Array = []
+var _crag_kit_loaded := false
+
+## CLIFF-ART-0906. The optional modular cliff kit for the embedded outcrops,
+## from `visual.geology.crag_kit` (an array of res:// scene paths). Empty
+## means the shipped Quaternius boulders.
+func _crag_kit() -> Array:
+	if _crag_kit_loaded:
+		return _crag_kit_cache
+	_crag_kit_loaded = true
+	var geo_cfg: Dictionary = _visual_config.get("geology", {})
+	for raw in (geo_cfg.get("crag_kit", []) as Array):
+		var scene := load(str(raw)) as PackedScene
+		if scene != null:
+			_crag_kit_cache.append(scene)
+		else:
+			push_warning("cloudreach geology.crag_kit: cannot load %s" % str(raw))
+	return _crag_kit_cache
 
 
 func _build_embedded_rock_shelves(parent: Node3D, size: Vector3, seed_value: int,
@@ -2587,7 +3434,22 @@ func _build_embedded_rock_shelves(parent: Node3D, size: Vector3, seed_value: int
 			22.0 if monumental else 14.0,78.0 if monumental else 52.0)
 		width*=0.82+0.18*sin(float(i)*2.17+seed_value)
 		var height := width * (0.35 + float(i % 2) * 0.14)
-		var rock := NATURE_ROCKS[posmod(i + seed_value, NATURE_ROCKS.size())].instantiate() as Node3D
+		# CLIFF-ART-0906 option C: `visual.geology.crag_kit` names a list of
+		# modular cliff meshes (Kenney Nature Kit `cliff_*`, CC0) to stand in
+		# for the Quaternius boulders as the embedded outcrops -- stepped,
+		# faceted ledge blocks instead of rounded stones. They wear the same
+		# geology shader as the mass, so the palette is one decision.
+		var kit := _crag_kit()
+		var rock: Node3D
+		if kit.is_empty():
+			rock = NATURE_ROCKS[posmod(i + seed_value, NATURE_ROCKS.size())].instantiate() as Node3D
+			apply_stone_palette(rock)
+		else:
+			rock = (kit[posmod(i + seed_value, kit.size())] as PackedScene).instantiate() as Node3D
+			# Kenney blocks are unit cubes with the face on +z; a 0..1 box
+			# scaled to width/height reads as a cut ledge, so let them be a
+			# little squarer than a boulder.
+			height = width * (0.42 + float(i % 2) * 0.16)
 		var bounds_tool := BUILDING_PREFABS.new()
 		var bounds: AABB = bounds_tool.combined_aabb(rock)
 		rock.scale = Vector3(width, height, width * 0.70) / bounds.size

@@ -342,6 +342,45 @@ func _set_menu_deaf(held: bool) -> void:
 ## use. Godot's built-in ui_* actions carry the d-pad, the left stick and the
 ## arrow keys at once, which is exactly the set a menu wants.
 
+## OP-0905-01 (owner playtest 2026-09-05: "Inputs and keyboard are not working
+## well again at the beginning"). Naming is the player's very first text entry,
+## and `_last_input_was_gamepad` (`game_state.gd`) SEEDS true whenever a
+## joypad is connected (`not Input.get_connected_joypads().is_empty()`) — true
+## on the owner's own hardware even when they are playing with a keyboard.
+## `_physics_process` below only RE-POLLS that flag once a frame, which is one
+## frame too late for the keystroke that caused the flip: Godot delivers a
+## single InputEvent through `_input()` on every node first, THEN to whichever
+## Control currently has GUI focus, both before this node's next
+## `_physics_process` ever runs. With `_field` still hidden and unfocused
+## (still in gamepad mode) at the moment that first real key arrives, GUI
+## dispatch has nowhere to send it — the character is dropped, not merely
+## delayed, and the player's first keystroke into their own game vanishes.
+## Reacting HERE, in `_input()`, flips `_field` visible and focused before
+## THIS SAME event reaches the GUI dispatch phase that follows `_input()` for
+## every node — so the very keystroke that proves "a physical keyboard is
+## live" is also the first one `_field` actually receives. Checked against the
+## raw event type rather than `INPUT_GLYPH.using_gamepad()` (which reads
+## `Game.last_input_was_gamepad()`, itself only updated by `Game`'s OWN
+## `_input()` — a real update, but this file has no ordering guarantee against
+## another autoload's callback, and does not need one: the classification
+## below is the exact one `game_state.gd::_input()` already uses).
+func _event_says_keyboard_or_mouse(event: InputEvent) -> bool:
+	return event is InputEventKey or event is InputEventMouseButton or event is InputEventMouseMotion
+
+
+func _input(event: InputEvent) -> void:
+	if not _open or not _using_gamepad:
+		return
+	if _guard > 0 or _mode_guard > 0:
+		return
+	if not _event_says_keyboard_or_mouse(event):
+		return
+	_using_gamepad = false
+	_apply_mode()
+	_draw()
+	_mode_guard = OPEN_GUARD_FRAMES
+
+
 func _physics_process(delta: float) -> void:
 	if not _open:
 		return

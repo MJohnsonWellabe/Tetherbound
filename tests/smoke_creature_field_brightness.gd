@@ -17,6 +17,7 @@ extends SceneTree
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const CREATURE_SCENE := "res://scenes/creatures/creature.tscn"
 const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
+const VISUAL := preload("res://scripts/creatures/creature_visual.gd")
 
 const SETTLE_FRAMES := 120
 
@@ -36,6 +37,7 @@ func _run() -> void:
 
 	await _rescale_moves_a_live_material()
 	_degreen_gap_is_independent_of_strength()
+	await _ceiling_never_exceeded_and_hue_survives()
 
 	_report()
 
@@ -98,6 +100,60 @@ func _degreen_gap_is_independent_of_strength() -> void:
 			"(0.9 -> gap %.4f, 2.5 -> gap %.4f)") % [low, high])
 	if absf(low - (0.75 * CREATURE_BODY.FIELD_DEGREEN_GAP)) > 0.0001:
 		_fail("gap must equal degreen * FIELD_DEGREEN_GAP exactly, got %.4f" % low)
+
+
+## OP-0905-03 (docs/owner/OWNER_PLAYTEST_2026-09-05.md, "Bramblebun colour is
+## awful"). Mechanical coverage for `_soft_knee_bright()`'s two obligations
+## this lane's own header comment on `FIELD_BRIGHT_KNEE` names: the tint must
+## never cross `field_bright_ceiling` no matter how high `field_emission` is
+## pushed (the raw-multiply defect that blew Bramblebun's coat out toward
+## white), and Mudsnout's own hue (no `field_degreen`, so a plain uniform
+## push) must come out EXACTLY unchanged -- a per-channel curve applied
+## unevenly, or a bug in the ceiling maths, would show up here as a hue that
+## moved even though nothing asked it to.
+func _ceiling_never_exceeded_and_hue_survives() -> void:
+	CREATURE_BODY.set_field_brightness_scale(1.0)
+	var ceiling: float = VISUAL.field_bright_ceiling()
+
+	var bramble: Node3D = (load(CREATURE_SCENE) as PackedScene).instantiate() as Node3D
+	bramble.set_script(CREATURE_BODY)
+	bramble.set("species_id", "bramblebun")
+	_world.add_child(bramble)
+	for i in 30:
+		await physics_frame
+	var bramble_material := _first_field_bright_material(bramble)
+	if bramble_material == null:
+		_fail("bramblebun spawned no _field_bright surface material for the ceiling check")
+	else:
+		var tint: Color = bramble_material.albedo_color
+		var max_channel := maxf(tint.r, maxf(tint.g, tint.b))
+		if max_channel > ceiling + 0.0005:
+			_fail("bramblebun field-bright tint max channel %.4f exceeds field_bright_ceiling %.4f" %
+				[max_channel, ceiling])
+	bramble.queue_free()
+
+	var mud: Node3D = (load(CREATURE_SCENE) as PackedScene).instantiate() as Node3D
+	mud.set_script(CREATURE_BODY)
+	mud.set("species_id", "mudsnout")
+	_world.add_child(mud)
+	for i in 30:
+		await physics_frame
+	var mud_material := _first_field_bright_material(mud)
+	if mud_material == null:
+		_fail("mudsnout spawned no _field_bright surface material for the hue check")
+	else:
+		var tint: Color = mud_material.albedo_color
+		var max_channel := maxf(tint.r, maxf(tint.g, tint.b))
+		if max_channel > ceiling + 0.0005:
+			_fail("mudsnout field-bright tint max channel %.4f exceeds field_bright_ceiling %.4f" %
+				[max_channel, ceiling])
+		# No `field_degreen` on this species, so R, G and B must all carry the
+		# exact same curve-mapped value -- any per-channel drift here means
+		# the ceiling maths is treating a channel unevenly.
+		if not (is_equal_approx(tint.r, tint.g) and is_equal_approx(tint.g, tint.b)):
+			_fail("mudsnout carries no field_degreen, so its field-bright tint must be perfectly " +
+				"neutral (equal R/G/B) -- got %s" % tint)
+	mud.queue_free()
 
 
 func _computed_gap(strength: float, degreen: float) -> float:
