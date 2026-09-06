@@ -127,11 +127,20 @@ func _ready() -> void:
 	net_position = global_position
 	_render_position = global_position
 	_has_render = true
-	_apply_nameplate()
+	# Ownership FIRST. `_owned_here` starts as `null` to mean "not yet asked",
+	# and `bool(null)` is not a falsy read in Godot 4.7 -- it is
+	# `Invalid call. Nonexistent 'bool' constructor.`, a script error printed on
+	# every single trainer spawn. Nameplating before asking who owns the body
+	# hit exactly that, harmlessly (the very next line re-applied it with a real
+	# bool) but noisily. `_apply_ownership()` calls `_apply_nameplate()` itself,
+	# so this ordering does strictly less work as well as being correct.
+	#
+	# Found by lane 5.B on the untouched base and left alone there rather than
+	# drive-by-edited during a five-lane wave; fixed here at integration.
 	_apply_ownership()
 	print("[trainers] %s stands up: authority %d, this peer is %d (%s)"
 		% [name, get_multiplayer_authority(), multiplayer.get_unique_id(),
-			"our own proxy" if bool(_owned_here) else "another player"])
+			"our own proxy" if _owned_here == true else "another player"])
 
 
 ## Apply everything that depends on WHOSE body this is. Idempotent, and called
@@ -168,7 +177,9 @@ func _apply_nameplate() -> void:
 	if shown.is_empty():
 		shown = "Trainer %d" % peer_id if peer_id != 0 else "Trainer"
 	plate.text = shown
-	plate.visible = not bool(_owned_here)
+	# `== true` rather than `bool()`: this can be reached before ownership has
+	# been asked, and `bool(null)` is a script error rather than a false.
+	plate.visible = not (_owned_here == true)
 
 
 ## Late name arrival: `trainer_spawn.gd` calls this when the registry finally
