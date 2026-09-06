@@ -115,7 +115,10 @@ func _run() -> void:
 	var deck_probe := origin+Vector3(8,0,0)
 	var hit := world.get_world_3d().direct_space_state.intersect_ray(PhysicsRayQueryParameters3D.create(deck_probe+Vector3.UP*2,deck_probe-Vector3.UP*3))
 	check(not hit.is_empty() and absf(hit.position.y-origin.y-0.15)<0.05,"real summit deck collision")
-	check(world.find_children("RelayHousingCollision","StaticBody3D",true,false).size()==3,"every relay housing has actor/camera collision")
+	# The crown relay is deliberately non-colliding (it straddles the arena's
+	# only authored approach -- see cloudreach_summit_presentation.gd and
+	# smoke_cloudreach_post_relay_exit.gd); only the two side housings collide.
+	check(world.find_children("RelayHousingCollision","StaticBody3D",true,false).size()==2,"every side relay housing has actor/camera collision")
 	# Explicit saved-state precondition fixture for the final encounter; the
 	# Act I and ordered Fly paths have separate real-input production smokes.
 	for flag in ["realm_key_cloudreach","cloudreach_chapter_started","cloudreach_crisis_learned","cloudreach_lower_anchors_investigated","causeway_survivors_reconnected","windscar_aerie_prepared","cloudreach_act_i_complete","fly_traversal_unlocked","sky_shrine_reached","storm_anchor_engine_truth_learned","cloudreach_upper_route_unlocked","cloudreach_act_ii_complete","cloudreach_upper_anchors_disabled","summit_extraction_engine_reached"]:

@@ -10,6 +10,33 @@ extends "res://scripts/world/gated_crossing.gd"
 ## Beating Oskar yields the South Bridge Key (`SC13`).
 
 const TETHER_SIGIL := preload("res://scripts/world/tether_sigil.gd")
+const TRAINER_NPCS := preload("res://scripts/world/trainer_npc.gd")
+
+## OP-0905-13, owner playtest 2026-09-05: "At the bridge you can't open it and
+## it doesn't tell you to go challenge the guy. When you try the bridge it
+## should make you challenge him. He should walk up and start talking to
+## you." A locked try used to answer with nothing but the gate's own jar
+## (`gated_crossing.gd`'s documented "never explains itself" rule) — correct
+## for a crossing whose keeper is scenery, wrong for one whose keeper is a
+## person standing 9.6m away who has never had a reason to notice the player
+## touched his gate. `_on_locked()` below is `gated_crossing.gd`'s one hook
+## for this: the base jar still plays (kept, for the tactile feedback while
+## he crosses the deck), and this crossing additionally sends its own
+## trainer — read from the SAME table `trainer_npc.gd` places him from,
+## never a second copy of his team or his conversation id — walking over to
+## do exactly what the owner asked: challenge, in person.
+const GRUNT_ID := "south_bridge_grunt"
+## Metres short of the player he stops — a person you can talk to, not one
+## standing on your feet.
+const GRUNT_APPROACH_STOP := 2.2
+## m/s. Owner range 2.0-2.5; unremarkable walking pace, not a sprint to a
+## fight nobody asked to be rushed into.
+const GRUNT_APPROACH_SPEED := 2.2
+## Metres from the crossing's own centre `_try_auto_open()` will consider
+## "close enough" to open the gate the instant the grunt is beaten and the
+## key is already in the satchel — so a player who wins the fight standing
+## right beside the gate does not have to back off and re-interact with it.
+const AUTO_OPEN_RANGE := 12.0
 
 ## GATE-1-HELD (G3-BAND1-FINISH-0904). The played-route blind judge
 ## (`ralph/reports/GATE2-EVIDENCE-0903/JUDGE.md` §3, §8.1 item 2), standing on
@@ -96,6 +123,22 @@ const HERO_GATE_MODEL := "res://assets/environment/team_tether/south_bridge_gate
 const HERO_GATE_HEIGHT := POST_H + LINTEL_H
 var _hero_gate: Node3D = null
 
+## The world this crossing was built in, kept for the guardian challenge and
+## the auto-open poll below — both need to reach the "Trainers" and "Player"
+## siblings `playground_world.gd` stands up beside this crossing, and neither
+## is reachable from `_gate`/`_mesh` alone. Set once, in `_build_extras()`,
+## which already receives the same `world` `build()` was called with.
+var _world: Node3D = null
+## True from the moment the guardian starts walking until he actually arrives
+## (or the walk is cancelled) — guards a second `_on_tried()` mid-walk from
+## starting a second tween on top of the first.
+var _grunt_challenge_pending := false
+## CL-W5(a)'s own pattern: `Game.progression.revision` only bumps when a flag
+## genuinely changes, so `_process()` below can poll it for free on every
+## frame the fight has not just ended and do real work only on the one it has.
+var _progression_revision := -1
+var _progression_cache: RefCounted = null
+
 
 func _init() -> void:
 	super("south_bridge", "south_bridge_key", "south_bridge_open")
@@ -106,6 +149,7 @@ func _init() -> void:
 ## `GateLeaf`, already positioned and rotated by the time `build()` reaches
 ## this call.
 func _build_extras(world: Node3D, prefabs: RefCounted, _deck_ground: float) -> void:
+	_world = world
 	if _mesh == null:
 		return
 	_build_checkpoint_gatehouse(prefabs)
@@ -120,6 +164,161 @@ func _on_unlocked() -> void:
 	if _hero_gate != null and is_instance_valid(_hero_gate):
 		_hero_gate.queue_free()
 	_hero_gate = null
+	# Whatever path opened the gate (the ordinary try_open, or the auto-open
+	# poll below firing while he was still mid-walk) — the gate being open is
+	# the answer, and a guardian still crossing the deck toward a fight that
+	# is no longer the point stops exactly where he is rather than finishing
+	# the trip. See `npc_body.gd::cancel_walk()`'s own header.
+	_cancel_guardian_challenge()
+
+
+## OP-0905-13. The locked answer for THIS crossing: the jar plays (unchanged,
+## `_on_locked()` in `gated_crossing.gd` runs it before this), and — the whole
+## point of the owner directive — the crossing's own keeper, if he is still
+## standing and unbeaten, walks over and does the challenging himself rather
+## than leaving the player to read a mute gate and a distant NPC as unrelated.
+##
+## Nothing here invents his team, his conversation, or his defeat flag: every
+## one of those still comes from `data/config/bands/band1_lower_meadows/
+## trainers.json`'s own `south_bridge_grunt` row, read through the exact
+## static table `trainer_npc.gd` places him from. What this adds is the
+## motion and the trigger — the SAME `_on_challenged()` a walk-up to his own
+## 4.2m prompt would have called, so "too low a level", "no usable ally" and
+## the ordinary challenge all still say whatever they already say; nothing
+## about a trainer's dialogue logic forks in two for this one gate.
+func _on_locked() -> void:
+	_jar()
+	_challenge_the_guardian()
+
+
+func _challenge_the_guardian() -> void:
+	if _grunt_challenge_pending:
+		return
+	var spec := TRAINER_NPCS.trainer(GRUNT_ID)
+	if spec.is_empty():
+		push_warning("south_bridge_grunt missing from trainers.json; the gate has nobody to challenge")
+		return
+	if TRAINER_NPCS.already_beaten(spec, _progression()):
+		# Beaten, but the player still lacks the key (dropped, or never
+		# picked up) — the base jar above is the whole answer; nobody has
+		# anything left to say that `south_bridge_grunt_beaten` didn't
+		# already say the day he lost.
+		return
+	var panel := get_tree().get_first_node_in_group("dialogue_panel")
+	if panel != null and bool(panel.call("is_open")):
+		# Something else already owns the screen (unlikely — this gate's own
+		# prompt cannot fire while a panel is open, `interaction_arbiter.gd`
+		# sees to that — but a defensive no-op costs nothing here).
+		return
+	var trainers := _trainers_placer()
+	var grunt: Node3D = trainers.call("body_for", GRUNT_ID) if trainers != null else null
+	if grunt == null or not is_instance_valid(grunt):
+		return
+	var player := _player_node()
+	if player == null:
+		return
+
+	_grunt_challenge_pending = true
+	var here: Vector3 = grunt.global_position
+	var flat: Vector3 = player.global_position - here
+	flat.y = 0.0
+	var target := here
+	if flat.length() > GRUNT_APPROACH_STOP:
+		target = player.global_position - flat.normalized() * GRUNT_APPROACH_STOP
+		target.y = here.y
+	grunt.call("walk_to", target, GRUNT_APPROACH_SPEED,
+		Callable(self, "_on_guardian_arrived").bind(spec, grunt))
+
+
+## He has crossed the deck and stopped in front of the player. Face them —
+## `npc_body.gd`'s own head-turn `_process()` would get here on its own given
+## time, but the walk is over now and there is no reason to make the player
+## wait an extra beat for it to catch up — then open exactly the conversation
+## a walk-up to his own prompt would have, through the same
+## `trainer_npc.gd::_on_challenged()` this crossing never duplicates.
+func _on_guardian_arrived(spec: Dictionary, grunt: Node3D) -> void:
+	_grunt_challenge_pending = false
+	if grunt == null or not is_instance_valid(grunt):
+		return
+	var player := _player_node()
+	if player != null:
+		var flat: Vector3 = player.global_position - grunt.global_position
+		flat.y = 0.0
+		if flat.length() > 0.05:
+			grunt.rotation.y = atan2(flat.x, flat.z)
+	var trainers := _trainers_placer()
+	if trainers == null:
+		push_error("no Trainers node; the South Bridge guardian walked over with nothing to say")
+		return
+	trainers.call("_on_challenged", spec)
+
+
+## Stops the guardian's walk exactly where he stands, for `_on_unlocked()`.
+func _cancel_guardian_challenge() -> void:
+	_grunt_challenge_pending = false
+	var trainers := _trainers_placer()
+	var grunt: Node3D = trainers.call("body_for", GRUNT_ID) if trainers != null else null
+	if grunt != null and is_instance_valid(grunt) and grunt.has_method("cancel_walk"):
+		grunt.call("cancel_walk")
+
+
+## `playground_world.gd` builds "Trainers" as a sibling of this crossing
+## (both direct children of the world), the same shape `trainer_npc.gd::
+## _director()` already reaches "EncounterDirector" through.
+func _trainers_placer() -> Node:
+	if _world == null:
+		return null
+	return _world.get_node_or_null(^"Trainers")
+
+
+func _player_node() -> Node3D:
+	if _world == null:
+		return null
+	return _world.get_node_or_null(^"Player") as Node3D
+
+
+func _progression() -> RefCounted:
+	var game := get_node_or_null(^"/root/Game")
+	return game.get("progression") if game != null else null
+
+
+## OP-0905-13's own "consider... auto-opening": a player who wins the fight
+## should not have to back off the gate and press the interact button a
+## second time to walk through it. Polled the same cheap way `trainer_npc.gd`
+## relabels prompts — once per frame the whole game's `progression.revision`
+## counter has actually moved, never a per-frame flag scan — so this costs
+## nothing on the overwhelming majority of frames it runs on.
+func _process(_delta: float) -> void:
+	if _open:
+		return
+	if _progression_cache == null:
+		_progression_cache = _progression()
+		if _progression_cache == null:
+			return
+	var revision := int(_progression_cache.get("revision"))
+	if revision == _progression_revision:
+		return
+	_progression_revision = revision
+	_try_auto_open()
+
+
+func _try_auto_open() -> void:
+	if _open:
+		return
+	if not bool(_progression_cache.call("has", "defeated_south_bridge_grunt")):
+		return
+	var game := get_node_or_null(^"/root/Game")
+	var inventory: RefCounted = game.get("inventory") if game != null else null
+	if inventory == null:
+		return
+	var player := _player_node()
+	if player == null or global_position.distance_to(player.global_position) > AUTO_OPEN_RANGE:
+		return
+	# `_gate.try_open()` is the SAME key-consuming call `_on_tried()` makes —
+	# this never invents a second way to spend `south_bridge_key`, it only
+	# calls the existing one without waiting for another interact press.
+	if _gate.try_open(inventory, _progression_cache):
+		_unlock()
 
 
 ## The archway stands ARCH_X_OFFSET further toward the village than the gate

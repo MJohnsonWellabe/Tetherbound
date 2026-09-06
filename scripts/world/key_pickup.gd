@@ -11,7 +11,9 @@ const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 ## OP-0830-3: the one shared pickup highlight. See scripts/world/pickup_glow.gd.
 const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
 ## D103 / Stage B lane 3.B. See `_on_picked_up()`: this key is claimed through
-## the world ledger now, not written here.
+## the world ledger now, not written here. OP-0905-18's catalyst-discoverability
+## announcement moved with the grant to `ledger_rpc.gd::_apply_player_ops()`,
+## which is peer-scoped -- see `item_cache_pickup.gd`'s identical note.
 const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
 
 const FLAG_PREFIX := "pickup:"

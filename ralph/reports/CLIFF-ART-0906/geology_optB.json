@@ -1,0 +1,18 @@
+{
+ "_comment": "CLIFF-ART-0906 option B: option A's palette on Poly Haven's CC0 mossy_rock 1k (albedo + GL normal) instead of ambientCG Rock030.",
+ "stone_light": "#9a9c90",
+ "stone_dark": "#4a4f47",
+ "strata_ochre_tint": "#5d6a5a",
+ "strata_ochre_strength": 0.18,
+ "strata_strength": 0.05,
+ "strata_period_m": 9.0,
+ "ledge_moss_tint": "#4c6b36",
+ "ledge_moss_strength": 0.62,
+ "ledge_lighten": 0.1,
+ "ledge_normal_threshold": 0.55,
+ "crevice_strength": 0.45,
+ "crevice_scale": 0.09,
+ "texture_scale": 0.045,
+ "albedo": "res://assets/environment/terrain/candidates/mossy_rock_diff_1k.jpg",
+ "normal": "res://assets/environment/terrain/candidates/mossy_rock_nor_gl_1k.jpg"
+}

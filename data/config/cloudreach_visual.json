@@ -85,12 +85,13 @@
     "max_depth_m": 460.0,
     "route_shoulder_min_half_width_m": 18.0,
     "route_shoulder_path_multiplier": 2.9,
-    "route_station_spacing_m": 32.0,
+    "route_station_spacing_m": 16.0,
     "route_cliff_depth_min_m": 36.0,
     "route_cliff_depth_max_m": 92.0,
     "path_collision_width_m": 7.0,
     "path_visible_width_m": 4.2,
-    "landing_size_m": 16.0
+    "landing_size_m": 16.0,
+    "landing_flat_fraction": 0.82
   },
   "ground_cover": {
     "grass_density_per_m2": 4.8,

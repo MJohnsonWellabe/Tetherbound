@@ -41,11 +41,28 @@ extends RefCounted
 ##   bond_near      task, task_name, remaining, target
 ##   bond_milestone node, task, task_name, benefit, tier, total
 ##   reward_summary receipt (a team-wide victory receipt)
+##   evolution_eligible target (the species this creature is about to become)
+##   catalyst_found     item_id, text (a discoverability note, creature-less)
 ## Every event also carries `kind`, `seq`, `creature_id` (the instance id),
 ## `name` (the creature's label) and `species_id`.
+##
+## OP-0905-18 (docs/owner/OWNER_PLAYTEST_2026-09-05.md): "When and how does
+## the pig evolve?" -- the rule (evolution.gd) was always real, but nothing
+## ever told the player it existed. `evolution_eligible` and `catalyst_found`
+## exist ONLY to fix that discoverability gap; neither changes eligibility --
+## `evolution.gd::check()`/`evolve()` remain the one source of truth for
+## whether a creature actually can evolve. `evolution_eligible` fires once
+## per creature, the moment `check()` first reports `eligible: true` --
+## checked here, in the one place `level_up` and `bond_credit` already both
+## pass through, rather than as a new hook in combat_manager.gd or
+## bond_milestones.gd (a level crossing the gate and a bond tier crossing it
+## are the two ways eligibility changes; both already call `push()`).
+## `catalyst_found` fires once, the moment a pickup script hands a known
+## evolution item to `announce_catalyst_pickup()` -- see that function.
 
 const CONFIG_PATH := "res://data/config/progression_feedback.json"
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const EVOLUTION := preload("res://scripts/creatures/evolution.gd")
 
 ## Config, not state: one immutable read of a data file, identical for every
 ## player in the process. The seam's own exemption -- "the pure helpers may stay
@@ -57,6 +74,10 @@ var _events: Array = []
 var _seq: int = 0
 var _revision: int = 0
 var _epoch: int = 0
+## OP-0905-18. Per-player: two players must each get their own one-time
+## discoverability announcement for a creature they own, so this lives beside
+## the rest of the per-instance log rather than as a shared static.
+var _evolution_announced: Dictionary = {}
 
 ## The local player's feed, HANDED OVER by `Game._ensure_containers()` rather
 ## than looked up. There is exactly one local player per process (the execution
@@ -156,6 +177,9 @@ func push_event(kind: String, creature: RefCounted, payload: Dictionary = {}) ->
 		var party: RefCounted = owner.get("party")
 		if party != null:
 			party.set("revision", int(party.get("revision")) + 1)
+	if (kind == "level_up" or kind == "bond_credit") and creature != null:
+		var inventory: RefCounted = owner.get("inventory") if owner != null else null
+		eligibility_event(creature, PROGRESSION.config(), inventory)
 	return event.duplicate(true)
 
 
@@ -229,6 +253,90 @@ func all_events() -> Array:
 	return _events.duplicate(true)
 
 
+# --- OP-0905-18: evolution discoverability -----------------------------------
+
+## `evolution.gd::check()` for `creature`, and -- the FIRST time it comes back
+## eligible -- one `evolution_eligible` push. A no-op (returns {}) for every
+## later call on the same creature, so a creature that stays eligible for
+## hours of play (the player has not opened Team yet) is announced once, not
+## every level or bond tick after. Public and independent of `push()`'s own
+## `level_up`/`bond_credit` hook so a test (or a future caller with its own
+## reason to re-check) can drive it directly without faking an XP award.
+static func evolution_eligibility_event(
+	creature: RefCounted, cfg: Dictionary, inventory: RefCounted = null
+) -> Dictionary:
+	return active().eligibility_event(creature, cfg, inventory)
+
+
+## The instance form -- see `push`/`push_event` above for why the static
+## entry point stays. `_evolution_announced` is per-player (OP-0905-18): two
+## players must each get their own one-time announcement for a creature they
+## own, never a shared global that suppresses the second player's.
+func eligibility_event(
+	creature: RefCounted, cfg: Dictionary, inventory: RefCounted = null
+) -> Dictionary:
+	if creature == null:
+		return {}
+	var id := creature.get_instance_id()
+	if bool(_evolution_announced.get(id, false)):
+		return {}
+	var result: Dictionary = EVOLUTION.check(creature, cfg, inventory)
+	if not bool(result.get("eligible", false)):
+		return {}
+	_evolution_announced[id] = true
+	return push_event("evolution_eligible", creature, {"target": str(result.get("target", ""))})
+
+
+## The discoverability line for picking up `item_id`, or "" when it is not an
+## evolution catalyst any species' `progression.json` block or
+## `evolves_into_variants` branch names -- most items, always, on the shipped
+## roster's two exceptions (heartstone, sunstone). Reads the SAME
+## `evolution.gd::requirements()` the Team screen and the ceremony use, so the
+## level/bond numbers it quotes can never drift from the real gate.
+static func catalyst_pickup_text(item_id: String, cfg: Dictionary = {}) -> String:
+	if item_id == "":
+		return ""
+	var progression_cfg := cfg if not cfg.is_empty() else PROGRESSION.config()
+	var evolution: Dictionary = progression_cfg.get("evolution", {})
+	var template := str(config().get("catalyst_pickup_template", "%s: held against a creature that has grown enough (Lv %d, bond tier %d), it finishes what it was becoming. %s is one."))
+	for species_id: String in evolution.keys():
+		var req := EVOLUTION.requirements(species_id, progression_cfg)
+		if req.is_empty():
+			continue
+		var matches := str(req.get("item_id", "")) == item_id
+		if not matches:
+			matches = (req.get("branches", {}) as Dictionary).has(item_id)
+		if matches:
+			return template % [
+				item_id.capitalize(), int(req.get("level", 0)), int(req.get("bond_tier", 0)),
+				species_id.capitalize(),
+			]
+	return ""
+
+
+## Call from a pickup script's success path, right after the item lands in
+## the satchel (the same moment `key_pickup.gd`/`item_cache_pickup.gd`
+## already have the inventory in hand). Pushes the discoverability note once
+## for a real catalyst, then re-checks every owned creature's eligibility --
+## the item just picked up may be the one thing a Lv 15, bond-tier-3 creature
+## was still missing, and that creature should not have to wait for its next
+## level or bond tick to be told.
+static func announce_catalyst_pickup(item_id: String) -> void:
+	var cfg := PROGRESSION.config()
+	var text := catalyst_pickup_text(item_id, cfg)
+	if text != "":
+		push("catalyst_found", null, {"item_id": item_id, "text": text})
+	var owner := game()
+	if owner == null:
+		return
+	var party: RefCounted = owner.get("party")
+	if party == null:
+		return
+	var inventory: RefCounted = owner.get("inventory")
+	for member: Variant in (party.call("members") as Array):
+		evolution_eligibility_event(member as RefCounted, cfg, inventory)
+
+
 ## Take everything and empty the log. Bumps the revision so a presenter
 ## comparing revisions sees the drain as a change too.
 static func drain() -> Array:
@@ -257,6 +365,7 @@ func clear_events() -> void:
 	_seq = 0
 	_revision = 0
 	_epoch += 1
+	_evolution_announced.clear()
 
 
 # --- derived state presenters ask about ---------------------------------------
@@ -360,13 +469,22 @@ static func moment_text(event: Dictionary) -> Dictionary:
 			var title := "%s  ·  bond %d / %d" % [name, int(event.get("node", 0)), int(event.get("total", 5))]
 			var detail := "%s  ·  %s" % [str(event.get("task_name", "")), str(event.get("benefit", ""))]
 			return {"title": title, "detail": detail}
+		"evolution_eligible":
+			# OP-0905-18: the whole point is the player learns this WITHOUT
+			# having read `evolution.gd` or the Team tab's fine print first --
+			# name the exact verb (the Team tab's own "G  evolve" hint), not
+			# a vaguer "check on your team".
+			return {"title": "%s can evolve" % name, "detail": "Open Team, G evolve"}
+		"catalyst_found":
+			return {"title": "%s found" % str(event.get("item_id", "")).capitalize(), "detail": str(event.get("text", ""))}
 		_:
 			return {"title": "", "detail": ""}
 
 
 static func is_moment(event: Dictionary) -> bool:
 	var kind := str(event.get("kind", ""))
-	return kind == "level_up" or kind == "bond_milestone" or kind == "reward_summary"
+	return kind == "level_up" or kind == "bond_milestone" or kind == "reward_summary" \
+		or kind == "evolution_eligible" or kind == "catalyst_found"
 
 
 static func is_tick(event: Dictionary) -> bool:

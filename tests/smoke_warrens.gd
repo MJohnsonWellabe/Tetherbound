@@ -87,6 +87,8 @@ func _run() -> void:
 		", ".join(warrens.call("chamber_ids"))])
 
 	_the_population_and_the_guardian_are_placed(warrens)
+	_the_approach_is_not_crowded()
+	_the_vault_alpha_reads_as_an_alpha(world, warrens)
 	# Everything below is about GEOMETRY, and the residents are aggressive by
 	# design: left running they walk into the player, block a push with their
 	# own capsule, and eventually start a real fight that takes the camera.
@@ -94,6 +96,8 @@ func _run() -> void:
 	_quieten_the_residents(warrens)
 	await _the_cave_is_enclosed(world, player, warrens)
 	_no_daylight_leaks(world, warrens)
+	_the_bank_encloses_every_chamber(world, warrens)
+	_the_mouth_arch_is_open(world, warrens)
 	await _the_room_has_its_own_dark(player, warrens)
 	_the_room_dressing_is_clear_of_the_walk(warrens)
 	await _the_branch_is_shut_until_the_guardian_falls(player, warrens, progression)
@@ -393,6 +397,133 @@ func _the_population_and_the_guardian_are_placed(warrens: Node3D) -> void:
 		str(instance.get("move_charged")) if instance != null else "?"])
 
 
+## OP-0905-10, owner playtest 2026-09-05: "there's too many creatures too
+## close inside. There should be 2-3 right before the guardian then the
+## alpha." Read against the CONFIG rather than the live population, the same
+## reason `_the_population_and_the_guardian_are_placed` above asserts the
+## guardian's alpha dressing against `_warrens_config()`: retuning the
+## population stays a data edit and this test keeps checking the shape rather
+## than numbers copied into this file. Goes red on the pre-fix data (2 in the
+## hall, 2 in the warren, 1 more in the den beside the guardian -- 5 residents
+## before or beside the boss) and green on the fix (mouth 1 + hall 1 + the
+## optional warren branch's 1, den empty but for the guardian).
+func _the_approach_is_not_crowded() -> void:
+	var spawns: Array = _warrens_config().get("spawns", [])
+	var before_den := 0
+	var mandatory := 0
+	var den_residents := 0
+	for entry: Variant in spawns:
+		if not entry is Dictionary:
+			continue
+		var spec: Dictionary = entry as Dictionary
+		var chamber := str(spec.get("chamber", ""))
+		var count := int(spec.get("count", 1))
+		if chamber == "den":
+			den_residents += count
+		elif chamber == "mouth" or chamber == "hall" or chamber == "warren":
+			before_den += count
+			if chamber != "warren":
+				mandatory += count
+	print("residents before the guardian: %d (%d mandatory, warren branch optional); den residents besides the guardian: %d"
+		% [before_den, mandatory, den_residents])
+	if den_residents > 0:
+		_fail("OP-0905-10: the den still holds %d ordinary resident(s) sharing the room with the guardian; "
+			% den_residents + "the guardian is supposed to be the one thing standing in it")
+	if before_den > 3:
+		_fail("OP-0905-10: %d creatures stand between the mouth and the guardian (mouth + hall + the optional warren branch); "
+			% before_den + "the owner asked for 2-3")
+	if mandatory > 2:
+		_fail("OP-0905-10: %d creatures are MANDATORY before the guardian, ignoring the optional warren branch; "
+			% mandatory + "the owner asked for 2-3 total including the optional branch, not 2-3 on the main path alone")
+
+
+## OP-0905-11, owner playtest 2026-09-05: "My alpha looked the exact same as a
+## regular trail pup." Trailpup has no authored `_alpha.png` colourway
+## (checked: assets/creatures/tetherbound/trailpup/ carries no `*_alpha`
+## texture), so before this fix `set_alpha(true)` fell back all the way to the
+## `vivid` texture every ordinary trailpup already wears by default
+## (creature_body.gd::_refresh_shiny_tint()'s own alpha->vivid fallback) --
+## the guardian's alpha dressing (`_dress_the_guardian()`) was never wired to
+## anything but the guardian, so the vault's "Elder Trailpup" got a name and
+## nothing else. This asserts the fix rather than the mechanism so it goes red
+## on the old code: the `alpha` meta, the size the guardian's own check above
+## already asserts against config, and a MATERIAL that differs from a plain
+## trailpup's — the concrete, code-visible stand-in for "does not look
+## identical", since this harness has no way to render and compare pixels.
+func _the_vault_alpha_reads_as_an_alpha(world: Node, warrens: Node3D) -> void:
+	var alpha_body: Node3D = null
+	for body: Node3D in warrens.call("population"):
+		if is_instance_valid(body) and str(body.get("display_name")) == "Elder Trailpup":
+			alpha_body = body
+			break
+	if alpha_body == null:
+		_fail("OP-0905-11: no 'Elder Trailpup' body found in the vault; cannot check its alpha dressing")
+		return
+
+	if not alpha_body.has_meta("alpha"):
+		_fail("OP-0905-11: the vault's Elder Trailpup has no `alpha` meta; "
+			+ "encounter_director's own field alphas carry one and this dungeon's own guardian does too")
+
+	var alpha_spec: Dictionary = {}
+	for entry: Variant in _warrens_config().get("spawns", []):
+		if entry is Dictionary and str((entry as Dictionary).get("nickname", "")) == "Elder Trailpup":
+			alpha_spec = (entry as Dictionary).get("alpha", {}) as Dictionary
+			break
+	var want_scale := float(alpha_spec.get("scale", 1.0))
+	if want_scale > 1.0:
+		var look: Dictionary = SPECIES.placeholder(str(alpha_body.get("species_id")))
+		var want_height := float(look.get("height", 0.0)) * want_scale
+		if want_height > 0.0 and not is_equal_approx(float(alpha_body.call("body_height")), want_height):
+			_fail("OP-0905-11: the vault alpha's body height is %.2f m but its species at %.2fx is %.2f m; "
+				% [float(alpha_body.call("body_height")), want_scale, want_height]
+				+ "the silhouette scaled and the capsule/reach/catch-odds did not, or the scale was never applied")
+		else:
+			print("vault alpha stands %.2f m tall against a plain trailpup's %.2f m (%.2fx authored)" % [
+				float(alpha_body.call("body_height")), float(look.get("height", 0.0)), want_scale])
+
+	# A material difference from a plain trailpup of the same species, spawned
+	# fresh with no alpha dressing at all, standing on the alpha's own ground
+	# so `place_on_ground` has real floor under it.
+	var director := world.get_node_or_null(^"EncounterDirector")
+	if director == null:
+		_fail("no EncounterDirector on the world; cannot spawn a control trailpup to compare materials against")
+		return
+	var control: Node3D = director.call(
+		"spawn_wild", "trailpup", alpha_body.global_position, {"parent": warrens, "name": "ControlTrailpupOP0905_11"})
+	if control == null:
+		_fail("could not spawn a control trailpup to compare the vault alpha's material against")
+		return
+	var alpha_tinted := _has_tinted_material(alpha_body.get_node_or_null(^"Model"))
+	var control_tinted := _has_tinted_material(control.get_node_or_null(^"Model"))
+	control.queue_free()
+	if not alpha_tinted or control_tinted:
+		_fail(("OP-0905-11: the vault alpha's coat material does not read as different from a plain trailpup's " +
+			"(alpha tinted=%s, control tinted=%s); trailpup has no `_alpha` colourway, so set_alpha() alone falls " +
+			"back to the same 'vivid' texture an ordinary trailpup already wears") % [alpha_tinted, control_tinted])
+	else:
+		print("vault alpha's coat material is tinted; a freshly spawned plain trailpup's is not")
+
+
+## Recursively looks for a surface override material tagged by
+## `burrow_warrens.gd::_tint_node()` (`_alpha_coat_tint`) -- the concrete,
+## checkable trace of the coat-tint lever `_dress_alpha()` applies for a
+## species with no authored alpha colourway.
+func _has_tinted_material(node: Node) -> bool:
+	if node == null:
+		return false
+	if node is MeshInstance3D:
+		var instance := node as MeshInstance3D
+		var mesh: Mesh = instance.mesh
+		for surface in (mesh.get_surface_count() if mesh != null else 0):
+			var material := instance.get_active_material(surface)
+			if material != null and str(material.resource_name).ends_with("_alpha_coat_tint"):
+				return true
+	for child in node.get_children():
+		if _has_tinted_material(child):
+			return true
+	return false
+
+
 ## Freeze the residents where they stand — physics off, aggression off. NOT
 ## hidden and NOT freed: the warrens reads "the guardian is gone" partly from
 ## the body being invisible (that is the caught path), and hiding it here
@@ -659,6 +790,63 @@ func _no_daylight_leaks(world: Node, warrens: Node3D) -> void:
 	print("daylight leak check: %d rays, %d leaks" % [checked, leaks])
 
 
+## OP-0905-09. The old mound never claimed to enclose anything -- the cave's
+## own boxes did that job. The new earth bank claims to, chamber by chamber
+## (`burrow_warrens.gd::_build_bank()`'s own `_bank_chamber_bumps()`), so this
+## proves the claim from OUTSIDE the geometry rather than trusting the print
+## line: a ray straight up from every chamber's own marker must hit something
+## that belongs to the warrens (the bank, an earth cap, or a ceiling slab) --
+## never open sky -- before it travels a very generous 200m.
+func _the_bank_encloses_every_chamber(world: Node, warrens: Node3D) -> void:
+	var space := (world as Node3D).get_world_3d().direct_space_state
+	var exclude: Array[RID] = []
+	for body in world.find_children("*", "CharacterBody3D", true, false):
+		exclude.append((body as CharacterBody3D).get_rid())
+	var checked := 0
+	for id: String in warrens.call("chamber_ids"):
+		var at: Vector3 = warrens.call("marker", id)
+		var query := PhysicsRayQueryParameters3D.create(at, at + Vector3.UP * 200.0)
+		query.exclude = exclude
+		var hit := space.intersect_ray(query)
+		checked += 1
+		var collider: Node = hit.get("collider", null) as Node
+		if hit.is_empty() or collider == null or not warrens.is_ancestor_of(collider):
+			_fail("chamber '%s' is not enclosed: a ray straight up from its own marker reached open sky" % id)
+	print("bank enclosure check: %d chambers, all covered from directly above" % checked)
+
+
+## The mouth is a real cut, not a wall with a hole painted on it: a ray from
+## 12m in front of the mouth, at roughly eye height, aimed at the mouth
+## chamber's own floor marker must travel almost the whole distance before it
+## hits anything -- if the earth bank's own dug face or throat blocks it
+## early, the arch is not actually open.
+func _the_mouth_arch_is_open(world: Node, warrens: Node3D) -> void:
+	var space := (world as Node3D).get_world_3d().direct_space_state
+	var exclude: Array[RID] = []
+	for body in world.find_children("*", "CharacterBody3D", true, false):
+		exclude.append((body as CharacterBody3D).get_rid())
+	var mouth: Vector3 = warrens.call("marker", "mouth")
+	var approach: Vector3 = warrens.to_global(Vector3(0.0, 1.6, warrens.to_local(mouth).z - 12.0))
+	var ground := float(world.call("ground_height_at", approach.x, approach.z)) if world.has_method("ground_height_at") else NAN
+	var origin: Vector3 = approach if is_nan(ground) else Vector3(approach.x, ground + 1.6, approach.z)
+	var target := mouth + Vector3.UP * 1.0
+	var full := origin.distance_to(target)
+	var query := PhysicsRayQueryParameters3D.create(origin, target)
+	query.exclude = exclude
+	var hit := space.intersect_ray(query)
+	if hit.is_empty():
+		print("mouth arch check: clear line from %.1fm out straight to the mouth chamber" % full)
+		return
+	var collider: Node = hit.get("collider", null) as Node
+	var hit_distance := origin.distance_to(hit.get("position", origin))
+	if hit_distance < full - 2.0:
+		_fail("the mouth arch is blocked %.1fm short of the mouth chamber by %s" % [
+			full - hit_distance, "no collider" if collider == null else str(collider.get_path())])
+	else:
+		print("mouth arch check: reached %.1fm of %.1fm before hitting %s" % [
+			hit_distance, full, "nothing" if collider == null else str(collider.get_path())])
+
+
 func _has_layer(node: Node) -> bool:
 	return node is GeometryInstance3D and ((node as GeometryInstance3D).layers & INTERIOR_LAYER_BIT) != 0
 
@@ -703,6 +891,13 @@ func _the_room_has_its_own_dark(player: CharacterBody3D, warrens: Node3D) -> voi
 	var mound: Node = warrens.get_node_or_null(^"Mound")
 	if mound != null:
 		_geometry_under(mound, exterior_named)
+	# OP-0905-09: the mound was replaced by one earth-bank mesh plus its own
+	# mouth dressing -- same exterior-layer promise, new node names.
+	for holder_name: String in ["Bank", "BankMouth", "SiteSkirt", "WarrenHoles",
+			"BankRoots", "ClawScrapes", "CrestTrees", "AccentBoulders", "SpoilMounds", "MoundGrowth"]:
+		var bank_holder: Node = warrens.get_node_or_null(NodePath(holder_name))
+		if bank_holder != null:
+			_geometry_under(bank_holder, exterior_named)
 	for child in warrens.get_children():
 		if str(child.name).begins_with("ExteriorEarthSkin"):
 			_geometry_under(child, exterior_named)

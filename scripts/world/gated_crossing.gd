@@ -418,14 +418,14 @@ func _on_tried() -> void:
 	var game := get_node_or_null(^"/root/Game")
 	var inventory: RefCounted = game.get("inventory") if game != null else null
 	if inventory == null or not _gate.can_open(inventory):
-		_jar()
+		_on_locked()
 		return
 	var verdict := STORY_LEDGER.set_world_flag(self, flag_id)
 	if not bool(verdict.get("ok", false)) and not bool(verdict.get("pending", false)):
 		# The host said no, or there is no world to write to. The player keeps
 		# the key: a spend that bought nothing is the one failure a physical-key
 		# gate must never have (`item_gate.gd`'s own all-or-nothing rule).
-		_jar()
+		_on_locked()
 		return
 	_gate.spend(inventory)
 	if bool(verdict.get("ok", false)):
@@ -433,6 +433,16 @@ func _on_tried() -> void:
 	# A client's `pending` verdict opens nothing yet. `_on_delta_applied` does,
 	# the moment the host's committed delta lands -- which is also the path the
 	# OTHER player's leaf swings on.
+
+
+## Called when an interact attempt fails to open the gate. Base behaviour is
+## the plain jar this file's own header explains — no dialogue, no HUD line.
+## OP-0905-13. `south_bridge.gd` overrides this to answer a locked attempt
+## with its own gate's keeper walking up to challenge the player instead of a
+## silent leaf-rattle alone; every other crossing (`mill_crossing.gd`
+## included) keeps this base no-more-than-a-jar behaviour untouched.
+func _on_locked() -> void:
+	_jar()
 
 
 func _unlock() -> void:

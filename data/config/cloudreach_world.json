@@ -12,7 +12,12 @@
       "min_z": -500.0,
       "max_z": 6000.0
     },
-    "grounded_unlock_id": "cloudreach_upper_route_unlocked"
+    "grounded_unlock_id": "cloudreach_upper_route_unlocked",
+    "fall_recovery": {
+      "_comment": "OP-0905-22: below-the-world failsafe (scripts/world/fall_recovery.gd). The kill plane sits this far below the CloudSea mesh's own Y (cloudreach_world.gd::_build_cloud_sea, not re-derived from world_bounds.min_y so the two can never drift apart) -- far enough that a real fall reads as dropping through the cloud sea before recovery, close enough that recovery follows within about a second. bounds_margin_m pads world_bounds.min_x/max_x/min_z/max_z outward so the kill volume can never be narrower than the traversable realm.",
+      "below_cloud_sea_m": 50.0,
+      "bounds_margin_m": 400.0
+    }
   },
   "transition_points": {
     "meadows_entry": {

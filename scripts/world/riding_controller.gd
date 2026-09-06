@@ -296,6 +296,25 @@ func _riding_allowed() -> bool:
 	return true
 
 
+## The combat half of `_riding_allowed()`, split out for `dismount()`: was a
+## fight (wild or trainer) the reason this ride is ending? Deliberately NOT
+## the arbiter's `enabled` flag, which also covers a build ghost armed, a
+## fade, a conversation, the naming prompt and the starter picker -- every one
+## of those clears on its own a frame or two later, and the mount should be
+## walking beside the player again the moment it does, not left `_following ==
+## false` until something else notices. Combat is the one case where the
+## combat manager is about to drive this body itself and `set_following(true)`
+## would fight it for control.
+func _combat_took_the_mount() -> bool:
+	if _manager != null and is_instance_valid(_manager) and bool(_manager.call("is_fighting")):
+		return true
+	if _encounter != null and is_instance_valid(_encounter) \
+			and _encounter.has_method("trainer_battle_active") \
+			and bool(_encounter.call("trainer_battle_active")):
+		return true
+	return false
+
+
 ## --- mounting ---------------------------------------------------------------
 
 ## Get on. Returns whether it happened, so a caller driving this from a test can
@@ -362,10 +381,26 @@ func dismount() -> bool:
 	if _player != null and is_instance_valid(_player):
 		_player.call("set_carrier", null)
 		_player.global_position = _dismount_spot(body if alive else null)
-	if alive and body.has_method("set_following") and _riding_allowed():
-		# Straight back to walking beside you. Skipped when a fight is what
+	if alive and body.has_method("set_following") and not _combat_took_the_mount():
+		# Straight back to walking beside you. Skipped ONLY when a fight is what
 		# ended the ride: the combat manager is about to drive this same body,
 		# and `_set_exploration_active(false)` has already said so.
+		#
+		# This has to be `_combat_took_the_mount()`, not the full
+		# `_riding_allowed()` the comment above used to say and then didn't do:
+		# `_riding_allowed()` also goes false for a build ghost armed, a fade,
+		# an open conversation, the naming prompt or the starter picker — every
+		# modal `sequence_director.gd::_refresh_lockout()` covers, not just
+		# combat — because `_physics_process()` calls `dismount()` the instant
+		# any of those becomes true (the "not _riding_allowed(): dismount()"
+		# branch above). Gating `set_following` on that same broad check meant
+		# any one of those non-combat modals left the mount with `_following`
+		# stuck false and collision layer 0 forever (`follower_creature.gd`
+		# clears both when following stops) -- stranded exactly like a
+		# despawned creature, except it never despawned, so the "Ride" offer
+		# never came back either: `_mountable_body()` still finds it, but
+		# `interaction_offer()`'s prompt never re-triggers a walk that never
+		# resumes. Only combat legitimately hands this body to someone else.
 		body.call("set_following", true)
 	if _camera_rig != null and is_instance_valid(_camera_rig) and _camera_rig.has_method("set_target"):
 		_camera_rig.call("set_target", _player, {})

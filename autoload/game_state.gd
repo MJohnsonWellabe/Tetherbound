@@ -38,6 +38,9 @@ const PROGRESSION_FEED := preload("res://scripts/creatures/progression_feed.gd")
 const WORLD_STATE := preload("res://autoload/world_state.gd")
 const PLAYER_STATE := preload("res://autoload/player_state.gd")
 const MERGED_PROGRESSION := preload("res://autoload/merged_progression.gd")
+## OP-0905-20: `enter_realm()`'s own loading-screen overlay. See that file's
+## header for why it is a plain RefCounted helper rather than a scene/autoload.
+const LOADING_OVERLAY := preload("res://scripts/ui/loading_overlay.gd")
 ## T3-ENCOUNTER. Only for `reset_for_new_game()`'s world-seed decision; the
 ## roll itself lives in `encounter_director.gd`, which is where the spawn table
 ## is.
@@ -1390,10 +1393,28 @@ func can_enter_realm(realm_id: String) -> bool:
 ## A client swapping its own world scene does NOT leave the session: nothing
 ## here touches the peer, and `Session` is a child of this autoload rather
 ## than of any scene, so it outlives the swap unchanged.
-func enter_realm(realm_id: String, entry_id: String = "") -> bool:
-	if not can_enter_realm(realm_id):
+##
+## OP-0905-20: shows a full-screen "Loading <realm>…" overlay
+## (`scripts/ui/loading_overlay.gd`) before the blocking
+## `change_scene_to_file()` below, and removes it once the destination scene
+## has drawn a frame. That overlay wait is why this is now a coroutine —
+## every existing call site either discards the return value (`realm_gate.gd`)
+## or is a test double that never awaits it, so calling this without `await`
+## remains safe; only a NEW caller that reads the returned `bool` needs one.
+##
+## `bypass_gate`: debug teleport's own cross-realm escape hatch
+## (`debug_teleport_to`/OP-0905-21) — the debug list deliberately does not
+## require the destination's entry-key flag, so it calls this with
+## `bypass_gate = true`. Every other caller leaves it false and gets the
+## normal `can_enter_realm()` check.
+func enter_realm(realm_id: String, entry_id: String = "", bypass_gate: bool = false) -> bool:
+	if realm_hearts == null:
+		return false
+	if not bypass_gate and not can_enter_realm(realm_id):
 		return false
 	var scene := str(realm_hearts.call("scene_for_realm", realm_id))
+	if scene == "":
+		return false
 	if not ResourceLoader.exists(scene):
 		push_error("realm '%s' points at missing scene %s" % [realm_id, scene])
 		return false
@@ -1428,7 +1449,13 @@ func enter_realm(realm_id: String, entry_id: String = "") -> bool:
 	# D100: the transition autosave is a WORLD write, so only the host makes it.
 	if save_system != null and is_host():
 		save_system.call("save", self, autosave_slot())
-	get_tree().change_scene_to_file(scene)
+	var tree := get_tree()
+	if tree == null:
+		return false
+	var display_name := str((realm_hearts.call("realm", realm_id) as Dictionary).get("display_name", realm_id))
+	var overlay := await LOADING_OVERLAY.present(tree, "Loading %s…" % display_name)
+	tree.change_scene_to_file(scene)
+	await LOADING_OVERLAY.dismiss(tree, overlay)
 	return true
 
 
@@ -1499,6 +1526,17 @@ func restore_realm_maps(payloads: Dictionary) -> void:
 ## `PlayerState.map_for()`, which owns the per-realm extent.
 func _ensure_realm_map(realm_id: String) -> RefCounted:
 	return local.call("map_for", realm_id)
+
+
+## OP-0905-27: read-only lookup for a realm's `MapState` instance, for a
+## VIEWER that must not disturb `map` — the single active-realm alias every
+## other system (minimap, fog writers, HUD) reads. `bind_realm_map()` is the
+## right call when something is actually entering a realm; this is the right
+## call when the full map tab only wants to look at a realm the player is not
+## currently standing in. One-line wrapper so `scripts/ui/tab_map.gd` never
+## has to reach for the underscore-named `_ensure_realm_map` across files.
+func realm_map_for(realm_id: String) -> RefCounted:
+	return _ensure_realm_map(realm_id)
 
 
 ## Called only after the destination world has placed Player on its authored
@@ -2040,7 +2078,78 @@ func debug_teleport_destinations() -> Array[Dictionary]:
 			_debug_teleport_add(out, str(landmark.get("display_name", "")), landmark.get("position", Vector2.ZERO))
 	for spoke: Dictionary in _debug_teleport_spokes():
 		_debug_teleport_add(out, str(spoke.get("display_name", "")), spoke.get("position", Vector2.ZERO))
+	_debug_teleport_add_other_realm(out)
 	return out
+
+
+## OP-0905-21: the list above only ever named places in the realm the player
+## already stands in, so a player who had not yet found the physical gate had
+## no menu path to Cloudreach at all. Debug teleport is a settings-only
+## escape hatch (`set_debug_teleport`), so this deliberately does NOT require
+## `realm_key_cloudreach` the way a real gate crossing would — the point is to
+## reach the second realm before earning it. Rows are labelled with the
+## destination realm's own display name ("Cloudreach Cliffs — Galefoot
+## Landing") so a crossing reads as a crossing, not as "a place already here".
+func _debug_teleport_add_other_realm(out: Array[Dictionary]) -> void:
+	if realm_hearts == null:
+		return
+	var other_realm := "cloudreach" if current_realm != "cloudreach" else "meadows"
+	if str(realm_hearts.call("scene_for_realm", other_realm)) == "":
+		return
+	var other_map := _ensure_realm_map(other_realm)
+	if other_map == null:
+		return
+	var other_display := str((realm_hearts.call("realm", other_realm) as Dictionary).get("display_name", other_realm))
+	var entry_id := _debug_teleport_entry_id_for(other_realm)
+	for region: Dictionary in (other_map.regions() as Array):
+		_debug_teleport_add_crossing(out, other_realm, other_display, str(region.get("display_name", "")), region.get("centre", Vector2.ZERO), entry_id)
+	for landmark: Dictionary in (other_map.landmarks() as Array):
+		if bool(landmark.get("dynamic", false)):
+			continue
+		_debug_teleport_add_crossing(out, other_realm, other_display, str(landmark.get("display_name", "")), landmark.get("position", Vector2.ZERO), entry_id)
+
+
+## The authored arrival id `enter_realm()` should carry for a debug crossing
+## INTO `realm_id`. This only seeds the destination world's own initial
+## placement/orientation (the same anchor a real gate crossing would use) —
+## `debug_teleport_to`'s cross-realm path immediately overrides x/z with the
+## actually-chosen destination once that placement has settled, so this does
+## not need to be the nearest anchor to that destination, only a valid one.
+func _debug_teleport_entry_id_for(realm_id: String) -> String:
+	if realm_id == "cloudreach":
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_world.json"))
+		if typeof(parsed) == TYPE_DICTIONARY:
+			var points: Dictionary = (parsed as Dictionary).get("transition_points", {})
+			var entry: Dictionary = points.get("meadows_entry", {})
+			return str(entry.get("id", ""))
+	elif realm_id == "meadows":
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/realm_transitions.json"))
+		if typeof(parsed) == TYPE_DICTIONARY:
+			var entries: Variant = (parsed as Dictionary).get("meadows_entries", {})
+			if entries is Dictionary and not (entries as Dictionary).is_empty():
+				return str((entries as Dictionary).keys()[0])
+	return ""
+
+
+## Same dedupe rule as `_debug_teleport_add`, scoped to entries already
+## tagged with `realm_id` — Cloudreach's world-scale coordinates (hundreds to
+## thousands of metres) are never going to collide with a Meadows position by
+## accident, but scoping the check is what makes that true by construction
+## rather than by the two ranges happening not to overlap today.
+func _debug_teleport_add_crossing(out: Array[Dictionary], realm_id: String, realm_display: String, display_name: String, position: Vector2, entry_id: String) -> void:
+	if display_name.is_empty():
+		return
+	for existing: Dictionary in out:
+		if str(existing.get("realm", "")) != realm_id:
+			continue
+		if (existing.get("position", Vector2.ZERO) as Vector2).distance_to(position) <= DEBUG_TELEPORT_DEDUPE_RADIUS:
+			return
+	out.append({
+		"display_name": "%s — %s" % [realm_display, display_name],
+		"position": position,
+		"realm": realm_id,
+		"entry_id": entry_id,
+	})
 
 
 func _debug_teleport_add(out: Array[Dictionary], display_name: String, position: Vector2) -> void:
@@ -2101,9 +2210,56 @@ func _debug_teleport_spokes() -> Array[Dictionary]:
 ## OPEN mid-fight (`game_menu.gd::open()`), so the combat check here is a
 ## second, redundant guard for whichever future caller reaches this some
 ## other way.
-func debug_teleport_to(x: float, z: float) -> bool:
+## `realm_id`/`entry_id` are additive (OP-0905-21): every existing caller —
+## including the tests that call this with exactly two floats and read the
+## `bool` back synchronously — passes neither, `realm_id` stays `""`, the
+## branch below is never taken, and the function returns exactly as it always
+## did with no `await` ever reached on that path. Only a genuine realm
+## crossing takes the coroutine branch.
+func debug_teleport_to(x: float, z: float, realm_id: String = "", entry_id: String = "") -> bool:
 	if _debug_teleport_combat_running():
 		return false
+	if realm_id != "" and realm_id != current_realm:
+		return await _debug_teleport_cross_realm(x, z, realm_id, entry_id)
+	var player := _find_player()
+	if player == null:
+		return false
+	var world := _debug_teleport_world()
+	if world == null:
+		return false
+	var ground: float = float(world.call("ground_height_at", x, z))
+	if is_nan(ground):
+		return false
+	player.global_position = Vector3(x, ground + DEBUG_TELEPORT_CLEARANCE, z)
+	if player is CharacterBody3D:
+		(player as CharacterBody3D).velocity = Vector3.ZERO
+	return true
+
+
+## OP-0905-21's cross-realm half. `enter_realm(..., bypass_gate = true)` skips
+## the entry-key check and shows the OP-0905-20 loading overlay, then places
+## the player on the destination's own AUTHORED arrival anchor — the same
+## placement a real gate crossing performs. That placement is not the debug
+## destination the player picked, and on the Meadows side it is followed a
+## few physics frames later by a settle coroutine
+## (`playground_world.gd::_settle_meadows_realm_arrival`) that re-asserts the
+## anchor position and only then calls `complete_realm_entry()`. Overriding
+## x/z before that settle finishes would just lose the race and get silently
+## overwritten back to the gate, so this waits for `pending_entry_for` to
+## clear — the same "arrival is done" signal both realms' world scripts
+## already report through — before grounding the player at the chosen (x, z)
+## with the arrived world's own `ground_height_at`, exactly as the
+## same-realm path above does.
+func _debug_teleport_cross_realm(x: float, z: float, realm_id: String, entry_id: String) -> bool:
+	if not await enter_realm(realm_id, entry_id, true):
+		return false
+	var tree := get_tree()
+	if tree == null:
+		return false
+	var settle_frames := 0
+	while pending_entry_for(realm_id) != "" and settle_frames < 240:
+		await tree.physics_frame
+		settle_frames += 1
 	var player := _find_player()
 	if player == null:
 		return false

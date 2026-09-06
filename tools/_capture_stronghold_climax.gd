@@ -124,6 +124,7 @@ func _run() -> void:
 	var reveal: Vector3 = hold.call("marker", "reveal_stand")
 	var yaw := hold.rotation.y
 	var local_x := Vector3(cos(yaw), 0.0, -sin(yaw))
+	var local_z := Vector3(sin(yaw), 0.0, cos(yaw))
 	# From the reveal stand: the arch face-on, the creature in the ring.
 	var stand_face := Vector3(reveal.x, reveal.y + 1.7, reveal.z)
 	# From the doorway on the chamber's +x wall: the way the player walks in.
@@ -163,6 +164,49 @@ func _run() -> void:
 	var aim_y := float(hold.call("causeway_surface_y", cause_aim.x, cause_aim.z)) if hold.has_method("causeway_surface_y") else NAN
 	cause_aim.y = (cause_y if is_nan(aim_y) else aim_y) + 4.0
 
+	# OP-0905-19 "the hall needs to be lit by torches": three stands inside
+	# the roofed rooms that carry the new wall sconces (`hall_occupation
+	# .braziers` entries with `mount: "wall"`, built by `_wall_torch()`),
+	# shot bound (pre-Warden) so nothing about the finale's own staging is
+	# competing with the question -- does the room itself read torch-lit.
+	# Positions are local-frame, via the hold: each chamber's own `marker()`
+	# centre (already at floor height) offset along `local_x`/`local_z` by
+	# that chamber's own `chamber_size()` half-extents, the same idiom
+	# `stand_door`/`door` above already use.
+	var ta_centre: Vector3 = hold.call("marker", "tether_approach")
+	var ta_size: Vector3 = hold.call("chamber_size", "tether_approach")
+	var ta_half_z := ta_size.y * 0.5
+	# 2 m inside the entrance (the -z wall, shared with courtyard), looking
+	# the length of the room toward the far door (the +z wall, to warden_arena)
+	# -- the two wall-torch pairs (z 60/68) flank this walk on both sides.
+	var ta_near := ta_centre + local_z * (-ta_half_z + 2.0)
+	var ta_far := ta_centre + local_z * ta_half_z
+	var stand_t01 := Vector3(ta_near.x, ta_centre.y + 1.7, ta_near.z)
+	var aim_t01 := Vector3(ta_far.x, ta_centre.y + 1.7, ta_far.z)
+
+	var wa_centre: Vector3 = hold.call("marker", "warden_arena")
+	var wa_size: Vector3 = hold.call("chamber_size", "warden_arena")
+	var wa_half_x := wa_size.x * 0.5
+	var wa_half_z := wa_size.y * 0.5
+	# 2 m inside the entrance (the -z wall, from tether_approach), aimed at
+	# the legendary_chamber door on the -x wall -- a diagonal across the
+	# arena that keeps that -x wall's own torch row (z 82.2/90.2/98.2) in
+	# frame as the near side wall.
+	var wa_near := wa_centre + local_z * (-wa_half_z + 2.0)
+	var wa_door := wa_centre + local_x * (-wa_half_x)
+	var stand_t02 := Vector3(wa_near.x, wa_centre.y + 1.7, wa_near.z)
+	var aim_t02 := Vector3(wa_door.x, wa_centre.y + 1.7, wa_door.z)
+
+	var lc_size: Vector3 = hold.call("chamber_size", "legendary_chamber")
+	var lc_half_x := lc_size.x * 0.5
+	# 4 m in from the doorway (the +x wall, from warden_arena), turned 60
+	# degrees off the straight-in walk toward the -z wall, where one of the
+	# two torch pairs hangs (x -36/-28 at z 76.35).
+	var lc_in := chamber + local_x * (lc_half_x - 4.0)
+	var stand_t03 := Vector3(lc_in.x, chamber.y + 1.7, lc_in.z)
+	var t03_turned := (-local_x) * cos(deg_to_rad(60.0)) + (-local_z) * sin(deg_to_rad(60.0))
+	var aim_t03 := stand_t03 + t03_turned * 15.0
+
 	var torch := OmniLight3D.new()
 	torch.light_energy = 0.0
 	torch.visible = false
@@ -175,6 +219,9 @@ func _run() -> void:
 	await _shoot(camera, look, gate_eye, gate_aim, "G-01-gate-night-held", written, failures, "night", player)
 	await _shoot(camera, look, cause_eye, cause_aim, "G-01b-causeway-night-held", written, failures, "night", player)
 	await _shoot(camera, look, yard_eye, yard_aim, "G-02-yard-night-held", written, failures, "night", player)
+	await _shoot(camera, look, stand_t01, aim_t01, "T-01-approach-room", written, failures, "night", player)
+	await _shoot(camera, look, stand_t02, aim_t02, "T-02-warden-arena", written, failures, "night", player)
+	await _shoot(camera, look, stand_t03, aim_t03, "T-03-legendary-side-wall", written, failures, "night", player)
 
 	# The lever, the game's own way. The Warden gate is what the lever checks;
 	# `_free_the_legendary` is the stage the lever leads to.

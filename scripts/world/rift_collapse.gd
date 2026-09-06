@@ -12,18 +12,29 @@ extends Node3D
 ## and because SF33 already dressed that seam with a live pylon and a resuming
 ## roadbed on the FAR rim, which is the close-range half of the same sentence.
 ##
-## THE CARVE-OUT IS THE POINT AND IT IS NOT NEGOTIABLE. This is a DISTANT,
-## NON-ENTERABLE VIEW. CLAUDE.md forbids Biome 2 work until the Meadows passes
-## its exit gate, D23 holds that rule over this step, and §19's non-goals agree.
-## So this file builds SKY and nothing else:
+## THIS FILE ITSELF IS STILL SKY AND NOTHING ELSE — that half of the
+## carve-out is not negotiable. CLAUDE.md forbids Biome 2 TERRAIN work until
+## the Meadows passes its exit gate, D23 holds that rule over this step, and
+## §19's non-goals agree. So this file builds SKY and nothing else:
 ##
 ##   * every mesh sits 260–460m out along the spoke's own bearing — outside the
 ##     512m terrain, past the 235m boundary ring, past the spoke's carve
 ##   * not one collider, area, spawn, species, prompt or nav mesh is created
-##   * the road still stops at the collapsed bridge. `tests/smoke_boss.gd`
-##     walks a body at the LEGENDARY's own 55-degree climb limit (R8.5, the
-##     best mobility that exists in this game) into that seam before and after
-##     the flag and fails the build if it ever gets across
+##
+## WHAT IS NO LONGER TRUE OF THE ROAD ITSELF, AND WHY THAT IS A SEPARATE FILE.
+## OP-0905-15 (`docs/owner/OWNER_PLAYTEST_2026-09-05.md`) and
+## `docs/decisions/D110-the-rift-collapse-is-the-crossing-to-cloudreach.md`
+## replace the keyed realm arch with the storm road's own collapsed bridge
+## rebuilding itself once this file's `legendary_freed` flag lands. That
+## rebuild — a real walkable span and a real Area3D realm boundary past the
+## far rim — is `scripts/world/rift_crossing.gd`, a sibling this file neither
+## builds nor depends on; it only reads this file's `flag` and `collapse`
+## timings so the two stay in step. `tests/smoke_boss.gd` still walks a body
+## at the LEGENDARY's own climb limit (R8.5, the best mobility in the game)
+## into the seam before the flag and asserts it does NOT get across, and after
+## the flag (plus the collapse timings and the crossing's own appear
+## animation) asserts it DOES — the span existing and being walkable is the
+## payoff now, not a permanent barrier.
 ##
 ## What it does own: two groups of unshaded, alpha-blended slabs. `StormWall`
 ## is up from the first boot and is what the player has looked at across the

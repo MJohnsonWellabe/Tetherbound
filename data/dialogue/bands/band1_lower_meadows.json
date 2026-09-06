@@ -226,13 +226,13 @@
     "old_champion_beaten": {
       "speaker": "Old Bram",
       "portrait": "res://assets/ui/portraits/wandering_trainer.png",
-      "_comment": "The payoff line. The items and coins are granted by the trainer's own `reward` block the moment the fight is won (data/config/bands/band1_lower_meadows/trainers.json), so a player who walks off and never speaks to him again keeps them -- this is the acknowledgement, not the delivery. The last two lines are the ONLY place the elder mosshell (spawns.json order 1900) is named anywhere in the game. Prompt 30: some optional content should be found by curiosity, and secrets should not be pre-labelled on the map, so the elder has no marker -- but a player who did the harder optional thing gets told where the other one is, which makes the two a chain instead of two icons.",
+      "_comment": "The payoff line. The items and coins are granted by the trainer's own `reward` block the moment the fight is won (data/config/bands/band1_lower_meadows/trainers.json), so a player who walks off and never speaks to him again keeps them -- this is the acknowledgement, not the delivery. The last two lines are one of two places the pond's mosshell is named (the other is Nan's own greeting, pond_fisher_greeting, updated the same day) -- a player who did the harder optional thing gets pointed at the other one too, which makes the two a chain instead of two icons. UPDATED 2026-09-05 per OP-0905-06 / the alpha conversion (spawns.json order 1900): the creature moved from the west hollow to the pond's own far shore and stopped being an 'elder' with a bespoke notice range, so the old hollow directions and the 'sees you coming a long way off' line (which described that mechanism) no longer describe it; the hollow itself is now just a candy find (pickups.json `b1_candy_pond_hollow`).",
       "lines": [
         "Ha. Well.",
         "First time in nine years I've enjoyed losing.",
         "Take the orbs. You'll need them — the far side of that bridge doesn't hand anything over.",
-        "One more thing, since you've earned it. West of the pond, past where the path bends away, there's a hollow that stays green when everything round it burns off. A mosshell lives down there, older than I am.",
-        "I've never been able to take it. You might. Mind — it sees you coming a long way off."
+        "One more thing, since you've earned it. Out past the pond, on the far bank where the road doesn't go, there's a mosshell twice the size it's got any business being. Alpha, the sort that pins itself to a map.",
+        "I've never been able to take it. You might."
       ]
     },
     "meadowhart_herd_sighting": {
@@ -324,9 +324,10 @@
     "pond_fisher_greeting": {
       "speaker": "Nan",
       "portrait": "res://assets/ui/portraits/villager_ranger.png",
-      "_comment": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 3: 'a fisher NPC who mentions the South Bridge and the captured keeper (dialogue only, no fight)'. The captured keeper is the relay's own captive (data/dialogue/relay.json's Sela, freed via `captive_rescued`; MEADOWS_PROGRESSION_SPEC.md sec on the river crossing: 'the bridge keeper / ranger / researcher who knows the mechanism has been captured'), named here only as rumour a Band 1 fisher would plausibly have heard -- the player has no way to know who she is yet, which is the point of a rumour this early.",
+      "_comment": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 3: 'a fisher NPC who mentions the South Bridge and the captured keeper (dialogue only, no fight)'. The captured keeper is the relay's own captive (data/dialogue/relay.json's Sela, freed via `captive_rescued`; MEADOWS_PROGRESSION_SPEC.md sec on the river crossing: 'the bridge keeper / ranger / researcher who knows the mechanism has been captured'), named here only as rumour a Band 1 fisher would plausibly have heard -- the player has no way to know who she is yet, which is the point of a rumour this early. UPDATED 2026-09-05, OP-0905-06 (owner playtest, verbatim: 'Isn't there supposed to be an alpha at the pond? Shouldn't I be directed to go there?'): this is Nan's only conversation node, so it IS her first one, and the new second line names the alpha directly rather than leaving direction to Old Bram's own after-the-fact hint (old_champion_beaten) -- a player who never fights Bram now still hears about it from the one NPC standing at the water. Kept to one added line, plain-voiced like her others, no map marker (prompt 30's curiosity rule): she says where to look, not a quest arrow.",
       "lines": [
         "Quiet out here since the company came through. Even the fish keep low these days.",
+        "There's a big one out on the far bank — bigger than any mosshell's got a right to be. I don't fish that side any more.",
         "Word's gone round they've got someone locked up past that bridge. One of the border scouts, so they say. Nobody's seen her since.",
         "You crossing? Mind the one standing watch. He won't just wave you through."
       ]
