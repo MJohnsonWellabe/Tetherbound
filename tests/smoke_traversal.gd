@@ -1209,6 +1209,23 @@ func _check_gated_crossing(world: Node, player: CharacterBody3D, failures: Array
 	if bool(progression.call("has", flag)):
 		failures.append("trying the locked gate at %s set its open flag anyway" % label)
 
+	# OP-0905-13: a locked South Bridge sends its own guardian walking over to
+	# challenge the player (`south_bridge.gd::_on_locked()`), on top of the
+	# jar every other gated crossing gives alone. This walk has nowhere near
+	# `smoke_south_bridge_challenge.gd`'s own budget to actually reach the
+	# player and open a real conversation, and this test — reused verbatim
+	# for the Old Mill Crossing, which has no guardian at all — has no
+	# scripted way to sit through one. Stop it here, the same clean way a
+	# battle actually starting would (`npc_body.gd::cancel_walk()`), so the
+	# walk below is testing what it says it is testing: whether the crossing
+	# itself stayed shut, not whether a dialogue box left open by this probe
+	# can freeze the player's movement for the rest of it.
+	if bridge.has_method("_cancel_guardian_challenge"):
+		bridge.call("_cancel_guardian_challenge")
+		var panel := root.get_tree().get_first_node_in_group("dialogue_panel")
+		if panel != null and bool(panel.call("is_open")):
+			panel.call("close")
+
 	var reached_locked: float = await _walk_at_the_bridge(bridge, player, camera_rig)
 	print("  %s, locked:   reached %+.1fm past the gap" % [label, reached_locked])
 	if reached_locked > BRIDGE_BLOCKED_M:
