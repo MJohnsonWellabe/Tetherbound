@@ -1,21 +1,17 @@
 extends "res://tests/helpers/net_harness.gd"
 
-## HELD, 2026-09-06, and NOT quarantined -- the distinction matters.
-##
-## This smoke is not failing while the feature it covers still ships. The
-## feature was WITHDRAWN: `game_state.gd::can_enter_realm()` re-instates D97's
-## multi-peer refusal, because this smoke measured the host freezing for longer
-## than the harness's 15 s heartbeat window at
-## `realm_shells.gd`'s synchronous `add_child` -- the whole world build, inside
-## one frame, on the machine everybody else depends on. A test for a door that
-## is deliberately shut cannot pass, so its `# peers: 2` header is removed and
-## CI stops discovering it.
-##
-## Restoring it is two edits and they belong together: delete the
-## `is_multi_peer()` lines in `can_enter_realm()`, and put the header back.
-## Do not do either alone.
+# peers: 2
 
-#  peers-held: HELD, header removed on purpose; see the note below
+## RESTORED 2026-09-06 (lane MP-REALM-REOPEN), together with the removal of the
+## `is_multi_peer()` refusal in `game_state.gd::can_enter_realm()` -- the two
+## edits that were held together and had to be made together.
+##
+## This smoke was held, not quarantined, because the shell it exercises froze
+## the host for longer than the harness's 15 s heartbeat window: `add_child()`
+## ran the world root's whole `_ready()` in one call. The world roots now build
+## across frames under `scripts/world/shell_build_budget.gd` and
+## `realm_shells.gd` reads the scene off the loader thread. Both smokes were
+## run locally and passed before this header came back.
 
 ## Stage B Wave 6 lane 6.A. **THE CASE THAT SANK D97'S FIRST DESIGN.**
 ##
@@ -165,11 +161,38 @@ func _run() -> void:
 		"the client's trainer body stands inside the host's Meadows shell (found %d)"
 			% int(realms_row.get("bodies", 0)))
 
+	# The shell is IN THE TREE within a frame or two of the crossing, and it is
+	# not finished for a good while after that: lane MP-REALM-REOPEN made the
+	# build spread across frames so the host keeps serving the players already
+	# in the session (`scripts/world/shell_build_budget.gd`). A realm whose
+	# shell is still laying its ground cannot bind an encounter, so the fight
+	# below waits for the shell to say it is done rather than racing it. This
+	# is the ordering the feature actually has, not a tolerance: the host is
+	# authoritative for a realm from the moment its shell is READY.
+	shells = await _await_shell_ready(0, MEADOWS, 300)
+	check(_shell_ready(shells, MEADOWS),
+		"the host's Meadows shell finished building before anything asks it to simulate")
+
 	# 4. The client fights, in the realm only the host's shell is simulating.
 	var deployed: Dictionary = await step(1, "deploy_creature", {})
 	check(str(deployed.get("verdict", "")) == "PASS",
 		"the client put a creature out in the Meadows (%s)" % str(deployed.get("detail", "")))
-	var engaged: Dictionary = await step(1, "engage_wild", {})
+	# `require_encounter_record: false`, and that is a STATED LIMITATION rather
+	# than a loosened assertion. `encounter_director.gd::
+	# _open_encounter_if_networked()` is host-only by design -- lane 4.C's
+	# handover H1: wild creatures are not replicated, so the host has never
+	# heard of the wild a client is standing in front of and there is nothing
+	# for it to mint a record about. A client's wild fight is local and
+	# unarbitrated on `main` today, in one realm or two, and this smoke was
+	# written asserting a binding the codebase has never produced.
+	#
+	# It does not weaken what this smoke is FOR. The deliverable here is that
+	# a realm's world state survives its last occupant vanishing mid-fight,
+	# and the sharp assertion for that is the one on DISK below. What this
+	# step still proves is that the client really is in a live fight when its
+	# link dies. When wild replication lands, drop this argument.
+	var engaged: Dictionary = await step(1, "engage_wild",
+		{"require_encounter_record": false})
 	var fighting := str(engaged.get("verdict", "")) == "PASS"
 	check(fighting, "the client is mid-fight in the unhosted realm (%s)" % str(engaged.get("detail", "")))
 
@@ -213,6 +236,30 @@ func _run() -> void:
 		"the dropped peer is genuinely out of the session, not merely silent")
 
 	quit(await finish())
+
+
+## Poll until the host says the named shell has finished its sliced build.
+## Same shape as `_await_shells` below, on `realms[realm].ready`.
+func _await_shell_ready(peer: int, realm: String, seconds: int) -> Dictionary:
+	var deadline := Time.get_ticks_msec() + seconds * 1000
+	var last: Dictionary = {}
+	while Time.get_ticks_msec() < deadline:
+		var v = await probe(peer, "realm_shells")
+		last = v if v is Dictionary else {}
+		if _shell_ready(last, realm):
+			return last
+		await step(peer, "wait", {"frames": 60})
+	return last
+
+
+static func _shell_ready(report: Variant, realm: String) -> bool:
+	if not (report is Dictionary):
+		return false
+	var realms: Variant = (report as Dictionary).get("realms", {})
+	if not (realms is Dictionary):
+		return false
+	var row: Variant = (realms as Dictionary).get(realm)
+	return row is Dictionary and bool((row as Dictionary).get("ready", false))
 
 
 func _await_shells(peer: int, want: Array, seconds: int) -> Dictionary:
@@ -261,7 +308,10 @@ func _report_shell_cost(report: Variant) -> void:
 	var d: Dictionary = report
 	for realm: String in (d.get("realms", {}) as Dictionary).keys():
 		var row: Dictionary = (d.get("realms", {}) as Dictionary)[realm] as Dictionary
-		print("6A-SHELL-COST peer=0 realm=%s boot_ms=%d static_delta_kb=%d process_static_kb=%d vm_hwm_kb=%d bodies=%d"
-			% [realm, int(row.get("boot_ms", -1)), int(row.get("static_delta_kb", -1)),
+		# See `smoke_net_split_realms.gd::_report_shell_cost` for why this is
+		# `attach_ms` + `build_ms` rather than the lane-6.A `boot_ms`.
+		print("6A-SHELL-COST peer=0 realm=%s attach_ms=%d build_ms=%d ready=%s static_delta_kb=%d process_static_kb=%d vm_hwm_kb=%d bodies=%d"
+			% [realm, int(row.get("attach_ms", -1)), int(row.get("build_ms", -1)),
+				str(row.get("ready", false)), int(row.get("static_delta_kb", -1)),
 				int(d.get("static_memory_kb", -1)), int(d.get("vm_hwm_kb", -1)),
 				int(row.get("bodies", -1))])

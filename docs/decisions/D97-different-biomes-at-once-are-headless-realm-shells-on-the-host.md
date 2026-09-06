@@ -122,3 +122,64 @@ already true. It is:
 **Budget to come in under:** the shell is 1,289 MB beside a host already holding a full world, and
 S2 put four concurrent boots at 12.85 GB. Two realms on one host is affordable; the question the
 retry answers is whether it is affordable *while staying responsive*.
+
+
+## Reopened — 2026-09-06, lane MP-REALM-REOPEN
+
+Directive rule 16 is open. `can_enter_realm()`'s multi-peer refusal is gone and both net
+smokes pass locally: `smoke_net_split_realms` 40 checks, and
+`smoke_net_realm_owner_disconnect_mid_fight` 23. Two players stand in two biomes, gather
+and fight in both at once, swap realms, and a realm's world state survives its last
+occupant vanishing mid-fight.
+
+**The section above is wrong about the mechanism, and the section above THAT was right.**
+`add_child_ms=0` is an artifact of where it was measured: `tools/net/_probe_6a_shell.gd`
+calls `root.add_child()` from `SceneTree._init()`, before the root window is inside the
+tree, and Godot does not propagate `_ready()` into a node whose parent is not in the tree.
+The build was deferred one frame, not spread across frames — which is exactly why the
+same probe then reads a 21.9 s **single frame**. Called from a live tree, the way
+`realm_shells.gd` calls it, `add_child()` blocks for 21 s
+(`tools/net/_probe_addchild_live.gd`). So the shell build did have to be made
+asynchronous, and now is.
+
+### What the freeze actually was, in three parts
+
+| | before | after |
+|---|---|---|
+| Cloudreach shell, worst held frame | 21.9 s | 1.1 s |
+| Cloudreach shell, worst 60-physics-frame window | 22.8 s | 4.4 s |
+| Meadows shell, worst held frame | 30.5 s | 7.4 s |
+| Meadows shell, worst 60-physics-frame window | 41.2 s | 9.9 s |
+| freeing the outgoing Meadows on the crossing peer | 43.0 s | 1.9 s |
+| `load()` of a shell's scene, on the host's main thread | 3.5–5.6 s | off-thread |
+
+The 60-frame window is the number that decides the feature: `peer_runner.gd` heartbeats
+every 60 physics frames and the harness calls a peer silent at 15 s. Spreading a build
+over a handful of frames does not help — sixty consecutive frames span about a second, so
+fourteen one-and-a-half-second steps all land inside one window. The build is time-sliced
+instead (`scripts/world/shell_build_budget.gd`), and a slice too long to divide is
+followed by a whole window of cheap frames so it never has to share one.
+
+**The largest single cost was not the shell at all.** It was
+`interaction_arbiter.gd::unregister()` — an `Array.erase()` over 24,461 registered
+providers, O(n) each, so tearing a world down was O(n²): 43 seconds in one engine call
+that no slicing can break up, paid by whichever peer walks through the gate. PERF-2 had
+fixed the same O(n²) on the registration side and left this one, because until Wave 6
+nothing tore a world down mid-session. `_providers` had already stopped being iterated
+when the spatial index landed, so it is now a derived view of the O(1) membership
+dictionary. Every realm crossing in single-player got 41 seconds faster too.
+
+### What it costs, stated plainly
+
+A shell now takes **longer in wall-clock** than the freeze did — 42.7 s for a Meadows
+shell in the smoke, against ~30 s of held frames before — because the host is deliberately
+spending most of each frame on the players who are already in the session. During that
+window the host is authoritative for a realm it cannot yet fully answer for, so
+`realm_shells.gd::report()` carries a `ready` flag per shell and things that need the
+realm to answer wait on it rather than racing it. The remaining 7.4 s single frame in a
+Meadows shell is one indivisible Terrain3D region-data load; it is isolated so it never
+shares a heartbeat window, and reducing it needs Terrain3D streaming, not GDScript.
+
+Budgets live in `data/config/performance.json` (`shell_build_budget_ms`,
+`crossing_build_budget_ms`). Solo play is never sliced: the slicer asks the session first
+and does nothing without one.

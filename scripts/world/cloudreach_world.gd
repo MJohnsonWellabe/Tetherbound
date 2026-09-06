@@ -61,6 +61,7 @@ const GEOLOGY_SHADER := preload("res://shaders/cloudreach_cliff.gdshader")
 const TRAIL_SHADER := preload("res://shaders/cloudreach_trail.gdshader")
 const MASONRY_SHADER := preload("res://shaders/cloudreach_masonry.gdshader")
 const WORLD_RUNTIME := preload("res://scripts/world/cloudreach_world_runtime.gd")
+const SHELL_BUILD := preload("res://scripts/world/shell_build_budget.gd")
 const ENVIRONMENT_MATERIALS:=preload("res://scripts/world/cloudreach_environment_materials.gd")
 const BRIDGE_KIT:=preload("res://scripts/world/cloudreach_bridge_kit.gd")
 
@@ -106,6 +107,14 @@ var _realm_map: RefCounted
 var _surface_cells: Dictionary = {}
 var _surface_index_count := -1
 const SURFACE_CELL_M := 128.0
+
+## D97 / lane MP-REALM-REOPEN. The time slice this world builds in when it is
+## a headless realm shell on somebody else's host. Inert -- every `await` on
+## it resumes in the same frame -- when `simulation_only` is false, which is
+## every case a player is actually standing here. See
+## `scripts/world/shell_build_budget.gd`.
+var _shell_build: RefCounted = null
+var _shell_ready := false
 
 
 ## D101 deliverable 5 — the one door onto this process's local rig and its
@@ -242,21 +251,37 @@ func _ready() -> void:
 	if _config.is_empty():
 		push_error("Cloudreach world config missing or invalid: %s" % CONFIG_PATH)
 		return
+	# D97 / lane MP-REALM-REOPEN. A shell builds in slices; a real arrival
+	# does not. `begin(self, false)` makes every `await` below resume in the
+	# same frame, so the player's own crossing still gets a finished world
+	# before its first frame, exactly as it always did.
+	_shell_build = SHELL_BUILD.new()
+	_shell_build.call("begin", self, simulation_only)
 	_build_materials()
+	await _shell_build.call("step", "materials")
 	# Pure backdrop: a flat cloud box under the world and the ranges on the
 	# skyline. Nothing stands on either.
 	if not simulation_only:
 		_build_cloud_sea()
 		_build_horizon_ranges()
-	_build_regions()
+	await _build_regions()
+	await _shell_build.call("step", "regions")
 	_build_transition_ledges()
-	_build_routes()
+	await _shell_build.call("step", "ledges")
+	await _build_routes()
+	await _shell_build.call("step", "routes")
 	_build_progression_gates()
+	await _shell_build.call("step", "gates")
 	_build_bridges()
-	_build_landmarks()
+	await _shell_build.call("step", "bridges")
+	await _build_landmarks()
+	await _shell_build.call("step", "landmarks")
 	_build_return_gate()
-	_build_authored_route_details()
-	_build_resource_patches()
+	await _shell_build.call("step", "return_gate")
+	await _build_authored_route_details()
+	await _shell_build.call("step", "route_details")
+	await _build_resource_patches()
+	await _shell_build.call("step", "resource_patches")
 	if not simulation_only:
 		var arrival_beats := preload("res://scripts/world/cloudreach_arrival_beats.gd").new()
 		arrival_beats.name = "ArrivalRoadObservation"
@@ -275,6 +300,7 @@ func _ready() -> void:
 	# 54 MB of static memory. It is arena geometry and battle yards, not the
 	# "VFX" D97 means; see `ralph/reports/MP-6A-REALMS-0906/REPORT.md`.
 	runtime.call("build_environment", self)
+	await _shell_build.call("step", "environment")
 	if not simulation_only:
 		_build_ground_cover()
 	_place_player()
@@ -283,6 +309,7 @@ func _ready() -> void:
 	chapter.name = "CloudreachChapter"
 	add_child(chapter)
 	runtime.call("mount", self, chapter, _realm_map)
+	await _shell_build.call("step", "mount")
 	# `get_window()` is the REAL window even for a world that is not the
 	# current scene: an unguarded capture here takes the pointer away from the
 	# player standing in the host's own realm.
@@ -292,6 +319,20 @@ func _ready() -> void:
 	else:
 		_shell_strip_huds()
 	_sync_progression_gates(_game())
+	var profile := str(_shell_build.call("summary"))
+	if not profile.is_empty():
+		print("[cloudreach] shell build %s" % profile)
+	_shell_ready = true
+
+
+## D97 / lane MP-REALM-REOPEN. False while a SHELL is still building itself
+## across frames, true the moment its `_ready()` finishes. Always true for a
+## world a player is actually standing in, whose `_ready()` never yields at
+## all. `realm_shells.gd::report()` carries it and the net smokes wait on it:
+## a shell part-way through laying its routes is already authoritative for a
+## realm whose ground height it cannot yet answer.
+func shell_build_complete() -> bool:
+	return _shell_ready or not simulation_only
 
 
 func _process(_delta: float) -> void:
@@ -513,6 +554,7 @@ func _build_regions() -> void:
 	root.name = "CliffRegions"
 	add_child(root)
 	for raw: Variant in _config.get("regions", []):
+		await _shell_build.call("breathe")
 		if not raw is Dictionary:
 			continue
 		var spec := raw as Dictionary
@@ -690,6 +732,7 @@ func _build_routes() -> void:
 	root.name = "AuthoredRoutes"
 	add_child(root)
 	for raw: Variant in _config.get("routes", []):
+		await _shell_build.call("breathe")
 		if not raw is Dictionary:
 			continue
 		var spec := raw as Dictionary
@@ -703,13 +746,14 @@ func _build_routes() -> void:
 		var collision_width := minf(width, float(landmass.get("path_collision_width_m", 7.0)))
 		var visible_width := minf(collision_width - 0.8,
 			float(landmass.get("path_visible_width_m", 4.2)))
-		_build_route_shoulders(root, spec, points, width)
+		await _build_route_shoulders(root, spec, points, width)
 		var route_name_lower := str(spec.get("id", "")).to_lower()
 		var landing_top: Material = _materials["upland_dry"] if (
 			route_name_lower.contains("upper") or route_name_lower.contains("summit")
 		) else _materials["upland"]
 		for i in points.size():
 			var pad := points[i]
+			await _shell_build.call("breathe")
 			if _bridge_interior_point(str(spec.get("id","")),pad):
 				continue # The continuous deck owns its internal bend, not a flat land cap.
 			var landing_size := maxf(float(landmass.get("landing_size_m", 16.0)),
@@ -736,6 +780,7 @@ func _build_routes() -> void:
 				points[i], points[i + 1])
 			for section_index in sections.size():
 				var section: Dictionary = sections[section_index]
+				await _shell_build.call("breathe")
 				var section_a: Vector3 = section["a"]
 				var section_b: Vector3 = section["b"]
 				# A ramp running to the CENTRE of a level landing intersects its
@@ -833,6 +878,7 @@ func _build_route_shoulders(root: Node3D, spec: Dictionary, points: Array[Vector
 			original_a, original_b)
 		for section: Dictionary in sections:
 			var a: Vector3 = section["a"]
+			await _shell_build.call("breathe")
 			var b: Vector3 = section["b"]
 			_route_ridge(shoulder_root, "Ridge%03d" % serial, a, b, half_width,
 				segment_index + int(spec.get("order", 0)) * 17 + serial,
@@ -936,6 +982,7 @@ func _build_resource_patches() -> void:
 	root.name = "CloudreachResources"
 	add_child(root)
 	for spec: Dictionary in RESOURCE_PATCH.gatherable_nodes():
+		await _shell_build.call("breathe")
 		var authored := _vec3(spec.get("position", []))
 		var placement_override: Variant = _visual_config.get("resource_positions", {}).get(str(spec.get("id", "")))
 		if placement_override is Array:
@@ -1268,6 +1315,7 @@ func _build_authored_route_details() -> void:
 	var detail: Dictionary = _visual_config.get("route_details", {})
 	var bounds_tool := BUILDING_PREFABS.new()
 	for raw: Dictionary in detail.get("pockets", []):
+		await _shell_build.call("breathe")
 		var pocket := Node3D.new()
 		pocket.name = str(raw.get("id", "Pocket"))
 		root.add_child(pocket)
@@ -1277,6 +1325,7 @@ func _build_authored_route_details() -> void:
 		forward = forward.normalized()
 		var right := Vector3.UP.cross(forward)
 		for item: Dictionary in raw.get("items", []):
+			await _shell_build.call("breathe")
 			var asset := str(item.get("asset", "rock"))
 			var packed := ROUTE_DETAIL_SCENES.get(asset) as PackedScene
 			if packed == null:
@@ -1555,6 +1604,7 @@ func _build_landmarks() -> void:
 	root.name = "Landmarks"
 	add_child(root)
 	for raw: Variant in _config.get("landmarks", []):
+		await _shell_build.call("breathe")
 		if not raw is Dictionary:
 			continue
 		var spec := raw as Dictionary
@@ -1579,6 +1629,7 @@ func _build_landmarks() -> void:
 			"old_wind_observatory", "summit_eyrie_stronghold", "waterward_overlook"]
 		var ledge:=_mesa(landmark, "LandmarkLedge", Vector3(0.0, -ledge_size.y * 0.5 + 0.10, 0.0), ledge_size,
 			_materials["cliff"], _materials["upland_dry"] if at.y>=700.0 else _materials["upland"], ledge_collision, _landmark_count + 31)
+		await _shell_build.call("breathe")
 		if settlement:
 			(ledge.get_node("StratifiedCliffBody") as MeshInstance3D).visible=false
 			_build_articulated_settlement_skirt(landmark,at.y>=700.0)
@@ -1614,6 +1665,7 @@ func _build_landmarks() -> void:
 			"seed": _landmark_count * 71 + 809,
 			"dry": at.y >= 790.0})
 		var identity := (landmark_id + " " + str(spec.get("category", ""))).to_lower()
+		await _shell_build.call("breathe")
 		if landmark_id == "realm_gate_crag":
 			_build_realm_gate_crag(landmark)
 		elif landmark_id == "three_bells_bridge":

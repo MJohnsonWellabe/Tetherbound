@@ -1650,13 +1650,35 @@ func _step_drop_link(args: Dictionary) -> Dictionary:
 	var peer: MultiplayerPeer = api.multiplayer_peer if api != null else null
 	if peer == null or peer is OfflineMultiplayerPeer:
 		return {"verdict": "FAIL", "detail": "no live multiplayer peer to drop"}
-	# `close()` before detaching: ENet sends the disconnect immediately, so the
-	# host does not have to sit out its own connection timeout before
-	# `peer_disconnected` fires and the shell reconcile runs.
+	# `close()` sends the disconnect immediately, so the host does not have to
+	# sit out its own connection timeout before `peer_disconnected` fires and
+	# the shell reconcile runs.
+	#
+	# What this deliberately does NOT do any more (lane MP-REALM-REOPEN) is
+	# `api.multiplayer_peer = null` afterwards. Assigning null installs an
+	# `OfflineMultiplayerPeer`, for which Godot emits no `server_disconnected`
+	# at all -- so THIS process's own `Session` never learned its link had
+	# died and went on answering `is_active()` true, which is precisely the
+	# thing `smoke_net_realm_owner_disconnect_mid_fight`'s last check exists
+	# to disprove ("the dropped peer is genuinely out of the session, not
+	# merely silent"). Leaving the closed peer attached to be polled is also
+	# what a pulled cable actually looks like from inside the process.
 	peer.close()
-	api.multiplayer_peer = null
-	for i in maxi(0, int(args.get("settle_frames", 30))):
+	var sess := _session()
+	var frames := maxi(0, int(args.get("settle_frames", 30)))
+	var noticed := false
+	for i in frames:
 		await physics_frame
+		if sess == null or not bool(sess.call("is_active")):
+			noticed = true
+			break
+	if sess != null and not noticed:
+		# A SETUP failure, worded as one. This is not "realm shells are
+		# broken"; it is this step failing to produce the state the smoke
+		# after it is about to assert on.
+		return {"verdict": "FAIL",
+			"detail": "transport closed but this peer's Session still reports active after %d frames"
+				% frames}
 	return {"verdict": "PASS", "detail": "transport closed without a Session.leave()"}
 
 
@@ -1763,6 +1785,17 @@ func _step_engage_wild(args: Dictionary) -> Dictionary:
 	#
 	# A budget rather than a fixed wait so the host path still returns on its
 	# first poll and costs nothing.
+	#
+	# `require_encounter_record: false` (lane MP-REALM-REOPEN) is for the one
+	# case where NO record is the documented behaviour rather than a failure:
+	# a CLIENT fighting a WILD. `encounter_director.gd::
+	# _open_encounter_if_networked()` is host-only by design -- lane 4.C's
+	# handover H1, because wild creatures are not replicated, so the host has
+	# never heard of the wild a client is standing in front of and has nothing
+	# to mint a record about. A client's wild fight is local and unarbitrated.
+	# The default stays true, so every smoke that engages as the host, or
+	# joins a fight the host holds, is unchanged.
+	var require_record := bool(args.get("require_encounter_record", true))
 	var bind_budget := maxi(1, int(args.get("bind_budget_frames", 600)))
 	var id := ""
 	for i in bind_budget:
@@ -1774,6 +1807,10 @@ func _step_engage_wild(args: Dictionary) -> Dictionary:
 			return {"verdict": "FAIL",
 				"detail": "the fight ended before it was ever bound to an encounter record"}
 		await physics_frame
+	if not require_record:
+		return {"verdict": "PASS",
+			"detail": "engaged %s; the fight is live and UNBOUND, which is what a client's wild fight is (4.C H1: wilds are not replicated, so the host mints no record)"
+				% str(body.get("species_id"))}
 	return {"verdict": "FAIL",
 		"detail": "a fight started but it was never bound to an encounter record within %d frames"
 			% bind_budget}
@@ -2848,6 +2885,16 @@ func _execute_probe(msg: Dictionary) -> Variant:
 					"pos": [b.global_position.x, b.global_position.y, b.global_position.z],
 					"name": "" if plate == null else str(plate.text),
 					"mine": b.is_multiplayer_authority(),
+					# Lane MP-REALM-REOPEN. WHICH world this body stands in.
+					# The host holds a peer's body inside its headless REALM
+					# SHELL as well -- that is D97's whole design, it is how
+					# the host simulates a realm nobody here can see -- so
+					# "the tree contains a body for that peer" and "this
+					# process is DRAWING that peer" stopped being the same
+					# question the moment shells existed. Only a body under
+					# `current_scene` is on screen.
+					"in_current_scene": current_scene != null
+						and current_scene.is_ancestor_of(b),
 					"visible": b.visible,
 					"anim": str(b.get("net_anim_state")),
 					"sprinting": bool(b.get("net_sprinting")),

@@ -1318,34 +1318,41 @@ func current_realm_scene() -> String:
 	return str(realm_hearts.call("scene_for_realm", current_realm))
 
 
-## D97's interim refusal, RE-INSTATED 2026-09-06 after lane 6.A's own smokes
-## measured what standing a realm shell actually costs the host.
+## D97's interim refusal is GONE, 2026-09-06, and directive rule 16 is open:
+## two players can stand in different biomes at the same time.
 ##
-## 6.A lifted this refusal and built the machinery a crossing needs: the
-## registry learns where each peer is, the realm being left despawns that
-## peer's body, and `realm_shells.gd` stands a headless shell for any occupied
-## realm the host is not in. All of that is sound and is left in place. What is
-## not sound is the last step's cost: `realm_shells.gd` does
-## `packed.instantiate()` and then a synchronous `tree.root.add_child(node)`,
-## and `add_child` is what runs the world root's `_ready()` -- the whole world
-## build. `simulation_only` is set first and still does not bring it under the
-## harness's 15 s heartbeat window; BOTH of 6.A's net smokes die with
-## "peer silent (peer 0, no heartbeat for >15 s)" at exactly that call, in the
-## client-crossing case and the host-crossing case alike.
+## Lane 6.A built the crossing itself -- the registry learns where each peer
+## is, the realm being left despawns that peer's body while its world is still
+## up, and `realm_shells.gd` stands a headless shell for any occupied realm the
+## host is not in. That machinery was always sound. What shut the door again
+## was its cost: `add_child()` runs the world root's `_ready()`, and that
+## `_ready()` was the entire world build inside one call on the host every
+## other player depends on. Measured with `tools/net/_probe_6a_shell.gd` on a
+## 4 vCPU box, a shell held a single frame for 21.9 s (Cloudreach) and 30.5 s
+## (the Meadows), and both of the lane's net smokes died with
+## "peer silent (peer 0, no heartbeat for >15 s)" at exactly that call.
 ##
-## In a smoke that is a timeout. In a real session it is the HOST freezing for
-## tens of seconds the moment a friend walks into Cloudreach, which is worse
-## for everyone than not having realm transitions at all -- so the door stays
-## shut until the shell can be stood up across frames instead of inside one.
+## What re-opens it is not a removed guard but a shell that BUILDS ACROSS
+## FRAMES: `scripts/world/shell_build_budget.gd` bounds how much world
+## building either world root may do in one frame, and `realm_shells.gd` reads
+## the scene off the loader thread instead of blocking on `load()`. Measured
+## again on the same box, same probe:
 ##
-## The retry has what it needs and should not start over: `realm_shells.gd`
-## already instruments `boot_ms` and the static-memory delta at the add_child
-## site, and spike S2's figures (~85 s cold, 2,783 MB) are the budget it has to
-## come in under. Deleting these four lines is what re-opens the door.
+##   Cloudreach shell   worst held frame 21.9 s -> 1.1 s, worst 60-frame
+##                      window 22.8 s -> 4.4 s
+##   Meadows shell      worst held frame 30.5 s -> 7.4 s, worst 60-frame
+##                      window 41.2 s -> 9.9 s
+##
+## The Meadows' remaining 7.4 s is one indivisible Terrain3D region-data load
+## and is a stated, measured limitation rather than a fixed one -- see
+## `ralph/reports/MP-REALM-REOPEN-0906/REPORT.md`.
+##
+## Opening this door is TWO edits and they belong together: these lines, and
+## the `# peers: 2` headers on `tests/smoke_net_split_realms.gd` and
+## `tests/smoke_net_realm_owner_disconnect_mid_fight.gd`. Both were done
+## together, and both smokes were run locally before either was made.
 func can_enter_realm(realm_id: String) -> bool:
 	if realm_hearts == null or progression == null:
-		return false
-	if is_multi_peer():
 		return false
 	var scene := str(realm_hearts.call("scene_for_realm", realm_id))
 	if scene == "":
