@@ -1405,32 +1405,47 @@ func _realm_map_state(realm_id: String) -> RefCounted:
 	return game.get("map") if realm_id == _player_realm() else null
 
 
-## Every realm the player may currently VIEW on this tab: Meadows always,
-## Cloudreach once reachable. Fixed narrative order (Meadows first) rather
-## than discovery order, so the selector/cycle order never reshuffles itself
-## mid-session.
+## Every realm the player may currently VIEW on this tab. The map registry is
+## the authority; this tab never assumes a two-realm world. Meadows remains
+## first and later configured realms stay alphabetic, so cycle order never
+## reshuffles as a player makes discoveries.
 func _available_realms() -> Array[String]:
-	var out: Array[String] = ["meadows"]
-	if _cloudreach_unlocked():
-		out.append("cloudreach")
+	var out: Array[String] = []
+	for realm_id: String in _configured_map_realms():
+		if realm_id == "meadows" or _realm_unlocked(realm_id):
+			out.append(realm_id)
+	if not out.has("meadows"):
+		out.push_front("meadows")
 	return out
 
 
-## Cloudreach counts as reachable the moment ANY of: the player is physically
-## standing there right now; a configured progression flag says the gate has
-## been opened (`_realm_link_unlock_flags()` — legendary_freed/
-## realm_key_cloudreach/cloudreach_chapter_started by default, D110); or its
-## own MapState already holds any real discovery at all (a belt-and-braces
-## catch for a save/debug path that reached Cloudreach without ever setting
-## one of those flags). None of this is a place-table entry — CLOUDREACH
-## ITSELF has to already exist as a possibility before "which regions has the
-## player found in it" means anything.
-func _cloudreach_unlocked() -> bool:
+## A configured realm becomes viewable when the player is there, has its
+## configured entry key, or already has personal discovery in its own map.
+## The last case preserves migrated/debug saves without leaking another
+## player's fog: `_realm_map_state()` only returns this local player's object.
+func _realm_unlocked(realm_id: String) -> bool:
 	var game := state()
 	if game == null:
 		return false
-	if _player_realm() == "cloudreach":
+	if _player_realm() == realm_id:
 		return true
+	var key_flag := _realm_entry_key(realm_id)
+	var progression: RefCounted = game.get("progression")
+	if not key_flag.is_empty() and progression != null and bool(progression.call("has", key_flag)):
+		return true
+	var map_state := _realm_map_state(realm_id)
+	return map_state != null and map_state.has_method("discovered_fraction") \
+		and float(map_state.call("discovered_fraction")) > 0.0
+
+
+## Cloudreach's historical helper remains public for callers/tests. Its three
+## old alternate flags remain valid until those old save paths age out.
+func _cloudreach_unlocked() -> bool:
+	if _realm_unlocked("cloudreach"):
+		return true
+	var game := state()
+	if game == null:
+		return false
 	var progression: RefCounted = game.get("progression")
 	if progression != null:
 		for flag in _realm_link_unlock_flags():
@@ -1441,6 +1456,39 @@ func _cloudreach_unlocked() -> bool:
 			and float(cloud_map.call("discovered_fraction")) > 0.0:
 		return true
 	return false
+
+
+func _configured_map_realms() -> Array[String]:
+	var game := state()
+	if game != null:
+		var local: Variant = game.get("local")
+		if local is RefCounted and (local as RefCounted).has_method("mapped_realm_ids"):
+			return (local as RefCounted).call("mapped_realm_ids")
+	var ids: Array[String] = ["meadows", "cloudreach"]
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/realm_hearts.json"))
+	var realms: Variant = (parsed as Dictionary).get("realms", {}) if parsed is Dictionary else {}
+	if realms is Dictionary:
+		for raw_id: Variant in (realms as Dictionary).keys():
+			var realm_id := str(raw_id)
+			var definition: Variant = (realms as Dictionary)[raw_id]
+			if definition is Dictionary and (definition as Dictionary).has("map_world_path") and not ids.has(realm_id):
+				ids.append(realm_id)
+	ids.sort()
+	ids.erase("meadows")
+	ids.push_front("meadows")
+	return ids
+
+
+func _realm_entry_key(realm_id: String) -> String:
+	var game := state()
+	if game != null:
+		var local: Variant = game.get("local")
+		if local is RefCounted and (local as RefCounted).has_method("map_definition_for"):
+			return str((local as RefCounted).call("map_definition_for", realm_id).get("entry_key_flag", ""))
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/realm_hearts.json"))
+	var realms: Variant = (parsed as Dictionary).get("realms", {}) if parsed is Dictionary else {}
+	var definition: Variant = (realms as Dictionary).get(realm_id, {}) if realms is Dictionary else {}
+	return str((definition as Dictionary).get("entry_key_flag", "")) if definition is Dictionary else ""
 
 
 ## Which realm the canvas draws right now. Empty (the field's own initial
@@ -1465,10 +1513,11 @@ func _should_draw_player_marker() -> bool:
 
 
 func _other_realm(realm_id: String) -> String:
-	for candidate in _available_realms():
-		if candidate != realm_id:
-			return candidate
-	return "cloudreach" if realm_id == "meadows" else "meadows"
+	var realms := _available_realms()
+	var index := realms.find(realm_id)
+	if realms.size() <= 1:
+		return realm_id
+	return realms[wrapi(index + 1, 0, realms.size())] if index >= 0 else realms[0]
 
 
 func _realm_display_name(realm_id: String) -> String:

@@ -35,7 +35,7 @@ extends Node3D
 ## lives on the PLAYER half of the state split (`MP_STATE_SEAM.md` §2:
 ## `PlayerState.save_data()` carries `realm_hearts`), it is never submitted to
 ## the ledger, and nothing here replicates it. Two peers standing at the same
-## socket can be running two different Heart powers, and that is the point --
+## socket can be running two different relic powers, and that is the point --
 ## the Heart is placed in the world once, and each trainer chooses for
 ## themselves whether to wear its power.
 
@@ -73,6 +73,7 @@ var _observed_progression: RefCounted = null
 var _observed_hearts: RefCounted = null
 var _progression_revision := -1
 var _heart_revision := -1
+var _companion_slot := false
 
 
 ## Configure before adding the shrine to the scene tree.  Calling it later is
@@ -98,6 +99,24 @@ func _ready() -> void:
 	_build_visual()
 	_build_prompt()
 	refresh_from_game()
+	if not _companion_slot:
+		_build_relic_slots()
+
+
+func _build_relic_slots() -> void:
+	var definitions := {"meadows":"Heart of the Meadows", "cloudreach":"Wings of Cloudreach", "stormwood":"Spark of the Stormwood"}
+	var side := -1.0
+	for id: String in definitions:
+		if id == heart_id:
+			continue
+		var slot := (get_script() as Script).new() as Node3D
+		slot.name = "RelicSlot_" + id
+		slot.set("_companion_slot", true)
+		slot.call("setup", id, definitions[id], realm())
+		slot.position = Vector3(side * 3.0, 0, 0)
+		slot.set("interaction_radius", 2.0)
+		add_child(slot)
+		side = 1.0
 
 
 ## The four player-facing states required by the Realm Heart contract.  Kept
@@ -153,10 +172,10 @@ func _on_activated() -> void:
 			submit_place(game)
 		STATE_PLACED_INACTIVE:
 			if bool(hearts.call("activate", heart_id, progression)):
-				_announce(game, "%s active. %s Only one Heart power can be active." % [heart_name, _power_description(hearts)])
+				_announce(game, "%s active. %s Only one relic power can be active." % [heart_name, _power_description(hearts)])
 		STATE_ACTIVE:
 			hearts.call("clear_active")
-			_announce(game, "%s power released. No Heart power is active." % heart_name)
+			_announce(game, "%s power released. No relic power is active." % heart_name)
 		_:
 			return
 	_refresh(game)
@@ -181,6 +200,8 @@ func submit_place(game: Node) -> Dictionary:
 	var hearts := _realm_hearts(game)
 	if game == null or progression == null or hearts == null:
 		return _refusal("The world is not ready yet.")
+	if _companion_slot:
+		return _refusal("Place %s at its own realm's shrine first." % heart_name)
 	var flag := str(hearts.call("placed_flag", heart_id))
 	if flag.is_empty():
 		return _refusal("That Heart has no socket to record.")
@@ -217,7 +238,7 @@ func submit_place(game: Node) -> Dictionary:
 
 
 func _announce_placed(game: Node, hearts: RefCounted) -> void:
-	_announce(game, "%s placed. %s Only one Heart power can be active."
+	_announce(game, "%s placed. %s Only one relic power can be active."
 		% [heart_name, _power_description(hearts)])
 
 
@@ -241,15 +262,18 @@ func _refresh(game: Node) -> void:
 	# stands at the shrine, including when a save already has it placed.
 	var details := ""
 	if _observed_hearts != null:
-		details = "\n%s\nOnly one Heart power can be active." % _power_description(_observed_hearts)
+		details = "\n%s\nOnly one relic power can be active." % _power_description(_observed_hearts)
 	match state:
 		STATE_UNEARNED:
-			_prompt.call("configure", "The Meadows shrine is waiting", interaction_radius, true)
+			_prompt.call("configure", "%s — empty relic slot" % heart_name, interaction_radius, true)
 			_prompt.set("actionable", false)
 			_set_visual(false, false, false)
 		STATE_EARNED_UNPLACED:
-			_prompt.call("configure", "Place %s%s" % [heart_name, details], interaction_radius, true)
-			_prompt.set("actionable", true)
+			var label := "Place %s%s" % [heart_name, details]
+			if _companion_slot:
+				label = "%s — place at its own realm's shrine" % heart_name
+			_prompt.call("configure", label, interaction_radius, true)
+			_prompt.set("actionable", not _companion_slot)
 			_set_visual(true, false, false)
 		STATE_PLACED_INACTIVE:
 			_prompt.call("configure", "Activate %s%s" % [heart_name, details], interaction_radius, true)
@@ -350,9 +374,18 @@ func _build_visual() -> void:
 	_heart_visual = Node3D.new()
 	_heart_visual.name = "RealmHeart"
 	add_child(_heart_visual)
-	_build_heart_piece(Vector3(-0.16, 0.10, 0.0), Vector3(0.25, 0.24, 0.16), 0.0)
-	_build_heart_piece(Vector3(0.16, 0.10, 0.0), Vector3(0.25, 0.24, 0.16), 0.0)
-	_build_heart_piece(Vector3(0.0, -0.13, 0.0), Vector3(0.31, 0.31, 0.17), deg_to_rad(45.0))
+	if heart_id == "cloudreach":
+		for side: float in [-1.0, 1.0]:
+			for feather in 3:
+				_build_heart_piece(Vector3(side*(0.12+feather*0.12),0.15-feather*0.07,0),Vector3(0.13,0.45-feather*0.05,0.12),side*0.65)
+	elif heart_id == "stormwood":
+		_build_heart_piece(Vector3(-0.06,0.19,0),Vector3(0.16,0.48,0.16),-0.4)
+		_build_heart_piece(Vector3(0.06,-0.18,0),Vector3(0.16,0.48,0.16),-0.4)
+		_build_heart_piece(Vector3.ZERO,Vector3(0.35,0.13,0.16),0)
+	else:
+		_build_heart_piece(Vector3(-0.16, 0.10, 0.0), Vector3(0.25, 0.24, 0.16), 0.0)
+		_build_heart_piece(Vector3(0.16, 0.10, 0.0), Vector3(0.25, 0.24, 0.16), 0.0)
+		_build_heart_piece(Vector3(0.0, -0.13, 0.0), Vector3(0.31, 0.31, 0.17), deg_to_rad(45.0))
 
 	_heart_light = OmniLight3D.new()
 	_heart_light.name = "HeartLight"

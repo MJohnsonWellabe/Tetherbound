@@ -25,6 +25,13 @@ const GAME := preload("res://autoload/game_state.gd")
 const GAME_MENU := preload("res://scripts/ui/game_menu.gd")
 const TAB := preload("res://scripts/ui/tab_map.gd")
 const CLOUDREACH_AT := Vector3(1400, 1000, 5500)
+const STORMWOOD_AT := Vector3(-300, 30, 180)
+
+const THREE_REALM_MAPS := {
+	"meadows": {"display_name": "The Meadows", "map_landmarks_path": "res://data/config/map_landmarks.json"},
+	"cloudreach": {"display_name": "Cloudreach Cliffs", "entry_key_flag": "realm_key_cloudreach", "map_world_path": "res://data/config/cloudreach_world.json", "map_chapter_path": "res://data/config/cloudreach_chapter.json"},
+	"stormwood": {"display_name": "The Stormwood", "entry_key_flag": "realm_key_stormwood", "map_world_path": "res://data/config/stormwood_world.json", "map_tuning_path": "res://data/config/stormwood_atmosphere.json"},
+}
 
 var _nodes: Array[Node] = []
 
@@ -162,3 +169,17 @@ func test_realm_link_labels_and_icon_come_from_map_json_and_name_the_destination
 	assert_eq(str(tab.call("_other_realm", "cloudreach")), "meadows")
 	assert_eq(str(tab.call("_realm_display_name", "meadows")), "Meadows")
 	assert_eq(str(tab.call("_realm_display_name", "cloudreach")), "Cloudreach Cliffs")
+
+
+func test_selector_uses_all_unlocked_registry_realms_not_a_binary_pair() -> void:
+	var game := _game()
+	game.local.configure_map_definitions(THREE_REALM_MAPS)
+	game.progression.set_flag("realm_key_cloudreach")
+	var storm: RefCounted = game.realm_map_for("stormwood")
+	storm.mark_visited(STORMWOOD_AT)
+	var tab := _tab(game)
+	assert_eq(tab.call("_available_realms"), ["meadows", "cloudreach", "stormwood"])
+	assert_eq(str(tab.call("_other_realm", "cloudreach")), "stormwood")
+	tab.call("_on_realm_button_pressed", "stormwood")
+	assert_eq(tab.call("_map_state"), storm)
+	assert_false(bool(tab.call("_should_draw_player_marker")))

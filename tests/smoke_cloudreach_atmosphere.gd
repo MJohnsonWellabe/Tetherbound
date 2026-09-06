@@ -51,7 +51,7 @@ func _run() -> void:
 	flags.set_flag("captain_veyra_defeated")
 	flags.set_flag("storm_anchor_network_disabled")
 	flags.set_flag("cloudreach_winds_restored")
-	flags.set_flag("waterward_route_revealed")
+	flags.set_flag("stormward_route_revealed")
 	runtime.sync_progression()
 	runtime.advance_mix(4.0)
 	var mix := runtime.audio_snapshot()
@@ -66,7 +66,7 @@ func _run() -> void:
 	runtime.sync_progression()
 	runtime.sync_progression()
 	_check(is_equal_approx(shrine.light_energy, 2.7), "Reload/repeated sync cannot compound light intensity")
-	_check(not loaded.has("realm_key_water") and not loaded.has("cloudreach_chapter_complete"), "Atmosphere never fabricates story completion/rewards")
+	_check(not loaded.has("realm_key_stormwood") and not loaded.has("cloudreach_chapter_complete"), "Atmosphere never fabricates story completion/rewards")
 	scene.queue_free()
 	await process_frame
 	AMBIENCE.AUDIO.reset_for_test()

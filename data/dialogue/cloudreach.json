@@ -21,11 +21,11 @@
     },
     "cloudreach_aila_after_restoration": {
       "speaker": "Warden Aila", "portrait": "res://assets/ui/portraits/cloudreach_aila_clean.png",
-      "lines": ["Listen. The bells answer one another again. Galefoot, Windscar, Cliffhold: three places that can finally be neighbors.", "We'll mend the spans and bring the stranded people home. Keep the camps supplied while the roads fill again.", "The Waterward overlook holds our next promise. The road beyond this realm is still closed, but we can finally see where it leads."]
+      "lines": ["Listen. The bells answer one another again. Galefoot, Windscar, Cliffhold: three places that can finally be neighbors.", "We'll mend the spans and bring the stranded people home. Keep the camps supplied while the roads fill again.", "From Stormward Overlook you can see a storm that never moves. The Rodfolk live beneath it. Our road reaches their forest now."]
     },
     "cloudreach_aila_final_reward": {
       "speaker": "Warden Aila", "portrait": "res://assets/ui/portraits/cloudreach_aila_clean.png",
-      "lines": ["You brought the wind back to its roads. No warden should own those roads; our work is to keep them open for everyone.", "This is the Heart of Cloudreach, and the key kept for the Waterward realm. The Heart is a realm trophy. Its power is not yet available; your equipped Meadows power remains yours to use.", {"text": "Take them with our thanks. Look out from Waterward Overlook: that distant coast is the next chapter, when its gate opens. For now, Cloudreach and the road home are yours to explore.", "effect": "cloudreach:cloudreach_aila_final_reward_complete"}]
+      "lines": ["You brought the wind back to its roads. No warden should own those roads; our work is to keep them open for everyone.", "These are the Wings of Cloudreach, and the Key to the Stormwood. Place the Wings at the Sky Shrine when you return: Skyborne lets you fly without spending stamina. You can choose one relic power at a time.", {"text": "Take them with our thanks. Past Stormward Overlook, the scarred stair leads down to the sealed gate. Beyond it lies the Rodfolk's forest. Farther still, that glint is water. Keep the road home close.", "effect": "cloudreach:cloudreach_aila_final_reward_complete"}]
     },
     "cloudreach_iven_waycamp": {
       "speaker": "Iven", "portrait": "res://assets/ui/portraits/wilhelm.png",

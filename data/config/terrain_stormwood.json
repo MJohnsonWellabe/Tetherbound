@@ -1,0 +1,21 @@
+{
+  "_comment": "Authored Stormwood macro geography, baked offline. Region lattice is 512 m; 9 by 12 regions. Noise supplies surface variation only; settlements, passes and the Glass Sink have fixed positions.",
+  "seed": 20260906,
+  "region_size": 256,
+  "vertex_spacing": 2.0,
+  "world_bounds": {"min_x": -2560.0, "max_x": 2048.0, "min_z": 0.0, "max_z": 6144.0},
+  "base_height": 28.0,
+  "hills_amplitude": 14.0,
+  "hills_frequency": 0.0018,
+  "detail_amplitude": 1.4,
+  "detail_frequency": 0.018,
+  "ridge": {"centre": [-850, 2900], "radius": [850, 1100], "height": 62},
+  "deepwood": {"centre": [-350, 4320], "radius": [1800, 900], "height": 38},
+  "dynamo": {"centre": [-100, 5420], "radius": [900, 700], "height": 88},
+  "glass_sink": {"centre": [700, 2700], "outer_radius": 720, "island_radius": 250, "floor_y": -65, "island_y": 74},
+  "rootgate": {"z": 3550, "pass_x": -650, "pass_half_width": 32, "ridge_height": 150},
+  "route_half_width": 7.5,
+  "route_blend_width": 10.0,
+  "collision_mode": 3,
+  "_collision_comment": "Full game collision supports geographically separated peers in one realm; measure memory and CPU before accepting the world. Never average two players into one collision focus."
+}

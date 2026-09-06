@@ -266,6 +266,7 @@ const AUTOSAVE_SLOT := 0
 ## for why this lane ADDED the split rather than replacing the slot with it.
 const WORLD_SAVE := preload("res://scripts/save/world_save.gd")
 const CHARACTER_SAVE := preload("res://scripts/save/character_save.gd")
+const REALM_REWARD_MIGRATION := preload("res://scripts/save/realm_reward_migration.gd")
 
 var _dir: String
 var _worlds: RefCounted = null
@@ -419,6 +420,10 @@ func load_slot(game: Object, slot: int) -> bool:
 	data = _migrate_to_current(data, version, slot)
 	if data.is_empty():
 		return false
+	# Stormwood retargets Cloudreach's historical Water entitlement.  Repair the
+	# in-memory v22 payload before its first split so the live progression and
+	# generated world file agree; the original legacy slot remains untouched.
+	data = REALM_REWARD_MIGRATION.repair_flat_payload(data)
 
 	# D100, before a single field is applied: this slot becomes one world file
 	# and one character file, and the slot file itself is not touched.
@@ -783,18 +788,43 @@ func _realm_map_payloads(data: Dictionary) -> Dictionary:
 	var result: Dictionary = {}
 	var raw: Variant = data.get("realm_maps", {})
 	if raw is Dictionary:
-		for realm_id: String in ["meadows", "cloudreach"]:
-			if raw.get(realm_id) is Dictionary:
-				result[realm_id] = raw[realm_id].duplicate(true)
+		for realm_id: Variant in (raw as Dictionary):
+			if (raw as Dictionary)[realm_id] is Dictionary:
+				result[str(realm_id)] = ((raw as Dictionary)[realm_id] as Dictionary).duplicate(true)
 	var legacy: Variant = data.get("map", {})
 	if legacy is Dictionary:
-		var owner := "cloudreach" if str(legacy.get("realm_id", "")) == "cloudreach" else "meadows"
+		# The first per-realm-save experiments called this field `mapowner`.
+		# Keep accepting it (and the briefly-used snake_case spelling) before
+		# falling back to the later payload-local realm_id.  Selected scene is
+		# deliberately not evidence of fog ownership: old saves could be made
+		# while looking at Cloudreach with a Meadows grid in `map`.
+		var tagged := str(data.get("mapowner", data.get("map_owner", "")))
+		if tagged.is_empty():
+			tagged = str((legacy as Dictionary).get("mapowner", (legacy as Dictionary).get("map_owner", (legacy as Dictionary).get("realm_id", ""))))
+		var owner := tagged if not tagged.is_empty() else "meadows"
 		if not result.has(owner):
 			result[owner] = legacy.duplicate(true)
-	for realm_id: String in ["meadows", "cloudreach"]:
+	for realm_id: String in _mapped_realm_ids():
 		if not result.has(realm_id):
 			result[realm_id] = {}
 	return result
+
+
+func _mapped_realm_ids() -> Array[String]:
+	var ids: Array[String] = ["meadows", "cloudreach"]
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/realm_hearts.json"))
+	var realms: Variant = (parsed as Dictionary).get("realms", {}) if parsed is Dictionary else {}
+	if realms is Dictionary:
+		for realm_id: Variant in (realms as Dictionary).keys():
+			var id := str(realm_id)
+			var entry: Variant = (realms as Dictionary)[realm_id]
+			if ids.has(id) or not (entry is Dictionary):
+				continue
+			var map_world := str((entry as Dictionary).get("map_world_path", ""))
+			var map_landmarks := str((entry as Dictionary).get("map_landmarks_path", ""))
+			if not map_world.is_empty() or not map_landmarks.is_empty():
+				ids.append(id)
+	return ids
 
 
 func _finite_number(value: Variant) -> bool:

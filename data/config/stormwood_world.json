@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "_comment": "Root-authored six-region layout. All positions are realm-local metres. Ordinary routes never enter the Glass Sink. The Crown has only a linked-arch entry. The Stormheart Tree is the Dynamo and must dominate neighbouring views.",
+  "realm": {"id": "stormwood", "display_name": "The Stormwood", "world_bounds": {"min_x": -2560, "max_x": 2048, "min_y": -100, "max_y": 360, "min_z": 0, "max_z": 6144}},
+  "transition_points": {
+    "cloudreach_entry": {"id": "stormwood_arrival_from_cloudreach", "position": [-300, 30, 180], "facing_yaw_deg": 180, "peer_realm_id": "cloudreach", "peer_anchor_id": "cloudreach_return_from_stormwood", "save_anchor": true},
+    "cloudreach_return": {"id": "stormwood_return_to_cloudreach", "position": [-300, 30, 145], "facing_yaw_deg": 0, "peer_realm_id": "cloudreach", "peer_anchor_id": "cloudreach_return_from_stormwood", "save_anchor": true}
+  },
+  "regions": [
+    {"id": "cinder_verge", "display_name": "Cinder Verge", "order": 1, "position": [-300, 28, 530], "bounds": {"min_x": -2560, "max_x": 2048, "min_y": -100, "max_y": 360, "min_z": 0, "max_z": 1050}},
+    {"id": "glowmoss_hollows", "display_name": "Glowmoss Hollows", "order": 2, "position": [-500, 25, 1550], "bounds": {"min_x": -2560, "max_x": 2048, "min_y": -100, "max_y": 360, "min_z": 1050, "max_z": 2150}},
+    {"id": "conductor_run", "display_name": "The Conductor Run", "order": 3, "position": [-850, 80, 2820], "bounds": {"min_x": -2560, "max_x": 350, "min_y": -100, "max_y": 360, "min_z": 2150, "max_z": 3550}},
+    {"id": "hollow_crown", "display_name": "The Hollow Crown", "order": 4, "position": [700, 74, 2700], "bounds": {"min_x": 440, "max_x": 960, "min_y": 65, "max_y": 360, "min_z": 2440, "max_z": 2960}, "access": {"mode": "arch_only", "requires_unlock": "stormwood:crown_reached"}},
+    {"id": "deepwood", "display_name": "The Deepwood", "order": 5, "position": [-350, 70, 4330], "bounds": {"min_x": -2560, "max_x": 2048, "min_y": -100, "max_y": 360, "min_z": 3550, "max_z": 4950}, "access": {"requires_unlock": "stormwood:rootgate_released"}},
+    {"id": "dynamo", "display_name": "The Dynamo", "order": 6, "position": [-100, 130, 5420], "bounds": {"min_x": -2560, "max_x": 2048, "min_y": -100, "max_y": 360, "min_z": 4950, "max_z": 6144}, "access": {"requires_unlock": "stormwood:rootgate_released"}}
+  ],
+  "landmarks": [
+    {"id": "struck_sentinel", "display_name": "The Struck Sentinel", "region_id": "cinder_verge", "position": [-320, 28, 240], "category": "major"},
+    {"id": "ashfoot_waycamp", "display_name": "Ashfoot Waycamp", "region_id": "cinder_verge", "position": [-350, 28, 450], "category": "camp"},
+    {"id": "verge_rod_station", "display_name": "Verge Rod Station", "region_id": "cinder_verge", "position": [-650, 28, 830], "category": "stronghold"},
+    {"id": "lantern_pools", "display_name": "The Lantern Pools", "region_id": "glowmoss_hollows", "position": [-380, 25, 1400], "category": "major"},
+    {"id": "hollows_rod_station", "display_name": "Hollows Rod Station", "region_id": "glowmoss_hollows", "position": [-900, 30, 1780], "category": "stronghold"},
+    {"id": "crown_overlook", "display_name": "Crown Overlook", "region_id": "glowmoss_hollows", "position": [160, 48, 1980], "category": "major"},
+    {"id": "rodline_post", "display_name": "Rodline Post", "region_id": "conductor_run", "position": [-700, 65, 2300], "category": "settlement"},
+    {"id": "capacitor_grove", "display_name": "The Capacitor Grove", "region_id": "conductor_run", "position": [-1080, 86, 3020], "category": "major"},
+    {"id": "still_grove", "display_name": "The Still Grove", "region_id": "conductor_run", "position": [-160, 74, 2700], "category": "camp"},
+    {"id": "glass_sink", "display_name": "The Glass Sink", "region_id": "hollow_crown", "position": [700, -65, 2350], "category": "major"},
+    {"id": "crown_arch", "display_name": "The Crown Arch", "region_id": "hollow_crown", "position": [485, 74, 2700], "category": "major", "requires_unlock": "stormwood:crown_reached"},
+    {"id": "crown_heartstone", "display_name": "The Crown Heartstone", "region_id": "hollow_crown", "position": [700, 74, 2700], "category": "story", "requires_unlock": "stormwood:crown_reached"},
+    {"id": "lantern_hollow", "display_name": "Lantern Hollow", "region_id": "deepwood", "position": [-450, 67, 3960], "category": "settlement", "requires_unlock": "stormwood:rootgate_released"},
+    {"id": "fallen_giant", "display_name": "The Fallen Giant", "region_id": "deepwood", "position": [-150, 65, 4460], "category": "major", "requires_unlock": "stormwood:rootgate_released"},
+    {"id": "deepwood_rod_station", "display_name": "Deepwood Rod Station", "region_id": "deepwood", "position": [-890, 60, 4490], "category": "stronghold", "requires_unlock": "stormwood:rootgate_released"},
+    {"id": "old_rodfolk_hall", "display_name": "The Old Rodfolk Hall", "region_id": "deepwood", "position": [-1590, 57, 4370], "category": "dungeon", "requires_unlock": "stormwood:rootgate_released"},
+    {"id": "glass_field", "display_name": "The Glass Field", "region_id": "dynamo", "position": [-310, 100, 5050], "category": "major", "requires_unlock": "stormwood:rootgate_released"},
+    {"id": "dynamo_outer_works", "display_name": "Dynamo Outer Works", "region_id": "dynamo", "position": [-100, 130, 5350], "category": "stronghold", "requires_unlock": "stormwood:rootgate_released"},
+    {"id": "dynamo_core", "display_name": "The Stormheart Tree", "region_id": "dynamo", "position": [-100, 260, 5470], "category": "stronghold", "requires_unlock": "stormwood:rootgate_released"}
+  ],
+  "routes": [
+    {"id": "ash_road", "kind": "critical", "points": [[-300,180],[-350,450],[-650,830],[-590,1060],[-380,1400],[-900,1780],[-700,2300]]},
+    {"id": "conductor_road", "kind": "critical", "points": [[-700,2300],[-560,2480],[-160,2700],[-630,2930],[-1080,3020],[-1120,3290],[-650,3550]]},
+    {"id": "deepwood_road", "kind": "critical", "requires_unlock": "stormwood:rootgate_released", "points": [[-650,3550],[-450,3960],[-890,4490],[-150,4460],[-310,5050],[-100,5350],[-100,5470]]},
+    {"id": "pools_west_loop", "kind": "loop", "points": [[-590,1060],[-1230,1210],[-1480,1500],[-900,1780],[-380,1400],[-590,1060]]},
+    {"id": "crown_sightline_loop", "kind": "loop", "points": [[-380,1400],[50,1570],[160,1980],[-200,2160],[-700,2300],[-900,1780],[-380,1400]]},
+    {"id": "conductor_west_loop", "kind": "loop", "points": [[-700,2300],[-1550,2460],[-1720,3040],[-1120,3290],[-1080,3020],[-700,2300]]},
+    {"id": "hall_loop", "kind": "loop", "requires_unlock": "stormwood:rootgate_released", "points": [[-450,3960],[-1120,3870],[-1590,4370],[-890,4490],[-450,3960]]},
+    {"id": "blackwater_loop", "kind": "loop", "requires_unlock": "stormwood:rootgate_released", "points": [[-450,3960],[550,4050],[820,4520],[-150,4460],[-450,3960]]},
+    {"id": "crown_ring", "kind": "island", "points": [[485,2700],[590,2540],[805,2545],[890,2710],[780,2850],[585,2840],[485,2700]]}
+  ],
+  "no_fly": {"reason": "The storm canopy leaves no safe sky to launch into.", "all_realm": true}
+}

@@ -7,6 +7,13 @@ const TAB := preload("res://scripts/ui/tab_map.gd")
 const DIR := "user://test_realm_map_persistence/"
 const MEADOWS_AT := Vector3(120, 0, 140)
 const CLOUDREACH_AT := Vector3(1400, 1000, 5500)
+const STORMWOOD_AT := Vector3(-300, 30, 180)
+
+const THREE_REALM_MAPS := {
+	"meadows": {"display_name": "The Meadows", "map_landmarks_path": "res://data/config/map_landmarks.json"},
+	"cloudreach": {"display_name": "Cloudreach Cliffs", "map_world_path": "res://data/config/cloudreach_world.json", "map_chapter_path": "res://data/config/cloudreach_chapter.json"},
+	"stormwood": {"display_name": "The Stormwood", "entry_key_flag": "realm_key_stormwood", "map_world_path": "res://data/config/stormwood_world.json", "map_tuning_path": "res://data/config/stormwood_atmosphere.json"},
+}
 
 var _games: Array[Node] = []
 var _save: RefCounted
@@ -73,7 +80,7 @@ func test_transition_there_and_back_preserves_exact_meadows_fog_and_instances() 
 	assert_eq(game.map, cloud, "unsupported realm cannot replace the active map")
 
 
-func test_save_reload_in_either_realm_retains_both_payloads_and_ui_contract() -> void:
+func test_save_reload_in_existing_realms_retains_configured_payloads_and_ui_contract() -> void:
 	for realm_id: String in ["meadows", "cloudreach"]:
 		var written := _game()
 		written.map.mark_visited(MEADOWS_AT)
@@ -85,7 +92,9 @@ func test_save_reload_in_either_realm_retains_both_payloads_and_ui_contract() ->
 		assert_true(_save.save(written, 0))
 		var file_data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(_save.slot_path(0)))
 		assert_eq(file_data.version, SAVE.VERSION)
-		assert_eq(file_data.realm_maps.keys().size(), 2)
+		assert_eq(file_data.realm_maps.keys().size(), _save._mapped_realm_ids().size())
+		assert_eq(file_data.realm_maps.stormwood.realm_id, "stormwood")
+		assert_eq(Marshalls.base64_to_raw(str(file_data.realm_maps.stormwood.visited_b64)).count(1), 0)
 		_assert_payload(file_data.realm_maps.meadows, meadows_data)
 		var restored := _game()
 		var existing_meadows: RefCounted = restored.map
@@ -155,12 +164,36 @@ func test_authoritative_payloads_override_alias_and_reset_new_game_clears_both()
 	assert_false(_switch(game, "cloudreach").is_discovered(CLOUDREACH_AT))
 
 
-func test_version_one_chain_retains_pre_cloudreach_fields_and_produces_two_maps() -> void:
+func test_version_one_chain_retains_pre_cloudreach_fields_and_produces_configured_maps() -> void:
 	var old := {"version": 1, "day": 9, "party": [], "inventory": [], "placed_buildings": []}
 	var migrated: Dictionary = _save._migrate_to_current(old, 1, 0)
 	assert_eq(migrated.version, SAVE.VERSION)
 	assert_eq(migrated.current_realm, "meadows")
 	assert_eq(migrated.day, 9)
 	assert_true(migrated.has("realm_hearts"))
-	assert_eq(migrated.realm_maps.keys().size(), 2)
+	assert_eq(migrated.realm_maps.keys().size(), _save._mapped_realm_ids().size())
+	assert_eq(migrated.realm_maps.stormwood, {})
 	assert_eq(migrated.realm_maps.meadows, migrated.map)
+
+
+func test_third_configured_realm_round_trips_its_own_fog_and_legacy_owner() -> void:
+	var written := _game()
+	written.local.configure_map_definitions(THREE_REALM_MAPS)
+	written.map.mark_visited(MEADOWS_AT)
+	_switch(written, "cloudreach").mark_visited(CLOUDREACH_AT)
+	_switch(written, "stormwood").mark_visited(STORMWOOD_AT)
+	var storm_payload: Dictionary = written.map.save_data()
+	assert_true(_save.save(written, 0))
+	var raw: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(_save.slot_path(0)))
+	assert_eq(raw.realm_maps.keys().size(), 3)
+	_assert_payload(raw.realm_maps.stormwood, storm_payload, "Stormwood has an isolated payload")
+
+	var restored := _game()
+	restored.local.configure_map_definitions(THREE_REALM_MAPS)
+	assert_true(_save.load_slot(restored, 0))
+	assert_true(_switch(restored, "stormwood").is_discovered(STORMWOOD_AT))
+	assert_false(_switch(restored, "meadows").is_discovered(STORMWOOD_AT), "Stormwood fog never enters Meadows")
+
+	var legacy := {"version": 18, "mapowner": "stormwood", "map": storm_payload}
+	var migrated: Dictionary = _save._migrate_v18(legacy)
+	_assert_payload(migrated.realm_maps.stormwood, storm_payload, "mapowner keeps a legacy third-realm grid with its owner")

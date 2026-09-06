@@ -89,7 +89,7 @@ func _run() -> void:
 	for id: String in payoffs.anchors:
 		check(payoffs.anchors[id].wind.visible and not payoffs.anchors[id].bottled.visible,"natural wind replaces bottled anchor "+id)
 	check(not game.can_enter_realm("water"),"payoffs do not enter Waterward")
-	check(not game.progression.has("realm_key_water"),"payoffs do not manufacture final chapter rewards")
+	check(not game.progression.has("realm_key_stormwood"),"payoffs do not manufacture final chapter rewards")
 	var tavi: Node3D=director.trainer_nodes.young_trainer_tavi_rematch
 	check(tavi==director.trainer_nodes.young_trainer_tavi_upper_ring,"rematch reuses canonical Tavi")
 	player.global_position=tavi.global_position+Vector3(0,0.2,-5)

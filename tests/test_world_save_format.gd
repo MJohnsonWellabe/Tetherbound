@@ -128,6 +128,51 @@ func test_the_state_payload_loads_straight_into_a_world_state() -> void:
 	assert_false(bool((world.get("flags") as RefCounted).call("has", "tam_tools_given")))
 
 
+func test_split_world_state_repairs_only_legacy_cloudreach_water_entitlements() -> void:
+	assert_true(bool(worlds.call("write", "legacy-cloudreach", {
+		"flags": {"flags": [
+			"cloudreach_chapter_complete", "realm_key_water", "waterward_route_revealed",
+			"unrelated_world_flag",
+		]},
+	})))
+	var state: Dictionary = worlds.call("state", "legacy-cloudreach")
+	var ids: Array = (state.get("flags", {}) as Dictionary).get("flags", []) as Array
+	for id: String in ["realm_key_stormwood", "stormward_route_revealed",
+			"cloudreach_reward_retargeted_stormwood", "unrelated_world_flag"]:
+		assert_true(ids.has(id), "split-world repair lost '%s'" % id)
+	assert_false(ids.has("realm_key_water"))
+	assert_false(ids.has("waterward_route_revealed"))
+
+
+func test_split_world_state_preserves_later_legitimate_water_reward() -> void:
+	assert_true(bool(worlds.call("write", "stormwood-water", {
+		"flags": {"flags": [
+			"cloudreach_chapter_complete", "realm_key_water", "waterward_route_revealed",
+			"stormwood:chapter_complete",
+		]},
+	})))
+	var state: Dictionary = worlds.call("state", "stormwood-water")
+	var ids: Array = (state.get("flags", {}) as Dictionary).get("flags", []) as Array
+	assert_true(ids.has("realm_key_water"))
+	assert_true(ids.has("waterward_route_revealed"))
+	assert_false(ids.has("realm_key_stormwood"))
+	assert_false(ids.has("cloudreach_reward_retargeted_stormwood"))
+
+
+func test_split_world_state_marker_prevents_a_second_water_retarget() -> void:
+	assert_true(bool(worlds.call("write", "already-repaired", {
+		"flags": {"flags": [
+			"cloudreach_chapter_complete", "realm_key_water", "waterward_route_revealed",
+			"cloudreach_reward_retargeted_stormwood",
+		]},
+	})))
+	var state: Dictionary = worlds.call("state", "already-repaired")
+	var ids: Array = (state.get("flags", {}) as Dictionary).get("flags", []) as Array
+	assert_true(ids.has("realm_key_water"))
+	assert_true(ids.has("waterward_route_revealed"))
+	assert_false(ids.has("realm_key_stormwood"))
+
+
 # --- D100's ownership rule ----------------------------------------------------
 
 func test_a_client_save_writes_no_world_file() -> void:

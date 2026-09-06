@@ -211,7 +211,7 @@ func presentation_state() -> Dictionary:
 		"hazards_active": phase in ["crosswind_command", "anchor_overload", "break_the_eye"],
 		"anchor_drone_active": not _has(str(config.get("network_flag", ""))),
 		"natural_wind_trails": freed, "travelers_reconnected": freed,
-		"restored_route_currents": freed, "waterward_visible": _has("waterward_route_revealed")}
+		"restored_route_currents": freed, "waterward_visible": _has("stormward_route_revealed")}
 
 
 func build_interactions() -> void:

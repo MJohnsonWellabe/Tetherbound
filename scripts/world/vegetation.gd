@@ -56,6 +56,22 @@ const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
 ## computing, same as a missing or stale bake does.
 const BAKE_WORLD_NAME := "playground"
 
+var _realm_config: Dictionary = {}
+var _realm_field: RefCounted
+var _realm_bake_name := BAKE_WORLD_NAME
+var _realm_fingerprint := -1
+
+## A realm supplies its own baked placements and ecology, while retaining the
+## production Terrain3D instancer, harvest ledger, collisions and persistence.
+func configure_realm_scatter(config: Dictionary, field: RefCounted, bake_name: String, fingerprint: int) -> void:
+	_realm_config = config
+	_realm_field = field
+	_realm_bake_name = bake_name
+	_realm_fingerprint = fingerprint
+
+func _vegetation_config() -> Dictionary:
+	return _realm_config if not _realm_config.is_empty() else RULES.config()
+
 ## Props are sunk very slightly so their bases never float over a slope. The
 ## terrain under a prop is sampled at a single point, but the prop has width.
 const SINK := 0.06
@@ -427,10 +443,10 @@ func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 
 	_collision_batches.clear()
 
-	var cfg: Dictionary = RULES.config()
+	var cfg: Dictionary = _vegetation_config()
 	if cfg.is_empty():
 		return
-	var field: RefCounted = HEIGHTFIELD.new()
+	var field: RefCounted = _realm_field if _realm_field != null else HEIGHTFIELD.new()
 	_field = field
 	# SG46/D41: what the drain removed, kept aside instead of dropped. Nothing
 	# is built from it here -- these instances are exactly the ones that are
@@ -461,8 +477,11 @@ func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 	var suppressed: Dictionary = GRASS_FIELD.suppressed_layers()
 	var skipped: Dictionary = {}
 	var by_layer: Dictionary
-	if BAKE.is_fresh(BAKE_WORLD_NAME, base_seed):
-		by_layer = BAKE.load_all(BAKE_WORLD_NAME, _drained, suppressed, skipped)
+	if BAKE.is_fresh(_realm_bake_name, base_seed, _realm_fingerprint):
+		by_layer = BAKE.load_all(_realm_bake_name, _drained, suppressed, skipped)
+	elif _realm_bake_name != BAKE_WORLD_NAME:
+		push_error("Missing or stale %s scatter bake; rebuild before playing this realm." % _realm_bake_name)
+		return
 	else:
 		by_layer = RULES.all_placements(field, world_size, base_seed, _drained)
 	var t_load1 := Time.get_ticks_msec()
@@ -569,7 +588,7 @@ func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 ## on.
 func _mark_harvestable(by_layer: Dictionary) -> void:
 	for layer_name: String in by_layer.keys():
-		var layer: Dictionary = RULES.config().get("layers", {}).get(layer_name, {})
+		var layer: Dictionary = _vegetation_config().get("layers", {}).get(layer_name, {})
 		var item_id := str(layer.get("harvest_item", ""))
 		if item_id == "":
 			continue
@@ -642,10 +661,10 @@ func _bit_set(bytes: PackedByteArray, index: int) -> void:
 ## odd-coloured patch in a survey frame and takes an afternoon to trace.
 func _warn_about_shared_models(by_layer: Dictionary) -> void:
 	var owner_of: Dictionary = {}
-	for layer_name: String in RULES.config().get("layers", {}).keys():
+	for layer_name: String in _vegetation_config().get("layers", {}).keys():
 		if layer_name.begins_with("_"):
 			continue
-		var layer: Dictionary = RULES.config()["layers"][layer_name]
+		var layer: Dictionary = _vegetation_config()["layers"][layer_name]
 		for entry: Variant in (layer.get("models", []) as Array):
 			var model := str(entry)
 			if owner_of.has(model) and owner_of[model] != layer_name:
@@ -673,7 +692,7 @@ var _tints: Dictionary = {}
 ## hue breadth the meadow has. The critic counted 2 hue families against the key
 ## art board's 6, and the ground cannot supply the difference on its own.
 func _retint(mesh: Mesh, overrides: Dictionary, swaps: Dictionary = {}, needs_instance_colour: bool = false, adjusts: Dictionary = {}) -> Mesh:
-	var map: Dictionary = RULES.config().get("retint", {})
+	var map: Dictionary = _vegetation_config().get("retint", {})
 	# needs_instance_colour still requires a fresh material even with nothing
 	# else to change: per-instance MultiMesh colour only multiplies through
 	# when the material's own vertex_color_use_as_albedo is true, and the
@@ -775,7 +794,7 @@ func _adjusted_texture(base: Texture2D, adjust: Dictionary) -> Texture2D:
 
 
 func _tint_for(name: String, source: Material, overrides: Dictionary, swaps: Dictionary = {}, needs_instance_colour: bool = false, adjusts: Dictionary = {}) -> Material:
-	var map: Dictionary = RULES.config().get("retint", {})
+	var map: Dictionary = _vegetation_config().get("retint", {})
 	var colour := ""
 	if overrides.has(name):
 		colour = str(overrides[name])
@@ -1675,7 +1694,7 @@ func force_collision_resident(prefix: String) -> void:
 ## Which layer a model belongs to. Models are grouped by mesh for drawing, so the
 ## layer has to be recovered to know whether it is solid.
 func _layer_for(model_path: String) -> Dictionary:
-	var layers: Dictionary = RULES.config().get("layers", {})
+	var layers: Dictionary = _vegetation_config().get("layers", {})
 	for name: String in layers.keys():
 		if name.begins_with("_"):
 			continue
@@ -1693,7 +1712,7 @@ func _layer_for(model_path: String) -> Dictionary:
 ## its layer's `models` list (`bushes`' own water-margin anchors, "GATE-D")
 ## is invisible to this, same as it already is to `_layer_for()`.
 func _layer_name_for(model_path: String) -> String:
-	var layers: Dictionary = RULES.config().get("layers", {})
+	var layers: Dictionary = _vegetation_config().get("layers", {})
 	for name: String in layers.keys():
 		if name.begins_with("_"):
 			continue

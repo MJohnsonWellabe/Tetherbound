@@ -56,8 +56,8 @@ func _run() -> void:
 	if not failed:
 		_require(await _talk("warden_aila","cloudreach_chapter_complete",false),
 			"Real relocated-Warden dialogue claimed the Cloudreach reward")
-	_require(_has("realm_heart_cloudreach_earned") and _has("realm_key_water")
-		and _has("waterward_route_revealed"),
+	_require(_has("realm_heart_cloudreach_earned") and _has("realm_key_stormwood")
+		and _has("stormward_route_revealed"),
 		"Waterward reward footprint granted Heart, key, and route reveal")
 	_require(not game.can_enter_realm("water"),
 		"Waterward viewpoint remains non-enterable")

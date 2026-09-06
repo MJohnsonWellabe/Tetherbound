@@ -966,6 +966,35 @@ func test_save_then_load_round_trips_progression_flags() -> void:
 	assert_false(read.progression.has("never_set"))
 
 
+func test_completed_cloudreach_legacy_water_rewards_retarget_once_on_flat_load() -> void:
+	var written := _game(false)
+	var payload: Dictionary = saver.call("snapshot", written)
+	payload["progression"] = {"flags": [
+		"cloudreach_chapter_complete", "realm_key_water", "waterward_route_revealed",
+		"unrelated_world_flag",
+	]}
+	DirAccess.make_dir_recursive_absolute(TEST_DIR)
+	var file := FileAccess.open(saver.slot_path(1), FileAccess.WRITE)
+	file.store_string(JSON.stringify(payload))
+	file.close()
+
+	var first := _game(false)
+	assert_true(saver.load_slot(first, 1))
+	for id: String in ["realm_key_stormwood", "stormward_route_revealed",
+			"cloudreach_reward_retargeted_stormwood", "unrelated_world_flag"]:
+		assert_true(first.progression.has(id), "flat repair lost '%s'" % id)
+	assert_false(first.progression.has("realm_key_water"))
+	assert_false(first.progression.has("waterward_route_revealed"))
+
+	# A saved repaired payload cannot re-run or recreate either old alias.
+	assert_true(saver.save(first, 1))
+	var second := _game(false)
+	assert_true(saver.load_slot(second, 1))
+	assert_false(second.progression.has("realm_key_water"))
+	assert_false(second.progression.has("waterward_route_revealed"))
+	assert_true(second.progression.has("cloudreach_reward_retargeted_stormwood"))
+
+
 # --- VERSION 5: individuality and traits (R4.2) -----------------------------
 
 

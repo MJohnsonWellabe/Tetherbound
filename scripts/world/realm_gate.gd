@@ -35,6 +35,8 @@ const OPEN := Color("a8e9d1")
 @export var destination_label: String = "Cloudreach Cliffs"
 ## Stage B lane 5.A. A realm key and a realm unlock are WORLD facts.
 const STORY_LEDGER := preload("res://scripts/story/story_ledger.gd")
+const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
+@export var origin_realm: String = ""
 
 @export var key_flag: String = "realm_key_cloudreach"
 @export var unlock_flag: String = "realm_gate_cloudreach_unlocked"
@@ -126,8 +128,13 @@ func try_unlock(game: Node) -> bool:
 	# client's verdict is `pending` and the gate re-poses on the delta
 	# (`restore_progression_from_game` through the `progression_restore` group),
 	# so this returns `is_unlocked()` -- the honest answer to "is it open NOW".
-	var verdict := STORY_LEDGER.set_world_flag(self, unlock_flag)
-	if not bool(verdict.get("ok", false)) and not bool(verdict.get("pending", false)):
+	var realm := origin_realm if not origin_realm.is_empty() else STORY_LEDGER.realm_of(self)
+	var verdict := LEDGER_CLAIM.submit(self, {
+		"kind": "set_world_flag", "realm": realm, "id": unlock_flag, "value": true,
+	})
+	# Bare fixtures retain their direct state adapter; a refused live intent
+	# must never become a local unlock that bypasses the server.
+	if str(verdict.get("code", "")) == "offline" and LEDGER_CLAIM.transport(self) == null:
 		var progression := _progression(game)
 		if progression != null:
 			progression.call("set_flag", unlock_flag)

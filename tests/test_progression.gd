@@ -258,7 +258,63 @@ func test_gain_xp_of_zero_or_negative_does_nothing() -> void:
 	assert_eq(creature.gain_xp(0, CFG), 0)
 	assert_eq(creature.gain_xp(-5, CFG), 0)
 	assert_eq(creature.xp, 0)
-	assert_eq(creature.level, 1)
+
+
+func test_shipped_cap_is_100_and_curve_values_are_stable() -> void:
+	var cfg := PROGRESSION.config()
+	assert_eq(int(cfg.level.cap), 100)
+	assert_eq(PROGRESSION.xp_to_next(33, cfg), 2230)
+	assert_eq(PROGRESSION.xp_to_next(44, cfg), 3104)
+	assert_eq(PROGRESSION.xp_to_next(50, cfg), 3596)
+	assert_eq(PROGRESSION.xp_to_next(100, cfg), 7981)
+
+
+func test_shipped_cap_allows_xp_to_cross_level_50() -> void:
+	var cfg := PROGRESSION.config().duplicate(true)
+	cfg.level.cap = 100
+	var creature := _creature()
+	creature.set_level(49, cfg)
+	var gained: int = creature.gain_xp(PROGRESSION.xp_to_next(49, cfg), cfg)
+	assert_eq(gained, 1)
+	assert_eq(creature.level, 50)
+	assert_eq(creature.xp, 0)
+
+
+func test_candy_at_49_crosses_50_and_respects_a_lower_cap() -> void:
+	var cfg := PROGRESSION.config().duplicate(true)
+	var creature := _creature()
+	creature.set_level(49, cfg)
+	assert_eq(creature.gain_levels(3, cfg), 3)
+	assert_eq(creature.level, 52)
+
+	cfg.level.cap = 50
+	creature.set_level(49, cfg)
+	assert_eq(creature.gain_levels(3, cfg), 1)
+	assert_eq(creature.level, 50)
+
+
+func test_candy_at_44_is_unchanged_with_cap_100() -> void:
+	var cfg := PROGRESSION.config().duplicate(true)
+	var creature := _creature()
+	creature.set_level(44, cfg)
+	assert_eq(creature.gain_levels(1, cfg), 1)
+	assert_eq(creature.level, 45)
+	creature.set_level(44, cfg)
+	assert_eq(creature.gain_levels(2, cfg), 2)
+	assert_eq(creature.level, 46)
+	creature.set_level(44, cfg)
+	assert_eq(creature.gain_levels(3, cfg), 3)
+	assert_eq(creature.level, 47)
+
+
+func test_candy_clamps_at_100() -> void:
+	var cfg := PROGRESSION.config().duplicate(true)
+	var creature := _creature()
+	creature.set_level(99, cfg)
+	assert_eq(creature.gain_levels(3, cfg), 1)
+	assert_eq(creature.level, 100)
+	assert_eq(creature.gain_levels(1, cfg), 0)
+	assert_eq(creature.level, 100)
 
 
 func test_xp_to_next_matches_the_static_curve() -> void:

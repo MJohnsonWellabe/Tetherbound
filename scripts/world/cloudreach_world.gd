@@ -283,6 +283,7 @@ func _ready() -> void:
 	await _build_landmarks()
 	await _shell_build.call("step", "landmarks")
 	_build_return_gate()
+	preload("res://scripts/world/cloudreach_stormward_handoff.gd").build(self)
 	await _shell_build.call("step", "return_gate")
 	await _build_authored_route_details()
 	await _shell_build.call("step", "route_details")

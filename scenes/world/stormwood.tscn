@@ -1,0 +1,105 @@
+[gd_scene load_steps=14 format=3]
+
+; D101: the node named `Player` at this root IS the local rig -- one per
+; process, in the `local_player` group, and the only body here that owns a
+; camera or reads input. Other peers' trainers are spawned under
+; `Spawned/Trainers` below and are never in that group.
+[ext_resource type="PackedScene" path="res://scenes/player/local_rig.tscn" id="1_player"]
+[ext_resource type="PackedScene" path="res://scenes/ui/playground_hud.tscn" id="2_hud"]
+[ext_resource type="Script" path="res://scripts/player/camera_rig.gd" id="3_cam"]
+[ext_resource type="Script" path="res://scripts/world/stormwood_world.gd" id="4_world"]
+[ext_resource type="Script" path="res://scripts/world/interaction_arbiter.gd" id="5_arbiter"]
+[ext_resource type="PackedScene" path="res://scenes/ui/dialogue_panel.tscn" id="6_dialogue"]
+[ext_resource type="Script" path="res://scripts/world/world_look.gd" id="7_look"]
+[ext_resource type="Script" path="res://scripts/net/trainer_spawn.gd" id="8_trainer_spawn"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMaterial_cloudreach"]
+sky_top_color = Color(0.075, 0.055, 0.13, 1)
+sky_horizon_color = Color(0.21, 0.23, 0.3, 1)
+ground_bottom_color = Color(0.29, 0.39, 0.44, 1)
+ground_horizon_color = Color(0.67, 0.76, 0.8, 1)
+sun_angle_max = 18.0
+
+[sub_resource type="Sky" id="Sky_cloudreach"]
+sky_material = SubResource("SkyMaterial_cloudreach")
+
+[sub_resource type="Environment" id="Environment_cloudreach"]
+background_mode = 2
+sky = SubResource("Sky_cloudreach")
+ambient_light_source = 3
+ambient_light_color = Color(0.57, 0.67, 0.73, 1)
+ambient_light_energy = 0.72
+ambient_light_sky_contribution = 0.52
+reflected_light_source = 2
+tonemap_mode = 3
+tonemap_white = 4.0
+ssao_enabled = false
+fog_enabled = true
+fog_light_color = Color(0.15, 0.25, 0.27, 1)
+fog_density = 0.00065
+fog_sky_affect = 0.04
+
+[node name="Stormwood" type="Node3D"]
+script = ExtResource("4_world")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_cloudreach")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation = Vector3(-0.907571, -0.663225, 0)
+light_energy = 0.72
+light_color = Color(1, 0.91, 0.78, 1)
+shadow_enabled = true
+shadow_opacity = 0.68
+directional_shadow_mode = 2
+directional_shadow_max_distance = 420.0
+
+; Share the production Meadows day/sky language, including its authored
+; cumulus shader. Cloudreach remains a different composition and terrain
+; palette, but no longer falls back to an empty procedural gradient.
+[node name="CameraRig" type="SpringArm3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 60, 0)
+spring_length = 5.2
+margin = 0.6
+script = ExtResource("3_cam")
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig"]
+current = true
+fov = 70.0
+far = 9000.0
+
+[node name="Player" parent="." instance=ExtResource("1_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 60, 0)
+
+; D97: authored spawn containers, one `MultiplayerSpawner` each. See the same
+; block in scenes/world/meadows_playground.tscn for why they are authored
+; rather than built at run time.
+[node name="Spawned" type="Node3D" parent="."]
+
+[node name="Trainers" type="Node3D" parent="Spawned"]
+
+[node name="Creatures" type="Node3D" parent="Spawned"]
+
+[node name="Items" type="Node3D" parent="Spawned"]
+
+[node name="TrainerSpawner" type="MultiplayerSpawner" parent="Spawned"]
+spawn_path = NodePath("../Trainers")
+
+[node name="CreatureSpawner" type="MultiplayerSpawner" parent="Spawned"]
+spawn_path = NodePath("../Creatures")
+
+[node name="ItemSpawner" type="MultiplayerSpawner" parent="Spawned"]
+spawn_path = NodePath("../Items")
+
+[node name="TrainerSpawn" type="Node" parent="."]
+script = ExtResource("8_trainer_spawn")
+spawner_path = NodePath("../Spawned/TrainerSpawner")
+world_path = NodePath("..")
+
+[node name="InteractionArbiter" type="Node" parent="."]
+script = ExtResource("5_arbiter")
+player_path = NodePath("../Player")
+
+[node name="PlaygroundHUD" parent="." instance=ExtResource("2_hud")]
+
+[node name="DialoguePanel" parent="." instance=ExtResource("6_dialogue") groups=["dialogue_panel"]]

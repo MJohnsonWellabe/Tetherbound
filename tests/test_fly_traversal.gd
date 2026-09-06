@@ -10,6 +10,14 @@ class FlyGame extends Node:
 	var party: RefCounted = PARTY.new()
 	var progression: RefCounted = PROGRESSION.new()
 	var current_realm := "cloudreach"
+	var realm_hearts: RefCounted = null
+
+
+class FlyHearts extends RefCounted:
+	var power: Dictionary = {}
+
+	func active_power() -> Dictionary:
+		return power.duplicate(true)
 
 var fly: Node
 var game: Node
@@ -111,3 +119,28 @@ func test_invalid_airborne_anchor_rejects_pose_and_v17_migration_preserves_rewar
 	assert_eq(migrated.progression, {"fly_traversal_unlocked": true})
 	assert_eq(migrated.realm_hearts, {"active": "meadows"})
 	fixture.after_each()
+
+
+func test_skyborne_cost_helper_covers_launch_glide_and_climb_without_exceeding_base_costs() -> void:
+	var ordinary := {}
+	var skyborne := {"fly_stamina_multiplier": 0.0}
+	assert_almost_eq(FLY.adjusted_stamina_cost(8.0, ordinary), 8.0, 0.0001, "ordinary launch cost")
+	assert_almost_eq(FLY.adjusted_stamina_cost(1.0, ordinary), 1.0, 0.0001, "ordinary glide cost")
+	assert_almost_eq(FLY.adjusted_stamina_cost(1.6, ordinary), 1.6, 0.0001, "ordinary climb cost")
+	assert_almost_eq(FLY.adjusted_stamina_cost(18.0, ordinary), 18.0, 0.0001, "ordinary launch minimum")
+	assert_almost_eq(FLY.adjusted_stamina_cost(8.0, skyborne), 0.0, 0.0001, "Skyborne launch cost")
+	assert_almost_eq(FLY.adjusted_stamina_cost(1.0, skyborne), 0.0, 0.0001, "Skyborne glide cost")
+	assert_almost_eq(FLY.adjusted_stamina_cost(1.6, skyborne), 0.0, 0.0001, "Skyborne climb cost")
+	assert_almost_eq(FLY.adjusted_stamina_cost(18.0, skyborne), 0.0, 0.0001, "Skyborne launch minimum")
+	assert_almost_eq(FLY.stamina_cost_multiplier({"fly_stamina_multiplier": -1.0}), 0.0, 0.0001)
+	assert_almost_eq(FLY.stamina_cost_multiplier({"fly_stamina_multiplier": 2.0}), 1.0, 0.0001)
+
+
+func test_flight_stamina_multiplier_reads_only_this_players_active_relic() -> void:
+	var hearts := FlyHearts.new()
+	game.realm_hearts = hearts
+	assert_almost_eq(fly._flight_stamina_multiplier(), 1.0, 0.0001)
+	hearts.power = {"fly_stamina_multiplier": 0.0}
+	assert_almost_eq(fly._flight_stamina_multiplier(), 0.0, 0.0001)
+	hearts.power = {}
+	assert_almost_eq(fly._flight_stamina_multiplier(), 1.0, 0.0001, "switching away restores ordinary Fly costs")

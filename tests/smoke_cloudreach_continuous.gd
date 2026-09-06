@@ -276,7 +276,7 @@ func _run() -> void:
 	_require(party_differences.is_empty(),"Disk reload preserved every persisted field of all five members")
 	_require(_flag_snapshot() == saved_flags,"Disk reload preserved the exact progression-flag set")
 	await _frames(30)
-	for flag: String in ["realm_heart_cloudreach_earned", "realm_key_water", "waterward_route_revealed", "captain_veyra_defeated", "cloudreach_chapter_complete"]:
+	for flag: String in ["realm_heart_cloudreach_earned", "realm_key_stormwood", "stormward_route_revealed", "captain_veyra_defeated", "cloudreach_chapter_complete"]:
 		_require(_has(flag), "Reload preserved " + flag)
 	_require(game.inventory.count("coin") == coins, "Reload did not duplicate payouts")
 	_require(_inventory_snapshot() == saved_inventory,"Reload preserved every occupied inventory slot")

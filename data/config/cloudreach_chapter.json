@@ -13,7 +13,7 @@
       "causeway_travel_broken"
     ],
     "escalation_truth": "The lower anchors feed a summit extraction engine that bottles Cloudreach's ancestral winds.",
-    "resolution": "Disable the network, defeat its captain, restore the winds, and reveal the Waterward route."
+    "resolution": "Disable the network, defeat its captain, restore the winds, and reopen the Stormward route into the Stormwood."
   },
   "persistent_flags": {
     "entry": [
@@ -53,8 +53,8 @@
       "storm_anchor_network_disabled",
       "cloudreach_winds_restored",
       "realm_heart_cloudreach_earned",
-      "realm_key_water",
-      "waterward_route_revealed",
+      "realm_key_stormwood",
+      "stormward_route_revealed",
       "cloudreach_chapter_complete"
     ],
     "side_content": [
@@ -266,14 +266,14 @@
           "id": "cloudreach_claim_reward",
           "flag_id": "cloudreach_chapter_complete",
           "scope": "world",
-          "label": "Claim the Cloudreach Heart and look Waterward.",
-          "how": "Accept the realm's Heart and the key carried up the restored Waterward route.",
+          "label": "Claim the Wings of Cloudreach and look Stormward.",
+          "how": "Accept the Wings and the Key to the Stormwood. Follow the scarred stair beyond Stormward Overlook.",
           "region_id": "summit_final_stronghold",
           "requires_flags": ["cloudreach_winds_restored"],
           "grants_flags": [
             "realm_heart_cloudreach_earned",
-            "realm_key_water",
-            "waterward_route_revealed"
+            "realm_key_stormwood",
+            "stormward_route_revealed"
           ],
           "completion_event": "dialogue:cloudreach_aila_final_reward_complete"
         }
@@ -870,7 +870,7 @@
     "unlock_events": [
       {"flag_id": "fly_traversal_unlocked", "reveals_landmark_ids": ["sky_shrine_heartstone", "high_roost_perches"], "world_change": "High-altitude wind-route markers become visible."},
       {"flag_id": "cloudreach_upper_route_unlocked", "reveals_landmark_ids": ["cliffhold_settlement", "old_wind_observatory"], "world_change": "The counterweight stair is shown as a grounded route."},
-      {"flag_id": "waterward_route_revealed", "reveals_landmark_ids": ["waterward_overlook"], "world_change": "The Waterward route and future realm direction appear after the finale."}
+      {"flag_id": "stormward_route_revealed", "reveals_landmark_ids": ["waterward_overlook"], "world_change": "The Waterward route and future realm direction appear after the finale."}
     ],
     "fly_route_readability": "Use perch silhouettes, cloth streamers, airborne motes, and aligned updraft columns; the minimap supports but never replaces these cues."
   },
@@ -931,9 +931,9 @@
   "rewards": {
     "completion_flag": "cloudreach_chapter_complete",
     "grants": [
-      {"id": "cloudreach_heart", "kind": "realm_heart", "flag_id": "realm_heart_cloudreach_earned", "definition_status": "power_definition_intentionally_deferred"},
-      {"id": "water_realm_key", "kind": "realm_key", "flag_id": "realm_key_water", "definition_status": "entitlement_not_consumable"},
-      {"id": "waterward_reveal", "kind": "map_unlock", "flag_id": "waterward_route_revealed", "definition_status": "future_realm_not_enterable_until_implemented"}
+      {"id": "cloudreach_heart", "kind": "realm_heart", "display_name": "Wings of Cloudreach", "flag_id": "realm_heart_cloudreach_earned", "definition_status": "skyborne_single_active_relic"},
+      {"id": "water_realm_key", "kind": "realm_key", "display_name": "Key to the Stormwood", "flag_id": "realm_key_stormwood", "definition_status": "entitlement_not_consumable"},
+      {"id": "waterward_reveal", "kind": "map_unlock", "display_name": "Stormward Overlook", "flag_id": "stormward_route_revealed", "definition_status": "stormwood_gate_route"}
     ],
     "completion_feedback": ["chapter_banner", "reward_summary", "heart_received_message", "waterward_map_reveal"]
   },

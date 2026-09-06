@@ -146,12 +146,12 @@ static func _manifest_path(world_name: String) -> String:
 ## call site is about to use. False for "no bake yet" and for "bake is
 ## stale" alike — both mean "fall back to computing", the caller does not
 ## need to tell them apart.
-static func is_fresh(world_name: String, base_seed: int) -> bool:
+static func is_fresh(world_name: String, base_seed: int, expected_fingerprint: int = -1) -> bool:
 	var manifest := _read_manifest(world_name)
 	if manifest.is_empty():
 		return false
 	if int(manifest.get("base_seed", -1)) != base_seed \
-			or int(manifest.get("config_fingerprint", 0)) != config_fingerprint():
+			or int(manifest.get("config_fingerprint", 0)) != (config_fingerprint() if expected_fingerprint < 0 else expected_fingerprint):
 		return false
 	# A manifest is not a bake. The Windows release built 2026-09-02 22:12
 	# carried manifest.json (a .json is a Godot resource, so `all_resources`
@@ -380,7 +380,7 @@ static func _read_placement(file: FileAccess, models: Array[String]) -> Dictiona
 ## it does not recompute or reorder anything within a placement.
 static func write_all(
 	world_name: String, by_layer: Dictionary, drained_out: Dictionary,
-	region_size: float, base_seed: int
+	region_size: float, base_seed: int, source_fingerprint: int = -1
 ) -> Dictionary:
 	var dir_path := _bake_dir(world_name)
 	if not DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(dir_path)):
@@ -418,7 +418,7 @@ static func write_all(
 	var manifest := {
 		"base_seed": base_seed,
 		"region_size": region_size,
-		"config_fingerprint": config_fingerprint(),
+		"config_fingerprint": config_fingerprint() if source_fingerprint < 0 else source_fingerprint,
 		"regions": region_list,
 		"placements_kept": total_kept,
 		"placements_drained": total_drained,
