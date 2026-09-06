@@ -37,11 +37,17 @@ den guardian stands at 3.57 m with its head raised and faces the player who ente
 | 3 | Mouth closer; the bank still one smooth ridge with rocks glued on; a black cutout mouth; the red tree still steals focus; the guardian curled and small. |
 | 4 | The mound is a landmark from 60 m (a cone crowned with trees); the arch reads as smooth clay; the mouth unlit at the threshold; boxy rocks with flat moss tops; the cable across the walkway; ferns jungle-sized; the guardian under size and flank-on. The red tree is gone. |
 | 5 | Scale passes (arch 3–4 m against the 2.6 m post; guardian a touch under its 3.4 m door); the entrance still stacks unrelated materials (earth tubes, brown boulders, tropical ferns, a grey stone doorway visible inside); the throat glow painted the dome instead of the hole; pancake spoil mounds; the lamp unlit and faction-less; trunks and boulders without ground contact; the threshold a flat plane with a straight edge; the meadow ground pale and the mound near-black; the guardian rump-first. |
-| 6 | See `JUDGE-round6.md` (filled in below). |
+| 6 | The bank is a lit grass mound and a landmark from 60 m; the guardian faces the frame at the right scale (shoulder ~85–90% of its 3.4 m door). New: two bright slits above the arch (traced below: the dome was open over the throat), a white strip at the tube's end (the apron z-fighting the rising terrain), the mouth reads lamp-post height; the meadow ground still pale; the interior still a stone box. |
+| 6b (not blind) | Verification render after closing the dome, flaring the mouth and lifting the apron: no slits, no white strip; one pale terrain patch beside the fan, fixed by denser fan rows (final render below). |
 
-Both bar questions were "no" in every round so far, with the exterior moving from
-"no landmark" to "a landmark that does not yet read as dug earth" and the remaining
-"no" resting mostly on things outside this lane (below).
+Both bar questions were "no" in every round, with the exterior moving from "no
+landmark" (1–3) to "a landmark that does not yet read as dug earth" (4–5) to "a lit
+grass mound with a bank-side mouth; the ground palette, the arch's material and the
+interior sink it" (6). Rounds 4→5→6 each named new, smaller defects rather than
+repeating the previous round's; the remaining "no" rests mostly on things outside this
+lane (below). Measured axes across the lane: skyline maxima 1 → 3; face beside the
+mouth 22° → 46°; bank flank value (40,44,35) → (76,81,65) against the meadow's
+(112,125,102); the red tree gone from every exterior frame since round 4.
 
 ## Root causes found and fixed this lane
 
@@ -80,6 +86,21 @@ Both bar questions were "no" in every round so far, with the exterior moving fro
   unchanged by a grass brightness change because the dome's slopes sat above the
   32-degree earth threshold everywhere. The slope band moved to 42/58 and the
   remaining earth is lifted 1.5×. Measured again after round 6 below.
+- **The open dome over the throat (found by the round-6 verdict as "slits").** The
+  notch that lets the throat through the bank ran straight down x=0 while the tube
+  bends 1.6 m, so the walk-corridor factor had to clear 11 m of earth for the whole
+  throat length, beside and above the tube: an open slot in the dome you could see the
+  sky through either side of the arch. The notch now follows the tube's own bend, the
+  walk corridor stops at the tube's outer end, and a `BankCap` surface (the bank's own
+  un-notched height, never below the shell's crown, two-sided collider) closes the dome.
+  The fixture casts nine rays down over the throat and requires all to land on earth
+  above the tube's crown (was 9 of 9 open). Also found on the way: the bank's trimesh
+  was one-sided with its faces pointing down (a ray from above passed through it), so
+  both trimeshes now collide from both sides.
+- **The white strip at the tube's end.** The apron ramp's far end landed exactly on
+  terrain that rises 0.68 m toward the approach and z-fought it. The ramp now reaches
+  the tube's outer end and holds 0.15 m above the ground; the threshold fan runs under
+  it.
 - **The guardian's posture.** The burrowback rig has six clips (idle, walk, run,
   attack, hit, faint; `tools/_probe_burrowback_clips.gd`) and no alert idle. A
   per-body `SkeletonModifier3D` pitches neck/head/spine up on top of the idle (sign
@@ -94,8 +115,9 @@ Both bar questions were "no" in every round so far, with the exterior moving fro
 - `tests/smoke_warrens_fixture.gd` after every change: `WARRENS FIXTURE OK`, with the
   new readouts (skyline maxima 3; face 46°; spoil mask threshold 1.00 / crest 0.00 /
   all heaps raw; capsule channel clear; crest 18.1 m).
-- `tests/smoke_warrens.gd` rounds 4, 5 and 6: `warrens smoke test passed`, zero
-  `ERROR:` lines each run (round-6 line recorded below).
+- `tests/smoke_warrens.gd` after rounds 4, 5, 6, after the dome-closing change and
+  again on the final colliders (two-sided trimeshes): `warrens smoke test passed`
+  every run, zero `ERROR:` lines each run.
 - `tests/smoke_playground.gd` once after the crest-tree fix: `smoke: OK`; distinct
   ERROR set: `ERROR: Parameter "material" is null.` only (the known alpha-resize line).
 - Renders: `xvfb-run … tools/capture_warrens_63.gd`, eight frames per round; the
@@ -122,9 +144,14 @@ Both bar questions were "no" in every round so far, with the exterior moving fro
   puts the room geometry and the creature/world style match under "needs art".
 - **Foreground focus stealers at 60 m** (orange dry grass, red trunks, the shrub
   repeat): band scatter of the surrounding meadow.
-- **The arch's material continuity.** Rounds 4–5 still read the brow as a smooth
-  clay tube against faceted boulders. Round 6 removes the pancake mounds and the
-  ferns, tilts and skirts the rocks, and lights the hole; whether the tube-brow itself
-  passes is the round-6 verdict's call. If not, the next move is a brow built as part
-  of the bank height field (a raised lip in the grid) rather than a swept tube, which
-  this lane did not attempt.
+- **The arch's material continuity.** Round 6 still reads the brow as "a lumpy
+  chocolate-brown tube" against the grass dome and the boulders. The next move is a
+  brow that is part of the bank's own height field (a raised earth lip in the grid
+  above the cap, in the same shader) rather than a swept tube, which this lane did not
+  attempt; the flare and the cap now give it a face to sit in.
+- **The pale meadow ground** is the round-6 verdict's number-two gap and is not this
+  dungeon's to fix (terrain palette, grass-field density).
+- **A fourth blind round** was not run: the brief allowed three (4, 5, 6). The post-
+  round-6 dome closure is verified by the fixture's new ray assertion, the full
+  smoke, and a non-blind render (`_sheet_round6b_dome_closed.png`, final sheet
+  `_sheet_final.png`), not by a judge.
