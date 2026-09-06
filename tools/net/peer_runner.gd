@@ -439,6 +439,16 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = _step_item_drop(args)
 		"item_pickup":
 			out = _step_item_pickup(args)
+		"engage_wild":
+			out = await _step_engage_wild(args)
+		"join_encounter":
+			out = await _step_join_encounter(args)
+		"teleport":
+			out = await _step_teleport(args)
+		"place_creature":
+			out = await _step_place_creature(args)
+		"strike":
+			out = await _step_strike(args)
 		_:
 			out = {"verdict": "ERROR", "detail": "unknown action '%s'" % action}
 	out["frames_used"] = _physics_count - before
@@ -1327,6 +1337,191 @@ func _step_deploy_creature(args: Dictionary) -> Dictionary:
 	return {"verdict": "PASS", "detail": "deployed %s" % str((body as Node).name)}
 
 
+# --- lane 4.C: one wild, two players ------------------------------------------
+#
+# Four arms and one probe. Everything they touch is shipping code: the fight is
+# started through the director's own `interaction_activate()` (the press the
+# player makes), the join is `join_encounter()`, and a strike is
+# `submit_encounter_intent()` -- the one door `combat_manager.gd` itself
+# submits through. What the harness supplies is only what a controller supplies:
+# where the creature stands and which way the swing faced.
+
+## Walk to the nearest live wild and press the interact button on it.
+##
+## The teleport is the same one `tests/smoke_combat_camera.gd` uses to stand a
+## trainer beside a creature; the ENGAGE itself is the production press, so a
+## fight that would not start for a player does not start here either.
+func _step_engage_wild(args: Dictionary) -> Dictionary:
+	var director := _encounter_director()
+	if director == null:
+		return {"verdict": "ERROR", "detail": "no EncounterDirector in this scene"}
+	var wild: Variant = director.call("nearest_live_wild")
+	if wild == null:
+		return {"verdict": "FAIL", "detail": "no live wild creature to engage"}
+	var player := _probe.call("player") as Node3D
+	if player == null:
+		return {"verdict": "ERROR", "detail": "no live player"}
+	var body: Node3D = wild
+	player.global_position = body.global_position + Vector3(2.5, 0.0, 0.0)
+	player.velocity = Vector3.ZERO
+	for i in 20:
+		await physics_frame
+	director.call("interaction_activate")
+	for i in maxi(0, int(args.get("settle", 30))):
+		await physics_frame
+	var manager := _combat_manager()
+	if manager == null or not bool(manager.call("is_fighting")):
+		return {"verdict": "FAIL", "detail": "the engage press did not start a fight"}
+	var id := str(manager.call("encounter_id"))
+	if id.is_empty():
+		return {"verdict": "FAIL",
+			"detail": "a fight started but it is not bound to an encounter record"}
+	return {"verdict": "PASS", "detail": "engaged %s as encounter %s"
+		% [str(body.get("species_id")), id]}
+
+
+## Stand the trainer at a point. The travel itself, not a game action.
+##
+## A joining player walks to the fight; a headless harness cannot, and must not
+## pretend to -- `tests/smoke_aggression.gd`'s own header documents a scripted
+## walk dying against a Terrain3D snag, and a smoke that fails there is
+## reporting on terrain rather than on what it is testing. Same teleport
+## `tests/smoke_combat_camera.gd` uses to stand a trainer beside a creature.
+func _step_teleport(args: Dictionary) -> Dictionary:
+	var player := _probe.call("player") as Node3D
+	if player == null:
+		return {"verdict": "ERROR", "detail": "no live player"}
+	var at: Array = args.get("at", []) as Array
+	if at.size() != 3:
+		return {"verdict": "ERROR", "detail": "teleport needs args.at = [x, y, z]"}
+	player.global_position = Vector3(float(at[0]), float(at[1]), float(at[2]))
+	player.velocity = Vector3.ZERO
+	for i in maxi(0, int(args.get("settle", 30))):
+		await physics_frame
+	var p: Vector3 = player.global_position
+	return {"verdict": "PASS", "detail": "trainer stands at (%.2f, %.2f, %.2f)" % [p.x, p.y, p.z]}
+
+
+## Protocol §6: join a fight already running, by id.
+func _step_join_encounter(args: Dictionary) -> Dictionary:
+	var director := _encounter_director()
+	if director == null:
+		return {"verdict": "ERROR", "detail": "no EncounterDirector in this scene"}
+	var id := str(args.get("encounter_id", ""))
+	if id.is_empty():
+		return {"verdict": "ERROR", "detail": "join_encounter needs args.encounter_id"}
+	if not bool(director.call("join_encounter", id)):
+		return {"verdict": "FAIL", "detail": "join_encounter('%s') refused locally" % id}
+	for i in maxi(0, int(args.get("settle", 60))):
+		await physics_frame
+	var manager := _combat_manager()
+	if manager == null or not bool(manager.call("is_fighting")):
+		return {"verdict": "FAIL", "detail": "the join did not put this peer in a fight"}
+	# The stand-in this peer is fighting beside is reported, never asserted on:
+	# until wild replication lands (4.B's H1) a joiner's opponent BODY is its own
+	# local simulation, and everything that decides an outcome comes off the
+	# host's record instead. Printing it is how a reader of a failed run can see
+	# whether the two processes picked the same creature.
+	var body: Variant = manager.call("enemy_body")
+	var species := "?"
+	var where := Vector3.ZERO
+	if body != null and is_instance_valid(body):
+		species = str((body as Node3D).get("species_id"))
+		where = (body as Node3D).global_position
+	return {"verdict": "PASS", "detail": "joined %s beside a local '%s' at (%.1f, %.1f)"
+		% [id, species, where.x, where.z]}
+
+
+## Stand this peer's OWN deployed creature somewhere. A peer owns its creature's
+## transform (4.B) and replicates it, so this is a legal thing for a peer to do
+## and the host learns about it exactly the way it learns about a player walking.
+func _step_place_creature(args: Dictionary) -> Dictionary:
+	var director := _encounter_director()
+	if director == null:
+		return {"verdict": "ERROR", "detail": "no EncounterDirector in this scene"}
+	var body: Variant = director.call("ally_body")
+	if body == null or not is_instance_valid(body):
+		return {"verdict": "FAIL", "detail": "this peer has no creature out to place"}
+	var at: Array = args.get("at", []) as Array
+	if at.size() != 3:
+		return {"verdict": "ERROR", "detail": "place_creature needs args.at = [x, y, z]"}
+	var target := Vector3(float(at[0]), float(at[1]), float(at[2]))
+	var node: Node3D = body
+	# `place_on_ground` asks the world for the height rather than raycasting
+	# (D09), which is what stops the body from being dropped a metre or two into
+	# the air over sloping ground and then SLIDING while it settles -- measured
+	# at up to 2 m of drift in a 20-frame settle, which is enough to walk a
+	# deliberately-aimed swing out of its own cone.
+	if node.has_method("place_on_ground"):
+		node.call("place_on_ground", target)
+	else:
+		node.global_position = target
+	if node.has_method("face_towards") and args.has("face"):
+		var f: Array = args.get("face", []) as Array
+		if f.size() == 3:
+			node.call("face_towards", Vector3(float(f[0]), float(f[1]), float(f[2])))
+	# Long enough for `remote_creature.gd`'s 0.08 s half-life to converge on
+	# every other peer, and for the body to settle onto the ground it was
+	# dropped over.
+	for i in maxi(0, int(args.get("settle", 60))):
+		await physics_frame
+	return {"verdict": "PASS", "detail": "creature stands at (%.2f, %.2f, %.2f)"
+		% [node.global_position.x, node.global_position.y, node.global_position.z]}
+
+
+## Submit a `strike_intent` through the production door, with a chosen facing.
+##
+## The facing is the point of the arm. A button press always faces the
+## opponent (`combat_manager.gd::_start_action()` calls `face_towards` on it),
+## so a swing aimed at a TEAMMATE cannot be produced by pressing a button --
+## which is exactly why §5's `friendly_target` refusal is a host-side rule and
+## not a UI one, and why the harness has to be able to say what a modified
+## client could say.
+func _step_strike(args: Dictionary) -> Dictionary:
+	var director := _encounter_director()
+	var manager := _combat_manager()
+	if director == null or manager == null:
+		return {"verdict": "ERROR", "detail": "no EncounterDirector/CombatManager"}
+	var id := str(manager.call("encounter_id"))
+	if id.is_empty():
+		return {"verdict": "FAIL", "detail": "this peer is not in a networked fight"}
+	var body: Variant = director.call("ally_body")
+	if body == null or not is_instance_valid(body):
+		return {"verdict": "FAIL", "detail": "this peer has no creature out"}
+	var creature: Variant = manager.call("active_creature")
+	if creature == null:
+		return {"verdict": "FAIL", "detail": "this peer has no active creature"}
+	var origin: Vector3 = (body as Node3D).call("centre")
+	var toward: Array = args.get("facing", []) as Array
+	if toward.size() != 3:
+		return {"verdict": "ERROR", "detail": "strike needs args.facing = [x, y, z]"}
+	var facing := Vector3(float(toward[0]), float(toward[1]), float(toward[2]))
+	facing.y = 0.0
+	if facing.length_squared() <= 0.000001:
+		return {"verdict": "ERROR", "detail": "strike facing is zero-length"}
+	facing = facing.normalized()
+	var slot := str(args.get("slot", "quick"))
+	var verdict: Dictionary = director.call("submit_encounter_intent", {
+		"kind": "strike_intent",
+		"encounter_id": id,
+		"slot": slot,
+		"move_id": str((creature as RefCounted).get(
+			"move_quick" if slot == "quick" else "move_charged")),
+		"origin": [origin.x, origin.y, origin.z],
+		"facing": [facing.x, facing.y, facing.z],
+	})
+	for i in maxi(0, int(args.get("settle", 45))):
+		await physics_frame
+	return {"verdict": "PASS", "detail": "submitted %s strike (local verdict ok=%s code=%s)"
+		% [slot, str(verdict.get("ok", false)), str(verdict.get("code", ""))]}
+
+
+func _combat_manager() -> Node:
+	if current_scene == null:
+		return null
+	return current_scene.get_node_or_null(^"CombatManager")
+
+
 func _encounter_director() -> Node:
 	if current_scene == null:
 		return null
@@ -1648,6 +1843,51 @@ func _execute_probe(msg: Dictionary) -> Variant:
 					"visible": c.visible,
 				}
 			return deployed
+		"encounter":
+			# Stage B lane 4.C. Everything `smoke_net_shared_wild_fight` asserts
+			# on, read off this peer's own live objects: the encounter record it
+			# is rendering (§3 -- the HP here IS the hit points), its own
+			# creature's HP, and the last refusal the host gave it.
+			#
+			# The refusal is reported as well as the HP deliberately: §5 says a
+			# silent no-op would pass the weaker half of the friendly-fire test
+			# while hiding a targeting bug, so the smoke asserts BOTH that the
+			# teammate took nothing and that the striker was told why.
+			var edirector := _encounter_director()
+			var emanager := _combat_manager()
+			if edirector == null or emanager == null:
+				return {"available": false}
+			var rec: Dictionary = edirector.call("encounter_record")
+			var opponent: Dictionary = rec.get("opponent", {}) as Dictionary
+			var mine: Variant = edirector.call("ally_instance")
+			var mine_body: Variant = edirector.call("ally_body")
+			var joinable: Array = []
+			for row: Variant in (edirector.call("joinable_encounters") as Array):
+				joinable.append(str((row as Dictionary).get("encounter_id", "")))
+			var out := {
+				"available": true,
+				"fighting": bool(emanager.call("is_fighting")),
+				"id": str(rec.get("encounter_id", "")),
+				"bound_id": str(emanager.call("encounter_id")),
+				"kind": str(rec.get("kind", "")),
+				"phase": str(rec.get("phase", "")),
+				"seq": int(rec.get("seq", 0)),
+				"realm": str(rec.get("realm", "")),
+				"participants": (rec.get("participants", {}) as Dictionary).keys(),
+				"opponent_hp": float(opponent.get("hp", -1.0)),
+				"opponent_hp_max": float(opponent.get("hp_max", -1.0)),
+				"opponent_species": str(opponent.get("species_id", "")),
+				"opponent_pos": opponent.get("position", []),
+				"refusal": emanager.get("last_encounter_refusal"),
+				"joinable": joinable,
+			}
+			if mine != null:
+				out["my_creature_hp"] = float((mine as RefCounted).get("hp"))
+				out["my_creature_max_hp"] = float((mine as RefCounted).get("max_hp"))
+			if mine_body != null and is_instance_valid(mine_body):
+				var mb: Vector3 = (mine_body as Node3D).global_position
+				out["my_creature_pos"] = [mb.x, mb.y, mb.z]
+			return out
 		"session":
 			# Wave 2 (lane 2.A): a real `scripts/net/session.gd` exists, so
 			# every field here is read off it. `available` stays as the first
