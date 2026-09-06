@@ -12,8 +12,10 @@ Branch `claude/art-cloudreach-atmosphere-0906`, from
 
 | File | What it is |
 |---|---|
+| `REPORT.md` | **Start here.** Lane report: gaps closed and left open, the exact test output, and pickup notes. |
 | `JUDGE-before.md` | Blind visual judge on stands 01, 02, 04, 11 at the branch point. |
 | `JUDGE-after.md` | Blind visual judge on the same four stands after the change. |
+| `JUDGE-after-round2.md`, `JUDGE-after-round3.md` | The two interim rounds that redirected the work. |
 | `EVIDENCE.md` | Ground truth both sides, frame time, the smokes, and what changed. |
 
 Screenshot payloads are not committed: `shots/` is gitignored, and the project
