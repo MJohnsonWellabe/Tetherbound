@@ -122,6 +122,8 @@ func _run() -> void:
 	_the_recovery_point_revives_and_heals(hold)
 	_the_machine_stands_in_the_legendary_chamber(hold)
 	_the_legendary_is_bound_inside_the_machine(world, hold)
+	_the_machine_faces_the_doorway(world, hold)
+	_the_hall_is_lit_by_torches(hold)
 	await _the_route_is_traversable_in_order(player, hold, progression)
 
 	print("")
@@ -362,6 +364,186 @@ func _the_legendary_is_bound_inside_the_machine(world: Node, hold: Node3D) -> vo
 		_fail("the bound legendary carries no containment VFX")
 
 
+## OP-0905-16 (owner playtest 2026-09-05): "You can't see the legendary when
+## you enter the chamber. The machine needs to be turned." Two things, both
+## measured rather than trusted: the machine actually carries the authored
+## `facing_deg` as a real `rotation.y` (not just a number sitting in JSON),
+## and a straight line from just inside the doorway to the bound legendary's
+## own chest is not blocked by the machine's VISIBLE geometry -- checked
+## against the actual mesh triangles, not just the base collider, because
+## `_build_machine`'s own header says the ring and the core are decoration
+## with NO collider at all, so a physics raycast alone would pass even if the
+## cage's solid pillars visually wall off the view.
+func _the_machine_faces_the_doorway(world: Node, hold: Node3D) -> void:
+	var machine: Node3D = hold.call("machine")
+	if machine == null:
+		_fail("no machine to check the facing of")
+		return
+	var config := _stronghold_config()
+	var facing_deg := float((config.get("machine", {}) as Dictionary).get("facing_deg", 0.0))
+	var got_deg := rad_to_deg(machine.rotation.y)
+	print("machine facing: authored %.1f deg, built rotation.y %.1f deg" % [facing_deg, got_deg])
+	if absf(wrapf(got_deg - facing_deg, -180.0, 180.0)) > 0.5:
+		_fail("the machine's rotation.y is %.1f deg; stronghold.json's machine.facing_deg asks for %.1f" % [
+			got_deg, facing_deg])
+
+	var climax: Node = world.get_node_or_null(^"StrongholdClimax")
+	var legendary: Node3D = climax.call("legendary_body") as Node3D if climax != null else null
+	if legendary == null:
+		_fail("no bound legendary to sight toward; the doorway sightline cannot be checked")
+		return
+
+	# Just inside the Legendary Chamber's own doorway (the +x wall -- see
+	# `marks.machine_foot`'s own note), at eye height, looking across the room
+	# the way the player actually walks in.
+	var chamber: Dictionary = _chamber_by_id(config, "legendary_chamber")
+	var centre := _local_of(chamber.get("at", []))
+	var size := _size_of(chamber.get("size", []))
+	var floor_pos: Vector3 = hold.call("marker", "legendary_chamber")
+	var local_floor: Vector3 = hold.to_local(floor_pos)
+	var doorway_local := Vector3(centre.x + size.x * 0.5 - 1.0, local_floor.y + 1.6, centre.z)
+	var doorway: Vector3 = hold.to_global(doorway_local)
+
+	var scale: float = float((config.get("legendary", {}) as Dictionary).get("scale", 1.0)) \
+		if config.has("legendary") else 1.0
+	# `stronghold_climax.json` (not this file's config) actually carries
+	# `legendary.scale` -- read it there so this check does not silently drift
+	# from the real figure if the two are ever tuned apart.
+	var climax_config := _climax_config()
+	scale = float((climax_config.get("legendary", {}) as Dictionary).get("scale", 1.22))
+	var chest: Vector3 = legendary.global_position + Vector3.UP \
+		* (float(legendary.call("body_height")) * scale * 0.55)
+
+	var model: Node3D = machine.get_node_or_null(^"Model")
+	if model == null:
+		print("  (no installed Model mesh -- this run is on the primitive fallback, which has no solid cage wall to block the sightline)")
+		return
+	var hit := _ray_blocked_by_mesh(model, doorway, chest)
+	print("doorway-to-legendary sightline: %.1fm, %s" % [
+		doorway.distance_to(chest),
+		("BLOCKED at %.1fm by the machine's own mesh" % float(hit["distance"])) if bool(hit["blocked"]) else "clear"])
+	if bool(hit["blocked"]):
+		_fail("the machine's mesh blocks the doorway-to-legendary sightline at %.1fm (of %.1fm); the cage's open side is not facing the doorway" % [
+			float(hit["distance"]), doorway.distance_to(chest)])
+
+
+## The bin a machine's config-declared chamber lives at, read straight off the
+## JSON rather than through the built node (this file's own `chambers`
+## dictionary is private to `stronghold.gd`).
+func _chamber_by_id(config: Dictionary, id: String) -> Dictionary:
+	for entry: Variant in config.get("chambers", []):
+		var chamber: Dictionary = entry as Dictionary
+		if str(chamber.get("id", "")) == id:
+			return chamber
+	return {}
+
+
+func _climax_config() -> Dictionary:
+	var file := FileAccess.open("res://data/config/stronghold_climax.json", FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	return parsed as Dictionary if parsed is Dictionary else {}
+
+
+## Whether a straight segment from `from` to `to` crosses any triangle of any
+## MeshInstance3D under `model` before it reaches `to` (with a small epsilon so
+## grazing the target itself never counts as a block). `Mesh.get_faces()` at
+## the mesh's own scale/transform is not reliable across import pipelines, so
+## triangles are read from `surface_get_arrays()` directly and put through the
+## mesh instance's own `global_transform`, the same technique
+## `tools/_probe_tether_machine_facing.gd` and `stronghold_climax.gd::_to_machine`
+## already use for this exact mesh.
+func _ray_blocked_by_mesh(model: Node3D, from: Vector3, to: Vector3) -> Dictionary:
+	var delta := to - from
+	var dist := delta.length()
+	if dist < 0.01:
+		return {"blocked": false, "distance": 0.0}
+	var dir := delta / dist
+	var closest := INF
+	for child in model.find_children("*", "MeshInstance3D", true, false):
+		var mi := child as MeshInstance3D
+		if mi.mesh == null:
+			continue
+		var xform := mi.global_transform
+		for s in mi.mesh.get_surface_count():
+			var arrays := mi.mesh.surface_get_arrays(s)
+			var verts: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+			var idx: PackedInt32Array = arrays[Mesh.ARRAY_INDEX]
+			var use_index := idx.size() > 0
+			var tri_count := (idx.size() / 3) if use_index else (verts.size() / 3)
+			for t in tri_count:
+				var i0 := idx[t * 3] if use_index else t * 3
+				var i1 := idx[t * 3 + 1] if use_index else t * 3 + 1
+				var i2 := idx[t * 3 + 2] if use_index else t * 3 + 2
+				var a := xform * verts[i0]
+				var b := xform * verts[i1]
+				var c := xform * verts[i2]
+				var hit = Geometry3D.ray_intersects_triangle(from, dir, a, b, c)
+				if hit == null:
+					continue
+				var d: float = (hit as Vector3).distance_to(from)
+				if d < dist - 0.15:
+					closest = minf(closest, d)
+	return {"blocked": closest < INF, "distance": closest if closest < INF else 0.0}
+
+
+## OP-0905-19 ("The hall needs to be lit by torches"). The three roofed
+## interior rooms on the route had no self-lit source of their own at all
+## before this item -- just the cool ambient omnis `lights` already gives
+## each. Checked two ways: every room actually has real flame lights inside
+## its own box (not somewhere else in the building), and no room's total
+## OMNI count (torches + its pre-existing ambient pair + the machine's own
+## core light where it applies) breaches Godot's per-object cap of 8 -- the
+## same cap `stronghold.json`'s own warm-spot comment in the Legendary
+## Chamber measured a real light silently dropped against.
+func _the_hall_is_lit_by_torches(hold: Node3D) -> void:
+	var holder: Node3D = hold.get_node_or_null(^"HallBraziers")
+	if holder == null:
+		_fail("the Hall built no HallBraziers holder; there are no fires anywhere, torches included")
+		return
+	var fires: Array[OmniLight3D] = []
+	for child in _all_children(holder):
+		if child is OmniLight3D:
+			fires.append(child as OmniLight3D)
+	print("hall braziers: %d flickering light(s) total (interior + exterior)" % fires.size())
+
+	var config := _stronghold_config()
+	const OMNI_CAP := 8
+	for id in ["tether_approach", "warden_arena", "legendary_chamber"]:
+		var chamber := _chamber_by_id(config, id)
+		var centre := _local_of(chamber.get("at", []))
+		var half := _size_of(chamber.get("size", [])) * 0.5
+
+		var torches := 0
+		for fire in fires:
+			var local: Vector3 = hold.to_local(fire.global_position)
+			if absf(local.x - centre.x) <= half.x + 0.6 and absf(local.z - centre.z) <= half.y + 0.6:
+				torches += 1
+
+		var ambient := 0
+		for entry: Variant in config.get("lights", []):
+			var spec: Dictionary = entry as Dictionary
+			if str(spec.get("type", "")) == "spot":
+				continue # spots are on a separate Godot budget; never this cap
+			var at := _local_of(spec.get("at", []))
+			if absf(at.x - centre.x) <= half.x + 0.6 and absf(at.z - centre.z) <= half.y + 0.6:
+				ambient += 1
+		# The machine's own core OmniLight is on-axis inside the Legendary
+		# Chamber and well within every other omni's range there; it counts
+		# against the same room's cap even though it is not a `braziers` entry.
+		var machine_core := 1 if id == "legendary_chamber" else 0
+		var total := torches + ambient + machine_core
+		print("  %-16s %d torch(es) + %d ambient omni(s)%s = %d omni(s) (cap %d)" % [
+			id, torches, ambient, (" + the machine core" if machine_core > 0 else ""), total, OMNI_CAP])
+		if torches < 4:
+			_fail("'%s' has only %d torch light(s) inside its own box; OP-0905-19 wants the room actually lit" % [
+				id, torches])
+		if total > OMNI_CAP:
+			_fail("'%s' totals %d omni lights; Godot's Compatibility renderer caps omnis affecting one mesh at %d" % [
+				id, total, OMNI_CAP])
+
+
 ## The centrepiece, and the seam. This asserts the SCALE (which is real work and
 ## survives the asset swap) and asserts that the build still calls itself a
 ## placeholder (which is the honest part).
@@ -519,6 +701,24 @@ func _progression_config() -> Dictionary:
 		return {}
 	var parsed: Variant = JSON.parse_string(file.get_as_text())
 	return parsed as Dictionary if parsed is Dictionary else {}
+
+
+## The same two conversions `stronghold.gd::_local_of`/`_size_of` apply to raw
+## config arrays -- duplicated here (rather than called through `hold`, which
+## does not expose them) because OP-0905-16/19's own checks read chamber `at`/
+## `size` straight out of the JSON, the same way the builder does.
+func _local_of(raw: Variant) -> Vector3:
+	var list: Array = raw if raw is Array else []
+	if list.size() < 2:
+		return Vector3.ZERO
+	return Vector3(float(list[0]), 0.0, float(list[1]))
+
+
+func _size_of(raw: Variant) -> Vector2:
+	var list: Array = raw if raw is Array else []
+	if list.size() < 2:
+		return Vector2(8.0, 8.0)
+	return Vector2(float(list[0]), float(list[1]))
 
 
 ## OP-0905-14: read the gate straight from the same config the builder reads,

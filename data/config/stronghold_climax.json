@@ -52,8 +52,8 @@
     "_comment_level": "Above the Warden's own team, which is the point -- this is what Team Tether was holding. TUNABLE.",
     "mark": "legendary_stand",
     "fallback": [232.0, -177.0],
-    "facing_deg": 180.0,
-    "_comment_facing": "Local to the stronghold's frame, like every other facing. 180 faces the chamber's -depth side: the reveal stand and the arch's face, so the player who walks round to look at it meets its eyes.",
+    "facing_deg": 90.0,
+    "_comment_facing": "Local to the stronghold's frame, like every other facing. OP-0905-16: the machine now turns its open cage side onto the chamber's +x doorway (stronghold.json machine.facing_deg) and the freed stand steps out on that same +x bearing, so the bound creature faces +x too (90 turns +z onto +x) and meets the player's eyes from the doorway instead of showing them its flank. Was 180 (the old side-on reveal stand).",
     "scale": 1.22,
     "_comment_scale": "On top of the species' own 2.6m, so it stands ~3.2m in the chamber -- a head and a rack above anything else the player has met, and visibly not the same animal as a wild one would be if one ever spawned. Applied to the model pivot, so the collider and the fit are untouched.",
     "stage": {
