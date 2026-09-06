@@ -14,8 +14,8 @@
     ],
     "yaw_deg": 0.0,
     "floor_clearance": 0.5,
-    "_comment_interior_conduit_energy": "N05-WORLD-DRESSING-0905. Emission on the live teal runs INSIDE the roofed rooms -- the floor conduits and the line a `lit` trim girder carries (`stronghold.gd::_interior_live_material`). W06-FINALE-0904's judges read the 1.4-energy runs in the Legendary Chamber as cyan bars / debug draws; W06 measured this teal clipping to white at 2.2 and holding its hue at 1.15. 0.9 keeps it a colour. Exterior runs keep `exterior_conduit_energy`; the machine's crown and ring lamps keep the full 1.4 because they are the room's light source.",
-    "interior_conduit_energy": 0.9,
+    "_comment_interior_conduit_energy": "N05-WORLD-DRESSING-0905. Emission on the live teal runs INSIDE the roofed rooms -- the floor conduits and the line a `lit` trim girder carries (`stronghold.gd::_interior_live_material`). W06-FINALE-0904's judges read the 1.4-energy runs in the Legendary Chamber as cyan bars / debug draws; W06 measured this teal clipping to white at 2.2 and holding its hue at 1.15. 0.9 keeps it a colour. Exterior runs keep `exterior_conduit_energy`; the machine's crown and ring lamps keep the full 1.4 because they are the room's light source. HALL-STAGING-0906 round 2: with the wall torches finally lighting the rooms, the blind judge still read the 0.9 floor runs as the KEY light in all three roofed rooms ('teal functions as key light, not accent'); 0.5 puts them under the torches, still clearly live.",
+    "interior_conduit_energy": 0.5,
     "wall_thickness": 1.2,
     "skirt": 18.0,
     "ramp_run": 40.0,
@@ -658,13 +658,13 @@
       "colour": "#c4a67e"
     },
     {
-      "_comment": "OP-0905-19: energy cut ~40% (1.45 -> 0.87) now that Warden Arena carries its own wall torches (hall_occupation.braziers), so the warm sconces read as key.",
+      "_comment": "OP-0905-19: energy cut ~40% (1.45 -> 0.87) now that Warden Arena carries its own wall torches (hall_occupation.braziers), so the warm sconces read as key. HALL-STAGING-0906 round 3: back up to 1.6 (warm #c4a67e) -- with max_lights_per_object raised the torches reach the floor, but the arena is 24 x 26 x 11 m and its near floor measured luma 2.0 from the entrance; the torches stay the key, this is the base the floor needs to read as stone.",
       "at": [
         -8.0,
         90.2
       ],
       "y": 8.0,
-      "energy": 0.9,
+      "energy": 1.6,
       "range": 24.0,
       "colour": "#c4a67e"
     },
@@ -675,18 +675,18 @@
         90.2
       ],
       "y": 8.0,
-      "energy": 0.9,
+      "energy": 1.6,
       "range": 24.0,
       "colour": "#c4a67e"
     },
     {
-      "_comment": "OP-0905-19: energy cut ~40% (1.05 -> 0.63) now that the Legendary Chamber carries its own wall torches (hall_occupation.braziers), so the warm sconces (and the existing warm SPOT fills) read as key against this cool omni.",
+      "_comment": "OP-0905-19: energy cut ~40% (1.05 -> 0.63) now that the Legendary Chamber carries its own wall torches (hall_occupation.braziers), so the warm sconces (and the existing warm SPOT fills) read as key against this cool omni. HALL-STAGING-0906 round 3: 1.3 for the same floor-base reason as the arena pair; the core light was cut to 1.9 in the same round so this warm base now beats the teal.",
       "at": [
         -32.0,
         78.0
       ],
       "y": 12.0,
-      "energy": 0.9,
+      "energy": 1.3,
       "range": 30.0,
       "colour": "#c4a67e"
     },
@@ -697,7 +697,7 @@
         102.0
       ],
       "y": 12.0,
-      "energy": 0.9,
+      "energy": 1.3,
       "range": 30.0,
       "colour": "#c4a67e"
     },
@@ -918,7 +918,7 @@
         "mount": "wall",
         "at": [
           -7.85,
-          60.0
+          63.0
         ],
         "y": 1.9,
         "yaw_deg": 90.0,
@@ -932,7 +932,7 @@
         "mount": "wall",
         "at": [
           -7.85,
-          68.0
+          70.0
         ],
         "y": 1.9,
         "yaw_deg": 90.0,
@@ -946,7 +946,7 @@
         "mount": "wall",
         "at": [
           7.85,
-          60.0
+          63.0
         ],
         "y": 1.9,
         "yaw_deg": -90.0,
@@ -960,7 +960,7 @@
         "mount": "wall",
         "at": [
           7.85,
-          68.0
+          70.0
         ],
         "y": 1.9,
         "yaw_deg": -90.0,
@@ -2267,7 +2267,8 @@
         "bracket_pitch": 3
       }
     ],
-    "_comment_wall_torches_0906b": "Interior stands T-01..T-03 (tools/_capture_stronghold_climax.gd, 2026-09-06) rendered the three inner rooms near-black at 2.4 energy / 11 m: a 24x26x11 m room swallows a torch tuned for a yard. Raised to 6.5 / 18 m / attenuation 1.0 and the prop to 1.25 so the flame itself reads; the rooms' cool ambients warmed below. Torches are the key light of the Hall's interior now (OP-0905-19)."
+    "_comment_wall_torches_0906b": "Interior stands T-01..T-03 (tools/_capture_stronghold_climax.gd, 2026-09-06) rendered the three inner rooms near-black at 2.4 energy / 11 m: a 24x26x11 m room swallows a torch tuned for a yard. Raised to 6.5 / 18 m / attenuation 1.0 and the prop to 1.25 so the flame itself reads; the rooms' cool ambients warmed below. Torches are the key light of the Hall's interior now (OP-0905-19).",
+    "_comment_wall_torches_approach_0906": "HALL-STAGING-0906 round 2: the approach room's pairs moved from z 60/68 to 63/70. From the entrance (z 57) a torch 3 m ahead on a wall 7.85 m out is 69 degrees off-axis -- outside any frame -- so the judge saw 'warmth with no visible source'; at 6 and 13 m ahead both pairs are in the walk's field of view, and the far pair lights the doorway to warden_arena."
   },
   "_comment_machine": "PLACEHOLDER MASSING, AND IT MUST NOT BE MISTAKEN FOR THE ASSET. The Tether Machine has an owner-supplied board (docs/art/reference/15_Legendary_Tether_Machine.png, 2026-08-11) and is one of the three hero objects D24 reserves a Meshy generation for. The agent that built this route had no Meshy access, so what stands here is primitives plus the Tether materials, sized to the board's own ~15m scale bar, and the seam is left deliberately obvious: `placeholder: true` below, a name of `TetherMachinePlaceholder` in the scene tree, and no attempt at the board's surfacing. Replacing it is a one-object swap into `machine.model` -- the chamber, the lighting and the markers around it are all real and are what this item actually delivered. AND THE STANDING WARNING FROM THE BACKLOG: the board draws a legendary bound inside the containment ring because that is what the machine DOES to legendaries. The board licenses the MACHINE, never its occupant. Sec20/D23 forbid a new creature mesh at any credit balance, so the bound creature is an existing roster body or VFX placed by R8.4 -- there is no creature in this block and none may be added to it.",
   "machine": {
@@ -2282,8 +2283,9 @@
     "ring_pillars": 8,
     "core_radius": 1.9,
     "core_light": {
-      "energy": 3.2,
-      "range": 26.0
+      "energy": 1.9,
+      "range": 22.0,
+      "_comment": "HALL-STAGING-0906 round 2: the core was the Legendary Chamber's key at 3.2/26 -- a blind judge read the room as \"a teal machine room with one candle in the corner\". The torch rows are the key now; the core is the accent that says the machine is live."
     },
     "_scale_note": "15m against the board's own 0-20m bar. base_radius/ring_radius are read off the same board's plan proportions (the containment ring is a little under half the total height across), not invented -- but they are TUNABLE and will be replaced wholesale by the real mesh's own extents.",
     "_comment_seam_closed": "SEAM CLOSED 2026-08-16. The owner authorised the generation and the key came from the Ralph art-lane Routine. Meshy multi-image-to-3D, refine tier, from four crops of board 15 cut by tools/art_pipeline/crop_prop_views.py -- and the front and side crops had the BOUND LEGENDARY LIFTED OUT of them first, because D24 licenses the machine and not its prisoner and image-to-3D follows its pictures rather than its negative prompt. `height` below is still the authority: stronghold.gd fits the mesh to it by its own visual bounds. The primitive massing under `base_radius`/`ring_radius`/`core_radius` is kept as the fallback the code still takes when `model` is empty or missing, and as the record of what the chamber was built around."

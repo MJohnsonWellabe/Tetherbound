@@ -70,6 +70,17 @@ pointing/emulate_touch_from_mouse=false
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
+; HALL-STAGING-0906 (OP-0905-19, "the hall should be lit by torches"). The
+; Compatibility renderer caps the OMNI lights one mesh may take at this value
+; and silently drops the rest. A Hall room floor is ONE slab per chamber
+; (stronghold.gd::_build_chambers) and the approach room's slab is inside the
+; range of ~13 omnis (its two ambients, four wall torches, the arena pair, the
+; courtyard fill, four yard braziers), so at 8 the wall torches lost the draw
+; on exactly the surface the player stands on: two blind judges read warm
+; ceilings over dead-black floors with "no visible source". 16 lets every
+; practical in a room reach its own floor. The per-object light loop costs a
+; little fragment time only where that many ranges overlap, i.e. indoors.
+limits/opengl/max_lights_per_object=16
 ; Shadows are the single defect that killed the previous prototype. Godot gives
 ; real directional shadows out of the box; these are just the defaults made
 ; explicit so nobody has to guess what they were.

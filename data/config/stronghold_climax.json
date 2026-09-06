@@ -66,8 +66,9 @@
     "bound": {
       "_comment": "While it is held in the machine: drained, clamped, lit by somebody else's light. Two cold teal restraint rings (palette.json's reserved Tether teal) tight on the body -- `rings` are heights as fractions of the body's own height, the radius is the species' gameplay radius plus `ring_clearance` -- plus a slow pulse so it reads as machinery working rather than as scenery. The old 24-bar floor ring of radius 3.4 m is gone: it was the ring outside the machine.",
       "colour": "#7fd8c4",
-      "energy": 2.4,
-      "range": 9.0,
+      "energy": 1.3,
+      "range": 7.0,
+      "_comment_energy": "HALL-STAGING-0906 round 2: at 2.4/9 the cage light was a barred cell with blown-out white light, the single brightest object in the frame from the warden arena doorway, outshining the torch-lit archway beside it. 1.3/7 keeps the pulse legible inside the cage and lets the torches own the room.",
       "pulse_seconds": 2.6,
       "emission": 1.15,
       "_comment_emission": "NOT higher. Above ~1.2 the teal clips to white and the ring stops reading as the reserved colour at all -- the same ceiling stronghold_occupation.gd's work-lamp lens found at 2.4 and fixed at 1.15, and the same finding a blind judge returned on these rings at 2.2 ('unlit white primitives').",
