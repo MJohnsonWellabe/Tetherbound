@@ -584,8 +584,11 @@ func _build_chambers() -> void:
 		var height := float(chamber.get("height", 4.0))
 		var outer := Vector2(size.x + _wall_t * 2.0, size.y + _wall_t * 2.0)
 
+		# WARRENS-EXT-0906 close-out: an earth-clad chamber's floor is the
+		# apron earth, not the cave's flagstone -- it is the pale slab the
+		# approach sees through the arch.
 		_floor_box(Vector3(outer.x, _skirt, outer.y),
-			Vector3(centre.x, _floor_y - _skirt * 0.5, centre.z))
+			Vector3(centre.x, _floor_y - _skirt * 0.5, centre.z), _is_earth_clad(id))
 		var ceiling := _box(Vector3(outer.x, 0.8, outer.y),
 			Vector3(centre.x, _floor_y + height + 0.4, centre.z), _rock(), true, true)
 		# Round 5: this slab stands above the meadow at this site and is seen
@@ -603,6 +606,22 @@ func _build_chambers() -> void:
 			add_child(cap)
 			ceiling.set_meta(EXTERIOR_META, true)
 
+		# WARRENS-EXT-0906 close-out, "grey masonry visible through the mouth":
+		# an earth-clad first bay. The chambers named in
+		# `site.earth_clad_interiors` (default: the mouth) hang the same
+		# collision-free earth skin the outer faces wear on the INSIDE of
+		# their walls and under their ceiling, so the first thing seen through
+		# the arch is dug earth, not cut stone with straight jambs.
+		if _is_earth_clad(id):
+			var under := MeshInstance3D.new()
+			var under_box := BoxMesh.new()
+			var t := _interior_cladding_m()
+			under_box.size = Vector3(size.x + _wall_t * 2.0, t, size.y + _wall_t * 2.0)
+			under.mesh = under_box
+			under.material_override = _cladding_material()
+			under.position = Vector3(centre.x, _floor_y + height - t * 0.5, centre.z)
+			under.name = "CeilingEarthUnderside_%s" % id
+			add_child(under)
 		for side: String in ["-x", "+x", "-z", "+z"]:
 			var opening := _opening_on(id, side)
 			# PALE-SLAB-FIX. The mouth chamber's "-z" wall is the ONE chamber
@@ -772,18 +791,51 @@ func _build_wall(_id: String, centre: Vector3, size: Vector2, height: float,
 		wall_centre.x += sign_ * offset
 	var wall_h := height + 1.2  # up past the ceiling slab, so no seam of daylight
 
+	# The room-facing direction of this wall, for the earth-clad interiors.
+	var inward := Vector3.ZERO
+	if _is_earth_clad(_id):
+		inward = Vector3(0.0, 0.0, -sign_) if along_x else Vector3(-sign_, 0.0, 0.0)
+
 	if opening.is_empty():
-		_wall_piece(along_x, wall_centre, span, wall_h, 0.0, exterior)
+		_wall_piece(along_x, wall_centre, span, wall_h, 0.0, exterior, inward)
 		return
 
 	var gap := float(opening.get("width", 2.5))
 	var gap_h := minf(float(opening.get("height", 2.6)), height)
 	var flank := (span - gap) * 0.5
 	if flank > 0.05:
-		_wall_piece(along_x, _shift(wall_centre, along_x, -(gap * 0.5 + flank * 0.5)), flank, wall_h, 0.0, exterior)
-		_wall_piece(along_x, _shift(wall_centre, along_x, gap * 0.5 + flank * 0.5), flank, wall_h, 0.0, exterior)
+		_wall_piece(along_x, _shift(wall_centre, along_x, -(gap * 0.5 + flank * 0.5)), flank, wall_h, 0.0, exterior, inward)
+		_wall_piece(along_x, _shift(wall_centre, along_x, gap * 0.5 + flank * 0.5), flank, wall_h, 0.0, exterior, inward)
 	# The lintel: from the top of the opening to the top of the wall.
-	_wall_piece(along_x, wall_centre, gap, wall_h - gap_h, gap_h, exterior)
+	_wall_piece(along_x, wall_centre, gap, wall_h - gap_h, gap_h, exterior, inward)
+
+
+## WARRENS-EXT-0906 close-out. Which chambers wear earth on the inside.
+func _is_earth_clad(chamber_id: String) -> bool:
+	var ids: Array = _config.get("site", {}).get("earth_clad_interiors", ["mouth"])
+	return ids.has(chamber_id)
+
+
+func _interior_cladding_m() -> float:
+	return float(_config.get("site", {}).get("interior_cladding_m", 0.15))
+
+
+## The inward twin of `_clad_exterior_face()`: a thin collision-free earth skin
+## on the room side of one wall piece. `inward` is the unit direction from the
+## wall into the room. Thin (`site.interior_cladding_m`) because the wall's own
+## collider stays where it was; the skin is a surface, not a thicker wall.
+func _clad_interior_face(wall: MeshInstance3D, size: Vector3, piece_at: Vector3, along_x: bool, inward: Vector3) -> void:
+	var thickness := _interior_cladding_m()
+	if thickness <= 0.0 or inward == Vector3.ZERO:
+		return
+	var skin := MeshInstance3D.new()
+	var box := BoxMesh.new()
+	box.size = Vector3(size.x, size.y, thickness) if along_x else Vector3(thickness, size.y, size.z)
+	skin.mesh = box
+	skin.material_override = _cladding_material()
+	skin.position = piece_at + inward * (_wall_t * 0.5 + thickness * 0.5)
+	skin.name = "InteriorEarthSkin_%s" % wall.get_instance_id()
+	add_child(skin)
 
 
 func _shift(at: Vector3, along_x: bool, by: float) -> Vector3:
@@ -795,7 +847,7 @@ func _shift(at: Vector3, along_x: bool, by: float) -> Vector3:
 
 
 func _wall_piece(along_x: bool, at: Vector3, span: float, height: float, base: float,
-		exterior := false) -> void:
+		exterior := false, inward := Vector3.ZERO) -> void:
 	if span <= 0.01 or height <= 0.01:
 		return
 	var size := Vector3(span, height, _wall_t) if along_x else Vector3(_wall_t, height, span)
@@ -807,6 +859,8 @@ func _wall_piece(along_x: bool, at: Vector3, span: float, height: float, base: f
 	var box := _box(size, piece_at, _rock(), true, true)
 	if exterior:
 		_clad_exterior_face(box, size, piece_at, along_x)
+	if inward != Vector3.ZERO:
+		_clad_interior_face(box, size, piece_at, along_x, inward)
 
 
 ## VP6 WARRENS CLEAN RESTART (2026-09-02). The pale, flat, speckled slab the
@@ -4008,6 +4062,9 @@ func _build_structure() -> void:
 		return
 	var chambers: Array = []
 	for id: String in _chambers:
+		# WARRENS-EXT-0906 close-out: a dug earth bay carries no masonry.
+		if _is_earth_clad(id):
+			continue
 		var chamber: Dictionary = _chambers[id]
 		var centre := _local_of(chamber.get("at", []))
 		chambers.append({
