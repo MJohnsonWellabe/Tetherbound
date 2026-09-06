@@ -1,6 +1,6 @@
 # Stage B multiplayer — handoff
 
-**Branch:** `claude/tetherbound-roadmap-next-jrcjs8` @ `855ba52b`. **PR #63, open, not on `main`.**
+**Branch:** `claude/tetherbound-roadmap-next-jrcjs8` @ `3b8b72ab` (the head this handoff was written at; `855ba52b` was its parent). **PR #63, open, not on `main`.**
 **Contract:** `docs/MULTIPLAYER_DIRECTIVE.md`. **Evidence:** `docs/acceptance/MULTIPLAYER_ACCEPTANCE.md`
 — that file is authoritative, this one is the summary and the to-do list.
 
