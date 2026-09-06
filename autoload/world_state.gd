@@ -225,3 +225,84 @@ func _finite_clock(raw: Variant) -> float:
 		return CLOCK_UNSET
 	var seconds := float(raw)
 	return seconds if seconds >= 0.0 else CLOCK_UNSET
+
+
+# --- Wave 3 / D103: the one way a world changes -------------------------------
+
+## Apply a delta the `WorldLedger` committed. Returns how many WORLD-scope ops
+## actually landed.
+##
+## From Wave 3 this is the ONLY way a client's world state changes: a client
+## never validates, never decides, and never writes a world container of its own
+## accord -- it receives ops the host already committed and replays them. The
+## host runs this same function on its own commit (`world_ledger.gd::_commit()`
+## calls `apply()`, which calls this), so host and client cannot drift by
+## running different code over the same ops.
+##
+## Ops whose `scope` is not `world` are skipped, deliberately and silently:
+## `player` ops are addressed to a peer and applied by `ledger_rpc.gd` against
+## `PlayerState`, and `scene` ops belong to a live node that owns its own mirror
+## format (lane 3.B's vegetation bitset). This file has no opinion about either,
+## which is the same line `MP_STATE_SEAM.md` §1 already draws.
+##
+## Never fatal on a malformed op: a delta from a peer running a different build
+## should cost that one op, not the whole world.
+func apply_delta(delta: Dictionary) -> int:
+	var raw_ops: Variant = delta.get("ops", [])
+	if typeof(raw_ops) != TYPE_ARRAY:
+		return 0
+	var applied := 0
+	for raw: Variant in (raw_ops as Array):
+		if typeof(raw) != TYPE_DICTIONARY:
+			continue
+		var op := raw as Dictionary
+		if str(op.get("scope", "")) != "world":
+			continue
+		if _apply_op(op):
+			applied += 1
+	return applied
+
+
+func _apply_op(op: Dictionary) -> bool:
+	match str(op.get("op", "")):
+		"flag":
+			var id := str(op.get("id", ""))
+			if id.is_empty() or flags == null:
+				return false
+			flags.call("set_flag", id, bool(op.get("value", true)))
+			revision += 1
+			return true
+		"building_add":
+			# Through `register_building()`, not a hand-built Dictionary: the
+			# shape of a placed-building record keeps exactly one construction
+			# site, so a delta and a solo placement can never disagree about it.
+			register_building(str(op.get("id", "")), _op_position(op.get("position")),
+				float(op.get("yaw_deg", 0.0)), bool(op.get("paid", true)),
+				str(op.get("realm", "meadows")))
+			return true
+		"building_remove":
+			var index := int(op.get("index", -1))
+			if index < 0 or index >= placed_buildings.size():
+				return false
+			placed_buildings.remove_at(index)
+			revision += 1
+			return true
+		"storage_set":
+			var slot := int(op.get("index", -1))
+			if slot < 0 or slot >= placed_buildings.size():
+				return false
+			var record: Dictionary = placed_buildings[slot] as Dictionary
+			var state: Variant = op.get("state", [])
+			record["state"] = (state as Array).duplicate(true) if typeof(state) == TYPE_ARRAY else []
+			revision += 1
+			return true
+	return false
+
+
+func _op_position(raw: Variant) -> Vector3:
+	if typeof(raw) == TYPE_VECTOR3:
+		return raw as Vector3
+	if typeof(raw) == TYPE_ARRAY and (raw as Array).size() == 3:
+		var a := raw as Array
+		return Vector3(float(a[0]), float(a[1]), float(a[2]))
+	return Vector3.ZERO
