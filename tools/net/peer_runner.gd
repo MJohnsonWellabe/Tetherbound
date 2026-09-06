@@ -82,6 +82,9 @@ const STORY_LEDGER := preload("res://scripts/story/story_ledger.gd")
 ## Lane 4.D. The trainer table, read the way the game reads it.
 const NET_TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 const NET_REWARDS := preload("res://scripts/net/encounter_rewards.gd")
+## Wave 6 lanes 6.B/6.C. Riding and Fly.
+const NET_RIDING := preload("res://scripts/world/riding_controller.gd")
+const SPECIES_DATA := preload("res://scripts/creatures/creature_species.gd")
 
 const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
@@ -513,6 +516,22 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_enter_realm(args)
 		"drop_link":
 			out = await _step_drop_link(args)
+		"dismiss_dialogue":
+			out = await _step_dismiss_dialogue(args)
+		"ride_setup":
+			out = await _step_ride_setup(args)
+		"ride_mount":
+			out = await _step_ride_mount(args)
+		"ride_dismount":
+			out = await _step_ride_dismount(args)
+		"fly_setup":
+			out = await _step_fly_setup(args)
+		"fly_launch":
+			out = await _step_fly_launch(args)
+		"fly_land":
+			out = await _step_fly_land(args)
+		"fly_claim_anchor":
+			out = await _step_fly_claim_anchor(args)
 		_:
 			out = {"verdict": "ERROR", "detail": "unknown action '%s'" % action}
 	out["frames_used"] = _physics_count - before
@@ -1611,8 +1630,19 @@ func _step_engage_wild(args: Dictionary) -> Dictionary:
 		return {"verdict": "FAIL", "detail": "the engage press did not start a fight"}
 	var id := str(manager.call("encounter_id"))
 	if id.is_empty():
-		return {"verdict": "FAIL",
-			"detail": "a fight started but it is not bound to an encounter record"}
+		# `require_record` defaults to TRUE, so every smoke written before this
+		# argument existed is byte-for-byte unchanged. Lane 6.B passes false,
+		# and says why in its own file: a CLIENT's engage starts a local fight
+		# but has not bound a host record within four seconds, which is lane
+		# 4.C's contract rather than riding's -- and a lane asserting on
+		# somebody else's protocol would be a lane reporting their red as its
+		# own. The fact is REPORTED either way rather than hidden.
+		if bool(args.get("require_record", true)):
+			return {"verdict": "FAIL",
+				"detail": "a fight started but it is not bound to an encounter record"}
+		return {"verdict": "PASS",
+			"detail": "engaged %s; fight running, NO encounter record bound yet"
+				% str(body.get("species_id"))}
 	return {"verdict": "PASS", "detail": "engaged %s as encounter %s"
 		% [str(body.get("species_id")), id]}
 
@@ -1938,6 +1968,37 @@ func _own_proxy(role: String) -> Node3D:
 
 ## Lane 5.A. `scenes/world/meadows_playground.tscn`'s own node name, found the
 ## same way `_combat_manager()` and `_encounter_director()` find theirs.
+## Who is holding the screen, as `sequence_director.gd::_refresh_lockout()`
+## itself asks it. Read-only and defensive: every field is absent rather than
+## guessed when the node that answers for it is missing.
+func _lockout_report() -> Dictionary:
+	var out := {}
+	var director := _sequence_director()
+	if director != null:
+		out["fading"] = director.has_method("is_fading") and bool(director.call("is_fading"))
+		out["adopting"] = bool(director.get("_adopting"))
+		var dialogue: Variant = director.get("_dialogue")
+		out["dialogue"] = dialogue != null and (dialogue as Object).has_method("is_open") \
+			and bool((dialogue as Object).call("is_open"))
+		var picker: Variant = director.get("_starter_picker")
+		out["picker"] = picker != null and (picker as Object).has_method("is_open") \
+			and bool((picker as Object).call("is_open"))
+		var prompt: Variant = director.get("_name_prompt")
+		out["name_prompt"] = prompt != null and (prompt as Object).has_method("is_open") \
+			and bool((prompt as Object).call("is_open"))
+		out["beat"] = str(director.get("_beat"))
+	var manager := _combat_manager()
+	out["fighting"] = manager != null and bool(manager.call("is_fighting"))
+	var encounter := _encounter_director()
+	out["trainer_battle"] = encounter != null and encounter.has_method("trainer_battle_active") \
+		and bool(encounter.call("trainer_battle_active"))
+	var game := root.get_node_or_null(^"Game")
+	out["pending_build"] = str(game.get("pending_build")) if game != null else ""
+	var downed := _downed_state()
+	out["downed"] = downed != null and downed.has_method("is_downed") and bool(downed.call("is_downed"))
+	return out
+
+
 func _sequence_director() -> Node:
 	if current_scene == null:
 		return null
@@ -2512,6 +2573,476 @@ func _progression_store() -> RefCounted:
 	return game.get("progression") as RefCounted if game != null else null
 
 
+# --- Wave 6 lanes 6.B and 6.C: riding and Fly, with everybody else still playing
+#
+# Seven arms and two probes. Everything they touch is shipping code: the mount
+# is `riding_controller.gd::mount()` (the same call the interact press makes,
+# with the same refusals), the launch is the real second-airborne-Jump the
+# player makes, and the landing anchor goes through the real client->host
+# round trip. What the harness supplies is what a PLAYER would have supplied
+# by playing for two hours -- the creature in the party, the saddle in the
+# satchel, the Fly unlock -- and every one of those is SETUP, granted
+# explicitly and named as such below.
+#
+# THE SETUP RULE, and why it is written out here rather than assumed. Lane
+# 6.A's two smokes never granted Cloudreach's realm key and then reported
+# "enter_realm refused", which reads as though realm shells had failed
+# outright when what had actually failed was the fixture. So: every grant
+# below is a `SETUP` line in its own detail string, and every step that
+# CANNOT run because its setup did not take returns a detail that says which
+# grant is missing -- never a bare refusal that reads like the feature.
+
+## SETUP, and a reproduction of a finding this lane did not fix.
+##
+## MEASURED, three local runs of `tests/smoke_net_fly.gd` deep. A peer that
+## JOINS a session boots into the opening's `house` beat holding an OPEN
+## DIALOGUE BOX, and never closes it. `sequence_director._refresh_lockout()`
+## reads that box as a panel every frame, and a panel is modal, so it calls
+## `set_locomotion_enabled(false)` every frame for the rest of the session. The
+## client can then neither walk nor jump: it is not slow, it is switched off.
+## The probe row that pinned it, off the joining peer:
+##
+##     locomotion=false carried=false on_floor=true
+##     lockout={"beat":"house","dialogue":true,"adopting":false,"fading":false,
+##              "picker":false,"name_prompt":false,"fighting":false}
+##
+## That is the opening sequence on a joining client, which belongs to Wave 2/5
+## and not to riding or Fly, so it is recorded rather than fixed
+## (`ralph/reports/MP-6BC-RIDING-FLY-0906/REPORT.md`, finding F2). It also
+## explains the divergence `tests/smoke_net_movement_two_peers.gd`'s own
+## constant block records and calls "not understood": the host walks out and
+## the client does not, because on the client locomotion was never on.
+##
+## What this step does is what a PLAYER does with a dialogue box: presses
+## `interact` until it is gone. That is the production advance
+## (`dialogue_panel.gd::_physics_process`), not a state poke, and it is bounded
+## -- a box that will not close is reported as such rather than pressed at
+## forever.
+func _step_dismiss_dialogue(args: Dictionary) -> Dictionary:
+	var detail := await _clear_open_dialogue(int(args.get("presses", 40)))
+	for f in maxi(0, int(args.get("settle", 30))):
+		await physics_frame
+	var player := _probe.call("player") as Node3D
+	return {"verdict": "FAIL" if detail.begins_with("STUCK") else "PASS",
+		"detail": "SETUP: %s; locomotion now %s"
+			% [detail, str(player.call("locomotion_enabled")) if player != null else "?"]}
+
+
+## Press `interact` until the opening's dialogue box is gone, and say what
+## happened. Called from `_step_dismiss_dialogue` and from the two Fly steps
+## that CANNOT work while it is open -- the box opens partway through the
+## `house` beat rather than at boot, so clearing it once after the handshake is
+## not enough and the clear has to sit next to the thing it is a precondition
+## for.
+func _clear_open_dialogue(presses_allowed: int) -> String:
+	var director := _sequence_director()
+	if director == null:
+		return "no SequenceDirector here; nothing holding the screen"
+	var dialogue: Variant = director.get("_dialogue")
+	if dialogue == null or not (dialogue is Object) or not (dialogue as Object).has_method("is_open"):
+		return "no dialogue panel to close"
+	var panel := dialogue as Object
+	if not bool(panel.call("is_open")):
+		return "no dialogue box was open"
+	var presses := 0
+	for i in maxi(1, presses_allowed):
+		if not bool(panel.call("is_open")):
+			break
+		await _press_edge("interact", true)
+		for f in 2:
+			await physics_frame
+		await _press_edge("interact", false)
+		for f in 6:
+			await physics_frame
+		presses += 1
+	if bool(panel.call("is_open")):
+		return "STUCK: the opening dialogue would not close after %d interact presses (beat '%s')" \
+			% [presses, str(director.get("_beat"))]
+	return "closed the opening dialogue in %d presses" % presses
+
+
+## SETUP. Put the mount in this peer's party, bring it out, and put the saddle
+## in the satchel. None of this is the thing under test: a player reaches it by
+## catching a Meadowhart and winning the tournament that unlocks the saddle
+## recipe (D48 SS4), which a two-peer smoke is not going to play through.
+##
+## The one thing it deliberately does NOT do is fit the saddle. Fitting is
+## `mount()`'s own job (OP-0904-3: getting on IS putting it on), so a smoke
+## that pre-fitted it would be testing a state the game never reaches by
+## itself.
+func _step_ride_setup(args: Dictionary) -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	var director := _encounter_director()
+	if game == null or director == null:
+		return {"verdict": "ERROR", "detail": "no /root/Game or EncounterDirector in this scene"}
+	var species := str(args.get("species", "meadowhart"))
+	if not SPECIES_DATA.is_rideable(species):
+		return {"verdict": "ERROR",
+			"detail": "SETUP: species.json says '%s' is not rideable" % species}
+	var party: RefCounted = game.get("party")
+	var satchel: RefCounted = game.get("inventory")
+	if party == null or satchel == null:
+		return {"verdict": "ERROR", "detail": "no Game.party or Game.inventory"}
+	# SETUP: the tack. `_has_tack()` counts it in the satchel, so a missing
+	# grant would refuse the mount for a reason that is about the fixture.
+	var required := str(SPECIES_DATA.rideable(species).get("requires_item", ""))
+	if not required.is_empty():
+		satchel.call("add", required, 1)
+	# SETUP: the animal. Whatever the opening left standing beside this trainer
+	# is not the species under test, so it is put away first -- the same order
+	# `tests/smoke_riding.gd::_put_the_mount_in_the_world()` uses.
+	if director.call("ally_body") != null:
+		director.call("dismiss_active_creature")
+		for i in 20:
+			await physics_frame
+	var mount: RefCounted = SPECIES_DATA.spawn(species)
+	if mount == null or not bool(party.call("add", mount)):
+		return {"verdict": "FAIL",
+			"detail": "SETUP failed: could not put a %s in this peer's party" % species}
+	for i in int(party.call("size")):
+		if party.call("at", i) == mount:
+			party.call("set_active", i)
+			break
+	if party.call("active") != mount:
+		return {"verdict": "FAIL",
+			"detail": "SETUP failed: the party would not make the %s active" % species}
+	if director.call("ally_body") == null:
+		await director.call("summon_active_creature")
+	for i in maxi(0, int(args.get("settle", 90))):
+		await physics_frame
+		var standing: Variant = director.call("ally_body")
+		if standing != null and is_instance_valid(standing) and (standing as Node3D).visible:
+			break
+	var body: Variant = director.call("ally_body")
+	if body == null or not is_instance_valid(body):
+		return {"verdict": "FAIL",
+			"detail": "SETUP failed: the %s never appeared in this peer's world" % species}
+	return {"verdict": "PASS",
+		"detail": "SETUP: %s standing as %s, %s in the satchel"
+			% [species, str((body as Node).name), required if not required.is_empty() else "no tack needed"]}
+
+
+## Get on. The production door, with the production refusals -- `mount()`
+## returns false for no saddle, a fainted mount, a running fight and a mount
+## out of reach, and every one of those is a real answer rather than a harness
+## failure, so a false is reported with the reason the game itself would give.
+func _step_ride_mount(args: Dictionary) -> Dictionary:
+	var riding := _riding_controller()
+	if riding == null:
+		return {"verdict": "ERROR", "detail": "no RidingController in this scene"}
+	var director := _encounter_director()
+	var body: Variant = director.call("ally_body") if director != null else null
+	if body == null or not is_instance_valid(body):
+		return {"verdict": "FAIL",
+			"detail": "SETUP incomplete: this peer has no creature out to ride (run ride_setup)"}
+	# Stand the trainer next to their own animal. `MOUNT_RADIUS` is 4.5 m and a
+	# summoned creature normally lands well inside that, but a peer that walked
+	# since the summon has not -- and the refusal for distance is the one
+	# refusal that would read exactly like the feature being broken.
+	var player := _probe.call("player") as Node3D
+	if player != null:
+		player.global_position = (body as Node3D).global_position + Vector3(1.2, 0.0, 0.0)
+		player.velocity = Vector3.ZERO
+		for i in 10:
+			await physics_frame
+	if not bool(riding.call("mount")):
+		return {"verdict": "FAIL",
+			"detail": "mount() refused: %s" % str(riding.call("interaction_offer",
+				player.global_position if player != null else Vector3.ZERO).get("label", "no prompt"))}
+	for i in maxi(0, int(args.get("settle", 30))):
+		await physics_frame
+	var mount: Variant = riding.call("mount_body")
+	return {"verdict": "PASS", "detail": "riding %s"
+		% (str((mount as Node).name) if mount != null and is_instance_valid(mount) else "?")}
+
+
+func _step_ride_dismount(args: Dictionary) -> Dictionary:
+	var riding := _riding_controller()
+	if riding == null:
+		return {"verdict": "ERROR", "detail": "no RidingController in this scene"}
+	if not bool(riding.call("is_mounted")):
+		return {"verdict": "FAIL", "detail": "this peer was not on a mount"}
+	riding.call("dismount")
+	for i in maxi(0, int(args.get("settle", 30))):
+		await physics_frame
+	var player := _probe.call("player") as Node3D
+	return {"verdict": "PASS", "detail": "dismounted; trainer visible=%s on_floor=%s"
+		% [str(player.visible) if player != null else "?",
+			str(player.call("is_on_floor")) if player != null else "?"]}
+
+
+func _riding_controller() -> Node:
+	if current_scene == null:
+		return null
+	return current_scene.get_node_or_null(^"RidingController")
+
+
+func _fly_controller() -> Node:
+	var player := _probe.call("player") as Node3D
+	if player == null:
+		return null
+	var fly: Variant = player.get("fly_controller")
+	return fly as Node if fly is Node else null
+
+
+## SETUP. The Fly unlock flag, a carrier in the party, and a rested trainer.
+##
+## `fly_traversal.json`'s mentor loaner only stands in inside Cloudreach, so a
+## Meadows smoke has to bring its own carrier -- which is the ordinary path
+## anyway (`eligible_creature()` prefers the party's active carrier over the
+## loaner everywhere). The unlock flag is the Windscar trial's reward and is
+## granted here for the same reason the saddle is: playing to it is not what
+## this smoke is about.
+func _step_fly_setup(args: Dictionary) -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	var fly := _fly_controller()
+	if game == null or fly == null:
+		return {"verdict": "ERROR", "detail": "no /root/Game or FlyController on this peer's player"}
+	var species := str(args.get("species", "galecrest"))
+	if not bool(SPECIES_DATA.fly_capability(species).get("can_carry", false)):
+		return {"verdict": "ERROR",
+			"detail": "SETUP: fly_traversal.json has no carrier capability for '%s'" % species}
+	var progression: RefCounted = game.get("progression")
+	if progression == null:
+		return {"verdict": "ERROR", "detail": "no Game.progression"}
+	# SETUP: the unlock. Without it `can_launch()` answers "Complete the
+	# Windscar flight trial", which is a fixture failure wearing the feature's
+	# words.
+	progression.call("set_flag", "fly_traversal_unlocked")
+	var party: RefCounted = game.get("party")
+	if party == null:
+		return {"verdict": "ERROR", "detail": "no Game.party"}
+	var carrier: RefCounted = SPECIES_DATA.spawn(species)
+	if carrier == null or not bool(party.call("add", carrier)):
+		return {"verdict": "FAIL",
+			"detail": "SETUP failed: could not put a %s in this peer's party" % species}
+	for i in int(party.call("size")):
+		if party.call("at", i) == carrier:
+			party.call("set_active", i)
+			break
+	var player := _probe.call("player") as Node3D
+	if player != null:
+		# SETUP: stamina. `minimum_launch_stamina` is 18 and a peer that has
+		# been walking may be under it.
+		var vitals: Variant = player.get("vitals")
+		if vitals != null:
+			(vitals as RefCounted).call("rest")
+	for i in maxi(0, int(args.get("settle", 30))):
+		await physics_frame
+	# SETUP: somewhere with sky over it.
+	#
+	# Measured, not assumed. On this smoke's first local run every launch was
+	# refused, and the reason was not Fly: a fresh boot stands the trainer
+	# INSIDE Grandpa's farmhouse (the same fixture fact
+	# `tests/smoke_net_movement_two_peers.gd` records from the walking side),
+	# and `can_launch()`'s overhead shape query finds the ceiling. Asked from
+	# the ground that refusal is invisible -- `can_launch()` short-circuits on
+	# "jump first" -- so the search below asks `launch_blockers()`, which is
+	# the same checks with only the airborne one taken out. One implementation,
+	# and the harness never re-derives what counts as a legal launch.
+	var screen := await _clear_open_dialogue(40)
+	var cleared := await _stand_somewhere_launchable(fly, int(args.get("search_rings", 3)))
+	var stood := _probe.call("player") as Node3D
+	return {"verdict": "PASS",
+		"detail": "SETUP: fly_traversal_unlocked set, %s active, anchor=%s, screen: %s, launch site: %s (locomotion=%s carried=%s on_floor=%s)"
+			% [species, str(fly.get("safe_anchor")), screen, cleared,
+				str(stood.call("locomotion_enabled")) if stood != null else "?",
+				str(stood.call("is_carried")) if stood != null else "?",
+				str(stood.call("is_on_floor")) if stood != null else "?"]}
+
+
+## Walk the trainer out from wherever it is until the game itself says a launch
+## from here would be legal. Returns what happened, for the step's detail.
+##
+## The body is placed rather than walked, for `_step_explore_at()`'s stated
+## reason: a scripted walk in a headless smoke dies against terrain and reports
+## on the terrain rather than on what is being tested. Ground height is taken
+## from the world's own `ground_height_at` where the scene offers one, which is
+## the same door `creature_body.place_on_ground` asks first (D09).
+func _stand_somewhere_launchable(fly: Node, rings: int) -> String:
+	var player := _probe.call("player") as Node3D
+	if player == null:
+		return "no player to stand anywhere"
+	var blocked := await _blockers_with_the_screen_free(fly)
+	if blocked.is_empty():
+		return "already clear where it stood"
+	var start := player.global_position
+	var world: Node = _probe.call("world")
+	var reach := 0.0
+	for ring in maxi(1, rings):
+		var radius := 20.0 * float(ring + 1)
+		reach = radius
+		for step_index in 6:
+			var angle := TAU * float(step_index) / 6.0
+			var at := start + Vector3(cos(angle), 0.0, sin(angle)) * radius
+			if world != null and world.has_method("ground_height_at"):
+				var height := float(world.call("ground_height_at", at.x, at.z))
+				if not is_nan(height):
+					at.y = height + 0.4
+			player.global_position = at
+			player.velocity = Vector3.ZERO
+			# Long enough for Terrain3D's camera-following collision to stream
+			# in under the new spot: a body placed ahead of its own ground
+			# falls, and a falling body answers every question wrongly. This is
+			# the FENCE/teleport trap `docs/00_START_HERE.md` records.
+			for i in 24:
+				await physics_frame
+			if not player.is_on_floor():
+				continue
+			blocked = await _blockers_with_the_screen_free(fly)
+			if blocked.is_empty():
+				return "cleared at (%.1f, %.1f) after %.0f m" % [at.x, at.z, radius]
+	player.global_position = start
+	for i in 24:
+		await physics_frame
+	return "NO clear launch site found within %.0f m; last refusal '%s'" % [reach, blocked]
+
+
+## `launch_blockers()`, asked once this peer's screen is actually its own.
+##
+## MEASURED, and this is why it is not simply a call. The opening's `house`
+## beat opens and re-opens Grandpa's dialogue box while the trainer is still
+## inside the farmhouse, and while it is open `sequence_director` holds
+## locomotion down -- so `launch_blockers()` answers "Fly is unavailable while
+## riding or in combat" for a spot whose only real problem might be the ceiling,
+## or none at all. Asking through here presses the box away and waits a bounded
+## number of frames for the lockout to lift, so what comes back is a fact about
+## the SPOT rather than about the beat. A lockout that never lifts is returned
+## as itself rather than waited on forever.
+func _blockers_with_the_screen_free(fly: Node) -> String:
+	await _clear_open_dialogue(20)
+	var blocked := str(fly.call("launch_blockers"))
+	for i in 60:
+		if blocked != "Fly is unavailable while riding or in combat.":
+			return blocked
+		await physics_frame
+		blocked = str(fly.call("launch_blockers"))
+	return blocked
+
+
+## Launch. The production input, not a state poke: a Jump off the ground, then
+## a second Jump while airborne, which is `fly_controller.physics_step()`'s own
+## `Input.is_action_just_pressed("jump") and not is_on_floor()`.
+func _step_fly_launch(args: Dictionary) -> Dictionary:
+	var fly := _fly_controller()
+	if fly == null:
+		return {"verdict": "ERROR", "detail": "no FlyController on this peer's player"}
+	# SETUP first, every time: the opening's dialogue box opens partway through
+	# the `house` beat, and while it is open `sequence_director` holds this
+	# peer's locomotion down -- which `can_launch()` reports as "Fly is
+	# unavailable while riding or in combat", a sentence about the FEATURE for
+	# a problem that is entirely the fixture's. See `_step_dismiss_dialogue`.
+	var screen := await _clear_open_dialogue(40)
+	var reason := await _blockers_with_the_screen_free(fly)
+	var player := _probe.call("player") as Node3D
+	# `height` stands the trainer up in the air before the launch press, and is
+	# the Meadows' stand-in for a Cloudreach ledge.
+	#
+	# It is HARNESS PLACEMENT, exactly as `_step_teleport` and `_step_explore_at`
+	# are, and it is not what is under test: the launch itself is still the
+	# production `Input.is_action_just_pressed("jump")` while off the floor, and
+	# `can_launch()` still refuses it for every real reason. What it buys is
+	# AIRTIME. A glide sinks at `fly_traversal.json`'s 2 m/s, and a Meadows hop
+	# clears about two metres, so a launch off flat ground is a one-second
+	# flight -- over before a friend's peer has drawn a single frame of it, and
+	# a smoke asserting on that would be asserting on a race it set up itself.
+	# Sixty metres is thirty seconds, which is a flight somebody can watch.
+	var height := float(args.get("height", 0.0))
+	for attempt in maxi(1, int(args.get("attempts", 3))):
+		if height > 0.0 and player != null:
+			player.global_position += Vector3.UP * height
+			player.velocity = Vector3.ZERO
+			for i in 4:
+				await physics_frame
+		else:
+			await _press_edge("jump", true)
+			for i in 3:
+				await physics_frame
+			await _press_edge("jump", false)
+			for i in 6:
+				await physics_frame
+		await _press_edge("jump", true)
+		for i in 3:
+			await physics_frame
+		await _press_edge("jump", false)
+		for i in maxi(0, int(args.get("settle", 20))):
+			await physics_frame
+		if bool(fly.call("is_flying")):
+			return {"verdict": "PASS", "detail": "flying (%s) at y=%.2f on attempt %d"
+				% [str(fly.get("state")),
+					player.global_position.y if player != null else NAN, attempt]}
+		# Between attempts the trainer has to be back on the floor for the
+		# first Jump to be a jump at all.
+		for i in 90:
+			await physics_frame
+	return {"verdict": "FAIL",
+		"detail": "the second airborne Jump did not launch; screen: %s; launch_blockers() said '%s', now '%s'"
+			% [screen, reason, str(fly.call("launch_blockers"))]}
+
+
+## Come down. Holds the descend action until the body is on the floor, which is
+## the same touchdown a player reaches -- `physics_step()`'s `is_on_floor()`
+## branch, which is what proposes the landing anchor.
+func _step_fly_land(args: Dictionary) -> Dictionary:
+	var fly := _fly_controller()
+	var player := _probe.call("player") as Node3D
+	if fly == null or player == null:
+		return {"verdict": "ERROR", "detail": "no FlyController or player on this peer"}
+	if not bool(fly.call("is_flying")):
+		return {"verdict": "PASS", "detail": "already grounded"}
+	await _press_edge("fly_descend", true)
+	var budget := maxi(1, int(args.get("budget_frames", 900)))
+	var landed := false
+	for i in budget:
+		await physics_frame
+		if not bool(fly.call("is_flying")):
+			landed = true
+			break
+	await _press_edge("fly_descend", false)
+	for i in maxi(0, int(args.get("settle", 30))):
+		await physics_frame
+	if not landed:
+		return {"verdict": "FAIL", "detail": "still airborne after %d frames at y=%.2f"
+			% [budget, player.global_position.y]}
+	return {"verdict": "PASS", "detail": "landed at (%.2f, %.2f, %.2f); anchor report %s"
+		% [player.global_position.x, player.global_position.y, player.global_position.z,
+			JSON.stringify(fly.call("anchor_report"))]}
+
+
+## Forge a landing-anchor claim and send it to the host.
+##
+## This is the adversary the arbiter exists for, and it is deliberately NOT a
+## polite API call: it goes through this peer's own outbound trainer proxy,
+## down the same RPC a real client's landing goes down, carrying a position the
+## client made up. If the host grants it, a client can name its own recovery
+## point anywhere in the world -- which is `MP_ENCOUNTER_PROTOCOL.md` SS2 broken
+## for Fly. The smoke asserts the refusal.
+func _step_fly_claim_anchor(args: Dictionary) -> Dictionary:
+	var fly := _fly_controller()
+	var proxy := _own_proxy("trainer")
+	if fly == null:
+		return {"verdict": "ERROR", "detail": "no FlyController on this peer's player"}
+	if proxy == null:
+		return {"verdict": "ERROR",
+			"detail": "SETUP incomplete: this peer has no outbound trainer proxy (no session?)"}
+	var at: Array = args.get("at", []) as Array
+	if at.size() != 3:
+		return {"verdict": "ERROR", "detail": "fly_claim_anchor needs args.at = [x, y, z]"}
+	var before: Dictionary = fly.call("anchor_report")
+	var game := root.get_node_or_null(^"Game")
+	var realm := str(args.get("realm", str(game.get("current_realm")) if game != null else ""))
+	proxy.call("request_landing_anchor",
+		Vector3(float(at[0]), float(at[1]), float(at[2])), realm)
+	for i in maxi(0, int(args.get("settle", 60))):
+		await physics_frame
+	var after: Dictionary = fly.call("anchor_report")
+	return {"verdict": "PASS", "detail": "claimed (%.1f, %.1f, %.1f); refusals %d -> %d, accepts %d -> %d, code '%s'"
+		% [float(at[0]), float(at[1]), float(at[2]),
+			int(before.get("refusals", 0)), int(after.get("refusals", 0)),
+			int(before.get("accepts", 0)), int(after.get("accepts", 0)),
+			str(after.get("last_code", ""))]}
+
+
 func _execute_probe(msg: Dictionary) -> Variant:
 	var what := str(msg.get("what", ""))
 	match what:
@@ -2630,6 +3161,137 @@ func _execute_probe(msg: Dictionary) -> Variant:
 						"presence": pbody.get_node_or_null(^"Presence") != null,
 					}
 			return drawn
+		"riding":
+			# Wave 6 lane 6.B. Two halves, and the SECOND is the deliverable.
+			#
+			# `local` is what this peer is doing itself. `remote` is what this
+			# peer can SEE of everybody else's ride: for each other peer's
+			# trainer body, whether it is drawn as riding, which creature it is
+			# sitting on, how far the rider is from the mount right now, and
+			# whether the seated pose actually reached the skeleton.
+			#
+			# `gap` is the number the smoke asserts on and it is deliberately
+			# measured live rather than derived: a rider and a mount that are
+			# two independently interpolated bodies read as ONE animal only for
+			# as long as the distance between them stays put. `seated` is the
+			# other half of the same claim -- `trainer_model.gd::ride_pose_
+			# applied()`'s own comment says why a VISIBLE rider is not the same
+			# claim as a SEATED one, and a trainer drawn standing bolt upright
+			# on a creature's back is the owner's own OP-0904-3 bug.
+			var riding_node := _riding_controller()
+			var ride_local := {}
+			if riding_node != null:
+				var mount_body: Variant = riding_node.call("mount_body")
+				var local_player := _probe.call("player") as Node3D
+				var local_model: Node = local_player.get_node_or_null(^"Model") \
+					if local_player != null else null
+				ride_local = {
+					"mounted": bool(riding_node.call("is_mounted")),
+					"mount": str((mount_body as Node).name) \
+						if mount_body != null and is_instance_valid(mount_body) else "",
+					"species": str((mount_body as Node3D).get("species_id")) \
+						if mount_body != null and is_instance_valid(mount_body) else "",
+					"saddle_worn": mount_body != null and is_instance_valid(mount_body) \
+						and (mount_body as Node).get_node_or_null(^"RideSaddle") != null,
+					"seated": local_model != null and local_model.has_method("ride_pose_applied") \
+						and bool(local_model.call("ride_pose_applied")),
+					"speed": float(riding_node.call("ride_speed_now")),
+				}
+			var ride_remote := {}
+			for body in get_nodes_in_group(&"remote_trainer"):
+				if not is_instance_valid(body) or not (body is Node3D):
+					continue
+				var rider: Node3D = body
+				if rider.is_multiplayer_authority():
+					continue
+				var rider_mount: Node3D = null
+				for creature in get_nodes_in_group(&"remote_creature"):
+					if creature is Node3D and is_instance_valid(creature) \
+							and int((creature as Node3D).get("owner_peer_id")) == int(rider.get("peer_id")):
+						rider_mount = creature as Node3D
+						break
+				var rider_model: Node = rider.get_node_or_null(^"Model")
+				ride_remote[str(int(rider.get("peer_id")))] = {
+					"riding": bool(rider.get("net_riding")),
+					"carried": bool(rider.get("net_carried")),
+					"saddled": bool(rider.get("net_creature_saddled")),
+					"visible": rider.visible,
+					"mount": str(rider_mount.name) if rider_mount != null else "",
+					"mount_species": str(rider_mount.get("species_id")) if rider_mount != null else "",
+					"mount_saddle_worn": rider_mount != null \
+						and rider_mount.get_node_or_null(^"RideSaddle") != null,
+					"gap": rider.global_position.distance_to(rider_mount.global_position) \
+						if rider_mount != null else -1.0,
+					"above": rider.global_position.y - rider_mount.global_position.y \
+						if rider_mount != null else 0.0,
+					"seated": rider_model != null and rider_model.has_method("ride_pose_applied") \
+						and bool(rider_model.call("ride_pose_applied")),
+					"pos": [rider.global_position.x, rider.global_position.y, rider.global_position.z],
+				}
+			return {"local": ride_local, "remote": ride_remote}
+		"flying":
+			# Wave 6 lane 6.C, same shape and the same reason. `local` is this
+			# peer's own flight and its landing-anchor ledger; `remote` is what
+			# this peer DRAWS of somebody else's -- which is the half that was
+			# missing entirely, because a flying trainer used to replicate as a
+			# trainer falling.
+			#
+			# `carrier` is the name of the bird node standing over the remote
+			# body's head. Reported by NAME rather than by a live scan for a
+			# mesh, for `remote_presentation`'s reason one file over: what is
+			# being asserted is that the art was BUILT, and a node that exists
+			# is the durable proof of that.
+			var fly_node := _fly_controller()
+			var fly_player := _probe.call("player") as Node3D
+			var fly_local := {}
+			if fly_node != null:
+				fly_local = {
+					"flying": bool(fly_node.call("is_flying")),
+					"state": str(fly_node.get("state")),
+					# The reasons a launch would be refused RIGHT NOW, and the
+					# two player facts behind the most confusing of them. A run
+					# that cannot get off the ground has to say why in its own
+					# output: the first run of `smoke_net_fly.gd` reported
+					# "the second airborne Jump did not launch" three times
+					# over while the actual answer was a farmhouse ceiling.
+					"blockers": str(fly_node.call("launch_blockers")),
+					"locomotion": fly_player != null \
+						and bool(fly_player.call("locomotion_enabled")),
+					"carried": fly_player != null and bool(fly_player.call("is_carried")),
+					"on_floor": fly_player != null and bool(fly_player.call("is_on_floor")),
+					# Which owner of the screen is holding locomotion down, when
+					# one is. `sequence_director._refresh_lockout()` re-applies
+					# its answer every frame, so a locomotion lock that persists
+					# is one of these four still reading true -- naming them is
+					# the difference between a finding with a reproduction and
+					# "the client cannot move".
+					"lockout": _lockout_report(),
+					"species": str(fly_node.call("carrier_species_id")),
+					"y": fly_player.global_position.y if fly_player != null else 0.0,
+					"carrier": fly_player != null \
+						and fly_player.get_node_or_null(^"FlyCompanionPresentation") != null,
+					"anchor": fly_node.call("anchor_report"),
+				}
+			var fly_remote := {}
+			for body in get_nodes_in_group(&"remote_trainer"):
+				if not is_instance_valid(body) or not (body is Node3D):
+					continue
+				var flier: Node3D = body
+				if flier.is_multiplayer_authority():
+					continue
+				var flier_model: Node = flier.get_node_or_null(^"Model")
+				fly_remote[str(int(flier.get("peer_id")))] = {
+					"flying": bool(flier.get("net_flying")),
+					"state": str(flier.get("net_fly_state")),
+					"species": str(flier.get("net_fly_species")),
+					"visible": flier.visible,
+					"carrier": flier.get_node_or_null(^"FlyCompanionPresentation") != null,
+					"hanging": flier_model != null and flier_model.has_method("is_riding") \
+						and bool(flier_model.get("_fly_hang")),
+					"pos": [flier.global_position.x, flier.global_position.y, flier.global_position.z],
+					"y": flier.global_position.y,
+				}
+			return {"local": fly_local, "remote": fly_remote}
 		"remote_trainers":
 			# Lane 2.C. Every OTHER peer's body as this process sees it:
 			# the nodes `scripts/net/trainer_spawn.gd` spawned under D97's

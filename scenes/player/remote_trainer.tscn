@@ -21,14 +21,19 @@ height = 1.8
 radius = 0.4
 height = 1.8
 
-; The replicated set, lane 2.C deliverable 4: position, yaw, animation state,
-; sprint, carried. `net_position` and `net_yaw` go every tick because they are
-; what the body is interpolated toward; the three discrete ones are sent on
-; change (replication_mode 2) because they are flags, not curves.
+; The replicated set. Lane 2.C deliverable 4: position, yaw, animation state,
+; sprint, carried. Wave 6 lanes 6.B and 6.C add the ride (riding, the seat
+; offset, the mount's saddle) and the flight (flying, the controller's state
+; word, the carrier species). `net_position` and `net_yaw` go every tick
+; because they are what the body is interpolated toward; every discrete one is
+; sent on change (replication_mode 2) because they are flags, not curves.
 ;
-; `spawn = true` on all five so a peer that joins mid-session sees a trainer
-; who is already sprinting as sprinting, rather than as an idle body at the
-; origin for one tick.
+; `spawn = true` on all of them so a peer that joins mid-session sees a trainer
+; who is already sprinting as sprinting, a trainer already on a mount as
+; seated, and a trainer already in the air as flying -- rather than as an idle
+; body at the origin for one tick. A joiner has never seen the transition that
+; started any of those, which is exactly why the state and not the event is
+; what crosses the wire.
 [sub_resource type="SceneReplicationConfig" id="Repl_1"]
 properties/0/path = NodePath(".:net_position")
 properties/0/spawn = true
@@ -45,6 +50,24 @@ properties/3/replication_mode = 2
 properties/4/path = NodePath(".:net_carried")
 properties/4/spawn = true
 properties/4/replication_mode = 2
+properties/5/path = NodePath(".:net_riding")
+properties/5/spawn = true
+properties/5/replication_mode = 2
+properties/6/path = NodePath(".:net_mount_offset")
+properties/6/spawn = true
+properties/6/replication_mode = 2
+properties/7/path = NodePath(".:net_creature_saddled")
+properties/7/spawn = true
+properties/7/replication_mode = 2
+properties/8/path = NodePath(".:net_flying")
+properties/8/spawn = true
+properties/8/replication_mode = 2
+properties/9/path = NodePath(".:net_fly_state")
+properties/9/spawn = true
+properties/9/replication_mode = 2
+properties/10/path = NodePath(".:net_fly_species")
+properties/10/spawn = true
+properties/10/replication_mode = 2
 
 [node name="RemoteTrainer" type="CharacterBody3D" groups=["remote_trainer"]]
 floor_max_angle = 0.7854
