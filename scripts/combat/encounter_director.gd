@@ -405,6 +405,32 @@ var _has_trainer_battle_anchor: bool = false
 ## is in here exactly like the one that was there from the first send-out.
 var _trainer_battle_participants: Dictionary = {}
 
+## D100 / §10. The UNSCALED numbers §10's multiplier is always derived FROM, and
+## the creature they were taken off.
+##
+## §10 re-derives its row every time `participants` changes, so the multiplier is
+## applied to one live creature MORE THAN ONCE -- on a mid-fight join, on a
+## leave, and again on the next creature of a trainer's roster. The scaler used
+## to multiply `attack`/`defence` in place with no base kept, which is safe
+## exactly once; the moment it is asked a second time the multiplier squares.
+##
+## Keeping the authored numbers here rather than re-deriving them from the
+## species curve is D100's decision and its reasoning is there: a trainer's
+## creature is NOT a pure function of species and level (`trainers.json` authors
+## `level_bonus`, `stat_bonus`, `body_scale`, a per-member `combat` block and a
+## shiny roll), so re-deriving would quietly discard everything the encounter
+## authored. It lives on the DIRECTOR and not on `creature_instance.gd` because
+## the instance is saved (`character_save.gd`) and a scaling scratch field has no
+## business in a save file; the opponent of a networked fight lives and dies
+## inside one battle, which is exactly this node's lifetime.
+##
+## Empty whenever nothing has been scaled -- a solo game never writes a key here.
+var _scaling_base: Dictionary = {}
+var _scaling_base_owner: RefCounted = null
+## The row last WRITTEN onto `_scaling_base_owner`, so an unchanged row costs
+## nothing. `_host_after_encounter_change()` runs on every landed strike.
+var _scaling_applied: Dictionary = {}
+
 
 func _ready() -> void:
 	_engage_range = float(MATH.config().get("flow", {}).get("engage_range", 6.0))
@@ -1823,6 +1849,13 @@ func _host_after_encounter_change(encounter_id: String, author_peer_id: int = 0)
 	if rec.is_empty():
 		return
 	_encounter = rec
+	# D100 / §10: `participants` may have just changed, and the record's row was
+	# re-stamped with it. The creature standing in the fight has to move with it
+	# -- a join that makes the record say 1.1 and leaves the body swinging at its
+	# authored numbers is the defect this is here to close. Cheap on the strike
+	# path: an unchanged row returns on the scaler's own guard.
+	if _trainer_body != null and is_instance_valid(_trainer_body):
+		_scale_opponent_for_the_session(_trainer_body.get("instance") as RefCounted)
 	if _manager != null:
 		# When the host is the AUTHOR of the change, the hit reaction is left to
 		# the strike render that follows a moment later
@@ -2869,6 +2902,11 @@ func _start_fight(wild: Node3D, opponent_owned: bool = false) -> void:
 	_engaged_with = wild
 	_set_exploration_active(false)
 	_open_encounter_if_networked(wild, opponent_owned)
+	# D100 / §10, and the ORDER is the fix: the record has to exist before the
+	# scaler can read a participant count off it. Trainer-owned opponents only,
+	# which is the scope lane 4.D shipped -- see `_scale_opponent_for_the_session`.
+	if opponent_owned:
+		_scale_opponent_for_the_session(wild.get("instance") as RefCounted)
 
 
 ## Stage B lane 4.C. Stand a host-arbitrated encounter record up behind the
@@ -3367,7 +3405,11 @@ func _send_out_next_creature() -> bool:
 			(_player as CharacterBody3D).velocity = Vector3.ZERO
 
 	var creature: RefCounted = _trainer_queue.pop_front()
-	_scale_opponent_for_the_session(creature)
+	# §10's multiplier is deliberately NOT applied here. It is read off the
+	# encounter record, and the record is not opened or resumed until
+	# `_start_fight()` below -- so a call at this point reads an identity row and
+	# reaches nothing, which is exactly what it did until D100. `_start_fight()`
+	# scales the creature once the record behind it is live.
 
 	var body: Node3D = CREATURE_SCENE.instantiate()
 	# Numbered off a counter that only ever goes up, never off `_trainer_fallen`
@@ -3437,31 +3479,154 @@ func _send_out_next_creature() -> bool:
 ##
 ## Solo returns on the first line, so a solo trainer battle is byte-for-byte the
 ## fight it was.
+## WHERE IT IS CALLED FROM, and why it moved (D100, finding F1 of
+## `ralph/reports/MP-ROWS-8-21-0906/REPORT.md`).
+##
+## This used to be called once, from `_send_out_next_creature()`, immediately
+## after the creature was popped off the queue and BEFORE `_start_fight()` opened
+## or resumed the record it reads its multiplier off. It therefore reached
+## nothing, ever: the first creature found no record at all, and every later one
+## found a participant list §9 had emptied at the round boundary, whose re-stamp
+## is `scaling_for(0)` -- the identity. Measured on the Warden at two
+## participants: both creatures fought at their authored attack, defence and
+## cooldown while the record beside them said 1.1.
+##
+## It is now called from the two places the answer can CHANGE, both of which run
+## after the record exists:
+##
+##   * `_start_fight()`, after `_open_encounter_if_networked()` has minted or
+##     resumed the record -- so a creature stepping up into a fight two people
+##     are already in is scaled as it arrives;
+##   * `_host_after_encounter_change()`, which is the host's one choke point for
+##     `join` and `leave` -- so §10's "re-derived when `participants` changes,
+##     including a mid-fight join or leave" reaches the creature already standing
+##     on the field, and not only the record's own stamped row.
+##
+## Both are re-entrant by design, which is why `_scaling_base` exists.
 func _scale_opponent_for_the_session(creature: RefCounted) -> void:
-	if creature == null or not _is_multi_peer() or not _is_host() \
-			or _encounter_host == null:
+	if creature == null:
 		return
-	var encounter_id := str(_encounter.get("encounter_id", ""))
-	if encounter_id.is_empty():
-		return
-	var row: Dictionary = _encounter_host.call("scaling", encounter_id)
+	# A different creature than the one the base was taken off: the previous
+	# round's opponent is gone and its base is not this one's. Dropped BEFORE the
+	# session gate below, so a battle that ends the session (or a solo one that
+	# never had one) cannot leave a stale base behind for a later fight.
+	if _scaling_base_owner != creature:
+		_forget_scaling_base()
+	var row := _session_scaling_row()
 	var stat := float(row.get("stat_multiplier", 1.0))
 	var cooldown := float(row.get("attack_cooldown_multiplier", 1.0))
-	if is_equal_approx(stat, 1.0) and is_equal_approx(cooldown, 1.0):
+	if _scaling_base_owner == null:
+		# Nothing has been written to this creature yet. An identity row has
+		# nothing to write and nothing to restore, so it does not even take a
+		# base: a solo fight, and a two-peer session whose fight only ever has
+		# one participant in it, are byte-for-byte the fights they were.
+		if is_equal_approx(stat, 1.0) and is_equal_approx(cooldown, 1.0):
+			return
+		_take_scaling_base(creature)
+	elif is_equal_approx(stat, float(_scaling_applied.get("stat_multiplier", 1.0))) \
+			and is_equal_approx(cooldown,
+				float(_scaling_applied.get("attack_cooldown_multiplier", 1.0))):
+		# The row has not moved since it was last written. `join`, `leave` and
+		# every landed strike all come through here.
 		return
-	creature.set("attack", float(creature.get("attack")) * stat)
-	creature.set("defence", float(creature.get("defence")) * stat)
-	if is_equal_approx(cooldown, 1.0):
-		return
+	# ALWAYS base x row, never live x row. This is the whole of D100: the same
+	# creature is scaled again on every participant change, and a multiplier
+	# folded into an already-scaled number squares itself on the second call.
+	creature.set("attack", float(_scaling_base.get("attack", 0.0)) * stat)
+	creature.set("defence", float(_scaling_base.get("defence", 0.0)) * stat)
 	# G-2's per-creature override is where a trainer's creature already says how
 	# it fights, so the swing rate is written there rather than into a second
 	# channel `wild_creature.gd::configure()` would have to learn about.
-	var override: Dictionary = (creature.get("combat_override") as Dictionary).duplicate(true)
-	var base := float(override.get("attack_cooldown",
-		float((MATH.config().get("enemy_trainer", {}) as Dictionary).get("attack_cooldown",
-			float((MATH.config().get("wild", {}) as Dictionary).get("attack_cooldown", 1.4))))))
-	override["attack_cooldown"] = maxf(0.1, base * cooldown)
-	creature.set("combat_override", override)
+	#
+	# At the identity the AUTHORED dictionary goes back verbatim rather than
+	# `base x 1.0` being written into it: a creature that authored no
+	# `attack_cooldown` (the Warden's opening burrowback authors none) must not
+	# acquire one just for having been in a two-player fight that emptied out.
+	var authored: Dictionary = (_scaling_base.get("combat_override", {}) as Dictionary)
+	if is_equal_approx(cooldown, 1.0):
+		creature.set("combat_override", authored.duplicate(true))
+	else:
+		var override: Dictionary = authored.duplicate(true)
+		override["attack_cooldown"] = maxf(0.1,
+			float(_scaling_base.get("attack_cooldown", 1.4)) * cooldown)
+		creature.set("combat_override", override)
+	_scaling_applied = {
+		"stat_multiplier": stat, "attack_cooldown_multiplier": cooldown,
+	}
+	_push_scaling_to_opponent_body(creature)
+
+
+## The row this fight is running under, off the host's own record -- so a
+## participant's process and the host agree by construction rather than by each
+## recomputing it.
+##
+## The IDENTITY, deliberately, whenever this process is not the host of a
+## multi-peer session or holds no live record. That is not a guard clause moved
+## about: it is what puts the creature BACK when the last other participant
+## leaves. `_is_multi_peer()` goes false the moment a two-person session is one
+## person again, and a scaler that simply returned there would leave the boss
+## standing in front of the remaining player carrying a multiplier for a fight
+## nobody else is in any more -- the leave half of §10's "re-derived when
+## `participants` changes, including a mid-fight join or leave".
+##
+## A creature that was never scaled is unaffected: `_scale_opponent_for_the_
+## session()` takes no base at the identity, so a solo game does not read or
+## write one number of this.
+func _session_scaling_row() -> Dictionary:
+	var identity := {"stat_multiplier": 1.0, "attack_cooldown_multiplier": 1.0}
+	if not _is_multi_peer() or not _is_host() or _encounter_host == null:
+		return identity
+	var encounter_id := str(_encounter.get("encounter_id", ""))
+	if encounter_id.is_empty():
+		return identity
+	var row: Dictionary = _encounter_host.call("scaling", encounter_id)
+	return row if not row.is_empty() else identity
+
+
+## The authored numbers, taken once, the first time this creature is scaled.
+##
+## `attack_cooldown` is the RESOLVED base rather than the authored key: G-2's
+## override is allowed not to name one, in which case the body falls through to
+## `combat.json`'s `enemy_trainer` baseline, and the number the multiplier has to
+## be applied to is the one the body would actually have used.
+func _take_scaling_base(creature: RefCounted) -> void:
+	var override: Dictionary = creature.get("combat_override") as Dictionary
+	_scaling_base_owner = creature
+	_scaling_base = {
+		"attack": float(creature.get("attack")),
+		"defence": float(creature.get("defence")),
+		"combat_override": override.duplicate(true),
+		"attack_cooldown": float(override.get("attack_cooldown",
+			float((MATH.config().get("enemy_trainer", {}) as Dictionary).get("attack_cooldown",
+				float((MATH.config().get("wild", {}) as Dictionary).get("attack_cooldown", 1.4)))))),
+	}
+	_scaling_applied = {}
+
+
+func _forget_scaling_base() -> void:
+	_scaling_base_owner = null
+	_scaling_base = {}
+	_scaling_applied = {}
+
+
+## `attack` and `defence` need no push -- `combat_manager.gd` reads
+## `_enemy.effective_attack()` off this same instance at the moment of every
+## damage roll, so writing the instance IS applying them.
+##
+## The cooldown does. `wild_creature.gd::set_engaged()` snapshots
+## `_enemy_config_for_this_body()` into `_combat_cfg` when the fight opens, and
+## the fight opens (through `combat_manager.begin()`) BEFORE the record this
+## scaler reads even exists -- so a `combat_override` written afterwards would
+## sit on the instance and never be read. The body is told to re-read it.
+func _push_scaling_to_opponent_body(creature: RefCounted) -> void:
+	var body := _trainer_body
+	if body == null or not is_instance_valid(body):
+		return
+	if body.get("instance") != creature:
+		return
+	body.set("combat_override", creature.get("combat_override"))
+	if body.has_method("refresh_combat_profile"):
+		body.call("refresh_combat_profile")
 
 
 ## Beside the trainer, a stride toward the player — so their creature comes
@@ -3881,6 +4046,9 @@ func _close_trainer_encounter() -> void:
 	var id := str(_encounter.get("encounter_id", ""))
 	_encounter = {}
 	_trainer_battle_participants = {}
+	# D100: the battle is over and its opponent is gone, so the base it was
+	# scaled from goes with it rather than waiting for the next fight to notice.
+	_forget_scaling_base()
 	if id.is_empty():
 		return
 	_joinable_encounters.erase(id)

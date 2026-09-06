@@ -81,56 +81,41 @@ extends "res://tests/helpers/net_harness.gd"
 ## `defence` -- the three this asserts on -- but reading them afterwards would
 ## invite the next reader to assume it might.
 ##
-## ### FINDING F1: §10's stat multiplier reaches nothing, and this file says so
+## ### FINDING F1, CLOSED: the stat multiplier and the cooldown now reach the
+## ### creature, and this file asserts it
 ##
-## Recorded here rather than worked around, and reported in
-## `ralph/reports/MP-ROWS-8-21-0906/REPORT.md`.
+## This file used to PRINT the other two thirds of §10 -- the modest stat
+## multiplier and the shorter attack cooldown -- and deliberately assert no
+## direction on them, because on the tree row 8 shipped against they reached
+## nothing at all in any trainer or boss battle:
 ##
-## §10 has three clauses. This file asserts the one it forbids -- **never HP x
-## players** -- and it holds. The other two, the modest stat multiplier and the
-## shorter attack cooldown, are **not applied to any creature in any trainer or
-## boss battle on this tree**, and the numbers are printed in the run so a reader
-## can see it.
-##
-## The mechanism, followed rather than guessed:
-##
-##   * `encounter_director.gd::_scale_opponent_for_the_session()` is called from
+##   * `encounter_director.gd::_scale_opponent_for_the_session()` was called from
 ##     exactly one place -- `_send_out_next_creature()`, immediately after the
-##     creature is popped off the trainer's queue and BEFORE `_start_fight()`
-##     opens or resumes the record;
-##   * it reads its multiplier off the record (`encounter_host.gd::scaling()`),
-##     which is the right source: participant count is the host's business;
-##   * for the FIRST creature there is no record yet, so it returns on
-##     `_encounter` being empty;
-##   * for every creature after that, `_resume_trainer_encounter()`'s own header
-##     says what has happened by then: "`combat_manager.gd::_finish()` submits
-##     `disengage` at the end of EVERY round ... by the time the next creature
-##     steps up, §9 has emptied the record's participant list and marked it
-##     `done`." An empty participant list re-stamps the row through
-##     `scaling_for(0)`, which is the identity, so the scaler reads 1.0/1.0 and
-##     returns on its own `is_equal_approx` guard. The re-seat that puts everyone
-##     back -- and restores the row to 1.1/0.85 -- runs inside `_start_fight()`,
-##     i.e. AFTER the scaling call.
+##     creature was popped off the trainer's queue and BEFORE `_start_fight()`
+##     opened or resumed the record it reads its multiplier off;
+##   * so the FIRST creature found no record and returned on `_encounter` being
+##     empty, and every creature after it found the participant list §9 empties
+##     at each round boundary -- re-stamped through `scaling_for(0)`, the
+##     identity -- and returned on the scaler's own `is_equal_approx` guard.
 ##
 ## Measured on the Warden, twice: his opening burrowback carried attack 27.750 /
 ## defence 42.550 and his galecrest 51.800 / 27.750, each exactly its authored
-## number, while the record beside them said `stat_multiplier` 1.1.
+## number, while the record beside them said `stat_multiplier` 1.1. Nothing had
+## caught it because the only tests of §10 -- `test_encounter_rewards.gd`'s
+## scaling block -- test `scaling_for()` and `host.scaling()`, the TABLE and the
+## RECORD, and no test had ever asserted that the multiplier reaches a creature.
 ##
-## Nothing had caught it because the only tests of §10 -- `test_encounter_rewards
-## .gd`'s scaling block -- test `scaling_for()` and `host.scaling()`, the TABLE
-## and the RECORD. No test has ever asserted that the multiplier reaches a
-## creature.
-##
-## **Not fixed here, deliberately.** The call has to move to after the record is
-## resumed, and `_scale_opponent_for_the_session()` multiplies the instance's own
-## `attack`/`defence` IN PLACE with no unscaled base kept -- so moving it without
-## also deciding where the base lives risks compounding the multiplier across
-## rounds. That is lane 4.D's code and a real design decision, not a line this
-## row may quietly change.
-##
-## This file therefore asserts **no direction** on attack, defence or cooldown.
-## Asserting they equal the authored numbers would bless the defect; asserting
-## they do not would go red the day it is fixed. They are printed.
+## Lane MP-F1-F2 fixed it (D100: the scaling call moved to after the record is
+## live, and an UNSCALED BASE is kept on the director so a row that is re-derived
+## on every join, leave and landed strike cannot compound). The assertions below
+## are now the direction they refused to take: at two participants the live
+## creature's attack and defence are its authored numbers times
+## `stat_multiplier`, and the BODY's own combat config -- the number the swing
+## timer reads, not the one sitting on the instance -- is its authored cooldown
+## times `attack_cooldown_multiplier`. `tests/smoke_encounter_scaling.gd` is the
+## same claim driven over three rounds, three participant counts and a leave in
+## one process; this file is the half of it that runs over a real ENet link
+## against the real `session.gd`.
 ##
 ## ### Why the HP reads happen on the boss's SECOND creature
 ##
@@ -392,11 +377,12 @@ func _run() -> void:
 		"and has no roster of the Warden's to send out (got %d)"
 			% int(guest_live.get("creatures_left", -1)))
 
-	# The record's row IS re-derived the moment participants changes (§10), and
-	# that is asserted here, on the record the join just changed. What is NOT
-	# re-derived is the creature already standing on the field -- finding F1, see
-	# this file's header -- which is why the numbers below are read off his
-	# SECOND creature instead.
+	# The record's row is re-derived the moment participants changes (§10), and
+	# that is asserted here, on the record the join just changed. Since D100 the
+	# creature already standing on the field moves with it; the stat and cooldown
+	# comparisons are still taken on his SECOND creature, for finding F3's reason
+	# rather than F1's -- his opener authors no `attack_cooldown` and a
+	# measurement on it would compare 0.0 to 0.0.
 	var joined_scaling: Dictionary = host_rec.get("scaling", {}) as Dictionary
 	check(absf(float(joined_scaling.get("stat_multiplier", -1.0)) - configured_stat) < 0.0001,
 		"the join re-derived the record's scaling row to the two-player one (%.4f, configured %.4f)"
@@ -473,28 +459,44 @@ func _run() -> void:
 		"and §3's record -- the number both HUDs draw -- carries that same authored hp_max"
 		+ " (record %.3f, authored %.3f)" % [float(host_rec.get("hp_max", -2.0)), authored_hp])
 
-	# The OTHER half of §10 -- the modest stat multiplier and the shorter attack
-	# cooldown -- is NOT asserted, and this file will not pretend either way.
-	# FINDING F1: it reaches nothing on this tree, in any trainer or boss battle,
-	# and the numbers are printed above so a reader of the run can see it. See
-	# this file's header for the mechanism and
-	# `ralph/reports/MP-ROWS-8-21-0906/REPORT.md` for the measurement.
+	# --- the OTHER two thirds of §10, now asserted (finding F1, closed) -------
 	#
-	# Deliberately no assertion in either direction. `live.attack ==
-	# authored.attack` would bless the defect as intended behaviour, and
-	# `live.attack != authored.attack` would go red on the day somebody fixes it.
-	# The HP claim above is the one §10 forbids outright and the one this row was
-	# asked for; it is asserted, it passes, and it stays honest whatever happens
-	# to the multiplier.
-	print("§10 stat multiplier, MEASURED and not asserted (finding F1):"
-		+ " attack live %.3f / authored %.3f x %.4f = %.3f;"
-			% [float(live.get("attack", -1.0)), float(authored.get("attack", 0.0)),
-			   configured_stat, float(authored.get("attack", 0.0)) * configured_stat]
-		+ " defence live %.3f / authored %.3f; cooldown live %.3f / authored %.3f x %.4f = %.3f"
-			% [float(live.get("defence", -1.0)), float(authored.get("defence", 0.0)),
-			   float(live.get("attack_cooldown", -1.0)), float(authored.get("attack_cooldown", 0.0)),
-			   configured_cooldown,
-			   float(authored.get("attack_cooldown", 0.0)) * configured_cooldown])
+	# The same three numbers, in the same direction the header describes. Every
+	# one is authored x the CONFIGURED row, so a code/config divergence fails
+	# here rather than agreeing with itself, and `configured_stat > 1.0` has
+	# already been asserted above -- without it these three would be
+	# `authored == authored` and would pass a build that scaled nothing.
+	var authored_attack := float(authored.get("attack", 0.0))
+	var authored_defence := float(authored.get("defence", 0.0))
+	check(absf(float(live.get("attack", -1.0)) - authored_attack * configured_stat) < 0.001,
+		"§10: at 2 participants his creature's attack is the authored %.3f x %.4f = %.3f (live %.3f)"
+			% [authored_attack, configured_stat, authored_attack * configured_stat,
+			   float(live.get("attack", -1.0))])
+	check(absf(float(live.get("defence", -1.0)) - authored_defence * configured_stat) < 0.001,
+		"and its defence is the authored %.3f x %.4f = %.3f (live %.3f)"
+			% [authored_defence, configured_stat, authored_defence * configured_stat,
+			   float(live.get("defence", -1.0))])
+	# Finding F3 is why this is asserted on his SECOND creature and why the
+	# authored number is checked first: the opening burrowback authors no
+	# `attack_cooldown` at all, so a cooldown measurement taken on it would
+	# compare 0.0 to 0.0 and say nothing. The galecrest authors 0.9.
+	var authored_cooldown := float(authored.get("attack_cooldown", 0.0))
+	check(authored_cooldown > 0.0,
+		"his second creature authors a real attack_cooldown (%.3f) -- without one this comparison"
+			% authored_cooldown
+		+ " is 0.0 against 0.0 and proves nothing (finding F3)")
+	# THE BODY's number, not the instance's. `wild_creature.gd::set_engaged()`
+	# snapshots its combat config when the fight opens, which is before §10's
+	# record exists, so an override written afterwards reaches no swing at all
+	# unless the body is told to re-read it. Asserting the instance's own
+	# `combat_override` would pass a build in which the multiplier was written
+	# and then never read -- which is a different bug wearing F1's clothes.
+	var live_cooldown := float(live.get("body_attack_cooldown", -1.0))
+	check(absf(live_cooldown - maxf(0.1, authored_cooldown * configured_cooldown)) < 0.001,
+		"and the BODY swings on the authored %.3f x %.4f = %.3f (live %.3f) -- read off its own"
+			% [authored_cooldown, configured_cooldown,
+			   maxf(0.1, authored_cooldown * configured_cooldown), live_cooldown]
+		+ " combat config, which is the number the swing timer uses")
 
 	# The row the host actually stamped on the record when `participants` last
 	# changed -- so a host that scaled the creature correctly but told the

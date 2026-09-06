@@ -32,8 +32,26 @@ extends SceneTree
 ##      SAME RUNNING FIGHT and repeats the identical push, asserting that the
 ##      fighter NOW phases outside the room -- proof this test would have
 ##      failed on the code before this item, not just that it passes after.
+##
+## A third case, added by lane MP-F1-F2 (finding F2): a fight must also FORM
+## inside the room, not merely be held inside one once it has. `_place_fighters()`
+## stages the whole fight `deploy_offset + separation` (~7.6 m) in front of
+## wherever the player engaged, and the Warden stands 5 m from the back wall of
+## his own arena -- so a fight taken up beside him used to form 4-5 m OUTSIDE the
+## room, where there is no floor collider at all but `stronghold.gd::
+## built_floor_height_at()` still answers the room's floor height. Every body was
+## seated at y 6.172 and then fell ~8 m. Measured on the unfixed tree, at the spot
+## `tools/net/peer_runner.gd::_step_trainer_battle` stands a challenger on:
+##
+##     player    (8.49, -0.363, 7667.24)  arena_r -1.00  OUTSIDE the room
+##     ally     (11.62,  6.173, 7661.71)  arena_r  0.50  inside
+##     opponent (13.25, -1.124, 7665.10)  arena_r -1.00  OUTSIDE the room
+##
+## The player and the boss six and a half metres under the floor their fight is
+## being held on, on opposite sides of a wall from the player's own creature.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
+const ARENA_TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 
 const SETTLE_FRAMES := 300
 ## `data/config/combat.json`'s own flat `arena.radius` -- the number every
@@ -47,6 +65,10 @@ const NAIVE_DEFAULT_RADIUS := 11.0
 const PUSH_FRAMES := 90
 
 var _failures: Array[String] = []
+## How many assertions the Warden-Arena staging case below actually RAN. A break
+## that makes a test run FEWER assertions is a function aborting, not a test
+## failing, so the count is reported next to the failures on every run.
+var _staging_checks: int = 0
 var _world: Node = null
 var _player: CharacterBody3D = null
 var _rig: Node3D = null
@@ -72,6 +94,10 @@ func _run() -> void:
 
 	await _warrens_case()
 	await _stronghold_case()
+	# LAST, deliberately: a trainer battle cannot be left through Run (that is
+	# `smoke_trainer_battle.gd`'s own assertion), so `_end_fight_if_running()`
+	# cannot clean up after this one and nothing may be staged behind it.
+	await _warden_arena_staging_case()
 	_report()
 
 
@@ -146,6 +172,202 @@ func _stronghold_case() -> void:
 	var ally: Node3D = _director.call("ally_body") as Node3D
 	await _prove_containment("stronghold / tether_approach", stronghold, ally)
 	await _end_fight_if_running()
+
+
+## --- the Warden Arena: where a fight FORMS ----------------------------------
+
+## `data/config/combat.json`'s own staging numbers, read here rather than
+## hard-coded, because the claim is about this room against THESE offsets and a
+## designer who retunes either has to see this move with them.
+const ARENA_CONFIG := "res://data/config/combat.json"
+## How far off the room's floor a body may rest and still be standing on it.
+## `place_on_ground()` seats at the built floor exactly (6.172 measured) and a
+## settled body rests within a millimetre of it; anything past this is the fall
+## this case exists to catch, which is metres.
+const ON_THE_FLOOR_M := 0.35
+## Long enough for a body seated on a claimed floor with no collider under it to
+## be unmistakably falling. The measured drop is ~8 m, and `creature_body.gd`
+## grounds on `is_on_floor()`, so 120 frames is several times what it needs.
+const FALL_FRAMES := 120
+
+
+func _warden_arena_staging_case() -> void:
+	var stronghold: Node3D = _world.get_node_or_null(^"Stronghold") as Node3D
+	if stronghold == null:
+		_fail("the world built no Stronghold node; the Warden Arena staging case cannot run")
+		return
+	var warden := _body_for_trainer("warden_aldis")
+	if warden == null:
+		_fail("'warden_aldis' was never stood up; the Warden Arena staging case cannot run")
+		return
+	var spec: Dictionary = ARENA_TRAINERS.trainer("warden_aldis")
+	if spec.is_empty():
+		_fail("trainers.json has no 'warden_aldis'")
+		return
+
+	var floor_y := float(stronghold.call("built_floor_height_at",
+		warden.global_position.x, warden.global_position.z))
+	if is_nan(floor_y):
+		_fail("the stronghold claims no floor under the Warden himself; nothing below can be measured")
+		return
+	print("warden_aldis stands at %s; his arena's floor is y=%.3f" % [
+		str(warden.global_position), floor_y])
+
+	# The spot `tools/net/peer_runner.gd::_step_trainer_battle()` stands a
+	# challenger on, and the spot F2 was measured at: beside him, a stride out
+	# on each axis. Chosen because it is the configuration that was measured
+	# rather than one invented here -- and it is a spot a player who walked past
+	# him can stand on, which is the whole reason it matters.
+	_player.global_position = warden.global_position + Vector3(2.0, 0.0, 2.0)
+	_player.velocity = Vector3.ZERO
+	for i in 30:
+		await physics_frame
+	var start_radius := float(stronghold.call("combat_arena_bounds_at",
+		_player.global_position.x, _player.global_position.z))
+	_staging_check(start_radius > 0.0,
+		"the challenger does not even start inside the Warden Arena (%s, radius %.2f); this probe would prove nothing"
+			% [str(_player.global_position), start_radius])
+	if start_radius <= 0.0:
+		return
+
+	# Two fights already happened above and this case is not about surviving a
+	# third: the ally is put back on its feet exactly the way every other combat
+	# smoke in this repo tops its creature up, so `can_challenge()` refuses for a
+	# reason that is about the Warden rather than about the last two rooms.
+	await _revive_the_ally()
+
+	# The production call. `stronghold_climax.gd` makes exactly this one, and
+	# `data/config/stronghold_climax.json` says so in its own words: "There is no
+	# boss combat mode and there is no boss script." The dialogue in front of it
+	# is `smoke_boss.gd`'s ground; this case is about the geometry the fight
+	# forms on.
+	var began := bool(_director.call("begin_trainer_battle", spec, warden))
+	_staging_check(began,
+		("begin_trainer_battle('warden_aldis') refused (fighting: %s, battle active: %s, no usable ally: %s, "
+			+ "too low: %s, already beaten: %s); nothing below this point was tested")
+			% [str(_manager.call("is_fighting")), str(_director.call("trainer_battle_active")),
+			   str(_director.call("no_usable_ally")), str(_director.call("too_low_to_challenge", spec)),
+			   str(ARENA_TRAINERS.already_beaten(spec, _progression_store()))])
+	if not began:
+		return
+	for i in 45:
+		await physics_frame
+	if not bool(_manager.call("is_fighting")):
+		_fail("the Warden challenge did not open a fight; nothing below this point was tested")
+		return
+
+	var ally: Node3D = _director.call("ally_body") as Node3D
+	var opponent := _world.find_child("TrainerCreature_warden_aldis_*", true, false) as Node3D
+	if ally == null or opponent == null:
+		_fail("the Warden fight opened without both bodies on the field")
+		return
+
+	# THE CHECK THAT KEEPS THE THREE BELOW HONEST. Containment only ever
+	# SHORTENS the staging along the axis the fight formed on, so the axis is
+	# still readable off the opponent -- and this asserts that the room really
+	# does end before the full, unshortened staging span reaches. Without it,
+	# a room that happened to be big enough would pass the floor checks below
+	# while proving nothing at all about containment.
+	var axis := opponent.global_position - _player.global_position
+	axis.y = 0.0
+	if axis.length() < 0.01:
+		_fail("the fight formed on top of the player; there is no staging axis to measure")
+		return
+	axis = axis.normalized()
+	var cfg: Dictionary = _arena_staging_config()
+	var span := float(cfg.get("deploy_offset", 2.6)) + float(cfg.get("separation", 5.0))
+	var uncontained := _player.global_position + axis * span
+	var uncontained_r := float(stronghold.call("combat_arena_bounds_at", uncontained.x, uncontained.z))
+	_staging_check(uncontained_r <= 0.0,
+		("the unshortened staging point %s is still inside the Warden Arena (radius %.2f), so this case "
+			+ "cannot tell a contained fight from an uncontained one -- combat.json's deploy_offset+separation "
+			+ "is %.2f m and the room has grown past it") % [str(uncontained), uncontained_r, span])
+	if uncontained_r > 0.0:
+		return
+	print("the full %.2f m staging span reaches %s, which the room does NOT claim (radius %.2f)" % [
+		span, str(uncontained), uncontained_r])
+
+	_every_body_stands_in_the_arena(stronghold, floor_y, ally, opponent, "as the fight opened")
+	for i in FALL_FRAMES:
+		await physics_frame
+	_every_body_stands_in_the_arena(stronghold, floor_y, ally, opponent,
+		"after %d frames" % FALL_FRAMES)
+
+
+## The player, their creature and the Warden's creature: all three inside the
+## room the challenge was taken up in, and all three standing on its floor.
+##
+## Both halves are asserted separately on purpose. "Inside the room" alone would
+## pass a body seated on the floor CLAIM in mid-air over the margin; "on the
+## floor" alone would pass a body that had walked out of the room onto ground
+## that happens to be at the same height.
+func _every_body_stands_in_the_arena(stronghold: Node3D, floor_y: float,
+		ally: Node3D, opponent: Node3D, when: String) -> void:
+	var failures_before := _failures.size()
+	for row: Array in [["the player", _player], ["their creature", ally],
+			["the Warden's creature", opponent]]:
+		var who := str(row[0])
+		var body: Node3D = row[1] as Node3D
+		var alive := body != null and is_instance_valid(body)
+		_staging_check(alive, "%s left the field %s" % [who, when])
+		if not alive:
+			continue
+		var at := body.global_position
+		var radius := float(stronghold.call("combat_arena_bounds_at", at.x, at.z))
+		_staging_check(radius > 0.0,
+			("%s is OUTSIDE the Warden Arena %s, at %s -- the room does not claim that spot, "
+				+ "so the floor it was seated on has no collider under it") % [who, when, str(at)])
+		var drop := absf(at.y - floor_y)
+		_staging_check(drop <= ON_THE_FLOOR_M,
+			"%s is %.3f m off the Warden Arena's floor %s (body y %.3f, floor y %.3f)"
+				% [who, drop, when, at.y, floor_y])
+	if _failures.size() == failures_before:
+		print("all three bodies stand inside the Warden Arena, on its floor, %s" % when)
+
+
+## `combat.json`'s `arena` block, read the same way `combat_manager.gd` reads it.
+func _arena_staging_config() -> Dictionary:
+	var file := FileAccess.open(ARENA_CONFIG, FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not (parsed is Dictionary):
+		return {}
+	var block: Variant = (parsed as Dictionary).get("arena", {})
+	return block as Dictionary if block is Dictionary else {}
+
+
+## The Warden is placed by `stronghold_climax.gd`, not by the stronghold's own
+## gauntlet node, so he is found the way `tools/net/peer_runner.gd` finds him --
+## by asking every node in the world that answers to `body_for`.
+func _body_for_trainer(trainer_id: String) -> Node3D:
+	for node in _world.find_children("*", "Node3D", true, false):
+		if not is_instance_valid(node) or not node.has_method("body_for"):
+			continue
+		var found: Variant = node.call("body_for", trainer_id)
+		if found != null and is_instance_valid(found):
+			return found as Node3D
+	return null
+
+
+## Put the player's creature back on its feet between cases. The same allowance
+## `smoke_boss.gd` and `smoke_trainer_battle.gd` make (`mine.hp = mine.max_hp`),
+## for the same reason: these files test WIRING, not whether a starter can
+## survive three rooms of the fortress back to back.
+func _revive_the_ally() -> void:
+	var ally: RefCounted = _director.call("ally_instance") as RefCounted
+	if ally != null:
+		ally.set("fainted", false)
+		ally.set("hp", float(ally.get("max_hp")))
+	if _director.call("ally_body") == null:
+		await _director.call("adopt_starter", "terrapup")
+	for i in 20:
+		await physics_frame
+
+
+func _progression_store() -> RefCounted:
+	var game := root.get_node_or_null(^"/root/Game")
+	return game.get("progression") as RefCounted if game != null else null
 
 
 ## --- the shared proof -------------------------------------------------------
@@ -445,10 +667,19 @@ func _fail(message: String) -> void:
 	_failures.append(message)
 
 
+## One assertion of the Warden-Arena staging case, counted whether it passes or
+## fails, so a run that silently stopped asserting is visible in the report.
+func _staging_check(ok: bool, message: String) -> void:
+	_staging_checks += 1
+	if not ok:
+		_fail(message)
+
+
 func _report() -> void:
 	print("")
+	print("Warden Arena staging: %d assertion(s) run" % _staging_checks)
 	if _failures.is_empty():
-		print("arena containment: OK -- Warrens and Stronghold fights hold participants inside a reachable, legal room.")
+		print("arena containment: OK -- Warrens and Stronghold fights FORM inside a reachable, legal room and hold participants inside it.")
 		quit(0)
 		return
 	for line in _failures:

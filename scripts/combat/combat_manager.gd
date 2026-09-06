@@ -556,10 +556,73 @@ func _arena_bounds(centre: Vector3) -> float:
 
 
 func _midpoint(cfg: Dictionary) -> Vector3:
+	var spots := _staging_spots(cfg)
+	return (spots[0] + spots[1]) * 0.5
+
+
+## How coarsely `_staging_reach()` walks the staging back out of a wall. Half a
+## metre is well under the fighters' own body radii, so a spot found at this
+## resolution is not one a body then overlaps the wall from.
+const CONTAIN_STEP_M := 0.5
+
+
+## The two spots the fight forms on, in front of the player along the line they
+## engaged down: their creature at `deploy_offset`, the opponent `separation`
+## past it. Taken as ONE piece so `_open_arena()` and `_place_fighters()` cannot
+## disagree about where the fight is.
+func _staging_spots(cfg: Dictionary) -> Array[Vector3]:
 	var forward := _forward_axis()
 	var deploy := float(cfg.get("deploy_offset", 2.6))
 	var separation := float(cfg.get("separation", 5.0))
-	return _player.global_position + forward * (deploy + separation * 0.5)
+	var full := deploy + separation
+	var scale := 1.0
+	if full > 0.01:
+		scale = _staging_reach(_player.global_position, forward, full) / full
+	return [
+		_player.global_position + forward * (deploy * scale),
+		_player.global_position + forward * (full * scale),
+	]
+
+
+## How far in front of `from` the fight may form before it leaves the room it is
+## being held in. `want` back unchanged whenever no room claims `from`, which is
+## every square metre of the open meadow.
+##
+## MP-F1-F2 finding F2, measured in the Warden Arena. The staging above is
+## `deploy_offset + separation` -- ~7.6 m with the shipped `arena` block -- in
+## front of wherever the player engaged. The Warden stands 5 m from that room's
+## back wall, so a fight taken up beside him formed 4-5 m OUTSIDE it, at
+## z 7666-7668 where the sweep below found no floor collider at all:
+##
+##     z 7663.0   claim 6.172   terrain -1.568   arena_r  0.50   slab collider
+##     z 7664.0   claim 6.172   terrain -1.605   arena_r -1.00   slab collider
+##     z 7666.0   claim 6.172   terrain -1.664   arena_r -1.00   NO COLLIDER
+##     z 7668.0   claim 6.172   terrain -1.767   arena_r -1.00   NO COLLIDER
+##
+## `stronghold.gd::built_floor_height_at()` still CLAIMS those metres -- its
+## margin is deliberately 10 m so that a fight which has drifted past a wall is
+## not told its floor is the meadow far below -- so `place_on_ground()` seated
+## every body at the room's floor height of 6.172 and
+## `creature_body._physics_process()`, which grounds on `is_on_floor()` and not
+## on anybody's claim, dropped them ~8 m. Measured: the boss finished at -1.767
+## with both piloted creatures still falling from 6.172, and every swing missed.
+##
+## The claim margin is not the bug and is not narrowed here; the stronghold's own
+## comment says so and names the owner of the other half outright: "containing
+## that drift is `combat_manager.gd`'s own arena-bounds job and stays there."
+## This is that. `_arena_bounds()` is already exactly the question -- it answers
+## the room's affordable radius inside a chamber and -1.0 everywhere else -- so a
+## fight started outdoors, or in a passage between two chambers, walks none of
+## this and is byte-for-byte the fight it was.
+func _staging_reach(from: Vector3, forward: Vector3, want: float) -> float:
+	if want <= 0.0 or _arena_bounds(from) <= 0.0:
+		return want
+	var reach := want
+	while reach > CONTAIN_STEP_M:
+		if _arena_bounds(from + forward * reach) > 0.0:
+			return reach
+		reach -= CONTAIN_STEP_M
+	return reach
 
 
 func _forward_axis() -> Vector3:
@@ -580,9 +643,12 @@ func _forward_axis() -> Vector3:
 ## "a state" and "a separate scene".
 func _place_fighters() -> void:
 	var cfg: Dictionary = MATH.config().get("arena", {})
+	# Taken BEFORE anything is placed: `_forward_axis()` reads the opponent's
+	# current position, and `_place()` below moves it.
 	var forward := _forward_axis()
-	var ally_spot := _player.global_position + forward * float(cfg.get("deploy_offset", 2.6))
-	var wild_spot := ally_spot + forward * float(cfg.get("separation", 5.0))
+	var spots := _staging_spots(cfg)
+	var ally_spot: Vector3 = spots[0]
+	var wild_spot: Vector3 = spots[1]
 
 	_ally_body.visible = true
 	_place(_ally_body, ally_spot)

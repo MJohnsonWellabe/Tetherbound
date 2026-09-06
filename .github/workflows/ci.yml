@@ -1156,6 +1156,28 @@ jobs:
             echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
           done
           exit 1
+      # Lane MP-F1-F2 / D100. §10's participant scaling reaching a live creature,
+      # and not compounding when it is re-derived. Measured 74s locally, which is
+      # why it fits this shard rather than needing one of its own; RETRIES is 1
+      # deliberately -- it drives no wild creature, rolls nothing and takes no
+      # timing, so a red run here is arithmetic and a retry would only hide it.
+      - name: Verify encounter_scaling
+        if: ${{ !cancelled() }}
+        env: { SMOKE: encounter_scaling, RETRIES: 1 }
+        run: |
+          set -uo pipefail
+          n=0
+          until [ "$n" -ge "$RETRIES" ]; do
+            n=$((n + 1))
+            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+              echo "::endgroup::"
+              exit 0
+            fi
+            echo "::endgroup::"
+            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+          done
+          exit 1
 
   verify-regions-shard:
     runs-on: ubuntu-latest
