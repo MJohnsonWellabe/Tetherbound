@@ -120,7 +120,7 @@
         },
         {
           "name": "Menus",
-          "actions": ["menu_confirm", "menu_cancel", "menu_tab_left", "menu_tab_right", "map_zoom_in", "map_zoom_out"]
+          "actions": ["menu_confirm", "menu_cancel", "menu_tab_left", "menu_tab_right", "map_zoom_in", "map_zoom_out", "map_realm_prev", "map_realm_next"]
         },
         {
           "name": "Satchel",
@@ -169,6 +169,8 @@
         "menu_cancel": "Back  /  close the menu",
         "map_zoom_in": "Map: zoom in",
         "map_zoom_out": "Map: zoom out",
+        "map_realm_prev": "Map: previous realm",
+        "map_realm_next": "Map: next realm",
         "backpack_drop": "Satchel: drop the focused item",
         "backpack_split": "Satchel: split the focused stack",
         "backpack_assign": "Satchel: put the focused item on the quick bar",

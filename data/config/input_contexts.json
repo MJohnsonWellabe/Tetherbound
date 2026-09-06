@@ -93,9 +93,9 @@
     },
 
     "menu_map": {
-      "_comment": "The full map tab. Triggers zoom, the stick pans.",
+      "_comment": "The full map tab. Triggers zoom, the stick pans. `map_realm_prev`/`map_realm_next` (OP-0905-27) are the realm selector, read only while this tab is shown -- L3/R3 (stick click), reusing the same context-scoped-borrow pattern as `sprint`/`camera_recenter` in world play and `backpack_assign`/`backpack_split` on the satchel tab.",
       "includes": ["menu"],
-      "actions": ["map_zoom_in", "map_zoom_out"]
+      "actions": ["map_zoom_in", "map_zoom_out", "map_realm_prev", "map_realm_next"]
     },
 
     "narrative_modal": {
