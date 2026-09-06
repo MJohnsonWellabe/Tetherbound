@@ -184,6 +184,26 @@ map_zoom_out={
 , Object(InputEventJoypadMotion,"device":-1,"axis":4,"axis_value":1.0,"script":null)
 ]
 }
+; OP-0905-27: the full map's realm selector (scripts/ui/tab_map.gd). LB/RB
+; (button 9/10) already mean "previous/next MENU TAB" (menu_tab_left/right,
+; game_menu.gd) — reusing them here would fire both a realm switch AND a tab
+; change off the same press. L3/R3 (stick click, button 7/8) sit unclaimed
+; while the map tab is open: `sprint`/`camera_recenter` are the same physical
+; buttons in world play, and `backpack_assign`/`backpack_split` reuse them the
+; same context-scoped way for the satchel tab, so tab_map.gd reading them only
+; while it is the shown tab is the established pattern, not a new one.
+map_realm_prev={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":44,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":7,"pressed":false,"script":null)
+]
+}
+map_realm_next={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":46,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":8,"pressed":false,"script":null)
+]
+}
 creature_recall={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":82,"pressed":false,"script":null)

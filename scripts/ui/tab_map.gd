@@ -50,6 +50,29 @@ const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 ## but the literal baked terrain bitmap, one bake for both.
 const MAP_BAKER_PATH := "res://scripts/world/map_baker.gd"
 
+## OP-0905-27: "the map should show all the regions you've uncovered so
+## meadows and clouds together." Read-only, off-realm sources for the crossing
+## marker's world position -- `data/config/realm_transitions.json`'s own
+## header calls itself the one shared source "gates, arrival placement and
+## evidence harnesses" all read, and `cloudreach_world.json`'s
+## `transition_points.meadows_entry` is Cloudreach's half of the same handoff.
+## Positions are read from THERE, never duplicated into `map.json` — the
+## config this feature DOES own only decides how the marker looks (icon,
+## size, colour) and which flags unlock it, per that file's own `realm_link`
+## block.
+const REALM_TRANSITIONS_PATH := "res://data/config/realm_transitions.json"
+const CLOUDREACH_WORLD_PATH := "res://data/config/cloudreach_world.json"
+const MAP_CONFIG_PATH := "res://data/config/map.json"
+
+## Fallback used only if `map.json`'s own `realm_link.unlock_flags` is
+## missing/empty (`_realm_link_unlock_flags()`). D110: the Warden grants
+## `realm_key_cloudreach` at the same beat `legendary_freed` is set;
+## `cloudreach_chapter_started` additionally covers a save that reached
+## Cloudreach through the debug teleport rather than the story gate.
+const CLOUDREACH_UNLOCK_FLAGS: Array[String] = [
+	"legendary_freed", "realm_key_cloudreach", "cloudreach_chapter_started",
+]
+
 const ICON_DIR := "res://assets/ui/icons/map/"
 ## OP21-15: bumped from 26 across the board (icon/marker/font sizes below) —
 ## this screen's `canvas.draw_*` calls sit under the SAME `canvas_items`
@@ -133,6 +156,7 @@ class MapCanvas extends Control:
 
 
 var _canvas: MapCanvas = null
+var _title_label: Label = null
 var _surveyed_label: Label = null
 var _legend_row: HBoxContainer = null
 var _controls_label: RichTextLabel = null
@@ -154,10 +178,26 @@ var _last_map_revision: int = -1
 var _last_player_pos: Vector3 = Vector3.ZERO
 var _has_last_player_pos: bool = false
 
-var _terrain_attempted: bool = false
-var _terrain_tex: Texture2D = null
+## Keyed by realm id ("meadows"/"cloudreach") rather than one bare value, now
+## that this tab can draw a realm its own current scene did not bake. Presence
+## of a key (even mapped to `null`, the honest "no terrain to show" answer)
+## means "already attempted" — see `_terrain_texture()`'s own header.
+var _terrain_cache: Dictionary = {}
 var _icon_cache: Dictionary = {}
 var _region_font: Font = null
+
+## OP-0905-27: which realm the CANVAS is drawing right now. Independent of
+## `Game.current_realm` (where the player's own body actually is) -- that is
+## `_player_realm()`, below. Empty means "no explicit choice yet," which
+## `_display_realm()` resolves to the player's own realm; kept as a real
+## field (not derived fresh every call) so a deliberate switch persists across
+## polls until the player switches again or the tab rebuilds.
+var _view_realm: String = ""
+var _realm_row: HBoxContainer = null
+var _realm_buttons: Dictionary = {} # realm_id -> Button
+var _realm_link_cfg: Dictionary = {}
+var _realm_link_cfg_loaded: bool = false
+var _realm_link_points: Dictionary = {} # realm_id -> Vector2 or null, cached from disk once
 
 ## Cache for `_fog_texture()`, keyed on `map_state.revision` — see that
 ## function's own header for why this exists: the bug it fixed, not a
@@ -195,24 +235,29 @@ func build() -> void:
 	_zoom = clampf(remembered_zoom, MIN_ZOOM, MAX_ZOOM)
 	_pan_world = Vector2.ZERO
 	_manual_pan = false
-	_terrain_attempted = false
-	_terrain_tex = null
+	_terrain_cache.clear()
 	_fog_tex = null
 	_fog_tex_revision = -1
 	_icon_cache.clear()
 	_last_map_revision = -1
 	_has_last_player_pos = false
 	_settle_frames_left = SETTLE_FRAMES
+	# OP-0905-27: defaults back to wherever the player stands every time the
+	# tab (re)opens, per the spec's own "default selection = the realm the
+	# player is in" -- a deliberate switch does not survive closing the map.
+	_view_realm = ""
+	_realm_row = null
+	_realm_buttons.clear()
+	_realm_link_points.clear()
 
 	var header := HBoxContainer.new()
 	header.add_theme_constant_override("separation", 16)
 	add_child(header)
 
-	var title := Label.new()
-	title.text = "THE MEADOWS"
-	title.add_theme_font_size_override("font_size", UITokens.FONT_HEADING)
-	title.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
-	header.add_child(title)
+	_title_label = Label.new()
+	_title_label.add_theme_font_size_override("font_size", UITokens.FONT_HEADING)
+	_title_label.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
+	header.add_child(_title_label)
 
 	var spacer := Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -224,6 +269,14 @@ func build() -> void:
 	_surveyed_label.add_theme_font_size_override("font_size", CANVAS_HEADING_FONT_SIZE + 2)
 	_surveyed_label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 	header.add_child(_surveyed_label)
+
+	# OP-0905-27: the realm selector. Hidden by `_refresh_realm_row()` whenever
+	# fewer than two realms are available -- most of the game, until Cloudreach
+	# is reachable -- so a player who will never see a second realm never sees
+	# an inert row of chips either.
+	_realm_row = HBoxContainer.new()
+	_realm_row.add_theme_constant_override("separation", 10)
+	add_child(_realm_row)
 
 	_canvas = MapCanvas.new()
 	_canvas.tab = self
@@ -272,10 +325,20 @@ func revision() -> int:
 ## `build()` and once every `poll()` tick so this label tracks live input the
 ## same way every other glyph-bearing prompt in the menu does.
 func _refresh_controls_label() -> void:
-	_controls_label.text = "%s Zoom Out    %s Zoom In    Right Stick  Pan" % [
+	var text := "%s Zoom Out    %s Zoom In    Right Stick  Pan" % [
 		INPUT_GLYPH.icon("map_zoom_out", 24),
 		INPUT_GLYPH.icon("map_zoom_in", 24),
 	]
+	# OP-0905-27: only advertised once there is a second realm to switch to --
+	# an always-on hint for a button that does nothing yet is worse than no
+	# hint, the same reasoning `_refresh_realm_row()` hides the chip row on.
+	if _available_realms().size() > 1:
+		text += "    %s/%s  View %s" % [
+			INPUT_GLYPH.icon("map_realm_prev", 24),
+			INPUT_GLYPH.icon("map_realm_next", 24),
+			_realm_display_name(_other_realm(_display_realm())),
+		]
+	_controls_label.text = text
 
 
 func poll() -> void:
@@ -283,6 +346,8 @@ func poll() -> void:
 		return
 	_refresh_controls_label()
 	_read_navigation_input()
+	_read_realm_input()
+	_refresh_realm_row()
 	_follow_player_if_not_panned()
 
 	var map_state: RefCounted = _map_state()
@@ -351,6 +416,13 @@ func _read_navigation_input() -> void:
 func _follow_player_if_not_panned() -> void:
 	if _manual_pan or _zoom <= MIN_ZOOM:
 		return
+	# OP-0905-27: the player's own world position is meaningless in a realm
+	# they are not standing in -- following it here would divide the CURRENT
+	# scene's coordinates by whichever OTHER realm's much smaller/larger
+	# `world_bounds` this view is drawing, producing a pan that has nothing to
+	# do with either realm.
+	if not _should_draw_player_marker():
+		return
 	var player := _player_node()
 	if player == null:
 		return
@@ -388,6 +460,99 @@ func _next_zoom_level(direction: int) -> float:
 	return ZOOM_LEVELS[clampi(nearest + direction, 0, ZOOM_LEVELS.size() - 1)]
 
 
+## OP-0905-27. `map_realm_prev`/`map_realm_next` (project.godot: L3/R3, `,`/`.`
+## on keyboard) are dedicated rather than a reuse of LB/RB: those are already
+## `menu_tab_left`/`menu_tab_right` (game_menu.gd), which would fire a MENU TAB
+## change off the identical press and carry the player off this tab entirely
+## before a realm switch could ever register. `ui_accept` is a second way in —
+## the "activate the crossing" verb the spec asks for — safe to read here
+## because this tab's own canvas has nothing else bound to it.
+## A no-op whenever there is nothing to switch to, so the checks cost nothing
+## for the entire game until Cloudreach is reachable.
+func _read_realm_input() -> void:
+	var realms := _available_realms()
+	if realms.size() <= 1:
+		return
+	if Input.is_action_just_pressed("map_realm_next") or Input.is_action_just_pressed("ui_accept"):
+		_cycle_realm_view(realms, 1)
+	elif Input.is_action_just_pressed("map_realm_prev"):
+		_cycle_realm_view(realms, -1)
+
+
+func _cycle_realm_view(realms: Array[String], direction: int) -> void:
+	var current := _display_realm()
+	var index := realms.find(current)
+	if index < 0:
+		index = 0
+	_set_display_realm(realms[wrapi(index + direction, 0, realms.size())])
+
+
+## The one place `_view_realm` actually changes after `build()` -- shared by
+## the button row, the dedicated input actions and `ui_accept`, so all three
+## reset the same view-dependent state (zoom/pan/fog cache/settle frames) the
+## same way and none of them can drift from the others.
+func _set_display_realm(realm_id: String) -> void:
+	if realm_id == _display_realm():
+		return
+	_view_realm = realm_id
+	# A realm switch is a new "camera": Cloudreach's ~3.2km-wide open bounds
+	# and the Meadows' 2km-tall corridor have nothing in common, so carrying
+	# over the other realm's zoom/pan would land on an arbitrary crop of
+	# whichever realm is now shown rather than its own honest whole-world fit.
+	_zoom = MIN_ZOOM
+	_pan_world = Vector2.ZERO
+	_manual_pan = false
+	_last_map_revision = -1
+	_fog_tex = null
+	_fog_tex_revision = -1
+	_settle_frames_left = SETTLE_FRAMES
+	if _canvas != null:
+		_canvas.queue_redraw()
+	_update_legend(_map_state())
+
+
+func _on_realm_button_pressed(realm_id: String) -> void:
+	_set_display_realm(realm_id)
+
+
+## Builds the chip row once per distinct AVAILABLE SET (not every poll — these
+## are real `Button`s, not a canvas draw, and tearing them down every frame
+## would drop controller/mouse focus sitting on one exactly as `_update_legend`'s
+## own header warns against for the legend row). Hidden outright with fewer
+## than two realms to choose from, which is most of the game.
+func _refresh_realm_row() -> void:
+	if _realm_row == null:
+		return
+	var realms := _available_realms()
+	if realms.size() <= 1:
+		_realm_row.visible = false
+		return
+	_realm_row.visible = true
+	var realms_key := ",".join(realms)
+	if str(_realm_row.get_meta("realms_key", "")) != realms_key:
+		for child in _realm_row.get_children():
+			child.queue_free()
+		_realm_buttons.clear()
+		for realm_id in realms:
+			var button := Button.new()
+			button.text = _realm_display_name(realm_id)
+			# Controller/keyboard reach this tab's realm switch through the
+			# dedicated actions above, not focus traversal (see this file's
+			# own header on the left stick/d-pad staying with the menu's
+			# existing focus navigation) — mouse/touch can still click it.
+			button.focus_mode = Control.FOCUS_NONE
+			button.pressed.connect(_on_realm_button_pressed.bind(realm_id))
+			_realm_row.add_child(button)
+			_realm_buttons[realm_id] = button
+		_realm_row.set_meta("realms_key", realms_key)
+	var shown := _display_realm()
+	for realm_id: String in _realm_buttons:
+		# `disabled` reads as "this is the one already selected" — the same
+		# meaning a tab strip gives its own current tab — without inventing a
+		# second selected/unselected stylebox pair for one two-item row.
+		(_realm_buttons[realm_id] as Button).disabled = (realm_id == shown)
+
+
 func _clamp_pan() -> void:
 	if _zoom <= MIN_ZOOM:
 		_pan_world = Vector2.ZERO
@@ -416,13 +581,17 @@ func _clamp_pan() -> void:
 
 
 func _update_header(map_state: RefCounted) -> void:
+	var realm_name := str(map_state.call("map_display_name")) if map_state != null and map_state.has_method("map_display_name") else "Meadows"
+	if _title_label != null:
+		# "THE MEADOWS" reads naturally with the article; "Cloudreach Cliffs"
+		# is already a proper place name and does not want one.
+		_title_label.text = "THE " + realm_name.to_upper() if _display_realm() == "meadows" else realm_name.to_upper()
 	if _surveyed_label == null:
 		return
 	if map_state == null:
 		_surveyed_label.text = "Surveyed: --"
 		return
 	var fraction: float = float(map_state.call("discovered_fraction"))
-	var realm_name := str(map_state.call("map_display_name")) if map_state.has_method("map_display_name") else "Meadows"
 	var view_name := "Whole " + realm_name if _zoom <= MIN_ZOOM else "%dx local view" % int(_zoom)
 	_surveyed_label.text = "Surveyed: %d%%   •   %s" % [int(round(fraction * 100.0)), view_name]
 
@@ -550,24 +719,37 @@ func _draw_map(canvas: Control) -> void:
 			if bool(region.get("discovered", false)):
 				_draw_region_label(canvas, map_rect, region, placed_label_rects)
 
-	var objective: Dictionary = map_state.call("objective_marker")
-	if not objective.is_empty():
-		# The player's OWN canvas point, computed here (world position, not yet
-		# drawn) so `_draw_objective` can nudge the diamond clear of it before
-		# `_draw_player` draws the marker itself on top a few lines below --
-		# see `_draw_objective`'s own header for why the two would otherwise
-		# collide at whole-Meadows fit.
-		var player_point: Variant = null
-		var player_for_clear := _player_node()
-		if player_for_clear != null:
-			player_point = _world_to_canvas(
-				Vector2(player_for_clear.global_position.x, player_for_clear.global_position.z), map_rect)
-		_draw_objective(canvas, map_rect, objective, player_point)
+	# OP-0905-27: the realm crossing marker -- drawn on whichever realm map is
+	# actually showing, pointing at the OTHER one. Layered with the regular
+	# landmarks/regions rather than folded into the overview side-columns:
+	# it sits at the very edge of each realm's explored area, nowhere near the
+	# corridor's own callout clutter, so it needs none of that column's
+	# collision handling.
+	_draw_realm_link(canvas, map_rect)
 
-	if world != null:
-		var player := _player_node()
-		if player != null:
-			_draw_player(canvas, map_rect, player.global_position, _facing_yaw(world, player))
+	# The player's own body and the tracked objective both answer questions
+	# that only make sense in the realm the player actually stands in -- a
+	# diamond or dot placed at raw world coordinates onto a DIFFERENT realm's
+	# frame would land on an arbitrary, meaningless spot in it.
+	if _should_draw_player_marker():
+		var objective: Dictionary = map_state.call("objective_marker")
+		if not objective.is_empty():
+			# The player's OWN canvas point, computed here (world position, not yet
+			# drawn) so `_draw_objective` can nudge the diamond clear of it before
+			# `_draw_player` draws the marker itself on top a few lines below --
+			# see `_draw_objective`'s own header for why the two would otherwise
+			# collide at whole-Meadows fit.
+			var player_point: Variant = null
+			var player_for_clear := _player_node()
+			if player_for_clear != null:
+				player_point = _world_to_canvas(
+					Vector2(player_for_clear.global_position.x, player_for_clear.global_position.z), map_rect)
+			_draw_objective(canvas, map_rect, objective, player_point)
+
+		if world != null:
+			var player := _player_node()
+			if player != null:
+				_draw_player(canvas, map_rect, player.global_position, _facing_yaw(world, player))
 
 
 ## A 4:1 world cannot honestly fill a 16:9 panel at whole-world fit. The
@@ -719,23 +901,27 @@ func _map_marker_exclusion_rects(canvas: Control, map_rect: Rect2, map_state: Re
 		if viewport.intersects(exclusion):
 			occupied.append(exclusion)
 
-	var objective: Dictionary = map_state.call("objective_marker")
-	if not objective.is_empty():
-		var point := _world_to_canvas(objective.get("position", Vector2.ZERO), map_rect)
-		var exclusion := Rect2(point - Vector2(17.0, 17.0), Vector2(34.0, 34.0))
-		if viewport.intersects(exclusion):
-			occupied.append(exclusion)
+	# Objective and player exclusions only mean anything in the realm the
+	# player actually stands in -- see `_draw_map`'s own gate on the same
+	# check for why drawing either onto another realm's frame is meaningless.
+	if _should_draw_player_marker():
+		var objective: Dictionary = map_state.call("objective_marker")
+		if not objective.is_empty():
+			var point := _world_to_canvas(objective.get("position", Vector2.ZERO), map_rect)
+			var exclusion := Rect2(point - Vector2(17.0, 17.0), Vector2(34.0, 34.0))
+			if viewport.intersects(exclusion):
+				occupied.append(exclusion)
 
-	var player := _player_node()
-	if player != null:
-		var point := _world_to_canvas(Vector2(player.global_position.x, player.global_position.z), map_rect)
-		# Matches `_draw_player`'s own halo radius (`PLAYER_MARKER_RADIUS +
-		# PLAYER_FACING_BASE + PLAYER_FACING_LENGTH + 4.0`) so a label never
-		# lands on top of the bigger OP21-15 legibility halo.
-		var player_radius := PLAYER_MARKER_RADIUS + PLAYER_FACING_BASE + PLAYER_FACING_LENGTH + 4.0
-		var exclusion := Rect2(point - Vector2(player_radius, player_radius), Vector2(player_radius, player_radius) * 2.0)
-		if viewport.intersects(exclusion):
-			occupied.append(exclusion)
+		var player := _player_node()
+		if player != null:
+			var point := _world_to_canvas(Vector2(player.global_position.x, player.global_position.z), map_rect)
+			# Matches `_draw_player`'s own halo radius (`PLAYER_MARKER_RADIUS +
+			# PLAYER_FACING_BASE + PLAYER_FACING_LENGTH + 4.0`) so a label never
+			# lands on top of the bigger OP21-15 legibility halo.
+			var player_radius := PLAYER_MARKER_RADIUS + PLAYER_FACING_BASE + PLAYER_FACING_LENGTH + 4.0
+			var exclusion := Rect2(point - Vector2(player_radius, player_radius), Vector2(player_radius, player_radius) * 2.0)
+			if viewport.intersects(exclusion):
+				occupied.append(exclusion)
 	return occupied
 
 
@@ -1050,7 +1236,7 @@ const FOG_DISCOVERED := Color(0.0, 0.0, 0.0, 0.0)
 ## and seeing the exact same solid white square: more WAITING never helped
 ## because nothing was still triggering new REDRAWS by then, and every past
 ## redraw had rebuilt this same texture from scratch. Caching it the same way
-## `_terrain_tex` already is (build once per real state change, not once per
+## `_terrain_cache` already is (build once per real state change, not once per
 ## draw call) means there are only ever a handful of "brand new texture" frames
 ## over the tab's whole lifetime instead of one per redraw, and — just as
 ## importantly — a LATER redraw (there will always be at least a few more
@@ -1089,18 +1275,44 @@ func _fog_texture(map_state: RefCounted) -> ImageTexture:
 ## no `ground_height_at` (this tab open in a headless test with no scene), or
 ## `get_tree().get_current_scene()` returning null all fall through to `null`
 ## rather than erroring — the caller draws a flat panel instead. Attempted at
-## most once per `build()`, since `build()` already reruns on every fresh
-## `open()`/`select()` (see the header note on `revision()`), which is exactly
-## when it is worth retrying a world that was not ready last time.
+## most once per `build()` PER REALM (`_terrain_cache`, keyed by realm id),
+## since `build()` already reruns on every fresh `open()`/`select()` (see the
+## header note on `revision()`), which is exactly when it is worth retrying a
+## world that was not ready last time.
+##
+## OP-0905-27: `world` is always the CURRENTLY LOADED scene, which is only the
+## right terrain source when the realm being VIEWED is the realm the player
+## is actually standing in — `_bake_terrain_for_realm` is what tells those
+## apart; this wrapper only adds the per-realm memoisation on top.
 func _terrain_texture(world: Node) -> Texture2D:
-	if world != null and world.has_method("map_terrain_texture"):
+	var realm_id := _display_realm()
+	if _terrain_cache.has(realm_id):
+		return _terrain_cache[realm_id]
+	var tex := _bake_terrain_for_realm(realm_id, world)
+	_terrain_cache[realm_id] = tex
+	return tex
+
+
+## `world.map_terrain_texture()` is only trustworthy when `world` and
+## `realm_id` are the SAME realm — Cloudreach's own world script answers that
+## call by baking off `self`'s live heightfield, so calling it while `world`
+## is actually the Meadows (or vice-versa the day Meadows grows the same hook)
+## would silently draw one realm's ground under the other's fog.
+func _bake_terrain_for_realm(realm_id: String, world: Node) -> Texture2D:
+	if world != null and realm_id == _player_realm() and world.has_method("map_terrain_texture"):
 		return world.call("map_terrain_texture") as Texture2D
-	var map_state := _map_state()
+
+	var map_state := _realm_map_state(realm_id)
 	if map_state != null and map_state.has_method("world_bounds"):
-		return null # A realm must not display the cached Meadows bake.
-	if _terrain_attempted:
-		return _terrain_tex
-	_terrain_attempted = true
+		# A realm with real 3D world bounds (Cloudreach today) only ever shows
+		# a bake its OWN MapState instance already produced from an actual
+		# visit — `bake_terrain(null)` (cloudreach_map_state.gd) returns that
+		# cache, or null, and never re-samples height off whatever scene
+		# happens to be loaded, which would draw the wrong land under this
+		# realm's fog. The cache lives on the realm's own singleton MapState
+		# instance (`Game._realm_map_instances`), so it survives leaving that
+		# realm's scene entirely, for as long as the session runs.
+		return map_state.call("bake_terrain", null) as Texture2D if map_state.has_method("bake_terrain") else null
 
 	if world == null or not world.has_method("ground_height_at"):
 		return null
@@ -1111,9 +1323,13 @@ func _terrain_texture(world: Node) -> Texture2D:
 	if baker_script == null or not baker_script.has_method("bake_cached"):
 		return null
 
-	var result: Variant = baker_script.call("bake_cached", world)
-	_terrain_tex = result as Texture2D
-	return _terrain_tex
+	# `bake_cached` only ever touches `world` on a genuine disk-cache MISS —
+	# and the Meadows cache (`user://cache/map_meadows.png`) is written
+	# continuously by `minimap.gd` during ordinary Meadows play, long before
+	# Cloudreach is reachable at all, so the common path here is a pure cache
+	# hit that never calls into `world` — safe even when `world` is actually
+	# Cloudreach's own scene (viewing the Meadows map from there).
+	return baker_script.call("bake_cached", world) as Texture2D
 
 
 func _icon_texture(icon_name: String) -> Texture2D:
@@ -1125,9 +1341,234 @@ func _icon_texture(icon_name: String) -> Texture2D:
 	return tex
 
 
+## The MapState instance for whichever realm the CANVAS is currently drawing
+## (`_display_realm()`) — never `game.map` directly, so that field (the single
+## alias every other system reads as THE active realm) stays untouched by
+## this tab merely looking at a realm the player is not in.
 func _map_state() -> RefCounted:
+	return _realm_map_state(_display_realm())
+
+
+## --- OP-0905-27: the realm-view selector --------------------------------
+##
+## "The map should show all the regions you've uncovered so meadows and
+## clouds together" (docs/owner/OWNER_PLAYTEST_2026-09-05.md). Everything
+## below decides WHICH realm's MapState this tab reads for a given poll/draw,
+## and is deliberately pure/state-only (no canvas, no tree) so it is provable
+## without ever calling `_draw_map` — `CanvasItem.draw_*` calls are only legal
+## inside an engine-dispatched `_draw()` (see `tests/test_map_realm_view.gd`'s
+## own header for why that rules a real render out of a `test_case.gd` unit).
+
+## The realm the player's own body is actually in right now. Independent of
+## which realm this TAB is showing (`_display_realm()`).
+func _player_realm() -> String:
 	var game := state()
-	return game.get("map") if game != null else null
+	return str(game.get("current_realm")) if game != null else "meadows"
+
+
+## Read-only lookup for a realm's `MapState`, without ever touching
+## `Game.map` (see `_map_state()`'s own header). Falls back to the active
+## realm's own `map` field for a bare test double that has no
+## `realm_map_for()` — the accessor `autoload/game_state.gd` carries in
+## production.
+func _realm_map_state(realm_id: String) -> RefCounted:
+	var game := state()
+	if game == null:
+		return null
+	if game.has_method("realm_map_for"):
+		return game.call("realm_map_for", realm_id)
+	return game.get("map") if realm_id == _player_realm() else null
+
+
+## Every realm the player may currently VIEW on this tab: Meadows always,
+## Cloudreach once reachable. Fixed narrative order (Meadows first) rather
+## than discovery order, so the selector/cycle order never reshuffles itself
+## mid-session.
+func _available_realms() -> Array[String]:
+	var out: Array[String] = ["meadows"]
+	if _cloudreach_unlocked():
+		out.append("cloudreach")
+	return out
+
+
+## Cloudreach counts as reachable the moment ANY of: the player is physically
+## standing there right now; a configured progression flag says the gate has
+## been opened (`_realm_link_unlock_flags()` — legendary_freed/
+## realm_key_cloudreach/cloudreach_chapter_started by default, D110); or its
+## own MapState already holds any real discovery at all (a belt-and-braces
+## catch for a save/debug path that reached Cloudreach without ever setting
+## one of those flags). None of this is a place-table entry — CLOUDREACH
+## ITSELF has to already exist as a possibility before "which regions has the
+## player found in it" means anything.
+func _cloudreach_unlocked() -> bool:
+	var game := state()
+	if game == null:
+		return false
+	if _player_realm() == "cloudreach":
+		return true
+	var progression: RefCounted = game.get("progression")
+	if progression != null:
+		for flag in _realm_link_unlock_flags():
+			if bool(progression.call("has", str(flag))):
+				return true
+	var cloud_map := _realm_map_state("cloudreach")
+	if cloud_map != null and cloud_map.has_method("discovered_fraction") \
+			and float(cloud_map.call("discovered_fraction")) > 0.0:
+		return true
+	return false
+
+
+## Which realm the canvas draws right now. Empty (the field's own initial
+## value, and what `build()` resets it to on every open) resolves to the
+## player's own realm; also re-resolves there if a previously chosen realm
+## somehow stopped being available (there is no path to that today — nothing
+## un-discovers Cloudreach — but a stale, now-invalid selection silently
+## surviving would be a worse failure than snapping back to a place the
+## player can always actually see).
+func _display_realm() -> String:
+	if _view_realm.is_empty() or not _available_realms().has(_view_realm):
+		_view_realm = _player_realm()
+	return _view_realm
+
+
+## Whether THIS tab should draw the player's own dot/facing arrow and the
+## tracked objective diamond right now — both are meaningless when drawn onto
+## a realm the player is not actually standing in (OP-0905-27: "the player
+## marker and 'you are here' only draw on the realm the player is in").
+func _should_draw_player_marker() -> bool:
+	return _display_realm() == _player_realm()
+
+
+func _other_realm(realm_id: String) -> String:
+	for candidate in _available_realms():
+		if candidate != realm_id:
+			return candidate
+	return "cloudreach" if realm_id == "meadows" else "meadows"
+
+
+func _realm_display_name(realm_id: String) -> String:
+	if realm_id == "meadows":
+		return "Meadows"
+	var map_state := _realm_map_state(realm_id)
+	if map_state != null and map_state.has_method("map_display_name"):
+		return str(map_state.call("map_display_name"))
+	return realm_id.capitalize()
+
+
+## `data/config/map.json`'s `realm_link` block — how the crossing marker
+## looks and what unlocks it. Loaded once and cached; this file is small and
+## never changes at runtime, the same reasoning `_region_font` caches a
+## `load()` for the tab's whole lifetime.
+func _realm_link_config() -> Dictionary:
+	if not _realm_link_cfg_loaded:
+		_realm_link_cfg_loaded = true
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(MAP_CONFIG_PATH))
+		if parsed is Dictionary:
+			var section: Variant = (parsed as Dictionary).get("realm_link", {})
+			if section is Dictionary:
+				_realm_link_cfg = section as Dictionary
+	return _realm_link_cfg
+
+
+func _realm_link_unlock_flags() -> Array:
+	var configured: Variant = _realm_link_config().get("unlock_flags", [])
+	if configured is Array and not (configured as Array).is_empty():
+		return configured
+	return CLOUDREACH_UNLOCK_FLAGS
+
+
+## Whether the crossing marker belongs on the realm CURRENTLY being drawn.
+## Meadows only shows it once Cloudreach is actually reachable (the same
+## severed-spoke rule the storm road itself already follows: nothing on the
+## map may promise a way through before one exists); Cloudreach always shows
+## the way back, since arriving there requires the way in to already exist.
+func _realm_link_visible() -> bool:
+	var realm_id := _display_realm()
+	if realm_id == "meadows":
+		return _cloudreach_unlocked()
+	if realm_id == "cloudreach":
+		return true
+	return false
+
+
+## The crossing's world (x, z) position for `realm_id`'s own map, read from
+## the single shared authored source for that handoff and cached once per
+## tab lifetime (`build()` clears it). `null` if the source is missing or
+## malformed — the caller must treat that as "nothing to draw," never a
+## crash, same as every other defensive lookup in this file.
+func _realm_link_point(realm_id: String) -> Variant:
+	if _realm_link_points.has(realm_id):
+		return _realm_link_points[realm_id]
+	var point: Variant = null
+	if realm_id == "meadows":
+		# The storm road's own collapsed-bridge crossing (D110): the gate
+		# `scripts/world/realm_gate.gd` stands at, on the Meadows side.
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(REALM_TRANSITIONS_PATH))
+		if parsed is Dictionary:
+			var gate: Variant = (parsed as Dictionary).get("meadows_cloudreach_gate", {})
+			if gate is Dictionary:
+				var pos: Variant = (gate as Dictionary).get("position", [])
+				if pos is Array and (pos as Array).size() >= 2:
+					point = Vector2(float(pos[0]), float(pos[1]))
+	elif realm_id == "cloudreach":
+		# Cloudreach's own arrival anchor for the same crossing.
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(CLOUDREACH_WORLD_PATH))
+		if parsed is Dictionary:
+			var transitions: Variant = (parsed as Dictionary).get("transition_points", {})
+			if transitions is Dictionary:
+				var entry: Variant = (transitions as Dictionary).get("meadows_entry", {})
+				if entry is Dictionary:
+					var pos: Variant = (entry as Dictionary).get("position", [])
+					# Cloudreach positions are [x, y, z]; the map only draws (x, z).
+					if pos is Array and (pos as Array).size() >= 3:
+						point = Vector2(float(pos[0]), float(pos[2]))
+	_realm_link_points[realm_id] = point
+	return point
+
+
+## Draws the crossing icon + destination label on whichever realm's map is
+## currently showing, if `_realm_link_visible()` allows it. A generic
+## landmark-style draw (backing plate + icon + outlined label), not routed
+## through the overview side-column system: this marker sits at the very
+## edge of each realm's own explored area, and both realms' crossings are far
+## from any other callout, so it needs none of that column's own collision
+## bookkeeping.
+func _draw_realm_link(canvas: Control, map_rect: Rect2) -> void:
+	if not _realm_link_visible():
+		return
+	var realm_id := _display_realm()
+	var point_world: Variant = _realm_link_point(realm_id)
+	if not (point_world is Vector2):
+		return
+	var point := _world_to_canvas(point_world, map_rect)
+	var cfg := _realm_link_config()
+	var size: float = float(cfg.get("marker_size", ICON_SIZE + 8.0))
+	var viewport := Rect2(Vector2.ZERO, canvas.size).grow(-size * 0.5)
+	if not viewport.has_point(point):
+		return
+
+	var destination := _other_realm(realm_id)
+	var labels: Variant = cfg.get("labels", {})
+	var label := _realm_display_name(destination)
+	if labels is Dictionary and (labels as Dictionary).has(destination):
+		label = str((labels as Dictionary)[destination])
+
+	var accent := UITokens.TEAL
+	var configured_colour: Variant = cfg.get("marker_colour")
+	if configured_colour is String and not (configured_colour as String).is_empty():
+		accent = Color(configured_colour as String)
+
+	canvas.draw_circle(point, size * 0.58, Color(0.02, 0.03, 0.04, 0.78))
+	var tex := _icon_texture(str(cfg.get("icon", "gate")))
+	if tex != null:
+		canvas.draw_texture_rect(tex, Rect2(point - Vector2(size, size) * 0.5, Vector2(size, size)), false)
+	canvas.draw_arc(point, size * 0.62, 0.0, TAU, 24, accent, 2.5, true)
+
+	if _region_font == null:
+		_region_font = load(UITokens.FONT_PATH)
+	if _region_font != null:
+		var baseline := point + Vector2(-size * 0.5, size * 0.5 + 24.0)
+		_draw_string_legible(canvas, _region_font, baseline, label, HORIZONTAL_ALIGNMENT_LEFT, 280.0, CANVAS_LABEL_FONT_SIZE, UITokens.TEXT_PRIMARY)
 
 
 ## Defensive the same way `_terrain_texture()` is: no tree, no current scene,

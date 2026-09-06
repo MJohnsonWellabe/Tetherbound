@@ -15,5 +15,27 @@
 
     "first_pin_message": "An alpha is near — marked on your map.",
     "_comment_first_pin_message": "Shown once per save, on the FIRST pin ever placed, through game_state.gd's push_world_message(). Once the player knows what the mark means, repeating the sentence at every one of the remaining 15 is nagging -- the mark appearing on the map is itself the notification from then on."
+  },
+
+  "_comment_realm_link": "OP-0905-27 (docs/owner/OWNER_PLAYTEST_2026-09-05.md): 'the map should show all the regions you've uncovered so meadows and clouds together.' scripts/ui/tab_map.gd's realm selector lets the full map show EITHER realm's own fog/regions/landmarks; this marker is the crossing between them, drawn on whichever realm is showing, pointing at the other. Positions are read straight from data/config/realm_transitions.json (`meadows_cloudreach_gate`) and data/config/cloudreach_world.json (`transition_points.meadows_entry`) -- the single shared source those files' own headers already name for this exact handoff -- so nothing here duplicates a coordinate that could drift out of step with the real gate. This block only says how the marker LOOKS and what unlocks it.",
+
+  "realm_link": {
+    "icon": "gate",
+    "_comment_icon": "assets/ui/icons/map/gate.png. CLAUDE.md forbids new Meadows art; the vendored gate icon already reads as a threshold/crossing and needed no new generation.",
+
+    "marker_size": 40.0,
+    "_comment_marker_size": "A touch larger than a 'major' landmark's 38px (tab_map.gd's own `_marker_size`) -- this is the one marker on the map that changes which REALM you are looking at, not just where you are within one.",
+
+    "marker_colour": "#7fd8c8",
+    "_comment_marker_colour": "UITokens.TEAL spelled out as a literal hex string -- this file has no access to that autoload's constants. Deliberately the same teal family the player's own marker already uses (tab_map.gd's PLAYER ring/arrow), so the crossing reads as 'a way you personally can go', not a third HUD colour.",
+
+    "unlock_flags": ["legendary_freed", "realm_key_cloudreach", "cloudreach_chapter_started"],
+    "_comment_unlock_flags": "Cloudreach counts as reachable on the Meadows map the moment ANY of these progression flags is set (docs/decisions/D110: the Warden grants `realm_key_cloudreach` at the same beat as `legendary_freed`; `cloudreach_chapter_started` additionally covers a save that reached Cloudreach through the debug teleport rather than the story gate). tab_map.gd also treats the player physically standing in Cloudreach, or that realm's own MapState already holding any discovery, as unlocked -- those are live facts, not flags, and stay in code rather than duplicated here. An empty list here falls back to this same default in code.",
+
+    "labels": {
+      "meadows": "Cloudreach Cliffs",
+      "cloudreach": "The Meadows"
+    },
+    "_comment_labels": "What the crossing marker is captioned, keyed by which map is CURRENTLY showing -- i.e. the label names the destination, not the realm you are looking at."
   }
 }
