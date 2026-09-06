@@ -341,12 +341,17 @@
         ]
       },
       {
+        "_comment_dress_0906": "CLOUDREACH-DRESS-0906 / C7 follow-up. The blind judge on the summit approach: 'To its right a bare lumber stack and a plank shed sit half over the edge of the plateau.' Probed from the stand-06 camera (tools/_probe_cloudreach_dark_props.gd -- --stand=06), the object filling that rectangle is THIS pocket's wagon -- Prop_Wagon, 24 m from the lens, spanning screen x 795-1049 -- with the fence panel beside it reading as the shed. It is not the stronghold's own approach props, which were a separate instance of the same mistake and were fixed alongside it. The four man-made items move ~3 m inward off the lip, gain a paving apron so they sit on something, and are joined by a workbench, a bag and a second crate so the group reads as a supply post somebody uses rather than as lumber tipped over the edge. The rock/bush/flower items on the +x side are unchanged.",
         "id": "SummitSupplyPosition", "anchor": [100.0, 1160.0, 5297.0], "forward": [0.0, 0.0, 1.0],
         "items": [
-          {"asset": "wagon", "offset": [-9.0, 8.0], "height_m": 2.35, "yaw_deg": 24.0},
-          {"asset": "crate", "offset": [-6.7, 6.5], "height_m": 1.0, "yaw_deg": -16.0},
-          {"asset": "barrel", "offset": [-8.5, 5.0], "height_m": 1.25, "yaw_deg": 17.0},
-          {"asset": "fence", "offset": [-11.5, 7.0], "height_m": 1.2, "yaw_deg": 80.0},
+          {"asset": "paving", "offset": [-6.2, 6.2], "width_m": 7.5, "yaw_deg": 12.0, "bury_m": 0.02},
+          {"asset": "wagon", "offset": [-6.2, 7.6], "height_m": 2.35, "yaw_deg": 24.0},
+          {"asset": "crate", "offset": [-4.6, 6.3], "height_m": 1.0, "yaw_deg": -16.0},
+          {"asset": "barrel", "offset": [-5.7, 5.2], "height_m": 1.25, "yaw_deg": 17.0},
+          {"asset": "workbench", "offset": [-7.9, 5.6], "height_m": 1.1, "yaw_deg": 68.0},
+          {"asset": "bag", "offset": [-4.2, 5.3], "height_m": 0.6, "yaw_deg": 51.0},
+          {"asset": "crate", "offset": [-5.1, 7.4], "height_m": 0.8, "yaw_deg": 38.0},
+          {"asset": "fence", "offset": [-8.6, 7.2], "height_m": 1.2, "yaw_deg": 80.0},
           {"asset": "rock", "offset": [7.4, 1.0], "height_m": 2.2, "yaw_deg": 96.0, "bury_m": 0.35},
           {"asset": "rock_low", "offset": [5.5, -0.5], "height_m": 0.9, "yaw_deg": 31.0, "bury_m": 0.18},
           {"asset": "bush", "offset": [8.7, 3.2], "height_m": 1.45, "yaw_deg": 19.0},

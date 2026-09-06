@@ -63,6 +63,9 @@ const MASONRY_SHADER := preload("res://shaders/cloudreach_masonry.gdshader")
 const WORLD_RUNTIME := preload("res://scripts/world/cloudreach_world_runtime.gd")
 const SHELL_BUILD := preload("res://scripts/world/shell_build_budget.gd")
 const ENVIRONMENT_MATERIALS:=preload("res://scripts/world/cloudreach_environment_materials.gd")
+# CLOUDREACH-DRESS-0906: the brazier stand-in pair (X1) for the summit approach.
+const SUMMIT_TORCH := preload("res://assets/props/quaternius_fantasy/Torch_Metal.gltf")
+const SUMMIT_CANDLE_STAND := preload("res://assets/props/quaternius_fantasy/CandleStick_Stand.gltf")
 const BRIDGE_KIT:=preload("res://scripts/world/cloudreach_bridge_kit.gd")
 const AVIARY := preload("res://scripts/world/cloudreach_aviary.gd")
 const AVIARY_CONFIG_PATH := "res://data/config/cloudreach_aviary.json"
@@ -2398,6 +2401,17 @@ func _build_authored_route_details() -> void:
 			placement.add_child(model)
 			if asset == "bush" or asset == "flowers":
 				_apply_tree_palette(model, pocket.get_child_count())
+			elif asset.begins_with("rock"):
+				# CLOUDREACH-DRESS-0906. C9 routed `_place_local_prop`'s rocks
+				# through the stone palette, and that fix is real -- but this is
+				# a SECOND, independent rock placer, and it was never given the
+				# same line. Its rocks kept the nature kit's raw material and
+				# rendered at Rec.709 luminance 1.000 (probed at the stand-11
+				# aerie shelter), which is the other half of the judge's "rocks
+				# are in three unrelated materials": the pale cubes that "read
+				# as jade or ice", beside the near-black masses the palette's
+				# own multiply was producing.
+				apply_stone_palette(model)
 			_set_geometry_visibility(placement, float(detail.get("visibility_range_m", 320.0)))
 
 
@@ -2433,7 +2447,8 @@ func _route_detail_ground(at: Vector3) -> float:
 ## The stylised Rock_Medium_* kit ships a pale, near-white base colour that
 ## reads as wax or ice beside the trainer (blind verdict round 1, defect 7);
 ## every instance the world or the look pass places is retinted here to a
-## cool mid-grey with full roughness so it reads as stone.
+## cool mid-grey so it reads as stone. The tint REPLACES the source albedo
+## texture rather than multiplying onto it -- see the note in the body.
 ## One tinted duplicate per source material, cached: a fresh duplicate per
 ## instance (thousands of rocks) raised the headless renderer's
 ## `Parameter "material" is null` on every override, the cached one raises
@@ -2453,10 +2468,39 @@ static func apply_stone_palette(root_node: Node) -> void:
 			var tinted: StandardMaterial3D = _stone_palette_cache.get(base)
 			if tinted == null:
 				tinted = (base as StandardMaterial3D).duplicate() as StandardMaterial3D
-				tinted.albedo_color = Color("#8e918c")
-				tinted.roughness = 1.0
+				# CLOUDREACH-DRESS-0906. This retint used to set only the albedo
+				# COLOUR and leave the source `albedo_texture` in place, so the
+				# rendered result was the product of the two -- and the nature
+				# kit's shared `Rocks_Diffuse.png` is dark: measured over the
+				# whole 512x512 image its Rec.709 median is 0.324 and its most
+				# common colours are dark olives ((45,61,0), (53,65,31)). A
+				# 0.557 grey multiplied onto that lands near 0.18, not near
+				# 0.557, which is why the "cool mid-grey" this comment promised
+				# rendered as the blind judge's "near-black matte blobs with no
+				# highlight that read as bin bags or tents" at stand 11. Two of
+				# those masses measure Rec.709 medians of 0.059 and 0.138 in the
+				# 11-aerie-ground-connection frame against a 0.387 frame median.
+				# The routing fix (C9) was real and is still here -- every rock
+				# does reach this function -- but the function itself could not
+				# produce the value it names while it was multiplying.
+				#
+				# Clearing the texture makes the palette deterministic: these
+				# are low-poly faceted rocks, so the facets carry the form and
+				# the texture was contributing darkness rather than detail.
+				# Roughness comes off 1.0 for the other half of the same
+				# sentence: a fully rough surface has no highlight at all.
+				tinted.albedo_texture = null
+				# Value chosen by measurement, not by eye. With the texture
+				# gone, #8e918c rendered its sunlit faces at Rec.709 0.809 in
+				# the stand-02 frame -- brighter than the cottage plaster beside
+				# them at 0.711, against a 0.420 frame median, which trades the
+				# judge's black blobs for white ones. Scaling the linear albedo
+				# by ~0.52 puts a lit face near 0.60 and a shadowed one near
+				# 0.34, which brackets the frame median the way stone should.
+				tinted.albedo_color = Color("#676d66")
+				tinted.roughness = 0.82
 				tinted.metallic = 0.0
-				tinted.metallic_specular = 0.15
+				tinted.metallic_specular = 0.28
 				_stone_palette_cache[base] = tinted
 			mesh_instance.set_surface_override_material(surface_index, tinted)
 
@@ -3386,6 +3430,16 @@ func _build_summit_stronghold(root: Node3D) -> void:
 		"rope": _materials["rope"],
 		"veil": aviary_veil,
 		"lantern": _emissive_material(Color("#ffb15c"), 2.0),
+		# CLOUDREACH-DRESS-0906 / C7. Three materials the dressing pass needs
+		# and the drum never had. `membrane` is the translucent skin between
+		# ribs (lever b); `floor` is the aviary's own ground treatment, on the
+		# same worn-ground shader every other Cloudreach yard uses, so the
+		# keeper's floor matches the world rather than introducing a material;
+		# `cloth` is the existing banner shader with the device switched off,
+		# because plain wind cloth hanging in an aviary is not a faction banner.
+		"membrane": _aviary_membrane_material(),
+		"floor": ENVIRONMENT_MATERIALS.worn_ground(root.global_position, 26.0),
+		"cloth": _aviary_cloth_material(),
 	}
 	var aviary: Dictionary = AVIARY.build(root, aviary_materials, _read_json(AVIARY_CONFIG_PATH))
 	# Corner tether pylons: they stood on the watchtower tops; they now stand
@@ -3418,6 +3472,56 @@ func _build_summit_stronghold(root: Node3D) -> void:
 	summit_pylon.position = anchor.origin - Vector3(pylon_bounds.get_center().x, pylon_bounds.position.y, pylon_bounds.get_center().z) * pylon_scale
 	root.add_child(summit_pylon)
 	_develop_stronghold_spaces(root)
+
+
+
+## CLOUDREACH-DRESS-0906 / C7. The membrane between the aviary's ribs: a
+## translucent, slightly warm skin that catches the sky rather than a tinted
+## glass. Depth WRITE is off so the panels around the far side of the drum do
+## not stack into an opaque wall where the eye grazes the curve; depth TEST
+## stays on so the drum's own masonry still occludes it.
+func _aviary_membrane_material() -> StandardMaterial3D:
+	var material := StandardMaterial3D.new()
+	# Round 1 of this round skinned the dome at alpha 0.34 with a strong rim,
+	# and it read as GLASS -- the frame turned from an unbuilt planetarium into
+	# a greenhouse, which is a different wrong object. This is stretched hide
+	# and canvas over ribs instead: a warm parchment tone, more opaque, fully
+	# rough, and no rim term. That is what a working aviary's wind-skin is, and
+	# it cannot be mistaken for glazing.
+	# Alpha raised from 0.62 after a blind verdict sampled the dome at two
+	# points and got flat sky colour (134,155,156) back -- i.e. the skin was
+	# not reading as a surface at all, and the object was still "an open
+	# lattice of wooden ribs". At 0.82 it is stretched hide that light comes
+	# through, not a tint over the sky.
+	material.albedo_color = Color(0.86, 0.81, 0.68, 0.82)
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_PER_PIXEL
+	material.roughness = 1.0
+	material.metallic = 0.0
+	material.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
+	material.no_depth_test = false
+	material.depth_draw_mode = BaseMaterial3D.DEPTH_DRAW_DISABLED
+	return material
+
+
+## CLOUDREACH-DRESS-0906 / C7. Wind cloth for the aviary: the Hall's cloth
+## shader with the faction device switched off and a bleached, weathered
+## colour. Team Tether's banners already hang on the wings outside; the cloth
+## INSIDE the cage is laundry and wind-break, not heraldry.
+func _aviary_cloth_material() -> ShaderMaterial:
+	var material := ShaderMaterial.new()
+	material.shader = preload("res://assets/environment/team_tether/hall/banner_cloth.gdshader")
+	material.set_shader_parameter("colour", Color("#b9b09a"))
+	material.set_shader_parameter("selvage_colour", Color("#8d8470"))
+	material.set_shader_parameter("use_device", 0.0)
+	material.set_shader_parameter("size", Vector2(2.6, 5.2))
+	material.set_shader_parameter("tails", 2.0)
+	material.set_shader_parameter("notch_depth", 0.12)
+	material.set_shader_parameter("sway", 0.34)
+	material.set_shader_parameter("speed", 0.8)
+	material.set_shader_parameter("phase", 1.7)
+	return material
 
 
 func _build_summit_route_wing(root: Node3D, side: float, portal_z: float) -> void:
@@ -3494,9 +3598,65 @@ func _develop_stronghold_spaces(root: Node3D) -> void:
 			_box(root,"ApproachRetainingEdge",at+Vector3(0,0.45,0),Vector3(1.4,0.9,7.7),_materials["masonry"],false)
 			if i%2==0:
 				_plant_floor_pocket(root,at+Vector3(side*3.4,0.12,0),Vector2(3.0,5.5),941+i+int(side)*21,true)
-		_place_local_prop(root,"wagon",Vector3(side*18,0.12,-34),2.2,side*7)
-		_place_local_prop(root,"crate",Vector3(side*20,0.12,-38),1.05,side*28)
-		_place_local_prop(root,"barrel",Vector3(side*21.3,0.12,-37),1.1,18)
+		# CLOUDREACH-DRESS-0906 / C7 follow-up. The blind judge on the summit
+		# approach: "To its right a bare lumber stack and a plank shed sit half
+		# over the edge of the plateau." They did. The approach's own
+		# `ApproachRetainingEdge` runs from |x| = 15.0 out to 17.4 as z falls
+		# from -26 to -48.5, so it IS the plateau lip here -- and these three
+		# props stood at |x| = 18.0, 20.0 and 21.3, every one of them outside
+		# it, with nothing under them. Brought inside the retaining edge onto a
+		# masonry footing of their own, and turned from a discarded pile into a
+		# manned gate post: a lit brazier, a banner and a stack that belongs to
+		# somebody. The approach lane itself (|x| < 6, the road ribbon) is
+		# untouched, and none of this collides.
+		var post := Vector3(side * 12.6, 0.0, -35.0)
+		_box(root,"GatePostFooting",post+Vector3(0,0.22,0),Vector3(7.4,0.44,6.6),_materials["masonry"],false)
+		_place_local_prop(root,"wagon",post+Vector3(side*0.4,0.44,1.2),2.2,side*7)
+		_place_local_prop(root,"crate",post+Vector3(side*2.3,0.44,-2.0),1.05,side*28)
+		_place_local_prop(root,"barrel",post+Vector3(side*3.1,0.44,-1.0),1.1,18)
+		_place_local_prop(root,"crate",post+Vector3(side*1.6,1.49,-2.2),0.8,side*-14)
+		_summit_gate_post_brazier(root,post+Vector3(side*-2.6,0.44,-2.4))
+		_hang_cloudreach_banner(root,post+Vector3(side*-2.6,4.3,-2.6),Vector2(1.5,2.6),PI)
+
+
+
+## CLOUDREACH-DRESS-0906. A manned brazier on the summit approach, built from
+## the installed `CandleStick_Stand` + `Torch_Metal` pair X1 authorises as the
+## brazier stand-in (no licence-clean brazier mesh exists, and Meshy is not
+## allowed for a non-hero object). Real light, not just an emissive disc, so it
+## reads at the approach camera's distance and after dark.
+func _summit_gate_post_brazier(root: Node3D, at: Vector3) -> void:
+	_install_prop_scene(root, SUMMIT_CANDLE_STAND, "GatePostBrazierStand", at, 1.5, 0.0)
+	_install_prop_scene(root, SUMMIT_TORCH, "GatePostBrazierHead", at + Vector3.UP * 1.45, 1.25, 0.0)
+	_cylinder(root, "GatePostCoals", at + Vector3.UP * 1.62, 0.4, 0.16,
+		_emissive_material(Color("#f0954a"), 1.6))
+	var light := OmniLight3D.new()
+	light.name = "GatePostBrazierLight"
+	light.position = at + Vector3.UP * 2.2
+	light.light_color = Color("#ffb478")
+	light.light_energy = 3.0
+	light.omni_range = 16.0
+	root.add_child(light)
+
+
+## Height-normalised install of a packed scene, seated so its base sits at
+## `at`. `_place_local_prop` only reaches the fourteen ROUTE_DETAIL_SCENES; this
+## takes any installed scene.
+func _install_prop_scene(parent: Node3D, scene: PackedScene, label: String, at: Vector3,
+		height: float, yaw: float) -> Node3D:
+	var model := scene.instantiate() as Node3D
+	var bounds: AABB = BUILDING_PREFABS.new().call("combined_aabb", model)
+	var anchor := Node3D.new()
+	anchor.name = label
+	anchor.position = at
+	anchor.rotation.y = yaw
+	parent.add_child(anchor)
+	var factor := height / maxf(bounds.size.y, 0.01)
+	model.scale = Vector3.ONE * factor
+	model.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * factor
+	anchor.add_child(model)
+	_set_geometry_visibility(anchor, 520.0)
+	return anchor
 
 
 func _build_wayfinder(root: Node3D) -> void:
