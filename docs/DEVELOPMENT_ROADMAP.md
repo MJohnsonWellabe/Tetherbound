@@ -2,9 +2,22 @@
 
 **Status:** canonical living product-development roadmap.
 
-**Purpose:** Own the execution sequence from the current two-biome build through multiplayer, integrated game audit, Stormwood, the owner playtest/repair cycle, Biome 4, and a four-biome beta. Update this document as each stage lands. A fresh Fable or Codex session should be able to read this file, identify the current stage, follow the linked directive, and continue without inventing a new master plan.
+**Purpose:** Own the execution sequence from the current two-biome build through multiplayer/art/fixes, Stormwood, Water, a single four-biome product audit and repair pass, and a four-biome beta. Update this document as each stage lands. A fresh Fable or Codex session should be able to read this file, identify the current stage, follow the linked directive, and continue without inventing a new master plan.
 
 > **Core rule:** build → validate → repair → expand. Do not add another biome on top of unresolved systemic problems.
+
+**Revision, 2026-09-06 (owner direction):** this roadmap is simplified from an
+earlier ten-stage sequence. The previous plan gated Stormwood behind a
+two-biome (Meadows + Cloudreach) audit/repair cycle, and gated Water behind a
+separate three-biome (Meadows + Cloudreach + Stormwood) owner playtest/repair
+cycle. Both intermediate gates are **removed**. The new sequence builds
+Stormwood and Water back-to-back once current Meadows/Cloudreach work,
+multiplayer and art land, then runs **one** product audit and **one** repair
+pass across all four biomes before the Beta Ready gate. The audit's six
+questions and the repair-pass discipline from the old two-biome gate are kept
+and scaled up to four biomes rather than discarded. Stage letters below are
+the current ones; do not cite the pre-2026-09-06 letters (they no longer
+match this file).
 
 ---
 
@@ -29,69 +42,75 @@ A stage is not complete because files, tests or branches exist. Completion is pl
 
 ## 1. Master sequence
 
-1. **Land all current Meadows + Cloudreach work and stabilize `main`.**
-2. **Make Tetherbound fully playable 1–4 player multiplayer.**
-3. **Run a full Fable product audit across Meadows + Cloudreach on multiplayer-capable `main`.**
-4. **Repair the audit's P0/P1 findings before adding another biome.**
-5. **Build Biome 3: The Stormwood.**
-6. **Owner performs a real continuous three-biome playtest.**
-7. **Repair all broken/high-impact findings from that playtest.**
-8. **Design and build Biome 4 using the lessons from the three-biome game.**
-9. **Run a dedicated four-biome Beta Ready gate.**
-10. **Launch four-biome beta.**
-11. **Add Biomes 5–8 over time using the same build → audit → repair discipline.**
+| Stage | What it is | State |
+|---|---|---|
+| **0** | Current work: land Meadows + Cloudreach in flight, ship playable 1–4 player multiplayer, run the Meadows visual sweep, and land general game fixes. | In progress |
+| **A** | Build Biome 3, the Stormwood. | Not started |
+| **B** | Build Biome 4, the Water Archipelago. | Not started |
+| **C** | Full four-biome product audit — six questions: does it work, is there enough to do, is progression satisfying, is it fun minute-to-minute, does the world feel authored, does it meet the visual bar. | Not started |
+| **D** | Four-biome repair pass — fix Stage C's P0/P1 findings before any new content. | Not started |
+| **E** | Four-biome Beta Ready gate. | Not started |
+| **F** | Four-biome beta launch. | Not started |
+| **G** | Biomes 5–8, one at a time, after beta, using the same build → audit → repair discipline. | Not started |
 
-Do not skip a gate because later content is easier or more exciting.
+Do not skip a stage because later content is easier or more exciting. Do not
+reintroduce an intermediate audit/playtest gate between Stormwood and Water
+without a new owner directive — that is the specific thing the 2026-09-06
+revision removed.
 
 ---
 
-# STAGE A — LAND CURRENT WORK AND STABILIZE MAIN
+# STAGE 0 — LAND CURRENT WORK, SHIP MULTIPLAYER, FIX THE GAME
 
 **Owner:** Fable orchestration / integration.
 
-**Goal:** reach one known-good integrated baseline containing the best completed Meadows and Cloudreach work before multiplayer begins.
+**Goal:** reach one stable, playable-multiplayer, visually improved baseline
+across Meadows and Cloudreach before Stormwood begins. This stage folds
+together three concurrent workstreams that were previously separate stages:
+landing in-flight content, shipping multiplayer, and the Meadows visual
+sweep, plus ordinary game fixes as they surface.
 
-### Read
+### Workstream 1 — land in-flight Meadows/Cloudreach work
+
+#### Read
 - `docs/FINISH_THE_MEADOWS.md`
 - `docs/FINISH_THE_MEADOWS_ADDENDUM_2026-09-04.md`
 - `docs/biomes/cloudreach/BUILD_CLOUDREACH_CLIFFS_TO_COMPLETION.md`
 - `docs/CURRENT_STATE.md`
 - recent open PRs/branches and evidence reports
 
-### Required work
+#### Required work
 - inspect every in-flight branch/PR;
 - merge completed verified work;
 - preserve incomplete but useful branches with exact handoff notes;
 - resolve integration conflicts in favor of latest owner directives and player-facing behavior;
 - run proportionate integrated smokes;
 - update `docs/CURRENT_STATE.md` to describe what is actually on `main`;
-- record severe known blockers honestly rather than carrying hidden assumptions into multiplayer.
+- record severe known blockers honestly rather than carrying hidden assumptions forward.
 
-### Exit criteria
-- no valuable completed work is stranded;
-- `main` imports and plays;
-- Meadows and Cloudreach are both reachable to the extent currently implemented;
-- known severe blockers are explicitly listed;
-- multiplayer can branch from one stable SHA.
+### Workstream 2 — playable 1–4 player multiplayer
 
-Then move immediately to Stage B.
-
----
-
-# STAGE B — MAKE THE GAME PLAYABLE MULTIPLAYER
-
-**Owner:** Fable senior orchestrator.
+> **Naming note:** the multiplayer execution plan and `docs/CURRENT_STATE.md`
+> use an older internal numbering ("Stage A" for landing in-flight work,
+> "Stage B" for multiplayer, with waves under it) that predates this file's
+> 2026-09-06 renumbering. That internal numbering is unrelated to this
+> roadmap's stage letters; the multiplayer work it describes is entirely
+> inside this roadmap's **Stage 0**. Do not confuse the execution plan's own
+> "Stage B" with this roadmap's Stage B (Water).
 
 **Detailed directive:** `docs/MULTIPLAYER_DIRECTIVE.md`
 
-**Execution plan (approved 2026-09-05):** `docs/specs/STAGE_B_MULTIPLAYER_EXECUTION_PLAN.md` —
-the thirteen architecture decisions, the model-tier rule (Fable / Opus / Sonnet / Haiku), eight
-waves of lanes with owned files and proving tests, and the §17-item-to-smoke acceptance table.
-Start at its Wave 0.
+**Execution plan:** `docs/specs/STAGE_B_MULTIPLAYER_EXECUTION_PLAN.md` —
+the thirteen architecture decisions, the model-tier rule (Fable / Opus /
+Sonnet / Haiku), eight waves of lanes with owned files and proving tests, and
+the item-to-smoke acceptance table. `docs/CURRENT_STATE.md` carries the live
+wave-by-wave status; read it for what has already landed rather than trusting
+a wave number written here.
 
-This is not an architecture-only pass. The required outcome is a real **Valheim-style 1–4 player co-op game**.
+This is not an architecture-only pass. The required outcome is a real
+**Valheim-style 1–4 player co-op game**.
 
-### Product target
+#### Product target
 - one player hosts a world;
 - up to three friends join;
 - host/server authoritative shared world;
@@ -105,7 +124,7 @@ This is not an architecture-only pass. The required outcome is a real **Valheim-
 - host quit safely ends/saves the session;
 - dedicated servers and host migration are not required initially.
 
-### Minimum implementation scope
+#### Minimum implementation scope
 - WorldState vs PlayerState ownership split;
 - migrated world/player save format;
 - host/join UI and session lifecycle;
@@ -130,7 +149,7 @@ This is not an architecture-only pass. The required outcome is a real **Valheim-
 - all-player sleep requirement;
 - safe save/reload/reconnect.
 
-### Evidence bar
+#### Evidence bar
 Prove:
 - 1-player hosted run;
 - 2-player join/play/leave/rejoin;
@@ -147,26 +166,155 @@ Prove:
 - geographically separated players without state collapse;
 - different-biome occupancy if realm architecture supports it.
 
-### Anti-grind rule
+#### Anti-grind rule
 Drive to broad playable multiplayer first. Do not spend the whole pass perfecting one edge case while basic co-op is absent elsewhere. After two serious approaches to one narrow issue produce neither material improvement nor new causal evidence, change strategy or hand it to a fresh focused lane.
 
-### Exit criteria
-An outside tester can launch a host world, invite three friends, move, deploy creatures, fight, gather, build, progress, save and reconnect without developer intervention.
+### Workstream 3 — Meadows visual sweep
 
-After this stage, **do not start Stormwood yet**. Move directly to Stage C.
+**Directive:** `docs/owner/MEADOWS_VISUAL_SWEEP_GOAL_2026-09-06.md` — grass,
+trees (including evaluating the Sakura tree asset as a sparing hero accent),
+bushes, Grandpa's Village composition, the Burrow Warrens, the Meadows
+stronghold, and other key route locations, judged against Valheim Meadows and
+Palworld early-game quality with the repo's blind visual-judge workflow.
+
+This workstream ends at **CANDIDATE READY FOR EXTERNAL VISUAL REVIEW — DO NOT
+MERGE**, per that directive's own success bar; it does not itself close
+Stage 0, but Stage 0 should not close while it is still open.
+
+### Workstream 4 — general game fixes
+
+Ordinary bug fixes and small player-facing corrections surfaced by testing,
+CI or owner playtests during this stage, scoped and landed the same way any
+other bounded task is: branch, fix, test, evidence, PR, verify on `main`. Do
+not let this workstream become a dumping ground for scope that belongs in
+Stage C's audit or a later biome's directive.
+
+### Exit criteria
+- no valuable completed work is stranded;
+- `main` imports and plays;
+- Meadows and Cloudreach are both reachable to the extent currently implemented;
+- an outside tester can launch a host world, invite three friends, move, deploy creatures, fight, gather, build, progress, save and reconnect without developer intervention;
+- the Meadows visual sweep has reached its own candidate-ready state;
+- known severe blockers are explicitly listed rather than carried silently forward.
+
+Then move to Stage A.
 
 ---
 
-# STAGE C — FULL TWO-BIOME PRODUCT AUDIT
+# STAGE A — BUILD BIOME 3: THE STORMWOOD
+
+**Owner:** Codex orchestration.
+
+**Start here:** `docs/biomes/stormwood/00_CODEX_START_HERE.md`
+
+**Detailed directive:** `docs/biomes/stormwood/BUILD_STORMWOOD_TO_COMPLETION.md`
+
+**Execution policy:** `docs/biomes/stormwood/EXECUTION_PROGRESS_POLICY.md`
+
+### Required behavior
+Stormwood must be built against the multiplayer-capable architecture. Do not create single-player-only Surge, arch, pickup, encounter, boss, progression, camp or save systems that need a second retrofit.
+
+Reproduce or exceed the useful broad-build performance Codex achieved on Cloudreach: get the world, chapter, systems and content materially built before allowing the session to be consumed by narrow tail work.
+
+The primary orchestration run should reach at least the same broad **80–85%-style material state** Cloudreach reached before its diminishing-return grind. This is a progress benchmark, not a completion declaration.
+
+Use the two-no-yield-attempt rule from the Stormwood execution policy. Continue while meaningful player-facing progress remains strong; hand narrow late-tail work to a fresh session when progress flattens.
+
+### Exit criteria
+Use the full Stormwood directive. Product-level requirements include:
+- natural Cloudreach → Stormwood transition;
+- six regions materially exist;
+- Surge changes play;
+- Stormglass Arches work;
+- Hollow Crown works;
+- rod-station progression works;
+- content density is real;
+- story reaches Dynamo;
+- finale and captive legendary sequence work with placeholders if necessary;
+- Spark/relic aftermath works;
+- Water is clearly next;
+- save/load works;
+- multiplayer works throughout;
+- major visuals read as intentional/commercial;
+- no critical path requires debug intervention.
+
+Close the remaining high-value tail in focused passes rather than forcing one giant session to consume itself.
+
+Then move directly to Stage B. There is no intermediate three-biome
+playtest/repair gate here — see the 2026-09-06 revision note above.
+
+---
+
+# STAGE B — BUILD BIOME 4: THE WATER ARCHIPELAGO
+
+**Owner:** owner/creative direction first, then Codex/Fable implementation.
+
+**Start here:** `docs/biomes/water/00_START_HERE.md`
+
+**Design directive:** `docs/biomes/water/TETHERBOUND_BIOME4_WATER_ARCHIPELAGO_DESIGN_DIRECTIVE.md`
+
+The design directive locks the biome fantasy: an inhabited island-chain
+archipelago built around human swimming and drowning pressure, NPC-controlled
+dock-gated progression, a midpoint amphibious Water Dragon Alpha that unlocks
+the Swim Saddle regardless of catch outcome, expanding post-Alpha crossings
+with currents and water combat, black glowing Skill Candy I/II/III, escalating
+Team Tether presence, and a finale stronghold hidden inside a mountain behind
+a waterfall. Read it in full before any design or implementation work; do not
+simplify or replace it.
+
+### Design gate before code
+The design directive's §23 lists the later design deliverables required
+before implementation, at the same depth Stormwood received in
+`BUILD_STORMWOOD_TO_COMPLETION.md`:
+- Water world/island map and dock progression;
+- full Water creature roster;
+- Water Dragon Alpha production board with full Meshy orthographic views;
+- Swim Saddle production board;
+- Skill Candy I/II/III board;
+- Water NPC/Team Tether visual additions;
+- final-island/waterfall stronghold concept board;
+- Water legendary and Warden/finale design;
+- numeric swimming/skills/currents tuning spec;
+- multiplayer swimming authority/state spec.
+
+Produce these — and a Stormwood-equivalent `BUILD_WATER_ARCHIPELAGO_TO_COMPLETION.md`
+execution directive — before Codex begins building.
+
+### Build requirements
+- multiplayer-native from first implementation (replicated swimming, drowning
+  state, mounted swimmers, rider/mount sync, water combat transitions, dock/world
+  authority, Alpha state, Swim Stone unlocks, Skill Candy ownership, save/reconnect
+  across islands);
+- broad playable chapter before tail polish, using the same front-load
+  discipline and two-no-yield-attempt rule proven on Cloudreach and Stormwood;
+- density at least equal to the accepted prior-biome bars;
+- preserve existing hard rules: the human never fights, creature combat is
+  directly piloted, only five creatures may be owned, catching is unavailable
+  on trainer-owned creatures;
+- preserve shared systems rather than fork biome-specific substitutes;
+- integrate continuously.
+
+### Exit criteria
+Use the design directive's §22 completion bar in full. Water is materially
+complete, playable end-to-end, multiplayer-capable, visually coherent,
+content-dense and stable enough to enter Stage C.
+
+Then move to Stage C.
+
+---
+
+# STAGE C — FULL FOUR-BIOME PRODUCT AUDIT
 
 **Owner:** Fable.
 
-**Goal:** assess Meadows + Cloudreach as a product, not as a codebase.
+**Goal:** assess Meadows + Cloudreach + Stormwood + Water as a product, not as
+a codebase. This is the single audit gate in this roadmap; there is no
+separate two-biome or three-biome audit before it.
 
-This is a formal quality gate. Do not begin with another architecture inventory. Inspect real runtime behavior, route density, progression, content, multiplayer behavior and representative visuals.
+This is a formal quality gate. Do not begin with another architecture inventory. Inspect real runtime behavior, route density, progression, content, multiplayer behavior and representative visuals across all four biomes.
 
 ## C1 — Does it work?
-Prove a new player can progress from the opening through the end of Cloudreach without:
+Prove a new player can progress from the opening through the end of Water without:
 - console commands;
 - debug teleports;
 - dead objectives;
@@ -200,7 +348,7 @@ Do not rely only on totals. Measure:
 - worst dead-travel gap;
 - on-route vs off-route reward balance;
 - whether visible detours pay off;
-- whether late regions are thinner than early ones.
+- whether later biomes are thinner than earlier ones.
 
 ## C3 — Is progression satisfying?
 Audit:
@@ -216,6 +364,7 @@ Audit:
 - camping/recovery;
 - riding;
 - Fly;
+- swimming and the Swim Saddle;
 - realm relic powers;
 - whether stronger creatures/gear materially change play.
 
@@ -268,10 +417,10 @@ Judge:
 - VFX;
 - UI legibility;
 - world density;
-- consistency across Meadows and Cloudreach;
+- consistency across all four biomes;
 - multiplayer scenes with multiple trainers/creatures.
 
-Capture representative **real gameplay frames** across both biomes and use code-blind judges. Required questions:
+Capture representative **real gameplay frames** across all four biomes and use code-blind judges. Required questions:
 1. Does this look like a finished commercial game or a prototype?
 2. What are the three most visible things holding it back?
 3. Is there an obvious reason to explore what is visible?
@@ -286,7 +435,7 @@ Produce a concise prioritized repair plan, not a 300-item backlog:
 
 - **P0:** game-breaking, progression-breaking, data-loss, severe multiplayer failure.
 - **P1:** materially hurts fun, density, progression, visuals, performance or usability.
-- **P2:** desirable polish that does not block the next biome.
+- **P2:** desirable polish that does not block beta.
 - **DO NOT WORK:** low-value perfectionism, speculative refactors, tiny inconsistencies with no player impact.
 
 Every P0/P1 must include:
@@ -294,10 +443,10 @@ Every P0/P1 must include:
 - exact evidence;
 - likely owning system/files;
 - acceptance criterion;
-- whether it blocks Stormwood.
+- whether it blocks the Beta Ready gate.
 
 ### Exit criteria
-- audit evidence exists for both biomes;
+- audit evidence exists for all four biomes;
 - density tables contain actuals;
 - visual judge evidence exists;
 - solo + multiplayer critical paths were exercised;
@@ -306,11 +455,15 @@ Every P0/P1 must include:
 
 ---
 
-# STAGE D — TWO-BIOME REPAIR PASS
+# STAGE D — FOUR-BIOME REPAIR PASS
 
 **Owner:** Fable orchestrates; lower-tier agents implement bounded fixes.
 
 **Input:** Stage C audit.
+
+**Rule:** fix Stage C's P0/P1 findings before any new content — no Biomes 5–8
+work starts, and no scope creep into new features, until this stage's exit
+criteria are met.
 
 ### Priority
 1. all P0s;
@@ -321,7 +474,7 @@ Every P0/P1 must include:
 6. only then high-return P2 items.
 
 ### Rules
-- do not begin Stormwood while unresolved P0s remain;
+- do not begin the Beta Ready gate while unresolved P0s remain;
 - do not weaken an acceptance test to hide a product problem;
 - use existing systems instead of duplicates;
 - broad player impact outranks internal neatness;
@@ -331,189 +484,29 @@ Every P0/P1 must include:
 
 ### Exit criteria
 - P0 = zero open;
-- every Stormwood-blocking P1 closed;
+- every Beta-blocking P1 closed;
 - remaining P1s explicitly accepted as non-blocking with evidence;
-- Meadows + Cloudreach continuous paths still work;
+- all four biomes' continuous paths still work;
 - multiplayer remains playable.
 
 Then proceed to Stage E.
 
 ---
 
-# STAGE E — BUILD BIOME 3: THE STORMWOOD
-
-**Owner:** Codex orchestration.
-
-**Start here:** `docs/biomes/stormwood/00_CODEX_START_HERE.md`
-
-**Detailed directive:** `docs/biomes/stormwood/BUILD_STORMWOOD_TO_COMPLETION.md`
-
-**Execution policy:** `docs/biomes/stormwood/EXECUTION_PROGRESS_POLICY.md`
-
-### Required behavior
-Stormwood must be built against the multiplayer-capable architecture. Do not create single-player-only Surge, arch, pickup, encounter, boss, progression, camp or save systems that need a second retrofit.
-
-Reproduce or exceed the useful broad-build performance Codex achieved on Cloudreach: get the world, chapter, systems and content materially built before allowing the session to be consumed by narrow tail work.
-
-The primary orchestration run should reach at least the same broad **80–85%-style material state** Cloudreach reached before its diminishing-return grind. This is a progress benchmark, not a completion declaration.
-
-Use the two-no-yield-attempt rule from the Stormwood execution policy. Continue while meaningful player-facing progress remains strong; hand narrow late-tail work to a fresh session when progress flattens.
-
-### Exit criteria
-Use the full Stormwood directive. Product-level requirements include:
-- natural Cloudreach → Stormwood transition;
-- six regions materially exist;
-- Surge changes play;
-- Stormglass Arches work;
-- Hollow Crown works;
-- rod-station progression works;
-- content density is real;
-- story reaches Dynamo;
-- finale and captive legendary sequence work with placeholders if necessary;
-- Spark/relic aftermath works;
-- Water is clearly next;
-- save/load works;
-- multiplayer works throughout;
-- major visuals read as intentional/commercial;
-- no critical path requires debug intervention.
-
-Close the remaining high-value tail in focused passes rather than forcing one giant session to consume itself.
-
----
-
-# STAGE F — OWNER THREE-BIOME PLAYTEST
-
-**Owner:** human owner.
-
-**Goal:** play the integrated game from the beginning through the end of Stormwood and record what actually feels broken, boring, confusing or weak.
-
-This occurs before designing Biome 4 so three chapters of repetition can expose systemic problems.
-
-### Playtest mode
-Do at least:
-- one primarily solo run;
-- one meaningful multiplayer run with at least one friend if available;
-- controller-first on target hardware where practical.
-
-### Capture findings by category
-- progression blocker;
-- bug/softlock;
-- multiplayer issue;
-- combat/balance;
-- creature/catching;
-- bond/leveling;
-- exploration/density;
-- crafting/building;
-- camping/recovery;
-- traversal/riding/Fly/arches;
-- story/dialogue;
-- UI/controller;
-- visuals;
-- performance;
-- boring/nothing-to-do moments;
-- great moments worth protecting.
-
-Do not turn the playtest into a developer checklist while playing. Record actual player experience first.
-
-### Required output
-An owner playtest report with:
-- chronological notes;
-- P0/P1/P2 classification afterward;
-- screenshots/clips where useful;
-- reproduction steps when known;
-- strongest positive moments later work must preserve.
-
-### Exit criteria
-The playtest report is complete enough for Stage G to execute without guessing.
-
----
-
-# STAGE G — THREE-BIOME REPAIR AND SYSTEM HARDENING
-
-**Owner:** Fable orchestrates.
-
-**Input:** owner Stage F report + automated regressions.
-
-### Goal
-Repair the game the owner actually played before designing Biome 4. Prefer systemic fixes once rather than biome-by-biome patches.
-
-Examples:
-- if all three biomes feel empty late, fix density methodology;
-- if progression becomes invisible after level 30, fix progression UX globally;
-- if multiplayer catch ownership is confusing, fix the shared system;
-- if final regions perform badly, fix visibility/streaming strategy;
-- if traversal bypasses gates, fix authority/gating globally.
-
-### Exit criteria
-- all owner-playtest P0s closed;
-- high-impact P1s closed or explicitly accepted;
-- continuous three-biome run works;
-- multiplayer remains functional across all three;
-- no known systemic flaw should obviously be copied into Biome 4.
-
-Only then begin Stage H.
-
----
-
-# STAGE H — DESIGN AND BUILD BIOME 4
-
-**Owner:** owner/creative direction first, then Codex/Fable implementation.
-
-Current direction is the **Water biome**, but final traversal mechanic, story, roster, reward and world structure should be designed after the three-biome playtest so the design incorporates what the game actually taught us.
-
-### Design gate before code
-Create a Biome 4 directive at least as complete as Stormwood, including:
-- concept/visual board;
-- biome fantasy/tone;
-- chapter story;
-- entry from Stormwood;
-- coherent regional layout;
-- signature traversal/gameplay mechanic;
-- required gate/destination proving the mechanic matters;
-- NPC cast;
-- trainer ladder;
-- encounter structure;
-- resource/crafting tier;
-- item density minimums;
-- camps;
-- side chains;
-- boss/finale;
-- captive legendary if canon still requires it;
-- unique realm relic/power;
-- Biome 4 → Biome 5 handoff;
-- multiplayer behavior;
-- save/state requirements;
-- visual/performance bar;
-- tests/evidence;
-- anti-grind execution policy learned from Cloudreach/Stormwood.
-
-### Build requirements
-- multiplayer-native from first implementation;
-- broad playable chapter before tail polish;
-- density at least equal to accepted prior-biome bars;
-- new mechanic must change player decisions, not decorate traversal;
-- preserve shared systems rather than fork biome-specific substitutes;
-- integrate continuously.
-
-### Exit criteria
-Biome 4 is materially complete, playable end-to-end, multiplayer-capable, visually coherent, content-dense and stable enough to enter Beta Ready.
-
----
-
-# STAGE I — FOUR-BIOME BETA READY GATE
+# STAGE E — FOUR-BIOME BETA READY GATE
 
 **Owner:** Fable senior orchestration + owner final playtest.
 
 This is a release-readiness pass, not another content expansion.
 
-## I1 — Continuous completion
+## E1 — Continuous completion
 Prove a fresh player can complete:
 
-**opening → Meadows → Cloudreach → Stormwood → Biome 4**
+**opening → Meadows → Cloudreach → Stormwood → Water**
 
 without developer intervention, both solo and on a representative multiplayer path.
 
-## I2 — Multiplayer reliability
+## E2 — Multiplayer reliability
 Stress:
 - 1/2/3/4 players;
 - join/leave/reconnect;
@@ -531,7 +524,7 @@ Stress:
 
 Item duplication, save corruption, progression rollback and unrecoverable desync are beta blockers.
 
-## I3 — New-player onboarding
+## E3 — New-player onboarding
 A player unfamiliar with the project must understand:
 - movement;
 - creature control;
@@ -545,21 +538,22 @@ A player unfamiliar with the project must understand:
 - trainer progression;
 - maps/tasks;
 - realm relics;
+- swimming/riding/Fly;
 - multiplayer joining/invites.
 
 No external instructions required.
 
-## I4 — Performance
+## E4 — Performance
 Validate target hardware and representative PCs in worst-case areas:
 - dense Meadows;
 - Cloudreach long sightlines/Fly;
 - Stormwood canopy/Surge;
-- Biome 4's most expensive scene;
+- Water's most expensive crossing/scene;
 - four players + four deployed creatures;
 - boss VFX;
 - built structures.
 
-## I5 — Visual consistency
+## E5 — Visual consistency
 Final blind visual audit across all four biomes.
 
 Required bar:
@@ -568,7 +562,7 @@ Required bar:
 
 Fix major visual outliers. Do not chase tiny asset imperfections that do not affect beta perception.
 
-## I6 — Content/density consistency
+## E6 — Content/density consistency
 Run one density census across all four biomes comparing:
 - encounters/km;
 - trainers/km;
@@ -581,7 +575,7 @@ Run one density census across all four biomes comparing:
 
 Later biomes must not become thinner.
 
-## I7 — Progression/balance
+## E7 — Progression/balance
 Check end-to-end:
 - levels;
 - candy;
@@ -593,18 +587,19 @@ Check end-to-end:
 - trainer difficulty;
 - bosses;
 - relic powers;
+- swimming/Skill Candy economy;
 - multiplayer scaling.
 
 Avoid trivialization and grind.
 
-## I8 — Save/migration safety
+## E8 — Save/migration safety
 - old saves migrate;
 - solo saves remain valid;
 - multiplayer world/player saves separate correctly;
 - no destructive migration path;
 - safe behavior for corrupt/incompatible saves.
 
-## I9 — Release hygiene
+## E9 — Release hygiene
 - no debug-only progression dependency;
 - no credentials/secrets;
 - no unnecessary reference assets in export;
@@ -627,7 +622,7 @@ Avoid trivialization and grind.
 
 ---
 
-# STAGE J — FOUR-BIOME BETA
+# STAGE F — FOUR-BIOME BETA
 
 Launch as a **four-biome beta**, not as a claim that the full eight-biome game is finished.
 
@@ -639,7 +634,7 @@ Learn from real players:
 - whether the five-creature limit creates meaningful decisions;
 - whether multiplayer is fun/reliable;
 - whether exploration pays off;
-- whether building/camping matter;
+- whether building/camping/swimming matter;
 - which bosses are memorable;
 - where pacing drags;
 - what breaks across different hardware/networks.
@@ -658,7 +653,7 @@ Do not implement every feature request immediately. Fix reliability and repeated
 
 ---
 
-# STAGES K–N — BIOMES 5–8 AFTER BETA
+# STAGE G — BIOMES 5–8 AFTER BETA
 
 For each remaining biome:
 
@@ -686,6 +681,12 @@ A system is not done because a class, JSON file or test exists.
 ### Broad useful progress before late-tail grind
 The Cloudreach lesson applies to every major orchestration pass. Push hard while the game is materially advancing. When a narrow tail stops yielding progress, preserve evidence and move it to a fresh focused pass rather than consuming the entire session.
 
+### One audit/repair cycle across all four biomes, not one per biome
+The 2026-09-06 revision deliberately removed the intermediate two-biome and
+three-biome audit/playtest gates. Do not reintroduce a per-biome audit gate
+between Stages A and B without a new owner directive — the point of the
+simplification is to build Stormwood and Water back-to-back and audit once.
+
 ### Human playtest is a formal source of truth
 The owner's observed experience may override assumptions from automated evidence. Capture it precisely and turn it into bounded acceptance criteria.
 
@@ -693,19 +694,27 @@ The owner's observed experience may override assumptions from automated evidence
 Valheim and Palworld are comparison references for whether Tetherbound feels like a real cohesive game. Do not waste time chasing raw AAA asset fidelity when composition, materials, silhouettes, animation, VFX, density and UI are the actual limiting factors.
 
 ### Do not copy systemic mistakes into more biomes
-Audit and repair between expansion waves.
+Stage C/D exist precisely to catch this once, across all four biomes, before Biomes 5–8.
 
-### Multiplayer is foundational after Stage B
-All new gameplay/world systems after Stage B are multiplayer-native unless an owner directive explicitly says otherwise.
+### Multiplayer is foundational after Stage 0
+All new gameplay/world systems after Stage 0 are multiplayer-native unless an owner directive explicitly says otherwise.
 
 ---
 
 # CURRENT NEXT ACTION
 
-When all currently in-flight Meadows/Cloudreach work has landed and `main` is stabilized:
+Tetherbound is in **Stage 0**: land in-flight Meadows/Cloudreach work, ship
+playable 1–4 player multiplayer (`docs/MULTIPLAYER_DIRECTIVE.md`,
+`docs/specs/STAGE_B_MULTIPLAYER_EXECUTION_PLAN.md`, live status in
+`docs/CURRENT_STATE.md`), run the Meadows visual sweep
+(`docs/owner/MEADOWS_VISUAL_SWEEP_GOAL_2026-09-06.md`), and land general game
+fixes as they surface.
 
-> **Fable starts Stage B by reading `docs/MULTIPLAYER_DIRECTIVE.md` and executes it until Tetherbound is a playable Valheim-style 1–4 player co-op game.**
-
-After multiplayer is proven, Fable does **not** start another biome. It moves directly to Stage C, the full two-biome product audit.
+> **When Stage 0's exit criteria are met, Codex starts Stage A (Stormwood) at
+> `docs/biomes/stormwood/00_CODEX_START_HERE.md`. Immediately after Stormwood
+> is built, move directly to Stage B (Water) at
+> `docs/biomes/water/00_START_HERE.md` — do not insert an intermediate
+> playtest/audit gate. Only after Water is built does Stage C run the single
+> four-biome product audit.**
 
 Update this section whenever the current stage changes.
