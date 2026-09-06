@@ -41,9 +41,13 @@ const VIEWPOINTS := [
 	# looking at one. `_clear_exterior_views()` measures instead -- it rings
 	# the cave, casts at it, and keeps the stands that can actually SEE it.
 	{
+		# ROUND-5-0906: 12m out framed the arch alone and cropped both the
+		# lamp post (the scale reference) and the bank above the opening;
+		# 16m out, aimed a little higher, is where a player actually stops
+		# to look at a den mouth.
 		"name": "03-mouth", "local": true, "ground": true,
-		"eye": Vector2(0.0, -12.0), "eye_h": 1.7,
-		"target": Vector2(0.0, 4.0), "target_h": 1.2,
+		"eye": Vector2(0.0, -16.0), "eye_h": 1.7,
+		"target": Vector2(0.0, -2.0), "target_h": 2.6,
 	},
 	{
 		"name": "04-hall-dressing", "local": true,

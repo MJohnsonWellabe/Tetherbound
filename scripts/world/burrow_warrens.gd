@@ -2734,9 +2734,14 @@ func _build_bank_lamp_and_cable(holder: Node3D, bank: Dictionary, z0: float, rx:
 	# The cable: staked into the bank behind the post and running low to the
 	# post's own base, a sag rather than a taut line so it reads as run
 	# rather than modelled.
-	var stake := Vector3(side + 0.6, base_y + 0.05, post_z - 0.8)
-	var sag := Vector3(side * 0.55, base_y + post_h * 0.12, post_z - 0.3)
-	var path: PackedVector3Array = [stake, sag, Vector3(side, base_y + 0.12, post_z + 0.1)]
+	# ROUND-5-0906, JUDGE-round4.md 03 ("a second grey bar runs diagonally
+	# across the ground ... reads as a bug"): the sag point used to sit at
+	# `side * 0.55`, i.e. most of the way to the walkway's centreline -- a
+	# cable lying ACROSS the threshold. It now runs outward and back, on the
+	# post's own side, toward the bank.
+	var stake := Vector3(side + 1.1, base_y + 0.05, post_z + 1.4)
+	var sag := Vector3(side + 0.55, base_y + post_h * 0.1, post_z + 0.7)
+	var path: PackedVector3Array = [stake, sag, Vector3(side, base_y + 0.12, post_z + 0.05)]
 	var radii: PackedFloat32Array = [0.03, 0.035, 0.03]
 	var cable := MeshInstance3D.new()
 	cable.name = "TetherCable"
@@ -2805,9 +2810,39 @@ func _build_mouth_brow(holder: Node3D, bank: Dictionary, z_front: float, rx: flo
 		radii.append(thickness * 0.5 * (1.0 + rng.randf_range(-0.35, 0.4)))
 	var brow := MeshInstance3D.new()
 	brow.name = "MouthBrow"
-	brow.mesh = _tube_mesh(path, radii, 8, false)
+	brow.mesh = _tube_mesh(path, radii, 10, false)
 	brow.material_override = _bank_earth_material()
 	holder.add_child(brow)
+
+	# ROUND-5-0906, JUDGE-round4.md 03 ("no grass overhanging the lip ...
+	# nothing about it says dug"): turf along the brow's crown, tufts seated
+	# on the tube's top and leaning outward over the opening, the way a cut
+	# bank keeps its sod overhang. Same flora and retint as the bank's growth.
+	var turf_count := int(bank.get("brow_turf", 0))
+	if turf_count > 0:
+		var turf := Node3D.new()
+		turf.name = "BrowTurf"
+		holder.add_child(turf)
+		var turf_names := ["Grass_Wide_Tall", "Grass_Common_Tall", "Fern_1"]
+		for i in turf_count:
+			var t := lerpf(0.1, 0.9, float(i) / float(maxi(turf_count - 1, 1))) + rng.randf_range(-0.04, 0.04)
+			var angle := PI * t
+			var packed: PackedScene = load("res://assets/environment/stylized_nature/%s.gltf" % turf_names[i % turf_names.size()]) as PackedScene
+			if packed == null:
+				continue
+			var tuft: Node3D = packed.instantiate() as Node3D
+			if tuft == null:
+				continue
+			var ring_r := brow_rx + thickness * 0.15
+			var y: float = _floor_y + spring_h + (arch_h - spring_h) * sin(angle) * 1.1 + thickness * 0.3
+			tuft.position = Vector3(ring_r * cos(angle), y - 0.1, z_front + rng.randf_range(-0.35, 0.15))
+			# lean outward from the ring's own centre so the blades overhang
+			var lean := Vector3(cos(angle), 0.0, -0.4).normalized()
+			tuft.rotation = Vector3(deg_to_rad(rng.randf_range(10.0, 30.0)) * lean.z,
+				rng.randf_range(-PI, PI), -deg_to_rad(rng.randf_range(15.0, 40.0)) * lean.x)
+			tuft.scale = Vector3.ONE * rng.randf_range(0.7, 1.25)
+			turf.add_child(tuft)
+			_dress_skirt_flora(tuft)
 
 	var root_count := int(bank.get("brow_roots", 0))
 	if root_count <= 0:
@@ -2828,7 +2863,9 @@ func _build_mouth_brow(holder: Node3D, bank: Dictionary, z_front: float, rx: flo
 		var bends := 3
 		var dir := Vector3(rng.randf_range(-0.25, 0.25), -1.0, rng.randf_range(0.05, 0.35)).normalized()
 		var path_r: PackedVector3Array = [start]
-		var radii_r: PackedFloat32Array = [rng.randf_range(0.08, 0.14)]
+		# ROUND-5-0906 (JUDGE-round4.md 03: the roots "read as a black
+		# scribble"): thicker, so a strand is a root and not a line.
+		var radii_r: PackedFloat32Array = [rng.randf_range(0.13, 0.2)]
 		var here := start
 		for b in bends:
 			dir = (dir + Vector3(rng.randf_range(-0.3, 0.3), 0.0, rng.randf_range(-0.2, 0.2))).normalized()
@@ -3381,7 +3418,16 @@ func _build_bank_face_outcrops() -> void:
 		var surface_y: float = (base if not is_nan(base) else _floor_y) + _bank_height_at(offset.x, offset.z)
 		var sink := float(spec.get("sink_m", 0.6))
 		art.position = Vector3(offset.x, surface_y, offset.z) - normal * sink
-		art.rotation = Vector3(0.0, deg_to_rad(float(spec.get("yaw_deg", 0.0))), 0.0)
+		# ROUND-5-0906, JUDGE-round4.md 01/02 ("a stack of boxes ... flat green
+		# tops, hard facets, right-angles to each other"): every outcrop used
+		# to stand yaw-only, i.e. with its modelled base flat -- so the moss
+		# cap painted one level plane on top of each and three rocks read as
+		# three crates. A pitch and roll of up to `outcrop_tilt_deg` (per
+		# entry: `tilt_deg`), drawn from the same seeded rng, breaks the
+		# level tops and the right angles between neighbours.
+		var tilt := deg_to_rad(float(spec.get("tilt_deg", bank.get("outcrop_tilt_deg", 0.0))))
+		art.rotation = Vector3(rng.randf_range(-tilt, tilt),
+			deg_to_rad(float(spec.get("yaw_deg", 0.0))), rng.randf_range(-tilt, tilt))
 		art.scale = Vector3.ONE * float(spec.get("scale", 1.6))
 		holder.add_child(art)
 		_keep_rock_out_of_the_rooms(art)
@@ -3404,7 +3450,11 @@ func _cap_outcrop_with_growth(holder: Node3D, art: Node3D, offset: Vector3, norm
 	if box.size == Vector3.ZERO:
 		return
 	var names := ["Grass_Wide_Tall", "Fern_1", "Grass_Common_Tall", "Grass_Wide_Tall"]
-	for i in names.size():
+	# ROUND-5-0906 (JUDGE-round4.md: "grass tufts along the rock tops are
+	# single identical clumps at similar spacing"): 1-4 tufts, not always 4,
+	# at a wider scale spread.
+	var count := rng.randi_range(1, names.size())
+	for i in count:
 		var packed: PackedScene = load(
 			"res://assets/environment/stylized_nature/%s.gltf" % names[i]) as PackedScene
 		if packed == null:
@@ -3431,7 +3481,7 @@ func _cap_outcrop_with_growth(holder: Node3D, art: Node3D, offset: Vector3, norm
 				foot.z)
 		tuft.position = at
 		tuft.rotation = Vector3(0.0, rng.randf_range(-PI, PI), 0.0)
-		tuft.scale = Vector3.ONE * rng.randf_range(0.7, 1.1)
+		tuft.scale = Vector3.ONE * rng.randf_range(0.5, 1.3)
 		holder.add_child(tuft)
 		_dress_skirt_flora(tuft)
 
