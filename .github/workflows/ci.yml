@@ -2006,11 +2006,10 @@ jobs:
           # landing, which is what the shard's own comment above asks for:
           # several lanes add smokes into one wave and an incremented guess
           # reconciles to whichever lane's conflict resolution won, not to the
-          # tree. Lane 6.A's `split_realms` and
-          # `realm_owner_disconnect_mid_fight` are NOT counted while their
-          # headers are withdrawn (D97's hold).
-          if [ "$count" -lt 26 ]; then
-            echo "::error::expected at least 26 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
+          # tree. This landing is the case in point: one branch said 26 and the
+          # other 24, and neither was right for the merged tree.
+          if [ "$count" -lt 28 ]; then
+            echo "::error::expected at least 28 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
             exit 1
           fi
           # Named registration, on top of the count. Discovery alone would let a
@@ -2036,12 +2035,14 @@ jobs:
             tests/smoke_net_movement_two_peers.gd \
             tests/smoke_net_peer_death.gd \
             tests/smoke_net_pickup_race.gd \
+            tests/smoke_net_realm_owner_disconnect_mid_fight.gd \
             tests/smoke_net_reconnect_keeps_character.gd \
             tests/smoke_net_revive.gd \
             tests/smoke_net_riding.gd \
             tests/smoke_net_shared_building.gd \
             tests/smoke_net_shared_wild_fight.gd \
             tests/smoke_net_sleep_vote.gd \
+            tests/smoke_net_split_realms.gd \
             tests/smoke_net_storage_concurrency.gd \
             tests/smoke_net_trade.gd \
             tests/smoke_net_two_peers_boot.gd

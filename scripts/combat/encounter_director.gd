@@ -2946,6 +2946,20 @@ func _encounter_kind(opponent_owned: bool) -> String:
 ## record stamped with whichever one the host happens to be in files a
 ## Cloudreach fight in the Meadows.
 func _encounter_realm() -> String:
+	# Lane MP-REALM-REOPEN. This asked `Game.current_realm` -- the exact thing
+	# the paragraph above forbids, and harmless only for as long as the host
+	# could not be standing anywhere else. It can now: a host in Cloudreach
+	# runs a headless MEADOWS shell (`scripts/net/realm_shells.gd`), and that
+	# shell holds a director of its own whose fights are Meadows fights. Ask
+	# the WORLD this director belongs to, which answers `world_realm()` in both
+	# world roots and in a shell answers the shell's realm.
+	var node: Node = get_parent()
+	while node != null:
+		if node.has_method("world_realm"):
+			var owned := str(node.call("world_realm"))
+			if not owned.is_empty():
+				return owned
+		node = node.get_parent()
 	var game := get_node_or_null(^"/root/Game")
 	if game == null:
 		return "meadows"

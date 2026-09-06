@@ -40,23 +40,47 @@ signal activated(provider: Object)
 @export var player_path: NodePath
 
 var _player: Node3D = null
-var _providers: Array = []
 ## PERF-2. `register()`/`unregister()` used to test/remove membership with
-## `Array.has()`/`Array.erase()` alone, both O(n) linear scans over
-## `_providers`. Registration happens once per `Interactable._ready()`
-## (`interactable.gd::_attach()`), and HARVEST-ALL made ~19,193 scatter
-## placements (every harvestable tree/rock) each carry one -- registering
-## them all in a tight boot-time burst made every `has()` scan longer than
-## the last, an O(n^2) wall that measured as 5.75s of `vegetation.gd::
-## build()`'s 6.2s `build_batches_total` in isolation (`tools/
-## _probe_veg_boot_phases.gd`, this box, bake already fresh -- so this was
-## the actual bottleneck, not `Node.new()`/`add_child()` cost as the task
-## brief assumed going in). This mirrors `_providers` as a real O(1)
-## membership index; `_providers` itself is UNCHANGED in type, order or
-## iteration (`_recompute()` still walks the Array, which is what fixed
-## iteration order for `prompt_arbiter.gd`'s tie-breaking depends on) --
-## this only ever answers "is it already in there".
+## `Array.has()`/`Array.erase()` alone, both O(n) linear scans over what was
+## then a real `_providers` Array. Registration happens once per
+## `Interactable._ready()` (`interactable.gd::_attach()`), and HARVEST-ALL made
+## ~19,193 scatter placements (every harvestable tree/rock) each carry one --
+## registering them all in a tight boot-time burst made every `has()` scan
+## longer than the last, an O(n^2) wall that measured as 5.75s of
+## `vegetation.gd::build()`'s 6.2s `build_batches_total` in isolation (`tools/
+## _probe_veg_boot_phases.gd`, this box, bake already fresh -- so this was the
+## actual bottleneck, not `Node.new()`/`add_child()` cost as the task brief
+## assumed going in). This is the real O(1) membership index, and the
+## registration ORDINAL `_by_registration()` sorts on.
 var _provider_set: Dictionary = {}
+
+## Lane MP-REALM-REOPEN. THE OTHER HALF OF THAT SAME O(n^2), FOUND ON TEARDOWN.
+##
+## PERF-2 fixed `register()` and left `unregister()` as `_providers.erase()`,
+## a linear scan-and-shift over the same array -- which nothing minded, because
+## providers are unregistered a handful at a time while the player plays.
+## Tearing a WORLD down unregisters all 24,461 of them at once, and that is
+## O(n^2) again:
+##
+##   freeing the Meadows world root                       43.0 s
+##   freeing its children one at a time (arbiter goes
+##   first, so the other 24,461 skip `unregister()`)       1.8 s
+##
+## Both measured with `tools/net/_probe_realm_crossing.gd` on a 4 vCPU box.
+## The 43 s is a single synchronous engine call that no amount of slicing can
+## break up, and it was the whole reason a peer crossing a realm boundary went
+## heartbeat-silent -- the freeze was in LEAVING the old world, not in building
+## the new one.
+##
+## `_providers` had already stopped being iterated when the spatial index
+## (`_cells`/`_loose`) landed: `_recompute()` walks `_candidates()`, not this.
+## Its only remaining readers are the tests and probes that ask the arbiter for
+## its census. So it is that census, derived from the dictionary above, and
+## unregistering is a dictionary erase. Same contents, same registration order
+## (GDScript dictionaries keep insertion order), no scan.
+var _providers: Array:
+	get:
+		return _provider_set.keys()
 
 ## --- PERF-ROG / OP23-01: the spatial index -----------------------------------
 ##
@@ -192,14 +216,12 @@ func register(provider: Object) -> void:
 	if not provider.has_method("interaction_offer") or not provider.has_method("interaction_activate"):
 		push_error("%s registered as an interaction provider without the two methods" % provider)
 		return
-	_providers.append(provider)
 	_provider_set[provider] = _next_ordinal
 	_next_ordinal += 1
 	_index(provider)
 
 
 func unregister(provider: Object) -> void:
-	_providers.erase(provider)
 	_provider_set.erase(provider)
 	_deindex(provider)
 
@@ -421,7 +443,6 @@ func _by_registration(a: Variant, b: Variant) -> bool:
 ## _exit_tree()` unregisters on the way out and `queue_free()` always exits the
 ## tree first. This stays as the belt to that braces.
 func _forget(provider: Variant) -> void:
-	_providers.erase(provider)
 	_provider_set.erase(provider)
 	if provider is Object:
 		_deindex(provider as Object)

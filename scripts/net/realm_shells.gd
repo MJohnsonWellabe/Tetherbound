@@ -66,8 +66,13 @@ const FOCUS_INTERVAL_S := 0.5
 
 ## realm id -> the world node standing for it (a child of the tree root).
 var _shells: Dictionary = {}
-## realm id -> {"boot_ms": int, "static_delta_kb": int}, kept for the lane's
-## own measurement against spike S2 and for `report()`.
+## realm id -> the scene path `ResourceLoader.load_threaded_request()` was
+## asked for and has not yet been collected. See `_stand_up()`.
+var _loading: Dictionary = {}
+## realm id -> {"attach_ms", "static_delta_kb", "started_ms", "build_ms"},
+## kept for the lane's own measurement against spike S2 and for `report()`.
+## `attach_ms` is the walk to the world's first yield; `build_ms` is the whole
+## sliced build and is -1 until the shell says it has finished.
 var _cost: Dictionary = {}
 var _focus_accum: float = 0.0
 
@@ -86,6 +91,7 @@ func _exit_tree() -> void:
 		if node is Node and is_instance_valid(node):
 			(node as Node).queue_free()
 	_shells.clear()
+	_loading.clear()
 
 
 # --- public API ---------------------------------------------------------------
@@ -104,6 +110,12 @@ func reconcile() -> void:
 	for realm: String in _shells.keys().duplicate():
 		if not wanted.has(realm):
 			_tear_down(realm)
+	# A realm whose last occupant left again while its scene was still being
+	# read off disk. Drop the request rather than standing a shell up for
+	# nobody and immediately tearing it down through a world save.
+	for realm: String in _loading.keys().duplicate():
+		if not wanted.has(realm):
+			_loading.erase(realm)
 
 
 ## Tear every shell down, saving each first. Called when this process stops
@@ -111,6 +123,7 @@ func reconcile() -> void:
 func release_all() -> void:
 	for realm: String in _shells.keys().duplicate():
 		_tear_down(realm)
+	_loading.clear()
 
 
 ## The realms this process is currently simulating for somebody else.
@@ -138,9 +151,19 @@ func report() -> Dictionary:
 		row["alive"] = node != null
 		row["path"] = str(node.get_path()) if node != null else ""
 		row["bodies"] = _bodies_in(realm).size()
+		# D97 / lane MP-REALM-REOPEN. A shell is in the tree long before it has
+		# finished building itself -- the build is deliberately spread over
+		# frames so the host keeps drawing for the players already in the
+		# session. Anything that needs the realm to be able to answer for its
+		# own ground waits on this, not on `alive`.
+		row["ready"] = node != null and (not node.has_method("shell_build_complete")
+			or bool(node.call("shell_build_complete")))
 		rows[realm] = row
+	var pending: Array = _loading.keys()
+	pending.sort()
 	return {
 		"realms": rows,
+		"loading": pending,
 		"static_memory_kb": int(OS.get_static_memory_usage() / 1024),
 		"hosting": _is_host(),
 	}
@@ -185,9 +208,18 @@ func _stand_up(realm: String) -> void:
 	if scene.is_empty() or not ResourceLoader.exists(scene):
 		push_warning("[realms] realm '%s' points at missing scene '%s'" % [realm, scene])
 		return
-	var packed: PackedScene = load(scene)
+	# D97 / lane MP-REALM-REOPEN. The plain `load()` this used to be was the
+	# one HARD freeze in a stand-up: measured on a 4 vCPU box at 3.5 s for the
+	# Meadows and 5.6 s for Cloudreach, inside a single frame, on the host
+	# every other player depends on. `load()` cannot be interrupted; a
+	# threaded request can simply be asked again next tick.
+	#
+	# `_process()` calls `reconcile()` twice a second, and a realm still being
+	# read is not in `_shells`, so this function is re-entered for the same
+	# realm until the scene arrives -- which is what makes returning here
+	# safe rather than a dropped shell.
+	var packed: PackedScene = _collect_scene(realm, scene)
 	if packed == null:
-		push_warning("[realms] could not load '%s' for realm '%s'" % [scene, realm])
 		return
 	var node: Node = packed.instantiate()
 	if node == null:
@@ -215,12 +247,49 @@ func _stand_up(realm: String) -> void:
 	var t0 := Time.get_ticks_msec()
 	var mem0 := OS.get_static_memory_usage()
 	tree.root.add_child(node)
-	var boot_ms := Time.get_ticks_msec() - t0
+	# `add_child` runs the world root's `_ready()`, and in a shell that
+	# `_ready()` yields (`scripts/world/shell_build_budget.gd`), so this is
+	# the cost of reaching the world's FIRST yield -- not of building it.
+	# `build_ms` below is the whole build, filled in when the world says it
+	# has finished.
+	var attach_ms := Time.get_ticks_msec() - t0
 	var static_kb := int((OS.get_static_memory_usage() - mem0) / 1024)
 	_shells[realm] = node
-	_cost[realm] = {"boot_ms": boot_ms, "static_delta_kb": static_kb}
-	print("[realms] shell up for '%s' at /root/%s: %d ms, +%d KB static (S2 full boot: ~85 s cold, 2,783 MB)"
-		% [realm, node.name, boot_ms, static_kb])
+	_cost[realm] = {"attach_ms": attach_ms, "static_delta_kb": static_kb,
+		"started_ms": t0, "build_ms": -1}
+	print("[realms] shell up for '%s' at /root/%s: attached in %d ms, +%d KB static; still building across frames"
+		% [realm, node.name, attach_ms, static_kb])
+
+
+## Ask for the realm's scene on a background thread, and answer with it only
+## once it is actually there. Returns null while the read is still running,
+## which is not a failure -- `reconcile()` asks again on the next tick.
+func _collect_scene(realm: String, scene: String) -> PackedScene:
+	if not _loading.has(realm):
+		var started := ResourceLoader.load_threaded_request(scene)
+		if started != OK:
+			# A threaded request the engine declined (an unknown path, no
+			# free loader thread). Fall back to the blocking read rather than
+			# never standing the shell up at all: a freeze is worse than a
+			# threaded load and better than a realm nobody simulates.
+			push_warning("[realms] threaded load of '%s' declined (%d); reading it inline" % [scene, started])
+			return load(scene) as PackedScene
+		_loading[realm] = scene
+		print("[realms] reading '%s' for realm '%s' off the loader thread" % [scene, realm])
+		return null
+	match ResourceLoader.load_threaded_get_status(scene):
+		ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+			return null
+		ResourceLoader.THREAD_LOAD_LOADED:
+			_loading.erase(realm)
+			var packed := ResourceLoader.load_threaded_get(scene) as PackedScene
+			if packed == null:
+				push_warning("[realms] '%s' loaded but is not a PackedScene" % scene)
+			return packed
+		_:
+			_loading.erase(realm)
+			push_warning("[realms] threaded load of '%s' failed for realm '%s'" % [scene, realm])
+			return null
 
 
 ## Deliverable 5. The last occupant of a realm has gone -- possibly by
@@ -232,6 +301,7 @@ func _tear_down(realm: String) -> void:
 	var node: Node = shell(realm)
 	_shells.erase(realm)
 	_cost.erase(realm)
+	_loading.erase(realm)
 	if node == null:
 		return
 	var game := _game()
@@ -256,6 +326,13 @@ func _tear_down(realm: String) -> void:
 func _process(delta: float) -> void:
 	if _shells.is_empty() and not _is_host():
 		return
+	# A scene still being read off the loader thread is polled EVERY frame,
+	# not twice a second: the read finishes when it finishes, and half a
+	# second of doing nothing about it is half a second the peer who crossed
+	# is standing in a realm nobody is simulating.
+	if not _loading.is_empty():
+		reconcile()
+	_note_finished_builds()
 	_focus_accum += delta
 	if _focus_accum < FOCUS_INTERVAL_S:
 		return
@@ -277,6 +354,26 @@ func _process(delta: float) -> void:
 		for body: Node3D in bodies:
 			centre += body.global_position
 		node.call("track_simulation_focus", centre / float(bodies.size()))
+
+
+## Fill in `build_ms` the first tick a shell reports itself finished. This is
+## the number that matters for the reopen -- how long the host spends building
+## a realm nobody can see -- and it is not `attach_ms`, which is only the walk
+## to the world's first yield.
+func _note_finished_builds() -> void:
+	for realm: String in _shells.keys():
+		var row: Variant = _cost.get(realm)
+		if not (row is Dictionary) or int((row as Dictionary).get("build_ms", -1)) >= 0:
+			continue
+		var node: Node = shell(realm)
+		if node == null or not node.has_method("shell_build_complete"):
+			continue
+		if not bool(node.call("shell_build_complete")):
+			continue
+		var built := Time.get_ticks_msec() - int((row as Dictionary).get("started_ms", 0))
+		(row as Dictionary)["build_ms"] = built
+		print("[realms] shell for '%s' finished building in %.1f s (S2 full boot: ~85 s cold, 2,783 MB)"
+			% [realm, built / 1000.0])
 
 
 ## The remote trainer bodies standing inside one shell. By ancestry rather

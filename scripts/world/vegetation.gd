@@ -374,7 +374,14 @@ func _load_performance_overrides() -> void:
 		COLLISION_STREAM_CELL = maxf(1.0, float(cfg["collision_stream_cell_m"]))
 
 
-func build(world_size: float, terrain: Node) -> void:
+## `slicer` is `scripts/world/shell_build_budget.gd`, handed down by
+## `playground_world.gd` when this scatter is being built inside a headless
+## REALM SHELL on somebody's host (D97). It bounds how much of this build one
+## frame may do, so the host keeps drawing for the players already in the
+## session instead of holding a frame for the whole scatter. Null -- which is
+## every ordinary boot, and every test -- makes each `await` below resume in
+## the same frame, so nothing about a real build changes.
+func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 	_load_performance_overrides()
 	for child in get_children():
 		child.queue_free()
@@ -491,8 +498,10 @@ func build(world_size: float, terrain: Node) -> void:
 		print("[vegetation] grass field is on; %d placements across %d layers left unbuilt (%s)" % [
 			dropped, suppressed.size(), ", ".join(suppressed.keys())])
 
+	await _breathe(slicer)
 	_mark_harvestable(by_layer)
 	var t_mark1 := Time.get_ticks_msec()
+	await _breathe(slicer)
 
 	# Grouped by MODEL rather than by layer: two layers sharing a mesh should
 	# share one instancer mesh id, or the draw-call saving is thrown away by
@@ -524,7 +533,8 @@ func build(world_size: float, terrain: Node) -> void:
 	var t_assets1 := Time.get_ticks_msec()
 
 	for model: String in by_model.keys():
-		_build_batch(model, by_model[model])
+		await _build_batch(model, by_model[model], slicer)
+		await _breathe(slicer)
 	var t_batches1 := Time.get_ticks_msec()
 	# One rebuild of the instancer's live MultiMeshInstance3Ds after every
 	# batch is queued, not one per model -- `add_transforms()` below is
@@ -1127,7 +1137,16 @@ func _make_mesh_asset(model_path: String) -> Object:
 ## Colour jitter needs its own RNG stream per model, seeded the same way the
 ## old MultiMesh path seeded it, so a jittered layer's palette spread is
 ## unchanged by this swap.
-func _build_batch(model_path: String, placements: Array) -> void:
+## Let a frame out if the shell build budget says this one is spent. A null
+## slicer -- every non-shell build -- returns without ever suspending, so the
+## `await`s on it resume in the same frame.
+func _breathe(slicer: RefCounted) -> void:
+	if slicer == null:
+		return
+	await slicer.call("breathe")
+
+
+func _build_batch(model_path: String, placements: Array, slicer: RefCounted = null) -> void:
 	# In a shell nothing is registered with Terrain3D, so there is no real
 	# mesh id to ask for -- and asking would load the model, which is the
 	# whole cost being skipped. A local counter stands in, purely as the key
@@ -1162,6 +1181,12 @@ func _build_batch(model_path: String, placements: Array) -> void:
 			colours.resize(placements.size())
 
 	for i in placements.size():
+		# Every 512th placement, not every one: a shell's biggest model batch
+		# runs to tens of thousands of these and an `await` per iteration
+		# would cost more than the work it is slicing. 512 is small enough
+		# that no single stretch between yields is long.
+		if slicer != null and i % 512 == 0:
+			await _breathe(slicer)
 		var placement: Dictionary = placements[i]
 		if simulation_only:
 			if placement.has("harvest_item"):

@@ -1,21 +1,17 @@
 extends "res://tests/helpers/net_harness.gd"
 
-## HELD, 2026-09-06, and NOT quarantined -- the distinction matters.
-##
-## This smoke is not failing while the feature it covers still ships. The
-## feature was WITHDRAWN: `game_state.gd::can_enter_realm()` re-instates D97's
-## multi-peer refusal, because this smoke measured the host freezing for longer
-## than the harness's 15 s heartbeat window at
-## `realm_shells.gd`'s synchronous `add_child` -- the whole world build, inside
-## one frame, on the machine everybody else depends on. A test for a door that
-## is deliberately shut cannot pass, so its `# peers: 2` header is removed and
-## CI stops discovering it.
-##
-## Restoring it is two edits and they belong together: delete the
-## `is_multi_peer()` lines in `can_enter_realm()`, and put the header back.
-## Do not do either alone.
+# peers: 2
 
-#  peers-held: HELD, header removed on purpose; see the note below
+## RESTORED 2026-09-06 (lane MP-REALM-REOPEN), together with the removal of the
+## `is_multi_peer()` refusal in `game_state.gd::can_enter_realm()` -- the two
+## edits that were held together and had to be made together.
+##
+## This smoke was held, not quarantined, because the shell it exercises froze
+## the host for longer than the harness's 15 s heartbeat window: `add_child()`
+## ran the world root's whole `_ready()` in one call. The world roots now build
+## across frames under `scripts/world/shell_build_budget.gd` and
+## `realm_shells.gd` reads the scene off the loader thread. Both smokes were
+## run locally and passed before this header came back.
 
 ## Stage B Wave 6 lane 6.A. THE player-visible outcome of the lane, and of
 ## directive rule 16: **two people in different biomes at the same time.**
@@ -212,6 +208,13 @@ func _run() -> void:
 	check(shells is Dictionary and _shell_realms(shells) == [CLOUDREACH],
 		"the host stands a headless Cloudreach shell up for the peer who went there (holds %s)"
 			% str(_shell_realms(shells)))
+	# The positive half of check 4 below. A shell that holds nobody is a shell
+	# simulating an empty realm, which is the failure the despawn-before-swap
+	# ordering could hide: the body has to LEAVE the Meadows and ARRIVE in the
+	# shell, not merely leave.
+	check(_shell_bodies(shells, CLOUDREACH) == 1,
+		"the Cloudreach shell holds the body of the peer who crossed (holds %d)"
+			% _shell_bodies(shells, CLOUDREACH))
 	_report_shell_cost(0, shells)
 	var guest_shells = await probe(1, "realm_shells")
 	check(guest_shells is Dictionary and (_shell_realms(guest_shells)).is_empty(),
@@ -225,7 +228,7 @@ func _run() -> void:
 		var bodies = await probe(i, "remote_trainers")
 		var d: Dictionary = bodies if bodies is Dictionary else {}
 		check(_not_mine(d).is_empty(),
-			"peer %d draws no trainer body for a player in another realm (drew %d)"
+			"peer %d draws no trainer body, in the world on its own screen, for a player in another realm (drew %d)"
 				% [i, _not_mine(d).size()])
 
 	# 5. Both gather, at once, in two realms. Two intents, two explicit realms,
@@ -313,12 +316,41 @@ static func _shell_realms(report: Variant) -> Array:
 
 ## The bodies a process is drawing that it does not own -- i.e. other people.
 ## Same helper, same reasoning as `smoke_net_movement_two_peers.gd::_others()`.
+## Every body this process is DRAWING that belongs to somebody else -- bodies
+## under its `current_scene`, which is the world on its screen.
+##
+## Not "every body in the tree". The host also stands a peer's body up inside
+## its headless realm shell, which is how it simulates a realm it is not in
+## (D97), and the shell is not drawn by anyone. Counting those made this check
+## fail with "peer 0 draws no trainer body for a player in another realm (drew
+## 1)" while the despawn it exists to protect was working perfectly -- the one
+## body it found was the shell's. The positive half of that, that the shell
+## really is holding the departed peer, is asserted separately below rather
+## than lost.
+## How many remote trainer bodies stand inside one of the host's shells, as
+## `realm_shells.gd::report()` counts them.
+static func _shell_bodies(report: Variant, realm: String) -> int:
+	if not (report is Dictionary):
+		return -1
+	var realms: Variant = (report as Dictionary).get("realms", {})
+	if not (realms is Dictionary):
+		return -1
+	var row: Variant = (realms as Dictionary).get(realm)
+	return int((row as Dictionary).get("bodies", -1)) if row is Dictionary else -1
+
+
 static func _not_mine(bodies: Dictionary) -> Array:
 	var out: Array = []
 	for key in bodies.keys():
 		var row: Variant = bodies[key]
-		if row is Dictionary and not bool((row as Dictionary).get("mine", false)):
-			out.append(row)
+		if not (row is Dictionary):
+			continue
+		var d: Dictionary = row
+		if bool(d.get("mine", false)):
+			continue
+		if not bool(d.get("in_current_scene", true)):
+			continue
+		out.append(d)
 	return out
 
 
@@ -333,7 +365,12 @@ func _report_shell_cost(peer: int, report: Variant) -> void:
 	var realms: Dictionary = d.get("realms", {}) as Dictionary
 	for realm: String in realms.keys():
 		var row: Dictionary = realms[realm] as Dictionary
-		print("6A-SHELL-COST peer=%d realm=%s boot_ms=%d static_delta_kb=%d process_static_kb=%d vm_hwm_kb=%d bodies=%d"
-			% [peer, realm, int(row.get("boot_ms", -1)), int(row.get("static_delta_kb", -1)),
+		# `attach_ms` is the walk to the world root's first yield and
+		# `build_ms` is the whole sliced build (-1 while it is still running);
+		# lane MP-REALM-REOPEN split them when the build stopped happening
+		# inside `add_child`.
+		print("6A-SHELL-COST peer=%d realm=%s attach_ms=%d build_ms=%d ready=%s static_delta_kb=%d process_static_kb=%d vm_hwm_kb=%d bodies=%d"
+			% [peer, realm, int(row.get("attach_ms", -1)), int(row.get("build_ms", -1)),
+				str(row.get("ready", false)), int(row.get("static_delta_kb", -1)),
 				int(d.get("static_memory_kb", -1)), int(d.get("vm_hwm_kb", -1)),
 				int(row.get("bodies", -1))])

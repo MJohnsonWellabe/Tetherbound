@@ -31,8 +31,17 @@ extends SceneTree
 ## (CLAUDE.md forbids a Biome 2 implementation), so a host holds at most ONE
 ## shell however many peers join. Four peers do not mean four shells.
 
+## Lane MP-REALM-REOPEN. The three phases of a stand-up, timed separately, and
+## the number the reopen actually turns on: the WORST 60-consecutive-physics-
+## frame wall time during the build. `tools/net/peer_runner.gd` heartbeats
+## every 60 physics frames and `net_harness.gd` calls a peer silent after 15 s,
+## so a shell whose worst 60-frame window exceeds 15 s kills the session it is
+## standing in -- and a real host stutters for exactly as long. `boot_ms` alone
+## cannot see this: a 24 s boot spread evenly over 240 frames is fine, and the
+## same 24 s spent in three 8 s slices is not.
 const SETTLE_FRAMES := 240
 const SAMPLE_FRAMES := 300
+const HEARTBEAT_FRAMES := 60
 
 const SCENES := {
 	"meadows": "res://scenes/world/meadows_playground.tscn",
@@ -69,16 +78,21 @@ func _run() -> void:
 
 	var t0 := Time.get_ticks_msec()
 	var packed: PackedScene = load(scene)
+	var load_ms := Time.get_ticks_msec() - t0
+	var t_inst := Time.get_ticks_msec()
 	var world: Node = packed.instantiate()
+	var instantiate_ms := Time.get_ticks_msec() - t_inst
 	if mode == "shell":
 		# The same two writes `realm_shells.gd::_stand_up()` makes, in the same
 		# place: before `add_child()`, which is what runs `_ready()`.
 		world.set("simulation_only", true)
 		world.set("shell_realm", realm)
+	var t_add := Time.get_ticks_msec()
 	root.add_child(world)
-	for i in SETTLE_FRAMES:
-		await physics_frame
+	var add_child_ms := Time.get_ticks_msec() - t_add
+	var build := await _watch_build(SETTLE_FRAMES, world)
 	var boot_ms := Time.get_ticks_msec() - t0
+	_print_phases("%s/%s" % [realm, mode], load_ms, instantiate_ms, add_child_ms, build)
 
 	var static_first := OS.get_static_memory_usage()
 	var vmhwm_first := _status_kb("VmHWM:")
@@ -89,13 +103,20 @@ func _run() -> void:
 		print("--- realm %s standing; adding a %s SHELL beside it ---" % [realm, shell_realm])
 		var t1 := Time.get_ticks_msec()
 		var shell_scene := str(SCENES.get(shell_realm, ""))
-		var shell_node: Node = (load(shell_scene) as PackedScene).instantiate()
+		var shell_packed: PackedScene = load(shell_scene) as PackedScene
+		var pair_load_ms := Time.get_ticks_msec() - t1
+		var t1b := Time.get_ticks_msec()
+		var shell_node: Node = shell_packed.instantiate()
+		var pair_inst_ms := Time.get_ticks_msec() - t1b
 		shell_node.set("simulation_only", true)
 		shell_node.set("shell_realm", shell_realm)
+		var t1c := Time.get_ticks_msec()
 		root.add_child(shell_node)
-		for i in SETTLE_FRAMES:
-			await physics_frame
+		var pair_add_ms := Time.get_ticks_msec() - t1c
+		var pair_build := await _watch_build(SETTLE_FRAMES, shell_node)
 		shell_ms = Time.get_ticks_msec() - t1
+		_print_phases("%s-shell beside %s" % [shell_realm, realm],
+			pair_load_ms, pair_inst_ms, pair_add_ms, pair_build)
 		print("shell stood up in %.1f s" % (shell_ms / 1000.0))
 
 	var static_after := OS.get_static_memory_usage()
@@ -121,6 +142,63 @@ func _run() -> void:
 		(static_after - static_boot) / 1048576.0, _status_kb("VmHWM:") / 1024.0, _median(samples),
 	])
 	quit(0)
+
+
+## Walk physics frames while the build runs, keeping every frame's wall time.
+## Returns the worst single frame and the worst 60-frame window, which is the
+## heartbeat criterion.
+##
+## At least `n` frames, and then as many more as the world needs to finish: a
+## sliced shell build (`scripts/world/shell_build_budget.gd`) deliberately
+## outlives any fixed frame count, and stopping the clock at 240 frames would
+## report a boot that had not happened and a memory figure for half a world.
+func _watch_build(n: int, world: Node) -> Dictionary:
+	var frames: Array[float] = []
+	var cap := 20000
+	var watched := 0
+	while watched < n or not _built(world):
+		if watched >= cap:
+			print("WARNING: world never reported shell_build_complete within %d frames" % cap)
+			break
+		var t := Time.get_ticks_usec()
+		await physics_frame
+		frames.append((Time.get_ticks_usec() - t) / 1000.0)
+		watched += 1
+	print("build watched for %d physics frames" % frames.size())
+	var worst_frame := 0.0
+	for f: float in frames:
+		worst_frame = maxf(worst_frame, f)
+	# Rolling sum over HEARTBEAT_FRAMES consecutive frames.
+	var worst_window := 0.0
+	var window := 0.0
+	for i in frames.size():
+		window += frames[i]
+		if i >= HEARTBEAT_FRAMES:
+			window -= frames[i - HEARTBEAT_FRAMES]
+		if i >= HEARTBEAT_FRAMES - 1:
+			worst_window = maxf(worst_window, window)
+	return {"worst_frame_ms": worst_frame, "worst_60_frame_window_s": worst_window / 1000.0}
+
+
+## A world with no such method is a pre-lane build; treat it as finished.
+func _built(world: Node) -> bool:
+	if world == null or not is_instance_valid(world):
+		return true
+	if not world.has_method("shell_build_complete"):
+		return true
+	return bool(world.call("shell_build_complete"))
+
+
+func _print_phases(label: String, load_ms: int, instantiate_ms: int, add_child_ms: int,
+		build: Dictionary) -> void:
+	print("--- phases: %s ---" % label)
+	print("load_ms=%d  instantiate_ms=%d  add_child_ms=%d" % [load_ms, instantiate_ms, add_child_ms])
+	print("worst single frame during build: %.0f ms" % float(build.get("worst_frame_ms", 0.0)))
+	print("worst 60-physics-frame window during build: %.1f s  (heartbeat dies above 15.0 s)"
+		% float(build.get("worst_60_frame_window_s", 0.0)))
+	print("6A-SHELL-PHASES %s load_ms=%d instantiate_ms=%d add_child_ms=%d worst_frame_ms=%.0f worst_hb_window_s=%.1f"
+		% [label.replace(" ", "_"), load_ms, instantiate_ms, add_child_ms,
+			float(build.get("worst_frame_ms", 0.0)), float(build.get("worst_60_frame_window_s", 0.0))])
 
 
 func _sample_frames(n: int) -> Array[float]:
