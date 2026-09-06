@@ -26,6 +26,13 @@ Thumbs.db
 # belongs under assets/. See docs/ASSET_LEDGER.md.
 assets_raw/
 
+# tripo-cli's local state: its per-directory job context and any batch-run
+# resume file (named <manifest>.state.json next to a tripo batch manifest).
+# The API key itself lives in ~/.tripo (outside the repo, managed by
+# `tripo login`/`logout`) and is never written here.
+.tripo/
+*.yaml.state.json
+
 # Godot's own crash/log output
 logs/
 *.log

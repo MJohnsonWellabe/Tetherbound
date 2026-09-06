@@ -3,6 +3,7 @@
 #
 #   tools/art_pipeline/setup.sh          # everything
 #   tools/art_pipeline/setup.sh blender  # just one
+#   tools/art_pipeline/setup.sh tripo    # just tripo-cli (npm global install)
 #   tools/art_pipeline/setup.sh --print   # paths only, fetch nothing
 #
 # Both Blender and Godot ship self-contained builds that run from wherever they
@@ -88,6 +89,30 @@ fetch_python() {
   echo "python   ready"
 }
 
+fetch_tripo() {
+  # tools/art_pipeline/tripo.py's fallback/comparison generator (section 3.3
+  # of TETHERBOUND_3D_ART_PIPELINE.md). A small npm package, not a heavy
+  # binary like Blender/Godot, but the same idempotent check-then-fetch shape
+  # so a fresh ephemeral container is ready without a manual step.
+  if command -v tripo >/dev/null 2>&1; then
+    echo "tripo    present  $(tripo --version 2>/dev/null)"
+    return 0
+  fi
+  if ! command -v npm >/dev/null 2>&1; then
+    echo "tripo    MISSING  npm not found — install Node.js first" >&2
+    return 1
+  fi
+  echo "tripo    installing tripo-cli ..."
+  npm install --global --silent tripo-cli || {
+    echo "tripo    FAILED — install by hand: npm install -g tripo-cli" >&2
+    return 1
+  }
+  echo "tripo    ready    $(tripo --version 2>/dev/null)"
+  echo "tripo    NOTE     no API key yet — run 'tripo login --region ov' yourself,"
+  echo "                  interactively, on this machine (see the pipeline doc's"
+  echo "                  credential-boundary rule; never run login unattended)"
+}
+
 # Rendering needs a display and a software rasteriser. Reported rather than
 # installed, because this is the one step that does need root and the caller may
 # not have it.
@@ -115,13 +140,15 @@ case "${1:-all}" in
   blender) fetch_blender || status=1 ;;
   godot)   fetch_godot   || status=1 ;;
   python)  fetch_python  || status=1 ;;
+  tripo)   fetch_tripo   || status=1 ;;
   all)
     fetch_blender    || status=1
     fetch_godot      || status=1
     fetch_python     || status=1
+    fetch_tripo      || status=1
     check_render_deps || true   # advisory: headless inspection works without it
     ;;
-  *) echo "usage: $0 [all|blender|godot|python|--print]" >&2; exit 2 ;;
+  *) echo "usage: $0 [all|blender|godot|python|tripo|--print]" >&2; exit 2 ;;
 esac
 
 echo

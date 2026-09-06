@@ -222,6 +222,37 @@ After installation verify that:
 - a test operation works,
 - and output can be downloaded to a controlled local asset-staging directory.
 
+### 3.3 Tripo CLI — fallback / comparison 3D generation
+
+Section 2's candidate order below has always named a third rung: "Tripo comparison candidate if Meshy results are inadequate." This is that rung. Reach for it only when Meshy's own candidates are inadequate, or for a deliberate side-by-side — never as a way to spend a second generation on the same asset "just in case," and never as a substitute for Meshy as the default (multi-image > image > text-to-3D still applies first).
+
+Tripo is [`tripo-cli`](https://www.npmjs.com/package/tripo-cli), the official Tripo3D CLI (`https://github.com/vast-enterprise/Tripo-API-CLI`), used the same way Meshy is used here: as a committed script, not an MCP server, per docs/decisions/D11's reasoning (an MCP config is session-local and dies with the session; a committed script survives it).
+
+**Install once per machine:**
+
+```bash
+tools/art_pipeline/setup.sh tripo   # or: npm install -g tripo-cli
+```
+
+**Authenticate once per machine, interactively, by a human:**
+
+```bash
+tripo login --region ov   # ov = international, cn = China mainland
+```
+
+This is a genuine credential boundary (section 0.5): it prints a verification URL and a one-time code and blocks for up to ~15 minutes waiting for a human to approve in a browser. Never run it unattended or on the owner's behalf from an agent session; if a key is not yet configured, stop at this line and hand it back with the exact command above. `TRIPO_API_KEY` in the environment works too and skips the interactive step, if the owner already has a key.
+
+**Generate candidates through the project's own wrapper**, which resolves Tetherbound's reference crops exactly the way `meshy.py` does and lands output in the same `assets_raw/<species>/<candidate>/` layout with a `provenance.json`:
+
+```bash
+tools/art_pipeline/tripo.py check
+tools/art_pipeline/tripo.py generate terrapup --candidates 3
+```
+
+See the script's own docstring (`tools/art_pipeline/tripo.py`) for the full command surface and the reasoning behind its budget guard.
+
+**The same hard rules apply.** CLAUDE.md's asset rules ("Never spend a Meshy generation without owner-supplied reference art", "Meshy is reserved for Team Tether hero objects", "No new creature meshes or Meshy generations for the Meadows") govern any AI 3D generation service — Tripo included — not the literal word "Meshy". A Tripo candidate still needs a row in `docs/specs/ASSET_LEDGER.md` before it ships, following the same provenance convention as every Meshy row there.
+
 ---
 
 ## Tier B — Blender Agent Bridge
