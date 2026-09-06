@@ -75,6 +75,22 @@
       "tint": "#9b805f"
     }
   },
+  "geology": {
+    "_comment": "CLIFF-ART-0906, owner picked option A (2026-09-06). CLIFF-ART-0906 option A: material only. The key art's cliff/stronghold stone is grey-green granite (judge measured RGB 80/79/71 on the board's cut stone) with mossy shelves; the shipped defaults are tan (0.63,0.53,0.40) with ochre strata. Same Rock030 texture, retinted. Every key here maps 1:1 onto a shaders/cloudreach_cliff.gdshader uniform via cloudreach_world.gd::_build_materials; the shader's own defaults are the old tan look, so removing a key reverts that one uniform and removing the block reverts the whole cliff. Rendered options and the judge sheet: ralph/reports/CLIFF-ART-0906/.",
+    "stone_light": "#8a8f82",
+    "stone_dark": "#464b44",
+    "strata_ochre_tint": "#5d6a5a",
+    "strata_ochre_strength": 0.18,
+    "strata_strength": 0.05,
+    "strata_period_m": 9.0,
+    "ledge_moss_tint": "#4c6b36",
+    "ledge_moss_strength": 0.62,
+    "ledge_lighten": 0.1,
+    "ledge_normal_threshold": 0.55,
+    "crevice_strength": 0.45,
+    "crevice_scale": 0.09,
+    "texture_scale": 0.055
+  },
   "landmass": {
     "geology_base_y": -210.0,
     "region_width_factor": 0.30,
