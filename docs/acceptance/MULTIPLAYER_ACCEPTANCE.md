@@ -133,7 +133,7 @@ Recorded here so a reader does not have to infer them from silence:
   one found a participant list §9 had emptied at the round boundary — an identity row. Measured on
   the Warden twice (burrowback 27.750/42.550, galecrest 51.800/27.750, each exactly its authored
   number, with the record beside them saying `stat_multiplier` 1.1). Fixed by lane MP-F1-F2 and
-  recorded as `docs/decisions/D100-participant-scaling-keeps-an-unscaled-base-on-the-director.md`:
+  recorded as `docs/decisions/D112-participant-scaling-keeps-an-unscaled-base-on-the-director.md`:
   the call moved to after the record is live, and an **unscaled base is kept on the director** so a
   row that is re-derived on every join, leave and landed strike lands on `base × row` rather than
   compounding. `wild_creature.gd::refresh_combat_profile()` is the other half — the body snapshots

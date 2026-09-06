@@ -1,4 +1,4 @@
-# D100 — §10's participant scaling keeps an UNSCALED BASE on the director, and is applied after the record is live
+# D112 — §10's participant scaling keeps an UNSCALED BASE on the director, and is applied after the record is live
 
 **Date:** 2026-09-06
 **Status:** settled
@@ -6,11 +6,11 @@
 **Touches:** `scripts/combat/encounter_director.gd`, `scripts/creatures/wild_creature.gd`
 **Contract:** `docs/specs/MP_ENCOUNTER_PROTOCOL.md` §10 / D-MP12
 
-> There is an unrelated D100 in the save work (the character/world split named in
+> There is an unrelated D112 in the save work (the character/world split named in
 > `docs/acceptance/MULTIPLAYER_ACCEPTANCE.md`'s v22 bullet). That number was
 > taken in a lane's prose, never as a record in this directory; this file is the
-> first `docs/decisions/D100`. Where the two are cited together the save one is
-> "D100's split" and this one is "D100's base".
+> first `docs/decisions/D112`. Where the two are cited together the save one is
+> "D112's split" and this one is "D112's base".
 
 ## What was wrong
 

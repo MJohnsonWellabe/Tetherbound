@@ -19,7 +19,10 @@ predicted.**
 | **F2** — a fight staged outside the Warden Arena | `smoke_arena_contain`: **21 assertions (staging case), 8 failures** | **21 assertions, 0 failures** |
 
 The design decision F1 required is recorded as
-`docs/decisions/D100-participant-scaling-keeps-an-unscaled-base-on-the-director.md`.
+`docs/decisions/D112-participant-scaling-keeps-an-unscaled-base-on-the-director.md`.
+(Filed by this lane as D100, RENUMBERED to D112 at merge: D100 was already taken by
+the world/character save split, and D106 already holds the scaling decision this one
+amends. Numbers are not reused.)
 It is summarised in §2 below with the alternative and why it was rejected.
 
 One thing the F2 write-up had the wrong way round is corrected in §3, with the
@@ -42,7 +45,7 @@ Two things found and deliberately **not** fixed are in §7.
 | `tests/smoke_net_shared_boss.gd` | Tightened: the §10 stat and cooldown numbers it deliberately only PRINTED are now asserted, against the config row it reads out of the data file itself. |
 | `tools/net/peer_runner.gd` | The `boss` probe reports `live.body_attack_cooldown` — the number the swing timer reads — beside the instance's own override. |
 | `.github/workflows/ci.yml` | One step registering the new smoke in `verify-combat-shard`. |
-| `docs/decisions/D100-...md` | NEW. The design decision F1 required. |
+|  `docs/decisions/D112-...md` | NEW. The design decision F1 required. |
 | `docs/acceptance/MULTIPLAYER_ACCEPTANCE.md` | The two "Known-open" bullets this lane closed, plus row 8's evidence cell. |
 
 ## 2. F1 — the design decision, and why
