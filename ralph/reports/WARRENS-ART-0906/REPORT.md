@@ -222,3 +222,61 @@ explicitly fences off ("do not touch creature meshes or `creature_visual.gd`").
 does not have to re-derive them.** Note the probe's visual-AABB line is not
 evidence of anything: it merges the *rest-pose* bounds of skinned meshes, which is
 why it reports a nonsensical 16 m span.
+
+## Blind verdict — `JUDGE-round1.md`, against the three gaps this lane owns
+
+The judge saw the sheet and the eight frames, the two references and the skill,
+and nothing else — no source, no config, no history, no statement of what changed.
+Its full text is in `JUDGE-round1.md`. Scored against the handoff §4.3 rows in the
+judges' own words:
+
+| gap | round 6 (before) | round 1 of this lane (after) |
+|---|---|---|
+| **W1** "Mushrooms are plain domes, no gills or cap profile" | named | **not named.** `05`'s cluster is now called "the single best-shaped thing in the interior". A NEW complaint replaces it: the mushrooms read 1.5–2 m, "larger than its guardian, which inverts the hierarchy". |
+| **W3** "Interior rooms read as a stone box" | named | **still named, and ranked #3**: "reads as a rectangular basement, not a dug den". Worse, it names the seam this lane's own partial cladding created — "`04` uses a brown dirt-and-gravel wall while `05`/`06`/`07` add a grey speckled granite for the same structural role — two unrelated rock materials in adjacent rooms with no transition, so the burrow has no material identity". |
+| **W5** "Burrow-arch reads as tubes, not compacted earth and roots" | named | **not named.** `03-mouth` is now "a genuinely good arch silhouette — the mossy lintel over a dark opening with grass fringing the top is a real piece of landmark language and it is the best-composed frame here." |
+| §5.2 tube-foot sliver | recorded as remaining | **not named** at any size. Below the threshold that matters, on frames rendered before the round-3 overlap fix. |
+
+So: **W5 closed, W1 closed on its own terms, W3 not closed — and half-doing it
+made one of its symptoms worse.** A bay of earth beside unclad stone is two
+materials where there was one. That is a real cost of the partial approach and it
+is this lane's to carry.
+
+### New defects the verdict names that are inside this lane's files
+
+- `03`: "the root/branch dressing hanging over the arch is a flat black scribble
+  with no thickness or overlap; it reads as a decal, not geometry" — the new
+  `brow_root_meshes`, silhouetted against bright sky.
+- `03`: "a **red-and-white striped pole with a white ball on top** ... reads as a
+  barber pole, a survey stake or a debug marker, and it is the single most
+  saturated red in the whole survey". That is the Team Tether lamp post, which
+  round 6 asked for and which now reads as left-in placeholder.
+- `03`: "the bottom 40% of the frame is a single smooth chocolate-brown mass with
+  no texture, no scatter and no detail" — the threshold fan.
+- `03`, `01`: "the moss on the boulders is a bright green band painted only on the
+  upper faces with a hard straight edge where it stops — reads as a decal stripe".
+- `05`: the beacon cluster sits ~1 m from the capture's own eye, which is why it
+  measures 1.5–2 m against a doorway 10 m behind it.
+
+### What the verdict names that is NOT this lane's, recorded so it is not lost
+
+- **The guardian** (its ranked #1): style seam at the neck, two texel densities,
+  dog scale, no staging. W4 / owner call, and creature meshes plus
+  `creature_visual.gd` are fenced off from this lane. **One caution for whoever
+  takes it:** the judge measured against "a doorway a 1.80 m trainer walks through
+  is ~2 m". After this lane's owner-directed height pass those passages are
+  3.2–4.4 m, so the absolute figures ("under 1 m at the shoulder") rest on a wrong
+  premise. The *finding underneath* still stands and is the useful part: a blind
+  viewer had no scale cue in that room and read the boss as dog-sized.
+- **The meadow ground** (its ranked #2): grey not green, bare substrate between
+  isolated blades, evenly-spaced one-scale scatter, no atmospheric perspective.
+  This is W2 — Meadows-wide terrain palette and grass field, explicitly not this
+  lane, and it shares a root cause with Cloudreach's C1.
+- **"The exterior has no sun"**: no cast shadows on terrain in `00`/`01`/`02`,
+  while `01`'s crate and `03`'s near ground both have crisp ones. That pattern is a
+  directional-shadow range limit, not a missing light — `art.json` and the renderer,
+  Meadows-wide.
+- **Asset-set gaps** the judge says the scene cannot fix: the tree set (two
+  silhouettes, flat leaf cards, off-palette trunks), the ground-cover set, the rock
+  set (facet slabs with a painted moss band), and an organic tunnel kit for the
+  interior.
