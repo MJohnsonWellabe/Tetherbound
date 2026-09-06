@@ -77,6 +77,21 @@ const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const CLOUDREACH_SCENE := "res://scenes/world/cloudreach_cliffs.tscn"
 
+## Wave 6 lane 6.A. Realm id -> the AUTHORED ROOT NAME of its world scene, and
+## -> the `boot` step's name for it. The root name is what
+## `change_scene_to_file()` puts at `/root/<name>`, and (per
+## `scripts/net/realm_shells.gd`'s header) it is also where the host mounts a
+## shell -- which is exactly why `_step_enter_realm` compares against
+## `current_scene` and not merely against the node's existence.
+const REALM_ROOT_NAMES := {
+	"meadows": "MeadowsPlayground",
+	"cloudreach": "CloudreachCliffs",
+}
+const REALM_SCENE_NAMES := {
+	"meadows": "world",
+	"cloudreach": "cloudreach",
+}
+
 const DEFAULT_SETTLE_FRAMES := 240
 const HEARTBEAT_FRAMES := 60
 ## ~10s of idle-frame polling for the initial TCP connect, matching the
@@ -462,6 +477,10 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_sleep_stand(args)
 		"sleep_press":
 			out = _step_sleep_press(args)
+		"enter_realm":
+			out = await _step_enter_realm(args)
+		"drop_link":
+			out = await _step_drop_link(args)
 		_:
 			out = {"verdict": "ERROR", "detail": "unknown action '%s'" % action}
 	out["frames_used"] = _physics_count - before
@@ -1287,6 +1306,20 @@ func _session() -> Node:
 	return game.get("session") as Node
 
 
+## Lane 6.A's measurement seam, the same field `tools/net/_probe_s2_shell.gd`
+## reads so the numbers are comparable with spike S2's. -1 where /proc is not
+## readable (not Linux), which a caller reports rather than treats as zero.
+func _read_status_field_kb(field: String) -> int:
+	var f := FileAccess.open("/proc/self/status", FileAccess.READ)
+	if f == null:
+		return -1
+	while not f.eof_reached():
+		var line := f.get_line()
+		if line.begins_with(field):
+			return int(line.replace(field, "").replace("kB", "").strip_edges())
+	return -1
+
+
 func _session_peer_ids() -> Array:
 	var sess := _session()
 	if sess == null or not bool(sess.call("is_active")):
@@ -1362,6 +1395,84 @@ func _step_leave(args: Dictionary) -> Dictionary:
 		await physics_frame
 	return {"verdict": "FAIL", "detail": "%s session was still active %d frames after leave()"
 		% ["host" if was_host else "client", budget]}
+
+
+## Wave 6 lane 6.A, directive rule 16. Cross a realm boundary WITHOUT leaving
+## the session, through the one door the game itself uses --
+## `Game.enter_realm()`. Deliberately not `change_scene_to_file()`: a smoke
+## that swaps the scene by hand proves the scene loads and nothing about the
+## announce/despawn/shell sequence that is the whole lane.
+##
+## `enter_realm()` calls `get_tree().change_scene_to_file()`, which is
+## DEFERRED to the end of the frame, so the step polls for the new world root
+## by name rather than returning on the call. It also updates `_scene_name`,
+## so a later `boot` step with no explicit scene re-boots the right one.
+func _step_enter_realm(args: Dictionary) -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		return {"verdict": "ERROR", "detail": "no /root/Game"}
+	var realm := str(args.get("realm", ""))
+	if realm.is_empty():
+		return {"verdict": "ERROR", "detail": "enter_realm needs args.realm"}
+	var was := str(game.get("current_realm"))
+	if not bool(game.call("enter_realm", realm, str(args.get("entry", "")))):
+		return {"verdict": "FAIL",
+			"detail": "Game.enter_realm('%s') refused from '%s' (can_enter=%s)"
+				% [realm, was, str(game.call("can_enter_realm", realm))]}
+	var wanted := str(REALM_ROOT_NAMES.get(realm, ""))
+	var budget := int(args.get("budget_frames", 6000))
+	for i in maxi(1, budget):
+		await physics_frame
+		if str(game.get("current_realm")) != realm:
+			continue
+		if wanted.is_empty():
+			break
+		var world := root.get_node_or_null(NodePath(wanted))
+		# `current_scene` and not merely "a node of that name": the host also
+		# holds SHELLS at /root under their authored names, and a step that
+		# accepted one of those would pass without the local player having
+		# gone anywhere at all.
+		if world != null and world == current_scene:
+			_scene_name = str(REALM_SCENE_NAMES.get(realm, _scene_name))
+			# Settle, so the arriving world has finished its procedural build
+			# before anything is probed against it.
+			for j in int(args.get("settle_frames", DEFAULT_SETTLE_FRAMES)):
+				await physics_frame
+			return {"verdict": "PASS",
+				"detail": "crossed '%s' -> '%s' after %d frames; current scene is /root/%s"
+					% [was, realm, i, wanted]}
+	return {"verdict": "FAIL", "detail": "enter_realm('%s') never stood /root/%s up as the current scene within %d frames"
+		% [realm, wanted, budget]}
+
+
+## Wave 6 lane 6.A. Vanish, the way a lost connection does -- NOT the way
+## `leave` does.
+##
+## `leave` is an orderly departure: it saves, it tells everybody, it waits for
+## the flush. Deliverable 5 is about the other thing, the case that sank D97's
+## first design: a peer whose link simply stops while it is mid-fight in a
+## realm nobody else is standing in. So this closes the transport out from
+## under the session without going through `Session.leave()` at all, and the
+## host learns about it exactly as it would learn about a pulled cable --
+## through `multiplayer.peer_disconnected`.
+##
+## The PROCESS deliberately stays alive. The harness treats a peer that exits
+## unexpectedly as a fatal run fault (`net_harness.gd::_check_liveness`), and
+## more usefully, a live process can still be probed afterwards to prove it
+## really did lose its session rather than merely stop talking.
+func _step_drop_link(args: Dictionary) -> Dictionary:
+	var api := get_multiplayer()
+	var peer: MultiplayerPeer = api.multiplayer_peer if api != null else null
+	if peer == null or peer is OfflineMultiplayerPeer:
+		return {"verdict": "FAIL", "detail": "no live multiplayer peer to drop"}
+	# `close()` before detaching: ENet sends the disconnect immediately, so the
+	# host does not have to sit out its own connection timeout before
+	# `peer_disconnected` fires and the shell reconcile runs.
+	peer.close()
+	api.multiplayer_peer = null
+	for i in maxi(0, int(args.get("settle_frames", 30))):
+		await physics_frame
+	return {"verdict": "PASS", "detail": "transport closed without a Session.leave()"}
 
 
 func _step_expect_peers(args: Dictionary) -> Dictionary:
@@ -2133,6 +2244,76 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				if dstatus is Dictionary:
 					drow.merge(dstatus as Dictionary, true)
 			return drow
+		"realm":
+			# Wave 6 lane 6.A. Where this peer is standing, and where it
+			# believes everybody else is. The per-peer realms come off the
+			# REGISTRY (`Session.realm_of`), never off `Game.current_realm`,
+			# which D97 makes true of the local player only.
+			var rgame := root.get_node_or_null(^"Game")
+			if rgame == null:
+				return null
+			var rsess := _session()
+			var by_peer: Dictionary = {}
+			if rsess != null and bool(rsess.call("is_active")):
+				for entry: Variant in (rsess.call("peers") as Array):
+					if entry is Dictionary:
+						by_peer[str(int((entry as Dictionary).get("peer_id", 0)))] = \
+							str((entry as Dictionary).get("realm", ""))
+			return {
+				"current": str(rgame.get("current_realm")),
+				"scene": str(current_scene.name) if current_scene != null else "",
+				"peers": by_peer,
+				"occupied": rsess.call("occupied_realms") if rsess != null \
+					and bool(rsess.call("is_active")) else [],
+			}
+		"world_records":
+			# Wave 6 lane 6.A deliverable 5. What the host holds, and what it
+			# has actually WRITTEN. The live half alone would not prove
+			# anything: the whole risk is a realm's world state that lives
+			# only in a scene, and a scene that is freed without being read
+			# back leaves `Game` looking exactly as it does here.
+			#
+			# So the on-disk half is the real assertion: the autosave slot is
+			# re-read from `user://` and counted independently.
+			var wrgame := root.get_node_or_null(^"Game")
+			if wrgame == null:
+				return null
+			var by_realm: Dictionary = {}
+			for entry: Variant in (wrgame.get("placed_buildings") as Array):
+				if typeof(entry) != TYPE_DICTIONARY:
+					continue
+				var wrealm := str((entry as Dictionary).get("realm", "meadows"))
+				by_realm[wrealm] = int(by_realm.get(wrealm, 0)) + 1
+			var disk: Dictionary = {}
+			var wrsave: Variant = wrgame.get("save_system")
+			if wrsave != null:
+				var slot := int(wrgame.call("autosave_slot"))
+				var wrpath := str(wrsave.call("slot_path", slot))
+				var wrf := FileAccess.open(wrpath, FileAccess.READ)
+				if wrf != null:
+					var parsed: Variant = JSON.parse_string(wrf.get_as_text())
+					wrf.close()
+					if parsed is Dictionary:
+						for entry: Variant in ((parsed as Dictionary).get("placed_buildings", []) as Array):
+							if typeof(entry) != TYPE_DICTIONARY:
+								continue
+							var drealm := str((entry as Dictionary).get("realm", "meadows"))
+							disk[drealm] = int(disk.get(drealm, 0)) + 1
+					disk["_file"] = wrpath
+			return {"live": by_realm, "disk": disk}
+		"realm_shells":
+			# The host's headless shells: which realms this process is
+			# simulating for somebody else, what each cost to stand up, and
+			# how many bodies are standing in it. Empty on a client and in
+			# solo, which is itself the assertion in
+			# `smoke_net_split_realms.gd`.
+			var shgame := root.get_node_or_null(^"Game")
+			if shgame == null or not shgame.has_method("realm_shell_report"):
+				return null
+			var shreport: Dictionary = shgame.call("realm_shell_report")
+			shreport["vm_hwm_kb"] = _read_status_field_kb("VmHWM:")
+			shreport["vm_rss_kb"] = _read_status_field_kb("VmRSS:")
+			return shreport
 		"session":
 			# Wave 2 (lane 2.A): a real `scripts/net/session.gd` exists, so
 			# every field here is read off it. `available` stays as the first

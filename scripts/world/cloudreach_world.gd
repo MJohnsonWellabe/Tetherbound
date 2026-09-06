@@ -70,6 +70,22 @@ const BRIDGE_KIT:=preload("res://scripts/world/cloudreach_bridge_kit.gd")
 ## `top_level = true` and follows by code. Remote peers' trainers stand under
 ## `Spawned/Trainers` and are reachable from neither path. `local_rig()` and
 ## `local_camera_rig()` below are the public door.
+## D97 / Wave 6 lane 6.A. This world as a headless realm shell on the host --
+## see `playground_world.gd::simulation_only` for the full account; the
+## contract is identical and the flag is set the same way, by
+## `realm_shells.gd::_stand_up()` before `add_child()`.
+##
+## Cloudreach skips LESS than the Meadows does, and deliberately. Its ground
+## IS authored geometry: `_build_regions()`, `_build_routes()`,
+## `_build_bridges()` and `_build_transition_ledges()` produce the meshes
+## `_rebuild_surface_index()` samples in `ground_height_at()`, so a shell
+## without them has no ground for a host-simulated body to stand on and no
+## answer for the encounter director. What goes is what only looks like
+## something: the cloud sea, the horizon ranges, the ground cover, the arrival
+## beats and the runtime's atmosphere pass.
+@export var simulation_only: bool = false
+@export var shell_realm: String = ""
+
 @onready var _player: CharacterBody3D = $Player
 @onready var _camera_rig: Node3D = $CameraRig
 
@@ -100,6 +116,65 @@ func local_rig() -> CharacterBody3D:
 
 func local_camera_rig() -> Node3D:
 	return _camera_rig
+
+
+## The realm this world stands for, shell or not. See
+## `playground_world.gd::world_realm()`.
+func world_realm() -> String:
+	return shell_realm if not shell_realm.is_empty() else REALM_ID
+
+
+## The Meadows' `_shell_strip()`, for the nodes this scene authors. Same
+## reasoning, node for node -- see `playground_world.gd::_shell_strip()`.
+## `DialoguePanel` stays (D97, amended after spike S2).
+##
+## The HUDs are NOT freed here, and that is the second half of the same
+## measured finding as `build_environment()` above:
+## `cloudreach_world_runtime.gd::mount()` does `world.get_node("PlaygroundHUD")`
+## and adds a `CombatHUD` of its own. Freeing the HUD before `mount()` runs
+## makes that lookup a hard error. They go in `_shell_strip_huds()` instead,
+## after the mount, before the first frame is ever drawn.
+func _shell_strip() -> void:
+	for path: String in ["WorldEnvironment", "Sun", "WorldLook"]:
+		var node := get_node_or_null(NodePath(path))
+		if node != null:
+			node.get_parent().remove_child(node)
+			node.queue_free()
+	var cam := get_node_or_null(^"CameraRig/Camera3D") as Camera3D
+	if cam != null:
+		cam.current = false
+	var rig := get_node_or_null(^"Player") as CharacterBody3D
+	if rig != null:
+		rig.process_mode = Node.PROCESS_MODE_DISABLED
+		rig.visible = false
+		rig.collision_layer = 0
+		rig.collision_mask = 0
+	print("[cloudreach] simulation-only shell for realm '%s': no cloud sea, horizon, ground cover, arrival beats, HUD, sun or environment"
+		% (shell_realm if not shell_realm.is_empty() else REALM_ID))
+
+
+## D97's "no HUD", applied once every node that reads a HUD by name has had
+## its turn. Both of these are `CanvasLayer`s: left standing they draw over
+## the screen of the player who is in the OTHER realm, which is the whole
+## reason a shell is headless.
+func _shell_strip_huds() -> void:
+	for path: String in ["PlaygroundHUD", "CombatHUD"]:
+		var node := get_node_or_null(NodePath(path))
+		if node != null:
+			node.get_parent().remove_child(node)
+			node.queue_free()
+
+
+## Cloudreach's geometry is all authored and always resident, so there is no
+## streaming bubble to re-centre -- but the camera still moves, because
+## anything that samples "the view" (and any future Terrain3D use here) reads
+## it, and a shell whose camera never leaves the arrival ledge is a lie about
+## where its occupants are.
+func track_simulation_focus(at: Vector3) -> void:
+	if not simulation_only:
+		return
+	if _camera_rig != null and is_instance_valid(_camera_rig):
+		_camera_rig.global_position = at
 
 
 func _build_horizon_ranges() -> void:
@@ -142,6 +217,9 @@ func _visual_rock_mass(parent: Node3D,label: String,base: Vector3,size: Vector3,
 
 
 func _ready() -> void:
+	# First, before any node in the scene has run its own `_ready()`.
+	if simulation_only:
+		_shell_strip()
 	add_to_group("progression_restore")
 	# D107, lane 3.E. The two nodes item trading needs standing in every
 	# process before anybody presses anything: the spawner that draws a
@@ -154,7 +232,7 @@ func _ready() -> void:
 	_config = _read_json(CONFIG_PATH)
 	_visual_config = _read_json(VISUAL_CONFIG_PATH)
 	var look := get_node_or_null(^"WorldLook")
-	if look != null:
+	if look != null and not simulation_only:
 		var local_look: Dictionary = (look.get("_config") as Dictionary).duplicate(true)
 		var sky_profile: Dictionary = _visual_config.get("sky_profile", {})
 		(local_look.get("sky", {}) as Dictionary).merge(sky_profile, true)
@@ -165,8 +243,11 @@ func _ready() -> void:
 		push_error("Cloudreach world config missing or invalid: %s" % CONFIG_PATH)
 		return
 	_build_materials()
-	_build_cloud_sea()
-	_build_horizon_ranges()
+	# Pure backdrop: a flat cloud box under the world and the ranges on the
+	# skyline. Nothing stands on either.
+	if not simulation_only:
+		_build_cloud_sea()
+		_build_horizon_ranges()
 	_build_regions()
 	_build_transition_ledges()
 	_build_routes()
@@ -176,23 +257,40 @@ func _ready() -> void:
 	_build_return_gate()
 	_build_authored_route_details()
 	_build_resource_patches()
-	var arrival_beats:=preload("res://scripts/world/cloudreach_arrival_beats.gd").new()
-	arrival_beats.name="ArrivalRoadObservation"
-	add_child(arrival_beats)
-	arrival_beats.call("build",self,_visual_config.get("arrival_beats",{}))
+	if not simulation_only:
+		var arrival_beats := preload("res://scripts/world/cloudreach_arrival_beats.gd").new()
+		arrival_beats.name = "ArrivalRoadObservation"
+		add_child(arrival_beats)
+		arrival_beats.call("build", self, _visual_config.get("arrival_beats", {}))
 	var runtime := WORLD_RUNTIME.new()
 	runtime.name = "CloudreachRuntime"
 	add_child(runtime)
+	# `build_environment()` runs in a shell TOO, and the first attempt to skip
+	# it is the lane's own measured finding rather than a guess: it builds
+	# `SummitArenaPresentation` and `CloudreachBattleYards`, and `mount()`
+	# below reads BOTH (`presentation.bind_finale`, `battle_yards
+	# .trainer_positions`). Skipping it produced 2,567 script errors in one
+	# 240-frame shell boot -- a null `presentation` at mount and then a null
+	# `atmosphere` every single frame in `_sync_returning_travelers()` -- for
+	# 54 MB of static memory. It is arena geometry and battle yards, not the
+	# "VFX" D97 means; see `ralph/reports/MP-6A-REALMS-0906/REPORT.md`.
 	runtime.call("build_environment", self)
-	_build_ground_cover()
+	if not simulation_only:
+		_build_ground_cover()
 	_place_player()
 	_realm_map = _game().call("bind_realm_map", REALM_ID, _player.global_position)
 	var chapter := CHAPTER_RUNTIME.new()
 	chapter.name = "CloudreachChapter"
 	add_child(chapter)
 	runtime.call("mount", self, chapter, _realm_map)
-	_capture_mouse_if_free()
-	get_window().focus_entered.connect(_capture_mouse_if_free)
+	# `get_window()` is the REAL window even for a world that is not the
+	# current scene: an unguarded capture here takes the pointer away from the
+	# player standing in the host's own realm.
+	if not simulation_only:
+		_capture_mouse_if_free()
+		get_window().focus_entered.connect(_capture_mouse_if_free)
+	else:
+		_shell_strip_huds()
 	_sync_progression_gates(_game())
 
 

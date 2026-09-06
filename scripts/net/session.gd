@@ -39,6 +39,7 @@ extends Node
 ##      No spawner here yet (2.C owns the rigs); noted so it is not forgotten.
 
 const PEER_REGISTRY := preload("res://scripts/net/peer_registry.gd")
+const REALM_SHELLS := preload("res://scripts/net/realm_shells.gd")
 const CONFIG_PATH := "res://data/config/multiplayer.json"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 
@@ -57,6 +58,10 @@ const HOST_PEER_ID := PEER_REGISTRY.HOST_PEER_ID
 
 signal peer_joined(peer_id: int, character_id: String)
 signal peer_left(peer_id: int)
+## Wave 6 lane 6.A. Somebody crossed a realm boundary without leaving the
+## session. Emitted on every peer, from the replicated registry, so a world
+## scene can reconcile what it draws without asking who moved.
+signal peer_realm_changed(peer_id: int, from_realm: String, to_realm: String)
 signal snapshot_applied()
 signal session_ended(reason: String)
 
@@ -98,11 +103,19 @@ var _pending_hello: Dictionary = {}
 var _closing_frames: int = 0
 var _closing_reason: String = ""
 
+## Wave 6 lane 6.A: `/root/Game/Session/Realms`, the host's headless shells.
+## Mounted in `_ready()` so its node path is identical in every process, the
+## same reason `LedgerRpc` is mounted with the session rather than by its
+## first consumer.
+var _realms: Node = null
+
 
 func _ready() -> void:
 	name = "Session"
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_config = _load_config()
+	_realms = REALM_SHELLS.new()
+	add_child(_realms)
 	var api := multiplayer
 	if api != null:
 		api.peer_connected.connect(_on_peer_connected)
@@ -172,6 +185,8 @@ func host(port: int = -1, peers: int = -1) -> bool:
 	_box["ended"] = ""
 	_registry.call("clear")
 	_registry.call("add", HOST_PEER_ID, _local_character_id(), _local_display_name(), _local_realm())
+	if _realms != null:
+		_realms.call("reconcile")
 	print("[session] hosting on udp/%d (cap %d, channels %d); local peer id %d"
 		% [use_port, cap, int(_cfg("channel_count", 2)), multiplayer.get_unique_id()])
 	return true
@@ -260,6 +275,8 @@ func kick(peer_id: int) -> bool:
 	_registry.call("remove", peer_id)
 	_broadcast_registry()
 	peer_left.emit(peer_id)
+	if _realms != null:
+		_realms.call("reconcile")
 	return true
 
 
@@ -278,6 +295,105 @@ func is_active() -> bool:
 ## `enter_realm()` refusal and D105's sleep vote both key off.
 func is_multi_peer() -> bool:
 	return peer_count() > 1
+
+
+# --- realms (Wave 6 lane 6.A) ----------------------------------------------------
+
+## The host's shell manager, `/root/Game/Session/Realms`. Never null after
+## `_ready()`; a caller still checks, because a `Session` reached through
+## `Object.call()` before its first frame is a real state.
+func realms() -> Node:
+	return _realms
+
+
+## Which realm a peer is standing in, from the replicated registry. THE answer
+## to that question for anybody but the local player -- D97 is explicit that
+## nothing authoritative reads `Game.current_realm`, and from this lane on
+## that global is only ever true of this process.
+func realm_of(peer_id: int) -> String:
+	if not is_active():
+		return _local_realm() if peer_id == local_peer_id() else ""
+	var row: Dictionary = _registry.call("row", peer_id)
+	return str(row.get("realm", ""))
+
+
+## Every peer standing in `realm`, ordered by peer id.
+func peers_in_realm(realm: String) -> Array:
+	var out: Array = []
+	for entry: Variant in peers():
+		if entry is Dictionary and str((entry as Dictionary).get("realm", "")) == realm:
+			out.append(int((entry as Dictionary).get("peer_id", 0)))
+	return out
+
+
+## Every realm somebody is standing in right now, ordered. What
+## `realm_shells.gd` reconciles against.
+func occupied_realms() -> Array:
+	var seen: Dictionary = {}
+	for entry: Variant in peers():
+		if entry is Dictionary:
+			var realm := str((entry as Dictionary).get("realm", ""))
+			if not realm.is_empty():
+				seen[realm] = true
+	var out: Array = seen.keys()
+	out.sort()
+	return out
+
+
+## Directive rule 16, this end of it. `game_state.gd::enter_realm()` calls this
+## BEFORE it swaps the scene, and that ordering is the deliverable: the host
+## takes this peer's body out of the realm it is leaving while the peer is
+## still standing in it, so nobody is left drawing a trainer who has gone.
+##
+## Solo and session-less: nothing to tell anybody, and no shells to keep, so
+## this is a no-op and a crossing is exactly what it always was.
+func announce_realm(from_realm: String, to_realm: String) -> void:
+	if not is_active() or from_realm == to_realm:
+		return
+	if is_host():
+		_apply_realm_change(HOST_PEER_ID, from_realm, to_realm)
+		return
+	# The client tells the host and moves. It does NOT wait for an
+	# acknowledgement: `enter_realm()` is a synchronous call reached through
+	# `Object.call()`, and nothing in this file is a coroutine (see `_box`).
+	# The cost is bounded and known -- for the round trip the host still holds
+	# a body for this peer in the realm it has left, which the reconcile below
+	# then removes. The alternative, a client that cannot walk through a gate
+	# until a packet comes back, is worse and is not what rule 16 asks for.
+	rpc_id(HOST_PEER_ID, "_rpc_realm_changed", from_realm, to_realm)
+
+
+## Client -> host, ledger channel. Reliable: a lost realm change would leave
+## the host simulating the wrong world for this peer indefinitely.
+@rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_realm_changed(from_realm: String, to_realm: String) -> void:
+	if not is_host():
+		return
+	var sender := multiplayer.get_remote_sender_id()
+	if not bool(_registry.call("has", sender)):
+		return
+	# The host trusts the peer about where IT is standing and nothing else:
+	# `from_realm` is taken from the registry, not from the packet, so a peer
+	# cannot claim to have left a realm it was never in.
+	_apply_realm_change(sender, str(_registry.call("row", sender).get("realm", "")), to_realm)
+
+
+## The one place a realm change lands, whoever moved. Registry first (it is
+## what `realm_shells.gd` and the per-realm spawners read), then the
+## replication, then the shells, then the signal.
+func _apply_realm_change(peer_id: int, from_realm: String, to_realm: String) -> void:
+	if from_realm == to_realm:
+		return
+	_registry.call("set_realm", peer_id, to_realm)
+	# BEFORE the shells reconcile. `trainer_spawn.gd` listens for this and
+	# despawns the moving peer's body out of the realm it has left, which is
+	# what stops everybody still there from drawing a trainer who has gone --
+	# and it has to happen while that world is still standing, because a shell
+	# torn down by the reconcile takes its own spawner with it.
+	peer_realm_changed.emit(peer_id, from_realm, to_realm)
+	_broadcast_registry()
+	if _realms != null:
+		_realms.call("reconcile")
 
 
 ## Peers in the session. 1 when solo or session-less: the local player is
@@ -338,6 +454,11 @@ func _rpc_hello(summary: Dictionary) -> void:
 	rpc_id(sender, "_rpc_snapshot", _world_snapshot())
 	_broadcast_registry()
 	peer_joined.emit(sender, character_id)
+	# The joiner may be arriving into a realm this process is not standing in
+	# (a rejoin carries the character's last realm forward, `peer_registry
+	# .gd::add`). Standing its shell up is this call, not a special case.
+	if _realms != null:
+		_realms.call("reconcile")
 
 
 ## Host -> one joiner, snapshot channel. The whole world, as
@@ -356,7 +477,27 @@ func _rpc_snapshot(data: Dictionary) -> void:
 ## header explains why whole and not a delta).
 @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
 func _rpc_registry(payload: Dictionary) -> void:
+	# The realms BEFORE the load, so a client can tell which peers actually
+	# moved. Without this a client learns of a realm change only as a body
+	# that stopped updating: `peer_realm_changed` is what its own world scene
+	# reconciles what it draws against, and only the host reaches
+	# `_apply_realm_change()`.
+	var before: Dictionary = {}
+	for entry: Variant in (_registry.call("rows") as Array):
+		if entry is Dictionary:
+			before[int((entry as Dictionary).get("peer_id", 0))] = str((entry as Dictionary).get("realm", ""))
 	_registry.call("load_data", payload)
+	for entry: Variant in (_registry.call("rows") as Array):
+		if not (entry is Dictionary):
+			continue
+		var row: Dictionary = entry
+		var id := int(row.get("peer_id", 0))
+		if not before.has(id):
+			continue
+		var was := str(before[id])
+		var now := str(row.get("realm", ""))
+		if was != now:
+			peer_realm_changed.emit(id, was, now)
 
 
 ## Host -> everyone, ledger channel. D105: `day` and `clock_elapsed_seconds` are
@@ -398,6 +539,13 @@ func _on_peer_disconnected(peer_id: int) -> void:
 		_broadcast_registry()
 		peer_left.emit(peer_id)
 		print("[session] peer %d left; %d remain" % [peer_id, peer_count()])
+		# Deliverable 5, and the case that sank D97's first design: the peer
+		# who just vanished may have been the only one in its realm, and its
+		# shell holds world state nothing else does. `reconcile()` tears that
+		# shell down THROUGH the host's own world save, so a disconnect
+		# mid-fight in an otherwise empty realm loses nothing.
+		if _realms != null:
+			_realms.call("reconcile")
 
 
 func _on_connected_to_server() -> void:
@@ -500,6 +648,11 @@ func _save_character_here() -> void:
 
 
 func _teardown() -> void:
+	# Before the peer goes away, not after: `realm_shells.gd::_tear_down()`
+	# asks `Game.is_host()` whether it may write the world, and that answer
+	# flips the moment `_mode` is cleared below.
+	if _realms != null:
+		_realms.call("release_all")
 	if multiplayer != null and multiplayer.multiplayer_peer == _peer and _peer != null:
 		multiplayer.multiplayer_peer = null
 	if _peer != null:

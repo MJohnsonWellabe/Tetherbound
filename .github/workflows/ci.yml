@@ -1906,7 +1906,19 @@ jobs:
   # rule AGENT_WORKFLOW.md §5 already holds every other smoke to.
   verify-multiplayer-shard:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    # Was 25, which the thirteen Wave 2-5 smokes filled in 20 (run 34015409321).
+    # Lane 6.A's two rule-16 smokes add four to five Meadows-class WORLD BUILDS
+    # between them -- a realm crossing is a scene swap on the crossing peer and
+    # a shell stand-up on the host, and neither is free. Measured on lane 6.A's
+    # box (ralph/reports/MP-6A-REALMS-0906/REPORT.md §4): a full Meadows 65 s, a
+    # Meadows shell 46 s, a full Cloudreach 56 s, a Cloudreach shell 32 s. That
+    # is +11 to +13 minutes, which does not fit in 25.
+    #
+    # 45 is 20 + that, plus margin for a slower runner. It is an ESTIMATE built
+    # from measured build costs, not a measurement of this shard: the first real
+    # run is what should correct it, in either direction. A shard that finishes
+    # in 32 minutes does not need 45.
+    timeout-minutes: 45
     needs: changes
     if: needs.changes.outputs.code == 'true'
     steps:
@@ -1947,14 +1959,22 @@ jobs:
           # control); Wave 2 added host/join/leave and movement; lane 3.D added
           # storage_concurrency; lane 4.B added deploy_two_creatures; lane 3.C
           # added shared_building; lane 3.B added pickup_race; lane 5.C added
-          # fog_is_personal.
+          # fog_is_personal; lane 6.A added split_realms and
+          # realm_owner_disconnect_mid_fight -- the two most expensive smokes
+          # in the shard, because directive rule 16 costs five world builds
+          # between them (see each smoke's own header).
           #
           # The number is the TRUE count of files declaring the header, not a
           # lane's guess at it -- every lane raises it by one and a merge of
           # several at once has to be reconciled against the directory rather
           # than against whichever lane's line won the conflict.
-          if [ "$count" -lt 13 ]; then
-            echo "::error::expected at least 13 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
+          # Lane 6.A regenerated this from the FILES ON DISK rather than
+          # incrementing the previous line, which is what the shard's own
+          # comment above asks for: five lanes are adding smokes into this
+          # wave at once and an incremented guess reconciles to whichever
+          # lane's conflict resolution won, not to the tree.
+          if [ "$count" -lt 15 ]; then
+            echo "::error::expected at least 15 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
             exit 1
           fi
           # added shared_building; lane 3.B added pickup_race; lane 5.D added
@@ -1977,10 +1997,12 @@ jobs:
             tests/smoke_net_movement_two_peers.gd \
             tests/smoke_net_peer_death.gd \
             tests/smoke_net_pickup_race.gd \
+            tests/smoke_net_realm_owner_disconnect_mid_fight.gd \
             tests/smoke_net_revive.gd \
             tests/smoke_net_shared_building.gd \
             tests/smoke_net_shared_wild_fight.gd \
             tests/smoke_net_sleep_vote.gd \
+            tests/smoke_net_split_realms.gd \
             tests/smoke_net_storage_concurrency.gd \
             tests/smoke_net_trade.gd \
             tests/smoke_net_two_peers_boot.gd

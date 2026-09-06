@@ -57,6 +57,14 @@ const IDLE_SPEED := 0.15
 @export var peer_id: int = 0
 @export var character_id: String = ""
 @export var display_name: String = ""
+## Wave 6 lane 6.A. The realm this body was spawned INTO, stamped by
+## `trainer_spawn.gd::_spawn_trainer()` from the spawn data. Deliberately not
+## replicated per-frame and deliberately not "the realm its owner is in": when
+## the owner crosses a boundary the host despawns this body and spawns a new
+## one in the destination, so this value is fixed for the body's whole life
+## and a body whose realm disagrees with its owner's is a body that should
+## already be gone.
+@export var net_realm: String = ""
 
 ## The replicated set (lane 2.C deliverable 4): position, yaw, animation
 ## state, sprint, carried. Authored into the synchronizer's

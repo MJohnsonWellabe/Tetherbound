@@ -1332,21 +1332,49 @@ func can_enter_realm(realm_id: String) -> bool:
 ## `save_game()`'s pose capture: after `current_realm` changes, a pose captured
 ## from the outgoing scene would be labelled as the destination and could drop
 ## the player at a valid but unrelated coordinate on Continue.
+##
+## ## Directive rule 16, lifted (Wave 6 lane 6.A)
+##
+## This used to REFUSE outright in a multi-peer session -- D97's interim rule,
+## because a crossing rebuilds only this peer's scene and the host would have
+## gone on simulating one realm for two players standing in different ones.
+## The refusal is gone. What replaces it is not a removed guard but
+## `Session.announce_realm()` below and the three things it drives:
+##
+##   1. the host's registry learns where this peer now is, and every peer's
+##      copy of it does (`peer_registry.gd::set_realm` -> `_broadcast_registry`);
+##   2. `trainer_spawn.gd` in the realm being LEFT despawns this peer's body,
+##      while that world is still standing, so nobody there is left drawing a
+##      trainer who has gone;
+##   3. `realm_shells.gd` stands up a headless shell for the realm being
+##      entered if the host is not itself in it, and folds down -- through the
+##      host's own world save -- any realm this leaves empty.
+##
+## The call is made BEFORE `change_scene_to_file()` for step 2's sake. It is
+## also made before the transition autosave is skipped or taken, so a client
+## crossing a boundary never depends on having written anything.
+##
+## A client swapping its own world scene does NOT leave the session: nothing
+## here touches the peer, and `Session` is a child of this autoload rather
+## than of any scene, so it outlives the swap unchanged.
 func enter_realm(realm_id: String, entry_id: String = "") -> bool:
 	if not can_enter_realm(realm_id):
-		return false
-	# D97's interim rule, which lane 6.A lifts once the host runs a headless
-	# realm shell per occupied realm. Until then a crossing rebuilds only THIS
-	# peer's scene, and the host would go on simulating one realm for two
-	# players standing in different ones -- so it is refused out loud rather
-	# than half-done. Solo is unaffected: `is_multi_peer()` is false with one
-	# peer, which is what a solo session is.
-	if is_multi_peer():
-		push_world_message("Travelling between realms is closed while others are in your world.")
 		return false
 	var scene := str(realm_hearts.call("scene_for_realm", realm_id))
 	if not ResourceLoader.exists(scene):
 		push_error("realm '%s' points at missing scene %s" % [realm_id, scene])
+		return false
+	var leaving := current_realm
+	if leaving == realm_id:
+		# Not a crossing, and in a multi-peer session it is worse than a
+		# no-op. A same-realm call would rebuild THIS peer's scene -- taking
+		# every remote trainer body it had received down with it -- while
+		# announcing nothing, because a realm change from X to X is not one.
+		# The host would therefore never despawn and respawn anything, and
+		# this peer would be left permanently unable to see the people
+		# standing next to it. Nothing in the game does this (`realm_gate.gd`
+		# is the only caller and always names the other side), so refusing is
+		# free; leaving it open is not.
 		return false
 	_sync_placed_building_state()
 	_sync_death_satchel_state()
@@ -1360,11 +1388,44 @@ func enter_realm(realm_id: String, entry_id: String = "") -> bool:
 	bind_realm_map()
 	pending_realm_entry = entry_id
 	saved_player_pose = {}
+	# Rule 16's ordering. Before the save and before the scene swap: the host
+	# has to take this peer out of the world it is leaving while that world is
+	# still standing on every peer that can see it.
+	announce_realm(leaving, realm_id)
 	# D100: the transition autosave is a WORLD write, so only the host makes it.
 	if save_system != null and is_host():
 		save_system.call("save", self, autosave_slot())
 	get_tree().change_scene_to_file(scene)
 	return true
+
+
+## The realm-change seam, in one place so `enter_realm()` is the only caller
+## that has to know a `Session` may not exist. Solo and session-less crossings
+## are unchanged by construction: `session.gd::announce_realm()` returns
+## immediately when there is no live session.
+func announce_realm(from_realm: String, to_realm: String) -> void:
+	if session == null or not session.has_method("announce_realm"):
+		return
+	session.call("announce_realm", from_realm, to_realm)
+
+
+## Which realm a peer is standing in. `current_realm` answers that for the
+## LOCAL player only, and D97 is explicit that nothing authoritative may read
+## it for anybody else -- from Wave 6 two peers stand in two realms at once.
+func realm_of_peer(peer_id: int) -> String:
+	if session == null or not session.has_method("realm_of"):
+		return current_realm
+	return str(session.call("realm_of", peer_id))
+
+
+## The host's live realm shells, or an empty report on a client or solo.
+func realm_shell_report() -> Dictionary:
+	if session == null or not session.has_method("realms"):
+		return {}
+	var realms: Variant = session.call("realms")
+	if not (realms is Node) or not (realms as Node).has_method("report"):
+		return {}
+	return (realms as Node).call("report")
 
 
 func pending_entry_for(realm_id: String) -> String:
