@@ -45,7 +45,7 @@ two people in it, or that a friend's creature reads as theirs. Those are the own
 | 17 | Ride and Fly while others act | *lanes 6.B / 6.C not started* | ☐ |
 | 18 | Transition independently | **HELD** — built by 6.A, refusal re-instated: the shell boot freezes the host past 15 s (D97) | ☐ |
 | 19 | Different biomes simultaneously | **HELD** — same cause as 18; the machinery is built and measured, the door is shut (D97) | ☐ |
-| 20 | Save world + portable characters | `test_world_save_format`, `test_save_format` (59 tests). **The character half is not yet written** — lane 1.C deferred; a client writes no character file today | ☐ |
+| 20 | Save world + portable characters | `test_world_save_format` (15 tests, 90 assertions), `test_character_save_format` (16/83), `test_legacy_slot_split_never_touches_the_original` (10/44), `test_split_key_coverage_equals_v22` (9/40), `test_save_format` (59/354), and `smoke_net_host_join_leave`, which now asserts the host wrote a world file, the client wrote none, and the client wrote exactly one character file — its own | ☐ |
 | 21 | Disconnect and reconnect | *lane 7.A not started* | ☐ |
 | 22 | Late-join a modified world | *lane 7.A not started* | ☐ |
 | 23 | Host plays solo when alone | Solo **is** a one-peer session through the same funnel; every solo smoke is this row's evidence | ☐ |
@@ -79,8 +79,12 @@ Recorded here so a reader does not have to infer them from silence:
   measurements and what the next attempt must settle.
 - **`smoke_aggression` and the combat-camera smoke are genuinely flaky**, measured against
   untouched bases by two independent lanes.
-- **The character save half is not written**, so "portable character" (row 20) is a forward
-  assertion rather than a demonstrated behaviour.
+- **The v22 slot file is still written alongside the D100 split** (lane 1.C, 2026-09-06). D100
+  replaces `user://saves/slot_<n>.json` with the two new files; 1.C writes the two new files and
+  keeps writing the slot, because `save_game.gd::slot_path()` is read by the Gate F operator
+  harness, by `tools/net/peer_runner.gd`'s desync hash (on every peer, host and client) and by
+  nineteen test files. `load_slot()` still reads the slot. Retiring it is a separate change with
+  its own blast radius; see `ralph/reports/MP-1C-CHARSAVE-0906/REPORT.md`.
 
 ## The verdict
 

@@ -261,11 +261,41 @@ const SLOT_COUNT := 5
 ## beyond this comment — any slot reads and writes the same way.
 const AUTOSAVE_SLOT := 0
 
+## D100's two savers. The v22 slot file above is still written, unchanged and
+## byte-identical, and is still what `load_slot()` reads -- see `_write_split()`
+## for why this lane ADDED the split rather than replacing the slot with it.
+const WORLD_SAVE := preload("res://scripts/save/world_save.gd")
+const CHARACTER_SAVE := preload("res://scripts/save/character_save.gd")
+
 var _dir: String
+var _worlds: RefCounted = null
+var _characters: RefCounted = null
 
 
+## `dir` is the slot directory. The two D100 directories are the real
+## `user://worlds/` and `user://characters/` ONLY for the real slot directory:
+## a saver pointed at a scratch directory (every test in `tests/`, and
+## `smoke_alpha_pins`) gets scratch split directories under it, so a unit test
+## can never leave a world or a character behind where a real playthrough on the
+## same machine would find it.
 func _init(dir: String = "user://saves/") -> void:
 	_dir = dir if dir.ends_with("/") else dir + "/"
+	if _dir == "user://saves/":
+		_worlds = WORLD_SAVE.new("user://worlds/")
+		_characters = CHARACTER_SAVE.new("user://characters/")
+	else:
+		_worlds = WORLD_SAVE.new(_dir + "worlds/")
+		_characters = CHARACTER_SAVE.new(_dir + "characters/")
+
+
+## The two savers, for a caller that needs to read a world or a character
+## without going through a slot (`session.gd`, `tests/`).
+func worlds() -> RefCounted:
+	return _worlds
+
+
+func characters() -> RefCounted:
+	return _characters
 
 
 func slot_path(slot: int) -> String:
@@ -282,19 +312,60 @@ func slot_info(slot: int) -> Dictionary:
 	var data := _read(slot)
 	if data.is_empty():
 		return {}
+	var version := int(data.get("version", 0)) if _finite_number(data.get("version")) else 0
 	return {
 		"day": int(data.get("day", 1)),
 		"party_size": (data.get("party", []) as Array).size(),
 		"realm": str(data.get("current_realm", "meadows")),
+		# D100: the title screen lists a slot written by an older build under a
+		# "Legacy" label until it has been opened once, because opening it is
+		# what splits it into a world and a character. Derived from the stamped
+		# version rather than from "is there a legacy-slot-N directory": a slot
+		# the player has since re-saved is at the current version and is not
+		# legacy any more, and the directory would say it forever.
+		"legacy": version > 0 and version < VERSION,
 	}
 
 
 ## Serialize `game` into `slot`. Returns whether the write succeeded.
-func save(game: Object, slot: int) -> bool:
+##
+## D100's split is written ALONGSIDE the slot file, not instead of it -- see
+## `_write_split()`.
+##
+## `write_split` exists for ONE caller shape: a scratch write that is not a save
+## of record. `tools/net/peer_runner.gd` calls `save()` into a scratch slot on
+## every heartbeat purely to hash the bytes back, and on every peer. Letting
+## that write the D100 store would mint a world and a character named after the
+## scratch slot, stamp that scratch id onto the live `Game.local` -- where the
+## peer registry then advertises it to everybody -- and rewrite both files
+## several times a second. A hash probe must not be able to rename a trainer.
+func save(game: Object, slot: int, write_split: bool = true) -> bool:
 	if slot < 0 or slot >= SLOT_COUNT:
 		return false
 	DirAccess.make_dir_recursive_absolute(_dir)
 
+	var data := snapshot(game)
+	var file := FileAccess.open(slot_path(slot), FileAccess.WRITE)
+	if file == null:
+		return false
+	file.store_string(JSON.stringify(data, "\t"))
+	# A save may be loaded again immediately from the same UI/session. Close the
+	# writer before reporting success so that read never observes a buffered or
+	# partially flushed JSON document.
+	file.close()
+	if write_split:
+		_write_split(game, slot, data)
+	return true
+
+
+## The v22 save dictionary for `game`, with nothing written to disk.
+##
+## Split out of `save()` by lane 1.C because three callers now need the
+## dictionary rather than the file: `save()` itself, `save_world()` and
+## `save_character()`. `tools/net/peer_runner.gd`'s desync hash wanted exactly
+## this and said so ("no dictionary-only accessor"), but it is left alone here:
+## re-pointing it is a harness change in another lane's file, and it works.
+func snapshot(game: Object) -> Dictionary:
 	var map_obj: Variant = game.get("map")
 	var progression_obj: Variant = game.get("progression")
 	var realm_hearts_obj: Variant = game.get("realm_hearts")
@@ -326,16 +397,7 @@ func save(game: Object, slot: int) -> bool:
 		"clock_elapsed_seconds": _read_clock(game),
 	}
 	data["realm_maps"] = game.call("save_realm_maps") if game.has_method("save_realm_maps") else _realm_map_payloads(data)
-
-	var file := FileAccess.open(slot_path(slot), FileAccess.WRITE)
-	if file == null:
-		return false
-	file.store_string(JSON.stringify(data, "\t"))
-	# A save may be loaded again immediately from the same UI/session. Close the
-	# writer before reporting success so that read never observes a buffered or
-	# partially flushed JSON document.
-	file.close()
-	return true
+	return data
 
 
 ## Rehydrate `game` from `slot`. Returns whether a save was actually applied —
@@ -357,6 +419,10 @@ func load_slot(game: Object, slot: int) -> bool:
 	data = _migrate_to_current(data, version, slot)
 	if data.is_empty():
 		return false
+
+	# D100, before a single field is applied: this slot becomes one world file
+	# and one character file, and the slot file itself is not touched.
+	_split_legacy_slot(game, slot, data)
 
 	game.set("day", int(data.get("day", 1)))
 	_array_to_party(data.get("party", []), game.get("party"))
@@ -437,6 +503,157 @@ func load_slot(game: Object, slot: int) -> bool:
 	elif game.has_meta("pending_fly_load"):
 		game.remove_meta("pending_fly_load")
 	return true
+
+
+# --- D100: the world/character split -------------------------------------------
+##
+## ## Why the v22 slot file is still written
+##
+## D100 replaces the slot with `user://worlds/<world_id>/world.json` plus
+## `user://characters/<character_id>/character.json`, and this lane writes both.
+## It does NOT stop writing `user://saves/slot_<n>.json`, and that is a
+## deliberate, reported deviation rather than an unfinished half:
+## `slot_path()` is read by the whole Gate F operator harness, by
+## `tools/net/peer_runner.gd`'s desync hash (which calls `save()` and reads the
+## bytes back on EVERY peer, host and client alike), and by nineteen test files.
+## Refusing the slot write on a client would have returned `null` from that hash
+## on every client heartbeat, which the coordinator reports as a harness fault --
+## four other lanes' smokes, broken by a save-format lane. So the slot file
+## stays exactly what it was, byte for byte, and the split is written next to it.
+##
+## What that costs is one duplicated copy of the same dictionary on disk. What
+## it buys is that no path in the game changed shape while the character half
+## was being added, so a defect here cannot lose an existing save.
+
+## Write the D100 pair for a slot write. Never fatal: a failed split leaves the
+## slot file -- which is still the one `load_slot()` reads -- untouched and
+## correct.
+##
+## Ownership, exactly as D100 states it: the host writes the world file, EVERY
+## peer writes its own character file, and a client never writes a world file.
+## `_is_host()` asks the game, never `multiplayer.is_server()` -- with an
+## `OfflineMultiplayerPeer` that call is true and `get_unique_id()` is 1, so it
+## cannot tell a solo player from a host and cannot tell a client from either.
+func _write_split(game: Object, slot: int, data: Dictionary) -> void:
+	var world_id := _world_id_for(game, slot)
+	var character_id := _character_id_for(game, slot)
+	if _is_host(game):
+		_worlds.call("write", world_id, WORLD_SAVE.partition(data),
+			{"display_name": _display_name(game)})
+	_characters.call("write", character_id, CHARACTER_SAVE.partition(data),
+		{"display_name": _display_name(game), "last_world_id": world_id})
+
+
+## Write only this peer's character file. `session.gd::_save_character_here()`
+## calls this on a client, which has no slot and no business writing a world.
+func save_character(game: Object, character_id: String) -> bool:
+	if game == null or character_id.is_empty():
+		return false
+	var data := snapshot(game)
+	var world_id := ""
+	var world: Variant = game.get("world")
+	if world != null:
+		world_id = str((world as RefCounted).get("world_id"))
+	return bool(_characters.call("write", character_id, CHARACTER_SAVE.partition(data),
+		{"display_name": _display_name(game), "last_world_id": world_id}))
+
+
+## Write only the world file. Refuses on a client, so a caller cannot get the
+## ownership rule wrong by calling the wrong function.
+func save_world(game: Object, world_id: String) -> bool:
+	if game == null or world_id.is_empty() or not _is_host(game):
+		return false
+	return bool(_worlds.call("write", world_id, WORLD_SAVE.partition(snapshot(game)),
+		{"display_name": _display_name(game)}))
+
+
+## D100: a v<=22 slot splits on FIRST LOAD into one world and one character, and
+## the original file is never modified and never deleted.
+##
+## Nothing in this function opens the slot file at all -- it is handed the
+## dictionary `load_slot()` already read and migrated in memory, so "the
+## original is untouched" is a property of the code shape and not of a promise.
+## `tests/test_legacy_slot_split_never_touches_the_original.gd` asserts the
+## bytes and the modification time are identical either side of a load.
+##
+## Both halves record `migrated_from: slot_<n>`, and neither is rewritten on a
+## second load: the split is a migration, and re-running it over a slot the
+## player has since continued from would throw away whatever the world has done
+## since.
+func _split_legacy_slot(game: Object, slot: int, data: Dictionary) -> void:
+	var world_id := "legacy-slot-%d" % slot
+	var character_id := "legacy-slot-%d" % slot
+	var origin := "slot_%d" % slot
+	var wrote_world := false
+	if not bool(_worlds.call("has", world_id)):
+		wrote_world = bool(_worlds.call("write", world_id, WORLD_SAVE.partition(data),
+			{"display_name": _display_name(game), "migrated_from": origin}))
+	if not bool(_characters.call("has", character_id)):
+		_characters.call("write", character_id, CHARACTER_SAVE.partition(data),
+			{"display_name": _display_name(game), "migrated_from": origin,
+			 "last_world_id": world_id})
+	if wrote_world:
+		print("[save] split %s into worlds/%s and characters/%s (original untouched)" % [
+			origin, world_id, character_id,
+		])
+	# Adopt the migrated ids onto the live state, so the next `save()` to this
+	# slot continues writing the world it just migrated rather than minting a
+	# second one beside it (`_world_id_for`).
+	_adopt_id(game.get("world"), "world_id", world_id)
+	_adopt_id(game.get("local"), "character_id", character_id)
+
+
+func _adopt_id(holder: Variant, field: String, id: String) -> void:
+	if holder == null:
+		return
+	if str((holder as RefCounted).get(field)).is_empty():
+		(holder as RefCounted).set(field, id)
+
+
+## Which world file a slot write goes to.
+##
+## The slot owns the id. A live id is honoured only when it is already this
+## slot's -- either the id this saver mints for it or the one the legacy split
+## migrated it to -- so New Game, then Save to slot 2, writes slot 2's world
+## rather than overwriting the world that was loaded from slot 1 before it.
+func _world_id_for(game: Object, slot: int) -> String:
+	var id := "slot-%d" % slot
+	var world: Variant = game.get("world") if game != null else null
+	if world != null:
+		var live := str((world as RefCounted).get("world_id"))
+		if live == id or live == "legacy-slot-%d" % slot:
+			return live
+		(world as RefCounted).set("world_id", id)
+	return id
+
+
+func _character_id_for(game: Object, slot: int) -> String:
+	var id := "slot-%d" % slot
+	var local: Variant = game.get("local") if game != null else null
+	if local != null:
+		var live := str((local as RefCounted).get("character_id"))
+		if live == id or live == "legacy-slot-%d" % slot:
+			return live
+		(local as RefCounted).set("character_id", id)
+	return id
+
+
+## "May this process write the world?" -- `game_state.gd::is_host()`, which is
+## true solo, true for a host, and true for a process with no session at all
+## (a headless test, a capture tool, the `FakeGame` in `test_save_format.gd`).
+func _is_host(game: Object) -> bool:
+	if game == null:
+		return false
+	if not game.has_method("is_host"):
+		return true
+	return bool(game.call("is_host"))
+
+
+func _display_name(game: Object) -> String:
+	var local: Variant = game.get("local") if game != null else null
+	if local == null:
+		return ""
+	return str((local as RefCounted).get("display_name"))
 
 
 ## A completed Meadows save may predate the Warden's realm rewards, including

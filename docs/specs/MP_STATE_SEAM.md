@@ -229,3 +229,15 @@ Until 2.A exists, `is_host()` is a stub returning true.
   coercing.
 - The merged view's `save_data`/`load_data` (§2) are 1.C's to delete, together with the
   top-level `alpha_pins` key that `Game.save_game()` still emits for v22 compatibility.
+
+**What 1.C actually did, 2026-09-06 — read this before acting on the line above.** Neither was
+deleted, and the reason is the same one for both: `save_game.gd` still writes the v22 slot file.
+D100's split is written *alongside* it (`world_save.gd`, `character_save.gd`), not instead of it,
+because `slot_path()` is read by the Gate F operator harness, by `tools/net/peer_runner.gd`'s
+desync hash — which calls `save()` and reads the bytes back on **every peer, host and client** —
+and by nineteen test files; a client that refused the slot write would have returned `null` from
+that hash on every heartbeat, which the coordinator reports as a harness fault. So the merged
+view's `save_data`/`load_data` are still the flag store the slot file goes through, and the
+top-level `alpha_pins` key is still emitted. Inside the split, `alpha_pins` and `map` are
+**derived** on merge from `realm_maps` rather than stored, which is the outcome §2 wanted. The
+lane that retires the slot file deletes all three together.

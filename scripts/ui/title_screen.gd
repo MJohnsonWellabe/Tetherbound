@@ -527,7 +527,12 @@ func _show_load_slots() -> void:
 			button.text = "%s — Empty" % label
 			button.disabled = true
 		else:
-			button.text = "%s — Day %d · %d Pals" % [label, int(info.get("day", 1)), int(info.get("party_size", 0))]
+			# D100's "Legacy saves" mark: a slot from an older build, which
+			# this load will split into a world and a character without
+			# touching the slot file itself.
+			var legacy := " (Legacy)" if bool(info.get("legacy", false)) else ""
+			button.text = "%s%s — Day %d · %d Pals" % [
+				label, legacy, int(info.get("day", 1)), int(info.get("party_size", 0))]
 			var chosen := slot
 			button.pressed.connect(func() -> void: _load_slot(chosen))
 			if first == null:

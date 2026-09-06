@@ -629,14 +629,19 @@ func _save_world_here() -> void:
 
 ## Deliverable 4/D100's other half: every peer writes its own character.
 ##
-## HONEST GAP, recorded rather than faked: the character file does not exist
-## yet. D100's split (`user://characters/<id>/character.json`) is a later lane's
-## deliverable, and today the only writer is `save_game.gd`, whose file carries
-## the WORLD keys too -- so calling it here is exactly the thing a client must
-## not do. Until the split lands a client writes nothing on leave, which is why
-## `smoke_net_host_join_leave.gd` asserts the client's autosave slot stays
-## absent: that assertion is what will have to be re-pointed (not deleted) when
-## the character half becomes writable.
+## D100's autosave ownership at the one site that is not `Game.autosave_here()`:
+## the host writes its world (through the slot save, which writes the split pair
+## with it), and a client writes ONLY its own portable character file.
+##
+## Lane 1.C wrote the second half. Before it, this printed "no character file to
+## write yet" and a client left a session having recorded nothing at all -- the
+## fog it had walked off, the creatures it had levelled and the satchel it had
+## filled all went with the process.
+##
+## `_capture_player_pose()` first, for the same reason `game_state.gd::save_game()`
+## calls it before every slot write: a character file whose pose is wherever the
+## trainer last happened to be captured drops them somewhere else on the next
+## Continue, which is exactly the thing a portable character must not do.
 func _save_character_here() -> void:
 	var game := _game()
 	if game == null:
@@ -644,7 +649,17 @@ func _save_character_here() -> void:
 	if is_host():
 		game.call("save_game", int(game.call("autosave_slot")))
 		return
-	print("[session] client leave: no character file to write yet (D100 split is a later lane)")
+	var save_system: Variant = game.get("save_system")
+	if save_system == null:
+		push_warning("[session] client leave: no Game.save_system to write a character with")
+		return
+	if game.has_method("_capture_player_pose"):
+		game.call("_capture_player_pose")
+	var character_id := _local_character_id()
+	if bool((save_system as RefCounted).call("save_character", game, character_id)):
+		print("[session] client leave: wrote character '%s' (no world file -- D100)" % character_id)
+	else:
+		push_warning("[session] client leave: could not write character '%s'" % character_id)
 
 
 func _teardown() -> void:
