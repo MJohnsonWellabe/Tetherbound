@@ -84,6 +84,10 @@ const STORY_LEDGER := preload("res://scripts/story/story_ledger.gd")
 
 ## Lane 4.D. The trainer table, read the way the game reads it.
 const NET_TRAINERS := preload("res://scripts/world/trainer_npc.gd")
+## Row 21's `party_grant`: the opening's own door into `Game.party`, and the
+## level curve `adopt_starter()` reads for a starter.
+const PARTY_SEAM := preload("res://scripts/story/party_seam.gd")
+const NET_PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const NET_REWARDS := preload("res://scripts/net/encounter_rewards.gd")
 ## Wave 6 lanes 6.B/6.C. Riding and Fly.
 const NET_RIDING := preload("res://scripts/world/riding_controller.gd")
@@ -409,9 +413,18 @@ func _handle_message(msg: Dictionary) -> void:
 	match kind:
 		"step":
 			var result := await _execute_step(msg)
+			# `data` is the one passthrough: a step that has a STRUCTURED
+			# answer -- not just a verdict and a sentence -- puts it there and
+			# it reaches `net_harness.gd::step()`'s return value intact. Added
+			# for row 8, where a host striker's §5 refusal is the return value of
+			# `submit_encounter_intent` and nothing else (finding F4), so the
+			# smoke had no way to read `ok`/`pending`/`code` off the strike arm.
+			# `{}` when a step names none, so every step written before this line
+			# is byte-for-byte unchanged on the wire.
 			_send({"type": "verdict", "id": msg.get("id", ""),
 				"verdict": str(result.get("verdict", "ERROR")),
 				"detail": str(result.get("detail", "")),
+				"data": (result.get("data", {}) as Dictionary),
 				"frames_used": int(result.get("frames_used", 0))})
 		"probe":
 			var value = await _execute_probe(msg)
@@ -536,6 +549,14 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			return await _step_trainer_battle(args)
 		"win_trainer_battle":
 			return await _step_win_trainer_battle(args)
+		"place_stand_in":
+			out = await _step_place_stand_in(args)
+		"party_grant":
+			out = _step_party_grant(args)
+		"save_character_here":
+			out = _step_save_character_here(args)
+		"wipe_character":
+			out = _step_wipe_character(args)
 		"sleep_stand":
 			out = await _step_sleep_stand(args)
 		"story_flag":
@@ -1963,7 +1984,17 @@ func _step_place_creature(args: Dictionary) -> Dictionary:
 	# the air over sloping ground and then SLIDING while it settles -- measured
 	# at up to 2 m of drift in a 20-frame settle, which is enough to walk a
 	# deliberately-aimed swing out of its own cone.
-	if node.has_method("place_on_ground"):
+	#
+	# `exact` skips that query and uses the literal coordinates. Added for the
+	# boss smoke, where the caller's Y comes off the encounter record -- the
+	# opponent's OWN height, host truth -- and asking the world for a different
+	# one is the thing that goes wrong: inside the stronghold the terrain height
+	# under the Warden Arena is metres away from the floor the fight is standing
+	# on, and both creatures were placed 6-8 m above the boss (finding F2).
+	# OFF by default, so every caller written before this line is unchanged.
+	if bool(args.get("exact", false)):
+		node.global_position = target
+	elif node.has_method("place_on_ground"):
 		node.call("place_on_ground", target)
 	else:
 		node.global_position = target
@@ -1978,6 +2009,59 @@ func _step_place_creature(args: Dictionary) -> Dictionary:
 		await physics_frame
 	return {"verdict": "PASS", "detail": "creature stands at (%.2f, %.2f, %.2f)"
 		% [node.global_position.x, node.global_position.y, node.global_position.z]}
+
+
+## Stage B row 8. Move this peer's OWN LOCAL stand-in for the opponent.
+##
+## A joiner in a fight it did not start is fighting beside a body of its own:
+## `encounter_director.gd::join_encounter()` binds the manager to
+## `nearest_live_wild()`, whichever ambient creature happens to be closest to the
+## joining player. Wild bodies are not replicated (the acceptance file's first
+## known-open, lane 4.B's H1), so that stand-in can be ten metres from where the
+## host holds the real opponent -- and the joiner's own combat manager keeps
+## pulling its creature back to it, which is what makes a deliberately-placed
+## creature drift away from the fight it is supposed to be swinging at.
+##
+## This arm moves the stand-in to where the host says the opponent is, so the
+## joiner's LOCAL view agrees with the host's. It changes nothing about any
+## outcome: `MP_ENCOUNTER_PROTOCOL.md` §2 resolves every strike against HOST
+## positions, which is exactly what keeps the drift cosmetic in the first place.
+## It is the thing wild replication will do for free when it lands, done by hand
+## in the meantime so a smoke's geometry is not a lottery over which ambient
+## creature stood nearest.
+##
+## Deliberately NOT a way to move the HOST's opponent: on the host this body IS
+## the authoritative one, so the step refuses there rather than quietly letting a
+## smoke teleport the creature everyone is fighting.
+func _step_place_stand_in(args: Dictionary) -> Dictionary:
+	var manager := _combat_manager()
+	if manager == null:
+		return {"verdict": "ERROR", "detail": "no CombatManager in this scene"}
+	var sess := _session()
+	if sess != null and bool(sess.call("is_active")) and bool(sess.call("is_host")):
+		return {"verdict": "ERROR",
+			"detail": "this peer is the HOST -- its opponent body is the authoritative one, "
+				+ "and this arm only moves a joiner's local stand-in"}
+	var body: Variant = manager.call("enemy_body")
+	if body == null or not is_instance_valid(body):
+		return {"verdict": "FAIL", "detail": "this peer has no opponent body to move"}
+	var at: Array = args.get("at", []) as Array
+	if at.size() != 3:
+		return {"verdict": "ERROR", "detail": "place_stand_in needs args.at = [x, y, z]"}
+	var node: Node3D = body
+	node.global_position = Vector3(float(at[0]), float(at[1]), float(at[2]))
+	if node is CharacterBody3D:
+		(node as CharacterBody3D).velocity = Vector3.ZERO
+	# `home` too, or the wild wanders straight back to where it was standing:
+	# `wild_creature.gd`'s peaceful tick returns it to `home` and the combat tick
+	# repositions around it.
+	if node.get("home") != null:
+		node.set("home", node.global_position)
+	for i in maxi(0, int(args.get("settle", 20))):
+		await physics_frame
+	var p: Vector3 = node.global_position
+	return {"verdict": "PASS", "detail": "local stand-in '%s' stands at (%.2f, %.2f, %.2f)"
+		% [str(node.name), p.x, p.y, p.z]}
 
 
 ## Submit a `strike_intent` through the production door, with a chosen facing.
@@ -2023,8 +2107,25 @@ func _step_strike(args: Dictionary) -> Dictionary:
 	})
 	for i in maxi(0, int(args.get("settle", 45))):
 		await physics_frame
-	return {"verdict": "PASS", "detail": "submitted %s strike (local verdict ok=%s code=%s)"
-		% [slot, str(verdict.get("ok", false)), str(verdict.get("code", ""))]}
+	# The LOCAL verdict, reported as fields and not only inside the detail
+	# string. On a HOST striker `submit_encounter_intent` commits synchronously
+	# and the answer -- including a §5 refusal -- is this return value; only a
+	# CLIENT's answer arrives later through `note_encounter_refusal`, which is
+	# what the `encounter`/`boss` probes' `refusal` reads. A smoke asserting on a
+	# host's refusal had nowhere to read it (row 8, finding F4).
+	#
+	# `pending` is carried through verbatim. A client's `{"ok": false, "pending":
+	# true}` is the host being asked, NOT the host saying no, and collapsing the
+	# two is how a "refused" is reported that never happened.
+	return {"verdict": "PASS", "detail": "submitted %s strike (local verdict ok=%s pending=%s code=%s)"
+		% [slot, str(verdict.get("ok", false)), str(verdict.get("pending", false)),
+		   str(verdict.get("code", ""))],
+		"data": {
+			"ok": bool(verdict.get("ok", false)),
+			"pending": bool(verdict.get("pending", false)),
+			"code": str(verdict.get("code", "")),
+			"reason": str(verdict.get("reason", "")),
+		}}
 
 
 func _combat_manager() -> Node:
@@ -2725,12 +2826,29 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 	var swings := 0
 	var frames := 0
 	var creatures_seen := {}
+	## Stop EARLY, with the named number of their creatures still queued, rather
+	## than fighting the whole team down. -1 (the default) fights to the end, so
+	## every caller written before this line runs the fight it ran.
+	##
+	## `smoke_net_shared_boss.gd` needs this because §10 scaling is applied at
+	## SEND-OUT (`encounter_director.gd::_send_next_trainer_creature`), so the
+	## creature that was already on the field when a second player joined is not
+	## scaled -- the record's row is re-derived, the body's stats are not. To
+	## assert scaling at two participants the smoke has to reach a creature that
+	## came out AFTER the join, which is the boss's second.
+	var stop_at := int(args.get("stop_when_creatures_left", -1))
 	while bool(director.call("trainer_battle_active")) and frames < budget:
 		await physics_frame
 		frames += 1
 		if not bool(manager.call("is_fighting")):
 			# The beat between their creatures. Nothing to do but let it pass.
 			continue
+		# Checked BEFORE the ceiling below, so an early stop hands the caller a
+		# creature at full health rather than one already pulled down to it.
+		if stop_at >= 0 and int(director.call("trainer_creatures_left")) <= stop_at:
+			return {"verdict": "PASS",
+				"detail": "stopped with %d of their creatures still queued after %d frames / %d swings"
+					% [int(director.call("trainer_creatures_left")), frames, swings]}
 		if frames % stride != 0:
 			continue
 		var mine: Variant = manager.call("active_creature")
@@ -2746,6 +2864,24 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 				or body == null or not is_instance_valid(body):
 			continue
 		creatures_seen[str((opponent as Node3D).name)] = true
+		# `smoke_boss.gd`'s own allowance, for its own stated reason and with the
+		# same words: "the opponent's HP is pulled low so a level-1 starter can
+		# finish a level-20 ace inside a CI budget: this test is about WIRING,
+		# not balance." A headless peer fights with the starter
+		# `deploy_creature` adopted, and the Warden fields five creatures at
+		# levels 18-20; measured without this, see MP-ROWS-8-21-0906 finding F3.
+		#
+		# OFF by default (0.0), so every caller that existed before this line --
+		# row 7's trainer payout among them -- runs the fight it ran.
+		#
+		# It touches `hp`, never `max_hp`, and a smoke asserting on §10 scaling
+		# must therefore read `max_hp`/`attack`/`defence` BEFORE calling this
+		# arm. `smoke_net_shared_boss.gd` does, and says so.
+		var ceiling := float(args.get("enemy_hp_ceiling", 0.0))
+		if ceiling > 0.0:
+			var theirs: Variant = (opponent as Node3D).get("instance")
+			if theirs != null and float((theirs as RefCounted).get("hp")) > ceiling:
+				(theirs as RefCounted).set("hp", ceiling)
 		var target: Vector3 = (opponent as Node3D).call("centre")
 		var stand := target + Vector3(1.1, 0.0, 0.0)
 		if (body as Node3D).has_method("place_on_ground"):
@@ -2810,6 +2946,204 @@ func _trainer_body_named(trainer_id: String) -> Node3D:
 		if body != null and is_instance_valid(body):
 			return body as Node3D
 	return null
+
+
+## Row 21. What this process holds in MEMORY for the local character: the party
+## as `<species>@<level>` rows, the WHOLE satchel, and the PLAYER-scoped flags
+## named by the caller.
+##
+## The party is reported as species+level rather than as a count. A count of 1
+## before and 1 after would pass a restore that came back with somebody else's
+## creature, and "the same character" is the row.
+##
+## The satchel is the whole thing, not a list of named items, so the comparison
+## against the file is total. Read through `gate_f_probe.gd::inventory_snapshot`
+## -- id -> count over every occupied slot -- for the reason that file exists:
+## one definition of "what is this peer carrying", shared with every other
+## smoke.
+##
+## The flags asked about are checked against `Game.local.flags` -- the PLAYER
+## half -- and NOT against `Game.progression`, the merged view. A world flag
+## reaches every peer through the host's snapshot, so reading the merged view
+## would let a world flag stand in for the player-scoped one the character file
+## is supposed to carry.
+func _character_view(game: Node, args: Dictionary) -> Dictionary:
+	var local: Variant = game.get("local")
+	if local == null:
+		return {}
+	var party_rows: Array = []
+	var party: Variant = (local as RefCounted).get("party")
+	if party != null:
+		for i in int((party as RefCounted).call("size")):
+			var member: Variant = (party as RefCounted).call("at", i)
+			if member != null:
+				party_rows.append("%s@%d" % [str((member as RefCounted).get("species_id")),
+					int((member as RefCounted).get("level"))])
+	var flags_set: Dictionary = {}
+	var flags: Variant = (local as RefCounted).get("flags")
+	for flag: Variant in args.get("flags", []):
+		flags_set[str(flag)] = flags != null and bool((flags as RefCounted).call("has", str(flag)))
+	return {
+		"party": party_rows,
+		"party_size": party_rows.size(),
+		"satchel": _probe.call("inventory_snapshot"),
+		"player_flags": flags_set,
+		"display_name": str((local as RefCounted).get("display_name")),
+		"satiety": float((local as RefCounted).get("satiety")),
+	}
+
+
+## Row 21. The same things, read out of `character_save.gd::state()` -- i.e. out
+## of the FILE -- in the same shape, so the smoke compares like with like
+## instead of comparing a shape to a claim.
+##
+## `state()`'s `party` and `inventory` are the SAVED rows, not live objects, so
+## both are read off dictionaries. A saved stack is `{"id", "n"}` --
+## `autoload/inventory.gd`'s own shape, which `save_game.gd::_stack_from_json`
+## round-trips verbatim -- and NOT `{"item_id", "count"}`; reading the wrong
+## pair here would report an empty satchel for a full one, which fails in the
+## direction that looks like the feature being broken.
+func _character_file_view(state: Dictionary, args: Dictionary) -> Dictionary:
+	var party_rows: Array = []
+	for raw: Variant in (state.get("party", []) as Array):
+		if typeof(raw) != TYPE_DICTIONARY:
+			continue
+		var row := raw as Dictionary
+		party_rows.append("%s@%d" % [str(row.get("species_id", "")), int(row.get("level", 0))])
+	var satchel: Dictionary = {}
+	for raw: Variant in (state.get("inventory", []) as Array):
+		if typeof(raw) != TYPE_DICTIONARY:
+			continue
+		var stack := raw as Dictionary
+		var id := str(stack.get("id", ""))
+		if id.is_empty():
+			continue
+		satchel[id] = int(satchel.get(id, 0)) + int(stack.get("n", 0))
+	var held: Array = []
+	var raw_flags: Variant = state.get("flags", {})
+	if typeof(raw_flags) == TYPE_DICTIONARY:
+		var ids: Variant = (raw_flags as Dictionary).get("flags", [])
+		if typeof(ids) == TYPE_ARRAY:
+			held = ids as Array
+	var flags_set: Dictionary = {}
+	for flag: Variant in args.get("flags", []):
+		flags_set[str(flag)] = held.has(str(flag))
+	return {
+		"party": party_rows,
+		"party_size": party_rows.size(),
+		"satchel": satchel,
+		"player_flags": flags_set,
+		"display_name": str(state.get("display_name", "")),
+		"satiety": float(state.get("satiety", -1.0)),
+	}
+
+
+## Row 21. Put a creature in this peer's PARTY, through the seam the opening
+## itself uses.
+##
+## `deploy_creature` is not this: it calls `adopt_starter()`, which spawns the
+## ally BODY and sets `_ally`, and never touches `Game.party` -- the opening adds
+## the chosen creature separately, through `party_seam.gd`. Measured on row 21's
+## first run: a peer that had "deployed its own creature" still reported a party
+## of zero, so a reconnect smoke asserting on the party had nothing to assert on.
+##
+## `party_seam.gd::add()` is that separate door and its own header calls itself
+## "the one place the opening sequence touches the party", so this is the
+## production path and not a poke at `autoload/party.gd`. The instance is built
+## the way `adopt_starter()` builds one -- `SPECIES.spawn()` then `set_level()` at
+## `progression.json`'s own `starter_level` -- so what lands in the party is an
+## ordinary creature of the kind the game hands out, not a hand-assembled one.
+##
+## The five-creature rule is untouched: `party.add()` is what enforces it and it
+## is the thing being called, so a sixth is refused here exactly as it is
+## refused everywhere else, and the refusal is reported.
+func _step_party_grant(args: Dictionary) -> Dictionary:
+	var species := str(args.get("species", "bramblebun"))
+	var creature: RefCounted = SPECIES_DATA.spawn(species)
+	if creature == null:
+		return {"verdict": "ERROR", "detail": "species.json has no '%s'" % species}
+	var cfg: Dictionary = NET_PROGRESSION.config()
+	var level := int(args.get("level",
+		int((cfg.get("level", {}) as Dictionary).get("starter_level", 3))))
+	creature.call("set_level", level, cfg)
+	if not bool(PARTY_SEAM.add(creature, str(args.get("nickname", "")))):
+		return {"verdict": "FAIL",
+			"detail": "party_seam.add('%s') refused -- the party is full (five, and there is no sixth slot)"
+				% species}
+	var game := root.get_node_or_null(^"Game")
+	var party: Variant = game.get("party") if game != null else null
+	var size := int((party as RefCounted).call("size")) if party != null else -1
+	if not PARTY_SEAM.has_game_state():
+		return {"verdict": "FAIL",
+			"detail": "party_seam is running on its FALLBACK array, not Game.party -- "
+				+ "a creature added here would never reach the real party"}
+	return {"verdict": "PASS", "detail": "'%s' at level %d joined the party (%d member(s))"
+		% [species, level, size]}
+
+
+## Row 21. Write this peer's own save through the production autosave door.
+##
+## `Game.autosave_here()` and nothing hand-rolled: D100 routes there, and on a
+## client it is exactly `session.gd::_save_character_here()` -- the call a real
+## disconnect makes. A step that called `save_character()` itself would be
+## testing this file's idea of how a character is written rather than the
+## game's.
+func _step_save_character_here(_args: Dictionary) -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		return {"verdict": "ERROR", "detail": "no /root/Game"}
+	var local: Variant = game.get("local")
+	var character_id := str((local as RefCounted).get("character_id")) if local != null else ""
+	var wrote_world := bool(game.call("autosave_here"))
+	var save_system: Variant = game.get("save_system")
+	var on_disk := false
+	if save_system != null and not character_id.is_empty():
+		var characters: Variant = (save_system as RefCounted).call("characters")
+		on_disk = characters != null and bool((characters as RefCounted).call("has", character_id))
+	if not on_disk:
+		return {"verdict": "FAIL",
+			"detail": "autosave_here() left no character file for '%s' (wrote_world=%s)"
+				% [character_id, str(wrote_world)]}
+	return {"verdict": "PASS", "detail": "character '%s' is on disk (wrote_world=%s)"
+		% [character_id, str(wrote_world)]}
+
+
+## Row 21. Install a BLANK character over the top of this process's own, in
+## memory only, leaving the file on disk alone.
+##
+## This is the step that makes the reconnect assertion falsifiable. Lane 7.A's
+## smoke asserted that a rejoiner's party was unchanged, and that was true
+## because the process never restarted and never lost it -- its own header says
+## so. After this step the process holds nothing, so a party that comes back
+## after the rejoin can only have come off the file.
+##
+## `PlayerState.load_data({})` and not a hand-written clear: it is the game's
+## own loader, so what is left behind is exactly the blank character a freshly
+## booted process holds (`_array_to_party`/`_array_to_inventory` both clear
+## before they fill, `flags.load_data({})` empties the player half, satiety
+## returns to 100, the pose and maps empty). `character_id` is deliberately
+## preserved -- `load_data` defaults it to the current value when the payload
+## names none -- because the id is how the rejoin finds the file, and a harness
+## that wiped it would be testing nothing.
+func _step_wipe_character(_args: Dictionary) -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		return {"verdict": "ERROR", "detail": "no /root/Game"}
+	var local: Variant = game.get("local")
+	if local == null:
+		return {"verdict": "ERROR", "detail": "no Game.local to wipe"}
+	var party: Variant = (local as RefCounted).get("party")
+	var before := int((party as RefCounted).call("size")) if party != null else -1
+	var character_id := str((local as RefCounted).get("character_id"))
+	(local as RefCounted).call("load_data", {})
+	var after := int((party as RefCounted).call("size")) if party != null else -1
+	var kept := str((local as RefCounted).get("character_id"))
+	if kept != character_id:
+		return {"verdict": "FAIL", "detail": "the wipe lost the character id ('%s' -> '%s')"
+			% [character_id, kept]}
+	return {"verdict": "PASS",
+		"detail": "in-memory character blanked (party %d -> %d), id '%s' kept, file untouched"
+			% [before, after, kept]}
 
 
 func _progression_store() -> RefCounted:
@@ -3917,6 +4251,157 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				var mb: Vector3 = (mine_body as Node3D).global_position
 				out["my_creature_pos"] = [mb.x, mb.y, mb.z]
 			return out
+		"boss":
+			# Stage B Wave 8, row 8. What `smoke_net_shared_boss.gd` asserts on:
+			# the ONE host record two pilots are in, and -- the part row 7 never
+			# had to ask -- what §10 / D-MP12 scaling did to the opponent
+			# standing in it.
+			#
+			# Three sets of numbers, from three places, because the claim is a
+			# comparison between them and collapsing any two would make it
+			# unfalsifiable:
+			#
+			#   * `record` -- the host's encounter record (§3: "the `hp` on this
+			#     record is THE hit points"), including the `scaling` row the
+			#     host stamped when `participants` last changed;
+			#   * `live` -- the opponent creature instance actually on the
+			#     field, AFTER `encounter_director.gd::
+			#     _scale_opponent_for_the_session()` has had it;
+			#   * `authored` -- the same team entry rebuilt from
+			#     `trainers.json` through the production
+			#     `trainer_npc.gd::creature_for()`, UNSCALED. Keyed by species,
+			#     which is unique across the Warden's five.
+			#
+			# `authored` is deliberately re-derived rather than hard-coded in
+			# the smoke: `creature_for()` is fully deterministic (no level roll,
+			# no IV roll, no trait roll -- `creature_instance.gd::from_species`
+			# defaults every one of them), so this is the SAME authored source
+			# the fight itself read, and a species curve retune moves both sides
+			# together instead of turning this into a false red. What must NOT
+			# move together is hp against attack/defence, and that is what the
+			# smoke compares.
+			var bdirector := _encounter_director()
+			var bmanager := _combat_manager()
+			if bdirector == null or bmanager == null:
+				return {"available": false}
+			var brec: Dictionary = bdirector.call("encounter_record")
+			var bopponent: Dictionary = brec.get("opponent", {}) as Dictionary
+			var bargs: Dictionary = msg.get("args", {}) as Dictionary
+			var btrainer := str(bargs.get("trainer", "warden_aldis"))
+			var bspec: Dictionary = NET_TRAINERS.trainer(btrainer)
+			var authored: Dictionary = {}
+			for entry: Variant in NET_TRAINERS.team_of(bspec):
+				if typeof(entry) != TYPE_DICTIONARY:
+					continue
+				var built: RefCounted = NET_TRAINERS.creature_for(entry as Dictionary)
+				if built == null:
+					continue
+				authored[str(built.get("species_id"))] = {
+					"level": int(built.get("level")),
+					"max_hp": float(built.get("max_hp")),
+					"attack": float(built.get("attack")),
+					"defence": float(built.get("defence")),
+					"attack_cooldown": float((built.get("combat_override") as Dictionary)
+						.get("attack_cooldown", 0.0)),
+				}
+			var live: Dictionary = {}
+			var benemy: Variant = bmanager.call("enemy_body")
+			if benemy != null and is_instance_valid(benemy):
+				var binstance: Variant = (benemy as Node3D).get("instance")
+				if binstance != null:
+					live = {
+						"species_id": str((binstance as RefCounted).get("species_id")),
+						"level": int((binstance as RefCounted).get("level")),
+						"hp": float((binstance as RefCounted).get("hp")),
+						"max_hp": float((binstance as RefCounted).get("max_hp")),
+						"attack": float((binstance as RefCounted).get("attack")),
+						"defence": float((binstance as RefCounted).get("defence")),
+						"attack_cooldown": float(((binstance as RefCounted)
+							.get("combat_override") as Dictionary).get("attack_cooldown", 0.0)),
+					}
+			return {
+				"available": true,
+				"is_boss": NET_TRAINERS.is_boss(bspec),
+				"trainer": btrainer,
+				"defeat_flag": str(bspec.get("defeat_flag", "")),
+				"reward_flags": NET_TRAINERS.reward_flags(bspec),
+				"team_size": NET_TRAINERS.team_of(bspec).size(),
+				"battle_active": bool(bdirector.call("trainer_battle_active")),
+				"battle_id": str(bdirector.call("trainer_battle_id")),
+				"creatures_left": int(bdirector.call("trainer_creatures_left")),
+				"record": {
+					"id": str(brec.get("encounter_id", "")),
+					"bound_id": str(bmanager.call("encounter_id")),
+					"kind": str(brec.get("kind", "")),
+					"phase": str(brec.get("phase", "")),
+					"realm": str(brec.get("realm", "")),
+					"seq": int(brec.get("seq", 0)),
+					"participants": (brec.get("participants", {}) as Dictionary).keys(),
+					"hp": float(bopponent.get("hp", -1.0)),
+					"hp_max": float(bopponent.get("hp_max", -1.0)),
+					"species_id": str(bopponent.get("species_id", "")),
+					"position": bopponent.get("position", []),
+					"scaling": brec.get("scaling", {}),
+					# §10's targeting spread, as the host's own tally: how many
+					# times `pick_struck` has chosen each participant to be hit.
+					# `host_pick_struck_participant`'s own header says a pick IS
+					# a hit on this path ("`move_connects` is the miss test, and
+					# both branches deal damage once a participant has been
+					# picked"), so a tally that did not move over a window is the
+					# host saying the boss landed nothing on that peer in it.
+					# Row 8 uses it to take the boss OUT of its friendly-fire
+					# measurement: the victim's creature is standing in a live
+					# boss fight and the boss hits it (finding F9).
+					"struck_counts": brec.get("struck_counts", {}),
+				},
+				"local_peer_id": bdirector.call("_local_peer_id"),
+				"live": live,
+				"authored": authored,
+				# §10's gate, reported so a scaling assertion that goes red says
+				# WHICH of the four conditions
+				# `encounter_director.gd::_scale_opponent_for_the_session()`
+				# refused on. Without it "live == authored" is indistinguishable
+				# between "the multiplier was not applied", "the multiplier was
+				# applied and then overwritten" and "the host does not think it
+				# is in a session".
+				"scaling_gate": {
+					"is_host": bool(bdirector.call("_is_host")),
+					"is_multi_peer": bool(bdirector.call("_is_multi_peer")),
+					"encounter_host": bdirector.get("_encounter_host") != null,
+					"director_encounter_id": str((bdirector.get("_encounter") as Dictionary)
+						.get("encounter_id", "")),
+				},
+				"refusal": bmanager.get("last_encounter_refusal"),
+			}
+		"character_restore":
+			# Stage B Wave 8, row 21. The two halves the reconnect smoke has to
+			# tell apart: what this process holds in MEMORY, and what
+			# `user://characters/<id>/character.json` holds ON DISK.
+			#
+			# Reported side by side and never merged, because the whole point of
+			# the row is which of the two a rejoiner's party came from. Lane
+			# 7.A's smoke could only read the first, so "the character survived"
+			# was true by the process never having lost it.
+			var crargs: Dictionary = msg.get("args", {}) as Dictionary
+			var crgame := root.get_node_or_null(^"Game")
+			if crgame == null:
+				return {}
+			var crlocal: Variant = crgame.get("local")
+			var crsave: Variant = crgame.get("save_system")
+			var crid := str(crargs.get("character_id", ""))
+			if crid.is_empty() and crlocal != null:
+				crid = str((crlocal as RefCounted).get("character_id"))
+			var crfile: Dictionary = {}
+			if crsave != null and not crid.is_empty():
+				var crchars: Variant = (crsave as RefCounted).call("characters")
+				if crchars != null and bool((crchars as RefCounted).call("has", crid)):
+					crfile = (crchars as RefCounted).call("state", crid) as Dictionary
+			return {
+				"character_id": crid,
+				"live": _character_view(crgame, crargs),
+				"file": _character_file_view(crfile, crargs),
+				"file_exists": not crfile.is_empty(),
+			}
 		"trainer_reward":
 			# Lane 4.D. Everything `smoke_net_boss_rewards_each_participant`
 			# asserts on, read off this peer's own live objects.

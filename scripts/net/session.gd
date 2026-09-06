@@ -220,6 +220,14 @@ func join(ip: String, port: int = -1, character_summary: Dictionary = {}) -> boo
 	_box["ended"] = ""
 	_registry.call("clear")
 
+	# D100's portable half, on the way IN. Before the summary is built, so a
+	# restored character's own realm and display name are what this peer
+	# announces rather than the blank ones a fresh process holds. See
+	# `_restore_character_here()` for why this is here and not after the
+	# snapshot.
+	_adopt_character_id(str(character_summary.get("character_id", "")))
+	_restore_character_here(str(character_summary.get("character_id", "")))
+
 	var summary := character_summary.duplicate(true)
 	if not summary.has("character_id"):
 		summary["character_id"] = _local_character_id()
@@ -660,6 +668,88 @@ func _save_character_here() -> void:
 		print("[session] client leave: wrote character '%s' (no world file -- D100)" % character_id)
 	else:
 		push_warning("[session] client leave: could not write character '%s'" % character_id)
+
+
+## A caller who joins AS a named character makes this process that character.
+##
+## FINDING this fixes, found by row 21: `join()` put the caller's
+## `character_id` into `_pending_hello` and nowhere else, so the registry row,
+## the world and the other peers all knew this peer as (say)
+## `reconnect-smoke-character` while its own `PlayerState.character_id` stayed
+## empty. `_local_character_id()` then MINTED a `peer-<pid>-<usec>` id on the way
+## out, and `_save_character_here()` wrote the character file under THAT --
+## a file the next join by the announced id could never find. The write and the
+## read were addressing two different names for one trainer.
+##
+## Only ever a stamp, never a clear: an empty argument leaves whatever this
+## process already had, so `join()` with no summary keeps minting exactly as it
+## did.
+func _adopt_character_id(wanted_id: String) -> void:
+	if wanted_id.is_empty():
+		return
+	var game := _game()
+	if game == null:
+		return
+	var local: Variant = game.get("local")
+	if local == null:
+		return
+	(local as RefCounted).set("character_id", wanted_id)
+
+
+## D100's portable half, on the way back IN, and the other half of
+## `_save_character_here()` above. **§17 item 21.**
+##
+## `character_save.gd::apply()` was written by lane 1.C as "the entry point for
+## the multiplayer paths that have a character id and no slot at all" and had no
+## caller: every peer WROTE `user://characters/<id>/character.json` on the way
+## out and nothing ever read one back, so a rejoiner arrived as whatever its
+## process still happened to hold in memory. A peer whose process restarted --
+## the case the file exists for -- arrived as a blank trainer.
+##
+## Called from `join()` rather than after the host's snapshot, for two reasons:
+## the character half names no world (that is the whole point of the split, see
+## `character_save.gd`'s header), so it does not need the world to exist yet;
+## and the hello this peer is about to send carries its display name and realm,
+## which have to be the RESTORED ones or the registry row advertises a trainer
+## nobody is playing.
+##
+## `false`, never fatal, on every miss: no id, no save system, no file. Joining
+## as a fresh trainer is the correct outcome for a character that has never been
+## saved, which is every first join, and it must not be an error.
+##
+## **Only when the caller NAMED a character.** An empty `wanted_id` returns
+## immediately and does not fall back to `_local_character_id()`, because the
+## other caller on this tree is `scripts/mp/join_driver.gd`, which dials with no
+## summary at all -- and `title_screen.gd::_begin_join()` has already loaded slot
+## 0 by then. Restoring over the top of a slot the player just chose to continue
+## would replace their party with whatever the character file last held, which is
+## the one thing this must not do. When that screen grows the character picker its
+## own comment promises, it will name an id and come through here.
+##
+## The HOST never comes through here at all: `host()` does not call it.
+func _restore_character_here(wanted_id: String) -> bool:
+	if wanted_id.is_empty():
+		return false
+	var game := _game()
+	if game == null:
+		return false
+	var character_id := wanted_id
+	var save_system: Variant = game.get("save_system")
+	if save_system == null:
+		return false
+	var characters: Variant = (save_system as RefCounted).call("characters")
+	if characters == null:
+		return false
+	if not bool((characters as RefCounted).call("has", character_id)):
+		print("[session] join: no character file for '%s'; arriving as a fresh trainer"
+			% character_id)
+		return false
+	if not bool((characters as RefCounted).call("apply", game, character_id)):
+		push_warning("[session] join: could not apply character '%s'" % character_id)
+		return false
+	print("[session] join: restored character '%s' from disk (D100 portable half)"
+		% character_id)
+	return true
 
 
 func _teardown() -> void:

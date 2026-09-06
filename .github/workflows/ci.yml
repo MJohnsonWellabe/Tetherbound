@@ -2006,10 +2006,11 @@ jobs:
           # landing, which is what the shard's own comment above asks for:
           # several lanes add smokes into one wave and an incremented guess
           # reconciles to whichever lane's conflict resolution won, not to the
-          # tree. This landing is the case in point: one branch said 26 and the
-          # other 24, and neither was right for the merged tree.
-          if [ "$count" -lt 28 ]; then
-            echo "::error::expected at least 28 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
+          # tree. Two landings running: one branch said 26, another 24, another
+          # 27 -- none of them right for the merged tree, which is the whole
+          # argument for regenerating rather than incrementing.
+          if [ "$count" -lt 29 ]; then
+            echo "::error::expected at least 29 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
             exit 1
           fi
           # Named registration, on top of the count. Discovery alone would let a
@@ -2039,6 +2040,7 @@ jobs:
             tests/smoke_net_reconnect_keeps_character.gd \
             tests/smoke_net_revive.gd \
             tests/smoke_net_riding.gd \
+            tests/smoke_net_shared_boss.gd \
             tests/smoke_net_shared_building.gd \
             tests/smoke_net_shared_wild_fight.gd \
             tests/smoke_net_sleep_vote.gd \
