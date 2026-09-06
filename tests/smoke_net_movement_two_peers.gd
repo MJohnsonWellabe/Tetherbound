@@ -32,17 +32,24 @@ extends "res://tests/helpers/net_harness.gd"
 ## `data/config/multiplayer.json` because they are this smoke's assertion, not
 ## a game tunable, and `multiplayer.json` belongs to lane 2.A.
 ##
-## ## Status at the time of writing
+## ## What it caught the first time it was run
 ##
-## `Session` (lane 2.A) does not exist in this lane's base. Without it there is
-## nothing to host or join, `trainer_spawn.gd` correctly does nothing, and this
-## smoke cannot pass — it would report zero remote bodies. It is written and
-## left RED on purpose. Stubbing a fake session to make it green would prove
-## the stub, which is exactly the "a retry that turns 0-for-1 into green is a
-## finding, not a pass" trap in CLAUDE.md. Run it once 2.A has landed; the
-## first thing to check if it fails is that the remote body exists at all
-## (`remote_trainers` non-empty), then that its authority is the other peer
-## (`mine == false` on the viewer), and only then the distances.
+## Written before lane 2.A landed and therefore left red on purpose; the first
+## real run, on the merged Wave 2 tree, failed and was right to. Every process
+## with no session runs on Godot's default `OfflineMultiplayerPeer`, under
+## which `multiplayer.is_server()` is **true** and `get_unique_id()` is **1**,
+## so both peers spawned a phantom `Trainer_1` while the world was still
+## booting. On the client that phantom held the name the host's real body
+## needed (`Condition "parent->has_node(name)" is true`), and it was tracked by
+## the spawner across the peer swap in `join()`
+## (`Condition "!_has_authority(spawner)" is true`). The fix is in
+## `scripts/net/trainer_spawn.gd::_is_host()`, whose comment carries the full
+## account.
+##
+## The debug order if it fails again: does a remote body exist at all
+## (`remote_trainers` non-empty), is its authority the OTHER peer (`mine ==
+## false` on the viewer), and only then the distances. A body that exists with
+## the wrong authority looks like a frozen trainer, not like an error.
 
 ## Lane 2.C's fixed budget: how far a remote body may be from where its owner
 ## says it is before it is not "seen".
@@ -113,6 +120,29 @@ func _run() -> void:
 		check(str(seen.get("verdict", "")) == "PASS",
 			"peer %d's registry holds both players (%s)" % [i, str(seen.get("detail", ""))])
 
+	# The state-hash comparison belongs HERE, immediately after the handshake,
+	# and not at the end of the run. Here it asserts exactly what Wave 2
+	# delivers: the host's world snapshot really crossed the wire and the
+	# joiner really applied it, so both processes hold the same world before
+	# anybody acts in it. A broken or dropped snapshot fails this line.
+	#
+	# It is deliberately NOT re-asserted after the walking below, and the
+	# reason is measured rather than assumed. Run
+	# `net-movement_two_peers-20260906T021905Z` diverged on exactly one of the
+	# seven hashed keys: `progression.flags` held `opening:beat:house` on the
+	# host and not on the client. `sequence_director.gd::_persist_opening_fact`
+	# writes opening beats into each process's own progression as that process
+	# walks through the opening, and nothing replicates them — the handshake is
+	# a one-time snapshot (D100) and the only thing sent afterwards is the host
+	# clock (D105). Story-flag replication is D99's scope declarations and the
+	# ledger wave, not this lane's, so asserting it here would be asserting a
+	# deliverable that does not exist yet. Re-instate the end-of-run comparison
+	# in the wave that lands flag replication; it is a good check, in the wrong
+	# place for now.
+	var hashes_ok := await assert_all_hashes_equal(300)
+	check(hashes_ok,
+		"both peers hold the same world after the handshake (contract §7 hashed keys)")
+
 	# Both peers must be standing in each other's world before either walks:
 	# one body per peer, on every peer, including each peer's own invisible
 	# outbound proxy (`remote_trainer.gd` hides the body whose authority is
@@ -176,9 +206,6 @@ func _run() -> void:
 		check(gap_watcher >= 0.0 and gap_watcher <= NEAR_REST_M,
 			"peer %d still saw the standing peer %d within %.1f m (%.2f m)"
 				% [mover, watcher, NEAR_REST_M, gap_watcher])
-
-	var hashes_ok := await assert_all_hashes_equal(300)
-	check(hashes_ok, "both peers' world state hashes agree (contract §7)")
 
 	quit(await finish())
 

@@ -72,6 +72,13 @@ func _ready() -> void:
 	if _session.has_signal("peer_left") \
 			and not _session.is_connected("peer_left", _on_peer_left):
 		_session.connect("peer_left", _on_peer_left)
+	if _session.has_signal("session_ended") \
+			and not _session.is_connected("session_ended", _on_session_ended):
+		_session.connect("session_ended", _on_session_ended)
+	# Usually a no-op: the world is normally standing before anyone hosts, and
+	# nothing may be spawned until there is a real peer under the spawner (see
+	# `_is_host()`). It matters for the reverse order — a world loaded while a
+	# session is already up, which is what a realm shell does.
 	_reconcile()
 
 
@@ -79,17 +86,40 @@ func _exit_tree() -> void:
 	_bodies.clear()
 
 
-## Only the host spawns. `multiplayer.is_server()` rather than
-## `Session.is_host()` first, because a world can be standing before the
-## session has finished its handshake and the multiplayer API is the fact that
-## cannot be stale.
+## Whether THIS process is the host of a real, live session.
+##
+## This is the lane's one real defect and it is worth the paragraph. It used to
+## read `multiplayer.is_server()`, guarded only by `multiplayer_peer != null`.
+## In Godot 4 that guard can never fail: a process with no session at all still
+## has an `OfflineMultiplayerPeer` installed by default, and under it
+## `is_server()` returns **true** and `get_unique_id()` returns **1** — the
+## host's own id. So every process, host and client alike, believed it was the
+## host with peer id 1 while the world was still booting, and each one spawned
+## itself a phantom `Trainer_1` through the spawner before any session existed.
+##
+## Three things then went wrong at once, all of them loud only much later.
+## The client's phantom occupied the name `Trainer_1`, so when the real host's
+## body arrived the engine refused it with
+## `Condition "parent->has_node(name)" is true` and the host simply never
+## existed on the client. The phantom was tracked by the spawner while an
+## offline peer was installed, so the moment `join()` swapped in the ENet peer
+## the engine walked its tracked spawns and hit
+## `Condition "!_has_authority(spawner)" is true` — a client is not the
+## spawner's authority. And every delta the host sent for its body was refused
+## as `non-authority or invalid synchronizer`, because the node those deltas
+## belonged to had never been created.
+##
+## The fix is to ask the SESSION, which knows the difference between "no
+## session" and "host", instead of asking the multiplayer API, which does not.
+## `Session.is_host()` alone is not enough either — it is deliberately true
+## when there is no session at all, because that is the honest answer for the
+## D100 autosave sites. Both questions together mean exactly `_mode == "host"`.
 func _is_host() -> bool:
-	if not is_inside_tree():
+	if not is_inside_tree() or _session == null:
 		return false
-	var api := multiplayer
-	if api == null or api.multiplayer_peer == null:
+	if not _session.has_method("is_active") or not _session.has_method("is_host"):
 		return false
-	return api.is_server()
+	return bool(_session.call("is_active")) and bool(_session.call("is_host"))
 
 
 ## Bring the spawned set in line with the registry: one body per peer,
@@ -173,6 +203,7 @@ func _spawn_for(peer_id: int) -> void:
 		"display_name": _display_name_for(peer_id),
 		"at": [at.x, at.y, at.z],
 	}
+	print("[trainers] spawning a body for peer %d at (%.1f, %.1f)" % [peer_id, at.x, at.z])
 	var node: Node = _spawner.spawn(data)
 	if node != null:
 		_bodies[peer_id] = node
@@ -202,7 +233,14 @@ func _spawn_trainer(data: Variant) -> Node:
 		(node as Node3D).position = Vector3(float(a[0]), float(a[1]), float(a[2]))
 		node.set("net_position", (node as Node3D).position)
 	if peer_id != 0:
+		# Recursive by default, which is what is wanted: the child
+		# `MultiplayerSynchronizer` has to carry the same authority or its
+		# deltas are refused at the far end. Logged with the real ids because
+		# they are large random numbers and a swapped pair is otherwise
+		# indistinguishable from a working one.
 		node.set_multiplayer_authority(peer_id)
+	print("[trainers] built %s for peer %d, authority %d (this peer is %d)"
+		% [node.name, peer_id, node.get_multiplayer_authority(), multiplayer.get_unique_id()])
 	return node
 
 
@@ -219,16 +257,37 @@ func _spawn_position() -> Vector3:
 	return Vector3.ZERO
 
 
+## `_reconcile()`, not `_spawn_for(peer_id)`. The host's OWN body has to be
+## spawned too, and the join is the first moment at which it can be: before it
+## there is no live peer under the spawner, and a body spawned without one is
+## the phantom `_is_host()` above exists to prevent. Reconciling here covers
+## both in one idempotent pass.
 func _on_peer_joined(peer_id: int, _character_id: Variant = null) -> void:
 	if not _is_host():
 		return
-	_spawn_for(int(peer_id))
+	_reconcile()
 
 
 func _on_peer_left(peer_id: int, _reason: Variant = null) -> void:
 	if not _is_host():
 		return
 	_despawn_for(int(peer_id))
+
+
+## The mirror of the boot-time defect. When the session ends, the multiplayer
+## peer goes back to the offline default; any body still tracked by the spawner
+## would then be a spawn held under a peer that is not the one it was made
+## under — the same shape that produced `!_has_authority(spawner)` on join.
+## Drop them all, on host and client alike.
+func _on_session_ended(_reason: Variant = null) -> void:
+	_bodies.clear()
+	if _spawner == null:
+		return
+	var root := _spawner.get_node_or_null(_spawner.spawn_path)
+	if root == null:
+		return
+	for child in root.get_children():
+		child.queue_free()
 
 
 ## Test/inspection door: the remote bodies standing in this world right now.
