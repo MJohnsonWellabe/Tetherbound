@@ -23,6 +23,8 @@ extends CanvasLayer
 
 const UITokens := preload("res://scripts/ui/ui_tokens.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+## D102: pausing the tree is a solo-only act. See local_pause.gd.
+const LOCAL_PAUSE := preload("res://scripts/ui/local_pause.gd")
 const TRADE_DB := preload("res://scripts/trade/trade_db.gd")
 const ROW_ICON_PX := 24
 const PRICE_COLUMN_PX := 70
@@ -94,7 +96,10 @@ func open(vendor: String) -> void:
 	_mouse_before = Input.mouse_mode
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	_paused_before = get_tree().paused
-	get_tree().paused = true
+	# D102: a true pause solo, a no-op in a session. The player who opened
+	# this panel still has their world verbs stood down either way --
+	# `input_owner.gd`'s group does that, and always did.
+	LOCAL_PAUSE.hold(get_tree())
 	# A station panel is a modal surface, and the exploration HUD was drawn
 	# straight over the top of it -- the creature block, roster, vitals,
 	# hotbar and minimap all still painting across this panel's own rows. It
@@ -123,7 +128,7 @@ func close() -> void:
 		# would put the HUD back over a panel that is still open underneath.
 		INPUT_OWNER.set_world_hud_visible(get_tree(), true)
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-		get_tree().paused = false
+		LOCAL_PAUSE.release(get_tree())
 
 
 func _process(_delta: float) -> void:

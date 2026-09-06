@@ -1918,7 +1918,18 @@ jobs:
     # from measured build costs, not a measurement of this shard: the first real
     # run is what should correct it, in either direction. A shard that finishes
     # in 32 minutes does not need 45.
-    timeout-minutes: 45
+    #
+    # 52 adds the two acceptance-item smokes below it, measured end to end on a
+    # 4-core box on 2026-09-06: `menu_does_not_freeze_peer` 2 min 45 s (two
+    # Meadows builds and eight measured walks), `catch_race` 2 min 23 s (two
+    # Meadows builds, one fight, one wobble). Five minutes plus the same margin.
+    #
+    # It is still an estimate rather than a measurement OF THE SHARD, and for a
+    # blunter reason than the paragraph above admits: until the discovery fix in
+    # this same block landed, this job was a bash syntax error and had never run
+    # a single net smoke. Nothing here has ever been timed against a real green
+    # run. The first one is what should correct this number.
+    timeout-minutes: 52
     needs: changes
     if: needs.changes.outputs.code == 'true'
     steps:
@@ -1990,8 +2001,8 @@ jobs:
           # restated the lanes before them, and the block had accumulated four
           # duplicated fragments before lane 2.B noticed. The roster is the
           # record; prose about it only rots.
-          if [ "$count" -lt 22 ]; then
-            echo "::error::expected at least 22 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
+          if [ "$count" -lt 24 ]; then
+            echo "::error::expected at least 24 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
             exit 1
           fi
           # Named registration, on top of the count. Discovery alone would let a
@@ -2002,6 +2013,7 @@ jobs:
           for required in \
             tests/smoke_net_behind_character_joins_ahead_world.gd \
             tests/smoke_net_boss_rewards_each_participant.gd \
+            tests/smoke_net_catch_race.gd \
             tests/smoke_net_deploy_two_creatures.gd \
             tests/smoke_net_farm_race.gd \
             tests/smoke_net_fog_is_personal.gd \
@@ -2011,6 +2023,7 @@ jobs:
             tests/smoke_net_host_join_leave.gd \
             tests/smoke_net_join_by_address.gd \
             tests/smoke_net_late_join_modified_world.gd \
+            tests/smoke_net_menu_does_not_freeze_peer.gd \
             tests/smoke_net_movement_two_peers.gd \
             tests/smoke_net_peer_death.gd \
             tests/smoke_net_pickup_race.gd \

@@ -27,6 +27,8 @@ const KEY_BINDINGS := preload("res://scripts/ui/key_bindings.gd")
 const AUDIO_CUES := preload("res://scripts/ui/audio_cues.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+## D102: pausing the tree is a solo-only act. See local_pause.gd.
+const LOCAL_PAUSE := preload("res://scripts/ui/local_pause.gd")
 
 ## How long a status line stays up. Long enough to read on a handheld held at
 ## arm's length, short enough that it is gone before the next one arrives.
@@ -346,7 +348,10 @@ func open(tab_id: String = "") -> bool:
 	_mouse_before = Input.mouse_mode
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	_paused_before = get_tree().paused
-	get_tree().paused = true
+	# D102: a true pause solo, a no-op in a session. The player who opened
+	# this panel still has their world verbs stood down either way --
+	# `input_owner.gd`'s group does that, and always did.
+	LOCAL_PAUSE.hold(get_tree())
 
 	_open = true
 	_root.visible = true
@@ -387,7 +392,7 @@ func close() -> void:
 	# RG1: the shell releases pause ownership; it must not resurrect a stale
 	# paused snapshot captured during an earlier modal transition. All legal
 	# open paths originate from the live world, so release means unpaused.
-	get_tree().paused = false
+	LOCAL_PAUSE.release(get_tree())
 	_set_world_hud_visible(true)
 	if _index >= 0 and _index < _bodies.size():
 		_bodies[_index].call("say", "")
