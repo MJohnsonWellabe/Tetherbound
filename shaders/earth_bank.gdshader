@@ -88,6 +88,24 @@ uniform float macro_patch_strength : hint_range(0.0, 1.0) = 0.35;
 uniform float moist_darken : hint_range(0.0, 1.0) = 0.35;
 uniform vec3 moist_tint : source_color = vec3(0.55, 0.5, 0.45);
 
+// ROUND-4-0906, JUDGE-round3.md "nothing shows directional throw of earth":
+// the raw-spoil mask, written per-vertex into COLOR.b by
+// `burrow_warrens.gd::_bank_spoil_at()` (the throw lobe of every secondary
+// dig-mound, the fan out of the mouth, the fan below every warren hole).
+// Where it is high the surface is forced to bare earth regardless of slope
+// or height and darkened toward `spoil_tint`, so freshly displaced dirt
+// reads as darker, un-grassed and directional against the settled bank.
+uniform vec3 spoil_tint : source_color = vec3(0.48, 0.38, 0.28);
+uniform float spoil_darken : hint_range(0.0, 1.0) = 0.55;
+
+// ROUND-4-0906: the crest-fraction earth band below (`height_low_frac` /
+// `height_high_frac`) put EVERYTHING in the bank's lowest metres in earth --
+// including the grid's whole grade-level skirt, which two blind rounds read
+// as a "pale flagstone patio" around the mound. 0 turns that band off and
+// leaves earth to slope, moisture and spoil; 1 (the default) keeps the old
+// behaviour for any other site using this shader.
+uniform float height_blend_on : hint_range(0.0, 1.0) = 1.0;
+
 // Slope blend: 0 degrees is flat ground, 90 is a vertical face. Below
 // `slope_low_deg` the surface is grass regardless of height; above
 // `slope_high_deg` it is earth regardless of height. Between the two, height
@@ -107,10 +125,13 @@ uniform float height_high_frac : hint_range(0.0, 1.0) = 0.30;
 varying float v_height_frac;
 // SECOND-PASS-0906: the moisture mask `_build_bank()` writes to COLOR.g.
 varying float v_moist;
+// ROUND-4-0906: the raw-spoil mask `_build_bank()` writes to COLOR.b.
+varying float v_spoil;
 
 void vertex() {
 	v_height_frac = COLOR.r;
 	v_moist = COLOR.g;
+	v_spoil = COLOR.b;
 }
 
 // Cheap triplanar: three axis-projected samples of the same installed photo,
@@ -169,7 +190,7 @@ void fragment() {
 
 	float slope_deg = degrees(acos(clamp(world_normal.y, -1.0, 1.0)));
 	float earth_by_slope = smoothstep(slope_low_deg, slope_high_deg, slope_deg);
-	float earth_by_height = 1.0 - smoothstep(height_low_frac, height_high_frac, v_height_frac);
+	float earth_by_height = (1.0 - smoothstep(height_low_frac, height_high_frac, v_height_frac)) * height_blend_on;
 	float earth_w = clamp(max(earth_by_slope, earth_by_height), 0.0, 1.0);
 
 	vec3 grass_c = triplanar(grass_albedo, world_pos, blend, grass_uv_scale) * grass_tint;
@@ -200,6 +221,12 @@ void fragment() {
 	// rather than the same dry dirt as the rest of the face.
 	float moist = clamp(v_moist, 0.0, 1.0);
 	earth_c = mix(earth_c, earth_c * moist_tint, moist * moist_darken);
+
+	// ROUND-4-0906: raw spoil -- forced bare (max(), never lowers earth_w)
+	// and darkened toward `spoil_tint`, see the uniform's own comment.
+	float spoil = clamp(v_spoil, 0.0, 1.0);
+	earth_w = clamp(max(earth_w, spoil), 0.0, 1.0);
+	earth_c = mix(earth_c, earth_c * spoil_tint, spoil * spoil_darken);
 
 	vec3 albedo = mix(grass_c, earth_c, earth_w);
 	ALBEDO = albedo;

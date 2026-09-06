@@ -81,6 +81,9 @@ func _run() -> void:
 	_the_mouth_frontage_has_no_flat_slab_edge(warrens)
 	_the_throat_is_at_least_8m_and_hides_the_interior(world, warrens)
 	_the_hero_clear_radius_is_wide_enough_for_the_red_tree()
+	_the_skyline_is_a_cluster_of_mounds(warrens)
+	_the_face_above_the_mouth_is_steep(warrens)
+	_the_threshold_and_the_heaps_read_as_spoil(warrens)
 
 	_finish()
 
@@ -439,6 +442,130 @@ func _the_hero_clear_radius_is_wide_enough_for_the_red_tree() -> void:
 		_fail("site.hero_clear_radius_m is %.0fm; the judge measured the red tree at ~25m out and asked for enough margin to clear it -- expected >=50m" % hero_radius)
 	if hero_radius <= base_radius:
 		_fail("site.hero_clear_radius_m (%.0fm) is not wider than site.clear_radius_m (%.0fm); it would be a no-op on top of the existing clearing" % [hero_radius, base_radius])
+
+
+## ROUND-4-0906, JUDGE-round3.md finding 1: "the hill silhouette is a single
+## smooth dome/ridge with no bumps, mounds, or spoil-heaps". The skyline the
+## approach road sees is, for every x across the site, the highest point of
+## the bank at any z -- a ridge is that profile with one local maximum, a
+## cluster of mounds is the same profile with several. Sampled straight off
+## `_bank_height_at()` (the field the mesh is built from) and counted with a
+## prominence floor so a ripple of surface noise never counts as a peak; the
+## brief asks for >=3.
+func _the_skyline_is_a_cluster_of_mounds(warrens: Node3D) -> void:
+	var step := 0.5
+	var half_span := 34.0
+	var profile: PackedFloat32Array = []
+	var xs: PackedFloat32Array = []
+	var x := -half_span
+	while x <= half_span:
+		var best := 0.0
+		var z := -14.0
+		while z <= 66.0:
+			best = maxf(best, float(warrens.call("_bank_height_at", x, z)))
+			z += step
+		profile.append(best)
+		xs.append(x)
+		x += step
+	var min_prominence := 1.0
+	var peaks: Array[String] = []
+	for i in range(1, profile.size() - 1):
+		var h := profile[i]
+		if h <= profile[i - 1] or h < profile[i + 1] or h < 2.0:
+			continue
+		# prominence: the drop to the lowest point between this peak and the
+		# nearest higher ground on each side (or the profile's own end)
+		var left_min := h
+		var j := i - 1
+		while j >= 0 and profile[j] <= h:
+			left_min = minf(left_min, profile[j])
+			j -= 1
+		var right_min := h
+		j = i + 1
+		while j < profile.size() and profile[j] <= h:
+			right_min = minf(right_min, profile[j])
+			j += 1
+		var prominence := h - maxf(left_min, right_min)
+		if prominence >= min_prominence:
+			peaks.append("x=%+.1f h=%.1fm (prom %.1fm)" % [xs[i], h, prominence])
+	print("[fixture] skyline from the approach: %d local maxima with >=%.1fm prominence: %s" % [
+		peaks.size(), min_prominence, ", ".join(peaks) if not peaks.is_empty() else "none"])
+	if peaks.size() < 3:
+		_fail(("the bank's skyline has only %d peak(s) of >=%.1fm prominence; the brief asks for a cluster of " +
+			"dig-mounds (>=3) so the profile reads as several heaps, not one ridge") % [peaks.size(), min_prominence])
+
+
+## ROUND-4-0906: the dug face's own steepness either side of the opening.
+## Sampled just outside the walk corridor's own soft edge (where the earth
+## mass is whole, `x_outer`) and, as a second readout, right beside the
+## arch's notch (`x_inner`, inside the corridor's taper, so lower). For each
+## column: the height at the doorway plane, the z where the face first
+## rises past knee height coming in from the throat's outer end, and the
+## slope of that rise. The brief asks for the number; the assertion is the
+## loose one that matters: a face under 40 degrees is a slope you walk up,
+## not a bank something dug into. Before this round it measured 22.
+func _the_face_above_the_mouth_is_steep(warrens: Node3D) -> void:
+	var bank := warrens.call("_bank_cfg") as Dictionary
+	var z0: float = float(warrens.call("_mouth_outer_z"))
+	var depth := float(bank.get("throat_depth_m", 6.0))
+	var arch_half: float = float(bank.get("arch_width_m", 5.0)) * 0.5 + float(bank.get("arch_margin_m", 0.6))
+	var x_inner := arch_half + 1.4
+	var x_outer := arch_half + 3.6
+	var outer_mean := 0.0
+	for x_off: float in [x_inner, x_outer]:
+		var lines: Array[String] = []
+		var mean := 0.0
+		for side: float in [-1.0, 1.0]:
+			var x := side * x_off
+			var top := float(warrens.call("_bank_height_at", x, z0))
+			var z_foot := z0 - depth
+			var z := z0 - depth
+			while z < z0:
+				if float(warrens.call("_bank_height_at", x, z)) > 0.5:
+					z_foot = z
+					break
+				z += 0.25
+			var run := maxf(z0 - z_foot, 0.25)
+			var slope := rad_to_deg(atan2(top - 0.5, run))
+			mean += slope * 0.5
+			lines.append("x=%+.1f top %.1fm, foot %.1fm out, %.0f deg" % [x, top, z0 - z_foot, slope])
+		print("[fixture] mouth-side face (%s): %s (mean %.0f deg; config face_slope_deg %.0f)" % [
+			"beside the notch" if x_off == x_inner else "outside the corridor", ", ".join(lines), mean,
+			float(bank.get("face_slope_deg", 60.0))])
+		if x_off == x_outer:
+			outer_mean = mean
+	if outer_mean < 40.0:
+		_fail("the face beside the mouth averages only %.0f degrees outside the corridor; it reads as a walkable slope, not a dug bank" % outer_mean)
+
+
+## ROUND-4-0906: the spoil mask that makes displaced earth read as displaced
+## -- raw on the threshold fan out of the mouth and on every secondary
+## mound's throw lobe, absent on the settled crest.
+func _the_threshold_and_the_heaps_read_as_spoil(warrens: Node3D) -> void:
+	var bank := warrens.call("_bank_cfg") as Dictionary
+	var z0: float = float(warrens.call("_mouth_outer_z"))
+	var throat_end: float = z0 - float(bank.get("throat_depth_m", 6.0))
+	var at_threshold := float(warrens.call("_bank_spoil_at", 2.0, throat_end - 3.0))
+	var at_crest := float(warrens.call("_bank_spoil_at", 0.0, z0 + 8.0))
+	var lobes := 0
+	var mounds: Array = bank.get("mounds", [])
+	for entry_v: Variant in mounds:
+		var spec: Dictionary = entry_v as Dictionary
+		var offset: Array = spec.get("offset", [0.0, 0.0])
+		var yaw := deg_to_rad(float(spec.get("yaw_deg", 0.0)))
+		var r := float(spec.get("throw_radius_m", 8.0)) * 0.5
+		var probe := float(warrens.call("_bank_spoil_at",
+			float(offset[0]) + sin(yaw) * r, float(offset[1]) + cos(yaw) * r))
+		if probe > 0.4:
+			lobes += 1
+	print("[fixture] spoil mask: threshold %.2f, crest %.2f, %d of %d mound throw lobes raw" % [
+		at_threshold, at_crest, lobes, mounds.size()])
+	if at_threshold < 0.5:
+		_fail("the threshold in front of the mouth is not marked as raw spoil (%.2f); the fan out of the mouth is missing" % at_threshold)
+	if at_crest > 0.2:
+		_fail("the settled crest behind the doorway is marked as spoil (%.2f); the mask is leaking onto the grassy top" % at_crest)
+	if not mounds.is_empty() and lobes < mounds.size() - 1:
+		_fail("only %d of %d secondary mounds have a raw throw lobe; the heaps will read as grown, not thrown" % [lobes, mounds.size()])
 
 
 func _finish() -> void:

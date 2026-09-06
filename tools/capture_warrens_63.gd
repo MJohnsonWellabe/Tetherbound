@@ -41,9 +41,13 @@ const VIEWPOINTS := [
 	# looking at one. `_clear_exterior_views()` measures instead -- it rings
 	# the cave, casts at it, and keeps the stands that can actually SEE it.
 	{
+		# ROUND-5-0906: 12m out framed the arch alone and cropped both the
+		# lamp post (the scale reference) and the bank above the opening;
+		# 16m out, aimed a little higher, is where a player actually stops
+		# to look at a den mouth.
 		"name": "03-mouth", "local": true, "ground": true,
-		"eye": Vector2(0.0, -12.0), "eye_h": 1.7,
-		"target": Vector2(0.0, 4.0), "target_h": 1.2,
+		"eye": Vector2(0.0, -16.0), "eye_h": 1.7,
+		"target": Vector2(0.0, -2.0), "target_h": 2.6,
 	},
 	{
 		"name": "04-hall-dressing", "local": true,
@@ -150,7 +154,10 @@ func _run() -> void:
 		if player is CharacterBody3D:
 			(player as CharacterBody3D).velocity = Vector3.ZERO
 
-	var views: Array = _clear_exterior_views(world, warrens)
+	# ROUND-4-0906: the authored approach stand goes first -- it is the frame
+	# the landmark read is judged on.
+	var views: Array = [_approach_stand(world, warrens)]
+	views.append_array(_clear_exterior_views(world, warrens))
 	views.append_array(VIEWPOINTS)
 
 	# A stand-in for the torch. The warrens is authored DARK on purpose -- its
@@ -226,6 +233,29 @@ func _run() -> void:
 		quit(1)
 		return
 	quit(0)
+
+
+## ROUND-4-0906: the view a player actually gets. `_clear_exterior_views()`
+## below finds stands that can see the cave from 26/40m rings, which is a
+## fair survey but never the approach itself. This one is authored: 60m
+## straight out from the throat's outer end along the mouth's own axis (the
+## road in), eye at 1.7m, aimed at the dome above the opening -- the distance
+## at which a landmark either reads or does not.
+func _approach_stand(world: Node, warrens: Node3D) -> Dictionary:
+	var z0: float = float(warrens.call("_mouth_outer_z"))
+	var bank := warrens.call("_bank_cfg") as Dictionary
+	var throat_end: float = z0 - float(bank.get("throat_depth_m", 6.0))
+	var eye_flat: Vector3 = warrens.to_global(Vector3(0.0, 0.0, throat_end - 60.0))
+	var ground := float(world.call("ground_height_at", eye_flat.x, eye_flat.z))
+	var mouth: Vector3 = warrens.call("marker", "mouth")
+	if is_nan(ground):
+		ground = mouth.y
+	var target: Vector3 = warrens.to_global(Vector3(0.0, 0.0, z0))
+	return {
+		"name": "00-approach-60m",
+		"world_eye": Vector3(eye_flat.x, ground + 1.7, eye_flat.z),
+		"world_target": Vector3(target.x, mouth.y + 6.0, target.z),
+	}
 
 
 ## Two exterior stands that can see the cave, found rather than guessed.
