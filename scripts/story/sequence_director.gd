@@ -82,6 +82,14 @@ const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 const HOME_RECOVERY := preload("res://scripts/creatures/home_recovery.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 
+## Stage B lane 5.A. How a story effect reaches the world ledger, and how this
+## node asks the WORLD (never the merged view) what has already happened.
+const STORY_LEDGER := preload("res://scripts/story/story_ledger.gd")
+## D99's residual home/creature-bed grants, re-evaluated when the world gains
+## the pieces rather than only on the frame somebody placed them -- see
+## `_share_the_camp()`.
+const HOME_PROGRESS := preload("res://scripts/build/home_progress.gd")
+
 ## Mirrors CombatManager.OUTCOME_CAUGHT rather than typing "caught" twice, so a
 ## renamed outcome cannot silently stop matching here. Same reason
 ## encounter_director.gd declares its own.
@@ -90,6 +98,31 @@ const CAUGHT := "caught"
 ## The dialogue key `$name` is substituted from. data/dialogue/opening.json
 ## writes `$name` and this is the other half of that agreement.
 const NAME_KEY := "name"
+
+## Stage B directive rule 3: "the main story advances once for the world, and a
+## character who is behind is never locked out." These are the WORLD-scope flags
+## that say the chapter has moved past its own opening. Any one of them set in
+## `WorldState.flags` means somebody in this world has already done work the
+## opening exists to teach -- and from that moment the opening's GATES stand
+## down for anybody who has not personally done it (`_catch_up_a_behind_
+## character()`).
+##
+## Every id here is `world` in `data/progression/flag_scopes.json`, and
+## `tests/test_story_world_catchup.gd` pins that: a personal flag in this list
+## would make a player's own tutorial progress open the door for them, which is
+## exactly the collapse D99 exists to prevent, in the wrong direction.
+##
+## Deliberately not "any world flag at all": picking a berry writes
+## `harvest_node:`, and a friend gathering in the yard is not the story moving on.
+const WORLD_MOVED_ON_FLAGS: Array[String] = [
+	"defeated_warden",
+	"legendary_freed",
+	"relay_disabled",
+	"tournament_won",
+	"south_bridge_open",
+	"trainer_defeated_practice",
+	"meadows_acknowledged",
+]
 
 ## How many physics frames to keep trying to stand something on the ground.
 ##
@@ -197,6 +230,32 @@ var _shop_panel: CanvasLayer = null
 var _battle_pending: String = ""
 var _swap_panel: CanvasLayer = null
 
+## Stage B lane 5.A, directive rule 3. True once this character has been let
+## into a world that had already moved past the opening. A latch rather than a
+## per-frame recompute because the catch-up ADOPTS a creature, and a second pass
+## while the first one is still awaiting ground would adopt twice.
+var _caught_up: bool = false
+## Set the instant the late-arrival adoption starts and NEVER cleared. `_caught_up`
+## is re-armed by `restore_progression_from_game()` (a load can bring in a world
+## further along than this character), and re-arming it while `adopt_starter()`
+## is still awaiting ground would adopt a second creature into a five-slot party.
+var _late_arrival_handled: bool = false
+## True only while `adopt_starter()` is awaiting ground for a late arrival.
+## `restore_progression_from_game()` clears `_adopting` -- correct for a mid-
+## session Load, wrong in the middle of an adoption, and now reachable because
+## that function also runs on every world delta.
+var _late_arrival_in_flight: bool = false
+## The species `encounter_director.gd` would have handed a player who never ran
+## the opening at all -- its own `default_starter` export, read before
+## `suspend_default_starter()` clears it in `_ready`. That is the game's own
+## answer to "what creature does somebody get when the opening does not run",
+## and a late joiner is exactly that case.
+var _sandbox_starter: String = ""
+## The last delta seq this node re-posed the world for, so the double delivery
+## documented on `story_ledger.gd::listen()` costs one integer compare rather
+## than one full sweep.
+var _last_delta_seq: int = -1
+
 ## True from the moment a name is confirmed until the creature is standing beside the
 ## trainer. `adopt_starter` waits for ground, so there are frames in there where
 ## no panel is open and the player must still not be able to walk off.
@@ -221,6 +280,9 @@ func _ready() -> void:
 	# given a terrapup they did not choose, and `adopt_starter` then refuses the
 	# one they did.
 	if _encounter != null:
+		# Read before it is cleared: `_catch_up_a_behind_character()` needs the
+		# creature the sandbox would have given, and suspension erases it.
+		_sandbox_starter = str(_encounter.get("default_starter"))
 		_encounter.call("suspend_default_starter")
 
 	_player = get_node_or_null(player_path) as Node3D
@@ -276,6 +338,11 @@ func _ready() -> void:
 	_starter_picker.connect("chosen", _on_starter_picker_chosen)
 
 	_restore_opening_beat()
+	# Stage B lane 5.A. A world delta is the only thing that tells this process
+	# a gate somebody ELSE opened is open, and `ledger_rpc.gd` delivers it two
+	# different ways depending on who committed it -- see
+	# `story_ledger.gd::listen()` for the ordering trap this answers.
+	STORY_LEDGER.listen(self, _on_ledger_delta)
 	if _beat == BEATS.WAKE:
 		_build_fade()
 
@@ -377,10 +444,19 @@ func _restore_opening_beat() -> void:
 ## Unlike ordinary transitions, loading an earlier slot is allowed to move the
 ## machine backwards because the slot—not the pre-load scene—is authoritative.
 func restore_progression_from_game(_game: Node) -> void:
+	# Idempotent by contract (`story_ledger.gd::listen()`): this runs on a save
+	# load, on a joiner's world snapshot, and on every world delta, and must
+	# read the same on the second call as on the first.
+	STORY_LEDGER.listen(self, _on_ledger_delta)
 	_restore_opening_beat()
 	_picker_pending = _beat == BEATS.CHOOSE
 	_choice = -1
-	_adopting = false
+	if not _late_arrival_in_flight:
+		_adopting = false
+	# A load can bring in a world that is further along than this character.
+	# Re-arm rather than re-run: `_catch_up_a_behind_character()` decides, on
+	# the next frame, whether there is anything to catch up to.
+	_caught_up = false
 	if _beat == BEATS.WAKE:
 		_set_player_lying(true)
 	else:
@@ -453,6 +529,7 @@ func _process(delta: float) -> void:
 	_tick_fade(delta)
 	_drain_effects()
 	_advance_from_external_progression()
+	_catch_up_a_behind_character()
 	_refresh_lockout()
 	_refresh_prompts()
 	_refresh_door_gate()
@@ -650,6 +727,28 @@ func _maybe_start_battle() -> void:
 ## refusing to run backwards; these are flat, unordered facts about the save.
 ## A villager's handover is the second kind and folding it into the first would
 ## put the village in the opening's state machine.
+## Stage B lane 5.A. A dialogue `flag:` effect is now an INTENT, not a local
+## write.
+##
+## The conversation itself stays local -- the box, the portrait, the button are
+## one player's screen and nobody else's -- but what a line CHANGES is not. D99
+## says which: a world fact (`relay_disabled`, `south_bridge_open`) is one thing
+## that happened to the world and is committed once for everybody, and a
+## personal fact (`tournament_entered`, `tam_tools_given`) belongs to the player
+## who was standing there. `story_ledger.gd::write_flag()` is where that
+## classification becomes `set_world_flag` or `grant_player_flag`; this only
+## hands it the id.
+##
+## The grant is addressed to the SPEAKER's peer -- which is the asking peer, the
+## ledger's own default -- rather than broadcast, with D99's residual home and
+## creature-bed flags as the named exception. Nothing is written locally here on
+## the way past: the committed delta is what writes the flag, on the host in
+## `commit()` and on every client in `apply()`, so two peers can never disagree
+## about whether the line fired.
+##
+## A refusal is one sentence the player sees (`ledger_claim.gd::submit()` says
+## it); a client's `pending` verdict is not a failure and is deliberately not
+## reported, exactly as lane 3.B's pickups do not report theirs.
 func _set_progression_flag(flag_id: String) -> void:
 	if flag_id == "":
 		push_warning("a flag: effect reads flag:<flag_id>; got an empty id")
@@ -658,11 +757,156 @@ func _set_progression_flag(flag_id: String) -> void:
 	if game == null:
 		push_error("no Game autoload; the flag '%s' was written nowhere" % flag_id)
 		return
+	var verdict := STORY_LEDGER.write_flag(self, flag_id)
+	if bool(verdict.get("ok", false)) or bool(verdict.get("pending", false)):
+		return
+	# No transport at all (a bare fixture, a capture tool with no `Game.ledger`)
+	# is the one case that still writes straight to the store: the alternative
+	# is a conversation that plays and changes nothing, which is the exact
+	# failure `_drain_effects`' own header was written about.
+	if str(verdict.get("code", "")) != "offline":
+		return
 	var progression: RefCounted = game.get("progression")
 	if progression == null:
 		push_error("the Game autoload has no progression store; '%s' was written nowhere" % flag_id)
 		return
 	progression.call("set_flag", flag_id)
+
+
+## --- rule 3: a character who is behind is never locked out ---------------------
+
+## Whether THE WORLD has moved past its own opening -- read off `WorldState`,
+## never off the merged view, so one player's personal tutorial progress can
+## never answer it. See `WORLD_MOVED_ON_FLAGS`.
+func world_has_moved_on() -> bool:
+	for id: String in WORLD_MOVED_ON_FLAGS:
+		if STORY_LEDGER.world_flag(self, id):
+			return true
+	return false
+
+
+## Stage B directive rule 3, as a player experience rather than a data-model
+## claim: **a character who has not done the opening can join a world where the
+## boss is already dead, and act immediately.**
+##
+## Everything the opening does to a player is a gate: the fade holds the screen
+## black, the lying pose pins them to the bed, Grandpa's front door is a solid
+## box until `walk_out`, and the starter is suspended so the sandbox creature
+## never arrives. Every one of those is right for the player this world's
+## opening is FOR, and every one of them is a soft-lock for somebody who walked
+## into a finished world -- an invisible wall in a farmhouse, in a chapter whose
+## boss is already dead.
+##
+## So when the world says the story moved on, the opening stands down for this
+## character: the beat is carried to the end (which persists as their own
+## `opening:beat:` history, a PLAYER fact, so it survives their next login), the
+## fade and the bed pose are cleared, and -- because a trainer with no creature
+## cannot act at all -- they are handed the same companion
+## `encounter_director.gd` would have given them if this node had never run.
+##
+## Deliberate calls, recorded rather than defaulted:
+##   * The creature is the sandbox `default_starter`, NOT a choice of three. The
+##     starter picker is a modal panel: opening it here would answer "can they
+##     act at once" with "no, first read this menu". A late arrival gets a
+##     companion, not a ceremony.
+##   * It does not run backwards. A character who is AHEAD of the world (their
+##     own save carries beats this world has not seen) is untouched, because
+##     `_force_restore_beat` is only called when the beat is genuinely behind.
+##   * It is per-CHARACTER, not per-session. A host loading a solo save into a
+##     world they themselves finished takes the same path, and should.
+func _catch_up_a_behind_character() -> void:
+	if _caught_up or _adopting:
+		return
+	if not world_has_moved_on():
+		return
+	_caught_up = true
+	var last := BEATS.order()[-1] if not BEATS.order().is_empty() else BEATS.FREE_PLAY
+	if not BEATS.at_or_after(_beat, last):
+		_force_restore_beat(last)
+	_clear_fade()
+	_set_player_lying(false)
+	_picker_pending = false
+	_refresh_prompts()
+	_refresh_door_gate()
+	_hand_a_late_arrival_a_companion()
+
+
+## The other half of the catch-up: a trainer with nothing at their heel cannot
+## act, whatever the gates say. Awaited rather than fired and forgotten because
+## `adopt_starter()` waits for Terrain3D's collision the same way every other
+## spawn in this file does, and `_adopting` holds the arbiter off for that
+## window exactly as the ordinary adoption does.
+func _hand_a_late_arrival_a_companion() -> void:
+	if _late_arrival_handled or _sandbox_starter.is_empty() or _encounter == null:
+		return
+	var game := get_node_or_null(^"/root/Game")
+	var party: RefCounted = game.get("party") if game != null else null
+	if party == null or int(party.call("size")) > 0:
+		return
+	if _starter_already_granted():
+		return
+	_late_arrival_handled = true
+	_late_arrival_in_flight = true
+	_adopting = true
+	var adopted: bool = await _encounter.call("adopt_starter", _sandbox_starter)
+	_late_arrival_in_flight = false
+	_adopting = false
+	if not adopted:
+		push_warning("a late arrival could not be given a '%s'" % _sandbox_starter)
+		return
+	if _give_to_party(_encounter.call("ally_instance"), ""):
+		_persist_opening_fact(STARTER_GRANTED_FLAG)
+
+
+## --- world deltas ---------------------------------------------------------------
+
+## A committed delta landed on THIS peer. Directive rule 3's third clause: a
+## gate another player opened is open for you, and the only thing that can say
+## so is the delta.
+##
+## `story_ledger.gd::restore_all()` re-runs the same `progression_restore` sweep
+## `ledger_rpc.gd::_rpc_delta` runs on a client -- run from here because
+## `_commit_here()` (the HOST's path, and solo's) does not run it at all, so
+## without this a client's opened gate re-poses on every peer except the one
+## that committed it. On a client the sweep therefore runs twice per delta;
+## every restore path in it is idempotent by contract, which it has to be anyway
+## because a save reload calls it too.
+##
+## The `seq` guard is ordered AFTER the world-flag test rather than before it,
+## because `_rpc_delta` sweeps the group before it emits -- a guard that
+## remembered "already handled" from the sweep would skip the emit on clients
+## only, which is lane 3.B's finding restated.
+func _on_ledger_delta(delta: Dictionary) -> void:
+	var seq := int(delta.get("seq", 0))
+	var already_seen := seq != 0 and seq == _last_delta_seq
+	_last_delta_seq = seq
+	if already_seen:
+		return
+	# Runs on EVERY delta, not only a flag one: the world gaining a camp is a
+	# `place_building` op, and that is precisely the delta the residual grant is
+	# about.
+	_share_the_camp()
+	if not STORY_LEDGER.delta_has_world_flag(delta):
+		return
+	STORY_LEDGER.restore_all(self)
+
+
+## D99's residual table, applied when the world gains the pieces rather than
+## only on the frame somebody placed them.
+##
+## `home_progress.gd` grants `home_built`, `home_materials_gathered` and the
+## creature-bed ladder to every connected peer -- but it is only ever CALLED
+## from a build placement, which happens in one process. The peer who was
+## across the meadow when the hut went up, and the peer who joined after it was
+## already standing, never evaluated it. A shared camp is everyone's camp, so
+## the evaluation runs again on every peer whenever the world's building list
+## moves, which is exactly what a `place_building` delta is.
+func _share_the_camp() -> void:
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return
+	HOME_PROGRESS.maybe_set_home_built(game)
+	HOME_PROGRESS.maybe_set_creature_beds(game)
 
 
 ## `heal_party` — G3-OPENING-FIX-0904 (2.10), the owner instruction "give
@@ -758,6 +1002,30 @@ func _give_items(parts: Array) -> void:
 ## conversation or harvest prompt happened to be in reach — so building next to
 ## anything interactive fought the player for the button. An armed ghost owns
 ## the screen the same way a fight does.
+## STAGE B DIRECTIVE RULE 16, and it is the whole of what this function may do:
+## **it locks THE LOCAL RIG AND NOBODY ELSE'S.** One player standing in a
+## conversation must not freeze the other, and the fact that each peer runs this
+## node in its own process is not on its own a guarantee -- the world every peer
+## builds contains the other peers' bodies too (`remote_trainer.gd`, group
+## `remote_trainer`), and every handle this function touches has to be one this
+## process OWNS.
+##
+## The four handles, and why each is local:
+##   * `_arbiter` -- the interaction arbiter reads THIS process's `interact`
+##     button. There is one per process and it is nobody else's.
+##   * `_player` -- `player_path`, the rig this process drives. Checked below
+##     against the `remote_trainer` group rather than assumed, because a wiring
+##     mistake that pointed this at a replicated body would freeze a FRIEND
+##     every time this player opened a conversation, on their screen only, which
+##     is the hardest possible shape of this bug to see.
+##   * `_camera_rig` -- this process's camera.
+##   * `_manager` / `_encounter` -- read, never written; `is_fighting()` is this
+##     peer's own bound encounter (Wave 4), not "somebody is fighting".
+##
+## `modal` is likewise computed only from panels on THIS screen: the dialogue
+## box, the naming prompt, the starter picker and the fade all belong to the
+## player looking at them. A conversation is local; only its EFFECTS cross the
+## wire (`_set_progression_flag`).
 func _refresh_lockout() -> void:
 	var fighting: bool = _manager != null and bool(_manager.call("is_fighting"))
 	# R8.1: a trainer battle is longer than any one fight inside it — their
@@ -797,7 +1065,7 @@ func _refresh_lockout() -> void:
 		if _camera_rig != null and is_instance_valid(_camera_rig):
 			_camera_rig.set_process(true)
 		return
-	if _player.has_method("set_locomotion_enabled"):
+	if _is_local_rig(_player) and _player.has_method("set_locomotion_enabled"):
 		_player.call("set_locomotion_enabled", not modal)
 	if _camera_rig != null and is_instance_valid(_camera_rig):
 		# The rig has no suspend of its own, so its idle tick — which is where
@@ -805,6 +1073,24 @@ func _refresh_lockout() -> void:
 		# the fade: the world is black, but the camera still has to be sitting
 		# behind the player by the time it clears.
 		_camera_rig.set_process(not panel)
+
+
+## Rule 16's guard, spelled once. A body this process replicates from another
+## peer (`remote_trainer.gd` joins `remote_trainer` and holds that peer's
+## authority) is never this node's to freeze, prompt, pose or move. A `false`
+## here is a wiring bug rather than an ordinary state, so it says so -- once,
+## because `_refresh_lockout` runs every frame.
+func _is_local_rig(body: Node) -> bool:
+	if body == null or not is_instance_valid(body):
+		return false
+	if not body.is_in_group(&"remote_trainer"):
+		return true
+	if not _warned_about_a_remote_rig:
+		_warned_about_a_remote_rig = true
+		push_error("the sequence director is pointed at a replicated body (%s); a conversation here would freeze another player" % body.name)
+	return false
+
+var _warned_about_a_remote_rig: bool = false
 
 
 ## Grandpa offers his prompt on any beat he has something to say on.
@@ -855,7 +1141,13 @@ const DOOR_CALLOUT_BEATS := [BEATS.HOUSE, BEATS.RETURN_STARTER]
 func _refresh_door_gate() -> void:
 	if _house == null or not is_instance_valid(_house):
 		return
-	var door_open := BEATS.at_or_after(_beat, BEATS.WALK_OUT)
+	# `or world_has_moved_on()`: directive rule 3. The physical stop in
+	# `grandpa_house.gd` is the opening's, and in a world whose boss is already
+	# dead it is an invisible wall around a farmhouse. `_catch_up_a_behind_
+	# character()` normally carries the beat past `walk_out` anyway; this is the
+	# same answer stated at the gate itself, so a frame between the world flag
+	# landing and the catch-up running never shows a shut door.
+	var door_open := BEATS.at_or_after(_beat, BEATS.WALK_OUT) or world_has_moved_on()
 	_house.call("set_door_open", door_open)
 	# OWNER-0901: the player's own bed offers "Sleep" (grandpa_house.gd's
 	# `_build_sleep_prompt`) on the same gate as the front door — free to

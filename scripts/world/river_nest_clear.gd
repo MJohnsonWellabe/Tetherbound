@@ -28,6 +28,8 @@ extends Node3D
 const NPC := preload("res://scripts/npc/npc_body.gd")
 const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
 const ITEM_GATE := preload("res://scripts/world/item_gate.gd")
+## Stage B lane 5.A. A cleared nest is a WORLD fact.
+const STORY_LEDGER := preload("res://scripts/story/story_ledger.gd")
 
 const ITEM_IDS := ["wood", "fiber"]
 const FLAG_ID := "river_nest_doss_cleared"
@@ -66,16 +68,28 @@ func build(world: Node3D, player: Node3D, at: Vector2, facing_deg: float) -> voi
 	_prompt = npc.call("add_prompt", "Greet Doss")
 	_prompt.connect("activated", _on_greeted)
 
-	var game := get_node_or_null(^"/root/Game")
-	var progression: RefCounted = game.get("progression") if game != null else null
-	if progression != null and _gate.is_open(progression):
-		_prompt.call("set_enabled", false)
+	# Stage B lane 5.A: a cleared nest is a WORLD fact (D99). The pose is
+	# restored from the world's store and re-checked when a delta lands, so a
+	# nest the other player cleared reads as cleared here too.
+	add_to_group("progression_restore")
+	STORY_LEDGER.listen(self, _on_delta_applied)
+	restore_progression_from_game(get_node_or_null(^"/root/Game"))
 
 
 func is_cleared() -> bool:
-	var game := get_node_or_null(^"/root/Game")
-	var progression: RefCounted = game.get("progression") if game != null else null
-	return progression != null and _gate.is_open(progression)
+	return STORY_LEDGER.world_flag(self, FLAG_ID)
+
+
+## The `progression_restore` seam: a save load, a joiner's snapshot, or another
+## peer's delta. Idempotent.
+func restore_progression_from_game(_game: Node) -> void:
+	if _prompt != null and is_instance_valid(_prompt) and is_cleared():
+		_prompt.call("set_enabled", false)
+
+
+func _on_delta_applied(delta: Dictionary) -> void:
+	if STORY_LEDGER.delta_sets_world_flag(delta, FLAG_ID):
+		restore_progression_from_game(get_node_or_null(^"/root/Game"))
 
 
 func _on_greeted() -> void:
@@ -83,16 +97,25 @@ func _on_greeted() -> void:
 		return
 	var game := get_node_or_null(^"/root/Game")
 	var inventory: RefCounted = game.get("inventory") if game != null else null
-	var progression: RefCounted = game.get("progression") if game != null else null
-	if progression != null:
-		progression.call("set_flag", MET_FLAG)
-	if inventory != null and progression != null and _gate.try_open(inventory, progression):
-		inventory.call("add", "coin", REWARD_COINS)
-		inventory.call("add", REWARD_ITEM_ID, REWARD_ITEM_COUNT)
-		_prompt.call("set_enabled", false)
-		_say(CLEARED_CONVERSATION)
-	else:
+	# Meeting Doss is a world fact (`river_nest_doss_met`), so it is committed
+	# rather than written locally.
+	STORY_LEDGER.write_flag(self, MET_FLAG)
+	if inventory == null or not _gate.can_open(inventory):
 		_say(BLOCKED_CONVERSATION)
+		return
+	var verdict := STORY_LEDGER.set_world_flag(self, FLAG_ID)
+	if not bool(verdict.get("ok", false)) and not bool(verdict.get("pending", false)):
+		_say(BLOCKED_CONVERSATION)
+		return
+	_gate.spend(inventory)
+	# The REWARD is personal and stays personal: it goes to the satchel of the
+	# player who brought the materials, not to everybody who happens to be in
+	# the world. Only the cleared nest is shared.
+	inventory.call("add", "coin", REWARD_COINS)
+	inventory.call("add", REWARD_ITEM_ID, REWARD_ITEM_COUNT)
+	if bool(verdict.get("ok", false)):
+		_prompt.call("set_enabled", false)
+	_say(CLEARED_CONVERSATION)
 
 
 func _say(conversation_id: String) -> void:

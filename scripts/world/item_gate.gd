@@ -70,6 +70,35 @@ func try_open(inventory: RefCounted, progression: RefCounted) -> bool:
 	return true
 
 
+## Stage B lane 5.A. `try_open()`'s first half, on its own: does this player
+## hold everything this gate needs, right now?
+##
+## `try_open()` spends the key AND writes the flag in one call, which is exactly
+## right solo and impossible on a client -- the flag is a WORLD fact and has to
+## be committed by the host, which takes a round trip, and a call that already
+## wrote it locally cannot wait for the answer. So the two halves are named:
+## `can_open()` asks, `spend()` takes, and a caller with a ledger puts the
+## commit between them (`gated_crossing.gd::_on_tried`). `try_open()` is
+## unchanged and is still what a solo/no-transport caller and every existing
+## test use.
+##
+## All or nothing, the same rule `try_open()` states: a two-of-three attempt is
+## as shut as a zero-of-three one.
+func can_open(inventory: RefCounted) -> bool:
+	return not item_ids.is_empty() and held(inventory) >= item_ids.size()
+
+
+## `try_open()`'s second half: take one of each required item. Answers whether
+## anything was actually taken, so a caller cannot spend a key it did not have.
+## Never writes a flag -- who records the open gate is the caller's business.
+func spend(inventory: RefCounted) -> bool:
+	if not can_open(inventory):
+		return false
+	for id: String in item_ids:
+		inventory.remove(id, 1)
+	return true
+
+
 ## SF34: how many of this gate's items the player is carrying right now, for a
 ## gate that wants to say "2/3" rather than just "locked". Counts DISTINCT
 ## required ids held at least once, never a stack size — three of one Sigil is

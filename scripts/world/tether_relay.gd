@@ -74,6 +74,9 @@ const BUILDING_PREFABS := preload("res://scripts/world/building_prefabs.gd")
 ## `severed_spokes.gd` -- see `_build_deck_people`'s own header.
 const NPC := preload("res://scripts/npc/npc_body.gd")
 const NPC_RANKS := preload("res://scripts/characters/npc_ranks.gd")
+## Stage B lane 5.A. A relay going dark is a WORLD fact: one console, one
+## darkening, every peer.
+const STORY_LEDGER := preload("res://scripts/story/story_ledger.gd")
 const CONFIG_PATH := "res://data/config/tether_relay.json"
 ## FIX 1 fallbacks, used only when `tether_relay.json`'s own `conduits.
 ## cable_radius`/`cable_emission_energy` are absent. Match that config's
@@ -181,6 +184,13 @@ func build(world: Node3D) -> bool:
 	# A relay disabled before a save is still disabled after a reload: the
 	# flag is the state, and the scene is rebuilt from it rather than
 	# remembering anything of its own.
+	#
+	# Stage B lane 5.A: a relay is a WORLD fact, and "still disabled after a
+	# reload" and "already disabled when you joined" are the same sentence. The
+	# restore seam below is what makes the second one true, and it is also what
+	# darkens the conduits on the peer who was not standing at the console.
+	add_to_group("progression_restore")
+	STORY_LEDGER.listen(self, _on_delta_applied)
 	if is_disabled():
 		_kill_the_conduits()
 		_sync_console()
@@ -221,11 +231,12 @@ func console_flag() -> String:
 	return str(_console().get("flag", "relay_disabled"))
 
 
+## Stage B lane 5.A: the WORLD's store, never the merged view. `relay_disabled`
+## is a world flag (D99), and reading it through the merged view would let a
+## mis-scoped personal id darken one player's relay and not the other's -- the
+## exact split D99 exists to prevent.
 func is_disabled() -> bool:
-	var progression := _progression()
-	if progression == null:
-		return false
-	return bool(progression.call("has", console_flag()))
+	return STORY_LEDGER.world_flag(self, console_flag())
 
 
 ## --- the compound ----------------------------------------------------------
@@ -896,22 +907,55 @@ func _build_console(seam: Node3D, apparatus: Dictionary) -> void:
 ## did it, so a test can press it twice without needing a second station —
 ## same shape and same reason as `burrow_warrens.gd::grant_clear_reward()`.
 func disable_relay() -> bool:
-	var progression := _progression()
-	if progression == null:
-		return false
 	var console := _console()
+	# `requires_flag` is `relay_captain_defeated` -- a WORLD flag (D99), and the
+	# whole point of it being one is that the captain only has to fall once. A
+	# player who walked up after their friend won that fight is not sent back
+	# to fight it again.
 	var gate := str(console.get("requires_flag", ""))
-	if not gate.is_empty() and not bool(progression.call("has", gate)):
+	if not gate.is_empty() and not STORY_LEDGER.world_flag(self, gate):
 		_say(str(console.get("refused_message", "")))
 		return false
-	if bool(progression.call("has", console_flag())):
+	if is_disabled():
 		return false
-	progression.call("set_flag", console_flag())
+	# Stage B lane 5.A. One relay, one darkening, one world: the flag is
+	# committed through the ledger so the friend three hundred metres away sees
+	# the conduits die too, rather than walking up to a console this process
+	# alone thinks is dead. `_on_delta_applied` is what poses THIS station once
+	# the commit lands, so the host's own press and a client's take the same
+	# path and cannot drift apart.
+	var verdict := STORY_LEDGER.set_world_flag(self, console_flag())
+	if not bool(verdict.get("ok", false)) and not bool(verdict.get("pending", false)):
+		return false
+	if bool(verdict.get("ok", false)):
+		_apply_disabled_pose()
+	_say(str(console.get("done_message", "")))
+	return true
+
+
+## Everything a disabled relay looks like, in one idempotent call so the live
+## press, a save load, a joiner's snapshot and another peer's delta all produce
+## the same station. `_kill_the_conduits()` re-assigns materials, `_sync_console()`
+## re-reads the flag, and `_heal_local_ground()` no-ops once healing has begun.
+func _apply_disabled_pose() -> void:
 	_kill_the_conduits()
 	_sync_console()
 	_heal_local_ground()
-	_say(str(console.get("done_message", "")))
-	return true
+
+
+## The `progression_restore` seam: a save load, a joiner's world snapshot, or a
+## world delta another peer committed.
+func restore_progression_from_game(_game: Node) -> void:
+	if is_disabled():
+		_apply_disabled_pose()
+
+
+## `ledger_rpc.gd::_commit_here()` does not sweep the `progression_restore`
+## group -- only `_rpc_delta` does -- so the HOST needs this to notice its own
+## commit and a client's. See `story_ledger.gd::listen()` for the full ordering.
+func _on_delta_applied(delta: Dictionary) -> void:
+	if STORY_LEDGER.delta_sets_world_flag(delta, console_flag()):
+		_apply_disabled_pose()
 
 
 ## GATE3_ENCOUNTER_CONTRACTS.md V-5, G3-BAND3-0903. D41 says drained ground

@@ -69,6 +69,21 @@ const NO_ALLY_DEPLOYED_CONVERSATION := "trainer_no_ally_deployed"
 ## a level up") without a quest-log entry per trainer.
 const TOO_LOW_CONVERSATION := "trainer_too_low"
 
+## Stage B lane 5.A, directive rule 3: "a character who is behind is never
+## locked out ... no dialogue that refuses to start because a personal flag is
+## missing."
+##
+## A trainer's `defeated` conversation is optional in `trainers.json`, and when
+## it is absent `_on_challenged` used to fall through to a bare `return` --
+## silence, no line, no fight. Solo that case is nearly unreachable: you only
+## see a beaten trainer because you beat them, and a trainer somebody fights has
+## a defeated line. With a second player it is the ORDINARY case, because
+## `defeat_flag` is a WORLD flag (D99): the trainer your friend beat is beaten
+## for you, and walking up to them got a prompt that answered with nothing at
+## all. `interactable.gd`'s own rule -- "a visible prompt the button refuses is
+## worse than no prompt" -- is what this closes.
+const ALREADY_BEATEN_CONVERSATION := "trainer_already_beaten"
+
 ## BAND-SPLIT. The `trainers` array is cut per corridor band under
 ## `data/config/bands/<band>/trainers.json`; `flow` and `prompts` are global
 ## and stay in the head file. `band_content.gd` merges them back.
@@ -242,6 +257,10 @@ func _on_challenged(spec: Dictionary) -> void:
 			conversation = NO_ALLY_DEPLOYED_CONVERSATION
 	else:
 		conversation = str(spec.get("defeated", ""))
+	if conversation == "" and already_beaten(spec, _progression()):
+		# Rule 3: a beaten trainer with no line of their own still speaks. See
+		# `ALREADY_BEATEN_CONVERSATION`.
+		conversation = ALREADY_BEATEN_CONVERSATION
 	if conversation == "":
 		return
 	# N04-DIALOGUE-PORTRAITS. The two generic refusals are ONE conversation
@@ -252,7 +271,8 @@ func _on_challenged(spec: Dictionary) -> void:
 	# line already wears. Per-trainer conversations carry their own fields
 	# and get nothing laid over them.
 	var identity: Dictionary = speaker_identity(spec) \
-		if conversation in [NO_USABLE_CREATURE_CONVERSATION, NO_ALLY_DEPLOYED_CONVERSATION] else {}
+		if conversation in [NO_USABLE_CREATURE_CONVERSATION, NO_ALLY_DEPLOYED_CONVERSATION,
+			ALREADY_BEATEN_CONVERSATION] else {}
 	if not bool(panel.call("start", conversation, identity)):
 		return
 
@@ -314,6 +334,21 @@ func _prompt_for(spec: Dictionary) -> String:
 ## actually changes state) is what makes this cheap: on the overwhelming
 ## majority of frames this is one integer compare and nothing else, and the
 ## relabel walk only runs on the frames a flag genuinely flipped.
+##
+## STAGE B LANE 5.A: this is also what relabels a trainer THE OTHER PLAYER beat,
+## and it needs no ledger wiring of its own. A `defeat_flag` is a WORLD flag
+## (D99), a committed delta applies it through `WorldState.apply_delta()`, and
+## `merged_progression.gd::revision` is the SUM of both stores' counters -- so
+## the world's store moving is indistinguishable, here, from this player's own
+## store moving, which is exactly right: the label is about the world, and the
+## world changed. Verified rather than assumed in
+## `tests/test_story_world_catchup.gd`.
+##
+## `_progression()` stays the merged view on purpose. Every `defeat_flag` in
+## `data/progression/flag_scopes.json` is `world`, and `tests/test_flag_scopes.gd`
+## fails on any that is not -- so "either store has it" and "the world has it"
+## are the same answer for these ids by construction, and the merged view is the
+## one that also answers `too_low_to_challenge`'s personal questions.
 func _process(_delta: float) -> void:
 	# The `/root/Game` lookup is cached rather than repeated per frame: this
 	# runs on every frame of the game, and `playground_hud.gd` caches the same
