@@ -33,7 +33,14 @@ const RULES := preload("res://scripts/world/scatter_rules.gd")
 class CountingVegetation extends "res://scripts/world/vegetation.gd":
 	var batches: Array[String] = []
 
-	func _build_batch(model_path: String, placements: Array) -> void:
+	## The `slicer` parameter arrived with the realm-shell time slice
+	## (`shell_build_budget.gd`): the real `_build_batch` breathes every 512
+	## placements so a host building a shell never holds a frame long enough
+	## to miss a heartbeat. This override does no work worth slicing, so it
+	## accepts the argument and ignores it -- but it must DECLARE it, because
+	## GDScript rejects an override whose signature does not match the parent
+	## and the whole test file then fails to parse rather than failing a test.
+	func _build_batch(model_path: String, placements: Array, _slicer: RefCounted = null) -> void:
 		batches.append(model_path)
 		_placed += placements.size()
 
