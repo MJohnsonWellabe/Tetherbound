@@ -44,42 +44,45 @@ and analytic ground. The kinematic heightfield mode is dropped from lane 4.B's s
 keep Dynamic/Game collision around their own camera. Everything about authority above stands:
 the host still owns every opponent body, every HP value, every strike and every catch.
 
-## Attempted and reverted 2026-09-06 — and the reason recorded here first was wrong
+## Attempted and reverted 2026-09-06
 
 Lane 4.B recorded the FULL_GAME switch as unassigned (handover H1). It was implemented
-(`playground_world.gd` picking the mode on `is_multi_peer() and is_host()`, a host that started
-alone upgrading on `Session.peer_joined`), and confirmed to do exactly that in the isolated peer
+(`playground_world.gd` choosing the mode on `is_multi_peer() and is_host()`, a host that started
+alone upgrading on `Session.peer_joined`) and confirmed to do exactly that in the isolated peer
 boot logs: host mode 1 -> 3 on join, client and solo staying at 1. `smoke_net_movement_two_peers`
-then went red, and it was reverted.
+then went red on the CLIENT, and it was reverted.
 
-**The first version of this section blamed the switch for changing where players can walk. That
-was wrong, and the correction is the useful part.** Holding the stick forward for 300 frames from
-the same spawn:
+Holding the stick forward for 300 frames from the same spawn, across four runs:
 
 | Head | host | client |
 |---|---|---|
-| the smoke's documented baseline | 2.71 m | 2.71 m, stable across 90- and 300-frame holds |
-| with the switch | 14.52 m | 1.92 m local, **0.86 m in CI** — FAIL |
-| with the switch reverted | **14.57 m** | 2.66 m — PASS |
+| `adba6b6c` — last CI-green head, **baseline** | 14.52 m | **2.71 m** |
+| `2a5f271e` — with the switch | 14.52 m | 1.92 m local, **0.86 m in CI** — FAIL |
+| `947ba214` — switch reverted | 14.57 m | 2.66 m — PASS |
 
-The host's 14.5 m **survives the revert**. So it is not the collision mode; it arrived with the
-Wave 3 consumer lanes or the stable-uid work, and it means something moved the host's world
-geometry near the spawn that nobody asked to move. The client's figure is meanwhile *variable*
-where the smoke documents it as stable — 0.86, 1.92, 2.66 across three runs, against a 2.0 m bar.
+Two conclusions, of different strength.
 
-The revert still stands, on its own merits rather than as a fix: the switch buys nothing until
-wild bodies are replicated (H1) and something consumes host-side positions (lane 4.C), so
-carrying it while the above is unexplained adds a variable for no benefit.
+**Settled: the host's 14.5 m is not a regression and not this switch.** It is already there at the
+baseline. The movement smoke's header claimed both peers stop at 2.71 m; that was true when
+written and is not true now, and nobody noticed because 14.52 clears a 2 m bar as easily as 2.71.
+The comment has been corrected in the smoke.
 
-**What the next attempt must settle, rather than assume:** this decision's line that "clients keep
-Dynamic/Game collision around their own camera" is the thing under question, not a given. A host
-and a client disagreeing about their shared geography would be a worse defect than the one the
-switch solves, and this attempt did not establish whether the switch causes that — only that
-something else in Wave 3 already moved the host's. Land it with wild-body replication, where the
-benefit is real and the asymmetry can be judged against creature behaviour rather than against a
-trainer's walk out of a farmhouse.
+**Not settled, and stated as the weak claim it is: the switch appears to degrade the CLIENT's
+walk** — 2.71 and 2.66 without it, 1.92 and 0.86 with it — even though a client's own collision
+mode is untouched. Two runs either side is not proof, and no mechanism has been established. The
+plausible one is that the host's 3-second collision rebuild fires on `peer_joined`, exactly while
+the joiner is settling into the world, but that was not demonstrated.
 
-**Method note, because it cost a wrong public claim:** one run's numbers fitted a story, the
-revert made the smoke pass, and the coincidence read as confirmation. A revert that turns a test
-green is not evidence that the reverted change caused what the test measured — the baseline has
-to be run too.
+The revert stands on grounds that do not depend on resolving it: the switch buys nothing until
+wild bodies are replicated (H1) and something consumes host-side positions (lane 4.C), so carrying
+an unexplained effect for no present benefit is a bad trade.
+
+**What the next attempt must do:** establish the mechanism for the client effect before landing,
+and settle whether this decision's line that "clients keep Dynamic/Game collision around their own
+camera" survives — a host and a client disagreeing about their shared geography would be worse
+than the problem the switch solves. Land it with wild-body replication, where the benefit is real.
+
+**Method note, because it cost two wrong public claims.** The first blamed the switch for the
+host's 14.5 m; the revert left it at 14.57 m. A revert that turns a test green is not evidence the
+reverted change caused what the test measured. The second reasoned from the smoke's header as
+though it described the current tree. Run the baseline; read the numbers, not the comment.
