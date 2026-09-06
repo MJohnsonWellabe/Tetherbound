@@ -1,5 +1,41 @@
 # Current state — evidence-backed, 2026-09-02
 
+## Owner-list pass — 2026-09-05/06 (`claude/second-biome-completion-n1deay`)
+
+The owner's 2026-09-05 list (`docs/owner/OWNER_PLAYTEST_2026-09-05.md`, 28 items plus
+the 2026-09-06 addendum) worked on one branch; every row below was verified by the
+named smoke on this box (Godot 4.7-stable headless) before its commit. "Landed" means
+on the branch with a green named test; nothing here is an Ally reproduction.
+
+| Item | Status | Evidence |
+|---|---|---|
+| Cloudreach did not build on `main` (typed loop over `times` threw in `_ready`) | **fixed** (ported from the multiplayer lane, 18ea9410) | `smoke_cloudreach_foundation` OK (was SCRIPT ERROR at cloudreach_world.gd:138) |
+| OP-0905-14 stronghold: fight every NPC to advance | landed | `smoke_stronghold` gates all four passages blocked→open; red on old data |
+| OP-0905-17 combat camera too zoomed in | landed | `smoke_combat_camera` near=6.00 far=8.75 m; base 4.6→6.0, fov 62→68 |
+| OP-0905-12/-26 ride Terrapup; stag offer vanished | landed | `test_rideable_roster` 8/8, `smoke_riding` incl. build-ghost interruption (seen red) |
+| OP-0905-22 fall forever (Cloudreach) | landed | `smoke_cloudreach_fall_recovery` (seen red without the mount) |
+| OP-0905-08/-10/-11 Gil's camp rest; Warrens 2–3 then guardian then alpha; alpha looked plain | landed | `smoke_authored_camps`, `smoke_warrens` (alpha 1.30x, tinted coat, den holds only the guardian) |
+| OP-0905-13 bridge: guardian walks up and challenges | landed | `smoke_south_bridge_challenge` (seen red), `smoke_traversal` OK |
+| OP-0905-20/-21 loading indication; menu teleport to Cloudreach | landed | `smoke_realm_teleport`, `smoke_settings` 34 destinations, `smoke_cloudreach_transition` |
+| OP-0905-15 no portal; rift collapse is the crossing | landed, **D110** | `smoke_boss` SG44 probe crosses 54.5 m after the flag, blocked before; `smoke_cloudreach_transition` walks the span |
+| OP-0905-04/-05/-06 band 1 findables; roadside life; pond alpha | landed | 26 pickups (`_probe_band_density` 26/26 sites OK, worst gap 72 m); road gap 119→91 m; `test_alpha_pins`, `test_spawns_data` |
+| OP-0905-18 when/how the pig evolves | landed | `test_evolution_discoverability` 15/15; `smoke_evolution` |
+| OP-0905-27 map shows both realms | landed | `test_map_realm_view` 7/7; map suites 109/109 |
+| OP-0905-01 inputs/keyboard at the beginning | **partly**: name prompt dropped the first keystroke with a joypad connected — fixed; HUD buff chips were back in the mouse path (`smoke_mouse_look` red on main) — fixed | `smoke_early_input`, `smoke_mouse_look` PASS |
+| OP-0905-02 direct build route cannot place | **not reproduced headless** | `smoke_build_direct_routes` drives LT, keyboard B, hammer+interact with real events: all place. Headless cannot hit-test a real mouse click on a catalogue cell. Open for the Ally |
+| OP-0905-03 Bramblebun colour | landed, render-judge pending | soft-knee ceiling 1.75: rendered mean 1.73→0.85; `smoke_creature_field_brightness` |
+| OP-0905-07 Gil's face | **asset limit**, recorded | `docs/art/HUMANOID_ASSET_INVENTORY.md` §Known limit; needs owner reference art |
+| OP-0905-16/-19 machine turned; Hall torches | landed | `smoke_stronghold`: facing -101.2°, doorway sightline 13.6 m clear, 14 wall torches |
+| OP-0905-09 Warrens exterior | in flight (earth bank built; hall-walk regression being fixed) | `smoke_warrens_fixture` OK; `smoke_warrens` one red |
+| OP-0905-23/-24/-25 Cloudreach grass, holes, sinking | in flight | ground-truth probe 561→270 holes so far; walk smokes are the bar |
+| OP-0906-01..05 Cloudreach look; aviary stronghold | in flight | blind before-verdict `ralph/reports/CLOUDREACH-LOOK-0906/JUDGE-before.md` |
+
+Process finding (OP-0906-06): a Meadows world boot is ~3.3 GB and 100 s uncontended; four
+at once OOM-kill each other on a 15 GB box. A 3-slot throttle now wraps `godot` here, and
+lanes iterate with `--check-only` parse checks (2 s), flat-world fixtures (seconds) and
+Cloudreach's own scene (~36 s), booting the Meadows once at the end.
+
+
 ## Active Cloudreach branch — 2026-09-05
 
 Owner resumed the full Cloudreach chapter goal, excluding final creature art.
