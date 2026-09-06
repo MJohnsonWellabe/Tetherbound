@@ -927,6 +927,7 @@ func _fight_to_the_end(id: String, room: String) -> void:
 			+ "%d consecutive at the end)") % [id, BATTLE_FRAME_LIMIT, _quick_hits - hits_at_start,
 			_quick_misses - misses_at_start, _consecutive_misses])
 		return
+	await _drain_any_victory_dialogue(id)
 	if not bool(_player.call("locomotion_enabled")):
 		_fail("exploration never came back after '%s''s fight" % id)
 
@@ -1007,6 +1008,35 @@ func _stalled_report(id: String, room: String, frames: int, ally: Node3D, oppone
 		opponent.global_position.y - ally.global_position.y,
 		str(_manager.call("quick_ready")), int(_manager.get("state")),
 		_quick_hits - hits_at_start, _quick_misses - misses_at_start]
+
+
+## Some trainers carry a `victory_conversation` (band5_stronghold_approach's
+## Warden entry: "stronghold_warden_realm_reward", the Cloudreach realm-reward
+## handoff) that `encounter_director.gd::_finish_trainer_battle()` re-enables
+## exploration and THEN opens with `call_deferred("_present_trainer_victory",
+## spec)`. `sequence_director.gd::_refresh_lockout()` disables locomotion again
+## while that panel is up, so a fight that ends into one of these has to have
+## it read and closed, the same way `_read_the_reveal_before_he_speaks` and the
+## belt ceremony above drain a real conversation, before "exploration came
+## back" means anything. A gauntlet fight with no such conversation attached
+## never opens the panel at all, so this is a no-op there and the assertion
+## after it is unaffected.
+func _drain_any_victory_dialogue(id: String) -> void:
+	for i in 4:
+		await physics_frame
+	if _panel == null or not bool(_panel.call("is_open")):
+		return
+	var heard := str(_panel.call("runner").call("conversation_id"))
+	var presses := 0
+	while bool(_panel.call("is_open")) and presses < 60:
+		await _press("interact")
+		presses += 1
+	if bool(_panel.call("is_open")):
+		_fail("'%s''s victory conversation ('%s') never closed after %d presses"
+			% [id, heard, presses])
+		return
+	print("  drained '%s''s victory conversation ('%s') before checking exploration"
+		% [id, heard])
 
 
 func _disconnect_fight_signals() -> void:
