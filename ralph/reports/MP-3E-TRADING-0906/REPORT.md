@@ -128,11 +128,14 @@ says so in a comment where a future reader would otherwise be tempted.
    disconnect is safe by construction: nothing is ever escrowed, so an
    unanswered offer is only a message and the items never left the giver's bag.
 5. **Lane 4.B shipped `tests/smoke_net_deploy_two_creatures.gd` without its
-   `.uid`.** A fresh `--import` on this tree generates
-   `tests/smoke_net_deploy_two_creatures.gd.uid` as an untracked file, so every
-   agent who imports sees it as noise. Left untracked here rather than swept
-   into this lane's diff — it is that lane's file and a one-line `git add` for
-   whoever owns it next.
+   `.uid`.** A fresh `--import` generates it as an untracked file, so every
+   agent who imports this tree gets a dirty checkout and CI's own
+   checkout-then-import would too. `tests/` holds 362 `.gd` files and, before
+   this, 361 tracked `.gd.uid` siblings — the convention is unambiguous and this
+   was the single gap, so it is committed here (one line, `uid://7kfvijwwd4xt`)
+   rather than left to reappear for the next agent. Not this lane's file; an
+   add/add against 4.B fixing it themselves resolves trivially, the content
+   being identical.
 6. **`storage_container.gd::_panel` is process-global `static`.** Same latent
    split-screen hazard 3.D recorded; `trade_offer_panel.gd` is per-process too
    (mounted under the tree root), and would need to become per-player the day
