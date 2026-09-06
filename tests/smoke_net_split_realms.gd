@@ -145,7 +145,7 @@ func _run() -> void:
 		"the Cloudreach route is open before anyone tries to walk it (%s)"
 			% str(keyed.get("detail", "")))
 	for i in 2:
-		var seen: Dictionary = await step(i, "wait_flag", {"id": CLOUDREACH_KEY_FLAG})
+		var seen: Dictionary = await step(i, "wait_flag", {"flag": CLOUDREACH_KEY_FLAG})
 		check(str(seen.get("verdict", "")) == "PASS",
 			"peer %d sees the Cloudreach route open (%s)" % [i, str(seen.get("detail", ""))])
 
