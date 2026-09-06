@@ -28,10 +28,20 @@ extends "res://tests/helpers/net_harness.gd"
 ##   1. Their WORLD says the boss is dead. Without this nothing below means
 ##      anything: it would be asserting about a peer that never got the
 ##      snapshot.
-##   2. They still do NOT personally hold the opening beats. This is the half
-##      that would be wrong if the fix were "make the flags world-scoped": the
-##      main story advanced once for the world, and this character's own
-##      tutorial history is still their own (D99).
+##   2. A personal fact of the HOST'S did not cross to them, and the beat their
+##      own catch-up wrote did not cross to the world. This is the half that
+##      would be wrong if the fix were "make the opening flags world-scoped".
+##      It is asserted with two flags rather than one, because the obvious
+##      single assertion is not discriminating: the joiner DOES end up holding
+##      `opening:beat:house`, written by their own catch-up into their own
+##      store, and "absent" and "inherited" are not the only two possibilities.
+##      So the proof is a pair --
+##        * `tam_tools_given`, a personal payoff the host holds and the joiner
+##          must not (nothing writes it on a catch-up, so its presence on the
+##          joiner could only mean a personal flag crossed the wire), and
+##        * `opening:beat:house` present in the joiner's PLAYER store and
+##          absent from the WORLD's on both peers (so the catch-up recorded a
+##          character's own history and did not rewrite the world's).
 ##   3. Their sequence director agrees the world has moved on.
 ##   4. Their locomotion is enabled and their input context is `world` -- not a
 ##      fade, not a modal panel. This is "act immediately", literally.
@@ -42,9 +52,10 @@ extends "res://tests/helpers/net_harness.gd"
 ##      that reads true over a body pinned to a bed pose would pass (4) and fail
 ##      the player.
 ##
-## And about the HOST, throughout: it did not have peer 1's personal beats
-## granted to it, and it is not frozen. One player's story position is not the
-## other's, and one player being behind is not a thing that happens TO anybody.
+## And about the HOST, throughout: its own personal payoff is still its own, no
+## tutorial beat leaked into the world on its side either, and it is not frozen.
+## One player's story position is not the other's, and one player being behind is
+## not a thing that happens TO anybody.
 ##
 ## ## Debug order if it fails
 ##
@@ -59,9 +70,16 @@ extends "res://tests/helpers/net_harness.gd"
 ## and is in `sequence_director.gd::WORLD_MOVED_ON_FLAGS`; both are pinned by
 ## `tests/test_story_world_catchup.gd` so this smoke can name the id plainly.
 const BOSS_FLAG := "defeated_warden"
-## An opening beat the joiner must NOT be handed. `opening:` is a `player`
-## prefix (D99): the world moving on does not rewrite whose tutorial it was.
+## The beat the joiner's own catch-up records. `opening:` is a `player` prefix
+## (D99), and the assertion is about WHICH STORE it lands in: the character's
+## own, never the world's. See the header's item 2 for why "absent" would be the
+## wrong assertion.
 const OPENING_BEAT_FLAG := "opening:beat:house"
+## A personal payoff of the HOST'S. `player` scope in
+## `data/progression/flag_scopes.json`, not in D99's residual shared table, and
+## written by nothing on a catch-up -- so if the joiner holds it, a personal
+## flag crossed the wire, which is the failure this smoke exists to catch.
+const PERSONAL_FLAG := "tam_tools_given"
 ## Frames for the catch-up to run once the world says the boss is dead: it
 ## clears the fade, carries the beat, opens the door and adopts a companion,
 ## and `adopt_starter()` waits on Terrain3D's collision the way every spawn in
@@ -107,6 +125,13 @@ func _run() -> void:
 	check(str(boss.get("verdict", "")) == "PASS",
 		"the host's world records that the Warden is dead (%s)" % str(boss.get("detail", "")))
 
+	# And a personal payoff of the host's, submitted through the SAME entry
+	# point with no scope named -- so D99's table is what decides it is personal,
+	# which is the thing under test.
+	var mine: Dictionary = await step(0, "story_flag", {"flag": PERSONAL_FLAG})
+	check(str(mine.get("verdict", "")) == "PASS",
+		"the host recorded a personal payoff of their own (%s)" % str(mine.get("detail", "")))
+
 	var host_session = await probe(0, "session")
 	var port := int((host_session as Dictionary).get("enet_port", 0)) if host_session is Dictionary else 0
 	var joined: Dictionary = await step(1, "join", {"host": "127.0.0.1", "port": port})
@@ -132,11 +157,18 @@ func _run() -> void:
 	check(_flag(row, "world", BOSS_FLAG) == true,
 		"the joiner's WORLD says the Warden is dead")
 
-	# 2. And their own history did not. This is the assertion that fails if
-	#    somebody "fixes" rule 3 by making opening beats world-scoped.
-	check(_flag(row, "player", OPENING_BEAT_FLAG) == false,
-		"the joiner did NOT inherit somebody else's tutorial (%s is still theirs to have or not)"
-			% OPENING_BEAT_FLAG)
+	# 2. And nothing personal did. The host's own payoff stayed the host's...
+	check(_flag(row, "player", PERSONAL_FLAG) == false,
+		"the joiner did NOT inherit the host's personal payoff (%s)" % PERSONAL_FLAG)
+	# ...and the beat the joiner's own catch-up wrote went into THEIR store and
+	# not into the world's. Both halves, because either one alone passes for the
+	# wrong reason: absence-from-the-world is satisfied by a catch-up that wrote
+	# nothing at all, and presence-in-the-player-store is satisfied by a flag
+	# that arrived from somebody else.
+	check(_flag(row, "player", OPENING_BEAT_FLAG) == true,
+		"the joiner's own catch-up recorded their own opening history (%s)" % OPENING_BEAT_FLAG)
+	check(_flag(row, "world", OPENING_BEAT_FLAG) == false,
+		"and it did NOT rewrite the world's story to say a tutorial happened in it")
 
 	# 3. The director agrees.
 	check(row.has("world_moved_on") and bool(row["world_moved_on"]),
@@ -169,8 +201,10 @@ func _run() -> void:
 	check(host is Dictionary, "the host answered the story probe")
 	if host is Dictionary:
 		var host_row: Dictionary = host
-		check(_flag(host_row, "player", OPENING_BEAT_FLAG) == false,
-			"the host was not handed the joiner's personal tutorial beat either")
+		check(_flag(host_row, "player", PERSONAL_FLAG) == true,
+			"the host still holds its own personal payoff (%s)" % PERSONAL_FLAG)
+		check(_flag(host_row, "world", OPENING_BEAT_FLAG) == false,
+			"and no tutorial beat leaked into the world on the host's side either")
 		check(host_row.has("locomotion") and bool(host_row["locomotion"]),
 			"the host is not frozen by somebody else arriving behind")
 		check(_flag(host_row, "world", BOSS_FLAG) == true,
@@ -181,8 +215,8 @@ func _run() -> void:
 
 func _story(peer: int) -> Variant:
 	return await probe(peer, "story", {
-		"world_flags": [BOSS_FLAG],
-		"player_flags": [OPENING_BEAT_FLAG],
+		"world_flags": [BOSS_FLAG, OPENING_BEAT_FLAG],
+		"player_flags": [OPENING_BEAT_FLAG, PERSONAL_FLAG],
 	})
 
 

@@ -209,11 +209,66 @@ readers return `null` rather than `false` for a key the probe did not report, so
 
 ### Solo regression
 
-<!-- SOLO_REGRESSION -->
+All four named smokes run against this branch, first attempt, no retries:
+
+| smoke | result |
+|---|---|
+| `smoke_opening` | `opening: OK — talked, chose, named, and the creature is in the party.` |
+| `smoke_relay` | `relay: OK — the captain is beaten, the captive is freed, the Gear is carried, and she is in the village saying something new.` |
+| `smoke_stronghold` | `stronghold smoke test passed` |
+| `smoke_playground` | `smoke: OK` |
 
 ### Net smokes (both **new**, both registered in CI)
 
-<!-- NET_SMOKES -->
+Run with `tools/net/run_net_smoke.sh <name> --out=/tmp/net-5a`.
+
+**`smoke_net_gate_opens_for_both`** — `ALL CHECKS PASSED`, zero failures, and all
+three state hashes identical across both peers
+(`net-gate_opens_for_both-20260906T065946Z`). The client submits, the host
+arbitrates, the delta comes back, and **both** peers' bridge gate nodes have
+re-posed — which is the assertion that would have gone red before this lane, on
+the host in particular, for the reason in finding 1 below.
+
+**`smoke_net_behind_character_joins_ahead_world`** — `ALL CHECKS PASSED`
+(`net-behind_character_joins_ahead_world-20260906T070550Z`). The rule-3 bar. The
+measured lines are the ones worth quoting:
+
+```
+PASS: a character with no opening progress joined a world whose boss is dead
+PASS: the joiner's WORLD says the Warden is dead
+PASS: the joiner's sequence director reads the world as moved on
+PASS: the joiner is in the world, not behind a fade or a modal panel (context 'world')
+PASS: the joiner's own locomotion is enabled
+PASS: the joiner has a creature (a trainer with nothing at their heel cannot act at all)
+PASS: the joiner actually walked (9.62 m, wanted at least 1.00 m)
+PASS: the joiner did NOT inherit the host's personal payoff (tam_tools_given)
+PASS: the joiner's own catch-up recorded their own opening history (opening:beat:house)
+PASS: and it did NOT rewrite the world's story to say a tutorial happened in it
+PASS: the host is not frozen by somebody else arriving behind
+```
+
+**9.62 m** is the number that says the door is really open: `smoke_net_movement_
+two_peers.gd`'s own comment records that a fresh boot walks **2.71 m** before it
+meets a wall, and that wall is the farmhouse.
+
+**The first run of this smoke went red on two assertions, and they were the
+smoke's fault, not the code's** — recorded here rather than quietly rewritten.
+Both asserted that the joiner does *not* hold `opening:beat:house`. They do hold
+it: their own catch-up writes their own beat history into their own player store.
+"Absent" and "inherited from the host" are not the only two possibilities, and
+the assertion could not tell them apart. It is now a discriminating pair:
+
+- `tam_tools_given`, a personal payoff the host holds and nothing on a catch-up
+  writes — so its presence on the joiner could *only* mean a personal flag
+  crossed the wire; and
+- `opening:beat:house` present in the joiner's **player** store and absent from
+  the **world's** on both peers — so the catch-up recorded a character's own
+  history and did not rewrite the world's story.
+
+Two earlier failures in the gate smoke's first run were also the harness's own:
+a `world_moved_on` / `world_has_moved_on` typo in the new probe. Fixed, re-run
+clean. Neither smoke has ever passed only on retry — the reruns were of changed
+code, not of the same code twice.
 
 Both are registered in `.github/workflows/ci.yml`'s `verify-multiplayer-shard`,
 by name in the `for required in ...` list **and** in the discovery floor. The
@@ -275,7 +330,18 @@ One arm and one probe, both narrow:
    scope (`docs/00_START_HERE.md`), and touching it here would be this lane
    widening itself.
 
-5. **`scripts/net/*`, `autoload/game_state.gd`, `autoload/world_state.gd`,
+5. **A pre-existing runtime error in `scripts/net/remote_trainer.gd:137`**,
+   surfaced by every two-peer run and not caused by this lane:
+   `Invalid call. Nonexistent 'bool' constructor.` in `_apply_nameplate`, thrown
+   once per remote body spawned, on both peers, reached from
+   `trainer_spawn.gd::_spawn_for` -> `session.gd::_rpc_hello`. It does not stop
+   the run — every check above passes over it — but it means a nameplate field is
+   not being applied. `scripts/net/*` is out of this lane's fence, so it is
+   reported rather than fixed. It reproduces on the untouched base: the first
+   gate-smoke run recorded it at `main_sha a3df25467f04`, before any commit of
+   this lane's existed.
+
+6. **`scripts/net/*`, `autoload/game_state.gd`, `autoload/world_state.gd`,
    `scripts/combat/*`, `tab_map.gd`/`alpha_pins.gd`/`quest_log.gd`,
    `night_rest.gd`, `realm_heart_shrine.gd` and the Wave 3 consumers were not
    touched**, per the lane's file fence. The "shrine restore path" in the brief
