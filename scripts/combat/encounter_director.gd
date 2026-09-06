@@ -1762,6 +1762,7 @@ func _host_catch(intent: Dictionary, peer_id: int) -> Dictionary:
 		"direction": intent.get("direction", []),
 		"orb_id": str(intent.get("orb_id", "")),
 		"roll": _encounter_roll(),
+		"skill_bonus": _catching_bonus_for(peer_id),
 	}, Time.get_ticks_msec())
 	if bool(verdict.get("ok", false)):
 		_catch_claimant = peer_id
@@ -1773,6 +1774,20 @@ func _host_catch(intent: Dictionary, peer_id: int) -> Dictionary:
 ## The winner's wobble ended. On a catch the record goes `resolving` and §8 step
 ## 4's `caught_by` goes to everybody else; on a breakout the fight goes back to
 ## `active` and anybody may throw again.
+func _catching_bonus_for(peer_id: int) -> float:
+	var game := get_node_or_null("/root/Game")
+	if game == null:
+		return 0.0
+	if peer_id == multiplayer.get_unique_id():
+		return float(game.get("local").skills.catch_bonus())
+	for proxy: Node in get_tree().get_nodes_in_group("remote_trainer"):
+		if proxy.get_multiplayer_authority() == peer_id:
+			var personal := preload("res://scripts/player/player_skills.gd").new()
+			personal.load_data({"levels": {"catching": proxy.get("net_catching_level")}})
+			return personal.catch_bonus()
+	return 0.0
+
+
 func _host_catch_finished(intent: Dictionary, peer_id: int) -> Dictionary:
 	var encounter_id := str(intent.get("encounter_id", ""))
 	_catch_arbiter.call("release", encounter_id, peer_id)
@@ -3224,6 +3239,8 @@ func _resolve_catch(kept: RefCounted) -> void:
 	if not bool(party.call("is_full")):
 		if not bool(party.call("add", kept)):
 			push_error("the caught %s never reached the party" % str(kept.get("species_id")))
+		else:
+			_award_catching_skill(kept)
 		return
 
 	if game.get("pending_catch") != null:
@@ -3236,6 +3253,21 @@ func _resolve_catch(kept: RefCounted) -> void:
 		push_error("a second catch resolved while one was already waiting on the ceremony; the %s went free" % str(kept.get("species_id")))
 		return
 	game.set("pending_catch", kept)
+	_award_catching_skill(kept)
+
+
+var _catch_skill_activity: RefCounted
+
+
+func _award_catching_skill(kept: RefCounted) -> void:
+	var game := get_node_or_null("/root/Game")
+	if game == null or game.get("local") == null:
+		return
+	if _catch_skill_activity == null:
+		_catch_skill_activity = preload("res://scripts/player/skills_activity.gd").new(game.get("local").skills)
+	# This function runs only for the local winning catch, after ownership or
+	# the mandatory five-slot ceremony has accepted it. Wobbles award nothing.
+	_catch_skill_activity.record_catch(str(kept.get_instance_id()), true, true)
 
 
 ## --- R8.1: trainer battles --------------------------------------------------

@@ -2,6 +2,13 @@
   "_comment": "Water Phase 0 authored composition contract. DATA ONLY: no playable terrain, gates, nodes, flows or performance proof. Source BUILD_WATER_ARCHIPELAGO_TO_COMPLETION section3 and owner directive/boards. Metres, realm-local XYZ. Starting numbers tunable; derived lengths are calculated from listed polylines.",
   "schema_version": 1,
   "realm_id": "water",
+  "map": {
+    "_comment": "Personal fog uses 8m cells across the full archipelago; landmarks reveal only within 30m, with a 160m handheld minimap span. Discovery never opens a dock.",
+    "cell_m": 8,
+    "reveal_radius_m": 45,
+    "landmark_discovery_radius_m": 30,
+    "minimap_span_m": 160
+  },
   "world_bounds": {
     "min_x": -1200,
     "max_x": 1900,

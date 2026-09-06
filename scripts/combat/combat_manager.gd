@@ -2042,7 +2042,8 @@ func _on_orb_struck(_target: Node3D, offset: float) -> void:
 		str(_throw.call("thrown_orb_id")),
 		offset,
 		radius,
-		_rng.randf()
+		_rng.randf(),
+		_personal_catching_bonus()
 	)
 	if _tutorial_catch_failure_bound >= 0:
 		decision = CATCH.apply_failure_bound(
@@ -2630,8 +2631,13 @@ func catch_chance_now() -> float:
 		radius = float(_wild.call("body_radius"))
 	return CATCH.catch_chance(
 		SPECIES.catch_rate(_enemy.species_id), _enemy.hp_fraction(), current_orb_id(),
-		catch_aim_offset(radius), radius
+		catch_aim_offset(radius), radius, _personal_catching_bonus()
 	)
+
+
+func _personal_catching_bonus() -> float:
+	var game := get_node_or_null("/root/Game")
+	return float(game.get("local").skills.catch_bonus()) if game != null and game.get("local") != null else 0.0
 
 
 ## Metres off centre this throw would strike at, as best the aim can know

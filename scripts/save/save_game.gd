@@ -367,6 +367,7 @@ func save(game: Object, slot: int, write_split: bool = true) -> bool:
 ## this and said so ("no dictionary-only accessor"), but it is left alone here:
 ## re-pointing it is a harness change in another lane's file, and it works.
 func snapshot(game: Object) -> Dictionary:
+	var skills_obj := _player_skills(game)
 	var map_obj: Variant = game.get("map")
 	var progression_obj: Variant = game.get("progression")
 	var realm_hearts_obj: Variant = game.get("realm_hearts")
@@ -384,6 +385,7 @@ func snapshot(game: Object) -> Dictionary:
 		"alpha_pins": (map_obj as RefCounted).call("alpha_pin_save_data") if map_obj != null else [],
 		"progression": (progression_obj as RefCounted).call("save_data") if progression_obj != null else {},
 		"realm_hearts": (realm_hearts_obj as RefCounted).call("save_data") if realm_hearts_obj != null else {},
+		"skills": skills_obj.call("save_data") if skills_obj != null else {},
 		"current_realm": str(game.get("current_realm")) if game.get("current_realm") != null else "meadows",
 		"pending_realm_entry": str(game.get("pending_realm_entry")) if game.get("pending_realm_entry") != null else "",
 		"harvested_vegetation": (game.get("harvested_vegetation") as Dictionary).duplicate(true),
@@ -399,6 +401,11 @@ func snapshot(game: Object) -> Dictionary:
 	}
 	data["realm_maps"] = game.call("save_realm_maps") if game.has_method("save_realm_maps") else _realm_map_payloads(data)
 	return data
+
+
+func _player_skills(game: Object) -> RefCounted:
+	var local: Variant = game.get("local")
+	return local.get("skills") as RefCounted if local is Object else null
 
 
 ## Rehydrate `game` from `slot`. Returns whether a save was actually applied —
@@ -446,6 +453,11 @@ func load_slot(game: Object, slot: int) -> bool:
 		game.set("saved_player_pose", _sanitise_player_pose(pose_raw))
 	if game.get("current_realm") != null:
 		game.set("current_realm", str(data.get("current_realm", "meadows")))
+	var skills_obj := _player_skills(game)
+	if skills_obj != null:
+		var raw_skills: Variant = data.get("skills", {})
+		skills_obj.call("load_data", raw_skills if raw_skills is Dictionary else {})
+		skills_obj.call("enter_realm", str(game.get("current_realm")))
 	if game.get("pending_realm_entry") != null:
 		game.set("pending_realm_entry", str(data.get("pending_realm_entry", "")))
 	if game.get("clock_elapsed_seconds") != null:

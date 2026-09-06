@@ -1870,6 +1870,9 @@ func recipe_known(id: String) -> bool:
 	var recipe: Dictionary = items.recipe(id)
 	if recipe.is_empty():
 		return false
+	for personal_flag: String in recipe.get("requires_personal_flags", []):
+		if local == null or local.flags == null or not local.flags.has(personal_flag):
+			return false
 	var flag := str(items.recipe_unlock_flag(id))
 	if flag == "":
 		return true

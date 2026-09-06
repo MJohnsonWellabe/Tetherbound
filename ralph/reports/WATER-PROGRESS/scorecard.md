@@ -27,5 +27,8 @@ Stable main source inventory finds no Water scene, swimming system, global Skill
 | UTC checkpoint | Main SHA | Score | Window gain | Evidence / response |
 |---|---|---:|---:|---|
 | 2026-09-06 21:55:38 | 5547d415f | 0 | — | Source baseline only; no Water player path exists |
+| 2026-09-06 23:55:38 | e78f2ab45 | 0 | 0 | First low-gain window. PR69 remains deliberately unmerged under the newer owner branch-only instruction. Human lesson and Skills menu have local runtime evidence, but neither a continuous chapter path nor current-wave full CI has passed. Shift immediately from foundational systems/data to the First Shore→dock→Alpha player path. |
+
+Owner branch-only update supersedes automatic merging. Keep main evidence and branch evidence distinct; do not claim an unmerged result exists on main. The original fixed denominator and thresholds remain unchanged. `runtime-wave-1.md` lists local evidence without crediting plans or data. The next checkpoint is 2026-09-07 01:55:38 UTC. A second consecutive gain below five still triggers the specified stop-and-tail rule; no new permission or design gate is introduced.
 
 At each 2-hour checkpoint: >=10 points strong, continue; 5–<10 acceptable, name next change; <5 change strategy immediately; two consecutive <5 windows stop, integrate verified work, and write the fresh-session tail. No third near-identical attempt. Record actual elapsed time and any external blockers; do not give score credit for waiting or documentation.

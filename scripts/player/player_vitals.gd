@@ -151,9 +151,9 @@ func can_sprint() -> bool:
 
 ## Advance one frame. `sprinting` should be what the player is ACTUALLY doing,
 ## not what they asked for; the caller resolves that with can_sprint().
-func tick(delta: float, sprinting: bool) -> void:
+func tick(delta: float, sprinting: bool, sprint_efficiency: float = 1.0) -> void:
 	if sprinting:
-		_spend(_sprint_drain * delta)
+		_spend(_sprint_drain * delta * clampf(sprint_efficiency, 0.0, 1.0))
 	elif _regen_cooldown > 0.0:
 		_regen_cooldown = maxf(0.0, _regen_cooldown - delta)
 	else:

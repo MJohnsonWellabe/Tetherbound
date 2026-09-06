@@ -40,8 +40,8 @@
       "transport": "existing_owned_trainer_proxy_or_session_rpc",
       "sender": "character_owner",
       "consumer": "host_catch_arbitration",
-      "checks": ["sender matches peer authority", "exact five skill ids", "finite integer levels within configured cap", "monotonic revision within session"],
-      "_comment": "Portable characters are owner-authored in the existing game. This bounded summary shares their benefit, not arbitrary XP instructions; host exclusively computes and rolls catch outcomes. Do not read unpopulated Game.players."
+      "checks": ["sender matches trainer proxy authority", "typed net_catching_level clamped through PlayerSkills to configured cap", "reliable on-change replication and spawn snapshot"],
+      "_comment": "Portable characters are owner-authored in the existing game. Send only Catching level, the sole skill the host needs for arbitration; XP and other skill levels remain private. Reliable on-change proxy replication orders updates. The host derives the capped bonus, ignores any bonus in a throw intent, and exclusively rolls the catch. Do not read unpopulated Game.players."
     }
   },
   "replication": {
