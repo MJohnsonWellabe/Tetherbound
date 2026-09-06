@@ -202,6 +202,19 @@ Recorded here so a reader does not have to infer them from silence:
   proven is that Cloudreach's own world mutations go through the ledger (lane 6.E) and that two
   peers occupy two biomes at once; a Cloudreach fight with two pilots in it is owed.
 
+- **A joiner's swing depends on a spawn-table lottery, and only the smokes that know it are safe.**
+  `encounter_director.gd::join_encounter()` binds a joiner to `nearest_live_wild()` — whichever
+  ambient creature was closest when it joined — and because wild bodies are not replicated, how far
+  that stand-in sits from the host's real opponent is decided by the seeded spawn table. Its combat
+  manager then pulls its creature toward the stand-in, so a swing aimed at the host's opponent
+  misses. Recorded first as lane MP-ROWS-8-21's finding F10 and fixed there in
+  `smoke_net_shared_boss`; `smoke_net_shared_wild_fight` predated the arm and was measured failing
+  one run in three under 150 ms jitter (`104.5 -> 104.5 on the host`, while peer 0 landed
+  immediately). Both smokes now seat the joiner's local stand-in on the host's opponent before
+  swinging, which changes no outcome — protocol §2 resolves every strike against host positions —
+  and is what wild replication will do for free when it lands. **The underlying binding is
+  unchanged**: any future smoke that has a joiner swing needs the same arm, or the same lottery.
+
 ## The verdict
 
 Stage B is done when **every row above reads PASS**, solo Meadows and Cloudreach still play end to

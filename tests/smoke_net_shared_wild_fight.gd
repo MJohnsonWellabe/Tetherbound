@@ -218,6 +218,32 @@ func _run() -> void:
 			# creature, so neither is ever in the other's arc here.
 			var side := -NEAR_Z if mover == 0 else NEAR_Z
 			var stand := opponent + Vector3(0.0, 0.0, side)
+			# FINDING F10, in the smoke that never got its fix. A JOINER is
+			# bound by `encounter_director.gd::join_encounter()` to
+			# `nearest_live_wild()` -- whichever ambient creature happened to be
+			# closest when it joined -- and wild bodies are not replicated, so
+			# how far that stand-in sits from where the host holds the real
+			# opponent is decided by the seeded spawn table. Its own combat
+			# manager then keeps pulling its creature back toward that
+			# stand-in, and a swing aimed at the host's opponent misses.
+			#
+			# Measured: under 150 ms delay / 30 ms jitter / 1 % loss, one run in
+			# three had peer 1 unable to land a blow in five swings
+			# (104.5 -> 104.5 on the host) while peer 0 landed one immediately.
+			# That is F10 exactly, and `smoke_net_shared_boss` already fixes it
+			# this way; this smoke predates the arm.
+			#
+			# It changes no outcome: protocol §2 resolves every strike against
+			# HOST positions, which is what makes the drift cosmetic to begin
+			# with, and this is what wild replication will do for free when it
+			# lands. The arm refuses on the host, where that body IS the
+			# authoritative one.
+			if mover != 0:
+				var seated: Dictionary = await step(mover, "place_stand_in",
+					{"at": [opponent.x, opponent.y, opponent.z], "settle": PLACE_SETTLE})
+				check(str(seated.get("verdict", "")) == "PASS",
+					"peer %d's local stand-in was moved onto the host's opponent (%s)"
+						% [mover, str(seated.get("detail", ""))])
 			var placed: Dictionary = await step(mover, "place_creature",
 				{"at": [stand.x, stand.y, stand.z],
 				 "face": [opponent.x, opponent.y, opponent.z], "settle": PLACE_SETTLE})
