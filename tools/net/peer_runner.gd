@@ -371,6 +371,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = _step_storage_grant(args)
 		"storage_transfer":
 			out = _step_storage_transfer(args)
+		"deploy_creature":
+			out = await _step_deploy_creature(args)
 		_:
 			out = {"verdict": "ERROR", "detail": "unknown action '%s'" % action}
 	out["frames_used"] = _physics_count - before
@@ -873,6 +875,46 @@ func _step_expect_peers(args: Dictionary) -> Dictionary:
 ## Contract §4's `wait_flag`: a world or player flag becomes set within budget.
 ## `scope` picks the store -- "any" (the merged view every gameplay reader
 ## already uses), "world" or "player".
+## Stage B lane 4.B. Put this peer's own creature out, through the one door
+## the game itself uses -- `encounter_director.gd`. Deliberately NOT a direct
+## `_spawn_ally_body` poke: a smoke that reaches past the public API proves
+## the private one works and nothing else.
+##
+## `summon_active_creature()` first, because that is the real recall path and
+## it is what a peer with a party does. It refuses when the party is empty
+## (which is every peer in the opening beat, before the starter is chosen), so
+## `adopt_starter()` is the fallback -- the same call the sandbox's own
+## `default_starter` makes.
+func _step_deploy_creature(args: Dictionary) -> Dictionary:
+	var director := _encounter_director()
+	if director == null:
+		return {"verdict": "ERROR", "detail": "no EncounterDirector in this scene"}
+	if director.call("ally_body") != null:
+		return {"verdict": "PASS", "detail": "a creature was already out"}
+	# The outcome is read off `ally_body()` rather than off either call's
+	# return value, deliberately: both are coroutines, and a coroutine reached
+	# through `Object.call()` hands back whatever it had at its first `await`,
+	# not its eventual result. The body standing in the world is the honest
+	# answer and it is the one the game itself acts on.
+	await director.call("summon_active_creature")
+	var species := str(args.get("species", "terrapup"))
+	if director.call("ally_body") == null:
+		await director.call("adopt_starter", species, str(args.get("nickname", "")))
+	for i in maxi(0, int(args.get("settle", 30))):
+		await physics_frame
+	var body: Variant = director.call("ally_body")
+	if body == null or not is_instance_valid(body):
+		return {"verdict": "FAIL",
+			"detail": "neither summon_active_creature() nor adopt_starter('%s') left a body standing" % species}
+	return {"verdict": "PASS", "detail": "deployed %s" % str((body as Node).name)}
+
+
+func _encounter_director() -> Node:
+	if current_scene == null:
+		return null
+	return current_scene.get_node_or_null(^"EncounterDirector")
+
+
 func _step_wait_flag(args: Dictionary) -> Dictionary:
 	var flag := str(args.get("flag", ""))
 	if flag.is_empty():
@@ -1013,6 +1055,35 @@ func _execute_probe(msg: Dictionary) -> Variant:
 					"carried": bool(b.get("net_carried")),
 				}
 			return seen
+		"deployed_creatures":
+			# Stage B lane 4.B. Every DEPLOYED creature body this process is
+			# holding, keyed by NODE NAME -- because there are three of them in
+			# a two-peer session and two of them share an owner: the local
+			# `follower_creature.gd` this peer pilots (`local` true), that
+			# peer's own invisible outbound `remote_creature.gd` proxy, and the
+			# other peer's visible proxy. Keying by owner id would collapse the
+			# first two and hide exactly the case worth asserting.
+			#
+			# `owner`, `authority` and `mine` are reported separately and all
+			# three matter: a body that exists with the WRONG authority looks
+			# like a frozen creature, not like an error, so
+			# `tests/smoke_net_deploy_two_creatures.gd` asserts on them rather
+			# than on presence alone.
+			var deployed := {}
+			for body in get_nodes_in_group(&"deployed_creature"):
+				if not is_instance_valid(body) or not (body is Node3D):
+					continue
+				var c: Node3D = body
+				deployed[str(c.name)] = {
+					"pos": [c.global_position.x, c.global_position.y, c.global_position.z],
+					"owner": int(c.get("owner_peer_id")),
+					"species": str(c.get("species_id")),
+					"authority": c.get_multiplayer_authority(),
+					"mine": c.is_multiplayer_authority(),
+					"local": c.has_method("is_local_deployment") and bool(c.call("is_local_deployment")),
+					"visible": c.visible,
+				}
+			return deployed
 		"session":
 			# Wave 2 (lane 2.A): a real `scripts/net/session.gd` exists, so
 			# every field here is read off it. `available` stays as the first

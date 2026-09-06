@@ -32,7 +32,20 @@ const LEASH := 45.0
 const PRESENCE := preload("res://scripts/creatures/companion_presence.gd")
 
 
+## The trainer THIS creature follows. Stage B lane 4.B: it is the body of the
+## peer who owns the creature, not "the player" -- in a session every peer has
+## a trainer body standing in this world, and a follower that walked to
+## whichever one happened to be local would abandon its own trainer the moment
+## a second player joined. `encounter_director.gd::_spawn_ally_body()` sets it
+## to the owner's rig, and nothing here ever falls back to a global lookup:
+## a follower with no leader stands still, which is visibly wrong and
+## therefore reportable, where following the wrong trainer is neither.
 var leader: Node3D = null
+## The peer this creature belongs to. 1 in solo and on the host, a large
+## random ENet id for a joiner (spike finding 2: peer ids are never 2, 3, 4).
+## Set by the encounter director at deploy time and re-set if the session's
+## peer id changes under it.
+var owner_peer_id: int = 0
 var _presence: Node = null
 
 var _following: bool = false
@@ -91,8 +104,18 @@ func presence() -> Node:
 	return _presence
 
 
+## True: a `follower_creature.gd` body is, by construction, the creature THIS
+## process pilots -- `encounter_director.gd` only ever builds one for the local
+## player. `remote_creature.gd` answers false. Together they let
+## `playground_hud.gd` pick the local player's own creature out of
+## `DEPLOYED_GROUP` without asking for a node called "AllyCreature".
+func is_local_deployment() -> bool:
+	return true
+
+
 func _ready() -> void:
 	super()
+	add_to_group(DEPLOYED_GROUP)
 	_presence = PRESENCE.new()
 	_presence.name = "Presence"
 	add_child(_presence)
