@@ -271,9 +271,12 @@ Reported as 1-fail-then-3-green rather than as "green", by rule.
 
 | Tree | Runs | Result |
 |---|---|---|
-| this branch | 1 | **FAIL** — `the second production encounter would not start` |
-| this branch | 3 | **PASS**, 0 failures each |
-| base `61518f6b`, untouched | see below | — |
+| this branch | 4 | **1 FAIL** — `the second production encounter would not start` — and 3 PASS |
+| base `61518f6b`, untouched | 5 | **2 FAIL**, the identical assertion and the identical message, and 3 PASS |
+
+**The base fails the same way, 2 runs in 5.** Pre-existing, and not this lane's. The full
+run-by-run table, the mechanism, and the handover are in `BASE_CAMERA_RUNS.md` beside this
+file.
 
 What the failure is: the smoke's second entry/exit cycle did not start a fight. What is
 NOT plausible as a cause, stated as reasoning rather than assertion: every line this lane adds
@@ -287,8 +290,10 @@ call site now delegates to. The smoke's own printed `look vector` values already
 run-to-run between base and branch at identical steps, which is timing jitter in the orbit
 sample rather than anything this lane touches.
 
-**Base flake rate: recorded in `BASE_CAMERA_RUNS.md` beside this report.** It was measured
-specifically to answer "did this lane break it", before writing this verdict.
+The base was run five times specifically to answer "did this lane break it", before this
+verdict was written, and it answers it: the same assertion fails on the untouched tree at a
+rate no lower than the branch's. Handed to whoever owns that smoke's second entry/exit cycle
+— handover H9.
 
 ### F5 — no `smoke_net_catch_race`, and that is scope, not an oversight
 
@@ -388,6 +393,11 @@ door for "what this peer has out" (4.B's H4), and this is one more field through
   `last_encounter_refusal`. Nothing draws either yet. §8 step 4's requirement is that a losing
   thrower's HUD says WHO got it rather than their fight silently ending; the event exists, the
   banner does not.
+* **H9 — `smoke_combat_camera`'s second entry/exit cycle is flaky on `main`.** F4 and
+  `BASE_CAMERA_RUNS.md`: 2 failures in 5 on the untouched base, 1 in 4 on this branch, same
+  assertion and same message. Not fixed here and not this lane's. What would settle the
+  mechanism is a distance/visibility/alive print at the frame of the second press — the smoke
+  currently reports that the fight did not start, not why it could not.
 * **H8 — `build_placer.gd`'s `AllyCreature` name lookup** (4.B's H2) is still open. It is in
   this lane's do-not-touch list too, so the legacy alias still stands.
 
