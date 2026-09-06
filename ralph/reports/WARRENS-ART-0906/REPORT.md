@@ -2,390 +2,333 @@
 
 Branch `claude/art-warrens-round-0906`, from `claude/second-biome-art-plan-470zru`
 (which carries the main merge, Cloudreach cliff option A and the crown-relief work).
+**No pull request opened**, per the brief. Written to be picked up cold.
 
-Gap table: `docs/HANDOFF_2026-09-06.md` §4.3. Six prior exterior judge rounds and
+Gap table: `docs/HANDOFF_2026-09-06.md` §4.3. The six prior exterior judge rounds and
 their trajectory: `ralph/reports/WARRENS-EXT-0906/REPORT.md`.
 
-## The owner's standing correction, and what it changed
+---
 
-> "There is art in the repo for most of these things already, like mushrooms and
-> team tether stuff. Find it and use it. Recolor it if you need to. Don't use Meshy."
-> — owner, 2026-09-06
+## 1. Scoreboard
 
-This overrides the handoff's own W1 row, which proposed downloading the AssetQuest
-Free Mushroom Asset Kit (54.8 MB). **Nothing was downloaded in this lane and no
-Meshy generation was spent.** The repository already held six mushroom
-silhouettes; the two the gap actually needed were sitting un-installed in
-`assets_raw/vendor/quaternius_stylized-nature-megakit/`, one `cp` away, sharing a
-texture that was already installed. Every other asset this lane places —
-`DeadTree_1/2/3`, `TwistedTree_1/2/4`, `stump_round`, Kenney `tree-log` — was
-already installed and needed no ledger row of its own.
+| gap | round 6 (before) | blind round 1 | blind round 2 | status |
+|---|---|---|---|---|
+| **W1** mushrooms are plain domes, no gills or cap profile | named | not named | not named, **praised**: "the only object in any interior frame with a designed silhouette … It reads at thumbnail size. Nothing else indoors does." | **CLOSED** |
+| **W3** interior rooms read as a stone box | named | still named, **and the partial cladding's own seam named** | material half gone; what remains is "hard 90° extruded prisms … nothing says *dug*" | **MATERIAL HALF CLOSED, GEOMETRY HALF OPEN** — see §4 |
+| **W5** burrow arch reads as tubes, not compacted earth and roots | named | not named | not named, **opens the verdict**: "`03-mouth` is the best frame in the survey and it is genuinely good" | **CLOSED** |
+| §5.2 tube-foot pale sliver | recorded as remaining | not named | not named | **CLOSED**, measured: 219 → **0** bright pixels |
+| §5.2 pale terrain strip at the threshold | recorded | not named | not named | **left alone deliberately** — it is the terrain's own baked road (§6) |
+| **W2** meadow ground pale and sparse | (not this lane) | judge's ranked #2 | judge's ranked #1, with numbers | **NOT THIS LANE**, evidence in §6 |
+| **W4** guardian proportions / style | (not this lane) | judge's ranked #1 | judge's #2; **withdraws** its own round-1 scale finding | **NOT THIS LANE**, evidence in §6 |
 
-(Placeholder: verdicts and measured evidence are appended below as rounds land.)
+Verdicts in full: `JUDGE-round1.md`, `JUDGE-round2.md`. Both agents were given the
+skill and the two references and nothing else — no source, no config, no history, no
+statement of what changed. Round 2 was additionally told **not** to assume a doorway is
+2 m, because round 1's absolute scale figures rested on that and this lane's
+owner-directed height pass had already invalidated it.
 
-## Round 1 — measured on the lane's own frames, before any judge was spawned
+---
 
-`docs/HANDOFF_2026-09-06.md` §6 trap 9 says to measure exposure yourself before
-spawning a judge, because the judge reads it off the PNG and a wasted round costs
-15 minutes. Measuring found three defects loud enough that a judge round on these
-frames would have been spent on them, so they were fixed first. Rec.709 medians,
-`shots/warrens_63/`, 1280x800, day, software GL:
+## 2. What was closed, and how
 
-| frame | median Y | p05 | p95 | floor-band Y | floor-band RGB |
-|---|---|---|---|---|---|
-| 00-approach-60m | 122.7 | 22.0 | 186.9 | 126.4 | 126,129,106 |
-| 01-knoll-from-outside | 125.6 | 47.5 | 184.9 | 107.6 | 105,110,89 |
-| 02-knoll-from-outside | 116.7 | 54.6 | 189.2 | 106.4 | 97,111,91 |
-| 03-mouth | 54.8 | 7.3 | 171.5 | 48.3 | 59,47,30 |
-| 04-hall-dressing | **24.6** | 7.7 | 109.1 | 92.4 | 108,90,66 |
-| 05-hall-from-the-doorway | 123.2 | 10.8 | 188.9 | **159.1** | 185,156,114 |
-| 06-den-and-guardian | 54.0 | 9.0 | 103.3 | 66.9 | 76,66,51 |
-| 07-den-dressing | 43.1 | 9.1 | 84.8 | 74.0 | 86,72,55 |
+### W1 — mushrooms (`fungus.species`)
 
-**1. The new earth collar was the brightest object at the entrance** (03-mouth,
-01-knoll): a cream ring around a black hole, reading as bone or plaster, not as
-compacted earth — and about 3.3 m of collar around a 5.9 m arch, a hood rather
-than a rim, with a sawtooth silhouette from ~11 lobes and ~54 grain cycles around
-the arch.
+Two causes. Only one species was placed, and `Mushroom_Common` **is** a plain
+0.56 × 0.46 m dome with no stem read and no gill line; and every instance took the same
+tint, so even two species would have read as one.
 
-Root cause is not the collar: it is that the bank's `earth_tint` (#f0ece4 at
-`earth_brightness` 1.5) is tuned to lift the *sunlit dug face* against a pale
-meadow, and a hole's rim is not a sunlit face. The Compatibility renderer has no
-SSAO and no light volumes, so nothing darkens the inside of a concave form. Fixed
-by giving `earth_bank.gdshader` a baked contact-occlusion term on **COLOR.a** and
-having the collar write a ramp into it — dark at the rim, reaching exactly 1.0 at
-the outer edge so the collar and the mound still match where they touch. This is
-a no-op for everything that existed before it: `_build_bank()` and
-`_build_bank_cap()` write vertex colour through `_bank_add_vertex()`, whose
-`Color(frac, moist, spoil)` leaves alpha at Godot's default 1.0. The alternative
-— moving `earth_tint` — would have repainted the whole mound, which a previous
-lane judged over six rounds.
+The owner's standing correction of 2026-09-06 overrode the handoff's W1 row, which
+proposed a 54.8 MB AssetQuest download:
 
-Size halved, lobe and grain frequencies dropped to a few broad lobes.
+> "There is art in the repo for most of these things already, like mushrooms and team
+> tether stuff. Find it and use it. Recolor it if you need to. Don't use Meshy."
 
-**2. Three of the new root masses came back as dark maroon blobs** (03-mouth,
-01-knoll). `TwistedTree_*` ships `Leaves_TwistedTree`, the pack's crimson autumn
-texture. This is the same asset and the same texture as the "red tree" the
-previous lane spent three judge rounds chasing
-(`ralph/reports/WARRENS-EXT-0906/REPORT.md`), and `_tint_rock()` multiplying a
-root brown over crimson only makes it darker crimson. A root mass has no leaves
-at all, so the fix is not a retexture: every entry is now `DeadTree_*`, which
-carries `Bark_DeadTree` and nothing else.
+`Mushroom_Oyster` (stacked gilled shelves) and `Mushroom_RedCap` (a cap-and-stem
+toadstool) were already vendored in `assets_raw/vendor/quaternius_stylized-nature-megakit/`
+and share `Mushrooms.png`, which was **already installed**. The install is two `.gltf`
+and two `.bin` and **no new texture**. `fungus.species` gives each species its own
+albedo tint, glow colour, emission and `scale_mul`; the tints are pale cave variants
+(sage / bone / cool blue-grey), which is also what keeps the harvestable
+`mushroom_pickup` readable — it is now the only warm saturated mushroom underground.
+`scale_mul` is derived from each model's native height so all three land near 0.46 m.
 
-**3. Two value inversions.**
+**Nothing was downloaded in this lane and no Meshy generation was spent.**
 
-- The earth-clad hall bay came back at a frame median of **24.6** (04) — earth so
-  dark it reads as a hole, not a wall. `exterior_cladding_colour` (#4a3a2a) is
-  tuned for full daylight *plus* the mouth dome's shadow; underground, against
-  stone that is `rock` lerped 45 % toward a near-white tint, it is the wrong end
-  of the same problem. New `site.interior_cladding_colour`, ~1.5x, applied to the
-  interior skins only — `_clad_exterior_face()` is deliberately left alone.
-  Absent, the key is a no-op and every skin is byte-identical to before.
-- The mouth->hall beacon mushrooms were **brighter than the floor they stand on**
-  (05: floor-band median 185,156,114; the caps read above 200 in all channels) —
-  a stand of pale mint parasols filling the frame. Two causes: `scale_mul` was
-  picked per species by eye, and `Mushroom_Oyster` is a multi-cap mesh, so four
-  instances put twelve caps in a 3 m passage. Every multiplier is now derived
-  from the model's own native height (0.46 / 0.92 / 1.78 m) so all three land
-  near 0.46 m at a cluster scale of 1.0; emission roughly halved and the albedo
-  tints dropped about a quarter. Glowing fungus has to sit *under* the lit floor
-  in value or it stops being a light source and becomes the subject.
+### W5 — the burrow arch
 
-**Also fixed this round, the §5.2 leftover.** The "thin pale sliver at the tube's
-right foot" is measurable, not a guess: the apron ramp tapers to a **2.30 m**
-half-width at the throat's outer end while the throat shell there is flared
-(`throat_flare` 0.18) to **2.95 m**. The ramp is 0.65 m narrower than the hole it
-ends in, at both feet, and what shows in the gap is raw pale terrain inside a dark
-tube. The taper's own stated reading ("the trample spreads wide at the threshold
-and narrows further off") is not what the numbers do either — the wide end is the
-doorway, 8 m *inside* the throat. Fixed by construction rather than by re-tuning a
-width: the ramp is never allowed to be narrower than the throat standing on it,
-for any `throat_flare` and any taper a later pass picks.
+The brow was a `_tube_mesh()` sweep (a constant-radius circular section — literally a
+pipe) wearing `_bank_earth_material()`, while the bank two metres behind it wears
+`earth_bank.gdshader`. Both are gone. It is now a **surface**: a collar swept around
+the arch rim whose cross-section is a quadratic Bézier from the rim, out and proud to a
+crest, then back and further out to die into the mound, displaced by seeded noise that
+fades to zero at **both** ends of the section so the inner rim stays exactly on the arch
+and the outer edge lands flush on the bank. It wears `_bank_material()` with the bank's
+own vertex-colour contract, so the earth photo, its normal map and the spoil darkening
+are continuous across the seam.
 
-**The other §5.2 leftover, the pale terrain strip at the threshold, is left
-alone deliberately.** `tools/_probe_warrens_threshold_render.gd` already
-established what it is: the terrain's own baked dirt-path road arriving at the
-mouth. A road that arrives at the den mouth is the world working, not a defect,
-and `meadow_grass_Color.png` and the Meadows terrain bake are out of this lane.
+The ten bark-root cylinders (`bank.roots`, two five-tube "masses") are replaced by real
+installed meshes — `DeadTree_*` crowns aimed crown-first out of the dug face, with
+`stump_round` and Kenney `tree-log` half-buried at their feet (`bank.root_masses`), plus
+two more hung off the arch itself (`bank.brow_root_meshes`). The two thin "snagged over
+the top" sticks JUDGE-round2.md liked are kept verbatim — a thin snagged stick is one of
+the few things a tapered tube actually is.
 
-## Owner directive, 2026-09-06, on this lane's first render
+### The §5.2 tube-foot sliver — three diagnoses, and what settled it
 
-> "the interior looks a little cramped for that creature. should be taller.
-> exterior look better but can still be improved."
+Worth reading if you inherit this, because two of my three diagnoses were wrong and the
+**measurement** is what corrected them:
 
-**Interior height.** The den guardian is a Burrowback at 3.57 m (measured last
-lane) and the den ceiling was 4.8 m: 1.2 m of air over its head, of which
-`interior_structure.rib_drop_m` takes 0.34 back, so the boss stood
-shoulder-to-beam in its own chamber (frame `06-den-and-guardian`). Per CLAUDE.md's
-own scale rule — *resolve relative-scale defects by growing the smaller side,
-never by shrinking* — the room grew, not the creature:
-
-| chamber / passage | was | now | why |
-|---|---|---|---|
-| den | 4.8 | **7.0** | the guardian is now 51 % of its own room's height, 3.4 m over it |
-| hall | 4.2 | 5.6 | the room the player walks into, and where the earth bay is |
-| warren, vault | 3.4 | 4.0 | kept in proportion with the two big rooms |
-| hall→den passage | 3.4 | 4.4 | round 6 measured the guardian's shoulder at 85–90 % of this door |
-| mouth, mouth→hall | 3.6 / 3.0 | unchanged | tied to `bank.arch_height_m` and the throat — moving them moves the front door six judge rounds settled |
-
-Two knock-ons were re-authored with it rather than left to rot. `roots.pieces.tip_y`
-per chamber: a root crown authored to hang just under a 4.2 m ceiling is a floating
-bush under a 5.6 m one, and its trunk has to stay buried in the ceiling slab (every
-piece re-checked: shortest trunk top is 6.5 m against a 4.0 m ceiling, tallest 9.0 m
-against 7.0 m). And the `lights` y/range/energy for the four rooms that grew — in
-particular the den's warm key moved from y 3.1 to 4.6, i.e. from *below* a 3.57 m
-creature's head to above it.
-
-The mound over each room needed no authoring at all: `_bank_chamber_bumps()` derives
-its cone from the chamber's own height plus `clearance_m` + `safety_m`, so the
-enclosure promise holds by construction. Re-measured after the change:
-
-```
-[warrens] chamber clearance past the required 1.5m: mouth +11.8m, hall +2.8m,
-          warren +3.5m, den +2.9m, vault +4.7m (worst 2.8m)
-[fixture] chamber enclosure: 5 chambers checked, highest cover hit 0.3m above the mouth
-[fixture] skyline from the approach: 3 local maxima with >=1.0m prominence:
-          x=-21.0 h=16.2m, x=+0.5 h=18.1m, x=+19.0 h=15.2m
-WARRENS FIXTURE OK
-```
-
-(the two flank maxima gained 0.6 m each: the heaps over the warren and the vault
-rose with the rooms under them, which is the mound telling the truth about what it
-covers.)
-
-**Exterior.** The round-1 fixes named above — the collar's value, size and
-silhouette, the maroon `TwistedTree` root masses, and the apron/throat sliver —
-were all still unrendered when the directive arrived. They go into the next sheet,
-and the blind judge names what is left rather than this file guessing at it.
-
-## Round 2 — measured on the round-1 re-render
-
-Rec.709 medians, same capture, before/after round 1:
-
-| frame | median Y (r0 → r1) | floor-band Y | what moved |
-|---|---|---|---|
-| 03-mouth | 54.8 → 51.8 | 48.3 → 46.2 | collar occlusion landed |
-| 04-hall-dressing | **24.6 → 52.8** | 92.4 → 101.6 | `interior_cladding_colour`: earth reads as a wall, not a hole |
-| 05-hall-from-the-doorway | **123.2 → 73.7** | 159.1 → 159.3 | mushrooms stopped being the subject; the floor did not move |
-| 07-den-dressing | 43.1 → 46.6 | 74.0 → 87.7 | ditto, den passage |
-
-The maroon root masses are gone and the collar is no longer cream. Two things
-the re-render still shows, both fixed this round:
-
-**1. The collar traded a sawtooth for a pipe.** Round 1 cut `brow_noise_m` to
-0.16 and `brow_lobe_freq` to 0.06 and the collar came back *smooth* — a rounded
-band of near-uniform thickness, which is precisely the W5 gap ("reads as tubes"),
-just olive instead of chocolate. Grain and lobes are put back between the two
-extremes (~27 cycles and ~6 broad lobes, against round 0's 54 and 11). The
-structural change is in code, not config: `width_scale` now drives the crest's
-**proud** offset as well as its radial one, so a lobe pushes out *and* forward and
-the crest **line** wanders in z. A crest line that runs true along the arch is what
-reads as a pipe from 16 m, whatever the thickness is doing.
-
-**2. The pale sliver survived the round-1 fix — the measurement corrected the
-guess.** Cropped and sampled at the throat's right foot in `03-mouth.png`: a flat
-near-white wedge at RGB **[162,157,134]**, and it is the **bank's own surface**
-where `_bank_notch_open_factor()` stops holding the mound open, caught at a
-grazing angle. Round 1 measured the apron ramp against the throat *shell*
-(2.95 m) when the bare, un-mounded ground actually runs to the *notch's* edge
-(`arch_width_m * 0.5 + arch_margin_m` = 3.60 m, plus its own 0.6 m taper ≈ 4.2 m),
-so the ramp still stopped 0.4 m short at each foot. It is measured against the
-notch now (`_mouth_notch_half_width()`), which is the thing that actually decides
-where the mound stops.
-
-The tonal half is the same root cause as the collar: `earth_tint` #f0ece4 at
-`earth_brightness` 1.5 is tuned for the broad sunlit dug face, and *any* small
-piece of bank caught at a grazing angle reads white at that value. Rather than
-repaint a mound a previous lane judged over six rounds, this uses the mechanism
-that already exists for it — the damp band around every opening. `moist_radius_m`
-3.0 → 4.5 and `moist_darken` 0.35 → 0.55, which is also the SECOND-PASS brief's
-own words ("a darker moist band within 2 m of every hole and the mouth").
-
-## The guardian is not floating — measured, not assumed
-
-`06-den-and-guardian` reads as though the boss hovers. It does not, and the new
-`tools/_probe_warrens_guardian_stance.gd` says so on a real boot of the real scene:
-
-```
-PROBE floor plane y = 4.148
-PROBE guardian origin y = 4.149  (origin - floor = 0.001)
-PROBE is CharacterBody3D, on_floor=true velocity=(0.0, 0.0, 0.0)
-PROBE collider Collision shape=CapsuleShape3D origin_y=5.934 (1.786 above floor)
-```
-
-The body is on the floor, at rest, its origin a millimetre above the floor plane.
-What reads as a hover is the **mesh's own feet sitting above its origin**, magnified
-by the 3.57 m scale — a creature-mesh matter, which `docs/HANDOFF_2026-09-06.md`
-§4.3 W4 puts under "creature art locked / owner call" and this lane's brief
-explicitly fences off ("do not touch creature meshes or `creature_visual.gd`").
-**Left alone deliberately, and recorded here with the numbers so whoever owns it
-does not have to re-derive them.** Note the probe's visual-AABB line is not
-evidence of anything: it merges the *rest-pose* bounds of skinned meshes, which is
-why it reports a nonsensical 16 m span.
-
-## Blind verdict — `JUDGE-round1.md`, against the three gaps this lane owns
-
-The judge saw the sheet and the eight frames, the two references and the skill,
-and nothing else — no source, no config, no history, no statement of what changed.
-Its full text is in `JUDGE-round1.md`. Scored against the handoff §4.3 rows in the
-judges' own words:
-
-| gap | round 6 (before) | round 1 of this lane (after) |
+| round | fix attempted | result |
 |---|---|---|
-| **W1** "Mushrooms are plain domes, no gills or cap profile" | named | **not named.** `05`'s cluster is now called "the single best-shaped thing in the interior". A NEW complaint replaces it: the mushrooms read 1.5–2 m, "larger than its guardian, which inverts the hierarchy". |
-| **W3** "Interior rooms read as a stone box" | named | **still named, and ranked #3**: "reads as a rectangular basement, not a dug den". Worse, it names the seam this lane's own partial cladding created — "`04` uses a brown dirt-and-gravel wall while `05`/`06`/`07` add a grey speckled granite for the same structural role — two unrelated rock materials in adjacent rooms with no transition, so the burrow has no material identity". |
-| **W5** "Burrow-arch reads as tubes, not compacted earth and roots" | named | **not named.** `03-mouth` is now "a genuinely good arch silhouette — the mossy lintel over a dark opening with grass fringing the top is a real piece of landmark language and it is the best-composed frame here." |
-| §5.2 tube-foot sliver | recorded as remaining | **not named** at any size. Below the threshold that matters, on frames rendered before the round-3 overlap fix. |
+| 1 | apron ramp widened to the throat **shell** (2.30 → 2.95 m half-width) | 219 bright px, bbox x 668–803 |
+| 2 | apron widened to the **notch** (4.2 m) **and** the bank's moist band deepened | 219 px, **same bbox**, RGB [173,173,148] |
+| 3 | `threshold_fan_overlap_m` — a metre of fan/ramp overlap instead of a hand's width | **0 px** |
 
-So: **W5 closed, W1 closed on its own terms, W3 not closed — and half-doing it
-made one of its symptoms worse.** A bay of earth beside unclad stone is two
-materials where there was one. That is a real cost of the partial approach and it
-is this lane's to carry.
+An artefact byte-identical across two builds that changed different things is not caused
+by either of them. It was a **z-gap**: the ramp's outermost box ends at `z_front − 0.075`,
+the fan's row 0 sat at `z_front + 0.2` and row 1 at `z_front − 0.24`, so the two surfaces
+met inside a single 0.44 m band, 3 cm apart in height, on ground falling away — at the
+16 m stand that band is a few pixels tall and the eye looks straight through it to
+sunlit terrain.
 
-### New defects the verdict names that are inside this lane's files
+Rounds 1 and 2 were **kept, not reverted**: the apron genuinely did stop 0.4 m short of
+the notch at each foot, and the bank's earth genuinely does read white at a grazing angle
+at `earth_tint` #f0ece4 × 1.5. Real defects found on the way; neither was this one.
 
-- `03`: "the root/branch dressing hanging over the arch is a flat black scribble
-  with no thickness or overlap; it reads as a decal, not geometry" — the new
-  `brow_root_meshes`, silhouetted against bright sky.
-- `03`: "a **red-and-white striped pole with a white ball on top** ... reads as a
-  barber pole, a survey stake or a debug marker, and it is the single most
-  saturated red in the whole survey". That is the Team Tether lamp post, which
-  round 6 asked for and which now reads as left-in placeholder.
-- `03`: "the bottom 40% of the frame is a single smooth chocolate-brown mass with
-  no texture, no scatter and no detail" — the threshold fan.
-- `03`, `01`: "the moss on the boulders is a bright green band painted only on the
-  upper faces with a hard straight edge where it stops — reads as a decal stripe".
-- `05`: the beacon cluster sits ~1 m from the capture's own eye, which is why it
-  measures 1.5–2 m against a doorway 10 m behind it.
+### Owner-directed interior height pass (2026-09-06)
 
-### What the verdict names that is NOT this lane's, recorded so it is not lost
+> "the interior looks a little cramped for that creature. should be taller."
 
-- **The guardian** (its ranked #1): style seam at the neck, two texel densities,
-  dog scale, no staging. W4 / owner call, and creature meshes plus
-  `creature_visual.gd` are fenced off from this lane. **One caution for whoever
-  takes it:** the judge measured against "a doorway a 1.80 m trainer walks through
-  is ~2 m". After this lane's owner-directed height pass those passages are
-  3.2–4.4 m, so the absolute figures ("under 1 m at the shoulder") rest on a wrong
-  premise. The *finding underneath* still stands and is the useful part: a blind
-  viewer had no scale cue in that room and read the boss as dog-sized.
-- **The meadow ground** (its ranked #2): grey not green, bare substrate between
-  isolated blades, evenly-spaced one-scale scatter, no atmospheric perspective.
-  This is W2 — Meadows-wide terrain palette and grass field, explicitly not this
-  lane, and it shares a root cause with Cloudreach's C1.
-- **"The exterior has no sun"**: no cast shadows on terrain in `00`/`01`/`02`,
-  while `01`'s crate and `03`'s near ground both have crisp ones. That pattern is a
-  directional-shadow range limit, not a missing light — `art.json` and the renderer,
+The guardian is 3.57 m under what was a 4.8 m ceiling, of which `rib_drop_m` takes 0.34
+back. Per CLAUDE.md's scale rule the **room** grew, never the creature:
+
+| | was | now |
+|---|---|---|
+| den | 4.8 | **7.0** (guardian 51 % of its own room, 3.4 m above it) |
+| hall | 4.2 | 5.6 |
+| warren, vault | 3.4 | 4.0 |
+| hall→den passage | 3.4 | 4.4 (the boss's own door was shorter than the boss) |
+| mouth, mouth→hall | 3.6 / 3.0 | **unchanged** — tied to `bank.arch_height_m` and the throat |
+
+Two knock-ons re-authored with it: `roots.pieces.tip_y` per chamber (a crown hung under a
+4.2 m ceiling is a floating bush under a 5.6 m one; every trunk re-checked as still
+buried in its slab, shortest top 6.5 m against a 4.0 m ceiling) and the `lights` y/range/
+energy for the four rooms that grew — the den's warm key moved from y 3.1 to 4.6, i.e.
+from *below* a 3.57 m creature's head to above it. The mound needed no authoring:
+`_bank_chamber_bumps()` derives its cone from the chamber height, so clearance held at
+`den +2.9m`, unchanged.
+
+Blind round 2 independently confirms the result and **withdraws** round 1's scale
+finding: "the guardian measures about 4.5–5× the chest's height at the shoulder … It is
+not the frog-sized-boss failure. Good."
+
+### Other defects the verdicts named inside this lane's files, all fixed
+
+- "a red-and-white striped pole with a white ball on top … reads as a barber pole, a
+  survey stake or a debug marker" → emission 7.0 was clipping the bulb to white (round 6's
+  fix for "an unlit black pole with a white sphere" had overshot into a different white
+  sphere); the oxblood **stays** (this is the one Team Tether object at the threshold) but
+  moved from an eye-height ring to a foot collar. Then round 2 called the result "a
+  municipal streetlight", so `Lantern_Wall` — **already vendored, all three textures
+  already installed** — hangs on the post instead. Ledger row added before the file.
+- "the root/branch dressing … is a flat black scribble … reads as a decal, not geometry"
+  → three thin crowns became two at half again the scale, overlapping, over a lighter
+  tint. Round 2 quotes the result as a thing that works.
+- "the moss on the boulders is a bright green band … a decal stripe" → `moss_normal_min`
+  0.5 **was** the hard edge (it switched moss on across a few degrees of surface normal);
+  0.22 makes it a gradient.
+- "two grass tufts hang in open air against the blue sky" → self-inflicted: the brow turf
+  was seated to the **old swept-tube** brow and I moved the collar twice without moving
+  the turf. It now derives its seat from the same `lip_out`/`lip_proud` the ring is built
+  from, so it cannot drift out of step again.
+- "the bottom 40 % of the frame is a single smooth chocolate-brown mass" → threshold
+  rubble 40 → 85.
+
+---
+
+## 3. Measured evidence (Rec.709, `shots/warrens_63/`, 1280×800, day, software GL)
+
+Measured before every judge round, per `docs/HANDOFF_2026-09-06.md` §6 trap 9.
+
+| frame | round 0 median Y | after | floor-band Y | what moved |
+|---|---|---|---|---|
+| 04-hall-dressing | **24.6** | **52.8** | 92.4 → 101.5 | `interior_cladding_colour`: earth reads as a wall, not a hole |
+| 05-hall-from-the-doorway | **123.2** | **72.7** | 159.1 → 159.3 | mushrooms stopped being the subject; the floor did not move |
+| 03-mouth | 54.8 | 50.5 | 48.3 → 47.5 | collar occlusion landed |
+| 07-den-dressing | 43.1 | **32.0** | 74.0 → 90.3 | **a regression — see §5** |
+
+---
+
+## 4. W3's honest status: the material task is done, the geometry task is not
+
+They were never the same task, and the handoff conflated them.
+
+The handoff's W3 row is a **material** instruction — "extend the earth-clad treatment
+(`site.earth_clad_interiors`) to the hall's first bay and the passage walls. Corbels and
+beams stay." Doing exactly that is what produced blind round 1's finding:
+
+> "04 uses a brown dirt-and-gravel wall while 05/06/07 add a grey speckled granite for
+> the same structural role — two unrelated rock materials in adjacent rooms with no
+> transition, so the burrow has no material identity."
+
+A bay of earth beside unclad stone is two materials where there was one. Round 2's own
+instruction was "pick ONE wall rock material for the burrow", so `site.earth_clad_walls`
+now clads all four walls and the ceiling underside of every chamber, the passages
+already were, and the hall's partial bay retires to an empty list (the mechanism stays
+in code — it is the right tool for a site that wants a real material transition
+somewhere). Evidence: `38 interior earth skins across 5 walls-clad chamber(s) and the
+passages`. Round 2 does not repeat the two-materials finding.
+
+**What remains is geometry, and it is out of reach of a config key.** Round 2: "hard 90°
+extruded prisms with perfectly flat walls, sharp vertical corners and a flat ceiling.
+Nothing about `04`, `05`, `06` or `07` says *dug*. The doorways are plain rectangles cut
+in a wall with a flat frame band, no jamb, no lintel, no wear." Round 1 put the same
+thing in its **cannot be fixed by scene work** list: "the interior kit. Boxy planes and
+unbevelled beams cannot be dressed into a dug burrow. Needs a curved/organic tunnel kit,
+or the burrow reads as a cellar forever."
+
+That is a kit decision for an owner, not a tuning pass, and it was not attempted.
+
+---
+
+## 5. What I did NOT get to, and why
+
+1. **`07-den-dressing` value regression, introduced by this lane and unresolved.** Frame
+   median fell 46.6 → **32.0** when the den's walls went from pale stone to earth. The
+   material identity is right and the value is now wrong: the den's light pools were
+   tuned against a wall albedo that no longer exists. The levers are
+   `site.interior_cladding_colour` (currently `#6f5840`) and the three den entries in
+   `lights`. **This is the first thing to pick up.** Named here rather than left to be
+   discovered.
+2. **A judge round on the final tree.** The last two commits — the Cloudreach-style
+   geology layer and its correction — are rendered but **not blind-judged**. Verdicts 1
+   and 2 predate them. Do not read either verdict as acceptance of the geology work.
+3. **The geology changed the mound's CHARACTER, and that is an owner call I could not
+   make.** The previous lane spent six rounds turning this knoll into "a lit grass mound"
+   (its round-6 verdict). With the geology layer on, the upper cone now reads as
+   grey-green **stone** with mossy shelves rather than grass. That is the direction the
+   owner asked for — Cloudreach-style geology instead of plastic props — and the rock
+   language is now one thing instead of two. But it is a change of character, not just of
+   material, and no judge has seen it. If the grass mound was the intent, `slope_low_deg`
+   is the dial: raising it toward 60 hands the dome back to grass and leaves stone only on
+   the dug face. Measured on the final render, `01-knoll` darkest-5 % lifted 39.9 → 50.5
+   between the overshoot and the correction, so the black cone is gone; whether the
+   remaining amount is right is a look decision.
+4. **The geology strength is a guess.** `bank.geology.strength` 0.55 over a 52–68° band
+   is my second attempt; the first (0.85 over 44–60°) turned the knoll into a near-black
+   cone because this mound's settled flanks already sit near 50°, so there is no clean
+   slope gap between "cut face" and "grassy flank". The corrected numbers are rendered
+   but unjudged. `strength: 0` reverts the whole layer; nothing else needs touching.
+5. **Interior floors** are still the pale sandy `_floor_material(false)` while the walls
+   are now earth. Round 2 names the mismatch ("through the doorway in `03-mouth` the
+   interior floor reads dark blue-grey; in `04` and `05` the same floor is a bright warm
+   cream sand … it is a hue flip"). `earth_clad_interiors` already swaps a chamber's floor
+   to apron earth; extending that to the walls-clad rooms is the obvious next move and I
+   did not risk it without a judge round.
+6. **W2 and W4** were explicitly out of scope and stayed out. Evidence in §6.
+
+---
+
+## 6. Named by the judges, NOT this lane's — recorded so it is not lost
+
+- **The meadow ground** (round 2's ranked #1), with its numbers: exterior ground median
+  chroma **0.18–0.28** and brightest-5 % **0.62–0.69**, against the references' 0.42–0.49
+  and 0.90–0.94. "A hard blue sky, a sun direction proven by the crate's sharp shadow —
+  and a meadow lit as though it were overcast." This is W2: the Meadows-wide terrain
+  palette and grass field, sharing a root cause with Cloudreach's C1.
+- **"The exterior has no sun"** — no cast shadows on terrain in `00`/`01`/`02` while
+  `01`'s crate and `03`'s near ground both have crisp ones. That pattern is a
+  directional-shadow **range** limit, not a missing light: `art.json` and the renderer,
   Meadows-wide.
-- **Asset-set gaps** the judge says the scene cannot fix: the tree set (two
-  silhouettes, flat leaf cards, off-palette trunks), the ground-cover set, the rock
-  set (facet slabs with a painted moss band), and an organic tunnel kit for the
-  interior.
+- **The guardian's style seam** — "a hand-painted matte badger head joined at the shoulder
+  to a glossy moss-plated rock body, with a third material on the paws". W4, owner call,
+  and creature meshes plus `creature_visual.gd` were fenced off from this lane.
+- **The guardian reads as floating** — and it is **not**, measured on a real boot by the
+  new `tools/_probe_warrens_guardian_stance.gd`:
+  ```
+  PROBE floor plane y = 4.148
+  PROBE guardian origin y = 4.149  (origin - floor = 0.001)
+  PROBE is CharacterBody3D, on_floor=true velocity=(0.0, 0.0, 0.0)
+  ```
+  The body is on the floor, at rest. What reads as a hover is the **mesh's own feet
+  sitting above its origin**, magnified by the 3.57 m scale. A mesh matter, not a
+  placement one. (The probe's visual-AABB line is not evidence of anything — it merges
+  rest-pose bounds of skinned meshes, which is why it reports a nonsensical 16 m span.)
+- **"Duplicate chests in three frames"** — real, and confirmed by crop, but **not the
+  warrens' dressing list.** `burrow_warrens.json` authors no chest at all, and the new
+  `tools/_probe_warrens_prop_overlaps.gd` builds the warrens against the same flat
+  fixture `smoke_warrens_fixture` uses, walks all **801** placed props and reports every
+  pair closer than 1.4 m: **no Dressing↔Dressing pair exists.** The fixture has no
+  playground and the real scene does, so the second copy comes from the playground's own
+  band-pickup / harvest pass, which is not warrens-aware (`playground_world.gd` mentions
+  the warrens only to build it). Handed over with the probe rather than half-fixed from
+  inside the wrong file.
+- **The pale terrain strip at the threshold** is the terrain's own baked dirt-path road
+  arriving at the mouth, already established by `tools/_probe_warrens_threshold_render.gd`.
+  A road that arrives at a den mouth is the world working. `meadow_grass_Color.png` and
+  the Meadows bake were out of this lane and were not touched.
+- **Asset-set gaps** both rounds say the scene cannot fix: the tree set (two silhouettes,
+  flat leaf cards, off-palette trunks), the ground-cover set, the rock family, an organic
+  tunnel kit, and the prop family's photographic wood/metal against flat-shaded stylised
+  geometry.
 
-## Round 3 — acting on the verdict
+---
 
-W3 done as the verdict asked ("pick ONE wall rock material for the burrow")
-rather than as the handoff asked ("the hall's first bay and the passage walls").
-`site.earth_clad_walls` clads all four walls and the ceiling underside of every
-chamber; the hall's partial bay retires to an empty list. Evidence in the smoke
-output:
+## 7. Tests — the exact lines this rests on
+
+Run on this branch. A self-report is not evidence; these are the runs.
 
 ```
-[warrens] 38 interior earth skins across 5 walls-clad chamber(s) and the passages
-warrens smoke test passed
-SMOKE_EXIT=0        ERROR lines: 0
+tests/smoke_warrens_fixture.gd  ->  WARRENS FIXTURE OK
+  [warrens] 38 interior earth skins across 5 walls-clad chamber(s) and the passages
+  [warrens] mouth brow: displaced earth collar, 31 x 8 in the bank's own shader
+  [warrens] 2 root masses over the mouth (meshes, not tubes)
+  [warrens] 6 root masses on the bank face (meshes, not tubes)
+  [warrens] placed 4 accent boulders at the bank's own foot
+  [warrens] 3 rock outcrops protruding from the dug face and flanks
+  [warrens] 8 fungus clusters, 3 species
+  [warrens] earth bank 63x90m, crest 18.1m above the mouth (10.0x the 1.8m trainer);
+            chamber clearance past the required 1.5m: mouth +11.8m, hall +2.8m,
+            warren +3.5m, den +2.9m, vault +4.7m (worst 2.8m)
+  [fixture] mouth arch: clear line from 12.0m out straight to the mouth chamber floor
+  [fixture] chamber enclosure: 5 chambers checked, highest cover hit 0.3m above the mouth
+  [fixture] capsule shape-cast (r=0.4m): safe 28.0m, unsafe 28.0m, of 28.0m along the
+            mouth->hall line
+  [fixture] capsule shape-cast: channel to the hall is clear
+  [fixture] dome over the throat: 9 rays down, 0 open (all land on earth above the tube)
+  [fixture] skyline from the approach: 3 local maxima with >=1.0m prominence:
+            x=-21.0 h=16.2m, x=+0.5 h=18.1m, x=+19.0 h=15.2m
+
+tests/smoke_warrens.gd  ->  warrens smoke test passed
+  SMOKE_EXIT=0
+  ERROR lines: 0
+  second build of a cleared warrens spawned no guardian, as it should not
 ```
 
-The four `03-mouth` defects the verdict named in this lane's files are fixed:
-the lamp (hood, amber bulb at emission 3.2 instead of a white-clipping 7.0,
-oxblood moved from an eye-height ring to a foot collar), the arch roots (three
-thin crowns became two at half again the scale, overlapping, over a lighter
-tint), the boulder moss (`moss_normal_min` 0.5 → 0.22 — that threshold *was* the
-hard edge the judge saw), and the threshold debris (40 → 85).
+**Caveat, stated plainly.** `smoke_warrens` was last run in full on the tree at commit
+`2905e2ae` (the one-wall-material change). The four commits after it — the lamp light
+offset, the lantern swap, the brow-turf reseat, the geology layer and its correction —
+have been verified by `smoke_warrens_fixture` (**WARRENS FIXTURE OK**, quoted above, run
+after each) and by rendering, **but the full `smoke_warrens` boot was not re-run on the
+final head**. It should be, and it is cheap (~6 minutes). Nothing in those four commits
+touches collision, the walk route or chamber geometry — they are materials, a light
+position, two prop transforms and a shader layer — but that is an argument, not a run.
 
-**A regression this round introduced, recorded rather than hidden:**
-`07-den-dressing` fell from a frame median of 46.6 to **32.0** when the den's
-walls went from pale stone to earth. The material identity is right and the value
-is now wrong; the den's own lights were tuned against a wall albedo that no longer
-exists. `site.interior_cladding_colour` and the den pools are the levers and this
-is the next thing to measure, not something to leave for a reader to discover.
+**Not verified at all:** CI. No CI run was dispatched from this lane.
 
-**A second-order defect found while checking the lamp.** The post rendered
-near-white whatever its albedo said, because the lamp's `OmniLight3D` was
-parented at the post's own axis — the post was lit at zero distance. That is half
-of why the verdict read "a red-and-white striped pole": not the colour, the
-lighting. `lamp_throw_m` stands the light 0.45 m out toward the road while the
-bulb and hood stay on the post, since a light source does not have to be the
-thing you see.
+---
 
-## Blind verdict round 2 — `JUDGE-round2.md`
+## 8. Files this lane owns and touched
 
-Same discipline, fresh agent, told nothing about round 1 or what changed, and
-this time explicitly told **not** to assume a doorway is 2 m (round 1's absolute
-scale figures rested on that wrong premise).
+- `scripts/world/burrow_warrens.gd`
+- `data/config/burrow_warrens.json`
+- `shaders/earth_bank.gdshader`
+- `assets/environment/stylized_nature/Mushroom_{Oyster,RedCap}.{gltf,bin}` (installed)
+- `assets/props/quaternius_fantasy/Lantern_Wall.{gltf,bin}` (installed)
+- `docs/specs/ASSET_LEDGER.md` (two addendum rows, both written before the files)
+- `tools/_probe_warrens_guardian_stance.gd`, `tools/_probe_warrens_prop_overlaps.gd` (new)
+- `ralph/reports/WARRENS-ART-0906/`
 
-| gap | round 6 (before this lane) | round 1 | round 2 |
-|---|---|---|---|
-| **W1** mushrooms are plain domes | named | not named | **not named, and praised**: "the only object in any interior frame with a designed silhouette: varied cap heights, varied stem lean, overlapping depths, a colour that separates from the room. It reads at thumbnail size. Nothing else indoors does." |
-| **W3** interior reads as a stone box | named | still named, **and the partial cladding's own seam named** | **the material half is gone.** Round 1's "two unrelated rock materials in adjacent rooms … the burrow has no material identity" does not appear. What remains is geometry: "hard 90° extruded prisms … nothing about `04`, `05`, `06` or `07` says *dug*." |
-| **W5** arch reads as tubes | named | not named | **not named, and it opens the verdict**: "`03-mouth` is the best frame in the survey and it is genuinely good. The arch of the earth lip, the tangle of exposed roots hanging into the opening … that is authored composition with a foreground, a threshold and a reveal." |
-| §5.2 tube-foot sliver | recorded | not named | not named (0 bright pixels, measured) |
-
-Round 1's "flat black scribble" root complaint has become round 2's "the tangle
-of exposed roots hanging into the opening", quoted as a thing that works.
-
-**W3's honest status: the material task is done, the geometry task is not, and
-they were never the same task.** The handoff's W3 row is a material instruction
-("extend the earth-clad treatment … corbels and beams stay") and that is
-complete. "The rooms are boxes" is a different and larger thing — round 1 put an
-organic tunnel kit in its *cannot be fixed by scene work* list, and round 2
-agrees by describing extruded prisms with flat ceilings and painted-on beams.
-That needs a kit decision, not a config key.
-
-### Acted on this round
-
-- **The park lamp.** Round 3's hood turned a survey stake into a municipal
-  streetlight — the wrong vocabulary solved twice. The verdict's own remedy
-  ("a lantern, a torch, a marked cairn") was already vendored: `Lantern_Wall`
-  hangs on the existing post, its three textures already installed, one `.gltf`
-  and one `.bin`. Ledger row added. The judge was right that brightness would not
-  fix it and wrong that it needed art the build lacks.
-- **"Two grass tufts hang in open air against the blue sky"** (`03`). Self-
-  inflicted, and worth naming as such: the brow turf was seated with a
-  hand-tuned offset that matched the *old swept-tube* brow, and rounds 1 and 2
-  both moved the collar's reach without moving the turf. It now derives its seat
-  from the same `lip_out`/`lip_proud` the ring is built from, so it cannot drift
-  out of step again.
-
-### "Duplicate chests in three frames" — measured, and not this lane's
-
-The verdict calls it systemic: "`04`, `06` and `07` each contain two copies of
-the chest asset at nearly the same transform, interpenetrating." A crop of `06`
-confirms it exactly — two crates offset by about half a crate, the rear one's lid
-rim and back corner standing proud of the front one.
-
-It is **not** the warrens' dressing list. `data/config/burrow_warrens.json`
-authors no chest at all, and `tools/_probe_warrens_prop_overlaps.gd` (new) builds
-the warrens against the same flat fixture `smoke_warrens_fixture` uses, walks all
-801 placed props and reports every pair closer than 1.4 m: **no Dressing↔Dressing
-pair exists.** The fixture has no playground in it, and the real scene does — so
-the second copy comes from a placer outside these four files (the playground's
-own band-pickup / harvest pass, which is not warrens-aware; `playground_world.gd`
-mentions the warrens only to build it). Handed over with the probe, rather than
-half-fixed from inside the wrong file.
-
-### Still open, and whose
-
-- **The guardian** — the style seam is unchanged and is the verdict's #2. But
-  round 2 *withdraws* round 1's scale finding on its own: "the guardian measures
-  about 4.5–5× the chest's height at the shoulder … It is not the frog-sized-boss
-  failure. Good." Round 1's "dog-sized" rested on the 2 m doorway assumption.
-  W4 / owner call either way.
-- **Exterior light and ground** — the verdict's #1, with numbers: ground median
-  chroma 0.18–0.28 and a brightest-5% of 0.62–0.69 against the references'
-  0.42–0.49 and 0.90–0.94. "A hard blue sky, a sun direction proven by the
-  crate's sharp shadow — and a meadow lit as though it were overcast." W2 and the
-  renderer, Meadows-wide, not this lane.
-- **The interior is boxy** — needs a tunnel kit, per both verdicts.
-- **The prop family** — "photographic-looking wood and metal textures while the
-  world around them is flat-shaded stylised geometry". A re-texture decision for
-  the whole prop family, not a Warrens fix.
+Nothing under `scripts/world/cloudreach_*`, `scripts/world/stronghold*`,
+`data/config/stronghold.json` or `assets/environment/team_tether/` was touched. The
+Cloudreach cliff shader was **read** for its technique, never edited or shared.
