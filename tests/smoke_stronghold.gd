@@ -509,7 +509,11 @@ func _the_hall_is_lit_by_torches(hold: Node3D) -> void:
 	print("hall braziers: %d flickering light(s) total (interior + exterior)" % fires.size())
 
 	var config := _stronghold_config()
-	const OMNI_CAP := 8
+	# HALL-STAGING-0906: the cap is the PROJECT's, not Godot's default. The
+	# approach room's floor slab alone sits inside ~13 omni ranges, so the
+	# Hall raised rendering/limits/opengl/max_lights_per_object to 16 (see
+	# project.godot); this check reads that value so it guards the real budget.
+	var OMNI_CAP: int = int(ProjectSettings.get_setting("rendering/limits/opengl/max_lights_per_object", 8))
 	for id in ["tether_approach", "warden_arena", "legendary_chamber"]:
 		var chamber := _chamber_by_id(config, id)
 		var centre := _local_of(chamber.get("at", []))
