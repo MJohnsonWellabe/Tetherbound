@@ -14,6 +14,10 @@ const NAME_PROMPT_SCENE := preload("res://scenes/ui/name_prompt.tscn")
 const NAME_ENTRY := preload("res://scripts/ui/name_entry.gd")
 const LAN_BEACON := preload("res://scripts/mp/lan_beacon.gd")
 const JOIN_DRIVER := preload("res://scripts/mp/join_driver.gd")
+## Character-choice step. `data/config/characters.json` -- one entry today,
+## and this screen is the whole reason a second one is a JSON row rather than
+## a UI rewrite. See `_load_character_options()`/`_show_character_select()`.
+const CHARACTERS_CONFIG_PATH := "res://data/config/characters.json"
 
 
 ## ## THE COMMAND-LINE MULTIPLAYER FLAGS (lane 2.B)
@@ -181,12 +185,28 @@ var _main_box: VBoxContainer
 var _load_box: VBoxContainer
 var _confirm_box: VBoxContainer
 var _join_box: VBoxContainer
+## The character-choice step, shown before a new game actually starts. Built
+## fresh every time `_show_character_select()` opens it, the same pattern
+## `_load_box`/`_join_box` already use for their own per-visit rows.
+var _character_box: VBoxContainer
 var _lan_list: VBoxContainer
 var _status: Label
 var _new_button: Button
 var _load_button: Button
 var _join_button: Button
 var _quit_button: Button
+
+## What B/menu_cancel should do while `_character_box` is open -- the join
+## flow wants to return to the join screen, everything else wants the main
+## menu, and this is the one field that lets `_unhandled_input()`'s single
+## shared handler know which. Set by `_show_character_select()`, read there.
+var _character_back: Callable = Callable()
+## The character option the player picked, kept for a future consumer (a
+## starting cosmetic/loadout difference) that does not exist yet -- today's
+## one option makes every choice the same, so nothing reads this yet. Not
+## threaded into `PlayerState`/`character_save.gd` for that reason: there is
+## nothing there for it to change.
+var _pending_character_option_id: String = ""
 
 ## The LAN listener, alive only while the join screen is on. A child of this
 ## screen, so leaving the screen frees the socket rather than leaving it bound
@@ -428,6 +448,11 @@ func _build() -> void:
 	_join_box.add_theme_constant_override("separation", 10)
 	root_box.add_child(_join_box)
 
+	_character_box = VBoxContainer.new()
+	_character_box.visible = false
+	_character_box.add_theme_constant_override("separation", 10)
+	root_box.add_child(_character_box)
+
 	_status = Label.new()
 	_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -474,7 +499,7 @@ func _on_new_pressed() -> void:
 				has_existing = true
 				break
 	if not has_existing:
-		_start_new_game()
+		_show_character_select(_start_new_game_with_character, _show_main)
 		return
 	_show_new_confirmation()
 
@@ -493,16 +518,85 @@ func _show_new_confirmation() -> void:
 	var back := _button("Back")
 	_confirm_box.add_child(go)
 	_confirm_box.add_child(back)
-	go.pressed.connect(_start_new_game)
+	go.pressed.connect(func() -> void: _show_character_select(_start_new_game_with_character, _show_main))
 	back.pressed.connect(_show_main)
 	go.grab_focus()
 
 
-func _start_new_game() -> void:
+## `data/config/characters.json`'s `characters` array, or `[]` if the file is
+## missing/malformed -- `_show_character_select()` then draws "No character
+## options are configured" rather than a broken screen, the same fallback
+## `_show_load_slots()` gives an empty save list.
+func _load_character_options() -> Array:
+	var file := FileAccess.open(CHARACTERS_CONFIG_PATH, FileAccess.READ)
+	if file == null:
+		return []
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if typeof(parsed) != TYPE_DICTIONARY:
+		return []
+	var list: Variant = (parsed as Dictionary).get("characters", [])
+	return list if list is Array else []
+
+
+## The character-choice step every new-game path shows before the world is
+## entered (owner directive: even with one option today, build the picker so
+## a second is a JSON row, not a rewrite). Picking a row IS confirming it --
+## the same one-press pattern `_show_load_slots()` already uses for a save
+## slot -- so this screen never needs a separate Confirm button.
+##
+## `on_chosen` receives the picked option's `id` and does whatever starting a
+## game from here actually means (a fresh solo/host game, or continuing a
+## join once a character exists); `on_back` is what B/`menu_cancel` and this
+## screen's own Back button do, which differs by how this screen was reached
+## (main menu for a new game, the join screen for an empty-save join).
+func _show_character_select(on_chosen: Callable, on_back: Callable) -> void:
+	_main_box.visible = false
+	_load_box.visible = false
+	_confirm_box.visible = false
+	_join_box.visible = false
+	_clear(_character_box)
+	_character_box.visible = true
+	_character_back = on_back
+
+	var heading := Label.new()
+	heading.text = "Choose Your Character"
+	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	heading.add_theme_font_size_override("font_size", 26)
+	_character_box.add_child(heading)
+
+	var options := _load_character_options()
+	var first: Button = null
+	for raw: Variant in options:
+		if typeof(raw) != TYPE_DICTIONARY:
+			continue
+		var option := raw as Dictionary
+		var id := str(option.get("id", ""))
+		var display_name := str(option.get("display_name", id if not id.is_empty() else "Character"))
+		var tagline := str(option.get("tagline", ""))
+		var button := _button(display_name if tagline.is_empty() else "%s — %s" % [display_name, tagline])
+		button.pressed.connect(func() -> void: on_chosen.call(id))
+		_character_box.add_child(button)
+		if first == null:
+			first = button
+	if options.is_empty():
+		var empty := Label.new()
+		empty.text = "No character options are configured."
+		empty.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		_character_box.add_child(empty)
+
+	var back := _button("Back")
+	back.pressed.connect(func() -> void: on_back.call())
+	_character_box.add_child(back)
+	(first if first != null else back).grab_focus()
+	UITokens.make_text_legible(_character_box)
+
+
+func _start_new_game_with_character(character_id: String) -> void:
 	var game := get_node_or_null(^"/root/Game")
 	if game == null:
 		_status.text = "Game state failed to start."
 		return
+	_pending_character_option_id = character_id
 	game.call("reset_for_new_game")
 	_enter_world("Starting new game…")
 
@@ -510,6 +604,7 @@ func _start_new_game() -> void:
 func _show_load_slots() -> void:
 	_main_box.visible = false
 	_confirm_box.visible = false
+	_character_box.visible = false
 	_clear(_load_box)
 	_load_box.visible = true
 	var heading := Label.new()
@@ -561,6 +656,7 @@ func _show_join() -> void:
 	_main_box.visible = false
 	_load_box.visible = false
 	_confirm_box.visible = false
+	_character_box.visible = false
 	_join_box.visible = true
 	_clear(_join_box)
 	_lan_drawn = ""
@@ -650,7 +746,7 @@ func _refresh_lan_list() -> void:
 		# A full world is SHOWN and refused, not hidden: a player looking for
 		# their friend's game has to be able to see that they found it.
 		button.disabled = full
-		button.pressed.connect(func() -> void: _begin_join(address, port, 0.0))
+		button.pressed.connect(func() -> void: _join_via(address, port))
 		_lan_list.add_child(button)
 		if key == focused:
 			button.grab_focus()
@@ -691,7 +787,29 @@ func _on_address_confirmed(typed: String) -> void:
 		_status.text = "\"%s\" is not an address. Try 192.168.1.24, or 192.168.1.24:27015." % typed
 		_show_join()
 		return
-	_begin_join(str(target.get("address", "")), int(target.get("port", 0)), 0.0)
+	_join_via(str(target.get("address", "")), int(target.get("port", 0)))
+
+
+## The two manual, player-pressed ways into `_begin_join()` (a LAN row, a typed
+## address) both route through here instead of calling it directly, so both
+## get the character-choice step this screen owns -- `--mp-join`'s own call
+## site further down deliberately does not, because that flag is the
+## launcher's unattended path (`tools/owner/`, `smoke_net_join_by_address.gd`)
+## and has nobody at the keyboard to show a picker to.
+##
+## Only shown when this machine is about to MINT a character: an address that
+## resumes this machine's own existing autosave (`_begin_join()`'s own
+## `has_save(0)` branch below) is a returning player, not a new one, and gets
+## no new-game step for the same reason Load Game never shows this screen.
+func _join_via(address: String, port: int) -> void:
+	var game := _game()
+	if game != null and bool(game.call("has_save", 0)):
+		_begin_join(address, port, 0.0)
+		return
+	_show_character_select(func(character_id: String) -> void:
+		_pending_character_option_id = character_id
+		_begin_join(address, port, 0.0)
+	, _show_join)
 
 
 ## Start a join. THE WORLD IS BUILT FIRST AND THE SOCKET OPENED SECOND, which
@@ -861,6 +979,7 @@ func _show_main() -> void:
 	_load_box.visible = false
 	_stop_lan_listener()
 	_join_box.visible = false
+	_character_box.visible = false
 	_main_box.visible = true
 	_status.text = ""
 	_refresh_load_button()
@@ -884,6 +1003,15 @@ func _unhandled_input(event: InputEvent) -> void:
 	# delete. Two readers of one button is one of them acting on a press the
 	# player aimed at the other.
 	if _address_prompt != null:
+		return
+	if event.is_action_pressed("menu_cancel") and _character_box.visible:
+		# Routes to the join screen or the main menu depending on how this
+		# screen was reached -- see `_character_back`'s own field comment.
+		if _character_back.is_valid():
+			_character_back.call()
+		else:
+			_show_main()
+		get_viewport().set_input_as_handled()
 		return
 	if event.is_action_pressed("menu_cancel") \
 			and (_load_box.visible or _confirm_box.visible or _join_box.visible):
