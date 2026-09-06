@@ -74,6 +74,9 @@ const FLOOR_CHECK_EVERY := 300
 const WALK_FRAMES := 700
 ## Frames the climax's stage machine gets to walk its own order.
 const SEQUENCE_FRAMES := 900
+## How long a post-fight victory conversation may hold locomotion before the
+## "exploration came back" check gives up (a conversation is a few presses).
+const VICTORY_DIALOGUE_FRAMES := 600
 ## Frames spent resting at the recovery point. The bed heals over
 ## `progression.json`'s `creature_bed.full_heal_seconds` (120s), so this is
 ## deliberately a PARTIAL rest: what is under test is that the bed accepts a
@@ -927,8 +930,29 @@ func _fight_to_the_end(id: String, room: String) -> void:
 			+ "%d consecutive at the end)") % [id, BATTLE_FRAME_LIMIT, _quick_hits - hits_at_start,
 			_quick_misses - misses_at_start, _consecutive_misses])
 		return
+	# A trainer with a `victory_conversation` (the Warden, since 04d844d0) has its
+	# dialogue opened by `encounter_director._finish_trainer_battle()` ONE FRAME
+	# after it re-enables exploration (`call_deferred("_present_trainer_victory")`),
+	# and `sequence_director._refresh_lockout()` holds locomotion while any panel
+	# is open. Reading `locomotion_enabled` on the resolving frame therefore raced
+	# the panel -- green or red depending on which side of the deferred call the
+	# check landed, which was this smoke's documented flake on `main`
+	# (CURRENT_STATE §1). A player reads the line and presses interact; do the
+	# same, bounded, and only then ask whether exploration came back.
+	await _read_any_victory_conversation()
 	if not bool(_player.call("locomotion_enabled")):
 		_fail("exploration never came back after '%s''s fight" % id)
+
+
+## Press through a victory conversation if one opens after a fight, and give
+## the lockout one frame to release. Returns as soon as locomotion is back.
+func _read_any_victory_conversation() -> void:
+	for i in VICTORY_DIALOGUE_FRAMES:
+		if bool(_player.call("locomotion_enabled")):
+			return
+		await physics_frame
+		if bool(_panel.call("is_open")):
+			await _press("interact")
 
 
 ## The fight is happening where the player started it, not under the building.

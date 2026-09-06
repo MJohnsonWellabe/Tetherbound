@@ -1161,7 +1161,7 @@ jobs:
     runs-on: ubuntu-latest
     # Sum of these six tests' own run time measured 2026-09-01: 1,034s
     # (17.2 min). 25 min covers checkout/setup with margin.
-    timeout-minutes: 25
+    timeout-minutes: 35
     needs: changes
     if: needs.changes.outputs.code == 'true'
     steps:
@@ -1206,6 +1206,27 @@ jobs:
       - name: Verify relay_station
         if: ${{ !cancelled() }}
         env: { SMOKE: relay_station, RETRIES: 1 }
+        run: |
+          set -uo pipefail
+          n=0
+          until [ "$n" -ge "$RETRIES" ]; do
+            n=$((n + 1))
+            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+              echo "::endgroup::"
+              exit 0
+            fi
+            echo "::endgroup::"
+            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+          done
+          exit 1
+      # Stage B Wave 0: Cloudreach had no smoke in CI, and main shipped with the
+      # whole realm unbuilt (cloudreach_world.gd's typed preset loop aborted on an
+      # art.json comment key; ralph/reports/MP-0D-SPIKE-HOSTCOST-0905/). This
+      # walks the real arrival route on the production scene, ~8 min.
+      - name: Verify cloudreach_arrival_walk
+        if: ${{ !cancelled() }}
+        env: { SMOKE: cloudreach_arrival_walk, RETRIES: 1 }
         run: |
           set -uo pipefail
           n=0
@@ -1863,6 +1884,124 @@ jobs:
         run: |
           set -euo pipefail
           godot --headless --path . --script tests/smoke_gate_b_continuous.gd -- --gate-b-full-chain
+
+  # Stage B lane 0.E — the named fence
+  # `docs/specs/STAGE_B_MULTIPLAYER_EXECUTION_PLAN.md` Wave 1 row 1.B refers to.
+  # This job runs nothing new: it is a checkpoint that every job the plan
+  # calls "the existing 46 CI smokes" (the six verify-*-shard jobs) plus
+  # verify-gate-b-core actually ran and passed before a Wave 1 state-seam
+  # change is allowed to call itself green. It exists so Wave 1's own
+  # completion report has one job name to point at rather than enumerating
+  # six shard jobs by hand every time, and so a future job rename or an
+  # accidentally-dropped `needs:` entry is a visible CI failure instead of a
+  # silent gap in the fence.
+  # Stage B Wave 0 lane 0.F. docs/specs/MP_NET_HARNESS_CONTRACT.md §10: runs
+  # every tests/smoke_net_*.gd whose header declares `# peers: 2` through
+  # tools/net/run_net_smoke.sh -- two real, isolated headless Godot processes
+  # per smoke, coordinated over a TCP control channel
+  # (tests/helpers/net_harness.gd + tools/net/peer_runner.gd), each in its own
+  # XDG_DATA_HOME. `# peers: 3`/`# peers: 4` smokes are nightly/owner-kit only
+  # (`verify-multiplayer-wide`, not created by this lane) and do not run here.
+  # RETRIES: 1 -- a net smoke that only passes on retry is a finding, same
+  # rule AGENT_WORKFLOW.md §5 already holds every other smoke to.
+  verify-multiplayer-shard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ralph/
+            !/docs/
+            !/shots/
+            !/assets_raw/
+            !/archive/
+      - uses: ./.github/actions/setup-godot
+      - name: Discover peers:2 net smokes
+        id: discover
+        run: |
+          set -uo pipefail
+          files=""
+          count=0
+          for f in tests/smoke_net_*.gd; do
+            [ -f "$f" ] || continue
+            if head -5 "$f" | grep -qE '^#\s*peers:\s*2\s*$'; then
+              files="$files $f"
+              count=$((count + 1))
+            fi
+          done
+          echo "found (${count}):${files}"
+          # Review item 6: a renamed/deleted header must not make this shard
+          # go green without actually running a peer -- fewer than the two
+          # smokes this lane ships (the boot smoke and its negative control)
+          # fails the job outright rather than silently skipping the run step.
+          if [ "$count" -lt 2 ]; then
+            echo "::error::expected at least 2 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
+            exit 1
+          fi
+          echo "files=${files}" >> "$GITHUB_OUTPUT"
+      - name: Run net smokes
+        if: ${{ !cancelled() && steps.discover.outputs.files != '' }}
+        env:
+          RETRIES: 1
+        run: |
+          set -uo pipefail
+          status=0
+          for f in ${{ steps.discover.outputs.files }}; do
+            name="$(basename "$f" .gd)"
+            name="${name#smoke_net_}"
+            n=0
+            until [ "$n" -ge "$RETRIES" ]; do
+              n=$((n + 1))
+              echo "::group::smoke_net_${name}.gd attempt ${n}/${RETRIES}"
+              if tools/net/run_net_smoke.sh "$name" --out=/tmp/net-ci; then
+                echo "::endgroup::"
+                continue 2
+              fi
+              echo "::endgroup::"
+              echo "smoke_net_${name}.gd failed on attempt ${n}/${RETRIES}"
+            done
+            status=1
+          done
+          exit "$status"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: net-smoke-runs
+          path: /tmp/net-ci/
+          retention-days: 14
+          if-no-files-found: ignore
+
+  verify-solo-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs:
+      - changes
+      - verify-core-verb-shard
+      - verify-gate-a-ui-build-shard
+      - verify-combat-shard
+      - verify-regions-shard
+      - verify-owner-regressions-shard
+      - verify-gate-evidence-shard
+      - verify-gate-b-core
+    if: needs.changes.outputs.code == 'true'
+    steps:
+      - name: Confirm the solo regression fence held
+        run: |
+          echo "Solo regression fence held. Depended-on jobs, all green:"
+          echo "  - verify-core-verb-shard"
+          echo "  - verify-gate-a-ui-build-shard"
+          echo "  - verify-combat-shard"
+          echo "  - verify-regions-shard"
+          echo "  - verify-owner-regressions-shard"
+          echo "  - verify-gate-evidence-shard"
+          echo "  - verify-gate-b-core"
+          exit 0
 
   # Main only. Ralph dispatches CI after a clean branch rebase; treating that
   # workflow_dispatch as an export request made every rebase pay this tail.

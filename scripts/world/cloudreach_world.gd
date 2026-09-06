@@ -132,10 +132,7 @@ func _ready() -> void:
 		var local_look: Dictionary = (look.get("_config") as Dictionary).duplicate(true)
 		var sky_profile: Dictionary = _visual_config.get("sky_profile", {})
 		(local_look.get("sky", {}) as Dictionary).merge(sky_profile, true)
-		for preset: Dictionary in local_look.get("times", {}).values():
-			if not preset.has("sky"):
-				preset["sky"] = {}
-			(preset["sky"] as Dictionary).merge(sky_profile, true)
+		merge_sky_profile_into_times(local_look.get("times", {}), sky_profile)
 		look.set("_config", local_look)
 		look.call("set_weather", _visual_config.get("atmosphere", {}))
 	if _config.is_empty():
@@ -277,6 +274,31 @@ func _rebuild_surface_index() -> void:
 ## pickup onto the highest cliff sharing its x/z. No ground still returns NAN.
 func ground_height_near(at: Vector3) -> float:
 	return ground_height_at(at.x, at.z, at.y)
+
+
+## Lay this realm's sky profile over every time-of-day preset in `art.json`'s
+## `times` block. `times` carries `_`-prefixed comment strings beside the preset
+## dictionaries (`world_look.gd::times_available()` skips them the same way), and
+## a typed `for preset: Dictionary in ... .values()` loop over that block throws
+## on the first string and aborts the whole calling function -- which, from
+## `_ready()`, left the entire Cloudreach world unbuilt on `main` (found by the
+## Stage B host-cost spike, `ralph/reports/MP-0D-SPIKE-HOSTCOST-0905/`).
+## Mutates `times` in place; returns how many presets were merged.
+static func merge_sky_profile_into_times(times: Variant, sky_profile: Dictionary) -> int:
+	if not times is Dictionary:
+		return 0
+	var merged := 0
+	for key in (times as Dictionary).keys():
+		if str(key).begins_with("_"):
+			continue
+		var preset: Variant = (times as Dictionary)[key]
+		if not preset is Dictionary:
+			continue
+		if not (preset as Dictionary).has("sky"):
+			(preset as Dictionary)["sky"] = {}
+		((preset as Dictionary)["sky"] as Dictionary).merge(sky_profile, true)
+		merged += 1
+	return merged
 
 
 static func _preferred_surface(current: float, candidate: float, preferred_y: float) -> float:

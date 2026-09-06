@@ -84,6 +84,11 @@ Then move immediately to Stage B.
 
 **Detailed directive:** `docs/MULTIPLAYER_DIRECTIVE.md`
 
+**Execution plan (approved 2026-09-05):** `docs/specs/STAGE_B_MULTIPLAYER_EXECUTION_PLAN.md` —
+the thirteen architecture decisions, the model-tier rule (Fable / Opus / Sonnet / Haiku), eight
+waves of lanes with owned files and proving tests, and the §17-item-to-smoke acceptance table.
+Start at its Wave 0.
+
 This is not an architecture-only pass. The required outcome is a real **Valheim-style 1–4 player co-op game**.
 
 ### Product target
