@@ -29,8 +29,8 @@ func _initialize() -> void:
 		var tally := {"no_hit": 0, "not_turf": 0, "excluded": 0, "settlement": 0,
 			"route": 0, "plantable": 0}
 		var tops := {}
-		for ring in 12:
-			var radius := 4.0 + float(ring) * 6.0
+		for ring in 10:
+			var radius := 2.0 + float(ring) * 2.0
 			for step in 16:
 				var a := float(step) * TAU / 16.0
 				var at := stand + Vector2(cos(a), sin(a)) * radius
@@ -40,7 +40,7 @@ func _initialize() -> void:
 				var collider := str(hit.get("collider", ""))
 				if collider != "":
 					tops[collider] = int(tops.get(collider, 0)) + 1
-		print("  ", tally)
+		print("  r=2..20 m  ", tally)
 		print("  colliders hit: ", tops)
 	quit(0)
 

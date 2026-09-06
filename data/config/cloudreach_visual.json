@@ -141,7 +141,7 @@
     "bush_scale_max": 1.18,
     "visibility_range_m": 260.0,
     "route_cover_chunk_m": 120.0,
-    "path_clearance_m": 0.7,
+    "path_clearance_m": 0.0,
     "cluster_frequency": 0.16,
     "cluster_threshold": -0.22,
     "grass_base": "#2c4214",

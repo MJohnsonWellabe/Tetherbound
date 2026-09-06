@@ -726,7 +726,13 @@ func _dress_turf_fill(root: Node3D, ellipse_patches: Array, cfg: Dictionary, bud
 	var far_visibility := float(fill.get("far_visibility_range_m", float(cfg.get("far_visibility_range_m", 900.0))))
 	var scale_min := float(fill.get("scale_min", 0.52))
 	var scale_max := float(fill.get("scale_max", 0.95))
+	# An absolute cap wins over the share when it is set: the fill covers every
+	# turf surface in the realm now, not a skirt around each patch, so its size
+	# is set by how much turf there IS and not by a fraction of the ellipse
+	# pass's budget.
 	var cap := maxi(0, int(float(budget) * share))
+	if fill.has("instance_cap"):
+		cap = maxi(0, int(fill["instance_cap"]))
 	if cap <= 0:
 		return
 
