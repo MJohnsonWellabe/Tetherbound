@@ -467,6 +467,23 @@ const HOUSE_AT := Vector2(-22.0, -16.0)
 ## outrun is the streaming answer -- see `_apply_dynamic_collision()`.
 const COLLISION_DYNAMIC_GAME := 1
 
+## Terrain3D.CollisionMode 3, FULL_GAME: real collision shapes for the WHOLE
+## loaded map, built once at the moment it is switched on.
+##
+## D96, as amended after spike S2. A host owns every wild creature's body and
+## every strike resolved against it (`MP_ENCOUNTER_PROTOCOL.md` §2), and it
+## owns them across the entire Meadows -- not only within the 256 m bubble
+## Terrain3D grants around ONE camera. Under dynamic collision a creature
+## fighting a client two hundred metres from the host's trainer would be
+## simulated against no ground at all on the machine that decides the fight.
+##
+## S2 measured the price at **+16.1 MB in 3.06 s**, which is why this is not
+## simply the mode everyone uses: a solo player would pay it for nothing, and
+## `COLLISION_DYNAMIC_GAME`'s own comment above is still right about the 64-
+## region corridor. So it is switched on exactly when a second player arrives
+## and never in a one-peer session.
+const COLLISION_FULL_GAME := 3
+
 ## What `_apply_dynamic_collision()` asks Terrain3D for. Verified against the
 ## vendored addon (`tools/_probe_terrain_collision.gd`, run 2026-08-16) that
 ## `collision_radius` is SILENTLY CLAMPED to the nearest legal value in
@@ -612,6 +629,7 @@ func _ready() -> void:
 	BOOT_LOG.phase("playground: terrain data_directory assigned")
 
 	_apply_dynamic_collision()
+	_watch_for_joiners()
 
 	_apply_ground_materials()
 	BOOT_LOG.phase("playground: ground materials/shader applied")
@@ -666,23 +684,67 @@ func _ready() -> void:
 ## requested constant -- the whole point of this function is to not repeat
 ## the mistake `collision_mode` already made once.
 func _apply_dynamic_collision() -> void:
-	_terrain.set("collision_mode", COLLISION_DYNAMIC_GAME)
+	var wanted := COLLISION_FULL_GAME if _host_needs_full_collision() else COLLISION_DYNAMIC_GAME
+	_terrain.set("collision_mode", wanted)
 	_terrain.set("collision_radius", COLLISION_RADIUS_REQUESTED)
 	_terrain.set("collision_shape_size", COLLISION_SHAPE_SIZE)
 
 	var mode: int = int(_terrain.get("collision_mode"))
 	var radius: int = int(_terrain.get("collision_radius"))
 	var shape_size: int = int(_terrain.get("collision_shape_size"))
-	BOOT_LOG.line("playground: dynamic collision mode=%d radius=%d (requested %d) shape_size=%d (requested %d)" % [
-		mode, radius, COLLISION_RADIUS_REQUESTED, shape_size, COLLISION_SHAPE_SIZE])
+	BOOT_LOG.line("playground: collision mode=%d (wanted %d) radius=%d (requested %d) shape_size=%d (requested %d)" % [
+		mode, wanted, radius, COLLISION_RADIUS_REQUESTED, shape_size, COLLISION_SHAPE_SIZE])
 
-	if mode != COLLISION_DYNAMIC_GAME:
-		push_error("terrain collision_mode is %d, expected %d (Dynamic/Game). " % [mode, COLLISION_DYNAMIC_GAME] +
-			"The player will fall through the world outside the dynamic collision radius.")
+	if mode != wanted:
+		push_error("terrain collision_mode is %d, expected %d. " % [mode, wanted] +
+			"Bodies will fall through the world outside the collision that was actually granted.")
 	if radius <= 0:
 		push_error("terrain collision_radius read back as %d; Terrain3D exposed no usable dynamic collision" % radius)
 	if shape_size <= 0:
 		push_error("terrain collision_shape_size read back as %d; Terrain3D exposed no usable collision shapes" % shape_size)
+
+## Subscribe to the session's join signal, so a host that started alone
+## upgrades its collision the moment someone arrives. Silent and harmless in
+## every process that has no session -- a headless test, a capture tool, or a
+## client, none of which owe the map anything.
+func _watch_for_joiners() -> void:
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return
+	var session: Node = game.get("session") as Node
+	if session == null or not session.has_signal("peer_joined"):
+		return
+	if not session.is_connected("peer_joined", _on_peer_joined_upgrade_collision):
+		session.connect("peer_joined", _on_peer_joined_upgrade_collision)
+
+
+## Does THIS process owe the whole map real collision?
+##
+## Only a host, and only once a second player is actually in the session. A
+## solo player is a one-peer session by design (D95), so `is_multi_peer()` --
+## not `is_host()` -- is the question: `is_host()` is deliberately true for
+## solo, for a headless test and for a capture tool, and answering yes to any
+## of those would spend 3 seconds and 16 MB of every single-player boot.
+func _host_needs_full_collision() -> bool:
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return false
+	return bool(game.call("is_host")) and bool(game.call("is_multi_peer"))
+
+
+## A host that started alone and has just been joined has to upgrade: it now
+## owns creature bodies fighting a player who may be anywhere on the map, and
+## dynamic collision only follows its OWN camera. The 3-second rebuild lands
+## while the joiner is still applying the world snapshot, which is the least
+## disruptive moment it could happen.
+func _on_peer_joined_upgrade_collision(_peer_id: int = 0, _character_id: String = "") -> void:
+	if _terrain == null or not _host_needs_full_collision():
+		return
+	if int(_terrain.get("collision_mode")) == COLLISION_FULL_GAME:
+		return
+	BOOT_LOG.line("playground: a peer joined -- upgrading terrain collision to full-map")
+	_apply_dynamic_collision()
+
 
 ## COLL1 / §8.3: re-centres the scatter's collision streaming bubble on the
 ## player, throttled rather than every physics tick -- see

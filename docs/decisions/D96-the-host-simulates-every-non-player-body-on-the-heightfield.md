@@ -43,3 +43,20 @@ runs Terrain3D in FULL_GAME collision mode**, and host-simulated bodies keep the
 and analytic ground. The kinematic heightfield mode is dropped from lane 4.B's scope. Clients
 keep Dynamic/Game collision around their own camera. Everything about authority above stands:
 the host still owns every opponent body, every HP value, every strike and every catch.
+
+**Implemented 2026-09-06**, after lane 4.B's handover H1 recorded the amendment as unassigned and
+declined to make a world-boot change from a creature-ownership lane. `playground_world.gd` now
+picks `COLLISION_FULL_GAME` when `Game.is_multi_peer()` **and** `Game.is_host()`, and a host that
+started alone upgrades on `Session.peer_joined` -- the 3.06 s rebuild lands while the joiner is
+still applying the world snapshot. The gate is `is_multi_peer()` rather than `is_host()` on
+purpose: `is_host()` is deliberately true for solo, for a headless test and for a capture tool
+(see `session.gd`'s own reasoning), and answering yes to any of those would spend 16.1 MB and
+three seconds on every single-player boot for nothing. Clients are untouched and keep
+Dynamic/Game around their own camera.
+
+What this does **not** do, so the gap stays visible: wild creature bodies are still not replicated
+to clients, so a client's wilds remain its own local simulation and drift from the host's. Lane
+4.B deliberately did not freeze them -- a frozen meadow reads worse than drift -- and
+`MP_ENCOUNTER_PROTOCOL.md` §2 already requires the host to resolve strikes against its own
+positions, which is what makes the drift cosmetic rather than a correctness bug. Replicating them
+is a later lane's work.
