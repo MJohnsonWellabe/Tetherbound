@@ -141,7 +141,10 @@ JPEG_QUALITY = 92
 # GRADED p2..p98 and walks the machine steadily paler each time -- and the only
 # reliable way to notice that from the file itself is a marker.
 STAMP_KEY = "tetherbound_albedo_regrade"
-STAMP = "hall-palette-1"
+STAMP = "hall-palette-3"
+
+# Match the Hall's own masonry (`stronghold.gd::_material` roughness 0.92-0.93).
+ROUGHNESS = 0.93
 
 
 def _srgb_hex(h: str) -> np.ndarray:
@@ -275,6 +278,20 @@ def main() -> int:
     buf = io.BytesIO()
     after.save(buf, format="JPEG", quality=JPEG_QUALITY, subsampling=0)
     blob = buf.getvalue()
+    # ROUGHNESS. Round 3's judge measured the machine's top-5% highlights at
+    # saturation 0.288-0.410 against the wall's 0.632-0.700, with roughly double
+    # the wall's luma-gradient energy, and read the surface as "wet plastic or
+    # oiled obsidian sitting against matte masonry". The mesh ships
+    # `roughnessFactor` 0.8 with `metallicFactor` 0; the walls are the hall_stone
+    # shader at roughness 0.92-0.93 (`stronghold.gd::_material`). Matching the
+    # masonry broadens and dims the specular lobe so the blown desaturated
+    # hotspots stop competing with the albedo the ramp just authored. Nothing
+    # here adds emission -- see WHY THIS EXISTS, point 1.
+    pbr = gltf["materials"][0]["pbrMetallicRoughness"]
+    if abs(float(pbr.get("roughnessFactor", 1.0)) - ROUGHNESS) > 1e-6:
+        print("roughnessFactor %.2f -> %.2f (walls are 0.92-0.93)"
+              % (float(pbr.get("roughnessFactor", 1.0)), ROUGHNESS))
+        pbr["roughnessFactor"] = ROUGHNESS
     gltf.setdefault("extras", {})[STAMP_KEY] = STAMP
     _replace_image(gltf, chunks, blob)
     _write_glb(GLB, gltf, chunks)
