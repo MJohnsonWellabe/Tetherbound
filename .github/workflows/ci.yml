@@ -161,6 +161,14 @@ jobs:
         run: |
           set -uo pipefail
 
+          # An explicit manual run requests real code verification even when
+          # the branch only carries reference art or documentation.
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            echo "Explicit full verification requested."
+            echo "code=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
           # No-build paths: markdown anywhere, and the four trees the game
           # binary never loads -- the website (published by Release, not
           # compiled), docs/ (reference images feed the visual-judge skill,
