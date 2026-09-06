@@ -1420,3 +1420,48 @@ the albedo. The procedural re-author was prototyped and rejected by the owner
 facing: authored -101.2 deg, built rotation.y -101.2 deg`, `doorway-to-legendary
 sightline: 13.6m, clear`. Verdicts, measurements and the exact next steps:
 `ralph/reports/TETHER-MACHINE-0906/` (`REPORT.md`, `JUDGE-machine-round{1,2,3}.md`).
+
+## Cloudreach Cliffs atmosphere and verticality (CLOUDREACH-ATMOS-0906)
+
+On `claude/art-cloudreach-atmosphere-0906`, off `claude/second-biome-art-plan-470zru`.
+Evidence, both blind verdicts in full and the two interim rounds:
+`ralph/reports/CLOUDREACH-ATMOS-0906/`.
+
+**C5 (floating islands) is closed on the charge the judge made.** Before: "it has no
+underside, no roots, no mist, no anchor — it reads as a mesh that lost its parent and is a
+bug to any player who sees it", with "detached rock blobs hanging in the air beneath it".
+After, asked the question directly and blind: "authored, not a rendering failure ...
+failures do not produce that shape or that supporting detail." Three literal causes were
+found and fixed: `_mesa` never capped its bottom ring (an airborne `LandmarkLedge` was an
+open tube — it now gets a tapering root); `_build_embedded_rock_shelves` measured outcrop
+depth from the crown without bounding it by the mass's own height, putting four of thirteen
+outcrops 25–61 m *below* the bottom ring (the falling pebbles); and the mooring lines were
+not missing but 0.16 m of rope read at 800 m.
+
+**C4 (thin horizon) moved but is not closed.** Before: "no distant ranges, no lower cloud
+deck, no further spires, nothing". After: cloud below eye level "yes in three, no in one",
+terrain lower than the player "yes in three, no in one" — but "rendered as flat cutouts, so
+the horizon carries *layers* without carrying *depth*". A tier-following cloud sea, distant
+lower relief and hazed skyline tiers now exist; making them read needs a soft-edged cloud
+material, not more of them.
+
+**C3 (a region named for cliffs never shows one) is not closed at the judged stands.**
+Region crowns now terrace down to their rims and route shoulders drop 14–54 m at their
+outer edge, both through the shared height model — but stands 01/02/04/11 all sit mid-crest,
+and the judge's answer is still "No, and no." Closing it needs a drop within about 60 m of
+where the player actually stands, or different stands.
+
+**A real bug found on the way:** `cloudreach_look.gd` re-applied this realm's fog by
+multiplying the environment's *current* value every frame, which is only correct while
+`world_look.gd` keeps resetting the base — and that function returns on its first line when
+its clock is frozen, which every capture tool does before rendering. Fog compounded at 0.55
+per frame for a dozen frames before the first shutter, so **Cloudreach had effectively no
+distance fog in any judged frame to date.**
+
+Gate held: ground truth **0 holes, 33 mismatches, 888 buried** (from 0/33/914), crown
+triangles unchanged at 727,157; `probe_cloudreach_wild_performance` 12 phases, 0 failures,
+frame interval mean 16.665–16.668 ms, p99 up to 18.313 ms; `smoke_cloudreach_foundation`,
+`_look`, `_ground_truth` and `_arrival_walk` all green. Frame exposure moved into the
+reference band (p90 194–223 against palworld's 210–226; p99 228–231 against 225–242) with
+saturation coming *down* from 50–61 % to 36–52 %, which answers the before-judge's own
+largest finding.

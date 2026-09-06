@@ -71,6 +71,10 @@ var _space_state: PhysicsDirectSpaceState3D
 var _fog_env: Environment
 var _fog_density_scale := 1.0
 var _fog_aerial_scale := 1.0
+# The last values `_process` itself wrote, so a reapply can tell "WorldLook has
+# refreshed the base" from "nobody has touched it since my last frame".
+var _fog_scaled_density := -1.0
+var _fog_scaled_aerial := -1.0
 
 # Counts reported to tests/smoke_cloudreach_look.gd and the operator.
 var _bridge_rope_sides: Dictionary = {} # "<bridge>/<section>" -> {left:int,right:int}
@@ -1309,11 +1313,32 @@ func _dress_fog() -> void:
 	set_process(true)
 
 
+## Reapply this realm's fog deltas ON TOP of whatever WorldLook last wrote.
+##
+## CLOUDREACH-ATMOS-0906. This used to multiply the environment's CURRENT value
+## by the scale every frame, which is only correct while somebody else keeps
+## resetting that value to the art.json base first. `world_look.gd::_process`
+## does exactly that -- but it returns on its FIRST line when its clock is
+## frozen, and `set_clock_frozen(true)` is what every capture tool calls before
+## it renders. So in the evidence renders nothing reset the base and this
+## compounded: 0.55 per frame, 12+ frames before the first shutter, fog density
+## at 0.0005x the authored value. Cloudreach has had effectively NO distance fog
+## in any judged frame, which is the mechanism behind the blind judge's "no
+## aerial perspective ... far cliffs are as saturated and contrasty as near
+## ones" (CLOUDREACH-GROUND-0906 JUDGE-after2, defect 13).
+##
+## Scaling only a value this function did not itself write is correct in both
+## cases: when WorldLook rewrites the base, ours no longer matches and the
+## scale applies once; when nobody writes, ours matches and this is a no-op.
 func _process(_delta: float) -> void:
 	if _fog_env == null:
 		return
-	_fog_env.fog_density = _fog_env.fog_density * _fog_density_scale
-	_fog_env.fog_aerial_perspective = _fog_env.fog_aerial_perspective * _fog_aerial_scale
+	if not is_equal_approx(_fog_env.fog_density, _fog_scaled_density):
+		_fog_scaled_density = _fog_env.fog_density * _fog_density_scale
+		_fog_env.fog_density = _fog_scaled_density
+	if not is_equal_approx(_fog_env.fog_aerial_perspective, _fog_scaled_aerial):
+		_fog_scaled_aerial = _fog_env.fog_aerial_perspective * _fog_aerial_scale
+		_fog_env.fog_aerial_perspective = _fog_scaled_aerial
 
 
 # ---------------------------------------------------------------------------
