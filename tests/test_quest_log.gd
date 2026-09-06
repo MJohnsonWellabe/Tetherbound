@@ -817,3 +817,143 @@ func test_finishing_a_later_beat_early_neither_strands_nor_spoils_the_chain() ->
 			saw_tam_done = bool(entry.get("done", false))
 	assert_true(saw_tam_done,
 		"the early-completed beat is not shown as done once the player reaches it")
+
+
+# --- D99: every row carries a declared scope ---------------------------------
+#
+# Stage B lane 5.C. `quest_log.gd` now reports `scope` on every row, and the
+# rule D99 settles is that the scope is DECLARED, never defaulted: it comes
+# from the entry's own `scope` key or from `progression_state.scope_of()`, and
+# an id neither can answer is a `push_error` and a `""` scope. These tests are
+# the guarantee that shipped data never takes that path, and they sweep BOTH
+# authored chapters -- `objectives.json` and `cloudreach_chapter.json` -- because
+# defaulting an unknown id either way is only wrong once a second player exists,
+# which is exactly when nobody is running a unit suite.
+
+func _reveal_everything() -> void:
+	# `revealed_by` hides an optional entry until its flag is set, and a hidden
+	# entry is never built into a row -- so a scope sweep that did not set them
+	# would silently sweep fewer rows than the file authors. Every id any entry
+	# names is set, which reveals all of them and also marks them done; neither
+	# affects the scope a row reports.
+	for path: String in [OBJECTIVES_PATH, "res://data/config/cloudreach_chapter.json"]:
+		var file := FileAccess.open(path, FileAccess.READ)
+		if file == null:
+			continue
+		var text := file.get_as_text()
+		for key: String in ["revealed_by", "requires_flags"]:
+			var at := 0
+			while true:
+				at = text.find('"%s"' % key, at)
+				if at == -1:
+					break
+				at += key.length() + 2
+				var open_quote := text.find('"', at)
+				var close_quote := text.find('"', open_quote + 1)
+				if open_quote == -1 or close_quote == -1:
+					break
+				progression.set_flag(text.substr(open_quote + 1, close_quote - open_quote - 1))
+
+
+func _all_rows(realm_id: String) -> Array:
+	var reader: RefCounted = QUEST_LOG.new()
+	reader.call("set_realm", realm_id)
+	var rows: Array = []
+	rows.append_array(reader.call("main_entries", progression) as Array)
+	rows.append_array(reader.call("local_entries", progression) as Array)
+	return rows
+
+
+func test_every_meadows_quest_row_declares_world_or_player() -> void:
+	_reveal_everything()
+	var rows := _all_rows("meadows")
+	assert_true(rows.size() >= 10,
+		"sanity: the Meadows chapter built %d rows to sweep" % rows.size())
+	var undeclared: Array[String] = []
+	for raw: Variant in rows:
+		var row := raw as Dictionary
+		var scope := str(row.get("scope", ""))
+		if scope != "world" and scope != "player":
+			undeclared.append("%s -> '%s'" % [str(row.get("label", "")), scope])
+	assert_true(undeclared.is_empty(),
+		"D99: every quest-log row must declare a scope; these did not: %s"
+			% ", ".join(undeclared))
+
+
+func test_every_cloudreach_quest_row_declares_world_or_player() -> void:
+	_reveal_everything()
+	var rows := _all_rows("cloudreach")
+	assert_true(rows.size() >= 10,
+		"sanity: the Cloudreach chapter built %d rows to sweep" % rows.size())
+	var undeclared: Array[String] = []
+	for raw: Variant in rows:
+		var row := raw as Dictionary
+		var scope := str(row.get("scope", ""))
+		if scope != "world" and scope != "player":
+			undeclared.append("%s -> '%s'" % [str(row.get("label", "")), scope])
+	assert_true(undeclared.is_empty(),
+		"D99: every Cloudreach quest-log row must declare a scope; these did not: %s"
+			% ", ".join(undeclared))
+
+
+func test_a_declared_scope_never_contradicts_the_table() -> void:
+	# The entry's own `scope` key wins at runtime, so a key that disagrees with
+	# `flag_scopes.json` would send the row's label and the flag's actual store
+	# in opposite directions. Swept over the authored data rather than a fixture.
+	var mismatched: Array[String] = []
+	for path: String in [OBJECTIVES_PATH, "res://data/config/cloudreach_chapter.json"]:
+		for entry: Dictionary in _scoped_entries_in(path):
+			var flag_id := str(entry.get("flag_id", ""))
+			var declared := str(entry.get("scope", ""))
+			var table := PROGRESSION_STATE.scope_of(flag_id)
+			if declared != table:
+				mismatched.append("%s: declares '%s', table says '%s' for '%s'"
+					% [path.get_file(), declared, table, flag_id])
+	assert_true(mismatched.is_empty(),
+		"a declared scope disagrees with data/progression/flag_scopes.json: %s"
+			% ", ".join(mismatched))
+
+
+func test_the_meadows_chain_carries_both_scopes() -> void:
+	# A sweep that only ever saw one scope would pass while `_scope_of()` was
+	# hard-wired to return it. The Meadows chapter genuinely mixes them: the
+	# tutorial and tournament readiness are the player's, the Warden and the
+	# gates are the world's.
+	_reveal_everything()
+	var seen: Dictionary = {}
+	for raw: Variant in _all_rows("meadows"):
+		seen[str((raw as Dictionary).get("scope", ""))] = true
+	assert_true(seen.has("world"), "no Meadows row reported scope 'world'")
+	assert_true(seen.has("player"), "no Meadows row reported scope 'player'")
+
+
+## Every `{scope, flag_id}` pair an authored chapter file declares, whichever
+## shape it declares it in: an objective carries `flag_id`, a Cloudreach side
+## chain carries `completion_flag`.
+func _scoped_entries_in(path: String) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		return out
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if typeof(parsed) != TYPE_DICTIONARY:
+		return out
+	var data := parsed as Dictionary
+	var lists: Array = []
+	lists.append_array(data.get("main", []) as Array)
+	lists.append_array(data.get("local", []) as Array)
+	for act: Variant in (data.get("acts", []) as Array):
+		if act is Dictionary:
+			lists.append_array((act as Dictionary).get("objectives", []) as Array)
+	for raw: Variant in lists:
+		if raw is Dictionary and not str((raw as Dictionary).get("scope", "")).is_empty():
+			out.append(raw as Dictionary)
+	for raw: Variant in (data.get("side_chains", []) as Array):
+		if not (raw is Dictionary):
+			continue
+		var chain := raw as Dictionary
+		if str(chain.get("scope", "")).is_empty():
+			continue
+		out.append({"scope": str(chain.get("scope", "")),
+			"flag_id": str(chain.get("completion_flag", ""))})
+	return out

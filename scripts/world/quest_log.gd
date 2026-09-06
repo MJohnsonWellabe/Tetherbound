@@ -32,6 +32,25 @@ extends RefCounted
 ##   whole chain, because the two questions are genuinely different -- "what
 ##   is authored" and "what may the player see".
 ##
+## ## Every row carries a declared scope (D99, Stage B lane 5.C)
+##
+## An entry's row now reports `scope`: `"world"` if the beat is something that
+## happened to the world and is therefore already done for a trainer who walks
+## in tomorrow (the Warden is defeated, the south bridge is open), `"player"` if
+## it is that trainer's own (their tutorial, their readiness to enter the
+## tournament, their camp). The two lists mix them freely and always did; what
+## is new is that the log can say which it is drawing.
+##
+## D99's rule is the point: the scope is DECLARED, never defaulted. It comes
+## from the entry's own `scope` key when it has one (`objectives.json` carries
+## one on all 33) and otherwise from `progression_state.scope_of()`, which is
+## the same table the runtime writer routes by -- so a Cloudreach act objective
+## and a Meadows one are answered by one source of truth and cannot disagree
+## with where the flag actually lands. An id neither can answer is a
+## `push_error` and a `""` scope, never a guess: defaulting an unknown id either
+## way is wrong in a way that only shows up with a second player, and shipped
+## data is kept off that path by `test_quest_log.gd`'s scope sweep.
+##
 ## SF34 added the first exception, and kept it as small as it sounds: an entry
 ## may carry `count_flags`, a list of flags whose set-count is appended to its
 ## label as " n/total" (spec §16's own example line is "Defeat the Upper
@@ -46,6 +65,9 @@ const DATA_PATH := "res://data/progression/objectives.json"
 ## this file stays as headlessly testable as it was.
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 const CHAPTER_LOGIC := preload("res://scripts/world/realm_chapter_progression.gd")
+## D99's scope table lives on the flag store, and this file asks it rather than
+## keeping a second copy -- see `_scope_of()`.
+const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 
 var _main: Array = []
 var _local: Array = []
@@ -103,8 +125,32 @@ func main_entries(progression: RefCounted) -> Array:
 ## already its own one-at-a-time rule.
 func local_entries(progression: RefCounted) -> Array:
 	if _realm_id == "cloudreach":
-		return CHAPTER_LOGIC.side_entries(progression, _realm_data)
+		return _scoped_side_entries(progression)
 	return _entries(_local, progression)
+
+
+## Cloudreach's side chains come back from `realm_chapter_progression.gd`, which
+## builds its rows from the chain record and does not know about D99. Rather
+## than teach that file a second vocabulary, the scope is stamped on here from
+## the chain the row came from, matched by `id` -- the same `_scope_of()` every
+## other row uses, over `{scope, flag_id: completion_flag}`.
+func _scoped_side_entries(progression: RefCounted) -> Array:
+	var by_id: Dictionary = {}
+	for raw: Variant in _realm_data.get("side_chains", []):
+		if typeof(raw) != TYPE_DICTIONARY:
+			continue
+		var chain := raw as Dictionary
+		by_id[str(chain.get("id", ""))] = {
+			"id": str(chain.get("id", "")),
+			"scope": str(chain.get("scope", "")),
+			"flag_id": str(chain.get("completion_flag", "")),
+		}
+	var out: Array = []
+	for raw: Variant in CHAPTER_LOGIC.side_entries(progression, _realm_data):
+		var row := (raw as Dictionary).duplicate()
+		row["scope"] = _scope_of(by_id.get(str(row.get("id", "")), {}) as Dictionary)
+		out.append(row)
+	return out
 
 
 func _entries(source: Array, progression: RefCounted) -> Array:
@@ -135,8 +181,34 @@ func _entries(source: Array, progression: RefCounted) -> Array:
 			"label": _label(entry, progression),
 			"done": _done(entry, progression),
 			"how": hint_text(entry),
+			"scope": _scope_of(entry),
 		})
 	return out
+
+
+## D99: which store this entry's completion actually lives in.
+##
+## The entry's own `scope` wins when it declares one, because that is the
+## declaration D99 asks authors to make and a mismatch with the table is
+## `test_flag_scopes.gd`'s failure, not a runtime guess. Otherwise the table
+## answers -- `cloudreach_chapter.json`'s acts and side chains declare their
+## scope the same way `objectives.json` does, and an entry from any other source
+## still resolves through the same `scope_of()` the writer routes by.
+##
+## "" is returned for an id nothing can classify, WITH an error, and callers
+## must treat it as "unknown", never as either scope. `_entries()` still lists
+## the row: an undeclared scope is a data bug to be fixed by the test that
+## catches it, not a reason to hide an objective from the player mid-chapter.
+func _scope_of(entry: Dictionary) -> String:
+	var declared := str(entry.get("scope", ""))
+	if declared == "world" or declared == "player":
+		return declared
+	var flag_id := str(entry.get("flag_id", ""))
+	var from_table := PROGRESSION_STATE.scope_of(flag_id) if not flag_id.is_empty() else ""
+	if from_table.is_empty():
+		push_error("quest_log.gd: objective '%s' has no declared scope (flag '%s') -- classify it in data/progression/flag_scopes.json (D99)"
+			% [str(entry.get("id", "")), flag_id])
+	return from_table
 
 
 ## Is this entry not yet part of the player's world at all? `revealed_by`
