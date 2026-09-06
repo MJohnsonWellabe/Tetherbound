@@ -1,0 +1,86 @@
+{
+  "_why": "D111 -- OP-0906-05: the Summit Stronghold reads as a castle keep; the owner wants a domed aviary with rustic stone remaining. This is the standalone geometry the hookup swaps into _build_summit_stronghold. cloudreach_aviary.gd is the only reader.",
+  "footprint": {
+    "half_width_x_m": 24.0,
+    "half_depth_z_m": 20.0,
+    "_why": "matches the castle's existing bounding footprint so the swap does not touch approach roads, cover exclusions or the courtyard beyond it."
+  },
+  "throat": {
+    "axis_z": [-1.5, 7.5],
+    "required_half_width_m": 5.0,
+    "required_clear_height_m": 8.0,
+    "_why": "PORTAL_HALF_WIDTH/PORTAL_CLEAR_HEIGHT and the two portal_z bands _build_summit_route_wing already uses -- the route must keep clearing an x=-30..30 walk at both z lines after the swap."
+  },
+  "drum": {
+    "radius_x_m": 22.0,
+    "radius_z_m": 20.0,
+    "height_m": 9.0,
+    "wall_thickness_m": 1.6,
+    "segment_count": 32,
+    "plinth_height_m": 0.55,
+    "plinth_extra_radius_m": 0.35,
+    "pier_angles_deg": [45.0, 135.0, 225.0, 315.0],
+    "pier_width_m": 3.2,
+    "pier_depth_m": 2.4,
+    "pier_extra_radius_m": 0.6,
+    "crenellation_count_per_pier": 3,
+    "crenellation_size_m": [0.9, 0.9, 0.9],
+    "crenellation_gap_m": 1.1,
+    "_why": "a low masonry ring, not a keep -- 9m of wall is enough for a rustic drum with the dome doing the height. 32 chord segments approximate the ellipse closely enough that no facet reads as flat at the visual-judge distance. Piers sit at the diagonals, away from every arch, so their small crenellation stubs are the only battlement left (the owner's 'still keep some rustic stone elements')."
+  },
+  "arches": {
+    "throat_half_angle_deg": 25.0,
+    "throat_angles_deg": [0.0, 180.0],
+    "throat_clear_height_m": 8.5,
+    "side_half_angle_deg": 16.0,
+    "side_angles_deg": [90.0, 270.0],
+    "side_clear_height_m": 7.0,
+    "arch_gap_margin_deg": 6.0,
+    "lintel_thickness_m": 0.9,
+    "jamb_width_m": 1.1,
+    "_why": "throat_angles 0/180 (pure east/west) put the drum's two route arches astride x=+-22,z~=0, wide enough at 25deg half-angle (Rz*sin25=8.5m) to clear both the -1.5 and 7.5 portal_z lines with margin either side of the 0.5m capsule, and 8.5m clear beats the 8.0m PORTAL_CLEAR_HEIGHT the route wing already promises. side_angles 90/270 are the old front-gate/rear-courtyard axis, kept as arches so the drum still reads as entered from two directions, not sealed into a drum with two slits. arch_gap_margin_deg=6 matches (with room to spare) the ~5.6deg half-width of one of the drum's own 32 wall chords -- the jamb sits at half_angle+margin, i.e. flush with the wall/plinth ring's own opening boundary (see cloudreach_aviary.gd _build_ring_course's own half-span-aware gap check), so there is no bare sliver of ground between jamb and wall and no jamb mass left sitting inside the swept capsule line."
+  },
+  "dome": {
+    "radius_m": 23.0,
+    "meridian_count": 16,
+    "rib_segments": 5,
+    "rib_base_radius_m": 0.35,
+    "rib_tip_radius_m": 0.2,
+    "latitude_ring_count": 5,
+    "ring_tube_radius_m": 0.16,
+    "oculus_radius_m": 6.0,
+    "oculus_ring_tube_radius_m": 0.4,
+    "_why": "sphere centred at the drum's top (y=drum.height_m) with this radius puts the apex at drum.height_m + 23 = ~32m, the owner's 'great dome' scale against a 1.80m trainer. Ribs stop at the oculus latitude (asin(6/23)~=15 deg from the pole) instead of converging to a point, so the top is a genuinely open ring the OccupiedSummitPylon can stand inside rather than a solid spire."
+  },
+  "veil_panels": {
+    "count": 6,
+    "height_m": 3.6,
+    "base_offset_m": 0.3,
+    "alpha_deg": 78.0,
+    "_why": "a handful of translucent wind-veil panels just above the drum crown, between ribs on the leeward-reading side, so the dome is open air everywhere else -- not a solid shell."
+  },
+  "furniture": {
+    "perch_count": 10,
+    "perch_length_min_m": 4.0,
+    "perch_length_max_m": 6.0,
+    "perch_height_min_m": 12.0,
+    "perch_height_max_m": 20.0,
+    "perch_radius_m": 0.14,
+    "perch_rope_tail_m": 1.5,
+    "nest_indices": [0, 4, 8],
+    "nest_radius_m": 0.85,
+    "nest_cone_height_m": 0.9,
+    "lantern_count": 4,
+    "lantern_post_height_m": 3.4,
+    "lantern_post_radius_m": 0.12,
+    "lantern_box_size_m": 0.32,
+    "ring_anchor_count": 6,
+    "ring_anchor_radius_m": 0.28,
+    "ring_anchor_height_m": 1.4,
+    "_why": "8-12 roosts and 3 nests read as an aviary from the ground; lanterns sit at the four arch flanks so the openings are legible at night; ring anchors are a cheap rustic detail (mooring rope tie-offs) that costs one torus each."
+  },
+  "pylon_anchor": {
+    "height_above_drum_m": 0.15,
+    "_why": "the oculus centre at drum top height (+ a hair so the pylon does not clip the ring) is where OccupiedSummitPylon should stand -- the hookup keeps building that node itself, this just hands back the anchor transform."
+  }
+}
