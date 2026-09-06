@@ -688,10 +688,25 @@ func _step_save_world(_args: Dictionary) -> Dictionary:
 	var save_system: Variant = game.get("save_system")
 	if save_system == null:
 		return {"verdict": "ERROR", "detail": "no Game.save_system"}
-	if not bool(save_system.call("save", game, SAVE_SCRATCH_SLOT)):
+	# Same reason as `_compute_state_hash`: a scratch slot a smoke reads back is
+	# not a save of record, so it does not write the D100 split.
+	if not bool(save_system.call("save", game, SAVE_SCRATCH_SLOT, false)):
 		return {"verdict": "FAIL", "detail": "save to slot %d refused" % SAVE_SCRATCH_SLOT}
 	var path := str(save_system.call("slot_path", SAVE_SCRATCH_SLOT))
 	return {"verdict": "PASS", "detail": "saved slot %d to %s" % [SAVE_SCRATCH_SLOT, path]}
+
+
+## The subdirectory names under a D100 save root, sorted, or [] when the root
+## does not exist. `DirAccess.get_directories_at` on a missing path pushes an
+## error and returns nothing, and "the directory is not there" is exactly the
+## answer a client is supposed to give -- not a harness fault.
+func _save_dir_entries(root_path: String) -> Array:
+	if not DirAccess.dir_exists_absolute(root_path):
+		return []
+	var listed: PackedStringArray = DirAccess.get_directories_at(root_path)
+	var out: Array = Array(listed)
+	out.sort()
+	return out
 
 
 ## `placed_buildings`, flattened to what a smoke can compare across two
@@ -3128,14 +3143,35 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			return FileAccess.file_exists(str(asave.call("slot_path", int(agame.call("autosave_slot")))))
 		"worlds_dir_entries":
 			# D100's `user://worlds/` -- the host-owned world save directory.
-			# It does not exist for anybody yet (the split is a later lane), so
-			# a client asserting 0 here is a FORWARD assertion: it is written
-			# now so the day the host starts writing that directory, a client
-			# that also starts writing it fails this smoke rather than shipping.
-			if not DirAccess.dir_exists_absolute("user://worlds"):
-				return []
-			var listed: PackedStringArray = DirAccess.get_directories_at("user://worlds")
-			return Array(listed)
+			#
+			# Re-pointed by lane 1.C, which wrote the split. This was a FORWARD
+			# assertion while nobody wrote that directory: a client reporting 0
+			# proved nothing, because the host reported 0 too. It is a real
+			# comparison now -- the host's is non-empty and the client's is
+			# still empty -- which is what the smoke asserts.
+			return _save_dir_entries("user://worlds")
+		"characters_dir_entries":
+			# D100's `user://characters/` -- the PORTABLE half, which every
+			# peer writes for itself and only for itself. The client half of
+			# the pair above: a client writes no world and exactly one
+			# character.
+			return _save_dir_entries("user://characters")
+		"character_file":
+			# The local peer's own character file, as `{id, keys}` -- enough for
+			# a smoke to assert whose it is and that it carries a character
+			# rather than a world, without shipping the whole payload through
+			# the coordinator.
+			var cgame := root.get_node_or_null(^"Game")
+			if cgame == null:
+				return null
+			var csave: Variant = cgame.get("save_system")
+			if csave == null:
+				return null
+			var ids: Array = _save_dir_entries("user://characters")
+			if ids.is_empty():
+				return {}
+			var cdata: Dictionary = (csave.call("characters") as RefCounted).call("read", str(ids[0]))
+			return {"id": str(ids[0]), "keys": cdata.keys(), "party": (cdata.get("party", []) as Array).size()}
 		_:
 			return null
 
@@ -3162,7 +3198,11 @@ func _compute_state_hash() -> Variant:
 	var save_system: Variant = game.get("save_system")
 	if save_system == null:
 		return null
-	if not bool(save_system.call("save", game, HASH_SCRATCH_SLOT)):
+	# `write_split` false: this is a hash probe, not a save of record. D100's
+	# world/character files are written by the real autosave sites; a heartbeat
+	# that also wrote them would mint a world named after the scratch slot and
+	# stamp that id onto `Game.local`, which the peer registry advertises.
+	if not bool(save_system.call("save", game, HASH_SCRATCH_SLOT, false)):
 		return null
 	var path := str(save_system.call("slot_path", HASH_SCRATCH_SLOT))
 	if not FileAccess.file_exists(path):

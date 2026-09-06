@@ -18,9 +18,16 @@ extends "res://tests/helpers/net_harness.gd"
 ##      and character ids;
 ##   5. the client leaves, and `expect_peers 1` on the host -- the host noticed
 ##      the disconnect and re-broadcast the registry without it;
-##   6. the host exits: it writes its own world autosave, and the client's
-##      autosave slot and `user://worlds/` both stay untouched (D100 --
-##      "a client never writes a world file").
+##   6. the host exits: it writes its own world autosave and its world file,
+##      the client writes ITS OWN CHARACTER FILE and nothing else, and the
+##      client's autosave slot and `user://worlds/` both stay empty
+##      (D100 -- "a client never writes a world file").
+##
+## Step 6 was a forward assertion until lane 1.C wrote the character half: with
+## nobody writing `user://worlds/` at all, a client reporting 0 entries there
+## proved nothing, because the host reported 0 too. Both sides of the
+## comparison are real now, and the client's side has gained the half it was
+## missing -- it leaves a session having written down its trainer.
 ##
 ## Each peer has its own `XDG_DATA_HOME` (contract §2), so 6 is a real
 ## filesystem comparison between two isolated `user://` trees, not two reads of
@@ -116,9 +123,33 @@ func _run() -> void:
 	var client_saved = await probe(1, "autosave_exists")
 	check(client_saved == false, "the client wrote NO world save, on join or on leave (%s)" % str(client_saved))
 
+	# D100's ownership, both halves. The host's world directory is the control:
+	# an empty client directory only means something beside a non-empty host one.
+	var host_worlds = await probe(0, "worlds_dir_entries")
+	check(host_worlds is Array and not (host_worlds as Array).is_empty(),
+		"the host wrote a world file to user://worlds/ (%s)" % str(host_worlds))
 	var client_worlds = await probe(1, "worlds_dir_entries")
 	check(client_worlds is Array and (client_worlds as Array).is_empty(),
 		"the client's user://worlds/ is empty (%s)" % str(client_worlds))
+
+	# The half lane 1.C added: every peer writes its OWN character, so the
+	# client leaves having recorded its trainer even though it recorded no world.
+	var client_characters = await probe(1, "characters_dir_entries")
+	check(client_characters is Array and (client_characters as Array).size() == 1,
+		"the client wrote exactly one character file, its own (%s)" % str(client_characters))
+	var client_character = await probe(1, "character_file")
+	var cf: Dictionary = client_character as Dictionary if client_character is Dictionary else {}
+	check(str(cf.get("id", "")) != "",
+		"and it is addressed by a character id (%s)" % str(client_character))
+	var cf_keys: Array = (cf.get("keys", []) as Array)
+	check(cf_keys.has("party") and cf_keys.has("realm_maps") and cf_keys.has("flags"),
+		"the client's character file carries its team, its maps and its own flags (%s)" % str(cf_keys))
+	check(not cf_keys.has("placed_buildings") and not cf_keys.has("day"),
+		"and no world key -- a trainer is not a world (%s)" % str(cf_keys))
+
+	var host_characters = await probe(0, "characters_dir_entries")
+	check(host_characters is Array and not (host_characters as Array).is_empty(),
+		"the host wrote its own character file too (%s)" % str(host_characters))
 
 	quit(await finish())
 
