@@ -72,6 +72,23 @@ const HEARTBEAT_SILENT_TIMEOUT_S := 15.0
 const NOMINAL_MS_PER_PHYSICS_FRAME := 1000.0 / 60.0
 const WALL_SLACK_MS := 5000.0
 
+## The live tolerance, which a smoke may raise BEFORE `launch()`. Fifteen
+## seconds is right for a peer that is only ever asked to walk and press
+## things: silence that long means it died or hung.
+##
+## It is wrong for a peer that changes scene AFTER hello.
+## `tests/smoke_net_join_by_address.gd`'s joiner reaches the world the way a
+## player does -- from the title screen, once the host's snapshot lands -- and
+## building the Meadows is ONE blocking frame that spike S2
+## (`ralph/reports/MP-0D-SPIKE-HOSTCOST-0905/`) measured at ~85 s. That peer is
+## working, not hung, and the detector cannot tell the difference from outside;
+## the smoke that knows it is about to happen says so. Every smoke that does
+## not touch this keeps §3's number exactly.
+##
+## `_init_budgets()` deliberately does not reset this: it runs inside
+## `launch()`, which is after the only useful moment to set it.
+var heartbeat_silence_tolerance_s := HEARTBEAT_SILENT_TIMEOUT_S
+
 var failures: Array[String] = []
 var _peers: Array = []
 var _run_dir := ""
@@ -130,14 +147,21 @@ func _init_budgets() -> void:
 ## one of them to connect and say `hello`. Returns false (with `failures`
 ## appended) on any launch problem; a caller that gets false should call
 ## `finish()` and quit rather than try to drive a peer that never came up.
-func launch(peer_count: int, scene: String, extra_args: Array = []) -> bool:
+## `per_peer_args` (lane 2.B) adds tokens to ONE peer's argv, keyed by index,
+## on top of `extra_args`, which every peer gets. It exists because a
+## command-line flag is fixed at process start: a joiner that reaches the
+## session through `--mp-join <host>:<port>` (the path a player and
+## `tools/owner/`'s launcher take) has to carry the HOST's port in the argv it
+## boots with, which is long before any `hello` could report it -- see
+## `enet_port_for()`. Empty by default, so every smoke written before it is
+## byte-for-byte unchanged.
+func launch(peer_count: int, scene: String, extra_args: Array = [],
+		per_peer_args: Dictionary = {}) -> bool:
 	_init_budgets()
 	_scene_for_run = scene
 	_peer_count_for_run = peer_count
 
-	_run_id = OS.get_environment("TB_NET_RUN_ID")
-	if _run_id.is_empty():
-		_run_id = "local-%d" % Time.get_ticks_usec()
+	_run_id = run_id()
 
 	_run_dir = _resolve_run_dir()
 	DirAccess.make_dir_recursive_absolute(_run_dir)
@@ -163,7 +187,11 @@ func launch(peer_count: int, scene: String, extra_args: Array = []) -> bool:
 		DirAccess.make_dir_recursive_absolute(home)
 		var role := "host" if i == 0 else "client"
 		var log_path := _run_dir.path_join("peer-%d.log" % i)
-		var pid := _spawn_peer(i, role, control_port, enet_base + i, scene, home, log_path, extra_args)
+		var args_for_peer: Array = extra_args.duplicate()
+		var mine: Variant = per_peer_args.get(i, [])
+		if mine is Array:
+			args_for_peer.append_array(mine as Array)
+		var pid := _spawn_peer(i, role, control_port, enet_base + i, scene, home, log_path, args_for_peer)
 		if pid <= 0:
 			var why2 := "coordinator: OS.create_process failed for peer %d" % i
 			failures.append(why2)
@@ -206,6 +234,27 @@ func launch(peer_count: int, scene: String, extra_args: Array = []) -> bool:
 			_fatal_reason = why3 # item 1: hello timeout is a harness fault, exit 2
 			return false
 	return false # unreachable; satisfies static return-path analysis on `while true`
+
+
+## This run's id, resolved once. `launch()` reads it through here so a smoke
+## may ask BEFORE launching -- `enet_port_for()` needs it, and a smoke that
+## computed its own would get a different answer every call for a run with no
+## TB_NET_RUN_ID in the environment.
+func run_id() -> String:
+	if _run_id.is_empty():
+		_run_id = OS.get_environment("TB_NET_RUN_ID")
+		if _run_id.is_empty():
+			_run_id = "local-%d" % Time.get_ticks_usec()
+	return _run_id
+
+
+## The ENet port `launch()` WILL hand peer `index`. The same derivation
+## `launch()` itself uses, called from one place rather than restated, because
+## a second formula here is a smoke that puts a port nothing is listening on
+## into a joiner's command line and then reports a join failure that is really
+## an arithmetic failure.
+func enet_port_for(index: int) -> int:
+	return _env_int("TB_NET_ENET_BASE", ENET_BASE_PORT + _port_offset_from_run_id(run_id())) + index
 
 
 ## Item 13 (review): a small, deterministic, bounded offset from the run id so
@@ -418,8 +467,8 @@ func _check_liveness(p: Dictionary) -> void:
 		# reporting the wrong reason. Fall back to `hello_at` as the reference
 		# point when no heartbeat has ever arrived.
 		var reference: float = last if last > 0.0 else float(p.get("hello_at", 0.0))
-		if reference > 0.0 and (Time.get_ticks_msec() / 1000.0 - reference) > HEARTBEAT_SILENT_TIMEOUT_S:
-			var reason2 := "ERROR: peer silent (peer %d, no heartbeat for >%.0f s)" % [int(p["index"]), HEARTBEAT_SILENT_TIMEOUT_S]
+		if reference > 0.0 and (Time.get_ticks_msec() / 1000.0 - reference) > heartbeat_silence_tolerance_s:
+			var reason2 := "ERROR: peer silent (peer %d, no heartbeat for >%.0f s)" % [int(p["index"]), heartbeat_silence_tolerance_s]
 			if _fatal_reason.is_empty():
 				_fatal_reason = reason2
 				print("coordinator: %s" % reason2)

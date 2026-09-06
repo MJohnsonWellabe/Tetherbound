@@ -44,6 +44,12 @@
       "script": "res://scripts/ui/tab_build.gd"
     },
     {
+      "_comment": "Stage B lane 2.B. Who is in this world, and the host's Remove button. Sits after Build and before Save because it is a world-level screen rather than a thing you carry: the four tabs above it are the player's own kit, the two below are the game around them. Its own script is honest with no session -- a solo player sees the address a friend needs, not an empty list (scripts/ui/tab_players.gd).",
+      "id": "players",
+      "label": "Players",
+      "script": "res://scripts/ui/tab_players.gd"
+    },
+    {
       "id": "save",
       "label": "Save",
       "script": "res://scripts/ui/tab_save.gd"

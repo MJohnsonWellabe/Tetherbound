@@ -57,9 +57,40 @@ const ROWS := [
 	["-", "'", SPACE, BACKSPACE, DONE],
 ]
 
+## The SECOND grid, for the join screen's host address (lane 2.B,
+## `scripts/ui/title_screen.gd`). It lives here, beside `ROWS`, rather than in
+## the join screen, because the on-screen keyboard is ONE keyboard: the panel
+## (`scripts/ui/name_prompt.gd`), the cursor, the wrapping, the repeat and the
+## DEL/OK cells are all the same code, and a second grid built next to it
+## would be a second thing to fix every time the first one is.
+##
+## Digits first, then the two separators an address needs, then DEL and OK on
+## the same row -- an IPv4 address plus a port is the case this exists for and
+## it is typed without ever leaving the top two rows. The alphabet follows for
+## a hostname ("study.local"), in the same A-J / K-T / U-Z shape `ROWS` uses,
+## so a player who has named a creature already knows where a letter is.
+const ADDRESS_ROWS := [
+	["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
+	[".", ":", "-", BACKSPACE, DONE],
+	["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"],
+	["k", "l", "m", "n", "o", "p", "q", "r", "s", "t"],
+	["u", "v", "w", "x", "y", "z"],
+]
+
+## A hostname plus `:port`. Long enough for "a-long-machine-name.local:27015",
+## and bounded so the buffer can never grow past what a panel can draw.
+const ADDRESS_MAX_LENGTH := 63
+
 var text: String = ""
 var row: int = 0
 var _column: int = 0
+
+## The grid this entry is walking, and the cap `type()` enforces. Both default
+## to the naming grid, so every existing caller -- the opening, the rename verb,
+## the unit tests -- is byte-for-byte unchanged; `use_rows()` is the only thing
+## that moves them.
+var _grid: Array = ROWS
+var max_length: int = MAX_LENGTH
 ## The column a deliberate LEFT/RIGHT press (or a direct assignment, e.g. a
 ## test teleporting the cursor) last asked for, independent of the clamped
 ## `column` below. Rows are ragged (the bottom row is 7 cells, every other
@@ -89,10 +120,18 @@ func reset() -> void:
 	column = 0
 
 
+## Point this entry at a different grid, and clear it. `ROWS` (and the naming
+## cap) when called with an empty array, so there is one way back.
+func use_rows(grid: Array, cap: int = MAX_LENGTH) -> void:
+	_grid = grid if not grid.is_empty() else ROWS
+	max_length = maxi(1, cap)
+	reset()
+
+
 ## --- the grid ---------------------------------------------------------------
 
 func rows() -> Array:
-	return ROWS
+	return _grid
 
 
 ## Move the cursor. Wraps vertically and horizontally: on a handheld the grid is
@@ -100,7 +139,7 @@ func rows() -> Array:
 ## bottom row — which holds Done — the most expensive cell to reach.
 func move(dx: int, dy: int) -> void:
 	if dy != 0:
-		row = wrapi(row + dy, 0, ROWS.size())
+		row = wrapi(row + dy, 0, _grid.size())
 		# Restore the column the player actually asked for, clamped only far
 		# enough to stay on this (possibly shorter) row — not through the
 		# `column` property, which would overwrite `_desired_column` with the
@@ -111,7 +150,7 @@ func move(dx: int, dy: int) -> void:
 
 
 func selected() -> String:
-	return str(ROWS[row][column])
+	return str(_grid[row][column])
 
 
 ## Fire the selected cell. Returns what it did — "typed", "backspace", "done" or
@@ -136,7 +175,7 @@ func activate() -> String:
 func type(character: String) -> bool:
 	if character.length() != 1:
 		return false
-	if text.length() >= MAX_LENGTH:
+	if text.length() >= max_length:
 		return false
 	# A name that begins with a space is a name the player cannot see they typed.
 	if character == SPACE and text.strip_edges() == "":
@@ -162,8 +201,8 @@ func sanitised() -> String:
 	var trimmed := text.strip_edges()
 	while trimmed.contains("  "):
 		trimmed = trimmed.replace("  ", " ")
-	if trimmed.length() > MAX_LENGTH:
-		trimmed = trimmed.substr(0, MAX_LENGTH)
+	if trimmed.length() > max_length:
+		trimmed = trimmed.substr(0, max_length)
 	return trimmed
 
 
@@ -181,4 +220,4 @@ static func cell_label(cell: String) -> String:
 
 
 func _row_length() -> int:
-	return (ROWS[row] as Array).size()
+	return (_grid[row] as Array).size()
