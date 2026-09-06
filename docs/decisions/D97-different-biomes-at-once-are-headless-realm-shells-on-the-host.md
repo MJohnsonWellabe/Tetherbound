@@ -146,10 +146,10 @@ asynchronous, and now is.
 
 | | before | after |
 |---|---|---|
-| Cloudreach shell, worst held frame | 21.9 s | 1.1 s |
-| Cloudreach shell, worst 60-physics-frame window | 22.8 s | 4.4 s |
-| Meadows shell, worst held frame | 30.5 s | 7.4 s |
-| Meadows shell, worst 60-physics-frame window | 41.2 s | 9.9 s |
+| Cloudreach shell, worst held frame | 21.9 s | 1.5 s |
+| Cloudreach shell, worst 60-physics-frame window | 22.8 s | 2.6 s |
+| Meadows shell, worst held frame | 30.5 s | 5.1 s |
+| Meadows shell, worst 60-physics-frame window | 41.2 s | 7.5 s |
 | freeing the outgoing Meadows on the crossing peer | 43.0 s | 1.9 s |
 | `load()` of a shell's scene, on the host's main thread | 3.5–5.6 s | off-thread |
 
@@ -171,12 +171,12 @@ dictionary. Every realm crossing in single-player got 41 seconds faster too.
 
 ### What it costs, stated plainly
 
-A shell now takes **longer in wall-clock** than the freeze did — 42.7 s for a Meadows
-shell in the smoke, against ~30 s of held frames before — because the host is deliberately
+A shell now takes **longer in wall-clock** than the freeze did — 50.6 s for a Meadows shell,
+against ~30 s of held frames before — because the host is deliberately
 spending most of each frame on the players who are already in the session. During that
 window the host is authoritative for a realm it cannot yet fully answer for, so
 `realm_shells.gd::report()` carries a `ready` flag per shell and things that need the
-realm to answer wait on it rather than racing it. The remaining 7.4 s single frame in a
+realm to answer wait on it rather than racing it. The remaining 5.1 s single frame in a
 Meadows shell is one indivisible Terrain3D region-data load; it is isolated so it never
 shares a heartbeat window, and reducing it needs Terrain3D streaming, not GDScript.
 

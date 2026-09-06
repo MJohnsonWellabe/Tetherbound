@@ -221,6 +221,6 @@ func summary() -> String:
 		return ""
 	return ("%.1f s wall, %d yields at %d ms/frame, %d indivisible slices given a "
 		+ "heartbeat window each, worst held slice %d ms (in the step following '%s'); "
-		+ "steps (ms): %s") % [
+		+ "steps (ms wall, yields included): %s") % [
 		(Time.get_ticks_msec() - _began_ms) / 1000.0, _yields, _budget_ms, _paybacks,
 		_worst_slice_ms, _worst_slice_step, " ".join(_steps)]

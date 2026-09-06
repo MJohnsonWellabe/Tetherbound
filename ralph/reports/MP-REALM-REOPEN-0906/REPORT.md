@@ -22,11 +22,11 @@ realms, and a realm's world state reaches disk when its last occupant vanishes m
 
 | | before | after |
 |---|---:|---:|
-| Cloudreach shell, worst held frame | 21,947 ms | **1,099 ms** |
-| Cloudreach shell, worst 60-physics-frame window | 22.8 s | **4.4 s** |
+| Cloudreach shell, worst held frame | 21,947 ms | **1,501 ms** |
+| Cloudreach shell, worst 60-physics-frame window | 22.8 s | **2.6 s** |
 | Cloudreach shell, `load()` on the main thread | 4,751–5,639 ms | **off-thread** |
-| Meadows shell, worst held frame | 30,547 ms | **7,443 ms** |
-| Meadows shell, worst 60-physics-frame window | 41.2 s | **9.9 s** |
+| Meadows shell, worst held frame | 30,547 ms | **5,067 ms** |
+| Meadows shell, worst 60-physics-frame window | 41.2 s | **7.5 s** |
 | Meadows shell, `load()` on the main thread | 3,499 ms | **off-thread** |
 | freeing the outgoing Meadows on the crossing peer | 43,049 ms | **1,931 ms** |
 | Meadows shell, static memory | 2,610 MB | 2,603 MB (unchanged) |
@@ -105,7 +105,7 @@ frames to keep *happening*, which means bounding the work in each individual fra
 - `step(label)` does that and records a named slice, so a shell prints its own profile once.
 - A slice at or above 250 ms is treated as **indivisible** and is followed by a whole
   heartbeat window (65 physics frames) of cheap frames, so it never has to share a window
-  with anything else. This is what took the Meadows from 13.8 s to 9.9 s.
+  with anything else. This is what took the Meadows' worst window from 13.8 s to 7.5 s.
 - `begin()` decides whether to slice at all: finest for a shell; coarse (100 ms) for a peer
   building a real world for itself during a live session; **not at all** otherwise. Solo
   play is byte-for-byte the build it always was — the slicer asks the session first.
@@ -115,34 +115,42 @@ Sliced, by file:
 | file | where |
 |---|---|
 | `cloudreach_world.gd` | 12 named `_ready()` steps; `breathe()` inside `_build_regions`, `_build_routes` (per route, per ledge point, per ground section), `_build_route_shoulders` (per section), `_build_landmarks` (three per landmark), `_build_authored_route_details` (per pocket, per item), `_build_resource_patches` |
-| `playground_world.gd` | 7 named `_ready()` steps, with the Terrain3D **node** build split from the **data-directory** assignment so the indivisible ~7.4 s region load never shares a window; `breathe()` after each of 29 settlement sub-builds |
+| `playground_world.gd` | 7 named `_ready()` steps, with the Terrain3D **node** build split from the **data-directory** assignment so the indivisible ~5 s region load never shares a window; `breathe()` after each of 29 settlement sub-builds |
 | `vegetation.gd` | `build()` takes the slicer; `breathe()` per model batch and every 512 placements inside `_build_batch` |
 | `realm_shells.gd` | `ResourceLoader.load_threaded_request()`/`load_threaded_get()`, polled every frame while a read is outstanding |
 
 Measured shell profiles, printed by the world itself:
 
 ```
-[cloudreach] shell build 20.4 s wall, 124 yields at 8 ms/frame, worst held slice 1709 ms;
-  steps (ms): materials=186 regions=658 ledges=25 routes=16259 gates=1 bridges=26
-              landmarks=2625 return_gate=1 route_details=6 resource_patches=25
-              environment=85 mount=149
-[playground] shell build 42.6 s wall, 897 yields at 8 ms/frame, 11 indivisible slices given
-  a heartbeat window each, worst held slice 5323 ms;
-  steps (ms): terrain_node=28 terrain_data=5323 terrain_collision=484 ground_materials=306
-              player_placed=1 vegetation=11274 settlement=18727
+[cloudreach] shell build 43.3 s wall, 1729 yields at 8 ms/frame, 25 indivisible slices given
+  a heartbeat window each, worst held slice 1501 ms; steps (ms wall, yields included):
+  materials=136 regions=586 ledges=22 routes=38509 gates=1 bridges=28 landmarks=3419
+  return_gate=1 route_details=6 resource_patches=23 environment=90 mount=136
+[playground] shell build 50.6 s wall, 1282 yields at 8 ms/frame, 17 indivisible slices given
+  a heartbeat window each, worst held slice 6163 ms; steps (ms wall, yields included):
+  terrain_node=25 terrain_data=6163 terrain_collision=345 ground_materials=538
+  player_placed=0 vegetation=9069 settlement=30861
 ```
+
+The step figures are wall clock **including** the yields taken inside each step, so they are
+not comparable to a held-frame number; `routes=38509` is about 17 s of work and the rest is
+the host letting frames out. The one to read is `worst held slice`.
 
 ## What is still slow, honestly
 
-- **A Meadows shell holds one 7.4 s frame** (5.3 s in the smoke's own run). It is a single
+- **A Meadows shell holds one 5.1 s frame** (5.3 s in the smoke's own run; 7.4 s before the
+  terrain node/data split isolated it). It is a single
   Terrain3D region-data load — one engine call, not script. It is isolated so it never
-  shares a heartbeat window, which is what keeps the worst window at 9.9 s against a 15 s
+  shares a heartbeat window, which is what keeps the worst window at 7.5 s against a 15 s
   limit. Reducing it needs Terrain3D streaming, not more GDScript slicing. **Margin note:**
-  9.9 s of 15 s is real but not generous; a CI runner ~50 % slower than this box would be at
-  the limit. If the shard ever reports `peer silent` again, this frame is the first suspect
+  7.5 s of 15 s is margin, but not a lot of it on a runner slower than this box. If the shard ever reports `peer silent` again, this frame is the first suspect
   and `shell_build_budget_ms` in `data/config/performance.json` is the lever.
-- **A shell takes longer in wall-clock than the freeze did** — 42.7 s for a Meadows shell
-  against ~30 s of held frames. That is the deliberate trade: the host spends most of each
+- **The wall-clock costs below are the SHELL's, not the crossing player's.** A peer building
+  its own destination runs at the coarse 100 ms slice, so the loading transition the traveller
+  actually sits through is barely longer than it was; the 8 ms slice is reserved for the host
+  building a world nobody on that machine can see.
+- **A shell takes longer in wall-clock than the freeze did** — 50.6 s for a Meadows shell and 43.3 s
+  for a Cloudreach one, against ~30 s and ~21 s of held frames. That is the deliberate trade: the host spends most of each
   frame on the players already in the session. `realm_shells.gd::report()` now carries a
   `ready` flag per shell, and `build_ms` (the whole sliced build) alongside `attach_ms` (the
   walk to the world root's first yield), because `boot_ms` no longer means anything.
@@ -215,7 +223,7 @@ both OK. `yaml.safe_load` clean.
 | `--check-only` on every changed script | clean |
 | `smoke_net_split_realms` | 40 checks, 0 failed |
 | `smoke_net_realm_owner_disconnect_mid_fight` | 23 checks, 0 failed |
-| `smoke_net_shared_wild_fight` | see below |
+| `smoke_net_shared_wild_fight` | flaky on BOTH sides — see F7 |
 | `smoke_cloudreach_transition` | OK |
 | `smoke_cloudreach_arrival_walk` | OK |
 | `smoke_playground` | `smoke: OK` |
@@ -229,9 +237,39 @@ checks respectively.
 `scripts/save/*`, `riding_controller.gd`, `fly_controller.gd`, the six modal panels,
 `tests/helpers/net_harness.gd`. No defect found in any of them.
 
+## F7 — `smoke_net_shared_wild_fight` is flaky, on this branch and on the base
+
+It failed on this branch on its first run after the last code change, so it was measured
+rather than retried away.
+
+| | pass | runs |
+|---|---:|---:|
+| this branch | 5 | 7 |
+| base `d0a4cf33` | 6 | 7 |
+
+Interleaved base/branch runs (three pairs, alternating, to control for machine drift) went
+branch 3/3, base 2/3. **The same root cause on both sides**, and the smoke's own authors
+anticipated it: the two creatures are moved next to each other before the friendly swing and
+where they end up is not deterministic. When they finish too far apart the swing does not
+reach and there is nothing to refuse. The base fails the diagnostic bound the authors wrote
+for exactly this ("the two creatures are within one swing of each other (4.40 m apart)"); this
+branch failed at 1.82 m and 2.12 m, just inside that bound, where the host's replicated view of
+the two bodies disagrees with the client's at the moment of the swing. A base run passed at
+2.15 m — wider than either failure — which is what rules the geometry alone out as the
+discriminator and the marginality in.
+
+No mechanism was found in this lane's diff that could reach it: nothing here touches per-frame
+combat, body replication, or the arbiter's query path — only its teardown — and the damage
+rolls vary run to run on the base too, so the scenario was never deterministic.
+
+**This matters for CI:** the shard runs with `RETRIES: 1`, which is one attempt, so this smoke
+will redden `verify-multiplayer-shard` for whichever lane happens to be landing. Recorded here
+rather than fixed: the fix is to place the two creatures deterministically before the friendly
+swing, which belongs to whoever owns that smoke.
+
 ## Handovers
 
-1. **Terrain3D region data is a 7.4 s indivisible frame.** The only remaining held frame of
+1. **Terrain3D region data is a ~5 s indivisible frame.** The only remaining held frame of
    any size. Needs Terrain3D-side streaming or a smaller shell heightfield.
 2. **Wild replication** (4.C H1) — see F5. Restores the strict binding assertion.
 3. **`verify-multiplayer-shard` timeout is an estimate.** It is 45 minutes for an estimated
@@ -239,3 +277,11 @@ checks respectively.
    first real run should correct it in whichever direction it needs.
 4. **`_providers` is a derived view now.** Anything that wants a cheap census should read
    `_provider_set` directly rather than materialising the keys.
+5. **`smoke_net_shared_wild_fight` needs a deterministic pre-swing placement** — F7. It is
+   flaky on `main`, at roughly one run in seven, against a shard that does not retry.
+6. **The wall-clock/responsiveness trade is a dial, and it is currently set toward
+   responsiveness.** A Cloudreach shell reads a 2.6 s worst window and 43 s of wall clock; the
+   Meadows 7.5 s and 51 s. `shell_build_budget_ms` and `shell_build_budget.gd`'s
+   `LONG_SLICE_MS` (the payback threshold, currently 250 ms — 17 to 25 slices per build each
+   get a 65-frame window to themselves) are where that is spent. The Meadows is the binding
+   constraint; Cloudreach has room to be made faster and less smooth if anyone wants it.

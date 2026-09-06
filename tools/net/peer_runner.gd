@@ -1699,7 +1699,16 @@ func _step_enter_realm(args: Dictionary) -> Dictionary:
 	if realm.is_empty():
 		return {"verdict": "ERROR", "detail": "enter_realm needs args.realm"}
 	var was := str(game.get("current_realm"))
-	if not bool(game.call("enter_realm", realm, str(args.get("entry", "")))):
+	# `enter_realm()` is a coroutine (`autoload/game_state.gd`'s OP-0905-20
+	# loading overlay awaits two frames before it ever returns), so a caller
+	# that reads its bool has to `await` the call -- exactly the "NEW caller"
+	# that function's own header warns about. Without this `await`,
+	# `game.call(...)` hands back the coroutine's completion Signal instead of
+	# the real bool, and using that as a bool aborts this step with a fatal
+	# script error before it reaches any `return` -- which is what actually
+	# produced the ERROR-with-no-detail this lane's net smokes hit.
+	var crossed: bool = await game.call("enter_realm", realm, str(args.get("entry", "")))
+	if not crossed:
 		return {"verdict": "FAIL",
 			"detail": "Game.enter_realm('%s') refused from '%s' (can_enter=%s)"
 				% [realm, was, str(game.call("can_enter_realm", realm))]}

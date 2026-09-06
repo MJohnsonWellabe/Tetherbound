@@ -20,6 +20,42 @@ to mistake for a verdict:
   not be described as such until one shard run finishes.
 - **None of it is on `main`.** PR #63 is open.
 
+**Update, 2026-09-06 (later the same day): the shard finally ran to completion at `ad383219`, and
+`verify-multiplayer-shard` failed** on `tests/smoke_net_realm_owner_disconnect_mid_fight.gd`, at the
+exact check named in this file's own honest-limits list above: the first CI-evidenced run of these
+two 6.A smokes, and the first thing it found.
+
+Root cause: `tools/net/peer_runner.gd::_step_enter_realm()` called `Game.enter_realm()` through
+`Object.call()` and read its boolean return value **without `await`**. `enter_realm()` became a
+coroutine when OP-0905-20's loading-overlay change gave it `await tree.process_frame` (twice) —
+before that landed, discarding or reading its return synchronously was safe, which is exactly why
+`game_state.gd::enter_realm()`'s own header already warned "only a NEW caller that reads the
+returned bool needs [await]." `_step_enter_realm()` was that caller and had not been updated.
+Reading a suspended coroutine's return value as a `bool` is a fatal script error that aborts the
+step before it reaches any `return`, which is why the coordinator logged a bare
+`ERROR: peer 0 reported ERROR:` with no detail — `_execute_step()`'s `out` stayed at its default
+`{}`. Both 6.A net smokes share this one step handler, so one `await` fixes both.
+
+This also resolves an apparent contradiction with lane MP-REALM-REOPEN's own report, which recorded
+both smokes green on a local run: that run predates OP-0905-20 landing on this consolidated branch,
+so the interaction between the two lanes was genuinely new to `claude/tetherbound-roadmap-next-jrcjs8`
+and had never been exercised together before this CI run.
+
+**A second, separate finding surfaced in local reproduction, not yet confirmed on GitHub's own
+runner:** rerunning `smoke_net_realm_owner_disconnect_mid_fight` after the fix, the crossing check
+now passes, but the run went on to trip the harness's 15 s heartbeat-silence guard while the host's
+Meadows shell built — `[playground] shell build 54.8 s wall ... worst held slice 15482 ms (in the
+step following 'vegetation')`. `scripts/world/village.gd::build()` has no internal `breathe()` /
+`await` at all, so its entire construction runs as one indivisible slice inside
+`playground_world.gd::_build_settlement()`'s `settlement` step — unlike every other file
+`ralph/reports/MP-REALM-REOPEN-0906/REPORT.md` lists as sliced. On the report's own reference box
+this stayed comfortably under the 15 s budget (never called out as a risk; only the ~5 s Terrain3D
+region load was), so this reads as this session's sandbox being meaningfully slower per-operation
+than that box, not a new regression — but it was not re-verified against GitHub's actual runner
+before this note was written. If `verify-multiplayer-shard` reports `peer silent` on either 6.A
+smoke, `village.gd::build()`'s missing slicing is the first suspect, and the fix is the same
+`breathe()`-between-substeps pattern already used in `playground_world.gd` and `cloudreach_world.gd`.
+
 ### What was built, in the order it will matter to a player
 
 A person starts or loads a world from the title screen and up to three friends join by address or
