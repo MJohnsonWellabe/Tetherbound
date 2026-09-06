@@ -75,6 +75,36 @@
       "tint": "#9b805f"
     }
   },
+  "geology": {
+    "_comment": "CLIFF-ART-0906, owner picked option A (2026-09-06). CLIFF-ART-0906 option A: material only. The key art's cliff/stronghold stone is grey-green granite (judge measured RGB 80/79/71 on the board's cut stone) with mossy shelves; the shipped defaults are tan (0.63,0.53,0.40) with ochre strata. Same Rock030 texture, retinted. Every key here maps 1:1 onto a shaders/cloudreach_cliff.gdshader uniform via cloudreach_world.gd::_build_materials; the shader's own defaults are the old tan look, so removing a key reverts that one uniform and removing the block reverts the whole cliff. Rendered options and the judge sheet: ralph/reports/CLIFF-ART-0906/.",
+    "stone_light": "#8a8f82",
+    "stone_dark": "#464b44",
+    "strata_ochre_tint": "#5d6a5a",
+    "strata_ochre_strength": 0.18,
+    "strata_strength": 0.05,
+    "strata_period_m": 9.0,
+    "ledge_moss_tint": "#4c6b36",
+    "ledge_moss_strength": 0.62,
+    "ledge_lighten": 0.1,
+    "ledge_normal_threshold": 0.55,
+    "crevice_strength": 0.45,
+    "crevice_scale": 0.09,
+    "texture_scale": 0.055
+  },
+  "crown_relief": {
+    "_comment": "OWNER 2026-09-06: 'that completely flat green ground shouldn't exist'. Only a CliffMass got an eroded crown, and even that reached its first contour in ONE triangle per side -- three vertices describe a plane, so every crown rendered as a flat disc however much height the model carried. cloudreach_world.gd now (a) carries relief in the shared height model (_crown_height_at, which the visible crown, its collision copy and every conforming shoulder all read) and (b) subdivides the crown bands so the mesh can show it. amplitude_m is measured at reference_radius_m and scales down with the crown's own radius, so a landing pad still reads as a pad; crowns under min_radius_m are left alone. The relief zeroes itself inside a settlement clearance and within LINE_PIN_MARGIN_M+LINE_EASE_M of any road or bridge deck -- without that it would roll through an authored ribbon and reopen the hole/sink class OP-0905-24/25 closed. mesh_step_m is the target quad size of the subdivision and is the cheap lever if triangle count matters.",
+    "enabled": true,
+    "amplitude_m": 4.5,
+    "reference_radius_m": 150.0,
+    "min_radius_m": 40.0,
+    "rim_fade_fraction": 0.78,
+    "long_wavelength_m": 74.0,
+    "short_wavelength_m": 31.0,
+    "short_amplitude_fraction": 0.34,
+    "respect_settlements": true,
+    "mesh_step_m": 7.0,
+    "max_steps": 26
+  },
   "landmass": {
     "geology_base_y": -210.0,
     "region_width_factor": 0.30,

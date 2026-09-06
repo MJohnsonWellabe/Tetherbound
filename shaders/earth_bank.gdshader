@@ -122,16 +122,87 @@ uniform float slope_high_deg = 48.0;
 uniform float height_low_frac : hint_range(0.0, 1.0) = 0.12;
 uniform float height_high_frac : hint_range(0.0, 1.0) = 0.30;
 
+// ---------------------------------------------------------------------------
+// WARRENS-ART-0906 round 5 -- OWNER, 2026-09-06: "the placed rocks on the
+// exterior don't look right. it seems like you can do something more like what
+// we're doing on cloudreach cliffs with the cliffs to make this look better
+// rather than using plastic prop assets."
+//
+// Both blind rounds had already found the same thing from the pictures alone:
+//
+//   round 1: "the rock set. Flat hard-edged facet slabs with a painted-on moss
+//            band ... needs rock forms with real strata and a moss treatment
+//            that grows rather than stripes."
+//   round 2: "the boulders are flat-shaded low-poly slabs with hard facets and
+//            visible triangle edges, while the knoll they sit on is a smooth
+//            high-resolution blob with a noise texture. Two incompatible rock
+//            treatments, adjacent, in the same shot."
+//
+// The answer is not more props. This bank is already a procedural surface with
+// a shader on it, so the rock goes IN the surface: where the mound is steep
+// enough to be a cut face rather than a settled slope, it draws stone with
+// sedimentary banding, mossy ledges and crevice shadow -- the same three moves
+// `shaders/cloudreach_cliff.gdshader` makes, sharing that shader's own Rock030
+// texture and the grey-green granite palette the owner picked for Cloudreach
+// (option A), so the two biomes' stone is one material language and this
+// site's own knoll and boulders stop being two.
+//
+// `rock_strength` 0 disables the whole layer and this file is then
+// byte-identical to before it, which is what every key below is defaulted for.
+uniform sampler2D rock_albedo : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
+uniform sampler2D rock_normal_map : hint_normal, filter_linear_mipmap_anisotropic, repeat_enable;
+uniform float rock_strength : hint_range(0.0, 1.0) = 0.0;
+uniform float rock_uv_scale = 0.055;
+uniform vec3 stone_light : source_color = vec3(0.54, 0.56, 0.51);
+uniform vec3 stone_dark : source_color = vec3(0.27, 0.29, 0.27);
+// Where stone takes over from earth. A settled grass slope is never rock; the
+// dug face beside the mouth, the throat's own cut and the steepest flanks are.
+uniform float rock_slope_low_deg = 46.0;
+uniform float rock_slope_high_deg = 62.0;
+// Sedimentary banding, world-space so it reads across the whole mass however
+// the procedural mesh is tessellated. Soft edges, never a hard floor(), or it
+// is a barcode rather than a stratum.
+uniform float strata_period_m : hint_range(1.0, 30.0) = 6.0;
+uniform float strata_strength : hint_range(0.0, 0.3) = 0.05;
+uniform vec3 strata_ochre_tint : source_color = vec3(0.36, 0.41, 0.35);
+uniform float strata_ochre_strength : hint_range(0.0, 1.0) = 0.18;
+// Near-horizontal ledges pick up moss; steep faces are untouched.
+uniform vec3 ledge_moss_tint : source_color = vec3(0.30, 0.42, 0.21);
+uniform float ledge_moss_strength : hint_range(0.0, 1.0) = 0.55;
+uniform float ledge_lighten : hint_range(0.0, 0.5) = 0.1;
+uniform float ledge_normal_threshold : hint_range(0.0, 1.0) = 0.55;
+// Crevice darkening on the steep faces between ledges, so the cut face is not
+// one flat mid-tone.
+uniform float crevice_strength : hint_range(0.0, 1.0) = 0.45;
+uniform float crevice_scale = 0.09;
+
 varying float v_height_frac;
 // SECOND-PASS-0906: the moisture mask `_build_bank()` writes to COLOR.g.
 varying float v_moist;
 // ROUND-4-0906: the raw-spoil mask `_build_bank()` writes to COLOR.b.
 varying float v_spoil;
+// WARRENS-ART-0906: baked contact occlusion, COLOR.a. The Compatibility
+// renderer has no SSAO and no light volumes (`burrow_warrens.json`'s own
+// `_comment_w07_room` says so), so nothing in the engine darkens the inside
+// of a concave form -- and the mouth's earth collar is exactly that: the rim
+// of a hole, whose inner face should sit in the hole's own shadow and which
+// instead rendered as the BRIGHTEST thing at the entrance, a cream ring
+// around a black opening (60m approach frame, first render of this pass).
+// `_build_brow_earth_ring()` writes a ramp here, dark at the rim and 1.0 at
+// the outer edge where the collar dies into the mound.
+//
+// This is a no-op for every surface that existed before it. `_build_bank()`
+// and `_build_bank_cap()` both write their vertex colour through
+// `_bank_add_vertex()`, whose `Color(frac, moist, spoil)` leaves alpha at
+// Godot's own default of 1.0, so `v_occlusion` is 1.0 across the whole mound
+// and the multiply below changes nothing there.
+varying float v_occlusion;
 
 void vertex() {
 	v_height_frac = COLOR.r;
 	v_moist = COLOR.g;
 	v_spoil = COLOR.b;
+	v_occlusion = COLOR.a;
 }
 
 // Cheap triplanar: three axis-projected samples of the same installed photo,
@@ -169,6 +240,13 @@ vec3 triplanar_normal(sampler2D tex, vec3 world_pos, vec3 blend, float scale, ve
 // integer-lattice hash values so it reads as broad relief, not static.
 float hash2(vec2 p) {
 	return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+}
+
+// WARRENS-ART-0906: the same cheap 3D noise `cloudreach_cliff.gdshader` uses,
+// for the strata bend and the crevice field. Kept identical to that file's so
+// the two biomes' stone breaks up the same way.
+float noise3(vec3 p) {
+	return sin(p.x * 0.83 + sin(p.z * 0.67)) * 0.5 + sin(p.z * 0.49 + p.y * 0.37) * 0.5;
 }
 
 float value_noise(vec2 p) {
@@ -229,8 +307,45 @@ void fragment() {
 	earth_c = mix(earth_c, earth_c * spoil_tint, spoil * spoil_darken);
 
 	vec3 albedo = mix(grass_c, earth_c, earth_w);
+
+	// The geology layer (see the `rock_*` uniforms' own header). Slope alone
+	// decides it: a settled grass shoulder is never stone, the dug face and
+	// the steepest flanks always are, and `rock_strength` scales the whole
+	// thing so a site can dial it back to nothing.
+	float rock_w = smoothstep(rock_slope_low_deg, rock_slope_high_deg, slope_deg) * rock_strength;
+	if (rock_w > 0.001) {
+		vec3 rock_tex = triplanar(rock_albedo, world_pos, blend, rock_uv_scale);
+		float bend = noise3(world_pos * 0.027) * 8.0;
+		float macro = clamp(noise3(world_pos * 0.016) * 0.5 + 0.5, 0.0, 1.0);
+		float face = abs(sin(world_pos.x * 0.019 - world_pos.z * 0.024 + bend * 0.04));
+		vec3 stone = mix(stone_dark, stone_light, 0.30 + macro * 0.45 + face * 0.15);
+
+		float strata_units = world_pos.y / max(strata_period_m, 0.1);
+		float strata_band = floor(strata_units);
+		float strata_frac = fract(strata_units);
+		float band_edge = smoothstep(0.0, 0.14, strata_frac) * (1.0 - smoothstep(0.86, 1.0, strata_frac));
+		float strata_parity = mod(strata_band, 2.0);
+		stone *= 1.0 + mix(-strata_strength, strata_strength, strata_parity) * band_edge;
+		float ochre_band = 1.0 - smoothstep(0.0, 1.0, mod(strata_band, 3.0));
+		stone = mix(stone, strata_ochre_tint, strata_ochre_strength * band_edge * ochre_band);
+
+		float ledge_mask = smoothstep(ledge_normal_threshold, ledge_normal_threshold + 0.25, world_normal.y);
+		vec3 ledge_colour = mix(stone * (1.0 + ledge_lighten), ledge_moss_tint, ledge_moss_strength);
+		stone = mix(stone, ledge_colour, ledge_mask * clamp(0.55 + macro * 0.5, 0.0, 1.0));
+
+		float steepness = 1.0 - ledge_mask;
+		float crevice_noise = noise3(world_pos * crevice_scale) * 0.5 + 0.5;
+		float crevice = (1.0 - smoothstep(0.05, 0.6, crevice_noise)) * steepness;
+		stone *= mix(1.0, 1.0 - crevice_strength, crevice);
+
+		albedo = mix(albedo, stone * mix(vec3(0.82), rock_tex * 1.28, 0.52), rock_w);
+	}
+
+	// Baked contact occlusion, see `v_occlusion` above. 1.0 everywhere the
+	// mesh does not author it, so this line is free for the mound itself.
+	albedo *= clamp(v_occlusion, 0.0, 1.0);
 	ALBEDO = albedo;
-	ROUGHNESS = mix(grass_roughness, earth_roughness, earth_w);
+	ROUGHNESS = mix(mix(grass_roughness, earth_roughness, earth_w), 0.96, rock_w);
 
 	// NORMAL_MAP (Godot's tangent-space slot) needs real per-vertex TANGENT
 	// data to build its TBN basis, and this mesh has none --
@@ -245,5 +360,12 @@ void fragment() {
 	vec3 grass_n = triplanar_normal(grass_normal, world_pos, blend, grass_uv_scale, world_normal);
 	vec3 earth_n = triplanar_normal(earth_normal, world_pos, blend, earth_uv_scale, world_normal);
 	vec3 blended_n = normalize(mix(grass_n, earth_n, earth_w));
+	// Where the geology layer wins, so does its own relief -- a strata face
+	// with the meadow's soil normals on it is the mismatch this layer exists
+	// to remove.
+	if (rock_w > 0.001) {
+		vec3 rock_n = triplanar_normal(rock_normal_map, world_pos, blend, rock_uv_scale, world_normal);
+		blended_n = normalize(mix(blended_n, rock_n, rock_w));
+	}
 	NORMAL = normalize(mix(world_normal, blended_n, clamp(normal_strength, 0.0, 1.0)));
 }

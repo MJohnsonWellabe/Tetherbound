@@ -188,7 +188,6 @@ in two different biomes at once. A world is host-owned and a character is portab
 > split 1.C, and the realm refusal it describes as held all landed later the same day. Read the
 > entry above for the state, and `docs/acceptance/MULTIPLAYER_ACCEPTANCE.md` for the evidence.
 
-
 **Two people can walk around one Meadows and see each other.** That is Wave 2's deliverable and it
 is measured, not asserted: `tests/smoke_net_movement_two_peers.gd` runs two isolated Godot
 processes that really host, join, exchange a world snapshot and walk, and each asks the other
@@ -1314,3 +1313,36 @@ marks and repair the harsh summit foreground shadow/grass intersection while doi
   Pond is a real 14 m basin (water surface authored at −17.0 m) and the evidence run now authors
   the climb out of its north-east shoulder (`S05-32x`, the RIG-F6 precedent — legs checked
   against a route that was actually walked, never a teleport past geometry): 23 s instead of 543.
+## Burrow Warrens art round — 2026-09-06 (`claude/art-warrens-round-0906`)
+
+`docs/HANDOFF_2026-09-06.md` §4.3 W1, W3 and W5 plus the §5.2 leftovers, closed against
+two blind visual-judge rounds. Full report and both verdicts:
+`ralph/reports/WARRENS-ART-0906/` (`REPORT.md`, `JUDGE-round1.md`, `JUDGE-round2.md`).
+
+**Closed.** W1 mushrooms — `Mushroom_Oyster`/`Mushroom_RedCap` installed from the already
+vendored nature megakit (no download, no Meshy; their texture was already installed) with
+per-species pale cave tints; round 2 calls the cluster "the only object in any interior
+frame with a designed silhouette". W5 burrow arch — the swept bark tube is now a displaced
+earth collar in the bank's own shader and the ten root cylinders are real `DeadTree_*`
+meshes; round 2 opens with "`03-mouth` is the best frame in the survey and it is genuinely
+good". The §5.2 tube-foot sliver — a z-gap between the apron ramp and the threshold fan,
+219 bright pixels → 0.
+
+**Partly closed.** W3 — the material half is done (`site.earth_clad_walls`, one wall
+material across all five chambers and the passages; round 1's "two unrelated rock
+materials … no material identity" does not recur in round 2). The geometry half is open:
+both rounds call the rooms extruded prisms and both put an organic tunnel kit in their
+*cannot be fixed by scene work* list.
+
+**Owner-directed, landed.** Interior heights raised (den 4.8 → 7.0, hall 4.2 → 5.6,
+hall→den passage 3.4 → 4.4) after "the interior looks a little cramped for that creature";
+root tips and light heights re-authored with them. A Cloudreach-style geology layer on
+`earth_bank.gdshader` after "the placed rocks … look like plastic prop assets", with the
+prop rock scatter cut back.
+
+**Open, with detail in the report.** `07-den-dressing` lost value (median 46.6 → 32.0) when
+the den walls went from pale stone to earth — a regression this lane introduced; the den
+light pools were tuned against an albedo that no longer exists. The geology layer and its
+correction are rendered but **not blind-judged**. `smoke_warrens` was last run in full at
+`2905e2ae`; the four commits after it are covered by `smoke_warrens_fixture` and renders
+only. No CI run was dispatched from this lane.

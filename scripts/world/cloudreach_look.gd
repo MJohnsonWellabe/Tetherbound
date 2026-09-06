@@ -78,6 +78,11 @@ var _bridge_post_count := 0
 var _mooring_lines: Dictionary = {} # island label -> int lines
 var _cover_main_count := 0
 var _cover_far_count := 0
+var _cover_fill_count := 0
+var _cover_fill_cells := 0
+var _cover_fill_msec := 0
+var _cover_fill_grid: Dictionary = {}
+var _cover_fill_probes := 0
 var _cover_alpine_count := 0
 var _cover_by_patch: Dictionary = {} # patch label -> tuft count (this pass only)
 var _tree_count := 0
@@ -89,6 +94,7 @@ var _cover_patch_centres: Array[Vector3] = []
 var _cover_counts_by_index: Array[int] = []
 var _ellipse_patches_cache: Array = []
 var _tree_positions: Array[Vector3] = []
+var _route_bounds_cache: Array = []
 
 
 func dress(world: Node3D) -> void:
@@ -252,7 +258,20 @@ func _excluded(at: Vector3) -> bool:
 	return false
 
 
-func _near_route(at: Vector3, extra_m: float) -> bool:
+## Per route: the XZ box its polyline occupies and its y span, built once.
+## `_near_route` is asked once per candidate tuft -- hundreds of thousands of
+## times in a build -- and without this it walked EVERY segment of EVERY route
+## for every one of them.
+##
+## There WAS an early-out here and it did nothing: it computed whether both
+## endpoints were more than 260 m away and then ran `pass`, so the segment loop
+## ran regardless. It was also not safe to just promote to `continue` -- a
+## route longer than 260 m end to end can pass close to a point both of whose
+## endpoints are far away, and the causeways do exactly that. A bounding box is
+## the same idea without the assumption.
+func _route_bounds() -> Array:
+	if not _route_bounds_cache.is_empty() or _routes.is_empty():
+		return _route_bounds_cache
 	for raw: Variant in _routes:
 		if not raw is Dictionary:
 			continue
@@ -260,12 +279,32 @@ func _near_route(at: Vector3, extra_m: float) -> bool:
 		var polyline: Array = route.get("polyline", [])
 		if polyline.size() < 2:
 			continue
-		var half_width := float(route.get("width_m", 7.5)) * 0.5 + extra_m
+		var lo := Vector3(INF, INF, INF)
+		var hi := Vector3(-INF, -INF, -INF)
+		for point: Variant in polyline:
+			var p := _vec3(point)
+			lo = Vector3(minf(lo.x, p.x), minf(lo.y, p.y), minf(lo.z, p.z))
+			hi = Vector3(maxf(hi.x, p.x), maxf(hi.y, p.y), maxf(hi.z, p.z))
+		_route_bounds_cache.append({"route": route, "lo": lo, "hi": hi,
+			"half_width": float(route.get("width_m", 7.5)) * 0.5})
+	return _route_bounds_cache
+
+
+func _near_route(at: Vector3, extra_m: float) -> bool:
+	for entry: Dictionary in _route_bounds():
+		var lo: Vector3 = entry["lo"]
+		var hi: Vector3 = entry["hi"]
+		var half_width := float(entry["half_width"]) + extra_m
+		# Outside the route's own box by more than the width it could reach,
+		# no segment inside it can be within `half_width`. The y guard matches
+		# the one the segment loop applies below.
+		if at.x < lo.x - half_width or at.x > hi.x + half_width \
+				or at.z < lo.z - half_width or at.z > hi.z + half_width \
+				or at.y < lo.y - 10.0 or at.y > hi.y + 10.0:
+			continue
+		var route: Dictionary = entry["route"]
+		var polyline: Array = route.get("polyline", [])
 		var prev: Vector3 = _vec3(polyline[0])
-		if prev.distance_to(at) > 260.0 and Vector3(polyline[polyline.size() - 1][0], 0, polyline[polyline.size() - 1][2]).distance_to(at) > 260.0:
-			# Cheap reject: neither endpoint is anywhere near this point and
-			# Cloudreach routes are short local hops, not cross-map lines.
-			pass
 		for i in range(1, polyline.size()):
 			var cur: Vector3 = _vec3(polyline[i])
 			var ab := Vector2(cur.x - prev.x, cur.z - prev.z)
@@ -643,7 +682,199 @@ func _dress_ground_cover_finish() -> void:
 		_cover_patch_centres.append(centre)
 		_cover_counts_by_index.append(placed_main + placed_far)
 
+	_dress_turf_fill(root, ellipse_patches, cfg, budget, tuft_mesh,
+		main_material, main_material_dry, far_material, extra_clear)
 	_dress_alpine_rim(ellipse_patches, cfg, budget)
+
+
+## OWNER 2026-09-06: "in grass areas it should be continuous, not abrupt
+## stops". The pass above, and `cloudreach_ground_cover.gd::build` under it,
+## both fill ONLY the ellipses `cloudreach_world.gd` registers in
+## `_cover_patches` -- one per region, landmark, pad, settlement and shelf.
+## Turf outside every registered ellipse got nothing at all, and that boundary
+## is the hard edge in the owner's renders: dense blades to the ellipse rim,
+## then a mown lawn to the horizon.
+##
+## So this covers the TURF ITSELF rather than a list of shapes. A coarse grid
+## over the bounding box of every patch (plus a margin) finds the cells whose
+## ground is walkable turf, and each such cell is planted at the same density
+## the ellipse pass uses, so the two meet with no seam. Grid cells that miss
+## turf -- open sky between the islands, cliff faces, water, path, yard --
+## raycast and are dropped, which is why an over-large box costs raycasts and
+## never correctness.
+##
+## THE FADE IS BY DENSITY, NEVER BY A CULL. Beyond `fade_start_m` from the
+## nearest patch, density falls off smoothly to `distant_density_factor`
+## instead of stopping, and the far tier carries `far_visibility_range_m` so
+## the horizon thins rather than ending. That is the whole difference between
+## "the grass gets sparser out there" and "the grass stops".
+func _dress_turf_fill(root: Node3D, ellipse_patches: Array, cfg: Dictionary, budget: int,
+		tuft_mesh: ArrayMesh, main_material: Material, main_material_dry: Material,
+		far_material: Material, extra_clear: float) -> void:
+	var fill: Dictionary = cfg.get("turf_fill", {})
+	if not bool(fill.get("enabled", true)) or ellipse_patches.is_empty() or tuft_mesh == null:
+		return
+	var spacing := maxf(1.0, float(fill.get("grid_spacing_m", 6.0)))
+	var reach := maxf(spacing, float(fill.get("reach_m", 130.0)))
+	var density := maxf(0.0, float(fill.get("density_per_m2", float(cfg.get("main_density_per_m2", 0.35)))))
+	var far_density := maxf(0.0, float(fill.get("far_density_per_m2", 0.06)))
+	var fade_start := maxf(0.0, float(fill.get("fade_start_m", 25.0)))
+	var fade_span := maxf(1.0, float(fill.get("fade_span_m", 95.0)))
+	var distant_factor := clampf(float(fill.get("distant_density_factor", 0.3)), 0.0, 1.0)
+	var share := clampf(float(fill.get("budget_share", 0.55)), 0.0, 4.0)
+	var near_visibility := float(fill.get("visibility_range_m", 360.0))
+	var far_visibility := float(fill.get("far_visibility_range_m", float(cfg.get("far_visibility_range_m", 900.0))))
+	var scale_min := float(fill.get("scale_min", 0.52))
+	var scale_max := float(fill.get("scale_max", 0.95))
+	var cap := maxi(0, int(float(budget) * share))
+	if cap <= 0:
+		return
+
+	var started_usec := Time.get_ticks_usec()
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(fill.get("seed", 90607))
+	var cell_area := spacing * spacing
+	var probe_casts := 0
+	# Cells are keyed on a global lattice so two patches whose skirts overlap
+	# plant a cell once between them rather than twice.
+	var seen: Dictionary = {}
+	var cells: Array = []
+	var desired := 0.0
+
+	# PASS 1 -- find the turf. Every cell within `reach_m` of a patch rim is
+	# probed once, and the ones standing on walkable turf are kept with the
+	# density factor their distance from that rim earns.
+	for patch_index in ellipse_patches.size():
+		var patch: Dictionary = ellipse_patches[patch_index]
+		var centre: Vector3 = patch.get("centre", Vector3.ZERO)
+		var half: Vector2 = patch.get("half", Vector2.ONE)
+		var dry := bool(patch.get("dry", false))
+		var col_lo := int(floor((centre.x - half.x - reach) / spacing))
+		var col_hi := int(ceil((centre.x + half.x + reach) / spacing))
+		var row_lo := int(floor((centre.z - half.y - reach) / spacing))
+		var row_hi := int(ceil((centre.z + half.y + reach) / spacing))
+		for row in range(row_lo, row_hi + 1):
+			for col in range(col_lo, col_hi + 1):
+				var key := row * 1000003 + col
+				if seen.has(key):
+					continue
+				var cell := Vector2((float(col) + 0.5) * spacing, (float(row) + 0.5) * spacing)
+				# Inside a registered ellipse the pass above already planted at
+				# full density; planting again would double it and read as a ring.
+				var d := Vector2(cell.x - centre.x, cell.y - centre.z)
+				var norm := Vector2(d.x / maxf(half.x, 0.01), d.y / maxf(half.y, 0.01)).length()
+				if norm <= 1.0:
+					seen[key] = true
+					continue
+				var edge := (norm - 1.0) * maxf(half.x, half.y)
+				if edge > reach:
+					continue
+				seen[key] = true
+				# The two AREA predicates are asked ONCE for the cell rather
+				# than once per tuft: an exclusion zone and a settlement
+				# clearance are both far larger than a `grid_spacing_m` cell,
+				# so asking them a dozen times inside one is a dozen times the
+				# cost for the same answer. `_near_route` stays per tuft below
+				# -- a route is narrower than a cell and a cell-level answer
+				# would clear-cut its whole width.
+				var cell_probe := Vector3(cell.x, centre.y, cell.y)
+				if _excluded(cell_probe) or bool(_world.call("_inside_settlement_clearance", cell_probe)):
+					continue
+				probe_casts += 1
+				var probe_hit := _raycast_down(cell, centre.y)
+				if not _is_turf_top(probe_hit):
+					continue
+				_cover_fill_cells += 1
+				var factor := 1.0
+				if edge > fade_start:
+					factor = lerpf(1.0, distant_factor, clampf((edge - fade_start) / fade_span, 0.0, 1.0))
+				cells.append({"at": cell, "y": (probe_hit.get("position") as Vector3).y,
+					"factor": factor, "dry": dry})
+				desired += (density + far_density) * cell_area * factor
+
+	# PASS 2 -- plant. The budget is scaled ONCE across every cell found rather
+	# than spent first-come-first-served: stopping at a cap mid-sweep would
+	# leave whatever patches came later in the list with no fill at all, which
+	# is a new hard edge in place of the one this exists to remove.
+	var scale_factor := 1.0 if desired <= 0.0 else minf(1.0, float(cap) / desired)
+	var near_transforms: Array[Transform3D] = []
+	var dry_transforms: Array[Transform3D] = []
+	var far_transforms: Array[Transform3D] = []
+	for raw: Variant in cells:
+		var cell_data: Dictionary = raw
+		var at_cell: Vector2 = cell_data["at"]
+		var probe_y := float(cell_data["y"])
+		var factor := float(cell_data["factor"]) * scale_factor
+		var dry_cell := bool(cell_data["dry"])
+		var wanted := density * cell_area * factor
+		var wanted_far := far_density * cell_area * factor
+		var target := int(wanted) + (1 if rng.randf() < fmod(wanted, 1.0) else 0)
+		var target_far := int(wanted_far) + (1 if rng.randf() < fmod(wanted_far, 1.0) else 0)
+		for i in target + target_far:
+			var at := Vector2(at_cell.x + rng.randf_range(-0.5, 0.5) * spacing,
+				at_cell.y + rng.randf_range(-0.5, 0.5) * spacing)
+			var placed: Variant = _fill_tuft(at, probe_y, extra_clear, rng, scale_min, scale_max)
+			if placed == null:
+				continue
+			var xform: Transform3D = placed
+			if i < target:
+				if dry_cell:
+					dry_transforms.append(xform)
+				else:
+					near_transforms.append(xform)
+			else:
+				far_transforms.append(xform)
+
+	_cover_fill_grid = {"cells_considered": seen.size(), "spacing_m": spacing, "reach_m": reach,
+		"density_scale": scale_factor}
+	_cover_fill_count += _commit_tufts(root, "CoverFillMain", near_transforms, tuft_mesh,
+		main_material, near_visibility)
+	_cover_fill_count += _commit_tufts(root, "CoverFillDry", dry_transforms, tuft_mesh,
+		main_material_dry, near_visibility)
+	_cover_fill_count += _commit_tufts(root, "CoverFillFar", far_transforms, tuft_mesh,
+		far_material, far_visibility)
+	_cover_fill_msec = int((Time.get_ticks_usec() - started_usec) / 1000)
+	_cover_fill_probes = probe_casts
+
+
+## One tuft at `at`, or null if the ground there is not plantable. Every
+## rejection here is the same set the ellipse pass applies, asked in the same
+## order, so the two layers agree about what counts as turf.
+func _fill_tuft(at: Vector2, height_hint: float, extra_clear: float, rng: RandomNumberGenerator,
+		scale_min: float, scale_max: float) -> Variant:
+	if _near_route(Vector3(at.x, height_hint, at.y), extra_clear):
+		return null
+	var hit := _raycast_down(at, height_hint)
+	if not _is_turf_top(hit):
+		return null
+	var ground: Vector3 = hit.get("position")
+	var scale_value := rng.randf_range(scale_min, scale_max)
+	var width_scale := rng.randf_range(1.6, 2.3)
+	var basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU)).scaled(
+		Vector3(width_scale, scale_value, width_scale))
+	return Transform3D(basis, ground + Vector3.UP * 0.02)
+
+
+func _commit_tufts(parent: Node3D, label: String, transforms: Array[Transform3D],
+		mesh: ArrayMesh, material: Material, visibility_range: float) -> int:
+	if transforms.is_empty():
+		return 0
+	var mm := MultiMesh.new()
+	mm.transform_format = MultiMesh.TRANSFORM_3D
+	mm.mesh = mesh
+	mm.instance_count = transforms.size()
+	for i in transforms.size():
+		mm.set_instance_transform(i, transforms[i])
+	var instances := MultiMeshInstance3D.new()
+	instances.name = label
+	instances.multimesh = mm
+	instances.material_override = material
+	instances.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	instances.visibility_range_end = visibility_range
+	instances.visibility_range_end_margin = 40.0
+	instances.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
+	parent.add_child(instances)
+	return transforms.size()
 
 
 func _tuft_material(base: Color, tip: Color) -> ShaderMaterial:
@@ -1105,6 +1336,60 @@ func cover_finish_main_count() -> int:
 	return _cover_main_count
 
 
+## Tufts the realm-wide turf fill planted, and how many grid cells found turf
+## to plant on. The cell count is the diagnostic that matters when this goes
+## wrong: zero cells means the grid never found walkable turf outside the
+## patches, which is a raycast or exclusion problem, not a density one.
+func cover_fill_count() -> int:
+	return _cover_fill_count
+
+
+func cover_fill_cell_count() -> int:
+	return _cover_fill_cells
+
+
+## Wall-clock and coarse-probe cost of the fill. Reported because this loop is
+## the expensive half of the look pass and `grid_spacing_m` moves it quadratically.
+func cover_fill_msec() -> int:
+	return _cover_fill_msec
+
+
+func cover_fill_probe_count() -> int:
+	return _cover_fill_probes
+
+
+## The grid the fill actually ran: columns, rows, the derived extent in metres
+## and the spacing. Derived from the patches rather than authored, so this is
+## how a reader finds out the world grew.
+## Diagnostic: why is the ground under `at` bare? Answers with the FIRST
+## predicate that refuses it, in the same order the fill asks them, plus the
+## collider the downward ray actually found. `tools/_probe_cloudreach_turf_rejects.gd`
+## is the caller; a bare plane in a render is one of these five answers and
+## guessing between them costs a render each time.
+func probe_turf_at(at: Vector2, height_hint: float = 900.0) -> Dictionary:
+	var hit := _raycast_down(at, height_hint, 1400.0, 1600.0)
+	if hit.is_empty():
+		return {"verdict": "no_hit", "collider": ""}
+	var collider_name := ""
+	var collider: Variant = hit.get("collider")
+	if collider is Node:
+		collider_name = (collider as Node).name
+	var ground: Vector3 = hit.get("position")
+	if not _is_turf_top(hit):
+		return {"verdict": "not_turf", "collider": collider_name, "y": ground.y}
+	if _excluded(ground):
+		return {"verdict": "excluded", "collider": collider_name, "y": ground.y}
+	if bool(_world.call("_inside_settlement_clearance", ground)):
+		return {"verdict": "settlement", "collider": collider_name, "y": ground.y}
+	if _near_route(ground, 0.5):
+		return {"verdict": "route", "collider": collider_name, "y": ground.y}
+	return {"verdict": "plantable", "collider": collider_name, "y": ground.y}
+
+
+func cover_fill_grid() -> Dictionary:
+	return _cover_fill_grid.duplicate()
+
+
 func cover_finish_far_count() -> int:
 	return _cover_far_count
 
@@ -1114,7 +1399,7 @@ func cover_finish_alpine_count() -> int:
 
 
 func cover_finish_total_count() -> int:
-	return _cover_main_count + _cover_far_count + _cover_alpine_count
+	return _cover_main_count + _cover_far_count + _cover_alpine_count + _cover_fill_count
 
 
 func cover_finish_count_near(at: Vector3, radius: float) -> int:
