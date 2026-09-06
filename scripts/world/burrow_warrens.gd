@@ -1823,6 +1823,34 @@ func _bank_skirts_from_config(bank: Dictionary) -> Array:
 			"amp": float(spec.get("skirt_height_m", 0.22 + 0.25 * draw)),
 			"radius": maxf(float(spec.get("skirt_radius_m", 1.9 * draw)), 0.3),
 		})
+	# ROUND-6-0906, JUDGE-round5.md 00/03 ("trunks emerge from the dome with
+	# no root flare, no soil disturbance") and 01 ("boulders sit on the grass
+	# with no ground contact ... the cluster floats"): the same displaced-earth
+	# cone under every crest tree (a root mound) and every accent boulder,
+	# so each stands IN the surface rather than on it. `skirt_height_m` /
+	# `skirt_radius_m` per entry override the scale-derived defaults.
+	for entry_v: Variant in bank.get("crest_trees", []):
+		if not entry_v is Dictionary:
+			continue
+		var spec: Dictionary = entry_v as Dictionary
+		var offset := _local_of(spec.get("offset", [0.0, 0.0]))
+		var draw := float(spec.get("scale", 1.0))
+		out.append({
+			"cx": offset.x, "cz": offset.z,
+			"amp": float(spec.get("skirt_height_m", 0.45 + 0.3 * draw)),
+			"radius": maxf(float(spec.get("skirt_radius_m", 2.2 * draw)), 0.3),
+		})
+	for entry_v: Variant in bank.get("accent_boulders", []):
+		if not entry_v is Dictionary:
+			continue
+		var spec: Dictionary = entry_v as Dictionary
+		var offset := _local_of(spec.get("offset", [0.0, 0.0]))
+		var draw := float(spec.get("scale", 3.0))
+		out.append({
+			"cx": offset.x, "cz": offset.z,
+			"amp": float(spec.get("skirt_height_m", 0.15 + 0.22 * draw)),
+			"radius": maxf(float(spec.get("skirt_radius_m", 1.6 * draw)), 0.3),
+		})
 	return out
 
 
@@ -2734,12 +2762,27 @@ func _build_bank_lamp_and_cable(holder: Node3D, bank: Dictionary, z0: float, rx:
 
 	var bulb := MeshInstance3D.new()
 	var bulb_mesh := SphereMesh.new()
-	bulb_mesh.radius = 0.09
-	bulb_mesh.height = 0.18
+	bulb_mesh.radius = 0.11
+	bulb_mesh.height = 0.22
 	bulb.mesh = bulb_mesh
-	bulb.material_override = _material(lamp_colour, 3.0)
+	# ROUND-6-0906, JUDGE-round5.md 03 ("an unlit black pole with a white
+	# sphere -- no glow, no colour, no Team Tether identity"): the bulb burns
+	# a deeper amber at higher emission so it reads lit in daylight, and the
+	# post carries a Team Tether oxblood collar -- the reserved danger colour,
+	# on the one object at this threshold that IS Team Tether.
+	var bulb_colour := Color(str(bank.get("lamp_bulb_colour", "#ff9a3c")))
+	bulb.material_override = _material(bulb_colour, float(bank.get("lamp_bulb_emission", 7.0)))
 	bulb.position = lamp.position
 	post.add_child(bulb)
+	var collar := MeshInstance3D.new()
+	var collar_mesh := CylinderMesh.new()
+	collar_mesh.top_radius = 0.085
+	collar_mesh.bottom_radius = 0.085
+	collar_mesh.height = 0.28
+	collar.mesh = collar_mesh
+	collar.material_override = _material(Color(str(bank.get("lamp_collar_colour", "#6b1d1d"))))
+	collar.position = Vector3(0.0, -post_h * 0.5 + 1.55, 0.0)
+	post.add_child(collar)
 
 	# The cable: staked into the bank behind the post and running low to the
 	# post's own base, a sag rather than a taut line so it reads as run
@@ -2777,7 +2820,11 @@ func _build_throat_glow(holder: Node3D, bank: Dictionary, z_front: float, z_back
 	light.light_color = Color(str(bank.get("throat_glow_colour", "#ffb877")))
 	light.light_energy = energy
 	light.omni_range = float(bank.get("throat_glow_range_m", 6.0))
-	light.omni_attenuation = 1.4
+	# ROUND-6-0906, JUDGE-round5.md 00/03 ("a large yellow-green oval on the
+	# dome face ... the light that should come out of the mouth is instead
+	# painted on the hill above it"): a steeper falloff so the glow stays in
+	# the hole and on the sill instead of reaching the dome above the brow.
+	light.omni_attenuation = float(bank.get("throat_glow_attenuation", 2.2))
 	light.shadow_enabled = false
 	light.position = Vector3(_throat_curve_offset(z, z_front, z_back),
 		_floor_y + float(bank.get("throat_glow_height_m", 1.1)), z)
@@ -2835,7 +2882,9 @@ func _build_mouth_brow(holder: Node3D, bank: Dictionary, z_front: float, rx: flo
 		holder.add_child(turf)
 		# Wide tufts and fern only: the round-5 frame caught the taller
 		# Grass_Common_Tall blades backlit above the brow as two black spikes.
-		var turf_names := ["Grass_Wide_Tall", "Fern_1", "Grass_Wide_Tall"]
+		# ROUND-6-0906 (JUDGE-round5.md: "tropical ferns and aloe/agave clumps
+		# sitting on top of all of it"): meadow grass only, short.
+		var turf_names := ["Grass_Wide_Short", "Grass_Wispy_Tall", "Grass_Common_Short"]
 		for i in turf_count:
 			var t := lerpf(0.1, 0.9, float(i) / float(maxi(turf_count - 1, 1))) + rng.randf_range(-0.04, 0.04)
 			var angle := PI * t
@@ -2933,11 +2982,22 @@ func _build_threshold_fan(holder: Node3D, bank: Dictionary, z_front: float) -> v
 			# the rim bows outward in the middle and is jittered so it reads
 			# as a worn patch, not a trapezoid
 			var bow := (1.0 - u * u) * length * 0.18 * t
-			var jit := rng.randf_range(-0.35, 0.35) * t
-			var x := u * half + rng.randf_range(-0.15, 0.15) * t
+			# ROUND-6-0906, JUDGE-round5.md 03 ("a flat brown plane with a
+			# razor-straight diagonal edge ... level, no mounding, no lip"):
+			# a ragged rim (up to a metre of jitter at the far edge) and a
+			# low berm -- the middle rows lift into a shallow heap that
+			# falls back to grade at the rim, so the fan reads as earth
+			# thrown and settled, not a decal.
+			var jit := rng.randf_range(-0.9, 0.9) * t
+			var x := u * half + rng.randf_range(-0.5, 0.5) * t
 			var z := centre_z - dist - bow + jit
 			var base := _site_ground(Vector3(x, 0.0, z))
-			var y: float = (base if not is_nan(base) else _floor_y) + _bank_height_at(x, z) + lift
+			var berm := 0.0
+			if r > 0 and r < rings:
+				var across_w := 1.0 - u * u
+				berm = float(bank.get("threshold_berm_m", 0.3)) * sin(PI * t) * (0.55 + 0.45 * across_w) \
+					* (1.0 + rng.randf_range(-0.3, 0.3))
+			var y: float = (base if not is_nan(base) else _floor_y) + _bank_height_at(x, z) + lift + berm
 			row.append(Vector3(x, y, z))
 		rows.append(row)
 	var st := SurfaceTool.new()
@@ -3461,7 +3521,9 @@ func _cap_outcrop_with_growth(holder: Node3D, art: Node3D, offset: Vector3, norm
 	var box := _bounds_of(art)
 	if box.size == Vector3.ZERO:
 		return
-	var names := ["Grass_Wide_Tall", "Fern_1", "Grass_Common_Tall", "Grass_Wide_Tall"]
+	# ROUND-6-0906: meadow grass only -- the ferns read as house plants
+	# (JUDGE-round5.md 03).
+	var names := ["Grass_Wide_Short", "Grass_Wispy_Tall", "Grass_Common_Short", "Grass_Wide_Short"]
 	# ROUND-5-0906 (JUDGE-round4.md: "grass tufts along the rock tops are
 	# single identical clumps at similar spacing"): 1-4 tufts, not always 4,
 	# at a wider scale spread.
