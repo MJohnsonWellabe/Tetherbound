@@ -9,6 +9,7 @@ on the branch with a green named test; nothing here is an Ally reproduction.
 
 | Item | Status | Evidence |
 |---|---|---|
+| CI on the final merged head | **green** (run 4450 on a1842cf9, the Cloudreach lane close-out merge: unit shards 1-4 and every verify shard green; only the two KNOWN RED jobs red) | https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/34026997741 |
 | CI on the merged branch | **green** (run 4449 on 9ca36cd2: unit shards 1-4, every verify shard incl. stronghold, warrens, cloudreach_arrival_walk, gate_e_finale; only the two KNOWN RED jobs red) | https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/34021074221 |
 | Cloudreach did not build on `main` (typed loop over `times` threw in `_ready`) | **fixed** (ported from the multiplayer lane, 18ea9410) | `smoke_cloudreach_foundation` OK (was SCRIPT ERROR at cloudreach_world.gd:138) |
 | OP-0905-14 stronghold: fight every NPC to advance | landed | `smoke_stronghold` gates all four passages blocked→open; red on old data |
