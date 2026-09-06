@@ -354,3 +354,15 @@ Meadows and Cloudreach still play end to end, and everything is on `main`.
 - No new creature meshes, no Meshy, no visual work beyond making existing VFX render on remote
   bodies; the visual bar is Stage C's.
 - No Biome 3 work.
+
+---
+
+## 9. Carry-overs for Stage C (recorded during Stage B)
+
+- **Smoke consolidation.** `tests/` holds 151 `smoke_*.gd` (2026-09-06): 76 boot the full Meadows
+  world, 37 are Cloudreach-specific, 51 are per-incident regression pins carrying an owner-report
+  id, and only 47 run in CI — which is how Cloudreach shipped unbuildable on `main`. They test
+  real behaviour and should not be culled during Stage B; the Wave 0 sweep
+  (`ralph/reports/MP-W0-SMOKE-SWEEP-0906/`) gives each one's duration and verdict. Stage C/D
+  folds the per-incident pins into per-system smokes on the `smoke_playground` model (one boot,
+  many checks), targeting 30–40 files all gating in CI.
