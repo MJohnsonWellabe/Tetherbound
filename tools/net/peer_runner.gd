@@ -410,6 +410,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_expect_peers(args)
 		"wait_flag":
 			out = await _step_wait_flag(args)
+		"wait_context":
+			out = await _step_wait_context(args)
 		"storage_place":
 			out = _step_storage_place(args)
 		"storage_bind":
@@ -1759,6 +1761,30 @@ func _flag_is_set(flag: String, scope: String) -> bool:
 	if store == null:
 		return false
 	return bool((store as RefCounted).call("has", flag))
+
+
+## Lane 2.B. Poll until this peer's input context becomes `equals`.
+##
+## `assert input_context` already exists and is the same comparison, but it is
+## a SNAPSHOT: it answers on the frame it arrives and cannot wait. A peer that
+## reaches the world by changing scene -- which is what a joiner coming off the
+## title screen does, and the only honest way to test the path a player takes
+## -- is blocked for the whole of that scene's build (~85 s for the Meadows,
+## spike S2) and answers nothing at all until it is done. This is the wait,
+## with the assertion built in, so a smoke does not have to spin probes at a
+## process that is busy.
+func _step_wait_context(args: Dictionary) -> Dictionary:
+	var want := str(args.get("equals", ""))
+	if want.is_empty():
+		return {"verdict": "ERROR", "detail": "wait_context needs args.equals"}
+	var budget := int(args.get("budget_frames", NET_STEP_BUDGET_FRAMES))
+	var have := ""
+	for i in maxi(1, budget):
+		have = str(_probe.call("input_context"))
+		if have == want:
+			return {"verdict": "PASS", "detail": "input_context=%s after %d frames" % [have, i]}
+		await physics_frame
+	return {"verdict": "FAIL", "detail": "input_context=%s, wanted %s" % [have, want]}
 
 
 ## Semantics ported verbatim from `operator_harness.gd::_step_assert`'s own
