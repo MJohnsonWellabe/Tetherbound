@@ -889,10 +889,10 @@
         "y": 1.9,
         "yaw_deg": -90.0,
         "scale": 1.6,
-        "energy": 12.0,
-        "range": 18.0,
+        "energy": 20.0,
+        "range": 24.0,
         "attenuation": 1.0,
-        "_comment": "HALL-STAGING-0906 round 6: the Legendary Chamber's -x wall (x -46) had no torch; from the doorway stand the right half of the frame was Y 9-16 and the teal conduit keyed the room. Two more sconces, 0.6 m proud like the rest."
+        "_comment": "HALL-STAGING-0906 round 6: the Legendary Chamber's -x wall (x -46) had no torch; from the doorway stand the right half of the frame was Y 9-16 and the teal conduit keyed the room. Two more sconces, 0.6 m proud like the rest. TETHER-MACHINE-0906 (2026-09-06) measured this wall again from the C-02/C-03 doorway/corner stands with the machine's own regraded albedo and found it still unlit enough to fail figure-ground against the machine's silhouette (Michelson 0.234/0.303, against 0.652 at T-03's torch-lit wall, same mesh and albedo) -- the machine is 15 m tall and 12 m deep, and energy 12/range 18 sized for the room's ordinary wall traffic does not carry across that mass's own shadow. energy 12->20, range 18->24, closing the gap this pair was already sized to close. Re-render/re-judge C-02 and C-03 before treating this as settled."
       },
       {
         "mount": "wall",
@@ -900,8 +900,8 @@
         "y": 1.9,
         "yaw_deg": -90.0,
         "scale": 1.6,
-        "energy": 12.0,
-        "range": 18.0,
+        "energy": 20.0,
+        "range": 24.0,
         "attenuation": 1.0
       }
     ],
