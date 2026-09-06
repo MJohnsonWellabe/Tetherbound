@@ -314,6 +314,8 @@
     "threshold_fan_m": 8.0,
     "threshold_fan_half_width_m": 7.0,
     "threshold_fan_near_pad_m": 1.6,
+    "threshold_fan_overlap_m": 1.4,
+    "threshold_fan_lift_m": 0.2,
     "_why_threshold_colour_round5": "ROUND-5-0906: the diagnostic render showed the pale strip in front of the mouth is the terrain's own baked dirt-path texture -- the approach road, pale tan under software GL -- arriving at the threshold, not the apron (which is inside the throat). #4a3a2c against that road gave JUDGE-round4.md its 'hard straight edge between the pale texture and the dark brown ground'; a mid trodden tone reads as the same road turning damp and churned at the den rather than a second material.",
     "threshold_colour": "#6e5b45",
     "threshold_berm_m": 0.3,

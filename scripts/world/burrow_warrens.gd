@@ -3692,11 +3692,29 @@ func _build_threshold_fan(holder: Node3D, bank: Dictionary, z_front: float) -> v
 	# a 0.12m lift keep the fan on top of the ground it follows.
 	var rings := 12
 	var spokes := 22
-	# Starts 0.2m INSIDE the throat's outer end so it runs under the apron
-	# ramp's own last box (the ramp ends above it) rather than leaving a
-	# sliver of bare terrain between the two.
-	var centre_z := z_front + 0.2
-	var lift := 0.12
+	# Starts INSIDE the throat's outer end so it runs under the apron ramp's
+	# own last box (the ramp ends above it) rather than leaving a sliver of
+	# bare terrain between the two.
+	#
+	# WARRENS-ART-0906 round 3. 0.2 m was not enough overlap and the numbers
+	# say why. The ramp's outermost box is `run / steps + 0.15` deep and
+	# centred at `outer_z - 0.95 * run`, so its far face lands at
+	# `z_front - 0.075`; the fan's row 0 sat at `z_front + 0.2` and its row 1
+	# at `z_front - 0.24`, which leaves the two surfaces meeting inside a
+	# single 0.44 m band, 0.03 m apart in height, on ground that is falling
+	# away. At the 16 m stand that band is a few pixels tall and the eye
+	# looks straight through it to sunlit terrain: the "thin pale sliver at
+	# the tube's right foot" of `_sheet_final.png` frame 03, measured on this
+	# lane's own renders at RGB [173,173,148] across 219 pixels and
+	# BYTE-IDENTICAL across two builds that changed the apron's width and the
+	# bank's moist band -- which is what finally ruled both of those out as
+	# its cause. `threshold_fan_overlap_m` buys a whole metre of overlap
+	# instead of a hand's width, and the fan is lifted with it; the ramp is
+	# above the fan through the whole overlap (terrain falls toward the
+	# mouth here, see `_build_approach_apron()`'s own end-of-ramp note), so
+	# the fan stays hidden under it and nothing z-fights.
+	var centre_z := z_front + float(bank.get("threshold_fan_overlap_m", 0.2))
+	var lift := float(bank.get("threshold_fan_lift_m", 0.12))
 	# Rows of points from the opening (row 0, under the brow) outward to the
 	# fan's far rim; each row is an arc of `spokes` points across the fan's
 	# width at that distance, so the mesh is a regular strip grid with a
