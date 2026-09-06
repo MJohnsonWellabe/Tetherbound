@@ -60,11 +60,11 @@
     "_why": "a handful of translucent wind-veil panels just above the drum crown, between ribs on the leeward-reading side, so the dome is open air everywhere else -- not a solid shell."
   },
   "membrane": {
-    "_why": "CLOUDREACH-DRESS-0906 / C7 lever (b). The blind judge read the dome as 'a rusted-iron ribbed cage, open lattice ... an unbuilt planetarium frame or a giant birdcage on a ruined fort'. An open lattice has no surface, so at reading distance the dome is only its own wireframe and the eye finishes it as scaffold. This skins a BAND of the meridian gaps -- from the rim (0.0) to 0.62 of the way up each rib -- with a translucent membrane on the same sphere the ribs use, so the ribs read as the structure of something. Deliberately a band and not a full skin: above to_rib_fraction the crown stays open lattice and the oculus stays a real hole, so it is still an aviary rather than a roof. skip_every_nth_gap leaves one gap in four unskinned; those torn panels are what stop a skinned dome reading as solid, and they keep sky in the silhouette. rib_inset_m holds the membrane just inside the rib centreline so the ribs stay proud of it from outside.",
+    "_why": "CLOUDREACH-DRESS-0906 / C7 lever (b). The blind judge read the dome as 'a rusted-iron ribbed cage, open lattice ... an unbuilt planetarium frame or a giant birdcage on a ruined fort'. An open lattice has no surface, so at reading distance the dome is only its own wireframe and the eye finishes it as scaffold. This skins a BAND of the meridian gaps -- from the rim (0.0) to 0.78 of the way up each rib -- with a translucent membrane on the same sphere the ribs use, so the ribs read as the structure of something. Deliberately a band and not a full skin: above to_rib_fraction the crown stays open lattice and the oculus stays a real hole, so it is still an aviary rather than a roof. A later blind verdict sampled through the dome at two points and got flat sky colour back, so the first pass -- 0.62 of the rib, one gap in four open, alpha 0.34 -- was not reading as a surface at all; the band is taller now, only one gap in six is left open, and the material is far more opaque. skip_every_nth_gap leaves one gap in six unskinned; those torn panels are what stop a skinned dome reading as solid, and they keep sky in the silhouette. rib_inset_m holds the membrane just inside the rib centreline so the ribs stay proud of it from outside.",
     "enabled": true,
     "from_rib_fraction": 0.0,
-    "to_rib_fraction": 0.62,
-    "skip_every_nth_gap": 4,
+    "to_rib_fraction": 0.78,
+    "skip_every_nth_gap": 6,
     "rows": 4,
     "columns": 3,
     "rib_inset_m": 0.12

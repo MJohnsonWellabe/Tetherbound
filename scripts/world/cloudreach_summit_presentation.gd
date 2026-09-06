@@ -23,7 +23,6 @@ const SHIELD:=preload("res://assets/props/quaternius_fantasy/Shield_Wooden.gltf"
 const DUMMY:=preload("res://assets/props/quaternius_fantasy/Dummy.gltf")
 const BANNER_STAND:=preload("res://assets/props/quaternius_fantasy/Banner_2.gltf")
 const CRATE_METAL:=preload("res://assets/props/quaternius_fantasy/Crate_Metal.gltf")
-const STALL:=preload("res://assets/props/quaternius_fantasy/Stall_Empty.gltf")
 const TETHER_PYLON:=preload("res://assets/environment/team_tether/tether_pylon.glb")
 const ENVIRONMENT_MATERIALS:=preload("res://scripts/world/cloudreach_environment_materials.gd")
 var config: Dictionary
@@ -178,9 +177,10 @@ func build(world: Node3D) -> void:
 ##
 ## Two separate problems, fixed separately below:
 ##   1. the floor. One 72 m disc of one tiling cobble is the 60% of frame. It
-##      gets an inlaid ring at each hazard radius the fight actually uses, a
-##      worn centre where the fight happens, and scuff patches -- so the plane
-##      is broken by the arena's own geometry rather than by scatter.
+##      is banded into a pale swept fight circle, the base cobble and a darker
+##      outer court, with a band inlaid at each radius the fight is actually
+##      authored around, and its rim feathered into the turf -- so the plane is
+##      broken by the arena's own geometry rather than by scatter on top of it.
 ##   2. the emptiness. Everything Team Tether would have had to CARRY up here
 ##      to run this engine: cages, chains, braziers with real fire, stores,
 ##      weapon stands and dummies, banners, and their own pylons.
@@ -202,8 +202,10 @@ func _build_arena_dressing(world: Node3D, materials: Dictionary) -> void:
 
 	# ---- 1. the floor -----------------------------------------------------
 	# The deck's own top surface is y = 0.15 and the live hazard telegraph
-	# overlay is a plane at y = 0.24, so every inlay here is authored into that
-	# 9 cm band: proud enough to catch the light, never through the telegraph.
+	# overlay is a plane at y = 0.24, so the whole treatment is one strict stack
+	# inside that 9 cm band, 2 cm apart: outer court 0.155, mid court 0.175,
+	# swept circle 0.195, hazard inlays 0.213/0.217, scuffs 0.228. 2 cm is far
+	# more than depth precision needs at this stand, and nothing reaches 0.24.
 	# Round 1 of this dressing put a `worn_ground` disc and scuffs on the deck
 	# and they all but vanished: worn ground is a dirt tone and the deck is a
 	# dirt-toned cobble, so the treatment had no value contrast to work with.
@@ -217,17 +219,37 @@ func _build_arena_dressing(world: Node3D, materials: Dictionary) -> void:
 	# the base cobble, and a darker weathered outer court. Same shader as the
 	# deck, different tints -- the pattern the lee pockets' own SafeFloor
 	# already uses -- so the bands read as one floor rather than as decals on it.
-	var worn := ENVIRONMENT_MATERIALS.worn_ground(position, 16.0)
+	# Built here rather than through `world._cylinder`, which flares its bottom
+	# radius to 1.08x. Three flared cones stacked 5 mm apart intersected each
+	# other, and their 64-segment skirts came out of the render as a ring of
+	# pale chevrons across the deck -- an artefact, not a floor. These are flat
+	# discs at 96 segments, separated by 3 cm, which is well clear of depth
+	# precision at this stand and still under the 0.24 hazard overlay.
+	#
+	# The band VALUES were also inverted at first. The capture camera stands at
+	# r ~ 29, so the outer court is most of the foreground; making it the
+	# darkest turned 40% of the frame into a flat dark slab. The tone now rises
+	# toward the centre, so the deck reads as concentric target rings drawing
+	# the eye to the fight rather than as a dark apron.
 	for zone: Dictionary in [
-		{"r": radius - 1.0, "tint": Color("#4a4638"), "y": 0.165, "label": "ArenaOuterCourt"},
-		{"r": 24.0, "tint": Color("#7d7760"), "y": 0.170, "label": "ArenaMidCourt"},
-		{"r": 15.5, "tint": Color("#cfc4a0"), "y": 0.175, "label": "ArenaSweptCircle"},
+		{"r": radius - 1.0, "tint": Color("#6b6552"), "y": 0.155, "label": "ArenaOuterCourt"},
+		{"r": 24.0, "tint": Color("#8a8368"), "y": 0.175, "label": "ArenaMidCourt"},
+		{"r": 15.5, "tint": Color("#cfc4a0"), "y": 0.195, "label": "ArenaSweptCircle"},
 	]:
 		var zone_material := paving.duplicate() as ShaderMaterial
 		zone_material.set_shader_parameter("tint", zone["tint"])
-		world.call("_cylinder", root, str(zone["label"]), Vector3(0.0, float(zone["y"]), 0.0),
-			float(zone["r"]), 0.04, zone_material)
-	world.call("_cylinder", root, "ArenaWornCentre", Vector3(0.0, 0.18, 0.0), 8.5, 0.04, worn)
+		var disc := CylinderMesh.new()
+		disc.top_radius = float(zone["r"])
+		disc.bottom_radius = float(zone["r"])
+		disc.height = 0.04
+		disc.radial_segments = 96
+		var zone_node := MeshInstance3D.new()
+		zone_node.name = str(zone["label"])
+		zone_node.mesh = disc
+		zone_node.material_override = zone_material
+		zone_node.position = Vector3(0.0, float(zone["y"]), 0.0)
+		zone_node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		root.add_child(zone_node)
 	# The judge also called the deck "a perfect oval of dirt with a razor-sharp
 	# edge against grass". The deck mesh is a truncated cone, so its top rim at
 	# 36 m is a mathematically exact circle against the turf. This skirt of worn
@@ -235,64 +257,45 @@ func _build_arena_dressing(world: Node3D, materials: Dictionary) -> void:
 	# out into the grass instead of the paving ending on a drawn line.
 	world.call("_cylinder", root, "ArenaEdgeWear", Vector3(0.0, 0.145, 0.0), radius + 3.5, 0.04,
 		ENVIRONMENT_MATERIALS.worn_ground(position, radius + 3.5))
-	# One inlaid band at each radius the fight is actually authored around:
-	# the relay arc sweeps 14 m to 33 m, so these two rings are the ring the
-	# player learns to stand inside and the ring they learn to leave.
+	# One inlaid band at each radius the fight is actually authored around: the
+	# relay arc sweeps 14 m to 33 m, so these two rings are the ring the player
+	# learns to stand inside and the ring they learn to leave.
+	#
+	# Built as a flat TORUS, which is a real annulus. The first version drew a
+	# solid disc and then a second, smaller disc on top to "cut" the middle out
+	# -- and the 33 m band's cut was 31.9 m wide, sitting at the TOP of the
+	# stack, so it repainted the swept circle and the mid court underneath it,
+	# and it shared its exact y (0.217) with the 14 m band's cut. Two co-planar
+	# overlapping discs seen at a grazing angle is z-fighting, and it came out
+	# of the render as a field of pale chevrons stamped across the mid-deck.
 	for band: Dictionary in [
-		{"r": float(config.relay_arc.inner_radius_m), "w": 1.6, "mat": materials.bronze},
-		{"r": float(config.relay_arc.outer_radius_m), "w": 2.2, "mat": materials.tether},
+		{"r": float(config.relay_arc.inner_radius_m), "tube": 0.55, "mat": materials.bronze},
+		{"r": float(config.relay_arc.outer_radius_m), "tube": 0.8, "mat": materials.tether},
 	]:
 		var band_radius := float(band["r"])
-		var ring := CylinderMesh.new()
-		ring.top_radius = band_radius + float(band["w"]) * 0.5
-		ring.bottom_radius = band_radius + float(band["w"]) * 0.5
-		ring.height = 0.05
-		ring.radial_segments = 96
+		var tube := float(band["tube"])
+		var torus := TorusMesh.new()
+		torus.inner_radius = maxf(band_radius - tube, 0.1)
+		torus.outer_radius = band_radius + tube
+		torus.rings = 96
+		torus.ring_segments = 8
 		var inlay := MeshInstance3D.new()
 		inlay.name = "ArenaHazardInlay%d" % int(band_radius)
-		inlay.mesh = ring
+		inlay.mesh = torus
 		inlay.material_override = band["mat"]
-		inlay.position = Vector3(0.0, 0.19, 0.0)
+		# The tube's radius is `tube`, so seat it with the top of the tube a few
+		# centimetres proud of the deck and the rest of it buried: an inlaid
+		# kerb, not a pipe lying on the ground.
+		inlay.position = Vector3(0.0, 0.15 - tube + 0.07, 0.0)
 		inlay.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		root.add_child(inlay)
-		# Cut the inner disc away so each band reads as a ring and not a plate.
-		# The cut repaints with whichever ZONE tint that radius belongs to, so
-		# the band sits inside the banding rather than over it.
-		var cut := CylinderMesh.new()
-		cut.top_radius = maxf(band_radius - float(band["w"]) * 0.5, 0.1)
-		cut.bottom_radius = cut.top_radius
-		cut.height = 0.05
-		cut.radial_segments = 96
-		var field := paving.duplicate() as ShaderMaterial
-		field.set_shader_parameter("tint", Color("#cfc4a0") if band_radius < 20.0 else Color("#7d7760"))
-		var hole := MeshInstance3D.new()
-		hole.name = "ArenaHazardInlayField%d" % int(band_radius)
-		hole.mesh = cut
-		hole.material_override = field
-		hole.position = Vector3(0.0, 0.195, 0.0)
-		hole.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-		root.add_child(hole)
-	# Scuffs and spilled ballast: small, flat, and off the fight centre, so the
-	# cobble reads as used rather than tiled.
-	# No loose rock on the deck. Tried, and rendered as a pale boulder sitting a
-	# few metres from the trainer on a swept parade ground: not rubble, an
-	# object somebody left there, and the most prominent thing in the frame.
-	# The banding is the floor treatment; the rim dressing is the clutter.
-	for i in 26:
-		var angle := rng.randf_range(0.0, TAU)
-		var reach := rng.randf_range(9.0, radius - 1.5)
-		var scuff := MeshInstance3D.new()
-		scuff.name = "ArenaScuff"
-		var patch := CylinderMesh.new()
-		patch.top_radius = rng.randf_range(0.9, 2.8)
-		patch.bottom_radius = patch.top_radius
-		patch.height = 0.03
-		patch.radial_segments = 9
-		scuff.mesh = patch
-		scuff.material_override = worn
-		scuff.position = Vector3(cos(angle) * reach, 0.205, sin(angle) * reach)
-		scuff.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-		root.add_child(scuff)
+	# No scuff patches. They were 26 nine-segment discs in the worn-ground
+	# material, and against the banded deck they came out of the render as a
+	# field of pale angular quadrilaterals -- read as a stepped chevron pattern
+	# stamped across the mid-deck, which is a worse artefact than the flat plane
+	# they were meant to break. The three tinted zones and the two hazard inlays
+	# carry the floor treatment on their own, and every loose object now lives
+	# at the rim where it belongs.
 
 	# ---- 2. the occupation ------------------------------------------------
 	# Angles are measured from +z (north). The southern walk-in is |x-component|
@@ -360,7 +363,14 @@ func _build_arena_dressing(world: Node3D, materials: Dictionary) -> void:
 		# at 36 m and the perimeter wall stands at 39.3, so an offset of +7 on
 		# the same sign as `side` would put a barrel through the wall.
 		_arena_brazier(world, root, gate, materials)
-		_install(STALL, root, gate + Vector3(side * -3.6, 0.02, 2.6), 2.6, deg_to_rad(side * -24.0))
+		# No market stall. `Stall_Empty` carries a striped awning, and a blind
+		# verdict read the pair of them as "market stalls" and their awnings as
+		# Team Tether oxblood leaking onto ordinary furniture -- in the one yard
+		# in the region where oxblood is supposed to mean the enemy. A crate
+		# stack and a weapon stand say "equipment staged for a fight"; an awning
+		# says "market day".
+		_install(WEAPON_STAND, root, gate + Vector3(side * -3.6, 0.02, 2.6), 1.9,
+			deg_to_rad(side * -24.0))
 		world.call("_place_local_prop", root, "crate", gate + Vector3(side * -5.6, 0.0, 0.4), 1.2, side * 20.0)
 		world.call("_place_local_prop", root, "barrel", gate + Vector3(side * -6.9, 0.0, -0.9), 1.3, side * -35.0)
 		_arena_cage(world, root, gate + Vector3(side * -2.2, 0.0, -2.8), side * 16.0, rng)

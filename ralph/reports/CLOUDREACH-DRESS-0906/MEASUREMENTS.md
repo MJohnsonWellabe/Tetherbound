@@ -114,3 +114,87 @@ flipped. The final value brackets the frame median the way stone should: the
 shadowed face just under it, the lit face just under the plaster. The
 prediction that set `#676d66` (scale the linear albedo by ~0.52 to land a lit
 face near 0.60 and a shadowed one near 0.34) came out at 0.649 and 0.357.
+
+## 7. The stand-11 blobs, before and after
+
+Same rectangle, same camera, `11-aerie-ground-connection.png`:
+
+| | before | final |
+|---|---|---|
+| left mass (140-255, 355-450) | **0.059** — mean RGB (16, 28, 26) | **0.271** — mean RGB (60, 80, 85) |
+| whole frame median | 0.387 | 0.388 |
+
+A 4.6x lift on the object with the frame's own median unmoved (0.387 -> 0.388),
+which is the shape a targeted material fix should have: the thing that was
+wrong changed and the exposure did not. The second mass in the same frame reads
+0.271 as well. Both are shadowed faces at this stand — the sunlit reading is
+the 0.649 in §6 — and neither is "near-black with no highlight" any more.
+
+## 8. Two claims in `JUDGE-after.md` that region medians do not support
+
+The after-verdict's answer D is measured off SINGLE PIXELS. Handoff trap 2 says
+to measure Rec.709 medians before spawning a judge; the same discipline applies
+to reading one back. Both of these are on `02-lower-cliffs-galefoot.png`, the
+frame the verdict cites.
+
+**"The bushes in 02 measure (0,11,0) — pure black, no highlight, no rim."**
+
+| region | median | mean RGB | darkest single pixel |
+|---|---|---|---|
+| bush, far left (95-130, 398-422) | 0.129 | (38, 56, 20) | (0, 0, 0) |
+| bush, left (218-252, 400-424) | **0.434** | (66, 93, 29) | (0, 0, 0) |
+| bush, right (888-925, 398-424) | **0.488** | (118, 145, 89) | (30, 55, 12) |
+| lit grass | 0.407 | (81, 116, 39) | (48, 77, 24) |
+| whole frame | 0.424 | (83, 109, 69) | (0, 0, 0) |
+
+The two lit bushes sit AT or ABOVE the frame median. The third is inside a cast
+shadow. A (0,0,0) pixel exists in almost every region of this frame — including
+the grass crop and the frame as a whole — because the scene has hard shadows and
+because `Bush_Common` is an alpha-cutout mesh whose texture is transparent-black
+between the leaf cards. `Leaves_TwistedTree_C.png` and the derived Cloudreach
+leaf texture both read median 0.000 over ALL pixels and 0.353 over OPAQUE ones.
+There is no bush defect here, and this round deliberately did not "fix" one.
+
+(The rock diagnosis in §2 is not the same case and does survive the check:
+`Rocks_Diffuse.png` is RGB with no alpha channel at all, so its 0.324 median is
+genuine surface colour and not a cutout background.)
+
+**"The cliff face measures (20,30,31) while the boulders in front measure
+(169,181,171) — a 6x luminance gap between two stones in the same frame."**
+
+| region | median | mean RGB |
+|---|---|---|
+| cliff face (600-700, 150-260) | **0.331** | (67, 87, 85) |
+| boulder in front of it (35-75, 395-420) | **0.356** | (87, 107, 95) |
+
+0.331 against 0.356 — the two stone families are within 0.025 of each other and
+both sit just under the 0.424 frame median. The 6x gap is two sampled pixels,
+one in shadow and one on a specular face, not two objects.
+
+This does not make the verdict wrong about the frames overall; it means answer D
+is not evidence that the rock work failed. The rock work is evidenced in §6 and
+§7 by region medians before and after.
+
+## 9. The two post-verdict changes, measured (nobody has judged these)
+
+`JUDGE-after.md` answer B: "sampling through it at two points returns sky colour
+(134,155,156), so you are looking straight through to the sky, not at glazing."
+The membrane band was widened (rim to 0.78 of the rib instead of 0.62), one gap
+in six is left open instead of one in four, and the material alpha went 0.62 →
+0.82. Re-rendered `06-summit-final-approach.png`:
+
+| region | median | mean RGB |
+|---|---|---|
+| dome, mid-left (470-560, 320-370) | 0.625 | (146, 149, 139) |
+| dome, upper (600-700, 300-340) | 0.584 | (121, 130, 127) |
+| open sky, clear of the dome | 0.456 | (86, 128, 153) |
+
+The dome now reads warm-neutral and about 0.15 brighter than the sky behind it,
+rather than returning the sky's own blue. It is a surface. Whether it reads as
+a *finished aviary* is a judgement nobody has made on these frames.
+
+The arena's two `Stall_Empty` props were also removed in the same round — a
+blind verdict read them as market stalls and their awnings as Team Tether
+oxblood leaking onto ordinary furniture, in the one yard in the region where
+oxblood is supposed to mean the enemy. They are replaced by weapon stands.
+Also unjudged.

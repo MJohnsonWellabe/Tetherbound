@@ -1128,3 +1128,39 @@ marks and repair the harsh summit foreground shadow/grass intersection while doi
   Pond is a real 14 m basin (water surface authored at −17.0 m) and the evidence run now authors
   the climb out of its north-east shoulder (`S05-32x`, the RIG-F6 precedent — legs checked
   against a route that was actually walked, never a teleport past geometry): 23 s instead of 543.
+## Cloudreach dressing lane — 2026-09-06 (C6, C7, C8, X3)
+
+Branch `claude/art-cloudreach-dressing-0906` off `claude/second-biome-art-plan-470zru`.
+Full write-up and evidence: `ralph/reports/CLOUDREACH-DRESS-0906/`.
+
+**Not closed.** The bar was "the blind judge no longer names the gap". Asked
+directly, `JUDGE-after.md` still answers no on all three: the arena "reads as a
+village square that has been swept", the aviary "reads as an unfinished frame",
+and the cottages are "generic ... could be anywhere". `REPORT.md` §5 is the
+concrete remaining list; the short version is that the arena needs geometry
+(a kerb, a step, a rim) rather than more tinting, the aviary's interior is
+hidden behind its own 9 m drum wall from the one stand it is judged at, and the
+cottage dressing is placed but too small to read at that distance.
+
+**Verified closed:** the stand-11 "near-black matte blobs" (Rec.709 region
+median 0.059 → 0.271 with the frame median unmoved), and stand 08's "flat
+yellow-green rectangle for a banner". Both had a cause worth recording:
+
+- `apply_stone_palette` set the albedo colour but left the source
+  `albedo_texture` in place, so the result was the product of the two, and the
+  nature kit's `Rocks_Diffuse.png` has a Rec.709 median of 0.324. C9's routing
+  fix was real — every rock did reach the function — but the function could not
+  produce the "cool mid-grey" its own comment promised while it multiplied.
+  Separately, `_build_authored_route_details` is a second rock placer that never
+  got C9's line at all and probed at albedo luminance 1.000.
+- Godot renames colliding siblings to `@ClassName@N`, discarding the label. A
+  `find_children("WindBanner*")` search therefore hid one of the two slabs per
+  settlement and reported a healthy count while the other stayed up.
+
+34 already-vendored props and medieval modules were installed (no downloads, no
+Meshy) with their `ASSET_LEDGER.md` rows; 0 of 34 carry the absent-
+`metallicFactor` black-silhouette defect. `smoke_cloudreach_foundation`,
+`smoke_cloudreach_look` and `smoke_cloudreach_ground_truth` pass, and
+`probe_cloudreach_wild_performance` holds the 16.67 ms mean / ~18 ms p99
+baseline with 0 failures — both taken before the last two commits, which are
+data and prop placement only and which nobody has judged.

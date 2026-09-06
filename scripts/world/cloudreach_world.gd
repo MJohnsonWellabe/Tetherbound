@@ -2920,7 +2920,12 @@ func _aviary_membrane_material() -> StandardMaterial3D:
 	# and canvas over ribs instead: a warm parchment tone, more opaque, fully
 	# rough, and no rim term. That is what a working aviary's wind-skin is, and
 	# it cannot be mistaken for glazing.
-	material.albedo_color = Color(0.86, 0.81, 0.68, 0.62)
+	# Alpha raised from 0.62 after a blind verdict sampled the dome at two
+	# points and got flat sky colour (134,155,156) back -- i.e. the skin was
+	# not reading as a surface at all, and the object was still "an open
+	# lattice of wooden ribs". At 0.82 it is stretched hide that light comes
+	# through, not a tint over the sky.
+	material.albedo_color = Color(0.86, 0.81, 0.68, 0.82)
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_PER_PIXEL
