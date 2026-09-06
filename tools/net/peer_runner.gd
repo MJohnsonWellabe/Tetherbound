@@ -449,6 +449,10 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_place_creature(args)
 		"strike":
 			out = await _step_strike(args)
+		"go_down":
+			out = _step_go_down(args)
+		"stand_by_downed":
+			out = await _step_stand_by_downed(args)
 		_:
 			out = {"verdict": "ERROR", "detail": "unknown action '%s'" % action}
 	out["frames_used"] = _physics_count - before
@@ -1739,6 +1743,110 @@ func _run_assert(check: String, args: Dictionary) -> Dictionary:
 
 # --- probes -----------------------------------------------------------------
 
+# --- lane 4.E: down and revive ------------------------------------------------
+#
+# Two arms and one probe. Neither arm invents a death or a revive: `go_down`
+# drives the SHIPPING lethal path (`vitals.health` to zero, then the player's
+# own `died` signal -- byte for byte what `scripts/world/water.gd
+# ::_apply_hazard_damage` does when a drowning turns fatal), and the revive
+# itself is not an arm at all: the smoke stands the reviver next to the body
+# and holds the real `interact` action through `hold`/`release`, which is the
+# player's own input.
+
+
+## Kill this peer outright, through the game's own signal.
+##
+## `emit_signal("died")` rather than a fall, because a reproducible lethal fall
+## needs terrain the harness cannot promise it has; `water.gd` reaches the same
+## signal the same way for the same reason. Everything downstream --
+## `player_death.gd::_on_died`, `downed_state.gd::request_down`, the satchel,
+## the respawn -- is untouched shipping code.
+func _step_go_down(_args: Dictionary) -> Dictionary:
+	var player := _probe.call("player") as Node3D
+	if player == null:
+		return {"verdict": "ERROR", "detail": "no live player to bring down (scene '%s')" % _scene_name}
+	var vitals: Variant = player.get("vitals")
+	if vitals == null:
+		return {"verdict": "ERROR", "detail": "the player carries no vitals object"}
+	if not player.has_signal("died"):
+		return {"verdict": "ERROR", "detail": "the player has no `died` signal to emit"}
+	(vitals as RefCounted).set("health", 0.0)
+	player.emit_signal("died")
+	return {"verdict": "PASS", "detail": "health 0 and `died` emitted"}
+
+
+## Put this peer's rig `offset` metres from the downed teammate's body, so the
+## revive hold has something to be held over.
+##
+## A placement rather than a walk, deliberately. `move_to` drives the real
+## stick navigator, and what it measures is pathfinding -- which this smoke is
+## not about, and which this repo has open stall findings against
+## (FENCE-CORNER-0903). The thing under test is that a hold over a downed body
+## revives it; standing the reviver there is setup, exactly as lane 3.B's
+## `pickup_stand` stands its prop rather than making the smoke walk to one.
+func _step_stand_by_downed(args: Dictionary) -> Dictionary:
+	var player := _probe.call("player") as Node3D
+	if player == null:
+		return {"verdict": "ERROR", "detail": "no live player to move (scene '%s')" % _scene_name}
+	# 1.8 m, not the metre the first run used. Two trainer capsules are 0.4 m
+	# in radius each, and `remote_trainer.gd::SNAP_M` makes a placement of more
+	# than five metres arrive on the far peer as a SNAP rather than a walk -- so
+	# a reviver dropped a metre away lands interpenetrating the body it came to
+	# help, `move_and_slide()` shoves the downed player into the farmhouse wall,
+	# and `player_controller.gd`'s unstick lifts them 5.6 m into the air. That
+	# is what the first run of this smoke produced (see the lane report's
+	# findings). 1.8 m leaves a metre of clearance and is still comfortably
+	# inside `revive_radius_m` of 2.5.
+	var offset := float(args.get("offset", 1.8))
+	var want := int(args.get("peer_id", 0))
+	var body := _downed_body(want)
+	if body == null:
+		return {"verdict": "ERROR",
+			"detail": "no downed teammate's body to stand by (peer_id=%d, %d remote bodies)"
+				% [want, get_nodes_in_group(&"remote_trainer").size()]}
+	player.global_position = body.global_position + Vector3(offset, 0.0, 0.0)
+	if player is CharacterBody3D:
+		(player as CharacterBody3D).velocity = Vector3.ZERO
+	await physics_frame
+	var gap := player.global_position.distance_to(body.global_position)
+	return {"verdict": "PASS", "detail": "standing %.2f m from peer %d's body"
+		% [gap, int(body.get("peer_id"))]}
+
+
+## The `remote_trainer` body of a peer this process knows to be downed. With a
+## `peer_id` of 0 it takes the one body this process does NOT own that
+## `downed_state.gd` has a window open for -- which in a two-peer session is
+## exactly one body, and reporting null rather than guessing is what keeps a
+## smoke from asserting against its own reflection.
+func _downed_body(peer_id: int) -> Node3D:
+	var state := _downed_state()
+	var known: Array = []
+	if state != null:
+		var status: Variant = state.call("status")
+		if status is Dictionary:
+			known = (status as Dictionary).get("downed_peers", [])
+	for node in get_nodes_in_group(&"remote_trainer"):
+		if not is_instance_valid(node) or not (node is Node3D):
+			continue
+		var b: Node3D = node
+		var id := int(b.get("peer_id"))
+		if peer_id != 0:
+			if id == peer_id:
+				return b
+			continue
+		if b.is_multiplayer_authority():
+			continue
+		if known.has(id):
+			return b
+	return null
+
+
+## `/root/Game/DownedState` -- lane 4.E mounts it under the one autoload so the
+## node path is identical in every process (see that file's header).
+func _downed_state() -> Node:
+	return root.get_node_or_null(^"Game/DownedState")
+
+
 func _execute_probe(msg: Dictionary) -> Variant:
 	var what := str(msg.get("what", ""))
 	match what:
@@ -1888,6 +1996,35 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				var mb: Vector3 = (mine_body as Node3D).global_position
 				out["my_creature_pos"] = [mb.x, mb.y, mb.z]
 			return out
+		"downed":
+			# Lane 4.E. Everything the down/revive smoke asserts on, read off
+			# this peer's own live objects: whether IT is downed and for how
+			# much longer, whom it knows to be downed, what its health and
+			# locomotion actually are, and how many death satchels the world
+			# holds -- because "going down dropped no satchel" is the half of
+			# the deliverable that a revive which still costs you your bag
+			# would quietly fail.
+			var dgame := root.get_node_or_null(^"Game")
+			var dstate := _downed_state()
+			if dgame == null:
+				return null
+			var dplayer := _probe.call("player") as Node3D
+			var dvitals: Variant = dplayer.get("vitals") if dplayer != null else null
+			var drow := {
+				"available": dstate != null,
+				"health": float((dvitals as RefCounted).get("health")) if dvitals != null else -1.0,
+				"stamina": float((dvitals as RefCounted).get("stamina")) if dvitals != null else -1.0,
+				"locomotion": dplayer != null and dplayer.has_method("locomotion_enabled") \
+					and bool(dplayer.call("locomotion_enabled")),
+				"satchels": (dgame.get("death_satchels") as Array).size(),
+				"satchel_nodes": get_nodes_in_group(&"death_satchel").size(),
+				"carried": _storage_counts(dgame.get("inventory") as RefCounted),
+			}
+			if dstate != null:
+				var dstatus: Variant = dstate.call("status")
+				if dstatus is Dictionary:
+					drow.merge(dstatus as Dictionary, true)
+			return drow
 		"session":
 			# Wave 2 (lane 2.A): a real `scripts/net/session.gd` exists, so
 			# every field here is read off it. `available` stays as the first

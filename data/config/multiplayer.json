@@ -1,5 +1,18 @@
 {
   "_comment": "Stage B multiplayer config. `test_budgets` is Wave 0 lane 0.F's net harness budgets (docs/specs/MP_NET_HARNESS_CONTRACT.md §8), read by tests/helpers/net_harness.gd::_init_budgets(). `session` is Wave 2 lane 2.A's transport and handshake tunables (D95), read by scripts/net/session.gd::config(). Missing keys fall back to each reader's own defaults, so a partial edit here is safe.",
+  "downed": {
+    "_comment": "Stage B Wave 4 lane 4.E (D-MP19, directive rule 19). A player who goes down in a MULTI-PEER session is a problem their friend can solve, not the end of the fight. Read by scripts/player/downed_state.gd::_load_config(); a missing key falls back to that file's own default, so a partial edit here is safe. SOLO HAS NO WINDOW AT ALL and there is no key here that can give it one: scripts/world/player_death.gd asks Game.is_multi_peer() first, and a solo death runs exactly the path it ran before this lane.",
+    "window_s": 45.0,
+    "_comment_window_s": "Seconds a downed player stays revivable before the ordinary satchel-drop and respawn runs. Fixed from the movement numbers rather than discovered by running until something passed: data/config/movement.json sprints at 8.6 m/s, so a teammate needs roughly ten seconds to break off the fight they are still in (rule 19 -- one player going down never stops the encounter), twenty to cross the hundred-odd metres a Meadows engagement spreads over, and revive_hold_s on top. 45 s carries that with margin. It is deliberately not 30 (too tight for a friend who is mid-fight, which is the case this feature exists for) and not 90 (a minute and a half face-down is a worse game than dying).",
+    "revive_hold_s": 3.0,
+    "_comment_revive_hold_s": "Seconds a teammate must HOLD interact, standing over the downed player, for the revive to land. Long enough to be a commitment made under pressure -- you are stationary and exposed for all three seconds -- and short enough that it is never a chore. A tap would make the revive free; five seconds would make it a chore.",
+    "revive_radius_m": 2.5,
+    "_comment_revive_radius_m": "Metres between the reviver's own body and the downed body. Tighter than interactable.gd's generous 3.6 m default on purpose: a berry bush may offer itself from across a clearing, but kneeling over a friend is arm's reach plus a step, and the tightness is what makes the reviver's own position a real exposure.",
+    "revive_health_fraction": 0.35,
+    "_comment_revive_health_fraction": "Fraction of max health a revived player stands up with. Not full -- going down has to cost something or it is free -- and not a sliver, because being revived straight into a second knockdown is the worse game. 0.35 is enough to walk out of the fight and eat.",
+    "revive_stamina_fraction": 0.35,
+    "_comment_revive_stamina_fraction": "Same, for stamina: you get up able to move, not able to sprint away for free. Satiety is deliberately NOT touched -- a revive is not a meal, and CLAUDE.md's light-satiety rule means it was never a danger in the first place."
+  },
   "session": {
     "port": 27015,
     "_comment_port": "Default UDP port Session.host() binds and Session.join() dials when a caller names none. D95: direct IP, no relay, no Steam.",

@@ -1953,10 +1953,12 @@ jobs:
           # lane's guess at it -- every lane raises it by one and a merge of
           # several at once has to be reconciled against the directory rather
           # than against whichever lane's line won the conflict.
-          if [ "$count" -lt 11 ]; then
-            echo "::error::expected at least 11 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
+          if [ "$count" -lt 12 ]; then
+            echo "::error::expected at least 12 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
             exit 1
           fi
+          # added shared_building; lane 3.B added pickup_race; lane 4.E added
+          # revive.
           # storage_concurrency; lane 4.B added deploy_two_creatures; lane 4.C
           # added shared_wild_fight.
           # storage_concurrency; lane 4.B added deploy_two_creatures; lane 3.E
@@ -1973,6 +1975,7 @@ jobs:
             tests/smoke_net_movement_two_peers.gd \
             tests/smoke_net_peer_death.gd \
             tests/smoke_net_pickup_race.gd \
+            tests/smoke_net_revive.gd \
             tests/smoke_net_shared_building.gd \
             tests/smoke_net_shared_wild_fight.gd \
             tests/smoke_net_storage_concurrency.gd \
