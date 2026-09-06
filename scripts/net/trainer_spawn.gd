@@ -49,6 +49,15 @@ const SESSION_PATH := ^"/root/Game/Session"
 
 var _spawner: MultiplayerSpawner = null
 var _session: Node = null
+## Wave 6 lane 6.A. The realm THIS world is, asked of the world root once its
+## `_ready()` has run. Every spawn decision below is scoped to it: from Wave 6
+## two peers stand in two realms at once, and a host running a headless shell
+## for the realm it is not in has two of these nodes alive in one process.
+##
+## Read from `world_realm()` rather than from `Game.current_realm`, which D97
+## forbids for anything but the local player and which is simply the wrong
+## answer inside a shell.
+var _realm: String = ""
 ## peer id -> the node standing for that peer, host side only. Clients receive
 ## their copies through the spawner and never index them here.
 var _bodies: Dictionary = {}
@@ -63,6 +72,7 @@ func _ready() -> void:
 	# `spawn(data)` into a node locally, on each side.
 	_spawner.spawn_function = _spawn_trainer
 
+	_realm = _resolve_realm()
 	_session = get_node_or_null(SESSION_PATH)
 	if _session == null:
 		return
@@ -75,6 +85,13 @@ func _ready() -> void:
 	if _session.has_signal("session_ended") \
 			and not _session.is_connected("session_ended", _on_session_ended):
 		_session.connect("session_ended", _on_session_ended)
+	# Rule 16's visible half. When somebody crosses a realm boundary the world
+	# they LEFT has to stop drawing them and the world they entered has to
+	# start -- both of those are this same reconcile, in two different
+	# instances of this node, driven by one signal.
+	if _session.has_signal("peer_realm_changed") \
+			and not _session.is_connected("peer_realm_changed", _on_peer_realm_changed):
+		_session.connect("peer_realm_changed", _on_peer_realm_changed)
 	# Usually a no-op: the world is normally standing before anyone hosts, and
 	# nothing may be spawned until there is a real peer under the spawner (see
 	# `_is_host()`). It matters for the reverse order — a world loaded while a
@@ -139,6 +156,14 @@ func _reconcile() -> void:
 
 ## `Session.peers()` (2.A). Read defensively: it may hand back plain ids or
 ## registry rows, and it may not exist yet at all.
+## The peers standing in THIS world's realm. Everything about the filter is
+## the lane: a body spawned for a peer who is two realms away would be
+## addressed, by the spawner, to a `spawn_path` that peer does not have.
+##
+## A row with no realm at all is treated as belonging here. That is the
+## honest reading of a registry written before this lane -- and of the one
+## row `session.gd::peers()` synthesises when there is no session, which is
+## the solo case every existing smoke exercises.
 func _peer_ids() -> Array:
 	var out: Array = []
 	if _session == null or not _session.has_method("peers"):
@@ -149,6 +174,9 @@ func _peer_ids() -> Array:
 	for entry in (raw as Array):
 		if entry is Dictionary:
 			var d: Dictionary = entry
+			var realm := str(d.get("realm", ""))
+			if not realm.is_empty() and not _realm.is_empty() and realm != _realm:
+				continue
 			if d.has("peer_id"):
 				out.append(int(d["peer_id"]))
 			elif d.has("id"):
@@ -156,6 +184,24 @@ func _peer_ids() -> Array:
 		elif entry is int or entry is float:
 			out.append(int(entry))
 	return out
+
+
+## This world's realm, asked of the world root. `world_path` is the export the
+## scene already points at its own root; `get_parent()` is the same node in
+## both shipped worlds, and the fallback keeps a hand-built test scene working.
+func _resolve_realm() -> String:
+	var world := get_node_or_null(world_path)
+	if world == null:
+		world = get_parent()
+	if world != null and world.has_method("world_realm"):
+		return str(world.call("world_realm"))
+	return ""
+
+
+func _on_peer_realm_changed(_peer_id: int, _from_realm: String, _to_realm: String) -> void:
+	if not _is_host():
+		return
+	_reconcile()
 
 
 ## The registry's display name for a peer, read defensively (deliverable 4):
@@ -202,6 +248,10 @@ func _spawn_for(peer_id: int) -> void:
 		"character_id": _character_id_for(peer_id),
 		"display_name": _display_name_for(peer_id),
 		"at": [at.x, at.y, at.z],
+		# Carried in the spawn rather than read from `_realm` in the spawn
+		# function, because the spawn function runs on EVERY peer and the peer
+		# receiving it may have no such world of its own to ask.
+		"realm": _realm,
 	}
 	print("[trainers] spawning a body for peer %d at (%.1f, %.1f)" % [peer_id, at.x, at.z])
 	var node: Node = _spawner.spawn(data)
@@ -232,6 +282,8 @@ func _spawn_trainer(data: Variant) -> Node:
 		var a: Array = at
 		(node as Node3D).position = Vector3(float(a[0]), float(a[1]), float(a[2]))
 		node.set("net_position", (node as Node3D).position)
+	var realm := str(d.get("realm", ""))
+	node.set("net_realm", realm)
 	if peer_id != 0:
 		# Recursive by default, which is what is wanted: the child
 		# `MultiplayerSynchronizer` has to carry the same authority or its
@@ -239,6 +291,7 @@ func _spawn_trainer(data: Variant) -> Node:
 		# they are large random numbers and a swapped pair is otherwise
 		# indistinguishable from a working one.
 		node.set_multiplayer_authority(peer_id)
+	_scope_to_realm(node, realm)
 	print("[trainers] built %s for peer %d, authority %d (this peer is %d)"
 		% [node.name, peer_id, node.get_multiplayer_authority(), multiplayer.get_unique_id()])
 	return node
@@ -288,6 +341,45 @@ func _on_session_ended(_reason: Variant = null) -> void:
 		return
 	for child in root.get_children():
 		child.queue_free()
+
+
+## D97's "replication is realm-scoped", the half a per-realm spawner cannot do
+## on its own.
+##
+## A `MultiplayerSpawner` has no visibility API. What it has instead is
+## Godot's own rule that a spawn is only sent to a peer the spawned subtree's
+## SYNCHRONIZERS are visible to -- so one filter on the body's
+## `MultiplayerSynchronizer` scopes both the spawn and every delta after it.
+## Without it a Meadows-standing peer would be sent a Cloudreach trainer whose
+## spawner path it does not have, and the spawn would be dropped with an error
+## rather than with an explanation.
+##
+## Added on EVERY peer, in the spawn function, because each process evaluates
+## the filter for its own outbound traffic: the host for the spawn, the body's
+## owner for the deltas. Both read the same replicated registry, so both get
+## the same answer.
+##
+## The filter reads the session EVERY evaluation. It must: the answer changes
+## the moment somebody walks through a gate, and a body that cached it at
+## spawn would keep replicating into a realm its owner has left.
+func _scope_to_realm(node: Node, realm: String) -> void:
+	if realm.is_empty():
+		return
+	var sync := node.get_node_or_null(^"Sync") as MultiplayerSynchronizer
+	if sync == null:
+		return
+	sync.add_visibility_filter(func(observer: int) -> bool:
+		var session := node.get_node_or_null(SESSION_PATH)
+		if session == null or not session.has_method("realm_of"):
+			return true
+		if not bool(session.call("is_active")):
+			return true
+		var where := str(session.call("realm_of", observer))
+		# An observer with no registry row yet (the frame between the ENet
+		# connection and the hello) is shown the body rather than hidden from
+		# it: a spawn withheld is never retried, and a body seen one frame
+		# early corrects itself on the next evaluation.
+		return where.is_empty() or where == realm)
 
 
 ## Test/inspection door: the remote bodies standing in this world right now.

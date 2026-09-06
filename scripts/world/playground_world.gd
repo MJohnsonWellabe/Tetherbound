@@ -13,6 +13,10 @@ extends Node3D
 ## time and nothing should: per the owner's direction the terrain is authored
 ## macro geography, not a procedural seed.
 
+## D97 / lane 6.A: the realm this world IS. Named rather than repeated as a
+## literal because from Wave 6 it is an authority answer -- the per-realm
+## spawners and synchronizer visibility filters key on it.
+const REALM_ID := "meadows"
 const DATA_DIR := "res://data/terrain/playground"
 const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
 const VEGETATION := preload("res://scripts/world/vegetation.gd")
@@ -498,6 +502,34 @@ const SPAWN_CLEARANCE := 2.0
 ## the encounter director, riding — stays a per-process singleton keyed on the
 ## local rig, which is the simplification D101 buys. `local_rig()` and
 ## `local_camera_rig()` below are the public door onto them.
+## D97 / Wave 6 lane 6.A. SIMULATION-ONLY MODE -- this world as a headless
+## realm shell on the host, standing so the host stays authoritative over a
+## realm nobody in this process can see.
+##
+## Set by `realm_shells.gd::_stand_up()` on the instance BEFORE `add_child()`,
+## because `add_child()` is what runs `_ready()` and `_ready()` is what reads
+## it. Set afterwards it would build the whole visual meadow first and then
+## apologise -- which is exactly the post-hoc free spike S2 measured and D97
+## was amended to reject: freeing after `_ready()` recovered 30 % of frame
+## time but only 1.2 % of memory, because the 385,333-prop scatter and
+## Terrain3D's resident data were already built.
+##
+## What a shell keeps: the heightfield and its collision, the encounter
+## director and combat manager, world records, pickups, gates and NPC
+## triggers, the authored `Spawned` containers and their spawners, and -- per
+## D97's amendment -- `DialoguePanel`, `NamePrompt` and `StarterPicker`, which
+## `sequence_director.gd` calls every frame and which produced 13,000+
+## "previously freed instance" errors when S2 freed them.
+##
+## What it drops: grass, water, weather, audio, the HUDs, the sun, the
+## environment and the visual half of the vegetation scatter. See
+## `_shell_strip()`.
+@export var simulation_only: bool = false
+## The realm this shell stands for, stamped by `realm_shells.gd`. Empty in an
+## ordinary world -- which reads its realm from `REALM_ID` like everything
+## else -- and only ever used for logging here.
+@export var shell_realm: String = ""
+
 @onready var _player: CharacterBody3D = $Player
 @onready var _camera_rig: Node3D = $CameraRig
 @onready var _camera: Camera3D = $CameraRig/Camera3D
@@ -576,6 +608,101 @@ func local_camera_rig() -> Node3D:
 	return _camera_rig
 
 
+## The realm this world stands for, shell or not. `trainer_spawn.gd` asks so
+## it can spawn only the peers who are actually standing here, and so the
+## bodies it spawns are only replicated to the peers who can see them.
+func world_realm() -> String:
+	return shell_realm if not shell_realm.is_empty() else REALM_ID
+
+
+## D97's "no grass, water rendering, VFX, HUD or audio", applied to the nodes
+## this scene AUTHORS rather than builds. Runs at the very top of `_ready()`,
+## before any of them has had a `_ready()` of its own.
+##
+## Every one of these is a correctness problem in a shell, not only a cost:
+## the scene is a sibling of the host's own world under the SAME tree root
+## (see `realm_shells.gd`'s header for why it has to be), so a second
+## `WorldEnvironment` fights the host's, a second `DirectionalLight3D` adds
+## its light to the host's meadow, a second `current` `Camera3D` takes the
+## viewport, and both HUD `CanvasLayer`s draw straight over the host's screen.
+##
+## `WorldLook` goes too, and that one is worth naming: it is in the
+## `day_cycle` group, and `game_state.gd::_sync_clock_state()` takes the FIRST
+## member it finds. A shell that kept its own clock could hand the host's save
+## the shell's hour.
+##
+## `DialoguePanel`, `NamePrompt` and `StarterPicker` deliberately STAY (D97,
+## amended after spike S2): `sequence_director.gd` calls them every frame and
+## freeing them produced 13,000+ "previously freed instance" errors.
+##
+## `SequenceDirector` itself goes, and that is a small deviation from D97
+## worth stating. D97 keeps the three panels BECAUSE the director calls them;
+## freeing the director instead satisfies the same constraint from the other
+## end -- nothing calls a freed panel, because nothing calls them at all --
+## and it closes a hole the panels-only rule leaves open: a `DialoguePanel` is
+## a `CanvasLayer`, and a shell that ran a story beat would draw a dialogue
+## box over the screen of a player standing in a realm the beat is not
+## happening in.
+##
+## Nothing is lost by it. Story beats are per-player and the peer actually
+## standing in this realm runs its own `SequenceDirector` in its own scene;
+## the shell exists to be authoritative about the world, not to narrate to
+## nobody. Nothing in either world scene looks the director up -- it points at
+## other nodes and nothing points at it (grepped, not assumed) -- so its
+## absence is inert. `scripts/story/sequence_director.gd` belongs to lane 5.A
+## and is not touched.
+func _shell_strip() -> void:
+	for path: String in [
+		"WorldEnvironment", "Sun", "WorldLook", "WorldWeather", "WorldAudio",
+		"PlaygroundHUD", "CombatHUD", "SequenceDirector",
+	]:
+		var node := get_node_or_null(NodePath(path))
+		if node != null:
+			node.get_parent().remove_child(node)
+			node.queue_free()
+
+	# The camera STAYS. Terrain3D decides which regions keep resident
+	# collision from the camera it was handed (spike S2 item 5 confirmed a
+	# distant second camera builds collision where it points), and a shell
+	# with no camera is a shell whose simulated bodies fall through the world.
+	# It simply must not be the one the viewport draws from.
+	var cam := get_node_or_null(^"CameraRig/Camera3D") as Camera3D
+	if cam != null:
+		cam.current = false
+
+	# The local rig has no player behind it here. Left in the tree because
+	# half this scene addresses it by `NodePath("../Player")` from the editor
+	# (`EncounterDirector`, `WorldWeather`, `RidingController`,
+	# `SequenceDirector`), and a null there is a crash rather than a saving --
+	# but stopped, hidden, and taken off every collision layer, so it neither
+	# reads the host's input nor shoves the remote bodies standing around it.
+	var rig := get_node_or_null(^"Player") as CharacterBody3D
+	if rig != null:
+		rig.process_mode = Node.PROCESS_MODE_DISABLED
+		rig.visible = false
+		rig.collision_layer = 0
+		rig.collision_mask = 0
+	print("[playground] simulation-only shell for realm '%s': no grass, water, weather, audio, HUD, sun or environment"
+		% (shell_realm if not shell_realm.is_empty() else "meadows"))
+
+
+## Where this shell should keep its resident terrain collision. Called by
+## `realm_shells.gd` with the average position of the peers actually standing
+## in it -- a shell has no player of its own to follow, and Terrain3D's
+## dynamic collision follows the camera.
+##
+## Also re-centres the scatter's collision streaming bubble, which is what
+## `_process()` does for the player in an ordinary world.
+func track_simulation_focus(at: Vector3) -> void:
+	if not simulation_only:
+		return
+	if _camera_rig != null and is_instance_valid(_camera_rig):
+		_camera_rig.global_position = at
+	if _vegetation != null and is_instance_valid(_vegetation) \
+			and _vegetation.has_method("update_collision_streaming"):
+		_vegetation.call("update_collision_streaming", at)
+
+
 func _reapply_look_after_ground_materials() -> void:
 	var look := get_node_or_null(^"WorldLook")
 	if look == null:
@@ -588,13 +715,20 @@ func _reapply_look_after_ground_materials() -> void:
 
 
 func _ready() -> void:
+	# FIRST, before any build work and before the DROPPED_ITEM_SPAWNER /
+	# TRADE_OFFER attach below: `_shell_strip()` frees the nodes whose
+	# `_ready()` would otherwise draw a second HUD over the host's screen,
+	# install a second WorldEnvironment, or add a second directional light to
+	# the world the host is actually looking at.
+	if simulation_only:
+		_shell_strip()
 	var perf_cfg := PERF_CONFIG.config()
 	# D107, lane 3.E. The two nodes item trading needs standing in every
 	# process before anybody presses anything: the spawner that draws a
 	# committed `item_dropped` op as a stack on the ground, and the offer
 	# transport, whose node path has to be identical on both peers or its RPCs
 	# do not resolve at all. Both are idempotent.
-	DROPPED_ITEM_SPAWNER.attach(self, "meadows")
+	DROPPED_ITEM_SPAWNER.attach(self, REALM_ID)
 	TRADE_OFFER.attach(get_node_or_null(^"/root/Game"))
 
 	if perf_cfg.has("collision_stream_interval_s"):
@@ -642,8 +776,13 @@ func _ready() -> void:
 	BOOT_LOG.phase("playground: player placed on terrain")
 	_dress_the_meadow()
 	BOOT_LOG.phase("playground: vegetation scatter built (instance/batch count above)")
-	_build_water()
-	BOOT_LOG.phase("playground: water built (pond, stream, reeds — counts above)")
+	# D97: no water RENDERING in a shell. The heightfield's water_level and
+	# stream_factor are read straight off the terrain by everything that cares
+	# (`playground_heightfield.gd`), so a shell without a Water node still
+	# knows where the pond is; it simply does not draw it.
+	if not simulation_only:
+		_build_water()
+		BOOT_LOG.phase("playground: water built (pond, stream, reeds — counts above)")
 	_build_settlement()
 	BOOT_LOG.phase("playground: settlement (house, village, signpost, landmark, perimeter, harvest nodes) built")
 	# CL-W1. The whole hook: `alpha_pins.gd` self-ticks and shares no state with
@@ -651,8 +790,13 @@ func _ready() -> void:
 	# director. Added after the player is placed so its `../Player` lookup finds
 	# a body already standing on the terrain.
 	add_child(ALPHA_PINS.new())
-	_capture_mouse_if_free()
-	get_window().focus_entered.connect(_capture_mouse_if_free)
+	# A shell must never touch the mouse: `get_window()` is the REAL window
+	# even for a world that is not the current scene, so an unguarded capture
+	# here takes the pointer away from the player standing in the host's own
+	# realm.
+	if not simulation_only:
+		_capture_mouse_if_free()
+		get_window().focus_entered.connect(_capture_mouse_if_free)
 	_report_for_export_check()
 	BOOT_LOG.phase("playground: _ready complete, waiting for first frame")
 	await get_tree().process_frame
@@ -708,6 +852,12 @@ var _collision_stream_elapsed: float = 0.0
 
 
 func _process(delta: float) -> void:
+	# A shell's streaming bubble follows the peers standing in it, not the
+	# disabled local rig parked on the authored spawn -- `realm_shells.gd`
+	# drives that through `track_simulation_focus()`. Left to run here, this
+	# would drag the bubble back to the spawn twice a second.
+	if simulation_only:
+		return
 	if _vegetation == null or _player == null:
 		return
 	_collision_stream_elapsed += delta
@@ -1082,6 +1232,11 @@ func _build_texture_list() -> Object:
 ## nothing and processes nothing unless enabled -- so this costs a node and a
 ## config read on a boot that is not using it.
 func _stand_up_the_grass_field() -> void:
+	# D97: no grass in a shell, and skipped at BUILD time rather than freed
+	# after -- see `simulation_only`'s own comment for what S2 measured about
+	# the difference.
+	if simulation_only:
+		return
 	if not GRASS_FIELD.is_enabled():
 		return
 	if _terrain == null:
@@ -1101,6 +1256,10 @@ func _dress_the_meadow() -> void:
 	var config := _load_terrain_config()
 	_vegetation = VEGETATION.new()
 	_vegetation.name = "Vegetation"
+	# D97's amendment names "the visual half of vegetation" as part of the
+	# skip-build flag. Set BEFORE `add_child`/`build`, for the same reason
+	# this world's own flag is set before `add_child`.
+	_vegetation.set("simulation_only", simulation_only)
 	add_child(_vegetation)
 	_vegetation.call("build", float(config.get("world_size", 512)), _terrain)
 	# COLL1 / §8.3: build() only streamed collision in around the world
