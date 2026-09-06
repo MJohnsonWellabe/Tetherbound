@@ -60,7 +60,7 @@ two people in it, or that a friend's creature reads as theirs. Those are the own
 
 | Item | Evidence | Owner |
 |---|---|---|
-| Latency / jitter | **RAN, and something broke.** 7.A drove three smokes through the harness UDP proxy at 150 ms delay / 30 ms jitter / 1 % loss. Two pass fully. `smoke_net_shared_wild_fight` keeps the friendly-fire **safety** but loses the refusal **message** to the striker — an early `STRIKE_SETTLE` read (finding F7). Recorded and characterised, deliberately **not** tuned | ☐ |
+| Latency / jitter | **RAN, and something broke.** 7.A drove three smokes through the harness UDP proxy at 150 ms delay / 30 ms jitter / 1 % loss. Two pass fully. `smoke_net_shared_wild_fight` kept the friendly-fire **safety** but lost the refusal **message** to the striker — an early `STRIKE_SETTLE` read (finding F7). **Fixed 2026-09-06:** the smoke polls for the host's verdict instead of reading once after a fixed settle, which was the same defect as its loopback flake. Re-run under jitter is owed | ☐ |
 | No duplication under races | `test_world_ledger_races` — 24 tests, 136 assertions, each interleaving seen red first | ☐ |
 | Desync detector quiet through every net smoke | contract §7 hashed keys, asserted in `two_peers_boot` | ☐ |
 | **Target hardware frame time on the Ally** | **owner-measured only.** `fps.json` from the kickoff, host-side, with a second player connected | ☐ |
@@ -161,10 +161,15 @@ Recorded here so a reader does not have to infer them from silence:
   MP-ROWS-8-21 finding F2). Worked around in the harness with an `exact` placement argument; **not
   fixed in the world.** A player deploying inside that arena meets the same geometry.
 
-- **`smoke_net_shared_wild_fight` is flaky on both sides.** The realm-shell lane measured 5 of 7 on
-  its own branch against 6 of 7 on its untouched base. That is a flake rate, not a regression, and
-  it was recorded rather than tuned around — but it means a single green run of that smoke is not
-  evidence, and a single red one is not a finding.
+- **`smoke_net_shared_wild_fight`'s flake and the 150 ms jitter failure were ONE defect — CLOSED,
+  2026-09-06** (kept here because it is where both were recorded). The smoke read the host's
+  friendly-fire refusal ONCE, after a fixed 15-frame settle. That refusal is the host's answer and
+  it comes back over the wire, so the settle bought nothing but "probably long enough on loopback":
+  hence 5 of 7 on one branch against 6 of 7 on its base, and hence 7.A's finding F7, where under
+  150 ms delay / 30 ms jitter / 1 % loss the safety held but the refusal MESSAGE never arrived. It
+  now polls with a budget. Measured after the fix: 3 runs, 3 passes — and **run 3 needed two polls**,
+  which is the same race, caught, on loopback. Not a widened tolerance: the assertion still fails if
+  the refusal never comes, comes with the wrong code, or comes without a sentence.
 
 ## The verdict
 

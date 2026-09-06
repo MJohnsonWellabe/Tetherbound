@@ -71,6 +71,14 @@ const STRIKE_SETTLE := 15
 ## retry budget.
 const SWINGS := 5
 
+## How many times to ask peer 1 for the host's verdict on its friendly swing
+## before calling it lost. Each poll is a coordinator round trip to the peer, so
+## this is generous in wall-clock without being a fixed wait: a refusal that
+## arrives on the first poll costs one, and the assertion below still fails if
+## none ever arrives. Sized so the loop outlasts 7.A's jitter profile (150 ms
+## delay / 30 ms jitter) rather than only loopback.
+const REFUSAL_POLLS := 40
+
 
 func _initialize() -> void:
 	_run()
@@ -294,11 +302,36 @@ func _run() -> void:
 	check(str(friendly.get("verdict", "")) == "PASS",
 		"peer 1's swing at its teammate reached the host (%s)" % str(friendly.get("detail", "")))
 
-	var refusal: Dictionary = ((await _encounter(1)).get("refusal", {}) as Dictionary)
+	# POLLED, not read once after a fixed settle. This was a flake and a jitter
+	# failure and they were the same defect.
+	#
+	# The refusal is the HOST's answer and it comes back over the wire, so the
+	# only thing `STRIKE_SETTLE` frames buys is "probably long enough on
+	# loopback". Measured: this smoke ran 5 of 7 on one branch against 6 of 7 on
+	# its untouched base, and under 7.A's proxy at 150 ms delay / 30 ms jitter
+	# / 1 % loss it lost the refusal MESSAGE every time while the safety itself
+	# held (7.A finding F7, recorded and deliberately not tuned). Both were one
+	# read landing before the answer arrived.
+	#
+	# This is a fix at the cause and NOT a widened tolerance: the assertion
+	# still fails if the refusal never comes, if it comes with the wrong code,
+	# or if it comes without a sentence. What it no longer does is fail because
+	# a round trip took longer than a quarter of a second. Same shape as the
+	# `engage` binding poll in `peer_runner.gd::_step_engage` -- on a client,
+	# `submit()` answers `{"ok": false, "pending": true}` and the verdict
+	# follows a round trip later, so a single read of a host's answer is the
+	# "pending is not a refusal" trap wearing a different hat.
+	var refusal: Dictionary = {}
+	var refusal_polls := 0
+	while refusal_polls < REFUSAL_POLLS:
+		refusal_polls += 1
+		refusal = ((await _encounter(1)).get("refusal", {}) as Dictionary)
+		if not str(refusal.get("code", "")).is_empty():
+			break
 	# HALF ONE: the host said no, out loud, with the code §5 names.
 	check(str(refusal.get("code", "")) == "friendly_target",
-		"the host refused it with `friendly_target` (got code '%s', reason '%s')"
-			% [str(refusal.get("code", "")), str(refusal.get("reason", ""))])
+		"the host refused it with `friendly_target` after %d poll(s) (got code '%s', reason '%s')"
+			% [refusal_polls, str(refusal.get("code", "")), str(refusal.get("reason", ""))])
 	check(not str(refusal.get("reason", "")).is_empty(),
 		"and gave the striker a sentence a player can be shown")
 
