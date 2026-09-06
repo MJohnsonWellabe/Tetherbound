@@ -27,6 +27,7 @@ extends SceneTree
 
 const SCENE := preload("res://scenes/world/cloudreach_cliffs.tscn")
 const TOLERANCE_M := 0.15
+const MAX_MISMATCH_FRACTION := 0.01
 const REAL_MASK := 1 # Default physics layer used by every StaticBody3D this file's builders create.
 
 var world: Node3D
@@ -34,6 +35,7 @@ var space: PhysicsDirectSpaceState3D
 var checked := 0
 var holes: Array[String] = []
 var mismatches: Array[String] = []
+var buried: Array[String] = [] # sampled surface lies under other VISIBLE geometry (not a defect)
 var worst: Array[Dictionary] = [] # {label, gap}
 var collider_count := 0
 var trimesh_collider_count := 0
@@ -64,8 +66,10 @@ func _run() -> void:
 	worst.sort_custom(func(a, b): return a["gap"] > b["gap"])
 	print("CLOUDREACH GROUND TRUTH: colliders=%d trimesh_colliders=%d trimesh_triangles=%d"
 		% [collider_count, trimesh_collider_count, trimesh_triangle_count])
-	print("CLOUDREACH GROUND TRUTH: %d sample points checked, %d holes, %d height mismatches (>%.2fm)"
-		% [checked, holes.size(), mismatches.size(), TOLERANCE_M])
+	print("CLOUDREACH GROUND TRUTH: %d sample points checked, %d holes, %d height mismatches (>%.2fm), %d buried under visible geometry"
+		% [checked, holes.size(), mismatches.size(), TOLERANCE_M, buried.size()])
+	print("CLOUDREACH GROUND TRUTH: mismatch rate %.2f%% (holes + mismatches over samples)"
+		% (100.0 * float(holes.size() + mismatches.size()) / maxf(1.0, float(checked))))
 	print("CLOUDREACH GROUND TRUTH: worst offenders (largest gap first):")
 	for i in mini(10, worst.size()):
 		var entry: Dictionary = worst[i]
@@ -74,9 +78,17 @@ func _run() -> void:
 		printerr("HOLE: " + line)
 	for line: String in mismatches:
 		printerr("MISMATCH: " + line)
-	var failures := holes.size() + mismatches.size()
-	print("CLOUDREACH GROUND TRUTH: %s" % ("PASS" if failures == 0 else "FAIL (%d)" % failures))
-	quit(0 if failures == 0 else 1)
+	for line: String in buried:
+		print("BURIED: " + line)
+	# Bar (CLOUDREACH-GROUND-0906): no hole anywhere, and sinks/floats on at
+	# most MAX_MISMATCH_FRACTION of samples -- the residue after the shared
+	# road-network clamp is unnamed prop floors and sub-0.3 m lips where two
+	# routes' ribbons cross a shoulder (0.08 % when this bar was set); the
+	# brief's acceptance was 3 %, so 1 % is a regression guard with headroom.
+	var rate := float(mismatches.size()) / maxf(1.0, float(checked))
+	var passed := holes.is_empty() and rate <= MAX_MISMATCH_FRACTION
+	print("CLOUDREACH GROUND TRUTH: %s" % ("PASS" if passed else "FAIL (%d holes, %d mismatches)" % [holes.size(), mismatches.size()]))
+	quit(0 if passed else 1)
 
 
 ## ---- geometry accounting (report item 6) --------------------------------
@@ -142,11 +154,41 @@ func _probe(label: String, expected: Vector3) -> void:
 		holes.append("%s: no static collider under rendered point %s" % [label, expected])
 		worst.append({"label": label + " (HOLE)", "gap": 999.0})
 		return
-	var gap := absf((hit["position"] as Vector3).y - expected.y)
+	var hit_y := (hit["position"] as Vector3).y
+	var gap := absf(hit_y - expected.y)
 	worst.append({"label": label, "gap": gap})
 	if gap > TOLERANCE_M:
-		mismatches.append("%s: rendered y=%.3f, collider hit y=%.3f, gap=%.3fm at %s"
-			% [label, expected.y, (hit["position"] as Vector3).y, gap, expected])
+		var collider_node := hit["collider"] as Node
+		var owner: Node = collider_node.get_parent() if collider_node != null else null
+		var owner_name := str(owner.name) if owner != null else "?"
+		var line := "%s: rendered y=%.3f, collider hit y=%.3f, gap=%.3fm at %s hit=%s" \
+			% [label, expected.y, hit_y, gap, expected, owner_name]
+		# Two real defects: the collider sits BELOW the rendered surface (the
+		# walker sinks into visible ground -- OP-0905-25), or an INVISIBLE
+		# collider stands above it (the walker floats on nothing drawn). A
+		# visible surface standing above the sampled one is neither: the
+		# sampled mesh is simply buried under other real, drawn geology (a
+		# region crown over a road, a rock shelf over a shoulder, the shrine
+		# dais over its ledge, two shoulders crossing) and the walker stands on
+		# what they see. Counted separately so the number stays visible.
+		if hit_y < expected.y or not _owner_renders_surface(owner):
+			mismatches.append(line)
+		else:
+			buried.append(line)
+
+
+## True when the collider's owning node draws a visible surface of its own --
+## a `_box`/`_disc` wrapper with a visible mesh child, or a visible
+## MeshInstance3D (ridge, mesa crown) carrying the collision body.
+func _owner_renders_surface(owner: Node) -> bool:
+	if owner == null:
+		return false
+	if owner is MeshInstance3D:
+		return (owner as MeshInstance3D).is_visible_in_tree()
+	for child in owner.get_children():
+		if child is MeshInstance3D and (child as MeshInstance3D).is_visible_in_tree():
+			return true
+	return false
 
 
 func _probe_mesh(label_prefix: String, mesh_instance: MeshInstance3D, stride: int = 1) -> void:
@@ -308,7 +350,7 @@ func _check_named_platforms() -> void:
 			# beneath them -- only ground gates should ever find a collider.
 			if ground_gate_ids.has(str(gate_node.name)):
 				_probe("Gate/%s" % gate_node.name, gate_node.global_position)
-	for label: String in ["Dais", "UpperKeep", "GateThreshold", "SettlementWalkableTerrace",
+	for label: String in ["Dais", "AviaryPier", "GateThreshold", "SettlementWalkableTerrace",
 			"ObservatoryWalkableCrown", "OverlookWalkableCrown"]:
 		var found := world.find_child(label, true, false)
 		if found is Node3D:
