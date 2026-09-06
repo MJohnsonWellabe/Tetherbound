@@ -1969,8 +1969,29 @@ jobs:
           # restated the lanes before them, and the block accumulated four
           # duplicated fragments before anyone noticed. The roster is the
           # record; prose about it only rots.
-          if [ "$count" -lt 18 ]; then
-            echo "::error::expected at least 18 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
+          # FIXED, lane 7.A: this block was TWO `if` opens with ONE `fi`,
+          # left by two lanes resolving the same conflict in turn -- a bash
+          # syntax error, so this whole step exited 2 and the multiplayer
+          # shard ran no smoke at all. `bash -n` over the step's own script
+          # is what found it; see MP-7A-RELIABILITY-0906 finding F1.
+          #
+          # The floor is REGENERATED from the files on disk at every landing,
+          # never incremented from whatever the previous line said -- several
+          # lanes add a smoke at once, and a bumped guess reconciles to the
+          # wrong number:
+          #
+          #   for f in tests/smoke_net_*.gd; do
+          #     head -5 "$f" | grep -qE '^#[[:space:]]*peers:[[:space:]]*2$' && echo "$f"
+          #   done | wc -l
+          #
+          # The `for required in` roster below is the authority the count has
+          # to match. This comment deliberately does not list which lane added
+          # which smoke: four lanes resolving this same conflict in turn each
+          # restated the lanes before them, and the block had accumulated four
+          # duplicated fragments before lane 2.B noticed. The roster is the
+          # record; prose about it only rots.
+          if [ "$count" -lt 21 ]; then
+            echo "::error::expected at least 21 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
             exit 1
           fi
           # Named registration, on top of the count. Discovery alone would let a
@@ -1985,11 +2006,14 @@ jobs:
             tests/smoke_net_fog_is_personal.gd \
             tests/smoke_net_gate_opens_for_both.gd \
             tests/smoke_net_hearts.gd \
+            tests/smoke_net_host_exit_saves.gd \
             tests/smoke_net_host_join_leave.gd \
             tests/smoke_net_join_by_address.gd \
+            tests/smoke_net_late_join_modified_world.gd \
             tests/smoke_net_movement_two_peers.gd \
             tests/smoke_net_peer_death.gd \
             tests/smoke_net_pickup_race.gd \
+            tests/smoke_net_reconnect_keeps_character.gd \
             tests/smoke_net_revive.gd \
             tests/smoke_net_shared_building.gd \
             tests/smoke_net_shared_wild_fight.gd \
