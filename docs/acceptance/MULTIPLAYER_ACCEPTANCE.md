@@ -1,6 +1,6 @@
 # Multiplayer acceptance — Stage B
 
-**Status:** in progress. Automated column: 22 of 24 §17 rows have named evidence; rows 8 and 18/19 do not, and row 21 is partial. Owner column: nothing signed off yet. **Contract:** `docs/MULTIPLAYER_DIRECTIVE.md` §17 (the twenty-four
+**Status:** in progress. Automated column: 21 of the 24 §17 rows name a run; rows 8, 18 and 19 do not, and row 21 is partial. Owner column: nothing signed off yet. **Contract:** `docs/MULTIPLAYER_DIRECTIVE.md` §17 (the twenty-four
 minimum-experience items), §21 (reliability), §23 (the human half). **Filled in by:** Fable, from
 CI runs and the owner's own LAN session. **Last updated:** 2026-09-06.
 
