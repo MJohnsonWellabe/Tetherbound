@@ -7,6 +7,17 @@
   "site": {
     "_comment_earth_clad_interiors": "WARRENS-EXT-0906 close-out. The lane's round-5/6 blind verdicts both named 'a grey stone doorway with dead-straight jambs and a flat lintel visible through the arch -- built, not dug; it says cellar before the player has stepped in'. The mouth chamber now wears the bank's own earth skin (`_cladding_material()`, the triplanar Ground030 the outer faces, dome and apron already wear) on the room side of its four walls and under its ceiling, 0.15 m thin so the wall colliders are unchanged, and the masonry bay dresser skips it. Every other chamber is untouched: the interior the owner judged good starts at the hall.",
     "earth_clad_interiors": ["mouth"],
+    "_comment_earth_clad_bays": "WARRENS-ART-0906 (W3, judge: 'interior rooms read as a stone box'). `earth_clad_interiors` above is all-or-nothing per chamber and it also makes `_build_structure()` SKIP the room -- right for the mouth, which is a dug throat, wrong for the hall, whose corbels, bay pilasters and ribs the owner already judged good and which this pass keeps. `earth_clad_bays` is the partial form: the named chamber wears the same earth skin on the wall at one END of it (`from`) and along `depth_m` of both side walls from that end, and nothing else changes -- the masonry dresser still runs over the whole room, so the pilasters (0.32 m projection) and the corner piers (0.46 m) stand proud of the 0.15 m skin exactly as they stand proud of the stone elsewhere. What the player walking in from the mouth sees is the throat's earth carrying a few metres INTO the hall before the cut stone starts. Side-wall runs are clipped short of any doorway on that wall by `_bay_clear_depth()`, so `depth_m` can never paper over an opening: the hall's own warren doorway is centred at z=22 and 2.6 m wide, so a request past ~4.35 m from the z=16 end is clipped to it.",
+    "earth_clad_bays": [
+      {
+        "chamber": "hall",
+        "from": "-z",
+        "depth_m": 4.2,
+        "ceiling": true
+      }
+    ],
+    "_comment_earth_clad_passages": "WARRENS-ART-0906 (W3). The passages are the other half of the stone box: they carry no masonry dressing at all (they are not in `_build_structure()`'s chamber list), so an unclad passage is a bare grey tube between two lined rooms. Clad, they are earth wall to wall and ceiling -- the dug link the fiction wants. `true` clads every passage; a list of \"from>to\" keys clads only those.",
+    "earth_clad_passages": true,
     "interior_cladding_m": 0.15,
     "at": [
       -357.0,
@@ -228,11 +239,70 @@
     "collar_thickness_m": 1.0,
     "_why_brow": "ROUND-4-0906, JUDGE-round3.md finding 4/6 ('no visible worn dirt lip, root mass'; 'dead branches read as clutter'). The throat's OUTER end (the ring a player walks through -- the lip ring above sits 8m in, at the dome face) gets its own worn earth brow and `brow_roots` tapered bark tubes hanging from its crown INTO the opening, tips above `brow_root_clear_m` (burrow_warrens.gd::_build_mouth_brow). 0 thickness disables.",
     "_why_brow_round5": "ROUND-5-0906, JUDGE-round4.md 03 ('smooth, faceted, single-tone brown ... clay, chocolate or plasticine; no grass overhanging the lip'): thinner and lumpier (0.85/0.45), ten sides, and `brow_turf` tufts seated along its crown leaning out over the opening.",
+    "_why_brow_w5": "WARRENS-ART-0906 (W5, judge rounds 5 and 6: 'the entrance stacks unrelated materials -- earth tubes, brown boulders'; 'a lumpy chocolate-brown tube'). The brow was a `_tube_mesh()` sweep -- a constant-radius circular section around the arch, i.e. a pipe -- wearing `_bank_earth_material()` (a StandardMaterial3D) while the bank two metres behind it wears `earth_bank.gdshader`. It is now a SURFACE in the bank's own shader: a collar whose cross section is a quadratic Bezier from the arch rim (`brow_lip_out_m` out, `brow_lip_proud_m` proud of the mouth plane) then back and further out (`brow_lip_flare_m`, `brow_lip_back_m`) to die into the mound, displaced by `brow_noise_m` of seeded noise that fades to zero at both ends of the section, with `brow_lobe_amount` of coarse width variation around the arch. `brow_moist`/`brow_spoil_outer` are the vertex-colour masks the shader already reads, so the earth photo, its normal map and the spoil darkening are continuous across the seam. `brow_jitter_m` is dead (it was the tube's per-ring radius wobble) and is gone; 0 thickness still disables the whole brow.",
     "brow_thickness_m": 0.85,
-    "brow_jitter_m": 0.45,
+    "brow_arc_segments": 22,
+    "brow_across_segments": 7,
+    "brow_lip_out_m": 0.8,
+    "brow_lip_proud_m": 0.62,
+    "brow_lip_flare_m": 1.5,
+    "brow_lip_back_m": 1.3,
+    "brow_noise_m": 0.4,
+    "brow_noise_freq": 0.9,
+    "brow_lobe_amount": 0.45,
+    "brow_lobe_freq": 0.22,
+    "brow_moist": 0.9,
+    "brow_spoil_outer": 0.35,
     "brow_turf": 8,
-    "brow_roots": 5,
     "brow_root_clear_m": 2.3,
+    "_why_brow_root_meshes": "WARRENS-ART-0906 (W5). `brow_roots` (five tapered bark TUBES drooping into the opening) is replaced by real installed meshes hung crown-first off the arch, the same 'a bare branching crown IS a root mass' trick `roots.pieces` already uses inside the cave. `at_deg` is the arch angle (0 right spring, 90 crown, 180 left spring), `radial_m` how far out of the rim the piece hangs, `drop_m` how far its crown reaches below the rim line -- clamped so no tip ever comes below `brow_root_clear_m`.",
+    "brow_root_meshes": [
+      {
+        "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+        "at_deg": 112.0,
+        "radial_m": 0.15,
+        "z_m": 0.15,
+        "drop_m": 1.15,
+        "scale": 0.36,
+        "dir": [
+          0.25,
+          -1.0,
+          -0.35
+        ],
+        "roll_deg": 25.0,
+        "_why": "left of the crown, the biggest mass -- the one that reads from the 16m stand"
+      },
+      {
+        "model": "res://assets/environment/stylized_nature/DeadTree_1.gltf",
+        "at_deg": 68.0,
+        "radial_m": 0.2,
+        "z_m": 0.05,
+        "drop_m": 0.95,
+        "scale": 0.3,
+        "dir": [
+          -0.3,
+          -1.0,
+          -0.3
+        ],
+        "roll_deg": -45.0,
+        "_why": "right of the crown, smaller, so the pair is not a mirror"
+      },
+      {
+        "model": "res://assets/environment/stylized_nature/TwistedTree_2.gltf",
+        "at_deg": 145.0,
+        "radial_m": 0.1,
+        "z_m": 0.25,
+        "drop_m": 0.8,
+        "scale": 0.22,
+        "dir": [
+          0.5,
+          -1.0,
+          -0.2
+        ],
+        "roll_deg": 70.0,
+        "_why": "a third, low on the left shoulder, so the fringe runs down one jamb instead of sitting only over the crown"
+      }
+    ],
     "_why_threshold": "ROUND-4-0906, JUDGE-round3.md finding 4 ('a threshold of trodden dark earth with a spoil fan spilling onto it'). The apron ramp (`site.apron_run_m`) ends INSIDE the throat, so the ground right outside the opening was plain meadow. `threshold_fan_m` lays a trodden-earth fan that far out from the throat's outer end (burrow_warrens.gd::_build_threshold_fan), `threshold_fan_half_width_m` wide at its far rim, in `threshold_colour`; it also clears the runtime grass under it. 0 disables.",
     "threshold_fan_m": 8.0,
     "threshold_fan_half_width_m": 7.0,
@@ -388,98 +458,8 @@
         "_why": "over the vault chamber's own bulge, far side of the site from the mouth"
       }
     ],
-    "_comment_roots": "Roots over the mouth and out of the dug face -- tapered tubes wearing the installed TwistedTree bark photo (no new asset). Local offsets on the dug face; `droop_deg` measured from straight down. THIRD-PASS-0906, JUDGE-round2.md sec3 item 2 ('two exposed root masses ... bursting from the face beside the mouth'): the previous 12 entries were thin (radius 0.06-0.16) and mostly spread across the whole face/flank, so nothing read as a MASS. Replaced with two explicit 5-tube clusters flanking the mouth, outside the arch's own half-width (`arch_width_m`*0.5+`arch_margin_m`=3.1) so they sit on solid dug face rather than in the open throat, at roughly double the old radius (0.13-0.26) so each cluster reads as one torn-open root mass rather than five separate sticks. The two thin 'snagged over the top' roots the judge specifically liked (near the crest, further out at z=-5.8/-6.2) are kept verbatim.",
+    "_comment_roots": "WARRENS-ART-0906 (W5, judge round 5 'the entrance stacks unrelated materials -- earth tubes, brown boulders, tropical ferns' and round 6 'reads as tubes'). This list used to author two 5-tube 'root masses' flanking the mouth. A `_tube_mesh()` cylinder wearing a bark photo is a pipe from every angle and five of them side by side is a pipe organ, which is what both verdicts saw. The ten face tubes are GONE; what replaces them is `root_masses` below -- real installed meshes. The two thin 'snagged over the top' roots JUDGE-round2.md specifically liked are kept here verbatim, because a thin snagged stick is one of the few things a tapered tube actually is.",
     "roots": [
-      {
-        "offset": [-8.8, -1.0],
-        "length_m": 3.4,
-        "radius_m": 0.22,
-        "bends": 3,
-        "yaw_deg": -70.0,
-        "droop_deg": 58.0,
-        "_why": "left root mass, tube 1 of 5"
-      },
-      {
-        "offset": [-7.6, -2.6],
-        "length_m": 3.0,
-        "radius_m": 0.2,
-        "bends": 3,
-        "yaw_deg": -50.0,
-        "droop_deg": 55.0,
-        "_why": "left root mass, tube 2 of 5"
-      },
-      {
-        "offset": [-6.4, -0.6],
-        "length_m": 2.6,
-        "radius_m": 0.17,
-        "bends": 2,
-        "yaw_deg": -85.0,
-        "droop_deg": 60.0,
-        "_why": "left root mass, tube 3 of 5"
-      },
-      {
-        "offset": [-5.6, -3.4],
-        "length_m": 2.8,
-        "radius_m": 0.15,
-        "bends": 2,
-        "yaw_deg": -30.0,
-        "droop_deg": 65.0,
-        "_why": "left root mass, tube 4 of 5"
-      },
-      {
-        "offset": [-8.0, -4.2],
-        "length_m": 2.2,
-        "radius_m": 0.13,
-        "bends": 2,
-        "yaw_deg": -110.0,
-        "droop_deg": 62.0,
-        "_why": "left root mass, tube 5 of 5"
-      },
-      {
-        "offset": [8.8, -1.0],
-        "length_m": 3.4,
-        "radius_m": 0.22,
-        "bends": 3,
-        "yaw_deg": 70.0,
-        "droop_deg": 58.0,
-        "_why": "right root mass, tube 1 of 5"
-      },
-      {
-        "offset": [7.6, -2.6],
-        "length_m": 3.0,
-        "radius_m": 0.2,
-        "bends": 3,
-        "yaw_deg": 50.0,
-        "droop_deg": 55.0,
-        "_why": "right root mass, tube 2 of 5"
-      },
-      {
-        "offset": [6.4, -0.6],
-        "length_m": 2.6,
-        "radius_m": 0.17,
-        "bends": 2,
-        "yaw_deg": 85.0,
-        "droop_deg": 60.0,
-        "_why": "right root mass, tube 3 of 5"
-      },
-      {
-        "offset": [5.6, -3.4],
-        "length_m": 2.8,
-        "radius_m": 0.15,
-        "bends": 2,
-        "yaw_deg": 30.0,
-        "droop_deg": 65.0,
-        "_why": "right root mass, tube 4 of 5"
-      },
-      {
-        "offset": [8.0, -4.2],
-        "length_m": 2.2,
-        "radius_m": 0.13,
-        "bends": 2,
-        "yaw_deg": 110.0,
-        "droop_deg": 62.0,
-        "_why": "right root mass, tube 5 of 5"
-      },
       {
         "offset": [
           -1.2,
@@ -503,6 +483,97 @@
         "yaw_deg": 5.0,
         "droop_deg": 78.0,
         "_why": "thin stick snagged over the top -- kept as-is"
+      }
+    ],
+    "_comment_root_masses": "WARRENS-ART-0906 (W5). The real meshes that replace the ten face tubes above. Two placement modes: an entry with `dir` is aimed crown-first OUT of the bank surface along that cave-local direction (`out_m` proud of it) so only the bare branching crown is in the frame and its trunk runs back into the earth -- the same trick `roots.pieces` uses inside the cave; an entry without `dir` is seated on the surface with `yaw_deg`/`tilt_deg` and sunk `sink_m` along the surface normal, a stump or a log half-buried in the spoil. Everything wears `root_tint`, carries no collider, and sits outside the arch's own half-width (`arch_width_m`*0.5 + `arch_margin_m` = 3.6 at the current numbers) so nothing stands in the throat. All models are already installed: DeadTree/TwistedTree from the nature megakit, stump/log from `assets/environment/nature/`, `tree-log` from `assets/props/kenney_survival/`.",
+    "root_masses": [
+      {
+        "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+        "offset": [
+          -7.4,
+          -1.4
+        ],
+        "scale": 0.42,
+        "out_m": 0.35,
+        "dir": [
+          -0.85,
+          -0.35,
+          -0.4
+        ],
+        "roll_deg": 35.0,
+        "_why": "the LEFT root mass -- one crown bursting out of the dug face where five tubes used to be"
+      },
+      {
+        "model": "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
+        "offset": [
+          -6.2,
+          -3.2
+        ],
+        "scale": 0.26,
+        "out_m": 0.25,
+        "dir": [
+          -0.6,
+          -0.6,
+          -0.5
+        ],
+        "roll_deg": -60.0,
+        "_why": "a smaller second crown below and outboard of it, so the mass has two scales rather than one silhouette"
+      },
+      {
+        "model": "res://assets/environment/nature/stump_round.glb",
+        "offset": [
+          -8.2,
+          -4.6
+        ],
+        "scale": 1.5,
+        "sink_m": 0.55,
+        "yaw_deg": 40.0,
+        "tilt_deg": 24.0,
+        "_why": "half-buried at the left mass's own foot: the thing the roots come off, tilted so it is not a level disc"
+      },
+      {
+        "model": "res://assets/environment/stylized_nature/DeadTree_1.gltf",
+        "offset": [
+          7.6,
+          -1.2
+        ],
+        "scale": 0.38,
+        "out_m": 0.35,
+        "dir": [
+          0.85,
+          -0.35,
+          -0.4
+        ],
+        "roll_deg": -25.0,
+        "_why": "the RIGHT root mass, a different model from the left one so the pair is not a mirror"
+      },
+      {
+        "model": "res://assets/environment/stylized_nature/TwistedTree_1.gltf",
+        "offset": [
+          6.4,
+          -3.0
+        ],
+        "scale": 0.24,
+        "out_m": 0.22,
+        "dir": [
+          0.55,
+          -0.65,
+          -0.45
+        ],
+        "roll_deg": 80.0,
+        "_why": "its smaller companion"
+      },
+      {
+        "model": "res://assets/props/kenney_survival/tree-log.glb",
+        "offset": [
+          8.4,
+          -4.8
+        ],
+        "scale": 1.1,
+        "sink_m": 0.4,
+        "yaw_deg": -25.0,
+        "tilt_deg": 16.0,
+        "_why": "a log dragged down to the right mass's foot -- the horizontal that stops both flanks reading as two vertical fans"
       }
     ],
     "_comment_claw_scrapes": "Thin dark claw-scrape decals beside the main mouth -- quads standing slightly proud of the dug-face surface. Local offsets. THIRD-PASS-0906, JUDGE-round2.md sec3 item 4 ('scatter ... two claw scrapes across it [the trodden threshold]'): the last two entries sit further out, on the flatter walked apron rather than the steep dug face (`_bank_height_at()` reads ~0 there, so `_build_claw_scrapes()`'s own surface-normal placement lays them flat against the ground like a real drag mark), longer and wider than the face-mounted scrapes to read at walking distance.",
@@ -1689,12 +1760,57 @@
     "_comment": "W07-WARRENS-0904. Installed Mushroom meshes, albedo wired into emission at `glow_colour` (the cave's own pale green against the heartstone's red at the end), one small omni per cluster. `between` entries sit in the two unlit passages as beacons -- navigation stays readable with no torch.",
     "enabled": true,
     "seed": 905,
+    "_comment_species_w1": "WARRENS-ART-0906 (W1, judge: 'mushrooms are plain domes with no gills or cap profile'). One species was placed and `Mushroom_Common` IS a plain 0.56x0.46m dome. The other three of the pack's four are here now: `Mushroom_RedCap` (cap-and-stem toadstool, 1.68x0.92m native) and `Mushroom_Oyster` (stacked gilled shelves, 2.39x1.78m native) were copied out of `assets_raw/vendor/quaternius_stylized-nature-megakit/` into the same nature family folder -- two .gltf and two .bin, sharing the `Mushrooms.png` that was already installed. NO download and NO generation; ASSET_LEDGER row 2026-09-06. `scale_mul` is load-bearing: at the clusters' authored 0.7-1.3 the Oyster would stand 1.6-2.3m. TINTS ARE PALE CAVE VARIANTS, not the pack's forest colours: the megakit paints these for a sunlit wood and the Warrens are underground with no sky, so the caps go pale sage / bone / cool blue-grey. That also keeps the one WARM SATURATED mushroom down here the harvestable `mushroom_pickup` prop, which is the silhouette and the colour a player has to be able to pick out.",
+    "species": [
+      {
+        "model": "res://assets/environment/stylized_nature/Mushroom_Common.gltf",
+        "albedo": "#cbd4c2",
+        "glow": "#7fd89a",
+        "emission": 0.55,
+        "scale_mul": 1.35,
+        "_why": "the original dome, kept as the filler between the profiled species and grown a third so it reads at cluster distance"
+      },
+      {
+        "model": "res://assets/environment/stylized_nature/Mushroom_RedCap.gltf",
+        "albedo": "#ded0b6",
+        "glow": "#8fe0b4",
+        "emission": 0.6,
+        "scale_mul": 0.62,
+        "_why": "the cap-and-stem profile the verdict asked for. The pack's own red is dropped for bone -- a red toadstool under a green beacon reads as the pickup"
+      },
+      {
+        "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+        "albedo": "#c6cddb",
+        "glow": "#8fcde6",
+        "emission": 0.45,
+        "scale_mul": 0.34,
+        "_why": "gilled shelves, the silhouette with actual undersides; a cool blue-grey second glow so the cave is not one green"
+      }
+    ],
+    "bracket_species": [
+      {
+        "model": "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf",
+        "albedo": "#d7c6a6",
+        "glow": "#8fe0b4",
+        "emission": 0.55,
+        "scale_mul": 1.0
+      },
+      {
+        "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+        "albedo": "#c6cddb",
+        "glow": "#8fcde6",
+        "emission": 0.45,
+        "scale_mul": 0.5,
+        "_why": "the oyster is a shelf fungus; on a wall it is the same mesh doing the job it is shaped for"
+      }
+    ],
     "models": [
       "res://assets/environment/stylized_nature/Mushroom_Common.gltf"
     ],
     "bracket_models": [
       "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf"
     ],
+    "_comment_models_fallback": "Kept only as the fallback `_build_fungus()` uses when `species` is absent or fails to load. `species` above is what actually places.",
     "glow_colour": "#7fd89a",
     "emission": 0.55,
     "light_energy": 0.7,
@@ -1710,7 +1826,12 @@
           0.0
         ],
         "count": 4,
-        "spread": 0.6
+        "spread": 0.6,
+        "species": [
+          2,
+          0
+        ],
+        "_why_species": "WARRENS-ART-0906 (W1): the two unlit passages carry no light but their own cluster (`_comment_lights_w07`). Giving the beacons the cool blue-grey oyster and the pale dome, and the ROOMS the warmer bone toadstool, makes the beacon read as a different thing from room dressing at a glance -- which is the job it was authored for."
       },
       {
         "chamber": "hall",
@@ -1756,7 +1877,11 @@
           0.5
         ],
         "count": 4,
-        "spread": 0.6
+        "spread": 0.6,
+        "species": [
+          2,
+          0
+        ]
       },
       {
         "chamber": "den",
