@@ -19,10 +19,36 @@ work is merged onto it: Water, the Stormwood hosted-combat wave, the HUD compass
 work, the combat/performance/visual evidence, the owner's kickoff run, and the
 documentation consolidation.
 
-**Your first act is to land it.** Read its CI run job by job. If it is green,
-merge it and continue from `main`. If it is red, fix what the merge broke and land
-it before starting anything else — the tree everything else builds on has to be
-true first. Do not start a lane on a branch that is about to move.
+**Your first act is to land it.** Read its CI run job by job, fix what the merge
+broke, and land it before starting anything else — the tree everything else builds
+on has to be true first. Do not start a lane on a branch that is about to move.
+
+**It is currently red: 5 of 25 jobs** on `e062cf1e` (run 34133703620) —
+`verify-unit-tests (1)`, `verify-owner-regressions-shard`, and multiplayer shards
+2, 3 and 4 (1 and 5 passed). PR #79's comment thread carries the full diagnosis;
+the short version is two merge-integration defects in shared code, both reachable
+only once Water met current `main`:
+
+1. **The ledger verdict contract disagrees.** `water_veilfall.gd::host_commit`
+   returns `_game.ledger.submit({...})` straight through and its test reads `.ok`
+   with property syntax; on merged `main` the ledger can return a pending verdict
+   with no `ok` key. Decide whether `submit()` guarantees `ok` on every path or
+   whether every caller uses `.get("ok", false)`, then apply it to all callers.
+   Note the test's own assertions passed — this reds the job through the
+   `SCRIPT ERROR` check, which is the rule working as intended.
+2. **Two per-frame handlers assume a live world.** `game_state.gd:68-69` declares
+   `world` and `local` as null until a world is built, and both
+   `ledger_rpc.gd::reconcile_satchel_escrow` and
+   `water_capture_claims.gd::_process` dereference them on a timer. They now run
+   in unit shards that never build a world. A null guard is the correct fix, not a
+   workaround — but make it fail for the right reason before you trust it.
+
+Both sit in shared multiplayer and save-adjacent code, the same surface the save
+rewrite and the `session.gd` change landed on. Run the **full suite and all five
+net shards** after fixing, not just the three that were red. The failing smoke
+names for the net shards are in the `net-smoke-runs-{2,3,4}` artifacts on that run;
+the owner-regressions failure line was not in the log tail and still needs
+identifying rather than assuming.
 
 After it lands, every other branch is fully contained in `main` and the owner will
 delete them.
