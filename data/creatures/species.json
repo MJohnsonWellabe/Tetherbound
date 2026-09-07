@@ -1,16 +1,16 @@
 {
   "_comment": "Species definitions. Base stats and presentation only; a live creature's current HP and energy belong to a creature_instance, never here (TECHNICAL_START.md, Creature Data vs Creature Instance). M11 replaces `model` and the colours with real rigged creatures without touching combat code.",
   "_comment_moves": "Each species carries a `moves` field (D30, creature progression): {\"quick\": id, \"charged\": id}, both ids into data/moves/moves.json. Chosen for flavour fit, not balance -- every move ships at power 1.0 so this is balance-neutral. Related species (an evolution line, a shared archetype) may reuse the same move id on purpose; see data/moves/moves.json for the full pool.",
-  "_placeholder": "M2 ships coloured capsules on purpose. CLAUDE.md forbids judging creature appeal on placeholders, so these are shaped for READABILITY at combat distance — clearly different silhouettes and clearly different colours — and nothing else.",
+  "_placeholder": "M2 ships coloured capsules on purpose. CLAUDE.md forbids judging creature appeal on placeholders, so these are shaped for READABILITY at combat distance \u2014 clearly different silhouettes and clearly different colours \u2014 and nothing else.",
   "_comment_catch": "`catch_rate` is the species' base share of the catch formula in scripts/combat/catch_math.gd. Lower is rarer. Every species must declare one; tests/test_catch_math.gd fails the build if any is missing, because a creature that is accidentally trivial to catch is the kind of bug nobody reports.",
-  "_comment_names": "Ids and display names for the wild roster are canon from `docs/art/wild/` — the owner's Meadows Wild Canon Pack, which supersedes `docs/art/ROSTER_MANIFEST.md` for these creatures (`docs/decisions/D13`). The meshes under them do not all match yet: Tuskroot is still a songbird from the Plumberry pack (`docs/decisions/D10`) and is the last stand-in in the table. Bramblebun WAS a duck and is not any more — it was produced properly from its own sheet.",
+  "_comment_names": "Ids and display names for the wild roster are canon from `docs/art/wild/` \u2014 the owner's Meadows Wild Canon Pack, which supersedes `docs/art/ROSTER_MANIFEST.md` for these creatures (`docs/decisions/D13`). The meshes under them do not all match yet: Tuskroot is still a songbird from the Plumberry pack (`docs/decisions/D10`) and is the last stand-in in the table. Bramblebun WAS a duck and is not any more \u2014 it was produced properly from its own sheet.",
   "_comment_scale": "Creatures stand as PEERS to the 1.8m trainer, not as pets at his ankles (docs/decisions/D12), and the band was raised a second time by D19 (starters at boar scale) and WIDENED a third time by D69, this pass, on the owner's direction to 'widen the creature band size if appropriate'. The band now runs 0.60-2.60m, a 4.33x span over seventeen species. Radii scale by the SAME ratio as height per D12, so nothing gets easier to hit relative to its own size and creature_body._fit()'s footprint allowance sees an unchanged ratio. The reference sheets' real-world sizes (Terrapup 0.45m at the shoulder) are the CREATURE'S biology, not its game scale, and the two are allowed to differ -- see D12/D19/D69.",
   "_comment_starter_scale_2026_08_31": "BACKLOG-VISUAL-STARTER-SCALE / BACKLOG-VISUAL-BADGER-LINE-SCALE, from the 2026-08-31 visual census (ralph/reports/audit/VISUAL-CENSUS-2026-08-31.md #64-65): both starters rendered taller than the 1.80m trainer (Terrapup, Ripplet), and Terrapup -- a starter, not an evolved form; it does NOT `evolves_into`/`evolves_from` Burrowback, the census's own 'badger line' framing is a thematic label only -- outranked Burrowback, a Medium-tier wild adult, on nothing but coincidence. THIS IS A DELIBERATE, NAMED EXCEPTION to D19's 'starters (1.90-2.00m) are untouched' finding, not a quiet reopening of it: D19's own reasoning was owner-play evidence that the PILOTED creature felt small in combat, and that reasoning does not automatically license a starter standing taller than the human it walks beside in every non-combat frame of the game, which is what the census caught. Terrapup drops to 1.62m and Ripplet to 1.55m, smaller again, because ripplet's own sheet designs it as a chibi pocket mascot with stub-mitt hands, the LEAST peer-like of the three starters, so it should read as the smallest, not tallest. Verified against a direct re-render, not the raw config number alone: on current `main`, `creature_body._fit()` at these heights sits nowhere near its footprint-volume clamp for either model, so the render-measured height equals the declared value exactly (2026-08-31's own audit reported 1.92m/1.93m/1.66m for Terrapup/Ripplet/Burrowback at their then-current 2.00m/1.95m/1.70m declared heights, a clamp-shaped gap that does NOT reproduce on current `main` -- a fresh re-render of all three, unmodified, measured exactly 2.00m/1.95m/1.70m, matching declared 1:1; the gap the census reported is stale, not a live constraint this edit had to route around). Terrapup's 1.62m sits clear of Burrowback's own declared/measured 1.70m (Burrowback is untouched by this pass). Both new heights stay comfortably inside D19/D69's 0.60-2.60m band and above the small tier (Pipwing 1.35m) -- this narrows the top of the starter range, it does not re-open the whole band. Radii dropped by the identical ratio per D12. Galewisp (1.90m) is UNTOUCHED: the census raised no defect against it, and BACKLOG-VISUAL-ROSTER-SCALE-SPREAD (a size-tier redesign) is explicitly out of scope for this pass.",
   "_comment_wild_stats": "TUNABLE, all of them. The wild roster's statlines are set from the sheets' own ROLE and STRENGTHS lines and from nothing else: a digger is tougher than a scout, a tracker hits harder than it takes, a shell is defence and a raptor is not. Nobody has played a fight with any of them yet, so treat every number below as a first guess that combat feedback is expected to move.",
   "_comment_wild_heights": "Heights follow D13's rule -- the sheets' RELATIVE ordering is preserved -- through every rescale this file has had. D69 widened the band to 0.60-2.15m for the wild roster around starters left at 1.90-2.00m. The ordering is bit-for-bit the same as D19 left it, including the ties D19 itself preserved (Trailpup and Duskhush still tie in the middle). Pipwing and Bramblebun are still the smallest pair; Meadowhart, Galecrest and Tuskroot still the largest wild tier. The pack's own centimetre figures (Pipwing 0.25m body length, Galecrest 1.80m) are the creature's biology, not its game scale, exactly as sheets 01-04's figures already are.",
   "_comment_evolution_size": "An evolution is ALWAYS larger than the form it came from -- the owner's rule, `docs/decisions/D17`. Every `evolves_into` target must have a strictly greater `placeholder.height` than its source. This constrains RELATIVE size inside a line only; the absolute band is D12/D13's settled policy as amended by D19 and widened by D69 (0.60-2.60m overall). Mudsnout 0.95m -> Tuskroot 2.15m satisfies it with a great deal more room than it used to: D69 pulled the pre-evolution down without moving the evolved form, so the line now more than doubles in height, which is what an evolution ought to look like. It satisfied D17 by accident until tests/test_evolution_links.gd started failing loudly on it, because heights here are tunable and a tune that inverts a line is otherwise completely silent.",
-  "_comment_aggressive": "`aggressive` decides whether a wild creature will start a fight on its own. GAME_DESIGN.md 14 forbids simple proximity starting a fight with a PEACEFUL creature, and the same list allows 'Aggressive creature initiates' — so this flag is the line between those two rules, and it lives in data because it is a property of the creature, not of the code.",
-  "_comment_best_creature": "R4.7, GAME_DESIGN.md 12: 'Best Creature abilities should be species-specific where possible.' `kind` is `survivability` (a percentage bonus to the effective defence a Best Creature fights with) or `energy` (the same percentage bonus applied to energy gained from a landed quick attack) — the two D30-era combat hooks that already exist. Read only through `creature_species.best_creature_ability()`, and only applied when a creature is the party's flagged Best Creature (`autoload/party.gd::best()`); it never affects a creature nobody has designated. Traversal and other perk kinds named by GAME_DESIGN.md 12 are not built — no out-of-exploration companion-speed system exists yet for one to hook into.",
+  "_comment_aggressive": "`aggressive` decides whether a wild creature will start a fight on its own. GAME_DESIGN.md 14 forbids simple proximity starting a fight with a PEACEFUL creature, and the same list allows 'Aggressive creature initiates' \u2014 so this flag is the line between those two rules, and it lives in data because it is a property of the creature, not of the code.",
+  "_comment_best_creature": "R4.7, GAME_DESIGN.md 12: 'Best Creature abilities should be species-specific where possible.' `kind` is `survivability` (a percentage bonus to the effective defence a Best Creature fights with) or `energy` (the same percentage bonus applied to energy gained from a landed quick attack) \u2014 the two D30-era combat hooks that already exist. Read only through `creature_species.best_creature_ability()`, and only applied when a creature is the party's flagged Best Creature (`autoload/party.gd::best()`); it never affects a creature nobody has designated. Traversal and other perk kinds named by GAME_DESIGN.md 12 are not built \u2014 no out-of-exploration companion-speed system exists yet for one to hook into.",
   "species": {
     "terrapup": {
       "display_name": "Terrapup",
@@ -49,13 +49,13 @@
         "radius": 0.8746,
         "_comment_rest_roll": "BACKLOG-VISUAL-BED-FITS-CREATURE (2026-09-01) tried `rest_roll_deg: 0` here to escape DEFAULT_REST_ROLL_DEG's 90-degree roll flipping this species onto its back (idle holds front paws lifted toward the chest rather than planted, so a 90-degree roll swings them skyward instead of settling). The owner rejected that fix outright ('so is solution was to make terrapup stand in bed again?') -- 0 degrees is play_faint()'s crouch/sit pose, not lying down, and a sitting creature was never the ask. BACKLOG-VISUAL-BED-ROSTER-FIT (2026-09-01, this pass) swept intermediate angles instead of only 0/90 and found -45 degrees genuinely settles this body plan onto its side: at a shallower roll the lifted front paws land roughly where a real curled-up sleeping pose puts them rather than swinging wide, and it reads as lying down in both a top-down containment check and a real render from two angles (`ralph/reports/audit/bed-roster-fit/shots/`). -30 partially rolls (still sit-like) and -60 over-rotates (belly starts to show); -45 was the sweet spot. Same idle-based roll math as every other rolled species -- this is a POSE angle, not a special-cased animation.",
         "rest_roll_deg": -45.0,
-        "_comment_footprint": "How long this body may be for its width, as a multiple of its collider diameter. A quadruped is genuinely several times longer than it is wide; a frog is not. Set too low and creature_body._fit() scales the model DOWN to fit the allowance and the creature renders shorter than its own collider claims — silently, until MA4.",
+        "_comment_footprint": "How long this body may be for its width, as a multiple of its collider diameter. A quadruped is genuinely several times longer than it is wide; a frog is not. Set too low and creature_body._fit() scales the model DOWN to fit the allowance and the creature renders shorter than its own collider claims \u2014 silently, until MA4.",
         "model": "res://assets/creatures/tetherbound/terrapup/models/creature_terrapup_lod0.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "_comment_field_emission_0901": "OWNER DIRECTIVE 2026-09-01 ('some of the smaller creatures blend into the environment too well like bramblebun and others who disappear in the grass'), extended to Terrapup per this lane's brief (its mint shell against grass, the same complaint BACKLOG-VISUAL-TERRAPUP-FIELD-SEPARATION flagged). Same `field_emission` lever as bramblebun (creature_body.gd::_apply_field_brightness()), re-measured for this species rather than assumed to transfer: Terrapup's SHIPPED (field_emission 0.0) ratio measured BELOW 1.0 (0.755/0.716, creature actually darker than the field, unlike bramblebun's near-1.0 starting point), so it needed a bigger push to cross into the 1.06-1.15 target. Swept with tools/_probe_grass_separation.gd --species=terrapup --extra-emission= against a creature-sized crop box (490,225)-(795,445): 0.3->0.856/0.814, 0.5->0.917/0.870, 0.7->0.971/0.924, 0.9->1.022/0.971, 1.2->1.087/1.034, 1.3->1.106/1.052, 1.35->1.116/1.060, 1.4->1.124/1.070, 1.5->1.144/1.087. 1.4 is comfortably inside both boxes' target window (1.124/1.070) with margin on both sides, same discipline as bramblebun's 0.9. TUNABLE.",
         "field_emission": 1.4,
-        "_comment_art": "Rigged and animated. The model is measured and fitted to `height` at load by creature_body._fit(), so the collider — and therefore the hit cone and the catch accuracy bonus — does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
+        "_comment_art": "Rigged and animated. The model is measured and fitted to `height` at load by creature_body._fit(), so the collider \u2014 and therefore the hit cone and the catch accuracy bonus \u2014 does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
         "_comment_animations": "26 clips ship baked into each .glb, so nothing is retargeted and nothing can be mangled. `pain` and `fall_over` are what hit and faint have wanted since M2; `uppercut` is a real committed swing rather than a lunge with no animation.",
         "animations": {
           "idle": "idle",
@@ -65,10 +65,10 @@
           "hit": "hit",
           "faint": "faint"
         },
-        "_comment_size": "Chibi bipeds beside a 1.8m trainer, so they read as companions rather than as livestock — which is the Palworld register. Sized against each other so the practice creature is smaller than your partner and the one that ambushes you is bigger than both.",
-        "_comment_pack": "Plumberry Plains Vol. 2, and it answers the review's first and largest complaint directly. The critic's words were 'none of them is a designed creature... Palworld's entire proposition is that its creatures are drawn characters — bold silhouette, hue-opposed to the environment, exaggerated proportion, expression', and that the previous roster put 'a naturalistic tree frog, a faceted grey low-poly goat, and a Nintendo Mii in the same 300 pixels'. These are ten designed chibi characters from ONE artist, which fixes the design AND the cohesion complaint at once.",
-        "_comment_pick": "Chosen on MEASURED colour, not taste. The first pick was fox, rabbit and wolf — which turned out to be the three LEAST saturated characters in the pack (0.20, 0.19, 0.15), i.e. exactly the defect the critic named on the creature they replaced: 'saturation 0.12... a grey rock standing on olive ground... your own creature is the least readable object in your own fight'. Re-picked against its stated criterion — hue-opposed to a green world, and readable at 40px:\n  bear      hue  23 deg, sat 0.77, val 0.61  — orange-brown, the most saturated thing in the pack\n  duck      hue  42 deg, sat 0.67, val 0.95  — bright gold\n  songbird  hue 194 deg, sat 0.36, val 0.72  — blue, the only cool hue available\nThree hues, three values, none of them the chartreuse the ground is made of.",
-        "_comment_role": "Your partner, and therefore the one that must never be lost in a frame — so it gets the most saturated character in the pack."
+        "_comment_size": "Chibi bipeds beside a 1.8m trainer, so they read as companions rather than as livestock \u2014 which is the Palworld register. Sized against each other so the practice creature is smaller than your partner and the one that ambushes you is bigger than both.",
+        "_comment_pack": "Plumberry Plains Vol. 2, and it answers the review's first and largest complaint directly. The critic's words were 'none of them is a designed creature... Palworld's entire proposition is that its creatures are drawn characters \u2014 bold silhouette, hue-opposed to the environment, exaggerated proportion, expression', and that the previous roster put 'a naturalistic tree frog, a faceted grey low-poly goat, and a Nintendo Mii in the same 300 pixels'. These are ten designed chibi characters from ONE artist, which fixes the design AND the cohesion complaint at once.",
+        "_comment_pick": "Chosen on MEASURED colour, not taste. The first pick was fox, rabbit and wolf \u2014 which turned out to be the three LEAST saturated characters in the pack (0.20, 0.19, 0.15), i.e. exactly the defect the critic named on the creature they replaced: 'saturation 0.12... a grey rock standing on olive ground... your own creature is the least readable object in your own fight'. Re-picked against its stated criterion \u2014 hue-opposed to a green world, and readable at 40px:\n  bear      hue  23 deg, sat 0.77, val 0.61  \u2014 orange-brown, the most saturated thing in the pack\n  duck      hue  42 deg, sat 0.67, val 0.95  \u2014 bright gold\n  songbird  hue 194 deg, sat 0.36, val 0.72  \u2014 blue, the only cool hue available\nThree hues, three values, none of them the chartreuse the ground is made of.",
+        "_comment_role": "Your partner, and therefore the one that must never be lost in a frame \u2014 so it gets the most saturated character in the pack."
       }
     },
     "ripplet": {
@@ -190,7 +190,7 @@
         "model": "res://assets/creatures/tetherbound/bramblebun_redesign/models/creature_bramblebun_redesign_lod0.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
-        "_comment_art": "Produced by tools/art_pipeline from the owner's wild Ground Sheet A; see docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md. Replaces the Plumberry duck that stood in for it. The model is measured and fitted to `height` at load by creature_body._fit(), so the collider — and therefore the hit cone and the catch accuracy bonus — does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
+        "_comment_art": "Produced by tools/art_pipeline from the owner's wild Ground Sheet A; see docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md. Replaces the Plumberry duck that stood in for it. The model is measured and fitted to `height` at load by creature_body._fit(), so the collider \u2014 and therefore the hit cone and the catch accuracy bonus \u2014 does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
         "_comment_redesign_0830": "T3-INSTALL, 2026-08-30, TRIED repointing `model` at bramblebun_redesign/'s mesh and REVERTED it in the same pass: `tests/smoke_art.gd` caught 'bramblebun has no AnimationPlayer despite declaring 6 clips' because the redesign's `.glb` was a static, unrigged single-mesh Meshy export (skins: 0, empty animations array). T1-CREATURE-RIG, same day, closed that gap: `tools/art_pipeline/finish.py rig bramblebun_redesign --kind quadruped` (the LOCAL Blender quadruped rigger every other production creature in this roster already goes through -- rig_quadruped.py + animate_quadruped.py, no Meshy spend, not the humanoid Meshy-auto-rig recipe the comment this replaces guessed at) produced a clean rig (15 bones, 0 unweighted vertices) and the standard 6 clips (idle/walk/run/attack/hit/faint), verified against a rendered posed frame (ralph/reports/T1-CREATURE-RIG/shots/pose_check/bramblebun_redesign_attack10.png) before installing, not just a passing skins-count check. `model` now points at the redesign for real. `height` was already moved 0.96 -> 1.00 for the redesign's own size guide (see _comment_scale_0830) and is left there.",
         "animations": {
           "idle": "idle",
@@ -233,7 +233,7 @@
         "_comment_footprint": "A low piglet is much longer than it is tall.",
         "footprint_allowance": 3.0,
         "_comment_field_emission_0901": "OWNER DIRECTIVE 2026-09-01 ('some of the smaller creatures blend into the environment too well... they either need to be bigger or brighter'). Third species this lane checked with tools/_probe_grass_separation.gd's `--species=` sweep (after bramblebun and terrapup) rather than assumed from the other two -- picked because it is the darkest small creature in the roster (`#6e492c`, a dark dirt brown) and a real render confirmed it: SHIPPED (field_emission 0.0) measured 0.719/0.682, the creature noticeably darker than the field, a near-identical starting problem to terrapup's rather than bramblebun's milder one. Swept against crop box (560,340)-(720,445): 0.5->0.883/0.840, 0.9->1.006/0.955, 1.2->1.087/1.035, 1.3->1.114/1.059, 1.35->1.125/1.068, 1.4->1.136/1.081, 1.5->1.161/1.104, 1.8->1.218/1.159, 2.1->1.272/1.209. 1.4 lands both boxes comfortably inside the 1.06-1.15 target, same discipline and the same value terrapup landed on. SUPERSEDED below -- that 1.06-1.15 target is CREATURE-LEGIBILITY-0903's own stricter 1.5:1 bar's predecessor.",
-        "_comment_field_emission_0904": "G3-CREATURE-COLOUR-0904. Re-measured against Gate 2.4's stricter 1.5:1 bar, which only Bramblebun had been re-checked against (docs/CURRENT_STATE.md §3 flagged Mudsnout/Terrapup/Burrowback as open). tools/_probe_grass_separation.gd --species=mudsnout --time=day, tighter creature box (600,375)-(690,440) (the original (560,340)-(720,445) box above dilutes with surrounding grass at this stricter bar's scale), same open-grass reference box (150,260,380,340) CREATURE-LEGIBILITY-0903 used: SHIPPED (1.4) measured 1.347-1.428 across two crop widths -- FAILS the 1.5:1 bar, confirming the open item. Swept: 1.8->1.558, 2.2->1.734, 2.6->1.886, 3.0->2.016. Hue held flat at ~44 degrees (a plain warm dirt-brown, `_comment_field_emission_0901`'s own `#6e492c`) across the whole sweep since this species carries no `field_degreen` -- no pink-shift risk the way Bramblebun's did. 2.2 clears the bar with real margin (1.734, the same discipline CREATURE-LEGIBILITY-0903 used for Bramblebun's own 2.5) while staying short of 3.0's washed-out saturation (sat 0.427 at 2.2 vs 0.360 at 3.0, measured off the rendered frame). TUNABLE.",
+        "_comment_field_emission_0904": "G3-CREATURE-COLOUR-0904. Re-measured against Gate 2.4's stricter 1.5:1 bar, which only Bramblebun had been re-checked against (docs/CURRENT_STATE.md \u00a73 flagged Mudsnout/Terrapup/Burrowback as open). tools/_probe_grass_separation.gd --species=mudsnout --time=day, tighter creature box (600,375)-(690,440) (the original (560,340)-(720,445) box above dilutes with surrounding grass at this stricter bar's scale), same open-grass reference box (150,260,380,340) CREATURE-LEGIBILITY-0903 used: SHIPPED (1.4) measured 1.347-1.428 across two crop widths -- FAILS the 1.5:1 bar, confirming the open item. Swept: 1.8->1.558, 2.2->1.734, 2.6->1.886, 3.0->2.016. Hue held flat at ~44 degrees (a plain warm dirt-brown, `_comment_field_emission_0901`'s own `#6e492c`) across the whole sweep since this species carries no `field_degreen` -- no pink-shift risk the way Bramblebun's did. 2.2 clears the bar with real margin (1.734, the same discipline CREATURE-LEGIBILITY-0903 used for Bramblebun's own 2.5) while staying short of 3.0's washed-out saturation (sat 0.427 at 2.2 vs 0.360 at 3.0, measured off the rendered frame). TUNABLE.",
         "field_emission": 2.2,
         "model": "res://assets/creatures/tetherbound/mudsnout/models/creature_mudsnout_lod0.glb",
         "model_scale": 1.0,
@@ -329,7 +329,7 @@
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "_comment_field_emission_vp9": "VP9 LIFE round 2 (code-blind judge addendum): 'ridge camp shapes indistinguishable from rocks'. `colour` #6c7061 is a grey-olive rock tone by design (its own sheet: rock-nodule armour), which is exactly why it was reading as scenery rather than a creature next to the ridge camp's actual rocks. Same `field_emission` lever OWNER DIRECTIVE 2026-09-01 set for bramblebun/terrapup/mudsnout (creature_body.gd::_apply_field_brightness()), applied here for the first time -- unmeasured against tools/_probe_grass_separation.gd (no time in this round's budget to run the sweep), so 0.9 is bramblebun's own modest, no-glow value taken as the conservative default rather than terrapup/mudsnout's steeper 1.4 (both of those started BELOW 1.0 on measurement; this species has not been measured at all). TUNABLE, and due a real sweep before it is treated as settled.",
-        "_comment_field_emission_0904": "G3-CREATURE-COLOUR-0904. Finally measured, against Gate 2.4's 1.5:1 bar (docs/CURRENT_STATE.md §3 flagged this species as open, never swept). tools/_probe_grass_separation.gd --species=burrowback --time=day, crop box (530,280)-(720,440), same grass reference box CREATURE-LEGIBILITY-0903 used: SHIPPED (0.9) -> creature luma 0.261 vs. grass 0.307 -- this species is DARKER than the field, not brighter, so the creature/grass ratio reads 0.85:1 (below 1.0), and even read as an absolute contrast ratio (max/min) it is only 1.18:1. Swept 1.3->1.03:1, 1.7->1.19:1 -- still under 1.5:1 at either point, and every step toward 1.5 pushes this species further AWAY from the grey-olive 'rock-nodule armour' identity `_comment_field_emission_vp9` above names as the reason `colour` is a rock tone on purpose. Unlike Bramblebun/Mudsnout (both measurably too DARK for their setting, a straight brightness fix), Burrowback's whole design intent is camouflage-adjacent-to-rocks, and a same-direction brightness push here trades that identity for a bar written around a creature meant to stand out in grass, not one meant to blend into a ridge camp's stone. Left at 0.9, unchanged -- this is a design question (does this species still get to read as rock-toned, or does grass-legibility override that everywhere it spawns), not a value nobody chose to measure. Flagged, not fixed.",
+        "_comment_field_emission_0904": "G3-CREATURE-COLOUR-0904. Finally measured, against Gate 2.4's 1.5:1 bar (docs/CURRENT_STATE.md \u00a73 flagged this species as open, never swept). tools/_probe_grass_separation.gd --species=burrowback --time=day, crop box (530,280)-(720,440), same grass reference box CREATURE-LEGIBILITY-0903 used: SHIPPED (0.9) -> creature luma 0.261 vs. grass 0.307 -- this species is DARKER than the field, not brighter, so the creature/grass ratio reads 0.85:1 (below 1.0), and even read as an absolute contrast ratio (max/min) it is only 1.18:1. Swept 1.3->1.03:1, 1.7->1.19:1 -- still under 1.5:1 at either point, and every step toward 1.5 pushes this species further AWAY from the grey-olive 'rock-nodule armour' identity `_comment_field_emission_vp9` above names as the reason `colour` is a rock tone on purpose. Unlike Bramblebun/Mudsnout (both measurably too DARK for their setting, a straight brightness fix), Burrowback's whole design intent is camouflage-adjacent-to-rocks, and a same-direction brightness push here trades that identity for a bar written around a creature meant to stand out in grass, not one meant to blend into a ridge camp's stone. Left at 0.9, unchanged -- this is a design question (does this species still get to read as rock-toned, or does grass-legibility override that everywhere it spawns), not a value nobody chose to measure. Flagged, not fixed.",
         "field_emission": 0.9,
         "_comment_art": "R0.6: tools/art_pipeline finish.py clean -> texture -> rig -> grade -> install, from the R0.4 winner (candidate c). See docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md. The model is measured and fitted to `height` at load by creature_body._fit(), so the collider -- and therefore the hit cone and the catch accuracy bonus -- does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
         "animations": {
@@ -395,14 +395,14 @@
     "tuskroot": {
       "display_name": "Tuskroot",
       "type": "ground",
-      "_comment": "The one that comes at you. Tougher and rarer than the Hopper, because being ambushed should be a moment rather than an interruption — and because the first thing anyone does when something charges them is find out whether they can beat it.",
+      "_comment": "The one that comes at you. Tougher and rarer than the Hopper, because being ambushed should be a moment rather than an interruption \u2014 and because the first thing anyone does when something charges them is find out whether they can beat it.",
       "base_hp": 130.0,
       "base_attack": 24.0,
       "base_defence": 19.0,
       "catch_rate": 0.28,
       "aggressive": true,
       "evolves_from": "mudsnout",
-      "_comment_evolution": "Tuskroot is no longer a base creature you meet in the wild — the owner's Meadows Wild Canon Pack makes it the evolved form of Mudsnout, and the ONLY evolution in the biome (docs/decisions/D13). R4.6 built the evolution SYSTEM (scripts/creatures/evolution.gd, data/config/progression.json's `evolution` block); a caught Mudsnout can now actually become this. The pair's heights (Mudsnout 0.95m -> Tuskroot 2.15m after D69's widening) are held apart by D17 and tests/test_evolution_links.gd: the evolved form must always be the larger one.",
+      "_comment_evolution": "Tuskroot is no longer a base creature you meet in the wild \u2014 the owner's Meadows Wild Canon Pack makes it the evolved form of Mudsnout, and the ONLY evolution in the biome (docs/decisions/D13). R4.6 built the evolution SYSTEM (scripts/creatures/evolution.gd, data/config/progression.json's `evolution` block); a caught Mudsnout can now actually become this. The pair's heights (Mudsnout 0.95m -> Tuskroot 2.15m after D69's widening) are held apart by D17 and tests/test_evolution_links.gd: the evolved form must always be the larger one.",
       "moves": {
         "quick": "root_nibble",
         "charged": "rootquake"
@@ -433,7 +433,7 @@
         "model": "res://assets/creatures/tetherbound/tuskroot/models/creature_tuskroot_lod0.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
-        "_comment_art": "R0.6: tools/art_pipeline finish.py clean -> texture -> rig -> grade -> install, from the R0.4 winner (candidate a). See docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md. The model is measured and fitted to `height` at load by creature_body._fit(), so the collider — and therefore the hit cone and the catch accuracy bonus — does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
+        "_comment_art": "R0.6: tools/art_pipeline finish.py clean -> texture -> rig -> grade -> install, from the R0.4 winner (candidate a). See docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md. The model is measured and fitted to `height` at load by creature_body._fit(), so the collider \u2014 and therefore the hit cone and the catch accuracy bonus \u2014 does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
         "animations": {
           "idle": "idle",
           "walk": "walk",
@@ -723,7 +723,7 @@
     "veridian": {
       "display_name": "Veridian Stag",
       "type": "ground",
-      "_comment_type": "Board 06 labels it Grass/Earth. The Meadows has three types — Ground, Water, Air — and REFERENCE_CANON's precedence rule is that the markdown wins on type while the image wins on looks, so it is the GROUND legendary per GAME_DESIGN.md section 26.",
+      "_comment_type": "Board 06 labels it Grass/Earth. The Meadows has three types \u2014 Ground, Water, Air \u2014 and REFERENCE_CANON's precedence rule is that the markdown wins on type while the image wins on looks, so it is the GROUND legendary per GAME_DESIGN.md section 26.",
       "base_hp": 420.0,
       "base_attack": 46.0,
       "base_defence": 44.0,
@@ -764,7 +764,7 @@
         "model": "res://assets/creatures/tetherbound/veridian/models/creature_veridian_lod0.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
-        "_comment_art": "Board 06's Veridian Stag, owner-approved as the legendary's direct source. Antler rack thickened and bent forward per the blind critique — the generated rack swept backward only, 'which turns a crown into a windblown crest'.",
+        "_comment_art": "Board 06's Veridian Stag, owner-approved as the legendary's direct source. Antler rack thickened and bent forward per the blind critique \u2014 the generated rack swept backward only, 'which turns a crown into a windblown crest'.",
         "animations": {
           "idle": "idle",
           "walk": "walk",
@@ -1098,8 +1098,870 @@
         },
         "_comment_art": "T3-INSTALL, 2026-08-30: Meshy mesh generated and committed by the coordinator against the owner's creature-expansion reference boards (docs/art/reference/creature-expansion-2026-08-30/); moved here from data/creatures/species_pending.json now that the model exists on disk. T1-CREATURE-RIG, same day: rigged and animated through `tools/art_pipeline/finish.py rig <species> --kind quadruped` (the LOCAL Blender quadruped rigger every other production creature in this roster already goes through -- rig_quadruped.py + animate_quadruped.py -- not Meshy's own auto-rigger, which is documented humanoid-only). Verified against a rendered posed frame (ralph/reports/T1-CREATURE-RIG/shots/pose_check/) before installing, not just a passing skins-count check; now plays idle/walk/run/attack/hit/faint like every other production creature."
       }
+    },
+    "cannonback": {
+      "display_name": "Cannonback",
+      "type": "water",
+      "base_hp": 95.0,
+      "base_attack": 24.0,
+      "base_defence": 18.0,
+      "catch_rate": 0.35,
+      "aggressive": false,
+      "moves": {
+        "quick": "tremor_roll",
+        "charged": "splash_snap"
+      },
+      "placeholder": {
+        "colour": "#8899aa",
+        "height": 2.2,
+        "radius": 0.77,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/cannonback/models/creature_cannonback_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+      }
+    },
+    "riptusk": {
+      "display_name": "Riptusk",
+      "type": "water",
+      "base_hp": 95.0,
+      "base_attack": 24.0,
+      "base_defence": 18.0,
+      "catch_rate": 0.35,
+      "aggressive": true,
+      "moves": {
+        "quick": "splash_snap",
+        "charged": "undertow"
+      },
+      "placeholder": {
+        "colour": "#8899aa",
+        "height": 2.6,
+        "radius": 0.91,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/riptusk/models/creature_riptusk_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+      }
+    },
+    "mirejaw": {
+      "display_name": "Mirejaw",
+      "type": "water",
+      "base_hp": 95.0,
+      "base_attack": 24.0,
+      "base_defence": 18.0,
+      "catch_rate": 0.35,
+      "aggressive": true,
+      "moves": {
+        "quick": "ripple_jab",
+        "charged": "tremor_roll"
+      },
+      "placeholder": {
+        "colour": "#8899aa",
+        "height": 1.6,
+        "radius": 0.56,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/mirejaw/models/creature_mirejaw_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+      }
+    },
+    "torrentoad": {
+      "display_name": "Torrentoad",
+      "type": "water",
+      "base_hp": 95.0,
+      "base_attack": 24.0,
+      "base_defence": 18.0,
+      "catch_rate": 0.35,
+      "aggressive": false,
+      "moves": {
+        "quick": "tremor_roll",
+        "charged": "splash_snap"
+      },
+      "placeholder": {
+        "colour": "#8899aa",
+        "height": 1.9,
+        "radius": 0.665,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/torrentoad/models/creature_torrentoad_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+      }
+    },
+    "cragclaw": {
+      "display_name": "Cragclaw",
+      "type": "water",
+      "base_hp": 95.0,
+      "base_attack": 24.0,
+      "base_defence": 18.0,
+      "catch_rate": 0.35,
+      "aggressive": false,
+      "moves": {
+        "quick": "shell_bash",
+        "charged": "ripple_jab"
+      },
+      "placeholder": {
+        "colour": "#8899aa",
+        "height": 1.7,
+        "radius": 0.595,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/cragclaw/models/creature_cragclaw_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+      }
+    },
+    "riverdrake": {
+      "display_name": "Riverdrake",
+      "type": "water",
+      "base_hp": 95.0,
+      "base_attack": 24.0,
+      "base_defence": 18.0,
+      "catch_rate": 0.35,
+      "aggressive": true,
+      "moves": {
+        "quick": "undertow",
+        "charged": "riptide_rush"
+      },
+      "placeholder": {
+        "colour": "#8899aa",
+        "height": 2.4,
+        "radius": 0.84,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/riverdrake/models/creature_riverdrake_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+      }
+    },
+    "sirenseal": {
+      "display_name": "Sirenseal",
+      "type": "water",
+      "base_hp": 95.0,
+      "base_attack": 24.0,
+      "base_defence": 18.0,
+      "catch_rate": 0.35,
+      "aggressive": false,
+      "moves": {
+        "quick": "tremor_roll",
+        "charged": "splash_snap"
+      },
+      "placeholder": {
+        "colour": "#8899aa",
+        "height": 1.9,
+        "radius": 0.665,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/sirenseal/models/creature_sirenseal_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+      }
+    },
+    "mangrove_monitor": {
+      "display_name": "Mangrove Monitor",
+      "type": "water",
+      "base_hp": 95.0,
+      "base_attack": 24.0,
+      "base_defence": 18.0,
+      "catch_rate": 0.35,
+      "aggressive": true,
+      "moves": {
+        "quick": "ripple_jab",
+        "charged": "tremor_roll"
+      },
+      "placeholder": {
+        "colour": "#8899aa",
+        "height": 2.0,
+        "radius": 0.7,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/mangrove_monitor/models/creature_mangrove_monitor_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+      }
+    },
+    "tidecoil": {
+      "display_name": "Tidecoil",
+      "type": "water",
+      "base_hp": 95.0,
+      "base_attack": 24.0,
+      "base_defence": 18.0,
+      "catch_rate": 0.35,
+      "aggressive": true,
+      "moves": {
+        "quick": "ripple_jab",
+        "charged": "tremor_roll"
+      },
+      "placeholder": {
+        "colour": "#8899aa",
+        "height": 3.4,
+        "radius": 1.19,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/tidecoil/models/creature_tidecoil_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+      }
+    },
+    "abyssal_guardian": {
+      "display_name": "Abyssal Guardian",
+      "type": "water",
+      "base_hp": 220.0,
+      "base_attack": 42.0,
+      "base_defence": 30.0,
+      "catch_rate": 0.05,
+      "aggressive": true,
+      "moves": {
+        "quick": "tremor_roll",
+        "charged": "splash_snap"
+      },
+      "placeholder": {
+        "colour": "#8899aa",
+        "height": 4.5,
+        "radius": 1.575,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/abyssal_guardian/models/creature_abyssal_guardian_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+      },
+      "best_creature": {
+        "id": "legendary_presence",
+        "kind": "prestige",
+        "value": 0.3
+      }
+    },
+    "voltwig": {
+      "display_name": "Voltwig",
+      "type": "electric",
+      "base_hp": 95.0,
+      "base_attack": 24.0,
+      "base_defence": 18.0,
+      "catch_rate": 0.35,
+      "aggressive": false,
+      "moves": {
+        "quick": "spark_bite",
+        "charged": "arc_lash"
+      },
+      "placeholder": {
+        "colour": "#8899aa",
+        "height": 1.9,
+        "radius": 0.665,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/voltwig/models/creature_voltwig_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+      }
+    },
+    "mosshock": {
+      "display_name": "Mosshock",
+      "type": "electric",
+      "base_hp": 95.0,
+      "base_attack": 24.0,
+      "base_defence": 18.0,
+      "catch_rate": 0.35,
+      "aggressive": false,
+      "moves": {
+        "quick": "spark_bite",
+        "charged": "arc_lash"
+      },
+      "placeholder": {
+        "colour": "#8899aa",
+        "height": 1.7,
+        "radius": 0.595,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/mosshock/models/creature_mosshock_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+      }
+    },
+    "staticub": {
+      "display_name": "Staticub",
+      "type": "electric",
+      "base_hp": 95.0,
+      "base_attack": 24.0,
+      "base_defence": 18.0,
+      "catch_rate": 0.35,
+      "aggressive": false,
+      "moves": {
+        "quick": "spark_bite",
+        "charged": "arc_lash"
+      },
+      "placeholder": {
+        "colour": "#8899aa",
+        "height": 1.9,
+        "radius": 0.665,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/staticub/models/creature_staticub_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+      }
+    },
+    "voltarach": {
+      "display_name": "Voltarach",
+      "type": "electric",
+      "base_hp": 140.0,
+      "base_attack": 32.0,
+      "base_defence": 24.0,
+      "catch_rate": 0.15,
+      "aggressive": true,
+      "moves": {
+        "quick": "arc_lash",
+        "charged": "spark_bite"
+      },
+      "placeholder": {
+        "colour": "#8899aa",
+        "height": 2.6,
+        "radius": 0.91,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/voltarach/models/creature_voltarach_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+      },
+      "best_creature": {
+        "id": "alpha_dominance",
+        "kind": "prestige",
+        "value": 0.2
+      }
+    },
+    "fulgocobra": {
+      "display_name": "Fulgocobra",
+      "type": "electric",
+      "base_hp": 220.0,
+      "base_attack": 42.0,
+      "base_defence": 30.0,
+      "catch_rate": 0.05,
+      "aggressive": true,
+      "moves": {
+        "quick": "spark_bite",
+        "charged": "arc_lash"
+      },
+      "placeholder": {
+        "colour": "#8899aa",
+        "height": 3.2,
+        "radius": 1.12,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/fulgocobra/models/creature_fulgocobra_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+      },
+      "best_creature": {
+        "id": "legendary_presence",
+        "kind": "prestige",
+        "value": 0.3
+      }
+    },
+    "stormraven": {
+      "display_name": "Stormraven",
+      "type": "electric",
+      "base_hp": 95.0,
+      "base_attack": 24.0,
+      "base_defence": 18.0,
+      "catch_rate": 0.35,
+      "aggressive": true,
+      "moves": {
+        "quick": "spark_bite",
+        "charged": "arc_lash"
+      },
+      "placeholder": {
+        "colour": "#8899aa",
+        "height": 2.0,
+        "radius": 0.7,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/stormraven/models/creature_stormraven_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+      }
+    },
+    "pebbik": {
+      "display_name": "Pebbik",
+      "type": "air",
+      "base_hp": 95.0,
+      "base_attack": 24.0,
+      "base_defence": 18.0,
+      "catch_rate": 0.35,
+      "aggressive": false,
+      "moves": {
+        "quick": "talon_dive",
+        "charged": "gust_burst"
+      },
+      "placeholder": {
+        "colour": "#8899aa",
+        "height": 1.9,
+        "radius": 0.665,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/pebbik/models/creature_pebbik_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+      }
+    },
+    "craghorn": {
+      "display_name": "Craghorn",
+      "type": "air",
+      "base_hp": 95.0,
+      "base_attack": 24.0,
+      "base_defence": 18.0,
+      "catch_rate": 0.35,
+      "aggressive": false,
+      "moves": {
+        "quick": "sky_rend",
+        "charged": "gale_peck"
+      },
+      "placeholder": {
+        "colour": "#8899aa",
+        "height": 2.1,
+        "radius": 0.735,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/craghorn/models/creature_craghorn_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+      }
+    },
+    "stormcapra": {
+      "display_name": "Stormcapra",
+      "type": "air",
+      "base_hp": 95.0,
+      "base_attack": 24.0,
+      "base_defence": 18.0,
+      "catch_rate": 0.35,
+      "aggressive": true,
+      "moves": {
+        "quick": "gale_peck",
+        "charged": "storm_strike"
+      },
+      "placeholder": {
+        "colour": "#8899aa",
+        "height": 2.3,
+        "radius": 0.805,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/stormcapra/models/creature_stormcapra_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+      }
+    },
+    "skyrill": {
+      "display_name": "Skyrill",
+      "type": "air",
+      "base_hp": 95.0,
+      "base_attack": 24.0,
+      "base_defence": 18.0,
+      "catch_rate": 0.35,
+      "aggressive": false,
+      "moves": {
+        "quick": "storm_strike",
+        "charged": "night_swoop"
+      },
+      "placeholder": {
+        "colour": "#8899aa",
+        "height": 1.9,
+        "radius": 0.665,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/skyrill/models/creature_skyrill_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+      }
+    },
+    "aeriex": {
+      "display_name": "Aeriex",
+      "type": "air",
+      "base_hp": 95.0,
+      "base_attack": 24.0,
+      "base_defence": 18.0,
+      "catch_rate": 0.35,
+      "aggressive": false,
+      "moves": {
+        "quick": "gale_peck",
+        "charged": "storm_strike"
+      },
+      "placeholder": {
+        "colour": "#8899aa",
+        "height": 2.4,
+        "radius": 0.84,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/aeriex/models/creature_aeriex_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+      }
+    },
+    "ribbonray": {
+      "display_name": "Ribbonray",
+      "type": "air",
+      "base_hp": 95.0,
+      "base_attack": 24.0,
+      "base_defence": 18.0,
+      "catch_rate": 0.35,
+      "aggressive": false,
+      "moves": {
+        "quick": "talon_dive",
+        "charged": "gust_burst"
+      },
+      "placeholder": {
+        "colour": "#8899aa",
+        "height": 2.2,
+        "radius": 0.77,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/ribbonray/models/creature_ribbonray_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+      }
+    },
+    "breezetail": {
+      "display_name": "Breezetail",
+      "type": "air",
+      "base_hp": 95.0,
+      "base_attack": 24.0,
+      "base_defence": 18.0,
+      "catch_rate": 0.35,
+      "aggressive": false,
+      "moves": {
+        "quick": "gale_peck",
+        "charged": "storm_strike"
+      },
+      "placeholder": {
+        "colour": "#8899aa",
+        "height": 1.9,
+        "radius": 0.665,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/breezetail/models/creature_breezetail_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+      }
+    },
+    "cloudfang": {
+      "display_name": "Cloudfang",
+      "type": "air",
+      "base_hp": 95.0,
+      "base_attack": 24.0,
+      "base_defence": 18.0,
+      "catch_rate": 0.35,
+      "aggressive": true,
+      "moves": {
+        "quick": "quick_flit",
+        "charged": "sky_rend"
+      },
+      "placeholder": {
+        "colour": "#8899aa",
+        "height": 2.3,
+        "radius": 0.805,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/cloudfang/models/creature_cloudfang_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+      }
+    },
+    "cliffspike": {
+      "display_name": "Cliffspike",
+      "type": "air",
+      "base_hp": 95.0,
+      "base_attack": 24.0,
+      "base_defence": 18.0,
+      "catch_rate": 0.35,
+      "aggressive": false,
+      "moves": {
+        "quick": "storm_strike",
+        "charged": "night_swoop"
+      },
+      "placeholder": {
+        "colour": "#8899aa",
+        "height": 1.9,
+        "radius": 0.665,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/cliffspike/models/creature_cliffspike_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+      }
+    },
+    "tempestwing": {
+      "display_name": "Tempestwing",
+      "type": "air",
+      "base_hp": 140.0,
+      "base_attack": 32.0,
+      "base_defence": 24.0,
+      "catch_rate": 0.15,
+      "aggressive": true,
+      "moves": {
+        "quick": "gust_burst",
+        "charged": "quick_flit"
+      },
+      "placeholder": {
+        "colour": "#8899aa",
+        "height": 2.5,
+        "radius": 0.875,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/tempestwing/models/creature_tempestwing_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+      },
+      "best_creature": {
+        "id": "alpha_dominance",
+        "kind": "prestige",
+        "value": 0.2
+      }
+    },
+    "solmane": {
+      "display_name": "Solmane",
+      "type": "air",
+      "base_hp": 220.0,
+      "base_attack": 42.0,
+      "base_defence": 30.0,
+      "catch_rate": 0.05,
+      "aggressive": false,
+      "moves": {
+        "quick": "quick_flit",
+        "charged": "sky_rend"
+      },
+      "placeholder": {
+        "colour": "#8899aa",
+        "height": 4.2,
+        "radius": 1.47,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/solmane/models/creature_solmane_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+      },
+      "best_creature": {
+        "id": "legendary_presence",
+        "kind": "prestige",
+        "value": 0.3
+      }
     }
   },
   "_comment_aspect_variants": "T3-CREATURES, from docs/owner/TETHERBOUND_MEADOWS_CREATURE_EXPANSION.md and the ten reference boards in docs/art/reference/creature-expansion-2026-08-30/. The four entries below are ASPECT VARIANTS -- the brief's own third category, kept deliberately separate from the other two (its 'Shiny vs Alpha vs Elemental Variant' section). A SHINY is the same species with the same typing and a rare colourway and MUST NEVER change typing; that stays data/creatures/shiny_colourways.json and encounter_director's shiny draw, both untouched by this lane. An ALPHA is an exceptional INDIVIDUAL of a species, bigger and higher-level, and stays the per-cluster `alpha` block on a spawns.json entry. An ASPECT variant is a creature whose environmental exposure changed its TYPING and its appearance -- and typing is a species-table property in this build, read by creature_instance.from_species from here and nowhere else, so an aspect variant has to be a row in this table. `variant_of` records the canon claim the brief makes ('This is NOT a new species unless later decided otherwise... internally it may remain a Paddlenewt variant'): these are the same animal, and that field is what a codex, a research log, or a later decision to merge one back into its base species would read. Two of the four are ALSO alphas exactly as the brief directs (Nightburrow, Stormtrail), and that is expressed the ordinary way -- their spawn entries carry an `alpha` block -- so the two concepts compose instead of colliding. All four reuse their base species' MESH on purpose. The other five creatures in the brief need meshes that do not exist yet and are deliberately NOT in this table, because smoke_art.gd requires every entry here to name a model that exists (this file's own _comment_wild_roster already states that rule); they are authored in full in data/creatures/species_pending.json, which nothing loads.",
-  "_comment_wild_roster": "The Meadows wild roster is canonised by docs/art/wild/ — twelve species plus one evolution. Species appear in this file as each is produced, because smoke_art.gd requires every entry to name a model that exists. All twelve wild species have real production art now (R0.6 complete); Tuskroot's evolved-form model is the one remaining stand-in, tracked separately. Heights follow D13's relative ordering inside D19's raised band (starters at boar scale)."
+  "_comment_wild_roster": "The Meadows wild roster is canonised by docs/art/wild/ \u2014 twelve species plus one evolution. Species appear in this file as each is produced, because smoke_art.gd requires every entry to name a model that exists. All twelve wild species have real production art now (R0.6 complete); Tuskroot's evolved-form model is the one remaining stand-in, tracked separately. Heights follow D13's relative ordering inside D19's raised band (starters at boar scale)."
 }
