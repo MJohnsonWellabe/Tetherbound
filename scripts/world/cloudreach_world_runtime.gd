@@ -117,8 +117,13 @@ func mount(owner_world: Node3D, chapter_node: Node, realm_map: RefCounted) -> vo
 	payoffs.call("configure", world, chapter, presentation)
 	finale.connect("phase_changed", _phase_changed)
 	_register_actor(player)
-	# PlaygroundHUD already mounts the progression-feed presenter, build-menu
-	# entry point, and a compass that follows Game.map directly.
+	# PlaygroundHUD already mounts the progression-feed presenter and build-menu
+	# input entry point. Reuse them; a duplicate presenter would drain the queue.
+	var hud := world.get_node("PlaygroundHUD")
+	var minimap: Control = hud.get("_minimap")
+	if minimap != null:
+		minimap.call("configure", navigation, world.call("map_terrain_texture"), 90.0)
+		hud.set("_minimap_baked", true)
 	add_to_group("progression_restore")
 	_publish_finale_presentation_mode()
 	_mount_fall_recovery()

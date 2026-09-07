@@ -9,7 +9,6 @@
       "id": "opening_hear_grandpa",
       "flag_id": "opening:beat:choose",
       "scope": "player",
-      "destination": {"landmark_id": "grandpa_house"},
       "label": "Go down and hear Grandpa out.",
       "how": "He is waiting at the table downstairs. {interact} when you are next to him.",
       "_comment": "OP-0830-4. Real flag, already written by sequence_director.gd::_set_beat -- `opening:beat:choose` is set the moment his briefing's last line fires `beat:starter_choice`, so this rung is DONE exactly when he has been heard."
@@ -18,7 +17,6 @@
       "id": "opening_take_starter",
       "flag_id": "opening:beat:return_starter",
       "scope": "player",
-      "destination": {"landmark_id": "grandpa_house"},
       "label": "Choose your first creature and give it a name.",
       "how": "Grandpa opens all three orbs. Look at each one, take the one you want, then type a name.",
       "_comment": "OP-0830-4. `opening:beat:return_starter` is set by `_adopt()` the frame the named creature reaches the party. The `how` names no button on purpose: the picker and the naming grid are both modal and draw their own prompts, so a glyph here would be the third instruction on screen for one action."
@@ -27,7 +25,6 @@
       "id": "opening_show_grandpa",
       "flag_id": "opening:beat:walk_out",
       "scope": "player",
-      "destination": {"landmark_id": "grandpa_house"},
       "label": "Show Grandpa your creature before you head out.",
       "how": "He has not moved from the table. {interact} to talk -- he has orbs for you, and the door is his to open.",
       "_comment": "OP-0830-4, and the rung the whole ladder was missing. THIS is the beat the owner got stuck on: 'after the first conversation with grandpa you're trapped in his house with nothing telling you to talk to him again before you can go.' The door gate (grandpa_house.gd::_build_door_gate) stays solid until `opening:beat:walk_out`, and the only thing that sets it is the `beat:first_encounter` effect on the last line of `grandpa_first_catch` -- i.e. talking to him a second time. Nothing said so. It says so now, and sequence_director.gd::_refresh_door_gate additionally calls the player back when they push on the shut door, the same way spec sec1D already required for the FIRST required conversation."
@@ -36,7 +33,6 @@
       "id": "opening_first_catch",
       "flag_id": "opening:beat:road",
       "scope": "player",
-      "destination": {"region_id": "the_rise"},
       "label": "Catch your first wild creature.",
       "how": "Wear it down in the fight first, then pick an orb on the hotbar and press {combat_throw}.",
       "_comment": "Set by sequence_director.gd only on a successful catch (CombatManager.OUTCOME_CAUGHT), not on winning or fleeing the tutorial fight -- see its `_on_combat_exited`.",
@@ -46,7 +42,6 @@
       "id": "open_road_gate",
       "flag_id": "road_gate_open",
       "scope": "world",
-      "destination": {"landmark_id": "road_gate"},
       "label": "Open the village gate and follow the road in.",
       "how": "The old key lies in the grass a few steps off the road. {interact} to take it, then {interact} at the gate.",
       "_comment": "OP23-04. Was \"Find a way through the village gate.\" -- a riddle, and the owner's own words for why this lane exists: it \"makes no sense\" as the thing the game asks of you first. There is no puzzle here; `playground_world.gd::_spawn_gate_key()` drops `castle_gate_key` a few metres to the side of the gate on purpose (SA7: \"near-field and low-stakes, so the player understands early that gated things have keys\"). The label now says what to do and the `how` line says where the key is, which is what the beat was always FOR."
@@ -55,7 +50,6 @@
       "id": "village_tools",
       "flag_id": "tam_tools_given",
       "scope": "player",
-      "destination": {"landmark_id": "village"},
       "label": "Meet Tam in the village and take his tools.",
       "how": "Tam is the village smith, south-east of the well. {interact} to talk: axe for trees, pickaxe for stone, knife for fiber.",
       "_comment": "OP23-04, a NEW rung and the one the ladder was missing. Real flag, already wired: data/dialogue/village.json's `village_tam_tools` carries `flag:tam_tools_given` on the same line as its three `give:` effects. Everything below this rung presupposes those tools -- item_db.harvest_yield()'s rule is right-tool = full, no tool = half, WRONG tool = nothing, so a player without the knife gathers ZERO fiber and cannot afford an orb, a camp or a bed. Gate B's own harness discovered this the hard way and wrote it down: \"'natural route requires Tam's axe before it can harvest', which was not a harness bug -- it was a real beat of Gate B this file had skipped\" (tests/smoke_gate_b_continuous.gd). A ladder that skips the rung the player is actually standing on is the whole of what OP23-04 reports."
@@ -64,7 +58,6 @@
       "id": "tournament_build_team",
       "flag_id": "tournament_team_ready",
       "scope": "player",
-      "destination": {"region_id": "grandpas_village"},
       "label": "Build your full team of five for the village tournament.",
       "how": "Catch creatures that fit your team. Halda registers only a complete five-creature team; the Workbench is useful later for preparation, not a registration requirement.",
       "_comment": "FIRST-HOUR-FUN-REBUILD. tournament.json owns the five-creature threshold and clamps it to the hard five-creature ownership cap. The opening objective makes the destination clear without adding storage, a sixth slot, or a Workbench prerequisite."
@@ -73,7 +66,6 @@
       "id": "tournament_train_team",
       "flag_id": "tournament_training_ready",
       "scope": "player",
-      "destination": {"region_id": "grandpas_village"},
       "label": "Train with your team before the tournament.",
       "how": "Villagers who offer a fight are the training -- Bryn at the practice ring first. Wins are levels. Get your whole team to level 5.",
       "_comment": "CONTRACT flag -- RG19 owns the permanent level/condition threshold. Winning fights, gaining XP, or whatever RG19's condition model actually gates entry on should set this, not an invented second number.",
@@ -127,7 +119,6 @@
       "id": "tournament_enter",
       "flag_id": "tournament_entered",
       "scope": "player",
-      "destination": {"region_id": "grandpas_village"},
       "label": "Enter the village tournament.",
       "how": "Halda runs the bracket in the north field past the square. {interact} to sign up; her board names anything missing.",
       "_comment": "CONTRACT flag -- RG19's own tournament-entry system. This objective must not duplicate RG19's eligibility checklist; it only reflects RG19's own verdict."
@@ -136,7 +127,6 @@
       "id": "tournament_win",
       "flag_id": "tournament_won",
       "scope": "world",
-      "destination": {"region_id": "grandpas_village"},
       "label": "Win the village tournament.",
       "how": "Three rounds. Lose one and you can heal your team and ask Halda for the same round again.",
       "_comment": "CONTRACT flag -- RG19's own tournament victory state."
@@ -145,7 +135,6 @@
       "id": "head_to_south_bridge",
       "flag_id": "south_bridge_open",
       "scope": "world",
-      "destination": {"landmark_id": "south_bridge"},
       "label": "Reach South Bridge -- Team Tether holds the crossing.",
       "how": "A Team Tether grunt has the key now, not Oskar. Take the road south out of the village and beat him at the crossing.",
       "_comment": "Real flag, already wired: the South Bridge gatekeeper (`south_bridge_grunt`, data/config/bands/band1_lower_meadows/trainers.json) hands over `south_bridge_key` on defeat, which `gated_crossing.gd`/`south_bridge.gd` reads to set `south_bridge_open` the moment the gate opens. This is the opening ladder's actual handoff into the wider Meadows -- Gate C/D1 own everything past it.\n\nT5-STORY-2, 2026-08-30: this used to end 'and so does the guided `how` line: OP23-04's directive is the opening \"until tournament entry\", and a chapter-wide hint pass is not this lane's to invent.' The eleven rungs below then carried no `how` at all, which measured as sixteen of the chapter's thirty-two rungs offering a bare verb and no direction (tools/_probe_story_drive.gd). OP23-04 asked for the opening because the opening was what the owner had played; the reason the rule exists -- 'tell the player the NEXT thing to do' -- does not stop at the bridge, and the mechanism it built costs one string per rung. They are written now.\n\nT3-BRIDGE, 2026-08-29: this line was still naming Oskar as the gatekeeper. The 2026-08-22 owner directive (TOURNAMENT-1) moved that role to a Team Tether grunt so Oskar could be the tournament final, and Oskar's own `village_oskar_challenge` line already says so in character ('Tether took the key off my belt in the spring and put one of their own on the near landing') -- but this objective's `how` line never followed, so the guided quest log was telling the player to fight the wrong person for a week of shipped content. Fixed to match both the actual reward owner and owner-direction §4's ask that the player understand up front that Team Tether, not a villager, is the obstacle at the bridge."
@@ -154,7 +143,6 @@
       "id": "clear_the_burrow_warrens",
       "flag_id": "warrens_cleared",
       "scope": "world",
-      "destination": {"region_id": "the_burrow_warrens"},
       "label": "Clear the Burrow Warrens beneath the Old Quarry.",
       "how": "Past South Bridge the Old Quarry is Team Tether's dig -- the warren beneath it is not. Take a team with more than one kind of answer; what is down the deep branch knows a heavier trick than the diggers do.",
       "_why": "The quarry has no flag of its own -- it is a harvest site, not a gate -- so it is named in the label of the beat it leads to rather than given a boolean it does not need."
@@ -163,7 +151,6 @@
       "id": "defeat_the_relay_captain",
       "flag_id": "relay_captain_defeated",
       "scope": "world",
-      "destination": {"landmark_id": "tether_relay"},
       "label": "Defeat the Relay Captain.",
       "how": "Follow the conduits out of the quarry to the relay station on the river. Fight in past the pickets: the one standing at the console is the one who matters."
     },
@@ -171,7 +158,6 @@
       "id": "rescue_the_captive",
       "flag_id": "captive_rescued",
       "scope": "world",
-      "destination": {"landmark_id": "tether_relay"},
       "label": "Find who Team Tether is holding at the relay.",
       "how": "They are holding someone in the relay yard, and she would not say a word while the Captain was on his feet. {interact} with her now that he is not.",
       "_why": "Ordered after the captain because that is the real gating: data/config/relay_site.json puts the captive's rescue conversation behind `if_flag: relay_captain_defeated`. Out-of-order completion is safe regardless -- an entry whose flag is already set is simply done, and the tracked line moves to the first one that is not."
@@ -180,7 +166,6 @@
       "id": "disable_the_relay",
       "flag_id": "relay_disabled",
       "scope": "world",
-      "destination": {"landmark_id": "tether_relay"},
       "label": "Shut down the Tether Relay.",
       "how": "The console in the relay yard runs the station. {interact} to shut it down and this stretch of the Meadows stops feeding whatever is at the far end of it.",
       "_why": "scripts/world/tether_relay.gd's console flag. Ordered after the captain to match data/config/tether_relay.json's own authored intent for the console's `requires_flag` seam."
@@ -189,7 +174,6 @@
       "id": "restore_the_mill_crossing",
       "flag_id": "mill_crossing_restored",
       "scope": "world",
-      "destination": {"landmark_id": "old_mill_crossing"},
       "label": "Restore the Old Mill Crossing.",
       "how": "Sela's drive gear is the part they took out of the Old Mill Crossing. {interact} at the broken span to refit it -- a working bridge is the short way home and the way on into the Upper Meadows.",
       "_why": "scripts/world/mill_crossing.gd's MILL_FLAG. This used to say the gear was 'the gear the Relay Captain pays'; it is not, and the `how` line above had to be true, so it was checked. `mill_bridge_gear` is granted by data/dialogue/relay.json's `relay_captive_freed` -- Sela hands it over on the same line she explains what it is, with `flag:captive_rescued` beside it. Beating the captain is what makes her talk (relay_site.json gates her rescue branch on `relay_captain_defeated`), which is presumably how the two got conflated."
@@ -210,7 +194,6 @@
       "id": "fight_through_the_hall",
       "flag_id": "defeated_stronghold_elite",
       "scope": "world",
-      "destination": {"landmark_id": "stronghold"},
       "label": "Fight through the guard inside Meadows Hall.",
       "how": "Three ranks stand between the gate and the arena -- the patrol on the outer works, the guard in the courtyard, then the elite. They come one after another, so heal and restock before you go through the gate.",
       "count_flags": [
@@ -224,7 +207,6 @@
       "id": "defeat_the_warden",
       "flag_id": "defeated_warden",
       "scope": "world",
-      "destination": {"landmark_id": "stronghold"},
       "label": "Defeat the Meadows Warden.",
       "how": "Read the maintenance board on the arena threshold before you speak to him. He would rather you had."
     },
@@ -232,7 +214,6 @@
       "id": "shut_down_the_machine",
       "flag_id": "legendary_freed",
       "scope": "world",
-      "destination": {"landmark_id": "stronghold"},
       "label": "Shut down what Team Tether built under the Hall.",
       "how": "The chamber behind the arena is one room and one object, and the object is still running. Aldis told you what pulling it costs; he was not lying and it changes nothing.",
       "_why": "Deliberately does not name what the machine holds -- see _comment_no_spoilers. `legendary_freed` is the flag the climax already sets; only the wording here is new."
@@ -249,7 +230,6 @@
       "id": "see_what_changed",
       "flag_id": "meadows_acknowledged",
       "scope": "world",
-      "destination": {"region_id": "grandpas_village"},
       "label": "Go back through the Meadows and see what changed.",
       "how": "Walk back the way you came in. Everyone you passed on the road has something to say about it now.",
       "_why": "GATE-E, prompt 68's last finale line ('surface the post-Warden world-state acknowledgment / next-world hint without entering Biome 2') and prompt 69's 'post-win acknowledgment'. SG46 already wrote the words (data/dialogue/meadows_freed.json) and SG44/SG46 already change the world; what was missing was the one line that sends the player back out to meet them, so the ending is a walk home through a healed region rather than a fade after the last flag. Completed by ANY of those post-victory conversations -- each carries `flag:meadows_acknowledged` -- so the villagers, the foreman and the traveller at the storm road all satisfy it and none of them is a required stop. This is the chapter's last main entry on purpose: the tracked line goes empty after it, which quest_log.gd's own header documents as the finished state, and D23 forbids the next one from existing here."

@@ -613,10 +613,7 @@ const PREF_AUTO_RUN := "auto_run"
 ## rebuilding its whole canvas every time the tab opens (`game_menu.gd` forces
 ## a rebuild on open/select), the same "one thing across scene loads" job this
 ## autoload already does for `map` itself.
-## Local-first map view: the 1x whole-realm overview remains one zoom-out
-## away, while a fresh map opens close enough for the revealed ground and
-## nearby routes to occupy useful screen area.
-var map_last_zoom: float = 8.0
+var map_last_zoom: float = 1.0
 
 var _menu: CanvasLayer = null
 
@@ -740,7 +737,6 @@ func reset_for_new_game() -> void:
 	bind_realm_map()
 	objective_text = quest_log.call("tracked_text", progression)
 	objective_hint = quest_log.call("tracked_hint", progression)
-	_sync_tracked_objective_marker()
 	_last_progression_revision = int(progression.get("revision"))
 	_last_hint_device_was_gamepad = _last_input_was_gamepad
 	_objective_is_posed = false
@@ -974,7 +970,6 @@ func _process(delta: float) -> void:
 		_objective_is_posed = false
 		objective_text = quest_log.call("tracked_text", progression)
 		objective_hint = quest_log.call("tracked_hint", progression)
-		_sync_tracked_objective_marker()
 
 	_discovery_elapsed += delta
 	if _discovery_elapsed < _DISCOVERY_INTERVAL_S:
@@ -1091,36 +1086,6 @@ func set_objective(text: String, world_pos: Variant = null) -> void:
 		map.add_dynamic_marker("objective", "objective", world_pos as Vector3)
 	else:
 		map.remove_dynamic_marker("objective")
-
-
-## Resolve the authored target of the tracked quest against this realm's map
-## database. Objective data names stable landmark/region ids; MapState remains
-## the only owner of their coordinates. Portable objectives intentionally
-## return no target and remove the pin instead of inventing a false location.
-func _sync_tracked_objective_marker() -> void:
-	if map == null or quest_log == null or progression == null:
-		return
-	var destination: Dictionary = quest_log.call("tracked_destination", progression)
-	var point: Variant = _resolve_map_destination(map, destination)
-	if point == null:
-		map.call("remove_dynamic_marker", "objective")
-		return
-	var p := point as Vector2
-	map.call("add_dynamic_marker", "objective", "objective", Vector3(p.x, 0.0, p.y), objective_text)
-
-
-static func _resolve_map_destination(map_state: RefCounted, destination: Dictionary) -> Variant:
-	var landmark_id := str(destination.get("landmark_id", ""))
-	if not landmark_id.is_empty():
-		for entry: Dictionary in (map_state.call("landmarks") as Array):
-			if str(entry.get("id", "")) == landmark_id:
-				return entry.get("position", null)
-	var region_id := str(destination.get("region_id", ""))
-	if not region_id.is_empty():
-		for entry: Dictionary in (map_state.call("regions") as Array):
-			if str(entry.get("id", "")) == region_id:
-				return entry.get("centre", null)
-	return null
 
 
 # --- naming a flag store explicitly (MP_STATE_SEAM.md §3, last paragraph) ----

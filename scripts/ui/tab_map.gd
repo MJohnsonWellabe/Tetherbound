@@ -98,7 +98,6 @@ const PLAYER_FACING_HALF_WIDTH := 7.0
 const OBJECTIVE_RADIUS := 11.0
 const MIN_ZOOM := 1.0
 const MAX_ZOOM := 16.0
-const DEFAULT_ZOOM := 8.0
 ## Deliberate strategic scales: the 4:1 north/south Meadows corridor needs a
 ## substantial step before a 16:9 panel reads as a local rather than overview
 ## map. Every trigger press should make an unmistakable, useful change.
@@ -161,7 +160,6 @@ var _title_label: Label = null
 var _surveyed_label: Label = null
 var _legend_row: HBoxContainer = null
 var _controls_label: RichTextLabel = null
-var _destination_button: Button = null
 
 var _zoom: float = MIN_ZOOM
 var _pan_world: Vector2 = Vector2.ZERO
@@ -206,7 +204,6 @@ var _realm_link_points: Dictionary = {} # realm_id -> Vector2 or null, cached fr
 ## pre-emptive optimisation.
 var _fog_tex: ImageTexture = null
 var _fog_tex_revision: int = -1
-var _fog_tex_map_state: RefCounted = null
 
 ## Frames left to force a redraw regardless of `revision`/movement, counted
 ## down from `SETTLE_FRAMES` by every `poll()` right after `build()`. A freshly
@@ -224,55 +221,24 @@ var _fog_tex_map_state: RefCounted = null
 ## expire — no permanent per-frame redraw is added.
 var _settle_frames_left: int = 0
 const SETTLE_FRAMES := 6
-var _reopen_refresh_frames_left := 0
 
 
 func build() -> void:
-	# The shell deliberately asks every tab to build again on each open, but
-	# this tab's structure is static and poll() already refreshes map revision,
-	# realm availability, labels and controls. Reuse the live controls instead
-	# of destroying/recreating a large Canvas plus GPU textures while paused;
-	# repeated rebuilds produced visibly corrupted glyphs and a blank map on the
-	# second open under the handheld OpenGL renderer.
-	if _canvas != null and is_instance_valid(_canvas) and _canvas.is_inside_tree():
-		var remembered_zoom := float(state().get("map_last_zoom")) if state() != null else DEFAULT_ZOOM
-		_zoom = clampf(remembered_zoom, MIN_ZOOM, MAX_ZOOM)
-		_pan_world = Vector2.ZERO
-		_manual_pan = false
-		_view_realm = ""
-		_last_map_revision = -1
-		# Re-submit the current fog pixels after the newly-visible menu has rendered
-		# one frame. Doing it synchronously in this build call is too early: Root was
-		# only just shown, and Compatibility can restore its stale paused canvas
-		# state afterward. The deferred in-place update below repairs both the map
-		# sample and shared font atlas without replacing the texture RID.
-		_reopen_refresh_frames_left = 30
-		_has_last_player_pos = false
-		_settle_frames_left = SETTLE_FRAMES
-		_refresh_controls_label()
-		_refresh_realm_row()
-		poll()
-		return
 	for child in get_children():
-		# The menu rebuilds while the world tree is paused. Detach immediately:
-		# queue_free() alone can leave the old full-size canvas/panels drawing
-		# over this new generation for paused frames, clipping text and masking
-		# the freshly rendered map on repeated opens.
-		remove_child(child)
 		child.queue_free()
 	# OP23-03 (owner playtest 2026-08-23): "zoom level should persist" --
 	# `build()` runs every time the map tab (re)opens (`game_menu.gd` forces
 	# this on open/select), so hardcoding MIN_ZOOM here reset the player's
 	# zoom on every single visit. Clamped against the current ZOOM_LEVELS in
 	# case the saved value came from a build with a different level set.
-	var remembered_zoom := float(state().get("map_last_zoom")) if state() != null else DEFAULT_ZOOM
+	var remembered_zoom := float(state().get("map_last_zoom")) if state() != null else MIN_ZOOM
 	_zoom = clampf(remembered_zoom, MIN_ZOOM, MAX_ZOOM)
 	_pan_world = Vector2.ZERO
 	_manual_pan = false
-	# Texture caches survive a structural menu rebuild. Recreating and freeing
-	# the large terrain/fog RIDs on every paused close/open caused intermittent
-	# blank canvases and glyph-atlas corruption on the following frame. Their
-	# own realm/revision keys already provide the correct invalidation.
+	_terrain_cache.clear()
+	_fog_tex = null
+	_fog_tex_revision = -1
+	_icon_cache.clear()
 	_last_map_revision = -1
 	_has_last_player_pos = false
 	_settle_frames_left = SETTLE_FRAMES
@@ -292,12 +258,6 @@ func build() -> void:
 	_title_label.add_theme_font_size_override("font_size", UITokens.FONT_HEADING)
 	_title_label.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 	header.add_child(_title_label)
-
-	_destination_button = Button.new()
-	_destination_button.text = "Set objective as destination"
-	_destination_button.tooltip_text = "Pin the current objective to the HUD compass"
-	_destination_button.pressed.connect(_on_set_destination_pressed)
-	header.add_child(_destination_button)
 
 	var spacer := Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -388,7 +348,6 @@ func poll() -> void:
 	_read_navigation_input()
 	_read_realm_input()
 	_refresh_realm_row()
-	_refresh_destination_button()
 	_follow_player_if_not_panned()
 
 	var map_state: RefCounted = _map_state()
@@ -407,14 +366,8 @@ func poll() -> void:
 	var settling := _settle_frames_left > 0
 	if settling:
 		_settle_frames_left -= 1
-	var reopen_refresh := false
-	if _reopen_refresh_frames_left > 0:
-		_reopen_refresh_frames_left -= 1
-		if _reopen_refresh_frames_left == 0:
-			_fog_tex_revision = -1
-			reopen_refresh = true
 
-	if revision_changed or moved or settling or reopen_refresh:
+	if revision_changed or moved or settling:
 		_canvas.queue_redraw()
 	if revision_changed:
 		_last_map_revision = current_revision
@@ -520,8 +473,7 @@ func _read_realm_input() -> void:
 	var realms := _available_realms()
 	if realms.size() <= 1:
 		return
-	if Input.is_action_just_pressed("map_realm_next") \
-			or (Input.is_action_just_pressed("ui_accept") and _canvas != null and _canvas.has_focus()):
+	if Input.is_action_just_pressed("map_realm_next") or Input.is_action_just_pressed("ui_accept"):
 		_cycle_realm_view(realms, 1)
 	elif Input.is_action_just_pressed("map_realm_prev"):
 		_cycle_realm_view(realms, -1)
@@ -547,13 +499,12 @@ func _set_display_realm(realm_id: String) -> void:
 	# and the Meadows' 2km-tall corridor have nothing in common, so carrying
 	# over the other realm's zoom/pan would land on an arbitrary crop of
 	# whichever realm is now shown rather than its own honest whole-world fit.
-	_zoom = DEFAULT_ZOOM
+	_zoom = MIN_ZOOM
 	_pan_world = Vector2.ZERO
 	_manual_pan = false
 	_last_map_revision = -1
 	_fog_tex = null
 	_fog_tex_revision = -1
-	_fog_tex_map_state = null
 	_settle_frames_left = SETTLE_FRAMES
 	if _canvas != null:
 		_canvas.queue_redraw()
@@ -562,32 +513,6 @@ func _set_display_realm(realm_id: String) -> void:
 
 func _on_realm_button_pressed(realm_id: String) -> void:
 	_set_display_realm(realm_id)
-
-
-func _on_set_destination_pressed() -> void:
-	var map_state := _map_state()
-	if map_state == null:
-		return
-	var objective: Dictionary = map_state.call("objective_marker")
-	if objective.is_empty():
-		say("This objective has no fixed map destination.")
-		return
-	var pos: Vector2 = objective.get("position", Vector2.ZERO)
-	var label := str(objective.get("display_name", "Objective"))
-	map_state.call("add_dynamic_marker", "destination", "objective", Vector3(pos.x, 0.0, pos.y), label)
-	_refresh_destination_button()
-	say("Destination set: %s" % label)
-	if _canvas != null:
-		_canvas.queue_redraw()
-
-
-func _refresh_destination_button() -> void:
-	if _destination_button == null:
-		return
-	var map_state := _map_state()
-	var objective: Dictionary = map_state.call("objective_marker") if map_state != null else {}
-	_destination_button.disabled = objective.is_empty()
-	_destination_button.text = "No fixed destination" if objective.is_empty() else "Set objective as destination"
 
 
 ## Builds the chip row once per distinct AVAILABLE SET (not every poll — these
@@ -1328,7 +1253,7 @@ const FOG_DISCOVERED := Color(0.0, 0.0, 0.0, 0.0)
 ## of its own on every attempt.
 func _fog_texture(map_state: RefCounted) -> ImageTexture:
 	var revision: int = int(map_state.get("revision"))
-	if _fog_tex != null and map_state == _fog_tex_map_state and revision == _fog_tex_revision:
+	if _fog_tex != null and revision == _fog_tex_revision:
 		return _fog_tex
 
 	var grid_x: int = int(map_state.call("cell_grid_x"))
@@ -1347,18 +1272,8 @@ func _fog_texture(map_state: RefCounted) -> ImageTexture:
 		var row := iz * grid_x
 		for ix in grid_x:
 			image.set_pixel(ix, iz, FOG_DISCOVERED if visited[row + ix] == 1 else FOG_UNDISCOVERED)
-	# Preserve the existing GPU RID when the same realm's grid changes. Replacing
-	# the ImageTexture here frees a RID that the paused menu's previous draw list
-	# can still reference; on the Windows compatibility renderer that can corrupt
-	# both the next map sample and the shared font atlas after a close/reopen.
-	# Updating in place gives the renderer one stable resource identity.
-	if _fog_tex != null and map_state == _fog_tex_map_state \
-			and _fog_tex.get_width() == grid_x and _fog_tex.get_height() == grid_z:
-		_fog_tex.update(image)
-	else:
-		_fog_tex = ImageTexture.create_from_image(image)
+	_fog_tex = ImageTexture.create_from_image(image)
 	_fog_tex_revision = revision
-	_fog_tex_map_state = map_state
 	return _fog_tex
 
 

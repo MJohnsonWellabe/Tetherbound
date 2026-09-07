@@ -105,7 +105,12 @@ const CREATURE_PROGRESSION_HUD := preload("res://scripts/creatures/progression.g
 const AUDIO_MANAGER_HUD := preload("res://scripts/audio/audio_manager.gd")
 const GAME_MENU_HUD := preload("res://scripts/ui/game_menu.gd")
 const STAMINA_ARC_SCRIPT := "res://scripts/ui/stamina_arc.gd"
-const COMPASS_SCRIPT := "res://scripts/ui/compass_bar.gd"
+## Owned by a concurrent agent this pass (see CLAUDE.md task header) — never
+## edited here, only loaded and called defensively. If either file is missing
+## or fails to produce a usable node, the minimap simply does not mount; every
+## other block on this HUD is independent of it.
+const MINIMAP_SCRIPT := "res://scripts/ui/minimap.gd"
+const MAP_BAKER_SCRIPT := "res://scripts/world/map_baker.gd"
 
 const HOTBAR_SLOTS := 5
 ## Action name IS the glyph id (input_glyph.gd's GLYPHS dict uses the same
@@ -197,9 +202,11 @@ const REGION_BANNER_HEIGHT := 48.0
 ## at `DAYTIME_READOUT_HEIGHT`'s own font+leading, so a region announcement
 ## never overlaps it.
 ##
-## The heading compass now owns the top-centre lane. Day/time moves to the
-## otherwise-clear top-left edge, still above the transient region banner and
-## clear of the right-side objective card.
+## Deliberately outside the left column and the minimap/objective column on
+## the right -- item 21 is a separate, still-open complaint that those two
+## already crowd the screen, and this is a NEW element, so it goes in the one
+## authored-space lane nothing else occupies at rest: top-centre, above where
+## the transient region banner draws.
 const DAYTIME_READOUT_FONT_SIZE := UITokens.FONT_LABEL
 const DAYTIME_READOUT_TOP := UITokens.HUD_INSET
 const DAYTIME_READOUT_HEIGHT := 32.0
@@ -412,8 +419,12 @@ const VITALS_STACK_GAP := UITokens.GAP
 
 const STAMINA_ARC_POS := Vector2(960.0 + 48.0, 540.0 - 160.0 * 0.5) ## centred-right of screen centre
 
-## A narrow navigation instrument in the clear top-centre lane.
-const COMPASS_SIZE := Vector2(560.0, 82.0)
+## HUD-SCALE: 240 -> 184. The minimap is a permanently-present 2.78% of the
+## canvas and is read as a shape (a triangle on a field), not as text, so it
+## has no lettering floor to clear at all -- it was simply drawn at the same
+## inflated scale as everything else. 184 keeps the player arrow and the
+## marker dots at the same fraction of the map they had.
+const MINIMAP_SIZE := Vector2(184.0, 184.0)
 
 ## HUD-SCALE: 420 -> 348, following the objective text down from
 ## `HUD_READABLE_FONT_SIZE` (38) to `HUD_SENTENCE_FONT_SIZE` (32). The width
@@ -851,10 +862,10 @@ var _stamina_arc: Control = null
 var _stamina_icon: TextureRect = null
 var _last_stamina_fraction := -1.0
 
-## --- compass -----------------------------------------------------------------
+## --- minimap (owned by a concurrent pass; mounted defensively) ----------------
 
-var _compass: Control = null
-var _compass_map_state: RefCounted = null
+var _minimap: Control = null
+var _minimap_baked := false
 
 ## --- objective block ------------------------------------------------------------
 
@@ -966,7 +977,7 @@ func _ready() -> void:
 	_build_vitals_cluster()
 	_build_player_health_bar()
 	_mount_stamina_arc()
-	_mount_compass()
+	_mount_minimap()
 	_build_objective_block()
 	_build_objective_hint_card()
 	_build_region_banner()
@@ -2441,37 +2452,83 @@ func _update_stamina_arc(vitals: RefCounted, delta: float) -> void:
 		_stamina_icon.modulate.a = _stamina_arc.modulate.a
 
 
-# --- compass ----------------------------------------------------------------------
+# --- minimap (mounted defensively; owned by a concurrent pass) ---------------------
 
 
-func _mount_compass() -> void:
-	if not ResourceLoader.exists(COMPASS_SCRIPT):
-		push_warning("HUD: compass_bar.gd not found; compass disabled")
+func _mount_minimap() -> void:
+	if not ResourceLoader.exists(MINIMAP_SCRIPT):
+		push_warning("HUD: minimap.gd not found; minimap disabled for this pass")
 		return
-	var script: Script = load(COMPASS_SCRIPT)
+	var script: Script = load(MINIMAP_SCRIPT)
 	if script == null:
-		push_warning("HUD: compass_bar.gd failed to load; compass disabled")
+		push_warning("HUD: minimap.gd failed to load; minimap disabled")
 		return
 	var inst: Variant = script.new()
 	if not (inst is Control):
-		push_warning("HUD: compass_bar.gd did not produce a Control; compass disabled")
+		push_warning("HUD: minimap.gd did not produce a Control; minimap disabled")
 		return
-	_compass = inst
-	_compass.name = "CompassBar"
-	_compass.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_compass.position = Vector2((1920.0 - COMPASS_SIZE.x) * 0.5, UITokens.HUD_INSET)
-	_compass.custom_minimum_size = COMPASS_SIZE
-	_root.add_child(_compass)
-	_compass.size = COMPASS_SIZE
-## Camera look comes from the same resolved rig basis used by the full map's
-## player arrow, so both navigation surfaces agree about forward.
-func _update_compass() -> void:
-	if _compass == null or _player == null or _game == null:
+	_minimap = inst
+	_minimap.name = "Minimap"
+	_minimap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_minimap.position = Vector2(
+		1920.0 - UITokens.HUD_INSET - MINIMAP_SIZE.x, UITokens.HUD_INSET
+	)
+	# HUD-SCALE: `MINIMAP_SIZE` used to feed the POSITION only -- `minimap.gd`
+	# carries its own 240x240 `custom_minimum_size` and won, so cutting the
+	# constant moved the widget without resizing it (caught by
+	# `tools/_measure_hud_footprint.gd` still reporting 240x240 after the cut).
+	# Sized here rather than in `minimap.gd` so that widget keeps its own
+	# default for anything that mounts it outside this HUD.
+	_minimap.custom_minimum_size = MINIMAP_SIZE
+	_root.add_child(_minimap)
+	# AFTER `add_child`, and that ordering is load-bearing: assigning `size` on
+	# the line above left the widget at 240x240 with a 184x184 combined
+	# minimum, because `Control.set_size()` clamps against a minimum-size cache
+	# that `minimap.gd::_init()`'s own 240 had populated and the assignment two
+	# lines earlier had not yet invalidated. Measured, not guessed --
+	# `tools/_measure_hud_footprint.gd` kept reporting a 240x240 minimap after
+	# `MINIMAP_SIZE` was already 184 and the widget's POSITION had moved.
+	_minimap.size = MINIMAP_SIZE
+
+
+## Baked lazily and once: `map_baker.gd::bake_cached` is a real terrain bake
+## the first time it runs (cheap after, via its own disk cache), so this waits
+## for a world with `ground_height_at` to exist rather than baking in
+## `_ready()` before the world scene is necessarily up -- headless-safe, same
+## reasoning `tools/capture_minimap.gd` already relies on.
+func _ensure_minimap_baked() -> void:
+	if _minimap == null or _minimap_baked:
+		return
+	var world := get_tree().get_current_scene()
+	if world == null or not world.has_method("ground_height_at"):
+		return
+	if not ResourceLoader.exists(MAP_BAKER_SCRIPT):
+		return
+	var baker: Script = load(MAP_BAKER_SCRIPT)
+	if baker == null:
+		return
+	if _game == null:
 		return
 	var game_map: RefCounted = _game.get("map")
-	if game_map != _compass_map_state:
-		_compass_map_state = game_map
-		_compass.call("configure", game_map)
+	if game_map == null:
+		return
+	var terrain: Texture2D = baker.call("bake_cached", world)
+	_minimap.call("configure", game_map, terrain, 90.0)
+	_minimap_baked = true
+
+
+## `player.global_position` and LOOK yaw derived from `CameraRig.planar_basis()`
+## rather than read off a private field. `minimap.gd` derives its separate
+## travel heading from successive real positions after movement resolution.
+## Both use the project convention `forward(yaw) = (sin(yaw), 0, cos(yaw))`.
+## `creature_pos` is the LOCAL player's own follower creature's position when
+## `encounter_director.gd` has deployed one, else null. Found through
+## `_local_deployed_creature()` rather than by node name: lane 4.B gives every
+## peer in a session its own deployed body, and the minimap must plot this
+## player's creature rather than whichever one happens to be in the tree first.
+func _update_minimap() -> void:
+	if _minimap == null or not _minimap_baked or _player == null:
+		return
 	var world := get_tree().get_current_scene()
 	var yaw := 0.0
 	if world != null:
@@ -2480,20 +2537,25 @@ func _update_compass() -> void:
 			var basis: Basis = rig.call("planar_basis")
 			yaw = atan2(basis.z.x, basis.z.z)
 
-	_compass.call("update_view", _player.global_position, yaw)
+	var creature_pos: Variant = null
+	var follower := _local_deployed_creature()
+	if follower != null:
+		creature_pos = follower.global_position
+
+	_minimap.call("update_view", _player.global_position, yaw, creature_pos)
 
 	var dim := 1.0
 	if world != null:
 		var combat := world.get_node_or_null(^"CombatManager")
 		if combat != null and combat.has_method("is_fighting") and bool(combat.call("is_fighting")):
 			dim = 0.55
-	_compass.call("set_dim", dim)
+	_minimap.call("set_dim", dim)
 
 
 # --- objective block ---------------------------------------------------------------
 
 
-## Right-aligned at the top inset, clear of the centred compass.
+## Below the minimap, right-aligned to the same inset.
 ##
 ## HUD-POPUP task 3: this used to be naked text with only a legibility
 ## outline, on the spec's own call ("no giant quest window") -- but a blind
@@ -2508,7 +2570,7 @@ func _update_compass() -> void:
 ## `HUD_READABLE_FONT_SIZE` alongside the eyebrow it already sits below.
 func _build_objective_block() -> void:
 	var right := 1920.0 - UITokens.HUD_INSET
-	var top := UITokens.HUD_INSET
+	var top := UITokens.HUD_INSET + MINIMAP_SIZE.y + UITokens.GAP
 	var block := Control.new()
 	block.name = "ObjectiveBlock"
 	_objective_block = block
@@ -3262,13 +3324,14 @@ func _build_daytime_readout() -> void:
 	_daytime_label = Label.new()
 	_daytime_label.name = "DaytimeReadout"
 	_daytime_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_daytime_label.anchor_left = 0.0
-	_daytime_label.anchor_right = 0.0
-	_daytime_label.offset_left = UITokens.HUD_INSET
-	_daytime_label.offset_right = UITokens.HUD_INSET + 320.0
+	_daytime_label.anchor_left = 0.5
+	_daytime_label.anchor_right = 0.5
+	_daytime_label.offset_left = -200.0
+	_daytime_label.offset_right = 200.0
 	_daytime_label.offset_top = DAYTIME_READOUT_TOP
 	_daytime_label.offset_bottom = DAYTIME_READOUT_TOP + DAYTIME_READOUT_HEIGHT
-	_daytime_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	_daytime_label.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	_daytime_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_daytime_label.add_theme_font_size_override("font_size", DAYTIME_READOUT_FONT_SIZE)
 	_daytime_label.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
 	_daytime_label.text = daytime_readout_text(1, 0.0)
@@ -3348,7 +3411,7 @@ func _apply_presentation_priority() -> void:
 	for entry: Array in [[_region_banner,mode.location],[_daytime_label,mode.location],
 		[_objective_block,mode.task],[_hotbar_panel,mode.hotbar],[_exploration_legend,mode.exploration],
 		[_party_strip,mode.party],[_creature_block,mode.exploration],[_health_bar_cluster,mode.human_vitals],
-		[_vitals_cluster,mode.human_vitals],[_compass,mode.compass],[_prompt_label,mode.prompt]]:
+		[_vitals_cluster,mode.human_vitals],[_minimap,mode.minimap],[_prompt_label,mode.prompt]]:
 		_presentation_allow(entry[0],entry[1])
 	# During combat, enemy plate and telegraphs own the top. In the post-combat
 	# mechanic, one instruction replaces the task card/legend/hotbar cluster.
@@ -3407,7 +3470,8 @@ func _run_frame(delta: float) -> void:
 	_update_moment_banner()
 	_update_daytime_readout()
 	_update_exploration_legend()
-	_update_compass()
+	_ensure_minimap_baked()
+	_update_minimap()
 	_update_aim_fade(delta)
 
 	if _player == null:
