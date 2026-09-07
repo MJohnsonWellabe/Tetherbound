@@ -205,12 +205,21 @@ func _run() -> void:
 	for peer in 2:
 		var flag := await step(peer, "wait_flag", {"flag": DEFEAT_FLAG, "scope": "world", "budget_frames": 900})
 		check(str(flag.get("verdict", "")) == "PASS", "peer %d received the shared hosted-trainer defeat flag" % peer)
+	# `world_snapshot()` synchronizes the live day clock on every read, so two
+	# whole snapshots taken 180 frames apart are expected to differ even when
+	# the retry changes nothing. The hosted payout's durable world facts and
+	# per-participant reward receipts both live in the authoritative flag store;
+	# compare that exact container around the refused retry.
 	var world_before_retry: Variant = await probe(0, "world_snapshot")
+	var flags_before_retry: Dictionary = (world_before_retry as Dictionary).get("flags", {}) \
+		if world_before_retry is Dictionary else {}
 	var retry := await step(1, "stormwood_hosted_start", {"trainer": TRAINER, "settle": 180})
 	check(str(retry.get("verdict", "")) == "FAIL", "completed authored trainer cannot be reopened for a second payout")
 	var world_after_retry: Variant = await probe(0, "world_snapshot")
-	check(JSON.stringify(world_before_retry, "", true, true) == JSON.stringify(world_after_retry, "", true, true),
-		"retrying the completed trainer made no second world payout or flag mutation")
+	var flags_after_retry: Dictionary = (world_after_retry as Dictionary).get("flags", {}) \
+		if world_after_retry is Dictionary else {}
+	check(JSON.stringify(flags_before_retry, "", true, true) == JSON.stringify(flags_after_retry, "", true, true),
+		"retrying the completed trainer made no second reward receipt or world-flag mutation")
 	check(await assert_all_hashes_equal(900), "world state hash agrees after hosted trainer completion")
 
 	quit(await finish())
