@@ -81,7 +81,19 @@ func _run() -> void:
 	check(bool(storm.get("ready", false)), "host reports the Stormwood simulation shell ready")
 	check(int(storm.get("bodies", 0)) >= 1, "host shell owns the remote client's body")
 
-	var deployed := await step(1, "deploy_creature", {})
+	# A fresh net-harness process has not played the opening, so it owns no
+	# party member. `deploy_creature` can build the sandbox fallback body, but
+	# `begin_hosted_round` correctly requires the Game.party record that every
+	# real Stormwood player acquired at the starter choice. Seed that state via
+	# the opening's production PartySeam before asking the production recall
+	# path to deploy it.
+	var party_seeded := await step(1, "party_grant", {"species": "terrapup"})
+	check(str(party_seeded.get("verdict", "")) == "PASS",
+		"client owns a real party member before the hosted challenge")
+	if str(party_seeded.get("verdict", "")) != "PASS":
+		quit(await finish())
+		return
+	var deployed := await step(1, "deploy_creature", {"species": "terrapup"})
 	check(str(deployed.get("verdict", "")) == "PASS", "client deployed its own creature before challenging")
 	if str(deployed.get("verdict", "")) != "PASS":
 		quit(await finish())

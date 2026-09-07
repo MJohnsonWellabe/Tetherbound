@@ -78,20 +78,26 @@ func _run() -> void:
 	check(host_log.find("STORMWOOD READY realm=stormwood shell=true terrain_regions=108") >= 0,
 		"Stormwood shell built the production Terrain3D 108-region footprint")
 
-	# Take both baselines around the action under test. The earlier version took
-	# the host baseline before the client crossed and before the Stormwood shell
-	# spent several seconds building; the host's own normal spawn reveal could
-	# therefore change during setup and be blamed on the client's later walk.
-	var host_fog_before: Variant = await probe(0, "map_fog")
-	var client_fog_before: Variant = await probe(1, "map_fog")
-	var explored: Dictionary = await step(1, "explore_at", {"at": [-350, 450], "settle": 180})
+	# Ask both personal maps about the exact remote point. Comparing whole-map
+	# counts was not an isolation test: the host legitimately keeps revealing
+	# cells under its own settling body while the client action spans 180 frames.
+	# If the client's Stormwood reveal leaks, this point appears in the host's
+	# Meadows map; unrelated host exploration cannot create that false result.
+	var reveal_at := [-350, 450]
+	var host_fog_before: Variant = await probe(0, "map_fog", {"at": reveal_at})
+	var client_fog_before: Variant = await probe(1, "map_fog", {"at": reveal_at})
+	var explored: Dictionary = await step(1, "explore_at", {"at": reveal_at, "settle": 180})
 	check(str(explored.get("verdict", "")) == "PASS", "client discovers its Stormwood map locally")
-	var client_fog_after: Variant = await probe(1, "map_fog")
-	var host_fog_after: Variant = await probe(0, "map_fog")
+	var client_fog_after: Variant = await probe(1, "map_fog", {"at": reveal_at})
+	var host_fog_after: Variant = await probe(0, "map_fog", {"at": reveal_at})
 	check(client_fog_before is Dictionary and client_fog_after is Dictionary
 		and int((client_fog_after as Dictionary).get("cells", 0)) > int((client_fog_before as Dictionary).get("cells", 0)),
 		"client discovers fresh Stormwood fog cells in its local map payload")
-	check(host_fog_before == host_fog_after,
+	check(client_fog_after is Dictionary and bool((client_fog_after as Dictionary).get("at_discovered", false)),
+		"client discovers the requested Stormwood position")
+	check(host_fog_before is Dictionary and host_fog_after is Dictionary
+		and not bool((host_fog_before as Dictionary).get("at_discovered", true))
+		and not bool((host_fog_after as Dictionary).get("at_discovered", true)),
 		"client Stormwood discovery does not change host Meadows fog")
 
 	var home: Dictionary = await step(1, "enter_realm", {"realm": MEADOWS}, REALM_STEP_BUDGET)

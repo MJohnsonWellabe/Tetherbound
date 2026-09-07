@@ -4167,6 +4167,7 @@ func _probe_water_swimming() -> Dictionary:
 
 func _execute_probe(msg: Dictionary) -> Variant:
 	var what := str(msg.get("what", ""))
+	var args: Dictionary = msg.get("args", {}) as Dictionary
 	match what:
 		"water_mounted":
 			return _probe_water_mounted()
@@ -4249,13 +4250,22 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			for byte in (fog_state.call("visited_bytes") as PackedByteArray):
 				if byte != 0:
 					revealed += 1
-			return {
+			var report := {
 				"cells": revealed,
 				"grid": [int(fog_state.call("cell_grid_x")), int(fog_state.call("cell_grid_z"))],
 				"landmarks": int(fog_state.call("discovered_landmark_count")),
 				"alpha_pins": int(fog_state.call("alpha_pin_count")),
 				"revision": int(fog_state.get("revision")),
 			}
+			# A caller checking personal ownership needs to distinguish the other
+			# trainer's exact reveal from this trainer continuing to uncover cells
+			# under their own feet while the probe settles. Report a requested cell
+			# through MapState's shipping lookup; do not mutate the map here.
+			var at: Array = args.get("at", []) as Array
+			if at.size() >= 2:
+				report["at_discovered"] = bool(fog_state.call(
+					"is_discovered", Vector3(float(at[0]), 0.0, float(at[1]))))
+			return report
 		"realm_heart":
 			# Lane 5.B. The two halves of a Realm Heart, kept apart on purpose.
 			#
