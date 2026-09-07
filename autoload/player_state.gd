@@ -63,6 +63,14 @@ var character_id: String = ""
 ## The nameplate a remote peer draws over this trainer (Wave 2).
 var display_name: String = ""
 
+## Which `data/config/art.json` body the player picked on the title screen's
+## character-select step (title_screen.gd). "trainer" is the original single
+## protagonist and stays the default so a save/build predating character
+## choice, or a peer that skipped the picker, still resolves to a real body.
+## Deliberately NOT cleared by reset() below -- it is chosen before
+## `Game.reset_for_new_game()` runs, not part of the run's own state.
+var chosen_character: String = "trainer"
+
 var party: RefCounted = null
 var inventory: RefCounted = null
 var equipment: RefCounted = null

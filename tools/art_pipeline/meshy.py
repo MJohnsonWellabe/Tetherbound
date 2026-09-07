@@ -1483,12 +1483,14 @@ SPECIES_PROMPTS = {
     # this board, one legendary (fulgocobra) and one alpha catch (voltarach).
     # ---------------------------------------------------------------------
     "voltwig": (
-        "small storm-charged reptile creature, VOLTWIG the branch gecko. "
-        "TWO LARGE OVERLAPPING LEAF-SHAPED APPENDAGES growing from the "
-        "tail like living foliage, MOTTLED BARK-BROWN AND MOSS-GREEN SKIN "
-        "for camouflage on branches. Large round amber eyes, small "
-        "clinging clawed toes, slender curling tail, alert perched "
-        "posture, a small woodland creature charged with quiet static"),
+        "small gecko-like reptile creature, VOLTWIG the branch gecko, "
+        "FOUR LEGS ONLY, NO BACK BRANCHES AND NO EXTRA APPENDAGES. "
+        "LEAF-SHAPED GREEN-AND-OLIVE SCALES running along the head and "
+        "spine as part of the skin, gold-yellow crackling electric "
+        "patterns woven into the scale texture itself, not separate "
+        "objects. Wide padded clawed toes for climbing, long tapered "
+        "tail, large round amber eyes, clean simple silhouette, no "
+        "floating or disconnected parts, consistent from every angle"),
     "thundertunnel": (
         "small burrowing mammal creature, THUNDERTUNNEL the storm mole. "
         "BRIGHT BLUE CRACKLING LIGHTNING MARKINGS running along the spine "
@@ -1497,54 +1499,78 @@ SPECIES_PROMPTS = {
         "low stocky tunnel-digging build, whiskered snout, storms travel "
         "below with this one"),
     "glimmermoth": (
-        "small luminous insect creature, GLIMMERMOTH the luminous moth. "
-        "LARGE LAYERED TRANSLUCENT WINGS patterned in deep purple-blue "
-        "with glowing veins, FEATHERED ANTENNAE. Soft pale furred body, "
-        "tiny glowing eyes, delicate thin legs, gentle hovering "
-        "silhouette, light guides the way, a small guiding light of the "
-        "storm woods"),
+        "small luminous moth creature, GLIMMERMOTH, EXACTLY FOUR LEGS, "
+        "TWO WINGS AND TWO ANTENNAE, no extra limbs or hidden parts. "
+        "LARGE LAYERED WINGS patterned in deep purple-blue with glowing "
+        "bioluminescent veins woven into the wing texture itself, "
+        "feathered antennae. Soft pale furred body, large round glowing "
+        "eyes kept a consistent size, wings modelled as part of the body "
+        "rather than separate objects, no floating parts, gentle hovering "
+        "silhouette"),
     "stormbrush": (
-        "medium ground mammal creature, STORMBRUSH the thunder badger. "
-        "CRACKLING BLUE LIGHTNING PATTERNS branching across a "
-        "black-and-white striped back, LARGE DIGGING CLAWS. Sturdy low "
-        "badger build, bold black-and-white facial mask, small alert "
-        "eyes, thick striped fur, tougher skies raise stronger roots"),
+        "medium ground badger creature, STORMBRUSH the thunder badger, "
+        "FOUR LEGS ONLY, no extra limbs. CRACKLING BLUE LIGHTNING "
+        "PATTERNS woven into a black-and-white striped back as part of "
+        "the fur texture, QUILLS INTEGRATED DIRECTLY INTO THE BACK, not "
+        "separate parts. Sturdy low grounded build, bold black-and-white "
+        "facial mask, prominent curved digging claws, thick layered fur "
+        "with a clear silhouette, no armor, no accessories, no floating "
+        "parts, consistent from every angle"),
     "mosshock": (
-        "small amphibian creature, MOSSHOCK the moss newt. LIVING MOSS AND "
-        "SMALL FUNGAL GROWTHS across its back, GLOWING BLUE-GREEN ELECTRIC "
-        "SPOTS along the spine. Bumpy warm-brown and olive skin, wide "
-        "golden eyes, short sturdy legs, calm patient posture, storms feed "
-        "new life"),
+        "small amphibian newt creature, MOSSHOCK the moss newt, FOUR LEGS "
+        "ONLY, no back branches and no extra appendages. LIVING MOSS-LIKE "
+        "FRILLS growing directly out of the body as part of its form (not "
+        "separate objects), GLOWING BLUE-GREEN ELECTRIC SPOTS as part of "
+        "the skin texture along the spine. Bumpy warm-brown and olive "
+        "skin, wide golden eyes, short sturdy legs, red-yellow-black "
+        "colour scheme distinct from the green-toned Voltwig, no floating "
+        "parts, clean simple silhouette consistent from every angle"),
     "staticub": (
-        "young bear cub creature, STATICUB the storm cub. CRACKLING "
-        "BLUE-WHITE STATIC SPARKS across the shoulders and paws, ROUND "
-        "FLUFFY EARS. Warm brown shaggy fur, cream muzzle and chest, big "
-        "curious dark eyes, sturdy stocky cub build, wild hearts thrive "
-        "here, playful and energetic"),
+        "young bear cub creature, STATICUB the storm cub, FOUR LEGS ONLY, "
+        "natural bear anatomy, no extra limbs. CRACKLING BLUE-WHITE "
+        "STATIC SPARKS woven into the fur texture across the shoulders "
+        "and paws (not separate objects), ROUND FLUFFY EARS. Thick "
+        "layered warm brown shaggy fur with a clear silhouette, cream "
+        "muzzle and chest, big curious dark eyes, rounded youthful cub "
+        "proportions, no armor, no accessories, consistent from every "
+        "angle"),
     "tanglevolt": (
-        "lean wolf creature, TANGLEVOLT the storm wolf. JAGGED "
-        "LIGHTNING-BOLT MARKINGS running down the back and legs, GLOWING "
-        "PALE BLUE EYES. Dark grey-black shaggy fur with lighter "
-        "undercoat, alert pointed ears, lean muscular build, long legs "
-        "built for the hunt, all things are connected"),
+        "lean wolf creature, TANGLEVOLT the storm wolf, FOUR LEGS ONLY, "
+        "natural wolf anatomy, no extra limbs. JAGGED LIGHTNING-BOLT "
+        "MARKINGS woven into the fur as part of its texture (electric "
+        "glow subtle, not overpowering), GLOWING PALE BLUE EYES. Thick "
+        "layered dark grey-black fur especially around the neck and "
+        "chest, alert pointed ears, lean muscular build, full expressive "
+        "tail, no armor, no accessories, consistent silhouette from every "
+        "angle"),
     "voltarach": (
         "large arachnid creature, VOLTARACH the thunder spider, alpha "
-        "catch. FOUR GLOWING BLUE MULTI-FACETED EYES across the front of "
-        "the head, CRACKLING GOLD LIGHTNING VEINS running down each long "
-        "armored leg. Dark bronze-black chitin plating, long spindly "
-        "powerful legs, weaves the storm into life, imposing and electric"),
+        "catch, EXACTLY EIGHT LEGS, no extra limbs. FOUR GLOWING BLUE "
+        "MULTI-FACETED EYES across the front of the head, CRACKLING GOLD "
+        "LIGHTNING VEINS woven directly into the dark bronze-black "
+        "carapace and every leg as part of the design, not separate "
+        "objects. Legs thick at the base tapering to sharp points, "
+        "angular spiked silhouette, no floating parts, clean game-ready "
+        "topology consistent from every angle"),
     "fulgocobra": (
-        "ancient legendary serpent creature, FULGOCOBRA the ancient "
-        "serpent, no legs. WIDE FLARING COBRA HOOD covered in glowing "
-        "gold crackling lightning veins over dark olive-black scales, "
-        "LARGE GOLDEN EYES. Long coiling sinuous body, fanged open mouth, "
-        "roots remember and storms renew, majestic and ancient"),
+        "ancient legendary cobra serpent creature, FULGOCOBRA the ancient "
+        "serpent, LONG COILED BODY WITH NO LEGS OR EXTRA LIMBS. WIDE "
+        "FLARING COBRA HOOD with a distinctive gold lightning pattern "
+        "woven into the dark scales as part of the texture (not "
+        "separate), LARGE GOLDEN EYES, long curved fangs. Head, hood and "
+        "tail clearly defined and distinct from each other, no floating "
+        "parts or accessories, no visible seams, menacing but majestic, "
+        "consistent from every angle"),
     "stormraven": (
-        "large corvid creature, STORMRAVEN the skyward watcher. GLOWING "
-        "ELECTRIC-BLUE LIGHTNING STREAKS through jet-black feathers, "
-        "BROAD POWERFUL WINGS. Sharp glowing blue eyes, heavy dark beak, "
-        "sturdy taloned feet, alert perched or soaring posture, storms see "
-        "further"),
+        "large corvid creature, STORMRAVEN the skyward watcher, EXACTLY "
+        "TWO LEGS, no extra limbs. Distinct layered feathers especially "
+        "on the wings and tail, GLOWING ELECTRIC-BLUE LIGHTNING PATTERNS "
+        "woven into the feathers themselves (not separate objects), "
+        "jet-black plumage. Wings modelled as part of the body (can be "
+        "posed folded at the sides), sharp glowing blue eyes, heavy dark "
+        "beak, sturdy taloned feet, full layered tail, sharp sleek "
+        "silhouette, no armor, no accessories, consistent from every "
+        "angle"),
 
     # ---------------------------------------------------------------------
     # Cloudreach Cliffs (Biome 2), owner-supplied 2026-09-06

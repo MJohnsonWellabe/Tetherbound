@@ -180,6 +180,7 @@ class MeadowsBackdrop extends Control:
 var _main_box: VBoxContainer
 var _load_box: VBoxContainer
 var _confirm_box: VBoxContainer
+var _character_box: VBoxContainer
 var _join_box: VBoxContainer
 var _lan_list: VBoxContainer
 var _status: Label
@@ -423,6 +424,11 @@ func _build() -> void:
 	_confirm_box.add_theme_constant_override("separation", 12)
 	root_box.add_child(_confirm_box)
 
+	_character_box = VBoxContainer.new()
+	_character_box.visible = false
+	_character_box.add_theme_constant_override("separation", 12)
+	root_box.add_child(_character_box)
+
 	_join_box = VBoxContainer.new()
 	_join_box.visible = false
 	_join_box.add_theme_constant_override("separation", 10)
@@ -474,7 +480,7 @@ func _on_new_pressed() -> void:
 				has_existing = true
 				break
 	if not has_existing:
-		_start_new_game()
+		_show_character_select()
 		return
 	_show_new_confirmation()
 
@@ -493,9 +499,79 @@ func _show_new_confirmation() -> void:
 	var back := _button("Back")
 	_confirm_box.add_child(go)
 	_confirm_box.add_child(back)
-	go.pressed.connect(_start_new_game)
+	go.pressed.connect(_show_character_select)
 	back.pressed.connect(_show_main)
 	go.grab_focus()
+
+
+## Three alternate main-character choices (docs/art/reference/23-25),
+## picked before a fresh run starts. Each portrait is the same 256x256 crop
+## `assets/ui/portraits/creatures/` already uses for the creature roster,
+## just for humans instead. Lyra has a portrait here but no rigged body yet
+## (see the `chosen_character` comment in autoload/player_state.gd) --
+## picking her still works, trainer_model.gd falls back to the original
+## trainer body.
+const CHARACTERS := [
+	{"id": "lyra", "label": "Lyra", "portrait": "res://assets/ui/portraits/lyra.png"},
+	{"id": "kael", "label": "Kael", "portrait": "res://assets/ui/portraits/kael.png"},
+	{"id": "sera", "label": "Sera", "portrait": "res://assets/ui/portraits/sera.png"},
+]
+
+
+func _show_character_select() -> void:
+	_main_box.visible = false
+	_confirm_box.visible = false
+	_clear(_character_box)
+	_character_box.visible = true
+
+	var heading := Label.new()
+	heading.text = "Choose your character"
+	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	heading.add_theme_font_size_override("font_size", 22)
+	_character_box.add_child(heading)
+
+	var row := HBoxContainer.new()
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.add_theme_constant_override("separation", 20)
+	_character_box.add_child(row)
+
+	var first_button: Button = null
+	for entry: Dictionary in CHARACTERS:
+		var card := VBoxContainer.new()
+		card.add_theme_constant_override("separation", 8)
+		row.add_child(card)
+
+		var portrait := TextureRect.new()
+		portrait.custom_minimum_size = Vector2(140, 140)
+		portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var image: Texture2D = load(str(entry["portrait"]))
+		if image != null:
+			portrait.texture = image
+		card.add_child(portrait)
+
+		var pick := _button(str(entry["label"]))
+		pick.custom_minimum_size = Vector2(140, 48)
+		var character_id: String = str(entry["id"])
+		pick.pressed.connect(func() -> void: _pick_character(character_id))
+		card.add_child(pick)
+		if first_button == null:
+			first_button = pick
+
+	var back := _button("Back")
+	_character_box.add_child(back)
+	back.pressed.connect(_show_main)
+
+	if first_button != null:
+		first_button.grab_focus()
+
+
+func _pick_character(character_id: String) -> void:
+	var player_state := get_node_or_null(^"/root/PlayerState")
+	if player_state != null:
+		player_state.set("chosen_character", character_id)
+	_start_new_game()
 
 
 func _start_new_game() -> void:
@@ -858,6 +934,7 @@ func _go_to_world(message: String) -> void:
 
 func _show_main() -> void:
 	_confirm_box.visible = false
+	_character_box.visible = false
 	_load_box.visible = false
 	_stop_lan_listener()
 	_join_box.visible = false
@@ -886,6 +963,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if _address_prompt != null:
 		return
 	if event.is_action_pressed("menu_cancel") \
-			and (_load_box.visible or _confirm_box.visible or _join_box.visible):
+			and (_load_box.visible or _confirm_box.visible or _character_box.visible
+				or _join_box.visible):
 		_show_main()
 		get_viewport().set_input_as_handled()

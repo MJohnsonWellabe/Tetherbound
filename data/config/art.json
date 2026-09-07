@@ -30,6 +30,52 @@
     "animation_libraries": [],
     "_comment_model": "Sheet 04's trainer, produced through tools/art_pipeline. The body and the head were generated separately and grafted: nine whole-figure candidates across three rounds all came back with a blank ovoid for a face, because at a 30k budget spread over a standing figure an eye socket is smaller than the triangles available to describe it."
   },
+  "kael": {
+    "_comment": "Main-character choice, board docs/art/reference/24_Kael_Character_Board.png. Rigged via Meshy's humanoid auto-rig, clips authored by the same animate_humanoid.py pass as the trainer -- identical clip names and identical frame counts/timing, so tool_swing and gait_reference_speeds are carried over unchanged rather than re-measured.",
+    "model": "res://assets/characters/kael/kael_lod0.glb",
+    "height": 1.9,
+    "model_yaw": 0.0,
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw",
+      "chop": "chop"
+    },
+    "tool_swing": {
+      "seconds": 0.625,
+      "impact_fraction": 0.6
+    },
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
+    "animation_libraries": []
+  },
+  "sera": {
+    "_comment": "Main-character choice, board docs/art/reference/25_Sera_Character_Board.png. Same rig/clip pipeline as kael above.",
+    "model": "res://assets/characters/sera/sera_lod0.glb",
+    "height": 1.75,
+    "model_yaw": 0.0,
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw",
+      "chop": "chop"
+    },
+    "tool_swing": {
+      "seconds": 0.625,
+      "impact_fraction": 0.6
+    },
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
+    "animation_libraries": []
+  },
   "sky": {
     "_comment": "Mid-morning, high summer, clear. Taken from the key art board rather than invented: a warm low-contrast sky over saturated grass is most of what makes the reference read as inviting rather than as a tech demo.",
     "top_colour": "#3b6f93",

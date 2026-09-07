@@ -60,10 +60,21 @@ var _fly_pose: Dictionary = {}
 func _ready() -> void:
 	_player = get_node_or_null(player_path) as CharacterBody3D
 	_gait_feel = _load_gait_feel()
-	if not build("trainer"):
-		# The scene's capsule stays visible, so a missing trainer is a trainer
-		# that looks wrong rather than a trainer who is not there.
-		push_error("no trainer model; falling back to the placeholder capsule")
+	var chosen := "trainer"
+	var player_state := get_node_or_null(^"/root/PlayerState")
+	if player_state != null:
+		chosen = str(player_state.get("chosen_character"))
+	# Lyra has a portrait for the title screen's character-select step but no
+	# rigged body yet (Meshy's pose estimator rejects her arms-at-sides pose --
+	# see docs/art/BIOME_2_3_4_CREATURE_ROSTER.md), so a choice of "lyra" falls
+	# back to the original trainer body rather than building nothing.
+	if chosen.is_empty() or not build(chosen):
+		if chosen != "trainer":
+			push_warning("no '%s' body (falling back to trainer)" % chosen)
+		if not build("trainer"):
+			# The scene's capsule stays visible, so a missing trainer is a
+			# trainer that looks wrong rather than a trainer who is not there.
+			push_error("no trainer model; falling back to the placeholder capsule")
 
 
 static func _load_gait_feel() -> Dictionary:
