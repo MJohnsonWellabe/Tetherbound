@@ -29,6 +29,29 @@ func fixture() -> RefCounted:
 	game.world.flags.set_flag("water_guardian_freed")
 	return game
 
+func test_release_requires_captain_and_journals_both_flags_or_neither() -> void:
+	var game := GameFixture.new()
+	game.world.world_id = "guardian-release-world"
+	var ledger := LEDGER.new(game.world)
+	assert_false(REWARD.release(game, ledger).ok)
+	game.world.flags.set_flag("water_captain_nerissa_defeated")
+	var before: Dictionary = game.world.save_data()
+	var sequence: int = ledger.seq
+	game.save_system.fail_write = true
+	assert_false(REWARD.release(game, ledger).ok)
+	assert_eq(game.world.save_data(), before)
+	assert_eq(ledger.seq, sequence)
+	game.save_system.fail_write = false
+	var result: Dictionary = REWARD.release(game, ledger)
+	assert_true(result.ok)
+	assert_true(game.world.flags.has("water_tether_disabled"))
+	assert_true(game.world.flags.has("water_guardian_freed"))
+	assert_eq(result.delta.ops.size(), 2)
+	var restored := WORLD.new()
+	restored.load_data(game.save_system.store.read(game.world.world_id))
+	assert_true(restored.flags.has("water_tether_disabled"))
+	assert_true(restored.flags.has("water_guardian_freed"))
+
 func test_exact_guardian_and_only_one_recipient_survive_real_world_file() -> void:
 	var game := fixture()
 	var ledger := LEDGER.new(game.world)
