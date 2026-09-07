@@ -2137,35 +2137,34 @@ func debug_teleport_destinations() -> Array[Dictionary]:
 			_debug_teleport_add(out, str(landmark.get("display_name", "")), landmark.get("position", Vector2.ZERO))
 	for spoke: Dictionary in _debug_teleport_spokes():
 		_debug_teleport_add(out, str(spoke.get("display_name", "")), spoke.get("position", Vector2.ZERO))
-	_debug_teleport_add_other_realm(out)
+	_debug_teleport_add_other_realms(out)
 	return out
 
 
-## OP-0905-21: the list above only ever named places in the realm the player
-## already stands in, so a player who had not yet found the physical gate had
-## no menu path to Cloudreach at all. Debug teleport is a settings-only
-## escape hatch (`set_debug_teleport`), so this deliberately does NOT require
-## `realm_key_cloudreach` the way a real gate crossing would — the point is to
-## reach the second realm before earning it. Rows are labelled with the
-## destination realm's own display name ("Cloudreach Cliffs — Galefoot
-## Landing") so a crossing reads as a crossing, not as "a place already here".
-func _debug_teleport_add_other_realm(out: Array[Dictionary]) -> void:
-	if realm_hearts == null:
+## OP-0905-21 began with Cloudreach. FOUR-BIOME-BUILD extends the same
+## settings escape hatch to every implemented realm: a tester must be able to
+## enter Meadows, Cloudreach, Stormwood or Water without first manufacturing
+## that chapter's story key. Read the player's mapped-realm registry instead
+## of choosing one hard-coded "other" realm, so the runtime contract and the
+## curated Settings list cannot disagree about which shipped worlds exist.
+func _debug_teleport_add_other_realms(out: Array[Dictionary]) -> void:
+	if realm_hearts == null or local == null or not local.has_method("mapped_realm_ids"):
 		return
-	var other_realm := "cloudreach" if current_realm != "cloudreach" else "meadows"
-	if str(realm_hearts.call("scene_for_realm", other_realm)) == "":
-		return
-	var other_map := _ensure_realm_map(other_realm)
-	if other_map == null:
-		return
-	var other_display := str((realm_hearts.call("realm", other_realm) as Dictionary).get("display_name", other_realm))
-	var entry_id := _debug_teleport_entry_id_for(other_realm)
-	for region: Dictionary in (other_map.regions() as Array):
-		_debug_teleport_add_crossing(out, other_realm, other_display, str(region.get("display_name", "")), region.get("centre", Vector2.ZERO), entry_id)
-	for landmark: Dictionary in (other_map.landmarks() as Array):
-		if bool(landmark.get("dynamic", false)):
+	for realm_value: Variant in (local.call("mapped_realm_ids") as Array):
+		var other_realm := str(realm_value)
+		if other_realm == current_realm or str(realm_hearts.call("scene_for_realm", other_realm)) == "":
 			continue
-		_debug_teleport_add_crossing(out, other_realm, other_display, str(landmark.get("display_name", "")), landmark.get("position", Vector2.ZERO), entry_id)
+		var other_map := _ensure_realm_map(other_realm)
+		if other_map == null:
+			continue
+		var other_display := str((realm_hearts.call("realm", other_realm) as Dictionary).get("display_name", other_realm))
+		var entry_id := _debug_teleport_entry_id_for(other_realm)
+		for region: Dictionary in (other_map.regions() as Array):
+			_debug_teleport_add_crossing(out, other_realm, other_display, str(region.get("display_name", "")), region.get("centre", Vector2.ZERO), entry_id)
+		for landmark: Dictionary in (other_map.landmarks() as Array):
+			if bool(landmark.get("dynamic", false)):
+				continue
+			_debug_teleport_add_crossing(out, other_realm, other_display, str(landmark.get("display_name", "")), landmark.get("position", Vector2.ZERO), entry_id)
 
 
 ## The authored arrival id `enter_realm()` should carry for a debug crossing
@@ -2180,6 +2179,18 @@ func _debug_teleport_entry_id_for(realm_id: String) -> String:
 		if typeof(parsed) == TYPE_DICTIONARY:
 			var points: Dictionary = (parsed as Dictionary).get("transition_points", {})
 			var entry: Dictionary = points.get("meadows_entry", {})
+			return str(entry.get("id", ""))
+	elif realm_id == "stormwood":
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_world.json"))
+		if typeof(parsed) == TYPE_DICTIONARY:
+			var points: Dictionary = (parsed as Dictionary).get("transition_points", {})
+			var entry: Dictionary = points.get("cloudreach_entry", {})
+			return str(entry.get("id", ""))
+	elif realm_id == "water":
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_world.json"))
+		if typeof(parsed) == TYPE_DICTIONARY:
+			var entries: Dictionary = (parsed as Dictionary).get("entry_anchors", {})
+			var entry: Dictionary = entries.get("from_stormwood", {})
 			return str(entry.get("id", ""))
 	elif realm_id == "meadows":
 		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/realm_transitions.json"))

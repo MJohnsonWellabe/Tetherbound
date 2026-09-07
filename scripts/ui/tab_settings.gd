@@ -379,7 +379,7 @@ func _build_teleport_row(entry: Dictionary) -> Control:
 	button.focus_mode = Control.FOCUS_ALL
 	button.text = "  %s" % display_name
 	# OP-0905-21: the row hands the WHOLE entry through, not just x/z — a
-	# realm-crossing row (`GameState._debug_teleport_add_other_realm`) carries
+	# realm-crossing row (`GameState._debug_teleport_add_other_realms`) carries
 	# `realm`/`entry_id` fields a bare Vector2 has no room for.
 	button.pressed.connect(func() -> void: _on_teleport(entry))
 	button.focus_entered.connect(func() -> void: _keep_visible(button))

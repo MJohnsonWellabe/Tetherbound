@@ -4,10 +4,11 @@ extends SceneTree
 ##
 ##   godot --headless --path . --script tests/smoke_realm_teleport.gd
 ##
-## Two owner playtest complaints, one fixture, because the second complaint's
-## fix (a debug-menu crossing into Cloudreach) exercises the first complaint's
-## fix (`enter_realm()`'s loading overlay) on the very same real production
-## crossing:
+## Two owner playtest complaints, one fixture, because the debug-menu crossing
+## exercises `enter_realm()`'s loading overlay on real production scenes. The
+## original smoke covered Meadows <-> Cloudreach; FOUR-BIOME-BUILD now walks
+## Meadows -> Cloudreach -> Stormwood -> Water -> Meadows so every shipped
+## realm is an actual menu-reachable scene rather than a catalogue-only row.
 ##
 ##   OP-0905-20: "When I press enter cloudreach cliffs the game froze for a
 ##   while. It should tell you it's loading." Proven by watching for the
@@ -67,92 +68,66 @@ func _run() -> void:
 	await process_frame
 
 	_expect(str(game.get("current_realm")) == "meadows", "fresh game did not start in the Meadows")
-	_expect(not bool(game.call("can_enter_realm", "cloudreach")),
-		"fixture already held the Cloudreach realm key -- the no-key case below proves nothing")
+	for locked_realm: String in ["cloudreach", "stormwood", "water"]:
+		_expect(not bool(game.call("can_enter_realm", locked_realm)),
+			"fixture already held the %s realm key -- the no-key case proves nothing" % locked_realm)
 
 	_expect(bool(game.call("set_debug_teleport", true)), "debug teleport toggle refused to turn on")
+	for destination_realm: String in ["cloudreach", "stormwood", "water", "meadows"]:
+		if not await _cross_to(game, destination_realm):
+			_finish(game)
+			return
 
+	_finish(game)
+
+
+func _cross_to(game: Node, destination_realm: String) -> bool:
 	var destinations: Array = game.call("debug_teleport_destinations")
-	var crossing := _first_realm_entry(destinations, "cloudreach")
+	var crossing := _first_realm_entry(destinations, destination_realm)
 	if crossing.is_empty():
-		_fail("no Cloudreach entry in the debug teleport list while standing in the Meadows and lacking the realm key -- OP-0905-21 regressed")
-		_finish(game)
-		return
+		_fail("no %s entry in the debug teleport list from %s" % [destination_realm, game.get("current_realm")])
+		return false
 	var display_name := str(crossing.get("display_name", ""))
-	_expect(display_name.begins_with("Cloudreach Cliffs — "),
-		"Cloudreach row '%s' is not labelled as a crossing" % display_name)
-	_expect(str(crossing.get("entry_id", "")) != "", "Cloudreach row carried no entry id")
+	var realm_spec: Dictionary = game.realm_hearts.call("realm", destination_realm)
+	var realm_display := str(realm_spec.get("display_name", destination_realm))
+	_expect(display_name.begins_with("%s — " % realm_display),
+		"%s row '%s' is not labelled as a crossing" % [destination_realm, display_name])
+	_expect(str(crossing.get("entry_id", "")) != "", "%s row carried no entry id" % destination_realm)
 	var target: Vector2 = crossing.get("position", Vector2.ZERO)
 
-	# OP-0905-20: watch for the overlay concurrently with the teleport call
-	# below rather than after it -- it is meant to appear BEFORE the blocking
-	# scene swap and disappear once the destination has drawn a frame, a
-	# window this real crossing holds open for several frames, not one.
+	# Watch concurrently: the overlay must appear before the blocking scene
+	# swap and disappear only after the destination has drawn and settled.
+	_saw_overlay = false
 	_watch_for_overlay()
-
 	var ok: bool = await game.call("debug_teleport_to", target.x, target.y,
 		str(crossing.get("realm", "")), str(crossing.get("entry_id", "")))
-	_expect(ok, "debug_teleport_to refused the Cloudreach crossing")
-
-	_expect(_saw_overlay, "the 'Loading Cloudreach Cliffs…' overlay never appeared during the crossing")
+	_expect(ok, "debug_teleport_to refused the crossing to %s" % destination_realm)
+	if not ok:
+		return false
+	_expect(_saw_overlay, "the loading overlay never appeared during the crossing to %s" % destination_realm)
 	_expect(root.get_node_or_null(^"LoadingOverlay") == null,
-		"the loading overlay was not removed once the crossing settled")
-
-	_expect(str(game.get("current_realm")) == "cloudreach", "Game did not finish the crossing in Cloudreach")
-	_expect(str(game.get("pending_realm_entry")) == "", "Cloudreach did not settle its pending entry")
+		"the loading overlay remained after the crossing to %s" % destination_realm)
+	_expect(str(game.get("current_realm")) == destination_realm,
+		"Game did not finish the crossing in %s" % destination_realm)
+	_expect(str(game.get("pending_realm_entry")) == "", "%s did not settle its pending entry" % destination_realm)
 
 	var player := game.call("find_player") as Node3D
 	if player == null:
-		_fail("no live Player after the Cloudreach crossing")
-	else:
-		var pos: Vector3 = player.global_position
-		_expect(is_finite(pos.x) and is_finite(pos.y) and is_finite(pos.z),
-			"player landed at a non-finite position (%s)" % pos)
-		var world := current_scene
-		var ground: float = float(world.call("ground_height_at", target.x, target.y)) if world != null else NAN
-		var expected_y := ground + float(GAME.DEBUG_TELEPORT_CLEARANCE)
-		_expect(not is_nan(ground), "Cloudreach reported no ground at the chosen destination")
-		_expect(is_equal_approx(pos.x, target.x) and is_equal_approx(pos.z, target.y),
-			"player landed at (%.1f,%.1f), expected the chosen destination (%.1f,%.1f)" % [pos.x, pos.z, target.x, target.y])
-		_expect(is_equal_approx(pos.y, expected_y),
-			"player landed at y=%.2f, expected ground(%.2f) + clearance = %.2f" % [pos.y, ground, expected_y])
-
-	# Symmetry: the list built from inside Cloudreach must offer a way back,
-	# and taking it must actually land at the CHOSEN destination -- not the
-	# Storm Road anchor. The Meadows arrival runs its own settle coroutine
-	# (`playground_world.gd::_settle_meadows_realm_arrival`) that re-asserts
-	# that anchor position a few physics frames after `_place_player()`, so
-	# this is the one direction that would actually catch
-	# `_debug_teleport_cross_realm` overriding x/z too early and quietly
-	# losing that race.
-	var return_destinations: Array = game.call("debug_teleport_destinations")
-	var return_crossing := _first_realm_entry(return_destinations, "meadows")
-	if return_crossing.is_empty():
-		_fail("no Meadows entry in the debug teleport list while standing in Cloudreach")
-		_finish(game)
-		return
-	var return_target: Vector2 = return_crossing.get("position", Vector2.ZERO)
-	_saw_overlay = false
-	_watch_for_overlay()
-	var return_ok: bool = await game.call("debug_teleport_to", return_target.x, return_target.y,
-		str(return_crossing.get("realm", "")), str(return_crossing.get("entry_id", "")))
-	_expect(return_ok, "debug_teleport_to refused the return crossing to the Meadows")
-	_expect(_saw_overlay, "the loading overlay never appeared during the return crossing")
-	_expect(root.get_node_or_null(^"LoadingOverlay") == null,
-		"the loading overlay was not removed once the return crossing settled")
-	_expect(str(game.get("current_realm")) == "meadows", "Game did not finish the return crossing in the Meadows")
-
-	var returned_player := game.call("find_player") as Node3D
-	if returned_player == null:
-		_fail("no live Player after the return crossing to the Meadows")
-	else:
-		var return_pos: Vector3 = returned_player.global_position
-		_expect(is_equal_approx(return_pos.x, return_target.x) and is_equal_approx(return_pos.z, return_target.y),
-			("player landed back in the Meadows at (%.1f,%.1f), expected the chosen destination (%.1f,%.1f) " +
-				"-- the anchor settle coroutine likely won the race and overrode it") % [
-					return_pos.x, return_pos.z, return_target.x, return_target.y])
-
-	_finish(game)
+		_fail("no live Player after the crossing to %s" % destination_realm)
+		return false
+	var pos: Vector3 = player.global_position
+	_expect(is_finite(pos.x) and is_finite(pos.y) and is_finite(pos.z),
+		"%s player landed at a non-finite position (%s)" % [destination_realm, pos])
+	var world := current_scene
+	var ground: float = float(world.call("ground_height_at", target.x, target.y)) \
+		if world != null and world.has_method("ground_height_at") else NAN
+	var expected_y := ground + float(GAME.DEBUG_TELEPORT_CLEARANCE)
+	_expect(not is_nan(ground), "%s reported no ground at the chosen destination" % destination_realm)
+	_expect(is_equal_approx(pos.x, target.x) and is_equal_approx(pos.z, target.y),
+		"%s landed at (%.1f,%.1f), expected (%.1f,%.1f)" % [destination_realm, pos.x, pos.z, target.x, target.y])
+	_expect(is_equal_approx(pos.y, expected_y),
+		"%s landed at y=%.2f, expected ground(%.2f) + clearance = %.2f" % [destination_realm, pos.y, ground, expected_y])
+	return true
 
 
 func _watch_for_overlay() -> void:
@@ -186,7 +161,7 @@ func _finish(game: Node) -> void:
 		game.call("set_debug_teleport", false)
 	_cleanup_test_saves()
 	if _failures.is_empty():
-		print("REALM TELEPORT OK: OP-0905-20 loading overlay, OP-0905-21 cross-realm debug teleport")
+		print("REALM TELEPORT OK: menu crossings Meadows -> Cloudreach -> Stormwood -> Water -> Meadows")
 		quit(0)
 		return
 	for failure: String in _failures:
