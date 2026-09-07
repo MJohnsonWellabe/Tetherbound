@@ -2,6 +2,8 @@
 
 Status: owner-authorized execution, 2026-09-06. Stage B. The owner's run directive overrides the design-only line in 00_START_HERE.md. The Water design directive and owner boards remain the creative contract; this document supplies implementation counts, tuning contracts and acceptance evidence.
 
+2026-09-07 stop status: the broad run hit the owner's two-low-window condition after a long execution-evidence gap. This contract remains incomplete and unchanged. Resume the [final report's bounded tail](../../../ralph/reports/WATER-PROGRESS/FINAL-REPORT-AND-FRESH-SESSION-TAIL.md), starting with current-main integration and the ordinary chapter path. Do not infer completion from the35/100 verified subpath score or advance Stage C prematurely.
+
 ## 0. Decisions and precedence
 
 Use the twelve named board species. Aquaryn is the catchable Water Dragon Alpha; Abyssal Guardian is the captive legendary; Tidecoil is the non-mount deep-water apex. Human never fights; five owned creatures total; no reserve. Multiplayer from the first implementation. No boats, oxygen meter, diving, underwater building, thirst, fishing minigame, grappling or universal wetness punishment. Installed humanoid cast only. Placeholder creature bodies are explicit replacement points, never final art acceptance.

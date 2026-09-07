@@ -1,0 +1,79 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://scripts/world/water_world.gd:52)
+       [1] _run (res://tests/smoke_water_guardian_ceremony.gd:34)
+WARNING: Terrain3DTextureAsset#7494:set_albedo_texture:79: Texture 'meadow_grass_Color' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_materials (res://scripts/world/water_world.gd:227)
+       [1] _ready (res://scripts/world/water_world.gd:72)
+WARNING: Terrain3DTextureAsset#7494:set_normal_texture:100: Texture 'meadow_grass_NormalGL' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_materials (res://scripts/world/water_world.gd:228)
+       [1] _ready (res://scripts/world/water_world.gd:72)
+WARNING: Terrain3DTextureAsset#3584:set_albedo_texture:79: Texture 'dirt_path_Color' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_materials (res://scripts/world/water_world.gd:227)
+       [1] _ready (res://scripts/world/water_world.gd:72)
+WARNING: Terrain3DTextureAsset#3584:set_normal_texture:100: Texture 'dirt_path_NormalGL' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_materials (res://scripts/world/water_world.gd:228)
+       [1] _ready (res://scripts/world/water_world.gd:72)
+WARNING: Terrain3DTextureAsset#9653:set_albedo_texture:79: Texture 'rock_scree_Color' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_materials (res://scripts/world/water_world.gd:227)
+       [1] _ready (res://scripts/world/water_world.gd:72)
+WARNING: Terrain3DTextureAsset#9653:set_normal_texture:100: Texture 'rock_scree_NormalGL' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_materials (res://scripts/world/water_world.gd:228)
+       [1] _ready (res://scripts/world/water_world.gd:72)
+PASS: Actual Water world builds with freed Guardian fixture
+PASS: Freed Guardian stands outside hidden captive crystal
+PASS: No fixture awards water_guardian_claimed
+PASS: No fixture awards water_guardian_settled
+PASS: No fixture awards water_currents_restored
+PASS: No fixture awards realm_relic_water_earned
+PASS: No fixture awards realm_relic_water_placed
+PASS: Nearby freed Guardian offers actual companionship interaction
+PASS: Actual offer creates Guardian through durable claim service
+PASS: Guardian claim waits on host before roster choice
+PASS: Pending choice cannot settle world or earn relic early
+PASS: Guardian reservation exists in actual world disk journal
+PASS: Production five-holder roster ceremony opens for Guardian
+PASS: Actual holder choice presents release confirmation
+PASS: Actual farewell completes Guardian handover
+PASS: Guardian takes chosen holder with exactly five owned
+PASS: Other companion identity retained at holder0
+PASS: Other companion identity retained at holder2
+PASS: Other companion identity retained at holder3
+PASS: Other companion identity retained at holder4
+PASS: Actual character file receipts Guardian handover
+PASS: Same saved character file owns the chosen Guardian
+PASS: Host removes Guardian reservation after saved receipt acknowledgment
+PASS: Completed roster choice publishes water_guardian_settled
+PASS: World journal persists water_guardian_settled
+PASS: Completed roster choice publishes water_currents_restored
+PASS: World journal persists water_currents_restored
+PASS: Completed roster choice publishes realm_relic_water_earned
+PASS: World journal persists realm_relic_water_earned
+PASS: Settled Guardian no longer duplicates the owned companion in chamber
+PASS: Physical named Tideglass Compass shrine exists
+PASS: Earned relic waits for physical placement
+PASS: Actual Salt Crown shrine offers nearby placement
+WARNING: Water site lacks supported creature footing: water_salt_crown_wild_012
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _spawn_available_sites (res://scripts/combat/water_encounter_director.gd:133)
+       [1] _process (res://scripts/combat/cloudreach_encounter_director.gd:242)
+       [2] _process (res://scripts/combat/water_encounter_director.gd:165)
+PASS: Physical shrine places earned Tideglass Compass in world
+PASS: Actual shrine activates Water power through existing single-active relic system
+Water Guardian ceremony smoke: 35 checks, 0 failures

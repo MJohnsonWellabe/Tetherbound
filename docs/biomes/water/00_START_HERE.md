@@ -1,6 +1,6 @@
 # Water (Biome 4) — Start Here
 
-**Status: implementation in progress on `ralph/water-foundation-0906`; not a complete chapter.**
+**Status: broad run stopped by the owner's progress-rate rule on `ralph/water-foundation-0906`; not a complete chapter.** Resume [the evidence-backed fresh-session tail](../../../ralph/reports/WATER-PROGRESS/FINAL-REPORT-AND-FRESH-SESSION-TAIL.md). Final verified subpath score35/100 does not close Stage B. The owner retains PR69's merge decision.
 
 The owner's 2026-09-06 build directive overrides the former design-only hold.
 Use [BUILD_WATER_ARCHIPELAGO_TO_COMPLETION.md](BUILD_WATER_ARCHIPELAGO_TO_COMPLETION.md)

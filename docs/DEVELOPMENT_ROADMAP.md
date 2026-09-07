@@ -46,7 +46,7 @@ A stage is not complete because files, tests or branches exist. Completion is pl
 |---|---|---|
 | **0** | Current work: land Meadows + Cloudreach in flight, ship playable 1–4 player multiplayer, run the Meadows visual sweep, and land general game fixes. | In progress |
 | **A** | Build Biome 3, the Stormwood. | Not started |
-| **B** | Build Biome 4, the Water Archipelago. | Not started |
+| **B** | Build Biome 4, the Water Archipelago. | Incomplete on owner-unmerged Water branch; broad run stopped under progress-rate rule |
 | **C** | Full four-biome product audit — six questions: does it work, is there enough to do, is progression satisfying, is it fun minute-to-minute, does the world feel authored, does it meet the visual bar. | Not started |
 | **D** | Four-biome repair pass — fix Stage C's P0/P1 findings before any new content. | Not started |
 | **E** | Four-biome Beta Ready gate. | Not started |
@@ -734,12 +734,14 @@ All new gameplay/world systems after Stage 0 are multiplayer-native unless an ow
 
 # CURRENT NEXT ACTION
 
-Tetherbound is in **Stage 0**: land in-flight Meadows/Cloudreach work, ship
-playable 1–4 player multiplayer (`docs/MULTIPLAYER_DIRECTIVE.md`,
-`docs/specs/STAGE_B_MULTIPLAYER_EXECUTION_PLAN.md`, live status in
-`docs/CURRENT_STATE.md`), run the Meadows visual sweep
-(`docs/owner/MEADOWS_VISUAL_SWEEP_GOAL_2026-09-06.md`), and land general game
-fixes as they surface.
+The Water delivery branch is in **Stage B**, still incomplete. Its broad run
+stopped under the owner's two-low-progress-window rule. Resume
+[the Water fresh-session tail](../ralph/reports/WATER-PROGRESS/FINAL-REPORT-AND-FRESH-SESSION-TAIL.md):
+integrate current Stormwood main, complete the ordinary chapter path and
+amphibious Alpha, then multiplayer finale and visual acceptance. The owner
+reserves merging PR69. The **next stage is Stage C, the single four-biome
+product audit**, after Water meets its existing exit bar; this report does
+not falsely mark Water complete to advance the roadmap.
 
 > **When Stage 0's exit criteria are met, Codex starts Stage A (Stormwood) at
 > `docs/biomes/stormwood/00_CODEX_START_HERE.md`. Immediately after Stormwood

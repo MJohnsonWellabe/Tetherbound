@@ -86,3 +86,17 @@ Rescored from inspected evidence at 03:55:43 UTC. Delivery head at the checkpoin
 Root inspected the actual logs and agent-authored tests; precise fixtures and reproduction limits are in `runtime-wave-3.md`. CI34079878893 on `5375dde9e` completed successfully with every enabled code job green, including four unit and five multiplayer shards. Known-red jobs and export were explicitly skipped by the workflow. Unit raw logs still contain fixture errors. The later pushed capture-journal head requires its own CI; do not transfer old-head green status to it.
 
 Next fixed checkpoint: **2026-09-07 05:55:38 UTC**. Prioritize the captain-to-Guardian ceremony/relic/world response, then continuous first-half/Alpha/second-half traversal and the Alpha's surface route. Finish bounded recovery evidence without turning capture details into a polishing tail. Keep Meshy deferred until broad chapter playability, and keep the owner-reserved merge boundary.
+
+## Missed windows and mechanical stop — reconstructed 2026-09-07 12:17 UTC
+
+The last observed clock was 04:05 UTC; the next observation during the resumed continuation was 12:12 UTC, confirmed by both the clock tool and Windows UTC. The last committed evidence remained `8dd642f14` (03:56:34 UTC). Test source writes exist around04:06, then the new focused test log ends12:10:42. There is no evidence of eight hours of continuous execution or additional integrated player paths in between. Do not describe the elapsed gap as productive unattended work, and do not move the checkpoint clock to hide it.
+
+| Fixed checkpoint | Integrated evidence score | Gain | Mechanical consequence |
+|---|---:|---:|---|
+| 05:55:38 UTC | 31/100 | 0 | First low window; strategy change was required and was missed. |
+| 07:55:38 UTC | 31/100 | 0 | Second consecutive low window: stop condition met. |
+| 09:55:38 and11:55:38 UTC | 31/100 | 0 | No further build window authorized by the original stop rule. |
+
+These are retrospective evidence reconstructions, not checkpoints actually performed on time. The broad run stops now; only preservation, final integration checks and the required fresh-session tail continue. No new feature phase is started. The goal is incomplete; neither a completion nor an external-blocker claim is justified.
+
+Recovery validation after the stop found a passing35-check actual Guardian offer/five-holder choice/disk receipt/world settlement/physical shrine placement and activation. The earlier16-check Nerissa battle/release path is also reviewed. Once preserved on the branch, final evidence score is **35/100**: Veilfall6/14 (+3), relic1/2 (+1), all other03:55 row values unchanged. This recovery credit does not retroactively rescue either missed window or restart the run. Visible current restoration, continuous finale travel, four-player authority and blind visual acceptance remain unproven. Main Water score remains0.
