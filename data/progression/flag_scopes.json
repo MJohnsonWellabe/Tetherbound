@@ -26,6 +26,10 @@
       "water_dock_sluice_isle_both_controls_disabled",
       "water_guardian_freed",
       "water_swim_lesson_complete",
+      "water_shellwatch_residents_freed",
+      "water_shellwatch_pump_disabled",
+      "water_sluice_west_disabled",
+      "water_sluice_east_disabled",
       "water_tether_disabled",
       "realm_heart_meadows_earned",
       "realm_heart_meadows_placed",
@@ -136,6 +140,8 @@
       "cloudreach_reward_retargeted_stormwood"
     ],
     "prefixes": [
+      "water_claim:",
+      "defeated_water_trainer_",
       "cache:",
       "pickup:",
       "tm:",
@@ -153,6 +159,7 @@
       "water_swim_stone_earned",
       "water_swim_saddle_recipe_learned",
       "water_swim_lesson_briefed",
+      "water_chapter_started",
       "tournament_team_ready",
       "tournament_training_ready",
       "tournament_condition_ready",
@@ -173,6 +180,7 @@
     ],
     "prefixes": [
       "opening:",
+      "water_candy:",
       "opening:beat:",
       "cloudreach_payout:",
       "saddle_fitted_",

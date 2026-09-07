@@ -4,14 +4,23 @@ const ADAPTER := preload("res://scripts/creatures/water_species_catalog.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 
 var original: Dictionary
+var installed: Dictionary
 
 
 func before_each() -> void:
-	original = SPECIES.table().duplicate(true)
+	installed = SPECIES.table().duplicate(true)
+	original = JSON.parse_string(FileAccess.get_file_as_string(SPECIES.SPECIES_PATH)).species
 
 
 func after_each() -> void:
-	SPECIES._table = original
+	SPECIES._table = installed
+
+
+func test_production_catalogue_registers_water_without_replacing_meadows() -> void:
+	assert_eq(installed.size(), original.size() + 12)
+	for id: String in ADAPTER.BOARD_IDS:
+		assert_true(SPECIES.has(ADAPTER.runtime_id(id)), id)
+	assert_eq(installed.mosshell, original.mosshell)
 
 
 func test_merge_preserves_every_existing_definition_and_is_deeply_isolated() -> void:
@@ -86,8 +95,11 @@ func test_production_species_spawn_preserves_names_stats_moves_and_five_capabili
 		assert_eq(member.move_quick, roster.species[id].moves.quick)
 		assert_eq(member.move_charged, roster.species[id].moves.charged)
 		assert_eq(definition.swim_mount, roster.species[id].swim_mount)
-		assert_false(definition.has("rideable"), "no invented unmeasured saddle anchor")
+		assert_eq(definition.has("rideable"), bool(definition.swim_mount.compatible))
 		if bool(definition.swim_mount.compatible):
+			var measurements: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_mounts.json"))
+			assert_eq(definition.rideable.mount_offset, measurements.mounts[runtime].mount_offset)
+			assert_eq(definition.rideable.requires_item, "swim_saddle")
 			swimmers += 1
 	assert_eq(swimmers, 5)
 	assert_false(SPECIES.definition("water_tidecoil").swim_mount.compatible)

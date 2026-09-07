@@ -366,6 +366,29 @@ func test_with_no_arbiter_the_remembered_provider_is_still_used() -> void:
 	assert_eq(watcher.call("current_speaker"), _speaker)
 
 
+func test_gate_dialogue_after_previous_provider_is_freed_keeps_exploration_camera() -> void:
+	var watcher: Node = _rig.get_node_or_null(^"ConversationCamera")
+	var arbiter := Arbiter.new()
+	var gate := Node3D.new()
+	var previous := Villager.new()
+	watcher.set("_arbiter", arbiter)
+	watcher.call("note_activation_for_tests", previous)
+	previous.free()
+	# The gate can open dialogue, but is not a character to frame. Falling
+	# back to the freed previous NPC must not enter a typed call with it.
+	arbiter.current = gate
+	assert_false(bool(watcher.call("begin")))
+	assert_false(bool(watcher.call("is_pushed_in")))
+	assert_eq(typeof(watcher.get("_last_provider")), TYPE_NIL,
+		"expired remembered provider must be cleared before speaker resolution")
+	# A subsequent live character must still engage the normal two-shot.
+	arbiter.current = _speaker
+	assert_true(bool(watcher.call("begin")))
+	watcher.call("end")
+	gate.free()
+	arbiter.free()
+
+
 ## --- the walled fixture -----------------------------------------------------
 
 func test_a_cramped_room_falls_back_to_a_closer_over_the_shoulder() -> void:

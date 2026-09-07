@@ -1750,6 +1750,9 @@ func apply_loaded_player_pose() -> bool:
 		# that has never been followed before; a load is exactly that case
 		# again, whatever the rig was following last.
 		rig.global_position = player.global_position
+	var swimming := player.get_node_or_null(^"SwimController")
+	if swimming != null and current_realm == "water" and saved_player_pose.get("aquatic") is Dictionary:
+		swimming.call("restore_save_data", saved_player_pose.aquatic)
 	return true
 
 

@@ -15,6 +15,18 @@ const DEATH_SATCHEL := preload("res://scripts/world/death_satchel.gd")
 const PLAYER_DEATH := preload("res://scripts/world/player_death.gd")
 
 var db: RefCounted = null
+var _created_satchels: Array[Node] = []
+
+func _new_satchel() -> Node3D:
+	var node: Node3D = DEATH_SATCHEL.new()
+	_created_satchels.append(node)
+	return node
+
+func after_each() -> void:
+	for node: Node in _created_satchels:
+		if is_instance_valid(node):
+			node.free()
+	_created_satchels.clear()
 
 
 func before_each() -> void:
@@ -28,7 +40,7 @@ func test_build_rehydrates_a_drained_inventory_into_the_satchels_own_state() -> 
 	var dropped: Array = bag.drain()
 	assert_eq(bag.used_slots(), 0, "drain must empty the source satchel")
 
-	var satchel: Node3D = DEATH_SATCHEL.new()
+	var satchel: Node3D = _new_satchel()
 	satchel.build(dropped, db)
 
 	assert_eq(satchel.state.inventory.count("wood"), 10)
@@ -42,7 +54,7 @@ func test_build_preserves_tool_durability_exactly_rather_than_re_stacking() -> v
 	var before: Dictionary = bag.stack_at(bag.find_slot("axe"))
 	var dropped: Array = bag.drain()
 
-	var satchel: Node3D = DEATH_SATCHEL.new()
+	var satchel: Node3D = _new_satchel()
 	satchel.build(dropped, db)
 
 	var slot := -1
@@ -56,7 +68,7 @@ func test_build_preserves_tool_durability_exactly_rather_than_re_stacking() -> v
 
 
 func test_build_on_an_empty_drop_leaves_an_empty_but_valid_satchel() -> void:
-	var satchel: Node3D = DEATH_SATCHEL.new()
+	var satchel: Node3D = _new_satchel()
 	satchel.build([], db)
 	assert_eq(satchel.state.inventory.used_slots(), 0)
 
@@ -71,7 +83,7 @@ func test_build_on_an_empty_drop_leaves_an_empty_but_valid_satchel() -> void:
 ## `_build_visuals()`'s PackedScene branch touches nothing but the satchel's
 ## own children.
 func test_build_produces_a_visible_bag_not_a_dead_mesh_assignment() -> void:
-	var satchel: Node3D = DEATH_SATCHEL.new()
+	var satchel: Node3D = _new_satchel()
 	satchel.build([], db)
 	assert_true(_has_a_populated_mesh_instance(satchel),
 		"Bag.gltf (a PackedScene) must produce a MeshInstance3D with a real mesh somewhere in the satchel's visual subtree, not a null one")

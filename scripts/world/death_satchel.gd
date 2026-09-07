@@ -30,6 +30,19 @@ const STORAGE_STATE := preload("res://scripts/world/storage_state.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
 const STORAGE_PANEL := preload("res://scripts/ui/storage_panel.gd")
+const TRANSFER_RULES := preload("res://scripts/world/death_satchel_rules.gd")
+signal storage_changed
+signal storage_refused(reason: String)
+var _glow_ready := false
+
+func _ready() -> void:
+	_connect_transfer_ledger()
+	_attach_glow()
+
+func _attach_glow() -> void:
+	if is_inside_tree() and state != null and not _glow_ready:
+		PICKUP_GLOW.attach(self, SATCHEL_GLOW_COLOUR)
+		_glow_ready = true
 
 const MESH_PATH := "res://assets/props/quaternius_fantasy/Bag.gltf"
 const MESH_SCALE := 0.6
@@ -106,6 +119,7 @@ func restore(data: Variant, db: RefCounted, owner: String = "") -> void:
 ## `.scale` applies to the whole bag.
 func _build_visuals() -> void:
 	add_to_group(GROUP)
+	_connect_transfer_ledger()
 
 	if ResourceLoader.exists(MESH_PATH):
 		var resource: Resource = load(MESH_PATH)
@@ -143,7 +157,7 @@ func _build_visuals() -> void:
 	# Registered AFTER the mesh, not before: `pickup_glow.gd` measures the
 	# prop's own crown to decide where the mote sits, and a satchel that had not
 	# built its bag yet would measure as flat.
-	PICKUP_GLOW.attach(self, SATCHEL_GLOW_COLOUR)
+	_attach_glow()
 
 
 # --- whose bag is this ------------------------------------------------------
@@ -207,3 +221,61 @@ func _on_open() -> void:
 		_panel = STORAGE_PANEL.new()
 		get_tree().root.add_child(_panel)
 	_panel.call("open", self)
+
+
+func submit_deposit(item_id: String, n: int, expected_revision: int = -1) -> Dictionary:
+	return _submit_transfer("deposit", item_id, n, expected_revision)
+
+func submit_withdraw(item_id: String, n: int, expected_revision: int = -1) -> Dictionary:
+	return _submit_transfer("withdraw", item_id, n, expected_revision)
+
+func _record_uid() -> String:
+	var game := get_node_or_null("/root/Game")
+	var index := int(get_meta("death_satchel_index", -1))
+	if game == null or index < 0 or index >= game.death_satchels.size():
+		return ""
+	return str(game.death_satchels[index].get("uid", "legacy_satchel_%d" % index))
+
+func _submit_transfer(direction: String, item: String, count: int, expected: int) -> Dictionary:
+	if not can_open():
+		return _transfer_refused(refusal())
+	var game := get_node_or_null("/root/Game")
+	var uid := _record_uid()
+	if game == null or state == null or uid.is_empty():
+		return _transfer_refused("The satchel is not registered in this world.")
+	var transport: Node = game.get("ledger")
+	var result: Dictionary = transport.call("transfer_satchel", uid, direction, item, count, expected)
+	if not result.get("ok", false) and not result.get("pending", false):
+		storage_refused.emit(str(result.get("reason", "")))
+	return result
+
+func _connect_transfer_ledger() -> void:
+	if not is_inside_tree():
+		return
+	var game := get_node_or_null("/root/Game")
+	if game == null:
+		return
+	var transport: Node = game.get("ledger")
+	if transport == null:
+		return
+	if not transport.delta_applied.is_connected(_on_transfer_delta):
+		transport.delta_applied.connect(_on_transfer_delta)
+	if not transport.intent_refused.is_connected(_on_transfer_refused):
+		transport.intent_refused.connect(_on_transfer_refused)
+
+func _on_transfer_delta(delta: Dictionary) -> void:
+	for op: Dictionary in delta.get("ops", []):
+		if str(op.get("op", "")) != "satchel_set" or str(op.get("uid", "")) != _record_uid():
+			continue
+		var game := get_node("/root/Game")
+		var index: int = game.get("world").call("death_satchel_index_of", _record_uid())
+		if index >= 0:
+			state.load_data(game.get("death_satchels")[index].get("state", []))
+		storage_changed.emit()
+
+func _on_transfer_refused(kind: String, _code: String, reason: String, detail: Dictionary) -> void:
+	if kind == "death_satchel_transfer" and str(detail.get("uid", "")) == _record_uid():
+		storage_refused.emit(reason)
+
+func _transfer_refused(reason: String) -> Dictionary:
+	return {"ok": false, "pending": false, "kind": "death_satchel_transfer", "reason": reason}

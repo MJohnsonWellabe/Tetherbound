@@ -976,5 +976,6 @@ func _ride(delta: float) -> void:
 	if _model != null:
 		_model.global_rotation.y = _carrier.global_rotation.y
 	_sprinting = false
-	vitals.tick(delta, false)
+	if swim_controller == null or not swim_controller.is_swimming():
+		vitals.tick(delta, false)
 	vitals.tick_satiety(delta)

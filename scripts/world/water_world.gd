@@ -8,6 +8,14 @@ const FIELD := preload("res://scripts/world/water_heightfield.gd")
 const CURRENTS := preload("res://scripts/world/water_current_field.gd")
 const SWIM := preload("res://scripts/player/swim_controller.gd")
 const SURFACE := preload("res://scripts/world/water_surface.gd")
+const CHAPTER := preload("res://scripts/world/water_chapter.gd")
+const PICKUPS := preload("res://scripts/world/water_scene_pickups.gd")
+const DEATH := preload("res://scripts/world/water_player_death.gd")
+const ENCOUNTERS := preload("res://scripts/world/water_scene_encounters.gd")
+const DOCKS := preload("res://scripts/world/water_dock_actions.gd")
+const RIDING := preload("res://scripts/world/water_riding_controller.gd")
+const MOUNTED_SWIM := preload("res://scripts/world/water_mounted_swim.gd")
+const CAMPS := preload("res://scripts/world/water_camps.gd")
 
 @export var simulation_only: bool = false
 @export var shell_realm: String = "water"
@@ -25,7 +33,15 @@ func _ready() -> void:
 	config = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
 	_visual = JSON.parse_string(FileAccess.get_file_as_string(VISUAL_PATH))
 	field = FIELD.new(config)
-	currents = CURRENTS.new(config)
+	var current_config := config.duplicate(true)
+	var traversal: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_swimming.json"))
+	for current: Dictionary in current_config.currents:
+		for dock: Dictionary in config.docks:
+			if str(current.route_id).begins_with(str(dock.outbound_edge) + "_") and not str(dock.unlock_flag).is_empty():
+				current.required_unlock_flag = dock.unlock_flag
+				current.closed_strength_m_s = float(traversal.docks.closed_current_strength_m_s)
+	var game := get_node("/root/Game")
+	currents = CURRENTS.new(current_config, game.world.flags)
 	if not ClassDB.class_exists("Terrain3D"):
 		push_error("Water requires Terrain3D")
 		return
@@ -65,7 +81,53 @@ func _ready() -> void:
 		player.add_child(swimming)
 		swimming.setup(player, self, local_camera_rig())
 		player.set("swim_controller", swimming)
+		var recovery := DEATH.new()
+		recovery.name = "PlayerDeath"
+		add_child(recovery)
+		recovery.build(self, player, entry_anchor("from_stormwood"))
+	var chapter := CHAPTER.new()
+	chapter.name = "WaterChapter"
+	add_child(chapter)
+	chapter.build(self)
+	var camps := CAMPS.new()
+	camps.name = "WaterCamps"
+	add_child(camps)
+	camps.build(self)
+	var docks := DOCKS.new()
+	docks.name = "WaterDocks"
+	add_child(docks)
+	docks.build(self)
+	var director := ENCOUNTERS.build(self, chapter.npc_bodies)
+	if not simulation_only:
+		var riding := RIDING.new()
+		riding.name = "RidingController"
+		riding.water_world = self
+		riding.player_path = ^"../Player"
+		riding.camera_rig_path = ^"../CameraRig"
+		riding.encounter_path = ^"../EncounterDirector"
+		riding.manager_path = ^"../CombatManager"
+		add_child(riding)
+		get_node("PlayerDeath").configure_riding(riding)
+		var swimming_mount := MOUNTED_SWIM.new()
+		swimming_mount.name = "MountedSwimming"
+		add_child(swimming_mount)
+		swimming_mount.setup(self, riding, director)
+	var pickups := PICKUPS.new()
+	pickups.name = "WaterPickups"
+	pickups.build(self)
 	_shell_ready = true
+	if not simulation_only:
+		if str(game.pending_entry_for("water")).is_empty():
+			game.apply_loaded_player_pose()
+		else:
+			_finish_entry.call_deferred(game)
+
+
+func _finish_entry(game: Node) -> void:
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	if is_instance_valid(game):
+		game.complete_realm_entry("water")
 
 
 func shell_build_complete() -> bool:
@@ -108,8 +170,10 @@ func ground_height_at(x: float, z: float) -> float:
 	return float(data.call("get_height", Vector3(x, 0, z))) if data != null else NAN
 
 
-func ground_height_near(x: float, z: float, _reference_y: float = 0.0) -> float:
-	return ground_height_at(x, z)
+func ground_height_near(x: Variant, z: float = 0.0, _reference_y: float = 0.0) -> float:
+	# Existing realm combat surfaces pass an XYZ point; terrain samplers pass
+	# X/Z scalars. Water has one terrain stratum, shared by both callers.
+	return ground_height_at(x.x, x.z) if x is Vector3 else ground_height_at(float(x), z)
 
 
 func water_depth_at(position: Vector3) -> float:

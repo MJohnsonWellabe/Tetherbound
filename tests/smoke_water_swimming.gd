@@ -59,6 +59,8 @@ func _run() -> void:
 	await _frames(45)
 	if not _expect(player.is_on_floor() and not swimming.is_swimming(), "initial safe landing did not settle dry"):
 		return
+	if not _expect(swimming.state.has_safe_landing and Vector2(swimming.state.safe_landing.x - west.x, swimming.state.safe_landing.z - west.z).length() < 0.1, "dry west anchor was not earned for recovery"):
+		return
 	var vitals: RefCounted = player.get("vitals")
 	var first := _vector(lesson.surface_polyline[0])
 	var last := _vector(lesson.surface_polyline[-1])
@@ -89,6 +91,19 @@ func _run() -> void:
 		return
 	if not _expect(bool(swimming.snapshot().drowning), "drowning feedback state was not set"):
 		return
+	# Real slot I/O during exhaustion must not refill either resource. This is
+	# a same-scene load; a separate transport test owns reconnect evidence.
+	player.call("set_locomotion_enabled", false)
+	await _frames(2)
+	var saved_health: float = vitals.health
+	if not _expect(game.save_game(1), "midwater exhausted save failed"):
+		return
+	vitals.stamina = vitals.max_stamina
+	vitals.health = vitals.max_health
+	if not _expect(game.load_game(1), "midwater exhausted load failed"):
+		return
+	if not _expect(is_zero_approx(float(vitals.stamina)) and is_equal_approx(float(vitals.health), saved_health), "loading restored free swimming stamina or health"):
+		return
 	player.call("set_locomotion_enabled", false)
 	await _frames(2)
 	var paused_health: float = vitals.health
@@ -108,6 +123,10 @@ func _run() -> void:
 	var landed_health: float = vitals.health
 	await _frames(120)
 	if not _expect(is_equal_approx(float(vitals.health), landed_health), "health continued draining on safe land"):
+		return
+	if not _expect(game.world.flags.has("water_swim_lesson_complete"), "physical lesson failed to commit its world objective"):
+		return
+	if not _expect(Vector2(swimming.state.safe_landing.x - east.x, swimming.state.safe_landing.z - east.z).length() < 0.1, "walking out of shallow water failed to earn the east recovery anchor"):
 		return
 	finished = true
 	print("WATER SWIMMING OK assertions=%d actual_lesson_swim_m=%.3f final_health=%.3f" % [assertions, lesson_distance, vitals.health])

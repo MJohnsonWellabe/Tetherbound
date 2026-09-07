@@ -3,10 +3,12 @@ extends RefCounted
 ## Identical field queries on every peer and for the visible foam. Overlapping
 ## routes select one authored current; they never accidentally add strength.
 var _currents: Array = []
+var _flags: RefCounted
 
 
-func _init(config: Dictionary = {}) -> void:
+func _init(config: Dictionary = {}, flags: RefCounted = null) -> void:
 	_currents = config.get("currents", []).duplicate(true)
+	_flags = flags
 
 
 func sample(position: Vector3, liberated: bool = false) -> Dictionary:
@@ -35,7 +37,10 @@ func sample(position: Vector3, liberated: bool = false) -> Dictionary:
 		var influence := 1.0 if blend <= 0.0 else 1.0 - smoothstep(radius - blend, radius, distance)
 		var direction: Array = current.get("flow_direction_xz", [0.0, 0.0])
 		var velocity := Vector3(float(direction[0]), 0.0, float(direction[1])).normalized()
-		velocity *= maxf(0.0, float(current.get("strength_m_s", 0.0))) * influence
+		var required := str(current.get("required_unlock_flag", ""))
+		var closed: bool = _flags != null and not required.is_empty() and not bool(_flags.has(required))
+		var strength := float(current.get("closed_strength_m_s", current.get("strength_m_s", 0.0))) if closed else float(current.get("strength_m_s", 0.0))
+		velocity *= maxf(0.0, strength) * influence
 		if liberated:
 			velocity *= clampf(float(current.get("post_liberation_strength_multiplier", 1.0)), 0.0, 1.0)
 		best_priority = priority

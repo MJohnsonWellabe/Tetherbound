@@ -266,6 +266,9 @@ func _has_tack(species_id: String) -> bool:
 	var game := get_node_or_null(^"/root/Game")
 	if game == null:
 		return false
+	var swim: Dictionary = SPECIES.definition(species_id).get("swim_mount", {})
+	if bool(swim.get("compatible", false)) and not game.get("local").flags.has(str(swim.get("requires_personal_flag", ""))):
+		return false
 	var bag: RefCounted = game.get("inventory")
 	return bag != null and int(bag.call("count", required)) > 0
 
@@ -623,7 +626,7 @@ const SADDLE_Y_NUDGE := -0.12
 ## mesh is never hung on an animal the craft was not for. Pure data, so
 ## `tests/test_riding_saddle.gd` can hold the rule without standing a body up.
 static func saddle_belongs_on(species_id: String) -> bool:
-	return str(SPECIES.rideable(species_id).get("requires_item", "")) == SADDLE_ITEM
+	return str(SPECIES.rideable(species_id).get("requires_item", "")) in [SADDLE_ITEM, "swim_saddle"]
 
 
 ## Has a saddle been built and fitted to this species? Saved with the game.
@@ -720,6 +723,11 @@ static func _attach_saddle(body: Node3D, species_id: String) -> void:
 	var offset: Vector3 = SPECIES.rideable(species_id).get("mount_offset", Vector3.UP)
 	visual.position = Vector3(offset.x, offset.y + SADDLE_Y_NUDGE, offset.z)
 	visual.scale = Vector3.ONE * SADDLE_SCALE
+	var water_geometry: Dictionary = SPECIES.definition(species_id).get("water_mount_geometry", {})
+	if not water_geometry.is_empty():
+		var saddle_at: Array = water_geometry.saddle_offset
+		visual.position = Vector3(float(saddle_at[0]), float(saddle_at[1]), float(saddle_at[2]))
+		visual.scale = Vector3.ONE * float(water_geometry.saddle_scale)
 	body.add_child(visual)
 
 

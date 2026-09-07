@@ -2,6 +2,23 @@ extends "res://tests/test_case.gd"
 
 const FIELD := preload("res://scripts/world/water_current_field.gd")
 
+class Flags:
+	extends RefCounted
+	var opened := false
+	func has(_id: String) -> bool:
+		return opened
+
+
+func test_shared_dock_result_changes_actual_current_without_rebuilding_field() -> void:
+	var flags := Flags.new()
+	var current := _current("lesson_departure", 0.08, 30)
+	current.required_unlock_flag = "water_swim_lesson_complete"
+	current.closed_strength_m_s = 6.0
+	var field := FIELD.new({"currents": [current]}, flags)
+	assert_eq(field.sample(Vector3(0, 0, 50)).velocity, Vector3(0, 0, -6))
+	flags.opened = true
+	assert_eq(field.sample(Vector3(0, 0, 50)).velocity, Vector3(0, 0, -0.08))
+
 
 func _current(id: String, strength: float, priority: int, offset: float = 0.0) -> Dictionary:
 	return {"id": id, "polyline": [[offset, 0, 0], [offset, 0, 100]],

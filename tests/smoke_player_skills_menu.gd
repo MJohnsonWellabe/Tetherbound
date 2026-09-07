@@ -43,6 +43,8 @@ func _run() -> void:
 	var menu: Node = game.call("menu")
 	var local: RefCounted = game.get("local")
 	local.reset()
+	await _check_realm_tab_navigation(menu, local)
+	local.reset()
 	var other := PLAYER_STATE.new()
 	other.configure(game.get("items"))
 	other.inventory.add("skill_candy_ii", 2)
@@ -122,6 +124,50 @@ func _run() -> void:
 	menu.call("close")
 	_check(not menu.call("is_open"), "Menu closes after the interaction")
 	_finish()
+
+func _check_realm_tab_navigation(menu: Node, local: RefCounted) -> void:
+	# Independent fresh character fixtures: Cloudreach's reveal must not mask
+	# a broken Water reveal. No world is booted or realm transition claimed.
+	var tabs: Array = menu.get("_tabs")
+	var buttons: Array = menu.get("_tab_buttons")
+	var bumpers: Array[int] = []
+	for action: String in ["menu_tab_right", "menu_tab_left"]:
+		var binding := -1
+		for event in InputMap.action_get_events(action):
+			if event is InputEventJoypadButton:
+				binding = event.button_index
+				break
+		_check(binding >= 0, action + " has a physical controller binding")
+		if binding < 0:
+			return
+		bumpers.append(binding)
+	for realm: String in ["meadows", "cloudreach", "water"]:
+		local.skills.load_data({})
+		local.skills.enter_realm(realm)
+		var revealed := realm != "meadows"
+		_check(local.skills.revealed == revealed, realm + " fixture has expected Skills reveal")
+		_check(menu.call("open", "backpack"), realm + " navigation fixture opens")
+		await _frames()
+		var available: Array[int] = []
+		for index in tabs.size():
+			var expected := str(tabs[index].id) != "skills" or revealed
+			_check(buttons[index].visible == expected, realm + " tab visibility: " + str(tabs[index].id))
+			if expected:
+				available.append(index)
+		for direction in [1, -1]:
+			var visited: Dictionary = {}
+			for step in available.size():
+				var expected_index: int = available[posmod(direction * (step + 1), available.size())]
+				await _pad(bumpers[0] if direction == 1 else bumpers[1])
+				var actual := int(menu.get("_index"))
+				_check(actual == expected_index, "%s physical %s reaches tab %s" % [realm, "RB" if direction == 1 else "LB", tabs[expected_index].id])
+				visited[actual] = true
+				var focus := root.gui_get_focus_owner()
+				_check(focus != null and focus.is_visible_in_tree(), realm + " bumper target has visible focus")
+			_check(visited.size() == available.size(), realm + " bumper visits every available tab")
+			_check(menu.call("current_tab_id") == "backpack", realm + " bumper wraps to Satchel")
+		menu.call("close")
+		await _frames()
 
 func _check_legacy_characters(store: RefCounted, items: RefCounted, payload: Dictionary) -> void:
 	# An actual old portable character file has no Skills key. Loading it into

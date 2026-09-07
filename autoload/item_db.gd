@@ -59,8 +59,8 @@ func _init(
 		var water := _read(WATER_CRAFTING_PATH)
 		for id: String in water.get("item_registration_proposals", {}):
 			_items[id] = water.item_registration_proposals[id]
-		# Register the recipe book with the chapter's actual unlock writers.
-		# Until then its authored proposals must not create unreachable rows.
+		for id: String in water.get("recipes", {}):
+			_recipes[id] = water.recipes[id]
 
 
 func _read(path: String) -> Dictionary:

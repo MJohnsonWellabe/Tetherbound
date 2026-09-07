@@ -78,6 +78,9 @@ var pose: Dictionary = {}
 ## answer; per player from now on.
 var realm: String = "meadows"
 var pending_realm_entry: String = ""
+## Inaccessible transaction escrow, never a usable inventory or creature slot.
+## Pending moves and settled receipts survive node teardown and reconnect.
+var satchel_escrow: Dictionary = {}
 
 ## The PLAYER half of the old flat `Game.progression` store: every id
 ## `progression_state.scope_of()` answers "player" for.
@@ -126,6 +129,7 @@ func _init() -> void:
 ## "no reset happened". `clear()` is the feed's own new-game reset and bumps the
 ## epoch, exactly as `Game.reset_for_new_game()` has always called it.
 func reset() -> void:
+	satchel_escrow.clear()
 	skills.load_data({})
 	flags.call("load_data", {})
 	feed.call("clear_events")
@@ -382,6 +386,7 @@ func save_data() -> Dictionary:
 		"player_pose": pose.duplicate(true),
 		"realm": realm,
 		"pending_realm_entry": pending_realm_entry,
+		"satchel_escrow": satchel_escrow.duplicate(true),
 		"realm_hearts": hearts.call("save_data") if hearts != null else {},
 		"skills": skills.save_data(),
 		"realm_maps": map_payloads(),
@@ -405,6 +410,8 @@ func load_data(data: Dictionary) -> void:
 	skills.load_data(raw_skills if raw_skills is Dictionary else {})
 	skills.enter_realm(realm)
 	pending_realm_entry = str(data.get("pending_realm_entry", ""))
+	var raw_escrow: Variant = data.get("satchel_escrow", {})
+	satchel_escrow = raw_escrow.duplicate(true) if raw_escrow is Dictionary else {}
 	if flags == null:
 		flags = PROGRESSION_STATE.new()
 	var raw_flags: Variant = data.get("flags", {})
