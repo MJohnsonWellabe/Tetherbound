@@ -36,6 +36,7 @@ extends RefCounted
 ## `merge()` rebuilds both, so the round trip is lossless without storing either
 ## twice.
 
+const ATOMIC_SAVE_FILE := preload("res://scripts/save/atomic_save_file.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const WORLD_SAVE := preload("res://scripts/save/world_save.gd")
 
@@ -49,7 +50,7 @@ const ENVELOPE_KEYS: Array[String] = [
 ## The v22 keys this half owns under their own names.
 const STATE_KEYS: Array[String] = [
 	"party", "inventory", "hotbar", "satiety", "player_pose", "pending_realm_entry",
-	"realm_hearts", "realm_maps",
+	"realm_hearts", "realm_maps", "skills", "satchel_escrow",
 ]
 
 ## v22 keys this half owns but does NOT store, because they are recoverable
@@ -84,7 +85,7 @@ func path_for(character_id: String) -> String:
 
 
 func has(character_id: String) -> bool:
-	return not character_id.is_empty() and FileAccess.file_exists(path_for(character_id))
+	return not character_id.is_empty() and FileAccess.file_exists(ATOMIC_SAVE_FILE.readable_path(path_for(character_id)))
 
 
 func list_ids() -> Array:
@@ -173,12 +174,9 @@ func write(character_id: String, payload: Dictionary, envelope: Dictionary = {})
 	data["last_played"] = now
 	data["last_world_id"] = str(envelope.get("last_world_id", existing.get("last_world_id", "")))
 	data["migrated_from"] = str(envelope.get("migrated_from", existing.get("migrated_from", "")))
-	var file := FileAccess.open(path_for(character_id), FileAccess.WRITE)
-	if file == null:
-		push_warning("character save: could not open %s for writing" % path_for(character_id))
+	if not ATOMIC_SAVE_FILE.new().write(path_for(character_id), JSON.stringify(data, "\t")):
+		push_warning("character save: could not commit %s" % path_for(character_id))
 		return false
-	file.store_string(JSON.stringify(data, "\t"))
-	file.close()
 	_envelope_cache[character_id] = _envelope_of(data)
 	return true
 
@@ -207,7 +205,7 @@ func _envelope_of(data: Dictionary) -> Dictionary:
 func read(character_id: String) -> Dictionary:
 	if not has(character_id):
 		return {}
-	var file := FileAccess.open(path_for(character_id), FileAccess.READ)
+	var file := FileAccess.open(ATOMIC_SAVE_FILE.readable_path(path_for(character_id)), FileAccess.READ)
 	if file == null:
 		return {}
 	var parsed: Variant = JSON.parse_string(file.get_as_text())

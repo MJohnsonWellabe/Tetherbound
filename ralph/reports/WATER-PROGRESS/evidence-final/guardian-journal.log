@@ -1,0 +1,9 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_water_guardian_reward: 1 of 235 test files
+  ok    test_water_guardian_reward.gd :: test_disk_refusal_restores_world_revision_sequence_and_allows_retry
+  ok    test_water_guardian_reward.gd :: test_exact_guardian_and_only_one_recipient_survive_real_world_file
+  ok    test_water_guardian_reward.gd :: test_refuses_wrong_species_missing_release_identity_and_host_authority
+  ok    test_water_guardian_reward.gd :: test_release_requires_captain_and_journals_both_flags_or_neither
+
+4 tests, 44 assertions, 0 failed

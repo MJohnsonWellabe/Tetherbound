@@ -1,0 +1,26 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_water_guardian_reward,test_water_relic,test_water_tidal_guard_combat,test_water_capture_transaction,test_water_dialogue_delivery,test_realm_heart: 6 of 235 test files
+  ok    test_realm_heart_state.gd :: test_activating_another_heart_replaces_the_first
+  ok    test_realm_heart_state.gd :: test_an_earned_heart_can_be_placed_and_activated
+  ok    test_realm_heart_state.gd :: test_an_unearned_heart_cannot_be_placed_or_activated
+  ok    test_realm_heart_state.gd :: test_load_refuses_a_power_whose_heart_is_not_placed
+  ok    test_realm_heart_state.gd :: test_realm_scene_and_key_are_data_driven
+  ok    test_realm_heart_state.gd :: test_save_round_trip_preserves_the_single_active_selection
+  ok    test_water_capture_transaction.gd :: test_catching_xp_saves_with_receipt_and_rolls_back_on_failure
+  ok    test_water_capture_transaction.gd :: test_failed_decline_remains_retryable_and_released_best_loses_title
+  ok    test_water_capture_transaction.gd :: test_failed_save_restores_exact_members_order_selection_and_flags
+  ok    test_water_capture_transaction.gd :: test_full_party_replacement_keeps_other_members_in_place_and_decline_is_durable
+  ok    test_water_capture_transaction.gd :: test_receipt_and_party_are_visible_in_one_save_and_replay_is_inert
+  ok    test_water_capture_transaction.gd :: test_wrong_identity_invalid_claim_and_owned_pending_never_mutate
+  ok    test_water_dialogue_delivery.gd :: test_iona_delivery_without_an_idle_frame
+  ok    test_water_guardian_reward.gd :: test_disk_refusal_restores_world_revision_sequence_and_allows_retry
+  ok    test_water_guardian_reward.gd :: test_exact_guardian_and_only_one_recipient_survive_real_world_file
+  ok    test_water_guardian_reward.gd :: test_refuses_wrong_species_missing_release_identity_and_host_authority
+  ok    test_water_relic.gd :: test_compass_cannot_be_placed_unearned_or_activated_unplaced
+  ok    test_water_relic.gd :: test_compass_replaces_each_older_power_without_stacking
+  ok    test_water_relic.gd :: test_compass_uses_the_production_named_relic_and_tunable_guard
+  ok    test_water_relic.gd :: test_save_round_trip_preserves_only_the_placed_compass_selection
+  ok    test_water_tidal_guard_combat.gd :: test_actual_owner_health_mutation_and_ordinary_strike_in_initialized_tree
+
+21 tests, 196 assertions, 0 failed

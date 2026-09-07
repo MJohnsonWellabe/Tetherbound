@@ -254,6 +254,7 @@ const SPECIES_PATH := "res://data/creatures/species.json"
 ## which Cloudreach owns; it takes the next free number here for the same
 ## reason the pin set did.
 const VERSION := 23
+const WATER_TRAVERSAL := preload("res://scripts/save/water_traversal_save.gd")
 const WORLD_RECORDS := preload("res://scripts/world/realm_world_records.gd")
 const SLOT_COUNT := 5
 ## Written automatically whenever the player rests (`scripts/build/camp.gd`).
@@ -264,6 +265,7 @@ const AUTOSAVE_SLOT := 0
 ## D100's two savers. The v22 slot file above is still written, unchanged and
 ## byte-identical, and is still what `load_slot()` reads -- see `_write_split()`
 ## for why this lane ADDED the split rather than replacing the slot with it.
+const ATOMIC_SAVE_FILE := preload("res://scripts/save/atomic_save_file.gd")
 const WORLD_SAVE := preload("res://scripts/save/world_save.gd")
 const CHARACTER_SAVE := preload("res://scripts/save/character_save.gd")
 const REALM_REWARD_MIGRATION := preload("res://scripts/save/realm_reward_migration.gd")
@@ -304,7 +306,7 @@ func slot_path(slot: int) -> String:
 
 
 func has_slot(slot: int) -> bool:
-	return FileAccess.file_exists(slot_path(slot))
+	return FileAccess.file_exists(ATOMIC_SAVE_FILE.readable_path(slot_path(slot)))
 
 
 ## What a slot list screen needs without loading it onto live state — empty
@@ -346,14 +348,8 @@ func save(game: Object, slot: int, write_split: bool = true) -> bool:
 	DirAccess.make_dir_recursive_absolute(_dir)
 
 	var data := snapshot(game)
-	var file := FileAccess.open(slot_path(slot), FileAccess.WRITE)
-	if file == null:
+	if not ATOMIC_SAVE_FILE.new().write(slot_path(slot), JSON.stringify(data, "\t")):
 		return false
-	file.store_string(JSON.stringify(data, "\t"))
-	# A save may be loaded again immediately from the same UI/session. Close the
-	# writer before reporting success so that read never observes a buffered or
-	# partially flushed JSON document.
-	file.close()
 	if write_split:
 		_write_split(game, slot, data)
 	return true
@@ -367,9 +363,14 @@ func save(game: Object, slot: int, write_split: bool = true) -> bool:
 ## this and said so ("no dictionary-only accessor"), but it is left alone here:
 ## re-pointing it is a harness change in another lane's file, and it works.
 func snapshot(game: Object) -> Dictionary:
+	var skills_obj := _player_skills(game)
+	var personal: Variant = game.get("local")
+	var escrow: Variant = personal.get("satchel_escrow") if personal is Object else null
 	var map_obj: Variant = game.get("map")
 	var progression_obj: Variant = game.get("progression")
 	var realm_hearts_obj: Variant = game.get("realm_hearts")
+	var world_obj: Variant = game.get("world")
+	var capture_claims: Variant = world_obj.get("water_capture_claims") if world_obj != null else {}
 	var data := {
 		"version": VERSION,
 		"day": int(game.get("day")),
@@ -379,11 +380,14 @@ func snapshot(game: Object) -> Dictionary:
 		"placed_buildings": WORLD_RECORDS.normalized(game.get("placed_buildings")),
 		"farm_plots": (game.get("farm_plots") as Array).duplicate(true),
 		"death_satchels": WORLD_RECORDS.normalized(game.get("death_satchels")),
+		"water_capture_claims": capture_claims.duplicate(true) if capture_claims is Dictionary else {},
 		"satiety": _read_satiety(game),
 		"map": (map_obj as RefCounted).call("save_data") if map_obj != null else {},
 		"alpha_pins": (map_obj as RefCounted).call("alpha_pin_save_data") if map_obj != null else [],
 		"progression": (progression_obj as RefCounted).call("save_data") if progression_obj != null else {},
 		"realm_hearts": (realm_hearts_obj as RefCounted).call("save_data") if realm_hearts_obj != null else {},
+		"skills": skills_obj.call("save_data") if skills_obj != null else {},
+		"satchel_escrow": escrow.duplicate(true) if escrow is Dictionary else {},
 		"current_realm": str(game.get("current_realm")) if game.get("current_realm") != null else "meadows",
 		"pending_realm_entry": str(game.get("pending_realm_entry")) if game.get("pending_realm_entry") != null else "",
 		"harvested_vegetation": (game.get("harvested_vegetation") as Dictionary).duplicate(true),
@@ -400,6 +404,11 @@ func snapshot(game: Object) -> Dictionary:
 	}
 	data["realm_maps"] = game.call("save_realm_maps") if game.has_method("save_realm_maps") else _realm_map_payloads(data)
 	return data
+
+
+func _player_skills(game: Object) -> RefCounted:
+	var local: Variant = game.get("local")
+	return local.get("skills") as RefCounted if local is Object else null
 
 
 ## Rehydrate `game` from `slot`. Returns whether a save was actually applied —
@@ -437,6 +446,10 @@ func load_slot(game: Object, slot: int) -> bool:
 	game.set("placed_buildings", WORLD_RECORDS.normalized(data.get("placed_buildings", [])))
 	game.set("farm_plots", (data.get("farm_plots", []) as Array).duplicate(true))
 	game.set("death_satchels", WORLD_RECORDS.normalized(data.get("death_satchels", [])))
+	var world_obj: Variant = game.get("world")
+	if world_obj != null:
+		var capture_claims: Variant = data.get("water_capture_claims", {})
+		world_obj.set("water_capture_claims", capture_claims.duplicate(true) if capture_claims is Dictionary else {})
 	game.set("world_seed", int(data.get("world_seed", 0)))
 	var harvested_raw: Variant = data.get("harvested_vegetation", {})
 	game.set("harvested_vegetation", (harvested_raw as Dictionary).duplicate(true) if typeof(harvested_raw) == TYPE_DICTIONARY else {})
@@ -447,6 +460,15 @@ func load_slot(game: Object, slot: int) -> bool:
 		game.set("saved_player_pose", _sanitise_player_pose(pose_raw))
 	if game.get("current_realm") != null:
 		game.set("current_realm", str(data.get("current_realm", "meadows")))
+	var skills_obj := _player_skills(game)
+	var personal: Variant = game.get("local")
+	if personal is Object:
+		var escrow: Variant = data.get("satchel_escrow", {})
+		personal.set("satchel_escrow", escrow.duplicate(true) if escrow is Dictionary else {})
+	if skills_obj != null:
+		var raw_skills: Variant = data.get("skills", {})
+		skills_obj.call("load_data", raw_skills if raw_skills is Dictionary else {})
+		skills_obj.call("enter_realm", str(game.get("current_realm")))
 	if game.get("pending_realm_entry") != null:
 		game.set("pending_realm_entry", str(data.get("pending_realm_entry", "")))
 	if game.get("clock_elapsed_seconds") != null:
@@ -723,6 +745,11 @@ func _sanitise_player_pose(raw: Variant) -> Dictionary:
 			if anchor.size() != 3:
 				return {}
 			clean["position"] = [anchor[0], float(anchor[1]) + 0.08, anchor[2]]
+	if pose.has("aquatic"):
+		var aquatic := WATER_TRAVERSAL.sanitise(pose.aquatic)
+		if aquatic.is_empty() or str(clean.realm) != "water":
+			return {}
+		clean.aquatic = aquatic
 	return clean
 
 
@@ -739,6 +766,9 @@ func _capture_traversal_pose(game: Object) -> Dictionary:
 		var fly: Node = player.get_node_or_null(^"FlyController") if player != null else null
 		if fly != null:
 			pose["traversal"] = fly.call("save_data")
+		var swimming := player.get_node_or_null(^"SwimController") if player != null else null
+		if swimming != null and str(pose.get("realm", "")) == "water":
+			pose["aquatic"] = swimming.call("save_data")
 	return _sanitise_player_pose(pose)
 
 
@@ -1225,7 +1255,7 @@ func _species_moves(species_table: Dictionary, species_id: String) -> Dictionary
 func _read(slot: int) -> Dictionary:
 	if slot < 0 or slot >= SLOT_COUNT:
 		return {}
-	var path := slot_path(slot)
+	var path := ATOMIC_SAVE_FILE.readable_path(slot_path(slot))
 	if not FileAccess.file_exists(path):
 		return {}
 	var file := FileAccess.open(path, FileAccess.READ)
@@ -1311,6 +1341,7 @@ func _party_to_array(party: Variant) -> Array:
 			"attack": float(instance.get("attack")),
 			"defence": float(instance.get("defence")),
 			"hp": float(instance.get("hp")),
+			"swim_stamina_fraction": float(instance.get("swim_stamina_fraction")),
 			"energy": float(instance.get("energy")),
 			"fainted": bool(instance.get("fainted")),
 			"resting": bool(instance.get("resting")),
@@ -1391,6 +1422,8 @@ func _array_to_party(entries: Variant, party: Variant) -> void:
 		creature.attack = float(d.get("attack", 1.0))
 		creature.defence = float(d.get("defence", 1.0))
 		creature.hp = float(d.get("hp", creature.max_hp))
+		var swim_stamina: Variant = d.get("swim_stamina_fraction", 1.0)
+		creature.swim_stamina_fraction = clampf(float(swim_stamina), 0.0, 1.0) if _finite_number(swim_stamina) else 0.0
 		creature.energy = float(d.get("energy", 0.0))
 		creature.fainted = bool(d.get("fainted", false))
 		creature.resting = bool(d.get("resting", false))

@@ -1,0 +1,11 @@
+{
+  "pickups": {"claim_radius_m": 3.6, "_comment": "Host checks the fixed authored Candy X/Z against current graded terrain height; generous interaction reach for surface and slope transitions."},
+  "_comment":"Starting Water traversal tuning. One owned movement simulation with replicated state, shared current field, personal resources. No oxygen or underwater traversal.",
+  "human":{"speed_m_s":3.8,"stamina_drain_per_s":2.8,"drowning_damage_per_s":4.0,"entry_depth_m":1.2,"exit_depth_m":0.9,"surface_body_offset_m":-0.7,"vertical_follow_rate":8.0,"acceleration_m_s2":12.0},
+  "mount":{"drowning_damage_per_s":3.0,"land_recovery_per_s":12.0,"surface_back_clearance_m":0.3,"_comment":"Speed, capacity and drain are explicit per species in water_roster.json. Stamina fraction persists on CreatureInstance independently of combat energy."},
+  "combat":{"pause_stamina":true,"pause_drowning":true,"pause_regeneration":true},
+  "docks":{"closed_current_strength_m_s":6.0,"barrier_height_m":2.5,"barrier_width_m":10.0,"_comment":"Closed departure channels visibly push back faster than a human can swim; completing the physical dock objective restores the authored crossing current. Safe shore pockets stay outside the channel and remain landable. Barrier dimensions are starting kitbash geometry, pending flank and visual acceptance."},
+  "safe_landing":{"maximum_slope_deg":35.0,"minimum_height_m":0.6,"clear_radius_m":1.5,"maximum_anchor_height_difference_m":1.5,"_comment":"Recovery requires actual floor contact within an authored safe landing and a 1.5m height tolerance; shallow-water exit alone earns no checkpoint."},
+  "xp":{"minimum_input":0.15,"maximum_step_m":3.0,"_comment":"Reward actual voluntary displacement; no teleport, carried idle, or passive current XP."},
+  "saddle_recipe":{"reed_fiber":8,"driftwood":6,"reef_stone":4}
+}

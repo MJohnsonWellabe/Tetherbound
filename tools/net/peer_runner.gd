@@ -97,6 +97,7 @@ const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const CLOUDREACH_SCENE := "res://scenes/world/cloudreach_cliffs.tscn"
 const STORMWOOD_SCENE := "res://scenes/world/stormwood.tscn"
+const WATER_SCENE := "res://scenes/world/water_archipelago.tscn"
 
 ## Wave 6 lane 6.A. Realm id -> the AUTHORED ROOT NAME of its world scene, and
 ## -> the `boot` step's name for it. The root name is what
@@ -108,11 +109,13 @@ const REALM_ROOT_NAMES := {
 	"meadows": "MeadowsPlayground",
 	"cloudreach": "CloudreachCliffs",
 	"stormwood": "Stormwood",
+	"water": "WaterArchipelago",
 }
 const REALM_SCENE_NAMES := {
 	"meadows": "world",
 	"cloudreach": "cloudreach",
 	"stormwood": "stormwood",
+	"water": "water",
 }
 
 const DEFAULT_SETTLE_FRAMES := 240
@@ -183,6 +186,8 @@ var _peer_index := -1
 var _control_port := 0
 var _enet_port := 0
 var _scene_name := "world"
+var _water_mount_motion: Dictionary = {"running": false, "completed": false, "distance_m": 0.0, "failure": ""}
+var _water_motion: Dictionary = {"running": false, "completed": false, "distance_m": 0.0, "failure": ""}
 
 var _sock: StreamPeerTCP = null
 var _rx_buf := ""
@@ -315,6 +320,10 @@ func _initialize() -> void:
 # --- boot ---------------------------------------------------------------------
 
 func _boot_scene(which: String, settle: int) -> void:
+	if which == "water":
+		# SceneTree._initialize can precede Game._ready. Let the production
+		# autoload reset and mount Session before standing a Water spawner.
+		await process_frame
 	if which == "loopback":
 		_boot_loopback()
 	else:
@@ -325,6 +334,12 @@ func _boot_scene(which: String, settle: int) -> void:
 			path = CLOUDREACH_SCENE
 		elif which == "stormwood":
 			path = STORMWOOD_SCENE
+		elif which == "water":
+			path = WATER_SCENE
+			# Explicit net-smoke realm fixture, not a key or chapter completion.
+			var water_game := root.get_node_or_null("Game")
+			if water_game != null:
+				water_game.set("current_realm", "water")
 		var packed: PackedScene = load(path)
 		if packed == null:
 			push_error("peer_runner: could not load scene '%s' (%s)" % [which, path])
@@ -338,6 +353,15 @@ func _boot_scene(which: String, settle: int) -> void:
 		var scene: Node = packed.instantiate()
 		root.add_child(scene)
 		current_scene = scene
+		if which == "water":
+			for _frame in 900:
+				if scene.has_method("shell_build_complete") and bool(scene.call("shell_build_complete")):
+					break
+				await physics_frame
+			if not scene.has_method("shell_build_complete") or not bool(scene.call("shell_build_complete")):
+				push_error("peer_runner: Water shell did not finish building")
+				quit(2)
+				return
 	for i in maxi(0, settle):
 		await physics_frame
 	_scene_name = which
@@ -622,6 +646,18 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_fly_land(args)
 		"fly_claim_anchor":
 			out = await _step_fly_claim_anchor(args)
+		"water_mount_fixture":
+			out = await _step_water_mount_fixture(args)
+		"water_mounted_swim":
+			out = _step_water_mounted_swim()
+		"water_remount":
+			var controller := _riding_controller()
+			var water_ok := current_scene != null and current_scene.has_method("world_realm") and str(current_scene.call("world_realm")) == "water"
+			out = {"verdict": "PASS" if water_ok and controller != null and controller.call("mount") else "FAIL", "detail": "Water actual remount; no position or resource writes"}
+		"water_fixture":
+			out = await _step_water_fixture(args)
+		"water_lesson":
+			out = _step_water_lesson()
 		_:
 			out = {"verdict": "ERROR", "detail": "unknown action '%s'" % action}
 	out["frames_used"] = _physics_count - before
@@ -3855,9 +3891,126 @@ func _step_fly_claim_anchor(args: Dictionary) -> Dictionary:
 
 
 
+## Water-only fixtures. Position/resource writes are explicitly SETUP; all
+## movement after water_lesson starts is production input and physics.
+func _step_water_fixture(args: Dictionary) -> Dictionary:
+	var world := current_scene as Node3D
+	var player := _probe.call("player") as CharacterBody3D
+	if world == null or not world.has_method("world_realm") or str(world.call("world_realm")) != "water" or player == null:
+		return {"verdict": "ERROR", "detail": "Water fixture requires the real Water scene and Player"}
+	var controller: Node = player.get("swim_controller")
+	if controller == null:
+		return {"verdict": "ERROR", "detail": "Water fixture has no production SwimController"}
+	if bool(_water_motion.running):
+		return {"verdict": "ERROR", "detail": "Cannot replace a moving lesson fixture"}
+	var mode := str(args.get("mode", "lesson"))
+	var vitals: RefCounted = player.get("vitals")
+	if mode == "exhausted":
+		vitals.stamina = 0.0
+		return {"verdict": "PASS", "detail": "SETUP: owning player's stamina set to zero; location/controller unchanged"}
+	var config: Dictionary = world.get("config")
+	var at := Vector3.INF
+	if mode == "lesson":
+		var raw: Array = config.swim_lesson.surface_polyline[0]
+		at = Vector3(float(raw[0]), -0.7, float(raw[2]))
+	elif mode == "island":
+		for anchor: Dictionary in config.anchors:
+			if str(anchor.island_id) == str(args.get("island_id", "")):
+				var raw: Array = anchor.safe_position
+				at = Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
+				at.y = float(world.call("ground_height_at", at.x, at.z)) + 0.2
+				break
+	if not at.is_finite():
+		return {"verdict": "ERROR", "detail": "Unknown Water fixture mode/island or missing baked height"}
+	_press_edge("move_forward", false)
+	player.global_position = at
+	player.velocity = Vector3.ZERO
+	vitals.health = vitals.max_health
+	vitals.stamina = vitals.max_stamina
+	# A declared skill-level fixture verifies nonzero owner presentation without
+	# pretending this network transport smoke earned catches or spent candy.
+	var game := root.get_node("Game")
+	var skills: RefCounted = game.get("local").skills
+	var skill_data: Dictionary = skills.call("save_data")
+	skill_data.levels.catching = int(args.get("catching_level", 0))
+	skills.call("load_data", skill_data)
+	for _frame in 60:
+		await physics_frame
+	return {"verdict": "PASS", "detail": "SETUP: Water %s fixture at %s; catching level %d" % [mode, player.global_position, skills.call("level", "catching")]}
+
+
+func _step_water_lesson() -> Dictionary:
+	if current_scene == null or not current_scene.has_method("world_realm") or str(current_scene.call("world_realm")) != "water":
+		return {"verdict": "ERROR", "detail": "water_lesson requires Water"}
+	if bool(_water_motion.running):
+		return {"verdict": "ERROR", "detail": "Water lesson input already running"}
+	_water_motion = {"running": true, "completed": false, "distance_m": 0.0, "failure": ""}
+	_water_lesson_walk()
+	return {"verdict": "PASS", "detail": "Started real camera-relative input across the authored 60m lesson"}
+
+
+func _water_lesson_walk() -> void:
+	var player := _probe.call("player") as CharacterBody3D
+	var camera := _probe.call("camera_rig") as Node3D
+	var config: Dictionary = current_scene.get("config")
+	var raw: Array = config.swim_lesson.surface_polyline[-1]
+	var target := Vector3(float(raw[0]), 0.0, float(raw[2]))
+	for _frame in 1500:
+		var delta := target - player.global_position
+		delta.y = 0.0
+		if delta.length() < 0.5:
+			_water_motion.completed = true
+			break
+		camera.set("yaw", atan2(-delta.x, -delta.z))
+		var press := _press_edge("move_forward", true)
+		if not bool(press.get("ok", false)):
+			_water_motion.failure = str(press.get("why", "input failed"))
+			break
+		var before := player.global_position
+		await physics_frame
+		var moved := player.global_position - before
+		moved.y = 0.0
+		var controller: Node = player.get("swim_controller")
+		if controller != null and bool(controller.call("is_swimming")):
+			_water_motion.distance_m += moved.length()
+		if float(player.get("vitals").health) <= 0.0:
+			_water_motion.failure = "Player died while following lesson input"
+			break
+	_press_edge("move_forward", false)
+	_water_motion.running = false
+	if not bool(_water_motion.completed) and str(_water_motion.failure).is_empty():
+		_water_motion.failure = "Lesson movement exceeded 1500 physics frames"
+
+
+func _probe_water_swimming() -> Dictionary:
+	var local := {}
+	var player := _probe.call("player") as CharacterBody3D
+	if player != null:
+		var controller: Node = player.get("swim_controller")
+		var vitals: RefCounted = player.get("vitals")
+		local = {"position": [player.global_position.x, player.global_position.y, player.global_position.z],
+			"on_floor": player.is_on_floor(), "health": vitals.health, "stamina": vitals.stamina,
+			"aquatic": controller.call("snapshot") if controller != null else {},
+			"lesson": _water_motion.duplicate(true), "user_data_dir": OS.get_user_data_dir()}
+	var remote := {}
+	for node: Node in get_nodes_in_group("remote_trainer"):
+		if not node is Node3D or node.is_multiplayer_authority():
+			continue
+		var body := node as Node3D
+		var aquatic: RefCounted = body.get("aquatic")
+		remote[str(body.get("peer_id"))] = {"position": [body.global_position.x, body.global_position.y, body.global_position.z],
+			"net_aquatic": body.get("net_aquatic"), "applied_aquatic": aquatic.call("snapshot"),
+			"net_catching_level": body.get("net_catching_level"), "visible": body.visible}
+	return {"local": local, "remote": remote, "current_realm": str(root.get_node("Game").get("current_realm"))}
+
+
 func _execute_probe(msg: Dictionary) -> Variant:
 	var what := str(msg.get("what", ""))
 	match what:
+		"water_mounted":
+			return _probe_water_mounted()
+		"water_swimming":
+			return _probe_water_swimming()
 		"position":
 			var player := _probe.call("player") as Node3D
 			if player == null:
@@ -5078,3 +5231,107 @@ func _git_sha() -> String:
 	if code == 0 and output.size() > 0:
 		return str(output[0]).strip_edges()
 	return ""
+
+
+## Water-only owned mount setup. Generic ride_setup remains the production
+## summon/tack fixture; this adds the explicit Stone and dry lesson position.
+func _step_water_mount_fixture(args: Dictionary) -> Dictionary:
+	if current_scene == null or not current_scene.has_method("world_realm") or str(current_scene.call("world_realm")) != "water":
+		return {"verdict":"ERROR", "detail":"Water mount fixture requires Water"}
+	var game := root.get_node("Game")
+	var director := _encounter_director()
+	if bool(args.get("exhausted", false)):
+		var creature: RefCounted = director.ally_instance()
+		if creature == null:
+			return {"verdict":"FAIL", "detail":"No owned mount to exhaust"}
+		creature.swim_stamina_fraction = 0.0
+		return {"verdict":"PASS", "detail":"SETUP owned creature swim stamina zero; pose unchanged"}
+	game.get("local").flags.set_flag("water_swim_stone_earned")
+	var config: Dictionary = current_scene.get("config")
+	var player := _probe.call("player") as CharacterBody3D
+	for anchor: Dictionary in config.anchors:
+		if str(anchor.id) == str(config.swim_lesson.start_anchor):
+			var a: Array = anchor.safe_position
+			player.global_position = Vector3(float(a[0]),current_scene.ground_height_at(float(a[0]),float(a[2]))+0.2,float(a[2]))
+			player.velocity = Vector3.ZERO
+			break
+	for _frame in 45:
+		await physics_frame
+	var result := await _step_ride_setup({"species":str(args.get("species","water_aquaryn"))})
+	if str(result.get("verdict","")) == "PASS":
+		# Nonzero energy makes the later no-combat-energy-drain assertion useful.
+		director.ally_instance().energy = 20.0
+	return result
+
+func _step_water_mounted_swim() -> Dictionary:
+	if current_scene == null or not current_scene.has_method("world_realm") or str(current_scene.call("world_realm")) != "water":
+		return {"verdict":"ERROR", "detail":"Mounted Water input requires Water"}
+	var riding := _riding_controller()
+	if riding == null or not riding.is_mounted() or bool(_water_mount_motion.running):
+		return {"verdict":"FAIL", "detail":"No mounted body or input already running"}
+	_water_mount_motion = {"running":true,"completed":false,"distance_m":0.0,"failure":""}
+	_water_mounted_walk()
+	return {"verdict":"PASS", "detail":"Started real mounted input from lesson shore to deep offshore point"}
+
+func _water_mounted_walk() -> void:
+	var riding := _riding_controller()
+	var body: CharacterBody3D = riding.mount_body()
+	var camera := _probe.call("camera_rig") as Node3D
+	var config: Dictionary = current_scene.get("config")
+	var a: Array = config.swim_lesson.surface_polyline[0]
+	var b: Array = config.swim_lesson.surface_polyline[-1]
+	var first := Vector3(float(a[0]),0,float(a[2]))
+	var middle := first.lerp(Vector3(float(b[0]),0,float(b[2])),0.5)
+	middle += middle.normalized()*15.0
+	var all_reached := true
+	for target: Vector3 in [first,middle]:
+		var reached := false
+		for _frame in 1200:
+			if not riding.is_mounted():
+				_water_mount_motion.failure = "Ride ended while swimming"
+				break
+			var delta := target-body.global_position
+			delta.y=0.0
+			if delta.length()<0.9:
+				reached=true
+				break
+			camera.set("yaw",atan2(-delta.x,-delta.z))
+			_press_edge("move_forward",true)
+			var before := body.global_position
+			await physics_frame
+			if int(current_scene.get_node("MountedSwimming").state.mode)==2:
+				var moved := body.global_position-before
+				moved.y=0.0
+				_water_mount_motion.distance_m+=moved.length()
+		if not reached:
+			all_reached=false
+			break
+	_press_edge("move_forward",false)
+	_water_mount_motion.running=false
+	_water_mount_motion.completed=all_reached
+	if not all_reached and str(_water_mount_motion.failure).is_empty():
+		_water_mount_motion.failure="Mounted input exceeded waypoint frame budget"
+
+func _probe_water_mounted() -> Dictionary:
+	var result: Dictionary = _probe_water_swimming()
+	result["riding"] = _execute_probe({"what":"riding"})
+	result["motion"] = _water_mount_motion.duplicate(true)
+	var director := _encounter_director()
+	var creature: RefCounted = director.ally_instance() if director != null else null
+	var body: Node3D = director.ally_body() if director != null else null
+	result["owned_mount"] = {"species":str(creature.species_id),"energy":creature.energy,"hp":creature.hp,
+		"swim_stamina_fraction":creature.swim_stamina_fraction,"position":[body.global_position.x,body.global_position.y,body.global_position.z]} if creature != null and body != null else {}
+	var remote_mounts: Dictionary = {}
+	for mount: Node in get_nodes_in_group("remote_creature"):
+		if not mount is Node3D or mount.is_multiplayer_authority():
+			continue
+		var owner := int(mount.get("owner_peer_id"))
+		var seat_error := -1.0
+		for rider: Node in get_nodes_in_group("remote_trainer"):
+			if rider is Node3D and int(rider.get("peer_id"))==owner:
+				seat_error=rider.global_position.distance_to(mount.to_global(rider.get("net_mount_offset")))
+		remote_mounts[str(owner)]={"owner_peer_id":owner,"authority":mount.get_multiplayer_authority(),
+			"species":mount.species_id,"net_aquatic":mount.net_aquatic,"applied_aquatic":mount.aquatic.snapshot(),
+			"seat_error_m":seat_error,"position":[mount.global_position.x,mount.global_position.y,mount.global_position.z]}
+	result["remote_mounts"]=remote_mounts
+	return result

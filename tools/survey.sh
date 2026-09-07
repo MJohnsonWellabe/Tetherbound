@@ -1,26 +1,35 @@
 #!/usr/bin/env bash
-# Capture the fixed-viewpoint survey, for the visual critic loop.
+# Fixed-viewpoint captures for the visual critic loop.
 #
-#   tools/survey.sh [godot-binary]
-#   tools/survey.sh --stormwood [godot-binary] [output-directory]
+#   tools/survey.sh [--water|--stormwood] [godot-binary] [output-directory]
 #
-# Capture with the shipped Compatibility renderer (project.godot and D01).
-# On Linux without a display, provide a virtual framebuffer and OpenGL driver.
-# Do not force Vulkan: that changes the project's rendering backend and has
-# failed during Stormwood asset loading on the Windows capture machine.
+# Capture with the shipped Compatibility renderer (project.godot and D01) in
+# every mode. On Linux without a display, provide a virtual framebuffer and the
+# OpenGL driver. Do not force Vulkan: that changes the project's rendering
+# backend and has failed during Stormwood asset loading on the Windows capture
+# machine. A Stormwood survey that forced Vulkan was the "renderer blocker" the
+# Stormwood lane later withdrew; the corrected Compatibility capture is what the
+# blind judge is answered on. Compatibility frames do not prove Forward+
+# lighting or post-processing, and nothing in this project ships Forward+.
 set -uo pipefail
 
-GODOT="${1:-${GODOT:-godot}}"
-MODE="meadows"
-if [ "${1:-}" = "--stormwood" ]; then
-  MODE="stormwood"
-  shift
-  GODOT="${1:-${GODOT:-godot}}"
-fi
+GODOT="${GODOT:-godot}"
+MODE=default
+OUT_ARG=""
+POSITIONAL_COUNT=0
+for arg in "$@"; do
+  case "$arg" in
+    --water) MODE=water ;;
+    --stormwood) MODE=stormwood ;;
+    *)
+      if [ "$POSITIONAL_COUNT" -eq 0 ]; then GODOT="$arg"; else OUT_ARG="$arg"; fi
+      POSITIONAL_COUNT=$((POSITIONAL_COUNT + 1))
+      ;;
+  esac
+done
 cd "$(dirname "$0")/.."
-
 if [ "$MODE" = "stormwood" ]; then
-  OUT_DIR="${STORMWOOD_SURVEY_OUT:-${2:-shots/stormwood-foundation}}"
+  OUT_DIR="${STORMWOOD_SURVEY_OUT:-${OUT_ARG:-shots/stormwood-foundation}}"
   mkdir -p "$OUT_DIR"
   LOG_PATH="$OUT_DIR/survey.log"
   STORMWOOD_SURVEY_OUT="$OUT_DIR" "$GODOT" --path . --rendering-driver opengl3 --resolution 1280x720 \
@@ -47,19 +56,49 @@ if [ "$MODE" = "stormwood" ]; then
   exit 0
 fi
 
+SCRIPT=tools/survey.gd
+OUT=shots
+if [ "$MODE" = water ]; then
+  SCRIPT=tools/survey_water.gd
+  OUT=shots/water
+fi
+mkdir -p "$OUT"
+case "$(uname -s)" in
+  MINGW*|MSYS*|CYGWIN*)
+    # Keep the render window off the desktop; this is a real display, not headless.
+    "$GODOT" --path . --rendering-driver opengl3 --resolution 1280x720 \
+      --position -10000,-10000 --log-file "$OUT/engine.log" --script "$SCRIPT" \
+      2>&1 | tee "$OUT/survey.log"
+    ;;
+  *)
+    xvfb-run -a -s "-screen 0 1280x720x24" \
+      "$GODOT" --path . --rendering-driver opengl3 --resolution 1280x720 \
+      --log-file "$OUT/engine.log" --script "$SCRIPT" 2>&1 \
+      | grep -viE "ALSA|libpulse|pcm\.c|conf\.c|confmisc|snd_"
+    ;;
+esac
+RUN_EXIT=${PIPESTATUS[0]}
+if [ "$MODE" = water ]; then
+  # Known extension shutdown failures may follow completed captures; surface the
+  # exit code but require the current-run completion manifest and all six files.
+  COUNT=$(find "$OUT" -maxdepth 1 -name '[0-9][0-9]-*.png' | wc -l)
+  if grep -qE 'SCRIPT ERROR:|^ERROR:' "$OUT/engine.log"; then
+    echo "Water survey FAILED: runtime errors in $OUT/engine.log"
+    exit 1
+  fi
+  if [ "$COUNT" -ne 6 ] || ! grep -Eq '"complete"[[:space:]]*:[[:space:]]*true' "$OUT/metadata.json"; then
+    echo "Water survey FAILED: frames=$COUNT engine_exit=$RUN_EXIT"
+    exit 1
+  fi
+  echo "Water survey wrote six frames to $OUT (engine_exit=$RUN_EXIT)"
+  exit 0
+fi
 # Godot aborts on shutdown after rendering with this extension loaded; the
 # frames are already written by then. The exit code is therefore not the check
 # — the file count is. See docs/decisions/D06.
-xvfb-run -a -s "-screen 0 1280x720x24" \
-  "$GODOT" --path . --rendering-driver opengl3 --resolution 1280x720 \
-  --script tools/survey.gd 2>&1 \
-  | grep -viE "ALSA|libpulse|pcm\.c|conf\.c|confmisc|snd_"
-
 COUNT=$(ls -1 shots/*.png 2>/dev/null | wc -l)
 if [ "$COUNT" -eq 0 ]; then
   echo "survey FAILED: no frames written"
   exit 1
 fi
-if grep -q . <<<"$(ls shots/*.png 2>/dev/null)"; then
-  echo "survey wrote ${COUNT} frames to shots/"
-fi
+echo "survey wrote ${COUNT} frames to shots/"

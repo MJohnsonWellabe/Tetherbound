@@ -123,14 +123,6 @@ const TYPE_ICONS := {
 }
 const BOND_ICON := preload("res://assets/ui/icons/ui/bond.png")
 
-## Where a species' portrait art lives, if it has any -- the same path shape
-## `playground_hud.gd::_species_portrait_path` builds for the HUD's own
-## tracked-creature chip. Duplicated rather than called cross-file (this tab
-## and that HUD are unrelated nodes with no shared parent to reach through),
-## but kept to the one format string so the two screens can never point at
-## different art for the same species.
-const PORTRAIT_DIR := "res://assets/ui/portraits/creatures/"
-
 var _header: Label = null
 ## Button nodes only — see the header note on why `smoke_menu.gd` needs these
 ## to be castable straight to `Button`, not a wrapper.
@@ -1657,6 +1649,12 @@ func _maybe_begin_release() -> void:
 	if party == null or game == null:
 		return
 	if not bool(party.call("is_full")):
+		var capture_service := _water_capture_service(pending)
+		if capture_service != null:
+			var result: Dictionary = capture_service.complete_pending_capture(-1)
+			if result.get("ok", false):
+				say("%s joins the belt." % str(pending.call("label")))
+			return
 		# Room opened between the catch and the ceremony (a load, a future
 		# system). No choice to stage — the newcomer just takes the free
 		# holder, said out loud.
@@ -1772,7 +1770,14 @@ func _do_release() -> void:
 		return
 
 	var released: RefCounted = null
-	if _release_target >= PARTY.MAX_CREATURES:
+	var capture_service := _water_capture_service(pending)
+	if capture_service != null:
+		var result: Dictionary = capture_service.complete_pending_capture(_release_target)
+		if not result.get("ok", false):
+			return
+		released = result.get("released")
+		_release_land = 0 if _release_target >= PARTY.MAX_CREATURES else _release_target
+	elif _release_target >= PARTY.MAX_CREATURES:
 		released = pending
 		_release_land = 0
 	else:
@@ -1897,6 +1902,10 @@ func _creature_at(index: int) -> RefCounted:
 	return party.call("at", index) if party != null else null
 
 
+func _water_capture_service(creature: RefCounted) -> Node:
+	var service := get_node_or_null("/root/Game/Session/LedgerRpc/WaterCaptureClaims")
+	return service if service != null and service.owns_pending(creature) else null
+
 func _pending_catch() -> RefCounted:
 	var game := state()
 	return game.get("pending_catch") if game != null else null
@@ -1935,20 +1944,7 @@ func _history_line(creature: RefCounted) -> String:
 	return " " + ", ".join(parts).capitalize() + "."
 
 
-## The same aspect-variant fallback `playground_hud.gd::_species_portrait_path()`
-## makes, kept here rather than reached across because these two screens have no
-## shared parent -- the identical reason `PORTRAIT_DIR`'s own header gives for
-## duplicating the path format. An aspect variant (T3-CREATURES: nightburrow,
-## stormtrail, riftfrill, ashtusk) has no portrait of its own and reuses its base
-## species', exactly as it already reuses that species' mesh. Without this the
-## roster showed a bare swatch for the four rarest creatures in the chapter --
-## the two screens drifting apart again, which is what that header exists to
-## prevent.
+## Shares dedicated, aspect-variant and explicit Water placeholder resolution
+## with the party HUD, so both screens show the same installed body.
 func _portrait_path(species_id: String) -> String:
-	if species_id.is_empty():
-		return ""
-	var path := "%s%s.png" % [PORTRAIT_DIR, species_id]
-	if ResourceLoader.exists(path):
-		return path
-	var base := str(SPECIES.definition(species_id).get("variant_of", ""))
-	return "%s%s.png" % [PORTRAIT_DIR, base] if base != "" else path
+	return preload("res://scripts/ui/creature_portrait.gd").resolve(species_id)

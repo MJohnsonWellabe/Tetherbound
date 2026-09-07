@@ -9,14 +9,17 @@ var _surviving := Vector3.ZERO
 var _last_velocity := Vector3.INF
 
 
-func register_modifier(id: StringName, owner: Node, modifier: Callable, order: int = 0) -> bool:
+func register_modifier(id: StringName, owner: Node, modifier: Callable, order: int = 0,
+		additive_axes: Vector3 = Vector3.ONE) -> bool:
 	if id.is_empty() or not is_instance_valid(owner) or not modifier.is_valid():
+		return false
+	if not additive_axes.is_finite():
 		return false
 	clear_modifier(id)
 	var cleanup := func() -> void: clear_modifier(id)
 	owner.tree_exiting.connect(cleanup, CONNECT_ONE_SHOT)
 	_entries[id] = {"owner": weakref(owner), "modifier": modifier, "order": order,
-		"sequence": _sequence, "cleanup": cleanup}
+		"sequence": _sequence, "cleanup": cleanup, "additive_axes": additive_axes.clamp(Vector3.ZERO, Vector3.ONE)}
 	_sequence += 1
 	return true
 
@@ -52,8 +55,8 @@ func apply(body: CharacterBody3D, delta: float) -> void:
 		var left: Dictionary = _entries[a]
 		var right: Dictionary = _entries[b]
 		return int(left.order) < int(right.order) if left.order != right.order else int(left.sequence) < int(right.sequence))
-	var before := body.velocity
 	var before_position := body.position
+	_added = Vector3.ZERO
 	for id: StringName in ordered:
 		if not _entries.has(id):
 			continue # An earlier callback may unregister a later one.
@@ -61,8 +64,13 @@ func apply(body: CharacterBody3D, delta: float) -> void:
 		if not is_instance_valid(entry.owner.get_ref()) or not (entry.modifier as Callable).is_valid():
 			clear_modifier(id)
 			continue
+		var before := body.velocity
 		(entry.modifier as Callable).call(body, delta)
-	_added = body.velocity - before if body.position.is_equal_approx(before_position) else Vector3.ZERO
+		# A surface controller replaces vertical gravity. That replacement is
+		# not additive wind to subtract and project across a shore next frame.
+		_added += (body.velocity - before) * (entry.additive_axes as Vector3)
+	if not body.position.is_equal_approx(before_position):
+		_added = Vector3.ZERO
 
 
 func after_slide(body: CharacterBody3D, discarded: bool = false) -> void:

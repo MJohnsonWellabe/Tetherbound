@@ -2,6 +2,25 @@ extends "res://tests/test_case.gd"
 
 const MODIFIERS := preload("res://scripts/world/environment_velocity_modifiers.gd")
 
+func test_surface_vertical_replacement_has_no_additive_debt_but_current_does() -> void:
+	var modifiers := MODIFIERS.new()
+	var body := CharacterBody3D.new()
+	var owner := Node.new()
+	var buoyancy := func(actor: CharacterBody3D, _dt: float) -> void:
+		actor.velocity += Vector3(2, 0, 1)
+		actor.velocity.y = -30.0
+	assert_true(modifiers.register_modifier(&"water", owner, buoyancy, 100, Vector3(1, 0, 1)))
+	body.velocity = Vector3(3, -2, 4)
+	modifiers.apply(body, 0.1)
+	assert_eq(body.velocity, Vector3(5, -30, 5))
+	assert_eq(modifiers._added, Vector3(2, 0, 1), "vertical surface correction must not become slope-projected wind debt")
+	modifiers.after_slide(body)
+	modifiers.begin_step(body)
+	assert_eq(body.velocity, Vector3(3, -30, 4), "remove current only; next integrator owns gravity")
+	modifiers.clear_all()
+	body.free()
+	owner.free()
+
 class Owner extends Node:
 	func add_wind(body: CharacterBody3D, _delta: float) -> void:
 		body.velocity.x += 7.0
