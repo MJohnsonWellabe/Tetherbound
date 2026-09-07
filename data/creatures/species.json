@@ -1192,6 +1192,37 @@
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
       }
     },
+    "aquaryn": {
+      "display_name": "Aquaryn",
+      "type": "water",
+      "base_hp": 95.0,
+      "base_attack": 24.0,
+      "base_defence": 18.0,
+      "catch_rate": 0.35,
+      "aggressive": false,
+      "moves": {
+        "quick": "ripple_jab",
+        "charged": "tremor_roll"
+      },
+      "placeholder": {
+        "colour": "#8899aa",
+        "height": 2.0,
+        "radius": 0.7,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/aquaryn/models/creature_aquaryn_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-FIX-2026-09-07: the model itself succeeded after 2 redos (a crop bug fed the wrong section of the reference board, causing a floating leg then a multi-leg pileup before a correctly-cropped board fixed it), but rig_quadruped.py's bone-heat weighting then failed to converge on the corrected mesh (100% of vertices left unweighted). Fixed via strip_textures.py -> cleanup_mesh.py (voxel-remesh to one manifold donor) -> rig_quadruped.py on the clean donor (0 unweighted) -> skin_transfer.py (nearest-face weight transfer onto the real textured mesh, 0 unweighted after transfer) -> animate_quadruped.py, verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+      }
+    },
     "torrentoad": {
       "display_name": "Torrentoad",
       "type": "water",
@@ -1670,6 +1701,130 @@
           "faint": "faint"
         },
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+      }
+    },
+    "stormbrush": {
+      "display_name": "Stormbrush",
+      "type": "electric",
+      "base_hp": 95.0,
+      "base_attack": 24.0,
+      "base_defence": 18.0,
+      "catch_rate": 0.35,
+      "aggressive": false,
+      "moves": {
+        "quick": "spark_bite",
+        "charged": "arc_lash"
+      },
+      "placeholder": {
+        "colour": "#8899aa",
+        "height": 1.9,
+        "radius": 0.665,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/stormbrush/models/creature_stormbrush_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-FIX-2026-09-07: modelled and reviewed clean earlier, but rig_quadruped.py's bone-heat weighting failed to converge on the raw retexture output (100% of vertices left unweighted -- the mesh rigged without erroring but every vertex was flagged as unweighted, which tears on the first animation frame). Fixed via strip_textures.py (drop texture nodes to get a rigging donor) -> cleanup_mesh.py (voxel-remesh to one manifold donor; the default --voxel-divisor 220 still failed 100% unweighted, --voxel-divisor 110 succeeded at 0 unweighted -- the dense spiky geometry needed a coarser voxel) -> rig_quadruped.py on the clean donor -> skin_transfer.py (nearest-face weight transfer onto the real textured mesh, 0 unweighted after transfer) -> animate_quadruped.py, verified against a rendered turntable (no tearing at the joints) before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+      }
+    },
+    "tanglevolt": {
+      "display_name": "Tanglevolt",
+      "type": "electric",
+      "base_hp": 95.0,
+      "base_attack": 24.0,
+      "base_defence": 18.0,
+      "catch_rate": 0.35,
+      "aggressive": true,
+      "moves": {
+        "quick": "arc_lash",
+        "charged": "spark_bite"
+      },
+      "placeholder": {
+        "colour": "#8899aa",
+        "height": 2.0,
+        "radius": 0.7,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/tanglevolt/models/creature_tanglevolt_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-FIX-2026-09-07: same failure and fix as stormbrush's comment above -- rig_quadruped.py's bone-heat weighting left 100% of vertices unweighted on the raw mesh; strip_textures.py -> cleanup_mesh.py (clean manifold donor) -> rig_quadruped.py on the donor (0 unweighted) -> skin_transfer.py onto the real textured mesh (0 unweighted after transfer) -> animate_quadruped.py, verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+      }
+    },
+    "thundertunnel": {
+      "display_name": "Thundertunnel",
+      "type": "electric",
+      "base_hp": 95.0,
+      "base_attack": 24.0,
+      "base_defence": 18.0,
+      "catch_rate": 0.35,
+      "aggressive": false,
+      "moves": {
+        "quick": "spark_bite",
+        "charged": "arc_lash"
+      },
+      "placeholder": {
+        "colour": "#8899aa",
+        "height": 1.6,
+        "radius": 0.56,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/thundertunnel/models/creature_thundertunnel_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-FIX-2026-09-07: took 4 model generations to land (the first two produced a duplicated/fused second body, traced to a reference crop that grabbed the whole multi-mole turnaround panel instead of one isolated creature; a 4th generation from a better-cropped board, requested by the owner, fixed the duplication). Same bone-heat failure and fix chain as stormbrush -- 100% unweighted on the raw mesh, --voxel-divisor 220 cleanup still failed 100% unweighted, --voxel-divisor 110 succeeded at 0 unweighted -- then skin_transfer.py onto the real textured mesh (0 unweighted after transfer) -> animate_quadruped.py, verified against a rendered turntable (single coherent body, no tearing) before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+      }
+    },
+    "glimmermoth": {
+      "display_name": "Glimmermoth",
+      "type": "electric",
+      "base_hp": 95.0,
+      "base_attack": 24.0,
+      "base_defence": 18.0,
+      "catch_rate": 0.35,
+      "aggressive": false,
+      "moves": {
+        "quick": "arc_lash",
+        "charged": "spark_bite"
+      },
+      "placeholder": {
+        "colour": "#8899aa",
+        "height": 1.8,
+        "radius": 0.63,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/glimmermoth/models/creature_glimmermoth_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-FIX-2026-09-07: modelled and reviewed clean earlier, but rig_quadruped.py refuses this body plan outright (a compact insect torso with 4 legs, 2 wings and 2 antennae doesn't separate into the 4 clean leg-quadrant clusters the script requires, so it exits rather than guessing). Fixed by rigging with rig_glider.py instead, directly on the mesh -- 0.1% unweighted, judged negligible and left as-is rather than chasing the last fraction of a vertex -- then animate_quadruped.py, which already auto-detects a glider skeleton by bone name and produced clips with no new animator script needed. Verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
       }
     },
     "stormcapra": {

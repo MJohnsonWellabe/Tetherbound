@@ -2,19 +2,19 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bgjt470e37qdx"
-path="res://.godot/imported/creature_stormcapra_lod0_Image_0.jpg-2cea2ffc6c177e83ac9adabc9d939c10.ctex"
+uid="uid://dqpd4qsf3rsmq"
+path="res://.godot/imported/creature_tanglevolt_lod0_Image_0.jpg-7db3f9aff8f0800cb8fa65dc5d76042d.ctex"
 metadata={
 "vram_texture": false
 }
 generator_parameters={
-"md5": "7cde38eaea6dec3347187778d685a8df"
+"md5": "31e42d2007fc83f1fc19158a66671359"
 }
 
 [deps]
 
-source_file="res://assets/creatures/tetherbound/stormcapra/models/creature_stormcapra_lod0_Image_0.jpg"
-dest_files=["res://.godot/imported/creature_stormcapra_lod0_Image_0.jpg-2cea2ffc6c177e83ac9adabc9d939c10.ctex"]
+source_file="res://assets/creatures/tetherbound/tanglevolt/models/creature_tanglevolt_lod0_Image_0.jpg"
+dest_files=["res://.godot/imported/creature_tanglevolt_lod0_Image_0.jpg-7db3f9aff8f0800cb8fa65dc5d76042d.ctex"]
 
 [params]
 

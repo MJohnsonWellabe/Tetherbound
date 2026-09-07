@@ -1331,15 +1331,18 @@ SPECIES_PROMPTS = {
     # ---------------------------------------------------------------------
     "lyra": (
         "stylised young female explorer, LYRA THE PATHFINDER: curious, bold, "
-        "always scouting the horizon. FULLY SCULPTED FACIAL FEATURES: "
-        "defined eye sockets, eyebrows, projecting nose and mouth geometry. "
-        "Slim athletic build, six and a quarter heads tall, NOT chibi. Five "
-        "separated fingers on each hand. Teal patterned scarf draped over "
-        "one shoulder with a leaf emblem, cream sleeveless crop top, dark "
-        "utility trousers with brown knee guards, fingerless gloves, canvas "
-        "satchel and pouches at the hip, sturdy brown lace-up boots, "
-        "tousled brown ponytail with loose side strands, warm confident "
-        "smile"),
+        "always scouting the horizon. BOTH ARMS HELD CLEARLY AWAY FROM THE "
+        "TORSO WITH VISIBLE DAYLIGHT BETWEEN EACH ARM AND THE BODY, elbows "
+        "bent, hands not touching the body, hips, or each other -- a "
+        "relaxed A-pose, not arms at the sides. FULLY SCULPTED FACIAL "
+        "FEATURES: defined eye sockets, eyebrows, projecting nose and mouth "
+        "geometry. Slim athletic build, six and a quarter heads tall, NOT "
+        "chibi. Five separated fingers on each hand. Teal patterned scarf "
+        "draped over one shoulder with a leaf emblem, cream sleeveless crop "
+        "top, dark utility trousers with brown knee guards, fingerless "
+        "gloves, canvas satchel and pouches at the hip, sturdy brown "
+        "lace-up boots, tousled brown ponytail with loose side strands, "
+        "warm confident smile"),
     "kael": (
         "stylised adult male explorer, KAEL THE NORTHWARD: steadfast, "
         "resilient, built for what's next. GRIPPING A LARGE STONE-HEADED "

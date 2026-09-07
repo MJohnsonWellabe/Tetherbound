@@ -2,19 +2,19 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bgjt470e37qdx"
-path="res://.godot/imported/creature_stormcapra_lod0_Image_0.jpg-2cea2ffc6c177e83ac9adabc9d939c10.ctex"
+uid="uid://cxjyipsa20tjf"
+path="res://.godot/imported/creature_aquaryn_lod0_Image_0.jpg-eede99d0757e31ded5e5e773f42b48f7.ctex"
 metadata={
 "vram_texture": false
 }
 generator_parameters={
-"md5": "7cde38eaea6dec3347187778d685a8df"
+"md5": "39b7ba0428ef27f219fdfff97a616e14"
 }
 
 [deps]
 
-source_file="res://assets/creatures/tetherbound/stormcapra/models/creature_stormcapra_lod0_Image_0.jpg"
-dest_files=["res://.godot/imported/creature_stormcapra_lod0_Image_0.jpg-2cea2ffc6c177e83ac9adabc9d939c10.ctex"]
+source_file="res://assets/creatures/tetherbound/aquaryn/models/creature_aquaryn_lod0_Image_0.jpg"
+dest_files=["res://.godot/imported/creature_aquaryn_lod0_Image_0.jpg-eede99d0757e31ded5e5e773f42b48f7.ctex"]
 
 [params]
 

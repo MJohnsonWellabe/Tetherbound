@@ -2,19 +2,19 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bgjt470e37qdx"
-path="res://.godot/imported/creature_stormcapra_lod0_Image_0.jpg-2cea2ffc6c177e83ac9adabc9d939c10.ctex"
+uid="uid://jp0trnncvxts"
+path="res://.godot/imported/creature_stormbrush_lod0_Image_0.jpg-2cdc24cfb61f65b0e7d72cdca8414c9d.ctex"
 metadata={
 "vram_texture": false
 }
 generator_parameters={
-"md5": "7cde38eaea6dec3347187778d685a8df"
+"md5": "3b235e12221168369312e98affb8acfe"
 }
 
 [deps]
 
-source_file="res://assets/creatures/tetherbound/stormcapra/models/creature_stormcapra_lod0_Image_0.jpg"
-dest_files=["res://.godot/imported/creature_stormcapra_lod0_Image_0.jpg-2cea2ffc6c177e83ac9adabc9d939c10.ctex"]
+source_file="res://assets/creatures/tetherbound/stormbrush/models/creature_stormbrush_lod0_Image_0.jpg"
+dest_files=["res://.godot/imported/creature_stormbrush_lod0_Image_0.jpg-2cdc24cfb61f65b0e7d72cdca8414c9d.ctex"]
 
 [params]
 
