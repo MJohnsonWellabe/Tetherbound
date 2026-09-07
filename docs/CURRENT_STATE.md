@@ -1,5 +1,21 @@
 # Current state — evidence-backed, 2026-09-06
 
+## Stormwood Stage A — resumed 2026-09-07, incomplete
+
+Stormwood foundation and opening/field interactions landed through PR #76 at
+`4562268dee581d2f2ce167a4670bbf752f139310`. PR #77 adds constructed Crown roads,
+heartstone progression and electric TMs; it is pending CI and merge. The chapter
+does not yet run end to end: named guardians, host-owned remote encounter starts,
+the mounted Dynamo and legendary/Spark/Waterward ending remain unfinished. The
+project ships the Compatibility renderer; the survey tool had incorrectly forced
+Vulkan. A corrected Compatibility production-scene survey emitted eight frames at
+`D:/CodexWork/stormwood-crown-compatibility`, and a separate compositor made `_sheet.png`.
+The blind judge failed both visual bar questions, so this replaces the old renderer-blocker
+claim but still earns no visual acceptance.
+See `ralph/reports/STORMWOOD-PROGRESS/fresh-session-tail-0907.md` for actual proof,
+the original run's missed overnight checkpoints and the resumed priorities.
+Stage B, Water, remains the next chapter after Stormwood passes its exit criteria.
+
 ## Stage B (multiplayer) — the CODE is complete, the OWNER EVIDENCE is not — 2026-09-06, branch `claude/tetherbound-roadmap-next-jrcjs8` @ `ad383219`
 
 **Every one of the twenty-four §17 rows in `docs/acceptance/MULTIPLAYER_ACCEPTANCE.md` now names a

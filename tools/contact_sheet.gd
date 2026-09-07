@@ -49,7 +49,8 @@ func _init() -> void:
 		if parts.size() < 2:
 			continue
 		if key == "dir":
-			_shots_dir = "res://%s" % parts[1].trim_prefix("res://").trim_suffix("/")
+			var directory := parts[1].replace("\\", "/").trim_suffix("/")
+			_shots_dir = directory if directory.is_absolute_path() else "res://%s" % directory.trim_prefix("res://")
 			_out_path = "%s/_sheet.png" % _shots_dir
 		elif key == "out":
 			explicit_out = parts[1]

@@ -19,6 +19,21 @@ const CURVE := preload("res://scripts/creatures/chapter_curve.gd")
 const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
 
 const SPAWNS_PATH := "res://data/config/spawns.json"
+const STORMWOOD_HARVESTS_PATH := "res://data/config/stormwood_harvests.json"
+const RECIPE_PATHS := [
+	"res://data/recipes/recipes.json",
+	"res://data/recipes/recipes_rootstone.json",
+	"res://data/recipes/recipes_ironwood.json",
+	"res://data/recipes/recipes_stormwood.json",
+]
+
+
+func _json(path: String) -> Dictionary:
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	return parsed if parsed is Dictionary else {}
 
 
 func _curve() -> Dictionary:
@@ -151,6 +166,10 @@ func test_every_build_cost_names_a_material_the_world_can_supply() -> void:
 	for node: Variant in (BAND_CONTENT.load_config(
 			"res://data/config/harvest.json", "nodes").get("nodes", []) as Array):
 		sources[str((node as Dictionary).get("item", ""))] = "harvest node"
+	for node: Variant in (_json(STORMWOOD_HARVESTS_PATH).get("sites", []) as Array):
+		var item := str((node as Dictionary).get("item", ""))
+		if item != "":
+			sources[item] = "Stormwood authored harvest site"
 
 	var veg_file := FileAccess.open("res://data/config/vegetation.json", FileAccess.READ)
 	assert_true(veg_file != null, "vegetation.json is missing")
@@ -162,6 +181,19 @@ func test_every_build_cost_names_a_material_the_world_can_supply() -> void:
 		if item != "":
 			sources[item] = "scatter layer '%s'" % name
 
+	# A build cost may be a field component, but only if its recipe closes over
+	# materials the world actually yields. This keeps thunderwood_frame honest:
+	# it is craftable from the Stormwood-mounted thunderwood and conductor-vine
+	# harvest sites, rather than being an allowlisted exception.
+	var recipes_by_output: Dictionary = {}
+	for path: String in RECIPE_PATHS:
+		for recipe: Variant in (_json(path).get("recipes", {}) as Dictionary).values():
+			var row: Dictionary = recipe as Dictionary
+			var output: Dictionary = row.get("output", {}) as Dictionary
+			var output_id := str(output.get("id", ""))
+			if output_id != "":
+				recipes_by_output[output_id] = row
+
 	var build_file := FileAccess.open("res://data/items/buildables.json", FileAccess.READ)
 	assert_true(build_file != null, "buildables.json is missing")
 	var parsed: Variant = JSON.parse_string(build_file.get_as_text())
@@ -171,6 +203,25 @@ func test_every_build_cost_names_a_material_the_world_can_supply() -> void:
 		var id := str((entry as Dictionary).get("id", ""))
 		for cost: Variant in ((entry as Dictionary).get("cost", []) as Array):
 			var material := str((cost as Dictionary).get("id", ""))
-			assert_true(sources.has(material),
+			assert_true(_material_is_obtainable(material, sources, recipes_by_output),
 				("buildable '%s' costs '%s' and nothing in the world yields it -- no harvest node, "
-				+ "no scatter layer. It could never be built") % [id, material])
+				+ "no scatter layer or recipe whose ingredients are obtainable. It could never be built") % [id, material])
+
+
+func _material_is_obtainable(material: String, sources: Dictionary, recipes: Dictionary,
+		visiting: Dictionary = {}) -> bool:
+	if sources.has(material):
+		return true
+	if visiting.has(material) or not recipes.has(material):
+		return false
+	var next_visiting := visiting.duplicate()
+	next_visiting[material] = true
+	var recipe: Dictionary = recipes[material] as Dictionary
+	var costs: Array = recipe.get("cost", []) as Array
+	if costs.is_empty():
+		return false
+	for raw_cost: Variant in costs:
+		var ingredient := str((raw_cost as Dictionary).get("id", ""))
+		if ingredient.is_empty() or not _material_is_obtainable(ingredient, sources, recipes, next_visiting):
+			return false
+	return true

@@ -1,6 +1,6 @@
 extends SceneTree
 
-## Forward+ production-scene foundation survey for Stormwood.
+## Shipped Compatibility-renderer production-scene survey for Stormwood.
 ##
 ## Run through tools/survey.sh --stormwood <godot-binary>. This captures the
 ## real Stormwood scene after its own `_ready_complete` signal, with the real
@@ -174,7 +174,7 @@ func _run() -> void:
 			push_error("Stormwood survey: %s" % failure)
 		quit(1)
 		return
-	print("STORMWOOD CAPTURE OK %d frames; Forward+ production scene; foundation views only" % VIEWS.size())
+	print("STORMWOOD CAPTURE OK %d frames; Compatibility production scene; survey fixture only" % VIEWS.size())
 	quit(0)
 
 

@@ -4,24 +4,10 @@
 #   tools/survey.sh [godot-binary]
 #   tools/survey.sh --stormwood [godot-binary] [output-directory]
 #
-# Needs a virtual framebuffer and software Vulkan:
-#   apt-get install -y xvfb mesa-vulkan-drivers
-#
-# RENDERER CAVEAT, which belongs in any critique made from these frames.
-#
-# This uses Godot's COMPATIBILITY renderer, not the Forward+ the game ships.
-# That is not a preference. Software Vulkan (lavapipe) was installed and does
-# render Forward+, but Terrain3D segfaults under it during region streaming —
-# reproduced consistently, crash inside terrain setup, before any capture.
-# Compatibility renders the same scene without complaint.
-#
-# What that costs: Compatibility is a different pipeline, not a lower-quality
-# Forward+. No SSAO, no volumetric fog, no SDFGI, and shadows are implemented
-# differently. So these frames are TRUSTWORTHY for composition, terrain shape,
-# silhouette, colour relationships and camera framing, and NOT trustworthy for
-# fine judgements about lighting quality or post-processing.
-#
-# On a machine with a real GPU, switch this to `vulkan` and the caveat lifts.
+# Capture with the shipped Compatibility renderer (project.godot and D01).
+# On Linux without a display, provide a virtual framebuffer and OpenGL driver.
+# Do not force Vulkan: that changes the project's rendering backend and has
+# failed during Stormwood asset loading on the Windows capture machine.
 set -uo pipefail
 
 GODOT="${1:-${GODOT:-godot}}"
@@ -37,7 +23,7 @@ if [ "$MODE" = "stormwood" ]; then
   OUT_DIR="${STORMWOOD_SURVEY_OUT:-${2:-shots/stormwood-foundation}}"
   mkdir -p "$OUT_DIR"
   LOG_PATH="$OUT_DIR/survey.log"
-  STORMWOOD_SURVEY_OUT="$OUT_DIR" "$GODOT" --path . --rendering-driver vulkan --resolution 1280x720 \
+  STORMWOOD_SURVEY_OUT="$OUT_DIR" "$GODOT" --path . --rendering-driver opengl3 --resolution 1280x720 \
     --script tools/survey_stormwood.gd 2>&1 | tee "$LOG_PATH"
   STATUS=${PIPESTATUS[0]}
   if [ "$STATUS" -ne 0 ]; then
@@ -56,7 +42,7 @@ if [ "$MODE" = "stormwood" ]; then
     echo "stormwood survey FAILED: contact sheet was not written"
     exit 1
   fi
-  echo "stormwood capture renderer: Godot Forward+ on the configured GPU (see capture log header)" | tee -a "$LOG_PATH"
+  echo "stormwood capture renderer: shipped Godot Compatibility/OpenGL (D01; see capture log header)" | tee -a "$LOG_PATH"
   echo "stormwood survey wrote ${COUNT} frames and ${OUT_DIR}/_sheet.png"
   exit 0
 fi
