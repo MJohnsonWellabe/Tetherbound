@@ -62,3 +62,27 @@ Delivery branch `ralph/water-foundation-0906` at `05a272f8961ca122a23063adc76320
 These paths ran before the rebase; the rebased map/flight/Skills/save seams were subsequently checked, but a complete current-head suite has not passed. CI34073362639 had two failing unit shards; their three concrete portrait/roster/save-key failures pass root's63tests359assertions and were pushed in05a272f89. That new commit awaits its own full CI. The local import failed with memory-allocation errors; the changed two-worker strategy is currently live without logged errors. The partial local shard run before import completion is not a clean regression pass. No points are awarded for imports, PRs, reports, analytic placement, untested mounted load changes or promised Alpha architecture.
 
 Next window ends **2026-09-07 03:55:38 UTC**. Prioritize the host-owned Aquaryn encounter, durable eligible-character Stone awards and ordinary saddle crafting, then second-half/Veilfall playability. Finish the already-prepared mounted transport and save checks while import completes; do not turn them into a narrow polishing tail. Preserve branch-only delivery and the two-consecutive-low-window stop rule.
+
+## Checkpoint 2026-09-07 03:55:38 UTC — branch 31/100, gain +13
+
+Rescored from inspected evidence at 03:55:43 UTC. Delivery head at the checkpoint is `494209824`, including capture-journal commit `9c546d81e`, based on main `c5e4d14d1`. Main still has **0 Water points**, because the owner explicitly keeps this branch unmerged. The denominator and weights are unchanged. This is a strong window: continue. No chapter phase or final acceptance is closed.
+
+| System | Weight | Branch score | Evidence and limit |
+|---|---:|---:|---|
+| Entry / continuous main path | 16 | 2 | Retain prior actual dock/camp subpaths. No continuous key-to-finale journey. |
+| Human swimming | 12 | 5 | Retain prior swimming/drowning/landing and peer proofs. Complete early crossing budgets remain unproven. |
+| Mounted traversal | 12 | 4 | Retain five-species actual traversal. Hardest crossing and second-half route choice still missing. |
+| Aquaryn / Stone / saddle | 12 | 7 | Actual33-check normal-attack victory → earned Stone → Iona dialogue → material-consuming craft → same-companion mount. Capture handover disk/ceremony64-check proof uses an explicitly seeded caught result. Dry basin only: surface phase, real catch completion and alternate mount journey remain missing. |
+| Veilfall | 14 | 3 | Actual31-check waterfall entrance, ordinary movement, blocking/opening grilles, pump/sluice world flags, bridge and return exit. No full approach or final ceremony. Newly completed captain smoke and Guardian presentation changes are not credited before their review/commit wave. |
+| Skills / Candy | 7 | 2 | Prior menu/ownership evidence retained. Full cross-biome reveal and all pickup paths missing. |
+| Water combat | 6 | 0 | Dry Alpha combat does not prove the water interception/pause/switch/remount sequence. |
+| Multiplayer | 8 | 4 | Mounted2-peer30-check evidence plus new24-check actual split-island Alpha host pose/HP/hit/forged-catch refusal and disconnect participant/target/claim-lock cleanup. No four-player, finale or catch/reconnect network acceptance. |
+| Persistence | 5 | 3 | Actual43-check mounted disk rebuild and64-check interrupted capture journal → real five-holder UI → character receipt/party disk save → host acknowledgment/replay. ENet mounted/capture reconnect remains unproven. |
+| Content / density | 4 | 1 | Prior actual encounter/camp and density evidence retained; no reward/dead-travel acceptance across whole archipelago. |
+| Relic / world response | 2 | 0 | Data and damage integration work in progress; no earned/place/activate/aftermath path. |
+| Visuals / controller / performance | 2 | 0 | No new blind accepted frames or shipping performance evidence. |
+| **Total** | **100** | **31** | **+13 from18. Strong: continue.** |
+
+Root inspected the actual logs and agent-authored tests; precise fixtures and reproduction limits are in `runtime-wave-3.md`. CI34079878893 on `5375dde9e` completed successfully with every enabled code job green, including four unit and five multiplayer shards. Known-red jobs and export were explicitly skipped by the workflow. Unit raw logs still contain fixture errors. The later pushed capture-journal head requires its own CI; do not transfer old-head green status to it.
+
+Next fixed checkpoint: **2026-09-07 05:55:38 UTC**. Prioritize the captain-to-Guardian ceremony/relic/world response, then continuous first-half/Alpha/second-half traversal and the Alpha's surface route. Finish bounded recovery evidence without turning capture details into a polishing tail. Keep Meshy deferred until broad chapter playability, and keep the owner-reserved merge boundary.
