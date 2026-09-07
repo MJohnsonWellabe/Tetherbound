@@ -9,6 +9,13 @@ class RealmStub extends Node:
 	var current_realm := "meadows"
 
 
+class ShellStub extends Node:
+	var simulation_only := true
+	var realm := "stormwood"
+	func world_realm() -> String:
+		return realm
+
+
 func _chapter() -> Dictionary:
 	return JSON.parse_string(FileAccess.get_file_as_string(PATH)) as Dictionary
 
@@ -188,4 +195,21 @@ func test_scene_adapter_uses_production_realm_property_and_rejects_meadows() -> 
 	assert_true(adapter._in_realm(game))
 	assert_false(adapter._in_realm(null))
 	adapter.free()
+	game.free()
+
+
+func test_scene_adapter_accepts_only_its_matching_host_simulation_shell() -> void:
+	var game := RealmStub.new()
+	var shell := ShellStub.new()
+	var adapter := ADAPTER.new()
+	adapter.realm_id = "stormwood"
+	shell.add_child(adapter)
+	assert_true(adapter._in_realm(game),
+		"a Stormwood shell must be allowed to commit its remote player's chapter event")
+	shell.realm = "cloudreach"
+	assert_false(adapter._in_realm(game), "a shell cannot emit for another realm")
+	shell.realm = "stormwood"
+	shell.simulation_only = false
+	assert_false(adapter._in_realm(game), "an inactive ordinary scene is not a realm authority")
+	shell.free()
 	game.free()

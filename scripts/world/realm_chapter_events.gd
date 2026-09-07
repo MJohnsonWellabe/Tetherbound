@@ -84,7 +84,22 @@ func restore_progression_from_game(game: Node) -> void:
 
 
 func _in_realm(game: Node) -> bool:
-	return game != null and str(game.get("current_realm")) == realm_id
+	if game == null:
+		return false
+	if str(game.get("current_realm")) == realm_id:
+		return true
+	# A host can be playing in Meadows while an occupied Stormwood shell owns
+	# a remote player's fight.  That shell is a real realm authority, not an
+	# inactive presentation scene, so its chapter events must reach the ledger.
+	# Walk ancestry rather than asking Game.current_realm: the latter describes
+	# only the host's local trainer and cannot identify this node's world.
+	var cursor := get_parent()
+	while cursor != null:
+		if cursor.has_method("world_realm"):
+			return str(cursor.call("world_realm")) == realm_id \
+				and bool(cursor.get("simulation_only"))
+		cursor = cursor.get_parent()
+	return false
 
 
 ## The `Callable(flag) -> verdict` `realm_chapter_progression.gd` writes through.
