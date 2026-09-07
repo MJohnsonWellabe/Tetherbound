@@ -208,6 +208,13 @@ func _run() -> void:
 		host_state = await _await_round(0, expected_round)
 		var staged := await step(0, "stormwood_hosted_fixture_health", {"trainer": TRAINER, "hp": 1.0})
 		check(str(staged.get("verdict", "")) == "PASS", "TEST FIXTURE staged host-owned round %d at 1 hp" % expected_round)
+		var aimed := await _stage_client_for_current_opponent()
+		check(str(aimed.get("verdict", "")) == "PASS",
+			"client and host agreed on the live round-%d strike geometry: %s"
+				% [expected_round, str(aimed.get("detail", ""))])
+		if str(aimed.get("verdict", "")) != "PASS":
+			quit(await finish())
+			return
 		var pressed := await step(1, "stormwood_hosted_quick", {"settle": 150, "ready_budget": 600})
 		check(str(pressed.get("verdict", "")) == "PASS", "client used real combat input to finish hosted round %d" % expected_round)
 		if expected_round == 0:
@@ -287,13 +294,43 @@ func _await_hosted(peer: int, must_exist: bool) -> Dictionary:
 	return last
 
 
-func _await_host_body_near(at: Vector3) -> Dictionary:
+## The opponent keeps running its real host AI while the smoke exercises stale
+## and forged requests.  Reconcile the client's presentation stand-in and its
+## local follower to the host's CURRENT opponent immediately before each real
+## button press; otherwise the combat manager steers toward an old local body
+## and a correctly validated swing can honestly miss the moving host target.
+func _stage_client_for_current_opponent() -> Dictionary:
+	var state := await _await_hosted(0, true)
+	var opponent_at := _vec(state.get("opponent_pos", []))
+	if opponent_at == Vector3.INF:
+		return {"verdict": "FAIL", "detail": "host exposed no live opponent position"}
+	var stand_in := await step(1, "place_stand_in", {
+		"at": [opponent_at.x, opponent_at.y, opponent_at.z], "exact": true, "settle": 1,
+	})
+	if str(stand_in.get("verdict", "")) != "PASS":
+		return {"verdict": "FAIL", "detail": "client stand-in: " + str(stand_in.get("detail", ""))}
+	var stand := opponent_at + Vector3(1.25, 0.0, 0.0)
+	var placed := await step(1, "place_creature", {
+		"at": [stand.x, stand.y, stand.z], "exact": true,
+		"face": [opponent_at.x, opponent_at.y, opponent_at.z], "settle": 60,
+	})
+	if str(placed.get("verdict", "")) != "PASS":
+		return {"verdict": "FAIL", "detail": "client follower: " + str(placed.get("detail", ""))}
+	state = await _await_host_body_near(stand, 1.0)
+	var host_at := _vec(state.get("host_body_pos", []))
+	if host_at == Vector3.INF or host_at.distance_to(stand) > 1.0:
+		return {"verdict": "FAIL", "detail": "host follower never reached the aimed position"}
+	return {"verdict": "PASS", "detail": "host follower is %.2fm from the aimed position"
+		% host_at.distance_to(stand)}
+
+
+func _await_host_body_near(at: Vector3, tolerance: float = HOST_SYNC_M) -> Dictionary:
 	var last: Dictionary = {}
 	for tick in HOSTED_WAIT_FRAMES:
 		var raw: Variant = await probe(0, "stormwood_hosted_trainer", {"trainer": TRAINER, "peer": _client_peer_id})
 		last = raw as Dictionary if raw is Dictionary else {}
 		var host_at := _vec(last.get("host_body_pos", []))
-		if host_at != Vector3.INF and host_at.distance_to(at) <= HOST_SYNC_M:
+		if host_at != Vector3.INF and host_at.distance_to(at) <= tolerance:
 			return last
 		await step(0, "wait", {"frames": 1})
 	return last
