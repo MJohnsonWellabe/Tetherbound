@@ -25,12 +25,19 @@ param(
   [switch]$Quick,
   [string]$Resume = "",
   [int]$SegmentTimeoutMinutes = 360,
+  [switch]$FullPayload,
   [string]$Res = "1280x800",
   [int]$RouteStepMetres = 40
 )
 
 $ErrorActionPreference = "Continue"
 $ProgressPreference = "SilentlyContinue"
+# An unattended run must never stop at a credential prompt. Without these a git
+# call on a machine that has never authenticated blocks on the Credential
+# Manager dialog forever, and an overnight chain dies holding a modal nobody is
+# there to answer. Failing fast is what lets Test-PushAccess report a verdict.
+$env:GIT_TERMINAL_PROMPT = "0"
+$env:GCM_INTERACTIVE = "never"
 try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch {}
 
 $GodotVersion = "4.7-stable"
@@ -53,6 +60,8 @@ $script:Repo = $null
 $script:Evidence = $null
 $script:GateRun = $null
 $script:Sha = "unknown"
+$script:CanPush = $false
+$script:PushProbe = "not checked"
 $script:Phases = @{}
 if (Test-Path $PhasesPath) {
   try { $loaded = Get-Content $PhasesPath -Raw | ConvertFrom-Json; foreach ($p in $loaded.PSObject.Properties) { $script:Phases[$p.Name] = $p.Value } } catch {}
@@ -73,7 +82,13 @@ function Save-Phases {
 function Run-Phase([string]$Name, [scriptblock]$Body, [bool]$Slow = $false) {
   if ($Only -and (($Only -split ",") -notcontains $Name)) { Log "phase ${Name}: skipped (-Only $Only)"; return }
   if ($Quick -and $Slow) { Log "phase ${Name}: skipped (-Quick)"; return }
-  if ($script:Phases.ContainsKey($Name) -and $script:Phases[$Name].status -eq "ok" -and $Resume) { Log "phase ${Name}: already ok in $Resume, skipped"; return }
+  # `prepare` is NEVER skipped, even on -Resume. It is the phase that sets
+  # $script:Repo, $script:Godot, $script:Evidence and $script:GateRun; skipping
+  # it left them null and the run died two lines into the main body with
+  # "prepare did not produce a repo and a Godot", which made -Resume -- the
+  # documented way to continue an interrupted run -- fail on every use. It is
+  # idempotent (a fetch, two tool checks, an import) and costs a minute.
+  if ($script:Phases.ContainsKey($Name) -and $script:Phases[$Name].status -eq "ok" -and $Resume -and $Name -ne "prepare") { Log "phase ${Name}: already ok in $Resume, skipped"; return }
   Log "=== phase $Name ==="
   $t0 = Get-Date
   $status = "ok"; $err = ""
@@ -259,6 +274,45 @@ function Ensure-Repo {
   $script:GateRun = Join-Path $script:Repo "ralph\reports\gate-f-run-$Stamp-owner"
   New-Item -ItemType Directory -Force -Path $script:Evidence, (Join-Path $script:Evidence "frames"), (Join-Path $script:Evidence "logs") | Out-Null
   Log "sha: $script:Sha  evidence: $script:Evidence"
+  Test-PushAccess
+}
+
+# Can this machine actually deliver the evidence?
+#
+# WHY THIS RUNS IN `prepare` AND NOT AT THE PUSH: the push is the last thing an
+# eight-hour run does. A machine that was never logged into GitHub burns the
+# whole chain and then fails at the final step, which is exactly what happened
+# on the 2026-09-07 run -- the evidence was complete and stranded on a local
+# branch. Ten seconds here turns that into a warning the operator sees before
+# walking away.
+#
+# `push --dry-run` rather than `ls-remote`: this repository allows anonymous
+# READ, so ls-remote succeeds on a machine that cannot push. --dry-run does the
+# real connection and the real authorisation check, and updates nothing -- the
+# probe ref is never created.
+function Test-PushAccess {
+  $git = Get-Command git -ErrorAction SilentlyContinue
+  if (-not $git -or -not (Test-Path (Join-Path $script:Repo ".git"))) {
+    $script:PushProbe = "no git checkout: evidence will be zipped only"
+    Log "PUSH ACCESS: none -- $script:PushProbe"
+    return
+  }
+  $probe = "refs/heads/kickoff-auth-probe-$Stamp"
+  $out = (& git -C $script:Repo push --dry-run origin "HEAD:$probe" 2>&1)
+  if ($LASTEXITCODE -eq 0) {
+    $script:CanPush = $true
+    $script:PushProbe = "ok"
+    Log "PUSH ACCESS: ok (evidence will be pushed to owner-run/$Stamp)"
+    return
+  }
+  $script:PushProbe = ($out | Select-Object -First 1) -join " "
+  Log "*** PUSH ACCESS: NONE ***"
+  Log "*** git said: $script:PushProbe"
+  Log "*** The run will continue and everything will be recorded, but the"
+  Log "*** evidence can only be delivered as the Desktop zip and a LOCAL"
+  Log "*** branch. To fix it now, in another window: gh auth login"
+  Log "*** (or: winget install GitHub.cli, then gh auth login), then re-run"
+  Log "*** KICKOFF. Nothing is lost -- -Resume $Stamp skips finished phases."
 }
 
 function Write-MachineRecord {
@@ -474,6 +528,7 @@ function Phase-Package {
   $lines += ""
   $lines += "Machine: $env:COMPUTERNAME. Repo sha: $script:Sha. Resolution: $Res."
   $lines += "Payload (video, every frame, strips) stays on this machine at: ``$RunLocal``."
+  $lines += "Push access, probed at the start of the run: $script:PushProbe."
   $lines += ""
   $lines += "| phase | status | seconds | error |"
   $lines += "|---|---|---|---|"
@@ -502,10 +557,76 @@ function Phase-Package {
   $branch = "owner-run/$Stamp"
   $prev = (& git -C $script:Repo rev-parse --abbrev-ref HEAD 2>$null)
   & git -C $script:Repo checkout -q -b $branch 2>&1 | ForEach-Object { Log "git: $_" }
-  & git -C $script:Repo add -f -- "ralph/reports/OWNER-KICKOFF-$Stamp" 2>&1 | ForEach-Object { Log "git: $_" }
+  # WHAT GOES IN THE TREE, and why this is not a plain `add -f` any more.
+  #
+  # The line this replaces added both directories with -f, which forced past
+  # every payload ignore in .gitignore -- the ones whose own comment says
+  # capture rounds "grew to 2.8 GB in three days" and that only written
+  # verdicts (*.md) and one contact sheet (_sheet*.png) per round belong in
+  # the tree. The 2026-09-07 run committed 170 MB that way. Its neighbours in
+  # ralph/reports/ are 3.2 MB: json, md and tsv, no per-frame captures.
+  #
+  # The comment on the old line already said "minus per-frame strips (sheets
+  # carry them)". The code never did that. This makes it true.
+  #
+  # Two directories, two different reasons:
+  #
+  #   OWNER-KICKOFF-<stamp>   `ralph/reports/OWNER-*/**/[!_]*.png` already
+  #                           ignores its per-frame captures and keeps the
+  #                           _sheet*.png contact sheets, so a PLAIN add is
+  #                           exactly right. -f was only ever defeating it.
+  #
+  #   gate-f-run-<stamp>-owner  .gitignore deliberately does not name gate-f
+  #                           dirs (CD-2 requires the prescribed captures, and
+  #                           the harness's own _uncommittable() reads
+  #                           `git check-ignore` exit 0 as "git will not carry
+  #                           this"), so nothing there is filtered for us and a
+  #                           plain add would commit every frame of a whole
+  #                           chapter. It is filtered HERE instead, by name, so
+  #                           no ignore rule and no test that reads one moves.
+  #                           The two blanket rules that DO reach it --
+  #                           `ralph/reports/**/*.jsonl` and `**/*.csv` -- are
+  #                           what the -f below is for: events.jsonl and
+  #                           route.csv are the Gate F telemetry the protocol
+  #                           wants committed.
+  #
+  # -FullPayload restores the old force-everything behaviour for a run that
+  # genuinely needs every frame in the tree.
+  & git -C $script:Repo add -- "ralph/reports/OWNER-KICKOFF-$Stamp" 2>&1 | ForEach-Object { Log "git: $_" }
+  # The run's own diagnostic record, forced past two REPO-WIDE ignores that are
+  # not about evidence at all: `*.log` (.gitignore:38) and `logs/`
+  # (.gitignore:37). kickoff.log is what says WHY a phase failed and it is a few
+  # hundred KB of text -- dropping it would leave a failed phase with a status
+  # and no cause. Checked with `git check-ignore -v` rather than assumed.
+  & git -C $script:Repo add -f -- "ralph/reports/OWNER-KICKOFF-$Stamp/kickoff.log" 2>&1 | ForEach-Object { Log "git: $_" }
+  if (Test-Path (Join-Path $script:Evidence "logs")) {
+    & git -C $script:Repo add -f -- "ralph/reports/OWNER-KICKOFF-$Stamp/logs" 2>&1 | ForEach-Object { Log "git: $_" }
+  }
   if (Test-Path $script:GateRun) {
-    # Everything the harness wrote, minus per-frame strips (sheets carry them).
-    & git -C $script:Repo add -f -- "ralph/reports/gate-f-run-$Stamp-owner" 2>&1 | ForEach-Object { Log "git: $_" }
+    if ($FullPayload) {
+      Log "add: -FullPayload, forcing the whole gate-f run into the commit"
+      & git -C $script:Repo add -f -- "ralph/reports/gate-f-run-$Stamp-owner" 2>&1 | ForEach-Object { Log "git: $_" }
+    } else {
+      # THE EXTENSION LIST IS MEASURED, NOT GUESSED. Every gate-f run already
+      # committed to this repo carries, in total: 1043 .json, 494 .md, 228
+      # .jsonl, 228 .csv, 8 .tsv, 7 .txt, 1 .sha256 -- and 17 .png, every one
+      # of them from a selfcheck rig or a preflight smoke, none a chapter run's
+      # per-frame capture. So this keeps the text record whole and takes only
+      # the _sheet*.png contact sheets, which is what the tree has always held.
+      $keep = @(Get-ChildItem -Path $script:GateRun -Recurse -File -ErrorAction SilentlyContinue | Where-Object {
+        $_.Extension -in @(".md", ".json", ".tsv", ".jsonl", ".csv", ".txt", ".sha256") -or $_.Name -like "_sheet*.png"
+      })
+      $skipped = 0
+      try { $skipped = @(Get-ChildItem -Path $script:GateRun -Recurse -File -ErrorAction SilentlyContinue).Count - $keep.Count } catch {}
+      Log "add: $($keep.Count) evidence files from the gate-f run, $skipped per-frame captures left on this machine"
+      # Batched: a whole chapter's verdicts overflow the command line as one call.
+      for ($i = 0; $i -lt $keep.Count; $i += 100) {
+        $batch = $keep[$i..([Math]::Min($i + 99, $keep.Count - 1))] | ForEach-Object { $_.FullName }
+        if ($batch.Count -gt 0) {
+          & git -C $script:Repo add -f -- $batch 2>&1 | ForEach-Object { Log "git: $_" }
+        }
+      }
+    }
   }
   $msg = "evidence(owner): kickoff run $Stamp on $env:COMPUTERNAME"
   & git -C $script:Repo -c user.name="Tetherbound Kickoff" -c user.email="kickoff@tetherbound.local" commit -q -m $msg 2>&1 | ForEach-Object { Log "git: $_" }
@@ -516,7 +637,14 @@ function Phase-Package {
     if ($LASTEXITCODE -eq 0) { $pushed = $true; break }
     Start-Sleep -Seconds ([Math]::Pow(2, $i))
   }
-  if ($pushed) { Log "PUSHED: $branch" } else { Log "push failed: the evidence is on local branch $branch and in $zip" }
+  if ($pushed) {
+    Log "PUSHED: $branch"
+  } else {
+    Log "*** PUSH FAILED. The evidence is complete and is in two places on"
+    Log "*** THIS machine: local branch $branch, and $zip"
+    Log "*** Nothing needs re-running. Authenticate (gh auth login) and then:"
+    Log "***   git -C `"$script:Repo`" push -u origin $branch"
+  }
   if ($prev -and $prev -ne "HEAD") { & git -C $script:Repo checkout -q $prev 2>&1 | ForEach-Object { Log "git: $_" } }
 }
 
