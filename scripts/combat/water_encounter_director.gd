@@ -9,6 +9,25 @@ const INTERACTION := preload("res://scripts/world/interactable.gd")
 var _wanted_sites: Dictionary = {}
 var _restoring_surface_position := Vector3.INF
 
+## Resolve a reserved site without rolling its random table. The two authored
+## references must agree; a missing/mismatched named row never becomes a random
+## substitute. This plan is also the integration seam for host-owned spawning.
+static func named_spawn_plan(site: Dictionary, named_encounters: Array) -> Dictionary:
+	var id := str(site.get("named_replacement_id", ""))
+	if id.is_empty():
+		return {}
+	var named := find_id(named_encounters, id)
+	if named.is_empty() or str(named.get("replaces_wild_site_id", "")) != str(site.get("id", "")) \
+			or bool(named.get("trainer_owned", true)) or not bool(named.get("catchable", false)):
+		return {}
+	return {"id": id, "species": str(named.get("species", "")),
+		"position": named.get("position", []).duplicate(),
+		"display_name": str(named.get("display_name", id)),
+		"reward_role": str(named.get("reward_role", "")),
+		"opts": {"name": id, "once_id": str(named.get("completion_flag", "")),
+			"level": int(named.get("level", 1)), "aggressive": false,
+			"wander_radius": float(site.get("roam_radius_m", site.get("radius_m", 4)))}}
+
 ## Rebuild the saved owner's existing party member through the deployment seam.
 ## A surface swimmer must not be placed on the seabed by the land spawn helper.
 func restore_swim_mount(saved: Dictionary) -> bool:
@@ -200,4 +219,3 @@ func _wild_support_impl(at: Vector3, radius: float, wild: Node3D, query_proxy: O
 			return Vector3.INF
 		highest = maxf(highest, float(hit.position.y))
 	return Vector3(at.x, highest, at.z)
-

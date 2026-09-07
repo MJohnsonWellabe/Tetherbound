@@ -1,5 +1,7 @@
 # Water build stop report and fresh-session tail — 2026-09-07
 
+> Superseded for current recovery state by [EXIT-HANDOFF-2026-09-07.md](EXIT-HANDOFF-2026-09-07.md). The owner stopped the resumed run. That handoff corrects this report's Water entry/key-consumption claim and records the local rebase and unfinished save changes.
+
 **Water is incomplete.** The broad run stopped under the owner's two-consecutive-low-progress-window rule. Final branch evidence is35/100; the original100-point goal is unchanged. The clock crossed an approximately eight-hour gap without evidence of continued execution. This report does not claim14 hours of productive unattended building. See [scorecard.md](scorecard.md) for the dated history and missed checkpoints.
 
 ## Delivery and recovery

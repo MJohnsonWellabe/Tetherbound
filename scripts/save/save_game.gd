@@ -265,6 +265,7 @@ const AUTOSAVE_SLOT := 0
 ## D100's two savers. The v22 slot file above is still written, unchanged and
 ## byte-identical, and is still what `load_slot()` reads -- see `_write_split()`
 ## for why this lane ADDED the split rather than replacing the slot with it.
+const ATOMIC_SAVE_FILE := preload("res://scripts/save/atomic_save_file.gd")
 const WORLD_SAVE := preload("res://scripts/save/world_save.gd")
 const CHARACTER_SAVE := preload("res://scripts/save/character_save.gd")
 const REALM_REWARD_MIGRATION := preload("res://scripts/save/realm_reward_migration.gd")
@@ -305,7 +306,7 @@ func slot_path(slot: int) -> String:
 
 
 func has_slot(slot: int) -> bool:
-	return FileAccess.file_exists(slot_path(slot))
+	return FileAccess.file_exists(ATOMIC_SAVE_FILE.readable_path(slot_path(slot)))
 
 
 ## What a slot list screen needs without loading it onto live state — empty
@@ -347,14 +348,8 @@ func save(game: Object, slot: int, write_split: bool = true) -> bool:
 	DirAccess.make_dir_recursive_absolute(_dir)
 
 	var data := snapshot(game)
-	var file := FileAccess.open(slot_path(slot), FileAccess.WRITE)
-	if file == null:
+	if not ATOMIC_SAVE_FILE.new().write(slot_path(slot), JSON.stringify(data, "\t")):
 		return false
-	file.store_string(JSON.stringify(data, "\t"))
-	# A save may be loaded again immediately from the same UI/session. Close the
-	# writer before reporting success so that read never observes a buffered or
-	# partially flushed JSON document.
-	file.close()
 	if write_split:
 		_write_split(game, slot, data)
 	return true
@@ -1260,7 +1255,7 @@ func _species_moves(species_table: Dictionary, species_id: String) -> Dictionary
 func _read(slot: int) -> Dictionary:
 	if slot < 0 or slot >= SLOT_COUNT:
 		return {}
-	var path := slot_path(slot)
+	var path := ATOMIC_SAVE_FILE.readable_path(slot_path(slot))
 	if not FileAccess.file_exists(path):
 		return {}
 	var file := FileAccess.open(path, FileAccess.READ)

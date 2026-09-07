@@ -1,5 +1,11 @@
 # Water progress scorecard
 
+Owner stopped the resumed period before its next checkpoint and requested an exit document. Last credited score remains **35/100**; no new playability credit is claimed. See [EXIT-HANDOFF-2026-09-07.md](EXIT-HANDOFF-2026-09-07.md). No further checkpoint or unattended continuation is scheduled.
+
+## Owner-authorized resumed run — 2026-09-07 12:51:53 UTC
+
+The owner explicitly said "Keep working towards the goal" after receiving the stop report. Resume the original full100-point goal from verified35/100, preserving the earlier missed windows and stop as history. This is a new authorized work period, not retroactive credit for that gap. Next evidence checkpoint is14:51:53 UTC, then every two hours with the same gain thresholds and two-consecutive-low-window stop. Main remains owner-unmerged. Prioritize ordinary chapter traversal and the amphibious Alpha; bounded save-integrity and named-encounter lanes run alongside root's composition/integration. Rebase onto current main4562268de is completed locally and earns no playability points by itself.
+
 Fixed denominator: **100 original-goal points**. Baseline 2026-09-06 21:55:38 UTC, main `5547d415ffe58438f5bed9fc9b6b710b37a5bdad`. First window ends 23:55:38 UTC. Partial credit requires a specific completed player-facing subpath with passing runtime evidence on the delivery branch; prose/data/code existence alone earns nothing. Full row credit requires all named exit evidence, including blind judgment where applicable. Never renormalize around deferred work. The owner's newer branch-only instruction changes the delivery target, not the goal or quality bar; shipped-to-main evidence stays separate below.
 
 | System / directive completion bar | Weight | Baseline | Full-credit evidence |

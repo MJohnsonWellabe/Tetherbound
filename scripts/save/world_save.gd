@@ -33,6 +33,7 @@ extends RefCounted
 ## world file is "nothing to load", the same rule `save_game.gd` has always
 ## applied to a slot (D15).
 
+const ATOMIC_SAVE_FILE := preload("res://scripts/save/atomic_save_file.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const REALM_REWARD_MIGRATION := preload("res://scripts/save/realm_reward_migration.gd")
 
@@ -82,7 +83,7 @@ func path_for(world_id: String) -> String:
 
 
 func has(world_id: String) -> bool:
-	return not world_id.is_empty() and FileAccess.file_exists(path_for(world_id))
+	return not world_id.is_empty() and FileAccess.file_exists(ATOMIC_SAVE_FILE.readable_path(path_for(world_id)))
 
 
 ## Every world id with a file on disk, sorted. Empty when nothing has written
@@ -158,14 +159,9 @@ func write(world_id: String, payload: Dictionary, envelope: Dictionary = {}) -> 
 	data["created_at"] = str(existing.get("created_at", now))
 	data["last_played"] = now
 	data["migrated_from"] = str(envelope.get("migrated_from", existing.get("migrated_from", "")))
-	var file := FileAccess.open(path_for(world_id), FileAccess.WRITE)
-	if file == null:
-		push_warning("world save: could not open %s for writing" % path_for(world_id))
+	if not ATOMIC_SAVE_FILE.new().write(path_for(world_id), JSON.stringify(data, "\t")):
+		push_warning("world save: could not commit %s" % path_for(world_id))
 		return false
-	file.store_string(JSON.stringify(data, "\t"))
-	# Same reason `save_game.gd` closes explicitly: a world may be read back in
-	# the same frame it was written, and a buffered document is not a document.
-	file.close()
 	_envelope_cache[world_id] = _envelope_of(data)
 	return true
 
@@ -196,7 +192,7 @@ func _envelope_of(data: Dictionary) -> Dictionary:
 func read(world_id: String) -> Dictionary:
 	if not has(world_id):
 		return {}
-	var file := FileAccess.open(path_for(world_id), FileAccess.READ)
+	var file := FileAccess.open(ATOMIC_SAVE_FILE.readable_path(path_for(world_id)), FileAccess.READ)
 	if file == null:
 		return {}
 	var parsed: Variant = JSON.parse_string(file.get_as_text())
