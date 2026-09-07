@@ -1,7 +1,7 @@
 extends Node
 
 const DIRECTOR := preload("res://scripts/combat/stormwood_encounter_director.gd")
-const MANAGER := preload("res://scripts/combat/cloudreach_combat_manager.gd")
+const MANAGER := preload("res://scripts/combat/stormwood_combat_manager.gd")
 const TRAINER_CAST := preload("res://scripts/world/stormwood_trainers.gd")
 const HUD := preload("res://scenes/combat/combat_hud.tscn")
 const DEATH := preload("res://scripts/world/player_death.gd")
@@ -22,6 +22,10 @@ func mount(world: Node3D) -> void:
 	trainers.name = "StormwoodTrainers"
 	world.add_child(trainers)
 	trainers.build_authored(world.get_node("Player"))
+	var hub := preload("res://scripts/world/stormwood_encounter_hub.gd").new()
+	hub.name = "StormwoodEncounterHub"
+	world.add_child(hub)
+	hub.mount(world)
 	if not bool(world.get("simulation_only")):
 		var hud := HUD.instantiate()
 		hud.name = "CombatHUD"
