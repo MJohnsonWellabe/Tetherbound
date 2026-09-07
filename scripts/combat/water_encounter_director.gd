@@ -7,6 +7,44 @@ const WATER_DATA := preload("res://scripts/world/water_encounter_runtime_data.gd
 const RANKS := preload("res://scripts/characters/npc_ranks.gd")
 const INTERACTION := preload("res://scripts/world/interactable.gd")
 var _wanted_sites: Dictionary = {}
+var _restoring_surface_position := Vector3.INF
+
+## Rebuild the saved owner's existing party member through the deployment seam.
+## A surface swimmer must not be placed on the seabed by the land spawn helper.
+func restore_swim_mount(saved: Dictionary) -> bool:
+	var party := _party()
+	var creature: RefCounted = party.at(int(saved.party_index)) if party != null else null
+	if creature == null or str(creature.species_id) != str(saved.species_id) \
+			or creature.fainted or creature.resting:
+		return false
+	var definition: Dictionary = preload("res://scripts/creatures/creature_species.gd").definition(str(creature.species_id))
+	if not bool(definition.get("swim_mount", {}).get("compatible", false)):
+		return false
+	var riding: Node = get_parent().get_node("RidingController")
+	if not riding._has_tack(str(creature.species_id)):
+		return false
+	if riding.is_mounted():
+		riding.dismount()
+	if is_instance_valid(_ally_body) and not dismiss_active_creature():
+		return false
+	if not party.set_active(int(saved.party_index)):
+		return false
+	var raw: Array = saved.position
+	_restoring_surface_position = Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
+	var spawned := await _spawn_ally_body(creature)
+	_restoring_surface_position = Vector3.INF
+	if not spawned:
+		return false
+	# No frame advances between revealing the body and attaching its rider.
+	_player.global_position = _ally_body.global_position + Vector3.UP
+	_ally_body.velocity = Vector3.ZERO
+	return riding.mount()
+
+func _stand_on_ground(body: Node3D, spot: Vector3) -> bool:
+	if _restoring_surface_position.is_finite() and body == _ally_body:
+		body.global_position = _restoring_surface_position
+		return true
+	return await super._stand_on_ground(body, spot)
 
 func setup(world: Node, bodies: Dictionary = {}, data: Dictionary = {}) -> void:
 	realm_world = world
@@ -162,6 +200,4 @@ func _wild_support_impl(at: Vector3, radius: float, wild: Node3D, query_proxy: O
 			return Vector3.INF
 		highest = maxf(highest, float(hit.position.y))
 	return Vector3(at.x, highest, at.z)
-
-
 

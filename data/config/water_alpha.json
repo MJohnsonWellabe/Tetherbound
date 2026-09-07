@@ -1,0 +1,69 @@
+{
+  "_comment": "Aquaryn host-owned encounter tuning. Starting numbers; runtime fight and shoreline basin integration remain required before acceptance.",
+  "id": "water_aquaryn_alpha",
+  "species_id": "water_aquaryn",
+  "level": 49,
+  "island_id": "tidal_cradle",
+  "encounter_kind": "wild",
+  "completion_flag": "water_aquaryn_resolved",
+  "personal_unlock_flag": "water_swim_stone_earned",
+  "_comment_rewards": "Defeat and validated host catch both settle the world encounter and durable eligible-character entitlements. No inventory capacity requirement for the Swim Stone unlock.",
+  "authority": {
+    "_comment": "Host validates deployed creature and observed character/realm/position. Client payload contains encounter identity and intent, never HP, phase, participants or reward eligibility.",
+    "engage_radius_m": 32.0,
+    "abandon_radius_m": 100.0,
+    "abandon_grace_s": 8.0,
+    "snapshot_interval_s": 0.1
+  },
+  "phases": [
+    {
+      "id": "shore_crest",
+      "name": "Shore Crest",
+      "_comment": "Opening shore stance: broad tail sweep, clear flank recovery. No HP multiplier.",
+      "enter_below_hp_fraction": 1.0,
+      "attack": "tail_sweep",
+      "telegraph_s": 1.25,
+      "recovery_s": 2.4,
+      "cooldown_s": 4.0,
+      "reach_m": 8.0,
+      "cone_degrees": 140.0,
+      "power_multiplier": 1.0,
+      "surface_run_every_s": 0.0
+    },
+    {
+      "id": "tidal_run",
+      "name": "Tidal Run",
+      "_comment": "Below70percent: visible surface-channel run then another exposed shore. Submergence is animation only; targets remain reachable without diving.",
+      "enter_below_hp_fraction": 0.7,
+      "attack": "wake_sweep",
+      "telegraph_s": 1.5,
+      "recovery_s": 3.0,
+      "cooldown_s": 4.5,
+      "reach_m": 9.0,
+      "cone_degrees": 100.0,
+      "power_multiplier": 1.05,
+      "surface_run_every_s": 12.0
+    },
+    {
+      "id": "broken_wake",
+      "name": "Broken Wake",
+      "_comment": "Below35percent: narrow frontal jet leaves both flanks exposed, alternating with the visible channel return.",
+      "enter_below_hp_fraction": 0.35,
+      "attack": "frontal_jet",
+      "telegraph_s": 1.7,
+      "recovery_s": 2.8,
+      "cooldown_s": 4.0,
+      "reach_m": 16.0,
+      "cone_degrees": 28.0,
+      "power_multiplier": 1.15,
+      "surface_run_every_s": 9.0
+    }
+  ],
+  "movement": {
+    "_comment": "Host movement uses grounded shore waypoints and a visible sea-level channel. Never teleport a target between stances.",
+    "shore_speed_m_s": 4.5,
+    "surface_speed_m_s": 8.0,
+    "waypoint_reach_m": 0.8,
+    "turn_speed_rad_s": 2.4
+  }
+}
