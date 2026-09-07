@@ -3,7 +3,7 @@
 **Base:** the Wave 2 branch after 2.A lands. **Contracts:** decision D101, D97's authored spawn
 containers, plan row 2.C, the ENet spike's spawn/authority rules
 (`ralph/reports/MP-0C-SPIKE-ENET-0905/`), inventory §2 (player-name lookups) and §5 (camera
-sites) in `docs/specs/MP_ASSUMPTION_INVENTORY.md`. Read `ralph/briefs/MP-W1/COMMON.md`.
+sites) in `archive/docs/specs/MP_ASSUMPTION_INVENTORY.md`. Read `ralph/briefs/MP-W1/COMMON.md`.
 
 **Player-visible outcome.** Two people on a LAN see each other walk around the Meadows: a
 remote trainer body with the right model, animation state and a nameplate, interpolated

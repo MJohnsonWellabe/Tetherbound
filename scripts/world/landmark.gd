@@ -285,7 +285,7 @@ func build(world: Node) -> void:
 
 ## T1-CASTLE (2026-08-29). `ralph/reports/T1-ARCH_buildings_2026-08-29.md`
 ## diagnosed the owner's "up close the castle reads pale, flat and
-## plastic/toylike" verdict (`docs/owner/OWNER_FEEDBACK_2026-08-29_BUILDINGS.md`)
+## plastic/toylike" verdict (`archive/owner/OWNER_FEEDBACK_2026-08-29_BUILDINGS.md`)
 ## as real and NOT a broken retint: a wall face pixel-samples to the authored
 ## `LightRock` colour, correctly brightened by direct sun. The report's own
 ## conclusion was that the Quaternius kit is solid-colour and no-texture, with

@@ -5,7 +5,7 @@ map, not another speculative rewrite plan"). One row per system: what class of s
 which wave and lane converts it, and the test that proves the conversion. Update rows as lanes
 land; a row is **done** only when its proving test exists, was seen red, and is green on `main`.
 
-Sources: `docs/MULTIPLAYER_DIRECTIVE.md` §19 (risks), `docs/specs/MP_ASSUMPTION_INVENTORY.md`
+Sources: `docs/MULTIPLAYER_DIRECTIVE.md` §19 (risks), `archive/docs/specs/MP_ASSUMPTION_INVENTORY.md`
 (counts), `docs/specs/MP_STATE_SEAM.md` (containers), `docs/specs/MP_NET_HARNESS_CONTRACT.md`
 (instrument), decisions D95–D107, and the spike reports
 `ralph/reports/MP-0C-SPIKE-ENET-0905/` and `MP-0D-SPIKE-HOSTCOST-0905/` (numbers in §4).

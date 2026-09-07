@@ -27,7 +27,7 @@ to and what I did instead.
 
 **What the brief said, and what is actually on `main`.** W05's finding assumed its own
 tree-scale change had landed ("fill now reaches scale 2.0, heroes reach 2.7"). It did not —
-W05 was rejected twice by the landing lane (`ralph/briefs/0904/LANES.md`, cycles 6 and 8),
+W05 was rejected twice by the landing lane (`archive/ralph/briefs/0904/LANES.md`, cycles 6 and 8),
 so `main` still carries `trees.scale_max` 1.45 / `trees.heroes.scale_max` 2.1. The numbers
 below are re-derived from `main`'s own `data/config/vegetation.json`, not quoted from W05.
 
@@ -260,7 +260,7 @@ evidence.
 
 ## 8. Known limitations, and what was deliberately not done
 
-- **`docs/CURRENT_STATE.md` was not edited.** `ralph/briefs/0905-followup/COMMON.md` says to
+- **`docs/CURRENT_STATE.md` was not edited.** `archive/ralph/briefs/0905-followup/COMMON.md` says to
   stay inside the brief's file list exactly because lanes in this wave run concurrently, and
   my brief's ownership is `vegetation.gd` and its own tests/bake. Thirteen lanes each
   rewriting one status row is a guaranteed conflict for the landing lane; this report is the

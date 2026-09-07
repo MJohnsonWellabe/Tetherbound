@@ -2,7 +2,7 @@
 
 **Date:** 2026-09-04 · **Decided by:** lane W04-PORTRAITS, implementing owner directive
 2026-09-04 item 8b (*"fix the picture during dialogue always being the main character"*)
-under `ralph/briefs/0904/COMMON.md`'s rule to make the smallest defensible call and
+under `archive/ralph/briefs/0904/COMMON.md`'s rule to make the smallest defensible call and
 record it rather than ask.
 
 ## The rule

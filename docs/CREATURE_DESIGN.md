@@ -4,7 +4,7 @@ Consolidated from `data/creatures/species.json`, `docs/art/wild/21_MEADOWS_WILD_
 `docs/art/ROSTER_MANIFEST.md`, `docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md`,
 `docs/art/HUMANOID_ASSET_INVENTORY.md`, `docs/art/REFERENCE_CANON.md`,
 `docs/owner/TETHERBOUND_MEADOWS_CREATURE_EXPANSION.md`,
-`docs/owner/OWNER_DIRECTIVES_2026-09-01.md`, and decisions D10, D12, D13, D17, D19,
+`archive/owner/OWNER_DIRECTIVES_2026-09-01.md`, and decisions D10, D12, D13, D17, D19,
 D30, D37, D69, D70, D71. Canon precedence (`CLAUDE.md`): newer owner
 directive > `MEADOWS_PROGRESSION_SPEC.md` > `GAME_DESIGN.md` > task prompts >
 backlog history. States current data-driven fact plus the decisions that
@@ -12,9 +12,14 @@ produced it; does not restate superseded reasoning — see cited files.
 
 ---
 
-## 1. Roster — all 25 species
+## 1. Roster — the 25 Meadows species
 
-Source: `data/creatures/species.json` (25 entries). Columns: height (m,
+> **2026-09-07:** `species.json` now has 57 entries. The 32 Cloudreach, Stormwood and
+> Water species landed with PR #78 and are catalogued in
+> `docs/art/BIOME_2_3_4_CREATURE_ROSTER.md`; none of them is in a spawn, encounter or
+> trainer table yet (goal prompt 77, lane ROSTER). The Meadows roster below is frozen.
+
+Source: `data/creatures/species.json` (25 Meadows entries). Columns: height (m,
 `placeholder.height`), `catch_rate` (0-1), `aggressive` (challenges on sight).
 
 ### Starters (3)
@@ -140,7 +145,7 @@ Four decisions moved the creature scale band since the game's earliest form.
    the SMALL tier (Pipwing 1.35→0.60 m); starters and the large tier do not
    move. Band becomes 0.60–2.60 m (4.33x spread, up from 1.93x). D13's
    relative ordering (smallest/largest) is preserved bit-for-bit.
-4. **OD-0901-1/2 (`docs/owner/OWNER_DIRECTIVES_2026-09-01.md`) — grow the
+4. **OD-0901-1/2 (`archive/owner/OWNER_DIRECTIVES_2026-09-01.md`) — grow the
    ceiling, don't shrink toward it.** Explicit owner correction: *"I think
    almost all creatures should stand taller than the character... these big
    beautiful fantastical creatures."* Reverses a prior lane's mistake

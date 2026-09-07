@@ -23,7 +23,7 @@ extends SceneTree
 ## That retarget was only HALF applied when CONTROLLER-MAP landed. The control
 ## case below still pressed d-pad left and demanded that it cycle the active
 ## creature -- the exact binding
-## `docs/owner/OWNER_DIRECTIVES_2026-08-22.md` section 1 removed, and whose removal
+## `archive/owner/OWNER_DIRECTIVES_2026-08-22.md` section 1 removed, and whose removal
 ## is the whole point of the remap ("the d-pad is hotbar 2-5 in every context
 ## including combat"). So this file failed on `main` from the moment the merge
 ## landed, asserting the banned map. No CI shard runs it, so nothing said so.

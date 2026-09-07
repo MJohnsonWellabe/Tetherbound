@@ -1,4 +1,10 @@
-# Roadmap — the next several days, as sequential gates
+# Roadmap — the Meadows chapter as sequential gates
+
+> **2026-09-07:** subordinate to `docs/DEVELOPMENT_ROADMAP.md` (the cross-biome sequence)
+> and to the current run contract `docs/prompts/77-CODEX-GOAL-four-biome-push-2026-09-07.md`.
+> This file still defines the Meadows gates and maps the prompt library onto them; its
+> per-gate status lines are older than `docs/CURRENT_STATE.md` and lose to it. Prompts
+> `01`–`54` named below now live under `archive/docs/prompts/`.
 
 **Status:** canonical execution order, 2026-09-02 reset. Supersedes
 `ralph/ACTIVE_GAME_PLAN.md` (archived at `archive/ralph/ACTIVE_GAME_PLAN.md`) as the

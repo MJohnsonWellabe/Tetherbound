@@ -4,7 +4,7 @@
 and the reference for 1.C (save split). It fixes *what* the containers hold, *how* the existing
 `Game.*` surface keeps working, and *which* flag goes where. Decisions behind it: D-MP4, D-MP5,
 D-MP6 in `docs/specs/STAGE_B_MULTIPLAYER_EXECUTION_PLAN.md` §3. Raw material:
-`docs/specs/MP_ASSUMPTION_INVENTORY.md` (§1 field usage, §8/§8b flag writers).
+`archive/docs/specs/MP_ASSUMPTION_INVENTORY.md` (§1 field usage, §8/§8b flag writers).
 
 Rule of the seam: **the pure modules do not change.** `party.gd`, `inventory.gd`,
 `creature_instance.gd`, `item_db.gd`, `player_equipment.gd`, `quest_log.gd`, `day_cycle.gd`

@@ -2,7 +2,7 @@
 
 **Status:** the live Gate 3 control document, opened 2026-09-03 by the Gate 3
 coordinator. It sits under `docs/ROADMAP.md`'s "Gate 3" section, which remains the
-acceptance authority, and under `docs/GATE3_COORDINATOR_BRIEF.md` (written by the
+acceptance authority, and under `archive/docs/gates/GATE3_COORDINATOR_BRIEF.md` (written by the
 Gate 2 coordinator), which remains the authority on the traps. This file records
 what is actually being executed, by whom, and on which files.
 
@@ -66,7 +66,7 @@ second one can answer prompt 63's actual question.
 
 ## 2. Why this parallelises, against the brief's advice
 
-`docs/GATE3_COORDINATOR_BRIEF.md` §3 argues Gate 3 is serial by design and warns that
+`archive/docs/gates/GATE3_COORDINATOR_BRIEF.md` §3 argues Gate 3 is serial by design and warns that
 "spawning five band lanes at once contradicts the method." That reasoning is sound for
 the *convergence* step and is being honoured there: segments are still fixed and
 re-converged one at a time, in order, against the chain.
@@ -204,7 +204,7 @@ words, "so Phase B reads the actual state rather than an implied green."
 
 ## 5. Standing rules for this gate
 
-From `CLAUDE.md`, `docs/AGENT_WORKFLOW.md` and `docs/GATE3_COORDINATOR_BRIEF.md` §6,
+From `CLAUDE.md`, `docs/AGENT_WORKFLOW.md` and `archive/docs/gates/GATE3_COORDINATOR_BRIEF.md` §6,
 each already paid for once:
 
 - A region is not done because code and data exist. It is done when the complete player

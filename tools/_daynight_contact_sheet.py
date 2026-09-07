@@ -10,7 +10,7 @@ told which row is which or what changed.
 
     --blind[=SEED]   shuffle the columns and label them A, B, C... instead of by
                      hour, and write the key to <OUT>.key.txt beside the sheet.
-                     `ralph/briefs/0904/COMMON.md` requires the judge be told
+                     `archive/ralph/briefs/0904/COMMON.md` requires the judge be told
                      nothing about what changed or what you hope it says, and an
                      hour label is exactly that: it tells the judge which frame
                      is SUPPOSED to be night, which is the question. Ask a blind

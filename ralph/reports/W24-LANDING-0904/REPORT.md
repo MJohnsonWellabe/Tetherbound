@@ -1,7 +1,7 @@
 # W24-LANDING-0904 — landing report
 
 Lane W24-LANDING: the one lane that lands other lanes' work onto `main`. Brief:
-`ralph/briefs/0904/W24-LANDING.md` (on `claude/codex-merge-meadows-finish-dq12jj`).
+`archive/ralph/briefs/0904/W24-LANDING.md` (on `claude/codex-merge-meadows-finish-dq12jj`).
 This report is kept current per cycle; the per-lane table is the authoritative
 landed / not-landed / not-yet-done ledger. Landing branches: `ralph/LAND-0904`,
 `ralph/LAND-0904-2`, … Report and ledger commits live on `ralph/W24-LANDING-0904` and
@@ -404,7 +404,7 @@ before and after bakes report **825,979 placements kept and 3,883 drained**, ide
 `smoke_playground` on the W05 tree logged `ERROR: 4 resources still in use at exit` beside
 the usual `Parameter "material" is null` ×2. My earlier smokes on the eight-lane tree showed
 only the material line, so on its face the known-benign set had grown — which
-`ralph/briefs/0904/COMMON.md` says must not happen.
+`archive/ralph/briefs/0904/COMMON.md` says must not happen.
 
 Ran the identical smoke on **current `main`** (`504c7b55`) as a baseline: it logs the same
 two lines in the same counts, `4 resources still in use at exit` ×1 and

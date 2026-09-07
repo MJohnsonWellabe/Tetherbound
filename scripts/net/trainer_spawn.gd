@@ -37,7 +37,7 @@ extends Node
 const REMOTE_TRAINER := preload("res://scenes/player/remote_trainer.tscn")
 
 ## Where `Session` is mounted: a `Node` child of the `Game` autoload
-## (`ralph/briefs/MP-W2/2A-SESSION.md` -- the one-autoload rule stands, so it
+## (`archive/ralph/briefs/MP-W2/2A-SESSION.md` -- the one-autoload rule stands, so it
 ## is not its own singleton).
 const SESSION_PATH := ^"/root/Game/Session"
 

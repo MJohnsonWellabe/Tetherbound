@@ -10,7 +10,7 @@ extends "res://tests/test_case.gd"
 ## in-game hours, 225 real seconds of a 600-second day, opening at an hour that
 ## renders at 67% of midday and closing after dawn has already begun.
 ##
-## `docs/prompts/07-RG21-continuous-day-night-short-night.md` is the owner-facing
+## `archive/docs/prompts/07-RG21-continuous-day-night-short-night.md` is the owner-facing
 ## contract and says otherwise in as many words: about 120 real seconds of true
 ## dark, "about 4.8 in-game hours"; "Dawn and dusk are transition periods, not
 ## part of the 2-minute fully dark window"; and `is_dark()` "should not simply
@@ -103,7 +103,7 @@ func test_true_dark_is_about_two_real_minutes_of_the_ten_minute_day() -> void:
 	var seconds := _dark_span_hours() / 24.0 * float(_cycle.day_length_seconds)
 	assert_between(seconds, TRUE_DARK_SECONDS_MIN, TRUE_DARK_SECONDS_MAX,
 		("is_dark() covers %.1f in-game hours = %.0f real seconds of a %.0f-second day; "
-		+ "docs/prompts/07-RG21-continuous-day-night-short-night.md asks for about 120, "
+		+ "archive/docs/prompts/07-RG21-continuous-day-night-short-night.md asks for about 120, "
 		+ "'about 4.8 in-game hours of true night', with dusk and dawn NOT counted in it")
 		% [_dark_span_hours(), seconds, float(_cycle.day_length_seconds)])
 

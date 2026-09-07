@@ -10,7 +10,7 @@ Sources: W08-DIALOGUE-CAMERA-0904 (fence, inn) and W06-FINALE-0904 (courtyard tr
 
 ## 0. A premise the wave got wrong, and what was done about it
 
-`ralph/briefs/0905-followup/COMMON.md` says every 0904 lane has landed and their reports can
+`archive/ralph/briefs/0905-followup/COMMON.md` says every 0904 lane has landed and their reports can
 be read at `ralph/reports/<LANE>-0904/REPORT.md` on `origin/main`. **Neither source lane of
 this brief is on `main`**: `git merge-base --is-ancestor` says no for both
 `origin/ralph/W06-FINALE-0904` and `origin/ralph/W08-DIALOGUE-CAMERA-0904`, their reports

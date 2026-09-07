@@ -15,6 +15,6 @@ Contract: `docs/specs/MP_STATE_SEAM.md`.
 ## Why
 
 Directive §3 allows adapters and forbids rewriting working systems for purity. The inventory
-(`docs/specs/MP_ASSUMPTION_INVENTORY.md` §1) counts 390 `Game.<field>` sites; a facade keeps them
+(`archive/docs/specs/MP_ASSUMPTION_INVENTORY.md` §1) counts 390 `Game.<field>` sites; a facade keeps them
 all working and bounds the sweep to host-side code. Every process still has exactly one local
 player, so "the local player's party" is a permanent meaning, not a transitional one.

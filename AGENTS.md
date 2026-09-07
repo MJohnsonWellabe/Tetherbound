@@ -5,12 +5,14 @@ This repository's real instructions live in `CLAUDE.md` (hard rules, binding) an
 Read both before doing anything else — `CLAUDE.md` overrides anything that conflicts
 with it, including prose elsewhere in this file.
 
-If you are picking up a fresh session with new pickup art to integrate, or with
-instructions to "finish the Meadows", start at
-`docs/prompts/75-CODEX-pull-in-pickup-assets-and-finish-the-meadows.md` — it is the
-current dated routing document and points at everything else in the right order.
+**The current orchestration contract is
+`docs/prompts/77-CODEX-GOAL-four-biome-push-2026-09-07.md`.** A fresh Codex session
+picking up this repository starts there: it names the integration branch, the lanes,
+the model per lane, the checkpoint cadence, the stop rules and the definition of done,
+and it points at every other document in the right order. The newest owner record is
+`docs/owner/OWNER_PLAYTEST_2026-09-07.md`.
 
 Do not read `CODEX_START_HERE.md`, `PROMPT_THOUGHTS.md`, or `CLAUDE_START_HERE.md` if
 you find copies of them anywhere outside `docs/prompts/` — they were drafted by a
 different tool without access to this repository's actual state and reference files
-that do not exist here. `docs/prompts/75-...md` supersedes them.
+that do not exist here. Do not cold-read `archive/`; it is history.

@@ -4,7 +4,7 @@ Branch `ralph/N10-HARNESS-TESTS-0905`, off `origin/main` at `f8a47ee4`.
 
 ## 0. Read this first: the wave's premise is not true of `main`
 
-`ralph/briefs/0905-followup/COMMON.md` says "all 24 base lanes have landed; you are working on
+`archive/ralph/briefs/0905-followup/COMMON.md` says "all 24 base lanes have landed; you are working on
 top of finished, merged work". **They have not.** `main` is at `f8a47ee4` = PR #51 (W20), and
 of the three lanes this brief cites as its sources, only W20 is merged:
 

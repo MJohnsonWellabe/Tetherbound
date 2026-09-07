@@ -1,5 +1,8 @@
 # HANDOFF — coordination follow-through, 2026-09-06/07 (for a Codex session)
 
+> **2026-09-07:** Tasks 1, 2 (merge), 3 and 7 are done; Tasks 4, 5, 6, 8 and the post-#72 re-judge are folded into `docs/prompts/77-CODEX-GOAL-four-biome-push-2026-09-07.md`, which is now the routing contract. The state-of-`main` and branch tables below are stale (PRs #74–#78 have since merged).
+
+
 **Read this before anything else in this file tree except `CLAUDE.md` and `docs/00_START_HERE.md`.**
 Written by a Claude coordination session, updated after the consolidation work it describes
 actually finished and merged. Precision over prose: every claim below is either verified

@@ -58,8 +58,8 @@ Inspect current `main` before judging:
 - `scripts/player/torch.gd`
 - `scripts/player/tool_hold.gd`
 - `data/config/movement.json` torch tuning
-- RG21 prompt: `docs/prompts/07-RG21-continuous-day-night-short-night.md`
-- RG22 prompt: `docs/prompts/08-RG22-verify-current-torch-lighting.md`
+- RG21 prompt: `archive/docs/prompts/07-RG21-continuous-day-night-short-night.md`
+- RG22 prompt: `archive/docs/prompts/08-RG22-verify-current-torch-lighting.md`
 - current `docs/CURRENT_STATE.md` notes for NIGHT-LIGHT / NIGHT-REJUDGE
 - prior night review/capture evidence under `archive/reports/docs-reviews-full/` and `shots/night_light/` if still present
 

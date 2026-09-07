@@ -1,7 +1,7 @@
 # W01-ROUTE-STRIP-0904 — the route strip photographs the game, not empty scenery
 
 Phase 0.1 / CL-H9 / task 2.15. Branch `ralph/W01-ROUTE-STRIP-0904`, from `origin/main`
-at `ef16544f`. Brief: `ralph/briefs/0904/W01-ROUTE-STRIP.md` on
+at `ef16544f`. Brief: `archive/ralph/briefs/0904/W01-ROUTE-STRIP.md` on
 `origin/claude/codex-merge-meadows-finish-dq12jj`.
 
 ## Files changed
@@ -13,7 +13,7 @@ at `ef16544f`. Brief: `ralph/briefs/0904/W01-ROUTE-STRIP.md` on
 | `tests/test_capture_check.gd` | 20 tests (up from the pre-existing 3): projection agreement, empty frame, behind camera, too small, cropped, side-by-side pass, one bad subject fails the frame, on-screen overlap, close-up cap, screen-gap requirement, `fit_distance` minimality / three-subject-vs-two / no-fit / height caps / a subject exempt from the size floor. |
 | `tests/test_route_strip_subject_boxes.gd` | New. 8 tests pinning subject-box sizing and fight-framing geometry against the shipped `species.json` and the arena's own numbers: a creature's box is its collider radius, not its spawn-spacing allowance; two fighters at the arena's authored separation and at melee range read as separate; one standing behind the other is still caught; two standing inside each other are reported as interpenetrating (not as screen overlap); a required on-screen gap is enforced and is asked of fighters only, never the trainer. |
 | `docs/CURRENT_STATE.md` | Exit-note paragraph updated; new §2 row "Route strip / creature evidence (2.15, CL-H9)". |
-| `docs/VISUAL_PARITY_PROGRESS.md` | "Route-strip investigation" rewritten as landed; "Exact resume point" now starts at the GPU strip. |
+| `archive/docs/VISUAL_PARITY_PROGRESS_cloudreach.md` | "Route-strip investigation" rewritten as landed; "Exact resume point" now starts at the GPU strip. |
 | `ralph/reports/W01-ROUTE-STRIP-0904/` | This report, `_sheet_route_strip.png` (final sheet, run 8), and `JUDGE-ROUND-1.md` through `JUDGE-ROUND-4.md` (one verbatim code-blind verdict per round). Run logs (`run1.log`–`run8.log`) are `*.log` and ignored by the repo's evidence rules; the numbers that matter are quoted below. |
 
 Not touched: anything under `scripts/`, `autoload/`, `data/`, `docs/owner/`,

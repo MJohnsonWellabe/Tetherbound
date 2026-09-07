@@ -442,7 +442,7 @@ down here for exactly that reason: the answer, in one place.
   125 real seconds) is the true-dark semantic every torch, camp fill light and
   creature emission floor switches on. It is deliberately NARROWER than the
   visible dusk→night→dawn sweep, per
-  `docs/prompts/07-RG21-continuous-day-night-short-night.md`: dusk and dawn are
+  `archive/docs/prompts/07-RG21-continuous-day-night-short-night.md`: dusk and dawn are
   transitions and are not part of it. Measured frame luma across the sweep, one
   camera, `tools/gate_f/probe_daynight_contrast.gd`: hour 8 = 114.5, 18 = 90.5,
   20 = 77.0, 22 = 54.7, 0 = 29.5, 3 = 43.2.

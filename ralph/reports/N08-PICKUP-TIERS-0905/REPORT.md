@@ -1,7 +1,7 @@
 # N08-PICKUP-TIERS — report
 
 Branch: `ralph/N08-PICKUP-TIERS-0905`, from `origin/main` at `f8a47ee4`.
-Lane brief: `ralph/briefs/0905-followup/N08-PICKUP-TIERS.md` (with `COMMON.md`) — **not
+Lane brief: `archive/ralph/briefs/0905-followup/N08-PICKUP-TIERS.md` (with `COMMON.md`) — **not
 present on any pushed ref when this lane started** (see "The brief" below). The lane
 worked from the session title (*"make pickup tiers distinguishable by more than hue"*),
 the W17 round-2 and W18 round-1 code-blind verdicts that raised the defect, and the
@@ -25,7 +25,7 @@ saturated amber carried on its own emission colour under a light albedo.
 
 ## The brief
 
-`ralph/briefs/0905-followup/` exists on no branch, tag or PR head of the repository
+`archive/ralph/briefs/0905-followup/` exists on no branch, tag or PR head of the repository
 (checked every remote ref at 13:40 UTC) and no other session was reachable to supply it.
 Per the launch instruction ("make the smallest defensible call and record it"), the lane
 took its scope from the session title and the two verdicts that routed this exact ask to
