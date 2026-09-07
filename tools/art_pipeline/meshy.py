@@ -169,6 +169,17 @@ for _species in NEW_BIOME_CREATURES:
         "bushy tail, ", "upturned tail, ", "paddle tail, ", "beaver tail, ",
         "long legs, ", "tall slender body, ", "fox proportions",
     )
+
+## Redo pass, owner-supplied dedicated per-character boards 2026-09-07 (one
+## board each for Lyra/Kael/Sera, replacing the shared 3-up sheet). Kael's
+## board shows him gripping a large axe in every turnaround view -- the
+## first-pass prompt said "holding nothing" against NEGATIVE_HUMAN's blanket
+## "weapons" ban, the exact same mistake NEGATIVE_HUMAN's own history
+## (Meadowhart's saddle, the Warden's staff) already made once. Lyra and
+## Sera's flowing scarf/cape drapes are core silhouette, not accident, and
+## sit in the same "cape" ban. Dropped for all three rather than only Kael.
+for _species in ("lyra", "kael", "sera"):
+    DROP_FOR_SPECIES[_species] = ("armor, ", "weapons, ", "cape, ")
 NEGATIVE_HUMAN = ("photorealistic skin, realistic human proportions, armor, weapons, "
             "sword, staff, gun, cape, robe, extra fingers, fused fingers, "
             "noisy surface detail, wet plastic shading, "
@@ -1331,14 +1342,16 @@ SPECIES_PROMPTS = {
         "smile"),
     "kael": (
         "stylised adult male explorer, KAEL THE NORTHWARD: steadfast, "
-        "resilient, built for what's next. FULLY SCULPTED FACIAL FEATURES: "
-        "deep eye sockets, heavy brow, projecting nose, thick braided BROWN "
-        "BEARD, tribal tattoo markings on one bare forearm. Broad heavy "
-        "build, seven heads tall, NOT slim. Five separated fingers on each "
-        "hand, holding nothing. Dark leather vest over bare muscular arms, "
-        "wide studded belt with a compass buckle, layered fur mantle over "
-        "one shoulder, dark trousers, heavy fur-cuffed boots, braided hair "
-        "pulled back, stern steady expression"),
+        "resilient, built for what's next. GRIPPING A LARGE STONE-HEADED "
+        "AXE with a wood-and-leather-wrapped haft, held low in one hand. "
+        "FULLY SCULPTED FACIAL FEATURES: deep eye sockets, heavy brow, "
+        "projecting nose, thick braided BROWN BEARD, shaved head with a dark "
+        "tribal tattoo pattern across the scalp and one bare forearm. Broad "
+        "heavy build, seven heads tall, NOT slim. Five separated fingers on "
+        "each hand. Layered leather-and-fur vest and harness over a blue-grey "
+        "tunic, round metal compass-emblem buckles, wide belt, thick fur "
+        "mantle draped over one shoulder, dark trousers, heavy fur-cuffed "
+        "boots, stern steady expression"),
     "sera": (
         "stylised young female explorer, SERA THE HARMONIST: thoughtful, "
         "compassionate, gentle. FULLY SCULPTED FACIAL FEATURES: defined eye "
@@ -1360,22 +1373,25 @@ SPECIES_PROMPTS = {
     "cannonback": (
         "small-to-medium armored water tortoise creature, CANNONBACK the "
         "shell sentinel. NO TAIL, BLUNT ROUNDED REAR -- the shell is the "
-        "whole silhouette from above, nothing trails behind it. THICK "
-        "OVERLAPPING BLUE-GREY SHELL PLATES ringed with bronze rivets "
-        "across a domed back, TWO FORWARD-FACING WATER-JET NOZZLES mounted "
-        "on the shoulders venting pressurized water. Stubby powerful legs, "
-        "weathered tan underbelly, deep-set amber eyes, blunt determined "
-        "face, barnacle texture on the shell rim, armored and unstoppable, "
-        "reads as a natural fortress"),
+        "whole silhouette from above, nothing trails behind it. FOUR TO SIX "
+        "CYLINDRICAL CANNON-BARREL TUBES with dark hollow openings mounted "
+        "upright around the rim of a domed shell, THICK OVERLAPPING "
+        "BLUE-GREY-AND-TAN SHELL PLATES with moss patches. Compact rounded "
+        "turtle head with nothing beside it, stubby powerful legs, "
+        "weathered tan underbelly and face, deep-set amber eyes, barnacle "
+        "texture on the shell rim, armored and unstoppable, reads as a "
+        "natural fortress"),
     "riptusk": (
         "medium aggressive river beast creature, RIPTUSK the river reaver. "
-        "TWO LARGE CURVED GOLD-AND-IVORY TUSKS jutting far up from the "
-        "lower jaw past the snout, unmistakably oversized. ROW OF JAGGED "
-        "DORSAL SPINES running down the spine and tail. BOLD "
-        "GOLDEN-ORANGE MARKINGS scattered across the shoulders, back and "
-        "tail OVER a mottled deep teal-blue hide -- the orange-gold is a "
-        "strong, saturated accent colour, not a faint tint. Thick "
-        "muscular quadruped build, powerful clawed webbed feet, small "
+        "ONE HEAD ONLY, at the front end -- the tail is SHORT, PLAIN AND "
+        "BLUNT with no face, no mouth and no second set of tusks anywhere "
+        "on it. TWO LARGE CURVED GOLD-AND-IVORY TUSKS jutting far up from "
+        "the lower jaw past the snout, unmistakably oversized. ROW OF "
+        "ORANGE-TIPPED JAGGED DORSAL SPINES running from the head down the "
+        "spine only. BOLD GOLDEN-ORANGE MARKINGS scattered across the "
+        "shoulders and back OVER a mottled deep teal-blue hide -- the "
+        "orange-gold is a strong, saturated accent colour, not a faint "
+        "tint. Thick muscular quadruped build, powerful clawed feet, small "
         "aggressive amber eyes, wide territorial stance, tough dominant "
         "river-shore predator"),
     "aquaryn": (
