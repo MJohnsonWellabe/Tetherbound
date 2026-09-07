@@ -111,9 +111,9 @@ void vertex() {
 	// (0,e,dy) and the normal is their cross product -- rebuilt here because
 	// displacing a vertex without doing this leaves the whole cloth lit as one
 	// flat plane, which is exactly the defect this shader's header records.
-	const float E = 0.09;
-	float dx = wave(cloth + vec2(E, 0.0), TIME) - wave(cloth - vec2(E, 0.0), TIME);
-	float dy = wave(cloth + vec2(0.0, E), TIME) - wave(cloth - vec2(0.0, E), TIME);
+	const float WAVE_EPSILON = 0.09;
+	float dx = wave(cloth + vec2(WAVE_EPSILON, 0.0), TIME) - wave(cloth - vec2(WAVE_EPSILON, 0.0), TIME);
+	float dy = wave(cloth + vec2(0.0, WAVE_EPSILON), TIME) - wave(cloth - vec2(0.0, WAVE_EPSILON), TIME);
 	// `relief` damps the slope BEFORE the normal is built, and it is not
 	// cosmetic. The true surface slope of this wave is close to 1.0 at the hem
 	// of a big cloth (`sway` 0.32 times the base term's 2.1 rad/m, plus the

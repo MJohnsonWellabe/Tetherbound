@@ -12,17 +12,47 @@ class Flags extends RefCounted:
 		values[id] = true
 		revision += 1
 
-class Ledger extends Node:
+class WorldState extends RefCounted:
 	var flags: Flags
+	var revision := 0
+	var world_id := "veilfall-test-world"
+	var water_capture_claims: Dictionary = {}
+	func save_data() -> Dictionary:
+		return {"flags": flags.values.duplicate(true)}
+	func load_data(data: Dictionary) -> void:
+		flags.values = data.get("flags", {}).duplicate(true)
+
+class SaveSystem extends RefCounted:
+	var saves := 0
+	func save_world(_game: Object, _world_id: String) -> bool:
+		saves += 1
+		return true
+
+class WorldLedger extends RefCounted:
+	var flags: Flags
+	var world: WorldState
+	var seq := 0
 	var submitted: Array = []
-	func submit(intent: Dictionary) -> Dictionary:
+	func commit(intent: Dictionary, _peer: int) -> Dictionary:
 		submitted.append(intent.duplicate(true))
 		flags.set_flag(str(intent.id))
-		return {"ok": true}
+		seq += 1
+		return {"ok": true, "delta": {"seq": seq, "realm": str(intent.get("realm", "")),
+			"ops": [{"kind": "set_world_flag", "id": str(intent.id), "value": true}]}}
+
+class Ledger extends Node:
+	var ledger: WorldLedger
+	var submitted: Array
+	var published: Array = []
+	func submit(intent: Dictionary) -> Dictionary:
+		return ledger.commit(intent, 1)
+	func publish_journaled_delta(delta: Dictionary) -> void:
+		published.append(delta.duplicate(true))
 
 class GameFixture extends Node:
-	var world: Dictionary
+	var world: WorldState
 	var ledger: Ledger
+	var save_system := SaveSystem.new()
 	var authority := true
 	func is_host() -> bool:
 		return authority
@@ -39,9 +69,13 @@ func _case_generated_geometry_and_controls() -> void:
 	var game := GameFixture.new()
 	game.name = "Game"
 	var flags := Flags.new()
-	game.world = {"flags": flags}
+	game.world = WorldState.new()
+	game.world.flags = flags
 	game.ledger = Ledger.new()
-	game.ledger.flags = flags
+	game.ledger.ledger = WorldLedger.new()
+	game.ledger.ledger.flags = flags
+	game.ledger.ledger.world = game.world
+	game.ledger.submitted = game.ledger.ledger.submitted
 	game.add_child(game.ledger)
 	var transport := Node.new()
 	transport.name = "WaterVeilfallTransport"
@@ -110,7 +144,10 @@ func _case_generated_geometry_and_controls() -> void:
 	flags.set_flag("water_captain_nerissa_defeated")
 	assert_true(cave.host_commit({"kind": "veilfall_control", "control_id": "guardian_tether"}, 2, {"realm": "water", "position": release}).ok)
 	assert_true(flags.has("water_guardian_freed"))
-	assert_eq(game.ledger.submitted.size(), 3)
+	assert_true(flags.has("water_tether_disabled"))
+	assert_eq(game.ledger.submitted.size(), 4)
+	assert_eq(game.save_system.saves, 1)
+	assert_eq(game.ledger.published.size(), 1)
 	world.free()
 	game.free()
 	if original != null: original.name = "Game"
