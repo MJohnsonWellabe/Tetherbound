@@ -1429,14 +1429,18 @@ SPECIES_PROMPTS = {
         "with a bounce"),
     "cragclaw": (
         "sturdy defensive crustacean creature, CRAGCLAW the stone sheller. "
-        "ROUGH BARNACLE-CRUSTED STONE SHELL fused across its back like a "
-        "small island, TWO OVERSIZED RUST-RED PINCER CLAWS held forward "
-        "defensively. Six jointed grey-blue legs, small alert stalked "
-        "eyes, weathered rock texture with moss in the shell seams, "
+        "EVERY LEG AND CLAW FIRMLY JOINED TO THE BODY WITH NO GAP -- no "
+        "floating or detached limb pieces anywhere. ROUGH MOSS-AND-CORAL "
+        "-CRUSTED STONE SHELL fused across its back like a small island, "
+        "TWO OVERSIZED ORANGE-RED PINCER CLAWS held forward defensively. "
+        "Six jointed orange legs, small alert stalked eyes, weathered rock "
+        "texture with moss and small coral growths in the shell seams, "
         "tenacious and adaptable, carries the island on its back"),
     "riverdrake": (
         "sleek agile amphibious dragon creature, RIVERDRAKE the current "
-        "stalker. LAYERED TEAL-AND-ORANGE FRILLED SAIL FIN running from "
+        "stalker. STANDING DIRECTLY ON ITS OWN FOUR FEET WITH NO GROUND "
+        "SLAB, NO ROCK PLATFORM AND NO BASE UNDER IT -- only the creature "
+        "itself. LAYERED TEAL-AND-ORANGE FRILLED SAIL FIN running from "
         "head to tail tip, LONG STREAMLINED BODY built equally for "
         "swimming and running. Fine overlapping scales fading from deep "
         "blue-green to pale cream belly, sharp golden eyes, clawed webbed "
