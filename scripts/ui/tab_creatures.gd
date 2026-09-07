@@ -123,14 +123,6 @@ const TYPE_ICONS := {
 }
 const BOND_ICON := preload("res://assets/ui/icons/ui/bond.png")
 
-## Where a species' portrait art lives, if it has any -- the same path shape
-## `playground_hud.gd::_species_portrait_path` builds for the HUD's own
-## tracked-creature chip. Duplicated rather than called cross-file (this tab
-## and that HUD are unrelated nodes with no shared parent to reach through),
-## but kept to the one format string so the two screens can never point at
-## different art for the same species.
-const PORTRAIT_DIR := "res://assets/ui/portraits/creatures/"
-
 var _header: Label = null
 ## Button nodes only — see the header note on why `smoke_menu.gd` needs these
 ## to be castable straight to `Button`, not a wrapper.
@@ -1935,20 +1927,7 @@ func _history_line(creature: RefCounted) -> String:
 	return " " + ", ".join(parts).capitalize() + "."
 
 
-## The same aspect-variant fallback `playground_hud.gd::_species_portrait_path()`
-## makes, kept here rather than reached across because these two screens have no
-## shared parent -- the identical reason `PORTRAIT_DIR`'s own header gives for
-## duplicating the path format. An aspect variant (T3-CREATURES: nightburrow,
-## stormtrail, riftfrill, ashtusk) has no portrait of its own and reuses its base
-## species', exactly as it already reuses that species' mesh. Without this the
-## roster showed a bare swatch for the four rarest creatures in the chapter --
-## the two screens drifting apart again, which is what that header exists to
-## prevent.
+## Shares dedicated, aspect-variant and explicit Water placeholder resolution
+## with the party HUD, so both screens show the same installed body.
 func _portrait_path(species_id: String) -> String:
-	if species_id.is_empty():
-		return ""
-	var path := "%s%s.png" % [PORTRAIT_DIR, species_id]
-	if ResourceLoader.exists(path):
-		return path
-	var base := str(SPECIES.definition(species_id).get("variant_of", ""))
-	return "%s%s.png" % [PORTRAIT_DIR, base] if base != "" else path
+	return preload("res://scripts/ui/creature_portrait.gd").resolve(species_id)
