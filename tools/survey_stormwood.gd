@@ -9,7 +9,7 @@ extends SceneTree
 ## or collision evidence.
 
 const SCENE := "res://scenes/world/stormwood.tscn"
-const OUT_DIR := "res://shots/stormwood-foundation"
+const DEFAULT_OUT_DIR := "res://shots/stormwood-foundation"
 const SETTLE_FRAMES := 36
 const POSE_FRAMES := 8
 
@@ -20,8 +20,8 @@ const VIEWS := [
 	{"name": "04-conductor", "eye": Vector2(-700.0, 2300.0), "target": Vector3(-1080.0, 105.0, 3020.0)},
 	{"name": "05-crown-overlook", "eye": Vector2(160.0, 1980.0), "target": Vector3(700.0, 92.0, 2700.0)},
 	{"name": "06-deepwood", "eye": Vector2(-450.0, 3960.0), "target": Vector3(-150.0, 88.0, 4460.0)},
-	{"name": "07-stormheart-approach", "eye": Vector2(-310.0, 5050.0), "target": Vector3(-100.0, 145.0, 5350.0)},
-	{"name": "08-treebase", "eye": Vector2(-100.0, 5300.0), "target": Vector3(-100.0, 205.0, 5470.0)},
+	{"name": "07-stormheart-approach", "eye": Vector2(-310.0, 5050.0), "target": Vector3(-100.0, 145.0, 5350.0), "target_above_ground": 100.0},
+	{"name": "08-treebase", "eye": Vector2(-100.0, 5300.0), "target": Vector3(-100.0, 205.0, 5470.0), "target_above_ground": 150.0},
 ]
 
 
@@ -29,8 +29,23 @@ func _init() -> void:
 	_run.call_deferred()
 
 
+func _output_dir() -> String:
+	var environment_dir := OS.get_environment("STORMWOOD_SURVEY_OUT")
+	if not environment_dir.is_empty():
+		return environment_dir
+	var args := OS.get_cmdline_args()
+	for index in args.size():
+		var arg := str(args[index])
+		if arg.begins_with("--output="):
+			return arg.trim_prefix("--output=")
+		if arg == "--output" and index + 1 < args.size():
+			return str(args[index + 1])
+	return DEFAULT_OUT_DIR
+
+
 func _run() -> void:
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
+	var out_dir := _output_dir()
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(out_dir))
 	var game := root.get_node_or_null(^"Game")
 	if game == null:
 		push_error("Stormwood survey: Game autoload is missing")
@@ -80,7 +95,8 @@ func _run() -> void:
 
 	var camera := Camera3D.new()
 	camera.name = "StormwoodSurveyCamera"
-	camera.fov = 70.0
+	camera.fov = production_camera.fov
+	camera.near = 0.1
 	camera.far = production_camera.far
 	world.add_child(camera)
 	camera.make_current()
@@ -99,7 +115,16 @@ func _run() -> void:
 			continue
 		var eye := Vector3(eye_xz.x, ground + 2.2, eye_xz.y)
 		var forward := Vector3(target.x-eye.x,0,target.z-eye.z).normalized()
-		var player_at := eye + forward*5.0
+		var target_ground := float(world.call("ground_height_at", target.x, target.z))
+		if is_nan(target_ground):
+			failures.append("%s: no terrain height at target" % view.name)
+			continue
+		# Keep the authored horizontal framing while deriving the look height from
+		# the production terrain. This prevents stale hand-authored Y values from
+		# aiming above a newly composed slope or underground.
+		target.y = target_ground + float(view.get("target_above_ground", 3.0))
+		forward = Vector3(target.x-eye.x, target.y-eye.y, target.z-eye.z).normalized()
+		var player_at := eye + forward*7.0
 		player_at.y = float(world.call("ground_height_at",player_at.x,player_at.z))+0.1
 		player.global_position = player_at
 		player.velocity = Vector3.ZERO
@@ -112,7 +137,7 @@ func _run() -> void:
 		for _frame in POSE_FRAMES:
 			await RenderingServer.frame_post_draw
 		var image := root.get_texture().get_image()
-		var path := "%s/%s.png" % [OUT_DIR, str(view.name)]
+		var path := "%s/%s.png" % [out_dir, str(view.name)]
 		if image == null or image.save_png(path) != OK:
 			failures.append("%s: viewport capture failed" % view.name)
 		else:

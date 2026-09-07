@@ -24,6 +24,7 @@ const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 ## same measurement -- see `_ground_clear_radius`.
 const CLEAR_MARGIN := 0.7
 const CONFIG_PATH := "res://data/config/village.json"
+@export var config_path := CONFIG_PATH
 
 var _prefabs: RefCounted = null
 var _placed := 0
@@ -38,7 +39,7 @@ var _placed := 0
 ## 2026-09-06). `null` (every non-shell build) makes `_breathe()` a no-op, so
 ## single-player boot is unchanged.
 func build(slicer: RefCounted = null) -> void:
-	var file := FileAccess.open(CONFIG_PATH, FileAccess.READ)
+	var file := FileAccess.open(config_path, FileAccess.READ)
 	if file == null:
 		push_error("village.json missing; the settlement is a field")
 		return

@@ -1,0 +1,21 @@
+{
+  "realm_id": "stormwood",
+  "_comment": "Root-authored Rodfolk settlement footprints. Reuses the installed civilian prefab family, its real doors and colliders. Services, inhabitants and camp progression are separate runtime work; buildings alone do not satisfy the camp census.",
+  "structures": [
+    {"id":"ashfoot_shelter","prefab":"ranger_station","at":[-365,460],"yaw_deg":135},
+    {"id":"ashfoot_cart","prefab":"wagon","at":[-338,461],"yaw_deg":25},
+    {"id":"pools_shelter","prefab":"ranger_station","at":[-396,1416],"yaw_deg":135},
+    {"id":"rodline_workshop","prefab":"workshop","at":[-720,2310],"yaw_deg":110},
+    {"id":"rodline_home","prefab":"cottage_a","at":[-678,2318],"yaw_deg":-125},
+    {"id":"rodline_well","prefab":"well","at":[-699,2314],"yaw_deg":20},
+    {"id":"rodline_supply_cart","prefab":"wagon","at":[-716,2283],"yaw_deg":-25},
+    {"id":"still_grove_shelter","prefab":"ranger_station","at":[-183,2707],"yaw_deg":105},
+    {"id":"crown_old_well","prefab":"well","at":[715,2690],"yaw_deg":35},
+    {"id":"lantern_hollow_inn","prefab":"inn","at":[-473,3980],"yaw_deg":125,"interior":"inn"},
+    {"id":"lantern_hollow_home","prefab":"cottage_b","at":[-428,3974],"yaw_deg":-130,"interior":"cottage"},
+    {"id":"lantern_hollow_workshop","prefab":"workshop","at":[-476,3945],"yaw_deg":75},
+    {"id":"lantern_hollow_well","prefab":"well","at":[-449,3985],"yaw_deg":-15},
+    {"id":"ember_shelter","prefab":"ranger_station","at":[-130,5275],"yaw_deg":115},
+    {"id":"ember_supply_cart","prefab":"wagon","at":[-104,5264],"yaw_deg":15}
+  ]
+}

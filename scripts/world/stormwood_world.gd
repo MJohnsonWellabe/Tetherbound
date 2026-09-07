@@ -8,6 +8,8 @@ const GATE := preload("res://scripts/world/realm_gate.gd")
 const SHELL_BUILD := preload("res://scripts/world/shell_build_budget.gd")
 const DROPS := preload("res://scripts/world/dropped_item_spawner.gd")
 const FALL_RECOVERY := preload("res://scripts/world/fall_recovery.gd")
+const STORMHEART := preload("res://scripts/world/stormheart_tree.gd")
+const SETTLEMENTS := preload("res://scripts/world/village.gd")
 var simulation_only := false
 var shell_realm := ""
 var _ready_complete := false
@@ -91,6 +93,12 @@ func _ready() -> void:
 	_build_landmark_masses()
 	_build_return_gate()
 	_build_rootgate()
+	var settlements := SETTLEMENTS.new()
+	settlements.name = "RodfolkSettlements"
+	settlements.config_path = "res://data/config/stormwood_settlements.json"
+	settlements.visible = not simulation_only
+	add_child(settlements)
+	await settlements.build(budget)
 	DROPS.attach(self,REALM_ID)
 	if not simulation_only:
 		var game := get_node("/root/Game")
@@ -170,20 +178,13 @@ func _build_rootgate() -> void:
 
 func _build_landmark_masses() -> void:
 	var base := Vector3(-100,ground_height_at(-100,5470),5470)
-	var tree := Node3D.new()
+	var tree := STORMHEART.new()
 	tree.name = "StormheartTree"
 	tree.position = base
+	tree.simulation_only = simulation_only
 	add_child(tree)
-	_model(tree,"res://assets/environment/stylized_nature/TwistedTree_2.gltf",Vector3(-24,0,0),8.8,-0.2)
-	_model(tree,"res://assets/environment/stylized_nature/TwistedTree_4.gltf",Vector3(24,0,0),8.8,0.5)
-	if not simulation_only:
-		for y in [25,65,110,155]:
-			var light := OmniLight3D.new()
-			light.position = Vector3(0,y,0)
-			light.light_color = Color("72c6ff")
-			light.light_energy = 3
-			light.omni_range = 60
-			tree.add_child(light)
+	tree.build()
+	tree.add_approach(Vector3(-100,ground_height_at(-100,5350)+0.2,5350))
 	var sentinel := Vector3(-320,ground_height_at(-320,240),240)
 	_model(self,"res://assets/environment/stylized_nature/DeadTree_1.gltf",sentinel,5.0,0.2)
 

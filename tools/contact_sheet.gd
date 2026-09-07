@@ -118,8 +118,8 @@ func _init() -> void:
 	for index in names.size():
 		print("  %d. %s" % [index + 1, names[index]])
 	print("")
-	print("Software rendering, Compatibility renderer. See tools/survey.sh for what")
-	print("these frames can and cannot be used to judge.")
+	print("Image compositing only. The originating capture log records the renderer")
+	print("and any rendering limitations; this compositor does not choose a renderer.")
 	quit(0)
 
 
