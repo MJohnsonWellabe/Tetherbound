@@ -1610,11 +1610,15 @@ SPECIES_PROMPTS = {
         "Pale cream underside, graceful curling flight pose, golden eyes, "
         "even currents carry dreams"),
     "ribbonray": (
-        "graceful gliding creature, RIBBONRAY the sky glider, manta and "
-        "bird influence. LONG TRAILING RIBBON-LIKE TAIL STREAMERS, WIDE "
-        "FEATHERED GLIDING WING-FINS in purple-blue-orange gradient. "
-        "Slender aerodynamic body, small round head, bright eyes, grace "
-        "turns into freedom, soaring flight silhouette"),
+        "graceful gliding creature, RIBBONRAY the sky glider, no legs. "
+        "TWO ENORMOUS WIDE FEATHERED WING-FINS spanning far wider than the "
+        "body, attached firmly along the sides with no gap, in a "
+        "purple-blue-orange gradient -- the wings are the single largest "
+        "and most visible feature. ONE BIRD-LIKE HEAD with a small beak and "
+        "bright eyes at the front, clearly a head and not a fin. LONG "
+        "TRAILING RIBBON-LIKE TAIL STREAMERS behind the body. Slender "
+        "aerodynamic body, no floating or detached parts, soaring flight "
+        "silhouette, consistent from every angle"),
     "breezetail": (
         "small bushy-tailed mammal creature, BREEZETAIL the cliff ferret. "
         "ENORMOUS FLUFFY STRIPED TAIL nearly as large as its whole body, a "
