@@ -584,10 +584,11 @@ func _check_the_change_reached_the_file() -> void:
 	print("the rebind survives a reload from %s" % path)
 
 
-## OF26. Off by default and its list hidden; the toggle shows it; a region and
-## a spoke road-end both compute the promised `ground_height_at(x,z) +
-## DEBUG_TELEPORT_CLEARANCE` position exactly; pressing a row's button also
-## teleports and closes the menu; the toggle hides the list again.
+## OF26. Off by default and its list hidden; the toggle shows the curated
+## two-spots-per-band list from `debug_teleport_spots.json`; a destination
+## computes the promised `ground_height_at(x,z) + DEBUG_TELEPORT_CLEARANCE`
+## position exactly; pressing a row's button also teleports and closes the
+## menu; the toggle hides the list again.
 ## `debug_teleport` is checked, not read through code — every assertion below
 ## is against `GameState`/the live `Player`, the same "the game agrees, not
 ## just the model" standard `_check_a_key_can_be_rebound` already holds
@@ -618,10 +619,6 @@ func _check_debug_teleport() -> void:
 	var section: Control = _tab.get("_teleport_section")
 	if section == null or section.visible:
 		_fail("the teleport list is visible while the toggle is off")
-
-	var village := _teleport_entry("The Village")
-	if not village.is_empty():
-		_fail("'The Village' should have been deduped into 'Grandpa's Village'")
 
 	var toggle: Button = _tab.get("_debug_teleport_button")
 	if toggle == null:
@@ -661,6 +658,22 @@ func _check_debug_teleport() -> void:
 
 	var scroll: ScrollContainer = _tab.get("_scroll")
 	var visible_destinations: Array = _tab.get("_teleport_rows")
+	var curated_destinations := _curated_teleport_expectations()
+	if visible_destinations.size() != curated_destinations.size():
+		_fail("settings showed %d debug destinations; curated config requires %d" % [
+			visible_destinations.size(), curated_destinations.size()
+		])
+		root.size = desktop_size
+		return
+	for i in curated_destinations.size():
+		var actual := visible_destinations[i] as Dictionary
+		var expected := curated_destinations[i] as Dictionary
+		var actual_position: Vector2 = actual.get("position", Vector2.ZERO)
+		if str(actual.get("display_name", "")) != str(expected.get("display_name", "")) \
+				or not actual_position.is_equal_approx(expected.get("position", Vector2.ZERO)):
+			_fail("curated debug destination %d does not match its JSON row: %s vs %s" % [i, actual, expected])
+			root.size = desktop_size
+			return
 	for i in visible_destinations.size():
 		await _tap_pad(JOY_BUTTON_DPAD_DOWN)
 		var expected: Button = (visible_destinations[i] as Dictionary)["button"]
@@ -689,44 +702,24 @@ func _check_debug_teleport() -> void:
 		visible_destinations.size(), handheld_size
 	])
 
-	# One region + one spoke end, checked exactly, synchronously, while the
-	# menu (and so the world) is still paused.
-	#
-	# OW5E: expectations are DERIVED from the same config the corridor's own
-	# relocation table (docs/specs/MEADOWS_MACRO_LAYOUT.md section 10) moves — the
-	# `the_pond` region's centre and the `river_gorge` spoke's own road-end —
-	# rather than a pasted-in coordinate. A pasted literal is exactly what went
-	# stale here once already (the pre-corridor (-92,100)/(-90.1,169.5) this
-	# replaced); deriving it means the next re-siting (OW6 or later) cannot
-	# break this assertion just by moving a place, the way `test_map_state.gd`
-	# derives its fog-count expectation from `map.reveal_radius` instead of a
-	# magic number.
-	var pond := _teleport_entry("The Pond")
-	if pond.is_empty():
-		_fail("'The Pond' is not in the teleport list")
+	# One curated destination, checked exactly and synchronously while the menu
+	# (and therefore the world) is still paused.
+	var village := _teleport_entry("Grandpa's Village")
+	if village.is_empty():
+		_fail("'Grandpa's Village' is not in the curated teleport list")
 	else:
-		_check_teleport_math(pond.get("position", Vector2.ZERO), _expected_region_centre("the_pond"), "The Pond")
-
-	var river := _teleport_entry("River Road")
-	if river.is_empty():
-		_fail("'River Road' is not in the teleport list")
-	else:
-		_check_teleport_math(river.get("position", Vector2.ZERO), _expected_spoke_end("River Road"), "River Road")
+		_check_teleport_math(village.get("position", Vector2.ZERO), Vector2(6.0, -22.0), "Grandpa's Village")
 
 	if not bool(_menu.call("is_open")):
 		_fail("the direct teleport calls above closed the menu; they should only move the player")
 
-	# One real button press end to end: a spoke with no carve/failsafe of its
-	# own (mountain_trail's blocker is a rockslide -- props and collision
-	# only, per terrain_playground.json's own blocker-kind comment), so a few
-	# settling frames of real gravity cannot also trigger a relocation and
-	# muddy what this is actually checking: that the ROW works and closes
-	# the menu, landing at the right (x, z) -- gravity only ever moves y.
-	var mountain := _teleport_entry("Mountain Road")
-	if mountain.is_empty():
-		_fail("'Mountain Road' is not in the teleport list")
+	# One real same-realm button press end to end, proving the curated row still
+	# reaches the existing move path and closes the menu.
+	var village_button := _teleport_entry("Grandpa's Village")
+	if village_button.is_empty():
+		_fail("'Grandpa's Village' disappeared from the curated teleport list")
 	else:
-		await _check_teleport_button(mountain, _expected_spoke_end("Mountain Road"), "Mountain Road")
+		await _check_teleport_button(village_button, Vector2(6.0, -22.0), "Grandpa's Village")
 	await _ensure_on_settings()
 
 	var toggle_off: Button = _tab.get("_debug_teleport_button")
@@ -745,56 +738,34 @@ func _check_debug_teleport() -> void:
 		print("debug teleport toggles off and its list hides")
 
 
-## A region's authored centre, read straight off the live `MapState` (the same
-## object `debug_teleport_destinations()` itself reads regions from) rather
-## than a coordinate pasted into this file. `data/config/map_landmarks.json`
-## is the one source of truth for where a region sits; this reads it back
-## through `map.regions()` instead of duplicating it, so re-siting a region
-## only ever means editing that JSON.
-func _expected_region_centre(region_id: String) -> Vector2:
-	var map: RefCounted = _game.get("map") if _game != null else null
-	if map == null:
-		return Vector2.ZERO
-	for region: Dictionary in (map.call("regions") as Array):
-		if str(region.get("id", "")) == region_id:
-			return region.get("centre", Vector2.ZERO)
-	return Vector2.ZERO
-
-
-## A severed spoke's own road-end, read straight from
-## `data/config/terrain_playground.json` — the same file and the same
-## "road[].back(), labelled from its own sign" rule
-## `GameState._debug_teleport_spokes()` uses, kept independent of that private
-## method rather than calling it, so this is still checking the destination
-## list against the source data and not just against itself.
-func _expected_spoke_end(sign_label: String) -> Vector2:
-	var file := FileAccess.open(GAME_STATE.TERRAIN_PLAYGROUND_PATH, FileAccess.READ)
-	if file == null:
-		return Vector2.ZERO
-	var parsed: Variant = JSON.parse_string(file.get_as_text())
+func _curated_teleport_expectations() -> Array:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(
+		"res://data/config/debug_teleport_spots.json"))
 	if typeof(parsed) != TYPE_DICTIONARY:
-		return Vector2.ZERO
-	var spokes: Variant = (parsed as Dictionary).get("spokes", {})
-	if typeof(spokes) != TYPE_DICTIONARY:
-		return Vector2.ZERO
-	var routes: Variant = (spokes as Dictionary).get("routes", [])
-	if typeof(routes) != TYPE_ARRAY:
-		return Vector2.ZERO
-	for entry: Variant in routes as Array:
-		if typeof(entry) != TYPE_DICTIONARY:
+		_fail("debug_teleport_spots.json did not parse")
+		return []
+	var expected: Array = []
+	for biome_value: Variant in (parsed as Dictionary).get("biomes", []):
+		if typeof(biome_value) != TYPE_DICTIONARY:
 			continue
-		var route := entry as Dictionary
-		var sign: Dictionary = route.get("sign", {}) as Dictionary
-		if str(sign.get("label", route.get("id", ""))) != sign_label:
-			continue
-		var road: Variant = route.get("road", [])
-		if typeof(road) != TYPE_ARRAY or (road as Array).is_empty():
-			continue
-		var end: Variant = (road as Array).back()
-		if typeof(end) != TYPE_ARRAY or (end as Array).size() < 2:
-			continue
-		return Vector2(float((end as Array)[0]), float((end as Array)[1]))
-	return Vector2.ZERO
+		for band_value: Variant in (biome_value as Dictionary).get("bands", []):
+			if typeof(band_value) != TYPE_DICTIONARY:
+				continue
+			var spots: Array = (band_value as Dictionary).get("spots", [])
+			if spots.size() != 2:
+				_fail("curated band '%s' has %d spots instead of exactly 2" % [
+					str((band_value as Dictionary).get("id", "?")), spots.size()
+				])
+			for spot_value: Variant in spots:
+				if typeof(spot_value) != TYPE_DICTIONARY:
+					continue
+				var spot := spot_value as Dictionary
+				var coordinates: Array = spot.get("position", [])
+				expected.append({
+					"display_name": str(spot.get("display_name", "")),
+					"position": Vector2(float(coordinates[0]), float(coordinates[1])),
+				})
+	return expected
 
 
 ## `_teleport_rows` is torn down and rebuilt every time the Settings tab's

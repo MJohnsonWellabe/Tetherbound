@@ -33,6 +33,7 @@ extends "res://scripts/ui/menu_tab.gd"
 ## `sections` array is ever reordered by whoever owns it.
 
 const CONFIG_PATH := "res://data/config/menu.json"
+const DEBUG_TELEPORT_SPOTS_PATH := "res://data/config/debug_teleport_spots.json"
 const KEY_BINDINGS := preload("res://scripts/ui/key_bindings.gd")
 
 ## How long the global reset stays armed after the first press. Long enough to
@@ -290,8 +291,8 @@ func _on_debug_teleport() -> void:
 	say(said)
 
 
-## OF26 debug scaffolding. One row per `GameState.debug_teleport_destinations()`
-## entry, built once (see the call site's own comment on why this is not
+## OF26 debug scaffolding. One row per curated debug-teleport spot, built once
+## (see the call site's own comment on why this is not
 ## rebuilt on toggle). Used to be bounded to its own fixed-height (260px)
 ## ScrollContainer, which never scrolled — nothing wired a row's
 ## `focus_entered` to it, and even fixed it would have fought the tab's own
@@ -315,7 +316,7 @@ func _build_debug_teleport_section() -> Control:
 	section.add_child(list)
 
 	var game := state()
-	var destinations: Array = game.call("debug_teleport_destinations") if game != null else []
+	var destinations: Array = _read_debug_teleport_spots(game)
 	if destinations.is_empty():
 		var empty := Label.new()
 		empty.add_theme_color_override("font_color", COLOUR_QUIET)
@@ -329,6 +330,43 @@ func _build_debug_teleport_section() -> Control:
 		list.add_child(_build_teleport_row(entry as Dictionary))
 
 	return section
+
+
+## The settings list is intentionally curated independently of discovery and
+## the current realm. Keep the JSON authoring hierarchy useful for humans, but
+## flatten it to the entry shape the already-proven teleport row/move path uses.
+func _read_debug_teleport_spots(game: Node) -> Array:
+	if game == null:
+		return []
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(DEBUG_TELEPORT_SPOTS_PATH))
+	if typeof(parsed) != TYPE_DICTIONARY:
+		return []
+	var destinations: Array = []
+	for biome_value: Variant in (parsed as Dictionary).get("biomes", []):
+		if typeof(biome_value) != TYPE_DICTIONARY:
+			continue
+		var biome := biome_value as Dictionary
+		var realm_id := str(biome.get("id", ""))
+		if realm_id.is_empty():
+			continue
+		var entry_id := str(game.call("_debug_teleport_entry_id_for", realm_id))
+		for band_value: Variant in biome.get("bands", []):
+			if typeof(band_value) != TYPE_DICTIONARY:
+				continue
+			for spot_value: Variant in (band_value as Dictionary).get("spots", []):
+				if typeof(spot_value) != TYPE_DICTIONARY:
+					continue
+				var spot := spot_value as Dictionary
+				var coordinates: Variant = spot.get("position", [])
+				if typeof(coordinates) != TYPE_ARRAY or (coordinates as Array).size() < 2:
+					continue
+				destinations.append({
+					"display_name": str(spot.get("display_name", "?")),
+					"position": Vector2(float(coordinates[0]), float(coordinates[1])),
+					"realm": realm_id,
+					"entry_id": entry_id,
+				})
+	return destinations
 
 
 func _build_teleport_row(entry: Dictionary) -> Control:
