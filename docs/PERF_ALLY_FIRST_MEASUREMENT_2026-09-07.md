@@ -132,13 +132,15 @@ believed it landed, it did not ship. Someone should reconcile these three
 comments; they currently cost every lane that reaches for this lever the same
 afternoon.
 
-## 7. Levers that exist and are switched off
+## 7. Draw-call levers and their shipped state
 
-Both are written, reasoned and gated to a no-op. Neither should be turned on
-before §5 runs, because both target draw calls, and §3 says draw calls are not
-what is costing the frame.
+Both are written and reasoned, and both target draw calls. Since this measurement
+was recorded, the shipped config enabled `structure_visibility_ranges`;
+`scatter_lod_ranges` remains gated to a no-op. Section 5 is still the experiment
+that should precede deeper tuning because §3 says draw calls are not what is
+costing the frame.
 
-- **`structure_visibility_ranges`** (`performance.json`, false).
+- **`structure_visibility_ranges`** (`performance.json`, true).
   `scripts/world/structure_visibility_range.gd` sets real
   `visibility_range_end` on built structures. Its own comment records that at
   `band1_open`, 4,058 of the draws are discrete built structures and props, not

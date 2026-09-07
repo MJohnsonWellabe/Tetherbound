@@ -93,11 +93,12 @@ hardware; it is the one step in this contract that cannot be done in a container
 Draw calls do not predict frame rate in this data. The fastest stand carries the
 second-most draw calls; the slowest nearly the fewest; the same place from two
 heights differs 3.3x in draw calls for 1 fps. Two gated levers exist —
-`structure_visibility_ranges` and `scatter_lod_ranges`, both `false` in
-`data/config/performance.json`, both written and reasoned — and **both target
-draw calls**, which is why they are still off. `scatter_lod_ranges` may deserve a
-re-test against *frame time*, since its original "not where the frames are"
-verdict was also reached against draw calls.
+`structure_visibility_ranges` and `scatter_lod_ranges`, both written and
+reasoned — and **both target draw calls**. The shipped config now enables
+`structure_visibility_ranges`; `scatter_lod_ranges` remains `false` in
+`data/config/performance.json` and may deserve a re-test against *frame time*,
+since its original "not where the frames are" verdict was also reached against
+draw calls.
 
 ### 2.3 One inconsistency to reconcile while you are in there
 
