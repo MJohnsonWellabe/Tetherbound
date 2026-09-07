@@ -1686,15 +1686,7 @@ func _distinct_tint(members: Array, index: int) -> Color:
 ## stand-in. Resolved rather than duplicated on disk, so landing a real portrait
 ## later is dropping in one file with no code change.
 func _species_portrait_path(species_id: String) -> String:
-	if species_id.is_empty():
-		return ""
-	var path := "res://assets/ui/portraits/creatures/%s.png" % species_id
-	if ResourceLoader.exists(path):
-		return path
-	var base := str(CREATURE_SPECIES.definition(species_id).get("variant_of", ""))
-	if base != "":
-		return "res://assets/ui/portraits/creatures/%s.png" % base
-	return path
+	return preload("res://scripts/ui/creature_portrait.gd").resolve(species_id)
 
 
 ## T3-MATCHUPS: the five expansion types (fire, electric, ice, psychic, dark)
