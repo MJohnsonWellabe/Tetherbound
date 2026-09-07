@@ -61,6 +61,12 @@ $script:Evidence = $null
 $script:GateRun = $null
 $script:Sha = "unknown"
 $script:CanPush = $false
+# Every segment the chain ran, and how it ended. Phase-Chain reads this to
+# decide its own status: without it a chain whose segments ALL failed still
+# reported "ok", because Run-Phase only fails on a thrown exception. The
+# 2026-09-07 run shipped a RUN_SUMMARY.md saying `chain | ok` over a CHAIN_LOG
+# in which 12 of 14 journey segments exited 1.
+$script:SegmentResults = @()
 $script:PushProbe = "not checked"
 $script:Phases = @{}
 if (Test-Path $PhasesPath) {
@@ -476,7 +482,19 @@ function Process-Video([string]$Avi, [string]$Seg, [string]$SegDir) {
 
 function Run-Segment([string]$Seg, [bool]$Capture, [bool]$Movie) {
   $out = Join-Path $script:GateRun $Seg
-  if (Test-Path (Join-Path $out "INVENTORY.json")) { Log "${Seg}: already has INVENTORY.json, skipped"; return }
+  # A finished segment is skipped on -Resume. A BLOCKED one is not: the harness
+  # writes INVENTORY.json even when it refuses at step 1, so the old
+  # INVENTORY-only test skipped precisely the segments a resume exists to
+  # retry. INCOMPLETE.md / BLOCKER.md are what the harness writes when it did
+  # not finish, so they are the honest test.
+  $done = (Test-Path (Join-Path $out "INVENTORY.json")) `
+      -and -not (Test-Path (Join-Path $out "INCOMPLETE.md")) `
+      -and -not (Test-Path (Join-Path $out "BLOCKER.md"))
+  if ($done) {
+    Log "${Seg}: already finished, skipped"
+    $script:SegmentResults += @{ seg = $Seg; exit = 0; wall = 0; capture = $Capture; skipped = $true }
+    return
+  }
   if (Test-Path $out) {
     $n = 1; while (Test-Path "$out-superseded-$n") { $n += 1 }
     Move-Item $out "$out-superseded-$n"; Log "${Seg}: previous attempt renamed to -superseded-$n"
@@ -499,6 +517,7 @@ function Run-Segment([string]$Seg, [bool]$Capture, [bool]$Movie) {
   Add-Content -Path (Join-Path $script:GateRun "CHAIN_LOG.tsv") -Value ("{0}`t{1}`t{2}`t{3}" -f $Seg, $t0.ToUniversalTime().ToString("o"), $wall, $code)
   if ($Movie) { Process-Video $avi $Seg $out }
   Log "${Seg}: exit $code after $wall s"
+  $script:SegmentResults += @{ seg = $Seg; exit = $code; wall = $wall; capture = $Capture; skipped = $false }
 }
 
 function Phase-Chain {
@@ -518,6 +537,19 @@ function Phase-Chain {
   foreach ($seg in $CaptureLanes) {
     if (Test-Path (Join-Path $script:Repo "tools\gate_f\segments\$seg.json")) { Run-Segment $seg $true $false }
   }
+
+  # THE PHASE IS ONLY OK IF THE PLAY ACTUALLY HAPPENED. Throwing here is how a
+  # non-zero segment reaches the phase table: Run-Phase catches it, records the
+  # message in the `error` column, and package still runs, so the evidence is
+  # still delivered -- it is just delivered honestly.
+  $journey = @($script:SegmentResults | Where-Object { -not $_.capture })
+  $lanes = @($script:SegmentResults | Where-Object { $_.capture })
+  $jbad = @($journey | Where-Object { $_.exit -ne 0 })
+  $lbad = @($lanes | Where-Object { $_.exit -ne 0 })
+  if ($jbad.Count -gt 0 -or $lbad.Count -gt 0) {
+    $names = (($jbad + $lbad) | ForEach-Object { $_.seg }) -join ", "
+    throw ("$($jbad.Count) of $($journey.Count) journey segments and $($lbad.Count) of $($lanes.Count) capture lanes FAILED: $names -- see CHAIN_LOG.tsv and each segment's BLOCKER.md/INCOMPLETE.md")
+  }
 }
 
 function Phase-Package {
@@ -529,6 +561,33 @@ function Phase-Package {
   $lines += "Machine: $env:COMPUTERNAME. Repo sha: $script:Sha. Resolution: $Res."
   $lines += "Payload (video, every frame, strips) stays on this machine at: ``$RunLocal``."
   $lines += "Push access, probed at the start of the run: $script:PushProbe."
+  $lines += ""
+
+  # THE VERDICT GOES FIRST. A reader who stops after four lines must not come
+  # away with the wrong answer: the 2026-09-07 summary opened with a phase
+  # table of six `ok`s above a chain log in which twelve of fourteen segments
+  # had exited 1, and that is the reading it invited.
+  $lines += "## Verdict"
+  $lines += ""
+  $badPhases = @(@("prepare", "frames", "perf", "export", "chain") | Where-Object {
+    $script:Phases.ContainsKey($_) -and $script:Phases[$_].status -ne "ok"
+  })
+  $notRun = @(@("prepare", "frames", "perf", "export", "chain") | Where-Object { -not $script:Phases.ContainsKey($_) })
+  $journey = @($script:SegmentResults | Where-Object { -not $_.capture })
+  $jbad = @($journey | Where-Object { $_.exit -ne 0 })
+  if ($badPhases.Count -eq 0 -and $notRun.Count -eq 0 -and $jbad.Count -eq 0) {
+    $lines += "**Everything ran.** All phases ok; every journey segment exited 0."
+  } else {
+    $lines += "**This run is NOT clean.**"
+    $lines += ""
+    if ($badPhases.Count) { $lines += "- phases that FAILED: $($badPhases -join ', ')" }
+    if ($notRun.Count) { $lines += "- phases that did NOT RUN: $($notRun -join ', ')" }
+    if ($journey.Count -and $jbad.Count) {
+      $lines += "- **$($jbad.Count) of $($journey.Count) journey segments failed**: $((($jbad | ForEach-Object { $_.seg }) -join ', '))"
+      $lines += "  Read each one's ``BLOCKER.md`` / ``INCOMPLETE.md`` before trusting anything about the chapter play."
+    }
+    if ($journey.Count -and $jbad.Count -eq 0) { $lines += "- every journey segment that ran exited 0" }
+  }
   $lines += ""
   $lines += "| phase | status | seconds | error |"
   $lines += "|---|---|---|---|"
