@@ -1779,17 +1779,36 @@ func _collect(node: Node, into: Array[MeshInstance3D]) -> void:
 ##
 ## Returns how many instances came back, so the caller can log a real number
 ## rather than an intention. Safe to call twice: the second call is a no-op.
-func restore_drained() -> int:
+##
+## `within` makes this partial. Pass `{"centre": Vector2, "radius": float}`
+## discs and only drained instances inside one of them return; everything else
+## remains held for a later call. Empty (the default) preserves the original
+## whole-map heal used after the legendary is freed.
+##
+## Geometry is passed instead of station ids because Vegetation does not own
+## chapter concepts. The drain itself is a positional field, so the same discs
+## form the narrowest stable boundary. `_regrown` accumulates across partial
+## calls while the return value reports only the instances restored this call.
+func restore_drained(within: Array = []) -> int:
 	if _drained.is_empty():
 		return 0
 	var by_model: Dictionary = {}
+	var held: Dictionary = {}
 	for layer_name: String in _drained.keys():
 		for entry: Variant in (_drained[layer_name] as Array):
 			var placement: Dictionary = entry
+			if not _inside_any(placement.get("position", Vector3.ZERO), within):
+				if not held.has(layer_name):
+					held[layer_name] = []
+				(held[layer_name] as Array).append(placement)
+				continue
 			var model := str(placement["model"])
 			if not by_model.has(model):
 				by_model[model] = []
 			(by_model[model] as Array).append(placement)
+	if by_model.is_empty():
+		_drained = held
+		return 0
 	var before := _placed
 	for model: String in by_model.keys():
 		_build_batch(model, by_model[model])
@@ -1798,9 +1817,25 @@ func restore_drained() -> int:
 	# all of this healing's models are queued, same as `build()`'s own loop.
 	if _instancer != null:
 		_instancer.call("update_mmis", true)
-	_regrown = _placed - before
-	_drained.clear()
-	return _regrown
+	_regrown += _placed - before
+	_drained = held
+	return _placed - before
+
+
+## Is this placement inside one of the healing discs? An empty list means no
+## filter: the chapter-wide legendary-freed sweep restores every held plant.
+func _inside_any(position: Vector3, discs: Array) -> bool:
+	if discs.is_empty():
+		return true
+	var spot := Vector2(position.x, position.z)
+	for raw: Variant in discs:
+		var disc: Dictionary = raw
+		var radius := float(disc.get("radius", 0.0))
+		if radius <= 0.0:
+			continue
+		if spot.distance_to(disc.get("centre", Vector2.ZERO) as Vector2) <= radius:
+			return true
+	return false
 
 
 ## How many instances the drain is currently holding out of the world — the
