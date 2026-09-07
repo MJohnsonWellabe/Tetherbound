@@ -1359,28 +1359,35 @@ SPECIES_PROMPTS = {
     # ---------------------------------------------------------------------
     "cannonback": (
         "small-to-medium armored water tortoise creature, CANNONBACK the "
-        "shell sentinel. THICK OVERLAPPING BLUE-GREY SHELL PLATES ringed "
-        "with bronze rivets across a domed back, TWO FORWARD-FACING "
-        "WATER-JET NOZZLES mounted on the shoulders venting pressurized "
-        "water. Stubby powerful legs, weathered tan underbelly, deep-set "
-        "amber eyes, blunt determined face, barnacle texture on the shell "
-        "rim, armored and unstoppable, reads as a natural fortress"),
+        "shell sentinel. NO TAIL, BLUNT ROUNDED REAR -- the shell is the "
+        "whole silhouette from above, nothing trails behind it. THICK "
+        "OVERLAPPING BLUE-GREY SHELL PLATES ringed with bronze rivets "
+        "across a domed back, TWO FORWARD-FACING WATER-JET NOZZLES mounted "
+        "on the shoulders venting pressurized water. Stubby powerful legs, "
+        "weathered tan underbelly, deep-set amber eyes, blunt determined "
+        "face, barnacle texture on the shell rim, armored and unstoppable, "
+        "reads as a natural fortress"),
     "riptusk": (
         "medium aggressive river beast creature, RIPTUSK the river reaver. "
-        "TWO LARGE CURVED IVORY TUSKS jutting up from the lower jaw, ROW OF "
-        "JAGGED DORSAL SPINES running down the spine and tail. Thick "
-        "muscular quadruped build, mottled teal-grey hide with darker "
-        "banded markings, powerful clawed webbed feet, small aggressive "
-        "amber eyes, wide territorial stance, tough dominant river-shore "
-        "predator"),
+        "TWO LARGE CURVED GOLD-AND-IVORY TUSKS jutting far up from the "
+        "lower jaw past the snout, unmistakably oversized. ROW OF JAGGED "
+        "DORSAL SPINES running down the spine and tail. BOLD "
+        "GOLDEN-ORANGE MARKINGS scattered across the shoulders, back and "
+        "tail OVER a mottled deep teal-blue hide -- the orange-gold is a "
+        "strong, saturated accent colour, not a faint tint. Thick "
+        "muscular quadruped build, powerful clawed webbed feet, small "
+        "aggressive amber eyes, wide territorial stance, tough dominant "
+        "river-shore predator"),
     "aquaryn": (
         "elegant four-legged water dragon creature, AQUARYN the tidal "
-        "dragon. LONG SERPENTINE NECK with a crest of pale blue-white fins "
-        "running from head to tail, LARGE TRANSLUCENT FIN-WINGS folded "
-        "along the back. Sleek pearlescent teal-and-white scaled body, "
-        "slender legs with webbed clawed feet, wise amber eyes, flowing "
-        "feathered fin along the spine, majestic and free, a legendary "
-        "companion of land and sea"),
+        "dragon. EXACTLY FOUR LEGS, EACH FIRMLY ATTACHED TO THE BODY AT "
+        "THE SHOULDER OR HIP WITH NO GAP -- no floating or detached limbs. "
+        "LONG SERPENTINE NECK with a crest of pale blue-white fins running "
+        "from head to tail, LARGE TRANSLUCENT FIN-WINGS folded along the "
+        "back. Sleek pearlescent teal-and-white scaled body, slender legs "
+        "with webbed clawed feet planted under the body, wise amber eyes, "
+        "flowing feathered fin along the spine, majestic and free, a "
+        "legendary companion of land and sea"),
     "tidecoil": (
         "colossal serpentine sea creature, TIDECOIL the abyss serpent, no "
         "legs. LONG COILING EEL-LIKE BODY covered in overlapping "
