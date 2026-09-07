@@ -73,6 +73,17 @@ func run() -> void:
 	check(events.size() == 1 and events[0][0] == "water:water_swim_lesson_briefed" and events[0][1] == "water_pell", "Complete briefing emits one guarded request")
 	check(game.get("world").flags.save_data() == world_before, "Dialogue leaves world flags unchanged")
 	check(game.get("local").flags.save_data() == personal_before, "Dialogue leaves personal flags unchanged")
+	# Explicit shared-victory fixture: a fresh late arrival should see an Iona
+	# action, while this speech-only service still cannot mint the Stone itself.
+	game.get("world").flags.set_flag("water_aquaryn_resolved", true)
+	player.global_position = bodies.water_iona.global_position + Vector3(1, 0, 0)
+	check(service.start_conversation("water_iona"), "Resolved shared Alpha exposes Iona attunement to a late arrival")
+	check(panel.call("runner").call("conversation_id") == "water_iona_attunement", "Normal Iona greeting selects the attunement action")
+	while panel.call("is_open"):
+		panel.call("advance")
+		await frames()
+	check(events.size() == 2 and events[1][0] == "water:water_swim_stone_attune", "Completed attunement speech emits one host-authority request")
+	check(game.get("local").flags.save_data() == personal_before, "Iona speech cannot grant its own Swim Stone")
 	# Explicit personal-unlock fixture: speech may request teaching, never award it.
 	game.get("local").flags.set_flag("water_swim_stone_earned")
 	var unlocked_flags: Dictionary = game.get("local").flags.save_data()
@@ -82,7 +93,8 @@ func run() -> void:
 	while panel.call("is_open"):
 		await frames()
 		panel.call("advance")
-	check(events.size() == 2 and events[1][0] == "water:water_swim_saddle_recipe_taught", "Iona emits guarded teaching request")
+	check(events.size() == 3 and events[2][0] == "water:water_swim_saddle_recipe_taught", "Iona emits guarded teaching request")
+	check(not service.start_conversation("water_iona", "water_iona_attunement"), "An already rewarded character cannot replay attunement")
 	check(game.get("local").flags.save_data() == unlocked_flags, "Teaching request itself grants no recipe flag")
 	check(game.get("local").save_data().inventory == inventory_before.inventory, "Teaching request grants no inventory items")
 	player.global_position += Vector3(100, 0, 0)
@@ -91,4 +103,3 @@ func run() -> void:
 	world.queue_free()
 	await frames()
 	quit(0 if failures.is_empty() else 1)
-

@@ -6,7 +6,7 @@
     {"flag_id":"water_dock_reedhaven_repaired","scope":"world","label":"Restore Reedhaven's departure dock.","how":"Reach Reedhaven and bring reed fiber and driftwood to the broken dock."},
     {"flag_id":"water_dock_brine_steps_trial_won","scope":"world","label":"Win Tovin's Brine Steps trial.","how":"Prepare your creatures, then challenge Tovin at the dock."},
     {"flag_id":"water_dock_shellwatch_residents_freed_and_pump_disabled","scope":"world","label":"Free Shellwatch's residents and stop the pump.","how":"Break Team Tether's hold on the landing before continuing to Tidal Cradle."},
-    {"flag_id":"water_swim_stone_earned","scope":"player","label":"Face Aquaryn at Tidal Cradle.","how":"Defeat or catch the Tidal Dragon Alpha to earn your Swim Stone."},
+    {"flag_id":"water_swim_stone_earned","scope":"player","label":"Earn a Swim Stone at Tidal Cradle.","how":"Defeat or catch Aquaryn, or ask Iona for attunement if the shared trial was resolved before you arrived."},
     {"flag_id":"water_swim_saddle_recipe_learned","scope":"player","label":"Learn the Swim Saddle recipe from Iona.","how":"Return to Iona after earning your Swim Stone, then craft a saddle at a workbench."},
     {"flag_id":"water_dock_salt_crown_landing_charted","scope":"world","label":"Chart Salt Crown's onward crossing.","how":"Prepare a compatible swim mount and reach Salt Crown's landing."},
     {"flag_id":"water_dock_sluice_isle_both_controls_disabled","scope":"world","label":"Disable Sluice Isle's two controls.","how":"Find both pump controls to open the final crossing."},

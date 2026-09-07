@@ -24,6 +24,7 @@ var _rewarded_peers: Dictionary = {}
 var _presented_resolution: Dictionary = {}
 var _catch_finish_pending := false
 var _catch_finish_reply: Dictionary = {}
+var _attune_pending := false
 var last_verdict: Dictionary = {}
 var _challenge_prompt: Node3D
 var _absent_seconds: Dictionary = {}
@@ -125,6 +126,8 @@ func host_commit(intent: Dictionary, peer: int, actor: Dictionary) -> Dictionary
 	if not is_alpha_authority():
 		return _refusal(intent, "Only the realm authority can decide this fight.")
 	var kind := str(intent.get("kind", ""))
+	if kind == "attune":
+		return _host_attune(intent, peer, actor)
 	if kind == "engage":
 		if get_node("/root/Game").world.flags.has(str(rules.completion_flag)):
 			return _refusal(intent, "Aquaryn has already been resolved in this world.")
@@ -158,6 +161,38 @@ func host_commit(intent: Dictionary, peer: int, actor: Dictionary) -> Dictionary
 			_publish_snapshot()
 			return result
 	return _refusal(intent, "That action is not available in this encounter.")
+
+func _host_attune(intent: Dictionary, peer: int, actor: Dictionary) -> Dictionary:
+	var attunement: Dictionary = rules.get("attunement", {})
+	var chapter := world.get_node_or_null("WaterChapter")
+	var bodies: Dictionary = chapter.get("npc_bodies") if chapter != null else {}
+	var iona := bodies.get(str(attunement.get("npc_id", "water_iona"))) as Node3D
+	if iona == null:
+		return _refusal(intent, "Iona is not ready to attune the Swim Stone yet.")
+	var ledger_rpc: Node = transport.get_parent()
+	var verdict: Dictionary = REWARDS.attune(get_node("/root/Game"), ledger_rpc.ledger,
+		actor, peer, iona.global_position, float(attunement.get("radius_m", 5.0)))
+	verdict["kind"] = "attune"
+	verdict["pending"] = false
+	if not bool(verdict.get("ok", false)):
+		verdict["reason"] = _attune_refusal_reason(str(verdict.get("code", "")))
+		return verdict
+	if not (verdict.get("delta", {}) as Dictionary).get("ops", []).is_empty():
+		ledger_rpc.publish_journaled_delta(verdict.delta)
+		_rewarded_peers["%s:%s" % [peer, str(actor.get("character_id", ""))]] = true
+	return verdict
+
+func _attune_refusal_reason(code: String) -> String:
+	match code:
+		"alpha_unresolved":
+			return "Aquaryn's shared trial has not been resolved yet."
+		"not_near_iona":
+			return "Stand beside Iona to attune the Swim Stone."
+		"invalid_actor":
+			return "Iona cannot identify this traveler in the Water Archipelago."
+		"journal_failed":
+			return "The Swim Stone could not be recorded safely. Please try again."
+	return "Iona cannot attune the Swim Stone right now."
 
 func _refusal(intent: Dictionary, reason: String) -> Dictionary:
 	return {"ok": false, "pending": false, "kind": str(intent.get("kind", "")), "reason": reason, "delta": {}}
@@ -242,7 +277,14 @@ func _settle_resolution() -> void:
 func receive_authority(kind: String, payload: Dictionary) -> void:
 	if kind == "verdict":
 		last_verdict = payload.duplicate(true)
-		if str(payload.get("kind", "")) == "engage":
+		if str(payload.get("kind", "")) == "attune":
+			_attune_pending = false
+			if payload.get("ok", false):
+				if str(payload.get("code", "")) == "attuned":
+					get_node("/root/Game").push_world_message("Iona attuned your Swim Stone. Return to her for the saddle pattern.")
+			else:
+				get_node("/root/Game").push_world_message(str(payload.get("reason", "Iona cannot attune the Swim Stone right now.")))
+		elif str(payload.get("kind", "")) == "engage":
 			_engage_pending = false
 			if payload.get("ok", false):
 				_begin_local(payload.record)
@@ -299,6 +341,14 @@ func request_engage() -> void:
 		return
 	_engage_pending = true
 	var verdict: Dictionary = submit_encounter_intent({"kind": "engage"})
+	if not verdict.get("pending", false):
+		receive_authority("verdict", verdict)
+
+func request_attunement() -> void:
+	if _attune_pending or world.simulation_only:
+		return
+	_attune_pending = true
+	var verdict: Dictionary = transport.submit({"kind": "attune"})
 	if not verdict.get("pending", false):
 		receive_authority("verdict", verdict)
 

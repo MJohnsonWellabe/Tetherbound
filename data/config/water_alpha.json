@@ -16,6 +16,11 @@
     "abandon_grace_s": 8.0,
     "snapshot_interval_s": 0.1
   },
+  "attunement": {
+    "npc_id": "water_iona",
+    "radius_m": 5.0,
+    "_comment": "After the one shared victory, the host may add one missing stable-character entitlement only when its observed Water-realm trainer stands beside the production Iona body. The client supplies no identity or position."
+  },
   "phases": [
     {
       "id": "shore_crest",

@@ -13,6 +13,17 @@
       "effect": "water:water_swim_lesson_briefed"
     },
     {
+      "requires_world_flags": [
+        "water_aquaryn_resolved"
+      ],
+      "unless_personal_flags": [
+        "water_swim_stone_earned"
+      ],
+      "conversation": "water_iona_attunement",
+      "purpose": "A late arrival completes Iona's explanation before requesting one host-validated personal Stone attunement. Speech itself grants nothing.",
+      "effect": "water:water_swim_stone_attune"
+    },
+    {
       "requires_personal_flags": [
         "water_swim_stone_earned"
       ],

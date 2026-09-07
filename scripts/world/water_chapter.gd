@@ -52,6 +52,10 @@ func _on_dialogue_request(event: String, npc_id: String, peer: int) -> void:
 	match event:
 		"water:water_swim_lesson_briefed":
 			_game.local.flags.set_flag("water_swim_lesson_briefed", true)
+		"water:water_swim_stone_attune":
+			var alpha := world.get_node_or_null("WaterAlpha")
+			if alpha != null and alpha.has_method("request_attunement"):
+				alpha.call("request_attunement")
 		"water:water_swim_saddle_recipe_taught":
 			if apply_personal_event(_game.local.flags, "saddle_taught", "water"):
 				_game.push_world_message("Swim Saddle recipe learned. Craft it at a workbench.")
