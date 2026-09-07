@@ -1,0 +1,102 @@
+{
+  "adapter": "AMD Radeon Graphics",
+  "driver": "Windows",
+  "grass_field_enabled": "true",
+  "resolution": [
+    2053.0,
+    1080.0
+  ],
+  "seconds_per_site": 20.0,
+  "sites": {
+    "band1_open": {
+      "draw_calls": 7328.0,
+      "fps_1pct_low": 6.3,
+      "fps_avg": 6.6,
+      "frame_ms_avg": 151.95,
+      "frame_ms_max": 160.0,
+      "frame_ms_p95": 158.0,
+      "frames": 132,
+      "primitives": 11670559.0
+    },
+    "band1_open_eye": {
+      "draw_calls": 2247.0,
+      "fps_1pct_low": 6.8,
+      "fps_avg": 7.6,
+      "frame_ms_avg": 132.05,
+      "frame_ms_max": 148.0,
+      "frame_ms_p95": 142.0,
+      "frames": 152,
+      "primitives": 7754202.0
+    },
+    "band2_quarry_eye": {
+      "draw_calls": 2439.0,
+      "fps_1pct_low": 5.3,
+      "fps_avg": 6.4,
+      "frame_ms_avg": 155.88,
+      "frame_ms_max": 189.0,
+      "frame_ms_p95": 177.0,
+      "frames": 129,
+      "primitives": 7669315.0
+    },
+    "band4_ironwood_eye": {
+      "draw_calls": 2688.0,
+      "fps_1pct_low": 9.0,
+      "fps_avg": 10.5,
+      "frame_ms_avg": 95.11,
+      "frame_ms_max": 112.0,
+      "frame_ms_p95": 106.0,
+      "frames": 211,
+      "primitives": 7413892.0
+    },
+    "hall_approach": {
+      "draw_calls": 3786.0,
+      "fps_1pct_low": 9.1,
+      "fps_avg": 10.3,
+      "frame_ms_avg": 96.97,
+      "frame_ms_max": 122.0,
+      "frame_ms_p95": 101.0,
+      "frames": 207,
+      "primitives": 2775699.0
+    },
+    "hall_approach_eye": {
+      "draw_calls": 4207.0,
+      "fps_1pct_low": 10.6,
+      "fps_avg": 11.3,
+      "frame_ms_avg": 88.69,
+      "frame_ms_max": 96.0,
+      "frame_ms_p95": 93.0,
+      "frames": 226,
+      "primitives": 3790033.0
+    },
+    "pond_pocket_eye": {
+      "draw_calls": 2453.0,
+      "fps_1pct_low": 6.2,
+      "fps_avg": 7.4,
+      "frame_ms_avg": 134.65,
+      "frame_ms_max": 164.0,
+      "frame_ms_p95": 148.0,
+      "frames": 149,
+      "primitives": 5738287.0
+    },
+    "village_high": {
+      "draw_calls": 3424.0,
+      "fps_1pct_low": 5.9,
+      "fps_avg": 6.8,
+      "frame_ms_avg": 147.69,
+      "frame_ms_max": 171.0,
+      "frame_ms_p95": 156.0,
+      "frames": 136,
+      "primitives": 8143689.0
+    },
+    "village_square_eye": {
+      "draw_calls": 4557.0,
+      "fps_1pct_low": 6.6,
+      "fps_avg": 7.3,
+      "frame_ms_avg": 136.58,
+      "frame_ms_max": 154.0,
+      "frame_ms_p95": 149.0,
+      "frames": 147,
+      "primitives": 9592965.0
+    }
+  }
+}

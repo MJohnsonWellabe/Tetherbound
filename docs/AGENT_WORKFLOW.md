@@ -77,9 +77,11 @@ reproduced from the branch is treated as failed.
 
 ## 5. Branches, CI and landing
 
-- Work on a branch from current `main`. `ralph/<TASK>` is the shipping prefix (CI runs on
-  it); `claude/<task>` is used by orchestrator sessions; `scratch/<x>` is watched by
-  nothing and is for throwaways. Branches cannot be deleted from a session; do not push
+- Work on a branch from current `main`. `ralph/<TASK>` is the lane prefix and
+  `claude/<task>` the orchestrator prefix; `scratch/<x>` is for throwaways. **Since
+  2026-09-05 CI runs only on `pull_request` events and on pushes to `main`** — a branch
+  with no pull request is never verified, so open a draft PR early and batch pushes to
+  it (a newer push cancels the run in flight on the same ref). Branches cannot be deleted from a session; do not push
   junk.
 - **Never push to `main` directly.** Land through a pull request (or the manual
   consolidation workflow). Verify with `git merge-base --is-ancestor <sha> origin/main`,

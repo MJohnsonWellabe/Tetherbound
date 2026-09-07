@@ -1,7 +1,7 @@
 # W13-PROGRESSION-FEED — report
 
 **Branch:** `ralph/W13-PROGRESSION-FEED-0904` (from `origin/main` at `ef16544f`)
-**Brief:** `ralph/briefs/0904/W13-PROGRESSION-FEED.md`; contract
+**Brief:** `archive/ralph/briefs/0904/W13-PROGRESSION-FEED.md`; contract
 `docs/prompts/73-PROGRESSION-VISIBLE-bond-and-level-feedback.md`
 **Owner sentence answered:** *"Bonding and leveling creatures is basically invisible. It
 needs to be a big thing. Not just when the bond goes up but also while trying to bond."*

@@ -8,7 +8,7 @@ Owns: `scripts/ui/tab_map.gd` and `scripts/ui/minimap.gd`.
 
 ## 0. Two things about the starting state, before anything else
 
-**(a) W11-ALPHA-PINS-0904 has NOT landed on `main`.** `ralph/briefs/0905-followup/COMMON.md`
+**(a) W11-ALPHA-PINS-0904 has NOT landed on `main`.** `archive/ralph/briefs/0905-followup/COMMON.md`
 says "all 24 base lanes have landed; you are working on top of finished, merged work." That
 is not true for W11. On `origin/main` at `f8a47ee4` — re-fetched at the start of this lane and
 again before the final push, still `f8a47ee4` — there is no `scripts/world/alpha_pins.gd`, no

@@ -5,10 +5,10 @@
 **Commits:** `d10e4ef8` (the test repair, WIP-marked), `9a89d3e0` (report draft), and the final commit that closes this report on top of them — `git log -1 origin/ralph/N01-SAVE-FORMAT-0905`. The tree is identical from `d10e4ef8` onward except for this report and one `CURRENT_STATE.md` row.
 
 **Brief:** the session was opened as "Lane N01-SAVE-FORMAT (Fable): fix the 5 false-passing
-save-format tests" with the instruction to read `ralph/briefs/0905-followup/COMMON.md` and
+save-format tests" with the instruction to read `archive/ralph/briefs/0905-followup/COMMON.md` and
 `N01-SAVE-FORMAT.md`. **Neither file exists on any branch of `origin`** (checked `main` at
 `f8a47ee4` and every `refs/heads/*` three times across the session, the last just before the
-final commit; `ralph/briefs/` holds only `0904/LANES.md`). The lane therefore worked from the session title, the 0904 lane conventions
+final commit; `archive/ralph/briefs/` holds only `0904/LANES.md`). The lane therefore worked from the session title, the 0904 lane conventions
 (`ralph/<LANE>-<date>` branch, `ralph/reports/<LANE>-<date>/REPORT.md`, `docs/AGENT_WORKFLOW.md`
 §4 completion contract), and this repository's own testing rules. Every call that a brief
 would normally settle is recorded under "Calls made without the brief" below.

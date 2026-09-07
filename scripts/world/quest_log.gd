@@ -88,6 +88,8 @@ func set_realm(realm_id: String) -> bool:
 	_local = []
 	_realm_data = {}
 	var path := "res://data/config/%s_chapter.json" % realm_id if realm_id in ["cloudreach", "stormwood"] else DATA_PATH
+	if realm_id == "water":
+		path = "res://data/config/water_objectives.json"
 	var file := FileAccess.open(path, FileAccess.READ)
 	if file == null:
 		push_warning("quest_log.gd: %s missing" % path)
@@ -178,12 +180,26 @@ func _entries(source: Array, progression: RefCounted) -> Array:
 		if _hidden(entry, progression):
 			continue
 		out.append({
+			"id": str(entry.get("id", "")),
 			"label": _label(entry, progression),
 			"done": _done(entry, progression),
 			"how": hint_text(entry),
 			"scope": _scope_of(entry),
+			"destination": _destination(entry),
 		})
 	return out
+
+
+## Optional authored map target for this rung. Meadows rows use either a
+## landmark or a broad region; Cloudreach objectives already carry region_id.
+## The quest log preserves that small data contract and leaves coordinate
+## resolution to the active realm's MapState, which owns the actual geometry.
+func _destination(entry: Dictionary) -> Dictionary:
+	var authored: Variant = entry.get("destination", {})
+	if authored is Dictionary and not (authored as Dictionary).is_empty():
+		return (authored as Dictionary).duplicate(true)
+	var region_id := str(entry.get("region_id", ""))
+	return {"region_id": region_id} if not region_id.is_empty() else {}
 
 
 ## D99: which store this entry's completion actually lives in.
@@ -409,6 +425,19 @@ func tracked_id(progression: RefCounted) -> String:
 		if not _done(entry, progression):
 			return str(entry.get("id", ""))
 	return ""
+
+
+## Map target for the same first unfinished rung tracked_text()/tracked_id()
+## expose. Empty means the objective is portable or player-chosen (for
+## example, building a camp) and must not lie by pinning an arbitrary place.
+func tracked_destination(progression: RefCounted) -> Dictionary:
+	for raw: Variant in _main:
+		if typeof(raw) != TYPE_DICTIONARY:
+			continue
+		var entry := raw as Dictionary
+		if not _done(entry, progression):
+			return _destination(entry)
+	return {}
 
 
 ## Spec §16's one concise HUD line: the first Main Story entry not yet done,

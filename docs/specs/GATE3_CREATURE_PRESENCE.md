@@ -46,10 +46,10 @@ contract without crossing one, the contract is wrong, not the rule.
   used here is siting, behaviour, camera, contrast, VFX, HUD and encounter context.
 - **Five creatures total. No storage, no reserve, no sixth slot.** Nothing here adds a
   body to the world that the party does not own; "one active companion body" stays the
-  rule (`docs/prompts/48-PARTY-cycle-pals-in-world.md`).
+  rule (`archive/docs/prompts/48-PARTY-cycle-pals-in-world.md`).
 - **Real-time, directly piloted combat. No shields. The human never fights** (D07). The
   combat picture asked for in §3 is the picture of what already happens.
-- **Creatures loom; never shrink one** (OD-0901-1, `docs/owner/OWNER_DIRECTIVES_2026-09-01.md`).
+- **Creatures loom; never shrink one** (OD-0901-1, `archive/owner/OWNER_DIRECTIVES_2026-09-01.md`).
   Where a creature is unreadable at distance the answer below is contrast, siting or
   camera. No height in `species.json` moves down because of this file.
 - **The near grass is not touched.** Owner, verbatim: *"don't change the look of my

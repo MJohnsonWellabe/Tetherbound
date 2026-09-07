@@ -4,7 +4,7 @@
 rule that a lane makes the smallest defensible call and records it rather than
 stopping to ask. Sources: `docs/owner/OWNER_PLAYTEST_2026-09-04.md` OP-0904-2,
 `docs/GATE2_GATE3_CLOSURE_PLAN.md` CL-O2,
-`docs/prompts/07-RG21-continuous-day-night-short-night.md`, and the frames
+`archive/docs/prompts/07-RG21-continuous-day-night-short-night.md`, and the frames
 `tools/gate_f/probe_daynight_contrast.gd` shot for this lane.
 
 The owner played the shipped build and said **"There is no night time."** Two
@@ -47,7 +47,7 @@ multi-hour sheet from one tripod — `tools/gate_f/probe_daynight_contrast.gd`,
 which drives `world_look.gd::_apply_blended()` so the frames are lit the way the
 running game lights them, not `apply_time()`'s pinned preset that every other
 capture tool in `tools/` uses. Blind judging is unchanged from
-`ralph/briefs/0904/COMMON.md`; this only fixes what the judge is handed, and the
+`archive/ralph/briefs/0904/COMMON.md`; this only fixes what the judge is handed, and the
 sheet should be shuffled and lettered so the judge is not told which frame is
 supposed to be the night one.
 

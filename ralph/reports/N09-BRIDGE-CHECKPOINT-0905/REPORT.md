@@ -2,7 +2,7 @@
 
 Branch `ralph/N09-BRIDGE-CHECKPOINT-0905`, from `origin/main` at `f8a47ee4`.
 
-Brief: `ralph/briefs/0905-followup/N09-BRIDGE-CHECKPOINT.md` — close the three
+Brief: `archive/ralph/briefs/0905-followup/N09-BRIDGE-CHECKPOINT.md` — close the three
 "do not ship" items W22-BRIDGE-SIGNPOST-0904's landing-time blind judge named at the
 South Bridge checkpoint (`ralph/reports/W22-BRIDGE-SIGNPOST-0904/JUDGE.md`, run by
 W24-LANDING under the owner directive of 2026-09-05 02:24 UTC), plus a scope check on

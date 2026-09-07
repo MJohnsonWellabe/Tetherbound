@@ -1492,7 +1492,7 @@ func _build_approach_apron() -> void:
 			# at the throat's outer end), so the last metres of ramp were
 			# coplanar with it and z-fought. The end now sits a step above.
 			end_local = height - global_position.y + 0.15
-	# WARRENS-ART-0906, the leftover named in `docs/HANDOFF_2026-09-06.md` §5.2
+	# WARRENS-ART-0906, the leftover named in `archive/docs/handoffs/HANDOFF_2026-09-06.md` §5.2
 	# and `ralph/reports/WARRENS-EXT-0906/REPORT.md` ("a thin pale sliver
 	# remains at the tube's right foot", `_sheet_final.png` frame 03).
 	# Measured, not guessed: the ramp tapers from `apron_mouth_width_m` (8.0)

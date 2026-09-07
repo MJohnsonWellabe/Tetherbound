@@ -2,7 +2,7 @@
 
 **Lane:** 2.A Session (Opus) · **Branch:** `worktree-agent-a7f9f10a3968b2339`, commit `d964a95f`
 on `claude/tetherbound-roadmap-next-jrcjs8` at `bd8bd062`; merged as `45e1c5ad` · **Brief:**
-`ralph/briefs/MP-W2/2A-SESSION.md` · **Contracts:** D95, D97, D100, D105,
+`archive/ralph/briefs/MP-W2/2A-SESSION.md` · **Contracts:** D95, D97, D100, D105,
 `docs/specs/MP_NET_HARNESS_CONTRACT.md` §4. Written by Fable from the lane's completion report
 (the lane's tooling refused a `.md`).
 

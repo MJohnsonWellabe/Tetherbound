@@ -27,6 +27,31 @@ after the double-click.
 3. Nothing else. The window says when it is done and names the branch it
    pushed (`owner-run/<stamp>`) and the zip on the Desktop.
 
+If the first minute prints `*** PUSH ACCESS: NONE ***`, the machine has never
+been authenticated to GitHub. The run still works and records everything, but
+it can only deliver the Desktop zip and a local branch. Fix it in another
+window while the run continues — `winget install GitHub.cli`, then
+`gh auth login` (HTTPS) — and the push at the end will find the credentials.
+
+**If a run ever finishes with `*** PUSH FAILED`, nothing is lost and nothing
+needs re-running.** The evidence is complete in two places on that machine: the
+local `owner-run/<stamp>` branch and `Tetherbound-evidence-<stamp>.zip` on the
+Desktop. Authenticate as above, then push the branch that already exists:
+
+```
+git -C %LOCALAPPDATA%\Tetherbound\repo push -u origin owner-run/<stamp>
+```
+
+If pushing is not possible at all, `tools/owner/COLLECT_EVIDENCE.cmd` (double-click
+it) writes `kickoff-text-<stamp>.zip` to the Desktop: the run's `.md`, `.json`,
+`.tsv`, `.csv` and `.log` only, a few hundred KB, small enough to attach
+anywhere. That is enough to read the phase table, the chain log and every
+defect; only the visual bars need the sheets.
+
+This happened on the 2026-09-07 run — a full overnight chain through S10e
+completed and stranded, because nothing checked for credentials until the very
+last step. That is why `prepare` now probes.
+
 The machine is busy for the duration: a game window opens and closes
 repeatedly, and the chapter plays itself with video recording. Do not use it
 for anything else during the run; a stray keypress goes into the game.
@@ -35,12 +60,12 @@ for anything else during the run; a stray keypress goes into the game.
 
 | Phase | What happens | Leaves behind |
 |---|---|---|
-| `prepare` | Fetches the branch (`main` unless `kickoff.branch` or `-Branch` says otherwise). Installs the pinned Godot 4.7-stable console binary and ffmpeg under `%LOCALAPPDATA%\Tetherbound`. Imports the project twice. Records the machine (GPU, driver, CPU, RAM, OS) and the shipped config flags (grass on/off). | `RUN_METADATA.json` |
+| `prepare` | Fetches the branch (`main` unless `kickoff.branch` or `-Branch` says otherwise). Installs the pinned Godot 4.7-stable console binary and ffmpeg under `%LOCALAPPDATA%\Tetherbound`. Imports the project twice. Records the machine (GPU, driver, CPU, RAM, OS) and the shipped config flags (grass on/off). **Probes push access** (`git push --dry-run` against a ref it never creates) and says so loudly, so a machine that cannot deliver is known in the first minute rather than after the chain. | `RUN_METADATA.json`, the push-access line in `RUN_SUMMARY.md` |
 | `frames` | Renders on the GPU at 1280×800: the five survey stands, the eight Band 1 composition stands, the five places, the location set, and the **route strip** (`tools/_capture_route_strip.gd`): one frame every 40 m along the whole trail spine at eye height by day, every 80 m by night. Sheets everything. | `frames/_sheet_*.png`, the route manifests |
 | `perf` | `tools/perf_render_stats.gd` (draw calls, primitives) and `tools/_owner_fps_probe.gd`: twenty seconds of real frame times at nine sites, eye-level and elevated, with the shipped grass setting. | `perf_render_stats.txt`, `fps.json` |
 | `export` | Downloads the shipped `Tetherbound-windows.zip`, records its Last-Modified, runs the exported binary with `--verify-export`, applies the same checks as `tools/verify_export.sh`. | `EXPORT_VERDICT.md` |
 | `chain` | Runs the capture smoke, then Gate F **S01 → S10e** through `tools/gate_f/operator_harness.gd` with Godot's movie writer (`--write-movie`, 30 fps, audio included), then the capture lanes `S01C → S10cC` for the prescribed frames. Each segment's video is transcoded, cut into one tile per minute of play, and sheeted; per-frame strips at one frame per ten seconds stay on the machine. | `ralph/reports/gate-f-run-<stamp>-owner/` with every segment's telemetry, saves, prescribed shots and `_sheet_video_*.png`; the `.mp4` files under `%LOCALAPPDATA%\Tetherbound\runs\<stamp>\video` |
-| `package` | Writes `RUN_SUMMARY.md`, zips the evidence to the Desktop, commits the two evidence directories (forced past the payload ignores) on `owner-run/<stamp>` and pushes with retries. | the branch, the zip |
+| `package` | Writes `RUN_SUMMARY.md`, zips the evidence to the Desktop, commits the two evidence directories on `owner-run/<stamp>` and pushes with retries. **The commit is the written record, not the payload:** the kickoff directory goes in under the normal ignore rules (its `_sheet*.png` sheets and verdicts, not its per-frame captures) plus its `kickoff.log`, and the Gate F run contributes its `.md`/`.json`/`.tsv`/`.jsonl`/`.csv`/`.txt` and `_sheet*.png` only. Every frame and video stays on the machine and in the zip. `-FullPayload` commits the lot instead. | the branch, the zip |
 
 A phase that fails is recorded in `PHASES.json` and the next one runs. A
 segment that already has an `INVENTORY.json` is skipped, so `-Resume <stamp>`

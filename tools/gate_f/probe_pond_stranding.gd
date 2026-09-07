@@ -13,7 +13,7 @@ extends SceneTree
 ## the whole time. Reproduced twice, on two independent runs from the same
 ## save.
 ##
-## `docs/HANDOFF_2026-09-03.md` names the trap this probe exists to avoid:
+## `archive/docs/handoffs/HANDOFF_2026-09-03.md` names the trap this probe exists to avoid:
 ## "Harness defects that look exactly like game defects... Before believing a
 ## failure describes the game, ask what the harness did to produce it. The
 ## inverse error is also live, so do not assume the harness is wrong either."

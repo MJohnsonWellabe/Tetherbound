@@ -1,0 +1,23 @@
+﻿Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+OpenGL API 3.3.0 Core Profile Context 24.10.21.03.240627 - Compatibility - Using Device: ATI Technologies Inc. - AMD Radeon Graphics
+
+Movie Maker mode enabled, recording movie in 1920├ù1080 @ 30 FPS...
+gate-f harness ERROR: step S10e-98g: HARNESS-ERROR walk with no live Player/CameraRig
+--------------------------------------------------------------------------------
+Done recording movie at path: C:\Users\mattj\AppData\Local\Tetherbound\runs\20260907T023802Z\video\S10e.avi
+5488 frames at 30 FPS (movie length: 00:03:02:28), recorded in 00:04:47 (63% of real-time speed).
+CPU render time: 1.36 seconds (average: 0.25 ms/frame)
+GPU render time: 5.07 seconds (average: 0.92 ms/frame)
+Encoding time: 70.66 seconds (average: 12.88 ms/frame)
+--------------------------------------------------------------------------------
+
+--- stderr ---
+ERROR: gate-f harness: step S10e-98g: HARNESS-ERROR walk with no live Player/CameraRig
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _harness_error (res://tools/gate_f/operator_harness.gd:6609)
+       [1] _do_step (res://tools/gate_f/operator_harness.gd:1889)
+       [2] _play (res://tools/gate_f/operator_harness.gd:806)
+       [3] _do_step (res://tools/gate_f/operator_harness.gd:1943)
+       [4] _step_press (res://tools/gate_f/operator_harness.gd:2528)
+

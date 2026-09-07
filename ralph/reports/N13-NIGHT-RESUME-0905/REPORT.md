@@ -2,7 +2,7 @@
 
 **Branch:** `ralph/N13-NIGHT-RESUME-0905` · **Base:** `origin/main` @ `f8a47ee4`
 
-Resuming `ralph/briefs/0904/W15-NIGHT.md`, which pushed one investigative commit
+Resuming `archive/ralph/briefs/0904/W15-NIGHT.md`, which pushed one investigative commit
 (`45144af3`) and never reached a root cause, a fix or a report. Closing question:
 OP-0904-2 / CL-O2, the owner on the shipped ROG build — **"There is no night time."**
 
@@ -152,7 +152,7 @@ xvfb-run -a -s "-screen 0 960x540x24" godot --path . --rendering-driver opengl3 
 
 **Midnight renders at 26% of midday.** Night works. The genuinely dark part of the
 sweep — below half of midday — runs from about hour 21.7 to about 2.6, roughly 4.9
-in-game hours, **≈122 real seconds**, which is `docs/prompts/07-RG21-continuous-day-night-short-night.md`'s
+in-game hours, **≈122 real seconds**, which is `archive/docs/prompts/07-RG21-continuous-day-night-short-night.md`'s
 "about 2 real minutes" almost exactly. The *picture* already met its spec.
 
 ## 4. First defect fixed — `is_dark()` covered the wrong hours
@@ -392,7 +392,7 @@ as unable to do its job), `save_game.gd`, `game_state.gd`.
 ## 9. Verification
 
 All commands run from the repo root with `export PATH=$HOME/godot-bin:$PATH`, Godot
-4.7.stable (installed per `ralph/briefs/0904/COMMON.md`).
+4.7.stable (installed per `archive/ralph/briefs/0904/COMMON.md`).
 
 **Unit tests**
 

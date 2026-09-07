@@ -552,7 +552,7 @@ func _build_materials() -> void:
 	# are lit on purpose -- a bright top and a shaded base is the whole of what
 	# makes a puff read as cumulus rather than as a white blob -- with a small
 	# emission so the shaded side never falls into the ACES toe the way the
-	# Hall's torches did (docs/HANDOFF_2026-09-06.md trap 2).
+	# Hall's torches did (archive/docs/handoffs/HANDOFF_2026-09-06.md trap 2).
 	var cloud_cfg: Dictionary = _visual_config.get("cloud_sea", {})
 	_materials["cloud_deck"] = _unshaded_material(Color(str(cloud_cfg.get("deck_colour", "#c4d5e0"))))
 	_materials["cloud_deck_far"] = _unshaded_material(Color(str(cloud_cfg.get("deck_far_colour", "#94abbd"))))

@@ -1,0 +1,13 @@
+﻿Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+OpenGL API 3.3.0 Core Profile Context 24.10.21.03.240627 - Compatibility - Using Device: ATI Technologies Inc. - AMD Radeon Graphics
+
+gate-f harness ERROR: capture pre-flight BLOCKER: tools/capture_diag_minimal.gd left no capture_smoke.png in C:\Users\mattj\AppData\Local\Tetherbound\repo\ralph\reports\gate-f-run-20260907T023802Z-owner\S06C. run_segment.sh --capture writes one before it starts a segment, so its absence means this segment did not come through the capture path.
+
+--- stderr ---
+ERROR: gate-f harness: capture pre-flight BLOCKER: tools/capture_diag_minimal.gd left no capture_smoke.png in C:\Users\mattj\AppData\Local\Tetherbound\repo\ralph\reports\gate-f-run-20260907T023802Z-owner\S06C. run_segment.sh --capture writes one before it starts a segment, so its absence means this segment did not come through the capture path.
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _harness_error (res://tools/gate_f/operator_harness.gd:6609)
+       [1] _preflight_capture (res://tools/gate_f/operator_harness.gd:1140)
+       [2] _measure_frame_cost (res://tools/gate_f/operator_harness.gd:1419)
+

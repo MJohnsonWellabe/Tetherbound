@@ -4,7 +4,7 @@ Branch `claude/art-warrens-round-0906`, from `claude/second-biome-art-plan-470zr
 (which carries the main merge, Cloudreach cliff option A and the crown-relief work).
 **No pull request opened**, per the brief. Written to be picked up cold.
 
-Gap table: `docs/HANDOFF_2026-09-06.md` §4.3. The six prior exterior judge rounds and
+Gap table: `archive/docs/handoffs/HANDOFF_2026-09-06.md` §4.3. The six prior exterior judge rounds and
 their trajectory: `ralph/reports/WARRENS-EXT-0906/REPORT.md`.
 
 ---
@@ -148,7 +148,7 @@ not the frog-sized-boss failure. Good."
 
 ## 3. Measured evidence (Rec.709, `shots/warrens_63/`, 1280×800, day, software GL)
 
-Measured before every judge round, per `docs/HANDOFF_2026-09-06.md` §6 trap 9.
+Measured before every judge round, per `archive/docs/handoffs/HANDOFF_2026-09-06.md` §6 trap 9.
 
 | frame | round 0 median Y | after | floor-band Y | what moved |
 |---|---|---|---|---|

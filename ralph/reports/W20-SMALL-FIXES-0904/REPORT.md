@@ -1,7 +1,7 @@
 # W20-SMALL-FIXES — report
 
 Branch: `ralph/W20-SMALL-FIXES-0904`, from `origin/main` at `ef16544f`.
-Lane brief: `ralph/briefs/0904/W20-SMALL-FIXES.md` (closure plan §6.2 — the cheap,
+Lane brief: `archive/ralph/briefs/0904/W20-SMALL-FIXES.md` (closure plan §6.2 — the cheap,
 owned, disjoint items that were generating false readings).
 
 **One line per item, done / not done, up front. Detail below.**
@@ -62,7 +62,7 @@ Harness and tools:
 Docs:
 
 - `docs/prompts/64-BAND3-finished-river-relay.md`, `docs/prompts/66-BAND5-finished-stronghold-approach.md` (CL-D2)
-- `docs/GATE3_EXECUTION_PLAN.md` §4 (CL-D6)
+- `archive/docs/gates/GATE3_EXECUTION_PLAN.md` §4 (CL-D6)
 - `docs/acceptance/MEADOWS_EXIT_CRITERION.md` B2 / B4 / E5 (CL-D7)
 
 ---
@@ -504,7 +504,7 @@ instruction. Two rows are affected, and here is exactly what to put in them.
   trap is closed at its source: `tools/gate_f/run_segment.sh` writes the run directory's
   own logic-lane declaration, so an isolated logic-lane run starts without an operator
   hand-writing `RUN_METADATA.json` first. Proven both directions on `selfcheck_context`
-  (with: no BLOCKER, 9 of 12 steps executed; without: BLOCKER, 0 steps). `docs/GATE3_EXECUTION_PLAN.md`
+  (with: no BLOCKER, 9 of 12 steps executed; without: BLOCKER, 0 steps). `archive/docs/gates/GATE3_EXECUTION_PLAN.md`
   §4b still documents the manual workaround and is still correct for a capture lane and
   for an unconverted `both` segment, which the runner deliberately does not guess at.
 

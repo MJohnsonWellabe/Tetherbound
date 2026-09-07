@@ -1,7 +1,7 @@
 # N04-DIALOGUE-PORTRAITS-0905 — every speaker wears its own face; villagers stop sharing one
 
 Branch `ralph/N04-DIALOGUE-PORTRAITS-0905`, from `origin/main` @ `f8a47ee4`.
-Brief: `ralph/briefs/0905-followup/N04-DIALOGUE-PORTRAITS.md` (sources W08-DIALOGUE-CAMERA,
+Brief: `archive/ralph/briefs/0905-followup/N04-DIALOGUE-PORTRAITS.md` (sources W08-DIALOGUE-CAMERA,
 W04-PORTRAITS). Owner directive 2026-09-04 item 8b: *"fix the picture during dialogue always
 being the main character."*
 

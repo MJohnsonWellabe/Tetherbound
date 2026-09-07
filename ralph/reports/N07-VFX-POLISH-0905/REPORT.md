@@ -117,7 +117,7 @@ ceiling in D87 §1 and `JUDGE_round2.md`. `combat.json`'s `_why_colour_0905`,
 | same, round 2, run **concurrently with the round-2 software render** | **rc=1**: `FAIL: exploration never came back after the boss fight` — the fight itself ran and was won (`5 creatures, 961 frames, 6 quick attacks landed, 0 missed`), the tether released, the legendary joined, the full-belt ceremony took the decision, and only the final exploration-return check failed. |
 | same, re-run alone, no code changed, render finished | rc=0, `boss smoke test passed` (`5 creatures, 981 frames, 7 quick attacks landed, 0 missed`) |
 
-**On the one red.** It is the symptom `ralph/briefs/0904/LANES.md` records for
+**On the one red.** It is the symptom `archive/ralph/briefs/0904/LANES.md` records for
 `smoke_gate_e_finale` — "exploration never came back after 'warden_aldis''s fight", split
 verdicts across paired runs of one commit, traced to a race on whether a dialogue or decision
 panel is up when the smoke checks locomotion. Nothing this lane changed executes after a boss
@@ -132,7 +132,7 @@ unstable as `docs/AGENT_WORKFLOW.md` §6 says) and, under xvfb only, the ALSA `E
 with the dummy-audio fallback. The unit runner adds its usual two exit-time leak lines, identical
 in the baseline and after runs. No `SCRIPT ERROR`. The distinct set did not grow.
 
-Godot 4.7-stable, installed per `ralph/briefs/0904/COMMON.md`; `--import` once before any run.
+Godot 4.7-stable, installed per `archive/ralph/briefs/0904/COMMON.md`; `--import` once before any run.
 
 ## Frames and measurement
 

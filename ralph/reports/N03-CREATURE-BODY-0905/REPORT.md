@@ -13,9 +13,9 @@ Code commit: **`d52be361`** (every code, test, tool and docs change; the commits
 | CL-G7 — `ERROR: Parameter "material" is null.` at `material_get_instance_shader_parameters` on every world boot | **root-caused and fixed** in `creature_body.gd::_build_model()`'s teardown; probe and world-boot smokes clean |
 | `play_rest()` signed-roll grounding — negative-roll species (terrapup, trailpup) sink under the creature bed | **fixed** (`radius * abs(sin(roll))`), pinned by a new unit test seen red first |
 
-**A note on the brief.** `ralph/briefs/0905-followup/COMMON.md` and
+**A note on the brief.** `archive/ralph/briefs/0905-followup/COMMON.md` and
 `N03-CREATURE-BODY.md` were never pushed to the remote — no branch on `origin`
-carries a `ralph/briefs/0905-followup/` directory (checked with `git ls-remote`
+carries a `archive/ralph/briefs/0905-followup/` directory (checked with `git ls-remote`
 and by listing every `ralph/*` branch), and no peer session was reachable to
 supply them. The lane was reconstructed from the session title, the CL-G7 row in
 `docs/GATE2_GATE3_CLOSURE_PLAN.md` §2.B, and W12-COMPANION's routing note on
@@ -50,7 +50,7 @@ Docs:
 
 - `docs/CURRENT_STATE.md` §3 — two rows (P2 bed pose, P3 CL-G7), both marked fixed.
 - `docs/GATE2_GATE3_CLOSURE_PLAN.md` §2.B — the CL-G7 row's claimed-by / kind.
-- `docs/GATE3_EXECUTION_PLAN.md` §6 — one sentence under the existing bullet.
+- `archive/docs/gates/GATE3_EXECUTION_PLAN.md` §6 — one sentence under the existing bullet.
 
 No data, scene, asset, config or CI change. No new mesh, no Meshy, no decision
 record (nothing here is a design choice).

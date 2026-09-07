@@ -1,0 +1,32 @@
+﻿{
+    "perf":  {
+                 "status":  "ok",
+                 "error":  "",
+                 "seconds":  782,
+                 "started":  "2026-09-06T22:26:00.2720767-05:00"
+             },
+    "chain":  {
+                  "status":  "ok",
+                  "error":  "",
+                  "seconds":  6500,
+                  "started":  "2026-09-06T22:41:33.5208236-05:00"
+              },
+    "frames":  {
+                   "status":  "ok",
+                   "error":  "",
+                   "seconds":  2469,
+                   "started":  "2026-09-06T21:44:51.4152041-05:00"
+               },
+    "export":  {
+                   "status":  "ok",
+                   "error":  "",
+                   "seconds":  151,
+                   "started":  "2026-09-06T22:39:02.5975820-05:00"
+               },
+    "prepare":  {
+                    "status":  "ok",
+                    "error":  "",
+                    "seconds":  409,
+                    "started":  "2026-09-06T21:38:02.3094494-05:00"
+                }
+}

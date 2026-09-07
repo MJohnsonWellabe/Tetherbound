@@ -18,7 +18,7 @@ Touched: that file and this directory only.
 | 7 | Nine items are cheap enough that leaving them open is worse than doing them; four things nobody has budgeted are named plainly (VFX, a branching tree form, the S10 cost, pacing at 4.7 h). | §6 |
 | 8 | Six of the seven round-one Gate 3 reports are on the landing branch; the Band 3 report and its S07 run artefacts are only on `origin/ralph/G3-BAND3-0903` (`8e5e2a9c`). | CL-D3 |
 
-The brief says nine lanes are in flight on round two; `docs/GATE3_EXECUTION_PLAN.md` §6
+The brief says nine lanes are in flight on round two; `archive/docs/gates/GATE3_EXECUTION_PLAN.md` §6
 names six plus this one. The plan assigns work by item, names the §6 lane where one
 claims it, and marks the rest **unassigned** for the coordinator to route.
 

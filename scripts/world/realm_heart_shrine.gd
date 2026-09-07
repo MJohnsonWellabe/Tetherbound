@@ -62,6 +62,8 @@ const HEART_ACTIVE := Color("d7f59a")
 ## Empty means "the same id as the Heart", which is what every shrine in the
 ## chapter is (`data/config/realm_hearts.json` names one Heart per realm).
 @export var realm_id: String = ""
+## Host simulation shells retain world sockets without offering local actions.
+@export var presentation_enabled: bool = true
 
 var _prompt: Node3D = null
 var _heart_visual: Node3D = null
@@ -104,19 +106,21 @@ func _ready() -> void:
 
 
 func _build_relic_slots() -> void:
-	var definitions := {"meadows":"Heart of the Meadows", "cloudreach":"Wings of Cloudreach", "stormwood":"Spark of the Stormwood"}
-	var side := -1.0
+	var definitions := {"meadows":"Heart of the Meadows", "cloudreach":"Wings of Cloudreach", "stormwood":"Spark of the Stormwood", "water":"Tideglass Compass"}
+	var positions := [Vector3(-3, 0, 0), Vector3(3, 0, 0), Vector3(0, 0, -3)]
+	var index := 0
 	for id: String in definitions:
 		if id == heart_id:
 			continue
 		var slot := (get_script() as Script).new() as Node3D
 		slot.name = "RelicSlot_" + id
 		slot.set("_companion_slot", true)
+		slot.set("presentation_enabled", presentation_enabled)
 		slot.call("setup", id, definitions[id], realm())
-		slot.position = Vector3(side * 3.0, 0, 0)
+		slot.position = positions[index]
 		slot.set("interaction_radius", 2.0)
 		add_child(slot)
-		side = 1.0
+		index += 1
 
 
 ## The four player-facing states required by the Realm Heart contract.  Kept
@@ -285,6 +289,7 @@ func _refresh(game: Node) -> void:
 			_prompt.call("configure", "Release %s power%s" % [heart_name, details], interaction_radius, true)
 			_prompt.set("actionable", true)
 			_set_visual(true, true, true)
+	_prompt.enabled = _prompt.enabled and presentation_enabled
 
 
 func _power_description(hearts: RefCounted) -> String:

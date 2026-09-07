@@ -18,6 +18,19 @@ func before_each() -> void:
 	log_reader = QUEST_LOG.new()
 
 
+func test_water_guidance_replaces_meadows_and_uses_scoped_completion() -> void:
+	log_reader.set_realm("water")
+	assert_eq(log_reader.tracked_text(progression), "Meet Pell at First Shore.")
+	progression.set_flag("water_swim_lesson_briefed")
+	assert_eq(log_reader.tracked_text(progression), "Swim between the lesson landings.")
+	progression.set_flag("water_swim_lesson_complete")
+	assert_eq(log_reader.tracked_text(progression), "Restore Reedhaven's departure dock.")
+	for row: Dictionary in log_reader.main_entries(progression):
+		assert_true(str(row.scope) in ["player", "world"])
+	log_reader.set_realm("meadows")
+	assert_false(log_reader.tracked_text(progression).contains("Reedhaven"))
+
+
 ## Every rung of the scripted opening, in order, as the sequence director itself
 ## writes them (`OPENING_BEAT_PREFIX + <beat>`, and since OP-0830-4 as history
 ## rather than one at a time). What a test means by "the player has finished the
@@ -77,6 +90,23 @@ func test_the_recorded_degraded_opening_state_does_not_strand_the_ladder() -> vo
 func test_objectives_data_parses_and_has_at_least_one_main_entry() -> void:
 	var entries: Array = log_reader.main_entries(progression)
 	assert_true(entries.size() >= 1, "data/progression/objectives.json's main list is empty")
+
+
+func test_tracked_objective_exposes_its_authored_map_destination() -> void:
+	var destination: Dictionary = log_reader.tracked_destination(progression)
+	assert_eq(str(destination.get("landmark_id", "")), "grandpa_house",
+		"the opening objective should point to Grandpa rather than leave the map unhelpful")
+	var first: Dictionary = log_reader.main_entries(progression)[0]
+	assert_eq(str(first.get("id", "")), "opening_hear_grandpa")
+	assert_eq(first.get("destination", {}), destination,
+		"guided/menu rows and the HUD-tracked target must expose the same destination")
+
+
+func test_cloudreach_objectives_inherit_their_existing_region_target() -> void:
+	log_reader.set_realm("cloudreach")
+	var destination: Dictionary = log_reader.tracked_destination(progression)
+	assert_eq(str(destination.get("region_id", "")), "gate_lower_cliffs",
+		"Cloudreach's existing objective region_id should drive map navigation without duplicate coordinates")
 
 
 func test_tracked_text_names_the_first_undone_main_objective() -> void:

@@ -16,7 +16,7 @@ document rewritten twice in one day.
 |---|---|---|
 | `docs/TETHERBOUND_GAME_VISION.md` | `docs/GAME_VISION.md` | canonical vision, canonical name |
 | `docs/ralph-prompts/` (80 files) | `docs/prompts/` | it is the task-contract library, not a Ralph artefact |
-| `ralph/PROMPT_COMPATIBILITY_MAP.md` | `docs/prompts/COMPATIBILITY_MAP.md` | lives with the prompts it maps |
+| `ralph/PROMPT_COMPATIBILITY_MAP.md` | `archive/docs/prompts/COMPATIBILITY_MAP.md` | lives with the prompts it maps |
 | `docs/owner-direction/` (4) + `ralph/OWNER_*.md` (7) + `ralph/planning/MEADOWS_QUALITY_REBUILD_PLAN.md` | `docs/owner/` | every owner-authored or owner-verbatim document in one precedence-1 place |
 | `docs/{MEADOWS_PROGRESSION_SPEC, MEADOWS_MACRO_LAYOUT, MEADOWS_PROGRESSION_CURVE, MEADOWS_VERTICAL_SLICE, GAME_DESIGN, ENVIRONMENT_AND_UI_BIBLE, OPENING_SEQUENCE, PERFORMANCE_BUDGET, BIOME_DESIGN_WORKFLOW, TETHERBOUND_VISUAL_BIBLE_V2, ASSET_LEDGER}.md` | `docs/specs/` | long-form owner-supplied specs stay canonical but leave the docs root to the ten source-of-truth files |
 | `ralph/{GATE_F_PROTOCOL, GATE_F_MASTER_PROTOCOL, GATE_F_INSTRUMENTATION_REQUEST, MEADOWS_EXIT_CRITERION}.md`, `ralph/planning/TETHERBOUND_OWNER_ONLY_FULL_BLIND_PLAYTEST.md` | `docs/acceptance/` | chapter acceptance and the full-playtest protocol |
@@ -109,3 +109,29 @@ about 5,400.
 - `docs/decisions/` numbering collisions were not fixed.
 - History was not rewritten; clone size shrinks only for future shallow clones and
   for the working tree once the untrack commands run.
+
+
+## Second pass — 2026-09-07
+
+Done by the coordination session that wrote `docs/prompts/77-CODEX-GOAL-four-biome-push-2026-09-07.md`,
+after an audit of every live document. Same convention: `git mv`, history preserved,
+every reference rewritten (code, data comments, tests, tools, workflows, docs).
+
+| From | To | Why |
+|---|---|---|
+| `docs/HANDOFF_2026-09-03.md`, `docs/HANDOFF_2026-09-06.md` | `archive/docs/handoffs/` | every item closed or superseded by `HANDOFF_GRASS_AND_ART_LANES_2026-09-06.md`, `HANDOFF_COORDINATION_2026-09-06-CODEX.md` and PR #72 |
+| `docs/GATE3_COORDINATOR_BRIEF.md`, `docs/GATE3_EXECUTION_PLAN.md` | `archive/docs/gates/` | the Meadows-gate sequence they scheduled ran and landed; `docs/DEVELOPMENT_ROADMAP.md` replaced it |
+| `docs/AUDIT_2026-09-02.md` | `archive/docs/` | the reset audit; nothing references it |
+| `docs/VISUAL_PARITY_PROGRESS.md` | `archive/docs/VISUAL_PARITY_PROGRESS_cloudreach.md` | a Codex Cloudreach round log ending 2026-09-05; superseded by the 0906 lane reports |
+| `docs/specs/MP_ASSUMPTION_INVENTORY.md`, `docs/specs/SMOKE_SWEEP_PLAN.md` | `archive/docs/specs/` | raw material for the state seam (landed) and a CI proposal CI took a different route on |
+| `docs/biomes/cloudreach/*` except the build directive and `CONTINUOUS_ACCEPTANCE_0905.md` | `archive/docs/biomes/cloudreach/` | eighteen Codex integration checkpoints and lane evidence notes, all wired or superseded |
+| `docs/owner/OWNER_DIRECTIVES_2026-08-22/23/30`, `2026-09-01`, `OWNER_PLAYTEST_2026-09-01/02`, `OWNER_FEEDBACK_2026-08-29_BUILDINGS` | `archive/owner/` | every item closed with evidence or re-reported in a newer owner record; verbatim text kept whole |
+| `ralph/briefs/*` | `archive/ralph/briefs/` | every W-, N- and MP-wave lane landed |
+| `docs/prompts/01`–`54`, `COMPATIBILITY_MAP.md` | `archive/docs/prompts/` | the 2026-08 review-item conversion, consumed or superseded by the 2026-09-04 plan and the C1–C4 contracts |
+| `docs/CURRENT_STATE.md` dated sections (ten groups, ~200 KB) | `archive/docs/current-state-history/` | checkpoints of finished lanes; the file keeps §0–§5 and a History footer |
+
+Not moved, on purpose: `docs/GATE2_GATE3_CLOSURE_PLAN.md` (its CL-* table is the join
+key for C1–C4, several ADRs and two tests), `docs/acceptance/GATE_F_INSTRUMENTATION_REQUEST.md`
+(eighteen segment JSONs cite it), `docs/acceptance/OWNER_ONLY_FULL_BLIND_PLAYTEST.md`
+(owner-authored; whether the blind human playtest is still planned is the owner's call),
+and every owner record that still carries an open requirement.

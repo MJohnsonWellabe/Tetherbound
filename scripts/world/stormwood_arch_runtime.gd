@@ -21,7 +21,7 @@ func mount(owner_world: Node3D) -> void:
 	add_to_group("stormwood_arch_runtime")
 	add_to_group("progression_restore")
 	session.stormwood_arch_arrival.connect(_arrive)
-	game.get("ledger").intent_refused.connect(func(kind: String, _code: String, _reason: String) -> void:
+	game.get("ledger").intent_refused.connect(func(kind: String, _code: String, _reason: String, _detail: Dictionary) -> void:
 		if kind == "stormwood_relight_arch": _pending_id = "")
 	for arch: Dictionary in RULES.config().arches:
 		_build(arch)

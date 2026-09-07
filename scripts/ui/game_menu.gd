@@ -255,6 +255,19 @@ func _build_tabs() -> void:
 		_tab_buttons.append(button)
 		_tab_labels.append(label)
 		_style_tab_button(button, label, false)
+	_refresh_tab_availability()
+
+
+func _tab_available(index: int) -> bool:
+	if not bool(_tabs[index].get("requires_skills_revealed", false)):
+		return true
+	var personal: RefCounted = game.get("local") if game != null else null
+	return personal != null and personal.get("skills") != null and bool(personal.skills.revealed)
+
+
+func _refresh_tab_availability() -> void:
+	for index in _tabs.size():
+		_tab_buttons[index].visible = _tab_available(index)
 
 
 ## The rail treatment for one tab button (spec §16): a 3px teal underline
@@ -318,6 +331,7 @@ func open(tab_id: String = "") -> bool:
 		return false
 	if not _refusal_reason().is_empty():
 		return false
+	_refresh_tab_availability()
 
 	# BEFORE anything below makes a tab visible. The press that opens this shell
 	# is STILL DOWN, and gamepad Start is two actions at once: `game_menu` here
@@ -429,6 +443,10 @@ func select(index: int) -> void:
 		return
 	_deaf = false
 	_index = posmod(index, _tabs.size())
+	for _attempt in _tabs.size():
+		if _tab_available(_index):
+			break
+		_index = posmod(_index + 1, _tabs.size())
 	for i in _bodies.size():
 		_bodies[i].visible = i == _index
 		_tab_buttons[i].button_pressed = i == _index
@@ -460,7 +478,12 @@ func next_tab() -> void:
 ## `reverse_cycle_action` (RB, below in `_read_actions`) is the RB half.
 func previous_tab() -> void:
 	AUDIO_CUES.play(&"ui_tab")
-	select(_index - 1)
+	var previous := posmod(_index - 1, _tabs.size())
+	for _attempt in _tabs.size():
+		if _tab_available(previous):
+			break
+		previous = posmod(previous - 1, _tabs.size())
+	select(previous)
 
 
 ## One status line for the whole menu, so a message cannot appear somewhere the

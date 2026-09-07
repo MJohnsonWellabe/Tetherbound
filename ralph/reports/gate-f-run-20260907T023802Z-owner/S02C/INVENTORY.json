@@ -1,0 +1,180 @@
+{
+  "blocked": "tools/capture_diag_minimal.gd left no capture_smoke.png in C:\\Users\\mattj\\AppData\\Local\\Tetherbound\\repo\\ralph\\reports\\gate-f-run-20260907T023802Z-owner\\S02C. run_segment.sh --capture writes one before it starts a segment, so its absence means this segment did not come through the capture path.",
+  "captures": {
+    "absent": 8,
+    "delegated": [],
+    "delegated_to": "",
+    "owes": [
+      "GF-02-START-01",
+      "GF-21-WEATHER-01",
+      "GF-02-START-02",
+      "GF-02-START-03",
+      "GF-14-COMBAT-01",
+      "GF-15-CATCH-01",
+      "GF-15-CATCH-02",
+      "GF-03-VILLAGE-01"
+    ],
+    "planned": 8,
+    "present": 0,
+    "rows": [
+      {
+        "action": "capture",
+        "bytes": 0,
+        "class": "2",
+        "exists": false,
+        "file": null,
+        "id": "GF-02-START-01",
+        "intended_proof": "opening stages correctly (incl. player body presence as-shipped)",
+        "reason": "the step that would have written it never ran",
+        "step": "S02C-08"
+      },
+      {
+        "action": "capture",
+        "bytes": 0,
+        "class": "21",
+        "exists": false,
+        "file": null,
+        "id": "GF-21-WEATHER-01",
+        "intended_proof": "weather identity; palette holds",
+        "reason": "the step that would have written it never ran",
+        "step": "S02C-09"
+      },
+      {
+        "action": "capture",
+        "bytes": 0,
+        "class": "2",
+        "exists": false,
+        "file": null,
+        "id": "GF-02-START-02",
+        "intended_proof": "mandatory opening reads; dialogue UI",
+        "reason": "the step that would have written it never ran",
+        "step": "S02C-17"
+      },
+      {
+        "action": "capture",
+        "bytes": 0,
+        "class": "2",
+        "exists": false,
+        "file": null,
+        "id": "GF-02-START-03",
+        "intended_proof": "starter choice presentation",
+        "reason": "the step that would have written it never ran",
+        "step": "S02C-21"
+      },
+      {
+        "action": "capture",
+        "bytes": 0,
+        "class": "14",
+        "exists": false,
+        "file": null,
+        "id": "GF-14-COMBAT-01",
+        "intended_proof": "per-case: the chapter's first piloted fight reads as a fight",
+        "reason": "the step that would have written it never ran",
+        "step": "S02C-35"
+      },
+      {
+        "action": "capture",
+        "bytes": 0,
+        "class": "15",
+        "exists": false,
+        "file": null,
+        "id": "GF-15-CATCH-01",
+        "intended_proof": "throw/feedback quality",
+        "reason": "the step that would have written it never ran",
+        "step": "S02C-41"
+      },
+      {
+        "action": "capture",
+        "bytes": 0,
+        "class": "15",
+        "exists": false,
+        "file": null,
+        "id": "GF-15-CATCH-02",
+        "intended_proof": "throw/feedback quality",
+        "reason": "the step that would have written it never ran",
+        "step": "S02C-44"
+      },
+      {
+        "action": "capture",
+        "bytes": 0,
+        "class": "3",
+        "exists": false,
+        "file": null,
+        "id": "GF-03-VILLAGE-01",
+        "intended_proof": "village reads as a settled place from the entry route",
+        "reason": "the step that would have written it never ran",
+        "step": "S02C-57"
+      }
+    ]
+  },
+  "complete": false,
+  "cost": {
+    "frame_cost_s": 0.007554,
+    "reprices": []
+  },
+  "derailed": "",
+  "derailed_at": "",
+  "derails": [],
+  "disk": {
+    "applies": false,
+    "why": "no measured PNG size (the pre-flight self-test did not write one)"
+  },
+  "disk_actual": {
+    "frame_bytes": 0,
+    "largest_evidence_png_bytes": 0,
+    "preflight_self_test_png_bytes": 0,
+    "shot_bytes": 0,
+    "total_bytes": 0
+  },
+  "evidence_lane": "capture",
+  "frames": {
+    "absent": 0,
+    "absent_reasons": {},
+    "baseline_hz": 0.0,
+    "delegated_windows": [],
+    "written": 0
+  },
+  "git_check": "not run",
+  "harness_errors": [
+    "capture pre-flight BLOCKER: tools/capture_diag_minimal.gd left no capture_smoke.png in C:\\Users\\mattj\\AppData\\Local\\Tetherbound\\repo\\ralph\\reports\\gate-f-run-20260907T023802Z-owner\\S02C. run_segment.sh --capture writes one before it starts a segment, so its absence means this segment did not come through the capture path."
+  ],
+  "preflight": {
+    "allow_no_capture": false,
+    "capture_available": true,
+    "capture_lane": "",
+    "capture_requested": true,
+    "delegated_captures": 0,
+    "disk": {
+      "applies": false,
+      "why": "no measured PNG size (the pre-flight self-test did not write one)"
+    },
+    "display_server": "Windows",
+    "evidence_lane": "capture",
+    "freeze_record": {
+      "claim": "X11 under xvfb-run",
+      "from": "C:/Users/mattj/AppData/Local/Tetherbound/repo/ralph/reports/gate-f-candidate/RUN_METADATA.json",
+      "key": "display_server",
+      "lane": "(all lanes; the record declares none)"
+    },
+    "measured_frame_cost_s": 0.007554,
+    "planned_captures": 8,
+    "predicted_frames": 41193,
+    "predicted_segment_cost_s": 311.2,
+    "record_baseline_hz": 0.0,
+    "verdict": "BLOCKER",
+    "why": "tools/capture_diag_minimal.gd left no capture_smoke.png in C:\\Users\\mattj\\AppData\\Local\\Tetherbound\\repo\\ralph\\reports\\gate-f-run-20260907T023802Z-owner\\S02C. run_segment.sh --capture writes one before it starts a segment, so its absence means this segment did not come through the capture path."
+  },
+  "run_id": "gate-f-run-20260907T023802Z-owner",
+  "segment": "S02C",
+  "sha": "75bb1dc7db36fb4452a746410f45e9ac77699300",
+  "steps": {
+    "delegated": 0,
+    "fail": 0,
+    "pass": 0,
+    "ran": 0,
+    "refused": 0,
+    "skipped": 0,
+    "total": 70
+  },
+  "uncommittable": []
+}

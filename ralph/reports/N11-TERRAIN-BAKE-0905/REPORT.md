@@ -8,12 +8,12 @@ the commit that saves it. The base every number here was measured on is `f8a47ee
 
 ## The brief was not in the repository
 
-The launch prompt said to read `ralph/briefs/0905-followup/COMMON.md` and
-`ralph/briefs/0905-followup/N11-TERRAIN-BAKE.md`. Neither exists on `origin/main`
+The launch prompt said to read `archive/ralph/briefs/0905-followup/COMMON.md` and
+`archive/ralph/briefs/0905-followup/N11-TERRAIN-BAKE.md`. Neither exists on `origin/main`
 (`f8a47ee4`), on any of the 20 `ralph/*` branches, on `claude/codex-merge-meadows-finish-dq12jj`,
 `codex/cloudreach-cliffs`, or on any of the 52 PR heads (`git ls-remote` over every ref,
 re-checked with `git fetch` after the clone). The only briefs directory on `main` is
-`ralph/briefs/0904/`, and it holds only `LANES.md`. The session was created with no
+`archive/ralph/briefs/0904/`, and it holds only `LANES.md`. The session was created with no
 repository attached at all; `MJohnsonWellabe/Tetherbound` was attached from the session
 title (*"Lane N11-TERRAIN-BAKE (Fable): re-bake the stale terrain manifest"*) and cloned.
 The parent session (`session_012LVyP4m2khjJ9Pczw8Gai3`) could not be reached by peer message
@@ -26,8 +26,8 @@ judgement call is recorded below so the orchestrator can overrule it against the
 
 ## What "stale terrain manifest" turned out to mean
 
-The record on `main` (`docs/CURRENT_STATE.md` §1, `ralph/briefs/0904/LANES.md`,
-`docs/HANDOFF_2026-09-03.md` §2, commits `0702ad4c`, `3c73aab5`, `f2dd20e4`, `2724b5af`):
+The record on `main` (`docs/CURRENT_STATE.md` §1, `archive/ralph/briefs/0904/LANES.md`,
+`archive/docs/handoffs/HANDOFF_2026-09-03.md` §2, commits `0702ad4c`, `3c73aab5`, `f2dd20e4`, `2724b5af`):
 
 | Commit | What happened to `data/terrain/playground` |
 |---|---|

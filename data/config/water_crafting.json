@@ -1,0 +1,422 @@
+{
+  "schema_version": 1,
+  "realm_id": "water",
+  "status": "authored_proposals_not_runtime_registered",
+  "_comment": "Ten recipes and nine item proposals for integration through the existing ItemDB and crafting transaction. Data alone does not grant unlocks, craft, equip or consume Skill Candy. No global catalogue is changed by this file.",
+  "_comment_ids": "Owner orchestration settled five resource IDs as reef_stone, driftwood, reed_fiber, tide_bloom and sluice_metal. These exactly match water_pickups.json planned registrations; earlier plan aliases reefstone, saltbloom and tideglass are not new item IDs.",
+  "_comment_schema": "Item proposals use existing items.json fields. Skill Candy intentionally has kind skill_candy and no level_up field, preventing accidental creature-candy routing. Tier amounts remain solely in player_skills.json candy_levels. Recipes use existing cost/output/unlocked_by fields. Extra region, station and prerequisite metadata needs an integration consumer or validation.",
+  "_comment_tuning": "Resource stack caps 50 or 30, Candy10, saddle1; recipe costs and quantities are starting tuning. Three-to-one camp material conversion follows existing Cloudreach recipes. Medicines trade renewable gathered ingredients for familiar recovery, never permanent levels. The costly Revive preserves a reason to rest.",
+  "item_registration_proposals": {
+    "reef_stone": {
+      "name": "Reef Stone",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#b9b99b",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Pale stone exposed above the tide.",
+      "description": "Gather from exposed reef seams with a pickaxe. Brace a Swim Saddle or crush into ordinary stone for camp and repair work.",
+      "gathered_with": "pickaxe"
+    },
+    "driftwood": {
+      "name": "Driftwood",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#a27c55",
+      "icon": "res://assets/ui/icons/items/wood.png",
+      "blurb": "Sea-smoothed wood washed onto dry shores.",
+      "description": "Gather fallen shore timber with an axe. Cut camp boards or shape the frame of a Swim Saddle.",
+      "gathered_with": "axe"
+    },
+    "reed_fiber": {
+      "name": "Reed Fiber",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#aaa565",
+      "icon": "res://assets/ui/icons/items/fiber.png",
+      "blurb": "Long strong strands from island reeds.",
+      "description": "Strip dry-bank reeds with a knife. Twist into camp cordage, bind medicine, or secure a Swim Saddle.",
+      "gathered_with": "knife"
+    },
+    "tide_bloom": {
+      "name": "Tide Bloom",
+      "kind": "resource",
+      "stack": 30,
+      "colour": "#ceaa74",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "A fragrant flower of salt marsh banks.",
+      "description": "Pick by hand from dry marsh banks. Island recipes use these blooms in familiar medicines and trail preserves; they do not grant an underwater survival effect."
+    },
+    "sluice_metal": {
+      "name": "Sluice Metal",
+      "kind": "resource",
+      "stack": 30,
+      "colour": "#94725f",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Weathered scrap left around old pump works.",
+      "description": "Salvage loose, inactive scrap with a pickaxe. Its mineral coating is used in the island recipe for Stoneguard Brew. Gathering scrap never damages active pumps or replaces a creature combat objective.",
+      "gathered_with": "pickaxe"
+    },
+    "skill_candy_i": {
+      "name": "Skill Candy I",
+      "kind": "skill_candy",
+      "stack": 10,
+      "colour": "#17161b",
+      "icon": "res://assets/ui/icons/items/good_candy.png",
+      "blurb": "Raise a chosen player skill by one level.",
+      "description": "Choose Running, Catching, Riding, Swimming or Flying. Adds one level and preserves progress toward the next level. If the full award would exceed the skill cap, keep the candy. This sweet is for your skills, not creature levels.",
+      "world_model": "res://assets/props/candy_pickup/candy_pickup.glb",
+      "world_model_scale": 0.55
+    },
+    "skill_candy_ii": {
+      "name": "Skill Candy II",
+      "kind": "skill_candy",
+      "stack": 10,
+      "colour": "#17161b",
+      "icon": "res://assets/ui/icons/items/good_candy.png",
+      "blurb": "Raise a chosen player skill by 2 levels.",
+      "description": "Choose Running, Catching, Riding, Swimming or Flying. Adds 2 levels and preserves progress toward the next level. If the full award would exceed the skill cap, keep the candy. This sweet is for your skills, not creature levels.",
+      "world_model": "res://assets/props/candy_pickup/candy_pickup.glb",
+      "world_model_scale": 0.65
+    },
+    "skill_candy_iii": {
+      "name": "Skill Candy III",
+      "kind": "skill_candy",
+      "stack": 10,
+      "colour": "#17161b",
+      "icon": "res://assets/ui/icons/items/good_candy.png",
+      "blurb": "Raise a chosen player skill by 3 levels.",
+      "description": "Choose Running, Catching, Riding, Swimming or Flying. Adds 3 levels and preserves progress toward the next level. If the full award would exceed the skill cap, keep the candy. This sweet is for your skills, not creature levels.",
+      "world_model": "res://assets/props/candy_pickup/candy_pickup.glb",
+      "world_model_scale": 0.75
+    },
+    "swim_saddle": {
+      "name": "Swim Saddle",
+      "kind": "gear",
+      "stack": 1,
+      "colour": "#94724b",
+      "icon": "res://assets/ui/icons/items/saddle_frame.png",
+      "blurb": "Fit a compatible swimmer after earning the Swim Stone.",
+      "description": "A broad driftwood frame with reed straps and reef-stone bracing. Fits Aquaryn, Mosshell, Sirenseal, Riverdrake and Cannonback. The fitted saddle appears on the owned mount; wild creatures never wear one. Swimming still uses the mount's stamina."
+    }
+  },
+  "recipes": {
+    "water_swim_saddle": {
+      "name": "Swim Saddle",
+      "realm_id": "water",
+      "unlocked_by": "water_swim_saddle_recipe_learned",
+      "cost": [
+        {
+          "id": "reed_fiber",
+          "n": 8
+        },
+        {
+          "id": "driftwood",
+          "n": 6
+        },
+        {
+          "id": "reef_stone",
+          "n": 4
+        }
+      ],
+      "output": {
+        "id": "swim_saddle",
+        "n": 1
+      },
+      "blurb": "Make a reusable saddle for a compatible swim mount. Requires your Swim Stone and Iona's lesson.",
+      "progression_region": "tidal_cradle",
+      "progression_team_band": [
+        47,
+        49
+      ],
+      "station_presentation": "existing_campfire_or_workbench",
+      "requires_personal_flags": [
+        "water_swim_stone_earned",
+        "water_swim_saddle_recipe_learned"
+      ]
+    },
+    "water_camp_boards": {
+      "name": "Driftwood Camp Boards",
+      "realm_id": "water",
+      "unlocked_by": "water_chapter_started",
+      "cost": [
+        {
+          "id": "driftwood",
+          "n": 2
+        }
+      ],
+      "output": {
+        "id": "wood",
+        "n": 6
+      },
+      "blurb": "Cut six ordinary wood for existing tents, beds and repairs.",
+      "progression_region": "first_shores",
+      "progression_team_band": [
+        43,
+        45
+      ],
+      "station_presentation": "existing_campfire_or_workbench"
+    },
+    "water_camp_cordage": {
+      "name": "Reed Camp Cordage",
+      "realm_id": "water",
+      "unlocked_by": "water_chapter_started",
+      "cost": [
+        {
+          "id": "reed_fiber",
+          "n": 2
+        }
+      ],
+      "output": {
+        "id": "fiber",
+        "n": 6
+      },
+      "blurb": "Twist six ordinary fiber for bedding, camp ties and repairs.",
+      "progression_region": "first_shores",
+      "progression_team_band": [
+        43,
+        45
+      ],
+      "station_presentation": "existing_campfire_or_workbench"
+    },
+    "water_camp_aggregate": {
+      "name": "Reef Camp Aggregate",
+      "realm_id": "water",
+      "unlocked_by": "water_chapter_started",
+      "cost": [
+        {
+          "id": "reef_stone",
+          "n": 2
+        }
+      ],
+      "output": {
+        "id": "stone",
+        "n": 6
+      },
+      "blurb": "Crush reef stone into six ordinary stone for camp and dock masonry.",
+      "progression_region": "marsh_channels",
+      "progression_team_band": [
+        45,
+        47
+      ],
+      "station_presentation": "existing_campfire_or_workbench"
+    },
+    "water_small_potion": {
+      "name": "Tide Bloom Small Potion",
+      "realm_id": "water",
+      "unlocked_by": "water_chapter_started",
+      "cost": [
+        {
+          "id": "tide_bloom",
+          "n": 1
+        },
+        {
+          "id": "reed_fiber",
+          "n": 1
+        }
+      ],
+      "output": {
+        "id": "potion_small",
+        "n": 1
+      },
+      "blurb": "Prepare the familiar 35 HP creature medicine. Fainted creatures still need a Revive.",
+      "progression_region": "first_shores",
+      "progression_team_band": [
+        43,
+        45
+      ],
+      "station_presentation": "existing_campfire_or_workbench"
+    },
+    "water_ridge_tonic": {
+      "name": "Tide Bloom Ridge Tonic",
+      "realm_id": "water",
+      "unlocked_by": "water_chapter_started",
+      "cost": [
+        {
+          "id": "tide_bloom",
+          "n": 3
+        },
+        {
+          "id": "reed_fiber",
+          "n": 1
+        }
+      ],
+      "output": {
+        "id": "potion_large",
+        "n": 1
+      },
+      "blurb": "Brew the familiar 80 HP creature tonic for longer expeditions.",
+      "progression_region": "marsh_channels",
+      "progression_team_band": [
+        45,
+        47
+      ],
+      "station_presentation": "existing_campfire_or_workbench"
+    },
+    "water_revive": {
+      "name": "Tide Bloom Revive",
+      "realm_id": "water",
+      "unlocked_by": "water_chapter_started",
+      "cost": [
+        {
+          "id": "tide_bloom",
+          "n": 6
+        },
+        {
+          "id": "reed_fiber",
+          "n": 2
+        },
+        {
+          "id": "reef_stone",
+          "n": 1
+        }
+      ],
+      "output": {
+        "id": "revive",
+        "n": 1
+      },
+      "blurb": "Concentrate a costly Revive. A fainted creature returns at half health; rest finishes its recovery.",
+      "progression_region": "tidal_cradle",
+      "progression_team_band": [
+        47,
+        49
+      ],
+      "station_presentation": "existing_campfire_or_workbench"
+    },
+    "water_trail_preserve": {
+      "name": "Island Cloudberry Preserve",
+      "realm_id": "water",
+      "unlocked_by": "water_chapter_started",
+      "cost": [
+        {
+          "id": "cloudberry",
+          "n": 3
+        },
+        {
+          "id": "tide_bloom",
+          "n": 1
+        }
+      ],
+      "output": {
+        "id": "cloudreach_trail_preserve",
+        "n": 1
+      },
+      "blurb": "Prepare the familiar Cloudberry Trail Preserve using island blooms. Its stamina recovery buff helps on land; it cannot refill stamina in deep water.",
+      "progression_region": "outer_reaches",
+      "progression_team_band": [
+        49,
+        51
+      ],
+      "station_presentation": "existing_campfire_or_workbench"
+    },
+    "water_swift_tonic": {
+      "name": "Island Swift Tonic",
+      "realm_id": "water",
+      "unlocked_by": "water_chapter_started",
+      "cost": [
+        {
+          "id": "tide_bloom",
+          "n": 3
+        },
+        {
+          "id": "berries",
+          "n": 2
+        },
+        {
+          "id": "reed_fiber",
+          "n": 1
+        }
+      ],
+      "output": {
+        "id": "swift_tonic",
+        "n": 1
+      },
+      "blurb": "Prepare the existing temporary creature movement tonic for a demanding encounter. This is not a swim-stamina refill.",
+      "progression_region": "outer_reaches",
+      "progression_team_band": [
+        49,
+        51
+      ],
+      "station_presentation": "existing_campfire_or_workbench"
+    },
+    "water_stoneguard_brew": {
+      "name": "Sluice Stoneguard Brew",
+      "realm_id": "water",
+      "unlocked_by": "water_chapter_started",
+      "cost": [
+        {
+          "id": "sluice_metal",
+          "n": 1
+        },
+        {
+          "id": "tide_bloom",
+          "n": 3
+        },
+        {
+          "id": "reed_fiber",
+          "n": 1
+        }
+      ],
+      "output": {
+        "id": "stoneguard_brew",
+        "n": 1
+      },
+      "blurb": "Use recovered mineral coating to brew the existing temporary creature defence tonic.",
+      "progression_region": "tether_current",
+      "progression_team_band": [
+        51,
+        53
+      ],
+      "station_presentation": "existing_campfire_or_workbench"
+    }
+  },
+  "skill_candy_presentation": {
+    "all_tiers_body_colour": "#17161b",
+    "all_tiers_aura_colour": "#302d36",
+    "marking_colour": "#ddd8e5",
+    "tiers": {
+      "skill_candy_i": {
+        "marking": "I",
+        "silhouette": "small_single_wrapper",
+        "world_scale": 0.55
+      },
+      "skill_candy_ii": {
+        "marking": "II",
+        "silhouette": "larger_double_fold_wrapper",
+        "world_scale": 0.65
+      },
+      "skill_candy_iii": {
+        "marking": "III",
+        "silhouette": "largest_three_point_wrapper",
+        "world_scale": 0.75
+      }
+    },
+    "status": "requires_black_material_override_engraved_markings_and_readable_icon_variants",
+    "_comment": "Installed candy mesh and icon are placeholders. Their original green material/icon is not visual acceptance; every tier needs black treatment plus explicit Roman marking and shape change. Never distinguish tiers by hue."
+  },
+  "integration_contract": {
+    "recipe_book": "Merge recipes into the existing ItemDB recipe table; never add a separate crafting inventory.",
+    "saddle_unlock": "water_swim_saddle_recipe_learned is a personal durable flag awarded by Iona only after water_swim_stone_earned. Validate both when listing/crafting, including migrated or hostile requests.",
+    "saddle_transaction": "Remove exactly8 reed_fiber,6 driftwood,4 reef_stone and add one swim_saddle atomically; insufficient room or any failed requirement leaves inventory unchanged.",
+    "saddle_fit": "Use existing item identity-based saddle fitting with explicit Water species compatibility and personal Swim Stone. Do not consume the saddle on every mount.",
+    "candy_transaction": "Use player_skills.json to validate the full1/2/3-level award before removing one owning-character item; preserve fractional progress and deduplicate repeated request IDs.",
+    "normal_recipe_unlock": "water_chapter_started routes normal recipes; progression bands describe intended first usefulness and material availability, not a hidden player-level gate.",
+    "food_supply": "Cloudberries and ordinary berries are existing items. Offer their ordinary trade supply at Salt Crown or preserve cross-biome return access; these two optional preparations cannot gate the mandatory saddle or crossing.",
+    "dock_scope": "Wood/fiber/stone outputs support existing building and repair consumers. Reedhaven dock may still require its authored raw materials; crafting never grants dock flags.",
+    "temporary_buffs": "Use existing item effect values unchanged. No health/stamina restoration while swimming is introduced by this file."
+  },
+  "census": {
+    "recipes": 10,
+    "new_harvest_resources": 5,
+    "new_skill_candy_items": 3,
+    "new_swim_saddle_items": 1,
+    "item_proposals_total": 9,
+    "recipes_producing_skill_candy": 0,
+    "runtime_proven": 0
+  },
+  "known_limitations": [
+    "ItemDB, recipe unlock conjunction, Skill Candy picker and saddle fitting are not integrated by this file.",
+    "All reused icon/model paths exist, but final black Candy icons/materials and tier geometry are unrendered.",
+    "Salt Crown berry trade supply requires integration; these optional recipes currently have no proven island supply path.",
+    "Cost tuning and controller craft flows need runtime evidence."
+  ]
+}

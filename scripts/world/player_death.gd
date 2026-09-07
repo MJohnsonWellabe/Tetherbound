@@ -93,6 +93,11 @@ func build(world: Node3D, player: CharacterBody3D, spawn_position: Vector3) -> v
 	if not _recovery_ground.is_valid() and world.has_method("ground_height_near"):
 		_recovery_ground = Callable(world, "ground_height_near")
 	add_to_group(GROUP)
+	var game := get_node_or_null("/root/Game")
+	if game != null and game.get("ledger") != null:
+		var transport: Node = game.get("ledger")
+		if not transport.delta_applied.is_connected(_on_satchel_delta):
+			transport.delta_applied.connect(_on_satchel_delta)
 	# Lane 4.E. Mounted under `Game`, not under this node: the RPC path has to
 	# be identical in every process and this component is rebuilt on every
 	# scene change. `attach_local` rebinds it to the rig standing now and hands
@@ -123,7 +128,8 @@ func _die_now() -> void:
 	var carried: Array = []
 	var bag: RefCounted = game.get("inventory")
 	if bag != null:
-		carried = bag.call("drain")
+		if int(bag.call("used_slots")) > 0:
+			carried = DEATH_SATCHEL.TRANSFER_RULES.slots(bag)
 	if not carried.is_empty():
 		_drop_satchel(carried, _player.global_position, game)
 
@@ -172,33 +178,42 @@ static func resolve_safe_camp(camps: Array, flags: RefCounted, from: Vector3,
 	return nearest
 
 
-func _drop_satchel(carried: Array, at: Vector3, game: Node) -> void:
-	# R3.2. Register the persisted record FIRST, so the live node can carry
-	# its own index into `GameState.death_satchels` from the moment it
-	# exists — the same order `build_placer.gd::_place()` uses (compute the
-	# index the entry is about to occupy, then spawn).
-	# D104/D-MP10. The realm is passed explicitly rather than left to
-	# `register_death_satchel`'s own fallback, for the same D97 reason every
-	# ledger intent carries one: a record is stamped with the realm of the thing
-	# being written, never with whichever realm some global happens to hold.
+func _drop_satchel(_carried: Array, at: Vector3, game: Node) -> void:
 	var realm := WORLD_RECORDS.active(game)
-	var owner := _local_character_id(game)
-	var index := int(game.call("register_death_satchel", at, owner, realm))
+	var transport: Node = game.get("ledger")
+	if transport != null:
+		transport.call("drop_satchel", at, realm)
 
-	var satchel: Node3D = DEATH_SATCHEL.new()
-	_satchel_count += 1
-	satchel.name = "DeathSatchel_%d" % _satchel_count
-	satchel.position = at
-	satchel.set_meta(SATCHEL_INDEX_META, index)
-	satchel.set_meta("realm", realm)
-	_world.add_child(satchel)
-	satchel.call("build", carried, game.get("items"), owner)
-	# Capture immediately, not only at the next scene/save synchronization.
-	(game.get("death_satchels") as Array)[index]["state"] = satchel.get("state").call("save_data")
 
-	var map: RefCounted = game.get("map")
-	if map != null:
-		map.call("add_dynamic_marker", "death_satchel_%d" % (index + 1), MAP_ICON, at)
+func _on_satchel_delta(delta: Dictionary) -> void:
+	var game := get_node_or_null("/root/Game")
+	if game == null or _world == null:
+		return
+	for op: Dictionary in delta.get("ops", []):
+		if str(op.get("op", "")) != "satchel_add":
+			continue
+		if str(op.get("realm", "")) != WORLD_RECORDS.active(game):
+			continue
+		var index: int = game.get("world").call("death_satchel_index_of", str(op.uid))
+		if index < 0:
+			continue
+		var record: Dictionary = game.get("death_satchels")[index]
+		var at: Array = record.position
+		game.get("map").call("add_dynamic_marker", "death_satchel_%d" % (index + 1), MAP_ICON, Vector3(at[0], at[1], at[2]))
+		var found := false
+		for existing: Node in get_tree().get_nodes_in_group(DEATH_SATCHEL.GROUP):
+			if _world.is_ancestor_of(existing) and int(existing.get_meta(SATCHEL_INDEX_META, -1)) == index:
+				found = true
+				break
+		if not found:
+			var satchel: Node3D = DEATH_SATCHEL.new()
+			_satchel_count += 1
+			satchel.name = "DeathSatchel_%d" % _satchel_count
+			satchel.position = Vector3(at[0], at[1], at[2])
+			satchel.set_meta(SATCHEL_INDEX_META, index)
+			satchel.set_meta("realm", str(op.realm))
+			_world.add_child(satchel)
+			satchel.call("restore", record.get("state", []), game.get("items"), str(record.get("owner", "")))
 
 
 ## R3.2. The reverse of `restore_from_game`'s `state` half: called by
@@ -214,6 +229,11 @@ func sync_state_to_game(game: Node) -> void:
 	for node in get_tree().get_nodes_in_group(DEATH_SATCHEL.GROUP):
 		var index := int(node.get_meta(SATCHEL_INDEX_META, -1))
 		if index < 0 or index >= satchels.size():
+			continue
+		# Ledger-backed bags already have authoritative persisted contents.
+		# A delayed presentation callback must never roll a committed record
+		# back when a world snapshot/save asks this component to synchronize.
+		if str(satchels[index].get("uid", "")).begins_with("death_") or satchels[index].has("transactions"):
 			continue
 		if not WORLD_RECORDS.belongs(satchels[index], WORLD_RECORDS.active(game)) \
 				or str(node.get_meta("realm", "meadows")) != WORLD_RECORDS.active(game):

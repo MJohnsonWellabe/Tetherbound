@@ -104,7 +104,7 @@ share of a small frame; on the dense stands it is under 5 %.
 
 ## 4. Exposure, measured before spawning a judge
 
-Trap 9 of `docs/HANDOFF_2026-09-06.md`: the blind judge reads exposure off the PNG, so
+Trap 9 of `archive/docs/handoffs/HANDOFF_2026-09-06.md`: the blind judge reads exposure off the PNG, so
 measure it first. Rec.709 luminance percentiles and mean saturation over the whole frame:
 
 | set | frame | p50 | p90 | p99 | sat % |

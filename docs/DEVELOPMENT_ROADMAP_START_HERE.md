@@ -11,14 +11,27 @@ This is the routing entrypoint for the next major development sequence.
 
 Then execute the first incomplete stage in `docs/DEVELOPMENT_ROADMAP.md`.
 
-## Current next major action
+## Current next major action — 2026-09-07
 
-Tetherbound is in **Stage 0** of `docs/DEVELOPMENT_ROADMAP.md`: land in-flight
-Meadows/Cloudreach work, ship playable 1–4 player multiplayer, run the
-Meadows visual sweep, and land general game fixes — all concurrently.
+**Run `docs/prompts/77-CODEX-GOAL-four-biome-push-2026-09-07.md`.** It is the one
+consolidated contract for the next long orchestration run and it advances Stage 0
+and Stage A together, which the owner has authorised:
+
+- **Stage 0** stays open on two owner-only items (the outside-tester multiplayer
+  session and the owner's own LAN session) and on the Meadows visual sweep, which the
+  goal prompt carries as lane VIS-MEADOWS. The multiplayer implementation scope is
+  complete and on `main`.
+- **Stage A (Stormwood)** is in progress: five PRs merged, the Dynamo, legendary
+  release, Spark/aftermath and Waterward view unbuilt, visual bars failed. The goal
+  prompt carries it as lane STORMWOOD, resuming from
+  `ralph/reports/STORMWOOD-PROGRESS/fresh-session-tail-0907.md`.
+- **Stage B (Water)** is being built ahead of sequence on its own draft branch (PR #69)
+  and is held there by owner instruction; the goal prompt carries it as lane WATER.
+- The owner's 2026-09-07 playtest adds two P0 freezes and a road-presence P1 that
+  come first (lanes STAB and ROAD).
 
 > **Naming note:** the multiplayer initiative's own documents
-> (`docs/specs/STAGE_B_MULTIPLAYER_EXECUTION_PLAN.md`, `docs/CURRENT_STATE.md`,
+> (`docs/specs/STAGE_B_MULTIPLAYER_EXECUTION_PLAN.md`, `docs/acceptance/MULTIPLAYER_ACCEPTANCE.md`,
 > commit history) call it "Stage B" and "Stage A" using an older, internal
 > numbering that predates the 2026-09-06 roadmap renumbering. That internal
 > numbering is unrelated to this roadmap's stage letters — the multiplayer
@@ -26,36 +39,11 @@ Meadows visual sweep, and land general game fixes — all concurrently.
 > confuse the multiplayer plan's own "Stage B" with this roadmap's Stage B
 > (Water).
 
-**Fable continues the multiplayer execution plan** — playable Valheim-style
-1–4 player multiplayer:
-
-Read and execute:
-
-`docs/MULTIPLAYER_DIRECTIVE.md` (what), then
-`docs/specs/STAGE_B_MULTIPLAYER_EXECUTION_PLAN.md` (how, in what order, by which tier).
-
-Stage A (landing in-flight work) closed on 2026-09-05 with PR #54 (`main` at
-`55c64aaa`); Stage B's Wave 0 landed as PR #58 (`main` at `d72580b5`,
-2026-09-06); Waves 1–5 have since landed (see `docs/CURRENT_STATE.md` for the
-live wave-by-wave status — do not trust a wave number written here once it is
-older than that file).
-
-**In parallel, run the Meadows visual sweep** per
-`docs/owner/MEADOWS_VISUAL_SWEEP_GOAL_2026-09-06.md`: grass, trees (including
-the Sakura accent tree), bushes, Grandpa's Village, the Burrow Warrens, the
-Meadows stronghold, and other key locations, judged with the repo's blind
-visual-judge workflow against Valheim Meadows / Palworld early-game quality.
-
-The multiplayer pass is not architecture-only. It must end with a genuinely playable host/join co-op game across the existing content.
-
-## What happens after Stage 0
+## What happens after Stage 0 and Stage A
 
 **2026-09-06 simplification:** the roadmap no longer inserts a two-biome
 product audit or a three-biome owner playtest between Stormwood and Water.
-Those intermediate gates are removed. The sequence is now:
-
-**Stage A — Codex builds Biome 3, the Stormwood**, starting at
-`docs/biomes/stormwood/00_CODEX_START_HERE.md`.
+Those intermediate gates are removed. The sequence is:
 
 **Stage B — build Biome 4, the Water Archipelago**, starting at
 `docs/biomes/water/00_START_HERE.md`, immediately after Stormwood — do not

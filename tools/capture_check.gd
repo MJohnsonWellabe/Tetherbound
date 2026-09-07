@@ -453,7 +453,7 @@ static func _find(from: Node, want: String) -> Node:
 ## screen", and that is the wrong question for a creature game's own evidence:
 ## a Bramblebun whose bounding box clips one corner of the frame, or that
 ## projects to eleven pixels of silhouette behind the trainer's shoulder, passes
-## it -- and `docs/VISUAL_PARITY_PROGRESS.md` records a blind judge rejecting
+## it -- and `archive/docs/VISUAL_PARITY_PROGRESS_cloudreach.md` records a blind judge rejecting
 ## exactly such a fight frame ("the Bramblebun silhouette was too small and the
 ## trainer was absent"). The route strip's Bar B question -- is this the same
 ## kind of game? -- can only be asked of a frame where the trainer and the
@@ -738,7 +738,7 @@ static func _collect_rids(node: Node, into: Array[RID]) -> void:
 ## `focus + bearing * d + (0, height, 0)` and aimed at `focus + (0, look_up, 0)`.
 ##
 ## This is the "camera distance solved against all three projected bounds"
-## that `docs/VISUAL_PARITY_PROGRESS.md`'s route-strip investigation named as
+## that `archive/docs/VISUAL_PARITY_PROGRESS_cloudreach.md`'s route-strip investigation named as
 ## the first of its two lessons: a distance solved for the two creatures left
 ## the trainer out of the fight frame. Stepped rather than closed-form because
 ## the bound is a max over eight corners of several boxes, and a 0.25 m step

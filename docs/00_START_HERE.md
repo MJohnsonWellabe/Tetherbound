@@ -1,89 +1,57 @@
 # START HERE — Tetherbound
 
-> **Multi-biome roadmap, 2026-09-06: [`docs/DEVELOPMENT_ROADMAP.md`](DEVELOPMENT_ROADMAP.md)**
-> — the canonical execution sequence above the level of a single chapter:
-> land current Meadows/Cloudreach work, ship 1–4 player multiplayer, run the
-> Meadows visual sweep, then build Stormwood (Biome 3) and Water (Biome 4)
-> back-to-back, then one four-biome product audit and repair pass, then the
-> Beta Ready gate. Start at `docs/DEVELOPMENT_ROADMAP_START_HERE.md` for the
-> current next action. The Meadows-only `docs/ROADMAP.md` below still governs
-> the fine-grained Meadows gates that this file's routing table points to;
-> `docs/DEVELOPMENT_ROADMAP.md` is the layer above it that sequences whole
-> biomes and cross-cutting work (multiplayer, audits, beta).
-
-> **Cloudreach branch scope, 2026-09-05:** the newer owner directive in
-> `docs/biomes/cloudreach/BUILD_CLOUDREACH_CLIFFS_TO_COMPLETION.md` authorizes the
-> second chapter, Cloudreach Cliffs (Air), on `codex/cloudreach-cliffs`. For that
-> work read the directive and `docs/biomes/cloudreach/CONTINUOUS_ACCEPTANCE_0905.md`.
-> The Meadows-only routing below still governs Meadows work. Cloudreach's
-> implementation does not imply either chapter's acceptance has passed.
-
-> **Start here, 2026-09-04: [`docs/FINISH_THE_MEADOWS.md`](FINISH_THE_MEADOWS.md)** — the
-> whole remaining plan to finish the chapter, in order, written to be picked up cold. It
-> supersedes older prose about what is next. `docs/GATE2_GATE3_CLOSURE_PLAN.md` is the
-> detail behind it, with a *fails if* on every open item.
->
-> **Then read [`docs/FINISH_THE_MEADOWS_ADDENDUM_2026-09-04.md`](FINISH_THE_MEADOWS_ADDENDUM_2026-09-04.md).**
-> It adds the newest owner-directed chapter requirements: visible bond/level progression,
-> Good/Great/Rare Candy, denser useful world findables, and visible companion personality.
-> The source directive is `docs/owner/OWNER_DIRECTIVES_2026-09-04-C.md` and outranks older
-> planning where it overlaps.
-
 **Read this first. It is the only routing document.** Rewritten 2026-09-02 at the
-repository reset; it replaces `ralph/START_HERE.md`, the coordinator handovers and the
-dated backlogs, which are now under `archive/`.
+repository reset and trimmed 2026-09-07; it replaces `ralph/START_HERE.md`, the
+coordinator handovers and the dated backlogs, which are under `archive/`.
 
 ## What Tetherbound is
 
 A third-person open-world creature-training adventure in Godot 4.7 for Windows and the
-ROG Ally, controller-first, solo. The player owns **five creatures, total**, pilots them
-directly in real-time combat, and supports the team with gathering, crafting, building,
-care and rest. The first chapter is **the Meadows**: wake at Grandpa's
-farmhouse, win the village tournament, travel south through five increasingly demanding
-bands, break Team Tether's relay, take the three Sigils, defeat the Warden in Meadows
-Hall, free the legendary, and choose the final five. Target: a 3–4 hour focused first
-clear. `docs/GAME_VISION.md` is the experience contract.
+ROG Ally, controller-first, with 1–4 player co-op. The player owns **five creatures,
+total**, pilots them directly in real-time combat, and supports the team with
+gathering, crafting, building, care and rest. The first chapter is **the Meadows**:
+wake at Grandpa's farmhouse, win the village tournament, travel south through five
+increasingly demanding bands, break Team Tether's relay, take the three Sigils, defeat
+the Warden in Meadows Hall, free the legendary, and choose the final five. Cloudreach
+Cliffs (Air) is the second chapter, Stormwood (Electric) the third, the Water
+Archipelago the fourth. `docs/GAME_VISION.md` is the experience contract.
 
-## Current stage
+## Current stage — 2026-09-07
 
-**Gate 1 is nearly proven and Gate 2 is open** (`docs/ROADMAP.md`). All chapter systems
-exist in code and data — `docs/CURRENT_STATE.md` is the evidence-backed status of each and
-outranks this summary.
+- **The next orchestration run is `docs/prompts/77-CODEX-GOAL-four-biome-push-2026-09-07.md`.**
+  It is the single consolidated contract: stability (the Ally freeze), creatures
+  visible on every road, the new roster and characters wired in, the Meadows and
+  Cloudreach visual sweeps and the full blind visual audit, the combat depth ladder,
+  the Stormwood and Water tails, multiplayer upkeep, cheap performance wins, docs
+  upkeep. One integration branch, one pull request, many parallel lanes.
+- The cross-biome sequence is `docs/DEVELOPMENT_ROADMAP.md` (entry
+  `docs/DEVELOPMENT_ROADMAP_START_HERE.md`): Stage 0 (land current work, multiplayer,
+  Meadows visual sweep) is still open and Stage A (Stormwood) is in progress at the
+  same time, by owner direction. Water (Stage B) is being built on its own draft
+  branch and is held there.
+- The newest owner record is `docs/owner/OWNER_PLAYTEST_2026-09-07.md`: two P0
+  freezes on the Ally, bare road stretches with no creatures in view, and the order
+  of work — stability, then looks and content, then performance (cheap wins only).
+- `docs/CURRENT_STATE.md` §0–§3 is the evidence-backed status and outranks this
+  summary.
 
-Updated 2026-09-03. The three failures this section used to name are resolved, and two of
-them were not what they claimed:
+The two handoffs that still carry live detail are folded into the goal prompt but
+remain readable: `docs/HANDOFF_GRASS_AND_ART_LANES_2026-09-06.md` (§3–§6: the
+Cloudreach ground that still reads flat green, and what has been ruled out) and
+`docs/HANDOFF_COORDINATION_2026-09-06-CODEX.md` (Tasks 4–8: multiplayer wrap-up,
+the Warrens hero pass, the post-#72 re-judge, the compass bar). Older handoffs and
+the Gate 3 coordinator brief are under `archive/docs/`.
 
-- The opening-segment orb floor is **fixed** (gate on the beat, not the species).
-- The Gate B objective chain was **never stalling** — two assertions were pinned to label
-  strings that had never existed in `objectives.json`, behind a job that did not gate. The
-  gather-route half was real, and is now **fixed**: the corner past TrailGate was a
-  harness defect, not a world defect — a real body clears it on a plain stick-hold; only
-  `stick_navigator.gd`'s stall/flip logic could not round it (FENCE-CORNER-0903).
-- The South Bridge `smoke_traversal` failure was **a harness defect, not a world hole**: a
-  teleport outran Terrain3D's camera-following collision, so the body fell before the
-  ground existed under it. The crossing's geometry was never changed and never needed to be.
+Meadows-only gate detail: `docs/ROADMAP.md` (subordinate to the development roadmap);
+the remaining Meadows plan with a *fails if* per item: `docs/FINISH_THE_MEADOWS.md`
+and `docs/FINISH_THE_MEADOWS_ADDENDUM_2026-09-04.md`; the open-item index:
+`docs/GATE2_GATE3_CLOSURE_PLAN.md` §2 (the CL-* table).
 
-`smoke_gate_b_continuous` now drives ~25 minutes of continuous play, and its reliable
-prefix gates in CI.
-
-**If you are picking up the art-gap work, read
-[`docs/HANDOFF_GRASS_AND_ART_LANES_2026-09-06.md`](HANDOFF_GRASS_AND_ART_LANES_2026-09-06.md)
-first.** It carries the six unlanded art branches, the owner directions that override the
-older plan (use the art already in the repo; no Meshy), and the one problem still open:
-the ground the player stands on at Cloudreach still renders as flat painted green. It
-lists what has already been ruled out with evidence, so the next reader does not repeat
-six-minute renders that have already been spent.
-
-**For the art-gap closure plan itself, read
-`docs/HANDOFF_2026-09-06.md`** (the owner-list pass, second-biome state and the art-gap
-closure plan; `docs/HANDOFF_2026-09-03.md` is the previous one) — it carries the live lane state, the open PR, and the
-traps that have already cost this project time.
-
-**If you are starting Gate 3, read `docs/GATE3_COORDINATOR_BRIEF.md` first.** Gate 3 may
-begin before Gate 2 is called done — the Gate 1 precedent covers this — but Gate 3's
-acceptance is defined by reference to the Gate 2 standard, and task 2.8 is currently
-empowered to revise that standard. The brief says which Gate 3 work is safe to start now
-and which must wait for 2.8's verdict.
+For Cloudreach work read `docs/biomes/cloudreach/BUILD_CLOUDREACH_CLIFFS_TO_COMPLETION.md`
+and `docs/biomes/cloudreach/CONTINUOUS_ACCEPTANCE_0905.md`; for Stormwood
+`docs/biomes/stormwood/00_CODEX_START_HERE.md`; for Water `docs/biomes/water/00_START_HERE.md`.
+Combat: `docs/specs/COMBAT_DEPTH_PLAN.md`. The new roster:
+`docs/art/BIOME_2_3_4_CREATURE_ROSTER.md`.
 
 ## What is authoritative
 
@@ -128,27 +96,21 @@ Precedence when documents disagree: newest owner directive or playtest in `docs/
 
 ## Known issues right now
 
-See `docs/CURRENT_STATE.md` §3 for the ranked list — it is authoritative and this
-summary is not. Updated 2026-09-03; the four items this section used to head with
-(opening orb floor, the Gate B objective chain, South Bridge entombment, the truncated
-objective label) are all closed, two of them as harness defects rather than game
-defects. See "Current stage" above.
+`docs/CURRENT_STATE.md` §3 is the ranked, authoritative list. The head of it on
+2026-09-07, from the owner's playtest of that day:
 
-Headline items still open:
-
-- The tutorial catch is unstable across knockout / re-engage rounds.
-- Bramblebun reads as a self-lit glow at night: `field_emission` was raised to 2.5 for
-  daytime grass separation and the multiply is not time-of-day scaled.
-- Gate B's tail stalls placing creature beds (3 of 5), and the objective does not advance
-  off "Make camp for your team". Found only after the gather-route fix let the run get
-  that far.
-- Gate B's walk back to the Practice Meadow clearing stalls ~27–32 m short. Same reason:
-  newly reachable, not newly broken.
-- Bram's shop exit clips furniture.
-- Gate 2's task list (2.1–2.7) is complete while its blind-judge bar is not met; task
-  2.8 decides what that means. See `docs/GATE3_COORDINATOR_BRIEF.md` §2.
-- Four items only the owner's ROG Ally can close: interact reliability, frame rate with
-  grass on, player sleep, day/night advancing.
+- **P0** hard freeze placing a second creature bed on the Ally (a re-entrant ledger
+  loop is the strongest lead — goal prompt 77 §STAB-LEADS).
+- **P0** repeated freezes in the first ten minutes of a fresh game.
+- **P1** bare road stretches with no creatures in view; the owner's bar is multiple
+  creatures in the forward 180° at all times.
+- **P1** the 32 new species are in no biome's tables; the chosen playable character is
+  not persisted and is not what other peers see.
+- Visual: every blind judge still fails the Palworld bar on every biome; the Meadows
+  ground carries the chroma the creatures should; Cloudreach stand 05 reads flat green;
+  Stormwood's Stormheart and forest read as debug geometry.
+- Owner-only: the multiplayer LAN and outside-tester sessions, the grass A/B frame-time
+  run, player sleep and day/night confirmation on hardware.
 
 ## How evidence is produced (D73)
 

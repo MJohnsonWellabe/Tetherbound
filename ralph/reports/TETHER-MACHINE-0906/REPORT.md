@@ -10,7 +10,7 @@ and three measured rounds show it is not closeable from this asset's textures.**
 
 ## What the brief got wrong, verified in the repo
 
-`docs/HANDOFF_2026-09-06.md` §4.2 row H6 reads "**Meshy hero object — owner
+`archive/docs/handoffs/HANDOFF_2026-09-06.md` §4.2 row H6 reads "**Meshy hero object — owner
 reference art required**", and its Work column says the emissive cap "plus a warm
 rake spot are the only levers". Three of those four claims are wrong:
 

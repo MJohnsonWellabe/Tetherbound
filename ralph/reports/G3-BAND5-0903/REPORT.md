@@ -373,7 +373,7 @@ carve or a missing rescue. **Per the coordinator's own advance warning: a
 navigator routing problem, not a world defect.** Not fixed here — `severed_spokes.gd`
 is this lane's file, but the walker that drove into the trap
 (`tools/gate_f/operator_harness.gd`'s `move_to` action, presumably backed by the
-same `stick_navigator`-shaped logic named in `docs/HANDOFF_2026-09-03.md`) is Gate F
+same `stick_navigator`-shaped logic named in `archive/docs/handoffs/HANDOFF_2026-09-03.md`) is Gate F
 harness infrastructure, not band 5 world data, and CLAUDE.md's own guidance is not
 to fix the harness by teleporting past geometry — that would hide the next real
 defect for a real player.

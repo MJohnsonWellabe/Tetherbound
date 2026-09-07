@@ -1,0 +1,15 @@
+﻿Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+5 tiles -> res://shots/_sheet_survey.png  (1916x746)
+reading order, left to right, top to bottom:
+  1. 01-spawn-outward
+  2. 02-valley-floor
+  3. 03-rise-overlook
+  4. 04-three-quarter
+  5. 05-spawn-low-sun
+
+Software rendering, Compatibility renderer. See tools/survey.sh for what
+these frames can and cannot be used to judge.
+
+--- stderr ---
+

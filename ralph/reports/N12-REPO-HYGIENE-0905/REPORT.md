@@ -6,9 +6,9 @@ opened, per the brief.
 
 ## 0. What this covers, and a note on the brief
 
-The session was started with the instruction to read `ralph/briefs/0905-followup/COMMON.md`
-and `ralph/briefs/0905-followup/N12-REPO-HYGIENE.md`. **Neither file exists on any branch
-of `origin`** (`git ls-remote --heads` lists 23 branches; `ralph/briefs/` on `main` holds
+The session was started with the instruction to read `archive/ralph/briefs/0905-followup/COMMON.md`
+and `archive/ralph/briefs/0905-followup/N12-REPO-HYGIENE.md`. **Neither file exists on any branch
+of `origin`** (`git ls-remote --heads` lists 23 branches; `archive/ralph/briefs/` on `main` holds
 only `0904/LANES.md`). The brief was presumably written in the coordinator's container and
 not pushed. Rather than stall, this lane took its scope from the session title — *"commit
 the missing import sidecars"* — and from the three lane reports that routed this gap to the

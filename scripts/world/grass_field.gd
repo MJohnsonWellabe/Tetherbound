@@ -374,7 +374,7 @@ static func _fill_lattice(mm: MultiMesh, plan: Array, cell: float) -> int:
 ## the ~7,000 the frame already carries -- `PERF-ROG-GPU` records that
 ## Compatibility's cost is batches, and these are small batches), primitives
 ## fall by the tiles that are not. Measured with tools/perf_render_stats.gd,
-## recorded in archive/docs/VISUAL_PARITY_PROGRESS.md.
+## recorded in archive/archive/docs/VISUAL_PARITY_PROGRESS_cloudreach.md.
 ##
 ## `cull_tile_m` 0 restores the single-MultiMesh path exactly, for A/B
 ## measurement. Forced to a whole multiple of the lattice cell so a tile edge

@@ -1,0 +1,59 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://scripts/world/water_world.gd:52)
+       [1] _run (res://tests/smoke_water_veilfall_captain.gd:34)
+WARNING: Terrain3DTextureAsset#6581:set_albedo_texture:79: Texture 'meadow_grass_Color' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_materials (res://scripts/world/water_world.gd:226)
+       [1] _ready (res://scripts/world/water_world.gd:72)
+WARNING: Terrain3DTextureAsset#6581:set_normal_texture:100: Texture 'meadow_grass_NormalGL' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_materials (res://scripts/world/water_world.gd:227)
+       [1] _ready (res://scripts/world/water_world.gd:72)
+WARNING: Terrain3DTextureAsset#2671:set_albedo_texture:79: Texture 'dirt_path_Color' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_materials (res://scripts/world/water_world.gd:226)
+       [1] _ready (res://scripts/world/water_world.gd:72)
+WARNING: Terrain3DTextureAsset#2671:set_normal_texture:100: Texture 'dirt_path_NormalGL' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_materials (res://scripts/world/water_world.gd:227)
+       [1] _ready (res://scripts/world/water_world.gd:72)
+WARNING: Terrain3DTextureAsset#8740:set_albedo_texture:79: Texture 'rock_scree_Color' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_materials (res://scripts/world/water_world.gd:226)
+       [1] _ready (res://scripts/world/water_world.gd:72)
+WARNING: Terrain3DTextureAsset#8740:set_normal_texture:100: Texture 'rock_scree_NormalGL' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_materials (res://scripts/world/water_world.gd:227)
+       [1] _ready (res://scripts/world/water_world.gd:72)
+PASS: Actual Water world builds for isolated captain encounter
+PASS: Installed Nerissa body resides in actual Heart Chamber
+Nerissa authored team: [{ "trainer_owned": true, "species": "water_cannonback", "level": 55.0 }, { "trainer_owned": true, "species": "water_mirejaw", "level": 55.0 }, { "trainer_owned": true, "species": "water_riverdrake", "level": 55.0 }, { "trainer_owned": true, "species": "water_riptusk", "level": 55.0 }]
+PASS: Captain retains authored four-creature team
+PASS: Captain battle routes exact finale victory flag
+PASS: No fixture seeds victory or release
+PASS: Production summon deploys prepared owned Mosshell
+PASS: Actual nearby captain challenge prompt is available
+PASS: Production challenge starts Captain Nerissa fight
+PASS: Production opponent 1 is trainer-owned level55
+Captain opponent 1: water_cannonback HP 593.6
+PASS: Production opponent 2 is trainer-owned level55
+Captain opponent 2: water_mirejaw HP 530.0
+PASS: Production opponent 3 is trainer-owned level55
+Captain opponent 3: water_riverdrake HP 500.32
+PASS: Production opponent 4 is trainer-owned level55
+Captain opponent 4: water_riptusk HP 585.12
+PASS: Normal combat reaches every authored captain opponent
+PASS: Actual final-round victory awards captain progression
+PASS: Guardian tether offers actual nearby post-victory interaction
+PASS: Actual tether now frees Guardian after earned captain victory
+Water Veilfall captain smoke: 16 checks, 0 failures

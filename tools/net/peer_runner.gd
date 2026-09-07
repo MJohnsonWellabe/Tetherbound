@@ -97,6 +97,7 @@ const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const CLOUDREACH_SCENE := "res://scenes/world/cloudreach_cliffs.tscn"
 const STORMWOOD_SCENE := "res://scenes/world/stormwood.tscn"
+const WATER_SCENE := "res://scenes/world/water_archipelago.tscn"
 
 ## Wave 6 lane 6.A. Realm id -> the AUTHORED ROOT NAME of its world scene, and
 ## -> the `boot` step's name for it. The root name is what
@@ -108,11 +109,13 @@ const REALM_ROOT_NAMES := {
 	"meadows": "MeadowsPlayground",
 	"cloudreach": "CloudreachCliffs",
 	"stormwood": "Stormwood",
+	"water": "WaterArchipelago",
 }
 const REALM_SCENE_NAMES := {
 	"meadows": "world",
 	"cloudreach": "cloudreach",
 	"stormwood": "stormwood",
+	"water": "water",
 }
 
 const DEFAULT_SETTLE_FRAMES := 240
@@ -183,6 +186,8 @@ var _peer_index := -1
 var _control_port := 0
 var _enet_port := 0
 var _scene_name := "world"
+var _water_mount_motion: Dictionary = {"running": false, "completed": false, "distance_m": 0.0, "failure": ""}
+var _water_motion: Dictionary = {"running": false, "completed": false, "distance_m": 0.0, "failure": ""}
 
 var _sock: StreamPeerTCP = null
 var _rx_buf := ""
@@ -315,6 +320,10 @@ func _initialize() -> void:
 # --- boot ---------------------------------------------------------------------
 
 func _boot_scene(which: String, settle: int) -> void:
+	if which == "water":
+		# SceneTree._initialize can precede Game._ready. Let the production
+		# autoload reset and mount Session before standing a Water spawner.
+		await process_frame
 	if which == "loopback":
 		_boot_loopback()
 	else:
@@ -325,6 +334,12 @@ func _boot_scene(which: String, settle: int) -> void:
 			path = CLOUDREACH_SCENE
 		elif which == "stormwood":
 			path = STORMWOOD_SCENE
+		elif which == "water":
+			path = WATER_SCENE
+			# Explicit net-smoke realm fixture, not a key or chapter completion.
+			var water_game := root.get_node_or_null("Game")
+			if water_game != null:
+				water_game.set("current_realm", "water")
 		var packed: PackedScene = load(path)
 		if packed == null:
 			push_error("peer_runner: could not load scene '%s' (%s)" % [which, path])
@@ -338,6 +353,15 @@ func _boot_scene(which: String, settle: int) -> void:
 		var scene: Node = packed.instantiate()
 		root.add_child(scene)
 		current_scene = scene
+		if which == "water":
+			for _frame in 900:
+				if scene.has_method("shell_build_complete") and bool(scene.call("shell_build_complete")):
+					break
+				await physics_frame
+			if not scene.has_method("shell_build_complete") or not bool(scene.call("shell_build_complete")):
+				push_error("peer_runner: Water shell did not finish building")
+				quit(2)
+				return
 	for i in maxi(0, settle):
 		await physics_frame
 	_scene_name = which
@@ -622,6 +646,26 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_fly_land(args)
 		"fly_claim_anchor":
 			out = await _step_fly_claim_anchor(args)
+		"water_mount_fixture":
+			out = await _step_water_mount_fixture(args)
+		"water_mounted_swim":
+			out = _step_water_mounted_swim()
+		"water_remount":
+			var controller := _riding_controller()
+			var water_ok := current_scene != null and current_scene.has_method("world_realm") and str(current_scene.call("world_realm")) == "water"
+			out = {"verdict": "PASS" if water_ok and controller != null and controller.call("mount") else "FAIL", "detail": "Water actual remount; no position or resource writes"}
+		"water_fixture":
+			out = await _step_water_fixture(args)
+		"water_lesson":
+			out = _step_water_lesson()
+		"stormwood_hosted_start":
+			out = await _step_stormwood_hosted_start(args)
+		"stormwood_hosted_fixture_health":
+			out = _step_stormwood_hosted_fixture_health(args)
+		"stormwood_hosted_raw_strike":
+			out = await _step_stormwood_hosted_raw_strike(args)
+		"stormwood_hosted_quick":
+			out = await _step_stormwood_hosted_quick(args)
 		_:
 			out = {"verdict": "ERROR", "detail": "unknown action '%s'" % action}
 	out["frames_used"] = _physics_count - before
@@ -2160,6 +2204,159 @@ func _step_strike(args: Dictionary) -> Dictionary:
 		}}
 
 
+# --- Stormwood hosted-trainer smoke seams ------------------------------------
+#
+# These four arms deliberately touch the real StormwoodEncounterHub/Session
+# path.  They are test vocabulary only: the fixture can lower the CURRENT
+# host-owned opponent's health, but every round still ends through the real
+# combat_quick input -> hub -> Session -> host validation route.  In
+# particular, no arm advances a roster, writes a defeat flag, or calls finish.
+
+func _stormwood_hub() -> Node:
+	return get_first_node_in_group("stormwood_encounter_hub")
+
+
+func _stormwood_hosted_fight(trainer_id: String) -> Node:
+	var hub := _stormwood_hub()
+	if hub == null:
+		return null
+	var fights: Variant = hub.get("fights")
+	if not (fights is Dictionary):
+		return null
+	var fight: Variant = (fights as Dictionary).get(trainer_id)
+	return fight as Node if fight != null and is_instance_valid(fight) else null
+
+
+## The client stands at the authored trainer and sends the same `start`
+## intent `stormwood_encounter_director.gd::begin_trainer_battle()` sends. The
+## host may be in another realm; it receives this only via Session's realm shell.
+func _step_stormwood_hosted_start(args: Dictionary) -> Dictionary:
+	var hub := _stormwood_hub()
+	var session: Node = root.get_node_or_null(^"Game/Session")
+	var trainer_id := str(args.get("trainer", "tamsin_surge_lesson"))
+	var prepare_only := bool(args.get("prepare_only", false))
+	var request_only := bool(args.get("request_only", false))
+	if hub == null or session == null:
+		return {"verdict": "ERROR", "detail": "no StormwoodEncounterHub/Session"}
+	if bool(session.call("is_host")):
+		return {"verdict": "ERROR", "detail": "stormwood_hosted_start must be sent by the remote client"}
+	if prepare_only and request_only:
+		return {"verdict": "ERROR", "detail": "stormwood_hosted_start cannot prepare and request separately at once"}
+	var cast: Node = hub.get("world").get_node_or_null("StormwoodTrainers")
+	var trainer: Node3D = cast.call("body_for", trainer_id) if cast != null else null
+	var actor: Node3D = hub.call("actor_for", int(session.call("local_peer_id")))
+	if trainer == null or actor == null:
+		return {"verdict": "ERROR", "detail": "missing authored trainer '%s' or client actor" % trainer_id}
+	if not request_only:
+		actor.global_position = trainer.global_position + Vector3(2.0, 0.0, 2.0)
+		if actor is CharacterBody3D:
+			(actor as CharacterBody3D).velocity = Vector3.ZERO
+		# The deployed follower is a separate local body. Move that fixture along
+		# with the trainer before sending `start`: the host's hub validates the
+		# follower, not the visual trainer, and a distant follower would turn this
+		# into a false “host refused the encounter” result.
+		var follower: Node3D = hub.call("body_for", int(session.call("local_peer_id")))
+		if follower == null:
+			return {"verdict": "FAIL", "detail": "client has no deployed follower to bring to '%s'" % trainer_id}
+		follower.global_position = actor.global_position + Vector3(0.0, 0.0, -0.75)
+		if follower.has_method("set"):
+			follower.set("home", follower.global_position)
+		if prepare_only:
+			return {"verdict": "PASS", "detail": "prepared client actor and follower beside '%s'" % trainer_id}
+	hub.call("request_start", trainer_id)
+	var waited := 0
+	var limit := maxi(60, int(args.get("settle", 360)))
+	while waited < limit:
+		if str(hub.get("_local_trainer")) == trainer_id and not str(hub.get("_local_record")).is_empty():
+			return {"verdict": "PASS", "detail": "remote client started hosted trainer '%s' as record '%s'"
+				% [trainer_id, str(hub.get("_local_record"))]}
+		await physics_frame
+		waited += 1
+	var manager := _combat_manager()
+	var pending: Variant = hub.get("_pending_state")
+	return {"verdict": "FAIL", "detail":
+		"hosted trainer '%s' never bound on the client; refusal=%s fighting=%s pending=%s local_peer=%d realm=%s"
+		% [trainer_id, str(hub.get("last_start_refusal")), manager != null and bool(manager.call("is_fighting")),
+			str(pending), int(session.call("local_peer_id")), str(session.call("realm_of", int(session.call("local_peer_id"))))]}
+
+
+## TEST FIXTURE ONLY. Run on the host process after a round is live. It lowers
+## only the live opponent HP and the host encounter record together; a real
+## host-validated combat input is still required to kill it and advance.
+func _step_stormwood_hosted_fixture_health(args: Dictionary) -> Dictionary:
+	var session: Node = root.get_node_or_null(^"Game/Session")
+	var trainer_id := str(args.get("trainer", "tamsin_surge_lesson"))
+	if session == null or not bool(session.call("is_host")):
+		return {"verdict": "ERROR", "detail": "fixture health is host-only"}
+	var fight := _stormwood_hosted_fight(trainer_id)
+	if fight == null or bool(fight.get("finished")):
+		return {"verdict": "FAIL", "detail": "no live hosted fight for '%s'" % trainer_id}
+	var opponent: Node3D = fight.get("opponent") as Node3D
+	var instance: Variant = opponent.get("instance") if opponent != null else null
+	var hp := maxf(1.0, float(args.get("hp", 1.0)))
+	if opponent == null or instance == null:
+		return {"verdict": "FAIL", "detail": "host has no live opponent to stage"}
+	(instance as RefCounted).set("hp", hp)
+	var authority: RefCounted = fight.get("authority")
+	var record: Dictionary = fight.get("record") as Dictionary
+	authority.call("set_opponent_hp", str(record.get("encounter_id", "")), hp,
+		float((instance as RefCounted).get("max_hp")))
+	fight.call("_snapshot")
+	return {"verdict": "PASS", "detail": "TEST FIXTURE staged host-owned '%s' round %d to %.1f hp"
+		% [trainer_id, int(fight.get("round_index")), hp]}
+
+
+## Sends intentionally untrusted fields down the same Session RPC as a client.
+## The controller must derive damage/facing from host state and reject a stale
+## action; an invented `realm` must never select or advance another realm's fight.
+func _step_stormwood_hosted_raw_strike(args: Dictionary) -> Dictionary:
+	var hub := _stormwood_hub()
+	var session: Node = root.get_node_or_null(^"Game/Session")
+	if hub == null or session == null:
+		return {"verdict": "ERROR", "detail": "no StormwoodEncounterHub/Session"}
+	var trainer_id := str(args.get("trainer", hub.get("_local_trainer")))
+	var id := str(args.get("encounter_id", hub.get("_local_record")))
+	if trainer_id.is_empty() or id.is_empty():
+		return {"verdict": "FAIL", "detail": "no hosted record to forge against"}
+	var payload: Dictionary = {
+		"kind": "strike_intent", "trainer_id": trainer_id, "encounter_id": id,
+		"slot": str(args.get("slot", "quick")), "move_id": str(args.get("move_id", "forged_move")),
+		"action": int(args.get("action", 1)), "realm": str(args.get("realm", "stormwood")),
+		"damage": float(args.get("damage", 999999.0)),
+		"origin": args.get("origin", [9999.0, 9999.0, 9999.0]),
+		"facing": args.get("facing", [1.0, 0.0, 0.0]),
+	}
+	# Raw fixture requests share the sender's monotonic action stream, so a
+	# later real button press is not accidentally an old fixture action id.
+	hub.set("_action", maxi(int(hub.get("_action")), int(payload.action)))
+	session.call("request_stormwood_encounter", payload)
+	for i in maxi(0, int(args.get("settle", 90))):
+		await physics_frame
+	var manager := _combat_manager()
+	return {"verdict": "PASS", "detail": "sent raw hosted strike action=%d realm=%s; refusal=%s"
+		% [int(payload.action), str(payload.realm), str(manager.get("last_encounter_refusal") if manager != null else {})]}
+
+
+## A real controller press, after the host has had time to receive the client
+## body transform. This is intentionally not `fight.strike()` or a direct call
+## to the hub: it is the combat input path a player uses.
+func _step_stormwood_hosted_quick(args: Dictionary) -> Dictionary:
+	var manager := _combat_manager()
+	if manager == null or not bool(manager.call("is_fighting")):
+		return {"verdict": "FAIL", "detail": "no hosted combat manager fight is live"}
+	var ready_frames := maxi(30, int(args.get("ready_budget", 360)))
+	for i in ready_frames:
+		if bool(manager.call("quick_ready")):
+			var pressed := await _inject("combat_quick", 1)
+			if not bool(pressed.get("ok", false)):
+				return {"verdict": "ERROR", "detail": "could not inject combat_quick: %s" % str(pressed)}
+			for settle in maxi(0, int(args.get("settle", 90))):
+				await physics_frame
+			return {"verdict": "PASS", "detail": "pressed the real hosted combat_quick input"}
+		await physics_frame
+	return {"verdict": "FAIL", "detail": "combat_quick never became ready; did not bypass cooldown"}
+
+
 func _combat_manager() -> Node:
 	if current_scene == null:
 		return null
@@ -2440,7 +2637,13 @@ func _step_explore_at(args: Dictionary) -> Dictionary:
 	# system that has stopped ticking still shows up as zero new cells.
 	for i in maxi(1, int(args.get("settle", 240))):
 		await physics_frame
-	return {"verdict": "PASS", "detail": "stood at (%.0f, %.0f), y=%.1f" % [float(at[0]), float(at[1]), y]}
+	var settled := player.global_position
+	return {
+		"verdict": "PASS",
+		"detail": "stood at (%.0f, %.0f), settled at (%.1f, %.1f), y=%.1f"
+			% [float(at[0]), float(at[1]), settled.x, settled.z, settled.y],
+		"at": [settled.x, settled.z],
+	}
 
 
 ## Make sure the authored alpha at `order` is pinned on THIS peer's own map.
@@ -3855,9 +4058,127 @@ func _step_fly_claim_anchor(args: Dictionary) -> Dictionary:
 
 
 
+## Water-only fixtures. Position/resource writes are explicitly SETUP; all
+## movement after water_lesson starts is production input and physics.
+func _step_water_fixture(args: Dictionary) -> Dictionary:
+	var world := current_scene as Node3D
+	var player := _probe.call("player") as CharacterBody3D
+	if world == null or not world.has_method("world_realm") or str(world.call("world_realm")) != "water" or player == null:
+		return {"verdict": "ERROR", "detail": "Water fixture requires the real Water scene and Player"}
+	var controller: Node = player.get("swim_controller")
+	if controller == null:
+		return {"verdict": "ERROR", "detail": "Water fixture has no production SwimController"}
+	if bool(_water_motion.running):
+		return {"verdict": "ERROR", "detail": "Cannot replace a moving lesson fixture"}
+	var mode := str(args.get("mode", "lesson"))
+	var vitals: RefCounted = player.get("vitals")
+	if mode == "exhausted":
+		vitals.stamina = 0.0
+		return {"verdict": "PASS", "detail": "SETUP: owning player's stamina set to zero; location/controller unchanged"}
+	var config: Dictionary = world.get("config")
+	var at := Vector3.INF
+	if mode == "lesson":
+		var raw: Array = config.swim_lesson.surface_polyline[0]
+		at = Vector3(float(raw[0]), -0.7, float(raw[2]))
+	elif mode == "island":
+		for anchor: Dictionary in config.anchors:
+			if str(anchor.island_id) == str(args.get("island_id", "")):
+				var raw: Array = anchor.safe_position
+				at = Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
+				at.y = float(world.call("ground_height_at", at.x, at.z)) + 0.2
+				break
+	if not at.is_finite():
+		return {"verdict": "ERROR", "detail": "Unknown Water fixture mode/island or missing baked height"}
+	_press_edge("move_forward", false)
+	player.global_position = at
+	player.velocity = Vector3.ZERO
+	vitals.health = vitals.max_health
+	vitals.stamina = vitals.max_stamina
+	# A declared skill-level fixture verifies nonzero owner presentation without
+	# pretending this network transport smoke earned catches or spent candy.
+	var game := root.get_node("Game")
+	var skills: RefCounted = game.get("local").skills
+	var skill_data: Dictionary = skills.call("save_data")
+	skill_data.levels.catching = int(args.get("catching_level", 0))
+	skills.call("load_data", skill_data)
+	for _frame in 60:
+		await physics_frame
+	return {"verdict": "PASS", "detail": "SETUP: Water %s fixture at %s; catching level %d" % [mode, player.global_position, skills.call("level", "catching")]}
+
+
+func _step_water_lesson() -> Dictionary:
+	if current_scene == null or not current_scene.has_method("world_realm") or str(current_scene.call("world_realm")) != "water":
+		return {"verdict": "ERROR", "detail": "water_lesson requires Water"}
+	if bool(_water_motion.running):
+		return {"verdict": "ERROR", "detail": "Water lesson input already running"}
+	_water_motion = {"running": true, "completed": false, "distance_m": 0.0, "failure": ""}
+	_water_lesson_walk()
+	return {"verdict": "PASS", "detail": "Started real camera-relative input across the authored 60m lesson"}
+
+
+func _water_lesson_walk() -> void:
+	var player := _probe.call("player") as CharacterBody3D
+	var camera := _probe.call("camera_rig") as Node3D
+	var config: Dictionary = current_scene.get("config")
+	var raw: Array = config.swim_lesson.surface_polyline[-1]
+	var target := Vector3(float(raw[0]), 0.0, float(raw[2]))
+	for _frame in 1500:
+		var delta := target - player.global_position
+		delta.y = 0.0
+		if delta.length() < 0.5:
+			_water_motion.completed = true
+			break
+		camera.set("yaw", atan2(-delta.x, -delta.z))
+		var press := _press_edge("move_forward", true)
+		if not bool(press.get("ok", false)):
+			_water_motion.failure = str(press.get("why", "input failed"))
+			break
+		var before := player.global_position
+		await physics_frame
+		var moved := player.global_position - before
+		moved.y = 0.0
+		var controller: Node = player.get("swim_controller")
+		if controller != null and bool(controller.call("is_swimming")):
+			_water_motion.distance_m += moved.length()
+		if float(player.get("vitals").health) <= 0.0:
+			_water_motion.failure = "Player died while following lesson input"
+			break
+	_press_edge("move_forward", false)
+	_water_motion.running = false
+	if not bool(_water_motion.completed) and str(_water_motion.failure).is_empty():
+		_water_motion.failure = "Lesson movement exceeded 1500 physics frames"
+
+
+func _probe_water_swimming() -> Dictionary:
+	var local := {}
+	var player := _probe.call("player") as CharacterBody3D
+	if player != null:
+		var controller: Node = player.get("swim_controller")
+		var vitals: RefCounted = player.get("vitals")
+		local = {"position": [player.global_position.x, player.global_position.y, player.global_position.z],
+			"on_floor": player.is_on_floor(), "health": vitals.health, "stamina": vitals.stamina,
+			"aquatic": controller.call("snapshot") if controller != null else {},
+			"lesson": _water_motion.duplicate(true), "user_data_dir": OS.get_user_data_dir()}
+	var remote := {}
+	for node: Node in get_nodes_in_group("remote_trainer"):
+		if not node is Node3D or node.is_multiplayer_authority():
+			continue
+		var body := node as Node3D
+		var aquatic: RefCounted = body.get("aquatic")
+		remote[str(body.get("peer_id"))] = {"position": [body.global_position.x, body.global_position.y, body.global_position.z],
+			"net_aquatic": body.get("net_aquatic"), "applied_aquatic": aquatic.call("snapshot"),
+			"net_catching_level": body.get("net_catching_level"), "visible": body.visible}
+	return {"local": local, "remote": remote, "current_realm": str(root.get_node("Game").get("current_realm"))}
+
+
 func _execute_probe(msg: Dictionary) -> Variant:
 	var what := str(msg.get("what", ""))
+	var args: Dictionary = msg.get("args", {}) as Dictionary
 	match what:
+		"water_mounted":
+			return _probe_water_mounted()
+		"water_swimming":
+			return _probe_water_swimming()
 		"position":
 			var player := _probe.call("player") as Node3D
 			if player == null:
@@ -3935,13 +4256,22 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			for byte in (fog_state.call("visited_bytes") as PackedByteArray):
 				if byte != 0:
 					revealed += 1
-			return {
+			var report := {
 				"cells": revealed,
 				"grid": [int(fog_state.call("cell_grid_x")), int(fog_state.call("cell_grid_z"))],
 				"landmarks": int(fog_state.call("discovered_landmark_count")),
 				"alpha_pins": int(fog_state.call("alpha_pin_count")),
 				"revision": int(fog_state.get("revision")),
 			}
+			# A caller checking personal ownership needs to distinguish the other
+			# trainer's exact reveal from this trainer continuing to uncover cells
+			# under their own feet while the probe settles. Report a requested cell
+			# through MapState's shipping lookup; do not mutate the map here.
+			var at: Array = args.get("at", []) as Array
+			if at.size() >= 2:
+				report["at_discovered"] = bool(fog_state.call(
+					"is_discovered", Vector3(float(at[0]), 0.0, float(at[1]))))
+			return report
 		"realm_heart":
 			# Lane 5.B. The two halves of a Realm Heart, kept apart on purpose.
 			#
@@ -4418,6 +4748,76 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				},
 				"refusal": bmanager.get("last_encounter_refusal"),
 			}
+		"stormwood_hosted_trainer":
+			# Narrow, serializable readout of the real StormwoodEncounterHub. The
+			# host half reads its shell-owned fight; the client half reads exactly
+			# the record and refusal its local combat presentation received.
+			var shargs: Dictionary = msg.get("args", {}) as Dictionary
+			var trainer_id := str(shargs.get("trainer", "tamsin_surge_lesson"))
+			var hub := _stormwood_hub()
+			var session: Node = root.get_node_or_null(^"Game/Session")
+			if hub == null or session == null:
+				return {"available": false}
+			var fight := _stormwood_hosted_fight(trainer_id)
+			var manager := _combat_manager()
+			var local_record := str(hub.get("_local_record"))
+			var peer := int(shargs.get("peer", 0))
+			var actor: Node3D = hub.call("actor_for", peer)
+			var cast: Node = hub.get("world").get_node_or_null("StormwoodTrainers")
+			var trainer: Node3D = cast.call("body_for", trainer_id) if cast != null else null
+			var result := {
+				"available": true,
+				"is_host": bool(session.call("is_host")),
+				"local_peer_id": int(session.call("local_peer_id")),
+				"trainer": trainer_id,
+				"local_trainer": str(hub.get("_local_trainer")),
+				"local_record": local_record,
+				"fighting": manager != null and bool(manager.call("is_fighting")),
+				"refusal": manager.get("last_encounter_refusal") if manager != null else {},
+				"exists": fight != null,
+				"host_actor_pos": [actor.global_position.x, actor.global_position.y, actor.global_position.z] if actor != null else [],
+				"trainer_pos": [trainer.global_position.x, trainer.global_position.y, trainer.global_position.z] if trainer != null else [],
+			}
+			var local_card: Dictionary = hub.call("card_for", int(session.call("local_peer_id")))
+			result["local_card"] = {
+				"level": int(local_card.get("level", 0)),
+				"hp": float(local_card.get("hp", 0.0)),
+				"max_hp": float(local_card.get("max_hp", 0.0)),
+				"quick": str(local_card.get("move_quick", "")),
+				"charged": str(local_card.get("move_charged", "")),
+			}
+			var peer_card: Dictionary = hub.call("card_for", peer)
+			result["peer_card"] = {
+				"level": int(peer_card.get("level", 0)),
+				"hp": float(peer_card.get("hp", 0.0)),
+				"max_hp": float(peer_card.get("max_hp", 0.0)),
+				"quick": str(peer_card.get("move_quick", "")),
+				"charged": str(peer_card.get("move_charged", "")),
+			}
+			if fight != null:
+				var record: Dictionary = fight.get("record") as Dictionary
+				var opponent: Node3D = fight.get("opponent") as Node3D
+				var instance: Variant = opponent.get("instance") if opponent != null else null
+				var body: Node3D = hub.call("body_for", peer)
+				result.merge({
+					"record": {
+						"id": str(record.get("encounter_id", "")),
+						"realm": str(record.get("realm", "")),
+						"kind": str(record.get("kind", "")),
+						"phase": str(record.get("phase", "")),
+						"seq": int(record.get("seq", 0)),
+						"participants": (record.get("participants", {}) as Dictionary).keys(),
+						"hp": float((record.get("opponent", {}) as Dictionary).get("hp", -1.0)),
+						"hp_max": float((record.get("opponent", {}) as Dictionary).get("hp_max", -1.0)),
+					},
+					"round": int(fight.get("round_index")),
+					"total": (fight.get("team") as Array).size(),
+					"finished": bool(fight.get("finished")),
+					"opponent_hp": float((instance as RefCounted).get("hp")) if instance != null else -1.0,
+					"opponent_pos": [opponent.global_position.x, opponent.global_position.y, opponent.global_position.z] if opponent != null else [],
+					"host_body_pos": [body.global_position.x, body.global_position.y, body.global_position.z] if body != null else [],
+				}, true)
+			return result
 		"character_restore":
 			# Stage B Wave 8, row 21. The two halves the reconnect smoke has to
 			# tell apart: what this process holds in MEMORY, and what
@@ -5078,3 +5478,107 @@ func _git_sha() -> String:
 	if code == 0 and output.size() > 0:
 		return str(output[0]).strip_edges()
 	return ""
+
+
+## Water-only owned mount setup. Generic ride_setup remains the production
+## summon/tack fixture; this adds the explicit Stone and dry lesson position.
+func _step_water_mount_fixture(args: Dictionary) -> Dictionary:
+	if current_scene == null or not current_scene.has_method("world_realm") or str(current_scene.call("world_realm")) != "water":
+		return {"verdict":"ERROR", "detail":"Water mount fixture requires Water"}
+	var game := root.get_node("Game")
+	var director := _encounter_director()
+	if bool(args.get("exhausted", false)):
+		var creature: RefCounted = director.ally_instance()
+		if creature == null:
+			return {"verdict":"FAIL", "detail":"No owned mount to exhaust"}
+		creature.swim_stamina_fraction = 0.0
+		return {"verdict":"PASS", "detail":"SETUP owned creature swim stamina zero; pose unchanged"}
+	game.get("local").flags.set_flag("water_swim_stone_earned")
+	var config: Dictionary = current_scene.get("config")
+	var player := _probe.call("player") as CharacterBody3D
+	for anchor: Dictionary in config.anchors:
+		if str(anchor.id) == str(config.swim_lesson.start_anchor):
+			var a: Array = anchor.safe_position
+			player.global_position = Vector3(float(a[0]),current_scene.ground_height_at(float(a[0]),float(a[2]))+0.2,float(a[2]))
+			player.velocity = Vector3.ZERO
+			break
+	for _frame in 45:
+		await physics_frame
+	var result := await _step_ride_setup({"species":str(args.get("species","water_aquaryn"))})
+	if str(result.get("verdict","")) == "PASS":
+		# Nonzero energy makes the later no-combat-energy-drain assertion useful.
+		director.ally_instance().energy = 20.0
+	return result
+
+func _step_water_mounted_swim() -> Dictionary:
+	if current_scene == null or not current_scene.has_method("world_realm") or str(current_scene.call("world_realm")) != "water":
+		return {"verdict":"ERROR", "detail":"Mounted Water input requires Water"}
+	var riding := _riding_controller()
+	if riding == null or not riding.is_mounted() or bool(_water_mount_motion.running):
+		return {"verdict":"FAIL", "detail":"No mounted body or input already running"}
+	_water_mount_motion = {"running":true,"completed":false,"distance_m":0.0,"failure":""}
+	_water_mounted_walk()
+	return {"verdict":"PASS", "detail":"Started real mounted input from lesson shore to deep offshore point"}
+
+func _water_mounted_walk() -> void:
+	var riding := _riding_controller()
+	var body: CharacterBody3D = riding.mount_body()
+	var camera := _probe.call("camera_rig") as Node3D
+	var config: Dictionary = current_scene.get("config")
+	var a: Array = config.swim_lesson.surface_polyline[0]
+	var b: Array = config.swim_lesson.surface_polyline[-1]
+	var first := Vector3(float(a[0]),0,float(a[2]))
+	var middle := first.lerp(Vector3(float(b[0]),0,float(b[2])),0.5)
+	middle += middle.normalized()*15.0
+	var all_reached := true
+	for target: Vector3 in [first,middle]:
+		var reached := false
+		for _frame in 1200:
+			if not riding.is_mounted():
+				_water_mount_motion.failure = "Ride ended while swimming"
+				break
+			var delta := target-body.global_position
+			delta.y=0.0
+			if delta.length()<0.9:
+				reached=true
+				break
+			camera.set("yaw",atan2(-delta.x,-delta.z))
+			_press_edge("move_forward",true)
+			var before := body.global_position
+			await physics_frame
+			if int(current_scene.get_node("MountedSwimming").state.mode)==2:
+				var moved := body.global_position-before
+				moved.y=0.0
+				_water_mount_motion.distance_m+=moved.length()
+		if not reached:
+			all_reached=false
+			break
+	_press_edge("move_forward",false)
+	_water_mount_motion.running=false
+	_water_mount_motion.completed=all_reached
+	if not all_reached and str(_water_mount_motion.failure).is_empty():
+		_water_mount_motion.failure="Mounted input exceeded waypoint frame budget"
+
+func _probe_water_mounted() -> Dictionary:
+	var result: Dictionary = _probe_water_swimming()
+	result["riding"] = _execute_probe({"what":"riding"})
+	result["motion"] = _water_mount_motion.duplicate(true)
+	var director := _encounter_director()
+	var creature: RefCounted = director.ally_instance() if director != null else null
+	var body: Node3D = director.ally_body() if director != null else null
+	result["owned_mount"] = {"species":str(creature.species_id),"energy":creature.energy,"hp":creature.hp,
+		"swim_stamina_fraction":creature.swim_stamina_fraction,"position":[body.global_position.x,body.global_position.y,body.global_position.z]} if creature != null and body != null else {}
+	var remote_mounts: Dictionary = {}
+	for mount: Node in get_nodes_in_group("remote_creature"):
+		if not mount is Node3D or mount.is_multiplayer_authority():
+			continue
+		var owner := int(mount.get("owner_peer_id"))
+		var seat_error := -1.0
+		for rider: Node in get_nodes_in_group("remote_trainer"):
+			if rider is Node3D and int(rider.get("peer_id"))==owner:
+				seat_error=rider.global_position.distance_to(mount.to_global(rider.get("net_mount_offset")))
+		remote_mounts[str(owner)]={"owner_peer_id":owner,"authority":mount.get_multiplayer_authority(),
+			"species":mount.species_id,"net_aquatic":mount.net_aquatic,"applied_aquatic":mount.aquatic.snapshot(),
+			"seat_error_m":seat_error,"position":[mount.global_position.x,mount.global_position.y,mount.global_position.z]}
+	result["remote_mounts"]=remote_mounts
+	return result

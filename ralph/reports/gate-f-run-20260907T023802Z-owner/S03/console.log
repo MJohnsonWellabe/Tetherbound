@@ -1,0 +1,24 @@
+﻿Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+OpenGL API 3.3.0 Core Profile Context 24.10.21.03.240627 - Compatibility - Using Device: ATI Technologies Inc. - AMD Radeon Graphics
+
+Movie Maker mode enabled, recording movie in 1920├ù1080 @ 30 FPS...
+gate-f harness ERROR: segment BLOCKED after step S03-04: re-priced at boot:title, the REST of this segment predicts 15114 s (4.2 h) against 14397 s of the 14400 s ceiling left: 306239 planned frames at a MEASURED 0.049 s/frame in THIS scene, plus a 1 s boot. The last price was 0.0466 s/frame. A GPU or a split evidence lane -- not a shorter wait; the waits exist so fights resolve.
+--------------------------------------------------------------------------------
+Done recording movie at path: C:\Users\mattj\AppData\Local\Tetherbound\runs\20260907T023802Z\video\S03.avi
+54 frames at 30 FPS (movie length: 00:00:01:24), recorded in 00:00:04 (25% of real-time speed).
+CPU render time: 0.03 seconds (average: 0.53 ms/frame)
+GPU render time: 0.04 seconds (average: 0.75 ms/frame)
+Encoding time: 0.66 seconds (average: 12.27 ms/frame)
+--------------------------------------------------------------------------------
+
+--- stderr ---
+ERROR: gate-f harness: segment BLOCKED after step S03-04: re-priced at boot:title, the REST of this segment predicts 15114 s (4.2 h) against 14397 s of the 14400 s ceiling left: 306239 planned frames at a MEASURED 0.049 s/frame in THIS scene, plus a 1 s boot. The last price was 0.0466 s/frame. A GPU or a split evidence lane -- not a shorter wait; the waits exist so fights resolve.
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _harness_error (res://tools/gate_f/operator_harness.gd:6609)
+       [1] _play (res://tools/gate_f/operator_harness.gd:810)
+       [2] _do_step (res://tools/gate_f/operator_harness.gd:1943)
+       [3] _step_boot (res://tools/gate_f/operator_harness.gd:2110)
+       [4] _reprice (res://tools/gate_f/operator_harness.gd:2158)
+       [5] _measure_frame_cost (res://tools/gate_f/operator_harness.gd:1419)
+

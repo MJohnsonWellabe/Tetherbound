@@ -1,0 +1,3 @@
+# Water Best Creature inheritance
+
+The twelve namespaced Water species reuse existing Best Creature abilities through an explicit `best_creature_source` in the Water roster, independently of their temporary mesh source. Cannonback and Water Mosshell inherit Mosshell's defensive perk, Cragclaw inherits Burrowback's defensive perk, and the attacking or mobile species inherit the existing Tuskroot, Paddlenewt, Ripplet or Brooktail energy perks already compatible with their roles. The adapter copies each existing ability's ID, kind and strength unchanged; it adds no combat or traversal mechanic and changes no Meadows definition. Missing or invalid inheritance rejects the roster atomically instead of silently giving a designated Best Creature no perk.

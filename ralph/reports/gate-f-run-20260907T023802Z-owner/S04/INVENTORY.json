@@ -1,0 +1,199 @@
+{
+  "blocked": "",
+  "captures": {
+    "absent": 0,
+    "delegated": [
+      "GF-04-TOURN-01",
+      "GF-14-COMBAT-03",
+      "GF-04-TOURN-02",
+      "S04-SEQ-final-000",
+      "S04-SEQ-final-001",
+      "S04-SEQ-final-002",
+      "S04-SEQ-final-003",
+      "S04-SEQ-final-004",
+      "S04-SEQ-final-005",
+      "S04-SEQ-final-006",
+      "S04-SEQ-final-007",
+      "S04-SEQ-final-008",
+      "S04-SEQ-final-009",
+      "S04-SEQ-final-010",
+      "S04-SEQ-final-011",
+      "S04-SEQ-final-012",
+      "S04-SEQ-final-013",
+      "S04-SEQ-final-014",
+      "S04-SEQ-final-015",
+      "S04-SEQ-final-016",
+      "S04-SEQ-final-017",
+      "S04-SEQ-final-018",
+      "S04-SEQ-final-019",
+      "S04-SEQ-final-020",
+      "S04-SEQ-final-021",
+      "S04-SEQ-final-022",
+      "S04-SEQ-final-023",
+      "S04-SEQ-final-024",
+      "S04-SEQ-final-025",
+      "S04-SEQ-final-026",
+      "S04-SEQ-final-027",
+      "S04-SEQ-final-028",
+      "S04-SEQ-final-029",
+      "S04-SEQ-final-030",
+      "S04-SEQ-final-031",
+      "S04-SEQ-final-032",
+      "S04-SEQ-final-033",
+      "S04-SEQ-final-034",
+      "S04-SEQ-final-035",
+      "S04-SEQ-final-036",
+      "S04-SEQ-final-037",
+      "S04-SEQ-final-038",
+      "S04-SEQ-final-039",
+      "GF-14-COMBAT-09a",
+      "GF-04-TOURN-03"
+    ],
+    "delegated_to": "S04C",
+    "owes": [],
+    "planned": 0,
+    "present": 0,
+    "rows": []
+  },
+  "complete": false,
+  "cost": {
+    "frame_cost_s": 0.025747,
+    "reprices": [
+      {
+        "at": "boot:title",
+        "budget_remaining_s": 14397.2,
+        "frame_cost_s": 0.049229,
+        "frames_remaining": 69858,
+        "predicted_remaining_s": 3439.9,
+        "step_index": 3,
+        "wall_spent_s": 2.8,
+        "was_frame_cost_s": 0.047016
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14393.0,
+        "frame_cost_s": 0.034577,
+        "frames_remaining": 69821,
+        "observed_window_s": 0.034577,
+        "predicted_remaining_s": 2414.2,
+        "samples": 1,
+        "step_index": 8,
+        "wall_spent_s": 7.0,
+        "was_frame_cost_s": 0.049229
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14386.8,
+        "frame_cost_s": 0.025892,
+        "frames_remaining": 69821,
+        "observed_window_s": 0.025818,
+        "predicted_remaining_s": 1807.8,
+        "samples": 3,
+        "step_index": 8,
+        "wall_spent_s": 13.2,
+        "was_frame_cost_s": 0.030235
+      }
+    ]
+  },
+  "derailed": "",
+  "derailed_at": "",
+  "derails": [],
+  "disk": {
+    "applies": false,
+    "why": "no measured PNG size (the pre-flight self-test did not write one)"
+  },
+  "disk_actual": {
+    "frame_bytes": 0,
+    "largest_evidence_png_bytes": 0,
+    "preflight_self_test_png_bytes": 0,
+    "shot_bytes": 0,
+    "total_bytes": 0
+  },
+  "evidence_lane": "logic",
+  "frames": {
+    "absent": 0,
+    "absent_reasons": {},
+    "baseline_hz": 0.0,
+    "delegated_windows": [],
+    "written": 0
+  },
+  "git_check": "not run",
+  "harness_errors": [
+    "step S04-14: HARNESS-ERROR walk with no live Player/CameraRig"
+  ],
+  "preflight": {
+    "allow_no_capture": false,
+    "boot_cost_s": 0.83,
+    "capture_available": true,
+    "capture_lane": "S04C",
+    "capture_requested": false,
+    "cost_rechecks": 91,
+    "delegated_captures": 45,
+    "display_server": "Windows",
+    "evidence_lane": "logic",
+    "freeze_record": {
+      "claim": "X11 under xvfb-run",
+      "from": "C:/Users/mattj/AppData/Local/Tetherbound/repo/ralph/reports/gate-f-candidate/RUN_METADATA.json",
+      "key": "display_server",
+      "lane": "(all lanes; the record declares none)"
+    },
+    "measured_frame_cost_s": 0.047016,
+    "measured_frame_cost_s_in_scene": 0.025747,
+    "planned_captures": 0,
+    "predicted_frames": 69891,
+    "predicted_segment_cost_s": 3286.0,
+    "predicted_segment_cost_s_in_scene": 2080.9,
+    "record_baseline_hz": 0.0,
+    "reprices": [
+      {
+        "at": "boot:title",
+        "budget_remaining_s": 14397.2,
+        "frame_cost_s": 0.049229,
+        "frames_remaining": 69858,
+        "predicted_remaining_s": 3439.9,
+        "step_index": 3,
+        "wall_spent_s": 2.8,
+        "was_frame_cost_s": 0.047016
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14393.0,
+        "frame_cost_s": 0.034577,
+        "frames_remaining": 69821,
+        "observed_window_s": 0.034577,
+        "predicted_remaining_s": 2414.2,
+        "samples": 1,
+        "step_index": 8,
+        "wall_spent_s": 7.0,
+        "was_frame_cost_s": 0.049229
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14386.8,
+        "frame_cost_s": 0.025892,
+        "frames_remaining": 69821,
+        "observed_window_s": 0.025818,
+        "predicted_remaining_s": 1807.8,
+        "samples": 3,
+        "step_index": 8,
+        "wall_spent_s": 13.2,
+        "was_frame_cost_s": 0.030235
+      }
+    ],
+    "verdict": "not required",
+    "why": "segment declares no captures and no continuous record"
+  },
+  "run_id": "gate-f-run-20260907T023802Z-owner",
+  "segment": "S04",
+  "sha": "75bb1dc7db36fb4452a746410f45e9ac77699300",
+  "steps": {
+    "delegated": 0,
+    "fail": 3,
+    "pass": 11,
+    "ran": 15,
+    "refused": 0,
+    "skipped": 0,
+    "total": 89
+  },
+  "uncommittable": []
+}

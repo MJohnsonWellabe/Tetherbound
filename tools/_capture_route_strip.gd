@@ -32,7 +32,7 @@ extends SceneTree
 ##     hand-off and all), and takes one frame with the camera solved so that
 ##     trainer, companion AND opponent all fit and read -- the two-creature
 ##     solve that left the trainer out is the first lesson recorded in
-##     `docs/VISUAL_PARITY_PROGRESS.md`.
+##     `archive/docs/VISUAL_PARITY_PROGRESS_cloudreach.md`.
 ##   * Every frame is refused, not saved, if `capture_check.readable_problems`
 ##     says a subject is missing, behind the camera, under 12% of the frame's
 ##     height, cropped or occluded. A refused frame is listed in the manifest
@@ -922,7 +922,7 @@ func _ground_at(x: float, z: float) -> float:
 ##
 ## The flee is read by `combat_manager.gd::_read_player_input`, which
 ## `flow.input_guard` gates for 0.25 s after `begin()`; a press inside the
-## guard is silently dropped (docs/VISUAL_PARITY_PROGRESS.md, lesson two).
+## guard is silently dropped (archive/docs/VISUAL_PARITY_PROGRESS_cloudreach.md, lesson two).
 ## `FIGHT_GUARD_TICKS` of physics are spent here regardless of how long the
 ## framing above took, so a bearing that fitted first try cannot flee early.
 func _end_fight(band_index: int) -> void:

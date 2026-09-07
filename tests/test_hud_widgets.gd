@@ -387,6 +387,25 @@ func test_every_installed_species_has_the_hud_portrait_it_resolves() -> void:
 	hud.free()
 
 
+func test_water_placeholder_portraits_agree_in_hud_and_creatures_menu() -> void:
+	var hud := PLAYGROUND_HUD.new()
+	var menu := preload("res://scripts/ui/tab_creatures.gd").new()
+	var count := 0
+	for species_id: String in CREATURE_SPECIES.table().keys():
+		if not species_id.begins_with("water_"):
+			continue
+		count += 1
+		var dedicated := "res://assets/ui/portraits/creatures/%s.png" % species_id
+		var source := str(CREATURE_SPECIES.definition(species_id).water_placeholder.source_species)
+		var expected := dedicated if ResourceLoader.exists(dedicated) else "res://assets/ui/portraits/creatures/%s.png" % source
+		assert_eq(hud.call("_species_portrait_path", species_id), expected)
+		assert_eq(menu.call("_portrait_path", species_id), expected)
+		assert_true(ResourceLoader.exists(expected), "Explicit installed placeholder portrait must exist")
+	assert_eq(count, 12, "All twelve Water creatures must resolve in both screens")
+	hud.free()
+	menu.free()
+
+
 func test_resting_entry_has_an_explicit_unavailable_marker() -> void:
 	var strip := _make_strip()
 	strip.update_from_party([{

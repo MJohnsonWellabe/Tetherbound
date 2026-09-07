@@ -233,7 +233,7 @@ const GLYPHS := {
 
 ## Actions whose PAD button lives on a DIFFERENT action.
 ##
-## CONTROLLER-MAP (`docs/owner/OWNER_DIRECTIVES_2026-08-22.md` §1, recorded as
+## CONTROLLER-MAP (`archive/owner/OWNER_DIRECTIVES_2026-08-22.md` §1, recorded as
 ## `docs/decisions/D68`) re-authored the pad map and moved several verbs onto
 ## buttons that already had an action of their own. The verb still exists on the
 ## pad; the action named for it no longer carries a joypad event.
@@ -362,7 +362,7 @@ static func key_name_for_action(action: String) -> String:
 ##
 ## Only for the glyph fallback above: an action with a live pad binding and no
 ## art should say which button it is, not which key it is. Covers the buttons
-## `docs/owner/OWNER_DIRECTIVES_2026-08-22.md`'s authored map actually uses; anything
+## `archive/owner/OWNER_DIRECTIVES_2026-08-22.md`'s authored map actually uses; anything
 ## outside that returns "" and falls through to the key name as before, which
 ## is the honest answer for an action a pad genuinely cannot reach.
 static func pad_button_name_for_action(id: String) -> String:

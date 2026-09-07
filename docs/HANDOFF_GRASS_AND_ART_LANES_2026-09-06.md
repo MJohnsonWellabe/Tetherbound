@@ -1,6 +1,9 @@
 # Handoff — 2026-09-06 (art-gap lanes, and the grass problem that is still open)
 
-Read `docs/00_START_HERE.md`, then `docs/HANDOFF_2026-09-06.md` (the art-gap closure
+> **2026-09-07:** the six branches in §2 all merged in PR #72 and were deleted; §3.2's `_near_route` bug is fixed on `main`. §3 (the flat-green ground at Cloudreach stand 05 and what has been ruled out), §4 and §6 are still live and are carried by `docs/prompts/77-CODEX-GOAL-four-biome-push-2026-09-07.md` lane VIS-CLOUDREACH.
+
+
+Read `docs/00_START_HERE.md`, then `archive/docs/handoffs/HANDOFF_2026-09-06.md` (the art-gap closure
 plan, §4), then this. This file is the state of the six branches that came out of that
 plan, the one problem that is **not solved and needs a fresh pair of eyes**, and the
 owner directions that override the older plan.
@@ -216,7 +219,7 @@ referenced nowhere outside `archive/`.
   ground-truth smoke ~2.5 min. Never run two Godot processes at once (a boot is 2–3 GB,
   a render ~7 GB). Budget accordingly — a guess costs six minutes, a probe costs two.
 - `json.dump` reformats whole files. Edit JSON with targeted text insertion.
-- The other traps still apply: `docs/HANDOFF_2026-09-06.md` §6.
+- The other traps still apply: `archive/docs/handoffs/HANDOFF_2026-09-06.md` §6.
 
 ## 6. Still open from the older plan, untouched by any lane
 

@@ -45,8 +45,8 @@ A stage is not complete because files, tests or branches exist. Completion is pl
 | Stage | What it is | State |
 |---|---|---|
 | **0** | Current work: land Meadows + Cloudreach in flight, ship playable 1–4 player multiplayer, run the Meadows visual sweep, and land general game fixes. | In progress |
-| **A** | Build Biome 3, the Stormwood. | Not started |
-| **B** | Build Biome 4, the Water Archipelago. | Not started |
+| **A** | Build Biome 3, the Stormwood. | In progress (PRs #68, #70, #74, #76, #77 merged; scorecard 12/100; main path unfinished) |
+| **B** | Build Biome 4, the Water Archipelago. | Started ahead of sequence on draft PR #69 (35/100 on the branch, held unmerged by owner instruction) |
 | **C** | Full four-biome product audit — six questions: does it work, is there enough to do, is progression satisfying, is it fun minute-to-minute, does the world feel authored, does it meet the visual bar. | Not started |
 | **D** | Four-biome repair pass — fix Stage C's P0/P1 findings before any new content. | Not started |
 | **E** | Four-biome Beta Ready gate. | Not started |
@@ -183,10 +183,10 @@ things hold it there. None of them is code:
    friends joining without developer intervention. No automated evidence can satisfy that sentence.
    The owner column of the acceptance file is entirely unsigned, and §23 also wants the owner's own
    LAN session and an Ally frame-time measurement, both recorded in `docs/owner/`.
-2. **`verify-multiplayer-shard` has never completed a CI run.** Cancelled seven times, because
-   `ci.yml` sets `cancel-in-progress` for every non-`main` ref and that job takes ~45 minutes. All
-   net-smoke evidence to date is from local two-process runs — real, but not CI.
-3. **It is not on `main`.** PR #63 is open.
+2. ~~`verify-multiplayer-shard` has never completed a CI run.~~ **Fixed 2026-09-06**: the job
+   was split into discovery plus a 5-way execution matrix (~18–20 minutes) and completes green;
+   the scheduled 3/4-peer workflow also ran green on 2026-09-07.
+3. ~~It is not on `main`.~~ **PR #63 merged 2026-09-06.**
 
 The "Evidence bar" list above is met by automated runs with one honest gap: a **shared Cloudreach
 encounter** has no net smoke of its own. Cloudreach's own world mutations go through the ledger
@@ -734,13 +734,15 @@ All new gameplay/world systems after Stage 0 are multiplayer-native unless an ow
 
 # CURRENT NEXT ACTION
 
-Owner-directed execution is in **Stage A: Stormwood**. Resume from
-`ralph/reports/STORMWOOD-PROGRESS/fresh-session-tail-0907.md`: land the preserved
-Crown integration, implement host-owned encounter starts, finish the Dynamo and
-legendary/relic ending, and prove the continuous chapter. Stormwood is incomplete;
-the next stage is **Stage B: Water** at `docs/biomes/water/00_START_HERE.md` only
-after Stormwood passes its full exit criteria, without an intermediate three-biome audit. Other
-Meadows/Cloudreach lanes retain their own owners and are not this lane's landings.
+**2026-09-07: run `docs/prompts/77-CODEX-GOAL-four-biome-push-2026-09-07.md`.** It
+carries Stage 0's open work (the Meadows visual sweep, multiplayer upkeep, the owner's
+new P0 freezes and road-presence P1, the roster and character wiring, the combat depth
+ladder) and Stage A's Stormwood tail (resume from
+`ralph/reports/STORMWOOD-PROGRESS/fresh-session-tail-0907.md`: host-owned encounter
+starts, the named encounters, the Dynamo and legendary/relic ending, the continuous
+chapter) in one integration branch with parallel lanes, and keeps Water building on its
+own draft branch. Stage B's merge waits on Stormwood's exit criteria and an owner
+decision; there is no intermediate three-biome audit.
 
 > **Stage A is active. Codex continues Stormwood at
 > `docs/biomes/stormwood/00_CODEX_START_HERE.md`. Only after Stormwood passes

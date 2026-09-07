@@ -2,7 +2,7 @@
 
 **Date:** 2026-09-05 · **Decided by:** lane N04-DIALOGUE-PORTRAITS-0905, under the
 COMMON rule that a lane makes the smallest defensible call and records it rather than
-stopping to ask. Sources: `ralph/briefs/0905-followup/N04-DIALOGUE-PORTRAITS.md`,
+stopping to ask. Sources: `archive/ralph/briefs/0905-followup/N04-DIALOGUE-PORTRAITS.md`,
 the W08-DIALOGUE-CAMERA and W04-PORTRAITS reports, D81, owner directive 2026-09-04
 item 8b (*"fix the picture during dialogue always being the main character"*).
 

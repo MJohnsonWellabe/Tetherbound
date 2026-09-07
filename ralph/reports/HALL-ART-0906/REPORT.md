@@ -1,7 +1,7 @@
 # HALL-ART-0906 — Meadows Hall interior art round
 
 Branch `claude/art-hall-round-0906`, cut from `claude/second-biome-art-plan-470zru`
-(`6900f553`). Closes the Meadows Hall half of `docs/HANDOFF_2026-09-06.md` §4.2 —
+(`6900f553`). Closes the Meadows Hall half of `archive/docs/handoffs/HANDOFF_2026-09-06.md` §4.2 —
 H1, H2, H3, H4, H5, H7, H8 and the cross-cutting X1 — plus the two §5.2 Hall
 leftovers (the arena ivy, the T-03 sconce pool). **H6 (the tether machine) was not
 touched**: `assets/environment/team_tether/tether_machine.glb` and

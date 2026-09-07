@@ -843,7 +843,7 @@ func reveal_circle(world_pos: Vector3, radius: float) -> void:
 ## The ground the player is presumed to already know, revealed before they
 ## have walked a step.
 ##
-## `docs/owner/OWNER_DIRECTIVES_2026-08-22.md` section 3: "The village and the roads
+## `archive/owner/OWNER_DIRECTIVES_2026-08-22.md` section 3: "The village and the roads
 ## out of it start revealed... The player does not start blind in their own
 ## home town." The fog itself was never broken -- it was working exactly as
 ## OW3 built it, from zero reveal -- so a fresh save opened a black rectangle

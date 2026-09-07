@@ -26,7 +26,7 @@ extends SceneTree
 ## `smoke_gate_a_map_cycle.gd` establishes the same real-pad-through-full-world
 ## pattern this borrows.
 ##
-## RETARGETED for CONTROLLER-MAP. `docs/owner/OWNER_DIRECTIVES_2026-08-22.md` section
+## RETARGETED for CONTROLLER-MAP. `archive/owner/OWNER_DIRECTIVES_2026-08-22.md` section
 ## 1 bans hold-to-modify chords outright ("don't make a user hold a button down
 ## for any action") and REVERTS the hold-LB chord this file was written around.
 ## Under the owner's authored map the d-pad is hotbar 2-5 in EVERY context and

@@ -175,6 +175,12 @@ func current_speaker() -> Node3D:
 		var live := resolve_speaker(_arbiter.call("winning_provider") as Node3D)
 		if live != null:
 			return live
+	# A residency rebuild can free the last activated NPC before a gate or
+	# story beat opens dialogue. Validate before the typed call: a freed Object
+	# cannot enter resolve_speaker(Node3D), even though its body checks validity.
+	if not is_instance_valid(_last_provider):
+		_last_provider = null
+		return null
 	return resolve_speaker(_last_provider)
 
 

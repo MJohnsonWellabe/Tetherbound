@@ -3,7 +3,7 @@
 **Written 2026-09-04.** This is the routing document for a fresh Codex session picking
 up this repository. It replaces the generic `CODEX_START_HERE.md` / `PROMPT_THOUGHTS.md`
 pair the owner had a separate tool draft — those reference files that do not exist in
-this repository's current state (`docs/VISUAL_PARITY_PROGRESS.md`,
+this repository's current state (`archive/docs/VISUAL_PARITY_PROGRESS_cloudreach.md`,
 `docs/TETHERBOUND_VISUAL_BIBLE_V2.md` at the top level, `docs/VISUAL_PARITY_STAGED_GOAL_PROMPT_V2.md`)
 and predate the 2026-09-02 repository reset. Do not read them. Read this instead.
 

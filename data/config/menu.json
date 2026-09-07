@@ -34,6 +34,12 @@
       "script": "res://scripts/ui/tab_map.gd"
     },
     {
+      "id": "skills",
+      "label": "Skills",
+      "script": "res://scripts/ui/tab_skills.gd",
+      "requires_skills_revealed": true
+    },
+    {
       "id": "quest_log",
       "label": "Quests",
       "script": "res://scripts/ui/tab_quest_log.gd"

@@ -1,0 +1,13 @@
+﻿{
+    "smoke":  "_smoke/capture_smoke.png",
+    "used":  [
+                 1280,
+                 800
+             ],
+    "why":  "kickoff resolution",
+    "substituted":  false,
+    "requested":  [
+                      1280,
+                      800
+                  ]
+}

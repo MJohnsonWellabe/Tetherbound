@@ -117,7 +117,7 @@ against the harness's implemented action vocabulary and requires an `expected` o
 
 ## The runtime validation: four logic-lane runs from synthetic entries
 
-Method, per the brief and `docs/GATE3_EXECUTION_PLAN.md` §4b:
+Method, per the brief and `archive/docs/gates/GATE3_EXECUTION_PLAN.md` §4b:
 
 ```
 export GODOT=$HOME/godot-bin/godot                      # 4.7-stable, installed here
@@ -488,7 +488,7 @@ godot --headless --path <tree> --script tests/run_tests.gd \
 `test_item_icons.gd` is the six candy/mushroom icons COMMON.md names as another lane's and
 tells this one not to touch. The two bake-freshness checks are the committed
 `data/terrain/playground` and `data/scatter/playground` bakes being stale against the live
-config — `docs/GATE3_EXECUTION_PLAN.md` assigns both to **nobody**: *"coordinator bakes once,
+config — `archive/docs/gates/GATE3_EXECUTION_PLAN.md` assigns both to **nobody**: *"coordinator bakes once,
 after the merge."*
 
 One thing for the coordinator to expect, because it will look like a change and is not:

@@ -52,6 +52,13 @@ These override lower-level prompts and implementation convenience:
 - **Never spend a Meshy generation without owner-supplied reference art.**
 - One nature family, one village family, one prop family. Meshy is reserved for Team
   Tether hero objects (pylons, relay apparatus, the tether machine).
+- **Carve-out, owner directive 2026-09-07**
+  (`docs/owner/OWNER_DIRECTIVE_2026-09-07_AGENT_GENERATED_REFERENCE_ART.md`): for **one
+  pilot subject only**, a creature or character the agent chooses and justifies from the
+  blind verdicts, the two rules directly above are lifted — the agent generates three
+  reference images itself, a code-blind judge picks the winner, and the Meshy work runs
+  from that image, in the Meadows included. One subject. A second needs a new
+  instruction. Everything else in these art rules is unchanged.
 - **Reuse the installed humanoid cast** (trainer, Grandpa, Warden, villager male,
   villager female, Team Tether grunt). `docs/art/HUMANOID_ASSET_INVENTORY.md` is
   authoritative. A new humanoid mesh is exceptional and still needs owner reference art.

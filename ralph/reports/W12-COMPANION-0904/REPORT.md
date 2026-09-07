@@ -1,6 +1,6 @@
 # W12-COMPANION-0904 — companion presence
 
-Lane brief: `ralph/briefs/0904/W12-COMPANION.md` (on
+Lane brief: `archive/ralph/briefs/0904/W12-COMPANION.md` (on
 `origin/claude/codex-merge-meadows-finish-dq12jj`). Source requirements:
 `docs/FINISH_THE_MEADOWS_ADDENDUM_2026-09-04.md` §E and
 `docs/owner/OWNER_DIRECTIVES_2026-09-04-C.md` §5.

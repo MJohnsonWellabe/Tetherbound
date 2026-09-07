@@ -981,7 +981,7 @@ func _settle_dismantle(game: Node, ticket: Dictionary) -> void:
 ## and a host's own refusal was answered synchronously in `_place` /
 ## `dismantle_piece`. All that is left is to drop the ticket, which is what
 ## keeps the player's wood in their satchel.
-func _on_intent_refused(kind: String, _code: String, _reason: String) -> void:
+func _on_intent_refused(kind: String, _code: String, _reason: String, _detail: Dictionary) -> void:
 	if kind == "place_building" and not _pending_placements.is_empty():
 		_pending_placements.pop_front()
 		AUDIO_CUES.play(&"ui_error")
