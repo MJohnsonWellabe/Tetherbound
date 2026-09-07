@@ -9,6 +9,7 @@ var _world: Node3D
 var _camera: Node3D
 var _config: Dictionary
 var _horizontal := Vector3.ZERO
+var _pending_mount: Dictionary = {}
 
 
 func setup(player: CharacterBody3D, world: Node3D, camera: Node3D) -> void:
@@ -27,17 +28,36 @@ func snapshot() -> Dictionary:
 
 
 func save_data() -> Dictionary:
+	if not _pending_mount.is_empty():
+		return _pending_mount.duplicate(true)
 	var vitals: RefCounted = _player.get("vitals")
 	var anchor: Array = [state.safe_landing.x, state.safe_landing.y, state.safe_landing.z] if state.has_safe_landing else []
-	return {"version": 1, "mode": state.mode, "safe_anchor": anchor,
+	var saved := {"version": 1, "mode": state.mode, "safe_anchor": anchor,
 		"stamina_fraction": clampf(vitals.stamina / vitals.max_stamina, 0.0, 1.0),
 		"health_fraction": clampf(vitals.health / vitals.max_health, 0.0, 1.0)}
+	var riding := _world.get_node_or_null("RidingController")
+	var director := _world.get_node_or_null("EncounterDirector")
+	if riding != null and riding.is_mounted() and director != null:
+		var party: RefCounted = get_node("/root/Game").party
+		var index: int = party.members().find(director.ally_instance())
+		var body: Node3D = riding.mount_body()
+		if index >= 0:
+			saved.mount = {"party_index": index, "species_id": str(body.species_id),
+				"position": [body.global_position.x, body.global_position.y, body.global_position.z]}
+	return saved
 
 
 func restore_save_data(raw: Dictionary) -> bool:
 	var clean := SAVE.sanitise(raw)
 	if clean.is_empty():
 		return false
+	# Slot loads can reuse the current world. Detach the old carrier before
+	# reconstructing the saved one, without replacing the just-loaded pose.
+	var riding := _world.get_node_or_null("RidingController")
+	if riding != null and riding.is_mounted():
+		var saved_position := _player.global_position
+		riding.dismount()
+		_player.global_position = saved_position
 	var vitals: RefCounted = _player.get("vitals")
 	vitals.stamina = vitals.max_stamina * float(clean.stamina_fraction)
 	vitals.health = vitals.max_health * float(clean.health_fraction)
@@ -56,14 +76,34 @@ func restore_save_data(raw: Dictionary) -> bool:
 	state.stamina_fraction = float(clean.stamina_fraction)
 	state.drowning = state.mode == STATE.Mode.HUMAN and vitals.stamina <= 0.0
 	_horizontal = Vector3.ZERO
+	if clean.has("mount") and not vitals.is_dead():
+		_pending_mount = clean.duplicate(true)
+		_restore_mount.call_deferred()
 	if vitals.is_dead():
 		_player.call_deferred("emit_signal", "died")
 	return true
 
 
+func _restore_mount() -> void:
+	if _pending_mount.is_empty():
+		return
+	var director := _world.get_node_or_null("EncounterDirector")
+	var restored := false
+	if director != null:
+		restored = await director.restore_swim_mount(_pending_mount.mount)
+	_pending_mount.clear()
+	if restored and _world.water_depth_at(_player.global_position) >= float(_config.human.entry_depth_m):
+		state.enter_water(true, _world.field.water_level())
+		state.stamina_fraction = director.ally_instance().swim_stamina_fraction
+		state.drowning = state.stamina_fraction <= 0.0
+
+
 ## Called by the owner rig instead of its ground integrator, never in addition
 ## to it. A remote trainer only displays the replicated state and transform.
 func physics_step(delta: float, input_blocked: bool, combat_paused: bool) -> bool:
+	if not _pending_mount.is_empty():
+		_player.velocity = Vector3.ZERO
+		return true
 	if _player == null or _world == null or not bool(_world.call("shell_build_complete")):
 		return false
 	state.owner_peer_id = multiplayer.get_unique_id()

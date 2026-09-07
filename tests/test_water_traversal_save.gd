@@ -48,3 +48,21 @@ func test_pause_and_mount_modes_are_data_without_importing_transport_revision() 
 		var raw: Dictionary = _pose().aquatic
 		raw.mode = mode
 		assert_true(WATER.sanitise(raw).is_empty())
+
+func test_mount_identity_round_trip_uses_owned_party_slot_not_transport_id() -> void:
+	var raw: Dictionary = _pose().aquatic
+	raw.mode = 2
+	raw.mount = {"party_index": 3, "species_id": "water_aquaryn", "position": [80.0, -0.65, 180.0], "owner_peer_id": 777}
+	var clean := WATER.sanitise(JSON.parse_string(JSON.stringify(raw)))
+	assert_eq(clean.mount.party_index, 3)
+	assert_eq(clean.mount.species_id, "water_aquaryn")
+	assert_eq(clean.mount.position, raw.mount.position)
+	assert_false(clean.mount.has("owner_peer_id"))
+	for index: Variant in [-1, 5, 1.5, "0", NAN]:
+		var invalid := raw.duplicate(true)
+		invalid.mount.party_index = index
+		assert_true(WATER.sanitise(invalid).is_empty())
+	for position: Variant in [[], [0, 1], [0, INF, 1], [0, "sea", 1]]:
+		var invalid := raw.duplicate(true)
+		invalid.mount.position = position
+		assert_true(WATER.sanitise(invalid).is_empty())
