@@ -1738,9 +1738,28 @@ def cmd_balance(_args) -> None:
     print(json.dumps(request("GET", "/openapi/v1/balance"), indent=2))
 
 
+def generation_views(species: str, image: str | None = None) -> dict[str, pathlib.Path]:
+    """Resolve either the normal authored view set or one explicit pilot image."""
+    if image is None:
+        return reference_views(species)
+    source = pathlib.Path(image).expanduser().resolve()
+    if not source.is_file():
+        sys.exit(f"no such reference image: {source}")
+    if source.suffix.lower() != ".png":
+        sys.exit(f"reference image must be a PNG: {source}")
+    return {"source": source}
+
+
+def _manifest_path(path: pathlib.Path) -> str:
+    try:
+        return str(path.relative_to(ROOT))
+    except ValueError:
+        return str(path)
+
+
 def cmd_generate(args) -> None:
     species = args.species
-    views = reference_views(species)
+    views = generation_views(species, args.image)
     prompt = prompt_for(species)
 
     before = request("GET", "/openapi/v1/balance").get("balance", 0)
@@ -1771,7 +1790,7 @@ def cmd_generate(args) -> None:
         "tier": args.tier,
         "prompt": prompt,
         "negative_prompt": negative_for(species),
-        "views": {v: str(p.relative_to(ROOT)) for v, p in views.items()},
+        "views": {v: _manifest_path(p) for v, p in views.items()},
         "polycount": args.polycount,
         "tasks": [],
     }
@@ -2127,6 +2146,8 @@ def main() -> None:
                      help="preview is cheap and untextured; refine costs more (§25)")
     gen.add_argument("--polycount", type=int, default=30000)
     gen.add_argument("--budget", type=int, default=DEFAULT_BUDGET)
+    gen.add_argument("--image", default=None,
+                     help="use one explicit local PNG instead of the species' authored view set")
     gen.add_argument("--yes", action="store_true", help="proceed past the budget guard")
     gen.set_defaults(func=cmd_generate)
 
