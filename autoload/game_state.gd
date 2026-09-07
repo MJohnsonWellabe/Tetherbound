@@ -923,13 +923,33 @@ func set_farm_plot(index: int, plot: Dictionary) -> void:
 ## `quest_log`/etc. the way a full `_process()` tick would demand -- see
 ## `tests/test_autosave_fallback.gd`.
 func _tick_autosave(delta: float) -> void:
+	if save_system != null and save_system.has_method("poll_fallback"):
+		save_system.call("poll_fallback")
 	_autosave_elapsed += delta
 	if _autosave_elapsed < _AUTOSAVE_FALLBACK_INTERVAL_S:
 		return
 	_autosave_elapsed = 0.0
-	# D100: the world half is the host's to write. A client still reaches here
-	# every 180 s and still saves its own character (nothing, until the split).
-	autosave_here()
+	if save_system == null:
+		return
+	# Live scene state is synchronized here; only the copied save request goes
+	# to the worker. Bed/rest/quit/realm-entry still use the synchronous API.
+	_capture_player_pose()
+	var host := is_host()
+	if host:
+		_sync_placed_building_state()
+		_sync_death_satchel_state()
+		_sync_harvest_state()
+		_sync_clock_state()
+	var character_id := "" if host else str(session.call("_local_character_id"))
+	if not host and character_id.is_empty():
+		return
+	save_system.call("request_fallback", self, autosave_slot(), character_id)
+
+
+func _exit_tree() -> void:
+	# SceneTree.quit/window close must not abandon a partially committed split.
+	if save_system != null and save_system.has_method("finish_fallback"):
+		save_system.call("finish_fallback")
 
 
 ## Fog-of-war discovery, throttled to `_DISCOVERY_INTERVAL_S`. Silently does

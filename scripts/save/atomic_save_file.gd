@@ -1,6 +1,15 @@
 extends RefCounted
 
 static var _validity_cache: Dictionary = {}
+static var _io_mutex := Mutex.new()
+
+
+static func begin_transaction() -> void:
+	_io_mutex.lock()
+
+
+static func end_transaction() -> void:
+	_io_mutex.unlock()
 
 ## Per-file save commit. Godot 4.7's Windows rename removes an existing
 ## destination BEFORE moving the source, so never rename over a live save.
@@ -9,10 +18,18 @@ static var _validity_cache: Dictionary = {}
 ## This helper is not a transaction across world/character/slot files;
 ## save_game.gd coordinates synchronous rollback for that group. Neither is an
 ## OS power-loss durability guarantee (FileAccess exposes flush, not fsync).
-## Callers retain the existing one-owner, synchronous-write contract. Pending
+## The IO mutex serializes writers (including fallback workers); the outer
+## SaveGame transaction retains it across all three commits and rollback. Pending
 ## files orphaned by a crash are never loaded; only .previous is recoverable.
 
 static func readable_path(path: String) -> String:
+	begin_transaction()
+	var result := _readable_path_locked(path)
+	end_transaction()
+	return result
+
+
+static func _readable_path_locked(path: String) -> String:
 	if _is_valid_document(path):
 		return path
 	var previous := path + ".previous"
@@ -20,6 +37,13 @@ static func readable_path(path: String) -> String:
 
 
 static func has_readable(path: String) -> bool:
+	begin_transaction()
+	var result := _has_readable_locked(path)
+	end_transaction()
+	return result
+
+
+static func _has_readable_locked(path: String) -> bool:
 	return _is_valid_document(readable_path(path))
 
 
@@ -47,6 +71,13 @@ static func _is_valid_document(path: String) -> bool:
 ## Remove every readable generation of one save. A backup-only interrupted
 ## commit must not make a deleted slot reappear on the next listing.
 static func delete(path: String) -> bool:
+	begin_transaction()
+	var result := _delete_locked(path)
+	end_transaction()
+	return result
+
+
+static func _delete_locked(path: String) -> bool:
 	var complete := true
 	for candidate: String in [path, path + ".previous"]:
 		_validity_cache.erase(candidate)
@@ -59,6 +90,13 @@ static func delete(path: String) -> bool:
 ## generation until finish() or rollback(). SaveGame uses that narrow mode to
 ## coordinate its slot/world/character group without re-reading all three files.
 func write(path: String, text: String, retain_previous: bool = false) -> bool:
+	begin_transaction()
+	var result := _write_locked(path, text, retain_previous)
+	end_transaction()
+	return result
+
+
+func _write_locked(path: String, text: String, retain_previous: bool = false) -> bool:
 	var previous := path + ".previous"
 	_validity_cache.erase(path)
 	_validity_cache.erase(previous)
@@ -125,6 +163,13 @@ func write(path: String, text: String, retain_previous: bool = false) -> bool:
 
 ## Complete a retained replacement after every member of its save group wrote.
 static func finish(path: String) -> bool:
+	begin_transaction()
+	var result := _finish_locked(path)
+	end_transaction()
+	return result
+
+
+static func _finish_locked(path: String) -> bool:
 	var previous := path + ".previous"
 	_validity_cache.erase(previous)
 	return not FileAccess.file_exists(previous) or DirAccess.remove_absolute(previous) == OK
@@ -134,6 +179,13 @@ static func finish(path: String) -> bool:
 ## false, the new canonical is the first valid generation and rollback removes
 ## it; when true, .previous is the exact old generation to restore.
 static func rollback(path: String, had_readable: bool) -> bool:
+	begin_transaction()
+	var result := _rollback_locked(path, had_readable)
+	end_transaction()
+	return result
+
+
+static func _rollback_locked(path: String, had_readable: bool) -> bool:
 	_validity_cache.erase(path)
 	_validity_cache.erase(path + ".previous")
 	if not had_readable:

@@ -30,6 +30,9 @@ var _warmup_max_gap_ms := 0.0
 var _warmup_max_gap_context := ""
 var _last_frame_usec := 0
 var _soak_started_msec := 0
+var _fallback_fired := 0
+var _fallback_completed := 0
+var _fallback_max_gap_ms := 0.0
 
 
 func _init() -> void:
@@ -45,6 +48,7 @@ func _run() -> void:
 	_game.call("reset_for_new_game")
 	_wipe_test_dir()
 	_game.set("save_system", SAVE_GAME.new(TEST_DIR))
+	_game.get("save_system").fallback_completed.connect(_on_fallback_completed)
 	_world = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(_world)
 	await _settle(SETTLE_FRAMES, false)
@@ -98,6 +102,14 @@ func _run() -> void:
 	else:
 		print("two-bed post-warmup watchdog: max %.1f ms from %.1f-%.1f s (%s)" % [
 			_max_gap_ms, _warmup_seconds(), soak_seconds, _max_gap_context])
+	# A timing pass is invalid if the asynchronous save was never completed.
+	var saver: RefCounted = _game.get("save_system")
+	if not bool(saver.call("finish_fallback")):
+		_fail("fallback save failed at final durability boundary")
+	if soak_seconds >= 180.0 and (_fallback_fired == 0 or _fallback_completed == 0):
+		_fail("180-second soak must observe a fallback request and successful completion")
+	print("two-bed fallback: requests %d, completed %d, trigger-frame max %.1f ms" % [
+		_fallback_fired, _fallback_completed, _fallback_max_gap_ms])
 	_report()
 
 
@@ -165,6 +177,9 @@ func _settle(frames: int, measure: bool) -> void:
 			var gap_ms := float(now - _last_frame_usec) / 1000.0
 			var soak_elapsed := float(Time.get_ticks_msec() - _soak_started_msec) / 1000.0
 			var autosave_after := float(_game.get("_autosave_elapsed")) if _game != null else -1.0
+			if autosave_after < autosave_before:
+				_fallback_fired += 1
+				_fallback_max_gap_ms = maxf(_fallback_max_gap_ms, gap_ms)
 			var context := "soak %.1fs, autosave %.1fs -> %.1fs%s" % [
 				soak_elapsed, autosave_before, autosave_after,
 				" (fallback fired)" if autosave_after < autosave_before else "",
@@ -181,6 +196,13 @@ func _settle(frames: int, measure: bool) -> void:
 
 func _on_delta_applied(_delta: Dictionary) -> void:
 	_delta_count += 1
+
+
+func _on_fallback_completed(success: bool) -> void:
+	if success:
+		_fallback_completed += 1
+	else:
+		_fail("asynchronous fallback save reported a write failure")
 
 
 func _soak_seconds() -> float:
@@ -211,6 +233,9 @@ func _fail(message: String) -> void:
 
 func _report() -> void:
 	if _game != null:
+		var saver: RefCounted = _game.get("save_system")
+		if saver != null:
+			saver.call("finish_fallback")
 		_game.set("free_build", false)
 		_game.set("pending_build", "")
 	_wipe_test_dir()
