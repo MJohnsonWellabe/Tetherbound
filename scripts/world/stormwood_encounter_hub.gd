@@ -1,0 +1,235 @@
+extends Node
+
+## Realm-local adapters, global Session transport. The host owns all trainer
+## opponents even when its own player remains in another realm.
+const HOSTED := preload("res://scripts/combat/stormwood_hosted_trainer.gd")
+const AUTHORITY := preload("res://scripts/net/encounter_host.gd")
+var world: Node3D
+var session: Node
+var director: Node
+var authority := AUTHORITY.new()
+var fights: Dictionary = {}
+var _local_trainer := ""
+var _local_record := ""
+var _action := 0
+var _pending_state: Dictionary = {}
+var last_start_refusal: Dictionary = {}
+
+func mount(owner_world: Node3D) -> void:
+	world = owner_world
+	director = world.get_node("EncounterDirector")
+	# Existing realm safety checks (including arch travel) see these fights too.
+	director.set("_encounter_host", authority)
+	session = get_node("/root/Game/Session")
+	add_to_group("stormwood_encounter_hub")
+	session.stormwood_encounter_message.connect(_receive)
+	if not bool(world.get("simulation_only")):
+		session.request_stormwood_encounter({"kind": "snapshot"})
+
+func request_start(id: String) -> void:
+	last_start_refusal.clear()
+	session.request_stormwood_encounter({"kind": "start", "trainer_id": id})
+
+func _refuse_start(peer: int, id: String, reason: String) -> void:
+	send_to(peer, {"kind": "start_refused", "trainer_id": id, "reason": reason})
+
+func dispatch(peer: int, intent: Dictionary) -> void:
+	if not session.is_host() or session.realm_of(peer) != "stormwood":
+		return
+	var kind := str(intent.get("kind", ""))
+	if kind == "snapshot":
+		for fight: Node in fights.values():
+			if not fight.finished:
+				send_to(peer, fight.snapshot())
+		return
+	var id := str(intent.get("trainer_id", ""))
+	if kind == "start":
+		_start_for(peer, id)
+		return
+	var fight: Node = fights.get(id)
+	if not is_instance_valid(fight):
+		return
+	match kind:
+		"strike_intent":
+			var verdict: Dictionary = fight.strike(peer, intent)
+			send_to(peer, {"kind": "verdict", "trainer_id": id, "encounter_id": intent.get("encounter_id", ""), "verdict": verdict})
+		"disengage":
+			# A completed round is not withdrawal from the trainer's roster.
+			if str(intent.get("encounter_id", "")) == str(fight.record.get("encounter_id", "")) and str(authority.record(str(intent.encounter_id)).get("phase", "")) != "done":
+				fight.leave(peer)
+
+func _start_for(peer: int, id: String) -> void:
+	var cast := world.get_node("StormwoodTrainers")
+	var spec: Dictionary = cast.authored_specs.get(id, {})
+	var trainer: Node3D = cast.body_for(id)
+	var actor := actor_for(peer)
+	if spec.is_empty() or not is_instance_valid(trainer) or not is_instance_valid(actor) or not is_instance_valid(body_for(peer)):
+		_refuse_start(peer, id, "missing_trainer_or_deployment")
+		return
+	if actor.global_position.distance_to(trainer.global_position) > 12.0:
+		_refuse_start(peer, id, "too_far")
+		return
+	if float(card_for(peer).get("hp", 0.0)) <= 0.0:
+		_refuse_start(peer, id, "no_healthy_deployment")
+		return
+	var flags: RefCounted = get_node("/root/Game").get("progression")
+	if flags.has(str(spec.get("defeat_flag", ""))):
+		_refuse_start(peer, id, "already_defeated")
+		return
+	for flag: String in spec.get("requires_flags", []):
+		if not flags.has(flag):
+			_refuse_start(peer, id, "missing_prerequisite")
+			return
+	# The climax must explicitly register its controller before admitting Marrow.
+	if id == "captain_marrow_dynamo_core":
+		var dynamo := world.get_node_or_null("StormwoodDynamo")
+		if dynamo == null or not dynamo.has_method("begin_for_peer"):
+			_refuse_start(peer, id, "dynamo_unavailable")
+			return
+		dynamo.begin_for_peer(peer)
+		return
+	for active: Node in fights.values():
+		if not active.finished and active.participants.has(peer) and str(active.spec.id) != id:
+			_refuse_start(peer, id, "already_fighting")
+			return
+	var fight: Node = fights.get(id)
+	if is_instance_valid(fight) and not fight.finished:
+		fight.join(peer)
+		return
+	if is_instance_valid(fight):
+		fight.queue_free()
+	fight = HOSTED.new()
+	fight.name = "Trainer_%s" % id
+	add_child(fight)
+	fights[id] = fight
+	var toward := actor.global_position - trainer.global_position
+	toward.y = 0.0
+	var at := trainer.global_position + toward.normalized() * 4.0
+	if not fight.start(self, spec, peer, at):
+		_refuse_start(peer, id, "opponent_unavailable")
+		fights.erase(id)
+		fight.queue_free()
+
+func publish(fight: Node, event: Dictionary) -> void:
+	var message := event.duplicate(true)
+	message["trainer_id"] = str(fight.spec.id)
+	message["encounter_id"] = str(fight.record.get("encounter_id", ""))
+	for peer: int in session.peers_in_realm("stormwood"):
+		send_to(peer, message)
+	if not session.is_active():
+		send_to(session.local_peer_id(), message)
+
+func send_to(peer: int, event: Dictionary) -> void:
+	session.send_stormwood_encounter(peer, event)
+
+func trainer_finished(fight: Node, won: bool) -> void:
+	if won:
+		director.award_hosted_trainer(fight.spec, fight.contributors)
+
+func actor_for(peer: int) -> Node3D:
+	return (world.get_node("StormwoodLightning").call("_actors") as Dictionary).get(peer)
+
+func body_for(peer: int) -> Node3D:
+	return director.deployed_body_for(peer)
+
+func card_for(peer: int) -> Dictionary:
+	return director.call("_creature_card_for", peer)
+
+func body_rows() -> Array:
+	return director.call("_encounter_body_rows")
+
+func body_radius(body: Node3D) -> float:
+	return float(body.call("body_radius")) if body.has_method("body_radius") else 0.5
+
+func _receive(event: Dictionary) -> void:
+	if bool(world.get("simulation_only")):
+		return
+	var kind := str(event.get("kind", ""))
+	var id := str(event.get("trainer_id", ""))
+	if kind == "start_refused":
+		last_start_refusal = event.duplicate(true)
+		var messages := {
+			"missing_trainer_or_deployment": "Bring your companion close before challenging.",
+			"too_far": "Move closer to the trainer to challenge.",
+			"no_healthy_deployment": "Your companion needs to recover before this battle.",
+			"already_defeated": "You have already won this battle.",
+			"missing_prerequisite": "There is more to do before this challenge.",
+			"dynamo_unavailable": "The Dynamo Core is not ready for your challenge.",
+			"already_fighting": "Finish your current battle first.",
+			"opponent_unavailable": "This opponent is not available right now.",
+		}
+		get_node("/root/Game").push_world_message(str(messages.get(str(event.get("reason", "")), "This challenge is not available right now.")))
+		return
+	var manager := world.get_node("CombatManager")
+	if kind == "state":
+		if not (event.get("participants", []) as Array).has(session.local_peer_id()):
+			director.observe_hosted_state(event)
+			return
+		_pending_state = event.duplicate(true)
+		_apply_state()
+		return
+	if kind == "finished":
+		director.remove_hosted_observer(id)
+	if id != _local_trainer or str(event.get("encounter_id", "")) != _local_record:
+		director.observe_hosted_event(id, event)
+		return
+	match kind:
+		"verdict":
+			var verdict: Dictionary = event.verdict
+			if bool(verdict.get("ok", false)):
+				manager.apply_host_strike_verdict(verdict.get("delta", {}))
+			else:
+				manager.note_encounter_refusal(verdict)
+		"enemy_hit":
+			manager.apply_host_enemy_hit(event.payload)
+		"telegraph":
+			director.hosted_telegraph(float(event.seconds))
+		"swing":
+			director.hosted_swing()
+		"finished":
+			_pending_state.clear()
+			director.end_hosted_trainer(bool(event.get("won", false)))
+			_local_trainer = ""
+			_local_record = ""
+
+func _process(_delta: float) -> void:
+	if not _pending_state.is_empty():
+		_apply_state()
+
+func _apply_state() -> void:
+	var manager := world.get_node("CombatManager")
+	var incoming: Dictionary = _pending_state.get("record", {})
+	var incoming_id := str(incoming.get("encounter_id", ""))
+	if incoming_id.is_empty():
+		return
+	if incoming_id != _local_record:
+		if manager.is_fighting():
+			return
+		if str(incoming.get("phase", "")) == "done":
+			_pending_state.clear()
+			return
+		if not director.begin_hosted_round(self, _pending_state):
+			return
+		_local_trainer = str(_pending_state.trainer_id)
+		_local_record = incoming_id
+		_action = 0
+	director.update_hosted_opponent(_pending_state)
+	manager.apply_encounter_record(incoming)
+	_pending_state.clear()
+
+func submit_encounter_intent(intent: Dictionary) -> Dictionary:
+	var request := intent.duplicate(true)
+	request["trainer_id"] = _local_trainer
+	_action += 1
+	request["action"] = _action
+	session.request_stormwood_encounter(request)
+	return {"ok": false, "pending": true, "kind": str(intent.get("kind", "")), "delta": {}}
+
+func is_encounter_host() -> bool:
+	return false
+
+func hosted_transport() -> bool:
+	return true
+
+func local_encounter_peer_id() -> int:
+	return session.local_peer_id()
