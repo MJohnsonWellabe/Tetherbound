@@ -184,11 +184,8 @@ class MeadowsBackdrop extends Control:
 var _main_box: VBoxContainer
 var _load_box: VBoxContainer
 var _confirm_box: VBoxContainer
-var _join_box: VBoxContainer
-## The character-choice step, shown before a new game actually starts. Built
-## fresh every time `_show_character_select()` opens it, the same pattern
-## `_load_box`/`_join_box` already use for their own per-visit rows.
 var _character_box: VBoxContainer
+var _join_box: VBoxContainer
 var _lan_list: VBoxContainer
 var _status: Label
 var _new_button: Button
@@ -201,11 +198,11 @@ var _quit_button: Button
 ## menu, and this is the one field that lets `_unhandled_input()`'s single
 ## shared handler know which. Set by `_show_character_select()`, read there.
 var _character_back: Callable = Callable()
-## The character option the player picked, kept for a future consumer (a
-## starting cosmetic/loadout difference) that does not exist yet -- today's
-## one option makes every choice the same, so nothing reads this yet. Not
-## threaded into `PlayerState`/`character_save.gd` for that reason: there is
-## nothing there for it to change.
+## The character option the player picked. `PlayerState.chosen_character` is
+## set alongside this (both call sites below) the moment it is known, since
+## that is what actually decides the player's body via `art.json`; this copy
+## is kept for a future consumer (a starting cosmetic/loadout difference)
+## that does not exist yet.
 var _pending_character_option_id: String = ""
 
 ## The LAN listener, alive only while the join screen is on. A child of this
@@ -443,6 +440,11 @@ func _build() -> void:
 	_confirm_box.add_theme_constant_override("separation", 12)
 	root_box.add_child(_confirm_box)
 
+	_character_box = VBoxContainer.new()
+	_character_box.visible = false
+	_character_box.add_theme_constant_override("separation", 12)
+	root_box.add_child(_character_box)
+
 	_join_box = VBoxContainer.new()
 	_join_box.visible = false
 	_join_box.add_theme_constant_override("separation", 10)
@@ -549,6 +551,12 @@ func _load_character_options() -> Array:
 ## join once a character exists); `on_back` is what B/`menu_cancel` and this
 ## screen's own Back button do, which differs by how this screen was reached
 ## (main menu for a new game, the join screen for an empty-save join).
+##
+## Each row shows a portrait when the option names one (`assets/ui/
+## portraits/<id>.png`, the same crop convention the creature roster already
+## uses) -- Lyra/Kael/Sera in `data/config/characters.json` all carry one; the
+## original single trainer option does not, so a missing portrait is drawn
+## as a text-only row rather than a broken image.
 func _show_character_select(on_chosen: Callable, on_back: Callable) -> void:
 	_main_box.visible = false
 	_load_box.visible = false
@@ -564,6 +572,11 @@ func _show_character_select(on_chosen: Callable, on_back: Callable) -> void:
 	heading.add_theme_font_size_override("font_size", 26)
 	_character_box.add_child(heading)
 
+	var row := HBoxContainer.new()
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.add_theme_constant_override("separation", 20)
+	_character_box.add_child(row)
+
 	var options := _load_character_options()
 	var first: Button = null
 	for raw: Variant in options:
@@ -573,9 +586,27 @@ func _show_character_select(on_chosen: Callable, on_back: Callable) -> void:
 		var id := str(option.get("id", ""))
 		var display_name := str(option.get("display_name", id if not id.is_empty() else "Character"))
 		var tagline := str(option.get("tagline", ""))
+		var portrait_path := str(option.get("portrait", ""))
+
+		var card := VBoxContainer.new()
+		card.add_theme_constant_override("separation", 8)
+		row.add_child(card)
+
+		if not portrait_path.is_empty():
+			var portrait := TextureRect.new()
+			portrait.custom_minimum_size = Vector2(140, 140)
+			portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			var image: Texture2D = load(portrait_path) as Texture2D
+			if image != null:
+				portrait.texture = image
+			card.add_child(portrait)
+
 		var button := _button(display_name if tagline.is_empty() else "%s — %s" % [display_name, tagline])
+		button.custom_minimum_size = Vector2(140, 48)
 		button.pressed.connect(func() -> void: on_chosen.call(id))
-		_character_box.add_child(button)
+		card.add_child(button)
 		if first == null:
 			first = button
 	if options.is_empty():
@@ -597,6 +628,12 @@ func _start_new_game_with_character(character_id: String) -> void:
 		_status.text = "Game state failed to start."
 		return
 	_pending_character_option_id = character_id
+	# Set BEFORE reset_for_new_game(), same as PlayerState.chosen_character's
+	# own field comment requires -- the body choice is made before the run's
+	# own state resets, not part of it.
+	var player_state := get_node_or_null(^"/root/PlayerState")
+	if player_state != null:
+		player_state.set("chosen_character", character_id)
 	game.call("reset_for_new_game")
 	_enter_world("Starting new game…")
 
@@ -808,6 +845,9 @@ func _join_via(address: String, port: int) -> void:
 		return
 	_show_character_select(func(character_id: String) -> void:
 		_pending_character_option_id = character_id
+		var player_state := get_node_or_null(^"/root/PlayerState")
+		if player_state != null:
+			player_state.set("chosen_character", character_id)
 		_begin_join(address, port, 0.0)
 	, _show_join)
 
@@ -976,6 +1016,7 @@ func _go_to_world(message: String) -> void:
 
 func _show_main() -> void:
 	_confirm_box.visible = false
+	_character_box.visible = false
 	_load_box.visible = false
 	_stop_lan_listener()
 	_join_box.visible = false
@@ -1014,6 +1055,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		return
 	if event.is_action_pressed("menu_cancel") \
-			and (_load_box.visible or _confirm_box.visible or _join_box.visible):
+			and (_load_box.visible or _confirm_box.visible or _character_box.visible
+				or _join_box.visible):
 		_show_main()
 		get_viewport().set_input_as_handled()

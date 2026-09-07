@@ -146,6 +146,40 @@ DROP_FOR_SPECIES = {
     # cost Trailpup once, one creature later.
     "sparkit": ("fox proportions",),
 }
+
+## Biome 2-4 roster (Cloudreach Cliffs, Stormwood, Water Realm), owner-supplied
+## sheets 2026-09-06 (docs/art/reference/22-25). The tail/leg/proportion bans
+## in NEGATIVE_CREATURE were tuned against the Meadows roster's own design
+## language and fight this batch outright -- long-legged wolves and goats,
+## bushy-tailed ferrets and pikas, slender serpents and dragons are the
+## recurring silhouette language across all three new sheets, not an
+## invention to guard against here. Dropped uniformly for the whole batch
+## rather than picked off species by species.
+NEW_BIOME_CREATURES = (
+    "cannonback", "riptusk", "aquaryn", "tidecoil", "mirejaw", "torrentoad",
+    "cragclaw", "riverdrake", "sirenseal", "mangrove_monitor", "mosshell_isle",
+    "abyssal_guardian",
+    "voltwig", "thundertunnel", "glimmermoth", "stormbrush", "mosshock",
+    "staticub", "tanglevolt", "voltarach", "fulgocobra", "stormraven",
+    "pebbik", "craghorn", "stormcapra", "skyrill", "aeriex", "ribbonray",
+    "breezetail", "cloudfang", "cliffspike", "tempestwing", "solmane",
+)
+for _species in NEW_BIOME_CREATURES:
+    DROP_FOR_SPECIES[_species] = (
+        "bushy tail, ", "upturned tail, ", "paddle tail, ", "beaver tail, ",
+        "long legs, ", "tall slender body, ", "fox proportions",
+    )
+
+## Redo pass, owner-supplied dedicated per-character boards 2026-09-07 (one
+## board each for Lyra/Kael/Sera, replacing the shared 3-up sheet). Kael's
+## board shows him gripping a large axe in every turnaround view -- the
+## first-pass prompt said "holding nothing" against NEGATIVE_HUMAN's blanket
+## "weapons" ban, the exact same mistake NEGATIVE_HUMAN's own history
+## (Meadowhart's saddle, the Warden's staff) already made once. Lyra and
+## Sera's flowing scarf/cape drapes are core silhouette, not accident, and
+## sit in the same "cape" ban. Dropped for all three rather than only Kael.
+for _species in ("lyra", "kael", "sera"):
+    DROP_FOR_SPECIES[_species] = ("armor, ", "weapons, ", "cape, ")
 NEGATIVE_HUMAN = ("photorealistic skin, realistic human proportions, armor, weapons, "
             "sword, staff, gun, cape, robe, extra fingers, fused fingers, "
             "noisy surface detail, wet plastic shading, "
@@ -168,7 +202,8 @@ NEGATIVE_HUMAN = ("photorealistic skin, realistic human proportions, armor, weap
 ## DELIBERATELY EXCLUDED -- CLAUDE.md and docs/art/HUMANOID_ASSET_INVENTORY.md
 ## are explicit that he is already rebuilt from board 16 and must not be
 ## regenerated or reopened.
-HUMANS = {"trainer", "grandpa", "warden", "villager_female", "villager_male", "grunt",
+HUMANS = {"lyra", "kael", "sera",
+          "trainer", "grandpa", "warden", "villager_female", "villager_male", "grunt",
           "warden_head", "warden_body",
           "grunt_a", "grunt_b", "grunt_c", "officer_a", "officer_b",
           "captain_a", "captain_b",
@@ -1286,6 +1321,340 @@ SPECIES_PROMPTS = {
         "defector who has stripped the faction's markings. Dark "
         "Charcoal/Slate Gray palette, no Tether Purple anywhere. Six "
         "heads tall, closed-off wary stance"),
+
+    # ---------------------------------------------------------------------
+    # Three alternate main-character choices, owner-supplied 2026-09-06
+    # (docs/art/reference/22_Main_Character_Choices.png). One-shot prompts,
+    # not run through the multi-round blind-critique cycle the trainer/
+    # Grandpa/Warden went through -- owner directive is to move fast and
+    # cheap here, so these are a single preview-quality pass each.
+    # ---------------------------------------------------------------------
+    "lyra": (
+        "stylised young female explorer, LYRA THE PATHFINDER: curious, bold, "
+        "always scouting the horizon. BOTH ARMS HELD CLEARLY AWAY FROM THE "
+        "TORSO WITH VISIBLE DAYLIGHT BETWEEN EACH ARM AND THE BODY, elbows "
+        "bent, hands not touching the body, hips, or each other -- a "
+        "relaxed A-pose, not arms at the sides. FULLY SCULPTED FACIAL "
+        "FEATURES: defined eye sockets, eyebrows, projecting nose and mouth "
+        "geometry. Slim athletic build, six and a quarter heads tall, NOT "
+        "chibi. Five separated fingers on each hand. Teal patterned scarf "
+        "draped over one shoulder with a leaf emblem, cream sleeveless crop "
+        "top, dark utility trousers with brown knee guards, fingerless "
+        "gloves, canvas satchel and pouches at the hip, sturdy brown "
+        "lace-up boots, tousled brown ponytail with loose side strands, "
+        "warm confident smile"),
+    "kael": (
+        "stylised adult male explorer, KAEL THE NORTHWARD: steadfast, "
+        "resilient, built for what's next. GRIPPING A LARGE STONE-HEADED "
+        "AXE with a wood-and-leather-wrapped haft, held low in one hand. "
+        "FULLY SCULPTED FACIAL FEATURES: deep eye sockets, heavy brow, "
+        "projecting nose, thick braided BROWN BEARD, shaved head with a dark "
+        "tribal tattoo pattern across the scalp and one bare forearm. Broad "
+        "heavy build, seven heads tall, NOT slim. Five separated fingers on "
+        "each hand. Layered leather-and-fur vest and harness over a blue-grey "
+        "tunic, round metal compass-emblem buckles, wide belt, thick fur "
+        "mantle draped over one shoulder, dark trousers, heavy fur-cuffed "
+        "boots, stern steady expression"),
+    "sera": (
+        "stylised young female explorer, SERA THE HARMONIST: thoughtful, "
+        "compassionate, gentle. FULLY SCULPTED FACIAL FEATURES: defined eye "
+        "sockets, eyebrows, soft projecting nose and mouth. Slim graceful "
+        "build, six and a quarter heads tall, NOT chibi. Five separated "
+        "fingers on each hand. Long pale blonde braided hair with small "
+        "hairpins, purple asymmetric cape with a botanical emblem, cream "
+        "layered tunic, wide belt with a satchel and a glowing crystal "
+        "pendant, soft fingerless gloves, tall lace-up boots, warm serene "
+        "smile"),
+
+    # ---------------------------------------------------------------------
+    # Water Realm (Biome 4), owner-supplied 2026-09-06
+    # (docs/reference/boards-2026-09-06/water-realm-creature-roster-board.png,
+    # already committed -- see that directory's README.md). Twelve species, one
+    # legendary (abyssal_guardian). Signature feature first, in capitals, per
+    # this file's own established convention.
+    # ---------------------------------------------------------------------
+    "cannonback": (
+        "small-to-medium armored water tortoise creature, CANNONBACK the "
+        "shell sentinel. NO TAIL, BLUNT ROUNDED REAR -- the shell is the "
+        "whole silhouette from above, nothing trails behind it. FOUR TO SIX "
+        "CYLINDRICAL CANNON-BARREL TUBES with dark hollow openings mounted "
+        "upright around the rim of a domed shell, THICK OVERLAPPING "
+        "BLUE-GREY-AND-TAN SHELL PLATES with moss patches. Compact rounded "
+        "turtle head with nothing beside it, stubby powerful legs, "
+        "weathered tan underbelly and face, deep-set amber eyes, barnacle "
+        "texture on the shell rim, armored and unstoppable, reads as a "
+        "natural fortress"),
+    "riptusk": (
+        "medium aggressive river beast creature, RIPTUSK the river reaver. "
+        "ONE HEAD ONLY, at the front end -- the tail is SHORT, PLAIN AND "
+        "BLUNT with no face, no mouth and no second set of tusks anywhere "
+        "on it. TWO LARGE CURVED GOLD-AND-IVORY TUSKS jutting far up from "
+        "the lower jaw past the snout, unmistakably oversized. ROW OF "
+        "ORANGE-TIPPED JAGGED DORSAL SPINES running from the head down the "
+        "spine only. BOLD GOLDEN-ORANGE MARKINGS scattered across the "
+        "shoulders and back OVER a mottled deep teal-blue hide -- the "
+        "orange-gold is a strong, saturated accent colour, not a faint "
+        "tint. Thick muscular quadruped build, powerful clawed feet, small "
+        "aggressive amber eyes, wide territorial stance, tough dominant "
+        "river-shore predator"),
+    "aquaryn": (
+        "elegant four-legged water dragon creature, AQUARYN the tidal "
+        "dragon. EXACTLY FOUR LEGS, EACH FIRMLY ATTACHED TO THE BODY AT "
+        "THE SHOULDER OR HIP WITH NO GAP -- no floating or detached limbs. "
+        "LONG SERPENTINE NECK with a crest of pale blue-white fins running "
+        "from head to tail, LARGE TRANSLUCENT FIN-WINGS folded along the "
+        "back. Sleek pearlescent teal-and-white scaled body, slender legs "
+        "with webbed clawed feet planted under the body, wise amber eyes, "
+        "flowing feathered fin along the spine, majestic and free, a "
+        "legendary companion of land and sea"),
+    "tidecoil": (
+        "colossal serpentine sea creature, TIDECOIL the abyss serpent, no "
+        "legs. LONG COILING EEL-LIKE BODY covered in overlapping "
+        "pale-and-teal iridescent scales, TALL FRILLED DORSAL FIN running "
+        "the full length of the spine flaring into wide fan fins at the "
+        "head. Wide fanged jaw, pink membrane fin frills along the "
+        "jawline, glowing pale eyes, ancient and unbound, a colossal ocean "
+        "force"),
+    "mirejaw": (
+        "small ambush amphibian creature, MIREJAW the depth stalker, "
+        "axolotl and salamander influence. THREE FEATHERED PINK-RED "
+        "EXTERNAL GILL FRONDS on each side of the head, MOTTLED "
+        "DARK-SPOTTED SKIN for camouflage. Wide flat patient mouth, small "
+        "stubby legs, long tapering tail, pale cream underside, calm "
+        "unblinking dark eyes, low ambush-hunter silhouette lurking beneath "
+        "calm water"),
+    "torrentoad": (
+        "small bouncy amphibian creature, TORRENTOAD the bog bouncer. HUGE "
+        "ROUND INFLATED PALE ORANGE THROAT POUCH, POWERFUL SPRING-LOADED "
+        "HIND LEGS built for explosive jumps. Smooth teal-blue skin with "
+        "darker mottled patches, wide comical grinning mouth, big round "
+        "golden eyes, short forelegs, bold and unexpected, turns the tide "
+        "with a bounce"),
+    "cragclaw": (
+        "sturdy defensive crustacean creature, CRAGCLAW the stone sheller. "
+        "EVERY LEG AND CLAW FIRMLY JOINED TO THE BODY WITH NO GAP -- no "
+        "floating or detached limb pieces anywhere. ROUGH MOSS-AND-CORAL "
+        "-CRUSTED STONE SHELL fused across its back like a small island, "
+        "TWO OVERSIZED ORANGE-RED PINCER CLAWS held forward defensively. "
+        "Six jointed orange legs, small alert stalked eyes, weathered rock "
+        "texture with moss and small coral growths in the shell seams, "
+        "tenacious and adaptable, carries the island on its back"),
+    "riverdrake": (
+        "sleek agile amphibious dragon creature, RIVERDRAKE the current "
+        "stalker. STANDING DIRECTLY ON ITS OWN FOUR FEET WITH NO GROUND "
+        "SLAB, NO ROCK PLATFORM AND NO BASE UNDER IT -- only the creature "
+        "itself. LAYERED TEAL-AND-ORANGE FRILLED SAIL FIN running from "
+        "head to tail tip, LONG STREAMLINED BODY built equally for "
+        "swimming and running. Fine overlapping scales fading from deep "
+        "blue-green to pale cream belly, sharp golden eyes, clawed webbed "
+        "feet, low fast quadruped stance, master of both water and land"),
+    "sirenseal": (
+        "graceful melodic seal creature, SIRENSEAL the songweaver. LONG "
+        "FLOWING FIN-CREST trailing from the crown down the back like a "
+        "mane, LARGE SOULFUL DARK EYES. Smooth pearl-white and pale "
+        "blue-grey body, elegant flippers, soft rounded muzzle with long "
+        "whiskers, serene connected expression, its song echoes across the "
+        "waves"),
+    "mangrove_monitor": (
+        "swift lizard creature, MANGROVE MONITOR the shore runner. RIDGE OF "
+        "SMALL SPINY OLIVE-GOLD DORSAL SCUTES running neck to tail tip, "
+        "LONG WHIP-LIKE BALANCING TAIL. Mottled green-brown scaled body "
+        "blending land and water camouflage, alert forward-facing eyes, "
+        "sturdy clawed feet, low fast quadruped stance, stealthy "
+        "resourceful shoreline hunter"),
+    "mosshell_isle": (
+        "enormous gentle tortoise creature, MOSSHELL the living island. A "
+        "SMALL LIVING ECOSYSTEM OF MOSS, GRASS AND A SINGLE SMALL TREE "
+        "growing across its broad domed shell, TRICKLING WATERFALL of moss "
+        "and vines down one side of the shell. Deep olive-green weathered "
+        "shell rim, sage-green wrinkled skin, calm heavy-lidded eyes, "
+        "massive stumpy legs, slow gentle life-giving guardian, a moving "
+        "home for many"),
+    "abyssal_guardian": (
+        "immense legendary deep-sea dragon creature, ABYSSAL GUARDIAN the "
+        "deep watcher. BIOLUMINESCENT PALE-BLUE SPOTS scattered across a "
+        "long serpentine body, ROW OF TALL TRANSLUCENT FIN-SAILS down the "
+        "spine and a wide finned tail. Dark blue-black scaled body fading "
+        "to pale luminous belly, wide fanged jaw with sharp teeth, glowing "
+        "pale eyes, four clawed limbs, mysterious and immense, some depths "
+        "were never meant to be found"),
+
+    # ---------------------------------------------------------------------
+    # Stormwood (Biome 3), owner-supplied 2026-09-06
+    # (docs/reference/boards-2026-09-06/stormwood-creature-roster-board.png,
+    # already committed -- see that directory's README.md). Ten species shown on
+    # this board, one legendary (fulgocobra) and one alpha catch (voltarach).
+    # ---------------------------------------------------------------------
+    "voltwig": (
+        "small gecko-like reptile creature, VOLTWIG the branch gecko, "
+        "FOUR LEGS ONLY, NO BACK BRANCHES AND NO EXTRA APPENDAGES. "
+        "LEAF-SHAPED GREEN-AND-OLIVE SCALES running along the head and "
+        "spine as part of the skin, gold-yellow crackling electric "
+        "patterns woven into the scale texture itself, not separate "
+        "objects. Wide padded clawed toes for climbing, long tapered "
+        "tail, large round amber eyes, clean simple silhouette, no "
+        "floating or disconnected parts, consistent from every angle"),
+    "thundertunnel": (
+        "ONE SINGLE small burrowing mammal creature, exactly one body, no "
+        "duplicate, no second animal, THUNDERTUNNEL the storm mole. BRIGHT "
+        "BLUE CRACKLING LIGHTNING MARKINGS running along the spine and "
+        "flanks, LARGE PADDLE-LIKE DIGGING FOREPAWS with long claws. Dense "
+        "dark grey-black fur, small pink twitching nose, tiny eyes, low "
+        "stocky tunnel-digging build, whiskered snout, single compact "
+        "rounded body with four legs only, storms travel below with this "
+        "one"),
+    "glimmermoth": (
+        "small luminous moth creature, GLIMMERMOTH, EXACTLY FOUR LEGS, "
+        "TWO WINGS AND TWO ANTENNAE, no extra limbs or hidden parts. "
+        "LARGE LAYERED WINGS patterned in deep purple-blue with glowing "
+        "bioluminescent veins woven into the wing texture itself, "
+        "feathered antennae. Soft pale furred body, large round glowing "
+        "eyes kept a consistent size, wings modelled as part of the body "
+        "rather than separate objects, no floating parts, gentle hovering "
+        "silhouette"),
+    "stormbrush": (
+        "medium ground badger creature, STORMBRUSH the thunder badger, "
+        "FOUR LEGS ONLY, no extra limbs. CRACKLING BLUE LIGHTNING "
+        "PATTERNS woven into a black-and-white striped back as part of "
+        "the fur texture, QUILLS INTEGRATED DIRECTLY INTO THE BACK, not "
+        "separate parts. Sturdy low grounded build, bold black-and-white "
+        "facial mask, prominent curved digging claws, thick layered fur "
+        "with a clear silhouette, no armor, no accessories, no floating "
+        "parts, consistent from every angle"),
+    "mosshock": (
+        "small amphibian newt creature, MOSSHOCK the moss newt, FOUR LEGS "
+        "ONLY, no back branches and no extra appendages. LIVING MOSS-LIKE "
+        "FRILLS growing directly out of the body as part of its form (not "
+        "separate objects), GLOWING BLUE-GREEN ELECTRIC SPOTS as part of "
+        "the skin texture along the spine. Bumpy warm-brown and olive "
+        "skin, wide golden eyes, short sturdy legs, red-yellow-black "
+        "colour scheme distinct from the green-toned Voltwig, no floating "
+        "parts, clean simple silhouette consistent from every angle"),
+    "staticub": (
+        "young bear cub creature, STATICUB the storm cub, FOUR LEGS ONLY, "
+        "natural bear anatomy, no extra limbs. CRACKLING BLUE-WHITE "
+        "STATIC SPARKS woven into the fur texture across the shoulders "
+        "and paws (not separate objects), ROUND FLUFFY EARS. Thick "
+        "layered warm brown shaggy fur with a clear silhouette, cream "
+        "muzzle and chest, big curious dark eyes, rounded youthful cub "
+        "proportions, no armor, no accessories, consistent from every "
+        "angle"),
+    "tanglevolt": (
+        "lean wolf creature, TANGLEVOLT the storm wolf, FOUR LEGS ONLY, "
+        "natural wolf anatomy, no extra limbs. JAGGED LIGHTNING-BOLT "
+        "MARKINGS woven into the fur as part of its texture (electric "
+        "glow subtle, not overpowering), GLOWING PALE BLUE EYES. Thick "
+        "layered dark grey-black fur especially around the neck and "
+        "chest, alert pointed ears, lean muscular build, full expressive "
+        "tail, no armor, no accessories, consistent silhouette from every "
+        "angle"),
+    "voltarach": (
+        "large arachnid creature, VOLTARACH the thunder spider, alpha "
+        "catch, EXACTLY EIGHT LEGS, no extra limbs. FOUR GLOWING BLUE "
+        "MULTI-FACETED EYES across the front of the head, CRACKLING GOLD "
+        "LIGHTNING VEINS woven directly into the dark bronze-black "
+        "carapace and every leg as part of the design, not separate "
+        "objects. Legs thick at the base tapering to sharp points, "
+        "angular spiked silhouette, no floating parts, clean game-ready "
+        "topology consistent from every angle"),
+    "fulgocobra": (
+        "ancient legendary cobra serpent creature, FULGOCOBRA the ancient "
+        "serpent, LONG COILED BODY WITH NO LEGS OR EXTRA LIMBS. WIDE "
+        "FLARING COBRA HOOD with a distinctive gold lightning pattern "
+        "woven into the dark scales as part of the texture (not "
+        "separate), LARGE GOLDEN EYES, long curved fangs. Head, hood and "
+        "tail clearly defined and distinct from each other, no floating "
+        "parts or accessories, no visible seams, menacing but majestic, "
+        "consistent from every angle"),
+    "stormraven": (
+        "large corvid creature, STORMRAVEN the skyward watcher, EXACTLY "
+        "TWO LEGS, no extra limbs. Distinct layered feathers especially "
+        "on the wings and tail, GLOWING ELECTRIC-BLUE LIGHTNING PATTERNS "
+        "woven into the feathers themselves (not separate objects), "
+        "jet-black plumage. Wings modelled as part of the body (can be "
+        "posed folded at the sides), sharp glowing blue eyes, heavy dark "
+        "beak, sturdy taloned feet, full layered tail, sharp sleek "
+        "silhouette, no armor, no accessories, consistent from every "
+        "angle"),
+
+    # ---------------------------------------------------------------------
+    # Cloudreach Cliffs (Biome 2), owner-supplied 2026-09-06
+    # (docs/reference/boards-2026-09-06/cloudreach-cliffs-creature-roster-board.png,
+    # already committed -- see that directory's README.md). Eleven
+    # species shown, one legendary (solmane) and one alpha catch
+    # (tempestwing).
+    # ---------------------------------------------------------------------
+    "pebbik": (
+        "small fluffy mammal creature, PEBBIK the cliff pika. OVERSIZED "
+        "ROUND EARS with blue feathered tufts at the tips, a FEATHERY "
+        "BLUE-TIPPED TAIL curling upward. Warm tan-and-cream fur, big "
+        "curious dark eyes, small compact rounded body, tiny paws, "
+        "curious spirits climb higher, alert perched posture on a rock"),
+    "craghorn": (
+        "sturdy mountain goat creature, CRAGHORN the mountain goat. "
+        "MASSIVE CURLED RIDGED HORNS sweeping back from the crown, THICK "
+        "SHAGGY WHITE-AND-GREY WOOL COAT. Sturdy four-legged stance, dark "
+        "hooves, calm weathered face, steadfast paths lead further, built "
+        "for high cliff terrain"),
+    "stormcapra": (
+        "large armored ram creature, STORMCAPRA the armored ram. HEAVY "
+        "OVERLAPPING GREY STONE-PLATE ARMOR fused across the shoulders and "
+        "back, a GLOWING BLUE CRYSTAL embedded in the chest plate. Thick "
+        "curled horns, shaggy pale wool beneath the armor, sturdy heavy "
+        "legs, resilient spirits weather any storm"),
+    "skyrill": (
+        "small agile lizard creature, SKYRILL the cliff lizard. LARGE "
+        "COLOURFUL ORANGE-AND-BLUE FRILLED SAIL FIN along the back capable "
+        "of gliding, SPOTTED SCALE PATTERN. Slender four-legged body, long "
+        "balancing tail, bright orange eye, clinging clawed feet, small "
+        "rides can reach great heights"),
+    "aeriex": (
+        "elegant flying serpent creature, AERIEX the wind serpent, no "
+        "legs. LONG RIBBON-LIKE BODY with layered rainbow teal-orange "
+        "feathered fins running its full length, CRESTED FEATHERED HEAD. "
+        "Pale cream underside, graceful curling flight pose, golden eyes, "
+        "even currents carry dreams"),
+    "ribbonray": (
+        "graceful gliding creature, RIBBONRAY the sky glider, no legs. "
+        "TWO ENORMOUS WIDE FEATHERED WING-FINS spanning far wider than the "
+        "body, attached firmly along the sides with no gap, in a "
+        "purple-blue-orange gradient -- the wings are the single largest "
+        "and most visible feature. ONE BIRD-LIKE HEAD with a small beak and "
+        "bright eyes at the front, clearly a head and not a fin. LONG "
+        "TRAILING RIBBON-LIKE TAIL STREAMERS behind the body. Slender "
+        "aerodynamic body, no floating or detached parts, soaring flight "
+        "silhouette, consistent from every angle"),
+    "breezetail": (
+        "small bushy-tailed mammal creature, BREEZETAIL the cliff ferret. "
+        "ENORMOUS FLUFFY STRIPED TAIL nearly as large as its whole body, a "
+        "small harness with pouches. Warm brown-and-cream fur, alert "
+        "perked ears, bright curious eyes, small paths lead to big "
+        "horizons, agile mountain scrambler"),
+    "cloudfang": (
+        "large white wolf creature, CLOUDFANG the sky wolf. THICK LAYERED "
+        "WHITE-AND-PALE-BLUE FUR with a longer ruff around the neck and "
+        "shoulders, PIERCING PALE BLUE EYES. Powerful long-legged build, "
+        "sharp fangs, sturdy clawed paws, the higher we roam the brighter "
+        "we become, noble pack-leader bearing"),
+    "cliffspike": (
+        "small spiky mammal creature, CLIFFSPIKE the cliff creature, "
+        "hedgehog and porcupine influence. DENSE COAT OF LONG BLUE-AND-TAN "
+        "BANDED SPINES covering the whole back and sides, SMALL ROUND FACE "
+        "peeking out from the spines. Stubby legs, dark button eyes, tough "
+        "roots stand taller here, compact defensive posture"),
+    "tempestwing": (
+        "large armored dragonfly creature, TEMPESTWING the giant "
+        "dragonfly, alpha catch. FOUR LARGE IRIDESCENT BLUE-GOLD VEINED "
+        "WINGS, LONG SEGMENTED ARMORED TAIL. Metallic blue-bronze "
+        "exoskeleton, huge compound eyes, six spindly clawed legs gripping "
+        "a perch, masters the storms and rides the skies"),
+    "solmane": (
+        "majestic legendary winged lion creature, SOLMANE the winged "
+        "lion. ENORMOUS GOLDEN-AND-TEAL FEATHERED WINGS spanning wide, a "
+        "FLOWING GOLDEN MANE with feathered highlights. Powerful lion "
+        "body, calm noble expression, sturdy clawed paws, long tufted "
+        "tail, some creatures teach us what's possible, radiant and "
+        "inspiring"),
 }
 
 
