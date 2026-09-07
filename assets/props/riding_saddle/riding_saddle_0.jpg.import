@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dveoy21wt5oii"
-path="res://.godot/imported/riding_saddle_0.jpg-5bd6455969a62075a13489c59cf47544.ctex"
+path.s3tc="res://.godot/imported/riding_saddle_0.jpg-5bd6455969a62075a13489c59cf47544.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "a6965bfc154c231a7f7ce997b67d4e60"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/props/riding_saddle/riding_saddle_0.jpg"
-dest_files=["res://.godot/imported/riding_saddle_0.jpg-5bd6455969a62075a13489c59cf47544.ctex"]
+dest_files=["res://.godot/imported/riding_saddle_0.jpg-5bd6455969a62075a13489c59cf47544.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

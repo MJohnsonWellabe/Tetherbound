@@ -3,19 +3,20 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cgq8yxpxslnda"
-path="res://.godot/imported/Leaves_NormalTree_C_desat55_b100.png-944bc9fa978ec3a90c2df9cac7642fae.ctex"
+path.s3tc="res://.godot/imported/Leaves_NormalTree_C_desat55_b100.png-944bc9fa978ec3a90c2df9cac7642fae.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55_b100.png"
-dest_files=["res://.godot/imported/Leaves_NormalTree_C_desat55_b100.png-944bc9fa978ec3a90c2df9cac7642fae.ctex"]
+dest_files=["res://.godot/imported/Leaves_NormalTree_C_desat55_b100.png-944bc9fa978ec3a90c2df9cac7642fae.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -37,4 +38,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

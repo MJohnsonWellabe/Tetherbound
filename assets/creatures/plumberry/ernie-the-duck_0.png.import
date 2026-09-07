@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dkb4unjw4r4kq"
-path="res://.godot/imported/ernie-the-duck_0.png-ca337b5769e7c0aef8f9c18ebea59809.ctex"
+path.s3tc="res://.godot/imported/ernie-the-duck_0.png-ca337b5769e7c0aef8f9c18ebea59809.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "878bb37dbdba6591b5534e27faaaadf8"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/creatures/plumberry/ernie-the-duck_0.png"
-dest_files=["res://.godot/imported/ernie-the-duck_0.png-ca337b5769e7c0aef8f9c18ebea59809.ctex"]
+dest_files=["res://.godot/imported/ernie-the-duck_0.png-ca337b5769e7c0aef8f9c18ebea59809.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

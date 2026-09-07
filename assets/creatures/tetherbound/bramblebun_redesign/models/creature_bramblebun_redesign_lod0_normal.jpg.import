@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c2jprbm30iq6c"
-path="res://.godot/imported/creature_bramblebun_redesign_lod0_normal.jpg-e253798a2c265174a81246572304ce47.ctex"
+path.s3tc="res://.godot/imported/creature_bramblebun_redesign_lod0_normal.jpg-e253798a2c265174a81246572304ce47.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "2e302d5c0209cefb4faea52059a58744"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/creatures/tetherbound/bramblebun_redesign/models/creature_bramblebun_redesign_lod0_normal.jpg"
-dest_files=["res://.godot/imported/creature_bramblebun_redesign_lod0_normal.jpg-e253798a2c265174a81246572304ce47.ctex"]
+dest_files=["res://.godot/imported/creature_bramblebun_redesign_lod0_normal.jpg-e253798a2c265174a81246572304ce47.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

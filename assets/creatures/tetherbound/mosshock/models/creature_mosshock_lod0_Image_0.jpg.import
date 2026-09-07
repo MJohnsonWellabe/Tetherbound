@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://0peyf0xkbgu3"
-path="res://.godot/imported/creature_mosshock_lod0_Image_0.jpg-d81a6c765e1203b4ea7d790a1a544458.ctex"
+path.s3tc="res://.godot/imported/creature_mosshock_lod0_Image_0.jpg-d81a6c765e1203b4ea7d790a1a544458.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "631df0eb504a76b78e923a9c8e7bf967"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/creatures/tetherbound/mosshock/models/creature_mosshock_lod0_Image_0.jpg"
-dest_files=["res://.godot/imported/creature_mosshock_lod0_Image_0.jpg-d81a6c765e1203b4ea7d790a1a544458.ctex"]
+dest_files=["res://.godot/imported/creature_mosshock_lod0_Image_0.jpg-d81a6c765e1203b4ea7d790a1a544458.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

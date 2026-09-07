@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cgdosh63acmsx"
-path="res://.godot/imported/creature_cindercub_lod0_metallic_roughness.jpg-4de318d76ae2422046c0a18f09ac43ab.ctex"
+path.s3tc="res://.godot/imported/creature_cindercub_lod0_metallic_roughness.jpg-4de318d76ae2422046c0a18f09ac43ab.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "744d5306dff3d8c3572b7db57360d153"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/creatures/tetherbound/cindercub/models/creature_cindercub_lod0_metallic_roughness.jpg"
-dest_files=["res://.godot/imported/creature_cindercub_lod0_metallic_roughness.jpg-4de318d76ae2422046c0a18f09ac43ab.ctex"]
+dest_files=["res://.godot/imported/creature_cindercub_lod0_metallic_roughness.jpg-4de318d76ae2422046c0a18f09ac43ab.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

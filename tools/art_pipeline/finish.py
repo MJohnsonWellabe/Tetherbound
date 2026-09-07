@@ -32,6 +32,8 @@ import pathlib
 import subprocess
 import sys
 
+from texture_import_policy import apply_policy
+
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 RAW = ROOT / "assets_raw"
 BLENDER = pathlib.Path.home() / ".cache/tetherbound-art/blender-4.2.9-linux-x64/blender"
@@ -180,6 +182,14 @@ def cmd_install(args) -> None:
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_bytes(source.read_bytes())
     print(f"{target.relative_to(ROOT)}  {target.stat().st_size // 1024} KB")
+    # The headless pipeline never opens an editor scene, so Godot's automatic
+    # detect_3d conversion does not fire. Enforce the import policy for any
+    # loose textures already beside the installed model; the repository-wide
+    # --check catches a texture sidecar created only by the subsequent import.
+    updated = apply_policy([target.parent], ROOT)
+    if updated:
+        print(f"set {len(updated)} adjacent texture import(s) to VRAM Compressed")
+        print("run Godot --headless --path . --import to rebuild imported payloads")
 
 
 def main() -> None:

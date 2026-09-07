@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bhrgqm7mv7xmu"
-path="res://.godot/imported/local_historian_lod0_texture_0.png-fd52c773e8181ca13ba18d55febd6c45.ctex"
+path.s3tc="res://.godot/imported/local_historian_lod0_texture_0.png-fd52c773e8181ca13ba18d55febd6c45.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "a68e26b2a02139fb9c4575446f5d9966"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/characters/local_historian/local_historian_lod0_texture_0.png"
-dest_files=["res://.godot/imported/local_historian_lod0_texture_0.png-fd52c773e8181ca13ba18d55febd6c45.ctex"]
+dest_files=["res://.godot/imported/local_historian_lod0_texture_0.png-fd52c773e8181ca13ba18d55febd6c45.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0
