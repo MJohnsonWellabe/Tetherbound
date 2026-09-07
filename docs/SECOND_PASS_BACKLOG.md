@@ -1,0 +1,55 @@
+# Second-pass backlog
+
+**Created 2026-09-07** under
+`docs/owner/OWNER_DIRECTIVE_2026-09-07_PLAYABLE_FIRST.md`. This run targets the
+**playable four-biome build**; everything deferred to reach it lands here.
+
+**The rule: a deferral that is not written here is a defect, not a shortcut.** Append a
+row the moment something is deferred — not at the end of the run, not "when there's
+time". This file is the entire justification for going fast, and it is the input to the
+second pass.
+
+## How to add a row
+
+| Item | Criterion | Why deferred | Evidence that exists |
+|---|---|---|---|
+
+- **Item** — what was skipped, specifically enough to pick up cold.
+- **Criterion** — which exit criterion it belongs to, by document and number
+  (e.g. `Stormwood §32 #14`, `Water §21 (17)`), so the second pass can close it against
+  the real bar.
+- **Why deferred** — one line. "Needs art that does not exist" and "judge failed once,
+  one-round rule applied" are both fine. "Ran out of time" is fine too, if it is true.
+- **Evidence that exists** — the render, verdict, probe or report already committed, so
+  the second pass does not redo the diagnosis. Path under `ralph/reports/` or `docs/`.
+
+## Known deferrals carried in from before this directive
+
+These were already deferred or open when the directive was written, and belong to the
+second pass unless they start blocking the playable path.
+
+| Item | Criterion | Why deferred | Evidence that exists |
+|---|---|---|---|
+| Every biome fails its blind visual bars; no biome has ever passed both | Stormwood §32 #14, Water §21 (17), Cloudreach and Meadows equivalents | Requires art and lighting work beyond the playable bar | `ralph/reports/JUDGE-OWNER-RUN-20260907/VERDICT.md`, `ralph/reports/STORMWOOD-PROGRESS/crown-visual-judge-0907.md`, `ralph/reports/CLOUDREACH-*/JUDGE-*.md` |
+| Six of nine authored stands under 8 fps on the Ally with grass on | Stormwood §32 #15, Water §21 (17) | Owner deferred deep performance work; cheap wins only | `docs/PERF_ALLY_FIRST_MEASUREMENT_2026-09-07.md` |
+| Texture import: 497 of 608 textures are Lossless rather than VRAM-compressed | performance / build size | Cheap win, but needs a measured before/after `.pck` and a blind check | PR #79 comment, 2026-09-07 |
+| The cast reads as "three incompatible languages" — raptor, deer, trainer/villager split | art coherence | Needs meshes; the authorised pilot covers one subject only | `ralph/reports/JUDGE-OWNER-RUN-20260907/VERDICT.md`, `ralph/reports/WARRENS-ART-0906/JUDGE-round2.md` |
+| Cloudreach stand `05-upper-cloudreach-cliffhold` ground reads flat green | Cloudreach acceptance; owner grass invariant | Nine causes already ruled out; needs a further probe round | `docs/HANDOFF_GRASS_AND_ART_LANES_2026-09-06.md` §3 |
+| Cloudreach Phase A visual audit document never written | `docs/owner/CLOUDREACH_VISUAL_AUDIT_AND_SWEEP_GOAL_2026-09-06.md` | Audit-first process, deferred with the rest of the visual work | that goal document |
+| Meadows visual sweep: grass, trees, Sakura accent, village, Warrens hero pass, stronghold | `docs/owner/MEADOWS_VISUAL_SWEEP_GOAL_2026-09-06.md` | Deferred visual work | that goal document; the 0906 lane reports |
+| Warrens interior geometry reads as "hard 90° extruded prisms" | Meadows visual | Needs an organic tunnel kit — owner budget decision | `ralph/reports/WARRENS-ART-0906/REPORT.md` |
+| Tether machine silhouette unreadable; established as a lighting/staging failure | Meadows visual | Three albedo grades exhausted the cheap lever | `ralph/reports/TETHER-MACHINE-0906/JUDGE-machine-round3.md` |
+| HUD compass shelved; minimap restored after the corrupt second map open | HUD quality | Two attempts failed, rollback taken per the two-no-yield rule | `docs/CODEX_EXIT_HANDOFF_2026-09-07.md`, PR #80 |
+| Stormwood: 57 of ≥160 dialogue nodes, 8 of 12 recipes, 461 placeholder replacement points | Stormwood §32 #7 | Content floor applies this run, not the §13 target | `ralph/reports/STORMWOOD-PROGRESS/census-and-placeholders-0907.md` |
+| Water: 0 of 6 side chains, 12 of 28–32 objectives, 0 of 3 settlements accepted | Water §21 (7) | Content floor applies this run | `ralph/reports/WATER-PROGRESS/EXIT-HANDOFF-2026-09-07.md` |
+| Multiplayer: four-peer finale, reconnect stress, separated-island proofs | Water §21 (15), Stormwood MP | Solo is this run's bar; MP must not corrupt state, but is not proven to depth | `docs/acceptance/MULTIPLAYER_ACCEPTANCE.md` known-open list |
+| Multiplayer owner evidence: outside tester hosting three joiners, owner LAN session | `docs/DEVELOPMENT_ROADMAP.md` Stage 0 exit | Owner-only; no automated evidence can satisfy it | `docs/owner/STAGE_B_HANDOFF_2026-09-06.md` |
+| Combat depth ladder: COMBAT-3, 4 and 6 | `docs/specs/COMBAT_DEPTH_PLAN.md` | Blocked on owner decisions (dodge verb, Y slot, type chart) | `docs/prompts/76-CODEX-combat-depth-performance-and-visual-bar.md` §5 |
+| Gate F chain S03 onward refused by the harness budget guard at 0.049 s/frame | evidence pipeline | Fits only if the frame rate roughly doubles | `ralph/reports/OWNER-KICKOFF-20260907T023802Z/` |
+
+## Deferred during this run
+
+Append below. Newest last.
+
+| Item | Criterion | Why deferred | Evidence that exists |
+|---|---|---|---|

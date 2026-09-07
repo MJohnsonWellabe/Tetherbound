@@ -72,17 +72,83 @@ one for any lane you pick up; none of them is optimistic and all three are accur
 `ralph/reports/STORMWOOD-PROGRESS/EXIT-HANDOFF-2026-09-07.md`,
 `docs/CODEX_EXIT_HANDOFF_2026-09-07.md`.
 
-## 2. What "finished" means
+## 2. What "finished" means — READ THIS BEFORE ANY PHASE
 
-A four-biome game a stranger can play from the opening through the end of Water,
-solo or in co-op, without developer help, that looks like one game throughout. The
-formal bar is `docs/DEVELOPMENT_ROADMAP.md` Stage E, the four-biome Beta Ready gate.
-Per-chapter bars are `docs/acceptance/MEADOWS_EXIT_CRITERION.md`,
+**Owner directive, 2026-09-07:
+`docs/owner/OWNER_DIRECTIVE_2026-09-07_PLAYABLE_FIRST.md`.** It outranks every biome
+exit-criteria document for what it covers. Read it before deciding anything is "done".
+
+This run does **not** target the full acceptance bars. It targets one milestone:
+
+> **THE PLAYABLE FOUR-BIOME BUILD** — a fresh save plays from the opening through the
+> end of Water without a console command, a debug teleport, or a reload to advance.
+
+Reaching that ends the run. Everything else is a second pass.
+
+### What blocks — the only things that stop you
+
+A criterion blocks only if failing it means the player **cannot proceed, loses data, or
+the game stops working**:
+
+1. **The path completes.** Every region enterable, every gate openable by its intended
+   means, every objective advances, every required fight resolvable, every required
+   reward obtainable. No dead ends.
+2. **Nothing breaks.** No freeze, crash, softlock or save corruption. Saves load,
+   migrate, survive realm travel.
+3. **Solo is the bar.** Multiplayer must not corrupt shared state or duplicate items;
+   four-peer finale, reconnect stress and separated-island proofs are deferred.
+4. **`CLAUDE.md`'s hard rules hold.** Five creatures, the human never fights, real-time
+   piloted combat, no storage box. These never bend for speed.
+5. **Content floor, not target.** On the critical path: no dead-travel gap over 120 m,
+   and every region's named encounters present and fightable — placeholders wearing
+   another creature's body are acceptable.
+
+### What is deferred — record it, never block on it
+
+Blind visual bars on every biome. Ally performance budgets. Full §13 density counts,
+dialogue-node counts, recipe counts. Meshy replacements beyond the authorised pilot.
+Four-peer multiplayer proofs. Audio, VFX, animation polish. Anything a player would
+describe as "it looks rough" rather than "I can't get past this".
+
+### Anti-grind rules, binding
+
+1. **The blind visual judge runs once per biome, to RECORD a verdict — not to pass one.**
+   Log it, file the findings, move on. Never iterate a scene to change a verdict this run.
+2. **One round, not two, for anything cosmetic** — grass, ground, lighting, landmarks,
+   sky, night, dressing, composition, HUD. The standing rule is two no-yield attempts;
+   for scene polish it is one.
+   **Exception, owner amendment 2026-09-07: creature and character MESHES get up to
+   THREE blind-judge rounds per subject.** Not one, not countless. The third rejection
+   ends that subject — register it in `docs/SECOND_PASS_BACKLOG.md` with all three
+   verdicts and move to the next. This exception exists because the judge's standing
+   finding is that the cast cannot be fixed by lighting, placement, retexturing or
+   rescaling; it is the one visual problem where scene work cannot substitute. It does
+   **not** reopen scene polish.
+3. **Take the free wins and stop.** Runtime-free data or palette changes — the
+   ground/creature chroma reallocation, landmarks from installed families, the night
+   relight — once, early, then move on. Do not chase what needs new art.
+4. **A placeholder is a valid answer.** Ship the encounter with the wrong body rather
+   than block on the right one. Register it; do not replace it.
+5. **Never weaken a test, an assertion or an acceptance criterion to move faster.**
+   Deferring is written down; quietly lowering one is not permitted. The first is a
+   decision, the second is a lie in the ledger.
+
+### The backlog is what makes this safe
+
+Every deferral goes in **`docs/SECOND_PASS_BACKLOG.md`** as it happens, with what was
+skipped, which criterion it belongs to, why, and what evidence already exists.
+**A deferral that is not written down is a defect, not a shortcut.**
+
+### The bars that still define done, for the second pass
+
+Unchanged and not to be edited: `docs/DEVELOPMENT_ROADMAP.md` Stage E,
+`docs/acceptance/MEADOWS_EXIT_CRITERION.md`,
 `docs/biomes/cloudreach/BUILD_CLOUDREACH_CLIFFS_TO_COMPLETION.md`,
-`docs/biomes/stormwood/BUILD_STORMWOOD_TO_COMPLETION.md` and the Water design
-directive with its own `BUILD_WATER_ARCHIPELAGO_TO_COMPLETION.md`.
+`docs/biomes/stormwood/BUILD_STORMWOOD_TO_COMPLETION.md` §32, and
+`docs/biomes/water/BUILD_WATER_ARCHIPELAGO_TO_COMPLETION.md` §21. No document may be
+edited to make a deferred criterion look satisfied.
 
-The binding principle, unchanged:
+The binding principle still holds, read against the playable bar rather than the full one:
 
 > A region or system is not done because code and data exist. It is done when the
 > complete player path produces the intended Tetherbound experience.
@@ -145,8 +211,13 @@ three phases → the captive legendary release and five-slot ceremony → Spark 
 Livewire → the storm aftermath → the non-enterable Waterward view that hands off to
 Water. Then the continuous chapter run, solo and two-peer.
 
-**Exit:** the Stormwood directive's own exit criteria, proven by a continuous
-playthrough, not by counts.
+**Exit for THIS run (§2's playable bar, not §32):** a player entering from a completed
+Cloudreach save reaches the Waterward view through ordinary play — every gate, objective,
+named encounter, the Dynamo, the release and the aftermath — solo, with no console, no
+debug teleport and no reload to advance. Placeholders are fine. §32's visual (#14),
+performance (#15) and full density (#7) criteria are **deferred to the second pass** and
+recorded in `docs/SECOND_PASS_BACKLOG.md`; run the blind judge once to log a verdict and
+do not iterate on it.
 
 ### Phase 3 — finish Water (Biome 4)
 
@@ -164,8 +235,11 @@ route with real stamina and resources, the six side chains, the objective spine
 (twelve of 28–32 exist), named encounters through host authority, the four-peer
 finale and reconnect, and the aftermath.
 
-**Exit:** the design directive's §22 completion bar, entered and completed through
-ordinary play.
+**Exit for THIS run (§2's playable bar, not §21):** a player reaches Water through
+ordinary play — the Spark-gated reveal and the one-time key — and completes the route to
+the legendary climax, solo, with no console and no dead ends. A late joiner can still
+earn the Swim Stone. §21's visual, performance, full-density and four-peer criteria are
+**deferred to the second pass** and recorded in `docs/SECOND_PASS_BACKLOG.md`.
 
 ### Phase 4 — how it looks, running beside Phases 2 and 3
 
@@ -182,11 +256,20 @@ content." Lane detail in 77: **VIS-MEADOWS**, **VIS-CLOUDREACH**, **VIS-HALL-WAR
 - Stormwood and Water have never passed a blind visual round at all.
 - **ART-PILOT** is §4 below.
 
-**Exit:** a code-blind judge, given fresh frames from all four biomes and told
-nothing, no longer says the game reads as a prototype, and no biome or major UI
-surface reads as a prototype relative to the others.
+**Exit for THIS run:** the free wins are taken once, and a code-blind judge has been run
+**once per biome to record a verdict** — not to pass one. File every finding to
+`docs/SECOND_PASS_BACKLOG.md` and move on. The "no biome reads as a prototype" bar is the
+second pass's exit, not this run's. If a judge fails a scene twice, that is the signal to
+stop, not to try a third time.
 
 ### Phase 5 — the four-biome product audit
+
+**Scoped to the playable bar this run.** The audit's job here is to find what stops a
+player finishing, not to grade polish: dead ends, softlocks, save corruption, missing
+rewards, unfightable encounters, dead travel over 120 m on the critical path. Record the
+polish findings — visuals, density, balance, performance — straight into
+`docs/SECOND_PASS_BACKLOG.md` without fixing them. The full six-question audit in
+`docs/DEVELOPMENT_ROADMAP.md` Stage C is the second pass's opening move.
 
 `docs/DEVELOPMENT_ROADMAP.md` Stage C, its six questions, in full: does it work, is
 there enough to do, is progression satisfying, is it fun minute to minute, does the
@@ -277,6 +360,17 @@ together; lanes sharing `playground_hud.gd`, `game_state.gd`, `playground_world.
 `vegetation.json`, `grass_field.json`, `species.json`, `save_game.gd`, `world_save.gd`,
 `session.gd` or `combat_manager.gd` are serialized on that file. One Godot render at a
 time per box.
+
+**Scope the Godot lock to writes.** Import, export and render take the lock because they
+write `.godot/imported/`. Unit tests, probes and headless smokes against an
+already-imported project do not — they read it, and they run beside a render. Serializing
+them behind the render lock is the largest avoidable throughput loss on a one-box run.
+Serialize full-world smokes against each other for RAM, and take the write lock for
+anything that triggers a re-import; nothing else. Queue lanes by player-path priority:
+a deferred-list task must never hold the lock while a playable-path lane waits. If the
+lock is still the ceiling, widen the box — a second git worktree has its own `.godot/`
+and its own import cache — or push and let CI's parallel jobs do the validation.
+See `docs/AGENT_WORKFLOW.md` §3.
 
 **Checkpoints and stopping.** Checkpoint every two wall-clock hours to
 `ralph/reports/FOUR-BIOME-BUILD/checkpoints.md`: player-visible capability added, paths
