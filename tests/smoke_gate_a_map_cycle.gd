@@ -18,7 +18,7 @@ var _game: Node = null
 var _party: RefCounted = null
 var _director: Node = null
 var _player: CharacterBody3D = null
-var _minimap: Control = null
+var _compass: Control = null
 var _menu: CanvasLayer = null
 
 
@@ -37,17 +37,17 @@ func _run() -> void:
 	_director = _world.get_node_or_null(^"EncounterDirector")
 	_player = _world.get_node_or_null(^"Player") as CharacterBody3D
 	var hud := _world.get_node_or_null(^"PlaygroundHUD")
-	_minimap = hud.get("_minimap") as Control if hud != null else null
+	_compass = hud.get("_compass") as Control if hud != null else null
 	_menu = _game.call("menu") as CanvasLayer if _game != null else null
 	_party = _game.get("party") as RefCounted if _game != null else null
-	if _game == null or _director == null or _player == null or _minimap == null \
+	if _game == null or _director == null or _player == null or _compass == null \
 			or _menu == null or _party == null:
-		_fail("real Meadows boot is missing Game/director/player/HUD minimap/menu/party")
+		_fail("real Meadows boot is missing Game/director/player/HUD compass/menu/party")
 		_report()
 		return
 
 	await _check_real_pad_party_cycle()
-	await _check_actual_travel_drives_minimap()
+	await _check_actual_travel_and_look_drive_compass()
 	await _check_full_map_controller_ownership_and_recovery()
 	_report()
 
@@ -86,30 +86,17 @@ func _check_real_pad_party_cycle() -> void:
 	print("  ok    real pad LB cycles five owned creatures, wraps, and skips resting")
 
 
-func _check_actual_travel_drives_minimap() -> void:
-	# Let the HUD establish its initial stationary sample, then move through the
-	# real left-stick binding. The expected heading comes from resolved world
-	# displacement, never from camera yaw or the requested stick vector -- but
-	# only over the TAIL of the hold. A long held-stick input near spawn can
-	# cross OF15's obstacle-deflection feature (player_controller.gd:287-334,
-	# owner ruling 2026-08-25: "when you hit a rock you should slide around
-	# it"), which genuinely bends the trainer's real path partway through. A
-	# single atan2 over the whole hold's net displacement would blend the
-	# pre- and post-deflection segments into a chord the trainer was never
-	# actually facing at any instant. minimap._movement_yaw (scripts/ui/
-	# minimap.gd:120-131) is itself only ever the most recently resolved
-	# frame's instantaneous heading, so this compares like with like by
-	# sampling "expected" from the same tail window instead.
+func _check_actual_travel_and_look_drive_compass() -> void:
+	# The compass is camera-up, so actual movement must update its player sample
+	# without redefining north. Right-stick orbit independently changes heading.
 	for i in 8:
 		await physics_frame
+	var before := _player.global_position
 	var motion := InputEventJoypadMotion.new()
 	motion.axis = JOY_AXIS_LEFT_X
 	motion.axis_value = 1.0
 	Input.parse_input_event(motion)
 	for i in 60:
-		await physics_frame
-	var tail_before := _player.global_position
-	for i in 10:
 		await physics_frame
 	var release := InputEventJoypadMotion.new()
 	release.axis = JOY_AXIS_LEFT_X
@@ -118,28 +105,22 @@ func _check_actual_travel_drives_minimap() -> void:
 	for i in 8:
 		await physics_frame
 	var after := _player.global_position
-	var displacement := Vector2(after.x - tail_before.x, after.z - tail_before.z)
+	var displacement := Vector2(after.x - before.x, after.z - before.z)
 	if displacement.length() < 0.5:
-		_fail("physical left stick did not move the trainer; minimap travel cannot be proven")
+		_fail("physical left stick did not move the trainer; compass position cannot be proven")
 		return
-	var expected := atan2(displacement.x, displacement.y)
-	var movement_yaw := float(_minimap.get("_movement_yaw"))
-	if absf(angle_difference(expected, movement_yaw)) > 0.12:
-		_fail("minimap heading %.3f does not match resolved travel %.3f" % [movement_yaw, expected])
+	var sampled: Vector3 = _compass.get("_player_pos")
+	if sampled.distance_to(after) > 0.5:
+		_fail("HUD compass did not receive the trainer's resolved world position")
 		return
 
-	# Orbit with the real right stick while standing still. World orientation
-	# must retain travel-up; the independently drawn look marker must change.
-	var retained := movement_yaw
-	var look_before := float(_minimap.get("_look_yaw"))
+	var look_before := float(_compass.get("_look_yaw"))
 	await _hold_axis(JOY_AXIS_RIGHT_X, 1.0, 35)
-	var look_after := float(_minimap.get("_look_yaw"))
-	if absf(angle_difference(retained, float(_minimap.get("_movement_yaw")))) > 0.02:
-		_fail("stationary camera orbit rotated the movement-up map")
-	elif absf(angle_difference(look_before, look_after)) < 0.15:
-		_fail("physical right stick did not update the minimap's independent look heading")
+	var look_after := float(_compass.get("_look_yaw"))
+	if absf(angle_difference(look_before, look_after)) < 0.15:
+		_fail("physical right stick did not update the compass heading")
 	else:
-		print("  ok    resolved travel stays map-up while stationary right-stick look remains independent")
+		print("  ok    resolved travel updates compass position and right-stick look updates heading")
 
 
 func _check_full_map_controller_ownership_and_recovery() -> void:
@@ -152,8 +133,8 @@ func _check_full_map_controller_ownership_and_recovery() -> void:
 		return
 	var bodies: Array = _menu.get("_bodies")
 	var map_tab := bodies[int(_menu.get("_index"))] as Control
-	if map_tab == null or float(map_tab.get("_zoom")) != 1.0:
-		_fail("full map did not open at whole-world fit")
+	if map_tab == null or float(map_tab.get("_zoom")) != 8.0:
+		_fail("full map did not open at the useful 8x local view")
 		return
 	var controls := map_tab.get("_controls_label") as RichTextLabel
 	if controls == null or not controls.text.contains("Zoom") or not controls.text.contains("Pan"):
@@ -164,13 +145,24 @@ func _check_full_map_controller_ownership_and_recovery() -> void:
 		_fail("full-map canvas does not clip scaled map content inside its panel")
 		return
 	var fit_rect: Rect2 = map_tab.call("_map_rect_for_canvas", canvas.size)
+	var destination_button := map_tab.get("_destination_button") as Button
+	if destination_button == null or destination_button.disabled:
+		_fail("tracked opening objective was not auto-highlighted as a mappable destination")
+		return
+	map_tab.call("_on_set_destination_pressed")
+	var has_destination := false
+	for marker: Dictionary in (_game.get("map").call("landmarks") as Array):
+		has_destination = has_destination or str(marker.get("id", "")) == "destination"
+	if not has_destination:
+		_fail("Set objective as destination did not publish a compass marker")
+		return
 
 	await _pulse_motion_action("map_zoom_in")
 	if float(map_tab.get("_zoom")) <= 1.0:
 		_fail("physical RT did not zoom the full map in")
 		return
 	var zoomed_rect: Rect2 = map_tab.call("_map_rect_for_canvas", canvas.size)
-	if zoomed_rect.size.x < fit_rect.size.x * 3.5 or zoomed_rect.size.y < fit_rect.size.y * 3.5:
+	if zoomed_rect.size.x < fit_rect.size.x * 1.9 or zoomed_rect.size.y < fit_rect.size.y * 1.9:
 		_fail("zoom changed state without visibly scaling the map presentation")
 		return
 
@@ -187,10 +179,8 @@ func _check_full_map_controller_ownership_and_recovery() -> void:
 	#     tab's own functions (not duplicated math) so this cannot drift from
 	#     the real implementation, and restored immediately after so nothing
 	#     downstream sees a mutated tab.
-	#  2. Since this spawn sits close to the map's south edge, the clamp is
-	#     expected to engage on the Z axis — confirmed explicitly, so a
-	#     regression that stopped clamping (and let the view scroll off the
-	#     world) would also fail this rather than passing by accident.
+	# Boundary clamping is exercised separately after the manual pan below. At
+	# the new 16x local scale the spawn can honestly centre without touching it.
 	var live_pan: Vector2 = map_tab.get("_pan_world")
 	var unclamped_target: Vector2 = map_tab.call("_pan_world_for_player", _player.global_position)
 	map_tab.set("_pan_world", unclamped_target)
@@ -200,10 +190,7 @@ func _check_full_map_controller_ownership_and_recovery() -> void:
 	if live_pan.distance_to(clamped_target) > 1.0:
 		_fail("zoomed full map did not keep the player centred (pan %s, expected clamped-to-player %s)" % [live_pan, clamped_target])
 		return
-	if unclamped_target.distance_to(clamped_target) < 10.0:
-		_fail("this smoke's spawn no longer sits near a map edge, so the boundary-clamp half of the OP21-15 check is not exercised — move the probe or the spawn")
-		return
-	print("  ok    zoom keeps the view pinned to the player (clamped %.1fm from the true target at this spawn, by the honest world-edge limit)" % unclamped_target.distance_to(clamped_target))
+	print("  ok    zoom keeps the view pinned to the player (world-edge adjustment %.1fm)" % unclamped_target.distance_to(clamped_target))
 
 	# The relay's named region and major destination intentionally share a
 	# centre. Their geometry is therefore the canonical regression case for
@@ -245,13 +232,14 @@ func _check_full_map_controller_ownership_and_recovery() -> void:
 		return
 	# Drive to the boundary, then keep driving. A stable world-space centre on
 	# the second hold proves the clamp rather than merely proving movement.
-	await _hold_axis(JOY_AXIS_RIGHT_X, 1.0, 300)
+	await _hold_axis(JOY_AXIS_RIGHT_X, 1.0, 900)
 	var clamped := map_tab.get("_pan_world") as Vector2
-	await _hold_axis(JOY_AXIS_RIGHT_X, 1.0, 60)
+	await _hold_axis(JOY_AXIS_RIGHT_X, 1.0, 120)
 	if (map_tab.get("_pan_world") as Vector2).distance_to(clamped) > 1.0:
 		_fail("right-stick pan did not clamp at the world boundary")
 		return
-	await _pulse_motion_action("map_zoom_out")
+	for i in 3:
+		await _pulse_motion_action("map_zoom_out")
 	if float(map_tab.get("_zoom")) != 1.0 or (map_tab.get("_pan_world") as Vector2).length() > 0.01:
 		_fail("physical LT did not restore whole-world fit and clear pan")
 		return
@@ -265,6 +253,12 @@ func _check_full_map_controller_ownership_and_recovery() -> void:
 	if bool(_menu.call("is_open")) or paused:
 		_fail("physical Back did not close the full map and release pause ownership")
 		return
+	await _press_action("map")
+	var reopened_tab := (_menu.get("_bodies") as Array)[int(_menu.get("_index"))] as Control
+	if reopened_tab == null or reopened_tab.get("_canvas") != canvas:
+		_fail("reopening the map rebuilt its static canvas instead of reusing the stable view")
+		return
+	await _press_action("menu_cancel")
 	var before := _player.global_position
 	# Try two resolved directions: the opening house can legitimately block one
 	# depending on the camera orbit used above, which is collision correctness,
@@ -353,7 +347,7 @@ func _fail(message: String) -> void:
 func _report() -> void:
 	print("")
 	if _failures.is_empty():
-		print("Gate A map/cycle: OK -- real pad cycling, movement-up minimap, full-map zoom/pan, recovery.")
+		print("Gate A map/cycle: OK -- real pad cycling, heading compass, objective destination, full-map zoom/pan, recovery.")
 		quit(0)
 		return
 	for line in _failures:

@@ -34,12 +34,17 @@ const SETTLE_FRAMES := 240
 const REDRAW_FRAMES := 90
 
 var _out_dir := "res://shots/_diag"
+var _capture_only := ""
 
 
 func _init() -> void:
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--out="):
 			_out_dir = arg.substr(6)
+		elif arg == "--capture-repeat-only":
+			_capture_only = "map_day1_repeat"
+		elif arg.begins_with("--capture-only="):
+			_capture_only = arg.substr(15)
 	_run()
 
 
@@ -63,6 +68,9 @@ func _run() -> void:
 		push_error("Game autoload not found")
 		quit(1)
 		return
+	# This is a controller-first handheld capture. The workstation renderer has
+	# no physical pad attached, so pin the same device state the Ally reports.
+	game.set("_last_input_was_gamepad", true)
 	var menu: CanvasLayer = game.call("menu")
 	if menu == null:
 		push_error("the autoload did not stand up the menu")
@@ -85,6 +93,9 @@ func _run() -> void:
 		map_state.mark_visited(point)
 	game.call("set_objective", "Restore the Old Mill Crossing", Vector3(200.0, 0.0, -140.0))
 	await _shoot_map(menu, map_state, "map_day1", written, failures)
+	# A second open of the identical state catches transient menu/font upload
+	# artefacts without conflating them with a different discovery footprint.
+	await _shoot_map(menu, map_state, "map_day1_repeat", written, failures)
 
 	# --- (c) high coverage: the case W11's judge named but never rendered ---
 	# A sweep of overlapping reveals across the mapped square, sized to land
@@ -121,8 +132,14 @@ func _shoot_map(menu: CanvasLayer, map_state: RefCounted, name: String, written:
 	# explains why this waits far longer than the mitigation nominally needs.
 	for i in REDRAW_FRAMES:
 		await process_frame
-	print("  %-14s surveyed %.2f%%" % [name, float(map_state.call("discovered_fraction")) * 100.0])
-	await _shoot(name, written, failures)
+	print("  %-14s surveyed %.2f%% revision %d" % [name, float(map_state.call("discovered_fraction")) * 100.0, int(map_state.get("revision"))])
+	# Repeated viewport readbacks corrupt the immediately following CanvasItem
+	# frame on the Windows/NVIDIA compatibility renderer (the live UI itself is
+	# clean). Normal evidence therefore skips the redundant reopen frame; the
+	# diagnostic mode walks through the same opens without earlier readbacks and
+	# captures only that reopen as an independent proof.
+	if _capture_only.is_empty() or name == _capture_only:
+		await _shoot(name, written, failures)
 	menu.call("close")
 	for i in 6:
 		await process_frame
