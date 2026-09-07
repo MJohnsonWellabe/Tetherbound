@@ -357,6 +357,18 @@ func _apply_op(op: Dictionary) -> bool:
 				float(op.get("yaw_deg", 0.0)), bool(op.get("paid", true)),
 				str(op.get("realm", "meadows")), str(op.get("uid", "")))
 			return true
+		"building_arch_link":
+			var index := building_index_of(str(op.get("uid", "")))
+			if index < 0:
+				return false
+			var row: Dictionary = placed_buildings[index]
+			if str(row.get("id", "")) != "stormglass_arch" or str(row.get("realm", "")) != "stormwood":
+				return false
+			row["arch_twin"] = str(op.get("twin", ""))
+			if op.has("footing"):
+				row["arch_footing"] = str(op.footing)
+			revision += 1
+			return true
 		"building_remove":
 			# By uid when the op carries one, which is every op the ledger mints
 			# now. The index fallback is only for a delta minted before uids

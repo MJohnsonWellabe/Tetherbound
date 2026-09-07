@@ -167,6 +167,17 @@ func _ready() -> void:
 	rods.name = "StormwoodRodStations"
 	add_child(rods)
 	rods.mount(self)
+	var crown := preload("res://scripts/world/stormwood_crown.gd").new()
+	crown.name = "CrownHeartstone"
+	add_child(crown)
+	crown.mount(self)
+	if not simulation_only:
+		var placer := preload("res://scripts/build/build_placer.gd").new()
+		placer.name = "BuildPlacer"
+		placer.player_path = NodePath("../Player")
+		placer.camera_rig_path = NodePath("../CameraRig")
+		add_child(placer)
+		placer.restore_from_game(get_node("/root/Game"))
 	_ready_complete = true
 	add_to_group("progression_restore")
 	print("STORMWOOD BUILD ",budget.call("summary"))

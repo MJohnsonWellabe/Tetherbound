@@ -120,3 +120,11 @@ Approach change for the next window: freeze additional content-table and silhoue
 | UTC | Main SHA | Score | Window delta | Strategy |
 |---|---|---:|---:|---|
 | 2026-09-07 03:54:38 | 4562268de | 12.00 | 6.75 | Constructed Crown route, then host-coordinated Dynamo; table/silhouette tuning frozen. |
+
+## Missed overnight windows and explicit resume — audited 2026-09-07 12:10 UTC
+
+No checkpoint was actually executed at 05:54:38 or 07:54:38. On resumption, fetched main is still `4562268dee581d2f2ce167a4670bbf752f139310`; the last previous local test artifacts are approximately 04:06 UTC. There is no evidence of continued building, completed CI, or a verified process wait during the intervening gap. The gap must not be advertised as an unattended build run.
+
+Applying the owner's wall-clock rule retrospectively: **05:54:38 = 12.00, delta 0**, first low-progress window; **07:54:38 = 12.00, delta 0**, second consecutive low-progress window. The original broad run therefore reached its stop-building condition. Subsequent elapsed windows add no credit. Its finished local Crown/arch/TM work must be integrated and its remaining scope preserved in a fresh-session tail rather than counted as progress on main.
+
+The owner explicitly resumed at 12:10 UTC with “continue from where you left off.” This begins a resumed execution segment toward the same unchanged full objective and frozen weights, starting at **12.00/100**. First finish and land the preserved wave; then use the fresh tail's bounded priorities. Next resumed checkpoint is **14:10 UTC**. This records a resumed run, not a retroactive reset that makes the missed original windows acceptable.

@@ -40,7 +40,7 @@ func _process(delta: float) -> void:
 	var peer: int = actors.keys()[_rng.randi_range(0, actors.size() - 1)]
 	var body: Node3D = actors[peer]
 	var at := body.global_position
-	if surge.phase_at_position(at) != "break" or not exposed(at, body):
+	if not rules.strike_window(at, surge.phase_at_position(at)) or not exposed(at, body):
 		return
 	at.y = world.ground_height_near(at) + 0.08
 	# Vertical arenas have their own hazard controller; a forest strike must
@@ -70,9 +70,11 @@ func _actors() -> Dictionary:
 	return result
 
 func exposed(at: Vector3, body: Node3D = null) -> bool:
+	if rules.in_glass_sink(at): return true
 	return rules.eligible_ground(at, str(surge.region_at(at)), sheltered(at, body))
 
 func sheltered(at: Vector3, body: Node3D = null) -> bool:
+	if rules.in_glass_sink(at): return false
 	var region := str(surge.region_at(at))
 	# Physical roofs and live baked leaf envelopes both shelter the ground.
 	var query := PhysicsRayQueryParameters3D.create(at + Vector3.UP * 2.2, at + Vector3.UP * 100, 1)

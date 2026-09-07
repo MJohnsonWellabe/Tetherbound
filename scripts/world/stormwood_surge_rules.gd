@@ -5,9 +5,18 @@ extends RefCounted
 const PATH := "res://data/config/stormwood_surge.json"
 const PHASES := ["calm","building","break","fading"]
 var config: Dictionary
+var sink: Dictionary
 
 func _init(authored: Dictionary = {}) -> void:
 	config = authored.duplicate(true) if not authored.is_empty() else JSON.parse_string(FileAccess.get_file_as_string(PATH))
+	sink = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_stormwood.json")).glass_sink
+
+func in_glass_sink(at: Vector3) -> bool:
+	var distance := Vector2(at.x, at.z).distance_to(Vector2(float(sink.centre[0]), float(sink.centre[1])))
+	return distance > float(sink.island_radius) + 20.0 and distance < float(sink.outer_radius) - 110.0 and at.y < float(sink.island_y) - 30.0
+
+func strike_window(at: Vector3, phase: String) -> bool:
+	return phase == "break" or in_glass_sink(at)
 
 func phase_at(elapsed: float,region: String,rod_disabled: bool = false,aftermath: bool = false) -> Dictionary:
 	var row: Dictionary = config.regions.get(region,{})
