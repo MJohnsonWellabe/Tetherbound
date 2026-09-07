@@ -84,19 +84,21 @@ func _run() -> void:
 	# If the client's Stormwood reveal leaks, this point appears in the host's
 	# Meadows map; unrelated host exploration cannot create that false result.
 	var reveal_at := [-350, 450]
-	var host_fog_before: Variant = await probe(0, "map_fog", {"at": reveal_at})
-	var client_fog_before: Variant = await probe(1, "map_fog", {"at": reveal_at})
+	var client_fog_before: Variant = await probe(1, "map_fog")
 	var explored: Dictionary = await step(1, "explore_at", {"at": reveal_at, "settle": 180})
 	check(str(explored.get("verdict", "")) == "PASS", "client discovers its Stormwood map locally")
-	var client_fog_after: Variant = await probe(1, "map_fog", {"at": reveal_at})
-	var host_fog_after: Variant = await probe(0, "map_fog", {"at": reveal_at})
+	# Terrain collision may settle the body away from the requested fixture
+	# coordinate. Ask both maps about where the shipping discovery tick actually
+	# sampled the player, not where the harness originally tried to place them.
+	var settled_at: Array = explored.get("at", reveal_at) as Array
+	var client_fog_after: Variant = await probe(1, "map_fog", {"at": settled_at})
+	var host_fog_after: Variant = await probe(0, "map_fog", {"at": settled_at})
 	check(client_fog_before is Dictionary and client_fog_after is Dictionary
 		and int((client_fog_after as Dictionary).get("cells", 0)) > int((client_fog_before as Dictionary).get("cells", 0)),
 		"client discovers fresh Stormwood fog cells in its local map payload")
 	check(client_fog_after is Dictionary and bool((client_fog_after as Dictionary).get("at_discovered", false)),
 		"client discovers the requested Stormwood position")
-	check(host_fog_before is Dictionary and host_fog_after is Dictionary
-		and not bool((host_fog_before as Dictionary).get("at_discovered", true))
+	check(host_fog_after is Dictionary
 		and not bool((host_fog_after as Dictionary).get("at_discovered", true)),
 		"client Stormwood discovery does not change host Meadows fog")
 

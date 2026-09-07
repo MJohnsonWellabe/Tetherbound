@@ -2637,7 +2637,13 @@ func _step_explore_at(args: Dictionary) -> Dictionary:
 	# system that has stopped ticking still shows up as zero new cells.
 	for i in maxi(1, int(args.get("settle", 240))):
 		await physics_frame
-	return {"verdict": "PASS", "detail": "stood at (%.0f, %.0f), y=%.1f" % [float(at[0]), float(at[1]), y]}
+	var settled := player.global_position
+	return {
+		"verdict": "PASS",
+		"detail": "stood at (%.0f, %.0f), settled at (%.1f, %.1f), y=%.1f"
+			% [float(at[0]), float(at[1]), settled.x, settled.z, settled.y],
+		"at": [settled.x, settled.z],
+	}
 
 
 ## Make sure the authored alpha at `order` is pinned on THIS peer's own map.

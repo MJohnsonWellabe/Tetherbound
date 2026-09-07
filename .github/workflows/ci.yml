@@ -2141,7 +2141,7 @@ jobs:
         env:
           ALL_FILES: ${{ needs.discover-net-smokes.outputs.files }}
           SHARD: ${{ matrix.shard }}
-          SHARD_COUNT: 5
+          SHARD_COUNT: 7
         run: |
           set -uo pipefail
           i=0
