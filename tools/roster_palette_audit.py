@@ -77,8 +77,10 @@ def main():
     only = None
     if "--only" in sys.argv:
         only = sys.argv[sys.argv.index("--only") + 1]
-    spec = json.load(open(os.path.join(ROOT, "data", "creatures", "shiny_colourways.json")))
-    species = [k for k in spec.get("species", {}) if not k.startswith("_")]
+    species = []
+    for filename in ("shiny_colourways.json", "four_biome_colourways.json"):
+        spec = json.load(open(os.path.join(ROOT, "data", "creatures", filename)))
+        species.extend(k for k in spec.get("species", {}) if not k.startswith("_") and k not in species)
 
     rows = {}
     for variant in ("vivid", "shiny", "alpha"):

@@ -1,0 +1,2546 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:178)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:179)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:180)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:242)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:283)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:285)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:299)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:299)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:302)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:302)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:304)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+ERROR: Failed to load script "res://scripts/ui/game_menu.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+ERROR: Cannot open file 'res://.godot/imported/creature_abyssal_guardian_lod0.glb-7a53c70b8994a768e5b31d61ad32cc71.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_abyssal_guardian_lod0.glb-7a53c70b8994a768e5b31d61ad32cc71.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/abyssal_guardian/models/creature_abyssal_guardian_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'abyssal_guardian' model at res://assets/creatures/tetherbound/abyssal_guardian/models/creature_abyssal_guardian_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_aeriex_lod0.glb-8b2eb8f7786c2d93b89d213df0edada4.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_aeriex_lod0.glb-8b2eb8f7786c2d93b89d213df0edada4.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/aeriex/models/creature_aeriex_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'aeriex' model at res://assets/creatures/tetherbound/aeriex/models/creature_aeriex_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_aquaryn_lod0.glb-729d35bab9b7f6e1dc2479015d56fd17.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_aquaryn_lod0.glb-729d35bab9b7f6e1dc2479015d56fd17.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/aquaryn/models/creature_aquaryn_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'aquaryn' model at res://assets/creatures/tetherbound/aquaryn/models/creature_aquaryn_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_tuskroot_lod0.glb-92e7bc7fc582bfd6cd160cc09a31ef9d.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_tuskroot_lod0.glb-92e7bc7fc582bfd6cd160cc09a31ef9d.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/tuskroot/models/creature_tuskroot_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'ashtusk' model at res://assets/creatures/tetherbound/tuskroot/models/creature_tuskroot_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_bramblebun_redesign_lod0.glb-a7f17fa79e3958eaff888ebdbeca5952.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_bramblebun_redesign_lod0.glb-a7f17fa79e3958eaff888ebdbeca5952.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/bramblebun_redesign/models/creature_bramblebun_redesign_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'bramblebun' model at res://assets/creatures/tetherbound/bramblebun_redesign/models/creature_bramblebun_redesign_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_breezetail_lod0.glb-b8e56184c05b0ab3362c38f2cfee9550.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_breezetail_lod0.glb-b8e56184c05b0ab3362c38f2cfee9550.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/breezetail/models/creature_breezetail_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'breezetail' model at res://assets/creatures/tetherbound/breezetail/models/creature_breezetail_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_brooktail_lod0.glb-f287e33bad7a824b98b5056243b54520.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_brooktail_lod0.glb-f287e33bad7a824b98b5056243b54520.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/brooktail/models/creature_brooktail_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'brooktail' model at res://assets/creatures/tetherbound/brooktail/models/creature_brooktail_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_burrowback_lod0.glb-fb493c6ad3850a54d901ad37893d7842.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_burrowback_lod0.glb-fb493c6ad3850a54d901ad37893d7842.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/burrowback/models/creature_burrowback_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'burrowback' model at res://assets/creatures/tetherbound/burrowback/models/creature_burrowback_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_cannonback_lod0.glb-46057cb65d99408c37d2fe29f5789e3e.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_cannonback_lod0.glb-46057cb65d99408c37d2fe29f5789e3e.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/cannonback/models/creature_cannonback_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'cannonback' model at res://assets/creatures/tetherbound/cannonback/models/creature_cannonback_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_cindercub_lod0.glb-e257c94d656c5ee52c68286305cb822c.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_cindercub_lod0.glb-e257c94d656c5ee52c68286305cb822c.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/cindercub/models/creature_cindercub_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'cindercub' model at res://assets/creatures/tetherbound/cindercub/models/creature_cindercub_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_cliffspike_lod0.glb-c71b4c55218cd28ab65e3f6b6cdb2ef2.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_cliffspike_lod0.glb-c71b4c55218cd28ab65e3f6b6cdb2ef2.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/cliffspike/models/creature_cliffspike_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'cliffspike' model at res://assets/creatures/tetherbound/cliffspike/models/creature_cliffspike_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_cloudfang_lod0.glb-1d113586bd9d5b5a95902dce7d26ed8e.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_cloudfang_lod0.glb-1d113586bd9d5b5a95902dce7d26ed8e.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/cloudfang/models/creature_cloudfang_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'cloudfang' model at res://assets/creatures/tetherbound/cloudfang/models/creature_cloudfang_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_cragclaw_lod0.glb-96237d84819ce641c71b5f0751e73a7b.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_cragclaw_lod0.glb-96237d84819ce641c71b5f0751e73a7b.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/cragclaw/models/creature_cragclaw_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'cragclaw' model at res://assets/creatures/tetherbound/cragclaw/models/creature_cragclaw_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_craghorn_lod0.glb-bca32987c6cab14a2d8036064172c7c6.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_craghorn_lod0.glb-bca32987c6cab14a2d8036064172c7c6.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/craghorn/models/creature_craghorn_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'craghorn' model at res://assets/creatures/tetherbound/craghorn/models/creature_craghorn_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_duskhush_lod0.glb-504678397d612f2db6ab7c76e00e4d41.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_duskhush_lod0.glb-504678397d612f2db6ab7c76e00e4d41.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/duskhush/models/creature_duskhush_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'duskhush' model at res://assets/creatures/tetherbound/duskhush/models/creature_duskhush_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_frostclaw_lod0.glb-e0fe3195790212cffe64df2908f453d1.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_frostclaw_lod0.glb-e0fe3195790212cffe64df2908f453d1.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/frostclaw/models/creature_frostclaw_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'frostclaw' model at res://assets/creatures/tetherbound/frostclaw/models/creature_frostclaw_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_fulgocobra_lod0.glb-964b60158506be6d01a8fbd9b63dedbb.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_fulgocobra_lod0.glb-964b60158506be6d01a8fbd9b63dedbb.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/fulgocobra/models/creature_fulgocobra_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'fulgocobra' model at res://assets/creatures/tetherbound/fulgocobra/models/creature_fulgocobra_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_galecrest_lod0.glb-cf21411b680dd8c016d50aebb123ea2e.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_galecrest_lod0.glb-cf21411b680dd8c016d50aebb123ea2e.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/galecrest/models/creature_galecrest_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'galecrest' model at res://assets/creatures/tetherbound/galecrest/models/creature_galecrest_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_galewisp_lod0.glb-5bcd15184ef51eb7a66dea5257057997.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_galewisp_lod0.glb-5bcd15184ef51eb7a66dea5257057997.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/galewisp/models/creature_galewisp_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'galewisp' model at res://assets/creatures/tetherbound/galewisp/models/creature_galewisp_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_glimmermoth_lod0.glb-724548b4ba879b29e54622d9c753ed3a.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_glimmermoth_lod0.glb-724548b4ba879b29e54622d9c753ed3a.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/glimmermoth/models/creature_glimmermoth_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'glimmermoth' model at res://assets/creatures/tetherbound/glimmermoth/models/creature_glimmermoth_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_mangrove_monitor_lod0.glb-7ddc0ce16485c26956e255cc4b3dbff0.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_mangrove_monitor_lod0.glb-7ddc0ce16485c26956e255cc4b3dbff0.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/mangrove_monitor/models/creature_mangrove_monitor_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'mangrove_monitor' model at res://assets/creatures/tetherbound/mangrove_monitor/models/creature_mangrove_monitor_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_meadowhart_lod0.glb-7bc595c2982a8fb8df7b11c6597ab913.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_meadowhart_lod0.glb-7bc595c2982a8fb8df7b11c6597ab913.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/meadowhart/models/creature_meadowhart_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'meadowhart' model at res://assets/creatures/tetherbound/meadowhart/models/creature_meadowhart_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_mirejaw_lod0.glb-e58acb72c4c9291408edf230fb8ae526.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_mirejaw_lod0.glb-e58acb72c4c9291408edf230fb8ae526.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/mirejaw/models/creature_mirejaw_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'mirejaw' model at res://assets/creatures/tetherbound/mirejaw/models/creature_mirejaw_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_mosshell_lod0.glb-0688b7db72b91569ebaabbee9740c98d.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_mosshell_lod0.glb-0688b7db72b91569ebaabbee9740c98d.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/mosshell/models/creature_mosshell_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'mosshell' model at res://assets/creatures/tetherbound/mosshell/models/creature_mosshell_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_mosshock_lod0.glb-970f9379e77efaa745d1665469e94327.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_mosshock_lod0.glb-970f9379e77efaa745d1665469e94327.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/mosshock/models/creature_mosshock_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'mosshock' model at res://assets/creatures/tetherbound/mosshock/models/creature_mosshock_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_mudsnout_lod0.glb-d31891cc82193400a71f8a58d7d6f00c.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_mudsnout_lod0.glb-d31891cc82193400a71f8a58d7d6f00c.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/mudsnout/models/creature_mudsnout_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'mudsnout' model at res://assets/creatures/tetherbound/mudsnout/models/creature_mudsnout_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_burrowback_lod0.glb-fb493c6ad3850a54d901ad37893d7842.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_burrowback_lod0.glb-fb493c6ad3850a54d901ad37893d7842.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/burrowback/models/creature_burrowback_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'nightburrow' model at res://assets/creatures/tetherbound/burrowback/models/creature_burrowback_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_paddlenewt_lod0.glb-5ad94f4f84e53a5eaa69f86d0d2970b6.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_paddlenewt_lod0.glb-5ad94f4f84e53a5eaa69f86d0d2970b6.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/paddlenewt/models/creature_paddlenewt_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'paddlenewt' model at res://assets/creatures/tetherbound/paddlenewt/models/creature_paddlenewt_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_pebbik_lod0.glb-b7241be85e9ba43d12188c47687a6c64.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_pebbik_lod0.glb-b7241be85e9ba43d12188c47687a6c64.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/pebbik/models/creature_pebbik_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'pebbik' model at res://assets/creatures/tetherbound/pebbik/models/creature_pebbik_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_pipwing_lod0.glb-d3b88c369cf1ec317219d0df430fd64e.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_pipwing_lod0.glb-d3b88c369cf1ec317219d0df430fd64e.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/pipwing/models/creature_pipwing_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'pipwing' model at res://assets/creatures/tetherbound/pipwing/models/creature_pipwing_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_reedwing_lod0.glb-445be9a633a4442a1f727ca1c14a9ede.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_reedwing_lod0.glb-445be9a633a4442a1f727ca1c14a9ede.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/reedwing/models/creature_reedwing_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'reedwing' model at res://assets/creatures/tetherbound/reedwing/models/creature_reedwing_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_ribbonray_lod0.glb-797ad5accf2a7beec5a3cd3d2791ed08.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_ribbonray_lod0.glb-797ad5accf2a7beec5a3cd3d2791ed08.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/ribbonray/models/creature_ribbonray_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'ribbonray' model at res://assets/creatures/tetherbound/ribbonray/models/creature_ribbonray_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_paddlenewt_lod0.glb-5ad94f4f84e53a5eaa69f86d0d2970b6.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_paddlenewt_lod0.glb-5ad94f4f84e53a5eaa69f86d0d2970b6.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/paddlenewt/models/creature_paddlenewt_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'riftfrill' model at res://assets/creatures/tetherbound/paddlenewt/models/creature_paddlenewt_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_ripplet_lod0.glb-9ef63535bd3eda468cf7fc096ffcf2df.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_ripplet_lod0.glb-9ef63535bd3eda468cf7fc096ffcf2df.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/ripplet/models/creature_ripplet_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'ripplet' model at res://assets/creatures/tetherbound/ripplet/models/creature_ripplet_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_riptusk_lod0.glb-f846bd8f8603aadd20089edd608b4e50.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_riptusk_lod0.glb-f846bd8f8603aadd20089edd608b4e50.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/riptusk/models/creature_riptusk_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'riptusk' model at res://assets/creatures/tetherbound/riptusk/models/creature_riptusk_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_riverdrake_lod0.glb-e7383a375d323e669db867f549a7f442.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_riverdrake_lod0.glb-e7383a375d323e669db867f549a7f442.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/riverdrake/models/creature_riverdrake_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'riverdrake' model at res://assets/creatures/tetherbound/riverdrake/models/creature_riverdrake_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_shadelet_lod0.glb-be080858291e89471d747ed21314d9ae.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_shadelet_lod0.glb-be080858291e89471d747ed21314d9ae.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/shadelet/models/creature_shadelet_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'shadelet' model at res://assets/creatures/tetherbound/shadelet/models/creature_shadelet_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_sirenseal_lod0.glb-155cf9dac9f7ddd8455747411416bd7b.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_sirenseal_lod0.glb-155cf9dac9f7ddd8455747411416bd7b.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/sirenseal/models/creature_sirenseal_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'sirenseal' model at res://assets/creatures/tetherbound/sirenseal/models/creature_sirenseal_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_skyrill_lod0.glb-ee28ec65f5bc4f9b6d3804f5e92f8177.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_skyrill_lod0.glb-ee28ec65f5bc4f9b6d3804f5e92f8177.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/skyrill/models/creature_skyrill_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'skyrill' model at res://assets/creatures/tetherbound/skyrill/models/creature_skyrill_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_solmane_lod0.glb-6513099d25edec130127dcb91c26499e.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_solmane_lod0.glb-6513099d25edec130127dcb91c26499e.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/solmane/models/creature_solmane_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'solmane' model at res://assets/creatures/tetherbound/solmane/models/creature_solmane_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_sparkit_lod0.glb-47fd02c581b4054e977b38f67d32d0c5.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_sparkit_lod0.glb-47fd02c581b4054e977b38f67d32d0c5.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/sparkit/models/creature_sparkit_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'sparkit' model at res://assets/creatures/tetherbound/sparkit/models/creature_sparkit_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_staticub_lod0.glb-7128d42acf87d3a425c3970a170425e6.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_staticub_lod0.glb-7128d42acf87d3a425c3970a170425e6.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/staticub/models/creature_staticub_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'staticub' model at res://assets/creatures/tetherbound/staticub/models/creature_staticub_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_stormbrush_lod0.glb-ce386ac16ffdee881b552e460d9fed0e.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_stormbrush_lod0.glb-ce386ac16ffdee881b552e460d9fed0e.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/stormbrush/models/creature_stormbrush_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'stormbrush' model at res://assets/creatures/tetherbound/stormbrush/models/creature_stormbrush_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_stormcapra_lod0.glb-507d63e37dfe100ee2932d2d9658ce82.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_stormcapra_lod0.glb-507d63e37dfe100ee2932d2d9658ce82.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/stormcapra/models/creature_stormcapra_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'stormcapra' model at res://assets/creatures/tetherbound/stormcapra/models/creature_stormcapra_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_stormraven_lod0.glb-a46e698f61e9098088344c8fd6066de2.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_stormraven_lod0.glb-a46e698f61e9098088344c8fd6066de2.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/stormraven/models/creature_stormraven_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'stormraven' model at res://assets/creatures/tetherbound/stormraven/models/creature_stormraven_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_trailpup_lod0.glb-e7c5635c34bc52aa246d15b74b05b917.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_trailpup_lod0.glb-e7c5635c34bc52aa246d15b74b05b917.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/trailpup/models/creature_trailpup_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'stormtrail' model at res://assets/creatures/tetherbound/trailpup/models/creature_trailpup_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_tanglevolt_lod0.glb-2fc8d8d101c3a5a84010c3e768b58787.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_tanglevolt_lod0.glb-2fc8d8d101c3a5a84010c3e768b58787.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/tanglevolt/models/creature_tanglevolt_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'tanglevolt' model at res://assets/creatures/tetherbound/tanglevolt/models/creature_tanglevolt_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_tempestwing_lod0.glb-659c4913fe3afa6d705a30c16ac3b47c.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_tempestwing_lod0.glb-659c4913fe3afa6d705a30c16ac3b47c.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/tempestwing/models/creature_tempestwing_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'tempestwing' model at res://assets/creatures/tetherbound/tempestwing/models/creature_tempestwing_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_terrapup_lod0.glb-6a75538a289d5b7a0cb6f8fe16914b49.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_terrapup_lod0.glb-6a75538a289d5b7a0cb6f8fe16914b49.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/terrapup/models/creature_terrapup_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'terrapup' model at res://assets/creatures/tetherbound/terrapup/models/creature_terrapup_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_thundertunnel_lod0.glb-2dd13f1871ce8a25c20da9caf6a3e5c9.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_thundertunnel_lod0.glb-2dd13f1871ce8a25c20da9caf6a3e5c9.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/thundertunnel/models/creature_thundertunnel_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'thundertunnel' model at res://assets/creatures/tetherbound/thundertunnel/models/creature_thundertunnel_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_tidecoil_lod0.glb-a61de83292aa809ea01e7e988f87ddf6.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_tidecoil_lod0.glb-a61de83292aa809ea01e7e988f87ddf6.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/tidecoil/models/creature_tidecoil_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'tidecoil' model at res://assets/creatures/tetherbound/tidecoil/models/creature_tidecoil_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_torrentoad_lod0.glb-d70e624aecf4f6333848ecccd3b73cb1.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_torrentoad_lod0.glb-d70e624aecf4f6333848ecccd3b73cb1.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/torrentoad/models/creature_torrentoad_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'torrentoad' model at res://assets/creatures/tetherbound/torrentoad/models/creature_torrentoad_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_trailpup_lod0.glb-e7c5635c34bc52aa246d15b74b05b917.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_trailpup_lod0.glb-e7c5635c34bc52aa246d15b74b05b917.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/trailpup/models/creature_trailpup_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'trailpup' model at res://assets/creatures/tetherbound/trailpup/models/creature_trailpup_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_tuskroot_lod0.glb-92e7bc7fc582bfd6cd160cc09a31ef9d.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_tuskroot_lod0.glb-92e7bc7fc582bfd6cd160cc09a31ef9d.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/tuskroot/models/creature_tuskroot_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'tuskroot' model at res://assets/creatures/tetherbound/tuskroot/models/creature_tuskroot_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_veridian_lod0.glb-cd8951f3eaf0c8c3603005fb5201c129.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_veridian_lod0.glb-cd8951f3eaf0c8c3603005fb5201c129.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/veridian/models/creature_veridian_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'veridian' model at res://assets/creatures/tetherbound/veridian/models/creature_veridian_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_voltarach_lod0.glb-427f522ac8b9a793dcc062cd2e29fc6b.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_voltarach_lod0.glb-427f522ac8b9a793dcc062cd2e29fc6b.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/voltarach/models/creature_voltarach_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'voltarach' model at res://assets/creatures/tetherbound/voltarach/models/creature_voltarach_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_voltwig_lod0.glb-fca11b1c71ff207f81b482768998e0c8.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_voltwig_lod0.glb-fca11b1c71ff207f81b482768998e0c8.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/voltwig/models/creature_voltwig_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'voltwig' model at res://assets/creatures/tetherbound/voltwig/models/creature_voltwig_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_abyssal_guardian_lod0.glb-7a53c70b8994a768e5b31d61ad32cc71.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_abyssal_guardian_lod0.glb-7a53c70b8994a768e5b31d61ad32cc71.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/abyssal_guardian/models/creature_abyssal_guardian_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'water_abyssal_guardian' model at res://assets/creatures/tetherbound/abyssal_guardian/models/creature_abyssal_guardian_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_aquaryn_lod0.glb-729d35bab9b7f6e1dc2479015d56fd17.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_aquaryn_lod0.glb-729d35bab9b7f6e1dc2479015d56fd17.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/aquaryn/models/creature_aquaryn_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'water_aquaryn' model at res://assets/creatures/tetherbound/aquaryn/models/creature_aquaryn_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_cannonback_lod0.glb-46057cb65d99408c37d2fe29f5789e3e.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_cannonback_lod0.glb-46057cb65d99408c37d2fe29f5789e3e.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/cannonback/models/creature_cannonback_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'water_cannonback' model at res://assets/creatures/tetherbound/cannonback/models/creature_cannonback_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_cragclaw_lod0.glb-96237d84819ce641c71b5f0751e73a7b.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_cragclaw_lod0.glb-96237d84819ce641c71b5f0751e73a7b.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/cragclaw/models/creature_cragclaw_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'water_cragclaw' model at res://assets/creatures/tetherbound/cragclaw/models/creature_cragclaw_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_mangrove_monitor_lod0.glb-7ddc0ce16485c26956e255cc4b3dbff0.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_mangrove_monitor_lod0.glb-7ddc0ce16485c26956e255cc4b3dbff0.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/mangrove_monitor/models/creature_mangrove_monitor_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'water_mangrove_monitor' model at res://assets/creatures/tetherbound/mangrove_monitor/models/creature_mangrove_monitor_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_mirejaw_lod0.glb-e58acb72c4c9291408edf230fb8ae526.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_mirejaw_lod0.glb-e58acb72c4c9291408edf230fb8ae526.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/mirejaw/models/creature_mirejaw_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'water_mirejaw' model at res://assets/creatures/tetherbound/mirejaw/models/creature_mirejaw_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_mosshell_lod0.glb-0688b7db72b91569ebaabbee9740c98d.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_mosshell_lod0.glb-0688b7db72b91569ebaabbee9740c98d.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/mosshell/models/creature_mosshell_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'water_mosshell' model at res://assets/creatures/tetherbound/mosshell/models/creature_mosshell_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_riptusk_lod0.glb-f846bd8f8603aadd20089edd608b4e50.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_riptusk_lod0.glb-f846bd8f8603aadd20089edd608b4e50.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/riptusk/models/creature_riptusk_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'water_riptusk' model at res://assets/creatures/tetherbound/riptusk/models/creature_riptusk_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_riverdrake_lod0.glb-e7383a375d323e669db867f549a7f442.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_riverdrake_lod0.glb-e7383a375d323e669db867f549a7f442.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/riverdrake/models/creature_riverdrake_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'water_riverdrake' model at res://assets/creatures/tetherbound/riverdrake/models/creature_riverdrake_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_sirenseal_lod0.glb-155cf9dac9f7ddd8455747411416bd7b.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_sirenseal_lod0.glb-155cf9dac9f7ddd8455747411416bd7b.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/sirenseal/models/creature_sirenseal_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'water_sirenseal' model at res://assets/creatures/tetherbound/sirenseal/models/creature_sirenseal_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_tidecoil_lod0.glb-a61de83292aa809ea01e7e988f87ddf6.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_tidecoil_lod0.glb-a61de83292aa809ea01e7e988f87ddf6.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/tidecoil/models/creature_tidecoil_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'water_tidecoil' model at res://assets/creatures/tetherbound/tidecoil/models/creature_tidecoil_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Cannot open file 'res://.godot/imported/creature_torrentoad_lod0.glb-d70e624aecf4f6333848ecccd3b73cb1.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://.godot/imported/creature_torrentoad_lod0.glb-d70e624aecf4f6333848ecccd3b73cb1.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: Failed loading resource: res://assets/creatures/tetherbound/torrentoad/models/creature_torrentoad_lod0.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:503)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: species 'water_torrentoad' model at res://assets/creatures/tetherbound/torrentoad/models/creature_torrentoad_lod0.glb did not load as a scene
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:505)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:487)
+       [2] setup (res://scripts/creatures/creature_body.gd:377)
+       [3] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:33)
+ERROR: FITTED BOUNDS FAIL: abyssal_guardian fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: abyssal_guardian fits to 0.000m, declared 7.200m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: aeriex fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: aeriex fits to 0.000m, declared 4.000m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: aquaryn fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: aquaryn fits to 0.000m, declared 3.400m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: ashtusk fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: ashtusk fits to 0.000m, declared 3.600m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: bramblebun fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: bramblebun fits to 0.000m, declared 2.050m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: breezetail fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: breezetail fits to 0.000m, declared 3.250m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: brooktail fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: brooktail fits to 0.000m, declared 2.100m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: burrowback fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: burrowback fits to 0.000m, declared 2.950m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: cannonback fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: cannonback fits to 0.000m, declared 3.700m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: cindercub fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: cindercub fits to 0.000m, declared 2.500m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: cliffspike fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: cliffspike fits to 0.000m, declared 3.250m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: cloudfang fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: cloudfang fits to 0.000m, declared 3.850m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: cragclaw fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: cragclaw fits to 0.000m, declared 2.950m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: craghorn fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: craghorn fits to 0.000m, declared 3.500m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: duskhush fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: duskhush fits to 0.000m, declared 2.300m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: frostclaw fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: frostclaw fits to 0.000m, declared 3.400m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: fulgocobra fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: fulgocobra fits to 0.000m, declared 5.200m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: galecrest fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: galecrest fits to 0.000m, declared 3.500m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: galewisp fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: galewisp fits to 0.000m, declared 3.250m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: glimmermoth fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: glimmermoth fits to 0.000m, declared 3.100m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: mangrove_monitor fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: mangrove_monitor fits to 0.000m, declared 3.400m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: meadowhart fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: meadowhart fits to 0.000m, declared 3.450m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: mirejaw fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: mirejaw fits to 0.000m, declared 2.800m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: mosshell fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: mosshell fits to 0.000m, declared 2.500m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: mosshock fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: mosshock fits to 0.000m, declared 2.950m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: mudsnout fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: mudsnout fits to 0.000m, declared 2.000m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: nightburrow fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: nightburrow fits to 0.000m, declared 3.500m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: paddlenewt fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: paddlenewt fits to 0.000m, declared 2.150m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: pebbik fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: pebbik fits to 0.000m, declared 3.250m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: pipwing fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: pipwing fits to 0.000m, declared 1.900m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: reedwing fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: reedwing fits to 0.000m, declared 2.650m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: ribbonray fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: ribbonray fits to 0.000m, declared 3.700m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: riftfrill fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: riftfrill fits to 0.000m, declared 2.150m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: ripplet fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: ripplet fits to 0.000m, declared 3.600m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: riptusk fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: riptusk fits to 0.000m, declared 4.250m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: riverdrake fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: riverdrake fits to 0.000m, declared 4.000m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: shadelet fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: shadelet fits to 0.000m, declared 2.800m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: sirenseal fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: sirenseal fits to 0.000m, declared 3.250m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: skyrill fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: skyrill fits to 0.000m, declared 3.250m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: solmane fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: solmane fits to 0.000m, declared 6.700m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: sparkit fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: sparkit fits to 0.000m, declared 1.950m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: staticub fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: staticub fits to 0.000m, declared 3.250m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: stormbrush fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: stormbrush fits to 0.000m, declared 3.250m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: stormcapra fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: stormcapra fits to 0.000m, declared 3.850m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: stormraven fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: stormraven fits to 0.000m, declared 3.400m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: stormtrail fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: stormtrail fits to 0.000m, declared 2.550m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: tanglevolt fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: tanglevolt fits to 0.000m, declared 3.400m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: tempestwing fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: tempestwing fits to 0.000m, declared 4.150m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: terrapup fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: terrapup fits to 0.000m, declared 3.850m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: thundertunnel fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: thundertunnel fits to 0.000m, declared 2.800m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: tidecoil fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: tidecoil fits to 0.000m, declared 5.500m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: torrentoad fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: torrentoad fits to 0.000m, declared 3.250m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: trailpup fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: trailpup fits to 0.000m, declared 2.300m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: tuskroot fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: tuskroot fits to 0.000m, declared 3.600m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: veridian fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: veridian fits to 0.000m, declared 5.800m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: voltarach fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: voltarach fits to 0.000m, declared 4.250m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: voltwig fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: voltwig fits to 0.000m, declared 3.250m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: water_abyssal_guardian fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: water_abyssal_guardian fits to 0.000m, declared 7.200m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: water_aquaryn fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: water_aquaryn fits to 0.000m, declared 5.000m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: water_cannonback fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: water_cannonback fits to 0.000m, declared 4.150m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: water_cragclaw fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: water_cragclaw fits to 0.000m, declared 3.700m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: water_mangrove_monitor fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: water_mangrove_monitor fits to 0.000m, declared 3.850m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: water_mirejaw fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: water_mirejaw fits to 0.000m, declared 3.550m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: water_mosshell fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: water_mosshell fits to 0.000m, declared 2.500m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: water_riptusk fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: water_riptusk fits to 0.000m, declared 4.450m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: water_riverdrake fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: water_riverdrake fits to 0.000m, declared 4.150m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: water_sirenseal fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: water_sirenseal fits to 0.000m, declared 3.700m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: water_tidecoil fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: water_tidecoil fits to 0.000m, declared 5.500m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: water_torrentoad fits to 0.000m, below trainer
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)
+ERROR: FITTED BOUNDS FAIL: water_torrentoad fits to 0.000m, declared 3.700m
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/gate_f/probe_creature_fitted_bounds.gd:61)

@@ -28,6 +28,9 @@ const CLOUDREACH_CHAPTER := "res://data/config/cloudreach_chapter.json"
 const CLOUDREACH_ENCOUNTERS := "res://data/config/cloudreach_encounters.json"
 const STORMWOOD_WORLD := "res://data/config/stormwood_world.json"
 const STORMWOOD_ENCOUNTERS := "res://data/config/stormwood_encounters.json"
+const WATER_WORLD := "res://data/config/water_world.json"
+const WATER_ENCOUNTERS := "res://data/config/water_encounters.json"
+const WATER_ROSTER := "res://data/config/water_roster.json"
 
 ## The main Cloudreach road is authored as several named pieces around one required
 ## Fly out-and-back. These are the grounded chapter-spine pieces, not optional loops.
@@ -58,11 +61,12 @@ static func evaluate_all() -> Dictionary:
 		"meadows": _evaluate_meadows(species),
 		"cloudreach": _evaluate_cloudreach(species),
 		"stormwood": _evaluate_stormwood(species),
+		"water": _evaluate_water(),
 	}
 
 
 static func all_routes_pass(result: Dictionary) -> bool:
-	for realm_id: String in ["meadows", "cloudreach", "stormwood"]:
+	for realm_id: String in ["meadows", "cloudreach", "stormwood", "water"]:
 		for route: Dictionary in result.get(realm_id, []):
 			if int(route.get("failing_samples", 0)) > 0:
 				return false
@@ -148,6 +152,35 @@ static func _evaluate_stormwood(species: Dictionary) -> Array[Dictionary]:
 			str(route.get("id", "unknown_route")),
 			_points_xz(route.get("points", [])), bodies
 		))
+	return out
+
+
+static func _evaluate_water() -> Array[Dictionary]:
+	var world := _json(WATER_WORLD)
+	var encounters := _json(WATER_ENCOUNTERS)
+	var roster: Dictionary = _json(WATER_ROSTER).get("species", {})
+	var tables := _by_id(encounters.get("tables", []))
+	var bodies: Array[Dictionary] = []
+	for site: Dictionary in encounters.get("wild_sites", []):
+		var table: Dictionary = tables.get(str(site.get("table_id", "")), {})
+		bodies.append(_body(
+			_point3(site.get("position", [])),
+			int(site.get("count", 1)),
+			_min_water_table_height(table, roster),
+			str(site.get("id", "unknown_site"))
+		))
+	var out: Array[Dictionary] = []
+	# Both the land spines and the direct/sheltered sailing choices marked as
+	# main_path are required traversal. Optional island detours stay outside ROAD.
+	for route_group: String in ["land_routes", "water_routes"]:
+		for route: Dictionary in world.get(route_group, []):
+			if not bool(route.get("main_path", false)):
+				continue
+			out.append(_evaluate_route(
+				str(route.get("id", "unknown_route")),
+				_points_cloudreach(route.get("polyline", [])),
+				bodies
+			))
 	return out
 
 
@@ -273,6 +306,16 @@ static func _min_stormwood_table_height(table: Dictionary, species: Dictionary) 
 	for role: Dictionary in table.get("roles", []):
 		var id := str(role.get("species", role.get("placeholder_species", "")))
 		minimum = minf(minimum, _height_for(id, species))
+	return minimum if minimum < 999999.0 else 1.0
+
+
+static func _min_water_table_height(table: Dictionary, roster: Dictionary) -> float:
+	var minimum := 999999.0
+	for entry: Dictionary in table.get("entries", []):
+		var id := str(entry.get("species_id", entry.get("placeholder_species", "")))
+		var row: Dictionary = roster.get(id, {})
+		var placeholder: Dictionary = row.get("placeholder", {})
+		minimum = minf(minimum, maxf(0.1, float(placeholder.get("target_height_m", 1.0))))
 	return minimum if minimum < 999999.0 else 1.0
 
 

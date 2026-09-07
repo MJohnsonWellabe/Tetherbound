@@ -26,9 +26,17 @@ static func build(world_config: Dictionary, characters: Dictionary, encounters: 
 			entry["placeholder_species"] = _species(str(entry.get("species_id", entry.get("placeholder_species", ""))), errors)
 		tables.append(table)
 	var sites: Array = []
+	var sea_level := float(world_config.get("terrain", {}).get("sea_level_m", 0.0))
 	for authored: Dictionary in encounters.get("wild_sites", []):
 		var site := authored.duplicate(true)
-		site["position"] = _grounded(authored.get("position", []), height_callable, errors, str(authored.id))
+		var placement_mode := str(authored.get("placement_mode", "ground"))
+		if placement_mode == "water_surface":
+			site["position"] = _water_surface(authored, sea_level, errors)
+		elif placement_mode == "ground":
+			site["position"] = _grounded(authored.get("position", []), height_callable, errors, str(authored.id))
+		else:
+			errors.append("Unknown Water wild placement mode: %s (%s)" % [placement_mode, str(authored.id)])
+			site["position"] = []
 		site["requires_flags"] = authored.get("requires_flags", []).duplicate()
 		sites.append(site)
 	var trainers: Dictionary = {}
@@ -112,3 +120,20 @@ static func _grounded(raw: Array, height_callable: Callable, errors: Array[Strin
 		errors.append("Nonfinite encounter ground: " + id)
 		return []
 	return [x, height, z]
+
+
+static func _water_surface(authored: Dictionary, sea_level: float, errors: Array[String]) -> Array:
+	var id := str(authored.get("id", "unknown_site"))
+	var raw: Array = authored.get("position", [])
+	var authored_surface := float(authored.get("surface_y_m", NAN))
+	var submerge := float(authored.get("surface_submerge_fraction", NAN))
+	if raw.size() != 3 or not is_finite(float(raw[0])) or not is_finite(float(raw[2])):
+		errors.append("Invalid Water surface position: " + id)
+		return []
+	if not is_finite(authored_surface) or absf(authored_surface - sea_level) > 0.01:
+		errors.append("Water surface site disagrees with world sea level: " + id)
+		return []
+	if not is_finite(submerge) or submerge < 0.0 or submerge > 0.5:
+		errors.append("Water surface site has invalid submerge fraction: " + id)
+		return []
+	return [float(raw[0]), authored_surface, float(raw[2])]

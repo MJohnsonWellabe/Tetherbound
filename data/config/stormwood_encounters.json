@@ -3,7 +3,7 @@
   "_comment": "Stormwood encounter catalogue only. Its authored role and replacement-point schema now names the installed biome roster; runtime injection, visualisation, and playability are separate work.",
   "realm_id": "stormwood",
   "table_count_contract": 12,
-  "wild_cluster_count_contract": 330,
+  "wild_cluster_count_contract": 401,
   "tables": [
     {
       "id": "verge_calm",
@@ -4836,6 +4836,1071 @@
       "calm_table_id": "dynamo_calm",
       "surge_table_id": "dynamo_surge",
       "replacement_point": "wild_clusters.dynamo_cluster_55"
+    },
+    {
+      "id": "road_visibility_ash_road_01",
+      "region_id": "cinder_verge",
+      "position": [
+        -651.975,
+        0.0,
+        844.22
+      ],
+      "radius": 3.0,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.road_visibility_ash_road_01",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_ash_road_02",
+      "region_id": "cinder_verge",
+      "position": [
+        -623.661,
+        0.0,
+        909.176
+      ],
+      "radius": 3.0,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.road_visibility_ash_road_02",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_ash_road_03",
+      "region_id": "cinder_verge",
+      "position": [
+        -616.636,
+        0.0,
+        979.686
+      ],
+      "radius": 3.0,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.road_visibility_ash_road_03",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_ash_road_04",
+      "region_id": "cinder_verge",
+      "position": [
+        -588.322,
+        0.0,
+        1044.643
+      ],
+      "radius": 3.0,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.road_visibility_ash_road_04",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_ash_road_05",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -565.481,
+        0.0,
+        1110.163
+      ],
+      "radius": 3.0,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.road_visibility_ash_road_05",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_ash_road_06",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -519.338,
+        0.0,
+        1163.939
+      ],
+      "radius": 3.0,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.road_visibility_ash_road_06",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_ash_road_07",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -491.912,
+        0.0,
+        1229.275
+      ],
+      "radius": 3.0,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.road_visibility_ash_road_07",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_ash_road_08",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -445.769,
+        0.0,
+        1283.051
+      ],
+      "radius": 3.0,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.road_visibility_ash_road_08",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_ash_road_09",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -476.853,
+        0.0,
+        1463.965
+      ],
+      "radius": 3.0,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.road_visibility_ash_road_09",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_ash_road_10",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -615.693,
+        0.0,
+        1579.049
+      ],
+      "radius": 3.0,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.road_visibility_ash_road_10",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_ash_road_11",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -791.735,
+        0.0,
+        1694.071
+      ],
+      "radius": 3.0,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.road_visibility_ash_road_11",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_ash_road_12",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -876.24,
+        0.0,
+        1826.456
+      ],
+      "radius": 3.0,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.road_visibility_ash_road_12",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_ash_road_13",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -839.839,
+        0.0,
+        1951.74
+      ],
+      "radius": 3.0,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.road_visibility_ash_road_13",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_ash_road_14",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -804.444,
+        0.0,
+        2013.125
+      ],
+      "radius": 3.0,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.road_visibility_ash_road_14",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_ash_road_15",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -789.582,
+        0.0,
+        2082.408
+      ],
+      "radius": 3.0,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.road_visibility_ash_road_15",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_ash_road_16",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -754.187,
+        0.0,
+        2143.793
+      ],
+      "radius": 3.0,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.road_visibility_ash_road_16",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_ash_road_17",
+      "region_id": "conductor_run",
+      "position": [
+        -739.325,
+        0.0,
+        2213.076
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_ash_road_17",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_ash_road_18",
+      "region_id": "conductor_run",
+      "position": [
+        -703.93,
+        0.0,
+        2274.462
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_ash_road_18",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_ash_road_19",
+      "region_id": "conductor_run",
+      "position": [
+        -704.415,
+        0.0,
+        2303.841
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_ash_road_19",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_conductor_road_01",
+      "region_id": "conductor_run",
+      "position": [
+        -660.138,
+        0.0,
+        2360.21
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_conductor_road_01",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_conductor_road_02",
+      "region_id": "conductor_run",
+      "position": [
+        -608.479,
+        0.0,
+        2408.711
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_conductor_road_02",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_conductor_road_03",
+      "region_id": "conductor_run",
+      "position": [
+        -541.652,
+        0.0,
+        2496.368
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_conductor_road_03",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_conductor_road_04",
+      "region_id": "conductor_run",
+      "position": [
+        -475.016,
+        0.0,
+        2520.464
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_conductor_road_04",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_conductor_road_05",
+      "region_id": "conductor_run",
+      "position": [
+        -331.36,
+        0.0,
+        2612.029
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_conductor_road_05",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_conductor_road_06",
+      "region_id": "conductor_run",
+      "position": [
+        -264.724,
+        0.0,
+        2636.125
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_conductor_road_06",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_conductor_road_07",
+      "region_id": "conductor_run",
+      "position": [
+        -208.69,
+        0.0,
+        2679.497
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_conductor_road_07",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_conductor_road_08",
+      "region_id": "conductor_run",
+      "position": [
+        -218.173,
+        0.0,
+        2734.591
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_conductor_road_08",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_conductor_road_09",
+      "region_id": "conductor_run",
+      "position": [
+        -191.848,
+        0.0,
+        2715.585
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_conductor_road_09",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_conductor_road_10",
+      "region_id": "conductor_run",
+      "position": [
+        -173.262,
+        0.0,
+        2712.613
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_conductor_road_10",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_conductor_road_11",
+      "region_id": "conductor_run",
+      "position": [
+        -164.901,
+        0.0,
+        2702.398
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_conductor_road_11",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_conductor_road_12",
+      "region_id": "conductor_run",
+      "position": [
+        -281.048,
+        0.0,
+        2765.36
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_conductor_road_12",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_conductor_road_13",
+      "region_id": "conductor_run",
+      "position": [
+        -348.758,
+        0.0,
+        2786.248
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_conductor_road_13",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_conductor_road_14",
+      "region_id": "conductor_run",
+      "position": [
+        -451.709,
+        0.0,
+        2848.875
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_conductor_road_14",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_conductor_road_15",
+      "region_id": "conductor_run",
+      "position": [
+        -519.42,
+        0.0,
+        2869.763
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_conductor_road_15",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_conductor_road_16",
+      "region_id": "conductor_run",
+      "position": [
+        -691.872,
+        0.0,
+        2947.983
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_conductor_road_16",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_conductor_road_17",
+      "region_id": "conductor_run",
+      "position": [
+        -762.67,
+        0.0,
+        2950.925
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_conductor_road_17",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_conductor_road_18",
+      "region_id": "conductor_run",
+      "position": [
+        -878.182,
+        0.0,
+        2985.245
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_conductor_road_18",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_conductor_road_19",
+      "region_id": "conductor_run",
+      "position": [
+        -948.98,
+        0.0,
+        2988.187
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_conductor_road_19",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_conductor_road_20",
+      "region_id": "conductor_run",
+      "position": [
+        -1064.493,
+        0.0,
+        3022.507
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_conductor_road_20",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_conductor_road_21",
+      "region_id": "conductor_run",
+      "position": [
+        -1093.543,
+        0.0,
+        3073.883
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_conductor_road_21",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_conductor_road_22",
+      "region_id": "conductor_run",
+      "position": [
+        -1092.92,
+        0.0,
+        3144.739
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_conductor_road_22",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_conductor_road_23",
+      "region_id": "conductor_run",
+      "position": [
+        -1114.059,
+        0.0,
+        3212.371
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_conductor_road_23",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_conductor_road_24",
+      "region_id": "conductor_run",
+      "position": [
+        -1113.437,
+        0.0,
+        3283.228
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_conductor_road_24",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_conductor_road_25",
+      "region_id": "conductor_run",
+      "position": [
+        -1059.363,
+        0.0,
+        3329.829
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_conductor_road_25",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_conductor_road_26",
+      "region_id": "conductor_run",
+      "position": [
+        -992.786,
+        0.0,
+        3354.088
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_conductor_road_26",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_conductor_road_27",
+      "region_id": "conductor_run",
+      "position": [
+        -936.859,
+        0.0,
+        3397.598
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_conductor_road_27",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_conductor_road_28",
+      "region_id": "conductor_run",
+      "position": [
+        -870.282,
+        0.0,
+        3421.857
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_conductor_road_28",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_conductor_road_29",
+      "region_id": "conductor_run",
+      "position": [
+        -814.354,
+        0.0,
+        3465.366
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_conductor_road_29",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_conductor_road_30",
+      "region_id": "conductor_run",
+      "position": [
+        -747.777,
+        0.0,
+        3489.625
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_conductor_road_30",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_conductor_road_31",
+      "region_id": "conductor_run",
+      "position": [
+        -691.849,
+        0.0,
+        3533.135
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_conductor_road_31",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_conductor_road_32",
+      "region_id": "conductor_run",
+      "position": [
+        -645.588,
+        0.0,
+        3546.155
+      ],
+      "radius": 3.0,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.road_visibility_conductor_road_32",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_deepwood_road_01",
+      "region_id": "deepwood",
+      "position": [
+        -627.761,
+        0.0,
+        3608.135
+      ],
+      "radius": 3.0,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.road_visibility_deepwood_road_01",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_deepwood_road_02",
+      "region_id": "deepwood",
+      "position": [
+        -587.185,
+        0.0,
+        3666.226
+      ],
+      "radius": 3.0,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.road_visibility_deepwood_road_02",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_deepwood_road_03",
+      "region_id": "deepwood",
+      "position": [
+        -566.382,
+        0.0,
+        3733.963
+      ],
+      "radius": 3.0,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.road_visibility_deepwood_road_03",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_deepwood_road_04",
+      "region_id": "deepwood",
+      "position": [
+        -525.806,
+        0.0,
+        3792.054
+      ],
+      "radius": 3.0,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.road_visibility_deepwood_road_04",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_deepwood_road_05",
+      "region_id": "deepwood",
+      "position": [
+        -505.002,
+        0.0,
+        3859.79
+      ],
+      "radius": 3.0,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.road_visibility_deepwood_road_05",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_deepwood_road_06",
+      "region_id": "deepwood",
+      "position": [
+        -871.064,
+        0.0,
+        4475.802
+      ],
+      "radius": 3.0,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.road_visibility_deepwood_road_06",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_deepwood_road_07",
+      "region_id": "deepwood",
+      "position": [
+        -872.811,
+        0.0,
+        4494.808
+      ],
+      "radius": 3.0,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.road_visibility_deepwood_road_07",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_deepwood_road_08",
+      "region_id": "deepwood",
+      "position": [
+        -885.023,
+        0.0,
+        4489.798
+      ],
+      "radius": 3.0,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.road_visibility_deepwood_road_08",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_deepwood_road_09",
+      "region_id": "deepwood",
+      "position": [
+        -203.36,
+        0.0,
+        4467.668
+      ],
+      "radius": 3.0,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.road_visibility_deepwood_road_09",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_deepwood_road_10",
+      "region_id": "deepwood",
+      "position": [
+        -183.002,
+        0.0,
+        4602.71
+      ],
+      "radius": 3.0,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.road_visibility_deepwood_road_10",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_deepwood_road_11",
+      "region_id": "deepwood",
+      "position": [
+        -211.94,
+        0.0,
+        4667.391
+      ],
+      "radius": 3.0,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.road_visibility_deepwood_road_11",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_deepwood_road_12",
+      "region_id": "deepwood",
+      "position": [
+        -219.645,
+        0.0,
+        4737.829
+      ],
+      "radius": 3.0,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.road_visibility_deepwood_road_12",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_deepwood_road_13",
+      "region_id": "deepwood",
+      "position": [
+        -248.583,
+        0.0,
+        4802.51
+      ],
+      "radius": 3.0,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.road_visibility_deepwood_road_13",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_deepwood_road_14",
+      "region_id": "deepwood",
+      "position": [
+        -256.288,
+        0.0,
+        4872.949
+      ],
+      "radius": 3.0,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.road_visibility_deepwood_road_14",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_deepwood_road_15",
+      "region_id": "deepwood",
+      "position": [
+        -285.225,
+        0.0,
+        4937.63
+      ],
+      "radius": 3.0,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.road_visibility_deepwood_road_15",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_deepwood_road_16",
+      "region_id": "dynamo",
+      "position": [
+        -292.93,
+        0.0,
+        5008.069
+      ],
+      "radius": 3.0,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.road_visibility_deepwood_road_16",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_deepwood_road_17",
+      "region_id": "dynamo",
+      "position": [
+        -300.133,
+        0.0,
+        5073.686
+      ],
+      "radius": 3.0,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.road_visibility_deepwood_road_17",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_deepwood_road_18",
+      "region_id": "dynamo",
+      "position": [
+        -250.979,
+        0.0,
+        5124.724
+      ],
+      "radius": 3.0,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.road_visibility_deepwood_road_18",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_deepwood_road_19",
+      "region_id": "dynamo",
+      "position": [
+        -219.849,
+        0.0,
+        5188.379
+      ],
+      "radius": 3.0,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.road_visibility_deepwood_road_19",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
+    },
+    {
+      "id": "road_visibility_deepwood_road_20",
+      "region_id": "dynamo",
+      "position": [
+        -147.756,
+        0.0,
+        5272.186
+      ],
+      "radius": 3.0,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.road_visibility_deepwood_road_20",
+      "purpose": "roadside creature sightline pair",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the critical-road shoulder. Stormwood runtime already expands every cluster to exactly two bodies."
     }
   ],
   "named_encounters": [

@@ -16,7 +16,8 @@ func before_each() -> void:
 func test_complete_counts_and_namespaced_board_species_without_story_leak() -> void:
 	assert_true(result.ok, str(result.errors))
 	assert_eq(result.trainer_specs.size(), 24)
-	assert_eq(result.encounter_config.wild_sites.size(), 240)
+	assert_eq(result.encounter_config.wild_sites.size(), int(encounters.census.wild_clusters))
+	assert_true(result.encounter_config.wild_sites.size() > 240)
 	assert_eq(result.chapter.encounter_tables.size(), encounters.tables.size())
 	assert_eq(result.board_to_runtime.size(), 12)
 	assert_false(JSON.stringify(result).to_lower().contains("cloudreach"))
@@ -74,6 +75,8 @@ func test_positions_are_regrounded_and_existing_npc_bodies_are_reused() -> void:
 			assert_eq(spec.reuse_npc_id, "")
 	assert_eq(reused, 3)
 	var ids: Dictionary = {}
+	var surface_sites := 0
+	var surface_sites_over_deep_water := 0
 	for index in result.encounter_config.wild_sites.size():
 		var site: Dictionary = result.encounter_config.wild_sites[index]
 		var original: Dictionary = encounters.wild_sites[index]
@@ -81,8 +84,38 @@ func test_positions_are_regrounded_and_existing_npc_bodies_are_reused() -> void:
 		ids[site.id] = true
 		assert_eq(site.position[0], original.position[0])
 		assert_eq(site.position[2], original.position[2])
-		assert_almost_eq(site.position[1], field.height_at(site.position[0], site.position[2]))
+		if str(original.get("placement_mode", "ground")) == "water_surface":
+			surface_sites += 1
+			assert_almost_eq(site.position[1], float(world.terrain.sea_level_m))
+			if absf(site.position[1] - field.height_at(site.position[0], site.position[2])) > 1.0:
+				surface_sites_over_deep_water += 1
+		else:
+			assert_almost_eq(site.position[1], field.height_at(site.position[0], site.position[2]))
 		assert_eq(site.count, original.count)
+	assert_eq(surface_sites, 17)
+	assert_true(surface_sites_over_deep_water >= 15,
+		"surface mode must materially differ from terrain grounding across the sailing route")
+
+
+func test_surface_site_contract_rejects_wrong_waterline_or_submerge() -> void:
+	var changed := encounters.duplicate(true)
+	var surface_index := -1
+	for index in changed.wild_sites.size():
+		if str(changed.wild_sites[index].get("placement_mode", "")) == "water_surface":
+			surface_index = index
+			break
+	assert_true(surface_index >= 0)
+	if surface_index < 0:
+		return
+	changed.wild_sites[surface_index].surface_y_m = 3.0
+	var wrong_level := ADAPTER.build(world, characters, changed, field.height_at)
+	assert_false(wrong_level.ok)
+	assert_true(str(wrong_level.errors).contains("disagrees with world sea level"))
+	changed = encounters.duplicate(true)
+	changed.wild_sites[surface_index].surface_submerge_fraction = 0.75
+	var wrong_submerge := ADAPTER.build(world, characters, changed, field.height_at)
+	assert_false(wrong_submerge.ok)
+	assert_true(str(wrong_submerge.errors).contains("invalid submerge fraction"))
 func test_table_levels_weights_and_named_replacements_remain_exact() -> void:
 	for index in encounters.tables.size():
 		var table: Dictionary = result.chapter.encounter_tables[index]

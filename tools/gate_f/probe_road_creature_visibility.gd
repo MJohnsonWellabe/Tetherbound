@@ -12,7 +12,7 @@ func _init() -> void:
 		criterion["viewport_height_px"], criterion["vertical_fov_deg"],
 		criterion["forward_cone_deg"], criterion["required_visible"],
 	])
-	for realm_id: String in ["meadows", "cloudreach", "stormwood"]:
+	for realm_id: String in ["meadows", "cloudreach", "stormwood", "water"]:
 		print("[%s]" % realm_id)
 		for route: Dictionary in result[realm_id]:
 			print("  %s samples=%d min=%d failing=%d longest=%.0fm" % [

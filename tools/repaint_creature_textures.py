@@ -96,7 +96,10 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from creature_overlays import apply_overlays  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SPEC_PATH = os.path.join(ROOT, "data", "creatures", "shiny_colourways.json")
+SPEC_PATHS = [
+    os.path.join(ROOT, "data", "creatures", "shiny_colourways.json"),
+    os.path.join(ROOT, "data", "creatures", "four_biome_colourways.json"),
+]
 CREATURES = os.path.join(ROOT, "assets", "creatures", "tetherbound")
 
 ## The meadow's own hue, measured off shipped frames rather than off
@@ -108,9 +111,14 @@ TERRAIN_HUE_BAND = (80.0, 175.0)
 
 
 def load_spec():
-    with open(SPEC_PATH) as f:
-        spec = json.load(f)
-    return {k: v for k, v in spec.get("species", {}).items() if not k.startswith("_")}
+    merged = {}
+    for path in SPEC_PATHS:
+        with open(path) as f:
+            spec = json.load(f)
+        for key, value in spec.get("species", {}).items():
+            if not key.startswith("_"):
+                merged[key] = value
+    return merged
 
 
 def find_textures(species):
@@ -366,8 +374,10 @@ def variant_path(src_path, suffix):
 
 def main():
     spec = load_spec()
-    with open(SPEC_PATH) as f:
-        default_finish = json.load(f).get("_finish_default", {})
+    default_finish = {}
+    for path in SPEC_PATHS:
+        with open(path) as f:
+            default_finish.update(json.load(f).get("_finish_default", {}))
     argv = list(sys.argv[1:])
     only = None
     if "--only" in argv:

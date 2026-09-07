@@ -9,6 +9,35 @@ const INTERACTION := preload("res://scripts/world/interactable.gd")
 var _wanted_sites: Dictionary = {}
 var _restoring_surface_position := Vector3.INF
 
+
+## Surface sites are explicit open-water ecology, never land bodies with their Y
+## spoofed once at spawn. CreatureBody still owns all horizontal peace/combat
+## movement; this Water-only subtype replaces ground seating and clamps its
+## origin after inherited physics so gravity cannot sink it toward the seabed.
+class SurfaceWild:
+	extends "res://scripts/creatures/wild_creature.gd"
+	var water_surface_y := 0.0
+	var surface_submerge_fraction := 0.28
+
+	func configure_water_surface(surface_y: float, submerge_fraction: float) -> void:
+		water_surface_y = surface_y
+		surface_submerge_fraction = clampf(submerge_fraction, 0.0, 0.5)
+
+	func surface_origin_y() -> float:
+		return water_surface_y - float(call("body_height")) * surface_submerge_fraction
+
+	func place_on_ground(target: Vector3) -> bool:
+		global_position = Vector3(target.x, surface_origin_y(), target.z)
+		velocity = Vector3.ZERO
+		return true
+
+	func _physics_process(delta: float) -> void:
+		super._physics_process(delta)
+		var at := global_position
+		at.y = surface_origin_y()
+		global_position = at
+		velocity.y = 0.0
+
 ## Resolve a reserved site without rolling its random table. The two authored
 ## references must agree; a missing/mismatched named row never becomes a random
 ## substitute. This plan is also the integration seam for host-owned spawning.
@@ -137,11 +166,21 @@ func _spawn_available_sites() -> void:
 			var selected := roll_wild(table, world_seed(), hash(id) + index)
 			if selected.is_empty():
 				continue
-			var wild := spawn_wild(str(selected.species), centre, {"name": "%s_%d" % [id, index],
+			var opts := {"name": "%s_%d" % [id, index],
 				"site_anchor": centre, "level": selected.level, "aggressive": false,
-				"wander_radius": float(site.get("radius_m", 4))})
+				"wander_radius": float(site.get("radius_m", 4))}
+			var wild: Node3D
+			if str(site.get("placement_mode", "ground")) == "water_surface":
+				var member_at := _surface_member_position(centre, int(site.get("count", 1)), index,
+					float(site.get("radius_m", 4.0)))
+				wild = _spawn_surface_wild(str(selected.species), member_at, opts,
+					float(site.get("surface_y_m", centre.y)),
+					float(site.get("surface_submerge_fraction", 0.28)))
+			else:
+				wild = spawn_wild(str(selected.species), centre, opts)
 			if wild != null:
 				wild.set_meta("water_site_id", id)
+				wild.set_meta("water_placement_mode", str(site.get("placement_mode", "ground")))
 				members.append(wild)
 				_wild_respawn[wild] = float(encounter_config.get("wild_respawn_seconds", 240))
 		_site_members[id] = members
@@ -150,6 +189,56 @@ func _spawn_available_sites() -> void:
 		else:
 			_site_failures[id] = true
 			push_warning("Water site lacks supported creature footing: " + id)
+
+
+static func _surface_member_position(centre: Vector3, count: int, index: int, radius: float) -> Vector3:
+	if count <= 1:
+		return centre
+	var angle := TAU * float(index) / float(count)
+	var spread := minf(maxf(radius * 0.55, 2.0), 4.0)
+	return centre + Vector3(cos(angle) * spread, 0.0, sin(angle) * spread)
+
+
+func _spawn_surface_wild(species: String, spot: Vector3, opts: Dictionary,
+		surface_y: float, submerge_fraction: float) -> Node3D:
+	if not SPECIES.has(species):
+		push_error("spawn_surface_wild('%s') names a species that is not in species.json" % species)
+		return null
+	var once_id := str(opts.get("once_id", ""))
+	if _once_cleared(once_id):
+		return null
+	var wild: Node3D = CREATURE_SCENE.instantiate()
+	wild.set_script(SurfaceWild)
+	wild.name = str(opts.get("name", "SurfaceWild_%s_%d" % [species, _wild_creatures.size() + 1]))
+	var parent: Node = opts.get("parent", null) as Node
+	if not is_instance_valid(parent):
+		parent = get_parent()
+	parent.add_child(wild)
+	wild.call("populate", species, _player)
+	var opt_combat: Variant = opts.get("combat", {})
+	if opt_combat is Dictionary and not opt_combat.is_empty():
+		wild.set("combat_override", opt_combat.duplicate(true))
+	var level := int(opts.get("level", 0))
+	if level > 0:
+		_set_fixed_level(wild, species, level)
+	if opts.has("aggressive"):
+		wild.set("aggressive", bool(opts.aggressive))
+	var wild_cfg: Dictionary = MATH.config().get("wild", {}).duplicate()
+	if opts.has("wander_radius"):
+		wild_cfg["wander_radius"] = opts.wander_radius
+	wild.call("configure", wild_cfg)
+	wild.call("configure_water_surface", surface_y, submerge_fraction)
+	if not bool(wild.call("place_on_ground", spot)):
+		wild.free()
+		return null
+	wild.set("home", wild.global_position)
+	wild.set("_target", wild.global_position)
+	_wild_homes[wild] = wild.global_position
+	wild.connect("wants_to_engage", _on_wild_wants_to_engage.bind(wild))
+	_wild_creatures.append(wild)
+	if not once_id.is_empty():
+		_once_only[wild] = once_id
+	return wild
 
 func _build_trainers() -> void:
 	for placement: Dictionary in encounter_config.get("trainers", []):

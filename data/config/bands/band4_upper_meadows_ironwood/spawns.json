@@ -1141,14 +1141,18 @@
       "order": 4101,
       "species": "meadowhart",
       "count": 1,
-      "centre": [425.0, 0.0, 5844.0],
+      "centre": [
+        425.0,
+        0.0,
+        5844.0
+      ],
       "radius": 12.0,
       "alpha": {
         "level_bonus": 4,
         "scale": 1.35
       },
       "_why": "T5-CADENCE. The herd bull of the Highfield, and the second beat inside T4-REGIONS' 1161m dead run (arc 1703, on the eastern sweep). Band 4 holds 30 meadowhart and all four of its existing alphas sit in the WESTERN third -- the entire eastern half of the longest band in the chapter had no exceptional individual at all.",
-      "_why_alpha": "Fun-rebuild §12's own example of a beat that satisfies the cadence without any fight being required: 'a visible herd on a ridge'. Meadowhart is spec §3's named riding creature, so a visibly larger bull standing over the band's biggest herd is the one silhouette in the Upper Meadows a player is most likely to change direction for -- which is exactly what §12 asks a cadence beat to be. Scale 1.35 and level_bonus 4 match order 4075's tree-line elder, the band's own convention for a solitary temptation, rather than inventing a third pair of numbers. It is a second individual of a species already here rather than a new one: T4-REGIONS' second-ranked chapter gap (zero new species in bands 4 and 5) is a ROSTER question owned by the creature lane, and this lane deliberately did not reach into species.json or the spawn tables to answer it."
+      "_why_alpha": "Fun-rebuild \u00a712's own example of a beat that satisfies the cadence without any fight being required: 'a visible herd on a ridge'. Meadowhart is spec \u00a73's named riding creature, so a visibly larger bull standing over the band's biggest herd is the one silhouette in the Upper Meadows a player is most likely to change direction for -- which is exactly what \u00a712 asks a cadence beat to be. Scale 1.35 and level_bonus 4 match order 4075's tree-line elder, the band's own convention for a solitary temptation, rather than inventing a third pair of numbers. It is a second individual of a species already here rather than a new one: T4-REGIONS' second-ranked chapter gap (zero new species in bands 4 and 5) is a ROSTER question owned by the creature lane, and this lane deliberately did not reach into species.json or the spawn tables to answer it."
     },
     {
       "order": 4103,
@@ -1279,6 +1283,136 @@
       ],
       "radius": 14.0,
       "_why_w18_density": "W18-DENSITY. The seam's sentries: two galecrest at the band 5 boundary so the approach's aggressor line is announced from the band 4 side (spine 3400m held nothing)."
+    },
+    {
+      "order": 4910,
+      "species": "galecrest",
+      "count": 2,
+      "centre": [
+        -122.918,
+        0.0,
+        4849.584
+      ],
+      "radius": 3.0,
+      "habitat": "roadside_sightline",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair for band4_upper_meadows_ironwood; forward-visible at the preceding 10m sample. Alternating 5.5m shoulder offset preserves the player line and existing off-road ecology."
+    },
+    {
+      "order": 4911,
+      "species": "galecrest",
+      "count": 2,
+      "centre": [
+        -358.122,
+        0.0,
+        5245.126
+      ],
+      "radius": 3.0,
+      "habitat": "roadside_sightline",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair for band4_upper_meadows_ironwood; forward-visible at the preceding 10m sample. Alternating 5.5m shoulder offset preserves the player line and existing off-road ecology."
+    },
+    {
+      "order": 4912,
+      "species": "galecrest",
+      "count": 2,
+      "centre": [
+        -206.133,
+        0.0,
+        5393.903
+      ],
+      "radius": 3.0,
+      "habitat": "roadside_sightline",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair for band4_upper_meadows_ironwood; forward-visible at the preceding 10m sample. Alternating 5.5m shoulder offset preserves the player line and existing off-road ecology."
+    },
+    {
+      "order": 4913,
+      "species": "galecrest",
+      "count": 2,
+      "centre": [
+        82.901,
+        0.0,
+        5532.384
+      ],
+      "radius": 3.0,
+      "habitat": "roadside_sightline",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair for band4_upper_meadows_ironwood; forward-visible at the preceding 10m sample. Alternating 5.5m shoulder offset preserves the player line and existing off-road ecology."
+    },
+    {
+      "order": 4914,
+      "species": "galecrest",
+      "count": 2,
+      "centre": [
+        -35.995,
+        0.0,
+        6285.563
+      ],
+      "radius": 3.0,
+      "habitat": "roadside_sightline",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair for band4_upper_meadows_ironwood; forward-visible at the preceding 10m sample. Alternating 5.5m shoulder offset preserves the player line and existing off-road ecology."
+    },
+    {
+      "order": 4915,
+      "species": "galecrest",
+      "count": 2,
+      "centre": [
+        -121.774,
+        0.0,
+        6355.043
+      ],
+      "radius": 3.0,
+      "habitat": "roadside_sightline",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair for band4_upper_meadows_ironwood; forward-visible at the preceding 10m sample. Alternating 5.5m shoulder offset preserves the player line and existing off-road ecology."
+    },
+    {
+      "order": 4916,
+      "species": "galecrest",
+      "count": 2,
+      "centre": [
+        -240.865,
+        0.0,
+        6563.172
+      ],
+      "radius": 3.0,
+      "habitat": "roadside_sightline",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair for band4_upper_meadows_ironwood; forward-visible at the preceding 10m sample. Alternating 5.5m shoulder offset preserves the player line and existing off-road ecology."
+    },
+    {
+      "order": 4917,
+      "species": "galecrest",
+      "count": 2,
+      "centre": [
+        -120.901,
+        0.0,
+        6676.883
+      ],
+      "radius": 3.0,
+      "habitat": "roadside_sightline",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair for band4_upper_meadows_ironwood; forward-visible at the preceding 10m sample. Alternating 5.5m shoulder offset preserves the player line and existing off-road ecology."
+    },
+    {
+      "order": 4918,
+      "species": "galecrest",
+      "count": 2,
+      "centre": [
+        -20.2,
+        0.0,
+        6759.81
+      ],
+      "radius": 3.0,
+      "habitat": "roadside_sightline",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair for band4_upper_meadows_ironwood; forward-visible at the preceding 10m sample. Alternating 5.5m shoulder offset preserves the player line and existing off-road ecology."
+    },
+    {
+      "order": 4919,
+      "species": "galecrest",
+      "count": 2,
+      "centre": [
+        49.887,
+        0.0,
+        6918.905
+      ],
+      "radius": 3.0,
+      "habitat": "roadside_sightline",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair for band4_upper_meadows_ironwood; forward-visible at the preceding 10m sample. Alternating 5.5m shoulder offset preserves the player line and existing off-road ecology."
     }
   ],
   "_comment_why_so_few": "WILD-ECOLOGY. This band held ONE cluster (the Meadowhart herd below) across z 4760-7000 -- 2240m, the longest region in the chapter and the one the probe measures as its longest single travel leg. Prompt 60's population rule is 'still prevalent enough that wanting another creature does not require a barren search', and one herd over 2.2km is the barren search. The seven entries added below sit on the spine's own points so the ecology is met by walking the route, not by leaving it. Levels are resolved from chapter_curve.json's band for this z ([11, 14]), never set here.",

@@ -1,0 +1,837 @@
+{
+  "trainer_height_m": 1.8,
+  "changes": [],
+  "global_fitted_world_bounds": {
+    "terrapup": {
+      "source_bounds_m": [
+        1.255425,
+        1.505425,
+        1.995885
+      ],
+      "footprint_allowance": 2.4,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.85,
+      "fitted_render_width_m": 3.210646,
+      "fitted_render_depth_m": 5.104309
+    },
+    "ripplet": {
+      "source_bounds_m": [
+        1.181009,
+        1.900637,
+        2.047472
+      ],
+      "footprint_allowance": 3.6,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.6,
+      "fitted_render_width_m": 2.23695,
+      "fitted_render_depth_m": 3.878119
+    },
+    "galewisp": {
+      "source_bounds_m": [
+        2.075421,
+        2.077247,
+        1.349081
+      ],
+      "footprint_allowance": 4.5,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.25,
+      "fitted_render_width_m": 3.247144,
+      "fitted_render_depth_m": 2.110733
+    },
+    "bramblebun": {
+      "source_bounds_m": [
+        1.583808,
+        1.714952,
+        2.0
+      ],
+      "footprint_allowance": 5.8,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 2.05,
+      "fitted_render_width_m": 1.893235,
+      "fitted_render_depth_m": 2.390738
+    },
+    "mudsnout": {
+      "source_bounds_m": [
+        0.98276,
+        1.186952,
+        2.0
+      ],
+      "footprint_allowance": 3.0,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 2.0,
+      "fitted_render_width_m": 1.655939,
+      "fitted_render_depth_m": 3.369976
+    },
+    "trailpup": {
+      "source_bounds_m": [
+        0.519112,
+        1.241322,
+        2.0
+      ],
+      "footprint_allowance": 3.2,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 2.3,
+      "fitted_render_width_m": 0.961843,
+      "fitted_render_depth_m": 3.705727
+    },
+    "burrowback": {
+      "source_bounds_m": [
+        1.12102,
+        1.209088,
+        2.0
+      ],
+      "footprint_allowance": 3.2,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 2.95,
+      "fitted_render_width_m": 2.735127,
+      "fitted_render_depth_m": 4.879711
+    },
+    "meadowhart": {
+      "source_bounds_m": [
+        0.711356,
+        2.0,
+        1.990095
+      ],
+      "footprint_allowance": 2.8,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.45,
+      "fitted_render_width_m": 1.227089,
+      "fitted_render_depth_m": 3.432914
+    },
+    "tuskroot": {
+      "source_bounds_m": [
+        0.92063,
+        1.175708,
+        2.000001
+      ],
+      "footprint_allowance": 3.5,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.6,
+      "fitted_render_width_m": 2.818955,
+      "fitted_render_depth_m": 6.123972
+    },
+    "paddlenewt": {
+      "source_bounds_m": [
+        1.762936,
+        1.974686,
+        2.000001
+      ],
+      "footprint_allowance": 4.8,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 2.15,
+      "fitted_render_width_m": 1.91945,
+      "fitted_render_depth_m": 2.177563
+    },
+    "mosshell": {
+      "source_bounds_m": [
+        1.56567,
+        1.344788,
+        2.0
+      ],
+      "footprint_allowance": 5.8,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 2.5,
+      "fitted_render_width_m": 2.910626,
+      "fitted_render_depth_m": 3.718059
+    },
+    "brooktail": {
+      "source_bounds_m": [
+        1.430298,
+        2.0,
+        1.967144
+      ],
+      "footprint_allowance": 8.6,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 2.1,
+      "fitted_render_width_m": 1.501812,
+      "fitted_render_depth_m": 2.0655
+    },
+    "galecrest": {
+      "source_bounds_m": [
+        1.22432,
+        1.406796,
+        2.0
+      ],
+      "footprint_allowance": 4.2,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.5,
+      "fitted_render_width_m": 3.046014,
+      "fitted_render_depth_m": 4.975847
+    },
+    "duskhush": {
+      "source_bounds_m": [
+        1.316198,
+        2.0,
+        1.677504
+      ],
+      "footprint_allowance": 3.4,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 2.3,
+      "fitted_render_width_m": 1.513628,
+      "fitted_render_depth_m": 1.929129
+    },
+    "pipwing": {
+      "source_bounds_m": [
+        1.125744,
+        1.999999,
+        1.65187
+      ],
+      "footprint_allowance": 3.0,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 1.9,
+      "fitted_render_width_m": 1.069457,
+      "fitted_render_depth_m": 1.569277
+    },
+    "reedwing": {
+      "source_bounds_m": [
+        1.133376,
+        1.806398,
+        2.0
+      ],
+      "footprint_allowance": 3.4,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 2.65,
+      "fitted_render_width_m": 1.662671,
+      "fitted_render_depth_m": 2.934016
+    },
+    "veridian": {
+      "source_bounds_m": [
+        1.73138,
+        2.112139,
+        1.783537
+      ],
+      "footprint_allowance": 2.4,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 5.8,
+      "fitted_render_width_m": 4.754423,
+      "fitted_render_depth_m": 4.897647
+    },
+    "nightburrow": {
+      "source_bounds_m": [
+        1.12102,
+        1.209088,
+        2.0
+      ],
+      "footprint_allowance": 3.2,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.5,
+      "fitted_render_width_m": 3.245066,
+      "fitted_render_depth_m": 5.789488
+    },
+    "stormtrail": {
+      "source_bounds_m": [
+        0.519112,
+        1.241322,
+        2.0
+      ],
+      "footprint_allowance": 3.2,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 2.55,
+      "fitted_render_width_m": 1.066392,
+      "fitted_render_depth_m": 4.108523
+    },
+    "riftfrill": {
+      "source_bounds_m": [
+        1.762936,
+        1.974686,
+        2.000001
+      ],
+      "footprint_allowance": 2.6,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 2.15,
+      "fitted_render_width_m": 1.91945,
+      "fitted_render_depth_m": 2.177563
+    },
+    "ashtusk": {
+      "source_bounds_m": [
+        0.92063,
+        1.175708,
+        2.000001
+      ],
+      "footprint_allowance": 3.5,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.6,
+      "fitted_render_width_m": 2.818955,
+      "fitted_render_depth_m": 6.123972
+    },
+    "sparkit": {
+      "source_bounds_m": [
+        0.69836,
+        1.247156,
+        2.0
+      ],
+      "footprint_allowance": 3.0,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 1.95,
+      "fitted_render_width_m": 1.091926,
+      "fitted_render_depth_m": 3.127115
+    },
+    "cindercub": {
+      "source_bounds_m": [
+        0.78402,
+        1.340736,
+        2.0
+      ],
+      "footprint_allowance": 3.2,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 2.5,
+      "fitted_render_width_m": 1.461921,
+      "fitted_render_depth_m": 3.729296
+    },
+    "shadelet": {
+      "source_bounds_m": [
+        1.084644,
+        0.934338,
+        2.0
+      ],
+      "footprint_allowance": 4.0,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 2.8,
+      "fitted_render_width_m": 3.250433,
+      "fitted_render_depth_m": 5.993549
+    },
+    "frostclaw": {
+      "source_bounds_m": [
+        0.666088,
+        1.022258,
+        2.0
+      ],
+      "footprint_allowance": 3.4,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.4,
+      "fitted_render_width_m": 2.215389,
+      "fitted_render_depth_m": 6.65194
+    },
+    "cannonback": {
+      "source_bounds_m": [
+        1.422832,
+        1.112975,
+        1.894583
+      ],
+      "footprint_allowance": 3.0,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.7,
+      "fitted_render_width_m": 4.730095,
+      "fitted_render_depth_m": 6.298395
+    },
+    "riptusk": {
+      "source_bounds_m": [
+        0.717241,
+        1.090938,
+        1.886427
+      ],
+      "footprint_allowance": 3.0,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 4.25,
+      "fitted_render_width_m": 2.794177,
+      "fitted_render_depth_m": 7.349009
+    },
+    "mirejaw": {
+      "source_bounds_m": [
+        1.019609,
+        0.611855,
+        1.892905
+      ],
+      "footprint_allowance": 4.5,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 2.8,
+      "fitted_render_width_m": 4.665982,
+      "fitted_render_depth_m": 8.662401
+    },
+    "aquaryn": {
+      "source_bounds_m": [
+        0.743615,
+        1.643252,
+        1.898026
+      ],
+      "footprint_allowance": 3.0,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.4,
+      "fitted_render_width_m": 1.538589,
+      "fitted_render_depth_m": 3.927145
+    },
+    "torrentoad": {
+      "source_bounds_m": [
+        1.702225,
+        1.388277,
+        1.900714
+      ],
+      "footprint_allowance": 3.0,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.25,
+      "fitted_render_width_m": 3.984962,
+      "fitted_render_depth_m": 4.449631
+    },
+    "cragclaw": {
+      "source_bounds_m": [
+        1.47167,
+        1.137281,
+        1.894901
+      ],
+      "footprint_allowance": 3.0,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 2.95,
+      "fitted_render_width_m": 3.817373,
+      "fitted_render_depth_m": 4.915195
+    },
+    "riverdrake": {
+      "source_bounds_m": [
+        0.770821,
+        0.869565,
+        1.900745
+      ],
+      "footprint_allowance": 3.2,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 4.0,
+      "fitted_render_width_m": 3.545778,
+      "fitted_render_depth_m": 8.743429
+    },
+    "sirenseal": {
+      "source_bounds_m": [
+        0.931174,
+        0.801361,
+        1.896793
+      ],
+      "footprint_allowance": 3.5,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.25,
+      "fitted_render_width_m": 3.776469,
+      "fitted_render_depth_m": 7.692633
+    },
+    "mangrove_monitor": {
+      "source_bounds_m": [
+        0.624813,
+        0.752771,
+        1.896871
+      ],
+      "footprint_allowance": 3.8,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.4,
+      "fitted_render_width_m": 2.822059,
+      "fitted_render_depth_m": 8.567494
+    },
+    "tidecoil": {
+      "source_bounds_m": [
+        0.548473,
+        1.076559,
+        1.887528
+      ],
+      "footprint_allowance": 3.0,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 5.5,
+      "fitted_render_width_m": 2.802077,
+      "fitted_render_depth_m": 9.643135
+    },
+    "abyssal_guardian": {
+      "source_bounds_m": [
+        0.836942,
+        0.75574,
+        1.89627
+      ],
+      "footprint_allowance": 3.7,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 7.2,
+      "fitted_render_width_m": 7.973618,
+      "fitted_render_depth_m": 18.065925
+    },
+    "voltwig": {
+      "source_bounds_m": [
+        1.201444,
+        1.079809,
+        1.897989
+      ],
+      "footprint_allowance": 3.0,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.25,
+      "fitted_render_width_m": 3.616096,
+      "fitted_render_depth_m": 5.712551
+    },
+    "mosshock": {
+      "source_bounds_m": [
+        1.131345,
+        0.884621,
+        1.900008
+      ],
+      "footprint_allowance": 3.2,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 2.95,
+      "fitted_render_width_m": 3.772766,
+      "fitted_render_depth_m": 6.336074
+    },
+    "staticub": {
+      "source_bounds_m": [
+        0.931953,
+        1.107884,
+        1.881131
+      ],
+      "footprint_allowance": 3.0,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.25,
+      "fitted_render_width_m": 2.733903,
+      "fitted_render_depth_m": 5.518336
+    },
+    "voltarach": {
+      "source_bounds_m": [
+        1.629826,
+        1.085764,
+        1.894031
+      ],
+      "footprint_allowance": 3.0,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 4.25,
+      "fitted_render_width_m": 6.379617,
+      "fitted_render_depth_m": 7.413794
+    },
+    "fulgocobra": {
+      "source_bounds_m": [
+        1.046154,
+        0.733345,
+        1.900256
+      ],
+      "footprint_allowance": 3.8,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 5.2,
+      "fitted_render_width_m": 7.418065,
+      "fitted_render_depth_m": 13.474329
+    },
+    "stormraven": {
+      "source_bounds_m": [
+        0.847984,
+        0.952769,
+        1.892026
+      ],
+      "footprint_allowance": 3.0,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.4,
+      "fitted_render_width_m": 3.026069,
+      "fitted_render_depth_m": 6.751781
+    },
+    "pebbik": {
+      "source_bounds_m": [
+        1.091141,
+        1.323173,
+        1.898469
+      ],
+      "footprint_allowance": 3.0,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.25,
+      "fitted_render_width_m": 2.680079,
+      "fitted_render_depth_m": 4.663052
+    },
+    "craghorn": {
+      "source_bounds_m": [
+        1.351612,
+        1.41547,
+        1.895281
+      ],
+      "footprint_allowance": 3.0,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.5,
+      "fitted_render_width_m": 3.342101,
+      "fitted_render_depth_m": 4.686418
+    },
+    "stormbrush": {
+      "source_bounds_m": [
+        0.841194,
+        0.890306,
+        1.87431
+      ],
+      "footprint_allowance": 3.2,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.25,
+      "fitted_render_width_m": 3.070723,
+      "fitted_render_depth_m": 6.842043
+    },
+    "tanglevolt": {
+      "source_bounds_m": [
+        0.598989,
+        0.832886,
+        1.89135
+      ],
+      "footprint_allowance": 3.4,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.4,
+      "fitted_render_width_m": 2.445188,
+      "fitted_render_depth_m": 7.72085
+    },
+    "thundertunnel": {
+      "source_bounds_m": [
+        1.237967,
+        1.195321,
+        1.892115
+      ],
+      "footprint_allowance": 3.0,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 2.8,
+      "fitted_render_width_m": 2.899897,
+      "fitted_render_depth_m": 4.432217
+    },
+    "glimmermoth": {
+      "source_bounds_m": [
+        1.897903,
+        1.24976,
+        0.975118
+      ],
+      "footprint_allowance": 3.0,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.1,
+      "fitted_render_width_m": 4.707702,
+      "fitted_render_depth_m": 2.418757
+    },
+    "stormcapra": {
+      "source_bounds_m": [
+        1.153016,
+        1.343801,
+        1.887109
+      ],
+      "footprint_allowance": 3.0,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.85,
+      "fitted_render_width_m": 3.303399,
+      "fitted_render_depth_m": 5.406582
+    },
+    "skyrill": {
+      "source_bounds_m": [
+        1.900499,
+        0.491938,
+        1.362385
+      ],
+      "footprint_allowance": 5.8,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.25,
+      "fitted_render_width_m": 12.555689,
+      "fitted_render_depth_m": 9.000629
+    },
+    "aeriex": {
+      "source_bounds_m": [
+        0.907521,
+        1.220239,
+        1.898206
+      ],
+      "footprint_allowance": 3.0,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 4.0,
+      "fitted_render_width_m": 2.974895,
+      "fitted_render_depth_m": 6.222407
+    },
+    "ribbonray": {
+      "source_bounds_m": [
+        1.902518,
+        1.190141,
+        1.749231
+      ],
+      "footprint_allowance": 3.0,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.7,
+      "fitted_render_width_m": 5.914691,
+      "fitted_render_depth_m": 5.438141
+    },
+    "breezetail": {
+      "source_bounds_m": [
+        0.766032,
+        1.614034,
+        1.886408
+      ],
+      "footprint_allowance": 3.0,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.25,
+      "fitted_render_width_m": 1.542473,
+      "fitted_render_depth_m": 3.798448
+    },
+    "cloudfang": {
+      "source_bounds_m": [
+        0.513119,
+        1.137258,
+        1.881769
+      ],
+      "footprint_allowance": 3.0,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.85,
+      "fitted_render_width_m": 1.73708,
+      "fitted_render_depth_m": 6.37042
+    },
+    "cliffspike": {
+      "source_bounds_m": [
+        1.211217,
+        1.22054,
+        1.894269
+      ],
+      "footprint_allowance": 3.0,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.25,
+      "fitted_render_width_m": 3.225175,
+      "fitted_render_depth_m": 5.043975
+    },
+    "tempestwing": {
+      "source_bounds_m": [
+        1.902925,
+        1.057033,
+        1.280458
+      ],
+      "footprint_allowance": 3.0,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 4.15,
+      "fitted_render_width_m": 7.47104,
+      "fitted_render_depth_m": 5.027185
+    },
+    "solmane": {
+      "source_bounds_m": [
+        1.882107,
+        0.927611,
+        1.67815
+      ],
+      "footprint_allowance": 3.0,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 6.7,
+      "fitted_render_width_m": 13.594186,
+      "fitted_render_depth_m": 12.121034
+    }
+  },
+  "water_fitted_world_bounds": {
+    "water_cannonback": {
+      "source_bounds_m": [
+        1.422832,
+        1.112975,
+        1.894583
+      ],
+      "footprint_allowance": 5.8,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 4.15,
+      "fitted_render_width_m": 5.305377,
+      "fitted_render_depth_m": 7.064416
+    },
+    "water_riptusk": {
+      "source_bounds_m": [
+        0.717241,
+        1.090938,
+        1.886427
+      ],
+      "footprint_allowance": 3.5,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 4.45,
+      "fitted_render_width_m": 2.925668,
+      "fitted_render_depth_m": 7.694844
+    },
+    "water_aquaryn": {
+      "source_bounds_m": [
+        0.743615,
+        1.643252,
+        1.898026
+      ],
+      "footprint_allowance": 4.8,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 5.0,
+      "fitted_render_width_m": 2.26263,
+      "fitted_render_depth_m": 5.775213
+    },
+    "water_tidecoil": {
+      "source_bounds_m": [
+        0.548473,
+        1.076559,
+        1.887528
+      ],
+      "footprint_allowance": 4.8,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 5.5,
+      "fitted_render_width_m": 2.802077,
+      "fitted_render_depth_m": 9.643135
+    },
+    "water_mirejaw": {
+      "source_bounds_m": [
+        1.019609,
+        0.611855,
+        1.892905
+      ],
+      "footprint_allowance": 4.8,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.55,
+      "fitted_render_width_m": 5.915799,
+      "fitted_render_depth_m": 10.982687
+    },
+    "water_torrentoad": {
+      "source_bounds_m": [
+        1.702225,
+        1.388277,
+        1.900714
+      ],
+      "footprint_allowance": 3.6,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.7,
+      "fitted_render_width_m": 4.536726,
+      "fitted_render_depth_m": 5.065734
+    },
+    "water_cragclaw": {
+      "source_bounds_m": [
+        1.47167,
+        1.137281,
+        1.894901
+      ],
+      "footprint_allowance": 3.2,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.7,
+      "fitted_render_width_m": 4.787892,
+      "fitted_render_depth_m": 6.16482
+    },
+    "water_riverdrake": {
+      "source_bounds_m": [
+        0.770821,
+        0.869565,
+        1.900745
+      ],
+      "footprint_allowance": 4.8,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 4.15,
+      "fitted_render_width_m": 3.678744,
+      "fitted_render_depth_m": 9.071307
+    },
+    "water_sirenseal": {
+      "source_bounds_m": [
+        0.931174,
+        0.801361,
+        1.896793
+      ],
+      "footprint_allowance": 8.6,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.7,
+      "fitted_render_width_m": 4.299365,
+      "fitted_render_depth_m": 8.757766
+    },
+    "water_mangrove_monitor": {
+      "source_bounds_m": [
+        0.624813,
+        0.752771,
+        1.896871
+      ],
+      "footprint_allowance": 4.8,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 3.85,
+      "fitted_render_width_m": 3.195566,
+      "fitted_render_depth_m": 9.701427
+    },
+    "water_mosshell": {
+      "source_bounds_m": [
+        1.56567,
+        1.344788,
+        2.0
+      ],
+      "footprint_allowance": 5.8,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 2.5,
+      "fitted_render_width_m": 2.910626,
+      "fitted_render_depth_m": 3.718059
+    },
+    "water_abyssal_guardian": {
+      "source_bounds_m": [
+        0.836942,
+        0.75574,
+        1.89627
+      ],
+      "footprint_allowance": 4.8,
+      "fit_limited_by": "height",
+      "fitted_render_height_m": 7.2,
+      "fitted_render_width_m": 7.973618,
+      "fitted_render_depth_m": 18.065925
+    }
+  },
+  "errors": []
+}

@@ -4,6 +4,7 @@
   "_comment": "Starting geometry-backed placeholder mounting data. AABBs are measured through production CreatureBody._fit and skin-correct RenderBounds at rest, not inferred from declared collision height. Seat/back anchors remain conservative anatomical estimates within those envelopes; no visual, animated-seat, mounted-network, or swimming acceptance is claimed. Re-measure and obtain blind rendered acceptance when each replacement lands.",
   "_comment_coordinates": "All offsets are creature-root-local metres at body_scale=1. surface_origin_offset_m adds to sea level to position the creature root. mount_offset is rider HIP anchor; production rider seat_drop_m=0.92 lowers trainer art from that anchor. All proposed trainer art origins exceed sea level by at least0.08m. Root architecture must scale offsets consistently for non-unit individuals.",
   "_comment_tuning": "Starting land multipliers multiply production human walk speed; these prioritize species swim identities without making every placeholder a superior land sprinter. Dismount distances exceed fitted half-width +0.4m human radius +0.25m clearance, rounded upward. Actual dismount placement must still query collision and water safety.",
+  "_comment_scale_2026_09_07": "Every spatial measurement except saddle_scale was uniformly grown with its Water target body by tools/art_pipeline/creature_scale_ladder.py. The player-sized saddle remains unchanged; mount/saddle anchors, surface offset, dismount clearance, fitted AABB and collision radius all track the larger creature.",
   "saddle": {
     "aabb_position": [
       -0.768,
@@ -21,31 +22,31 @@
     "water_aquaryn": {
       "mount_offset": [
         0.0,
-        1.98,
-        -0.22
+        3.193548,
+        -0.354839
       ],
       "saddle_offset": [
         0.0,
-        1.86,
-        -0.22
+        3.0,
+        -0.354839
       ],
       "saddle_scale": 0.55,
-      "surface_origin_offset_m": -0.65,
+      "surface_origin_offset_m": -1.048387,
       "land_speed_multiplier": 1.35,
-      "dismount_distance": 2.1,
+      "dismount_distance": 3.387097,
       "_comment_seat": "Proposed seat around central torso, behind centre. Y derived conservatively inside fitted envelope; AABB cannot identify anatomical back or animation deformation. Production saddle reused at explicit scale; its full rest bounds stay above sea at this proposed origin.",
       "measurement": {
         "aabb_position": [
-          -1.384,
+          -2.232258,
           0.0,
-          -1.57
+          -2.532258
         ],
         "aabb_size": [
-          2.768,
-          3.1,
-          3.14
+          4.464516,
+          5.0,
+          5.064516
         ],
-        "collision_radius_m": 1.0324347826087,
+        "collision_radius_m": 1.665217,
         "model": "res://assets/creatures/tetherbound/paddlenewt/models/creature_paddlenewt_lod0.glb",
         "replacement_binding": "res://data/config/water_roster.json#species/aquaryn/placeholder/model",
         "replacement_model": "res://assets/creatures/tetherbound/aquaryn/models/creature_aquaryn_lod0.glb",
@@ -62,31 +63,31 @@
     "water_mosshell": {
       "mount_offset": [
         0.0,
-        1.12,
-        -0.1
+        2.0,
+        -0.178571
       ],
       "saddle_offset": [
         0.0,
-        1.0,
-        -0.1
+        1.785714,
+        -0.178571
       ],
       "saddle_scale": 0.45,
-      "surface_origin_offset_m": -0.12,
+      "surface_origin_offset_m": -0.214286,
       "land_speed_multiplier": 0.9,
-      "dismount_distance": 1.5,
+      "dismount_distance": 2.678571,
       "_comment_seat": "Proposed seat around central torso, behind centre. Y derived conservatively inside fitted envelope; AABB cannot identify anatomical back or animation deformation. Production saddle reused at explicit scale; its full rest bounds stay above sea at this proposed origin.",
       "measurement": {
         "aabb_position": [
-          -0.815,
+          -1.455357,
           0.0,
-          -1.041
+          -1.858929
         ],
         "aabb_size": [
-          1.63,
-          1.4,
-          2.082
+          2.910714,
+          2.5,
+          3.717857
         ],
-        "collision_radius_m": 0.584,
+        "collision_radius_m": 1.042857,
         "model": "res://assets/creatures/tetherbound/mosshell/models/creature_mosshell_lod0.glb",
         "replacement_binding": "res://data/config/water_roster.json#species/mosshell/placeholder/model",
         "replacement_model": "res://assets/creatures/tetherbound/water_mosshell/models/creature_water_mosshell_lod0.glb",
@@ -103,31 +104,31 @@
     "water_sirenseal": {
       "mount_offset": [
         0.0,
-        1.5,
-        -0.12
+        2.522727,
+        -0.201818
       ],
       "saddle_offset": [
         0.0,
-        1.38,
-        -0.12
+        2.320909,
+        -0.201818
       ],
       "saddle_scale": 0.45,
-      "surface_origin_offset_m": -0.42,
+      "surface_origin_offset_m": -0.706364,
       "land_speed_multiplier": 1.1,
-      "dismount_distance": 1.5,
+      "dismount_distance": 2.522727,
       "_comment_seat": "Proposed seat around central torso, behind centre. Y derived conservatively inside fitted envelope; AABB cannot identify anatomical back or animation deformation. Production saddle reused at explicit scale; its full rest bounds stay above sea at this proposed origin.",
       "measurement": {
         "aabb_position": [
-          -0.787,
+          -1.323591,
           0.0,
-          -1.082
+          -1.819727
         ],
         "aabb_size": [
-          1.573,
-          2.2,
-          2.164
+          2.6455,
+          3.7,
+          3.639455
         ],
-        "collision_radius_m": 0.756380952380952,
+        "collision_radius_m": 1.272095,
         "model": "res://assets/creatures/tetherbound/brooktail/models/creature_brooktail_lod0.glb",
         "replacement_binding": "res://data/config/water_roster.json#species/sirenseal/placeholder/model",
         "replacement_model": "res://assets/creatures/tetherbound/sirenseal/models/creature_sirenseal_lod0.glb",
@@ -144,31 +145,31 @@
     "water_riverdrake": {
       "mount_offset": [
         0.0,
-        1.65,
-        -0.18
+        2.739,
+        -0.2988
       ],
       "saddle_offset": [
         0.0,
-        1.53,
-        -0.18
+        2.5398,
+        -0.2988
       ],
       "saddle_scale": 0.5,
-      "surface_origin_offset_m": -0.5,
+      "surface_origin_offset_m": -0.83,
       "land_speed_multiplier": 1.45,
-      "dismount_distance": 1.8,
+      "dismount_distance": 2.988,
       "_comment_seat": "Proposed seat around central torso, behind centre. Y derived conservatively inside fitted envelope; AABB cannot identify anatomical back or animation deformation. Production saddle reused at explicit scale; its full rest bounds stay above sea at this proposed origin.",
       "measurement": {
         "aabb_position": [
-          -1.116,
+          -1.85256,
           0.0,
-          -1.266
+          -2.10156
         ],
         "aabb_size": [
-          2.232,
-          2.5,
-          2.532
+          3.70512,
+          4.15,
+          4.20312
         ],
-        "collision_radius_m": 0.832608695652174,
+        "collision_radius_m": 1.38213,
         "model": "res://assets/creatures/tetherbound/paddlenewt/models/creature_paddlenewt_lod0.glb",
         "replacement_binding": "res://data/config/water_roster.json#species/riverdrake/placeholder/model",
         "replacement_model": "res://assets/creatures/tetherbound/riverdrake/models/creature_riverdrake_lod0.glb",
@@ -185,31 +186,31 @@
     "water_cannonback": {
       "mount_offset": [
         0.0,
-        2.0,
-        -0.14
+        3.32,
+        -0.2324
       ],
       "saddle_offset": [
         0.0,
-        1.88,
-        -0.14
+        3.1208,
+        -0.2324
       ],
       "saddle_scale": 0.55,
-      "surface_origin_offset_m": -0.7,
+      "surface_origin_offset_m": -1.162,
       "land_speed_multiplier": 1.0,
-      "dismount_distance": 2.2,
+      "dismount_distance": 3.652,
       "_comment_seat": "Proposed seat around central torso, behind centre. Y derived conservatively inside fitted envelope; AABB cannot identify anatomical back or animation deformation. Production saddle reused at explicit scale; its full rest bounds stay above sea at this proposed origin.",
       "measurement": {
         "aabb_position": [
-          -1.455,
+          -2.4153,
           0.0,
-          -1.859
+          -3.08594
         ],
         "aabb_size": [
-          2.911,
-          2.5,
-          3.718
+          4.83226,
+          4.15,
+          6.17188
         ],
-        "collision_radius_m": 1.04285714285714,
+        "collision_radius_m": 1.731143,
         "model": "res://assets/creatures/tetherbound/mosshell/models/creature_mosshell_lod0.glb",
         "replacement_binding": "res://data/config/water_roster.json#species/cannonback/placeholder/model",
         "replacement_model": "res://assets/creatures/tetherbound/cannonback/models/creature_cannonback_lod0.glb",

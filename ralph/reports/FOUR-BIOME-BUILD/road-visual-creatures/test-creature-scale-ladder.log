@@ -1,0 +1,67 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_creature_scale_ladder.gd: 1 of 263 test files
+  ok    test_creature_scale_ladder.gd :: test_every_global_creature_clears_the_trainer_and_keeps_physical_proportions
+  ok    test_creature_scale_ladder.gd :: test_water_targets_and_rider_geometry_share_the_larger_scale
+
+2 tests, 154 assertions, 0 failed
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:178)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:179)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:180)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:242)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:283)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:285)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:299)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:299)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:302)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:302)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:304)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+ERROR: Failed to load script "res://scripts/ui/game_menu.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)

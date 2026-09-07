@@ -352,6 +352,19 @@
       ],
       "radius": 12.0,
       "_why_w18_density": "W18-DENSITY. Dug in under the outer watch's own stonework, 65m off the road behind Corr (P-5.3 keeps the road untouched; D78): the occupation's crescendo is that even Team Tether's masonry has something living under it. The only cluster this pass adds to band 5 -- D70 forbids padding it."
+    },
+    {
+      "order": 5910,
+      "species": "burrowback",
+      "count": 2,
+      "centre": [
+        -5.821,
+        0.0,
+        7560.606
+      ],
+      "radius": 3.0,
+      "habitat": "roadside_sightline",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair for band5_stronghold_approach; forward-visible at the preceding 10m sample. Alternating 5.5m shoulder offset preserves the player line and existing off-road ecology."
     }
   ],
   "_comment_ashtusk_removed": "D71/T3-SUNSTONE, 2026-08-30. The wild Ashtusk cluster T3-CREATURES placed here (order 5100, one individual at (118,0,7340), the scorched-industrial ground by the Sigil gate) is REMOVED. The owner directed Ashtusk to be reached by evolving a Mudsnout with a Sunstone instead ('there should just be some kind of sunstone... to get the Ashtusk'), which gives Ashtusk `evolves_from: mudsnout` -- and tests/test_spawns_data.gd::test_no_evolved_form_spawns_wild already forbids any evolved-form species from spawning wild (D20: 'an evolution you can just walk up to and catch makes evolving pointless'). Keeping this cluster would have meant weakening that test, which this lane's brief explicitly forbids. The site is NOT abandoned: scripts/world/playground_world.gd now places the Sunstone pickup in this same pocket, so the ground keeps its narrative payload (this is where a fire-touched Tuskroot comes from) and the encounter becomes a genuine five-creature-slot choice rather than a catch. See ralph/reports/SUNSTONE_DESIGN_2026-08-30.md section 4 for the options considered and docs/decisions/D71 for the full record.",

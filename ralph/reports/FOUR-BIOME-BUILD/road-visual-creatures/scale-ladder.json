@@ -1,0 +1,477 @@
+{
+  "trainer_height_m": 1.8,
+  "changes": [
+    {
+      "id": "pipwing",
+      "before_height_m": 0.76,
+      "after_height_m": 1.9,
+      "scale": 2.5,
+      "after_radius_m": 0.5675
+    },
+    {
+      "id": "sparkit",
+      "before_height_m": 0.85,
+      "after_height_m": 1.95,
+      "scale": 2.294118,
+      "after_radius_m": 0.660706
+    },
+    {
+      "id": "mudsnout",
+      "before_height_m": 0.95,
+      "after_height_m": 2.0,
+      "scale": 2.105263,
+      "after_radius_m": 0.8
+    },
+    {
+      "id": "bramblebun",
+      "before_height_m": 1.0,
+      "after_height_m": 2.05,
+      "scale": 2.05,
+      "after_radius_m": 0.66625
+    },
+    {
+      "id": "brooktail",
+      "before_height_m": 1.05,
+      "after_height_m": 2.1,
+      "scale": 2.0,
+      "after_radius_m": 0.722
+    },
+    {
+      "id": "paddlenewt",
+      "before_height_m": 1.15,
+      "after_height_m": 2.15,
+      "scale": 1.869565,
+      "after_radius_m": 0.716043
+    },
+    {
+      "id": "riftfrill",
+      "before_height_m": 1.15,
+      "after_height_m": 2.15,
+      "scale": 1.869565,
+      "after_radius_m": 0.716043
+    },
+    {
+      "id": "duskhush",
+      "before_height_m": 1.28,
+      "after_height_m": 2.3,
+      "scale": 1.796875,
+      "after_radius_m": 0.812187
+    },
+    {
+      "id": "trailpup",
+      "before_height_m": 1.28,
+      "after_height_m": 2.3,
+      "scale": 1.796875,
+      "after_radius_m": 0.770859
+    },
+    {
+      "id": "cindercub",
+      "before_height_m": 1.4,
+      "after_height_m": 2.5,
+      "scale": 1.785714,
+      "after_radius_m": 0.833929
+    },
+    {
+      "id": "mosshell",
+      "before_height_m": 1.4,
+      "after_height_m": 2.5,
+      "scale": 1.785714,
+      "after_radius_m": 1.042857
+    },
+    {
+      "id": "stormtrail",
+      "before_height_m": 1.45,
+      "after_height_m": 2.55,
+      "scale": 1.758621,
+      "after_radius_m": 0.85469
+    },
+    {
+      "id": "reedwing",
+      "before_height_m": 1.5,
+      "after_height_m": 2.65,
+      "scale": 1.766667,
+      "after_radius_m": 0.913367
+    },
+    {
+      "id": "mirejaw",
+      "before_height_m": 1.6,
+      "after_height_m": 2.8,
+      "scale": 1.75,
+      "after_radius_m": 0.98
+    },
+    {
+      "id": "shadelet",
+      "before_height_m": 1.6,
+      "after_height_m": 2.8,
+      "scale": 1.75,
+      "after_radius_m": 0.875
+    },
+    {
+      "id": "thundertunnel",
+      "before_height_m": 1.6,
+      "after_height_m": 2.8,
+      "scale": 1.75,
+      "after_radius_m": 0.98
+    },
+    {
+      "id": "burrowback",
+      "before_height_m": 1.7,
+      "after_height_m": 2.95,
+      "scale": 1.735294,
+      "after_radius_m": 1.068941
+    },
+    {
+      "id": "cragclaw",
+      "before_height_m": 1.7,
+      "after_height_m": 2.95,
+      "scale": 1.735294,
+      "after_radius_m": 1.0325
+    },
+    {
+      "id": "mosshock",
+      "before_height_m": 1.7,
+      "after_height_m": 2.95,
+      "scale": 1.735294,
+      "after_radius_m": 1.0325
+    },
+    {
+      "id": "glimmermoth",
+      "before_height_m": 1.8,
+      "after_height_m": 3.1,
+      "scale": 1.722222,
+      "after_radius_m": 1.085
+    },
+    {
+      "id": "breezetail",
+      "before_height_m": 1.9,
+      "after_height_m": 3.25,
+      "scale": 1.710526,
+      "after_radius_m": 1.1375
+    },
+    {
+      "id": "cliffspike",
+      "before_height_m": 1.9,
+      "after_height_m": 3.25,
+      "scale": 1.710526,
+      "after_radius_m": 1.1375
+    },
+    {
+      "id": "galewisp",
+      "before_height_m": 1.9,
+      "after_height_m": 3.25,
+      "scale": 1.710526,
+      "after_radius_m": 1.231579
+    },
+    {
+      "id": "pebbik",
+      "before_height_m": 1.9,
+      "after_height_m": 3.25,
+      "scale": 1.710526,
+      "after_radius_m": 1.1375
+    },
+    {
+      "id": "sirenseal",
+      "before_height_m": 1.9,
+      "after_height_m": 3.25,
+      "scale": 1.710526,
+      "after_radius_m": 1.1375
+    },
+    {
+      "id": "skyrill",
+      "before_height_m": 1.9,
+      "after_height_m": 3.25,
+      "scale": 1.710526,
+      "after_radius_m": 1.1375
+    },
+    {
+      "id": "staticub",
+      "before_height_m": 1.9,
+      "after_height_m": 3.25,
+      "scale": 1.710526,
+      "after_radius_m": 1.1375
+    },
+    {
+      "id": "stormbrush",
+      "before_height_m": 1.9,
+      "after_height_m": 3.25,
+      "scale": 1.710526,
+      "after_radius_m": 1.1375
+    },
+    {
+      "id": "torrentoad",
+      "before_height_m": 1.9,
+      "after_height_m": 3.25,
+      "scale": 1.710526,
+      "after_radius_m": 1.1375
+    },
+    {
+      "id": "voltwig",
+      "before_height_m": 1.9,
+      "after_height_m": 3.25,
+      "scale": 1.710526,
+      "after_radius_m": 1.1375
+    },
+    {
+      "id": "aquaryn",
+      "before_height_m": 2.0,
+      "after_height_m": 3.4,
+      "scale": 1.7,
+      "after_radius_m": 1.19
+    },
+    {
+      "id": "frostclaw",
+      "before_height_m": 2.0,
+      "after_height_m": 3.4,
+      "scale": 1.7,
+      "after_radius_m": 1.173
+    },
+    {
+      "id": "mangrove_monitor",
+      "before_height_m": 2.0,
+      "after_height_m": 3.4,
+      "scale": 1.7,
+      "after_radius_m": 1.19
+    },
+    {
+      "id": "stormraven",
+      "before_height_m": 2.0,
+      "after_height_m": 3.4,
+      "scale": 1.7,
+      "after_radius_m": 1.19
+    },
+    {
+      "id": "tanglevolt",
+      "before_height_m": 2.0,
+      "after_height_m": 3.4,
+      "scale": 1.7,
+      "after_radius_m": 1.19
+    },
+    {
+      "id": "meadowhart",
+      "before_height_m": 2.05,
+      "after_height_m": 3.45,
+      "scale": 1.682927,
+      "after_radius_m": 1.245366
+    },
+    {
+      "id": "craghorn",
+      "before_height_m": 2.1,
+      "after_height_m": 3.5,
+      "scale": 1.666667,
+      "after_radius_m": 1.225
+    },
+    {
+      "id": "galecrest",
+      "before_height_m": 2.1,
+      "after_height_m": 3.5,
+      "scale": 1.666667,
+      "after_radius_m": 1.083333
+    },
+    {
+      "id": "nightburrow",
+      "before_height_m": 2.1,
+      "after_height_m": 3.5,
+      "scale": 1.666667,
+      "after_radius_m": 1.268167
+    },
+    {
+      "id": "ashtusk",
+      "before_height_m": 2.15,
+      "after_height_m": 3.6,
+      "scale": 1.674419,
+      "after_radius_m": 1.289302
+    },
+    {
+      "id": "ripplet",
+      "before_height_m": 2.15,
+      "after_height_m": 3.6,
+      "scale": 1.674419,
+      "after_radius_m": 1.365488
+    },
+    {
+      "id": "tuskroot",
+      "before_height_m": 2.15,
+      "after_height_m": 3.6,
+      "scale": 1.674419,
+      "after_radius_m": 1.289302
+    },
+    {
+      "id": "cannonback",
+      "before_height_m": 2.2,
+      "after_height_m": 3.7,
+      "scale": 1.681818,
+      "after_radius_m": 1.295
+    },
+    {
+      "id": "ribbonray",
+      "before_height_m": 2.2,
+      "after_height_m": 3.7,
+      "scale": 1.681818,
+      "after_radius_m": 1.295
+    },
+    {
+      "id": "cloudfang",
+      "before_height_m": 2.3,
+      "after_height_m": 3.85,
+      "scale": 1.673913,
+      "after_radius_m": 1.3475
+    },
+    {
+      "id": "stormcapra",
+      "before_height_m": 2.3,
+      "after_height_m": 3.85,
+      "scale": 1.673913,
+      "after_radius_m": 1.3475
+    },
+    {
+      "id": "terrapup",
+      "before_height_m": 2.3,
+      "after_height_m": 3.85,
+      "scale": 1.673913,
+      "after_radius_m": 1.464004
+    },
+    {
+      "id": "aeriex",
+      "before_height_m": 2.4,
+      "after_height_m": 4.0,
+      "scale": 1.666667,
+      "after_radius_m": 1.4
+    },
+    {
+      "id": "riverdrake",
+      "before_height_m": 2.4,
+      "after_height_m": 4.0,
+      "scale": 1.666667,
+      "after_radius_m": 1.4
+    },
+    {
+      "id": "tempestwing",
+      "before_height_m": 2.5,
+      "after_height_m": 4.15,
+      "scale": 1.66,
+      "after_radius_m": 1.4525
+    },
+    {
+      "id": "riptusk",
+      "before_height_m": 2.6,
+      "after_height_m": 4.25,
+      "scale": 1.634615,
+      "after_radius_m": 1.4875
+    },
+    {
+      "id": "voltarach",
+      "before_height_m": 2.6,
+      "after_height_m": 4.25,
+      "scale": 1.634615,
+      "after_radius_m": 1.4875
+    },
+    {
+      "id": "fulgocobra",
+      "before_height_m": 3.2,
+      "after_height_m": 5.2,
+      "scale": 1.625,
+      "after_radius_m": 1.82
+    },
+    {
+      "id": "tidecoil",
+      "before_height_m": 3.4,
+      "after_height_m": 5.5,
+      "scale": 1.617647,
+      "after_radius_m": 1.925
+    },
+    {
+      "id": "veridian",
+      "before_height_m": 3.6,
+      "after_height_m": 5.8,
+      "scale": 1.611111,
+      "after_radius_m": 2.126667
+    },
+    {
+      "id": "solmane",
+      "before_height_m": 4.2,
+      "after_height_m": 6.7,
+      "scale": 1.595238,
+      "after_radius_m": 2.345
+    },
+    {
+      "id": "abyssal_guardian",
+      "before_height_m": 4.5,
+      "after_height_m": 7.2,
+      "scale": 1.6,
+      "after_radius_m": 2.52
+    },
+    {
+      "id": "water_cannonback",
+      "before_height_m": 2.5,
+      "after_height_m": 4.15,
+      "scale": 1.66
+    },
+    {
+      "id": "water_riptusk",
+      "before_height_m": 2.7,
+      "after_height_m": 4.45,
+      "scale": 1.648148
+    },
+    {
+      "id": "water_aquaryn",
+      "before_height_m": 3.1,
+      "after_height_m": 5.0,
+      "scale": 1.612903
+    },
+    {
+      "id": "water_tidecoil",
+      "before_height_m": 3.4,
+      "after_height_m": 5.5,
+      "scale": 1.617647
+    },
+    {
+      "id": "water_mirejaw",
+      "before_height_m": 2.1,
+      "after_height_m": 3.55,
+      "scale": 1.690476
+    },
+    {
+      "id": "water_torrentoad",
+      "before_height_m": 2.2,
+      "after_height_m": 3.7,
+      "scale": 1.681818
+    },
+    {
+      "id": "water_cragclaw",
+      "before_height_m": 2.2,
+      "after_height_m": 3.7,
+      "scale": 1.681818
+    },
+    {
+      "id": "water_riverdrake",
+      "before_height_m": 2.5,
+      "after_height_m": 4.15,
+      "scale": 1.66
+    },
+    {
+      "id": "water_sirenseal",
+      "before_height_m": 2.2,
+      "after_height_m": 3.7,
+      "scale": 1.681818
+    },
+    {
+      "id": "water_mangrove_monitor",
+      "before_height_m": 2.3,
+      "after_height_m": 3.85,
+      "scale": 1.673913
+    },
+    {
+      "id": "water_mosshell",
+      "before_height_m": 1.4,
+      "after_height_m": 2.5,
+      "scale": 1.785714
+    },
+    {
+      "id": "water_abyssal_guardian",
+      "before_height_m": 3.8,
+      "after_height_m": 7.2,
+      "scale": 1.894737
+    }
+  ],
+  "errors": []
+}
