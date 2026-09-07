@@ -1,0 +1,717 @@
+{
+  "_comment": "Stormwood NPC dialogue draft. Three state conversations per contract NPC; requires_flags are intended bindings for the runtime owner. This lane does not add flags, objectives or plot beats.",
+  "schema_version": 1,
+  "realm": "stormwood",
+  "unbound_flags": [
+    "stormwood:chapter_started",
+    "stormwood:chapter_complete",
+    "stormwood:rootgate_released",
+    "stormwood:stormglass_arch_recipe_learned",
+    "stormwood:dynamo_complete"
+  ],
+  "conversations": {
+    "stormwood_rodkeeper_hesk_arrival": {
+      "speaker": "Rodkeeper Hesk",
+      "portrait": "res://assets/ui/portraits/villager_male.png",
+      "state": "arrival",
+      "requires_flags": [],
+      "lines": [
+        "You came down from Cloudreach? Then you remember what a storm sounds like when it ends. Ours no longer does.",
+        "The outer trees are dying. Our arches have gone dark, and the rod lines carry every strike toward Team Tether's works in the split tree.",
+        "Stay under Ashfoot's shelter when the light begins to build. Tamsin will show you how to read a Break. We need stormglass to light the road to the Lantern Pools again."
+      ]
+    },
+    "stormwood_rodkeeper_hesk_in_progress": {
+      "speaker": "Rodkeeper Hesk",
+      "portrait": "res://assets/ui/portraits/villager_male.png",
+      "state": "in_progress",
+      "requires_flags": [
+        "stormwood:chapter_started"
+      ],
+      "lines": [
+        "This Long Storm is killing the outer canopy. Team Tether says its rod lines keep us safe, but they carry the lightning away from our homes and into that split tree.",
+        "Our stormglass arches used to join these roads. With their cores dark, families at the Lantern Pools might as well be in another realm.",
+        "Watch a Break with Tamsin from Ashfoot's shelter. After the warning flashes, charged stormglass becomes harvestable. Bring it to the camp's dark arch and we can begin opening the road."
+      ]
+    },
+    "stormwood_rodkeeper_hesk_post_storm": {
+      "speaker": "Rodkeeper Hesk",
+      "portrait": "res://assets/ui/portraits/villager_male.png",
+      "state": "post_storm",
+      "requires_flags": [
+        "stormwood:chapter_complete"
+      ],
+      "lines": [
+        "Rodkeeper Hesk: The roads are answering again, and the quiet places are safe to visit.",
+        "Follow the marked road beneath the first struck trunks. The route is open enough to take your time.",
+        "Ask after the nearest rod line and the next safe clearing. We will keep this place ready for the next traveler."
+      ]
+    },
+    "stormwood_stormreader_tamsin_arrival": {
+      "speaker": "Tamsin",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "state": "arrival",
+      "requires_flags": [],
+      "lines": [
+        "Tamsin: I practice where the ground gives warning before the thunder arrives.",
+        "Follow the marked road beneath the first struck trunks. The rod station sits beyond the waycamp; exposed glass is a poor place to linger.",
+        "A short detour can teach you more than rushing the ridge."
+      ]
+    },
+    "stormwood_stormreader_tamsin_in_progress": {
+      "speaker": "Tamsin",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "state": "in_progress",
+      "requires_flags": [
+        "stormwood:chapter_started"
+      ],
+      "lines": [
+        "Tamsin: The rod station sits beyond the waycamp; exposed glass is a poor place to linger.",
+        "I practice where the ground gives warning before the thunder arrives. Keep the camp behind you when the thunder builds.",
+        "The next useful landmark is Ashfoot Waycamp; use it to orient yourself before the weather turns."
+      ]
+    },
+    "stormwood_stormreader_tamsin_post_storm": {
+      "speaker": "Tamsin",
+      "portrait": "res://assets/ui/portraits/young_trainer.png",
+      "state": "post_storm",
+      "requires_flags": [
+        "stormwood:chapter_complete"
+      ],
+      "lines": [
+        "Tamsin: The roads are answering again, and the quiet places are safe to visit.",
+        "Follow the marked road beneath the first struck trunks. The route is open enough to take your time.",
+        "A short detour can teach you more than rushing the ridge. We will keep this place ready for the next traveler."
+      ]
+    },
+    "stormwood_cook_marl_arrival": {
+      "speaker": "Marl",
+      "portrait": "res://assets/ui/portraits/wilhelm.png",
+      "state": "arrival",
+      "requires_flags": [],
+      "lines": [
+        "Marl: Eat while the fire is steady and check your supplies before the next stretch.",
+        "Follow the marked road beneath the first struck trunks. The rod station sits beyond the waycamp; exposed glass is a poor place to linger.",
+        "The storm makes a long road harder, but a hungry traveler can still come home."
+      ]
+    },
+    "stormwood_cook_marl_in_progress": {
+      "speaker": "Marl",
+      "portrait": "res://assets/ui/portraits/wilhelm.png",
+      "state": "in_progress",
+      "requires_flags": [
+        "stormwood:chapter_started"
+      ],
+      "lines": [
+        "Marl: The rod station sits beyond the waycamp; exposed glass is a poor place to linger.",
+        "Eat while the fire is steady and check your supplies before the next stretch. Keep the camp behind you when the thunder builds.",
+        "The next useful landmark is Ashfoot Waycamp; use it to orient yourself before the weather turns."
+      ]
+    },
+    "stormwood_cook_marl_post_storm": {
+      "speaker": "Marl",
+      "portrait": "res://assets/ui/portraits/innkeeper.png",
+      "state": "post_storm",
+      "requires_flags": [
+        "stormwood:chapter_complete"
+      ],
+      "lines": [
+        "Marl: The roads are answering again, and the quiet places are safe to visit.",
+        "Follow the marked road beneath the first struck trunks. The route is open enough to take your time.",
+        "The storm makes a long road harder, but a hungry traveler can still come home. We will keep this place ready for the next traveler."
+      ]
+    },
+    "stormwood_courier_pim_arrival": {
+      "speaker": "Pim",
+      "portrait": "res://assets/ui/portraits/lark.png",
+      "state": "arrival",
+      "requires_flags": [],
+      "lines": [
+        "Pim: I know which arch footing has a dry ledge and which pool turns treacherous.",
+        "The moss pools mark the low route; hollow trunks make the safer detour. Look for the pale Crown ring beyond the pools, but do not enter the sink on foot.",
+        "If you carry a parcel, keep it sealed until the marked recipient is in sight."
+      ]
+    },
+    "stormwood_courier_pim_in_progress": {
+      "speaker": "Pim",
+      "portrait": "res://assets/ui/portraits/lark.png",
+      "state": "in_progress",
+      "requires_flags": [
+        "stormwood:chapter_started"
+      ],
+      "lines": [
+        "Pim: Look for the pale Crown ring beyond the pools, but do not enter the sink on foot.",
+        "I know which arch footing has a dry ledge and which pool turns treacherous. When the storm breaks, charged clearings open and the pools change their way through.",
+        "The next useful landmark is Lantern Pools; use it to orient yourself before the weather turns."
+      ]
+    },
+    "stormwood_courier_pim_post_storm": {
+      "speaker": "Pim",
+      "portrait": "res://assets/ui/portraits/courier.png",
+      "state": "post_storm",
+      "requires_flags": [
+        "stormwood:chapter_complete"
+      ],
+      "lines": [
+        "Pim: The roads are answering again, and the quiet places are safe to visit.",
+        "The moss pools mark the low route; hollow trunks make the safer detour. The route is open enough to take your time.",
+        "If you carry a parcel, keep it sealed until the marked recipient is in sight. We will keep this place ready for the next traveler."
+      ]
+    },
+    "stormwood_trainer_ivo_arrival": {
+      "speaker": "Ivo",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "state": "arrival",
+      "requires_flags": [],
+      "lines": [
+        "Ivo: I keep to the side routes so the road never becomes the only lesson.",
+        "The moss pools mark the low route; hollow trunks make the safer detour. Look for the pale Crown ring beyond the pools, but do not enter the sink on foot.",
+        "Meet me when your team is ready, and we will test the ground together."
+      ]
+    },
+    "stormwood_trainer_ivo_in_progress": {
+      "speaker": "Ivo",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "state": "in_progress",
+      "requires_flags": [
+        "stormwood:chapter_started"
+      ],
+      "lines": [
+        "Ivo: Look for the pale Crown ring beyond the pools, but do not enter the sink on foot.",
+        "I keep to the side routes so the road never becomes the only lesson. When the storm breaks, charged clearings open and the pools change their way through.",
+        "The next useful landmark is Crown Overlook; use it to orient yourself before the weather turns."
+      ]
+    },
+    "stormwood_trainer_ivo_post_storm": {
+      "speaker": "Ivo",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "state": "post_storm",
+      "requires_flags": [
+        "stormwood:chapter_complete"
+      ],
+      "lines": [
+        "Ivo: The roads are answering again, and the quiet places are safe to visit.",
+        "The moss pools mark the low route; hollow trunks make the safer detour. The route is open enough to take your time.",
+        "Meet me when your team is ready, and we will test the ground together. We will keep this place ready for the next traveler."
+      ]
+    },
+    "stormwood_grunt_lieutenant_dace_arrival": {
+      "speaker": "Lieutenant Dace",
+      "portrait": "res://assets/ui/portraits/grunt_c.png",
+      "state": "arrival",
+      "requires_flags": [],
+      "lines": [
+        "Lieutenant Dace: The station's rod line is ours until someone reaches the switch.",
+        "The moss pools mark the low route; hollow trunks make the safer detour. Look for the pale Crown ring beyond the pools, but do not enter the sink on foot.",
+        "The approach has cover if you stop watching the machine and start watching the ground."
+      ]
+    },
+    "stormwood_grunt_lieutenant_dace_in_progress": {
+      "speaker": "Lieutenant Dace",
+      "portrait": "res://assets/ui/portraits/grunt_c.png",
+      "state": "in_progress",
+      "requires_flags": [
+        "stormwood:chapter_started"
+      ],
+      "lines": [
+        "Lieutenant Dace: Look for the pale Crown ring beyond the pools, but do not enter the sink on foot.",
+        "The station's rod line is ours until someone reaches the switch. When the storm breaks, charged clearings open and the pools change their way through.",
+        "The next useful landmark is Hollows Rod Station; use it to orient yourself before the weather turns."
+      ]
+    },
+    "stormwood_grunt_lieutenant_dace_post_storm": {
+      "speaker": "Lieutenant Dace",
+      "portrait": "res://assets/ui/portraits/grunt_c.png",
+      "state": "post_storm",
+      "requires_flags": [
+        "stormwood:chapter_complete"
+      ],
+      "lines": [
+        "Lieutenant Dace: The roads are answering again, and the quiet places are safe to visit.",
+        "The moss pools mark the low route; hollow trunks make the safer detour. The route is open enough to take your time.",
+        "The approach has cover if you stop watching the machine and start watching the ground. We will keep this place ready for the next traveler."
+      ]
+    },
+    "stormwood_warden_elect_bryn_arrival": {
+      "speaker": "Warden-Elect Bryn",
+      "portrait": "res://assets/ui/portraits/villager_male.png",
+      "state": "arrival",
+      "requires_flags": [],
+      "lines": [
+        "Warden-Elect Bryn: The Rodfolk kept these roads by reading the storm, not by trying to own it.",
+        "Take the ridge road toward Rodline Post and watch the copper-fused roots. The Still Grove is a quiet clearing beyond the Capacitor Grove.",
+        "Ask after the nearest rod line and the next safe clearing."
+      ]
+    },
+    "stormwood_warden_elect_bryn_in_progress": {
+      "speaker": "Warden-Elect Bryn",
+      "portrait": "res://assets/ui/portraits/villager_male.png",
+      "state": "in_progress",
+      "requires_flags": [
+        "stormwood:chapter_started"
+      ],
+      "lines": [
+        "You have joined the lower road again. Beyond Rodline, the old route ends at the Glass Sink. Walking will never bring you to the Crown.",
+        "Varga holds the bridge where the last archwrights tried to carry their tools through. Defeat that lieutenant, then find Keeper Ondra at the Still Grove.",
+        "Ondra remembers how to build a twin for the Crown arch. Without that road, we cannot reach the heartstone that holds the Rootgate shut."
+      ]
+    },
+    "stormwood_warden_elect_bryn_post_storm": {
+      "speaker": "Warden-Elect Bryn",
+      "portrait": "res://assets/ui/portraits/villager_male.png",
+      "state": "post_storm",
+      "requires_flags": [
+        "stormwood:chapter_complete"
+      ],
+      "lines": [
+        "Warden-Elect Bryn: The roads are answering again, and the quiet places are safe to visit.",
+        "Take the ridge road toward Rodline Post and watch the copper-fused roots. The route is open enough to take your time.",
+        "Ask after the nearest rod line and the next safe clearing. We will keep this place ready for the next traveler."
+      ]
+    },
+    "stormwood_trader_oswin_arrival": {
+      "speaker": "Oswin",
+      "portrait": "res://assets/ui/portraits/villager_male.png",
+      "state": "arrival",
+      "requires_flags": [],
+      "lines": [
+        "Oswin: Bring what you gather from the hollows; the road always needs another repair.",
+        "Take the ridge road toward Rodline Post and watch the copper-fused roots. The Still Grove is a quiet clearing beyond the Capacitor Grove.",
+        "I keep practical supplies for people who return with a plan."
+      ]
+    },
+    "stormwood_trader_oswin_in_progress": {
+      "speaker": "Oswin",
+      "portrait": "res://assets/ui/portraits/villager_male.png",
+      "state": "in_progress",
+      "requires_flags": [
+        "stormwood:chapter_started"
+      ],
+      "lines": [
+        "Oswin: The Still Grove is a quiet clearing beyond the Capacitor Grove.",
+        "Bring what you gather from the hollows; the road always needs another repair. A rod makes the exposed crossing manageable; prepare before leaving the shelter.",
+        "The next useful landmark is Rodline Post; use it to orient yourself before the weather turns."
+      ]
+    },
+    "stormwood_trader_oswin_post_storm": {
+      "speaker": "Oswin",
+      "portrait": "res://assets/ui/portraits/trader.png",
+      "state": "post_storm",
+      "requires_flags": [
+        "stormwood:chapter_complete"
+      ],
+      "lines": [
+        "Oswin: The roads are answering again, and the quiet places are safe to visit.",
+        "Take the ridge road toward Rodline Post and watch the copper-fused roots. The route is open enough to take your time.",
+        "I keep practical supplies for people who return with a plan. We will keep this place ready for the next traveler."
+      ]
+    },
+    "stormwood_tether_lieutenant_varga_arrival": {
+      "speaker": "Lieutenant Varga",
+      "portrait": "res://assets/ui/portraits/officer_a.png",
+      "state": "arrival",
+      "requires_flags": [],
+      "lines": [
+        "Lieutenant Varga: The bridge is closed because the storm says so, and I am the one listening.",
+        "Take the ridge road toward Rodline Post and watch the copper-fused roots. The Still Grove is a quiet clearing beyond the Capacitor Grove.",
+        "Cross my post and prove you can move between strikes."
+      ]
+    },
+    "stormwood_tether_lieutenant_varga_in_progress": {
+      "speaker": "Lieutenant Varga",
+      "portrait": "res://assets/ui/portraits/officer_a.png",
+      "state": "in_progress",
+      "requires_flags": [
+        "stormwood:chapter_started"
+      ],
+      "lines": [
+        "Lieutenant Varga: The Still Grove is a quiet clearing beyond the Capacitor Grove.",
+        "The bridge is closed because the storm says so, and I am the one listening. A rod makes the exposed crossing manageable; prepare before leaving the shelter.",
+        "The next useful landmark is Rodline Post bridge; use it to orient yourself before the weather turns."
+      ]
+    },
+    "stormwood_tether_lieutenant_varga_post_storm": {
+      "speaker": "Lieutenant Varga",
+      "portrait": "res://assets/ui/portraits/officer_a.png",
+      "state": "post_storm",
+      "requires_flags": [
+        "stormwood:chapter_complete"
+      ],
+      "lines": [
+        "Lieutenant Varga: The roads are answering again, and the quiet places are safe to visit.",
+        "Take the ridge road toward Rodline Post and watch the copper-fused roots. The route is open enough to take your time.",
+        "Cross my post and prove you can move between strikes. We will keep this place ready for the next traveler."
+      ]
+    },
+    "stormwood_keeper_ondra_arrival": {
+      "speaker": "Keeper Ondra",
+      "portrait": "res://assets/ui/portraits/villager_female.png",
+      "state": "arrival",
+      "requires_flags": [],
+      "lines": [
+        "Keeper Ondra: Stormglass joins cleanly when the footing is dry and the binding is tight.",
+        "Take the ridge road toward Rodline Post and watch the copper-fused roots. The Still Grove is a quiet clearing beyond the Capacitor Grove.",
+        "Measure twice before you place an arch or a rod."
+      ]
+    },
+    "stormwood_keeper_ondra_in_progress": {
+      "speaker": "Keeper Ondra",
+      "portrait": "res://assets/ui/portraits/villager_female.png",
+      "state": "in_progress",
+      "requires_flags": [
+        "stormwood:chapter_started"
+      ],
+      "lines": [
+        "With Varga driven off, we can carry the tools again. I will teach you the Stormglass Arch recipe.",
+        "An arch needs its twin. Build this one on the Still Grove footing, using Crown-grade stormglass gathered during a Break. The old Crown arch is waiting across the Glass Sink.",
+        "The footing fixes the alignment. You cannot plant this arch elsewhere and expect the road to answer."
+      ]
+    },
+    "stormwood_keeper_ondra_post_storm": {
+      "speaker": "Keeper Ondra",
+      "portrait": "res://assets/ui/portraits/craftsperson.png",
+      "state": "post_storm",
+      "requires_flags": [
+        "stormwood:chapter_complete"
+      ],
+      "lines": [
+        "Keeper Ondra: The roads are answering again, and the quiet places are safe to visit.",
+        "Take the ridge road toward Rodline Post and watch the copper-fused roots. The route is open enough to take your time.",
+        "Measure twice before you place an arch or a rod. We will keep this place ready for the next traveler."
+      ]
+    },
+    "stormwood_archivist_wen_arrival": {
+      "speaker": "Archivist Wen",
+      "portrait": "res://assets/ui/portraits/old_perrin.png",
+      "state": "arrival",
+      "requires_flags": [],
+      "lines": [
+        "Archivist Wen: The marks here are records of pressure, not decoration.",
+        "The Crown is reached by its arch, and the black sink below is not a road. Stay on the pale island footing; the dark glass outside it takes strikes.",
+        "Walk the island edge and compare what the glass remembers."
+      ]
+    },
+    "stormwood_archivist_wen_in_progress": {
+      "speaker": "Archivist Wen",
+      "portrait": "res://assets/ui/portraits/old_perrin.png",
+      "state": "in_progress",
+      "requires_flags": [
+        "stormwood:chapter_started"
+      ],
+      "lines": [
+        "These records remember storms moving into the forest. The newest marks run the other way: out of the split tree.",
+        "The Dynamo is making the Long Storm. Its rod lines do not contain the Rift; they feed it. Team Tether has reversed the old network.",
+        "The Crown heartstone still commands the Rootgate. Restore its connection, then follow the opened road to Lantern Hollow. Someone there must know what powers the machine."
+      ]
+    },
+    "stormwood_archivist_wen_post_storm": {
+      "speaker": "Archivist Wen",
+      "portrait": "res://assets/ui/portraits/field_researcher.png",
+      "state": "post_storm",
+      "requires_flags": [
+        "stormwood:chapter_complete"
+      ],
+      "lines": [
+        "Archivist Wen: The roads are answering again, and the quiet places are safe to visit.",
+        "The Crown is reached by its arch, and the black sink below is not a road. The route is open enough to take your time.",
+        "Walk the island edge and compare what the glass remembers. We will keep this place ready for the next traveler."
+      ]
+    },
+    "stormwood_elder_maud_arrival": {
+      "speaker": "Elder Maud",
+      "portrait": "res://assets/ui/portraits/villager_male.png",
+      "state": "arrival",
+      "requires_flags": [],
+      "lines": [
+        "Elder Maud: The Rodfolk kept these roads by reading the storm, not by trying to own it.",
+        "The canopy route runs from Lantern Hollow toward the Fallen Giant. Root bridges are shortcuts, but the Blackwater edge is exposed.",
+        "Ask after the nearest rod line and the next safe clearing."
+      ]
+    },
+    "stormwood_elder_maud_in_progress": {
+      "speaker": "Elder Maud",
+      "portrait": "res://assets/ui/portraits/villager_male.png",
+      "state": "in_progress",
+      "requires_flags": [
+        "stormwood:chapter_started"
+      ],
+      "lines": [
+        "Elder Maud: Root bridges are shortcuts, but the Blackwater edge is exposed.",
+        "The Rodfolk kept these roads by reading the storm, not by trying to own it. The old hall lies west of the rod station; carry recovery supplies for the detour.",
+        "The next useful landmark is Lantern Hollow; use it to orient yourself before the weather turns."
+      ]
+    },
+    "stormwood_elder_maud_post_storm": {
+      "speaker": "Elder Maud",
+      "portrait": "res://assets/ui/portraits/villager_male.png",
+      "state": "post_storm",
+      "requires_flags": [
+        "stormwood:chapter_complete"
+      ],
+      "lines": [
+        "Elder Maud: The roads are answering again, and the quiet places are safe to visit.",
+        "The canopy route runs from Lantern Hollow toward the Fallen Giant. The route is open enough to take your time.",
+        "Ask after the nearest rod line and the next safe clearing. We will keep this place ready for the next traveler."
+      ]
+    },
+    "stormwood_trader_fenn_arrival": {
+      "speaker": "Fenn",
+      "portrait": "res://assets/ui/portraits/trader.png",
+      "state": "arrival",
+      "requires_flags": [],
+      "lines": [
+        "Fenn: Bring what you gather from the hollows; the road always needs another repair.",
+        "The canopy route runs from Lantern Hollow toward the Fallen Giant. Root bridges are shortcuts, but the Blackwater edge is exposed.",
+        "I keep practical supplies for people who return with a plan."
+      ]
+    },
+    "stormwood_trader_fenn_in_progress": {
+      "speaker": "Fenn",
+      "portrait": "res://assets/ui/portraits/trader.png",
+      "state": "in_progress",
+      "requires_flags": [
+        "stormwood:chapter_started"
+      ],
+      "lines": [
+        "Fenn: Root bridges are shortcuts, but the Blackwater edge is exposed.",
+        "Bring what you gather from the hollows; the road always needs another repair. The old hall lies west of the rod station; carry recovery supplies for the detour.",
+        "The next useful landmark is Lantern Hollow; use it to orient yourself before the weather turns."
+      ]
+    },
+    "stormwood_trader_fenn_post_storm": {
+      "speaker": "Fenn",
+      "portrait": "res://assets/ui/portraits/trader.png",
+      "state": "post_storm",
+      "requires_flags": [
+        "stormwood:chapter_complete"
+      ],
+      "lines": [
+        "Fenn: The roads are answering again, and the quiet places are safe to visit.",
+        "The canopy route runs from Lantern Hollow toward the Fallen Giant. The route is open enough to take your time.",
+        "I keep practical supplies for people who return with a plan. We will keep this place ready for the next traveler."
+      ]
+    },
+    "stormwood_caretaker_lio_arrival": {
+      "speaker": "Lio",
+      "portrait": "res://assets/ui/portraits/lark.png",
+      "state": "arrival",
+      "requires_flags": [],
+      "lines": [
+        "Lio: A creature needs a quiet place, a full bowl and time to settle after a storm.",
+        "The canopy route runs from Lantern Hollow toward the Fallen Giant. Root bridges are shortcuts, but the Blackwater edge is exposed.",
+        "Bring your team back before fatigue turns a warning into a fall."
+      ]
+    },
+    "stormwood_caretaker_lio_in_progress": {
+      "speaker": "Lio",
+      "portrait": "res://assets/ui/portraits/lark.png",
+      "state": "in_progress",
+      "requires_flags": [
+        "stormwood:chapter_started"
+      ],
+      "lines": [
+        "Lio: Root bridges are shortcuts, but the Blackwater edge is exposed.",
+        "A creature needs a quiet place, a full bowl and time to settle after a storm. The old hall lies west of the rod station; carry recovery supplies for the detour.",
+        "The next useful landmark is Lantern Hollow; use it to orient yourself before the weather turns."
+      ]
+    },
+    "stormwood_caretaker_lio_post_storm": {
+      "speaker": "Lio",
+      "portrait": "res://assets/ui/portraits/creature_caretaker.png",
+      "state": "post_storm",
+      "requires_flags": [
+        "stormwood:chapter_complete"
+      ],
+      "lines": [
+        "Lio: The roads are answering again, and the quiet places are safe to visit.",
+        "The canopy route runs from Lantern Hollow toward the Fallen Giant. The route is open enough to take your time.",
+        "Bring your team back before fatigue turns a warning into a fall. We will keep this place ready for the next traveler."
+      ]
+    },
+    "stormwood_ace_trainer_rook_arrival": {
+      "speaker": "Rook",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "state": "arrival",
+      "requires_flags": [],
+      "lines": [
+        "Rook: The Deepwood has room for a circuit if you stop treating every fight like a finish line.",
+        "The canopy route runs from Lantern Hollow toward the Fallen Giant. Root bridges are shortcuts, but the Blackwater edge is exposed.",
+        "Take the long loop and return when you have learned its rhythm."
+      ]
+    },
+    "stormwood_ace_trainer_rook_in_progress": {
+      "speaker": "Rook",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "state": "in_progress",
+      "requires_flags": [
+        "stormwood:chapter_started"
+      ],
+      "lines": [
+        "Rook: Root bridges are shortcuts, but the Blackwater edge is exposed.",
+        "The Deepwood has room for a circuit if you stop treating every fight like a finish line. The old hall lies west of the rod station; carry recovery supplies for the detour.",
+        "The next useful landmark is Fallen Giant; use it to orient yourself before the weather turns."
+      ]
+    },
+    "stormwood_ace_trainer_rook_post_storm": {
+      "speaker": "Rook",
+      "portrait": "res://assets/ui/portraits/rival_trainer.png",
+      "state": "post_storm",
+      "requires_flags": [
+        "stormwood:chapter_complete"
+      ],
+      "lines": [
+        "Rook: The roads are answering again, and the quiet places are safe to visit.",
+        "The canopy route runs from Lantern Hollow toward the Fallen Giant. The route is open enough to take your time.",
+        "Take the long loop and return when you have learned its rhythm. We will keep this place ready for the next traveler."
+      ]
+    },
+    "stormwood_defector_sable_arrival": {
+      "speaker": "Sable",
+      "portrait": "res://assets/ui/portraits/ren.png",
+      "state": "arrival",
+      "requires_flags": [],
+      "lines": [
+        "Sable: The machines were built to pull strikes into a single line; the people paid for every shortcut.",
+        "The canopy route runs from Lantern Hollow toward the Fallen Giant. Root bridges are shortcuts, but the Blackwater edge is exposed.",
+        "I can point out the old service route if you keep your distance from live hardware."
+      ]
+    },
+    "stormwood_defector_sable_in_progress": {
+      "speaker": "Sable",
+      "portrait": "res://assets/ui/portraits/ren.png",
+      "state": "in_progress",
+      "requires_flags": [
+        "stormwood:chapter_started"
+      ],
+      "lines": [
+        "I worked the crown lifts. There is a living creature inside the Stormheart Tree, held above the core. Marrow is drawing the storm through it.",
+        "We called the machine the Dynamo as if that made the screaming something ordinary. It is a prison, and every rod station keeps it working.",
+        "Cut the remaining rod lines. Rest at Ember Bivouac before the ascent. Inside the core, break the capacitor banks and use the rod plates to turn the discharge away from your team."
+      ]
+    },
+    "stormwood_defector_sable_post_storm": {
+      "speaker": "Sable",
+      "portrait": "res://assets/ui/portraits/former_tether_member.png",
+      "state": "post_storm",
+      "requires_flags": [
+        "stormwood:chapter_complete"
+      ],
+      "lines": [
+        "Sable: The roads are answering again, and the quiet places are safe to visit.",
+        "The canopy route runs from Lantern Hollow toward the Fallen Giant. The route is open enough to take your time.",
+        "I can point out the old service route if you keep your distance from live hardware. We will keep this place ready for the next traveler."
+      ]
+    },
+    "stormwood_officer_kestrel_arrival": {
+      "speaker": "Officer Kestrel",
+      "portrait": "res://assets/ui/portraits/officer_b.png",
+      "state": "arrival",
+      "requires_flags": [],
+      "lines": [
+        "Officer Kestrel: The outer works keep their own schedule, and the storm is part of it.",
+        "Follow the glass field toward the Outer Works; the Stormheart Tree rises beyond it. Rod cover ends at the stronghold approach, so read the strike ground before crossing.",
+        "Cross my post and prove you can move between strikes."
+      ]
+    },
+    "stormwood_officer_kestrel_in_progress": {
+      "speaker": "Officer Kestrel",
+      "portrait": "res://assets/ui/portraits/officer_b.png",
+      "state": "in_progress",
+      "requires_flags": [
+        "stormwood:chapter_started"
+      ],
+      "lines": [
+        "Officer Kestrel: Rod cover ends at the stronghold approach, so read the strike ground before crossing.",
+        "The outer works keep their own schedule, and the storm is part of it. The core is reached through the tree's lower works; take a camp break first.",
+        "The next useful landmark is Dynamo Outer Works; use it to orient yourself before the weather turns."
+      ]
+    },
+    "stormwood_officer_kestrel_post_storm": {
+      "speaker": "Officer Kestrel",
+      "portrait": "res://assets/ui/portraits/officer_b.png",
+      "state": "post_storm",
+      "requires_flags": [
+        "stormwood:chapter_complete"
+      ],
+      "lines": [
+        "Officer Kestrel: The roads are answering again, and the quiet places are safe to visit.",
+        "Follow the glass field toward the Outer Works; the Stormheart Tree rises beyond it. The route is open enough to take your time.",
+        "Cross my post and prove you can move between strikes. We will keep this place ready for the next traveler."
+      ]
+    },
+    "stormwood_captain_marrow_arrival": {
+      "speaker": "Captain Marrow",
+      "portrait": "res://assets/ui/portraits/captain_a.png",
+      "state": "arrival",
+      "requires_flags": [],
+      "lines": [
+        "Captain Marrow: You crossed every region to reach this core. The storm has measured your preparation.",
+        "Follow the glass field toward the Outer Works; the Stormheart Tree rises beyond it. Rod cover ends at the stronghold approach, so read the strike ground before crossing.",
+        "Step forward when you are ready to settle the question by creature and ground."
+      ]
+    },
+    "stormwood_captain_marrow_in_progress": {
+      "speaker": "Captain Marrow",
+      "portrait": "res://assets/ui/portraits/captain_a.png",
+      "state": "in_progress",
+      "requires_flags": [
+        "stormwood:chapter_started"
+      ],
+      "lines": [
+        "Captain Marrow: Rod cover ends at the stronghold approach, so read the strike ground before crossing.",
+        "You crossed every region to reach this core. The storm has measured your preparation. The core is reached through the tree's lower works; take a camp break first.",
+        "The next useful landmark is Dynamo Core; use it to orient yourself before the weather turns."
+      ]
+    },
+    "stormwood_captain_marrow_post_storm": {
+      "speaker": "Captain Marrow",
+      "portrait": "res://assets/ui/portraits/captain_a.png",
+      "state": "post_storm",
+      "requires_flags": [
+        "stormwood:chapter_complete"
+      ],
+      "lines": [
+        "Captain Marrow: The roads are answering again, and the quiet places are safe to visit.",
+        "Follow the glass field toward the Outer Works; the Stormheart Tree rises beyond it. The route is open enough to take your time.",
+        "Step forward when you are ready to settle the question by creature and ground. We will keep this place ready for the next traveler."
+      ]
+    },
+    "stormwood_crown_caretaker_neri_arrival": {
+      "speaker": "Neri",
+      "portrait": "res://assets/ui/portraits/villager_female.png",
+      "state": "arrival",
+      "requires_flags": [],
+      "lines": [
+        "Neri: I tend the Crown's small beds and keep the arch footing clear of moss.",
+        "The Crown is reached by its arch, and the black sink below is not a road. Stay on the pale island footing; the dark glass outside it takes strikes.",
+        "A little pruning and a clean footing make a safer crossing."
+      ]
+    },
+    "stormwood_crown_caretaker_neri_in_progress": {
+      "speaker": "Neri",
+      "portrait": "res://assets/ui/portraits/villager_female.png",
+      "state": "in_progress",
+      "requires_flags": [
+        "stormwood:chapter_started"
+      ],
+      "lines": [
+        "Neri: Stay on the pale island footing; the dark glass outside it takes strikes.",
+        "I tend the Crown's small beds and keep the arch footing clear of moss. The arch and heartstone face the lower forest, so turn that way when you leave.",
+        "The next useful landmark is Crown Arch; use it to orient yourself before the weather turns."
+      ]
+    },
+    "stormwood_crown_caretaker_neri_post_storm": {
+      "speaker": "Neri",
+      "portrait": "res://assets/ui/portraits/villager_female.png",
+      "state": "post_storm",
+      "requires_flags": [
+        "stormwood:chapter_complete"
+      ],
+      "lines": [
+        "Neri: The roads are answering again, and the quiet places are safe to visit.",
+        "The Crown is reached by its arch, and the black sink below is not a road. The route is open enough to take your time.",
+        "A little pruning and a clean footing make a safer crossing. We will keep this place ready for the next traveler."
+      ]
+    }
+  }
+}

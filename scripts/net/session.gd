@@ -63,6 +63,8 @@ signal peer_left(peer_id: int)
 ## scene can reconcile what it draws without asking who moved.
 signal peer_realm_changed(peer_id: int, from_realm: String, to_realm: String)
 signal snapshot_applied()
+signal stormwood_strike_received(event: Dictionary)
+signal stormwood_arch_arrival(event: Dictionary)
 signal session_ended(reason: String)
 
 ## "" (no session), "host" or "client". The single source of truth for
@@ -520,6 +522,63 @@ func _rpc_clock(day: int, elapsed: float) -> void:
 	game.call("apply_host_clock", day, elapsed)
 
 
+## Same global transport as the day clock: it exists while a client changes
+## realms, before the destination's weather node can receive scene RPCs.
+@rpc("authority", "call_remote", "unreliable_ordered", CHANNEL_LEDGER)
+func _rpc_realm_environment(state: Dictionary) -> void:
+	var game := _game()
+	if game != null and not is_host():
+		game.set("realm_environment", state)
+
+
+## Hazard decisions originate in the host's realm simulation. The transport is
+## global because a client and host may be standing in different world scenes.
+func publish_stormwood_strike(event: Dictionary) -> void:
+	if not is_host():
+		return
+	stormwood_strike_received.emit(event.duplicate(true))
+	if is_active():
+		rpc("_rpc_stormwood_strike", event)
+
+
+@rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_stormwood_strike(event: Dictionary) -> void:
+	if not is_host():
+		stormwood_strike_received.emit(event.duplicate(true))
+
+
+func request_stormwood_arch_travel(arch_id: String) -> void:
+	if is_host():
+		_dispatch_stormwood_arch(local_peer_id(), arch_id)
+	elif is_active():
+		rpc_id(HOST_PEER_ID, "_rpc_stormwood_arch_request", arch_id)
+
+
+@rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_stormwood_arch_request(arch_id: String) -> void:
+	if is_host():
+		_dispatch_stormwood_arch(multiplayer.get_remote_sender_id(), arch_id)
+
+
+func _dispatch_stormwood_arch(peer_id: int, arch_id: String) -> void:
+	if realm_of(peer_id) != "stormwood":
+		return
+	var runtime := get_tree().get_first_node_in_group("stormwood_arch_runtime")
+	if runtime == null:
+		return
+	var verdict: Dictionary = runtime.travel_for_peer(peer_id, arch_id)
+	if peer_id == local_peer_id():
+		stormwood_arch_arrival.emit(verdict)
+	elif is_active():
+		rpc_id(peer_id, "_rpc_stormwood_arch_arrival", verdict)
+
+
+@rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_stormwood_arch_arrival(event: Dictionary) -> void:
+	if not is_host():
+		stormwood_arch_arrival.emit(event)
+
+
 ## Host -> everyone (or one kicked peer), ledger channel.
 @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
 func _rpc_session_ended(reason: String) -> void:
@@ -603,6 +662,9 @@ func _process(delta: float) -> void:
 	if game == null:
 		return
 	rpc("_rpc_clock", int(game.get("day")), float(game.get("clock_elapsed_seconds")))
+	var environment: Variant = game.get("realm_environment")
+	if environment is Dictionary:
+		rpc("_rpc_realm_environment", environment)
 
 
 # --- internals -------------------------------------------------------------------

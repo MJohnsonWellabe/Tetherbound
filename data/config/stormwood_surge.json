@@ -1,0 +1,31 @@
+{
+  "realm_id": "stormwood",
+  "phases": [{"id":"calm","seconds":240},{"id":"building","seconds":90},{"id":"break","seconds":120},{"id":"fading","seconds":60}],
+  "gentle_calm_multiplier": 1.35,
+  "disabled_rod_calm_multiplier": 1.5,
+  "disabled_rod_break_multiplier": 0.6,
+  "aftermath_seconds": {"calm":2400,"building":45,"break":45,"fading":60},
+  "strike": {"interval_min":4,"interval_max":8,"telegraph_seconds":1.2,"radius_m":3,"static_seconds":8,"static_regen_multiplier":0.5,"rod_radius_m":12,"max_health_fraction":0.25,"insulation_pieces_for_immunity":4},
+  "regions": {
+    "cinder_verge":{"gentle":true,"damage":12,"rod_flag":"stormwood:rod_verge_disabled"},
+    "glowmoss_hollows":{"gentle":true,"damage":15,"rod_flag":"stormwood:rod_hollows_disabled"},
+    "conductor_run":{"damage":18},
+    "hollow_crown":{"safe":true,"damage":20},
+    "deepwood":{"damage":23,"rod_flag":"stormwood:rod_deepwood_disabled"},
+    "dynamo":{"damage":26,"rod_flag":"stormwood:rod_dynamo_disabled"}
+  },
+  "marked_clearings": [
+    {"id":"verge_glass_01","region_id":"cinder_verge","at":[-610,755],"radius":20},
+    {"id":"verge_glass_02","region_id":"cinder_verge","at":[-750,885],"radius":20},
+    {"id":"hollows_glass_01","region_id":"glowmoss_hollows","at":[-530,1510],"radius":22},
+    {"id":"hollows_glass_02","region_id":"glowmoss_hollows","at":[-1000,1850],"radius":22}
+  ],
+  "safe_zones": [
+    {"id":"ashfoot","at":[-350,450],"radius":42},
+    {"id":"lantern_pools","at":[-380,1400],"radius":42},
+    {"id":"rodline_post","at":[-700,2300],"radius":45},
+    {"id":"still_grove","at":[-160,2700],"radius":70},
+    {"id":"lantern_hollow","at":[-450,3960],"radius":48},
+    {"id":"ember_bivouac","at":[-120,5270],"radius":35}
+  ]
+}

@@ -80,6 +80,9 @@ extends RefCounted
 ## encounter host in Wave 4, not through this file.
 
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
+const STORMWOOD_ARCHES := preload("res://scripts/world/stormwood_arch_rules.gd")
+const STORMWOOD_HARVEST := preload("res://scripts/world/stormwood_harvest_rules.gd")
+var _stormwood_harvest_rules: RefCounted
 
 ## The authoritative world this ledger writes. On a client, `ledger_rpc.gd`
 ## still builds a ledger over the local replica, but only ever calls `apply()`
@@ -120,6 +123,12 @@ func commit(intent: Dictionary, peer_id: int = 1) -> Dictionary:
 		return _refuse(kind, peer_id, "malformed", "That action did not say which world it belongs to.")
 
 	match kind:
+		"stormwood_disable_rod":
+			return _stormwood_disable_rod(intent, peer_id, realm)
+		"stormwood_harvest":
+			return _stormwood_harvest(intent, peer_id, realm)
+		"stormwood_relight_arch":
+			return _stormwood_relight_arch(intent, peer_id, realm)
 		"claim_pickup":
 			return _claim_pickup(intent, peer_id, realm)
 		"harvest":
@@ -212,6 +221,24 @@ static func scene_ops(delta: Dictionary) -> Array:
 
 # --- intents ------------------------------------------------------------------
 
+func _stormwood_disable_rod(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
+	var kind := "stormwood_disable_rod"
+	if realm != "stormwood":
+		return _refuse(kind, peer_id, "malformed", "That station belongs to the Stormwood.")
+	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_rod_stations.json"))
+	for station: Dictionary in data.get("stations", []):
+		if str(station.id) != str(intent.get("id", "")):
+			continue
+		if _flag_set(str(station.disabled_flag)):
+			return _refuse(kind, peer_id, "already_taken", "This rod line is already quiet.")
+		for gate: String in station.get("requires_flags", []):
+			if not _flag_set(gate):
+				return _refuse(kind, peer_id, "locked", "Follow the rod line before opening this switch.")
+		if not _flag_set(str(station.guard_defeat_flag)):
+			return _refuse(kind, peer_id, "guarded", "Defeat the station's picket before opening its switch.")
+		return _commit([_world_flag(realm, str(station.disabled_flag))], kind, peer_id, realm)
+	return _refuse(kind, peer_id, "malformed", "That rod station could not be found.")
+
 ## A one-time world find (`item_cache_pickup.gd`, `key_pickup.gd`,
 ## `tm_pickup.gd`). `flag` is the value of that consumer's own static
 ## `flag_id()`, so the ledger never has to learn three id schemes -- and the
@@ -235,6 +262,8 @@ func _claim_pickup(intent: Dictionary, peer_id: int, realm: String) -> Dictionar
 ## `harvest_node:<id>` flag D72 already writes, now written once by the host.
 func _harvest(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
 	var flag := str(intent.get("flag", ""))
+	if flag.begins_with("harvest_node:order:stormwood_harvest_"):
+		return _refuse("harvest", peer_id, "malformed", "That resource needs the forest's harvest rules.")
 	if flag.is_empty():
 		return _refuse("harvest", peer_id, "malformed", "That resource has no identity to record.")
 	if _flag_set(flag):
@@ -245,6 +274,24 @@ func _harvest(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
 	if not item.is_empty() and amount > 0:
 		ops.append(_item_grant(peer_id, item, amount))
 	return _commit(ops, "harvest", peer_id, realm)
+
+
+func _stormwood_harvest(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
+	var kind := "stormwood_harvest"
+	if realm != "stormwood":
+		return _refuse(kind, peer_id, "malformed", "That resource belongs to the Stormwood.")
+	if _stormwood_harvest_rules == null:
+		_stormwood_harvest_rules = STORMWOOD_HARVEST.new()
+	var id := str(intent.get("site_id", ""))
+	var reason: String = _stormwood_harvest_rules.refusal(id, world)
+	if not reason.is_empty():
+		return _refuse(kind, peer_id, "unavailable", reason)
+	var flag := STORMWOOD_HARVEST.flag(id)
+	if _flag_set(flag):
+		return _refuse(kind, peer_id, "already_taken", "Someone else already gathered that.")
+	var site: Dictionary = _stormwood_harvest_rules.sites[id]
+	# Identity, yield and availability come from host data, never the request.
+	return _commit([_world_flag(realm, flag), _item_grant(peer_id, str(site.item), int(site.amount))], kind, peer_id, realm)
 
 
 ## One scattered bush/tree/rock, addressed the way `vegetation.gd` addresses it:
@@ -519,6 +566,24 @@ static func reward_flag(source: String, peer_id: int) -> String:
 
 
 # --- internals ------------------------------------------------------------------
+
+func _stormwood_relight_arch(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
+	var kind := "stormwood_relight_arch"
+	var id := str(intent.get("id", ""))
+	var arch := STORMWOOD_ARCHES.definition(id)
+	if realm != "stormwood" or arch.is_empty():
+		return _refuse(kind, peer_id, "invalid_arch", "That arch does not belong to this road.")
+	if not STORMWOOD_ARCHES.is_available(arch, world.get("flags")):
+		return _refuse(kind, peer_id, "gated", "The Rootgate must open before this road can be relit.")
+	if STORMWOOD_ARCHES.is_lit(arch, world.get("flags")):
+		return _refuse(kind, peer_id, "already_lit", "That arch is already alight.")
+	var cost := int(STORMWOOD_ARCHES.config().relight_cost)
+	if int(intent.get("available_stormglass", 0)) < cost:
+		return _refuse(kind, peer_id, "materials", "Relighting this arch needs %d Stormglass." % cost)
+	# The character inventory uses the established per-peer delta path. The
+	# flag and cost are a single winning commit; a competing claimant pays none.
+	return _commit([_world_flag(realm, STORMWOOD_ARCHES.lit_flag(id)), _item_take(peer_id, "stormglass", cost)], kind, peer_id, realm)
+
 
 func _flag_set(id: String) -> bool:
 	var flags: Variant = world.get("flags")

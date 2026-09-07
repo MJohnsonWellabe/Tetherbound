@@ -308,6 +308,13 @@ var clock_elapsed_seconds: float:
 
 ## What the build menu last armed, or an empty string. The building system reads
 ## this when there is one; until then it is the honest end of the build screen.
+var realm_environment: Dictionary:
+	get:
+		return world.realm_environment if world != null else {}
+	set(value):
+		if world != null:
+			world.realm_environment = value.duplicate(true)
+
 var pending_build: String:
 	get:
 		return local.pending_build if local != null else ""

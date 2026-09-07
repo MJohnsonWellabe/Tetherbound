@@ -1,0 +1,24 @@
+{
+  "realm_id": "stormwood",
+  "relight_cost": 3,
+  "player_pair_limit": 3,
+  "recipe_flag": "stormwood:arch_recipe_known",
+  "arches": [
+    {"id":"a_ashfoot","pair":"a","name":"Ashfoot Arch","at":[-350,500],"yaw_deg":0},
+    {"id":"a_pools","pair":"a","name":"Lantern Pools South Arch","at":[-350,1440],"yaw_deg":180},
+    {"id":"b_pools","pair":"b","name":"Lantern Pools North Arch","at":[-410,1350],"yaw_deg":0},
+    {"id":"b_rodline","pair":"b","name":"Rodline Arrival Arch","at":[-680,2360],"yaw_deg":180},
+    {"id":"c_rodline","pair":"c","name":"Rodline Long Road Arch","at":[-720,2260],"yaw_deg":0,"requires_flag":"stormwood:rootgate_released"},
+    {"id":"c_lantern","pair":"c","name":"Lantern Hollow Arch","at":[-420,4010],"yaw_deg":180,"requires_flag":"stormwood:rootgate_released"},
+    {"id":"d_hall","pair":"d","name":"Old Rodfolk Hall Arch","at":[-1120,3870],"yaw_deg":0,"requires_flag":"stormwood:rootgate_released"},
+    {"id":"d_giant","pair":"d","name":"Fallen Giant Arch","at":[-150,4460],"yaw_deg":180,"requires_flag":"stormwood:rootgate_released"},
+    {"id":"e_crown","pair":"e","name":"Crown Arch","at":[485,2700],"yaw_deg":90,"starts_lit":true}
+  ],
+  "footings": [
+    {"id":"still_grove","at":[-160,2750],"yaw_deg":90,"fixed_twin":"e_crown","requires_flag":"stormwood:arch_recipe_known"},
+    {"id":"verge_road","at":[-630,800],"yaw_deg":0},
+    {"id":"hollows_road","at":[-1050,1750],"yaw_deg":0},
+    {"id":"capacitor_grove","at":[-1040,3070],"yaw_deg":180},
+    {"id":"deepwood_road","at":[-400,4540],"yaw_deg":0,"requires_flag":"stormwood:rootgate_released"}
+  ]
+}

@@ -1,0 +1,177 @@
+{
+  "_comment": "Stormwood inventory recipes. Arch, rod, lantern and bench placement recipes remain in the integration payload until their build consumers are ready.",
+  "recipes": {
+    "insulated_helm": {
+      "name": "Insulated Helm",
+      "realm_id": "stormwood",
+      "unlocked_by": "stormwood:rodline_linked",
+      "output": {
+        "id": "insulated_helm",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "stormglass",
+          "n": 3
+        },
+        {
+          "id": "sparkfur",
+          "n": 3
+        },
+        {
+          "id": "stormglass_lining",
+          "n": 1
+        }
+      ],
+      "blurb": "Crafted Rodline Post protection."
+    },
+    "insulated_vest": {
+      "name": "Insulated Vest",
+      "realm_id": "stormwood",
+      "unlocked_by": "stormwood:rodline_linked",
+      "output": {
+        "id": "insulated_vest",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "stormglass",
+          "n": 5
+        },
+        {
+          "id": "sparkfur",
+          "n": 5
+        },
+        {
+          "id": "stormglass_lining",
+          "n": 2
+        }
+      ],
+      "blurb": "Crafted core Stormwood protection."
+    },
+    "rod_mast": {
+      "name": "Rod Mast",
+      "realm_id": "stormwood",
+      "unlocked_by": "stormwood:rodline_linked",
+      "output": {
+        "id": "rod_mast",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "thunderwood",
+          "n": 4
+        },
+        {
+          "id": "conductor_vine",
+          "n": 2
+        }
+      ],
+      "blurb": "A prepared mast for a lightning rod installation."
+    },
+    "voltcap_stew": {
+      "name": "Voltcap Stew",
+      "realm_id": "stormwood",
+      "unlocked_by": "stormwood:chapter_started",
+      "output": {
+        "id": "voltcap_stew",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "voltcap",
+          "n": 3
+        },
+        {
+          "id": "glowmoss",
+          "n": 1
+        }
+      ],
+      "blurb": "Prepare a distinct nourishing Voltcap meal."
+    },
+    "glowmoss_tonic": {
+      "name": "Glowmoss Tonic",
+      "realm_id": "stormwood",
+      "unlocked_by": "stormwood:chapter_started",
+      "output": {
+        "id": "glowmoss_tonic",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "glowmoss",
+          "n": 3
+        },
+        {
+          "id": "voltcap",
+          "n": 1
+        }
+      ],
+      "blurb": "Brew a distinct Stormwood recovery tonic; it does not revive a fainted creature."
+    },
+    "stormglass_orb_socket": {
+      "name": "Stormglass Orb Socket",
+      "realm_id": "stormwood",
+      "unlocked_by": "stormwood:ember_bivouac_reached",
+      "output": {
+        "id": "orb_prime",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "stormglass",
+          "n": 4
+        },
+        {
+          "id": "sparkfur",
+          "n": 2
+        },
+        {
+          "id": "fiber",
+          "n": 2
+        }
+      ],
+      "blurb": "Fit a prime orb with a charged Stormwood socket."
+    },
+    "stormglass_lining": {
+      "name": "Stormglass Lining",
+      "realm_id": "stormwood",
+      "unlocked_by": "stormwood:rodline_linked",
+      "output": {
+        "id": "stormglass_lining",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "stormglass",
+          "n": 2
+        },
+        {
+          "id": "conductor_vine",
+          "n": 2
+        }
+      ],
+      "blurb": "Wrap glass strips so they can insulate a crafted gear piece."
+    },
+    "thunderwood_frame": {
+      "name": "Thunderwood Frame",
+      "realm_id": "stormwood",
+      "unlocked_by": "stormwood:chapter_started",
+      "output": {
+        "id": "thunderwood_frame",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "thunderwood",
+          "n": 3
+        },
+        {
+          "id": "conductor_vine",
+          "n": 1
+        }
+      ],
+      "blurb": "Prepare a stable Stormwood support for an arch or bench."
+    }
+  }
+}

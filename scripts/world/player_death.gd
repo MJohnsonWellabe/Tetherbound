@@ -134,7 +134,7 @@ func _die_now() -> void:
 func recovery_position(game: Node, from: Vector3) -> Vector3:
 	var realm := WORLD_RECORDS.active(game)
 	var fallback := _fallback_home
-	if realm == "cloudreach":
+	if realm in ["cloudreach", "stormwood"]:
 		fallback = resolve_safe_camp(_recovery_camps, game.get("progression"), from,
 			_fallback_home, _recovery_ground)
 	return resolve_home(game.get("placed_buildings"), fallback, realm)

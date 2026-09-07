@@ -1,0 +1,3881 @@
+{
+  "_comment": "Stormwood authored one-time pickup catalogue. Ordinary positions are measured terrain contacts with a 0.35m pickup offset. Story rewards are flag-gated records, not loose collectible items; runtime integration remains unimplemented in this data-only lane.",
+  "schema_version": 1,
+  "world": "stormwood",
+  "pickups": [
+    {
+      "id": "stormwood_pickup_route_01",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -300,
+        32.62,
+        180
+      ],
+      "placement": "critical_route_verge",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_route_02",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -370,
+        29.646551579237,
+        500
+      ],
+      "placement": "critical_route_verge",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_route_03",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -650,
+        21.18,
+        830
+      ],
+      "placement": "critical_route_verge",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_route_04",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -590,
+        27.41,
+        1060
+      ],
+      "placement": "critical_route_verge",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_route_05",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -380,
+        32.58,
+        1400
+      ],
+      "placement": "critical_route_verge",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_route_06",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -900,
+        32.3,
+        1780
+      ],
+      "placement": "critical_route_verge",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_route_07",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -700,
+        44.38,
+        2300
+      ],
+      "placement": "critical_route_verge",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_route_08",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -560,
+        62.88,
+        2480
+      ],
+      "placement": "critical_route_verge",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_route_09",
+      "item_id": "great_candy",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -160,
+        34.89,
+        2700
+      ],
+      "placement": "critical_route_verge",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_route_10",
+      "item_id": "great_candy",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -630,
+        80.21,
+        2930
+      ],
+      "placement": "critical_route_verge",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_route_11",
+      "item_id": "great_candy",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -1080,
+        74.16,
+        3020
+      ],
+      "placement": "critical_route_verge",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_route_12",
+      "item_id": "rare_candy",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -1120,
+        62.44,
+        3290
+      ],
+      "placement": "critical_route_verge",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_route_13",
+      "item_id": "potion_small",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -650,
+        48,
+        3550
+      ],
+      "placement": "critical_route_verge",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_route_14",
+      "item_id": "potion_small",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -450,
+        57.84,
+        3960
+      ],
+      "placement": "critical_route_verge",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_route_15",
+      "item_id": "potion_small",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -890,
+        51.77,
+        4490
+      ],
+      "placement": "critical_route_verge",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_route_16",
+      "item_id": "potion_small",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -150,
+        61.34,
+        4460
+      ],
+      "placement": "critical_route_verge",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_route_17",
+      "item_id": "potion_small",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        -310,
+        65.65,
+        5050
+      ],
+      "placement": "critical_route_verge",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_route_18",
+      "item_id": "potion_small",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        -100,
+        107.92,
+        5350
+      ],
+      "placement": "critical_route_verge",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_route_19",
+      "item_id": "potion_small",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        -100,
+        112.41,
+        5470
+      ],
+      "placement": "critical_route_verge",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_001",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -550,
+        28.78,
+        20
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_002",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -413,
+        28.25,
+        20
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_003",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -276,
+        31.61,
+        36
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_004",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -139,
+        23.81,
+        119
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_005",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -502,
+        26.53,
+        202
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_006",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -365,
+        30.99,
+        285
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_007",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -228,
+        28.29,
+        368
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_008",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -91,
+        29.53,
+        451
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_009",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -454,
+        29.89,
+        534
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_010",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -317,
+        29.77,
+        20
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_011",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -180,
+        24.6,
+        20
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_012",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -543,
+        26.78,
+        83
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_013",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -406,
+        28.42,
+        166
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_014",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -269,
+        29.38,
+        249
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_015",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -132,
+        29.25,
+        332
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_016",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -495,
+        28.61,
+        415
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_017",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -358,
+        29.57,
+        498
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_018",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -221,
+        26.79,
+        20
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_019",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -84,
+        25.94,
+        20
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_020",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -447,
+        28.43,
+        47
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_021",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -310,
+        31.99,
+        130
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_022",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -173,
+        30.09,
+        213
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_023",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -536,
+        26.8,
+        296
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_024",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -399,
+        31.05,
+        379
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_025",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -262,
+        25.92,
+        462
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_026",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -125,
+        25.59,
+        545
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_027",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -488,
+        30.98,
+        20
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_028",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -351,
+        31.78,
+        20
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_029",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -214,
+        28.61,
+        94
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_030",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -77,
+        28.55,
+        177
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_031",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -440,
+        27.67,
+        260
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_032",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -303,
+        27.08,
+        343
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_033",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -166,
+        27.74,
+        426
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_034",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -529,
+        31.07,
+        509
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_035",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "cinder_verge",
+      "position": [
+        -392,
+        29.89,
+        20
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_036",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -697,
+        30.65,
+        1121
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_037",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -560,
+        29.82,
+        1204
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_038",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -423,
+        30.13,
+        1287
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_039",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -286,
+        28.79,
+        1370
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_040",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -649,
+        24.63,
+        1453
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_041",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -512,
+        30.98,
+        1536
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_042",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -375,
+        32.94,
+        1619
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_043",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -738,
+        26.61,
+        1702
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_044",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -601,
+        27.4,
+        1085
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_045",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -464,
+        29.4,
+        1168
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_046",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -327,
+        27.73,
+        1251
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_047",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -690,
+        24.61,
+        1334
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_048",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -553,
+        30.81,
+        1417
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_049",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -416,
+        33.4,
+        1500
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_050",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -279,
+        35.33,
+        1583
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_051",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -642,
+        28.82,
+        1666
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_052",
+      "item_id": "good_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -505,
+        26.7,
+        1749
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_053",
+      "item_id": "great_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -368,
+        23.46,
+        1132
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_054",
+      "item_id": "great_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -731,
+        30.7,
+        1215
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_055",
+      "item_id": "great_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -594,
+        27.49,
+        1298
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_056",
+      "item_id": "great_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -457,
+        31.92,
+        1381
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_057",
+      "item_id": "great_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -320,
+        33.44,
+        1464
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_058",
+      "item_id": "great_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -683,
+        25.8,
+        1547
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_059",
+      "item_id": "great_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -546,
+        28.51,
+        1630
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_060",
+      "item_id": "great_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -409,
+        32.19,
+        1713
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_061",
+      "item_id": "great_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -272,
+        23.48,
+        1096
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_062",
+      "item_id": "great_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -635,
+        28.22,
+        1179
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_063",
+      "item_id": "great_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -498,
+        30.47,
+        1262
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_064",
+      "item_id": "great_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -361,
+        28.7,
+        1345
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_065",
+      "item_id": "great_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -724,
+        27.35,
+        1428
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_066",
+      "item_id": "great_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -587,
+        25.98,
+        1511
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_067",
+      "item_id": "great_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -450,
+        31.1,
+        1594
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_068",
+      "item_id": "great_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -313,
+        33.64,
+        1677
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_069",
+      "item_id": "great_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -676,
+        33.31,
+        1060
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_070",
+      "item_id": "great_candy",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -539,
+        29.36,
+        1143
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_071",
+      "item_id": "great_candy",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -844,
+        35.84,
+        2092
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_072",
+      "item_id": "great_candy",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -707,
+        40.81,
+        2175
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_073",
+      "item_id": "great_candy",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -570,
+        42.47,
+        2258
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_074",
+      "item_id": "great_candy",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -933,
+        61.18,
+        2341
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_075",
+      "item_id": "great_candy",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -796,
+        70.21,
+        2424
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_076",
+      "item_id": "great_candy",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -659,
+        71.46,
+        2507
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_077",
+      "item_id": "great_candy",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -522,
+        61.78,
+        2590
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_078",
+      "item_id": "great_candy",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -885,
+        26.17,
+        1973
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_079",
+      "item_id": "great_candy",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -748,
+        30.09,
+        2056
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_080",
+      "item_id": "rare_candy",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -611,
+        38.85,
+        2139
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_081",
+      "item_id": "rare_candy",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -474,
+        37.91,
+        2222
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_082",
+      "item_id": "rare_candy",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -837,
+        57.52,
+        2305
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_083",
+      "item_id": "rare_candy",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -700,
+        57.87,
+        2388
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_084",
+      "item_id": "rare_candy",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -563,
+        63.31,
+        2471
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_085",
+      "item_id": "rare_candy",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -926,
+        79.93,
+        2554
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_086",
+      "item_id": "rare_candy",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -789,
+        82.91,
+        2637
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_087",
+      "item_id": "rare_candy",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -652,
+        33.12,
+        2020
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_088",
+      "item_id": "rare_candy",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -515,
+        38.72,
+        2103
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_089",
+      "item_id": "potion_small",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -878,
+        49.97,
+        2186
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_090",
+      "item_id": "potion_small",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -741,
+        45.96,
+        2269
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_091",
+      "item_id": "potion_small",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -604,
+        50.39,
+        2352
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_092",
+      "item_id": "potion_small",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -467,
+        55.68,
+        2435
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_093",
+      "item_id": "potion_small",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -830,
+        80.42,
+        2518
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_094",
+      "item_id": "potion_small",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -693,
+        76.16,
+        2601
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_095",
+      "item_id": "potion_small",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -556,
+        29.41,
+        1984
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_096",
+      "item_id": "potion_small",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -919,
+        33.99,
+        2067
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_097",
+      "item_id": "potion_small",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -782,
+        40.22,
+        2150
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_098",
+      "item_id": "potion_small",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -645,
+        38.56,
+        2233
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_099",
+      "item_id": "potion_small",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -508,
+        43.26,
+        2316
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_100",
+      "item_id": "potion_small",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -871,
+        67.35,
+        2399
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_101",
+      "item_id": "potion_small",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -734,
+        72.09,
+        2482
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_102",
+      "item_id": "potion_small",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -597,
+        68.44,
+        2565
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_103",
+      "item_id": "potion_small",
+      "count": 1,
+      "region_id": "conductor_run",
+      "position": [
+        -460,
+        59.09,
+        2648
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_104",
+      "item_id": "potion_small",
+      "count": 1,
+      "region_id": "hollow_crown",
+      "position": [
+        600,
+        74.35,
+        2700
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:crown_reached"
+    },
+    {
+      "id": "stormwood_pickup_pocket_105",
+      "item_id": "potion_small",
+      "count": 1,
+      "region_id": "hollow_crown",
+      "position": [
+        583,
+        74.35,
+        2577
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:crown_reached"
+    },
+    {
+      "id": "stormwood_pickup_pocket_106",
+      "item_id": "potion_small",
+      "count": 1,
+      "region_id": "hollow_crown",
+      "position": [
+        666,
+        74.35,
+        2624
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:crown_reached"
+    },
+    {
+      "id": "stormwood_pickup_pocket_107",
+      "item_id": "potion_small",
+      "count": 1,
+      "region_id": "hollow_crown",
+      "position": [
+        749,
+        74.35,
+        2671
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:crown_reached"
+    },
+    {
+      "id": "stormwood_pickup_pocket_108",
+      "item_id": "potion_small",
+      "count": 1,
+      "region_id": "hollow_crown",
+      "position": [
+        832,
+        74.35,
+        2718
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:crown_reached"
+    },
+    {
+      "id": "stormwood_pickup_pocket_109",
+      "item_id": "potion_small",
+      "count": 1,
+      "region_id": "hollow_crown",
+      "position": [
+        535,
+        74.35,
+        2765
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:crown_reached"
+    },
+    {
+      "id": "stormwood_pickup_pocket_110",
+      "item_id": "potion_small",
+      "count": 1,
+      "region_id": "hollow_crown",
+      "position": [
+        618,
+        74.35,
+        2812
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:crown_reached"
+    },
+    {
+      "id": "stormwood_pickup_pocket_111",
+      "item_id": "potion_small",
+      "count": 1,
+      "region_id": "hollow_crown",
+      "position": [
+        701,
+        74.35,
+        2859
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:crown_reached"
+    },
+    {
+      "id": "stormwood_pickup_pocket_112",
+      "item_id": "potion_large",
+      "count": 1,
+      "region_id": "hollow_crown",
+      "position": [
+        784,
+        74.35,
+        2566
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:crown_reached"
+    },
+    {
+      "id": "stormwood_pickup_pocket_113",
+      "item_id": "potion_large",
+      "count": 1,
+      "region_id": "hollow_crown",
+      "position": [
+        867,
+        74.35,
+        2613
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:crown_reached"
+    },
+    {
+      "id": "stormwood_pickup_pocket_114",
+      "item_id": "potion_large",
+      "count": 1,
+      "region_id": "hollow_crown",
+      "position": [
+        570,
+        74.35,
+        2660
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:crown_reached"
+    },
+    {
+      "id": "stormwood_pickup_pocket_115",
+      "item_id": "potion_large",
+      "count": 1,
+      "region_id": "hollow_crown",
+      "position": [
+        653,
+        74.35,
+        2707
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:crown_reached"
+    },
+    {
+      "id": "stormwood_pickup_pocket_116",
+      "item_id": "potion_large",
+      "count": 1,
+      "region_id": "hollow_crown",
+      "position": [
+        736,
+        74.35,
+        2754
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:crown_reached"
+    },
+    {
+      "id": "stormwood_pickup_pocket_117",
+      "item_id": "potion_large",
+      "count": 1,
+      "region_id": "hollow_crown",
+      "position": [
+        819,
+        74.35,
+        2801
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:crown_reached"
+    },
+    {
+      "id": "stormwood_pickup_pocket_118",
+      "item_id": "potion_large",
+      "count": 1,
+      "region_id": "hollow_crown",
+      "position": [
+        522,
+        74.35,
+        2848
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:crown_reached"
+    },
+    {
+      "id": "stormwood_pickup_pocket_119",
+      "item_id": "potion_large",
+      "count": 1,
+      "region_id": "hollow_crown",
+      "position": [
+        605,
+        74.35,
+        2555
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:crown_reached"
+    },
+    {
+      "id": "stormwood_pickup_pocket_120",
+      "item_id": "potion_large",
+      "count": 1,
+      "region_id": "hollow_crown",
+      "position": [
+        688,
+        74.35,
+        2602
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:crown_reached"
+    },
+    {
+      "id": "stormwood_pickup_pocket_121",
+      "item_id": "potion_large",
+      "count": 1,
+      "region_id": "hollow_crown",
+      "position": [
+        771,
+        74.35,
+        2649
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:crown_reached"
+    },
+    {
+      "id": "stormwood_pickup_pocket_122",
+      "item_id": "potion_large",
+      "count": 1,
+      "region_id": "hollow_crown",
+      "position": [
+        854,
+        74.35,
+        2696
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:crown_reached"
+    },
+    {
+      "id": "stormwood_pickup_pocket_123",
+      "item_id": "potion_large",
+      "count": 1,
+      "region_id": "hollow_crown",
+      "position": [
+        557,
+        74.35,
+        2743
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:crown_reached"
+    },
+    {
+      "id": "stormwood_pickup_pocket_124",
+      "item_id": "potion_large",
+      "count": 1,
+      "region_id": "hollow_crown",
+      "position": [
+        640,
+        74.35,
+        2790
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:crown_reached"
+    },
+    {
+      "id": "stormwood_pickup_pocket_125",
+      "item_id": "potion_large",
+      "count": 1,
+      "region_id": "hollow_crown",
+      "position": [
+        723,
+        74.35,
+        2837
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:crown_reached"
+    },
+    {
+      "id": "stormwood_pickup_pocket_126",
+      "item_id": "potion_large",
+      "count": 1,
+      "region_id": "hollow_crown",
+      "position": [
+        806,
+        74.35,
+        2544
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:crown_reached"
+    },
+    {
+      "id": "stormwood_pickup_pocket_127",
+      "item_id": "potion_large",
+      "count": 1,
+      "region_id": "hollow_crown",
+      "position": [
+        509,
+        74.35,
+        2591
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:crown_reached"
+    },
+    {
+      "id": "stormwood_pickup_pocket_128",
+      "item_id": "potion_large",
+      "count": 1,
+      "region_id": "hollow_crown",
+      "position": [
+        592,
+        74.35,
+        2638
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:crown_reached"
+    },
+    {
+      "id": "stormwood_pickup_pocket_129",
+      "item_id": "potion_large",
+      "count": 1,
+      "region_id": "hollow_crown",
+      "position": [
+        675,
+        74.35,
+        2685
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:crown_reached"
+    },
+    {
+      "id": "stormwood_pickup_pocket_130",
+      "item_id": "revive",
+      "count": 1,
+      "region_id": "hollow_crown",
+      "position": [
+        758,
+        74.35,
+        2732
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:crown_reached"
+    },
+    {
+      "id": "stormwood_pickup_pocket_131",
+      "item_id": "revive",
+      "count": 1,
+      "region_id": "hollow_crown",
+      "position": [
+        841,
+        74.35,
+        2779
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:crown_reached"
+    },
+    {
+      "id": "stormwood_pickup_pocket_132",
+      "item_id": "revive",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -488,
+        50.87,
+        3894
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_133",
+      "item_id": "revive",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -351,
+        60.94,
+        3977
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_134",
+      "item_id": "revive",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -214,
+        59.36,
+        4060
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_135",
+      "item_id": "revive",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -577,
+        59.85,
+        4143
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_136",
+      "item_id": "revive",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -440,
+        63.35,
+        4226
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_137",
+      "item_id": "revive",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -303,
+        62.31,
+        4309
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_138",
+      "item_id": "revive",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -666,
+        40.87,
+        3692
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_139",
+      "item_id": "revive",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -529,
+        48.87,
+        3775
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_140",
+      "item_id": "revive",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -392,
+        50.18,
+        3858
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_141",
+      "item_id": "revive",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -255,
+        54.08,
+        3941
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_142",
+      "item_id": "revive",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -618,
+        50.55,
+        4024
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_143",
+      "item_id": "revive",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -481,
+        61.39,
+        4107
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_144",
+      "item_id": "revive",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -344,
+        62.23,
+        4190
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_145",
+      "item_id": "revive",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -207,
+        56.84,
+        4273
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_146",
+      "item_id": "revive",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -450,
+        63.1,
+        4200
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_147",
+      "item_id": "revive",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -433,
+        42.74,
+        3739
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_148",
+      "item_id": "revive",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -296,
+        43.13,
+        3822
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_149",
+      "item_id": "revive",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -659,
+        47.38,
+        3905
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_150",
+      "item_id": "revive",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -522,
+        56.41,
+        3988
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_151",
+      "item_id": "revive",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -385,
+        65.7,
+        4071
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_152",
+      "item_id": "revive",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -248,
+        61.21,
+        4154
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_153",
+      "item_id": "revive",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -611,
+        63.79,
+        4237
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_154",
+      "item_id": "speed_mushroom",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -1100,
+        50.12,
+        4200
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_155",
+      "item_id": "speed_mushroom",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -337,
+        35.95,
+        3703
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_156",
+      "item_id": "speed_mushroom",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -700,
+        38.43,
+        3786
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_157",
+      "item_id": "speed_mushroom",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -563,
+        50.46,
+        3869
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_158",
+      "item_id": "speed_mushroom",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -426,
+        58.18,
+        3952
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_159",
+      "item_id": "speed_mushroom",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -289,
+        63.7,
+        4035
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_160",
+      "item_id": "speed_mushroom",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -652,
+        54.67,
+        4118
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_161",
+      "item_id": "speed_mushroom",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -515,
+        63.47,
+        4201
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_162",
+      "item_id": "stamina_mushroom",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -378,
+        66.24,
+        4284
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_163",
+      "item_id": "stamina_mushroom",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -250,
+        58.88,
+        4200
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_164",
+      "item_id": "stamina_mushroom",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -604,
+        43.11,
+        3750
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_165",
+      "item_id": "stamina_mushroom",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -467,
+        50.32,
+        3833
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_166",
+      "item_id": "stamina_mushroom",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -330,
+        56.33,
+        3916
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_167",
+      "item_id": "stamina_mushroom",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -693,
+        48.88,
+        3999
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_168",
+      "item_id": "stamina_mushroom",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -556,
+        57.46,
+        4082
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_169",
+      "item_id": "stamina_mushroom",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -419,
+        61.66,
+        4165
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_170",
+      "item_id": "wild_mushroom",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -282,
+        59.37,
+        4248
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_171",
+      "item_id": "wild_mushroom",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        -85,
+        107.84,
+        5355
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_172",
+      "item_id": "wild_mushroom",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        52,
+        110.3,
+        5438
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_173",
+      "item_id": "wild_mushroom",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        -311,
+        102.37,
+        5521
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_174",
+      "item_id": "wild_mushroom",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        -174,
+        103.45,
+        5604
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_175",
+      "item_id": "wild_mushroom",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        -37,
+        90.01,
+        5687
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_176",
+      "item_id": "wild_mushroom",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        100,
+        69.08,
+        5070
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_177",
+      "item_id": "wild_mushroom",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        -263,
+        84.71,
+        5153
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_178",
+      "item_id": "swift_tonic",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        -126,
+        98.79,
+        5236
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_179",
+      "item_id": "swift_tonic",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        11,
+        106.69,
+        5319
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_180",
+      "item_id": "swift_tonic",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        148,
+        103.14,
+        5402
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_181",
+      "item_id": "swift_tonic",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        -215,
+        110.64,
+        5485
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_182",
+      "item_id": "attack_tonic",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        -78,
+        106.03,
+        5568
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_183",
+      "item_id": "attack_tonic",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        59,
+        88.47,
+        5651
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_184",
+      "item_id": "attack_tonic",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        -304,
+        63.15,
+        5034
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_185",
+      "item_id": "attack_tonic",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        -167,
+        82.81,
+        5117
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_186",
+      "item_id": "stoneguard_brew",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        -30,
+        94.09,
+        5200
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_187",
+      "item_id": "stoneguard_brew",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        107,
+        101.48,
+        5283
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_188",
+      "item_id": "stoneguard_brew",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        -256,
+        108.49,
+        5366
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_189",
+      "item_id": "stoneguard_brew",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        -119,
+        111.8,
+        5449
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_190",
+      "item_id": "orb_basic",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        18,
+        110.32,
+        5532
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_191",
+      "item_id": "orb_basic",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        -345,
+        93.08,
+        5615
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_192",
+      "item_id": "orb_basic",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        -208,
+        82.77,
+        5698
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_193",
+      "item_id": "orb_basic",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        -71,
+        78.88,
+        5081
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_194",
+      "item_id": "orb_basic",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        66,
+        83.03,
+        5164
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_195",
+      "item_id": "orb_basic",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        -297,
+        101.14,
+        5247
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_196",
+      "item_id": "orb_greater",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        -160,
+        109.99,
+        5330
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_197",
+      "item_id": "orb_greater",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        -23,
+        115.01,
+        5413
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_198",
+      "item_id": "orb_greater",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        114,
+        101.78,
+        5496
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_199",
+      "item_id": "orb_greater",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        -249,
+        102.32,
+        5579
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_200",
+      "item_id": "orb_prime",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        -112,
+        96.14,
+        5662
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_201",
+      "item_id": "orb_prime",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        25,
+        70.1,
+        5045
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_202",
+      "item_id": "tm_static_snap",
+      "count": 1,
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -800,
+        26.8,
+        1900
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": ""
+    },
+    {
+      "id": "stormwood_pickup_pocket_203",
+      "item_id": "tm_voltaic_whip",
+      "count": 1,
+      "region_id": "hollow_crown",
+      "position": [
+        620,
+        74.35,
+        2600
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:crown_reached"
+    },
+    {
+      "id": "stormwood_pickup_pocket_204",
+      "item_id": "tm_thunder_break",
+      "count": 1,
+      "region_id": "deepwood",
+      "position": [
+        -900,
+        55.98,
+        4400
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_205",
+      "item_id": "tm_stormfall",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        73,
+        109.4,
+        5377
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_206",
+      "item_id": "insulated_leggings",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        -290,
+        106.61,
+        5460
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_207",
+      "item_id": "insulated_boots",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        -153,
+        106.95,
+        5543
+      ],
+      "placement": "optional_reward_pocket",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "item",
+      "collectible": true,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_208",
+      "item_id": "rootgate_release_key",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        -16,
+        99.41,
+        5626
+      ],
+      "placement": "story_reward",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "story_reward",
+      "collectible": false,
+      "requires_unlock": "stormwood:rootgate_released"
+    },
+    {
+      "id": "stormwood_pickup_pocket_209",
+      "item_id": "dynamo_core_key",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        121,
+        58.34,
+        5009
+      ],
+      "placement": "story_reward",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "story_reward",
+      "collectible": false,
+      "requires_unlock": "stormwood:dynamo_core_key_required"
+    },
+    {
+      "id": "stormwood_pickup_pocket_210",
+      "item_id": "spark_of_stormwood",
+      "count": 1,
+      "region_id": "dynamo",
+      "position": [
+        -242,
+        74.2,
+        5092
+      ],
+      "placement": "story_reward",
+      "persistent": true,
+      "one_time": true,
+      "runtime_kind": "story_reward",
+      "collectible": false,
+      "requires_unlock": "stormwood:dynamo_complete"
+    }
+  ]
+}

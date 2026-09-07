@@ -445,7 +445,8 @@ func _on_gathered(equipped_tool: Variant = null) -> void:
 	# ledger takes it as the intent's `flag` rather than learning a second id
 	# scheme, and writes it once, on the host, for every peer.
 	var verdict := LEDGER_CLAIM.submit(self, {
-		"kind": "harvest",
+		"kind": "stormwood_harvest" if has_meta("stormwood_harvest_site") else "harvest",
+		"site_id": str(get_meta("stormwood_harvest_site", "")),
 		"realm": _realm_id,
 		"flag": flag_id(_node_id),
 		"item": _item_id,

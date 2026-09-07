@@ -1,0 +1,725 @@
+{
+  "schema_version": 1,
+  "realm_id": "stormwood",
+  "world_contract": "res://data/config/stormwood_world.json",
+  "_comment": "Root-authored accepted chapter spine. These events must be emitted only by successful production interactions; the presence of this catalogue is not runtime evidence.",
+  "story_problem": {
+    "public_explanation": "Team Tether claims the Long Storm keeps the wild forest contained.",
+    "regional_costs": [
+      "The outer canopy is dying.",
+      "Uncharged arches separate Rodfolk families and camps.",
+      "Rod lines drain every strike into the Stormheart Tree."
+    ],
+    "escalation_truth": "The Dynamo makes the Long Storm by draining the captive legendary; the Long Storm is the Rift.",
+    "resolution": "Break the rod lines, rebuild the Crown road, free the captive and let the forest rest. End on a view of Water without entering it."
+  },
+  "persistent_flags": {
+    "main": [
+      "stormwood:chapter_started",
+      "stormwood:crisis_learned",
+      "stormwood:first_break_witnessed",
+      "stormwood:first_stormglass_gathered",
+      "stormwood:ashfoot_arch_relit",
+      "stormwood:lantern_pools_linked",
+      "stormwood:lower_rods_disabled",
+      "stormwood:rodline_linked",
+      "stormwood:bryn_met",
+      "stormwood:varga_defeated",
+      "stormwood:arch_recipe_known",
+      "stormwood:crown_glass_gathered",
+      "stormwood:crown_arch_built",
+      "stormwood:crown_reached",
+      "stormwood:engine_truth_learned",
+      "stormwood:rootgate_released",
+      "stormwood:lantern_hollow_reached",
+      "stormwood:captive_truth_learned",
+      "stormwood:deepwood_station_disabled",
+      "stormwood:all_rods_disabled",
+      "stormwood:ember_bivouac_reached",
+      "stormwood:kestrel_defeated",
+      "stormwood:core_reached",
+      "stormwood:marrow_defeated",
+      "stormwood:legendary_freed",
+      "stormwood:legendary_offer_made",
+      "stormwood:spark_placed",
+      "stormwood:waterward_revealed"
+    ],
+    "side_content": [
+      "stormwood:side_dark_arches_1",
+      "stormwood:side_dark_arches_2",
+      "stormwood:side_dark_arches_complete",
+      "stormwood:side_pims_parcels_1",
+      "stormwood:side_pims_parcels_2",
+      "stormwood:side_pims_parcels_complete",
+      "stormwood:side_crown_remembers_1",
+      "stormwood:side_crown_remembers_2",
+      "stormwood:side_crown_remembers_complete",
+      "stormwood:side_glass_for_bryn_1",
+      "stormwood:side_glass_for_bryn_2",
+      "stormwood:side_glass_for_bryn_complete",
+      "stormwood:side_raise_a_road_1",
+      "stormwood:side_raise_a_road_2",
+      "stormwood:side_raise_a_road_complete",
+      "stormwood:side_deepwood_circuit_1",
+      "stormwood:side_deepwood_circuit_2",
+      "stormwood:side_deepwood_circuit_complete"
+    ]
+  },
+  "acts": [
+    {
+      "id": "act_i",
+      "order": 1,
+      "title": "Under the Storm",
+      "entry_flags": [
+        "realm_key_stormwood"
+      ],
+      "completion_flag": "stormwood:act_i_complete",
+      "objectives": [
+        {
+          "id": "stormwood_chapter_started",
+          "flag_id": "stormwood:chapter_started",
+          "scope": "world",
+          "label": "Find Ashfoot Waycamp.",
+          "how": "Follow the Struck Sentinel north under the canopy.",
+          "region_id": "cinder_verge",
+          "requires_flags": [
+            "realm_key_stormwood"
+          ],
+          "completion_event": "arrival:ashfoot"
+        },
+        {
+          "id": "stormwood_crisis_learned",
+          "flag_id": "stormwood:crisis_learned",
+          "scope": "world",
+          "label": "Hear Hesk's account of the Long Storm.",
+          "how": "Speak with Rodkeeper Hesk beside Ashfoot's dark arch.",
+          "region_id": "cinder_verge",
+          "requires_flags": [
+            "stormwood:chapter_started"
+          ],
+          "completion_event": "dialogue:hesk_long_storm"
+        },
+        {
+          "id": "stormwood_first_break_witnessed",
+          "flag_id": "stormwood:first_break_witnessed",
+          "scope": "world",
+          "label": "Read a Break with Tamsin.",
+          "how": "Stay beneath Ashfoot's shelter as the storm builds and breaks.",
+          "region_id": "cinder_verge",
+          "requires_flags": [
+            "stormwood:crisis_learned"
+          ],
+          "completion_event": "surge:tutorial_break"
+        },
+        {
+          "id": "stormwood_first_stormglass_gathered",
+          "flag_id": "stormwood:first_stormglass_gathered",
+          "scope": "world",
+          "label": "Gather the first stormglass.",
+          "how": "Wait for a Break, then harvest the marked clearing near the Verge rod line.",
+          "region_id": "cinder_verge",
+          "requires_flags": [
+            "stormwood:first_break_witnessed"
+          ],
+          "completion_event": "harvest:verge_stormglass"
+        },
+        {
+          "id": "stormwood_ashfoot_arch_relit",
+          "flag_id": "stormwood:ashfoot_arch_relit",
+          "scope": "world",
+          "label": "Relight Ashfoot's ancient arch.",
+          "how": "Bring three stormglass to the dark arch at Ashfoot.",
+          "region_id": "cinder_verge",
+          "requires_flags": [
+            "stormwood:first_stormglass_gathered"
+          ],
+          "completion_event": "arch:ancient_a_south"
+        },
+        {
+          "id": "stormwood_lantern_pools_linked",
+          "flag_id": "stormwood:lantern_pools_linked",
+          "scope": "world",
+          "label": "Reconnect Lantern Pools.",
+          "how": "Follow the ash road to Lantern Pools, relight its twin, and travel the linked pair.",
+          "region_id": "glowmoss_hollows",
+          "requires_flags": [
+            "stormwood:ashfoot_arch_relit"
+          ],
+          "completion_event": "arch:pair_a_travel"
+        },
+        {
+          "id": "stormwood_lower_rods_disabled",
+          "flag_id": "stormwood:lower_rods_disabled",
+          "scope": "world",
+          "label": "Break the two lower rod lines.",
+          "how": "Defeat each picket and operate the Verge and Hollows tower switches.",
+          "region_id": "glowmoss_hollows",
+          "requires_flags": [
+            "stormwood:lantern_pools_linked"
+          ],
+          "completion_event": "rods:lower_complete",
+          "count_flags": [
+            "stormwood:rod_verge_disabled",
+            "stormwood:rod_hollows_disabled"
+          ]
+        },
+        {
+          "id": "stormwood_rodline_linked",
+          "flag_id": "stormwood:rodline_linked",
+          "scope": "world",
+          "label": "Reopen Pim's road to Rodline.",
+          "how": "Relight the second ancient pair between Lantern Pools and Rodline Post.",
+          "region_id": "glowmoss_hollows",
+          "requires_flags": [
+            "stormwood:lower_rods_disabled"
+          ],
+          "completion_event": "arch:pair_b_linked"
+        },
+        {
+          "id": "stormwood_bryn_met",
+          "flag_id": "stormwood:bryn_met",
+          "scope": "world",
+          "label": "Meet the leader at Rodline Post.",
+          "how": "Find Warden-Elect Bryn beside the ruined road sign.",
+          "region_id": "conductor_run",
+          "requires_flags": [
+            "stormwood:rodline_linked"
+          ],
+          "completion_event": "dialogue:bryn_shattered_road",
+          "grants_flags": [
+            "stormwood:act_i_complete"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "act_ii",
+      "order": 2,
+      "title": "The Road Across",
+      "entry_flags": [
+        "stormwood:act_i_complete"
+      ],
+      "completion_flag": "stormwood:act_ii_complete",
+      "objectives": [
+        {
+          "id": "stormwood_varga_defeated",
+          "flag_id": "stormwood:varga_defeated",
+          "scope": "world",
+          "label": "Reclaim the conductor bridge.",
+          "how": "Challenge Lieutenant Varga on the exposed ascent beyond Rodline.",
+          "region_id": "conductor_run",
+          "requires_flags": [
+            "stormwood:bryn_met"
+          ],
+          "completion_event": "trainer:varga_defeated"
+        },
+        {
+          "id": "stormwood_arch_recipe_known",
+          "flag_id": "stormwood:arch_recipe_known",
+          "scope": "world",
+          "label": "Find the last arch-wright.",
+          "how": "Meet Keeper Ondra in the Still Grove, west of the Glass Sink.",
+          "region_id": "conductor_run",
+          "requires_flags": [
+            "stormwood:varga_defeated"
+          ],
+          "completion_event": "dialogue:ondra_arch_recipe"
+        },
+        {
+          "id": "stormwood_crown_glass_gathered",
+          "flag_id": "stormwood:crown_glass_gathered",
+          "scope": "world",
+          "label": "Gather Crown-grade stormglass.",
+          "how": "Pass the Capacitor Grove guardian and harvest charged glass during a Break.",
+          "region_id": "conductor_run",
+          "requires_flags": [
+            "stormwood:arch_recipe_known"
+          ],
+          "completion_event": "harvest:crown_grade"
+        },
+        {
+          "id": "stormwood_crown_arch_built",
+          "flag_id": "stormwood:crown_arch_built",
+          "scope": "world",
+          "label": "Raise the missing road.",
+          "how": "Build a Stormglass Arch on the shattered Still Grove footing.",
+          "region_id": "conductor_run",
+          "requires_flags": [
+            "stormwood:crown_glass_gathered"
+          ],
+          "completion_event": "arch:crown_constructed"
+        },
+        {
+          "id": "stormwood_crown_reached",
+          "flag_id": "stormwood:crown_reached",
+          "scope": "world",
+          "label": "Step into the Hollow Crown.",
+          "how": "Use the completed arch; the Glass Sink has no walking crossing.",
+          "region_id": "hollow_crown",
+          "requires_flags": [
+            "stormwood:crown_arch_built"
+          ],
+          "completion_event": "arch:crown_arrived"
+        },
+        {
+          "id": "stormwood_engine_truth_learned",
+          "flag_id": "stormwood:engine_truth_learned",
+          "scope": "world",
+          "label": "Read what the heartstone remembers.",
+          "how": "Defeat the Crown guardian and listen to Wen at the heartstone.",
+          "region_id": "hollow_crown",
+          "requires_flags": [
+            "stormwood:crown_reached"
+          ],
+          "completion_event": "dialogue:wen_truth"
+        },
+        {
+          "id": "stormwood_rootgate_released",
+          "flag_id": "stormwood:rootgate_released",
+          "scope": "world",
+          "label": "Release the Rootgate.",
+          "how": "Touch the Crown heartstone after learning what the Dynamo is doing.",
+          "region_id": "hollow_crown",
+          "requires_flags": [
+            "stormwood:engine_truth_learned"
+          ],
+          "completion_event": "heartstone:rootgate",
+          "grants_flags": [
+            "stormwood:act_ii_complete"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "act_iii",
+      "order": 3,
+      "title": "The Heart of the Long Storm",
+      "entry_flags": [
+        "stormwood:act_ii_complete"
+      ],
+      "completion_flag": "stormwood:chapter_complete",
+      "objectives": [
+        {
+          "id": "stormwood_lantern_hollow_reached",
+          "flag_id": "stormwood:lantern_hollow_reached",
+          "scope": "world",
+          "label": "Reach Lantern Hollow.",
+          "how": "Return through the arch and take the opened Rootgate passage north.",
+          "region_id": "deepwood",
+          "requires_flags": [
+            "stormwood:rootgate_released"
+          ],
+          "completion_event": "arrival:lantern_hollow"
+        },
+        {
+          "id": "stormwood_captive_truth_learned",
+          "flag_id": "stormwood:captive_truth_learned",
+          "scope": "world",
+          "label": "Hear the defector's account.",
+          "how": "Find Sable among Lantern Hollow's repair benches.",
+          "region_id": "deepwood",
+          "requires_flags": [
+            "stormwood:lantern_hollow_reached"
+          ],
+          "completion_event": "dialogue:sable_captive"
+        },
+        {
+          "id": "stormwood_deepwood_station_disabled",
+          "flag_id": "stormwood:deepwood_station_disabled",
+          "scope": "world",
+          "label": "Disable the Deepwood rod station.",
+          "how": "Defeat its officer and throw the tower switch.",
+          "region_id": "deepwood",
+          "requires_flags": [
+            "stormwood:captive_truth_learned"
+          ],
+          "completion_event": "rod:deepwood_disabled"
+        },
+        {
+          "id": "stormwood_all_rods_disabled",
+          "flag_id": "stormwood:all_rods_disabled",
+          "scope": "world",
+          "label": "Break the last line into the Dynamo.",
+          "how": "Disable the approach station; verify that all four rod lines are down.",
+          "region_id": "dynamo",
+          "requires_flags": [
+            "stormwood:deepwood_station_disabled"
+          ],
+          "completion_event": "rods:all_complete",
+          "count_flags": [
+            "stormwood:rod_verge_disabled",
+            "stormwood:rod_hollows_disabled",
+            "stormwood:rod_deepwood_disabled",
+            "stormwood:rod_dynamo_disabled"
+          ]
+        },
+        {
+          "id": "stormwood_ember_bivouac_reached",
+          "flag_id": "stormwood:ember_bivouac_reached",
+          "scope": "world",
+          "label": "Prepare at Ember Bivouac.",
+          "how": "Rest, feed your team and review its moves at the final sheltered camp.",
+          "region_id": "dynamo",
+          "requires_flags": [
+            "stormwood:all_rods_disabled"
+          ],
+          "completion_event": "arrival:ember_bivouac"
+        },
+        {
+          "id": "stormwood_kestrel_defeated",
+          "flag_id": "stormwood:kestrel_defeated",
+          "scope": "world",
+          "label": "Reclaim the Outer Works.",
+          "how": "Defeat Kestrel on the Stormheart Tree's lower platforms.",
+          "region_id": "dynamo",
+          "requires_flags": [
+            "stormwood:ember_bivouac_reached"
+          ],
+          "completion_event": "trainer:kestrel_defeated"
+        },
+        {
+          "id": "stormwood_core_reached",
+          "flag_id": "stormwood:core_reached",
+          "scope": "world",
+          "label": "Climb into the split core.",
+          "how": "Follow the platforms and hollow-trunk ascent to the Dynamo Core.",
+          "region_id": "dynamo",
+          "requires_flags": [
+            "stormwood:kestrel_defeated"
+          ],
+          "completion_event": "arrival:dynamo_core"
+        },
+        {
+          "id": "stormwood_marrow_defeated",
+          "flag_id": "stormwood:marrow_defeated",
+          "scope": "world",
+          "label": "Defeat Captain Marrow.",
+          "how": "Read the capacitor banks and grounded rod plates through all three phases.",
+          "region_id": "dynamo",
+          "requires_flags": [
+            "stormwood:core_reached"
+          ],
+          "completion_event": "trainer:marrow_defeated"
+        },
+        {
+          "id": "stormwood_legendary_freed",
+          "flag_id": "stormwood:legendary_freed",
+          "scope": "world",
+          "label": "End the Long Storm.",
+          "how": "Disable the exposed Dynamo core and free the legendary in the crown.",
+          "region_id": "dynamo",
+          "requires_flags": [
+            "stormwood:marrow_defeated"
+          ],
+          "completion_event": "dynamo:release",
+          "grants_flags": [
+            "realm_heart_stormwood_earned",
+            "stormwood:long_storm_ended"
+          ]
+        },
+        {
+          "id": "stormwood_legendary_offer_made",
+          "flag_id": "stormwood:legendary_offer_made",
+          "scope": "world",
+          "label": "Receive the legendary's offer.",
+          "how": "Meet it in the crown. Accept or decline through the five-creature roster choice.",
+          "region_id": "dynamo",
+          "requires_flags": [
+            "stormwood:legendary_freed"
+          ],
+          "completion_event": "legendary:offer_shown"
+        },
+        {
+          "id": "stormwood_spark_placed",
+          "flag_id": "stormwood:spark_placed",
+          "scope": "world",
+          "label": "Bring the Spark to Lantern Hollow.",
+          "how": "Place the Spark of the Stormwood at the settlement shrine.",
+          "region_id": "deepwood",
+          "requires_flags": [
+            "stormwood:legendary_offer_made"
+          ],
+          "completion_event": "shrine:stormwood_placed",
+          "grants_flags": [
+            "realm_heart_stormwood_placed"
+          ]
+        },
+        {
+          "id": "stormwood_waterward_revealed",
+          "flag_id": "stormwood:waterward_revealed",
+          "scope": "world",
+          "label": "Look beyond the broken storm.",
+          "how": "Return to the high platform for the newly clear view of water.",
+          "region_id": "dynamo",
+          "requires_flags": [
+            "stormwood:spark_placed"
+          ],
+          "completion_event": "aftermath:waterward_view",
+          "grants_flags": [
+            "realm_key_water",
+            "waterward_route_revealed",
+            "stormwood:chapter_complete"
+          ]
+        }
+      ]
+    }
+  ],
+  "side_chains": [
+    {
+      "id": "stormwood_dark_arches",
+      "title": "Dark Arches",
+      "completion_flag": "stormwood:side_dark_arches_complete",
+      "steps": [
+        {
+          "id": "step_1",
+          "flag_id": "stormwood:side_dark_arches_1",
+          "scope": "world",
+          "label": "Inspect the remaining ancient arches.",
+          "requires_flags": [
+            "stormwood:ashfoot_arch_relit"
+          ],
+          "completion_event": "side:stormwood_dark_arches:step_1"
+        },
+        {
+          "id": "step_2",
+          "flag_id": "stormwood:side_dark_arches_2",
+          "scope": "world",
+          "label": "Relight the Deepwood and Dynamo pairs.",
+          "requires_flags": [
+            "stormwood:side_dark_arches_1"
+          ],
+          "completion_event": "side:stormwood_dark_arches:step_2"
+        },
+        {
+          "id": "step_3",
+          "flag_id": "stormwood:side_dark_arches_complete",
+          "scope": "world",
+          "label": "Show Hesk that the old roads are connected.",
+          "requires_flags": [
+            "stormwood:side_dark_arches_2"
+          ],
+          "completion_event": "side:stormwood_dark_arches:step_3"
+        }
+      ],
+      "revealed_by": "stormwood:ashfoot_arch_relit"
+    },
+    {
+      "id": "stormwood_pims_parcels",
+      "title": "Pim's Parcels",
+      "completion_flag": "stormwood:side_pims_parcels_complete",
+      "steps": [
+        {
+          "id": "step_1",
+          "flag_id": "stormwood:side_pims_parcels_1",
+          "scope": "world",
+          "label": "Collect Pim's sealed parcels.",
+          "requires_flags": [
+            "stormwood:lantern_pools_linked"
+          ],
+          "completion_event": "side:stormwood_pims_parcels:step_1"
+        },
+        {
+          "id": "step_2",
+          "flag_id": "stormwood:side_pims_parcels_2",
+          "scope": "world",
+          "label": "Deliver them to three households along the restored arch roads.",
+          "requires_flags": [
+            "stormwood:side_pims_parcels_1"
+          ],
+          "completion_event": "side:stormwood_pims_parcels:step_2"
+        },
+        {
+          "id": "step_3",
+          "flag_id": "stormwood:side_pims_parcels_complete",
+          "scope": "world",
+          "label": "Return to Pim at Lantern Pools.",
+          "requires_flags": [
+            "stormwood:side_pims_parcels_2"
+          ],
+          "completion_event": "side:stormwood_pims_parcels:step_3"
+        }
+      ],
+      "revealed_by": "stormwood:lantern_pools_linked"
+    },
+    {
+      "id": "stormwood_crown_remembers",
+      "title": "What the Crown Remembers",
+      "completion_flag": "stormwood:side_crown_remembers_complete",
+      "steps": [
+        {
+          "id": "step_1",
+          "flag_id": "stormwood:side_crown_remembers_1",
+          "scope": "world",
+          "label": "Find the first surviving Crown record.",
+          "requires_flags": [
+            "stormwood:crown_reached"
+          ],
+          "completion_event": "side:stormwood_crown_remembers:step_1"
+        },
+        {
+          "id": "step_2",
+          "flag_id": "stormwood:side_crown_remembers_2",
+          "scope": "world",
+          "label": "Read all three records around the heartstone grove.",
+          "requires_flags": [
+            "stormwood:side_crown_remembers_1"
+          ],
+          "completion_event": "side:stormwood_crown_remembers:step_2"
+        },
+        {
+          "id": "step_3",
+          "flag_id": "stormwood:side_crown_remembers_complete",
+          "scope": "world",
+          "label": "Bring the complete account to Wen.",
+          "requires_flags": [
+            "stormwood:side_crown_remembers_2"
+          ],
+          "completion_event": "side:stormwood_crown_remembers:step_3"
+        }
+      ],
+      "revealed_by": "stormwood:crown_reached"
+    },
+    {
+      "id": "stormwood_glass_for_bryn",
+      "title": "Glass for Bryn",
+      "completion_flag": "stormwood:side_glass_for_bryn_complete",
+      "steps": [
+        {
+          "id": "step_1",
+          "flag_id": "stormwood:side_glass_for_bryn_1",
+          "scope": "world",
+          "label": "Ask Bryn what the rod crews need.",
+          "requires_flags": [
+            "stormwood:bryn_met"
+          ],
+          "completion_event": "side:stormwood_glass_for_bryn:step_1"
+        },
+        {
+          "id": "step_2",
+          "flag_id": "stormwood:side_glass_for_bryn_2",
+          "scope": "world",
+          "label": "Deliver stormglass and conductor vine for insulation repairs.",
+          "requires_flags": [
+            "stormwood:side_glass_for_bryn_1"
+          ],
+          "completion_event": "side:stormwood_glass_for_bryn:step_2"
+        },
+        {
+          "id": "step_3",
+          "flag_id": "stormwood:side_glass_for_bryn_complete",
+          "scope": "world",
+          "label": "See the repaired supplies at Rodline Post.",
+          "requires_flags": [
+            "stormwood:side_glass_for_bryn_2"
+          ],
+          "completion_event": "side:stormwood_glass_for_bryn:step_3"
+        }
+      ],
+      "revealed_by": "stormwood:bryn_met"
+    },
+    {
+      "id": "stormwood_raise_a_road",
+      "title": "Raise a Road",
+      "completion_flag": "stormwood:side_raise_a_road_complete",
+      "steps": [
+        {
+          "id": "step_1",
+          "flag_id": "stormwood:side_raise_a_road_1",
+          "scope": "world",
+          "label": "Choose two optional ancient footings.",
+          "requires_flags": [
+            "stormwood:arch_recipe_known"
+          ],
+          "completion_event": "side:stormwood_raise_a_road:step_1"
+        },
+        {
+          "id": "step_2",
+          "flag_id": "stormwood:side_raise_a_road_2",
+          "scope": "world",
+          "label": "Build and bind an arch at each chosen footing.",
+          "requires_flags": [
+            "stormwood:side_raise_a_road_1"
+          ],
+          "completion_event": "side:stormwood_raise_a_road:step_2"
+        },
+        {
+          "id": "step_3",
+          "flag_id": "stormwood:side_raise_a_road_complete",
+          "scope": "world",
+          "label": "Travel your new road and report to Ondra.",
+          "requires_flags": [
+            "stormwood:side_raise_a_road_2"
+          ],
+          "completion_event": "side:stormwood_raise_a_road:step_3"
+        }
+      ],
+      "revealed_by": "stormwood:arch_recipe_known"
+    },
+    {
+      "id": "stormwood_deepwood_circuit",
+      "title": "The Deepwood Circuit",
+      "completion_flag": "stormwood:side_deepwood_circuit_complete",
+      "steps": [
+        {
+          "id": "step_1",
+          "flag_id": "stormwood:side_deepwood_circuit_1",
+          "scope": "world",
+          "label": "Accept Rook's circuit at Lantern Hollow.",
+          "requires_flags": [
+            "stormwood:lantern_hollow_reached"
+          ],
+          "completion_event": "side:stormwood_deepwood_circuit:step_1"
+        },
+        {
+          "id": "step_2",
+          "flag_id": "stormwood:side_deepwood_circuit_2",
+          "scope": "world",
+          "label": "Defeat the three marked optional Deepwood trainers.",
+          "requires_flags": [
+            "stormwood:side_deepwood_circuit_1"
+          ],
+          "completion_event": "side:stormwood_deepwood_circuit:step_2"
+        },
+        {
+          "id": "step_3",
+          "flag_id": "stormwood:side_deepwood_circuit_complete",
+          "scope": "world",
+          "label": "Return to Rook for the circuit's acknowledgement.",
+          "requires_flags": [
+            "stormwood:side_deepwood_circuit_2"
+          ],
+          "completion_event": "side:stormwood_deepwood_circuit:step_3"
+        }
+      ],
+      "revealed_by": "stormwood:lantern_hollow_reached"
+    }
+  ],
+  "catalogues": {
+    "npcs": "res://data/config/stormwood_npcs.json",
+    "trainers": "res://data/config/stormwood_trainers.json",
+    "encounters": "res://data/config/stormwood_encounters.json",
+    "pickups": "res://data/config/stormwood_pickups.json"
+  },
+  "final_encounter": {
+    "id": "stormwood_dynamo",
+    "landmark_id": "dynamo_core",
+    "captain_id": "captain_marrow",
+    "lieutenant_id": "kestrel",
+    "arena_style": "Stormheart Tree split-trunk core",
+    "capacitor_banks": 4,
+    "safe_rod_plates": 3,
+    "phases": 3,
+    "captive_chamber": "crown",
+    "legendary_level": 44,
+    "party_limit": 5,
+    "declining_legendary_blocks_ending": false
+  },
+  "rewards": {
+    "relic_id": "stormwood",
+    "relic_display_name": "Spark of the Stormwood",
+    "power": "Livewire",
+    "cooldown_multiplier": 0.75,
+    "next_realm_key": "realm_key_water",
+    "next_realm_enterable": false
+  }
+}

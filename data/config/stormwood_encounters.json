@@ -1,0 +1,4949 @@
+{
+  "schema_version": 1,
+  "_comment": "Stormwood encounter catalogue only. It declares replaceable placeholder roles and authored positions; runtime injection, visualisation, and playability are separate work.",
+  "realm_id": "stormwood",
+  "table_count_contract": 12,
+  "wild_cluster_count_contract": 330,
+  "tables": [
+    {
+      "id": "verge_calm",
+      "region_id": "cinder_verge",
+      "surge_phase": "calm",
+      "level_range": [
+        30,
+        34
+      ],
+      "catchable": true,
+      "replaceable": true,
+      "night_role_weights": [
+        {
+          "role": "cinder_forager",
+          "weight": 1
+        },
+        {
+          "role": "edge_scout",
+          "weight": 1
+        },
+        {
+          "role": "ash_digger",
+          "weight": 1
+        }
+      ],
+      "roles": [
+        {
+          "role": "cinder_forager",
+          "placeholder_species": "bramblebun",
+          "weight": "common",
+          "replacement_point": "tables.verge_calm.roles.cinder_forager"
+        },
+        {
+          "role": "edge_scout",
+          "placeholder_species": "pipwing",
+          "weight": "common",
+          "replacement_point": "tables.verge_calm.roles.edge_scout"
+        },
+        {
+          "role": "ash_digger",
+          "placeholder_species": "burrowback",
+          "weight": "uncommon",
+          "replacement_point": "tables.verge_calm.roles.ash_digger"
+        }
+      ]
+    },
+    {
+      "id": "verge_surge",
+      "region_id": "cinder_verge",
+      "surge_phase": "surge",
+      "level_range": [
+        32,
+        35
+      ],
+      "catchable": true,
+      "replaceable": true,
+      "night_role_weights": [
+        {
+          "role": "storm_runner",
+          "weight": 1
+        },
+        {
+          "role": "edge_scout",
+          "weight": 1
+        },
+        {
+          "role": "glass_lurker",
+          "weight": 3
+        }
+      ],
+      "roles": [
+        {
+          "role": "storm_runner",
+          "placeholder_species": "stormtrail",
+          "weight": "common",
+          "replacement_point": "tables.verge_surge.roles.storm_runner"
+        },
+        {
+          "role": "edge_scout",
+          "placeholder_species": "pipwing",
+          "weight": "uncommon",
+          "replacement_point": "tables.verge_surge.roles.edge_scout"
+        },
+        {
+          "role": "glass_lurker",
+          "placeholder_species": "shadelet",
+          "weight": "rare",
+          "replacement_point": "tables.verge_surge.roles.glass_lurker"
+        }
+      ]
+    },
+    {
+      "id": "hollows_calm",
+      "region_id": "glowmoss_hollows",
+      "surge_phase": "calm",
+      "level_range": [
+        32,
+        36
+      ],
+      "catchable": true,
+      "replaceable": true,
+      "night_role_weights": [
+        {
+          "role": "pool_drifter",
+          "weight": 1
+        },
+        {
+          "role": "moss_grazer",
+          "weight": 1
+        },
+        {
+          "role": "spark_darter",
+          "weight": 1
+        }
+      ],
+      "roles": [
+        {
+          "role": "pool_drifter",
+          "placeholder_species": "brooktail",
+          "weight": "common",
+          "replacement_point": "tables.hollows_calm.roles.pool_drifter"
+        },
+        {
+          "role": "moss_grazer",
+          "placeholder_species": "meadowhart",
+          "weight": "common",
+          "replacement_point": "tables.hollows_calm.roles.moss_grazer"
+        },
+        {
+          "role": "spark_darter",
+          "placeholder_species": "sparkit",
+          "weight": "uncommon",
+          "replacement_point": "tables.hollows_calm.roles.spark_darter"
+        }
+      ]
+    },
+    {
+      "id": "hollows_surge",
+      "region_id": "glowmoss_hollows",
+      "surge_phase": "surge",
+      "level_range": [
+        34,
+        37
+      ],
+      "catchable": true,
+      "replaceable": true,
+      "night_role_weights": [
+        {
+          "role": "spark_darter",
+          "weight": 1
+        },
+        {
+          "role": "night_glider",
+          "weight": 3
+        },
+        {
+          "role": "pool_ambusher",
+          "weight": 1
+        }
+      ],
+      "roles": [
+        {
+          "role": "spark_darter",
+          "placeholder_species": "sparkit",
+          "weight": "common",
+          "replacement_point": "tables.hollows_surge.roles.spark_darter"
+        },
+        {
+          "role": "night_glider",
+          "placeholder_species": "duskhush",
+          "weight": "uncommon",
+          "replacement_point": "tables.hollows_surge.roles.night_glider"
+        },
+        {
+          "role": "pool_ambusher",
+          "placeholder_species": "riftfrill",
+          "weight": "uncommon",
+          "replacement_point": "tables.hollows_surge.roles.pool_ambusher"
+        }
+      ]
+    },
+    {
+      "id": "run_calm",
+      "region_id": "conductor_run",
+      "surge_phase": "calm",
+      "level_range": [
+        34,
+        38
+      ],
+      "catchable": true,
+      "replaceable": true,
+      "night_role_weights": [
+        {
+          "role": "ridge_stalker",
+          "weight": 1
+        },
+        {
+          "role": "spark_darter",
+          "weight": 1
+        },
+        {
+          "role": "vine_climber",
+          "weight": 1
+        }
+      ],
+      "roles": [
+        {
+          "role": "ridge_stalker",
+          "placeholder_species": "frostclaw",
+          "weight": "common",
+          "replacement_point": "tables.run_calm.roles.ridge_stalker"
+        },
+        {
+          "role": "spark_darter",
+          "placeholder_species": "sparkit",
+          "weight": "common",
+          "replacement_point": "tables.run_calm.roles.spark_darter"
+        },
+        {
+          "role": "vine_climber",
+          "placeholder_species": "veridian",
+          "weight": "uncommon",
+          "replacement_point": "tables.run_calm.roles.vine_climber"
+        }
+      ]
+    },
+    {
+      "id": "run_surge",
+      "region_id": "conductor_run",
+      "surge_phase": "surge",
+      "level_range": [
+        36,
+        39
+      ],
+      "catchable": true,
+      "replaceable": true,
+      "night_role_weights": [
+        {
+          "role": "storm_runner",
+          "weight": 1
+        },
+        {
+          "role": "arc_diver",
+          "weight": 1
+        },
+        {
+          "role": "ridge_stalker",
+          "weight": 1
+        }
+      ],
+      "roles": [
+        {
+          "role": "storm_runner",
+          "placeholder_species": "stormtrail",
+          "weight": "common",
+          "replacement_point": "tables.run_surge.roles.storm_runner"
+        },
+        {
+          "role": "arc_diver",
+          "placeholder_species": "galecrest",
+          "weight": "uncommon",
+          "replacement_point": "tables.run_surge.roles.arc_diver"
+        },
+        {
+          "role": "ridge_stalker",
+          "placeholder_species": "frostclaw",
+          "weight": "uncommon",
+          "replacement_point": "tables.run_surge.roles.ridge_stalker"
+        }
+      ]
+    },
+    {
+      "id": "crown_calm",
+      "region_id": "hollow_crown",
+      "surge_phase": "calm",
+      "level_range": [
+        37,
+        40
+      ],
+      "catchable": true,
+      "replaceable": true,
+      "night_role_weights": [
+        {
+          "role": "crown_keeper",
+          "weight": 1
+        },
+        {
+          "role": "spark_darter",
+          "weight": 1
+        },
+        {
+          "role": "glass_lurker",
+          "weight": 3
+        }
+      ],
+      "roles": [
+        {
+          "role": "crown_keeper",
+          "placeholder_species": "mosshell",
+          "weight": "common",
+          "replacement_point": "tables.crown_calm.roles.crown_keeper"
+        },
+        {
+          "role": "spark_darter",
+          "placeholder_species": "sparkit",
+          "weight": "uncommon",
+          "replacement_point": "tables.crown_calm.roles.spark_darter"
+        },
+        {
+          "role": "glass_lurker",
+          "placeholder_species": "shadelet",
+          "weight": "rare",
+          "replacement_point": "tables.crown_calm.roles.glass_lurker"
+        }
+      ]
+    },
+    {
+      "id": "crown_surge",
+      "region_id": "hollow_crown",
+      "surge_phase": "surge",
+      "level_range": [
+        38,
+        40
+      ],
+      "catchable": true,
+      "replaceable": true,
+      "night_role_weights": [
+        {
+          "role": "crown_wisp",
+          "weight": 1
+        },
+        {
+          "role": "glass_lurker",
+          "weight": 3
+        },
+        {
+          "role": "spark_darter",
+          "weight": 1
+        }
+      ],
+      "roles": [
+        {
+          "role": "crown_wisp",
+          "placeholder_species": "duskhush",
+          "weight": "common",
+          "replacement_point": "tables.crown_surge.roles.crown_wisp"
+        },
+        {
+          "role": "glass_lurker",
+          "placeholder_species": "shadelet",
+          "weight": "uncommon",
+          "replacement_point": "tables.crown_surge.roles.glass_lurker"
+        },
+        {
+          "role": "spark_darter",
+          "placeholder_species": "sparkit",
+          "weight": "uncommon",
+          "replacement_point": "tables.crown_surge.roles.spark_darter"
+        }
+      ]
+    },
+    {
+      "id": "deepwood_calm",
+      "region_id": "deepwood",
+      "surge_phase": "calm",
+      "level_range": [
+        38,
+        42
+      ],
+      "catchable": true,
+      "replaceable": true,
+      "night_role_weights": [
+        {
+          "role": "giant_rooter",
+          "weight": 1
+        },
+        {
+          "role": "canopy_hunter",
+          "weight": 1
+        },
+        {
+          "role": "ember_scavenger",
+          "weight": 1
+        }
+      ],
+      "roles": [
+        {
+          "role": "giant_rooter",
+          "placeholder_species": "tuskroot",
+          "weight": "common",
+          "replacement_point": "tables.deepwood_calm.roles.giant_rooter"
+        },
+        {
+          "role": "canopy_hunter",
+          "placeholder_species": "galecrest",
+          "weight": "common",
+          "replacement_point": "tables.deepwood_calm.roles.canopy_hunter"
+        },
+        {
+          "role": "ember_scavenger",
+          "placeholder_species": "cindercub",
+          "weight": "uncommon",
+          "replacement_point": "tables.deepwood_calm.roles.ember_scavenger"
+        }
+      ]
+    },
+    {
+      "id": "deepwood_surge",
+      "region_id": "deepwood",
+      "surge_phase": "surge",
+      "level_range": [
+        39,
+        42
+      ],
+      "catchable": true,
+      "replaceable": true,
+      "night_role_weights": [
+        {
+          "role": "storm_runner",
+          "weight": 1
+        },
+        {
+          "role": "night_glider",
+          "weight": 3
+        },
+        {
+          "role": "ash_charger",
+          "weight": 1
+        }
+      ],
+      "roles": [
+        {
+          "role": "storm_runner",
+          "placeholder_species": "stormtrail",
+          "weight": "common",
+          "replacement_point": "tables.deepwood_surge.roles.storm_runner"
+        },
+        {
+          "role": "night_glider",
+          "placeholder_species": "duskhush",
+          "weight": "uncommon",
+          "replacement_point": "tables.deepwood_surge.roles.night_glider"
+        },
+        {
+          "role": "ash_charger",
+          "placeholder_species": "ashtusk",
+          "weight": "uncommon",
+          "replacement_point": "tables.deepwood_surge.roles.ash_charger"
+        }
+      ]
+    },
+    {
+      "id": "dynamo_calm",
+      "region_id": "dynamo",
+      "surge_phase": "calm",
+      "level_range": [
+        40,
+        42
+      ],
+      "catchable": true,
+      "replaceable": true,
+      "night_role_weights": [
+        {
+          "role": "fence_prowler",
+          "weight": 1
+        },
+        {
+          "role": "conduit_gnawer",
+          "weight": 3
+        },
+        {
+          "role": "spark_darter",
+          "weight": 1
+        }
+      ],
+      "roles": [
+        {
+          "role": "fence_prowler",
+          "placeholder_species": "shadelet",
+          "weight": "common",
+          "replacement_point": "tables.dynamo_calm.roles.fence_prowler"
+        },
+        {
+          "role": "conduit_gnawer",
+          "placeholder_species": "nightburrow",
+          "weight": "common",
+          "replacement_point": "tables.dynamo_calm.roles.conduit_gnawer"
+        },
+        {
+          "role": "spark_darter",
+          "placeholder_species": "sparkit",
+          "weight": "uncommon",
+          "replacement_point": "tables.dynamo_calm.roles.spark_darter"
+        }
+      ]
+    },
+    {
+      "id": "dynamo_surge",
+      "region_id": "dynamo",
+      "surge_phase": "surge",
+      "level_range": [
+        41,
+        43
+      ],
+      "catchable": true,
+      "replaceable": true,
+      "night_role_weights": [
+        {
+          "role": "arc_diver",
+          "weight": 1
+        },
+        {
+          "role": "spark_darter",
+          "weight": 1
+        },
+        {
+          "role": "ash_charger",
+          "weight": 1
+        }
+      ],
+      "roles": [
+        {
+          "role": "arc_diver",
+          "placeholder_species": "galecrest",
+          "weight": "common",
+          "replacement_point": "tables.dynamo_surge.roles.arc_diver"
+        },
+        {
+          "role": "spark_darter",
+          "placeholder_species": "sparkit",
+          "weight": "uncommon",
+          "replacement_point": "tables.dynamo_surge.roles.spark_darter"
+        },
+        {
+          "role": "ash_charger",
+          "placeholder_species": "ashtusk",
+          "weight": "uncommon",
+          "replacement_point": "tables.dynamo_surge.roles.ash_charger"
+        }
+      ]
+    }
+  ],
+  "wild_clusters": [
+    {
+      "id": "cinder_verge_cluster_01",
+      "region_id": "cinder_verge",
+      "position": [
+        -566,
+        28,
+        225
+      ],
+      "radius": 28,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_01"
+    },
+    {
+      "id": "cinder_verge_cluster_02",
+      "region_id": "cinder_verge",
+      "position": [
+        -392,
+        28,
+        252
+      ],
+      "radius": 32,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_02"
+    },
+    {
+      "id": "cinder_verge_cluster_03",
+      "region_id": "cinder_verge",
+      "position": [
+        -240,
+        28,
+        225
+      ],
+      "radius": 36,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_03"
+    },
+    {
+      "id": "cinder_verge_cluster_04",
+      "region_id": "cinder_verge",
+      "position": [
+        -88,
+        28,
+        234
+      ],
+      "radius": 40,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_04"
+    },
+    {
+      "id": "cinder_verge_cluster_05",
+      "region_id": "cinder_verge",
+      "position": [
+        86,
+        28,
+        225
+      ],
+      "radius": 28,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_05"
+    },
+    {
+      "id": "cinder_verge_cluster_06",
+      "region_id": "cinder_verge",
+      "position": [
+        -528,
+        28,
+        285
+      ],
+      "radius": 32,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_06"
+    },
+    {
+      "id": "cinder_verge_cluster_07",
+      "region_id": "cinder_verge",
+      "position": [
+        -354,
+        28,
+        312
+      ],
+      "radius": 36,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_07"
+    },
+    {
+      "id": "cinder_verge_cluster_08",
+      "region_id": "cinder_verge",
+      "position": [
+        -202,
+        28,
+        285
+      ],
+      "radius": 40,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_08"
+    },
+    {
+      "id": "cinder_verge_cluster_09",
+      "region_id": "cinder_verge",
+      "position": [
+        -50,
+        28,
+        294
+      ],
+      "radius": 28,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_09"
+    },
+    {
+      "id": "cinder_verge_cluster_10",
+      "region_id": "cinder_verge",
+      "position": [
+        124,
+        28,
+        285
+      ],
+      "radius": 32,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_10"
+    },
+    {
+      "id": "cinder_verge_cluster_11",
+      "region_id": "cinder_verge",
+      "position": [
+        -566,
+        28,
+        345
+      ],
+      "radius": 36,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_11"
+    },
+    {
+      "id": "cinder_verge_cluster_12",
+      "region_id": "cinder_verge",
+      "position": [
+        -392,
+        28,
+        372
+      ],
+      "radius": 40,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_12"
+    },
+    {
+      "id": "cinder_verge_cluster_13",
+      "region_id": "cinder_verge",
+      "position": [
+        -240,
+        28,
+        345
+      ],
+      "radius": 28,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_13"
+    },
+    {
+      "id": "cinder_verge_cluster_14",
+      "region_id": "cinder_verge",
+      "position": [
+        -88,
+        28,
+        354
+      ],
+      "radius": 32,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_14"
+    },
+    {
+      "id": "cinder_verge_cluster_15",
+      "region_id": "cinder_verge",
+      "position": [
+        86,
+        28,
+        345
+      ],
+      "radius": 36,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_15"
+    },
+    {
+      "id": "cinder_verge_cluster_16",
+      "region_id": "cinder_verge",
+      "position": [
+        -528,
+        28,
+        405
+      ],
+      "radius": 40,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_16"
+    },
+    {
+      "id": "cinder_verge_cluster_17",
+      "region_id": "cinder_verge",
+      "position": [
+        -354,
+        28,
+        432
+      ],
+      "radius": 28,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_17"
+    },
+    {
+      "id": "cinder_verge_cluster_18",
+      "region_id": "cinder_verge",
+      "position": [
+        -202,
+        28,
+        405
+      ],
+      "radius": 32,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_18"
+    },
+    {
+      "id": "cinder_verge_cluster_19",
+      "region_id": "cinder_verge",
+      "position": [
+        -50,
+        28,
+        414
+      ],
+      "radius": 36,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_19"
+    },
+    {
+      "id": "cinder_verge_cluster_20",
+      "region_id": "cinder_verge",
+      "position": [
+        124,
+        28,
+        405
+      ],
+      "radius": 40,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_20"
+    },
+    {
+      "id": "cinder_verge_cluster_21",
+      "region_id": "cinder_verge",
+      "position": [
+        -566,
+        28,
+        465
+      ],
+      "radius": 28,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_21"
+    },
+    {
+      "id": "cinder_verge_cluster_22",
+      "region_id": "cinder_verge",
+      "position": [
+        -392,
+        28,
+        492
+      ],
+      "radius": 32,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_22"
+    },
+    {
+      "id": "cinder_verge_cluster_23",
+      "region_id": "cinder_verge",
+      "position": [
+        -240,
+        28,
+        465
+      ],
+      "radius": 36,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_23"
+    },
+    {
+      "id": "cinder_verge_cluster_24",
+      "region_id": "cinder_verge",
+      "position": [
+        -88,
+        28,
+        474
+      ],
+      "radius": 40,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_24"
+    },
+    {
+      "id": "cinder_verge_cluster_25",
+      "region_id": "cinder_verge",
+      "position": [
+        86,
+        28,
+        465
+      ],
+      "radius": 28,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_25"
+    },
+    {
+      "id": "cinder_verge_cluster_26",
+      "region_id": "cinder_verge",
+      "position": [
+        -528,
+        28,
+        525
+      ],
+      "radius": 32,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_26"
+    },
+    {
+      "id": "cinder_verge_cluster_27",
+      "region_id": "cinder_verge",
+      "position": [
+        -354,
+        28,
+        552
+      ],
+      "radius": 36,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_27"
+    },
+    {
+      "id": "cinder_verge_cluster_28",
+      "region_id": "cinder_verge",
+      "position": [
+        -202,
+        28,
+        525
+      ],
+      "radius": 40,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_28"
+    },
+    {
+      "id": "cinder_verge_cluster_29",
+      "region_id": "cinder_verge",
+      "position": [
+        -50,
+        28,
+        534
+      ],
+      "radius": 28,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_29"
+    },
+    {
+      "id": "cinder_verge_cluster_30",
+      "region_id": "cinder_verge",
+      "position": [
+        124,
+        28,
+        525
+      ],
+      "radius": 32,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_30"
+    },
+    {
+      "id": "cinder_verge_cluster_31",
+      "region_id": "cinder_verge",
+      "position": [
+        -566,
+        28,
+        585
+      ],
+      "radius": 36,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_31"
+    },
+    {
+      "id": "cinder_verge_cluster_32",
+      "region_id": "cinder_verge",
+      "position": [
+        -392,
+        28,
+        612
+      ],
+      "radius": 40,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_32"
+    },
+    {
+      "id": "cinder_verge_cluster_33",
+      "region_id": "cinder_verge",
+      "position": [
+        -240,
+        28,
+        585
+      ],
+      "radius": 28,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_33"
+    },
+    {
+      "id": "cinder_verge_cluster_34",
+      "region_id": "cinder_verge",
+      "position": [
+        -88,
+        28,
+        594
+      ],
+      "radius": 32,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_34"
+    },
+    {
+      "id": "cinder_verge_cluster_35",
+      "region_id": "cinder_verge",
+      "position": [
+        86,
+        28,
+        585
+      ],
+      "radius": 36,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_35"
+    },
+    {
+      "id": "cinder_verge_cluster_36",
+      "region_id": "cinder_verge",
+      "position": [
+        -528,
+        28,
+        645
+      ],
+      "radius": 40,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_36"
+    },
+    {
+      "id": "cinder_verge_cluster_37",
+      "region_id": "cinder_verge",
+      "position": [
+        -354,
+        28,
+        672
+      ],
+      "radius": 28,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_37"
+    },
+    {
+      "id": "cinder_verge_cluster_38",
+      "region_id": "cinder_verge",
+      "position": [
+        -202,
+        28,
+        645
+      ],
+      "radius": 32,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_38"
+    },
+    {
+      "id": "cinder_verge_cluster_39",
+      "region_id": "cinder_verge",
+      "position": [
+        -50,
+        28,
+        654
+      ],
+      "radius": 36,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_39"
+    },
+    {
+      "id": "cinder_verge_cluster_40",
+      "region_id": "cinder_verge",
+      "position": [
+        124,
+        28,
+        645
+      ],
+      "radius": 40,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_40"
+    },
+    {
+      "id": "cinder_verge_cluster_41",
+      "region_id": "cinder_verge",
+      "position": [
+        -566,
+        28,
+        705
+      ],
+      "radius": 28,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_41"
+    },
+    {
+      "id": "cinder_verge_cluster_42",
+      "region_id": "cinder_verge",
+      "position": [
+        -392,
+        28,
+        732
+      ],
+      "radius": 32,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_42"
+    },
+    {
+      "id": "cinder_verge_cluster_43",
+      "region_id": "cinder_verge",
+      "position": [
+        -240,
+        28,
+        705
+      ],
+      "radius": 36,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_43"
+    },
+    {
+      "id": "cinder_verge_cluster_44",
+      "region_id": "cinder_verge",
+      "position": [
+        -88,
+        28,
+        714
+      ],
+      "radius": 40,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_44"
+    },
+    {
+      "id": "cinder_verge_cluster_45",
+      "region_id": "cinder_verge",
+      "position": [
+        86,
+        28,
+        705
+      ],
+      "radius": 28,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_45"
+    },
+    {
+      "id": "cinder_verge_cluster_46",
+      "region_id": "cinder_verge",
+      "position": [
+        -528,
+        28,
+        765
+      ],
+      "radius": 32,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_46"
+    },
+    {
+      "id": "cinder_verge_cluster_47",
+      "region_id": "cinder_verge",
+      "position": [
+        -354,
+        28,
+        792
+      ],
+      "radius": 36,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_47"
+    },
+    {
+      "id": "cinder_verge_cluster_48",
+      "region_id": "cinder_verge",
+      "position": [
+        -202,
+        28,
+        765
+      ],
+      "radius": 40,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_48"
+    },
+    {
+      "id": "cinder_verge_cluster_49",
+      "region_id": "cinder_verge",
+      "position": [
+        -50,
+        28,
+        774
+      ],
+      "radius": 28,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_49"
+    },
+    {
+      "id": "cinder_verge_cluster_50",
+      "region_id": "cinder_verge",
+      "position": [
+        124,
+        28,
+        765
+      ],
+      "radius": 32,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_50"
+    },
+    {
+      "id": "cinder_verge_cluster_51",
+      "region_id": "cinder_verge",
+      "position": [
+        -566,
+        28,
+        825
+      ],
+      "radius": 36,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_51"
+    },
+    {
+      "id": "cinder_verge_cluster_52",
+      "region_id": "cinder_verge",
+      "position": [
+        -392,
+        28,
+        852
+      ],
+      "radius": 40,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_52"
+    },
+    {
+      "id": "cinder_verge_cluster_53",
+      "region_id": "cinder_verge",
+      "position": [
+        -240,
+        28,
+        825
+      ],
+      "radius": 28,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_53"
+    },
+    {
+      "id": "cinder_verge_cluster_54",
+      "region_id": "cinder_verge",
+      "position": [
+        -88,
+        28,
+        834
+      ],
+      "radius": 32,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_54"
+    },
+    {
+      "id": "cinder_verge_cluster_55",
+      "region_id": "cinder_verge",
+      "position": [
+        86,
+        28,
+        825
+      ],
+      "radius": 36,
+      "calm_table_id": "verge_calm",
+      "surge_table_id": "verge_surge",
+      "replacement_point": "wild_clusters.cinder_verge_cluster_55"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_01",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -886,
+        28,
+        1300
+      ],
+      "radius": 28,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_01"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_02",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -712,
+        28,
+        1327
+      ],
+      "radius": 32,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_02"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_03",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -560,
+        28,
+        1300
+      ],
+      "radius": 36,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_03"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_04",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -408,
+        28,
+        1309
+      ],
+      "radius": 40,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_04"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_05",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -234,
+        28,
+        1300
+      ],
+      "radius": 28,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_05"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_06",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -848,
+        28,
+        1360
+      ],
+      "radius": 32,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_06"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_07",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -674,
+        28,
+        1387
+      ],
+      "radius": 36,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_07"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_08",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -522,
+        28,
+        1360
+      ],
+      "radius": 40,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_08"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_09",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -370,
+        28,
+        1369
+      ],
+      "radius": 28,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_09"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_10",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -196,
+        28,
+        1360
+      ],
+      "radius": 32,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_10"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_11",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -886,
+        28,
+        1420
+      ],
+      "radius": 36,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_11"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_12",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -712,
+        28,
+        1447
+      ],
+      "radius": 40,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_12"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_13",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -560,
+        28,
+        1420
+      ],
+      "radius": 28,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_13"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_14",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -408,
+        28,
+        1429
+      ],
+      "radius": 32,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_14"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_15",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -234,
+        28,
+        1420
+      ],
+      "radius": 36,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_15"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_16",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -848,
+        28,
+        1480
+      ],
+      "radius": 40,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_16"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_17",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -674,
+        28,
+        1507
+      ],
+      "radius": 28,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_17"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_18",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -522,
+        28,
+        1480
+      ],
+      "radius": 32,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_18"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_19",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -370,
+        28,
+        1489
+      ],
+      "radius": 36,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_19"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_20",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -196,
+        28,
+        1480
+      ],
+      "radius": 40,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_20"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_21",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -886,
+        28,
+        1540
+      ],
+      "radius": 28,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_21"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_22",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -712,
+        28,
+        1567
+      ],
+      "radius": 32,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_22"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_23",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -560,
+        28,
+        1540
+      ],
+      "radius": 36,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_23"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_24",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -408,
+        28,
+        1549
+      ],
+      "radius": 40,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_24"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_25",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -234,
+        28,
+        1540
+      ],
+      "radius": 28,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_25"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_26",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -848,
+        28,
+        1600
+      ],
+      "radius": 32,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_26"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_27",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -674,
+        28,
+        1627
+      ],
+      "radius": 36,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_27"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_28",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -522,
+        28,
+        1600
+      ],
+      "radius": 40,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_28"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_29",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -370,
+        28,
+        1609
+      ],
+      "radius": 28,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_29"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_30",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -196,
+        28,
+        1600
+      ],
+      "radius": 32,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_30"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_31",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -886,
+        28,
+        1660
+      ],
+      "radius": 36,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_31"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_32",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -712,
+        28,
+        1687
+      ],
+      "radius": 40,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_32"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_33",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -560,
+        28,
+        1660
+      ],
+      "radius": 28,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_33"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_34",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -408,
+        28,
+        1669
+      ],
+      "radius": 32,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_34"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_35",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -234,
+        28,
+        1660
+      ],
+      "radius": 36,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_35"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_36",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -848,
+        28,
+        1720
+      ],
+      "radius": 40,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_36"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_37",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -674,
+        28,
+        1747
+      ],
+      "radius": 28,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_37"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_38",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -522,
+        28,
+        1720
+      ],
+      "radius": 32,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_38"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_39",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -370,
+        28,
+        1729
+      ],
+      "radius": 36,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_39"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_40",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -196,
+        28,
+        1720
+      ],
+      "radius": 40,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_40"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_41",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -886,
+        28,
+        1780
+      ],
+      "radius": 28,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_41"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_42",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -712,
+        28,
+        1807
+      ],
+      "radius": 32,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_42"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_43",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -560,
+        28,
+        1780
+      ],
+      "radius": 36,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_43"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_44",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -408,
+        28,
+        1789
+      ],
+      "radius": 40,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_44"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_45",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -234,
+        28,
+        1780
+      ],
+      "radius": 28,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_45"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_46",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -848,
+        28,
+        1840
+      ],
+      "radius": 32,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_46"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_47",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -674,
+        28,
+        1867
+      ],
+      "radius": 36,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_47"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_48",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -522,
+        28,
+        1840
+      ],
+      "radius": 40,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_48"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_49",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -370,
+        28,
+        1849
+      ],
+      "radius": 28,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_49"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_50",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -196,
+        28,
+        1840
+      ],
+      "radius": 32,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_50"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_51",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -886,
+        28,
+        1900
+      ],
+      "radius": 36,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_51"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_52",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -712,
+        28,
+        1927
+      ],
+      "radius": 40,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_52"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_53",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -560,
+        28,
+        1900
+      ],
+      "radius": 28,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_53"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_54",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -408,
+        28,
+        1909
+      ],
+      "radius": 32,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_54"
+    },
+    {
+      "id": "glowmoss_hollows_cluster_55",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -234,
+        28,
+        1900
+      ],
+      "radius": 36,
+      "calm_table_id": "hollows_calm",
+      "surge_table_id": "hollows_surge",
+      "replacement_point": "wild_clusters.glowmoss_hollows_cluster_55"
+    },
+    {
+      "id": "conductor_run_cluster_01",
+      "region_id": "conductor_run",
+      "position": [
+        -1222,
+        72,
+        2475
+      ],
+      "radius": 28,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_01"
+    },
+    {
+      "id": "conductor_run_cluster_02",
+      "region_id": "conductor_run",
+      "position": [
+        -1010,
+        72,
+        2502
+      ],
+      "radius": 32,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_02"
+    },
+    {
+      "id": "conductor_run_cluster_03",
+      "region_id": "conductor_run",
+      "position": [
+        -820,
+        72,
+        2475
+      ],
+      "radius": 36,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_03"
+    },
+    {
+      "id": "conductor_run_cluster_04",
+      "region_id": "conductor_run",
+      "position": [
+        -630,
+        72,
+        2484
+      ],
+      "radius": 40,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_04"
+    },
+    {
+      "id": "conductor_run_cluster_05",
+      "region_id": "conductor_run",
+      "position": [
+        -418,
+        72,
+        2475
+      ],
+      "radius": 28,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_05"
+    },
+    {
+      "id": "conductor_run_cluster_06",
+      "region_id": "conductor_run",
+      "position": [
+        -1184,
+        72,
+        2550
+      ],
+      "radius": 32,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_06"
+    },
+    {
+      "id": "conductor_run_cluster_07",
+      "region_id": "conductor_run",
+      "position": [
+        -972,
+        72,
+        2577
+      ],
+      "radius": 36,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_07"
+    },
+    {
+      "id": "conductor_run_cluster_08",
+      "region_id": "conductor_run",
+      "position": [
+        -782,
+        72,
+        2550
+      ],
+      "radius": 40,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_08"
+    },
+    {
+      "id": "conductor_run_cluster_09",
+      "region_id": "conductor_run",
+      "position": [
+        -592,
+        72,
+        2559
+      ],
+      "radius": 28,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_09"
+    },
+    {
+      "id": "conductor_run_cluster_10",
+      "region_id": "conductor_run",
+      "position": [
+        -380,
+        72,
+        2550
+      ],
+      "radius": 32,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_10"
+    },
+    {
+      "id": "conductor_run_cluster_11",
+      "region_id": "conductor_run",
+      "position": [
+        -1222,
+        72,
+        2625
+      ],
+      "radius": 36,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_11"
+    },
+    {
+      "id": "conductor_run_cluster_12",
+      "region_id": "conductor_run",
+      "position": [
+        -1010,
+        72,
+        2652
+      ],
+      "radius": 40,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_12"
+    },
+    {
+      "id": "conductor_run_cluster_13",
+      "region_id": "conductor_run",
+      "position": [
+        -820,
+        72,
+        2625
+      ],
+      "radius": 28,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_13"
+    },
+    {
+      "id": "conductor_run_cluster_14",
+      "region_id": "conductor_run",
+      "position": [
+        -630,
+        72,
+        2634
+      ],
+      "radius": 32,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_14"
+    },
+    {
+      "id": "conductor_run_cluster_15",
+      "region_id": "conductor_run",
+      "position": [
+        -418,
+        72,
+        2625
+      ],
+      "radius": 36,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_15"
+    },
+    {
+      "id": "conductor_run_cluster_16",
+      "region_id": "conductor_run",
+      "position": [
+        -1184,
+        72,
+        2700
+      ],
+      "radius": 40,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_16"
+    },
+    {
+      "id": "conductor_run_cluster_17",
+      "region_id": "conductor_run",
+      "position": [
+        -972,
+        72,
+        2727
+      ],
+      "radius": 28,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_17"
+    },
+    {
+      "id": "conductor_run_cluster_18",
+      "region_id": "conductor_run",
+      "position": [
+        -782,
+        72,
+        2700
+      ],
+      "radius": 32,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_18"
+    },
+    {
+      "id": "conductor_run_cluster_19",
+      "region_id": "conductor_run",
+      "position": [
+        -592,
+        72,
+        2709
+      ],
+      "radius": 36,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_19"
+    },
+    {
+      "id": "conductor_run_cluster_20",
+      "region_id": "conductor_run",
+      "position": [
+        -380,
+        72,
+        2700
+      ],
+      "radius": 40,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_20"
+    },
+    {
+      "id": "conductor_run_cluster_21",
+      "region_id": "conductor_run",
+      "position": [
+        -1222,
+        72,
+        2775
+      ],
+      "radius": 28,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_21"
+    },
+    {
+      "id": "conductor_run_cluster_22",
+      "region_id": "conductor_run",
+      "position": [
+        -1010,
+        72,
+        2802
+      ],
+      "radius": 32,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_22"
+    },
+    {
+      "id": "conductor_run_cluster_23",
+      "region_id": "conductor_run",
+      "position": [
+        -820,
+        72,
+        2775
+      ],
+      "radius": 36,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_23"
+    },
+    {
+      "id": "conductor_run_cluster_24",
+      "region_id": "conductor_run",
+      "position": [
+        -630,
+        72,
+        2784
+      ],
+      "radius": 40,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_24"
+    },
+    {
+      "id": "conductor_run_cluster_25",
+      "region_id": "conductor_run",
+      "position": [
+        -418,
+        72,
+        2775
+      ],
+      "radius": 28,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_25"
+    },
+    {
+      "id": "conductor_run_cluster_26",
+      "region_id": "conductor_run",
+      "position": [
+        -1184,
+        72,
+        2850
+      ],
+      "radius": 32,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_26"
+    },
+    {
+      "id": "conductor_run_cluster_27",
+      "region_id": "conductor_run",
+      "position": [
+        -972,
+        72,
+        2877
+      ],
+      "radius": 36,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_27"
+    },
+    {
+      "id": "conductor_run_cluster_28",
+      "region_id": "conductor_run",
+      "position": [
+        -782,
+        72,
+        2850
+      ],
+      "radius": 40,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_28"
+    },
+    {
+      "id": "conductor_run_cluster_29",
+      "region_id": "conductor_run",
+      "position": [
+        -592,
+        72,
+        2859
+      ],
+      "radius": 28,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_29"
+    },
+    {
+      "id": "conductor_run_cluster_30",
+      "region_id": "conductor_run",
+      "position": [
+        -380,
+        72,
+        2850
+      ],
+      "radius": 32,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_30"
+    },
+    {
+      "id": "conductor_run_cluster_31",
+      "region_id": "conductor_run",
+      "position": [
+        -1222,
+        72,
+        2925
+      ],
+      "radius": 36,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_31"
+    },
+    {
+      "id": "conductor_run_cluster_32",
+      "region_id": "conductor_run",
+      "position": [
+        -1010,
+        72,
+        2952
+      ],
+      "radius": 40,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_32"
+    },
+    {
+      "id": "conductor_run_cluster_33",
+      "region_id": "conductor_run",
+      "position": [
+        -820,
+        72,
+        2925
+      ],
+      "radius": 28,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_33"
+    },
+    {
+      "id": "conductor_run_cluster_34",
+      "region_id": "conductor_run",
+      "position": [
+        -630,
+        72,
+        2934
+      ],
+      "radius": 32,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_34"
+    },
+    {
+      "id": "conductor_run_cluster_35",
+      "region_id": "conductor_run",
+      "position": [
+        -418,
+        72,
+        2925
+      ],
+      "radius": 36,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_35"
+    },
+    {
+      "id": "conductor_run_cluster_36",
+      "region_id": "conductor_run",
+      "position": [
+        -1184,
+        72,
+        3000
+      ],
+      "radius": 40,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_36"
+    },
+    {
+      "id": "conductor_run_cluster_37",
+      "region_id": "conductor_run",
+      "position": [
+        -972,
+        72,
+        3027
+      ],
+      "radius": 28,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_37"
+    },
+    {
+      "id": "conductor_run_cluster_38",
+      "region_id": "conductor_run",
+      "position": [
+        -782,
+        72,
+        3000
+      ],
+      "radius": 32,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_38"
+    },
+    {
+      "id": "conductor_run_cluster_39",
+      "region_id": "conductor_run",
+      "position": [
+        -592,
+        72,
+        3009
+      ],
+      "radius": 36,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_39"
+    },
+    {
+      "id": "conductor_run_cluster_40",
+      "region_id": "conductor_run",
+      "position": [
+        -380,
+        72,
+        3000
+      ],
+      "radius": 40,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_40"
+    },
+    {
+      "id": "conductor_run_cluster_41",
+      "region_id": "conductor_run",
+      "position": [
+        -1222,
+        72,
+        3075
+      ],
+      "radius": 28,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_41"
+    },
+    {
+      "id": "conductor_run_cluster_42",
+      "region_id": "conductor_run",
+      "position": [
+        -1010,
+        72,
+        3102
+      ],
+      "radius": 32,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_42"
+    },
+    {
+      "id": "conductor_run_cluster_43",
+      "region_id": "conductor_run",
+      "position": [
+        -820,
+        72,
+        3075
+      ],
+      "radius": 36,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_43"
+    },
+    {
+      "id": "conductor_run_cluster_44",
+      "region_id": "conductor_run",
+      "position": [
+        -630,
+        72,
+        3084
+      ],
+      "radius": 40,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_44"
+    },
+    {
+      "id": "conductor_run_cluster_45",
+      "region_id": "conductor_run",
+      "position": [
+        -418,
+        72,
+        3075
+      ],
+      "radius": 28,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_45"
+    },
+    {
+      "id": "conductor_run_cluster_46",
+      "region_id": "conductor_run",
+      "position": [
+        -1184,
+        72,
+        3150
+      ],
+      "radius": 32,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_46"
+    },
+    {
+      "id": "conductor_run_cluster_47",
+      "region_id": "conductor_run",
+      "position": [
+        -972,
+        72,
+        3177
+      ],
+      "radius": 36,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_47"
+    },
+    {
+      "id": "conductor_run_cluster_48",
+      "region_id": "conductor_run",
+      "position": [
+        -782,
+        72,
+        3150
+      ],
+      "radius": 40,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_48"
+    },
+    {
+      "id": "conductor_run_cluster_49",
+      "region_id": "conductor_run",
+      "position": [
+        -592,
+        72,
+        3159
+      ],
+      "radius": 28,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_49"
+    },
+    {
+      "id": "conductor_run_cluster_50",
+      "region_id": "conductor_run",
+      "position": [
+        -380,
+        72,
+        3150
+      ],
+      "radius": 32,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_50"
+    },
+    {
+      "id": "conductor_run_cluster_51",
+      "region_id": "conductor_run",
+      "position": [
+        -1222,
+        72,
+        3225
+      ],
+      "radius": 36,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_51"
+    },
+    {
+      "id": "conductor_run_cluster_52",
+      "region_id": "conductor_run",
+      "position": [
+        -1010,
+        72,
+        3252
+      ],
+      "radius": 40,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_52"
+    },
+    {
+      "id": "conductor_run_cluster_53",
+      "region_id": "conductor_run",
+      "position": [
+        -820,
+        72,
+        3225
+      ],
+      "radius": 28,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_53"
+    },
+    {
+      "id": "conductor_run_cluster_54",
+      "region_id": "conductor_run",
+      "position": [
+        -630,
+        72,
+        3234
+      ],
+      "radius": 32,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_54"
+    },
+    {
+      "id": "conductor_run_cluster_55",
+      "region_id": "conductor_run",
+      "position": [
+        -418,
+        72,
+        3225
+      ],
+      "radius": 36,
+      "calm_table_id": "run_calm",
+      "surge_table_id": "run_surge",
+      "replacement_point": "wild_clusters.conductor_run_cluster_55"
+    },
+    {
+      "id": "hollow_crown_cluster_01",
+      "region_id": "hollow_crown",
+      "position": [
+        526,
+        74,
+        2550
+      ],
+      "radius": 28,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_01"
+    },
+    {
+      "id": "hollow_crown_cluster_02",
+      "region_id": "hollow_crown",
+      "position": [
+        624,
+        74,
+        2577
+      ],
+      "radius": 32,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_02"
+    },
+    {
+      "id": "hollow_crown_cluster_03",
+      "region_id": "hollow_crown",
+      "position": [
+        700,
+        74,
+        2550
+      ],
+      "radius": 36,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_03"
+    },
+    {
+      "id": "hollow_crown_cluster_04",
+      "region_id": "hollow_crown",
+      "position": [
+        776,
+        74,
+        2559
+      ],
+      "radius": 40,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_04"
+    },
+    {
+      "id": "hollow_crown_cluster_05",
+      "region_id": "hollow_crown",
+      "position": [
+        874,
+        74,
+        2550
+      ],
+      "radius": 28,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_05"
+    },
+    {
+      "id": "hollow_crown_cluster_06",
+      "region_id": "hollow_crown",
+      "position": [
+        564,
+        74,
+        2580
+      ],
+      "radius": 32,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_06"
+    },
+    {
+      "id": "hollow_crown_cluster_07",
+      "region_id": "hollow_crown",
+      "position": [
+        662,
+        74,
+        2607
+      ],
+      "radius": 36,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_07"
+    },
+    {
+      "id": "hollow_crown_cluster_08",
+      "region_id": "hollow_crown",
+      "position": [
+        738,
+        74,
+        2580
+      ],
+      "radius": 40,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_08"
+    },
+    {
+      "id": "hollow_crown_cluster_09",
+      "region_id": "hollow_crown",
+      "position": [
+        814,
+        74,
+        2589
+      ],
+      "radius": 28,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_09"
+    },
+    {
+      "id": "hollow_crown_cluster_10",
+      "region_id": "hollow_crown",
+      "position": [
+        912,
+        74,
+        2580
+      ],
+      "radius": 32,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_10"
+    },
+    {
+      "id": "hollow_crown_cluster_11",
+      "region_id": "hollow_crown",
+      "position": [
+        526,
+        74,
+        2610
+      ],
+      "radius": 36,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_11"
+    },
+    {
+      "id": "hollow_crown_cluster_12",
+      "region_id": "hollow_crown",
+      "position": [
+        624,
+        74,
+        2637
+      ],
+      "radius": 40,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_12"
+    },
+    {
+      "id": "hollow_crown_cluster_13",
+      "region_id": "hollow_crown",
+      "position": [
+        700,
+        74,
+        2610
+      ],
+      "radius": 28,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_13"
+    },
+    {
+      "id": "hollow_crown_cluster_14",
+      "region_id": "hollow_crown",
+      "position": [
+        776,
+        74,
+        2619
+      ],
+      "radius": 32,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_14"
+    },
+    {
+      "id": "hollow_crown_cluster_15",
+      "region_id": "hollow_crown",
+      "position": [
+        874,
+        74,
+        2610
+      ],
+      "radius": 36,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_15"
+    },
+    {
+      "id": "hollow_crown_cluster_16",
+      "region_id": "hollow_crown",
+      "position": [
+        564,
+        74,
+        2640
+      ],
+      "radius": 40,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_16"
+    },
+    {
+      "id": "hollow_crown_cluster_17",
+      "region_id": "hollow_crown",
+      "position": [
+        662,
+        74,
+        2667
+      ],
+      "radius": 28,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_17"
+    },
+    {
+      "id": "hollow_crown_cluster_18",
+      "region_id": "hollow_crown",
+      "position": [
+        738,
+        74,
+        2640
+      ],
+      "radius": 32,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_18"
+    },
+    {
+      "id": "hollow_crown_cluster_19",
+      "region_id": "hollow_crown",
+      "position": [
+        814,
+        74,
+        2649
+      ],
+      "radius": 36,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_19"
+    },
+    {
+      "id": "hollow_crown_cluster_20",
+      "region_id": "hollow_crown",
+      "position": [
+        912,
+        74,
+        2640
+      ],
+      "radius": 40,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_20"
+    },
+    {
+      "id": "hollow_crown_cluster_21",
+      "region_id": "hollow_crown",
+      "position": [
+        526,
+        74,
+        2670
+      ],
+      "radius": 28,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_21"
+    },
+    {
+      "id": "hollow_crown_cluster_22",
+      "region_id": "hollow_crown",
+      "position": [
+        624,
+        74,
+        2697
+      ],
+      "radius": 32,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_22"
+    },
+    {
+      "id": "hollow_crown_cluster_23",
+      "region_id": "hollow_crown",
+      "position": [
+        700,
+        74,
+        2670
+      ],
+      "radius": 36,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_23"
+    },
+    {
+      "id": "hollow_crown_cluster_24",
+      "region_id": "hollow_crown",
+      "position": [
+        776,
+        74,
+        2679
+      ],
+      "radius": 40,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_24"
+    },
+    {
+      "id": "hollow_crown_cluster_25",
+      "region_id": "hollow_crown",
+      "position": [
+        874,
+        74,
+        2670
+      ],
+      "radius": 28,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_25"
+    },
+    {
+      "id": "hollow_crown_cluster_26",
+      "region_id": "hollow_crown",
+      "position": [
+        564,
+        74,
+        2700
+      ],
+      "radius": 32,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_26"
+    },
+    {
+      "id": "hollow_crown_cluster_27",
+      "region_id": "hollow_crown",
+      "position": [
+        662,
+        74,
+        2727
+      ],
+      "radius": 36,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_27"
+    },
+    {
+      "id": "hollow_crown_cluster_28",
+      "region_id": "hollow_crown",
+      "position": [
+        738,
+        74,
+        2700
+      ],
+      "radius": 40,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_28"
+    },
+    {
+      "id": "hollow_crown_cluster_29",
+      "region_id": "hollow_crown",
+      "position": [
+        814,
+        74,
+        2709
+      ],
+      "radius": 28,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_29"
+    },
+    {
+      "id": "hollow_crown_cluster_30",
+      "region_id": "hollow_crown",
+      "position": [
+        912,
+        74,
+        2700
+      ],
+      "radius": 32,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_30"
+    },
+    {
+      "id": "hollow_crown_cluster_31",
+      "region_id": "hollow_crown",
+      "position": [
+        526,
+        74,
+        2730
+      ],
+      "radius": 36,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_31"
+    },
+    {
+      "id": "hollow_crown_cluster_32",
+      "region_id": "hollow_crown",
+      "position": [
+        624,
+        74,
+        2757
+      ],
+      "radius": 40,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_32"
+    },
+    {
+      "id": "hollow_crown_cluster_33",
+      "region_id": "hollow_crown",
+      "position": [
+        700,
+        74,
+        2730
+      ],
+      "radius": 28,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_33"
+    },
+    {
+      "id": "hollow_crown_cluster_34",
+      "region_id": "hollow_crown",
+      "position": [
+        776,
+        74,
+        2739
+      ],
+      "radius": 32,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_34"
+    },
+    {
+      "id": "hollow_crown_cluster_35",
+      "region_id": "hollow_crown",
+      "position": [
+        874,
+        74,
+        2730
+      ],
+      "radius": 36,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_35"
+    },
+    {
+      "id": "hollow_crown_cluster_36",
+      "region_id": "hollow_crown",
+      "position": [
+        564,
+        74,
+        2760
+      ],
+      "radius": 40,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_36"
+    },
+    {
+      "id": "hollow_crown_cluster_37",
+      "region_id": "hollow_crown",
+      "position": [
+        662,
+        74,
+        2787
+      ],
+      "radius": 28,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_37"
+    },
+    {
+      "id": "hollow_crown_cluster_38",
+      "region_id": "hollow_crown",
+      "position": [
+        738,
+        74,
+        2760
+      ],
+      "radius": 32,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_38"
+    },
+    {
+      "id": "hollow_crown_cluster_39",
+      "region_id": "hollow_crown",
+      "position": [
+        814,
+        74,
+        2769
+      ],
+      "radius": 36,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_39"
+    },
+    {
+      "id": "hollow_crown_cluster_40",
+      "region_id": "hollow_crown",
+      "position": [
+        912,
+        74,
+        2760
+      ],
+      "radius": 40,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_40"
+    },
+    {
+      "id": "hollow_crown_cluster_41",
+      "region_id": "hollow_crown",
+      "position": [
+        526,
+        74,
+        2790
+      ],
+      "radius": 28,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_41"
+    },
+    {
+      "id": "hollow_crown_cluster_42",
+      "region_id": "hollow_crown",
+      "position": [
+        624,
+        74,
+        2817
+      ],
+      "radius": 32,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_42"
+    },
+    {
+      "id": "hollow_crown_cluster_43",
+      "region_id": "hollow_crown",
+      "position": [
+        700,
+        74,
+        2790
+      ],
+      "radius": 36,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_43"
+    },
+    {
+      "id": "hollow_crown_cluster_44",
+      "region_id": "hollow_crown",
+      "position": [
+        776,
+        74,
+        2799
+      ],
+      "radius": 40,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_44"
+    },
+    {
+      "id": "hollow_crown_cluster_45",
+      "region_id": "hollow_crown",
+      "position": [
+        874,
+        74,
+        2790
+      ],
+      "radius": 28,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_45"
+    },
+    {
+      "id": "hollow_crown_cluster_46",
+      "region_id": "hollow_crown",
+      "position": [
+        564,
+        74,
+        2820
+      ],
+      "radius": 32,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_46"
+    },
+    {
+      "id": "hollow_crown_cluster_47",
+      "region_id": "hollow_crown",
+      "position": [
+        662,
+        74,
+        2847
+      ],
+      "radius": 36,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_47"
+    },
+    {
+      "id": "hollow_crown_cluster_48",
+      "region_id": "hollow_crown",
+      "position": [
+        738,
+        74,
+        2820
+      ],
+      "radius": 40,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_48"
+    },
+    {
+      "id": "hollow_crown_cluster_49",
+      "region_id": "hollow_crown",
+      "position": [
+        814,
+        74,
+        2829
+      ],
+      "radius": 28,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_49"
+    },
+    {
+      "id": "hollow_crown_cluster_50",
+      "region_id": "hollow_crown",
+      "position": [
+        912,
+        74,
+        2820
+      ],
+      "radius": 32,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_50"
+    },
+    {
+      "id": "hollow_crown_cluster_51",
+      "region_id": "hollow_crown",
+      "position": [
+        526,
+        74,
+        2850
+      ],
+      "radius": 36,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_51"
+    },
+    {
+      "id": "hollow_crown_cluster_52",
+      "region_id": "hollow_crown",
+      "position": [
+        624,
+        74,
+        2877
+      ],
+      "radius": 40,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_52"
+    },
+    {
+      "id": "hollow_crown_cluster_53",
+      "region_id": "hollow_crown",
+      "position": [
+        700,
+        74,
+        2850
+      ],
+      "radius": 28,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_53"
+    },
+    {
+      "id": "hollow_crown_cluster_54",
+      "region_id": "hollow_crown",
+      "position": [
+        776,
+        74,
+        2859
+      ],
+      "radius": 32,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_54"
+    },
+    {
+      "id": "hollow_crown_cluster_55",
+      "region_id": "hollow_crown",
+      "position": [
+        874,
+        74,
+        2850
+      ],
+      "radius": 36,
+      "calm_table_id": "crown_calm",
+      "surge_table_id": "crown_surge",
+      "replacement_point": "wild_clusters.hollow_crown_cluster_55"
+    },
+    {
+      "id": "deepwood_cluster_01",
+      "region_id": "deepwood",
+      "position": [
+        -786,
+        67,
+        3950
+      ],
+      "radius": 28,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_01"
+    },
+    {
+      "id": "deepwood_cluster_02",
+      "region_id": "deepwood",
+      "position": [
+        -612,
+        67,
+        3977
+      ],
+      "radius": 32,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_02"
+    },
+    {
+      "id": "deepwood_cluster_03",
+      "region_id": "deepwood",
+      "position": [
+        -460,
+        67,
+        3950
+      ],
+      "radius": 36,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_03"
+    },
+    {
+      "id": "deepwood_cluster_04",
+      "region_id": "deepwood",
+      "position": [
+        -308,
+        67,
+        3959
+      ],
+      "radius": 40,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_04"
+    },
+    {
+      "id": "deepwood_cluster_05",
+      "region_id": "deepwood",
+      "position": [
+        -134,
+        67,
+        3950
+      ],
+      "radius": 28,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_05"
+    },
+    {
+      "id": "deepwood_cluster_06",
+      "region_id": "deepwood",
+      "position": [
+        -748,
+        67,
+        4010
+      ],
+      "radius": 32,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_06"
+    },
+    {
+      "id": "deepwood_cluster_07",
+      "region_id": "deepwood",
+      "position": [
+        -574,
+        67,
+        4037
+      ],
+      "radius": 36,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_07"
+    },
+    {
+      "id": "deepwood_cluster_08",
+      "region_id": "deepwood",
+      "position": [
+        -422,
+        67,
+        4010
+      ],
+      "radius": 40,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_08"
+    },
+    {
+      "id": "deepwood_cluster_09",
+      "region_id": "deepwood",
+      "position": [
+        -270,
+        67,
+        4019
+      ],
+      "radius": 28,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_09"
+    },
+    {
+      "id": "deepwood_cluster_10",
+      "region_id": "deepwood",
+      "position": [
+        -96,
+        67,
+        4010
+      ],
+      "radius": 32,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_10"
+    },
+    {
+      "id": "deepwood_cluster_11",
+      "region_id": "deepwood",
+      "position": [
+        -786,
+        67,
+        4070
+      ],
+      "radius": 36,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_11"
+    },
+    {
+      "id": "deepwood_cluster_12",
+      "region_id": "deepwood",
+      "position": [
+        -612,
+        67,
+        4097
+      ],
+      "radius": 40,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_12"
+    },
+    {
+      "id": "deepwood_cluster_13",
+      "region_id": "deepwood",
+      "position": [
+        -460,
+        67,
+        4070
+      ],
+      "radius": 28,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_13"
+    },
+    {
+      "id": "deepwood_cluster_14",
+      "region_id": "deepwood",
+      "position": [
+        -308,
+        67,
+        4079
+      ],
+      "radius": 32,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_14"
+    },
+    {
+      "id": "deepwood_cluster_15",
+      "region_id": "deepwood",
+      "position": [
+        -134,
+        67,
+        4070
+      ],
+      "radius": 36,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_15"
+    },
+    {
+      "id": "deepwood_cluster_16",
+      "region_id": "deepwood",
+      "position": [
+        -748,
+        67,
+        4130
+      ],
+      "radius": 40,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_16"
+    },
+    {
+      "id": "deepwood_cluster_17",
+      "region_id": "deepwood",
+      "position": [
+        -574,
+        67,
+        4157
+      ],
+      "radius": 28,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_17"
+    },
+    {
+      "id": "deepwood_cluster_18",
+      "region_id": "deepwood",
+      "position": [
+        -422,
+        67,
+        4130
+      ],
+      "radius": 32,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_18"
+    },
+    {
+      "id": "deepwood_cluster_19",
+      "region_id": "deepwood",
+      "position": [
+        -270,
+        67,
+        4139
+      ],
+      "radius": 36,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_19"
+    },
+    {
+      "id": "deepwood_cluster_20",
+      "region_id": "deepwood",
+      "position": [
+        -96,
+        67,
+        4130
+      ],
+      "radius": 40,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_20"
+    },
+    {
+      "id": "deepwood_cluster_21",
+      "region_id": "deepwood",
+      "position": [
+        -786,
+        67,
+        4190
+      ],
+      "radius": 28,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_21"
+    },
+    {
+      "id": "deepwood_cluster_22",
+      "region_id": "deepwood",
+      "position": [
+        -612,
+        67,
+        4217
+      ],
+      "radius": 32,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_22"
+    },
+    {
+      "id": "deepwood_cluster_23",
+      "region_id": "deepwood",
+      "position": [
+        -460,
+        67,
+        4190
+      ],
+      "radius": 36,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_23"
+    },
+    {
+      "id": "deepwood_cluster_24",
+      "region_id": "deepwood",
+      "position": [
+        -308,
+        67,
+        4199
+      ],
+      "radius": 40,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_24"
+    },
+    {
+      "id": "deepwood_cluster_25",
+      "region_id": "deepwood",
+      "position": [
+        -134,
+        67,
+        4190
+      ],
+      "radius": 28,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_25"
+    },
+    {
+      "id": "deepwood_cluster_26",
+      "region_id": "deepwood",
+      "position": [
+        -748,
+        67,
+        4250
+      ],
+      "radius": 32,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_26"
+    },
+    {
+      "id": "deepwood_cluster_27",
+      "region_id": "deepwood",
+      "position": [
+        -574,
+        67,
+        4277
+      ],
+      "radius": 36,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_27"
+    },
+    {
+      "id": "deepwood_cluster_28",
+      "region_id": "deepwood",
+      "position": [
+        -422,
+        67,
+        4250
+      ],
+      "radius": 40,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_28"
+    },
+    {
+      "id": "deepwood_cluster_29",
+      "region_id": "deepwood",
+      "position": [
+        -270,
+        67,
+        4259
+      ],
+      "radius": 28,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_29"
+    },
+    {
+      "id": "deepwood_cluster_30",
+      "region_id": "deepwood",
+      "position": [
+        -96,
+        67,
+        4250
+      ],
+      "radius": 32,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_30"
+    },
+    {
+      "id": "deepwood_cluster_31",
+      "region_id": "deepwood",
+      "position": [
+        -786,
+        67,
+        4310
+      ],
+      "radius": 36,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_31"
+    },
+    {
+      "id": "deepwood_cluster_32",
+      "region_id": "deepwood",
+      "position": [
+        -612,
+        67,
+        4337
+      ],
+      "radius": 40,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_32"
+    },
+    {
+      "id": "deepwood_cluster_33",
+      "region_id": "deepwood",
+      "position": [
+        -460,
+        67,
+        4310
+      ],
+      "radius": 28,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_33"
+    },
+    {
+      "id": "deepwood_cluster_34",
+      "region_id": "deepwood",
+      "position": [
+        -308,
+        67,
+        4319
+      ],
+      "radius": 32,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_34"
+    },
+    {
+      "id": "deepwood_cluster_35",
+      "region_id": "deepwood",
+      "position": [
+        -134,
+        67,
+        4310
+      ],
+      "radius": 36,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_35"
+    },
+    {
+      "id": "deepwood_cluster_36",
+      "region_id": "deepwood",
+      "position": [
+        -748,
+        67,
+        4370
+      ],
+      "radius": 40,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_36"
+    },
+    {
+      "id": "deepwood_cluster_37",
+      "region_id": "deepwood",
+      "position": [
+        -574,
+        67,
+        4397
+      ],
+      "radius": 28,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_37"
+    },
+    {
+      "id": "deepwood_cluster_38",
+      "region_id": "deepwood",
+      "position": [
+        -422,
+        67,
+        4370
+      ],
+      "radius": 32,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_38"
+    },
+    {
+      "id": "deepwood_cluster_39",
+      "region_id": "deepwood",
+      "position": [
+        -270,
+        67,
+        4379
+      ],
+      "radius": 36,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_39"
+    },
+    {
+      "id": "deepwood_cluster_40",
+      "region_id": "deepwood",
+      "position": [
+        -96,
+        67,
+        4370
+      ],
+      "radius": 40,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_40"
+    },
+    {
+      "id": "deepwood_cluster_41",
+      "region_id": "deepwood",
+      "position": [
+        -786,
+        67,
+        4430
+      ],
+      "radius": 28,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_41"
+    },
+    {
+      "id": "deepwood_cluster_42",
+      "region_id": "deepwood",
+      "position": [
+        -612,
+        67,
+        4457
+      ],
+      "radius": 32,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_42"
+    },
+    {
+      "id": "deepwood_cluster_43",
+      "region_id": "deepwood",
+      "position": [
+        -460,
+        67,
+        4430
+      ],
+      "radius": 36,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_43"
+    },
+    {
+      "id": "deepwood_cluster_44",
+      "region_id": "deepwood",
+      "position": [
+        -308,
+        67,
+        4439
+      ],
+      "radius": 40,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_44"
+    },
+    {
+      "id": "deepwood_cluster_45",
+      "region_id": "deepwood",
+      "position": [
+        -134,
+        67,
+        4430
+      ],
+      "radius": 28,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_45"
+    },
+    {
+      "id": "deepwood_cluster_46",
+      "region_id": "deepwood",
+      "position": [
+        -748,
+        67,
+        4490
+      ],
+      "radius": 32,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_46"
+    },
+    {
+      "id": "deepwood_cluster_47",
+      "region_id": "deepwood",
+      "position": [
+        -574,
+        67,
+        4517
+      ],
+      "radius": 36,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_47"
+    },
+    {
+      "id": "deepwood_cluster_48",
+      "region_id": "deepwood",
+      "position": [
+        -422,
+        67,
+        4490
+      ],
+      "radius": 40,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_48"
+    },
+    {
+      "id": "deepwood_cluster_49",
+      "region_id": "deepwood",
+      "position": [
+        -270,
+        67,
+        4499
+      ],
+      "radius": 28,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_49"
+    },
+    {
+      "id": "deepwood_cluster_50",
+      "region_id": "deepwood",
+      "position": [
+        -96,
+        67,
+        4490
+      ],
+      "radius": 32,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_50"
+    },
+    {
+      "id": "deepwood_cluster_51",
+      "region_id": "deepwood",
+      "position": [
+        -786,
+        67,
+        4550
+      ],
+      "radius": 36,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_51"
+    },
+    {
+      "id": "deepwood_cluster_52",
+      "region_id": "deepwood",
+      "position": [
+        -612,
+        67,
+        4577
+      ],
+      "radius": 40,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_52"
+    },
+    {
+      "id": "deepwood_cluster_53",
+      "region_id": "deepwood",
+      "position": [
+        -460,
+        67,
+        4550
+      ],
+      "radius": 28,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_53"
+    },
+    {
+      "id": "deepwood_cluster_54",
+      "region_id": "deepwood",
+      "position": [
+        -308,
+        67,
+        4559
+      ],
+      "radius": 32,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_54"
+    },
+    {
+      "id": "deepwood_cluster_55",
+      "region_id": "deepwood",
+      "position": [
+        -134,
+        67,
+        4550
+      ],
+      "radius": 36,
+      "calm_table_id": "deepwood_calm",
+      "surge_table_id": "deepwood_surge",
+      "replacement_point": "wild_clusters.deepwood_cluster_55"
+    },
+    {
+      "id": "dynamo_cluster_01",
+      "region_id": "dynamo",
+      "position": [
+        -509,
+        115,
+        5256
+      ],
+      "radius": 28,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_01"
+    },
+    {
+      "id": "dynamo_cluster_02",
+      "region_id": "dynamo",
+      "position": [
+        -363,
+        115,
+        5283
+      ],
+      "radius": 32,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_02"
+    },
+    {
+      "id": "dynamo_cluster_03",
+      "region_id": "dynamo",
+      "position": [
+        -240,
+        115,
+        5256
+      ],
+      "radius": 36,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_03"
+    },
+    {
+      "id": "dynamo_cluster_04",
+      "region_id": "dynamo",
+      "position": [
+        -116,
+        115,
+        5265
+      ],
+      "radius": 40,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_04"
+    },
+    {
+      "id": "dynamo_cluster_05",
+      "region_id": "dynamo",
+      "position": [
+        29,
+        115,
+        5256
+      ],
+      "radius": 28,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_05"
+    },
+    {
+      "id": "dynamo_cluster_06",
+      "region_id": "dynamo",
+      "position": [
+        -471,
+        115,
+        5305
+      ],
+      "radius": 32,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_06"
+    },
+    {
+      "id": "dynamo_cluster_07",
+      "region_id": "dynamo",
+      "position": [
+        -325,
+        115,
+        5332
+      ],
+      "radius": 36,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_07"
+    },
+    {
+      "id": "dynamo_cluster_08",
+      "region_id": "dynamo",
+      "position": [
+        -202,
+        115,
+        5305
+      ],
+      "radius": 40,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_08"
+    },
+    {
+      "id": "dynamo_cluster_09",
+      "region_id": "dynamo",
+      "position": [
+        -78,
+        115,
+        5314
+      ],
+      "radius": 28,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_09"
+    },
+    {
+      "id": "dynamo_cluster_10",
+      "region_id": "dynamo",
+      "position": [
+        67,
+        115,
+        5305
+      ],
+      "radius": 32,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_10"
+    },
+    {
+      "id": "dynamo_cluster_11",
+      "region_id": "dynamo",
+      "position": [
+        -509,
+        115,
+        5354
+      ],
+      "radius": 36,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_11"
+    },
+    {
+      "id": "dynamo_cluster_12",
+      "region_id": "dynamo",
+      "position": [
+        -363,
+        115,
+        5381
+      ],
+      "radius": 40,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_12"
+    },
+    {
+      "id": "dynamo_cluster_13",
+      "region_id": "dynamo",
+      "position": [
+        -240,
+        115,
+        5354
+      ],
+      "radius": 28,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_13"
+    },
+    {
+      "id": "dynamo_cluster_14",
+      "region_id": "dynamo",
+      "position": [
+        -116,
+        115,
+        5363
+      ],
+      "radius": 32,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_14"
+    },
+    {
+      "id": "dynamo_cluster_15",
+      "region_id": "dynamo",
+      "position": [
+        29,
+        115,
+        5354
+      ],
+      "radius": 36,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_15"
+    },
+    {
+      "id": "dynamo_cluster_16",
+      "region_id": "dynamo",
+      "position": [
+        -471,
+        115,
+        5403
+      ],
+      "radius": 40,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_16"
+    },
+    {
+      "id": "dynamo_cluster_17",
+      "region_id": "dynamo",
+      "position": [
+        -325,
+        115,
+        5430
+      ],
+      "radius": 28,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_17"
+    },
+    {
+      "id": "dynamo_cluster_18",
+      "region_id": "dynamo",
+      "position": [
+        -202,
+        115,
+        5403
+      ],
+      "radius": 32,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_18"
+    },
+    {
+      "id": "dynamo_cluster_19",
+      "region_id": "dynamo",
+      "position": [
+        -78,
+        115,
+        5412
+      ],
+      "radius": 36,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_19"
+    },
+    {
+      "id": "dynamo_cluster_20",
+      "region_id": "dynamo",
+      "position": [
+        67,
+        115,
+        5403
+      ],
+      "radius": 40,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_20"
+    },
+    {
+      "id": "dynamo_cluster_21",
+      "region_id": "dynamo",
+      "position": [
+        -509,
+        115,
+        5451
+      ],
+      "radius": 28,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_21"
+    },
+    {
+      "id": "dynamo_cluster_22",
+      "region_id": "dynamo",
+      "position": [
+        -363,
+        115,
+        5478
+      ],
+      "radius": 32,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_22"
+    },
+    {
+      "id": "dynamo_cluster_23",
+      "region_id": "dynamo",
+      "position": [
+        -240,
+        115,
+        5451
+      ],
+      "radius": 36,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_23"
+    },
+    {
+      "id": "dynamo_cluster_24",
+      "region_id": "dynamo",
+      "position": [
+        -116,
+        115,
+        5460
+      ],
+      "radius": 40,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_24"
+    },
+    {
+      "id": "dynamo_cluster_25",
+      "region_id": "dynamo",
+      "position": [
+        29,
+        115,
+        5451
+      ],
+      "radius": 28,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_25"
+    },
+    {
+      "id": "dynamo_cluster_26",
+      "region_id": "dynamo",
+      "position": [
+        -471,
+        115,
+        5500
+      ],
+      "radius": 32,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_26"
+    },
+    {
+      "id": "dynamo_cluster_27",
+      "region_id": "dynamo",
+      "position": [
+        -325,
+        115,
+        5527
+      ],
+      "radius": 36,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_27"
+    },
+    {
+      "id": "dynamo_cluster_28",
+      "region_id": "dynamo",
+      "position": [
+        -202,
+        115,
+        5500
+      ],
+      "radius": 40,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_28"
+    },
+    {
+      "id": "dynamo_cluster_29",
+      "region_id": "dynamo",
+      "position": [
+        -78,
+        115,
+        5509
+      ],
+      "radius": 28,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_29"
+    },
+    {
+      "id": "dynamo_cluster_30",
+      "region_id": "dynamo",
+      "position": [
+        67,
+        115,
+        5500
+      ],
+      "radius": 32,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_30"
+    },
+    {
+      "id": "dynamo_cluster_31",
+      "region_id": "dynamo",
+      "position": [
+        -509,
+        115,
+        5549
+      ],
+      "radius": 36,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_31"
+    },
+    {
+      "id": "dynamo_cluster_32",
+      "region_id": "dynamo",
+      "position": [
+        -363,
+        115,
+        5576
+      ],
+      "radius": 40,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_32"
+    },
+    {
+      "id": "dynamo_cluster_33",
+      "region_id": "dynamo",
+      "position": [
+        -240,
+        115,
+        5549
+      ],
+      "radius": 28,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_33"
+    },
+    {
+      "id": "dynamo_cluster_34",
+      "region_id": "dynamo",
+      "position": [
+        -116,
+        115,
+        5558
+      ],
+      "radius": 32,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_34"
+    },
+    {
+      "id": "dynamo_cluster_35",
+      "region_id": "dynamo",
+      "position": [
+        29,
+        115,
+        5549
+      ],
+      "radius": 36,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_35"
+    },
+    {
+      "id": "dynamo_cluster_36",
+      "region_id": "dynamo",
+      "position": [
+        -471,
+        115,
+        5598
+      ],
+      "radius": 40,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_36"
+    },
+    {
+      "id": "dynamo_cluster_37",
+      "region_id": "dynamo",
+      "position": [
+        -325,
+        115,
+        5625
+      ],
+      "radius": 28,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_37"
+    },
+    {
+      "id": "dynamo_cluster_38",
+      "region_id": "dynamo",
+      "position": [
+        -202,
+        115,
+        5598
+      ],
+      "radius": 32,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_38"
+    },
+    {
+      "id": "dynamo_cluster_39",
+      "region_id": "dynamo",
+      "position": [
+        -78,
+        115,
+        5607
+      ],
+      "radius": 36,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_39"
+    },
+    {
+      "id": "dynamo_cluster_40",
+      "region_id": "dynamo",
+      "position": [
+        67,
+        115,
+        5598
+      ],
+      "radius": 40,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_40"
+    },
+    {
+      "id": "dynamo_cluster_41",
+      "region_id": "dynamo",
+      "position": [
+        -509,
+        115,
+        5646
+      ],
+      "radius": 28,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_41"
+    },
+    {
+      "id": "dynamo_cluster_42",
+      "region_id": "dynamo",
+      "position": [
+        -363,
+        115,
+        5673
+      ],
+      "radius": 32,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_42"
+    },
+    {
+      "id": "dynamo_cluster_43",
+      "region_id": "dynamo",
+      "position": [
+        -240,
+        115,
+        5646
+      ],
+      "radius": 36,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_43"
+    },
+    {
+      "id": "dynamo_cluster_44",
+      "region_id": "dynamo",
+      "position": [
+        -116,
+        115,
+        5655
+      ],
+      "radius": 40,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_44"
+    },
+    {
+      "id": "dynamo_cluster_45",
+      "region_id": "dynamo",
+      "position": [
+        29,
+        115,
+        5646
+      ],
+      "radius": 28,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_45"
+    },
+    {
+      "id": "dynamo_cluster_46",
+      "region_id": "dynamo",
+      "position": [
+        -471,
+        115,
+        5695
+      ],
+      "radius": 32,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_46"
+    },
+    {
+      "id": "dynamo_cluster_47",
+      "region_id": "dynamo",
+      "position": [
+        -325,
+        115,
+        5722
+      ],
+      "radius": 36,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_47"
+    },
+    {
+      "id": "dynamo_cluster_48",
+      "region_id": "dynamo",
+      "position": [
+        -202,
+        115,
+        5695
+      ],
+      "radius": 40,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_48"
+    },
+    {
+      "id": "dynamo_cluster_49",
+      "region_id": "dynamo",
+      "position": [
+        -78,
+        115,
+        5704
+      ],
+      "radius": 28,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_49"
+    },
+    {
+      "id": "dynamo_cluster_50",
+      "region_id": "dynamo",
+      "position": [
+        67,
+        115,
+        5695
+      ],
+      "radius": 32,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_50"
+    },
+    {
+      "id": "dynamo_cluster_51",
+      "region_id": "dynamo",
+      "position": [
+        -509,
+        115,
+        5744
+      ],
+      "radius": 36,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_51"
+    },
+    {
+      "id": "dynamo_cluster_52",
+      "region_id": "dynamo",
+      "position": [
+        -363,
+        115,
+        5771
+      ],
+      "radius": 40,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_52"
+    },
+    {
+      "id": "dynamo_cluster_53",
+      "region_id": "dynamo",
+      "position": [
+        -240,
+        115,
+        5744
+      ],
+      "radius": 28,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_53"
+    },
+    {
+      "id": "dynamo_cluster_54",
+      "region_id": "dynamo",
+      "position": [
+        -116,
+        115,
+        5753
+      ],
+      "radius": 32,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_54"
+    },
+    {
+      "id": "dynamo_cluster_55",
+      "region_id": "dynamo",
+      "position": [
+        29,
+        115,
+        5744
+      ],
+      "radius": 36,
+      "calm_table_id": "dynamo_calm",
+      "surge_table_id": "dynamo_surge",
+      "replacement_point": "wild_clusters.dynamo_cluster_55"
+    }
+  ],
+  "named_encounters": [
+    {
+      "id": "hollows_alpha",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -520,
+        25,
+        1660
+      ],
+      "level": 38,
+      "behavior_profile": "CHARGER",
+      "placeholder_species": "sparkit",
+      "replacement_point": "named_encounters.hollows_alpha_placeholder",
+      "catchable": true,
+      "once_only": true
+    },
+    {
+      "id": "capacitor_alpha",
+      "region_id": "conductor_run",
+      "position": [
+        -1080,
+        86,
+        3020
+      ],
+      "level": 40,
+      "behavior_profile": "DIVER",
+      "placeholder_species": "stormtrail",
+      "replacement_point": "named_encounters.capacitor_alpha_placeholder",
+      "catchable": true,
+      "once_only": true
+    },
+    {
+      "id": "crown_guardian",
+      "region_id": "hollow_crown",
+      "position": [
+        700,
+        74,
+        2700
+      ],
+      "level": 41,
+      "behavior_profile": "WALL",
+      "placeholder_species": "mosshell",
+      "replacement_point": "named_encounters.crown_guardian_placeholder",
+      "catchable": true,
+      "once_only": true
+    },
+    {
+      "id": "old_rodfolk_hall_guardian",
+      "region_id": "deepwood",
+      "position": [
+        -1590,
+        57,
+        4370
+      ],
+      "level": 43,
+      "behavior_profile": "ACE",
+      "placeholder_species": "frostclaw",
+      "replacement_point": "named_encounters.old_rodfolk_hall_guardian_placeholder",
+      "catchable": true,
+      "once_only": true
+    },
+    {
+      "id": "blackwater_elder",
+      "region_id": "deepwood",
+      "position": [
+        -150,
+        65,
+        4460
+      ],
+      "level": 43,
+      "behavior_profile": "CURRENT",
+      "placeholder_species": "riftfrill",
+      "replacement_point": "named_encounters.blackwater_elder_placeholder",
+      "catchable": true,
+      "once_only": true
+    },
+    {
+      "id": "glass_field_alpha",
+      "region_id": "dynamo",
+      "position": [
+        -310,
+        100,
+        5050
+      ],
+      "level": 42,
+      "behavior_profile": "CHARGER",
+      "placeholder_species": "ashtusk",
+      "replacement_point": "named_encounters.glass_field_alpha_placeholder",
+      "catchable": true,
+      "once_only": true
+    }
+  ],
+  "legendary_placeholder": {
+    "id": "stormheart_placeholder",
+    "region_id": "dynamo",
+    "position": [
+      -100,
+      260,
+      5470
+    ],
+    "level": 44,
+    "placeholder_species": "sparkit",
+    "scale": 1.8,
+    "colourway": "alpha_stormheart",
+    "replacement_point": "legendary_placeholder.stormheart_placeholder",
+    "catchable": true,
+    "five_slot": true
+  }
+}

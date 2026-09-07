@@ -125,6 +125,48 @@ func _ready() -> void:
 		player.process_mode = Node.PROCESS_MODE_INHERIT
 		if not pending.is_empty():
 			game.call("complete_realm_entry",REALM_ID)
+	var chapter := preload("res://scripts/world/stormwood_chapter.gd").new()
+	chapter.name = "StormwoodChapter"
+	add_child(chapter)
+	chapter.mount(self)
+	var combat := preload("res://scripts/world/stormwood_combat_runtime.gd").new()
+	combat.name = "StormwoodCombatRuntime"
+	add_child(combat)
+	combat.mount(self)
+	var pickups := preload("res://scripts/world/stormwood_pickup_runtime.gd").new()
+	pickups.name = "StormwoodPickups"
+	add_child(pickups)
+	pickups.mount(self)
+	var camps := preload("res://scripts/world/stormwood_camps.gd").new()
+	camps.name = "StormwoodCampsRuntime"
+	add_child(camps)
+	camps.mount(self)
+	if not simulation_only:
+		get_node("PlayerDeath").configure_recovery(camps.recovery_camps(self), Callable(self, "ground_height_near"))
+	if not simulation_only:
+		var look := preload("res://scripts/world/world_look.gd").new()
+		look.name = "WorldLook"
+		look.sun_path = NodePath("../Sun")
+		look.environment_path = NodePath("../WorldEnvironment")
+		add_child(look)
+	var surge := preload("res://scripts/world/stormwood_surge.gd").new()
+	surge.name = "StormwoodSurge"
+	add_child(surge)
+	var lightning := preload("res://scripts/world/stormwood_lightning.gd").new()
+	lightning.name = "StormwoodLightning"
+	add_child(lightning)
+	var arches := preload("res://scripts/world/stormwood_arch_runtime.gd").new()
+	arches.name = "StormglassArches"
+	add_child(arches)
+	arches.mount(self)
+	var harvests := preload("res://scripts/world/stormwood_harvest_runtime.gd").new()
+	harvests.name = "StormwoodHarvests"
+	add_child(harvests)
+	harvests.mount(self)
+	var rods := preload("res://scripts/world/stormwood_rod_stations.gd").new()
+	rods.name = "StormwoodRodStations"
+	add_child(rods)
+	rods.mount(self)
 	_ready_complete = true
 	add_to_group("progression_restore")
 	print("STORMWOOD BUILD ",budget.call("summary"))
