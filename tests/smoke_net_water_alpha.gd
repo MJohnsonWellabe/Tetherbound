@@ -82,6 +82,14 @@ func _run() -> void:
 	client = await probe(1, "water_alpha")
 	check(not client.stone, "An unfinished real fight grants no premature Stone")
 	check((await step(1, "leave")).get("verdict") == "PASS", "Client exits production session during the Alpha fight")
+	for attempt in 120:
+		host = await probe(0, "water_alpha")
+		if host.get("record", {}).get("participants", {}).is_empty():
+			break
+		await create_timer(0.1).timeout
+	check(host.get("record", {}).get("participants", {}).is_empty(), "Host removes departed Alpha participant")
+	check(not host.get("has_target", true), "Departed swimmer is no longer a live Alpha target")
+	check(int(host.get("catch_owner", -1)) == 0, "Departed participant leaves no capture claim lock")
 	quit(await finish())
 
 func vector(raw: Array) -> Vector3:
