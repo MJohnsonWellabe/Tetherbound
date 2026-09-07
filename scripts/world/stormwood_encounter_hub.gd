@@ -44,6 +44,9 @@ func dispatch(peer: int, intent: Dictionary) -> void:
 		var dynamo := world.get_node_or_null("StormwoodDynamo")
 		if dynamo != null:
 			dynamo.call("send_snapshot", peer)
+		var ending := world.get_node_or_null("StormwoodEnding")
+		if ending != null:
+			ending.call("send_snapshot", peer)
 		return
 	var id := str(intent.get("trainer_id", ""))
 	if kind == "start":
@@ -53,6 +56,11 @@ func dispatch(peer: int, intent: Dictionary) -> void:
 		var dynamo := world.get_node_or_null("StormwoodDynamo")
 		if dynamo != null:
 			dynamo.call("dispatch", peer, intent)
+		return
+	if kind.begins_with("ending_"):
+		var ending := world.get_node_or_null("StormwoodEnding")
+		if ending != null:
+			ending.call("dispatch", peer, intent)
 		return
 	var fight: Node = fights.get(id)
 	if not is_instance_valid(fight):
@@ -182,6 +190,11 @@ func _receive(event: Dictionary) -> void:
 		var dynamo := world.get_node_or_null("StormwoodDynamo")
 		if dynamo != null:
 			dynamo.call("receive", event)
+		return
+	if kind.begins_with("ending_"):
+		var ending := world.get_node_or_null("StormwoodEnding")
+		if ending != null:
+			ending.call("receive", event)
 		return
 	if kind == "start_refused":
 		last_start_refusal = event.duplicate(true)

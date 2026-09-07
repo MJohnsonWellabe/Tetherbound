@@ -676,6 +676,45 @@
         "Step forward when you are ready to settle the question by creature and ground. We will keep this place ready for the next traveler."
       ]
     },
+    "stormwood_stormheart_release": {
+      "speaker": "Captain Marrow",
+      "portrait": "res://assets/ui/portraits/captain_a.png",
+      "state": "finale",
+      "requires_flags": [
+        "stormwood:marrow_defeated"
+      ],
+      "lines": [
+        "Captain Marrow: The last conduit is gone. I called this storm a shield because I could not bear to name its prisoner.",
+        "The containment arcs break. The Stormheart steps out under its own power, and the Long Storm spends its final thunder.",
+        "For the first time in years, the canopy answers with rain instead of lightning."
+      ]
+    },
+    "stormwood_stormheart_offer": {
+      "speaker": "The Stormheart",
+      "portrait": "res://assets/ui/portraits/creatures/fulgocobra.png",
+      "state": "finale",
+      "requires_flags": [
+        "stormwood:legendary_freed"
+      ],
+      "lines": [
+        "The Stormheart lowers its crown of sparks and crosses the ruined ring to you. This is an offer, not another tether.",
+        "If your belt already holds five companions, accepting means choosing one farewell. You may also keep the five who carried you here and let the Stormheart walk free.",
+        "The Spark it guarded is yours either way. Carry it to the empty shrine at Lantern Hollow."
+      ]
+    },
+    "stormwood_waterward_aftermath": {
+      "speaker": "The Stormheart",
+      "portrait": "res://assets/ui/portraits/creatures/fulgocobra.png",
+      "state": "aftermath",
+      "requires_flags": [
+        "stormwood:waterward_revealed"
+      ],
+      "lines": [
+        "Livewire settles into the shrine behind you: while the Spark is active, every creature move recovers twenty-five percent faster. Activating another relic releases it.",
+        "From the Dynamo's high platform, the broken storm no longer hides the sea. Islands stand beyond the bright water, and an old route descends toward their first shore.",
+        "The Waterward route is charted, and the Water key is yours."
+      ]
+    },
     "stormwood_crown_caretaker_neri_arrival": {
       "speaker": "Neri",
       "portrait": "res://assets/ui/portraits/villager_female.png",

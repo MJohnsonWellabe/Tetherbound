@@ -137,6 +137,10 @@ func _ready() -> void:
 	dynamo.name = "StormwoodDynamo"
 	add_child(dynamo)
 	dynamo.mount(self)
+	var ending := preload("res://scripts/world/stormwood_ending.gd").new()
+	ending.name = "StormwoodEnding"
+	add_child(ending)
+	ending.mount(self)
 	var pickups := preload("res://scripts/world/stormwood_pickup_runtime.gd").new()
 	pickups.name = "StormwoodPickups"
 	add_child(pickups)
