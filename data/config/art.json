@@ -76,6 +76,29 @@
     },
     "animation_libraries": []
   },
+  "lyra": {
+    "_comment": "Main-character choice, board docs/art/reference/23_Lyra_Character_Board.png. Her first two generations both failed Meshy's humanoid auto-rig outright ('Pose estimation failed') because the reference art's arms sat close enough to the torso that the pose estimator could not read the shoulder/elbow joints -- confirmed by rendering the regenerated model and visually checking the pose, not assumed. Fixed on the 3rd generation with a new owner-supplied reference board whose turnaround actually draws the arms away from the torso (a real pose change in the source art, not a prompt reword -- text alone did not move a baked-in pose on the 2nd attempt). Rigged via Meshy's humanoid auto-rig at the default 1.7m, clips authored by the same animate_humanoid.py pass as kael/sera/the trainer -- identical clip names and identical frame counts/timing, so tool_swing and gait_reference_speeds are carried over unchanged rather than re-measured.",
+    "model": "res://assets/characters/lyra/lyra_lod0.glb",
+    "height": 1.7,
+    "model_yaw": 0.0,
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw",
+      "chop": "chop"
+    },
+    "tool_swing": {
+      "seconds": 0.625,
+      "impact_fraction": 0.6
+    },
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
+    "animation_libraries": []
+  },
   "sky": {
     "_comment": "Mid-morning, high summer, clear. Taken from the key art board rather than invented: a warm low-contrast sky over saturated grass is most of what makes the reference read as inviting rather than as a tech demo.",
     "top_colour": "#3b6f93",

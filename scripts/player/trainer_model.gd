@@ -64,10 +64,6 @@ func _ready() -> void:
 	var player_state := get_node_or_null(^"/root/PlayerState")
 	if player_state != null:
 		chosen = str(player_state.get("chosen_character"))
-	# Lyra has a portrait for the title screen's character-select step but no
-	# rigged body yet (Meshy's pose estimator rejects her arms-at-sides pose --
-	# see docs/art/BIOME_2_3_4_CREATURE_ROSTER.md), so a choice of "lyra" falls
-	# back to the original trainer body rather than building nothing.
 	if chosen.is_empty() or not build(chosen):
 		if chosen != "trainer":
 			push_warning("no '%s' body (falling back to trainer)" % chosen)

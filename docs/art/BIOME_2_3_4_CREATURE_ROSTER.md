@@ -186,22 +186,30 @@ Kael and Sera are rigged, animated, and wired into `data/config/art.json`
 under their own keys (`kael`, `sera`) — picking them on the title screen's
 character-select step actually swaps the player's in-game body.
 
-**Lyra's rig is still blocked, confirmed a reference-art limitation rather
-than a pipeline bug.** Meshy's humanoid auto-rigger fails on her with "Pose
-estimation failed" because her arms sit close enough to her torso that the
-pose estimator can't read the joints. This pass tried the fix that seemed
-most promising short of new art: the prompt was rewritten with explicit,
-repeated pose-correction language ("BOTH ARMS HELD CLEARLY AWAY FROM THE
-TORSO WITH VISIBLE DAYLIGHT BETWEEN EACH ARM AND THE BODY... a relaxed
-A-pose, not arms at the sides") and the model was regenerated from scratch.
-The rig attempt on the new generation **still fails with the identical
-error**, and a rendered turntable of the regenerated model confirms why: her
-arms are still close to her sides with only a slight bend at the elbow, not
-the separated A-pose the prompt asked for. This matches this project's own
-established lesson that in image-to-3D reconstruction, the reference image's
-actual drawn pose overrides text instructions — text alone cannot correct a
-pose that is baked into the source art. Fixing this needs a genuinely
-redrawn reference image with the arms visibly away from the torso, not
-another prompt or rig attempt on the same art. This does not block using her
-portrait art in the selection UI; picking her currently falls back to the
-trainer body.
+**Lyra's rig is fixed.** The first two generations both failed Meshy's
+humanoid auto-rigger with "Pose estimation failed" because her arms sat
+close enough to her torso that the pose estimator could not read the
+shoulder/elbow joints. The first fix attempt tried prompt text alone
+("BOTH ARMS HELD CLEARLY AWAY FROM THE TORSO...") and still failed
+identically — a rendered turntable of that regeneration confirmed why: her
+arms were still close to her sides, matching this project's established
+lesson that the reference image's actual drawn pose overrides prompt text in
+image-to-3D reconstruction. The fix that actually worked was a new
+owner-supplied reference board whose front/3-quarter/side/back turnaround
+genuinely draws her arms away from her torso — a real pose change in the
+source pixels, not a reworded prompt. Cropped into the usual
+front/side/back/three_quarter set (the old face-closeup `head.png` was
+retired to stay under Meshy's 4-image cap; the four full-body views matter
+more for a pose fix than a face crop does), regenerated, and the auto-rig
+succeeded on the first attempt this time: a real 24-bone humanoid skeleton
+(hips/spine chain, both arms, both legs, neck/head), confirmed via a
+Blender turntable of both the raw rig and the animated result (clean
+skinning, no tearing at the joints). Animated with the same
+`animate_humanoid.py` pass as Kael/Sera/the trainer (idle/walk/sprint/jump/
+throw/chop, identical clip names), installed at
+`assets/characters/lyra/lyra_lod0.glb`, and wired into `data/config/art.json`
+under a `lyra` key. Picking her on the title screen's character-select step
+now builds her real body instead of falling back to the trainer — confirmed
+by loading `art.json`'s `lyra` entry straight through Godot's resource
+loader and checking the `AnimationPlayer` resolves all six clip names, the
+same check used for every creature in this document.
