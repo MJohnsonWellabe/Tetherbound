@@ -152,6 +152,9 @@ func _guard_holds(guard: Dictionary) -> bool:
 	for flag: String in guard.get("requires_world_flags", []):
 		if not LEDGER.world_flag(self, flag):
 			return false
+	for flag: String in guard.get("unless_world_flags", []):
+		if LEDGER.world_flag(self, flag):
+			return false
 	for flag: String in guard.get("requires_flags", []):
 		if not game.get("progression").has(flag):
 			return false

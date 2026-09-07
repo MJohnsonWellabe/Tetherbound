@@ -21,6 +21,17 @@
       "display_name": "Wings of Cloudreach",
       "earned_flag": "realm_heart_cloudreach_earned"
     },
+    "water": {
+      "display_name": "Tideglass Compass",
+      "earned_flag": "realm_relic_water_earned",
+      "placed_flag": "realm_relic_water_placed",
+      "power": {
+        "display_name": "Tidal Guard",
+        "description": "Reduces incoming creature damage by 10%.",
+        "_comment": "Owner-set starting blessing: 10% damage reduction. Tune this multiplier; 0.9 means damage received is 90% of normal. This relic shares the single-active realm power slot.",
+        "incoming_damage_multiplier": 0.9
+      }
+    },
     "stormwood": {
       "placed_flag": "realm_heart_stormwood_placed",
       "power": {

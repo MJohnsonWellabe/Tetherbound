@@ -200,7 +200,8 @@ func water_depth_at(position: Vector3) -> float:
 func current_at(position: Vector3, liberated: bool = false) -> Vector3:
 	if veilfall != null and veilfall.contains_interior(position):
 		return Vector3.ZERO
-	return currents.sample(position, liberated).velocity
+	var restored: bool = get_node("/root/Game").world.flags.has("water_currents_restored")
+	return currents.sample(position, liberated or restored).velocity
 
 
 func entry_anchor(_entry_id: String = "from_stormwood") -> Vector3:

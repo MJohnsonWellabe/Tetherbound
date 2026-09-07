@@ -55,6 +55,10 @@ func _on_dialogue_request(event: String, npc_id: String, peer: int) -> void:
 		"water:water_swim_saddle_recipe_taught":
 			if apply_personal_event(_game.local.flags, "saddle_taught", "water"):
 				_game.push_world_message("Swim Saddle recipe learned. Craft it at a workbench.")
+		"water:water_guardian_offer_requested":
+			var veilfall := world.get_node_or_null("WaterVeilfall")
+			if veilfall != null:
+				veilfall.request_guardian_offer()
 
 
 func _physics_process(_delta: float) -> void:

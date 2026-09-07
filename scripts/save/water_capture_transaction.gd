@@ -46,7 +46,7 @@ static func settle(game: Object, claim: Dictionary, pending: RefCounted, release
 	elif not party.add(pending):
 		return {"ok": false, "reason": "The capture could not join the party."}
 	flags.set_flag(receipt)
-	if skills != null:
+	if skills != null and str(claim.get("source", "")) != "guardian":
 		preload("res://scripts/player/skills_activity.gd").new(skills).record_catch(id, true, true)
 	if not game.save_system.save_character(game, str(game.local.character_id)):
 		# No await occurs between mutation, persistence and rollback. Assigning

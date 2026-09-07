@@ -22,6 +22,7 @@
     },
     {
       "conversation": "water_edda_guardian_offer",
+      "unless_world_flags": ["water_guardian_claimed", "water_guardian_settled"],
       "requires_world_flags": [
         "water_guardian_freed"
       ],

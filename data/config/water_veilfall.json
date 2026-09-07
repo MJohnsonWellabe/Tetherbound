@@ -29,7 +29,11 @@
   "captain_encounter_id": "water_trainer_nerissa",
   "captain_defeat_flag": "water_captain_nerissa_defeated",
   "captain_requires": ["water_veilfall_return_opened"],
-  "guardian_position": [0.0, 0.0, 113.0],
+  "guardian_species_id": "water_abyssal_guardian",
+  "guardian_level": 55,
+  "relic_landmark_id": "salt_crown_shrine",
+  "guardian_position": [0.0, 0.0, 108.0],
+  "guardian_freed_position": [-10.0, 0.0, 108.0],
   "crystal_position": [0.0, 5.0, 113.0],
   "colours": {"stone": "#4c5857", "floor": "#77817a", "metal": "#697676", "brass": "#96724d", "banner": "#345e84", "channel": "#347c89", "crystal": "#a6dce5"},
   "_comment_scope": "Two physical world-authority controls open real grilles. The captain and Guardian ceremony are required integration; this geometry/config alone does not complete either. No boats, diving, oxygen or new humanoids."

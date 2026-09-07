@@ -25,6 +25,8 @@
       "water_dock_shellwatch_residents_freed_and_pump_disabled",
       "water_dock_sluice_isle_both_controls_disabled",
       "water_guardian_freed",
+      "water_guardian_claimed",
+      "water_guardian_settled",
       "water_swim_lesson_complete",
       "water_shellwatch_residents_freed",
       "water_shellwatch_pump_disabled",
@@ -138,6 +140,8 @@
       "realm_heart_cloudreach_placed",
       "realm_heart_stormwood_earned",
       "realm_heart_stormwood_placed",
+      "realm_relic_water_earned",
+      "realm_relic_water_placed",
       "stormward_route_revealed",
       "cloudreach_reward_retargeted_stormwood"
     ],

@@ -17,6 +17,10 @@ var _gates: Dictionary = {}
 var _entry_prompt: Node3D
 var _exit_prompt: Node3D
 var _last_flags_revision := -1
+var _guardian: Node3D
+var _crystal: Node3D
+var _guardian_prompt: Node3D
+var relic_shrine: Node3D
 
 func build(realm: Node3D) -> void:
 	world = realm
@@ -57,7 +61,9 @@ func build(realm: Node3D) -> void:
 			_box(barrier, Vector3(x, height * 0.5, 0), Vector3(0.3, height, 0.4), Color(rules.colours.metal), false)
 		_gates[str(gate.opens_with)] = barrier
 	_build_heart_chamber()
+	_build_guardian()
 	_place_captain()
+	_build_relic_shrine()
 	ready_for_intents = true
 	_refresh()
 
@@ -145,6 +151,7 @@ func _build_waterfall() -> void:
 
 func _build_heart_chamber() -> void:
 	var crystal := MeshInstance3D.new()
+	_crystal = crystal
 	crystal.name = "CaptiveHeartChamberCrystal"
 	var prism := PrismMesh.new()
 	prism.size = Vector3(5, 10, 5)
@@ -160,6 +167,57 @@ func _build_heart_chamber() -> void:
 	for side in [-1, 1]:
 		_box(interior, Vector3(side * 18, 7, 105), Vector3(0.12, 6, 3), Color(rules.colours.banner), false)
 		_box(interior, Vector3(side * 7, 1, 113), Vector3(2, 2, 3), Color(rules.colours.metal), true)
+
+func _build_guardian() -> void:
+	_guardian = preload("res://scenes/creatures/creature.tscn").instantiate()
+	_guardian.set_script(preload("res://scripts/creatures/creature_body.gd"))
+	_guardian.name = "CaptiveAbyssalGuardian"
+	interior.add_child(_guardian)
+	_guardian.setup(str(rules.guardian_species_id))
+	_guardian.position = _v(rules.guardian_position)
+	_guardian.rotation.y = PI
+	_guardian.collision_layer = 0
+	_guardian.collision_mask = 0
+	_guardian.set_physics_process(false)
+	_guardian_prompt = _prompt(interior, "Invite the Deep Watcher", _v(rules.guardian_freed_position) + Vector3(0, 1.4, -2.5), request_guardian_offer)
+
+func _build_relic_shrine() -> void:
+	var config: Variant = world.get("config")
+	if not config is Dictionary:
+		return
+	for landmark: Dictionary in config.get("landmarks", []):
+		if str(landmark.id) != str(rules.relic_landmark_id):
+			continue
+		relic_shrine = preload("res://scripts/world/realm_heart_shrine.gd").new()
+		relic_shrine.name = "TideglassCompassShrine"
+		relic_shrine.presentation_enabled = not world.simulation_only
+		relic_shrine.setup("water", "Tideglass Compass", "water")
+		world.add_child(relic_shrine)
+		relic_shrine.global_position = _v(landmark.position)
+		relic_shrine.global_position.y = world.ground_height_at(relic_shrine.global_position.x, relic_shrine.global_position.z)
+		if world.simulation_only:
+			relic_shrine.visible = false
+		return
+
+func request_guardian_offer() -> void:
+	var result: Dictionary = _transport.submit({"kind": "guardian_offer"})
+	if not result.get("ok", false) and not result.get("pending", false):
+		_game.push_world_message(str(result.get("reason", "The Guardian is not ready.")))
+
+func _host_guardian_offer(actor: Dictionary) -> Dictionary:
+	var position: Vector3 = actor.get("position", Vector3.INF)
+	var nearby := position.distance_to(_guardian_prompt.global_position) <= float(rules.interact_radius_m)
+	var chapter := world.get_node_or_null("WaterChapter")
+	if chapter != null:
+		var edda: Node3D = chapter.npc_bodies.get("water_edda")
+		nearby = nearby or (edda != null and position.distance_to(edda.global_position) <= 5.0)
+	if str(actor.get("realm", "")) != "water" or not nearby:
+		return {"ok": false, "reason": "Stand beside the freed Guardian or speak with Edda."}
+	var creature: RefCounted = preload("res://scripts/world/trainer_npc.gd").creature_for({"species": str(rules.guardian_species_id), "level": int(rules.guardian_level)})
+	var result: Dictionary = preload("res://scripts/world/water_guardian_reward.gd").begin(_game, _game.ledger.ledger, str(actor.get("character_id", "")), creature)
+	if result.get("ok", false) and result.has("delta"):
+		_game.ledger.publish_journaled_delta(result.delta)
+	return result
 
 func _prompt(parent: Node3D, label: String, at: Vector3, action: Callable) -> Node3D:
 	var prompt := INTERACT.new()
@@ -206,6 +264,8 @@ func _activate(id: String) -> void:
 		_game.push_world_message(str(verdict.get("reason", "The mechanism is not ready.")))
 
 func host_commit(intent: Dictionary, _peer: int, actor: Dictionary) -> Dictionary:
+	if _game.is_host() and str(intent.get("kind", "")) == "guardian_offer":
+		return _host_guardian_offer(actor)
 	if not _game.is_host() or str(intent.get("kind", "")) != "veilfall_control":
 		return {"ok": false, "reason": "The realm authority cannot perform that action."}
 	var id := str(intent.get("control_id", ""))
@@ -220,6 +280,11 @@ func host_commit(intent: Dictionary, _peer: int, actor: Dictionary) -> Dictionar
 		for flag: String in control.requires:
 			if not _game.world.flags.has(flag):
 				return {"ok": false, "reason": "The upstream tether is still holding this mechanism."}
+		if str(control.flag) == "water_guardian_freed":
+			var release: Dictionary = preload("res://scripts/world/water_guardian_reward.gd").release(_game, _game.ledger.ledger)
+			if release.get("ok", false):
+				_game.ledger.publish_journaled_delta(release.delta)
+			return release
 		return _game.ledger.submit({"kind": "set_world_flag", "realm": "water", "id": str(control.flag), "value": true})
 	return {"ok": false}
 
@@ -250,6 +315,10 @@ func _process(_delta: float) -> void:
 	if not ready_for_intents:
 		return
 	_refresh()
+	if _guardian != null and interior.visible:
+		var animator: RefCounted = _guardian.get("_animator")
+		if animator != null:
+			animator.tick(_delta, 0.0, 1.0)
 
 func _refresh() -> void:
 	if interior == null:
@@ -258,11 +327,18 @@ func _refresh() -> void:
 	interior.visible = inside
 	_entry_prompt.enabled = not world.simulation_only and not inside
 	_exit_prompt.enabled = inside
+	if _guardian_prompt != null:
+		_guardian_prompt.enabled = inside and _game.world.flags.has("water_guardian_freed") and not _game.world.flags.has("water_guardian_claimed")
 	for control: Dictionary in rules.controls:
 		_controls[str(control.id)].enabled = inside and not _game.world.flags.has(str(control.flag))
 	if _last_flags_revision == int(_game.world.flags.revision):
 		return
 	_last_flags_revision = int(_game.world.flags.revision)
+	if _guardian != null:
+		var freed: bool = _game.world.flags.has("water_guardian_freed")
+		_guardian.position = _v(rules.guardian_freed_position if freed else rules.guardian_position)
+		_crystal.visible = not freed
+		_guardian.visible = not _game.world.flags.has("water_guardian_settled")
 	for flag: String in _gates:
 		var gate: StaticBody3D = _gates[flag]
 		var opened: bool = _game.world.flags.has(flag)

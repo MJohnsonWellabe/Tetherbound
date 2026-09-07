@@ -48,7 +48,11 @@ func receive_claim(claim: Dictionary) -> void:
 			or str(claim.get("world_id", "")) != game.world.world_id or str(claim.get("id", "")).is_empty():
 		return
 	if game.local.flags.has("water_capture_receipt:" + str(claim.id)):
+		if str(_pending.get("id", "")) == str(claim.id):
+			_pending = {}
 		_acknowledge(str(claim.id))
+		return
+	if str(_active.get("id", "")) == str(claim.id):
 		return
 	_pending = claim.duplicate(true)
 
@@ -56,6 +60,11 @@ func _offer_pending() -> void:
 	if _pending.is_empty() or not _active.is_empty():
 		return
 	var game := get_node("/root/Game")
+	if game.local.flags.has("water_capture_receipt:" + str(_pending.get("id", ""))):
+		var received_id := str(_pending.id)
+		_pending = {}
+		_acknowledge(received_id)
+		return
 	if game.current_realm != "water" or game.pending_catch != null \
 			or str(_pending.world_id) != game.world.world_id or str(_pending.character_id) != game.local.character_id:
 		return
@@ -113,6 +122,25 @@ func _accept_ack(peer: int, id: String) -> void:
 	var actor: Dictionary = get_parent()._water_actor_context(peer, {})
 	if claim.is_empty() or str(actor.get("character_id", "")) != str(claim.character_id):
 		return
+	var before: Dictionary = game.world.save_data()
+	var revision: int = game.world.revision
+	var ledger: RefCounted = get_parent().ledger
+	var sequence: int = ledger.seq
+	var ops: Array = []
+	if str(claim.get("source", "")) == "guardian":
+		for flag: String in ["water_guardian_settled", "water_currents_restored", "realm_relic_water_earned"]:
+			var verdict: Dictionary = ledger.commit({"kind": "set_world_flag", "realm": "water", "id": flag}, 1)
+			if not verdict.get("ok", false):
+				game.world.load_data(before)
+				game.world.revision = revision
+				ledger.seq = sequence
+				return
+			ops.append_array(verdict.delta.ops)
 	game.world.water_capture_claims.erase(id)
 	if not game.save_system.save_world(game, game.world.world_id):
-		game.world.water_capture_claims[id] = claim
+		game.world.load_data(before)
+		game.world.revision = revision
+		ledger.seq = sequence
+		return
+	if not ops.is_empty():
+		get_parent().publish_journaled_delta({"seq": ledger.seq, "realm": "water", "ops": ops})

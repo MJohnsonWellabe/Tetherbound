@@ -1461,13 +1461,24 @@ func _host_resolve_enemy_strike_for_a_participant(cfg: Dictionary, origin: Vecto
 ## everything here is the performance of it, and it is deliberately the same
 ## presentation the solo path plays (`_flash_at`, the two signals, the faint
 ## handling) so being in a session does not change what a blow looks like.
+func _incoming_owned_damage(amount: float) -> float:
+	if not is_inside_tree():
+		return amount
+	var game := get_node_or_null("/root/Game")
+	if game == null or game.get("realm_hearts") == null:
+		return amount
+	var power: Dictionary = game.realm_hearts.active_power()
+	return amount * clampf(float(power.get("incoming_damage_multiplier", 1.0)), 0.0, 1.0)
+
 func apply_host_enemy_hit(payload: Dictionary) -> void:
 	if state != State.ACTIVE or _ally_body == null:
 		return
 	var creature := active_creature()
 	if creature == null:
 		return
-	var damage := float(payload.get("damage", 0.0))
+	# Host rolls the base strike; this character's one active relic applies
+	# once at the owning health mutation, also for a host on another island.
+	var damage := _incoming_owned_damage(float(payload.get("damage", 0.0)))
 	var move_id := str(payload.get("move_id", ""))
 	var killed: bool = creature.take_damage(damage)
 	var facing: Vector3 = _ally_body.call("facing")
@@ -1879,6 +1890,7 @@ func _on_enemy_strike() -> void:
 		_enemy.effective_attack(prog_cfg), creature.effective_defence(prog_cfg, is_best, ability),
 		_rng.randf(), _moves.power(_enemy.move_quick), type_mult
 	)
+	damage = _incoming_owned_damage(damage)
 	var killed: bool = creature.take_damage(damage)
 	_ally_body.call("add_impulse", facing, float(cfg.get("lunge", 3.4)) * 0.4)
 	_ally_body.call("play_faint" if killed else "play_hit")
