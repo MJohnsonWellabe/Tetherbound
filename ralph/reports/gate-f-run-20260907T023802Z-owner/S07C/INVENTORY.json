@@ -1,0 +1,144 @@
+{
+  "blocked": "tools/capture_diag_minimal.gd left no capture_smoke.png in C:\\Users\\mattj\\AppData\\Local\\Tetherbound\\repo\\ralph\\reports\\gate-f-run-20260907T023802Z-owner\\S07C. run_segment.sh --capture writes one before it starts a segment, so its absence means this segment did not come through the capture path.",
+  "captures": {
+    "absent": 5,
+    "delegated": [],
+    "delegated_to": "",
+    "owes": [
+      "GF-10-RELAY-01",
+      "GF-21-WEATHER-03",
+      "GF-14-COMBAT-04c",
+      "GF-10-RELAY-02",
+      "GF-10-RELAY-03"
+    ],
+    "planned": 5,
+    "present": 0,
+    "rows": [
+      {
+        "action": "capture",
+        "bytes": 0,
+        "class": "10",
+        "exists": false,
+        "file": null,
+        "id": "GF-10-RELAY-01",
+        "intended_proof": "the river reads as a regional barrier",
+        "reason": "the step that would have written it never ran",
+        "step": "S07C-24"
+      },
+      {
+        "action": "capture",
+        "bytes": 0,
+        "class": "21",
+        "exists": false,
+        "file": null,
+        "id": "GF-21-WEATHER-03",
+        "intended_proof": "weather identity; palette holds",
+        "reason": "the step that would have written it never ran",
+        "step": "S07C-25"
+      },
+      {
+        "action": "capture",
+        "bytes": 0,
+        "class": "14",
+        "exists": false,
+        "file": null,
+        "id": "GF-14-COMBAT-04c",
+        "intended_proof": "per-case: band 3's representative fight",
+        "reason": "the step that would have written it never ran",
+        "step": "S07C-31"
+      },
+      {
+        "action": "capture",
+        "bytes": 0,
+        "class": "10",
+        "exists": false,
+        "file": null,
+        "id": "GF-10-RELAY-02",
+        "intended_proof": "Team Tether occupation escalation",
+        "reason": "the step that would have written it never ran",
+        "step": "S07C-40"
+      },
+      {
+        "action": "capture",
+        "bytes": 0,
+        "class": "10",
+        "exists": false,
+        "file": null,
+        "id": "GF-10-RELAY-03",
+        "intended_proof": "world visibly changes",
+        "reason": "the step that would have written it never ran",
+        "step": "S07C-66"
+      }
+    ]
+  },
+  "complete": false,
+  "cost": {
+    "frame_cost_s": 0.007802,
+    "reprices": []
+  },
+  "derailed": "",
+  "derailed_at": "",
+  "derails": [],
+  "disk": {
+    "applies": false,
+    "why": "no measured PNG size (the pre-flight self-test did not write one)"
+  },
+  "disk_actual": {
+    "frame_bytes": 0,
+    "largest_evidence_png_bytes": 0,
+    "preflight_self_test_png_bytes": 0,
+    "shot_bytes": 0,
+    "total_bytes": 0
+  },
+  "evidence_lane": "capture",
+  "frames": {
+    "absent": 0,
+    "absent_reasons": {},
+    "baseline_hz": 0.0,
+    "delegated_windows": [],
+    "written": 0
+  },
+  "git_check": "not run",
+  "harness_errors": [
+    "capture pre-flight BLOCKER: tools/capture_diag_minimal.gd left no capture_smoke.png in C:\\Users\\mattj\\AppData\\Local\\Tetherbound\\repo\\ralph\\reports\\gate-f-run-20260907T023802Z-owner\\S07C. run_segment.sh --capture writes one before it starts a segment, so its absence means this segment did not come through the capture path."
+  ],
+  "preflight": {
+    "allow_no_capture": false,
+    "capture_available": true,
+    "capture_lane": "",
+    "capture_requested": true,
+    "delegated_captures": 0,
+    "disk": {
+      "applies": false,
+      "why": "no measured PNG size (the pre-flight self-test did not write one)"
+    },
+    "display_server": "Windows",
+    "evidence_lane": "capture",
+    "freeze_record": {
+      "claim": "X11 under xvfb-run",
+      "from": "C:/Users/mattj/AppData/Local/Tetherbound/repo/ralph/reports/gate-f-candidate/RUN_METADATA.json",
+      "key": "display_server",
+      "lane": "(all lanes; the record declares none)"
+    },
+    "measured_frame_cost_s": 0.007802,
+    "planned_captures": 5,
+    "predicted_frames": 109241,
+    "predicted_segment_cost_s": 852.3,
+    "record_baseline_hz": 0.0,
+    "verdict": "BLOCKER",
+    "why": "tools/capture_diag_minimal.gd left no capture_smoke.png in C:\\Users\\mattj\\AppData\\Local\\Tetherbound\\repo\\ralph\\reports\\gate-f-run-20260907T023802Z-owner\\S07C. run_segment.sh --capture writes one before it starts a segment, so its absence means this segment did not come through the capture path."
+  },
+  "run_id": "gate-f-run-20260907T023802Z-owner",
+  "segment": "S07C",
+  "sha": "75bb1dc7db36fb4452a746410f45e9ac77699300",
+  "steps": {
+    "delegated": 0,
+    "fail": 0,
+    "pass": 0,
+    "ran": 0,
+    "refused": 0,
+    "skipped": 0,
+    "total": 72
+  },
+  "uncommittable": []
+}

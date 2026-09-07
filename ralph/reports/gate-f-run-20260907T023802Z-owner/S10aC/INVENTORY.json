@@ -1,0 +1,108 @@
+{
+  "blocked": "tools/capture_diag_minimal.gd left no capture_smoke.png in C:\\Users\\mattj\\AppData\\Local\\Tetherbound\\repo\\ralph\\reports\\gate-f-run-20260907T023802Z-owner\\S10aC. run_segment.sh --capture writes one before it starts a segment, so its absence means this segment did not come through the capture path.",
+  "captures": {
+    "absent": 2,
+    "delegated": [],
+    "delegated_to": "",
+    "owes": [
+      "GF-13-FINALE-01",
+      "GF-14-COMBAT-06"
+    ],
+    "planned": 2,
+    "present": 0,
+    "rows": [
+      {
+        "action": "capture",
+        "bytes": 0,
+        "class": "13",
+        "exists": false,
+        "file": null,
+        "id": "GF-13-FINALE-01",
+        "intended_proof": "occupation/industrialization read",
+        "reason": "the step that would have written it never ran",
+        "step": "S10aC-15"
+      },
+      {
+        "action": "capture",
+        "bytes": 0,
+        "class": "14",
+        "exists": false,
+        "file": null,
+        "id": "GF-14-COMBAT-06",
+        "intended_proof": "per-case: combat camera verified at battle start for every stronghold fight -- target_on_screen at t=0 and every switch",
+        "reason": "the step that would have written it never ran",
+        "step": "S10aC-21"
+      }
+    ]
+  },
+  "complete": false,
+  "cost": {
+    "frame_cost_s": 0.007795,
+    "reprices": []
+  },
+  "derailed": "",
+  "derailed_at": "",
+  "derails": [],
+  "disk": {
+    "applies": false,
+    "why": "no measured PNG size (the pre-flight self-test did not write one)"
+  },
+  "disk_actual": {
+    "frame_bytes": 0,
+    "largest_evidence_png_bytes": 0,
+    "preflight_self_test_png_bytes": 0,
+    "shot_bytes": 0,
+    "total_bytes": 0
+  },
+  "evidence_lane": "capture",
+  "frames": {
+    "absent": 0,
+    "absent_reasons": {},
+    "baseline_hz": 0.0,
+    "delegated_windows": [],
+    "written": 0
+  },
+  "git_check": "not run",
+  "harness_errors": [
+    "capture pre-flight BLOCKER: tools/capture_diag_minimal.gd left no capture_smoke.png in C:\\Users\\mattj\\AppData\\Local\\Tetherbound\\repo\\ralph\\reports\\gate-f-run-20260907T023802Z-owner\\S10aC. run_segment.sh --capture writes one before it starts a segment, so its absence means this segment did not come through the capture path."
+  ],
+  "preflight": {
+    "allow_no_capture": false,
+    "capture_available": true,
+    "capture_lane": "",
+    "capture_requested": true,
+    "delegated_captures": 0,
+    "disk": {
+      "applies": false,
+      "why": "no measured PNG size (the pre-flight self-test did not write one)"
+    },
+    "display_server": "Windows",
+    "evidence_lane": "capture",
+    "freeze_record": {
+      "claim": "X11 under xvfb-run",
+      "from": "C:/Users/mattj/AppData/Local/Tetherbound/repo/ralph/reports/gate-f-candidate/RUN_METADATA.json",
+      "key": "display_server",
+      "lane": "(all lanes; the record declares none)"
+    },
+    "measured_frame_cost_s": 0.007795,
+    "planned_captures": 2,
+    "predicted_frames": 23332,
+    "predicted_segment_cost_s": 181.9,
+    "record_baseline_hz": 0.0,
+    "verdict": "BLOCKER",
+    "why": "tools/capture_diag_minimal.gd left no capture_smoke.png in C:\\Users\\mattj\\AppData\\Local\\Tetherbound\\repo\\ralph\\reports\\gate-f-run-20260907T023802Z-owner\\S10aC. run_segment.sh --capture writes one before it starts a segment, so its absence means this segment did not come through the capture path."
+  },
+  "run_id": "gate-f-run-20260907T023802Z-owner",
+  "segment": "S10aC",
+  "sha": "75bb1dc7db36fb4452a746410f45e9ac77699300",
+  "steps": {
+    "delegated": 0,
+    "fail": 0,
+    "pass": 0,
+    "ran": 0,
+    "refused": 0,
+    "skipped": 0,
+    "total": 23
+  },
+  "uncommittable": []
+}

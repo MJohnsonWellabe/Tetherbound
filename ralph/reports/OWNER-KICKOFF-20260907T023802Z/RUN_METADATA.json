@@ -1,0 +1,17 @@
+﻿{
+    "machine":  "MATTSALLY",
+    "branch":  "main",
+    "godot":  "C:\\Users\\mattj\\AppData\\Local\\Tetherbound\\tools\\godot\\Godot_v4.7-stable_win64_console.exe",
+    "os":  "Microsoft Windows 11 Home",
+    "ram_gb":  12,
+    "cpu":  "AMD Ryzen Z1 Extreme                           ",
+    "grass_field":  true,
+    "sha":  "75bb1dc7db36fb4452a746410f45e9ac77699300",
+    "gpu":  "AMD Radeon Graphics (32.0.11021.3002)",
+    "only":  "",
+    "started_utc":  "2026-09-07T02:38:34.3779224Z",
+    "quick":  false,
+    "stamp":  "20260907T023802Z",
+    "resolution":  "1280x800",
+    "ffmpeg":  "C:\\Users\\mattj\\AppData\\Local\\Tetherbound\\tools\\ffmpeg\\ffmpeg-master-latest-win64-gpl\\bin\\ffmpeg.exe"
+}

@@ -1,0 +1,353 @@
+﻿Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+OpenGL API 3.3.0 Core Profile Context 24.10.21.03.240627 - Compatibility - Using Device: ATI Technologies Inc. - AMD Radeon Graphics
+
+[playground] spawned at 0.0, 2.9, 0.0
+[vegetation] grass field is on; 440646 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=218887 mark_harvestable=376 group_by_model=306 register_mesh_assets=119 build_batches_total=3191 (of which harvest_points[57770 nodes]=1771, initial_collision_stream[52661 solid]=149) update_mmis=573
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 3 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=RID(13013750906937) region_map=1024 entries
+[playground] scattered 385333 props in 36 batches (57770 harvestable, 0 already chopped, 389/52661 collision resident)
+[water] pond quads 2538, stream points 46, reeds 188, marginals 32, bank flowers 72, rocks 40, driftwood 5, lilypads 54, jetty 18, level -17.0
+[water] stream bank reeds 77, bank scrub 12
+[water] river quads 390, bank reeds 130, bank scrub 60
+[village] placed 25 structures
+[props] placed 267 props in 37 clusters (6 usable rest points)
+[village_npcs] placed 17 of 19
+[relay_site] placed 5 of 5
+[pond_npc] placed 1 of 1
+[trainers] placed 21 trainer(s)
+[quarry] 2 foundations, 4 pylons standing
+[relay] station at 350, 3760: 4 wall runs, 2 decks, 1 ramps, 10 pylons
+[river] 18 course segments, 18 recovery volumes
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+[playground] placed 139 harvest nodes
+[playground] placed 6 farm plots
+[warrens] cleared 660 scattered trees/rocks inside the 30m site radius
+[warrens] planted 104 pieces of ground cover around the site
+[warrens] placed 5 accent boulders around the mound
+[warrens] placed 3 mouth dome pieces (earth over the entrance)
+[warrens] placed 12 entrance dressing pieces (fern ring / hood)
+[warrens] placed 2 spoil mounds around the entrance
+[warrens] 181 pieces of interior rock across 5 chambers
+[warrens] 188 structural members across 5 chambers
+[approach-drain] 690 drained quads over the approach corridor
+[stronghold] approach ramp: 11.3m of rise over 40m (16 degrees)
+[stronghold] 407 structural members across 5 spaces
+[stronghold] hall massing exterior lift: 1.30x height on 17/18 module(s)
+[stronghold] massing grounded: 17 of 35 module foot shaft(s) to skirt y=-18.0
+[stronghold] waist: 3 inter-chamber gap(s) wrapped on both flanks
+[trainers] placed 3 trainer(s) for group 'stronghold'
+[stronghold] cleared 205 scattered prop(s) standing inside the five spaces
+[stronghold] 21 exterior omni light(s) at the Hall (budget 22), 11 of them flickering fires
+[stronghold] 5 spaces on the route (outer_works -> courtyard -> tether_approach -> warden_arena -> legendary_chamber), floor y=6.17, 3 gauntlet trainer(s), 15 approach pylon(s)
+[trainers] placed 1 trainer(s) for group 'stronghold_climax'
+[grass_field] now following rendering camera '@Camera3D@65118'
+  band1_00000m     (27.5, -16.0) -> res://shots_route_night/band1_00000m.png
+  band1_00080m     (10.5, 61.4) -> res://shots_route_night/band1_00080m.png
+  band1_00160m     (-16.1, 135.3) -> res://shots_route_night/band1_00160m.png
+  band1_00240m     (-59.5, 201.9) -> res://shots_route_night/band1_00240m.png
+  band1_00320m     (-112.6, 261.7) -> res://shots_route_night/band1_00320m.png
+  band1_00400m     (-180.5, 303.0) -> res://shots_route_night/band1_00400m.png
+  band1_00480m     (-250.8, 341.2) -> res://shots_route_night/band1_00480m.png
+  band1_00560m     (-321.2, 379.1) -> res://shots_route_night/band1_00560m.png
+  band1_00640m     (-379.3, 430.3) -> res://shots_route_night/band1_00640m.png
+  band1_00720m     (-422.2, 497.8) -> res://shots_route_night/band1_00720m.png
+  band1_00800m     (-378.8, 550.9) -> res://shots_route_night/band1_00800m.png
+  band1_00880m     (-313.9, 596.9) -> res://shots_route_night/band1_00880m.png
+  band1_00960m     (-240.4, 628.4) -> res://shots_route_night/band1_00960m.png
+  band1_01040m     (-166.3, 658.5) -> res://shots_route_night/band1_01040m.png
+  band1_01120m     (-91.0, 685.4) -> res://shots_route_night/band1_01120m.png
+  band1_01200m     (-16.4, 714.4) -> res://shots_route_night/band1_01200m.png
+  band1_01280m     (57.1, 745.9) -> res://shots_route_night/band1_01280m.png
+  band1_01360m     (129.5, 779.8) -> res://shots_route_night/band1_01360m.png
+  band1_01440m     (201.1, 815.5) -> res://shots_route_night/band1_01440m.png
+  band1_01520m     (270.6, 855.0) -> res://shots_route_night/band1_01520m.png
+  band1_01600m     (338.7, 896.9) -> res://shots_route_night/band1_01600m.png
+  band1_01680m     (389.5, 956.4) -> res://shots_route_night/band1_01680m.png
+  band1_01760m     (426.9, 1023.4) -> res://shots_route_night/band1_01760m.png
+  band1_01840m     (373.1, 1082.6) -> res://shots_route_night/band1_01840m.png
+  band1_01920m     (315.5, 1136.8) -> res://shots_route_night/band1_01920m.png
+  band1_02000m     (243.0, 1170.6) -> res://shots_route_night/band1_02000m.png
+  band1_02080m     (170.1, 1203.3) -> res://shots_route_night/band1_02080m.png
+  band1_02160m     (94.2, 1228.6) -> res://shots_route_night/band1_02160m.png
+  band1_02240m     (20.6, 1258.0) -> res://shots_route_night/band1_02240m.png
+  band1_02320m     (-39.9, 1310.1) -> res://shots_route_night/band1_02320m.png
+  band1_02400m     (0.7, 1357.2) -> res://shots_route_night/band1_02400m.png
+  band2_00000m     (0.0, 1360.0) -> res://shots_route_night/band2_00000m.png
+  band2_00080m     (49.1, 1423.1) -> res://shots_route_night/band2_00080m.png
+  band2_00160m     (106.8, 1477.6) -> res://shots_route_night/band2_00160m.png
+  band2_00240m     (170.8, 1525.6) -> res://shots_route_night/band2_00240m.png
+  band2_00320m     (229.6, 1579.6) -> res://shots_route_night/band2_00320m.png
+  band2_00400m     (286.2, 1636.2) -> res://shots_route_night/band2_00400m.png
+  band2_00480m     (335.0, 1698.9) -> res://shots_route_night/band2_00480m.png
+  band2_00560m     (378.3, 1766.2) -> res://shots_route_night/band2_00560m.png
+  band2_00640m     (383.2, 1836.1) -> res://shots_route_night/band2_00640m.png
+  band2_00720m     (349.3, 1908.6) -> res://shots_route_night/band2_00720m.png
+  band2_00800m     (301.4, 1969.0) -> res://shots_route_night/band2_00800m.png
+  band2_00880m     (234.9, 2013.4) -> res://shots_route_night/band2_00880m.png
+  band2_00960m     (167.4, 2056.3) -> res://shots_route_night/band2_00960m.png
+  band2_01040m     (95.9, 2092.1) -> res://shots_route_night/band2_01040m.png
+  band2_01120m     (24.3, 2127.8) -> res://shots_route_night/band2_01120m.png
+  band2_01200m     (-48.0, 2162.0) -> res://shots_route_night/band2_01200m.png
+  band2_01280m     (-120.4, 2196.1) -> res://shots_route_night/band2_01280m.png
+  band2_01360m     (-189.0, 2236.8) -> res://shots_route_night/band2_01360m.png
+  band2_01440m     (-254.9, 2282.1) -> res://shots_route_night/band2_01440m.png
+  band2_01520m     (-317.7, 2330.6) -> res://shots_route_night/band2_01520m.png
+  band2_01600m     (-365.1, 2395.1) -> res://shots_route_night/band2_01600m.png
+  band2_01680m     (-412.4, 2459.6) -> res://shots_route_night/band2_01680m.png
+  band2_01760m     (-387.1, 2528.5) -> res://shots_route_night/band2_01760m.png
+  band2_01840m     (-347.9, 2598.2) -> res://shots_route_night/band2_01840m.png
+  band2_01920m     (-293.8, 2654.1) -> res://shots_route_night/band2_01920m.png
+  band2_02000m     (-227.2, 2698.5) -> res://shots_route_night/band2_02000m.png
+  band2_02080m     (-161.7, 2744.4) -> res://shots_route_night/band2_02080m.png
+  band2_02160m     (-98.8, 2793.8) -> res://shots_route_night/band2_02160m.png
+  band2_02240m     (-36.2, 2843.5) -> res://shots_route_night/band2_02240m.png
+  band2_02320m     (22.6, 2897.8) -> res://shots_route_night/band2_02320m.png
+  band2_02400m     (81.4, 2952.0) -> res://shots_route_night/band2_02400m.png
+  band2_02480m     (74.6, 3026.5) -> res://shots_route_night/band2_02480m.png
+  band2_02560m     (51.8, 3102.4) -> res://shots_route_night/band2_02560m.png
+  band2_02640m     (7.4, 3168.9) -> res://shots_route_night/band2_02640m.png
+  band3_00000m     (0.0, 3180.0) -> res://shots_route_night/band3_00000m.png
+  band3_00080m     (-56.6, 3236.6) -> res://shots_route_night/band3_00080m.png
+  band3_00160m     (-111.6, 3294.1) -> res://shots_route_night/band3_00160m.png
+  band3_00240m     (-140.3, 3368.8) -> res://shots_route_night/band3_00240m.png
+  band3_00320m     (-142.2, 3437.8) -> res://shots_route_night/band3_00320m.png
+  band3_00400m     (-85.6, 3494.4) -> res://shots_route_night/band3_00400m.png
+  band3_00480m     (-21.4, 3540.6) -> res://shots_route_night/band3_00480m.png
+  band3_00560m     (49.2, 3578.2) -> res://shots_route_night/band3_00560m.png
+  band3_00640m     (120.2, 3615.1) -> res://shots_route_night/band3_00640m.png
+  band3_00720m     (191.7, 3650.9) -> res://shots_route_night/band3_00720m.png
+  band3_00800m     (259.8, 3692.3) -> res://shots_route_night/band3_00800m.png
+  band3_00880m     (323.8, 3740.3) -> res://shots_route_night/band3_00880m.png
+  band3_00960m     (328.9, 3802.2) -> res://shots_route_night/band3_00960m.png
+  band3_01040m     (293.1, 3873.8) -> res://shots_route_night/band3_01040m.png
+  band3_01120m     (235.3, 3923.9) -> res://shots_route_night/band3_01120m.png
+  band3_01200m     (164.7, 3961.5) -> res://shots_route_night/band3_01200m.png
+  band3_01280m     (93.6, 3998.2) -> res://shots_route_night/band3_01280m.png
+  band3_01360m     (22.1, 4034.0) -> res://shots_route_night/band3_01360m.png
+  band3_01440m     (-46.2, 4074.6) -> res://shots_route_night/band3_01440m.png
+  band3_01520m     (-105.6, 4128.2) -> res://shots_route_night/band3_01520m.png
+  band3_01600m     (-152.0, 4187.5) -> res://shots_route_night/band3_01600m.png
+  band3_01680m     (-138.6, 4264.6) -> res://shots_route_night/band3_01680m.png
+  band3_01760m     (-105.6, 4337.5) -> res://shots_route_night/band3_01760m.png
+  band3_01840m     (-49.4, 4392.8) -> res://shots_route_night/band3_01840m.png
+  band3_01920m     (11.7, 4444.5) -> res://shots_route_night/band3_01920m.png
+  band3_02000m     (72.8, 4496.2) -> res://shots_route_night/band3_02000m.png
+  band3_02080m     (133.8, 4547.9) -> res://shots_route_night/band3_02080m.png
+  band3_02160m     (142.4, 4612.2) -> res://shots_route_night/band3_02160m.png
+  band3_02240m     (111.6, 4686.1) -> res://shots_route_night/band3_02240m.png
+  band3_02320m     (46.1, 4730.7) -> res://shots_route_night/band3_02320m.png
+  band4_00000m     (0.0, 4760.0) -> res://shots_route_night/band4_00000m.png
+  band4_00080m     (-62.9, 4809.4) -> res://shots_route_night/band4_00080m.png
+  band4_00160m     (-125.8, 4858.9) -> res://shots_route_night/band4_00160m.png
+  band4_00240m     (-189.6, 4907.2) -> res://shots_route_night/band4_00240m.png
+  band4_00320m     (-253.6, 4955.2) -> res://shots_route_night/band4_00320m.png
+  band4_00400m     (-313.7, 5007.1) -> res://shots_route_night/band4_00400m.png
+  band4_00480m     (-363.7, 5069.6) -> res://shots_route_night/band4_00480m.png
+  band4_00560m     (-413.7, 5132.1) -> res://shots_route_night/band4_00560m.png
+  band4_00640m     (-387.3, 5201.7) -> res://shots_route_night/band4_00640m.png
+  band4_00720m     (-349.9, 5272.4) -> res://shots_route_night/band4_00720m.png
+  band4_00800m     (-298.2, 5329.9) -> res://shots_route_night/band4_00800m.png
+  band4_00880m     (-230.4, 5372.3) -> res://shots_route_night/band4_00880m.png
+  band4_00960m     (-162.0, 5413.8) -> res://shots_route_night/band4_00960m.png
+  band4_01040m     (-89.6, 5447.8) -> res://shots_route_night/band4_01040m.png
+  band4_01120m     (-17.2, 5481.9) -> res://shots_route_night/band4_01120m.png
+  band4_01200m     (52.5, 5520.9) -> res://shots_route_night/band4_01200m.png
+  band4_01280m     (121.5, 5561.5) -> res://shots_route_night/band4_01280m.png
+  band4_01360m     (189.5, 5603.4) -> res://shots_route_night/band4_01360m.png
+  band4_01440m     (255.5, 5648.8) -> res://shots_route_night/band4_01440m.png
+  band4_01520m     (321.4, 5694.1) -> res://shots_route_night/band4_01520m.png
+  band4_01600m     (371.7, 5755.6) -> res://shots_route_night/band4_01600m.png
+  band4_01680m     (419.7, 5819.6) -> res://shots_route_night/band4_01680m.png
+  band4_01760m     (440.7, 5888.0) -> res://shots_route_night/band4_01760m.png
+  band4_01840m     (415.4, 5963.9) -> res://shots_route_night/band4_01840m.png
+  band4_01920m     (390.1, 6039.8) -> res://shots_route_night/band4_01920m.png
+  band4_02000m     (322.3, 6082.3) -> res://shots_route_night/band4_02000m.png
+  band4_02080m     (254.5, 6124.7) -> res://shots_route_night/band4_02080m.png
+  band4_02160m     (184.8, 6163.9) -> res://shots_route_night/band4_02160m.png
+  band4_02240m     (114.1, 6201.4) -> res://shots_route_night/band4_02240m.png
+  band4_02320m     (44.2, 6240.2) -> res://shots_route_night/band4_02320m.png
+  band4_02400m     (-22.9, 6283.7) -> res://shots_route_night/band4_02400m.png
+  band4_02480m     (-90.1, 6327.1) -> res://shots_route_night/band4_02480m.png
+  band4_02560m     (-156.0, 6372.5) -> res://shots_route_night/band4_02560m.png
+  band4_02640m     (-221.3, 6418.6) -> res://shots_route_night/band4_02640m.png
+  band4_02720m     (-276.7, 6467.5) -> res://shots_route_night/band4_02720m.png
+  band4_02800m     (-244.6, 6540.8) -> res://shots_route_night/band4_02800m.png
+  band4_02880m     (-212.6, 6614.1) -> res://shots_route_night/band4_02880m.png
+  band4_02960m     (-150.1, 6662.8) -> res://shots_route_night/band4_02960m.png
+  band4_03040m     (-85.0, 6709.3) -> res://shots_route_night/band4_03040m.png
+  band4_03120m     (-18.8, 6754.1) -> res://shots_route_night/band4_03120m.png
+  band4_03200m     (47.8, 6798.5) -> res://shots_route_night/band4_03200m.png
+  band4_03280m     (65.9, 6858.8) -> res://shots_route_night/band4_03280m.png
+  band4_03360m     (37.9, 6933.6) -> res://shots_route_night/band4_03360m.png
+  band5_00000m     (0.0, 7000.0) -> res://shots_route_night/band5_00000m.png
+  band5_00080m     (-44.4, 7066.6) -> res://shots_route_night/band5_00080m.png
+  band5_00160m     (-73.4, 7134.3) -> res://shots_route_night/band5_00160m.png
+  band5_00240m     (-39.9, 7207.0) -> res://shots_route_night/band5_00240m.png
+  band5_00320m     (0.9, 7275.0) -> res://shots_route_night/band5_00320m.png
+  band5_00400m     (52.1, 7336.5) -> res://shots_route_night/band5_00400m.png
+  band5_00480m     (62.6, 7402.0) -> res://shots_route_night/band5_00480m.png
+  band5_00560m     (24.3, 7472.2) -> res://shots_route_night/band5_00560m.png
+  band5_00640m     (2.8, 7549.0) -> res://shots_route_night/band5_00640m.png
+
+147 route frames -> res://shots_route_night
+
+--- stderr ---
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+   GDScript backtrace (most recent call first):
+       [0] _build_terrain (res://scripts/world/playground_world.gd:773)
+       [1] _ready (res://scripts/world/playground_world.gd:529)
+ERROR: Parameter "material" is null.
+   at: material_casts_shadows (drivers/gles3/storage/material_storage.cpp:2592)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:492)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1403)
+       [2] _make_alpha (res://scripts/combat/encounter_director.gd:818)
+       [3] _spawn_creatures (res://scripts/combat/encounter_director.gd:552)
+       [4] _stand_on_ground (res://scripts/combat/encounter_director.gd:1118)
+ERROR: Parameter "material" is null.
+   at: material_is_animated (drivers/gles3/storage/material_storage.cpp:2579)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:492)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1403)
+       [2] _make_alpha (res://scripts/combat/encounter_director.gd:818)
+       [3] _spawn_creatures (res://scripts/combat/encounter_director.gd:552)
+       [4] _stand_on_ground (res://scripts/combat/encounter_director.gd:1118)
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (drivers/gles3/storage/material_storage.cpp:2618)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:492)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1403)
+       [2] _make_alpha (res://scripts/combat/encounter_director.gd:818)
+       [3] _spawn_creatures (res://scripts/combat/encounter_director.gd:552)
+       [4] _stand_on_ground (res://scripts/combat/encounter_director.gd:1118)
+ERROR: Parameter "material" is null.
+   at: material_update_dependency (drivers/gles3/storage/material_storage.cpp:2630)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:492)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1403)
+       [2] _make_alpha (res://scripts/combat/encounter_director.gd:818)
+       [3] _spawn_creatures (res://scripts/combat/encounter_director.gd:552)
+       [4] _stand_on_ground (res://scripts/combat/encounter_director.gd:1118)
+WARNING: Terrain3DTextureAsset#1891:set_albedo_texture:79: Texture 'meadow_grass_Color' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_texture_list (res://scripts/world/playground_world.gd:957)
+       [1] _apply_ground_materials (res://scripts/world/playground_world.gd:797)
+       [2] _ready (res://scripts/world/playground_world.gd:548)
+WARNING: Terrain3DTextureAsset#1891:set_normal_texture:100: Texture 'meadow_grass_NormalGL' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_texture_list (res://scripts/world/playground_world.gd:960)
+       [1] _apply_ground_materials (res://scripts/world/playground_world.gd:797)
+       [2] _ready (res://scripts/world/playground_world.gd:548)
+WARNING: Terrain3DTextureAsset#5087:set_albedo_texture:79: Texture 'verge_grass_Color' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_texture_list (res://scripts/world/playground_world.gd:957)
+       [1] _apply_ground_materials (res://scripts/world/playground_world.gd:797)
+       [2] _ready (res://scripts/world/playground_world.gd:548)
+WARNING: Terrain3DTextureAsset#5087:set_normal_texture:100: Texture 'verge_grass_NormalGL' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_texture_list (res://scripts/world/playground_world.gd:960)
+       [1] _apply_ground_materials (res://scripts/world/playground_world.gd:797)
+       [2] _ready (res://scripts/world/playground_world.gd:548)
+WARNING: Terrain3DTextureAsset#6944:set_albedo_texture:79: Texture 'rock_scree_Color' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_texture_list (res://scripts/world/playground_world.gd:957)
+       [1] _apply_ground_materials (res://scripts/world/playground_world.gd:797)
+       [2] _ready (res://scripts/world/playground_world.gd:548)
+WARNING: Terrain3DTextureAsset#6944:set_normal_texture:100: Texture 'rock_scree_NormalGL' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_texture_list (res://scripts/world/playground_world.gd:960)
+       [1] _apply_ground_materials (res://scripts/world/playground_world.gd:797)
+       [2] _ready (res://scripts/world/playground_world.gd:548)
+WARNING: Terrain3DTextureAsset#3937:set_albedo_texture:79: Texture 'dirt_path_Color' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_texture_list (res://scripts/world/playground_world.gd:957)
+       [1] _apply_ground_materials (res://scripts/world/playground_world.gd:797)
+       [2] _ready (res://scripts/world/playground_world.gd:548)
+WARNING: Terrain3DTextureAsset#3937:set_normal_texture:100: Texture 'dirt_path_NormalGL' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_texture_list (res://scripts/world/playground_world.gd:960)
+       [1] _apply_ground_materials (res://scripts/world/playground_world.gd:797)
+       [2] _ready (res://scripts/world/playground_world.gd:548)
+WARNING: Terrain3DTextureAsset#0933:set_albedo_texture:79: Texture 'wet_earth_Color' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_texture_list (res://scripts/world/playground_world.gd:957)
+       [1] _apply_ground_materials (res://scripts/world/playground_world.gd:797)
+       [2] _ready (res://scripts/world/playground_world.gd:548)
+WARNING: Terrain3DTextureAsset#0933:set_normal_texture:100: Texture 'wet_earth_NormalGL' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_texture_list (res://scripts/world/playground_world.gd:960)
+       [1] _apply_ground_materials (res://scripts/world/playground_world.gd:797)
+       [2] _ready (res://scripts/world/playground_world.gd:548)
+WARNING: Terrain3DTextureAsset#5035:set_albedo_texture:79: Texture 'forest_floor_Color' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_texture_list (res://scripts/world/playground_world.gd:957)
+       [1] _apply_ground_materials (res://scripts/world/playground_world.gd:797)
+       [2] _ready (res://scripts/world/playground_world.gd:548)
+WARNING: Terrain3DTextureAsset#5035:set_normal_texture:100: Texture 'forest_floor_NormalGL' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_texture_list (res://scripts/world/playground_world.gd:960)
+       [1] _apply_ground_materials (res://scripts/world/playground_world.gd:797)
+       [2] _ready (res://scripts/world/playground_world.gd:548)
+WARNING: scatter anchor at (-58.0, 199.0) placed 1 of 3 in 36 attempts
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _place_anchor (res://scripts/world/scatter_rules.gd:453)
+       [1] placements_for (res://scripts/world/scatter_rules.gd:261)
+       [2] all_placements (res://scripts/world/scatter_rules.gd:1568)
+       [3] build (res://scripts/world/vegetation.gd:366)
+       [4] _dress_the_meadow (res://scripts/world/playground_world.gd:1022)
+       [5] _ready (res://scripts/world/playground_world.gd:565)
+WARNING: scatter anchor at (2.0, 47.0) placed 3 of 4 in 48 attempts
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _place_anchor (res://scripts/world/scatter_rules.gd:453)
+       [1] placements_for (res://scripts/world/scatter_rules.gd:261)
+       [2] all_placements (res://scripts/world/scatter_rules.gd:1568)
+       [3] build (res://scripts/world/vegetation.gd:366)
+       [4] _dress_the_meadow (res://scripts/world/playground_world.gd:1022)
+       [5] _ready (res://scripts/world/playground_world.gd:565)
+WARNING: scatter anchor at (-10.0, 1318.0) placed 5 of 8 in 96 attempts
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _place_anchor (res://scripts/world/scatter_rules.gd:453)
+       [1] placements_for (res://scripts/world/scatter_rules.gd:261)
+       [2] all_placements (res://scripts/world/scatter_rules.gd:1568)
+       [3] build (res://scripts/world/vegetation.gd:366)
+       [4] _dress_the_meadow (res://scripts/world/playground_world.gd:1022)
+       [5] _ready (res://scripts/world/playground_world.gd:565)
+WARNING: scatter anchor at (-248.74, 6462.9) placed 0 of 2 in 24 attempts
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _place_anchor (res://scripts/world/scatter_rules.gd:453)
+       [1] placements_for (res://scripts/world/scatter_rules.gd:261)
+       [2] all_placements (res://scripts/world/scatter_rules.gd:1568)
+       [3] build (res://scripts/world/vegetation.gd:366)
+       [4] _dress_the_meadow (res://scripts/world/playground_world.gd:1022)
+       [5] _ready (res://scripts/world/playground_world.gd:565)
+WARNING: [grass_field] the rendering camera (@Camera3D@65118) is not the one bind() was given (Camera3D); following the rendering one. In a CAPTURE this is expected -- see _follow_camera. In GAMEPLAY it means the ground is being dressed around the wrong eye.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _follow_camera (res://scripts/world/grass_field.gd:1661)
+       [1] _process (res://scripts/world/grass_field.gd:2053)
+
