@@ -2272,7 +2272,12 @@ func _step_stormwood_hosted_start(args: Dictionary) -> Dictionary:
 				% [trainer_id, str(hub.get("_local_record"))]}
 		await physics_frame
 		waited += 1
-	return {"verdict": "FAIL", "detail": "hosted trainer '%s' never bound on the client; refusal=%s" % [trainer_id, str(hub.get("last_start_refusal"))]}
+	var manager := _combat_manager()
+	var pending: Variant = hub.get("_pending_state")
+	return {"verdict": "FAIL", "detail":
+		"hosted trainer '%s' never bound on the client; refusal=%s fighting=%s pending=%s local_peer=%d realm=%s"
+		% [trainer_id, str(hub.get("last_start_refusal")), manager != null and bool(manager.call("is_fighting")),
+			str(pending), int(session.call("local_peer_id")), str(session.call("realm_of", int(session.call("local_peer_id"))))]}
 
 
 ## TEST FIXTURE ONLY. Run on the host process after a round is live. It lowers

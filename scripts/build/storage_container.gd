@@ -322,7 +322,7 @@ func _resolve_pending(op: Dictionary) -> void:
 ## The host refused an intent. `_rpc_verdict` only reaches the peer whose
 ## intent it was, so a refusal here is always ours — and only the chest with a
 ## write in flight has anything to drop.
-func _on_intent_refused(kind: String, _code: String, reason: String) -> void:
+func _on_intent_refused(kind: String, _code: String, reason: String, _detail: Dictionary) -> void:
 	if kind != "storage_txn":
 		return
 	if not _pending.is_empty():

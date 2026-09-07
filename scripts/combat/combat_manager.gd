@@ -1309,8 +1309,12 @@ func note_encounter_refusal(verdict: Dictionary) -> void:
 	if code == "friendly_target":
 		attack_missed.emit(true)
 	if not reason.is_empty():
-		catch_refused.emit(reason) if str(verdict.get("kind", "")) == "catch_attempt" \
-			else encounter_refused.emit(code, reason)
+		# Signal emission returns void in Godot 4.7, so it cannot be selected
+		# with a value-producing ternary expression.
+		if str(verdict.get("kind", "")) == "catch_attempt":
+			catch_refused.emit(reason)
+		else:
+			encounter_refused.emit(code, reason)
 	state_changed.emit()
 
 
