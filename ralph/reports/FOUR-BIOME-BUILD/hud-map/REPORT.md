@@ -95,3 +95,19 @@ After capture, the real-input regression was rerun:
 
 It exited 0 and reported the production Meadows map opened, closed, opened a second
 time, closed cleanly, and returned world movement ownership.
+
+## Independent code-blind verdict
+
+The replacement frames passed capture integrity and the rollback contract: the HUD
+minimap is visible and readable without covering the centre of play; both full-map
+opens are populated and visually consistent; the second open is neither blank nor
+corrupt. This completes prompt 77's explicit fallback exit (restore the minimap and
+preserve the compass branch) rather than claiming the abandoned compass experiment
+was repaired.
+
+The judge did **not** pass the full map as finished interface art. It found three
+repair-pass defects in both opens: `DISCOVERED REGIONS` overlaps `GRANDPA'S VILLAGE`
+and northern lettering clips at the panel edge; the geography is a narrow strip
+dominated by oversized labels; and large marker backplates crowd the northern
+settlements and relay/crossing cluster. These are recorded as open product defects,
+not misreported as second-open corruption or capture failure.
