@@ -31,6 +31,8 @@
       "water_sluice_west_disabled",
       "water_sluice_east_disabled",
       "water_tether_disabled",
+      "water_veilfall_intake_stopped",
+      "water_veilfall_return_opened",
       "realm_heart_meadows_earned",
       "realm_heart_meadows_placed",
       "realm_heart_cloudreach_earned",

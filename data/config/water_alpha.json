@@ -59,11 +59,17 @@
       "surface_run_every_s": 9.0
     }
   ],
+  "placement": {
+    "_comment": "Existing Tidal Basin landmark X/Z; ground samples the shipped bake. Channel coordinates will be enabled with the authored basin terrain, never simulated by teleportation.",
+    "spawn": [601.574, 1389.434],
+    "surface_route": []
+  },
   "movement": {
     "_comment": "Host movement uses grounded shore waypoints and a visible sea-level channel. Never teleport a target between stances.",
     "shore_speed_m_s": 4.5,
     "surface_speed_m_s": 8.0,
     "waypoint_reach_m": 0.8,
-    "turn_speed_rad_s": 2.4
+    "turn_speed_rad_s": 2.4,
+    "preferred_reach_fraction": 0.7
   }
 }

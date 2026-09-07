@@ -1,0 +1,36 @@
+{
+  "_comment": "Veilfall kitbash implementation. Exterior follows the authored hike to the waterfall. The compact cave interior uses a concealed same-realm staging area so terrain collision remains available for players outside while peers independently enter and reconnect inside. Coordinates and all distances are starting tuning, not visual acceptance.",
+  "entrance_xz": [335.208, 3885.711],
+  "waterfall": {"_comment": "A broad curtain hides the gate; the island mountain remains the distant silhouette.", "width_m": 20.0, "height_m": 82.0, "depth_m": 1.2, "colour": "#b8e2df"},
+  "interior_origin": [1800.0, 40.0, 4140.0],
+  "interact_radius_m": 4.2,
+  "floor_thickness_m": 1.0,
+  "wall_height_m": 12.0,
+  "wall_thickness_m": 2.0,
+  "entry_position": [0.0, 0.2, 4.0],
+  "exit_position": [0.0, 1.0, 2.0],
+  "rooms": [
+    {"id": "intake_gallery", "name": "Intake Gallery", "center_xz": [0.0, 15.0], "size_xz": [18.0, 30.0]},
+    {"id": "pump_hall", "name": "Pump Hall", "center_xz": [0.0, 45.0], "size_xz": [30.0, 30.0]},
+    {"id": "sluice_crossing", "name": "Sluice Crossing", "center_xz": [0.0, 70.0], "size_xz": [30.0, 20.0], "bridge_width_m": 5.0},
+    {"id": "heart_chamber", "name": "Heart Chamber", "center_xz": [0.0, 102.0], "size_xz": [42.0, 44.0]}
+  ],
+  "controls": [
+    {"id": "intake_pump", "label": "Stop the intake pump", "position": [-5.0, 1.0, 22.0], "flag": "water_veilfall_intake_stopped", "requires": []},
+    {"id": "sluice_wheel", "label": "Open the return sluice", "position": [9.0, 1.0, 49.0], "flag": "water_veilfall_return_opened", "requires": ["water_veilfall_intake_stopped"]},
+    {"id": "guardian_tether", "label": "Release the Abyssal Guardian", "position": [0.0, 1.0, 113.0], "flag": "water_guardian_freed", "requires": ["water_captain_nerissa_defeated"]}
+  ],
+  "gates": [
+    {"id": "intake_grille", "z": 30.0, "width_m": 18.0, "height_m": 7.0, "opens_with": "water_veilfall_intake_stopped"},
+    {"id": "return_grille", "z": 79.0, "width_m": 30.0, "height_m": 7.0, "opens_with": "water_veilfall_return_opened"}
+  ],
+  "captain_position": [9.0, 0.0, 91.0],
+  "captain_npc_id": "water_nerissa",
+  "captain_encounter_id": "water_trainer_nerissa",
+  "captain_defeat_flag": "water_captain_nerissa_defeated",
+  "captain_requires": ["water_veilfall_return_opened"],
+  "guardian_position": [0.0, 0.0, 113.0],
+  "crystal_position": [0.0, 5.0, 113.0],
+  "colours": {"stone": "#4c5857", "floor": "#77817a", "metal": "#697676", "brass": "#96724d", "banner": "#345e84", "channel": "#347c89", "crystal": "#a6dce5"},
+  "_comment_scope": "Two physical world-authority controls open real grilles. The captain and Guardian ceremony are required integration; this geometry/config alone does not complete either. No boats, diving, oxygen or new humanoids."
+}

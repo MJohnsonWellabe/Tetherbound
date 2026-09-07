@@ -61,7 +61,7 @@ func restore_save_data(raw: Dictionary) -> bool:
 	var vitals: RefCounted = _player.get("vitals")
 	vitals.stamina = vitals.max_stamina * float(clean.stamina_fraction)
 	vitals.health = vitals.max_health * float(clean.health_fraction)
-	state.owner_peer_id = multiplayer.get_unique_id()
+	state.owner_peer_id = int(get_node("/root/Game").session.local_peer_id())
 	state.leave_water()
 	state.has_safe_landing = false
 	var anchor: Array = clean.safe_anchor
@@ -106,7 +106,7 @@ func physics_step(delta: float, input_blocked: bool, combat_paused: bool) -> boo
 		return true
 	if _player == null or _world == null or not bool(_world.call("shell_build_complete")):
 		return false
-	state.owner_peer_id = multiplayer.get_unique_id()
+	state.owner_peer_id = int(get_node("/root/Game").session.local_peer_id())
 	var sea: float = _world.field.water_level()
 	var depth: float = _world.water_depth_at(_player.global_position)
 	var human: Dictionary = _config.human

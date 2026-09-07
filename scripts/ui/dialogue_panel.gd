@@ -63,6 +63,8 @@ const OUTLINE_SIZE := 6
 const SHADOW := Color(0.0, 0.0, 0.0, 0.55)
 
 signal finished(conversation_id: String)
+## Delivered synchronously with the text, including physics-tick advances.
+signal line_presented(conversation_id: String, is_last: bool)
 
 var _runner: RefCounted = RUNNER.new()
 var _guard: int = 0
@@ -253,6 +255,7 @@ func _draw() -> void:
 	var speaker := str(_identity.get("speaker", ""))
 	_speaker.text = speaker if speaker != "" else str(line.get("speaker", ""))
 	_body.text = str(line.get("text", ""))
+	line_presented.emit(_runner.conversation_id(), bool(line.get("is_last", false)))
 	# Real glyph, not "[X] / [E]" bracket text showing both devices at once --
 	# bible sec18: "Do not display both keyboard and controller prompts
 	# simultaneously unless context requires it."
