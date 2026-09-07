@@ -1602,6 +1602,23 @@ jobs:
             echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
           done
           exit 1
+      - name: Verify build_two_creature_beds
+        if: ${{ !cancelled() }}
+        env: { SMOKE: build_two_creature_beds, RETRIES: 1 }
+        run: |
+          set -uo pipefail
+          n=0
+          until [ "$n" -ge "$RETRIES" ]; do
+            n=$((n + 1))
+            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+              echo "::endgroup::"
+              exit 0
+            fi
+            echo "::endgroup::"
+            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+          done
+          exit 1
       - name: Verify gate_a_rest_torch
         if: ${{ !cancelled() }}
         env: { SMOKE: gate_a_rest_torch, RETRIES: 1 }
