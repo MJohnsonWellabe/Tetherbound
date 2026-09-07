@@ -70,3 +70,44 @@ At First Shore, a real CraftPanel button converted **2 driftwood into 6 wood** u
 
 The teleported camp tour also emitted `Water site lacks supported creature footing: water_brine_steps_wild_010`. Preserve that as a concrete all-site placement gap: the 240-site catalogue is not 240 proven viable spawns.
 
+
+
+## Wave 3 harvest distribution correction (configured and analytic only)
+
+Added 22 stable harvest identities: Tidal Cradle +2 (14), Veilfall +8 (14), Lantern Cove +4 (8), Gull Rest +6 (8), Deep Watch +2 (8). Total is now **182 configured harvest nodes**, with 200 pickups unchanged. JSON comparison against HEAD confirms all original 160 harvest records and all 200 pickup records are unchanged. All twelve islands meet BUILD section 13's configured harvest minimum. Original validation hashes describe the old placement pass, not these additions.
+
+Nodes offer saddle materials on Tidal Cradle, repair/fuel and recovery ingredients on optional detours, and salvage/recovery resources before the Veilfall hike and Deep Watch approach. Additions store analytic approaches, leave >=6 m from land-route centerlines, >=6 m from other resources/pickups, >=12 m from landing centers, and were selected outside 10 m NPC/trainer/camp exclusions. Tidal additions remain >120 m from the planned Alpha basin at (601,1389).
+
+Straight route spokes could not provide every Veilfall position. Three final nodes instead use stored 2 m grid paths flood-filled from a safe landing, with midpoint checks. Footprints and approach samples are dry (>=0.8 m) and within the existing <=35 degree harvest grade limit. These connect to authored routes/landings analytically; **no continuous walked or baked Terrain3D footing evidence** is claimed. No visual or gameplay density acceptance is awarded.
+
+Verification: `tests/test_water_harvest_density.gd`, actual Godot **1 test, 9,678 assertions, 0 failed**, exit 0, no script errors. Log: `C:/Users/mattj/AppData/Local/Temp/water-harvest-density-console.log`. Covers identities, minimum counts, footprints, sampled approach grades, resource/landing/path clearance and Alpha exclusion. NPC/camp exclusions were checked by the generator, not this test. Re-run after terrain composition changes. Actual-world residency, harvesting, multiplayer claims, readability and route tours remain required.
+
+Analytic source hashes at this run:
+
+- `scripts/world/water_heightfield.gd`: `d8d5fb7fb59c9bdd6bb16bc3c6b7450d89206ff6afec9aca702be098f14ebf6c`
+- `data/config/water_world.json`: `a2fca1bf27c6d896be547633b2bb18c71942834347a918fa305c99b3e3c32740`
+
+| Stable ID | Resource | X, Y, Z (metres) |
+|---|---|---|
+| water:tidal_cradle:harvest:013 | reed_fiber | 795.114, 56.190, 1651.888 |
+| water:tidal_cradle:harvest:014 | driftwood | 804.943, 60.073, 1645.005 |
+| water:veilfall:harvest:007 | driftwood | 390.962, 2.856, 3818.202 |
+| water:veilfall:harvest:008 | tide_bloom | 369.940, 2.856, 3806.623 |
+| water:veilfall:harvest:009 | reef_stone | 362.933, 2.728, 3802.762 |
+| water:veilfall:harvest:010 | sluice_metal | 395.074, 3.853, 3827.318 |
+| water:veilfall:harvest:011 | driftwood | 381.844, 12.530, 3837.360 |
+| water:lantern_cove:harvest:005 | reed_fiber | -359.048, 13.999, 128.966 |
+| water:lantern_cove:harvest:006 | driftwood | -358.792, 18.123, 116.968 |
+| water:lantern_cove:harvest:007 | reed_fiber | -358.536, 16.510, 104.971 |
+| water:lantern_cove:harvest:008 | driftwood | -371.045, 14.598, 128.710 |
+| water:gull_rest:harvest:003 | reed_fiber | -97.800, 15.596, 817.863 |
+| water:gull_rest:harvest:004 | driftwood | -102.943, 17.393, 807.021 |
+| water:gull_rest:harvest:005 | tide_bloom | -106.372, 15.077, 799.793 |
+| water:gull_rest:harvest:006 | reed_fiber | -108.642, 17.247, 823.006 |
+| water:gull_rest:harvest:007 | driftwood | -113.785, 16.950, 812.164 |
+| water:gull_rest:harvest:008 | tide_bloom | -117.214, 14.725, 804.936 |
+| water:deep_watch:harvest:007 | tide_bloom | 1274.558, 2.803, 3400.861 |
+| water:deep_watch:harvest:008 | sluice_metal | 1256.948, 2.803, 3417.167 |
+| water:veilfall:harvest:012 | tide_bloom | 398.000, 1.256, 3806.000 |
+| water:veilfall:harvest:013 | reef_stone | 380.000, 1.069, 3794.000 |
+| water:veilfall:harvest:014 | sluice_metal | 396.000, 1.918, 3812.000 |

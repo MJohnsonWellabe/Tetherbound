@@ -2,7 +2,7 @@
   "schema_version": 1,
   "realm_id": "water",
   "status": "authored_placements_not_runtime_spawned",
-  "_comment": "200 item pickups and160 harvest nodes. Candidate positions use production water_heightfield,6m grid flood-filled from safe landings with quarter-edge dry/slope checks. This is analytic placement evidence, not a body traversal or rendered density pass. Runtime must retain claim policies, exclusion zones and stable IDs. Authored paths currently need grading; these positions exclude disconnected gentle summits.",
+  "_comment": "200 item pickups and182 harvest nodes. Original160 placements use the recorded grid;22 density_wave3 additions store current analytic route approaches separately. Historic hashes do not certify these additions. Candidate positions use production water_heightfield,6m grid flood-filled from safe landings with quarter-edge dry/slope checks. This is analytic placement evidence, not a body traversal or rendered density pass. Runtime must retain claim policies, exclusion zones and stable IDs. Authored paths currently need grading; these positions exclude disconnected gentle summits.",
   "validation": {
     "heightfield_sha256": "e7a6f5fb2354486716d8a2d70b6779c094ac2ec5c84cf2f3e7b3f8774001668d",
     "world_config_sha256": "b6e944c4f3be86aabf801a87ff86d3cc434c777d44870a18bb8f4a19f839fb3a",
@@ -53,7 +53,7 @@
   ],
   "census": {
     "pickups": 200,
-    "harvest": 160,
+    "harvest": 182,
     "pickup_categories": {
       "gear_story": 6,
       "creature_candy": 72,
@@ -90,11 +90,11 @@
       "tm_leviathan_surge": 1
     },
     "harvest_item_counts": {
-      "reed_fiber": 42,
-      "driftwood": 38,
-      "reef_stone": 36,
-      "tide_bloom": 24,
-      "sluice_metal": 20
+      "reed_fiber": 47,
+      "driftwood": 45,
+      "reef_stone": 38,
+      "tide_bloom": 29,
+      "sluice_metal": 23
     },
     "by_island": {
       "first_shore": {
@@ -119,7 +119,7 @@
       },
       "tidal_cradle": {
         "pickups": 20,
-        "harvest": 12,
+        "harvest": 14,
         "landing_connected_sample_count": 259
       },
       "salt_crown": {
@@ -134,17 +134,17 @@
       },
       "veilfall": {
         "pickups": 14,
-        "harvest": 6,
+        "harvest": 14,
         "landing_connected_sample_count": 86
       },
       "lantern_cove": {
         "pickups": 8,
-        "harvest": 4,
+        "harvest": 8,
         "landing_connected_sample_count": 35
       },
       "gull_rest": {
         "pickups": 6,
-        "harvest": 2,
+        "harvest": 8,
         "landing_connected_sample_count": 27
       },
       "drowned_garden": {
@@ -154,7 +154,7 @@
       },
       "deep_watch": {
         "pickups": 12,
-        "harvest": 6,
+        "harvest": 8,
         "landing_connected_sample_count": 1826
       }
     }
@@ -6357,6 +6357,638 @@
       "registration": "planned",
       "gather_action": "axe",
       "placement_reason": "Salvage timber placed back from the landing approach."
+    },
+    {
+      "approach_from": [
+        788.560485839844,
+        54.5942086556196,
+        1656.47705078125
+      ],
+      "island_id": "tidal_cradle",
+      "position": [
+        795.114,
+        56.18956,
+        1651.888
+      ],
+      "route_clearance_m": 8.00006198883057,
+      "sampled_slope_deg": 28.5228481228352,
+      "id": "water:tidal_cradle:harvest:013",
+      "item_id": "reed_fiber",
+      "gather_action": "hand",
+      "registration": "runtime_registered",
+      "placement_reason": "Preparation detour on the inland route, clear of the planned Alpha shore basin; saddle materials after the fight.",
+      "placement_revision": "density_wave3",
+      "evidence_status": "analytic_approach_only_not_baked_or_walked",
+      "yield": 3
+    },
+    {
+      "approach_from": [
+        788.560485839844,
+        54.5942086556196,
+        1656.47705078125
+      ],
+      "island_id": "tidal_cradle",
+      "position": [
+        804.943,
+        60.073304,
+        1645.005
+      ],
+      "route_clearance_m": 20.0000286102295,
+      "sampled_slope_deg": 30.8826805610036,
+      "id": "water:tidal_cradle:harvest:014",
+      "item_id": "driftwood",
+      "gather_action": "axe",
+      "registration": "runtime_registered",
+      "placement_reason": "Preparation detour on the inland route, clear of the planned Alpha shore basin; saddle materials after the fight.",
+      "placement_revision": "density_wave3",
+      "evidence_status": "analytic_approach_only_not_baked_or_walked",
+      "yield": 3
+    },
+    {
+      "approach_from": [
+        380.451080322266,
+        3.05748631186711,
+        3812.41235351563
+      ],
+      "island_id": "veilfall",
+      "position": [
+        390.962,
+        2.855543,
+        3818.202
+      ],
+      "route_clearance_m": 11.999945640564,
+      "sampled_slope_deg": 9.08038815988371,
+      "id": "water:veilfall:harvest:007",
+      "item_id": "driftwood",
+      "gather_action": "axe",
+      "registration": "runtime_registered",
+      "placement_reason": "Dry landing and hike approach provision pocket before the hidden stronghold; recovery ingredients and repair materials.",
+      "placement_revision": "density_wave3",
+      "evidence_status": "analytic_approach_only_not_baked_or_walked",
+      "yield": 3
+    },
+    {
+      "approach_from": [
+        380.451080322266,
+        3.05748631186711,
+        3812.41235351563
+      ],
+      "island_id": "veilfall",
+      "position": [
+        369.94,
+        2.855565,
+        3806.623
+      ],
+      "route_clearance_m": 11.9998655319214,
+      "sampled_slope_deg": 9.12545981893749,
+      "id": "water:veilfall:harvest:008",
+      "item_id": "tide_bloom",
+      "gather_action": "hand",
+      "registration": "runtime_registered",
+      "placement_reason": "Dry landing and hike approach provision pocket before the hidden stronghold; recovery ingredients and repair materials.",
+      "placement_revision": "density_wave3",
+      "evidence_status": "analytic_approach_only_not_baked_or_walked",
+      "yield": 2
+    },
+    {
+      "approach_from": [
+        380.451080322266,
+        3.05748631186711,
+        3812.41235351563
+      ],
+      "island_id": "veilfall",
+      "position": [
+        362.933,
+        2.728409,
+        3802.762
+      ],
+      "route_clearance_m": 20.0000019073486,
+      "sampled_slope_deg": 6.11548580975939,
+      "id": "water:veilfall:harvest:009",
+      "item_id": "reef_stone",
+      "gather_action": "pickaxe",
+      "registration": "runtime_registered",
+      "placement_reason": "Dry landing and hike approach provision pocket before the hidden stronghold; recovery ingredients and repair materials.",
+      "placement_revision": "density_wave3",
+      "evidence_status": "analytic_approach_only_not_baked_or_walked",
+      "yield": 2
+    },
+    {
+      "approach_from": [
+        377.556121826172,
+        5.13707173033697,
+        3817.66772460938
+      ],
+      "island_id": "veilfall",
+      "position": [
+        395.074,
+        3.853176,
+        3827.318
+      ],
+      "route_clearance_m": 20.0000820159912,
+      "sampled_slope_deg": 22.0224138720353,
+      "id": "water:veilfall:harvest:010",
+      "item_id": "sluice_metal",
+      "gather_action": "pickaxe",
+      "registration": "runtime_registered",
+      "placement_reason": "Dry landing and hike approach provision pocket before the hidden stronghold; recovery ingredients and repair materials.",
+      "placement_revision": "density_wave3",
+      "evidence_status": "analytic_approach_only_not_baked_or_walked",
+      "yield": 2
+    },
+    {
+      "approach_from": [
+        373.856842041016,
+        11.0955656240911,
+        3836.90014648438
+      ],
+      "island_id": "veilfall",
+      "position": [
+        381.844,
+        12.529826,
+        3837.36
+      ],
+      "route_clearance_m": 7.99999141693115,
+      "sampled_slope_deg": 32.5378271458854,
+      "id": "water:veilfall:harvest:011",
+      "item_id": "driftwood",
+      "gather_action": "axe",
+      "registration": "runtime_registered",
+      "placement_reason": "Dry landing and hike approach provision pocket before the hidden stronghold; recovery ingredients and repair materials.",
+      "placement_revision": "density_wave3",
+      "evidence_status": "analytic_approach_only_not_baked_or_walked",
+      "yield": 3
+    },
+    {
+      "approach_from": [
+        -359.218475341797,
+        12.0589301359326,
+        136.963928222656
+      ],
+      "island_id": "lantern_cove",
+      "position": [
+        -359.048,
+        13.999015,
+        128.966
+      ],
+      "route_clearance_m": 8.0000057220459,
+      "sampled_slope_deg": 32.4004077807838,
+      "id": "water:lantern_cove:harvest:005",
+      "item_id": "reed_fiber",
+      "gather_action": "hand",
+      "registration": "runtime_registered",
+      "placement_reason": "Optional cove detour repays the swim with dock repair and camp fuel resources.",
+      "placement_revision": "density_wave3",
+      "evidence_status": "analytic_approach_only_not_baked_or_walked",
+      "yield": 3
+    },
+    {
+      "approach_from": [
+        -359.218475341797,
+        12.0589301359326,
+        136.963928222656
+      ],
+      "island_id": "lantern_cove",
+      "position": [
+        -358.792,
+        18.122958,
+        116.968
+      ],
+      "route_clearance_m": 20.0,
+      "sampled_slope_deg": 7.41394190349425,
+      "id": "water:lantern_cove:harvest:006",
+      "item_id": "driftwood",
+      "gather_action": "axe",
+      "registration": "runtime_registered",
+      "placement_reason": "Optional cove detour repays the swim with dock repair and camp fuel resources.",
+      "placement_revision": "density_wave3",
+      "evidence_status": "analytic_approach_only_not_baked_or_walked",
+      "yield": 3
+    },
+    {
+      "approach_from": [
+        -359.218475341797,
+        12.0589301359326,
+        136.963928222656
+      ],
+      "island_id": "lantern_cove",
+      "position": [
+        -358.536,
+        16.50978,
+        104.971
+      ],
+      "route_clearance_m": 32.0,
+      "sampled_slope_deg": 8.01140935143306,
+      "id": "water:lantern_cove:harvest:007",
+      "item_id": "reed_fiber",
+      "gather_action": "hand",
+      "registration": "runtime_registered",
+      "placement_reason": "Optional cove detour repays the swim with dock repair and camp fuel resources.",
+      "placement_revision": "density_wave3",
+      "evidence_status": "analytic_approach_only_not_baked_or_walked",
+      "yield": 3
+    },
+    {
+      "approach_from": [
+        -371.215728759766,
+        13.0414580385641,
+        136.70783996582
+      ],
+      "island_id": "lantern_cove",
+      "position": [
+        -371.045,
+        14.598355,
+        128.71
+      ],
+      "route_clearance_m": 8.00000667572021,
+      "sampled_slope_deg": 26.7797397197978,
+      "id": "water:lantern_cove:harvest:008",
+      "item_id": "driftwood",
+      "gather_action": "axe",
+      "registration": "runtime_registered",
+      "placement_reason": "Optional cove detour repays the swim with dock repair and camp fuel resources.",
+      "placement_revision": "density_wave3",
+      "evidence_status": "analytic_approach_only_not_baked_or_walked",
+      "yield": 3
+    },
+    {
+      "approach_from": [
+        -94.3717498779297,
+        13.6632328624737,
+        825.091186523438
+      ],
+      "island_id": "gull_rest",
+      "position": [
+        -97.8,
+        15.595713,
+        817.863
+      ],
+      "route_clearance_m": 8.00003337860107,
+      "sampled_slope_deg": 30.8177212356983,
+      "id": "water:gull_rest:harvest:003",
+      "item_id": "reed_fiber",
+      "gather_action": "hand",
+      "registration": "runtime_registered",
+      "placement_reason": "Sheltered researcher detour offers recovery ingredients and return-trip preparation materials.",
+      "placement_revision": "density_wave3",
+      "evidence_status": "analytic_approach_only_not_baked_or_walked",
+      "yield": 3
+    },
+    {
+      "approach_from": [
+        -94.3717498779297,
+        13.6632328624737,
+        825.091186523438
+      ],
+      "island_id": "gull_rest",
+      "position": [
+        -102.943,
+        17.392576,
+        807.021
+      ],
+      "route_clearance_m": 19.999979019165,
+      "sampled_slope_deg": 16.8916003517694,
+      "id": "water:gull_rest:harvest:004",
+      "item_id": "driftwood",
+      "gather_action": "axe",
+      "registration": "runtime_registered",
+      "placement_reason": "Sheltered researcher detour offers recovery ingredients and return-trip preparation materials.",
+      "placement_revision": "density_wave3",
+      "evidence_status": "analytic_approach_only_not_baked_or_walked",
+      "yield": 3
+    },
+    {
+      "approach_from": [
+        -94.3717498779297,
+        13.6632328624737,
+        825.091186523438
+      ],
+      "island_id": "gull_rest",
+      "position": [
+        -106.372,
+        15.077161,
+        799.793
+      ],
+      "route_clearance_m": 28.0000095367432,
+      "sampled_slope_deg": 15.1525568881089,
+      "id": "water:gull_rest:harvest:005",
+      "item_id": "tide_bloom",
+      "gather_action": "hand",
+      "registration": "runtime_registered",
+      "placement_reason": "Sheltered researcher detour offers recovery ingredients and return-trip preparation materials.",
+      "placement_revision": "density_wave3",
+      "evidence_status": "analytic_approach_only_not_baked_or_walked",
+      "yield": 2
+    },
+    {
+      "approach_from": [
+        -105.213836669922,
+        16.0832026060301,
+        830.234069824219
+      ],
+      "island_id": "gull_rest",
+      "position": [
+        -108.642,
+        17.246542,
+        823.006
+      ],
+      "route_clearance_m": 8.00002956390381,
+      "sampled_slope_deg": 18.9555406718922,
+      "id": "water:gull_rest:harvest:006",
+      "item_id": "reed_fiber",
+      "gather_action": "hand",
+      "registration": "runtime_registered",
+      "placement_reason": "Sheltered researcher detour offers recovery ingredients and return-trip preparation materials.",
+      "placement_revision": "density_wave3",
+      "evidence_status": "analytic_approach_only_not_baked_or_walked",
+      "yield": 3
+    },
+    {
+      "approach_from": [
+        -105.213836669922,
+        16.0832026060301,
+        830.234069824219
+      ],
+      "island_id": "gull_rest",
+      "position": [
+        -113.785,
+        16.950127,
+        812.164
+      ],
+      "route_clearance_m": 19.9999771118164,
+      "sampled_slope_deg": 16.6806757011777,
+      "id": "water:gull_rest:harvest:007",
+      "item_id": "driftwood",
+      "gather_action": "axe",
+      "registration": "runtime_registered",
+      "placement_reason": "Sheltered researcher detour offers recovery ingredients and return-trip preparation materials.",
+      "placement_revision": "density_wave3",
+      "evidence_status": "analytic_approach_only_not_baked_or_walked",
+      "yield": 3
+    },
+    {
+      "approach_from": [
+        -105.213836669922,
+        16.0832026060301,
+        830.234069824219
+      ],
+      "island_id": "gull_rest",
+      "position": [
+        -117.214,
+        14.724881,
+        804.936
+      ],
+      "route_clearance_m": 28.0000038146973,
+      "sampled_slope_deg": 14.7054766849687,
+      "id": "water:gull_rest:harvest:008",
+      "item_id": "tide_bloom",
+      "gather_action": "hand",
+      "registration": "runtime_registered",
+      "placement_reason": "Sheltered researcher detour offers recovery ingredients and return-trip preparation materials.",
+      "placement_revision": "density_wave3",
+      "evidence_status": "analytic_approach_only_not_baked_or_walked",
+      "yield": 2
+    },
+    {
+      "approach_from": [
+        1265.75329589844,
+        3.05761120261363,
+        3409.01416015625
+      ],
+      "island_id": "deep_watch",
+      "position": [
+        1274.558,
+        2.803235,
+        3400.861
+      ],
+      "route_clearance_m": 11.9999914169312,
+      "sampled_slope_deg": 9.0651848453947,
+      "id": "water:deep_watch:harvest:007",
+      "item_id": "tide_bloom",
+      "gather_action": "hand",
+      "registration": "runtime_registered",
+      "placement_reason": "Deep crossing preparation pocket provides recovery ingredients and salvage before the apex approach.",
+      "placement_revision": "density_wave3",
+      "evidence_status": "analytic_approach_only_not_baked_or_walked",
+      "yield": 2
+    },
+    {
+      "approach_from": [
+        1265.75329589844,
+        3.05761120261363,
+        3409.01416015625
+      ],
+      "island_id": "deep_watch",
+      "position": [
+        1256.948,
+        2.8032,
+        3417.167
+      ],
+      "route_clearance_m": 11.9999914169312,
+      "sampled_slope_deg": 9.05735676391551,
+      "id": "water:deep_watch:harvest:008",
+      "item_id": "sluice_metal",
+      "gather_action": "pickaxe",
+      "registration": "runtime_registered",
+      "placement_reason": "Deep crossing preparation pocket provides recovery ingredients and salvage before the apex approach.",
+      "placement_revision": "density_wave3",
+      "evidence_status": "analytic_approach_only_not_baked_or_walked",
+      "yield": 2
+    },
+    {
+      "approach_polyline": [
+        [
+          384.0,
+          2.00043706527479,
+          3806.0
+        ],
+        [
+          386.0,
+          1.89660933861494,
+          3806.0
+        ],
+        [
+          388.0,
+          1.791925935564,
+          3806.0
+        ],
+        [
+          390.0,
+          1.6863933832154,
+          3806.0
+        ],
+        [
+          392.0,
+          1.58001819458716,
+          3806.0
+        ],
+        [
+          394.0,
+          1.47280686747011,
+          3806.0
+        ],
+        [
+          396.0,
+          1.36476588330855,
+          3806.0
+        ],
+        [
+          398.0,
+          1.25590170611321,
+          3806.0
+        ]
+      ],
+      "island_id": "veilfall",
+      "position": [
+        398.0,
+        1.255902,
+        3806.0
+      ],
+      "route_clearance_m": 13.7019186019897,
+      "sampled_slope_deg": 6.11548580975939,
+      "id": "water:veilfall:harvest:012",
+      "item_id": "tide_bloom",
+      "gather_action": "hand",
+      "registration": "runtime_registered",
+      "placement_reason": "Dry landing and hike approach provision pocket before the hidden stronghold; recovery ingredients and repair materials.",
+      "placement_revision": "density_wave3",
+      "evidence_status": "analytic_approach_only_not_baked_or_walked",
+      "yield": 2
+    },
+    {
+      "approach_polyline": [
+        [
+          384.0,
+          2.00043706527479,
+          3806.0
+        ],
+        [
+          382.0,
+          2.10340257555918,
+          3806.0
+        ],
+        [
+          380.0,
+          2.20549931781004,
+          3806.0
+        ],
+        [
+          380.0,
+          2.01673669473791,
+          3804.0
+        ],
+        [
+          380.0,
+          1.82772334740421,
+          3802.0
+        ],
+        [
+          380.0,
+          1.63846272498997,
+          3800.0
+        ],
+        [
+          380.0,
+          1.44895821808821,
+          3798.0
+        ],
+        [
+          380.0,
+          1.25921315983652,
+          3796.0
+        ],
+        [
+          380.0,
+          1.06923082702661,
+          3794.0
+        ]
+      ],
+      "island_id": "veilfall",
+      "position": [
+        380.0,
+        1.069231,
+        3794.0
+      ],
+      "route_clearance_m": 12.1925983428955,
+      "sampled_slope_deg": 6.11554992290117,
+      "id": "water:veilfall:harvest:013",
+      "item_id": "reef_stone",
+      "gather_action": "pickaxe",
+      "registration": "runtime_registered",
+      "placement_reason": "Dry landing and hike approach provision pocket before the hidden stronghold; recovery ingredients and repair materials.",
+      "placement_revision": "density_wave3",
+      "evidence_status": "analytic_approach_only_not_baked_or_walked",
+      "yield": 2
+    },
+    {
+      "approach_polyline": [
+        [
+          384.0,
+          2.00043706527479,
+          3806.0
+        ],
+        [
+          386.0,
+          1.89660933861494,
+          3806.0
+        ],
+        [
+          388.0,
+          1.791925935564,
+          3806.0
+        ],
+        [
+          390.0,
+          1.6863933832154,
+          3806.0
+        ],
+        [
+          392.0,
+          1.58001819458716,
+          3806.0
+        ],
+        [
+          394.0,
+          1.47280686747011,
+          3806.0
+        ],
+        [
+          396.0,
+          1.36476588330855,
+          3806.0
+        ],
+        [
+          396.0,
+          1.54943739421203,
+          3808.0
+        ],
+        [
+          396.0,
+          1.73382160240459,
+          3810.0
+        ],
+        [
+          396.0,
+          1.91791462597971,
+          3812.0
+        ]
+      ],
+      "island_id": "veilfall",
+      "position": [
+        396.0,
+        1.917915,
+        3812.0
+      ],
+      "route_clearance_m": 13.4204607009888,
+      "sampled_slope_deg": 6.11548580975939,
+      "id": "water:veilfall:harvest:014",
+      "item_id": "sluice_metal",
+      "gather_action": "pickaxe",
+      "registration": "runtime_registered",
+      "placement_reason": "Dry landing and hike approach provision pocket before the hidden stronghold; recovery ingredients and repair materials.",
+      "placement_revision": "density_wave3",
+      "evidence_status": "analytic_approach_only_not_baked_or_walked",
+      "yield": 2
     }
   ]
 }

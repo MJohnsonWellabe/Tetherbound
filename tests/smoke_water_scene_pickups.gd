@@ -55,7 +55,7 @@ func run() -> void:
 	player.global_position = position_of(ordinary)
 	var service := SERVICE.new()
 	var census := service.build(world)
-	check(census.ready and census.authored_pickups == 200 and census.authored_harvest == 160, "Catalogue builds all 360 identities")
+	check(census.ready and census.authored_pickups == 200 and census.authored_harvest == 182, "Catalogue builds all 382 identities")
 	check(census.active_pickups + census.active_harvest <= service.active_cap_per_peer, "Local residency respects budget")
 	var ordinary_node := service.node_for(ordinary.id)
 	check(ordinary_node != null, "Nearby ordinary pickup physically instantiated")
@@ -119,10 +119,10 @@ func run() -> void:
 	check(service.node_for(far_row.id) == null, "Peer in another realm does not retain Water objects")
 	check(service.census().errors.is_empty(), "No registration or ground errors in visited slices")
 	service.residency_radius_m = 100000.0
-	service.active_cap_per_peer = 360
+	service.active_cap_per_peer = 382
 	service.refresh()
 	var all := service.census()
-	check(all.active_pickups == 198 and all.active_harvest == 159 and all.errors.is_empty(), "Every remaining authored pickup and harvest body builds with registered items and dry ground")
+	check(all.active_pickups == 198 and all.active_harvest == 181 and all.errors.is_empty(), "Every remaining authored pickup and harvest body builds with registered items and dry ground")
 	print("Water pickup smoke: ", checks, " checks, ", failures.size(), " failures; census=", service.census())
 	world.queue_free()
 	await frames()
