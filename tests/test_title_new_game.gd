@@ -13,6 +13,7 @@ const GAME_STATE := preload("res://autoload/game_state.gd")
 ## for one rather than re-implementing the config read.
 const PLAYER_STATE := preload("res://autoload/player_state.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
+const TITLE_SCREEN := preload("res://scripts/ui/title_screen.gd")
 
 const TEST_DIR := "user://test_title_new_game_saves/"
 
@@ -51,7 +52,7 @@ func test_new_game_clears_loaded_progress_but_preserves_save_slots() -> void:
 		"camera_yaw": 0.2,
 		"camera_pitch": -0.1,
 	}
-	game.progression.set_flag("warden_defeated")
+	game.progression.set_flag("defeated_warden")
 	game.map.mark_visited(Vector3.ZERO)
 	game.satiety = 24.0
 	game.pending_build = "wall"
@@ -100,6 +101,28 @@ func test_fresh_party_still_enforces_the_five_creature_limit() -> void:
 		assert_true(game.party.add(game.make_creature("terrapup", "Pal %d" % i)))
 	assert_false(game.party.add(game.make_creature("ripplet", "Sixth")))
 	assert_eq(game.party.size(), 5)
+
+
+func test_title_character_choice_targets_game_local_and_survives_new_game_reset() -> void:
+	TITLE_SCREEN._set_chosen_character(game, "kael")
+	game.reset_for_new_game()
+	assert_eq(str(game.local.chosen_character), "kael")
+
+
+func test_all_four_character_choices_resolve_to_real_body_assets() -> void:
+	var options: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
+		"res://data/config/characters.json"))
+	var art: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
+		"res://data/config/art.json"))
+	var rows: Array = options.get("characters", [])
+	assert_eq(rows.size(), 4)
+	for raw: Variant in rows:
+		var row: Dictionary = raw
+		var id := str(row.get("id", ""))
+		assert_true(art.has(id), "character '%s' is missing its art route" % id)
+		var body: Dictionary = art.get(id, {})
+		var model := str(body.get("model", ""))
+		assert_true(FileAccess.file_exists(model), "character '%s' model is missing: %s" % [id, model])
 
 
 func _wipe_test_dir() -> void:

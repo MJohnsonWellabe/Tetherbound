@@ -39,6 +39,12 @@ class FakeVitals:
 	var satiety: float = 100.0
 	var max_satiety: float = 100.0
 
+class FakeLocal:
+	extends RefCounted
+	var character_id: String = ""
+	var display_name: String = ""
+	var chosen_character: String = "trainer"
+
 class FakeGame:
 	extends RefCounted
 	var day: int = 1
@@ -78,6 +84,7 @@ class FakeGame:
 	## Set by a test to exercise the "live vitals reachable" branch of the
 	## satiety seam; left null to exercise the fallback branch instead.
 	var _vitals: RefCounted = null
+	var local: RefCounted = null
 
 	func player_vitals() -> RefCounted:
 		return _vitals
@@ -115,6 +122,7 @@ func _game(seed_party: bool = true) -> RefCounted:
 	game.inventory = INVENTORY.new(db)
 	game.progression = PROGRESSION_STATE.new()
 	game.realm_hearts = REALM_HEART_STATE.new()
+	game.local = FakeLocal.new()
 	if seed_party:
 		var creature: RefCounted = CREATURE.from_species("terrapup", {
 			"display_name": "Terrapup", "type": "ground", "base_hp": 100.0,
@@ -124,6 +132,15 @@ func _game(seed_party: bool = true) -> RefCounted:
 		creature.take_damage(35.0)
 		game.party.add(creature)
 	return game
+
+
+func test_save_then_load_round_trips_the_selected_character_body() -> void:
+	var written := _game(false)
+	written.local.chosen_character = "lyra"
+	assert_true(saver.save(written, 1))
+	var read := _game(false)
+	assert_true(saver.load_slot(read, 1))
+	assert_eq(str(read.local.chosen_character), "lyra")
 
 
 func test_save_then_load_round_trips_realm_and_active_heart() -> void:

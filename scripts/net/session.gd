@@ -187,7 +187,8 @@ func host(port: int = -1, peers: int = -1) -> bool:
 	_box["failed"] = false
 	_box["ended"] = ""
 	_registry.call("clear")
-	_registry.call("add", HOST_PEER_ID, _local_character_id(), _local_display_name(), _local_realm())
+	_registry.call("add", HOST_PEER_ID, _local_character_id(), _local_display_name(),
+		_local_realm(), _local_appearance_id())
 	if _realms != null:
 		_realms.call("reconcile")
 	print("[session] hosting on udp/%d (cap %d, channels %d); local peer id %d"
@@ -238,6 +239,8 @@ func join(ip: String, port: int = -1, character_summary: Dictionary = {}) -> boo
 		summary["display_name"] = _local_display_name()
 	if not summary.has("realm"):
 		summary["realm"] = _local_realm()
+	if not summary.has("appearance_id"):
+		summary["appearance_id"] = _local_appearance_id()
 	_pending_hello = summary
 	print("[session] dialling %s:%d as '%s' (%s)"
 		% [ip, use_port, str(summary["display_name"]), str(summary["character_id"])])
@@ -418,7 +421,7 @@ func peer_count() -> int:
 func peers() -> Array:
 	if not is_active():
 		return [PEER_REGISTRY.make_row(HOST_PEER_ID, _local_character_id(),
-			_local_display_name(), _local_realm())]
+			_local_display_name(), _local_realm(), _local_appearance_id())]
 	return _registry.call("rows")
 
 
@@ -457,7 +460,8 @@ func _rpc_hello(summary: Dictionary) -> void:
 	var character_id := str(summary.get("character_id", ""))
 	var display_name := str(summary.get("display_name", ""))
 	var realm := str(summary.get("realm", "meadows"))
-	_registry.call("add", sender, character_id, display_name, realm)
+	var appearance_id := str(summary.get("appearance_id", "trainer"))
+	_registry.call("add", sender, character_id, display_name, realm, appearance_id)
 	print("[session] peer %d joined as '%s' (%s) in %s" % [sender, display_name, character_id, realm])
 	# The snapshot goes on its OWN channel (D95) and BEFORE the registry, so a
 	# joiner can never see itself listed as present while still holding an
@@ -912,6 +916,17 @@ func _local_display_name() -> String:
 		return "Trainer"
 	var n := str((local as RefCounted).get("display_name"))
 	return n if not n.is_empty() else "Trainer"
+
+
+func _local_appearance_id() -> String:
+	var game := _game()
+	if game == null:
+		return "trainer"
+	var local: Variant = game.get("local")
+	if not local is Object:
+		return "trainer"
+	var appearance := str((local as Object).get("chosen_character"))
+	return appearance if not appearance.is_empty() else "trainer"
 
 
 func _local_realm() -> String:

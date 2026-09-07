@@ -241,6 +241,19 @@ func _character_id_for(peer_id: int) -> String:
 	return ""
 
 
+func _appearance_id_for(peer_id: int) -> String:
+	if _session != null and _session.has_method("peers"):
+		var raw: Variant = _session.call("peers")
+		if raw is Array:
+			for entry in (raw as Array):
+				if entry is Dictionary:
+					var d: Dictionary = entry
+					if int(d.get("peer_id", d.get("id", 0))) == peer_id:
+						var appearance := str(d.get("appearance_id", "trainer"))
+						return appearance if not appearance.is_empty() else "trainer"
+	return "trainer"
+
+
 func _spawn_for(peer_id: int) -> void:
 	if _spawner == null or _bodies.has(peer_id):
 		return
@@ -248,6 +261,7 @@ func _spawn_for(peer_id: int) -> void:
 	var data := {
 		"peer_id": peer_id,
 		"character_id": _character_id_for(peer_id),
+		"appearance_id": _appearance_id_for(peer_id),
 		"display_name": _display_name_for(peer_id),
 		"at": [at.x, at.y, at.z],
 		# Carried in the spawn rather than read from `_realm` in the spawn
@@ -278,6 +292,13 @@ func _spawn_trainer(data: Variant) -> Node:
 	node.name = "Trainer_%d" % peer_id
 	node.set("peer_id", peer_id)
 	node.set("character_id", str(d.get("character_id", "")))
+	var appearance_id := str(d.get("appearance_id", "trainer"))
+	if appearance_id.is_empty():
+		appearance_id = "trainer"
+	node.set("appearance_id", appearance_id)
+	var model := node.get_node_or_null(^"Model")
+	if model != null:
+		model.set("appearance_id", appearance_id)
 	node.set("display_name", str(d.get("display_name", "")))
 	var at: Variant = d.get("at", [])
 	if at is Array and (at as Array).size() == 3:

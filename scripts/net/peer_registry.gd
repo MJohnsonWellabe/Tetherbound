@@ -11,7 +11,7 @@ extends RefCounted
 ## `player_state.gd`: no `Node`, no `multiplayer.`, no signals. `session.gd`
 ## owns the transport and does the emitting; this file only knows the mapping
 ##
-##     peer id  <->  character id  <->  display name  <->  realm
+##     peer id  <->  character id  <->  appearance id  <->  display name  <->  realm
 ##
 ## plus the two Wave 4/5 placeholder flags (`sleeping` for D105's sleep vote,
 ## `downed` for the revive window). They are stored and replicated from today so
@@ -42,11 +42,12 @@ var revision: int = 0
 ## always -- a replicated row with a missing key is the kind of thing that
 ## reads fine on the host and crashes a client three waves later.
 static func make_row(peer_id: int, character_id: String = "", display_name: String = "",
-		realm: String = "meadows") -> Dictionary:
+		realm: String = "meadows", appearance_id: String = "trainer") -> Dictionary:
 	return {
 		"peer_id": peer_id,
 		"character_id": character_id,
 		"display_name": display_name,
+		"appearance_id": appearance_id if not appearance_id.is_empty() else "trainer",
 		"realm": realm,
 		"sleeping": false,
 		"downed": false,
@@ -61,14 +62,14 @@ static func make_row(peer_id: int, character_id: String = "", display_name: Stri
 ## socket died and reconnected resumes where its character was rather than
 ## appearing twice.
 func add(peer_id: int, character_id: String = "", display_name: String = "",
-		realm: String = "meadows") -> Dictionary:
+		realm: String = "meadows", appearance_id: String = "trainer") -> Dictionary:
 	var carried_realm := realm
 	if not character_id.is_empty():
 		var previous := peer_for_character(character_id)
 		if previous != 0 and previous != peer_id:
 			carried_realm = str((_rows[previous] as Dictionary).get("realm", realm))
 			_rows.erase(previous)
-	var row := make_row(peer_id, character_id, display_name, carried_realm)
+	var row := make_row(peer_id, character_id, display_name, carried_realm, appearance_id)
 	_rows[peer_id] = row
 	revision += 1
 	return row.duplicate(true)
@@ -173,7 +174,8 @@ func load_data(data: Dictionary) -> void:
 			if id == 0:
 				continue
 			var r := make_row(id, str(e.get("character_id", "")),
-				str(e.get("display_name", "")), str(e.get("realm", "meadows")))
+				str(e.get("display_name", "")), str(e.get("realm", "meadows")),
+				str(e.get("appearance_id", "trainer")))
 			r["sleeping"] = bool(e.get("sleeping", false))
 			r["downed"] = bool(e.get("downed", false))
 			_rows[id] = r

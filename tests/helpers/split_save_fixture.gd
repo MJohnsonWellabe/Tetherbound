@@ -37,6 +37,7 @@ class IdHolder:
 	var world_id: String = ""
 	var character_id: String = ""
 	var display_name: String = ""
+	var chosen_character: String = "trainer"
 
 
 class FakeGame:
@@ -97,6 +98,7 @@ static func game(db: RefCounted, seed_party: bool = true) -> RefCounted:
 	g.realm_hearts = REALM_HEART_STATE.new()
 	g.world = IdHolder.new()
 	g.local = IdHolder.new()
+	g.local.chosen_character = "sera"
 	for realm_id: String in ["meadows", "cloudreach"]:
 		var instance: RefCounted = MAP_STATE.new()
 		instance.call("configure", _json(MAP_LANDMARKS_PATH))

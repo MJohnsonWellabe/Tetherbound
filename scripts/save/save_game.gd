@@ -510,6 +510,7 @@ func snapshot(game: Object) -> Dictionary:
 	var data := {
 		"version": VERSION,
 		"day": int(game.get("day")),
+		"chosen_character": str(personal.get("chosen_character")) if personal is Object else "trainer",
 		"party": _party_to_array(game.get("party")),
 		"inventory": _inventory_to_array(game.get("inventory")),
 		"hotbar": _hotbar_to_array(game),
@@ -600,6 +601,9 @@ func load_slot(game: Object, slot: int) -> bool:
 	var skills_obj := _player_skills(game)
 	var personal: Variant = game.get("local")
 	if personal is Object:
+		personal.set("chosen_character", str(data.get("chosen_character", "trainer")))
+		if str(personal.get("chosen_character")).is_empty():
+			personal.set("chosen_character", "trainer")
 		var escrow: Variant = data.get("satchel_escrow", {})
 		personal.set("satchel_escrow", escrow.duplicate(true) if escrow is Dictionary else {})
 	if skills_obj != null:

@@ -79,6 +79,8 @@ const IDLE_SPEED := 0.15
 ## node enters the tree. Not replicated per-frame: they never change.
 @export var peer_id: int = 0
 @export var character_id: String = ""
+## The art.json body id is separate from character_id, which names the save.
+@export var appearance_id: String = "trainer"
 @export var display_name: String = ""
 ## Wave 6 lane 6.A. The realm this body was spawned INTO, stamped by
 ## `trainer_spawn.gd::_spawn_trainer()` from the spawn data. Deliberately not

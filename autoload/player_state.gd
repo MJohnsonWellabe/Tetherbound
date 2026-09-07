@@ -387,6 +387,7 @@ func save_data() -> Dictionary:
 	return {
 		"character_id": character_id,
 		"display_name": display_name,
+		"chosen_character": chosen_character,
 		"party": saver.call("_party_to_array", party),
 		"inventory": saver.call("_inventory_to_array", inventory),
 		"hotbar": _hotbar_array(),
@@ -407,6 +408,9 @@ func load_data(data: Dictionary) -> void:
 	var loader: RefCounted = SAVE_GAME.new()
 	character_id = str(data.get("character_id", character_id))
 	display_name = str(data.get("display_name", display_name))
+	chosen_character = str(data.get("chosen_character", "trainer"))
+	if chosen_character.is_empty():
+		chosen_character = "trainer"
 	loader.call("_array_to_party", data.get("party", []), party)
 	loader.call("_array_to_inventory", data.get("inventory", []), inventory)
 	_load_hotbar(data.get("hotbar", []))
