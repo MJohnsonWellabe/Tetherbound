@@ -90,3 +90,41 @@ Approach change for the next window: pause tree silhouette and density polishing
 | UTC | Main SHA | Score | Window delta | Strategy |
 |---|---|---:|---:|---|
 | 2026-09-07 01:54:38 | 84125fcd0 | 5.25 | 5.25 | Visual polishing paused; prioritize live Surge, arches and chapter gates, with bounded proof lanes. |
+
+## Two-hour checkpoint — 2026-09-07 03:54:38 UTC
+
+Fetched merged main: `4562268dee581d2f2ce167a4670bbf752f139310` (PR #76; PR #74 also landed in this window). Score **12.00 / 100**, window delta **6.75**: acceptable, not strong. Consecutive-under-five count remains zero. Next checkpoint: **05:54:38 UTC**. The prior 5.25 points remain unchanged; no full exit line is accepted and no phase is closed.
+
+New partial credits, each limited to a tested sub-capability on merged main:
+
+| Row | Fraction of frozen weight | Added | Evidence and remaining scope |
+|---|---:|---:|---|
+| §32.3 Surge | 25% of 8 | 2.00 | Real harvest fixture refuses in Calm, opens in Break, grants three Stormglass and spends pickaxe durability. Phase recognition by a blind player, changed encounters and two-process hazard interaction remain unproven. |
+| §32.7 Density | 25% of 5 | 1.25 | Actual assembled realm mounts 19 NPCs, 26 trainers and 660 wild placements; pickup and harvest fixtures consume real authored placements. This credits the mounted ordinary content layer only, not the complete §13 census, named/Surge encounters or walked gap limits. |
+| §32.10 Fair hazard | 25% of 3 | 0.75 | Live lightning fixture proves announced host strike publication, moving out of the warning and duplicate-impact suppression. This is a minimal scene, not a blind forest run; equipment, creature impacts and multiplayer field proof remain. |
+| §32.13 Persistence | 25% of 5 | 1.25 | Merged v23 migration and world snapshot tests preserve nested weather state; runtime claims restore taken pickups/harvest flags without repeating their reward. Whole chapter saves, constructed arches, Dynamo and actual late-join field reconstruction remain unproven. |
+| §7.5 Surge gameplay | 25% of 2 | 0.50 | The live charged-harvest interaction above is the first working phase-dependent player action. |
+| §7.6 Arches traversal | 25% of 1 | 0.25 | Actual Area3D passage after two relights transports player and companion, refuses combat and duplicate relight cost in the real Session/ledger fixture. Single host only; constructed pairs and Crown absent on main. |
+| §7.9 Distributed content | 25% of 1 | 0.25 | Live opening reaches Hesk through the interaction arbiter and advances to Tamsin; distributed ordinary NPC/trainer/wild mounts above. Later story interactions and full traversal unproven. |
+| §7.10 Rewarded exploration | 25% of 1 | 0.25 | Real ordinary pickup claims and charged harvesting grant inventory rewards and persist stable placement identity. Broad exploration cadence unproven. |
+| §7.16 Save/load chapter state | 25% of 1 | 0.25 | Weather and consumed field-object state above; not the complete chapter or finale. |
+
+All other rows remain at their preceding values (zero except entry/transition). In particular, an ancient arch fixture earns **no** Crown-access exit credit, and two opening objectives earn **no** whole-story credit. Current branch Dynamo rules, combat adapters, four electric TMs and constructed-arch work earn no score.
+
+Evidence re-inspected at checkpoint: `D:/CodexWork/stormwood-prefix-with-rods.log` ends `STORMWOOD CHAPTER PREFIX OK: Ashfoot -> Hesk -> Tamsin objective`; `stormwood-arches-root-proof.log` passes; `stormwood-harvest-live-root.log` passes 21 assertions with a dummy-renderer material error (not visual evidence); `stormwood-lightning-shelter-root.log` has 11 assertions, zero failures. `runtime-wave-evidence-0907.md` lists the focused suites. PR #76 CI run 34078735577 passed all required code jobs after one isolated rerun of the existing catch-race shard; its Stormwood realm smoke passed. Root confirmed head `adea7467fc746e45f0d83123035d0123e2a282d2` is an ancestor of fetched main. The latest local two-process run `net-run-local-1912078` crashed while building Meadows before Stormwood; its terminal failure is retained and is not presented as a successful current local multiplayer run.
+
+Reachable scope: entry/return, Ashfoot opening, ordinary field interactions and ancient travel now exist on integrated main. Terrain and content span six regions, but the Crown route and continuous story to the Dynamo still do not work. Rod switches have host gates, but the real guard-fight-to-switch chain has not been played. Visual reviews remain failed. Main-path blockers remain constructed Crown access, its truth/Rootgate sequence, host-coordinated Marrow and conduits, legendary/relic aftermath and Waterward ending.
+
+Approach change for the next window: freeze additional content-table and silhouette tuning. Root is wiring normal built arches through stable saved twin IDs to unlock the Crown, then the host-owned Dynamo coordinator. Bounded agents verify geometry and pair/save interleavings on independent files; root verifies their claims. Do not grind the local Meadows allocator crash while CI supplies a passing realm seam and independent main-path work remains. Ship the next coherent route wave once its actual code jobs pass.
+
+| UTC | Main SHA | Score | Window delta | Strategy |
+|---|---|---:|---:|---|
+| 2026-09-07 03:54:38 | 4562268de | 12.00 | 6.75 | Constructed Crown route, then host-coordinated Dynamo; table/silhouette tuning frozen. |
+
+## Missed overnight windows and explicit resume — audited 2026-09-07 12:10 UTC
+
+No checkpoint was actually executed at 05:54:38 or 07:54:38. On resumption, fetched main is still `4562268dee581d2f2ce167a4670bbf752f139310`; the last previous local test artifacts are approximately 04:06 UTC. There is no evidence of continued building, completed CI, or a verified process wait during the intervening gap. The gap must not be advertised as an unattended build run.
+
+Applying the owner's wall-clock rule retrospectively: **05:54:38 = 12.00, delta 0**, first low-progress window; **07:54:38 = 12.00, delta 0**, second consecutive low-progress window. The original broad run therefore reached its stop-building condition. Subsequent elapsed windows add no credit. Its finished local Crown/arch/TM work must be integrated and its remaining scope preserved in a fresh-session tail rather than counted as progress on main.
+
+The owner explicitly resumed at 12:10 UTC with “continue from where you left off.” This begins a resumed execution segment toward the same unchanged full objective and frozen weights, starting at **12.00/100**. First finish and land the preserved wave; then use the fresh tail's bounded priorities. Next resumed checkpoint is **14:10 UTC**. This records a resumed run, not a retroactive reset that makes the missed original windows acceptable.

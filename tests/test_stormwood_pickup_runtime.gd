@@ -6,7 +6,7 @@ const CACHE := preload("res://scripts/world/item_cache_pickup.gd")
 
 func test_catalogue_mounts_only_current_ordinary_item_definitions() -> void:
 	var mounted := RUNTIME.ordinary_specs()
-	assert_eq(mounted.size(), 222)
+	assert_eq(mounted.size(), 226)
 	for spec: Dictionary in mounted:
 		assert_eq(str(spec.get("runtime_kind", "")), "item")
 		assert_true(RUNTIME.item_definitions().has(str(spec.get("item_id", ""))))
@@ -14,7 +14,7 @@ func test_catalogue_mounts_only_current_ordinary_item_definitions() -> void:
 
 func test_withheld_rows_are_story_events_or_missing_item_definitions() -> void:
 	var withheld := RUNTIME.withheld_specs()
-	assert_eq(withheld.size(), 7)
+	assert_eq(withheld.size(), 3)
 	var ids: Array[String] = []
 	for spec: Dictionary in withheld:
 		ids.append(str(spec.get("id", "")))
@@ -23,8 +23,6 @@ func test_withheld_rows_are_story_events_or_missing_item_definitions() -> void:
 		else:
 			assert_false(RUNTIME.item_definitions().has(str(spec.get("item_id", ""))))
 	assert_eq(ids, [
-		"stormwood_pickup_pocket_202", "stormwood_pickup_pocket_203",
-		"stormwood_pickup_pocket_204", "stormwood_pickup_pocket_205",
 		"stormwood_pickup_pocket_208", "stormwood_pickup_pocket_209",
 		"stormwood_pickup_pocket_210",
 	])

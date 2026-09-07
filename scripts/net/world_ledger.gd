@@ -1,5 +1,7 @@
 extends RefCounted
 
+const STORMWOOD_ARCH_BUILD := preload("res://scripts/world/stormwood_arch_build_rules.gd")
+
 ## Stage B Wave 3 lane 3.A. THE WORLD LEDGER: one writer for shared world state.
 ##
 ## D103. Every consequential world mutation arrives as an INTENT, is validated
@@ -333,6 +335,20 @@ func _place_building(intent: Dictionary, peer_id: int, realm: String) -> Diction
 	# arrives on the op. A client minting its own would produce two identities
 	# for one structure the moment two peers placed in the same tick.
 	var uid := "b%d" % int(world.get("next_building_uid"))
+	var arch_plan: Dictionary = {}
+	var request_position := _position(intent.get("position"))
+	var arch_at := Vector3(float(request_position[0]), float(request_position[1]), float(request_position[2]))
+	if realm == "stormwood" and id != "stormglass_arch" and not STORMWOOD_ARCH_BUILD.footing_at(arch_at).is_empty():
+		return _refuse("place_building", peer_id, "arch_footing", "This old footing accepts only a Stormglass Arch.")
+	if id == "stormglass_arch":
+		arch_plan = STORMWOOD_ARCH_BUILD.placement(arch_at, realm, world.get("flags"), world.get("placed_buildings"))
+		if not bool(arch_plan.ok):
+			return _refuse("place_building", peer_id, "arch_locked", str(arch_plan.reason))
+		if bool(intent.get("paid", true)):
+			var available: Dictionary = intent.get("available_materials", {})
+			for need: Dictionary in STORMWOOD_ARCH_BUILD.cost(arch_at):
+				if int(available.get(str(need.id), 0)) < int(need.n):
+					return _refuse("place_building", peer_id, "arch_materials", "This footing needs the correct Stormglass grade and arch materials.")
 	var op := {
 		"op": "building_add",
 		"scope": "world",
@@ -345,7 +361,14 @@ func _place_building(intent: Dictionary, peer_id: int, realm: String) -> Diction
 	}
 	if not txn.is_empty():
 		op["txn_id"] = txn
-	var verdict := _commit([op], "place_building", peer_id, realm)
+	var ops: Array = [op]
+	if not arch_plan.is_empty():
+		ops.append({"op": "building_arch_link", "scope": "world", "realm": realm,
+			"uid": uid, "twin": str(arch_plan.twin), "footing": str(arch_plan.footing)})
+		if not str(arch_plan.twin).is_empty() and str(arch_plan.twin) != "e_crown":
+			ops.append({"op": "building_arch_link", "scope": "world", "realm": realm,
+				"uid": str(arch_plan.twin), "twin": uid})
+	var verdict := _commit(ops, "place_building", peer_id, realm)
 	# Echoed so the presser can match THIS answer to the ticket it raised. Two
 	# placements in flight inside one round trip otherwise pop the wrong ticket
 	# and charge the wrong press (lane 3.C, F3).
@@ -382,7 +405,12 @@ func _dismantle(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
 		"uid": str(record.get("uid", "")), "index": index}
 	if not txn.is_empty():
 		op["txn_id"] = txn
-	var verdict := _commit([op], "dismantle", peer_id, realm)
+	var ops: Array = [op]
+	var twin := str(record.get("arch_twin", ""))
+	if not twin.is_empty() and twin != "e_crown":
+		ops.append({"op": "building_arch_link", "scope": "world", "realm": realm,
+			"uid": twin, "twin": ""})
+	var verdict := _commit(ops, "dismantle", peer_id, realm)
 	verdict["uid"] = str(record.get("uid", ""))
 	if not txn.is_empty():
 		verdict["txn_id"] = txn

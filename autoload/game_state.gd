@@ -1829,6 +1829,17 @@ func can_afford(id: String) -> bool:
 	# Without this, free build's empty cost would make every typo affordable.
 	if items.buildable(id).is_empty():
 		return false
+	if id == "stormglass_arch":
+		if current_realm != "stormwood" or not progression.has("stormwood:arch_recipe_known"):
+			return false
+		if not free_build:
+			# The Crown socket accepts the refined grade; allow selecting the
+			# arch with either grade, then charge the exact preview's recipe.
+			for need: Dictionary in build_cost_for(id):
+				var stock := int(inventory.count(str(need.id)))
+				if str(need.id) == "stormglass": stock = maxi(stock, int(inventory.count("stormglass_crown")))
+				if stock < int(need.n): return false
+			return true
 	for requirement in build_cost_for(id):
 		if typeof(requirement) != TYPE_DICTIONARY:
 			continue

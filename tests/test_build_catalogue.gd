@@ -116,12 +116,13 @@ func test_every_entry_has_a_thumbnail() -> void:
 				"'%s' names thumbnail '%s', which does not exist" % [id, thumbnail])
 
 
-const HAND_AUTHORED_IDS := ["tent", "campfire", "bedroll", "storage"]
+const HAND_AUTHORED_IDS := ["tent", "campfire", "bedroll", "storage", "stormglass_arch"]
 
 func test_every_non_camp_entry_has_a_mesh_that_exists() -> void:
 	# R2.6/R2.7. `tent`/`campfire`/`bedroll` (OWNER-0902-CAMP-SPLIT) and
 	# `storage` place through their own hand-authored scripts
 	# (camp_tent.gd/campfire.gd/player_bed.gd, storage_container.gd) and
+	# Stormglass Arch uses stormwood_arch_piece.gd's open-frame collision.
 	# carry no `mesh` field of their own; every other entry is generic
 	# geometry placed by build_piece.gd from this path, so a missing one is a
 	# piece that arms in the menu and puts nothing in the world when placed.

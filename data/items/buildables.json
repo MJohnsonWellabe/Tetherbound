@@ -140,6 +140,28 @@
         { "id": "wood", "n": 6 },
         { "id": "fiber", "n": 8 }
       ]
+    },
+    {
+      "id": "stormglass_arch",
+      "name": "Stormglass Arch",
+      "category": "structures",
+      "blurb": "Learn from Keeper Ondra. Raise two arches to bind a road. The Still Grove footing requires six Crown-grade Stormglass and binds only to the Crown.",
+      "thumbnail": "res://assets/ui/icons/buildables/door.png",
+      "cost": [
+        {
+          "id": "stormglass",
+          "n": 6
+        },
+        {
+          "id": "thunderwood_frame",
+          "n": 2
+        },
+        {
+          "id": "conductor_vine",
+          "n": 4
+        }
+      ],
+      "unlocked_by": "stormwood:arch_recipe_known"
     }
   ]
 }

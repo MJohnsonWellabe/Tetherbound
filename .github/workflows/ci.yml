@@ -1271,6 +1271,15 @@ jobs:
             echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
           done
           exit 1
+      - name: Verify Stormwood constructed arch journey
+        if: ${{ !cancelled() }}
+        run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_arches.gd
+      - name: Verify Stormwood heartstone interaction
+        if: ${{ !cancelled() }}
+        run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_crown_heartstone.gd
+      - name: Verify Stormwood ordinary and electric TM pickups
+        if: ${{ !cancelled() }}
+        run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_pickup_runtime.gd
       - name: Verify relay
         if: ${{ !cancelled() }}
         env: { SMOKE: relay, RETRIES: 1 }

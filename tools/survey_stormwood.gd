@@ -1,6 +1,6 @@
 extends SceneTree
 
-## Forward+ production-scene foundation survey for Stormwood.
+## Shipped Compatibility-renderer production-scene survey for Stormwood.
 ##
 ## Run through tools/survey.sh --stormwood <godot-binary>. This captures the
 ## real Stormwood scene after its own `_ready_complete` signal, with the real
@@ -24,6 +24,18 @@ const VIEWS := [
 	{"name": "08-treebase", "eye": Vector2(-100.0, 5300.0), "target": Vector3(-100.0, 205.0, 5470.0), "target_above_ground": 150.0},
 ]
 
+## Opt-in capture fixture only. It deliberately goes through the normal ledger
+## and BuildPlacer delta consumer after the production world is ready, so the
+## resulting frame documents the rendered constructed-arch path rather than a
+## hand-placed duplicate prop. It is never a playthrough/progression claim.
+const CROWN_FIXTURE_ENV := "STORMWOOD_SURVEY_CROWN"
+const STILL_GROVE := Vector2(-160.0, 2750.0)
+const CROWN_FIXTURE_MATERIALS := {
+	"stormglass_crown": 6,
+	"thunderwood_frame": 2,
+	"conductor_vine": 4,
+}
+
 
 func _init() -> void:
 	_run.call_deferred()
@@ -41,6 +53,10 @@ func _output_dir() -> String:
 		if arg == "--output" and index + 1 < args.size():
 			return str(args[index + 1])
 	return DEFAULT_OUT_DIR
+
+
+func _crown_fixture_enabled() -> bool:
+	return OS.get_environment(CROWN_FIXTURE_ENV) == "1"
 
 
 func _run() -> void:
@@ -75,6 +91,10 @@ func _run() -> void:
 		push_error("Stormwood survey: world._ready_complete did not arrive")
 		quit(1)
 		return
+	if _crown_fixture_enabled():
+		if not await _raise_crown_fixture(game, world):
+			quit(1)
+			return
 
 	var player := world.get_node_or_null(^"Player") as CharacterBody3D
 	var production_camera := world.get_node_or_null(^"CameraRig/Camera3D") as Camera3D
@@ -106,7 +126,13 @@ func _run() -> void:
 
 	var failures: Array[String] = []
 	for raw_view: Variant in VIEWS:
-		var view := raw_view as Dictionary
+		var view := (raw_view as Dictionary).duplicate()
+		# The ordinary survey retains its eight fixed views byte-for-byte. The
+		# opt-in fixture replaces only view five with the still-grove viewpoint:
+		# raised player arch in the near field, Crown island as the far read.
+		if _crown_fixture_enabled() and str(view.name) == "05-crown-overlook":
+			view = {"name": "05-crown-overlook", "eye": Vector2(-178.0, 2732.0),
+				"target": Vector3(700.0, 92.0, 2700.0), "target_above_ground": 28.0}
 		var eye_xz: Vector2 = view["eye"]
 		var target: Vector3 = view["target"]
 		var ground := float(world.call("ground_height_at", eye_xz.x, eye_xz.y))
@@ -148,5 +174,49 @@ func _run() -> void:
 			push_error("Stormwood survey: %s" % failure)
 		quit(1)
 		return
-	print("STORMWOOD CAPTURE OK %d frames; Forward+ production scene; foundation views only" % VIEWS.size())
+	print("STORMWOOD CAPTURE OK %d frames; Compatibility production scene; survey fixture only" % VIEWS.size())
 	quit(0)
+
+
+## A deliberately narrow survey setup: it grants only the recipe flag and
+## sends the normal paid placement request with the exact Still Grove materials.
+## The direct flag write is fixture setup; the actual building record and its
+## scene node must still arrive through Game.ledger -> BuildPlacer delta.
+func _raise_crown_fixture(game: Node, world: Node3D) -> bool:
+	var progression: RefCounted = game.get("progression")
+	if progression == null:
+		push_error("Stormwood Crown survey fixture: progression is missing")
+		return false
+	progression.set_flag("stormwood:arch_recipe_known")
+	var placer := world.get_node_or_null(^"BuildPlacer")
+	if placer == null:
+		push_error("Stormwood Crown survey fixture: normal BuildPlacer is missing")
+		return false
+	var ledger := game.get("ledger") as Node
+	if ledger == null:
+		push_error("Stormwood Crown survey fixture: Game.ledger is missing")
+		return false
+	var ground := float(world.call("ground_height_at", STILL_GROVE.x, STILL_GROVE.y))
+	if is_nan(ground):
+		push_error("Stormwood Crown survey fixture: Still Grove has no terrain height")
+		return false
+	var verdict: Dictionary = ledger.call("submit", {
+		"kind": "place_building",
+		"realm": "stormwood",
+		"id": "stormglass_arch",
+		"position": [STILL_GROVE.x, ground, STILL_GROVE.y],
+		"yaw_deg": 90.0,
+		"paid": true,
+		"available_materials": CROWN_FIXTURE_MATERIALS.duplicate(),
+	})
+	if not bool(verdict.get("ok", false)):
+		push_error("Stormwood Crown survey fixture: ledger refused arch: %s" % str(verdict.get("reason", verdict)))
+		return false
+	for _frame in 12:
+		await process_frame
+	for piece: Node in get_nodes_in_group(&"placed_building"):
+		if world.is_ancestor_of(piece) and str(piece.get_meta("building_id", "")) == "stormglass_arch":
+			print("STORMWOOD CROWN SURVEY FIXTURE raised through ledger and BuildPlacer delta")
+			return true
+	push_error("Stormwood Crown survey fixture: building delta did not produce an arch node")
+	return false

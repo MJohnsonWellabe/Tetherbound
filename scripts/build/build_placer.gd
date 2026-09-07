@@ -65,6 +65,8 @@ const BUILD_DOOR := preload("res://scripts/build/build_door.gd")
 const HOME_PROGRESS := preload("res://scripts/build/home_progress.gd")
 const WORLD_RECORDS := preload("res://scripts/world/realm_world_records.gd")
 const BUILD_PIECE := preload("res://scripts/build/build_piece.gd")
+const STORMWOOD_ARCH_RULES := preload("res://scripts/world/stormwood_arch_build_rules.gd")
+const STORMWOOD_ARCH_PIECE := preload("res://scripts/build/stormwood_arch_piece.gd")
 const BUILD_GRID := preload("res://scripts/build/build_grid.gd")
 const BUILD_SNAP := preload("res://scripts/build/build_snap_contract.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
@@ -84,7 +86,7 @@ const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 ## real `village_door.gd` hinge/prompt build_piece.gd cannot give it, not
 ## saved state (open/closed does not persist across save/load, same as every
 ## authored village door today).
-const STATEFUL_IDS := ["tent", "campfire", "bedroll", "storage", "creature_bed", "door"]
+const STATEFUL_IDS := ["tent", "campfire", "bedroll", "storage", "creature_bed", "door", "stormglass_arch"]
 
 ## R3.1. Every node this script has planted for real, ghost excluded — how
 ## `restore_from_game` finds and clears the old set before rebuilding from a
@@ -436,7 +438,11 @@ func _show_ghost(game: Node, armed: String) -> void:
 
 	if _ghost == null or not is_instance_valid(_ghost):
 		_ghost_id = armed
-		if armed == "tent":
+		if armed == "stormglass_arch":
+			_ghost = STORMWOOD_ARCH_PIECE.new()
+			_ghost.name = "StormglassArchGhost"
+			_ghost.build_ghost()
+		elif armed == "tent":
 			_ghost = CAMP_TENT.new()
 			_ghost.name = "TentGhost"
 			_ghost.call("build_ghost")
@@ -598,6 +604,11 @@ static func evaluate_placement(game: Node, armed: String, raw_spot: Vector3,
 			"yaw_deg": NAN,
 		}
 	var resolved := BUILD_SNAP.resolve(raw_spot, ground, armed, buildings)
+	var socket := STORMWOOD_ARCH_RULES.footing_at(raw_spot) if WORLD_RECORDS.active(game) == "stormwood" else {}
+	if armed == "stormglass_arch" and not socket.is_empty():
+		var anchor := Vector3(float(socket.at[0]), ground, float(socket.at[1]))
+		anchor.y = float(ground_height.call(anchor))
+		resolved = {"position": anchor, "snapped_to_neighbour": true, "structural": false, "yaw_deg": float(socket.yaw_deg)}
 	var spot: Vector3 = resolved.position
 	var snapped_to_neighbour := bool(resolved.snapped_to_neighbour)
 
@@ -617,8 +628,21 @@ static func evaluate_placement(game: Node, armed: String, raw_spot: Vector3,
 	# buildable stay exactly as legal as they were.
 	var needs_tent := armed == "bedroll" and not _bedroll_has_tent(spot, buildings)
 	var afford := _can_afford(game, armed)
+	var arch_reason := ""
+	if armed == "stormglass_arch":
+		var plan := STORMWOOD_ARCH_RULES.placement(spot, WORLD_RECORDS.active(game), game.get("progression"), buildings)
+		arch_reason = str(plan.reason)
+		afford = bool(game.get("free_build"))
+		if not afford:
+			afford = true
+			for need: Dictionary in STORMWOOD_ARCH_RULES.cost(spot):
+				if int(game.get("inventory").count(str(need.id))) < int(need.n): afford = false
+	elif not socket.is_empty():
+		arch_reason = "This old footing accepts only a Stormglass Arch"
 	var reason := ""
-	if occupied:
+	if not arch_reason.is_empty():
+		reason = arch_reason
+	elif occupied:
 		reason = "Something is already here"
 	elif too_steep:
 		reason = "Too steep to build here"
@@ -628,7 +652,7 @@ static func evaluate_placement(game: Node, armed: String, raw_spot: Vector3,
 		reason = "Can't afford this — check the build menu for what's short"
 	return {
 		"has_ground": true,
-		"ok": not too_steep and not occupied and not needs_tent and afford,
+		"ok": arch_reason.is_empty() and not too_steep and not occupied and not needs_tent and afford,
 		"reason": reason,
 		"position": spot,
 		"snapped_to_neighbour": snapped_to_neighbour,
@@ -677,7 +701,12 @@ static func _bedroll_has_tent(spot: Vector3, buildings: Array) -> bool:
 ## yet to restore.
 func _spawn_building(game: Node, id: String, yaw_deg: float = 0.0, index: int = -1, state_data: Variant = null) -> Node3D:
 	var placed: Node3D = null
-	if id == "tent":
+	if id == "stormglass_arch":
+		placed = STORMWOOD_ARCH_PIECE.new()
+		placed.name = "StormglassArch"
+		get_parent().add_child(placed)
+		placed.build_real()
+	elif id == "tent":
 		placed = CAMP_TENT.new()
 		placed.name = "Tent"
 		get_parent().add_child(placed)
@@ -766,6 +795,9 @@ func _open_craft_panel() -> void:
 ## complete inside this call, because `submit()` commits in-process and emits
 ## the delta before it returns.
 func _place(game: Node, armed: String) -> void:
+	if armed == "stormglass_arch" and not _pending_placements.is_empty():
+		game.call("push_world_message", "Let the previous placement settle first")
+		return
 	var transport := _transport(game)
 	if transport == null:
 		push_error("no Game.ledger to submit a placement through")
@@ -784,10 +816,14 @@ func _place(game: Node, armed: String) -> void:
 		"realm": realm,
 		"position": spot,
 		"yaw_deg": yaw_deg,
-		"cost": (game.call("build_cost_for", armed) as Array).duplicate(true),
+		"cost": (STORMWOOD_ARCH_RULES.cost(spot) if armed == "stormglass_arch" and not bool(game.get("free_build")) else game.call("build_cost_for", armed)).duplicate(true),
 		"paid": not bool(game.get("free_build")),
 	}
 	_pending_placements.append(ticket)
+	var available_materials := {}
+	if armed == "stormglass_arch":
+		for need: Dictionary in STORMWOOD_ARCH_RULES.cost(spot):
+			available_materials[str(need.id)] = int(game.get("inventory").count(str(need.id)))
 	var verdict: Dictionary = transport.call("submit", {
 		"kind": "place_building",
 		"realm": realm,
@@ -795,6 +831,7 @@ func _place(game: Node, armed: String) -> void:
 		"position": [spot.x, spot.y, spot.z],
 		"yaw_deg": yaw_deg,
 		"paid": ticket["paid"],
+		"available_materials": available_materials,
 	})
 	if bool(verdict.get("ok", false)) or bool(verdict.get("pending", false)):
 		# `ok` means the delta already landed and `_on_delta_applied` has
@@ -1112,6 +1149,9 @@ func dismantle_piece(game: Node, target: Node3D) -> bool:
 	if bool(record.get("paid", true)) and refund.is_empty():
 		var entry: Dictionary = game.get("items").call("buildable", id)
 		refund = (entry.get("cost", []) as Array).duplicate(true)
+	if id == "stormglass_arch" and bool(record.get("paid", true)):
+		var p: Array = record.position
+		refund = STORMWOOD_ARCH_RULES.cost(Vector3(float(p[0]), float(p[1]), float(p[2])))
 	if not bool(record.get("paid", true)):
 		refund = []
 	var inventory: RefCounted = game.get("inventory")

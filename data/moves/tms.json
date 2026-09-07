@@ -113,6 +113,38 @@
         "air"
       ],
       "colour": "#7aa9cc"
+    },
+    "tm_static_snap": {
+      "display_name": "TM: Static Snap",
+      "move_id": "static_snap",
+      "compatible_types": [
+        "electric"
+      ],
+      "colour": "#f5d24a"
+    },
+    "tm_voltaic_whip": {
+      "display_name": "TM: Voltaic Whip",
+      "move_id": "voltaic_whip",
+      "compatible_types": [
+        "electric"
+      ],
+      "colour": "#f5d24a"
+    },
+    "tm_thunder_break": {
+      "display_name": "TM: Thunder Break",
+      "move_id": "thunder_break",
+      "compatible_types": [
+        "electric"
+      ],
+      "colour": "#f5d24a"
+    },
+    "tm_stormfall": {
+      "display_name": "TM: Stormfall",
+      "move_id": "stormfall",
+      "compatible_types": [
+        "electric"
+      ],
+      "colour": "#f5d24a"
     }
   },
   "_comment_catalogue": "Owner, after playing: there were exactly TWO TMs in the game, both ground, and each taught a move some creature already had -- \"far too few\" and \"they're not upgrades\". Both halves needed the move work that landed alongside this: while every move was power 1.0 with the same reach and timing, there was nothing for an upgrade to BE better than. TM moves now sit at 1.15x-2.0x a base move's power and buy real reach or area with it, and the 2.0x tier (earthshatter, leviathan_surge, heavenfall) is deliberately one per type and deliberately rare. Compatibility stays same-type-only; GAME_DESIGN.md 13's 'off-type moves where thematically sensible' is still a design call nobody has made, and this data does not make it."

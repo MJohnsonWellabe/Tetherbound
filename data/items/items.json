@@ -1071,6 +1071,54 @@
       "description": "Slow-grown Stormglass from the Capacitor Grove and Hollow Crown. Its concentrated charge holds the Crown connection steady.",
       "gathered_with": "pickaxe",
       "realm_id": "stormwood"
+    },
+    "tm_static_snap": {
+      "name": "TM: Static Snap",
+      "kind": "tm",
+      "move": "static_snap",
+      "stack": 1,
+      "colour": "#f5d24a",
+      "icon": "res://assets/ui/icons/items/tm_quick.png",
+      "world_model": "res://assets/props/tm_orb/tm_orb.glb",
+      "world_model_scale": 0.42,
+      "blurb": "One electric creature, one lesson.",
+      "description": "A gold-lit teaching orb carrying Static Snap. An electric creature can learn this quick move; the orb is spent after the lesson."
+    },
+    "tm_voltaic_whip": {
+      "name": "TM: Voltaic Whip",
+      "kind": "tm",
+      "move": "voltaic_whip",
+      "stack": 1,
+      "colour": "#f5d24a",
+      "icon": "res://assets/ui/icons/items/tm_charged.png",
+      "world_model": "res://assets/props/tm_orb/tm_orb.glb",
+      "world_model_scale": 0.42,
+      "blurb": "One electric creature, one lesson.",
+      "description": "A gold-lit teaching orb carrying Voltaic Whip. An electric creature can learn this charged move; the orb is spent after the lesson."
+    },
+    "tm_thunder_break": {
+      "name": "TM: Thunder Break",
+      "kind": "tm",
+      "move": "thunder_break",
+      "stack": 1,
+      "colour": "#f5d24a",
+      "icon": "res://assets/ui/icons/items/tm_charged.png",
+      "world_model": "res://assets/props/tm_orb/tm_orb.glb",
+      "world_model_scale": 0.42,
+      "blurb": "One electric creature, one lesson.",
+      "description": "A gold-lit teaching orb carrying Thunder Break. An electric creature can learn this charged move; the orb is spent after the lesson."
+    },
+    "tm_stormfall": {
+      "name": "TM: Stormfall",
+      "kind": "tm",
+      "move": "stormfall",
+      "stack": 1,
+      "colour": "#f5d24a",
+      "icon": "res://assets/ui/icons/items/tm_charged.png",
+      "world_model": "res://assets/props/tm_orb/tm_orb.glb",
+      "world_model_scale": 0.42,
+      "blurb": "One electric creature, one lesson.",
+      "description": "A gold-lit teaching orb carrying Stormfall. An electric creature can learn this charged move; the orb is spent after the lesson."
     }
   },
   "_comment_held": "Tools carry the mesh they appear in the trainer's hand as. Owner playtest: \"the tools exist but you can't pull them out when you're exploring and use them\" -- before this a tool was an inventory row and nothing else, and pressing it on the hotbar only repaired it. `scripts/player/tool_hold.gd` bone-attaches `held_model` to the trainer's hand, using the same BoneAttachment3D pattern the carried torch already uses (scripts/player/torch.gd). `held_offset`/`held_rotation_deg` are the fit in that hand and are TUNABLE. An empty `held_model` means the tool is carried but never drawn -- fishing_rod, which has no water to fish yet and no vendored rod mesh (D24: no new asset families for one prop).",

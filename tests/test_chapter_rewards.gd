@@ -28,6 +28,7 @@ const ITEMS_PATH := "res://data/items/items.json"
 const TRADE_PATH := "res://data/config/trade.json"
 const BUILDABLES_PATH := "res://data/items/buildables.json"
 const HARVEST_PATH := "res://data/config/harvest.json"
+const STORMWOOD_PICKUPS_PATH := "res://data/config/stormwood_pickups.json"
 const RECIPE_PATHS := [
 	"res://data/recipes/recipes.json",
 	"res://data/recipes/recipes_rootstone.json",
@@ -76,12 +77,31 @@ func _tms_placed_in_the_world() -> Array:
 	return found
 
 
+## Stormwood mounts ordinary catalogue rows through
+## `stormwood_pickup_runtime.gd::ordinary_specs()`: only `runtime_kind: item`
+## rows whose item id exists are physical pickups. Read the same contract here
+## without preloading the world runtime into this pure data suite.
+func _stormwood_tms_mounted_by_runtime() -> Array:
+	var items: Dictionary = _json(ITEMS_PATH).get("items", {}) as Dictionary
+	var found: Array = []
+	for raw: Variant in (_json(STORMWOOD_PICKUPS_PATH).get("pickups", []) as Array):
+		var spec: Dictionary = raw as Dictionary
+		var id := str(spec.get("item_id", ""))
+		if str(spec.get("runtime_kind", "")) == "item" and items.has(id) and id.begins_with("tm_"):
+			found.append(id)
+	assert_true(found.size() >= 4,
+		"parsed %d mounted Stormwood TM pickups; the ordinary_specs contract went blind" % found.size())
+	return found
+
+
 ## Where a TM can come from: standing in the world, stocked by a vendor, or
 ## paid by a trainer. Any one of the three makes it obtainable.
 func _obtainable_tms() -> Dictionary:
 	var found: Dictionary = {}
 	for id: String in _tms_placed_in_the_world():
 		found[id] = "world pickup"
+	for id: String in _stormwood_tms_mounted_by_runtime():
+		found[id] = "Stormwood world pickup"
 	for vendor: Variant in (_json(TRADE_PATH).get("vendors", {}) as Dictionary).values():
 		for good: Variant in ((vendor as Dictionary).get("goods", {}) as Dictionary).keys():
 			if str(good).begins_with("tm_"):

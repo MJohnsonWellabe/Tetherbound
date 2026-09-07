@@ -51,6 +51,20 @@ func test_shelter_and_gentle_ground_policy() -> void:
 	assert_true(rules.sheltered(Vector3(999, 0, 999), "deepwood", true), "canopy is safe")
 
 
+func test_glass_sink_floor_is_a_strike_window_through_every_weather_phase() -> void:
+	# The island is deliberately above the sink-floor band: the Crown crossing is
+	# a safe destination, while falling or walking out into the live glass keeps
+	# its warning pressure even during Calm.
+	var sink_floor := Vector3(1100.0, -65.0, 2700.0)
+	var island := Vector3(700.0, 74.0, 2700.0)
+	for phase: String in ["calm", "building", "break", "fading"]:
+		assert_true(rules.strike_window(sink_floor, phase),
+			"the live glass sink remains a strike window during %s" % phase)
+	assert_false(rules.in_glass_sink(island), "the Crown island remains outside the live glass band")
+	assert_false(rules.strike_window(Vector3(-160.0, 0.0, 2700.0), "calm"),
+		"ordinary exposed ground stays quiet during Calm")
+
+
 func test_insulation_charge_windows_and_nonlethal_entry_hp() -> void:
 	var bare: Dictionary = rules.strike_effect("dynamo", 1000.0, 0)
 	var partial: Dictionary = rules.strike_effect("dynamo", 1000.0, 2)

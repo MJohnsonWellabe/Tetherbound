@@ -625,8 +625,6 @@
         "speed": 26.0
       }
     },
-
-
     "shadow_nip": {
       "display_name": "Shadow Nip",
       "type": "dark",
@@ -790,6 +788,72 @@
       "vfx": {
         "kind": "melee",
         "colour": "#a8dcf0"
+      }
+    },
+    "static_snap": {
+      "display_name": "Static Snap",
+      "type": "electric",
+      "slot": "quick",
+      "power": 1.15,
+      "energy_gain": 26,
+      "range": 2.5,
+      "cone_degrees": 100.0,
+      "windup": 0.11,
+      "recovery": 0.16,
+      "lunge": 3.6,
+      "vfx": {
+        "kind": "melee",
+        "colour": "#f5d24a"
+      }
+    },
+    "voltaic_whip": {
+      "display_name": "Voltaic Whip",
+      "type": "electric",
+      "slot": "charged",
+      "power": 1.3,
+      "energy_cost": 100,
+      "range": 7.5,
+      "cone_degrees": 40.0,
+      "windup": 0.45,
+      "recovery": 0.45,
+      "lunge": 0.0,
+      "vfx": {
+        "kind": "projectile",
+        "colour": "#f5d24a",
+        "speed": 38.0
+      }
+    },
+    "thunder_break": {
+      "display_name": "Thunder Break",
+      "type": "electric",
+      "slot": "charged",
+      "power": 1.6,
+      "energy_cost": 100,
+      "range": 6.5,
+      "cone_degrees": 360.0,
+      "windup": 0.7,
+      "recovery": 0.65,
+      "lunge": 0.0,
+      "vfx": {
+        "kind": "area",
+        "colour": "#f5d24a"
+      }
+    },
+    "stormfall": {
+      "display_name": "Stormfall",
+      "type": "electric",
+      "slot": "charged",
+      "power": 2.0,
+      "energy_cost": 100,
+      "range": 10.0,
+      "cone_degrees": 45.0,
+      "windup": 0.9,
+      "recovery": 0.8,
+      "lunge": 0.0,
+      "vfx": {
+        "kind": "cone",
+        "colour": "#f5d24a",
+        "speed": 26.0
       }
     }
   },

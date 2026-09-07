@@ -734,16 +734,17 @@ All new gameplay/world systems after Stage 0 are multiplayer-native unless an ow
 
 # CURRENT NEXT ACTION
 
-Tetherbound is in **Stage 0**: land in-flight Meadows/Cloudreach work, ship
-playable 1–4 player multiplayer (`docs/MULTIPLAYER_DIRECTIVE.md`,
-`docs/specs/STAGE_B_MULTIPLAYER_EXECUTION_PLAN.md`, live status in
-`docs/CURRENT_STATE.md`), run the Meadows visual sweep
-(`docs/owner/MEADOWS_VISUAL_SWEEP_GOAL_2026-09-06.md`), and land general game
-fixes as they surface.
+Owner-directed execution is in **Stage A: Stormwood**. Resume from
+`ralph/reports/STORMWOOD-PROGRESS/fresh-session-tail-0907.md`: land the preserved
+Crown integration, implement host-owned encounter starts, finish the Dynamo and
+legendary/relic ending, and prove the continuous chapter. Stormwood is incomplete;
+the next stage is **Stage B: Water** at `docs/biomes/water/00_START_HERE.md` only
+after Stormwood passes its full exit criteria, without an intermediate three-biome audit. Other
+Meadows/Cloudreach lanes retain their own owners and are not this lane's landings.
 
-> **When Stage 0's exit criteria are met, Codex starts Stage A (Stormwood) at
-> `docs/biomes/stormwood/00_CODEX_START_HERE.md`. Immediately after Stormwood
-> is built, move directly to Stage B (Water) at
+> **Stage A is active. Codex continues Stormwood at
+> `docs/biomes/stormwood/00_CODEX_START_HERE.md`. Only after Stormwood passes
+> its full exit criteria, move directly to Stage B (Water) at
 > `docs/biomes/water/00_START_HERE.md` — do not insert an intermediate
 > playtest/audit gate. Only after Water is built does Stage C run the single
 > four-biome product audit.**
