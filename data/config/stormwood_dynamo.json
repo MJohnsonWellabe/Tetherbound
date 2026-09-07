@@ -1,0 +1,20 @@
+{
+  "realm_id": "stormwood",
+  "arena_radius_m": 42.0,
+  "bank_radius_m": 35.0,
+  "bank_count": 4,
+  "lane_half_width_m": 2.5,
+  "plate_radius_m": 3.5,
+  "plates": [[0, 24], [-20.7846, -12], [20.7846, -12]],
+  "phases": {
+    "bank_cycle": {"charge_seconds": 6.0, "fire_seconds": 0.8, "recovery_seconds": 2.0},
+    "overload": {"charge_seconds": 3.0, "fire_seconds": 0.8, "recovery_seconds": 1.0},
+    "break_core": {"charge_seconds": 6.0, "fire_seconds": 0.8, "recovery_seconds": 0.2}
+  },
+  "strike_max_health_fraction": 0.25,
+  "static_seconds": 8.0,
+  "conduit_reach_m": 3.2,
+  "captain_trainer_id": "captain_marrow_dynamo_core",
+  "replacement_point": "stormwood_dynamo.captive.placeholder_species",
+  "captive": {"placeholder_species": "sparkit", "level": 44, "scale": 1.8, "nickname": "the Stormheart"}
+}
