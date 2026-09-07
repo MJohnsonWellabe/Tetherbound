@@ -68,6 +68,8 @@ func _execute_probe(msg: Dictionary) -> Variant:
 	var at: Vector3 = alpha.body.global_position
 	var player_at: Vector3 = alpha.world.local_rig().global_position
 	return {"ready": true, "path": str(alpha.get_path()), "shell": bool(alpha.world.simulation_only),
+		"has_target": alpha.target_body() != null if game.is_host() else false,
+		"catch_owner": alpha.get("_catch_arbiter").owner_of(alpha.authority.encounter_id, Time.get_ticks_msec()) if game.is_host() else 0,
 		"player_position": [player_at.x, player_at.y, player_at.z],
 		"current_realm": game.current_realm, "authority": alpha.is_alpha_authority(),
 		"record": rec, "position": [at.x, at.y, at.z], "hp": alpha.body.instance.hp,
