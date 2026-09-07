@@ -1492,12 +1492,14 @@ SPECIES_PROMPTS = {
         "tail, large round amber eyes, clean simple silhouette, no "
         "floating or disconnected parts, consistent from every angle"),
     "thundertunnel": (
-        "small burrowing mammal creature, THUNDERTUNNEL the storm mole. "
-        "BRIGHT BLUE CRACKLING LIGHTNING MARKINGS running along the spine "
-        "and flanks, LARGE PADDLE-LIKE DIGGING FOREPAWS with long claws. "
-        "Dense dark grey-black fur, small pink twitching nose, tiny eyes, "
-        "low stocky tunnel-digging build, whiskered snout, storms travel "
-        "below with this one"),
+        "ONE SINGLE small burrowing mammal creature, exactly one body, no "
+        "duplicate, no second animal, THUNDERTUNNEL the storm mole. BRIGHT "
+        "BLUE CRACKLING LIGHTNING MARKINGS running along the spine and "
+        "flanks, LARGE PADDLE-LIKE DIGGING FOREPAWS with long claws. Dense "
+        "dark grey-black fur, small pink twitching nose, tiny eyes, low "
+        "stocky tunnel-digging build, whiskered snout, single compact "
+        "rounded body with four legs only, storms travel below with this "
+        "one"),
     "glimmermoth": (
         "small luminous moth creature, GLIMMERMOTH, EXACTLY FOUR LEGS, "
         "TWO WINGS AND TWO ANTENNAE, no extra limbs or hidden parts. "
