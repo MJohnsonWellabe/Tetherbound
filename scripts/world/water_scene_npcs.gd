@@ -52,6 +52,8 @@ func build(world: Node3D) -> Dictionary:
 		table[id] = entry
 	if not _panel.finished.is_connected(_on_finished):
 		_panel.finished.connect(_on_finished)
+	if not _panel.line_presented.is_connected(_on_line_presented):
+		_panel.line_presented.connect(_on_line_presented)
 	var centres: Dictionary = {}
 	var config: Dictionary = world.get("config")
 	for island: Dictionary in config.get("islands", []):
@@ -93,12 +95,9 @@ func build(world: Node3D) -> Dictionary:
 		_bodies[id] = body
 	return _bodies.duplicate()
 
-func _process(_delta: float) -> void:
-	if _active_conversation.is_empty() or _panel == null or not _panel.call("is_open"):
-		return
-	var runner: RefCounted = _panel.call("runner")
-	if str(runner.call("conversation_id")) == _active_conversation:
-		_last_line_seen = _last_line_seen or bool(runner.call("line").get("is_last", false))
+func _on_line_presented(conversation: String, is_last: bool) -> void:
+	if not _active_conversation.is_empty() and conversation == _active_conversation:
+		_last_line_seen = _last_line_seen or is_last
 
 func _on_greeted(id: String) -> void:
 	start_conversation(id)
@@ -171,5 +170,4 @@ func _on_finished(conversation: String) -> void:
 		return
 	for guard: Dictionary in _guards:
 		if str(guard.get("conversation", "")) == conversation and _guard_holds(guard):
-			guarded_event_requested.emit(str(guard.effect), id, multiplayer.get_unique_id())
-
+			guarded_event_requested.emit(str(guard.effect), id, game.session.local_peer_id())

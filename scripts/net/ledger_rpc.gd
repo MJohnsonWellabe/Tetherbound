@@ -182,6 +182,14 @@ func _ready() -> void:
 	name = NODE_NAME
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_ensure_ledger()
+	# Fixed under the persistent ledger on every peer, including hosts playing
+	# another realm while their Water simulation shell arbitrates Aquaryn.
+	var alpha_transport := preload("res://scripts/net/water_alpha_transport.gd").new()
+	alpha_transport.name = "WaterAlphaTransport"
+	add_child(alpha_transport)
+	var veilfall_transport := preload("res://scripts/net/water_veilfall_transport.gd").new()
+	veilfall_transport.name = "WaterVeilfallTransport"
+	add_child(veilfall_transport)
 
 
 # --- the one entry point --------------------------------------------------------
@@ -287,6 +295,18 @@ func _water_actor_context(peer_id: int, intent: Dictionary) -> Dictionary:
 			if pickup != null:
 				context["pickup_position"] = pickup.global_position
 	return context
+
+
+## A realm authority has already committed and durably journaled these ops.
+## Keep publication identical to ordinary ledger commits, including local
+## player application. Never exposed as a remotely callable commit shortcut.
+func publish_journaled_delta(delta: Dictionary) -> void:
+	if not bool(_game().call("is_host")) or delta.get("ops", []).is_empty():
+		return
+	_apply_player_ops(delta)
+	delta_applied.emit(delta)
+	if _can_rpc() and _is_multi_peer():
+		rpc("_rpc_delta", delta)
 
 
 # --- rpc ------------------------------------------------------------------------

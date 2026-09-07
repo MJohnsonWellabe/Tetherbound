@@ -25,6 +25,7 @@ var field: RefCounted
 var currents: RefCounted
 var config: Dictionary
 var _visual: Dictionary
+var veilfall: Node3D
 
 
 func _ready() -> void:
@@ -98,6 +99,14 @@ func _ready() -> void:
 	add_child(docks)
 	docks.build(self)
 	var director := ENCOUNTERS.build(self, chapter.npc_bodies)
+	var alpha := preload("res://scripts/combat/water_alpha.gd").new()
+	alpha.name = "WaterAlpha"
+	add_child(alpha)
+	alpha.build(self, director)
+	veilfall = preload("res://scripts/world/water_veilfall.gd").new()
+	veilfall.name = "WaterVeilfall"
+	add_child(veilfall)
+	veilfall.build(self)
 	if not simulation_only:
 		var riding := RIDING.new()
 		riding.name = "RidingController"
@@ -164,6 +173,10 @@ func local_camera_rig() -> Node3D:
 
 
 func ground_height_at(x: float, z: float) -> float:
+	if veilfall != null:
+		var built: float = veilfall.built_floor_height_at(x, z)
+		if is_finite(built):
+			return built
 	if terrain == null:
 		return NAN
 	var data: Object = terrain.get("data")
@@ -177,10 +190,16 @@ func ground_height_near(x: Variant, z: float = 0.0, _reference_y: float = 0.0) -
 
 
 func water_depth_at(position: Vector3) -> float:
+	if veilfall != null and veilfall.contains_interior(position):
+		var built: float = veilfall.built_floor_height_at(position.x, position.z)
+		if is_finite(built):
+			return maxf(0.0, veilfall.interior.position.y - 0.4 - built)
 	return maxf(0.0, field.water_level() - field.height_at(position.x, position.z))
 
 
 func current_at(position: Vector3, liberated: bool = false) -> Vector3:
+	if veilfall != null and veilfall.contains_interior(position):
+		return Vector3.ZERO
 	return currents.sample(position, liberated).velocity
 
 

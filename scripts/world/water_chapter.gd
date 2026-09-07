@@ -43,7 +43,7 @@ static func apply_personal_event(flags: RefCounted, event: String, realm: String
 
 
 func _on_dialogue_request(event: String, npc_id: String, peer: int) -> void:
-	if peer != multiplayer.get_unique_id() or world.simulation_only or str(_game.current_realm) != "water":
+	if peer != int(_game.session.local_peer_id()) or world.simulation_only or str(_game.current_realm) != "water":
 		return
 	var body: Node3D = npc_bodies.get(npc_id)
 	var player := world.local_rig() as Node3D
@@ -67,7 +67,7 @@ func _physics_process(_delta: float) -> void:
 	if not world.simulation_only and str(_game.current_realm) == "water":
 		var player := world.local_rig() as CharacterBody3D
 		if player != null and player.swim_controller != null:
-			completed = _lesson.observe(multiplayer.get_unique_id(), player.global_position,
+			completed = _lesson.observe(int(_game.session.local_peer_id()), player.global_position,
 				int(player.swim_controller.state.mode))
 	for proxy: Node in get_tree().get_nodes_in_group("remote_trainer"):
 		if str(proxy.get("net_realm")) != "water" or proxy.is_multiplayer_authority():

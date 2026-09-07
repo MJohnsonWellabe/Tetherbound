@@ -44,7 +44,7 @@ func _physics_process(_delta: float) -> void:
 func _apply_buoyancy(actor: CharacterBody3D, delta: float) -> void:
 	if _instance == null or not is_instance_valid(riding):
 		return
-	state.owner_peer_id = multiplayer.get_unique_id()
+	state.owner_peer_id = int(get_node("/root/Game").session.local_peer_id())
 	var depth: float = world.water_depth_at(actor.global_position)
 	var mounted: bool = riding.is_mounted() and riding.mount_body() == actor
 	var player := world.local_rig() as CharacterBody3D
