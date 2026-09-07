@@ -30,7 +30,7 @@ func _run() -> void:
 	runtime.mount(world)
 	await process_frame
 	var placements: Dictionary = runtime.get("_placements")
-	_expect(placements.size() == 122, "opening flags mount all 122 currently reachable defined items")
+	_expect(placements.size() == 123, "opening flags mount the route caches and the available Static Snap TM")
 	_expect(_all_have_meshes(placements), "every opening pickup has a populated visual child")
 	var first := placements.get("stormwood_pickup_route_02") as Node3D
 	_expect(first != null, "arrival route cache exists at its authored coordinate")
@@ -54,14 +54,30 @@ func _run() -> void:
 		placements = runtime.get("_placements")
 		_expect(not placements.has("stormwood_pickup_route_02"), "claimed placement is absent after rebuild")
 		_expect(placements.has("stormwood_pickup_route_01"), "a neighboring same-item placement remains")
+		var static_snap := placements.get("stormwood_pickup_pocket_202") as Node3D
+		_expect(static_snap != null, "available Static Snap TM mounts as a regular Stormwood cache")
+		if static_snap != null:
+			var tm_before := int(game.get("inventory").count("tm_static_snap"))
+			static_snap.call("_on_picked_up")
+			await process_frame
+			_expect(CACHE.was_taken(game, "tm_static_snap", "stormwood_pickup_pocket_202", "stormwood"),
+				"Static Snap TM claim commits its realm-qualified stable flag")
+			_expect(int(game.get("inventory").count("tm_static_snap")) == tm_before + 1,
+				"Static Snap TM reaches the satchel through the host ledger")
+			runtime.restore_progression_from_game(game)
+			await process_frame
+			placements = runtime.get("_placements")
+			_expect(not placements.has("stormwood_pickup_pocket_202"), "claimed Static Snap TM is absent after rebuild")
 		game.get("progression").set_flag("stormwood:crown_reached")
 		game.get("progression").set_flag("stormwood:rootgate_released")
 		runtime.sync_progression()
 		await process_frame
 		placements = runtime.get("_placements")
-		_expect(placements.size() == 221, "late unlocks mount every remaining defined ordinary item")
+		_expect(placements.size() == 224, "late unlocks mount every remaining defined ordinary item")
 		_expect(_all_have_meshes(placements), "every late-unlocked pickup has a populated visual child")
-		_expect(not placements.has("stormwood_pickup_pocket_202"), "undefined Stormwood TM remains withheld")
+		_expect(placements.has("stormwood_pickup_pocket_203"), "Crown-gated Voltaic Whip TM mounts after crown progress")
+		_expect(placements.has("stormwood_pickup_pocket_204"), "Rootgate-gated Thunder Break TM mounts after rootgate progress")
+		_expect(placements.has("stormwood_pickup_pocket_205"), "Rootgate-gated Stormfall TM mounts after rootgate progress")
 		_expect(not placements.has("stormwood_pickup_pocket_208"), "story reward remains event-owned and unmounted")
 	world.queue_free()
 	_finish()
