@@ -114,8 +114,16 @@ describe as "it looks rough" rather than "I can't get past this".
 
 1. **The blind visual judge runs once per biome, to RECORD a verdict — not to pass one.**
    Log it, file the findings, move on. Never iterate a scene to change a verdict this run.
-2. **One round, not two, for anything cosmetic.** The standing rule is two no-yield
-   attempts; for anything on the deferred list it is one.
+2. **One round, not two, for anything cosmetic** — grass, ground, lighting, landmarks,
+   sky, night, dressing, composition, HUD. The standing rule is two no-yield attempts;
+   for scene polish it is one.
+   **Exception, owner amendment 2026-09-07: creature and character MESHES get up to
+   THREE blind-judge rounds per subject.** Not one, not countless. The third rejection
+   ends that subject — register it in `docs/SECOND_PASS_BACKLOG.md` with all three
+   verdicts and move to the next. This exception exists because the judge's standing
+   finding is that the cast cannot be fixed by lighting, placement, retexturing or
+   rescaling; it is the one visual problem where scene work cannot substitute. It does
+   **not** reopen scene polish.
 3. **Take the free wins and stop.** Runtime-free data or palette changes — the
    ground/creature chroma reallocation, landmarks from installed families, the night
    relight — once, early, then move on. Do not chase what needs new art.
