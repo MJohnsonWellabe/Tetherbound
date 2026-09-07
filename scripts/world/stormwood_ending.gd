@@ -430,9 +430,9 @@ func _build_waterward_view() -> void:
 	var plane := PlaneMesh.new()
 	plane.size = Vector2(2600.0, 1700.0)
 	_waterward_sea.mesh = plane
-	_waterward_sea.global_position = Vector3(-100.0, 35.0, 6900.0)
 	_waterward_sea.material_override = _glow(Color("2d8fa6"), 0.35, 0.92)
 	world.add_child(_waterward_sea)
+	_waterward_sea.global_position = Vector3(-100.0, 35.0, 6900.0)
 
 
 func _make_legendary() -> RefCounted:
