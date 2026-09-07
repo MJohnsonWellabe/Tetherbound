@@ -59,6 +59,31 @@ coupled. Each agent gets an explicit ownership list; a collision on a shared fil
 Only one Godot process at a time per 4-core box for renders. Tests can run beside a
 render, but renders cannot run beside renders.
 
+**The Godot lock covers writes, not reads.** It exists because import, export and render
+all write `.godot/imported/`, and two processes writing that cache corrupt each other's
+import state. It does not exist because Godot cannot run twice. So:
+
+- **Locked:** anything that imports, re-imports, exports, or renders frames.
+- **Not locked:** unit tests, headless smokes and probes against an already-imported
+  project. These only read the cache. Running them behind the render lock serializes
+  work that has no conflict, and is the single largest avoidable throughput loss on a
+  one-box run.
+
+Two exceptions to the read carve-out, both real and both narrow: a smoke that builds a
+full Terrain3D world can exhaust RAM when two run at once (see
+`ralph/reports/WATER-PROGRESS/EXIT-HANDOFF-2026-09-07.md`), so serialize *world* smokes
+against each other; and any run that would trigger a re-import takes the write lock.
+
+**Queue by player-path priority, never first-come.** A lane on the critical playable
+path outranks a lane whose criterion is on `docs/SECOND_PASS_BACKLOG.md`. A deferred-list
+task holding the lock while playable-path lanes wait is a scheduling defect: preempt it.
+
+**When the lock is the ceiling, widen the box before you wait on it.** Additional git
+worktrees each carry their own `.godot/` and therefore their own import cache, so renders
+in separate worktrees do not conflict — the cost is disk and one cold import each. And
+CI runs its jobs in parallel on other machines: push the branch and read the run rather
+than serializing that validation locally.
+
 ## 4. Completion contract
 
 Every implementation agent ends with this report, and the orchestrator reads it against

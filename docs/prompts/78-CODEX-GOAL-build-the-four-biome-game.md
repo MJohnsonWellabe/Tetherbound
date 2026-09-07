@@ -361,6 +361,17 @@ together; lanes sharing `playground_hud.gd`, `game_state.gd`, `playground_world.
 `session.gd` or `combat_manager.gd` are serialized on that file. One Godot render at a
 time per box.
 
+**Scope the Godot lock to writes.** Import, export and render take the lock because they
+write `.godot/imported/`. Unit tests, probes and headless smokes against an
+already-imported project do not — they read it, and they run beside a render. Serializing
+them behind the render lock is the largest avoidable throughput loss on a one-box run.
+Serialize full-world smokes against each other for RAM, and take the write lock for
+anything that triggers a re-import; nothing else. Queue lanes by player-path priority:
+a deferred-list task must never hold the lock while a playable-path lane waits. If the
+lock is still the ceiling, widen the box — a second git worktree has its own `.godot/`
+and its own import cache — or push and let CI's parallel jobs do the validation.
+See `docs/AGENT_WORKFLOW.md` §3.
+
 **Checkpoints and stopping.** Checkpoint every two wall-clock hours to
 `ralph/reports/FOUR-BIOME-BUILD/checkpoints.md`: player-visible capability added, paths
 newly reachable, systems newly working in real play, content added, merged SHA,
