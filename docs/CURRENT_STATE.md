@@ -4,66 +4,64 @@
 it used to carry is under `archive/docs/current-state-history/` (list at the end).
 Findings go in §3, ranked by player impact; process traps in §4.
 
-## 0. Where the project is (2026-09-07)
+## 0. Where the project is (2026-09-07, second pass)
 
-- `main` = `4acfb109` (PR #78, 2026-09-07 13:48 UTC, CI green in 18 minutes with
-  all shards). Stage per `docs/DEVELOPMENT_ROADMAP.md`: **Stage 0 still open**
-  (owner multiplayer evidence, Meadows visual sweep) **and Stage A (Stormwood) in
-  progress** concurrently; the owner authorised both lines.
-- **The next orchestration run is defined by
-  `docs/prompts/77-CODEX-GOAL-four-biome-push-2026-09-07.md`.** It consolidates every
-  open item from the handoffs, sweep goals, biome tails, the combat contract and the
-  2026-09-07 owner playtest into one branch and one pull request.
+**Every branch that carried unique work is merged onto `codex/four-biome-push-0907`
+and lands as PR #79**, on the owner's instruction to get everything onto `main`. The
+project no longer has a branch backlog; it has one tree, and three things in it are
+unproven by their own authors.
+
+- **The next orchestration run is
+  `docs/prompts/77-CODEX-GOAL-four-biome-push-2026-09-07.md`.** It carries the owner's
+  2026-09-07 playtest items, the visual sweeps, the combat ladder, the biome tails, and
+  the three lanes that exist to prove or revert what the merge just landed.
 - **Owner playtest 2026-09-07** (`docs/owner/OWNER_PLAYTEST_2026-09-07.md`): P0 hard
-  freeze placing a second creature bed on the Ally, P0 repeated freezes in the first
-  ten minutes, P1 bare road stretches with no creatures in view. Priority: stability,
-  then looks and content, then performance (cheap wins only).
-- **Multiplayer (Stage 0 workstream 2):** code complete on `main` (PR #63); the 5-way
-  `verify-multiplayer-shard` completes in CI; the scheduled 3/4-peer workflow ran green
-  2026-09-07 08:27 UTC. Contract and per-row evidence:
-  `docs/acceptance/MULTIPLAYER_ACCEPTANCE.md`; to-do and owner-only rows:
-  `docs/owner/STAGE_B_HANDOFF_2026-09-06.md`. No owner row is signed.
-- **Stormwood (Stage A):** PRs #68, #70, #74, #76, #77 merged; scorecard 12/100
-  frozen weights; the Dynamo, legendary release, Spark/aftermath and Waterward view
-  are unbuilt; every blind judge has rejected both visual bars. Live tail:
-  `ralph/reports/STORMWOOD-PROGRESS/fresh-session-tail-0907.md`.
-- **Water (Stage B):** PR #69 draft on `ralph/water-foundation-0906`, 35/100 on the
-  branch, 0 on `main`, ten recorded merge conflicts against `main`, a P0
-  save-integrity defect (unchecked, non-atomic writes). Owner instruction of record:
-  keep it draft and unmerged.
-- **Cloudreach:** continuous acceptance replay clean
-  (`docs/biomes/cloudreach/CONTINUOUS_ACCEPTANCE_0905.md`); visual bars "No, narrowly"
-  / "No"; the owner's Phase A audit document does not exist yet; stand 05's ground
-  still reads flat green.
-- **Roster:** 57 species in `species.json` with installed meshes; the 32 new
-  Cloudreach/Stormwood/Water species are in no spawn, encounter or trainer table.
-  Four playable characters are offered; the choice is not persisted and remote peers
-  render the local body, not theirs.
-- **Performance on the Ally:** first real measurement 2026-09-07, six of nine stands
-  under 8 fps with grass on at 2053×1080
-  (`docs/PERF_ALLY_FIRST_MEASUREMENT_2026-09-07.md` on
-  `claude/early-game-combat-design-fp3tua`). Draw calls do not predict frame time;
-  the grass A/B is the owner's twenty-minute run and settles it.
+  freeze placing a second creature bed, P0 repeated freezes in the first ten minutes,
+  P1 bare road stretches with no creatures in view. Priority: stability, then looks and
+  content, then performance (cheap wins only).
+- **Owner directive 2026-09-07**
+  (`docs/owner/OWNER_DIRECTIVE_2026-09-07_AGENT_GENERATED_REFERENCE_ART.md`): for one
+  pilot subject, the agent may generate its own reference art, have a blind judge pick
+  among three candidates, and run Meshy from the winner — Meadows included. Two
+  `CLAUDE.md` art rules are lifted for that one subject only.
+
+### What the merge landed, and how proven it is
+
+| Area | State |
+|---|---|
+| **Water (Biome 4)** | Whole foundation now on `main`: twelve islands, human swimming and drowning, five mounted swim species, docks, camps, encounters, the Aquaryn host fight, the Veilfall interior, Nerissa, the Guardian ceremony. **35/100 and incomplete.** Cannot be entered by ordinary play — no production emitter for the `aftermath:waterward_view` reveal, no Water transition point. Late joiners can be permanently denied the Swim Stone. The Alpha fight is dry. Tail: `ralph/reports/WATER-PROGRESS/EXIT-HANDOFF-2026-09-07.md`. |
+| **The save layer** | `scripts/save/atomic_save_file.gd` plus rewritten `world_save.gd`, `character_save.gd`, `save_game.gd` now govern **every save in every biome**. Arrived with Water; its own author says the diff "has not received complete independent review or the required full suite". **Highest-risk item in the tree** — prompt 77 lane SAVE. |
+| **Stormwood hosted combat** | `stormwood_authoritative_fight.gd`, `stormwood_hosted_trainer.gd`, `stormwood_encounter_hub.gd` and a change to shared `scripts/net/session.gd` are on `main`. **Unproven**: `smoke_net_stormwood_hosted_trainers.gd` fails at trainer start and the last edits were never recompiled. Tail: `ralph/reports/STORMWOOD-PROGRESS/EXIT-HANDOFF-2026-09-07.md`. |
+| **HUD compass / map** | The runtime minimap is **removed**, replaced by `scripts/ui/compass_bar.gd`; `tab_map.gd` and `quest_log.gd` reworked with objective destinations. **Known player-facing bug**: the second map open on the real Meadows world loses terrain and fog and fragments unrelated glyphs, confirmed in OS-composited pixels. The committed 30-frame deferred refresh is an unverified experiment. Tail: `docs/CODEX_EXIT_HANDOFF_2026-09-07.md`. |
+| **Stormwood chapter** | PRs #68, #70, #74, #76, #77. Scorecard 12/100. Dynamo, legendary release, Spark/aftermath and the Waterward view are all "blocked by missing implementation" in its own table. Every blind judge rejects both visual bars. |
+| **Roster and characters** | 57 species with installed meshes; the 32 new Cloudreach/Stormwood/Water species are in **no** spawn, encounter or trainer table. Four playable characters are offered, but the choice is not persisted and remote peers render the local body rather than their own. |
+| **Multiplayer** | Implementation scope complete (PR #63); the 5-way shard completes in CI; the 3/4-peer workflow ran green 2026-09-07 08:27 UTC. No owner evidence row is signed — those are owner-only. |
+| **Cloudreach** | Continuous acceptance replay clean (`docs/biomes/cloudreach/CONTINUOUS_ACCEPTANCE_0905.md`); visual bars "No, narrowly" / "No"; the owner's Phase A audit document does not exist; stand 05's ground still reads flat green. |
+| **Performance** | First real Ally measurement: six of nine stands under 8 fps with grass on at 2053×1080 (`docs/PERF_ALLY_FIRST_MEASUREMENT_2026-09-07.md`). Draw calls do not predict frame time. The grass A/B is the owner's own twenty-minute run and is the only thing that settles it. |
 
 ## 1. Git truth
 
-- `origin/main` `4acfb109`. Landed today in order: #74 (Stormheart foundation), #75
-  (curated debug teleport spots in Settings), #76 (Stormwood opening, encounters,
-  Surge), #77 (Crown roads, heartstones, electric TMs, Dynamo parts), #78 (roster,
-  characters, Lyra).
-- Open PRs: #69 Water (draft, hold). Open branches with unique work:
-  `claude/early-game-combat-design-fp3tua` (combat contract, Ally measurement,
-  owner-run judge verdict, kickoff script repairs; merges clean),
-  `owner-run/20260907T023802Z` (kickoff evidence payload; read only),
-  `claude/codex-lanes-progress-c323mb` (this consolidation).
-- Fully merged and safe to delete: every `ralph/stormwood-*`,
-  `ralph/codex-handoff-wrapup-0906`, `claude/handoff-coordination-refresh-2026-09-07`,
-  `claude/meshy-characters-creatures-huok0q`, `consolidate-lyra-creatures-0907`.
-- CI: `ci.yml` runs on `pull_request` and pushes to `main` only; a branch without a
-  PR is never verified. Full run 18–25 minutes. `multiplayer-wide.yml` is scheduled.
-- Release: `release.yml` publishes from `main`; run 809 (PR #78) was in progress at
-  13:48 UTC. The owner's 2026-09-07 playtest was on the build published from
-  `75bb1dc7` or later; check the asset timestamp before assuming a fix was in it.
+- `main` was `4acfb109` (PR #78, CI green in 18 minutes) before the consolidation.
+  PR #79 (`codex/four-biome-push-0907`) merges Water, the Stormwood hosted-combat wave,
+  the HUD compass work, the combat/perf/visual evidence, the owner kickoff run and the
+  documentation pass. Verify with `git merge-base --is-ancestor` before trusting any
+  claim that it landed.
+- Merge conflicts resolved by hand, worth knowing: `tools/survey.sh` kept the Water
+  branch's structure but **`main`'s Compatibility renderer for Stormwood** — the Water
+  branch predates PR #77 and would have reintroduced the forced-Vulkan capture that the
+  Stormwood lane itself withdrew as a false blocker; `tools/net/peer_runner.gd` kept
+  both sides' match cases; `CURRENT_STATE.md` and `DEVELOPMENT_ROADMAP.md` kept the
+  consolidated versions.
+- After PR #79 lands, every other branch is fully contained in `main` and can be
+  deleted.
+- CI: `ci.yml` runs on `pull_request` and on pushes to `main` only — a branch without a
+  PR is never verified. A full run is 18–25 minutes. `multiplayer-wide.yml` is
+  scheduled. A run under five minutes verified nothing.
+- Release: `release.yml` publishes from `main`. Check the release asset timestamp
+  before telling the owner a fix is playable.
+- **The 33-creature batch in PR #78 has no `docs/specs/ASSET_LEDGER.md` row**, so the
+  repo cannot currently state the Meshy credit balance. Lane ART-PILOT must re-measure
+  with `tools/art_pipeline/meshy.py balance` and write the row.
 
 ## 2. Verified system status
 
@@ -128,6 +126,10 @@ tournament rounds, 1 boss. Full tables: `docs/WORLD_AND_CONTENT.md`.
 | P0 | **Repeated freezes in the first ten minutes** of a fresh game on the Ally. Leads: `restore_all` on every world-flag delta, the 180 s same-frame autosave, first-sight GL shader compile and synchronous species GLB loads, the first map bake. | OPEN — lane STAB |
 | P1 | **Bare road stretches with no creatures in view.** Owner bar: multiple creatures in the forward 180° at all times. Authored worst gaps 148–159 m (band 2), 138 m (band 3), 108–120 m (band 4); the CP-2a 250 m contract passes on paper and is not the bar. | OPEN — lane ROAD |
 | P1 | The 32 new Cloudreach/Stormwood/Water species are in no spawn, encounter or trainer table; the chosen playable character is not persisted and remote peers render the local body. | OPEN — lane ROSTER |
+| P0 | **The save layer was rewritten and now governs every save in every biome**, arriving with Water and unproven by its own author. `scripts/save/atomic_save_file.gd` + `world_save.gd`/`character_save.gd`/`save_game.gd`. | OPEN — lane SAVE |
+| P1 | **The minimap is gone and the map's second open is corrupt** on the real Meadows world — terrain and fog lost, unrelated glyphs fragmented, confirmed in OS-composited pixels. `scripts/ui/tab_map.gd`, `compass_bar.gd`. | OPEN — lane HUD-MAP |
+| P1 | **Stormwood hosted combat is on `main` and does not work**; it also changed shared `scripts/net/session.gd` without the full suite its own handoff required. `smoke_net_stormwood_hosted_trainers.gd` fails at trainer start. | OPEN — lane STORMWOOD-HOSTED |
+| P1 | **Water cannot be entered by ordinary play**: no production emitter for `aftermath:waterward_view`, no Water transition point, and a late joiner can be permanently denied the Swim Stone. | OPEN — lane WATER |
 
 
 P0 blocks normal play. P1 major. P2 significant quality. P3 polish.

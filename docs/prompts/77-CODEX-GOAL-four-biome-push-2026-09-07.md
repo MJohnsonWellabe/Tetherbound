@@ -111,12 +111,18 @@ two items that are free.
 7. Per lane, the documents that lane names in §3. Do not cold-read
    `archive/`.
 
-Branch `claude/early-game-combat-design-fp3tua` carries evidence this file depends
-on and merges clean onto `main`. Merge it into the integration branch in Wave 0
-(§2). It adds `docs/prompts/76-CODEX-combat-depth-performance-and-visual-bar.md`,
+8. `docs/owner/OWNER_DIRECTIVE_2026-09-07_AGENT_GENERATED_REFERENCE_ART.md` before
+   lane ART-PILOT — it lifts two `CLAUDE.md` art rules for one subject, and only one.
+
+Four evidence documents this file leans on are already in the tree, merged with
+everything else: `docs/prompts/76-CODEX-combat-depth-performance-and-visual-bar.md`,
 `docs/PERF_ALLY_FIRST_MEASUREMENT_2026-09-07.md`,
-`ralph/reports/JUDGE-OWNER-RUN-20260907/VERDICT.md` and the repaired owner kickoff
-scripts under `tools/owner/`.
+`ralph/reports/JUDGE-OWNER-RUN-20260907/VERDICT.md`, and the two exit handoffs
+(`ralph/reports/WATER-PROGRESS/EXIT-HANDOFF-2026-09-07.md`,
+`ralph/reports/STORMWOOD-PROGRESS/EXIT-HANDOFF-2026-09-07.md`) plus
+`docs/CODEX_EXIT_HANDOFF_2026-09-07.md` for the HUD work. Read the handoff for any
+lane you pick up; each names its own blockers precisely and none of them is
+optimistic.
 
 ---
 
@@ -125,35 +131,65 @@ scripts under `tools/owner/`.
 Verify with `git log -1 --oneline origin/main` and the open PR list before trusting
 any of this; it drifts.
 
-- `origin/main` = `4acfb109`, PR #78 merged 2026-09-07 13:48 UTC, CI green
-  (run 34127711895, 18 minutes, all shards). Release run 809 publishing. PR #78
-  landed: 33 new creature models (all 12 Water, 9 Stormwood, 10 of 11 Cloudreach)
-  rigged and wired into `species.json`; Lyra's rig; four playable characters in
-  `data/config/characters.json` with portraits and a character-select step in
-  `title_screen.gd` that swaps the body through `PlayerState.chosen_character`;
-  HUD portraits for 32 species; move-slot and Best Creature ability fixes; the
-  combat plan `docs/specs/COMBAT_DEPTH_PLAN.md`.
-- Stormwood: PRs #68, #70, #74, #76, #77 merged. Scorecard 12/100 frozen weights;
-  `ralph/reports/STORMWOOD-PROGRESS/fresh-session-tail-0907.md` is the live tail.
-- Water: PR #69, **draft**, branch `ralph/water-foundation-0906`, 35/100 on the
-  branch, 0 on `main`; base is 10+ commits behind `main` with ten content
-  conflicts recorded; carries a P0 save-integrity defect (§3 lane WATER).
-- Open unmerged branches with unique work: `claude/early-game-combat-design-fp3tua`
-  (evidence + kickoff repairs, merges clean), `owner-run/20260907T023802Z` (the
-  kickoff evidence payload; read, do not merge).
-- Multiplayer: implementation scope complete and on `main` (PR #63); the 5-way
-  `verify-multiplayer-shard` completes in CI; the scheduled 3/4-peer workflow ran
-  green on 2026-09-07 08:27 UTC. Owner evidence rows unsigned (owner-only).
-- The Ally: six of nine authored stands under 8 fps with grass on at 2053×1080
-  (`docs/PERF_ALLY_FIRST_MEASUREMENT_2026-09-07.md`). Shipped build passes its
-  export check with scatter present. Gate F chain S03+ refused by the harness
-  budget guard at 0.049 s/frame.
-- Two facts that older docs get wrong, so you do not re-learn them:
+**2026-09-07, second pass: every branch that carried unique work is merged onto
+`codex/four-biome-push-0907` and is landing as PR #79**, per the owner's instruction
+to get everything onto `main`. So the starting point for this run is not a branch
+survey — it is one tree that already contains all of it. What that tree contains, and
+how proven each part is:
+
+- **`main` before the merge** = `4acfb109` (PR #78, CI green in 18 minutes). It landed
+  33 new creature models rigged into `species.json`, Lyra's rig, four playable
+  characters in `data/config/characters.json` with a character-select step in
+  `title_screen.gd`, HUD portraits for 32 species, and `docs/specs/COMBAT_DEPTH_PLAN.md`.
+- **Water is now in the tree, not on a branch.** The whole Biome 4 foundation: twelve
+  Terrain3D islands, human swimming and drowning, five mounted swim species, docks,
+  camps, encounters, the Aquaryn host fight, the Veilfall interior, Nerissa, the
+  Guardian ceremony, the Tideglass Compass. **35/100 by its own scorecard and
+  incomplete**; `ralph/reports/WATER-PROGRESS/EXIT-HANDOFF-2026-09-07.md` is its live
+  tail and its own words are "no merge-ready or complete-chapter claim is made".
+- **The save layer was rewritten with it.** `scripts/save/atomic_save_file.gd` plus
+  changes to `world_save.gd`, `character_save.gd` and `save_game.gd` now govern
+  **every save the game writes, in every biome**. Its own handoff says the diff "has
+  not received complete independent review or the required full suite". Lane SAVE
+  below owns proving or reverting it, and it is the highest-risk thing in the tree.
+- **Stormwood hosted combat is in the tree and is unproven.**
+  `stormwood_authoritative_fight.gd`, `stormwood_hosted_trainer.gd`,
+  `stormwood_encounter_hub.gd`, changes to `stormwood_encounter_director.gd` and
+  `stormwood_combat_runtime.gd`, and a change to **`scripts/net/session.gd`** — shared
+  multiplayer transport, which its own handoff says "requires full suite/CI before
+  landing". Its two-process smoke `tests/smoke_net_stormwood_hosted_trainers.gd`
+  **fails at trainer start**, and the last edits before the owner stopped it "have not
+  been recompiled/run". Live tail:
+  `ralph/reports/STORMWOOD-PROGRESS/EXIT-HANDOFF-2026-09-07.md`.
+- **The minimap is gone and the map has a known corrupt-reopen bug.**
+  `ralph/hud-map-compass-0906` replaced the runtime minimap with
+  `scripts/ui/compass_bar.gd`, reworked `tab_map.gd` and `quest_log.gd`, and added
+  objective destinations. On the real Meadows world the **second** map open loses the
+  terrain and fog and fragments unrelated glyphs — confirmed in OS-composited pixels,
+  not just a readback artefact. The committed `_reopen_refresh_frames_left = 30` is an
+  unverified experiment whose own verification run crashed before reaching the UI.
+  Live tail: `docs/CODEX_EXIT_HANDOFF_2026-09-07.md`.
+- **Stormwood chapter work merged earlier**: PRs #68, #70, #74, #76, #77. Scorecard
+  12/100 on frozen weights. The Dynamo, the legendary release, Spark/aftermath and the
+  Waterward view are all "blocked by missing implementation" in its own status table.
+- **Multiplayer**: implementation scope complete on `main` (PR #63); the 5-way
+  `verify-multiplayer-shard` completes in CI; the scheduled 3/4-peer workflow ran green
+  on 2026-09-07 08:27 UTC. Owner evidence rows remain unsigned (owner-only).
+- **The Ally**: six of nine authored stands under 8 fps with grass on at 2053×1080
+  (`docs/PERF_ALLY_FIRST_MEASUREMENT_2026-09-07.md`). The shipped build passes its
+  export check with scatter present. The Gate F chain refuses S03 onward at the
+  harness budget guard, 0.049 s/frame.
+- Two facts older docs get wrong, so you do not re-learn them:
   `structure_visibility_ranges` is **true** on `main`
-  (`data/config/performance.json:21`, since `222ea390`); only
-  `scatter_lod_ranges` is false. `data/config/vegetation.json:527` and `:739`
-  claim `scatter_lod_ranges` is live; it is not, and every `lod_*` key there is
-  inert. Fix those two comments in Wave 0.
+  (`data/config/performance.json:21`, since `222ea390`); only `scatter_lod_ranges` is
+  false. `data/config/vegetation.json:527` and `:739` claim `scatter_lod_ranges` is
+  live; it is not, and every `lod_*` key there is inert. Fix those two comments early.
+
+**What this changes about the run.** There is no rebase work and no branch archaeology
+left. What replaces it is that three unproven things are now in the shipped line, so
+the first wave is not only the owner's playtest items — it is also proving or reverting
+what just landed. That is lanes SAVE, HUD-MAP and STORMWOOD-HOSTED below, and they
+outrank everything except the freeze.
 
 ---
 
@@ -166,8 +202,12 @@ is in its last bullet; the run's is §8.
 
 ### Wave 0 — orchestrator, first hour, no sub-agents yet
 
-1. Cut `codex/four-biome-push-0907` from `main`; open the draft PR.
-2. Merge `origin/claude/early-game-combat-design-fp3tua` (clean).
+1. `codex/four-biome-push-0907` already exists with every branch merged onto it and
+   is landing as PR #79. Confirm it is on `main` before starting
+   (`git merge-base --is-ancestor`); if PR #79 is still open, work on that branch and
+   land it first — nothing below is worth doing on a tree that is about to move.
+2. Read the CI run on PR #79 job by job. The merge put three unproven things into the
+   shipped line at once; whatever it broke is Wave 0's problem, before any lane starts.
 3. Fix the two wrong `vegetation.json` comments (§2). Correct
    `docs/prompts/76-...md` §2.2 and `docs/PERF_ALLY_FIRST_MEASUREMENT_2026-09-07.md`
    §7 where they say `structure_visibility_ranges` is off.
@@ -215,6 +255,106 @@ Tests: the new smoke, `smoke_gate_a_build_house`, `smoke_free_build`,
 `smoke_gate_b_continuous` reliable prefix. Done when the two-bed smoke passes ten
 runs in a row with no frame over 250 ms after the first minute, and the early
 hitching has a named cause with either a fix or a measured "needs the Ally".
+
+#### Lane SAVE — prove or revert the save rewrite that now governs every save (astra)
+
+**Highest-risk thing in the tree.** `scripts/save/atomic_save_file.gd` and the changes
+to `world_save.gd`, `character_save.gd` and `save_game.gd` arrived with Water and now
+write **every save in every biome**, including the owner's existing ones. Its own author
+says: "The final diff has not received complete independent review or the required full
+suite. Per-file replacement is not a world/character/slot transaction or power-loss
+durability guarantee."
+
+The mechanism it replaced was genuinely broken — a disk-full on C: produced truncated
+JSON with a success return — so reverting to the old code is not automatically the safe
+option. Both directions carry risk, which is why this is a lane and not a rubber stamp.
+
+Prove, in this order, and stop at the first one that fails:
+
+1. **An existing save still loads.** Take a save written by the pre-merge code (no
+   `.previous` sibling) and load it. This is the owner's own save file shape.
+2. **Every reader falls back.** Canonical file absent, `.previous` present: the loader,
+   the save-slot list in the title screen, the "does a save exist" check, delete, and
+   the multiplayer character-save path. Name any reader that does not.
+3. **A corrupt canonical file** — present but truncated or invalid JSON — is
+   distinguishable from a valid one *before* it is trusted, and falls back rather than
+   losing the save.
+4. **Split-save failure**: the world file writes and the character file fails. Does the
+   failure propagate, or is the player left with two halves that disagree?
+5. **Injected-failure tests are real.** `tests/test_atomic_save_file.gd` must fail for
+   the right reason when the feature is removed. Do not fill a disk to reproduce.
+6. **Full suite**, because this is save-format and autoload-adjacent — the workflow
+   requires it and this is exactly the case the rule exists for.
+
+Owned: `scripts/save/`, `tests/test_atomic_save_file.gd`, save-related smokes.
+Done when 1–6 hold, or when the lane reports precisely which one does not and reverts
+the rewrite to `main`'s prior save code plus the minimal `store_string`-result check
+that fixes the original truncation bug without the rest of the machinery.
+
+#### Lane HUD-MAP — fix the map the compass work broke, or put the minimap back (astra)
+
+The runtime minimap is gone, replaced by `scripts/ui/compass_bar.gd`, and `tab_map.gd`
+was reworked. The compass itself is good work with green focused suites behind it. The
+problem is what came with it, in its author's own words: on the real Meadows world the
+**second** map open "loses the terrain/fog rendering and fragments several unrelated
+glyphs", confirmed in OS-composited pixels rather than only in a readback. Two
+mitigations failed (reusing the control tree; preserving texture caches). The committed
+`_reopen_refresh_frames_left = 30` is an unverified experiment — its verification run
+crashed in unrelated vegetation construction before reaching the UI — and it costs half
+a second of latency on every map open whether or not it helps.
+
+The player opens the map constantly. A corrupt second open is not a polish item.
+
+1. Reproduce it first, on the full Meadows world, exactly as
+   `docs/CODEX_EXIT_HANDOFF_2026-09-07.md` describes, and capture with unique
+   basenames — a previous judging round was invalidated by an image viewer serving
+   stale same-name files.
+2. Finish the deferred-refresh experiment or drop it. If a delay repairs the reopen,
+   minimise it and keep the map body hidden until the refresh completes so the player
+   never sees the broken intermediate frame. If it does not, stop tuning the delay:
+   the corruption hits shell, tab, button and glyph regions *outside* the map canvas,
+   which points at GPU texture or font-atlas lifetime, not a missed `queue_redraw()`.
+3. The two-no-yield rule applies. If two real attempts do not fix it, **restore the
+   minimap and hold the compass on a branch**. A working minimap beats a compass beside
+   a broken map, and the owner asked for looks and content, not for a downgrade.
+4. Then the rest of Task 8: the full map opening at a useful local view, the tracked
+   objective highlight, and "set objective as destination" — all of which are already
+   written and tested, and are the actual player-facing win here.
+
+Owned: `scripts/ui/compass_bar.gd`, `scripts/ui/tab_map.gd`, `scripts/ui/playground_hud.gd`,
+`scripts/world/quest_log.gd`, `data/progression/objectives.json`, the map tests and
+capture tools. Done when both the first and the repeated map open render clean in an
+OS-composited capture, a blind judge passes the HUD, and `smoke_gate_a_map_cycle` is
+green — or when the minimap is back and the compass is preserved for a later attempt.
+
+#### Lane STORMWOOD-HOSTED — finish the host-owned combat that landed unproven (astra)
+
+The hosted-combat wave is in the tree and does not work yet.
+`tests/smoke_net_stormwood_hosted_trainers.gd` fails at trainer start; the last edits
+before the owner stopped that run "must be inspected and compiled before use". It also
+changed **`scripts/net/session.gd`**, shared multiplayer transport, which its own
+handoff says needs the full suite and CI before landing — it has now landed without
+them, so that debt is due immediately.
+
+1. Compile-check every file in the wave first (`--check-only`), including the
+   interrupted fixture edits nobody re-ran.
+2. Run the full suite plus all five multiplayer shards, because `session.gd` changed.
+   A regression in an unrelated net smoke is this wave's bug.
+3. Then the actual feature: a remote client starts an authored Stormwood trainer fight
+   the host simulates. The strongest **unconfirmed** hypothesis for the current failure
+   is that the reliable start arrived before the host actor's transform converged after
+   the test teleport, and the hub silently refused beyond 12 m; the wave already added a
+   refusal reason and a host-position wait to separate that from the alternatives. Run
+   it once against the changed hypothesis. Do not repeat unchanged failures, and **do
+   not weaken the admission checks to green a fixture**.
+4. The test party starts at Meadows levels against a level-32 trainer. If it loses
+   during protocol checks, author a level-appropriate fixture — that proves protocol,
+   not balance, and say so.
+
+Done when a remote client's fight is host-simulated with strikes, rounds and rewards
+proven in a two-process run, and the full suite and every net shard are green — or when
+the wave is reverted off `main` and preserved on a branch, which is the honest outcome
+if it cannot be made to work in two attempts.
 
 #### Lane ROAD — creatures visible on every Meadows road (sol)
 
@@ -385,6 +525,92 @@ Owned: `scripts/world/stronghold*.gd`, `warrens*.gd`, their configs, their captu
 tools. Visual: yes. Done when the Hall's leftovers are gone in a blind round and
 the Warrens interior no longer regresses `07-den`.
 
+#### Lane ART-PILOT — one replaced creature or character, from art you make yourself (astra judges; sol runs the pipeline)
+
+**Owner directive, 2026-09-07:**
+`docs/owner/OWNER_DIRECTIVE_2026-09-07_AGENT_GENERATED_REFERENCE_ART.md`. It lifts two
+`CLAUDE.md` rules for **one pilot subject only**: the "owner-supplied reference art"
+precondition and the Meadows Meshy ban. Read it before starting. Everything else in
+`CLAUDE.md`'s art rules still binds, and a second subject needs a new instruction.
+
+Why this exists: the blind judge's standing verdict is that the cast is "three
+incompatible languages" — a stylised rock-shelled tortoise that matches the world, a
+recoloured photoreal eagle, generic photo-fur deer, a badger head grafted onto a rock
+shell inside one silhouette, and a trainer and villager in two different character
+styles — and that this **cannot** be closed by lighting, placement, retexturing or
+rescaling, because the silhouettes were never designed as a set. Every cheaper lever
+has been spent. This lane tests whether the project can author its way out, on one
+subject, before anyone proposes doing it to the whole roster.
+
+**1. Choose the subject and justify it.** One creature or one character. Pick it from
+the blind verdicts already in the repo, not from taste:
+`ralph/reports/JUDGE-OWNER-RUN-20260907/VERDICT.md` (the raptor, the deer, the
+trainer/villager split, the grey-on-grey Team Tether grunt),
+`ralph/reports/WARRENS-ART-0906/JUDGE-round2.md` (Burrowback: "two different animals
+welded together, in two different painting styles"), and the style-clash quotes
+collected in §4 of this file. Prefer the subject that (a) the judge names most often,
+(b) the player sees earliest and most, and (c) is one mesh rather than a family.
+Write the choice and the reasoning into the lane report before generating anything.
+
+**2. Generate three reference images.** Same subject, same brief, three genuinely
+different takes — not three renders of one idea. Each must be a clean orthographic-ish
+character sheet on a plain background: full body, neutral standing pose, T-pose-adjacent,
+one creature, no base, no pedestal, no text. Feed the subject's identity from the
+authored source, not from your own memory of it: `data/creatures/species.json`'s entry,
+its `SPECIES_PROMPTS` text in `tools/art_pipeline/meshy.py` (which is deliberately
+authoritative over "anything an image generator wrote onto a sheet"), the height it must
+hold, and its habitat. The house style is `STYLE` in the same file — stylised PBR game
+character, clean readable forms, large clear colour regions, restrained surface detail —
+and the target is the *installed* stylised end of the cast, the rock-shelled tortoise
+the judge keeps naming as the one that works. Save them as
+`ralph/reports/ART-PILOT-0907/candidates/{a,b,c}.png` with unique basenames — the HUD
+lane lost a whole judging round to an image viewer serving stale same-name files.
+
+**3. A code-blind judge picks the winner.** A separate astra sub-agent, per
+`.claude/skills/visual-judge/SKILL.md`. It is shown the three candidates, the installed
+creature it must sit beside, and `docs/reference/` — and **told nothing** about which
+candidate is which, how each was made, or which the lane prefers. The lane that made the
+images never judges them. Its question is not "which is prettiest" but **"which of these
+could stand next to the installed cast and read as the same game?"** It also answers
+whether *any* of them clears that bar; "none of these" is a valid verdict and stops the
+lane at zero Meshy credits.
+
+**4. Run the Meshy work from the winner.**
+`tools/art_pipeline/meshy.py`, which takes any local PNG as a data URI — a generated
+image is the same input as a cropped owner board. Before spending anything:
+
+- `tools/art_pipeline/meshy.py balance`, and **record the number in the lane report**.
+  `MESHY_API_KEY` is read from the environment and nowhere else; if it is unset or
+  rejected, stop and say so rather than hunting for a key.
+- The art-source order still applies first (installed asset → free pack → Meshy). The
+  ledger's own cautionary tale is 120 credits spent chasing a mushroom that was already
+  in `assets/environment/`.
+- **Budget cap for this pilot: one preview (20) plus at most one refine (30) plus rig
+  (5).** If the preview is rejected by the blind judge twice, stop and report the
+  ceiling — that is the two-no-yield rule, and it applies to credits as hard as to time.
+- **If this session has no image generation at all**, say so plainly in the report and
+  run `/openapi/v2/text-to-3d` instead, which needs no image and already has a prompt
+  for every subject. Do not fabricate a board, and do not silently skip the lane.
+
+**5. Judge the result in the world, not alone.** Install it, re-render the stand where
+the subject actually appears, and judge blind **beside the creatures it has to live
+with**. A mesh that looks good in isolation and still clashes has failed the only thing
+this lane was for. Then write the `docs/specs/ASSET_LEDGER.md` row: source, task ids,
+credits before and after, licence and provenance — the 33-creature batch that landed in
+PR #78 has no ledger row at all, and that gap is why nobody can currently state the
+account balance from the repo.
+
+Owned: `tools/art_pipeline/`, `assets/creatures/<subject>/` or
+`assets/characters/<subject>/`, that subject's `species.json` or `art.json` row,
+`docs/specs/ASSET_LEDGER.md`, `ralph/reports/ART-PILOT-0907/`. Forbidden: any other
+species, the roster tables (lane ROSTER owns them), and every rule in `CLAUDE.md` the
+directive did not lift.
+
+Done when one subject has a new mesh installed and rigged, a blind judge says it reads
+as the same game as the cast beside it, the ledger row is written, and the report says
+what the loop cost in credits and in rounds — or when the judge's "none of these"
+stopped it, which is also a result and is cheaper than the alternative.
+
 #### Lane COMBAT — the ladder out of button-mash (sol implements; astra designs the harness)
 
 The full contract is `docs/prompts/76-CODEX-combat-depth-performance-and-visual-bar.md`
@@ -451,31 +677,37 @@ Owned: `scripts/world/stormwood_*`, `data/config/stormwood_*`, Stormwood tests.
 Multiplayer-native from the first commit. Done per the directive's exit criteria;
 report the scorecard delta at each checkpoint.
 
-#### Lane WATER — keep building on its own branch (astra rebases; sol builds)
+#### Lane WATER — carry on now that the code is on main (sol; astra for the chapter seams)
 
-Owner instruction of record: keep PR #69 **draft and unmerged**; nothing newer
-lifts it (§7 asks the owner to confirm or lift it). Work continues on
-`ralph/water-foundation-0906`:
+The owner lifted the merge hold and Water's code is in the tree. That does **not** make
+Water a delivered chapter: it is 35/100 by its own scorecard, and
+`ralph/reports/WATER-PROGRESS/EXIT-HANDOFF-2026-09-07.md` is the live tail. Its save
+work is lane SAVE's problem now, not this lane's. What remains here, in its own order:
 
-1. Rebase (merge `main` forward — the branch is the owner's; do not rewrite it)
-   through the ten recorded conflicts (`autoload/item_db.gd`, `world_ledger.gd`,
-   `save_game.gd`, `world_save.gd`, `quest_log.gd`, two tests, `tools/survey.sh`,
-   two docs) and now PR #78's roster files. Resolve in favour of `main`'s shared
-   systems and the branch's Water content.
-2. **P0 save integrity**: `world_save.gd::write` and `character_save.gd::write` do
-   not check the `store_string` result and do not write atomically; disk-full
-   produced truncated JSON with a success return. Write to a temp file, fsync,
-   rename; fail loud. This fix also belongs on the integration branch for `main`'s
-   own saves — port it there as a small separate lane.
-3. Swap the 12 placeholder Water bodies for the meshes PR #78 installed.
-4. Then the report's next five (`FINAL-REPORT-AND-FRESH-SESSION-TAIL.md:91-95`):
-   the continuous key → Veilfall route, the six side chains and objective spine,
-   the Aquaryn surface arena, two-then-four-peer finale/reconnect, aftermath.
-5. Full regression in a healthy environment (the branch's last run died on a
-   Windows Bash fork and a CRLF checkout, not on the game).
+1. **The chapter cannot be entered by ordinary play.** On the merged tree,
+   `stormwood_world.gd::_build_return_gate` creates only the Cloudreach return, and
+   `stormwood_world.json.transition_points` has no Water entry. The
+   `stormwood_waterward_revealed` objective grants `realm_key_water` but the audit found
+   **no production emitter** of the `aftermath:waterward_view` event it listens for.
+   Build the Spark-gated reveal, the one-time key consumption and a safe return, on the
+   existing realm-transition and host-ledger seams. Reveal leaves the player looking at
+   water; only the explicit key spend opens it. Note this depends on Stormwood's ending,
+   which lane STORMWOOD owns — coordinate, do not duplicate.
+2. **Late joiners can be permanently denied the Swim Stone.** `water_alpha_rewards.resolve()`
+   returns early once the shared Alpha is resolved, and the Alpha cannot be refought, so
+   a fresh character can never ride. Host-validated Iona attunement after a shared
+   victory is the recommended fix.
+3. **The Alpha fight is dry.** Aquaryn's spawn sits at roughly XZ (601.6, 1389.4) with an
+   empty `surface_route`; the 33-check smoke proves a dry battle, not the amphibious one
+   the design asks for. Compose a reachable shoreline arena and author the route.
+4. Swap the twelve placeholder Water bodies for the meshes PR #78 installed
+   (coordinate with lane ROSTER, which owns `species.json`).
+5. Then the first-half route with real stamina, dock actions and resource collection;
+   the six side chains and the objective spine (twelve of 28–32 exist); named encounters
+   through verified host authority; the four-peer finale and reconnect; the aftermath.
 
-Done when the branch is green on current `main`, its P0 is fixed and its
-scorecard moves; merging is the owner's call.
+Done when a player can reach Water through ordinary play, complete the first-half route
+continuously, and a late joiner can still earn the Stone — not when the file count grows.
 
 #### Lane MP-KEEP — multiplayer stays playable while everything else lands (sol)
 
@@ -750,6 +982,17 @@ has no spacing assertion).
   `docs/HANDOFF_COORDINATION_2026-09-06-CODEX.md` Tasks 4, 5, 6, 8) are folded into
   the lanes above; they stay in `docs/` until this run lands.
 - Corrected the stale status rows in `docs/DEVELOPMENT_ROADMAP.md`.
+- **Merged every branch that carried unique work onto `codex/four-biome-push-0907`**
+  and opened PR #79: Water (was draft PR #69), the Stormwood hosted-combat wave, the
+  HUD compass work, the combat/perf/visual evidence branch, the owner kickoff run, and
+  this documentation pass. Three conflicts were resolved by hand and are worth knowing:
+  `tools/survey.sh` kept the Water branch's structure but **`main`'s Compatibility
+  renderer for Stormwood** (the Water branch predates PR #77 and would have
+  reintroduced the forced-Vulkan capture the Stormwood lane itself withdrew);
+  `tools/net/peer_runner.gd` kept both sides' match cases; the two docs kept the
+  consolidated versions.
+- Recorded the owner's agent-generated-reference-art directive and added the
+  corresponding carve-out to `CLAUDE.md`'s art rules, scoped to one subject.
 
 ---
 
@@ -774,19 +1017,24 @@ has no spacing assertion).
 Record each as an OPEN entry in `docs/decisions/` with the recommendation; build
 around them.
 
-1. **Water merge hold.** The standing instruction keeps PR #69 draft and unmerged.
-   Does the 2026-09-07 "merge to main when it's ready" lift it? Default in this
-   run: no; Water stays on its branch and is rebased and built.
+1. ~~Water merge hold.~~ **Settled 2026-09-07: the owner lifted it** ("merge every
+   branch that isn't on main"). Water is in the tree and lands with PR #79. What is
+   *not* settled is whether Water keeps its place in the roadmap sequence now that its
+   code is on `main` while its chapter is 35/100 — this run treats it as Stage B still
+   open, not as delivered.
 2. **Combat verb**: movement only, retuned / a burst step on A without i-frames
    (recommended) / a dodge roll with i-frames. Blocks COMBAT-3.
 3. **Y as the third move slot** and **moves learned by level** vs TM-only. Blocks
    COMBAT-4.
 4. **Type chart 1.5/0.67.** Blocks COMBAT-6 and reopens D77 and W-1 numbers.
 5. **A wild can exhaust your creature** (wind slowdown as a cost). Tunes COMBAT-2.
-6. **Creature and character style coherence** across the cast: the judge says the
-   meshes were never designed as a set and scene fixes cannot close it; `CLAUDE.md`
-   forbids new Meadows meshes and Meshy without owner art. Which way does the owner
-   want to go, biome by biome?
+6. **Creature and character style coherence** across the cast. **Partly answered
+   2026-09-07**: the owner authorised a one-subject pilot — the agent generates three
+   reference images, a blind judge picks one, Meshy runs from it, Meadows included
+   (`docs/owner/OWNER_DIRECTIVE_2026-09-07_AGENT_GENERATED_REFERENCE_ART.md`, lane
+   ART-PILOT). Still open, and the pilot exists to inform it: whether to do the same to
+   the rest of the cast, at what budget, biome by biome. Do not extend past one subject
+   without a new instruction.
 7. **Warrens tunnel kit** budget (W3) and **aviary dome** lattice vs membrane (C7).
 8. **Multiplayer**: does a wild scale when a friend joins; may a client originate a
    wild encounter (this run implements the host-authoritative default so Stormwood
@@ -800,6 +1048,19 @@ Code existing is not done. The run is done when, on the integration branch and
 then on `main`:
 
 - STAB: the two-bed smoke passes ten runs; the early hitching has a named cause.
+- SAVE: an existing pre-merge save loads; every reader falls back to `.previous`; a
+  corrupt canonical file is caught before it is trusted; split-save failure propagates;
+  the full suite is green — or the rewrite is reverted to `main`'s prior save code plus
+  the minimal `store_string`-result check, and the report says which check failed.
+- HUD-MAP: the first *and* the repeated map open render clean in an OS-composited
+  capture and a blind judge passes the HUD — or the minimap is restored and the compass
+  is preserved on a branch.
+- STORMWOOD-HOSTED: a remote client's trainer fight is host-simulated with strikes,
+  rounds and rewards in a two-process run, and the full suite and all five net shards
+  are green — or the wave is reverted off `main` and preserved on a branch.
+- ART-PILOT: one subject has a new mesh that a blind judge says reads as the same game
+  as the cast beside it, with the `ASSET_LEDGER.md` row written and the credit cost
+  stated — or the judge's "none of these" stopped it before any credit was spent.
 - ROAD: no road sample on any Meadows band shows fewer than two visible creatures
   in the forward 180° at shipped draw distance.
 - ROSTER: all four characters play, on real input, solo and joined; the roster
@@ -812,8 +1073,9 @@ then on `main`:
   the caveat about Ally readability written down.
 - STORMWOOD: the main path runs from the Stormward gate through the Dynamo,
   release and aftermath in one continuous run, solo and two-peer; scorecard moved.
-- WATER: rebased on current `main`, save-integrity P0 fixed, green CI on its own
-  head; still draft unless the owner lifts the hold.
+- WATER: a player reaches Water through ordinary play (the Spark-gated reveal and the
+  one-time key), completes the first-half route continuously, and a late joiner can
+  still earn the Swim Stone.
 - MP-KEEP: the net shard and the 3/4-peer workflow green on the integration
   branch's final head; the shared-Cloudreach-fight smoke exists.
 - CONTENT: the task feed drives the relay chain in a played segment; level gates
