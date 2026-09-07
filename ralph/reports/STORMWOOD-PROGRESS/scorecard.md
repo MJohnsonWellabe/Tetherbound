@@ -128,7 +128,3 @@ No checkpoint was actually executed at 05:54:38 or 07:54:38. On resumption, fetc
 Applying the owner's wall-clock rule retrospectively: **05:54:38 = 12.00, delta 0**, first low-progress window; **07:54:38 = 12.00, delta 0**, second consecutive low-progress window. The original broad run therefore reached its stop-building condition. Subsequent elapsed windows add no credit. Its finished local Crown/arch/TM work must be integrated and its remaining scope preserved in a fresh-session tail rather than counted as progress on main.
 
 The owner explicitly resumed at 12:10 UTC with “continue from where you left off.” This begins a resumed execution segment toward the same unchanged full objective and frozen weights, starting at **12.00/100**. First finish and land the preserved wave; then use the fresh tail's bounded priorities. Next resumed checkpoint is **14:10 UTC**. This records a resumed run, not a retroactive reset that makes the missed original windows acceptable.
-
-## Owner-directed stop — 2026-09-07
-
-The owner asked to stop implementation and write an exit document before the resumed 14:10 UTC checkpoint. No new score is assigned: last official score remains 12/100. Main is ba8a66fbfe823c439a3adea268d00fce0199fff7 (PR #77). Hosted-combat changes remain unmerged and the last network smoke failed at remote trainer start. See EXIT-HANDOFF-2026-09-07.md for exact state, evidence, untested edits and successor priorities. This is an owner stop, not achievement or an external blocker.
