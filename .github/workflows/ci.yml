@@ -1947,7 +1947,7 @@ jobs:
   # itself, run once as a plain job. It was 46 minutes on run 34049435929
   # because ~29 two-process net smokes ran SEQUENTIALLY in that one job -- the
   # whole point of splitting it into `discover-net-smokes` (this job, floor and
-  # roster check only, no Godot) plus a 5-way `verify-multiplayer-shard` matrix
+  # roster check only, no Godot) plus a `verify-multiplayer-shard` matrix
   # below is to run those smokes in PARALLEL instead. Same discovery script,
   # same floor and named roster, moved rather than duplicated: the matrix jobs
   # below read this job's `files` output and slice it, they do not re-discover.
@@ -2094,17 +2094,20 @@ jobs:
 
   verify-multiplayer-shard:
     runs-on: ubuntu-latest
-    # 5-way matrix, 2026-09-06 (owner direction, after the 46-minute sequential
-    # run above). Each shard gets every 5th file from discover-net-smokes'
-    # alphabetical list (index % 5), which happens to split the two heaviest
+    # 7-way matrix. The first 5-way split was added 2026-09-06 after the
+    # 46-minute sequential run above. Each shard now gets every 7th file from
+    # discover-net-smokes' alphabetical list (index % 7), which splits the
+    # heaviest
     # smokes -- `realm_owner_disconnect_mid_fight` (Meadows + Cloudreach + a
     # Meadows SHELL) and `split_realms` (five world builds, "the most
     # expensive net smoke in the shard by a wide margin" per its own header)
-    # -- onto different shards (index 17 -> shard 3, index 25 -> shard 1)
-    # rather than stacking both behind one runner. 29 smokes / 5 shards is a
-    # plain round-robin, not weighted by measured cost, because no per-smoke
-    # timing exists yet for this tree's shards -- the first real run is what
-    # should correct the split if one shard runs hot next to the others.
+    # -- onto different shards rather than stacking both behind one runner.
+    # Run 34141345280 supplied the missing measurement: with 34 smokes, shard
+    # 3 held seven worlds including realm-owner disconnect, hosted Stormwood
+    # and Water swimming, and was cancelled at the 30-minute ceiling after the
+    # first five passed and hosted Stormwood was still running. Seven-way
+    # round-robin separates those three heavy scenes and gives every shard
+    # four or five smokes without dropping or relaxing a single assertion.
     #
     # 30 minutes per shard is an ESTIMATE, not a measurement of any one shard:
     # the old job's 65-minute ceiling covered every smoke in one sequence, and
@@ -2114,7 +2117,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4, 5]
+        shard: [1, 2, 3, 4, 5, 6, 7]
     timeout-minutes: 30
     needs:
       - changes

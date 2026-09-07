@@ -257,7 +257,8 @@ func _await_hosted(peer: int, must_exist: bool) -> Dictionary:
 func _await_host_body_near(at: Vector3) -> Dictionary:
 	var last: Dictionary = {}
 	for tick in HOSTED_WAIT_FRAMES:
-		last = await _await_hosted(0, true)
+		var raw: Variant = await probe(0, "stormwood_hosted_trainer", {"trainer": TRAINER, "peer": _client_peer_id})
+		last = raw as Dictionary if raw is Dictionary else {}
 		var host_at := _vec(last.get("host_body_pos", []))
 		if host_at != Vector3.INF and host_at.distance_to(at) <= HOST_SYNC_M:
 			return last
@@ -281,7 +282,8 @@ func _await_host_actor_near_trainer() -> Dictionary:
 func _await_round(peer: int, wanted: int) -> Dictionary:
 	var last: Dictionary = {}
 	for tick in HOSTED_WAIT_FRAMES:
-		last = await _await_hosted(peer, true)
+		var raw: Variant = await probe(peer, "stormwood_hosted_trainer", {"trainer": TRAINER, "peer": _client_peer_id})
+		last = raw as Dictionary if raw is Dictionary else {}
 		if int(last.get("round", -1)) == wanted and not bool(last.get("finished", false)):
 			return last
 		await step(peer, "wait", {"frames": 1})
@@ -291,7 +293,8 @@ func _await_round(peer: int, wanted: int) -> Dictionary:
 func _await_finished(peer: int) -> Dictionary:
 	var last: Dictionary = {}
 	for tick in HOSTED_WAIT_FRAMES:
-		last = await _await_hosted(peer, true)
+		var raw: Variant = await probe(peer, "stormwood_hosted_trainer", {"trainer": TRAINER, "peer": _client_peer_id})
+		last = raw as Dictionary if raw is Dictionary else {}
 		if bool(last.get("finished", false)):
 			return last
 		await step(peer, "wait", {"frames": 1})
