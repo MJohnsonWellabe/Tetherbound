@@ -1108,8 +1108,13 @@
       "catch_rate": 0.35,
       "aggressive": false,
       "moves": {
-        "quick": "tremor_roll",
-        "charged": "splash_snap"
+        "quick": "splash_snap",
+        "charged": "tremor_roll"
+      },
+      "best_creature": {
+        "id": "cannonback_edge",
+        "kind": "survivability",
+        "value": 0.12
       },
       "placeholder": {
         "colour": "#8899aa",
@@ -1142,6 +1147,11 @@
         "quick": "splash_snap",
         "charged": "undertow"
       },
+      "best_creature": {
+        "id": "riptusk_edge",
+        "kind": "energy",
+        "value": 0.12
+      },
       "placeholder": {
         "colour": "#8899aa",
         "height": 2.6,
@@ -1172,6 +1182,11 @@
       "moves": {
         "quick": "ripple_jab",
         "charged": "tremor_roll"
+      },
+      "best_creature": {
+        "id": "mirejaw_edge",
+        "kind": "energy",
+        "value": 0.12
       },
       "placeholder": {
         "colour": "#8899aa",
@@ -1204,6 +1219,11 @@
         "quick": "ripple_jab",
         "charged": "tremor_roll"
       },
+      "best_creature": {
+        "id": "aquaryn_edge",
+        "kind": "survivability",
+        "value": 0.12
+      },
       "placeholder": {
         "colour": "#8899aa",
         "height": 2.0,
@@ -1232,8 +1252,13 @@
       "catch_rate": 0.35,
       "aggressive": false,
       "moves": {
-        "quick": "tremor_roll",
-        "charged": "splash_snap"
+        "quick": "splash_snap",
+        "charged": "tremor_roll"
+      },
+      "best_creature": {
+        "id": "torrentoad_edge",
+        "kind": "survivability",
+        "value": 0.12
       },
       "placeholder": {
         "colour": "#8899aa",
@@ -1264,7 +1289,12 @@
       "aggressive": false,
       "moves": {
         "quick": "shell_bash",
-        "charged": "ripple_jab"
+        "charged": "undertow"
+      },
+      "best_creature": {
+        "id": "cragclaw_edge",
+        "kind": "survivability",
+        "value": 0.12
       },
       "placeholder": {
         "colour": "#8899aa",
@@ -1294,8 +1324,13 @@
       "catch_rate": 0.35,
       "aggressive": true,
       "moves": {
-        "quick": "undertow",
+        "quick": "ripple_jab",
         "charged": "riptide_rush"
+      },
+      "best_creature": {
+        "id": "riverdrake_edge",
+        "kind": "energy",
+        "value": 0.12
       },
       "placeholder": {
         "colour": "#8899aa",
@@ -1325,8 +1360,13 @@
       "catch_rate": 0.35,
       "aggressive": false,
       "moves": {
-        "quick": "tremor_roll",
-        "charged": "splash_snap"
+        "quick": "splash_snap",
+        "charged": "tremor_roll"
+      },
+      "best_creature": {
+        "id": "sirenseal_edge",
+        "kind": "survivability",
+        "value": 0.12
       },
       "placeholder": {
         "colour": "#8899aa",
@@ -1359,6 +1399,11 @@
         "quick": "ripple_jab",
         "charged": "tremor_roll"
       },
+      "best_creature": {
+        "id": "mangrove_monitor_edge",
+        "kind": "energy",
+        "value": 0.12
+      },
       "placeholder": {
         "colour": "#8899aa",
         "height": 2.0,
@@ -1390,6 +1435,11 @@
         "quick": "ripple_jab",
         "charged": "tremor_roll"
       },
+      "best_creature": {
+        "id": "tidecoil_edge",
+        "kind": "energy",
+        "value": 0.12
+      },
       "placeholder": {
         "colour": "#8899aa",
         "height": 3.4,
@@ -1418,8 +1468,8 @@
       "catch_rate": 0.05,
       "aggressive": true,
       "moves": {
-        "quick": "tremor_roll",
-        "charged": "splash_snap"
+        "quick": "splash_snap",
+        "charged": "tremor_roll"
       },
       "placeholder": {
         "colour": "#8899aa",
@@ -1457,6 +1507,11 @@
         "quick": "spark_bite",
         "charged": "arc_lash"
       },
+      "best_creature": {
+        "id": "voltwig_edge",
+        "kind": "survivability",
+        "value": 0.12
+      },
       "placeholder": {
         "colour": "#8899aa",
         "height": 1.9,
@@ -1487,6 +1542,11 @@
       "moves": {
         "quick": "spark_bite",
         "charged": "arc_lash"
+      },
+      "best_creature": {
+        "id": "mosshock_edge",
+        "kind": "survivability",
+        "value": 0.12
       },
       "placeholder": {
         "colour": "#8899aa",
@@ -1519,6 +1579,11 @@
         "quick": "spark_bite",
         "charged": "arc_lash"
       },
+      "best_creature": {
+        "id": "staticub_edge",
+        "kind": "survivability",
+        "value": 0.12
+      },
       "placeholder": {
         "colour": "#8899aa",
         "height": 1.9,
@@ -1547,8 +1612,8 @@
       "catch_rate": 0.15,
       "aggressive": true,
       "moves": {
-        "quick": "arc_lash",
-        "charged": "spark_bite"
+        "quick": "spark_bite",
+        "charged": "arc_lash"
       },
       "placeholder": {
         "colour": "#8899aa",
@@ -1622,6 +1687,11 @@
         "quick": "spark_bite",
         "charged": "arc_lash"
       },
+      "best_creature": {
+        "id": "stormraven_edge",
+        "kind": "energy",
+        "value": 0.12
+      },
       "placeholder": {
         "colour": "#8899aa",
         "height": 2.0,
@@ -1653,6 +1723,11 @@
         "quick": "talon_dive",
         "charged": "gust_burst"
       },
+      "best_creature": {
+        "id": "pebbik_edge",
+        "kind": "survivability",
+        "value": 0.12
+      },
       "placeholder": {
         "colour": "#8899aa",
         "height": 1.9,
@@ -1681,8 +1756,13 @@
       "catch_rate": 0.35,
       "aggressive": false,
       "moves": {
-        "quick": "sky_rend",
-        "charged": "gale_peck"
+        "quick": "gale_peck",
+        "charged": "sky_rend"
+      },
+      "best_creature": {
+        "id": "craghorn_edge",
+        "kind": "survivability",
+        "value": 0.12
       },
       "placeholder": {
         "colour": "#8899aa",
@@ -1715,6 +1795,11 @@
         "quick": "spark_bite",
         "charged": "arc_lash"
       },
+      "best_creature": {
+        "id": "stormbrush_edge",
+        "kind": "survivability",
+        "value": 0.12
+      },
       "placeholder": {
         "colour": "#8899aa",
         "height": 1.9,
@@ -1743,8 +1828,13 @@
       "catch_rate": 0.35,
       "aggressive": true,
       "moves": {
-        "quick": "arc_lash",
-        "charged": "spark_bite"
+        "quick": "spark_bite",
+        "charged": "arc_lash"
+      },
+      "best_creature": {
+        "id": "tanglevolt_edge",
+        "kind": "energy",
+        "value": 0.12
       },
       "placeholder": {
         "colour": "#8899aa",
@@ -1777,6 +1867,11 @@
         "quick": "spark_bite",
         "charged": "arc_lash"
       },
+      "best_creature": {
+        "id": "thundertunnel_edge",
+        "kind": "survivability",
+        "value": 0.12
+      },
       "placeholder": {
         "colour": "#8899aa",
         "height": 1.6,
@@ -1805,8 +1900,13 @@
       "catch_rate": 0.35,
       "aggressive": false,
       "moves": {
-        "quick": "arc_lash",
-        "charged": "spark_bite"
+        "quick": "spark_bite",
+        "charged": "arc_lash"
+      },
+      "best_creature": {
+        "id": "glimmermoth_edge",
+        "kind": "survivability",
+        "value": 0.12
       },
       "placeholder": {
         "colour": "#8899aa",
@@ -1839,6 +1939,11 @@
         "quick": "gale_peck",
         "charged": "storm_strike"
       },
+      "best_creature": {
+        "id": "stormcapra_edge",
+        "kind": "energy",
+        "value": 0.12
+      },
       "placeholder": {
         "colour": "#8899aa",
         "height": 2.3,
@@ -1867,8 +1972,13 @@
       "catch_rate": 0.35,
       "aggressive": false,
       "moves": {
-        "quick": "storm_strike",
+        "quick": "talon_dive",
         "charged": "night_swoop"
+      },
+      "best_creature": {
+        "id": "skyrill_edge",
+        "kind": "survivability",
+        "value": 0.12
       },
       "placeholder": {
         "colour": "#8899aa",
@@ -1901,6 +2011,11 @@
         "quick": "gale_peck",
         "charged": "storm_strike"
       },
+      "best_creature": {
+        "id": "aeriex_edge",
+        "kind": "survivability",
+        "value": 0.12
+      },
       "placeholder": {
         "colour": "#8899aa",
         "height": 2.4,
@@ -1931,6 +2046,11 @@
       "moves": {
         "quick": "talon_dive",
         "charged": "gust_burst"
+      },
+      "best_creature": {
+        "id": "ribbonray_edge",
+        "kind": "survivability",
+        "value": 0.12
       },
       "placeholder": {
         "colour": "#8899aa",
@@ -1963,6 +2083,11 @@
         "quick": "gale_peck",
         "charged": "storm_strike"
       },
+      "best_creature": {
+        "id": "breezetail_edge",
+        "kind": "survivability",
+        "value": 0.12
+      },
       "placeholder": {
         "colour": "#8899aa",
         "height": 1.9,
@@ -1994,6 +2119,11 @@
         "quick": "quick_flit",
         "charged": "sky_rend"
       },
+      "best_creature": {
+        "id": "cloudfang_edge",
+        "kind": "energy",
+        "value": 0.12
+      },
       "placeholder": {
         "colour": "#8899aa",
         "height": 2.3,
@@ -2022,8 +2152,13 @@
       "catch_rate": 0.35,
       "aggressive": false,
       "moves": {
-        "quick": "storm_strike",
-        "charged": "night_swoop"
+        "quick": "quick_flit",
+        "charged": "storm_strike"
+      },
+      "best_creature": {
+        "id": "cliffspike_edge",
+        "kind": "survivability",
+        "value": 0.12
       },
       "placeholder": {
         "colour": "#8899aa",
@@ -2053,8 +2188,8 @@
       "catch_rate": 0.15,
       "aggressive": true,
       "moves": {
-        "quick": "gust_burst",
-        "charged": "quick_flit"
+        "quick": "quick_flit",
+        "charged": "gust_burst"
       },
       "placeholder": {
         "colour": "#8899aa",
