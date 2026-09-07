@@ -156,7 +156,13 @@ func run(tree: SceneTree) -> Dictionary:
 	# frame the dialog lands on, the next iteration answers it. `_answered`
 	# keeps that to one press, so a second dialog would be a real failure
 	# rather than something this quietly clicks through forever.
+	# ANSWER THE CHARACTER-CHOICE STEP the same way, folded into the same wait
+	# for the same reason: every new-game path now shows "Choose Your
+	# Character" (data/config/characters.json) before the world is entered.
+	# One entry exists today, focused automatically, so pressing through it is
+	# the production path for the only character that currently exists.
 	var answered_confirmation := false
+	var answered_character_choice := false
 	for _i in 2400:
 		if _tree.current_scene != null and _tree.current_scene.scene_file_path == WORLD_SCENE:
 			_world = _tree.current_scene
@@ -168,11 +174,19 @@ func run(tree: SceneTree) -> Dictionary:
 				_checkpoint("answered the returning-player fresh-game confirmation")
 				await _tap_action("ui_accept")
 				continue
+		if not answered_character_choice:
+			var character_choice := _tree.root.get_viewport().gui_get_focus_owner() as Button
+			if character_choice != null and character_choice.text.begins_with("The Trainer"):
+				answered_character_choice = true
+				_checkpoint("answered the character-choice step")
+				await _tap_action("ui_accept")
+				continue
 		await _tree.process_frame
 	if _world == null:
 		_fail(("Start New Game never reached the configured Meadows world "
-			+ "(fresh-game confirmation %s)")
-			% ("answered" if answered_confirmation else "never appeared"))
+			+ "(fresh-game confirmation %s, character choice %s)")
+			% ["answered" if answered_confirmation else "never appeared",
+				"answered" if answered_character_choice else "never appeared"])
 		return _result()
 	_checkpoint("new game world entered")
 	for _i in 300:
