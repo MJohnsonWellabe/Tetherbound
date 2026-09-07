@@ -80,6 +80,12 @@ func _run() -> void:
 	var storm: Dictionary = ((shells.get("realms", {}) as Dictionary).get(STORMWOOD, {})) as Dictionary
 	check(bool(storm.get("ready", false)), "host reports the Stormwood simulation shell ready")
 	check(int(storm.get("bodies", 0)) >= 1, "host shell owns the remote client's body")
+	var client_runtime := await _await_client_stormwood_runtime()
+	check(bool(client_runtime.get("available", false)),
+		"client finished standing up the Stormwood combat runtime")
+	if not bool(client_runtime.get("available", false)):
+		quit(await finish())
+		return
 
 	# A fresh net-harness process has not played the opening, so it owns no
 	# party member. `deploy_creature` can build the sandbox fallback body, but
@@ -239,6 +245,24 @@ func _await_stormwood_shell() -> Dictionary:
 		if bool(storm.get("ready", false)) and int(storm.get("bodies", 0)) >= 1:
 			return last
 		await step(0, "wait", {"frames": 60})
+	return last
+
+
+## `Game.enter_realm()` returns after the new current scene exists, while the
+## Stormwood world deliberately continues its budgeted procedural build over
+## later frames.  On a cold Linux runner that build outlasts the generic realm
+## settle window.  Wait for the production encounter hub (created beside the
+## EncounterDirector) before asking the ordinary deploy path for that director.
+func _await_client_stormwood_runtime() -> Dictionary:
+	var last: Dictionary = {}
+	for tick in HOSTED_WAIT_FRAMES:
+		var raw: Variant = await probe(1, "stormwood_hosted_trainer", {
+			"trainer": TRAINER, "peer": _client_peer_id,
+		})
+		last = raw as Dictionary if raw is Dictionary else {}
+		if bool(last.get("available", false)) and not (last.get("trainer_pos", []) as Array).is_empty():
+			return last
+		await step(1, "wait", {"frames": 1})
 	return last
 
 
