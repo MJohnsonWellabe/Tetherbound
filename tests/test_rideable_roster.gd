@@ -20,6 +20,24 @@ const EXPECTED_RIDEABLE: Array[String] = [
 	"terrapup", "burrowback", "tuskroot", "meadowhart", "veridian",
 ]
 
+## Water directive and owner board: only these five carry a swimmer.
+const EXPECTED_WATER_SWIMMERS: Array[String] = [
+	"water_aquaryn", "water_mosshell", "water_sirenseal", "water_riverdrake", "water_cannonback",
+]
+
+func test_water_swimmers_require_swim_saddle_and_other_water_species_cannot_carry() -> void:
+	for id: String in _all_species_ids():
+		if not id.begins_with("water_"):
+			continue
+		assert_eq(SPECIES.is_rideable(id), id in EXPECTED_WATER_SWIMMERS,
+			"Water rideability must match the owner roster: " + id)
+		if id in EXPECTED_WATER_SWIMMERS:
+			assert_eq(str(SPECIES.rideable(id).get("requires_item", "")), "swim_saddle")
+		else:
+			assert_false(SPECIES.definition(id).has("rideable"),
+				"Land-or-shallows species, Tidecoil and Guardian must not inherit mounts: " + id)
+
+
 ## The three this lane adds. Meadowhart and Veridian are unchanged by it.
 const NEW_MOUNTS: Array[String] = ["terrapup", "burrowback", "tuskroot"]
 
@@ -38,13 +56,14 @@ func _all_species_ids() -> Array[String]:
 	return found
 
 
-func test_exactly_five_species_are_rideable() -> void:
+func test_exactly_five_meadows_and_five_owner_water_species_are_rideable() -> void:
 	var found: Array[String] = []
 	for id in _all_species_ids():
 		if SPECIES.is_rideable(id):
 			found.append(id)
 	found.sort()
 	var expected := EXPECTED_RIDEABLE.duplicate()
+	expected.append_array(EXPECTED_WATER_SWIMMERS)
 	expected.sort()
 	assert_eq(found, expected,
 		"the rideable roster is %s, expected exactly %s" % [found, expected])

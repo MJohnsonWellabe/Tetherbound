@@ -341,22 +341,43 @@ func _check_focus_can_be_driven() -> void:
 func _check_tabs_can_be_cycled() -> void:
 	# Owner playtest report: "LB = tab left, RB = tab right". `menu_tab_left`
 	# (Q / LB) must step BACKWARD and `menu_tab_right` (Tab / RB) must step
-	# FORWARD. Drive the physical bindings and visit every registered tab; a
+	# FORWARD. Drive the physical bindings and visit every available tab; a
 	# two-tab spot check could leave a newly added tab unreachable or unfocused.
-	var tab_count := int(_menu.get("_tabs").size())
+	# The fresh Meadows character has not revealed Skills. Assert that player
+	# contract independently of the menu's own availability helper.
+	var expected_ids := ["backpack", "creatures", "map", "quest_log", "build", "players", "save", "settings"]
+	var tabs: Array = _menu.get("_tabs")
+	var buttons: Array = _menu.get("_tab_buttons")
+	var available: Array[int] = []
+	var visible_ids: Array[String] = []
+	for index in tabs.size():
+		var id := str(tabs[index].id)
+		if expected_ids.has(id):
+			available.append(index)
+		if buttons[index].visible:
+			visible_ids.append(id)
+	if visible_ids != expected_ids:
+		_fail("fresh Meadows tab rail should hide only Skills; drew %s" % str(visible_ids))
+	if available.size() != expected_ids.size():
+		_fail("menu configuration is missing expected Meadows tabs")
+		return
+	var tab_count := available.size()
 	var rb := _pad_button_for("menu_tab_right")
 	var lb := _pad_button_for("menu_tab_left")
 	if rb < 0 or lb < 0:
 		_fail("LB/RB tab actions do not both have physical joypad bindings")
 		return
 	var start := int(_menu.get("_index"))
+	if not available.has(start):
+		_fail("fresh Meadows selected unavailable tab %d" % start)
+		return
 	var visited: Dictionary = {start: true}
 	var both_ok := true
 	for step in tab_count:
 		var before := int(_menu.get("_index"))
 		await _pad(rb)
 		var after := int(_menu.get("_index"))
-		if after != posmod(before + 1, tab_count):
+		if after != available[posmod(available.find(before) + 1, tab_count)]:
 			_fail("physical RB should step to the next tab; went from %d to %d" % [before, after])
 			both_ok = false
 			break
@@ -371,16 +392,16 @@ func _check_tabs_can_be_cycled() -> void:
 	var mid := int(_menu.get("_index"))
 	await _pad(lb)
 	var after_lb := int(_menu.get("_index"))
-	if after_lb != posmod(mid - 1, tab_count):
+	if after_lb != available[posmod(available.find(mid) - 1, tab_count)]:
 		_fail("physical LB should step to the previous tab; went from %d to %d" % [mid, after_lb])
 		both_ok = false
 	await _pad(rb)
 	var after_rb := int(_menu.get("_index"))
-	if after_rb != posmod(after_lb + 1, tab_count):
+	if after_rb != available[posmod(available.find(after_lb) + 1, tab_count)]:
 		_fail("physical RB should step to the next tab; went from %d to %d" % [after_lb, after_rb])
 		both_ok = false
 	if both_ok:
-		print("physical RB reaches all %d tabs with focus; LB and RB move in opposite directions" % tab_count)
+		print("physical RB reaches all %d available Meadows tabs with focus; LB and RB move in opposite directions" % tab_count)
 
 
 ## The five-creature cap, seen from the screen rather than from the unit test.

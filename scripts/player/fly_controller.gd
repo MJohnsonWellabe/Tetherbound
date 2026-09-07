@@ -308,8 +308,11 @@ func physics_step(delta: float, input_owned: bool) -> bool:
 				return true
 	else:
 		last_denial = ""
-	var base_spend := float(config.get("climb_stamina_per_second", 1.6)) if state == "climb" else float(config.get("stamina_per_second", 1.0))
-	vitals.call("spend_traversal", adjusted_stamina_cost(base_spend * delta, _active_realm_power()))
+	var spend := float(config.get("climb_stamina_per_second", 1.6)) if state == "climb" else float(config.get("stamina_per_second", 1.0))
+	var skills_game := get_node_or_null("/root/Game")
+	if skills_game != null and skills_game.get("local") != null:
+		spend *= float(skills_game.get("local").skills.efficiency("flying"))
+	vitals.call("spend_traversal", adjusted_stamina_cost(spend * delta, _active_realm_power()))
 	var velocity_before_environment := _player.velocity
 	_player.call("apply_environment_velocity_modifiers", delta)
 	# External wind cannot bypass authored swept no-fly restrictions.

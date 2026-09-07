@@ -183,8 +183,11 @@ func _migrate_building_uids() -> void:
 ## Returns the new entry's index, which the caller stashes as node metadata so
 ## `sync_state_to_game`/`restore_from_game` can find their way back to it.
 func register_death_satchel(position: Vector3, owner: String = "",
-		realm: String = "meadows") -> int:
+		realm: String = "meadows", uid: String = "") -> int:
+	if uid.is_empty():
+		uid = "legacy_satchel_%d" % death_satchels.size()
 	death_satchels.append({
+		"uid": uid,
 		"realm": realm,
 		"owner": owner,
 		"position": [position.x, position.y, position.z],
@@ -192,6 +195,15 @@ func register_death_satchel(position: Vector3, owner: String = "",
 	})
 	revision += 1
 	return death_satchels.size() - 1
+
+
+func death_satchel_index_of(uid: String) -> int:
+	for index in death_satchels.size():
+		if death_satchels[index] is Dictionary:
+			var record: Dictionary = death_satchels[index]
+			if str(record.get("uid", "legacy_satchel_%d" % index)) == uid:
+				return index
+	return -1
 
 
 ## R7.6. The state of farm bed `index`, or a fresh fallow one. Grows
@@ -261,6 +273,9 @@ func load_data(data: Dictionary) -> void:
 	_migrate_building_uids()
 	farm_plots = _array(data.get("farm_plots", []))
 	death_satchels = _array(data.get("death_satchels", []))
+	for index in death_satchels.size():
+		if death_satchels[index] is Dictionary and str(death_satchels[index].get("uid", "")).is_empty():
+			death_satchels[index]["uid"] = "legacy_satchel_%d" % index
 	harvested_vegetation = _dictionary(data.get("harvested_vegetation", {}))
 	felled_vegetation = _dictionary(data.get("felled_vegetation", {}))
 	if flags == null:
@@ -336,6 +351,28 @@ func apply_delta(delta: Dictionary) -> int:
 
 func _apply_op(op: Dictionary) -> bool:
 	match str(op.get("op", "")):
+		"satchel_add":
+			var uid := str(op.get("uid", ""))
+			if uid.is_empty() or death_satchel_index_of(uid) >= 0:
+				return false
+			var index := register_death_satchel(_op_position(op.get("position")), str(op.get("owner", "")), str(op.get("realm", "meadows")), uid)
+			death_satchels[index]["state"] = (op.get("state", []) as Array).duplicate(true)
+			return true
+		"satchel_set":
+			var index := death_satchel_index_of(str(op.get("uid", "")))
+			if index < 0:
+				return false
+			if int(op.get("revision", 0)) <= int(death_satchels[index].get("revision", 0)):
+				return false
+			death_satchels[index]["state"] = (op.get("state", []) as Array).duplicate(true)
+			death_satchels[index]["revision"] = int(op.get("revision", 0))
+			var transactions: Array = death_satchels[index].get("transactions", [])
+			var txn := str(op.get("txn_id", ""))
+			if not txn.is_empty() and not transactions.has(txn):
+				transactions.append(txn)
+			death_satchels[index]["transactions"] = transactions
+			revision += 1
+			return true
 		"flag":
 			var id := str(op.get("id", ""))
 			if id.is_empty() or flags == null:

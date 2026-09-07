@@ -59,6 +59,7 @@ const RIDING := preload("res://scripts/world/riding_controller.gd")
 const FLY := preload("res://scripts/player/fly_controller.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const ANCHOR_ARBITER := preload("res://scripts/net/fly_anchor_arbiter.gd")
+const SWIM_STATE := preload("res://scripts/player/swim_state.gd")
 
 ## Smoothing half-life for the remote's rendered position. Small enough that a
 ## walking trainer is never further behind than lane 2.C's own "seen" budget
@@ -96,6 +97,11 @@ var net_yaw: float = 0.0
 var net_anim_state: String = "idle"
 var net_sprinting: bool = false
 var net_carried: bool = false
+var net_aquatic: Dictionary = {}
+## Personal character level, owner-published like their equipment. The host
+## recomputes the capped bonus; a throw intent never carries a catch bonus.
+var net_catching_level: int = 0
+var aquatic := SWIM_STATE.new()
 
 ## --- Stage B lane 6.B: one player is on their creature ------------------------
 ##
@@ -291,6 +297,11 @@ func _push_from_local_rig() -> void:
 	net_anim_state = _state_of(rig)
 	_push_ride(rig)
 	_push_flight(rig)
+	var swimming: Node = rig.get("swim_controller")
+	net_aquatic = swimming.call("snapshot") if swimming != null else {}
+	var skills_game := get_node_or_null("/root/Game")
+	if skills_game != null and skills_game.get("local") != null:
+		net_catching_level = int(skills_game.get("local").skills.level("catching"))
 	# Keep the proxy co-located with the rig it mirrors. Nothing renders it
 	# here, but a probe or a distance check that finds this node should not see
 	# a body parked at the origin.
@@ -475,6 +486,9 @@ static func _state_of(rig: Node3D) -> String:
 # --- every other peer's side -------------------------------------------------
 
 func _follow(delta: float) -> void:
+	if not net_aquatic.is_empty():
+		aquatic.owner_peer_id = get_multiplayer_authority()
+		aquatic.apply_remote_snapshot(net_aquatic, get_multiplayer_authority())
 	_apply_ride_and_flight(delta)
 	if net_riding:
 		var mount := _mount_body()
@@ -524,7 +538,7 @@ func _follow(delta: float) -> void:
 	_render_position = _render_position.lerp(net_position, weight)
 	rotation.y = lerp_angle(rotation.y, net_yaw, weight)
 
-	if net_carried or net_flying:
+	if net_carried or net_flying or aquatic.mode != SWIM_STATE.Mode.LAND:
 		# A carried trainer's transform belongs to whatever carries them; do
 		# not fight it with a floor query. `player_controller.gd` runs no
 		# locomotion while carried either.

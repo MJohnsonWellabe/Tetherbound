@@ -419,7 +419,7 @@ func arena() -> Node3D:
 func begin(
 	player: Node3D, wild: Node3D, ally_body: Node3D, party: Array[RefCounted],
 	camera_rig: Node = null, best_creature: RefCounted = null,
-	opponent_owned: bool = false
+	opponent_owned: bool = false, realm_owned_opponent: bool = false
 ) -> bool:
 	if is_fighting():
 		return false
@@ -468,16 +468,23 @@ func begin(
 	last_xp_award.clear()
 
 	_open_arena()
-	_place_fighters()
+	if realm_owned_opponent:
+		# Joining a shared realm encounter must not reposition its enemy or
+		# constrain it to this participant's disposable presentation arena.
+		_ally_body.visible = true
+		_ally_body.call("face_towards", _wild.global_position)
+	else:
+		_place_fighters()
 	_throw.call("arm", _player, _wild, _camera_rig)
 
 	if not _wild.is_connected("strike_ready", _on_enemy_strike):
 		_wild.connect("strike_ready", _on_enemy_strike)
 	if not _wild.is_connected("telegraph_started", _on_enemy_telegraph):
 		_wild.connect("telegraph_started", _on_enemy_telegraph)
-	_wild.call("set_engaged", true, _ally_body)
-	_wild.set("arena", _arena)
-	_ally_body.set("arena", _arena)
+	if not realm_owned_opponent:
+		_wild.call("set_engaged", true, _ally_body)
+		_wild.set("arena", _arena)
+	_ally_body.set("arena", null if realm_owned_opponent else _arena)
 
 	_target_marker = TARGET_MARKER.begin(_arena, _wild, MATH.config().get("target_marker", {}))
 
@@ -2042,7 +2049,8 @@ func _on_orb_struck(_target: Node3D, offset: float) -> void:
 		str(_throw.call("thrown_orb_id")),
 		offset,
 		radius,
-		_rng.randf()
+		_rng.randf(),
+		_personal_catching_bonus()
 	)
 	if _tutorial_catch_failure_bound >= 0:
 		decision = CATCH.apply_failure_bound(
@@ -2218,6 +2226,12 @@ func _tick_catch_resolution(delta: float) -> void:
 
 
 func _finish_catch() -> void:
+	var confirmed_by_realm := _encounter_link != null and _encounter_link.has_method("confirm_catch_finish")
+	if confirmed_by_realm:
+		var confirmation: Dictionary = _encounter_link.call("confirm_catch_finish", _encounter_id)
+		if bool(confirmation.get("pending", false)):
+			return
+		_catch_succeeded = bool(confirmation.get("caught", false))
 	_catch_phase = CatchPhase.NONE
 	var cfg: Dictionary = CATCH.config().get("resolve", {})
 	var orb: Node3D = _throw.call("resting_orb")
@@ -2228,7 +2242,7 @@ func _finish_catch() -> void:
 	# host cannot see a client's animation finish, and
 	# `catch_arbitration_window_ms` is the backstop for the case where this
 	# message never arrives, not the schedule.
-	if _encounter_link != null:
+	if _encounter_link != null and not confirmed_by_realm:
 		_encounter_link.call("submit_encounter_intent", {
 			"kind": "catch_finished",
 			"encounter_id": _encounter_id,
@@ -2630,8 +2644,13 @@ func catch_chance_now() -> float:
 		radius = float(_wild.call("body_radius"))
 	return CATCH.catch_chance(
 		SPECIES.catch_rate(_enemy.species_id), _enemy.hp_fraction(), current_orb_id(),
-		catch_aim_offset(radius), radius
+		catch_aim_offset(radius), radius, _personal_catching_bonus()
 	)
+
+
+func _personal_catching_bonus() -> float:
+	var game := get_node_or_null("/root/Game")
+	return float(game.get("local").skills.catch_bonus()) if game != null and game.get("local") != null else 0.0
 
 
 ## Metres off centre this throw would strike at, as best the aim can know

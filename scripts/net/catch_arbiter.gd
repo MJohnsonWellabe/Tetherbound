@@ -178,7 +178,8 @@ func attempt(encounter_id: String, peer_id: int, params: Dictionary,
 		str(params["orb_id"]),
 		offset,
 		radius,
-		float(params["roll"])
+		float(params["roll"]),
+		float(params.get("skill_bonus", 0.0))
 	)
 	decision["offset"] = offset
 	decision["orb_id"] = str(params["orb_id"])

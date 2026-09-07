@@ -34,6 +34,7 @@ const PARTY := preload("res://autoload/party.gd")
 const MAP_STATE := preload("res://autoload/map_state.gd")
 const CLOUDREACH_MAP_STATE := preload("res://scripts/world/cloudreach_map_state.gd")
 const REALM_MAP_STATE := preload("res://scripts/world/realm_map_state.gd")
+const WATER_MAP_STATE := preload("res://scripts/world/water_map_state.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const REALM_HEART_STATE := preload("res://autoload/realm_heart_state.gd")
 const PLAYER_EQUIPMENT := preload("res://scripts/player/player_equipment.gd")
@@ -41,6 +42,7 @@ const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 const PROGRESSION_FEED := preload("res://scripts/creatures/progression_feed.gd")
 const CREATURE_INSTANCE := preload("res://scripts/creatures/creature_instance.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
+const PLAYER_SKILLS := preload("res://scripts/player/player_skills.gd")
 
 const SPECIES_PATH := "res://data/creatures/species.json"
 const MAP_LANDMARKS_PATH := "res://data/config/map_landmarks.json"
@@ -48,8 +50,7 @@ const CLOUDREACH_WORLD_PATH := "res://data/config/cloudreach_world.json"
 const CLOUDREACH_CHAPTER_PATH := "res://data/config/cloudreach_chapter.json"
 const REALM_HEARTS_PATH := "res://data/config/realm_hearts.json"
 
-## The realms that have an implemented map. Waterward is a distant vista, not
-## an enterable place (CLAUDE.md's Biome 2 rule), so it gets no MapState.
+## Registry order prefers the original chapters. A map never grants entry.
 const DEFAULT_MAPPED_REALMS: Array[String] = ["meadows", "cloudreach"]
 
 ## Item kinds that may occupy an action slot -- an allow-list, not a refusal
@@ -77,6 +78,9 @@ var pose: Dictionary = {}
 ## answer; per player from now on.
 var realm: String = "meadows"
 var pending_realm_entry: String = ""
+## Inaccessible transaction escrow, never a usable inventory or creature slot.
+## Pending moves and settled receipts survive node teardown and reconnect.
+var satchel_escrow: Dictionary = {}
 
 ## The PLAYER half of the old flat `Game.progression` store: every id
 ## `progression_state.scope_of()` answers "player" for.
@@ -88,6 +92,7 @@ var maps: Dictionary = {}
 var _map_definitions_override: Dictionary = {}
 
 var hearts: RefCounted = null
+var skills: RefCounted = PLAYER_SKILLS.new()
 var feed: RefCounted = null
 var quest_log: RefCounted = null
 
@@ -124,6 +129,8 @@ func _init() -> void:
 ## "no reset happened". `clear()` is the feed's own new-game reset and bumps the
 ## epoch, exactly as `Game.reset_for_new_game()` has always called it.
 func reset() -> void:
+	satchel_escrow.clear()
+	skills.load_data({})
 	flags.call("load_data", {})
 	feed.call("clear_events")
 	maps.clear()
@@ -180,6 +187,9 @@ func map_for(realm_id: String) -> RefCounted:
 		instance = CLOUDREACH_MAP_STATE.new()
 		instance.call("configure_cloudreach", _json(str(definition.get("map_world_path", CLOUDREACH_WORLD_PATH))),
 			_json(str(definition.get("map_chapter_path", CLOUDREACH_CHAPTER_PATH))), flag_reader)
+	elif realm_id == "water":
+		instance = WATER_MAP_STATE.new()
+		instance.call("configure_water", _json(str(definition.map_world_path)))
 	elif realm_id == "meadows":
 		instance = MAP_STATE.new()
 		instance.call("configure", _json(str(definition.get("map_landmarks_path", MAP_LANDMARKS_PATH))))
@@ -376,7 +386,9 @@ func save_data() -> Dictionary:
 		"player_pose": pose.duplicate(true),
 		"realm": realm,
 		"pending_realm_entry": pending_realm_entry,
+		"satchel_escrow": satchel_escrow.duplicate(true),
 		"realm_hearts": hearts.call("save_data") if hearts != null else {},
+		"skills": skills.save_data(),
 		"realm_maps": map_payloads(),
 		"flags": flags.save_data() if flags != null else {},
 	}
@@ -394,7 +406,12 @@ func load_data(data: Dictionary) -> void:
 	var raw_pose: Variant = data.get("player_pose", {})
 	pose = (raw_pose as Dictionary).duplicate(true) if typeof(raw_pose) == TYPE_DICTIONARY else {}
 	realm = str(data.get("realm", "meadows"))
+	var raw_skills: Variant = data.get("skills", {})
+	skills.load_data(raw_skills if raw_skills is Dictionary else {})
+	skills.enter_realm(realm)
 	pending_realm_entry = str(data.get("pending_realm_entry", ""))
+	var raw_escrow: Variant = data.get("satchel_escrow", {})
+	satchel_escrow = raw_escrow.duplicate(true) if raw_escrow is Dictionary else {}
 	if flags == null:
 		flags = PROGRESSION_STATE.new()
 	var raw_flags: Variant = data.get("flags", {})

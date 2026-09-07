@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "realm_id": "water",
+  "_comment": "Eight authored camps use existing NightRest sleep voting and CraftPanel. Terrain grounding and interaction smoke required; no visual acceptance implied.",
+  "tuning": {
+    "prompt_radius_m": 3.2,
+    "craft_offset_xz": [
+      0.0,
+      4.0
+    ],
+    "creature_bed_offset_xz": [
+      -4.0,
+      0.0
+    ],
+    "fire_offset_xz": [
+      5.0,
+      0.0
+    ],
+    "workbench_scale": 1.0,
+    "_comment": "Starting layout separates rest, creature care, fire and craft prompts. Reserved Water creature-bed indices -41 through -48 do not overlap installed Meadows/Cloudreach beds."
+  },
+  "camps": [
+    {
+      "id": "water_camp_first_shore",
+      "island_id": "first_shore",
+      "at": [
+        7.0,
+        142.0
+      ],
+      "creature_bed_index": -41,
+      "label": "Rest at first shore",
+      "_comment": "Seven metres beside the first inland approach; each component samples baked terrain. Static authored service, no player-built objective flag."
+    },
+    {
+      "id": "water_camp_reedhaven",
+      "island_id": "reedhaven",
+      "at": [
+        7.0,
+        298.0
+      ],
+      "creature_bed_index": -42,
+      "label": "Rest at reedhaven",
+      "_comment": "Seven metres beside the first inland approach; each component samples baked terrain. Static authored service, no player-built objective flag."
+    },
+    {
+      "id": "water_camp_brine_steps",
+      "island_id": "brine_steps",
+      "at": [
+        292.353546142578,
+        589.471069335938
+      ],
+      "creature_bed_index": -43,
+      "label": "Rest at brine steps",
+      "_comment": "Seven metres beside the first inland approach; each component samples baked terrain. Static authored service, no player-built objective flag."
+    },
+    {
+      "id": "water_camp_shellwatch",
+      "island_id": "shellwatch",
+      "at": [
+        359.289459228516,
+        971.46923828125
+      ],
+      "creature_bed_index": -44,
+      "label": "Rest at shellwatch",
+      "_comment": "Seven metres beside the first inland approach; each component samples baked terrain. Static authored service, no player-built objective flag."
+    },
+    {
+      "id": "water_camp_tidal_cradle",
+      "island_id": "tidal_cradle",
+      "at": [
+        556.092163085938,
+        1367.17846679688
+      ],
+      "creature_bed_index": -45,
+      "label": "Rest at tidal cradle",
+      "_comment": "Seven metres beside the first inland approach; each component samples baked terrain. Static authored service, no player-built objective flag."
+    },
+    {
+      "id": "water_camp_salt_crown",
+      "island_id": "salt_crown",
+      "at": [
+        284.932739257813,
+        2128.56884765625
+      ],
+      "creature_bed_index": -46,
+      "label": "Rest at salt crown",
+      "_comment": "Seven metres beside the first inland approach; each component samples baked terrain. Static authored service, no player-built objective flag."
+    },
+    {
+      "id": "water_camp_sluice_isle",
+      "island_id": "sluice_isle",
+      "at": [
+        672.336120605469,
+        2788.5263671875
+      ],
+      "creature_bed_index": -47,
+      "label": "Rest at sluice isle",
+      "_comment": "Seven metres beside the first inland approach; each component samples baked terrain. Static authored service, no player-built objective flag."
+    },
+    {
+      "id": "water_camp_veilfall",
+      "island_id": "veilfall",
+      "at": [
+        381.661010742188,
+        3822.92333984375
+      ],
+      "creature_bed_index": -48,
+      "label": "Rest at veilfall",
+      "_comment": "Seven metres beside the first inland approach; each component samples baked terrain. Static authored service, no player-built objective flag."
+    }
+  ]
+}

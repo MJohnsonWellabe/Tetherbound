@@ -1,0 +1,4547 @@
+{
+  "_comment": "Water Phase 0 authored composition contract. DATA ONLY: no playable terrain, gates, nodes, flows or performance proof. Source BUILD_WATER_ARCHIPELAGO_TO_COMPLETION section3 and owner directive/boards. Metres, realm-local XYZ. Starting numbers tunable; derived lengths are calculated from listed polylines.",
+  "anchors": [
+    {
+      "_comment": "Shore is exactly radius at sea level. Safe position samples beach formula. Validate real body clearance and grade after baking.",
+      "approach_width_m": 8.0,
+      "grounding": "terrain_required",
+      "id": "first_shore_to_reedhaven_departure",
+      "island_id": "first_shore",
+      "kind": "departure",
+      "safe_position": [
+        0.0,
+        1.929,
+        162.0
+      ],
+      "safe_radius_m": 3.0,
+      "scatter_clear_radius_m": 12.0,
+      "shore_position": [
+        0.0,
+        0.0,
+        180.0
+      ]
+    },
+    {
+      "_comment": "Shore is exactly radius at sea level. Safe position samples beach formula. Validate real body clearance and grade after baking.",
+      "approach_width_m": 8.0,
+      "grounding": "terrain_required",
+      "id": "first_shore_to_reedhaven_arrival",
+      "island_id": "reedhaven",
+      "kind": "arrival",
+      "safe_position": [
+        0.0,
+        1.929,
+        278.0
+      ],
+      "safe_radius_m": 3.0,
+      "scatter_clear_radius_m": 12.0,
+      "shore_position": [
+        0.0,
+        0.0,
+        260.0
+      ]
+    },
+    {
+      "_comment": "Shore is exactly radius at sea level. Safe position samples beach formula. Validate real body clearance and grade after baking.",
+      "approach_width_m": 8.0,
+      "grounding": "terrain_required",
+      "id": "reedhaven_to_brine_steps_departure",
+      "island_id": "reedhaven",
+      "kind": "departure",
+      "safe_position": [
+        143.505,
+        1.929,
+        515.169
+      ],
+      "safe_radius_m": 3.0,
+      "scatter_clear_radius_m": 12.0,
+      "shore_position": [
+        159.45,
+        0.0,
+        523.521
+      ]
+    },
+    {
+      "_comment": "Shore is exactly radius at sea level. Safe position samples beach formula. Validate real body clearance and grade after baking.",
+      "approach_width_m": 8.0,
+      "grounding": "terrain_required",
+      "id": "reedhaven_to_brine_steps_arrival",
+      "island_id": "brine_steps",
+      "kind": "arrival",
+      "safe_position": [
+        267.637,
+        1.929,
+        580.191
+      ],
+      "safe_radius_m": 3.0,
+      "scatter_clear_radius_m": 12.0,
+      "shore_position": [
+        251.692,
+        0.0,
+        571.839
+      ]
+    },
+    {
+      "_comment": "Shore is exactly radius at sea level. Safe position samples beach formula. Validate real body clearance and grade after baking.",
+      "approach_width_m": 8.0,
+      "grounding": "terrain_required",
+      "id": "brine_steps_to_shellwatch_departure",
+      "island_id": "brine_steps",
+      "kind": "departure",
+      "safe_position": [
+        383.462,
+        1.929,
+        828.074
+      ],
+      "safe_radius_m": 3.0,
+      "scatter_clear_radius_m": 12.0,
+      "shore_position": [
+        379.638,
+        0.0,
+        845.664
+      ]
+    },
+    {
+      "_comment": "Shore is exactly radius at sea level. Safe position samples beach formula. Validate real body clearance and grade after baking.",
+      "approach_width_m": 8.0,
+      "grounding": "terrain_required",
+      "id": "brine_steps_to_shellwatch_arrival",
+      "island_id": "shellwatch",
+      "kind": "arrival",
+      "safe_position": [
+        356.538,
+        1.929,
+        951.926
+      ],
+      "safe_radius_m": 3.0,
+      "scatter_clear_radius_m": 12.0,
+      "shore_position": [
+        360.362,
+        0.0,
+        934.336
+      ]
+    },
+    {
+      "_comment": "Shore is exactly radius at sea level. Safe position samples beach formula. Validate real body clearance and grade after baking.",
+      "approach_width_m": 8.0,
+      "grounding": "terrain_required",
+      "id": "shellwatch_to_tidal_cradle_departure",
+      "island_id": "shellwatch",
+      "kind": "departure",
+      "safe_position": [
+        436.92,
+        1.929,
+        1246.15
+      ],
+      "safe_radius_m": 3.0,
+      "scatter_clear_radius_m": 12.0,
+      "shore_position": [
+        449.155,
+        0.0,
+        1259.352
+      ]
+    },
+    {
+      "_comment": "Shore is exactly radius at sea level. Safe position samples beach formula. Validate real body clearance and grade after baking.",
+      "approach_width_m": 8.0,
+      "grounding": "terrain_required",
+      "id": "shellwatch_to_tidal_cradle_arrival",
+      "island_id": "tidal_cradle",
+      "kind": "arrival",
+      "safe_position": [
+        535.497,
+        1.929,
+        1352.51
+      ],
+      "safe_radius_m": 3.0,
+      "scatter_clear_radius_m": 12.0,
+      "shore_position": [
+        523.261,
+        0.0,
+        1339.308
+      ]
+    },
+    {
+      "_comment": "Shore is exactly radius at sea level. Safe position samples beach formula. Validate real body clearance and grade after baking.",
+      "approach_width_m": 8.0,
+      "grounding": "terrain_required",
+      "id": "tidal_cradle_to_salt_crown_departure",
+      "island_id": "tidal_cradle",
+      "kind": "departure",
+      "safe_position": [
+        560.542,
+        1.929,
+        1727.776
+      ],
+      "safe_radius_m": 3.0,
+      "scatter_clear_radius_m": 12.0,
+      "shore_position": [
+        550.169,
+        0.0,
+        1742.487
+      ]
+    },
+    {
+      "_comment": "Shore is exactly radius at sea level. Safe position samples beach formula. Validate real body clearance and grade after baking.",
+      "approach_width_m": 8.0,
+      "grounding": "terrain_required",
+      "id": "tidal_cradle_to_salt_crown_arrival",
+      "island_id": "salt_crown",
+      "kind": "arrival",
+      "safe_position": [
+        289.458,
+        1.929,
+        2112.224
+      ],
+      "safe_radius_m": 3.0,
+      "scatter_clear_radius_m": 12.0,
+      "shore_position": [
+        299.831,
+        0.0,
+        2097.513
+      ]
+    },
+    {
+      "_comment": "Shore is exactly radius at sea level. Safe position samples beach formula. Validate real body clearance and grade after baking.",
+      "approach_width_m": 8.0,
+      "grounding": "terrain_required",
+      "id": "salt_crown_to_sluice_isle_departure",
+      "island_id": "salt_crown",
+      "kind": "departure",
+      "safe_position": [
+        327.336,
+        1.929,
+        2474.669
+      ],
+      "safe_radius_m": 3.0,
+      "scatter_clear_radius_m": 12.0,
+      "shore_position": [
+        340.526,
+        0.0,
+        2486.917
+      ]
+    },
+    {
+      "_comment": "Shore is exactly radius at sea level. Safe position samples beach formula. Validate real body clearance and grade after baking.",
+      "approach_width_m": 8.0,
+      "grounding": "terrain_required",
+      "id": "salt_crown_to_sluice_isle_arrival",
+      "island_id": "sluice_isle",
+      "kind": "arrival",
+      "safe_position": [
+        650.68,
+        1.929,
+        2774.917
+      ],
+      "safe_radius_m": 3.0,
+      "scatter_clear_radius_m": 12.0,
+      "shore_position": [
+        637.49,
+        0.0,
+        2762.669
+      ]
+    },
+    {
+      "_comment": "Shore is exactly radius at sea level. Safe position samples beach formula. Validate real body clearance and grade after baking.",
+      "approach_width_m": 8.0,
+      "grounding": "terrain_required",
+      "id": "sluice_isle_to_veilfall_departure",
+      "island_id": "sluice_isle",
+      "kind": "departure",
+      "safe_position": [
+        718.763,
+        1.929,
+        3198.245
+      ],
+      "safe_radius_m": 3.0,
+      "scatter_clear_radius_m": 12.0,
+      "shore_position": [
+        710.078,
+        0.0,
+        3214.012
+      ]
+    },
+    {
+      "_comment": "Shore is exactly radius at sea level. Safe position samples beach formula. Validate real body clearance and grade after baking.",
+      "approach_width_m": 8.0,
+      "grounding": "terrain_required",
+      "id": "sluice_isle_to_veilfall_arrival",
+      "island_id": "veilfall",
+      "kind": "arrival",
+      "safe_position": [
+        384.311,
+        1.929,
+        3805.405
+      ],
+      "safe_radius_m": 3.0,
+      "scatter_clear_radius_m": 12.0,
+      "shore_position": [
+        392.995,
+        0.0,
+        3789.639
+      ]
+    },
+    {
+      "_comment": "Shore is exactly radius at sea level. Safe position samples beach formula. Validate real body clearance and grade after baking.",
+      "approach_width_m": 8.0,
+      "grounding": "terrain_required",
+      "id": "first_shore_to_lantern_cove_departure",
+      "island_id": "first_shore",
+      "kind": "departure",
+      "safe_position": [
+        -145.72,
+        1.929,
+        70.778
+      ],
+      "safe_radius_m": 3.0,
+      "scatter_clear_radius_m": 12.0,
+      "shore_position": [
+        -161.911,
+        0.0,
+        78.643
+      ]
+    },
+    {
+      "_comment": "Shore is exactly radius at sea level. Safe position samples beach formula. Validate real body clearance and grade after baking.",
+      "approach_width_m": 8.0,
+      "grounding": "terrain_required",
+      "id": "first_shore_to_lantern_cove_arrival",
+      "island_id": "lantern_cove",
+      "kind": "arrival",
+      "safe_position": [
+        -267.245,
+        1.929,
+        129.805
+      ],
+      "safe_radius_m": 3.0,
+      "scatter_clear_radius_m": 12.0,
+      "shore_position": [
+        -251.054,
+        0.0,
+        121.941
+      ]
+    },
+    {
+      "_comment": "Shore is exactly radius at sea level. Safe position samples beach formula. Validate real body clearance and grade after baking.",
+      "approach_width_m": 8.0,
+      "grounding": "terrain_required",
+      "id": "reedhaven_to_gull_rest_departure",
+      "island_id": "reedhaven",
+      "kind": "departure",
+      "safe_position": [
+        -26.029,
+        1.929,
+        599.895
+      ],
+      "safe_radius_m": 3.0,
+      "scatter_clear_radius_m": 12.0,
+      "shore_position": [
+        -28.922,
+        0.0,
+        617.661
+      ]
+    },
+    {
+      "_comment": "Shore is exactly radius at sea level. Safe position samples beach formula. Validate real body clearance and grade after baking.",
+      "approach_width_m": 8.0,
+      "grounding": "terrain_required",
+      "id": "reedhaven_to_gull_rest_arrival",
+      "island_id": "gull_rest",
+      "kind": "arrival",
+      "safe_position": [
+        -56.825,
+        1.929,
+        789.065
+      ],
+      "safe_radius_m": 3.0,
+      "scatter_clear_radius_m": 12.0,
+      "shore_position": [
+        -53.932,
+        0.0,
+        771.299
+      ]
+    },
+    {
+      "_comment": "Shore is exactly radius at sea level. Safe position samples beach formula. Validate real body clearance and grade after baking.",
+      "approach_width_m": 8.0,
+      "grounding": "terrain_required",
+      "id": "salt_crown_to_drowned_garden_departure",
+      "island_id": "salt_crown",
+      "kind": "departure",
+      "safe_position": [
+        391.464,
+        1.929,
+        2293.902
+      ],
+      "safe_radius_m": 3.0,
+      "scatter_clear_radius_m": 12.0,
+      "shore_position": [
+        409.424,
+        0.0,
+        2292.705
+      ]
+    },
+    {
+      "_comment": "Shore is exactly radius at sea level. Safe position samples beach formula. Validate real body clearance and grade after baking.",
+      "approach_width_m": 8.0,
+      "grounding": "terrain_required",
+      "id": "salt_crown_to_drowned_garden_arrival",
+      "island_id": "drowned_garden",
+      "kind": "arrival",
+      "safe_position": [
+        1058.315,
+        1.929,
+        2249.446
+      ],
+      "safe_radius_m": 3.0,
+      "scatter_clear_radius_m": 12.0,
+      "shore_position": [
+        1040.354,
+        0.0,
+        2250.643
+      ]
+    },
+    {
+      "_comment": "Shore is exactly radius at sea level. Safe position samples beach formula. Validate real body clearance and grade after baking.",
+      "approach_width_m": 8.0,
+      "grounding": "terrain_required",
+      "id": "sluice_isle_to_deep_watch_departure",
+      "island_id": "sluice_isle",
+      "kind": "departure",
+      "safe_position": [
+        1034.799,
+        1.929,
+        3159.583
+      ],
+      "safe_radius_m": 3.0,
+      "scatter_clear_radius_m": 12.0,
+      "shore_position": [
+        1047.028,
+        0.0,
+        3172.791
+      ]
+    },
+    {
+      "_comment": "Shore is exactly radius at sea level. Safe position samples beach formula. Validate real body clearance and grade after baking.",
+      "approach_width_m": 8.0,
+      "grounding": "terrain_required",
+      "id": "sluice_isle_to_deep_watch_arrival",
+      "island_id": "deep_watch",
+      "kind": "arrival",
+      "safe_position": [
+        1260.318,
+        1.929,
+        3403.144
+      ],
+      "safe_radius_m": 3.0,
+      "scatter_clear_radius_m": 12.0,
+      "shore_position": [
+        1248.089,
+        0.0,
+        3389.936
+      ]
+    },
+    {
+      "_comment": "Marker is water surface; safe point is dry beach1.928571m above sea. Analytic first_shore radius180/seabed slope.35 samples, not runtime verified.",
+      "approach_width_m": 8.0,
+      "grounding": "terrain_required",
+      "id": "water_first_shore_lesson_west",
+      "island_id": "first_shore",
+      "kind": "lesson_landing",
+      "required_world_flags": [],
+      "safe_position": [
+        57.368121,
+        1.928571,
+        151.502141
+      ],
+      "safe_radius_m": 3.0,
+      "scatter_clear_radius_m": 12.0,
+      "shore_position": [
+        63.742357,
+        0.0,
+        168.335712
+      ],
+      "swim_marker": [
+        66.019238,
+        0.0,
+        174.348674
+      ],
+      "swim_marker_depth_m": 2.250364
+    },
+    {
+      "_comment": "Marker is water surface; safe point is dry beach1.928571m above sea. Analytic first_shore radius180/seabed slope.35 samples, not runtime verified.",
+      "approach_width_m": 8.0,
+      "grounding": "terrain_required",
+      "id": "water_first_shore_lesson_east",
+      "island_id": "first_shore",
+      "kind": "lesson_landing",
+      "required_world_flags": [],
+      "safe_position": [
+        102.520642,
+        1.928571,
+        125.433321
+      ],
+      "safe_radius_m": 3.0,
+      "scatter_clear_radius_m": 12.0,
+      "shore_position": [
+        113.911825,
+        0.0,
+        139.370356
+      ],
+      "swim_marker": [
+        117.980762,
+        0.0,
+        144.348674
+      ],
+      "swim_marker_depth_m": 2.250364
+    }
+  ],
+  "currents": [
+    {
+      "_comment": "Adverse outbound; favorable return. Sheltered lateral route has weaker push, direct route is shorter. Priority keeps endpoints recoverable; route timing uses full stated adverse magnitude conservatively.",
+      "edge_blend_m": 4.0,
+      "flow_direction_xz": [
+        0.0,
+        -1.0
+      ],
+      "id": "first_shore_to_reedhaven_sheltered_current",
+      "overlap_rule": "highest_priority_then_nearest_centerline_no_vector_sum",
+      "polyline": [
+        [
+          0.0,
+          0.0,
+          180.0
+        ],
+        [
+          -9.6,
+          0.0,
+          220.0
+        ],
+        [
+          0.0,
+          0.0,
+          260.0
+        ]
+      ],
+      "post_liberation_strength_multiplier": 0.25,
+      "priority": 30.0,
+      "route_id": "first_shore_to_reedhaven_sheltered",
+      "strength_m_s": 0.08,
+      "visual_flow": "white_foam_and_driftwood_same_vector_as_physics",
+      "width_m": 18.0
+    },
+    {
+      "_comment": "Adverse outbound; favorable return. Sheltered lateral route has weaker push, direct route is shorter. Priority keeps endpoints recoverable; route timing uses full stated adverse magnitude conservatively.",
+      "edge_blend_m": 4.0,
+      "flow_direction_xz": [
+        0.0,
+        -1.0
+      ],
+      "id": "first_shore_to_reedhaven_direct_current",
+      "overlap_rule": "highest_priority_then_nearest_centerline_no_vector_sum",
+      "polyline": [
+        [
+          0.0,
+          0.0,
+          180.0
+        ],
+        [
+          0.0,
+          0.0,
+          260.0
+        ]
+      ],
+      "post_liberation_strength_multiplier": 0.25,
+      "priority": 20.0,
+      "route_id": "first_shore_to_reedhaven_direct",
+      "strength_m_s": 0.35,
+      "visual_flow": "white_foam_and_driftwood_same_vector_as_physics",
+      "width_m": 28.0
+    },
+    {
+      "_comment": "Adverse outbound; favorable return. Sheltered lateral route has weaker push, direct route is shorter. Priority keeps endpoints recoverable; route timing uses full stated adverse magnitude conservatively.",
+      "edge_blend_m": 4.0,
+      "flow_direction_xz": [
+        -0.886,
+        -0.464
+      ],
+      "id": "reedhaven_to_brine_steps_sheltered_current",
+      "overlap_rule": "highest_priority_then_nearest_centerline_no_vector_sum",
+      "polyline": [
+        [
+          159.45,
+          0.0,
+          523.521
+        ],
+        [
+          199.773,
+          0.0,
+          558.749
+        ],
+        [
+          251.692,
+          0.0,
+          571.839
+        ]
+      ],
+      "post_liberation_strength_multiplier": 0.25,
+      "priority": 30.0,
+      "route_id": "reedhaven_to_brine_steps_sheltered",
+      "strength_m_s": 0.08,
+      "visual_flow": "white_foam_and_driftwood_same_vector_as_physics",
+      "width_m": 18.0
+    },
+    {
+      "_comment": "Adverse outbound; favorable return. Sheltered lateral route has weaker push, direct route is shorter. Priority keeps endpoints recoverable; route timing uses full stated adverse magnitude conservatively.",
+      "edge_blend_m": 4.0,
+      "flow_direction_xz": [
+        -0.886,
+        -0.464
+      ],
+      "id": "reedhaven_to_brine_steps_direct_current",
+      "overlap_rule": "highest_priority_then_nearest_centerline_no_vector_sum",
+      "polyline": [
+        [
+          159.45,
+          0.0,
+          523.521
+        ],
+        [
+          251.692,
+          0.0,
+          571.839
+        ]
+      ],
+      "post_liberation_strength_multiplier": 0.25,
+      "priority": 20.0,
+      "route_id": "reedhaven_to_brine_steps_direct",
+      "strength_m_s": 0.35,
+      "visual_flow": "white_foam_and_driftwood_same_vector_as_physics",
+      "width_m": 28.0
+    },
+    {
+      "_comment": "Adverse outbound; favorable return. Sheltered lateral route has weaker push, direct route is shorter. Priority keeps endpoints recoverable; route timing uses full stated adverse magnitude conservatively.",
+      "edge_blend_m": 4.0,
+      "flow_direction_xz": [
+        0.212,
+        -0.977
+      ],
+      "id": "brine_steps_to_shellwatch_sheltered_current",
+      "overlap_rule": "highest_priority_then_nearest_centerline_no_vector_sum",
+      "polyline": [
+        [
+          379.638,
+          0.0,
+          845.664
+        ],
+        [
+          359.359,
+          0.0,
+          887.687
+        ],
+        [
+          360.362,
+          0.0,
+          934.336
+        ]
+      ],
+      "post_liberation_strength_multiplier": 0.25,
+      "priority": 30.0,
+      "route_id": "brine_steps_to_shellwatch_sheltered",
+      "strength_m_s": 0.08,
+      "visual_flow": "white_foam_and_driftwood_same_vector_as_physics",
+      "width_m": 18.0
+    },
+    {
+      "_comment": "Adverse outbound; favorable return. Sheltered lateral route has weaker push, direct route is shorter. Priority keeps endpoints recoverable; route timing uses full stated adverse magnitude conservatively.",
+      "edge_blend_m": 4.0,
+      "flow_direction_xz": [
+        0.212,
+        -0.977
+      ],
+      "id": "brine_steps_to_shellwatch_direct_current",
+      "overlap_rule": "highest_priority_then_nearest_centerline_no_vector_sum",
+      "polyline": [
+        [
+          379.638,
+          0.0,
+          845.664
+        ],
+        [
+          360.362,
+          0.0,
+          934.336
+        ]
+      ],
+      "post_liberation_strength_multiplier": 0.25,
+      "priority": 20.0,
+      "route_id": "brine_steps_to_shellwatch_direct",
+      "strength_m_s": 0.35,
+      "visual_flow": "white_foam_and_driftwood_same_vector_as_physics",
+      "width_m": 28.0
+    },
+    {
+      "_comment": "Adverse outbound; favorable return. Sheltered lateral route has weaker push, direct route is shorter. Priority keeps endpoints recoverable; route timing uses full stated adverse magnitude conservatively.",
+      "edge_blend_m": 4.0,
+      "flow_direction_xz": [
+        -0.68,
+        -0.733
+      ],
+      "id": "shellwatch_to_tidal_cradle_sheltered_current",
+      "overlap_rule": "highest_priority_then_nearest_centerline_no_vector_sum",
+      "polyline": [
+        [
+          449.155,
+          0.0,
+          1259.352
+        ],
+        [
+          476.613,
+          0.0,
+          1308.223
+        ],
+        [
+          523.261,
+          0.0,
+          1339.308
+        ]
+      ],
+      "post_liberation_strength_multiplier": 0.25,
+      "priority": 30.0,
+      "route_id": "shellwatch_to_tidal_cradle_sheltered",
+      "strength_m_s": 0.08,
+      "visual_flow": "white_foam_and_driftwood_same_vector_as_physics",
+      "width_m": 18.0
+    },
+    {
+      "_comment": "Adverse outbound; favorable return. Sheltered lateral route has weaker push, direct route is shorter. Priority keeps endpoints recoverable; route timing uses full stated adverse magnitude conservatively.",
+      "edge_blend_m": 4.0,
+      "flow_direction_xz": [
+        -0.68,
+        -0.733
+      ],
+      "id": "shellwatch_to_tidal_cradle_direct_current",
+      "overlap_rule": "highest_priority_then_nearest_centerline_no_vector_sum",
+      "polyline": [
+        [
+          449.155,
+          0.0,
+          1259.352
+        ],
+        [
+          523.261,
+          0.0,
+          1339.308
+        ]
+      ],
+      "post_liberation_strength_multiplier": 0.25,
+      "priority": 20.0,
+      "route_id": "shellwatch_to_tidal_cradle_direct",
+      "strength_m_s": 0.35,
+      "visual_flow": "white_foam_and_driftwood_same_vector_as_physics",
+      "width_m": 28.0
+    },
+    {
+      "_comment": "Adverse outbound; favorable return. Sheltered lateral route has weaker push, direct route is shorter. Priority keeps endpoints recoverable; route timing uses full stated adverse magnitude conservatively.",
+      "edge_blend_m": 4.0,
+      "flow_direction_xz": [
+        0.576,
+        -0.817
+      ],
+      "id": "tidal_cradle_to_salt_crown_sheltered_current",
+      "overlap_rule": "highest_priority_then_nearest_centerline_no_vector_sum",
+      "polyline": [
+        [
+          550.169,
+          0.0,
+          1742.487
+        ],
+        [
+          361.095,
+          0.0,
+          1874.939
+        ],
+        [
+          299.831,
+          0.0,
+          2097.513
+        ]
+      ],
+      "post_liberation_strength_multiplier": 0.25,
+      "priority": 30.0,
+      "route_id": "tidal_cradle_to_salt_crown_sheltered",
+      "strength_m_s": 0.2,
+      "visual_flow": "white_foam_and_driftwood_same_vector_as_physics",
+      "width_m": 18.0
+    },
+    {
+      "_comment": "Adverse outbound; favorable return. Sheltered lateral route has weaker push, direct route is shorter. Priority keeps endpoints recoverable; route timing uses full stated adverse magnitude conservatively.",
+      "edge_blend_m": 4.0,
+      "flow_direction_xz": [
+        0.576,
+        -0.817
+      ],
+      "id": "tidal_cradle_to_salt_crown_direct_current",
+      "overlap_rule": "highest_priority_then_nearest_centerline_no_vector_sum",
+      "polyline": [
+        [
+          550.169,
+          0.0,
+          1742.487
+        ],
+        [
+          299.831,
+          0.0,
+          2097.513
+        ]
+      ],
+      "post_liberation_strength_multiplier": 0.25,
+      "priority": 20.0,
+      "route_id": "tidal_cradle_to_salt_crown_direct",
+      "strength_m_s": 1.3,
+      "visual_flow": "white_foam_and_driftwood_same_vector_as_physics",
+      "width_m": 28.0
+    },
+    {
+      "_comment": "Adverse outbound; favorable return. Sheltered lateral route has weaker push, direct route is shorter. Priority keeps endpoints recoverable; route timing uses full stated adverse magnitude conservatively.",
+      "edge_blend_m": 4.0,
+      "flow_direction_xz": [
+        -0.733,
+        -0.68
+      ],
+      "id": "salt_crown_to_sluice_isle_sheltered_current",
+      "overlap_rule": "highest_priority_then_nearest_centerline_no_vector_sum",
+      "polyline": [
+        [
+          340.526,
+          0.0,
+          2486.917
+        ],
+        [
+          439.373,
+          0.0,
+          2678.246
+        ],
+        [
+          637.49,
+          0.0,
+          2762.669
+        ]
+      ],
+      "post_liberation_strength_multiplier": 0.25,
+      "priority": 30.0,
+      "route_id": "salt_crown_to_sluice_isle_sheltered",
+      "strength_m_s": 0.2,
+      "visual_flow": "white_foam_and_driftwood_same_vector_as_physics",
+      "width_m": 18.0
+    },
+    {
+      "_comment": "Adverse outbound; favorable return. Sheltered lateral route has weaker push, direct route is shorter. Priority keeps endpoints recoverable; route timing uses full stated adverse magnitude conservatively.",
+      "edge_blend_m": 4.0,
+      "flow_direction_xz": [
+        -0.733,
+        -0.68
+      ],
+      "id": "salt_crown_to_sluice_isle_direct_current",
+      "overlap_rule": "highest_priority_then_nearest_centerline_no_vector_sum",
+      "polyline": [
+        [
+          340.526,
+          0.0,
+          2486.917
+        ],
+        [
+          637.49,
+          0.0,
+          2762.669
+        ]
+      ],
+      "post_liberation_strength_multiplier": 0.25,
+      "priority": 20.0,
+      "route_id": "salt_crown_to_sluice_isle_direct",
+      "strength_m_s": 1.3,
+      "visual_flow": "white_foam_and_driftwood_same_vector_as_physics",
+      "width_m": 28.0
+    },
+    {
+      "_comment": "Adverse outbound; favorable return. Sheltered lateral route has weaker push, direct route is shorter. Priority keeps endpoints recoverable; route timing uses full stated adverse magnitude conservatively.",
+      "edge_blend_m": 4.0,
+      "flow_direction_xz": [
+        0.482,
+        -0.876
+      ],
+      "id": "sluice_isle_to_veilfall_sheltered_current",
+      "overlap_rule": "highest_priority_then_nearest_centerline_no_vector_sum",
+      "polyline": [
+        [
+          710.078,
+          0.0,
+          3214.012
+        ],
+        [
+          447.924,
+          0.0,
+          3444.751
+        ],
+        [
+          392.995,
+          0.0,
+          3789.639
+        ]
+      ],
+      "post_liberation_strength_multiplier": 0.25,
+      "priority": 30.0,
+      "route_id": "sluice_isle_to_veilfall_sheltered",
+      "strength_m_s": 0.3,
+      "visual_flow": "white_foam_and_driftwood_same_vector_as_physics",
+      "width_m": 18.0
+    },
+    {
+      "_comment": "Adverse outbound; favorable return. Sheltered lateral route has weaker push, direct route is shorter. Priority keeps endpoints recoverable; route timing uses full stated adverse magnitude conservatively.",
+      "edge_blend_m": 4.0,
+      "flow_direction_xz": [
+        0.482,
+        -0.876
+      ],
+      "id": "sluice_isle_to_veilfall_direct_current",
+      "overlap_rule": "highest_priority_then_nearest_centerline_no_vector_sum",
+      "polyline": [
+        [
+          710.078,
+          0.0,
+          3214.012
+        ],
+        [
+          392.995,
+          0.0,
+          3789.639
+        ]
+      ],
+      "post_liberation_strength_multiplier": 0.25,
+      "priority": 20.0,
+      "route_id": "sluice_isle_to_veilfall_direct",
+      "strength_m_s": 1.8,
+      "visual_flow": "white_foam_and_driftwood_same_vector_as_physics",
+      "width_m": 28.0
+    },
+    {
+      "_comment": "Adverse outbound; favorable return. Sheltered lateral route has weaker push, direct route is shorter. Priority keeps endpoints recoverable; route timing uses full stated adverse magnitude conservatively.",
+      "edge_blend_m": 4.0,
+      "flow_direction_xz": [
+        0.9,
+        -0.437
+      ],
+      "id": "first_shore_to_lantern_cove_sheltered_current",
+      "overlap_rule": "highest_priority_then_nearest_centerline_no_vector_sum",
+      "polyline": [
+        [
+          -161.911,
+          0.0,
+          78.643
+        ],
+        [
+          -211.678,
+          0.0,
+          89.595
+        ],
+        [
+          -251.054,
+          0.0,
+          121.941
+        ]
+      ],
+      "post_liberation_strength_multiplier": 0.25,
+      "priority": 30.0,
+      "route_id": "first_shore_to_lantern_cove_sheltered",
+      "strength_m_s": 0.08,
+      "visual_flow": "white_foam_and_driftwood_same_vector_as_physics",
+      "width_m": 18.0
+    },
+    {
+      "_comment": "Adverse outbound; favorable return. Sheltered lateral route has weaker push, direct route is shorter. Priority keeps endpoints recoverable; route timing uses full stated adverse magnitude conservatively.",
+      "edge_blend_m": 4.0,
+      "flow_direction_xz": [
+        0.9,
+        -0.437
+      ],
+      "id": "first_shore_to_lantern_cove_direct_current",
+      "overlap_rule": "highest_priority_then_nearest_centerline_no_vector_sum",
+      "polyline": [
+        [
+          -161.911,
+          0.0,
+          78.643
+        ],
+        [
+          -251.054,
+          0.0,
+          121.941
+        ]
+      ],
+      "post_liberation_strength_multiplier": 0.25,
+      "priority": 20.0,
+      "route_id": "first_shore_to_lantern_cove_direct",
+      "strength_m_s": 0.35,
+      "visual_flow": "white_foam_and_driftwood_same_vector_as_physics",
+      "width_m": 28.0
+    },
+    {
+      "_comment": "Adverse outbound; favorable return. Sheltered lateral route has weaker push, direct route is shorter. Priority keeps endpoints recoverable; route timing uses full stated adverse magnitude conservatively.",
+      "edge_blend_m": 4.0,
+      "flow_direction_xz": [
+        0.161,
+        -0.987
+      ],
+      "id": "reedhaven_to_gull_rest_sheltered_current",
+      "overlap_rule": "highest_priority_then_nearest_centerline_no_vector_sum",
+      "polyline": [
+        [
+          -28.922,
+          0.0,
+          617.661
+        ],
+        [
+          -53.718,
+          0.0,
+          692.479
+        ],
+        [
+          -53.932,
+          0.0,
+          771.299
+        ]
+      ],
+      "post_liberation_strength_multiplier": 0.25,
+      "priority": 30.0,
+      "route_id": "reedhaven_to_gull_rest_sheltered",
+      "strength_m_s": 0.08,
+      "visual_flow": "white_foam_and_driftwood_same_vector_as_physics",
+      "width_m": 18.0
+    },
+    {
+      "_comment": "Adverse outbound; favorable return. Sheltered lateral route has weaker push, direct route is shorter. Priority keeps endpoints recoverable; route timing uses full stated adverse magnitude conservatively.",
+      "edge_blend_m": 4.0,
+      "flow_direction_xz": [
+        0.161,
+        -0.987
+      ],
+      "id": "reedhaven_to_gull_rest_direct_current",
+      "overlap_rule": "highest_priority_then_nearest_centerline_no_vector_sum",
+      "polyline": [
+        [
+          -28.922,
+          0.0,
+          617.661
+        ],
+        [
+          -53.932,
+          0.0,
+          771.299
+        ]
+      ],
+      "post_liberation_strength_multiplier": 0.25,
+      "priority": 20.0,
+      "route_id": "reedhaven_to_gull_rest_direct",
+      "strength_m_s": 0.35,
+      "visual_flow": "white_foam_and_driftwood_same_vector_as_physics",
+      "width_m": 28.0
+    },
+    {
+      "_comment": "Adverse outbound; favorable return. Sheltered lateral route has weaker push, direct route is shorter. Priority keeps endpoints recoverable; route timing uses full stated adverse magnitude conservatively.",
+      "edge_blend_m": 4.0,
+      "flow_direction_xz": [
+        -0.998,
+        0.067
+      ],
+      "id": "salt_crown_to_drowned_garden_sheltered_current",
+      "overlap_rule": "highest_priority_then_nearest_centerline_no_vector_sum",
+      "polyline": [
+        [
+          409.424,
+          0.0,
+          2292.705
+        ],
+        [
+          732.46,
+          0.0,
+          2385.241
+        ],
+        [
+          1040.354,
+          0.0,
+          2250.643
+        ]
+      ],
+      "post_liberation_strength_multiplier": 0.25,
+      "priority": 30.0,
+      "route_id": "salt_crown_to_drowned_garden_sheltered",
+      "strength_m_s": 0.2,
+      "visual_flow": "white_foam_and_driftwood_same_vector_as_physics",
+      "width_m": 18.0
+    },
+    {
+      "_comment": "Adverse outbound; favorable return. Sheltered lateral route has weaker push, direct route is shorter. Priority keeps endpoints recoverable; route timing uses full stated adverse magnitude conservatively.",
+      "edge_blend_m": 4.0,
+      "flow_direction_xz": [
+        -0.998,
+        0.067
+      ],
+      "id": "salt_crown_to_drowned_garden_direct_current",
+      "overlap_rule": "highest_priority_then_nearest_centerline_no_vector_sum",
+      "polyline": [
+        [
+          409.424,
+          0.0,
+          2292.705
+        ],
+        [
+          1040.354,
+          0.0,
+          2250.643
+        ]
+      ],
+      "post_liberation_strength_multiplier": 0.25,
+      "priority": 20.0,
+      "route_id": "salt_crown_to_drowned_garden_direct",
+      "strength_m_s": 1.3,
+      "visual_flow": "white_foam_and_driftwood_same_vector_as_physics",
+      "width_m": 28.0
+    },
+    {
+      "_comment": "Adverse outbound; favorable return. Sheltered lateral route has weaker push, direct route is shorter. Priority keeps endpoints recoverable; route timing uses full stated adverse magnitude conservatively.",
+      "edge_blend_m": 4.0,
+      "flow_direction_xz": [
+        -0.679,
+        -0.734
+      ],
+      "id": "sluice_isle_to_deep_watch_sheltered_current",
+      "overlap_rule": "highest_priority_then_nearest_centerline_no_vector_sum",
+      "polyline": [
+        [
+          1047.028,
+          0.0,
+          3172.791
+        ],
+        [
+          1108.472,
+          0.0,
+          3317.554
+        ],
+        [
+          1248.089,
+          0.0,
+          3389.936
+        ]
+      ],
+      "post_liberation_strength_multiplier": 0.25,
+      "priority": 30.0,
+      "route_id": "sluice_isle_to_deep_watch_sheltered",
+      "strength_m_s": 0.25,
+      "visual_flow": "white_foam_and_driftwood_same_vector_as_physics",
+      "width_m": 18.0
+    },
+    {
+      "_comment": "Adverse outbound; favorable return. Sheltered lateral route has weaker push, direct route is shorter. Priority keeps endpoints recoverable; route timing uses full stated adverse magnitude conservatively.",
+      "edge_blend_m": 4.0,
+      "flow_direction_xz": [
+        -0.679,
+        -0.734
+      ],
+      "id": "sluice_isle_to_deep_watch_direct_current",
+      "overlap_rule": "highest_priority_then_nearest_centerline_no_vector_sum",
+      "polyline": [
+        [
+          1047.028,
+          0.0,
+          3172.791
+        ],
+        [
+          1248.089,
+          0.0,
+          3389.936
+        ]
+      ],
+      "post_liberation_strength_multiplier": 0.25,
+      "priority": 20.0,
+      "route_id": "sluice_isle_to_deep_watch_direct",
+      "strength_m_s": 2.2,
+      "visual_flow": "white_foam_and_driftwood_same_vector_as_physics",
+      "width_m": 28.0
+    }
+  ],
+  "docks": [
+    {
+      "_comment": "unlock_flag is a durable world fact only. required_equipment and required_personal_flags are checked for the requesting actor; they never become shared ledger flags. Compatible mount and saddle must remain equipped at departure.",
+      "arrival_anchor": "first_shore_to_reedhaven_arrival",
+      "authority": "host_world_ledger",
+      "departure_anchor": "first_shore_to_reedhaven_departure",
+      "gate_representation": "physical_access_to_sheltered_channel",
+      "id": "first_shore_to_reedhaven_dock",
+      "island_id": "first_shore",
+      "mandatory": true,
+      "outbound_edge": "first_shore_to_reedhaven",
+      "physical_contract": "Gate must control useful ramp approach or alter actual current. A waypoint flag is insufficient. Bake/test flanking cliffs; never invisible swim walls.",
+      "required_equipment": [],
+      "return_policy": "Previously reached shore remains accessible without another realm key.",
+      "unlock_flag": "water_swim_lesson_complete"
+    },
+    {
+      "_comment": "unlock_flag is a durable world fact only. required_equipment and required_personal_flags are checked for the requesting actor; they never become shared ledger flags. Compatible mount and saddle must remain equipped at departure.",
+      "arrival_anchor": "reedhaven_to_brine_steps_arrival",
+      "authority": "host_world_ledger",
+      "departure_anchor": "reedhaven_to_brine_steps_departure",
+      "gate_representation": "physical_access_to_sheltered_channel",
+      "id": "reedhaven_to_brine_steps_dock",
+      "island_id": "reedhaven",
+      "mandatory": true,
+      "outbound_edge": "reedhaven_to_brine_steps",
+      "physical_contract": "Gate must control useful ramp approach or alter actual current. A waypoint flag is insufficient. Bake/test flanking cliffs; never invisible swim walls.",
+      "required_equipment": [],
+      "return_policy": "Previously reached shore remains accessible without another realm key.",
+      "unlock_flag": "water_dock_reedhaven_repaired"
+    },
+    {
+      "_comment": "unlock_flag is a durable world fact only. required_equipment and required_personal_flags are checked for the requesting actor; they never become shared ledger flags. Compatible mount and saddle must remain equipped at departure.",
+      "arrival_anchor": "brine_steps_to_shellwatch_arrival",
+      "authority": "host_world_ledger",
+      "departure_anchor": "brine_steps_to_shellwatch_departure",
+      "gate_representation": "physical_access_to_sheltered_channel",
+      "id": "brine_steps_to_shellwatch_dock",
+      "island_id": "brine_steps",
+      "mandatory": true,
+      "outbound_edge": "brine_steps_to_shellwatch",
+      "physical_contract": "Gate must control useful ramp approach or alter actual current. A waypoint flag is insufficient. Bake/test flanking cliffs; never invisible swim walls.",
+      "required_equipment": [],
+      "return_policy": "Previously reached shore remains accessible without another realm key.",
+      "unlock_flag": "water_dock_brine_steps_trial_won"
+    },
+    {
+      "_comment": "unlock_flag is a durable world fact only. required_equipment and required_personal_flags are checked for the requesting actor; they never become shared ledger flags. Compatible mount and saddle must remain equipped at departure.",
+      "arrival_anchor": "shellwatch_to_tidal_cradle_arrival",
+      "authority": "host_world_ledger",
+      "departure_anchor": "shellwatch_to_tidal_cradle_departure",
+      "gate_representation": "physical_access_to_sheltered_channel",
+      "id": "shellwatch_to_tidal_cradle_dock",
+      "island_id": "shellwatch",
+      "mandatory": true,
+      "outbound_edge": "shellwatch_to_tidal_cradle",
+      "physical_contract": "Gate must control useful ramp approach or alter actual current. A waypoint flag is insufficient. Bake/test flanking cliffs; never invisible swim walls.",
+      "required_equipment": [],
+      "return_policy": "Previously reached shore remains accessible without another realm key.",
+      "unlock_flag": "water_dock_shellwatch_residents_freed_and_pump_disabled"
+    },
+    {
+      "_comment": "unlock_flag is a durable world fact only. required_equipment and required_personal_flags are checked for the requesting actor; they never become shared ledger flags. Compatible mount and saddle must remain equipped at departure.",
+      "arrival_anchor": "tidal_cradle_to_salt_crown_arrival",
+      "authority": "host_world_ledger",
+      "departure_anchor": "tidal_cradle_to_salt_crown_departure",
+      "gate_representation": "physical_access_to_sheltered_channel",
+      "id": "tidal_cradle_to_salt_crown_dock",
+      "island_id": "tidal_cradle",
+      "mandatory": true,
+      "outbound_edge": "tidal_cradle_to_salt_crown",
+      "physical_contract": "Gate must control useful ramp approach or alter actual current. A waypoint flag is insufficient. Bake/test flanking cliffs; never invisible swim walls.",
+      "required_equipment": [
+        "swim_saddle"
+      ],
+      "required_personal_flags": [
+        "water_swim_stone_earned"
+      ],
+      "requires_compatible_active_swim_mount": true,
+      "return_policy": "Previously reached shore remains accessible without another realm key.",
+      "unlock_flag": ""
+    },
+    {
+      "_comment": "unlock_flag is a durable world fact only. required_equipment and required_personal_flags are checked for the requesting actor; they never become shared ledger flags. Compatible mount and saddle must remain equipped at departure.",
+      "arrival_anchor": "salt_crown_to_sluice_isle_arrival",
+      "authority": "host_world_ledger",
+      "departure_anchor": "salt_crown_to_sluice_isle_departure",
+      "gate_representation": "physical_access_to_sheltered_channel",
+      "id": "salt_crown_to_sluice_isle_dock",
+      "island_id": "salt_crown",
+      "mandatory": true,
+      "outbound_edge": "salt_crown_to_sluice_isle",
+      "physical_contract": "Gate must control useful ramp approach or alter actual current. A waypoint flag is insufficient. Bake/test flanking cliffs; never invisible swim walls.",
+      "required_equipment": [
+        "swim_saddle"
+      ],
+      "required_personal_flags": [
+        "water_swim_stone_earned"
+      ],
+      "requires_compatible_active_swim_mount": true,
+      "return_policy": "Previously reached shore remains accessible without another realm key.",
+      "unlock_flag": "water_dock_salt_crown_landing_charted"
+    },
+    {
+      "_comment": "unlock_flag is a durable world fact only. required_equipment and required_personal_flags are checked for the requesting actor; they never become shared ledger flags. Compatible mount and saddle must remain equipped at departure.",
+      "arrival_anchor": "sluice_isle_to_veilfall_arrival",
+      "authority": "host_world_ledger",
+      "departure_anchor": "sluice_isle_to_veilfall_departure",
+      "gate_representation": "physical_access_to_sheltered_channel",
+      "id": "sluice_isle_to_veilfall_dock",
+      "island_id": "sluice_isle",
+      "mandatory": true,
+      "outbound_edge": "sluice_isle_to_veilfall",
+      "physical_contract": "Gate must control useful ramp approach or alter actual current. A waypoint flag is insufficient. Bake/test flanking cliffs; never invisible swim walls.",
+      "required_equipment": [
+        "swim_saddle"
+      ],
+      "required_personal_flags": [
+        "water_swim_stone_earned"
+      ],
+      "requires_compatible_active_swim_mount": true,
+      "return_policy": "Previously reached shore remains accessible without another realm key.",
+      "unlock_flag": "water_dock_sluice_isle_both_controls_disabled"
+    },
+    {
+      "_comment": "unlock_flag is a durable world fact only. required_equipment and required_personal_flags are checked for the requesting actor; they never become shared ledger flags. Compatible mount and saddle must remain equipped at departure.",
+      "arrival_anchor": "first_shore_to_lantern_cove_arrival",
+      "authority": "host_world_ledger",
+      "departure_anchor": "first_shore_to_lantern_cove_departure",
+      "gate_representation": "open_optional_landing",
+      "id": "first_shore_to_lantern_cove_dock",
+      "island_id": "first_shore",
+      "mandatory": false,
+      "outbound_edge": "first_shore_to_lantern_cove",
+      "physical_contract": "Gate must control useful ramp approach or alter actual current. A waypoint flag is insufficient. Bake/test flanking cliffs; never invisible swim walls.",
+      "required_equipment": [],
+      "return_policy": "Previously reached shore remains accessible without another realm key.",
+      "unlock_flag": ""
+    },
+    {
+      "_comment": "unlock_flag is a durable world fact only. required_equipment and required_personal_flags are checked for the requesting actor; they never become shared ledger flags. Compatible mount and saddle must remain equipped at departure.",
+      "arrival_anchor": "reedhaven_to_gull_rest_arrival",
+      "authority": "host_world_ledger",
+      "departure_anchor": "reedhaven_to_gull_rest_departure",
+      "gate_representation": "open_optional_landing",
+      "id": "reedhaven_to_gull_rest_dock",
+      "island_id": "reedhaven",
+      "mandatory": false,
+      "outbound_edge": "reedhaven_to_gull_rest",
+      "physical_contract": "Gate must control useful ramp approach or alter actual current. A waypoint flag is insufficient. Bake/test flanking cliffs; never invisible swim walls.",
+      "required_equipment": [],
+      "return_policy": "Previously reached shore remains accessible without another realm key.",
+      "unlock_flag": ""
+    },
+    {
+      "_comment": "unlock_flag is a durable world fact only. required_equipment and required_personal_flags are checked for the requesting actor; they never become shared ledger flags. Compatible mount and saddle must remain equipped at departure.",
+      "arrival_anchor": "salt_crown_to_drowned_garden_arrival",
+      "authority": "host_world_ledger",
+      "departure_anchor": "salt_crown_to_drowned_garden_departure",
+      "gate_representation": "physical_access_to_sheltered_channel",
+      "id": "salt_crown_to_drowned_garden_dock",
+      "island_id": "salt_crown",
+      "mandatory": false,
+      "outbound_edge": "salt_crown_to_drowned_garden",
+      "physical_contract": "Gate must control useful ramp approach or alter actual current. A waypoint flag is insufficient. Bake/test flanking cliffs; never invisible swim walls.",
+      "required_equipment": [
+        "swim_saddle"
+      ],
+      "required_personal_flags": [
+        "water_swim_stone_earned"
+      ],
+      "requires_compatible_active_swim_mount": true,
+      "return_policy": "Previously reached shore remains accessible without another realm key.",
+      "unlock_flag": ""
+    },
+    {
+      "_comment": "unlock_flag is a durable world fact only. required_equipment and required_personal_flags are checked for the requesting actor; they never become shared ledger flags. Compatible mount and saddle must remain equipped at departure.",
+      "arrival_anchor": "sluice_isle_to_deep_watch_arrival",
+      "authority": "host_world_ledger",
+      "departure_anchor": "sluice_isle_to_deep_watch_departure",
+      "gate_representation": "physical_access_to_sheltered_channel",
+      "id": "sluice_isle_to_deep_watch_dock",
+      "island_id": "sluice_isle",
+      "mandatory": false,
+      "outbound_edge": "sluice_isle_to_deep_watch",
+      "physical_contract": "Gate must control useful ramp approach or alter actual current. A waypoint flag is insufficient. Bake/test flanking cliffs; never invisible swim walls.",
+      "required_equipment": [
+        "swim_saddle"
+      ],
+      "required_personal_flags": [
+        "water_swim_stone_earned"
+      ],
+      "requires_compatible_active_swim_mount": true,
+      "return_policy": "Previously reached shore remains accessible without another realm key.",
+      "unlock_flag": ""
+    }
+  ],
+  "entry_anchors": {
+    "from_stormwood": {
+      "_comment": "Uses the first shore safe beach facing open north water; no center hill between eye and destination. Reconcile exact predecessor anchor id with merged Stormwood handoff.",
+      "facing_landmark": "veilfall_mountain_crown",
+      "id": "water_arrival_from_stormwood",
+      "island_id": "first_shore",
+      "peer_realm": "stormwood",
+      "persisted_unlock": "realm_gate_water_unlocked",
+      "position": [
+        0.0,
+        1.929,
+        162.0
+      ],
+      "requires_key": "realm_key_water"
+    },
+    "return_to_stormwood": {
+      "id": "water_return_to_stormwood",
+      "island_id": "first_shore",
+      "peer_realm": "stormwood",
+      "position": [
+        12.0,
+        1.881,
+        162.0
+      ],
+      "requires_key_after_unlock": false
+    }
+  },
+  "islands": [
+    {
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "center_xz_m": [
+        0.0,
+        0.0
+      ],
+      "coast_beach_width_m": 4.0,
+      "coast_inner_height_m": 12.0,
+      "id": "first_shore",
+      "landing_sectors": [
+        {
+          "_comment": "Angle atan2(z-center_z,x-center_x). Safe centerline radius-18 is 1.929m above sea.",
+          "angle_deg": 90.0,
+          "beach_width_m": 28.0,
+          "feather_deg": 3.0,
+          "half_width_deg": 7.5,
+          "id": "first_shore_to_reedhaven_departure",
+          "inner_height_m": 3.0
+        },
+        {
+          "_comment": "Angle atan2(z-center_z,x-center_x). Safe centerline radius-18 is 1.929m above sea.",
+          "angle_deg": 154.093,
+          "beach_width_m": 28.0,
+          "feather_deg": 3.0,
+          "half_width_deg": 7.5,
+          "id": "first_shore_to_lantern_cove_departure",
+          "inner_height_m": 3.0
+        },
+        {
+          "_comment": "Ungated training beach northeast of arrival. Radius162 safe point uses existing3/28 beach slope. Ground the approach and test continuous access from arrival.",
+          "angle_deg": 69.260222,
+          "beach_width_m": 28.0,
+          "feather_deg": 3.0,
+          "half_width_deg": 7.5,
+          "id": "water_first_shore_lesson_west",
+          "inner_height_m": 3.0
+        },
+        {
+          "_comment": "Ungated training beach northeast of arrival. Radius162 safe point uses existing3/28 beach slope. Ground the approach and test continuous access from arrival.",
+          "angle_deg": 50.739778,
+          "beach_width_m": 28.0,
+          "feather_deg": 3.0,
+          "half_width_deg": 7.5,
+          "id": "water_first_shore_lesson_east",
+          "inner_height_m": 3.0
+        }
+      ],
+      "main_path": true,
+      "name": "First Shore",
+      "peak_height_m": 36.0,
+      "peak_power": 1.65,
+      "region_id": "first_shores",
+      "scatter_seed": 486000.0,
+      "shore_radius_m": 180.0,
+      "terrain_profile": "radial_landing_sectors_v1"
+    },
+    {
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "center_xz_m": [
+        0.0,
+        440.0
+      ],
+      "coast_beach_width_m": 4.0,
+      "coast_inner_height_m": 12.0,
+      "id": "reedhaven",
+      "landing_sectors": [
+        {
+          "_comment": "Angle atan2(z-center_z,x-center_x). Safe centerline radius-18 is 1.929m above sea.",
+          "angle_deg": -90.0,
+          "beach_width_m": 28.0,
+          "feather_deg": 3.0,
+          "half_width_deg": 7.5,
+          "id": "first_shore_to_reedhaven_arrival",
+          "inner_height_m": 3.0
+        },
+        {
+          "_comment": "Angle atan2(z-center_z,x-center_x). Safe centerline radius-18 is 1.929m above sea.",
+          "angle_deg": 27.646,
+          "beach_width_m": 28.0,
+          "feather_deg": 3.0,
+          "half_width_deg": 7.5,
+          "id": "reedhaven_to_brine_steps_departure",
+          "inner_height_m": 3.0
+        },
+        {
+          "_comment": "Angle atan2(z-center_z,x-center_x). Safe centerline radius-18 is 1.929m above sea.",
+          "angle_deg": 99.246,
+          "beach_width_m": 28.0,
+          "feather_deg": 3.0,
+          "half_width_deg": 7.5,
+          "id": "reedhaven_to_gull_rest_departure",
+          "inner_height_m": 3.0
+        }
+      ],
+      "main_path": true,
+      "name": "Reedhaven",
+      "peak_height_m": 24.0,
+      "peak_power": 1.65,
+      "region_id": "marsh_channels",
+      "scatter_seed": 486001.0,
+      "shore_radius_m": 180.0,
+      "terrain_profile": "radial_landing_sectors_v1"
+    },
+    {
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "center_xz_m": [
+        420.0,
+        660.0
+      ],
+      "coast_beach_width_m": 4.0,
+      "coast_inner_height_m": 12.0,
+      "id": "brine_steps",
+      "landing_sectors": [
+        {
+          "_comment": "Angle atan2(z-center_z,x-center_x). Safe centerline radius-18 is 1.929m above sea.",
+          "angle_deg": -152.354,
+          "beach_width_m": 28.0,
+          "feather_deg": 3.0,
+          "half_width_deg": 7.5,
+          "id": "reedhaven_to_brine_steps_arrival",
+          "inner_height_m": 3.0
+        },
+        {
+          "_comment": "Angle atan2(z-center_z,x-center_x). Safe centerline radius-18 is 1.929m above sea.",
+          "angle_deg": 102.265,
+          "beach_width_m": 28.0,
+          "feather_deg": 3.0,
+          "half_width_deg": 7.5,
+          "id": "brine_steps_to_shellwatch_departure",
+          "inner_height_m": 3.0
+        }
+      ],
+      "main_path": true,
+      "name": "Brine Steps",
+      "peak_height_m": 78.0,
+      "peak_power": 1.65,
+      "region_id": "marsh_channels",
+      "scatter_seed": 486002.0,
+      "shore_radius_m": 190.0,
+      "terrain_profile": "radial_landing_sectors_v1"
+    },
+    {
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "center_xz_m": [
+        320.0,
+        1120.0
+      ],
+      "coast_beach_width_m": 4.0,
+      "coast_inner_height_m": 12.0,
+      "id": "shellwatch",
+      "landing_sectors": [
+        {
+          "_comment": "Angle atan2(z-center_z,x-center_x). Safe centerline radius-18 is 1.929m above sea.",
+          "angle_deg": -77.735,
+          "beach_width_m": 28.0,
+          "feather_deg": 3.0,
+          "half_width_deg": 7.5,
+          "id": "brine_steps_to_shellwatch_arrival",
+          "inner_height_m": 3.0
+        },
+        {
+          "_comment": "Angle atan2(z-center_z,x-center_x). Safe centerline radius-18 is 1.929m above sea.",
+          "angle_deg": 47.175,
+          "beach_width_m": 28.0,
+          "feather_deg": 3.0,
+          "half_width_deg": 7.5,
+          "id": "shellwatch_to_tidal_cradle_departure",
+          "inner_height_m": 3.0
+        }
+      ],
+      "main_path": true,
+      "name": "Shellwatch",
+      "peak_height_m": 66.0,
+      "peak_power": 1.65,
+      "region_id": "marsh_channels",
+      "scatter_seed": 486003.0,
+      "shore_radius_m": 190.0,
+      "terrain_profile": "radial_landing_sectors_v1"
+    },
+    {
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "center_xz_m": [
+        700.0,
+        1530.0
+      ],
+      "coast_beach_width_m": 4.0,
+      "coast_inner_height_m": 12.0,
+      "id": "tidal_cradle",
+      "landing_sectors": [
+        {
+          "_comment": "Angle atan2(z-center_z,x-center_x). Safe centerline radius-18 is 1.929m above sea.",
+          "angle_deg": -132.825,
+          "beach_width_m": 28.0,
+          "feather_deg": 3.0,
+          "half_width_deg": 7.5,
+          "id": "shellwatch_to_tidal_cradle_arrival",
+          "inner_height_m": 3.0
+        },
+        {
+          "_comment": "Angle atan2(z-center_z,x-center_x). Safe centerline radius-18 is 1.929m above sea.",
+          "angle_deg": 125.189,
+          "beach_width_m": 28.0,
+          "feather_deg": 3.0,
+          "half_width_deg": 7.5,
+          "id": "tidal_cradle_to_salt_crown_departure",
+          "inner_height_m": 3.0
+        }
+      ],
+      "main_path": true,
+      "name": "Tidal Cradle",
+      "peak_height_m": 115.0,
+      "peak_power": 1.65,
+      "region_id": "tidal_cradle",
+      "scatter_seed": 486004.0,
+      "shore_radius_m": 260.0,
+      "terrain_profile": "radial_landing_sectors_v1"
+    },
+    {
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "center_xz_m": [
+        150.0,
+        2310.0
+      ],
+      "coast_beach_width_m": 4.0,
+      "coast_inner_height_m": 12.0,
+      "id": "salt_crown",
+      "landing_sectors": [
+        {
+          "_comment": "Angle atan2(z-center_z,x-center_x). Safe centerline radius-18 is 1.929m above sea.",
+          "angle_deg": -54.811,
+          "beach_width_m": 28.0,
+          "feather_deg": 3.0,
+          "half_width_deg": 7.5,
+          "id": "tidal_cradle_to_salt_crown_arrival",
+          "inner_height_m": 3.0
+        },
+        {
+          "_comment": "Angle atan2(z-center_z,x-center_x). Safe centerline radius-18 is 1.929m above sea.",
+          "angle_deg": 42.879,
+          "beach_width_m": 28.0,
+          "feather_deg": 3.0,
+          "half_width_deg": 7.5,
+          "id": "salt_crown_to_sluice_isle_departure",
+          "inner_height_m": 3.0
+        },
+        {
+          "_comment": "Angle atan2(z-center_z,x-center_x). Safe centerline radius-18 is 1.929m above sea.",
+          "angle_deg": -3.814,
+          "beach_width_m": 28.0,
+          "feather_deg": 3.0,
+          "half_width_deg": 7.5,
+          "id": "salt_crown_to_drowned_garden_departure",
+          "inner_height_m": 3.0
+        }
+      ],
+      "main_path": true,
+      "name": "Salt Crown",
+      "peak_height_m": 96.0,
+      "peak_power": 1.65,
+      "region_id": "outer_reaches",
+      "scatter_seed": 486005.0,
+      "shore_radius_m": 260.0,
+      "terrain_profile": "radial_landing_sectors_v1"
+    },
+    {
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "center_xz_m": [
+        850.0,
+        2960.0
+      ],
+      "coast_beach_width_m": 4.0,
+      "coast_inner_height_m": 12.0,
+      "id": "sluice_isle",
+      "landing_sectors": [
+        {
+          "_comment": "Angle atan2(z-center_z,x-center_x). Safe centerline radius-18 is 1.929m above sea.",
+          "angle_deg": -137.121,
+          "beach_width_m": 28.0,
+          "feather_deg": 3.0,
+          "half_width_deg": 7.5,
+          "id": "salt_crown_to_sluice_isle_arrival",
+          "inner_height_m": 3.0
+        },
+        {
+          "_comment": "Angle atan2(z-center_z,x-center_x). Safe centerline radius-18 is 1.929m above sea.",
+          "angle_deg": 118.848,
+          "beach_width_m": 28.0,
+          "feather_deg": 3.0,
+          "half_width_deg": 7.5,
+          "id": "sluice_isle_to_veilfall_departure",
+          "inner_height_m": 3.0
+        },
+        {
+          "_comment": "Angle atan2(z-center_z,x-center_x). Safe centerline radius-18 is 1.929m above sea.",
+          "angle_deg": 47.203,
+          "beach_width_m": 28.0,
+          "feather_deg": 3.0,
+          "half_width_deg": 7.5,
+          "id": "sluice_isle_to_deep_watch_departure",
+          "inner_height_m": 3.0
+        }
+      ],
+      "main_path": true,
+      "name": "Sluice Isle",
+      "peak_height_m": 118.0,
+      "peak_power": 1.65,
+      "region_id": "tether_current",
+      "scatter_seed": 486006.0,
+      "shore_radius_m": 290.0,
+      "terrain_profile": "radial_landing_sectors_v1"
+    },
+    {
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "center_xz_m": [
+        200.0,
+        4140.0
+      ],
+      "coast_beach_width_m": 4.0,
+      "coast_inner_height_m": 12.0,
+      "id": "veilfall",
+      "landing_sectors": [
+        {
+          "_comment": "Angle atan2(z-center_z,x-center_x). Safe centerline radius-18 is 1.929m above sea.",
+          "angle_deg": -61.152,
+          "beach_width_m": 28.0,
+          "feather_deg": 3.0,
+          "half_width_deg": 7.5,
+          "id": "sluice_isle_to_veilfall_arrival",
+          "inner_height_m": 3.0
+        }
+      ],
+      "main_path": true,
+      "name": "The Veilfall",
+      "peak_height_m": 620.0,
+      "peak_power": 1.65,
+      "region_id": "veilfall",
+      "scatter_seed": 486007.0,
+      "shore_radius_m": 400.0,
+      "terrain_profile": "radial_landing_sectors_v1"
+    },
+    {
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "center_xz_m": [
+        -350.0,
+        170.0
+      ],
+      "coast_beach_width_m": 4.0,
+      "coast_inner_height_m": 12.0,
+      "id": "lantern_cove",
+      "landing_sectors": [
+        {
+          "_comment": "Angle atan2(z-center_z,x-center_x). Safe centerline radius-18 is 1.929m above sea.",
+          "angle_deg": -25.907,
+          "beach_width_m": 28.0,
+          "feather_deg": 3.0,
+          "half_width_deg": 7.5,
+          "id": "first_shore_to_lantern_cove_arrival",
+          "inner_height_m": 3.0
+        }
+      ],
+      "main_path": false,
+      "name": "Lantern Cove",
+      "peak_height_m": 22.0,
+      "peak_power": 1.65,
+      "region_id": "first_shores",
+      "scatter_seed": 486008.0,
+      "shore_radius_m": 110.0,
+      "terrain_profile": "radial_landing_sectors_v1"
+    },
+    {
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "center_xz_m": [
+        -70.0,
+        870.0
+      ],
+      "coast_beach_width_m": 4.0,
+      "coast_inner_height_m": 12.0,
+      "id": "gull_rest",
+      "landing_sectors": [
+        {
+          "_comment": "Angle atan2(z-center_z,x-center_x). Safe centerline radius-18 is 1.929m above sea.",
+          "angle_deg": -80.754,
+          "beach_width_m": 28.0,
+          "feather_deg": 3.0,
+          "half_width_deg": 7.5,
+          "id": "reedhaven_to_gull_rest_arrival",
+          "inner_height_m": 3.0
+        }
+      ],
+      "main_path": false,
+      "name": "Gull Rest",
+      "peak_height_m": 32.0,
+      "peak_power": 1.65,
+      "region_id": "marsh_channels",
+      "scatter_seed": 486009.0,
+      "shore_radius_m": 100.0,
+      "terrain_profile": "radial_landing_sectors_v1"
+    },
+    {
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "center_xz_m": [
+        1200.0,
+        2240.0
+      ],
+      "coast_beach_width_m": 4.0,
+      "coast_inner_height_m": 12.0,
+      "id": "drowned_garden",
+      "landing_sectors": [
+        {
+          "_comment": "Angle atan2(z-center_z,x-center_x). Safe centerline radius-18 is 1.929m above sea.",
+          "angle_deg": 176.186,
+          "beach_width_m": 28.0,
+          "feather_deg": 3.0,
+          "half_width_deg": 7.5,
+          "id": "salt_crown_to_drowned_garden_arrival",
+          "inner_height_m": 3.0
+        }
+      ],
+      "main_path": false,
+      "name": "Drowned Garden",
+      "peak_height_m": 48.0,
+      "peak_power": 1.65,
+      "region_id": "outer_reaches",
+      "scatter_seed": 486010.0,
+      "shore_radius_m": 160.0,
+      "terrain_profile": "radial_landing_sectors_v1"
+    },
+    {
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "center_xz_m": [
+        1350.0,
+        3500.0
+      ],
+      "coast_beach_width_m": 4.0,
+      "coast_inner_height_m": 12.0,
+      "id": "deep_watch",
+      "landing_sectors": [
+        {
+          "_comment": "Angle atan2(z-center_z,x-center_x). Safe centerline radius-18 is 1.929m above sea.",
+          "angle_deg": -132.797,
+          "beach_width_m": 28.0,
+          "feather_deg": 3.0,
+          "half_width_deg": 7.5,
+          "id": "sluice_isle_to_deep_watch_arrival",
+          "inner_height_m": 3.0
+        }
+      ],
+      "main_path": false,
+      "name": "Deep Watch",
+      "peak_height_m": 54.0,
+      "peak_power": 1.65,
+      "region_id": "tether_current",
+      "scatter_seed": 486011.0,
+      "shore_radius_m": 150.0,
+      "terrain_profile": "radial_landing_sectors_v1"
+    }
+  ],
+  "land_loops": [
+    {
+      "_comment": "Closed loop is one perimeter traversal; not multiplied for backtracking. Resource/trainer nodes are separate authored content and not counted here.",
+      "grading_status": "unbaked_requires_grade_check",
+      "id": "reed_root_circuit",
+      "island_id": "reedhaven",
+      "maximum_target_grade_deg": 24.0,
+      "measured_polyline_m": 684.119,
+      "polyline": [
+        [
+          107.797,
+          17.136,
+          468.884
+        ],
+        [
+          55.8,
+          17.136,
+          536.648
+        ],
+        [
+          -28.884,
+          8.851,
+          547.797
+        ],
+        [
+          -96.648,
+          17.136,
+          495.8
+        ],
+        [
+          -107.797,
+          17.136,
+          411.116
+        ],
+        [
+          -55.8,
+          17.136,
+          343.352
+        ],
+        [
+          28.884,
+          17.136,
+          332.203
+        ],
+        [
+          96.648,
+          17.136,
+          384.2
+        ],
+        [
+          107.797,
+          17.136,
+          468.884
+        ]
+      ],
+      "purpose": "Marsh resources, resident conversation, repair material and raised root return.",
+      "width_m": 3.5
+    },
+    {
+      "_comment": "Closed loop is one perimeter traversal; not multiplied for backtracking. Resource/trainer nodes are separate authored content and not counted here.",
+      "grading_status": "unbaked_requires_grade_check",
+      "id": "brine_terrace_circuit",
+      "island_id": "brine_steps",
+      "maximum_target_grade_deg": 24.0,
+      "measured_polyline_m": 744.548,
+      "polyline": [
+        [
+          513.151,
+          38.302,
+          738.163
+        ],
+        [
+          430.598,
+          38.302,
+          781.137
+        ],
+        [
+          341.837,
+          38.302,
+          753.151
+        ],
+        [
+          298.863,
+          38.302,
+          670.598
+        ],
+        [
+          326.849,
+          38.302,
+          581.837
+        ],
+        [
+          409.402,
+          38.302,
+          538.863
+        ],
+        [
+          498.163,
+          38.302,
+          566.849
+        ],
+        [
+          541.137,
+          38.302,
+          649.402
+        ],
+        [
+          513.151,
+          38.302,
+          738.163
+        ]
+      ],
+      "purpose": "Trainer terrace, overlooking rock pocket, shallow habitat and dock return.",
+      "width_m": 3.5
+    },
+    {
+      "_comment": "Closed loop is one perimeter traversal; not multiplied for backtracking. Resource/trainer nodes are separate authored content and not counted here.",
+      "grading_status": "unbaked_requires_grade_check",
+      "id": "salt_shrine_circuit",
+      "island_id": "salt_crown",
+      "maximum_target_grade_deg": 24.0,
+      "measured_polyline_m": 955.179,
+      "polyline": [
+        [
+          303.63,
+          51.054,
+          2337.089
+        ],
+        [
+          239.478,
+          51.054,
+          2437.788
+        ],
+        [
+          122.911,
+          51.054,
+          2463.63
+        ],
+        [
+          22.212,
+          51.054,
+          2399.478
+        ],
+        [
+          -3.63,
+          51.054,
+          2282.911
+        ],
+        [
+          60.522,
+          51.054,
+          2182.212
+        ],
+        [
+          177.089,
+          51.054,
+          2156.37
+        ],
+        [
+          277.788,
+          51.054,
+          2220.522
+        ],
+        [
+          303.63,
+          51.054,
+          2337.089
+        ]
+      ],
+      "purpose": "Care/rest preparation, shrine, trader overlook and return bell.",
+      "width_m": 3.5
+    },
+    {
+      "_comment": "Closed loop is one perimeter traversal; not multiplied for backtracking. Resource/trainer nodes are separate authored content and not counted here.",
+      "grading_status": "unbaked_requires_grade_check",
+      "id": "sluice_patrol_circuit",
+      "island_id": "sluice_isle",
+      "maximum_target_grade_deg": 24.0,
+      "measured_polyline_m": 1102.536,
+      "polyline": [
+        [
+          1018.957,
+          58.231,
+          2898.505
+        ],
+        [
+          1012.954,
+          58.231,
+          3035.987
+        ],
+        [
+          911.495,
+          58.231,
+          3128.957
+        ],
+        [
+          774.013,
+          43.222,
+          3122.954
+        ],
+        [
+          681.043,
+          58.231,
+          3021.495
+        ],
+        [
+          687.046,
+          58.231,
+          2884.013
+        ],
+        [
+          788.505,
+          58.231,
+          2791.043
+        ],
+        [
+          925.987,
+          58.231,
+          2797.046
+        ],
+        [
+          1018.957,
+          58.231,
+          2898.505
+        ]
+      ],
+      "purpose": "Two separate pump approaches, patrol bridge and maintenance descent.",
+      "width_m": 3.5
+    }
+  ],
+  "land_routes": [
+    {
+      "_comment": "Coordinates sample radial base only. Length is planning geometry, not runtime walked length; no traversability or density credit until baked/played. Optional spines return to the same landing by distinct legs.",
+      "grading_status": "analytic_trail_modifier_authored_bake_and_walk_required",
+      "id": "first_shore_exploration_spine",
+      "island_id": "first_shore",
+      "main_path": true,
+      "maximum_empty_interval_m": 120.0,
+      "maximum_target_grade_deg": 24.0,
+      "measured_polyline_m": 577.454,
+      "polyline": [
+        [
+          0.0,
+          1.929,
+          162.0
+        ],
+        [
+          0.0,
+          6.0,
+          142.0
+        ],
+        [
+          -96.648,
+          22.273,
+          -55.8
+        ],
+        [
+          35.707,
+          23.734,
+          98.104
+        ],
+        [
+          65.044,
+          21.905,
+          92.892
+        ],
+        [
+          0.0,
+          6.0,
+          142.0
+        ],
+        [
+          0.0,
+          1.929,
+          162.0
+        ]
+      ],
+      "purpose": "Connect safe arrival, resource/care detour, defining landmark and next departure.",
+      "radial_landing_approaches": true,
+      "target_average_empty_interval_m": 80.0,
+      "width_m": 4.0
+    },
+    {
+      "_comment": "Coordinates sample radial base only. Length is planning geometry, not runtime walked length; no traversability or density credit until baked/played. Optional spines return to the same landing by distinct legs.",
+      "grading_status": "analytic_trail_modifier_authored_bake_and_walk_required",
+      "id": "reedhaven_exploration_spine",
+      "island_id": "reedhaven",
+      "main_path": true,
+      "maximum_empty_interval_m": 120.0,
+      "maximum_target_grade_deg": 24.0,
+      "measured_polyline_m": 459.677,
+      "polyline": [
+        [
+          0.0,
+          1.929,
+          278.0
+        ],
+        [
+          0.0,
+          6.0,
+          298.0
+        ],
+        [
+          -96.648,
+          17.136,
+          384.2
+        ],
+        [
+          -54.0,
+          22.194,
+          440.0
+        ],
+        [
+          65.044,
+          16.952,
+          532.892
+        ],
+        [
+          125.788177490234,
+          6.0,
+          505.888793945313
+        ],
+        [
+          143.505,
+          1.929,
+          515.169
+        ]
+      ],
+      "purpose": "Connect safe arrival, resource/care detour, defining landmark and next departure.",
+      "radial_landing_approaches": true,
+      "target_average_empty_interval_m": 80.0,
+      "width_m": 4.0
+    },
+    {
+      "_comment": "Coordinates sample radial base only. Length is planning geometry, not runtime walked length; no traversability or density credit until baked/played. Optional spines return to the same landing by distinct legs.",
+      "grading_status": "analytic_trail_modifier_authored_bake_and_walk_required",
+      "id": "brine_steps_exploration_spine",
+      "island_id": "brine_steps",
+      "main_path": true,
+      "maximum_empty_interval_m": 120.0,
+      "maximum_target_grade_deg": 24.0,
+      "measured_polyline_m": 483.481,
+      "polyline": [
+        [
+          267.637,
+          1.929,
+          580.191
+        ],
+        [
+          285.353546142578,
+          6.0,
+          589.471069335938
+        ],
+        [
+          317.982,
+          18.607,
+          601.1
+        ],
+        [
+          329.729,
+          44.339,
+          723.208
+        ],
+        [
+          488.657,
+          39.314,
+          758.052
+        ],
+        [
+          387.710540771484,
+          6.0,
+          808.53076171875
+        ],
+        [
+          383.462,
+          1.929,
+          828.074
+        ]
+      ],
+      "purpose": "Connect safe arrival, resource/care detour, defining landmark and next departure.",
+      "radial_landing_approaches": true,
+      "target_average_empty_interval_m": 80.0,
+      "width_m": 4.0
+    },
+    {
+      "_comment": "Coordinates sample radial base only. Length is planning geometry, not runtime walked length; no traversability or density credit until baked/played. Optional spines return to the same landing by distinct legs.",
+      "grading_status": "analytic_trail_modifier_authored_bake_and_walk_required",
+      "id": "shellwatch_exploration_spine",
+      "island_id": "shellwatch",
+      "main_path": true,
+      "maximum_empty_interval_m": 120.0,
+      "maximum_target_grade_deg": 24.0,
+      "measured_polyline_m": 482.05,
+      "polyline": [
+        [
+          356.538,
+          1.929,
+          951.926
+        ],
+        [
+          352.289459228516,
+          6.0,
+          971.46923828125
+        ],
+        [
+          267.004,
+          31.864,
+          1006.349
+        ],
+        [
+          217.982,
+          35.175,
+          1061.1
+        ],
+        [
+          388.657,
+          19.532,
+          1218.052
+        ],
+        [
+          423.324462890625,
+          6.0,
+          1231.48120117188
+        ],
+        [
+          436.92,
+          1.929,
+          1246.15
+        ]
+      ],
+      "purpose": "Connect safe arrival, resource/care detour, defining landmark and next departure.",
+      "radial_landing_approaches": true,
+      "target_average_empty_interval_m": 80.0,
+      "width_m": 4.0,
+      "_comment_composition_revision": "2026-09-07: owner-delegated correction removes unequal-height crossings or acute return-leg overlap; shore endpoints retained. Original polyline: [[356.538,1.929,951.926],[352.289459228516,6.0,971.46923828125],[217.982,35.175,1061.1],[267.004,31.864,1006.349],[388.657,19.532,1218.052],[423.324462890625,6.0,1231.48120117188],[436.92,1.929,1246.15]]. Analytic audit only; bake and real-body walk remain required."
+    },
+    {
+      "_comment": "Coordinates sample radial base only. Length is planning geometry, not runtime walked length; no traversability or density credit until baked/played. Optional spines return to the same landing by distinct legs.",
+      "grading_status": "analytic_trail_modifier_authored_bake_and_walk_required",
+      "id": "tidal_cradle_exploration_spine",
+      "island_id": "tidal_cradle",
+      "main_path": true,
+      "maximum_empty_interval_m": 120.0,
+      "maximum_target_grade_deg": 24.0,
+      "measured_polyline_m": 770.127,
+      "polyline": [
+        [
+          535.497,
+          1.929,
+          1352.51
+        ],
+        [
+          549.092163085938,
+          6.0,
+          1367.17846679688
+        ],
+        [
+          560.397,
+          36.208,
+          1449.4
+        ],
+        [
+          601.574,
+          33.934,
+          1389.434
+        ],
+        [
+          793.952,
+          55.199,
+          1664.177
+        ],
+        [
+          572.067321777344,
+          6.0,
+          1711.43103027344
+        ],
+        [
+          560.542,
+          1.929,
+          1727.776
+        ]
+      ],
+      "purpose": "Connect safe arrival, resource/care detour, defining landmark and next departure.",
+      "radial_landing_approaches": true,
+      "target_average_empty_interval_m": 80.0,
+      "width_m": 4.0
+    },
+    {
+      "_comment": "Coordinates sample radial base only. Length is planning geometry, not runtime walked length; no traversability or density credit until baked/played. Optional spines return to the same landing by distinct legs.",
+      "grading_status": "analytic_trail_modifier_authored_bake_and_walk_required",
+      "id": "salt_crown_exploration_spine",
+      "island_id": "salt_crown",
+      "main_path": true,
+      "maximum_empty_interval_m": 120.0,
+      "maximum_target_grade_deg": 24.0,
+      "measured_polyline_m": 756.299,
+      "polyline": [
+        [
+          289.458,
+          1.929,
+          2112.224
+        ],
+        [
+          277.932739257813,
+          6.0,
+          2128.56884765625
+        ],
+        [
+          10.397,
+          48.508,
+          2229.4
+        ],
+        [
+          211.08,
+          74.224,
+          2332.231
+        ],
+        [
+          243.952,
+          31.759,
+          2444.177
+        ],
+        [
+          312.680236816406,
+          6.0,
+          2461.06005859375
+        ],
+        [
+          327.336,
+          1.929,
+          2474.669
+        ]
+      ],
+      "purpose": "Connect safe arrival, resource/care detour, defining landmark and next departure.",
+      "radial_landing_approaches": true,
+      "target_average_empty_interval_m": 80.0,
+      "width_m": 4.0
+    },
+    {
+      "_comment": "Coordinates sample radial base only. Length is planning geometry, not runtime walked length; no traversability or density credit until baked/played. Optional spines return to the same landing by distinct legs.",
+      "grading_status": "analytic_trail_modifier_authored_bake_and_walk_required",
+      "id": "sluice_isle_exploration_spine",
+      "island_id": "sluice_isle",
+      "main_path": true,
+      "maximum_empty_interval_m": 120.0,
+      "maximum_target_grade_deg": 24.0,
+      "measured_polyline_m": 846.367,
+      "polyline": [
+        [
+          650.68,
+          1.929,
+          2774.917
+        ],
+        [
+          665.336120605469,
+          6.0,
+          2788.5263671875
+        ],
+        [
+          694.289,
+          37.505,
+          2870.1
+        ],
+        [
+          905.1,
+          93.309,
+          2864.564
+        ],
+        [
+          954.792,
+          41.784,
+          3109.659
+        ],
+        [
+          728.412658691406,
+          6.0,
+          3180.72729492188
+        ],
+        [
+          718.763,
+          1.929,
+          3198.245
+        ]
+      ],
+      "purpose": "Connect safe arrival, resource/care detour, defining landmark and next departure.",
+      "radial_landing_approaches": true,
+      "target_average_empty_interval_m": 80.0,
+      "width_m": 4.0
+    },
+    {
+      "_comment": "Coordinates sample radial base only. Length is planning geometry, not runtime walked length; no traversability or density credit until baked/played. Optional spines return to the same landing by distinct legs.",
+      "grading_status": "analytic_trail_modifier_authored_bake_and_walk_required",
+      "hike_ends_at_gate": true,
+      "id": "veilfall_exploration_spine",
+      "island_id": "veilfall",
+      "main_path": true,
+      "maximum_empty_interval_m": 120.0,
+      "maximum_target_grade_deg": 24.0,
+      "measured_polyline_m": 1441.949,
+      "polyline": [
+        [
+          384.311,
+          1.929,
+          3805.405
+        ],
+        [
+          374.661010742188,
+          6.0,
+          3822.92333984375
+        ],
+        [
+          344.541,
+          196.855,
+          4346.426
+        ],
+        [
+          -14.774,
+          166.168,
+          4016.0
+        ],
+        [
+          335.208,
+          139.396,
+          3885.711
+        ]
+      ],
+      "purpose": "Connect safe arrival, resource/care detour, defining landmark and next departure.",
+      "radial_landing_approaches": true,
+      "target_average_empty_interval_m": 80.0,
+      "width_m": 4.0
+    },
+    {
+      "_comment": "Coordinates sample radial base only. Length is planning geometry, not runtime walked length; no traversability or density credit until baked/played. Optional spines return to the same landing by distinct legs.",
+      "grading_status": "analytic_trail_modifier_authored_bake_and_walk_required",
+      "id": "lantern_cove_exploration_spine",
+      "island_id": "lantern_cove",
+      "main_path": false,
+      "maximum_empty_interval_m": 120.0,
+      "maximum_target_grade_deg": 24.0,
+      "measured_polyline_m": 393.505,
+      "polyline": [
+        [
+          -267.245,
+          1.929,
+          129.805
+        ],
+        [
+          -285.235321044922,
+          6.0,
+          138.543090820313
+        ],
+        [
+          -409.063,
+          16.141,
+          135.9
+        ],
+        [
+          -310.251,
+          15.985,
+          226.767
+        ],
+        [
+          -292.115,
+          17.067,
+          191.068
+        ],
+        [
+          -285.235321044922,
+          6.0,
+          138.543090820313
+        ],
+        [
+          -267.245,
+          1.929,
+          129.805
+        ]
+      ],
+      "purpose": "Connect safe arrival, resource/care detour, defining landmark and next departure.",
+      "radial_landing_approaches": true,
+      "target_average_empty_interval_m": 80.0,
+      "width_m": 4.0,
+      "_comment_composition_revision": "2026-09-07: owner-delegated correction removes unequal-height crossings or acute return-leg overlap; shore endpoints retained. Original polyline: [[-267.245,1.929,129.805],[-285.235321044922,6.0,138.543090820313],[-409.063,16.141,135.9],[-292.115,17.067,191.068],[-310.251,15.985,226.767],[-285.235321044922,6.0,138.543090820313],[-267.245,1.929,129.805]]. Analytic audit only; bake and real-body walk remain required."
+    },
+    {
+      "_comment": "Coordinates sample radial base only. Length is planning geometry, not runtime walked length; no traversability or density credit until baked/played. Optional spines return to the same landing by distinct legs.",
+      "grading_status": "analytic_trail_modifier_authored_bake_and_walk_required",
+      "id": "gull_rest_exploration_spine",
+      "island_id": "gull_rest",
+      "main_path": false,
+      "maximum_empty_interval_m": 120.0,
+      "maximum_target_grade_deg": 24.0,
+      "measured_polyline_m": 354.59,
+      "polyline": [
+        [
+          -56.825,
+          1.929,
+          789.065
+        ],
+        [
+          -60.0384559631348,
+          6.0,
+          808.805480957031
+        ],
+        [
+          -123.694,
+          20.208,
+          839.0
+        ],
+        [
+          -72.615,
+          28.881,
+          899.886
+        ],
+        [
+          -33.865,
+          19.896,
+          921.607
+        ],
+        [
+          -60.0384559631348,
+          6.0,
+          808.805480957031
+        ],
+        [
+          -56.825,
+          1.929,
+          789.065
+        ]
+      ],
+      "purpose": "Connect safe arrival, resource/care detour, defining landmark and next departure.",
+      "radial_landing_approaches": true,
+      "target_average_empty_interval_m": 80.0,
+      "width_m": 4.0
+    },
+    {
+      "_comment": "Coordinates sample radial base only. Length is planning geometry, not runtime walked length; no traversability or density credit until baked/played. Optional spines return to the same landing by distinct legs.",
+      "grading_status": "analytic_trail_modifier_authored_bake_and_walk_required",
+      "id": "drowned_garden_exploration_spine",
+      "island_id": "drowned_garden",
+      "main_path": false,
+      "maximum_empty_interval_m": 120.0,
+      "maximum_target_grade_deg": 24.0,
+      "measured_polyline_m": 504.36,
+      "polyline": [
+        [
+          1058.315,
+          1.929,
+          2249.446
+        ],
+        [
+          1078.27026367188,
+          6.0,
+          2248.11572265625
+        ],
+        [
+          1080.0,
+          14.0,
+          2200.0
+        ],
+        [
+          1105.458,
+          28.415,
+          2223.33
+        ],
+        [
+          1257.817,
+          26.758,
+          2322.571
+        ],
+        [
+          1078.27026367188,
+          6.0,
+          2248.11572265625
+        ],
+        [
+          1058.315,
+          1.929,
+          2249.446
+        ]
+      ],
+      "purpose": "Connect safe arrival, resource/care detour, defining landmark and next departure.",
+      "radial_landing_approaches": true,
+      "target_average_empty_interval_m": 80.0,
+      "width_m": 4.0,
+      "_comment_composition_revision": "2026-09-07: owner-delegated correction removes unequal-height crossings or acute return-leg overlap; shore endpoints retained. Original polyline: [[1058.315,1.929,2249.446],[1078.27026367188,6.0,2248.11572265625],[1114.09,27.312,2190.4],[1105.458,28.415,2223.33],[1257.817,26.758,2322.571],[1078.27026367188,6.0,2248.11572265625],[1058.315,1.929,2249.446]]. Analytic audit only; bake and real-body walk remain required."
+    },
+    {
+      "_comment": "Coordinates sample radial base only. Length is planning geometry, not runtime walked length; no traversability or density credit until baked/played. Optional spines return to the same landing by distinct legs.",
+      "grading_status": "analytic_trail_modifier_authored_bake_and_walk_required",
+      "id": "deep_watch_exploration_spine",
+      "island_id": "deep_watch",
+      "main_path": false,
+      "maximum_empty_interval_m": 120.0,
+      "maximum_target_grade_deg": 24.0,
+      "measured_polyline_m": 470.286,
+      "polyline": [
+        [
+          1260.318,
+          1.929,
+          3403.144
+        ],
+        [
+          1273.90600585938,
+          6.0,
+          3417.81909179688
+        ],
+        [
+          1269.46,
+          19.087,
+          3453.5
+        ],
+        [
+          1300.0,
+          22.113,
+          3490.0
+        ],
+        [
+          1404.203,
+          29.148,
+          3577.41
+        ],
+        [
+          1273.90600585938,
+          6.0,
+          3417.81909179688
+        ],
+        [
+          1260.318,
+          1.929,
+          3403.144
+        ]
+      ],
+      "purpose": "Connect safe arrival, resource/care detour, defining landmark and next departure.",
+      "radial_landing_approaches": true,
+      "target_average_empty_interval_m": 80.0,
+      "width_m": 4.0,
+      "_comment_composition_revision": "2026-09-07: owner-delegated correction removes unequal-height crossings or acute return-leg overlap; shore endpoints retained. Original polyline: [[1260.318,1.929,3403.144],[1273.90600585938,6.0,3417.81909179688],[1269.46,19.087,3453.5],[1272.59,22.113,3445.797],[1404.203,29.148,3577.41],[1273.90600585938,6.0,3417.81909179688],[1260.318,1.929,3403.144]]. Analytic audit only; bake and real-body walk remain required."
+    }
+  ],
+  "landmarks": [
+    {
+      "_comment": "Position is analytic base-surface sample, not validated traversable terrain. Landscape/scene grading must preserve coast anchors.",
+      "grounding": "sample_terrain_after_bake",
+      "id": "arrival_beacon",
+      "island_id": "first_shore",
+      "name": "First Shore Welcome Beacon",
+      "position": [
+        35.707,
+        23.734,
+        98.104
+      ],
+      "role": "settlement_navigation",
+      "visible_from_island": ""
+    },
+    {
+      "_comment": "Position is analytic base-surface sample, not validated traversable terrain. Landscape/scene grading must preserve coast anchors.",
+      "grounding": "sample_terrain_after_bake",
+      "id": "reedhaven_woven_hall",
+      "island_id": "reedhaven",
+      "name": "Reedhaven Woven Hall",
+      "position": [
+        -54.0,
+        22.194,
+        440.0
+      ],
+      "role": "community_settlement",
+      "visible_from_island": ""
+    },
+    {
+      "_comment": "Position is analytic base-surface sample, not validated traversable terrain. Landscape/scene grading must preserve coast anchors.",
+      "grounding": "sample_terrain_after_bake",
+      "id": "brine_tidal_steps",
+      "island_id": "brine_steps",
+      "name": "The Tidal Stairstones",
+      "position": [
+        329.729,
+        44.339,
+        723.208
+      ],
+      "role": "layered_rock_trainer_route",
+      "visible_from_island": ""
+    },
+    {
+      "_comment": "Position is analytic base-surface sample, not validated traversable terrain. Landscape/scene grading must preserve coast anchors.",
+      "grounding": "sample_terrain_after_bake",
+      "id": "shellwatch_rescue_jetty",
+      "island_id": "shellwatch",
+      "name": "Shellwatch Rescue Jetty",
+      "position": [
+        267.004,
+        31.864,
+        1006.349
+      ],
+      "role": "occupied_dock_rescue",
+      "visible_from_island": ""
+    },
+    {
+      "_comment": "Position is analytic base-surface sample, not validated traversable terrain. Landscape/scene grading must preserve coast anchors.",
+      "grounding": "sample_terrain_after_bake",
+      "id": "aquaryn_tidal_basin",
+      "island_id": "tidal_cradle",
+      "name": "Aquaryn Tidal Basin",
+      "position": [
+        601.574,
+        33.934,
+        1389.434
+      ],
+      "role": "alpha_land_water_arena",
+      "visible_from_island": ""
+    },
+    {
+      "_comment": "Position is analytic base-surface sample, not validated traversable terrain. Landscape/scene grading must preserve coast anchors.",
+      "grounding": "sample_terrain_after_bake",
+      "id": "salt_crown_shrine",
+      "island_id": "salt_crown",
+      "name": "Salt Crown Tide Shrine",
+      "position": [
+        211.08,
+        87.253,
+        2332.231
+      ],
+      "role": "settlement_relic_preparation",
+      "visible_from_island": ""
+    },
+    {
+      "_comment": "Position is analytic base-surface sample, not validated traversable terrain. Landscape/scene grading must preserve coast anchors.",
+      "grounding": "sample_terrain_after_bake",
+      "id": "sluice_twin_pumps",
+      "island_id": "sluice_isle",
+      "name": "Sluice Isle Twin Pumps",
+      "position": [
+        905.1,
+        93.309,
+        2864.564
+      ],
+      "role": "current_control_network",
+      "visible_from_island": ""
+    },
+    {
+      "_comment": "Position is analytic base-surface sample, not validated traversable terrain. Landscape/scene grading must preserve coast anchors.",
+      "grounding": "sample_terrain_after_bake",
+      "id": "veilfall_white_cascade",
+      "island_id": "veilfall",
+      "name": "The Veilfall Cascade",
+      "position": [
+        335.208,
+        139.396,
+        3885.711
+      ],
+      "role": "waterfall_hidden_gate",
+      "visible_from_island": ""
+    },
+    {
+      "_comment": "Position is analytic base-surface sample, not validated traversable terrain. Landscape/scene grading must preserve coast anchors.",
+      "grounding": "sample_terrain_after_bake",
+      "id": "lantern_cove_drift_arch",
+      "island_id": "lantern_cove",
+      "name": "Lantern Cove Drift Arch",
+      "position": [
+        -292.115,
+        17.067,
+        191.068
+      ],
+      "role": "optional_hidden_cove",
+      "visible_from_island": ""
+    },
+    {
+      "_comment": "Position is analytic base-surface sample, not validated traversable terrain. Landscape/scene grading must preserve coast anchors.",
+      "grounding": "sample_terrain_after_bake",
+      "id": "gull_rest_signal_spire",
+      "island_id": "gull_rest",
+      "name": "Gull Rest Signal Spire",
+      "position": [
+        -72.615,
+        28.881,
+        899.886
+      ],
+      "role": "stranded_researcher",
+      "visible_from_island": ""
+    },
+    {
+      "_comment": "Position is analytic base-surface sample, not validated traversable terrain. Landscape/scene grading must preserve coast anchors.",
+      "grounding": "sample_terrain_after_bake",
+      "id": "drowned_garden_terraces",
+      "island_id": "drowned_garden",
+      "name": "Drowned Garden Terraces",
+      "position": [
+        1105.458,
+        28.415,
+        2223.33
+      ],
+      "role": "exposed_ruins_no_diving",
+      "visible_from_island": ""
+    },
+    {
+      "_comment": "Position is analytic base-surface sample, not validated traversable terrain. Landscape/scene grading must preserve coast anchors.",
+      "grounding": "sample_terrain_after_bake",
+      "id": "deep_watch_lookout",
+      "island_id": "deep_watch",
+      "name": "Deep Watch Lookout",
+      "position": [
+        1300.0,
+        29.148,
+        3490.0
+      ],
+      "role": "tidecoil_surface_encounter",
+      "visible_from_island": "",
+      "_comment_composition_revision": "2026-09-07: lookout XZ follows the revised non-reversing route waypoint. Original position [1272.59,29.148,3445.797]; Y must sample graded terrain after bake."
+    },
+    {
+      "_comment": "Position is analytic base-surface sample, not validated traversable terrain. Landscape/scene grading must preserve coast anchors.",
+      "grounding": "sample_terrain_after_bake",
+      "id": "first_shore_horizon_stones",
+      "island_id": "first_shore",
+      "name": "First Shore Horizon Stones",
+      "position": [
+        -63.636,
+        24.812,
+        75.838
+      ],
+      "role": "viewpoint_to_veilfall",
+      "visible_from_island": ""
+    },
+    {
+      "_comment": "Position is analytic base-surface sample, not validated traversable terrain. Landscape/scene grading must preserve coast anchors.",
+      "grounding": "sample_terrain_after_bake",
+      "id": "reedhaven_root_walk",
+      "island_id": "reedhaven",
+      "name": "Reedhaven Root Walk",
+      "position": [
+        98.207,
+        8.488,
+        496.7
+      ],
+      "role": "marsh_land_loop",
+      "visible_from_island": ""
+    },
+    {
+      "_comment": "Position is analytic base-surface sample, not validated traversable terrain. Landscape/scene grading must preserve coast anchors.",
+      "grounding": "sample_terrain_after_bake",
+      "id": "tidal_cradle_saddle_camp",
+      "island_id": "tidal_cradle",
+      "name": "Tidal Cradle Saddle Camp",
+      "position": [
+        841.384,
+        59.888,
+        1595.928
+      ],
+      "role": "alternative_mount_and_crafting",
+      "visible_from_island": ""
+    },
+    {
+      "_comment": "Position is analytic base-surface sample, not validated traversable terrain. Landscape/scene grading must preserve coast anchors.",
+      "grounding": "sample_terrain_after_bake",
+      "id": "salt_crown_return_bell",
+      "island_id": "salt_crown",
+      "name": "Salt Crown Return Bell",
+      "position": [
+        291.855,
+        47.23,
+        2228.1
+      ],
+      "role": "return_route_chart",
+      "visible_from_island": ""
+    },
+    {
+      "_comment": "Position is analytic base-surface sample, not validated traversable terrain. Landscape/scene grading must preserve coast anchors.",
+      "grounding": "sample_terrain_after_bake",
+      "id": "sluice_channel_bridge",
+      "island_id": "sluice_isle",
+      "name": "Sluice Channel Bridge",
+      "position": [
+        819.785,
+        61.438,
+        3131.357
+      ],
+      "role": "patrol_and_control_bridge",
+      "visible_from_island": ""
+    },
+    {
+      "_comment": "Position is analytic base-surface sample, not validated traversable terrain. Landscape/scene grading must preserve coast anchors.",
+      "grounding": "sample_terrain_after_bake",
+      "id": "veilfall_mountain_crown",
+      "island_id": "veilfall",
+      "name": "Veilfall Mountain Crown",
+      "position": [
+        200.0,
+        620.0,
+        4140.0
+      ],
+      "role": "distant_landmark_not_castle",
+      "visible_from_island": "first_shore"
+    }
+  ],
+  "map": {
+    "_comment": "Personal fog uses 8m cells across the full archipelago; landmarks reveal only within 30m, with a 160m handheld minimap span. Discovery never opens a dock.",
+    "cell_m": 8.0,
+    "landmark_discovery_radius_m": 30.0,
+    "minimap_span_m": 160.0,
+    "reveal_radius_m": 45.0
+  },
+  "planning_census": {
+    "_comment": "Counts of authored DATA, not spawned/played actuals. Water routes count sheltered edge once; direct alternatives are not additional chapter kilometres. Land lengths count listed spines and distinct loops once, not walkback multiplicity.",
+    "_comment_lesson": "Separate60m inshore lesson is not counted as an inter-island edge or added to chapter water kilometres.",
+    "authored_land_spines_and_loops_m": 11026.527,
+    "islands": 12.0,
+    "land_loops": 4.0,
+    "landmarks": 18.0,
+    "lesson_routes": 1.0,
+    "main_sheltered_water_m": 1985.675,
+    "optional_sheltered_water_m": 1246.14,
+    "regions": 6.0,
+    "return_shortcuts": 3.0,
+    "reward_pockets": 8.0,
+    "shore_anchors": 24.0,
+    "target_land_route_m": 8000.0,
+    "unique_land_plan_length_status": "Raw authored 3D planning polylines total 11.027km after 2026-09-07 composition correction, including unverified loops and terrain; this is not playable distance and must not be credited against the 8km actual walked target.",
+    "unique_water_edges": 11.0,
+    "verified_runtime_land_m": 0.0,
+    "verified_runtime_water_m": 0.0
+  },
+  "realm_id": "water",
+  "regions": [
+    {
+      "_comment": "Fixed authored levels, never player scaling.",
+      "id": "first_shores",
+      "islands": [
+        "first_shore",
+        "lantern_cove"
+      ],
+      "name": "First Shores",
+      "team_level_exit": 45.0,
+      "team_level_start": 43.0
+    },
+    {
+      "_comment": "Fixed authored levels, never player scaling.",
+      "id": "marsh_channels",
+      "islands": [
+        "reedhaven",
+        "brine_steps",
+        "shellwatch",
+        "gull_rest"
+      ],
+      "name": "Marsh Channels",
+      "team_level_exit": 47.0,
+      "team_level_start": 45.0
+    },
+    {
+      "_comment": "Fixed authored levels, never player scaling.",
+      "id": "tidal_cradle",
+      "islands": [
+        "tidal_cradle"
+      ],
+      "name": "Tidal Cradle",
+      "team_level_exit": 49.0,
+      "team_level_start": 47.0
+    },
+    {
+      "_comment": "Fixed authored levels, never player scaling.",
+      "id": "outer_reaches",
+      "islands": [
+        "salt_crown",
+        "drowned_garden"
+      ],
+      "name": "Outer Reaches",
+      "team_level_exit": 51.0,
+      "team_level_start": 49.0
+    },
+    {
+      "_comment": "Fixed authored levels, never player scaling.",
+      "id": "tether_current",
+      "islands": [
+        "sluice_isle",
+        "deep_watch"
+      ],
+      "name": "Tether Current",
+      "team_level_exit": 53.0,
+      "team_level_start": 51.0
+    },
+    {
+      "_comment": "Fixed authored levels, never player scaling.",
+      "id": "veilfall",
+      "islands": [
+        "veilfall"
+      ],
+      "name": "Veilfall",
+      "team_level_exit": 55.0,
+      "team_level_start": 53.0
+    }
+  ],
+  "return_shortcuts": [
+    {
+      "_comment": "Durable server-owned world change; shortcut exists only after physical runtime result is visible. Never a new hidden teleport.",
+      "from_landmark": "reedhaven_woven_hall",
+      "id": "reedhaven_maintenance_ramp",
+      "island_id": "reedhaven",
+      "kind": "physical_ramp",
+      "purpose": "Repair opens a short dry ramp from settlement to departure instead of repeating marsh loop.",
+      "to_anchor": "reedhaven_to_brine_steps_departure",
+      "unlock_flag": "water_dock_reedhaven_repaired"
+    },
+    {
+      "_comment": "Durable server-owned world change; shortcut exists only after physical runtime result is visible. Never a new hidden teleport.",
+      "id": "shellwatch_pump_return_channel",
+      "island_id": "shellwatch",
+      "kind": "current_reduction",
+      "purpose": "Freed pump creates a gentler return channel without a teleport or free stamina.",
+      "route_id": "brine_steps_to_shellwatch_direct",
+      "strength_after_unlock_m_s": 0.08,
+      "unlock_flag": "water_dock_shellwatch_residents_freed_and_pump_disabled"
+    },
+    {
+      "_comment": "Durable server-owned world change; shortcut exists only after physical runtime result is visible. Never a new hidden teleport.",
+      "id": "deep_watch_current_cut",
+      "island_id": "deep_watch",
+      "kind": "current_reduction",
+      "purpose": "Optional lookout charts a shorter safe return, replacing 2.2m/s exposed flow with a readable sheltered eddy.",
+      "route_id": "sluice_isle_to_deep_watch_direct",
+      "strength_after_unlock_m_s": 0.1,
+      "unlock_flag": "water_dock_deep_watch_current_charted"
+    }
+  ],
+  "reward_pockets": [
+    {
+      "_comment": "Reward role reserves distribution intent only; item ids, actual placement, ownership and pickup evidence belong to content runtime.",
+      "claim_authority": "host_validates_character_owned_pickup",
+      "id": "lantern_hidden_cache",
+      "island_id": "lantern_cove",
+      "position": [
+        -407.668,
+        15.829,
+        210.38
+      ],
+      "purpose": "Rock arch hides a dry nook reached by the optional swim.",
+      "radius_m": 5.0,
+      "reward_role": "skill_candy_i"
+    },
+    {
+      "_comment": "Reward role reserves distribution intent only; item ids, actual placement, ownership and pickup evidence belong to content runtime.",
+      "claim_authority": "host_validates_character_owned_pickup",
+      "id": "reed_root_hollow",
+      "island_id": "reedhaven",
+      "position": [
+        -101.041,
+        18.048,
+        457.816
+      ],
+      "purpose": "Side branch off root walk, supporting pier repair.",
+      "radius_m": 5.0,
+      "reward_role": "recipe_and_reed_fiber"
+    },
+    {
+      "_comment": "Reward role reserves distribution intent only; item ids, actual placement, ownership and pickup evidence belong to content runtime.",
+      "claim_authority": "host_validates_character_owned_pickup",
+      "id": "brine_upper_shelf",
+      "island_id": "brine_steps",
+      "position": [
+        516.431,
+        46.318,
+        615.033
+      ],
+      "purpose": "Visible shelf reached by optional terrace spur.",
+      "radius_m": 5.0,
+      "reward_role": "skill_candy_i"
+    },
+    {
+      "_comment": "Reward role reserves distribution intent only; item ids, actual placement, ownership and pickup evidence belong to content runtime.",
+      "claim_authority": "host_validates_character_owned_pickup",
+      "id": "gull_research_satchel",
+      "island_id": "gull_rest",
+      "position": [
+        -17.84,
+        22.677,
+        883.976
+      ],
+      "purpose": "Prepared crossing and stranded researcher reward.",
+      "radius_m": 5.0,
+      "reward_role": "skill_candy_ii"
+    },
+    {
+      "_comment": "Reward role reserves distribution intent only; item ids, actual placement, ownership and pickup evidence belong to content runtime.",
+      "claim_authority": "host_validates_character_owned_pickup",
+      "id": "cradle_shell_nest",
+      "island_id": "tidal_cradle",
+      "position": [
+        815.824,
+        55.199,
+        1645.824
+      ],
+      "purpose": "Alternative mount preparation before main mounted departure.",
+      "radius_m": 5.0,
+      "reward_role": "reefstone_and_mount_care"
+    },
+    {
+      "_comment": "Reward role reserves distribution intent only; item ids, actual placement, ownership and pickup evidence belong to content runtime.",
+      "claim_authority": "host_validates_character_owned_pickup",
+      "id": "salt_bell_terrace",
+      "island_id": "salt_crown",
+      "position": [
+        30.731,
+        56.08,
+        2393.513
+      ],
+      "purpose": "Shrine loop side terrace with a route-changing vista.",
+      "radius_m": 5.0,
+      "reward_role": "skill_candy_i"
+    },
+    {
+      "_comment": "Reward role reserves distribution intent only; item ids, actual placement, ownership and pickup evidence belong to content runtime.",
+      "claim_authority": "host_validates_character_owned_pickup",
+      "id": "garden_exposed_vault",
+      "island_id": "drowned_garden",
+      "position": [
+        1200.0,
+        27.864,
+        2337.6
+      ],
+      "purpose": "Above-water ruined vault; never diving or an oxygen mechanic.",
+      "radius_m": 5.0,
+      "reward_role": "skill_candy_ii"
+    },
+    {
+      "_comment": "Reward role reserves distribution intent only; item ids, actual placement, ownership and pickup evidence belong to content runtime.",
+      "claim_authority": "host_validates_character_owned_pickup",
+      "id": "deep_watch_tidecoil_cache",
+      "island_id": "deep_watch",
+      "position": [
+        1409.751,
+        36.123,
+        3550.137
+      ],
+      "purpose": "Deep-water apex challenge and return-current mastery.",
+      "radius_m": 5.0,
+      "reward_role": "skill_candy_iii"
+    }
+  ],
+  "route_safety_analysis": {
+    "_comment": "Analytic lower-bound speed with full adverse current magnitude; no steering loss, waves, encounter delay, regeneration or food included. Validate with real bodies. Surface polyline conservatively includes wading ends.",
+    "_comment_final": "All five compatible mounts at Swimming0 and10. Survival is not comfortable reserve: Cannonback and Riverdrake remain near exhaustion at level0 and need earned skill/preparation or route tuning. No steering-loss or runtime safety claim.",
+    "early_crossings": [
+      {
+        "conservative_travel_s": 22.116,
+        "length_m": 82.272,
+        "reserve_percent": 38.075,
+        "route_id": "first_shore_to_reedhaven_sheltered",
+        "stamina_cost": 61.925
+      },
+      {
+        "conservative_travel_s": 28.787,
+        "length_m": 107.088,
+        "reserve_percent": 19.396,
+        "route_id": "reedhaven_to_brine_steps_sheltered",
+        "stamina_cost": 80.604
+      },
+      {
+        "conservative_travel_s": 25.086,
+        "length_m": 93.32,
+        "reserve_percent": 29.759,
+        "route_id": "brine_steps_to_shellwatch_sheltered",
+        "stamina_cost": 70.241
+      },
+      {
+        "conservative_travel_s": 30.138,
+        "length_m": 112.113,
+        "reserve_percent": 15.614,
+        "route_id": "shellwatch_to_tidal_cradle_sheltered",
+        "stamina_cost": 84.386
+      }
+    ],
+    "early_required_max_shore_gap_m": 115.0,
+    "final_crossing": [
+      {
+        "adverse_current_m_s": 0.3,
+        "capacity": 210.0,
+        "conservative_travel_s": 116.412,
+        "drain_s": 1.8,
+        "food_required_for_numeric_survival": false,
+        "length_m": 698.47,
+        "reserve_percent": 0.219,
+        "route_id": "sluice_isle_to_veilfall_sheltered",
+        "skill_drain_reduction": 0.0,
+        "species": "cannonback",
+        "speed_m_s": 6.3,
+        "stamina_cost": 209.541,
+        "swimming_level": 0.0
+      },
+      {
+        "adverse_current_m_s": 0.3,
+        "capacity": 210.0,
+        "conservative_travel_s": 116.412,
+        "drain_s": 1.8,
+        "food_required_for_numeric_survival": false,
+        "length_m": 698.47,
+        "reserve_percent": 15.186,
+        "route_id": "sluice_isle_to_veilfall_sheltered",
+        "skill_drain_reduction": 0.15,
+        "species": "cannonback",
+        "speed_m_s": 6.3,
+        "stamina_cost": 178.11,
+        "swimming_level": 10.0
+      },
+      {
+        "adverse_current_m_s": 0.3,
+        "capacity": 200.0,
+        "conservative_travel_s": 72.007,
+        "drain_s": 2.0,
+        "food_required_for_numeric_survival": false,
+        "length_m": 698.47,
+        "reserve_percent": 27.993,
+        "route_id": "sluice_isle_to_veilfall_sheltered",
+        "skill_drain_reduction": 0.0,
+        "species": "aquaryn",
+        "speed_m_s": 10.0,
+        "stamina_cost": 144.014,
+        "swimming_level": 0.0
+      },
+      {
+        "adverse_current_m_s": 0.3,
+        "capacity": 200.0,
+        "conservative_travel_s": 72.007,
+        "drain_s": 2.0,
+        "food_required_for_numeric_survival": false,
+        "length_m": 698.47,
+        "reserve_percent": 38.794,
+        "route_id": "sluice_isle_to_veilfall_sheltered",
+        "skill_drain_reduction": 0.15,
+        "species": "aquaryn",
+        "speed_m_s": 10.0,
+        "stamina_cost": 122.412,
+        "swimming_level": 10.0
+      },
+      {
+        "adverse_current_m_s": 0.3,
+        "capacity": 160.0,
+        "conservative_travel_s": 78.48,
+        "drain_s": 2.0,
+        "food_required_for_numeric_survival": false,
+        "length_m": 698.47,
+        "reserve_percent": 1.9,
+        "route_id": "sluice_isle_to_veilfall_sheltered",
+        "skill_drain_reduction": 0.0,
+        "species": "riverdrake",
+        "speed_m_s": 9.2,
+        "stamina_cost": 156.96,
+        "swimming_level": 0.0
+      },
+      {
+        "adverse_current_m_s": 0.3,
+        "capacity": 160.0,
+        "conservative_travel_s": 78.48,
+        "drain_s": 2.0,
+        "food_required_for_numeric_survival": false,
+        "length_m": 698.47,
+        "reserve_percent": 16.615,
+        "route_id": "sluice_isle_to_veilfall_sheltered",
+        "skill_drain_reduction": 0.15,
+        "species": "riverdrake",
+        "speed_m_s": 9.2,
+        "stamina_cost": 133.416,
+        "swimming_level": 10.0
+      },
+      {
+        "adverse_current_m_s": 0.3,
+        "capacity": 180.0,
+        "conservative_travel_s": 85.179,
+        "drain_s": 2.0,
+        "food_required_for_numeric_survival": false,
+        "length_m": 698.47,
+        "reserve_percent": 5.356,
+        "route_id": "sluice_isle_to_veilfall_sheltered",
+        "skill_drain_reduction": 0.0,
+        "species": "sirenseal",
+        "speed_m_s": 8.5,
+        "stamina_cost": 170.359,
+        "swimming_level": 0.0
+      },
+      {
+        "adverse_current_m_s": 0.3,
+        "capacity": 180.0,
+        "conservative_travel_s": 85.179,
+        "drain_s": 2.0,
+        "food_required_for_numeric_survival": false,
+        "length_m": 698.47,
+        "reserve_percent": 19.553,
+        "route_id": "sluice_isle_to_veilfall_sheltered",
+        "skill_drain_reduction": 0.15,
+        "species": "sirenseal",
+        "speed_m_s": 8.5,
+        "stamina_cost": 144.805,
+        "swimming_level": 10.0
+      },
+      {
+        "adverse_current_m_s": 0.3,
+        "capacity": 240.0,
+        "conservative_travel_s": 107.457,
+        "drain_s": 1.7,
+        "food_required_for_numeric_survival": false,
+        "length_m": 698.47,
+        "reserve_percent": 23.885,
+        "route_id": "sluice_isle_to_veilfall_sheltered",
+        "skill_drain_reduction": 0.0,
+        "species": "mosshell",
+        "speed_m_s": 6.8,
+        "stamina_cost": 182.677,
+        "swimming_level": 0.0
+      },
+      {
+        "adverse_current_m_s": 0.3,
+        "capacity": 240.0,
+        "conservative_travel_s": 107.457,
+        "drain_s": 1.7,
+        "food_required_for_numeric_survival": false,
+        "length_m": 698.47,
+        "reserve_percent": 35.302,
+        "route_id": "sluice_isle_to_veilfall_sheltered",
+        "skill_drain_reduction": 0.15,
+        "species": "mosshell",
+        "speed_m_s": 6.8,
+        "stamina_cost": 155.275,
+        "swimming_level": 10.0
+      }
+    ],
+    "first_required_min_reserve_percent": 15.0,
+    "human_capacity": 100.0,
+    "human_drain_s": 2.8,
+    "human_speed_m_s": 3.8
+  },
+  "schema_version": 1.0,
+  "swim_lesson": {
+    "_comment": "Accessible northeast training inlet beside realm arrival, independent of departure dock.60m segment has1.4..2.250m analytic depth; dry shore lies4..6.43m radially inland. It is outside outbound current strips. Real body depth threshold, no mandatory combat, shoreline approaches and current-free placement require runtime verification.",
+    "authority": "existing_owner_traversal_with_host_validated_objective_completion",
+    "completion_contract": "Enter west marker by normal movement, traverse at least50m in actual swimming mode, reach east marker, then exit at its dry safe landing. Host validates actor realm and active lesson progress through existing movement authority; briefing and teleport do not complete it.",
+    "completion_flag": "water_swim_lesson_complete",
+    "current_strength_m_s": 0.0,
+    "end_anchor": "water_first_shore_lesson_east",
+    "id": "water_first_shore_swim_lesson",
+    "island_id": "first_shore",
+    "marker_separation_m": 60.0,
+    "maximum_depth_m": 2.250364,
+    "minimum_depth_m": 1.4,
+    "required_world_flags": [],
+    "start_anchor": "water_first_shore_lesson_west",
+    "surface_polyline": [
+      [
+        66.019238,
+        0.0,
+        174.348674
+      ],
+      [
+        117.980762,
+        0.0,
+        144.348674
+      ]
+    ],
+    "validation": {
+      "_comment": "Host observes course progress from owned movement. Reject teleport-sized samples; require at least50m swimming and final dry arrival within8m of the end marker.",
+      "course_radius_m": 12.0,
+      "marker_radius_m": 8.0,
+      "maximum_observed_step_m": 3.0,
+      "minimum_swim_m": 50.0
+    }
+  },
+  "terrain": {
+    "_comment": "Separate aligned bake bounds pad authored world bounds without moving islands. Sparse island+shore regions avoid a giant empty seabed bake.",
+    "collision_comment": "FULL_GAME on sparse island regions; measure memory/startup and two separated remote bodies. One averaged camera is insufficient.",
+    "collision_mode": 3.0,
+    "data_directory": "res://data/terrain/water",
+    "height_formula": {
+      "_comment": "Deterministic analytic base surface, highest finite island contribution. Trail grading later requires explicit modifier; not implied here.",
+      "angular_profile": "For each landing sector angular distance d: w=1-smoothstep(half_width_deg,half_width_deg+feather_deg,d). Choose maximum weight and lerp default beach width and inner height toward its profile.",
+      "id": "radial_landing_sectors_v1",
+      "land": "When R-beach_width<=r<=R: h=inner_height*(R-r)/beach_width. When r<R-beach_width: h=inner_height+(peak_height-inner_height)*pow(1-pow(r/(R-beach_width),2),peak_power).",
+      "noise": "Disabled until a shoreline-preserving mask exists. Future detail must be zero at shore and safe anchors.",
+      "ocean": "When r>R: h=-min(seabed_depth,(r-R)*outer_shore_slope). Beyond sparse regions, depth queries return deep sea; no synthetic walkable floor.",
+      "radius": "r=length(xz-center); R=shore_radius_m",
+      "shore": "r=R gives h=0 exactly. Straight crossing gap=center_distance-R_from-R_to."
+    },
+    "outer_shore_slope": 0.35,
+    "region_count": 77.0,
+    "region_locations": [
+      [
+        -1.0,
+        -1.0
+      ],
+      [
+        -1.0,
+        0.0
+      ],
+      [
+        -1.0,
+        1.0
+      ],
+      [
+        -1.0,
+        4.0
+      ],
+      [
+        -1.0,
+        5.0
+      ],
+      [
+        -1.0,
+        7.0
+      ],
+      [
+        -1.0,
+        8.0
+      ],
+      [
+        0.0,
+        -1.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0
+      ],
+      [
+        0.0,
+        2.0
+      ],
+      [
+        0.0,
+        3.0
+      ],
+      [
+        0.0,
+        4.0
+      ],
+      [
+        0.0,
+        5.0
+      ],
+      [
+        0.0,
+        7.0
+      ],
+      [
+        0.0,
+        8.0
+      ],
+      [
+        1.0,
+        0.0
+      ],
+      [
+        1.0,
+        1.0
+      ],
+      [
+        1.0,
+        2.0
+      ],
+      [
+        1.0,
+        3.0
+      ],
+      [
+        1.0,
+        4.0
+      ],
+      [
+        1.0,
+        5.0
+      ],
+      [
+        1.0,
+        6.0
+      ],
+      [
+        1.0,
+        7.0
+      ],
+      [
+        1.0,
+        8.0
+      ],
+      [
+        2.0,
+        3.0
+      ],
+      [
+        2.0,
+        4.0
+      ],
+      [
+        2.0,
+        5.0
+      ],
+      [
+        2.0,
+        6.0
+      ],
+      [
+        2.0,
+        7.0
+      ]
+    ],
+    "region_selection": "Only regions intersecting island radius plus shore_apron_m; water gaps do not require terrain collision.",
+    "region_size": 512.0,
+    "scatter": {
+      "_comment": "Water scatter config is future implementation. Meadows fingerprint is insufficient. Exclude landing/approach clear radii.",
+      "data_directory": "res://data/scatter/water",
+      "freshness_inputs": [
+        "data/config/water_world.json",
+        "data/config/water_scatter.json"
+      ],
+      "nature_family": "res://assets/environment/stylized_nature/",
+      "placements": "layer_id -> [{model,position:Vector3,yaw,scale,normal?}]; stable island-qualified ids"
+    },
+    "sea_level_m": 0.0,
+    "seabed_depth_m": 65.0,
+    "shore_apron_m": 32.0,
+    "trail_grading": {
+      "_comment": "Starting 6m walk surface, 15m graded shoulders, spatial 32m lookup. Preserve outer 22m coast and all safe shore anchors; blend inland over 10m. Grade targets require baked real-body walks.",
+      "enabled": true,
+      "feather_m": 15.0,
+      "flat_half_width_m": 3.0,
+      "grid_pitch_m": 32.0,
+      "maximum_centerline_grade_deg": 20.0,
+      "preserve_shore_band_m": 22.0,
+      "shore_blend_m": 10.0
+    },
+    "vertex_spacing": 1.0,
+    "world_bounds": {
+      "max_x": 2048.0,
+      "max_z": 5120.0,
+      "min_x": -1536.0,
+      "min_z": -512.0
+    }
+  },
+  "unresolved_evidence": [
+    {
+      "detail": "Raw planning polylines exceed 8km, but include ungraded steep slopes and unverified meaningful-route geometry. Target applies only to unique baked walked routes; do not claim it from this data count.",
+      "issue": "Land path target is not proved",
+      "status": "implementation_needed"
+    },
+    {
+      "detail": "Reedhaven to Gull Rest is about155.66m radial shore gap. Explicit prepared-human or mounted optional branch; never required for Shellwatch progression. Do not call it level0-safe.",
+      "issue": "Gull Rest optional crossing exceeds level0 human endurance",
+      "status": "recorded_preparation_choice"
+    },
+    {
+      "detail": "All coast sectors and ramps must be tested for bypass. Current coefficients and flags alone cannot prove controlled departure.",
+      "issue": "Physical dock gate bypass",
+      "status": "runtime_geometry_test_required"
+    },
+    {
+      "detail": "Radial slope/analytic landmarks do not guarantee walkable approach; add shoreline-preserving trail grading and test continuous body movement.",
+      "issue": "Veilfall radial mountain needs graded hike",
+      "status": "authored_modifier_needed"
+    },
+    {
+      "detail": "Entry spends realm_key_water through existing transition seam; predecessor anchor id must be read from actual merged handoff.",
+      "issue": "Stormwood anchor ids pending merged dependency",
+      "status": "integration_needed"
+    },
+    {
+      "detail": "Build and test two separated island bodies with FULL_GAME collision, PCK data inclusion, actual loading/memory and rendered horizon.",
+      "issue": "Sparse terrain data and full collision budget",
+      "status": "two_peer_and_performance_evidence_needed"
+    }
+  ],
+  "veilfall_identity": {
+    "_comment": "Owner board mountain identity. The exposed landmark is terrain/cascade, never a sea-visible castle. Interior positions are reserved separately from the heightfield.",
+    "entrance_visibility": "hidden_behind_waterfall_until_hike",
+    "first_shore_sightline": {
+      "_comment": "Straight analytic sightline is specified, not visibility proof. Camera fog/LOD, intervening terrain and render must verify it.",
+      "eye_position": [
+        0.0,
+        3.729,
+        162.0
+      ],
+      "required_max_view_distance_m": 5000.0,
+      "target_position": [
+        200.0,
+        620.0,
+        4140.0
+      ]
+    },
+    "heart_chamber_props": [
+      "containment_crystal",
+      "blue_tether_banners",
+      "bridge",
+      "channels",
+      "aged_pumps",
+      "sluices"
+    ],
+    "hike_contract": "Author graded switchbacks from safe arrival to the waterfall gate at139.396m, matching waterfall_gate_height_m. Existing radial slope is too steep to assume walkable. Do not solve using teleport or surface snapping.",
+    "interior_rooms": [
+      "wet_cave_entry",
+      "pump_room",
+      "elevated_sluice_bridge",
+      "heart_chamber"
+    ],
+    "peak_landmark_id": "veilfall_mountain_crown",
+    "surface_palette": [
+      "pale_wet_rock",
+      "green_terraces",
+      "broad_white_falls",
+      "warm_lamps_inside"
+    ],
+    "waterfall_gate_height_m": 139.396,
+    "waterfall_landmark_id": "veilfall_white_cascade",
+    "waterfall_start_height_m": 400.0,
+    "waterfall_width_m": 46.0
+  },
+  "water_routes": [
+    {
+      "_comment": "Actual shore-to-shore polyline; conservative against later wading threshold. No dock lengths or extra distance invented. Return-current help is not used for outbound safety.",
+      "center_distance_m": 440.0,
+      "choice": "sheltered",
+      "current_id": "first_shore_to_reedhaven_sheltered_current",
+      "edge_id": "first_shore_to_reedhaven",
+      "from_anchor": "first_shore_to_reedhaven_departure",
+      "from_island": "first_shore",
+      "id": "first_shore_to_reedhaven_sheltered",
+      "intended_traversal": "human_level_0",
+      "interception_roles": [
+        "shallows_wild_off_safe_line"
+      ],
+      "main_path": true,
+      "measured_surface_polyline_m": 82.272,
+      "polyline": [
+        [
+          0.0,
+          0.0,
+          180.0
+        ],
+        [
+          -9.6,
+          0.0,
+          220.0
+        ],
+        [
+          0.0,
+          0.0,
+          260.0
+        ]
+      ],
+      "radial_shore_gap_m": 80.0,
+      "required_departure_flag": "water_swim_lesson_complete",
+      "required_equipment": [],
+      "safe_channel_combat_policy": "No mandatory interception on lesson crossing.",
+      "to_anchor": "first_shore_to_reedhaven_arrival",
+      "to_island": "reedhaven"
+    },
+    {
+      "_comment": "Actual shore-to-shore polyline; conservative against later wading threshold. No dock lengths or extra distance invented. Return-current help is not used for outbound safety.",
+      "center_distance_m": 440.0,
+      "choice": "direct",
+      "current_id": "first_shore_to_reedhaven_direct_current",
+      "edge_id": "first_shore_to_reedhaven",
+      "from_anchor": "first_shore_to_reedhaven_departure",
+      "from_island": "first_shore",
+      "id": "first_shore_to_reedhaven_direct",
+      "intended_traversal": "human_level_0",
+      "interception_roles": [
+        "shallows_wild_off_safe_line"
+      ],
+      "main_path": true,
+      "measured_surface_polyline_m": 80.0,
+      "polyline": [
+        [
+          0.0,
+          0.0,
+          180.0
+        ],
+        [
+          0.0,
+          0.0,
+          260.0
+        ]
+      ],
+      "radial_shore_gap_m": 80.0,
+      "required_departure_flag": "water_swim_lesson_complete",
+      "required_equipment": [],
+      "safe_channel_combat_policy": "No mandatory interception on lesson crossing.",
+      "to_anchor": "first_shore_to_reedhaven_arrival",
+      "to_island": "reedhaven"
+    },
+    {
+      "_comment": "Actual shore-to-shore polyline; conservative against later wading threshold. No dock lengths or extra distance invented. Return-current help is not used for outbound safety.",
+      "center_distance_m": 474.131,
+      "choice": "sheltered",
+      "current_id": "reedhaven_to_brine_steps_sheltered_current",
+      "edge_id": "reedhaven_to_brine_steps",
+      "from_anchor": "reedhaven_to_brine_steps_departure",
+      "from_island": "reedhaven",
+      "id": "reedhaven_to_brine_steps_sheltered",
+      "intended_traversal": "human_level_0",
+      "interception_roles": [
+        "shallows_wild_off_safe_line"
+      ],
+      "main_path": true,
+      "measured_surface_polyline_m": 107.088,
+      "polyline": [
+        [
+          159.45,
+          0.0,
+          523.521
+        ],
+        [
+          199.773,
+          0.0,
+          558.749
+        ],
+        [
+          251.692,
+          0.0,
+          571.839
+        ]
+      ],
+      "radial_shore_gap_m": 104.131,
+      "required_departure_flag": "water_dock_reedhaven_repaired",
+      "required_equipment": [],
+      "safe_channel_combat_policy": "Any interception requires authored arena and traversal resume evidence.",
+      "to_anchor": "reedhaven_to_brine_steps_arrival",
+      "to_island": "brine_steps"
+    },
+    {
+      "_comment": "Actual shore-to-shore polyline; conservative against later wading threshold. No dock lengths or extra distance invented. Return-current help is not used for outbound safety.",
+      "center_distance_m": 474.131,
+      "choice": "direct",
+      "current_id": "reedhaven_to_brine_steps_direct_current",
+      "edge_id": "reedhaven_to_brine_steps",
+      "from_anchor": "reedhaven_to_brine_steps_departure",
+      "from_island": "reedhaven",
+      "id": "reedhaven_to_brine_steps_direct",
+      "intended_traversal": "human_level_0",
+      "interception_roles": [
+        "shallows_wild_off_safe_line"
+      ],
+      "main_path": true,
+      "measured_surface_polyline_m": 104.131,
+      "polyline": [
+        [
+          159.45,
+          0.0,
+          523.521
+        ],
+        [
+          251.692,
+          0.0,
+          571.839
+        ]
+      ],
+      "radial_shore_gap_m": 104.131,
+      "required_departure_flag": "water_dock_reedhaven_repaired",
+      "required_equipment": [],
+      "safe_channel_combat_policy": "Any interception requires authored arena and traversal resume evidence.",
+      "to_anchor": "reedhaven_to_brine_steps_arrival",
+      "to_island": "brine_steps"
+    },
+    {
+      "_comment": "Actual shore-to-shore polyline; conservative against later wading threshold. No dock lengths or extra distance invented. Return-current help is not used for outbound safety.",
+      "center_distance_m": 470.744,
+      "choice": "sheltered",
+      "current_id": "brine_steps_to_shellwatch_sheltered_current",
+      "edge_id": "brine_steps_to_shellwatch",
+      "from_anchor": "brine_steps_to_shellwatch_departure",
+      "from_island": "brine_steps",
+      "id": "brine_steps_to_shellwatch_sheltered",
+      "intended_traversal": "human_level_0",
+      "interception_roles": [
+        "shallows_wild_off_safe_line"
+      ],
+      "main_path": true,
+      "measured_surface_polyline_m": 93.32,
+      "polyline": [
+        [
+          379.638,
+          0.0,
+          845.664
+        ],
+        [
+          359.359,
+          0.0,
+          887.687
+        ],
+        [
+          360.362,
+          0.0,
+          934.336
+        ]
+      ],
+      "radial_shore_gap_m": 90.744,
+      "required_departure_flag": "water_dock_brine_steps_trial_won",
+      "required_equipment": [],
+      "safe_channel_combat_policy": "Any interception requires authored arena and traversal resume evidence.",
+      "to_anchor": "brine_steps_to_shellwatch_arrival",
+      "to_island": "shellwatch"
+    },
+    {
+      "_comment": "Actual shore-to-shore polyline; conservative against later wading threshold. No dock lengths or extra distance invented. Return-current help is not used for outbound safety.",
+      "center_distance_m": 470.744,
+      "choice": "direct",
+      "current_id": "brine_steps_to_shellwatch_direct_current",
+      "edge_id": "brine_steps_to_shellwatch",
+      "from_anchor": "brine_steps_to_shellwatch_departure",
+      "from_island": "brine_steps",
+      "id": "brine_steps_to_shellwatch_direct",
+      "intended_traversal": "human_level_0",
+      "interception_roles": [
+        "shallows_wild_off_safe_line"
+      ],
+      "main_path": true,
+      "measured_surface_polyline_m": 90.743,
+      "polyline": [
+        [
+          379.638,
+          0.0,
+          845.664
+        ],
+        [
+          360.362,
+          0.0,
+          934.336
+        ]
+      ],
+      "radial_shore_gap_m": 90.744,
+      "required_departure_flag": "water_dock_brine_steps_trial_won",
+      "required_equipment": [],
+      "safe_channel_combat_policy": "Any interception requires authored arena and traversal resume evidence.",
+      "to_anchor": "brine_steps_to_shellwatch_arrival",
+      "to_island": "shellwatch"
+    },
+    {
+      "_comment": "Actual shore-to-shore polyline; conservative against later wading threshold. No dock lengths or extra distance invented. Return-current help is not used for outbound safety.",
+      "center_distance_m": 559.017,
+      "choice": "sheltered",
+      "current_id": "shellwatch_to_tidal_cradle_sheltered_current",
+      "edge_id": "shellwatch_to_tidal_cradle",
+      "from_anchor": "shellwatch_to_tidal_cradle_departure",
+      "from_island": "shellwatch",
+      "id": "shellwatch_to_tidal_cradle_sheltered",
+      "intended_traversal": "human_level_0",
+      "interception_roles": [
+        "shallows_wild_off_safe_line"
+      ],
+      "main_path": true,
+      "measured_surface_polyline_m": 112.113,
+      "polyline": [
+        [
+          449.155,
+          0.0,
+          1259.352
+        ],
+        [
+          476.613,
+          0.0,
+          1308.223
+        ],
+        [
+          523.261,
+          0.0,
+          1339.308
+        ]
+      ],
+      "radial_shore_gap_m": 109.017,
+      "required_departure_flag": "water_dock_shellwatch_residents_freed_and_pump_disabled",
+      "required_equipment": [],
+      "safe_channel_combat_policy": "Any interception requires authored arena and traversal resume evidence.",
+      "to_anchor": "shellwatch_to_tidal_cradle_arrival",
+      "to_island": "tidal_cradle"
+    },
+    {
+      "_comment": "Actual shore-to-shore polyline; conservative against later wading threshold. No dock lengths or extra distance invented. Return-current help is not used for outbound safety.",
+      "center_distance_m": 559.017,
+      "choice": "direct",
+      "current_id": "shellwatch_to_tidal_cradle_direct_current",
+      "edge_id": "shellwatch_to_tidal_cradle",
+      "from_anchor": "shellwatch_to_tidal_cradle_departure",
+      "from_island": "shellwatch",
+      "id": "shellwatch_to_tidal_cradle_direct",
+      "intended_traversal": "human_level_0",
+      "interception_roles": [
+        "shallows_wild_off_safe_line"
+      ],
+      "main_path": true,
+      "measured_surface_polyline_m": 109.017,
+      "polyline": [
+        [
+          449.155,
+          0.0,
+          1259.352
+        ],
+        [
+          523.261,
+          0.0,
+          1339.308
+        ]
+      ],
+      "radial_shore_gap_m": 109.017,
+      "required_departure_flag": "water_dock_shellwatch_residents_freed_and_pump_disabled",
+      "required_equipment": [],
+      "safe_channel_combat_policy": "Any interception requires authored arena and traversal resume evidence.",
+      "to_anchor": "shellwatch_to_tidal_cradle_arrival",
+      "to_island": "tidal_cradle"
+    },
+    {
+      "_comment": "Actual shore-to-shore polyline; conservative against later wading threshold. No dock lengths or extra distance invented. Return-current help is not used for outbound safety.",
+      "center_distance_m": 954.411,
+      "choice": "sheltered",
+      "current_id": "tidal_cradle_to_salt_crown_sheltered_current",
+      "edge_id": "tidal_cradle_to_salt_crown",
+      "from_anchor": "tidal_cradle_to_salt_crown_departure",
+      "from_island": "tidal_cradle",
+      "id": "tidal_cradle_to_salt_crown_sheltered",
+      "intended_traversal": "swim_mount",
+      "interception_roles": [
+        "amphibious_surface_patrol",
+        "current_edge_wild"
+      ],
+      "main_path": true,
+      "measured_surface_polyline_m": 461.703,
+      "polyline": [
+        [
+          550.169,
+          0.0,
+          1742.487
+        ],
+        [
+          361.095,
+          0.0,
+          1874.939
+        ],
+        [
+          299.831,
+          0.0,
+          2097.513
+        ]
+      ],
+      "radial_shore_gap_m": 434.411,
+      "required_departure_flag": "",
+      "required_equipment": [
+        "swim_saddle"
+      ],
+      "required_personal_flags": [
+        "water_swim_stone_earned"
+      ],
+      "requires_compatible_active_swim_mount": true,
+      "safe_channel_combat_policy": "Any interception requires authored arena and traversal resume evidence.",
+      "to_anchor": "tidal_cradle_to_salt_crown_arrival",
+      "to_island": "salt_crown"
+    },
+    {
+      "_comment": "Actual shore-to-shore polyline; conservative against later wading threshold. No dock lengths or extra distance invented. Return-current help is not used for outbound safety.",
+      "center_distance_m": 954.411,
+      "choice": "direct",
+      "current_id": "tidal_cradle_to_salt_crown_direct_current",
+      "edge_id": "tidal_cradle_to_salt_crown",
+      "from_anchor": "tidal_cradle_to_salt_crown_departure",
+      "from_island": "tidal_cradle",
+      "id": "tidal_cradle_to_salt_crown_direct",
+      "intended_traversal": "swim_mount",
+      "interception_roles": [
+        "amphibious_surface_patrol",
+        "current_edge_wild"
+      ],
+      "main_path": true,
+      "measured_surface_polyline_m": 434.411,
+      "polyline": [
+        [
+          550.169,
+          0.0,
+          1742.487
+        ],
+        [
+          299.831,
+          0.0,
+          2097.513
+        ]
+      ],
+      "radial_shore_gap_m": 434.411,
+      "required_departure_flag": "",
+      "required_equipment": [
+        "swim_saddle"
+      ],
+      "required_personal_flags": [
+        "water_swim_stone_earned"
+      ],
+      "requires_compatible_active_swim_mount": true,
+      "safe_channel_combat_policy": "Any interception requires authored arena and traversal resume evidence.",
+      "to_anchor": "tidal_cradle_to_salt_crown_arrival",
+      "to_island": "salt_crown"
+    },
+    {
+      "_comment": "Actual shore-to-shore polyline; conservative against later wading threshold. No dock lengths or extra distance invented. Return-current help is not used for outbound safety.",
+      "center_distance_m": 955.249,
+      "choice": "sheltered",
+      "current_id": "salt_crown_to_sluice_isle_sheltered_current",
+      "edge_id": "salt_crown_to_sluice_isle",
+      "from_anchor": "salt_crown_to_sluice_isle_departure",
+      "from_island": "salt_crown",
+      "id": "salt_crown_to_sluice_isle_sheltered",
+      "intended_traversal": "swim_mount",
+      "interception_roles": [
+        "amphibious_surface_patrol",
+        "current_edge_wild"
+      ],
+      "main_path": true,
+      "measured_surface_polyline_m": 430.709,
+      "polyline": [
+        [
+          340.526,
+          0.0,
+          2486.917
+        ],
+        [
+          439.373,
+          0.0,
+          2678.246
+        ],
+        [
+          637.49,
+          0.0,
+          2762.669
+        ]
+      ],
+      "radial_shore_gap_m": 405.249,
+      "required_departure_flag": "water_dock_salt_crown_landing_charted",
+      "required_equipment": [
+        "swim_saddle"
+      ],
+      "required_personal_flags": [
+        "water_swim_stone_earned"
+      ],
+      "requires_compatible_active_swim_mount": true,
+      "safe_channel_combat_policy": "Any interception requires authored arena and traversal resume evidence.",
+      "to_anchor": "salt_crown_to_sluice_isle_arrival",
+      "to_island": "sluice_isle"
+    },
+    {
+      "_comment": "Actual shore-to-shore polyline; conservative against later wading threshold. No dock lengths or extra distance invented. Return-current help is not used for outbound safety.",
+      "center_distance_m": 955.249,
+      "choice": "direct",
+      "current_id": "salt_crown_to_sluice_isle_direct_current",
+      "edge_id": "salt_crown_to_sluice_isle",
+      "from_anchor": "salt_crown_to_sluice_isle_departure",
+      "from_island": "salt_crown",
+      "id": "salt_crown_to_sluice_isle_direct",
+      "intended_traversal": "swim_mount",
+      "interception_roles": [
+        "amphibious_surface_patrol",
+        "current_edge_wild"
+      ],
+      "main_path": true,
+      "measured_surface_polyline_m": 405.249,
+      "polyline": [
+        [
+          340.526,
+          0.0,
+          2486.917
+        ],
+        [
+          637.49,
+          0.0,
+          2762.669
+        ]
+      ],
+      "radial_shore_gap_m": 405.249,
+      "required_departure_flag": "water_dock_salt_crown_landing_charted",
+      "required_equipment": [
+        "swim_saddle"
+      ],
+      "required_personal_flags": [
+        "water_swim_stone_earned"
+      ],
+      "requires_compatible_active_swim_mount": true,
+      "safe_channel_combat_policy": "Any interception requires authored arena and traversal resume evidence.",
+      "to_anchor": "salt_crown_to_sluice_isle_arrival",
+      "to_island": "sluice_isle"
+    },
+    {
+      "_comment": "Actual shore-to-shore polyline; conservative against later wading threshold. No dock lengths or extra distance invented. Return-current help is not used for outbound safety.",
+      "center_distance_m": 1347.182,
+      "choice": "sheltered",
+      "current_id": "sluice_isle_to_veilfall_sheltered_current",
+      "edge_id": "sluice_isle_to_veilfall",
+      "from_anchor": "sluice_isle_to_veilfall_departure",
+      "from_island": "sluice_isle",
+      "id": "sluice_isle_to_veilfall_sheltered",
+      "intended_traversal": "swim_mount",
+      "interception_roles": [
+        "amphibious_surface_patrol",
+        "current_edge_wild"
+      ],
+      "main_path": true,
+      "measured_surface_polyline_m": 698.47,
+      "polyline": [
+        [
+          710.078,
+          0.0,
+          3214.012
+        ],
+        [
+          447.924,
+          0.0,
+          3444.751
+        ],
+        [
+          392.995,
+          0.0,
+          3789.639
+        ]
+      ],
+      "radial_shore_gap_m": 657.182,
+      "required_departure_flag": "water_dock_sluice_isle_both_controls_disabled",
+      "required_equipment": [
+        "swim_saddle"
+      ],
+      "required_personal_flags": [
+        "water_swim_stone_earned"
+      ],
+      "requires_compatible_active_swim_mount": true,
+      "safe_channel_combat_policy": "Any interception requires authored arena and traversal resume evidence.",
+      "to_anchor": "sluice_isle_to_veilfall_arrival",
+      "to_island": "veilfall"
+    },
+    {
+      "_comment": "Actual shore-to-shore polyline; conservative against later wading threshold. No dock lengths or extra distance invented. Return-current help is not used for outbound safety.",
+      "center_distance_m": 1347.182,
+      "choice": "direct",
+      "current_id": "sluice_isle_to_veilfall_direct_current",
+      "edge_id": "sluice_isle_to_veilfall",
+      "from_anchor": "sluice_isle_to_veilfall_departure",
+      "from_island": "sluice_isle",
+      "id": "sluice_isle_to_veilfall_direct",
+      "intended_traversal": "swim_mount",
+      "interception_roles": [
+        "amphibious_surface_patrol",
+        "current_edge_wild"
+      ],
+      "main_path": true,
+      "measured_surface_polyline_m": 657.182,
+      "polyline": [
+        [
+          710.078,
+          0.0,
+          3214.012
+        ],
+        [
+          392.995,
+          0.0,
+          3789.639
+        ]
+      ],
+      "radial_shore_gap_m": 657.182,
+      "required_departure_flag": "water_dock_sluice_isle_both_controls_disabled",
+      "required_equipment": [
+        "swim_saddle"
+      ],
+      "required_personal_flags": [
+        "water_swim_stone_earned"
+      ],
+      "requires_compatible_active_swim_mount": true,
+      "safe_channel_combat_policy": "Any interception requires authored arena and traversal resume evidence.",
+      "to_anchor": "sluice_isle_to_veilfall_arrival",
+      "to_island": "veilfall"
+    },
+    {
+      "_comment": "Actual shore-to-shore polyline; conservative against later wading threshold. No dock lengths or extra distance invented. Return-current help is not used for outbound safety.",
+      "center_distance_m": 389.102,
+      "choice": "sheltered",
+      "current_id": "first_shore_to_lantern_cove_sheltered_current",
+      "edge_id": "first_shore_to_lantern_cove",
+      "from_anchor": "first_shore_to_lantern_cove_departure",
+      "from_island": "first_shore",
+      "id": "first_shore_to_lantern_cove_sheltered",
+      "intended_traversal": "human_level_0",
+      "interception_roles": [
+        "shallows_wild_off_safe_line"
+      ],
+      "main_path": false,
+      "measured_surface_polyline_m": 101.916,
+      "polyline": [
+        [
+          -161.911,
+          0.0,
+          78.643
+        ],
+        [
+          -211.678,
+          0.0,
+          89.595
+        ],
+        [
+          -251.054,
+          0.0,
+          121.941
+        ]
+      ],
+      "radial_shore_gap_m": 99.102,
+      "required_departure_flag": "",
+      "required_equipment": [],
+      "safe_channel_combat_policy": "Any interception requires authored arena and traversal resume evidence.",
+      "to_anchor": "first_shore_to_lantern_cove_arrival",
+      "to_island": "lantern_cove"
+    },
+    {
+      "_comment": "Actual shore-to-shore polyline; conservative against later wading threshold. No dock lengths or extra distance invented. Return-current help is not used for outbound safety.",
+      "center_distance_m": 389.102,
+      "choice": "direct",
+      "current_id": "first_shore_to_lantern_cove_direct_current",
+      "edge_id": "first_shore_to_lantern_cove",
+      "from_anchor": "first_shore_to_lantern_cove_departure",
+      "from_island": "first_shore",
+      "id": "first_shore_to_lantern_cove_direct",
+      "intended_traversal": "human_level_0",
+      "interception_roles": [
+        "shallows_wild_off_safe_line"
+      ],
+      "main_path": false,
+      "measured_surface_polyline_m": 99.102,
+      "polyline": [
+        [
+          -161.911,
+          0.0,
+          78.643
+        ],
+        [
+          -251.054,
+          0.0,
+          121.941
+        ]
+      ],
+      "radial_shore_gap_m": 99.102,
+      "required_departure_flag": "",
+      "required_equipment": [],
+      "safe_channel_combat_policy": "Any interception requires authored arena and traversal resume evidence.",
+      "to_anchor": "first_shore_to_lantern_cove_arrival",
+      "to_island": "lantern_cove"
+    },
+    {
+      "_comment": "Actual shore-to-shore polyline; conservative against later wading threshold. No dock lengths or extra distance invented. Return-current help is not used for outbound safety.",
+      "center_distance_m": 435.66,
+      "choice": "sheltered",
+      "current_id": "reedhaven_to_gull_rest_sheltered_current",
+      "edge_id": "reedhaven_to_gull_rest",
+      "from_anchor": "reedhaven_to_gull_rest_departure",
+      "from_island": "reedhaven",
+      "id": "reedhaven_to_gull_rest_sheltered",
+      "intended_traversal": "prepared_human_or_swim_mount",
+      "interception_roles": [
+        "shallows_wild_off_safe_line"
+      ],
+      "main_path": false,
+      "measured_surface_polyline_m": 157.64,
+      "polyline": [
+        [
+          -28.922,
+          0.0,
+          617.661
+        ],
+        [
+          -53.718,
+          0.0,
+          692.479
+        ],
+        [
+          -53.932,
+          0.0,
+          771.299
+        ]
+      ],
+      "radial_shore_gap_m": 155.66,
+      "required_departure_flag": "",
+      "required_equipment": [],
+      "safe_channel_combat_policy": "Any interception requires authored arena and traversal resume evidence.",
+      "to_anchor": "reedhaven_to_gull_rest_arrival",
+      "to_island": "gull_rest"
+    },
+    {
+      "_comment": "Actual shore-to-shore polyline; conservative against later wading threshold. No dock lengths or extra distance invented. Return-current help is not used for outbound safety.",
+      "center_distance_m": 435.66,
+      "choice": "direct",
+      "current_id": "reedhaven_to_gull_rest_direct_current",
+      "edge_id": "reedhaven_to_gull_rest",
+      "from_anchor": "reedhaven_to_gull_rest_departure",
+      "from_island": "reedhaven",
+      "id": "reedhaven_to_gull_rest_direct",
+      "intended_traversal": "prepared_human_or_swim_mount",
+      "interception_roles": [
+        "shallows_wild_off_safe_line"
+      ],
+      "main_path": false,
+      "measured_surface_polyline_m": 155.66,
+      "polyline": [
+        [
+          -28.922,
+          0.0,
+          617.661
+        ],
+        [
+          -53.932,
+          0.0,
+          771.299
+        ]
+      ],
+      "radial_shore_gap_m": 155.66,
+      "required_departure_flag": "",
+      "required_equipment": [],
+      "safe_channel_combat_policy": "Any interception requires authored arena and traversal resume evidence.",
+      "to_anchor": "reedhaven_to_gull_rest_arrival",
+      "to_island": "gull_rest"
+    },
+    {
+      "_comment": "Actual shore-to-shore polyline; conservative against later wading threshold. No dock lengths or extra distance invented. Return-current help is not used for outbound safety.",
+      "center_distance_m": 1052.331,
+      "choice": "sheltered",
+      "current_id": "salt_crown_to_drowned_garden_sheltered_current",
+      "edge_id": "salt_crown_to_drowned_garden",
+      "from_anchor": "salt_crown_to_drowned_garden_departure",
+      "from_island": "salt_crown",
+      "id": "salt_crown_to_drowned_garden_sheltered",
+      "intended_traversal": "swim_mount",
+      "interception_roles": [
+        "amphibious_surface_patrol",
+        "current_edge_wild"
+      ],
+      "main_path": false,
+      "measured_surface_polyline_m": 672.057,
+      "polyline": [
+        [
+          409.424,
+          0.0,
+          2292.705
+        ],
+        [
+          732.46,
+          0.0,
+          2385.241
+        ],
+        [
+          1040.354,
+          0.0,
+          2250.643
+        ]
+      ],
+      "radial_shore_gap_m": 632.331,
+      "required_departure_flag": "",
+      "required_equipment": [
+        "swim_saddle"
+      ],
+      "required_personal_flags": [
+        "water_swim_stone_earned"
+      ],
+      "requires_compatible_active_swim_mount": true,
+      "safe_channel_combat_policy": "Any interception requires authored arena and traversal resume evidence.",
+      "to_anchor": "salt_crown_to_drowned_garden_arrival",
+      "to_island": "drowned_garden"
+    },
+    {
+      "_comment": "Actual shore-to-shore polyline; conservative against later wading threshold. No dock lengths or extra distance invented. Return-current help is not used for outbound safety.",
+      "center_distance_m": 1052.331,
+      "choice": "direct",
+      "current_id": "salt_crown_to_drowned_garden_direct_current",
+      "edge_id": "salt_crown_to_drowned_garden",
+      "from_anchor": "salt_crown_to_drowned_garden_departure",
+      "from_island": "salt_crown",
+      "id": "salt_crown_to_drowned_garden_direct",
+      "intended_traversal": "swim_mount",
+      "interception_roles": [
+        "amphibious_surface_patrol",
+        "current_edge_wild"
+      ],
+      "main_path": false,
+      "measured_surface_polyline_m": 632.331,
+      "polyline": [
+        [
+          409.424,
+          0.0,
+          2292.705
+        ],
+        [
+          1040.354,
+          0.0,
+          2250.643
+        ]
+      ],
+      "radial_shore_gap_m": 632.331,
+      "required_departure_flag": "",
+      "required_equipment": [
+        "swim_saddle"
+      ],
+      "required_personal_flags": [
+        "water_swim_stone_earned"
+      ],
+      "requires_compatible_active_swim_mount": true,
+      "safe_channel_combat_policy": "Any interception requires authored arena and traversal resume evidence.",
+      "to_anchor": "salt_crown_to_drowned_garden_arrival",
+      "to_island": "drowned_garden"
+    },
+    {
+      "_comment": "Actual shore-to-shore polyline; conservative against later wading threshold. No dock lengths or extra distance invented. Return-current help is not used for outbound safety.",
+      "center_distance_m": 735.935,
+      "choice": "sheltered",
+      "current_id": "sluice_isle_to_deep_watch_sheltered_current",
+      "edge_id": "sluice_isle_to_deep_watch",
+      "from_anchor": "sluice_isle_to_deep_watch_departure",
+      "from_island": "sluice_isle",
+      "id": "sluice_isle_to_deep_watch_sheltered",
+      "intended_traversal": "swim_mount",
+      "interception_roles": [
+        "amphibious_surface_patrol",
+        "current_edge_wild"
+      ],
+      "main_path": false,
+      "measured_surface_polyline_m": 314.527,
+      "polyline": [
+        [
+          1047.028,
+          0.0,
+          3172.791
+        ],
+        [
+          1108.472,
+          0.0,
+          3317.554
+        ],
+        [
+          1248.089,
+          0.0,
+          3389.936
+        ]
+      ],
+      "radial_shore_gap_m": 295.935,
+      "required_departure_flag": "",
+      "required_equipment": [
+        "swim_saddle"
+      ],
+      "required_personal_flags": [
+        "water_swim_stone_earned"
+      ],
+      "requires_compatible_active_swim_mount": true,
+      "safe_channel_combat_policy": "Any interception requires authored arena and traversal resume evidence.",
+      "to_anchor": "sluice_isle_to_deep_watch_arrival",
+      "to_island": "deep_watch"
+    },
+    {
+      "_comment": "Actual shore-to-shore polyline; conservative against later wading threshold. No dock lengths or extra distance invented. Return-current help is not used for outbound safety.",
+      "center_distance_m": 735.935,
+      "choice": "direct",
+      "current_id": "sluice_isle_to_deep_watch_direct_current",
+      "edge_id": "sluice_isle_to_deep_watch",
+      "from_anchor": "sluice_isle_to_deep_watch_departure",
+      "from_island": "sluice_isle",
+      "id": "sluice_isle_to_deep_watch_direct",
+      "intended_traversal": "swim_mount",
+      "interception_roles": [
+        "amphibious_surface_patrol",
+        "current_edge_wild"
+      ],
+      "main_path": false,
+      "measured_surface_polyline_m": 295.935,
+      "polyline": [
+        [
+          1047.028,
+          0.0,
+          3172.791
+        ],
+        [
+          1248.089,
+          0.0,
+          3389.936
+        ]
+      ],
+      "radial_shore_gap_m": 295.935,
+      "required_departure_flag": "",
+      "required_equipment": [
+        "swim_saddle"
+      ],
+      "required_personal_flags": [
+        "water_swim_stone_earned"
+      ],
+      "requires_compatible_active_swim_mount": true,
+      "safe_channel_combat_policy": "Any interception requires authored arena and traversal resume evidence.",
+      "to_anchor": "sluice_isle_to_deep_watch_arrival",
+      "to_island": "deep_watch"
+    }
+  ],
+  "world_bounds": {
+    "max_x": 1900.0,
+    "max_y": 650.0,
+    "max_z": 4900.0,
+    "min_x": -1200.0,
+    "min_y": -80.0,
+    "min_z": -500.0
+  }
+}

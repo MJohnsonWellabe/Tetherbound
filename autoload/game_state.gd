@@ -1750,6 +1750,9 @@ func apply_loaded_player_pose() -> bool:
 		# that has never been followed before; a load is exactly that case
 		# again, whatever the rig was following last.
 		rig.global_position = player.global_position
+	var swimming := player.get_node_or_null(^"SwimController")
+	if swimming != null and current_realm == "water" and saved_player_pose.get("aquatic") is Dictionary:
+		swimming.call("restore_save_data", saved_player_pose.aquatic)
 	return true
 
 
@@ -1870,6 +1873,9 @@ func recipe_known(id: String) -> bool:
 	var recipe: Dictionary = items.recipe(id)
 	if recipe.is_empty():
 		return false
+	for personal_flag: String in recipe.get("requires_personal_flags", []):
+		if local == null or local.flags == null or not local.flags.has(personal_flag):
+			return false
 	var flag := str(items.recipe_unlock_flag(id))
 	if flag == "":
 		return true

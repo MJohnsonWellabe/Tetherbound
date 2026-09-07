@@ -298,6 +298,19 @@ func test_every_unlock_flag_named_by_a_recipe_is_actually_written_by_something()
 	const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
 	const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 	var written: Array[String] = []
+	# Water's runtime arrival and guarded teaching own these personal flags.
+	# Exercise the production writer, including the Stone refusal, rather than
+	# whitelisting strings which could survive after a writer disappeared.
+	const WATER := preload("res://scripts/world/water_chapter.gd")
+	var water_progress: RefCounted = PROGRESSION_STATE.new()
+	assert_false(WATER.apply_personal_event(water_progress, "arrival", "meadows"))
+	assert_false(WATER.apply_personal_event(water_progress, "saddle_taught", "water"))
+	assert_true(WATER.apply_personal_event(water_progress, "arrival", "water"))
+	water_progress.set_flag("water_swim_stone_earned")
+	assert_true(WATER.apply_personal_event(water_progress, "saddle_taught", "water"))
+	for earned: String in water_progress.all_set():
+		if earned != "water_swim_stone_earned":
+			written.append(earned)
 	# Cloudreach arrival is a real world event, not a conversation reward.
 	# Exercise the chapter transition instead of accepting arbitrary flag text.
 	const CLOUDREACH := preload("res://scripts/world/cloudreach_chapter.gd")

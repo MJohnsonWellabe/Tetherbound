@@ -80,6 +80,7 @@ extends RefCounted
 ## encounter host in Wave 4, not through this file.
 
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
+const SATCHEL_RULES := preload("res://scripts/world/death_satchel_rules.gd")
 
 ## The authoritative world this ledger writes. On a client, `ledger_rpc.gd`
 ## still builds a ledger over the local replica, but only ever calls `apply()`
@@ -120,6 +121,18 @@ func commit(intent: Dictionary, peer_id: int = 1) -> Dictionary:
 		return _refuse(kind, peer_id, "malformed", "That action did not say which world it belongs to.")
 
 	match kind:
+		"death_satchel_create", "death_satchel_transfer":
+			return _death_satchel_intent(intent, peer_id, realm)
+		"water_dock_action":
+			var result: Dictionary = preload("res://scripts/world/water_dock_rules.gd").evaluate(intent, intent.get("_water_actor", {}), world.flags)
+			if not bool(result.ok):
+				return _refuse(kind, peer_id, str(result.code), str(result.reason))
+			return _commit(result.ops, kind, peer_id, realm)
+		"water_personal_pickup":
+			var result: Dictionary = preload("res://scripts/world/water_personal_pickup.gd").evaluate(intent, intent.get("_water_actor", {}), world.flags)
+			if not bool(result.ok):
+				return _refuse(kind, peer_id, str(result.code), str(result.reason))
+			return _commit(result.ops, kind, peer_id, realm)
 		"claim_pickup":
 			return _claim_pickup(intent, peer_id, realm)
 		"harvest":
@@ -155,8 +168,8 @@ func apply(delta: Dictionary) -> int:
 		if typeof(raw) != TYPE_DICTIONARY:
 			continue
 		var op := raw as Dictionary
-		if str(op.get("op", "")) == "storage_set":
-			_storage_revisions[str(op.get("container", ""))] = int(op.get("revision", 0))
+		if str(op.get("op", "")) in ["storage_set", "satchel_set"]:
+			_storage_revisions[str(op.get("container", ""))] = maxi(int(_storage_revisions.get(str(op.get("container", "")), 0)), int(op.get("revision", 0)))
 		var txn := str(op.get("txn_id", ""))
 		if not txn.is_empty():
 			_seen_txns[txn] = true
@@ -168,7 +181,73 @@ func apply(delta: Dictionary) -> int:
 
 ## The revision a caller must quote in the next `storage_txn` for `container`.
 func storage_revision(container: String) -> int:
+	if container.begins_with("satchel:") and world != null:
+		var index: int = world.call("death_satchel_index_of", container.trim_prefix("satchel:"))
+		if index >= 0:
+			return maxi(int(world.get("death_satchels")[index].get("revision", 0)), int(_storage_revisions.get(container, 0)))
 	return int(_storage_revisions.get(container, 0))
+
+
+func _death_satchel_intent(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
+	var kind := str(intent.kind)
+	var actor: Dictionary = intent.get("_satchel_actor", {})
+	var txn := str(intent.get("txn_id", ""))
+	if txn.is_empty() or _seen_txns.has(txn):
+		return _refuse(kind, peer_id, "duplicate", "That satchel move was already recorded.")
+	var at: Variant = actor.get("position")
+	if str(actor.get("realm", "")) != realm or int(actor.get("peer", 0)) != peer_id or not at is Vector3 or not at.is_finite():
+		return _refuse(kind, peer_id, "wrong_actor", "Your trainer is not ready in this realm.")
+	var character := str(actor.get("character_id", ""))
+	if kind == "death_satchel_create":
+		if not SATCHEL_RULES.valid_slots(intent.get("state")):
+			return _refuse(kind, peer_id, "malformed", "The dropped stacks could not be checked.")
+		var uid := "death_" + txn
+		if world.call("death_satchel_index_of", uid) >= 0:
+			return _refuse(kind, peer_id, "duplicate", "That death satchel already exists.")
+		# The requested drop point may lift a drowned bag to the surface, but
+		# cannot move it to a different island from the host's trainer proxy.
+		var raw: Variant = intent.get("position")
+		if raw is Array and raw.size() == 3:
+			for value: Variant in raw:
+				if not (value is float or value is int) or not is_finite(float(value)):
+					return _refuse(kind, peer_id, "malformed", "The dropped position could not be checked.")
+			var requested := Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
+			if requested.is_finite() and requested.distance_to(at) <= 5.0:
+				at = requested
+		return _commit([{"op": "satchel_add", "scope": "world", "realm": realm,
+			"uid": uid, "owner": character, "position": [at.x, at.y, at.z],
+			"state": intent.state.duplicate(true), "txn_id": txn}], kind, peer_id, realm)
+	var uid := str(intent.get("uid", ""))
+	var index: int = world.call("death_satchel_index_of", uid)
+	if index < 0:
+		return _refuse(kind, peer_id, "unknown_satchel", "That satchel has not reached this world yet.")
+	var record: Dictionary = world.get("death_satchels")[index]
+	if (record.get("transactions", []) as Array).has(txn):
+		return _refuse(kind, peer_id, "duplicate", "That satchel move was already recorded.")
+	if str(record.get("realm", "meadows")) != realm or (not str(record.get("owner", "")).is_empty() and str(record.owner) != character):
+		return _refuse(kind, peer_id, "not_owner", "Only this satchel's owner can move its contents.")
+	var raw: Array = record.position
+	if at.distance_to(Vector3(float(raw[0]), float(raw[1]), float(raw[2]))) > 3.6:
+		return _refuse(kind, peer_id, "too_far", "Move closer to your satchel.")
+	var container := "satchel:" + uid
+	var current := storage_revision(container)
+	for key: String in ["expected_revision", "count"]:
+		var value: Variant = intent.get(key)
+		if not (value is float or value is int) or not is_finite(float(value)) or float(value) != floorf(float(value)) or float(value) < 0 or float(value) > 2147483647:
+			return _refuse(kind, peer_id, "malformed", "That satchel move could not be checked.")
+	if int(intent.get("expected_revision", -1)) != current:
+		var refusal := _refuse(kind, peer_id, "stale_revision", "The satchel changed; try again.")
+		refusal.container = container
+		refusal.revision = current
+		return refusal
+	if not SATCHEL_RULES.valid_slots(intent.get("personal")):
+		return _refuse(kind, peer_id, "malformed", "Your carried stacks could not be checked.")
+	var preview := SATCHEL_RULES.preview(record.get("state", []), intent.personal, str(intent.get("direction", "")), str(intent.get("item", "")), int(intent.get("count", 0)))
+	if preview.is_empty():
+		return _refuse(kind, peer_id, "no_room", "Those items will not fit, or are no longer there.")
+	return _commit([{"op": "satchel_set", "scope": "world", "realm": realm,
+		"uid": uid, "container": container, "state": preview.state,
+		"revision": current + 1, "txn_id": txn}], kind, peer_id, realm)
 
 
 ## Take the host's word for a container's revision, from a `stale_revision`

@@ -25,6 +25,7 @@ const ROOTSTONE_RECIPES_PATH := "res://data/recipes/recipes_rootstone.json"
 ## Meadows economy (spec §10), so this is the last of these constants.
 const IRONWOOD_RECIPES_PATH := "res://data/recipes/recipes_ironwood.json"
 const CLOUDREACH_RECIPES_PATH := "res://data/recipes/recipes_cloudreach.json"
+const WATER_CRAFTING_PATH := "res://data/config/water_crafting.json"
 
 ## Fallback stack size for an id with no definition. One, so an unknown item
 ## cannot merge with anything and quietly lose itself.
@@ -54,6 +55,12 @@ func _init(
 		var tier_recipes: Dictionary = _read(tier_path).get("recipes", {})
 		for id: Variant in tier_recipes:
 			_recipes[id] = tier_recipes[id]
+	if items_path == ITEMS_PATH and recipes_path == RECIPES_PATH:
+		var water := _read(WATER_CRAFTING_PATH)
+		for id: String in water.get("item_registration_proposals", {}):
+			_items[id] = water.item_registration_proposals[id]
+		for id: String in water.get("recipes", {}):
+			_recipes[id] = water.recipes[id]
 
 
 func _read(path: String) -> Dictionary:

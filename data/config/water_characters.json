@@ -1,0 +1,1306 @@
+{
+  "schema_version": 1,
+  "realm_id": "water",
+  "status": "phase0_draft_not_runtime_spawned",
+  "_comment": "18 named NPC roles and 24 trainer encounters. Tovin Venn Nerissa share NPC entities rather than duplicate bodies. All placements are island-local grounding inputs. Production cast reused; no player portrait.",
+  "_portrait_source": "Profile-to-portrait identities match installed Cloudreach NPC runtime and production art profiles. Source filenames do not rename Water speakers.",
+  "_comment_combat": "12 critical and 12 optional; fixed regional progression 43 to 55 with adjacent critical ace steps at most 4. Installed Air-type Galecrest and Water-type Brooktail intentionally vary early optional counterplay; no starter injection.",
+  "dialogue_event_guards": [
+    {
+      "requires_flags": [],
+      "conversation": "water_pell_lesson_briefing",
+      "purpose": "Acknowledges advice only; actual inlet crossing completes the lesson objective.",
+      "effect": "water:water_swim_lesson_briefed"
+    },
+    {
+      "requires_personal_flags": [
+        "water_swim_stone_earned"
+      ],
+      "conversation": "water_iona_recipe",
+      "purpose": "Teaching is a conversation action. Recipe claim remains personal and idempotent; no Alpha or inventory grant.",
+      "effect": "water:water_swim_saddle_recipe_taught"
+    },
+    {
+      "conversation": "water_edda_guardian_offer",
+      "requires_world_flags": [
+        "water_guardian_freed"
+      ],
+      "purpose": "Opens the existing five-slot ceremony. Does not accept, release, replace or grant a creature by itself.",
+      "effect": "water:water_guardian_offer_requested"
+    }
+  ],
+  "npcs": [
+    {
+      "id": "water_mara",
+      "display_name": "Dockkeeper Mara",
+      "island_id": "first_shore",
+      "role": "arrival_dock",
+      "body_profile": "trader",
+      "model": "res://assets/characters/trader/trader_lod0.glb",
+      "portrait": "res://assets/ui/portraits/corin.png",
+      "portrait_mode": "installed_body_render",
+      "island_local_offset": [
+        -5.0,
+        0.0,
+        154.0
+      ],
+      "greeting": "water_mara_pre",
+      "greeting_when": [
+        {
+          "if_flag": "water_currents_restored",
+          "conversation": "water_mara_post"
+        }
+      ],
+      "_comment_placement": "Offset is island-local metres and must be grounded and composed by world integration; these are not measured terrain positions."
+    },
+    {
+      "id": "water_pell",
+      "display_name": "Swimmer Pell",
+      "island_id": "first_shore",
+      "role": "swimming_lesson",
+      "body_profile": "young_trainer",
+      "model": "res://assets/characters/young_trainer/young_trainer_lod0.glb",
+      "portrait": "res://assets/ui/portraits/bryn.png",
+      "portrait_mode": "installed_body_render",
+      "island_local_offset": [
+        53.368,
+        0.0,
+        151.502
+      ],
+      "greeting": "water_pell_pre",
+      "greeting_when": [
+        {
+          "if_flag": "water_currents_restored",
+          "conversation": "water_pell_post"
+        }
+      ],
+      "_comment_placement": "Offset is island-local metres and must be grounded and composed by world integration; these are not measured terrain positions."
+    },
+    {
+      "id": "water_elin",
+      "display_name": "Campkeeper Elin",
+      "island_id": "first_shore",
+      "role": "camp_recovery",
+      "body_profile": "innkeeper",
+      "model": "res://assets/characters/innkeeper/innkeeper_lod0.glb",
+      "portrait": "res://assets/ui/portraits/wilhelm.png",
+      "portrait_mode": "installed_body_render",
+      "island_local_offset": [
+        11.0,
+        0.0,
+        141.0
+      ],
+      "greeting": "water_elin_pre",
+      "greeting_when": [
+        {
+          "if_flag": "water_currents_restored",
+          "conversation": "water_elin_post"
+        }
+      ],
+      "_comment_placement": "Offset is island-local metres and must be grounded and composed by world integration; these are not measured terrain positions."
+    },
+    {
+      "id": "water_rowan",
+      "display_name": "Pierwright Rowan",
+      "island_id": "reedhaven",
+      "role": "dock_repair",
+      "body_profile": "trader",
+      "model": "res://assets/characters/trader/trader_lod0.glb",
+      "portrait": "res://assets/ui/portraits/corin.png",
+      "portrait_mode": "installed_body_render",
+      "island_local_offset": [
+        -9.0,
+        0.0,
+        23.0
+      ],
+      "greeting": "water_rowan_pre",
+      "greeting_when": [
+        {
+          "if_flag": "water_currents_restored",
+          "conversation": "water_rowan_post"
+        }
+      ],
+      "_comment_placement": "Offset is island-local metres and must be grounded and composed by world integration; these are not measured terrain positions."
+    },
+    {
+      "id": "water_sella",
+      "display_name": "Caretaker Sella",
+      "island_id": "reedhaven",
+      "role": "ecology_side_chain",
+      "body_profile": "creature_caretaker",
+      "model": "res://assets/characters/creature_caretaker/creature_caretaker_lod0.glb",
+      "portrait": "res://assets/ui/portraits/fenn.png",
+      "portrait_mode": "installed_body_render",
+      "island_local_offset": [
+        0.0,
+        0.0,
+        12.0
+      ],
+      "greeting": "water_sella_pre",
+      "greeting_when": [
+        {
+          "if_flag": "water_currents_restored",
+          "conversation": "water_sella_post"
+        }
+      ],
+      "_comment_placement": "Offset is island-local metres and must be grounded and composed by world integration; these are not measured terrain positions."
+    },
+    {
+      "id": "water_tovin",
+      "display_name": "Keeper Tovin",
+      "island_id": "brine_steps",
+      "role": "trainer_dock_test",
+      "body_profile": "wandering_trainer",
+      "model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "portrait_mode": "installed_body_render",
+      "island_local_offset": [
+        9.0,
+        0.0,
+        23.0
+      ],
+      "greeting": "water_tovin_pre",
+      "greeting_when": [
+        {
+          "if_flag": "water_currents_restored",
+          "conversation": "water_tovin_post"
+        }
+      ],
+      "_comment_placement": "Offset is island-local metres and must be grounded and composed by world integration; these are not measured terrain positions."
+    },
+    {
+      "id": "water_adair",
+      "display_name": "Surveyor Adair",
+      "island_id": "brine_steps",
+      "role": "current_mapping",
+      "body_profile": "field_researcher",
+      "model": "res://assets/characters/field_researcher/field_researcher_lod0.glb",
+      "portrait": "res://assets/ui/portraits/maren.png",
+      "portrait_mode": "installed_body_render",
+      "island_local_offset": [
+        -9.0,
+        0.0,
+        12.0
+      ],
+      "greeting": "water_adair_pre",
+      "greeting_when": [
+        {
+          "if_flag": "water_currents_restored",
+          "conversation": "water_adair_post"
+        }
+      ],
+      "_comment_placement": "Offset is island-local metres and must be grounded and composed by world integration; these are not measured terrain positions."
+    },
+    {
+      "id": "water_nalia",
+      "display_name": "Resident Nalia",
+      "island_id": "shellwatch",
+      "role": "resident_rescue",
+      "body_profile": "courier",
+      "model": "res://assets/characters/courier/courier_lod0.glb",
+      "portrait": "res://assets/ui/portraits/lark.png",
+      "portrait_mode": "installed_body_render",
+      "island_local_offset": [
+        0.0,
+        0.0,
+        23.0
+      ],
+      "greeting": "water_nalia_pre",
+      "greeting_when": [
+        {
+          "if_flag": "water_currents_restored",
+          "conversation": "water_nalia_post"
+        }
+      ],
+      "_comment_placement": "Offset is island-local metres and must be grounded and composed by world integration; these are not measured terrain positions."
+    },
+    {
+      "id": "water_bren",
+      "display_name": "Pump Tender Bren",
+      "island_id": "shellwatch",
+      "role": "pump_investigation",
+      "body_profile": "former_tether_member",
+      "model": "res://assets/characters/former_tether_member/former_tether_member_lod0.glb",
+      "portrait": "res://assets/ui/portraits/ren.png",
+      "portrait_mode": "installed_body_render",
+      "island_local_offset": [
+        9.0,
+        0.0,
+        12.0
+      ],
+      "greeting": "water_bren_pre",
+      "greeting_when": [
+        {
+          "if_flag": "water_currents_restored",
+          "conversation": "water_bren_post"
+        }
+      ],
+      "_comment_placement": "Offset is island-local metres and must be grounded and composed by world integration; these are not measured terrain positions."
+    },
+    {
+      "id": "water_iona",
+      "display_name": "Researcher Iona",
+      "island_id": "tidal_cradle",
+      "role": "alpha_and_saddle",
+      "body_profile": "field_researcher",
+      "model": "res://assets/characters/field_researcher/field_researcher_lod0.glb",
+      "portrait": "res://assets/ui/portraits/maren.png",
+      "portrait_mode": "installed_body_render",
+      "island_local_offset": [
+        -9.0,
+        0.0,
+        23.0
+      ],
+      "greeting": "water_iona_pre",
+      "greeting_when": [
+        {
+          "if_flag": "water_currents_restored",
+          "conversation": "water_iona_post"
+        }
+      ],
+      "_comment_placement": "Offset is island-local metres and must be grounded and composed by world integration; these are not measured terrain positions."
+    },
+    {
+      "id": "water_otto",
+      "display_name": "Tracker Otto",
+      "island_id": "tidal_cradle",
+      "role": "alternate_mount_route",
+      "body_profile": "wandering_trainer",
+      "model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "portrait_mode": "installed_body_render",
+      "island_local_offset": [
+        0.0,
+        0.0,
+        12.0
+      ],
+      "greeting": "water_otto_pre",
+      "greeting_when": [
+        {
+          "if_flag": "water_currents_restored",
+          "conversation": "water_otto_post"
+        }
+      ],
+      "_comment_placement": "Offset is island-local metres and must be grounded and composed by world integration; these are not measured terrain positions."
+    },
+    {
+      "id": "water_edda",
+      "display_name": "Shrinekeeper Edda",
+      "island_id": "salt_crown",
+      "role": "relic_and_ceremony",
+      "body_profile": "local_historian",
+      "model": "res://assets/characters/local_historian/local_historian_lod0.glb",
+      "portrait": "res://assets/ui/portraits/cloudreach_aila_clean.png",
+      "portrait_mode": "installed_body_render",
+      "island_local_offset": [
+        9.0,
+        0.0,
+        23.0
+      ],
+      "greeting": "water_edda_pre",
+      "greeting_when": [
+        {
+          "if_flag": "water_currents_restored",
+          "conversation": "water_edda_post"
+        }
+      ],
+      "_comment_placement": "Offset is island-local metres and must be grounded and composed by world integration; these are not measured terrain positions."
+    },
+    {
+      "id": "water_corin",
+      "display_name": "Defector Corin",
+      "island_id": "salt_crown",
+      "role": "tether_escalation",
+      "body_profile": "former_tether_member",
+      "model": "res://assets/characters/former_tether_member/former_tether_member_lod0.glb",
+      "portrait": "res://assets/ui/portraits/ren.png",
+      "portrait_mode": "installed_body_render",
+      "island_local_offset": [
+        -9.0,
+        0.0,
+        12.0
+      ],
+      "greeting": "water_corin_pre",
+      "greeting_when": [
+        {
+          "if_flag": "water_currents_restored",
+          "conversation": "water_corin_post"
+        }
+      ],
+      "_comment_placement": "Offset is island-local metres and must be grounded and composed by world integration; these are not measured terrain positions."
+    },
+    {
+      "id": "water_orsen",
+      "display_name": "Channel Keeper Orsen",
+      "island_id": "sluice_isle",
+      "role": "sluice_controls",
+      "body_profile": "wandering_trainer",
+      "model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "portrait_mode": "installed_body_render",
+      "island_local_offset": [
+        0.0,
+        0.0,
+        23.0
+      ],
+      "greeting": "water_orsen_pre",
+      "greeting_when": [
+        {
+          "if_flag": "water_currents_restored",
+          "conversation": "water_orsen_post"
+        }
+      ],
+      "_comment_placement": "Offset is island-local metres and must be grounded and composed by world integration; these are not measured terrain positions."
+    },
+    {
+      "id": "water_jessa",
+      "display_name": "Courier Jessa",
+      "island_id": "sluice_isle",
+      "role": "last_crossing_preparation",
+      "body_profile": "courier",
+      "model": "res://assets/characters/courier/courier_lod0.glb",
+      "portrait": "res://assets/ui/portraits/lark.png",
+      "portrait_mode": "installed_body_render",
+      "island_local_offset": [
+        9.0,
+        0.0,
+        12.0
+      ],
+      "greeting": "water_jessa_pre",
+      "greeting_when": [
+        {
+          "if_flag": "water_currents_restored",
+          "conversation": "water_jessa_post"
+        }
+      ],
+      "_comment_placement": "Offset is island-local metres and must be grounded and composed by world integration; these are not measured terrain positions."
+    },
+    {
+      "id": "water_halen",
+      "display_name": "Campkeeper Halen",
+      "island_id": "veilfall",
+      "role": "lastlight_recovery",
+      "body_profile": "innkeeper",
+      "model": "res://assets/characters/innkeeper/innkeeper_lod0.glb",
+      "portrait": "res://assets/ui/portraits/wilhelm.png",
+      "portrait_mode": "installed_body_render",
+      "island_local_offset": [
+        -9.0,
+        0.0,
+        23.0
+      ],
+      "greeting": "water_halen_pre",
+      "greeting_when": [
+        {
+          "if_flag": "water_currents_restored",
+          "conversation": "water_halen_post"
+        }
+      ],
+      "_comment_placement": "Offset is island-local metres and must be grounded and composed by world integration; these are not measured terrain positions."
+    },
+    {
+      "id": "water_venn",
+      "display_name": "Officer Venn",
+      "island_id": "veilfall",
+      "role": "waterfall_approach",
+      "body_profile": "officer_b",
+      "model": "res://assets/characters/officer_b/officer_b_lod0.glb",
+      "portrait": "res://assets/ui/portraits/officer_b.png",
+      "portrait_mode": "installed_body_render",
+      "island_local_offset": [
+        0.0,
+        0.0,
+        12.0
+      ],
+      "greeting": "water_venn_pre",
+      "greeting_when": [
+        {
+          "if_flag": "water_currents_restored",
+          "conversation": "water_venn_post"
+        }
+      ],
+      "_comment_placement": "Offset is island-local metres and must be grounded and composed by world integration; these are not measured terrain positions."
+    },
+    {
+      "id": "water_nerissa",
+      "display_name": "Captain Nerissa",
+      "island_id": "veilfall",
+      "role": "heart_chamber_finale",
+      "body_profile": "captain_b",
+      "model": "res://assets/characters/captain_b/captain_b_lod0.glb",
+      "portrait": "res://assets/ui/portraits/captain_b.png",
+      "portrait_mode": "installed_body_render",
+      "island_local_offset": [
+        9.0,
+        0.0,
+        23.0
+      ],
+      "greeting": "water_nerissa_pre",
+      "greeting_when": [
+        {
+          "if_flag": "water_currents_restored",
+          "conversation": "water_nerissa_post"
+        }
+      ],
+      "_comment_placement": "Offset is island-local metres and must be grounded and composed by world integration; these are not measured terrain positions."
+    }
+  ],
+  "trainers": [
+    {
+      "id": "water_trainer_pell_trial",
+      "display_name": "Pell",
+      "npc_entity_id": "water_trainer_pell_trial",
+      "island_id": "first_shore",
+      "island_local_offset": [
+        -18.0,
+        0.0,
+        -20.0
+      ],
+      "critical": false,
+      "ace_level": 43,
+      "rank": "local",
+      "body_profile": "young_trainer",
+      "model": "res://assets/characters/young_trainer/young_trainer_lod0.glb",
+      "portrait": "res://assets/ui/portraits/bryn.png",
+      "combat_profile": "CURRENT",
+      "team": [
+        {
+          "trainer_owned": true,
+          "species": "torrentoad",
+          "level": 43
+        },
+        {
+          "trainer_owned": true,
+          "species": "mosshell",
+          "level": 43
+        }
+      ],
+      "intro_conversation": "water_trainer_pell_trial_intro",
+      "win_conversation": "water_trainer_pell_trial_win",
+      "lose_conversation": "water_trainer_pell_trial_lose",
+      "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
+    },
+    {
+      "id": "water_trainer_fen",
+      "display_name": "Fen",
+      "npc_entity_id": "water_trainer_fen",
+      "island_id": "lantern_cove",
+      "island_local_offset": [
+        -6.0,
+        0.0,
+        -30.0
+      ],
+      "critical": false,
+      "ace_level": 44,
+      "rank": "local",
+      "body_profile": "wandering_trainer",
+      "model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "combat_profile": "DIVER",
+      "team": [
+        {
+          "trainer_owned": true,
+          "species": "riverdrake",
+          "level": 44
+        },
+        {
+          "trainer_owned": true,
+          "species": "brooktail",
+          "level": 44
+        }
+      ],
+      "intro_conversation": "water_trainer_fen_intro",
+      "win_conversation": "water_trainer_fen_win",
+      "lose_conversation": "water_trainer_fen_lose",
+      "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
+    },
+    {
+      "id": "water_trainer_lysa",
+      "display_name": "Lysa",
+      "npc_entity_id": "water_trainer_lysa",
+      "island_id": "reedhaven",
+      "island_local_offset": [
+        6.0,
+        0.0,
+        -40.0
+      ],
+      "critical": true,
+      "ace_level": 45,
+      "rank": "grunt",
+      "body_profile": "grunt_a",
+      "model": "res://assets/characters/grunt_a/grunt_a_lod0.glb",
+      "portrait": "res://assets/ui/portraits/grunt_a.png",
+      "combat_profile": "WALL",
+      "team": [
+        {
+          "trainer_owned": true,
+          "species": "cragclaw",
+          "level": 45
+        },
+        {
+          "trainer_owned": true,
+          "species": "mirejaw",
+          "level": 45
+        }
+      ],
+      "intro_conversation": "water_trainer_lysa_intro",
+      "win_conversation": "water_trainer_lysa_win",
+      "lose_conversation": "water_trainer_lysa_lose",
+      "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
+    },
+    {
+      "id": "water_trainer_daro",
+      "display_name": "Daro",
+      "npc_entity_id": "water_trainer_daro",
+      "island_id": "reedhaven",
+      "island_local_offset": [
+        18.0,
+        0.0,
+        -20.0
+      ],
+      "critical": false,
+      "ace_level": 45,
+      "rank": "local",
+      "body_profile": "young_trainer",
+      "model": "res://assets/characters/young_trainer/young_trainer_lod0.glb",
+      "portrait": "res://assets/ui/portraits/bryn.png",
+      "combat_profile": "CHARGER",
+      "team": [
+        {
+          "trainer_owned": true,
+          "species": "riptusk",
+          "level": 45
+        },
+        {
+          "trainer_owned": true,
+          "species": "torrentoad",
+          "level": 45
+        }
+      ],
+      "intro_conversation": "water_trainer_daro_intro",
+      "win_conversation": "water_trainer_daro_win",
+      "lose_conversation": "water_trainer_daro_lose",
+      "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
+    },
+    {
+      "id": "water_trainer_tovin",
+      "display_name": "Keeper Tovin",
+      "npc_entity_id": "water_tovin",
+      "island_id": "brine_steps",
+      "island_local_offset": [
+        -18.0,
+        0.0,
+        -30.0
+      ],
+      "critical": true,
+      "ace_level": 46,
+      "rank": "local",
+      "body_profile": "wandering_trainer",
+      "model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "combat_profile": "ACE",
+      "team": [
+        {
+          "trainer_owned": true,
+          "species": "cannonback",
+          "level": 46
+        },
+        {
+          "trainer_owned": true,
+          "species": "riverdrake",
+          "level": 46
+        }
+      ],
+      "intro_conversation": "water_trainer_tovin_intro",
+      "win_conversation": "water_trainer_tovin_win",
+      "lose_conversation": "water_trainer_tovin_lose",
+      "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
+    },
+    {
+      "id": "water_trainer_keir",
+      "display_name": "Keir",
+      "npc_entity_id": "water_trainer_keir",
+      "island_id": "brine_steps",
+      "island_local_offset": [
+        -6.0,
+        0.0,
+        -40.0
+      ],
+      "critical": false,
+      "ace_level": 46,
+      "rank": "local",
+      "body_profile": "wandering_trainer",
+      "model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "combat_profile": "WALL",
+      "team": [
+        {
+          "trainer_owned": true,
+          "species": "mosshell",
+          "level": 46
+        },
+        {
+          "trainer_owned": true,
+          "species": "cragclaw",
+          "level": 46
+        }
+      ],
+      "intro_conversation": "water_trainer_keir_intro",
+      "win_conversation": "water_trainer_keir_win",
+      "lose_conversation": "water_trainer_keir_lose",
+      "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
+    },
+    {
+      "id": "water_trainer_rune",
+      "display_name": "Rune",
+      "npc_entity_id": "water_trainer_rune",
+      "island_id": "gull_rest",
+      "island_local_offset": [
+        6.0,
+        0.0,
+        -20.0
+      ],
+      "critical": false,
+      "ace_level": 47,
+      "rank": "local",
+      "body_profile": "young_trainer",
+      "model": "res://assets/characters/young_trainer/young_trainer_lod0.glb",
+      "portrait": "res://assets/ui/portraits/bryn.png",
+      "combat_profile": "DIVER",
+      "team": [
+        {
+          "trainer_owned": true,
+          "species": "galecrest",
+          "level": 47
+        },
+        {
+          "trainer_owned": true,
+          "species": "sirenseal",
+          "level": 47
+        }
+      ],
+      "intro_conversation": "water_trainer_rune_intro",
+      "win_conversation": "water_trainer_rune_win",
+      "lose_conversation": "water_trainer_rune_lose",
+      "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
+    },
+    {
+      "id": "water_trainer_solm",
+      "display_name": "Solm",
+      "npc_entity_id": "water_trainer_solm",
+      "island_id": "shellwatch",
+      "island_local_offset": [
+        18.0,
+        0.0,
+        -30.0
+      ],
+      "critical": true,
+      "ace_level": 47,
+      "rank": "grunt",
+      "body_profile": "grunt_b",
+      "model": "res://assets/characters/grunt_b/grunt_b_lod0.glb",
+      "portrait": "res://assets/ui/portraits/grunt_b.png",
+      "combat_profile": "CURRENT",
+      "team": [
+        {
+          "trainer_owned": true,
+          "species": "mirejaw",
+          "level": 47
+        },
+        {
+          "trainer_owned": true,
+          "species": "mangrove_monitor",
+          "level": 47
+        }
+      ],
+      "intro_conversation": "water_trainer_solm_intro",
+      "win_conversation": "water_trainer_solm_win",
+      "lose_conversation": "water_trainer_solm_lose",
+      "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
+    },
+    {
+      "id": "water_trainer_irva",
+      "display_name": "Irva",
+      "npc_entity_id": "water_trainer_irva",
+      "island_id": "shellwatch",
+      "island_local_offset": [
+        -18.0,
+        0.0,
+        -40.0
+      ],
+      "critical": true,
+      "ace_level": 48,
+      "rank": "grunt",
+      "body_profile": "grunt_c",
+      "model": "res://assets/characters/grunt_c/grunt_c_lod0.glb",
+      "portrait": "res://assets/ui/portraits/grunt_c.png",
+      "combat_profile": "CHARGER",
+      "team": [
+        {
+          "trainer_owned": true,
+          "species": "riptusk",
+          "level": 48
+        },
+        {
+          "trainer_owned": true,
+          "species": "cannonback",
+          "level": 48
+        }
+      ],
+      "intro_conversation": "water_trainer_irva_intro",
+      "win_conversation": "water_trainer_irva_win",
+      "lose_conversation": "water_trainer_irva_lose",
+      "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
+    },
+    {
+      "id": "water_trainer_nel",
+      "display_name": "Nel",
+      "npc_entity_id": "water_trainer_nel",
+      "island_id": "shellwatch",
+      "island_local_offset": [
+        -6.0,
+        0.0,
+        -20.0
+      ],
+      "critical": false,
+      "ace_level": 47,
+      "rank": "local",
+      "body_profile": "wandering_trainer",
+      "model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "combat_profile": "CURRENT",
+      "team": [
+        {
+          "trainer_owned": true,
+          "species": "torrentoad",
+          "level": 47
+        },
+        {
+          "trainer_owned": true,
+          "species": "sirenseal",
+          "level": 47
+        }
+      ],
+      "intro_conversation": "water_trainer_nel_intro",
+      "win_conversation": "water_trainer_nel_win",
+      "lose_conversation": "water_trainer_nel_lose",
+      "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
+    },
+    {
+      "id": "water_trainer_oswin",
+      "display_name": "Oswin",
+      "npc_entity_id": "water_trainer_oswin",
+      "island_id": "tidal_cradle",
+      "island_local_offset": [
+        6.0,
+        0.0,
+        -30.0
+      ],
+      "critical": true,
+      "ace_level": 48,
+      "rank": "grunt",
+      "body_profile": "grunt_a",
+      "model": "res://assets/characters/grunt_a/grunt_a_lod0.glb",
+      "portrait": "res://assets/ui/portraits/grunt_a.png",
+      "combat_profile": "DIVER",
+      "team": [
+        {
+          "trainer_owned": true,
+          "species": "riverdrake",
+          "level": 48
+        },
+        {
+          "trainer_owned": true,
+          "species": "mirejaw",
+          "level": 48
+        }
+      ],
+      "intro_conversation": "water_trainer_oswin_intro",
+      "win_conversation": "water_trainer_oswin_win",
+      "lose_conversation": "water_trainer_oswin_lose",
+      "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
+    },
+    {
+      "id": "water_trainer_tal",
+      "display_name": "Tal",
+      "npc_entity_id": "water_trainer_tal",
+      "island_id": "tidal_cradle",
+      "island_local_offset": [
+        18.0,
+        0.0,
+        -40.0
+      ],
+      "critical": false,
+      "ace_level": 49,
+      "rank": "local",
+      "body_profile": "wandering_trainer",
+      "model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "combat_profile": "WALL",
+      "team": [
+        {
+          "trainer_owned": true,
+          "species": "mosshell",
+          "level": 49
+        },
+        {
+          "trainer_owned": true,
+          "species": "cannonback",
+          "level": 49
+        }
+      ],
+      "intro_conversation": "water_trainer_tal_intro",
+      "win_conversation": "water_trainer_tal_win",
+      "lose_conversation": "water_trainer_tal_lose",
+      "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
+    },
+    {
+      "id": "water_trainer_sera",
+      "display_name": "Sera",
+      "npc_entity_id": "water_trainer_sera",
+      "island_id": "salt_crown",
+      "island_local_offset": [
+        -18.0,
+        0.0,
+        -20.0
+      ],
+      "critical": true,
+      "ace_level": 50,
+      "rank": "grunt",
+      "body_profile": "grunt_b",
+      "model": "res://assets/characters/grunt_b/grunt_b_lod0.glb",
+      "portrait": "res://assets/ui/portraits/grunt_b.png",
+      "combat_profile": "CURRENT",
+      "team": [
+        {
+          "trainer_owned": true,
+          "species": "mangrove_monitor",
+          "level": 50
+        },
+        {
+          "trainer_owned": true,
+          "species": "riptusk",
+          "level": 50
+        }
+      ],
+      "intro_conversation": "water_trainer_sera_intro",
+      "win_conversation": "water_trainer_sera_win",
+      "lose_conversation": "water_trainer_sera_lose",
+      "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
+    },
+    {
+      "id": "water_trainer_odan",
+      "display_name": "Odan",
+      "npc_entity_id": "water_trainer_odan",
+      "island_id": "salt_crown",
+      "island_local_offset": [
+        -6.0,
+        0.0,
+        -30.0
+      ],
+      "critical": false,
+      "ace_level": 50,
+      "rank": "local",
+      "body_profile": "young_trainer",
+      "model": "res://assets/characters/young_trainer/young_trainer_lod0.glb",
+      "portrait": "res://assets/ui/portraits/bryn.png",
+      "combat_profile": "DIVER",
+      "team": [
+        {
+          "trainer_owned": true,
+          "species": "sirenseal",
+          "level": 50
+        },
+        {
+          "trainer_owned": true,
+          "species": "riverdrake",
+          "level": 50
+        }
+      ],
+      "intro_conversation": "water_trainer_odan_intro",
+      "win_conversation": "water_trainer_odan_win",
+      "lose_conversation": "water_trainer_odan_lose",
+      "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
+    },
+    {
+      "id": "water_trainer_yara",
+      "display_name": "Yara",
+      "npc_entity_id": "water_trainer_yara",
+      "island_id": "drowned_garden",
+      "island_local_offset": [
+        6.0,
+        0.0,
+        -40.0
+      ],
+      "critical": false,
+      "ace_level": 51,
+      "rank": "local",
+      "body_profile": "wandering_trainer",
+      "model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "combat_profile": "ACE",
+      "team": [
+        {
+          "trainer_owned": true,
+          "species": "mosshell",
+          "level": 51
+        },
+        {
+          "trainer_owned": true,
+          "species": "mangrove_monitor",
+          "level": 51
+        },
+        {
+          "trainer_owned": true,
+          "species": "sirenseal",
+          "level": 51
+        }
+      ],
+      "intro_conversation": "water_trainer_yara_intro",
+      "win_conversation": "water_trainer_yara_win",
+      "lose_conversation": "water_trainer_yara_lose",
+      "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
+    },
+    {
+      "id": "water_trainer_bex",
+      "display_name": "Bex",
+      "npc_entity_id": "water_trainer_bex",
+      "island_id": "sluice_isle",
+      "island_local_offset": [
+        18.0,
+        0.0,
+        -20.0
+      ],
+      "critical": true,
+      "ace_level": 51,
+      "rank": "grunt",
+      "body_profile": "grunt_c",
+      "model": "res://assets/characters/grunt_c/grunt_c_lod0.glb",
+      "portrait": "res://assets/ui/portraits/grunt_c.png",
+      "combat_profile": "WALL",
+      "team": [
+        {
+          "trainer_owned": true,
+          "species": "cragclaw",
+          "level": 51
+        },
+        {
+          "trainer_owned": true,
+          "species": "cannonback",
+          "level": 51
+        }
+      ],
+      "intro_conversation": "water_trainer_bex_intro",
+      "win_conversation": "water_trainer_bex_win",
+      "lose_conversation": "water_trainer_bex_lose",
+      "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
+    },
+    {
+      "id": "water_trainer_calder",
+      "display_name": "Calder",
+      "npc_entity_id": "water_trainer_calder",
+      "island_id": "sluice_isle",
+      "island_local_offset": [
+        -18.0,
+        0.0,
+        -30.0
+      ],
+      "critical": true,
+      "ace_level": 52,
+      "rank": "officer",
+      "body_profile": "officer_a",
+      "model": "res://assets/characters/officer_a/officer_a_lod0.glb",
+      "portrait": "res://assets/ui/portraits/officer_a.png",
+      "combat_profile": "CHARGER",
+      "team": [
+        {
+          "trainer_owned": true,
+          "species": "riptusk",
+          "level": 52
+        },
+        {
+          "trainer_owned": true,
+          "species": "torrentoad",
+          "level": 52
+        },
+        {
+          "trainer_owned": true,
+          "species": "riverdrake",
+          "level": 52
+        }
+      ],
+      "intro_conversation": "water_trainer_calder_intro",
+      "win_conversation": "water_trainer_calder_win",
+      "lose_conversation": "water_trainer_calder_lose",
+      "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
+    },
+    {
+      "id": "water_trainer_vera",
+      "display_name": "Vera",
+      "npc_entity_id": "water_trainer_vera",
+      "island_id": "sluice_isle",
+      "island_local_offset": [
+        -6.0,
+        0.0,
+        -40.0
+      ],
+      "critical": false,
+      "ace_level": 52,
+      "rank": "local",
+      "body_profile": "wandering_trainer",
+      "model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "combat_profile": "CURRENT",
+      "team": [
+        {
+          "trainer_owned": true,
+          "species": "cannonback",
+          "level": 52
+        },
+        {
+          "trainer_owned": true,
+          "species": "sirenseal",
+          "level": 52
+        }
+      ],
+      "intro_conversation": "water_trainer_vera_intro",
+      "win_conversation": "water_trainer_vera_win",
+      "lose_conversation": "water_trainer_vera_lose",
+      "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
+    },
+    {
+      "id": "water_trainer_tess",
+      "display_name": "Tess",
+      "npc_entity_id": "water_trainer_tess",
+      "island_id": "deep_watch",
+      "island_local_offset": [
+        6.0,
+        0.0,
+        -20.0
+      ],
+      "critical": false,
+      "ace_level": 54,
+      "rank": "local",
+      "body_profile": "wandering_trainer",
+      "model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "combat_profile": "DIVER",
+      "team": [
+        {
+          "trainer_owned": true,
+          "species": "mirejaw",
+          "level": 54
+        },
+        {
+          "trainer_owned": true,
+          "species": "riverdrake",
+          "level": 54
+        },
+        {
+          "trainer_owned": true,
+          "species": "sirenseal",
+          "level": 54
+        }
+      ],
+      "intro_conversation": "water_trainer_tess_intro",
+      "win_conversation": "water_trainer_tess_win",
+      "lose_conversation": "water_trainer_tess_lose",
+      "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
+    },
+    {
+      "id": "water_trainer_fennel",
+      "display_name": "Fennel",
+      "npc_entity_id": "water_trainer_fennel",
+      "island_id": "veilfall",
+      "island_local_offset": [
+        18.0,
+        0.0,
+        -30.0
+      ],
+      "critical": true,
+      "ace_level": 53,
+      "rank": "grunt",
+      "body_profile": "grunt_a",
+      "model": "res://assets/characters/grunt_a/grunt_a_lod0.glb",
+      "portrait": "res://assets/ui/portraits/grunt_a.png",
+      "combat_profile": "CURRENT",
+      "team": [
+        {
+          "trainer_owned": true,
+          "species": "mirejaw",
+          "level": 53
+        },
+        {
+          "trainer_owned": true,
+          "species": "mangrove_monitor",
+          "level": 53
+        }
+      ],
+      "intro_conversation": "water_trainer_fennel_intro",
+      "win_conversation": "water_trainer_fennel_win",
+      "lose_conversation": "water_trainer_fennel_lose",
+      "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
+    },
+    {
+      "id": "water_trainer_venn",
+      "display_name": "Officer Venn",
+      "npc_entity_id": "water_venn",
+      "island_id": "veilfall",
+      "island_local_offset": [
+        -18.0,
+        0.0,
+        -40.0
+      ],
+      "critical": true,
+      "ace_level": 53,
+      "rank": "officer",
+      "body_profile": "officer_b",
+      "model": "res://assets/characters/officer_b/officer_b_lod0.glb",
+      "portrait": "res://assets/ui/portraits/officer_b.png",
+      "combat_profile": "ACE",
+      "team": [
+        {
+          "trainer_owned": true,
+          "species": "cannonback",
+          "level": 53
+        },
+        {
+          "trainer_owned": true,
+          "species": "riptusk",
+          "level": 53
+        },
+        {
+          "trainer_owned": true,
+          "species": "riverdrake",
+          "level": 53
+        }
+      ],
+      "intro_conversation": "water_trainer_venn_intro",
+      "win_conversation": "water_trainer_venn_win",
+      "lose_conversation": "water_trainer_venn_lose",
+      "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
+    },
+    {
+      "id": "water_trainer_morra",
+      "display_name": "Morra",
+      "npc_entity_id": "water_trainer_morra",
+      "island_id": "veilfall",
+      "island_local_offset": [
+        -6.0,
+        0.0,
+        -20.0
+      ],
+      "critical": true,
+      "ace_level": 54,
+      "rank": "officer",
+      "body_profile": "officer_a",
+      "model": "res://assets/characters/officer_a/officer_a_lod0.glb",
+      "portrait": "res://assets/ui/portraits/officer_a.png",
+      "combat_profile": "WALL",
+      "team": [
+        {
+          "trainer_owned": true,
+          "species": "cragclaw",
+          "level": 54
+        },
+        {
+          "trainer_owned": true,
+          "species": "mirejaw",
+          "level": 54
+        },
+        {
+          "trainer_owned": true,
+          "species": "cannonback",
+          "level": 54
+        }
+      ],
+      "intro_conversation": "water_trainer_morra_intro",
+      "win_conversation": "water_trainer_morra_win",
+      "lose_conversation": "water_trainer_morra_lose",
+      "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
+    },
+    {
+      "id": "water_trainer_evi",
+      "display_name": "Evi",
+      "npc_entity_id": "water_trainer_evi",
+      "island_id": "veilfall",
+      "island_local_offset": [
+        6.0,
+        0.0,
+        -30.0
+      ],
+      "critical": false,
+      "ace_level": 54,
+      "rank": "local",
+      "body_profile": "wandering_trainer",
+      "model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "combat_profile": "DIVER",
+      "team": [
+        {
+          "trainer_owned": true,
+          "species": "sirenseal",
+          "level": 54
+        },
+        {
+          "trainer_owned": true,
+          "species": "riverdrake",
+          "level": 54
+        },
+        {
+          "trainer_owned": true,
+          "species": "mosshell",
+          "level": 54
+        }
+      ],
+      "intro_conversation": "water_trainer_evi_intro",
+      "win_conversation": "water_trainer_evi_win",
+      "lose_conversation": "water_trainer_evi_lose",
+      "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
+    },
+    {
+      "id": "water_trainer_nerissa",
+      "display_name": "Captain Nerissa",
+      "npc_entity_id": "water_nerissa",
+      "island_id": "veilfall",
+      "island_local_offset": [
+        18.0,
+        0.0,
+        -40.0
+      ],
+      "critical": true,
+      "ace_level": 55,
+      "rank": "captain",
+      "body_profile": "captain_b",
+      "model": "res://assets/characters/captain_b/captain_b_lod0.glb",
+      "portrait": "res://assets/ui/portraits/captain_b.png",
+      "combat_profile": "ACE",
+      "team": [
+        {
+          "trainer_owned": true,
+          "species": "cannonback",
+          "level": 55
+        },
+        {
+          "trainer_owned": true,
+          "species": "mirejaw",
+          "level": 55
+        },
+        {
+          "trainer_owned": true,
+          "species": "riverdrake",
+          "level": 55
+        },
+        {
+          "trainer_owned": true,
+          "species": "riptusk",
+          "level": 55
+        }
+      ],
+      "intro_conversation": "water_trainer_nerissa_intro",
+      "win_conversation": "water_trainer_nerissa_win",
+      "lose_conversation": "water_trainer_nerissa_lose",
+      "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
+    }
+  ]
+}

@@ -8,6 +8,7 @@ extends RefCounted
 
 const SPECIES_PATH := "res://data/creatures/species.json"
 const INSTANCE := preload("res://scripts/creatures/creature_instance.gd")
+const WATER_CATALOGUE := preload("res://scripts/creatures/water_species_catalog.gd")
 
 static var _table: Dictionary = {}
 static var _fly_capabilities: Dictionary = {}
@@ -23,6 +24,11 @@ static func table() -> Dictionary:
 	var parsed: Variant = JSON.parse_string(file.get_as_text())
 	if parsed is Dictionary:
 		_table = (parsed as Dictionary).get("species", {})
+		var water := WATER_CATALOGUE.merge_catalogue(_table)
+		if bool(water.ok):
+			_table = water.catalogue
+		else:
+			push_error("Water species registration failed: %s" % water.errors)
 	return _table
 
 

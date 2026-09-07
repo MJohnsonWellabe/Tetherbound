@@ -1,5 +1,13 @@
 # Current state — evidence-backed, 2026-09-06
 
+## Water branch update — 2026-09-07
+
+Stage B of the current four-biome roadmap is in progress in `D:\Tetherbound-Water`, branch `ralph/water-foundation-0906`, draft PR69. The owner explicitly reserved merging for later; no Water implementation is on main. The branch includes Stormwood main `84125fcd008d93c0fefdfff51a2752b94b4faada` as an ancestor. Older stage names and pre-merge multiplayer statements below are historical, not this Water delivery status.
+
+Verified branch subpaths include human swimming/drowning and separated-island peer state, all five mounted swimmers with exhaustion/dismount/remount/dry exit, dock repair barriers and current changes, eight rest/craft camps, and character/world death-bag recovery with lost-reply retries. These use explicit setup fixtures and do not prove an ordinary continuous chapter. See `ralph/reports/WATER-PROGRESS/runtime-wave-2.md` and its density census for evidence and limits.
+
+Aquaryn's fight and earned Swim Stone, continuous second-half progression, water combat presentation, the Veilfall stronghold/finale, Guardian ceremony, Tidal Guard and Tideglass Compass remain incomplete. Mounted save reconstruction is being implemented and remains runtime-unproven. No frame has passed blind visual acceptance and no Meshy generation has been used. Current branch CI and a complete local suite remain open. Stage C is the next stage after Water passes its full exit bar, not an exit already reached.
+
 ## Stage B (multiplayer) — the CODE is complete, the OWNER EVIDENCE is not — 2026-09-06, branch `claude/tetherbound-roadmap-next-jrcjs8` @ `ad383219`
 
 **Every one of the twenty-four §17 rows in `docs/acceptance/MULTIPLAYER_ACCEPTANCE.md` now names a

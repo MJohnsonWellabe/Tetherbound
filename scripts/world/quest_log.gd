@@ -88,6 +88,8 @@ func set_realm(realm_id: String) -> bool:
 	_local = []
 	_realm_data = {}
 	var path := "res://data/config/cloudreach_chapter.json" if realm_id == "cloudreach" else DATA_PATH
+	if realm_id == "water":
+		path = "res://data/config/water_objectives.json"
 	var file := FileAccess.open(path, FileAccess.READ)
 	if file == null:
 		push_warning("quest_log.gd: %s missing" % path)

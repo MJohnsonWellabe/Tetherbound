@@ -72,6 +72,9 @@ var attack: float = 1.0
 var defence: float = 1.0
 
 var hp: float = 1.0
+## Dedicated traversal resource. Combat energy, potions and switching never
+## refill it; Water's safe-land recovery owns its regeneration.
+var swim_stamina_fraction: float = 1.0
 var energy: float = 0.0
 
 ## Set once when the creature faints, so the transition can be detected exactly

@@ -1,0 +1,16 @@
+{
+  "_comment":"Cross-biome personal skills. XP starts in Meadows; reveal begins in Cloudreach. Numbers are starting tuning, not a retroactive XP grant.",
+  "level_cap":30,
+  "xp_base":100,
+  "xp_per_level":30,
+  "reveal_realms":["cloudreach","stormwood","water"],
+  "skills":{
+    "running":{"name":"Running","xp_per_m":0.3,"efficiency_per_level":0.01,"efficiency_cap":0.25,"description":"Sprint farther with less stamina."},
+    "catching":{"name":"Catching","xp_per_success":80,"chance_per_level":0.002,"chance_cap":0.05,"description":"A small improvement to physical catches."},
+    "riding":{"name":"Riding","xp_per_m":0.2,"handling_per_level":0.005,"handling_cap":0.15,"description":"Smoother mounted handling."},
+    "swimming":{"name":"Swimming","xp_per_m":3.0,"efficiency_per_level":0.015,"efficiency_cap":0.35,"description":"Swim farther, alone or mounted."},
+    "flying":{"name":"Flying","xp_per_m":0.3,"efficiency_per_level":0.01,"efficiency_cap":0.25,"description":"Spend less stamina in flight."}
+  },
+  "candy_levels":{"skill_candy_i":1,"skill_candy_ii":2,"skill_candy_iii":3},
+  "_comment_candy":"Award complete levels preserving progress within the current level. Refuse the entire tier if any level would exceed the cap. Item consumption belongs to the owning character transaction."
+}

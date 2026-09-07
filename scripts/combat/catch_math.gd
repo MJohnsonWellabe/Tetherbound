@@ -155,14 +155,15 @@ static func orb_ids() -> Array:
 ## rather than a special case in code.
 static func catch_chance(
 	species_rate: float, hp_fraction: float, orb_id: String,
-	offset: float, body_radius: float
+	offset: float, body_radius: float, skill_bonus: float = 0.0
 ) -> float:
 	var cfg: Dictionary = config().get("chance", {})
 	var raw := species_rate \
 		* hp_factor(hp_fraction) \
 		* orb_multiplier(orb_id) \
 		* accuracy_bonus(offset, body_radius)
-	return clampf(raw, float(cfg.get("min", 0.02)), float(cfg.get("max", 0.95)))
+	return clampf(raw + maxf(0.0, skill_bonus) if is_finite(skill_bonus) else raw,
+		float(cfg.get("min", 0.02)), float(cfg.get("max", 0.95)))
 
 
 ## --- the decision ---------------------------------------------------------
@@ -175,9 +176,9 @@ static func catch_chance(
 ## needs is here, so nothing downstream ever has to roll again.
 static func resolve(
 	species_rate: float, hp_fraction: float, orb_id: String,
-	offset: float, body_radius: float, roll: float
+	offset: float, body_radius: float, roll: float, skill_bonus: float = 0.0
 ) -> Dictionary:
-	var chance := catch_chance(species_rate, hp_fraction, orb_id, offset, body_radius)
+	var chance := catch_chance(species_rate, hp_fraction, orb_id, offset, body_radius, skill_bonus)
 	var caught := roll < chance
 	return {
 		"caught": caught,

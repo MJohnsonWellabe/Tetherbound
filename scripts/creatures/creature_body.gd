@@ -256,6 +256,7 @@ var _footprint_allowance: float = FOOTPRINT_ALLOWANCE
 ## creature sliding across the arena forever.
 var _requested: Vector3 = Vector3.ZERO
 var _requested_speed: float = 0.0
+var _requested_handling: float = 1.0
 
 ## Attack lunges and knockbacks, decaying. Separate from `velocity` so being hit
 ## mid-stride reads as a shove rather than as a cancelled input.
@@ -1633,10 +1634,12 @@ func _physics_process(delta: float) -> void:
 		_animator.call("tick", delta, moving, _speed)
 
 	_requested = Vector3.ZERO
+	_requested_handling = 1.0
 
 
-func register_environment_velocity_modifier(id: StringName, owner: Node, modifier: Callable, order: int = 0) -> bool:
-	return _environment_velocity.register_modifier(id, owner, modifier, order)
+func register_environment_velocity_modifier(id: StringName, owner: Node, modifier: Callable, order: int = 0,
+		additive_axes: Vector3 = Vector3.ONE) -> bool:
+	return _environment_velocity.register_modifier(id, owner, modifier, order, additive_axes)
 
 
 func clear_environment_velocity_modifier(id: StringName) -> void:
@@ -1653,7 +1656,13 @@ func _exit_tree() -> void:
 
 func _turn_towards(direction: Vector3, delta: float) -> void:
 	var target_yaw := atan2(direction.x, direction.z)
-	rotation.y = rotate_toward(rotation.y, target_yaw, _turn_speed * delta)
+	rotation.y = rotate_toward(rotation.y, target_yaw, _turn_speed * _requested_handling * delta)
+
+
+## One movement step only: dismounting cannot leave a follower or combatant
+## with the rider's personal handling bonus.
+func request_riding_handling(multiplier: float) -> void:
+	_requested_handling = multiplier if is_finite(multiplier) and multiplier >= 1.0 else 1.0
 
 
 ## --- animation, poked by combat ---------------------------------------------

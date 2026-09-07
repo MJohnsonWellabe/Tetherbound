@@ -1,0 +1,848 @@
+{
+  "_comment": "Draft conversations use the existing speaker/portrait/lines schema. Physical repairs rescues landings fights pumps and finale resolution are never auto-completed by speech. Event guards are recorded in water_characters.json and require parent integration.",
+  "conversations": {
+    "water_mara_pre": {
+      "speaker": "Dockkeeper Mara",
+      "portrait": "res://assets/ui/portraits/corin.png",
+      "lines": [
+        "The tall white falls beyond the islands are the Veilfall. Keep them in sight; every troubled channel here leads back there.",
+        "Reedhaven is your first stop. Its departure pier is broken, but the sheltered swimming channel reaches their near shore.",
+        "Before you leave, find Pell by the calm inlet and prepare food at camp. A short crossing still deserves a return plan."
+      ]
+    },
+    "water_mara_post": {
+      "speaker": "Dockkeeper Mara",
+      "portrait": "res://assets/ui/portraits/corin.png",
+      "lines": [
+        "The first civilian supplies reached Shellwatch this morning. I finally took the barricade chalk off my dock board.",
+        "The sea still has currents. Rest and choose your landing even when nobody is using the water against you."
+      ]
+    },
+    "water_pell_pre": {
+      "speaker": "Swimmer Pell",
+      "portrait": "res://assets/ui/portraits/bryn.png",
+      "lines": [
+        "Start where you can still put your feet down. Pick the far landing before you leave this bank.",
+        "Swimming spends stamina. If you run out, you begin losing health; reach shallow ground immediately instead of waiting in deep water.",
+        "Practice the sheltered inlet yourself. Hearing this lesson does not prove that you can make the crossing."
+      ]
+    },
+    "water_pell_post": {
+      "speaker": "Swimmer Pell",
+      "portrait": "res://assets/ui/portraits/bryn.png",
+      "lines": [
+        "I saw you come back through the inlet. The route feels smaller once you know where the ground rises.",
+        "Keep teaching the new arrivals that stopping in deep water does not refill their strength."
+      ]
+    },
+    "water_elin_pre": {
+      "speaker": "Campkeeper Elin",
+      "portrait": "res://assets/ui/portraits/wilhelm.png",
+      "lines": [
+        "Leave your wet boots by the fire. There is room for the whole team to recover before you travel.",
+        "Food helps you prepare; a low stomach is a soft setback, not a death sentence. Your swimming stamina is the urgent thing out there.",
+        "Use the camp and check each creature's health. Carry a revive where you can find it when a crossing goes wrong."
+      ]
+    },
+    "water_elin_post": {
+      "speaker": "Campkeeper Elin",
+      "portrait": "res://assets/ui/portraits/wilhelm.png",
+      "lines": [
+        "The camp is busy with returning families now. Nobody has to sleep beside a closed departure gate.",
+        "I kept your usual place near the fire. A victory is a good reason to look after the team that earned it."
+      ]
+    },
+    "water_rowan_pre": {
+      "speaker": "Pierwright Rowan",
+      "portrait": "res://assets/ui/portraits/corin.png",
+      "lines": [
+        "The far pier needs reed fiber and driftwood. Gather the repair materials, then work at the damaged supports.",
+        "I can explain the repair, but I cannot nail a board down by talking to you. The work site is beside the broken railing.",
+        "The reeds grow along the sheltered bank; use the dry route between patches so gathering does not empty your stamina."
+      ]
+    },
+    "water_rowan_post": {
+      "speaker": "Pierwright Rowan",
+      "portrait": "res://assets/ui/portraits/corin.png",
+      "lines": [
+        "The repaired pier carries people again. I saved the old broken plank to remind myself what a proper landing is worth.",
+        "Now that the pumps are quiet, we can repair the smaller paths instead of constantly rebuilding this one."
+      ]
+    },
+    "water_sella_pre": {
+      "speaker": "Caretaker Sella",
+      "portrait": "res://assets/ui/portraits/fenn.png",
+      "lines": [
+        "Mosshell rests near gentle banks. Give one space and it will usually let you pass without a fight.",
+        "You can own five creatures in total. If you want a new companion, think about who already travels with you.",
+        "A water creature is not automatically a swim mount. The saddle needs a species that can safely carry you."
+      ]
+    },
+    "water_sella_post": {
+      "speaker": "Caretaker Sella",
+      "portrait": "res://assets/ui/portraits/fenn.png",
+      "lines": [
+        "The shore creatures have returned to their old resting places. They no longer crowd the one calm corner of the marsh.",
+        "A familiar Mosshell can carry the next expedition as faithfully as an Alpha, once you have the Swim Stone and saddle."
+      ]
+    },
+    "water_tovin_pre": {
+      "speaker": "Keeper Tovin",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "This pier opens onto an exposed channel. I ask travelers to show that their team can handle pressure before they depart.",
+        "Our battle stays on these broad terraces. Watch which creature I send first, and keep room to move around its charge.",
+        "Winning the demonstration opens the departure route; speaking with me does not. Prepare before you challenge me."
+      ]
+    },
+    "water_tovin_post": {
+      "speaker": "Keeper Tovin",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "You earned the pier fairly. I will keep the training space open for anyone who wants a safer first expedition.",
+        "The channel is calmer after your victory at the Veilfall, but learning to read a charge is still useful."
+      ]
+    },
+    "water_adair_pre": {
+      "speaker": "Surveyor Adair",
+      "portrait": "res://assets/ui/portraits/maren.png",
+      "lines": [
+        "See the foam moving past the rocks? That is the direction the current will carry your body.",
+        "The sheltered line takes longer on the map but pushes against you less. Compare your landing options, not just the straight distance.",
+        "Mark a safe landing by reaching it yourself. A drawing from this terrace cannot tell us whether its bank is climbable."
+      ]
+    },
+    "water_adair_post": {
+      "speaker": "Surveyor Adair",
+      "portrait": "res://assets/ui/portraits/maren.png",
+      "lines": [
+        "Your landing notes have made a practical route guide. People can choose the sheltered line before they enter the water.",
+        "The strongest current has shifted since the pumps stopped. The foam tells the new truth; an old chart does not."
+      ]
+    },
+    "water_nalia_pre": {
+      "speaker": "Resident Nalia",
+      "portrait": "res://assets/ui/portraits/lark.png",
+      "lines": [
+        "Team Tether pushed us away from the usable pier. Our neighbors are stranded beyond their patrol and the pump controls.",
+        "Clear a route to the residents and shut the pump down at its switch. We need both before this becomes a safe departure.",
+        "The camp is on the raised shore. Bring injured creatures there before you try the channel toward Tidal Cradle."
+      ]
+    },
+    "water_nalia_post": {
+      "speaker": "Resident Nalia",
+      "portrait": "res://assets/ui/portraits/lark.png",
+      "lines": [
+        "Everyone from our dock is accounted for. I wrote their names on the camp board and crossed out nobody.",
+        "We are keeping the old patrol shelter for travelers. It feels better with blankets where the warning signs used to hang."
+      ]
+    },
+    "water_bren_pre": {
+      "speaker": "Pump Tender Bren",
+      "portrait": "res://assets/ui/portraits/ren.png",
+      "lines": [
+        "I maintained that pump before Tether fenced it off. The intake pulls loose water toward their marked channel.",
+        "Find the control beside the machinery after the approach is safe. Do not send your own body into the intake.",
+        "A stopped pump changes the route, but you still need enough stamina to reach the next bank."
+      ]
+    },
+    "water_bren_post": {
+      "speaker": "Pump Tender Bren",
+      "portrait": "res://assets/ui/portraits/ren.png",
+      "lines": [
+        "Listen to that: waves on stone instead of an engine fighting them. I had forgotten this shore's ordinary sound.",
+        "I am turning the spare housing into a dry store. Machinery should help the settlement, not hold it hostage."
+      ]
+    },
+    "water_iona_pre": {
+      "speaker": "Researcher Iona",
+      "portrait": "res://assets/ui/portraits/maren.png",
+      "lines": [
+        "Aquaryn uses both the shore and the surface channel. Watch where its sweep ends before you rush its flank.",
+        "Defeating or catching the Alpha can resolve this trial. Your Swim Stone must not depend on finding room for Aquaryn.",
+        "Once the Stone is yours, return here for the Swim Saddle recipe. Mosshell and the needed materials are available before the outer crossing."
+      ]
+    },
+    "water_iona_post": {
+      "speaker": "Researcher Iona",
+      "portrait": "res://assets/ui/portraits/maren.png",
+      "lines": [
+        "The Tidal Dragon moves freely around the cradle again. What matters is that the trial no longer closes the sea to everyone else.",
+        "Keep the saddle on a compatible creature and care for its swimming stamina. Speed alone does not decide a safe expedition."
+      ]
+    },
+    "water_otto_pre": {
+      "speaker": "Tracker Otto",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "If Aquaryn is not joining your team, follow the calm shore toward the Mosshell habitat. That is a real route forward.",
+        "You need the Swim Stone and a crafted Swim Saddle, not an Alpha in your party. Check those separately.",
+        "Gather reed fiber, driftwood and reefstone before departure. Iona can teach the recipe once the trial is resolved."
+      ]
+    },
+    "water_otto_post": {
+      "speaker": "Tracker Otto",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "I watched a traveler leave on a Mosshell today. Slow, steady, and enough strength left to enjoy the landing.",
+        "The best mount is the one you can prepare and care for, not the rarest name on somebody else's list."
+      ]
+    },
+    "water_edda_pre": {
+      "speaker": "Shrinekeeper Edda",
+      "portrait": "res://assets/ui/portraits/cloudreach_aila_clean.png",
+      "lines": [
+        "Salt Crown is the last full settlement before the occupied channels. Rest here and look at the crossing ahead with a fresh team.",
+        "Our realm keeps the Tideglass Compass. Its blessing is Tidal Guard, and it belongs in the same single active power choice as your other relics.",
+        "The Deep Watcher is held beneath the Veilfall. Freeing it must come before any offer of companionship."
+      ]
+    },
+    "water_edda_post": {
+      "speaker": "Shrinekeeper Edda",
+      "portrait": "res://assets/ui/portraits/cloudreach_aila_clean.png",
+      "lines": [
+        "The Compass marks a realm that can breathe again. Place it through the shrine's relic interaction when you are ready.",
+        "Only one relic power can be active. Choosing Tidal Guard is a choice about preparation, not a second power hidden underneath the first."
+      ]
+    },
+    "water_corin_pre": {
+      "speaker": "Defector Corin",
+      "portrait": "res://assets/ui/portraits/ren.png",
+      "lines": [
+        "The outer pumps feed the crystal behind the Veilfall. Nerissa calls the current network a road, but she decides who gets to use it.",
+        "On Sluice Isle, one control sits behind the patrol and another routes the channel. You need both to prepare the last approach.",
+        "From below, the stronghold looks like a mountain and a waterfall. Follow the hike; the entrance is behind the falling water."
+      ]
+    },
+    "water_corin_post": {
+      "speaker": "Defector Corin",
+      "portrait": "res://assets/ui/portraits/ren.png",
+      "lines": [
+        "I told people where the controls were. You were the one who reached them. I will spend the next season helping repair what I helped build.",
+        "The channel network is quiet now. Nobody should need my old uniform to reach their own home."
+      ]
+    },
+    "water_orsen_pre": {
+      "speaker": "Channel Keeper Orsen",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "The patrol control and the channel-routing switch do different jobs. Clearing only one leaves the preparation channel unsafe.",
+        "Read the visible flow before operating the sluice. Use the raised path to reach the switch instead of fighting the intake.",
+        "Lastlight Camp is your final recovery stop before the hardest crossing. Do not leave it with an exhausted mount."
+      ]
+    },
+    "water_orsen_post": {
+      "speaker": "Channel Keeper Orsen",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "The two controls now serve the landing instead of the barricade. We can keep the shelter supplied from Salt Crown.",
+        "I still check the raised paths each morning. A freed channel deserves maintenance as much as a guarded one did."
+      ]
+    },
+    "water_jessa_pre": {
+      "speaker": "Courier Jessa",
+      "portrait": "res://assets/ui/portraits/lark.png",
+      "lines": [
+        "I turned back from the Veilfall once with my mount shaking. Turning back early was the reason we both reached this camp.",
+        "Check mount stamina, human stamina, health and recovery supplies. A mount that fails leaves you swimming; it does not lend you a fresh body.",
+        "The hardest crossing begins after the preparation channel. Aim for the low landing, then take the mountain path to the falls."
+      ]
+    },
+    "water_jessa_post": {
+      "speaker": "Courier Jessa",
+      "portrait": "res://assets/ui/portraits/lark.png",
+      "lines": [
+        "My first delivery through the restored channel was blankets. After all those supply manifests, that felt like an excellent cargo.",
+        "The way is open, but the distance has not disappeared. I still stop here before I cross."
+      ]
+    },
+    "water_halen_pre": {
+      "speaker": "Campkeeper Halen",
+      "portrait": "res://assets/ui/portraits/wilhelm.png",
+      "lines": [
+        "You have reached the foot of the Veilfall. Rest before the hike; the waterfall hides the entrance higher on the mountain.",
+        "Officer Venn holds the approach. Beyond him are the wet caves, pumps, sluice bridge and the Heart Chamber.",
+        "Bring a team ready to move between raised safe ground and the discharge lanes. The human never needs to attack the machinery."
+      ]
+    },
+    "water_halen_post": {
+      "speaker": "Campkeeper Halen",
+      "portrait": "res://assets/ui/portraits/wilhelm.png",
+      "lines": [
+        "The waterfall sounds different with the pump chambers quiet behind it. The path is still steep, so take the descent carefully.",
+        "This camp will stay open. People should get to visit the mountain without preparing for a siege."
+      ]
+    },
+    "water_venn_pre": {
+      "speaker": "Officer Venn",
+      "portrait": "res://assets/ui/portraits/officer_b.png",
+      "lines": [
+        "You followed the service channels all the way here. The waterfall was supposed to keep the gate out of sight.",
+        "My creatures hold this approach. You will have to beat them before you reach the passage behind the water.",
+        "Watch the footing. Even a trained team loses control when its trainer ignores where the next exchange will happen."
+      ]
+    },
+    "water_venn_post": {
+      "speaker": "Officer Venn",
+      "portrait": "res://assets/ui/portraits/officer_b.png",
+      "lines": [
+        "The gate is open. Nerissa's orders were clear; they were not worth what those orders did to the islands.",
+        "I will leave the approach clear while the residents recover the pump equipment."
+      ]
+    },
+    "water_nerissa_pre": {
+      "speaker": "Captain Nerissa",
+      "portrait": "res://assets/ui/portraits/captain_b.png",
+      "lines": [
+        "These channels connected scattered islands into one network. I built a system that answered to a single command.",
+        "Your creature can challenge mine, but read the discharge lanes. The raised platforms will not protect a careless approach forever.",
+        "The conduits expose themselves between pulses. If you mean to end the network, your piloted creature will have to reach them."
+      ]
+    },
+    "water_nerissa_post": {
+      "speaker": "Captain Nerissa",
+      "portrait": "res://assets/ui/portraits/captain_b.png",
+      "lines": [
+        "The crystal is quiet. Every channel I called mine is moving without my permission.",
+        "The Deep Watcher is no longer contained here. I cannot pretend the islands needed its captivity after what you have shown them."
+      ]
+    },
+    "water_trainer_pell_trial_intro": {
+      "speaker": "Pell",
+      "portrait": "res://assets/ui/portraits/bryn.png",
+      "lines": [
+        "Try reading the opening splash before you close the distance."
+      ]
+    },
+    "water_trainer_pell_trial_win": {
+      "speaker": "Pell",
+      "portrait": "res://assets/ui/portraits/bryn.png",
+      "lines": [
+        "You left room for the second attack. That is the habit I wanted to see."
+      ]
+    },
+    "water_trainer_pell_trial_lose": {
+      "speaker": "Pell",
+      "portrait": "res://assets/ui/portraits/bryn.png",
+      "lines": [
+        "A quick step inward is tempting. Watch the space where the next splash will land."
+      ]
+    },
+    "water_trainer_fen_intro": {
+      "speaker": "Fen",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "This sheltered cove leaves room to practice a flanking team."
+      ]
+    },
+    "water_trainer_fen_win": {
+      "speaker": "Fen",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "You kept both exits in view. My flank never became a trap."
+      ]
+    },
+    "water_trainer_fen_lose": {
+      "speaker": "Fen",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "You followed my first retreat. Next time keep the bank behind you open."
+      ]
+    },
+    "water_trainer_lysa_intro": {
+      "speaker": "Lysa",
+      "portrait": "res://assets/ui/portraits/grunt_a.png",
+      "lines": [
+        "This repair pier is closed under channel authority."
+      ]
+    },
+    "water_trainer_lysa_win": {
+      "speaker": "Lysa",
+      "portrait": "res://assets/ui/portraits/grunt_a.png",
+      "lines": [
+        "The pier crew can pass. I will not make them fight again."
+      ]
+    },
+    "water_trainer_lysa_lose": {
+      "speaker": "Lysa",
+      "portrait": "res://assets/ui/portraits/grunt_a.png",
+      "lines": [
+        "Your first attack met the shell. Try reaching its side after the commitment."
+      ]
+    },
+    "water_trainer_daro_intro": {
+      "speaker": "Daro",
+      "portrait": "res://assets/ui/portraits/bryn.png",
+      "lines": [
+        "My pair rushes hard but has to recover. Can you find that moment?"
+      ]
+    },
+    "water_trainer_daro_win": {
+      "speaker": "Daro",
+      "portrait": "res://assets/ui/portraits/bryn.png",
+      "lines": [
+        "You waited out the rush. They had nowhere useful to put the next one."
+      ]
+    },
+    "water_trainer_daro_lose": {
+      "speaker": "Daro",
+      "portrait": "res://assets/ui/portraits/bryn.png",
+      "lines": [
+        "I caught you moving straight backward. Leave the charge lane sooner."
+      ]
+    },
+    "water_trainer_tovin_intro": {
+      "speaker": "Keeper Tovin",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "Show me a team that can adapt when a steady defender gives way to a fast flanker."
+      ]
+    },
+    "water_trainer_tovin_win": {
+      "speaker": "Keeper Tovin",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "You adapted. The demonstration is complete and the departure pier is yours to use."
+      ]
+    },
+    "water_trainer_tovin_lose": {
+      "speaker": "Keeper Tovin",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "Your team can recover here. Think about which creature should face my second one."
+      ]
+    },
+    "water_trainer_keir_intro": {
+      "speaker": "Keir",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "Two patient defenders. You do not need to hurry into either shell."
+      ]
+    },
+    "water_trainer_keir_win": {
+      "speaker": "Keir",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "You made me turn before committing. That broke my defense."
+      ]
+    },
+    "water_trainer_keir_lose": {
+      "speaker": "Keir",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "I can wait longer than you can trade careless hits. Make me move."
+      ]
+    },
+    "water_trainer_rune_intro": {
+      "speaker": "Rune",
+      "portrait": "res://assets/ui/portraits/bryn.png",
+      "lines": [
+        "The bird draws your attention while the seal changes the range."
+      ]
+    },
+    "water_trainer_rune_win": {
+      "speaker": "Rune",
+      "portrait": "res://assets/ui/portraits/bryn.png",
+      "lines": [
+        "You respected both ranges. My team never found a free approach."
+      ]
+    },
+    "water_trainer_rune_lose": {
+      "speaker": "Rune",
+      "portrait": "res://assets/ui/portraits/bryn.png",
+      "lines": [
+        "Watch the creature in front of you rather than preparing for the one still waiting."
+      ]
+    },
+    "water_trainer_solm_intro": {
+      "speaker": "Solm",
+      "portrait": "res://assets/ui/portraits/grunt_b.png",
+      "lines": [
+        "Those residents stay behind our line until this dock is secure."
+      ]
+    },
+    "water_trainer_solm_win": {
+      "speaker": "Solm",
+      "portrait": "res://assets/ui/portraits/grunt_b.png",
+      "lines": [
+        "Our line is broken. Take them to the raised shore."
+      ]
+    },
+    "water_trainer_solm_lose": {
+      "speaker": "Solm",
+      "portrait": "res://assets/ui/portraits/grunt_b.png",
+      "lines": [
+        "You stayed in front of Mirejaw too long. Its patience is the danger."
+      ]
+    },
+    "water_trainer_irva_intro": {
+      "speaker": "Irva",
+      "portrait": "res://assets/ui/portraits/grunt_c.png",
+      "lines": [
+        "The pump controls are behind me. A conversation will not stop the intake."
+      ]
+    },
+    "water_trainer_irva_win": {
+      "speaker": "Irva",
+      "portrait": "res://assets/ui/portraits/grunt_c.png",
+      "lines": [
+        "I cannot hold the controls. Shut them down yourself if that is your plan."
+      ]
+    },
+    "water_trainer_irva_lose": {
+      "speaker": "Irva",
+      "portrait": "res://assets/ui/portraits/grunt_c.png",
+      "lines": [
+        "My charge moved you away from the switch. Settle the fight before approaching it."
+      ]
+    },
+    "water_trainer_nel_intro": {
+      "speaker": "Nel",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "The camp is close enough for a practice match. Let us test your recovery discipline."
+      ]
+    },
+    "water_trainer_nel_win": {
+      "speaker": "Nel",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "You finished with options left. That matters before a swim."
+      ]
+    },
+    "water_trainer_nel_lose": {
+      "speaker": "Nel",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "Recover at camp and change the matchup before you try again."
+      ]
+    },
+    "water_trainer_oswin_intro": {
+      "speaker": "Oswin",
+      "portrait": "res://assets/ui/portraits/grunt_a.png",
+      "lines": [
+        "The research path is restricted. Your team will have to clear it."
+      ]
+    },
+    "water_trainer_oswin_win": {
+      "speaker": "Oswin",
+      "portrait": "res://assets/ui/portraits/grunt_a.png",
+      "lines": [
+        "The path is clear. Aquaryn beyond it is no creature of ours."
+      ]
+    },
+    "water_trainer_oswin_lose": {
+      "speaker": "Oswin",
+      "portrait": "res://assets/ui/portraits/grunt_a.png",
+      "lines": [
+        "You chased Riverdrake into Mirejaw's preferred reach. Read the next matchup."
+      ]
+    },
+    "water_trainer_tal_intro": {
+      "speaker": "Tal",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "A slow team can finish a long expedition. See whether you can move mine."
+      ]
+    },
+    "water_trainer_tal_win": {
+      "speaker": "Tal",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "You made patience work for you instead of against you."
+      ]
+    },
+    "water_trainer_tal_lose": {
+      "speaker": "Tal",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "Bring pressure from another angle. Hitting the strongest point is expensive."
+      ]
+    },
+    "water_trainer_sera_intro": {
+      "speaker": "Sera",
+      "portrait": "res://assets/ui/portraits/grunt_b.png",
+      "lines": [
+        "Salt Crown's supplies follow our routing orders."
+      ]
+    },
+    "water_trainer_sera_win": {
+      "speaker": "Sera",
+      "portrait": "res://assets/ui/portraits/grunt_b.png",
+      "lines": [
+        "The supply landing is open. Your people can use it."
+      ]
+    },
+    "water_trainer_sera_lose": {
+      "speaker": "Sera",
+      "portrait": "res://assets/ui/portraits/grunt_b.png",
+      "lines": [
+        "You let the runner set every exchange. Take back the space between attacks."
+      ]
+    },
+    "water_trainer_odan_intro": {
+      "speaker": "Odan",
+      "portrait": "res://assets/ui/portraits/bryn.png",
+      "lines": [
+        "Fast travel and fast combat ask different things from the same team."
+      ]
+    },
+    "water_trainer_odan_win": {
+      "speaker": "Odan",
+      "portrait": "res://assets/ui/portraits/bryn.png",
+      "lines": [
+        "You handled the change of pace. Your mount is more than a crossing tool."
+      ]
+    },
+    "water_trainer_odan_lose": {
+      "speaker": "Odan",
+      "portrait": "res://assets/ui/portraits/bryn.png",
+      "lines": [
+        "Keep enough space for the seal before preparing for the drake's rush."
+      ]
+    },
+    "water_trainer_yara_intro": {
+      "speaker": "Yara",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "These ruins reward a patient approach. My team will test whether you kept that patience."
+      ]
+    },
+    "water_trainer_yara_win": {
+      "speaker": "Yara",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "You found the openings without giving up your escape route."
+      ]
+    },
+    "water_trainer_yara_lose": {
+      "speaker": "Yara",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "Rest on the landing before trying again. The return swim is still ahead of you."
+      ]
+    },
+    "water_trainer_bex_intro": {
+      "speaker": "Bex",
+      "portrait": "res://assets/ui/portraits/grunt_c.png",
+      "lines": [
+        "The patrol control answers to this post."
+      ]
+    },
+    "water_trainer_bex_win": {
+      "speaker": "Bex",
+      "portrait": "res://assets/ui/portraits/grunt_c.png",
+      "lines": [
+        "The post is yours. The second channel control is a separate job."
+      ]
+    },
+    "water_trainer_bex_lose": {
+      "speaker": "Bex",
+      "portrait": "res://assets/ui/portraits/grunt_c.png",
+      "lines": [
+        "You tried to break the shell head on. Reposition after its attack."
+      ]
+    },
+    "water_trainer_calder_intro": {
+      "speaker": "Calder",
+      "portrait": "res://assets/ui/portraits/officer_a.png",
+      "lines": [
+        "You reached one control. My team holds the route to the other."
+      ]
+    },
+    "water_trainer_calder_win": {
+      "speaker": "Calder",
+      "portrait": "res://assets/ui/portraits/officer_a.png",
+      "lines": [
+        "Both approaches are open now. Operate the channel control yourself."
+      ]
+    },
+    "water_trainer_calder_lose": {
+      "speaker": "Calder",
+      "portrait": "res://assets/ui/portraits/officer_a.png",
+      "lines": [
+        "You handled the first charge and missed the second. Keep watching the send-outs."
+      ]
+    },
+    "water_trainer_vera_intro": {
+      "speaker": "Vera",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "This raised platform is wide enough for an honest test of ranged pressure."
+      ]
+    },
+    "water_trainer_vera_win": {
+      "speaker": "Vera",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "You crossed the danger space at the right moment."
+      ]
+    },
+    "water_trainer_vera_lose": {
+      "speaker": "Vera",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "A ranged attack still has recovery. Use it instead of trading from the same spot."
+      ]
+    },
+    "water_trainer_tess_intro": {
+      "speaker": "Tess",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "The named apex lies farther along the current. Check your team's readiness here first."
+      ]
+    },
+    "water_trainer_tess_win": {
+      "speaker": "Tess",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "Your team kept its shape. Keep some recovery supplies for Tidecoil."
+      ]
+    },
+    "water_trainer_tess_lose": {
+      "speaker": "Tess",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "This is a good place to turn back and prepare. Pride does not shorten the crossing."
+      ]
+    },
+    "water_trainer_fennel_intro": {
+      "speaker": "Fennel",
+      "portrait": "res://assets/ui/portraits/grunt_a.png",
+      "lines": [
+        "The lower hike is part of the captain's perimeter."
+      ]
+    },
+    "water_trainer_fennel_win": {
+      "speaker": "Fennel",
+      "portrait": "res://assets/ui/portraits/grunt_a.png",
+      "lines": [
+        "You have the trail. Venn holds the waterfall approach above."
+      ]
+    },
+    "water_trainer_fennel_lose": {
+      "speaker": "Fennel",
+      "portrait": "res://assets/ui/portraits/grunt_a.png",
+      "lines": [
+        "You watched the falls instead of the battle. Give this exchange your full attention."
+      ]
+    },
+    "water_trainer_venn_intro": {
+      "speaker": "Officer Venn",
+      "portrait": "res://assets/ui/portraits/officer_b.png",
+      "lines": [
+        "The concealed gate opens only when my team can no longer hold it."
+      ]
+    },
+    "water_trainer_venn_win": {
+      "speaker": "Officer Venn",
+      "portrait": "res://assets/ui/portraits/officer_b.png",
+      "lines": [
+        "The approach is lost. The passage behind the falls is clear."
+      ]
+    },
+    "water_trainer_venn_lose": {
+      "speaker": "Officer Venn",
+      "portrait": "res://assets/ui/portraits/officer_b.png",
+      "lines": [
+        "Recover below before returning. The wet-cave fight beyond me will ask more of you."
+      ]
+    },
+    "water_trainer_morra_intro": {
+      "speaker": "Morra",
+      "portrait": "res://assets/ui/portraits/officer_a.png",
+      "lines": [
+        "The sluice bridge feeds the Heart Chamber. You will go no farther."
+      ]
+    },
+    "water_trainer_morra_win": {
+      "speaker": "Morra",
+      "portrait": "res://assets/ui/portraits/officer_a.png",
+      "lines": [
+        "The bridge is clear. Watch the discharge lanes beyond it."
+      ]
+    },
+    "water_trainer_morra_lose": {
+      "speaker": "Morra",
+      "portrait": "res://assets/ui/portraits/officer_a.png",
+      "lines": [
+        "You let the narrow approach choose your footing. Use the raised space."
+      ]
+    },
+    "water_trainer_evi_intro": {
+      "speaker": "Evi",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "One last practice match at the safe camp, if your team needs it."
+      ]
+    },
+    "water_trainer_evi_win": {
+      "speaker": "Evi",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "You kept a healthy answer for the final defender."
+      ]
+    },
+    "water_trainer_evi_lose": {
+      "speaker": "Evi",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "There is time to rest. A practice loss should teach you before the chamber does."
+      ]
+    },
+    "water_trainer_nerissa_intro": {
+      "speaker": "Captain Nerissa",
+      "portrait": "res://assets/ui/portraits/captain_b.png",
+      "lines": [
+        "My team and the channel network hold this chamber. Read both if you mean to break through."
+      ]
+    },
+    "water_trainer_nerissa_win": {
+      "speaker": "Captain Nerissa",
+      "portrait": "res://assets/ui/portraits/captain_b.png",
+      "lines": [
+        "The network is finished. The crystal can no longer hold the Deep Watcher."
+      ]
+    },
+    "water_trainer_nerissa_lose": {
+      "speaker": "Captain Nerissa",
+      "portrait": "res://assets/ui/portraits/captain_b.png",
+      "lines": [
+        "You treated the lanes as scenery. Watch the warning and move your creature onto safe ground."
+      ]
+    },
+    "water_pell_lesson_briefing": {
+      "speaker": "Swimmer Pell",
+      "portrait": "res://assets/ui/portraits/bryn.png",
+      "lines": [
+        "Pick the sheltered landing and watch your stamina while you cross.",
+        {
+          "text": "I have explained the route. Now practice in the inlet; the crossing itself is what counts.",
+          "effect": "water:water_swim_lesson_briefed"
+        }
+      ]
+    },
+    "water_iona_recipe": {
+      "speaker": "Researcher Iona",
+      "portrait": "res://assets/ui/portraits/maren.png",
+      "lines": [
+        "The Swim Stone lets you learn the saddle pattern: eight reed fiber, six driftwood and four reefstone.",
+        {
+          "text": "Here is the pattern. Craft the saddle at the proper station and equip it on a compatible companion before departure.",
+          "effect": "water:water_swim_saddle_recipe_taught"
+        }
+      ]
+    },
+    "water_edda_guardian_offer": {
+      "speaker": "Shrinekeeper Edda",
+      "portrait": "res://assets/ui/portraits/cloudreach_aila_clean.png",
+      "lines": [
+        "The Deep Watcher is free. If you invite it into your team, the five-creature limit still applies.",
+        {
+          "text": "Consider the companions already beside you. The ceremony lets you decide; declining does not undo the freedom you won.",
+          "effect": "water:water_guardian_offer_requested"
+        }
+      ]
+    }
+  }
+}
