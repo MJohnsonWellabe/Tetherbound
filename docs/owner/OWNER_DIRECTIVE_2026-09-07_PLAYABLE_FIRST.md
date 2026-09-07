@@ -91,3 +91,41 @@ directive costs nothing permanent.
 criteria remain the definition of done. This directive inserts one milestone before
 them; it does not lower them, and no document may be edited to make a deferred
 criterion look satisfied.
+
+---
+
+## Amendment — creature and character art is worth a few rounds, 2026-09-07
+
+### Verbatim
+
+> fixing the creatures visually is worth the time i think. just as long as it's not
+> countless tries but a few are fine.
+
+### What this changes
+
+The one-round cosmetic rule above is **too tight for creature and character art**, and
+only for that. Everything else on the deferred list keeps the one-round rule.
+
+**Creature and character meshes get up to THREE blind-judge rounds per subject.** Not
+one, not countless. The third rejection ends that subject: register it in
+`docs/SECOND_PASS_BACKLOG.md` with the three verdicts and move to the next one.
+
+The reason for the exception is the standing blind verdict that the cast is "three
+incompatible languages", and that it **cannot** be fixed by lighting, placement,
+retexturing or rescaling because the silhouettes were never designed as a set. That is
+the one visual problem where scene work genuinely cannot substitute, and the owner
+judges it worth real attempts.
+
+### What is still one round, and unchanged
+
+Scene visuals: grass, ground, lighting, landmarks, skies, night, dressing, composition,
+HUD. Run the blind judge **once to record a verdict, not to pass one**, exactly as
+above. This carve-out does not reopen scene polish.
+
+### Budget discipline still binds
+
+Every rule in `docs/prompts/77-...md` lane ART-PILOT still applies: check
+`meshy.py balance` and record it before spending; art-source order first; a code-blind
+judge picks among candidates and never judges its own output; write the
+`docs/specs/ASSET_LEDGER.md` row with credits before and after. Three rounds is a
+ceiling, not a target — stop earlier if a subject passes.
