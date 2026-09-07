@@ -1649,6 +1649,12 @@ func _maybe_begin_release() -> void:
 	if party == null or game == null:
 		return
 	if not bool(party.call("is_full")):
+		var capture_service := _water_capture_service(pending)
+		if capture_service != null:
+			var result: Dictionary = capture_service.complete_pending_capture(-1)
+			if result.get("ok", false):
+				say("%s joins the belt." % str(pending.call("label")))
+			return
 		# Room opened between the catch and the ceremony (a load, a future
 		# system). No choice to stage — the newcomer just takes the free
 		# holder, said out loud.
@@ -1764,7 +1770,14 @@ func _do_release() -> void:
 		return
 
 	var released: RefCounted = null
-	if _release_target >= PARTY.MAX_CREATURES:
+	var capture_service := _water_capture_service(pending)
+	if capture_service != null:
+		var result: Dictionary = capture_service.complete_pending_capture(_release_target)
+		if not result.get("ok", false):
+			return
+		released = result.get("released")
+		_release_land = 0 if _release_target >= PARTY.MAX_CREATURES else _release_target
+	elif _release_target >= PARTY.MAX_CREATURES:
 		released = pending
 		_release_land = 0
 	else:
@@ -1888,6 +1901,10 @@ func _creature_at(index: int) -> RefCounted:
 	var party: RefCounted = _party()
 	return party.call("at", index) if party != null else null
 
+
+func _water_capture_service(creature: RefCounted) -> Node:
+	var service := get_node_or_null("/root/Game/Session/LedgerRpc/WaterCaptureClaims")
+	return service if service != null and service.owns_pending(creature) else null
 
 func _pending_catch() -> RefCounted:
 	var game := state()

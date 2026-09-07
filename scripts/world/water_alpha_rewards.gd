@@ -27,7 +27,7 @@ static func _ready_host(game: Object, ledger: RefCounted) -> bool:
 
 ## One synchronous transaction: no signal/RPC/await between the first mutation
 ## and the disk journal. A repeated resolution cannot append late bystanders.
-static func resolve(game: Object, ledger: RefCounted, outcome: String, characters: Array) -> Dictionary:
+static func resolve(game: Object, ledger: RefCounted, outcome: String, characters: Array, capture: Dictionary = {}) -> Dictionary:
 	if not _ready_host(game, ledger):
 		return _refuse("not_host_or_ready")
 	if outcome not in ["won", "caught"]:
@@ -46,6 +46,12 @@ static func resolve(game: Object, ledger: RefCounted, outcome: String, character
 	var before: Dictionary = world.save_data()
 	var before_revision: int = world.revision
 	var before_sequence: int = ledger.seq
+	if outcome == "caught":
+		if capture.is_empty() or not eligible.has(str(capture.get("character_id", ""))) \
+				or str(capture.get("world_id", "")) != world.world_id \
+				or str(capture.get("creature", {}).get("species_id", "")) != "water_aquaryn":
+			return _refuse("missing_capture_claim")
+		world.water_capture_claims[str(capture.id)] = capture.duplicate(true)
 	var ops: Array = []
 	var flags: Array[String] = [RESOLVED, outcome_flag(outcome)]
 	for character: String in eligible:
@@ -64,6 +70,10 @@ static func resolve(game: Object, ledger: RefCounted, outcome: String, character
 		ledger.seq = before_sequence
 		return _refuse("journal_failed")
 	return {"ok": true, "code": "", "delta": {"seq": ledger.seq, "realm": "water", "ops": ops}}
+
+static func capture_claim(world_id: String, character: String, creature: Dictionary) -> Dictionary:
+	return {"id": (world_id + ":aquaryn").sha256_text(), "world_id": world_id,
+		"character_id": character, "creature": creature.duplicate(true)}
 
 static func entitled(world: RefCounted, character_id: String) -> bool:
 	return world != null and not character_id.is_empty() and world.flags.has(RESOLVED) \

@@ -190,6 +190,9 @@ func _ready() -> void:
 	var veilfall_transport := preload("res://scripts/net/water_veilfall_transport.gd").new()
 	veilfall_transport.name = "WaterVeilfallTransport"
 	add_child(veilfall_transport)
+	var capture_claims := preload("res://scripts/net/water_capture_claims.gd").new()
+	capture_claims.name = "WaterCaptureClaims"
+	add_child(capture_claims)
 
 
 # --- the one entry point --------------------------------------------------------
