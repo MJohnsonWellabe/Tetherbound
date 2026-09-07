@@ -265,14 +265,16 @@ func _refresh(game: Node) -> void:
 		details = "\n%s\nOnly one relic power can be active." % _power_description(_observed_hearts)
 	match state:
 		STATE_UNEARNED:
-			_prompt.call("configure", "%s — empty relic slot" % heart_name, interaction_radius, true)
+			# Companion sockets are visual until they offer a real power action.
+			# A status-only socket must not steal a nearby trainer's interaction.
+			_prompt.call("configure", "%s — empty relic slot" % heart_name, interaction_radius, not _companion_slot)
 			_prompt.set("actionable", false)
 			_set_visual(false, false, false)
 		STATE_EARNED_UNPLACED:
 			var label := "Place %s%s" % [heart_name, details]
 			if _companion_slot:
 				label = "%s — place at its own realm's shrine" % heart_name
-			_prompt.call("configure", label, interaction_radius, true)
+			_prompt.call("configure", label, interaction_radius, not _companion_slot)
 			_prompt.set("actionable", not _companion_slot)
 			_set_visual(true, false, false)
 		STATE_PLACED_INACTIVE:
