@@ -53,30 +53,45 @@ before a Godot class/import cache existed, so `UITokens`, the menu base class, a
 vendored textures could not resolve. After bootstrapping the ignored cache from the
 same PR #79 tree, the identical command produced the green result above.
 
-## OS-composited evidence
+## Clean viewport evidence
 
-One continuous full Meadows process ran with the Compatibility/OpenGL 3 renderer at
-1280×800. The capture probe drove the physical joypad bindings for Map and Back, not
-direct menu calls: first open → capture → close → second open → capture → discovery
-revision → capture → close → restored minimap capture. `DisplayServer.screen_get_image()`
-captured OS-composited pixels and the process exited 0.
+The first OS-composited capture round was rejected because another desktop window
+obscured roughly two thirds of every frame. Those files are superseded and are not
+evidence.
+
+A new continuous full Meadows process ran with the shipped Compatibility/OpenGL 3
+renderer at 1920×1080. The capture-only harness drove the physical joypad bindings for
+Map and Back: first open → viewport capture → close → gameplay HUD/minimap viewport
+capture → second open → viewport capture → close. It also rejected the second open
+unless the production map tab rebuilt a valid clipped canvas. The game viewport is the
+pixel source, so an unrelated foreground desktop window cannot enter the PNG. The
+process exited 0 with no `SCRIPT ERROR` or `ERROR` line.
 
 Command:
 
 ```powershell
-& 'C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64_console.exe' --path . --rendering-driver opengl3 --resolution 1280x800 --script tools/_probe_map_visible_window.gd
+& 'C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64_console.exe' --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/capture_gate_a_map_presentation.gd
 ```
 
 Local capture payloads for the independent code-blind judge (not committed):
 
-- `captures/restored_map_initial_os_20260907_1349.png` — SHA-256
-  `FA6F32398F0479D87BDB5093AFB4F68A33297BD88EA0BB19BDDA80139736729F`
-- `captures/restored_map_reopened_os_20260907_1349.png` — SHA-256
-  `BECDA643BB4D7C49BFC48EF8C87905C0AC77F56B07EE8DFB427D39E3CBA4557D`
-- `captures/restored_map_surveyed_os_20260907_1349.png` — SHA-256
-  `66D698069B073B88731C84D5295EE754CC977A07D0E61F67F230E3B692584EFA`
-- `captures/restored_minimap_hud_os_20260907_1349.png` — SHA-256
-  `F295190F7474A61B8DCE2F701083AE28AB819EE2F600ED0AC927587280198AE7`
+- `captures/clean_full_map_first_open.png` — 1920×1055, SHA-256
+  `1463E0B00D6C1668302E3AE06FE795D07261FCCE33557D8ABC9268B7F0A5FCC8`
+- `captures/clean_hud_minimap_after_close.png` — 1920×1055, SHA-256
+  `6CF7AE75F923F165CB81B908056456031A2A0598EF158E40000912FFD043460A`
+- `captures/clean_full_map_second_open.png` — 1920×1055, SHA-256
+  `68D098FF0852C24DA67F8C2600B1EC49DC1302AA7071D0D17B7655D6A211DB3A`
 
-This lane intentionally did not inspect or judge its own frames. The coordinator was
-notified that the files are ready for an independent code-blind verdict.
+Capture-integrity inspection found all three unobstructed, full-frame and populated;
+the gameplay frame visibly contains the restored HUD minimap and the second-open frame
+is not blank or corrupt. This is not an artistic verdict. The coordinator will send
+the files to an independent code-blind judge.
+
+After capture, the real-input regression was rerun:
+
+```powershell
+& 'C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64_console.exe' --headless --path . --script tests/smoke_gate_a_map_cycle.gd
+```
+
+It exited 0 and reported the production Meadows map opened, closed, opened a second
+time, closed cleanly, and returned world movement ownership.

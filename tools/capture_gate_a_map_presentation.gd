@@ -1,10 +1,11 @@
 extends SceneTree
 
-## Gate A full-map evidence: honest whole-world fit plus the production
-## controller zoom/pan path at a readable local scale.
+## Gate A full-map evidence: the production first-open -> close -> second-open
+## path, plus the restored HUD minimap after the first close. Screenshots come
+## from the game viewport, so foreground desktop windows cannot obscure them.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://shots/_diag/gate_a_map_presentation"
+const OUT_DIR := "res://ralph/reports/FOUR-BIOME-BUILD/hud-map/captures"
 const SETTLE_FRAMES := 300
 
 
@@ -43,17 +44,45 @@ func _run() -> void:
 	await _press_button_action("map")
 	for i in 90:
 		await process_frame
-	await _shoot("full_map_world_fit")
+	var menu: CanvasLayer = game.call("menu") as CanvasLayer
+	if menu == null or not bool(menu.call("is_open")) or str(menu.call("current_tab_id")) != "map":
+		push_error("physical Map did not produce the first full-map open")
+		quit(1)
+		return
+	await _shoot("clean_full_map_first_open")
 
-	# Two physical RT pulses select the 8x local view, then the physical right
-	# stick moves it along both axes before the second frame.
-	await _pulse_motion_action("map_zoom_in")
-	await _pulse_motion_action("map_zoom_in")
-	await _hold_axis(JOY_AXIS_RIGHT_X, 1.0, 75)
-	await _hold_axis(JOY_AXIS_RIGHT_Y, -0.75, 55)
+	await _press_button_action("menu_cancel")
 	for i in 30:
 		await process_frame
-	await _shoot("full_map_zoomed_panned")
+	if bool(menu.call("is_open")):
+		push_error("physical Back did not close the first full-map open")
+		quit(1)
+		return
+	await _shoot("clean_hud_minimap_after_close")
+
+	await _press_button_action("map")
+	for i in 90:
+		await process_frame
+	if not bool(menu.call("is_open")) or str(menu.call("current_tab_id")) != "map":
+		push_error("physical Map did not produce the second full-map open")
+		quit(1)
+		return
+	var bodies: Array = menu.get("_bodies")
+	var reopened_map := bodies[int(menu.get("_index"))] as Control
+	var reopened_canvas := reopened_map.get("_canvas") as Control if reopened_map != null else null
+	if reopened_canvas == null or not reopened_canvas.clip_contents:
+		push_error("second full-map open did not build a valid clipped canvas")
+		quit(1)
+		return
+	await _shoot("clean_full_map_second_open")
+
+	await _press_button_action("menu_cancel")
+	for i in 15:
+		await process_frame
+	if bool(menu.call("is_open")):
+		push_error("physical Back did not close the second full-map open")
+		quit(1)
+		return
 	quit(0)
 
 
