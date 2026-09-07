@@ -11,7 +11,28 @@ const HEIGHTFIELD := preload("res://scripts/world/stormwood_heightfield.gd")
 ## scatter and wild node names. Reserve a realm-owned block so these cannot
 ## collide with the existing Meadows authored orders.
 const WILD_ORDER_NAMESPACE := 300000
+## Named residents use a smaller, disjoint block. Their order is derived from
+## the authored id rather than array position, so inserting or reordering
+## catalogue rows cannot move a body or change the base director's seeded roll.
+const NAMED_ORDER_NAMESPACE := 100000
+const NAMED_ORDER_SPAN := 100000
 const ORDINARY_GROUP_COUNT := 2
+
+## G-3 profiles are the shared encounter shapes, expressed in the production
+## combat override schema. `power` is absolute because the combat config's
+## default is 8; the spec's multipliers are resolved here once.
+const BEHAVIOR_PROFILES := {
+	"WALL": {"telegraph": 0.85, "recovery": 1.1, "power": 12.0,
+		"chase_speed": 3.4, "reposition_distance": 2.5},
+	"CHARGER": {"preferred_range": 4.5, "lunge": 7.0, "telegraph": 0.6,
+		"recovery": 0.9, "attack_cooldown": 1.6, "power": 10.4},
+	"DIVER": {"telegraph": 0.4, "lunge": 5.5, "reposition_distance": 7.0,
+		"reposition_time": 1.6, "attack_cooldown": 0.9, "power": 7.2},
+	"CURRENT": {"attack_cooldown": 0.7, "recovery": 0.55,
+		"reposition_time": 0.5, "reposition_distance": 2.0, "power": 6.4},
+	"ACE": {"telegraph": 1.0, "recovery": 1.2, "power": 14.4,
+		"lunge": 6.0, "attack_cooldown": 1.8, "first_attack_delay": 2.5},
+}
 
 static var _encounters: Dictionary = {}
 static var _trainers: Dictionary = {}
@@ -60,7 +81,72 @@ static func wild_config(phase: String = "calm") -> Dictionary:
 			"stormwood_phase": selected_phase,
 			"stormwood_phase_options": _phase_options(cluster, tables),
 		})
+	# These are authored individuals, not another random table. Keep them in the
+	# same production wild config so deployment, combat, catching and cleanup all
+	# run through encounter_director.gd's existing paths.
+	for raw: Variant in source.get("named_encounters", []):
+		if raw is Dictionary:
+			var named := _named_spawn(raw as Dictionary, field)
+			if not named.is_empty():
+				spawns.append(named)
 	return {"spawns": spawns}
+
+
+static func named_once_flag(id: String) -> String:
+	return "stormwood:named:%s:cleared" % id
+
+
+## The base director mints `wild_once_<order>` for any alpha entry. Translate
+## only the six Stormwood named orders to their readable realm-owned flags;
+## ordinary/future alpha ids pass through unchanged.
+static func canonical_once_flag(runtime_id: String) -> String:
+	for raw: Variant in encounter_catalogue().get("named_encounters", []):
+		if not raw is Dictionary:
+			continue
+		var id := str((raw as Dictionary).get("id", ""))
+		if runtime_id == "wild_once_%d" % _named_order(id):
+			return named_once_flag(id)
+	return runtime_id
+
+
+static func named_order(id: String) -> int:
+	return _named_order(id)
+
+
+static func _named_spawn(authored: Dictionary, field: RefCounted) -> Dictionary:
+	var id := str(authored.get("id", ""))
+	var species := str(authored.get("placeholder_species", ""))
+	var raw_position: Array = authored.get("position", []) as Array
+	var level := int(authored.get("level", 0))
+	var profile := str(authored.get("behavior_profile", ""))
+	if id.is_empty() or species.is_empty() or raw_position.size() < 3 or level <= 0 \
+			or not BEHAVIOR_PROFILES.has(profile):
+		return {}
+	var x := float(raw_position[0])
+	var z := float(raw_position[2])
+	var once_flag := named_once_flag(id)
+	return {
+		"id": "stormwood_named_%s" % id,
+		"order": _named_order(id),
+		"species": species,
+		"count": 1,
+		"centre": [x, field.call("height_at", x, z), z],
+		"radius": 0.0,
+		"level": level,
+		"alpha": {"scale": 1.0,
+			"combat": (BEHAVIOR_PROFILES[profile] as Dictionary).duplicate(true)},
+		"stormwood_named_id": id,
+		"stormwood_region_id": str(authored.get("region_id", "")),
+		"stormwood_behavior_profile": profile,
+		"stormwood_once_flag": once_flag,
+		"catchable": bool(authored.get("catchable", false)),
+		"once_only": bool(authored.get("once_only", false)),
+		"fixed_encounter": true,
+	}
+
+
+static func _named_order(id: String) -> int:
+	return NAMED_ORDER_NAMESPACE + posmod(_stable_hash(id), NAMED_ORDER_SPAN)
 
 
 static func trainer_specs() -> Array[Dictionary]:

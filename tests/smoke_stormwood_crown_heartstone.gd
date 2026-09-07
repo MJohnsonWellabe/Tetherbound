@@ -53,19 +53,24 @@ func _run() -> void:
 
 	player.global_position = heartstone.global_position + Vector3(0, 0, -2.5)
 	arbiter.call("_recompute")
-	_check(arbiter.activate(), "the real heartstone prompt dispatches through InteractionArbiter")
+	_check(not arbiter.activate(), "the heartstone cannot be touched while its guardian is active")
 	_check(not game.progression.has("stormwood:rootgate_released"),
-		"an early heartstone touch cannot release the Rootgate")
+		"the guarded heartstone cannot release the Rootgate")
 
-	# Fixture prerequisites establish only the state the Crown interaction is
-	# allowed to consume. They intentionally do not impersonate Wen or a fight.
 	for flag: String in ["stormwood:act_i_complete", "stormwood:crown_reached",
-			"stormwood:engine_truth_learned"]:
+			"stormwood:named:crown_guardian:cleared"]:
 		game.progression.set_flag(flag)
 	heartstone.restore_progression_from_game(game)
 	arbiter.call("_recompute")
+	_check(not arbiter.activate(), "guardian clear alone cannot touch the heartstone before Wen's truth")
+	_check(not game.progression.has("stormwood:rootgate_released"),
+		"guardian clear alone cannot release the Rootgate")
+
+	game.progression.set_flag("stormwood:engine_truth_learned")
+	heartstone.restore_progression_from_game(game)
+	arbiter.call("_recompute")
 	var before := int(game.progression.get("revision"))
-	_check(arbiter.activate(), "the same production prompt accepts after Crown and truth prerequisites")
+	_check(arbiter.activate(), "the production prompt accepts after guardian clear and Wen's truth")
 	await process_frame
 	_check(game.progression.has("stormwood:rootgate_released"),
 		"heartstone event reaches shared chapter-events dispatch and writes Rootgate")
@@ -80,6 +85,7 @@ func _run() -> void:
 	_check(not game.progression.has("stormwood:rootgate_released"), "fresh world data removes the shared Rootgate flag")
 	game.world.load_data(saved)
 	_check(game.progression.has("stormwood:engine_truth_learned") and
+		game.progression.has("stormwood:named:crown_guardian:cleared") and
 		game.progression.has("stormwood:crown_reached") and
 		game.progression.has("stormwood:rootgate_released"),
 		"world save/load preserves Crown prerequisite and released Rootgate flags")

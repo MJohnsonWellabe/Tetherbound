@@ -21,6 +21,31 @@ func _spawn_creatures() -> void:
 	population_ready = true
 	print("STORMWOOD ENCOUNTERS READY wild=", _wild_creatures.size())
 
+
+## The shared director derives an alpha's once id from its stable order. Named
+## Stormwood residents translate that implementation id into an explicit realm
+## flag, so the durable save record remains meaningful if namespaces change.
+func _once_cleared(id: String) -> bool:
+	return super._once_cleared(CATALOGUE.canonical_once_flag(id))
+
+
+func _mark_once_cleared(id: String) -> void:
+	super._mark_once_cleared(CATALOGUE.canonical_once_flag(id))
+
+
+## Realm-local named options layered over the production alpha construction.
+## A non-catchable authored row uses the same trainer-owned guard the catch
+## pipeline already enforces; catchable rows remain ordinary wild opponents.
+func _make_alpha(wild: Node3D, species: String, spawn: Dictionary, centre_z: float) -> void:
+	super._make_alpha(wild, species, spawn, centre_z)
+	var id := str(spawn.get("stormwood_named_id", ""))
+	if id.is_empty():
+		return
+	wild.name = "Named_%s" % id
+	wild.set_meta("stormwood_named_encounter", id)
+	wild.set_meta("stormwood_behavior_profile", str(spawn.get("stormwood_behavior_profile", "")))
+	wild.set("trainer_owned", not bool(spawn.get("catchable", false)))
+
 func can_challenge(spec: Dictionary) -> bool:
 	if str(spec.get("id", "")) == "captain_marrow_dynamo_core":
 		var dynamo := get_parent().get_node_or_null("StormwoodDynamo")
