@@ -2,7 +2,7 @@
 # Capture the fixed-viewpoint survey, for the visual critic loop.
 #
 #   tools/survey.sh [godot-binary]
-#   tools/survey.sh --stormwood [godot-binary]
+#   tools/survey.sh --stormwood [godot-binary] [output-directory]
 #
 # Needs a virtual framebuffer and software Vulkan:
 #   apt-get install -y xvfb mesa-vulkan-drivers
@@ -34,10 +34,10 @@ fi
 cd "$(dirname "$0")/.."
 
 if [ "$MODE" = "stormwood" ]; then
-  OUT_DIR="shots/stormwood-foundation"
+  OUT_DIR="${STORMWOOD_SURVEY_OUT:-${2:-shots/stormwood-foundation}}"
   mkdir -p "$OUT_DIR"
   LOG_PATH="$OUT_DIR/survey.log"
-  "$GODOT" --path . --rendering-driver vulkan --resolution 1280x720 \
+  STORMWOOD_SURVEY_OUT="$OUT_DIR" "$GODOT" --path . --rendering-driver vulkan --resolution 1280x720 \
     --script tools/survey_stormwood.gd 2>&1 | tee "$LOG_PATH"
   STATUS=${PIPESTATUS[0]}
   if [ "$STATUS" -ne 0 ]; then

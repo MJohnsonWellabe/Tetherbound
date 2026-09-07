@@ -1,0 +1,33 @@
+# Stormwood foundation tree v2 — blind visual judgment
+
+**Verdict: reject.** The capture was judged as Forward+ / Vulkan frames; the generic Compatibility wording printed by the contact-sheet formatter does not describe this capture. This is therefore a judgment of the visible output, including its lighting.
+
+At sheet size, the eight frames read as the same sparse, dark-red woodland on a gently rolling brown-green plane. The trainer is legible when near the centre of a frame, and the red shrubs, pale fungi, and lime rosettes are individually recognizable. The rest of the forest collapses into a repeated black-maroon canopy silhouette over a low-detail ground field. The one potential landmark only becomes identifiable in **08-treebase** when the camera looks nearly straight up; it is not a destination that organizes the preceding views.
+
+## Addressable findings
+
+- **01-entry, 03-glowmoss, 04-conductor, 06-deepwood, and 07-stormheart-approach:** The same three pieces recur at conspicuous, even intervals: twisted grey trunk with a round maroon crown, compact red shrub, and bright green rosette. They make the spaces read as a scatter test rather than as distinct forest situations. Build irregular density around routes and clearings, vary the visible age and spacing of the installed trees, and group understory into real patches instead of distributing its few plants as markers.
+
+- **02-struck-sentinel and 05-crown-overlook:** Large portions of the images are bare, blurred ground with no foreground subject, route, obstacle, or mid-ground destination. The terrain has almost no value or material breakup, so the horizon strips and tree rows read as a stage edge. Give every approach a foreground layer and a mid-distance point of interest, then use groundcover, roots, rocks, banks, and clustered litter to connect those layers.
+
+- **All frames, especially 01-entry and 04-conductor:** The trees’ near-black wine foliage swallows their internal shape and makes their repeated crowns more obvious. Pale trunks are readable, but their branch forks terminate under dense, similar blobs. The forest needs a clearer light/dark hierarchy and more canopy spacing so that the player can read a route through it. The repeated blob-like crown form itself is an art/asset ceiling; lighting and placement can improve readability but cannot make these silhouettes carry the board’s broad, living-tree complexity.
+
+- **07-stormheart-approach and 08-treebase:** The landmark is absent as a promise from the approach and unreadable as a place from its base. In **08-treebase**, the tall tree has a narrow dotted blue vertical effect and a small, high red crown, but no readable entrance, inhabited platforms, bridges, banners, warm lights, or broad branching mass. Beside either Stormheart board, this is the central missing experience. Scene work can establish a foot, a sightline, warm/cool light hierarchy, and visible destination language; the board’s monumental, multi-level tree anatomy and built-in structure require art that is not present in these frames.
+
+- **08-treebase:** The blue vertical effect is a thin, evenly segmented line that reads as a debug-like particle trace rather than power moving through a living tree. The white moon is a large soft disc with no relationship to the landmark. Make the charged feature occupy meaningful screen area and visibly affect nearby trunk, foliage, and ground; reserve the brightest cool value for the landmark rather than the sky.
+
+- **All frames:** There are no creatures, NPCs, combat effects, dwellings, or signs of occupation. The trainer alone cannot supply the sense of life or creature-adventure scale that the Palworld references sustain even in travel shots. This is content/presentation work, not a lighting adjustment.
+
+## The three things that most separate these frames from the references
+
+1. **The Stormheart is not yet a region-defining stronghold landmark** (**07-stormheart-approach**, **08-treebase**). Both boards make a colossal, branching, electrically alive tree with readable vertical destinations the composition’s subject. Here it is either hidden among ordinary trees or reduced to a thin blue line in a canopy. Sighting, entrance/foot composition, and lighting are scene-fixable; the board-level giant tree form and its layered structural language need art beyond the visible set.
+
+2. **The forest lacks authored layers and an intentional route composition** (**02-struck-sentinel**, **05-crown-overlook**, **06-deepwood**). The boards use foliage, trunks, architecture, light, and distant masses in successive layers. These frames use bare terrain, identical tree spacing, and a few repeated accents, so their views have no destination or depth. Clustering, ground breakup, route framing, and lighting are scene-fixable. The installed canopy’s repeated rounded mass remains an art limitation.
+
+3. **There is no creature-adventure event or inhabited-world evidence** (**all frames**). The Palworld shots put distinct creatures, companions, combat, work, or a strong destination into every view, with high contrast and a clear subject. These shots present only a lone trainer crossing scenery. Adding life and staging it against readable backgrounds is fixable through scene and encounter presentation; the appeal and stylistic cohesion of any added creature/character art remain an art-quality question that cannot be answered by these frames.
+
+## Bar questions
+
+**A. Do these frames read as belonging to the world in `tetherbound-meadows-keyart.png`? No.** They share a stylised third-person presentation and saturated accent colour, but the result is sparse, dark, and repetitive where the project board calls for lush layers, landmarks, readable long-distance composition, and a world that feels inhabited. The forest scatter, ground layering, palette hierarchy, lighting, and landmark framing are scene-fixable. The ordinary-tree canopy language and the absent monumental Stormheart form are art gaps.
+
+**B. Shown beside `palworld-0*.jpg`, would someone say these are trying to be the same kind of game? No.** Palworld’s frames have a readable creature or action subject, dense but organized ground and foliage, strong value separation, and an immediate sense of a lived-in play space. These frames do not yet show creature life, an event, or a destination, and their ground and forest do not hold comparable density or depth. Scene composition, density, lighting, and encounter staging are fixable; the bespoke expressive landmark and vegetation silhouette quality visible in the references needs art not visible in this build.
