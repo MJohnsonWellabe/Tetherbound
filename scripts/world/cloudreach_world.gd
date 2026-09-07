@@ -63,6 +63,9 @@ const MASONRY_SHADER := preload("res://shaders/cloudreach_masonry.gdshader")
 const WORLD_RUNTIME := preload("res://scripts/world/cloudreach_world_runtime.gd")
 const SHELL_BUILD := preload("res://scripts/world/shell_build_budget.gd")
 const ENVIRONMENT_MATERIALS:=preload("res://scripts/world/cloudreach_environment_materials.gd")
+# CLOUDREACH-DRESS-0906: the brazier stand-in pair (X1) for the summit approach.
+const SUMMIT_TORCH := preload("res://assets/props/quaternius_fantasy/Torch_Metal.gltf")
+const SUMMIT_CANDLE_STAND := preload("res://assets/props/quaternius_fantasy/CandleStick_Stand.gltf")
 const BRIDGE_KIT:=preload("res://scripts/world/cloudreach_bridge_kit.gd")
 const AVIARY := preload("res://scripts/world/cloudreach_aviary.gd")
 const AVIARY_CONFIG_PATH := "res://data/config/cloudreach_aviary.json"
@@ -209,12 +212,23 @@ func _build_horizon_ranges() -> void:
 			var base:=at+Vector3(cos(angle)*size.x*0.34,-size.y*0.5,sin(angle)*size.z*0.34)
 			# Installed asymmetrical closed rock geometry, overlapping down to the
 			# common range base. No kilometre-high tabletop perimeter or new floor.
+			# The skyline wears the hazed tier rather than the near geology
+			# shader -- a range 2 km out rendered at the same saturation and
+			# contrast as the cliff under the player's feet is what removed
+			# every depth cue from the horizon (judge defect 13).
 			_visual_rock_mass(group,"RangeCrag%d"%cluster,base,cluster_size,
-				int(range_spec.get("seed",0))+cluster*17,2600.0)
+				int(range_spec.get("seed",0))+cluster*17,2600.0,
+				str(_visual_config.get("distant_relief",{}).get("range_material","cliff")))
 
 
+## `material_key` picks which entry of `_materials` the mass wears. It defaults
+## to "cliff" -- the near geology shader, the shipped behaviour -- but the
+## skyline and the distant lower relief pass a hazed tier instead, because the
+## blind judge's defect 13 was exactly that "far cliffs are as saturated and
+## contrasty as near ones". Falls back to "cliff" if the key is not built.
 func _visual_rock_mass(parent: Node3D,label: String,base: Vector3,size: Vector3,
-		seed_value: int,visible_distance: float=1600.0) -> Node3D:
+		seed_value: int,visible_distance: float=1600.0,
+		material_key: String="cliff") -> Node3D:
 	var root:=Node3D.new()
 	root.name=label
 	root.position=base
@@ -225,8 +239,9 @@ func _visual_rock_mass(parent: Node3D,label: String,base: Vector3,size: Vector3,
 	rock.scale=size/bounds.size
 	rock.position=-Vector3(bounds.get_center().x,bounds.position.y,bounds.get_center().z)*rock.scale
 	root.add_child(rock)
+	var mass_material: Material = _materials.get(material_key, _materials["cliff"])
 	for mesh: MeshInstance3D in rock.find_children("*","MeshInstance3D",true,false):
-		mesh.material_override=_materials["cliff"]
+		mesh.material_override=mass_material
 	_set_geometry_visibility(root,visible_distance)
 	return root
 
@@ -265,11 +280,13 @@ func _ready() -> void:
 	_shell_build.call("begin", self, simulation_only)
 	_build_materials()
 	await _shell_build.call("step", "materials")
-	# Pure backdrop: a flat cloud box under the world and the ranges on the
-	# skyline. Nothing stands on either.
+	# Pure backdrop: a flat cloud box under the world, the ranges on the
+	# skyline, and the distant relief below them (C4). Nothing stands on any
+	# of it.
 	if not simulation_only:
 		_build_cloud_sea()
 		_build_horizon_ranges()
+		_build_distant_relief()
 	await _build_regions()
 	await _shell_build.call("step", "regions")
 	_build_transition_ledges()
@@ -282,6 +299,11 @@ func _ready() -> void:
 	await _shell_build.call("step", "bridges")
 	await _build_landmarks()
 	await _shell_build.call("step", "landmarks")
+	# After the regions, routes and landmarks, never before: the cloud sheet
+	# clamps itself under every walkable surface through `ground_height_at`,
+	# and that index only knows about surfaces those builders have registered.
+	if not simulation_only:
+		_build_cloud_decks()
 	_build_return_gate()
 	await _shell_build.call("step", "return_gate")
 	await _build_authored_route_details()
@@ -510,9 +532,49 @@ func _build_materials() -> void:
 	_materials["leaf_gold"] = _material(Color("#8f8744"), 0.94)
 	_materials["tether"] = _material(Color("#651f2b"), 0.82)
 	_materials["heart"] = _emissive_material(Color("#5ee0c2"), 1.35)
+	# The two THIN HORIZONTAL glow bars (the realm key over the arrival gate,
+	# the waterward overlook's) are the same teal as the beacon and marker
+	# lights, but a 0.45 m slab seen edge-on across a 7 m span blows straight
+	# through the day exposure and reads white -- the blind judge called stand
+	# 01's "a pale blue-white slab between the gatehouse crenels ... sky showing
+	# through a missing roof piece". Same hue, a third of the energy, so it
+	# still reads as a lit key and not as a hole in the masonry. The cylinders
+	# (BeaconFire, MarkerLight) keep the full-energy `heart`: they are meant to
+	# be the brightest thing around.
+	_materials["key_glow"] = _emissive_material(Color("#4fd0b4"), 0.42)
 	_materials["wind_veil"] = _wind_veil_material()
 	_materials["cloud"] = _cloud_material()
 	_materials["cloud_bank"] = _emissive_material(Color("#d4e2e5"), 0.12)
+	# CLOUDREACH-ATMOS-0906 (C4/C5). The cloud sheets are UNSHADED: they are
+	# read at 1-4 km and any directional shading on a kilometre-wide plane
+	# reads as a tilted floor, not as cloud. The billows and the island mist
+	# are lit on purpose -- a bright top and a shaded base is the whole of what
+	# makes a puff read as cumulus rather than as a white blob -- with a small
+	# emission so the shaded side never falls into the ACES toe the way the
+	# Hall's torches did (docs/HANDOFF_2026-09-06.md trap 2).
+	var cloud_cfg: Dictionary = _visual_config.get("cloud_sea", {})
+	_materials["cloud_deck"] = _unshaded_material(Color(str(cloud_cfg.get("deck_colour", "#c4d5e0"))))
+	_materials["cloud_deck_far"] = _unshaded_material(Color(str(cloud_cfg.get("deck_far_colour", "#94abbd"))))
+	_materials["cloud_billow"] = _emissive_material(Color(str(cloud_cfg.get("billow_colour", "#f0f5f8"))),
+		float(cloud_cfg.get("billow_emission", 0.10)))
+	_materials["cloud_billow"].roughness = 1.0
+	var island_cfg: Dictionary = _visual_config.get("island_roots", {})
+	_materials["island_mist"] = _emissive_material(Color(str(island_cfg.get("mist_colour", "#e6eef4"))),
+		float(island_cfg.get("mist_emission", 0.16)))
+	_materials["island_mist"].roughness = 1.0
+	# Aerial perspective, as a material rather than as more fog: the fog
+	# density this realm runs is deliberately scaled DOWN (see
+	# cloudreach_atmosphere.json's distant_fog, which exists to stop the
+	# floating islands washing to flat grey), so distance has to be carried by
+	# what the far masses are painted with instead. Two tiers, both hazed
+	# toward the sky's own blue-grey and lifted by emission so a far ridge
+	# never reads as a black silhouette the way stand 04's did.
+	var relief_cfg: Dictionary = _visual_config.get("distant_relief", {})
+	var haze_energy := float(relief_cfg.get("haze_emission", 0.22))
+	_materials["haze_near"] = _emissive_material(Color(str(relief_cfg.get("haze_near_colour", "#8098a6"))), haze_energy)
+	_materials["haze_near"].roughness = 1.0
+	_materials["haze_far"] = _emissive_material(Color(str(relief_cfg.get("haze_far_colour", "#9fb4c1"))), haze_energy * 1.25)
+	_materials["haze_far"].roughness = 1.0
 	for material_key: String in ["masonry", "masonry_trim"]:
 		var masonry := ENVIRONMENT_MATERIALS.masonry(material_key=="masonry_trim")
 		_materials[material_key] = masonry
@@ -537,7 +599,8 @@ func _build_materials() -> void:
 		if geo_cfg.has(colour_key):
 			var c := Color(str(geo_cfg[colour_key]))
 			geology.set_shader_parameter(colour_key, Vector3(c.r, c.g, c.b))
-	for float_key: String in ["texture_scale", "strata_period_m", "strata_strength", "strata_ochre_strength",
+	for float_key: String in ["texture_scale", "normal_scale", "strata_period_m", "strata_strength",
+			"strata_ochre_strength",
 			"ledge_moss_strength", "ledge_lighten", "ledge_normal_threshold", "crevice_strength", "crevice_scale"]:
 		if geo_cfg.has(float_key):
 			geology.set_shader_parameter(float_key, float(geo_cfg[float_key]))
@@ -571,6 +634,289 @@ func _build_cloud_sea() -> void:
 	# The former stretched SphereMesh puffs read as dark/white floating debris
 	# from several real gameplay angles. Keep the cloud sea and atmospheric fog;
 	# authored sky banks return only with a proper soft-cloud material.
+
+
+## The cloud layer the region is named for.
+##
+## `_build_cloud_sea` above keeps its single "CloudSea" plane exactly where it
+## is: `cloudreach_world_runtime.gd::_mount_fall_recovery` measures the
+## fall-recovery kill plane off THAT node's own Y, so moving it moves the kill
+## plane. It also sits 340-1340 m under every authored stand, which is what the
+## blind judge (CLOUDREACH-GROUND-0906 JUDGE-after2, defect 1) read as "the gap
+## below it is a featureless grey-blue band, no valley floor, no cloud, no
+## depth".
+##
+## This adds the layer that answers that instead of moving the one that cannot
+## move: a sheet whose height at every cell is the LOCAL region tier minus
+## `drop_below_tier_m`, then clamped under any walkable surface the realm has
+## already registered (`ground_height_at`, which is why this runs after the
+## regions, routes and landmarks are built). So it is always a few hundred
+## metres below the player's feet and can never become a ceiling over a lower
+## stand -- the failure mode a single flat deck at one height would have.
+## Two sheets, the lower one further down and bluer, give the drop a second
+## depth cue; billows ride on the upper one in a single MultiMesh.
+func _build_cloud_decks() -> void:
+	var cfg: Dictionary = _visual_config.get("cloud_sea", {})
+	if cfg.is_empty() or not bool(cfg.get("enabled", true)):
+		return
+	var tiers := _region_tiers()
+	if tiers.is_empty():
+		return
+	var realm: Dictionary = _config.get("realm", {})
+	var bounds: Dictionary = realm.get("world_bounds", {})
+	var margin := float(cfg.get("margin_m", 900.0))
+	var min_x := float(bounds.get("min_x", -1600.0)) - margin
+	var max_x := float(bounds.get("max_x", 1600.0)) + margin
+	var min_z := float(bounds.get("min_z", -500.0)) - margin
+	var max_z := float(bounds.get("max_z", 6000.0)) + margin
+	var spacing := maxf(40.0, float(cfg.get("grid_spacing_m", 110.0)))
+	var columns := maxi(2, int(ceilf((max_x - min_x) / spacing)) + 1)
+	var rows := maxi(2, int(ceilf((max_z - min_z) / spacing)) + 1)
+	var visible := float(cfg.get("visible_distance_m", 9000.0))
+
+	var root := Node3D.new()
+	root.name = "CloudDecks"
+	add_child(root)
+
+	# Heights first: the billow scatter below rides the same numbers the sheet
+	# is built from, so a billow can never float off its own deck.
+	var heights: Array[float] = []
+	heights.resize(columns * rows)
+	for row in rows:
+		var z := min_z + float(row) * spacing
+		for column in columns:
+			heights[row * columns + column] = cloud_sheet_height_at(
+				min_x + float(column) * spacing, z, spacing * 0.5)
+
+	_add_cloud_sheet(root, "CloudSeaUpper", min_x, min_z, spacing, columns, rows, heights, 0.0,
+		_materials["cloud_deck"], visible)
+	var lower_offset := float(cfg.get("lower_deck_offset_m", 320.0))
+	if lower_offset > 0.0:
+		_add_cloud_sheet(root, "CloudSeaLower", min_x, min_z, spacing, columns, rows, heights,
+			-lower_offset, _materials["cloud_deck_far"], visible)
+	_add_cloud_billows(root, cfg, min_x, min_z, spacing, columns, rows, heights, visible)
+
+
+## The cloud sheet's own height model, at one world XZ.
+##
+## The builder above fills its grid from this, and
+## `tools/_probe_cloudreach_cloud_decks.gd` reads the same function -- so a
+## probe can never report a height the mesh does not have. `neighbour_m` is how
+## far out the walkable-surface clamp also samples: a road ribbon with its
+## shoulders is about 40 m wide and the sheet grid is 110 m, so a whole route
+## can pass between two cell centres and be missed by a single sample.
+##
+## Returns the LOCAL region tier minus `drop_below_tier_m`, with a long swell,
+## clamped to stay `min_clearance_m` under anything `ground_height_at` knows is
+## walkable. A player must always be looking DOWN at this.
+func cloud_sheet_height_at(x: float, z: float, neighbour_m: float = 55.0) -> float:
+	var cfg: Dictionary = _visual_config.get("cloud_sea", {})
+	var tiers := _region_tiers()
+	if tiers.is_empty():
+		return NAN
+	var swell_m := maxf(1.0, float(cfg.get("swell_wavelength_m", 620.0)))
+	var y := _tier_height_at(tiers, z) - float(cfg.get("drop_below_tier_m", 250.0))
+	y += float(cfg.get("swell_amplitude_m", 26.0)) * sin(x / swell_m) * cos(z / swell_m * 1.21)
+	var clearance := float(cfg.get("min_clearance_m", 90.0))
+	for probe: Vector2 in [Vector2(x, z), Vector2(x - neighbour_m, z), Vector2(x + neighbour_m, z),
+			Vector2(x, z - neighbour_m), Vector2(x, z + neighbour_m)]:
+		# NAN off every registered surface, which is the common case out over
+		# open sky between the islands.
+		var ground := ground_height_at(probe.x, probe.y)
+		if not is_nan(ground):
+			y = minf(y, ground - clearance)
+	return y
+
+
+## The authored region crowns as (z, crown y), sorted by z and reduced to a
+## non-decreasing envelope. The realm climbs with z, so this is the whole "how
+## high is the land here" model the cloud sheet and the distant relief need --
+## read from `cloudreach_world.json` rather than restated, so a moved region
+## moves its cloud with it.
+##
+## The envelope matters: `high_roost_sky_shrine` sits at z=2920 y=1020, between
+## `windscar_ravine` (z=2850, y=470) and `upper_cloudreach` (z=4200, y=850). It
+## is a Fly-only pinnacle, not the local ground, and interpolating straight
+## through it spikes the model to 1020 right where the stands at z~3260 stand at
+## about 610 -- which would hang the cloud sheet 115 m OVER the player's head
+## instead of below their feet. Dropping any crown that stands above every
+## crown further up the realm keeps the model on the walkable tier.
+func _region_tiers() -> Array[Vector2]:
+	var raw_tiers: Array[Vector2] = []
+	for raw: Variant in _config.get("regions", []):
+		if not raw is Dictionary:
+			continue
+		var at := _vec3((raw as Dictionary).get("position", []))
+		raw_tiers.append(Vector2(at.z, at.y))
+	raw_tiers.sort_custom(func(a: Vector2, b: Vector2) -> bool: return a.x < b.x)
+	var tiers: Array[Vector2] = []
+	for i in raw_tiers.size():
+		var lowest_ahead := INF
+		for j in range(i + 1, raw_tiers.size()):
+			lowest_ahead = minf(lowest_ahead, raw_tiers[j].y)
+		if raw_tiers[i].y <= lowest_ahead:
+			tiers.append(raw_tiers[i])
+	return tiers
+
+
+func _tier_height_at(tiers: Array[Vector2], z: float) -> float:
+	if tiers.size() == 1:
+		return tiers[0].y
+	if z <= tiers[0].x:
+		return tiers[0].y
+	if z >= tiers[tiers.size() - 1].x:
+		return tiers[tiers.size() - 1].y
+	for i in range(1, tiers.size()):
+		if z <= tiers[i].x:
+			var a: Vector2 = tiers[i - 1]
+			var b: Vector2 = tiers[i]
+			var t := (z - a.x) / maxf(b.x - a.x, 0.001)
+			return lerpf(a.y, b.y, smoothstep(0.0, 1.0, t))
+	return tiers[tiers.size() - 1].y
+
+
+func _add_cloud_sheet(parent: Node3D, label: String, min_x: float, min_z: float, spacing: float,
+		columns: int, rows: int, heights: Array[float], offset_y: float,
+		material: Material, visible_distance: float) -> void:
+	var tool := SurfaceTool.new()
+	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	tool.set_material(material)
+	for row in rows - 1:
+		for column in columns - 1:
+			var x0 := min_x + float(column) * spacing
+			var x1 := x0 + spacing
+			var z0 := min_z + float(row) * spacing
+			var z1 := z0 + spacing
+			var a := Vector3(x0, heights[row * columns + column] + offset_y, z0)
+			var b := Vector3(x1, heights[row * columns + column + 1] + offset_y, z0)
+			var c := Vector3(x0, heights[(row + 1) * columns + column] + offset_y, z1)
+			var d := Vector3(x1, heights[(row + 1) * columns + column + 1] + offset_y, z1)
+			tool.add_vertex(a)
+			tool.add_vertex(c)
+			tool.add_vertex(b)
+			tool.add_vertex(b)
+			tool.add_vertex(c)
+			tool.add_vertex(d)
+	tool.generate_normals()
+	var mesh := MeshInstance3D.new()
+	mesh.name = label
+	mesh.mesh = tool.commit()
+	mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	mesh.visibility_range_end = visible_distance
+	mesh.visibility_range_end_margin = 400.0
+	parent.add_child(mesh)
+
+
+## Cumulus tops riding the upper sheet, in ONE MultiMesh -- a cloud sea reads
+## as cloud because it has form above the plane, and as a painted floor because
+## it does not. Lit (not unshaded) on purpose: the directional light is what
+## gives a billow a bright top and a shaded base.
+func _add_cloud_billows(parent: Node3D, cfg: Dictionary, min_x: float, min_z: float,
+		spacing: float, columns: int, rows: int, heights: Array[float],
+		visible_distance: float) -> void:
+	var count := maxi(0, int(cfg.get("billow_count", 460)))
+	if count == 0:
+		return
+	var radii: Array = cfg.get("billow_radius_m", [46.0, 132.0])
+	var min_r := float(radii[0]) if radii.size() > 0 else 46.0
+	var max_r := float(radii[1]) if radii.size() > 1 else 132.0
+	var flatten := float(cfg.get("billow_flatten", 0.42))
+	var rise := float(cfg.get("billow_rise_m", 14.0))
+	var sphere := SphereMesh.new()
+	sphere.radius = 1.0
+	sphere.height = 2.0
+	# 12x6 flattened to a single squash factor gave every billow the same
+	# scalloped crescent silhouette, and the judge counted "the same crescent
+	# silhouette repeats about six times in a row". More segments, and a
+	# per-instance squash below, is what breaks that up.
+	sphere.radial_segments = 14
+	sphere.rings = 7
+	sphere.material = _materials["cloud_billow"]
+	var multi := MultiMesh.new()
+	multi.transform_format = MultiMesh.TRANSFORM_3D
+	multi.mesh = sphere
+	multi.instance_count = count
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(cfg.get("seed", 20260906))
+	for i in count:
+		var column := rng.randi_range(0, columns - 1)
+		var row := rng.randi_range(0, rows - 1)
+		var x := min_x + float(column) * spacing + rng.randf_range(-spacing, spacing) * 0.5
+		var z := min_z + float(row) * spacing + rng.randf_range(-spacing, spacing) * 0.5
+		var y: float = heights[row * columns + column] + rise * rng.randf()
+		var r := rng.randf_range(min_r, max_r)
+		var basis := Basis.IDENTITY.rotated(Vector3.UP, rng.randf() * TAU)
+		# Squash varies per instance, not per deck: a cloud sea is billows of
+		# different build, and one shared squash is what made these read as a
+		# repeated stamp.
+		var squash := flatten * rng.randf_range(0.7, 1.55)
+		basis = basis.scaled(Vector3(r, r * squash, r * rng.randf_range(0.66, 1.05)))
+		multi.set_instance_transform(i, Transform3D(basis, Vector3(x, y, z)))
+	var node := MultiMeshInstance3D.new()
+	node.name = "CloudBillows"
+	node.multimesh = multi
+	node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	node.visibility_range_end = visible_distance
+	node.visibility_range_end_margin = 400.0
+	parent.add_child(node)
+
+
+## Distant LOWER land, which this region has never had.
+##
+## `_build_horizon_ranges` already puts ten ranges on the skyline, but every
+## one of them is a peak ABOVE the player. That is why the blind judge
+## (CLOUDREACH-GROUND-0906 JUDGE-after2, defect 1) read stand 08 as "the world
+## ends at a hard grey haze line behind the cottages, reading as a sea or a
+## void", and stand 04 as "a razor-straight terrain edge with sky under it,
+## nothing beyond": a plateau rim with nothing under the horizon has no depth
+## to give.
+##
+## These are wide, low masses out past the realm's own footprint whose tops sit
+## a few hundred metres BELOW the local tier, so a stand on a rim looks DOWN
+## onto them. They wear a hazed material rather than the near cliff shader --
+## the same judge's defect 13, "far cliffs are as saturated and contrasty as
+## near ones" -- and the cloud sheet runs between the player and them, so they
+## emerge through cloud the way the key art's far ridges do.
+func _build_distant_relief() -> void:
+	var cfg: Dictionary = _visual_config.get("distant_relief", {})
+	if cfg.is_empty() or not bool(cfg.get("enabled", true)):
+		return
+	var tiers := _region_tiers()
+	if tiers.is_empty():
+		return
+	var root := Node3D.new()
+	root.name = "DistantLowerRelief"
+	add_child(root)
+	var per_tier := maxi(0, int(cfg.get("per_tier", 4)))
+	var lateral_min := float(cfg.get("lateral_min_m", 900.0))
+	var lateral_max := float(cfg.get("lateral_max_m", 1900.0))
+	var z_spread := float(cfg.get("z_spread_m", 700.0))
+	var drop: Array = cfg.get("drop_below_tier_m", [180.0, 420.0])
+	var width: Array = cfg.get("width_m", [520.0, 1100.0])
+	var height: Array = cfg.get("height_m", [220.0, 520.0])
+	var visible := float(cfg.get("visible_distance_m", 6000.0))
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(cfg.get("seed", 20260906))
+	var index := 0
+	for tier: Vector2 in tiers:
+		for i in per_tier:
+			# Left and right of the realm spine in turn, so no tier ends up
+			# with all of its distance on one side of the road.
+			var side := 1.0 if (i % 2) == 0 else -1.0
+			var lateral := rng.randf_range(lateral_min, lateral_max) * side
+			var at_z := tier.x + rng.randf_range(-z_spread, z_spread)
+			var top := tier.y - rng.randf_range(float(drop[0]), float(drop[1]))
+			var mass_width := rng.randf_range(float(width[0]), float(width[1]))
+			var mass_height := rng.randf_range(float(height[0]), float(height[1]))
+			var base := Vector3(lateral, top - mass_height, at_z)
+			# Farther out reads bluer and flatter: two tints, chosen by how far
+			# past the realm footprint this mass sits.
+			var far := absf(lateral) > lerpf(lateral_min, lateral_max, 0.55)
+			_visual_rock_mass(root, "LowerRelief%d" % index, base,
+				Vector3(mass_width, mass_height, mass_width * rng.randf_range(0.7, 1.15)),
+				int(cfg.get("seed", 20260906)) + index * 13, visible,
+				"haze_far" if far else "haze_near")
+			index += 1
 
 
 func _build_regions() -> void:
@@ -995,6 +1341,152 @@ func _line_eased_height(world_point: Vector3, natural_y: float, lines: Array[Dic
 ## world XZ point: authored height inside the cap radius, then eased down to
 ## meet any road/deck within reach (R2). `_mesa` emits its crown rings from
 ## exactly this function and shoulders conform to it, so the three agree.
+## OWNER 2026-09-06: "that completely flat green ground shouldn't exist".
+##
+## Only a `CliffMass` mesa got an eroded crown (`_mesa`'s `eroded_crown`);
+## every other crown emitted a single fan from one apex vertex to its rim,
+## which is a mathematically flat disc. That is the owner's flat green ground
+## and the same root as the blind judge's "a perfectly flat, edge-lit green
+## plane" (CLOUDREACH-GROUND-0906 JUDGE-after2, defect 3).
+##
+## The relief goes in the HEIGHT MODEL rather than in the mesh emitters,
+## because `_mesa` builds its visible crown AND its collision copy from
+## `_crown_height_at`, and every shoulder conforms to the same function
+## (`_walkable_height`). One change moves all three together; a change in the
+## emitters would move the render away from the collider and reopen exactly
+## the hole/sink class OP-0905-24/25 closed.
+##
+## It is suppressed to nothing wherever something authored owns the ground:
+##
+##   * inside a settlement clearance -- buildings sit at an authored y;
+##   * approaching the rim, so the crown still meets its cliff edge cleanly
+##     and the eroded shelf line below it is unchanged;
+##   * near any road or deck line -- and that one is free, because the caller
+##     hands this to `_line_eased_height`, which lerps to the road's own
+##     height within `reach + LINE_EASE_M` and so flattens the relief back out
+##     under the player's feet wherever a route actually runs.
+##
+## Amplitude scales with the crown's own radius: a 30 m landing pad reads as a
+## pad, and only the wide crowns that fill a frame get metres of roll.
+func _crown_relief_at(pad: Dictionary, world_point: Vector3,
+		lines: Array[Dictionary] = [] as Array[Dictionary]) -> float:
+	var cfg: Dictionary = _crown_relief_config()
+	if cfg.is_empty():
+		return 0.0
+	var centre: Vector3 = pad["position"]
+	var flat_radius := maxf(float(pad.get("flat_radius", 0.0)), 1.0)
+	if flat_radius < float(cfg.get("min_radius_m", 40.0)):
+		return 0.0
+	var r := Vector2(world_point.x - centre.x, world_point.z - centre.z).length()
+	var rim_fade := clampf(float(cfg.get("rim_fade_fraction", 0.78)), 0.0, 0.99)
+	if r >= flat_radius:
+		return 0.0
+	var edge := 1.0
+	if r > flat_radius * rim_fade:
+		edge = 1.0 - smoothstep(0.0, 1.0, (r - flat_radius * rim_fade) / maxf(flat_radius * (1.0 - rim_fade), 0.01))
+	if edge <= 0.0:
+		return 0.0
+	if bool(cfg.get("respect_settlements", true)) and _inside_settlement_clearance(world_point):
+		return 0.0
+	# Roads and bridge decks own their own height. `_crown_height_at`'s caller
+	# flattens the relief back out near them for free through
+	# `_line_eased_height`, but `_emit_mesa_top` has no such easing, so the
+	# suppression lives here where both paths get it. Without it a region
+	# crown would roll straight through an authored road ribbon, which is the
+	# hole/sink class OP-0905-24/25 closed.
+	# C3's terraces are a much larger displacement than the waves, so they need
+	# a much wider berth from a road than LINE_EASE_M gives: 15 m of drop
+	# recovered over 6 m is a wall across the ribbon's shoulder. Same
+	# suppression, second ease distance.
+	var terrace_line := 1.0
+	if not lines.is_empty():
+		var nearest := _nearest_route_line(world_point, lines)
+		var d: float = nearest["distance"]
+		if not is_inf(d):
+			var reach: float = float(nearest["half_width"]) + LINE_PIN_MARGIN_M
+			if d < reach:
+				return 0.0
+			if d < reach + LINE_EASE_M:
+				edge *= smoothstep(0.0, 1.0, (d - reach) / LINE_EASE_M)
+			var wide := maxf(LINE_EASE_M, float(cfg.get("terrace_line_ease_m", 55.0)))
+			terrace_line = smoothstep(0.0, 1.0, clampf((d - reach) / wide, 0.0, 1.0))
+	var reference := maxf(float(cfg.get("reference_radius_m", 150.0)), 1.0)
+	var amplitude := float(cfg.get("amplitude_m", 4.5)) * minf(1.0, flat_radius / reference)
+	var long_m := maxf(float(cfg.get("long_wavelength_m", 74.0)), 1.0)
+	var short_m := maxf(float(cfg.get("short_wavelength_m", 31.0)), 1.0)
+	var short_mix := clampf(float(cfg.get("short_amplitude_fraction", 0.34)), 0.0, 1.0)
+	# Deterministic and continuous across mesa boundaries: sampled in WORLD xz,
+	# not in the pad's local frame, so two crowns that touch do not step where
+	# they meet.
+	var long_wave := sin(world_point.x / long_m) * cos(world_point.z / long_m * 1.13)
+	var short_wave := sin(world_point.z / short_m * 1.07 + 2.1) * cos(world_point.x / short_m + 0.7)
+	return amplitude * edge * lerpf(long_wave, short_wave, short_mix) \
+		+ _crown_terrace_at(cfg, r, flat_radius, terrace_line)
+
+
+## C3: the benches that make a crown read as a high place rather than a table.
+##
+## The waves above give a crown texture, not structure -- +-4.5 m of rolling
+## over a 150 m radius is invisible from a stand -- and the blind judge's very
+## first defect was "there is no vertical in this cliff region ... nothing looks
+## down". The cause is geometric: a region crown is level right out to the point
+## where its cliff face starts, so a player standing on it has no edge in front
+## of them and no stepped profile behind them.
+##
+## This steps the crown DOWN from its centre to its rim in `bench_count` broad
+## benches with walkable risers between them. Down, and never up: `_surfaces`
+## registers a region as one ellipse at its authored `top`, and
+## `ground_height_at` answers with that flat number for the whole disc -- so a
+## crown that rose ABOVE it would spawn a loaded player or an evidence camera
+## inside a hill, while one that falls below it only drops them a little. That
+## is the same direction `_mesa`'s eroded crown already takes; its rim is
+## authored up to 48 m below the registered top.
+##
+## Lives here, in the shared height model, for the reason the whole file is
+## organised around: `_mesa` emits its visible crown AND its collision copy from
+## `_crown_height_at`/`_emit_mesa_top`, and every shoulder conforms through
+## `_walkable_height`. Putting relief into one emitter alone is exactly the
+## hole/sink class OP-0905-24/25 closed at real cost.
+func _crown_terrace_at(cfg: Dictionary, r: float, flat_radius: float, line_ease: float) -> float:
+	var total := float(cfg.get("terrace_drop_m", 0.0))
+	var benches := int(cfg.get("bench_count", 0))
+	if total <= 0.0 or benches <= 0 or line_ease <= 0.0:
+		return 0.0
+	# Measured at `reference_radius_m` and scaled down with the crown's own
+	# radius, exactly as `amplitude_m` is, so a road spur's small rugged crown
+	# reads as a stepped outcrop and a region crown as a terraced plateau.
+	var reference := maxf(float(cfg.get("reference_radius_m", 150.0)), 1.0)
+	total *= minf(1.0, flat_radius / reference)
+	# Its own rim fade, wider than the waves' 0.78: the terrace has to have
+	# recovered to zero by the time the fan's outermost ring lands on the
+	# authored contour, and doing that over the last 22 % of a 200 m crown
+	# would be a 12 m rise in 44 m. Fading over the last 18 % keeps the
+	# recovery under the player controller's floor angle while still reading
+	# as the rimrock a real plateau has.
+	var rim_fade := clampf(float(cfg.get("terrace_rim_fade_fraction", 0.82)), 0.05, 0.99)
+	var rn := clampf(r / maxf(flat_radius, 0.001), 0.0, 1.0)
+	var fade := 1.0
+	if rn > rim_fade:
+		fade = 1.0 - smoothstep(0.0, 1.0, (rn - rim_fade) / (1.0 - rim_fade))
+	if fade <= 0.0:
+		return 0.0
+	var bands := rn * float(benches)
+	var band := floorf(bands)
+	# `riser_fraction` of each bench is the slope between it and the next; the
+	# rest is level tread. A pure step function here would be an unclimbable
+	# wall at every bench edge.
+	var riser := clampf(float(cfg.get("bench_riser_fraction", 0.3)), 0.05, 0.95)
+	var step := smoothstep(1.0 - riser, 1.0, bands - band)
+	return -total * ((band + step) / float(benches)) * fade * line_ease
+
+
+func _crown_relief_config() -> Dictionary:
+	var cfg: Dictionary = _visual_config.get("crown_relief", {})
+	if not bool(cfg.get("enabled", true)):
+		return {}
+	return cfg
+
+
 func _crown_height_at(pad: Dictionary, world_point: Vector3, lines: Array[Dictionary]) -> float:
 	var centre: Vector3 = pad["position"]
 	var r := Vector2(world_point.x - centre.x, world_point.z - centre.z).length()
@@ -1515,8 +2007,20 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 		var right_edge := centre + right * width_here
 		left_track.append(centre - right * half_width * 0.53)
 		right_track.append(centre + right * half_width * 0.53)
-		left.y -= (4.0 + 9.0 * (1.0 + sin(float(i) * 1.71 + seed_value))) * edge_taper
-		right_edge.y -= (4.0 + 9.0 * (1.0 + cos(float(i) * 2.13 + seed_value))) * edge_taper
+		# C3. This is the lip a player actually stands on at the causeway and the
+		# arrival reveal -- those stands sit on route shoulders between the
+		# regions, not on a region crown, so the crown terraces never reach
+		# them. At the shipped 4-22 m over the ~8 m of outward flare it reads as
+		# a rolled grassy shoulder rather than an edge, which is the blind
+		# judge's "the world crests at eye level and stops". Deepening it is
+		# safe against the ground-truth gate for the reason the rest of this
+		# function is: the walkable rows, the wall's upper attachment edge and
+		# the collision copy are ALL built from these same vertices further
+		# down, so the render and the collider move together or not at all.
+		var edge_base := float(config.get("route_edge_drop_min_m", 4.0))
+		var edge_range := float(config.get("route_edge_drop_range_m", 9.0))
+		left.y -= (edge_base + edge_range * (1.0 + sin(float(i) * 1.71 + seed_value))) * edge_taper
+		right_edge.y -= (edge_base + edge_range * (1.0 + cos(float(i) * 2.13 + seed_value))) * edge_taper
 		var depth_mix := 0.5 + 0.5 * sin(float(i * 11 + seed_value * 17))
 		var depth := maxf(centre.y - float(config.get("geology_base_y", -210.0)),
 			lerpf(float(config.get("route_cliff_depth_min_m", 36.0)),
@@ -1897,6 +2401,17 @@ func _build_authored_route_details() -> void:
 			placement.add_child(model)
 			if asset == "bush" or asset == "flowers":
 				_apply_tree_palette(model, pocket.get_child_count())
+			elif asset.begins_with("rock"):
+				# CLOUDREACH-DRESS-0906. C9 routed `_place_local_prop`'s rocks
+				# through the stone palette, and that fix is real -- but this is
+				# a SECOND, independent rock placer, and it was never given the
+				# same line. Its rocks kept the nature kit's raw material and
+				# rendered at Rec.709 luminance 1.000 (probed at the stand-11
+				# aerie shelter), which is the other half of the judge's "rocks
+				# are in three unrelated materials": the pale cubes that "read
+				# as jade or ice", beside the near-black masses the palette's
+				# own multiply was producing.
+				apply_stone_palette(model)
 			_set_geometry_visibility(placement, float(detail.get("visibility_range_m", 320.0)))
 
 
@@ -1932,7 +2447,8 @@ func _route_detail_ground(at: Vector3) -> float:
 ## The stylised Rock_Medium_* kit ships a pale, near-white base colour that
 ## reads as wax or ice beside the trainer (blind verdict round 1, defect 7);
 ## every instance the world or the look pass places is retinted here to a
-## cool mid-grey with full roughness so it reads as stone.
+## cool mid-grey so it reads as stone. The tint REPLACES the source albedo
+## texture rather than multiplying onto it -- see the note in the body.
 ## One tinted duplicate per source material, cached: a fresh duplicate per
 ## instance (thousands of rocks) raised the headless renderer's
 ## `Parameter "material" is null` on every override, the cached one raises
@@ -1952,10 +2468,39 @@ static func apply_stone_palette(root_node: Node) -> void:
 			var tinted: StandardMaterial3D = _stone_palette_cache.get(base)
 			if tinted == null:
 				tinted = (base as StandardMaterial3D).duplicate() as StandardMaterial3D
-				tinted.albedo_color = Color("#8e918c")
-				tinted.roughness = 1.0
+				# CLOUDREACH-DRESS-0906. This retint used to set only the albedo
+				# COLOUR and leave the source `albedo_texture` in place, so the
+				# rendered result was the product of the two -- and the nature
+				# kit's shared `Rocks_Diffuse.png` is dark: measured over the
+				# whole 512x512 image its Rec.709 median is 0.324 and its most
+				# common colours are dark olives ((45,61,0), (53,65,31)). A
+				# 0.557 grey multiplied onto that lands near 0.18, not near
+				# 0.557, which is why the "cool mid-grey" this comment promised
+				# rendered as the blind judge's "near-black matte blobs with no
+				# highlight that read as bin bags or tents" at stand 11. Two of
+				# those masses measure Rec.709 medians of 0.059 and 0.138 in the
+				# 11-aerie-ground-connection frame against a 0.387 frame median.
+				# The routing fix (C9) was real and is still here -- every rock
+				# does reach this function -- but the function itself could not
+				# produce the value it names while it was multiplying.
+				#
+				# Clearing the texture makes the palette deterministic: these
+				# are low-poly faceted rocks, so the facets carry the form and
+				# the texture was contributing darkness rather than detail.
+				# Roughness comes off 1.0 for the other half of the same
+				# sentence: a fully rough surface has no highlight at all.
+				tinted.albedo_texture = null
+				# Value chosen by measurement, not by eye. With the texture
+				# gone, #8e918c rendered its sunlit faces at Rec.709 0.809 in
+				# the stand-02 frame -- brighter than the cottage plaster beside
+				# them at 0.711, against a 0.420 frame median, which trades the
+				# judge's black blobs for white ones. Scaling the linear albedo
+				# by ~0.52 puts a lit face near 0.60 and a shadowed one near
+				# 0.34, which brackets the frame median the way stone should.
+				tinted.albedo_color = Color("#676d66")
+				tinted.roughness = 0.82
 				tinted.metallic = 0.0
-				tinted.metallic_specular = 0.15
+				tinted.metallic_specular = 0.28
 				_stone_palette_cache[base] = tinted
 			mesh_instance.set_surface_override_material(surface_index, tinted)
 
@@ -2650,7 +3195,7 @@ func _build_realm_gate_crag(root: Node3D) -> void:
 	_castle_piece(root, "AncientCarvedGateway", CASTLE_GATE, Vector3(0, 0, 2), Vector3(28, 27, 6), _materials["stone_light"])
 	for side: float in [-1.0, 1.0]:
 		_castle_piece(root, "GateWatchPillar", CASTLE_TOWER, Vector3(side * 12, 0, 2), Vector3(7, 33, 7), _materials["stone"])
-	_box(root, "RealmKeyGlow", Vector3(0.0, 26.0, 1.7), Vector3(7.0, 0.45, 0.35), _materials["heart"], false)
+	_box(root, "RealmKeyGlow", Vector3(0.0, 26.0, 1.7), Vector3(7.0, 0.45, 0.35), _materials["key_glow"], false)
 
 
 func _build_three_bells(root: Node3D) -> void:
@@ -2780,7 +3325,7 @@ func _build_waterward_overlook(root: Node3D) -> void:
 	for side: float in [-1.0, 1.0]:
 		_box(root, "WaterwardPillar", Vector3(side * 10.0, 10.0, 1.0), Vector3(3.0, 20.0, 3.0), _materials["stone"], false)
 	_box(root, "WaterwardLintel", Vector3(0.0, 19.0, 1.0), Vector3(23.0, 2.5, 3.5), _materials["stone"], false)
-	_box(root, "WaterwardGlow", Vector3(0.0, 16.0, 0.7), Vector3(8.0, 0.4, 0.3), _materials["heart"], false)
+	_box(root, "WaterwardGlow", Vector3(0.0, 16.0, 0.7), Vector3(8.0, 0.4, 0.3), _materials["key_glow"], false)
 
 
 func _build_sky_shrine(root: Node3D) -> void:
@@ -2885,6 +3430,16 @@ func _build_summit_stronghold(root: Node3D) -> void:
 		"rope": _materials["rope"],
 		"veil": aviary_veil,
 		"lantern": _emissive_material(Color("#ffb15c"), 2.0),
+		# CLOUDREACH-DRESS-0906 / C7. Three materials the dressing pass needs
+		# and the drum never had. `membrane` is the translucent skin between
+		# ribs (lever b); `floor` is the aviary's own ground treatment, on the
+		# same worn-ground shader every other Cloudreach yard uses, so the
+		# keeper's floor matches the world rather than introducing a material;
+		# `cloth` is the existing banner shader with the device switched off,
+		# because plain wind cloth hanging in an aviary is not a faction banner.
+		"membrane": _aviary_membrane_material(),
+		"floor": ENVIRONMENT_MATERIALS.worn_ground(root.global_position, 26.0),
+		"cloth": _aviary_cloth_material(),
 	}
 	var aviary: Dictionary = AVIARY.build(root, aviary_materials, _read_json(AVIARY_CONFIG_PATH))
 	# Corner tether pylons: they stood on the watchtower tops; they now stand
@@ -2917,6 +3472,56 @@ func _build_summit_stronghold(root: Node3D) -> void:
 	summit_pylon.position = anchor.origin - Vector3(pylon_bounds.get_center().x, pylon_bounds.position.y, pylon_bounds.get_center().z) * pylon_scale
 	root.add_child(summit_pylon)
 	_develop_stronghold_spaces(root)
+
+
+
+## CLOUDREACH-DRESS-0906 / C7. The membrane between the aviary's ribs: a
+## translucent, slightly warm skin that catches the sky rather than a tinted
+## glass. Depth WRITE is off so the panels around the far side of the drum do
+## not stack into an opaque wall where the eye grazes the curve; depth TEST
+## stays on so the drum's own masonry still occludes it.
+func _aviary_membrane_material() -> StandardMaterial3D:
+	var material := StandardMaterial3D.new()
+	# Round 1 of this round skinned the dome at alpha 0.34 with a strong rim,
+	# and it read as GLASS -- the frame turned from an unbuilt planetarium into
+	# a greenhouse, which is a different wrong object. This is stretched hide
+	# and canvas over ribs instead: a warm parchment tone, more opaque, fully
+	# rough, and no rim term. That is what a working aviary's wind-skin is, and
+	# it cannot be mistaken for glazing.
+	# Alpha raised from 0.62 after a blind verdict sampled the dome at two
+	# points and got flat sky colour (134,155,156) back -- i.e. the skin was
+	# not reading as a surface at all, and the object was still "an open
+	# lattice of wooden ribs". At 0.82 it is stretched hide that light comes
+	# through, not a tint over the sky.
+	material.albedo_color = Color(0.86, 0.81, 0.68, 0.82)
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_PER_PIXEL
+	material.roughness = 1.0
+	material.metallic = 0.0
+	material.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
+	material.no_depth_test = false
+	material.depth_draw_mode = BaseMaterial3D.DEPTH_DRAW_DISABLED
+	return material
+
+
+## CLOUDREACH-DRESS-0906 / C7. Wind cloth for the aviary: the Hall's cloth
+## shader with the faction device switched off and a bleached, weathered
+## colour. Team Tether's banners already hang on the wings outside; the cloth
+## INSIDE the cage is laundry and wind-break, not heraldry.
+func _aviary_cloth_material() -> ShaderMaterial:
+	var material := ShaderMaterial.new()
+	material.shader = preload("res://assets/environment/team_tether/hall/banner_cloth.gdshader")
+	material.set_shader_parameter("colour", Color("#b9b09a"))
+	material.set_shader_parameter("selvage_colour", Color("#8d8470"))
+	material.set_shader_parameter("use_device", 0.0)
+	material.set_shader_parameter("size", Vector2(2.6, 5.2))
+	material.set_shader_parameter("tails", 2.0)
+	material.set_shader_parameter("notch_depth", 0.12)
+	material.set_shader_parameter("sway", 0.34)
+	material.set_shader_parameter("speed", 0.8)
+	material.set_shader_parameter("phase", 1.7)
+	return material
 
 
 func _build_summit_route_wing(root: Node3D, side: float, portal_z: float) -> void:
@@ -2993,9 +3598,65 @@ func _develop_stronghold_spaces(root: Node3D) -> void:
 			_box(root,"ApproachRetainingEdge",at+Vector3(0,0.45,0),Vector3(1.4,0.9,7.7),_materials["masonry"],false)
 			if i%2==0:
 				_plant_floor_pocket(root,at+Vector3(side*3.4,0.12,0),Vector2(3.0,5.5),941+i+int(side)*21,true)
-		_place_local_prop(root,"wagon",Vector3(side*18,0.12,-34),2.2,side*7)
-		_place_local_prop(root,"crate",Vector3(side*20,0.12,-38),1.05,side*28)
-		_place_local_prop(root,"barrel",Vector3(side*21.3,0.12,-37),1.1,18)
+		# CLOUDREACH-DRESS-0906 / C7 follow-up. The blind judge on the summit
+		# approach: "To its right a bare lumber stack and a plank shed sit half
+		# over the edge of the plateau." They did. The approach's own
+		# `ApproachRetainingEdge` runs from |x| = 15.0 out to 17.4 as z falls
+		# from -26 to -48.5, so it IS the plateau lip here -- and these three
+		# props stood at |x| = 18.0, 20.0 and 21.3, every one of them outside
+		# it, with nothing under them. Brought inside the retaining edge onto a
+		# masonry footing of their own, and turned from a discarded pile into a
+		# manned gate post: a lit brazier, a banner and a stack that belongs to
+		# somebody. The approach lane itself (|x| < 6, the road ribbon) is
+		# untouched, and none of this collides.
+		var post := Vector3(side * 12.6, 0.0, -35.0)
+		_box(root,"GatePostFooting",post+Vector3(0,0.22,0),Vector3(7.4,0.44,6.6),_materials["masonry"],false)
+		_place_local_prop(root,"wagon",post+Vector3(side*0.4,0.44,1.2),2.2,side*7)
+		_place_local_prop(root,"crate",post+Vector3(side*2.3,0.44,-2.0),1.05,side*28)
+		_place_local_prop(root,"barrel",post+Vector3(side*3.1,0.44,-1.0),1.1,18)
+		_place_local_prop(root,"crate",post+Vector3(side*1.6,1.49,-2.2),0.8,side*-14)
+		_summit_gate_post_brazier(root,post+Vector3(side*-2.6,0.44,-2.4))
+		_hang_cloudreach_banner(root,post+Vector3(side*-2.6,4.3,-2.6),Vector2(1.5,2.6),PI)
+
+
+
+## CLOUDREACH-DRESS-0906. A manned brazier on the summit approach, built from
+## the installed `CandleStick_Stand` + `Torch_Metal` pair X1 authorises as the
+## brazier stand-in (no licence-clean brazier mesh exists, and Meshy is not
+## allowed for a non-hero object). Real light, not just an emissive disc, so it
+## reads at the approach camera's distance and after dark.
+func _summit_gate_post_brazier(root: Node3D, at: Vector3) -> void:
+	_install_prop_scene(root, SUMMIT_CANDLE_STAND, "GatePostBrazierStand", at, 1.5, 0.0)
+	_install_prop_scene(root, SUMMIT_TORCH, "GatePostBrazierHead", at + Vector3.UP * 1.45, 1.25, 0.0)
+	_cylinder(root, "GatePostCoals", at + Vector3.UP * 1.62, 0.4, 0.16,
+		_emissive_material(Color("#f0954a"), 1.6))
+	var light := OmniLight3D.new()
+	light.name = "GatePostBrazierLight"
+	light.position = at + Vector3.UP * 2.2
+	light.light_color = Color("#ffb478")
+	light.light_energy = 3.0
+	light.omni_range = 16.0
+	root.add_child(light)
+
+
+## Height-normalised install of a packed scene, seated so its base sits at
+## `at`. `_place_local_prop` only reaches the fourteen ROUTE_DETAIL_SCENES; this
+## takes any installed scene.
+func _install_prop_scene(parent: Node3D, scene: PackedScene, label: String, at: Vector3,
+		height: float, yaw: float) -> Node3D:
+	var model := scene.instantiate() as Node3D
+	var bounds: AABB = BUILDING_PREFABS.new().call("combined_aabb", model)
+	var anchor := Node3D.new()
+	anchor.name = label
+	anchor.position = at
+	anchor.rotation.y = yaw
+	parent.add_child(anchor)
+	var factor := height / maxf(bounds.size.y, 0.01)
+	model.scale = Vector3.ONE * factor
+	model.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * factor
+	anchor.add_child(model)
+	_set_geometry_visibility(anchor, 520.0)
+	return anchor
 
 
 func _build_wayfinder(root: Node3D) -> void:
@@ -3311,6 +3972,20 @@ func _mesa(
 		var next := (i + 1) % sides
 		_add_geological_face(lower_tool, lower_ring[i], lower_ring[next], bottom_ring[i], bottom_ring[next],
 			Vector3(top_ring[i].x, 0, top_ring[i].z).normalized(), Vector3(top_ring[next].x, 0, top_ring[next].z).normalized(), minf(size.x * 0.09, 35.0))
+	# C5. A mass whose base hangs in open sky gets an underside and a root;
+	# one built down into the geology (every region CliffMass) does not, and
+	# would only be paying for triangles nobody can see. VISUAL ONLY -- the
+	# collision copy below is still emitted from the crown alone, so nothing
+	# here can move the collider away from the render or reopen the hole class
+	# OP-0905-24/25 closed.
+	var mass_bottom_world := root.global_position.y - size.y * 0.5
+	var airborne := label == "LandmarkLedge" and _is_airborne_mass(mass_bottom_world)
+	if airborne:
+		var root_cfg: Dictionary = _visual_config.get("island_roots", {})
+		var root_depth := minf(size.y * float(root_cfg.get("root_depth_fraction", 0.85)),
+			float(root_cfg.get("root_depth_max_m", 96.0)))
+		_emit_mesa_root(lower_tool, sides, bottom_ring, root_depth,
+			maxi(1, int(root_cfg.get("root_steps", 5))), seed_value)
 	lower_tool.generate_normals()
 	lower_tool.commit(mesh)
 
@@ -3322,6 +3997,14 @@ func _mesa(
 	root.add_child(mass)
 	if rugged_crown:
 		_build_crown_outcrops(root,size,seed_value)
+	if airborne:
+		# Mist at the base is what tells a player the island is HIGH rather
+		# than broken. Radius from the widest ring the mass actually has, so a
+		# small stub gets a collar and not a weather system.
+		var widest := 0.0
+		for point: Vector3 in bottom_ring:
+			widest = maxf(widest, Vector2(point.x, point.z).length())
+		_build_island_mist(root, widest, -size.y * 0.5, seed_value)
 	if label == "CliffMass" or label == "LandmarkLedge" or label.contains("RockShoulder"):
 		_build_embedded_rock_shelves(root, size, seed_value, label)
 
@@ -3367,6 +4050,109 @@ func _mesa(
 		body.add_child(shape_node)
 		root.add_child(body)
 	return root
+
+
+## Is this mass hanging in open sky rather than standing on the geology?
+##
+## Every region `CliffMass` is built from its crown down to
+## `landmass.geology_base_y`, so its bottom ring is buried and nothing below it
+## is ever seen. A `LandmarkLedge` is a 72 m stub whose base sits hundreds of
+## metres above that datum -- and `_mesa` closes its crown and its four wall
+## bands but has never capped the bottom, so it is an open-ended tube. That is
+## the whole of the blind judge's defect 5 (CLOUDREACH-GROUND-0906
+## JUDGE-after2, stands 04 and 11): "it has no underside, no roots, no mist, no
+## anchor -- it reads as a mesh that lost its parent and is a bug to any player
+## who sees it".
+func _is_airborne_mass(world_bottom_y: float) -> bool:
+	var cfg: Dictionary = _visual_config.get("island_roots", {})
+	if not bool(cfg.get("enabled", true)):
+		return false
+	var base := float(_visual_config.get("landmass", {}).get("geology_base_y", -210.0))
+	return world_bottom_y > base + float(cfg.get("airborne_gap_m", 120.0))
+
+
+## The underside and root mass a floating island never had.
+##
+## Rings pulled in and down from `bottom_ring` to a keel, wearing the same
+## geology shader as the wall above, so the island reads as torn-off bedrock
+## rather than a lid. Winding matches `_add_geological_face`'s own
+## (upper[i], upper[next], lower[i]) / (lower[i], upper[next], lower[next])
+## convention, which is the outward-facing one on every wall band above.
+func _emit_mesa_root(tool: SurfaceTool, sides: int, bottom_ring: Array[Vector3],
+		depth: float, steps: int, seed_value: int) -> void:
+	var base_y: float = bottom_ring[0].y
+	for point: Vector3 in bottom_ring:
+		base_y = minf(base_y, point.y)
+	var upper := bottom_ring
+	for step in range(1, steps + 1):
+		var t := float(step) / float(steps)
+		# A quarter-ellipse profile -- wide and shallow just under the rim,
+		# steepening toward the point -- is how a torn root actually tapers; a
+		# straight cone reads as a spike glued on.
+		var pinch := sqrt(maxf(0.0, 1.0 - t * t))
+		var lower: Array[Vector3] = []
+		for i in sides:
+			var p: Vector3 = bottom_ring[i]
+			var ragged := 0.82 + 0.24 * sin(float(i) * 0.83 + float(seed_value) * 0.37 + t * 3.1)
+			lower.append(Vector3(p.x * pinch * ragged, base_y - depth * t, p.z * pinch * ragged))
+		for i in sides:
+			var next := (i + 1) % sides
+			_add_surface_triangle(tool, upper[i], upper[next], lower[i])
+			_add_surface_triangle(tool, lower[i], upper[next], lower[next])
+		upper = lower
+	var keel := Vector3(0.0, base_y - depth * 1.07, 0.0)
+	for i in sides:
+		_add_surface_triangle(tool, upper[i], upper[(i + 1) % sides], keel)
+
+
+## The mist that tells a player the island is high, not broken. A collar of
+## soft billows around and just under the base ring, one MultiMesh per island,
+## unshaded so it stays bright against the cliff underside it sits on.
+func _build_island_mist(parent: Node3D, radius: float, base_y: float, seed_value: int) -> void:
+	var cfg: Dictionary = _visual_config.get("island_roots", {})
+	var count := maxi(0, int(cfg.get("mist_puffs", 26)))
+	if count == 0:
+		return
+	var sphere := SphereMesh.new()
+	sphere.radius = 1.0
+	sphere.height = 2.0
+	sphere.radial_segments = 10
+	sphere.rings = 5
+	sphere.material = _materials["island_mist"]
+	var multi := MultiMesh.new()
+	multi.transform_format = MultiMesh.TRANSFORM_3D
+	multi.mesh = sphere
+	multi.instance_count = count
+	var rng := RandomNumberGenerator.new()
+	rng.seed = seed_value * 97 + 13
+	var spread := float(cfg.get("mist_spread_fraction", 1.35))
+	var inner := maxf(1.0, float(cfg.get("mist_inner_fraction", 1.05)))
+	var below := float(cfg.get("mist_below_m", 26.0))
+	var puff_min := float(cfg.get("mist_radius_min_fraction", 0.30))
+	var puff_max := float(cfg.get("mist_radius_max_fraction", 0.62))
+	for i in count:
+		var angle := rng.randf() * TAU
+		# A COLLAR, strictly outside the mass footprint and strictly below its
+		# base. The first version drew from 0.55x the radius and up to 13 m
+		# ABOVE the base with puffs up to 0.66x -- which put half of them
+		# inside the island, and the blind judge read exactly that: "the white
+		# cloud puffs draw THROUGH it -- cloud sprites intersect its body front
+		# and back ... it reads as unrendered geometry". Mist that overlaps the
+		# thing it is meant to anchor makes the thing look broken, not high.
+		var r := radius * rng.randf_range(inner, maxf(inner + 0.05, spread))
+		var y := base_y - rng.randf_range(below * 0.12, below)
+		var puff := radius * rng.randf_range(puff_min, puff_max)
+		var basis := Basis.IDENTITY.rotated(Vector3.UP, rng.randf() * TAU)
+		basis = basis.scaled(Vector3(puff, puff * 0.36, puff * rng.randf_range(0.7, 1.05)))
+		multi.set_instance_transform(i, Transform3D(basis,
+			Vector3(cos(angle) * r, y, sin(angle) * r)))
+	var node := MultiMeshInstance3D.new()
+	node.name = "IslandMist"
+	node.multimesh = multi
+	node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	node.visibility_range_end = float(cfg.get("mist_visible_distance_m", 3200.0))
+	node.visibility_range_end_margin = 300.0
+	parent.add_child(node)
 
 
 ## A shallow vertical rim just below the crown's outer edge, giving the
@@ -3482,6 +4268,15 @@ func _build_embedded_rock_shelves(parent: Node3D, size: Vector3, seed_value: int
 		var angle := float(i) * TAU / float(outcrop_count) + float(seed_value) * 0.23
 		var depth_step:=clampf(size.y*0.085,22.0,58.0) if monumental else minf(22.0,size.y*0.10)
 		var depth := 9.0 + float(i % (5 if monumental else 3)) * depth_step
+		# C5, the falling pebbles. `depth` is measured DOWN from the crown and
+		# was never bounded by the mass's own height: a LandmarkLedge is 72 m
+		# tall and monumental, so `9 + 4*22 = 97` put four of its thirteen
+		# outcrops 25-61 m BELOW the bottom ring -- loose rocks hanging in open
+		# sky under a floating island, which is literally what the blind judge
+		# reported ("a striped stump with loose rocks below it", stands 04 and
+		# 11). Clamp so the outcrop's own lower face stays inside the mass.
+		# These are decorative meshes with no collider, so this moves nothing
+		# walkable.
 		var width := clampf(size.x * (0.29 if monumental else 0.24),
 			22.0 if monumental else 14.0,78.0 if monumental else 52.0)
 		width*=0.82+0.18*sin(float(i)*2.17+seed_value)
@@ -3502,6 +4297,8 @@ func _build_embedded_rock_shelves(parent: Node3D, size: Vector3, seed_value: int
 			# scaled to width/height reads as a cut ledge, so let them be a
 			# little squarer than a boulder.
 			height = width * (0.42 + float(i % 2) * 0.16)
+		# Clamped here, after the kit branch above may have grown `height`.
+		depth = clampf(depth, 9.0, maxf(9.0, size.y - height - 4.0))
 		var bounds_tool := BUILDING_PREFABS.new()
 		var bounds: AABB = bounds_tool.combined_aabb(rock)
 		rock.scale = Vector3(width, height, width * 0.70) / bounds.size
@@ -3526,6 +4323,13 @@ func _build_embedded_rock_shelves(parent: Node3D, size: Vector3, seed_value: int
 			shelf_width=clampf(size.x*0.32,28.0,86.0)*(0.82+0.16*float(i%3))
 			shelf_height=minf(24.0,size.y*0.12)
 			shelf_top=size.y*0.5-14.0-i*clampf(size.y*0.075,21.0,64.0)
+			# C5, same defect as the outcrops above: on a 72 m LandmarkLedge
+			# this reached local y=-62 against a bottom ring at -36, hanging
+			# two shelves in open sky below a floating island. Only the i>=3
+			# shelves are clamped, and only these: they are the visual-only
+			# transition planes (`_mesa(..., i<3)` is the collision flag), so
+			# this cannot move a collider. i<3 keep their authored heights.
+			shelf_top=maxf(shelf_top, -size.y*0.5+shelf_height+4.0)
 		var shelf := Vector3(cos(angle) * size.x * 0.44, shelf_top, sin(angle) * size.z * 0.44)
 		_mesa(parent, "VegetatedGeologicalShelf%d" % i, shelf - Vector3.UP * shelf_height * 0.5,
 			Vector3(shelf_width, shelf_height, shelf_width * 0.78), _materials["cliff"], _materials["upland"],
@@ -3621,6 +4425,16 @@ func _wind_veil_material() -> StandardMaterial3D:
 
 func _cloud_material() -> StandardMaterial3D:
 	var material := _emissive_material(Color(0.67, 0.77, 0.82, 1.0), 0.18)
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	return material
+
+
+## Flat colour, no lighting term at all. A kilometre-wide cloud sheet shaded by
+## the directional light reads as a tilted floor rather than as cloud, so the
+## sheets take their whole value from this colour and let the lit billows on
+## top of them supply the form.
+func _unshaded_material(colour: Color) -> StandardMaterial3D:
+	var material := _material(colour, 1.0)
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	return material
 

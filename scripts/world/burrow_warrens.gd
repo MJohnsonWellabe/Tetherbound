@@ -211,6 +211,10 @@ var _wall_t: float = 1.2
 var _skirt: float = 10.0
 var _chambers: Dictionary = {}          # id -> chamber dict
 var _markers: Dictionary = {}           # name -> global Vector3
+## WARRENS-ART-0906: how many interior earth skins this build hung, so the
+## smoke output carries evidence that the burrow wears one wall material.
+var _interior_skins: int = 0
+
 var _materials: Dictionary = {}
 var _footprint: Array = []              # local AABB rectangles [minx, minz, maxx, maxz]
 ## CONTENT-0828. `[centre, radius]` per passage, in local metres. Filled by
@@ -287,8 +291,15 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null, director
 			centre.x + size.x * 0.5, centre.z + size.y * 0.5])
 		_markers[str(chamber.get("id", ""))] = to_global(Vector3(centre.x, _floor_y, centre.z))
 
+	_interior_skins = 0
 	_build_chambers()
 	_build_passages()
+	# WARRENS-ART-0906 (W3): after the passages, because a bay's own side-wall
+	# skins are clipped against the doorways `_build_passages()` records.
+	_build_earth_clad_bays()
+	if _interior_skins > 0:
+		print("[warrens] %d interior earth skins across %d walls-clad chamber(s) and the passages"
+			% [_interior_skins, _clad_chamber_count()])
 	# W07-WARRENS-0904. Everything the next call adds stands OUTSIDE the cave,
 	# and `_build_interior_ambient()` must never darken it -- see
 	# `_tag_exterior_children()`.
@@ -612,13 +623,13 @@ func _build_chambers() -> void:
 		# collision-free earth skin the outer faces wear on the INSIDE of
 		# their walls and under their ceiling, so the first thing seen through
 		# the arch is dug earth, not cut stone with straight jambs.
-		if _is_earth_clad(id):
+		if _is_earth_clad(id) or _chamber_walls_clad(id):
 			var under := MeshInstance3D.new()
 			var under_box := BoxMesh.new()
 			var t := _interior_cladding_m()
 			under_box.size = Vector3(size.x + _wall_t * 2.0, t, size.y + _wall_t * 2.0)
 			under.mesh = under_box
-			under.material_override = _cladding_material()
+			under.material_override = _interior_cladding_material()
 			under.position = Vector3(centre.x, _floor_y + height - t * 0.5, centre.z)
 			under.name = "CeilingEarthUnderside_%s" % id
 			add_child(under)
@@ -655,7 +666,11 @@ func _build_chambers() -> void:
 			# boulders (the hall's front wall showed as grey ashlar to the right
 			# of the mouth in the before frames). Default: the mouth's front.
 			var wall_is_exterior := _face_is_exterior(id, side)
-			_build_wall(id, centre, size, height, side, opening, wall_is_exterior)
+			# WARRENS-ART-0906 (W3): a whole earth-clad chamber, OR the end
+			# wall of an authored bay (`site.earth_clad_bays`).
+			var clad_inward := _is_earth_clad(id) or _chamber_walls_clad(id) \
+				or _bay_end_wall(id, side)
+			_build_wall(id, centre, size, height, side, opening, wall_is_exterior, clad_inward)
 			# T1-WARRENS-EXT, owner+judge evidence "the mouth facade is a flat
 			# wall with a rectangular hole". `_build_passages()` records BOTH
 			# ends of every internal passage into `_openings` for the reveals
@@ -779,7 +794,7 @@ func _side_toward(a_id: String, b_id: String) -> String:
 ## a lintel over it (grandpa_house.gd's doorway technique -- a
 ## CharacterBody3D cannot walk through a gap that was never cut).
 func _build_wall(_id: String, centre: Vector3, size: Vector2, height: float,
-		side: String, opening: Dictionary, exterior := false) -> void:
+		side: String, opening: Dictionary, exterior := false, clad := false) -> void:
 	var along_x := side == "-z" or side == "+z"
 	var span := (size.x if along_x else size.y) + _wall_t * 2.0
 	var offset := (size.y if along_x else size.x) * 0.5 + _wall_t * 0.5
@@ -793,7 +808,7 @@ func _build_wall(_id: String, centre: Vector3, size: Vector2, height: float,
 
 	# The room-facing direction of this wall, for the earth-clad interiors.
 	var inward := Vector3.ZERO
-	if _is_earth_clad(_id):
+	if clad or _is_earth_clad(_id):
 		inward = Vector3(0.0, 0.0, -sign_) if along_x else Vector3(-sign_, 0.0, 0.0)
 
 	if opening.is_empty():
@@ -820,6 +835,196 @@ func _interior_cladding_m() -> float:
 	return float(_config.get("site", {}).get("interior_cladding_m", 0.15))
 
 
+## WARRENS-ART-0906 (W3, "interior rooms read as a stone box"). The mouth
+## chamber already wears the bank's own earth skin on the room side of its
+## walls (`site.earth_clad_interiors`, the WARRENS-EXT-0906 close-out). That
+## treatment is all-or-nothing per chamber and it also makes
+## `_build_structure()` skip the room -- correct for the mouth, which is a dug
+## throat, wrong for the hall, whose corbels, bays and beams the owner already
+## judged good and which this pass must keep.
+##
+## `site.earth_clad_bays` is the partial form: a named chamber wears the earth
+## skin on the wall at one END of it (`from`, e.g. "-z") and along `depth_m` of
+## both side walls from that end, and nothing else changes -- the masonry
+## dresser still runs over the whole room, so the pilasters, the capital
+## course and the ribs stand PROUD of the earth skin (0.32 m and 0.46 m of
+## projection against a 0.15 m skin) exactly as they stand proud of the stone
+## elsewhere. What the player sees walking in from the mouth is the earth of
+## the throat carrying a few metres INTO the hall before the cut stone starts,
+## which is what a dug room lined further in actually looks like -- and it is
+## the same `_cladding_material()` the mouth uses, so the two rooms share one
+## earth rather than meeting at a hard material seam in the doorway.
+##
+## The end wall itself goes through `_build_wall()`'s own `clad` path (so its
+## flanks and lintel are cut around the doorway for free). This pass owns the
+## two side-wall runs and the optional ceiling underside. Side-wall runs are
+## clipped short of any doorway on that wall (`_bay_clear_depth()`), so a bay
+## can never paper over an opening the player has to walk through.
+func _build_earth_clad_bays() -> void:
+	var entries: Array = _config.get("site", {}).get("earth_clad_bays", [])
+	if entries.is_empty():
+		return
+	var thickness := _interior_cladding_m()
+	if thickness <= 0.0:
+		return
+	var placed := 0
+	for entry_v: Variant in entries:
+		if not entry_v is Dictionary:
+			continue
+		var spec: Dictionary = entry_v as Dictionary
+		var id := str(spec.get("chamber", ""))
+		if not _chambers.has(id) or _is_earth_clad(id):
+			continue
+		var chamber: Dictionary = _chambers[id]
+		var centre := _local_of(chamber.get("at", []))
+		var size := _size_of(chamber.get("size", []))
+		var height := float(chamber.get("height", 4.0))
+		var from_side := str(spec.get("from", "-z"))
+		var along_x := from_side == "-z" or from_side == "+z"
+		var sign_ := -1.0 if from_side.begins_with("-") else 1.0
+		# The inside face of the end wall: where the bay starts measuring from.
+		var start: float = (centre.z if along_x else centre.x) \
+			+ sign_ * (size.y * 0.5 if along_x else size.x * 0.5)
+		var want := float(spec.get("depth_m", 5.0))
+		var depth := _bay_clear_depth(id, start, want, sign_, along_x)
+		if depth <= 0.2:
+			continue
+		if depth < want - 0.01:
+			print("[warrens] earth-clad bay %s/%s clipped %.2fm -> %.2fm by a doorway"
+				% [id, from_side, want, depth])
+		var mid: float = start - sign_ * depth * 0.5
+		# The two side walls, `depth` in from the end wall.
+		for s in [-1.0, 1.0]:
+			var skin := MeshInstance3D.new()
+			var box := BoxMesh.new()
+			var at: Vector3
+			if along_x:
+				# side walls run along z; their room faces are at +/- size.x/2
+				box.size = Vector3(thickness, height, depth)
+				at = Vector3(centre.x + s * (size.x * 0.5 - thickness * 0.5),
+					_floor_y + height * 0.5, mid)
+			else:
+				box.size = Vector3(depth, height, thickness)
+				at = Vector3(mid, _floor_y + height * 0.5,
+					centre.z + s * (size.y * 0.5 - thickness * 0.5))
+			skin.mesh = box
+			skin.material_override = _interior_cladding_material()
+			skin.position = at
+			skin.name = "BayEarthSkin_%s_%d" % [id, int(s)]
+			add_child(skin)
+			placed += 1
+		if bool(spec.get("ceiling", true)):
+			var lid := MeshInstance3D.new()
+			var lid_box := BoxMesh.new()
+			lid_box.size = Vector3(size.x, thickness, depth) if along_x \
+				else Vector3(depth, thickness, size.y)
+			lid.mesh = lid_box
+			lid.material_override = _interior_cladding_material()
+			lid.position = Vector3(centre.x if along_x else mid,
+				_floor_y + height - thickness * 0.5,
+				mid if along_x else centre.z)
+			lid.name = "BayEarthCeiling_%s" % id
+			add_child(lid)
+			placed += 1
+	if placed > 0:
+		print("[warrens] %d earth-clad bay surfaces across %d bay(s)" % [placed, entries.size()])
+
+
+
+## WARRENS-ART-0906 round 3, on the blind verdict's ranked #3. `earth_clad_bays`
+## above is the PARTIAL treatment, and doing exactly what the handoff's W3 row
+## asked for -- "the hall's first bay and the passage walls" -- is what produced
+## the defect the judge then named:
+##
+##   "04 uses a brown dirt-and-gravel wall while 05/06/07 add a grey speckled
+##    granite for the same structural role -- two unrelated rock materials in
+##    adjacent rooms with no transition, so the burrow has no material identity"
+##
+## A bay of earth beside unclad stone is two materials where there was one. The
+## verdict's own instruction is "pick ONE wall rock material for the burrow", so
+## `site.earth_clad_walls` names the chambers that wear earth on ALL FOUR walls
+## and under the ceiling.
+##
+## This is deliberately NOT `earth_clad_interiors`, which is a different and
+## heavier thing: that list also swaps the chamber's FLOOR to the apron earth and
+## makes `_build_structure()` skip the room entirely. Correct for the mouth, which
+## is a dug throat with no masonry in it; wrong for the hall and the den, whose
+## corbels, bay pilasters and ribs the owner already judged good and which this
+## pass keeps. Walls-clad chambers still go through the masonry dresser, so the
+## members stand proud of the 0.15 m skin exactly as they stood proud of the stone
+## (0.32 m for a bay shaft, 0.46 m for a corner pier).
+##
+## The wall skins ride `_build_wall()`'s own `clad` path rather than this file's
+## bay pass, which is what makes whole-room cladding safe: that path already cuts
+## each wall into flanks and a lintel around its doorway, so a clad wall can never
+## paper over an opening a player walks through.
+func _clad_chamber_count() -> int:
+	var n := 0
+	for id: String in _chambers:
+		if _is_earth_clad(id) or _chamber_walls_clad(id):
+			n += 1
+	return n
+
+
+func _chamber_walls_clad(chamber_id: String) -> bool:
+	var ids: Array = _config.get("site", {}).get("earth_clad_walls", [])
+	return ids.has(chamber_id)
+
+## Is `side` the end wall of an authored bay on `chamber_id`?
+func _bay_end_wall(chamber_id: String, side: String) -> bool:
+	for entry_v: Variant in _config.get("site", {}).get("earth_clad_bays", []):
+		if not entry_v is Dictionary:
+			continue
+		var spec: Dictionary = entry_v as Dictionary
+		if str(spec.get("chamber", "")) == chamber_id \
+				and str(spec.get("from", "-z")) == side:
+			return true
+	return false
+
+
+## How far a bay's side-wall skin can run from `start` before it would cross a
+## doorway. `_build_passages()` has already recorded both ends of every passage
+## in `_openings` (cave-local, with the axis the hole runs along), so this needs
+## no second source of truth: any opening whose hole runs along the bay's own
+## run axis is a doorway in one of the two side walls, and the skin stops
+## `pad` short of its near edge.
+func _bay_clear_depth(chamber_id: String, start: float, want: float,
+		sign_: float, along_x: bool) -> float:
+	var chamber: Dictionary = _chambers.get(chamber_id, {})
+	var centre := _local_of(chamber.get("at", []))
+	var size := _size_of(chamber.get("size", []))
+	# The opening centres `_build_passages()` records sit on the chamber's own
+	# rectangle edge (`a_edge`/`b_edge`), NOT on the wall box's outer face, so
+	# this compares against the half-size and not the half-size plus a wall
+	# thickness -- off by `_wall_t`, the test rejects every real doorway and
+	# the clip silently never fires.
+	var half_across: float = size.x * 0.5 if along_x else size.y * 0.5
+	var pad := 0.35
+	var limit := want
+	for entry_v: Variant in _openings:
+		var opening: Dictionary = entry_v as Dictionary
+		# `_openings.along_x` describes the HOLE, not the tunnel: true means
+		# the hole's width runs along x, i.e. it is cut in a -z/+z wall. This
+		# bay's `along_x` describes its END wall the same way, so its SIDE
+		# walls are the other pair and the holes worth checking are the ones
+		# whose flag is the opposite of the bay's.
+		var hole_along_x := bool(opening.get("along_x", false))
+		if hole_along_x == along_x:
+			continue
+		var at: Vector3 = opening.get("centre", Vector3.ZERO)
+		var across: float = (at.x - centre.x) if along_x else (at.z - centre.z)
+		if absf(across) < half_across - 0.5:
+			continue  # not in one of this bay's side walls
+		var along: float = at.z if along_x else at.x
+		var reach := (start - along) * sign_
+		if reach <= 0.0:
+			continue  # behind the bay's own end wall; not in its run
+		var near := reach - float(opening.get("width", 2.5)) * 0.5 - pad
+		if near < limit:
+			limit = maxf(near, 0.0)
+	return limit
+
+
 ## The inward twin of `_clad_exterior_face()`: a thin collision-free earth skin
 ## on the room side of one wall piece. `inward` is the unit direction from the
 ## wall into the room. Thin (`site.interior_cladding_m`) because the wall's own
@@ -832,10 +1037,11 @@ func _clad_interior_face(wall: MeshInstance3D, size: Vector3, piece_at: Vector3,
 	var box := BoxMesh.new()
 	box.size = Vector3(size.x, size.y, thickness) if along_x else Vector3(thickness, size.y, size.z)
 	skin.mesh = box
-	skin.material_override = _cladding_material()
+	skin.material_override = _interior_cladding_material()
 	skin.position = piece_at + inward * (_wall_t * 0.5 + thickness * 0.5)
 	skin.name = "InteriorEarthSkin_%s" % wall.get_instance_id()
 	add_child(skin)
+	_interior_skins += 1
 
 
 func _shift(at: Vector3, along_x: bool, by: float) -> Vector3:
@@ -920,6 +1126,45 @@ func _cladding_material() -> StandardMaterial3D:
 	return m
 
 
+
+## WARRENS-ART-0906. The INTERIOR twin of `_cladding_material()`.
+##
+## `site.exterior_cladding_colour` (#4a3a2a) is tuned for a surface in FULL
+## DAYLIGHT that also has to survive the mouth dome's own shadow -- see
+## `_cladding_material()`'s header and the ROUND 12 note it carries about the
+## apron's own #2b2118 going to black out there. Underground it is the wrong
+## end of the same problem: the cave is lit by low authored pools and a carried
+## torch, the stone this skin replaces is `_rock()` lerped 45% toward a
+## near-white tint, and measured on this lane's own first render the earth-clad
+## hall bay came back at a frame median of 24.6
+## (`shots/warrens_63/04-hall-dressing.png`) -- earth so dark it reads as a
+## hole rather than as a wall.
+##
+## `site.interior_cladding_colour` is that value, authored separately. Absent,
+## this returns `_cladding_material()` unchanged, so a site that never sets it
+## keeps exactly the surface it had. `_clad_exterior_face()` is deliberately
+## NOT routed through here: it is the one skin that really is outdoors.
+func _interior_cladding_material() -> StandardMaterial3D:
+	var site: Dictionary = _config.get("site", {})
+	if not site.has("interior_cladding_colour"):
+		return _cladding_material()
+	var key := "cladding_interior"
+	if _materials.has(key):
+		return _materials[key]
+	var m := StandardMaterial3D.new()
+	m.roughness = 0.98
+	m.albedo_texture = FLOOR_ALBEDO
+	m.albedo_color = Color(str(site.get("interior_cladding_colour")))
+	m.normal_enabled = true
+	m.normal_texture = FLOOR_NORMAL
+	m.normal_scale = 1.8
+	m.uv1_triplanar = true
+	m.uv1_scale = Vector3.ONE * FLOOR_UV_SCALE
+	m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	_materials[key] = m
+	return m
+
+
 func _clad_exterior_face(wall: MeshInstance3D, size: Vector3, piece_at: Vector3, along_x: bool) -> void:
 	var site: Dictionary = _config.get("site", {})
 	var thickness := float(site.get("exterior_cladding_m", 0.4))
@@ -987,6 +1232,7 @@ func _build_passages() -> void:
 		_floor_box(floor_size, Vector3(centre.x, _floor_y - _skirt * 0.5, centre.z))
 		_box(ceiling_size, Vector3(centre.x, _floor_y + height + 0.4, centre.z), _rock(), true, true)
 
+		var clad := _passage_is_clad(from, to)
 		for s in [-1.0, 1.0]:
 			var wall_at := centre
 			var wall_size := Vector3(length, height + _skirt, _wall_t)
@@ -996,10 +1242,71 @@ func _build_passages() -> void:
 				wall_at.x += s * (width * 0.5 + _wall_t * 0.5)
 				wall_size = Vector3(_wall_t, height + _skirt, length)
 			_box(wall_size, Vector3(wall_at.x, _floor_y + height * 0.5 - _skirt * 0.5, wall_at.z), _rock(), true, true)
+			# WARRENS-ART-0906 (W3): the same earth skin the mouth and the
+			# hall's first bay wear, on the corridor side of each passage
+			# wall. A passage carries no masonry dressing at all (it is not in
+			# `_build_structure()`'s chamber list), so a clad passage is pure
+			# earth wall to wall -- the dug link between two lined rooms.
+			_clad_passage_face(clad, wall_size, wall_at, along_x, s, height)
+		_clad_passage_ceiling(clad, centre, length, width, height, along_x)
 
 		if bool(passage.get("gated", false)):
 			_build_vault_door(centre, along_x, width, height)
 
+
+## WARRENS-ART-0906 (W3). Which passages wear the earth skin.
+## `site.earth_clad_passages` is either `true` (every passage) or a list of
+## "from>to" keys; absent or `false` leaves every passage as cut stone.
+func _passage_is_clad(from: String, to: String) -> bool:
+	var value: Variant = _config.get("site", {}).get("earth_clad_passages", false)
+	if value is bool:
+		return value as bool
+	if value is Array:
+		return (value as Array).has("%s>%s" % [from, to])
+	return false
+
+
+## One corridor-side skin. `s` is which side of the passage this wall is on,
+## so the skin hangs `interior_cladding_m` in from its room face; the wall's
+## own collider is untouched, exactly as `_clad_interior_face()` does it.
+func _clad_passage_face(clad: bool, wall_size: Vector3, wall_at: Vector3,
+		along_x: bool, s: float, height: float) -> void:
+	var thickness := _interior_cladding_m()
+	if not clad or thickness <= 0.0:
+		return
+	var skin := MeshInstance3D.new()
+	var box := BoxMesh.new()
+	box.size = Vector3(wall_size.x, height, thickness) if along_x \
+		else Vector3(thickness, height, wall_size.z)
+	skin.mesh = box
+	skin.material_override = _interior_cladding_material()
+	var at := wall_at
+	if along_x:
+		at.z -= s * (_wall_t * 0.5 + thickness * 0.5)
+	else:
+		at.x -= s * (_wall_t * 0.5 + thickness * 0.5)
+	skin.position = Vector3(at.x, _floor_y + height * 0.5, at.z)
+	skin.name = "PassageEarthSkin_%d_%d" % [int(wall_at.x * 10.0), int(wall_at.z * 10.0)]
+	add_child(skin)
+
+
+## The underside of a clad passage's ceiling slab -- without it the corridor
+## reads as earth walls under a grey stone lid, which is the same "stone box"
+## the verdict named, just narrower.
+func _clad_passage_ceiling(clad: bool, centre: Vector3, length: float, width: float,
+		height: float, along_x: bool) -> void:
+	var thickness := _interior_cladding_m()
+	if not clad or thickness <= 0.0:
+		return
+	var lid := MeshInstance3D.new()
+	var box := BoxMesh.new()
+	box.size = Vector3(length, thickness, width) if along_x \
+		else Vector3(width, thickness, length)
+	lid.mesh = box
+	lid.material_override = _interior_cladding_material()
+	lid.position = Vector3(centre.x, _floor_y + height - thickness * 0.5, centre.z)
+	lid.name = "PassageEarthCeiling_%d_%d" % [int(centre.x * 10.0), int(centre.z * 10.0)]
+	add_child(lid)
 
 ## The one door in the cave. A rock slab filling the passage, removed for good
 ## once the guardian is down (`_sync_vault_door`). No prompt, no UI, no key:
@@ -1185,11 +1492,40 @@ func _build_approach_apron() -> void:
 			# at the throat's outer end), so the last metres of ramp were
 			# coplanar with it and z-fought. The end now sits a step above.
 			end_local = height - global_position.y + 0.15
+	# WARRENS-ART-0906, the leftover named in `docs/HANDOFF_2026-09-06.md` §5.2
+	# and `ralph/reports/WARRENS-EXT-0906/REPORT.md` ("a thin pale sliver
+	# remains at the tube's right foot", `_sheet_final.png` frame 03).
+	# Measured, not guessed: the ramp tapers from `apron_mouth_width_m` (8.0)
+	# at the dome-face doorway to `apron_far_width_m` (4.6) at the throat's
+	# OUTER end, so its half-width there is 2.30 m -- while the throat shell
+	# at that same z is FLARED (`throat_flare` 0.18) to a half-width of
+	# 2.5 * 1.18 = 2.95 m. The ramp is 0.65 m narrower than the hole it ends
+	# in, at both feet, and what shows in that gap is raw terrain: pale grass
+	# ground inside a dark tube, which is the sliver. The taper's own reading
+	# ("the trample spreads wide at the threshold and narrows further off",
+	# this function's header) is not what the numbers do here either -- the
+	# WIDE end is the doorway, 8 m inside the throat, and the narrow end is
+	# the threshold. The threshold fan is what actually spreads outside.
+	#
+	# Fixed by construction rather than by re-tuning a width: the ramp is
+	# never allowed to be narrower than the throat shell standing on it. Both
+	# feet close for every value of `throat_flare` and every taper, including
+	# the ones a later tuning pass picks.
+	# ROUND 2: the first fix here used the THROAT SHELL's own half-width and
+	# the sliver survived it, which is the measurement correcting the guess.
+	# The gap is not bounded by the tube: `_bank_notch_open_factor()` opens
+	# the mound across `arch_width_m * 0.5 + arch_margin_m` (3.60 m) plus its
+	# own 0.6 m `edge_soft` taper, so the bare, un-mounded ground at the
+	# tube's foot runs out to ~4.2 m while the tube itself is 2.95 m. The
+	# ramp is measured against the NOTCH now, which is the thing that
+	# actually decides where the mound stops.
+	var throat_pad := 0.5
 	for i in steps:
 		var t := (float(i) + 0.5) / float(steps)
 		var z := outer_z - t * run
 		var top: float = lerpf(_floor_y, end_local, t)
-		var width := lerpf(mouth_width, far_width, t)
+		var width := maxf(lerpf(mouth_width, far_width, t),
+			_mouth_notch_half_width() * 2.0 + throat_pad)
 		# Same dirt as the chambers' own floors, but the EXTERIOR tint -- this
 		# ramp is OUTDOORS, in daylight, beside textured terrain and the
 		# mound's own boulders. T1-WARRENS-EXT: the interior-tuned lerp read
@@ -1221,6 +1557,28 @@ func _build_approach_apron() -> void:
 			Vector2(mouth_width, run).length() * 0.5 + APRON_CLEAR_MARGIN)
 	apron.add_to_group(GRASS_FIELD.CLEAR_GROUP)
 
+
+
+## The throat shell's own half-width at `z` -- `arch_width_m` * 0.5 times the
+## outer flare `_build_throat_shell()` applies at that z.
+func _throat_half_width_at(z: float) -> float:
+	var bank := _bank_cfg()
+	var z0 := _mouth_outer_z()
+	var z_front := z0 - float(bank.get("throat_depth_m", 6.0))
+	var z_back := z0 + float(bank.get("throat_overlap_m", 0.4))
+	return float(bank.get("arch_width_m", 5.0)) * 0.5 * _throat_flare(z, z_front, z_back)
+
+
+## How far either side of the centreline `_bank_notch_open_factor()` holds the
+## mound fully open at the mouth, including its own edge taper -- i.e. how wide
+## the bare ground at the throat's foot actually is. Always at least the flared
+## shell's own half-width, so this can only ever be the wider of the two.
+func _mouth_notch_half_width() -> float:
+	var bank := _bank_cfg()
+	var notch := float(bank.get("arch_width_m", 5.0)) * 0.5 \
+		+ float(bank.get("arch_margin_m", 0.6)) + 0.6
+	var z0 := _mouth_outer_z()
+	return maxf(notch, _throat_half_width_at(z0 - float(bank.get("throat_depth_m", 6.0))))
 
 func _build_lights() -> void:
 	for entry: Variant in _config.get("lights", []):
@@ -2182,8 +2540,40 @@ func _bank_material() -> ShaderMaterial:
 	var spoil_tint := Color(str(bank.get("spoil_tint", "#7a6248")))
 	mat.set_shader_parameter("spoil_tint", Vector3(spoil_tint.r, spoil_tint.g, spoil_tint.b))
 	mat.set_shader_parameter("spoil_darken", float(bank.get("spoil_darken", 0.55)))
+	_apply_geology(mat, bank)
 	_materials[key] = mat
 	return mat
+
+
+## WARRENS-ART-0906 round 5. OWNER, 2026-09-06: "the placed rocks on the
+## exterior don't look right ... something more like what we're doing on
+## cloudreach cliffs with the cliffs ... rather than using plastic prop assets."
+##
+## `bank.geology` maps 1:1 onto the `rock_*` uniforms `shaders/earth_bank.gdshader`
+## grew for it, exactly the way `cloudreach_visual.json::geology` maps onto
+## `shaders/cloudreach_cliff.gdshader` -- same pattern, same Rock030 texture,
+## and the grey-green granite palette the owner picked for Cloudreach (option A)
+## so the two biomes' stone is one material language. `strength` 0, or no block
+## at all, leaves the bank byte-identical to before this existed.
+func _apply_geology(mat: ShaderMaterial, bank: Dictionary) -> void:
+	var geo: Dictionary = bank.get("geology", {})
+	mat.set_shader_parameter("rock_albedo", ROCK_ALBEDO)
+	mat.set_shader_parameter("rock_normal_map", ROCK_NORMAL)
+	mat.set_shader_parameter("rock_strength", float(geo.get("strength", 0.0)))
+	if geo.is_empty():
+		return
+	mat.set_shader_parameter("rock_uv_scale", float(geo.get("texture_scale", 0.055)))
+	mat.set_shader_parameter("rock_slope_low_deg", float(geo.get("slope_low_deg", 46.0)))
+	mat.set_shader_parameter("rock_slope_high_deg", float(geo.get("slope_high_deg", 62.0)))
+	for key: String in ["strata_period_m", "strata_strength", "strata_ochre_strength",
+			"ledge_moss_strength", "ledge_lighten", "ledge_normal_threshold",
+			"crevice_strength", "crevice_scale"]:
+		if geo.has(key):
+			mat.set_shader_parameter(key, float(geo[key]))
+	for key: String in ["stone_light", "stone_dark", "strata_ochre_tint", "ledge_moss_tint"]:
+		if geo.has(key):
+			var c := Color(str(geo[key]))
+			mat.set_shader_parameter(key, Vector3(c.r, c.g, c.b))
 
 
 func _bank_add_vertex(st: SurfaceTool, v: Vector3, crest_for_norm: float,
@@ -2949,7 +3339,11 @@ func _build_bank_lamp_and_cable(holder: Node3D, bank: Dictionary, z0: float, rx:
 	post_mesh.bottom_radius = 0.07
 	post_mesh.height = post_h
 	post.mesh = post_mesh
-	post.material_override = _tether_metal_material()
+	# A pale grey rod with one red band on it is a barber pole; a dark post
+	# with a red foot collar is a lamp with a faction on it. `lamp_post_colour`
+	# absent keeps the shared Team Tether metal exactly as it was.
+	post.material_override = _material(Color(str(bank.get("lamp_post_colour")))) \
+		if bank.has("lamp_post_colour") else _tether_metal_material()
 	post.position = Vector3(side, base_y + post_h * 0.5, post_z)
 	holder.add_child(post)
 
@@ -2960,13 +3354,46 @@ func _build_bank_lamp_and_cable(holder: Node3D, bank: Dictionary, z0: float, rx:
 	lamp.light_energy = float(bank.get("lamp_energy", 1.1))
 	lamp.omni_range = float(bank.get("lamp_range_m", 9.0))
 	lamp.shadow_enabled = false
-	lamp.position = Vector3.UP * (post_h * 0.42)
+	# WARRENS-ART-0906 round 3. The omni sat ON the post's own axis, so the
+	# post was lit at zero distance and rendered as a near-white rod whatever
+	# its albedo said -- which is half of why the blind verdict read
+	# "a red-and-white striped pole". Standing the light `lamp_throw_m` out
+	# from the post (toward the road; the bulb and hood stay on the post,
+	# because a light source does not have to be the thing you see) gives the
+	# post grazing light instead of point-blank, and throws the pool where a
+	# player actually walks. 0 reproduces the old position exactly.
+	lamp.position = Vector3(0.0, post_h * 0.42, -float(bank.get("lamp_throw_m", 0.0)))
 	post.add_child(lamp)
 
+	# WARRENS-ART-0906 round 4, blind verdict round 2 on 03-mouth: "a modern
+	# mushroom-shade park lamp on a smooth grey aluminium pole with an
+	# unshaded emissive yellow sphere and a painted red base ... reads as a
+	# municipal streetlight", and in that verdict's own not-fixable-by-scene
+	# list, "it needs to be a different object -- a lantern, a torch, a marked
+	# cairn". Round 3 built the hood that turned a survey stake INTO a park
+	# lamp, which is the wrong vocabulary solved twice. `lamp_head_model` hangs
+	# a real installed prop instead: `Lantern_Wall` out of the fantasy props
+	# family this world already ships (two files, and all three of its textures
+	# were already installed -- see the ASSET_LEDGER row). The emissive sphere
+	# stays but shrinks to a flame inside the lantern's own cage rather than
+	# being the object itself. Unset, the old sphere-and-hood is unchanged.
+	var head_path := str(bank.get("lamp_head_model", ""))
+	var head: Node3D = null
+	if not head_path.is_empty():
+		var packed: PackedScene = load(head_path) as PackedScene
+		if packed != null:
+			head = packed.instantiate() as Node3D
+	if head != null:
+		head.scale = Vector3.ONE * float(bank.get("lamp_head_scale", 0.9))
+		head.position = lamp.position + Vector3(0.0, float(bank.get("lamp_head_y_m", 0.0)), 0.0)
+		head.rotation = Vector3(0.0, deg_to_rad(float(bank.get("lamp_head_yaw_deg", 0.0))), 0.0)
+		head.name = "TetherLampHead"
+		post.add_child(head)
 	var bulb := MeshInstance3D.new()
 	var bulb_mesh := SphereMesh.new()
-	bulb_mesh.radius = 0.11
-	bulb_mesh.height = 0.22
+	var bulb_r := float(bank.get("lamp_bulb_radius_m", 0.11))
+	bulb_mesh.radius = bulb_r
+	bulb_mesh.height = bulb_r * 2.0
 	bulb.mesh = bulb_mesh
 	# ROUND-6-0906, JUDGE-round5.md 03 ("an unlit black pole with a white
 	# sphere -- no glow, no colour, no Team Tether identity"): the bulb burns
@@ -2977,14 +3404,37 @@ func _build_bank_lamp_and_cable(holder: Node3D, bank: Dictionary, z0: float, rx:
 	bulb.material_override = _material(bulb_colour, float(bank.get("lamp_bulb_emission", 7.0)))
 	bulb.position = lamp.position
 	post.add_child(bulb)
+	# WARRENS-ART-0906 round 3, blind verdict on 03-mouth: "a red-and-white
+	# striped pole with a white ball on top ... reads as a barber pole, a
+	# survey stake or a debug marker". A bare sphere on a rod IS a survey
+	# stake; what makes a lamp read as a lamp at 16 m is the hood over the
+	# bulb, because that is the silhouette the eye knows. `lamp_hood_m` 0
+	# leaves the old bare bulb.
+	var hood_r := float(bank.get("lamp_hood_m", 0.0))
+	if hood_r > 0.0 and head == null:
+		var hood := MeshInstance3D.new()
+		var hood_mesh := CylinderMesh.new()
+		hood_mesh.top_radius = hood_r * 0.35
+		hood_mesh.bottom_radius = hood_r
+		hood_mesh.height = hood_r * 0.62
+		hood.mesh = hood_mesh
+		hood.material_override = _material(Color(str(bank.get("lamp_hood_colour", "#3a3128"))))
+		hood.position = lamp.position + Vector3(0.0, 0.13 + hood_r * 0.31, 0.0)
+		hood.name = "TetherLampHood"
+		post.add_child(hood)
+	# WARRENS-ART-0906 round 3: the oxblood stays (this post is the one Team
+	# Tether object at the threshold and the reserved colour is the point) but
+	# it stops being a ring at eye height, which is what read as a barber
+	# pole. `lamp_collar_y_m` is measured from the post's FOOT, so the band
+	# sits where a cable collar belongs; `lamp_collar_height_m` widens it.
 	var collar := MeshInstance3D.new()
 	var collar_mesh := CylinderMesh.new()
-	collar_mesh.top_radius = 0.085
-	collar_mesh.bottom_radius = 0.085
-	collar_mesh.height = 0.28
+	collar_mesh.top_radius = 0.095
+	collar_mesh.bottom_radius = 0.1
+	collar_mesh.height = float(bank.get("lamp_collar_height_m", 0.28))
 	collar.mesh = collar_mesh
 	collar.material_override = _material(Color(str(bank.get("lamp_collar_colour", "#6b1d1d"))))
-	collar.position = Vector3(0.0, -post_h * 0.5 + 1.55, 0.0)
+	collar.position = Vector3(0.0, -post_h * 0.5 + float(bank.get("lamp_collar_y_m", 1.55)), 0.0)
 	post.add_child(collar)
 
 	# The cable: staked into the bank behind the post and running low to the
@@ -3038,12 +3488,45 @@ func _build_throat_glow(holder: Node3D, bank: Dictionary, z_front: float, z_back
 ## (root mass, worn dirt lip)", "dead branches above the entrance read as
 ## random clutter". The throat's OUTER end (`z_front`, the ring a player
 ## actually walks through -- `_build_bank_lip_ring()` dresses the inner end
-## at the dome face, `throat_depth_m` further in) now carries its own worn
-## earth brow: a thick, irregular earth tube over the crown of the opening
-## and down both jambs to the ground, and `brow_roots` tapered bark tubes
-## drooping from that crown INTO the opening, every tip kept above
+## at the dome face, `throat_depth_m` further in) carries its own worn earth
+## brow.
+##
+## WARRENS-ART-0906 (W5, "the burrow arch reads as tubes, not compacted earth
+## and roots"). Rounds 5 and 6 both named the same defect and
+## `ralph/reports/WARRENS-EXT-0906/REPORT.md` already wrote the next move
+## down: "a brow that is part of the bank's own height field (a raised earth
+## lip in the grid above the cap, IN THE SAME SHADER) rather than a swept
+## tube". Two things made the old brow read as a tube and both are now gone:
+##
+##   * It was a `_tube_mesh()` sweep -- a constant-radius circular cross
+##     section around the arch, i.e. literally a pipe, whose silhouette is a
+##     smooth arc of uniform thickness from every angle.
+##   * It wore `_bank_earth_material()`, a StandardMaterial3D on the Ground030
+##     photo, while the bank two metres behind it wears `_bank_material()`,
+##     the `earth_bank.gdshader` grass/earth/spoil/moist blend. Two different
+##     materials on the same earth is exactly the "stacks unrelated materials"
+##     the round-5 verdict named.
+##
+## The brow is now a SURFACE, not a sweep: an annular collar swept around the
+## arch rim whose cross section is a quadratic Bezier from the rim (on the
+## mouth plane, radius `rx`, so the walk-through is untouched), out and proud
+## to a crest, then back and further out to die into the bank's own face --
+## the shape a dug hole's rim actually has. Every vertex is displaced along
+## its own radial by seeded value noise that fades to zero at BOTH ends of the
+## cross section (so the inner rim stays exactly on the arch and the outer
+## edge lands flush on the mound), and the collar's width is modulated by a
+## second, coarser noise around the arch so the rim is uneven the way a dug
+## rim is. It wears `_bank_material()` with the bank's own vertex-colour
+## contract -- COLOR.r the height fraction, COLOR.g the moist band (wettest at
+## the rim), COLOR.b the raw-spoil mask (1.0 at the rim, handing off to the
+## surrounding bank at the outer edge) -- so the earth photo, its normal map,
+## the macro patch field and the spoil darkening are continuous across the
+## seam between the collar and the mound. No collider: dressing, as before.
+##
+## `brow_roots` (tapered bark TUBES drooping into the opening) is replaced by
+## `brow_root_meshes`, real installed meshes, for the same reason. Both keep
 ## `brow_root_clear_m` so nothing hangs into a 1.9m player's face (or the
-## fixture's capsule; the strands carry no collider either way).
+## fixture's capsule).
 func _build_mouth_brow(holder: Node3D, bank: Dictionary, z_front: float, rx: float,
 		arch_h: float, spring_h: float) -> void:
 	var thickness := float(bank.get("brow_thickness_m", 0.0))
@@ -3051,100 +3534,297 @@ func _build_mouth_brow(holder: Node3D, bank: Dictionary, z_front: float, rx: flo
 		return
 	var rng := RandomNumberGenerator.new()
 	rng.seed = int(bank.get("seed", 63220)) + 3301
-	var jitter := float(bank.get("brow_jitter_m", 0.3))
-	var brow_rx := rx + thickness * 0.75
-	var path: PackedVector3Array = []
-	var segments := 14
-	var ground_l := _site_ground(Vector3(-brow_rx, 0.0, z_front))
-	var ground_r := _site_ground(Vector3(brow_rx, 0.0, z_front))
-	path.append(Vector3(brow_rx, (ground_r if not is_nan(ground_r) else _floor_y) - 0.2, z_front))
-	for s in segments + 1:
-		var t := PI * float(s) / float(segments)
-		var y: float = spring_h + (arch_h - spring_h) * sin(t) * 1.1
-		path.append(Vector3((brow_rx + rng.randf_range(-jitter, jitter)) * cos(t),
-			_floor_y + y + rng.randf_range(-jitter, jitter) * 0.6,
-			z_front + rng.randf_range(-jitter, jitter) * 0.5))
-	path.append(Vector3(-brow_rx, (ground_l if not is_nan(ground_l) else _floor_y) - 0.2, z_front))
-	var radii: PackedFloat32Array = []
-	for i in path.size():
-		radii.append(thickness * 0.5 * (1.0 + rng.randf_range(-0.35, 0.4)))
-	var brow := MeshInstance3D.new()
-	brow.name = "MouthBrow"
-	brow.mesh = _tube_mesh(path, radii, 10, false)
-	brow.material_override = _bank_earth_material()
-	holder.add_child(brow)
+	var rim := _brow_rim_samples(bank, z_front, rx, arch_h, spring_h)
+	if rim.size() < 3:
+		return
+	var brow_rx := _build_brow_earth_ring(holder, bank, rim, thickness)
+	_build_brow_turf(holder, bank, rng, z_front, rx, brow_rx, arch_h, spring_h, thickness)
+	_build_brow_root_meshes(holder, bank, rng, z_front, rx, arch_h, spring_h)
 
-	# ROUND-5-0906, JUDGE-round4.md 03 ("no grass overhanging the lip ...
-	# nothing about it says dug"): turf along the brow's crown, tufts seated
-	# on the tube's top and leaning outward over the opening, the way a cut
-	# bank keeps its sod overhang. Same flora and retint as the bank's growth.
+
+## The arch rim, as a polyline of {`at`: the rim point, `out`: the outward unit
+## direction in the XY plane, `end`: how close this sample is to a ground end}.
+## Left jamb bottom -> up the left jamb -> over the arc -> down the right jamb
+## -> right jamb bottom, the same (rx, spring_h, arch_h) profile
+## `_build_throat_shell()` sweeps, so the collar's inner edge sits exactly on
+## the opening a player walks through and never inside it.
+func _brow_rim_samples(bank: Dictionary, z_front: float, rx: float,
+		arch_h: float, spring_h: float) -> Array:
+	var samples: Array = []
+	var ground_l := _site_ground(Vector3(-rx, 0.0, z_front))
+	var ground_r := _site_ground(Vector3(rx, 0.0, z_front))
+	var y_l: float = (ground_l if not is_nan(ground_l) else _floor_y + global_position.y) - global_position.y
+	var y_r: float = (ground_r if not is_nan(ground_r) else _floor_y + global_position.y) - global_position.y
+	y_l = minf(y_l, _floor_y) - 0.25
+	y_r = minf(y_r, _floor_y) - 0.25
+	var jamb_steps := 4
+	var arc_steps := int(bank.get("brow_arc_segments", 22))
+	# Left jamb, bottom to spring.
+	for j in jamb_steps:
+		var t := float(j) / float(jamb_steps)
+		samples.append({
+			"at": Vector3(-rx, lerpf(y_l, _floor_y + spring_h, t), z_front),
+			"out": Vector2(-1.0, 0.0), "end": 1.0 - t,
+		})
+	# The arc, left spring to right spring. Outward normal of the ellipse
+	# (x/rx)^2 + (y/rise)^2 = 1 is (cos/rx, sin/rise), normalised.
+	var rise := maxf(arch_h - spring_h, 0.05)
+	for s in arc_steps + 1:
+		var theta: float = PI - PI * float(s) / float(arc_steps)
+		var out := Vector2(cos(theta) / rx, sin(theta) / rise).normalized()
+		samples.append({
+			"at": Vector3(rx * cos(theta), _floor_y + spring_h + rise * sin(theta), z_front),
+			"out": out, "end": 0.0,
+		})
+	# Right jamb, spring back down to the ground.
+	for j in range(1, jamb_steps + 1):
+		var t := float(j) / float(jamb_steps)
+		samples.append({
+			"at": Vector3(rx, lerpf(_floor_y + spring_h, y_r, t), z_front),
+			"out": Vector2(1.0, 0.0), "end": t,
+		})
+	return samples
+
+
+## The collar itself. Returns the crest radius the turf pass seats on.
+func _build_brow_earth_ring(holder: Node3D, bank: Dictionary, rim: Array,
+		thickness: float) -> float:
+	var lip_out := float(bank.get("brow_lip_out_m", thickness * 0.9))
+	var lip_proud := float(bank.get("brow_lip_proud_m", thickness * 0.75))
+	var lip_flare := float(bank.get("brow_lip_flare_m", thickness * 1.6))
+	var lip_back := float(bank.get("brow_lip_back_m", thickness * 1.5))
+	var noise_m := float(bank.get("brow_noise_m", thickness * 0.45))
+	var lobe_amount := float(bank.get("brow_lobe_amount", 0.45))
+	var across := maxi(int(bank.get("brow_across_segments", 7)), 2)
+	var seed := int(bank.get("seed", 63220))
+
+	var detail := FastNoiseLite.new()
+	detail.seed = seed + 4401
+	detail.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	detail.frequency = float(bank.get("brow_noise_freq", 0.9))
+	var lobe := FastNoiseLite.new()
+	lobe.seed = seed + 4402
+	lobe.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	lobe.frequency = float(bank.get("brow_lobe_freq", 0.22))
+
+	# The bank's own crest, for COLOR.r -- the same fraction `_bank_add_vertex()`
+	# writes, so the two surfaces read one height field.
+	var mid_sample: Dictionary = rim[rim.size() / 2]
+	var mid_at: Vector3 = mid_sample["at"]
+	var crest := maxf(_bank_height_at(0.0, mid_at.z), 1.0)
+	var moist_max := float(bank.get("brow_moist", 0.9))
+	var spoil_outer := float(bank.get("brow_spoil_outer", 0.35))
+	var occl_min := float(bank.get("brow_occlusion_min", 0.42))
+	var occl_curve := maxf(float(bank.get("brow_occlusion_curve", 2.2)), 0.1)
+
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var rows := rim.size()
+	for i in rows:
+		var sample: Dictionary = rim[i]
+		var at: Vector3 = sample["at"]
+		var out: Vector2 = sample["out"]
+		var u := float(i) / float(rows - 1)
+		# A dug rim is not a constant width: this is the coarse lobe.
+		var width_scale := 1.0 + lobe_amount * lobe.get_noise_1d(u * 100.0)
+		# and it dies into the ground at both jamb feet rather than ending
+		# in mid-air with a flat cap.
+		var end_taper: float = lerpf(1.0, 0.3, clampf(float(sample["end"]), 0.0, 1.0))
+		width_scale *= end_taper
+		for j in across + 1:
+			var t := float(j) / float(across)
+			# Quadratic Bezier: rim -> proud crest -> tucked back into the bank.
+			# ROUND 2: `width_scale` drives the crest's PROUD offset as well as
+			# its radial one. Scaling only the radius moves the collar's
+			# thickness while its crest line still runs true along the arch,
+			# which is the single thing that reads as "tube" from 16 m; with
+			# both, a lobe pushes out and forward together and the crest line
+			# itself wanders in z.
+			var p0 := Vector2(0.0, 0.0)
+			var p1 := Vector2(lip_out * width_scale, -lip_proud * end_taper * width_scale)
+			var p2 := Vector2((lip_out + lip_flare) * width_scale, lip_back)
+			var omt := 1.0 - t
+			var b := p0 * (omt * omt) + p1 * (2.0 * omt * t) + p2 * (t * t)
+			# Displacement fades to zero at both ends of the cross section, so
+			# the inner edge stays exactly on the arch (nothing intrudes into
+			# the walk-through) and the outer edge lands flush on the mound.
+			var fade := sin(PI * t)
+			var n := detail.get_noise_2d(u * 60.0, t * 14.0)
+			var push := n * noise_m * fade * end_taper
+			# Never inward of the rim: at small `t` the Bezier's own radial is
+			# only a few centimetres and a negative noise sample can outrun it,
+			# which would put earth a few centimetres inside the opening a
+			# player walks through and coplanar with the throat shell's wall.
+			var radial := maxf(b.x + push, 0.0)
+			var v := at + Vector3(out.x * radial, out.y * radial, b.y + push * 0.35)
+			var frac := clampf((v.y - _floor_y) / crest, 0.0, 1.0)
+			var moist: float = moist_max * (1.0 - smoothstep(0.0, 0.7, t))
+			var spoil: float = lerpf(1.0, spoil_outer, t)
+			# COLOR.a is baked contact occlusion (see the shader's own
+			# `v_occlusion` header). The collar is the rim of a hole and its
+			# inner face sits in that hole's shadow, but the Compatibility
+			# renderer has no AO to put it there: without this the collar
+			# rendered as a cream ring around a black opening, the brightest
+			# thing at the entrance. Darkest at the rim, 1.0 by the outer
+			# edge where the collar meets the mound, so the two surfaces still
+			# match where they touch. The jamb feet are lifted back toward
+			# open sky by `end_taper` -- the ground beside a jamb is not in
+			# the hole.
+			# A power curve, not a smoothstep: it must reach exactly 1.0 at
+			# t=1 (so the collar and the mound match where they touch, with
+			# no value step at the seam) while staying low across the middle
+			# of the section, which is the part actually facing the camera.
+			var shade_t := pow(t, occl_curve)
+			var occl: float = lerpf(occl_min, 1.0, shade_t)
+			occl = lerpf(1.0, occl, end_taper)
+			st.set_color(Color(frac, moist, spoil, occl))
+			st.add_vertex(v)
+	for i in rows - 1:
+		for j in across:
+			var a := i * (across + 1) + j
+			var b_i := a + 1
+			var c := (i + 1) * (across + 1) + j
+			var d := c + 1
+			st.add_index(a)
+			st.add_index(c)
+			st.add_index(b_i)
+			st.add_index(b_i)
+			st.add_index(c)
+			st.add_index(d)
+	st.generate_normals()
+	var ring := MeshInstance3D.new()
+	ring.name = "MouthBrow"
+	ring.mesh = st.commit()
+	ring.material_override = _bank_material()
+	holder.add_child(ring)
+	print("[warrens] mouth brow: displaced earth collar, %d x %d in the bank's own shader"
+		% [rows, across + 1])
+	return float(bank.get("brow_lip_out_m", thickness * 0.9))
+
+
+## ROUND-5-0906, JUDGE-round4.md 03 ("no grass overhanging the lip ...
+## nothing about it says dug"): turf along the brow's crest, tufts seated on
+## the collar's own high line and leaning outward over the opening, the way a
+## cut bank keeps its sod overhang. Same flora and retint as the bank's growth.
+func _build_brow_turf(holder: Node3D, bank: Dictionary, rng: RandomNumberGenerator,
+		z_front: float, rx: float, brow_rx_extra: float, arch_h: float, spring_h: float,
+		thickness: float) -> void:
 	var turf_count := int(bank.get("brow_turf", 0))
-	if turf_count > 0:
-		var turf := Node3D.new()
-		turf.name = "BrowTurf"
-		holder.add_child(turf)
-		# Wide tufts and fern only: the round-5 frame caught the taller
-		# Grass_Common_Tall blades backlit above the brow as two black spikes.
-		# ROUND-6-0906 (JUDGE-round5.md: "tropical ferns and aloe/agave clumps
-		# sitting on top of all of it"): meadow grass only, short.
-		var turf_names := ["Grass_Wide_Short", "Grass_Wispy_Tall", "Grass_Common_Short"]
-		for i in turf_count:
-			var t := lerpf(0.1, 0.9, float(i) / float(maxi(turf_count - 1, 1))) + rng.randf_range(-0.04, 0.04)
-			var angle := PI * t
-			var packed: PackedScene = load("res://assets/environment/stylized_nature/%s.gltf" % turf_names[i % turf_names.size()]) as PackedScene
-			if packed == null:
-				continue
-			var tuft: Node3D = packed.instantiate() as Node3D
-			if tuft == null:
-				continue
-			var ring_r := brow_rx + thickness * 0.15
-			var y: float = _floor_y + spring_h + (arch_h - spring_h) * sin(angle) * 1.1 + thickness * 0.3
-			tuft.position = Vector3(ring_r * cos(angle), y - 0.1, z_front + rng.randf_range(-0.35, 0.15))
-			# lean outward from the ring's own centre so the blades overhang
-			var lean := Vector3(cos(angle), 0.0, -0.4).normalized()
-			tuft.rotation = Vector3(deg_to_rad(rng.randf_range(10.0, 30.0)) * lean.z,
-				rng.randf_range(-PI, PI), -deg_to_rad(rng.randf_range(15.0, 40.0)) * lean.x)
-			tuft.scale = Vector3.ONE * rng.randf_range(0.55, 0.9)
-			turf.add_child(tuft)
-			_dress_skirt_flora(tuft)
+	if turf_count <= 0:
+		return
+	var turf := Node3D.new()
+	turf.name = "BrowTurf"
+	holder.add_child(turf)
+	# Wide tufts and fern only: the round-5 frame caught the taller
+	# Grass_Common_Tall blades backlit above the brow as two black spikes.
+	# ROUND-6-0906 (JUDGE-round5.md: "tropical ferns and aloe/agave clumps
+	# sitting on top of all of it"): meadow grass only, short.
+	var turf_names := ["Grass_Wide_Short", "Grass_Wispy_Tall", "Grass_Common_Short"]
+	for i in turf_count:
+		var t := lerpf(0.1, 0.9, float(i) / float(maxi(turf_count - 1, 1))) + rng.randf_range(-0.04, 0.04)
+		var angle := PI * t
+		var packed: PackedScene = load("res://assets/environment/stylized_nature/%s.gltf" % turf_names[i % turf_names.size()]) as PackedScene
+		if packed == null:
+			continue
+		var tuft: Node3D = packed.instantiate() as Node3D
+		if tuft == null:
+			continue
+		# WARRENS-ART-0906 round 4, blind verdict round 2 on 03-mouth: "two
+		# grass tufts hang in open air against the blue sky, detached from any
+		# surface, several metres above the nearest rock." Self-inflicted: the
+		# turf was seated with `rx + brow_rx_extra` and a hand-tuned
+		# `thickness * 0.25` lift, which matched the OLD swept-tube brow.
+		# Round 1 and round 2 both moved the collar's reach, and the tufts
+		# stayed where the tube used to be. They are seated on the collar's own
+		# crest now -- the same `lip_out`/`lip_proud` the ring is actually
+		# built from -- so they follow it whatever a later tuning pass does to
+		# it, which is the only reason this will not drift again.
+		var crest_out := float(bank.get("brow_lip_out_m", thickness * 0.9))
+		var crest_proud := float(bank.get("brow_lip_proud_m", thickness * 0.75))
+		var rise := maxf(arch_h - spring_h, 0.05)
+		# The rim point, plus the ellipse's own outward normal times the
+		# collar's reach: exactly where `_build_brow_earth_ring()` puts its
+		# crest, with no second copy of the maths to drift out of step.
+		var out_dir := Vector2(cos(angle) / maxf(rx, 0.01), sin(angle) / rise).normalized()
+		var rim := Vector2(rx * cos(angle), _floor_y + spring_h + rise * sin(angle))
+		var crest := rim + out_dir * crest_out
+		tuft.position = Vector3(crest.x, crest.y - 0.06,
+			z_front - crest_proud * 0.55 + rng.randf_range(-0.15, 0.1))
+		# lean outward from the ring's own centre so the blades overhang
+		var lean := Vector3(cos(angle), 0.0, -0.4).normalized()
+		tuft.rotation = Vector3(deg_to_rad(rng.randf_range(10.0, 30.0)) * lean.z,
+			rng.randf_range(-PI, PI), -deg_to_rad(rng.randf_range(15.0, 40.0)) * lean.x)
+		tuft.scale = Vector3.ONE * rng.randf_range(0.55, 0.9)
+		turf.add_child(tuft)
+		_dress_skirt_flora(tuft)
 
-	var root_count := int(bank.get("brow_roots", 0))
-	if root_count <= 0:
+
+## WARRENS-ART-0906 (W5). What used to be `brow_roots` tapered bark tubes.
+## Real installed meshes, hung crown-first into the opening from the arch's
+## own crown and shoulders: the same "a DeadTree crown IS a root mass" trick
+## `_build_roots()` already uses inside the cave, aimed at the arch instead of
+## at a chamber. `at` is the arch angle in degrees (0 = right spring, 90 =
+## crown, 180 = left spring), `radial_m` how far out of the rim the piece
+## hangs, `drop_m` how far below the rim line its crown reaches. Every piece
+## is checked against `brow_root_clear_m` the way the tubes were, and carries
+## no collider.
+func _build_brow_root_meshes(holder: Node3D, bank: Dictionary, rng: RandomNumberGenerator,
+		z_front: float, rx: float, arch_h: float, spring_h: float) -> void:
+	var entries: Array = bank.get("brow_root_meshes", [])
+	if entries.is_empty():
 		return
 	var clear := float(bank.get("brow_root_clear_m", 2.3))
-	var mat := _root_material()
+	var tint := Color(str(bank.get("root_tint", "#6a5236")))
 	var roots := Node3D.new()
 	roots.name = "BrowRoots"
 	holder.add_child(roots)
-	for i in root_count:
-		var t := lerpf(0.22, 0.78, float(i) / float(maxi(root_count - 1, 1))) + rng.randf_range(-0.05, 0.05)
-		var angle := PI * t
-		var start := Vector3(rx * cos(angle) * 0.92,
-			_floor_y + spring_h + (arch_h - spring_h) * sin(angle) * 0.98,
-			z_front + rng.randf_range(-0.1, 0.4))
-		var max_len := start.y - (_floor_y + clear)
-		var length := clampf(rng.randf_range(0.9, 1.7), 0.3, maxf(max_len, 0.3))
-		var bends := 3
-		var dir := Vector3(rng.randf_range(-0.25, 0.25), -1.0, rng.randf_range(0.05, 0.35)).normalized()
-		var path_r: PackedVector3Array = [start]
-		# ROUND-5-0906 (JUDGE-round4.md 03: the roots "read as a black
-		# scribble"): thicker, so a strand is a root and not a line.
-		var radii_r: PackedFloat32Array = [rng.randf_range(0.13, 0.2)]
-		var here := start
-		for b in bends:
-			dir = (dir + Vector3(rng.randf_range(-0.3, 0.3), 0.0, rng.randf_range(-0.2, 0.2))).normalized()
-			if dir.y > -0.6:
-				dir.y = -0.6
-				dir = dir.normalized()
-			here += dir * (length / float(bends))
-			path_r.append(here)
-			radii_r.append(radii_r[0] * lerpf(1.0, 0.2, float(b + 1) / float(bends)))
-		var strand := MeshInstance3D.new()
-		strand.name = "BrowRoot_%d" % i
-		strand.mesh = _tube_mesh(path_r, radii_r, 6, false)
-		strand.material_override = mat
-		roots.add_child(strand)
-	print("[warrens] mouth brow with %d roots hanging into the opening" % root_count)
+	var rise := maxf(arch_h - spring_h, 0.05)
+	var placed := 0
+	for entry_v: Variant in entries:
+		if not entry_v is Dictionary:
+			continue
+		var spec: Dictionary = entry_v as Dictionary
+		var path := str(spec.get("model", ""))
+		if path.is_empty():
+			continue
+		var packed: PackedScene = load(path) as PackedScene
+		if packed == null:
+			push_warning("brow root names a model that does not load: %s" % path)
+			continue
+		var art: Node3D = packed.instantiate() as Node3D
+		if art == null:
+			continue
+		var theta := deg_to_rad(float(spec.get("at_deg", 90.0)))
+		var radial := float(spec.get("radial_m", 0.3))
+		var anchor := Vector3((rx + radial) * cos(theta),
+			_floor_y + spring_h + rise * sin(theta),
+			z_front + float(spec.get("z_m", 0.1)))
+		var scale := float(spec.get("scale", 0.3))
+		var box := _bounds_of(art)
+		var crown_y := box.end.y
+		var dir_raw: Array = spec.get("dir", [0.0, -1.0, -0.2])
+		var dir := Vector3(float(dir_raw[0]), float(dir_raw[1]), float(dir_raw[2]))
+		dir = dir.normalized() if dir.length() > 0.01 else Vector3.DOWN
+		# The crown's own tip is where the piece reaches; keep it above the
+		# walk clearance exactly the way the tubes did.
+		var drop := float(spec.get("drop_m", 1.2))
+		var tip_y := maxf(anchor.y - drop, _floor_y + clear)
+		var tip := Vector3(anchor.x, tip_y, anchor.z)
+		var swing := Quaternion(Vector3.UP, dir) if not dir.is_equal_approx(Vector3.UP) else Quaternion.IDENTITY
+		if dir.is_equal_approx(Vector3.DOWN):
+			swing = Quaternion(Vector3.RIGHT, PI)
+		var roll := Quaternion(dir, deg_to_rad(float(spec.get("roll_deg", 0.0))
+			+ rng.randf_range(-8.0, 8.0)))
+		var basis := Basis(roll * swing).scaled(Vector3.ONE * scale)
+		art.transform = Transform3D(basis, tip - dir * crown_y * scale)
+		art.name = "BrowRootMass_%d" % placed
+		# Outside, under the sun: never take the cave's own interior ambient.
+		art.set_meta(EXTERIOR_META, true)
+		roots.add_child(art)
+		_tint_rock(art, tint)
+		placed += 1
+	if placed > 0:
+		print("[warrens] %d root masses over the mouth (meshes, not tubes)" % placed)
 
 
 ## ROUND-4-0906, JUDGE-round3.md finding 4: "a threshold of trodden dark earth
@@ -3172,11 +3852,29 @@ func _build_threshold_fan(holder: Node3D, bank: Dictionary, z_front: float) -> v
 	# a 0.12m lift keep the fan on top of the ground it follows.
 	var rings := 12
 	var spokes := 22
-	# Starts 0.2m INSIDE the throat's outer end so it runs under the apron
-	# ramp's own last box (the ramp ends above it) rather than leaving a
-	# sliver of bare terrain between the two.
-	var centre_z := z_front + 0.2
-	var lift := 0.12
+	# Starts INSIDE the throat's outer end so it runs under the apron ramp's
+	# own last box (the ramp ends above it) rather than leaving a sliver of
+	# bare terrain between the two.
+	#
+	# WARRENS-ART-0906 round 3. 0.2 m was not enough overlap and the numbers
+	# say why. The ramp's outermost box is `run / steps + 0.15` deep and
+	# centred at `outer_z - 0.95 * run`, so its far face lands at
+	# `z_front - 0.075`; the fan's row 0 sat at `z_front + 0.2` and its row 1
+	# at `z_front - 0.24`, which leaves the two surfaces meeting inside a
+	# single 0.44 m band, 0.03 m apart in height, on ground that is falling
+	# away. At the 16 m stand that band is a few pixels tall and the eye
+	# looks straight through it to sunlit terrain: the "thin pale sliver at
+	# the tube's right foot" of `_sheet_final.png` frame 03, measured on this
+	# lane's own renders at RGB [173,173,148] across 219 pixels and
+	# BYTE-IDENTICAL across two builds that changed the apron's width and the
+	# bank's moist band -- which is what finally ruled both of those out as
+	# its cause. `threshold_fan_overlap_m` buys a whole metre of overlap
+	# instead of a hand's width, and the fan is lifted with it; the ramp is
+	# above the fan through the whole overlap (terrain falls toward the
+	# mouth here, see `_build_approach_apron()`'s own end-of-ramp note), so
+	# the fan stays hidden under it and nothing z-fights.
+	var centre_z := z_front + float(bank.get("threshold_fan_overlap_m", 0.2))
+	var lift := float(bank.get("threshold_fan_lift_m", 0.12))
 	# Rows of points from the opening (row 0, under the brow) outward to the
 	# fan's far rim; each row is an arc of `spokes` points across the fan's
 	# width at that distance, so the mesh is a regular strip grid with a
@@ -3460,7 +4158,96 @@ func _root_material() -> StandardMaterial3D:
 func _build_bank_roots_and_scrapes() -> void:
 	var bank := _bank_cfg()
 	_build_roots_on_bank(bank)
+	_build_bank_root_masses(bank)
 	_build_claw_scrapes(bank)
+
+
+## WARRENS-ART-0906 (W5). The real root meshes that replace `bank.roots`'
+## bark tubes on the dug face.
+##
+## `bank.roots` authored two "root masses" of five tapered `_tube_mesh()`
+## cylinders each, left and right of the mouth. Round 5's verdict read the
+## whole entrance as "unrelated materials stacked -- earth tubes, brown
+## boulders, tropical ferns"; round 6 still read the arch as tubes. A cylinder
+## with a bark photo on it is a pipe from every angle, and five of them
+## side by side is a pipe organ, not a root mass. The two thin snagged sticks
+## over the top of the opening are kept in `bank.roots` -- JUDGE-round2.md
+## named that pair as working -- and everything else here is a real installed
+## mesh: `DeadTree_*`/`TwistedTree_*` crowns aimed crown-first OUT of the face
+## (the same "a bare branching crown IS a root mass" trick `_build_roots()`
+## already uses inside the cave), and `stump_round`/`stump_square`/`log`/
+## Kenney `tree-log` half-buried at the face's own foot.
+##
+## Two placement modes, chosen by whether the entry names a `dir`:
+##
+##   * `dir` -- crown-first along that cave-local direction from the bank
+##     surface, `out_m` proud of it. The piece's own crown tip lands at the
+##     surface point; its trunk runs back INTO the bank, so only the root mass
+##     is in the frame.
+##   * no `dir` -- seated on the surface with `yaw_deg`/`tilt_deg` and sunk
+##     `sink_m` along the surface normal, the way `_build_bank_face_outcrops()`
+##     seats its stones: a stump or a log half-buried in the spoil.
+##
+## Everything wears `bank.root_tint` (the same tint the tubes wore, so the
+## palette does not move) and carries no collider -- dressing, like the tubes.
+func _build_bank_root_masses(bank: Dictionary) -> void:
+	var entries: Array = bank.get("root_masses", [])
+	if entries.is_empty() or _bank_bumps.is_empty():
+		return
+	var holder := Node3D.new()
+	holder.name = "BankRootMasses"
+	add_child(holder)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(bank.get("seed", 63220)) + 1607
+	var tint := Color(str(bank.get("root_tint", "#6a5236")))
+	var placed := 0
+	for entry_v: Variant in entries:
+		if not entry_v is Dictionary:
+			continue
+		var spec: Dictionary = entry_v as Dictionary
+		var path := str(spec.get("model", ""))
+		if path.is_empty():
+			continue
+		var packed: PackedScene = load(path) as PackedScene
+		if packed == null:
+			push_warning("bank root mass names a model that does not load: %s" % path)
+			continue
+		var art: Node3D = packed.instantiate() as Node3D
+		if art == null:
+			continue
+		var offset := _local_of(spec.get("offset", [0.0, 0.0]))
+		var normal := _bank_normal_at(offset.x, offset.z)
+		var base := _site_ground(offset)
+		var surface_y: float = (base if not is_nan(base) else _floor_y) \
+			+ _bank_height_at(offset.x, offset.z)
+		var surface := Vector3(offset.x, surface_y, offset.z)
+		var scale := float(spec.get("scale", 0.4))
+		var dir_raw: Array = spec.get("dir", [])
+		if dir_raw.size() == 3:
+			var dir := Vector3(float(dir_raw[0]), float(dir_raw[1]), float(dir_raw[2]))
+			dir = dir.normalized() if dir.length() > 0.01 else Vector3.DOWN
+			var box := _bounds_of(art)
+			var crown_y := box.end.y
+			var tip := surface + normal * float(spec.get("out_m", 0.3))
+			var swing := Quaternion(Vector3.UP, dir) if not dir.is_equal_approx(Vector3.UP) else Quaternion.IDENTITY
+			if dir.is_equal_approx(Vector3.DOWN):
+				swing = Quaternion(Vector3.RIGHT, PI)
+			var roll := Quaternion(dir, deg_to_rad(float(spec.get("roll_deg", 0.0))))
+			art.transform = Transform3D(Basis(roll * swing).scaled(Vector3.ONE * scale),
+				tip - dir * crown_y * scale)
+		else:
+			var tilt := deg_to_rad(float(spec.get("tilt_deg", 18.0)))
+			art.position = surface - normal * float(spec.get("sink_m", 0.35))
+			art.rotation = Vector3(rng.randf_range(-tilt, tilt),
+				deg_to_rad(float(spec.get("yaw_deg", 0.0))), rng.randf_range(-tilt, tilt))
+			art.scale = Vector3.ONE * scale
+		art.name = "BankRootMass_%d" % placed
+		art.set_meta(EXTERIOR_META, true)
+		holder.add_child(art)
+		_tint_rock(art, tint)
+		placed += 1
+	if placed > 0:
+		print("[warrens] %d root masses on the bank face (meshes, not tubes)" % placed)
 
 
 func _build_roots_on_bank(bank: Dictionary) -> void:
@@ -6148,21 +6935,57 @@ func _build_roots() -> void:
 
 ## Glowing fungus clusters: the installed Mushroom meshes with their own albedo
 ## wired into emission at a pale green, and one small omni per cluster.
+##
+## WARRENS-ART-0906 (W1, "mushrooms are plain domes with no gills or cap
+## profile"). Two causes, both fixed here rather than by sourcing anything:
+##
+##   * One species was placed. `Mushroom_Common` IS a plain dome -- 0.56 x 0.46 m
+##     of smooth cap with no stem read and no gill line. The Quaternius nature
+##     megakit this world already uses ships three more, and two of them were
+##     sitting un-installed in `assets_raw/vendor/`: `Mushroom_RedCap` (a real
+##     cap-and-stem toadstool, 1.68 x 0.92 m native) and `Mushroom_Oyster` (a
+##     stacked shelf cluster with gilled undersides, 2.39 x 1.78 m native).
+##     Both are now installed into the nature family folder alongside the two
+##     that were already there, sharing the pack's own `Mushrooms.png` -- which
+##     was ALREADY in the folder, so the install is two `.gltf` + two `.bin`
+##     and no new texture. No download and no generation: see this commit's
+##     `docs/specs/ASSET_LEDGER.md` row.
+##   * Every instance took the same tint. `fungus.species` replaces the flat
+##     `models` list: each species carries its own albedo tint, glow colour,
+##     emission and scale multiplier, so the four read as four things.
+##
+## The tints are PALE CAVE variants, not the pack's forest colours. The
+## megakit paints these caps for a sunlit wood -- warm browns and a saturated
+## red -- and the Warrens are underground, lit by authored pools with no sky:
+## the pack's own red toadstool under a green beacon glow reads as a bad
+## colour clash, and (worse) as the harvestable `mushroom_pickup` prop, which
+## is a warm, saturated, red-orange cluster. The cave set is deliberately
+## desaturated the other way -- pale sage, bone, and a cool blue-grey -- so
+## that the one warm saturated mushroom a player ever sees down here is the
+## one they can pick up. `scale_mul` per species is load-bearing too: at the
+## clusters' authored 0.7-1.3 the Oyster would stand 1.6-2.3 m.
+##
+## The old flat `models` / `glow_colour` / `emission` keys still work if
+## `species` is absent, so a site that never authors species is unchanged.
 func _build_fungus() -> void:
 	var cfg: Dictionary = _config.get("fungus", {})
 	if cfg.is_empty() or not bool(cfg.get("enabled", true)):
 		return
-	var models: Array[PackedScene] = _load_models(cfg.get("models", []))
-	var brackets: Array[PackedScene] = _load_models(cfg.get("bracket_models", []))
-	if models.is_empty():
+	var glow := Color(str(cfg.get("glow_colour", "#9fe3b0")))
+	var emission := float(cfg.get("emission", 1.4))
+	var species := _fungus_species(cfg, cfg.get("species", []), glow, emission)
+	if species.is_empty():
+		species = _fungus_species_from_models(cfg.get("models", []), glow, emission)
+	if species.is_empty():
 		return
+	var brackets := _fungus_species(cfg, cfg.get("bracket_species", []), glow, emission)
+	if brackets.is_empty():
+		brackets = _fungus_species_from_models(cfg.get("bracket_models", []), glow, emission)
 	var holder := Node3D.new()
 	holder.name = "Fungus"
 	add_child(holder)
 	var rng := RandomNumberGenerator.new()
 	rng.seed = int(cfg.get("seed", 905))
-	var glow := Color(str(cfg.get("glow_colour", "#9fe3b0")))
-	var emission := float(cfg.get("emission", 1.4))
 	var clusters := 0
 	for entry: Variant in cfg.get("clusters", []):
 		var spec: Dictionary = entry as Dictionary
@@ -6171,44 +6994,108 @@ func _build_fungus() -> void:
 		var count := int(spec.get("count", 4))
 		var spread := float(spec.get("spread", 0.8))
 		var scale_range: Array = spec.get("scale", [0.7, 1.3])
+		# A cluster may name the species it grows (indices into `species`), so
+		# a passage beacon and a hall stand are not the same four mushrooms.
+		var pool := _fungus_pool(species, spec.get("species", []))
 		for n in count:
-			var art: Node3D = models[rng.randi() % models.size()].instantiate() as Node3D
+			var kind: Dictionary = pool[rng.randi() % pool.size()]
+			var art: Node3D = (kind["scene"] as PackedScene).instantiate() as Node3D
 			if art == null:
 				continue
-			var s := rng.randf_range(float(scale_range[0]), float(scale_range[1]))
+			var s := rng.randf_range(float(scale_range[0]), float(scale_range[1])) \
+				* float(kind.get("scale_mul", 1.0))
 			art.scale = Vector3(s, s * rng.randf_range(0.85, 1.25), s)
 			var angle := rng.randf_range(-PI, PI)
 			var reach := rng.randf_range(0.0, spread)
 			art.position = at + Vector3(sin(angle) * reach, -0.02, cos(angle) * reach)
 			art.rotation = Vector3(rng.randf_range(-0.12, 0.12), rng.randf_range(-PI, PI), rng.randf_range(-0.12, 0.12))
 			holder.add_child(art)
-			_glow_fungus(art, glow, emission)
+			_glow_fungus(art, kind)
 		if bool(spec.get("bracket", false)) and not brackets.is_empty():
-			var bracket: Node3D = brackets[rng.randi() % brackets.size()].instantiate() as Node3D
+			var b_pool := _fungus_pool(brackets, spec.get("bracket_species", []))
+			var b_kind: Dictionary = b_pool[rng.randi() % b_pool.size()]
+			var bracket: Node3D = (b_kind["scene"] as PackedScene).instantiate() as Node3D
 			if bracket != null:
-				var bs := float(spec.get("bracket_scale", 0.7))
+				var bs := float(spec.get("bracket_scale", 0.7)) * float(b_kind.get("scale_mul", 1.0))
 				bracket.scale = Vector3.ONE * bs
 				var b_off := _local_of(spec.get("bracket_offset", [0.0, 0.0]))
 				bracket.position = Vector3(at.x + b_off.x, _floor_y + float(spec.get("bracket_y", 1.2)), at.z + b_off.z)
 				bracket.rotation = Vector3(deg_to_rad(float(spec.get("bracket_pitch_deg", 0.0))),
 					deg_to_rad(float(spec.get("bracket_yaw_deg", 0.0))), 0.0)
 				holder.add_child(bracket)
-				_glow_fungus(bracket, glow, emission)
+				_glow_fungus(bracket, b_kind)
 		var light := OmniLight3D.new()
-		light.light_color = glow
+		# The cluster's own beacon takes the colour of its first species, so a
+		# cool blue-grey stand does not sit inside a warm green pool.
+		light.light_color = Color(str(spec.get("light_colour", ""))) if spec.has("light_colour") \
+			else (pool[0]["glow"] as Color)
 		light.light_energy = float(spec.get("light_energy", cfg.get("light_energy", 0.9)))
 		light.omni_range = float(spec.get("light_range", cfg.get("light_range", 4.5)))
 		light.position = at + Vector3(0.0, float(spec.get("light_y", 0.7)), 0.0)
 		holder.add_child(light)
 		clusters += 1
 	if clusters > 0:
-		print("[warrens] %d fungus clusters" % clusters)
+		print("[warrens] %d fungus clusters, %d species" % [clusters, species.size()])
+
+
+## `fungus.species` entries -> loaded {scene, albedo, glow, emission, scale_mul}.
+## An entry may be a bare path string, in which case it takes the top-level
+## glow/emission and no albedo tint of its own.
+func _fungus_species(cfg: Dictionary, raw: Variant, glow: Color, emission: float) -> Array:
+	var out: Array = []
+	for entry: Variant in (raw if raw is Array else []):
+		var path := ""
+		var spec: Dictionary = {}
+		if entry is String:
+			path = str(entry)
+		elif entry is Dictionary:
+			spec = entry as Dictionary
+			path = str(spec.get("model", ""))
+		if path.is_empty():
+			continue
+		var packed: PackedScene = load(path) as PackedScene
+		if packed == null:
+			push_warning("fungus species names a model that does not load: %s" % path)
+			continue
+		out.append({
+			"scene": packed,
+			"albedo": Color(str(spec.get("albedo", cfg.get("albedo", "#ffffff")))),
+			"glow": Color(str(spec.get("glow", ""))) if spec.has("glow") else glow,
+			"emission": float(spec.get("emission", emission)),
+			"scale_mul": float(spec.get("scale_mul", 1.0)),
+		})
+	return out
+
+
+func _fungus_species_from_models(raw: Variant, glow: Color, emission: float) -> Array:
+	var out: Array = []
+	for packed: PackedScene in _load_models(raw):
+		out.append({"scene": packed, "albedo": Color("#ffffff"),
+			"glow": glow, "emission": emission, "scale_mul": 1.0})
+	return out
+
+
+## The subset of `species` a cluster grows, or all of them.
+func _fungus_pool(species: Array, picks: Variant) -> Array:
+	var wanted: Array = picks if picks is Array else []
+	if wanted.is_empty():
+		return species
+	var out: Array = []
+	for index: Variant in wanted:
+		var i := int(index)
+		if i >= 0 and i < species.size():
+			out.append(species[i])
+	return species if out.is_empty() else out
 
 
 ## The mushroom material's own texture, wired into emission so the painted
-## caps glow in the glow colour and the gaps between them stay dark. One
-## duplicate per source material, cached; never the shared resource.
-func _glow_fungus(node: Node, glow: Color, emission: float) -> void:
+## caps glow in the species' glow colour and the gaps between them stay dark.
+## One duplicate per (source material, species), cached; never the shared
+## resource -- two species sharing `Mushrooms.png` must not share one tint.
+func _glow_fungus(node: Node, kind: Dictionary) -> void:
+	var glow: Color = kind["glow"]
+	var albedo: Color = kind["albedo"]
+	var emission := float(kind["emission"])
 	if node is MeshInstance3D:
 		var mesh_instance := node as MeshInstance3D
 		var mesh := mesh_instance.mesh
@@ -6217,15 +7104,19 @@ func _glow_fungus(node: Node, glow: Color, emission: float) -> void:
 				var source: Material = mesh_instance.get_active_material(surface)
 				if source == null:
 					continue
-				var key := "fungus_%s#%d" % [str(source.resource_path), source.get_instance_id()]
+				var key := "fungus_%s#%d_%s_%s" % [str(source.resource_path),
+					source.get_instance_id(), albedo.to_html(false), glow.to_html(false)]
 				if not _materials.has(key):
 					var copy: StandardMaterial3D = source.duplicate() as StandardMaterial3D
 					if copy == null:
 						continue
-					# Round 2: the caps' own texture is near-white, and lit by the
-					# pools it blew out; the albedo goes toward the glow, darkened,
-					# and the emission carries the glow.
-					copy.albedo_color = copy.albedo_color * glow.darkened(0.35)
+					# Round 2: the caps' own texture is near-white, and lit by
+					# the pools it blew out; the albedo goes toward the
+					# species' own pale cave tint, darkened, and the emission
+					# carries the glow. WARRENS-ART-0906: `albedo` is the
+					# per-species tint that makes four species read as four
+					# things through one shared atlas.
+					copy.albedo_color = copy.albedo_color * albedo * glow.darkened(0.35)
 					copy.emission_enabled = true
 					copy.emission = glow
 					copy.emission_energy_multiplier = emission
@@ -6234,7 +7125,7 @@ func _glow_fungus(node: Node, glow: Color, emission: float) -> void:
 					_materials[key] = copy
 				mesh_instance.set_surface_override_material(surface, _materials[key])
 	for child in node.get_children():
-		_glow_fungus(child, glow, emission)
+		_glow_fungus(child, kind)
 
 
 ## Leaf litter on the floor: the installed flat Plant meshes retinted to dead

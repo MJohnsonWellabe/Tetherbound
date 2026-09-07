@@ -24,8 +24,17 @@ static func masonry(trim: bool=false) -> ShaderMaterial:
 static func banner(size: Vector2, phase: float) -> ShaderMaterial:
 	var material:=ShaderMaterial.new()
 	material.shader=CLOTH
-	material.set_shader_parameter("colour",Color("#66362c"))
-	material.set_shader_parameter("selvage_colour",Color("#3e211d"))
+	# CLOUDREACH-DRESS-0906 / C6. The blind judge on the final arena: "The
+	# banners are a pinkish crimson, not the board's oxblood -- they read as
+	# festival bunting rather than a threat." #66362c is a mid brown-red, and
+	# under this realm's noon key plus the ACES shoulder a mid red rides up
+	# into pink; the cloth shader then multiplies it by a fold shade that
+	# reaches 1.15, which lifts the lit side further. Dropped to a genuinely
+	# dark oxblood so the LIT value lands where #66362c was only ever the
+	# unlit value. The Hall keeps its own BANNER_COLOUR; this factory is
+	# Cloudreach-only.
+	material.set_shader_parameter("colour",Color("#4a2018"))
+	material.set_shader_parameter("selvage_colour",Color("#2c1310"))
 	material.set_shader_parameter("device_colour",Color("#e8ddc4"))
 	material.set_shader_parameter("device_tex",SIGIL.texture())
 	material.set_shader_parameter("size",size)

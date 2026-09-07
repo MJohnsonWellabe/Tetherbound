@@ -88,6 +88,14 @@ func _run() -> void:
 	if confirm != null and confirm.text == "Start Fresh Game":
 		await _pad(button_index)
 
+	# ANSWER THE CHARACTER-CHOICE STEP every new-game path now shows first
+	# (data/config/characters.json). One entry exists today ("The Trainer"),
+	# focused automatically, so pressing through it is the production path
+	# for the only character that currently exists -- not a test convenience.
+	var character_choice := root.get_viewport().gui_get_focus_owner() as Button
+	if character_choice != null and character_choice.text.begins_with("The Trainer"):
+		await _pad(button_index)
+
 	# change_scene_to_file() is requested after one title frame.  World _ready()
 	# is intentionally allowed to finish: seeing only a queued path would repeat
 	# the old false-positive where the title never actually reached Meadows.

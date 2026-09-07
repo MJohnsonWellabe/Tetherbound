@@ -1,0 +1,109 @@
+{
+  "_comment": "OF26 follow-up. The Debug teleport list used to be every region/landmark/severed-spoke `GameState.debug_teleport_destinations()` could find (34 rows, clustered wherever the map happens to have the most named places) plus whichever OTHER realm's own landmarks the player was not currently standing in. This file replaces that as the SOURCE scripts/ui/tab_settings.gd draws its rows from: a hand-curated, always-complete list -- exactly two spots per band (Meadows) or region (Cloudreach), for both biomes, always, regardless of which realm the player is standing in or has discovered. `GameState.debug_teleport_destinations()` itself is untouched (tests/smoke_realm_teleport.gd still exercises it directly) and `GameState.debug_teleport_to(x, z, realm_id, entry_id)` -- the proven, tested move-the-player-and-cross-realms-if-needed call -- is exactly what every row here still ends up calling; only which rows are OFFERED changed.",
+  "_comment_bands": "Meadows band ids/boundaries are data/config/chapter_curve.json's own five `regions` (band1_lower_meadows .. band5_stronghold_approach), the file docs/specs/MEADOWS_PROGRESSION_SPEC.md section 3's prose bands actually compile down to in the shipped world (z_to boundaries, matched against scripts/world/world_perimeter.gd by tests/test_chapter_curve.gd). Every position below is a REAL authored place already used elsewhere in the game -- a map region/landmark centre from data/config/map_landmarks.json, or (band 5's approach) the first of the Hall's own approach_pylons in data/config/stronghold.json -- picked to be spread well apart within its band rather than clustered at one end of it, not invented for this list.",
+  "_comment_cloudreach": "Cloudreach's own six authored regions (data/config/cloudreach_world.json's `regions`, ordered 1-6 per docs/biomes/cloudreach/BUILD_CLOUDREACH_CLIFFS_TO_COMPLETION.md section 11) each already carry exactly two landmarks inside their own `bounds` box -- verified by point-in-box against the live config, not guessed -- so both of that biome's spots per region are its own two named landmarks, position taken as (x, z) with the altitude (y) dropped: `debug_teleport_to` derives height from the destination world's own `ground_height_at`, exactly as every other row on this screen already does.",
+  "_comment_entry_ids": "`entry_id` is resolved at build time by scripts/ui/tab_settings.gd from the same two files GameState._debug_teleport_entry_id_for() reads (cloudreach_world.json's `transition_points.meadows_entry.id`, realm_transitions.json's `meadows_entries`' first key) -- not stored here, so a re-authored gate anchor updates both paths from one edit.",
+
+  "biomes": [
+    {
+      "id": "meadows",
+      "display_name": "Meadows",
+      "bands": [
+        {
+          "id": "band1_lower_meadows",
+          "display_name": "Band 1 — Lower Meadows",
+          "spots": [
+            { "display_name": "Grandpa's Village", "position": [6.0, -22.0] },
+            { "display_name": "The South Bridge", "position": [0.0, 1330.0] }
+          ]
+        },
+        {
+          "id": "band2_stone_and_root",
+          "display_name": "Band 2 — Stone & Root",
+          "spots": [
+            { "display_name": "The Old Quarry", "position": [403.0, 1794.0] },
+            { "display_name": "The Burrow Warrens", "position": [-357.0, 2610.0] }
+          ]
+        },
+        {
+          "id": "band3_the_river_lock",
+          "display_name": "Band 3 — The River Lock",
+          "spots": [
+            { "display_name": "The Tether Relay", "position": [350.0, 3760.0] },
+            { "display_name": "Old Mill Crossing", "position": [-152.0, 4203.0] }
+          ]
+        },
+        {
+          "id": "band4_upper_meadows_ironwood",
+          "display_name": "Band 4 — Upper Meadows / Ironwood",
+          "spots": [
+            { "display_name": "The Ironwood Grove", "position": [-345.0, 5060.0] },
+            { "display_name": "The Ridgeline Watch", "position": [-250.0, 6490.0] }
+          ]
+        },
+        {
+          "id": "band5_stronghold_approach",
+          "display_name": "Band 5 — Stronghold Approach",
+          "spots": [
+            { "display_name": "Stronghold Approach", "position": [-40.0, 7010.0] },
+            { "display_name": "Meadows Hall", "position": [8.0, 7590.0] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cloudreach",
+      "display_name": "Cloudreach Cliffs",
+      "bands": [
+        {
+          "id": "gate_lower_cliffs",
+          "display_name": "Region 1 — Cloudreach Gate / Lower Cliffs",
+          "spots": [
+            { "display_name": "Realm Gate Crag", "position": [0.0, -130.0] },
+            { "display_name": "Galefoot Waycamp", "position": [-280.0, 520.0] }
+          ]
+        },
+        {
+          "id": "broken_causeways",
+          "display_name": "Region 2 — Broken Causeways",
+          "spots": [
+            { "display_name": "Three Bells Bridge", "position": [-485.0, 1320.0] },
+            { "display_name": "Broken Skyroad Arch", "position": [350.0, 1940.0] }
+          ]
+        },
+        {
+          "id": "windscar_ravine",
+          "display_name": "Region 3 — Windscar Ravine",
+          "spots": [
+            { "display_name": "Windscar Beacon", "position": [-260.0, 2680.0] },
+            { "display_name": "Windscar Flight Aerie", "position": [400.0, 3250.0] }
+          ]
+        },
+        {
+          "id": "high_roost_sky_shrine",
+          "display_name": "Region 4 — High Roost / Sky Shrine",
+          "spots": [
+            { "display_name": "Sky Shrine", "position": [1110.0, 2940.0] },
+            { "display_name": "The High Perches", "position": [900.0, 2700.0] }
+          ]
+        },
+        {
+          "id": "upper_cloudreach",
+          "display_name": "Region 5 — Upper Cloudreach",
+          "spots": [
+            { "display_name": "Cliffhold", "position": [-340.0, 3970.0] },
+            { "display_name": "Old Wind Observatory", "position": [430.0, 4500.0] }
+          ]
+        },
+        {
+          "id": "summit_final_stronghold",
+          "display_name": "Region 6 — Summit / Final Stronghold",
+          "spots": [
+            { "display_name": "Summit Eyrie", "position": [100.0, 5350.0] },
+            { "display_name": "Waterward Overlook", "position": [-420.0, 5650.0] }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -845,8 +845,20 @@ func _exterior_live_material() -> Material:
 ## machine's own crown and ring lamps keep `_live_material()`: they ARE the
 ## light source of the room and are meant to be the brightest teal in it.
 func _interior_live_material() -> Material:
-	return _material(_palette("tether_teal", Color("#3fe8c4")).darkened(0.25),
-		float(_config.get("site", {}).get("interior_conduit_energy", 0.9)))
+	# HALL-ART-0906, H5. The emission was already tuned down to 0.5 by the block
+	# above and the runs STILL rendered as the two "white sliver / white wedge"
+	# artifacts JUDGE-5 found in T-02 and T-03, both at RGB ~228/238/238. The
+	# emission was never what was blowing them out: this is a StandardMaterial3D
+	# and its ALBEDO is a near-saturated teal, so a wall torch two metres away at
+	# `energy` 12 blows the box to white on the lit term alone, before a single
+	# unit of emission is added. Darkening the albedo is what stops that, and it
+	# costs nothing that matters -- the emission is the whole "this cable is
+	# live" read and it is untouched, while an unlit face of a cable SHOULD be a
+	# dark cable. TUNABLE via `site.interior_conduit_albedo_darken`.
+	var site: Dictionary = _config.get("site", {}) as Dictionary
+	return _material(_palette("tether_teal", Color("#3fe8c4"))
+			.darkened(clampf(float(site.get("interior_conduit_albedo_darken", 0.55)), 0.0, 0.95)),
+		float(site.get("interior_conduit_energy", 0.9)))
 
 
 ## N05-WORLD-DRESSING-0905. A `lit` band used to be one 0.6 x 0.5 m box of
@@ -927,13 +939,95 @@ func _build_chambers() -> void:
 			# pass looked at. Textured now, and darker: a lit ceiling competes
 			# with everything below it, and the ribs `_build_structure()` hangs
 			# under it only read as ribs against a ground they are darker than.
-			_box(Vector3(outer.x, 1.0, outer.y),
-				Vector3(centre.x, _floor_y + height + 0.5, centre.z),
 			# See `_ceiling_colour()` for why this slab's tint is not `_timber()`.
+			_build_ceiling(id, centre, outer, _floor_y + height + 0.5,
 				_material(_ceiling_colour(), 0.0, true))
 
 		for side: String in ["-x", "+x", "-z", "+z"]:
 			_build_wall(centre, size, height, side, _opening_on(id, side))
+
+
+## One ceiling slab, or four around a hole.
+##
+## HALL-ART-0906, the Hall verdict's own leftover: "ivy in the arena needs a
+## hole to the sky or removal". JUDGE-5 read `reclaim.ivy`'s arena band as
+## "heavy green ivy across the ceiling and upper right of an INTERIOR arena ...
+## the only saturated green in the set, and it pulls the eye upward, away from
+## the arena floor" -- correct, and the reason it is odd is that nothing in a
+## roofed room could grow it. A hole is the better half of that choice than
+## deleting the band, because it also answers the round's biggest measured
+## finding: "the ambient/fill is warm red, so nothing reads as FIRE -- it reads
+## as a room made of hot brick", against a key art whose night ambient is a BLUE
+## 17/36/59. A breach in the Warden's roof is the one thing that can put a cool
+## complementary field into that room without touching the torches at all, and
+## it explains the vine, the rubble and the ruin all at once.
+##
+## `roof_breach` is per chamber (`at` in the chamber's own local frame, `size`
+## the hole), and absent for every chamber that does not ask, so every other
+## ceiling in the complex is the same single slab it always was.
+func _build_ceiling(id: String, centre: Vector3, outer: Vector2, y: float,
+		material: Material) -> void:
+	var chamber: Dictionary = _chambers.get(id, {}) as Dictionary
+	var breach: Dictionary = chamber.get("roof_breach", {}) as Dictionary
+	if breach.is_empty():
+		_box(Vector3(outer.x, 1.0, outer.y), Vector3(centre.x, y, centre.z), material)
+		return
+	var hole_at := _local_of(breach.get("at", [0.0, 0.0]))
+	var hole := _size_of(breach.get("size", [5.0, 5.0]))
+	# Four slabs around the hole rather than a CSG subtract: this is one of the
+	# largest surfaces in the building and it has to stay four BoxMeshes, not a
+	# mesh the Compatibility renderer has to rebuild.
+	var west := (centre.x - outer.x * 0.5)
+	var east := (centre.x + outer.x * 0.5)
+	var south := (centre.z - outer.y * 0.5)
+	var north := (centre.z + outer.y * 0.5)
+	var hx0 := clampf(hole_at.x - hole.x * 0.5, west, east)
+	var hx1 := clampf(hole_at.x + hole.x * 0.5, west, east)
+	var hz0 := clampf(hole_at.z - hole.y * 0.5, south, north)
+	var hz1 := clampf(hole_at.z + hole.y * 0.5, south, north)
+	for band: Array in [
+			[west, hx0, south, north], [hx1, east, south, north],
+			[hx0, hx1, south, hz0], [hx0, hx1, hz1, north]]:
+		var w := float(band[1]) - float(band[0])
+		var d := float(band[3]) - float(band[2])
+		if w <= 0.02 or d <= 0.02:
+			continue
+		_box(Vector3(w, 1.0, d),
+			Vector3((float(band[0]) + float(band[1])) * 0.5, y,
+				(float(band[2]) + float(band[3])) * 0.5), material)
+	_build_roof_breach_edge(id, breach, Vector3(hole_at.x, y, hole_at.z), hole)
+
+
+## The breach's own lip and its light. Broken beam ends around the rim so the
+## hole reads as a collapse rather than as a rectangle somebody forgot to fill,
+## and one cool omni hung just under it -- the moon coming in. The light is
+## SMALL and COOL on purpose: it is the complementary field the warm room has
+## never had, not a second key, and one more omni is one more against the
+## Compatibility renderer's per-object cap (`smoke_stronghold.gd` prints the
+## per-room count every run, and this one is in it).
+func _build_roof_breach_edge(id: String, breach: Dictionary, at: Vector3, hole: Vector2) -> void:
+	var beam := _material(_timber(), 0.0, false)
+	var stubs := maxi(0, int(breach.get("beam_stubs", 5)))
+	for i in stubs:
+		var t := (float(i) + 0.5) / float(stubs)
+		var x := at.x - hole.x * 0.5 + hole.x * t
+		for s: float in [-1.0, 1.0]:
+			# Stubs reach INWARD over the hole from its two long edges, half a
+			# metre proud, so the rim has a broken profile from below.
+			_box(Vector3(0.22, 0.26, 0.7),
+				Vector3(x, at.y - 0.42, at.z + s * (hole.y * 0.5 - 0.3)), beam, false)
+	var energy := float(breach.get("moon_energy", 0.0))
+	if energy <= 0.0:
+		return
+	var moon := OmniLight3D.new()
+	moon.name = "RoofBreachMoon_%s" % id
+	moon.light_color = Color(str(breach.get("moon_colour", "#8fa8c8")))
+	moon.light_energy = energy
+	moon.omni_range = float(breach.get("moon_range", 16.0))
+	moon.omni_attenuation = float(breach.get("moon_attenuation", 0.85))
+	moon.shadow_enabled = false
+	moon.position = Vector3(at.x, at.y - 1.2, at.z)
+	add_child(moon)
 
 
 ## The opening (if any) in one side of one chamber, derived from the passage
@@ -1134,10 +1228,20 @@ func _build_door(flag: String, centre: Vector3, along_x: bool, width: float, hei
 	var box := BoxMesh.new()
 	box.size = size
 	mesh.mesh = box
-	mesh.material_override = _material(colour)
+	# HALL-ART-0906, H5. This was `_material(colour)` -- the UNtextured branch,
+	# a flat fill on the one object at the end of the approach room's own
+	# vista. JUDGE-5 measured it: "the doorway at the end of the hall is a flat
+	# untextured slab, per-channel std 5.3-5.8, uniform RGB 100/58/49 ...
+	# brighter than any stone at that depth and therefore the compositional
+	# focal point of the whole shot. It has no bevel, no boards, no handle, no
+	# material. It reads as a missing texture." Textured now, off the same
+	# `hall_stone.gdshader` every wall and floor in the complex wears, so the
+	# slab courses and weathers with the building it is set into.
+	mesh.material_override = _material(colour, 0.0, true)
 	mesh.position = Vector3(centre.x, _floor_y + height * 0.5, centre.z)
 	mesh.name = "BlastShutter_%s" % flag
 	add_child(mesh)
+	_dress_blast_shutter(mesh, along_x, width, height, size)
 
 	var body := StaticBody3D.new()
 	body.name = "BlastShutterBody_%s" % flag
@@ -1149,6 +1253,48 @@ func _build_door(flag: String, centre: Vector3, along_x: bool, width: float, hei
 	body.position = mesh.position
 	add_child(body)
 	_doors.append({"flag": flag, "body": body, "mesh": mesh})
+
+
+## The other half of H5: a texture stops the slab reading as missing, but a
+## flat rectangle at the end of a corridor is still a flat rectangle. A blast
+## shutter is machinery Team Tether bolted across an old doorway, so it gets the
+## hardware that says so -- an oxblood rail top and bottom, two cross-ribs, and
+## one slim live line down the middle in the reserved teal, on BOTH room-facing
+## faces (a shutter is seen from the room you are leaving and the one you are
+## entering). All in materials this file already owns; no new asset.
+##
+## Built as CHILDREN OF THE SLAB, in its own local frame, and this is not a
+## style preference: `_sync_doors()` opens a shutter by hiding `mesh` and
+## disabling its body, so anything parented to the stronghold instead of to the
+## slab would stay hanging in the empty doorway for the rest of the game. Nothing
+## here carries collision either -- the slab's own body is the door.
+func _dress_blast_shutter(slab: MeshInstance3D, along_x: bool,
+		width: float, height: float, size: Vector3) -> void:
+	var face := (size.x if along_x else size.z) * 0.5 + 0.05
+	var band := Vector3(0.09, 0.32, width * 0.9) if along_x else Vector3(width * 0.9, 0.32, 0.09)
+	var rib := Vector3(0.09, height * 0.84, 0.24) if along_x else Vector3(0.24, height * 0.84, 0.09)
+	var line := Vector3(0.07, height * 0.58, 0.1) if along_x else Vector3(0.1, height * 0.58, 0.07)
+	for s: float in [-1.0, 1.0]:
+		var out := Vector3(s * face, 0.0, 0.0) if along_x else Vector3(0.0, 0.0, s * face)
+		for frac: float in [-0.38, 0.38]:
+			_slab_plate(slab, band, out + Vector3(0.0, height * frac, 0.0), _tether_material())
+		for lateral: float in [-0.29, 0.29]:
+			var side := Vector3(0.0, 0.0, lateral * width) if along_x \
+				else Vector3(lateral * width, 0.0, 0.0)
+			_slab_plate(slab, rib, out + side, _tether_material())
+		_slab_plate(slab, line, out, _interior_live_material())
+
+
+func _slab_plate(parent: MeshInstance3D, size: Vector3, at: Vector3, material: Material) -> void:
+	var mesh := MeshInstance3D.new()
+	var box := BoxMesh.new()
+	box.size = size
+	mesh.mesh = box
+	mesh.material_override = material
+	mesh.position = at
+	parent.add_child(mesh)
+
+
 
 
 ## The way in, and the one piece of this build that had to be rebuilt once.
@@ -1718,7 +1864,7 @@ const BANNER_CLOTH_W := 1.35
 const BANNER_CLOTH_H := 2.0
 const BANNER_CLOTH_T := 0.07
 func _hang_banner(at: Vector3, yaw_rad: float, colour: Color = BANNER_COLOUR,
-		scale: float = BANNER_SCALE, torn: bool = false) -> void:
+		scale: float = BANNER_SCALE, torn: bool = false, pattern: float = 0.0) -> void:
 	var holder := Node3D.new()
 	holder.name = "ExteriorBanner"
 	holder.position = at
@@ -1750,12 +1896,16 @@ func _hang_banner(at: Vector3, yaw_rad: float, colour: Color = BANNER_COLOUR,
 	# normal is +X, so a quarter turn about Y carries the quad's +Z there.
 	var quad := QuadMesh.new()
 	quad.size = Vector2(width, height)
-	quad.subdivide_width = 6
-	quad.subdivide_depth = 14
+	# HALL-ART-0906, H3: 6 x 14 across an 8 m arena cloth is a vertex every
+	# half metre, which is coarser than the fold train the shader now rebuilds
+	# its normals from -- the creases were being averaged away between vertices
+	# before they could be lit. A banner is one draw call either way.
+	quad.subdivide_width = 10
+	quad.subdivide_depth = 24
 	var panel := MeshInstance3D.new()
 	panel.name = "BannerCloth"
 	panel.mesh = quad
-	panel.material_override = _banner_cloth_material(colour, Vector2(width, height), torn, at)
+	panel.material_override = _banner_cloth_material(colour, Vector2(width, height), torn, at, pattern)
 	panel.position = Vector3(BANNER_CLOTH_T, -height * 0.5 - 0.09, 0.0)
 	panel.rotation.y = PI * 0.5
 	holder.add_child(panel)
@@ -1766,7 +1916,8 @@ func _hang_banner(at: Vector3, yaw_rad: float, colour: Color = BANNER_COLOUR,
 ## the notch and the device are shaped against. `torn` is the relic banner
 ## (§6.2): one tail, ragged hem.
 const BANNER_CLOTH_SHADER := preload("res://assets/environment/team_tether/hall/banner_cloth.gdshader")
-func _banner_cloth_material(colour: Color, size: Vector2, torn: bool, at: Vector3) -> ShaderMaterial:
+func _banner_cloth_material(colour: Color, size: Vector2, torn: bool, at: Vector3,
+		pattern: float = 0.0) -> ShaderMaterial:
 	var m := ShaderMaterial.new()
 	m.shader = BANNER_CLOTH_SHADER
 	m.set_shader_parameter("colour", colour)
@@ -1782,7 +1933,36 @@ func _banner_cloth_material(colour: Color, size: Vector2, torn: bool, at: Vector
 	# Big banners move slower and further; small ones flutter.
 	m.set_shader_parameter("sway", clampf(0.05 * size.y, 0.08, 0.32))
 	m.set_shader_parameter("speed", clampf(2.4 / maxf(size.y, 1.0), 0.6, 1.6))
+	# H3's other two: the field's own design (0 plain / 1 barred / 2 chevron)
+	# and the hem-weighted drape. The drape is scaled by the drop -- a 1.4 m
+	# pennant on a pier does not self-occlude the way an 8 m arena cloth does,
+	# and a fixed value crushed the small ones to black at their hems.
+	m.set_shader_parameter("pattern", pattern)
+	m.set_shader_parameter("drape", clampf(0.16 + 0.035 * size.y, 0.16, 0.42))
+	m.set_shader_parameter("crease", clampf(0.22 + 0.03 * size.y, 0.22, 0.5))
 	return m
+
+
+## HALL-ART-0906, H3, and the judge's separate complaint that the arena banners
+## are "a pinkish crimson, not the board's oxblood -- festival bunting rather
+## than a threat".
+##
+## `BANNER_COLOUR` (#66362c) is a brick red with a warm ORANGE lean (G above B).
+## Outside in daylight that is the tone the exterior walls were tuned against
+## and it is left alone. Inside, under 12-energy torches whose own colour is
+## (1.0, 0.55, 0.16), an orange-leaning red lands on the sensor as salmon --
+## which is what the judge measured and named. `palette.json`'s RESERVED
+## `tether_oxblood` is the faction's real accent and it leans the other way
+## (B above G), so this takes that entry's hue and saturation exactly and only
+## lifts its VALUE, far enough that a cloth in a night interior is still a
+## colour rather than a silhouette. Hue and saturation come from the palette,
+## so the reserved accent stays the single source; only the exposure is local.
+## TUNABLE via `site.banner_interior_value`.
+func _banner_interior_colour() -> Color:
+	var reserved := _palette("tether_oxblood", Color("#332228"))
+	var lift := float(_config.get("site", {}).get("banner_interior_value", 2.0))
+	return Color.from_hsv(reserved.h, reserved.s,
+		clampf(reserved.v * lift, 0.0, 1.0), 1.0)
 
 
 ## Design §6.2's one invented story beat: a single faded Meadows-blue banner,
@@ -2773,6 +2953,16 @@ const FLICKER_SPEED := 7.0
 ## OP-0905-19: how far a wall-mounted torch's bracket reaches out from the
 ## wall it is bolted to (see `_wall_torch`).
 const WALL_TORCH_DEPTH := 0.28
+## HALL-ART-0906, H1. The vendored sconce the wall torches now hang from, the
+## height it is fitted to, where along its own depth the cup sits (measured off
+## the glTF: plate at z 0, cup mass centred ~72% of the way out the arm), the
+## standoff assumed when a torch is not inside any chamber, and the width of
+## the glow card that makes the flame legible at thumbnail size.
+const WALL_TORCH_MODEL := "Torch_Metal"
+const WALL_TORCH_FIXTURE_H := 0.72
+const WALL_TORCH_CUP_DEPTH_FRAC := 0.72
+const WALL_TORCH_PROUD_FALLBACK := 0.6
+const WALL_TORCH_GLOW_M := 1.35
 
 var _fires: Array[OmniLight3D] = []
 var _fire_energy: Array[float] = []
@@ -2817,6 +3007,156 @@ func _build_occupation() -> void:
 	_build_ruin_reclaim()
 	_build_tether_retrofit()
 	_build_tether_pipe_runs()
+	_build_hall_dressing()
+
+
+## HALL-ART-0906, H2 and X1. The three ROOFED rooms on the route -- the tether
+## approach, the Warden's arena and the Legendary Chamber -- were still empty
+## brick boxes: JUDGE-5 ranked it among the three things separating these
+## frames from the reference ("T-01 is a symmetrical empty box with two floor
+## props ... T-03's right half is bare wall") and named density as the gap
+## against `palworld-01`/`palworld-05`. `_build_garrison_camp` already dresses
+## the two open YARDS from the prop family; this is the same placer, the same
+## family and the same `on_floor` convention for the rooms it never reached.
+##
+## PLACEMENT IS A STORY, NOT A SCATTER -- `_comment_retrofit_t1_hall_art`'s own
+## standard, held to here: the approach room is the garrison's billet and
+## Tether's stores (bedrolls, ration crates, a workbench, a cage that is not
+## empty by accident), the arena is a holding floor with the fight's own kit
+## racked against its walls, and the Legendary Chamber is a research station
+## bolted into a ruin (a book stand and a table where the readings are taken,
+## chains and cages where the thing being studied was kept, fallen vases where
+## the building is losing).
+##
+## THE ARENA RING IS ENFORCED IN CODE, not merely respected in data. The Warden
+## fight owns its floor (`data/config/combat.json`'s `arena.radius`, 11 m; the
+## chamber's own `_role` calls it "a floor, a height and nothing to trip over")
+## and `tests/test_stronghold_warden_arena.gd` asserts the config obeys it. A
+## dressing entry that lands inside that ring is DROPPED with a warning rather
+## than built, so a future edit to the list cannot put a crate in the boss
+## fight even if nobody re-runs the test.
+##
+## Nothing here carries a collider: `_load_prop` returns the imported scene as
+## it is, and none of these meshes is named `-col`, so the whole layer is as
+## un-snaggable as the retrofit layer above it. That is deliberate for the same
+## reason -- a prop the player catches on in the run-up to the Warden is worse
+## than a bare room.
+const ARENA_KEEP_CLEAR_R := 11.0
+func _build_hall_dressing() -> void:
+	var list: Array = _occupation().get("dressing", []) as Array
+	if list.is_empty():
+		return
+	var holder := Node3D.new()
+	holder.name = "HallDressing"
+	add_child(holder)
+	var arena := Vector3.ZERO
+	var has_arena := _chambers.has("warden_arena")
+	if has_arena:
+		arena = _local_of((_chambers["warden_arena"] as Dictionary).get("at", []))
+	var built := 0
+	var dropped := 0
+	for entry: Variant in list:
+		var spec: Dictionary = entry as Dictionary
+		var at := _local_of(spec.get("at", []))
+		if has_arena and Vector2(at.x - arena.x, at.z - arena.z).length() < ARENA_KEEP_CLEAR_R:
+			push_warning("hall dressing '%s' at %s stands inside the Warden Arena's %.0fm combat ring; not built" % [
+				str(spec.get("model", "?")), str(at), ARENA_KEEP_CLEAR_R])
+			dropped += 1
+			continue
+		var node := _load_prop(str(spec.get("dir", FANTASY_PROPS)), str(spec.get("model", "")))
+		if node == null:
+			continue
+		node.name = str(spec.get("model", "HallProp"))
+		var stand := Node3D.new()
+		stand.name = "%s_%d" % [node.name, built]
+		stand.position = Vector3(at.x, _floor_y + float(spec.get("y", 0.0)), at.z)
+		stand.rotation.y = deg_to_rad(float(spec.get("yaw_deg", 0.0)))
+		holder.add_child(stand)
+		stand.add_child(node)
+		var fit := float(spec.get("fit_height_m", 0.0))
+		if fit > 0.01:
+			# `_fit_to_height` also seats the mesh's own lowest point on y=0,
+			# which is what a prop authored around its centre needs before it
+			# will stand on a floor rather than half inside one.
+			_fit_to_height(node, fit)
+		else:
+			node.scale = Vector3.ONE * float(spec.get("scale", 1.0))
+		if spec.has("lean_deg"):
+			# A crate stacked askew or a shield propped on a wall: `_fit_to_height`
+			# has already seated the mesh, so this tips it about its own foot.
+			node.rotation.z = deg_to_rad(float(spec.get("lean_deg", 0.0)))
+		var tint := str(spec.get("tint", ""))
+		if not tint.is_empty():
+			_tint_node(node, Color(tint))
+		var fire: Dictionary = spec.get("fire", {}) as Dictionary
+		if not fire.is_empty():
+			_dressing_fire(stand, fire)
+		built += 1
+	print("[stronghold] %d interior dressing prop(s) in the roofed rooms%s" % [
+		built, "" if dropped == 0 else " (%d dropped inside the arena ring)" % dropped])
+
+
+## X1, the brazier that does not exist as a mesh. `ralph/reports/CLIFF-ART-0906
+## /FREE_ASSET_CANDIDATES.md` found nothing licence-clean and the owner's
+## standing correction (2026-09-06) rules out both Meshy and a download for it:
+## "There is art in the repo for most of these things already ... Find it and
+## use it." So a brazier here is ASSEMBLED from things that are: the prop this
+## sits on is whatever the entry names (`CandleStick_Stand`, `Barrel_Holder`,
+## `Cauldron` on either), and the fire is `torch_prop.gd`'s flame WITHOUT its
+## stick -- the same flame-in-a-basket `_brazier` already builds, at the height
+## the carrying prop actually stands, plus the glow card `_wall_torch` uses.
+##
+## `energy` is opt-in and defaults to ZERO light. Two reasons, and they are the
+## same one twice: `_report_light_budget` spends the design's exterior ceiling
+## exactly, and Godot's Compatibility renderer drops omnis past
+## `max_lights_per_object` on whichever object has the most of them -- which in
+## this building is a room's single floor slab (see `project.godot` and
+## `smoke_stronghold.gd`'s own cap check). A brazier that only has to READ as
+## fire does not need to be one.
+func _dressing_fire(stand: Node3D, fire: Dictionary) -> void:
+	var lift := float(fire.get("y", 0.9))
+	var scale_factor := float(fire.get("scale", 1.4))
+	var torch: Node3D = TORCH_PROP.new()
+	var flame_scale := scale_factor * BRAZIER_FLAME_SCALE
+	torch.scale = Vector3.ONE * flame_scale
+	var stick := torch.get_node_or_null(^"Stick")
+	if stick != null:
+		stick.queue_free()
+	torch.position = Vector3(0.0,
+		lift - float(torch.call("flame_local_position").y) * flame_scale, 0.0)
+	stand.add_child(torch)
+	_warm_the_flame(torch)
+	var glow := _glow_card(float(fire.get("glow_size_m", 1.6)), FIRE_COLOUR,
+		float(fire.get("glow_energy", 0.85)))
+	glow.name = "BrazierGlow"
+	glow.position = Vector3(0.0, lift + 0.06, 0.0)
+	stand.add_child(glow)
+	var energy := float(fire.get("energy", 0.0))
+	if energy <= 0.0:
+		return
+	var light := OmniLight3D.new()
+	light.name = "Fire"
+	light.light_color = FIRE_COLOUR
+	light.light_energy = energy
+	light.omni_range = float(fire.get("range", 9.0))
+	light.omni_attenuation = float(fire.get("attenuation", 1.0))
+	light.shadow_enabled = false
+	# Parented to `HallBraziers`, NOT to the prop it belongs to, and the reason
+	# is the test rather than the scene: `smoke_stronghold.gd` counts a room's
+	# omnis by walking that holder, and it is the only guard this project has
+	# against the Compatibility renderer silently dropping torches past
+	# `max_lights_per_object` -- the failure that cost two blind rounds before
+	# anyone found it. A lit brazier hidden under a different holder would be a
+	# real light the cap check could not see. Both holders are children of this
+	# node at identity, so the stand's own local position carries across
+	# unchanged.
+	var holder: Node = get_node_or_null(^"HallBraziers")
+	if holder == null:
+		holder = self
+	holder.add_child(light)
+	light.position = stand.position + Vector3(0.0, lift, 0.0)
+	_fires.append(light)
+	_fire_energy.append(energy)
 
 
 ## JUDGE-5 D2, the half that props alone did not answer. With the courtyard
@@ -2853,11 +3193,16 @@ func _build_yard_banners() -> void:
 				centre.z + half.y - _wall_t * 0.5), PI * 0.5,
 				BANNER_COLOUR, BANNER_SCALE * 1.25)
 		# One per flank, inward, set back from the corner so it does not read
-		# as a corner decoration.
+		# as a corner decoration. HALL-ART-0906, H3: the flank pair takes the
+		# CHEVRON field. Two designs on thirty banners was the judge's count;
+		# splitting the yards' own far wall and flanks apart is the cheapest
+		# place to spend a third, because both are in frame together from every
+		# yard stand and the difference is what says the wall was dressed rather
+		# than stamped.
 		for s2: float in [-1.0, 1.0]:
 			_hang_banner(Vector3(centre.x + s2 * (half.x - _wall_t * 0.5), top,
 				centre.z + half.y * 0.18), 0.0 if s2 < 0.0 else PI,
-				BANNER_COLOUR, BANNER_SCALE * 1.25)
+				BANNER_COLOUR, BANNER_SCALE * 1.25, false, 2.0)
 
 
 ## The 40m climb, dressed: kerbs following the ramp's own slope, a timber rail
@@ -3099,42 +3444,201 @@ func _wall_torch(holder: Node3D, spec: Dictionary, index: int) -> Node3D:
 	iron.roughness = 0.8
 	iron.metallic = 0.4
 
-	# The bracket: a short arm reaching back toward the wall (local -Z, the
-	# mount's own back) so the torch it holds stands proud of the stone.
-	var bracket := MeshInstance3D.new()
-	bracket.name = "Bracket"
-	var bracket_mesh := BoxMesh.new()
-	bracket_mesh.size = Vector3(0.10, 0.10, WALL_TORCH_DEPTH) * scale_factor
-	bracket_mesh.material = iron
-	bracket.mesh = bracket_mesh
-	bracket.position = Vector3(0.0, 0.0, -WALL_TORCH_DEPTH * 0.5 * scale_factor)
-	mount.add_child(bracket)
+	# HALL-ART-0906, H1. The sconce is `Torch_Metal` out of the fantasy-props
+	# pack, not four primitives: JUDGE-5 read the built one as "a thin brown rod
+	# that hangs downward below the flame with a tiny pale-yellow blob at the
+	# top and no bracket, no cup, no sconce plate" -- a matchstick pushed into
+	# the wall. This model IS the missing fixture (a back plate, an arm and a
+	# cup), and it was already vendored: no download, no generation. Its own
+	# frame, measured off the glTF: the plate sits at local z 0, the arm runs
+	# out along +z and the cup rim tops out around (0, 0.37, 0.28) -- so +Z is
+	# "away from the wall", which is exactly the mount's own +Z, and the model
+	# needs no turn of its own. Everything below is derived from the loaded
+	# mesh's real bounds rather than from those numbers, so a re-import that
+	# changes the export scale cannot silently leave the flame hanging in air.
+	var fixture := _load_prop(FANTASY_PROPS, WALL_TORCH_MODEL)
+	var cup_local := Vector3.ZERO
+	var plate_z := 0.0
+	if fixture != null:
+		fixture.name = "Sconce"
+		var bounds := _visual_bounds(fixture)
+		var fit := float(spec.get("fixture_height_m", WALL_TORCH_FIXTURE_H))
+		var s := fit / maxf(bounds.size.y, 0.001)
+		fixture.scale = Vector3.ONE * s
+		# The flame sits on the cup's rim: the top of the mesh, at the depth
+		# the cup's own mass is centred on rather than the arm's.
+		cup_local = Vector3(bounds.get_center().x, bounds.end.y,
+			bounds.position.z + bounds.size.z * WALL_TORCH_CUP_DEPTH_FRAC) * s
+		plate_z = bounds.position.z * s
+		fixture.position = -cup_local
+		mount.add_child(fixture)
 
-	# The ring the brand sits through, same iron.
-	var ring := MeshInstance3D.new()
-	ring.name = "Ring"
-	var ring_mesh := TorusMesh.new()
-	ring_mesh.inner_radius = 0.05 * scale_factor
-	ring_mesh.outer_radius = 0.09 * scale_factor
-	ring_mesh.rings = 6
-	ring_mesh.ring_segments = 8
-	ring_mesh.material = iron
-	ring.mesh = ring_mesh
-	ring.rotation.x = deg_to_rad(90.0)
-	mount.add_child(ring)
+	# The arm back to the stone. `_comment_wall_torches_proud_0906` stands every
+	# flame 0.6 m off its wall so the pilasters cannot hide it; without
+	# something bridging that gap the sconce floats. The distance is MEASURED
+	# from the chamber the torch stands in rather than authored twice.
+	var reach := _wall_face_distance(at, yaw)
+	var arm_from := plate_z
+	if arm_from > -0.02:
+		arm_from = -WALL_TORCH_DEPTH * scale_factor
+	var arm_len := maxf(reach + arm_from, 0.0)
+	if arm_len > 0.04:
+		var arm := MeshInstance3D.new()
+		arm.name = "Bracket"
+		var arm_mesh := BoxMesh.new()
+		arm_mesh.size = Vector3(0.09, 0.09, arm_len)
+		arm_mesh.material = iron
+		arm.mesh = arm_mesh
+		# Sits between the wall face and the fixture's own back plate, at the
+		# height of the fixture's arm rather than at the flame.
+		arm.position = Vector3(0.0, minf(cup_local.y * -0.45, -0.05),
+			arm_from - arm_len * 0.5)
+		mount.add_child(arm)
+		var plate := MeshInstance3D.new()
+		plate.name = "BracketPlate"
+		var plate_mesh := BoxMesh.new()
+		plate_mesh.size = Vector3(0.26, 0.34, 0.05)
+		plate_mesh.material = iron
+		plate.mesh = plate_mesh
+		plate.position = Vector3(0.0, arm.position.y, -reach + 0.03)
+		mount.add_child(plate)
 
-	# The torch itself, kept whole (stick and all -- a sconce carries its
-	# brand the way a hand would, unlike a basket's flame-without-a-stick)
-	# and shifted so its own authored flame point lands exactly on the
-	# mount's origin, which is `spec.y` above the floor.
+	# The fire itself, as a basket carries it -- flame, embers, no stick. The
+	# sconce above is the thing holding it now, so `torch_prop.gd`'s own 0.78 m
+	# brand would only be a second handle inside an iron cup.
 	var torch: Node3D = TORCH_PROP.new()
 	var flame_scale := scale_factor * BRAZIER_FLAME_SCALE
 	torch.scale = Vector3.ONE * flame_scale
+	var stick := torch.get_node_or_null(^"Stick")
+	if stick != null:
+		stick.queue_free()
 	var flame_local_y := float(torch.call("flame_local_position").y) * flame_scale
 	torch.position = Vector3(0.0, -flame_local_y, 0.0)
 	mount.add_child(torch)
+	_warm_the_flame(torch)
+
+	# JUDGE-5's "torch fixtures are invisible at reading size": downsampled to
+	# 30% the flames were "two orange smudges" while the teal conduits stayed
+	# crisp. A glow card is what makes a source legible AS a source at thumbnail
+	# size -- a wide, soft, additive disc that has no edge of its own, so it
+	# reads as light coming off the cup rather than as another quad. Deliberately
+	# LOW energy and WIDE: the defect was never that the flame is dim, it is
+	# that it occupies four pixels.
+	#
+	# `glow_energy` came DOWN 0.9 -> 0.45 after the round was re-judged, and the
+	# finding is worth keeping because it is not obvious. At 0.9 the additive
+	# core clipped, so every glow in the room rendered as the same saturated
+	# white disc whatever its distance -- the blind pass measured "five sconce
+	# glows: peak luma 237, 240, 239, 240, 240 and half-widths 70, 65, 82, 68,
+	# 83 px, at wildly different depths. They neither dim nor shrink with
+	# distance." A clipped highlight carries no distance information at all.
+	# Below the clip the same card falls off with range like a light should, and
+	# the near torches still read at thumbnail size.
+	#
+	# The card is depth-tested (see `_glow_card`), so its radius is capped
+	# against the standoff `reach` measured above: a billboard turns to face the
+	# camera, and at a grazing angle along the wall a card wider than about
+	# twice its own standoff swings into the stone and gets cut. At 2.6x the
+	# standoff the cut lands at 77% of the card's radius, where the radial
+	# gradient is already down around alpha 0.2 -- so what meets the stone is
+	# the faint rim, not the core, and the glow keeps most of the width that
+	# makes it legible at thumbnail size in the first place.
+	var glow_span := minf(float(spec.get("glow_size_m", WALL_TORCH_GLOW_M)) * scale_factor,
+		maxf(reach, 0.2) * 2.6)
+	var glow := _glow_card(glow_span, FIRE_COLOUR, float(spec.get("glow_energy", 0.45)))
+	glow.name = "TorchGlow"
+	glow.position = Vector3(0.0, 0.06 * scale_factor, 0.02)
+	mount.add_child(glow)
 
 	return mount
+
+
+## How far `at` stands off the wall its `yaw` has it bolted to, measured
+## against the chamber it is inside. The mount's own local -Z points at the
+## stone (see `_wall_torch`), so this is the distance from the flame point to
+## that wall's inner face; it is what the bracket has to span. Falls back to
+## the authored 0.6 m standoff if the point is not inside any chamber, so a
+## torch on a passage wall still gets an arm.
+func _wall_face_distance(at: Vector3, yaw: float) -> float:
+	var back := Vector3(-sin(yaw), 0.0, -cos(yaw))
+	for id: String in _chambers:
+		var chamber: Dictionary = _chambers[id]
+		var centre := _local_of(chamber.get("at", []))
+		var half := _size_of(chamber.get("size", [])) * 0.5
+		if absf(at.x - centre.x) > half.x or absf(at.z - centre.z) > half.y:
+			continue
+		var reach := WALL_TORCH_PROUD_FALLBACK
+		if absf(back.x) > 0.5:
+			reach = (at.x - (centre.x - half.x)) if back.x < 0.0 else ((centre.x + half.x) - at.x)
+		elif absf(back.z) > 0.5:
+			reach = (at.z - (centre.z - half.y)) if back.z < 0.0 else ((centre.z + half.y) - at.z)
+		return clampf(reach, 0.15, 1.4)
+	return WALL_TORCH_PROUD_FALLBACK
+
+
+## JUDGE-5, T-01: "the flame's own colour (mean RGB 151/92/50) is paler and
+## less orange than the wall pool it is casting". `torch_prop.gd` is shared with
+## the carried torch and the buildable and is not this lane's to retune, so the
+## two billboards it builds are re-coloured HERE, per instance, after the fact:
+## a hotter, more saturated orange core and a wider outer, so the fire is the
+## most orange thing in a room full of warm stone rather than the palest.
+const FLAME_OUTER_COLOUR := Color(1.0, 0.42, 0.08)
+const FLAME_CORE_HOT := Color(1.0, 0.66, 0.20)
+func _warm_the_flame(torch: Node3D) -> void:
+	for pair: Array in [["FlameOuter", FLAME_OUTER_COLOUR, 1.9, 1.35],
+			["FlameCore", FLAME_CORE_HOT, 2.6, 1.15]]:
+		var node: Node = torch.get_node_or_null(NodePath(str(pair[0])))
+		if node == null or not (node is MeshInstance3D):
+			continue
+		var instance := node as MeshInstance3D
+		var source := instance.material_override
+		if not (source is StandardMaterial3D):
+			continue
+		# A duplicate, never the shared resource: `torch_prop.gd` mints one
+		# material per instance today, but a future cache there must not be
+		# repainted by the Hall.
+		var material := (source as StandardMaterial3D).duplicate() as StandardMaterial3D
+		material.albedo_color = pair[1]
+		material.emission = pair[1]
+		material.emission_energy_multiplier = float(pair[2])
+		instance.material_override = material
+		instance.scale = Vector3.ONE * float(pair[3])
+
+
+## A soft additive disc that always faces the camera: the thing that makes a
+## small bright source read as a source at thumbnail size. Shares
+## `_soft_disc_texture()` with the boiler plume, so this adds no new image.
+func _glow_card(size: float, colour: Color, energy: float) -> MeshInstance3D:
+	var quad := QuadMesh.new()
+	quad.size = Vector2(size, size)
+	var material := StandardMaterial3D.new()
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+	material.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	# No depth WRITE -- an additive card must not occlude what is behind it --
+	# but the depth TEST stays on, and that is a deliberate reversal of this
+	# function's first cut. Switching it off does stop the card being clipped by
+	# the wall it is bolted to, and it also lets every torch glow in the
+	# building draw straight through the masonry into whatever room the camera
+	# happens to be standing in, which is a far worse defect than a soft edge
+	# and one no interior stand would have caught. `torch_prop.gd`'s own flame
+	# billboards have always been depth-tested; this follows them. The clipping
+	# is answered by SIZE instead -- see `_wall_torch`, which caps the card's
+	# radius against the standoff it measured, so what meets the stone at a
+	# grazing angle is the gradient's faint rim and not its core.
+	material.depth_draw_mode = BaseMaterial3D.DEPTH_DRAW_DISABLED
+	material.albedo_color = colour
+	material.albedo_texture = _soft_disc_texture()
+	material.emission_enabled = true
+	material.emission = colour
+	material.emission_energy_multiplier = energy
+	var instance := MeshInstance3D.new()
+	instance.mesh = quad
+	instance.material_override = material
+	instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	return instance
 
 
 func _add_basket(into: Node3D, scale_factor: float) -> void:
@@ -3944,9 +4448,25 @@ func _build_warden_arena_dressing() -> void:
 	# rather than bare stone either side of a wide dark gap.
 	var top := _floor_y + height * 0.78
 	for s: float in [-1.0, 1.0]:
+		# HALL-ART-0906, H3: the reserved oxblood and the BARRED field, not the
+		# exterior brick red and the plain one. These two cloths fill the left
+		# quarter of the arena's own entrance stand, so they are the pair the
+		# judge measured as "a pinkish crimson ... festival bunting rather than
+		# a threat" and as a flat slab below the sigil.
 		_hang_banner(Vector3(centre.x + s * half.x * 0.28, top,
 			centre.z + half.y - _wall_t * 0.5), PI * 0.5,
-			BANNER_COLOUR, BANNER_SCALE * 1.1)
+			_banner_interior_colour(), BANNER_SCALE * 1.1, false, 1.0)
+
+	# And a shorter chevron pair on the two side walls, well outside the 11 m
+	# ring (`half.x` is 12 m, so a cloth hung on the wall face itself is 12 m
+	# out) -- three designs in the room the fight happens in, where there used
+	# to be one, and the side walls stop being bare stone either side of the
+	# torch row.
+	for s3: float in [-1.0, 1.0]:
+		_hang_banner(Vector3(centre.x + s3 * (half.x - _wall_t * 0.5),
+			_floor_y + height * 0.7, centre.z + half.y * 0.34),
+			0.0 if s3 < 0.0 else PI,
+			_banner_interior_colour(), BANNER_SCALE * 0.78, false, 2.0)
 
 	# The passage in is `passages`' own tether_approach->warden_arena entry,
 	# centred on this chamber's own x (both chambers share x=0) at half-width
@@ -3954,7 +4474,12 @@ func _build_warden_arena_dressing() -> void:
 	# the jamb, hugging the entry wall's base rather than crossing the floor.
 	var door_half_w := 1.7
 	var wall_z := centre.z - half.y + _wall_t * 0.5 + 0.15
-	var mat := _live_material()
+	# HALL-ART-0906, H5. These two runs sit at the camera's own feet from the
+	# arena's entrance stand, and at `_live_material()`'s 1.4 the near one
+	# rendered as the "white wedge artifact, max Y 240" JUDGE-5 found in T-02's
+	# bottom-right corner -- not a stray polygon, a reserved-teal cable clipped
+	# past white. Same material every other roofed run already uses.
+	var mat := _interior_live_material()
 	for s2: float in [-1.0, 1.0]:
 		var far_x := s2 * (half.x - 1.0)
 		var near_x := s2 * (door_half_w + 0.4)
@@ -4440,11 +4965,70 @@ func _place_gauntlet() -> void:
 	# the room it belongs to, which is the height its own marker already
 	# carries.
 	for spec: Variant in list:
-		var who := str((spec as Dictionary).get("trainer", ""))
+		var entry2: Dictionary = spec as Dictionary
+		var who := str(entry2.get("trainer", ""))
 		var body: Node3D = _trainers.call("body_for", who) as Node3D
 		var mark: Vector3 = _markers.get("trainer_%s" % who, Vector3.ZERO)
 		if body != null and mark != Vector3.ZERO:
 			body.global_position = Vector3(body.global_position.x, mark.y, body.global_position.z)
+		if body != null:
+			_light_the_gauntlet_body(body, entry2)
+
+
+## HALL-ART-0906, H7. JUDGE-5, T-01: "the Team Tether grunt at x 545-580 --
+## body median 33, standing on floor at median 22 -- a dark-on-dark figure
+## whose only readable edge is where he overlaps the pale door behind him.
+## Move him a metre left and he disappears." Against `palworld-01`, whose
+## trainer is "a high-contrast bespoke figure ... legible against a busy
+## forest", that is the character-readability bar failing outright.
+##
+## TWO LEVERS, and only one of them is a real one; this says which, because a
+## later round should not have to re-derive it.
+##
+## The RIM LIGHT is the real one. Same mechanism `gate_sentries`' own
+## `night_light` already uses -- an OmniLight3D parented to the BODY, so its
+## offset lands in the figure's own local frame and follows `facing_deg` for
+## free. `character_model.gd` bodies face local -Z, so a light at +Z is BEHIND
+## the figure: it edges the silhouette away from the camera side rather than
+## flattening the face, which is what separates a body from a wall of the same
+## value.
+##
+## The COSTUME is the weak one, and it is worth writing down why rather than
+## reporting "needs owner art" without trying. `character_model.gd`'s palette
+## path (`_apply_palette` -> `_shared_variant_material`) is a MULTIPLY over the
+## rig's painted albedo, and every Team Tether rank already sits at or near
+## white (`npc_ranks.json`: grunt #dcdcdc, officer #eeeeee, captain #ffffff) --
+## so the only direction a multiply can move this figure is DARKER, and dark is
+## the defect. What it CAN do is change the hue: a cool steel costume against a
+## room whose whole-frame mean is R/B 3.4 separates by colour where it cannot
+## separate by value. That is what `costume` does here, per placement, so
+## nothing about the grunt rig changes anywhere else in the game. A real
+## value-contrast costume is still an art question and this does not pretend
+## otherwise.
+func _light_the_gauntlet_body(body: Node3D, spec: Dictionary) -> void:
+	var costume: Dictionary = spec.get("costume", {}) as Dictionary
+	if not costume.is_empty() and body.has_method("_apply_palette"):
+		body.call("_apply_palette", {"palette": costume})
+	var rim: Dictionary = spec.get("rim_light", {}) as Dictionary
+	if rim.is_empty():
+		return
+	var offset_raw: Array = rim.get("offset", [0.0, 1.75, 0.8]) as Array
+	var light := OmniLight3D.new()
+	light.name = "GauntletRim"
+	light.light_color = Color(str(rim.get("colour", "#c6d4e4")))
+	light.light_energy = float(rim.get("energy", 2.2))
+	light.omni_range = float(rim.get("range", 3.2))
+	# Steep, so this is a rim on ONE body and not another room light: at 2.2 the
+	# pool has to die inside a couple of metres or it lifts the wall behind him
+	# by as much as it lifts him, and the contrast that made him readable is
+	# gone again.
+	light.omni_attenuation = float(rim.get("attenuation", 2.4))
+	light.shadow_enabled = false
+	light.position = Vector3(
+		float(offset_raw[0]) if offset_raw.size() > 0 else 0.0,
+		float(offset_raw[1]) if offset_raw.size() > 1 else 1.75,
+		float(offset_raw[2]) if offset_raw.size() > 2 else 0.8)
+	body.add_child(light)
 
 
 ## Named spots later items ask for by name: where the Warden stands, where the
@@ -4890,10 +5474,39 @@ func _build_tether_retrofit() -> void:
 		node.rotation.y = deg_to_rad(float(spec.get("yaw_deg", 0.0)))
 		node.scale = Vector3.ONE * float(spec.get("scale", 1.0))
 		holder.add_child(node)
+		_reserve_tether_oxblood(node)
 		if model.begins_with("rift_siphon"):
 			_light_the_siphon(node, spec)
 		if model.begins_with("team_tether_boiler") and bool(spec.get("smoke", true)):
 			_smoke_column(node, spec)
+
+
+## HALL-ART-0906. JUDGE-5, T-02: the arena machine "carries a saturated
+## fire-engine red ring at (866,398) and a red block at (900,320) -- that is not
+## oxblood, and bright red on Tether hardware competes with the banner's
+## reserved oxblood". It is the props' own `TT_Oxblood` material: authored in
+## Blender at (0.147, 0.023, 0.014), which is a pure red hue that only reads as
+## oxblood while it stays dark, and under a 12-energy wall torch a metre away it
+## does not stay dark. `palette.json`'s reserved `tether_oxblood` is the value
+## and the hue the faction is actually meant to wear, and the banners already
+## wear it -- so the hardware is repainted to it here rather than left to
+## disagree with the cloth hanging beside it. Per placement, through a duplicated
+## material, the same trap `_tint_node` documents.
+const TETHER_OXBLOOD_MATERIAL := "TT_Oxblood"
+func _reserve_tether_oxblood(node: Node3D) -> void:
+	var target: Node = node.find_child(TETHER_OXBLOOD_MATERIAL, true, false)
+	if not (target is MeshInstance3D):
+		return
+	var instance := target as MeshInstance3D
+	var oxblood := _palette("tether_oxblood", Color("#332228"))
+	for surface in (instance.mesh.get_surface_count() if instance.mesh != null else 0):
+		var source := instance.get_active_material(surface)
+		var material: StandardMaterial3D = (source as StandardMaterial3D).duplicate() as StandardMaterial3D \
+			if source is StandardMaterial3D else StandardMaterial3D.new()
+		material.albedo_color = oxblood
+		material.roughness = 0.94
+		material.metallic = 0.0
+		instance.set_surface_override_material(surface, material)
 
 
 ## VP8. A working boiler makes smoke, and smoke is the one sign of occupation
@@ -5044,10 +5657,34 @@ func _light_the_siphon(node: Node3D, spec: Dictionary) -> void:
 		# Three siphons sharing the imported resource would pulse in lockstep and,
 		# worse, a later per-siphon energy change would repaint all of them.
 		var mat := StandardMaterial3D.new()
-		mat.albedo_color = SIPHON_RIFT
+		# HALL-ART-0906, H4. JUDGE-5 named this twice, once per frame: T-01's
+		# "white/lavender panel on the left-hand Tether machine, RGB 238/228/238"
+		# and T-02's "cage/machine window pane, RGB 239/239/239, median 143,
+		# max 240 ... a hard-edged flat white rectangle that casts NOTHING".
+		# Two separate faults were producing one defect.
+		#
+		# The core stays PURPLE. The constant's own header above argues that at
+		# length and it is not being reopened here: the purple is the RIFT's and
+		# the teal is Team Tether's, which is why no teal appears on this prop
+		# and no purple appears anywhere else in the Hall. The judge never
+		# complained about purple -- it complained the pane was WHITE, and it
+		# was right, in both frames that contain one.
+		#
+		# What was wrong is the energy. W06-FINALE-0904 measured the reserved
+		# teal clipping to white at 2.2 and holding its hue at 1.15
+		# (`_interior_live_material` records that measurement), and these three
+		# were authored at 2.4-3.0 -- above the clip. That is why the previous
+		# round's recolour "did not fix the offence": past the clip every hue
+		# is the same white, so changing which hue was being blown out changed
+		# nothing a camera could see. Capped, so the core renders as the colour
+		# it is authored in. TUNABLE via `site.siphon_core_energy_max`; the
+		# per-entry `core_energy` still ranks the three siphons under it, so the
+		# arena's hero machine is still the brightest of them.
+		var ceiling := float(_config.get("site", {}).get("siphon_core_energy_max", 1.15))
+		mat.albedo_color = SIPHON_RIFT.darkened(0.35)
 		mat.emission_enabled = true
 		mat.emission = SIPHON_RIFT
-		mat.emission_energy_multiplier = float(spec.get("core_energy", 2.4))
+		mat.emission_energy_multiplier = minf(float(spec.get("core_energy", 2.4)), ceiling)
 		mi.material_override = mat
 	if not bool(spec.get("core_light", true)):
 		return
@@ -5060,10 +5697,36 @@ func _light_the_siphon(node: Node3D, spec: Dictionary) -> void:
 	light.light_color = SIPHON_RIFT
 	light.light_energy = float(spec.get("light_energy", 1.5))
 	light.omni_range = float(spec.get("light_range", 6.5))
-	light.omni_attenuation = 1.8
+	# H4's other half: "the stone immediately beside it is far darker than the
+	# pane, and the floor under it shows no pool at all -- so it reads as an
+	# emissive decal, not a light". 1.8 concentrates a light so hard at its own
+	# origin that a machine bolted flat to a wall pools on nothing; 1.15 lets
+	# the pool reach the stone either side and the floor under it, which is the
+	# whole read the judge was asking for. TUNABLE per entry.
+	light.omni_attenuation = float(spec.get("light_attenuation", 1.15))
 	light.shadow_enabled = false
 	light.position = Vector3(0.0, 1.72, -0.35)   # the chamber's own centre
 	node.add_child(light)
+
+	# And the small warm-neutral practical the same finding asks for. A rift
+	# siphon casting only its own teal keeps the surrounding stone reading as
+	# unlit hardware; one dim warm lamp on the machine's own housing puts the
+	# adjacent masonry back in the room's torch key, so the machine sits IN the
+	# hall rather than on top of it. Opt-in per entry (`practical_energy`), and
+	# omitted by default, because every omni in a roofed room competes for the
+	# Compatibility renderer's per-object cap -- see `smoke_stronghold.gd`.
+	var practical := float(spec.get("practical_energy", 0.0))
+	if practical <= 0.0:
+		return
+	var warm := OmniLight3D.new()
+	warm.name = "SiphonPractical"
+	warm.light_color = Color(1.0, 0.86, 0.72)
+	warm.light_energy = practical
+	warm.omni_range = float(spec.get("practical_range", 5.5))
+	warm.omni_attenuation = 1.1
+	warm.shadow_enabled = false
+	warm.position = Vector3(0.0, 1.15, -1.1)
+	node.add_child(warm)
 
 
 ## Pipe runs bolted along the ancient walls, from the modular kit board 03 asks

@@ -89,11 +89,18 @@ func _run() -> void:
 	_expect(int(look.call("settlement_guy_rope_count")) > 0, "no settlement guy ropes were added", failures)
 
 	if failures.is_empty():
+		var grid: Dictionary = look.call("cover_fill_grid")
+		print("  turf fill: %d turf surfaces, %d triangles, %d m2 of turf; %d plantable, %d tufts at density x%.2f, %d ms" % [
+			int(grid.get("surfaces", 0)), int(look.call("cover_fill_cell_count")),
+			int(grid.get("turf_area_m2", 0)), int(grid.get("turf_triangles", 0)),
+			int(look.call("cover_fill_count")), float(grid.get("density_scale", 1.0)),
+			int(look.call("cover_fill_msec"))])
 		print(("CLOUDREACH LOOK OK bridges_rails=%d posts=%d moorings=%d cover_main=%d cover_far=%d " +
-			"cover_alpine=%d trees=%d stones=%d settlement_overrides=%d guy_ropes=%d") % [
+			"cover_alpine=%d cover_fill=%d trees=%d stones=%d settlement_overrides=%d guy_ropes=%d") % [
 			rope_sides.size(), int(look.call("bridge_post_count")), mooring.size(),
 			int(look.call("cover_finish_main_count")), int(look.call("cover_finish_far_count")),
-			int(look.call("cover_finish_alpine_count")), int(look.call("tree_count")), int(look.call("stone_count")),
+			int(look.call("cover_finish_alpine_count")), int(look.call("cover_fill_count")),
+			int(look.call("tree_count")), int(look.call("stone_count")),
 			int(look.call("settlement_material_override_count")), int(look.call("settlement_guy_rope_count"))])
 		quit(0)
 		return

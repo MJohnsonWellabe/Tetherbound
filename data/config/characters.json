@@ -1,0 +1,12 @@
+{
+  "_comment": "Owner-requested character-CHOICE step: every new-game path (solo Start New Game, hosting -- which is Start New Game on the host's own machine, session.gd never a second entry point -- and Join when this machine has no local character yet) shows a 'Choose Your Character' screen before the world is entered. scripts/ui/title_screen.gd::_load_character_options() reads this list generically and builds one row per entry, so a second character is a JSON entry here, not a UI rewrite.",
+  "_comment_one_option": "Exactly one option exists today on purpose -- no lore or cosmetic content is invented here beyond what docs/GAME_VISION.md already establishes (the player wakes at Grandpa's farmhouse). Adding a second playable character is a design decision (what differs about them, whether it is cosmetic-only or changes starting context) that CLAUDE.md's 'ask instead of inventing' rule reserves for an owner directive, not for this plumbing task.",
+  "_comment_fields": "`id` is the stable key a future consumer (e.g. a starting-loadout or cosmetic difference) would key off; `display_name` and `tagline` are shown on the row. Selecting a row is also the confirmation -- the same one-press pattern the Load Game slot list already uses -- so a single option is one press, not a picker plus a separate confirm button.",
+  "characters": [
+    {
+      "id": "trainer_default",
+      "display_name": "The Trainer",
+      "tagline": "Wakes at Grandpa's farmhouse to build a team of five and see the Meadows through."
+    }
+  ]
+}
