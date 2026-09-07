@@ -60,7 +60,7 @@ static func presentation_for(flags: RefCounted) -> Dictionary:
 		"upper_routes": has_flag(flags, "cloudreach_upper_route_unlocked"),
 		"returning_travelers": restored, "shrine_brightened": restored,
 		"anchor_drone": not network_off, "natural_anchor_wind": restored,
-		"waterward_overlook": restored and has_flag(flags, "captain_veyra_defeated") and has_flag(flags, "waterward_route_revealed"),
+		"waterward_overlook": restored and has_flag(flags, "captain_veyra_defeated") and has_flag(flags, "stormward_route_revealed"),
 		"waterward_enterable": false}
 
 

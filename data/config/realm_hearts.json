@@ -10,6 +10,26 @@
         "description": "Doubles maximum stamina.",
         "max_stamina_multiplier": 2.0
       }
+    },
+    "cloudreach": {
+      "placed_flag": "realm_heart_cloudreach_placed",
+      "power": {
+        "description": "Fly without spending stamina.",
+        "display_name": "Skyborne",
+        "fly_stamina_multiplier": 0.0
+      },
+      "display_name": "Wings of Cloudreach",
+      "earned_flag": "realm_heart_cloudreach_earned"
+    },
+    "stormwood": {
+      "placed_flag": "realm_heart_stormwood_placed",
+      "power": {
+        "cooldown_multiplier": 0.75,
+        "description": "Creature move cooldowns are shortened by 25%.",
+        "display_name": "Livewire"
+      },
+      "display_name": "Spark of the Stormwood",
+      "earned_flag": "realm_heart_stormwood_earned"
     }
   },
   "realms": {
@@ -22,6 +42,13 @@
       "display_name": "Cloudreach Cliffs",
       "scene": "res://scenes/world/cloudreach_cliffs.tscn",
       "entry_key_flag": "realm_key_cloudreach"
+    },
+    "stormwood": {
+      "map_world_path": "res://data/config/stormwood_world.json",
+      "entry_key_flag": "realm_key_stormwood",
+      "map_tuning_path": "res://data/config/stormwood_atmosphere.json",
+      "display_name": "The Stormwood",
+      "scene": "res://scenes/world/stormwood.tscn"
     }
   }
 }

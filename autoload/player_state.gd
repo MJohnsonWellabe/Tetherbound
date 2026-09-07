@@ -33,6 +33,7 @@ const INVENTORY := preload("res://autoload/inventory.gd")
 const PARTY := preload("res://autoload/party.gd")
 const MAP_STATE := preload("res://autoload/map_state.gd")
 const CLOUDREACH_MAP_STATE := preload("res://scripts/world/cloudreach_map_state.gd")
+const REALM_MAP_STATE := preload("res://scripts/world/realm_map_state.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const REALM_HEART_STATE := preload("res://autoload/realm_heart_state.gd")
 const PLAYER_EQUIPMENT := preload("res://scripts/player/player_equipment.gd")
@@ -45,10 +46,11 @@ const SPECIES_PATH := "res://data/creatures/species.json"
 const MAP_LANDMARKS_PATH := "res://data/config/map_landmarks.json"
 const CLOUDREACH_WORLD_PATH := "res://data/config/cloudreach_world.json"
 const CLOUDREACH_CHAPTER_PATH := "res://data/config/cloudreach_chapter.json"
+const REALM_HEARTS_PATH := "res://data/config/realm_hearts.json"
 
 ## The realms that have an implemented map. Waterward is a distant vista, not
 ## an enterable place (CLAUDE.md's Biome 2 rule), so it gets no MapState.
-const MAPPED_REALMS: Array[String] = ["meadows", "cloudreach"]
+const DEFAULT_MAPPED_REALMS: Array[String] = ["meadows", "cloudreach"]
 
 ## Item kinds that may occupy an action slot -- an allow-list, not a refusal
 ## list. Owner board, "UI / SYSTEM FIXES CHECKLIST": "Hotbar: consumables +
@@ -83,6 +85,7 @@ var flags: RefCounted = null
 ## realm id -> MapState. Fog, landmarks, dynamic markers, regions and alpha
 ## pins, per realm, per player.
 var maps: Dictionary = {}
+var _map_definitions_override: Dictionary = {}
 
 var hearts: RefCounted = null
 var feed: RefCounted = null
@@ -167,18 +170,25 @@ func configure(item_db: RefCounted) -> void:
 ## with the Meadows ones, and neither can overwrite the other's grid. That is
 ## the whole reason this lane touched `map_state.gd`.
 func map_for(realm_id: String) -> RefCounted:
-	if realm_id not in MAPPED_REALMS:
+	var definition := map_definition_for(realm_id)
+	if definition.is_empty():
 		return null
 	if maps.has(realm_id):
 		return maps[realm_id]
 	var instance: RefCounted
 	if realm_id == "cloudreach":
 		instance = CLOUDREACH_MAP_STATE.new()
-		instance.call("configure_cloudreach", _json(CLOUDREACH_WORLD_PATH),
-			_json(CLOUDREACH_CHAPTER_PATH), flag_reader)
-	else:
+		instance.call("configure_cloudreach", _json(str(definition.get("map_world_path", CLOUDREACH_WORLD_PATH))),
+			_json(str(definition.get("map_chapter_path", CLOUDREACH_CHAPTER_PATH))), flag_reader)
+	elif realm_id == "meadows":
 		instance = MAP_STATE.new()
-		instance.call("configure", _json(MAP_LANDMARKS_PATH))
+		instance.call("configure", _json(str(definition.get("map_landmarks_path", MAP_LANDMARKS_PATH))))
+	else:
+		instance = REALM_MAP_STATE.new()
+		instance.call("configure_realm", realm_id, definition,
+			_json(str(definition.get("map_world_path", ""))),
+			_json(str(definition.get("map_chapter_path", ""))),
+			_json(str(definition.get("map_tuning_path", ""))), flag_reader)
 	maps[realm_id] = instance
 	return instance
 
@@ -192,19 +202,77 @@ func map() -> RefCounted:
 ## under `realm_maps`. Builds any map not yet visited so the key set is stable.
 func map_payloads() -> Dictionary:
 	var payloads: Dictionary = {}
-	for realm_id: String in MAPPED_REALMS:
+	for realm_id: String in mapped_realm_ids():
 		var instance := map_for(realm_id)
 		payloads[realm_id] = instance.call("save_data") if instance != null else {}
 	return payloads
 
 
 func load_map_payloads(payloads: Dictionary) -> void:
-	for realm_id: String in MAPPED_REALMS:
+	for realm_id: String in mapped_realm_ids():
 		var instance := map_for(realm_id)
 		if instance == null:
 			continue
 		var payload: Variant = payloads.get(realm_id, {})
 		instance.call("load_data", payload if payload is Dictionary else {})
+
+
+## Test fixtures and future realm catalogues can replace this small registry
+## without constructing a world scene. Reconfigure before gameplay begins;
+## clearing avoids retaining a MapState with an obsolete grid descriptor.
+func configure_map_definitions(definitions: Dictionary) -> void:
+	_map_definitions_override = definitions.duplicate(true)
+	maps.clear()
+
+
+func mapped_realm_ids() -> Array[String]:
+	var ids: Array[String] = []
+	var definitions := _map_definitions()
+	for preferred: String in DEFAULT_MAPPED_REALMS:
+		if definitions.has(preferred):
+			ids.append(preferred)
+	var remaining: Array = []
+	for realm_id: Variant in definitions.keys():
+		var id := str(realm_id)
+		if not ids.has(id):
+			remaining.append(id)
+	remaining.sort()
+	for realm_id: Variant in remaining:
+		ids.append(str(realm_id))
+	return ids
+
+
+func map_definition_for(realm_id: String) -> Dictionary:
+	var raw: Variant = _map_definitions().get(realm_id, {})
+	return raw.duplicate(true) if raw is Dictionary else {}
+
+
+func _map_definitions() -> Dictionary:
+	if not _map_definitions_override.is_empty():
+		return _map_definitions_override
+	var definitions: Dictionary = {
+		"meadows": {"display_name": "The Meadows", "map_landmarks_path": MAP_LANDMARKS_PATH},
+		"cloudreach": {"display_name": "Cloudreach Cliffs", "map_world_path": CLOUDREACH_WORLD_PATH,
+			"map_chapter_path": CLOUDREACH_CHAPTER_PATH},
+	}
+	var config := _json(REALM_HEARTS_PATH)
+	var realms: Variant = config.get("realms", {})
+	if not (realms is Dictionary):
+		return definitions
+	for realm_id: String in (realms as Dictionary):
+		var raw: Variant = (realms as Dictionary)[realm_id]
+		if not (raw is Dictionary):
+			continue
+		var authored := raw as Dictionary
+		# Existing maps retain their known paths until those optional fields are
+		# authored; a new map opts in by declaring any map source path.
+		if realm_id not in definitions and not authored.has("map_world_path") \
+				and not authored.has("map_landmarks_path"):
+			continue
+		var merged: Dictionary = definitions.get(realm_id, {}).duplicate(true)
+		merged.merge(authored, true)
+		definitions[realm_id] = merged
+	return definitions
 
 
 # --- the hotbar -------------------------------------------------------------

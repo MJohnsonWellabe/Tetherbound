@@ -69,6 +69,23 @@ func _run() -> void:
 	var hearts: RefCounted = game.get("realm_hearts")
 	var vitals: RefCounted = player.get("vitals")
 	var baseline: float = vitals.get("max_stamina")
+	# Companion relic slots share the shrine's physical space but have no action
+	# until their own Heart is placed.  They must therefore be absent from the
+	# offer set while inert, rather than winning proximity arbitration over a
+	# nearby trainer.  Once placed, they must still offer their real activation.
+	var cloudreach_slot: Node3D = shrine.get_node_or_null(^"RelicSlot_cloudreach") as Node3D
+	var cloudreach_prompt: Node3D = cloudreach_slot.get_node_or_null(^"Interactable") as Node3D \
+		if cloudreach_slot != null else null
+	_expect(cloudreach_prompt != null, "shrine did not build the Cloudreach companion relic slot")
+	if cloudreach_prompt != null:
+		player.global_position = cloudreach_prompt.global_position
+		_expect(cloudreach_prompt.call("interaction_offer", player.global_position).is_empty(),
+			"inactive companion relic slot still offers interaction")
+		progression.call("set_flag", "realm_heart_cloudreach_earned")
+		_expect(bool(hearts.call("place", "cloudreach", progression)), "Cloudreach Heart placement fixture failed")
+		await _settle()
+		_expect(not cloudreach_prompt.call("interaction_offer", player.global_position).is_empty(),
+			"placed companion relic slot no longer offers activation")
 	player.position = Vector3(20, 0, 2)
 	await _press_interact()
 	_expect(not gate.call("try_unlock", game), "no-key gate accepted unlock")
@@ -87,7 +104,7 @@ func _run() -> void:
 	await _settle()
 	_expect(bool(shrine.get_node(^"Interactable").get("actionable")), "earned shrine stayed unresponsive without reload")
 	var shrine_copy: String = shrine.get_node(^"Interactable").get("label")
-	_expect(shrine_copy.contains("maximum stamina") and shrine_copy.contains("Only one Heart power"), "persistent shrine prompt omitted the power or one-active rule")
+	_expect(shrine_copy.contains("maximum stamina") and shrine_copy.contains("Only one relic power"), "persistent shrine prompt omitted the power or one-active rule")
 	_expect(bool(gate.get_node(^"Interactable").get("actionable")), "rewarded gate stayed unresponsive without reload")
 	_expect(bool(hearts.call("is_earned", "meadows", progression)), "production Warden did not grant Heart")
 	_expect(bool(game.call("can_enter_realm", "cloudreach")), "production Warden did not grant realm key")
@@ -101,7 +118,7 @@ func _run() -> void:
 	_expect(bool(hearts.call("is_placed", "meadows", progression)), "shrine input did not place Heart")
 	_expect(str(hearts.call("active_id")) == "", "placement silently equipped power")
 	var message: String = game.call("take_pending_world_message")
-	_expect(message.contains("maximum stamina") and message.contains("Only one Heart power"), "shrine omitted power/selection explanation")
+	_expect(message.contains("maximum stamina") and message.contains("Only one relic power"), "shrine omitted power/selection explanation")
 	await _press_interact()
 	_expect(str(hearts.call("active_id")) == "meadows", "shrine input did not equip Heart")
 	_expect(is_equal_approx(float(vitals.get("max_stamina")), baseline * 2.0), "live player capacity did not double")

@@ -113,7 +113,14 @@
       "side_courier_medicine_delivered",
       "side_courier_pack_recovered",
       "side_stranded_couriers_complete",
-      "side_three_bells_complete"
+      "side_three_bells_complete",
+      "realm_key_stormwood",
+      "realm_gate_stormwood_unlocked",
+      "realm_heart_cloudreach_placed",
+      "realm_heart_stormwood_earned",
+      "realm_heart_stormwood_placed",
+      "stormward_route_revealed",
+      "cloudreach_reward_retargeted_stormwood"
     ],
     "prefixes": [
       "cache:",
@@ -124,7 +131,8 @@
       "felled:",
       "farm:",
       "wild_once_",
-      "warrens_once_"
+      "warrens_once_",
+      "stormwood:"
     ]
   },
   "player": {

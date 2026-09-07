@@ -34,6 +34,7 @@ extends RefCounted
 ## applied to a slot (D15).
 
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
+const REALM_REWARD_MIGRATION := preload("res://scripts/save/realm_reward_migration.gd")
 
 ## This file's own format version, independent of the v22 slot format's.
 const VERSION := 1
@@ -221,7 +222,7 @@ func state(world_id: String) -> Dictionary:
 		if data.has(key):
 			out[key] = copy_value(data[key])
 	out["flags"] = copy_value(data.get("flags", {})) if data.get("flags") is Dictionary else {}
-	return out
+	return REALM_REWARD_MIGRATION.repair_world_state_payload(out)
 
 
 static func copy_value(value: Variant) -> Variant:

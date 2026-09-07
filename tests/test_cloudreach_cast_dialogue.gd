@@ -221,8 +221,8 @@ func test_aila_reward_requires_aftermath_and_does_not_repeat_as_greeting() -> vo
 	assert_eq(aila["position_when"][0]["if_flag"], "cloudreach_winds_restored")
 	LOGIC.dispatch(flags, _read(CHAPTER_PATH), "dialogue:cloudreach_aila_final_reward_complete")
 	assert_true(flags.has("realm_heart_cloudreach_earned"))
-	assert_true(flags.has("realm_key_water"))
-	assert_true(flags.has("waterward_route_revealed"))
+	assert_true(flags.has("realm_key_stormwood"))
+	assert_true(flags.has("stormward_route_revealed"))
 	assert_eq(NPCS.greeting_for(aila, flags), "cloudreach_aila_after_restoration")
 	assert_false(LOGIC.dispatch(flags, _read(CHAPTER_PATH), "dialogue:cloudreach_aila_final_reward_complete")["changed"])
 

@@ -146,6 +146,32 @@ func _realm() -> String:
 	return str(_game.get("current_realm")) if is_instance_valid(_game) else ""
 
 
+## Realm powers are per-player state, so Fly reads them from this player's Game
+## instance rather than from a global/autoload.  Phase 1 accepts the ordinary
+## cost (1.0) through Skyborne's free cost (0.0); malformed relic data cannot
+## make traversal restore stamina or cost more than its authored base values.
+static func stamina_cost_multiplier(active_power: Dictionary) -> float:
+	return clampf(float(active_power.get("fly_stamina_multiplier", 1.0)), 0.0, 1.0)
+
+
+static func adjusted_stamina_cost(base_cost: float, active_power: Dictionary) -> float:
+	return maxf(0.0, base_cost) * stamina_cost_multiplier(active_power)
+
+
+func _active_realm_power() -> Dictionary:
+	if not is_instance_valid(_game):
+		return {}
+	var hearts: Variant = _game.get("realm_hearts")
+	if hearts == null or not hearts.has_method("active_power"):
+		return {}
+	var power: Variant = hearts.call("active_power")
+	return power.duplicate(true) if power is Dictionary else {}
+
+
+func _flight_stamina_multiplier() -> float:
+	return stamina_cost_multiplier(_active_realm_power())
+
+
 ## Prefer the party's existing active carrier. If a valid five-member Meadows
 ## team has no Fly species, Maela's transient story carrier prevents a chapter
 ## deadlock. It is never added to Party, saved, caught, or treated as a sixth
@@ -200,7 +226,9 @@ func launch_blockers() -> String:
 		return "Complete the Windscar flight trial to unlock Fly."
 	if eligible_creature() == null:
 		return "No healthy Fly carrier is available here."
-	if float(_player.get("vitals").get("stamina")) < float(config.get("minimum_launch_stamina", 18.0)):
+	var active_power := _active_realm_power()
+	var minimum_stamina := adjusted_stamina_cost(float(config.get("minimum_launch_stamina", 18.0)), active_power)
+	if minimum_stamina > 0.0 and float(_player.get("vitals").get("stamina")) < minimum_stamina:
 		return "Rest before launching: not enough stamina."
 	if safe_anchor == Vector3.INF or safe_realm != _realm():
 		return "Touch down on safe ground before launching."
@@ -237,7 +265,7 @@ func physics_step(delta: float, input_owned: bool) -> bool:
 	_player.call("begin_environment_velocity_step")
 	flight_seconds += delta
 	var vitals: RefCounted = _player.get("vitals")
-	if eligible_creature() != _creature or float(vitals.get("stamina")) <= 0.0 or flight_seconds >= float(config.get("maximum_flight_seconds", 180.0)):
+	if eligible_creature() != _creature or (_flight_stamina_multiplier() > 0.0 and float(vitals.get("stamina")) <= 0.0) or flight_seconds >= float(config.get("maximum_flight_seconds", 180.0)):
 		_set_state("exhausted")
 	var stick := Vector2.ZERO if input_owned else Input.get_vector("move_left", "move_right", "move_forward", "move_back")
 	var view_basis := Basis.IDENTITY
@@ -280,8 +308,8 @@ func physics_step(delta: float, input_owned: bool) -> bool:
 				return true
 	else:
 		last_denial = ""
-	var spend := float(config.get("climb_stamina_per_second", 1.6)) if state == "climb" else float(config.get("stamina_per_second", 1.0))
-	vitals.call("spend_traversal", spend * delta)
+	var base_spend := float(config.get("climb_stamina_per_second", 1.6)) if state == "climb" else float(config.get("stamina_per_second", 1.0))
+	vitals.call("spend_traversal", adjusted_stamina_cost(base_spend * delta, _active_realm_power()))
 	var velocity_before_environment := _player.velocity
 	_player.call("apply_environment_velocity_modifiers", delta)
 	# External wind cannot bypass authored swept no-fly restrictions.
@@ -515,7 +543,7 @@ func _launch() -> void:
 		_saved_shape_position = collider.position
 		collider.shape = _flight_shape()
 		collider.position = Vector3.UP * float(config.get("collision_height_m", 4.5)) * 0.5
-	_player.get("vitals").call("spend_traversal", float(config.get("launch_stamina", 8.0)))
+	_player.get("vitals").call("spend_traversal", adjusted_stamina_cost(float(config.get("launch_stamina", 8.0)), _active_realm_power()))
 	_set_state("glide")
 	_build_visual(SPECIES.fly_capability(str(_creature.get("species_id"))))
 	if _model != null and _model.has_method("set_fly_hang"):

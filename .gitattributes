@@ -1,0 +1,4 @@
+# Bake fingerprints and shell entry points must agree on Windows and Linux.
+*.gd text eol=lf
+*.json text eol=lf
+*.sh text eol=lf

@@ -424,7 +424,7 @@ func test_map_contract_uses_real_landmarks_and_covers_every_region() -> void:
 	var unlocks: Array = map.get("unlock_events", [])
 	var has_waterward_reveal := false
 	for value: Variant in unlocks:
-		if str((value as Dictionary).get("flag_id", "")) == "waterward_route_revealed":
+		if str((value as Dictionary).get("flag_id", "")) == "stormward_route_revealed":
 			has_waterward_reveal = true
 	assert_true(has_waterward_reveal, "the finale never reveals the future Waterward route")
 	assert_false(str(map.get("fly_route_readability", "")).is_empty(), "Fly navigation relies only on the minimap")
@@ -481,7 +481,7 @@ func test_victory_grants_both_realm_rewards_and_changes_the_world() -> void:
 	var reward_flags: Array[String] = []
 	for value: Variant in (rewards.get("grants", []) as Array):
 		reward_flags.append(str((value as Dictionary).get("flag_id", "")))
-	for required in ["realm_heart_cloudreach_earned", "realm_key_water", "waterward_route_revealed"]:
+	for required in ["realm_heart_cloudreach_earned", "realm_key_stormwood", "stormward_route_revealed"]:
 		assert_true(reward_flags.has(required), "chapter reward does not grant '%s'" % required)
 		assert_true(_persistent_flags().has(required), "reward '%s' is not persistent" % required)
 	var final_objective := _objective_with_flag("cloudreach_chapter_complete")

@@ -42,7 +42,7 @@ func test_unknown_and_premature_events_cannot_skip_chapter_gates() -> void:
 	var chapter := _chapter()
 	for event: String in ["flag:cloudreach_chapter_complete", "flight_trial_completed",
 		"landmark:sky_shrine_heartstone_reached", "encounter:captain_veyra_storm_anchor_won",
-		"dialogue:cloudreach_aila_final_reward_complete", "count:realm_key_water",
+		"dialogue:cloudreach_aila_final_reward_complete", "count:realm_key_stormwood",
 		"count:storm_anchor_upper_west_disabled"]:
 		assert_false(LOGIC.dispatch(flags, chapter, event)["changed"], event)
 	assert_eq(flags.all_set().size(), 0)
@@ -111,9 +111,9 @@ func test_finale_keeps_boss_network_aftermath_and_reward_as_separate_beats() -> 
 	assert_true(LOGIC.dispatch(flags, chapter, "summit_engine_relays_disabled")["changed"])
 	assert_false(flags.has("cloudreach_winds_restored"))
 	assert_true(LOGIC.dispatch(flags, chapter, "aftermath:cloudreach_winds_restored")["changed"])
-	assert_false(flags.has("realm_key_water"))
+	assert_false(flags.has("realm_key_stormwood"))
 	var result := LOGIC.dispatch(flags, chapter, "dialogue:cloudreach_aila_final_reward_complete")
-	assert_eq(result["granted_flags"], ["realm_heart_cloudreach_earned", "realm_key_water", "waterward_route_revealed"])
+	assert_eq(result["granted_flags"], ["realm_heart_cloudreach_earned", "realm_key_stormwood", "stormward_route_revealed"])
 	assert_eq(result["completed_ids"], ["cloudreach_claim_reward"])
 	assert_true(flags.has("cloudreach_chapter_complete"))
 	assert_false(flags.has("realm_heart_cloudreach_placed"), "Future Heart power is intentionally undefined")
@@ -134,10 +134,10 @@ func test_completed_reward_repairs_missing_entitlements_without_replaying_comple
 	flags.set_flag("cloudreach_act_ii_complete")
 	flags.set_flag("cloudreach_winds_restored")
 	flags.set_flag("cloudreach_chapter_complete")
-	flags.set_flag("realm_key_water")
+	flags.set_flag("realm_key_stormwood")
 	var result := LOGIC.reconcile(flags, _chapter())
 	assert_eq(result["completed_ids"], [])
-	assert_eq(result["granted_flags"], ["realm_heart_cloudreach_earned", "waterward_route_revealed"])
+	assert_eq(result["granted_flags"], ["realm_heart_cloudreach_earned", "stormward_route_revealed"])
 	assert_false(LOGIC.reconcile(flags, _chapter())["changed"])
 
 

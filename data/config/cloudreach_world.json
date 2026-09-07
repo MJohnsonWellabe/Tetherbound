@@ -20,6 +20,17 @@
     }
   },
   "transition_points": {
+    "stormwood_return": {
+      "id": "cloudreach_return_from_stormwood",
+      "role": "return_from_stormwood",
+      "region_id": "summit_final_stronghold",
+      "position": [-420.0, 1104.25, 5694.0],
+      "facing_yaw_deg": 180.0,
+      "peer_realm_id": "stormwood",
+      "peer_anchor_id": "stormwood_arrival_from_cloudreach",
+      "requires_flag": "realm_key_stormwood",
+      "save_anchor": true
+    },
     "meadows_entry": {
       "id": "cloudreach_arrival_from_meadows",
       "role": "entry_from_meadows",
@@ -265,7 +276,7 @@
     },
     {
       "id": "waterward_overlook",
-      "display_name": "Waterward Overlook",
+      "display_name": "Stormward Overlook",
       "region_id": "summit_final_stronghold",
       "position": [-420.0, 1110.0, 5650.0],
       "category": "major",

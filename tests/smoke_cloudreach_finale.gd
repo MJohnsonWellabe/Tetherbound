@@ -166,7 +166,7 @@ func _run() -> void:
 	_body.position = Vector3(0, 0.1, -10)
 	_check(_finale.witness_restoration(_body), "Physical overlook visit witnesses restoration")
 	_check(not _finale.witness_restoration(_body), "Duplicate witness is idempotent")
-	_check(not flags.has("realm_key_water"), "Heart/key still require reward dialogue")
+	_check(not flags.has("realm_key_stormwood"), "Heart/key still require reward dialogue")
 	_body.move_enabled = false
 	_body.position = Vector3(40, -8, 0)
 	_body.velocity = Vector3(0, -20, 0)

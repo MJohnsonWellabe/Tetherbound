@@ -58,3 +58,19 @@ Baseline total: **0 / 100**.
 | 2026-09-06 22:04 | 5547d415f | 0 | baseline | Land owner boards with code CI, then multiplayer realm seam and Terrain3D foundation. |
 
 Every checkpoint appends newly playable capabilities, reachable regions/story, live mechanics, content added, merged SHA, evidence, blockers and next highest-value task. >=10 points: strong; >=5 and <10: acceptable and name approach change; <5: change strategy immediately; two consecutive <5 windows: stop building, integrate completed work and write §34 final report plus §9 fresh-session tail. No third near-identical attempt on a narrow issue.
+
+## Two-hour checkpoint — 2026-09-06 23:54:38 UTC
+
+Merged main: `e78f2ab45f5d22bbf2ffcbb0394bd5b17b99f779` (reference PR #68). Original weighted score: **0 / 100**, delta **0**, first consecutive window under five points. Every exit/checklist row remains zero: PR #70 is not merged, and authored data is not playable evidence. The next checkpoint is 2026-09-07 01:54:38 UTC; another delta under five invokes the owner's stop-building, integrate-finished-work, and fresh-session-tail rule.
+
+Player-visible work on the integration branch: Cloudreach's actual gate enters the 108-region Terrain3D Stormwood and returns to Cloudreach in a completed runtime smoke. A real two-peer run places the client in Stormwood while the host remains in Meadows with the Stormwood simulation shell, then returns the client with the session intact. The client terrain load now yields between asset stages instead of starving network heartbeats. These are branch evidence, not merged-main score credit.
+
+Regions/content: all six regions have terrain and baked scatter (15,066 placements); the full walking route, Crown access, living encounters, NPC interactions and chapter finale do not yet work. Encounter, trainer, pickup and dialogue catalogues and the root-authored 28-beat story are unintegrated drafts. No Surge, Stormglass Arches or Dynamo gameplay has shipped. The eight-frame foundation visual review failed both bars; framing was corrected but not yet recaptured or rejudged.
+
+Evidence: `stormwood-route-smoke-fixed.log` ended STORMWOOD TRANSITION OK, exit 0. Net run `net-run-local-2020643` has no failures/fatal and both children exited; root read the separate child user directories and host's 108-region READY line. Positive fog growth was weakly asserted and is being strengthened in a fresh-location smoke. CI run 34067435099 passed all four unit and five multiplayer shards, terrain/scatter freshness and most gameplay jobs, but failed trainer_battle and trainer_no_usable_ally. The full local unit run is still executing its expensive vegetation tail; three earlier failures have targeted passing corrections, not a clean full-suite claim.
+
+Strategy change, effective now: stop treating foundation acceptance details as the only useful lane. Keep one bounded agent on the two trainer CI failures, another on the strengthened crossing smoke, and move root implementation focus to the continuous chapter route and working kitbashed Stormheart Dynamo. Integrate the foundation as soon as its actual code jobs pass; dependent runtime lanes must branch from that merged main. Content agents correct bounded catalogues while root retains story, world composition, architecture and acceptance. Do not attempt a third near-identical fix or count another catalogue as playable progress.
+
+| UTC | Main SHA | Score | Window delta | Strategy |
+|---|---|---:|---:|---|
+| 2026-09-06 23:54:38 | e78f2ab45 | 0 | 0 | Narrow foundation blockers delegated; root shifts to continuous chapter route and working Dynamo. |

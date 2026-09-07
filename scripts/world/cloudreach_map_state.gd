@@ -162,7 +162,7 @@ func _has(flag: String) -> bool:
 
 func _allowed(id: String) -> bool:
 	if id == "waterward_overlook":
-		return _has("captain_veyra_defeated") and _has("cloudreach_winds_restored") and _has("waterward_route_revealed")
+		return _has("captain_veyra_defeated") and _has("cloudreach_winds_restored") and _has("stormward_route_revealed")
 	for entry: Dictionary in _world_data.get("landmarks", []):
 		if str(entry["id"]) == id:
 			return _has(str(entry.get("requires_unlock", "")))

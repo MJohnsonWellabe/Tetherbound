@@ -44,7 +44,7 @@ func test_production_win_is_required_and_idempotent() -> void:
 	assert_false(finale.encounter_won("captain_veyra_storm_anchor"))
 	assert_eq(emitted, ["win"])
 	assert_false(flags.has("storm_anchor_network_disabled"))
-	assert_false(flags.has("realm_key_water"))
+	assert_false(flags.has("realm_key_stormwood"))
 	finale.free()
 
 
@@ -68,12 +68,12 @@ func test_save_restores_partial_relays_and_repairs_only_completed_network() -> v
 	assert_eq(finale.phase, "awaiting_restoration")
 	assert_false(finale.presentation_state()["hazards_active"])
 	assert_false(loaded.has("cloudreach_winds_restored"), "Relays cannot invent witnessed aftermath")
-	assert_false(loaded.has("realm_key_water"))
+	assert_false(loaded.has("realm_key_stormwood"))
 	loaded.set_flag("cloudreach_winds_restored")
 	finale.sync_progression()
 	assert_true(finale.presentation_state()["natural_wind_trails"])
 	assert_false(finale.presentation_state()["waterward_visible"], "Reward conversation is separate")
-	loaded.set_flag("waterward_route_revealed")
+	loaded.set_flag("stormward_route_revealed")
 	finale.sync_progression()
 	assert_true(finale.presentation_state()["waterward_visible"])
 	var revision: int = loaded.revision
