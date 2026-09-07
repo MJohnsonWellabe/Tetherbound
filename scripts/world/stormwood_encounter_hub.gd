@@ -41,10 +41,18 @@ func dispatch(peer: int, intent: Dictionary) -> void:
 		for fight: Node in fights.values():
 			if not fight.finished:
 				send_to(peer, fight.snapshot())
+		var dynamo := world.get_node_or_null("StormwoodDynamo")
+		if dynamo != null:
+			dynamo.call("send_snapshot", peer)
 		return
 	var id := str(intent.get("trainer_id", ""))
 	if kind == "start":
 		_start_for(peer, id)
+		return
+	if kind.begins_with("dynamo_"):
+		var dynamo := world.get_node_or_null("StormwoodDynamo")
+		if dynamo != null:
+			dynamo.call("dispatch", peer, intent)
 		return
 	var fight: Node = fights.get(id)
 	if not is_instance_valid(fight):
@@ -122,9 +130,33 @@ func publish(fight: Node, event: Dictionary) -> void:
 func send_to(peer: int, event: Dictionary) -> void:
 	session.send_stormwood_encounter(peer, event)
 
+
+func register_fight(id: String, hosted_fight: Node) -> void:
+	fights[id] = hosted_fight
+
+
+func forget_fight(id: String, hosted_fight: Node) -> void:
+	if fights.get(id) == hosted_fight:
+		fights.erase(id)
+
 func trainer_finished(fight: Node, won: bool) -> void:
+	if str(fight.spec.get("id", "")) == "captain_marrow_dynamo_core":
+		var dynamo := world.get_node_or_null("StormwoodDynamo")
+		if dynamo != null:
+			dynamo.call("captain_team_finished", fight, won)
+		return
 	if won:
 		director.award_hosted_trainer(fight.spec, fight.contributors)
+		var event := chapter_event_for_trainer(str(fight.spec.get("id", "")))
+		if not event.is_empty():
+			world.get_node("StormwoodChapter").call("emit_event", event)
+
+
+static func chapter_event_for_trainer(id: String) -> String:
+	return str({
+		"lieutenant_varga_rodline_bridge": "trainer:varga_defeated",
+		"officer_kestrel_outer_works": "trainer:kestrel_defeated",
+	}.get(id, ""))
 
 func actor_for(peer: int) -> Node3D:
 	return (world.get_node("StormwoodLightning").call("_actors") as Dictionary).get(peer)
@@ -146,6 +178,11 @@ func _receive(event: Dictionary) -> void:
 		return
 	var kind := str(event.get("kind", ""))
 	var id := str(event.get("trainer_id", ""))
+	if kind.begins_with("dynamo_"):
+		var dynamo := world.get_node_or_null("StormwoodDynamo")
+		if dynamo != null:
+			dynamo.call("receive", event)
+		return
 	if kind == "start_refused":
 		last_start_refusal = event.duplicate(true)
 		var messages := {
@@ -155,6 +192,7 @@ func _receive(event: Dictionary) -> void:
 			"already_defeated": "You have already won this battle.",
 			"missing_prerequisite": "There is more to do before this challenge.",
 			"dynamo_unavailable": "The Dynamo Core is not ready for your challenge.",
+			"dynamo_not_ready": "Disable the rods, defeat Kestrel and reach the Dynamo Core first.",
 			"already_fighting": "Finish your current battle first.",
 			"opponent_unavailable": "This opponent is not available right now.",
 		}

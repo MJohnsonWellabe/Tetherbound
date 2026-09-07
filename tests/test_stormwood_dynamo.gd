@@ -4,6 +4,8 @@ extends "res://tests/test_case.gd"
 ## promises: a five-creature captain fight escalates once, the visible banks
 ## really fire around the room, and the final piloted run has a hard deadline.
 const DYNAMO := preload("res://scripts/world/stormwood_dynamo_rules.gd")
+const CONTROLLER := preload("res://scripts/world/stormwood_dynamo.gd")
+const HUB := preload("res://scripts/world/stormwood_encounter_hub.gd")
 
 
 func _rules() -> RefCounted:
@@ -115,3 +117,43 @@ func test_save_load_keeps_a_partial_conduit_window_and_reset_never_keeps_release
 	assert_eq(restored.phase, "bank_cycle", "reset must reopen the encounter, never retain release")
 	assert_eq(restored.conduits, [], "reset must remove prior conduit strikes")
 	assert_eq(restored.attempt, prior_attempt + 1, "reset records the next encounter attempt")
+
+
+func test_controller_save_payload_keeps_contributors_and_accepts_the_legacy_shape() -> void:
+	var controller := CONTROLLER.new()
+	controller.rules = _rules()
+	controller.rules.update_team(0, 5)
+	controller.participants = [1, 7]
+	controller.contributors = [1, 4, 7]
+	assert_true(controller.rules.strike_conduit(2, controller.rules.bank_position(2), true))
+	var saved: Dictionary = controller.save_payload()
+
+	var restored := CONTROLLER.new()
+	restored.rules = _rules()
+	restored.load_payload(saved)
+	assert_eq(restored.rules.phase, "break_core")
+	assert_eq(restored.rules.conduits, [2])
+	assert_eq(restored.participants, [1, 7])
+	assert_eq(restored.contributors, [1, 4, 7])
+
+	var legacy := CONTROLLER.new()
+	legacy.rules = _rules()
+	legacy.load_payload(saved.rules)
+	assert_eq(legacy.rules.conduits, [2], "pre-wrapper Dynamo saves remain loadable")
+	controller.free()
+	restored.free()
+	legacy.free()
+
+
+func test_conduit_strikes_require_a_finite_forward_facing() -> void:
+	assert_true(CONTROLLER.facing_conduit(Vector3.FORWARD, Vector3(0, 0, -3)))
+	assert_false(CONTROLLER.facing_conduit(Vector3.BACK, Vector3(0, 0, -3)))
+	assert_false(CONTROLLER.facing_conduit(Vector3.ZERO, Vector3(0, 0, -3)))
+
+
+func test_hosted_story_trainers_emit_the_chapter_events_the_objectives_listen_for() -> void:
+	assert_eq(HUB.chapter_event_for_trainer("lieutenant_varga_rodline_bridge"),
+		"trainer:varga_defeated")
+	assert_eq(HUB.chapter_event_for_trainer("officer_kestrel_outer_works"),
+		"trainer:kestrel_defeated")
+	assert_eq(HUB.chapter_event_for_trainer("optional_rodfolk"), "")

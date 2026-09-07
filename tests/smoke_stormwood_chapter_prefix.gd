@@ -24,15 +24,30 @@ func _run() -> void:
 	if world == null: _finish(); return
 	var chapter: Node = null
 	var people: Node = null
+	var dynamo: Node3D = null
 	for i in FRAMES:
 		chapter = world.get_node_or_null(^"StormwoodChapter")
 		people = world.get_node_or_null(^"StormwoodPeople")
-		if chapter != null and people != null: break
+		dynamo = world.get_node_or_null(^"StormwoodDynamo")
+		if chapter != null and people != null and dynamo != null: break
 		await physics_frame
 	var player := world.get_node_or_null(^"Player") as CharacterBody3D
 	var hesk := people.get_node_or_null(^"Rodkeeper Hesk") as Node3D if people != null else null
-	_expect(chapter != null and hesk != null and player != null, "chapter, Hesk, or player missing")
-	if chapter == null or hesk == null or player == null: _finish(); return
+	_expect(chapter != null and hesk != null and player != null and dynamo != null,
+		"chapter, Hesk, player, or Dynamo controller missing")
+	if chapter == null or hesk == null or player == null or dynamo == null: _finish(); return
+	var arena := dynamo.get_node_or_null(^"DynamoArena")
+	_expect(arena != null, "mounted Dynamo controller has no authored arena")
+	if arena != null:
+		_expect(arena.get_node_or_null(^"CapacitorBank0") != null and
+			arena.get_node_or_null(^"CapacitorBank1") != null and
+			arena.get_node_or_null(^"CapacitorBank2") != null and
+			arena.get_node_or_null(^"CapacitorBank3") != null,
+			"Dynamo arena must mount all four capacitor banks")
+		_expect(arena.get_node_or_null(^"GroundedRodPlate0") != null and
+			arena.get_node_or_null(^"GroundedRodPlate1") != null and
+			arena.get_node_or_null(^"GroundedRodPlate2") != null,
+			"Dynamo arena must mount all three grounded safe plates")
 	# Test transport places the arrival at authored Ashfoot; progression remains
 	# owned by the chapter's real proximity check and the NPC's interaction path.
 	player.global_position = hesk.global_position + Vector3(0, 0, 1.2)

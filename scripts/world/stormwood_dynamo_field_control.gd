@@ -70,7 +70,9 @@ func _unhandled_input(event: InputEvent) -> void:
 			distance = candidate
 			closest = i
 	if closest >= 0:
-		dynamo.call("request_conduit_strike", closest, slot)
+		var creature: RefCounted = _body.get("instance")
+		var move_id := str(creature.get("move_" + slot)) if creature != null else ""
+		dynamo.call("request_conduit_strike", closest, slot, move_id)
 	get_viewport().set_input_as_handled()
 
 func _release() -> void:

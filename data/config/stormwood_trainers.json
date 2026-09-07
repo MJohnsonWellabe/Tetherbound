@@ -564,6 +564,12 @@
           "placeholder_species": "sparkit",
           "level": 44,
           "replacement_point": "trainers.captain_marrow_dynamo_core.party.4"
+        },
+        {
+          "slot": 5,
+          "placeholder_species": "voltarach",
+          "level": 44,
+          "replacement_point": "trainers.captain_marrow_dynamo_core.party.5"
         }
       ],
       "replacement_point": "trainers.captain_marrow_dynamo_core",
