@@ -34,14 +34,18 @@ var _hud: CanvasLayer = null
 var _player: CharacterBody3D = null
 var _vitals: RefCounted = null
 var _written: Array[String] = []
+var _out_dir := OUT_DIR
 
 
 func _init() -> void:
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--out="):
+			_out_dir = arg.substr(6)
 	_run()
 
 
 func _run() -> void:
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_out_dir))
 	await process_frame
 
 	var game := root.get_node_or_null(^"Game")
@@ -129,7 +133,7 @@ func _run() -> void:
 func _shoot(name: String) -> void:
 	await RenderingServer.frame_post_draw
 	var img := root.get_texture().get_image()
-	var path := "%s/%s.png" % [OUT_DIR, name]
+	var path := "%s/%s.png" % [_out_dir, name]
 	var err := img.save_png(path)
 	if err == OK:
 		_written.append(path)

@@ -92,6 +92,23 @@ func test_objectives_data_parses_and_has_at_least_one_main_entry() -> void:
 	assert_true(entries.size() >= 1, "data/progression/objectives.json's main list is empty")
 
 
+func test_tracked_objective_exposes_its_authored_map_destination() -> void:
+	var destination: Dictionary = log_reader.tracked_destination(progression)
+	assert_eq(str(destination.get("landmark_id", "")), "grandpa_house",
+		"the opening objective should point to Grandpa rather than leave the map unhelpful")
+	var first: Dictionary = log_reader.main_entries(progression)[0]
+	assert_eq(str(first.get("id", "")), "opening_hear_grandpa")
+	assert_eq(first.get("destination", {}), destination,
+		"guided/menu rows and the HUD-tracked target must expose the same destination")
+
+
+func test_cloudreach_objectives_inherit_their_existing_region_target() -> void:
+	log_reader.set_realm("cloudreach")
+	var destination: Dictionary = log_reader.tracked_destination(progression)
+	assert_eq(str(destination.get("region_id", "")), "gate_lower_cliffs",
+		"Cloudreach's existing objective region_id should drive map navigation without duplicate coordinates")
+
+
 func test_tracked_text_names_the_first_undone_main_objective() -> void:
 	var text: String = log_reader.tracked_text(progression)
 	assert_false(text.is_empty(), "a fresh game should always have something to track")
