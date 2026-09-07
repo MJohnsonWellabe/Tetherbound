@@ -1,0 +1,4597 @@
+{
+  "schema_version": 1,
+  "realm_id": "stormwood",
+  "_comment": "Stormwood's hand-authored Tier 3 harvest catalogue. Positions are realm-local X/Z and StormwoodHarvestRuntime samples StormwoodWorld.ground_height_at() before mounting each HarvestNode, so nodes stay grounded against the installed terrain. Each id is stable and is carried to HarvestNode as its order identity.",
+  "resources": [
+    "stormglass",
+    "thunderwood",
+    "conductor_vine",
+    "glowmoss",
+    "voltcap"
+  ],
+  "excluded_resource": "sparkfur",
+  "excluded_reason": "Sparkfur is an encounter reward. It has no harvest site, preserving the no-hunting/no-butchering rule.",
+  "charged_availability": [
+    "break",
+    "fading"
+  ],
+  "crown_grade_regions": [
+    "conductor_run",
+    "hollow_crown"
+  ],
+  "avoid_footprints": [
+    "settlement",
+    "camp",
+    "trainer",
+    "npc",
+    "ancient_arch",
+    "arch_socket",
+    "rod_station"
+  ],
+  "sites": [
+    {
+      "id": "stormwood_harvest_cinder_verge_001",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -1850,
+        220
+      ],
+      "item": "conductor_vine",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "model_scale": 0.8,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_002",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -1725,
+        220
+      ],
+      "item": "glowmoss",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_003",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -1600,
+        220
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_004",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -1475,
+        220
+      ],
+      "item": "conductor_vine",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "model_scale": 0.8,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_005",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -1350,
+        220
+      ],
+      "item": "glowmoss",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_006",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -1850,
+        335
+      ],
+      "item": "conductor_vine",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "model_scale": 0.8,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_007",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -1725,
+        335
+      ],
+      "item": "glowmoss",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_008",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -1600,
+        335
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_009",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -1475,
+        335
+      ],
+      "item": "conductor_vine",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "model_scale": 0.8,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_010",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -1350,
+        335
+      ],
+      "item": "glowmoss",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_011",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -1850,
+        450
+      ],
+      "item": "conductor_vine",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "model_scale": 0.8,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_012",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -1725,
+        450
+      ],
+      "item": "glowmoss",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_013",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -1600,
+        450
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_014",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -1475,
+        450
+      ],
+      "item": "conductor_vine",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "model_scale": 0.8,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_015",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -1350,
+        450
+      ],
+      "item": "glowmoss",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_016",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -1850,
+        565
+      ],
+      "item": "conductor_vine",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "model_scale": 0.8,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_017",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -1725,
+        565
+      ],
+      "item": "glowmoss",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_018",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -762,
+        893
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "break",
+        "fading"
+      ],
+      "charged": true,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_019",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -1475,
+        565
+      ],
+      "item": "conductor_vine",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "model_scale": 0.8,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_020",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -1350,
+        565
+      ],
+      "item": "glowmoss",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_021",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -1850,
+        680
+      ],
+      "item": "conductor_vine",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "model_scale": 0.8,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_022",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -1725,
+        680
+      ],
+      "item": "glowmoss",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_023",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -738,
+        877
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "break",
+        "fading"
+      ],
+      "charged": true,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_024",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -1475,
+        680
+      ],
+      "item": "conductor_vine",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "model_scale": 0.8,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_025",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -1350,
+        680
+      ],
+      "item": "glowmoss",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_026",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -1850,
+        795
+      ],
+      "item": "conductor_vine",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "model_scale": 0.8,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_027",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -1725,
+        795
+      ],
+      "item": "glowmoss",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_028",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -758,
+        878
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "break",
+        "fading"
+      ],
+      "charged": true,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_029",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -1475,
+        795
+      ],
+      "item": "conductor_vine",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "model_scale": 0.8,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_030",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -1350,
+        795
+      ],
+      "item": "glowmoss",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_031",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -1850,
+        910
+      ],
+      "item": "conductor_vine",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "model_scale": 0.8,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_032",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -1725,
+        910
+      ],
+      "item": "glowmoss",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_033",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -742,
+        892
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "break",
+        "fading"
+      ],
+      "charged": true,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_034",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -1475,
+        910
+      ],
+      "item": "conductor_vine",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "model_scale": 0.8,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_cinder_verge_035",
+      "region_id": "cinder_verge",
+      "route_id": "ash_road",
+      "position": [
+        -1350,
+        910
+      ],
+      "item": "glowmoss",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_036",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -538,
+        1503
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "break",
+        "fading"
+      ],
+      "charged": true,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_037",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -522,
+        1517
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "break",
+        "fading"
+      ],
+      "charged": true,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_038",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -1008,
+        1843
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "break",
+        "fading"
+      ],
+      "charged": true,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_039",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -992,
+        1857
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "break",
+        "fading"
+      ],
+      "charged": true,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_040",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -1330,
+        1150
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_041",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -1850,
+        1270
+      ],
+      "item": "glowmoss",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_042",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -1720,
+        1270
+      ],
+      "item": "voltcap",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_043",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -1590,
+        1270
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_044",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -1460,
+        1270
+      ],
+      "item": "conductor_vine",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "model_scale": 0.8,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_045",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -1330,
+        1270
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_046",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -1850,
+        1390
+      ],
+      "item": "glowmoss",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_047",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -1720,
+        1390
+      ],
+      "item": "voltcap",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_048",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -1590,
+        1390
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_049",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -1460,
+        1390
+      ],
+      "item": "conductor_vine",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "model_scale": 0.8,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_050",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -1330,
+        1390
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_051",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -1850,
+        1510
+      ],
+      "item": "glowmoss",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_052",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -1720,
+        1510
+      ],
+      "item": "voltcap",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_053",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -1590,
+        1510
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_054",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -1460,
+        1510
+      ],
+      "item": "conductor_vine",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "model_scale": 0.8,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_055",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -1330,
+        1510
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_056",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -1850,
+        1630
+      ],
+      "item": "glowmoss",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_057",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -1720,
+        1630
+      ],
+      "item": "voltcap",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_058",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -1590,
+        1630
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_059",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -1460,
+        1630
+      ],
+      "item": "conductor_vine",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "model_scale": 0.8,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_060",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -1330,
+        1630
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_061",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -1850,
+        1750
+      ],
+      "item": "glowmoss",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_062",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -1720,
+        1750
+      ],
+      "item": "voltcap",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_063",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -1590,
+        1750
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_064",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -1460,
+        1750
+      ],
+      "item": "conductor_vine",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "model_scale": 0.8,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_065",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -1330,
+        1750
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_066",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -1850,
+        1870
+      ],
+      "item": "glowmoss",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_067",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -1720,
+        1870
+      ],
+      "item": "voltcap",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_068",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -1590,
+        1870
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_069",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -1460,
+        1870
+      ],
+      "item": "conductor_vine",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "model_scale": 0.8,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_glowmoss_hollows_070",
+      "region_id": "glowmoss_hollows",
+      "route_id": "pools_west_loop",
+      "position": [
+        -1330,
+        1870
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_071",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1750,
+        2380
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "break",
+        "fading"
+      ],
+      "charged": true,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_072",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1600,
+        2380
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "break",
+        "fading"
+      ],
+      "charged": true,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_073",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1450,
+        2380
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "break",
+        "fading"
+      ],
+      "charged": true,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_074",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1300,
+        2380
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "break",
+        "fading"
+      ],
+      "charged": true,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_075",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1150,
+        2380
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "break",
+        "fading"
+      ],
+      "charged": true,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_076",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1750,
+        2510
+      ],
+      "item": "thunderwood",
+      "amount": 4,
+      "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "model_scale": 1.1,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_077",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1600,
+        2510
+      ],
+      "item": "conductor_vine",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "model_scale": 0.8,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_078",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1450,
+        2510
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_079",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1300,
+        2510
+      ],
+      "item": "thunderwood",
+      "amount": 4,
+      "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "model_scale": 1.1,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_080",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1150,
+        2510
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_081",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1750,
+        2640
+      ],
+      "item": "thunderwood",
+      "amount": 4,
+      "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "model_scale": 1.1,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_082",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1600,
+        2640
+      ],
+      "item": "conductor_vine",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "model_scale": 0.8,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_083",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1450,
+        2640
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_084",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1300,
+        2640
+      ],
+      "item": "thunderwood",
+      "amount": 4,
+      "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "model_scale": 1.1,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_085",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1150,
+        2640
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_086",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1750,
+        2770
+      ],
+      "item": "thunderwood",
+      "amount": 4,
+      "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "model_scale": 1.1,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_087",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1600,
+        2770
+      ],
+      "item": "conductor_vine",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "model_scale": 0.8,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_088",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1450,
+        2770
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_089",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1300,
+        2770
+      ],
+      "item": "thunderwood",
+      "amount": 4,
+      "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "model_scale": 1.1,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_090",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1150,
+        2770
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_091",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1750,
+        2900
+      ],
+      "item": "thunderwood",
+      "amount": 4,
+      "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "model_scale": 1.1,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_092",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1600,
+        2900
+      ],
+      "item": "conductor_vine",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "model_scale": 0.8,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_093",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1450,
+        2900
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_094",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1300,
+        2900
+      ],
+      "item": "thunderwood",
+      "amount": 4,
+      "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "model_scale": 1.1,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_095",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1150,
+        2900
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_096",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1750,
+        3030
+      ],
+      "item": "thunderwood",
+      "amount": 4,
+      "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "model_scale": 1.1,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_097",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1600,
+        3030
+      ],
+      "item": "conductor_vine",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "model_scale": 0.8,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_098",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1450,
+        3030
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_099",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1300,
+        3030
+      ],
+      "item": "thunderwood",
+      "amount": 4,
+      "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "model_scale": 1.1,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_100",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1150,
+        3030
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_101",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1750,
+        3160
+      ],
+      "item": "thunderwood",
+      "amount": 4,
+      "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "model_scale": 1.1,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_102",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1600,
+        3160
+      ],
+      "item": "conductor_vine",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "model_scale": 0.8,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_103",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1450,
+        3160
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_104",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1300,
+        3160
+      ],
+      "item": "thunderwood",
+      "amount": 4,
+      "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "model_scale": 1.1,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_conductor_run_105",
+      "region_id": "conductor_run",
+      "route_id": "conductor_west_loop",
+      "position": [
+        -1150,
+        3160
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_106",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        520,
+        2480
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "break",
+        "fading"
+      ],
+      "charged": true,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_107",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        595,
+        2480
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "break",
+        "fading"
+      ],
+      "charged": true,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_108",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        670,
+        2480
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "break",
+        "fading"
+      ],
+      "charged": true,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_109",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        745,
+        2480
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "break",
+        "fading"
+      ],
+      "charged": true,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_110",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        820,
+        2480
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "break",
+        "fading"
+      ],
+      "charged": true,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_111",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        520,
+        2565
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_112",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        595,
+        2565
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_113",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        670,
+        2565
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_114",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        745,
+        2565
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_115",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        820,
+        2565
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_116",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        520,
+        2650
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_117",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        595,
+        2650
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_118",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        520,
+        2520
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_119",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        880,
+        2520
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_120",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        820,
+        2650
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_121",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        900,
+        2580
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_122",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        595,
+        2735
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_123",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        900,
+        2750
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_124",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        880,
+        2880
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_125",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        820,
+        2735
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_126",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        520,
+        2820
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_127",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        520,
+        2860
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_128",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        670,
+        2820
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_129",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        745,
+        2820
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_130",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        880,
+        2900
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_131",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        520,
+        2905
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_132",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        595,
+        2905
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_133",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        670,
+        2905
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_134",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        745,
+        2905
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_135",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        820,
+        2905
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_136",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        520,
+        2940
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_137",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        595,
+        2940
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_138",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        670,
+        2940
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_139",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        745,
+        2940
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_hollow_crown_140",
+      "region_id": "hollow_crown",
+      "route_id": "crown_ring",
+      "position": [
+        820,
+        2940
+      ],
+      "item": "stormglass_crown",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.25,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "crown"
+    },
+    {
+      "id": "stormwood_harvest_deepwood_141",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -2150,
+        3680
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "break",
+        "fading"
+      ],
+      "charged": true,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_deepwood_142",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -1700,
+        3680
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "break",
+        "fading"
+      ],
+      "charged": true,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_deepwood_143",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -1250,
+        3680
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "break",
+        "fading"
+      ],
+      "charged": true,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_deepwood_144",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -800,
+        3680
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "break",
+        "fading"
+      ],
+      "charged": true,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_deepwood_145",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -350,
+        3680
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "break",
+        "fading"
+      ],
+      "charged": true,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_deepwood_146",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -2150,
+        3830
+      ],
+      "item": "thunderwood",
+      "amount": 4,
+      "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "model_scale": 1.1,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_deepwood_147",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -1700,
+        3830
+      ],
+      "item": "glowmoss",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_deepwood_148",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -1250,
+        3830
+      ],
+      "item": "voltcap",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_deepwood_149",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -800,
+        3830
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_deepwood_150",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -350,
+        3830
+      ],
+      "item": "thunderwood",
+      "amount": 4,
+      "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "model_scale": 1.1,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_deepwood_151",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -2150,
+        3980
+      ],
+      "item": "thunderwood",
+      "amount": 4,
+      "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "model_scale": 1.1,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_deepwood_152",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -1700,
+        3980
+      ],
+      "item": "glowmoss",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_deepwood_153",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -1250,
+        3980
+      ],
+      "item": "voltcap",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_deepwood_154",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -800,
+        3980
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_deepwood_155",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -350,
+        3980
+      ],
+      "item": "thunderwood",
+      "amount": 4,
+      "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "model_scale": 1.1,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_deepwood_156",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -2150,
+        4130
+      ],
+      "item": "thunderwood",
+      "amount": 4,
+      "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "model_scale": 1.1,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_deepwood_157",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -1700,
+        4130
+      ],
+      "item": "glowmoss",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_deepwood_158",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -1250,
+        4130
+      ],
+      "item": "voltcap",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_deepwood_159",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -800,
+        4130
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_deepwood_160",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -350,
+        4130
+      ],
+      "item": "thunderwood",
+      "amount": 4,
+      "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "model_scale": 1.1,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_deepwood_161",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -2150,
+        4280
+      ],
+      "item": "thunderwood",
+      "amount": 4,
+      "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "model_scale": 1.1,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_deepwood_162",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -1700,
+        4280
+      ],
+      "item": "glowmoss",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_deepwood_163",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -1250,
+        4280
+      ],
+      "item": "voltcap",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_deepwood_164",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -800,
+        4280
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_deepwood_165",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -350,
+        4280
+      ],
+      "item": "thunderwood",
+      "amount": 4,
+      "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "model_scale": 1.1,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_deepwood_166",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -2150,
+        4430
+      ],
+      "item": "thunderwood",
+      "amount": 4,
+      "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "model_scale": 1.1,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_deepwood_167",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -1700,
+        4430
+      ],
+      "item": "glowmoss",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_deepwood_168",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -1250,
+        4430
+      ],
+      "item": "voltcap",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_deepwood_169",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -800,
+        4430
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_deepwood_170",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -350,
+        4430
+      ],
+      "item": "thunderwood",
+      "amount": 4,
+      "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "model_scale": 1.1,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_deepwood_171",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -2150,
+        4580
+      ],
+      "item": "thunderwood",
+      "amount": 4,
+      "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "model_scale": 1.1,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_deepwood_172",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -1700,
+        4580
+      ],
+      "item": "glowmoss",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_deepwood_173",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -1250,
+        4580
+      ],
+      "item": "voltcap",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_deepwood_174",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -800,
+        4580
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_deepwood_175",
+      "region_id": "deepwood",
+      "route_id": "hall_loop",
+      "position": [
+        -350,
+        4580
+      ],
+      "item": "thunderwood",
+      "amount": 4,
+      "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "model_scale": 1.1,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_dynamo_176",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -2100,
+        5080
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "break",
+        "fading"
+      ],
+      "charged": true,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_dynamo_177",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -1650,
+        5080
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "break",
+        "fading"
+      ],
+      "charged": true,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_dynamo_178",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -1200,
+        5080
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "break",
+        "fading"
+      ],
+      "charged": true,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_dynamo_179",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -750,
+        5080
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "break",
+        "fading"
+      ],
+      "charged": true,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_dynamo_180",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -300,
+        5080
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "break",
+        "fading"
+      ],
+      "charged": true,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_dynamo_181",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -2100,
+        5230
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_dynamo_182",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -1650,
+        5230
+      ],
+      "item": "thunderwood",
+      "amount": 4,
+      "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "model_scale": 1.1,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_dynamo_183",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -1200,
+        5230
+      ],
+      "item": "voltcap",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_dynamo_184",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -750,
+        5230
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_dynamo_185",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -300,
+        5230
+      ],
+      "item": "glowmoss",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_dynamo_186",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -2100,
+        5380
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_dynamo_187",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -1650,
+        5380
+      ],
+      "item": "thunderwood",
+      "amount": 4,
+      "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "model_scale": 1.1,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_dynamo_188",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -1200,
+        5380
+      ],
+      "item": "voltcap",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_dynamo_189",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -750,
+        5380
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_dynamo_190",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -300,
+        5380
+      ],
+      "item": "glowmoss",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_dynamo_191",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -2100,
+        5530
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_dynamo_192",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -1650,
+        5530
+      ],
+      "item": "thunderwood",
+      "amount": 4,
+      "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "model_scale": 1.1,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_dynamo_193",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -1200,
+        5530
+      ],
+      "item": "voltcap",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_dynamo_194",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -750,
+        5530
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_dynamo_195",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -300,
+        5530
+      ],
+      "item": "glowmoss",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_dynamo_196",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -2100,
+        5680
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_dynamo_197",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -1650,
+        5680
+      ],
+      "item": "thunderwood",
+      "amount": 4,
+      "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "model_scale": 1.1,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_dynamo_198",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -1200,
+        5680
+      ],
+      "item": "voltcap",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_dynamo_199",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -750,
+        5680
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_dynamo_200",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -300,
+        5680
+      ],
+      "item": "glowmoss",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_dynamo_201",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -2100,
+        5830
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_dynamo_202",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -1650,
+        5830
+      ],
+      "item": "thunderwood",
+      "amount": 4,
+      "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "model_scale": 1.1,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_dynamo_203",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -1200,
+        5830
+      ],
+      "item": "voltcap",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_dynamo_204",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -750,
+        5830
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_dynamo_205",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -300,
+        5830
+      ],
+      "item": "glowmoss",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_dynamo_206",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -2100,
+        5980
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_dynamo_207",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -1650,
+        5980
+      ],
+      "item": "thunderwood",
+      "amount": 4,
+      "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "model_scale": 1.1,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_dynamo_208",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -1200,
+        5980
+      ],
+      "item": "voltcap",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    },
+    {
+      "id": "stormwood_harvest_dynamo_209",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -750,
+        5980
+      ],
+      "item": "stormglass",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": "ordinary"
+    },
+    {
+      "id": "stormwood_harvest_dynamo_210",
+      "region_id": "dynamo",
+      "route_id": "deepwood_road",
+      "position": [
+        -300,
+        5980
+      ],
+      "item": "glowmoss",
+      "amount": 3,
+      "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+      "model_scale": 0.65,
+      "intent_kind": "stormwood_harvest",
+      "availability": [
+        "calm",
+        "building",
+        "break",
+        "fading"
+      ],
+      "charged": false,
+      "grade": ""
+    }
+  ]
+}

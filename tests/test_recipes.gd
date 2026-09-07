@@ -297,6 +297,7 @@ func test_every_unlock_flag_named_by_a_recipe_is_actually_written_by_something()
 	# nothing, so both sources are read the same way the game reads them.
 	const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
 	const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
+	const CHAPTER_EVENTS := preload("res://scripts/world/realm_chapter_progression.gd")
 	var written: Array[String] = []
 	# Cloudreach arrival is a real world event, not a conversation reward.
 	# Exercise the chapter transition instead of accepting arbitrary flag text.
@@ -308,6 +309,13 @@ func test_every_unlock_flag_named_by_a_recipe_is_actually_written_by_something()
 	for earned: String in arrival_progression.all_set():
 		if earned != "realm_key_cloudreach":
 			written.append(earned)
+	# Stormwood's Chapter adapter delegates its successful arrival/objective
+	# events to the same RealmChapterEvents -> RealmChapterProgression path.
+	# Drive the authored event sequence itself, including count flags, so a
+	# recipe gate is accepted only when the actual chapter contract writes it.
+	for earned: String in _chapter_event_writers(CHAPTER_EVENTS,
+			_load_json("res://data/config/stormwood_chapter.json"), "realm_key_stormwood"):
+		written.append(earned)
 	for entry: Variant in TRAINERS.trainers():
 		for flag: String in TRAINERS.reward_flags(entry as Dictionary):
 			written.append(flag)
@@ -331,6 +339,23 @@ func test_every_unlock_flag_named_by_a_recipe_is_actually_written_by_something()
 			continue
 		assert_true(written.has(flag),
 			"recipe '%s' waits on flag '%s', which no conversation ever sets" % [id, flag])
+
+
+func _chapter_event_writers(logic: Script, chapter: Dictionary, entry_flag: String) -> Array[String]:
+	var progression: RefCounted = PROGRESSION_STATE.new()
+	progression.set_flag(entry_flag)
+	for act: Dictionary in chapter.get("acts", []):
+		for objective: Dictionary in act.get("objectives", []):
+			for count_flag: String in objective.get("count_flags", []):
+				logic.dispatch(progression, chapter, "count:" + count_flag)
+			var event := str(objective.get("completion_event", ""))
+			if not event.is_empty():
+				logic.dispatch(progression, chapter, event)
+	var written: Array[String] = []
+	for flag: String in progression.all_set():
+		if flag != entry_flag:
+			written.append(flag)
+	return written
 
 
 ## --- SD18: the Rootstone tier (data/recipes/recipes_rootstone.json) --------
@@ -614,7 +639,8 @@ func test_no_recipe_anywhere_needs_a_third_progression_material() -> void:
 func test_no_recipe_id_is_defined_in_two_tier_files() -> void:
 	var seen: Array[String] = []
 	for path in ["res://data/recipes/recipes.json", "res://data/recipes/recipes_rootstone.json",
-			"res://data/recipes/recipes_ironwood.json", "res://data/recipes/recipes_cloudreach.json"]:
+			"res://data/recipes/recipes_ironwood.json", "res://data/recipes/recipes_cloudreach.json",
+			"res://data/recipes/recipes_stormwood.json"]:
 		var file := FileAccess.open(path, FileAccess.READ)
 		assert_true(file != null, "%s is missing" % path)
 		var parsed: Variant = JSON.parse_string(file.get_as_text())

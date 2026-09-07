@@ -11,9 +11,20 @@ extends SceneTree
 const GAME := preload("res://autoload/game_state.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 const REALM_GATE := preload("res://scripts/world/realm_gate.gd")
-const TEST_SAVE_DIR := "user://stormwood_transition_smoke"
+const TEST_SAVE_DIR := "user://stormwood_transition_completed_cloudreach_fixture_0907"
 const SCENE_WAIT_FRAMES := 3600
 const SETTLE_WAIT_FRAMES := 600
+const COMPLETED_CLOUDREACH_FLAGS := [
+	"cloudreach_chapter_started",
+	"cloudreach_act_i_complete",
+	"cloudreach_act_ii_complete",
+	"captain_veyra_defeated",
+	"cloudreach_winds_restored",
+	"realm_heart_cloudreach_earned",
+	"realm_key_stormwood",
+	"stormward_route_revealed",
+	"cloudreach_chapter_complete",
+]
 
 var _failures: Array[String] = []
 
@@ -66,19 +77,26 @@ func _run() -> void:
 	_expect(not bool(stormward.call("try_enter", game)),
 		"Stormward gate issued travel while locked")
 
-	# The entitlement is a world fact.  Submit it through the production host
-	# ledger instead of writing the progression fixture directly.
-	var ledger: Node = game.get("ledger") as Node
-	_expect(ledger != null, "Game did not mount its host ledger")
-	if ledger != null:
-		var verdict: Dictionary = ledger.call("submit", {
-			"kind": "set_world_flag", "realm": "cloudreach",
-			"id": "realm_key_stormwood", "value": true,
-		})
-		_expect(bool(verdict.get("ok", false)) and not bool(verdict.get("pending", false)),
-			"host ledger did not commit realm_key_stormwood: %s" % verdict)
+	# This is a durable, post-Cloudreach fixture, not a simulated campaign.
+	# It uses the production host ledger and save/load APIs so the gate consumes
+	# the same persisted reward facts a completed chapter carries.
+	for flag: String in COMPLETED_CLOUDREACH_FLAGS:
+		_expect(_commit_world_flag(game, flag), "fixture could not commit %s" % flag)
+	_expect(bool(game.call("world_flags").call("has", "cloudreach_chapter_complete")),
+		"fixture did not hold the canonical Cloudreach completion flag")
+	_expect(bool(game.call("world_flags").call("has", "realm_heart_cloudreach_earned")),
+		"fixture did not hold the canonical Cloudreach reward flag")
 	_expect(bool(game.call("world_flags").call("has", "realm_key_stormwood")),
-		"host ledger grant did not reach the world flag store")
+		"fixture did not hold the Stormwood key")
+	_expect(bool(game.call("save_game", 0)), "completed-Cloudreach fixture did not save")
+	game.call("reset_for_new_game")
+	_expect(not bool(game.call("world_flags").call("has", "realm_key_stormwood")),
+		"reset did not remove the fixture key before load")
+	_expect(bool(game.call("load_game", 0)), "completed-Cloudreach fixture did not load")
+	_expect(bool(game.call("world_flags").call("has", "cloudreach_chapter_complete")),
+		"loaded fixture lost Cloudreach completion")
+	_expect(bool(game.call("world_flags").call("has", "realm_key_stormwood")),
+		"loaded fixture lost the durable Stormwood key")
 	await process_frame
 	_expect(str(stormward.call("current_state")) == REALM_GATE.STATE_UNLOCKABLE,
 		"Stormward gate did not become unlockable after host ledger entitlement")
@@ -156,6 +174,16 @@ func _vec3(raw: Variant) -> Vector3:
 	if raw is Array and (raw as Array).size() >= 3:
 		return Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
 	return Vector3.ZERO
+
+
+func _commit_world_flag(game: Node, flag: String) -> bool:
+	var ledger: Node = game.get("ledger") as Node
+	if ledger == null:
+		return false
+	var verdict: Dictionary = ledger.call("submit", {
+		"kind": "set_world_flag", "realm": "cloudreach", "id": flag, "value": true,
+	})
+	return bool(verdict.get("ok", false)) and not bool(verdict.get("pending", false))
 
 
 func _expect(condition: bool, message: String) -> void:

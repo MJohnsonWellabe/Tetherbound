@@ -1,0 +1,199 @@
+{
+  "_comment": "Stormwood Tier 3 integration payload. This file intentionally does not alter ItemDB, items.json, buildables.json, or any runtime service. The integration owner may merge the items and recipes in consumer-ready waves, but the four buildables are explicitly nonintegrable until their arch/rod/lantern/workbench placement consumers exist.",
+  "_comment_decisions": "The existing equipment service only reads armor_slot and defense; storm_strike_reduction and static_duration_scale are declarative Stormwood tuning fields until the surge owner consumes them. Two gear pieces are found as required by the biome contract, so only helm and vest are recipes. The remaining two recipe slots are simple field components, keeping the required twelve recipes without turning the tier into a factory chain.",
+  "realm_id": "stormwood",
+  "items": {
+    "stormglass": {
+      "name": "Stormglass",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#78c9df",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Lightning-fused glass prised from a charged seam.",
+      "description": "Fulgurite threaded with a cold blue charge. A pickaxe frees it during a Break or Fading surge, and it carries the current for arches, rods and insulated gear.",
+      "gathered_with": "pickaxe"
+    },
+    "thunderwood": {
+      "name": "Thunderwood",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#5b4638",
+      "icon": "res://assets/ui/icons/items/wood.png",
+      "blurb": "Glass-fused timber that still holds a charge.",
+      "description": "Dense wood from trunks scarred by repeated strikes. It forms the frames, masts and camp fittings that must survive a Stormwood surge.",
+      "gathered_with": "axe"
+    },
+    "conductor_vine": {
+      "name": "Conductor Vine",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#a6b96a",
+      "icon": "res://assets/ui/icons/items/fiber.png",
+      "blurb": "Tough vine that carries a controlled current.",
+      "description": "Wiry canopy vine stripped with a knife. Its live fibres bind arch frames, route a rod's charge and line insulated clothing.",
+      "gathered_with": "knife"
+    },
+    "glowmoss": {
+      "name": "Glowmoss",
+      "kind": "resource",
+      "stack": 30,
+      "colour": "#8dcc77",
+      "icon": "res://assets/ui/icons/items/fiber.png",
+      "blurb": "Cool green moss from the wet roots.",
+      "description": "Soft moss gathered by hand from shaded pools and giant roots. It gives a moss lantern its quiet light and brews into a recovery tonic."
+    },
+    "voltcap": {
+      "name": "Voltcap",
+      "kind": "food",
+      "stack": 20,
+      "colour": "#d8b85d",
+      "icon": "res://assets/ui/icons/items/wild_mushroom.png",
+      "blurb": "A warm mushroom that steadies the body against Static.",
+      "description": "A yellow-capped Stormwood mushroom. It restores 22 satiety and makes a good shared creature meal; its temporary Static resistance needs surge integration before it can take effect.",
+      "satiety": 22,
+      "creature_food": { "nourishment": 42, "happiness": 10 },
+      "buff": { "id": "voltcap_static_resistance", "stat": "static_duration_scale", "amount": 0.75, "duration_s": 180 }
+    },
+    "sparkfur": {
+      "name": "Sparkfur",
+      "kind": "material",
+      "stack": 30,
+      "colour": "#d7b964",
+      "icon": "res://assets/ui/icons/items/fiber.png",
+      "blurb": "Shed charged fur earned from Stormwood encounters.",
+      "description": "Naturally shed, static-bright fur collected as an encounter reward. It pads insulated gear without adding hunting or butchering.",
+      "acquisition": "encounter_reward"
+    },
+    "stormglass_lining": {
+      "name": "Stormglass Lining",
+      "kind": "material",
+      "stack": 20,
+      "colour": "#88cae2",
+      "icon": "res://assets/ui/icons/items/fiber.png",
+      "blurb": "Vine-wrapped glass strips for safe handling.",
+      "description": "Stormglass strips wrapped in conductor vine. A small field component used by the two crafted insulated pieces."
+    },
+    "thunderwood_frame": {
+      "name": "Thunderwood Frame",
+      "kind": "material",
+      "stack": 20,
+      "colour": "#735c49",
+      "icon": "res://assets/ui/icons/items/wood.png",
+      "blurb": "A prepared frame for Stormwood camp work.",
+      "description": "A pre-cut thunderwood support that keeps the arch and workbench recipes legible without introducing a new gathering tier."
+    },
+    "rod_mast": {
+      "name": "Rod Mast",
+      "kind": "material",
+      "stack": 10,
+      "colour": "#62564a",
+      "icon": "res://assets/ui/icons/items/wood.png",
+      "blurb": "A prepared thunderwood mast for a lightning rod.",
+      "description": "A straight, vine-bound thunderwood mast. It is a small crafted component for a lightning rod rather than a new gathering material."
+    },
+    "voltcap_stew": {
+      "name": "Voltcap Stew",
+      "kind": "food",
+      "stack": 10,
+      "colour": "#d5a956",
+      "icon": "res://assets/ui/icons/items/wild_mushroom.png",
+      "blurb": "A cooked Voltcap meal with longer Static resistance.",
+      "description": "A hearty Voltcap and glowmoss stew. It restores 42 satiety, feeds a creature well, and declares a longer Static-resistance buff for the future surge consumer.",
+      "satiety": 42,
+      "creature_food": { "nourishment": 65, "happiness": 14 },
+      "buff": { "id": "voltcap_stew_static_resistance", "stat": "static_duration_scale", "amount": 0.60, "duration_s": 300 }
+    },
+    "glowmoss_tonic": {
+      "name": "Glowmoss Tonic",
+      "kind": "consumable",
+      "stack": 10,
+      "colour": "#83cb7c",
+      "icon": "res://assets/ui/icons/items/potion_large.png",
+      "blurb": "A Stormwood recovery tonic; it does not revive.",
+      "description": "A cool, restorative glowmoss tonic. It is authored as a distinct consumable so Stormwood does not disguise a new recipe as a generic large potion.",
+      "heal": 80
+    },
+    "insulated_helm": {
+      "name": "Insulated Helm",
+      "kind": "armor",
+      "stack": 1,
+      "colour": "#6f8c99",
+      "armor_slot": "helmet",
+      "defense": 0.10,
+      "storm_strike_reduction": 0.15,
+      "static_duration_scale": 0.85,
+      "icon": "res://assets/ui/icons/items/armor_helmet.png",
+      "world_model": "res://assets/props/quaternius_fantasy/Pouch_Large.gltf",
+      "world_model_scale": 0.55,
+      "blurb": "Stormglass-lined head protection, crafted at Rodline Post.",
+      "description": "A padded helm with a conductor-vine lining. It improves passive fall protection and is intended to reduce strike damage and Static duration once Stormwood surge equipment is wired."
+    },
+    "insulated_vest": {
+      "name": "Insulated Vest",
+      "kind": "armor",
+      "stack": 1,
+      "colour": "#66818c",
+      "armor_slot": "upper_body",
+      "defense": 0.16,
+      "storm_strike_reduction": 0.20,
+      "static_duration_scale": 0.80,
+      "icon": "res://assets/ui/icons/items/armor_vest.png",
+      "world_model": "res://assets/props/quaternius_fantasy/Pouch_Large.gltf",
+      "world_model_scale": 0.65,
+      "blurb": "The largest crafted layer of Stormwood protection.",
+      "description": "Thunderwood toggles hold sparkfur padding off the body. It improves passive fall protection and is intended to blunt a strike and shorten Static once consumed by the surge system."
+    },
+    "insulated_leggings": {
+      "name": "Insulated Leggings",
+      "kind": "armor",
+      "stack": 1,
+      "colour": "#607a84",
+      "armor_slot": "lower_body",
+      "defense": 0.14,
+      "storm_strike_reduction": 0.18,
+      "static_duration_scale": 0.82,
+      "icon": "res://assets/ui/icons/items/armor_leggings.png",
+      "world_model": "res://assets/props/quaternius_fantasy/Pouch_Large.gltf",
+      "world_model_scale": 0.60,
+      "blurb": "Found protection for the Deepwood route.",
+      "description": "A found Stormwood layer rather than a crafted duplicate. It improves passive fall protection and carries the same pending strike and Static tuning fields as the rest of the set.",
+      "acquisition": "found_pickup"
+    },
+    "insulated_boots": {
+      "name": "Insulated Boots",
+      "kind": "armor",
+      "stack": 1,
+      "colour": "#58717a",
+      "armor_slot": "boots",
+      "defense": 0.10,
+      "storm_strike_reduction": 0.15,
+      "static_duration_scale": 0.85,
+      "icon": "res://assets/ui/icons/items/armor_boots.png",
+      "world_model": "res://assets/props/quaternius_fantasy/Pouch_Large.gltf",
+      "world_model_scale": 0.50,
+      "blurb": "Found boots for wet, charged ground.",
+      "description": "A found pair with dry insulating layers under the leather. It improves passive fall protection and carries pending Stormwood strike and Static tuning fields.",
+      "acquisition": "found_pickup"
+    }
+  },
+  "recipes": {
+    "stormglass_arch": { "name": "Stormglass Arch", "realm_id": "stormwood", "unlocked_by": "stormwood:arch_recipe_known", "output": { "id": "stormglass_arch", "n": 1, "kind": "buildable" }, "cost": [{ "id": "stormglass", "n": 6 }, { "id": "thunderwood_frame", "n": 2 }, { "id": "conductor_vine", "n": 4 }], "blurb": "Build a player arch pair after the Still Grove lesson." },
+    "insulated_helm": { "name": "Insulated Helm", "realm_id": "stormwood", "unlocked_by": "stormwood:rodline_linked", "output": { "id": "insulated_helm", "n": 1 }, "cost": [{ "id": "stormglass", "n": 3 }, { "id": "sparkfur", "n": 3 }, { "id": "stormglass_lining", "n": 1 }], "blurb": "Crafted Rodline Post protection." },
+    "insulated_vest": { "name": "Insulated Vest", "realm_id": "stormwood", "unlocked_by": "stormwood:rodline_linked", "output": { "id": "insulated_vest", "n": 1 }, "cost": [{ "id": "stormglass", "n": 5 }, { "id": "sparkfur", "n": 5 }, { "id": "stormglass_lining", "n": 2 }], "blurb": "Crafted core Stormwood protection." },
+    "lightning_rod": { "name": "Lightning Rod", "realm_id": "stormwood", "unlocked_by": "stormwood:rodline_linked", "output": { "id": "lightning_rod", "n": 1, "kind": "buildable" }, "cost": [{ "id": "stormglass", "n": 4 }, { "id": "rod_mast", "n": 1 }, { "id": "conductor_vine", "n": 3 }], "blurb": "A camp rod intended to make a 12 m radius surge-safe." },
+    "moss_lantern": { "name": "Moss Lantern", "realm_id": "stormwood", "unlocked_by": "stormwood:chapter_started", "output": { "id": "moss_lantern", "n": 1, "kind": "buildable" }, "cost": [{ "id": "glowmoss", "n": 4 }, { "id": "thunderwood", "n": 2 }, { "id": "conductor_vine", "n": 1 }], "blurb": "A low, green camp light for the Deepwood." },
+    "rod_mast": { "name": "Rod Mast", "realm_id": "stormwood", "unlocked_by": "stormwood:rodline_linked", "output": { "id": "rod_mast", "n": 1 }, "cost": [{ "id": "thunderwood", "n": 4 }, { "id": "conductor_vine", "n": 2 }], "blurb": "A prepared mast for a lightning rod installation." },
+    "insulated_workbench_upgrade": { "name": "Insulated Workbench Upgrade", "realm_id": "stormwood", "unlocked_by": "stormwood:rodline_linked", "output": { "id": "insulated_workbench_upgrade", "n": 1, "kind": "buildable" }, "cost": [{ "id": "thunderwood_frame", "n": 2 }, { "id": "stormglass", "n": 4 }, { "id": "sparkfur", "n": 2 }], "blurb": "An at-camp upgrade intended to unlock insulated recipes away from Rodline Post." },
+    "voltcap_stew": { "name": "Voltcap Stew", "realm_id": "stormwood", "unlocked_by": "stormwood:chapter_started", "output": { "id": "voltcap_stew", "n": 1 }, "cost": [{ "id": "voltcap", "n": 3 }, { "id": "glowmoss", "n": 1 }], "blurb": "Prepare a distinct nourishing Voltcap meal." },
+    "glowmoss_tonic": { "name": "Glowmoss Tonic", "realm_id": "stormwood", "unlocked_by": "stormwood:chapter_started", "output": { "id": "glowmoss_tonic", "n": 1 }, "cost": [{ "id": "glowmoss", "n": 3 }, { "id": "voltcap", "n": 1 }], "blurb": "Brew a distinct Stormwood recovery tonic; it does not revive a fainted creature." },
+    "stormglass_orb_socket": { "name": "Stormglass Orb Socket", "realm_id": "stormwood", "unlocked_by": "stormwood:ember_bivouac_reached", "output": { "id": "orb_prime", "n": 1 }, "cost": [{ "id": "stormglass", "n": 4 }, { "id": "sparkfur", "n": 2 }, { "id": "fiber", "n": 2 }], "blurb": "Fit a prime orb with a charged Stormwood socket." },
+    "stormglass_lining": { "name": "Stormglass Lining", "realm_id": "stormwood", "unlocked_by": "stormwood:rodline_linked", "output": { "id": "stormglass_lining", "n": 1 }, "cost": [{ "id": "stormglass", "n": 2 }, { "id": "conductor_vine", "n": 2 }], "blurb": "Wrap glass strips so they can insulate a crafted gear piece." },
+    "thunderwood_frame": { "name": "Thunderwood Frame", "realm_id": "stormwood", "unlocked_by": "stormwood:chapter_started", "output": { "id": "thunderwood_frame", "n": 1 }, "cost": [{ "id": "thunderwood", "n": 3 }, { "id": "conductor_vine", "n": 1 }], "blurb": "Prepare a stable Stormwood support for an arch or bench." }
+  },
+  "buildables": [
+    { "id": "stormglass_arch", "name": "Stormglass Arch", "category": "structures", "blurb": "A paired walking arch, linked by the Stormwood arch service.", "mesh": "res://assets/buildings/quaternius_castle/WallEntrance.obj", "thumbnail": "res://assets/ui/icons/buildables/door.png", "cost": [{ "id": "stormglass", "n": 6 }, { "id": "thunderwood", "n": 6 }, { "id": "conductor_vine", "n": 4 }], "integration_status": "blocked_pending_consumer", "integration_requirements": { "bounds": [4.0, 5.0, 1.5], "material": "stormglass_arch_finish", "requires_flags": ["stormwood:arch_recipe_known"], "placement": "arch_socket_pairing" } },
+    { "id": "lightning_rod", "name": "Lightning Rod", "category": "crafting", "blurb": "A surge-safe camp rod; its 12 m radius awaits runtime integration.", "mesh": "res://assets/environment/team_tether/tether_pylon.glb", "thumbnail": "res://assets/ui/icons/buildables/workbench.png", "cost": [{ "id": "stormglass", "n": 4 }, { "id": "thunderwood", "n": 5 }, { "id": "conductor_vine", "n": 3 }], "integration_status": "blocked_pending_consumer", "integration_requirements": { "bounds": [1.2, 6.0, 1.2], "material": "thunderwood_stormglass_finish", "requires_flags": ["stormwood:rodline_linked"], "placement": "rod_able_clearing", "safe_radius_m": 12.0 } },
+    { "id": "moss_lantern", "name": "Moss Lantern", "category": "furniture", "blurb": "A low green lantern for dark camps.", "mesh": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf", "thumbnail": "res://assets/ui/icons/buildables/torch.png", "cost": [{ "id": "glowmoss", "n": 4 }, { "id": "thunderwood", "n": 2 }, { "id": "conductor_vine", "n": 1 }], "integration_status": "blocked_pending_consumer", "integration_requirements": { "bounds": [0.7, 1.4, 0.5], "material": "glowmoss_lantern_finish", "requires_flags": ["stormwood:chapter_started"], "placement": "camp_surface" } },
+    { "id": "insulated_workbench_upgrade", "name": "Insulated Workbench Upgrade", "category": "crafting", "blurb": "A camp workbench upgrade for Stormwood gear recipes.", "mesh": "res://assets/props/quaternius_fantasy/Workbench.gltf", "thumbnail": "res://assets/ui/icons/buildables/workbench.png", "cost": [{ "id": "stormglass", "n": 4 }, { "id": "thunderwood", "n": 4 }, { "id": "sparkfur", "n": 2 }], "integration_status": "blocked_pending_consumer", "integration_requirements": { "bounds": [2.0, 1.3, 0.9], "material": "insulated_workbench_finish", "requires_flags": ["stormwood:rodline_linked"], "placement": "existing_workbench_upgrade" } }
+  ]
+}

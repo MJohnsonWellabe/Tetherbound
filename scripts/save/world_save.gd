@@ -50,7 +50,7 @@ const ENVELOPE_KEYS: Array[String] = [
 ## is not here: it is the split key, and its world scope arrives as `flags`.
 const STATE_KEYS: Array[String] = [
 	"day", "clock_elapsed_seconds", "world_seed", "placed_buildings", "farm_plots",
-	"death_satchels", "harvested_vegetation", "felled_vegetation",
+	"death_satchels", "harvested_vegetation", "felled_vegetation", "realm_environment",
 ]
 
 var _dir: String

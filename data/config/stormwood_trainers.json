@@ -1,0 +1,1030 @@
+{
+  "schema_version": 1,
+  "_comment": "Stormwood trainer catalogue only. Parties, ranks, and anchors are authored data; chapter objectives, NPC dialogue, encounters, and runtime injection are separate work.",
+  "realm_id": "stormwood",
+  "leaders": {
+    "verge": "officer_maren_verge_rod",
+    "hollows": "lieutenant_dace_hollows_rod",
+    "deepwood": "officer_nysa_deepwood_rod",
+    "dynamo": "outerworks_lieutenant_sera"
+  },
+  "trainers": [
+    {
+      "id": "tamsin_surge_lesson",
+      "display_name": "Tamsin",
+      "region_id": "cinder_verge",
+      "position": [
+        -340,
+        29.88,
+        430
+      ],
+      "route_class": "critical",
+      "critical_order": 1,
+      "humanoid_key": "young_trainer",
+      "rank": "trainer",
+      "ace_level": 33,
+      "party": [
+        {
+          "slot": 1,
+          "placeholder_species": "pipwing",
+          "level": 32,
+          "replacement_point": "trainers.tamsin_surge_lesson.party.1"
+        },
+        {
+          "slot": 2,
+          "placeholder_species": "bramblebun",
+          "level": 33,
+          "replacement_point": "trainers.tamsin_surge_lesson.party.2"
+        }
+      ],
+      "replacement_point": "trainers.tamsin_surge_lesson",
+      "encounter_anchor": {
+        "route_grounded": true,
+        "max_route_distance_m": 30
+      },
+      "mechanic": "shelter timing and forced reposition",
+      "group": "rodfolk_traveller",
+      "one_time": true
+    },
+    {
+      "id": "rodfolk_pathfinder_elin",
+      "display_name": "Elin",
+      "region_id": "cinder_verge",
+      "position": [
+        -600,
+        24.99,
+        780
+      ],
+      "route_class": "critical",
+      "critical_order": 2,
+      "humanoid_key": "wandering_trainer",
+      "rank": "trainer",
+      "ace_level": 34,
+      "party": [
+        {
+          "slot": 1,
+          "placeholder_species": "burrowback",
+          "level": 33,
+          "replacement_point": "trainers.rodfolk_pathfinder_elin.party.1"
+        },
+        {
+          "slot": 2,
+          "placeholder_species": "sparkit",
+          "level": 34,
+          "replacement_point": "trainers.rodfolk_pathfinder_elin.party.2"
+        }
+      ],
+      "replacement_point": "trainers.rodfolk_pathfinder_elin",
+      "encounter_anchor": {
+        "route_grounded": true,
+        "max_route_distance_m": 30
+      },
+      "mechanic": "narrow ash lane",
+      "group": "rodfolk_traveller",
+      "one_time": true
+    },
+    {
+      "id": "lieutenant_dace_hollows_rod",
+      "display_name": "Lieutenant Dace",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -880,
+        32.06,
+        1770
+      ],
+      "route_class": "critical",
+      "critical_order": 4,
+      "humanoid_key": "grunt_c",
+      "rank": "lieutenant",
+      "ace_level": 36,
+      "party": [
+        {
+          "slot": 1,
+          "placeholder_species": "stormtrail",
+          "level": 35,
+          "replacement_point": "trainers.lieutenant_dace_hollows_rod.party.1"
+        },
+        {
+          "slot": 2,
+          "placeholder_species": "shadelet",
+          "level": 36,
+          "replacement_point": "trainers.lieutenant_dace_hollows_rod.party.2"
+        },
+        {
+          "slot": 3,
+          "placeholder_species": "sparkit",
+          "level": 36,
+          "replacement_point": "trainers.lieutenant_dace_hollows_rod.party.3"
+        }
+      ],
+      "replacement_point": "trainers.lieutenant_dace_hollows_rod",
+      "encounter_anchor": {
+        "route_grounded": true,
+        "max_route_distance_m": 30
+      },
+      "mechanic": "picket switch pressure",
+      "group": "picket_leader",
+      "one_time": true
+    },
+    {
+      "id": "traveller_ivo_lantern_pools",
+      "display_name": "Ivo",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -400,
+        34.14,
+        1410
+      ],
+      "route_class": "critical",
+      "critical_order": 5,
+      "humanoid_key": "wandering_trainer",
+      "rank": "trainer",
+      "ace_level": 35,
+      "party": [
+        {
+          "slot": 1,
+          "placeholder_species": "brooktail",
+          "level": 34,
+          "replacement_point": "trainers.traveller_ivo_lantern_pools.party.1"
+        },
+        {
+          "slot": 2,
+          "placeholder_species": "duskhush",
+          "level": 35,
+          "replacement_point": "trainers.traveller_ivo_lantern_pools.party.2"
+        }
+      ],
+      "replacement_point": "trainers.traveller_ivo_lantern_pools",
+      "encounter_anchor": {
+        "route_grounded": true,
+        "max_route_distance_m": 30
+      },
+      "mechanic": "pool-side counter-switch",
+      "group": "rodfolk_traveller",
+      "one_time": true
+    },
+    {
+      "id": "lieutenant_varga_rodline_bridge",
+      "display_name": "Lieutenant Varga",
+      "region_id": "conductor_run",
+      "position": [
+        -700,
+        44.18,
+        2300
+      ],
+      "route_class": "critical",
+      "critical_order": 6,
+      "humanoid_key": "officer_a",
+      "rank": "lieutenant",
+      "ace_level": 39,
+      "party": [
+        {
+          "slot": 1,
+          "placeholder_species": "stormtrail",
+          "level": 37,
+          "replacement_point": "trainers.lieutenant_varga_rodline_bridge.party.1"
+        },
+        {
+          "slot": 2,
+          "placeholder_species": "frostclaw",
+          "level": 38,
+          "replacement_point": "trainers.lieutenant_varga_rodline_bridge.party.2"
+        },
+        {
+          "slot": 3,
+          "placeholder_species": "galecrest",
+          "level": 39,
+          "replacement_point": "trainers.lieutenant_varga_rodline_bridge.party.3"
+        }
+      ],
+      "replacement_point": "trainers.lieutenant_varga_rodline_bridge",
+      "encounter_anchor": {
+        "route_grounded": true,
+        "max_route_distance_m": 30
+      },
+      "mechanic": "bridge choke and switch pressure",
+      "group": "named_rank",
+      "one_time": true
+    },
+    {
+      "id": "officer_maren_verge_rod",
+      "display_name": "Officer Maren",
+      "region_id": "cinder_verge",
+      "position": [
+        -650,
+        20.98,
+        830
+      ],
+      "route_class": "critical",
+      "critical_order": 3,
+      "humanoid_key": "officer_b",
+      "rank": "officer",
+      "ace_level": 34,
+      "party": [
+        {
+          "slot": 1,
+          "placeholder_species": "sparkit",
+          "level": 32,
+          "replacement_point": "trainers.officer_maren_verge_rod.party.1"
+        },
+        {
+          "slot": 2,
+          "placeholder_species": "veridian",
+          "level": 33,
+          "replacement_point": "trainers.officer_maren_verge_rod.party.2"
+        },
+        {
+          "slot": 3,
+          "placeholder_species": "riftfrill",
+          "level": 34,
+          "replacement_point": "trainers.officer_maren_verge_rod.party.3"
+        }
+      ],
+      "replacement_point": "trainers.officer_maren_verge_rod",
+      "encounter_anchor": {
+        "route_grounded": true,
+        "max_route_distance_m": 30
+      },
+      "mechanic": "hazard lane reposition",
+      "group": "picket_leader",
+      "one_time": true
+    },
+    {
+      "id": "archwright_senn_crown_footing",
+      "display_name": "Senn",
+      "region_id": "hollow_crown",
+      "position": [
+        485,
+        74.15,
+        2700
+      ],
+      "route_class": "critical",
+      "critical_order": 7,
+      "humanoid_key": "craftsperson",
+      "rank": "trainer",
+      "ace_level": 40,
+      "party": [
+        {
+          "slot": 1,
+          "placeholder_species": "mosshell",
+          "level": 39,
+          "replacement_point": "trainers.archwright_senn_crown_footing.party.1"
+        },
+        {
+          "slot": 2,
+          "placeholder_species": "pipwing",
+          "level": 40,
+          "replacement_point": "trainers.archwright_senn_crown_footing.party.2"
+        }
+      ],
+      "replacement_point": "trainers.archwright_senn_crown_footing",
+      "encounter_anchor": {
+        "route_grounded": true,
+        "max_route_distance_m": 30
+      },
+      "mechanic": "glass-ring spacing",
+      "group": "rodfolk_traveller",
+      "one_time": true
+    },
+    {
+      "id": "archivist_wen_crown_trial",
+      "display_name": "Wen",
+      "region_id": "hollow_crown",
+      "position": [
+        600,
+        74.15,
+        2820
+      ],
+      "route_class": "critical",
+      "critical_order": 8,
+      "humanoid_key": "field_researcher",
+      "rank": "trainer",
+      "ace_level": 40,
+      "party": [
+        {
+          "slot": 1,
+          "placeholder_species": "mosshell",
+          "level": 40,
+          "replacement_point": "trainers.archivist_wen_crown_trial.party.1"
+        },
+        {
+          "slot": 2,
+          "placeholder_species": "sparkit",
+          "level": 40,
+          "replacement_point": "trainers.archivist_wen_crown_trial.party.2"
+        }
+      ],
+      "replacement_point": "trainers.archivist_wen_crown_trial",
+      "encounter_anchor": {
+        "route_grounded": true,
+        "max_route_distance_m": 30
+      },
+      "mechanic": "wall timing and counter-switch",
+      "group": "rodfolk_traveller",
+      "one_time": true
+    },
+    {
+      "id": "crown_wayfarer_nell",
+      "display_name": "Nell",
+      "region_id": "hollow_crown",
+      "position": [
+        820,
+        74.15,
+        2800
+      ],
+      "route_class": "critical",
+      "critical_order": 9,
+      "humanoid_key": "lost_traveler",
+      "rank": "trainer",
+      "ace_level": 41,
+      "party": [
+        {
+          "slot": 1,
+          "placeholder_species": "duskhush",
+          "level": 40,
+          "replacement_point": "trainers.crown_wayfarer_nell.party.1"
+        },
+        {
+          "slot": 2,
+          "placeholder_species": "shadelet",
+          "level": 41,
+          "replacement_point": "trainers.crown_wayfarer_nell.party.2"
+        }
+      ],
+      "replacement_point": "trainers.crown_wayfarer_nell",
+      "encounter_anchor": {
+        "route_grounded": true,
+        "max_route_distance_m": 30
+      },
+      "mechanic": "read the telegraph",
+      "group": "rodfolk_traveller",
+      "one_time": true
+    },
+    {
+      "id": "officer_nysa_deepwood_rod",
+      "display_name": "Officer Nysa",
+      "region_id": "deepwood",
+      "position": [
+        -890,
+        51.57,
+        4490
+      ],
+      "route_class": "critical",
+      "critical_order": 10,
+      "humanoid_key": "officer_a",
+      "rank": "officer",
+      "ace_level": 42,
+      "party": [
+        {
+          "slot": 1,
+          "placeholder_species": "ashtusk",
+          "level": 40,
+          "replacement_point": "trainers.officer_nysa_deepwood_rod.party.1"
+        },
+        {
+          "slot": 2,
+          "placeholder_species": "duskhush",
+          "level": 41,
+          "replacement_point": "trainers.officer_nysa_deepwood_rod.party.2"
+        },
+        {
+          "slot": 3,
+          "placeholder_species": "tuskroot",
+          "level": 42,
+          "replacement_point": "trainers.officer_nysa_deepwood_rod.party.3"
+        }
+      ],
+      "replacement_point": "trainers.officer_nysa_deepwood_rod",
+      "encounter_anchor": {
+        "route_grounded": true,
+        "max_route_distance_m": 30
+      },
+      "mechanic": "picket switch and hazard lanes",
+      "group": "picket_leader",
+      "one_time": true
+    },
+    {
+      "id": "rodfolk_guard_bram",
+      "display_name": "Bram",
+      "region_id": "deepwood",
+      "position": [
+        -450,
+        57.64,
+        3960
+      ],
+      "route_class": "critical",
+      "critical_order": 11,
+      "humanoid_key": "local_historian",
+      "rank": "trainer",
+      "ace_level": 41,
+      "party": [
+        {
+          "slot": 1,
+          "placeholder_species": "galecrest",
+          "level": 40,
+          "replacement_point": "trainers.rodfolk_guard_bram.party.1"
+        },
+        {
+          "slot": 2,
+          "placeholder_species": "cindercub",
+          "level": 41,
+          "replacement_point": "trainers.rodfolk_guard_bram.party.2"
+        }
+      ],
+      "replacement_point": "trainers.rodfolk_guard_bram",
+      "encounter_anchor": {
+        "route_grounded": true,
+        "max_route_distance_m": 30
+      },
+      "mechanic": "canopy ambush recovery",
+      "group": "rodfolk_traveller",
+      "one_time": true
+    },
+    {
+      "id": "outerworks_lieutenant_sera",
+      "display_name": "Lieutenant Sera",
+      "region_id": "dynamo",
+      "position": [
+        -100,
+        107.72,
+        5350
+      ],
+      "route_class": "critical",
+      "critical_order": 12,
+      "humanoid_key": "officer_b",
+      "rank": "lieutenant",
+      "ace_level": 42,
+      "party": [
+        {
+          "slot": 1,
+          "placeholder_species": "nightburrow",
+          "level": 41,
+          "replacement_point": "trainers.outerworks_lieutenant_sera.party.1"
+        },
+        {
+          "slot": 2,
+          "placeholder_species": "sparkit",
+          "level": 42,
+          "replacement_point": "trainers.outerworks_lieutenant_sera.party.2"
+        },
+        {
+          "slot": 3,
+          "placeholder_species": "ashtusk",
+          "level": 42,
+          "replacement_point": "trainers.outerworks_lieutenant_sera.party.3"
+        }
+      ],
+      "replacement_point": "trainers.outerworks_lieutenant_sera",
+      "encounter_anchor": {
+        "route_grounded": true,
+        "max_route_distance_m": 30
+      },
+      "mechanic": "outer-works hazard lane",
+      "group": "picket_leader",
+      "one_time": true
+    },
+    {
+      "id": "officer_kestrel_outer_works",
+      "display_name": "Officer Kestrel",
+      "region_id": "dynamo",
+      "position": [
+        -100,
+        110.49,
+        5390
+      ],
+      "route_class": "critical",
+      "critical_order": 13,
+      "humanoid_key": "officer_b",
+      "rank": "officer",
+      "ace_level": 43,
+      "party": [
+        {
+          "slot": 1,
+          "placeholder_species": "galecrest",
+          "level": 41,
+          "replacement_point": "trainers.officer_kestrel_outer_works.party.1"
+        },
+        {
+          "slot": 2,
+          "placeholder_species": "stormtrail",
+          "level": 42,
+          "replacement_point": "trainers.officer_kestrel_outer_works.party.2"
+        },
+        {
+          "slot": 3,
+          "placeholder_species": "riftfrill",
+          "level": 43,
+          "replacement_point": "trainers.officer_kestrel_outer_works.party.3"
+        }
+      ],
+      "replacement_point": "trainers.officer_kestrel_outer_works",
+      "encounter_anchor": {
+        "route_grounded": true,
+        "max_route_distance_m": 30
+      },
+      "mechanic": "counter-switch across discharge lanes",
+      "group": "named_rank",
+      "one_time": true
+    },
+    {
+      "id": "captain_marrow_dynamo_core",
+      "display_name": "Captain Marrow",
+      "region_id": "dynamo",
+      "position": [
+        -100,
+        262.21,
+        5470
+      ],
+      "route_class": "critical",
+      "critical_order": 14,
+      "humanoid_key": "captain_a",
+      "rank": "captain",
+      "ace_level": 44,
+      "party": [
+        {
+          "slot": 1,
+          "placeholder_species": "stormtrail",
+          "level": 42,
+          "replacement_point": "trainers.captain_marrow_dynamo_core.party.1"
+        },
+        {
+          "slot": 2,
+          "placeholder_species": "galecrest",
+          "level": 43,
+          "replacement_point": "trainers.captain_marrow_dynamo_core.party.2"
+        },
+        {
+          "slot": 3,
+          "placeholder_species": "ashtusk",
+          "level": 43,
+          "replacement_point": "trainers.captain_marrow_dynamo_core.party.3"
+        },
+        {
+          "slot": 4,
+          "placeholder_species": "sparkit",
+          "level": 44,
+          "replacement_point": "trainers.captain_marrow_dynamo_core.party.4"
+        }
+      ],
+      "replacement_point": "trainers.captain_marrow_dynamo_core",
+	  "surface_id": "dynamo_core",
+      "encounter_anchor": {
+        "route_grounded": true,
+        "max_route_distance_m": 30
+      },
+      "mechanic": "capacitor lanes and forced team switches",
+      "group": "named_rank",
+      "one_time": true
+    },
+    {
+      "id": "tamsin_ash_ring",
+      "display_name": "Tamsin's Ash Ring",
+      "region_id": "cinder_verge",
+      "position": [
+        -370,
+        30.005714,
+        430
+      ],
+      "route_class": "optional",
+      "critical_order": 0,
+      "humanoid_key": "young_trainer",
+      "rank": "trainer",
+      "ace_level": 33,
+      "party": [
+        {
+          "slot": 1,
+          "placeholder_species": "bramblebun",
+          "level": 32,
+          "replacement_point": "trainers.tamsin_ash_ring.party.1"
+        },
+        {
+          "slot": 2,
+          "placeholder_species": "pipwing",
+          "level": 33,
+          "replacement_point": "trainers.tamsin_ash_ring.party.2"
+        }
+      ],
+      "replacement_point": "trainers.tamsin_ash_ring",
+      "encounter_anchor": {
+        "route_grounded": true,
+        "max_route_distance_m": 30
+      },
+      "mechanic": "open arena scout",
+      "group": "verge_optional",
+      "one_time": true
+    },
+    {
+      "id": "ranger_pax_sentinel",
+      "display_name": "Ranger Pax",
+      "region_id": "cinder_verge",
+      "position": [
+        -320,
+        29.92,
+        240
+      ],
+      "route_class": "optional",
+      "critical_order": 0,
+      "humanoid_key": "alpha_tracker",
+      "rank": "trainer",
+      "ace_level": 34,
+      "party": [
+        {
+          "slot": 1,
+          "placeholder_species": "burrowback",
+          "level": 33,
+          "replacement_point": "trainers.ranger_pax_sentinel.party.1"
+        },
+        {
+          "slot": 2,
+          "placeholder_species": "shadelet",
+          "level": 34,
+          "replacement_point": "trainers.ranger_pax_sentinel.party.2"
+        }
+      ],
+      "replacement_point": "trainers.ranger_pax_sentinel",
+      "encounter_anchor": {
+        "route_grounded": true,
+        "max_route_distance_m": 30
+      },
+      "mechanic": "tracking a pursuer",
+      "group": "verge_optional",
+      "one_time": true
+    },
+    {
+      "id": "courier_pim_pool_loop",
+      "display_name": "Pim",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -380,
+        32.38,
+        1400
+      ],
+      "route_class": "optional",
+      "critical_order": 0,
+      "humanoid_key": "courier",
+      "rank": "trainer",
+      "ace_level": 35,
+      "party": [
+        {
+          "slot": 1,
+          "placeholder_species": "brooktail",
+          "level": 34,
+          "replacement_point": "trainers.courier_pim_pool_loop.party.1"
+        },
+        {
+          "slot": 2,
+          "placeholder_species": "sparkit",
+          "level": 35,
+          "replacement_point": "trainers.courier_pim_pool_loop.party.2"
+        }
+      ],
+      "replacement_point": "trainers.courier_pim_pool_loop",
+      "encounter_anchor": {
+        "route_grounded": true,
+        "max_route_distance_m": 30
+      },
+      "mechanic": "waterline reposition",
+      "group": "hollows_optional",
+      "one_time": true
+    },
+    {
+      "id": "traveller_ivo_moss_detour",
+      "display_name": "Ivo's Moss Detour",
+      "region_id": "glowmoss_hollows",
+      "position": [
+        -900,
+        32.10,
+        1780
+      ],
+      "route_class": "optional",
+      "critical_order": 0,
+      "humanoid_key": "wandering_trainer",
+      "rank": "trainer",
+      "ace_level": 36,
+      "party": [
+        {
+          "slot": 1,
+          "placeholder_species": "meadowhart",
+          "level": 35,
+          "replacement_point": "trainers.traveller_ivo_moss_detour.party.1"
+        },
+        {
+          "slot": 2,
+          "placeholder_species": "duskhush",
+          "level": 36,
+          "replacement_point": "trainers.traveller_ivo_moss_detour.party.2"
+        }
+      ],
+      "replacement_point": "trainers.traveller_ivo_moss_detour",
+      "encounter_anchor": {
+        "route_grounded": true,
+        "max_route_distance_m": 30
+      },
+      "mechanic": "dark-pool counter-switch",
+      "group": "hollows_optional",
+      "one_time": true
+    },
+    {
+      "id": "rodline_scout_kael",
+      "display_name": "Kael",
+      "region_id": "conductor_run",
+      "position": [
+        -560,
+        62.68,
+        2480
+      ],
+      "route_class": "optional",
+      "critical_order": 0,
+      "humanoid_key": "rival_trainer",
+      "rank": "trainer",
+      "ace_level": 37,
+      "party": [
+        {
+          "slot": 1,
+          "placeholder_species": "frostclaw",
+          "level": 36,
+          "replacement_point": "trainers.rodline_scout_kael.party.1"
+        },
+        {
+          "slot": 2,
+          "placeholder_species": "sparkit",
+          "level": 37,
+          "replacement_point": "trainers.rodline_scout_kael.party.2"
+        }
+      ],
+      "replacement_point": "trainers.rodline_scout_kael",
+      "encounter_anchor": {
+        "route_grounded": true,
+        "max_route_distance_m": 30
+      },
+      "mechanic": "ridge pursuit",
+      "group": "rodline_optional",
+      "one_time": true
+    },
+    {
+      "id": "rodline_keeper_fenn",
+      "display_name": "Fenn",
+      "region_id": "conductor_run",
+      "position": [
+        -160,
+        34.69,
+        2700
+      ],
+      "route_class": "optional",
+      "critical_order": 0,
+      "humanoid_key": "trader",
+      "rank": "trainer",
+      "ace_level": 38,
+      "party": [
+        {
+          "slot": 1,
+          "placeholder_species": "veridian",
+          "level": 37,
+          "replacement_point": "trainers.rodline_keeper_fenn.party.1"
+        },
+        {
+          "slot": 2,
+          "placeholder_species": "riftfrill",
+          "level": 38,
+          "replacement_point": "trainers.rodline_keeper_fenn.party.2"
+        }
+      ],
+      "replacement_point": "trainers.rodline_keeper_fenn",
+      "encounter_anchor": {
+        "route_grounded": true,
+        "max_route_distance_m": 30
+      },
+      "mechanic": "conduit lane control",
+      "group": "rodline_optional",
+      "one_time": true
+    },
+    {
+      "id": "rodline_duelist_ren",
+      "display_name": "Ren",
+      "region_id": "conductor_run",
+      "position": [
+        -1120,
+        62.24,
+        3290
+      ],
+      "route_class": "optional",
+      "critical_order": 0,
+      "humanoid_key": "young_trainer",
+      "rank": "trainer",
+      "ace_level": 39,
+      "party": [
+        {
+          "slot": 1,
+          "placeholder_species": "stormtrail",
+          "level": 38,
+          "replacement_point": "trainers.rodline_duelist_ren.party.1"
+        },
+        {
+          "slot": 2,
+          "placeholder_species": "galecrest",
+          "level": 39,
+          "replacement_point": "trainers.rodline_duelist_ren.party.2"
+        }
+      ],
+      "replacement_point": "trainers.rodline_duelist_ren",
+      "encounter_anchor": {
+        "route_grounded": true,
+        "max_route_distance_m": 30
+      },
+      "mechanic": "wind-up dive reads",
+      "group": "rodline_optional",
+      "one_time": true
+    },
+    {
+      "id": "rook_circuit_lantern",
+      "display_name": "Rook",
+      "region_id": "deepwood",
+      "position": [
+        -150,
+        61.14,
+        4460
+      ],
+      "route_class": "optional",
+      "critical_order": 0,
+      "humanoid_key": "rival_trainer",
+      "rank": "ace",
+      "ace_level": 42,
+      "party": [
+        {
+          "slot": 1,
+          "placeholder_species": "galecrest",
+          "level": 40,
+          "replacement_point": "trainers.rook_circuit_lantern.party.1"
+        },
+        {
+          "slot": 2,
+          "placeholder_species": "tuskroot",
+          "level": 41,
+          "replacement_point": "trainers.rook_circuit_lantern.party.2"
+        },
+        {
+          "slot": 3,
+          "placeholder_species": "ashtusk",
+          "level": 42,
+          "replacement_point": "trainers.rook_circuit_lantern.party.3"
+        }
+      ],
+      "replacement_point": "trainers.rook_circuit_lantern",
+      "encounter_anchor": {
+        "route_grounded": true,
+        "max_route_distance_m": 30
+      },
+      "mechanic": "ace counter-switch",
+      "group": "deepwood_circuit",
+      "one_time": true
+    },
+    {
+      "id": "circuit_lena_giant",
+      "display_name": "Lena",
+      "region_id": "deepwood",
+      "position": [
+        -1590,
+        31.63,
+        4370
+      ],
+      "route_class": "optional",
+      "critical_order": 0,
+      "humanoid_key": "lost_traveler",
+      "rank": "trainer",
+      "ace_level": 41,
+      "party": [
+        {
+          "slot": 1,
+          "placeholder_species": "cindercub",
+          "level": 40,
+          "replacement_point": "trainers.circuit_lena_giant.party.1"
+        },
+        {
+          "slot": 2,
+          "placeholder_species": "nightburrow",
+          "level": 41,
+          "replacement_point": "trainers.circuit_lena_giant.party.2"
+        }
+      ],
+      "replacement_point": "trainers.circuit_lena_giant",
+      "encounter_anchor": {
+        "route_grounded": true,
+        "max_route_distance_m": 30
+      },
+      "mechanic": "Hall telegraph drill",
+      "group": "deepwood_circuit",
+      "one_time": true
+    },
+    {
+      "id": "circuit_orin_blackwater",
+      "display_name": "Orin",
+      "region_id": "deepwood",
+      "position": [
+        550,
+        38.02,
+        4050
+      ],
+      "route_class": "optional",
+      "critical_order": 0,
+      "humanoid_key": "wandering_trainer",
+      "rank": "trainer",
+      "ace_level": 42,
+      "party": [
+        {
+          "slot": 1,
+          "placeholder_species": "riftfrill",
+          "level": 41,
+          "replacement_point": "trainers.circuit_orin_blackwater.party.1"
+        },
+        {
+          "slot": 2,
+          "placeholder_species": "duskhush",
+          "level": 42,
+          "replacement_point": "trainers.circuit_orin_blackwater.party.2"
+        }
+      ],
+      "replacement_point": "trainers.circuit_orin_blackwater",
+      "encounter_anchor": {
+        "route_grounded": true,
+        "max_route_distance_m": 30
+      },
+      "mechanic": "ravine current pressure",
+      "group": "deepwood_circuit",
+      "one_time": true
+    },
+    {
+      "id": "circuit_mira_lantern",
+      "display_name": "Mira",
+      "region_id": "deepwood",
+      "position": [
+        -450,
+        57.64,
+        3960
+      ],
+      "route_class": "optional",
+      "critical_order": 0,
+      "humanoid_key": "creature_caretaker",
+      "rank": "trainer",
+      "ace_level": 40,
+      "party": [
+        {
+          "slot": 1,
+          "placeholder_species": "meadowhart",
+          "level": 39,
+          "replacement_point": "trainers.circuit_mira_lantern.party.1"
+        },
+        {
+          "slot": 2,
+          "placeholder_species": "mosshell",
+          "level": 40,
+          "replacement_point": "trainers.circuit_mira_lantern.party.2"
+        }
+      ],
+      "replacement_point": "trainers.circuit_mira_lantern",
+      "encounter_anchor": {
+        "route_grounded": true,
+        "max_route_distance_m": 30
+      },
+      "mechanic": "shelter recovery choice",
+      "group": "deepwood_circuit",
+      "one_time": true
+    },
+    {
+      "id": "circuit_tavi_rodline",
+      "display_name": "Tavi",
+      "region_id": "deepwood",
+      "position": [
+        -890,
+        51.57,
+        4490
+      ],
+      "route_class": "optional",
+      "critical_order": 0,
+      "humanoid_key": "young_trainer",
+      "rank": "trainer",
+      "ace_level": 42,
+      "party": [
+        {
+          "slot": 1,
+          "placeholder_species": "sparkit",
+          "level": 41,
+          "replacement_point": "trainers.circuit_tavi_rodline.party.1"
+        },
+        {
+          "slot": 2,
+          "placeholder_species": "frostclaw",
+          "level": 42,
+          "replacement_point": "trainers.circuit_tavi_rodline.party.2"
+        }
+      ],
+      "replacement_point": "trainers.circuit_tavi_rodline",
+      "encounter_anchor": {
+        "route_grounded": true,
+        "max_route_distance_m": 30
+      },
+      "mechanic": "rod-station hazard lane",
+      "group": "deepwood_circuit",
+      "one_time": true
+    }
+  ]
+}

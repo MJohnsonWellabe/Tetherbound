@@ -253,7 +253,7 @@ const SPECIES_PATH := "res://data/creatures/species.json"
 ## authored morning" — `game_state.gd::CLOCK_UNSET`. N14 authored it as 19,
 ## which Cloudreach owns; it takes the next free number here for the same
 ## reason the pin set did.
-const VERSION := 22
+const VERSION := 23
 const WORLD_RECORDS := preload("res://scripts/world/realm_world_records.gd")
 const SLOT_COUNT := 5
 ## Written automatically whenever the player rests (`scripts/build/camp.gd`).
@@ -396,6 +396,7 @@ func snapshot(game: Object) -> Dictionary:
 		# nightfall again. Negative means "no carried clock, open at the
 		# authored morning" -- `game_state.gd::CLOCK_UNSET`.
 		"clock_elapsed_seconds": _read_clock(game),
+		"realm_environment": game.get("realm_environment").duplicate(true) if game.get("realm_environment") is Dictionary else {},
 	}
 	data["realm_maps"] = game.call("save_realm_maps") if game.has_method("save_realm_maps") else _realm_map_payloads(data)
 	return data
@@ -450,6 +451,9 @@ func load_slot(game: Object, slot: int) -> bool:
 		game.set("pending_realm_entry", str(data.get("pending_realm_entry", "")))
 	if game.get("clock_elapsed_seconds") != null:
 		game.set("clock_elapsed_seconds", _finite_clock(data.get("clock_elapsed_seconds")))
+	if game.get("realm_environment") != null:
+		var environment_raw: Variant = data.get("realm_environment", {})
+		game.set("realm_environment", environment_raw if environment_raw is Dictionary else {})
 	_write_satiety(game, float(data.get("satiety", _default_satiety())))
 
 	var map_obj: Variant = game.get("map")
@@ -1174,6 +1178,14 @@ func _migrate_v21(data: Dictionary) -> Dictionary:
 	var migrated := data.duplicate(true)
 	migrated["version"] = 22
 	migrated["clock_elapsed_seconds"] = -1.0
+	return migrated
+
+
+## Old saves have never started a realm weather cycle. Day/time is untouched.
+func _migrate_v22(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["version"] = 23
+	migrated["realm_environment"] = {}
 	return migrated
 
 

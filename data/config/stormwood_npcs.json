@@ -1,0 +1,255 @@
+{
+  "_comment": "Stormwood named NPC registry draft. Positions follow authored landmarks/routes. Body profiles reuse installed humanoid inventory; runtime spawn integration is intentionally unbound in this lane.",
+  "schema_version": 1,
+  "realm_id": "stormwood",
+  "characters": [
+    {
+      "id": "rodkeeper_hesk",
+      "name": "Rodkeeper Hesk",
+      "region_id": "cinder_verge",
+      "role": "local_historian",
+      "body_profile": "local_historian",
+      "portrait": "res://assets/ui/portraits/villager_male.png",
+      "position": [
+        -350,
+        30.31,
+        450
+      ]
+    },
+    {
+      "id": "stormreader_tamsin",
+      "name": "Tamsin",
+      "region_id": "cinder_verge",
+      "role": "young_trainer",
+      "body_profile": "young_trainer",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "position": [
+        -300,
+        26.56,
+        350
+      ]
+    },
+    {
+      "id": "cook_marl",
+      "name": "Marl",
+      "region_id": "cinder_verge",
+      "role": "innkeeper",
+      "body_profile": "innkeeper",
+      "portrait": "res://assets/ui/portraits/wilhelm.png",
+      "position": [
+        -360,
+        30.966332,
+        443
+      ]
+    },
+    {
+      "id": "courier_pim",
+      "name": "Pim",
+      "region_id": "glowmoss_hollows",
+      "role": "courier",
+      "body_profile": "courier",
+      "portrait": "res://assets/ui/portraits/lark.png",
+      "position": [
+        -380,
+        32.38,
+        1400
+      ]
+    },
+    {
+      "id": "trainer_ivo",
+      "name": "Ivo",
+      "region_id": "glowmoss_hollows",
+      "role": "wandering_trainer",
+      "body_profile": "wandering_trainer",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "position": [
+        -500,
+        29.55,
+        1600
+      ]
+    },
+    {
+      "id": "grunt_lieutenant_dace",
+      "name": "Lieutenant Dace",
+      "region_id": "glowmoss_hollows",
+      "role": "grunt_c",
+      "body_profile": "grunt_c",
+      "portrait": "res://assets/ui/portraits/grunt_c.png",
+      "position": [
+        -900,
+        32.10,
+        1780
+      ]
+    },
+    {
+      "id": "warden_elect_bryn",
+      "name": "Warden-Elect Bryn",
+      "region_id": "conductor_run",
+      "role": "local_historian",
+      "body_profile": "local_historian",
+      "portrait": "res://assets/ui/portraits/villager_male.png",
+      "position": [
+        -700,
+        44.18,
+        2300
+      ]
+    },
+    {
+      "id": "trader_oswin",
+      "name": "Oswin",
+      "region_id": "conductor_run",
+      "role": "trader",
+      "body_profile": "trader",
+      "portrait": "res://assets/ui/portraits/villager_male.png",
+      "position": [
+        -680,
+        45.83,
+        2310
+      ]
+    },
+    {
+      "id": "tether_lieutenant_varga",
+      "name": "Lieutenant Varga",
+      "region_id": "conductor_run",
+      "role": "officer_a",
+      "body_profile": "officer_a",
+      "portrait": "res://assets/ui/portraits/officer_a.png",
+      "position": [
+        -600,
+        66.56,
+        2500
+      ]
+    },
+    {
+      "id": "keeper_ondra",
+      "name": "Keeper Ondra",
+      "region_id": "conductor_run",
+      "role": "craftsperson",
+      "body_profile": "craftsperson",
+      "portrait": "res://assets/ui/portraits/villager_female.png",
+      "position": [
+        -160,
+        34.69,
+        2700
+      ]
+    },
+    {
+      "id": "archivist_wen",
+      "name": "Archivist Wen",
+      "region_id": "hollow_crown",
+      "role": "field_researcher",
+      "body_profile": "field_researcher",
+      "portrait": "res://assets/ui/portraits/old_perrin.png",
+      "position": [
+        700,
+        74.15,
+        2700
+      ]
+    },
+    {
+      "id": "elder_maud",
+      "name": "Elder Maud",
+      "region_id": "deepwood",
+      "role": "local_historian",
+      "body_profile": "local_historian",
+      "portrait": "res://assets/ui/portraits/villager_male.png",
+      "position": [
+        -450,
+        57.64,
+        3960
+      ]
+    },
+    {
+      "id": "trader_fenn",
+      "name": "Fenn",
+      "region_id": "deepwood",
+      "role": "trader",
+      "body_profile": "trader",
+      "portrait": "res://assets/ui/portraits/villager_male.png",
+      "position": [
+        -400,
+        61.37,
+        4000
+      ]
+    },
+    {
+      "id": "caretaker_lio",
+      "name": "Lio",
+      "region_id": "deepwood",
+      "role": "creature_caretaker",
+      "body_profile": "creature_caretaker",
+      "portrait": "res://assets/ui/portraits/lark.png",
+      "position": [
+        -350,
+        65.43,
+        4050
+      ]
+    },
+    {
+      "id": "ace_trainer_rook",
+      "name": "Rook",
+      "region_id": "deepwood",
+      "role": "rival_trainer",
+      "body_profile": "rival_trainer",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "position": [
+        -150,
+        61.14,
+        4460
+      ]
+    },
+    {
+      "id": "defector_sable",
+      "name": "Sable",
+      "region_id": "deepwood",
+      "role": "former_tether_member",
+      "body_profile": "former_tether_member",
+      "portrait": "res://assets/ui/portraits/ren.png",
+      "position": [
+        -450,
+        57.64,
+        3960
+      ]
+    },
+    {
+      "id": "officer_kestrel",
+      "name": "Officer Kestrel",
+      "region_id": "dynamo",
+      "role": "officer_b",
+      "body_profile": "officer_b",
+      "portrait": "res://assets/ui/portraits/officer_b.png",
+      "position": [
+        -100,
+        107.72,
+        5350
+      ]
+    },
+    {
+      "id": "captain_marrow",
+      "name": "Captain Marrow",
+      "region_id": "dynamo",
+      "role": "captain_a",
+      "body_profile": "captain_a",
+      "portrait": "res://assets/ui/portraits/captain_a.png",
+      "position": [
+        -100,
+        262.21,
+        5470
+      ],
+      "surface_id": "dynamo_core"
+    },
+    {
+      "id": "crown_caretaker_neri",
+      "name": "Neri",
+      "region_id": "hollow_crown",
+      "role": "caretaker",
+      "body_profile": "creature_caretaker",
+      "portrait": "res://assets/ui/portraits/villager_female.png",
+      "position": [
+        620,
+        74.15,
+        2600
+      ]
+    }
+  ]
+}

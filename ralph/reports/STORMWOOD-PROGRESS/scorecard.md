@@ -74,3 +74,19 @@ Strategy change, effective now: stop treating foundation acceptance details as t
 | UTC | Main SHA | Score | Window delta | Strategy |
 |---|---|---:|---:|---|
 | 2026-09-06 23:54:38 | e78f2ab45 | 0 | 0 | Narrow foundation blockers delegated; root shifts to continuous chapter route and working Dynamo. |
+
+## Two-hour checkpoint — due 2026-09-07 01:54:38 UTC, recorded 02:00 UTC
+
+Merged main at the checkpoint: `84125fcd008d93c0fefdfff51a2752b94b4faada` (PR #70). Score **5.25 / 100**, window delta **5.25**: acceptable, not strong. The preceding observation call was interrupted; this entry records the due checkpoint against the main that existed then, not a later landing. The consecutive-under-five count resets to zero. Next checkpoint: 03:54:38 UTC.
+
+Explicit row credits: §32.1 Entry and return earns 75% of 6 = **4.5**: the production mounted gate refuses no-key unlock/travel, accepts the durable host-ledger key, enters the real Terrain3D realm and returns; a two-peer crossing retains the host in Meadows with an active Stormwood simulation shell. The completed-Cloudreach save/load fixture remains unmerged and earns no credit, so this is not full entry acceptance. §7.1 Cloudreach transition earns 75% of 1 = **0.75**, for that same broad-build transition capability with the same missing completed-save proof. All other original rows remain zero. The frozen scorecard deliberately includes broad delivery separately; no extra CI, density, visual, or draft-code credit is added.
+
+Evidence inspected: merged `tests/smoke_stormwood_transition.gd` exercises the actual scene/router/gates; strict two-peer run `net-run-local-1977417` and subsequent foundation run `net-run-local-2021033` have separate peer directories, host 108-region shell READY, client fog growth without host fog contamination, and normal completion. PR #70 code jobs passed before its ancestry-confirmed merge. PR #74 was not merged at the checkpoint and is excluded even though its retry has since become green.
+
+Player-visible branch work, not score credit: 19 NPCs, 26 trainers and 660 ordinary wild instances load in six regions; a physical Stormheart ascent reaches the upper platform; ordinary pickups use existing host claims. The opening interaction exposed overlapping NPC/trainer/pickup offers, now under a bounded placement correction. Surge clock and save v23 transport exist locally, but strikes, arch travel/construction, Crown progression, four rod stations, Dynamo phases, legendary choice and Waterward ending remain unfinished. Every blind visual review still fails. No whole-chapter playability claim is justified.
+
+Approach change for the next window: pause tree silhouette and density polishing; keep CI diagnosis bounded; prioritize working Surge, arches and chapter gates across the route. Require real opening interactions and multiplayer/save evidence as each slice is integrated, and ship dependent work from the newly merged foundation. Avoid another visual tuning loop or CI retry without changed evidence. Full local unit wave 2 was started, but its last log is incomplete; its result is not credited.
+
+| UTC | Main SHA | Score | Window delta | Strategy |
+|---|---|---:|---:|---|
+| 2026-09-07 01:54:38 | 84125fcd0 | 5.25 | 5.25 | Visual polishing paused; prioritize live Surge, arches and chapter gates, with bounded proof lanes. |

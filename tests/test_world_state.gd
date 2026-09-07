@@ -97,9 +97,9 @@ func test_save_data_carries_the_world_half_of_the_v22_keys() -> void:
 	var data: Dictionary = world.save_data()
 	for key: String in ["world_id", "day", "clock_elapsed_seconds", "world_seed",
 			"placed_buildings", "farm_plots", "death_satchels",
-			"harvested_vegetation", "felled_vegetation", "flags"]:
+			"harvested_vegetation", "felled_vegetation", "flags", "realm_environment"]:
 		assert_true(data.has(key), "world.save_data() is missing '%s'" % key)
-	assert_eq(data.keys().size(), 10, "and nothing else -- got %s" % str(data.keys()))
+	assert_eq(data.keys().size(), 11, "and nothing else -- got %s" % str(data.keys()))
 
 
 func test_save_data_carries_no_player_key() -> void:

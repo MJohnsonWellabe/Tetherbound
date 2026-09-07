@@ -146,7 +146,10 @@
       "stack": 30,
       "colour": "#a33a55",
       "satiety": 18,
-      "creature_food": { "nourishment": 35.0, "happiness": 8.0 },
+      "creature_food": {
+        "nourishment": 35.0,
+        "happiness": 8.0
+      },
       "buff": {
         "id": "berry_verve",
         "stat": "stamina_regen_scale",
@@ -397,10 +400,10 @@
       "description": "A proper woodcutter's edge. It takes a full swing off an oak in the time bare hands would still be scraping bark, and it wears down a little with every tree.",
       "held_model": "res://assets/props/quaternius_fantasy/Axe_Bronze.gltf",
       "held_offset": [
-   0.02,
-   0.15,
-   0.0
-  ],
+        0.02,
+        0.15,
+        0.0
+      ],
       "held_rotation_deg": [
         0,
         0,
@@ -852,6 +855,222 @@
       "icon": "res://assets/ui/icons/items/armor_backpack.png",
       "blurb": "A padded frame pack. Takes a little sting out of landing on your back.",
       "description": "A padded frame worn high on the back. It carries nothing the satchel does not already hold -- CLAUDE.md's own rule against a carry-weight system stands -- but the padding softens a landing taken square on the spine."
+    },
+    "stormglass": {
+      "name": "Stormglass",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#78c9df",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Lightning-fused glass prised from a charged seam.",
+      "description": "Fulgurite threaded with a cold blue charge. A pickaxe frees it during a Break or Fading surge, and it carries the current for arches, rods and insulated gear.",
+      "gathered_with": "pickaxe",
+      "realm_id": "stormwood"
+    },
+    "thunderwood": {
+      "name": "Thunderwood",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#5b4638",
+      "icon": "res://assets/ui/icons/items/wood.png",
+      "blurb": "Glass-fused timber that still holds a charge.",
+      "description": "Dense wood from trunks scarred by repeated strikes. It forms the frames, masts and camp fittings that must survive a Stormwood surge.",
+      "gathered_with": "axe",
+      "realm_id": "stormwood"
+    },
+    "conductor_vine": {
+      "name": "Conductor Vine",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#a6b96a",
+      "icon": "res://assets/ui/icons/items/fiber.png",
+      "blurb": "Tough vine that carries a controlled current.",
+      "description": "Wiry canopy vine stripped with a knife. Its live fibres bind arch frames, route a rod's charge and line insulated clothing.",
+      "gathered_with": "knife",
+      "realm_id": "stormwood"
+    },
+    "glowmoss": {
+      "name": "Glowmoss",
+      "kind": "resource",
+      "stack": 30,
+      "colour": "#8dcc77",
+      "icon": "res://assets/ui/icons/items/fiber.png",
+      "blurb": "Cool green moss from the wet roots.",
+      "description": "Soft moss gathered by hand from shaded pools and giant roots. It gives a moss lantern its quiet light and brews into a recovery tonic.",
+      "realm_id": "stormwood"
+    },
+    "voltcap": {
+      "name": "Voltcap",
+      "kind": "food",
+      "stack": 20,
+      "colour": "#d8b85d",
+      "icon": "res://assets/ui/icons/items/wild_mushroom.png",
+      "blurb": "A warm mushroom that steadies the body against Static.",
+      "description": "A yellow-capped Stormwood mushroom. Restores 22 satiety and makes a nourishing creature meal.",
+      "satiety": 22,
+      "creature_food": {
+        "nourishment": 42,
+        "happiness": 10
+      },
+      "buff": {
+        "id": "voltcap_static_resistance",
+        "stat": "static_duration_scale",
+        "amount": 0.75,
+        "duration_s": 180
+      },
+      "realm_id": "stormwood"
+    },
+    "sparkfur": {
+      "name": "Sparkfur",
+      "kind": "material",
+      "stack": 30,
+      "colour": "#d7b964",
+      "icon": "res://assets/ui/icons/items/fiber.png",
+      "blurb": "Shed charged fur earned from Stormwood encounters.",
+      "description": "Naturally shed, static-bright fur collected as an encounter reward. It pads insulated gear without adding hunting or butchering.",
+      "acquisition": "encounter_reward",
+      "realm_id": "stormwood"
+    },
+    "stormglass_lining": {
+      "name": "Stormglass Lining",
+      "kind": "material",
+      "stack": 20,
+      "colour": "#88cae2",
+      "icon": "res://assets/ui/icons/items/fiber.png",
+      "blurb": "Vine-wrapped glass strips for safe handling.",
+      "description": "Stormglass strips wrapped in conductor vine. A small field component used by the two crafted insulated pieces.",
+      "realm_id": "stormwood"
+    },
+    "thunderwood_frame": {
+      "name": "Thunderwood Frame",
+      "kind": "material",
+      "stack": 20,
+      "colour": "#735c49",
+      "icon": "res://assets/ui/icons/items/wood.png",
+      "blurb": "A prepared frame for Stormwood camp work.",
+      "description": "A pre-cut thunderwood support that keeps the arch and workbench recipes legible without introducing a new gathering tier.",
+      "realm_id": "stormwood"
+    },
+    "rod_mast": {
+      "name": "Rod Mast",
+      "kind": "material",
+      "stack": 10,
+      "colour": "#62564a",
+      "icon": "res://assets/ui/icons/items/wood.png",
+      "blurb": "A prepared thunderwood mast for a lightning rod.",
+      "description": "A straight, vine-bound thunderwood mast. It is a small crafted component for a lightning rod rather than a new gathering material.",
+      "realm_id": "stormwood"
+    },
+    "voltcap_stew": {
+      "name": "Voltcap Stew",
+      "kind": "food",
+      "stack": 10,
+      "colour": "#d5a956",
+      "icon": "res://assets/ui/icons/items/wild_mushroom.png",
+      "blurb": "A cooked Voltcap meal with longer Static resistance.",
+      "description": "A hearty Voltcap and glowmoss stew. It restores 42 satiety, feeds a creature well, and declares a longer Static-resistance buff for the future surge consumer.",
+      "satiety": 42,
+      "creature_food": {
+        "nourishment": 65,
+        "happiness": 14
+      },
+      "buff": {
+        "id": "voltcap_stew_static_resistance",
+        "stat": "static_duration_scale",
+        "amount": 0.6,
+        "duration_s": 300
+      },
+      "realm_id": "stormwood"
+    },
+    "glowmoss_tonic": {
+      "name": "Glowmoss Tonic",
+      "kind": "consumable",
+      "stack": 10,
+      "colour": "#83cb7c",
+      "icon": "res://assets/ui/icons/items/potion_large.png",
+      "blurb": "A Stormwood recovery tonic; it does not revive.",
+      "description": "A cool restorative tonic brewed from glowmoss. Restores 80 creature health; it cannot revive a fainted creature.",
+      "heal": 80,
+      "realm_id": "stormwood",
+      "world_model": "res://assets/props/potion_plant/potion_plant.glb",
+      "world_model_scale": 0.55
+    },
+    "insulated_helm": {
+      "name": "Insulated Helm",
+      "kind": "armor",
+      "stack": 1,
+      "colour": "#6f8c99",
+      "armor_slot": "helmet",
+      "defense": 0.1,
+      "storm_strike_reduction": 0.15,
+      "static_duration_scale": 0.85,
+      "icon": "res://assets/ui/icons/items/armor_helmet.png",
+      "world_model": "res://assets/props/quaternius_fantasy/Pouch_Large.gltf",
+      "world_model_scale": 0.55,
+      "blurb": "Stormglass-lined head protection, crafted at Rodline Post.",
+      "description": "A padded helm with a conductor-vine lining. It improves passive fall protection and is intended to reduce strike damage and Static duration once Stormwood surge equipment is wired.",
+      "realm_id": "stormwood"
+    },
+    "insulated_vest": {
+      "name": "Insulated Vest",
+      "kind": "armor",
+      "stack": 1,
+      "colour": "#66818c",
+      "armor_slot": "upper_body",
+      "defense": 0.16,
+      "storm_strike_reduction": 0.2,
+      "static_duration_scale": 0.8,
+      "icon": "res://assets/ui/icons/items/armor_vest.png",
+      "world_model": "res://assets/props/quaternius_fantasy/Pouch_Large.gltf",
+      "world_model_scale": 0.65,
+      "blurb": "The largest crafted layer of Stormwood protection.",
+      "description": "Thunderwood toggles hold sparkfur padding off the body. It improves passive fall protection and is intended to blunt a strike and shorten Static once consumed by the surge system.",
+      "realm_id": "stormwood"
+    },
+    "insulated_leggings": {
+      "name": "Insulated Leggings",
+      "kind": "armor",
+      "stack": 1,
+      "colour": "#607a84",
+      "armor_slot": "lower_body",
+      "defense": 0.14,
+      "storm_strike_reduction": 0.18,
+      "static_duration_scale": 0.82,
+      "icon": "res://assets/ui/icons/items/armor_leggings.png",
+      "world_model": "res://assets/props/quaternius_fantasy/Pouch_Large.gltf",
+      "world_model_scale": 0.6,
+      "blurb": "Found protection for the Deepwood route.",
+      "description": "A found Stormwood layer rather than a crafted duplicate. It improves passive fall protection and carries the same pending strike and Static tuning fields as the rest of the set.",
+      "acquisition": "found_pickup",
+      "realm_id": "stormwood"
+    },
+    "insulated_boots": {
+      "name": "Insulated Boots",
+      "kind": "armor",
+      "stack": 1,
+      "colour": "#58717a",
+      "armor_slot": "boots",
+      "defense": 0.1,
+      "storm_strike_reduction": 0.15,
+      "static_duration_scale": 0.85,
+      "icon": "res://assets/ui/icons/items/armor_boots.png",
+      "world_model": "res://assets/props/quaternius_fantasy/Pouch_Large.gltf",
+      "world_model_scale": 0.5,
+      "blurb": "Found boots for wet, charged ground.",
+      "description": "A found pair with dry insulating layers under the leather. It improves passive fall protection and carries pending Stormwood strike and Static tuning fields.",
+      "acquisition": "found_pickup",
+      "realm_id": "stormwood"
+    },
+    "stormglass_crown": {
+      "name": "Crown-grade Stormglass",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#bd9de8",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "A dense violet grade of Stormglass.",
+      "description": "Slow-grown Stormglass from the Capacitor Grove and Hollow Crown. Its concentrated charge holds the Crown connection steady.",
+      "gathered_with": "pickaxe",
+      "realm_id": "stormwood"
     }
   },
   "_comment_held": "Tools carry the mesh they appear in the trainer's hand as. Owner playtest: \"the tools exist but you can't pull them out when you're exploring and use them\" -- before this a tool was an inventory row and nothing else, and pressing it on the hotbar only repaired it. `scripts/player/tool_hold.gd` bone-attaches `held_model` to the trainer's hand, using the same BoneAttachment3D pattern the carried torch already uses (scripts/player/torch.gd). `held_offset`/`held_rotation_deg` are the fit in that hand and are TUNABLE. An empty `held_model` means the tool is carried but never drawn -- fishing_rod, which has no water to fish yet and no vendored rod mesh (D24: no new asset families for one prop).",

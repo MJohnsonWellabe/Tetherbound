@@ -39,6 +39,9 @@ var world_id: String = ""
 var world_seed: int = 0
 var day: int = 1
 var clock_elapsed_seconds: float = CLOCK_UNSET
+## Realm-local weather clocks and durable environmental state. These belong
+## to the hosted world, independently of the day clock and visiting players.
+var realm_environment: Dictionary = {}
 
 ## The WORLD half of the old flat `Game.progression` store: every id
 ## `progression_state.scope_of()` answers "world" for. `Game.progression` is a
@@ -85,6 +88,7 @@ func reset() -> void:
 	flags.call("load_data", {})
 	day = 1
 	clock_elapsed_seconds = CLOCK_UNSET
+	realm_environment = {}
 	placed_buildings = []
 	farm_plots = []
 	death_satchels = []
@@ -231,6 +235,7 @@ func save_data() -> Dictionary:
 		"world_id": world_id,
 		"day": day,
 		"clock_elapsed_seconds": clock_elapsed_seconds,
+		"realm_environment": realm_environment.duplicate(true),
 		"world_seed": world_seed,
 		"placed_buildings": placed_buildings.duplicate(true),
 		"farm_plots": farm_plots.duplicate(true),
@@ -248,6 +253,7 @@ func load_data(data: Dictionary) -> void:
 	world_id = str(data.get("world_id", world_id))
 	day = _int(data.get("day"), 1)
 	clock_elapsed_seconds = _finite_clock(data.get("clock_elapsed_seconds"))
+	realm_environment = _dictionary(data.get("realm_environment", {}))
 	world_seed = _int(data.get("world_seed"), 0)
 	placed_buildings = _array(data.get("placed_buildings", []))
 	# The counter is DERIVED from the records rather than saved, so the world

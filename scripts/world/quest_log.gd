@@ -87,7 +87,7 @@ func set_realm(realm_id: String) -> bool:
 	_main = []
 	_local = []
 	_realm_data = {}
-	var path := "res://data/config/cloudreach_chapter.json" if realm_id == "cloudreach" else DATA_PATH
+	var path := "res://data/config/%s_chapter.json" % realm_id if realm_id in ["cloudreach", "stormwood"] else DATA_PATH
 	var file := FileAccess.open(path, FileAccess.READ)
 	if file == null:
 		push_warning("quest_log.gd: %s missing" % path)
@@ -98,7 +98,7 @@ func set_realm(realm_id: String) -> bool:
 		return true
 	var data := parsed as Dictionary
 	_realm_data = data
-	if realm_id == "cloudreach":
+	if realm_id in ["cloudreach", "stormwood"]:
 		for act: Dictionary in data.get("acts", []):
 			_main.append_array(act.get("objectives", []))
 		for chain: Dictionary in data.get("side_chains", []):
@@ -124,7 +124,7 @@ func main_entries(progression: RefCounted) -> Array:
 ## revealed by meeting the person who asks for it (`revealed_by`), which is
 ## already its own one-at-a-time rule.
 func local_entries(progression: RefCounted) -> Array:
-	if _realm_id == "cloudreach":
+	if _realm_id in ["cloudreach", "stormwood"]:
 		return _scoped_side_entries(progression)
 	return _entries(_local, progression)
 

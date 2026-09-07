@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "realm_id": "stormwood",
+  "_comment": "The four Team Tether rod stations named by the Stormwood chapter. Each switch is gated by its existing picket leader's durable defeat flag; the runtime owns interaction, visual state, aggregate completion, and Surge updates.",
+  "station_count": 4,
+  "stations": [
+    {
+      "id": "verge_rod_station",
+      "region_id": "cinder_verge",
+      "position": [-650, 830],
+      "prop_model": "res://assets/environment/team_tether/tether_pylon.glb",
+      "guard_trainer_id": "officer_maren_verge_rod",
+      "guard_defeat_flag": "stormwood:trainer:officer_maren_verge_rod:defeated",
+      "disabled_flag": "stormwood:rod_verge_disabled",
+      "requires_flags": ["stormwood:lantern_pools_linked"],
+      "completion_event": "rods:lower_complete"
+    },
+    {
+      "id": "hollows_rod_station",
+      "region_id": "glowmoss_hollows",
+      "position": [-900, 1780],
+      "prop_model": "res://assets/environment/team_tether/tether_pylon.glb",
+      "guard_trainer_id": "lieutenant_dace_hollows_rod",
+      "guard_defeat_flag": "stormwood:trainer:lieutenant_dace_hollows_rod:defeated",
+      "disabled_flag": "stormwood:rod_hollows_disabled",
+      "requires_flags": ["stormwood:lantern_pools_linked"],
+      "completion_event": "rods:lower_complete"
+    },
+    {
+      "id": "deepwood_rod_station",
+      "region_id": "deepwood",
+      "position": [-890, 4490],
+      "prop_model": "res://assets/environment/team_tether/tether_pylon.glb",
+      "guard_trainer_id": "officer_nysa_deepwood_rod",
+      "guard_defeat_flag": "stormwood:trainer:officer_nysa_deepwood_rod:defeated",
+      "disabled_flag": "stormwood:rod_deepwood_disabled",
+      "requires_flags": ["stormwood:captive_truth_learned"],
+      "completion_event": "rod:deepwood_disabled"
+    },
+    {
+      "id": "dynamo_approach_rod_station",
+      "region_id": "dynamo",
+      "position": [-100, 5350],
+      "prop_model": "res://assets/environment/team_tether/tether_pylon.glb",
+      "guard_trainer_id": "outerworks_lieutenant_sera",
+      "guard_defeat_flag": "stormwood:trainer:outerworks_lieutenant_sera:defeated",
+      "disabled_flag": "stormwood:rod_dynamo_disabled",
+      "requires_flags": ["stormwood:deepwood_station_disabled"],
+      "completion_event": "rods:all_complete"
+    }
+  ]
+}
