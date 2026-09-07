@@ -3,7 +3,7 @@ extends RefCounted
 ## Pure Water base terrain. No nodes, Terrain3D, state or random calls.
 ## The baker and depth queries share this surface; sparse region membership
 ## controls only where analytic seabed is represented, never island identity.
-## Trails/arenas must be explicit later modifiers: this does not grade a hike.
+## Authored trail grading shares the bake/depth surface and preserves shores.
 
 const CONFIG_PATH := "res://data/config/water_world.json"
 
@@ -22,6 +22,12 @@ var _power := PackedFloat64Array()
 var _beach_width := PackedFloat64Array()
 var _inner_height := PackedFloat64Array()
 var _sectors: Array = []
+var _trail_cells: Dictionary = {}
+var _trail_pitch := 32.0
+var _trail_flat := 3.0
+var _trail_feather := 15.0
+var _shore_preserve := 22.0
+var _shore_blend := 10.0
 
 
 static func load_config(path: String = CONFIG_PATH) -> Dictionary:
@@ -65,6 +71,7 @@ func _init(config: Dictionary = {}) -> void:
 				float(sector.get("inner_height_m", 3.0)),
 			])
 		_sectors.append(sectors)
+	_compile_trails()
 
 
 func water_level() -> float:
@@ -99,7 +106,62 @@ func height_at(x: float, z: float) -> float:
 		if absf(dx) > extent or absf(dz) > extent:
 			continue
 		best = maxf(best, _height_for(index, dx, dz))
-	return best
+	return _grade_trails(x, z, best)
+
+
+func _compile_trails() -> void:
+	var tuning: Dictionary = _config.get("terrain", {}).get("trail_grading", {})
+	if not bool(tuning.get("enabled", false)):
+		return
+	_trail_pitch = maxf(1.0, float(tuning.get("grid_pitch_m", 32.0)))
+	_trail_flat = maxf(1.0, float(tuning.get("flat_half_width_m", 3.0)))
+	_trail_feather = maxf(1.0, float(tuning.get("feather_m", 15.0)))
+	_shore_preserve = float(tuning.get("preserve_shore_band_m", 22.0))
+	_shore_blend = maxf(1.0, float(tuning.get("shore_blend_m", 10.0)))
+	var extent := _trail_flat + _trail_feather
+	for route: Dictionary in _config.get("land_routes", []):
+		var points: Array = route.get("polyline", [])
+		for n in maxi(0, points.size() - 1):
+			var a := Vector3(float(points[n][0]), float(points[n][1]), float(points[n][2]))
+			var b := Vector3(float(points[n + 1][0]), float(points[n + 1][1]), float(points[n + 1][2]))
+			var delta := Vector2(b.x - a.x, b.z - a.z)
+			if delta.length_squared() < 0.001:
+				continue
+			var segment := [a, b, delta, delta.length_squared()]
+			for gx in range(floori((minf(a.x, b.x) - extent) / _trail_pitch), floori((maxf(a.x, b.x) + extent) / _trail_pitch) + 1):
+				for gz in range(floori((minf(a.z, b.z) - extent) / _trail_pitch), floori((maxf(a.z, b.z) + extent) / _trail_pitch) + 1):
+					var cell := Vector2i(gx, gz)
+					if not _trail_cells.has(cell):
+						_trail_cells[cell] = []
+					_trail_cells[cell].append(segment)
+
+
+func _grade_trails(x: float, z: float, base: float) -> float:
+	var cell := Vector2i(floori(x / _trail_pitch), floori(z / _trail_pitch))
+	if not _trail_cells.has(cell):
+		return base
+	var coast_depth := -INF
+	for index in _ids.size():
+		coast_depth = maxf(coast_depth, _radius[index] - Vector2(x - _cx[index], z - _cz[index]).length())
+	var shore_weight := smoothstep(_shore_preserve, _shore_preserve + _shore_blend, coast_depth)
+	if shore_weight <= 0.0:
+		return base
+	var sum := 0.0
+	var total := 0.0
+	var strongest := 0.0
+	for segment: Array in _trail_cells[cell]:
+		var a: Vector3 = segment[0]
+		var b: Vector3 = segment[1]
+		var delta: Vector2 = segment[2]
+		var t := clampf(Vector2(x - a.x, z - a.z).dot(delta) / float(segment[3]), 0.0, 1.0)
+		var distance := Vector2(x - lerpf(a.x, b.x, t), z - lerpf(a.z, b.z, t)).length()
+		var weight := 1.0 - smoothstep(_trail_flat, _trail_flat + _trail_feather, distance)
+		# Distant shoulders must not tilt the centre of a neighboring trail.
+		var contribution := pow(weight, 8.0)
+		sum += lerpf(a.y, b.y, t) * contribution
+		total += contribution
+		strongest = maxf(strongest, weight)
+	return lerpf(base, sum / total, strongest * shore_weight) if total > 0.0 else base
 
 
 ## Island membership is dry land by default; callers may explicitly include

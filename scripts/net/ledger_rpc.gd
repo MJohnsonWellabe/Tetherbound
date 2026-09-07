@@ -70,6 +70,94 @@ signal delta_applied(delta: Dictionary)
 signal intent_refused(kind: String, code: String, reason: String, detail: Dictionary)
 
 var ledger: RefCounted = null
+const SATCHEL_ESCROW := preload("res://scripts/net/satchel_escrow.gd")
+var _satchel_retry_at: Dictionary = {}
+var _satchel_poll := 0.0
+
+func _process(delta: float) -> void:
+	_satchel_poll -= delta
+	if _satchel_poll > 0.0:
+		return
+	_satchel_poll = 0.5
+	reconcile_satchel_escrow()
+
+func drop_satchel(at: Vector3, realm: String) -> Dictionary:
+	var game := _game()
+	var txn := SATCHEL_ESCROW.begin_drop(game.get("local"), game.get("world"), at, realm, bool(game.call("is_host")))
+	return _submit_satchel_escrow(txn)
+
+func transfer_satchel(uid: String, direction: String, item: String, count: int, expected: int = -1) -> Dictionary:
+	_ensure_ledger()
+	var game := _game()
+	if expected < 0:
+		expected = ledger.storage_revision("satchel:" + uid)
+	var txn := SATCHEL_ESCROW.begin_transfer(game.get("local"), game.get("world"), uid, direction, item, count, expected, bool(game.call("is_host")))
+	return _submit_satchel_escrow(txn)
+
+func _persist_satchel_character() -> bool:
+	var game := _game()
+	# Legacy session-less fixtures have no split-save identity. Real named
+	# characters journal escrow before sending an irreversible host request.
+	if str(game.get("local").character_id).is_empty() or str(game.get("world").world_id).is_empty():
+		return true
+	var saver: RefCounted = game.get("save_system")
+	return saver != null and bool(saver.call("save_character", game, str(game.get("local").character_id)))
+
+func _submit_satchel_escrow(txn: String) -> Dictionary:
+	var game := _game()
+	if txn.is_empty() or not game.get("local").satchel_escrow.has(txn):
+		return {"ok": false, "pending": false, "reason": "Those items will not fit, or a satchel move is already pending."}
+	var row: Dictionary = game.get("local").satchel_escrow[txn]
+	if not _persist_satchel_character():
+		return {"ok": false, "pending": true, "reason": "Your pending satchel move is waiting for the character save."}
+	_satchel_retry_at[txn] = Time.get_ticks_msec() + 3000
+	var verdict := submit(row.intent)
+	if not verdict.get("ok", false) and not verdict.get("pending", false):
+		if str(verdict.get("code", "")) == "duplicate":
+			_accept_satchel_recovery(verdict)
+		else:
+			SATCHEL_ESCROW.refuse(game.get("local"), game.get("world"), txn)
+		_persist_satchel_character()
+	return verdict
+
+func _settle_satchel_receipts() -> void:
+	var game := _game()
+	if game != null and SATCHEL_ESCROW.reconcile(game.get("local"), game.get("world")):
+		_persist_satchel_character()
+	if game != null:
+		for row: Variant in game.get("local").satchel_escrow.values():
+			if row is Dictionary and str(row.get("status", "")) in ["grant_due", "refund_due"] and not row.get("room_message_shown", false):
+				game.call("push_world_message", "Your recovered items are safe. Make room in your satchel to receive them.")
+				row["room_message_shown"] = true
+
+func _accept_satchel_recovery(verdict: Dictionary) -> void:
+	var snapshot: Variant = verdict.get("satchel_recovery_snapshot")
+	var game := _game()
+	if game == null:
+		return
+	if snapshot is Dictionary and not bool(game.call("is_host")) and int(snapshot.get("seq", -1)) >= int(ledger.seq):
+		game.call("apply_world_snapshot", snapshot.get("world", {}))
+		ledger.seq = int(snapshot.seq)
+	_settle_satchel_receipts()
+
+func reconcile_satchel_escrow() -> void:
+	var game := _game()
+	if game == null:
+		return
+	var session: Node = game.get("session")
+	if session != null and session.has_method("snapshot_ready") and not bool(session.call("snapshot_ready")):
+		return
+	_settle_satchel_receipts()
+	for key: Variant in game.get("local").satchel_escrow.keys():
+		var row: Variant = game.get("local").satchel_escrow[key]
+		if not row is Dictionary or not SATCHEL_ESCROW.belongs(row, game.get("local"), game.get("world")) or str(row.get("status", "")) != "pending":
+			continue
+		if not row.get("intent") is Dictionary or str(row.intent.get("realm", "")) != str(game.get("current_realm")):
+			continue
+		if not bool(row.get("origin_host", false)) and (session == null or not session.has_method("is_active") or not bool(session.call("is_active"))):
+			continue
+		if Time.get_ticks_msec() >= int(_satchel_retry_at.get(str(key), 0)):
+			_submit_satchel_escrow(str(key))
 
 
 ## Find or mount the transport under the session. Returns the node, or `null`
@@ -117,17 +205,88 @@ func submit(intent: Dictionary) -> Dictionary:
 ## Host-side commit + broadcast, shared by `submit()` and `_rpc_intent()` so the
 ## local player and a remote one are arbitrated by literally the same lines.
 func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
+	var satchel_transaction := str(intent.get("kind", "")) in ["death_satchel_create", "death_satchel_transfer"]
+	var before_satchel: Dictionary = {}
+	if satchel_transaction:
+		before_satchel = {"world": ledger.world.save_data(), "seq": ledger.seq,
+			"revisions": ledger.get("_storage_revisions").duplicate(true), "seen": ledger.get("_seen_txns").duplicate(true)}
+	if str(intent.get("kind", "")) in ["death_satchel_create", "death_satchel_transfer"]:
+		intent = intent.duplicate(true)
+		intent["_satchel_actor"] = _water_actor_context(peer_id, intent)
+	if str(intent.get("kind", "")) in ["water_dock_action", "water_personal_pickup"]:
+		intent = intent.duplicate(true)
+		# Never accept actor identity, realm or position from the request. The
+		# host resolves its local rig or the sender's owned trainer proxy.
+		intent["_water_actor"] = _water_actor_context(peer_id, intent)
 	var verdict: Dictionary = ledger.call("commit", intent, peer_id)
+	if str(intent.get("kind", "")) in ["death_satchel_create", "death_satchel_transfer"]:
+		verdict["txn_id"] = str(intent.get("txn_id", ""))
+		verdict["uid"] = str(intent.get("uid", ""))
+		if str(verdict.get("code", "")) == "duplicate":
+			# A lost acknowledgement is a reconciliation, never a refund. The
+			# host sends its current durable snapshot, so the client can recover
+			# the receipt even when the original creation/transfer delta was lost.
+			verdict["satchel_recovery_snapshot"] = {"seq": ledger.seq, "world": ledger.world.save_data()}
 	if not bool(verdict.get("ok", false)):
 		return verdict
 	var delta: Dictionary = verdict.get("delta", {}) as Dictionary
+	if str(intent.get("kind", "")) in ["death_satchel_create", "death_satchel_transfer"]:
+		var satchel_game := _game()
+		var world_id := str(satchel_game.get("world").world_id)
+		if not world_id.is_empty():
+			var saver: RefCounted = satchel_game.get("save_system")
+			if saver == null or not bool(saver.call("save_world", satchel_game, world_id)):
+				# No personal settlement or publication happened yet. Roll back
+				# the synchronous in-memory commit as one unit, including receipt
+				# bookkeeping, so a later retry cannot mistake it for durable work.
+				ledger.world.load_data(before_satchel.world)
+				ledger.seq = before_satchel.seq
+				ledger.set("_storage_revisions", before_satchel.revisions)
+				ledger.set("_seen_txns", before_satchel.seen)
+				return {"ok": false, "pending": false, "kind": str(intent.kind), "peer": peer_id,
+					"code": "journal_failed", "reason": "The world could not save this satchel move. Your items remain safe.",
+					"txn_id": str(intent.get("txn_id", "")), "uid": str(intent.get("uid", "")), "delta": {"ops": []}}
 	# The host's own ledger already applied the delta to `Game.world` inside
 	# `commit()`; what is left here is the per-peer half and the broadcast.
 	_apply_player_ops(delta)
+	_settle_satchel_receipts()
 	delta_applied.emit(delta)
 	if _can_rpc() and _is_multi_peer():
 		rpc("_rpc_delta", delta)
 	return verdict
+
+
+func _water_actor_context(peer_id: int, intent: Dictionary) -> Dictionary:
+	var game := _game()
+	if game == null:
+		return {}
+	var actor: Node3D
+	var realm := ""
+	var character := ""
+	if peer_id == _local_peer_id():
+		actor = game.call("_find_player") as Node3D
+		realm = str(game.get("current_realm"))
+		character = str(game.get("local").character_id)
+	else:
+		for proxy: Node in get_tree().get_nodes_in_group("remote_trainer"):
+			if proxy.get_multiplayer_authority() == peer_id:
+				actor = proxy as Node3D
+				realm = str(proxy.get("net_realm"))
+				character = str(proxy.get("character_id"))
+				break
+	if actor == null:
+		return {}
+	var context := {"peer": peer_id, "character_id": character, "realm": realm,
+		"position": actor.global_position,
+		"personal_claimed": intent.get("personal_claimed", false) == true,
+		"inventory": intent.get("inventory", {}) if intent.get("inventory", {}) is Dictionary else {}}
+	if str(intent.get("kind", "")) == "water_personal_pickup" and get_tree().current_scene != null:
+		var service := get_tree().current_scene.get_node_or_null("WaterPickups")
+		if service != null and service.has_method("node_for"):
+			var pickup: Node3D = service.call("node_for", str(intent.get("pickup_id", "")))
+			if pickup != null:
+				context["pickup_position"] = pickup.global_position
+	return context
 
 
 # --- rpc ------------------------------------------------------------------------
@@ -162,6 +321,7 @@ func _rpc_delta(delta: Dictionary) -> void:
 		return
 	ledger.call("apply", delta)
 	_apply_player_ops(delta)
+	_settle_satchel_receipts()
 	_restore_progression()
 	delta_applied.emit(delta)
 
@@ -169,6 +329,14 @@ func _rpc_delta(delta: Dictionary) -> void:
 ## Host -> the one peer whose intent was refused.
 @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
 func _rpc_verdict(verdict: Dictionary) -> void:
+	if str(verdict.get("kind", "")) in ["death_satchel_create", "death_satchel_transfer"]:
+		var game := _game()
+		if game != null:
+			if str(verdict.get("code", "")) == "duplicate":
+				_accept_satchel_recovery(verdict)
+			else:
+				SATCHEL_ESCROW.refuse(game.get("local"), game.get("world"), str(verdict.get("txn_id", "")))
+			_persist_satchel_character()
 	var code := str(verdict.get("code", ""))
 	var reason := str(verdict.get("reason", ""))
 	# A refusal that names a container's current revision is applied to this

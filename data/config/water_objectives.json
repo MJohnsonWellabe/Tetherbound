@@ -1,0 +1,18 @@
+{
+  "_comment": "Water's ordered player guidance. Rows report durable personal/world facts; they never grant completion. Later rows remain implementation targets until their physical writer and player path are verified.",
+  "main": [
+    {"flag_id":"water_swim_lesson_briefed","scope":"player","label":"Meet Pell at First Shore.","how":"Follow the beach to the swimming guide. Use {interact} to talk."},
+    {"flag_id":"water_swim_lesson_complete","scope":"world","label":"Swim between the lesson landings.","how":"Cross the sheltered practice channel and step onto the far beach."},
+    {"flag_id":"water_dock_reedhaven_repaired","scope":"world","label":"Restore Reedhaven's departure dock.","how":"Reach Reedhaven and bring reed fiber and driftwood to the broken dock."},
+    {"flag_id":"water_dock_brine_steps_trial_won","scope":"world","label":"Win Tovin's Brine Steps trial.","how":"Prepare your creatures, then challenge Tovin at the dock."},
+    {"flag_id":"water_dock_shellwatch_residents_freed_and_pump_disabled","scope":"world","label":"Free Shellwatch's residents and stop the pump.","how":"Break Team Tether's hold on the landing before continuing to Tidal Cradle."},
+    {"flag_id":"water_swim_stone_earned","scope":"player","label":"Face Aquaryn at Tidal Cradle.","how":"Defeat or catch the Tidal Dragon Alpha to earn your Swim Stone."},
+    {"flag_id":"water_swim_saddle_recipe_learned","scope":"player","label":"Learn the Swim Saddle recipe from Iona.","how":"Return to Iona after earning your Swim Stone, then craft a saddle at a workbench."},
+    {"flag_id":"water_dock_salt_crown_landing_charted","scope":"world","label":"Chart Salt Crown's onward crossing.","how":"Prepare a compatible swim mount and reach Salt Crown's landing."},
+    {"flag_id":"water_dock_sluice_isle_both_controls_disabled","scope":"world","label":"Disable Sluice Isle's two controls.","how":"Find both pump controls to open the final crossing."},
+    {"flag_id":"water_captain_nerissa_defeated","scope":"world","label":"Confront Captain Nerissa inside the Veilfall.","how":"Cross to the mountain, climb to the waterfall and follow the hidden channels inward."},
+    {"flag_id":"water_guardian_freed","scope":"world","label":"Release the Abyssal Guardian.","how":"Reach the Heart Chamber and break the captive legendary's tether."},
+    {"flag_id":"water_currents_restored","scope":"world","label":"Restore the archipelago's currents.","how":"Complete the release ceremony and witness the islands respond."}
+  ],
+  "local": []
+}

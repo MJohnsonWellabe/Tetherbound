@@ -80,6 +80,8 @@ var deploy_shiny: bool = false
 ## its gait from the velocity that interpolation produces.
 var net_position: Vector3 = Vector3.ZERO
 var net_yaw: float = 0.0
+var net_aquatic: Dictionary = {}
+var aquatic := preload("res://scripts/player/swim_state.gd").new()
 
 ## The trainer body this creature belongs to, so the companion layer has
 ## somebody to look at and stand still beside. Resolved lazily from the
@@ -256,6 +258,7 @@ func _push_from_local_creature() -> void:
 		return
 	net_position = body.global_position
 	net_yaw = body.rotation.y
+	net_aquatic = body.get_meta("water_aquatic", {}).duplicate(true)
 	# Keep the proxy co-located with the body it mirrors: nothing renders it
 	# here, but a probe or a distance check that finds this node must not see a
 	# body parked where it spawned.
@@ -350,6 +353,9 @@ func _local_deployed_body() -> Node3D:
 # --- every other peer's side --------------------------------------------------
 
 func _follow(delta: float) -> void:
+	if not net_aquatic.is_empty():
+		aquatic.owner_peer_id = get_multiplayer_authority()
+		aquatic.apply_remote_snapshot(net_aquatic, get_multiplayer_authority())
 	if not _has_render:
 		_render_position = net_position
 		_has_render = true

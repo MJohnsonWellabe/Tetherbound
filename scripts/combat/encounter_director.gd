@@ -1467,7 +1467,7 @@ func _spawn_deployed_creature(data: Variant) -> Node:
 ## property (`docs/specs/MP_ENCOUNTER_PROTOCOL.md` §3).
 func _creature_replication_config() -> SceneReplicationConfig:
 	var cfg := SceneReplicationConfig.new()
-	for path in [^".:net_position", ^".:net_yaw"]:
+	for path in [^".:net_position", ^".:net_yaw", ^".:net_aquatic"]:
 		cfg.add_property(path)
 		cfg.property_set_spawn(path, true)
 		cfg.property_set_replication_mode(path, SceneReplicationConfig.REPLICATION_MODE_ALWAYS)

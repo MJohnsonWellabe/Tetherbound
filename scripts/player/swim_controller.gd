@@ -2,6 +2,7 @@ extends Node
 
 const STATE := preload("res://scripts/player/swim_state.gd")
 const CONFIG_PATH := "res://data/config/water_swimming.json"
+const SAVE := preload("res://scripts/save/water_traversal_save.gd")
 var state := STATE.new()
 var _player: CharacterBody3D
 var _world: Node3D
@@ -25,6 +26,41 @@ func snapshot() -> Dictionary:
 	return state.snapshot()
 
 
+func save_data() -> Dictionary:
+	var vitals: RefCounted = _player.get("vitals")
+	var anchor: Array = [state.safe_landing.x, state.safe_landing.y, state.safe_landing.z] if state.has_safe_landing else []
+	return {"version": 1, "mode": state.mode, "safe_anchor": anchor,
+		"stamina_fraction": clampf(vitals.stamina / vitals.max_stamina, 0.0, 1.0),
+		"health_fraction": clampf(vitals.health / vitals.max_health, 0.0, 1.0)}
+
+
+func restore_save_data(raw: Dictionary) -> bool:
+	var clean := SAVE.sanitise(raw)
+	if clean.is_empty():
+		return false
+	var vitals: RefCounted = _player.get("vitals")
+	vitals.stamina = vitals.max_stamina * float(clean.stamina_fraction)
+	vitals.health = vitals.max_health * float(clean.health_fraction)
+	state.owner_peer_id = multiplayer.get_unique_id()
+	state.leave_water()
+	state.has_safe_landing = false
+	var anchor: Array = clean.safe_anchor
+	if anchor.size() == 3:
+		var at := Vector3(float(anchor[0]), float(anchor[1]), float(anchor[2]))
+		var ground: float = _world.ground_height_at(at.x, at.z)
+		if is_finite(ground) and ground >= float(_config.safe_landing.minimum_height_m):
+			state.reach_land(Vector3(at.x, ground, at.z))
+	if _world.water_depth_at(_player.global_position) >= float(_config.human.entry_depth_m):
+		state.enter_water(false, _world.field.water_level())
+		_player.global_position.y = state.surface_y + float(_config.human.surface_body_offset_m)
+	state.stamina_fraction = float(clean.stamina_fraction)
+	state.drowning = state.mode == STATE.Mode.HUMAN and vitals.stamina <= 0.0
+	_horizontal = Vector3.ZERO
+	if vitals.is_dead():
+		_player.call_deferred("emit_signal", "died")
+	return true
+
+
 ## Called by the owner rig instead of its ground integrator, never in addition
 ## to it. A remote trainer only displays the replicated state and transform.
 func physics_step(delta: float, input_blocked: bool, combat_paused: bool) -> bool:
@@ -35,15 +71,13 @@ func physics_step(delta: float, input_blocked: bool, combat_paused: bool) -> boo
 	var depth: float = _world.water_depth_at(_player.global_position)
 	var human: Dictionary = _config.human
 	if state.mode == STATE.Mode.LAND:
+		_record_safe_landing()
 		if depth < float(human.entry_depth_m) or _player.global_position.y > sea + float(human.get("entry_above_surface_m", 0.4)):
 			return false
 		state.enter_water(false, sea)
 		_horizontal = Vector3(_player.velocity.x, 0, _player.velocity.z)
 	elif depth <= float(human.exit_depth_m):
 		state.leave_water()
-		var ground: float = _world.ground_height_at(_player.global_position.x, _player.global_position.z)
-		if is_finite(ground) and ground >= float(_config.safe_landing.minimum_height_m):
-			state.reach_land(Vector3(_player.global_position.x, ground, _player.global_position.z))
 		return false
 	if combat_paused:
 		state.pause_for_combat()
@@ -84,3 +118,26 @@ func physics_step(delta: float, input_blocked: bool, combat_paused: bool) -> boo
 	if alive and vitals.is_dead():
 		_player.emit_signal("died")
 	return true
+
+
+## Leaving the swim depth can still be underwater. Earn recovery only after
+## the real capsule settles beside an authored, dry landing on baked terrain.
+func _record_safe_landing() -> void:
+	if not _player.is_on_floor():
+		return
+	for anchor: Dictionary in _world.config.get("anchors", []):
+		var raw: Array = anchor.get("safe_position", [])
+		if raw.size() != 3:
+			continue
+		var at := Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
+		if Vector2(at.x - _player.global_position.x, at.z - _player.global_position.z).length() > float(anchor.get("safe_radius_m", 3.0)):
+			continue
+		var ground: float = _world.ground_height_at(at.x, at.z)
+		if not is_finite(ground) or ground < float(_config.safe_landing.minimum_height_m):
+			continue
+		at.y = ground
+		if absf(_player.global_position.y - at.y) > float(_config.safe_landing.get("maximum_anchor_height_difference_m", 1.5)):
+			continue
+		if not state.has_safe_landing or not state.safe_landing.is_equal_approx(at):
+			state.reach_land(at)
+		return

@@ -18,6 +18,19 @@ func before_each() -> void:
 	log_reader = QUEST_LOG.new()
 
 
+func test_water_guidance_replaces_meadows_and_uses_scoped_completion() -> void:
+	log_reader.set_realm("water")
+	assert_eq(log_reader.tracked_text(progression), "Meet Pell at First Shore.")
+	progression.set_flag("water_swim_lesson_briefed")
+	assert_eq(log_reader.tracked_text(progression), "Swim between the lesson landings.")
+	progression.set_flag("water_swim_lesson_complete")
+	assert_eq(log_reader.tracked_text(progression), "Restore Reedhaven's departure dock.")
+	for row: Dictionary in log_reader.main_entries(progression):
+		assert_true(str(row.scope) in ["player", "world"])
+	log_reader.set_realm("meadows")
+	assert_false(log_reader.tracked_text(progression).contains("Reedhaven"))
+
+
 ## Every rung of the scripted opening, in order, as the sequence director itself
 ## writes them (`OPENING_BEAT_PREFIX + <beat>`, and since OP-0830-4 as history
 ## rather than one at a time). What a test means by "the player has finished the

@@ -101,6 +101,14 @@ static func _definition(id: String, raw: Dictionary, base: Dictionary, errors: A
 			errors.append(id + ": missing " + slot + " move")
 			return {}
 	var look: Dictionary = source.placeholder.duplicate(true)
+	# Combat perks are explicit roster inheritance, independent of whichever
+	# mesh temporarily supplies presentation. Reuse the shipped hook and value.
+	var ability_source_id := str(raw.get("best_creature_source", ""))
+	var ability_source: Variant = base.get(ability_source_id)
+	var ability: Variant = ability_source.get("best_creature") if ability_source is Dictionary else null
+	if not ability is Dictionary or str(ability.get("id", "")).is_empty() or str(ability.get("kind", "")) not in ["survivability", "energy"] or not _positive_number(ability.get("value")):
+		errors.append(id + ": missing valid Best Creature source: " + ability_source_id)
+		return {}
 	var target_height: Variant = presentation.get("target_height_m")
 	if not _positive_number(target_height) or not _positive_number(look.get("height")) or not _positive_number(look.get("radius")):
 		errors.append(id + ": invalid source or target collision dimensions")
@@ -118,7 +126,18 @@ static func _definition(id: String, raw: Dictionary, base: Dictionary, errors: A
 		if raw.has(key):
 			definition[key] = raw[key].duplicate(true) if raw[key] is Dictionary else raw[key]
 	definition.placeholder = look
+	definition.best_creature = ability.duplicate(true)
 	definition.swim_mount = swimming.duplicate(true)
+	if bool(swimming.compatible):
+		var geometries: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_mounts.json"))
+		var geometry: Dictionary = geometries.get("mounts", {}).get(runtime_id(id), {})
+		if geometry.is_empty():
+			errors.append(id + ": missing measured mount geometry")
+			return {}
+		definition.water_mount_geometry = geometry.duplicate(true)
+		definition.rideable = {"can_carry":true, "requires_item":str(swimming.requires_item),
+			"mount_offset":geometry.mount_offset.duplicate(), "ride_speed_multiplier":float(geometry.land_speed_multiplier),
+			"dismount_distance":float(geometry.dismount_distance)}
 	definition.water_board_id = id
 	definition.water_placeholder = {
 		"source_species": source_id,
@@ -126,9 +145,8 @@ static func _definition(id: String, raw: Dictionary, base: Dictionary, errors: A
 		"replacement_binding": ROSTER_PATH + "#species/" + id + "/placeholder/model",
 		"status": str(presentation.get("status", "installed_mesh_placeholder_unrendered")),
 	}
-	# Never inherit moves, perks or land riding from a species borrowed for art.
-	# Existing saddle offsets need physical measurement before a rideable block
-	# is authored. swim_mount is the explicit capability contract for that work.
+	# Riding is authored from Water's measured geometry, never inherited from
+	# the species borrowed for placeholder art.
 	return definition
 
 

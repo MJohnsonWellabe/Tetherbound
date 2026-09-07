@@ -28,17 +28,41 @@ func _single_island() -> Dictionary:
 
 func test_real_island_peaks_and_full_shorelines_match_authored_mass() -> void:
 	assert_eq(_config.get("islands", []).size(), 12)
+	var base_config := _config.duplicate(true)
+	base_config.terrain.erase("trail_grading")
+	var base := FIELD.new(base_config)
 	for island: Dictionary in _config.get("islands", []):
 		var at: Array = island["center_xz_m"]
 		var cx := float(at[0])
 		var cz := float(at[1])
 		var radius := float(island["shore_radius_m"])
-		assert_almost_eq(_field.height_at(cx, cz), float(island["peak_height_m"]), 0.001, island["id"])
+		assert_almost_eq(base.height_at(cx, cz), float(island["peak_height_m"]), 0.001, island["id"])
+		# Roads may cut an interior crown; the distant Veilfall summit remains
+		# untouched because its hike goes around the mountain to the falls.
+		if str(island.id) == "veilfall":
+			assert_almost_eq(_field.height_at(cx, cz), 620.0, 0.001)
 		assert_eq(_field.island_id_at(cx, cz), island["id"])
 		for n in 36:
 			var angle := TAU * float(n) / 36.0
 			assert_almost_eq(_field.height_at(cx + cos(angle) * radius, cz + sin(angle) * radius),
 				_field.water_level(), 0.001, "%s shoreline %d" % [island["id"], n])
+
+
+func test_graded_main_approaches_and_veilfall_hike_have_walkable_centrelines() -> void:
+	# Four other exploratory spines have documented junction defects, so they
+	# deliberately earn no traversal acceptance from this focused assertion.
+	for route: Dictionary in _config.land_routes:
+		if str(route.island_id) not in ["first_shore", "reedhaven", "brine_steps", "tidal_cradle", "salt_crown", "sluice_isle", "veilfall", "gull_rest"]:
+			continue
+		for i in route.polyline.size() - 1:
+			var a: Array = route.polyline[i]
+			var b: Array = route.polyline[i + 1]
+			var steps := maxi(1, ceili(Vector2(float(a[0]) - float(b[0]), float(a[2]) - float(b[2])).length()))
+			for j in steps:
+				var fraction := float(j) / float(steps)
+				var x := lerpf(float(a[0]), float(b[0]), fraction)
+				var z := lerpf(float(a[2]), float(b[2]), fraction)
+				assert_between(_field.slope_degrees_at(x, z, 0.5), 0.0, 35.0, str(route.id))
 
 
 func test_authored_safe_landings_match_data_and_are_gentle() -> void:

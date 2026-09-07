@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "realm_id": "water",
+  "_comment": "Starting combat residency and trainer reward tuning. The runtime must enforce a union of peer neighborhoods, never a single averaged camera. Counts are caps, not proof of encounter density.",
+  "activation_distance_m": 100,
+  "active_wild_cap_per_peer": 16,
+  "wild_respawn_seconds": 240,
+  "trainer_prompt_radius_m": 4.2,
+  "_comment_rewards": "Conservative fixed first-win rewards: ordinary creature battle XP remains production behavior; no additional XP bonus, Skill Candy, realm keys or progression flags are awarded by this adapter. Named pickup rewards retain their authored placement ownership.",
+  "reward_tiers": {
+    "local": {"coins": 45, "items": [{"id": "potion_large", "count": 1}]},
+    "grunt": {"coins": 65, "items": [{"id": "potion_large", "count": 2}]},
+    "officer": {"coins": 110, "items": [{"id": "revive", "count": 1}]},
+    "captain": {"coins": 150, "items": [{"id": "revive", "count": 2}]}
+  }
+}

@@ -1637,8 +1637,9 @@ func _physics_process(delta: float) -> void:
 	_requested_handling = 1.0
 
 
-func register_environment_velocity_modifier(id: StringName, owner: Node, modifier: Callable, order: int = 0) -> bool:
-	return _environment_velocity.register_modifier(id, owner, modifier, order)
+func register_environment_velocity_modifier(id: StringName, owner: Node, modifier: Callable, order: int = 0,
+		additive_axes: Vector3 = Vector3.ONE) -> bool:
+	return _environment_velocity.register_modifier(id, owner, modifier, order, additive_axes)
 
 
 func clear_environment_velocity_modifier(id: StringName) -> void:
