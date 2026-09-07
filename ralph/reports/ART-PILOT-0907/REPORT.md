@@ -50,3 +50,9 @@ thumbnail did not make the defining hooked beak or broad head-to-chest transitio
 legible. No refine or rig request has been submitted. The next attempt is a
 zero-credit multi-angle inspection of the already-downloaded GLB before deciding
 whether the visible defect is real or only the supplied thumbnail angle.
+
+That inspection is now complete and independently rejected; see
+`WORLD-PREVIEW-VERDICT.md` and `world-preview/`. The four views preserve the broad
+raptor silhouette but do not recover the face, feather hierarchy or authored
+palette. No further paid request was submitted. The pilot remains at **20 credits**
+spent and does not proceed to refine or rig.
