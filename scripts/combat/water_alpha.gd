@@ -25,14 +25,19 @@ var _presented_resolution: Dictionary = {}
 var _catch_finish_pending := false
 var _catch_finish_reply: Dictionary = {}
 var last_verdict: Dictionary = {}
+var _challenge_prompt: Node3D
+var _absent_seconds: Dictionary = {}
 
 func _ready() -> void:
 	pass
 
 func _process(_delta: float) -> void:
-	# Exploration streaming and follower ownership belong to the primary
-	# director. Aquaryn advances only in the realm physics step below.
-	pass
+	# Use the shared controller interaction arbiter; never consume an unrelated
+	# NPC/workbench interact press just because Aquaryn is nearby.
+	if _challenge_prompt != null:
+		_challenge_prompt.enabled = not world.simulation_only and not _local_fight \
+			and not _engage_pending and not _manager.is_fighting() \
+			and not get_node("/root/Game").world.flags.has(str(rules.completion_flag))
 
 func build(realm: Node3D, director: Node) -> void:
 	world = realm
@@ -66,6 +71,11 @@ func build(realm: Node3D, director: Node) -> void:
 		body.set_physics_process(false)
 	body.register_environment_velocity_modifier(&"water_alpha", body, body.apply_surface_velocity, 0, Vector3(1, 0, 1))
 	body.strike_ready.connect(_on_alpha_strike)
+	_challenge_prompt = preload("res://scripts/world/interactable.gd").new()
+	body.add_child(_challenge_prompt)
+	_challenge_prompt.position = Vector3.UP * 2
+	_challenge_prompt.configure("Challenge Aquaryn", float(rules.authority.prompt_radius_m), false)
+	_challenge_prompt.activated.connect(request_engage)
 	_manager.exited.connect(_on_alpha_exit)
 	ready_for_intents = true
 	var pending: Dictionary = transport.consume_snapshot()
@@ -139,10 +149,12 @@ func host_commit(intent: Dictionary, peer: int, actor: Dictionary) -> Dictionary
 		"catch_finished":
 			var result: Dictionary = authority.finish_catch(peer, _catch_arbiter, Time.get_ticks_msec())
 			_publish_snapshot()
+			if str(result.get("outcome", "")) == "caught" and not _resolution_published:
+				return {"ok": false, "pending": true, "kind": kind}
 			return {"ok": not result.is_empty(), "kind": kind,
 				"delta": {"caught": str(result.get("outcome", "")) == "caught"}}
 		"disengage":
-			var result: Dictionary = authority.host.leave(authority.encounter_id, peer)
+			var result := _leave_alpha(peer, bool(intent.get("enrollment_declined", false)))
 			_publish_snapshot()
 			return result
 	return _refusal(intent, "That action is not available in this encounter.")
@@ -184,7 +196,7 @@ func _publish_snapshot() -> void:
 	_pose_sequence += 1
 	var snapshot := {"sequence": _pose_sequence, "record": authority.record().duplicate(true),
 		"position": body.global_position, "rotation": body.rotation, "velocity": body.velocity,
-		"phase_index": authority.phase_index, "resolution": authority.resolution.duplicate(true)}
+		"phase_index": authority.phase_index, "resolution": authority.resolution.duplicate(true) if _resolution_published else {}}
 	var game := get_node("/root/Game")
 	var peers: Array = game.session.peers_in_realm("water")
 	if not world.simulation_only and not peers.has(_local_peer_id()):
@@ -198,11 +210,19 @@ func _settle_resolution() -> void:
 	var ledger: RefCounted = ledger_rpc.ledger
 	if not authority.resolution.is_empty() and not _resolution_published:
 		var resolution: Dictionary = authority.resolution
+		var capture: Dictionary = {}
+		if str(resolution.outcome) == "caught":
+			var participant: Dictionary = authority.record().get("participants", {}).get(int(resolution.catcher_peer_id), {})
+			capture = REWARDS.capture_claim(game.world.world_id, str(participant.get("character_id", "")),
+				preload("res://scripts/save/water_capture_codec.gd").encode(body.instance))
 		var verdict: Dictionary = REWARDS.resolve(game, ledger,
-			"won" if str(resolution.outcome) == "defeated" else "caught", resolution.eligible_character_ids)
+			"won" if str(resolution.outcome) == "defeated" else "caught", resolution.eligible_character_ids, capture)
 		if verdict.get("ok", false):
 			ledger_rpc.publish_journaled_delta(verdict.delta)
 			_resolution_published = true
+			if str(resolution.outcome) == "caught":
+				transport.deliver(int(resolution.catcher_peer_id), "verdict", {
+					"kind": "catch_finished", "ok": true, "pending": false, "delta": {"caught": true}})
 	if not game.world.flags.has(str(rules.completion_flag)):
 		return
 	var peers: Array = game.session.peers_in_realm("water")
@@ -229,6 +249,8 @@ func receive_authority(kind: String, payload: Dictionary) -> void:
 			else:
 				get_node("/root/Game").push_world_message(str(payload.get("reason", "Aquaryn is not ready for a challenge.")))
 		elif str(payload.get("kind", "")) == "catch_finished":
+			if payload.get("pending", false):
+				return
 			_catch_finish_reply = {"pending": false, "caught": bool(payload.get("ok", false)) and bool(payload.get("delta", {}).get("caught", false))}
 			_catch_finish_pending = false
 		else:
@@ -273,7 +295,7 @@ func _present_resolution() -> void:
 		_manager._begin_resolve("won")
 
 func request_engage() -> void:
-	if _local_fight or _engage_pending or world.simulation_only:
+	if _local_fight or _engage_pending or world.simulation_only or _manager.is_fighting():
 		return
 	_engage_pending = true
 	var verdict: Dictionary = submit_encounter_intent({"kind": "engage"})
@@ -296,9 +318,11 @@ func _begin_local(rec: Dictionary) -> void:
 	_ally_body = primary.get("_ally_body")
 	_ally = primary.get("_ally")
 	if _ally_body == null:
+		_decline_enrollment(rec)
 		return
 	var party_obj := _party()
 	if not _manager.begin(_player, body, _ally_body, _fight_party(), _camera_rig, party_obj.best(), false, true):
+		_decline_enrollment(rec)
 		return
 	_local_fight = true
 	_encounter = rec
@@ -310,11 +334,39 @@ func _begin_local(rec: Dictionary) -> void:
 		body.strike_ready.disconnect(local_strike)
 	primary._set_exploration_active(false)
 
-func _on_alpha_exit(outcome: String) -> void:
+func _decline_enrollment(rec: Dictionary) -> void:
+	submit_encounter_intent({"kind": "disengage", "encounter_id": str(rec.encounter_id), "enrollment_declined": true})
+
+func _leave_alpha(peer: int, declined: bool = false) -> Dictionary:
+	var participant: Dictionary = authority.record().get("participants", {}).get(peer, {})
+	if declined:
+		authority.eligible_characters.erase(str(participant.get("character_id", "")))
+	_catch_arbiter.release(authority.encounter_id, peer)
+	_absent_seconds.erase(peer)
+	return authority.host.leave(authority.encounter_id, peer)
+
+func _prune_absent_participants(delta: float) -> void:
+	if not authority.resolution.is_empty():
+		return
+	for peer: int in authority.record().get("participants", {}).keys():
+		var actor: Dictionary = transport.get_parent()._water_actor_context(peer, {})
+		var deployed := deployed_body_for(peer)
+		var departed := actor.is_empty() or str(actor.get("realm", "")) != "water"
+		var absent := departed or deployed == null
+		if not absent:
+			absent = deployed.global_position.distance_to(body.global_position) > float(rules.authority.abandon_radius_m)
+		if not absent:
+			_absent_seconds.erase(peer)
+			continue
+		_absent_seconds[peer] = float(_absent_seconds.get(peer, 0.0)) + delta
+		if departed or float(_absent_seconds[peer]) >= float(rules.authority.abandon_grace_s):
+			_leave_alpha(peer)
+
+func _on_alpha_exit(_outcome: String) -> void:
 	if not _local_fight:
 		return
-	if outcome == "caught" and int(_presented_resolution.get("catcher_peer_id", 0)) == _local_peer_id():
-		primary._resolve_catch(body.instance)
+	# The durable character claim owns capture delivery, including reconnect.
+	# The ordinary direct-add seam would duplicate its replayed handover.
 	_local_fight = false
 
 func _on_alpha_strike() -> void:
@@ -353,6 +405,7 @@ func _physics_process(delta: float) -> void:
 	if not ready_for_intents:
 		return
 	if is_alpha_authority():
+		_prune_absent_participants(delta)
 		if str(authority.record().get("phase", "")) == "catching" and _catch_arbiter.owner_of(authority.encounter_id, Time.get_ticks_msec()) == 0:
 			# A disconnected thrower or expired animation acknowledgement cannot
 			# hold all other participants in a permanently paused fight.
@@ -367,7 +420,3 @@ func _physics_process(delta: float) -> void:
 		if _snapshot_clock <= 0:
 			_snapshot_clock = float(rules.authority.snapshot_interval_s)
 			_publish_snapshot()
-	if not world.simulation_only and not _local_fight and Input.is_action_just_pressed("interact"):
-		var deployed := deployed_body_for(_local_peer_id())
-		if deployed != null and deployed.global_position.distance_to(body.global_position) <= float(rules.authority.engage_radius_m):
-			request_engage()

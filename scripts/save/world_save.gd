@@ -51,6 +51,7 @@ const ENVELOPE_KEYS: Array[String] = [
 const STATE_KEYS: Array[String] = [
 	"day", "clock_elapsed_seconds", "world_seed", "placed_buildings", "farm_plots",
 	"death_satchels", "harvested_vegetation", "felled_vegetation",
+	"water_capture_claims",
 ]
 
 var _dir: String

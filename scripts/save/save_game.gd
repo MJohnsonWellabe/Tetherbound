@@ -374,6 +374,8 @@ func snapshot(game: Object) -> Dictionary:
 	var map_obj: Variant = game.get("map")
 	var progression_obj: Variant = game.get("progression")
 	var realm_hearts_obj: Variant = game.get("realm_hearts")
+	var world_obj: Variant = game.get("world")
+	var capture_claims: Variant = world_obj.get("water_capture_claims") if world_obj != null else {}
 	var data := {
 		"version": VERSION,
 		"day": int(game.get("day")),
@@ -383,6 +385,7 @@ func snapshot(game: Object) -> Dictionary:
 		"placed_buildings": WORLD_RECORDS.normalized(game.get("placed_buildings")),
 		"farm_plots": (game.get("farm_plots") as Array).duplicate(true),
 		"death_satchels": WORLD_RECORDS.normalized(game.get("death_satchels")),
+		"water_capture_claims": capture_claims.duplicate(true) if capture_claims is Dictionary else {},
 		"satiety": _read_satiety(game),
 		"map": (map_obj as RefCounted).call("save_data") if map_obj != null else {},
 		"alpha_pins": (map_obj as RefCounted).call("alpha_pin_save_data") if map_obj != null else [],
@@ -447,6 +450,10 @@ func load_slot(game: Object, slot: int) -> bool:
 	game.set("placed_buildings", WORLD_RECORDS.normalized(data.get("placed_buildings", [])))
 	game.set("farm_plots", (data.get("farm_plots", []) as Array).duplicate(true))
 	game.set("death_satchels", WORLD_RECORDS.normalized(data.get("death_satchels", [])))
+	var world_obj: Variant = game.get("world")
+	if world_obj != null:
+		var capture_claims: Variant = data.get("water_capture_claims", {})
+		world_obj.set("water_capture_claims", capture_claims.duplicate(true) if capture_claims is Dictionary else {})
 	game.set("world_seed", int(data.get("world_seed", 0)))
 	var harvested_raw: Variant = data.get("harvested_vegetation", {})
 	game.set("harvested_vegetation", (harvested_raw as Dictionary).duplicate(true) if typeof(harvested_raw) == TYPE_DICTIONARY else {})

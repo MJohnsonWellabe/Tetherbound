@@ -103,13 +103,13 @@ func test_the_two_halves_share_no_state_key() -> void:
 	assert_eq(shared, [], "intersection must be empty, got %s" % str(shared))
 
 
-func test_the_world_half_is_the_ten_keys_its_own_test_pins() -> void:
+func test_the_world_half_matches_the_capture_journal_schema() -> void:
 	# `tests/test_world_state.gd::test_save_data_carries_the_world_half_of_the_v22_keys`
-	# pins `WorldState.save_data()` at exactly ten keys: the eight below plus
+	# pins WorldState at eleven keys: nine below, including capture claims, plus
 	# `world_id` (the file's identity) and `flags` (the split key's world half).
 	# This asserts the SAVER agrees with the STATE object, so the two cannot
 	# drift into writing different world files.
-	assert_eq((WORLD_SAVE.STATE_KEYS as Array).size(), 8,
+	assert_eq((WORLD_SAVE.STATE_KEYS as Array).size(), 9,
 		"got %s" % str(WORLD_SAVE.STATE_KEYS))
 	var partitioned: Dictionary = WORLD_SAVE.partition(_v22())
 	assert_eq(_sorted(partitioned.keys()),

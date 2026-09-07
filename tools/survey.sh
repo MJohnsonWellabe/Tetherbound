@@ -7,16 +7,21 @@ set -uo pipefail
 
 GODOT="${GODOT:-godot}"
 MODE=default
+OUT_ARG=""
+POSITIONAL_COUNT=0
 for arg in "$@"; do
   case "$arg" in
     --water) MODE=water ;;
     --stormwood) MODE=stormwood ;;
-    *) GODOT="$arg" ;;
+    *)
+      if [ "$POSITIONAL_COUNT" -eq 0 ]; then GODOT="$arg"; else OUT_ARG="$arg"; fi
+      POSITIONAL_COUNT=$((POSITIONAL_COUNT + 1))
+      ;;
   esac
 done
 cd "$(dirname "$0")/.."
 if [ "$MODE" = "stormwood" ]; then
-  OUT_DIR="${STORMWOOD_SURVEY_OUT:-${2:-shots/stormwood-foundation}}"
+  OUT_DIR="${STORMWOOD_SURVEY_OUT:-${OUT_ARG:-shots/stormwood-foundation}}"
   mkdir -p "$OUT_DIR"
   LOG_PATH="$OUT_DIR/survey.log"
   STORMWOOD_SURVEY_OUT="$OUT_DIR" "$GODOT" --path . --rendering-driver vulkan --resolution 1280x720 \

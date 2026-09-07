@@ -11,6 +11,7 @@
   "authority": {
     "_comment": "Host validates deployed creature and observed character/realm/position. Client payload contains encounter identity and intent, never HP, phase, participants or reward eligibility.",
     "engage_radius_m": 32.0,
+    "prompt_radius_m": 12.0,
     "abandon_radius_m": 100.0,
     "abandon_grace_s": 8.0,
     "snapshot_interval_s": 0.1

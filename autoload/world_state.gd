@@ -58,6 +58,10 @@ var placed_buildings: Array = []
 var next_building_uid: int = 1
 var farm_plots: Array = []
 var death_satchels: Array = []
+## Host journal for unfinished Aquaryn handovers. These records are not owned
+## creatures or a usable reserve; only the named catcher's five-slot ceremony
+## can consume one. Personal receipts make replay after a lost ack idempotent.
+var water_capture_claims: Dictionary = {}
 var harvested_vegetation: Dictionary = {}
 var felled_vegetation: Dictionary = {}
 
@@ -88,6 +92,7 @@ func reset() -> void:
 	placed_buildings = []
 	farm_plots = []
 	death_satchels = []
+	water_capture_claims = {}
 	harvested_vegetation = {}
 	felled_vegetation = {}
 	revision += 1
@@ -247,6 +252,7 @@ func save_data() -> Dictionary:
 		"placed_buildings": placed_buildings.duplicate(true),
 		"farm_plots": farm_plots.duplicate(true),
 		"death_satchels": death_satchels.duplicate(true),
+		"water_capture_claims": water_capture_claims.duplicate(true),
 		"harvested_vegetation": harvested_vegetation.duplicate(true),
 		"felled_vegetation": felled_vegetation.duplicate(true),
 		"flags": flags.save_data() if flags != null else {},
@@ -273,6 +279,7 @@ func load_data(data: Dictionary) -> void:
 	_migrate_building_uids()
 	farm_plots = _array(data.get("farm_plots", []))
 	death_satchels = _array(data.get("death_satchels", []))
+	water_capture_claims = _dictionary(data.get("water_capture_claims", {}))
 	for index in death_satchels.size():
 		if death_satchels[index] is Dictionary and str(death_satchels[index].get("uid", "")).is_empty():
 			death_satchels[index]["uid"] = "legacy_satchel_%d" % index
