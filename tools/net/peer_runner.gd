@@ -4780,8 +4780,19 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			}
 			var local_card: Dictionary = hub.call("card_for", int(session.call("local_peer_id")))
 			result["local_card"] = {
+				"level": int(local_card.get("level", 0)),
+				"hp": float(local_card.get("hp", 0.0)),
+				"max_hp": float(local_card.get("max_hp", 0.0)),
 				"quick": str(local_card.get("move_quick", "")),
 				"charged": str(local_card.get("move_charged", "")),
+			}
+			var peer_card: Dictionary = hub.call("card_for", peer)
+			result["peer_card"] = {
+				"level": int(peer_card.get("level", 0)),
+				"hp": float(peer_card.get("hp", 0.0)),
+				"max_hp": float(peer_card.get("max_hp", 0.0)),
+				"quick": str(peer_card.get("move_quick", "")),
+				"charged": str(peer_card.get("move_charged", "")),
 			}
 			if fight != null:
 				var record: Dictionary = fight.get("record") as Dictionary

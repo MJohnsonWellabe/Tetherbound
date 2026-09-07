@@ -93,7 +93,14 @@ func _run() -> void:
 	# real Stormwood player acquired at the starter choice. Seed that state via
 	# the opening's production PartySeam before asking the production recall
 	# path to deploy it.
-	var party_seeded := await step(1, "party_grant", {"species": "terrapup"})
+	# This fixture skips the whole Meadows/Cloudreach progression and enters the
+	# chapter at its first authored level-32/33 trainer.  A starter-level (3)
+	# Terrapup is knocked out by Tamsin while the adversarial stale-action checks
+	# run, so the later real button press never has a living actor to execute it.
+	# Give the fixture the chapter-appropriate level a real arriving player has;
+	# HP, damage, cooldowns, movement and every outcome still go through shipping
+	# party/combat code, and the opponent is still host-owned.
+	var party_seeded := await step(1, "party_grant", {"species": "terrapup", "level": 33})
 	check(str(party_seeded.get("verdict", "")) == "PASS",
 		"client owns a real party member before the hosted challenge")
 	if str(party_seeded.get("verdict", "")) != "PASS":
@@ -133,6 +140,8 @@ func _run() -> void:
 		"host owns Tamsin's authored two-member roster at round 0")
 	check(str(client_state.get("local_record", "")) == str((host_state.get("record", {}) as Dictionary).get("id", "")),
 		"client renders the one record minted by the host shell")
+	check(int((host_state.get("peer_card", {}) as Dictionary).get("level", 0)) >= 32,
+		"host retained the client's chapter-ready deployment card")
 
 	# A Meadows peer cannot act on the Stormwood fight even if it knows its id.
 	# This is the wrong-realm attack: sender realm is derived from Session, not a
