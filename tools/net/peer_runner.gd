@@ -658,6 +658,14 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_water_fixture(args)
 		"water_lesson":
 			out = _step_water_lesson()
+		"stormwood_hosted_start":
+			out = await _step_stormwood_hosted_start(args)
+		"stormwood_hosted_fixture_health":
+			out = _step_stormwood_hosted_fixture_health(args)
+		"stormwood_hosted_raw_strike":
+			out = await _step_stormwood_hosted_raw_strike(args)
+		"stormwood_hosted_quick":
+			out = await _step_stormwood_hosted_quick(args)
 		_:
 			out = {"verdict": "ERROR", "detail": "unknown action '%s'" % action}
 	out["frames_used"] = _physics_count - before
@@ -2194,6 +2202,154 @@ func _step_strike(args: Dictionary) -> Dictionary:
 			"code": str(verdict.get("code", "")),
 			"reason": str(verdict.get("reason", "")),
 		}}
+
+
+# --- Stormwood hosted-trainer smoke seams ------------------------------------
+#
+# These four arms deliberately touch the real StormwoodEncounterHub/Session
+# path.  They are test vocabulary only: the fixture can lower the CURRENT
+# host-owned opponent's health, but every round still ends through the real
+# combat_quick input -> hub -> Session -> host validation route.  In
+# particular, no arm advances a roster, writes a defeat flag, or calls finish.
+
+func _stormwood_hub() -> Node:
+	return get_first_node_in_group("stormwood_encounter_hub")
+
+
+func _stormwood_hosted_fight(trainer_id: String) -> Node:
+	var hub := _stormwood_hub()
+	if hub == null:
+		return null
+	var fights: Variant = hub.get("fights")
+	if not (fights is Dictionary):
+		return null
+	var fight: Variant = (fights as Dictionary).get(trainer_id)
+	return fight as Node if fight != null and is_instance_valid(fight) else null
+
+
+## The client stands at the authored trainer and sends the same `start`
+## intent `stormwood_encounter_director.gd::begin_trainer_battle()` sends. The
+## host may be in another realm; it receives this only via Session's realm shell.
+func _step_stormwood_hosted_start(args: Dictionary) -> Dictionary:
+	var hub := _stormwood_hub()
+	var session: Node = root.get_node_or_null(^"Game/Session")
+	var trainer_id := str(args.get("trainer", "tamsin_surge_lesson"))
+	var prepare_only := bool(args.get("prepare_only", false))
+	var request_only := bool(args.get("request_only", false))
+	if hub == null or session == null:
+		return {"verdict": "ERROR", "detail": "no StormwoodEncounterHub/Session"}
+	if bool(session.call("is_host")):
+		return {"verdict": "ERROR", "detail": "stormwood_hosted_start must be sent by the remote client"}
+	if prepare_only and request_only:
+		return {"verdict": "ERROR", "detail": "stormwood_hosted_start cannot prepare and request separately at once"}
+	var cast: Node = hub.get("world").get_node_or_null("StormwoodTrainers")
+	var trainer: Node3D = cast.call("body_for", trainer_id) if cast != null else null
+	var actor: Node3D = hub.call("actor_for", int(session.call("local_peer_id")))
+	if trainer == null or actor == null:
+		return {"verdict": "ERROR", "detail": "missing authored trainer '%s' or client actor" % trainer_id}
+	if not request_only:
+		actor.global_position = trainer.global_position + Vector3(2.0, 0.0, 2.0)
+		if actor is CharacterBody3D:
+			(actor as CharacterBody3D).velocity = Vector3.ZERO
+		# The deployed follower is a separate local body. Move that fixture along
+		# with the trainer before sending `start`: the host's hub validates the
+		# follower, not the visual trainer, and a distant follower would turn this
+		# into a false “host refused the encounter” result.
+		var follower: Node3D = hub.call("body_for", int(session.call("local_peer_id")))
+		if follower == null:
+			return {"verdict": "FAIL", "detail": "client has no deployed follower to bring to '%s'" % trainer_id}
+		follower.global_position = actor.global_position + Vector3(0.0, 0.0, -0.75)
+		if follower.has_method("set"):
+			follower.set("home", follower.global_position)
+		if prepare_only:
+			return {"verdict": "PASS", "detail": "prepared client actor and follower beside '%s'" % trainer_id}
+	hub.call("request_start", trainer_id)
+	var waited := 0
+	var limit := maxi(60, int(args.get("settle", 360)))
+	while waited < limit:
+		if str(hub.get("_local_trainer")) == trainer_id and not str(hub.get("_local_record")).is_empty():
+			return {"verdict": "PASS", "detail": "remote client started hosted trainer '%s' as record '%s'"
+				% [trainer_id, str(hub.get("_local_record"))]}
+		await physics_frame
+		waited += 1
+	return {"verdict": "FAIL", "detail": "hosted trainer '%s' never bound on the client; refusal=%s" % [trainer_id, str(hub.get("last_start_refusal"))]}
+
+
+## TEST FIXTURE ONLY. Run on the host process after a round is live. It lowers
+## only the live opponent HP and the host encounter record together; a real
+## host-validated combat input is still required to kill it and advance.
+func _step_stormwood_hosted_fixture_health(args: Dictionary) -> Dictionary:
+	var session: Node = root.get_node_or_null(^"Game/Session")
+	var trainer_id := str(args.get("trainer", "tamsin_surge_lesson"))
+	if session == null or not bool(session.call("is_host")):
+		return {"verdict": "ERROR", "detail": "fixture health is host-only"}
+	var fight := _stormwood_hosted_fight(trainer_id)
+	if fight == null or bool(fight.get("finished")):
+		return {"verdict": "FAIL", "detail": "no live hosted fight for '%s'" % trainer_id}
+	var opponent: Node3D = fight.get("opponent") as Node3D
+	var instance: Variant = opponent.get("instance") if opponent != null else null
+	var hp := maxf(1.0, float(args.get("hp", 1.0)))
+	if opponent == null or instance == null:
+		return {"verdict": "FAIL", "detail": "host has no live opponent to stage"}
+	(instance as RefCounted).set("hp", hp)
+	var authority: RefCounted = fight.get("authority")
+	var record: Dictionary = fight.get("record") as Dictionary
+	authority.call("set_opponent_hp", str(record.get("encounter_id", "")), hp,
+		float((instance as RefCounted).get("max_hp")))
+	fight.call("_snapshot")
+	return {"verdict": "PASS", "detail": "TEST FIXTURE staged host-owned '%s' round %d to %.1f hp"
+		% [trainer_id, int(fight.get("round_index")), hp]}
+
+
+## Sends intentionally untrusted fields down the same Session RPC as a client.
+## The controller must derive damage/facing from host state and reject a stale
+## action; an invented `realm` must never select or advance another realm's fight.
+func _step_stormwood_hosted_raw_strike(args: Dictionary) -> Dictionary:
+	var hub := _stormwood_hub()
+	var session: Node = root.get_node_or_null(^"Game/Session")
+	if hub == null or session == null:
+		return {"verdict": "ERROR", "detail": "no StormwoodEncounterHub/Session"}
+	var trainer_id := str(args.get("trainer", hub.get("_local_trainer")))
+	var id := str(args.get("encounter_id", hub.get("_local_record")))
+	if trainer_id.is_empty() or id.is_empty():
+		return {"verdict": "FAIL", "detail": "no hosted record to forge against"}
+	var payload: Dictionary = {
+		"kind": "strike_intent", "trainer_id": trainer_id, "encounter_id": id,
+		"slot": str(args.get("slot", "quick")), "move_id": str(args.get("move_id", "forged_move")),
+		"action": int(args.get("action", 1)), "realm": str(args.get("realm", "stormwood")),
+		"damage": float(args.get("damage", 999999.0)),
+		"origin": args.get("origin", [9999.0, 9999.0, 9999.0]),
+		"facing": args.get("facing", [1.0, 0.0, 0.0]),
+	}
+	# Raw fixture requests share the sender's monotonic action stream, so a
+	# later real button press is not accidentally an old fixture action id.
+	hub.set("_action", maxi(int(hub.get("_action")), int(payload.action)))
+	session.call("request_stormwood_encounter", payload)
+	for i in maxi(0, int(args.get("settle", 90))):
+		await physics_frame
+	var manager := _combat_manager()
+	return {"verdict": "PASS", "detail": "sent raw hosted strike action=%d realm=%s; refusal=%s"
+		% [int(payload.action), str(payload.realm), str(manager.get("last_encounter_refusal") if manager != null else {})]}
+
+
+## A real controller press, after the host has had time to receive the client
+## body transform. This is intentionally not `fight.strike()` or a direct call
+## to the hub: it is the combat input path a player uses.
+func _step_stormwood_hosted_quick(args: Dictionary) -> Dictionary:
+	var manager := _combat_manager()
+	if manager == null or not bool(manager.call("is_fighting")):
+		return {"verdict": "FAIL", "detail": "no hosted combat manager fight is live"}
+	var ready_frames := maxi(30, int(args.get("ready_budget", 360)))
+	for i in ready_frames:
+		if bool(manager.call("quick_ready")):
+			var pressed := await _inject("combat_quick", 1)
+			if not bool(pressed.get("ok", false)):
+				return {"verdict": "ERROR", "detail": "could not inject combat_quick: %s" % str(pressed)}
+			for settle in maxi(0, int(args.get("settle", 90))):
+				await physics_frame
+			return {"verdict": "PASS", "detail": "pressed the real hosted combat_quick input"}
+		await physics_frame
+	return {"verdict": "FAIL", "detail": "combat_quick never became ready; did not bypass cooldown"}
 
 
 func _combat_manager() -> Node:
@@ -4571,6 +4727,65 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				},
 				"refusal": bmanager.get("last_encounter_refusal"),
 			}
+		"stormwood_hosted_trainer":
+			# Narrow, serializable readout of the real StormwoodEncounterHub. The
+			# host half reads its shell-owned fight; the client half reads exactly
+			# the record and refusal its local combat presentation received.
+			var shargs: Dictionary = msg.get("args", {}) as Dictionary
+			var trainer_id := str(shargs.get("trainer", "tamsin_surge_lesson"))
+			var hub := _stormwood_hub()
+			var session: Node = root.get_node_or_null(^"Game/Session")
+			if hub == null or session == null:
+				return {"available": false}
+			var fight := _stormwood_hosted_fight(trainer_id)
+			var manager := _combat_manager()
+			var local_record := str(hub.get("_local_record"))
+			var peer := int(shargs.get("peer", 0))
+			var actor: Node3D = hub.call("actor_for", peer)
+			var cast: Node = hub.get("world").get_node_or_null("StormwoodTrainers")
+			var trainer: Node3D = cast.call("body_for", trainer_id) if cast != null else null
+			var result := {
+				"available": true,
+				"is_host": bool(session.call("is_host")),
+				"local_peer_id": int(session.call("local_peer_id")),
+				"trainer": trainer_id,
+				"local_trainer": str(hub.get("_local_trainer")),
+				"local_record": local_record,
+				"fighting": manager != null and bool(manager.call("is_fighting")),
+				"refusal": manager.get("last_encounter_refusal") if manager != null else {},
+				"exists": fight != null,
+				"host_actor_pos": [actor.global_position.x, actor.global_position.y, actor.global_position.z] if actor != null else [],
+				"trainer_pos": [trainer.global_position.x, trainer.global_position.y, trainer.global_position.z] if trainer != null else [],
+			}
+			var local_card: Dictionary = hub.call("card_for", int(session.call("local_peer_id")))
+			result["local_card"] = {
+				"quick": str(local_card.get("move_quick", "")),
+				"charged": str(local_card.get("move_charged", "")),
+			}
+			if fight != null:
+				var record: Dictionary = fight.get("record") as Dictionary
+				var opponent: Node3D = fight.get("opponent") as Node3D
+				var instance: Variant = opponent.get("instance") if opponent != null else null
+				var body: Node3D = hub.call("body_for", peer)
+				result.merge({
+					"record": {
+						"id": str(record.get("encounter_id", "")),
+						"realm": str(record.get("realm", "")),
+						"kind": str(record.get("kind", "")),
+						"phase": str(record.get("phase", "")),
+						"seq": int(record.get("seq", 0)),
+						"participants": (record.get("participants", {}) as Dictionary).keys(),
+						"hp": float((record.get("opponent", {}) as Dictionary).get("hp", -1.0)),
+						"hp_max": float((record.get("opponent", {}) as Dictionary).get("hp_max", -1.0)),
+					},
+					"round": int(fight.get("round_index")),
+					"total": (fight.get("team") as Array).size(),
+					"finished": bool(fight.get("finished")),
+					"opponent_hp": float((instance as RefCounted).get("hp")) if instance != null else -1.0,
+					"opponent_pos": [opponent.global_position.x, opponent.global_position.y, opponent.global_position.z] if opponent != null else [],
+					"host_body_pos": [body.global_position.x, body.global_position.y, body.global_position.z] if body != null else [],
+				}, true)
+			return result
 		"character_restore":
 			# Stage B Wave 8, row 21. The two halves the reconnect smoke has to
 			# tell apart: what this process holds in MEMORY, and what

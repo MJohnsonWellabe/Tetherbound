@@ -65,6 +65,7 @@ signal peer_realm_changed(peer_id: int, from_realm: String, to_realm: String)
 signal snapshot_applied()
 signal stormwood_strike_received(event: Dictionary)
 signal stormwood_arch_arrival(event: Dictionary)
+signal stormwood_encounter_message(event: Dictionary)
 signal session_ended(reason: String)
 
 ## "" (no session), "host" or "client". The single source of truth for
@@ -552,6 +553,42 @@ func request_stormwood_arch_travel(arch_id: String) -> void:
 		_dispatch_stormwood_arch(local_peer_id(), arch_id)
 	elif is_active():
 		rpc_id(HOST_PEER_ID, "_rpc_stormwood_arch_request", arch_id)
+
+
+func request_stormwood_encounter(intent: Dictionary) -> void:
+	if is_host():
+		_dispatch_stormwood_encounter(local_peer_id(), intent)
+	elif is_active():
+		rpc_id(HOST_PEER_ID, "_rpc_stormwood_encounter_request", intent)
+
+
+@rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_stormwood_encounter_request(intent: Dictionary) -> void:
+	if is_host():
+		_dispatch_stormwood_encounter(multiplayer.get_remote_sender_id(), intent)
+
+
+func _dispatch_stormwood_encounter(peer: int, intent: Dictionary) -> void:
+	if realm_of(peer) != "stormwood":
+		return
+	var hub := get_tree().get_first_node_in_group("stormwood_encounter_hub")
+	if hub != null:
+		hub.dispatch(peer, intent)
+
+
+func send_stormwood_encounter(peer: int, event: Dictionary) -> void:
+	if not is_host():
+		return
+	if peer == local_peer_id():
+		stormwood_encounter_message.emit(event.duplicate(true))
+	elif is_active() and realm_of(peer) == "stormwood":
+		rpc_id(peer, "_rpc_stormwood_encounter_message", event)
+
+
+@rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_stormwood_encounter_message(event: Dictionary) -> void:
+	if not is_host():
+		stormwood_encounter_message.emit(event)
 
 
 @rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
