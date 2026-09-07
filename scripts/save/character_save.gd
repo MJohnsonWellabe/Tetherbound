@@ -85,7 +85,11 @@ func path_for(character_id: String) -> String:
 
 
 func has(character_id: String) -> bool:
-	return not character_id.is_empty() and FileAccess.file_exists(ATOMIC_SAVE_FILE.readable_path(path_for(character_id)))
+	return not character_id.is_empty() and ATOMIC_SAVE_FILE.has_readable(path_for(character_id))
+
+
+func delete(character_id: String) -> bool:
+	return not character_id.is_empty() and ATOMIC_SAVE_FILE.delete(path_for(character_id))
 
 
 func list_ids() -> Array:
@@ -157,7 +161,7 @@ static func _flag_ids(raw: Variant) -> Array:
 
 ## Write `payload` (a `partition()` result) as `character_id`'s file.
 ## `envelope` may carry `display_name`, `last_world_id` and `migrated_from`.
-func write(character_id: String, payload: Dictionary, envelope: Dictionary = {}) -> bool:
+func write(character_id: String, payload: Dictionary, envelope: Dictionary = {}, retain_previous: bool = false) -> bool:
 	if character_id.is_empty():
 		return false
 	var dir := dir_for(character_id)
@@ -174,7 +178,7 @@ func write(character_id: String, payload: Dictionary, envelope: Dictionary = {})
 	data["last_played"] = now
 	data["last_world_id"] = str(envelope.get("last_world_id", existing.get("last_world_id", "")))
 	data["migrated_from"] = str(envelope.get("migrated_from", existing.get("migrated_from", "")))
-	if not ATOMIC_SAVE_FILE.new().write(path_for(character_id), JSON.stringify(data, "\t")):
+	if not ATOMIC_SAVE_FILE.new().write(path_for(character_id), JSON.stringify(data, "\t"), retain_previous):
 		push_warning("character save: could not commit %s" % path_for(character_id))
 		return false
 	_envelope_cache[character_id] = _envelope_of(data)

@@ -306,7 +306,11 @@ func slot_path(slot: int) -> String:
 
 
 func has_slot(slot: int) -> bool:
-	return FileAccess.file_exists(ATOMIC_SAVE_FILE.readable_path(slot_path(slot)))
+	return slot >= 0 and slot < SLOT_COUNT and ATOMIC_SAVE_FILE.has_readable(slot_path(slot))
+
+
+func delete_slot(slot: int) -> bool:
+	return slot >= 0 and slot < SLOT_COUNT and ATOMIC_SAVE_FILE.delete(slot_path(slot))
 
 
 ## What a slot list screen needs without loading it onto live state — empty
@@ -348,10 +352,25 @@ func save(game: Object, slot: int, write_split: bool = true) -> bool:
 	DirAccess.make_dir_recursive_absolute(_dir)
 
 	var data := snapshot(game)
-	if not ATOMIC_SAVE_FILE.new().write(slot_path(slot), JSON.stringify(data, "\t")):
-		return false
+	var world_id := _world_id_for(game, slot) if write_split else ""
+	var character_id := _character_id_for(game, slot) if write_split else ""
+	var slot_token := _document_token(slot_path(slot))
+	var world_token: Dictionary = {}
+	var character_token: Dictionary = {}
+	if write_split and _is_host(game):
+		world_token = _document_token(str(_worlds.call("path_for", world_id)))
 	if write_split:
-		_write_split(game, slot, data)
+		character_token = _document_token(str(_characters.call("path_for", character_id)))
+	if not ATOMIC_SAVE_FILE.new().write(slot_path(slot), JSON.stringify(data, "\t"), write_split):
+		return false
+	if not write_split:
+		return true
+	var written: Array[Dictionary] = [slot_token]
+	if not _write_split(game, data, world_id, character_id, world_token, character_token, written):
+		if not _rollback_documents(written):
+			push_error("save slot %d: split write failed and rollback was incomplete" % slot)
+		return false
+	_finish_documents(written)
 	return true
 
 
@@ -556,23 +575,52 @@ func load_slot(game: Object, slot: int) -> bool:
 ## it buys is that no path in the game changed shape while the character half
 ## was being added, so a defect here cannot lose an existing save.
 
-## Write the D100 pair for a slot write. Never fatal: a failed split leaves the
-## slot file -- which is still the one `load_slot()` reads -- untouched and
-## correct.
+## Write the D100 pair for a slot write. A failure is fatal to the save call and
+## the caller restores every already-written document from its retained recovery
+## generation,
+## so the slot, world and character cannot be left at different generations.
 ##
 ## Ownership, exactly as D100 states it: the host writes the world file, EVERY
 ## peer writes its own character file, and a client never writes a world file.
 ## `_is_host()` asks the game, never `multiplayer.is_server()` -- with an
 ## `OfflineMultiplayerPeer` that call is true and `get_unique_id()` is 1, so it
 ## cannot tell a solo player from a host and cannot tell a client from either.
-func _write_split(game: Object, slot: int, data: Dictionary) -> void:
-	var world_id := _world_id_for(game, slot)
-	var character_id := _character_id_for(game, slot)
+func _write_split(game: Object, data: Dictionary, world_id: String, character_id: String,
+		world_token: Dictionary, character_token: Dictionary, written: Array[Dictionary]) -> bool:
 	if _is_host(game):
-		_worlds.call("write", world_id, WORLD_SAVE.partition(data),
-			{"display_name": _display_name(game)})
-	_characters.call("write", character_id, CHARACTER_SAVE.partition(data),
-		{"display_name": _display_name(game), "last_world_id": world_id})
+		if not bool(_worlds.call("write", world_id, WORLD_SAVE.partition(data),
+			{"display_name": _display_name(game)}, true)):
+			return false
+		written.append(world_token)
+	return bool(_characters.call("write", character_id, CHARACTER_SAVE.partition(data),
+		{"display_name": _display_name(game), "last_world_id": world_id}, true)) and _record_written(
+			written, character_token)
+
+
+func _record_written(written: Array[Dictionary], token: Dictionary) -> bool:
+	written.append(token)
+	return true
+
+
+func _document_token(path: String) -> Dictionary:
+	return {"path": path, "had_readable": ATOMIC_SAVE_FILE.has_readable(path)}
+
+
+func _rollback_documents(written: Array[Dictionary]) -> bool:
+	var complete := true
+	for i in range(written.size() - 1, -1, -1):
+		var token := written[i]
+		var restored := ATOMIC_SAVE_FILE.rollback(
+			str(token.get("path", "")), bool(token.get("had_readable", false)))
+		complete = restored and complete
+	return complete
+
+
+func _finish_documents(written: Array[Dictionary]) -> void:
+	for token: Dictionary in written:
+		var path := str(token.get("path", ""))
+		if not ATOMIC_SAVE_FILE.finish(path):
+			push_warning("save: could not remove retained recovery copy for %s" % path)
 
 
 ## Write only this peer's character file. `session.gd::_save_character_here()`
@@ -615,14 +663,23 @@ func _split_legacy_slot(game: Object, slot: int, data: Dictionary) -> void:
 	var world_id := "legacy-slot-%d" % slot
 	var character_id := "legacy-slot-%d" % slot
 	var origin := "slot_%d" % slot
+	var world_existed := bool(_worlds.call("has", world_id))
+	var character_existed := bool(_characters.call("has", character_id))
 	var wrote_world := false
-	if not bool(_worlds.call("has", world_id)):
+	if not world_existed:
 		wrote_world = bool(_worlds.call("write", world_id, WORLD_SAVE.partition(data),
 			{"display_name": _display_name(game), "migrated_from": origin}))
-	if not bool(_characters.call("has", character_id)):
-		_characters.call("write", character_id, CHARACTER_SAVE.partition(data),
+		if not wrote_world:
+			return
+	var wrote_character := false
+	if not character_existed:
+		wrote_character = bool(_characters.call("write", character_id, CHARACTER_SAVE.partition(data),
 			{"display_name": _display_name(game), "migrated_from": origin,
-			 "last_world_id": world_id})
+			 "last_world_id": world_id}))
+		if not wrote_character:
+			if wrote_world:
+				_worlds.call("delete", world_id)
+			return
 	if wrote_world:
 		print("[save] split %s into worlds/%s and characters/%s (original untouched)" % [
 			origin, world_id, character_id,
@@ -1255,9 +1312,10 @@ func _species_moves(species_table: Dictionary, species_id: String) -> Dictionary
 func _read(slot: int) -> Dictionary:
 	if slot < 0 or slot >= SLOT_COUNT:
 		return {}
-	var path := ATOMIC_SAVE_FILE.readable_path(slot_path(slot))
-	if not FileAccess.file_exists(path):
+	var canonical := slot_path(slot)
+	if not ATOMIC_SAVE_FILE.has_readable(canonical):
 		return {}
+	var path := ATOMIC_SAVE_FILE.readable_path(canonical)
 	var file := FileAccess.open(path, FileAccess.READ)
 	if file == null:
 		return {}
