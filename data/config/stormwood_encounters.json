@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "_comment": "Stormwood encounter catalogue only. It declares replaceable placeholder roles and authored positions; runtime injection, visualisation, and playability are separate work.",
+  "_comment": "Stormwood encounter catalogue only. Its authored role and replacement-point schema now names the installed biome roster; runtime injection, visualisation, and playability are separate work.",
   "realm_id": "stormwood",
   "table_count_contract": 12,
   "wild_cluster_count_contract": 330,
@@ -32,19 +32,19 @@
       "roles": [
         {
           "role": "cinder_forager",
-          "placeholder_species": "bramblebun",
+          "placeholder_species": "voltwig",
           "weight": "common",
           "replacement_point": "tables.verge_calm.roles.cinder_forager"
         },
         {
           "role": "edge_scout",
-          "placeholder_species": "pipwing",
+          "placeholder_species": "stormraven",
           "weight": "common",
           "replacement_point": "tables.verge_calm.roles.edge_scout"
         },
         {
           "role": "ash_digger",
-          "placeholder_species": "burrowback",
+          "placeholder_species": "thundertunnel",
           "weight": "uncommon",
           "replacement_point": "tables.verge_calm.roles.ash_digger"
         }
@@ -77,19 +77,19 @@
       "roles": [
         {
           "role": "storm_runner",
-          "placeholder_species": "stormtrail",
+          "placeholder_species": "tanglevolt",
           "weight": "common",
           "replacement_point": "tables.verge_surge.roles.storm_runner"
         },
         {
           "role": "edge_scout",
-          "placeholder_species": "pipwing",
+          "placeholder_species": "stormraven",
           "weight": "uncommon",
           "replacement_point": "tables.verge_surge.roles.edge_scout"
         },
         {
           "role": "glass_lurker",
-          "placeholder_species": "shadelet",
+          "placeholder_species": "glimmermoth",
           "weight": "rare",
           "replacement_point": "tables.verge_surge.roles.glass_lurker"
         }
@@ -122,13 +122,13 @@
       "roles": [
         {
           "role": "pool_drifter",
-          "placeholder_species": "brooktail",
+          "placeholder_species": "mosshock",
           "weight": "common",
           "replacement_point": "tables.hollows_calm.roles.pool_drifter"
         },
         {
           "role": "moss_grazer",
-          "placeholder_species": "meadowhart",
+          "placeholder_species": "mosshock",
           "weight": "common",
           "replacement_point": "tables.hollows_calm.roles.moss_grazer"
         },
@@ -173,13 +173,13 @@
         },
         {
           "role": "night_glider",
-          "placeholder_species": "duskhush",
+          "placeholder_species": "glimmermoth",
           "weight": "uncommon",
           "replacement_point": "tables.hollows_surge.roles.night_glider"
         },
         {
           "role": "pool_ambusher",
-          "placeholder_species": "riftfrill",
+          "placeholder_species": "mosshock",
           "weight": "uncommon",
           "replacement_point": "tables.hollows_surge.roles.pool_ambusher"
         }
@@ -212,7 +212,7 @@
       "roles": [
         {
           "role": "ridge_stalker",
-          "placeholder_species": "frostclaw",
+          "placeholder_species": "tanglevolt",
           "weight": "common",
           "replacement_point": "tables.run_calm.roles.ridge_stalker"
         },
@@ -224,7 +224,7 @@
         },
         {
           "role": "vine_climber",
-          "placeholder_species": "veridian",
+          "placeholder_species": "voltwig",
           "weight": "uncommon",
           "replacement_point": "tables.run_calm.roles.vine_climber"
         }
@@ -257,19 +257,19 @@
       "roles": [
         {
           "role": "storm_runner",
-          "placeholder_species": "stormtrail",
+          "placeholder_species": "tanglevolt",
           "weight": "common",
           "replacement_point": "tables.run_surge.roles.storm_runner"
         },
         {
           "role": "arc_diver",
-          "placeholder_species": "galecrest",
+          "placeholder_species": "stormraven",
           "weight": "uncommon",
           "replacement_point": "tables.run_surge.roles.arc_diver"
         },
         {
           "role": "ridge_stalker",
-          "placeholder_species": "frostclaw",
+          "placeholder_species": "tanglevolt",
           "weight": "uncommon",
           "replacement_point": "tables.run_surge.roles.ridge_stalker"
         }
@@ -302,7 +302,7 @@
       "roles": [
         {
           "role": "crown_keeper",
-          "placeholder_species": "mosshell",
+          "placeholder_species": "staticub",
           "weight": "common",
           "replacement_point": "tables.crown_calm.roles.crown_keeper"
         },
@@ -314,7 +314,7 @@
         },
         {
           "role": "glass_lurker",
-          "placeholder_species": "shadelet",
+          "placeholder_species": "glimmermoth",
           "weight": "rare",
           "replacement_point": "tables.crown_calm.roles.glass_lurker"
         }
@@ -347,13 +347,13 @@
       "roles": [
         {
           "role": "crown_wisp",
-          "placeholder_species": "duskhush",
+          "placeholder_species": "glimmermoth",
           "weight": "common",
           "replacement_point": "tables.crown_surge.roles.crown_wisp"
         },
         {
           "role": "glass_lurker",
-          "placeholder_species": "shadelet",
+          "placeholder_species": "glimmermoth",
           "weight": "uncommon",
           "replacement_point": "tables.crown_surge.roles.glass_lurker"
         },
@@ -392,19 +392,19 @@
       "roles": [
         {
           "role": "giant_rooter",
-          "placeholder_species": "tuskroot",
+          "placeholder_species": "staticub",
           "weight": "common",
           "replacement_point": "tables.deepwood_calm.roles.giant_rooter"
         },
         {
           "role": "canopy_hunter",
-          "placeholder_species": "galecrest",
+          "placeholder_species": "stormraven",
           "weight": "common",
           "replacement_point": "tables.deepwood_calm.roles.canopy_hunter"
         },
         {
           "role": "ember_scavenger",
-          "placeholder_species": "cindercub",
+          "placeholder_species": "staticub",
           "weight": "uncommon",
           "replacement_point": "tables.deepwood_calm.roles.ember_scavenger"
         }
@@ -437,19 +437,19 @@
       "roles": [
         {
           "role": "storm_runner",
-          "placeholder_species": "stormtrail",
+          "placeholder_species": "tanglevolt",
           "weight": "common",
           "replacement_point": "tables.deepwood_surge.roles.storm_runner"
         },
         {
           "role": "night_glider",
-          "placeholder_species": "duskhush",
+          "placeholder_species": "glimmermoth",
           "weight": "uncommon",
           "replacement_point": "tables.deepwood_surge.roles.night_glider"
         },
         {
           "role": "ash_charger",
-          "placeholder_species": "ashtusk",
+          "placeholder_species": "stormbrush",
           "weight": "uncommon",
           "replacement_point": "tables.deepwood_surge.roles.ash_charger"
         }
@@ -482,13 +482,13 @@
       "roles": [
         {
           "role": "fence_prowler",
-          "placeholder_species": "shadelet",
+          "placeholder_species": "tanglevolt",
           "weight": "common",
           "replacement_point": "tables.dynamo_calm.roles.fence_prowler"
         },
         {
           "role": "conduit_gnawer",
-          "placeholder_species": "nightburrow",
+          "placeholder_species": "thundertunnel",
           "weight": "common",
           "replacement_point": "tables.dynamo_calm.roles.conduit_gnawer"
         },
@@ -527,7 +527,7 @@
       "roles": [
         {
           "role": "arc_diver",
-          "placeholder_species": "galecrest",
+          "placeholder_species": "stormraven",
           "weight": "common",
           "replacement_point": "tables.dynamo_surge.roles.arc_diver"
         },
@@ -539,7 +539,7 @@
         },
         {
           "role": "ash_charger",
-          "placeholder_species": "ashtusk",
+          "placeholder_species": "stormbrush",
           "weight": "uncommon",
           "replacement_point": "tables.dynamo_surge.roles.ash_charger"
         }
@@ -4849,7 +4849,7 @@
       ],
       "level": 38,
       "behavior_profile": "CHARGER",
-      "placeholder_species": "sparkit",
+      "placeholder_species": "voltarach",
       "replacement_point": "named_encounters.hollows_alpha_placeholder",
       "catchable": true,
       "once_only": true
@@ -4864,7 +4864,7 @@
       ],
       "level": 40,
       "behavior_profile": "DIVER",
-      "placeholder_species": "stormtrail",
+      "placeholder_species": "voltarach",
       "replacement_point": "named_encounters.capacitor_alpha_placeholder",
       "catchable": true,
       "once_only": true
@@ -4879,7 +4879,7 @@
       ],
       "level": 41,
       "behavior_profile": "WALL",
-      "placeholder_species": "mosshell",
+      "placeholder_species": "staticub",
       "replacement_point": "named_encounters.crown_guardian_placeholder",
       "catchable": true,
       "once_only": true
@@ -4894,7 +4894,7 @@
       ],
       "level": 43,
       "behavior_profile": "ACE",
-      "placeholder_species": "frostclaw",
+      "placeholder_species": "tanglevolt",
       "replacement_point": "named_encounters.old_rodfolk_hall_guardian_placeholder",
       "catchable": true,
       "once_only": true
@@ -4909,7 +4909,7 @@
       ],
       "level": 43,
       "behavior_profile": "CURRENT",
-      "placeholder_species": "riftfrill",
+      "placeholder_species": "mosshock",
       "replacement_point": "named_encounters.blackwater_elder_placeholder",
       "catchable": true,
       "once_only": true
@@ -4924,7 +4924,7 @@
       ],
       "level": 42,
       "behavior_profile": "CHARGER",
-      "placeholder_species": "ashtusk",
+      "placeholder_species": "voltarach",
       "replacement_point": "named_encounters.glass_field_alpha_placeholder",
       "catchable": true,
       "once_only": true
@@ -4939,7 +4939,7 @@
       5470
     ],
     "level": 44,
-    "placeholder_species": "sparkit",
+    "placeholder_species": "fulgocobra",
     "scale": 1.8,
     "colourway": "alpha_stormheart",
     "replacement_point": "legendary_placeholder.stormheart_placeholder",

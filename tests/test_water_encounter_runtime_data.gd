@@ -33,7 +33,6 @@ func test_complete_counts_and_namespaced_board_species_without_story_leak() -> v
 		assert_eq(result.board_to_runtime[board], CATALOG.runtime_id(board))
 func test_trainer_levels_rewards_and_unique_defeat_flags_preserve_content() -> void:
 	var flags: Dictionary = {}
-	var retained_exceptions: Dictionary = {}
 	for authored: Dictionary in characters.trainers:
 		var spec: Dictionary = result.trainer_specs[authored.id]
 		assert_eq(spec.name, authored.display_name)
@@ -48,13 +47,7 @@ func test_trainer_levels_rewards_and_unique_defeat_flags_preserve_content() -> v
 			assert_eq(spec.team[index].level, authored.team[index].level)
 			assert_true(spec.team[index].trainer_owned)
 			var source := str(authored.team[index].species)
-			if source in ["brooktail", "galecrest"]:
-				retained_exceptions[source] = true
-				assert_eq(spec.team[index].species, source)
-			else:
-				assert_eq(spec.team[index].species, CATALOG.runtime_id(source))
-	assert_true(retained_exceptions.has("brooktail"))
-	assert_true(retained_exceptions.has("galecrest"))
+			assert_eq(spec.team[index].species, CATALOG.runtime_id(source))
 	assert_eq(result.encounter_config.active_wild_cap_per_peer, 16)
 	assert_eq(result.encounter_config.activation_distance_m, 100)
 func test_positions_are_regrounded_and_existing_npc_bodies_are_reused() -> void:
