@@ -1,0 +1,289 @@
+﻿Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+OpenGL API 3.3.0 Core Profile Context 24.10.21.03.240627 - Compatibility - Using Device: ATI Technologies Inc. - AMD Radeon Graphics
+
+[playground] spawned at 0.0, 2.9, 0.0
+[vegetation] grass field is on; 440646 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=220730 mark_harvestable=346 group_by_model=293 register_mesh_assets=121 build_batches_total=3280 (of which harvest_points[57770 nodes]=1818, initial_collision_stream[52661 solid]=137) update_mmis=590
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 3 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=RID(13013750906937) region_map=1024 entries
+[playground] scattered 385333 props in 36 batches (57770 harvestable, 0 already chopped, 389/52661 collision resident)
+[water] pond quads 2538, stream points 46, reeds 188, marginals 32, bank flowers 72, rocks 40, driftwood 5, lilypads 54, jetty 18, level -17.0
+[water] stream bank reeds 77, bank scrub 12
+[water] river quads 390, bank reeds 130, bank scrub 60
+[village] placed 25 structures
+[props] placed 267 props in 37 clusters (6 usable rest points)
+[village_npcs] placed 17 of 19
+[relay_site] placed 5 of 5
+[pond_npc] placed 1 of 1
+[trainers] placed 21 trainer(s)
+[quarry] 2 foundations, 4 pylons standing
+[relay] station at 350, 3760: 4 wall runs, 2 decks, 1 ramps, 10 pylons
+[river] 18 course segments, 18 recovery volumes
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+[playground] placed 139 harvest nodes
+[playground] placed 6 farm plots
+[warrens] cleared 660 scattered trees/rocks inside the 30m site radius
+[warrens] planted 104 pieces of ground cover around the site
+[warrens] placed 5 accent boulders around the mound
+[warrens] placed 3 mouth dome pieces (earth over the entrance)
+[warrens] placed 12 entrance dressing pieces (fern ring / hood)
+[warrens] placed 2 spoil mounds around the entrance
+[warrens] 181 pieces of interior rock across 5 chambers
+[warrens] 188 structural members across 5 chambers
+[approach-drain] 690 drained quads over the approach corridor
+[stronghold] approach ramp: 11.3m of rise over 40m (16 degrees)
+[stronghold] 407 structural members across 5 spaces
+[stronghold] hall massing exterior lift: 1.30x height on 17/18 module(s)
+[stronghold] massing grounded: 17 of 35 module foot shaft(s) to skirt y=-18.0
+[stronghold] waist: 3 inter-chamber gap(s) wrapped on both flanks
+[trainers] placed 3 trainer(s) for group 'stronghold'
+[stronghold] cleared 205 scattered prop(s) standing inside the five spaces
+[stronghold] 21 exterior omni light(s) at the Hall (budget 22), 11 of them flickering fires
+[stronghold] 5 spaces on the route (outer_works -> courtyard -> tether_approach -> warden_arena -> legendary_chamber), floor y=6.17, 3 gauntlet trainer(s), 15 approach pylon(s)
+[trainers] placed 1 trainer(s) for group 'stronghold_climax'
+[locations] world up, boot settled
+WARN site node StrongholdSilhouette is not in the tree
+[grass_field] now following rendering camera '@Camera3D@65118'
+[locations] clock pinned to day and frozen
+[01-village] day
+  01-village-approach        day   eye(27, 2.0, -31)  25 creatures, 15 people within 160m  cam-player 7.5m
+  01-village-standing        day   eye(10, 0.9, -16)  29 creatures, 15 people within 160m  cam-player 3.6m
+  01-village-twins           day   eye(-12, 1.2, -21)  29 creatures, 15 people within 160m  cam-player 15.2m
+  01-village-grandpa-yard    day   eye(-9, 1.2, -15)  29 creatures, 15 people within 160m  cam-player 3.6m
+  01-village-tournament      day   eye(14, 0.9, 5)  31 creatures, 15 people within 160m  cam-player 3.6m
+  01-village-route-out       day   eye(14, -0.5, 20)  31 creatures, 15 people within 160m  cam-player 3.9m
+[02-mill-pond] day
+  WARN no collision under (-330, 492); analytic -14.37 may be under the surface
+  WARN no collision under (-320, 484); analytic -11.62 may be under the surface
+  02-mill-pond-approach      day   eye(-330, -12.6, 492)  24 creatures, 3 people within 160m  cam-player 17.7m
+  02-mill-pond-standing      day   eye(-388, -16.5, 526)  16 creatures, 2 people within 160m  cam-player 3.4m
+  02-mill-pond-wheel         day   eye(-390, -16.5, 512)  19 creatures, 2 people within 160m  cam-player 5.7m
+[03-quarry] day
+  WARN no collision under (368, 1832); analytic 6.21 may be under the surface
+  WARN no collision under (363, 1837); analytic 6.05 may be under the surface
+  WARN no collision under (400, 1800); analytic -0.50 may be under the surface
+  03-quarry-approach         day   eye(368, 8.0, 1832)  10 creatures, 0 people within 160m  cam-player 6.8m
+  03-quarry-standing         day   eye(400, 0.3, 1803)  10 creatures, 1 people within 160m  cam-player 3.3m
+  03-quarry-conduit-head     day   eye(399, -0.3, 1809)  10 creatures, 0 people within 160m  cam-player 4.0m
+[04-warrens] day
+  WARN no collision under (-334, 2587); analytic 3.91 may be under the surface
+  WARN no collision under (-329, 2582); analytic 4.29 may be under the surface
+  04-warrens-approach        day   eye(-334, 11.1, 2587)  31 creatures, 1 people within 160m  cam-player 7.9m
+  04-warrens-standing        day   eye(-356, 4.1, 2609)  32 creatures, 1 people within 160m  cam-player 3.6m
+  04-warrens-den             day   eye(-385, 4.1, 2638)  34 creatures, 1 people within 160m  cam-player 2.7m
+[05-relay-camp] day
+  WARN no collision under (213, 3648); analytic -4.18 may be under the surface
+  WARN no collision under (208, 3643); analytic -4.87 may be under the surface
+  WARN no collision under (241, 3674); analytic -3.88 may be under the surface
+  05-relay-camp-approach     day   eye(213, -2.4, 3648)  16 creatures, 2 people within 160m  cam-player 7.4m
+  05-relay-camp-standing     day   eye(238, -3.9, 3670)  19 creatures, 9 people within 160m  cam-player 3.7m
+  05-relay-camp-fire         day   eye(237, -1.8, 3678)  20 creatures, 9 people within 160m  cam-player 3.0m
+[06-relay] day
+  06-relay-approach          day   eye(339, 8.7, 3777)  21 creatures, 9 people within 160m  cam-player 5.1m
+  06-relay-standing          day   eye(344, 6.1, 3765)  21 creatures, 9 people within 160m  cam-player 3.7m
+  06-relay-apparatus         day   eye(355, 4.6, 3746)  17 creatures, 9 people within 160m  cam-player 3.6m
+  06-relay-road              day   eye(350, 4.4, 3760)  20 creatures, 9 people within 160m  cam-player 7.5m
+[07-mill-crossing] day
+  WARN no collision under (-168, 4160); analytic -5.20 may be under the surface
+  WARN no collision under (-172, 4154); analytic -5.68 may be under the surface
+  WARN no collision under (-152, 4187); analytic -2.00 may be under the surface
+  07-mill-crossing-approach  day   eye(-168, -3.4, 4160)  29 creatures, 0 people within 160m  cam-player 7.5m
+  07-mill-crossing-standing  day   eye(-150, -2.0, 4192)  28 creatures, 0 people within 160m  cam-player 3.6m
+  07-mill-crossing-yard      day   eye(-144, -3.1, 4212)  25 creatures, 1 people within 160m  cam-player 1.0m
+[08-ridge-camp] day
+  WARN no collision under (-258, 6450); analytic 2.02 may be under the surface
+  WARN no collision under (-263, 6445); analytic 0.96 may be under the surface
+  WARN no collision under (-236, 6472); analytic 2.45 may be under the surface
+  08-ridge-camp-approach     day   eye(-258, 3.8, 6450)  18 creatures, 2 people within 160m  cam-player 7.3m
+  08-ridge-camp-standing     day   eye(-237, 2.7, 6468)  18 creatures, 2 people within 160m  cam-player 3.8m
+  NOTE (-230,6471) was occupied by _Node3D_60688_Collision; landing moved 2.0m aside
+  08-ridge-camp-fire         day   eye(-231, 2.6, 6469)  19 creatures, 2 people within 160m  cam-player 4.0m
+[09-waystop] day
+  WARN no collision under (-44, 7440); analytic 2.74 may be under the surface
+  WARN no collision under (-49, 7435); analytic 2.55 may be under the surface
+  09-waystop-approach        day   eye(-44, 4.5, 7440)  30 creatures, 1 people within 160m  cam-player 7.6m
+  09-waystop-standing        day   eye(-29, 2.6, 7454)  26 creatures, 1 people within 160m  cam-player 3.9m
+  NOTE (-23,7454) was occupied by _Node3D_60940_Collision; landing moved 2.0m aside
+  09-waystop-bench           day   eye(-24, 1.4, 7452)  26 creatures, 1 people within 160m  cam-player 3.2m
+[10-stronghold] day
+  10-stronghold-approach     day   eye(8, 4.1, 7397)  36 creatures, 1 people within 160m  cam-player 13.7m
+  10-stronghold-gate         day   eye(8, -5.1, 7507)  22 creatures, 1 people within 160m  cam-player 3.6m
+  10-stronghold-courtyard    day   eye(8, 6.2, 7592)  9 creatures, 1 people within 160m  cam-player 3.6m
+  10-stronghold-gate-face    day   eye(8, 4.2, 7540)  15 creatures, 1 people within 160m  cam-player 3.3m
+[11-castle-landmark] day
+  11-castle-landmark-hall-400m day   eye(8, 1.7, 7153)  38 creatures, 1 people within 160m  cam-player 27.7m
+  11-castle-landmark-hall-200m day   eye(8, -4.3, 7353)  40 creatures, 1 people within 160m  cam-player 28.8m
+  11-castle-landmark-hall-100m day   eye(8, -2.8, 7453)  34 creatures, 1 people within 160m  cam-player 12.1m
+[locations] clock pinned to night and frozen
+[01-village] night
+  WARN no collision under (27, -31); analytic 0.16 may be under the surface
+  WARN no collision under (31, -36); analytic -0.31 may be under the surface
+  01-village-approach        night eye(27, 2.0, -31)  25 creatures, 15 people within 160m  cam-player 7.5m
+  01-village-standing        night eye(10, 0.9, -16)  29 creatures, 15 people within 160m  cam-player 3.6m
+  01-village-twins           night eye(-12, 1.2, -21)  29 creatures, 15 people within 160m  cam-player 15.2m
+  01-village-grandpa-yard    night eye(-9, 1.2, -15)  28 creatures, 15 people within 160m  cam-player 3.6m
+  01-village-tournament      night eye(14, 0.9, 5)  28 creatures, 15 people within 160m  cam-player 3.6m
+  01-village-route-out       night eye(14, -0.5, 20)  28 creatures, 15 people within 160m  cam-player 3.9m
+[05-relay-camp] night
+  WARN no collision under (213, 3648); analytic -4.18 may be under the surface
+  WARN no collision under (208, 3643); analytic -4.87 may be under the surface
+  WARN no collision under (241, 3674); analytic -3.88 may be under the surface
+  05-relay-camp-approach     night eye(213, -2.4, 3648)  16 creatures, 2 people within 160m  cam-player 7.4m
+  05-relay-camp-standing     night eye(238, -3.9, 3670)  19 creatures, 9 people within 160m  cam-player 3.7m
+  05-relay-camp-fire         night eye(237, -1.8, 3678)  20 creatures, 9 people within 160m  cam-player 3.0m
+[08-ridge-camp] night
+  WARN no collision under (-258, 6450); analytic 2.02 may be under the surface
+  WARN no collision under (-263, 6445); analytic 0.96 may be under the surface
+  WARN no collision under (-236, 6472); analytic 2.45 may be under the surface
+  08-ridge-camp-approach     night eye(-258, 3.8, 6450)  18 creatures, 2 people within 160m  cam-player 7.3m
+  08-ridge-camp-standing     night eye(-237, 2.7, 6468)  18 creatures, 2 people within 160m  cam-player 3.8m
+  NOTE (-230,6471) was occupied by _Node3D_60688_Collision; landing moved 2.0m aside
+  08-ridge-camp-fire         night eye(-231, 2.6, 6469)  19 creatures, 2 people within 160m  cam-player 4.0m
+[10-stronghold] night
+  WARN no collision under (8, 7397); analytic 2.26 may be under the surface
+  WARN no collision under (8, 7385); analytic 2.81 may be under the surface
+  10-stronghold-approach     night eye(8, 4.1, 7397)  36 creatures, 1 people within 160m  cam-player 13.7m
+  10-stronghold-gate         night eye(8, -5.1, 7507)  22 creatures, 1 people within 160m  cam-player 3.6m
+  10-stronghold-courtyard    night eye(8, 6.2, 7592)  9 creatures, 1 people within 160m  cam-player 3.6m
+  10-stronghold-gate-face    night eye(8, 4.2, 7540)  15 creatures, 1 people within 160m  cam-player 3.3m
+
+locations survey: 54 frames written, 0 failed, into res://shots/locations
+Software rendering under the Compatibility renderer: composition,
+density and silhouette are trustworthy; frame times are not a
+performance measurement.
+
+--- stderr ---
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+   GDScript backtrace (most recent call first):
+       [0] _build_terrain (res://scripts/world/playground_world.gd:773)
+       [1] _ready (res://scripts/world/playground_world.gd:529)
+WARNING: Terrain3DTextureAsset#6722:set_albedo_texture:79: Texture 'meadow_grass_Color' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_texture_list (res://scripts/world/playground_world.gd:957)
+       [1] _apply_ground_materials (res://scripts/world/playground_world.gd:797)
+       [2] _ready (res://scripts/world/playground_world.gd:548)
+WARNING: Terrain3DTextureAsset#6722:set_normal_texture:100: Texture 'meadow_grass_NormalGL' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_texture_list (res://scripts/world/playground_world.gd:960)
+       [1] _apply_ground_materials (res://scripts/world/playground_world.gd:797)
+       [2] _ready (res://scripts/world/playground_world.gd:548)
+WARNING: Terrain3DTextureAsset#9898:set_albedo_texture:79: Texture 'verge_grass_Color' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_texture_list (res://scripts/world/playground_world.gd:957)
+       [1] _apply_ground_materials (res://scripts/world/playground_world.gd:797)
+       [2] _ready (res://scripts/world/playground_world.gd:548)
+WARNING: Terrain3DTextureAsset#9898:set_normal_texture:100: Texture 'verge_grass_NormalGL' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_texture_list (res://scripts/world/playground_world.gd:960)
+       [1] _apply_ground_materials (res://scripts/world/playground_world.gd:797)
+       [2] _ready (res://scripts/world/playground_world.gd:548)
+WARNING: Terrain3DTextureAsset#1765:set_albedo_texture:79: Texture 'rock_scree_Color' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_texture_list (res://scripts/world/playground_world.gd:957)
+       [1] _apply_ground_materials (res://scripts/world/playground_world.gd:797)
+       [2] _ready (res://scripts/world/playground_world.gd:548)
+WARNING: Terrain3DTextureAsset#1765:set_normal_texture:100: Texture 'rock_scree_NormalGL' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_texture_list (res://scripts/world/playground_world.gd:960)
+       [1] _apply_ground_materials (res://scripts/world/playground_world.gd:797)
+       [2] _ready (res://scripts/world/playground_world.gd:548)
+WARNING: Terrain3DTextureAsset#8758:set_albedo_texture:79: Texture 'dirt_path_Color' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_texture_list (res://scripts/world/playground_world.gd:957)
+       [1] _apply_ground_materials (res://scripts/world/playground_world.gd:797)
+       [2] _ready (res://scripts/world/playground_world.gd:548)
+WARNING: Terrain3DTextureAsset#8758:set_normal_texture:100: Texture 'dirt_path_NormalGL' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_texture_list (res://scripts/world/playground_world.gd:960)
+       [1] _apply_ground_materials (res://scripts/world/playground_world.gd:797)
+       [2] _ready (res://scripts/world/playground_world.gd:548)
+WARNING: Terrain3DTextureAsset#5754:set_albedo_texture:79: Texture 'wet_earth_Color' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_texture_list (res://scripts/world/playground_world.gd:957)
+       [1] _apply_ground_materials (res://scripts/world/playground_world.gd:797)
+       [2] _ready (res://scripts/world/playground_world.gd:548)
+WARNING: Terrain3DTextureAsset#5754:set_normal_texture:100: Texture 'wet_earth_NormalGL' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_texture_list (res://scripts/world/playground_world.gd:960)
+       [1] _apply_ground_materials (res://scripts/world/playground_world.gd:797)
+       [2] _ready (res://scripts/world/playground_world.gd:548)
+WARNING: Terrain3DTextureAsset#9870:set_albedo_texture:79: Texture 'forest_floor_Color' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_texture_list (res://scripts/world/playground_world.gd:957)
+       [1] _apply_ground_materials (res://scripts/world/playground_world.gd:797)
+       [2] _ready (res://scripts/world/playground_world.gd:548)
+WARNING: Terrain3DTextureAsset#9870:set_normal_texture:100: Texture 'forest_floor_NormalGL' has no mipmaps. Change on the Import panel if desired.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_texture_list (res://scripts/world/playground_world.gd:960)
+       [1] _apply_ground_materials (res://scripts/world/playground_world.gd:797)
+       [2] _ready (res://scripts/world/playground_world.gd:548)
+WARNING: scatter anchor at (-58.0, 199.0) placed 1 of 3 in 36 attempts
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _place_anchor (res://scripts/world/scatter_rules.gd:453)
+       [1] placements_for (res://scripts/world/scatter_rules.gd:261)
+       [2] all_placements (res://scripts/world/scatter_rules.gd:1568)
+       [3] build (res://scripts/world/vegetation.gd:366)
+       [4] _dress_the_meadow (res://scripts/world/playground_world.gd:1022)
+       [5] _ready (res://scripts/world/playground_world.gd:565)
+WARNING: scatter anchor at (2.0, 47.0) placed 3 of 4 in 48 attempts
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _place_anchor (res://scripts/world/scatter_rules.gd:453)
+       [1] placements_for (res://scripts/world/scatter_rules.gd:261)
+       [2] all_placements (res://scripts/world/scatter_rules.gd:1568)
+       [3] build (res://scripts/world/vegetation.gd:366)
+       [4] _dress_the_meadow (res://scripts/world/playground_world.gd:1022)
+       [5] _ready (res://scripts/world/playground_world.gd:565)
+WARNING: scatter anchor at (-10.0, 1318.0) placed 5 of 8 in 96 attempts
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _place_anchor (res://scripts/world/scatter_rules.gd:453)
+       [1] placements_for (res://scripts/world/scatter_rules.gd:261)
+       [2] all_placements (res://scripts/world/scatter_rules.gd:1568)
+       [3] build (res://scripts/world/vegetation.gd:366)
+       [4] _dress_the_meadow (res://scripts/world/playground_world.gd:1022)
+       [5] _ready (res://scripts/world/playground_world.gd:565)
+WARNING: scatter anchor at (-248.74, 6462.9) placed 0 of 2 in 24 attempts
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _place_anchor (res://scripts/world/scatter_rules.gd:453)
+       [1] placements_for (res://scripts/world/scatter_rules.gd:261)
+       [2] all_placements (res://scripts/world/scatter_rules.gd:1568)
+       [3] build (res://scripts/world/vegetation.gd:366)
+       [4] _dress_the_meadow (res://scripts/world/playground_world.gd:1022)
+       [5] _ready (res://scripts/world/playground_world.gd:565)
+WARNING: [grass_field] the rendering camera (@Camera3D@65118) is not the one bind() was given (Camera3D); following the rendering one. In a CAPTURE this is expected -- see _follow_camera. In GAMEPLAY it means the ground is being dressed around the wrong eye.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _follow_camera (res://scripts/world/grass_field.gd:1661)
+       [1] _process (res://scripts/world/grass_field.gd:2053)
+WARNING: _capture_locations.gd: 11-castle-landmark-hall-400m-day stands 27.7m from the player (max 20.0m) -- Terrain3D streaming may be degraded for this frame
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _shoot (res://tools/_capture_locations.gd:597)
+WARNING: _capture_locations.gd: 11-castle-landmark-hall-200m-day stands 28.8m from the player (max 20.0m) -- Terrain3D streaming may be degraded for this frame
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _shoot (res://tools/_capture_locations.gd:597)
+

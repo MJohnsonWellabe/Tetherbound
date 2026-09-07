@@ -1,0 +1,106 @@
+﻿Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+OpenGL API 3.3.0 Core Profile Context 24.10.21.03.240627 - Compatibility - Using Device: ATI Technologies Inc. - AMD Radeon Graphics
+
+[session] hosting on udp/27015 (cap 4, channels 2); local peer id 1
+[lan] advertising udp/27016 for a session on udp/27015
+[trainers] spawning a body for peer 1 at (0.0, 0.0)
+[trainers] built Trainer_1 for peer 1, authority 1 (this peer is 1)
+[trainers] Trainer_1 stands up: authority 1, this peer is 1 (our own proxy)
+[playground] spawned at 0.0, 2.9, 0.0
+[scatter bake] load phases (ms): read[256 regions, 386489 placements, 440646 skipped]=1751 reorder[16 layers]=429
+[vegetation] grass field is on; 440646 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=2451 mark_harvestable=72 group_by_model=365 register_mesh_assets=88 build_batches_total=3235 (of which harvest_points[57770 nodes]=1688, initial_collision_stream[52661 solid]=131) update_mmis=573
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 3 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=RID(16488379449418) region_map=1024 entries
+[playground] scattered 385333 props in 36 batches (57770 harvestable, 0 already chopped, 389/52661 collision resident)
+[water] pond quads 2538, stream points 46, reeds 188, marginals 32, bank flowers 72, rocks 40, driftwood 5, lilypads 54, jetty 18, level -17.0
+[water] stream bank reeds 77, bank scrub 12
+[water] river quads 390, bank reeds 130, bank scrub 60
+[village] placed 25 structures
+[props] placed 267 props in 37 clusters (6 usable rest points)
+[village_npcs] placed 17 of 19
+[relay_site] placed 5 of 5
+[pond_npc] placed 1 of 1
+[trainers] placed 21 trainer(s)
+--res://assets/environment/team_tether/hall/banner_cloth.gdshader--
+  112 |  
+  113 |  
+E 114->  const float E = 0.09;
+  115 |  float dx = wave(cloth + vec2(E, 0.0), TIME) - wave(cloth - vec2(E, 0.0), TIME);
+  116 |  float dy = wave(cloth + vec2(0.0, E), TIME) - wave(cloth - vec2(0.0, E), TIME);
+[south_bridge_dressing] placed 1 of 1
+[quarry] 2 foundations, 4 pylons standing
+[relay] station at 350, 3760: 4 wall runs, 2 decks, 1 ramps, 10 pylons
+[river] 18 course segments, 18 recovery volumes
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+[playground] placed 198 harvest nodes
+[playground] placed 6 farm plots
+[playground] placed 127 band pickups (0 already taken, 27 nudged off scatter, 0 unclear, 0 without ground)
+[warrens] 38 interior earth skins across 5 walls-clad chamber(s) and the passages
+[warrens] cleared 764 scattered trees/rocks inside the 30m site radius and the chambers
+[warrens] hero clearing: removed 1360 more scattered pieces out to 55m (was 30m) so no background tree competes with the mound
+[warrens] bank cap closes the dome over the throat (230 quads)
+[warrens] planted 20 pieces of ground cover around the site
+[warrens] earth bank 63x90m, crest 17.5m above the mouth (9.7x the 1.8m trainer); chamber clearance past the required 1.5m: mouth +11.8m, hall +2.8m, warren +3.5m, den +2.9m, vault +4.7m (worst 2.8m)
+[warrens] 4 flora pieces beside the mouth
+[warrens] mouth brow: displaced earth collar, 31 x 8 in the bank's own shader
+[warrens] 2 root masses over the mouth (meshes, not tubes)
+[warrens] trodden threshold fan 8m out from the mouth
+[warrens] 6 warren holes dressed on the bank
+[warrens] 2 root strands on the bank
+[warrens] 6 root masses on the bank face (meshes, not tubes)
+[warrens] 7 claw scrapes beside the mouth
+[warrens] 5 crest trees standing on the bank
+[warrens] placed 4 accent boulders at the bank's own foot
+[warrens] 3 rock outcrops protruding from the dug face and flanks
+[warrens] scattered 78 rubble pieces across the face foot, spoil fans and threshold
+[warrens] 167 pieces of growth on the bank
+[warrens] 159 pieces of interior rock across 5 chambers
+[warrens] 162 structural members across 5 chambers
+[warrens] 13 root masses
+[warrens] 8 fungus clusters, 3 species
+[warrens] 40 litter pieces
+[warrens] 6 haze cards
+[warrens] guardian carries an alert bearing (neck -30, head -12, spine -7 deg)
+[warrens] guardian idle faces the den's entrance passage (yaw -167.5 deg)
+[approach-drain] 690 drained quads over the approach corridor
+[stronghold] approach ramp: 11.3m of rise over 40m (16 degrees)
+[stronghold] 407 structural members across 5 spaces
+[stronghold] hall massing exterior lift: 1.30x height on 17/18 module(s)
+[stronghold] massing grounded: 17 of 35 module foot shaft(s) to skirt y=-18.0
+[stronghold] waist: 3 inter-chamber gap(s) wrapped on both flanks
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 78.7), enclosing LargeTower
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 78.7), enclosing _MeshInstance3D_65905
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 101.7), enclosing _MeshInstance3D_65906
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 101.7), enclosing _MeshInstance3D_65907
+[stronghold] tower pier in legendary_chamber: 5.0 x 5.1 m at local (-43.5, 78.7), enclosing PointyTower
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-20.0, 102.2), enclosing _MeshInstance3D_65908
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-44.0, 102.2), enclosing _MeshInstance3D_65909
+[stronghold] tower pier in legendary_chamber: 3.5 x 3.6 m at local (-19.7, 77.9), enclosing _MeshInstance3D_65910
+[stronghold] 8 tower pier(s) enclosing massing that reached inside a roofed chamber
+[stronghold] 87 interior dressing prop(s) in the roofed rooms
+[trainers] placed 3 trainer(s) for group 'stronghold'
+[stronghold] cleared 205 scattered prop(s) standing inside the five spaces
+[stronghold] 21 exterior omni light(s) at the Hall (budget 22), 11 of them flickering fires
+[stronghold] 5 spaces on the route (outer_works -> courtyard -> tether_approach -> warden_arena -> legendary_chamber), floor y=6.17, 3 gauntlet trainer(s), 15 approach pylon(s)
+[trainers] placed 1 trainer(s) for group 'stronghold_climax'
+[climax] the freed stand is 6.00 m from the machine's axis, inside its 6.19 m plinth on that bearing; moved out to 8.69 m
+[climax] the legendary stands inside the machine: dais 3.13 m up, void 5.76 m tall, body 4.39 m, headroom 1.37 m
+
+--- stderr ---
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+SHADER ERROR: Redefinition of 'E'.
+   at: (null) (res://assets/environment/team_tether/hall/banner_cloth.gdshader:114)
+ERROR: Shader compilation failed.
+   at: set_code (drivers/gles3/storage/material_storage.cpp:3116)
+WARNING: EXPORT-CHECK terrain=yes ground_at_spawn=0.90 player_y=2.90 props=383004
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+

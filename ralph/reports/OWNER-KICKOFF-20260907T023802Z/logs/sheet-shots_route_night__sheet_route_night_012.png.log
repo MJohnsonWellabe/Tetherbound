@@ -1,0 +1,22 @@
+﻿Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+12 tiles -> res://shots_route_night/_sheet_route_night_012.png  (1916x1478)
+reading order, left to right, top to bottom:
+  1. band4_02960m
+  2. band4_03040m
+  3. band4_03120m
+  4. band4_03200m
+  5. band4_03280m
+  6. band4_03360m
+  7. band5_00000m
+  8. band5_00080m
+  9. band5_00160m
+  10. band5_00240m
+  11. band5_00320m
+  12. band5_00400m
+
+Software rendering, Compatibility renderer. See tools/survey.sh for what
+these frames can and cannot be used to judge.
+
+--- stderr ---
+

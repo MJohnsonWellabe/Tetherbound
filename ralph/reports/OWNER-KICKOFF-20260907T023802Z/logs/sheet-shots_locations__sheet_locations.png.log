@@ -1,0 +1,64 @@
+﻿Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+54 tiles -> res://shots/locations/_sheet_locations.png  (1916x6602)
+reading order, left to right, top to bottom:
+  1. 01-village-approach-day
+  2. 01-village-approach-night
+  3. 01-village-grandpa-yard-day
+  4. 01-village-grandpa-yard-night
+  5. 01-village-route-out-day
+  6. 01-village-route-out-night
+  7. 01-village-standing-day
+  8. 01-village-standing-night
+  9. 01-village-tournament-day
+  10. 01-village-tournament-night
+  11. 01-village-twins-day
+  12. 01-village-twins-night
+  13. 02-mill-pond-approach-day
+  14. 02-mill-pond-standing-day
+  15. 02-mill-pond-wheel-day
+  16. 03-quarry-approach-day
+  17. 03-quarry-conduit-head-day
+  18. 03-quarry-standing-day
+  19. 04-warrens-approach-day
+  20. 04-warrens-den-day
+  21. 04-warrens-standing-day
+  22. 05-relay-camp-approach-day
+  23. 05-relay-camp-approach-night
+  24. 05-relay-camp-fire-day
+  25. 05-relay-camp-fire-night
+  26. 05-relay-camp-standing-day
+  27. 05-relay-camp-standing-night
+  28. 06-relay-apparatus-day
+  29. 06-relay-approach-day
+  30. 06-relay-road-day
+  31. 06-relay-standing-day
+  32. 07-mill-crossing-approach-day
+  33. 07-mill-crossing-standing-day
+  34. 07-mill-crossing-yard-day
+  35. 08-ridge-camp-approach-day
+  36. 08-ridge-camp-approach-night
+  37. 08-ridge-camp-fire-day
+  38. 08-ridge-camp-fire-night
+  39. 08-ridge-camp-standing-day
+  40. 08-ridge-camp-standing-night
+  41. 09-waystop-approach-day
+  42. 09-waystop-bench-day
+  43. 09-waystop-standing-day
+  44. 10-stronghold-approach-day
+  45. 10-stronghold-approach-night
+  46. 10-stronghold-courtyard-day
+  47. 10-stronghold-courtyard-night
+  48. 10-stronghold-gate-day
+  49. 10-stronghold-gate-face-day
+  50. 10-stronghold-gate-face-night
+  51. 10-stronghold-gate-night
+  52. 11-castle-landmark-hall-100m-day
+  53. 11-castle-landmark-hall-200m-day
+  54. 11-castle-landmark-hall-400m-day
+
+Software rendering, Compatibility renderer. See tools/survey.sh for what
+these frames can and cannot be used to judge.
+
+--- stderr ---
+

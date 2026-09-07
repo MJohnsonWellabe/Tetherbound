@@ -1,0 +1,83 @@
+{
+  "blocked": "predicted cost 15335 s (4.3 h) exceeds the 14400 s ceiling: 289897 planned frames at a MEASURED 0.053 s/frame on this box. The protocol's waits are not the problem -- they exist so fights resolve -- so this segment needs a GPU or a split evidence lane, not a shorter wait. X07 stopped at step 184 of 266 for exactly this, ~15 hours in. NOTE this number is the EMPTY TREE price and is the optimistic one: the re-price after each boot is the honest one.",
+  "captures": {
+    "absent": 0,
+    "delegated": [
+      "GF-11-UPPER-01",
+      "GF-18-MAP-02",
+      "GF-05-MEADOW-02",
+      "GF-14-COMBAT-12a",
+      "GF-19-UI-09",
+      "GF-11-UPPER-02",
+      "GF-14-COMBAT-04d"
+    ],
+    "delegated_to": "S08C",
+    "owes": [],
+    "planned": 0,
+    "present": 0,
+    "rows": []
+  },
+  "complete": false,
+  "cost": {
+    "frame_cost_s": 0.052898,
+    "reprices": []
+  },
+  "derailed": "",
+  "derailed_at": "",
+  "derails": [],
+  "disk": {},
+  "disk_actual": {
+    "frame_bytes": 0,
+    "largest_evidence_png_bytes": 0,
+    "preflight_self_test_png_bytes": 0,
+    "shot_bytes": 0,
+    "total_bytes": 0
+  },
+  "evidence_lane": "logic",
+  "frames": {
+    "absent": 0,
+    "absent_reasons": {},
+    "baseline_hz": 0.0,
+    "delegated_windows": [],
+    "written": 0
+  },
+  "git_check": "not run",
+  "harness_errors": [
+    "capture pre-flight BLOCKER: predicted cost 15335 s (4.3 h) exceeds the 14400 s ceiling: 289897 planned frames at a MEASURED 0.053 s/frame on this box. The protocol's waits are not the problem -- they exist so fights resolve -- so this segment needs a GPU or a split evidence lane, not a shorter wait. X07 stopped at step 184 of 266 for exactly this, ~15 hours in. NOTE this number is the EMPTY TREE price and is the optimistic one: the re-price after each boot is the honest one."
+  ],
+  "preflight": {
+    "allow_no_capture": false,
+    "capture_available": true,
+    "capture_lane": "S08C",
+    "capture_requested": false,
+    "delegated_captures": 7,
+    "display_server": "Windows",
+    "evidence_lane": "logic",
+    "freeze_record": {
+      "claim": "X11 under xvfb-run",
+      "from": "C:/Users/mattj/AppData/Local/Tetherbound/repo/ralph/reports/gate-f-candidate/RUN_METADATA.json",
+      "key": "display_server",
+      "lane": "(all lanes; the record declares none)"
+    },
+    "measured_frame_cost_s": 0.052898,
+    "planned_captures": 0,
+    "predicted_frames": 289897,
+    "predicted_segment_cost_s": 15334.9,
+    "record_baseline_hz": 0.0,
+    "verdict": "BLOCKER",
+    "why": "predicted cost 15335 s (4.3 h) exceeds the 14400 s ceiling: 289897 planned frames at a MEASURED 0.053 s/frame on this box. The protocol's waits are not the problem -- they exist so fights resolve -- so this segment needs a GPU or a split evidence lane, not a shorter wait. X07 stopped at step 184 of 266 for exactly this, ~15 hours in. NOTE this number is the EMPTY TREE price and is the optimistic one: the re-price after each boot is the honest one."
+  },
+  "run_id": "gate-f-run-20260907T023802Z-owner",
+  "segment": "S08",
+  "sha": "75bb1dc7db36fb4452a746410f45e9ac77699300",
+  "steps": {
+    "delegated": 0,
+    "fail": 0,
+    "pass": 0,
+    "ran": 0,
+    "refused": 0,
+    "skipped": 0,
+    "total": 150
+  },
+  "uncommittable": []
+}

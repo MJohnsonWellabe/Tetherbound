@@ -1,0 +1,21 @@
+﻿Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+OpenGL API 3.3.0 Core Profile Context 24.10.21.03.240627 - Compatibility - Using Device: ATI Technologies Inc. - AMD Radeon Graphics
+
+Movie Maker mode enabled, recording movie in 1920├ù1080 @ 30 FPS...
+gate-f harness ERROR: capture pre-flight BLOCKER: predicted cost 15335 s (4.3 h) exceeds the 14400 s ceiling: 289897 planned frames at a MEASURED 0.053 s/frame on this box. The protocol's waits are not the problem -- they exist so fights resolve -- so this segment needs a GPU or a split evidence lane, not a shorter wait. X07 stopped at step 184 of 266 for exactly this, ~15 hours in. NOTE this number is the EMPTY TREE price and is the optimistic one: the re-price after each boot is the honest one.
+--------------------------------------------------------------------------------
+Done recording movie at path: C:\Users\mattj\AppData\Local\Tetherbound\runs\20260907T023802Z\video\S08.avi
+20 frames at 30 FPS (movie length: 00:00:00:20), recorded in 00:00:02 (50% of real-time speed).
+CPU render time: 0.00 seconds (average: 0.08 ms/frame)
+GPU render time: 0.00 seconds (average: 0.08 ms/frame)
+Encoding time: 0.28 seconds (average: 13.83 ms/frame)
+--------------------------------------------------------------------------------
+
+--- stderr ---
+ERROR: gate-f harness: capture pre-flight BLOCKER: predicted cost 15335 s (4.3 h) exceeds the 14400 s ceiling: 289897 planned frames at a MEASURED 0.053 s/frame on this box. The protocol's waits are not the problem -- they exist so fights resolve -- so this segment needs a GPU or a split evidence lane, not a shorter wait. X07 stopped at step 184 of 266 for exactly this, ~15 hours in. NOTE this number is the EMPTY TREE price and is the optimistic one: the re-price after each boot is the honest one.
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _harness_error (res://tools/gate_f/operator_harness.gd:6609)
+       [1] _preflight_capture (res://tools/gate_f/operator_harness.gd:1140)
+       [2] _measure_frame_cost (res://tools/gate_f/operator_harness.gd:1419)
+
