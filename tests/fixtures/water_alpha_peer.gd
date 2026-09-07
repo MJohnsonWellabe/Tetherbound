@@ -63,7 +63,13 @@ func _execute_probe(msg: Dictionary) -> Variant:
 	var game := root.get_node("Game")
 	var alpha := root.get_node_or_null("WaterArchipelago/WaterAlpha")
 	if alpha == null or not alpha.ready_for_intents:
-		return {"ready": false, "current_realm": game.current_realm}
+		# A host folds its simulation shell as soon as the last Water peer
+		# leaves. No Alpha node is the strongest possible cleanup result; report
+		# its observable semantics explicitly instead of letting probe defaults
+		# misdescribe an absent service as a live target and locked claim.
+		return {"ready": false, "service_absent": alpha == null,
+			"current_realm": game.current_realm, "record": {},
+			"has_target": false, "catch_owner": 0}
 	var rec: Dictionary = alpha.authority.record() if game.is_host() else alpha.encounter_record()
 	var at: Vector3 = alpha.body.global_position
 	var player_at: Vector3 = alpha.world.local_rig().global_position

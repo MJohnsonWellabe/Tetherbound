@@ -17,7 +17,11 @@ func _process(delta: float) -> void:
 	if _poll > 0:
 		return
 	_poll = 1.0
-	var game := get_node("/root/Game")
+	var game := get_node_or_null("/root/Game")
+	# The persistent ledger transport processes while Game is between worlds,
+	# and pure unit fixtures may never create player/world state at all.
+	if game == null or game.get("world") == null or game.get("local") == null:
+		return
 	if not _active.is_empty() and (game.pending_catch == null or str(_active.world_id) != game.world.world_id \
 			or str(_active.character_id) != game.local.character_id):
 		_active = {}

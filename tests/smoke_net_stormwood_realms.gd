@@ -52,7 +52,6 @@ func _run() -> void:
 			check(str(visible.get("verdict", "")) == "PASS",
 				"peer %d sees replicated world flag %s" % [peer, flag])
 
-	var host_fog_before: Variant = await probe(0, "map_fog")
 	var crossed: Dictionary = await step(1, "enter_realm", {"realm": STORMWOOD},
 		REALM_STEP_BUDGET)
 	check(str(crossed.get("verdict", "")) == "PASS",
@@ -79,6 +78,11 @@ func _run() -> void:
 	check(host_log.find("STORMWOOD READY realm=stormwood shell=true terrain_regions=108") >= 0,
 		"Stormwood shell built the production Terrain3D 108-region footprint")
 
+	# Take both baselines around the action under test. The earlier version took
+	# the host baseline before the client crossed and before the Stormwood shell
+	# spent several seconds building; the host's own normal spawn reveal could
+	# therefore change during setup and be blamed on the client's later walk.
+	var host_fog_before: Variant = await probe(0, "map_fog")
 	var client_fog_before: Variant = await probe(1, "map_fog")
 	var explored: Dictionary = await step(1, "explore_at", {"at": [-350, 450], "settle": 180})
 	check(str(explored.get("verdict", "")) == "PASS", "client discovers its Stormwood map locally")

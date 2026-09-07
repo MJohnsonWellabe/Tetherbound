@@ -142,7 +142,10 @@ func _accept_satchel_recovery(verdict: Dictionary) -> void:
 
 func reconcile_satchel_escrow() -> void:
 	var game := _game()
-	if game == null:
+	# This transport is process-always and can outlive/reset ahead of Game's
+	# per-world state. Unit runners also mount it without constructing a world.
+	# Escrow has nothing to reconcile until both halves exist.
+	if game == null or game.get("local") == null or game.get("world") == null:
 		return
 	var session: Node = game.get("session")
 	if session != null and session.has_method("snapshot_ready") and not bool(session.call("snapshot_ready")):
