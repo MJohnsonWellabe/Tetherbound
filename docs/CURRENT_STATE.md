@@ -1,12 +1,16 @@
+> **Owner stopped execution on 2026-09-07.** Current pickup document: [Stormwood exit handoff](../ralph/reports/STORMWOOD-PROGRESS/EXIT-HANDOFF-2026-09-07.md). Hosted-combat work remains uncommitted and unproven; the last network smoke failed at remote trainer start. Latest edits were not rerun. No build/test process remains active.
+
 # Current state — evidence-backed, 2026-09-06
 
 ## Stormwood Stage A — resumed 2026-09-07, incomplete
 
 Stormwood foundation and opening/field interactions landed through PR #76 at
-`4562268dee581d2f2ce167a4670bbf752f139310`. PR #77 adds constructed Crown roads,
-heartstone progression and electric TMs; it is pending CI and merge. The chapter
-does not yet run end to end: named guardians, host-owned remote encounter starts,
-the mounted Dynamo and legendary/Spark/Waterward ending remain unfinished. The
+`4562268dee581d2f2ce167a4670bbf752f139310`. PR #77's constructed Crown roads,
+heartstone progression and electric TMs merged at
+`ba8a66fbfe823c439a3adea268d00fce0199fff7` after CI run `34122979345` completed
+its code jobs green, including all four unit shards and five multiplayer shards.
+The chapter does not yet run end to end: named guardians, host-owned remote
+encounter starts, the mounted Dynamo and legendary/Spark/Waterward ending remain unfinished. The
 project ships the Compatibility renderer; the survey tool had incorrectly forced
 Vulkan. A corrected Compatibility production-scene survey emitted eight frames at
 `D:/CodexWork/stormwood-crown-compatibility`, and a separate compositor made `_sheet.png`.
