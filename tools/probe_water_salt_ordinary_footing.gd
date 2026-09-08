@@ -3,6 +3,9 @@ extends SceneTree
 ## Focused production-footing evidence for the three rejected Salt Crown
 ## ordinary ecology sites. Explicit player poses are diagnostic setup; this
 ## does not claim route continuity or visibility acceptance.
+## Optional --site=id[,id] reuses this exact diagnostic for another rejected
+## Water site. Historical SALT_ORDINARY log tags remain for existing consumers;
+## each record carries the actual selected site ID.
 const SAVE := preload("res://scripts/save/save_game.gd")
 const WILD := preload("res://scripts/creatures/wild_creature.gd")
 const TARGET_IDS: Array[String] = [
@@ -18,6 +21,15 @@ func _init() -> void:
 
 func _run() -> void:
 	await process_frame
+	var target_ids: Array[String] = TARGET_IDS.duplicate()
+	for argument in OS.get_cmdline_user_args():
+		if argument.begins_with("--site="):
+			target_ids.clear()
+			for id in argument.trim_prefix("--site=").split(",", false):
+				target_ids.append(id)
+	if target_ids.is_empty():
+		_fail("An explicit footing target list must not be empty")
+		return
 	var game := root.get_node("Game")
 	game.save_system = SAVE.new("user://water_salt_ordinary_footing_%d/" % Time.get_ticks_usec())
 	game.reset_for_new_game()
@@ -37,9 +49,9 @@ func _run() -> void:
 	var sites: Dictionary = {}
 	var support_failures: Array[String] = []
 	for site: Dictionary in director.encounter_config.get("wild_sites", []):
-		if str(site.id) in TARGET_IDS:
+		if str(site.id) in target_ids:
 			sites[str(site.id)] = site
-	for id: String in TARGET_IDS:
+	for id: String in target_ids:
 		if not sites.has(id):
 			_fail("Salt ordinary footing target is absent: " + id)
 			return
@@ -83,7 +95,7 @@ func _run() -> void:
 
 	# The unchanged production loop owns the actual admission verdict.
 	director.set_process(true)
-	for id: String in TARGET_IDS:
+	for id: String in target_ids:
 		var centre := _vector3((sites[id] as Dictionary).position)
 		player.global_position = centre + Vector3.UP * 2.0
 		for frame in 30:
@@ -91,7 +103,7 @@ func _run() -> void:
 	var spawned: Dictionary = director.get("_site_spawned")
 	var failures: Dictionary = director.get("_site_failures")
 	var rejected: Array[String] = support_failures.duplicate()
-	for id: String in TARGET_IDS:
+	for id: String in target_ids:
 		var site: Dictionary = sites[id]
 		var members: Array = director.get("_site_members").get(id, [])
 		var ok := spawned.has(id) and not failures.has(id) and members.size() == int(site.count)
@@ -100,7 +112,7 @@ func _run() -> void:
 			"members": members.size(), "expected": int(site.count)}))
 		if not ok:
 			rejected.append(id)
-	print("SALT_ORDINARY_SUMMARY ", JSON.stringify({"sites": TARGET_IDS.size(),
+	print("SALT_ORDINARY_SUMMARY ", JSON.stringify({"sites": target_ids.size(),
 		"all_table_species_supported": support_failures.is_empty(),
 		"failures": rejected}))
 	quit(0 if rejected.is_empty() else 1)
