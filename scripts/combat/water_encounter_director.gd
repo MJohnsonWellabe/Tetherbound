@@ -220,6 +220,15 @@ func _spawn_available_sites() -> void:
 			if wild != null:
 				wild.set_meta("water_site_id", id)
 				wild.set_meta("water_placement_mode", str(site.get("placement_mode", "ground")))
+				# ROAD pairs are authored sightline ecology, not combat gates. Water
+				# owns this admission loop instead of Cloudreach's, so carry over the
+				# same narrow player/wild exception here; terrain, other wild bodies,
+				# attacks and named encounters retain their normal collisions.
+				if str(plan.id).is_empty() \
+						and not str(site.get("_why_road_visibility_0907", "")).is_empty() \
+						and wild is CollisionObject3D and _player is CollisionObject3D:
+					keep_trainer_corridor_clear(wild as CollisionObject3D,
+						_player as CollisionObject3D)
 				if not str(plan.id).is_empty():
 					# Named identity has to reach both the exploration prompt (the
 					# body) and combat/catch presentation (the live instance).

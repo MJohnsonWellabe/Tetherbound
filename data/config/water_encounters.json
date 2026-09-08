@@ -7290,14 +7290,14 @@
       "region_id": "veilfall",
       "table_id": "water_veilfall_land",
       "island_local_offset": [
-        90.431,
-        143.111,
-        -231.766
+        88.866,
+        142.968,
+        -235.97
       ],
       "position": [
-        290.431,
-        143.111,
-        3908.234
+        288.866,
+        142.968,
+        3904.03
       ],
       "count": 2,
       "radius_m": 3.0,
@@ -7340,14 +7340,14 @@
       "region_id": "veilfall",
       "table_id": "water_veilfall_land",
       "island_local_offset": [
-        157.541,
-        81.104,
-        -109.491
+        161.702,
+        81.788,
+        -109.252
       ],
       "position": [
-        357.541,
-        81.104,
-        4030.509
+        361.702,
+        81.788,
+        4030.748
       ],
       "count": 2,
       "radius_m": 3.0,
@@ -7365,14 +7365,14 @@
       "region_id": "veilfall",
       "table_id": "water_veilfall_land",
       "island_local_offset": [
-        161.383,
-        122.147,
-        3.679
+        157.222,
+        122.831,
+        3.44
       ],
       "position": [
-        361.383,
-        122.147,
-        4143.679
+        357.222,
+        122.831,
+        4143.44
       ],
       "count": 2,
       "radius_m": 3.0,
@@ -7390,14 +7390,14 @@
       "region_id": "veilfall",
       "table_id": "water_veilfall_land",
       "island_local_offset": [
-        144.586,
-        163.189,
-        115.662
+        148.748,
+        163.873,
+        115.901
       ],
       "position": [
-        344.586,
-        163.189,
-        4255.662
+        348.748,
+        163.873,
+        4255.901
       ],
       "count": 2,
       "radius_m": 3.0,
@@ -7415,14 +7415,14 @@
       "region_id": "veilfall",
       "table_id": "water_veilfall_land",
       "island_local_offset": [
-        50.049,
-        189.228,
-        126.988
+        53.087,
+        189.102,
+        123.684
       ],
       "position": [
-        250.049,
-        189.228,
-        4266.988
+        253.087,
+        189.102,
+        4263.684
       ],
       "count": 2,
       "radius_m": 3.0,
@@ -7465,14 +7465,14 @@
       "region_id": "veilfall",
       "table_id": "water_veilfall_land",
       "island_local_offset": [
-        64.741,
-        190.483,
-        140.5
+        67.78,
+        190.357,
+        137.195
       ],
       "position": [
-        264.741,
-        190.483,
-        4280.5
+        267.78,
+        190.357,
+        4277.195
       ],
       "count": 2,
       "radius_m": 3.0,
@@ -7515,14 +7515,14 @@
       "region_id": "veilfall",
       "table_id": "water_veilfall_land",
       "island_local_offset": [
-        86.78,
-        192.365,
-        160.767
+        89.819,
+        192.239,
+        157.462
       ],
       "position": [
-        286.78,
-        192.365,
-        4300.767
+        289.819,
+        192.239,
+        4297.462
       ],
       "count": 2,
       "radius_m": 3.0,
@@ -7565,14 +7565,14 @@
       "region_id": "veilfall",
       "table_id": "water_veilfall_land",
       "island_local_offset": [
-        108.819,
-        194.247,
-        181.033
+        111.858,
+        194.122,
+        177.729
       ],
       "position": [
-        308.819,
-        194.247,
-        4321.033
+        311.858,
+        194.122,
+        4317.729
       ],
       "count": 2,
       "radius_m": 3.0,
@@ -7615,14 +7615,14 @@
       "region_id": "veilfall",
       "table_id": "water_veilfall_land",
       "island_local_offset": [
-        130.858,
-        196.129,
-        201.3
+        133.896,
+        196.004,
+        197.996
       ],
       "position": [
-        330.858,
-        196.129,
-        4341.3
+        333.896,
+        196.004,
+        4337.996
       ],
       "count": 2,
       "radius_m": 3.0,
@@ -7640,14 +7640,14 @@
       "region_id": "veilfall",
       "table_id": "water_veilfall_land",
       "island_local_offset": [
-        -30.675,
-        181.699,
-        37.84
+        -33.714,
+        181.573,
+        41.144
       ],
       "position": [
-        169.325,
-        181.699,
-        4177.84
+        166.286,
+        181.573,
+        4181.144
       ],
       "count": 2,
       "radius_m": 3.0,
@@ -7665,14 +7665,14 @@
       "region_id": "veilfall",
       "table_id": "water_veilfall_land",
       "island_local_offset": [
-        -126.262,
-        174.17,
-        -35.147
+        -123.223,
+        174.045,
+        -38.451
       ],
       "position": [
-        73.738,
-        174.17,
-        4104.853
+        76.777,
+        174.045,
+        4101.549
       ],
       "count": 2,
       "radius_m": 3.0,
@@ -7690,14 +7690,14 @@
       "region_id": "veilfall",
       "table_id": "water_veilfall_land",
       "island_local_offset": [
-        -133.913,
-        160.272,
-        -148.249
+        -135.478,
+        160.129,
+        -152.453
       ],
       "position": [
-        66.087,
-        160.272,
-        3991.751
+        64.522,
+        160.129,
+        3987.547
       ],
       "count": 2,
       "radius_m": 3.0,
@@ -7715,14 +7715,14 @@
       "region_id": "veilfall",
       "table_id": "water_veilfall_land",
       "island_local_offset": [
-        -137.741,
-        160.272,
-        -158.531
+        -128.679,
+        159.555,
+        -157.118
       ],
       "position": [
-        62.259,
-        160.272,
-        3981.469
+        71.321,
+        159.555,
+        3982.882
       ],
       "count": 2,
       "radius_m": 3.0,
@@ -7765,14 +7765,14 @@
       "region_id": "veilfall",
       "table_id": "water_veilfall_land",
       "island_local_offset": [
-        -184.479,
-        163.847,
-        -141.132
+        -182.914,
+        163.704,
+        -136.928
       ],
       "position": [
-        15.521,
-        163.847,
-        3998.868
+        17.086,
+        163.704,
+        4003.072
       ],
       "count": 2,
       "radius_m": 3.0,
@@ -7815,14 +7815,14 @@
       "region_id": "veilfall",
       "table_id": "water_veilfall_land",
       "island_local_offset": [
-        -25.569,
-        151.691,
-        -200.29
+        -24.004,
+        151.548,
+        -196.086
       ],
       "position": [
-        174.431,
-        151.691,
-        3939.71
+        175.996,
+        151.548,
+        3943.914
       ],
       "count": 2,
       "radius_m": 3.0,

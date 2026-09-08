@@ -24,7 +24,8 @@ const PROBES := {
 	"veilfall": {
 		"route": "veilfall_exploration_spine",
 		"prefix": "road_visibility_veilfall_exploration_spine_",
-		"repairs": ["03"],
+		"repairs": ["03", "05", "06", "07", "08", "10", "12", "14",
+			"16", "17", "18", "19", "20", "22", "24"],
 	},
 }
 
