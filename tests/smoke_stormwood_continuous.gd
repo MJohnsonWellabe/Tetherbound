@@ -20,7 +20,7 @@ const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
 
-const TEST_SAVE_DIR := "user://stormwood_continuous_chapter_entry"
+const TEST_SAVE_DIR_PREFIX := "user://stormwood_continuous_chapter_entry"
 const SCENE_WAIT_FRAMES := 7200
 # The eight-minute prefix cap was measured too small after the segment grew into
 # Act II: it expired after pair B's first endpoint, with 1,536.8 authored metres
@@ -62,9 +62,14 @@ func _run() -> void:
 		game = GAME.new()
 		game.name = "Game"
 		root.add_child(game)
+	# Bind every invocation to a fresh split-save tree before the first yielded
+	# frame or explicit reset. No campaign slot, world journal or character file
+	# under the default user://saves|worlds|characters roots belongs to a smoke.
+	var test_save_dir := "%s_%d_%d" % [
+		TEST_SAVE_DIR_PREFIX, OS.get_process_id(), Time.get_ticks_usec()]
+	game.set("save_system", SAVE_GAME.new(test_save_dir))
 	await process_frame
 	game.call("reset_for_new_game")
-	game.set("save_system", SAVE_GAME.new(TEST_SAVE_DIR))
 	game.get("local").set("character_id", "stormwood-continuous-solo")
 	game.get("world").set("world_id", "stormwood-continuous-world")
 	# Preserve the production 1/60 simulation step while shortening the real
@@ -412,8 +417,12 @@ class Segment extends RefCounted:
 		_note("COMPLETED Act I through the production task chain at Rodline Post")
 
 		# Act II opens on the named trainer standing at Rodline's far side. The
-		# co-located route-07 reward was already consumed before Bryn, so no later
-		# pickup can be mistaken for Varga's challenge.
+		# co-located route-07 reward was already consumed before Bryn. Varga now
+		# stands at the midpoint of the authored first conductor-road ascent rather
+		# than on top of Bryn, so reaching the challenge remains an ordinary walk.
+		if not await _walk_xz(Vector2(-630.0, 2390.0),
+				"conductor ascent to Lieutenant Varga", 2.0):
+			return _result()
 		if not await _defeat_trainer("lieutenant_varga_rodline_bridge"):
 			return _result()
 		if not await _wait_flag("stormwood:varga_defeated", 300):

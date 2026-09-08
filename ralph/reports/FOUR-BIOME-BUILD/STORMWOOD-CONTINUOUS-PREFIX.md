@@ -74,3 +74,30 @@ world run must begin from the same disclosed chapter-entry seam and prove the
 button-edge retry, reordered Rodline prompts and measured Pools window before
 any Crown helper is composed. No timeout, player pose, material, weather,
 progression fixture or wild suppression was added by these repairs.
+
+## Runtime 4: Varga was standing inside Bryn
+
+`%TEMP%/stormwood-continuous-e78a76080-20260908.log` proved Dace's three won
+rounds, `lower_rods_disabled`, a production window with 131.966 simulation
+seconds open, both exact Pools +3 receipts and one wear each, paid pair-B
+relight, route-07-before-Bryn, and Act I completion. The next required Varga
+challenge was unreachable: from the target stance and all four cardinal
+approaches, Bryn's live greeting won. The final measurement was Bryn 1.4165 m,
+Varga body 1.07 m / prompt 1.48 m.
+
+This was an exact production data overlap. `stormwood_npcs.json` put Bryn at
+`[-700,44.18,2300]`; `stormwood_trainers.json` put Varga at the identical XYZ.
+The visible Act-II objective instead says Varga waits on the exposed ascent
+beyond Rodline, and `conductor_road` begins `[-700,2300] -> [-560,2480]`.
+Varga is moved to that segment's exact midpoint `[-630,56.45764165,2390]`;
+the Y is `StormwoodHeightfield.height_at(-630,2390)`. It is 114.0 m from Bryn,
+inside the playable-first dead-travel limit, and clear of both Bryn and the
+separate story-Varga greeting. The continuous harness now walks those 114 m
+through ordinary controller input before requesting the exact trainer.
+
+The same edit closes a harness isolation defect found during review. Each run
+constructs a unique scratch `SaveGame` before its first yielded frame and before
+its explicit reset, so subsequent transition autosaves cannot share journals or
+reach the default `user://saves`, `user://worlds` or `user://characters` trees.
+The static contract proves order and uniqueness; the next full-world run must
+also compare those default trees before/after and prove ordinary Varga approach.
