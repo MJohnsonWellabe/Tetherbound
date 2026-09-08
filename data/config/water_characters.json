@@ -1013,9 +1013,9 @@
       "npc_entity_id": "water_trainer_calder",
       "island_id": "sluice_isle",
       "island_local_offset": [
-        -18.0,
+        -107.0,
         0.0,
-        -30.0
+        216.0
       ],
       "critical": true,
       "ace_level": 52,
@@ -1044,7 +1044,7 @@
       "intro_conversation": "water_trainer_calder_intro",
       "win_conversation": "water_trainer_calder_win",
       "lose_conversation": "water_trainer_calder_lose",
-      "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
+      "_comment": "Calder guards the east control on the graded departure leg, upstream of its prompt; the former central-crown placement stood above the tested direct approach across the graded cut. Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
     },
     {
       "id": "water_trainer_vera",
