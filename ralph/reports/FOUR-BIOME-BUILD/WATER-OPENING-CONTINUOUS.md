@@ -72,5 +72,17 @@ production world starts.
 
 The default and `--through-reedhaven` modes remain party-empty and unchanged.
 A focused argument test makes `--through-brine` imply Reedhaven while preserving
-both shorter selections. Production runtime for the Brine composition remains
-required.
+both shorter selections.
+
+The repaired Brine composition passed exit 0 in one production process:
+`%TEMP%/water-opening-brine-tovin-repaired.log`. It re-earned Pell's lesson,
+the four Reedhaven harvests and paid repair, then completed the 107.088 m human
+crossing, full graded p1-through-p5 approach, both authored Tovin opponents and
+the durable defeat/trial flags. The surviving active creature retained
+`294.5 / 358` HP. Each helper returned `ok: true` with no failures; native
+`ERROR` / `SCRIPT ERROR` scan was clean. The only warnings were the separately
+owned Brine ordinary ecology sites `_010/_011`.
+
+This closes the bounded Water opening-through-Tovin route. It does not upgrade
+the disclosed synthetic carried party into proof of the earned Stormwood save
+handoff.
