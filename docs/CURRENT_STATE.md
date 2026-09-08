@@ -15,7 +15,8 @@ remain in `docs/SECOND_PASS_BACKLOG.md`; they are not claimed passed.
 PR #79 landed at `7ab4a12647a377a400c43335b64aff8b03ca6d43`. Current work is on
 `codex/four-biome-wave0`, PR #80, which includes main through `f6b79a6b3` via
 merge `01f85b2b356de72689eb90e42242e42ae64d5dfb`. The latest submitted batch is
-`de4fc499fb0aa441561351169dd5cd895ab069b3`; CI run `34197701347` is active.
+`de4fc499fb0aa441561351169dd5cd895ab069b3`; CI run `34197701347` completed
+successfully at 2026-09-08 07:32 UTC: 26 passing jobs and three skips.
 The preceding run `34195296547` completed with 24 passing jobs, two failures
 and three skips. These repairs are on the PR branch, not yet on main:
 
@@ -23,18 +24,18 @@ and three skips. These repairs are on the PR branch, not yet on main:
 |---|---|
 | Saves and second-bed freeze | Corrupt-canonical recovery and split-write rollback repaired; immutable fallback autosave runs on one worker. Ten two-bed cycles plus a 180-second soak pass, with the measured post-warmup maximum reduced from 536.7 ms to 107.6 ms. Save/load and recovery tests pass. This does not establish first-hour rendered performance on the Ally. See `ralph/reports/FOUR-BIOME-BUILD/save/REPORT.md` and `autosave/REPORT.md`. |
 | Map/minimap | Compass overhaul rolled back; minimap restored. Real repeated map input and an independent blind inspection confirm both opens remain populated and the second is not corrupt. Existing label crowding remains deferred. See `ralph/reports/FOUR-BIOME-BUILD/hud-map/REPORT.md`. |
-| Stormwood and ordinary Tidewake entry | Dynamo, release/aftermath and the Waterward reveal are implemented; the real Stormwood-to-Tidewake gate smoke passes. Hosted-trainer admission now resolves the race with local aggressive wild combat, with a passing two-peer Tamsin smoke. Livewire's final connected verdict is still pending CI. |
+| Stormwood and ordinary Tidewake entry | Dynamo, release/aftermath and the Waterward reveal are implemented; the real Stormwood-to-Tidewake gate smoke passes. Hosted-trainer admission now resolves the race with local aggressive wild combat, with a passing two-peer Tamsin smoke. Livewire passes connected CI on its first attempt in run 34197701347. |
 | Tidewake progression | Aquaryn's ordinary strike action IDs are repaired; the production defeat-to-Swim-Stone-to-saddle-to-mount path passes. Five authored named encounter sites now spawn in production. Long mounted crossings, Salt Crown/Sluice fights and controls, and the composed Veilfall/Guardian ending remain an open continuous-play proof. Isolated finale tests do not close that requirement. |
 | Creatures and menu travel | All 32 later-biome species are assigned to encounter tables; creature sizes span 1.90–7.20 m. ROAD evidence and its visual limitations are in §3. Settings offers 58 destinations across all four biomes; production realm-crossing and physical menu checks passed. |
 
-The latest completed PR #80 run, `34195296547`, passed Gate-B, all unit shards,
-solo regression and five multiplayer shards. Shard 2's Livewire smoke still
-reports an accepted attack without damage despite a stationary opponent;
-host-side hit geometry remains under investigation. Shard 5's shared-wild smoke
-read `replayed_action` where it expected `friendly_target`; its polling code can
-read the previous replay phase's retained refusal before the new network reply.
-The working polling repair awaits connected validation. Export and two optional
-known-red jobs were skipped. Neither failing job timed out.
+The latest completed PR #80 run, `34197701347`, passed Gate-B, all unit shards,
+solo regression and all seven multiplayer shards. The former Livewire failure
+is repaired by waiting for measured production host hit geometry, not merely
+client placement. The shared-wild check now awaits the new friendly-target
+refusal rather than consuming the previous replay phase's retained response.
+Both formerly failing smokes passed on attempt 1/1. Export and two optional
+known-red jobs were skipped. This verdict covers `de4fc499f`, not subsequent
+local Fly-anchor protocol changes or uncommitted Tidewake route repairs.
 Full milestone completion remains unproven.
 Detailed evidence and commit boundaries: `ralph/reports/FOUR-BIOME-BUILD/checkpoints.md`.
 

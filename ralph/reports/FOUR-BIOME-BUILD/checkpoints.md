@@ -552,3 +552,18 @@
   not obtain the victory flag. The next diagnostic uses the authored creature
   bed and overnight rest between Bex and Calder, with health/outcome telemetry,
   rather than injecting healing or reducing the trainer's difficulty.
+
+### Completed CI verdict — 2026-09-08 07:32 UTC
+
+- Root verified the run and every job through GitHub REST: run `34197701347`
+  on `de4fc499fb0aa441561351169dd5cd895ab069b3` is terminal success, with
+  26 passing jobs and three intentional skips (export and two known-red optional
+  jobs). All seven multiplayer shards, Gate-B, unit shards and solo regression pass.
+- This does not verify local `894a48f21` Fly-anchor protocol changes, the pending
+  Calder placement, or Tidal Cradle ROAD repairs. They require the next batch.
+- Parallel lanes remain distinct: real-input camp/Calder path, measured Tidal
+  footing repair (including newly reproduced ROAD08), and fresh-save composition
+  audit. Only full-world runs serialize for RAM. The camp diagnostic's first bed
+  attempt changed polled Input state without dispatching a GUI event; the harness
+  now sends parsed action events and checks actual panel focus before pressing.
+  Its rerun is live; no camp/Calder success is claimed yet.
