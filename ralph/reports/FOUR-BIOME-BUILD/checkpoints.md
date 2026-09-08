@@ -619,6 +619,42 @@
   Fresh-save opening-to-ending composition and full forward-view coverage
   remain open. The playable-first target and backlog are unchanged.
 
+## 2026-09-08 11:00 UTC — CI green, continuous paths still open
+
+- Previous turn was progress: terminal CI evidence recorded and Dace interaction
+  repair committed locally. Main remains `f6b79a6b32983d3b60f7333d8b44706736701474`,
+  included through merge `01f85b2b356de72689eb90e42242e42ae64d5dfb`; root fetched
+  and verified this ancestry this checkpoint interval.
+- Submitted head `5fc68033750f2cf5e2c0eed391561fb306ccbf82`, CI `34216463559`:
+  terminal 26 successes / three skips. All successful job logs reviewed, all
+  smoke first attempts pass. Livewire samples 296/186 ms within unchanged bounds;
+  released-window maximum sampling gap379 ms means timing sensitivity is not
+  eliminated. Native fixture/teardown errors remain documented, not hidden.
+- Meadows player build hold passes local fresh/repeated boot and ordinary return
+  with grounded movement and no runaway warning. Map's actual drawing contract
+  and fail-closed tests are repaired; isolated two-open captures exist, but full
+  world second-open proof and fresh blind verdict remain pending. Agent-tree cap
+  prevents a new zero-context critic; cosmetic deferral is explicit in backlog.
+- Local detached dialogue camera guard removes reproducible script errors:
+  unchanged portrait 13/2697 and camera 24/104 tests pass with clean native logs.
+  It and later changes are outside this CI head. No subsequent push yet.
+- Stormwood continuous last run stopped at a real wild winning Dace's button
+  edge. Repair `e78a76080` resolves only that exact live fight then reapproaches;
+  it never counts the wild as trainer activation. Focused8/89 pass, runtime
+  continuation pending. Obsolete initial test processes32352/20512 were verified
+  and terminated; malformed test base had aborted the runner before quit.
+- Water opening/Reedhaven/107m Brine crossing pass, but Tovin's old summit
+  approach is blocked. Baseline ordinary p3/p4/p5 approach established a usable
+  neighborhood. Small NPC-placement repair is now in runtime probe, confirmed
+  live21232/13456 with unique `water-tovin-approach-final.log`; no victory claimed.
+- Third agent independently measured Brine010/011 physical-footprint rejection;
+  current production normalizes JSON Y, so stale raw Y is NOT the live mechanism.
+  All-species common-coordinate candidates are next, no production spawn edit yet.
+- Full-world runs alone serialize for RAM; lightweight work continues in all
+  three lanes. Next: Tovin decisive proof, Stormwood continuation, Brine candidate
+  admission/clearance, then Water opening-to-Tovin replay and Shellwatch. Crown,
+  Tidewake finale and opening-to-ending fresh-save composition remain unproved.
+
 ## 2026-09-08 09:08 UTC — coherent repair batch submitted
 
 - Previous turn classified progress: Venn's real traversal/offer proof completed
