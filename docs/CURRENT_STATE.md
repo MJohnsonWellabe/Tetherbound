@@ -15,11 +15,16 @@ remain in `docs/SECOND_PASS_BACKLOG.md`; they are not claimed passed.
 PR #79 landed at `7ab4a12647a377a400c43335b64aff8b03ca6d43`. Current work is on
 `codex/four-biome-wave0`, PR #80, which includes main through `f6b79a6b3` via
 merge `01f85b2b356de72689eb90e42242e42ae64d5dfb`. The latest submitted batch is
-`c5012fff0d4286db42b76de34386ab37efcd3d1c`; CI run `34201147829` completed
+`226aaf070168b71e36bc6ee1eaf150c4148613af`; CI run `34205399274` is active.
+The preceding batch `c5012fff0d4286db42b76de34386ab37efcd3d1c`, run `34201147829`, completed
 with 25 passing jobs, three skips and one failure: multiplayer shard 4's hosted
 Tamsin smoke did not advance round 0 after its finishing input. The subsequent
 smoke watchdog is secondary, not a shard timeout. Root has retrieved its peer
 logs; strike submission/host acceptance/geometry are not yet distinguished.
+An instrumented Windows two-peer run passes both Tamsin rounds, rewards and
+replay refusal. The new batch also requires actual host quick-hit geometry
+before finishing input. Neither establishes the original Linux cause; the new
+CI verdict is still required. No further push will interrupt that run.
 The preceding batch `de4fc499fb0aa441561351169dd5cd895ab069b3`, run `34197701347`, completed
 successfully at 2026-09-08 07:32 UTC: 26 passing jobs and three skips.
 The preceding run `34195296547` completed with 24 passing jobs, two failures
@@ -46,6 +51,16 @@ unit shards, but reopens hosted Tamsin. Local Calder approach (`ffb7916db`),
 lightning cleanup (`112220071`) and cheap harvest scan (`767d3350a`) repairs are
 not covered by that run. Full milestone completion remains unproven.
 Detailed evidence and commit boundaries: `ralph/reports/FOUR-BIOME-BUILD/checkpoints.md`.
+
+**Solo Stormwood victory blocker, 2026-09-08:** the continuous runtime re-earned
+Ashfoot arrival/dialogues, sheltered Break, six Stormglass, arch pair A and the
+route pickup, then defeated Maren's three opponents through real combat input.
+The durable trainer defeat flag did not arrive. Root confirmed
+`StormwoodEncounterDirector.award_hosted_trainer()` incorrectly uses the base
+live-session-only `_is_host()` guard, although the Stormwood hub also owns solo
+fights. The same award method is called by Dynamo completion. A focused repair
+must allow the offline authority while continuing to refuse active clients;
+it is not yet proved by the continuous run. Do not treat the chapter as complete.
 
 **ROAD validation reopened, 2026-09-08:** the late-Tidewake traversal diagnostic
 reached Salt Crown but production rejected footing at
