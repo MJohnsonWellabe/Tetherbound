@@ -142,6 +142,16 @@ establish earned Stormwood-to-Water campaign continuity or progression beyond
 Reedhaven. Logs: `%TEMP%/water-opening-reedhaven-first.log` and
 `%TEMP%/water-opening-reedhaven-corrected.log`.
 
+**Tidewake Brine blocker, 2026-09-08:** the optional level-44 carried-party
+diagnostic repeats the opening/Reedhaven pass and physically crosses 107.088 m
+to Brine Steps, but fails its Tovin approach. The player stalls at
+`(408.952,43.667,733.921)` toward `(433,75.917,683)` with zero confined resets.
+Tovin's mandatory fight is not yet reached or proven; his reused NPC position
+is off the graded route near the summit. The same run rejects ordinary creature
+sites `water_brine_steps_wild_010` and `_011`. Production footing and walked
+approach diagnostics are required, not progression grants or relaxed checks.
+Log: `%TEMP%/water-opening-brine-first.log`, terminal exit 1.
+
 **ROAD validation reopened, 2026-09-08:** the late-Tidewake traversal diagnostic
 reached Salt Crown but production rejected footing at
 `road_visibility_salt_crown_exploration_spine_01`, `_02` and `_03`, plus ordinary
