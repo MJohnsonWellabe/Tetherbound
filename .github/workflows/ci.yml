@@ -1096,6 +1096,24 @@ jobs:
             echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
           done
           exit 1
+      - name: Verify throw preview physical occlusion
+        if: ${{ !cancelled() }}
+        run: |
+          set -euo pipefail
+          export XDG_DATA_HOME="$(mktemp -d)"
+          godot --headless --path . --log-file /tmp/throw-preview-occlusion.log --script tests/smoke_throw_preview_occlusion.gd
+          if grep -E '^(ERROR:|SCRIPT ERROR:)' /tmp/throw-preview-occlusion.log; then
+            exit 1
+          fi
+      - name: Verify earned party controller cycle
+        if: ${{ !cancelled() }}
+        run: |
+          set -euo pipefail
+          export XDG_DATA_HOME="$(mktemp -d)"
+          godot --headless --path . --log-file /tmp/earned-party-cycle.log --script tests/smoke_earned_party_cycle.gd
+          if grep -E '^(ERROR:|SCRIPT ERROR:)' /tmp/earned-party-cycle.log; then
+            exit 1
+          fi
       - name: Verify riding
         if: ${{ !cancelled() }}
         env: { SMOKE: riding, RETRIES: 2 }
@@ -1257,6 +1275,33 @@ jobs:
           godot --headless --path . --log-file /tmp/relay-deck-walk.log --script tests/smoke_relay_deck_walk.gd
           if grep -E '^ERROR:|SCRIPT ERROR:' /tmp/relay-deck-walk.log; then
             echo 'Relay deck walk emitted an engine or script error'
+            exit 1
+          fi
+      - name: Verify Stormheart approach and open ramp entrance
+        if: ${{ !cancelled() }}
+        run: |
+          set -euo pipefail
+          export XDG_DATA_HOME="$(mktemp -d)"
+          godot --headless --path . --log-file /tmp/stormheart-earned-mouth.log --script tools/_probe_stormheart_earned_mouth.gd -- --fixed-only
+          if grep -E '^(ERROR:|SCRIPT ERROR:)' /tmp/stormheart-earned-mouth.log; then
+            exit 1
+          fi
+      - name: Verify earned material prompt approach
+        if: ${{ !cancelled() }}
+        run: |
+          set -euo pipefail
+          export XDG_DATA_HOME="$(mktemp -d)"
+          godot --headless --path . --log-file /tmp/material-prompt-priority.log --script tests/smoke_material_prompt_priority.gd
+          if grep -E '^(ERROR:|SCRIPT ERROR:)' /tmp/material-prompt-priority.log; then
+            exit 1
+          fi
+      - name: Verify felled resource destruction
+        if: ${{ !cancelled() }}
+        run: |
+          set -euo pipefail
+          export XDG_DATA_HOME="$(mktemp -d)"
+          godot --headless --path . --log-file /tmp/felled-material-lifecycle.log --script tools/_probe_felled_material_lifecycle.gd
+          if grep -E '^(ERROR:|SCRIPT ERROR:)' /tmp/felled-material-lifecycle.log; then
             exit 1
           fi
       - name: Verify earned material source selection

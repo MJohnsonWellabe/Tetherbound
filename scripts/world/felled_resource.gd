@@ -75,6 +75,17 @@ var _claiming := false
 var _taken := false
 
 
+func _notification(what: int) -> void:
+	if what != NOTIFICATION_PREDELETE:
+		return
+	# Shared log meshes and their per-surface overrides can be released in
+	# different orders during child destruction. Detach render geometry while
+	# all its materials are still alive, before normal Node teardown. This is
+	# destruction-only: removing and re-adding a live pickup keeps its meshes.
+	for node: Node in _mesh_nodes(self):
+		(node as MeshInstance3D).mesh = null
+
+
 func setup(spec: Dictionary) -> void:
 	_item_id = str(spec.get("item", "wood"))
 	_amount = int(spec.get("amount", 1))

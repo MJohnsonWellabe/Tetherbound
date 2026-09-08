@@ -4,6 +4,7 @@ extends Node3D
 ## geometry is identical in the host shell and client scene; only art is omitted
 ## from the shell. This foundation does not award victories or chapter flags.
 const CORE_HEIGHT := 150.0
+const OUTER_WORKS_OUTER_RADIUS := 44.0
 const RAMP_RADIUS := 26.0
 const RAMP_WIDTH := 8.0
 const RAMP_TURNS := 4.0
@@ -23,7 +24,7 @@ func build() -> void:
 	_metal.albedo_color = Color("3d4752")
 	_metal.metallic = 0.65
 	_metal.roughness = 0.55
-	_ring("OuterWorks",18,44,6)
+	_ring("OuterWorks",18,OUTER_WORKS_OUTER_RADIUS,6)
 	_ring("DynamoCore",9,44,CORE_HEIGHT)
 	_ring("CrownChamber",7,18,CORE_HEIGHT+24)
 	_ascent()
@@ -42,7 +43,9 @@ func core_anchor() -> Vector3:
 	return global_position+Vector3(0,CORE_HEIGHT+0.2,-25)
 
 func add_approach(start: Vector3) -> void:
-	_ramp("OuterWorksApproach",to_local(start),Vector3(0,6,-40),10)
+	# Meet the deck at its outer edge: ending farther inside leaves the
+	# rising ramp below the ring's vertical fascia at first contact.
+	_ramp("OuterWorksApproach",to_local(start),Vector3(0,6,-OUTER_WORKS_OUTER_RADIUS),10)
 
 func ascent_point(fraction: float) -> Vector3:
 	var t := clampf(fraction,0,1)

@@ -6,6 +6,36 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-08, playable build in progress)
 
+**2026-09-08 18:12 UTC: Wave 2 is landed and main's own CI is green.** PR #86
+exact head `a62c81ae562714a59eb62ebcb2117e2649fa7e76` passed CI `34256323372`
+on attempt1 (26 successful jobs, three existing conditional skips; 3013 unit
+tests/486957 assertions, all seven multiplayer shards). Every executed job and
+step was reviewed. Main is now `b3458eb1d0f54ceb2554a97e9b0fe0b2f88f5bfb`,
+with the same tree; its own push CI `34258802654` passed on attempt1:
+27 successful jobs, two existing conditional skips, 3013 unit tests/486957
+assertions, all seven multiplayer shards. Windows PE export, actual exported
+Linux runtime terrain/ground probe, and artifact10070087141 all passed.
+Every executed job/step/log was reviewed; diagnostics remain disclosed in the
+main-green report. This is not a Windows or Ally playthrough claim.
+
+Landed runtime repair: the Relay ramp now meets its correctly oriented deck,
+verified by an actual Player walk. Earned later-chapter helpers are composed
+through Rootgate but remain unproved in the complete fresh path. Local Wave 3
+on `codex/four-biome-wave3` repairs observed throw-preview occlusion, Iona and
+Stormheart footing, and the earned driver's missed/double party-cycle input.
+The latest completed genuine fresh run earned five and ten training wins,
+all five at level5+, then gathered wood to31/42 before failing a vegetation
+interaction at624.730s; owner saves unchanged. Actual cycling was correct.
+Two material-null engine errors occurred during an earlier successful harvest;
+neither those errors nor the failed swing are dismissed as cleanup. No paid
+camp or full campaign completion is claimed by this update.
+The material fallback-status approach and felled-wood destruction now have
+clean native reproductions and fixes. A changed title-start run is active
+under `wave3-fresh-harvest-campaign`, using a new isolated profile. Local source
+composition reaches the earned Iona recipe, with the mounted ending suffix
+still being extracted; source/focused checks do not prove that campaign path.
+This supersedes the earlier Wave 2 pending-branch description below.
+
 **2026-09-08 17:07 UTC: Wave 1 is landed and main's own CI is green.** PR #85
 verified head `19d6ea8ecbc44ea479d5e49514359f6c116ba199` was squash-merged as
 `bc26b21eec2b96a8fbd8295732007aa67f92198a`. Its own push run `34252353122`

@@ -2779,6 +2779,10 @@ func catch_aim_is_locked() -> bool:
 	var report: Dictionary = _throw.call("aim_report")
 	if report.is_empty():
 		return false
+	# An eligible camera ray cannot promise a throw through an observed
+	# hand-arc obstruction. This changes the HUD claim, not launch assist.
+	if bool(report.get("trajectory_blocked", false)):
+		return false
 	# EITHER the assist is eligible, OR the previewed flight actually reaches
 	# the creature. The two are different questions and a render caught them
 	# contradicting each other on screen: the throw cone visibly ended on the

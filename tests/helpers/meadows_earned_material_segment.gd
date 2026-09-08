@@ -120,6 +120,17 @@ func _walk_supply(node: Node3D, budget: int) -> bool:
 	return await _walk_target(node.global_position, budget)
 
 
+func _clear_a_statement_off_the_button() -> bool:
+	# The normal Call out / Put away hint has priority -1/-2. It is the
+	# fallback when a harvest offer is out of reach or occluded, not a
+	# lockout that recalling can clear. Continue the existing physical
+	# approach in that case; retain recall for the priority-100 fainted line.
+	var offer: Dictionary = _arbiter.call("winner")
+	if int(offer.get("priority", 0)) <= 0:
+		return false
+	return await super._clear_a_statement_off_the_button()
+
+
 func _walk_target(target: Vector3, budget: int) -> bool:
 	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(BOUNDARY.BOUNDARY_CONFIG))
 	var open_ids: Array[String] = []

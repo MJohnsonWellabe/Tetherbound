@@ -163,8 +163,8 @@ func _swim_to(target: Vector3, label: String) -> bool:
 			_stop_stick()
 			await _frames(4)
 			return true
-		_camera.set("yaw", atan2(-offset.x, -offset.z))
-		_stick(0.0, -1.0)
+		var local: Vector3 = _camera.planar_basis().inverse() * offset.normalized()
+		_stick(local.x, local.z)
 		await _tree.physics_frame
 		if float(_player.vitals.health) <= 0.0:
 			return _fail("player died during %s toward %s" % [label, str(target)])

@@ -2,6 +2,15 @@
 
 **Status:** canonical living product-development roadmap.
 
+**2026-09-08 18:12 UTC update:** Wave 2 is merged as main
+`b3458eb1d0f54ceb2554a97e9b0fe0b2f88f5bfb`, after exact-head PR CI
+`34256323372` passed all executed jobs on attempt1. Its own main push CI
+`34258802654` passed on attempt1, including all seven multiplayer shards,
+Windows export and exported-runtime ground verification. The Relay deck
+repair has actual walking evidence. Full fresh-save
+completion remains open, with Wave 3 addressing observed catch display,
+party-input and footing blockers. No Stage E acceptance is claimed.
+
 **2026-09-08 playable-build update:** Wave 1 is on main
 `bc26b21eec2b96a8fbd8295732007aa67f92198a`, with its own push CI `34252353122`
 green on attempt 1, including all seven multiplayer shards and exported Windows

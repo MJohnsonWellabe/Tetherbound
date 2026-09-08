@@ -15,8 +15,8 @@ extends Node3D
 ## steps through. If the preview and the orb ever disagree, one of them
 ## changed alone.
 ##
-## Ground is asked of the world (`ground_height_at`, docs/decisions/D09) —
-## never a raycast, which lies about Terrain3D roughly a quarter of the time.
+## Ground retains the world height query (`ground_height_at`, docs/decisions/D09).
+## Segment raycasts additionally stop the prediction at physical blockers.
 
 const SAMPLES := 32
 
@@ -127,6 +127,9 @@ var _casing_mesh: ImmediateMesh = null
 ## Whether the arc drawn this frame actually reaches the creature. See
 ## `update_arc()`; read by `throw_aim.gd::aim_report()`.
 var trajectory_hits_target := false
+## A current physical body intercepts the predicted flight before the target.
+var trajectory_blocked := false
+var trajectory_blocker := ""
 ## Metres off the target's centre the previewed flight passes. Valid only while
 ## `trajectory_hits_target`; INF otherwise.
 var trajectory_offset := INF
@@ -256,9 +259,15 @@ func _overlay(priority: int) -> StandardMaterial3D:
 
 ## Redraw for this frame's aim. `target` is what the throw is locked to, for
 ## the end-of-arc test and the marker colour.
-func update_arc(origin: Vector3, direction: Vector3, speed: float, target: Node3D) -> void:
+func update_arc(origin: Vector3, direction: Vector3, speed: float, target: Node3D,
+		pass_through: Array[RID] = []) -> void:
 	visible = true
+	trajectory_blocked = false
+	trajectory_blocker = ""
 	var velocity := direction.normalized() * speed
+	var excluded: Array[RID] = pass_through.duplicate()
+	if is_instance_valid(target) and target is CollisionObject3D:
+		excluded.append((target as CollisionObject3D).get_rid())
 
 	var target_centre := Vector3.INF
 	var target_radius := 0.5
@@ -274,9 +283,26 @@ func update_arc(origin: Vector3, direction: Vector3, speed: float, target: Node3
 	for i in SAMPLES + 1:
 		var t := step * float(i)
 		var p := origin + velocity * t + Vector3.DOWN * (0.5 * _gravity * t * t)
+		var previous := points[-1] if not points.is_empty() else origin
+		var target_entry := _target_entry_fraction(previous, p, target_centre, target_radius + _orb_radius)
+		# Camera LOS is assist eligibility, not hand-arc clearance. Match the
+		# orb's physical exclusions and stop at the first intervening body.
+		if i > 0 and get_world_3d() != null:
+			var query := PhysicsRayQueryParameters3D.create(previous, p)
+			query.collide_with_areas = false
+			query.exclude = excluded
+			var hit := get_world_3d().direct_space_state.intersect_ray(query)
+			if not hit.is_empty() and previous.distance_to(hit.position) \
+					<= previous.distance_to(p) * target_entry:
+				end = hit.position
+				points.append(end)
+				trajectory_blocked = true
+				var collider: Object = hit.collider
+				trajectory_blocker = str(collider.get("name")) if collider is Node else str(collider)
+				break
 		points.append(p)
 		end = p
-		if target_centre != Vector3.INF and p.distance_to(target_centre) <= target_radius + _orb_radius:
+		if target_entry <= 1.0:
 			hit_target = true
 			break
 		var ground := _ground_height(p)
@@ -400,11 +426,32 @@ func _ribbon_half(point: Vector3, eye: Vector3, t: float) -> float:
 func hide_arc() -> void:
 	visible = false
 	trajectory_hits_target = false
+	trajectory_blocked = false
+	trajectory_blocker = ""
 	trajectory_offset = INF
 	if _line_mesh != null:
 		_line_mesh.clear_surfaces()
 	if _casing_mesh != null:
 		_casing_mesh.clear_surfaces()
+
+
+static func _target_entry_fraction(a: Vector3, b: Vector3, center: Vector3, radius: float) -> float:
+	if not center.is_finite():
+		return INF
+	var offset := a - center
+	var remaining := offset.length_squared() - radius * radius
+	if remaining <= 0.0:
+		return 0.0
+	var delta := b - a
+	var length_squared := delta.length_squared()
+	if length_squared <= 0.000001:
+		return INF
+	var projected := offset.dot(delta)
+	var discriminant := projected * projected - length_squared * remaining
+	if discriminant < 0.0:
+		return INF
+	var entry := (-projected - sqrt(discriminant)) / length_squared
+	return entry if entry >= 0.0 and entry <= 1.0 else INF
 
 
 ## The world root offers ground_height_at; walk up until something answers.

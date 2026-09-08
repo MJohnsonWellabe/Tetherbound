@@ -779,3 +779,50 @@
 - Prepared Warrens, camp/rest/tournament/bridge and later chapter helpers remain
   unproved as a continuous fresh path. Opening-to-Tidewake ending and full forward
   coverage are still open. No new deferrals or milestone closure credited.
+
+## 2026-09-08 17:51 UTC — merged runtime delta; zero-delta streak reset
+
+- Credited merged runtime progress since15:51: PR #85 landed as
+  `bc26b21eec2b96a8fbd8295732007aa67f92198a`; its own push CI `34252353122`
+  passed attempt1,27 jobs/2 existing conditional skips,2980 unit tests/486685
+  assertions, all7 multiplayer shards and actual Windows exported-runtime check.
+  The village-boundary route then supported genuine fresh acquisition of five
+  creatures and ten ordinary training wins to level5+. Production Fenn/Ondra
+  access repairs also have chapter-runtime evidence. This is a material merged
+  delta; the previous single zero checkpoint does not become a second zero.
+- PR #86 exact head `a62c81ae562714a59eb62ebcb2117e2649fa7e76` passed
+  CI `34256323372` at17:37:05, attempt1,26 jobs/3 expected skips. Units3013
+  tests/486957 assertions; all explicit unit/dedicated summaries3092/3843401,
+  zero failures. All7 multiplayer shards and all new native region checks pass.
+  Every job/step/log reviewed; original negative controls, renderer cleanup and
+  Water transition diagnostics are disclosed, not rerun away. Evidence:
+  `.artifacts/wave2-pr86-ci-34256323372-{01..06,FINAL,alljobs-final}.txt` and
+  `.artifacts/ci-34256323372/`. Main squash `b3458eb1d0f54ceb2554a97e9b0fe0b2f88f5bfb`
+  has the identical tree and bc26 ancestry. Its OWN push CI `34258802654` is
+  pending, last snapshot still checking out; no new main-green claim.
+- Landed Relay ramp/deck orientation repair has actual Player traversal proof.
+  Prepared earned Relay/Hall/Warden/Rift/Cloudreach/Stormward/Crown/Rootgate
+  composition is source-checked, not a completed fresh route. The separately
+  isolated Water chapter earned Shellwatch completion and Aquaryn/Swim Stone,
+  then hit its unchanged20-minute watchdog approaching Iona; recipe unproved.
+- Latest completed genuine fresh run `four_biome_fresh_35532_2265` ended at
+  316.881s: real opening/key/village, five earned creatures, three training wins,
+  then party-cycle selection failed. Owner fingerprints match; no engine/script
+  errors. `.artifacts/wave2-fresh-clear-throw-campaign{,-engine}.log`. Native
+  diagnosis reproduced missed/doubled synthetic cycle taps; changed physical
+  process-frame input passes16 assertions, existing team tests11/85. New fresh
+  session46271 is running with that changed driver, unique
+  `.artifacts/wave3-fresh-cycle-campaign*` profile/logs/source hashes. No camp
+  or material selector runtime completion is claimed.
+- Unmerged Wave3 production repairs: physical throw preview/HUD obstruction
+  (native24 assertions; existing10 tests/32 assertions), reachable Iona footing
+  (actual Player/NPC/prompt on shipped height patch), and Stormheart approach lip
+  (actual Player reaches core2826/6000 frames, grounded, zero unsticks). Original
+  failed probes and fixture errors are retained in their reports. New earned
+  Dynamo/Marrow/Waterward helpers remain runtime-unproved; focused checks5/49,
+  5/36 and6/45 respectively. These unmerged results receive no checkpoint credit.
+- Deferred ~23km Meadows acknowledgement backtracking and stale Kell aftermath
+  text were recorded in SECOND_PASS_BACKLOG with source evidence. Full uninterrupted
+  opening-to-Tidewake ending and forward-view coverage remain open. Next priority:
+  complete main's own CI review, then the actual fresh camp/training path and its
+  observed blockers. Next checkpoint19:51 UTC.
