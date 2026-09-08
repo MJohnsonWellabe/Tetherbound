@@ -15,9 +15,9 @@ remain in `docs/SECOND_PASS_BACKLOG.md`; they are not claimed passed.
 PR #79 landed at `7ab4a12647a377a400c43335b64aff8b03ca6d43`. Current work is on
 `codex/four-biome-wave0`, PR #80, which includes main through `f6b79a6b3` via
 merge `01f85b2b356de72689eb90e42242e42ae64d5dfb`. The latest submitted batch is
-`7415602f5231ff85e88d0a4f4c879cf1024d1ea0`; CI run `34195296547` completed with
-24 passing jobs, two failures and three skips. These repairs are on the PR branch,
-not yet on main:
+`de4fc499fb0aa441561351169dd5cd895ab069b3`; CI run `34197701347` is active.
+The preceding run `34195296547` completed with 24 passing jobs, two failures
+and three skips. These repairs are on the PR branch, not yet on main:
 
 | Area | Verified progress and remaining boundary |
 |---|---|
@@ -72,6 +72,21 @@ The suffix then failed at Calder's crown approach: player (788.349,62.516,2870.9
 remained 92.7 m from his prompt (836,115.767,2930). A near-east-control placement
 repair is under validation. Neither Calder nor the finale is proven, and the
 synthetic starting state still prevents a continuous fresh-save claim.
+
+The next diagnostic reached Calder's revised departure-road placement and
+entered all three opponents, but ended without the victory flag. The east
+control was correctly not attempted. Loss versus reward-delivery failure is
+under diagnosis; no encounter weakening is justified by this result.
+
+The exhaustive teleport check additionally caught Cliffhold returning to the
+previous High Perches landing: Cloudreach's 100 m walking-fall safeguard saw the
+old Fly anchor after the deliberate relocation. Local commit `894a48f21` clears
+that anchor on successful menu travel and correlates host replies with unique
+request IDs so delayed replies cannot restore it. Focused tests pass 15/996;
+the full-world rerun now passes all 58 destinations with the no-input
+displacement assertion, no script errors and no recovery messages. Connected
+Fly validation is still pending. No ordinary fall rule or destination-grounding
+check was relaxed. Log: `.artifacts/realm-teleport-anchor-reset58.log`.
 
 ### Consolidation baseline — historical, before PR #80 repairs
 

@@ -534,3 +534,21 @@
 - Calder's synthetic-start route run is still active; it has repeated Bex and
   west-control success and reached the departure road. It has not yet established
   a Calder/east-control or finale verdict.
+
+### Runtime follow-up
+
+- Anchor-reset all-58 teleport run completed exit 0 on `894a48f21`.
+  `.artifacts/realm-teleport-anchor-reset58.log` reports all 58 destinations,
+  retains exact immediate grounding and <=3 m no-input displacement checks,
+  and contains no ERROR/SCRIPT ERROR or recovery messages. This proves the
+  two bridge approaches and Cliffhold repair through actual production scenes.
+- CI `34197701347` has passed both formerly failing smokes on attempt 1/1.
+  Livewire action 805's host geometry was 1.250 m / 7.500 m range and
+  16.89 degrees / 20-degree half-cone before sending; the accepted attack
+  reduced HP. Shared-wild's automatic friendly action was 9003, returned
+  `friendly_target`, and damaged neither creature. Remaining CI jobs were
+  still active when this evidence was recorded; no full-run green is claimed.
+- Calder's route test reached and entered his three-opponent fight but did
+  not obtain the victory flag. The next diagnostic uses the authored creature
+  bed and overnight rest between Bex and Calder, with health/outcome telemetry,
+  rather than injecting healing or reducing the trainer's difficulty.
