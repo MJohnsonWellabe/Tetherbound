@@ -4984,6 +4984,9 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				var resolved_multiplier := float(hub.get("director").call(
 					"host_card_cooldown_multiplier", peer_card))
 				result.merge({
+					"last_strike": fight.get("last_strike"),
+					"body_radius": float(body.call("body_radius")) if body != null else 0.0,
+					"opponent_radius": float(opponent.call("body_radius")) if opponent != null else 0.0,
 					"record": {
 						"id": str(record.get("encounter_id", "")),
 						"realm": str(record.get("realm", "")),

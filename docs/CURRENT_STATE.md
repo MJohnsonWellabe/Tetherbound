@@ -6,12 +6,20 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-08, playable build in progress)
 
-**Session wrapped at owner request, 2026-09-08.** Resume from
-`docs/HANDOFF_FOUR_BIOME_2026-09-08_SESSION_WRAP.md` in this same local workspace.
-The owner subsequently requested a GitHub preservation push: local commits and
-the formerly dirty Shellwatch/candidate source are included in the new branch
-head. Read the handoff's preservation update; its new CI is not the old green run.
-No Godot process remains. The goal is incomplete, not declared blocked or passed.
+**Resumed 2026-09-08; owner priority is green main before Wave 1.** Main remains
+`f6b79a6b32983d3b60f7333d8b44706736701474`. Its run `34180178882` failed the
+shared-wild-fight reach diagnostic (multiplayer shard 3) and Tamsin final hosted
+completion (shard 7). PR #80's preservation head `b16d117c639c2ab503a39b7e0a5e0e0eebe238fb`
+also failed its own run `34221457038`: Varga ground clearance in unit shard 1,
+Tamsin completion in multiplayer shard 4, and client-first catch observation in
+multiplayer shard 5. Prior green runs do not validate that head. The repair
+batch corrects Varga's data clearance, observes completed asynchronous catch
+admission, and stages Tamsin's combat fixture at production body clearance
+with explicit authoritative killing-hit checks. Local catch (47 checks) and
+Tamsin (59 checks) smokes and the required world boot pass; the full unit suite
+is running and the new head still needs CI. PR #80 remains draft. See
+`ralph/reports/FOUR-BIOME-BUILD/MAIN-GREEN-20260908.md` for exact failures and
+evidence. The four-biome goal is incomplete, and Wave 1 has not started.
 
 The active target is the **playable four-biome build**, as defined by
 `docs/owner/OWNER_DIRECTIVE_2026-09-07_PLAYABLE_FIRST.md`: a fresh save completes
@@ -21,7 +29,7 @@ remain in `docs/SECOND_PASS_BACKLOG.md`; they are not claimed passed.
 
 PR #79 landed at `7ab4a12647a377a400c43335b64aff8b03ca6d43`. Current work is on
 `codex/four-biome-wave0`, PR #80, which includes main through `f6b79a6b3` via
-merge `01f85b2b356de72689eb90e42242e42ae64d5dfb`. The latest submitted batch is
+merge `01f85b2b356de72689eb90e42242e42ae64d5dfb`. The last successful batch before preservation was
 `c3cd1ac827655c765dd66f0a0d811b861d51f63a`; CI run `34218809408` is terminal
 success:26 jobs successful, three skipped, all successful job logs reviewed.
 Every smoke passed its first attempt; native-error caveats remain in the report.
@@ -29,8 +37,9 @@ The single push followed full review of the previous run and
 includes the dialogue camera guard, Dace harness repair, prepared Shellwatch
 helper and fail-closed test-runner base check. Focused47 tests/2902 assertions
 pass with clean native output. Tovin's now-proven placement, Varga's pending
-runtime repair and later evidence remain local, outside this CI head.
-See `CI-34218809408.md` in the build reports; no further push at owner wrap.
+runtime repair and later evidence were outside this CI head. They subsequently
+entered the preservation push described above; that new head is red.
+See `CI-34218809408.md` in the build reports for the earlier successful batch.
 Previous head `5fc68033750f2cf5e2c0eed391561fb306ccbf82` / CI `34216463559` is terminal:
 26 successful jobs, three skips, all completed-job logs reviewed. All smoke
 attempts pass first time; native-error caveats remain in the report. Livewire

@@ -30,6 +30,9 @@ var _missing_since: Dictionary = {}
 var _base_attack := 1.0
 var _base_defence := 1.0
 var _base_combat: Dictionary = {}
+## Retain the actual impact decision: a later pose or a client's retained
+## refusal cannot establish why an earlier input failed to finish a round.
+var last_strike: Dictionary = {}
 
 func start(owner_hub: Node, authored: Dictionary, peer: int, at: Vector3) -> bool:
 	hub = owner_hub
@@ -115,6 +118,14 @@ func leave(peer: int) -> void:
 		_snapshot()
 
 func strike(peer: int, intent: Dictionary) -> Dictionary:
+	last_strike = {"peer": peer, "action": int(intent.get("action", 0)),
+		"encounter_id": str(intent.get("encounter_id", "")),
+		"round": round_index, "host_now_ms": Time.get_ticks_msec()}
+	var verdict := _strike(peer, intent)
+	last_strike["verdict"] = verdict.duplicate(true)
+	return verdict
+
+func _strike(peer: int, intent: Dictionary) -> Dictionary:
 	var refused := {"ok": false, "kind": "strike_intent", "code": "unavailable", "reason": "That attack is no longer available.", "delta": {}}
 	if finished or _between > 0.0 or not participants.has(peer) or str(intent.get("encounter_id", "")) != str(record.get("encounter_id", "")):
 		return refused
@@ -139,6 +150,16 @@ func strike(peer: int, intent: Dictionary) -> Dictionary:
 	checked["move"] = profile
 	# The host's current facing, as well as its body position, owns the hit.
 	checked["facing"] = body.call("facing")
+	var origin: Vector3 = body.call("centre")
+	var facing: Vector3 = checked["facing"]
+	var target: Vector3 = opponent.call("centre")
+	last_strike["geometry"] = {"origin": [origin.x, origin.y, origin.z],
+		"facing": [facing.x, facing.y, facing.z],
+		"target": [target.x, target.y, target.z],
+		"range": float(profile.get("range", 0.0)),
+		"cone_degrees": float(profile.get("cone_degrees", 0.0)),
+		"windup": float(profile.get("windup", 0.0)),
+		"connects": MATH.move_connects(profile, origin, facing, target)}
 	authority.note_opponent_position(str(record.encounter_id), opponent.call("centre"), now)
 	var verdict: Dictionary = authority.validate_strike(checked, peer, {"now_ms": now, "origin": body.call("centre"), "bodies": hub.body_rows()})
 	if not bool(verdict.get("ok", false)):

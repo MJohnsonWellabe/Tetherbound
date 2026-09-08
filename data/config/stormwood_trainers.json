@@ -169,10 +169,10 @@
       "region_id": "conductor_run",
       "position": [
         -630,
-        56.45764165,
+        56.60764165,
         2390
       ],
-      "_why_player_path_0908": "PLAYABLE-FIRST 2026-09-08. The old position [-700,44.18,2300] exactly overlapped Warden-Elect Bryn and made Bryn's registered greeting win InteractionArbiter from every side, so Varga's required Act-II challenge was physically unreachable. This point is the exact midpoint of conductor_road's first exposed ascent, 114.0 m from Bryn (inside the 120 m live-road limit), 114.0 m from the separate story Varga, and its Y is stormwood_heightfield.height_at(-630,2390).",
+      "_why_player_path_0908": "PLAYABLE-FIRST 2026-09-08. The old position [-700,44.18,2300] exactly overlapped Warden-Elect Bryn and made Bryn's registered greeting win InteractionArbiter from every side, so Varga's required Act-II challenge was physically unreachable. This point is the exact midpoint of conductor_road's first exposed ascent, 114.0 m from Bryn (inside the 120 m live-road limit), 114.0 m from the separate story Varga, and its Y is stormwood_heightfield.height_at(-630,2390) plus the catalogue's 0.15 m ground clearance.",
       "route_class": "critical",
       "critical_order": 6,
       "humanoid_key": "officer_a",

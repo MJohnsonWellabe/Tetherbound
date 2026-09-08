@@ -22,6 +22,7 @@ const STORMWOOD_KEY := "realm_key_stormwood"
 const STORMWOOD_GATE := "realm_gate_stormwood_unlocked"
 const TRAINER := "tamsin_surge_lesson"
 const DEFEAT_FLAG := "stormwood:trainer:tamsin_surge_lesson:defeated"
+const STAGING := preload("res://tests/helpers/hosted_combat_staging.gd")
 const REALM_STEP_BUDGET := 10000
 const HOSTED_WAIT_FRAMES := 900
 ## `_start_for()`'s actual host-side challenge gate. Kept separate from how
@@ -253,10 +254,24 @@ func _run() -> void:
 			quit(await finish())
 			return
 		var pressed := await step(1, "stormwood_hosted_quick", {"settle": 150, "ready_budget": 600})
+		var impact: Dictionary = (await _await_hosted(0, true)).get("last_strike", {}) as Dictionary
+		print("Hosted post-quick impact: ", impact)
 		check(str(pressed.get("verdict", "")) == "PASS", "client submitted real combat input for hosted round %d: %s"
 			% [expected_round, str(pressed.get("detail", ""))])
 		if str(pressed.get("verdict", "")) != "PASS":
 			print("Hosted quick failure host state: ", await _await_hosted(0, true))
+			quit(await finish())
+			return
+		var verdict: Dictionary = impact.get("verdict", {}) as Dictionary
+		var delta: Dictionary = verdict.get("delta", {}) as Dictionary
+		var killed: bool = int(impact.get("round", -1)) == expected_round \
+			and bool(verdict.get("ok", false)) and bool(delta.get("hit", false)) \
+			and bool(delta.get("killed", false)) and float(delta.get("hp", -1.0)) == 0.0
+		check(killed, "host accepted a killing hit from the real round-%d input" % expected_round)
+		if not killed:
+			# A submitted action can be a legitimate miss. Report its actual
+			# impact, rather than waiting for an impossible roster completion.
+			print("Hosted killing-input failure state: ", await _await_hosted(0, true))
 			quit(await finish())
 			return
 		if expected_round == 0:
@@ -270,6 +285,8 @@ func _run() -> void:
 				return
 
 	var completed := await _await_finished(0)
+	if not bool(completed.get("finished", false)):
+		print("Hosted completion failure state: ", completed)
 	check(bool(completed.get("finished", false)), "host marked Tamsin's roster finished after actual strikes")
 	for peer in 2:
 		var flag := await step(peer, "wait_flag", {"flag": DEFEAT_FLAG, "scope": "world", "budget_frames": 900})
@@ -356,7 +373,12 @@ func _stage_client_for_current_opponent() -> Dictionary:
 	})
 	if str(stand_in.get("verdict", "")) != "PASS":
 		return {"verdict": "FAIL", "detail": "client stand-in: " + str(stand_in.get("detail", ""))}
-	var stand := opponent_at + Vector3(1.25, 0.0, 0.0)
+	var mine := float(state.get("body_radius", 0.0))
+	var theirs := float(state.get("opponent_radius", 0.0))
+	if mine <= 0.0 or theirs <= 0.0:
+		return {"verdict": "FAIL", "detail": "host exposed no live body radii"}
+	var spacing := STAGING.distance_for(mine, theirs)
+	var stand := opponent_at + Vector3(spacing, 0.0, 0.0)
 	var placed := await step(1, "place_creature", {
 		"at": [stand.x, stand.y, stand.z], "exact": true,
 		"face": [opponent_at.x, opponent_at.y, opponent_at.z], "settle": 60,
