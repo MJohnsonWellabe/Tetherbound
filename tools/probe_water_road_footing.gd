@@ -1,22 +1,41 @@
 extends SceneTree
 
-## Read-only diagnosis of rejected Salt Crown road spawns in the production world.
+## Read-only diagnosis of rejected Water road spawns in the production world.
 ## Explicit probe pose; this is footing evidence, not continuous-play acceptance.
 const SAVE := preload("res://scripts/save/save_game.gd")
 const WILD := preload("res://scripts/creatures/wild_creature.gd")
 const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
-const REPAIRED_IDS := [
-	"road_visibility_salt_crown_exploration_spine_01",
-	"road_visibility_salt_crown_exploration_spine_02",
-	"road_visibility_salt_crown_exploration_spine_03",
-	"road_visibility_salt_crown_exploration_spine_05",
-]
+const PROBES := {
+	"salt": {
+		"route": "salt_crown_exploration_spine",
+		"prefix": "road_visibility_salt_crown_exploration_spine_",
+		"repairs": ["01", "02", "03", "05"],
+	},
+	"sluice": {
+		"route": "sluice_isle_exploration_spine",
+		"prefix": "road_visibility_sluice_isle_exploration_spine_",
+		"repairs": ["01", "02", "03", "05"],
+	},
+}
 
 func _init() -> void:
 	_run.call_deferred()
 
 func _run() -> void:
 	await process_frame
+	var probe_key := "salt"
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--route="):
+			probe_key = argument.trim_prefix("--route=")
+	if not PROBES.has(probe_key):
+		push_error("Unknown Water footing probe route: " + probe_key)
+		quit(2)
+		return
+	var probe: Dictionary = PROBES[probe_key]
+	var site_prefix := str(probe.prefix)
+	var repaired_ids: Array[String] = []
+	for suffix: String in probe.repairs:
+		repaired_ids.append(site_prefix + suffix)
 	var game := root.get_node("Game")
 	game.reset_for_new_game()
 	game.current_realm = "water"
@@ -33,7 +52,7 @@ func _run() -> void:
 	director.set_process(false)
 	var road_sites: Array[Dictionary] = []
 	for site: Dictionary in director.encounter_config.wild_sites:
-		if not str(site.id).begins_with("road_visibility_salt_crown_exploration_spine_"):
+		if not str(site.id).begins_with(site_prefix):
 			continue
 		road_sites.append(site)
 		var at := Vector3(site.position[0], site.position[1], site.position[2])
@@ -86,11 +105,11 @@ func _run() -> void:
 			"expected": int(site.count)}))
 		if not ok:
 			production_failures.append(id)
-	var route: Dictionary = _find_id(world.config.land_routes, "salt_crown_exploration_spine")
+	var route: Dictionary = _find_id(world.config.land_routes, str(probe.route))
 	var navigator := NAVIGATOR.new(self, player, world.local_camera_rig(), _send_stick)
 	for site: Dictionary in road_sites:
 		var id := str(site.id)
-		if id not in REPAIRED_IDS:
+		if id not in repaired_ids:
 			continue
 		var crossing := _crossing_segment(site.position, route.get("polyline", []), world)
 		var passable := not crossing.is_empty() and await _walk_segment(
@@ -100,8 +119,8 @@ func _run() -> void:
 			"finish": str(crossing.get("finish", Vector3.INF))}))
 		if not passable:
 			production_failures.append(id + ":player_pass")
-	print("WATER_PRODUCTION_SUMMARY ", JSON.stringify({"sites": road_sites.size(),
-		"failures": production_failures}))
+	print("WATER_PRODUCTION_SUMMARY ", JSON.stringify({"probe": probe_key,
+		"sites": road_sites.size(), "failures": production_failures}))
 	quit(0 if production_failures.is_empty() else 1)
 
 

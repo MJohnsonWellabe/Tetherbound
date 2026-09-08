@@ -7090,14 +7090,14 @@
       "region_id": "tether_current",
       "table_id": "water_sluice_isle_land",
       "island_local_offset": [
-        -146.415,
-        39.417,
-        -84.825
+        -146.528,
+        39.929,
+        -89.141
       ],
       "position": [
-        703.585,
-        39.417,
-        2875.175
+        703.472,
+        39.929,
+        2870.859
       ],
       "count": 2,
       "radius_m": 3.0,
@@ -7115,14 +7115,14 @@
       "region_id": "tether_current",
       "table_id": "water_sluice_isle_land",
       "island_local_offset": [
-        -30.727,
-        70.115,
-        -98.501
+        -30.614,
+        70.627,
+        -94.185
       ],
       "position": [
-        819.273,
-        70.115,
-        2861.499
+        819.386,
+        70.627,
+        2865.815
       ],
       "count": 2,
       "radius_m": 3.0,
@@ -7140,14 +7140,14 @@
       "region_id": "tether_current",
       "table_id": "water_sluice_isle_land",
       "island_local_offset": [
-        67.595,
-        75.282,
-        -6.696
+        71.895,
+        74.879,
+        -7.568
       ],
       "position": [
-        917.595,
-        75.282,
-        2953.304
+        921.895,
+        74.879,
+        2952.432
       ],
       "count": 2,
       "radius_m": 3.0,
@@ -7190,14 +7190,14 @@
       "region_id": "tether_current",
       "table_id": "water_sluice_isle_land",
       "island_local_offset": [
-        -25.141,
-        21.801,
-        184.749
+        -23.811,
+        21.503,
+        188.984
       ],
       "position": [
-        824.859,
-        21.801,
-        3144.749
+        826.189,
+        21.503,
+        3148.984
       ],
       "count": 2,
       "radius_m": 3.0,
