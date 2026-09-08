@@ -50,8 +50,27 @@ reproduced the same 6 / 78 result in
 
 ## Current boundary
 
+The corrected run in
+`%TEMP%/stormwood-continuous-b492274fd-20260908.log` again earned the prefix
+through Maren's three explicitly won rounds and the live Verge switch. An
+ordinary aggressive road fight on the next leg ended in a loss; the harness
+used ordinary party-cycle recovery and reached Dace. At the Dace button edge,
+the arbiter activated `EncounterDirector` rather than Dace's prompt.
+
+This provider identity is decisive rather than inferred from timing. The arbiter
+only emits `activated(provider)` after the winning offer is actionable
+(`interaction_arbiter.gd:368-381`). Outside a fight, the encounter director's
+only actionable interaction offer is the nearest live wild inside engage range
+(`encounter_director.gd:2536-2568,2922-2938`); its fainted and creature-control
+lines are explicitly non-actionable. A roaming wild therefore entered engage
+range between the eight stable prompt samples and the physical button-edge
+recompute. The bounded repair resolves only that exact director-started live
+fight, recovers through ordinary party controls when necessary, and re-approaches.
+It still fails every other competitor and returns success only after the exact
+requested provider is observed.
+
 The continuous prefix has not yet earned a clean Ondra terminal. The next full-
 world run must begin from the same disclosed chapter-entry seam and prove the
-reordered Rodline prompts plus the measured Pools window before any Crown helper
-is composed. No timeout, player pose, material, weather or progression fixture
-was added by these repairs.
+button-edge retry, reordered Rodline prompts and measured Pools window before
+any Crown helper is composed. No timeout, player pose, material, weather,
+progression fixture or wild suppression was added by these repairs.

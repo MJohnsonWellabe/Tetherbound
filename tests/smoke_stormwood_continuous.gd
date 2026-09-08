@@ -768,6 +768,21 @@ class Segment extends RefCounted:
 					if _activated_provider_id == wanted_id:
 						return true
 					if _activated_provider_id != 0:
+						# A roaming wild can enter engage range after this prompt has
+						# held the arbiter for eight frames but before the physical
+						# button edge is recomputed. The arbiter then truthfully fires
+						# EncounterDirector, which synchronously starts that ordinary
+						# fight. Resolve only that exact production effect and approach
+						# again; every other competitor remains a hard failure, and this
+						# never counts as activating the requested provider.
+						if _activated_provider_id == director.get_instance_id() \
+								and bool(manager.call("is_fighting")):
+							_note("ANSWERED a roaming wild that won the button edge before %s" % label)
+							if not await _fight_current_encounter("%s competing wild" % label):
+								return false
+							if not await _ensure_usable_ally("retrying %s" % label):
+								return false
+							break
 						_fail("%s press activated competing provider %s#%d" % [
 							label, _activated_provider_path, _activated_provider_id])
 						return false
