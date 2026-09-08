@@ -51,7 +51,8 @@ multiplayer shards and export/runtime checks. Full campaign acceptance stays ope
 PR #89 also landed all-five care guidance, swimmer preparation instructions,
 the actual Water combat HUD and two reachable Brine ordinary encounters as
 65267c4bd935d80b2e073799caeffc81b913952c. Exact-head CI34279303451 passed
-26 jobs/three configured skips on attempt1; main's OWN CI34281611197 is pending.
+26 jobs/three configured skips on attempt1; main's OWN CI34281611197 passed
+at22:02:52UTC,27 jobs/two existing manual-only skips, including Windows export.
 The new saved-camp capture shows the correct care instruction, not fresh closure.
 See `CURRENT_STATE.md` and TEAM-CARE-AND-SWIMMER-CONTENT-WAVE5.md for evidence.
 

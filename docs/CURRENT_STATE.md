@@ -12,7 +12,10 @@ head`f4886bcb937e31a01276a2e5b7a42172b76be8d6`. Exact-head CI34279303451
 passed on attempt1:26 successful jobs/three configured skips,3056 unit tests/
 487375 assertions, all seven multiplayer shards. Every job, step and executed
 log was reviewed;86 wrapped smokes used only attempt1 and18 direct checks passed.
-Main's OWN push CI34281611197 is pending; PR CI does not replace its export/run.
+Main's OWN push CI34281611197 passed on attempt1 at22:02:52UTC:27 successful
+jobs/two existing manual-only skips. All executed logs and steps were reviewed;
+Windows PE export and the Linux exported-runtime terrain check passed. Windows
+artifact10078655466 is uploaded. No Windows/Ally or full-campaign pass is implied.
 
 The shipped batch includes the all-five care rung, persistent swimmer preparation
 instructions, actual Water combat HUD/shared Engage, and both Brine010/011

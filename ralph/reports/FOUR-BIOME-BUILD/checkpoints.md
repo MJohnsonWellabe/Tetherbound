@@ -929,3 +929,17 @@
   uninterrupted opening-to-ending run or full forward-view coverage is claimed.
   Finish main's own shipping review, then continue actual player-path work from
   these limits. Next checkpoint23:40UTC.
+
+### 22:08 UTC shipping addendum
+
+Main65267c4bd935d80b2e073799caeffc81b913952c OWN CI34281611197 passed at22:02:52,
+attempt1,27 jobs/two existing manual-only skips. All27 executed logs/every step
+reviewed;3056 unit tests/487375 assertions,86 first-attempt wrapped smokes and
+18 direct checks passed. Windows artifact10078655466 uploaded; exact export
+receipts in MAIN-GREEN-20260908.md and `.artifacts/wave5-main-ci-34281611197-*`.
+The fresh camp stall remains unresolved. Read-only preserved evidence does not
+establish input ownership, sleep fade or a wild fight as its cause: the final
+observer sample approximately1.4s before termination still records grounded
+movement; the observer suppresses combat/paused/input-owned samples. Nearby
+Bramblebun and Mudsnout are non-aggressive. Terminal locomotion is unrecorded.
+No speculative fix or repeated fresh run was performed. Next checkpoint23:40UTC.

@@ -262,3 +262,27 @@ all27logs and run/jobs metadata; `.artifacts/wave2-main-ci-34258802654-FINAL.txt
 `-alljobs-final.txt`, `-export-evidence.txt`, snapshots01 through09.
 
 Wave3 landing: PR87 exact6c0f0e78046fbd15c3e1fe46de06fa154981be66 passedCI34262351185 and squashlanded main043cd1061ba8e1423d1681c7479d9ad36f6d4317. Its own pushCI34264602920 passed at19:10:32UTC attempt1,27successfuljobs/two existingmanual-onlyskips. All executedjobs/steps/logs reviewed;3037unit tests/487178assertions;all7MPshards;WindowsPE102948352bytes;actualLinuxexportedruntimeground/terrain383004props;artifact10072368637=686522937bytes,ZIPsha2564acae933284d2ec3860a720b7a90de550dd6d4ed3a37352c37e3e401f3fa06e2. Exactreceipts .artifacts/wave3-main-ci-34264602920-{FINAL,alljobs-final,export-evidence}.txt. Notownerhardware/fullcampaignproof. CI laneclosed forowner's content-firstdirection.
+
+## Wave5 own-main verification — 2026-09-08 22:02 UTC
+
+PR89 shipped the Water combat HUD/shared Engage integration, both Brine ordinary
+encounter placements, all-five care guidance and persistent swimmer preparation.
+Main `65267c4bd935d80b2e073799caeffc81b913952c` was fetched and independently
+confirmed. Its OWN push CI34281611197 passed on attempt1 at22:02:52UTC:
+27 successful jobs, two existing manual-only skips,284 successful steps and
+five cached-install skips. Every job/step and all27 executed logs were reviewed.
+3056 unit tests/487375 assertions passed; all86 wrapped smokes used attempt1,
+including36 net smokes across allseven shards, and18 direct checks passed.
+No failed smoke attempt, later retry or SCRIPT ERROR; existing negative-test,
+fixture, shutdown and network transition diagnostics remain disclosed in
+`.artifacts/wave5-main-ci-34281611197-FINAL.txt`.
+
+Export job102252627913 passed in444s. Windows PE32+ GUI x86-64 executable:
+102948352bytes. Actual Linux exported runtime: terrain=yes, ground0.90,
+player2.90,383004props. Windows artifact10078655466 uploaded686605335bytes;
+ZIP SHA256 `84d1bbb783a4788f28106442394e03fe033f2a4146011c9f3c0e997e1e12cccf`.
+Build: https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/34281611197/artifacts/10078655466
+Raw27 logs/metadata: `.artifacts/ci-34281611197/`; final/alljobs/export/quest
+receipts: `.artifacts/wave5-main-ci-34281611197-*`. Separate Release excluded.
+Local Water HUD40/41 checks were not invoked by CI. No Windows/Ally playthrough,
+full fight-win or uninterrupted fresh-campaign acceptance is claimed.
