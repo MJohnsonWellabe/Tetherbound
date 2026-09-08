@@ -717,10 +717,15 @@ func _fight_to_a_finish() -> void:
 	var frames := 0
 	while bool(_manager.call("is_fighting")) and frames < FIGHT_FRAME_LIMIT:
 		var creature: RefCounted = _manager.call("active_creature")
-		# Keep the ally alive long enough to win: heal it rather than tune the
-		# fight, because this test is about wiring, not balance.
+		# Keep the ally alive long enough to win without erasing the injury that
+		# `_hp_is_not_auto_healed_after_the_fight()` must observe.  Filling to
+		# max here made the smoke accuse production of auto-healing whenever the
+		# final blow landed before the enemy's next attack.
 		if creature != null and creature.hp_fraction() < 0.4:
-			creature.hp = creature.max_hp
+			creature.hp = creature.max_hp * 0.7
+			print("survival aid left the ally injured at %.1f / %.1f hp" % [
+				creature.hp, creature.max_hp,
+			])
 
 		var to := _wild.global_position - _ally.global_position
 		to.y = 0.0

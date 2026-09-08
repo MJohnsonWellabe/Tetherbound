@@ -1,9 +1,9 @@
 extends "res://tests/helpers/net_harness.gd"
 
+# peers: 2
+
 const COMBAT_MANAGER := preload("res://scripts/combat/combat_manager.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
-
-# peers: 2
 
 ## Stage B Wave 4 lane 4.C. THE player-visible outcome of the lane: two people
 ## fight one creature together, and neither of them can hit the other.

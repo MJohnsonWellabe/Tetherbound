@@ -182,3 +182,38 @@
   execute the production realm-transition and continuous solo path smokes through
   the Water ending. Build-size A/B, visual polish, full density/performance, and
   multiplayer depth remain recorded second-pass work.
+
+## Checkpoint 5 — 2026-09-07 20:35 CDT
+
+- CI run `34175257602` completed on batched head `b7bd8c143`: 15 executable jobs
+  passed, three failed, and three were skipped. The two explicitly known-red aggregate
+  jobs were expected skips; the multiplayer matrix was skipped only because its
+  discovery prerequisite failed. Every completed job was read before this repair
+  batch.
+- The old eight-failure cluster is closed: all four unit shards, owner regressions,
+  regions, Gate A, Gate B core, gate evidence, harvest, scatter/terrain freshness,
+  scatter rules, and the vegetation corridor passed. No unit, region, owner, bake,
+  or gate-evidence job failed on this head.
+- `discover-net-smokes` failed because new preloads pushed
+  `smoke_net_shared_wild_fight.gd`'s `# peers: 2` marker from line 3 to line 6 while
+  discovery intentionally scans only the first five lines. The marker is restored to
+  line 3; local discovery finds 36 smokes, and the count floor/named registration now
+  covers all 36 rather than the stale 29-file roster.
+- `smoke_combat.gd` exposed a test self-conflict, not production healing: below 40%
+  HP the smoke itself restored the ally to 100%, then sometimes won before another
+  enemy hit and accused production of auto-healing. It now restores only to 70%.
+  Focused runtime passed with 5 enemy hits, 6 ally hits, type-chart damage 112.2
+  observed versus 114.5 predicted, and post-fight HP held at 55.9.
+- `smoke_riding.gd` was born overlapping the workshop after Meadowhart's radius grew
+  to 1.245 m. Its speed/jump fixture now uses the established open-meadow stand and
+  proves grounded placement plus pre-input stability. Focused runtime passed at
+  10.00 m/s mounted, 14.00 m/s sprinting, and 1.68 m jump rise; the production riding
+  controller did not change.
+- `smoke_catching.gd` had walked the trainer to 1.878 m from the enlarged Bramblebun,
+  where the supposedly 50-degree-off reticle was honestly still inside its body. The
+  fixture now walks away, proves at least 5 m target range and an outside-body live
+  reticle, then keeps the same unlocked assertion. Focused runtime passed; production
+  lock/trajectory behavior did not change.
+- Next action: commit and push this one small repair batch, then allow the full CI
+  rerun—including all seven measured multiplayer shards—to finish before any further
+  push. The ordinary Stormwood-to-Water gate remains the next player-path code lane.

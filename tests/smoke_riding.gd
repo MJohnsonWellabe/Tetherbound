@@ -44,6 +44,12 @@ const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 ## a second mount or the owner retiring this one does not leave this file
 ## quietly testing nothing.
 const MOUNT_SPECIES := "meadowhart"
+## Shared with smoke_build_wins_while_hammer_is_out.gd: a measured open patch
+## outside Grandpa's yard, with enough clearance for the enlarged Meadowhart.
+## World origin is only 2.8 m from the workshop. That was adequate for the old
+## 0.75 m body, but the current 1.245 m-radius mount overlaps the workshop
+## collision there and cannot move or jump in any direction.
+const OPEN_RIDE_XZ := Vector2(-25.0, -60.0)
 
 const SETTLE_FRAMES := 300
 
@@ -843,51 +849,32 @@ func _stand_beside_the_mount() -> void:
 		await physics_frame
 
 
-## World origin stands 2.8 m from `data/config/village.json`'s `workshop`
-## prefab, close enough that a mount placed there can clip it -- which is what
-## the sprint and jump checks first caught (a sprint reading 0.00 m/s and a
-## hop reading 0.89 m against an asked 1.60 m).
+## Put every speed/jump leg on the same measured open meadow. The old helper
+## placed the mount at world origin and then drove left. That stopped being a
+## valid fixture when Meadowhart's gameplay radius grew from roughly 0.75 m to
+## 1.245 m: origin is only 2.8 m from the workshop and the larger capsule was
+## born overlapping its collision, producing exactly 0.00 m/s and 0.00 m rise
+## in every direction on both CI attempts. This coordinate is already the real
+## open-meadow fixture used by smoke_build_wins_while_hammer_is_out.gd.
 ##
-## Two dead ends on the way to this, both worth recording so nobody repeats
-## them. First, teleporting to a coordinate read off `village.json`'s numbers
-## (picked clear of every authored structure): `creature_body.place_on_ground()`
-## silently no-ops -- returns false, leaves the body exactly where it was --
-## wherever `_ground_height()`/`_ray_ground()` cannot resolve a height, and
-## Terrain3D's collision streams in around the tracked body rather than
-## existing everywhere the heightmap technically covers. Both attempted
-## coordinates landed nowhere, and the failure was invisible because the call
-## returns a bool this test never checked, so "moved to open ground" was
-## assumed rather than confirmed.
-##
-## Second, driving there instead of teleporting: `move_back` is the heading
-## `_the_stick_moves_the_creature` already presses and already measures clean
-## (10 m/s peak, 7.3 m in 1.5 s) -- so it looked like the fix. It drives the
-## mount straight into the workshop's own south-west-facing open arch bay
-## (`village.json`'s own comment names it): a real, low, roofed porch a
-## creature can walk INTO at full speed without a wall ever stopping it, which
-## is exactly why the horizontal peak reads clean. The jump's own
-## `get_slide_collision()` is what actually found it -- a `(0, -1, 0)` normal
-## (a ceiling) on the exact frame the rise stopped at 0.89 m, bracketed by a
-## steady wall-normal collision on every frame before and after. Distance
-## along that heading never mattered (90 frames or 130 gave the identical
-## clamp): once wedged under the eave, more time driving into it does nothing.
-##
-## `move_left` is a different heading off the same spawn point and clears
-## everything (`get_slide_collision_count() == 0` for the whole rise, 1.68 m
-## on a 1.60 m ask). It is not claimed clear by inspection; it is EARNED by
-## the same evidence the workshop bay was ruled out with.
+## Check `place_on_ground()` rather than assuming a teleport worked. Terrain3D
+## collision follows the tracked player, and the rider follows this body on the
+## next physics frame; the settle window lets that streaming catch the move.
 func _onto_open_ground(mount: Node3D) -> void:
 	if mount == null or not is_instance_valid(mount):
 		return
-	mount.call("place_on_ground", Vector3.ZERO)
-	for i in 20:
-		await physics_frame
-	Input.action_press("move_left")
+	var target := Vector3(OPEN_RIDE_XZ.x, 0.0, OPEN_RIDE_XZ.y)
+	if not bool(mount.call("place_on_ground", target)):
+		_fail("the open-meadow fixture at (%.1f, %.1f) has no ground; the riding measurements cannot run"
+			% [OPEN_RIDE_XZ.x, OPEN_RIDE_XZ.y])
+		return
 	for i in 90:
 		await physics_frame
-	Input.action_release("move_left")
-	for i in 30:
-		await physics_frame
+	var planar_error := Vector2(mount.global_position.x - OPEN_RIDE_XZ.x,
+		mount.global_position.z - OPEN_RIDE_XZ.y).length()
+	if planar_error > 0.5:
+		_fail("the mount drifted %.2f m from the open-meadow fixture before input; it is not a stable speed/jump stand"
+			% planar_error)
 
 
 ## The trainer's own sprint, for the bar a mounted sprint has to beat. Read

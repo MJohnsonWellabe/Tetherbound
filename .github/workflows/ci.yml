@@ -2051,8 +2051,8 @@ jobs:
           # tree. Two landings running: one branch said 26, another 24, another
           # 27 -- none of them right for the merged tree, which is the whole
           # argument for regenerating rather than incrementing.
-          if [ "$count" -lt 29 ]; then
-            echo "::error::expected at least 29 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
+          if [ "$count" -lt 36 ]; then
+            echo "::error::expected at least 36 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
             exit 1
           fi
           # Named registration, on top of the count. Discovery alone would let a
@@ -2062,7 +2062,7 @@ jobs:
           # smoke adds its file here.
           #
           # Surveyed 2026-09-06 for genuine duplicates before this shard was
-          # split (owner direction): every one of these 29 has a distinct
+          # split (owner direction): every one of these 36 has a distinct
           # player-visible claim tied to a distinct lane/directive item --
           # `host_join_leave` (a quiet host exit) and `host_exit_saves` (host
           # exits MID-FIGHT) look like a pair but are deliberately different
@@ -2096,8 +2096,15 @@ jobs:
             tests/smoke_net_sleep_vote.gd \
             tests/smoke_net_split_realms.gd \
             tests/smoke_net_storage_concurrency.gd \
+            tests/smoke_net_stormwood_hosted_trainers.gd \
+            tests/smoke_net_stormwood_livewire.gd \
+            tests/smoke_net_stormwood_realms.gd \
             tests/smoke_net_trade.gd \
-            tests/smoke_net_two_peers_boot.gd
+            tests/smoke_net_two_peers_boot.gd \
+            tests/smoke_net_water_alpha.gd \
+            tests/smoke_net_water_mounted_swimming.gd \
+            tests/smoke_net_water_swim_stone_late_join.gd \
+            tests/smoke_net_water_swimming.gd
           do
             case " $files " in
               *" $required "*) ;;
