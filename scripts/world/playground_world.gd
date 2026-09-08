@@ -837,12 +837,21 @@ func _ready() -> void:
 	var profile := str(_shell_build.call("summary"))
 	if not profile.is_empty():
 		print("[playground] shell build %s" % profile)
-	_shell_ready = true
 	if held_player_mode >= 0:
 		# `_place_player()` separately calls set_physics_process(false) for a
 		# pending remote arrival. Restoring process_mode here does not turn that
 		# flag back on; `_settle_meadows_realm_arrival()` remains its sole release.
+		# Keep the broader hold through one COMPLETE physics tick after the last
+		# build mutation. `physics_frame` is emitted before node physics callbacks,
+		# so the following process boundary is the first safe time to restore.
+		# Otherwise the first resumed `move_and_slide()` can still read the
+		# one-frame apparent velocity of collision moved during construction.
+		await get_tree().physics_frame
+		await get_tree().process_frame
 		restore_player_after_real_build(_player, held_player_mode)
+	# Readiness follows release. Realm entry must not dismiss its overlay while
+	# a real Player is still under the construction hold.
+	_shell_ready = true
 	await get_tree().process_frame
 	BOOT_LOG.phase("playground: first frame presented")
 

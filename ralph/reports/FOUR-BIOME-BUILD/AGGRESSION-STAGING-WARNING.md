@@ -108,3 +108,75 @@ grounded/actionable movement after release, and produce no runaway-velocity
 warning. Multiplayer shell/sliced-transition tests must also remain green so
 the broader hold does not disturb their existing mode restoration. No runtime
 claim follows from the focused tests above.
+
+`tests/smoke_meadows_player_build_hold.gd` is the prepared combined runtime. It
+redirects the production saver to a unique process/run directory before reset,
+boots Meadows fresh, reloads Meadows in the same process, stages Cloudreach via
+the production debug router, then returns through ordinary
+`Game.enter_realm("meadows", "meadows_cloudreach_gate_return")`. The observer
+requires that authored entry to have actually appeared as pending. Each
+Meadows arrival must report its shell ready, clear pending state, restore
+physics and locomotion, stand on production ground, and move at least 1 m from
+ordinary forward input. The return must first land within 1 m of the authored
+`(-33.5,7494)` anchor.
+
+The smoke cannot intercept Godot's native warning stream from inside the same
+process, so its captured terminal log is part of the verdict. A passing
+assertion summary is accepted only if the external scan finds none of:
+
+```text
+_clamp_runaway_velocity
+velocity <number> m/s exceeded the 120 m/s ceiling
+SCRIPT ERROR
+ERROR:
+```
+
+The combined smoke and UID sidecar are parser-clean. Its first production run
+completed with exit 0 and all three behavioral paths playable:
+
+- fresh Meadows boot: pending empty, grounded, 5.03 m ordinary movement;
+- same-process second Meadows boot: pending empty, grounded, 5.03 m movement;
+- authored solo Cloudreach -> Meadows return: the pending entry was observed,
+  cleared at the authored anchor, and ordinary input moved 5.04 m.
+
+That is not a clean hold verdict. The external scan found the identical
+`854729 m/s` `_clamp_runaway_velocity` warning once during the fresh boot and
+once during the second boot. The authored pending-entry return did not emit it.
+The result isolates the remaining race to an ordinary Meadows build release:
+the current implementation restores the Player before the first physics frame
+after construction has finished moving collision. It does not implicate the
+separate pending-arrival physics hold, which remained active through its own
+settle and passed. Captured log:
+
+```text
+%TEMP%\meadows-build-hold-three-path-20260908.log
+```
+
+The next candidate must keep the real Player inert through a post-construction
+physics boundary before restoring the saved process mode, then rerun this exact
+three-path/native-log contract. No runtime claim is made for that candidate yet.
+
+The bounded follow-up now does exactly that: after the last construction
+mutation, `playground_world.gd::_ready()` awaits a physics signal and the
+following process boundary while the real Player remains process-disabled.
+That ordering matters because Godot emits `physics_frame` before node physics
+callbacks; the Player therefore stays inert through one complete physics tick.
+It then restores the exact saved mode/zero velocity and only then advertises
+`_shell_ready`. The order also keeps the
+loading overlay from dismissing while the broader construction hold remains
+active. It does not release `_settle_meadows_realm_arrival()`'s narrower
+`set_physics_process(false)` hold; that flag remains owned by the authored
+arrival settle and deferred completion still retries after shell readiness.
+
+Focused evidence for this follow-up:
+
+```text
+test_meadows_player_build_hold: 3 tests, 12 assertions, 0 failed
+realm_entry_readiness + realm_shell_transition_guard: 10 tests,
+51 assertions, 0 failed
+smoke_meadows_player_build_hold.gd --check-only: exit 0
+```
+
+This post-build settle candidate has not yet received another full-world run.
+The prior failed native-log verdict remains authoritative until the exact same
+three-path smoke passes without either runaway-velocity warning.
