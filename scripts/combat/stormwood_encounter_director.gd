@@ -233,7 +233,13 @@ func end_hosted_trainer(_won: bool) -> void:
 
 
 func award_hosted_trainer(spec: Dictionary, peers: Array) -> void:
-	if not _is_host():
+	# Stormwood's encounter hub owns trainer rounds even in solo play.  The
+	# shared director's `_is_host()` intentionally means "an active network
+	# session whose peer is host" for replicated spawn work, so it is false in
+	# that ordinary offline case.  Reward authority is the broader Game/Session
+	# contract: solo and the active host may commit; an active client may not.
+	if _session == null or not _session.has_method("is_host") \
+			or not bool(_session.call("is_host")):
 		return
 	for fact: Dictionary in ENCOUNTER_REWARDS.world_facts(spec, "stormwood"):
 		_submit_reward_intent(fact)
