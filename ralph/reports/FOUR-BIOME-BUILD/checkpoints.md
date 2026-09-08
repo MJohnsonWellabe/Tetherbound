@@ -619,6 +619,24 @@
   Fresh-save opening-to-ending composition and full forward-view coverage
   remain open. The playable-first target and backlog are unchanged.
 
+## 2026-09-08 11:25 UTC — owner-requested session wrap
+
+- Handoff: `docs/HANDOFF_FOUR_BIOME_2026-09-08_SESSION_WRAP.md`.
+- Main included through merge `01f85b2b356de72689eb90e42242e42ae64d5dfb`
+  (main `f6b79a6b32983d3b60f7333d8b44706736701474`). Last remote push remains
+  `c3cd1ac827655c765dd66f0a0d811b861d51f63a`; CI34218809408 terminal26success/
+  3skip, all successful logs reviewed, all smoke first attempts pass. No wrap push.
+- Water opening→Tovin exit0 proves ordinary lesson, harvest/payment, travel,
+  two opponents and durable flags. Varga overlap repaired locally but runtime
+  pending. Full-world map menu cycle exits0 with three frames and no native
+  errors; visual verdict remains pending and root did not judge frames.
+- Brine candidates pass all-species support and road walks; two admission probes
+  remain red from original site's sticky failure before candidate installation.
+  Next session must wait for actual population_ready, not repeat a guessed wait.
+- All three agents stopped; no local Godot process. Preserve the two dirty Water
+  composition files and untracked candidate smoke listed in handoff. No new run,
+  fresh task, automation, milestone pass or goal-blocked claim was made.
+
 ## 2026-09-08 11:00 UTC — CI green, continuous paths still open
 
 - Previous turn was progress: terminal CI evidence recorded and Dace interaction

@@ -6,6 +6,11 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-08, playable build in progress)
 
+**Session wrapped at owner request, 2026-09-08.** Resume from
+`docs/HANDOFF_FOUR_BIOME_2026-09-08_SESSION_WRAP.md` in this same local workspace.
+Local commits and two dirty Shellwatch composition files are newer than remote.
+No Godot process remains. The goal is incomplete, not declared blocked or passed.
+
 The active target is the **playable four-biome build**, as defined by
 `docs/owner/OWNER_DIRECTIVE_2026-09-07_PLAYABLE_FIRST.md`: a fresh save completes
 the opening through Tidewake without debug travel, console commands or a reload
@@ -15,12 +20,15 @@ remain in `docs/SECOND_PASS_BACKLOG.md`; they are not claimed passed.
 PR #79 landed at `7ab4a12647a377a400c43335b64aff8b03ca6d43`. Current work is on
 `codex/four-biome-wave0`, PR #80, which includes main through `f6b79a6b3` via
 merge `01f85b2b356de72689eb90e42242e42ae64d5dfb`. The latest submitted batch is
-`c3cd1ac827655c765dd66f0a0d811b861d51f63a`; CI run `34218809408` is queued,
-not a verdict. The single push follows full review of the previous run and
+`c3cd1ac827655c765dd66f0a0d811b861d51f63a`; CI run `34218809408` is terminal
+success:26 jobs successful, three skipped, all successful job logs reviewed.
+Every smoke passed its first attempt; native-error caveats remain in the report.
+The single push followed full review of the previous run and
 includes the dialogue camera guard, Dace harness repair, prepared Shellwatch
 helper and fail-closed test-runner base check. Focused47 tests/2902 assertions
-pass with clean native output. Tovin's unfinished placement remains local.
-See `CI-34218809408.md` in the build reports; no next push until terminal review.
+pass with clean native output. Tovin's now-proven placement, Varga's pending
+runtime repair and later evidence remain local, outside this CI head.
+See `CI-34218809408.md` in the build reports; no further push at owner wrap.
 Previous head `5fc68033750f2cf5e2c0eed391561fb306ccbf82` / CI `34216463559` is terminal:
 26 successful jobs, three skips, all completed-job logs reviewed. All smoke
 attempts pass first time; native-error caveats remain in the report. Livewire
