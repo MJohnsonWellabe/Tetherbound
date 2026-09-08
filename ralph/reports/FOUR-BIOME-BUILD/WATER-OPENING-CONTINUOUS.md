@@ -38,9 +38,15 @@ playable-path checks. No physical reachability or chapter completion is claimed.
 `-- --through-reedhaven` continues the same player from the earned lesson-east
 landing through the sheltered human crossing, four named resource nodes and
 the material-consuming Reedhaven repair. Its sole extra initial fixture is
-one axe and its hotbar assignment **before world creation/arrival**, representing
-a carried tool rather than Water supplies. No later fixture writes occur.
+one knife, one axe and their hotbar assignments **before world creation/arrival**,
+representing tools carried from the completed prior chapter rather than Water
+supplies. No later fixture writes occur.
 The helper requires the earned lesson and verifies exact six-reed/six-drift
 gathering and six-reed/four-drift repair payment. It does not substitute a
 previously repaired dock or grant materials. A focused verdict test passes
-1 test/4 assertions independently; composed runtime is still unproven.
+2 tests/16 assertions independently, including exact live ItemDB tool matching.
+The first composed run proved arrival, Pell, 64.488m of lesson swimming and the
+human crossing to Reedhaven, then exposed stale `hand` metadata on the first reed
+node; production correctly requires a knife. The fixture/helper now carry and
+equip the prior chapter's knife without weakening that gate. The corrected
+composed runtime is still unproven.

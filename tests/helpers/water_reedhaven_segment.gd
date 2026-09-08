@@ -1,19 +1,25 @@
 extends RefCounted
 
 ## Controller-only Water prefix segment. The caller owns the already-running
-## production world and must have earned the swim lesson and carried an axe in
-## from the preceding campaign. This helper never resets the game, moves an
+## production world and must have earned the swim lesson and carried a knife
+## and axe in from the preceding campaign. This helper never resets the game, moves an
 ## actor directly, or writes inventory/progression state.
 const NAV := preload("res://tests/helpers/stick_navigator.gd")
 const PICKUP_DATA := "res://data/config/water_pickups.json"
 const REPAIR_FLAG := "water_dock_reedhaven_repaired"
 const LESSON_FLAG := "water_swim_lesson_complete"
 const STOPS: Array[String] = [
-	"water:reedhaven:harvest:019", # +3 reed beside the arrival-side spine
+	"water:reedhaven:harvest:019", # +3 reed, knife, arrival-side spine
 	"water:reedhaven:harvest:017", # +3 driftwood west of the central spine
 	"water:reedhaven:harvest:003", # +3 driftwood beside the departure leg
-	"water:reedhaven:harvest:001", # +3 reed beside the departure landing
+	"water:reedhaven:harvest:001", # +3 reed, knife, departure landing
 ]
+const STOP_TOOLS := {
+	"water:reedhaven:harvest:019": "knife",
+	"water:reedhaven:harvest:017": "axe",
+	"water:reedhaven:harvest:003": "axe",
+	"water:reedhaven:harvest:001": "knife",
+}
 
 var failures: Array[String] = []
 var transcript: Array[String] = []
@@ -61,7 +67,7 @@ func run() -> bool:
 		return false
 	if not _player.is_on_floor() or _player.swim_controller.is_swimming():
 		return _fail("Reedhaven crossing did not finish dry and grounded")
-	transcript.append("ordinary human crossing reached Reedhaven")
+	_note("ordinary human crossing reached Reedhaven")
 
 	# These ordered points keep each named disposable node resident before its
 	# interaction. They are authored trail points, not actor-position writes.
@@ -71,18 +77,18 @@ func run() -> bool:
 	if not await _walk_to(spine[1], "Reedhaven arrival approach") \
 			or not await _walk_to(spine[2], "Reedhaven resource approach"):
 		return false
-	if not await _gather(STOPS[0], "reed_fiber", false):
+	if not await _gather(STOPS[0], "reed_fiber", str(STOP_TOOLS[STOPS[0]])):
 		return false
 	if not await _walk_to(spine[3], "Reedhaven central spine"):
 		return false
-	if not await _gather(STOPS[1], "driftwood", true):
+	if not await _gather(STOPS[1], "driftwood", str(STOP_TOOLS[STOPS[1]])):
 		return false
-	if not await _gather(STOPS[2], "driftwood", true):
+	if not await _gather(STOPS[2], "driftwood", str(STOP_TOOLS[STOPS[2]])):
 		return false
 	if not await _walk_to(spine[4], "Reedhaven departure approach") \
 			or not await _walk_to(spine[5], "Reedhaven departure landing"):
 		return false
-	if not await _gather(STOPS[3], "reed_fiber", false):
+	if not await _gather(STOPS[3], "reed_fiber", str(STOP_TOOLS[STOPS[3]])):
 		return false
 
 	var reed_gained := _count("reed_fiber") - reed_before
@@ -103,7 +109,7 @@ func run() -> bool:
 			or _count("driftwood") != int(before_repair.drift) - 4:
 		return _fail("repair charged the wrong material delta: before=%s after={reed:%d,drift:%d}" % [
 			str(before_repair), _count("reed_fiber"), _count("driftwood")])
-	transcript.append("four named nodes yielded6 reed/6 drift; repair spent6 reed/4 drift")
+	_note("four named nodes yielded6 reed/6 drift; repair spent6 reed/4 drift")
 	_completed = true
 	return true
 
@@ -127,10 +133,11 @@ func _preconditions_hold() -> bool:
 		return _fail("Reedhaven segment requires the physically earned swim lesson")
 	if _game.world.flags.has(REPAIR_FLAG):
 		return _fail("Reedhaven segment requires an unrepaired departure dock")
-	if int(_game.inventory.find_slot("axe")) < 0:
-		return _fail("Reedhaven segment requires the campaign-earned axe")
-	if _hotbar_action("axe") == &"":
-		return _fail("campaign axe is not assigned to a controller hotbar action")
+	for tool: String in ["knife", "axe"]:
+		if int(_game.inventory.find_slot(tool)) < 0:
+			return _fail("Reedhaven segment requires the campaign-earned " + tool)
+		if _hotbar_action(tool) == &"":
+			return _fail("campaign %s is not assigned to a controller hotbar action" % tool)
 	for id: String in STOPS:
 		if _harvest_row(id).is_empty():
 			return _fail("named Reedhaven harvest row is absent: " + id)
@@ -166,7 +173,7 @@ func _swim_to(target: Vector3, label: String) -> bool:
 		label, str(_player.global_position), str(target), float(_player.vitals.stamina)])
 
 
-func _gather(id: String, item: String, needs_axe: bool) -> bool:
+func _gather(id: String, item: String, required_tool: String) -> bool:
 	var row := _harvest_row(id)
 	var raw: Array = row.position
 	var authored := Vector3(float(raw[0]), 0.0, float(raw[2]))
@@ -183,10 +190,7 @@ func _gather(id: String, item: String, needs_axe: bool) -> bool:
 	if node == null or str(node.call("resource_item")) != item \
 			or int(node.call("resource_amount")) != int(row.get("yield", 0)):
 		return _fail("named production harvest node did not instantiate exactly: " + id)
-	if needs_axe:
-		if not await _equip_axe():
-			return false
-	elif not await _stow_tool():
+	if not await _equip_tool(required_tool):
 		return false
 	var before := _count(item)
 	var prompt := node.get_node_or_null("Interactable") as Node3D
@@ -202,7 +206,7 @@ func _gather(id: String, item: String, needs_axe: bool) -> bool:
 	if gained != int(row.get("yield", 0)) \
 			or not _game.progression.has("harvest_node:order:" + id):
 		return _fail("%s did not pay its exact production yield/receipt: gained=%d" % [id, gained])
-	transcript.append("%s +%d %s through controller interaction" % [id, gained, item])
+	_note("%s +%d %s through controller interaction" % [id, gained, item])
 	return true
 
 
@@ -226,34 +230,20 @@ func _activate(prompt: Node3D, label: String) -> bool:
 		label, str(_arbiter.call("winning_provider"))])
 
 
-func _equip_axe() -> bool:
+func _equip_tool(tool: String) -> bool:
 	var hold: Node = _player.get("tool_hold")
 	for frame in 120:
 		if hold == null or not hold.call("is_swinging"):
 			break
 		await _tree.physics_frame
-	if str(_game.equipped_tool) != "axe":
-		await _tap(_hotbar_action("axe"))
+	if str(_game.equipped_tool) != tool:
+		await _tap(_hotbar_action(tool))
 	for frame in 45:
-		if str(_game.equipped_tool) == "axe" and hold != null \
+		if str(_game.equipped_tool) == tool and hold != null \
 				and hold.call("prop_node") != null:
 			return true
 		await _tree.physics_frame
-	return _fail("controller hotbar did not visibly equip the campaign axe")
-
-
-func _stow_tool() -> bool:
-	if str(_game.equipped_tool).is_empty():
-		return true
-	var action := _hotbar_action(str(_game.equipped_tool))
-	if action == &"":
-		return _fail("held tool has no controller hotbar action: " + str(_game.equipped_tool))
-	await _tap(action)
-	for frame in 45:
-		if str(_game.equipped_tool).is_empty():
-			return true
-		await _tree.physics_frame
-	return _fail("controller hotbar did not stow the held tool")
+	return _fail("controller hotbar did not visibly equip the campaign " + tool)
 
 
 func _walk_to(target: Vector3, label: String, tolerance: float = 1.3) -> bool:
@@ -380,5 +370,10 @@ func _frames(count: int) -> void:
 func _fail(message: String) -> bool:
 	_stop_stick()
 	failures.append(message)
-	transcript.append("FAIL: " + message)
+	_note("FAIL: " + message)
 	return false
+
+
+func _note(message: String) -> void:
+	transcript.append(message)
+	print("WATER REEDHAVEN: " + message)

@@ -2,9 +2,9 @@ extends SceneTree
 
 ## Bounded chapter-entry diagnostic, NOT fresh-save campaign acceptance.
 ## The fixture is an empty solo Water realm at its production arrival; optional
-## --through-reedhaven supplies only a disclosed pre-arrival axe and hotbar slot.
-## No actor pose, Water fact, inventory, HP or stamina is injected. The player
-## walks to Pell, finishes his real dialogue, then earns the physical lesson.
+## --through-reedhaven supplies only disclosed pre-arrival knife/axe hotbar tools.
+## No actor pose, Water fact, inventory, HP or stamina is injected after arrival.
+## The player walks to Pell, finishes his real dialogue, then earns the physical lesson.
 const WORLD := preload("res://scenes/world/water_archipelago.tscn")
 const SAVE := preload("res://scripts/save/save_game.gd")
 const NAV := preload("res://tests/helpers/stick_navigator.gd")
@@ -29,15 +29,17 @@ func _run() -> void:
 	game.save_system = SAVE.new("user://water_opening_continuous_%d/" % Time.get_ticks_usec())
 	game.reset_for_new_game()
 	game.current_realm = "water"
-	# Optional composition fixture, before world/arrival: an axe carried from
+	# Optional composition fixture, before world/arrival: tools carried from
 	# the prior chapter. Never grant Water materials or replace earned lesson
 	# progress. The reusable Reedhaven segment itself grants nothing.
 	if through_reedhaven:
-		if game.inventory.add("axe", 1) != 0 or game.inventory.count("axe") != 1:
-			_fail("Could not create disclosed pre-arrival axe fixture")
+		if game.inventory.add("axe", 1) != 0 or game.inventory.add("knife", 1) != 0 \
+				or game.inventory.count("axe") != 1 or game.inventory.count("knife") != 1:
+			_fail("Could not create disclosed pre-arrival knife/axe fixture")
 			return
 		game.assign_hotbar(0, "axe")
-		print("WATER OPENING FIXTURE: one pre-arrival axe for optional Reedhaven; no Water materials/progress")
+		game.assign_hotbar(1, "knife")
+		print("WATER OPENING FIXTURE: pre-arrival knife/axe for optional Reedhaven; no Water materials/progress")
 	world = WORLD.instantiate()
 	root.add_child(world)
 	current_scene = world
