@@ -1,12 +1,14 @@
 extends SceneTree
 
 ## Bounded chapter-entry diagnostic, NOT fresh-save campaign acceptance.
-## The sole fixture is an empty solo Water realm at its production arrival.
+## The fixture is an empty solo Water realm at its production arrival; optional
+## --through-reedhaven supplies only a disclosed pre-arrival axe and hotbar slot.
 ## No actor pose, Water fact, inventory, HP or stamina is injected. The player
 ## walks to Pell, finishes his real dialogue, then earns the physical lesson.
 const WORLD := preload("res://scenes/world/water_archipelago.tscn")
 const SAVE := preload("res://scripts/save/save_game.gd")
 const NAV := preload("res://tests/helpers/stick_navigator.gd")
+const REEDHAVEN := preload("res://tests/helpers/water_reedhaven_segment.gd")
 var game: Node
 var world: Node3D
 var player: CharacterBody3D
@@ -15,16 +17,27 @@ var navigator: RefCounted
 var finished := false
 var activated: Object
 var swim_metres := 0.0
+var through_reedhaven := false
 
 func _init() -> void:
 	_run.call_deferred()
 
 func _run() -> void:
+	through_reedhaven = "--through-reedhaven" in OS.get_cmdline_user_args()
 	_watchdog.call_deferred()
 	game = root.get_node("Game")
 	game.save_system = SAVE.new("user://water_opening_continuous_%d/" % Time.get_ticks_usec())
 	game.reset_for_new_game()
 	game.current_realm = "water"
+	# Optional composition fixture, before world/arrival: an axe carried from
+	# the prior chapter. Never grant Water materials or replace earned lesson
+	# progress. The reusable Reedhaven segment itself grants nothing.
+	if through_reedhaven:
+		if game.inventory.add("axe", 1) != 0 or game.inventory.count("axe") != 1:
+			_fail("Could not create disclosed pre-arrival axe fixture")
+			return
+		game.assign_hotbar(0, "axe")
+		print("WATER OPENING FIXTURE: one pre-arrival axe for optional Reedhaven; no Water materials/progress")
 	world = WORLD.instantiate()
 	root.add_child(world)
 	current_scene = world
@@ -43,7 +56,7 @@ func _run() -> void:
 	if not arrival.is_finite() or not player.is_on_floor() or player.global_position.distance_to(arrival) > 3.0:
 		_fail("Production arrival did not settle at First Shore: player=%s expected=%s" % [player.global_position, arrival])
 		return
-	print("WATER OPENING ARRIVED: production pose=%s; empty chapter-entry fixture, not earned Stormwood transition" % player.global_position)
+	print("WATER OPENING ARRIVED: production pose=%s; chapter-entry fixture (axe=%s), not earned Stormwood transition" % [player.global_position, through_reedhaven])
 	if game.world.flags.has("water_swim_lesson_complete") or game.local.flags.has("water_swim_lesson_briefed"):
 		_fail("Opening fixture already contains lesson progress")
 		return
@@ -103,8 +116,17 @@ func _run() -> void:
 	if not player.is_on_floor() or player.swim_controller.is_swimming():
 		_fail("Lesson completion did not end at dry grounded landing")
 		return
-	finished = true
 	print("WATER OPENING PASS: arrival -> Pell -> physical lesson; swimming=%.3fm; no post-arrival fixture writes" % swim_metres)
+	if through_reedhaven:
+		var segment := REEDHAVEN.new()
+		segment.setup(self, world, player, camera)
+		var repaired: bool = await segment.run()
+		print("WATER REEDHAVEN RESULT: %s" % str(segment.result()))
+		if not repaired or not bool(segment.result().ok):
+			_fail("Ordinary Reedhaven continuation failed; inspect its exact result above")
+			return
+		print("WATER OPENING THROUGH REEDHAVEN PASS: paid repair earned through ordinary crossing and gathering")
+	finished = true
 	quit(0)
 
 func _walk(point: Vector3, label: String) -> bool:
@@ -174,6 +196,6 @@ func _fail(reason: String) -> bool:
 	return false
 
 func _watchdog() -> void:
-	await create_timer(600.0).timeout
+	await create_timer(1200.0 if through_reedhaven else 600.0).timeout
 	if not finished:
-		_fail("10-minute opening watchdog expired")
+		_fail("Opening watchdog expired (20 minutes with Reedhaven; 10 minutes lesson-only)")
