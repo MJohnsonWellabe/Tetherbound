@@ -1,7 +1,9 @@
 # Main recovery — 2026-09-08
 
 Owner interrupted the Wave 1 landing wait to prioritize a verified green main.
-No campaign completion is claimed. Wave 1 has not started.
+That interruption is complete: main75aaccca0210a9bc1ac0f16bac687d8557f0aacf
+passed its own post-merge CI34231941105. Wave 1 now continues separately;
+no campaign completion is claimed. The sections below retain the repair history.
 
 ## Reproductions from CI, before repairs
 
@@ -171,3 +173,22 @@ creature; adopt_starter is not a swap` error also present in the original CI
 artifact, so native output is not clean. Independent astra review found no
 actionable issues and confirmed unchanged HP/refusal/attempt criteria. This
 is not yet exact-head green evidence; the next coherent push requires fresh CI.
+
+## Final landing evidence — 2026-09-08 13:51 UTC
+
+Exact head `9cbec44fbbcf644bc2019cea8cab6c32aab32fd5`: run `34229513422`
+passed on attempt 1, 26 successful jobs / three existing conditional skips.
+Marked ready only after complete job review, then squash-merged PR #80 under
+owner authorization. Main is `75aaccca0210a9bc1ac0f16bac687d8557f0aacf`;
+its handoff file is present and its tree matches that verified head.
+
+Main's OWN push run `34231941105`, 13:26:09–13:50:58 UTC, passes attempt 1:
+27 successful jobs / two existing conditional skips. All seven multiplayer
+shards and export pass; all four unit shards total2921 tests/486218 assertions.
+Every job, step and log evidence reviewed. Shared-boss HP124.412->124.412 and
+boss194.512->194.512; catch/shared-wild/shared-boss/Tamsin all attempt1/1;
+Tamsin's both rounds have authoritative hit=true,killed=true,hp=0. The peer-death
+FAIL line is its intentional negative control, explicitly verified as exit2PASS.
+Windows binary and exported-runtime terrain checks pass. Raw logs remain local
+under `.artifacts/ci-34231941105/`. No CI rerun, raised ceiling, new skip,
+loosened assertion or added retry. The four-biome goal resumes only now.

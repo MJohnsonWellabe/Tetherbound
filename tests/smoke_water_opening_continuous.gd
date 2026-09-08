@@ -5,6 +5,7 @@ extends SceneTree
 ## --through-reedhaven supplies only disclosed pre-arrival knife/axe hotbar tools.
 ## --through-brine additionally carries the disclosed synthetic level-44 party.
 ## --through-shellwatch retains that same state and party without another fixture.
+## --through-tidal-recipe continues only to Alpha defeat and Iona's recipe.
 ## No actor pose, Water fact, inventory, HP or stamina is injected after arrival.
 ## The player walks to Pell, finishes his real dialogue, then earns the physical lesson.
 const WORLD := preload("res://scenes/world/water_archipelago.tscn")
@@ -15,6 +16,7 @@ const NAV := preload("res://tests/helpers/stick_navigator.gd")
 const REEDHAVEN := preload("res://tests/helpers/water_reedhaven_segment.gd")
 const BRINE := preload("res://tests/helpers/water_brine_segment.gd")
 const SHELLWATCH := preload("res://tests/helpers/water_shellwatch_segment.gd")
+const TIDAL := preload("res://tests/helpers/water_tidal_segment.gd")
 const BRINE_PARTY: Array[String] = [
 	"sparkit", "mudsnout", "bramblebun", "terrapup", "brooktail",
 ]
@@ -30,6 +32,7 @@ var swim_metres := 0.0
 var through_reedhaven := false
 var through_brine := false
 var through_shellwatch := false
+var through_tidal_recipe := false
 
 func _init() -> void:
 	_run.call_deferred()
@@ -39,10 +42,16 @@ func _run() -> void:
 	through_reedhaven = bool(selection.through_reedhaven)
 	through_brine = bool(selection.through_brine)
 	through_shellwatch = bool(selection.through_shellwatch)
+	through_tidal_recipe = bool(selection.through_tidal_recipe)
 	_watchdog.call_deferred()
 	game = root.get_node("Game")
-	game.save_system = SAVE.new("user://water_opening_continuous_%d/" % Time.get_ticks_usec())
+	var scratch_dir := "user://water_opening_continuous_%d/" % Time.get_ticks_usec()
+	game.save_system = SAVE.new(scratch_dir)
 	game.reset_for_new_game()
+	if str(game.save_system.slot_path(0)) != scratch_dir + "slot_0.json":
+		_fail("Opening did not retain its test-owned save binding")
+		return
+	print("WATER OPENING SAVE: " + ProjectSettings.globalize_path(scratch_dir))
 	game.current_realm = "water"
 	# Optional composition fixture, before world/arrival: tools carried from
 	# the prior chapter. Never grant Water materials or replace earned lesson
@@ -174,14 +183,25 @@ func _run() -> void:
 			_fail("Ordinary Shellwatch continuation failed; inspect its exact result above")
 			return
 		print("WATER OPENING THROUGH SHELLWATCH PASS: residents, pump and next dock resolved")
+	if through_tidal_recipe:
+		var tidal := TIDAL.new()
+		tidal.setup(self, world, player, camera)
+		var recipe_earned: bool = await tidal.run()
+		print("WATER TIDAL RESULT: %s" % str(tidal.result()))
+		if not recipe_earned or not bool(tidal.result().ok):
+			_fail("Ordinary Tidal recipe continuation failed; inspect exact result above")
+			return
+		print("WATER OPENING THROUGH TIDAL RECIPE PASS: Alpha/Stone/recipe earned; saddle/capture/mounted suffix unproven")
 	finished = true
 	quit(0)
 
 
 static func requested_segments(args: PackedStringArray) -> Dictionary:
-	var wants_shellwatch := "--through-shellwatch" in args
+	var wants_tidal := "--through-tidal-recipe" in args
+	var wants_shellwatch := wants_tidal or "--through-shellwatch" in args
 	var wants_brine := wants_shellwatch or "--through-brine" in args
 	return {
+		"through_tidal_recipe": wants_tidal,
 		"through_shellwatch": wants_shellwatch,
 		"through_brine": wants_brine,
 		"through_reedhaven": wants_brine or "--through-reedhaven" in args,

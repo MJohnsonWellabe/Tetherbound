@@ -19,6 +19,7 @@ const PUMP_FLAG := "water_shellwatch_pump_disabled"
 const COMBINED_FLAG := "water_dock_shellwatch_residents_freed_and_pump_disabled"
 const CAMP_ID := "water_camp_shellwatch"
 const DEPARTURE_BARRIER := "shellwatch_to_tidal_cradle_dockBarrier"
+const SOLM_APPROACH := [Vector2(315.0, 1104.0), Vector2(342.0, 1104.0)]
 
 var failures: Array[String] = []
 var transcript: Array[String] = []
@@ -87,7 +88,11 @@ func run() -> bool:
 		return false
 	if not await _walk_to(shellwatch[2], "Shellwatch trainer approach"):
 		return false
+	if not await _walk_solm_approach(false):
+		return false
 	if not await _fight_trainer(SOLM_ID, SOLM_FLAG, 2):
+		return false
+	if not await _walk_solm_approach(true):
 		return false
 	if not await _walk_to(shellwatch[2], "return from Solm") \
 			or not await _walk_to(shellwatch[1], "resident-release return"):
@@ -204,10 +209,10 @@ func _preconditions_hold() -> bool:
 		if not _director.trainer_nodes.has(id) or not _director.trainer_prompts.has(id):
 			return _fail("mandatory production trainer/prompt is absent: " + id)
 	if not trainer_contract(_director.trainer_specs.get(SOLM_ID, {}), SOLM_ID, 47,
-			["mirejaw", "mangrove_monitor"]):
+			["water_mirejaw", "water_mangrove_monitor"]):
 		return _fail("production Solm team contract is absent")
 	if not trainer_contract(_director.trainer_specs.get(IRVA_ID, {}), IRVA_ID, 48,
-			["riptusk", "cannonback"]):
+			["water_riptusk", "water_cannonback"]):
 		return _fail("production Irva team contract is absent")
 	return true
 
@@ -238,6 +243,19 @@ func _swim_to(target: Vector3, label: String) -> bool:
 	_stop_stick()
 	return _fail("human crossing stalled for %s: player=%s target=%s stamina=%.2f" % [
 		label, str(_player.global_position), str(target), float(_player.vitals.stamina)])
+
+
+func _walk_solm_approach(returning: bool) -> bool:
+	# The direct spine-to-Solm diagonal crosses a >45-degree landing-sector
+	# flank. Walk around its northern end on the existing terrain instead.
+	var points: Array = SOLM_APPROACH.duplicate()
+	if returning:
+		points.reverse()
+	for point: Vector2 in points:
+		var target := Vector3(point.x, _world.ground_height_at(point.x, point.y) + 0.1, point.y)
+		if not await _walk_to(target, "Solm flank path %s" % str(point)):
+			return false
+	return true
 
 
 func _fight_trainer(id: String, flag: String, expected_opponents: int) -> bool:
@@ -308,9 +326,9 @@ func _ensure_ally_deployed(label: String) -> bool:
 		label, str(_director.usable_ally_blocker())])
 
 
-func _recover_at_camp(label: String) -> bool:
-	var rest: Node3D = _camps.camps.get(CAMP_ID) as Node3D
-	var bed: Node3D = _camps.get_node_or_null(CAMP_ID + "_creature_bed") as Node3D
+func _recover_at_camp(label: String, camp_id: String = CAMP_ID) -> bool:
+	var rest: Node3D = _camps.camps.get(camp_id) as Node3D
+	var bed: Node3D = _camps.get_node_or_null(camp_id + "_creature_bed") as Node3D
 	var bed_prompt := bed.get_node_or_null("Interactable") as Node3D if bed != null else null
 	var rest_prompt := rest.get_node_or_null("Interactable") as Node3D if rest != null else null
 	if rest == null or bed == null or bed_prompt == null or rest_prompt == null:
@@ -371,6 +389,15 @@ func _recover_at_camp(label: String) -> bool:
 	if int(_game.day) != day_before + 1 or bool(member.fainted) \
 			or float(member.hp) < float(member.max_hp) - 0.01:
 		return _fail("Shellwatch ordinary rest did not advance one day and heal the bedded creature " + label)
+	# Bedding the active member advances Party's selection. Rest heals it but
+	# leaves that selection alone; restore it through the ordinary cycle input.
+	var cycle_count := recovery_cycle_count(_game.local.party, member)
+	if cycle_count < 0:
+		return _fail("Shellwatch recovered creature cannot be selected " + label)
+	for step in cycle_count:
+		await _tap(&"party_cycle")
+	if _game.local.party.active() != member:
+		return _fail("Shellwatch controller did not select the recovered creature " + label)
 	await _tap(&"creature_recall")
 	for frame in 180:
 		if _director.ally_body() != null and _director.ally_instance() == member:
@@ -378,6 +405,26 @@ func _recover_at_camp(label: String) -> bool:
 			return true
 		await _tree.physics_frame
 	return _fail("Shellwatch camp did not redeploy the recovered creature " + label)
+
+
+static func recovery_cycle_count(party: RefCounted, member: RefCounted) -> int:
+	if party == null or member == null or member.fainted or member.resting:
+		return -1
+	var members: Array = party.members()
+	var start := members.find(party.active())
+	if start < 0 or not members.has(member):
+		return -1
+	if party.active() == member:
+		return 0
+	var presses := 0
+	for offset in range(1, members.size()):
+		var candidate: RefCounted = members[(start + offset) % members.size()]
+		if candidate.fainted or candidate.resting:
+			continue
+		presses += 1
+		if candidate == member:
+			return presses
+	return -1
 
 
 func _activate_dock_action(id: String, flag: String) -> bool:

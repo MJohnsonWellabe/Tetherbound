@@ -478,19 +478,21 @@ func _clear_capacitor_alpha() -> bool:
 	const CLEAR_FLAG := "stormwood:named:capacitor_alpha:cleared"
 	if bool(_game.get("progression").call("has", CLEAR_FLAG)):
 		return true
+	# A proximity fight may already be active after the road walk. Finish it
+	# before exploration recall/cycle inputs, using the existing combat bound.
+	if bool(_manager.call("is_fighting")):
+		if not await _fight_current("Capacitor Alpha arrival"):
+			return false
+		if bool(_game.get("progression").call("has", CLEAR_FLAG)):
+			_note("CLEARED the named Capacitor Alpha during its ordinary road approach")
+			return true
 	var body := _named_wild("capacitor_alpha")
 	if body == null:
 		return _fail("the live named Capacitor Alpha is absent before its durable clear fact")
-	# Voltarach is production-aggressive. Ordinary movement into its exact live
-	# position lets its wants_to_engage path start combat; no helper calls the
-	# director's private fight entry point or changes either body's transform.
+	# Proximity may already have announced while no usable ally was deployed.
+	# Use the ordinary explicit Engage offer too; never assume an aggressive
+	# body's one-shot request will be repeated after party recovery.
 	for attempt in 4:
-		if bool(_manager.call("is_fighting")):
-			if not await _fight_current("Capacitor Alpha"):
-				return false
-		if await _wait_flag(CLEAR_FLAG, 180):
-			_note("CLEARED the named Capacitor Alpha through its production once-only fight")
-			return true
 		if not await _ensure_usable_ally("Capacitor Alpha re-engagement"):
 			return false
 		body = _named_wild("capacitor_alpha")
@@ -499,16 +501,82 @@ func _clear_capacitor_alpha() -> bool:
 		var at := Vector2(body.global_position.x, body.global_position.z)
 		if not await _walk_xz(at, "Capacitor Alpha live approach %d" % (attempt + 1), 1.2):
 			return false
+		if bool(_game.get("progression").call("has", CLEAR_FLAG)):
+			_note("CLEARED the named Capacitor Alpha during its ordinary live approach")
+			return true
+		if not is_instance_valid(body):
+			return _fail("Capacitor Alpha retired during approach without its clear receipt")
+		_note("ALPHA admission before input: " + str(_alpha_admission_snapshot(body)))
 		for _frame in 180:
 			if bool(_manager.call("is_fighting")):
 				break
 			if bool(_game.get("progression").call("has", CLEAR_FLAG)):
 				break
+			if _named_engage_ready(body):
+				_activated_provider_id = 0
+				_activated_provider_path = ""
+				var observer := Callable(self, "_on_arbiter_activated")
+				_arbiter.activated.connect(observer)
+				await _tap(&"interact")
+				if _arbiter.activated.is_connected(observer):
+					_arbiter.activated.disconnect(observer)
+				if bool(_manager.call("is_fighting")) \
+						and _manager.call("enemy_body") != body:
+					return _fail("explicit named Alpha Engage admitted a different body")
+				_note("ALPHA admission after input: " + str(_alpha_admission_snapshot(body)))
+				break
 			await _tree.physics_frame
+		_note("ALPHA approach ended: " + str(_alpha_admission_snapshot(body)))
+		# Resolve the encounter in the attempt that admitted it, including the
+		# final approach; deferring this to the next iteration loses attempt four.
+		if bool(_manager.call("is_fighting")):
+			if not await _fight_current("Capacitor Alpha"):
+				return false
+		if await _wait_flag(CLEAR_FLAG, 180):
+			_note("CLEARED the named Capacitor Alpha through its production once-only fight")
+			return true
 	return _fail("four ordinary approaches did not clear the named Capacitor Alpha (body=%s distance=%.2f outcome=%s)" % [
-		str(body.get_path()) if body != null else "<none>",
-		_player.global_position.distance_to(body.global_position) if body != null else INF,
+		str(body.get_path()) if is_instance_valid(body) else "<none>",
+		_player.global_position.distance_to(body.global_position) if is_instance_valid(body) else INF,
 		_last_combat_outcome])
+
+
+func _named_engage_ready(body: Node3D) -> bool:
+	if not is_instance_valid(body) or _director == null or _arbiter == null:
+		return false
+	var offer: Dictionary = _arbiter.call("winner")
+	return _director.call("_engageable") == body \
+		and _arbiter.call("winning_provider") == _director \
+		and bool(offer.get("actionable", false))
+
+
+func _alpha_admission_snapshot(body: Node3D) -> Dictionary:
+	if not is_instance_valid(body):
+		return {"body": "<retired>"}
+	var candidate := _director.call("_engageable") as Node3D
+	var winner := _arbiter.call("winning_provider") as Node
+	var owner := INPUT_OWNER.current(_tree)
+	var ally := _director.call("ally_instance") as RefCounted
+	return {
+		"body": str(body.get_path()), "aggressive": body.get("aggressive"),
+		"announced": body.get("_has_announced"), "grace": body.get("_grace_left"),
+		"returning_home": body.get("_returning_home"),
+		"alive": body.call("is_alive"), "visible": body.visible,
+		"distance": _player.global_position.distance_to(body.global_position),
+		"no_usable_ally": _director.call("no_usable_ally"),
+		"ally_deployed": _director.call("ally_body") != null,
+		"candidate": str(candidate.get_path()) if candidate != null else "<none>",
+		"winner": str(winner.get_path()) if winner != null else "<none>",
+		"offer": _arbiter.call("winner"), "fighting": _manager.call("is_fighting"),
+		"arbiter_enabled": _arbiter.call("enabled"), "tree_paused": _tree.paused,
+		"input_owner": str(owner.get_path()) if owner != null else "<none>",
+		"interact_pressed": Input.is_action_pressed("interact"),
+		"activated_provider": _activated_provider_path,
+		"ally_fainted": ally.get("fainted") if ally != null else null,
+		"ally_resting": ally.get("resting") if ally != null else null,
+		"ally_hp": ally.get("hp") if ally != null else null,
+		"manager_state": _manager.get("state"),
+	}
 
 
 func _named_wild(id: String) -> Node3D:

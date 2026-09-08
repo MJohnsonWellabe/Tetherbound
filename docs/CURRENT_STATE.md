@@ -6,36 +6,72 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-08, playable build in progress)
 
-**Resumed 2026-09-08; owner priority is green main before Wave 1.** Main remains
-`f6b79a6b32983d3b60f7333d8b44706736701474`. Its run `34180178882` failed the
-shared-wild-fight reach diagnostic (multiplayer shard 3) and Tamsin final hosted
-completion (shard 7). PR #80's preservation head `b16d117c639c2ab503a39b7e0a5e0e0eebe238fb`
-also failed its own run `34221457038`: Varga ground clearance in unit shard 1,
-Tamsin completion in multiplayer shard 4, and client-first catch observation in
-multiplayer shard 5. Prior green runs do not validate that head. The repair
-batch corrects Varga's data clearance, observes completed asynchronous catch
-admission, and stages Tamsin's combat fixture at production body clearance
-with explicit authoritative killing-hit checks. Local catch (47 checks) and
-Tamsin (59 checks) smokes and the required world boot pass. The local full suite
-finished 2993 tests / 3842642 assertions / three failed tests: the contradictory
-Varga route expectation (follow-up now passes both suites, 5/517) plus two Gate F
-issues recorded in `SECOND_PASS_BACKLOG.md`. CI `34225403192` on `d387d0bdd`
-completed 25 successful jobs / one failure / three intentional skips. Every
-job log was reviewed; all runtime and multiplayer shards passed first attempts.
-That Varga expectation is corrected in follow-up `d0f9a263e`; its CI
-`34227293723` passes all four unit shards, but multiplayer shard 5 fails the
-shared-boss friendly-fire HP check (124.403 before / 109.718 after). The
-`friendly_target` refusal passed. The run finished 25 successful jobs / one
-failure / three intentional skips; every job log and step was reviewed. The
-smoke reads HP outside its boss-hit-counter window, so a legitimate hit in
-either sampling gap can falsely fail the check. An atomic probe correction
-preserves the HP/refusal criteria; focused regressions pass (3 tests / 9
-assertions), as does its first repaired runtime run (85 checks / zero failures).
-Independent review found no actionable issues. The precise CI hit frame is
-not reconstructed. The next exact-head CI remains required before landing.
-PR #80 remains draft. See
-`ralph/reports/FOUR-BIOME-BUILD/MAIN-GREEN-20260908.md` for exact failures and
-evidence. The four-biome goal is incomplete, and Wave 1 has not started.
+**2026-09-08 13:51 UTC: main is green; Wave 1 starts from it.** PR #80 was
+squash-merged at `75aaccca0210a9bc1ac0f16bac687d8557f0aacf` after exact-head
+`9cbec44fbbcf644bc2019cea8cab6c32aab32fd5` CI `34229513422` completed
+26 successful jobs / three existing conditional skips, attempt 1. Main's OWN
+push run `34231941105` completed 27 successful jobs / two existing conditional
+skips, attempt 1, at 13:50:58 UTC. Every job/step and log evidence was reviewed,
+including all seven multiplayer shards, Windows export and exported-runtime
+terrain verification. The fetched handoff file is present and main's tree
+matches the verified PR head. No assertions, ceilings, shards or retries were
+loosened. Repair detail: `ralph/reports/FOUR-BIOME-BUILD/MAIN-GREEN-20260908.md`.
+
+The repaired paths include scaled-body shared-wild diagnostics, Varga's existing
+terrain clearance, completed asynchronous catch observation, Tamsin's real-body
+staging with authoritative killing-hit checks, and atomic shared-boss HP/hit
+observation. CI green does not erase the two local Gate F full-checkout issues
+recorded in `SECOND_PASS_BACKLOG.md`; the local full suite is not claimed green.
+
+Fresh branch `codex/four-biome-wave1` starts from that verified main. Stormwood's
+Varga/Ondra/Crown continuation, Tidewake's Shellwatch-onward composition and the
+actual uninterrupted fresh-save opening-to-ending run remain unproved. Existing
+chapter fixtures carry synthetic starting state; they are not milestone proof.
+
+**15:56 UTC update:** draft PR #85 head `0a91f9b39aa552e554b849b4eb57d8011e2c7589`
+is not green. Run `34245691443` passed all runtime smoke steps and 2977 unit
+tests / 486656 assertions, but MP4 artifact finalization failed with HTTP 403.
+No rerun or merge requested. The latest genuine fresh path passed key consumption,
+earned five creatures and one training win, then stopped on a terrain approach
+at 293.92 seconds. Owner saves are unchanged. The Stormwood exact-Engage attempt
+also failed admission; its underlying cause remains under bounded diagnosis.
+These later observations supersede the pending-runtime descriptions below.
+
+The changed Fenn placement now passes ordinary Ondra access: the serialized
+Stormwood path collected the actual route-09 reward and learned the Stormglass
+Arch recipe through dialogue. It next failed admission to Capacitor Alpha in
+the Crown helper, before Crown construction. An exact-target ordinary Engage
+repair has focused tests and awaits runtime; no Crown completion is claimed.
+
+**Wave 1 progress, 2026-09-08:** the genuine fresh opening through village tools,
+key consumption, Satchel assignments and three physical harvests now passes in
+172.968 seconds with owner saves unchanged and no native/script errors. A prior
+expanded attempt exposed shared-provider target confusion; the corrected helper
+verifies the exact offered and admitted creature. The next fresh run earned all
+five creatures and six real training wins, then failed ordinary navigation to
+the next wild encounter after 519.745 seconds. Camp/care/tournament and bridge
+continuations are prepared, not runtime-proven. See
+`ralph/reports/FOUR-BIOME-BUILD/WAVE1-FRESH-COMPOSITION.md`.
+
+Draft PR #85's first head `856534a7` completed CI `34236551038` with25 successful
+jobs, one MP5 control-listener bind failure, and three conditional skips. The
+local allocator fix reserves OS-assigned TCP listeners before spawning peers;
+real socket tests and the full two-peer catch race (47 assertions) pass. The
+changed code still awaits exact-head CI. This does not
+change the verified main result above. See
+`ralph/reports/FOUR-BIOME-BUILD/CI-CONTROL-PORT-20260908.md`.
+
+That allocator batch now passes exact-head CI `34242634338` on
+`8cd81b422e466a3918f471344750ee7edd15e883`: 26 successful jobs, three existing
+conditional skips, attempt 1; all four unit shards total 2,963 tests / 486,540
+assertions. Every job and its log evidence was reviewed. PR #85 remains draft
+while the next observed-path repairs are prepared; this is not a main landing.
+The next fresh camp attempt stopped at the inherited straight-line village-key
+walk before team selection. Its obstacle-aware input replacement has focused
+tests and awaits live proof. Water's full chapter fixture proved actual
+Shellwatch recovery/selection, then stopped on the steep Solm approach; a
+terrain-supported detour retains the existing stance and bounds. Full fresh
+camp/tournament/Warrens and opening-to-ending completion remain unproved.
 
 The active target is the **playable four-biome build**, as defined by
 `docs/owner/OWNER_DIRECTIVE_2026-09-07_PLAYABLE_FIRST.md`: a fresh save completes
@@ -43,87 +79,9 @@ the opening through Tidewake without debug travel, console commands or a reload
 to advance. Full visual, density, performance and multiplayer-depth criteria
 remain in `docs/SECOND_PASS_BACKLOG.md`; they are not claimed passed.
 
-PR #79 landed at `7ab4a12647a377a400c43335b64aff8b03ca6d43`. Current work is on
-`codex/four-biome-wave0`, PR #80, which includes main through `f6b79a6b3` via
-merge `01f85b2b356de72689eb90e42242e42ae64d5dfb`. The last successful batch before preservation was
-`c3cd1ac827655c765dd66f0a0d811b861d51f63a`; CI run `34218809408` is terminal
-success:26 jobs successful, three skipped, all successful job logs reviewed.
-Every smoke passed its first attempt; native-error caveats remain in the report.
-The single push followed full review of the previous run and
-includes the dialogue camera guard, Dace harness repair, prepared Shellwatch
-helper and fail-closed test-runner base check. Focused47 tests/2902 assertions
-pass with clean native output. Tovin's now-proven placement, Varga's pending
-runtime repair and later evidence were outside this CI head. They subsequently
-entered the preservation push described above; that new head is red.
-See `CI-34218809408.md` in the build reports for the earlier successful batch.
-Previous head `5fc68033750f2cf5e2c0eed391561fb306ccbf82` / CI `34216463559` is terminal:
-26 successful jobs, three skips, all completed-job logs reviewed. All smoke
-attempts pass first time; native-error caveats remain in the report. Livewire
-samples at 296/186 ms satisfy unchanged bounds, but the released window's
-379 ms maximum sample gap leaves scheduling sensitivity unclosed. This is not
-continuous-campaign or clean-native-output proof. It includes the Meadows build hold, restored map
-contract, Livewire diagnostic sampling telemetry and prepared route helpers.
-Root focused check passes 39 tests / 193 assertions with no native errors;
-later local changes remain outside this CI head. Review: `CI-34216463559.md` in the build reports.
-Previous batch `0ddc10269955bfbe16389ab8c2e6916708c64d06` / CI `34213024669` is terminal:
-25 successful jobs, one failure (Livewire's 119 ms observation versus the
-unchanged 180–350 ms window), three skips. Aggression passes first attempt;
-Livewire's actual refusal checks pass, but its timing proof does not. Local
-diagnostic telemetry now distinguishes late entry from a physics sample gap;
-this is not a repaired-runtime verdict. See `CI-34213024669.md` in the build
-reports for job-level evidence and native-error caveats. The batch includes
-Salt Crown ordinary spawn repair and Reedhaven tool-contract correction.
-The preceding submitted batch was
-`23b7d4acd935b508d53769a71e434857de1de41c`; CI run `34208280455` completed
-with 26 passing jobs and three skips. All seven multiplayer shards passed on
-their first attempts, including Livewire and Tamsin. Combat's aggression smoke
-failed its first attempt after the player never approached closer than the
-reported 116.1 m, then passed attempt two. This is a retry finding, not a clean
-validation. Checked proximity and approach telemetry in `1765092fc` now expose
-a stale fixture: its `(40,-62)` starting point intersects the closed village
-fence. The local collider diagnostic repeatedly contacts
-`VillageBoundary/FencePanelCollision_39`. The authored peaceful Bramblebun and
-aggressive Galecrest are on opposite sides of that sealed boundary. Separate
-initial scene fixtures now pass locally without unlocking progression or
-changing either behavior assertion: peaceful at 2.2 m for 900 frames, aggressive
-self-initiation at 8.8 m, real arena/ally/locomotion state and Run escape.
-Second-scene staging originally emitted a velocity-clamp warning at the origin.
-Local production repair `7d8d6b30b` keeps the player held through a complete
-post-construction physics tick before restoring its exact process mode and
-publishing readiness. The three-path runtime now passes fresh boot, repeated
-boot and ordinary Cloudreach-to-Meadows return: grounded, pending entry cleared,
-movement 1.97/1.97/5.04 m, no runaway-velocity warning or native ERROR in the
-captured output. The wrapper log is
-`%TEMP%/meadows-build-hold-three-path-settled-20260908.log`; this invocation
-omitted the separate engine `--log-file` argument, a recorded process deviation.
-This local proof is not yet covered by CI and does not erase the remaining
-Cloudreach pickup/mipmap warnings. Full prior CI job
-review: `ralph/reports/FOUR-BIOME-BUILD/CI-34208280455.md`.
-The preceding batch `226aaf070168b71e36bc6ee1eaf150c4148613af`, run `34205399274`, completed
-with 25 passing jobs, three skips and one failure. Only multiplayer shard 2
-failed: Livewire's remote polling missed its narrow pre-deadline observation
-window; gameplay hit/refusal and action-sequence checks passed. The exact
-remaining time at the failed observation was not logged. Local repair
-`12c7d76e0` samples that unchanged window on host physics frames, without
-changing deadlines or combat. A Windows two-peer run passes with samples at
-316 ms and 331 ms. Subsequent Linux CI `34208280455` passes first-attempt at
-345 and 348 ms, including unchanged early-action refusal checks.
-The preceding batch `c5012fff0d4286db42b76de34386ab37efcd3d1c`, run `34201147829`, completed
-with 25 passing jobs, three skips and one failure: multiplayer shard 4's hosted
-Tamsin smoke did not advance round 0 after its finishing input. The subsequent
-smoke watchdog is secondary, not a shard timeout. Root has retrieved its peer
-logs; strike submission/host acceptance/geometry are not yet distinguished.
-An instrumented Windows two-peer run passes both Tamsin rounds, rewards and
-replay refusal. The new batch also requires actual host quick-hit geometry
-before finishing input. Neither establishes the original Linux cause; the new
-CI run `34205399274` now passes Tamsin on attempt 1/1. Its diagnostics show
-position proximity can pass while the host hit cone is false; waiting for the
-actual cone precedes successful real input and round advancement. This confirms
-the precondition gap, not the unlogged impact geometry of the earlier failure.
-The preceding batch `de4fc499fb0aa441561351169dd5cd895ab069b3`, run `34197701347`, completed
-successfully at 2026-09-08 07:32 UTC: 26 passing jobs and three skips.
-The preceding run `34195296547` completed with 24 passing jobs, two failures
-and three skips. These repairs are on the PR branch, not yet on main:
+PR #79 and PR #80 are on main. The following capability ledger is now landed;
+its continuous-path and hardware limitations remain open. Superseded per-head
+CI history is retained in the build checkpoints and named CI reports.
 
 | Area | Verified progress and remaining boundary |
 |---|---|
@@ -133,19 +91,9 @@ and three skips. These repairs are on the PR branch, not yet on main:
 | Tidewake progression | Aquaryn's ordinary strike action IDs are repaired; the production defeat-to-Swim-Stone-to-saddle-to-mount path passes. Five authored named encounter sites now spawn in production. Long mounted crossings, Salt Crown/Sluice fights and controls, and the composed Veilfall/Guardian ending remain an open continuous-play proof. Isolated finale tests do not close that requirement. |
 | Creatures and menu travel | All 32 later-biome species are assigned to encounter tables; creature sizes span 1.90–7.20 m. ROAD evidence and its visual limitations are in §3. Settings offers 58 destinations across all four biomes; production realm-crossing and physical menu checks passed. |
 
-The preceding green PR #80 run, `34197701347`, passed Gate-B, all unit shards,
-solo regression and all seven multiplayer shards. The former Livewire failure
-is repaired by waiting for measured production host hit geometry, not merely
-client placement. The shared-wild check now awaits the new friendly-target
-refusal rather than consuming the previous replay phase's retained response.
-Both formerly failing smokes passed on attempt 1/1. Export and two optional
-known-red jobs were skipped. This verdict covers `de4fc499f`, not subsequent
-local Fly-anchor protocol changes or uncommitted Tidewake route repairs.
-The newer run `34201147829` passes the other six multiplayer shards and all four
-unit shards, but reopens hosted Tamsin. Local Calder approach (`ffb7916db`),
-lightning cleanup (`112220071`) and cheap harvest scan (`767d3350a`) repairs are
-not covered by that run. Full milestone completion remains unproven.
-Detailed evidence and commit boundaries: `ralph/reports/FOUR-BIOME-BUILD/checkpoints.md`.
+Exact current main validation is recorded above; older per-commit boundaries
+remain in `ralph/reports/FOUR-BIOME-BUILD/checkpoints.md`. The following runtime
+notes describe the inherited path evidence, not a four-biome completion claim.
 
 **Solo Stormwood victory repair, 2026-09-08:** the continuous runtime re-earned
 Ashfoot arrival/dialogues, sheltered Break, six Stormglass, arch pair A and the

@@ -1,6 +1,80 @@
 extends "res://tests/test_case.gd"
 
 const SEGMENT := preload("res://tests/helpers/water_shellwatch_segment.gd")
+const RUNTIME := preload("res://scripts/world/water_encounter_runtime_data.gd")
+
+
+func test_solm_path_avoids_unwalkable_landing_sector_flank() -> void:
+	var field := preload("res://scripts/world/water_heightfield.gd").new()
+	var world: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_world.json"))
+	var start := Vector2.ZERO
+	for route: Dictionary in world.land_routes:
+		if route.id == "shellwatch_exploration_spine":
+			start = Vector2(route.polyline[2][0], route.polyline[2][2])
+	var stance := Vector2(342.0, 1090.0)
+	assert_true(_maximum_slope(field, [start, stance]) > 45.0,
+		"negative control: former direct diagonal exceeds player floor angle")
+	var points: Array = [start]
+	points.append_array(SEGMENT.SOLM_APPROACH)
+	points.append(stance)
+	assert_true(_maximum_slope(field, points) < 45.0,
+		"production analytic terrain supports the detour; baked runtime still required")
+
+
+func _maximum_slope(field: RefCounted, points: Array) -> float:
+	var maximum := 0.0
+	for index in range(points.size() - 1):
+		var a: Vector2 = points[index]
+		var b: Vector2 = points[index + 1]
+		var samples := maxi(1, ceili(a.distance_to(b) * 4.0))
+		for sample in range(samples + 1):
+			var point := a.lerp(b, float(sample) / samples)
+			var gradient := Vector2(
+				(field.height_at(point.x + 0.25, point.y) - field.height_at(point.x - 0.25, point.y)) / 0.5,
+				(field.height_at(point.x, point.y + 0.25) - field.height_at(point.x, point.y - 0.25)) / 0.5)
+			maximum = maxf(maximum, rad_to_deg(atan(gradient.length())))
+	return maximum
+
+
+func test_recovery_reselects_bedded_member_after_party_auto_cycle() -> void:
+	var party := preload("res://autoload/party.gd").new()
+	var species := preload("res://scripts/creatures/creature_species.gd")
+	for id in ["sparkit", "mudsnout", "bramblebun", "terrapup", "brooktail"]:
+		party.add(species.spawn(id))
+	var retained: RefCounted = party.active()
+	assert_true(party.set_resting(0, true, 7))
+	assert_false(party.active() == retained, "negative control: bed assignment changes who recall summons")
+	assert_eq(SEGMENT.recovery_cycle_count(party, retained), -1, "a sleeping member remains unavailable")
+	party.set_resting(0, false)
+	assert_false(party.active() == retained, "unbedding does not restore active selection")
+	party.at(2).fainted = true
+	var presses := SEGMENT.recovery_cycle_count(party, retained)
+	assert_eq(presses, 3, "controller cycling skips the fainted member")
+	for step in presses:
+		assert_true(party.cycle_active(1))
+	assert_true(party.active() == retained, "the next recall now summons the recovered identity")
+	assert_eq(SEGMENT.recovery_cycle_count(party, retained), 0)
+	assert_eq(SEGMENT.recovery_cycle_count(party, species.spawn("terrapup")), -1)
+
+
+func test_live_trainer_contract_uses_production_namespaced_species() -> void:
+	var world: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_world.json"))
+	var characters: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_characters.json"))
+	var encounters: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_encounters.json"))
+	var translated := RUNTIME.build(world, characters, encounters,
+		func(_x: float, _z: float) -> float: return 0.0)
+	assert_true(translated.ok)
+	var trainers: Dictionary = translated.trainer_specs
+	assert_false(SEGMENT.trainer_contract(trainers[SEGMENT.SOLM_ID], SEGMENT.SOLM_ID, 47,
+		["mirejaw", "mangrove_monitor"]), "negative control reproduces old raw-ID comparison against live specs")
+	assert_true(SEGMENT.trainer_contract(trainers[SEGMENT.SOLM_ID], SEGMENT.SOLM_ID, 47,
+		["water_mirejaw", "water_mangrove_monitor"]))
+	assert_true(SEGMENT.trainer_contract(trainers[SEGMENT.IRVA_ID], SEGMENT.IRVA_ID, 48,
+		["water_riptusk", "water_cannonback"]))
+	var changed: Dictionary = trainers[SEGMENT.IRVA_ID].duplicate(true)
+	changed.team[0].level = 47
+	assert_false(SEGMENT.trainer_contract(changed, SEGMENT.IRVA_ID, 48,
+		["water_riptusk", "water_cannonback"]), "runtime contract still requires exact authored levels")
 
 
 func test_result_requires_explicit_clean_completion() -> void:

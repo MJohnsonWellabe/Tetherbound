@@ -43,6 +43,7 @@ extends SceneTree
 ## (`hello`, `step`, `verdict`, `probe`, `value`, `heartbeat`, `log`, `quit`).
 
 const PEER_RUNNER := preload("res://tools/net/peer_runner.gd")
+const CONTROL_PORTS := preload("res://tests/helpers/net_control_ports.gd")
 
 const DEFAULT_STEP_BUDGET_FRAMES := 3000
 ## Contract §8 as amended (`f090076c`): hello and the step phase are budgeted
@@ -58,7 +59,6 @@ const DEFAULT_HEARTBEAT_FRAMES := 60
 const DEFAULT_DESYNC_FRAMES := 240
 const DEFAULT_NEAR_REST_M := 1.5
 const DEFAULT_NEAR_MOTION_M := 4.0
-const CONTROL_BASE_PORT := 27901
 const ENET_BASE_PORT := 27801
 ## Contract §3: "A peer whose heartbeat stops for 15s wall clock is
 ## `ERROR: peer silent`".
@@ -121,6 +121,7 @@ var net_conditions: Dictionary = {}
 var _proxies: Dictionary = {}
 var _proxy_listen_next := 0
 var _children_terminated := false
+var _control_servers: Array = []
 
 
 ## MainLoop's last synchronous teardown seam. Smoke scripts normally call
@@ -218,12 +219,13 @@ func launch(peer_count: int, scene: String, extra_args: Array = [],
 	_run_dir = _resolve_run_dir()
 	DirAccess.make_dir_recursive_absolute(_run_dir)
 
-	# Item 13 (review): derive the port bases from the run id itself, so two
-	# runs on one box do not collide by default -- a human who wants exact
-	# ports still can via TB_NET_CONTROL_BASE/TB_NET_ENET_BASE, which win over
-	# the derived offset (contract §8: "both overridable by argument").
+	# ENet still needs a predictable port before child argv is built. TCP control
+	# ports do not: reserve OS-selected listeners atomically, before any child.
+	# A run-id hash is not a reservation and can name an occupied ephemeral port
+	# (CI 34236551038 failed on 34022 before peer 1 launched). Exact overrides remain
+	# available via TB_NET_CONTROL_BASE/TB_NET_ENET_BASE and fail closed.
 	var offset := _port_offset_from_run_id(_run_id)
-	var control_base := _env_int("TB_NET_CONTROL_BASE", CONTROL_BASE_PORT + offset)
+	var control_base := _env_int("TB_NET_CONTROL_BASE", 0)
 	var enet_base := _env_int("TB_NET_ENET_BASE", ENET_BASE_PORT + offset)
 	# Contract §9's proxies live inside this run's own port stride (20 wide,
 	# see `_port_offset_from_run_id`), above the four ENet ports it can hand
@@ -236,14 +238,16 @@ func launch(peer_count: int, scene: String, extra_args: Array = [],
 			   float(net_conditions.get("loss_pct", 0.0))])
 
 	_peers.clear()
+	var controls := CONTROL_PORTS.reserve(peer_count, control_base)
+	if not bool(controls.ok):
+		var why := "coordinator: " + str(controls.reason)
+		failures.append(why)
+		_fatal_reason = why
+		return false
+	_control_servers = controls.servers
 	for i in peer_count:
-		var control_port := control_base + i
-		var server := TCPServer.new()
-		if server.listen(control_port) != OK:
-			var why := "coordinator: could not listen on control port %d for peer %d" % [control_port, i]
-			failures.append(why)
-			_fatal_reason = why # item 1: a launch-time harness fault is exit 2, not 1
-			return false
+		var control_port := int(controls.ports[i])
+		var server: TCPServer = _control_servers[i]
 		var home := _run_dir.path_join("home-%d" % i)
 		DirAccess.make_dir_recursive_absolute(home)
 		var role := "host" if i == 0 else "client"
@@ -910,6 +914,7 @@ func _terminate_child_processes() -> void:
 	if _children_terminated:
 		return
 	_children_terminated = true
+	CONTROL_PORTS.release(_control_servers)
 	for entry in _peers:
 		var peer: Dictionary = entry
 		var pid := int(peer.get("pid", -1))

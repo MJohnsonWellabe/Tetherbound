@@ -45,8 +45,8 @@ A stage is not complete because files, tests or branches exist. Completion is pl
 | Stage | What it is | State |
 |---|---|---|
 | **0** | Current work: land Meadows + Cloudreach in flight, ship playable 1–4 player multiplayer, run the Meadows visual sweep, and land general game fixes. | In progress |
-| **A** | Build Biome 3, the Stormwood. | In progress (PRs #68, #70, #74, #76, #77 merged; scorecard 12/100; main path unfinished) |
-| **B** | Build Biome 4, the Water Archipelago. | Started ahead of sequence on draft PR #69 (35/100 on the branch, held unmerged by owner instruction) |
+| **A** | Build Biome 3, the Stormwood. | In progress; Wave 0 integrated through PR #80, but earned continuous Crown/Dynamo completion remains unproved |
+| **B** | Build Biome 4, the Water Archipelago (Tidewake). | In progress on main through PR #80; ordinary entry is smoke-proven, continuous earned opening-to-ending completion remains unproved |
 | **C** | Full four-biome product audit — six questions: does it work, is there enough to do, is progression satisfying, is it fun minute-to-minute, does the world feel authored, does it meet the visual bar. | Not started |
 | **D** | Four-biome repair pass — fix Stage C's P0/P1 findings before any new content. | Not started |
 | **E** | Four-biome Beta Ready gate. | Not started |
@@ -734,21 +734,20 @@ All new gameplay/world systems after Stage 0 are multiplayer-native unless an ow
 
 # CURRENT NEXT ACTION
 
-**2026-09-07: run `docs/prompts/77-CODEX-GOAL-four-biome-push-2026-09-07.md`.** It
-carries Stage 0's open work (the Meadows visual sweep, multiplayer upkeep, the owner's
-new P0 freezes and road-presence P1, the roster and character wiring, the combat depth
-ladder) and Stage A's Stormwood tail (resume from
-`ralph/reports/STORMWOOD-PROGRESS/fresh-session-tail-0907.md`: host-owned encounter
-starts, the named encounters, the Dynamo and legendary/relic ending, the continuous
-chapter) in one integration branch with parallel lanes, and keeps Water building on its
-own draft branch. Stage B's merge waits on Stormwood's exit criteria and an owner
-decision; there is no intermediate three-biome audit.
+**2026-09-08: continue the playable four-biome milestone under prompt 78 and
+`OWNER_DIRECTIVE_2026-09-07_PLAYABLE_FIRST.md`.** PR #80 landed on main at
+`75aaccca0210a9bc1ac0f16bac687d8557f0aacf`; main's own CI `34231941105`
+passes 27 jobs with two existing conditional skips, including export. Wave 1
+starts from that verified main on `codex/four-biome-wave1`.
 
-> **Stage A is active. Codex continues Stormwood at
-> `docs/biomes/stormwood/00_CODEX_START_HERE.md`. Only after Stormwood passes
-> its full exit criteria, move directly to Stage B (Water) at
-> `docs/biomes/water/00_START_HERE.md` — do not insert an intermediate
-> playtest/audit gate. Only after Water is built does Stage C run the single
-> four-biome product audit.**
+Stormwood and Tidewake implementation is integrated; neither complete earned
+chapter path is proven. Resume the handoff at
+`docs/HANDOFF_FOUR_BIOME_2026-09-08_SESSION_WRAP.md` and the latest checkpoint.
+The immediate work is Varga/Ondra/Crown/Dynamo continuation, Shellwatch onward,
+and a genuinely fresh opening-to-Tidewake-ending composition using ordinary
+input and earned party/resources/progression. Existing synthetic chapter starts
+and HP-pinned opening fixtures do not qualify as that proof.
 
-Update this section whenever the current stage changes.
+Stages A/B remain in progress. The broader Stage C audit and Beta Ready bars
+remain unchanged, with visual, density, hardware-performance and multiplayer
+polish deferrals recorded in `docs/SECOND_PASS_BACKLOG.md`.

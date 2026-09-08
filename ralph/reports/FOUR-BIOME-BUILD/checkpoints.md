@@ -700,3 +700,82 @@
   continues alongside the world run. No cache writer is monopolizing the queue.
 - Fresh-save opening-to-ending composition, Dace onward and Tidewake finale
   remain unproved. No milestone or deferred visual/performance closure claimed.
+
+## 2026-09-08 13:51 UTC — main repaired and verified; Wave 1 begins
+
+- Owner's main-green-first interruption is complete. PR #80 exact head
+  `9cbec44fbbcf644bc2019cea8cab6c32aab32fd5` passed CI `34229513422`,
+  attempt 1, 26 success / three existing conditional skips at 13:21:22 UTC.
+  Squash landing is `75aaccca0210a9bc1ac0f16bac687d8557f0aacf`.
+- Main's OWN push CI `34231941105` finished at 13:50:58 UTC, attempt 1:
+  27 success / two existing conditional skips. All seven multiplayer shards,
+  all four unit shards (2921 tests / 486218 assertions), all runtime shards,
+  Windows export and exported-runtime terrain verification pass. Every job and
+  step/log evidence was reviewed. Local raw ledgers: `.artifacts/ci-34229513422/`
+  and `.artifacts/ci-34231941105/`. No rerun or cancellation was requested.
+- Main shard 7's original unidentified failure was hosted Tamsin completion,
+  separate from shard 3's stale 4 m shared-wild diagnostic. The preserved WIP
+  also exposed Varga clearance and asynchronous catch observation failures;
+  follow-up CI exposed contradictory Varga expectations and torn shared-boss
+  HP/counter sampling. Fixes preserve production dimensions and exact criteria.
+  Detail, negative controls and logs: `MAIN-GREEN-20260908.md` beside this file.
+- Local repaired first runs: catch47 checks, Tamsin59, shared boss85, all zero
+  failures. Focused boss snapshot3/9, Varga5/517, catch18/58 and Tamsin7/22 pass.
+  Independent astra reviews found no actionable findings. Existing native-error
+  caveats and the two local Gate F full-checkout failures remain explicit;
+  neither a clean local full suite nor a campaign milestone is claimed.
+- Fetched main contains the required session handoff and has the same tree as
+  the verified PR head. New `codex/four-biome-wave1` branches from main. No
+  Wave 1 code ran before main's complete post-merge verdict.
+- Player-visible delta: accumulated Wave 0 work is now on verified main;
+  runtime-backed CI repairs make hosted combat completion and shared combat
+  refusal checks reliable under scaled fixtures. No new continuous campaign
+  reach is credited this checkpoint. Stormwood Varga/Ondra/Crown and Tidewake
+  Shellwatch/ending remain open; actual fresh opening-to-ending composition is
+  the deliverable, and synthetic chapter fixtures cannot substitute.
+- Next lanes: Stormwood continuation owns the first full-world RAM slot;
+  Tidewake reviews/tests its Shellwatch composition in parallel; independent
+  astra audit identifies reusable earned-state opening/Cloudreach seams. Root
+  owns end-to-end composition and integration. No cosmetic backlog is reopened.
+
+## 2026-09-08 15:51 UTC — checkpoint recorded 15:56; first zero merged delta
+
+- Main remains `75aaccca0210a9bc1ac0f16bac687d8557f0aacf`, own push CI
+  `34231941105` green. No Wave 1 runtime change has merged since 13:51.
+  This is the first consecutive checkpoint with zero credited merged delta;
+  the late record does not extend the cadence. Next checkpoint: 17:51 UTC.
+- Draft PR #85 head `0a91f9b39aa552e554b849b4eb57d8011e2c7589` finished
+  CI `34245691443` at 15:52:33 UTC, attempt 1: 25 success, one failure,
+  three existing conditional skips. Every job/step and log evidence reviewed.
+  All four unit shards passed: 2977 tests / 486656 assertions. All seven
+  multiplayer Run net smokes steps passed. MP4 failed artifact finalization
+  after uploading 9381576 bytes: non-retryable intermediary HTTP 403.
+  This remains a red run, not merge verification; no rerun requested.
+  Logs: `.artifacts/ci-34245691443/`; review `wave1-ci-0a91-1554.txt`.
+  Existing cleanup/material/cache messages and deliberate peer-death negative
+  control remain disclosed. Previous head 8cd81b422e466a3918f471344750ee7edd15e883
+  passed complete run 34242634338, 2963 tests / 486540 assertions.
+- Actual fresh-save run `four_biome_fresh_29284_1784` passed the changed physical
+  key/gate navigation at 111.73 seconds, earned five creatures and one real
+  training victory. It failed at 293.92 seconds on a 3600-frame wild approach:
+  player (-37.72714, 2.680571, 4.499945), Mudsnout (-54.17064, 5.498205,
+  23.00343), remaining distance 24.914 m, Terrain colliders, no input owner.
+  Exit 1; owner fingerprints unchanged; no ERROR/SCRIPT ERROR lines.
+  Logs: `.artifacts/wave1-fresh-key-nav-camp{,-engine}.log` and matching
+  owner-before/after.json. No camp completion or full team training claimed.
+  Two failed team approaches trigger bounded geometry/source diagnosis,
+  not another blind prefix or an expanded frame allowance.
+- Stormwood again earned Ondra's recipe but exact Alpha Engage did not enter
+  combat. A small actual arbiter/director/manager probe reproduces refusal for
+  a resting ally and success for a healthy ally. The campaign fixture does not
+  set resting: that control is NOT the campaign diagnosis. Added activation
+  telemetry passes focused 6 tests / 74 assertions. Next is a focused scene
+  diagnostic, not a third full-prefix replay. See STORMWOOD-WAVE1-20260908.md.
+- Tidewake's previous path proved paid Shellwatch rest/redeployment but stopped
+  on the Solm approach. Production-height sampling found the direct line exceeds
+  the player's 45-degree limit; a physical detour has a measured 39.85-degree
+  maximum and focused 8 tests / 58 assertions. Changed full-world continuation
+  now owns RAM, session 92218, `.artifacts/wave1-water-solm-detour` logs/profile.
+- Prepared Warrens, camp/rest/tournament/bridge and later chapter helpers remain
+  unproved as a continuous fresh path. Opening-to-Tidewake ending and full forward
+  coverage are still open. No new deferrals or milestone closure credited.
