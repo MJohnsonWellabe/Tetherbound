@@ -37,9 +37,17 @@ aggressive Galecrest are on opposite sides of that sealed boundary. Separate
 initial scene fixtures now pass locally without unlocking progression or
 changing either behavior assertion: peaceful at 2.2 m for 900 frames, aggressive
 self-initiation at 8.8 m, real arena/ally/locomotion state and Run escape.
-Second-scene staging emitted a velocity-clamp warning at the origin before the
-measured approach; its cause remains under investigation. This is a behavior
-pass, not a warning-free scene-loading claim. Full job
+Second-scene staging originally emitted a velocity-clamp warning at the origin.
+Local production repair `7d8d6b30b` keeps the player held through a complete
+post-construction physics tick before restoring its exact process mode and
+publishing readiness. The three-path runtime now passes fresh boot, repeated
+boot and ordinary Cloudreach-to-Meadows return: grounded, pending entry cleared,
+movement 1.97/1.97/5.04 m, no runaway-velocity warning or native ERROR in the
+captured output. The wrapper log is
+`%TEMP%/meadows-build-hold-three-path-settled-20260908.log`; this invocation
+omitted the separate engine `--log-file` argument, a recorded process deviation.
+This local proof is not yet covered by CI and does not erase the remaining
+Cloudreach pickup/mipmap warnings. Full prior CI job
 review: `ralph/reports/FOUR-BIOME-BUILD/CI-34208280455.md`.
 The preceding batch `226aaf070168b71e36bc6ee1eaf150c4148613af`, run `34205399274`, completed
 with 25 passing jobs, three skips and one failure. Only multiplayer shard 2
