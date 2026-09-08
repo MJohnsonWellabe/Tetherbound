@@ -12,6 +12,7 @@ const CAMP := preload("res://tests/helpers/meadows_earned_camp_segment.gd")
 const REST := preload("res://tests/helpers/meadows_earned_rest_segment.gd")
 const TOURNAMENT := preload("res://tests/helpers/meadows_earned_tournament_segment.gd")
 const BRIDGE := preload("res://tests/helpers/meadows_earned_bridge_segment.gd")
+const WARRENS := preload("res://tests/helpers/meadows_earned_warrens_segment.gd")
 var failures: Array[String] = []
 var live: Dictionary = {}
 var started_ms := 0
@@ -117,6 +118,16 @@ func _run() -> void:
 		return
 	reached = "south_bridge_crossed"
 	if OS.get_cmdline_user_args().has("--through-bridge"):
+		_finish(true)
+		return
+	var warrens_result: Dictionary = await WARRENS.new().run(self, live["world"], game)
+	for line: Variant in warrens_result.get("failures", []):
+		failures.append(str(line))
+	if not bool(warrens_result.get("passed", false)) or not failures.is_empty():
+		_finish(false)
+		return
+	reached = "warrens_cleared_and_exited"
+	if OS.get_cmdline_user_args().has("--through-warrens"):
 		_finish(true)
 		return
 	failures.append("fresh campaign suffix is not composed; reached prefix is not milestone completion")

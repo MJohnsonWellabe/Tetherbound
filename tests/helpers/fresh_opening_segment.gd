@@ -3,6 +3,49 @@ extends "res://tests/helpers/gate_a_opening_drive.gd"
 ## Reuse the production title, dialogue, starter and walking inputs, but never
 ## the older catch fixture's inventory drain, HP pinning or direct revival.
 ## A failed live fight is evidence; this segment cannot repair its state.
+const EARNED_NAV := preload("res://tests/helpers/stick_navigator.gd")
+
+
+func _walk_to_earned_prompt(target: Node3D, budget: int) -> bool:
+	var nav := EARNED_NAV.new(_tree, _player, _rig, _earned_walk_stick)
+	var closest := INF
+	print("earned prompt approach: target=%s target_position=%s player=%s budget=%d" % [
+		target.get_path(), target.global_position, _player.global_position, budget])
+	for _frame in budget:
+		if not is_instance_valid(target):
+			_stop_left_stick()
+			return false
+		var offset := target.global_position - _player.global_position
+		offset.y = 0.0
+		closest = minf(closest, offset.length())
+		# Keep the inherited 2 m approach criterion, but never press a shared
+		# unrelated offer simply because the player is near the intended target.
+		if offset.length() <= 2.0 and _earned_prompt_ready(target):
+			_stop_left_stick()
+			await _tap_action("interact")
+			return true
+		nav.step(target.global_position)
+		await _tree.physics_frame
+	_stop_left_stick()
+	var colliders: Array[String] = []
+	for index in _player.get_slide_collision_count():
+		var collider: Object = _player.get_slide_collision(index).get_collider()
+		colliders.append(str(collider.name) if collider is Node else str(collider))
+	print("earned prompt approach failed: target=%s target_position=%s player=%s closest=%.3f winner=%s offer=%s can_walk=%s colliders=%s" % [
+		target.get_path(), target.global_position, _player.global_position, closest,
+		_arbiter.call("winning_provider"), _arbiter.call("winner"), nav.can_walk(), colliders])
+	return false
+
+
+func _earned_prompt_ready(target: Node3D) -> bool:
+	return is_instance_valid(target) and bool(_arbiter.call("enabled")) \
+		and _arbiter.call("winning_provider") == target \
+		and bool(_arbiter.call("winner").get("actionable", false))
+
+
+func _earned_walk_stick(x: float, y: float) -> void:
+	_send_axis(JOY_AXIS_LEFT_X, x)
+	_send_axis(JOY_AXIS_LEFT_Y, y)
 
 func _walk_to_and_engage_wild(target: Node3D, budget: int) -> bool:
 	for _frame in budget:
@@ -75,7 +118,7 @@ func catch_existing(tree: SceneTree, world: Node, game: Node,
 
 func open_road_gate() -> Dictionary:
 	var key := _find_interactable(["take the old key"])
-	if key == null or not await _walk_to_and_activate(key, 2600):
+	if key == null or not await _walk_to_earned_prompt(key, 2600):
 		_fail("could not walk to and take the real village key")
 		return _result()
 	if int(_game.inventory.count("castle_gate_key")) != 1:
@@ -89,7 +132,7 @@ func open_road_gate() -> Dictionary:
 				gate = node.get_node_or_null("Interactable") as Node3D
 				if gate != null:
 					break
-	if gate == null or not await _walk_to_and_activate(gate, 2600):
+	if gate == null or not await _walk_to_earned_prompt(gate, 2600):
 		_fail("could not walk to and unlock the real village gate")
 		return _result()
 	if not await _close_dialogue(20):

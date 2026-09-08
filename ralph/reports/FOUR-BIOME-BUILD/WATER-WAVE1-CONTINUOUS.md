@@ -116,3 +116,38 @@ selection change, proves unbedding leaves it changed, skips a fainted member and
 restores the correct identity through production cycling. All Water focused tests:
 7 tests, 56 assertions, 0 failed, `.artifacts/water-camp-selection-unit.log`.
 This second repair has not yet had a full-world runtime; RAM returned to root.
+
+Camp-selection repair runtime (`--through-tidal-recipe`) completed once, exit 1.
+Fresh isolated profile and owner fingerprints were checked; owner saves remained
+unchanged and all Godot processes were gone at terminal. The ordinary opening
+lesson covered 64.491 m. Paid Reedhaven and 107.088 m Brine crossing passed;
+Tovin's two opponents and durable flags were earned with ally HP 318.3/358.0.
+The 93.320 m Shellwatch crossing passed. Ordinary rest advanced to day 2 and
+`Shellwatch camp recovered active creature before Solm` proved the repaired
+controller selection/redeployment with the retained member.
+
+First new failure was physical approach, before the Solm challenge:
+`water_trainer_solm challenge stance 0 walk failed: player=(335.8195, 58.26273, 1076.823) target=(342.0, 62.58215, 1090.0) resets=0`.
+No Solm victory, Shellwatch release/pump or Tidal recipe is claimed. No ERROR or
+SCRIPT ERROR in output/engine logs; existing terrain mipmap and unsupported Brine
+spawn warnings remain. Evidence `.artifacts/wave1-water-camp-tidal.log` and
+`.artifacts/wave1-water-camp-tidal-engine.log`; owner hashes in
+`.artifacts/wave1-water-camp-tidal-owner-before.json` and `-after.json`.
+RAM released to root. No rerun or new stage added following this first failure.
+
+Solm approach diagnosis/fix (runtime pending): the original direct diagonal from
+spine p2 (267.004,1006.349) to challenge stance (342,1090) crosses the radial
+landing-sector flank. Quarter-metre samples of the production Water heightfield
+show maximum ground slope 63.07 degrees, above the player's 45-degree floor angle.
+A shorter candidate at z1094 still measured 47.47 degrees and was rejected. The
+selected ordinary path goes via (315,1104) and (342,1104), then the unchanged stance;
+maximum sampled slope is 39.85 degrees. The same waypoints are followed in reverse
+after Solm before returning to spine p2. No production terrain/placement change,
+teleport, radius/ceiling increase, skipped challenge or retry was added.
+
+Focused regression uses the actual authored spine and production heightfield:
+old diagonal fails the walkable slope criterion, selected path passes. This is
+analytic support, not proof of baked collider traversal or combat acceptance.
+8 Water tests / 58 assertions / 0 failures in `.artifacts/water-solm-path-unit.log`.
+Probe evidence `.artifacts/solm-route-height.log` and `solm-route-height2.log`.
+Full-world validation remains queued under root's RAM allocation.

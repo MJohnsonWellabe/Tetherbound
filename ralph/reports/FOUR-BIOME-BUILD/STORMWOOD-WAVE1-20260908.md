@@ -106,17 +106,69 @@ route checks. Together with the trainer census/data and pickup contracts:
 errors (`wave1-fenn-clearance-focus-console.log` and matching `-engine.log`).
 This is analytic placement evidence, not Terrain3D or live dialogue proof.
 
+## Third runtime: earned Ondra recipe; Crown encounter admission blocked
+
+The one changed-Fenn run completed the entire prefix and **earned the Stormglass
+Arch recipe through Ondra's production dialogue**, after route 09's exact
+`+1 great_candy` receipt. Fenn's placement correction therefore has live
+Terrain3D/interaction proof, beyond the analytic checks above. This closes the
+old prefix endpoint without state grants or a reload.
+
+The same live world then entered the prepared Crown helper. Its first failure
+was `four ordinary approaches did not clear the named Capacitor Alpha
+(body=/root/Stormwood/Named_capacitor_alpha distance=2.93 outcome=)`.
+The existing helper's four approach attempts produced no combat outcome; this
+is an encounter-admission boundary, not evidence that a fight was won or lost.
+The wrapper additionally failed its paid-Crown endpoint assertion. No Crown
+materials, frame crafts, placement or travel are claimed. No further helper
+or production changes were made after this finding, pending integration.
+
+Terminal exit 1 and no remaining Godot processes were confirmed. Logs are
+`%TEMP%/wave1-stormwood-fenn-crown-console.log` and matching `-engine.log`.
+The only two `ERROR:` records are those explicit harness failures; there are
+no native/script errors. `wave1-stormwood-fenn-save-before.json` and
+`wave1-stormwood-fenn-save-after.json` again show eight identical default
+campaign files, zero path/SHA-256 differences. RAM was released to the root.
+
+## Crown admission source repair, runtime pending
+
+The helper only waited for aggressive proximity; it never pressed the ordinary
+Engage action. Production `wild_creature.gd` announces proximity once while
+close, setting `_has_announced` even if the director refuses because the ally
+is absent or fainted. Party recovery does not itself reset that latch. This
+explains a possible admission failure, but the previous log does not expose
+the latch or arbiter state and therefore does not prove that cause.
+
+The helper now reads the production engageable candidate and actionable
+arbiter winner, presses normal `interact` only for the exact named Alpha with
+the director as provider, and rejects a different admitted enemy. It records
+candidate/provider identity, offer, ally availability, aggression, announced
+latch, grace, return-home state, distance and fight state before/after input.
+It neither resets the latch nor calls the director's fight-entry method.
+
+The existing four approaches and 180-frame admission/receipt bounds remain.
+Combat resolution and receipt verification now occur at the end of the same
+approach, avoiding the old edge case where admission on approach four had no
+following iteration to resolve it. The fight bound is unchanged.
+
+Focused tests cover exact-body identity (including a different same-species
+candidate), competing providers, status-only offers and refusal. Alongside
+the paid Crown/material/no-bypass contracts: **5 tests / 72 assertions**, zero
+failures, terminal exit 0, no native/script error. Logs:
+`%TEMP%/wave1-crown-named-engage-focus-console.log` and matching `-engine.log`.
+No full-world test has yet run on this changed helper.
+
 ## Remaining proof and disclosure
 
-The Fenn relocation and composed Crown helper await the next assigned full-world
-RAM slot. No unchanged prefix rerun is proposed. Next command:
+The next assigned RAM slot may test this changed explicit-Engage path and its
+decisive telemetry. No unchanged prefix rerun is proposed. The command remains:
 
 ```text
 godot --headless --path . --log-file <unique-engine-log> --script tests/smoke_stormwood_continuous.gd -- --through-crown
 ```
 
-Fingerprint the default campaign files again before/after. Require earned
-Ondra recipe before Crown, then the named Capacitor encounter, real materials,
+Fingerprint the default campaign files again before/after. Preserve the earned
+Ondra recipe before Crown, then prove the named Capacitor encounter, real materials,
 two paid frame crafts and one paid green-ghost arch placement. Stop and diagnose
 the first physical failure. The helper currently ends at construction: Crown
 travel, guardian/Wen/Rootgate and the Dynamo remain outside this evidence.

@@ -4,6 +4,38 @@ const SEGMENT := preload("res://tests/helpers/water_shellwatch_segment.gd")
 const RUNTIME := preload("res://scripts/world/water_encounter_runtime_data.gd")
 
 
+func test_solm_path_avoids_unwalkable_landing_sector_flank() -> void:
+	var field := preload("res://scripts/world/water_heightfield.gd").new()
+	var world: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_world.json"))
+	var start := Vector2.ZERO
+	for route: Dictionary in world.land_routes:
+		if route.id == "shellwatch_exploration_spine":
+			start = Vector2(route.polyline[2][0], route.polyline[2][2])
+	var stance := Vector2(342.0, 1090.0)
+	assert_true(_maximum_slope(field, [start, stance]) > 45.0,
+		"negative control: former direct diagonal exceeds player floor angle")
+	var points: Array = [start]
+	points.append_array(SEGMENT.SOLM_APPROACH)
+	points.append(stance)
+	assert_true(_maximum_slope(field, points) < 45.0,
+		"production analytic terrain supports the detour; baked runtime still required")
+
+
+func _maximum_slope(field: RefCounted, points: Array) -> float:
+	var maximum := 0.0
+	for index in range(points.size() - 1):
+		var a: Vector2 = points[index]
+		var b: Vector2 = points[index + 1]
+		var samples := maxi(1, ceili(a.distance_to(b) * 4.0))
+		for sample in range(samples + 1):
+			var point := a.lerp(b, float(sample) / samples)
+			var gradient := Vector2(
+				(field.height_at(point.x + 0.25, point.y) - field.height_at(point.x - 0.25, point.y)) / 0.5,
+				(field.height_at(point.x, point.y + 0.25) - field.height_at(point.x, point.y - 0.25)) / 0.5)
+			maximum = maxf(maximum, rad_to_deg(atan(gradient.length())))
+	return maximum
+
+
 func test_recovery_reselects_bedded_member_after_party_auto_cycle() -> void:
 	var party := preload("res://autoload/party.gd").new()
 	var species := preload("res://scripts/creatures/creature_species.gd")

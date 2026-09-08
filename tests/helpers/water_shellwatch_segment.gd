@@ -19,6 +19,7 @@ const PUMP_FLAG := "water_shellwatch_pump_disabled"
 const COMBINED_FLAG := "water_dock_shellwatch_residents_freed_and_pump_disabled"
 const CAMP_ID := "water_camp_shellwatch"
 const DEPARTURE_BARRIER := "shellwatch_to_tidal_cradle_dockBarrier"
+const SOLM_APPROACH := [Vector2(315.0, 1104.0), Vector2(342.0, 1104.0)]
 
 var failures: Array[String] = []
 var transcript: Array[String] = []
@@ -87,7 +88,11 @@ func run() -> bool:
 		return false
 	if not await _walk_to(shellwatch[2], "Shellwatch trainer approach"):
 		return false
+	if not await _walk_solm_approach(false):
+		return false
 	if not await _fight_trainer(SOLM_ID, SOLM_FLAG, 2):
+		return false
+	if not await _walk_solm_approach(true):
 		return false
 	if not await _walk_to(shellwatch[2], "return from Solm") \
 			or not await _walk_to(shellwatch[1], "resident-release return"):
@@ -238,6 +243,19 @@ func _swim_to(target: Vector3, label: String) -> bool:
 	_stop_stick()
 	return _fail("human crossing stalled for %s: player=%s target=%s stamina=%.2f" % [
 		label, str(_player.global_position), str(target), float(_player.vitals.stamina)])
+
+
+func _walk_solm_approach(returning: bool) -> bool:
+	# The direct spine-to-Solm diagonal crosses a >45-degree landing-sector
+	# flank. Walk around its northern end on the existing terrain instead.
+	var points: Array = SOLM_APPROACH.duplicate()
+	if returning:
+		points.reverse()
+	for point: Vector2 in points:
+		var target := Vector3(point.x, _world.ground_height_at(point.x, point.y) + 0.1, point.y)
+		if not await _walk_to(target, "Solm flank path %s" % str(point)):
+			return false
+	return true
 
 
 func _fight_trainer(id: String, flag: String, expected_opponents: int) -> bool:

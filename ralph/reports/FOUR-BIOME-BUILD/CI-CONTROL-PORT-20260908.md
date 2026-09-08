@@ -55,3 +55,15 @@ No Godot processes remained at terminal inspection. Evidence:
 `.artifacts/catch-port-repair-20260908-engine.log`, and peer logs/NET_RUN.json
 under `.artifacts/catch-port-repair-20260908/`. This validates changed code;
 it is not a rerun of the unchanged failing CI head.
+
+Exact-head CI for the changed allocator is now GREEN: commit
+`8cd81b422e466a3918f471344750ee7edd15e883`, run `34242634338`, attempt 1,
+completed 2026-09-08 15:30:29 UTC. All 26 required jobs passed; three existing
+conditional jobs skipped. All seven multiplayer shards pass, including MP5's
+actual catch race (47 assertions). The four unit shards total 2,963 tests and
+486,540 assertions. Every job's steps and log evidence was inspected across
+`.artifacts/wave1-ci-8cd81-initial.txt`, `-1514.txt`, `-1520.txt`, `-1526.txt`
+and `-1532.txt`; raw ledger/logs are `.artifacts/ci-34242634338/`.
+Existing cleanup/material/cache diagnostics and intentional peer-death failure
+remain disclosed; green is not a claim of zero native diagnostic lines. No
+rerun or cancellation was requested. This is PR CI, not a new main landing.

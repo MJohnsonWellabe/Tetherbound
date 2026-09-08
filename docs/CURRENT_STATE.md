@@ -28,6 +28,12 @@ Varga/Ondra/Crown continuation, Tidewake's Shellwatch-onward composition and the
 actual uninterrupted fresh-save opening-to-ending run remain unproved. Existing
 chapter fixtures carry synthetic starting state; they are not milestone proof.
 
+The changed Fenn placement now passes ordinary Ondra access: the serialized
+Stormwood path collected the actual route-09 reward and learned the Stormglass
+Arch recipe through dialogue. It next failed admission to Capacitor Alpha in
+the Crown helper, before Crown construction. An exact-target ordinary Engage
+repair has focused tests and awaits runtime; no Crown completion is claimed.
+
 **Wave 1 progress, 2026-09-08:** the genuine fresh opening through village tools,
 key consumption, Satchel assignments and three physical harvests now passes in
 172.968 seconds with owner saves unchanged and no native/script errors. A prior
@@ -45,6 +51,18 @@ real socket tests and the full two-peer catch race (47 assertions) pass. The
 changed code still awaits exact-head CI. This does not
 change the verified main result above. See
 `ralph/reports/FOUR-BIOME-BUILD/CI-CONTROL-PORT-20260908.md`.
+
+That allocator batch now passes exact-head CI `34242634338` on
+`8cd81b422e466a3918f471344750ee7edd15e883`: 26 successful jobs, three existing
+conditional skips, attempt 1; all four unit shards total 2,963 tests / 486,540
+assertions. Every job and its log evidence was reviewed. PR #85 remains draft
+while the next observed-path repairs are prepared; this is not a main landing.
+The next fresh camp attempt stopped at the inherited straight-line village-key
+walk before team selection. Its obstacle-aware input replacement has focused
+tests and awaits live proof. Water's full chapter fixture proved actual
+Shellwatch recovery/selection, then stopped on the steep Solm approach; a
+terrain-supported detour retains the existing stance and bounds. Full fresh
+camp/tournament/Warrens and opening-to-ending completion remain unproved.
 
 The active target is the **playable four-biome build**, as defined by
 `docs/owner/OWNER_DIRECTIVE_2026-09-07_PLAYABLE_FIRST.md`: a fresh save completes

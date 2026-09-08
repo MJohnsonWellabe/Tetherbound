@@ -142,3 +142,63 @@ The prepared driver now includes the
 earned South Bridge segment; its composed parser check passed in
 `.artifacts/wave1-bridge-composition-parse.log`. The default still explicitly
 fails at the missing suffix and cannot report campaign completion.
+
+## Earned full-belt replacement seam prepared
+
+`tests/helpers/earned_roster_replacement_segment.gd` takes an already-engaged
+actual wild, the current five-member party and an explicit outgoing index.
+It reuses physical weakening/throws, requires the production pending catch to
+be the exact caught instance while the belt remains unchanged, waits for the
+automatic ceremony, and drives row choice, Keep/Let them go confirmation,
+goodbye and menu exit through focused input. No `pending_catch` assignment,
+party mutation, direct focus placement or ceremony callback is used.
+
+The receipt checks all retained identities in production order: removal shifts
+the remaining four and the caught newcomer is appended. Actual Party and
+negative receipt tests pass: 2 tests / 21 assertions, zero failures, in
+`.artifacts/wave1-earned-replacement-unit.log`; the helper parser passes in
+`.artifacts/wave1-earned-replacement-parse.log`. This is prepared source, not
+an earned Meadowhart capture or a live ceremony verdict. It is not yet wired
+into the continuous route. The departure audit explains why the current
+Ripplet/three-Bramblebun/Mudsnout roster needs an earned rideable replacement.
+
+Independent UI/source review found no blocking focus, admission-identity or
+fixture issue. It identified that the inherited tutorial weakening gate used
+a fixed 4 m input distance. This new Meadows-only helper now asks the actual
+`CombatManager.combat_move_reach("quick")` rule; the existing 1,800-step limit,
+28% HP threshold and 35-step attack cadence remain unchanged. It does not
+change the previously verified opening helper. The final helper parser check
+is `.artifacts/wave1-earned-replacement-reach-parse.log`. No larger-body runtime
+failure is inferred from this source finding and no live replacement is claimed.
+
+## Expanded camp attempt: inherited key walk failed
+
+The first `--through-camp` execution with changed training selection exited 1
+after 144.996 seconds. The fresh opening physically caught its Bramblebun at
+101.50 seconds (21/106 HP before the real throw), then the inherited straight
+key walk exhausted its unchanged 2,600-frame limit. It never reached village,
+the changed team selector, or camp; none is validated by this attempt.
+
+Evidence: `.artifacts/wave1-fresh-camp-selected.log` and `-engine.log`.
+Scratch `user://four_biome_fresh_9904_1798`; unique owner before/after manifests
+under the same evidence prefix compare unchanged. The only ERROR is the
+explicit key-walk harness failure; no remaining Godot process after terminal.
+The stack identifies `_walk_toward` exhaustion, not a failed key interaction.
+It does not identify a particular obstacle because the old helper omitted
+position and collider telemetry.
+
+The fresh key and gate path now uses the existing obstacle-aware stick
+navigator under the same 2,600-frame and 2 m criteria, and requires the exact
+enabled/actionable target offer before pressing. Start/failure diagnostics
+record positions, closest approach, provider, offer and slide colliders.
+Focused identity/offer tests pass: 3 tests / 10 assertions, zero failures,
+`.artifacts/wave1-key-enabled-unit.log`. Runtime remains queued; the failing
+code was not rerun unchanged.
+
+The earned Warrens segment is now composed after South Bridge behind
+`--through-warrens`: current seven quarry rootstone nodes, actual cave markers
+and ungated passages, exact guardian victory/item/XP receipts, and walking out
+with the same five. Its focused tests pass 8 / 82; no world execution is claimed.
+The complete changed driver parses in
+`.artifacts/wave1-key-warrens-composition-parse.log`. The default still fails
+at its missing later Meadows suffix and reports `campaign_complete:false`.
