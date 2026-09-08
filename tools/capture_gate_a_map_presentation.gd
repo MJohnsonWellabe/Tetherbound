@@ -5,17 +5,35 @@ extends SceneTree
 ## from the game viewport, so foreground desktop windows cannot obscure them.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
+const SAVE := preload("res://scripts/save/save_game.gd")
 const OUT_DIR := "res://ralph/reports/FOUR-BIOME-BUILD/hud-map/captures"
 const SETTLE_FRAMES := 300
+var output_dir := OUT_DIR
 
 
 func _init() -> void:
-	_run()
+	_run.call_deferred()
 
 
 func _run() -> void:
 	root.size = Vector2i(1920, 1080)
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
+	for argument in OS.get_cmdline_user_args():
+		if argument.begins_with("--out-dir="):
+			output_dir = argument.trim_prefix("--out-dir=")
+	if DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(output_dir)) != OK:
+		push_error("could not create capture directory")
+		quit(1)
+		return
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		push_error("Game autoload not found")
+		quit(1)
+		return
+	# This is a disclosed map-presentation fixture, never a user's save slot.
+	game.set("save_system", SAVE.new("user://map_presentation_%d_%d/" % [
+		OS.get_process_id(), Time.get_ticks_usec()]))
+	game.call("reset_for_new_game")
+	game.get("progression").call("set_flag", "opening:beat:free_play")
 	var packed := load(SCENE) as PackedScene
 	if packed == null:
 		push_error("could not load %s" % SCENE)
@@ -27,9 +45,8 @@ func _run() -> void:
 	for i in SETTLE_FRAMES:
 		await physics_frame
 
-	var game := root.get_node_or_null(^"Game")
-	if game == null:
-		push_error("Game autoload not found")
+	if not bool(world.call("shell_build_complete")):
+		push_error("Meadows world did not finish building before map capture")
 		quit(1)
 		return
 	var map_state: RefCounted = game.get("map")
@@ -49,7 +66,9 @@ func _run() -> void:
 		push_error("physical Map did not produce the first full-map open")
 		quit(1)
 		return
-	await _shoot("clean_full_map_first_open")
+	if not await _shoot("clean_full_map_first_open"):
+		quit(1)
+		return
 
 	await _press_button_action("menu_cancel")
 	for i in 30:
@@ -58,7 +77,9 @@ func _run() -> void:
 		push_error("physical Back did not close the first full-map open")
 		quit(1)
 		return
-	await _shoot("clean_hud_minimap_after_close")
+	if not await _shoot("clean_hud_minimap_after_close"):
+		quit(1)
+		return
 
 	await _press_button_action("map")
 	for i in 90:
@@ -74,7 +95,9 @@ func _run() -> void:
 		push_error("second full-map open did not build a valid clipped canvas")
 		quit(1)
 		return
-	await _shoot("clean_full_map_second_open")
+	if not await _shoot("clean_full_map_second_open"):
+		quit(1)
+		return
 
 	await _press_button_action("menu_cancel")
 	for i in 15:
@@ -142,17 +165,18 @@ func _hold_axis(axis: JoyAxis, value: float, frames: int) -> void:
 		await physics_frame
 
 
-func _shoot(name: String) -> void:
+func _shoot(name: String) -> bool:
 	for i in 8:
 		await process_frame
 	await RenderingServer.frame_post_draw
 	var image := root.get_texture().get_image()
 	if image == null:
 		push_error("viewport returned no image for %s" % name)
-		return
-	var path := "%s/%s.png" % [OUT_DIR, name]
+		return false
+	var path := "%s/%s.png" % [output_dir, name]
 	var error := image.save_png(path)
 	if error != OK:
 		push_error("save_png failed for %s (%d)" % [name, error])
-		return
+		return false
 	print("  %s -> %s (%dx%d)" % [name, path, image.get_width(), image.get_height()])
+	return true
