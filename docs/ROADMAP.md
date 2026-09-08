@@ -45,7 +45,9 @@ owner saves unchanged. Full care and the first-session chain remain open.
 
 PR #88 landed as2eb8d4b8 with first-camp and Tidewake guidance, reachable wood
 prompts and same-live Aquaryn retirement. Exact-head PR CI34270467585 passed
-26 jobs/three configured skips; main's OWN CI34272560821 is pending.
+26 jobs/three configured skips; main's OWN CI34272560821 passed on attempt1
+at20:31 UTC with27 successful jobs/two existing manual-only skips, all seven
+multiplayer shards and export/runtime checks. Full campaign acceptance stays open.
 The new all-five care guidance found from the saved camp is local Wave5 work.
 See `CURRENT_STATE.md` and MEADOWS-FIRST-CAMP-CONTENT-WAVE4.md for evidence.
 

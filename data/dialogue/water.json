@@ -168,16 +168,16 @@
       "portrait": "res://assets/ui/portraits/maren.png",
       "lines": [
         "The Tidal Dragon moves freely around the cradle again. What matters is that the trial no longer closes the sea to everyone else.",
-        "Keep the saddle on a compatible creature and care for its swimming stamina. Speed alone does not decide a safe expedition."
+        "Keep the saddle in your bag and use your compatible companion’s Ride prompt. Care for its swimming stamina; speed alone does not decide a safe expedition."
       ]
     },
     "water_otto_pre": {
       "speaker": "Tracker Otto",
       "portrait": "res://assets/ui/portraits/wandering_trainer.png",
       "lines": [
-        "If Aquaryn is not joining your team, follow the calm shore toward the Mosshell habitat. That is a real route forward.",
+        "If Aquaryn is not joining your team, catch a Mosshell or Riverdrake around Tidal Cradle. If your belt already holds five, the catch ceremony lets you choose a companion to release or let the newcomer go.",
         "You need the Swim Stone and a crafted Swim Saddle, not an Alpha in your party. Check those separately.",
-        "Gather reed fiber, driftwood and reefstone before departure. Iona can teach the recipe once the trial is resolved."
+        "Gather reed fiber and driftwood, and use a pickaxe for Reef Stone. Iona can teach the recipe once the trial is resolved."
       ]
     },
     "water_otto_post": {
@@ -828,7 +828,7 @@
       "lines": [
         "The Swim Stone lets you learn the saddle pattern: eight reed fiber, six driftwood and four reefstone.",
         {
-          "text": "Here is the pattern. Craft the saddle at the proper station and equip it on a compatible companion before departure.",
+          "text": "Here is the pattern. Craft it at Tidal Cradle’s camp workbench. Keep the saddle in your bag, bring out a compatible companion, and use its Ride prompt.",
           "effect": "water:water_swim_saddle_recipe_taught"
         }
       ]

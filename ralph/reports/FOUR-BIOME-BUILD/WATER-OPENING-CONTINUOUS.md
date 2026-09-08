@@ -1,5 +1,29 @@
 # Tidewake opening continuous diagnostic — prepared 2026-09-08
 
+## 2026-09-08: route through Iona passed
+
+The existing `--through-tidal-recipe` run passed once with the shipped Iona
+footing and Aquaryn retirement repairs, on launch HEAD
+`2eb8d4b8681ce8224eaa58666b41be5164479c5b`. Seven relevant source hashes
+were unchanged at completion. It took approximately18m24s by log timestamps,
+within the unchanged20-minute watchdog; exit0 and owner save hashes unchanged.
+
+Actual actions completed: Pell and the swimming lesson; Reedhaven gathering
+and paid dock repair; Tovin's two-opponent trial; Solm, resident release,
+Irva, pump shutdown and the Shellwatch departure; the sheltered Tidal crossing,
+camp recovery, Aquaryn defeat, personal Swim Stone and Iona's recipe. The same
+five creatures were retained. No post-arrival actor pose, progress, HP or
+inventory injection was used.
+
+This is an isolated chapter diagnostic with a disclosed synthetic carried
+level44 party and knife/axe, not an earned Stormwood handoff or fresh campaign.
+Capture/replacement, paid saddle, mounted travel and ending remain outside this
+run. Logs `.artifacts/wave5-water-through-iona{,-engine}.log` have no engine or
+script errors. Nine warnings remain: seven terrain/deprecation notices and
+Brine ordinary sites010/011 unable to spawn on their authored footing. The
+original cooldown refusal diagnostics are retained. This supersedes the older
+through-Iona status below, without changing any earlier run's result.
+
 `tests/smoke_water_opening_continuous.gd` covers the previously uncomposed
 production arrival -> Pell briefing -> physical swim lesson seam. That bounded
 production route has passed at runtime.

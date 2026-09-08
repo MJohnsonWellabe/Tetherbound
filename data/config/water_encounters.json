@@ -2433,24 +2433,24 @@
       "region_id": "marsh_channels",
       "table_id": "water_brine_steps_land",
       "island_local_offset": [
-        51.39,
-        50.131,
-        84.53
+        53.6123,
+        41.1299,
+        87.8559
       ],
       "position": [
-        471.39,
-        50.131,
-        744.53
+        473.6123,
+        41.1299,
+        747.8559
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 26.6441,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Basalt basking steps",
       "requires_aquatic_combat": false,
-      "placement_status": "analytic_spawn_footprint_only_arena_and_navigation_unproven"
+      "placement_status": "native_all_table_species_supported_ordinary_spine_approach_and_exact_engage_verified",
+      "placement_why": "Measured supported shelf beside the Brine exploration spine. All three table species passed native footing; an ordinary grounded approach and physical Interact started the exact authored Riptusk encounter. Full combat completion and HUD presentation were not validated."
     },
     {
       "id": "water_brine_steps_wild_012",
