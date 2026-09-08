@@ -32,6 +32,14 @@ the two Stormwood hosted-combat shards; repairs are in the submitted batch.
 Split-realm shard 7 passed. Full milestone completion remains unproven.
 Detailed evidence and commit boundaries: `ralph/reports/FOUR-BIOME-BUILD/checkpoints.md`.
 
+**ROAD validation reopened, 2026-09-08:** the late-Tidewake traversal diagnostic
+reached Salt Crown but production rejected footing at
+`road_visibility_salt_crown_exploration_spine_01`, `_02` and `_03`, plus ordinary
+sites `water_salt_crown_wild_011` and `_013`. The earlier 4,253-sample route model
+and 12 representative frames do not establish continuous live coverage of these
+sites. Measure the surviving creatures along this played route and repair any
+coverage gap before treating the functional ROAD closure below as complete.
+
 ### Consolidation baseline — historical, before PR #80 repairs
 
 **Every branch that carried unique work is merged onto `codex/four-biome-push-0907`
