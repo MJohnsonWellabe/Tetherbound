@@ -213,7 +213,8 @@ func _run_livewire() -> void:
 	check(str(livewire.get("verdict", "")) == "PASS", "sent a fresh Livewire action")
 	var after_livewire := await _await_host_action(805)
 	check(_hp(after_livewire) < _hp(after_livewire_first),
-		"host accepted the same charged move after its validated Livewire deadline")
+		"host accepted the same charged move after its validated Livewire deadline (%s)"
+			% _geometry_detail(after_livewire.get("charged_geometry", {}) as Dictionary))
 
 	# Releasing the one active relic refreshes the card again and restores the
 	# authored timer; a stale action id remains covered by the ordinary hosted
@@ -258,7 +259,44 @@ func _restage_for_strike(label: String) -> bool:
 	var aimed := await _stage_client_for_current_opponent()
 	check(str(aimed.get("verdict", "")) == "PASS",
 		"%s strike geometry is current on client and host" % label)
-	return str(aimed.get("verdict", "")) == "PASS"
+	if str(aimed.get("verdict", "")) != "PASS":
+		return false
+	# Position convergence alone did not prove a hit: two CI runs accepted action
+	# 805 while leaving HP unchanged.  Wait for the HOST's actual charged profile
+	# to connect against its current body centre, facing, and opponent centre.
+	# This is read-only; action/cooldown authority still advances only when the
+	# subsequent raw strike traverses Session and the production hosted fight.
+	var current := await _await_host_charged_geometry()
+	var geometry: Dictionary = current.get("charged_geometry", {}) as Dictionary
+	var connects := bool(geometry.get("connects", false))
+	check(connects, "%s host charged cone is live (%s)" % [label, _geometry_detail(geometry)])
+	return connects
+
+
+func _await_host_charged_geometry() -> Dictionary:
+	var last: Dictionary = {}
+	for tick in 180:
+		var raw: Variant = await probe(0, "stormwood_hosted_trainer", {
+			"trainer": TRAINER, "peer": _client_peer_id,
+		})
+		last = raw as Dictionary if raw is Dictionary else {}
+		var geometry: Dictionary = last.get("charged_geometry", {}) as Dictionary
+		if bool(geometry.get("available", false)) and bool(geometry.get("connects", false)):
+			return last
+		await step(0, "wait", {"frames": 1})
+	return last
+
+
+static func _geometry_detail(geometry: Dictionary) -> String:
+	if not bool(geometry.get("available", false)):
+		return "unavailable: %s" % str(geometry.get("reason", "no reason"))
+	return "distance=%.3fm/%.3fm angle=%.2fdeg/%.2fdeg origin=%s facing=%s target=%s" % [
+		float(geometry.get("distance_m", INF)), float(geometry.get("range_m", 0.0)),
+		float(geometry.get("angle_degrees", INF)),
+		float(geometry.get("cone_degrees", 0.0)) * 0.5,
+		str(geometry.get("origin", [])), str(geometry.get("facing", [])),
+		str(geometry.get("target", [])),
+	]
 
 
 func _charged(action: int, move_id: String, state: Dictionary, settle: int) -> Dictionary:

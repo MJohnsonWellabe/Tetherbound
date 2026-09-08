@@ -49,9 +49,11 @@ coverage gap before treating the functional ROAD closure below as complete.
 Salt Crown follow-up: a coordinate-only repair moves failing ROAD sites
 01/02/03/05 from 5.44–5.47 m shoulders to 1 m route offsets. The production
 probe now admits 2/2 creatures at all seven Salt Crown ROAD sites, and real-stick
-24 m walks pass across all four repaired populated segments. This does not close
-Sluice ROAD failures or ordinary Salt Crown wild sites 011/012/013, which still
-emit footing warnings. Full continuous forward-view coverage remains open.
+24 m walks pass across all four repaired populated segments. Sluice's analogous
+four-site repair also passes: all six ROAD sites admit 2/2 and four populated
+24 m walks pass. Ordinary Salt Crown wild sites 011/012/013, Cradle ROAD 02/03
+and Veilfall ROAD 03 remain open. Full continuous forward-view coverage remains
+open; see the Salt and Sluice footing reports under `road-visual-creatures/`.
 
 **Late Tidewake approach open, 2026-09-08:** the synthetic-start traversal
 diagnostic completed Tidal Cradle -> Salt Crown, the Salt chart interaction,
@@ -66,8 +68,10 @@ Follow-up on the working placement repair: the synthetic-start diagnostic has
 now walked to Bex on the arrival spine, defeated both opponents (+442.6 s) and
 activated the western control (+443.5 s), with no post-departure fixture writes.
 The character-data change preserves his team, dialogue and progression flags.
-The running suffix has not yet proved Calder or the finale, and its synthetic
-starting state still prevents a continuous fresh-save claim.
+The suffix then failed at Calder's crown approach: player (788.349,62.516,2870.969)
+remained 92.7 m from his prompt (836,115.767,2930). A near-east-control placement
+repair is under validation. Neither Calder nor the finale is proven, and the
+synthetic starting state still prevents a continuous fresh-save claim.
 
 ### Consolidation baseline — historical, before PR #80 repairs
 

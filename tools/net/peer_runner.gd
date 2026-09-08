@@ -92,6 +92,11 @@ const NET_REWARDS := preload("res://scripts/net/encounter_rewards.gd")
 ## Wave 6 lanes 6.B/6.C. Riding and Fly.
 const NET_RIDING := preload("res://scripts/world/riding_controller.gd")
 const SPECIES_DATA := preload("res://scripts/creatures/creature_species.gd")
+## Read-only geometry diagnostics for the hosted-trainer net smokes.  The host
+## still resolves every strike through the shipping classes; these only report
+## the exact profile and cone predicate that path is about to use.
+const NET_COMBAT_MANAGER := preload("res://scripts/combat/combat_manager.gd")
+const NET_COMBAT_MATH := preload("res://scripts/combat/combat_math.gd")
 
 const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
@@ -2216,6 +2221,11 @@ func _step_strike(args: Dictionary) -> Dictionary:
 		if args.has(key):
 			intent[key] = args[key]
 	var verdict: Dictionary = director.call("submit_encounter_intent", intent)
+	# An explicit replay keeps its authored action id; an ordinary strike gets
+	# the production counter that submit_encounter_intent just allocated.  Keep
+	# this observable so a stale prior refusal cannot be mistaken for the answer
+	# to a newly numbered request.
+	var submitted_action := int(intent.get("action", director.get("_encounter_action")))
 	for i in maxi(0, int(args.get("settle", 45))):
 		await physics_frame
 	# The LOCAL verdict, reported as fields and not only inside the detail
@@ -2236,6 +2246,7 @@ func _step_strike(args: Dictionary) -> Dictionary:
 			"pending": bool(verdict.get("pending", false)),
 			"code": str(verdict.get("code", "")),
 			"reason": str(verdict.get("reason", "")),
+			"submitted_action": submitted_action,
 		}}
 
 
@@ -2397,6 +2408,54 @@ func _step_stormwood_hosted_raw_strike(args: Dictionary) -> Dictionary:
 	var manager := _combat_manager()
 	return {"verdict": "PASS", "detail": "sent raw hosted strike action=%d realm=%s; refusal=%s"
 		% [int(payload.action), str(payload.realm), str(manager.get("last_encounter_refusal") if manager != null else {})]}
+
+
+## Read the exact host-owned geometry and production move profile used by
+## `stormwood_hosted_trainer.gd::strike()`.  This does not submit or validate an
+## intent and therefore cannot advance action/cooldown authority; it only makes
+## an accepted miss distinguishable as range, facing, or missing-body state.
+func _stormwood_hosted_strike_geometry(fight: Node, body: Node3D,
+		opponent: Node3D, card: Dictionary, slot: String = "charged") -> Dictionary:
+	if fight == null or not is_instance_valid(fight) \
+			or body == null or not is_instance_valid(body) \
+			or opponent == null or not is_instance_valid(opponent):
+		return {"available": false, "reason": "missing fight/body/opponent"}
+	var engine: Node = fight.get("engine") as Node
+	if engine == null or not is_instance_valid(engine):
+		return {"available": false, "reason": "missing authoritative engine"}
+	var hosted_hub: Node = fight.get("hub") as Node
+	var hosted_director: Node = null
+	if hosted_hub != null and is_instance_valid(hosted_hub):
+		hosted_director = hosted_hub.get("director") as Node
+	if hosted_director == null or not is_instance_valid(hosted_director):
+		return {"available": false, "reason": "missing hosted encounter director"}
+	var move_id := str(card.get("move_" + slot, ""))
+	var profile := NET_COMBAT_MANAGER.host_move_profile(
+		engine.get("_moves") as RefCounted, "player_" + slot, move_id,
+		float(body.call("body_radius")) if body.has_method("body_radius") else 0.5,
+		float(opponent.call("body_radius")) if opponent.has_method("body_radius") else 0.5,
+		float(hosted_director.call("host_card_cooldown_multiplier", card)))
+	var origin: Vector3 = body.call("centre")
+	var facing: Vector3 = body.call("facing")
+	var target: Vector3 = opponent.call("centre")
+	var toward := Vector3(target.x - origin.x, 0.0, target.z - origin.z)
+	var planar_facing := Vector3(facing.x, 0.0, facing.z)
+	var angle := 0.0
+	if toward.length_squared() > 0.000001 and planar_facing.length_squared() > 0.000001:
+		angle = rad_to_deg(planar_facing.normalized().angle_to(toward.normalized()))
+	return {
+		"available": true,
+		"slot": slot,
+		"move_id": move_id,
+		"connects": NET_COMBAT_MATH.move_connects(profile, origin, facing, target),
+		"origin": [origin.x, origin.y, origin.z],
+		"facing": [facing.x, facing.y, facing.z],
+		"target": [target.x, target.y, target.z],
+		"distance_m": toward.length(),
+		"angle_degrees": angle,
+		"range_m": float(profile.get("range", 2.6)),
+		"cone_degrees": float(profile.get("cone_degrees", 90.0)),
+	}
 
 
 ## A real controller press, after the host has had time to receive the client
@@ -4903,6 +4962,8 @@ func _execute_probe(msg: Dictionary) -> Variant:
 						"active_relic_id": str(peer_card.get("active_relic_id", "")),
 						"cooldown_multiplier": resolved_multiplier,
 					},
+					"charged_geometry": _stormwood_hosted_strike_geometry(
+						fight, body, opponent, peer_card, "charged"),
 				}, true)
 			return result
 		"character_restore":

@@ -479,3 +479,29 @@
   preceding replay proof intentionally leaves `replayed_action` there and a
   submitted client request does not clear it. A bounded expected-code poll
   repair parses; peer-log confirmation and connected validation remain pending.
+
+## Checkpoint 14 — 2026-09-08, Bex and Sluice integrated
+
+- `42f0b6558` commits Bex's arrival-spine placement with actual two-opponent
+  defeat and west-control activation evidence. The same synthetic-start run
+  subsequently failed Calder's crown approach, not the repaired Bex path.
+  Calder's data repair is still uncommitted and awaiting runtime validation.
+- `786cd913b` commits the four Sluice ROAD coordinate repairs. The strict
+  production probe admits 2/2 at all six sites and passes all four populated
+  24 m walks, exit 0. No size/count/species/tolerance relaxation was made.
+- `68688d174` moves the two bridge debug destinations onto authored approach
+  roads and adds a no-input displacement assertion. Its all-58 runtime rerun
+  is active; the older exit-0 run did not detect bridge-channel recovery.
+- CI `34195296547` finished 24 pass / 2 fail / 3 skip, with every job conclusion
+  read and no hidden multiplayer retries. New Livewire diagnostics read the
+  host's exact charged-move profile/centres/facing and wait for its actual hit
+  predicate before submitting. The prior stationary fixture was effectively
+  redundant: hosted opponents already disable physics when invisible.
+- Shared-wild polling now waits for this phase's expected friendly refusal
+  rather than the previous replay response; a new submitted-action diagnostic
+  asserts the automatically allocated id is 9003. The failed CI peer logs never
+  recorded a later friendly response before shutdown, so this remains a repair
+  hypothesis needing connected validation, not a claimed fix.
+- Local host-friendly tests pass 18/62 and Livewire/hosted tests pass 8/34.
+  Both changed diagnostic scripts parse. Production combat code and authority
+  checks remain unchanged. Independent review precedes the next single CI batch.

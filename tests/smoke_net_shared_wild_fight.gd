@@ -429,6 +429,8 @@ func _run() -> void:
 		 "settle": STRIKE_SETTLE})
 	check(str(friendly.get("verdict", "")) == "PASS",
 		"peer 1's swing at its teammate reached the host (%s)" % str(friendly.get("detail", "")))
+	check(int((friendly.get("data", {}) as Dictionary).get("submitted_action", 0)) == 9003,
+		"the friendly strike uses the next automatic action id after explicit authority/replay probes")
 
 	# POLLED, not read once after a fixed settle. This was a flake and a jitter
 	# failure and they were the same defect.
@@ -451,10 +453,15 @@ func _run() -> void:
 	# "pending is not a refusal" trap wearing a different hat.
 	var refusal: Dictionary = {}
 	var refusal_polls := 0
+	# The preceding replay proof deliberately leaves `replayed_action` in the
+	# client's last-refusal snapshot. Submission is asynchronous and does not
+	# clear that snapshot. Wait for this phase's expected host verdict, rather
+	# than treating the old non-empty response as the new strike's answer.
+	# The bounded poll still fails on a missing or wrong friendly verdict.
 	while refusal_polls < REFUSAL_POLLS:
 		refusal_polls += 1
 		refusal = ((await _encounter(1)).get("refusal", {}) as Dictionary)
-		if not str(refusal.get("code", "")).is_empty():
+		if str(refusal.get("code", "")) == "friendly_target":
 			break
 	# HALF ONE: the host said no, out loud, with the code §5 names.
 	check(str(refusal.get("code", "")) == "friendly_target",
