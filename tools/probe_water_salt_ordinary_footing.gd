@@ -8,6 +8,7 @@ extends SceneTree
 ## each record carries the actual selected site ID.
 const SAVE := preload("res://scripts/save/save_game.gd")
 const WILD := preload("res://scripts/creatures/wild_creature.gd")
+const ENCOUNTER_BASE := preload("res://scripts/combat/cloudreach_encounter_director.gd")
 const TARGET_IDS: Array[String] = [
 	"water_salt_crown_wild_011",
 	"water_salt_crown_wild_012",
@@ -78,7 +79,7 @@ func _run() -> void:
 			body.call("populate", species, player)
 			body.global_position = centre
 			body.set_physics_process(false)
-			var footprint_radius := float(body.call("body_radius")) + 0.15
+			var footprint_radius := float(body.call("body_radius")) + ENCOUNTER_BASE.WILD_FOOT_MARGIN
 			var safe: Vector3 = director._find_wild_spawn(body, centre, centre)
 			print("SALT_ORDINARY_FOOTING ", JSON.stringify({"site": id,
 				"species": species, "rolled_now": plans.any(func(plan: Dictionary) -> bool:
