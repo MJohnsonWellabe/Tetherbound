@@ -177,6 +177,19 @@ realm_entry_readiness + realm_shell_transition_guard: 10 tests,
 smoke_meadows_player_build_hold.gd --check-only: exit 0
 ```
 
-This post-build settle candidate has not yet received another full-world run.
-The prior failed native-log verdict remains authoritative until the exact same
-three-path smoke passes without either runaway-velocity warning.
+The exact three-path smoke was rerun against the post-build settle candidate.
+It completed with exit 0: fresh boot moved 1.97 m, the same-process second boot
+moved 1.97 m, and the authored solo return moved 5.04 m after observing and
+clearing its pending entry. All three were grounded and actionable. The
+authoritative external scan found no `_clamp_runaway_velocity`, velocity-ceiling,
+`SCRIPT ERROR`, or `ERROR:` lines:
+
+```text
+%TEMP%\meadows-build-hold-three-path-settled-20260908.log
+MEADOWS_NATIVE_SCAN_OK
+```
+
+Invocation deviation: this run used the unique Tee capture above but omitted
+Godot's own explicit `--log-file` argument. The capture includes stdout/stderr
+and the native warning stream and is sufficient for this verdict; future
+invocations must use both a unique engine log and a unique wrapper capture.
