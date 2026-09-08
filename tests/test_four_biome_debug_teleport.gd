@@ -8,6 +8,8 @@ extends "res://tests/test_case.gd"
 const GAME := preload("res://autoload/game_state.gd")
 const TAB_SETTINGS := preload("res://scripts/ui/tab_settings.gd")
 const SPOTS_PATH := "res://data/config/debug_teleport_spots.json"
+const FLY := preload("res://scripts/player/fly_controller.gd")
+
 
 const EXPECTED_GROUPS := {
 	"meadows": ["band1_lower_meadows", "band2_stone_and_root", "band3_the_river_lock", "band4_upper_meadows_ironwood", "band5_stronghold_approach"],
@@ -97,6 +99,21 @@ func test_curated_menu_has_two_destinations_in_every_named_region() -> void:
 			assert_true(seen_group_ids.has(expected_group_id), "%s/%s is missing from Settings" % [realm_id, expected_group_id])
 	for realm_id: String in EXPECTED_GROUPS:
 		assert_true(seen.has(realm_id), "%s is missing from the Settings teleport" % realm_id)
+
+
+func test_menu_relocation_resets_the_real_fly_controller_anchor() -> void:
+	var game := GAME.new()
+	var player := Node3D.new()
+	var fly := FLY.new()
+	fly.name = "FlyController"
+	player.add_child(fly)
+	fly.safe_anchor = Vector3(900, 1020, 2700)
+	fly.safe_realm = "cloudreach"
+	game.call("_clear_debug_teleport_recovery_anchor", player)
+	assert_eq(fly.safe_anchor, Vector3.INF, "the teleport helper must discard the old high landing")
+	assert_eq(fly.safe_realm, "")
+	player.free()
+	game.free()
 
 
 func test_every_realm_resolves_its_authored_arrival_anchor() -> void:

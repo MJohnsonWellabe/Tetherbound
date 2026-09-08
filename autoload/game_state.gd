@@ -2529,9 +2529,16 @@ func debug_teleport_to(x: float, z: float, realm_id: String = "", entry_id: Stri
 	if is_nan(ground):
 		return false
 	player.global_position = Vector3(x, ground + DEBUG_TELEPORT_CLEARANCE, z)
+	_clear_debug_teleport_recovery_anchor(player)
 	if player is CharacterBody3D:
 		(player as CharacterBody3D).velocity = Vector3.ZERO
 	return true
+
+
+func _clear_debug_teleport_recovery_anchor(player: Node3D) -> void:
+	var fly := player.get_node_or_null(^"FlyController")
+	if fly != null and fly.has_method("clear_recovery_anchor"):
+		fly.call("clear_recovery_anchor")
 
 
 ## OP-0905-21's cross-realm half. `enter_realm(..., bypass_gate = true)` skips
@@ -2568,6 +2575,7 @@ func _debug_teleport_cross_realm(x: float, z: float, realm_id: String, entry_id:
 	if is_nan(ground):
 		return false
 	player.global_position = Vector3(x, ground + DEBUG_TELEPORT_CLEARANCE, z)
+	_clear_debug_teleport_recovery_anchor(player)
 	if player is CharacterBody3D:
 		(player as CharacterBody3D).velocity = Vector3.ZERO
 	return true

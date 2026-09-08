@@ -505,3 +505,32 @@
 - Local host-friendly tests pass 18/62 and Livewire/hosted tests pass 8/34.
   Both changed diagnostic scripts parse. Production combat code and authority
   checks remain unchanged. Independent review precedes the next single CI batch.
+
+## Checkpoint 15 — 2026-09-08, post-push teleport recovery diagnosis
+
+- Reviewed batch `de4fc499fb0aa441561351169dd5cd895ab069b3` was pushed once,
+  after the preceding CI was terminal. New CI `34197701347` is active. No
+  unvalidated Calder placement was included in that batch.
+- The strengthened all-58 teleport smoke completed with exactly one failure:
+  Cliffhold (-340,3970) relocated to the previous High Perches (900,2700).
+  Both Meadows bridge approach fixes passed without their old recovery messages.
+  Log `.artifacts/realm-teleport-safe58.log`, exit 1.
+- Source diagnosis: `cloudreach_physical_runtime.gd` returns an unflying player
+  to the last Fly landing whenever its height is over 100 m above the player's
+  current height. The 1020 m High Perches anchor survived a deliberate teleport
+  to approximately 830 m Cliffhold, so this ordinary walking-fall safeguard
+  interpreted the menu action as a fall. No terrain/landing coordinate repair
+  is warranted for Cliffhold from this evidence.
+- Working fix clears the previous recovery anchor after a successful debug
+  relocation, without granting a new anchor or changing ordinary fall rules.
+  Independent review caught pending network replies restoring that old anchor;
+  opaque monotonic request IDs now cross the existing host request/verdict path,
+  and stale replies are ignored. IDs are allocated across controller instances
+  to prevent old-scene replies matching a new controller's first request.
+- Focused Fly/menu regression tests pass 15 tests / 996 assertions, including
+  stale accepted/refused replies, current replies, and replacement controllers.
+  Initial new test-fixture API/setup errors were corrected; only the clean
+  final run is counted. Runtime and connected Fly validation remain pending.
+- Calder's synthetic-start route run is still active; it has repeated Bex and
+  west-control success and reached the departure road. It has not yet established
+  a Calder/east-control or finale verdict.

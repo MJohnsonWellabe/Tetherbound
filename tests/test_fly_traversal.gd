@@ -35,6 +35,41 @@ func after_each() -> void:
 	game.free()
 
 
+func test_deliberate_relocation_forgets_old_anchor_without_granting_a_new_one() -> void:
+	fly.safe_anchor = Vector3(900, 1020, 2700)
+	fly.safe_realm = "cloudreach"
+	fly._anchor_host_granted = true
+	var old_request: int = fly._anchor_request_id
+	fly._anchor_pending = true
+	fly._anchor_pending_claim = fly.safe_anchor
+	fly._anchor_pending_is_landing = true
+	fly._anchor_pending_for = 0.2
+	fly.clear_recovery_anchor()
+	assert_eq(fly.safe_anchor, Vector3.INF)
+	assert_eq(fly.safe_realm, "")
+	assert_false(fly._anchor_host_granted)
+	assert_false(fly._anchor_pending)
+	assert_eq(fly._anchor_pending_claim, Vector3.INF)
+	assert_false(fly._anchor_pending_is_landing)
+	assert_eq(fly._anchor_pending_for, 0.0)
+	fly.apply_anchor_verdict(true, Vector3(900, 1020, 2700), "ok", "old landing", old_request)
+	assert_eq(fly.safe_anchor, Vector3.INF, "a late pre-teleport host answer stays invalid")
+	fly.apply_anchor_verdict(false, Vector3.ZERO, "refused", "old rejection", old_request)
+	assert_eq(fly._anchor_refusals, 0, "an old rejection cannot recover or deny the relocated player")
+	assert_false(fly.recover_to_anchor("stale pre-teleport landing"))
+	assert_false(game.progression.has("fly_traversal_unlocked"))
+	fly.apply_anchor_verdict(true, Vector3(-340, 830, 3970), "ok", "current landing", fly._anchor_request_id)
+	assert_eq(fly.safe_anchor, Vector3(-340, 830, 3970), "a current host verdict can establish the new landing")
+	assert_true(fly._anchor_host_granted)
+	var replacement := FLY.new()
+	replacement._game = game
+	assert_ne(replacement._anchor_request_id, fly._anchor_request_id,
+		"a replacement scene controller must not reuse the old controller's token")
+	replacement.apply_anchor_verdict(true, fly.safe_anchor, "ok", "old scene reply", fly._anchor_request_id)
+	assert_eq(replacement.safe_anchor, Vector3.INF)
+	replacement.free()
+
+
 func test_owned_active_healthy_carrier_is_preferred_without_sixth_slot() -> void:
 	assert_eq(fly.eligible_creature(), null)
 	for i in 4:
