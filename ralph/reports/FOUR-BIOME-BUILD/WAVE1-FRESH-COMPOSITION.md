@@ -222,3 +222,111 @@ No camp completion, all-five level-5 training or uninterrupted ending is claimed
 The key navigation repair has actual fresh-path evidence. This second team
 approach failure changes strategy to a bounded geometry/source diagnostic;
 there is no third blind prefix, larger movement ceiling or skipped encounter.
+
+## Prepared earned Cloudreach-to-Stormwood handoff (runtime unproved)
+
+`tests/helpers/earned_stormward_handoff.gd` accepts the completed live Cloudreach
+segment, requires its retained five identities and actual earned Stormwood key,
+walks the existing route graph back to the overlook, then follows the actual
+ScarredStep collision bodies to StormwardRealmGate. Two physical Interact inputs
+must each activate that exact provider: the first earns the durable unlock while
+retaining the chapter entitlement, the second lets production realm travel run.
+It awaits the actual Stormwood scene, completed shell, cleared pending entry and
+released input ownership under the existing 7200-frame scene bound, then checks
+the same five instance identities. It never calls the router, loads a save,
+assigns a player pose or writes progression. It is not yet wired after the
+unfinished Meadows suffix and has no runtime proof. Parser passed; logs
+`.artifacts/wave1-stormward-handoff-parse{,-engine}.log`.
+
+Independent review caught that the first handoff draft could stop on stair21
+up to0.75m early, outside the real prompt's4m radius. The revised walk reaches
+stair22 with0.35m waypoint precision and stops before the gate-centred final
+stair/barrier. It also waits for the actual Stormwood EncounterDirector's
+population-ready state. Revised parser passed without errors; log stem
+`.artifacts/wave1-stormward-handoff-reviewed-parse`. No runtime claim.
+
+### 2026-09-08 16:39 UTC — verified wave1 landing, wave2 continuation
+
+PR85 exact head19d6ea8ecbc44ea479d5e49514359f6c116ba199 was marked ready and
+squash-merged as main bc26b21eec2b96a8fbd8295732007aa67f92198a after complete
+first-attempt CI34248963300 review (26 successful jobs, three existing conditional
+skips, 2980 tests/486685 assertions). PR comments were empty. Fetch confirmed the
+main tree is identical to the verified head and contains prior main75aaccca0.
+Main's OWN push CI34252353122 and Release34252353246 are now running; this entry
+DOES NOT claim their success. Shared checkout is codex/four-biome-wave2 from that
+main, preserving all uncommitted follow-up work.
+
+The genuine fresh boundary/camp run remains live: actual five level5+ creatures,
+ten training wins, wood44/42 and fiber gathering underway. Camp is not yet proved.
+Root integration checks of the pending repairs passed13 tests/108 assertions
+(log stem .artifacts/wave1-batch-focused-1637) and Crown6/74 (wave1-crown-focused-1640).
+The first command named a nonexistent Crown test basename; the separate correct
+Crown selection supplied the missing coverage. Neither run emitted engine/script
+errors. Relay's actual continuous deck walk passed all five legs21/157/42/48/12
+frames with deck minimumY10.0007448; log stem wave1-relay-deck-integrated-1643.
+These pending repairs are not part of the landed wave1 tree and are not milestone
+completion. The uninterrupted opening-to-Tidewake suffix remains open.
+
+### Fresh material failure and revised supply choice — wave2
+
+Boundary/camp session72564 was explicitly stopped with exit-1 after44 logged
+SouthBridge trench recoveries (positions around x6–12,z1325,y-8). It was not a
+successful prefix or timeout. Actual receipts reached wood44/42,fiber8/50 after
+ten training wins; no paid camp was reached. The isolated launcher completed
+its owner fingerprint comparison unchanged; no Godot remained and no engine or
+script errors appeared. Evidence .artifacts/wave1-fresh-boundary-camp{,-engine}.log
+and its owner-before/after.json pair. The selected supply target had no old
+telemetry, so its exact identity is not claimed. Source showed authored supply
+was always preferred over natural scatter regardless of distance.
+
+Revised helper ranks both actual source types together, rejects supplies past
+the closed SouthBridge near rim using current crossing geometry, and reuses the
+actual open village gate route. Target/path telemetry is now printed. Tool,
+yield, stock, reach and original total walk budget stay intact. Independent
+review caught that raw step() dropped the existing navigator's held-input and
+confined-detour recovery; revised code calls the original walk for each waypoint
+with only the remaining total physics budget. No current-world runtime pass yet.
+
+The first unit fixture attempted the real tree during runner initialization
+and emitted a script error; a private uninitialized SceneTree then produced
+empty live groups and failed2 assertions. Strategy changed to a deferred native
+scene check, which passes4 assertions with actual authored/scatter node scripts:
+.artifacts/wave2-material-live-selection{,-engine}.log. The pure crossing guard
+unit passes1 test/6 assertions (wave2-material-final-unit log stem). Both final
+checks are error-free; the native selector check is registered in CI.
+
+Fresh driver now composes the earned Relay segment after Warrens and exposes
+--through-relay as prefix-only. It still explicitly fails at the missing Hall
+suffix. Parser check log stem wave2-material-relay-parse. No Relay full-world or
+opening-to-ending completion is claimed.
+
+The Hall continuation has now also been source-reviewed and composed after
+Relay/Mill; --through-hall ends only at Warden arena entry, and the default
+still fails at the unfinished Warden/ending suffix. Actual required captain,
+Sigil expense and physical shutter checks are detailed in MEADOWS-HALL-WAVE1.md.
+Root parser passed (.artifacts/wave2-hall-composed-parse{,-engine}.log). It has
+no fresh runtime claim. A new isolated local-supply camp launcher is prepared
+for after the current Water RAM allocation; it has not been launched.
+
+The default fresh driver now continues through the prepared actual Warden and
+acknowledgement/Rift tail into the existing Cloudreach live-context route, then
+the physical Stormward gate, ordinary Stormwood Segment, paid Crown and Rootgate.
+It does not invoke either chapter wrapper's synthetic-entry routine. The current
+explicit unfinished suffix is after Rootgate, before the Dynamo/Water ending.
+Optional --through-meadows and --through-cloudreach remain prefix-only. Parser
+passed under log stem .artifacts/wave2-chapters-composed-parse. All these newly
+connected later stages remain unproved in the genuine fresh run. The next unique
+launcher is .artifacts/run-wave2-fresh-local-supply-campaign.ps1 (default full
+composed route, no early --through-camp stop); it is queued after Water/Alpha.
+
+Independent composition review found the completed Cloudreach helper disconnects
+its physics clock and Fly recovery observers before Stormward reuses its walking
+methods. The handoff now reconnects those real observations for its physical
+travel, rejects any recorded failure, and disconnects before the realm-changing
+input destroys the old scene. Arrival compares captured instance IDs instead of
+a freed world reference. New focused clock/disconnect and missing-context checks
+pass2 tests/8 assertions; log stem wave2-stormward-observers-unit. Parser stem
+wave2-stormward-observers-parse. The wider composed batch passed41 tests/365
+assertions (wave2-composed-batch-unit); no native/script errors in those final
+checks. This repair preserves the existing measured-distance timeout rather than
+silently disabling it. Full-world handoff remains unproved.

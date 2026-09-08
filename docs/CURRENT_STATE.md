@@ -6,6 +6,26 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-08, playable build in progress)
 
+**2026-09-08 17:07 UTC: Wave 1 is landed and main's own CI is green.** PR #85
+verified head `19d6ea8ecbc44ea479d5e49514359f6c116ba199` was squash-merged as
+`bc26b21eec2b96a8fbd8295732007aa67f92198a`. Its own push run `34252353122`
+passed on attempt 1: 27 successful jobs, two existing conditional skips,
+2980 unit tests / 486685 assertions, all seven multiplayer shards, Windows
+export and exported-runtime ground verification. Every job/step/log evidence
+was reviewed; the fetched main tree matches the verified PR head. The prior
+artifact-403 run remains a recorded failure, not a rerun pass.
+
+The landed village gate route has genuine fresh-save proof: the same run earned
+five creatures at level 5+ through ten training wins. It then gathered wood44/42
+and fiber8/50 before repeatedly entering the closed SouthBridge trench; that
+attempt was explicitly stopped, owner saves unchanged. Paid camp and the full
+opening-to-Tidewake run remain unproved. The separate chapter fixture completed
+Shellwatch's trainers, release, pump and departure gate, not a fresh campaign.
+Wave 2 continues from this main on `codex/four-biome-wave2`; pending material,
+Relay-deck, Alpha-clock and Aquaryn repairs and later composition are not claimed
+landed. Detailed evidence: `ralph/reports/FOUR-BIOME-BUILD/WAVE1-FRESH-COMPOSITION.md`.
+This update supersedes the earlier draft/head status entries below.
+
 **2026-09-08 13:51 UTC: main is green; Wave 1 starts from it.** PR #80 was
 squash-merged at `75aaccca0210a9bc1ac0f16bac687d8557f0aacf` after exact-head
 `9cbec44fbbcf644bc2019cea8cab6c32aab32fd5` CI `34229513422` completed

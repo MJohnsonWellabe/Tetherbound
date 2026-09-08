@@ -529,7 +529,9 @@ func _build_decks() -> void:
 		var id := str(deck.get("id", "deck"))
 		var top := float(deck.get("deck_y", 0.0))
 		var centre := world_of(at)
-		var yaw := atan2(_u.x, _u.y)
+		# Config width runs along site s (_u); depth runs along t (_p).
+		# A box's local +X must therefore map to _u, not to -_p.
+		var yaw := atan2(-_u.y, _u.x)
 		# 0.4m of slab, its TOP at `deck_y`: a deck whose collider top sits
 		# where the config says the floor is, so a player standing on it is
 		# standing at the authored height and not 0.4m over it.

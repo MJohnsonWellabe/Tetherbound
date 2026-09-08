@@ -88,3 +88,15 @@ Raw logs are `.artifacts/ci-34245691443/`. Existing resource-at-exit/material
 messages and multiplayer cached-node teardown messages remain present; MP3's
 peer-death failure text is its deliberate negative control. Green individual
 smoke steps are not a claim of a native-error-free full suite or green CI.
+
+## Exact head 19d6ea8ec — complete CI pass
+
+Run `34248963300` completed at16:23:38 UTC, attempt1, for exact head
+`19d6ea8ecbc44ea479d5e49514359f6c116ba199`:26 successful jobs and three
+existing conditional skips. All four unit shards passed2980 tests/486685
+assertions; all seven multiplayer shards and their artifact uploads passed.
+Every job/step/log evidence was reviewed in initial,1613,1617,1622 and1624
+ledgers under `.artifacts/wave1-ci-19d6-*`; raw logs
+`.artifacts/ci-34248963300/`. Existing native cleanup/material/cache messages
+and deliberate negative-control errors remain disclosed. This is exact PR-head
+CI proof, not a new main landing or a complete campaign run. No rerun requested.

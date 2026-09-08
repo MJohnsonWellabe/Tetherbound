@@ -192,3 +192,23 @@ FAIL line is its intentional negative control, explicitly verified as exit2PASS.
 Windows binary and exported-runtime terrain checks pass. Raw logs remain local
 under `.artifacts/ci-34231941105/`. No CI rerun, raised ceiling, new skip,
 loosened assertion or added retry. The four-biome goal resumes only now.
+
+## Wave 1 follow-up landing — 2026-09-08 17:07 UTC
+
+PR85 was marked ready only on verified head19d6ea8ecbc44ea479d5e49514359f6c116ba199
+(CI34248963300, attempt1,26success/3existingconditional skips) and squash-merged
+as main bc26b21eec2b96a8fbd8295732007aa67f92198a. Fetch confirmed identical tree
+to that head and ancestry from prior main75aaccca0. Main OWN push CI34252353122
+completed17:07:27UTC, attempt1:27success/2existingconditional skips. Unit totals
+2980tests/486685assertions; allsevenMPsmokes/artifacts passed; Windows export,
+binary validation, exported-runtime ground check and artifactfinalization passed.
+Exportartifact10067539436 is686313000bytes with zipSHA256
+ df88b6c993e5cb3b0fd90ae447856f61985f6c5373253fb02538535766db9d33.
+
+Every job/step/logevidence reviewed via .artifacts/wave2-main-ci-{1648,1654,1657,
+1700,1703,1707,1709}.txt and raw .artifacts/ci-34252353122/. Existing cleanup,
+material/cache/synchronizer warnings and intentional peer-death negative control
+remain disclosed; no native-error-free full-CI claim. No retry/ceiling/assertion/
+skip was added or loosened. Current main was fetched again and confirmed bc26b21ee.
+The fresh campaign is still incomplete; this is the next verified integration,
+not a four-biome milestone pass.

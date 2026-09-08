@@ -7,6 +7,7 @@ const MANAGER := preload("res://scripts/combat/combat_manager.gd")
 const ARBITER := preload("res://scripts/world/interaction_arbiter.gd")
 const BODY := preload("res://scenes/creatures/creature.tscn")
 const WILD := preload("res://scripts/creatures/wild_creature.gd")
+const CROWN := preload("res://tests/helpers/stormwood_crown_build_segment.gd")
 
 class LocalDirector extends "res://scripts/combat/stormwood_encounter_director.gd":
 	func _ready() -> void:
@@ -28,6 +29,9 @@ func _initialize() -> void:
 	_run.call_deferred()
 
 func _run() -> void:
+	Engine.time_scale = 8.0
+	Engine.physics_ticks_per_second = 480
+	Engine.max_physics_steps_per_frame = 32
 	for resting in [true, false]:
 		await _case(resting)
 	print("SYNTHETIC ALPHA ADMISSION: 2 cases, failures=", failures)
@@ -80,27 +84,20 @@ func _case(resting: bool) -> void:
 		await process_frame
 	var offer: Dictionary = arbiter.winner()
 	var exact: bool = director._engageable() == alpha
-	var press := InputEventJoypadButton.new()
-	for binding: InputEvent in InputMap.action_get_events("interact"):
-		if binding is InputEventJoypadButton:
-			press.button_index = binding.button_index
-			break
-	press.pressed = true
-	Input.parse_input_event(press)
-	for _frame in 2:
-		await physics_frame
-	press = press.duplicate()
-	press.pressed = false
-	Input.parse_input_event(press)
-	for _frame in 4:
-		await physics_frame
+	var helper := CROWN.new()
+	helper._tree = self
+	helper._director = director
+	helper._arbiter = arbiter
+	var pressed: bool = await helper._tap_named_engage(alpha)
 	var fighting := manager.is_fighting()
 	print("SYNTHETIC ADMISSION ", {"resting": resting, "offer": offer,
 		"exact": exact, "no_usable_ally": director.no_usable_ally(),
-		"observed": observed, "fighting": fighting})
+		"observed": observed, "fighting": fighting, "pressed": pressed,
+		"restored_scale": Engine.time_scale, "restored_hz": Engine.physics_ticks_per_second})
 	if not exact or not bool(offer.get("actionable", false)) \
 			or observed.activated != 1 or observed.entered != (0 if resting else 1) \
-			or fighting == resting:
+			or fighting == resting or not pressed \
+			or Engine.time_scale != 8.0 or Engine.physics_ticks_per_second != 480:
 		failures.append("unexpected physical admission result, resting=" + str(resting))
 	world.queue_free()
 	await process_frame

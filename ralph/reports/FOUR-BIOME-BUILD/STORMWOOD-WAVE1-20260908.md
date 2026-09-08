@@ -234,9 +234,100 @@ it must be labeled diagnostic and must not count as earned chapter progress.
 
 ## Remaining proof and disclosure
 
-Next diagnose why the fourth exact actionable offer did not admit combat;
-inspect the actual input owner/activation and manager refusal conditions before
-another runtime. No unchanged prefix rerun is proposed. The command remains:
+### Wave 2 changed-clock actual-scene result
+
+The changed synthetic scene run exited 1, but **proved the Alpha input repair**:
+an exact actionable `Engage Voltarach` offer was followed by
+`activated_provider=/root/Stormwood/EncounterDirector`, manager state ACTIVE and
+`fighting=true`. The exact-enemy check passed. That fight ended `outcome=lost`;
+three encounters in total entered, including incidental wilds. Alpha clearance
+and paid Crown progression remain unproved. The one explicit helper `ERROR:`
+was the terminal four-approach failure; no native/script errors occurred.
+
+Logs: `%TEMP%/wave2-alpha-clock-scene-console.log` and matching engine log.
+Isolated APPDATA: `wave2-alpha-clock-scene-appdata`. The owner manifests
+`wave2-alpha-clock-scene-owner-before.json` / `-after.json` cover eight unchanged
+files, zero path/hash differences. Godot exited and RAM was released. This is
+synthetic admission proof only; it does not establish an earned Alpha victory.
+
+### Prepared immediate continuation: paid Crown to Rootgate
+
+`tests/helpers/stormwood_earned_rootgate_segment.gd` is a NEW reusable helper,
+not yet wired or runtime-tested. It refuses entry without the actual paid,
+non-removed Still Grove build record/UID linked to `e_crown`, the recipe and
+construction flags, the live player beside that arch, and a five-member party.
+It begins before Crown arrival. No prerequisite or position fixture is supplied.
+
+The helper sends normal Build Cancel if construction remains armed, walks out
+of and through the physical arch, requires `stormwood:crown_reached`, follows
+the authored Crown-ring points, clears the exact named guardian through ordinary
+combat, opens Archivist Wen's dialogue, then activates the heartstone. Completion
+requires `rootgate_released`, `act_ii_complete`, the actual Rootgate barrier hidden
+with collision disabled, and the same five creature identities/live world.
+The inherited movement/combat bounds are retained; this new helper's ordinary
+button delivery uses the established normal-clock discipline. No direct facing,
+travel, progression or pose writes are introduced.
+
+Parser clean. Entry-record, endpoint, no-bypass and inherited Crown contracts:
+**9 tests / 98 assertions**, zero failures, exit 0, no native/script errors in
+`%TEMP%/wave2-rootgate-helper-focus-console.log` and matching engine log.
+Current paid Crown construction is still missing; the helper cannot run as an
+earned continuation until that prerequisite is achieved.
+
+### Source-only Dynamo tail audit retained for the next lane
+
+After Rootgate, use the return arch and `deepwood_road` through
+`(-650,3550)`, `(-450,3960)`, `(-890,4490)`, `(-150,4460)`, `(-310,5050)`,
+`(-100,5350)`, then the actual Stormheart ascent rather than terrain-projecting
+the high core. Required receipts: Lantern Hollow arrival; Sable's captive truth;
+Nysa's three-member trainer roster and Deepwood switch; Sera and the approach
+switch, with all four individual rod flags; Ember Bivouac preparation; Kestrel;
+core arrival. Production `stormheart_tree.gd::ascent_point` describes the physical
+ramps, while `stormwood_dynamo.gd::arena_ready` requires Kestrel and core flags.
+
+Marrow's five-member hosted roster precedes `break_core`. The field-control
+adapter then pilots the deployed creature through four conduit strikes using
+normal movement and `combat_quick`/`combat_charged` events; the host checks
+participant/realm, exact move, action serial/cooldown, facing and bank reach.
+The trainer does not fight. Finally, `stormwood_ending.gd` exposes the release,
+legendary offer, Lantern Hollow Spark shrine and high-platform Waterward view
+events. Existing isolated/network tests are wiring evidence, not an earned tail.
+
+Future placement risk found in authored data: story Sable and trainer
+`rodfolk_guard_bram` share exactly `(-450,57.64,3960)`. This is a likely competing
+dialogue prompt, not a reproduced runtime failure. No production relocation was
+made. The Rootgate helper deliberately ends before this boundary.
+
+The first actual-scene synthetic diagnostic terminated exit 1. It reproduced
+an exact actionable Alpha offer with a healthy, non-resting deployed ally,
+enabled arbiter, unpaused tree and no input owner, but **no arbiter activation
+signal after physical Interact**. This rules out a manager refusal for that
+observed press: it never reached provider activation. Two later incidental
+route fights entered and were lost; Alpha remained uncleared. One explicit
+helper `ERROR:`, no native/script error; no Godot processes remained afterward.
+Logs: `%TEMP%/wave1-alpha-scene-runtime-console.log` and matching engine log.
+APPDATA was isolated under `wave1-alpha-scene-appdata-20260908`; the additional
+`wave1-alpha-scene-owner-before.json` / `-after.json` manifests show eight
+unchanged owner files. This remains synthetic diagnosis, not milestone proof.
+
+The Alpha-only press now follows the existing Cloudreach driver's clock
+discipline: synchronize with process frames, temporarily use 1x/60 Hz, recheck
+the exact candidate/actionable provider and input owner, deliver the same
+physical press (two held frames, four settle frames), restore 8x/480 Hz. No
+press, approach, retry or fight bound was added. Other Crown inputs are unchanged.
+
+The low-RAM real admission probe now exercises this helper at 8x/480 Hz.
+Both healthy and resting controls pass their respective one-activation /
+one-entry-or-refusal expectations, and both restore the original clock.
+`wave1-alpha-clock-control-console.log` and matching engine log: two synthetic
+cases, zero failures. Focused Crown contracts remain **6 tests / 74 assertions**,
+zero failures (`wave1-alpha-clock-focus-console.log` and matching engine log).
+Both commands exited 0 without native/script errors. The changed actual-scene
+diagnostic still awaits RAM; no third full-prefix run is proposed.
+
+Next validate the changed clock-synchronized press in the focused synthetic
+actual scene before considering the earned continuation again. The eventual
+continuous command remains:
 
 ```text
 godot --headless --path . --log-file <unique-engine-log> --script tests/smoke_stormwood_continuous.gd -- --through-crown
@@ -268,3 +359,54 @@ there is no production admission change or third full-prefix replay.
 Parser passed after the readiness guard correction; logs
 `%TEMP%/wave1-alpha-scene-readiness-parse-{console,engine}.log`.
 Full-world execution remains queued behind the live Tidewake run.
+
+### Wave2 Rootgate review and fight-clock correction
+
+Rootgate remains a prepared, unwired earned helper, not runtime proof. Its guardian
+approach now derives an outside stance from the actual guardian body radius and
+player `Collision` capsule using the production body-clearance function. Walking
+retains its existing 1.2m tolerance, four approaches and 180-frame Engage window.
+A null SceneTree fails before scene access. Focused Crown/Rootgate checks pass in
+`%TEMP%/wave2-rootgate-crown-final-focus-{console,engine}.log`.
+
+The changed actual Alpha admission scene proved the normal-clock physical Engage
+edge, but its fight lost. That diagnostic is synthetic and does not establish
+an earned Alpha clear. Its old telemetry cannot establish exact strike counts or
+entry ally species. The fight helper's wall-clock quick cadence (900ms) previously
+ran against 8x simulation, giving the enemy eight times as much simulation time
+between the same human actions. The helper now runs the existing fight at 1x/60Hz,
+retains the 180000ms wall cap and two-tick physical press, and restores prior clocks
+on success or failure. Entry/end species, level, HP, faint/rest state and actual
+hit/miss/damage signals are recorded; no production combat values changed.
+
+`tools/probe_stormwood_fight_clock.gd` is an explicitly synthetic harness control,
+not a victory test. Both successful-outcome and missing-outcome controls verify
+normal in-fight clocks, restoration to 8x/480, signal observer cleanup and exact
+emitted strike counters. Two cases pass, zero failures or engine/script errors:
+`%TEMP%/wave2-fight-clock-control-r2-{console,engine}.log`. The initial control
+had a parse error from assigning a method; the corrected control overrides it.
+Changed actual-scene combat validation awaits the allocated RAM slot.
+
+### Changed normal-clock Alpha scene: diagnostic pass
+
+The single authorized changed actual-scene run exited 0, with the durable named
+Alpha clear flag true and failures empty. Logs:
+`%TEMP%/wave2-alpha-normal-fight-{console,engine}.log`; isolated APPDATA
+`%TEMP%/wave2-alpha-normal-fight-appdata`. All eight owner files match the saved
+before/after SHA256 manifests; no Godot processes remain. No ERROR or SCRIPT ERROR
+lines occurred. This is explicitly synthetic chapter-party/position diagnostic
+proof, not earned campaign, paid Crown, or Rootgate completion.
+
+Observed encounters under unchanged physical action/approach limits:
+
+- Mudsnout level44 beat incidental Tanglevolt level35 in30.131s:32 player hits,
+  0 misses; Mudsnout HP358 to200.409.
+- The exact named Alpha physical Engage activated EncounterDirector. Mudsnout
+  faced Voltarach level40 HP511.755 and landed56 hits,0 misses,445.263 damage;
+  it fainted after53.279s with Alpha at66.491HP.
+- The existing next ordinary approach deployed Bramblebun level44 and resolved
+  that Alpha in9.161s:9 hits,0 misses, Alpha HP0; Bramblebun HP340.1 to305.053.
+  The helper observed the durable named clear receipt and returned success.
+
+RAM released to root for the fresh default campaign; no further Alpha run or
+helper expansion. Crown/Rootgate source remains frozen pending integration.

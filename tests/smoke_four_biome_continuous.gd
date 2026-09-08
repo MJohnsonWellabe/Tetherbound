@@ -13,6 +13,14 @@ const REST := preload("res://tests/helpers/meadows_earned_rest_segment.gd")
 const TOURNAMENT := preload("res://tests/helpers/meadows_earned_tournament_segment.gd")
 const BRIDGE := preload("res://tests/helpers/meadows_earned_bridge_segment.gd")
 const WARRENS := preload("res://tests/helpers/meadows_earned_warrens_segment.gd")
+const RELAY := preload("res://tests/helpers/meadows_earned_relay_segment.gd")
+const HALL := preload("res://tests/helpers/meadows_earned_hall_segment.gd")
+const WARDEN := preload("res://tests/helpers/meadows_earned_warden_segment.gd")
+const CLOUDREACH := preload("res://tests/helpers/cloudreach_live_segment.gd")
+const STORMWARD := preload("res://tests/helpers/earned_stormward_handoff.gd")
+const STORMWOOD := preload("res://tests/smoke_stormwood_continuous.gd")
+const CROWN := preload("res://tests/helpers/stormwood_crown_build_segment.gd")
+const ROOTGATE := preload("res://tests/helpers/stormwood_earned_rootgate_segment.gd")
 var failures: Array[String] = []
 var live: Dictionary = {}
 var started_ms := 0
@@ -130,8 +138,65 @@ func _run() -> void:
 	if OS.get_cmdline_user_args().has("--through-warrens"):
 		_finish(true)
 		return
+	var relay_result: Dictionary = await RELAY.new().run(self, live["world"], game)
+	for line: Variant in relay_result.get("failures", []):
+		failures.append(str(line))
+	if not bool(relay_result.get("passed", false)) or not failures.is_empty():
+		_finish(false)
+		return
+	reached = "relay_disabled_and_mill_crossed"
+	if OS.get_cmdline_user_args().has("--through-relay"):
+		_finish(true)
+		return
+	var hall_result: Dictionary = await HALL.new().run(self, live["world"], game)
+	for line: Variant in hall_result.get("failures", []):
+		failures.append(str(line))
+	if not bool(hall_result.get("passed", false)) or not failures.is_empty():
+		_finish(false)
+		return
+	reached = "warden_arena_entered"
+	if OS.get_cmdline_user_args().has("--through-hall"):
+		_finish(true)
+		return
+	if not _accepted(await WARDEN.new().run(self, live["world"], game), "passed"):
+		return
+	live["world"] = current_scene
+	reached = "cloudreach_arrived"
+	if OS.get_cmdline_user_args().has("--through-meadows"):
+		_finish(true)
+		return
+	var cloudreach := CLOUDREACH.new()
+	if not _accepted(await cloudreach.run(self, live["world"], game), "ok"):
+		return
+	reached = "cloudreach_completed"
+	if OS.get_cmdline_user_args().has("--through-cloudreach"):
+		_finish(true)
+		return
+	if not _accepted(await STORMWARD.new().run(self, cloudreach), "ok"):
+		return
+	live["world"] = current_scene
+	reached = "stormwood_arrived"
+	var stormwood := STORMWOOD.Segment.new()
+	if not _accepted(await stormwood.run(self, live["world"], game), "passed"):
+		return
+	reached = "stormwood_arch_recipe_earned"
+	if not _accepted(await CROWN.new().run(self, live["world"], game), "passed"):
+		return
+	reached = "stormwood_paid_crown"
+	if not _accepted(await ROOTGATE.new().run(self, live["world"], game), "passed"):
+		return
+	reached = "stormwood_rootgate_released"
 	failures.append("fresh campaign suffix is not composed; reached prefix is not milestone completion")
 	_finish(false)
+
+
+func _accepted(result: Dictionary, success_key: String) -> bool:
+	for line: Variant in result.get("failures", []):
+		failures.append(str(line))
+	if not bool(result.get(success_key, false)) or not failures.is_empty():
+		_finish(false)
+		return false
+	return true
 
 
 func _finish(prefix_passed: bool) -> void:

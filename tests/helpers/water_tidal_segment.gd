@@ -42,9 +42,10 @@ func run() -> bool:
 	if not await _walk_to(spine[1], "Tidal camp approach") \
 			or not await _recover_at_camp("Tidal before Aquaryn", TIDAL_CAMP):
 		return false
-	for index in [2, 3]:
-		if not await _walk_to(spine[index], "Tidal basin spine point %d" % index):
-			return false
+	if not await _walk_to(spine[2], "Tidal basin spine point 2"):
+		return false
+	# Spine point 3 is Aquaryn's occupied spawn. Its actual challenge provider
+	# is the destination; walking into the creature's centre cannot arrive.
 	if not await _fight_alpha():
 		return false
 	var iona := _world.find_child("water_iona", true, false) as Node3D
@@ -68,6 +69,42 @@ func run() -> bool:
 	return true
 
 
+static func alpha_challenge_stance(center: Vector3, approaching: Vector3,
+		alpha_radius: float, player_radius: float) -> Vector3:
+	var direction := approaching - center
+	direction.y = 0.0
+	if direction.is_zero_approx() or alpha_radius <= 0.0 or player_radius <= 0.0:
+		return Vector3(NAN, NAN, NAN)
+	# One metre is the unchanged precise interaction-walk tolerance. Even its
+	# near edge must remain outside both physical capsules.
+	return center + direction.normalized() * (alpha_radius + player_radius + 1.0)
+
+
+func _activate_alpha_challenge(alpha: Node) -> bool:
+	var prompt := alpha.get("_challenge_prompt") as Node3D
+	var player_collision := _player.get_node_or_null("Collision") as CollisionShape3D
+	if prompt == null or player_collision == null or not player_collision.shape is CapsuleShape3D:
+		return _fail("Aquaryn challenge geometry/provider is absent")
+	var target := alpha_challenge_stance(alpha.body.global_position, _player.global_position,
+		float(alpha.body.body_radius()), float(player_collision.shape.radius))
+	if not target.is_finite():
+		return _fail("Aquaryn has no outside approach direction")
+	target.y = _world.ground_height_at(target.x, target.z) + 0.1
+	if target.distance_to(prompt.global_position) > float(prompt.radius):
+		return _fail("Aquaryn outside stance is beyond its production challenge radius")
+	if not await _walk_to(target, "Aquaryn outside-capsule challenge stance", 1.0):
+		return false
+	await _frames(8)
+	if _arbiter.winning_provider() != prompt:
+		return _fail("Aquaryn challenge does not win at the physical outside stance")
+	_activated = null
+	await _tap(&"interact")
+	if _activated != prompt:
+		return _fail("Aquaryn challenge did not receive the controller interact press")
+	_note("Aquaryn challenge activated outside both physical capsules")
+	return true
+
+
 func _fight_alpha() -> bool:
 	var alpha := _world.get_node_or_null("WaterAlpha")
 	if alpha == null or not alpha.ready_for_intents or not is_instance_valid(alpha.body) \
@@ -75,7 +112,7 @@ func _fight_alpha() -> bool:
 		return _fail("Production level-49 Aquaryn is missing")
 	if not await _ensure_ally_deployed("Aquaryn"):
 		return false
-	if not await _activate(alpha.get("_challenge_prompt") as Node3D, "Aquaryn challenge"):
+	if not await _activate_alpha_challenge(alpha):
 		return false
 	for frame in 180:
 		if _manager.is_fighting():
