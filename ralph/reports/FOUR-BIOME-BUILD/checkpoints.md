@@ -567,3 +567,22 @@
   attempt changed polled Input state without dispatching a GUI event; the harness
   now sends parsed action events and checks actual panel focus before pressing.
   Its rerun is live; no camp/Calder success is claimed yet.
+
+### Next batch validation — 2026-09-08
+
+- Tidal Cradle repair `09cd1c66c` passes strict production admission at all nine
+  ROAD sites (2/2 each) and three populated 24 m controller walks. Root read the
+  actual repaired log and reviewed the coordinate-only changes. Main remains
+  `f6b79a6b32983d3b60f7333d8b44706736701474` by remote ref check.
+- Named pre-push `smoke_playground.gd` exited 1: gather impact was observed at
+  0.82 of the 0.625-second swing, versus the expected 0.60 (upper bound 0.80).
+  The only native error was the documented dummy-renderer null-material error.
+  Log: `C:/Users/mattj/AppData/Local/Temp/four-biome-next-batch-playground.log`.
+  This is not counted as a pass or assumed to be harmless timing noise.
+- Added synchronous production `swing_connected` diagnostics (wall time, swing
+  elapsed time and animation position) beside the existing durability poll.
+  Assertions and tolerances are unchanged; parser check passes. The next run
+  must distinguish late gameplay resolution from late observation before a fix.
+- The camp/Calder diagnostic ended earlier on a Salt Crown waypoint, 2.1 m from
+  its target with the unchanged 1.3 m tolerance. A new run records collision,
+  input-owner and navigator state on failure; no Calder success is claimed.

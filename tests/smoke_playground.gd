@@ -891,6 +891,16 @@ func _a_swing_plays_the_chop_and_lands_on_its_impact_frame(world: Node) -> Array
 	if not bool(hold.call("swing")):
 		return ["tool_hold.swing() refused a swing with the %s visibly equipped" % required_tool] as Array[String]
 	var started := float(Time.get_ticks_msec())
+	# Capture the production signal synchronously as well as the existing
+	# durability poll. A slow frame can delay the observer; keep the assertion
+	# unchanged until these two timestamps distinguish that from a late impact.
+	var impact_observation: Dictionary = {}
+	var observe_impact := func(_node: Node) -> void:
+		impact_observation["wall_seconds"] = (float(Time.get_ticks_msec()) - started) / 1000.0
+		impact_observation["swing_seconds_elapsed"] = seconds - float(hold.get("_swing_left"))
+		impact_observation["clip"] = str(anim.current_animation)
+		impact_observation["clip_position"] = anim.current_animation_position
+	hold.connect("swing_connected", observe_impact)
 	# One physics frame, then one process frame: trainer_model.gd picks the
 	# role in _physics_process, and _process there re-plays the clip on it.
 	# Checked HERE, mid-swing, not after the poll loop below runs to
@@ -929,6 +939,9 @@ func _a_swing_plays_the_chop_and_lands_on_its_impact_frame(world: Node) -> Array
 		await process_frame
 	if connected_at < 0.0 and int(inventory.call("durability_at", required_slot)) != durability_before:
 		connected_at = (float(Time.get_ticks_msec()) - started) / 1000.0
+	hold.disconnect("swing_connected", observe_impact)
+	impact_observation["durability_observed_seconds"] = connected_at
+	print("chop impact diagnostic: ", JSON.stringify(impact_observation))
 
 	# The hit lands when the axe is IN the wood. `art.json`'s
 	# `trainer.tool_swing.impact_fraction` is where that is, and the tolerance
