@@ -259,9 +259,9 @@
       "portrait": "res://assets/ui/portraits/maren.png",
       "portrait_mode": "installed_body_render",
       "island_local_offset": [
-        -9.0,
+        11.504,
         0.0,
-        23.0
+        20.0
       ],
       "greeting": "water_iona_pre",
       "greeting_when": [

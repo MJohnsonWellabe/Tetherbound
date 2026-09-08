@@ -201,6 +201,10 @@ func _catch_with_real_throws() -> bool:
 			return true
 		if _throw_misses > misses_before:
 			_checkpoint("live physical throw %d missed" % launches)
+			# A clear camera ray can still launch from behind another body's
+			# shoulder. Respond to the observed physical miss by walking to a
+			# different angle; repeating that same shot wastes the live fight.
+			await _wander_for_a_new_angle()
 			continue
 		if _throw_strikes <= strikes_before:
 			if _orbs_held() == orbs_before:
@@ -221,6 +225,22 @@ func _catch_with_real_throws() -> bool:
 			return true
 	_fail("live catch exhausted its 40-launch observation budget")
 	return false
+
+
+func _step_until_the_shot_is_clear() -> bool:
+	if not await super._step_until_the_shot_is_clear():
+		return false
+	var throw: Node = _combat.call("throw_aim")
+	if throw == null:
+		return false
+	var report: Dictionary = throw.call("aim_report")
+	# Camera eligibility is not hand-to-target trajectory clearance. Use the
+	# displayed physical obstruction before spending an earned orb; the caller
+	# already has a bounded ordinary walk to find another angle.
+	if bool(report.get("trajectory_blocked", false)):
+		_checkpoint("live catch preview is obstructed; changing the physical angle")
+		return false
+	return true
 
 
 func _live_catch_finished() -> bool:

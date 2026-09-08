@@ -410,3 +410,127 @@ Observed encounters under unchanged physical action/approach limits:
 
 RAM released to root for the fresh default campaign; no further Alpha run or
 helper expansion. Crown/Rootgate source remains frozen pending integration.
+
+### Prepared earned Deepwood-to-Dynamo continuation
+
+New `tests/helpers/stormwood_earned_dynamo_segment.gd` continues from the retained
+live Rootgate endpoint. Entry refuses missing Rootgate/ActII/truth/guardian or
+lower-rod receipts. It walks the actual paid Crown return passage, follows the
+Deepwood road, interacts with exact Sable, challenges actual Nysa/Sera/Kestrel
+hosted rosters and requires their finished victories plus durable flags. Rod
+switch identities and guards come from live authored rows; Ember arrival and
+all-rods receipts precede Kestrel. Final ascent samples the actual Stormheart
+ramp function and requires 3D proximity, then the production core-arrival flag
+with the same five creature instances and world. It stops before Marrow.
+
+Hosted combat uses one five-minute wall-clock loop across actual rounds, normal
+1x/60Hz physical quick input, production body reach, and restores clocks/input
+on exit. It does not nest a full-fight wait under the sequence deadline. No
+progression grants, inventory edits, pose writes, router calls, direct dialogue
+callbacks, hosted start calls or production changes were added. Frozen Crown
+and Rootgate files were not edited.
+
+Focused tests:4 tests/42 assertions/0 failed, no errors, in
+`%TEMP%/wave2-earned-dynamo-focus-{console,engine}.log`; parser clean in
+`%TEMP%/wave2-earned-dynamo-parse-{console,engine}.log`. These verify missing-entry
+refusal and authored roster/switch contracts, not runtime completion. The helper
+is unwired and has not run in a world. Known authored Sable/Bram exact NPC overlap
+remains unresolved and may block the exact story prompt; no placement or prompt
+acceptance change was made. Actual paid return navigation, earned party endurance,
+hosted roster completion and the physical ascent still need runtime proof.
+
+### Dynamo ascent bound review correction
+
+The earlier per-sample1800-frame draft has been replaced. The entire actual
+ascent, including approach to its lower ring, now shares the original
+`smoke_stormheart_ascent.gd`6000 actual physics-frame budget at4x/60Hz. It follows
+the smoke's continuous height-derived lookahead and original grounded endpoint
+(furthest>=0.998, core_anchor distance<=3.5m). Unexpected combat fails immediately;
+there is no nested fight wait under this budget. One wrapper restores clocks and
+input on all normal success/failure exits. Focused5 tests/49 assertions pass with
+no errors: `%TEMP%/wave2-earned-dynamo-bounded-focus-{console,engine}.log`.
+No actual earned ascent has run.
+
+### Prepared earned Marrow attempt; conduit feasibility limitation
+
+New `stormwood_earned_marrow_segment.gd` accepts the actual earned core/Kestrel
+state and unchanged five. It observes five actual hosted roster snapshots and a
+finished victory separately from durable Marrow completion. One300000ms loop at
+1x/60Hz then drives the actual FieldControl through ordinary movement/quick input,
+using authored bank positions/reach and production facing/cooldown rules. It fails
+on a refused strike, loss/reset or first conduit-cycle rollover; no extra cycle,
+retry, direct move/strike API or progress grant is added. Final acceptance requires
+all four physical strike inputs, phase released, marrow_defeated, legendary_freed,
+realm_heart_stormwood_earned and long_storm_ended with the same five/world. The
+helper stops before the offer. Parser clean; focused4 tests/31 assertions pass,
+no errors: `%TEMP%/wave2-earned-marrow-{parse,focus}-{console,engine}.log`.
+This is unwired source/control proof, not earned Marrow runtime proof.
+
+Source feasibility is concerning and unresolved: FieldControl uses the common
+5.6m/s body movement speed for every species, and Dynamo static affects trainer
+stamina regeneration rather than companion speed. With four banks at35m radius,
+3.2m reach and a28s cycle, even the generous triangle-inequality lower bound is
+129.292m after reaching the first bank. Add max(0,nearest-bank-distance-3.2) for
+the initial approach. Any actual starting point more than30.708m from its nearest
+bank is already too far at5.6m/s, ignoring acceleration/turning/input costs. From
+the core centre this lower bound is28.766s; even4m toward a bank gives28.052s.
+The surviving companion's actual final combat pose is not fixed by source, so
+this does not prove every possible earned attempt impossible. Actual endpose,
+movement and remaining first-cycle time must be observed before claiming feasibility.
+No gameplay modification or further world run was made from this calculation.
+
+The Marrow helper now records actual first-conduit-phase world/local body position,
+base_speed, remaining cycle seconds, conservative travel lower bound and exact
+ally species/level/HP. The bound is read-only telemetry, not a synthetic rejection;
+actual first-cycle completion/failure remains decisive. Focused tests now pass
+5 tests/36 assertions, no errors:
+`%TEMP%/wave2-earned-marrow-telemetry-focus-{console,engine}.log`.
+
+Read-only remaining ending audit: release dialogue -> actual StormheartOffer
+prompt -> ordinary offer dialogue and pending-creature ceremony (decline pending
+fulgocobra to preserve exactfive) -> personal ceremony-settled/world offer-made
+receipts -> physical descent/return to Lantern Hollow Spark shrine -> actual Spark
+placement -> physical return to high-platform WaterwardView -> revealed/key/chapter
+receipts -> two ordinary WaterwardRealmGate inputs. First consumes realm_key_water
+and persists realm_gate_water_unlocked; second enters water_arrival_from_stormwood
+at First Shore [0,1.929,162]. Wait for the replacement water scene and completed
+entry lifecycle before rebinding any controllers. No such ending helper was added.
+The earlier Meadows pending-decline GUI flow is a reusable pattern, but its whole
+helper is realm-specific. Keeping the exactfive does not block Water's later earned
+Stone/recipe/compatible-wild capture and explicit outgoing-slot choice.
+
+### Prepared earned Stormwood-to-First-Shore handoff
+
+New `tests/helpers/stormwood_earned_waterward_handoff.gd` accepts actual Marrow
+release flags and the retained live five/world, before the offer. It drains only
+the actual release/offer conversation IDs, interacts with StormheartOffer, declines
+the distinct pending level44 Fulgocobra through focused production farewell GUI,
+and requires unchanged five plus personal/world saved settlement receipts. It
+physically descends, returns to the actual Lantern Hollow Spark shrine, places the
+earned Spark, returns/climbs to WaterwardView, observes the reveal/key receipts,
+then uses exactly two observed physical Waterward gate activations. The first must
+consume the Water key and persist the unlock. The second must naturally replace
+the scene with Water at its authored First Shore anchor; old-world subscriptions
+are disconnected before travel.
+
+Water population readiness is observed from its actual inherited SIGNAL, not
+read as Stormwood's boolean field. Acceptance also requires the corresponding
+arrived director, completed shell, empty pending entry, available input, unchanged
+five identities, consumed key/unlocked gate and actual First Shore position. No
+Water opening, synthetic chapter start, save restore, pose, grant, router call,
+production interaction callback or direct party release is used.
+
+The descent reverses the newly proven native ascent mouth: ascent_point(0) ->
+local[-4,6,-26] -> [0,6,-40] -> authored approach foot. It uses the same0.8m mouth
+tolerance and a single6000 actual physics-frame budget at4x/60Hz, including upper
+ring/helix/mouth/approach. Unexpected combat fails immediately; clocks/input restore
+through one wrapper. Return ascent inherits the now-fixed Dynamo staging owned by
+the mouth lane. The native ASCENT was proved separately by that lane (2826/6000,
+grounded, core distance1.395m); this handoff's DESCENT and full ending are NOT
+runtime-proved. Upper-core movement follows its east/south ring shoulders.
+
+Final focused6 tests/45 assertions pass without errors:
+`%TEMP%/wave3-earned-waterward-descent-focus-{console,engine}.log`.
+The helper is unwired and no full world was launched for it. Spark/Sable prompt
+occupancy, physical descent/return endurance, ceremony save settlement and actual
+natural Water arrival remain runtime obligations; no successful campaign claim.

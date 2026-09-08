@@ -212,3 +212,28 @@ remain disclosed; no native-error-free full-CI claim. No retry/ceiling/assertion
 skip was added or loosened. Current main was fetched again and confirmed bc26b21ee.
 The fresh campaign is still incomplete; this is the next verified integration,
 not a four-biome milestone pass.
+
+## Wave2 own-main verification — 2026-09-08 18:12 UTC
+
+PR86 exacthead a62c81ae562714a59eb62ebcb2117e2649fa7e76 passed
+CI34256323372 before ready/expected-head squash merge. Fetched main
+b3458eb1d0f54ceb2554a97e9b0fe0b2f88f5bfb has the identical tree.
+Its OWN push CI34258802654 is terminal SUCCESS, attempt1, created17:43:24Z
+and updated18:12:05Z. All27 executed jobs and276 successful steps reviewed;
+two workflow_dispatch-only known-red jobs skipped, plus five cached install
+steps. Unit3013tests/486957assertions; dedicated-inclusive3092/3843401.
+All86 wrappedsmokes used actualattempt1, including36net checks; allseven
+MP shards and ten directregion checks passed. No SCRIPT ERROR or failed
+smoke attempt. Existing fixture/offtree/material/resource and MP2 Water
+transition diagnostics, plus intentional MP3 peer-death negative control,
+are retained and disclosed; green does not mean clean stderr.
+
+Export job102178136433 passed in460s: Windows PE32+ x86-64 executable
+102948352bytes; actual exported Linux runtime reports terrain=yes,
+ground_at_spawn0.90/player_y2.90/props383004 and exportOK. Windows artifact
+10070087141 uploaded686427424bytes with ZIP SHA256
+`e979a6d079e7b65b31438678d6a7305f8680a6a90427dcf2003a62e77f15930a`.
+This is not a Windows/Ally gameplay or complete fresh campaign claim.
+Separate Release34258802676 was not counted. Evidence: `.artifacts/ci-34258802654/`
+all27logs and run/jobs metadata; `.artifacts/wave2-main-ci-34258802654-FINAL.txt`,
+`-alljobs-final.txt`, `-export-evidence.txt`, snapshots01 through09.

@@ -21,6 +21,14 @@ const STORMWARD := preload("res://tests/helpers/earned_stormward_handoff.gd")
 const STORMWOOD := preload("res://tests/smoke_stormwood_continuous.gd")
 const CROWN := preload("res://tests/helpers/stormwood_crown_build_segment.gd")
 const ROOTGATE := preload("res://tests/helpers/stormwood_earned_rootgate_segment.gd")
+const DYNAMO := preload("res://tests/helpers/stormwood_earned_dynamo_segment.gd")
+const MARROW := preload("res://tests/helpers/stormwood_earned_marrow_segment.gd")
+const WATERWARD := preload("res://tests/helpers/stormwood_earned_waterward_handoff.gd")
+const WATER_OPENING := preload("res://tests/helpers/water_earned_opening_segment.gd")
+const REEDHAVEN := preload("res://tests/helpers/water_reedhaven_segment.gd")
+const BRINE := preload("res://tests/helpers/water_brine_segment.gd")
+const SHELLWATCH := preload("res://tests/helpers/water_shellwatch_segment.gd")
+const TIDAL := preload("res://tests/helpers/water_tidal_segment.gd")
 var failures: Array[String] = []
 var live: Dictionary = {}
 var started_ms := 0
@@ -186,6 +194,38 @@ func _run() -> void:
 	if not _accepted(await ROOTGATE.new().run(self, live["world"], game), "passed"):
 		return
 	reached = "stormwood_rootgate_released"
+	if not _accepted(await DYNAMO.new().run(self, live["world"], game), "passed"):
+		return
+	reached = "stormwood_dynamo_core_reached"
+	if not _accepted(await MARROW.new().run(self, live["world"], game), "passed"):
+		return
+	reached = "stormwood_marrow_and_core_released"
+	if not _accepted(await WATERWARD.new().run(self, live["world"], game), "passed"):
+		return
+	live["world"] = current_scene
+	reached = "water_arrived"
+	var water_opening := WATER_OPENING.new()
+	if not _accepted(await water_opening.run(self, live["world"], game), "passed"):
+		return
+	live["player"] = water_opening.player
+	live["rig"] = water_opening.camera
+	reached = "water_pell_lesson_earned"
+	for entry: Array in [[REEDHAVEN.new(), "water_reedhaven_paid"],
+			[BRINE.new(), "water_brine_trial_won"],
+			[SHELLWATCH.new(), "water_shellwatch_liberated"],
+			[TIDAL.new(), "water_swim_stone_and_recipe_earned"]]:
+		var segment: RefCounted = entry[0]
+		segment.setup(self, live["world"], live["player"], live["rig"])
+		var completed: bool = await segment.run()
+		var result: Dictionary = segment.result()
+		print("FRESH WATER SEGMENT %s %s" % [entry[1], JSON.stringify(result)])
+		if not _accepted(result, "ok"):
+			return
+		if not completed:
+			failures.append("Water segment returned false despite an accepted result: " + str(entry[1]))
+			_finish(false)
+			return
+		reached = str(entry[1])
 	failures.append("fresh campaign suffix is not composed; reached prefix is not milestone completion")
 	_finish(false)
 

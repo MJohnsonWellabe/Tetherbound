@@ -403,8 +403,39 @@ func _prepare_pilot(training: bool) -> bool:
 	for _press in int(_party().call("size")):
 		if int(_party().call("active_index")) == best:
 			return true
-		await _tap("party_cycle")
+		var before := int(_party().call("active_index"))
+		if not await _tap_party_cycle():
+			return false
+		_receipt("party_cycle", {"wanted": best, "before": before,
+			"after": int(_party().call("active_index"))})
+	if int(_party().call("active_index")) == best:
+		return true
 	return _fail("Party-cycle input did not select the available training creature")
+
+
+func _tap_party_cycle() -> bool:
+	# Physics-signal injection can mark the same edge for two physics ticks,
+	# or miss the first tick entirely. Send the actual bound controller button
+	# from the input frame, preserving the original three/five tick hold/release.
+	await _tree.process_frame
+	var event: InputEventJoypadButton
+	for binding in InputMap.action_get_events("party_cycle"):
+		if binding is InputEventJoypadButton:
+			event = binding.duplicate()
+			break
+	if event == null:
+		return _fail("Party-cycle has no physical controller binding")
+	event.pressed = true
+	Input.parse_input_event(event)
+	for _frame in 3:
+		await _tree.physics_frame
+	await _tree.process_frame
+	event = event.duplicate()
+	event.pressed = false
+	Input.parse_input_event(event)
+	for _frame in 5:
+		await _tree.physics_frame
+	return true
 
 
 func _use_remedy(item: String, index: int) -> bool:

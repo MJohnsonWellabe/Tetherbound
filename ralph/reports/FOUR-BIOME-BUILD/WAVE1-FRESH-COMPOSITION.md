@@ -330,3 +330,102 @@ wave2-stormward-observers-parse. The wider composed batch passed41 tests/365
 assertions (wave2-composed-batch-unit); no native/script errors in those final
 checks. This repair preserves the existing measured-distance timeout rather than
 silently disabling it. Full-world handoff remains unproved.
+
+## Fresh local-supply attempt — actual catch failure, 17:19 UTC
+
+The unique default launcher ran from the real title/opening and terminated with
+exit1 at193.842 seconds. Opening/key consumption and village tools/gathers passed;
+the next live catch failed before the new material selector or camp was reached.
+Scratch was `user://four_biome_fresh_20152_2163`. Logs are
+`.artifacts/wave2-fresh-local-supply-campaign{,-engine}.log`; its owner-before/after
+fingerprints match exactly. No copied save, granted prerequisites or revived
+combatant was used. This is a failed run, not a material or campaign pass.
+
+Actual target `Wild_mudsnout_1070_2` was weakened naturally. Four launches had
+eligible camera-ray diagnostics but hit neighboring `Wild_mudsnout_1070_1`;
+the first two repeated essentially the same origin and reported closest4.75m
+against needed1.40m. The fifth struck the target, but the live fight ended lost
+before capture. The driver previously continued immediately after each physical
+miss. It now walks using its existing alternative-angle routine after a miss,
+and rejects an explicitly obstructed trajectory preview before spending an orb.
+Existing launch, blocked-line and fight bounds are unchanged. Production preview
+occlusion is being repaired separately; camera assist eligibility itself is not
+a promise of clearance from the lower hand-launch origin. Changed runtime proof
+is still pending; the failed run will not be repeated unchanged.
+
+The next local composition now includes earned Rootgate-to-Dynamo core arrival,
+then explicitly fails before Marrow. Review replaced the initially invented
+per-waypoint ascent allowance with the existing ascent smoke's single6000-frame
+budget and matching4x/60Hz clock, restored on exit. An unexpected fight during
+that ascent is a failure, not a nested unbounded wait. Parser is clean under
+`.artifacts/wave2-dynamo-catch-composed-parse{,-engine}.log`; combined exact-target
+and Dynamo checks pass8 tests/59 assertions without engine/script errors under
+`.artifacts/wave2-dynamo-fresh-focused{,-engine}.log`. These are source/contract
+checks, not a runtime proof of that distant earned route.
+
+## Changed catch run — five earned, training input failure
+
+The changed default run `four_biome_fresh_35532_2265` completed the real opening,
+key consumption, village tools/gathers, all three further catches, and three
+training victories. It terminated exit1 at316.881 seconds because party-cycle
+input did not select the intended next fighter. Final five were Ripplet4,
+Bramblebun3, Mudsnout5, Mudsnout4, Bramblebun3. Owner fingerprints again matched.
+Logs/profile/source hashes: `.artifacts/wave2-fresh-clear-throw-campaign*`.
+No ERROR/SCRIPT ERROR lines occurred. No obstruction/miss was observed in this
+changed catch run, so it is separate progress evidence, not a recreation of the
+neighbor-blocker geometry. Native preview tests establish that repair. Camp and
+the new material selection were still not reached. No unchanged rerun was made.
+
+A tiny production EncounterDirector/Party input fixture reproduced the driver's
+cycle problem: five old taps yielded a missed first press, a double second
+press, then three single transitions. `.artifacts/party-cycle-native{,-engine}.log`
+records the actual physics-frame transitions. A changed controller probe moves
+the physical bound button edges to process-frame boundaries while retaining
+the original three/five physics-tick hold/release. It produced exactly one
+transition per press (`party-cycle-aligned` log stem). The earned helper now
+uses that dedicated cycle input, logs before/after indices, and checks the
+selection after its final allowed press; the five-press limit is unchanged.
+The registered native production-helper regression passes16 assertions with
+no errors under `party-cycle-production` log stem. This diagnostic uses an
+isolated party and input reader, not a loaded save or a campaign continuation.
+Changed full-world party selection remains pending.
+
+## Changed cycle run — ten victories, first live materials, harvest failure
+
+The genuine title-start run `four_biome_fresh_25636_2309` terminated exit1 at
+624.730s. The actual five reached levels5,5,6,5,5 after ten training wins;
+logged controller presses selected exactly one next party slot each time.
+The new local material selector then harvested seven real nodes, increasing
+wood from4 to31 of42. It failed on vegetation at(45.447,-62.501): the final
+arbiter was the non-actionable priority-2 EncounterDirector status and the
+wanted tree was5.29m away. No unchanged rerun was made. Two material-null
+errors occurred during an earlier successful vegetation harvest, before
+subsequent gathers; they are not classified as cleanup or a clean log.
+Logs/profile/hash manifest: `.artifacts/wave3-fresh-cycle-campaign*`.
+Owner before/after fingerprints match. Paid camp remains unproved.
+
+After that terminal run, the next source composition adds actual Marrow/core
+release, full-belt decline and physical Waterward gate handoff, Pell's earned
+lesson, then the existing Reedhaven/Brine/Shellwatch/Tidal-to-Iona helpers.
+It still explicitly fails at its unfinished swimmer/mounted ending suffix.
+The three existing human crossing helpers now derive left-stick direction
+from the current camera basis instead of assigning camera yaw; all original
+frame/distance limits remain. The new composition parses cleanly and its
+eight focused suites pass34 tests/272 assertions with no errors under
+`.artifacts/wave3-water-composed-focus-engine.log`. These checks are not a
+full-world or campaign pass. The completed cycle run loaded the earlier
+Dynamo-only suffix and does not test this newer composition.
+
+## Earned Guardian ending seam, Wave3 local
+
+New `tests/helpers/water_earned_ending_segment.gd` requires actual Nerissa/tether
+release inside the retained Veilfall world, invites the actual Guardian prompt,
+observes its durable character/world claim, declines only the pending newcomer
+through the full-belt GUI, and verifies the saved personal receipt, removal of
+the host claim, all three ending flags and unchanged five identities. No reward,
+transaction, flag or party API is invoked by the helper. It is not wired until
+the ordinary mounted late route reaches the freed tether. Full-world ceremony
+and ending remain unproved. Focused receipt/completion checks pass2 tests/16
+assertions clean under `.artifacts/wave3-earned-ending-focus-r2-engine.log`;
+the first test invocation failed to parse an incorrect Party preload path,
+which was corrected to the actual autoload path. That failed log is retained.

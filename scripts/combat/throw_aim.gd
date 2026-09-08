@@ -291,6 +291,8 @@ func _tick_aiming(delta: float) -> void:
 		and bool(_preview.get("trajectory_hits_target"))
 	_aim_report["trajectory_offset"] = float(_preview.get("trajectory_offset")) \
 		if previewing else INF
+	_aim_report["trajectory_blocked"] = previewing and bool(_preview.get("trajectory_blocked"))
+	_aim_report["trajectory_blocker"] = str(_preview.get("trajectory_blocker")) if previewing else ""
 
 	# Backing out is free and spends nothing, INCLUDING during the release
 	# wind-up — the orb is only spent in _release() itself. The cancel used to
@@ -450,7 +452,7 @@ func _update_preview() -> void:
 	_refresh_committed_assist_point(origin)
 	var forward := _launch_direction(camera, origin)
 	origin += forward * _spawn_forward
-	_preview.call("update_arc", origin, forward, _speed, _target)
+	_preview.call("update_arc", origin, forward, _speed, _target, _sight_exclusions())
 	_slow_the_stick_near_the_target(camera)
 
 
