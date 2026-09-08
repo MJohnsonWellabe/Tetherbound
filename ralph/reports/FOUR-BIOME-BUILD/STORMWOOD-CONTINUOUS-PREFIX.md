@@ -101,3 +101,22 @@ its explicit reset, so subsequent transition autosaves cannot share journals or
 reach the default `user://saves`, `user://worlds` or `user://characters` trees.
 The static contract proves order and uniqueness; the next full-world run must
 also compare those default trees before/after and prove ordinary Varga approach.
+The coordinator independently ran the Varga route plus save-isolation contracts:
+5 tests / 28 assertions, no native `ERROR:` in
+`root-varga-route-review-20260908.log`. This is configuration/static evidence,
+not the still-pending ordinary approach proof.
+
+## Fresh-session handoff
+
+The owner requested wrap-up before the Varga runtime could launch. There is no
+Stormwood Godot process or resumable runtime session. The default campaign save
+trees were fingerprinted before the queued proof and again after the focused
+contracts: eight files, unchanged aggregate SHA-256
+`C1B17A987B5E2B7C3D1EECA13F828BFD574ABF69ED0D67B1797DDB8E2E04CC28`.
+
+The next action is one full `tests/smoke_stormwood_continuous.gd` run with a
+unique `--log-file`, beginning at the disclosed Cloudreach-complete seam. It
+must prove the ordinary 114 m Bryn-to-Varga walk, exact Varga activation/all
+three rounds/durable win, continued Ondra recipe, and the default-save
+fingerprint unchanged afterward. Stop at its first actual failure; do not
+compose the separately prepared Crown helper until Ondra is earned in that run.
