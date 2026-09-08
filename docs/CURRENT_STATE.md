@@ -62,8 +62,21 @@ probe now admits 2/2 creatures at all seven Salt Crown ROAD sites, and real-stic
 four-site repair also passes: all six ROAD sites admit 2/2 and four populated
 24 m walks pass. Tidal Cradle's three-site repair (`09cd1c66c`) now passes all
 nine ROAD sites at 2/2, plus populated 24 m walks at 02/03/08. Ordinary Salt
-Crown wild sites 011/012/013 and Veilfall ROAD 03 remain open. Full continuous forward-view coverage remains
-open; see the Salt and Sluice footing reports under `road-visual-creatures/`.
+Crown wild sites 011/012/013 remain open. Veilfall's strict follow-up now admits
+2/2 creatures at all 24 ROAD sites and passes all 15 populated 24 m walking
+checks. The coordinate-only candidate had left site20 at 1/2 and blocked walks
+19/20/22. Staggering site20 and restoring Water's missing ROAD-only trainer/wild
+collision exception resolved those bounded checks without changing terrain or
+combat collision rules. Full continuous forward-view coverage remains open.
+See the footing reports under `road-visual-creatures/` and the Veilfall report.
+
+**Late Tidewake follow-up:** Calder's approach repair is local (`ffb7916db`).
+The synthetic-start route now proves ordinary Bex, camp/rest, Calder and both
+sluice controls; a copied-save suffix also mounts through the actionable Ride
+offer after physically approaching the follower. That suffix emitted two
+diagnostic script errors, now corrected with a focused regression. It is not
+a clean run or a fresh-save proof. Committed harness `9b5cd7315` retains those
+boundaries in `ralph/reports/FOUR-BIOME-BUILD/WATER-LATE-CONTINUOUS.md`.
 
 **Late Tidewake approach open, 2026-09-08:** the synthetic-start traversal
 diagnostic completed Tidal Cradle -> Salt Crown, the Salt chart interaction,
