@@ -52,16 +52,22 @@ lightning cleanup (`112220071`) and cheap harvest scan (`767d3350a`) repairs are
 not covered by that run. Full milestone completion remains unproven.
 Detailed evidence and commit boundaries: `ralph/reports/FOUR-BIOME-BUILD/checkpoints.md`.
 
-**Solo Stormwood victory blocker, 2026-09-08:** the continuous runtime re-earned
+**Solo Stormwood victory repair, 2026-09-08:** the continuous runtime re-earned
 Ashfoot arrival/dialogues, sheltered Break, six Stormglass, arch pair A and the
 route pickup, then resolved three Maren combat rounds through real input.
 The durable trainer defeat flag did not arrive; that log does not separately
 record each round's win/loss outcome. Independently, root confirmed
-`StormwoodEncounterDirector.award_hosted_trainer()` incorrectly uses the base
+`StormwoodEncounterDirector.award_hosted_trainer()` had incorrectly used the base
 live-session-only `_is_host()` guard, although the Stormwood hub also owns solo
-fights. The same award method is called by Dynamo completion. A focused repair
-must allow the offline authority while continuing to refuse active clients;
-it is not yet proved by the continuous run. Do not treat the chapter as complete.
+fights. The same award method is called by Dynamo completion. The focused repair
+allows the offline authority while continuing to refuse active clients;
+`7a773b8b0` passes eight focused authority/real-ledger checks. In the
+subsequent uninterrupted run, the production finished event explicitly reports
+Maren won, the durable defeat flag arrives, and the ordinary Verge rod switch
+succeeds. The run continues toward Dace; this is not whole-chapter completion.
+Log: `C:/Users/mattj/AppData/Local/Temp/stormwood-continuous-solo-award-final.log`.
+New CI steps `7e2753721` cover the reward and lightning-cleanup regressions;
+these local commits are not included in the currently running CI batch.
 
 **ROAD validation reopened, 2026-09-08:** the late-Tidewake traversal diagnostic
 reached Salt Crown but production rejected footing at
