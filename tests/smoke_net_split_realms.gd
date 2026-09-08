@@ -266,9 +266,17 @@ func _run() -> void:
 		"the HOST crossed into Cloudreach, the other way round (%s)" % str(away.get("detail", "")))
 
 	var swapped = await probe(0, "realm")
+	if not (swapped is Dictionary):
+		check(false, "the host realm probe returned no verdict after the swap")
+		quit(await finish())
+		return
 	check(str((swapped as Dictionary).get("current", "")) == CLOUDREACH,
 		"the host is now in Cloudreach")
 	var guest_home = await probe(1, "realm")
+	if not (guest_home is Dictionary):
+		check(false, "the client realm probe returned no verdict after the swap")
+		quit(await finish())
+		return
 	check(str((guest_home as Dictionary).get("current", "")) == MEADOWS,
 		"the client is now back in the Meadows")
 	check(str((guest_home as Dictionary).get("scene", "")) == "MeadowsPlayground",

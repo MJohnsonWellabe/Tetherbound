@@ -2111,26 +2111,14 @@ jobs:
 
   verify-multiplayer-shard:
     runs-on: ubuntu-latest
-    # 7-way matrix. The first 5-way split was added 2026-09-06 after the
-    # 46-minute sequential run above. Each shard now gets every 7th file from
-    # discover-net-smokes' alphabetical list (index % 7), which splits the
-    # heaviest
-    # smokes -- `realm_owner_disconnect_mid_fight` (Meadows + Cloudreach + a
-    # Meadows SHELL) and `split_realms` (five world builds, "the most
-    # expensive net smoke in the shard by a wide margin" per its own header)
-    # -- onto different shards rather than stacking both behind one runner.
-    # Run 34141345280 supplied the missing measurement: with 34 smokes, shard
-    # 3 held seven worlds including realm-owner disconnect, hosted Stormwood
-    # and Water swimming, and was cancelled at the 30-minute ceiling after the
-    # first five passed and hosted Stormwood was still running. Seven-way
-    # round-robin separates those three heavy scenes and gives every shard
-    # four or five smokes without dropping or relaxing a single assertion.
-    #
-    # 30 minutes per shard is an ESTIMATE, not a measurement of any one shard:
-    # the old job's 65-minute ceiling covered every smoke in one sequence, and
-    # even the heaviest single shard now carries at most a third of that
-    # sequence's content. Generous on purpose, same as the old ceiling was, and
-    # for the same reason -- correct it from a real green run, not a guess.
+    # 7-way measured-cost matrix. Run 34158919494 is the last complete green
+    # seven-shard run before the four-biome merge; its artifact timestamps are
+    # the costs used below. Longest-processing-time-first assignment replaces
+    # the alphabetical index split that stacked `split_realms` behind three
+    # other smokes in run 34163799085 and let that regression consume shard 5's
+    # 30-minute job ceiling. `split_realms` owns shard 7 alone: its successful
+    # measurement is kept in the table, while isolation ensures a future realm
+    # build stall cannot discard otherwise-green smoke results.
     strategy:
       fail-fast: false
       matrix:
@@ -2159,24 +2147,133 @@ jobs:
           ALL_FILES: ${{ needs.discover-net-smokes.outputs.files }}
           SHARD: ${{ matrix.shard }}
           SHARD_COUNT: 7
+          # Smoke wall time only. This leaves ten minutes of the unchanged
+          # 30-minute job for checkout, Godot setup, upload and runner drift.
+          MEASURED_SHARD_BUDGET_SECONDS: 1200
         run: |
-          set -uo pipefail
-          i=0
-          mine=""
-          for f in $ALL_FILES; do
-            if [ $(( i % SHARD_COUNT )) -eq $(( SHARD - 1 )) ]; then
-              mine="$mine $f"
-            fi
-            i=$((i + 1))
-          done
-          echo "shard ${SHARD}/${SHARD_COUNT}: ${mine}"
-          echo "files=${mine}" >> "$GITHUB_OUTPUT"
+          set -euo pipefail
+          python3 - <<'PY'
+          import os
+          import sys
+
+          # Seconds measured from completed run 34158919494's artifact start
+          # names and NET_RUN.json completion timestamps. The one smoke merged
+          # after that run has its completed local harness measurement.
+          costs = {
+              "tests/smoke_net_behind_character_joins_ahead_world.gd": 92,
+              "tests/smoke_net_boss_rewards_each_participant.gd": 110,
+              "tests/smoke_net_catch_race.gd": 118,
+              "tests/smoke_net_deploy_two_creatures.gd": 72,
+              "tests/smoke_net_farm_race.gd": 89,
+              "tests/smoke_net_fly.gd": 117,
+              "tests/smoke_net_fog_is_personal.gd": 96,
+              "tests/smoke_net_gate_opens_for_both.gd": 88,
+              "tests/smoke_net_hearts.gd": 92,
+              "tests/smoke_net_host_exit_saves.gd": 88,
+              "tests/smoke_net_host_join_leave.gd": 67,
+              "tests/smoke_net_join_by_address.gd": 80,
+              "tests/smoke_net_late_join_modified_world.gd": 81,
+              "tests/smoke_net_menu_does_not_freeze_peer.gd": 146,
+              "tests/smoke_net_movement_two_peers.gd": 97,
+              "tests/smoke_net_peer_death.gd": 81,
+              "tests/smoke_net_pickup_race.gd": 89,
+              "tests/smoke_net_realm_owner_disconnect_mid_fight.gd": 117,
+              "tests/smoke_net_reconnect_keeps_character.gd": 83,
+              "tests/smoke_net_revive.gd": 92,
+              "tests/smoke_net_riding.gd": 168,
+              "tests/smoke_net_shared_boss.gd": 117,
+              "tests/smoke_net_shared_building.gd": 87,
+              "tests/smoke_net_shared_wild_fight.gd": 89,
+              "tests/smoke_net_sleep_vote.gd": 75,
+              "tests/smoke_net_split_realms.gd": 116,
+              "tests/smoke_net_storage_concurrency.gd": 91,
+              "tests/smoke_net_stormwood_hosted_trainers.gd": 122,
+              "tests/smoke_net_stormwood_realms.gd": 116,
+              "tests/smoke_net_trade.gd": 92,
+              "tests/smoke_net_two_peers_boot.gd": 83,
+              "tests/smoke_net_water_alpha.gd": 86,
+              "tests/smoke_net_water_mounted_swimming.gd": 58,
+              "tests/smoke_net_water_swim_stone_late_join.gd": 63,
+              "tests/smoke_net_water_swimming.gd": 69,
+          }
+          files = os.environ["ALL_FILES"].split()
+          shard = int(os.environ["SHARD"])
+          shard_count = int(os.environ["SHARD_COUNT"])
+          budget = int(os.environ["MEASURED_SHARD_BUDGET_SECONDS"])
+          reserved = "tests/smoke_net_split_realms.gd"
+          if shard_count < 2 or not 1 <= shard <= shard_count:
+              sys.exit("invalid shard configuration")
+          if reserved not in files:
+              sys.exit(f"{reserved} was not discovered")
+
+          # A new smoke gets the slowest measured cost until its first green
+          # artifact replaces that conservative value. Existing smokes must
+          # never silently disappear from the plan.
+          fallback = max(costs.values())
+          unknown = sorted(set(files) - costs.keys())
+          for path in unknown:
+              print(f"::warning::{path} has no completed measurement; reserving {fallback}s")
+
+          bins = [[] for _ in range(shard_count)]
+          loads = [0 for _ in range(shard_count)]
+          bins[-1].append(reserved)
+          loads[-1] = costs[reserved]
+          weighted = sorted(
+              (path for path in files if path != reserved),
+              key=lambda path: (-costs.get(path, fallback), path),
+          )
+          for path in weighted:
+              target = min(range(shard_count - 1), key=lambda i: (loads[i], i))
+              bins[target].append(path)
+              loads[target] += costs.get(path, fallback)
+
+          # Deterministic assignment/budget contract: complete cover, no
+          # duplicates, split_realms isolated, and every measured load leaves
+          # the job-level setup/teardown reserve intact.
+          assigned = [path for group in bins for path in group]
+          if sorted(assigned) != sorted(files) or len(assigned) != len(set(assigned)):
+              sys.exit("net-shard plan is not an exact one-time cover")
+          if bins[-1] != [reserved]:
+              sys.exit("split_realms must be the only smoke on its shard")
+          overloaded = [i + 1 for i, load in enumerate(loads) if load > budget]
+          if overloaded:
+              sys.exit(f"measured net-shard budget exceeded by shard(s) {overloaded}: {loads}")
+
+          for index, (group, load) in enumerate(zip(bins, loads), start=1):
+              print(f"plan shard {index}/{shard_count}: measured={load}s files={' '.join(group)}")
+          mine = " ".join(bins[shard - 1])
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              output.write(f"files={mine}\n")
+              output.write(f"measured_seconds={loads[shard - 1]}\n")
+          PY
       - name: Run net smokes
         if: ${{ !cancelled() && steps.select.outputs.files != '' }}
         env:
           RETRIES: 1
         run: |
           set -uo pipefail
+          command -v setsid >/dev/null || {
+            echo "::error::setsid is required to contain each net smoke's process tree"
+            exit 1
+          }
+          active_runner_pid=""
+          cleanup_active_group() {
+            local pgid="${active_runner_pid:-}"
+            [ -n "$pgid" ] || return 0
+            # The runner, coordinator and OS.create_process peers all inherit
+            # this dedicated process group. Sweep it on success, failure,
+            # SIGINT/SIGTERM cancellation, and the step's EXIT path.
+            kill -TERM -- "-${pgid}" 2>/dev/null || true
+            for _ in $(seq 1 20); do
+              kill -0 -- "-${pgid}" 2>/dev/null || break
+              sleep 0.1
+            done
+            kill -KILL -- "-${pgid}" 2>/dev/null || true
+            wait "$pgid" 2>/dev/null || true
+            active_runner_pid=""
+          }
+          trap cleanup_active_group EXIT
+          trap 'exit 130' INT TERM HUP
           status=0
           for f in ${{ steps.select.outputs.files }}; do
             name="$(basename "$f" .gd)"
@@ -2185,7 +2282,15 @@ jobs:
             until [ "$n" -ge "$RETRIES" ]; do
               n=$((n + 1))
               echo "::group::smoke_net_${name}.gd attempt ${n}/${RETRIES}"
-              if tools/net/run_net_smoke.sh "$name" --out=/tmp/net-ci; then
+              setsid tools/net/run_net_smoke.sh "$name" --out=/tmp/net-ci &
+              active_runner_pid=$!
+              if wait "$active_runner_pid"; then
+                run_status=0
+              else
+                run_status=$?
+              fi
+              cleanup_active_group
+              if [ "$run_status" -eq 0 ]; then
                 echo "::endgroup::"
                 continue 2
               fi
