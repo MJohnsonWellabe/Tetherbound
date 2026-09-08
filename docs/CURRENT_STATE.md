@@ -15,10 +15,15 @@ remain in `docs/SECOND_PASS_BACKLOG.md`; they are not claimed passed.
 PR #79 landed at `7ab4a12647a377a400c43335b64aff8b03ca6d43`. Current work is on
 `codex/four-biome-wave0`, PR #80, which includes main through `f6b79a6b3` via
 merge `01f85b2b356de72689eb90e42242e42ae64d5dfb`. The latest submitted batch is
-`0ddc10269955bfbe16389ab8c2e6916708c64d06`; CI run `34213024669` is in progress,
-not a verdict. It includes the aggression fixture repair, Salt Crown ordinary
-spawn repair and Reedhaven tool-contract correction. No further push is planned
-until this run finishes. The preceding submitted batch was
+`0ddc10269955bfbe16389ab8c2e6916708c64d06`; CI run `34213024669` is terminal:
+25 successful jobs, one failure (Livewire's 119 ms observation versus the
+unchanged 180–350 ms window), three skips. Aggression passes first attempt;
+Livewire's actual refusal checks pass, but its timing proof does not. Local
+diagnostic telemetry now distinguishes late entry from a physics sample gap;
+this is not a repaired-runtime verdict. See `CI-34213024669.md` in the build
+reports for job-level evidence and native-error caveats. The batch includes
+Salt Crown ordinary spawn repair and Reedhaven tool-contract correction.
+The preceding submitted batch was
 `23b7d4acd935b508d53769a71e434857de1de41c`; CI run `34208280455` completed
 with 26 passing jobs and three skips. All seven multiplayer shards passed on
 their first attempts, including Livewire and Tamsin. Combat's aggression smoke
