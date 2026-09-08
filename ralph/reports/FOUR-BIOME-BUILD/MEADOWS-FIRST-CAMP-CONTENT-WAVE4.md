@@ -62,3 +62,13 @@ by the completed fresh run.
 Existing Tidewake dialogue/dock and general dialogue/quest checks passed
 113 tests / 2,053 assertions. The expected unknown-dialogue negative control
 is present; there are no script errors.
+
+Follow-up evidence after PR88 head was frozen: a staged capture of the actual
+paid camp, .artifacts/wave4-paid-camp.png, shows the HUD asking the player to
+enter the tournament. The original day3 character save has rested states
+false,false,true,true,false; tournament_condition_ready is absent although
+the prior-sleep and team-fed flags are present. A new authored care row now
+uses that existing live readiness flag before entry and retires upon actual
+registration. It does not alter tournament eligibility. This is queued for the
+next content commit, not present in PR88's verified head. Quest/home checks
+passed54 tests/896 assertions with clean engine output.

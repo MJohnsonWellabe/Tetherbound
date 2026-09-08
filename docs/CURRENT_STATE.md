@@ -6,6 +6,75 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-08, playable build in progress)
 
+**Wave5 shipping status:** draft PR #89 is frozen at
+`08b5b3d6f7cf6bf02ddd492cd941dab2b807a5a6`. CI34277113851 found two stale
+objective-fixture expectations; the remaining jobs are still being reviewed.
+The corrected fixtures require the new care rung and all34 authored objectives.
+Existing scope/chain/quest checks pass59 tests/1223 assertions with clean output.
+It contains the care/saddle guidance, Water combat HUD and Brine011 repair below.
+A later LOCAL-only010 placement also passed all-three-species footing and
+ordinary grounded approach/physical Engage against its exact Mangrove Monitor:
+86 observed frames, zero navigator resets/errors, owner saves unchanged.
+Its lower shoulder[320.4116,26.3276,637.8423] avoids the rejected high ledge.
+Existing data/residency checks pass12 tests/2213 assertions. This010 edit is
+not in PR89's first head; it will join the corrected batch after that run ends.
+Neither placement proves a full fight win or campaign.
+
+**2026-09-08 20:03 UTC: first-camp and Tidewake content landed in PR #88.**
+Main is `2eb8d4b8681ce8224eaa58666b41be5164479c5b`, with the identical tree
+to verified PR head `9cb6b1b42d4c5947842f72e2b8a57a1cd54e4593`.
+Its PR CI34270467585 passed on attempt1:26 successful jobs/three configured
+skips,3055 unit tests/487315 assertions and all seven multiplayer shards.
+Every executed job/step/log was reviewed. Main's OWN push CI34272560821 passed
+on attempt1 at20:31 UTC:27 successful jobs/two existing manual-only skips,
+all seven multiplayer shards, Windows PE export and the actual Linux exported
+runtime terrain/ground check. Artifact10075421254 is uploaded. This is not a
+Windows/Ally playthrough; see MAIN-GREEN-20260908.md for receipts and diagnostics.
+
+The village gathering placements and campsite dialogue, Salt Crown charting
+instruction, Nerissa dialogue, reachable wood prompts and same-live Aquaryn
+retirement are now on main. The failed fresh run's paid camp and two actual
+rests remain partial evidence. A diagnostic reload reached the same bed and
+did not reproduce the stall; it proves no fix and is not fresh acceptance.
+
+The saved-camp image exposed an additional guidance gap: the HUD says to enter
+the tournament while three creatures are still unrested. Local Wave5 adds a
+care rung using the existing live tournament_condition_ready flag and retires
+it after registration. It changes no eligibility rule and is not merged yet.
+Existing quest/home checks pass54 tests/896 assertions. Full uninterrupted
+campaign and full forward-view coverage remain open.
+
+Local Wave5 also makes the post-Iona preparation explicit: craft at the actual
+Tidal Cradle camp workbench, keep the saddle in the bag and use the companion's
+Ride prompt. Otto explains ordinary swimmer capture, the five-creature choice
+and pickaxe gathering for Reef Stone. Salt Crown's existing objective retains
+these directions after the recipe is learned. Existing dialogue/dock/quest
+checks pass47 tests/937 assertions with clean engine output. No new costs,
+completion flags, equipment step or encounter rule was introduced.
+
+Water's runtime builder also omitted the shipped CombatHUD and shared Engage
+registration. Local Wave5 now mounts that existing HUD against the actual
+manager/director and registers the director with the scene arbiter. The existing
+scene smoke passes40 checks headless and41 rendered, including health/name/move
+panels and Engage display. Owner saves match; no engine/script errors. The frame
+proves HUD presence, not combat framing: the synthetic fixture's camera has not
+settled onto the actors. Existing terrain/deprecation warnings remain recorded.
+
+The existing isolated Water chapter run has now completed First Shore through
+Iona's Swim Saddle recipe with the same five carried creatures, including all
+Reedhaven/Brine/Shellwatch actions, actual camp care and Aquaryn victory. It
+passed once in approximately18m24s within the unchanged20-minute watchdog,
+with owner saves unchanged and no engine/script errors. This uses the disclosed
+synthetic level44 chapter-entry team, not fresh campaign progress. Brine sites
+010/011 emitted invalid-footing warnings in that run. Local011 now moves to
+a supported nearby shelf: all three species passed native footing, and a
+grounded approach plus physical Interact started combat with the exact Riptusk.
+The first011 diagnostic wrongly required arbiter registration; Water currently
+uses its director's direct Engage path. Its failure is retained, not rerun away.
+010's candidate failed ordinary approach and was restored. Full fight completion
+and the combat HUD were not proved by this placement check.
+See WATER-OPENING-CONTINUOUS.md and BRINE-ORDINARY-FOOTING.md for evidence.
+
 **2026-09-08 19:10 UTC: Wave 3 landed; its own main CI is green.**
 PR #87 exact `6c0f0e78046fbd15c3e1fe46de06fa154981be66` passed run
 `34262351185` on attempt 1: 26 executed jobs passed, three existing conditional
@@ -17,11 +86,11 @@ manual-only skips, all seven multiplayer shards, Windows PE export, actual
 Linux exported-runtime terrain/ground check, and artifact10072368637.
 Every executed job, step and log was reviewed; this is not an Ally playthrough.
 
-The owner's latest direction prioritizes actual game content. Local Wave 4
+The owner's latest direction prioritizes actual game content. Shipped Wave 4
 clarifies the Tam-to-Practice Meadow gathering walk with two existing resource
 placements, NPC dialogue and camp instructions. Tidewake guidance now names
 Salt Crown's required chart interaction and removes Nerissa's unsupported
-conduit instruction. These edits are not on main yet.
+conduit instruction. These edits landed in PR #88.
 
 The latest genuine fresh run, `wave4-fresh-camp-lesson`, stopped at595.393s:
 ordinary opening and revised village dialogue, five earned creatures, ten

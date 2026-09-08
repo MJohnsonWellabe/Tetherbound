@@ -1,5 +1,28 @@
 # Main recovery — 2026-09-08
 
+## Latest content landing: PR #88, own main green at20:31 UTC
+
+Main `2eb8d4b8681ce8224eaa58666b41be5164479c5b` passed its own push run
+`34272560821` on attempt1 (20:03:32–20:31:08 UTC). Every executed job, step
+and log was reviewed:27 successful jobs, two existing manual-only skips,
+284 successful steps/five cached-install skips. All seven multiplayer shards
+passed;86 wrapped smokes used only attempt1, including36 network smokes.
+3055 unit tests/487315 assertions passed, with18 direct checks also passing.
+
+Export job102223409616 passed Windows PE validation and the actual Linux
+exported-runtime terrain/ground check. Uploaded Windows artifact10075421254
+contains686599847 bytes, SHA256
+`317cf08d9e1fa0afae6e14da17c458ea553a6a0f7e3c3bb10fb868f606bd61a6`.
+This does not claim an actual Windows/Ally playthrough or fresh campaign closure.
+
+Evidence: `.artifacts/wave4-main-ci-34272560821-FINAL.txt`,
+`-alljobs-final.txt`, `-export-evidence.txt`, and
+`.artifacts/ci-34272560821/` metadata and all27 executed logs. Expected negative
+fixture and shutdown diagnostics remain recorded; no clean-stderr claim,
+retry, raised ceiling or weakened assertion is implied.
+
+## Original requested recovery
+
 Owner interrupted the Wave 1 landing wait to prioritize a verified green main.
 That interruption is complete: main75aaccca0210a9bc1ac0f16bac687d8557f0aacf
 passed its own post-merge CI34231941105. Wave 1 now continues separately;

@@ -36,17 +36,20 @@ run from the reorganised tree. See `docs/CLEANUP_MANIFEST.md`.
 
 ## Gate 1 — The first session is real (wake → tournament → leave)
 
-**2026-09-08 live evidence:** the latest completed genuine fresh run earned
-five creatures and ten training wins, then stopped at750.55s with wood40/42.
-The exact baked tree's scaled interaction height is locally repaired without
-changing the2.6m radius; the fresh run harvested that tree and two more.
-The next tree lost its prompt to a neighbor in an overlapping rock cluster,
-now reproduced natively. Ordinary mining preparation is being investigated.
-Logs: `.artifacts/wave4-fresh-complete-campaign*`; owner saves unchanged.
-Paid camp and the full first-session chain remain unproved by fresh execution.
-PR #87 landed as043cd1061; its own main CI34264602920 passed27 jobs/two
-existing manual-only skips, including export and exported runtime. See
-`CURRENT_STATE.md` and the four-biome report for the distinct native proofs.
+**2026-09-08 live evidence:** the latest genuine fresh run earned five creatures,
+ten training wins, the actual one-bed camp materials and four paid camp pieces.
+Two creatures completed real rests. It stopped at595.393s while walking back
+to the bed for the next assignment. A copied-save diagnostic did not reproduce
+the stall; no fix is claimed. Logs: `.artifacts/wave4-fresh-camp-lesson*`;
+owner saves unchanged. Full care and the first-session chain remain open.
+
+PR #88 landed as2eb8d4b8 with first-camp and Tidewake guidance, reachable wood
+prompts and same-live Aquaryn retirement. Exact-head PR CI34270467585 passed
+26 jobs/three configured skips; main's OWN CI34272560821 passed on attempt1
+at20:31 UTC with27 successful jobs/two existing manual-only skips, all seven
+multiplayer shards and export/runtime checks. Full campaign acceptance stays open.
+The new all-five care guidance found from the saved camp is local Wave5 work.
+See `CURRENT_STATE.md` and MEADOWS-FIRST-CAMP-CONTENT-WAVE4.md for evidence.
 
 **Owning prompts:** `56-OPENING-first-session-to-tournament.md`, with
 `17-RG18`, `15-RG16`, `26-RG19`, `43-CREATURE-BED`, `44-GATHER`, `45-CATCH`,

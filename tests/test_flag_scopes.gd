@@ -244,7 +244,9 @@ func test_every_objective_entry_carries_a_scope_matching_the_table() -> void:
 					% [str(entry.get("id", "")), declared,
 						PROGRESSION_STATE.scope_of(flag_id), flag_id])
 			checked += 1
-	assert_eq(checked, 33, "every objective entry was checked")
+	# The all-five care rung adds one authored objective; every entry above
+	# must still declare the exact scope of its production flag.
+	assert_eq(checked, 34, "every objective entry was checked")
 
 
 func test_objective_retired_by_and_count_flags_are_scoped_too() -> void:

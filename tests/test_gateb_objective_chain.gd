@@ -40,6 +40,7 @@ const CHAIN := [
 	["creature_bed_built", "Creature Bed"],
 	["player_slept_at_home", "Rest at camp"],
 	["tournament_team_fed", "Feed your team"],
+	["tournament_condition_ready", "Rest and feed all five"],
 	["tournament_entered", "Enter the village tournament"],
 	["tournament_won", "Win the village tournament"],
 	["south_bridge_open", "South Bridge"],

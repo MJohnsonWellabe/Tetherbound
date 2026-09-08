@@ -1,8 +1,9 @@
 # Brine Steps ordinary ecology footing
 
-Status: exact production rejection reproduced for sites 010/011 and nearby
-supported candidates measured; no candidate coordinate has been applied or
-proved through final production admission/player-path checks.
+Status: both 010 and 011 now have supported, reachable authored candidates.
+Site 011 was accepted previously; the new lower-spine 010 candidate passed
+all-species native footing and an ordinary approach plus exact physical Engage.
+The rejected high 010 ledge and earlier invalid prompt criterion remain below.
 
 ## Observed production failure
 
@@ -161,3 +162,145 @@ Shore and then assert both target IDs are pristine before moving, or use fresh
 fixture-only duplicate IDs that preserve the production plan semantics. It must
 not clear `_site_failures`, because that would bypass the fail-closed gameplay
 contract. No encounter coordinate has been edited or claimed production-ready.
+
+## Wave 5: fresh authored admission and actual shelf approach
+
+Both common candidates were installed in authored JSON before constructing a
+fresh isolated Water world. Existing `tools/probe_water_salt_ordinary_footing.gd`
+with `--site=water_brine_steps_wild_010,water_brine_steps_wild_011` passed exit 0:
+both IDs spawned exactly one member, neither entered `_site_failures`, and all
+three permitted species passed the inherited production footprint admission.
+No failure state was cleared. Logs:
+`.artifacts/wave5-brine-authored-{console,engine}.log`.
+
+The authorized artifact-only approach wrapper reuses the actual Player,
+stick navigator, terrain, living site body and arbiter. A prepared Bramblebun
+and initial road position are explicit synthetic diagnostic setup; it is not
+campaign continuity. The existing candidate diagnostic's `max(2400,
+distance*80)` movement budget and 1.3 m arrival tolerance are retained.
+The outside stance derives from the actual wild radius plus player radius
+and 0.5 m clearance. No creature or terrain is moved during the approach.
+
+Site 010 FAILED the ordinary approach in
+`.artifacts/wave5-brine-approach-ready-{console,engine}.log`, exit 1:
+
+- Nearest road start: (321.7824, 27.08192, 640.6049).
+- Authored candidate: (340.8148, 58.21178, 638.7739), 19.1202 m off the spine
+  but 31.1299 m above that start.
+- Final human: (326.4995, 25.576, 625.4788), grounded, zero navigator resets.
+- Actual wild: (341.5842, 58.69777, 638.999).
+- 2400 movement frames plus 12 settling frames; arrived=false,
+  exact_engage=false, no offer. No fight was attempted.
+
+This proves why support alone was insufficient. No alternative 010 approach,
+terrain change, larger budget or reach was attempted. The 010 authored row is
+restored to its pre-change form; the old failure is retained rather than
+replaced with a claim of reachable content. The first approach wrapper attempt
+failed before movement because Water constructs EncounterDirector asynchronously;
+that invalid fixture log is retained as `.artifacts/wave5-brine-approach-*`.
+The corrected wrapper waits for the node and population readiness.
+
+Existing Water data/residency checks passed 12 tests / 2213 assertions after
+candidate installation (`.artifacts/wave5-brine-data-tests-*`). Default owner
+slot 0 and slot 3 hashes were unchanged across native admission and the 010
+approach; before/after records are `.artifacts/wave5-brine-authored-owner-*.json`.
+
+### Site 011 independent approach
+
+After restoring only 010, the same artifact wrapper was restricted to 011 in
+a separate fresh isolated world. This was a different candidate, not a retry
+of 010. `.artifacts/wave5-brine011-approach-{console,engine}.log` exited 1:
+
+- Road start: (472.1694, 39.96681, 754.4372), 6.7376 m lateral from the site.
+- Authored candidate: (473.6123, 41.12988, 747.8559).
+- Final human: (472.9339, 39.8756, 750.9517), grounded, zero resets.
+- Actual wild: (473.6123, 41.45721, 747.8559).
+- Arrived=true after 43 movement frames plus 12 settling frames, against the
+  same 2400 movement budget. Exact Engage=false; arbiter offer empty.
+
+This supports physical reachability of 011's shelf but does not establish
+its requested interaction. The final gap is within production's 6 m Engage
+range; the wrapper did not capture the missing admission precondition, so
+neither an unreachable-site claim nor a production input defect is justified.
+No extra approach, direct callback or fight was attempted. Site 011 is also
+restored to its original authored row; `water_encounters.json` has no remaining
+diff from this lane. No ERROR/SCRIPT ERROR was emitted during either completed
+approach run. Existing terrain mipmap/deprecation warnings remain disclosed.
+Owner slot hashes again matched the original before record
+(`.artifacts/wave5-brine011-owner-after.json`); all Godot processes ended.
+
+### Site 011 corrected production-input validation
+
+Read-only source review found a concrete diagnostic mismatch: Water's
+`water_scene_encounters.gd::build` does not register its director with the
+InteractionArbiter. The director retains its production fallback:
+`encounter_director.gd::_update_prompt` supplies its own Engage text and
+`_read_engage_input` reads physical Interact. Therefore the old wrapper's
+`arbiter.winning_provider() == director` condition was impossible; its empty
+arbiter offer did not establish failed encounter admission. The old failure
+logs above remain unchanged.
+
+Only 011's supported candidate was reapplied. One corrected isolated-world
+run (`.artifacts/wave5-brine011-direct-{console,engine}.log`, exit 0) retained
+the same road start, 2400-frame movement budget and six-minute watchdog.
+Before input, the exact candidate was the intended authored Riptusk, the
+production director prompt was `Engage Riptusk`, AllyCreature was deployed,
+and the manager was inactive. One physical Interact then started actual
+combat; `manager.enemy_body()` was the very same site 011 object. The human
+reached the stance, remained grounded, and required zero navigator resets;
+85 observed frames included movement, settling, input and combat-start settle.
+All-three-species footing and initial production admission remain supported
+by the earlier authored probe. This validates reachable, engageable placement,
+not a completed fight. The inherited terminal footer incorrectly says
+'no combat attempted'; the explicit PRE/POST participant telemetry above is
+the actual result. It also says 'both' though this run selected only 011.
+
+Site 011 is now the sole retained data correction; 010 stays original and
+unresolved. Counts, table, radius, roam distance and species are unchanged.
+The stale optional slope metadata is removed, not a validation requirement.
+No ERROR/SCRIPT ERROR occurred; existing terrain warnings remain. Owner
+fingerprints matched (`.artifacts/wave5-brine011-direct-owner-{before,after}.json`)
+and no Godot processes remained at RAM release. Water's apparent lack of the
+usual CombatHUD mount is a source-review concern for a later gameplay review;
+this non-rendered diagnostic establishes neither HUD visibility nor a HUD
+bug. No production input/runtime changes were made to satisfy the diagnostic.
+
+Final retained-011-only data passed the existing runtime-data/residency checks:
+12 tests / 2213 assertions, zero failures, exit 0, no engine errors
+(.artifacts/wave5-brine011-final-tests-{console,engine}.log).
+
+
+### Site 010 lower-spine content recovery (next-wave local change)
+
+The previous shelf's 31 m elevation mismatch was rejected, not retried.
+A different placement uses the lower west shoulder of the existing spine:
+(320.4116, 26.3276, 637.8423), island-local (-99.5884, 26.3276, -22.1577).
+It is 1.1 m from the spine at the same elevation. Production heightfield
+screening measured 11.8468 degrees maximum slope across the largest legal
+1.7375 m footprint and only 0.3628 m height variation. The footprint stays
+inside the graded shoulder; no other authored wild site lies within 20 m.
+No terrain, count, table, roam radius, interaction range or budget changed.
+
+The unchanged existing ordinary-footing probe ran once on this candidate:
+`.artifacts/wave5-brine010-low-footing-{console,engine}.log`, exit 0.
+Riptusk, Cragclaw and Mangrove Monitor all passed; initial production admission
+reported spawned=true, failed=false and one member against one expected.
+
+One actual-world controller diagnostic then began six metres back along the
+same spine to avoid a synthetic start inside the newly nearby creature.
+Start (320.932,25.21899,631.7645) is an explicitly synthetic diagnostic pose;
+subsequent approach and Interact were ordinary inputs. The actual arbiter
+published actionable Engage Mangrove Monitor at 3.174 m, with the manager
+inactive and the exact site 010 body selected. One physical Interact started
+combat against that same object. The approach arrived grounded with zero
+resets; 86 observed frames included the unchanged movement/input/settle path,
+well inside the original 2400-frame movement bound and six-minute watchdog.
+Log `.artifacts/wave5-brine010-low-engage-{console,engine}.log`, exit 0.
+
+This recovers ordinary encounter presence and fight admission, not full fight
+completion or fresh campaign continuity. Both runs had no ERROR/SCRIPT ERROR;
+existing Terrain3D warnings remain. Owner save fingerprints matched the
+before/after records `.artifacts/wave5-brine010-low-owner-*.json`, and Godot
+processes had exited when RAM was released. Site 011's accepted row is unchanged.
+
+Existing data/residency checks passed 12 tests / 2213 assertions, zero failures, exit 0 (.artifacts/wave5-brine010-low-tests-*.log).
