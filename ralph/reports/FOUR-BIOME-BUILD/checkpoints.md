@@ -423,9 +423,11 @@
   the Bex approach. A follow-up is testing the omitted Twin Pumps route waypoint
   before changing production placement; no claim of impassable terrain is made.
 - A production footing probe measured the Salt Crown ROAD failure: sites 01/02/03/05
-  are 57-74 m from the authored four-metre road, with steep footprint height changes
-  and normals below the existing support threshold. A coordinate-only repair is
-  underway. No footprint, slope, ray or creature-size contract is weakened.
+  are 5.44-5.465 m from the route centre, outside the graded three-metre half-width,
+  with steep footprint height changes and normals below the support threshold.
+  The initial 57-74 m report used a faulty nearest-vertex calculation and was
+  corrected during integration review. A coordinate-only repair is underway.
+  No footprint, slope, ray or creature-size contract is weakened.
 - The teleport smoke now covers all 58 curated destinations in its working-tree
   extension. It passes parser checks but awaits its full-world runtime slot; the
   previously recorded four-realm crossing run remains the last completed proof.
