@@ -73,6 +73,7 @@ extends Node3D
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const HARVEST_LOGIC := preload("res://scripts/world/harvest_logic.gd")
+const HUMAN_PROMPT_HEIGHT := 1.4
 ## D103 / Stage B lane 3.B. See `_on_gathered()`: the chop is an intent now.
 const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
 
@@ -108,7 +109,7 @@ func setup(spec: Dictionary) -> void:
 	_harvest_layer = str(spec.get("harvest_layer", ""))
 	_harvest_index = int(spec.get("harvest_index", -1))
 	_realm_id = str(spec.get("realm", "meadows"))
-	var prompt_height := float(spec.get("prompt_height", 1.4))
+	var prompt_height := float(spec.get("prompt_height", HUMAN_PROMPT_HEIGHT))
 
 	_prompt = INTERACTABLE.new()
 	_prompt.name = "Interactable"
@@ -227,4 +228,3 @@ func _ready() -> void:
 ## durability or respawn.
 func gather(equipped_tool: Variant = null) -> void:
 	_on_gathered(equipped_tool)
-

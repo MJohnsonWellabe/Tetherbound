@@ -6,6 +6,49 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-08, playable build in progress)
 
+**2026-09-08 19:10 UTC: Wave 3 landed; its own main CI is green.**
+PR #87 exact `6c0f0e78046fbd15c3e1fe46de06fa154981be66` passed run
+`34262351185` on attempt 1: 26 executed jobs passed, three existing conditional
+skips, 3037 unit tests/487178 assertions, all seven multiplayer shards. Every
+executed job/step/log was reviewed; five new strict native checks were clean.
+Squash main `043cd1061ba8e1423d1681c7479d9ad36f6d4317` has the identical tree.
+Its own push run34264602920 passed on attempt1: 27 successful jobs/two existing
+manual-only skips, all seven multiplayer shards, Windows PE export, actual
+Linux exported-runtime terrain/ground check, and artifact10072368637.
+Every executed job, step and log was reviewed; this is not an Ally playthrough.
+
+The owner's latest direction prioritizes actual game content. Local Wave 4
+clarifies the Tam-to-Practice Meadow gathering walk with two existing resource
+placements, NPC dialogue and camp instructions. Tidewake guidance now names
+Salt Crown's required chart interaction and removes Nerissa's unsupported
+conduit instruction. These edits are not on main yet.
+
+The latest genuine fresh run, `wave4-fresh-camp-lesson`, stopped at595.393s:
+ordinary opening and revised village dialogue, five earned creatures, ten
+training wins, actual camp materials gathered, paid tent/fire/bedroll/one
+Creature Bed, and two successful actual rests. The next bed assignment could
+not reach its prompt, stopping5.2m short at[31,0,-38]. Owner saves were unchanged;
+there were no engine/script errors. The quest requires one bed; the explicit
+lesson mode derives that count without weakening the five-creature readiness
+check. Full care, tournament and opening-to-ending remain unproven.
+
+Local wood prompt-height and same-live Aquaryn retirement fixes have native
+runtime evidence. The earlier750.55s fresh run harvested the original failing
+tree plus two more, then failed at a separate overlapping forest cluster. That
+cluster is recorded as deferred, not fixed. The latest run's read-only observer
+recorded123 samples over1364.57m, with92 below two visible creatures and one
+undersampled interval; full forward-view coverage remains open.
+
+Four first-camp day/night captures received one fresh blind review: key-art
+belonging no, Palworld same-kind yes without quality parity. Named material,
+ground-cover, path and lighting gaps are deferred. Existing content checks
+passed29 tests/22302 assertions; village dialogue/quest110/1998; lesson helpers
+and home/quest60/896; Tidewake dialogue/dock/quest113/2053. Expected dialogue
+negative-control errors are disclosed. See the first-camp Wave4 report.
+
+The local driver composes the full Water ending. A disclosed Guardian fixture
+passed invitation, full-party farewell and saved ending receipts; it is not a
+fresh campaign. These local results supersede the older statements below.
 **2026-09-08 18:12 UTC: Wave 2 is landed and main's own CI is green.** PR #86
 exact head `a62c81ae562714a59eb62ebcb2117e2649fa7e76` passed CI `34256323372`
 on attempt1 (26 successful jobs, three existing conditional skips; 3013 unit

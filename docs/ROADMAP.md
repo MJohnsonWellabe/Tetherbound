@@ -36,6 +36,18 @@ run from the reorganised tree. See `docs/CLEANUP_MANIFEST.md`.
 
 ## Gate 1 — The first session is real (wake → tournament → leave)
 
+**2026-09-08 live evidence:** the latest completed genuine fresh run earned
+five creatures and ten training wins, then stopped at750.55s with wood40/42.
+The exact baked tree's scaled interaction height is locally repaired without
+changing the2.6m radius; the fresh run harvested that tree and two more.
+The next tree lost its prompt to a neighbor in an overlapping rock cluster,
+now reproduced natively. Ordinary mining preparation is being investigated.
+Logs: `.artifacts/wave4-fresh-complete-campaign*`; owner saves unchanged.
+Paid camp and the full first-session chain remain unproved by fresh execution.
+PR #87 landed as043cd1061; its own main CI34264602920 passed27 jobs/two
+existing manual-only skips, including export and exported runtime. See
+`CURRENT_STATE.md` and the four-biome report for the distinct native proofs.
+
 **Owning prompts:** `56-OPENING-first-session-to-tournament.md`, with
 `17-RG18`, `15-RG16`, `26-RG19`, `43-CREATURE-BED`, `44-GATHER`, `45-CATCH`,
 `47-CREATURE-level-up`, `48-PARTY-cycle`, `68-CHAPTER-complete-objective-chain.md`

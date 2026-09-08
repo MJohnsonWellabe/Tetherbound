@@ -1,7 +1,7 @@
 extends "res://tests/helpers/gate_a_material_route.gd"
 
-## Gather the current catalogue's actual campsite cost, including one bed for
-## each configured tournament entrant. No old house budget or inventory grant.
+## Gather the current catalogue's actual campsite cost: the authored first
+## camp in lesson mode, otherwise one bed per entrant. No inventory grant.
 const CAMP := preload("res://tests/helpers/meadows_earned_camp_segment.gd")
 const BOUNDARY := preload("res://tests/helpers/meadows_earned_team_segment.gd")
 var _boundary: RefCounted
@@ -9,7 +9,7 @@ var _crossing: Dictionary = {}
 
 
 func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
-		camera_rig: Node3D) -> Dictionary:
+		camera_rig: Node3D, lesson_mode: bool = false) -> Dictionary:
 	_tree = tree
 	_world = world
 	_game = game
@@ -30,7 +30,7 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 	for crossing: Dictionary in terrain.get("crossings", []):
 		if str(crossing.get("id", "")) == "south_bridge":
 			_crossing = crossing
-	var needed := CAMP.required_stock(game)
+	var needed := CAMP.required_stock(game, lesson_mode)
 	for item: String in needed:
 		if not TOOL_ID.has(item):
 			_fail("campsite now requires an unimplemented gathering verb: " + item)

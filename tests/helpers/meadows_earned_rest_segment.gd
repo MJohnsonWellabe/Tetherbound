@@ -59,10 +59,12 @@ var _gatherer: BerryInput
 var _failures: Array[String] = []
 var _receipts: Array[Dictionary] = []
 var _completed := false
+var _lesson_mode := false
 
 
 func run(tree: SceneTree, world: Node3D, game: Node,
-		creature_beds: Array, bedroll: Node3D) -> Dictionary:
+		creature_beds: Array, bedroll: Node3D, lesson_mode: bool = false) -> Dictionary:
+	_lesson_mode = lesson_mode
 	_tree = tree
 	_world = world
 	_game = game
@@ -83,8 +85,9 @@ func run(tree: SceneTree, world: Node3D, game: Node,
 		return result()
 	_initial_ids = party_ids(_party)
 	_indices = entrant_indices(_party)
-	if _indices.size() != TOURNAMENT.required_party_size() or creature_beds.size() != _indices.size():
-		_fail("Every actual tournament entrant needs its own paid creature bed")
+	var wanted_beds := int(preload("res://scripts/build/home_progress.gd").required_pieces().get("creature_bed", 0)) if _lesson_mode else _indices.size()
+	if (_lesson_mode and wanted_beds != 1) or _indices.size() != TOURNAMENT.required_party_size() or creature_beds.size() != wanted_beds:
+		_fail("Actual retained tournament entrants or selected paid-bed mode are incomplete")
 		return result()
 	if not _paid_structure(bedroll, "bedroll"):
 		return result()
@@ -113,7 +116,7 @@ func run(tree: SceneTree, world: Node3D, game: Node,
 	_driver._bedroll = bedroll
 	_driver._beds.resize(int(_party.call("size")))
 	for ordinal in _indices.size():
-		_driver._beds[_indices[ordinal]] = _beds[ordinal]
+		_driver._beds[_indices[ordinal]] = _beds[0] if _lesson_mode else _beds[ordinal]
 	if not _driver._collect_nodes():
 		_fail("Bed input dependencies are missing: " + str(_driver.failures))
 		return result()
@@ -132,8 +135,46 @@ func run(tree: SceneTree, world: Node3D, game: Node,
 		_fail("Berry gathering lacks controller movement bindings")
 		return result()
 	_gatherer._nav = MATERIAL.NAVIGATOR.new(tree, _player, _rig, _gatherer._send_stick)
-	_completed = await _sleep_the_team_into_condition()
+	_completed = await _single_bed_lesson() if _lesson_mode else await _sleep_the_team_into_condition()
 	return result()
+
+
+func _single_bed_lesson() -> bool:
+	# A finite set of required care actions, not the five-bed mode's retry
+	# nights. Each retained unrested entrant uses the same actual paid bed once.
+	# The existing MAX_NIGHTS=3 team-retry mode and sleep frame bound stay intact.
+	for ordinal in _indices.size():
+		if not _team_preserved():
+			return false
+		var member := _entrants[ordinal]
+		if bool(member.get("rested")):
+			continue
+		if bool(member.get("resting")) or int(_beds[0].call("occupant_index")) >= 0:
+			return _fail("Lesson bed must be available before the next explicit assignment")
+		if not await _driver._assign_to_bed(_indices[ordinal]):
+			return _fail("Single-bed lesson assignment failed: " + str(_driver.failures))
+		if int(member.get("rest_bed_index")) != int(_beds[0].call("build_index")) \
+				or int(_beds[0].call("occupant_index")) != _indices[ordinal]:
+			return _fail("Lesson panel assigned a different entrant or bed")
+		_receipt("lesson_bed_assigned", {"creature":member.get_instance_id(),
+			"party_index":_indices[ordinal], "bed_index":member.get("rest_bed_index")})
+		if not await _sleep_once():
+			return false
+		if not bool(member.get("rested")) or bool(member.get("resting")) \
+				or bool(member.get("fainted")) or float(member.get("hp")) <= 0 \
+				or int(_beds[0].call("occupant_index")) >= 0:
+			return _fail("Lesson sleep did not restore its entrant and free the actual bed")
+		_receipt("lesson_rest_completed", {"creature":member.get_instance_id(),
+			"day":_game.get("day"), "condition":CONDITION.summary(member, CONDITION.config())})
+	if not await _feed_with_satchel():
+		return false
+	if not _team_preserved() or not _sleep_flag() or not TOURNAMENT.condition_ready(_party):
+		return _fail("One finite lesson pass did not satisfy actual team condition: " + str(TOURNAMENT.readiness_report(_party)))
+	for _frame in 120:
+		if bool((_game.get("progression") as RefCounted).call("has", "tournament_team_fed")):
+			return true
+		await _tree.physics_frame
+	return _fail("Tournament did not observe the lesson's actually fed entrants")
 
 
 func _sleep_the_team_into_condition() -> bool:

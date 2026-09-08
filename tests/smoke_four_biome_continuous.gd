@@ -1,8 +1,8 @@
 extends SceneTree
 
-## Work-in-progress genuine fresh-save composition. --through-opening exercises
-## its first completed segment and reports prefix evidence only. The default
-## cannot report a campaign pass until every earned-state segment is composed.
+## Genuine fresh-save composition. Optional --through-* stops are prefix
+## evidence only. Default success requires every earned segment and ending;
+## composition itself is not proof that the full runtime path has passed.
 const SAVE := preload("res://scripts/save/save_game.gd")
 const OPENING := preload("res://tests/helpers/fresh_opening_segment.gd")
 const VILLAGE := preload("res://tests/helpers/gate_a_npc_gather_segment.gd")
@@ -29,11 +29,18 @@ const REEDHAVEN := preload("res://tests/helpers/water_reedhaven_segment.gd")
 const BRINE := preload("res://tests/helpers/water_brine_segment.gd")
 const SHELLWATCH := preload("res://tests/helpers/water_shellwatch_segment.gd")
 const TIDAL := preload("res://tests/helpers/water_tidal_segment.gd")
+const SWIMMER := preload("res://tests/helpers/water_earned_swimmer_preparation_segment.gd")
+const LATE_WATER := preload("res://tests/helpers/water_earned_late_segment.gd")
+const WATER_ENDING := preload("res://tests/helpers/water_earned_ending_segment.gd")
+const COVERAGE := preload("res://tests/helpers/four_biome_road_coverage_observer.gd")
+var coverage: RefCounted
 var failures: Array[String] = []
 var live: Dictionary = {}
 var started_ms := 0
 var scratch := ""
 var reached := "title"
+var campaign_complete := false
+var finished := false
 
 
 func _init() -> void:
@@ -50,6 +57,11 @@ func _run() -> void:
 		return
 	# Install before any title input, reset, world construction or autosave.
 	game.set("save_system", SAVE.new(scratch))
+	coverage = COVERAGE.new()
+	if not coverage.start(self, "user://four_biome_coverage_%d_%d.jsonl" % [OS.get_process_id(), started_ms]):
+		failures.append_array(coverage.failures)
+		_finish(false)
+		return
 	print("FRESH CAMPAIGN scratch=%s slot=%s" % [ProjectSettings.globalize_path(scratch),
 		game.get("save_system").call("slot_path", 0)])
 	var opening := OPENING.new()
@@ -93,11 +105,15 @@ func _run() -> void:
 		return
 	var camp := CAMP.new()
 	for segment: RefCounted in [MATERIALS.new(), camp]:
-		var result: Dictionary = await segment.run(self,
-			live["world"], game, live["player"], live["rig"])
+		var result: Dictionary
+		if segment == camp:
+			result = await camp.run(self, live["world"], game, live["player"], live["rig"], false, false, true)
+		else:
+			result = await segment.run(self, live["world"], game, live["player"], live["rig"], true)
 		for line: Variant in result.get("failures", []):
 			failures.append(str(line))
 		if not bool(result.get("passed", false)) or not failures.is_empty():
+			print("FRESH MATERIAL/CAMP DIAGNOSTIC %s" % JSON.stringify(result))
 			_finish(false)
 			return
 	reached = "paid_camp"
@@ -105,7 +121,7 @@ func _run() -> void:
 		_finish(true)
 		return
 	var rest_result: Dictionary = await REST.new().run(self,
-		live["world"], game, camp._beds, camp._bedroll)
+		live["world"], game, camp._beds, camp._bedroll, true)
 	for line: Variant in rest_result.get("failures", []):
 		failures.append(str(line))
 	if not bool(rest_result.get("passed", false)) or not failures.is_empty():
@@ -226,7 +242,28 @@ func _run() -> void:
 			_finish(false)
 			return
 		reached = str(entry[1])
-	failures.append("fresh campaign suffix is not composed; reached prefix is not milestone completion")
+	var preparation := SWIMMER.new()
+	if not _accepted(await preparation.run(self, live["world"], game), "passed"):
+		return
+	reached = "water_earned_swimmer_and_paid_saddle_mounted"
+	var late_water := LATE_WATER.new()
+	late_water.setup(self, live["world"], live["player"], live["rig"])
+	var late_passed: bool = await late_water.run_from_mount(preparation.swimmer, _abort_late)
+	if not _accepted(late_water.result(), "passed"):
+		return
+	if not late_passed:
+		_abort_late("Late Water returned false despite its accepted result")
+		return
+	reached = "water_nerissa_defeated_and_guardian_freed"
+	if not _accepted(await WATER_ENDING.new().run_earned(self, live["world"], game), "ok"):
+		return
+	reached = "tidewake_ending_earned"
+	campaign_complete = true
+	_finish(true)
+
+
+func _abort_late(reason: String) -> void:
+	failures.append(reason)
 	_finish(false)
 
 
@@ -240,10 +277,17 @@ func _accepted(result: Dictionary, success_key: String) -> bool:
 
 
 func _finish(prefix_passed: bool) -> void:
+	if finished:
+		return
+	finished = true
+	if coverage != null:
+		var coverage_result: Dictionary = coverage.stop()
+		failures.append_array(coverage.failures)
+		print("FRESH COVERAGE OBSERVATIONS %s" % JSON.stringify(coverage_result))
 	print("FRESH CAMPAIGN RESULT %s" % JSON.stringify({
 		"requested_prefix_passed": prefix_passed,
 		"reached": reached,
-		"campaign_complete": false,
+		"campaign_complete": campaign_complete and failures.is_empty(),
 		"scratch": scratch,
 		"elapsed_seconds": (Time.get_ticks_msec() - started_ms) / 1000.0,
 		"failures": failures,

@@ -1114,6 +1114,18 @@ jobs:
           if grep -E '^(ERROR:|SCRIPT ERROR:)' /tmp/earned-party-cycle.log; then
             exit 1
           fi
+      - name: Verify same-live Water Alpha retirement
+        if: ${{ !cancelled() }}
+        run: |
+          set -euo pipefail
+          run_dir="$(mktemp -d)"
+          export XDG_DATA_HOME="$run_dir/profile"
+          mkdir -p "$XDG_DATA_HOME"
+          godot --headless --path . --log-file "$run_dir/engine.log" --script tests/smoke_water_alpha_retirement.gd 2>&1 | tee "$run_dir/console.log"
+          test -s "$run_dir/engine.log"
+          if grep -E '^(ERROR:|SCRIPT ERROR:)' "$run_dir/"*.log; then
+            exit 1
+          fi
       - name: Verify riding
         if: ${{ !cancelled() }}
         env: { SMOKE: riding, RETRIES: 2 }
@@ -1293,6 +1305,30 @@ jobs:
           export XDG_DATA_HOME="$(mktemp -d)"
           godot --headless --path . --log-file /tmp/material-prompt-priority.log --script tests/smoke_material_prompt_priority.gd
           if grep -E '^(ERROR:|SCRIPT ERROR:)' /tmp/material-prompt-priority.log; then
+            exit 1
+          fi
+      - name: Verify exact baked tree prompt at trunk contact
+        if: ${{ !cancelled() }}
+        run: |
+          set -euo pipefail
+          run_dir="$(mktemp -d)"
+          export XDG_DATA_HOME="$run_dir/profile"
+          mkdir -p "$XDG_DATA_HOME"
+          godot --headless --path . --log-file "$run_dir/engine.log" --script tools/_probe_scatter_tree_prompt_height.gd 2>&1 | tee "$run_dir/console.log"
+          test -s "$run_dir/engine.log"
+          if grep -E '^(ERROR:|SCRIPT ERROR:)' "$run_dir/"*.log; then
+            exit 1
+          fi
+      - name: Verify live road coverage observation
+        if: ${{ !cancelled() }}
+        run: |
+          set -euo pipefail
+          run_dir="$(mktemp -d)"
+          export XDG_DATA_HOME="$run_dir/profile"
+          mkdir -p "$XDG_DATA_HOME"
+          godot --headless --path . --log-file "$run_dir/engine.log" --script tools/_probe_live_road_coverage_observer.gd 2>&1 | tee "$run_dir/console.log"
+          test -s "$run_dir/engine.log"
+          if grep -E '^(ERROR:|SCRIPT ERROR:)' "$run_dir/"*.log; then
             exit 1
           fi
       - name: Verify felled resource destruction
