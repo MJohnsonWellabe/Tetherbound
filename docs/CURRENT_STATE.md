@@ -113,12 +113,16 @@ detached-opponent teardown fix and a CI regression that scans native errors.
 the production arrival, walks to Pell, completes his real dialogue, swims
 64.488 m to earn the lesson, and crosses to Reedhaven through ordinary human
 movement. Its first reed gather fails correctly because the fixture lacks the
-canonical knife; the stale selected-node metadata says hand. The prepared
-correction supplies disclosed knife/axe tools before world creation and uses
-their real hotbar actions. No Water materials or progression are granted.
-Reedhaven repair remains unproven pending the corrected composed run. This
-initial chapter fixture does not establish earned Stormwood-to-Water campaign
-continuity. Log: `%TEMP%/water-opening-reedhaven-first.log`.
+canonical knife; the stale selected-node metadata says hand. Correction
+`283897ed3` supplies disclosed knife/axe tools before world creation and uses
+their real hotbar actions. The corrected uninterrupted run passes: 64.487 m
+lesson swimming, ordinary crossing, four exact node receipts yielding six reed
+and six driftwood, then the production repair flag with six reed and four
+driftwood spent. No Water materials or progression are granted; its native
+ERROR/SCRIPT ERROR scan is clean. This initial chapter fixture does not
+establish earned Stormwood-to-Water campaign continuity or progression beyond
+Reedhaven. Logs: `%TEMP%/water-opening-reedhaven-first.log` and
+`%TEMP%/water-opening-reedhaven-corrected.log`.
 
 **ROAD validation reopened, 2026-09-08:** the late-Tidewake traversal diagnostic
 reached Salt Crown but production rejected footing at
