@@ -1,7 +1,8 @@
 # Water next segment: Tovin to liberated Shellwatch
 
 Status: production-data route and requirements identified; no runtime or
-implementation claim.
+implementation acceptance claim. A bounded helper and focused contracts are
+now prepared, but remain production-world unproven.
 
 The next bounded ordinary segment begins only after the Brine helper has earned
 both `defeated_water_trainer_tovin` and
@@ -11,10 +12,10 @@ It needs no new equipment, material, party, HP, pose or progression fixture.
 
 ## Executable order
 
-1. From Tovin's production body at XZ `(429,683)`, walk to Brine Steps spine
-   point 4 `(488.657,758.052)`, then points 5 `(387.711,808.531)` and 6 /
-   departure `(383.462,828.074)`. Those legs are approximately 95.9m, 112.8m
-   and 20.0m; no direct chord back across the island is needed.
+1. From Tovin's repaired production body at XZ `(395,809)`, continue forward
+   through Brine Steps spine point 5 `(387.711,808.531)` and point 6 /
+   departure `(383.462,828.074)`. Do not backtrack to the summit-era point 4;
+   the prior segment already arrived through p4 and p5.
 2. Swim `brine_steps_to_shellwatch_sheltered`. It is an authored
    `human_level_0` route of 93.320m, requires only the already-earned Brine
    trial flag, and lands at `brine_steps_to_shellwatch_arrival`
@@ -66,3 +67,34 @@ flag audit.
 The safe stop is the combined Shellwatch flag and absent departure barrier. Do
 not fold the following 112.113m crossing to Tidal Cradle or the Aquaryn trial
 into this first diagnostic; they are a separate balance and capture branch.
+
+## Prepared helper
+
+`tests/helpers/water_shellwatch_segment.gd` implements the order above against a
+supplied live world. It starts beside defeated Tovin, follows the Brine spine to
+the departure, swims the authored crossing, uses Shellwatch's real creature bed
+and overnight rest before Solm and between trainers, drives both fights through
+directional/quick input, activates both dock actions through the real arbiter,
+and requires the combined flag plus absent departure barrier. Production combat
+owns attack-facing; the helper never writes actor orientation or position.
+
+Camp recovery retains the exact deployed party instance before recall. The
+helper locates that instance's production party row, moves focus with controller
+`ui_down`, asserts the focused row still resolves to the retained instance, and
+only then accepts. It does not assume the panel's first row is active and never
+assigns a bed occupant directly.
+
+The barrier assertion targets the actual next dock,
+`shellwatch_to_tidal_cradle_dockBarrier`. The helper requires that barrier to
+exist in its initial uncompleted state before it can later credit removal; the
+already-open inbound `brine_steps_to_shellwatch_dockBarrier` cannot satisfy the
+test vacuously. A focused config contract pins the next dock's island, departure
+anchor and combined unlock flag.
+
+The helper fails closed on missing starting flags, any pre-completed Shellwatch
+fact, missing party/trainers/services, unexpected team data, failed travel,
+combat loss, incorrect action result or retained barrier. It contains no HP,
+pose, inventory, party or progression writes. Focused unit contracts cover its
+terminal verdict, exact crossing, trainer teams/levels, dock prerequisites and
+completion, and authored camp identity. Full production traversal remains the
+required verdict after the shorter Brine composition passes.
