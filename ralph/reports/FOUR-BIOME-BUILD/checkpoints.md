@@ -302,3 +302,23 @@
   readiness/collision/crown-harvest set is green at 12 tests / 55 assertions.
 - Next: run the final consolidated fast suite and diff review, create reviewable local
   commits, push once, then read every CI job before any further branch update.
+
+## Checkpoint 8 — 2026-09-08 00:15 CDT
+
+- Main was fetched and merged again before continuing. The verifiable merge commit is
+  `01f85b2b356de72689eb90e42242e42ae64d5dfb`; its merged-main parent is
+  `f6b79a6b3` (PR #84, D100: the fourth realm's player-facing name is Tidewake).
+- The prior coherent gameplay batch is present on PR #80 at `085d49a57`: its first
+  new CI run (`34189428258`) dispatched every ordinary job and all seven multiplayer
+  shards. That run predates the mandatory D100 merge, so it is useful intermediate
+  evidence but will not be treated as the final branch verdict.
+- D100 is integrated at the player seams the owner decision names: the Waterward
+  reveal introduces Tidewake, the physical realm gate and authority refusals use
+  Tidewake, the map header derives the display name from `realm_hearts.json`, and the
+  Settings teleport catalogue labels the fourth realm Tidewake while preserving the
+  internal `water` id and authored arrival key.
+- A parallel naming audit found the reveal omission; the production
+  Stormwood-to-Water smoke now pins the presence of `Tidewake` in that conversation.
+  Final post-merge validation passed at 20 tests / 1,023 assertions, zero failures;
+  the complete production Stormwood-to-Tidewake smoke also passed in 28.2 seconds,
+  and production script check plus `git diff --check` are clean.

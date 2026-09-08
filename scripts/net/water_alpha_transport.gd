@@ -22,7 +22,7 @@ func _commit(intent: Dictionary, peer: int) -> Dictionary:
 	var actor: Dictionary = get_parent().call("_water_actor_context", peer, {})
 	if str(actor.get("realm", "")) != "water":
 		return {"ok": false, "pending": false, "kind": str(intent.get("kind", "")),
-			"reason": "You must be in the Water Archipelago."}
+			"reason": "You must be in Tidewake."}
 	return service.call("host_commit", intent, peer, actor)
 
 func deliver(peer: int, kind: String, payload: Dictionary) -> void:

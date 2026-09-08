@@ -122,7 +122,7 @@ func test_open_gate_is_idempotent_and_routes_to_authored_water_arrival() -> void
 	route.progression = game.world.flags
 	route.session = SessionFixture.new()
 	var gate := GATE.new()
-	gate.call("setup", "water", "water_arrival_from_stormwood", "Water Archipelago",
+	gate.call("setup", "water", "water_arrival_from_stormwood", "Tidewake",
 		GATE.WATER_KEY_FLAG, GATE.WATER_GATE_FLAG)
 	assert_true(gate.call("try_enter", route))
 	assert_eq(route.entered_realm, "water")

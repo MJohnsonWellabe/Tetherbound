@@ -24,9 +24,13 @@ func test_water_extent_and_authored_destinations_are_independent_of_meadows() ->
 	var meadows: RefCounted = player.map_for("meadows")
 	var meadow_origin: Vector2 = meadows.origin()
 	var bounds: Dictionary = world.world_bounds
+	var realm_config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
+		"res://data/config/realm_hearts.json"))
 	assert_eq(water.origin(), Vector2(bounds.min_x, bounds.min_z))
 	assert_eq(water.world_bounds(), bounds)
-	assert_eq(water.map_display_name(), "Water Archipelago")
+	assert_eq(realm_config.realms.water.display_name, "Tidewake")
+	assert_eq(water.map_display_name(), realm_config.realms.water.display_name,
+		"The map header must derive Tidewake from the realm display config")
 	assert_true(water.origin().x + water.grid_x() * water.cell_size() >= float(bounds.max_x))
 	assert_true(water.origin().y + water.grid_z() * water.cell_size() >= float(bounds.max_z))
 	assert_eq(water.landmarks().size(), world.landmarks.size())

@@ -2,6 +2,7 @@ extends "res://autoload/map_state.gd"
 
 ## Each trainer owns their Water fog, island discoveries and pins. The shared
 ## world supplies geometry only; discovering an island does not unlock a dock.
+const REALM_CONFIG_PATH := "res://data/config/realm_hearts.json"
 var _bounds: Dictionary = {}
 
 
@@ -32,4 +33,11 @@ func world_bounds() -> Dictionary:
 
 
 func map_display_name() -> String:
-	return "Water Archipelago"
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(REALM_CONFIG_PATH))
+	if parsed is Dictionary:
+		var realms: Variant = (parsed as Dictionary).get("realms", {})
+		if realms is Dictionary:
+			var water: Variant = (realms as Dictionary).get("water", {})
+			if water is Dictionary:
+				return str((water as Dictionary).get("display_name", "Tidewake"))
+	return "Tidewake"

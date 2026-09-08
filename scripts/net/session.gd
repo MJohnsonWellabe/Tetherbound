@@ -665,7 +665,7 @@ func _on_connected_to_server() -> void:
 ## ENet's stock 5 s minimum timeout is shorter than a legitimate procedural
 ## realm crossing. During a split-realm transition both processes can be busy:
 ## the client builds its destination while the host stands up the matching
-## simulation shell. Each build yields frames and is bounded by Game's 60 s
+## simulation shell. Each build yields frames and is bounded by Game's 120 s
 ## readiness deadline, but a reliable packet sent immediately before one of
 ## those builds can otherwise age past ENet's minimum and tear down a healthy
 ## session. Keep transport tolerance above Game's bounded 120 s loading window. The

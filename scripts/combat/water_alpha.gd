@@ -189,7 +189,7 @@ func _attune_refusal_reason(code: String) -> String:
 		"not_near_iona":
 			return "Stand beside Iona to attune the Swim Stone."
 		"invalid_actor":
-			return "Iona cannot identify this traveler in the Water Archipelago."
+			return "Iona cannot identify this traveler in Tidewake."
 		"journal_failed":
 			return "The Swim Stone could not be recorded safely. Please try again."
 	return "Iona cannot attune the Swim Stone right now."

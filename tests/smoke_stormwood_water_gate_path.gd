@@ -12,6 +12,7 @@ const GAME := preload("res://autoload/game_state.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 const REALM_GATE := preload("res://scripts/world/realm_gate.gd")
 const STORMWOOD_SCENE := preload("res://scenes/world/stormwood.tscn")
+const STORMWOOD_DIALOGUE_PATH := "res://data/dialogue/stormwood.json"
 
 const TEST_SAVE_DIR := "user://stormwood_water_gate_path_smoke"
 const WORLD_ID := "stormwood-water-gate-path-world"
@@ -35,6 +36,11 @@ func _run() -> void:
 			_expect(false, "240 second watchdog expired")
 			_finish())
 	_cleanup_test_saves()
+	_expect(_waterward_reveal_names_tidewake(),
+		"the first Waterward reveal conversation does not introduce Tidewake by name")
+	if not _failures.is_empty():
+		_finish()
+		return
 	var game := root.get_node_or_null(^"Game")
 	if game == null:
 		game = GAME.new()
@@ -218,6 +224,23 @@ func _run() -> void:
 	_expect(water_player != null and water_player.global_position.distance_to(expected) <= ARRIVAL_TOLERANCE_M,
 		"Water player did not settle at authored water_arrival_from_stormwood")
 	_finish()
+
+
+func _waterward_reveal_names_tidewake() -> bool:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(STORMWOOD_DIALOGUE_PATH))
+	if parsed is not Dictionary:
+		return false
+	var conversations: Variant = (parsed as Dictionary).get("conversations", {})
+	if conversations is not Dictionary:
+		return false
+	var conversation: Variant = (conversations as Dictionary).get(
+		"stormwood_waterward_aftermath", {})
+	if conversation is not Dictionary:
+		return false
+	for line: Variant in (conversation as Dictionary).get("lines", []):
+		if str(line).contains("Tidewake"):
+			return true
+	return false
 
 
 func _commit_world_flag(game: Node, flag: String) -> bool:

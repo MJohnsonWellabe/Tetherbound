@@ -475,7 +475,7 @@ func _build_water_gate() -> void:
 	_water_gate.name = "WaterwardRealmGate"
 	_water_gate.origin_realm = "stormwood"
 	_water_gate.call("setup", "water", "water_arrival_from_stormwood",
-		"Water Archipelago", WATER_GATE.WATER_KEY_FLAG, WATER_GATE.WATER_GATE_FLAG)
+		"Tidewake", WATER_GATE.WATER_KEY_FLAG, WATER_GATE.WATER_GATE_FLAG)
 	world.add_child(_water_gate)
 	var anchor: Dictionary = world.call("entry_anchor", "stormwood_departure_to_water")
 	var position: Array = anchor.get("position", []) as Array

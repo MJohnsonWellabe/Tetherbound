@@ -23,6 +23,13 @@ const EXPECTED_ENTRY_IDS := {
 	"water": "water_arrival_from_stormwood",
 }
 
+const EXPECTED_REALM_DISPLAY_NAMES := {
+	"meadows": "Meadows",
+	"cloudreach": "Cloudreach Cliffs",
+	"stormwood": "The Stormwood",
+	"water": "Tidewake",
+}
+
 
 class TeleportGameDouble extends Node:
 	var current_realm := "menu_test_source"
@@ -57,6 +64,8 @@ func test_curated_menu_has_two_destinations_in_every_named_region() -> void:
 		var realm_id := str(biome.get("id", ""))
 		seen.append(realm_id)
 		assert_true(EXPECTED_GROUPS.has(realm_id), "unknown biome in teleport catalogue: %s" % realm_id)
+		assert_eq(str(biome.get("display_name", "")), EXPECTED_REALM_DISPLAY_NAMES.get(realm_id, ""),
+			"%s must use the realm's player-facing display name" % realm_id)
 		var groups: Array = biome.get("bands", [])
 		var expected_group_ids: Array = EXPECTED_GROUPS.get(realm_id, [])
 		assert_eq(groups.size(), expected_group_ids.size(),
