@@ -15,7 +15,12 @@ remain in `docs/SECOND_PASS_BACKLOG.md`; they are not claimed passed.
 PR #79 landed at `7ab4a12647a377a400c43335b64aff8b03ca6d43`. Current work is on
 `codex/four-biome-wave0`, PR #80, which includes main through `f6b79a6b3` via
 merge `01f85b2b356de72689eb90e42242e42ae64d5dfb`. The latest submitted batch is
-`0ddc10269955bfbe16389ab8c2e6916708c64d06`; CI run `34213024669` is terminal:
+`5fc68033750f2cf5e2c0eed391561fb306ccbf82`; CI run `34216463559` is in
+progress, not a verdict. It includes the proven Meadows build hold, restored map
+contract, Livewire diagnostic sampling telemetry and prepared route helpers.
+Root focused check passes 39 tests / 193 assertions with no native errors;
+no new push until CI completes. Review: `CI-34216463559.md` in the build reports.
+Previous batch `0ddc10269955bfbe16389ab8c2e6916708c64d06` / CI `34213024669` is terminal:
 25 successful jobs, one failure (Livewire's 119 ms observation versus the
 unchanged 180–350 ms window), three skips. Aggression passes first attempt;
 Livewire's actual refusal checks pass, but its timing proof does not. Local
