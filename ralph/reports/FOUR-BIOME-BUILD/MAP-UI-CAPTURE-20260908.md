@@ -20,6 +20,9 @@ the full-world second-open corruption cannot recur. The existing full-world
 capture remains pending. The map's unit contract separately passes 29 tests /
 95 assertions; see `MAP-LEGIBILITY-CONTRACT.md`.
 
-Code-blind visual verdict is pending. No visual quality pass is claimed by the
+Code-blind visual verdict is pending. Two attempts to allocate a fresh
+zero-context critic were rejected by the active agent-tree thread limit, even
+after the Meadows agent completed. An existing informed agent is not being
+relabelled as blind to bypass this requirement. No visual quality pass is claimed by the
 implementer. This small UI-only render ran beside the existing headless Meadows
 test, without a second terrain world or concurrent cache writer.
