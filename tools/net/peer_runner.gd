@@ -671,6 +671,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_stormwood_hosted_raw_strike(args)
 		"stormwood_hosted_quick":
 			out = await _step_stormwood_hosted_quick(args)
+		"stormwood_hosted_deadline_window":
+			out = await _step_stormwood_hosted_deadline_window(args)
 		_:
 			out = {"verdict": "ERROR", "detail": "unknown action '%s'" % action}
 	out["frames_used"] = _physics_count - before
@@ -2485,6 +2487,28 @@ func _step_stormwood_hosted_quick(args: Dictionary) -> Dictionary:
 					% [action_before, action_observed, str(manager.get("last_encounter_refusal"))]}
 		await physics_frame
 	return {"verdict": "FAIL", "detail": "combat_quick never became ready; did not bypass cooldown"}
+
+
+## Read-only host-local wait: a coordinator probe + wait round trip can skip
+## an entire narrow cooldown window. Sample it on the clock that owns it.
+## This neither sends a strike nor changes any authority/deadline value.
+func _step_stormwood_hosted_deadline_window(args: Dictionary) -> Dictionary:
+	var wanted := int(args.get("deadline_ms", 0))
+	var target := int(args.get("target_ms", 0))
+	var minimum := int(args.get("minimum_ms", 0))
+	var last: Dictionary = {}
+	for tick in 180:
+		last = _execute_probe({"what": "stormwood_hosted_trainer", "args": args}) as Dictionary
+		var authority: Dictionary = last.get("host_authority", {}) as Dictionary
+		if not bool(last.get("is_host", false)) or int(authority.get("deadline_ms", 0)) != wanted:
+			return {"verdict": "FAIL", "detail": "host deadline missing or changed", "data": last}
+		var remaining := wanted - int(authority.get("host_now_ms", 0))
+		if remaining <= target:
+			return {"verdict": "PASS" if remaining >= minimum else "FAIL",
+				"detail": "host sampled %dms before deadline (required %d..%dms)" % [remaining, minimum, target],
+				"data": last}
+		await physics_frame
+	return {"verdict": "FAIL", "detail": "host window wait exceeded 180 frames", "data": last}
 
 
 func _combat_manager() -> Node:

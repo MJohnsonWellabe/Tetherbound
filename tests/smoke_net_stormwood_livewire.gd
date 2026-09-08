@@ -337,17 +337,14 @@ func _await_host_relic(relic_id: String, multiplier: float) -> Dictionary:
 
 
 func _await_before_host_deadline(deadline_ms: int) -> Dictionary:
-	var last: Dictionary = {}
-	for tick in 180:
-		var raw: Variant = await probe(0, "stormwood_hosted_trainer", {
-			"trainer": TRAINER, "peer": _client_peer_id,
-		})
-		last = raw as Dictionary if raw is Dictionary else {}
-		var remaining := deadline_ms - int(_authority(last).get("host_now_ms", 0))
-		if remaining <= EARLY_TARGET_MS:
-			return last
-		await step(0, "wait", {"frames": 1})
-	return last
+	var sampled := await step(0, "stormwood_hosted_deadline_window", {
+		"trainer": TRAINER, "peer": _client_peer_id, "deadline_ms": deadline_ms,
+		"target_ms": EARLY_TARGET_MS, "minimum_ms": EARLY_MINIMUM_MS,
+	})
+	print("Hosted deadline window: ", sampled.get("detail", ""))
+	if str(sampled.get("verdict", "")) != "PASS":
+		return {}
+	return sampled.get("data", {}) as Dictionary
 
 
 func _await_after_host_deadline(deadline_ms: int) -> Dictionary:
