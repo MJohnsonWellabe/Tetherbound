@@ -1,7 +1,7 @@
 # Water Reedhaven continuous segment
 
-Status: helper implemented and parse-checked; production-world execution is
-queued behind the playable-path full-world slot.
+Status: production-world controller traversal passed through the paid
+Reedhaven repair.
 
 ## Scope
 
@@ -30,8 +30,7 @@ The driven sequence is:
 
 The selected nodes are not substitutes invented by the harness. Their authored
 main-route distances are 24.677m, 45.424m, 15.696m and 19.106m respectively;
-their analytic sampled slopes are 5.234, 5.720, 3.335 and 6.115 degrees. Runtime
-must still prove the baked approaches, offers, swings, crossing and repair.
+their analytic sampled slopes are 5.234, 5.720, 3.335 and 6.115 degrees.
 
 ## Evidence so far
 
@@ -46,9 +45,6 @@ must still prove the baked approaches, offers, swings, crossing and repair.
 - `tests/test_water_harvest_density.gd`: 1 test, 0 failures.
 - `git diff --check`: clean.
 
-These lightweight checks establish the source contracts only. They do not count
-as the required production traversal verdict.
-
 The first composed production attempt reached Water arrival, Pell, 64.488m of
 observed lesson swimming, Reedhaven and the first node through ordinary controls,
 then correctly received no yield from reed `:019`. The cause was an exposed data
@@ -58,11 +54,13 @@ knife, both selected reed rows say `knife`, and the focused test prevents either
 copy drifting from the ItemDB again. No production tool gate was relaxed. Log:
 `%TEMP%/water-opening-reedhaven-first.log`.
 
-## Required runtime verdict
+The corrected composed production run then passed the complete bounded segment:
+ordinary human crossing, all four named controller-driven harvests, exact
+six-reed/six-drift gathering, exact six-reed/four-drift repair payment, and the
+production repair flag. The helper returned `ok: true` with `failures: []`.
+The log scan found no `ERROR` or `SCRIPT ERROR`:
+`%TEMP%/water-opening-reedhaven-corrected.log`.
 
-Compose this helper immediately after the bounded opening segment reaches the
-real east lesson landing, using a disclosed completed-Stormwood party/tool entry
-fixture but no Water progress, material or pose fixtures. Success requires the
-helper's `run()` to return true, all four named harvest receipts, exact gathered
-and spent deltas, the production repair flag, no confined-reset travel failure,
-and a clean `ERROR` / `SCRIPT ERROR` log scan.
+This proves the bounded Water-arrival-through-Reedhaven route with the disclosed
+pre-arrival knife/axe fixture. It does not prove the preceding Stormwood party
+transfer or the later Water chapter path.

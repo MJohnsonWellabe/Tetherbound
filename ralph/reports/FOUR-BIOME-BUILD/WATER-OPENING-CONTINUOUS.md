@@ -1,8 +1,8 @@
 # Tidewake opening continuous diagnostic — prepared 2026-09-08
 
 `tests/smoke_water_opening_continuous.gd` covers the previously uncomposed
-production arrival -> Pell briefing -> physical swim lesson seam. It is prepared
-and parser-checked, not runtime acceptance.
+production arrival -> Pell briefing -> physical swim lesson seam. That bounded
+production route has passed at runtime.
 
 The isolated initial fixture is an empty solo Water realm with its production
 arrival placement. It does not earn the preceding Stormwood ending or transfer
@@ -27,11 +27,12 @@ injected exhaustion. Their focused claims remain valid, but neither establishes
 ordinary arrival-to-lesson progression. This diagnostic contains neither pose
 nor exhaustion injection. Failed movement must be diagnosed, not bypassed.
 
-Validation so far: Godot 4.7 `--headless --path . --check-only --script
+Godot 4.7 `--headless --path . --check-only --script
 tests/smoke_water_opening_continuous.gd --log-file
 C:/Users/mattj/AppData/Local/Temp/water-opening-check.log` exits 0 without errors.
-Full-world runtime is queued behind the active late Tidewake run and Stormwood
-playable-path checks. No physical reachability or chapter completion is claimed.
+The corrected composed runtime also passed production arrival, real Pell
+dialogue and 64.487m of observed lesson swimming. No full chapter completion is
+claimed.
 
 ## Optional composed Reedhaven continuation
 
@@ -48,5 +49,10 @@ previously repaired dock or grant materials. A focused verdict test passes
 The first composed run proved arrival, Pell, 64.488m of lesson swimming and the
 human crossing to Reedhaven, then exposed stale `hand` metadata on the first reed
 node; production correctly requires a knife. The fixture/helper now carry and
-equip the prior chapter's knife without weakening that gate. The corrected
-composed runtime is still unproven.
+equip the prior chapter's knife without weakening that gate.
+
+The corrected composed run passed the ordinary crossing, all four exact named
+controller harvests, exact six-reed/six-drift yield, and the paid Reedhaven
+repair with `ok: true`, `failures: []`. The log has no `ERROR` or `SCRIPT ERROR`:
+`%TEMP%/water-opening-reedhaven-corrected.log`. This remains a bounded Water
+entry fixture, not proof that Stormwood completion supplied the party/tools.
