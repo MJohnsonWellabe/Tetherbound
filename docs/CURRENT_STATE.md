@@ -137,6 +137,14 @@ New CI steps `7e2753721` cover the reward and lightning-cleanup regressions;
 these commits are included in submitted batch `23b7d4acd`, along with a focused
 detached-opponent teardown fix and a CI regression that scans native errors.
 
+Latest `e78a76080` continuation has independently observed new prefix evidence:
+all three Dace wins and both rod switches, then a Lantern Pools charged-window
+wait ending after68.025 wall seconds with131.966 simulation seconds open. Both
+Pools nodes036/037 yield their exact three-glass durable receipt and one pickaxe
+wear each. This proves the bounded weather/receipt repair on this run; the
+process is still continuing toward Rodline Post, not a chapter pass.
+Log: `%TEMP%/stormwood-continuous-e78a76080-20260908.log`.
+
 **Tidewake opening seam, 2026-09-08:** the uninterrupted diagnostic starts at
 the production arrival, walks to Pell, completes his real dialogue, swims
 64.488 m to earn the lesson, and crosses to Reedhaven through ordinary human
@@ -161,6 +169,14 @@ is off the graded route near the summit. The same run rejects ordinary creature
 sites `water_brine_steps_wild_010` and `_011`. Production footing and walked
 approach diagnostics are required, not progression grants or relaxed checks.
 Log: `%TEMP%/water-opening-brine-first.log`, terminal exit 1.
+The local Tovin placement candidate `(395,809)` now passes physical approach:
+ordinary p3/p4/p5 walking, zero resets, all nine Terrain support rays and
+0/8 approach samples over24 degrees. The first candidate run still exits1:
+the probe had not deployed its creature, so the trainer correctly refused its
+live offer. Controller deployment is added to the next probe; no fight or
+placement-completion claim yet. Brine010/011 fail the actual creature footprint
+(steep/missing support), not raw JSON Y, which production already normalizes.
+See `TOVIN-APPROACH.md` and `BRINE-ORDINARY-FOOTING.md` in the build reports.
 
 **ROAD validation reopened, 2026-09-08:** the late-Tidewake traversal diagnostic
 reached Salt Crown but production rejected footing at
