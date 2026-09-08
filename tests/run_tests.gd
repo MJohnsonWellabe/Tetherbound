@@ -48,6 +48,7 @@ extends SceneTree
 ## the expensive tail across every shard instead of stacking it in the last one.
 
 const TESTS_DIR := "res://tests"
+const TEST_CASE := preload("res://tests/test_case.gd")
 
 ## Parsed `--only=` selectors, each `{"file": String, "method": String}` with
 ## `method` empty meaning "every method in this file". Empty array means no
@@ -100,6 +101,17 @@ func _init() -> void:
 			total += 1
 			continue
 		var file_name := path.get_file()
+		# A parseable RefCounted is not necessarily a test case. Accessing its
+		# missing `failures` member aborts this SceneTree before quit(), leaving
+		# an orphan process instead of the required nonzero verdict.
+		if not is_instance_of(instance, TEST_CASE):
+			print("  FAIL  %s :: must extend tests/test_case.gd" % file_name)
+			failure_lines.append("%s: invalid test base" % path)
+			failed += 1
+			total += 1
+			if not instance is RefCounted:
+				instance.free()
+			continue
 
 		for method in _filter_methods(file_name, _test_methods(script)):
 			total += 1
