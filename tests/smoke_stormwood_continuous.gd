@@ -188,6 +188,11 @@ class Segment extends RefCounted:
 		"stormwood_harvest_glowmoss_hollows_037",
 	]
 	const BREAK_WAIT_MS := 120000
+	# Measured on the failed 2026-09-08 run: from Lantern Pools camp to both
+	# charged nodes plus their impact settles consumed about 45.7 simulation
+	# seconds. Require 55 contiguous seconds of the runtime's own open window;
+	# this is route margin, not a weather-duration or wall-clock change.
+	const MIN_CHARGED_ROUTE_SECONDS := 55.0
 	const ARRIVAL_XZ := Vector2(-350.0, 450.0)
 	const HESK_STANCE_XZ := Vector2(-350.0, 447.5)
 	const TAMSIN_STANCE_XZ := Vector2(-300.0, 347.5)
@@ -378,8 +383,7 @@ class Segment extends RefCounted:
 			if node == null:
 				_fail("authored Pools charged node %s is absent" % id)
 				return _result()
-			if not await _activate_node(node, node.get_node_or_null(^"Interactable") as Node3D,
-					Vector2(node.global_position.x, node.global_position.z), id):
+			if not await _harvest_charged_node(node, id):
 				return _result()
 		if int(game.get("inventory").call("count", "stormglass")) < 6:
 			_fail("the two Pools charged nodes did not supply pair B's six Stormglass")
@@ -393,6 +397,12 @@ class Segment extends RefCounted:
 				"stormwood:rodline_linked"):
 			return _result()
 		_note("RELIT pair B with entirely harvested Stormglass")
+		# The route-07 reward and Bryn occupy the same Rodline prompt cluster.
+		# Consume the visible one-time pickup before asking the arbiter for Bryn;
+		# otherwise its slightly nearer Take Good Candy offer correctly wins and
+		# the ordinary chapter conversation is unreachable from this stance.
+		if not await _collect_route_pickup(RODLINE_ROUTE_PICKUP_ID):
+			return _result()
 		if not await _talk_to("Warden-Elect Bryn", Vector2(-700.0, 2297.0),
 				"stormwood:bryn_met", "Bryn's shattered-road account"):
 			return _result()
@@ -402,11 +412,8 @@ class Segment extends RefCounted:
 		_note("COMPLETED Act I through the production task chain at Rodline Post")
 
 		# Act II opens on the named trainer standing at Rodline's far side. The
-		# route-07 reward shares this station, so consume its ordinary visible
-		# prompt first just as the Verge route does; no competing provider may be
-		# mistaken for Varga's challenge.
-		if not await _collect_route_pickup(RODLINE_ROUTE_PICKUP_ID):
-			return _result()
+		# co-located route-07 reward was already consumed before Bryn, so no later
+		# pickup can be mistaken for Varga's challenge.
 		if not await _defeat_trainer("lieutenant_varga_rodline_bridge"):
 			return _result()
 		if not await _wait_flag("stormwood:varga_defeated", 300):
@@ -564,15 +571,94 @@ class Segment extends RefCounted:
 		_begin_phase("%s charged-window wait" % label, at)
 		print("STORMWOOD CONTINUOUS — DIAGNOSTIC: START %s" % _active_phase)
 		while surge != null and Time.get_ticks_msec() - started < BREAK_WAIT_MS:
-			if bool(surge.call("charged_nodes_open_at", Vector3(at.x,
-					world.call("ground_height_at", at.x, at.y), at.y))):
-				print("STORMWOOD CONTINUOUS — DIAGNOSTIC: END %s elapsed_ms=%d" % [
-					_active_phase, Time.get_ticks_msec() - started])
+			var state := _charged_window_snapshot(at)
+			if float(state.get("open_seconds", 0.0)) >= MIN_CHARGED_ROUTE_SECONDS:
+				print("STORMWOOD CONTINUOUS — DIAGNOSTIC: END %s elapsed_ms=%d state=%s" % [
+					_active_phase, Time.get_ticks_msec() - started, str(state)])
 				_end_phase()
 				return true
 			await tree.physics_frame
-		_fail("%s did not reach a Break/Fading charged-node window" % label)
+		_fail("%s did not reach a Break/Fading window with %.1f simulation seconds remaining (last=%s)" % [
+			label, MIN_CHARGED_ROUTE_SECONDS, str(_charged_window_snapshot(at))])
 		return false
+
+
+	func _charged_window_snapshot(at: Vector2) -> Dictionary:
+		var surge := world.get_node_or_null(^"StormwoodSurge")
+		if surge == null:
+			return {}
+		var environment: Dictionary = game.get("realm_environment")
+		var saved: Variant = environment.get("stormwood", {})
+		var raw_elapsed: Variant = saved.get("elapsed", 0.0) if saved is Dictionary else 0.0
+		var elapsed := float(raw_elapsed) if raw_elapsed is float or raw_elapsed is int else 0.0
+		var point := Vector3(at.x, world.call("ground_height_at", at.x, at.y), at.y)
+		var region := str(surge.call("region_at", point))
+		var rules: RefCounted = surge.get("rules") as RefCounted
+		if rules == null:
+			return {}
+		var config: Dictionary = rules.get("config")
+		var region_row: Dictionary = config.get("regions", {}).get(region, {})
+		var rod_flag := str(region_row.get("rod_flag", ""))
+		var flags: RefCounted = game.get("progression") as RefCounted
+		var rod_disabled := not rod_flag.is_empty() and bool(flags.call("has", rod_flag))
+		var aftermath := bool(flags.call("has", "stormwood:long_storm_ended"))
+		var current: Dictionary = rules.call("phase_at", elapsed, region, rod_disabled, aftermath)
+		var next: Dictionary = {}
+		if str(current.get("phase", "")) == "break":
+			next = rules.call("phase_at",
+				elapsed + float(current.get("remaining", 0.0)) + 0.001,
+				region, rod_disabled, aftermath)
+		return {
+			"phase": str(current.get("phase", "")),
+			"remaining": float(current.get("remaining", 0.0)),
+			"next_phase": str(next.get("phase", "")),
+			"next_remaining": float(next.get("remaining", 0.0)),
+			"open_seconds": open_window_seconds(current, next),
+			"elapsed": elapsed,
+			"rod_disabled": rod_disabled,
+			"aftermath": aftermath,
+		}
+
+
+	static func open_window_seconds(current: Dictionary, next: Dictionary = {}) -> float:
+		var phase := str(current.get("phase", ""))
+		var remaining := maxf(0.0, float(current.get("remaining", 0.0)))
+		if phase == "fading":
+			return remaining
+		if phase != "break":
+			return 0.0
+		if str(next.get("phase", "")) == "fading":
+			return remaining + maxf(0.0, float(next.get("remaining", 0.0)))
+		return remaining
+
+
+	func _harvest_charged_node(node: Node3D, id: String) -> bool:
+		var inventory: RefCounted = game.get("inventory") as RefCounted
+		var pickaxe_slot := int(inventory.call("find_slot", "pickaxe"))
+		var count_before := int(inventory.call("count", "stormglass"))
+		var wear_before := int(inventory.call("durability_at", pickaxe_slot)) \
+			if pickaxe_slot >= 0 else -1
+		var at := Vector2(node.global_position.x, node.global_position.z)
+		if not await _activate_node(node, node.get_node_or_null(^"Interactable") as Node3D,
+				at, id):
+			return false
+		var receipt := "harvest_node:order:" + id
+		for _frame in 600:
+			if bool(game.get("progression").call("has", receipt)) \
+					and int(inventory.call("count", "stormglass")) > count_before:
+				break
+			await tree.physics_frame
+		var gained := int(inventory.call("count", "stormglass")) - count_before
+		var wear_after := int(inventory.call("durability_at", pickaxe_slot)) \
+			if pickaxe_slot >= 0 else -1
+		if gained != 3 or not bool(game.get("progression").call("has", receipt)) \
+				or wear_after != wear_before - 1:
+			_fail("%s did not settle its exact receipt/yield/wear (gained=%d receipt=%s wear=%d->%d weather=%s)" % [
+				id, gained, str(bool(game.get("progression").call("has", receipt))),
+				wear_before, wear_after, str(_charged_window_snapshot(at))])
+			return false
+		_note("GATHERED %s exact +3 Stormglass receipt with one pickaxe wear" % id)
+		return true
 
 
 	func _relight_arch(id: String, stance: Vector2, earned_flag: String) -> bool:
