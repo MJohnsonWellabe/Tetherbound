@@ -1274,6 +1274,20 @@ jobs:
       - name: Verify Stormwood constructed arch journey
         if: ${{ !cancelled() }}
         run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_arches.gd
+      - name: Verify solo Stormwood hosted rewards
+        if: ${{ !cancelled() }}
+        run: |
+          set -euo pipefail
+          timeout 30s godot --headless --path . --log-file /tmp/stormwood-hosted-rewards.log --script tests/smoke_stormwood_hosted_rewards.gd
+          test -s /tmp/stormwood-hosted-rewards.log
+          if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-hosted-rewards.log; then exit 1; fi
+      - name: Verify Stormwood lightning warning cleanup
+        if: ${{ !cancelled() }}
+        run: |
+          set -euo pipefail
+          timeout 30s godot --headless --path . --log-file /tmp/stormwood-lightning-cleanup.log --script tests/smoke_stormwood_lightning_cleanup.gd
+          test -s /tmp/stormwood-lightning-cleanup.log
+          if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-lightning-cleanup.log; then exit 1; fi
       - name: Verify Stormwood heartstone interaction
         if: ${{ !cancelled() }}
         run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_crown_heartstone.gd
