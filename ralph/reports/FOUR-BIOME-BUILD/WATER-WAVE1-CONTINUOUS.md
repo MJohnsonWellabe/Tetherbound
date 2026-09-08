@@ -151,3 +151,140 @@ analytic support, not proof of baked collider traversal or combat acceptance.
 8 Water tests / 58 assertions / 0 failures in `.artifacts/water-solm-path-unit.log`.
 Probe evidence `.artifacts/solm-route-height.log` and `solm-route-height2.log`.
 Full-world validation remains queued under root's RAM allocation.
+
+Solm-detour runtime completed once with `--through-tidal-recipe`, exit 1 overall.
+**Opening through Shellwatch passed in one continuous world.** Solm's actual team
+was water_mirejaw + water_mangrove_monitor; surviving ally HP 55.0/340.1. Ordinary
+return and resident-release interaction earned water_shellwatch_residents_freed.
+Camp rest advanced to day 3 and redeployed the recovered retained member. Irva's
+actual water_riptusk + water_cannonback team was defeated; ally HP 166.1/329.4.
+The ordinary pump action earned water_shellwatch_pump_disabled, and the combined
+gate plus actual departure barrier removal were verified. Shellwatch result:
+`ok: true, failures: []`. This runtime validates the changed Solm detour on baked
+terrain and the retained stronger victory/party/progression assertions.
+
+The same live run crossed 112.113 m to Tidal and completed ordinary camp recovery
+to day 4. First new failure was `Tidal basin spine point 3 walk failed:
+player=(602.7661, 34.06974, 1392.609) target=(601.574, 33.934, 1389.434) resets=0`.
+Aquaryn and Iona's recipe remain unproven. Owner save fingerprints unchanged;
+no Godot processes remained. No ERROR or SCRIPT ERROR, with previously disclosed
+terrain/Brine warnings. Evidence `.artifacts/wave1-water-solm-detour.log` and
+`wave1-water-solm-detour-engine.log`; isolated profile and before/after owner
+fingerprints share that prefix. RAM released; no unchanged-code rerun performed.
+The chapter's synthetic carried party/tools remain disclosed; this does not claim
+an earned fresh Stormwood-to-Water handoff.
+
+Tidal point-3 diagnosis: `water_alpha.json` placement.spawn is exactly
+[601.574,1389.434], the failed waypoint. `water_alpha.build()` places the real
+colliding Aquaryn at that center; its peaceful tick requests zero movement.
+The helper therefore demanded entering an occupied creature center before
+requesting its challenge. No terrain slope assumption is needed to establish
+that invalid destination. The final 3.39 m stopping distance alone does not prove
+which slide contact/navigation choice was last; no runtime contact trace exists.
+
+The helper now follows spine point 2, then approaches the actual live Alpha
+from its near side, outside Aquaryn's body_radius() plus the player's actual
+CapsuleShape3D radius plus the unchanged 1 m precise-walk tolerance. It grounds
+that target and fails if it lies outside the unchanged production prompt radius.
+It requires the exact Aquaryn provider to win and receive the controller press;
+no challenge direct-call, fallback/grant, radius expansion or retry. Existing
+level-49 fight, real defeat and personal Stone assertions remain unchanged.
+
+Focused regression verifies the authored waypoint equals the occupied spawn,
+near-side capsule clearance and unchanged prompt eligibility. Current production
+Aquaryn radius is 1.6652163 m, player 0.4 m, derived target distance 3.0652235 m.
+An initial negative assertion incorrectly claimed the old generic 2.5 m center
+itself overlaps; corrected evidence is its 1 m arrival-tolerance near edge can
+overlap (1.5 m < 2.0652163 m). Initial focused run 9 tests/64 assertions/1 failed;
+final 9 tests/64 assertions/0 failed, `.artifacts/water-alpha-stance-final.log`,
+no native or script errors. The occupied-center diagnosis is independent of that
+corrected secondary tolerance assertion. Full-world validation remains queued.
+
+Post-Iona bounded preparation: new `water_earned_swimmer_segment.gd` reuses the
+real physical weakening/throw and five-slot farewell implementation through a
+small default-Meadows `_replacement_realm()` seam (root approved). Water overrides
+the collector because SequenceDirector/starter/name-picker dependencies are not
+present in Water; it binds live CombatManager/ThrowAim signals instead. Caller
+must supply the exact already-engaged compatible ordinary wild, full five belt,
+earned Stone+recipe and carried pickaxe. Actual pending newcomer, unchanged belt
+before farewell, default Keep, outgoing identity, other four identities and
+appended caught identity remain checked by the inherited production-UI ceremony.
+
+After successful capture/farewell, its separate paid-craft method requires actual
+earned affordable materials, walks to the real Tidal camp workbench, selects the
+actual recipe row through controller input, and verifies the exact current
+production cost decrement plus one saddle. It does not directly call craft,
+create resources, equip a saddle or claim mounted travel. No caller is wired yet;
+ordinary target selection/engagement and material acquisition remain to compose.
+
+Verified current saddle data: 8 reed_fiber, 6 driftwood, 4 reef_stone; both personal
+Stone and recipe flags. ItemDB loads these registrations despite stale proposal
+metadata. Runtime-compatible swimmers are water_aquaryn, water_mosshell,
+water_sirenseal, water_riverdrake and water_cannonback; Brooktail is not compatible.
+Tidal land table offers Mosshell/Riverdrake plus noncompatible Cragclaw at 47–49;
+an authored table is not a guaranteed particular live spawn. Actual greater-orb
+pickups exist at Tidal pickup004 (586,1758) and earlier Shellwatch pickup002/019;
+no orb grants or respawn rerolls are part of this helper.
+
+Tidal harvest supply candidates: reed001/008/010 yield3 each; drift009/012 yield3;
+reef005/006 yield2 each. These IDs/coordinates are authored, not walked evidence.
+Reef uses ItemDB's real pickaxe gate; water_pickups supplies no pickaxe/stone
+pickup. Current chapter diagnostic carries only knife+axe and must stop at this
+tool gap. Genuine fresh village earns the pickaxe; the synthetic tool gap is not
+a whole-goal blocker and will not be patched with a grant. Base pickaxe crafting
+costs 3wood4stone2fiber, so assuming reef can bootstrap its own pickaxe is invalid.
+
+Focused new adapter/catalogue/cost plus existing real-Party receipt tests:
+4 tests,35 assertions,0 failed (`.artifacts/water-earned-swimmer-unit.log`).
+Adapter/world/throw/UI integration is unvalidated; no mounted suffix acceptance.
+
+Changed Aquaryn stance runtime (wave2) completed once: terminal exit 1, owner
+fingerprints unchanged, no remaining Godot processes. Opening/Pell/64.487 m lesson,
+paid Reedhaven, Brine and complete Shellwatch all passed on the same live state.
+Tovin survivor HP288.1/358.0; Solm29.6/340.1; Irva195.3/329.4. The Tidal112.113 m
+human crossing and day4 camp recovery passed. The new outside-capsule stance won
+and activated the exact production Aquaryn challenge. **Real Aquaryn defeat
+then earned world completion and the personal Swim Stone.** Thus the changed
+approach and authoritative Alpha combat/reward milestone have runtime evidence.
+
+First failure: `Opening watchdog expired (20 minutes with Reedhaven; 10 minutes
+lesson-only)` during the post-defeat Iona approach. The log did not record a final
+Iona approach pose; it does not prove a specific obstruction or a recipe result.
+Iona's recipe, paid saddle and capture/farewell remain unaccepted. The existing
+watchdog was not raised and this is not reported as a full continuation pass.
+No ERROR or SCRIPT ERROR in engine/output. Previously disclosed terrain/Brine
+warnings and one `strike_intent refused: cooldown` remain recorded.
+Logs: `.artifacts/wave2-water-aquaryn-stance.log` and corresponding `-engine.log`.
+Profile and owner before/after fingerprint files share that prefix. RAM released
+to the authorized Alpha lane; no second Water run launched.
+
+Read-only post-watchdog Iona audit (no world run/code change): output/engine files
+were created16:47:31UTC and last written17:08:27UTC on2026-09-08. Boot log records
+local11:47:35. Individual milestone lines contain no timestamps, so exact Alpha
+completion/Iona-start durations are unavailable. The20-minute SceneTree timer is
+a cumulative whole-path deadline; the log has no independent Iona walk failure.
+
+The isolated automatic save supplies an earlier real pose: slot_0.json written
+17:06:29.043UTC, about118 seconds before terminal, contains world Aquaryn completion
+and personal Swim Stone but no recipe. Grounded player position was
+(703.5404053,45.9484711,1541.1134033), velocity(0.5824291,0,0.6961185). This is
+an autosave observation, not a final failure pose; no save was loaded or changed.
+
+Source places Iona at(691,1553), island center(700,1530)+offset(-9,23), grounded
+to baked terrain. The first helper stance is(693.5,1553). Her0.36m capsule plus
+player0.4m radius fits outside that2.5m stance, unlike the occupied Alpha-center
+bug. There is a concrete terrain concern: nearest authored spine point to the
+saved player has height45.5197m and is3.4741m away. Iona is20.5645m from the spine,
+first stance18.5166m, outside the configured3m flat+15m feather grading extent.
+The production radial formula gives Iona113.4229m and stance113.5228m, versus
+nearest spine45.6810/45.7719m. This indicates a roughly67m shoulder climb between
+the graded road and Iona's ungraded summit location. These are source calculations,
+not a new baked-height/contact measurement; no precise final obstruction is claimed.
+
+Next bounded diagnostic proposal: under a future RAM grant, inspect actual baked
+heights and normals along the saved-pose-to-Iona-stance leg and the NPC's live
+capsule/prompt geometry, without moving progression or claiming a recipe. If the
+baked shoulder confirms source geometry, coordinate a reachable Iona placement
+or physically supported authored approach before another continuous run. Do not
+raise the20-minute timer or reload this save to advance. All Water source remains
+frozen; achieved Stone/no-Iona boundary unchanged.

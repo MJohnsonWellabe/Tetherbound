@@ -1250,6 +1250,34 @@ jobs:
             echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
           done
           exit 1
+      - name: Verify continuous Relay ramp and deck walk
+        if: ${{ !cancelled() }}
+        run: |
+          set -euo pipefail
+          godot --headless --path . --log-file /tmp/relay-deck-walk.log --script tests/smoke_relay_deck_walk.gd
+          if grep -E '^ERROR:|SCRIPT ERROR:' /tmp/relay-deck-walk.log; then
+            echo 'Relay deck walk emitted an engine or script error'
+            exit 1
+          fi
+      - name: Verify earned material source selection
+        if: ${{ !cancelled() }}
+        run: |
+          set -euo pipefail
+          godot --headless --path . --log-file /tmp/earned-material-selection.log --script tests/smoke_earned_material_selection.gd
+          if grep -E '^ERROR:|SCRIPT ERROR:' /tmp/earned-material-selection.log; then
+            echo 'Earned material selection emitted an engine or script error'
+            exit 1
+          fi
+      - name: Verify earned Stormwood input clocks
+        if: ${{ !cancelled() }}
+        run: |
+          set -euo pipefail
+          godot --headless --path . --log-file /tmp/stormwood-engage-clock.log --script tools/probe_stormwood_alpha_admission.gd
+          godot --headless --path . --log-file /tmp/stormwood-fight-clock.log --script tools/probe_stormwood_fight_clock.gd
+          if grep -E '^ERROR:|SCRIPT ERROR:' /tmp/stormwood-engage-clock.log /tmp/stormwood-fight-clock.log; then
+            echo 'Earned Stormwood input controls emitted an engine or script error'
+            exit 1
+          fi
       # Stage B Wave 0: Cloudreach had no smoke in CI, and main shipped with the
       # whole realm unbuilt (cloudreach_world.gd's typed preset loop aborted on an
       # art.json comment key; ralph/reports/MP-0D-SPIKE-HOSTCOST-0905/). This

@@ -2,6 +2,14 @@
 
 **Status:** canonical living product-development roadmap.
 
+**2026-09-08 playable-build update:** Wave 1 is on main
+`bc26b21eec2b96a8fbd8295732007aa67f92198a`, with its own push CI `34252353122`
+green on attempt 1, including all seven multiplayer shards and exported Windows
+runtime verification. The fresh path now proves the earned five and ten training
+wins, but paid camp and uninterrupted opening-to-Tidewake completion remain open.
+This is integration progress, not a Stage E pass; see `CURRENT_STATE.md` and the
+four-biome build reports for the pending Wave 2 route repairs.
+
 **Purpose:** Own the execution sequence from the current two-biome build through multiplayer/art/fixes, Stormwood, Water, a single four-biome product audit and repair pass, and a four-biome beta. Update this document as each stage lands. A fresh Fable or Codex session should be able to read this file, identify the current stage, follow the linked directive, and continue without inventing a new master plan.
 
 > **Core rule:** build → validate → repair → expand. Do not add another biome on top of unresolved systemic problems.

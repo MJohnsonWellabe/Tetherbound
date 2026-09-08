@@ -6,6 +6,10 @@ extends "res://tests/helpers/fresh_opening_segment.gd"
 const CEREMONY_FRAMES := 60 # Same automatic-open bound as smoke_release.
 
 
+func _replacement_realm() -> String:
+	return "meadows"
+
+
 func _fight_until_catchable() -> bool:
 	# The opening driver's fixed 4 m action gate only described its tutorial
 	# matchup. Ask the actual size-aware impact rule for this new wild target.
@@ -46,8 +50,8 @@ func replace_existing(tree: SceneTree, world: Node, game: Node,
 	_rig = rig
 	_started_ms = Time.get_ticks_msec()
 	if tree == null or not is_instance_valid(world) or not is_instance_valid(game) \
-			or str(game.get("current_realm")) != "meadows" or tree.current_scene != world:
-		_fail("earned replacement requires the caller's live Meadows context")
+			or str(game.get("current_realm")) != _replacement_realm() or tree.current_scene != world:
+		_fail("earned replacement requires the caller's live %s context" % _replacement_realm())
 		return _result()
 	if not _collect_world_nodes():
 		return _result()

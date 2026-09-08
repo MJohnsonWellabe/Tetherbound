@@ -444,6 +444,29 @@ func _walk_xz(point: Vector2, label: String, tolerance: float = 1.3,
 func _fight_current(label: String) -> bool:
 	_last_combat_outcome = ""
 	var started := Time.get_ticks_msec()
+	var previous_scale := Engine.time_scale
+	var previous_hz := Engine.physics_ticks_per_second
+	var ally_instance := _director.call("ally_instance") as RefCounted
+	var enemy_instance := _manager.call("enemy") as RefCounted
+	var counts := {"player_hits": 0, "enemy_hits": 0, "player_misses": 0,
+		"enemy_misses": 0, "damage_dealt": 0.0, "damage_taken": 0.0}
+	var on_hit := func(on_enemy: bool, amount: float) -> void:
+		var hits := "player_hits" if on_enemy else "enemy_hits"
+		var damage := "damage_dealt" if on_enemy else "damage_taken"
+		counts[hits] += 1
+		counts[damage] += amount
+	var on_miss := func(by_player: bool) -> void:
+		counts["player_misses" if by_player else "enemy_misses"] += 1
+	_manager.connect("hit_landed", on_hit)
+	_manager.connect("attack_missed", on_miss)
+	_note("FIGHT start %s ally=%s enemy=%s" % [label,
+		_fighter_snapshot(ally_instance), _fighter_snapshot(enemy_instance)])
+	# The physical action cadence below is wall-clock based. Keep production
+	# combat on that same clock, as with the explicit Engage edge.
+	await _tree.process_frame
+	Engine.time_scale = 1.0
+	Engine.physics_ticks_per_second = 60
+	await _tree.process_frame
 	var next_quick_ms := 0
 	var tick := 0
 	var release_tick := -1
@@ -468,10 +491,26 @@ func _fight_current(label: String) -> bool:
 		await _tree.physics_frame
 	_set_action(&"combat_quick", false)
 	_drive_stick.call(0.0, 0.0)
+	_manager.disconnect("hit_landed", on_hit)
+	_manager.disconnect("attack_missed", on_miss)
+	await _tree.process_frame
+	Engine.time_scale = previous_scale
+	Engine.physics_ticks_per_second = previous_hz
+	_note("FIGHT end %s outcome=%s elapsed_ms=%d ally=%s enemy=%s strikes=%s" % [
+		label, _last_combat_outcome, Time.get_ticks_msec() - started,
+		_fighter_snapshot(ally_instance), _fighter_snapshot(enemy_instance), counts])
 	if bool(_manager.call("is_fighting")) or _last_combat_outcome.is_empty():
 		return _fail("combat during %s did not resolve and publish an outcome" % label)
 	_note("RESOLVED live route encounter during %s (outcome=%s)" % [label, _last_combat_outcome])
 	return true
+
+
+static func _fighter_snapshot(creature: RefCounted) -> Dictionary:
+	if creature == null:
+		return {}
+	return {"species": creature.get("species_id"), "level": creature.get("level"),
+		"hp": creature.get("hp"), "max_hp": creature.get("max_hp"),
+		"fainted": creature.get("fainted"), "resting": creature.get("resting")}
 
 
 func _clear_capacitor_alpha() -> bool:
@@ -517,9 +556,11 @@ func _clear_capacitor_alpha() -> bool:
 				_activated_provider_path = ""
 				var observer := Callable(self, "_on_arbiter_activated")
 				_arbiter.activated.connect(observer)
-				await _tap(&"interact")
+				var pressed := await _tap_named_engage(body)
 				if _arbiter.activated.is_connected(observer):
 					_arbiter.activated.disconnect(observer)
+				if not pressed:
+					continue
 				if bool(_manager.call("is_fighting")) \
 						and _manager.call("enemy_body") != body:
 					return _fail("explicit named Alpha Engage admitted a different body")
@@ -548,6 +589,27 @@ func _named_engage_ready(body: Node3D) -> bool:
 	return _director.call("_engageable") == body \
 		and _arbiter.call("winning_provider") == _director \
 		and bool(offer.get("actionable", false))
+
+
+func _tap_named_engage(body: Node3D) -> bool:
+	# Match the existing Cloudreach controller driver: physical edges must land
+	# between physics batches. At 8x the old press/release could both occur in
+	# one batch and the arbiter observed neither (activated signal stayed empty).
+	var previous_scale := Engine.time_scale
+	var previous_hz := Engine.physics_ticks_per_second
+	await _tree.process_frame
+	Engine.time_scale = 1.0
+	Engine.physics_ticks_per_second = 60
+	await _tree.process_frame
+	# The candidate may move while clocks settle. Never press an old offer.
+	var pressed := _named_engage_ready(body) and bool(_arbiter.call("enabled")) \
+		and INPUT_OWNER.current(_tree) == null and not _tree.paused
+	if pressed:
+		await _tap(&"interact") # unchanged single press: two held + four settle frames
+	await _tree.process_frame
+	Engine.time_scale = previous_scale
+	Engine.physics_ticks_per_second = previous_hz
+	return pressed
 
 
 func _alpha_admission_snapshot(body: Node3D) -> Dictionary:
