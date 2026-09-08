@@ -64,4 +64,3 @@ Dace is not claimed.
   `%TEMP%/root-stormwood-hosted-rewards.log`.
 - Continuous script check-only parse passed after the outcome/recovery change;
   log `%TEMP%/stormwood-continuous-outcome-check.log`.
-
