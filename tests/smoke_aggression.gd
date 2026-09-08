@@ -91,6 +91,9 @@ func _run() -> void:
 	# standing next to them. The order is the fix; the species check below is the
 	# belt to its braces.
 	await _a_peaceful_creature_never_does()
+	if not _failures.is_empty():
+		_report()
+		return
 	await _an_aggressive_creature_starts_the_fight_itself()
 	_report()
 
@@ -163,7 +166,8 @@ func _collect_nodes() -> bool:
 ## Walk within notice range and then stop. Nothing is pressed after this point.
 func _an_aggressive_creature_starts_the_fight_itself() -> void:
 	var wild: Node3D = _director.call("aggressive_creature") as Node3D
-	await _walk_towards(wild, 10.0)
+	if not await _walk_towards(wild, 10.0):
+		return
 
 	var started := false
 	var closed_from := _player.global_position.distance_to(wild.global_position)
@@ -219,7 +223,8 @@ func _a_peaceful_creature_never_does() -> void:
 		return
 
 	var wild: Node3D = _director.call("wild_creature") as Node3D
-	await _walk_towards(wild, 2.5)
+	if not await _walk_towards(wild, 2.5):
+		return
 
 	var distance := _player.global_position.distance_to(wild.global_position)
 	var species := str(wild.get("species_id"))
@@ -245,16 +250,21 @@ func _a_peaceful_creature_never_does() -> void:
 		_fail("no engage prompt next to the peaceful creature; it cannot be fought at all")
 
 
-func _walk_towards(wild: Node3D, stop_at: float) -> void:
+func _walk_towards(wild: Node3D, stop_at: float) -> bool:
 	var stuck_frames := 0
 	var stuck_check_pos := _player.global_position
+	var initial := _player.global_position
 	for i in WALK_FRAMES:
 		var to := wild.global_position - _player.global_position
 		to.y = 0.0
-		if to.length() <= stop_at:
+		if _player.global_position.distance_to(wild.global_position) <= stop_at:
 			break
 		if bool(_manager.call("is_fighting")):
 			break
+		if i % 400 == 0:
+			print("AGGRESSION APPROACH frame=%d player=%s target=%s distance=%.2f velocity=%s locomotion=%s grounded=%s wall=%s stuck=%d" % [
+				i, _player.global_position, wild.global_position, to.length(), _player.velocity,
+				_player.call("locomotion_enabled"), _player.is_on_floor(), _player.is_on_wall(), stuck_frames])
 
 		var heading := to.normalized()
 		if stuck_frames > UNSTICK_AFTER_FRAMES:
@@ -280,6 +290,20 @@ func _walk_towards(wild: Node3D, stop_at: float) -> void:
 	Input.action_release("move_forward")
 	for i in 10:
 		await physics_frame
+	# CI 34208280455's first attempt exhausted its approach then waited for an
+	# ambush from 116.1m away. Neither an ambush failure nor peaceful restraint
+	# is meaningful without the promised proximity. A real fight during the
+	# approach is preserved for the callers' exact opponent/peacefulness checks.
+	if bool(_manager.call("is_fighting")):
+		return true
+	var remaining := _player.global_position.distance_to(wild.global_position)
+	if remaining > stop_at:
+		_fail("approach never reached %s within %.1fm: start=%s player=%s target=%s distance=%.2f velocity=%s locomotion=%s grounded=%s wall=%s" % [
+			str(wild.get("display_name")), stop_at, initial, _player.global_position,
+			wild.global_position, remaining, _player.velocity, _player.call("locomotion_enabled"),
+			_player.is_on_floor(), _player.is_on_wall()])
+		return false
+	return true
 
 
 func _press(action: String) -> void:
