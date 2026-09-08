@@ -431,3 +431,28 @@
 - The teleport smoke now covers all 58 curated destinations in its working-tree
   extension. It passes parser checks but awaits its full-world runtime slot; the
   previously recorded four-realm crossing run remains the last completed proof.
+
+## Checkpoint 13 — 2026-09-08, parallel playable-path validation
+
+- Main remains integrated through merge `01f85b2b356de72689eb90e42242e42ae64d5dfb`
+  (main `f6b79a6b32983d3b60f7333d8b44706736701474`). No push interrupts the
+  current CI run `34195296547` on `7415602f5`; its terminal verdict is pending.
+- Salt Crown coordinate-only footing repair committed locally as `4e459e604`.
+  All seven ROAD sites admit 2/2 production creatures; four repaired populated
+  segments pass 24 m real-stick walks. Ordinary Salt wild sites 011/012/013 remain
+  open. Details: `road-visual-creatures/SALT-FOOTING-REPAIR.md`.
+- Expanded `smoke_realm_teleport.gd` exits 0: all 58 curated Settings destinations
+  land through production teleport, all four realm crossings complete with overlay
+  checks, and one second of resumed physics leaves the player above terrain.
+  Log `.artifacts/realm-teleport-all58.log` has no ERROR or SCRIPT ERROR lines.
+  It does log three severed-spoke recoveries near South Bridge (0,1330) and Old
+  Mill Crossing (-152,4203). Those landings need further inspection: a recovery
+  can satisfy the final height assertion without remaining at the requested spot.
+- Teleport traversal additionally exposes ROAD footing warnings at Tidal Cradle
+  02/03, Sluice 02/03/05 and Veilfall 03. Functional coverage is not deferred or
+  claimed closed. The backlog wording now distinguishes the 12 representative
+  frames from this broader open coverage requirement.
+- Bex's arrival-spine placement repair awaits actual fight/control validation;
+  Sluice's short production footing probe runs first. CI monitoring, Bex analysis,
+  ROAD analysis and root integration run in parallel; full-world smokes serialize
+  for RAM only. No continuous fresh-save completion is claimed.
