@@ -160,7 +160,7 @@ establish earned Stormwood-to-Water campaign continuity or progression beyond
 Reedhaven. Logs: `%TEMP%/water-opening-reedhaven-first.log` and
 `%TEMP%/water-opening-reedhaven-corrected.log`.
 
-**Tidewake Brine blocker, 2026-09-08:** the optional level-44 carried-party
+**Tidewake Brine blocker repaired locally, 2026-09-08:** the optional level-44 carried-party
 diagnostic repeats the opening/Reedhaven pass and physically crosses 107.088 m
 to Brine Steps, but fails its Tovin approach. The player stalls at
 `(408.952,43.667,733.921)` toward `(433,75.917,683)` with zero confined resets.
@@ -177,6 +177,14 @@ live offer. Controller deployment is added to the next probe; no fight or
 placement-completion claim yet. Brine010/011 fail the actual creature footprint
 (steep/missing support), not raw JSON Y, which production already normalizes.
 See `TOVIN-APPROACH.md` and `BRINE-ORDINARY-FOOTING.md` in the build reports.
+Subsequent committed placement657fd49ef passes the uninterrupted opening-to-Brine
+replay: Pell/64.488m lesson, four Reedhaven receipts and paid repair,107.088m
+crossing, graded approach, both authored Tovin opponents, surviving ally294.5/358,
+and both durable victory/trial flags. Root independently read failures[] and
+terminal output; no native ERROR/SCRIPT ERROR. Log:
+`%TEMP%/water-opening-brine-tovin-repaired.log`, exit0. This closes the local
+Tovin blocker, not an earned Stormwood handoff or the whole Water chapter.
+Original ordinary spawn010/011 warnings remain separately under repair.
 
 **ROAD validation reopened, 2026-09-08:** the late-Tidewake traversal diagnostic
 reached Salt Crown but production rejected footing at
