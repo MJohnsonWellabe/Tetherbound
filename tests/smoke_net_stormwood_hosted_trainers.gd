@@ -242,6 +242,16 @@ func _run() -> void:
 		if str(aimed.get("verdict", "")) != "PASS":
 			quit(await finish())
 			return
+		# A replicated position does not prove the host has the facing used by
+		# the actual move cone. Require the production quick geometry as well;
+		# this waits for replication, never changes the host body or hit rules.
+		var ready := await _await_host_quick_geometry()
+		var geometry: Dictionary = ready.get("quick_geometry", {}) as Dictionary
+		check(bool(geometry.get("connects", false)),
+			"host quick geometry connects before the finishing input: %s" % str(geometry))
+		if not bool(geometry.get("connects", false)):
+			quit(await finish())
+			return
 		var pressed := await step(1, "stormwood_hosted_quick", {"settle": 150, "ready_budget": 600})
 		check(str(pressed.get("verdict", "")) == "PASS", "client submitted real combat input for hosted round %d: %s"
 			% [expected_round, str(pressed.get("detail", ""))])
@@ -361,6 +371,20 @@ func _stage_client_for_current_opponent() -> Dictionary:
 		return {"verdict": "FAIL", "detail": "host follower never reached the aimed position"}
 	return {"verdict": "PASS", "detail": "host follower is %.2fm from the aimed position"
 		% host_at.distance_to(stand)}
+
+
+func _await_host_quick_geometry() -> Dictionary:
+	var last: Dictionary = {}
+	for tick in 180:
+		var raw: Variant = await probe(0, "stormwood_hosted_trainer", {
+			"trainer": TRAINER, "peer": _client_peer_id,
+		})
+		last = raw as Dictionary if raw is Dictionary else {}
+		var geometry: Dictionary = last.get("quick_geometry", {}) as Dictionary
+		if bool(geometry.get("available", false)) and bool(geometry.get("connects", false)):
+			return last
+		await step(0, "wait", {"frames": 1})
+	return last
 
 
 func _await_host_body_near(at: Vector3, tolerance: float = BODY_SYNC_M) -> Dictionary:
