@@ -40,6 +40,15 @@ and 12 representative frames do not establish continuous live coverage of these
 sites. Measure the surviving creatures along this played route and repair any
 coverage gap before treating the functional ROAD closure below as complete.
 
+**Late Tidewake approach open, 2026-09-08:** the synthetic-start traversal
+diagnostic completed Tidal Cradle -> Salt Crown, the Salt chart interaction,
+and Salt Crown -> Sluice Isle with the same mount and no post-departure resource
+or position injection. It then failed to reach Bex from the exploration spine:
+player `(832.01, 74.63, 2870.74)`, challenge target `(872, 116.22, 2940)`.
+The approximately 80 m horizontal / 42 m vertical separation requires a real
+route-versus-placement diagnosis; a navigator failure alone does not prove
+the terrain is impassable. No Bex victory or later finale is claimed.
+
 ### Consolidation baseline — historical, before PR #80 repairs
 
 **Every branch that carried unique work is merged onto `codex/four-biome-push-0907`
