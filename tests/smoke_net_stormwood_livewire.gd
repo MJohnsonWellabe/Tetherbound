@@ -137,10 +137,12 @@ func _run_livewire() -> void:
 	var charged := str((client_state.get("local_card", {}) as Dictionary).get("charged", ""))
 	check(not charged.is_empty(), "the deployed card has an authored charged move")
 	# Keep one real opponent alive across all three timing comparisons. This
-	# fixture changes only host-owned HP; every strike, timer and verdict still
-	# traverses the production authority path.
+	# timing fixture keeps the target stationary as well: movement during the
+	# network staging round trip otherwise produces legitimate accepted misses.
+	# Every strike, timer, hit check and verdict uses production authority.
+	# The ordinary hosted-trainer smoke retains the moving enemy AI coverage.
 	var health := await step(0, "stormwood_hosted_fixture_health", {
-		"trainer": TRAINER, "hp": 100000.0,
+		"trainer": TRAINER, "hp": 100000.0, "stationary_target": true,
 	})
 	check(str(health.get("verdict", "")) == "PASS", "fixture kept one hosted round alive")
 	host_state = await _await_hosted(0, true)

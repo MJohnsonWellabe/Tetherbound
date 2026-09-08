@@ -402,3 +402,30 @@
   earned-state composition remains required before milestone acceptance.
 - `docs/CURRENT_STATE.md` now distinguishes PR #80 branch repairs from the historical
   PR #79 baseline. Reconciliation commit `ffbbaf375` is local until CI finishes.
+
+## Checkpoint 12 — 2026-09-08 01:36 CDT
+
+- CI run `34193395389` completed with 25 passing jobs, one failure and three
+  skips. All seven multiplayer job conclusions were read: only shard 2 failed.
+  Gate-B core passed first attempt, all unit shards and solo regression passed;
+  export and the two known-red optional jobs were skipped.
+- The remaining Livewire failure is an accepted miss, not a cooldown refusal:
+  action 805 advanced the host's accepted-action ID without reducing HP. Its
+  staging helper had waited 60 physics frames and only checked the follower
+  against the old target position. The timing-only health fixture now opts into
+  a stationary host target. Production hit, damage, action-ID and deadline checks
+  remain unchanged; the ordinary hosted-trainer smoke retains moving enemy AI.
+  Independent review found no P0/P1 issue. Both changed scripts parse, and focused
+  Livewire/hosted tests pass 8 tests / 34 assertions. CI owns the next two-peer
+  runtime verdict while the local full-world slot serves Tidewake progression.
+- The late-Tidewake synthetic-start diagnostic completed both first crossings,
+  grounded landings and the actual Salt Crown chart interaction. It failed on
+  the Bex approach. A follow-up is testing the omitted Twin Pumps route waypoint
+  before changing production placement; no claim of impassable terrain is made.
+- A production footing probe measured the Salt Crown ROAD failure: sites 01/02/03/05
+  are 57-74 m from the authored four-metre road, with steep footprint height changes
+  and normals below the existing support threshold. A coordinate-only repair is
+  underway. No footprint, slope, ray or creature-size contract is weakened.
+- The teleport smoke now covers all 58 curated destinations in its working-tree
+  extension. It passes parser checks but awaits its full-world runtime slot; the
+  previously recorded four-realm crossing run remains the last completed proof.

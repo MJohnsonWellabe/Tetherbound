@@ -2353,13 +2353,19 @@ func _step_stormwood_hosted_fixture_health(args: Dictionary) -> Dictionary:
 	if opponent == null or instance == null:
 		return {"verdict": "FAIL", "detail": "host has no live opponent to stage"}
 	(instance as RefCounted).set("hp", hp)
+	# The Livewire timing witness holds its target still so a valid cooldown
+	# admission cannot be confused with a moving-target miss. Ordinary hosted
+	# combat leaves this false and continues to exercise production enemy AI.
+	if bool(args.get("stationary_target", false)):
+		opponent.set_physics_process(false)
+		opponent.set("velocity", Vector3.ZERO)
 	var authority: RefCounted = fight.get("authority")
 	var record: Dictionary = fight.get("record") as Dictionary
 	authority.call("set_opponent_hp", str(record.get("encounter_id", "")), hp,
 		float((instance as RefCounted).get("max_hp")))
 	fight.call("_snapshot")
-	return {"verdict": "PASS", "detail": "TEST FIXTURE staged host-owned '%s' round %d to %.1f hp"
-		% [trainer_id, int(fight.get("round_index")), hp]}
+	return {"verdict": "PASS", "detail": "TEST FIXTURE staged host-owned '%s' round %d to %.1f hp; stationary_target=%s"
+		% [trainer_id, int(fight.get("round_index")), hp, bool(args.get("stationary_target", false))]}
 
 
 ## Sends intentionally untrusted fields down the same Session RPC as a client.
