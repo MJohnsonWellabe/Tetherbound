@@ -2497,15 +2497,27 @@ func _step_stormwood_hosted_deadline_window(args: Dictionary) -> Dictionary:
 	var target := int(args.get("target_ms", 0))
 	var minimum := int(args.get("minimum_ms", 0))
 	var last: Dictionary = {}
+	var entered_ms := Time.get_ticks_msec()
+	var first_remaining := 0
+	var previous_now := entered_ms
+	var largest_sample_gap := 0
 	for tick in 180:
 		last = _execute_probe({"what": "stormwood_hosted_trainer", "args": args}) as Dictionary
 		var authority: Dictionary = last.get("host_authority", {}) as Dictionary
 		if not bool(last.get("is_host", false)) or int(authority.get("deadline_ms", 0)) != wanted:
 			return {"verdict": "FAIL", "detail": "host deadline missing or changed", "data": last}
-		var remaining := wanted - int(authority.get("host_now_ms", 0))
+		var sampled_now := int(authority.get("host_now_ms", 0))
+		var remaining := wanted - sampled_now
+		if tick == 0:
+			first_remaining = remaining
+		largest_sample_gap = maxi(largest_sample_gap, sampled_now - previous_now)
+		previous_now = sampled_now
 		if remaining <= target:
 			return {"verdict": "PASS" if remaining >= minimum else "FAIL",
-				"detail": "host sampled %dms before deadline (required %d..%dms)" % [remaining, minimum, target],
+				"detail": ("host sampled %dms before deadline (required %d..%dms); "
+					+ "entry_remaining=%dms samples=%d elapsed=%dms max_sample_gap=%dms") % [
+					remaining, minimum, target, first_remaining, tick + 1,
+					sampled_now - entered_ms, largest_sample_gap],
 				"data": last}
 		await physics_frame
 	return {"verdict": "FAIL", "detail": "host window wait exceeded 180 frames", "data": last}
