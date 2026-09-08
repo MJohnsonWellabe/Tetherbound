@@ -109,13 +109,20 @@ const PAN_SPEED_MPS := 1200.0
 ## cell is invisible on screen anyway.
 const REDRAW_MOVE_EPSILON := 2.0
 
+## Restore the map-specific legibility contract without replacing the
+## Cloudreach map layout or its realm/fog handling. These are the original
+## N06 values; the minimap already uses the same opaque marker backing.
+const CANVAS_OUTLINE_SIZE := 10
+const MARKER_KNOCKBACK := Color(0.04, 0.06, 0.07, 1.0)
+const MARKER_KNOCKBACK_SKIRT := 3.0
+
 ## Canvas text sizes — bumped from `UITokens.FONT_TINY`/`FONT_LABEL` (19/23)
 ## for the same handheld-legibility reason `ICON_SIZE` above is bumped. These
 ## are read raw by `draw_string`/`draw_string_outline`, never by a `Label`
 ## node, so `UITokens.make_text_legible()`'s automatic outline pass (which
 ## only walks `Label`/`RichTextLabel` children) never reaches them — every
 ## canvas text draw below goes through `_draw_string_legible()` instead,
-## which applies the SAME `UITokens.OUTLINE`/`OUTLINE_SIZE` treatment by
+## which applies `UITokens.OUTLINE` with the map-specific outline size by
 ## hand, so a region name or destination label reads against any terrain
 ## colour underneath it rather than only the darkest ones.
 ## OP21-15's own bump (26/20, from the shared 19/23 UITokens defaults) still
@@ -843,8 +850,8 @@ func _spread_callouts(entries: Array[Dictionary], top: float, bottom: float) -> 
 ## multi-coloured baked terrain texture, so it needs the SAME outline
 ## treatment applied by hand rather than going unplated.
 func _draw_string_legible(canvas: Control, font: Font, baseline: Vector2, text: String, alignment: HorizontalAlignment, width: float, font_size: int, colour: Color) -> void:
-	canvas.draw_string_outline(font, baseline, text, alignment, width, font_size, UITokens.OUTLINE_SIZE, UITokens.OUTLINE)
-	canvas.draw_string(font, baseline, text, alignment, width, font_size, colour)
+	canvas.draw_string_outline(font, baseline, text, alignment, width, font_size, CANVAS_OUTLINE_SIZE, UITokens.OUTLINE)
+	canvas.draw_string(font, baseline, text, alignment, width, font_size, label_core_colour(colour))
 
 
 func _draw_callout_heading(canvas: Control, text: String, rect: Rect2, alignment: HorizontalAlignment) -> void:
@@ -960,7 +967,8 @@ func _draw_icon(canvas: Control, map_rect: Rect2, entry: Dictionary, alpha: floa
 	# landmark now gets one, sized down for minor/generic categories so a
 	# major destination still reads as visually heavier on the map.
 	var plate_scale := 0.58 if category == "major" else 0.48
-	canvas.draw_circle(point, marker_size * plate_scale, Color(0.02, 0.03, 0.04, 0.72))
+	canvas.draw_circle(point, marker_size * plate_scale + MARKER_KNOCKBACK_SKIRT, Color(MARKER_KNOCKBACK, 0.5))
+	canvas.draw_circle(point, marker_size * plate_scale, MARKER_KNOCKBACK)
 	canvas.draw_texture_rect(tex, Rect2(point - size * 0.5, size), false, Color(1, 1, 1, alpha))
 
 
