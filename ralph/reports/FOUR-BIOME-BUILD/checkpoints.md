@@ -97,3 +97,88 @@
   Dynamo, render and independently judge the Galecrest pilot, validate the
   Swim-Stone late-join fix, then land ROAD-VISUAL's zero-sample four-biome pass and
   push one material CI wave.
+
+## Checkpoint 3 — 2026-09-07 18:38 CDT
+
+- Player-visible capability added since checkpoint 2: a 1.90–7.20 m creature ladder,
+  vivid authored colourways for all 32 later-biome species, host-owned named
+  Stormwood/Crown encounters, the Dynamo-to-Waterward ending, late-join Swim Stone
+  entitlement, and persisted/replicated selection for all four trainer bodies are on
+  the branch. Runtime acceptance remains listed below rather than inferred from code.
+- Paths newly reachable: Stormwood's implemented route reaches the Waterward reveal
+  and grants the Water key. A post-merge static audit corrected the prior handoff:
+  there is still no production Water RealmGate or ordinary `enter_realm("water")`
+  caller, so ordinary Stormwood-to-Water travel remains a P0 rather than being claimed
+  reachable. Settings retains 58 debug destinations for testing but debug travel does
+  not count toward the playable milestone.
+- Systems newly working in evidence: the save rewrite and two-bed autosave soak pass;
+  the map/minimap rollback passes repeated-open checks; all 36 statically sampled road
+  routes report at least two forward creatures. The first 12-frame production road
+  capture passed 9 and exposed three real footing/framing misses now under repair.
+- Content added: 32 later-biome roster mappings; 69 creature presentations above the
+  1.80 m trainer; deterministic ROAD pairs across all four biomes; Stormwood named,
+  Crown, Dynamo, release, aftermath and Waterward content; Water late-join entitlement.
+- Main merge: `296f7aa1d2ab48990ecdfb3ced7c2a69e4699545`, whose second parent is current fetched
+  `origin/main` at `22fe512af9702009c2c4d77e7fb18e6dc8143fcc` (PRs #81–#83 included).
+- Corrected scheduler: the Godot lock now covers import/re-import/export/render writes
+  only. Unit tests, cache-reading probes and headless smokes may run beside a render;
+  full-world Terrain3D smokes remain mutually serialized for RAM. Player-path work
+  preempts build-size work.
+- Deferred and recorded: BUILD-SIZE's Compatibility A/B, deep split-realm liveness,
+  and the blocked two-peer Livewire smoke are in `docs/SECOND_PASS_BACKLOG.md` with
+  existing evidence. Galecrest is not declared deferred or finished: round 1 was
+  rejected and the owner amendment leaves up to two further mesh rounds.
+- CI: run `34169556676` completed on the old batched head `13946f297`: 16 jobs passed,
+  eight failed, shard 5 was cancelled at its 30-minute ceiling, and four downstream
+  jobs were skipped. Every failure was read as a diagnostic, not as proof. The next
+  push batches the three failures called out by the owner and the scale-regression
+  cluster they exposed, then that full run will be allowed to finish.
+- New focused evidence after merging main: four-biome Settings teleport coverage is
+  green (3 tests / 394 assertions); save migration/corrupt-load/autosave/map-fog is
+  green (70 / 398); Stronghold is green after growing the smaller machine and chamber
+  around the enlarged bound Veridian (21.5 x 19.5 x 15.6m machine, 7.67m cage,
+  7.08m creature, 0.59m internal headroom).
+- Blockers: ROAD's real Windscar/Water captures; the three owner-named CI defects
+  (direction-aware improved baseline, measured shard-5 split/orphan cleanup, and the
+  real shard-7 failure); the missing ordinary Stormwood-to-Water gate; continuous solo
+  Dynamo, Swim Stone and four-biome path proofs.
+- Next highest-value task: fix those three CI defects without weakening tests, push
+  once, read every completed job, then validate Dynamo, Swim Stone and ROAD in that
+  player-path order.
+
+## Checkpoint 4 — 2026-09-07 19:20 CDT
+
+- Player-visible capability added since checkpoint 3: the ROAD runtime pass now
+  shows at least two fully framed forward creatures at all 12 authored four-biome
+  stands; enlarged creatures can stage at their full 7.60 m combat formation in the
+  Warden Arena; large mounts use body-surface reach; throw assist no longer turns a
+  clear 50-degree miss into a lock; and the Spark's 0.75 cooldown power is resolved
+  from a host-validated relic identity rather than a client-supplied number.
+- Three owner-named CI repairs are ready in one batch. ROAD's historical failure
+  baseline is direction-aware (`<=`) while route/sample identity stays exact and a
+  deliberately worse fixture still fails. Multiplayer shards now use measured-cost
+  deterministic LPT packing, isolate split-realms, prove exact coverage, and kill
+  each smoke's entire process group on every exit. Hosted Stormwood readiness now
+  separates the real 12 m trainer challenge radius from 1.5 m actor replication.
+- Focused combined proof is green: 153 tests, 12,001 assertions, 0 failures across
+  ROAD/spawns/Cloudreach, scale-sensitive gameplay, Livewire, rideable/route boxes,
+  Stormwood catalogue and ending, Water relic/map state, save/autosave/map fog, and
+  all four Settings teleport destinations. The full-world Warden Arena smoke is
+  green with 22 assertions at open and after 120 frames.
+- ROAD production evidence is green at all 12 stands (minimum two forward and two
+  framed creatures per stand). A code-blind judge recorded, but did not iterate,
+  four visual rejections; the worst pileups/crops are listed in
+  `docs/SECOND_PASS_BACKLOG.md` as required by playable-first.
+- Hosted multiplayer boundary: the local two-peer Stormwood run is not claimed as a
+  pass. It reached its own 300-second cold-world startup deadline before either
+  runtime became ready, so the semantic checks did not execute. Both scripts pass
+  static check-only, all child Godot processes exited, and the batched CI run owns
+  the connected verdict.
+- Main merge remains `296f7aa1d2ab48990ecdfb3ced7c2a69e4699545` with merged-main
+  parent `22fe512af9702009c2c4d77e7fb18e6dc8143fcc`. No post-merge push has been made
+  yet; the next action is a single coherent push and a complete job-by-job verdict.
+- Still blocking the playable milestone after this CI batch: implement the missing
+  ordinary Stormwood-to-Water gate and atomic Water entitlement transition, then
+  execute the production realm-transition and continuous solo path smokes through
+  the Water ending. Build-size A/B, visual polish, full density/performance, and
+  multiplayer depth remain recorded second-pass work.
