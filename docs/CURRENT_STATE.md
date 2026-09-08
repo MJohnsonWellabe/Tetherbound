@@ -15,7 +15,14 @@ remain in `docs/SECOND_PASS_BACKLOG.md`; they are not claimed passed.
 PR #79 landed at `7ab4a12647a377a400c43335b64aff8b03ca6d43`. Current work is on
 `codex/four-biome-wave0`, PR #80, which includes main through `f6b79a6b3` via
 merge `01f85b2b356de72689eb90e42242e42ae64d5dfb`. The latest submitted batch is
-`23b7d4acd935b508d53769a71e434857de1de41c`; CI run `34208280455` is queued.
+`23b7d4acd935b508d53769a71e434857de1de41c`; CI run `34208280455` completed
+with 26 passing jobs and three skips. All seven multiplayer shards passed on
+their first attempts, including Livewire and Tamsin. Combat's aggression smoke
+failed its first attempt after the player never approached closer than the
+reported 116.1 m, then passed attempt two. This is a retry finding, not a clean
+validation. Checked proximity and approach telemetry are prepared in
+`1765092fc`; the physical approach cause remains under diagnosis. Full job
+review: `ralph/reports/FOUR-BIOME-BUILD/CI-34208280455.md`.
 The preceding batch `226aaf070168b71e36bc6ee1eaf150c4148613af`, run `34205399274`, completed
 with 25 passing jobs, three skips and one failure. Only multiplayer shard 2
 failed: Livewire's remote polling missed its narrow pre-deadline observation
@@ -23,7 +30,8 @@ window; gameplay hit/refusal and action-sequence checks passed. The exact
 remaining time at the failed observation was not logged. Local repair
 `12c7d76e0` samples that unchanged window on host physics frames, without
 changing deadlines or combat. A Windows two-peer run passes with samples at
-316 ms and 331 ms; the next CI verdict is required.
+316 ms and 331 ms. Subsequent Linux CI `34208280455` passes first-attempt at
+345 and 348 ms, including unchanged early-action refusal checks.
 The preceding batch `c5012fff0d4286db42b76de34386ab37efcd3d1c`, run `34201147829`, completed
 with 25 passing jobs, three skips and one failure: multiplayer shard 4's hosted
 Tamsin smoke did not advance round 0 after its finishing input. The subsequent
@@ -116,8 +124,14 @@ boundaries in `ralph/reports/FOUR-BIOME-BUILD/WATER-LATE-CONTINUOUS.md`.
 Venn's reused NPC body was hundreds of metres above the graded approach.
 Coordinate-only repair `d251f735e` puts him on the spine; real-stick traversal
 walks 349.49 m with zero resets and obtains an actionable production challenge
-offer. It proves approach, not victory or the ending. A full synthetic-start
-late-chapter continuation is running with no post-departure progression writes;
+offer. The subsequent synthetic-start late-chapter continuation also defeated
+all three Venn opponents after the physical hike, entered Veilfall, redeployed
+and opened both interior controls without post-departure fixture writes.
+It then lost to Nerissa: the single Aquaryn entered after Venn with
+250.9/708.4 HP and fainted during the second opposing creature. This does not
+prove a normal five-creature campaign is blocked; ordinary intervening recovery
+is being prepared. The ending remains unproven. Exact terminal log:
+`C:/Users/mattj/AppData/Local/Temp/water-continuous-full-20260908-0358.log`;
 see `ralph/reports/FOUR-BIOME-BUILD/VENN-APPROACH.md`.
 
 **Earlier late Tidewake attempts (superseded by follow-ups above):** the synthetic-start traversal
