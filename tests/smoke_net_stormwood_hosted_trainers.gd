@@ -237,7 +237,7 @@ func _run() -> void:
 		check(str(staged.get("verdict", "")) == "PASS", "TEST FIXTURE staged host-owned round %d at 1 hp" % expected_round)
 		var aimed := await _stage_client_for_current_opponent()
 		check(str(aimed.get("verdict", "")) == "PASS",
-			"client and host agreed on the live round-%d strike geometry: %s"
+			"client follower position synchronized before round-%d input: %s"
 				% [expected_round, str(aimed.get("detail", ""))])
 		if str(aimed.get("verdict", "")) != "PASS":
 			quit(await finish())
