@@ -378,3 +378,27 @@
   Tidewake encounters), `531647a9e` (Gate-B prompt arbitration), and `9a6ff4e5e`
   (hosted Stormwood trainer admission). The next action is one batched push, then a
   job-by-job exact-head CI read before another branch update.
+
+## Checkpoint 11 — 2026-09-08 01:18 CDT
+
+- The previous turn made concrete progress: four reviewed commits were pushed as
+  `968ae810780ad9fd8189adc38ba5523c4a668f16`. CI run `34193395389` is live and
+  an independent lane is reading its jobs. No follow-up push has interrupted it.
+- The combined local repair contracts pass on this tree: 27 tests / 2,309
+  assertions, zero failures (Aquaryn, named Water spawns, hosted Stormwood and
+  Gate-B arbitration). The named-spawn negative fixture emits its expected warning.
+- The production four-realm teleport smoke was rerun after the realm-loading rewrite
+  and Tidewake naming merge. It exits 0, reports Meadows -> Cloudreach -> Stormwood ->
+  Water -> Meadows, checks grounded arrivals and loading-overlay lifetime, and emits
+  no `ERROR:` or `SCRIPT ERROR` lines. Log: `.artifacts/realm-teleport-current.log`.
+  This samples one crossing destination per realm. All 58 Settings callbacks have
+  unit and physical focus coverage; exhaustive physical landing at all 58 spots is
+  still a narrower outstanding navigation check.
+- A read-only late-Tidewake audit found no second static flag dead-end, but exposed
+  missing continuous evidence for the three long mounted crossings and Salt Crown /
+  Sluice control chain. The new traversal diagnostic is being implemented and run by
+  a separate lane. Its synthetic starting creature and prerequisite fixtures must not
+  be represented as the earned state from the Alpha-to-Mosshell smoke; ordinary
+  earned-state composition remains required before milestone acceptance.
+- `docs/CURRENT_STATE.md` now distinguishes PR #80 branch repairs from the historical
+  PR #79 baseline. Reconciliation commit `ffbbaf375` is local until CI finishes.
