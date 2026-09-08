@@ -178,6 +178,9 @@ func _run_livewire() -> void:
 	# RealmHeartState.revision and refreshes the existing deployment card; the
 	# host derives 0.75 from its own placed Spark data.
 	await _await_after_host_deadline(int(inactive_authority.get("deadline_ms", 0)))
+	if not await _restage_for_strike("elapsed baseline"):
+		quit(await finish())
+		return
 	var baseline_ready := await _charged(803, charged, after_early, 2)
 	check(str(baseline_ready.get("verdict", "")) == "PASS", "sent the elapsed baseline action")
 	var after_baseline := await _await_host_action(803)
@@ -189,6 +192,9 @@ func _run_livewire() -> void:
 		and is_equal_approx(float(_authority(livewire_ready).get("cooldown_multiplier", 0.0)), 0.75),
 		"host received the refreshed Spark identity and resolved its own 0.75 value")
 	await _await_after_host_deadline(int(_authority(after_baseline).get("deadline_ms", 0)))
+	if not await _restage_for_strike("first Livewire"):
+		quit(await finish())
+		return
 	var livewire_first := await _charged(804, charged, after_baseline, 2)
 	check(str(livewire_first.get("verdict", "")) == "PASS", "sent the first Livewire action")
 	var after_livewire_first := await _await_host_action(804)
@@ -198,6 +204,9 @@ func _run_livewire() -> void:
 		and is_equal_approx(float(livewire_authority.get("cooldown_multiplier", 0.0)), 0.75),
 		"the accepted action records the host-resolved Livewire state")
 	await _await_after_host_deadline(int(livewire_authority.get("deadline_ms", 0)))
+	if not await _restage_for_strike("second Livewire"):
+		quit(await finish())
+		return
 	var livewire := await _charged(805, charged, after_livewire_first, 8)
 	check(str(livewire.get("verdict", "")) == "PASS", "sent a fresh Livewire action")
 	var after_livewire := await _await_host_action(805)
@@ -214,6 +223,9 @@ func _run_livewire() -> void:
 		and is_equal_approx(float(_authority(released_ready).get("cooldown_multiplier", 0.0)), 1.0),
 		"host saw the release and restored its authored multiplier")
 	await _await_after_host_deadline(int(_authority(after_livewire).get("deadline_ms", 0)))
+	if not await _restage_for_strike("released baseline"):
+		quit(await finish())
+		return
 	var release_first := await _charged(806, charged, after_livewire, 2)
 	check(str(release_first.get("verdict", "")) == "PASS", "sent a baseline action after release")
 	var after_release_first := await _await_host_action(806)
@@ -234,6 +246,17 @@ func _run_livewire() -> void:
 		"the released early action did not advance host authority")
 
 	quit(await finish())
+
+
+func _restage_for_strike(label: String) -> bool:
+	# The host-owned opponent keeps moving while the smoke waits on cooldown
+	# deadlines and relic replication.  Reconcile both real bodies immediately
+	# before an action expected to land so this timing proof cannot turn into an
+	# unrelated cone/position miss.
+	var aimed := await _stage_client_for_current_opponent()
+	check(str(aimed.get("verdict", "")) == "PASS",
+		"%s strike geometry is current on client and host" % label)
+	return str(aimed.get("verdict", "")) == "PASS"
 
 
 func _charged(action: int, move_id: String, state: Dictionary, settle: int) -> Dictionary:

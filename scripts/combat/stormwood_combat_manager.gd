@@ -4,6 +4,18 @@ extends "res://scripts/combat/cloudreach_combat_manager.gd"
 ## whether its own verdict or somebody else's host record arrives first.
 var _hosted_awarded := false
 
+
+## A trainer challenge is admitted by the realm host, but an aggressive local
+## wild can reach the player during the network round trip.  Once the host has
+## admitted the challenge its record is authoritative.  Yield only a fleeable
+## wild fight; an existing trainer fight must never be torn down this way.
+func yield_wild_fight_for_hosted_trainer() -> bool:
+	if not is_fighting() or not can_flee():
+		return false
+	_begin_resolve("fled")
+	_finish()
+	return true
+
 func bind_encounter(link: Node, id: String, kind: String) -> void:
 	_hosted_awarded = false
 	super.bind_encounter(link, id, kind)

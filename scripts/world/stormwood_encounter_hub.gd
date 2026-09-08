@@ -255,7 +255,12 @@ func _apply_state() -> void:
 		return
 	if incoming_id != _local_record:
 		if manager.is_fighting():
-			return
+			# The request was issued while idle, but a local aggressive wild can
+			# begin combat before the host-owned trainer state makes the round
+			# trip.  Host admission wins that race.  Only a fleeable wild may be
+			# yielded; a trainer fight remains protected by CombatManager.
+			if not manager.yield_wild_fight_for_hosted_trainer():
+				return
 		if str(incoming.get("phase", "")) == "done":
 			_pending_state.clear()
 			return
