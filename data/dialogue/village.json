@@ -182,7 +182,8 @@
           "text": "Mira set you up for gathering. This knife and torch are for the long work: clean fiber, then see your way home.",
           "effects": ["give:knife:1", "give:torch:1", "flag:tam_tools_given"]
         },
-        "Come back when they're blunt."
+        "Take the path toward Practice Meadow. There's deadwood off the path and long grass along the clearing. The knife will give you clean binding fiber.",
+        "Pick up what you've cut before you move on. Leave the road clear, and come back when those tools are blunt."
       ]
     },
     "village_tam_challenge": {
@@ -225,7 +226,9 @@
             "flag:camp_hammer_given"
           ]
         },
-        "Don't put it on the road itself. Learned that the hard way."
+        "Practice Meadow has room off the path. Pitch a tent, set your fire outside, and put your bedroll under the canvas.",
+        "One Creature Bed beside it gives a tired partner somewhere to recover. More beds can wait until you need them.",
+        "Leave a partner in its bed before you turn in. Then bring your rested team to Halda at the practice ring. And keep the road clear. Learned that the hard way."
       ]
     },
     "village_rescued_ranger": {
