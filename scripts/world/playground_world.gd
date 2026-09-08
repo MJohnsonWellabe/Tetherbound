@@ -751,24 +751,20 @@ func _ready() -> void:
 	# pumping. Solo still resumes every `await` below in the same frame.
 	_shell_build = SHELL_BUILD.new()
 	_shell_build.call("begin", self, simulation_only)
-	# A real realm transition can now yield while the procedural floor is only
-	# partly present. Keep the local player from integrating gravity through that
-	# unfinished floor; shells are already disabled by `_shell_strip`, and solo
-	# builds do not slice.
-	var held_player_mode := Node.PROCESS_MODE_INHERIT
-	var held_transition_player := not simulation_only \
-		and bool(_shell_build.call("is_slicing")) and _player != null
-	if held_transition_player:
-		held_player_mode = _player.process_mode
-		_player.process_mode = Node.PROCESS_MODE_DISABLED
-		_player.velocity = Vector3.ZERO
+	# The build yields while Terrain3D is coming online even in unsliced solo.
+	# A physics-active body resting on a collider that construction then moves
+	# inherits that collider's apparent platform velocity; T5-CARE measured a
+	# seven-digit launch, and AGGRESSION-STAGING-0908 reproduced the same guard
+	# warning on a same-process second Meadows boot. Hold every REAL local player
+	# before the first yield, not only a sliced multiplayer arrival. Simulation
+	# shells have already disabled/stripped their local rig and stay untouched.
+	var held_player_mode := hold_player_for_real_build(_player, simulation_only)
 	BOOT_LOG.phase("playground: _ready start, building Terrain3D node")
 	_terrain = _build_terrain()
 	if _terrain == null:
 		BOOT_LOG.line("playground: terrain build FAILED (see push_error above); world will not stand up")
-		if held_transition_player and is_instance_valid(_player):
-			_player.velocity = Vector3.ZERO
-			_player.process_mode = held_player_mode
+		if held_player_mode >= 0:
+			restore_player_after_real_build(_player, held_player_mode)
 		return
 	BOOT_LOG.phase("playground: terrain node created, waiting for Terrain3DData")
 	# D97 / lane MP-REALM-REOPEN. Split from the data-directory assignment
@@ -842,11 +838,37 @@ func _ready() -> void:
 	if not profile.is_empty():
 		print("[playground] shell build %s" % profile)
 	_shell_ready = true
-	if held_transition_player and is_instance_valid(_player):
-		_player.velocity = Vector3.ZERO
-		_player.process_mode = held_player_mode
+	if held_player_mode >= 0:
+		# `_place_player()` separately calls set_physics_process(false) for a
+		# pending remote arrival. Restoring process_mode here does not turn that
+		# flag back on; `_settle_meadows_realm_arrival()` remains its sole release.
+		restore_player_after_real_build(_player, held_player_mode)
 	await get_tree().process_frame
 	BOOT_LOG.phase("playground: first frame presented")
+
+
+## Keep a real local player inert while procedural construction moves collision
+## underneath it. Public/static only so the focused unit guard can prove the
+## mode/velocity contract without booting Terrain3D.
+static func hold_player_for_real_build(player: CharacterBody3D, simulation_only_build: bool) -> int:
+	if simulation_only_build or player == null or not is_instance_valid(player):
+		return -1
+	var prior_mode := int(player.process_mode)
+	player.process_mode = Node.PROCESS_MODE_DISABLED
+	player.velocity = Vector3.ZERO
+	return prior_mode
+
+
+## Restore only what the build hold owns. In particular, do not call
+## `set_physics_process(true)`: a pending realm arrival owns that narrower hold
+## until collision has streamed at its authored destination.
+static func restore_player_after_real_build(player: CharacterBody3D, prior_mode: int) -> void:
+	if player == null or not is_instance_valid(player) or prior_mode < 0:
+		return
+	player.velocity = Vector3.ZERO
+	player.process_mode = prior_mode as Node.ProcessMode
+	if player.is_inside_tree():
+		player.reset_physics_interpolation()
 
 
 ## D97 / lane MP-REALM-REOPEN. False while a SHELL is still building itself
