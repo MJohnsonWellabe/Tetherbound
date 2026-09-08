@@ -943,3 +943,37 @@ observer sample approximately1.4s before termination still records grounded
 movement; the observer suppresses combat/paused/input-owned samples. Nearby
 Bramblebun and Mudsnout are non-aggressive. Terminal locomotion is unrecorded.
 No speculative fix or repeated fresh run was performed. Next checkpoint23:40UTC.
+
+## 2026-09-08 23:48 UTC — owner-requested exit
+
+- Owner asked to write/push the handoff and stop. All agents interrupted and no
+  Godot processes remain. Resume only on owner instruction. Full handoff:
+  docs/HANDOFF_FOUR_BIOME_2026-09-08_OWNER_STOP.md.
+- Main remains65267c4bd935d80b2e073799caeffc81b913952c, own green CI34281611197.
+  PR90 draft gameplay head10fb6f1dbcc4dd42fdf4fb532c7fee4101dac801 passed
+  CI34287024505 with exhaustive review. Picker/input head
+  8eb887baced51b611abcf8dfadd630dfc1c5640c passed CI34288938433 at23:21:44UTC,
+  attempt1,26 successful jobs/three expected skips. Units3062/487412; all logs
+  downloaded, final exhaustive review of this head still open. Exit work is a
+  subsequent unverified head, not covered by those green runs. No new landing.
+- Picker: Arlo/Lyra/Kael/Sera portrait cards, preserved save IDs; actual UI
+  controller/keyboard checks and blind capture passed; combined unit13/70.
+  ROG bed issue resolved by owner using Gamepad mode; no hardware code-fix claim.
+- Actual solo realm-load baseline336.006s, routes82.878s and later mount233.020s;
+  exit0, owner fingerprints matched. One native ridge cache comparison reduced
+  267896us to212454us with identical mesh/collision SHA and49812 vertices. No
+  optimized full-transition proof. Named logs: realm-load-baseline-v2* and
+  route-cost-{original-v3,cached}* under.artifacts.
+- Supplemental Cloudreach render crashed during _plant_tufts with a null memory
+  allocation and signal11; no complete sheet. Owner fingerprints matched after.
+  Logs.artifacts/wave6-cloudreach-before*. Earlier parse/fixture failures remain.
+- New owner directive explicitly pulls forward StageC6: all58 Settings destinations
+  across four biomes, day/night; full blind rubric; local/systemic classification;
+  all-affected-biome before/after proof; separate earned-content agent. No complete
+  audit implementation, full sheets, blind biome verdict or visual repair yet.
+- Original uninterrupted fresh opening-to-Tidewake remains incomplete. Two failed
+  Wave6 fresh attempts and the withdrawn native aim hook remain failures. The
+  isolated Stormwood Crown run was interrupted for ROG after six gathered glass;
+  no Crown/full campaign completion. Do not copy a save or inject progress to advance.
+- Diagnostic source snapshots preserved in exit-20260908-diagnostics; raw captures,
+  profiles and logs remain local. No new tests or gameplay work after owner stop.

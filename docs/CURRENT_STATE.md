@@ -6,6 +6,15 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-08, playable build in progress)
 
+**Owner-requested stop, 2026-09-08:** see
+`docs/HANDOFF_FOUR_BIOME_2026-09-08_OWNER_STOP.md` before resuming. Latest owner
+scope is the complete Stage C6 all58 Settings destinations/day-night visual audit,
+plus a separate ongoing earned-content lane. The audit is not implemented or run.
+The bounded Cloudreach render crashed at ground-cover allocation before completion;
+owner save fingerprints matched afterward. All agents stopped; no Godot remains.
+Picker CI34288938433 is terminal success on8eb887bac, but the later exit work needs
+its own CI/review. PR90 stays draft, main unchanged; goal remains incomplete.
+
 **Owner priority update, 2026-09-08:** Ally Gamepad mode resolved the reported
 inability to get out of bed (owner confirmation). The four-character picker is
 rebuilt locally with portraits and Arlo/Lyra/Kael/Sera names; stable save IDs remain.
@@ -27,6 +36,17 @@ The second genuine fresh run stopped before throwing because the production
 reticle verdict was ineligible; no full fresh campaign pass exists. After two
 failed fresh attempts, repeated opening runs stopped. An isolated proposed aim
 timing change did not pass and was withdrawn.
+
+Owner loading reproduction: the actual solo Game.enter_realm Meadows→Cloudreach
+path completed in336.006s with44,347 destination nodes and cleared pending entry.
+Diagnostic gate bypass was disclosed; this is transfer performance evidence, not
+earned chapter entry. Construction took322.431s: routes82.878s, the later combined
+ground-cover/chapter/look/encounter setup233.020s. CPU continued advancing during
+the long quiet interval; no deadlock was observed. The baseline exited0 and owner
+save fingerprints matched. Logs`.artifacts/realm-load-baseline-v2{,-engine}.log`;
+the preceding instrumentation parse failure is retained separately. No loading
+speedup or visual improvement is claimed yet. Picker head8eb887baced51b611abcf8dfadd630dfc1c5640c
+is now pushed; its own CI34288938433 remains in progress.
 
 **2026-09-08 Wave6 local gameplay work:** Lantern Hollow's four overlapping
 NPCs now have separate nearby placements around the unchanged Spark shrine.

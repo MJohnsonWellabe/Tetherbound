@@ -1464,6 +1464,8 @@ func can_enter_realm(realm_id: String) -> bool:
 ## `bypass_gate = true`. Every other caller leaves it false and gets the
 ## normal `can_enter_realm()` check.
 func enter_realm(realm_id: String, entry_id: String = "", bypass_gate: bool = false) -> bool:
+	var profile_load := OS.get_cmdline_user_args().has("--profile-realm-load")
+	var load_started_ms := Time.get_ticks_msec()
 	if realm_hearts == null:
 		return false
 	if not bypass_gate and not can_enter_realm(realm_id):
@@ -1520,9 +1522,14 @@ func enter_realm(realm_id: String, entry_id: String = "", bypass_gate: bool = fa
 			}
 			push_error("realm '%s' transition autosave failed; crossing cancelled" % realm_id)
 			return false
+	if profile_load:
+		print("[realm_load] sync/save=%dms" % (Time.get_ticks_msec() - load_started_ms))
 	var display_name := str((realm_hearts.call("realm", realm_id) as Dictionary).get("display_name", realm_id))
 	var overlay := await LOADING_OVERLAY.present(tree, "Loading %s…" % display_name)
+	var scene_load_started_ms := Time.get_ticks_msec()
 	var scene_change_error := tree.change_scene_to_file(scene)
+	if profile_load:
+		print("[realm_load] change_scene_to_file=%dms" % (Time.get_ticks_msec() - scene_load_started_ms))
 	if scene_change_error != OK:
 		push_error("realm '%s' scene change failed (%d): %s" % [realm_id, scene_change_error, scene])
 		if not await _abort_realm_transition(tree, overlay, transition_snapshot, false):
@@ -1543,6 +1550,8 @@ func enter_realm(realm_id: String, entry_id: String = "", bypass_gate: bool = fa
 			and _deferred_realm_entry_completion == realm_id:
 		complete_realm_entry(realm_id)
 	await LOADING_OVERLAY.dismiss(tree, overlay)
+	if profile_load:
+		print("[realm_load] ready/dismiss total=%dms" % (Time.get_ticks_msec() - load_started_ms))
 	return true
 
 

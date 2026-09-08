@@ -141,10 +141,19 @@ func dress(world: Node3D) -> void:
 	_routes = config_data.get("routes", [])
 	_space_state = world.get_world_3d().direct_space_state if world.get_world_3d() != null else null
 
+	var profile_look := OS.get_cmdline_user_args().has("--profile-realm-load")
+	var phase_started := Time.get_ticks_msec()
 	_dress_bridge_rails()
+	if profile_look: print("[cloudreach_look] rails ms=", Time.get_ticks_msec() - phase_started)
+	phase_started = Time.get_ticks_msec()
 	_dress_moorings(config_data)
+	if profile_look: print("[cloudreach_look] moorings ms=", Time.get_ticks_msec() - phase_started)
+	phase_started = Time.get_ticks_msec()
 	_dress_ground_cover_finish()
+	if profile_look: print("[cloudreach_look] cover ms=", Time.get_ticks_msec() - phase_started)
+	phase_started = Time.get_ticks_msec()
 	_dress_trees_and_stones(config_data)
+	if profile_look: print("[cloudreach_look] trees_stones ms=", Time.get_ticks_msec() - phase_started)
 	_dress_settlement_materials()
 	_dress_fog()
 
