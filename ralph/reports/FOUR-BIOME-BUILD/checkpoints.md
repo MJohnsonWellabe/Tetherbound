@@ -618,3 +618,31 @@
   assertion on attempt1; timing telemetry alone does not prove the optimization.
   Fresh-save opening-to-ending composition and full forward-view coverage
   remain open. The playable-first target and backlog are unchanged.
+
+## 2026-09-08 09:08 UTC — coherent repair batch submitted
+
+- Previous turn classified progress: Venn's real traversal/offer proof completed
+  and its repair was committed. Root then independently passed the real-body
+  detached-opponent cleanup regression and added native-error-scanning CI coverage.
+- Main remains `f6b79a6b32983d3b60f7333d8b44706736701474`, included through merge
+  `01f85b2b356de72689eb90e42242e42ae64d5dfb`; remote checked before pushing.
+- Run `34205399274` is terminal: 25 passing jobs, three skips, only MP2 failing.
+  Its Livewire observation window failed while hit/refusal/action checks passed.
+  Host-local window sampling repair `12c7d76e0` passes a Windows two-peer run
+  at unchanged 180–350 ms bounds (316 and 331 ms). New CI remains necessary.
+  MP4 Tamsin passes first attempt and exposes position-only versus actual-cone gap.
+- Pushed once: `23b7d4acd935b508d53769a71e434857de1de41c`; remote SHA verified.
+  CI `34208280455` is queued. No new push until its terminal verdict.
+  Batch includes solo Stormwood reward authority, focused cleanup regressions,
+  Livewire measurement, Venn placement and continuous-route diagnostics.
+- Venn probe exits 0: 349.49 m ordinary movement, zero resets, actionable
+  Challenge Officer Venn at 2.021 m. Not victory or fresh-save proof.
+- Water continuous session `15526` / live Godot PID `32548` owns the full-world
+  slot. It reached Salt Crown; ordinary wild sites 011/012/013 are rejected.
+  A separate agent investigates those data/footing failures without a world run.
+- Stormwood agent's Dace continuation is queued behind Water, with the named
+  playground regression first. Its teardown repair passed root's unique-log
+  smoke with no errors. All agents have independent ownership; lightweight work
+  continues alongside the world run. No cache writer is monopolizing the queue.
+- Fresh-save opening-to-ending composition, Dace onward and Tidewake finale
+  remain unproved. No milestone or deferred visual/performance closure claimed.

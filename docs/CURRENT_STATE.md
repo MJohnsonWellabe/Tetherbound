@@ -15,7 +15,8 @@ remain in `docs/SECOND_PASS_BACKLOG.md`; they are not claimed passed.
 PR #79 landed at `7ab4a12647a377a400c43335b64aff8b03ca6d43`. Current work is on
 `codex/four-biome-wave0`, PR #80, which includes main through `f6b79a6b3` via
 merge `01f85b2b356de72689eb90e42242e42ae64d5dfb`. The latest submitted batch is
-`226aaf070168b71e36bc6ee1eaf150c4148613af`; CI run `34205399274` completed
+`23b7d4acd935b508d53769a71e434857de1de41c`; CI run `34208280455` is queued.
+The preceding batch `226aaf070168b71e36bc6ee1eaf150c4148613af`, run `34205399274`, completed
 with 25 passing jobs, three skips and one failure. Only multiplayer shard 2
 failed: Livewire's remote polling missed its narrow pre-deadline observation
 window; gameplay hit/refusal and action-sequence checks passed. The exact
@@ -74,10 +75,13 @@ allows the offline authority while continuing to refuse active clients;
 `7a773b8b0` passes eight focused authority/real-ledger checks. In the
 subsequent uninterrupted run, the production finished event explicitly reports
 Maren won, the durable defeat flag arrives, and the ordinary Verge rod switch
-succeeds. The run continues toward Dace; this is not whole-chapter completion.
+succeeds. The run then failed to start Dace; this is not whole-chapter completion.
+The next harness records intervening wild win/loss and uses ordinary party
+cycling/recall if the active ally fainted. That explanation remains unproven.
 Log: `C:/Users/mattj/AppData/Local/Temp/stormwood-continuous-solo-award-final.log`.
 New CI steps `7e2753721` cover the reward and lightning-cleanup regressions;
-these local commits are not included in the currently running CI batch.
+these commits are included in submitted batch `23b7d4acd`, along with a focused
+detached-opponent teardown fix and a CI regression that scans native errors.
 
 **ROAD validation reopened, 2026-09-08:** the late-Tidewake traversal diagnostic
 reached Salt Crown but production rejected footing at
@@ -102,15 +106,21 @@ collision exception resolved those bounded checks without changing terrain or
 combat collision rules. Full continuous forward-view coverage remains open.
 See the footing reports under `road-visual-creatures/` and the Veilfall report.
 
-**Late Tidewake follow-up:** Calder's approach repair is local (`ffb7916db`).
+**Late Tidewake follow-up:** Calder's approach repair is submitted (`ffb7916db`).
 The synthetic-start route now proves ordinary Bex, camp/rest, Calder and both
 sluice controls; a copied-save suffix also mounts through the actionable Ride
 offer after physically approaching the follower. That suffix emitted two
 diagnostic script errors, now corrected with a focused regression. It is not
 a clean run or a fresh-save proof. Committed harness `9b5cd7315` retains those
 boundaries in `ralph/reports/FOUR-BIOME-BUILD/WATER-LATE-CONTINUOUS.md`.
+Venn's reused NPC body was hundreds of metres above the graded approach.
+Coordinate-only repair `d251f735e` puts him on the spine; real-stick traversal
+walks 349.49 m with zero resets and obtains an actionable production challenge
+offer. It proves approach, not victory or the ending. A full synthetic-start
+late-chapter continuation is running with no post-departure progression writes;
+see `ralph/reports/FOUR-BIOME-BUILD/VENN-APPROACH.md`.
 
-**Late Tidewake approach open, 2026-09-08:** the synthetic-start traversal
+**Earlier late Tidewake attempts (superseded by follow-ups above):** the synthetic-start traversal
 diagnostic completed Tidal Cradle -> Salt Crown, the Salt chart interaction,
 and Salt Crown -> Sluice Isle with the same mount and no post-departure resource
 or position injection. It then failed to reach Bex from the exploration spine:
