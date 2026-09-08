@@ -127,7 +127,12 @@ probe now admits 2/2 creatures at all seven Salt Crown ROAD sites, and real-stic
 four-site repair also passes: all six ROAD sites admit 2/2 and four populated
 24 m walks pass. Tidal Cradle's three-site repair (`09cd1c66c`) now passes all
 nine ROAD sites at 2/2, plus populated 24 m walks at 02/03/08. Ordinary Salt
-Crown wild sites 011/012/013 remain open. Veilfall's strict follow-up now admits
+Crown wild sites 011/012/013 are now repaired in `1f6851a89`: coordinate-only
+moves of 8/6/4 m produce one actual member at each site without admission
+failures, and every legal table species passes its scaled-footprint support
+check. This focused three-site proof is not continuous forward-view coverage.
+See `ralph/reports/FOUR-BIOME-BUILD/SALT-ORDINARY-FOOTING.md`.
+Veilfall's strict follow-up now admits
 2/2 creatures at all 24 ROAD sites and passes all 15 populated 24 m walking
 checks. The coordinate-only candidate had left site20 at 1/2 and blocked walks
 19/20/22. Staggering site20 and restoring Water's missing ROAD-only trainer/wild
