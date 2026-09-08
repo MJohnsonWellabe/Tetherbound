@@ -4,6 +4,44 @@ extends "res://tests/helpers/gate_a_opening_drive.gd"
 ## the older catch fixture's inventory drain, HP pinning or direct revival.
 ## A failed live fight is evidence; this segment cannot repair its state.
 
+func _walk_to_and_engage_wild(target: Node3D, budget: int) -> bool:
+	for _frame in budget:
+		if not is_instance_valid(target) or not bool(target.call("is_alive")):
+			_stop_left_stick()
+			return false
+		if bool(_combat.call("is_fighting")):
+			_stop_left_stick()
+			return _engaged_expected_body(target)
+		var offer: Dictionary = _arbiter.call("winner")
+		if (_arbiter.call("winning_provider") == _encounter
+				and bool(offer.get("actionable", false))
+				and _encounter.call("_engageable") == target):
+			_stop_left_stick()
+			# Do not yield between observing the offered body and pressing.
+			# The provider is shared by every nearby wild creature.
+			print("live wild approach: exact offered target ", target.name)
+			await _tap_action("interact")
+			for _settle in 180:
+				if bool(_combat.call("is_fighting")):
+					return _engaged_expected_body(target)
+				await _tree.physics_frame
+			_fail("exact wild offer did not enter combat after Interact")
+			return false
+		await _drive_body_toward(_player, target.global_position, 1)
+	_stop_left_stick()
+	return false
+
+
+func _engaged_expected_body(target: Node3D) -> bool:
+	var actual: Node3D = _combat.call("enemy_body")
+	if actual == target:
+		_checkpoint("engaged exact live target %s (%s)" % [target.name, target.get("species_id")])
+		return true
+	_fail("wild engagement selected %s instead of the offered target %s" % [
+		actual.name if actual != null else "<none>", target.name])
+	return false
+
+
 func catch_existing(tree: SceneTree, world: Node, game: Node,
 		player: CharacterBody3D, rig: Node3D, wild: Node3D) -> Dictionary:
 	_tree = tree
@@ -17,6 +55,8 @@ func catch_existing(tree: SceneTree, world: Node, game: Node,
 	_wild = wild
 	if not is_instance_valid(_wild) or not bool(_combat.call("is_fighting")):
 		_fail("live capture segment requires an already engaged wild creature")
+		return _result()
+	if not _engaged_expected_body(_wild):
 		return _result()
 	var before := int(_game.party.size())
 	if before >= 5:

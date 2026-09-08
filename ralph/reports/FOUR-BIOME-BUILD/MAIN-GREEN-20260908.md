@@ -1,7 +1,9 @@
 # Main recovery — 2026-09-08
 
 Owner interrupted the Wave 1 landing wait to prioritize a verified green main.
-No campaign completion is claimed. Wave 1 has not started.
+That interruption is complete: main75aaccca0210a9bc1ac0f16bac687d8557f0aacf
+passed its own post-merge CI34231941105. Wave 1 now continues separately;
+no campaign completion is claimed. The sections below retain the repair history.
 
 ## Reproductions from CI, before repairs
 

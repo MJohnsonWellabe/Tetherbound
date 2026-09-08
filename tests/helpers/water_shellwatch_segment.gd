@@ -204,10 +204,10 @@ func _preconditions_hold() -> bool:
 		if not _director.trainer_nodes.has(id) or not _director.trainer_prompts.has(id):
 			return _fail("mandatory production trainer/prompt is absent: " + id)
 	if not trainer_contract(_director.trainer_specs.get(SOLM_ID, {}), SOLM_ID, 47,
-			["mirejaw", "mangrove_monitor"]):
+			["water_mirejaw", "water_mangrove_monitor"]):
 		return _fail("production Solm team contract is absent")
 	if not trainer_contract(_director.trainer_specs.get(IRVA_ID, {}), IRVA_ID, 48,
-			["riptusk", "cannonback"]):
+			["water_riptusk", "water_cannonback"]):
 		return _fail("production Irva team contract is absent")
 	return true
 
@@ -308,9 +308,9 @@ func _ensure_ally_deployed(label: String) -> bool:
 		label, str(_director.usable_ally_blocker())])
 
 
-func _recover_at_camp(label: String) -> bool:
-	var rest: Node3D = _camps.camps.get(CAMP_ID) as Node3D
-	var bed: Node3D = _camps.get_node_or_null(CAMP_ID + "_creature_bed") as Node3D
+func _recover_at_camp(label: String, camp_id: String = CAMP_ID) -> bool:
+	var rest: Node3D = _camps.camps.get(camp_id) as Node3D
+	var bed: Node3D = _camps.get_node_or_null(camp_id + "_creature_bed") as Node3D
 	var bed_prompt := bed.get_node_or_null("Interactable") as Node3D if bed != null else null
 	var rest_prompt := rest.get_node_or_null("Interactable") as Node3D if rest != null else null
 	if rest == null or bed == null or bed_prompt == null or rest_prompt == null:
@@ -371,6 +371,15 @@ func _recover_at_camp(label: String) -> bool:
 	if int(_game.day) != day_before + 1 or bool(member.fainted) \
 			or float(member.hp) < float(member.max_hp) - 0.01:
 		return _fail("Shellwatch ordinary rest did not advance one day and heal the bedded creature " + label)
+	# Bedding the active member advances Party's selection. Rest heals it but
+	# leaves that selection alone; restore it through the ordinary cycle input.
+	var cycle_count := recovery_cycle_count(_game.local.party, member)
+	if cycle_count < 0:
+		return _fail("Shellwatch recovered creature cannot be selected " + label)
+	for step in cycle_count:
+		await _tap(&"party_cycle")
+	if _game.local.party.active() != member:
+		return _fail("Shellwatch controller did not select the recovered creature " + label)
 	await _tap(&"creature_recall")
 	for frame in 180:
 		if _director.ally_body() != null and _director.ally_instance() == member:
@@ -378,6 +387,26 @@ func _recover_at_camp(label: String) -> bool:
 			return true
 		await _tree.physics_frame
 	return _fail("Shellwatch camp did not redeploy the recovered creature " + label)
+
+
+static func recovery_cycle_count(party: RefCounted, member: RefCounted) -> int:
+	if party == null or member == null or member.fainted or member.resting:
+		return -1
+	var members: Array = party.members()
+	var start := members.find(party.active())
+	if start < 0 or not members.has(member):
+		return -1
+	if party.active() == member:
+		return 0
+	var presses := 0
+	for offset in range(1, members.size()):
+		var candidate: RefCounted = members[(start + offset) % members.size()]
+		if candidate.fainted or candidate.resting:
+			continue
+		presses += 1
+		if candidate == member:
+			return presses
+	return -1
 
 
 func _activate_dock_action(id: String, flag: String) -> bool:

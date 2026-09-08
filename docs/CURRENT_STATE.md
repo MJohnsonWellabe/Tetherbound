@@ -28,6 +28,24 @@ Varga/Ondra/Crown continuation, Tidewake's Shellwatch-onward composition and the
 actual uninterrupted fresh-save opening-to-ending run remain unproved. Existing
 chapter fixtures carry synthetic starting state; they are not milestone proof.
 
+**Wave 1 progress, 2026-09-08:** the genuine fresh opening through village tools,
+key consumption, Satchel assignments and three physical harvests now passes in
+172.968 seconds with owner saves unchanged and no native/script errors. A prior
+expanded attempt exposed shared-provider target confusion; the corrected helper
+verifies the exact offered and admitted creature. The next fresh run earned all
+five creatures and six real training wins, then failed ordinary navigation to
+the next wild encounter after 519.745 seconds. Camp/care/tournament and bridge
+continuations are prepared, not runtime-proven. See
+`ralph/reports/FOUR-BIOME-BUILD/WAVE1-FRESH-COMPOSITION.md`.
+
+Draft PR #85's first head `856534a7` completed CI `34236551038` with25 successful
+jobs, one MP5 control-listener bind failure, and three conditional skips. The
+local allocator fix reserves OS-assigned TCP listeners before spawning peers;
+real socket tests and the full two-peer catch race (47 assertions) pass. The
+changed code still awaits exact-head CI. This does not
+change the verified main result above. See
+`ralph/reports/FOUR-BIOME-BUILD/CI-CONTROL-PORT-20260908.md`.
+
 The active target is the **playable four-biome build**, as defined by
 `docs/owner/OWNER_DIRECTIVE_2026-09-07_PLAYABLE_FIRST.md`: a fresh save completes
 the opening through Tidewake without debug travel, console commands or a reload

@@ -19,6 +19,8 @@ const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
+const PICKUPS := preload("res://scripts/world/stormwood_pickup_runtime.gd")
+const CROWN_SEGMENT := preload("res://tests/helpers/stormwood_crown_build_segment.gd")
 
 const TEST_SAVE_DIR_PREFIX := "user://stormwood_continuous_chapter_entry"
 const SCENE_WAIT_FRAMES := 7200
@@ -49,6 +51,12 @@ const ENTRY_PARTY: Array[String] = [
 var _failures: Array[String] = []
 var _finished := false
 var _segment: Variant = null
+var _prefix_complete := false
+var _crown_complete := false
+
+
+static func through_crown(arguments: PackedStringArray) -> bool:
+	return arguments.has("--through-crown")
 
 
 func _init() -> void:
@@ -136,6 +144,17 @@ func _run() -> void:
 		print("STORMWOOD CONTINUOUS — %s" % str(line))
 	for line: Variant in result.get("failures", []):
 		_failures.append(str(line))
+	_prefix_complete = _failures.is_empty() and bool(result.get("passed", false))
+	if _prefix_complete and through_crown(OS.get_cmdline_user_args()):
+		# The helper inherits this exact live world and earned recipe. It is
+		# never reached after a failed prefix, and creates no new entry fixture.
+		_crown_watchdog.call_deferred()
+		var crown := CROWN_SEGMENT.new()
+		var built: Dictionary = await crown.run(self, world, game)
+		for line: Variant in built.get("failures", []):
+			_failures.append(str(line))
+		_crown_complete = bool(built.get("passed", false))
+		_expect(_crown_complete, "same live chapter path reached the paid Crown arch")
 	_finish()
 
 
@@ -151,11 +170,20 @@ func _wait_for_stormwood() -> Node3D:
 
 func _watchdog() -> void:
 	await create_timer(float(PREFIX_WATCHDOG_MS) / 1000.0, true, false, true).timeout
-	if not _finished:
+	if not _finished and not _prefix_complete:
 		var detail := ""
 		if _segment != null and _segment.has_method("diagnostic_snapshot"):
 			detail = " (%s)" % str(_segment.call("diagnostic_snapshot"))
 		_failures.append("prefix watchdog expired before the Act-II Stormglass Arch recipe%s" % detail)
+		_finish()
+
+
+func _crown_watchdog() -> void:
+	# A separate segment receives the same bounded capacity; the original
+	# prefix deadline and every helper action/locomotion limit stay unchanged.
+	await create_timer(float(PREFIX_WATCHDOG_MS) / 1000.0, true, false, true).timeout
+	if not _finished:
+		_failures.append("Crown construction watchdog expired after the earned Ondra recipe")
 		_finish()
 
 
@@ -175,7 +203,8 @@ func _finish() -> void:
 	Engine.physics_ticks_per_second = 60
 	Engine.max_physics_steps_per_frame = 8
 	if _failures.is_empty():
-		print("stormwood continuous: OK — chapter-entry through the Act-II arch recipe passed without Stormwood flag or position fixtures")
+		var endpoint := "paid Crown arch" if _crown_complete else "Act-II arch recipe"
+		print("stormwood continuous: OK — chapter-entry through the %s passed without Stormwood flag or position fixtures" % endpoint)
 		quit(0)
 		return
 	for line: String in _failures:
@@ -188,6 +217,7 @@ class Segment extends RefCounted:
 	const SECOND_HARVEST_ID := "stormwood_harvest_cinder_verge_023"
 	const VERGE_ROUTE_PICKUP_ID := "stormwood_pickup_route_03"
 	const RODLINE_ROUTE_PICKUP_ID := "stormwood_pickup_route_07"
+	const ONDRA_ROUTE_PICKUP_ID := "stormwood_pickup_route_09"
 	const POOLS_HARVEST_IDS: Array[String] = [
 		"stormwood_harvest_glowmoss_hollows_036",
 		"stormwood_harvest_glowmoss_hollows_037",
@@ -226,6 +256,13 @@ class Segment extends RefCounted:
 	var _active_target_valid := false
 	var _active_walk_budget := 0
 	var _active_walked := 0
+
+
+	static func route_pickup_reward(id: String) -> Dictionary:
+		for spec: Dictionary in PICKUPS.ordinary_specs():
+			if str(spec.get("id", "")) == id:
+				return {"item": str(spec.get("item_id", "")), "count": int(spec.get("count", 1))}
+		return {}
 
 
 	func run(p_tree: SceneTree, p_world: Node3D, p_game: Node) -> Dictionary:
@@ -433,6 +470,10 @@ class Segment extends RefCounted:
 		for point: Vector2 in [Vector2(-560.0, 2480.0), Vector2(-160.0, 2700.0)]:
 			if not await _walk_xz(point, "conductor road to Keeper Ondra", 2.0):
 				return _result()
+		# Route-09's visible Great Candy shares Ondra's position and wins the
+		# live button edge. Collect its ordinary one-time reward before dialogue.
+		if not await _collect_route_pickup(ONDRA_ROUTE_PICKUP_ID):
+			return _result()
 		if not await _talk_to("Keeper Ondra", Vector2(-160.0, 2697.5),
 				"stormwood:arch_recipe_known", "Ondra's Stormglass Arch lesson"):
 			return _result()
@@ -446,7 +487,13 @@ class Segment extends RefCounted:
 		if pickup == null or prompt == null:
 			_fail("authored route pickup %s or its live prompt is absent" % id)
 			return false
-		var before := int(game.get("inventory").call("count", "good_candy"))
+		var reward := route_pickup_reward(id)
+		if reward.is_empty() or int(reward.get("count", 0)) <= 0 \
+				or str(pickup.get("_item_id")) != str(reward.get("item", "")) \
+				or int(pickup.get("_count")) != int(reward.get("count", 0)):
+			_fail("authored route pickup %s does not match its live item and count" % id)
+			return false
+		var before := int(game.get("inventory").call("count", str(reward.item)))
 		var at := Vector2(prompt.global_position.x, prompt.global_position.z)
 		if not await _activate_node(pickup, prompt, at + Vector2(0.0, -1.05),
 				"%s route reward" % id):
@@ -455,10 +502,12 @@ class Segment extends RefCounted:
 		if not await _wait_flag(flag, 300):
 			_fail("%s activation did not commit its durable pickup flag %s" % [id, flag])
 			return false
-		if int(game.get("inventory").call("count", "good_candy")) <= before:
-			_fail("%s committed without granting its authored good candy" % id)
+		var gained := int(game.get("inventory").call("count", str(reward.item))) - before
+		if gained != int(reward.count):
+			_fail("%s committed without its exact authored %s gain: got=%d expected=%d" % [
+				id, str(reward.item), gained, int(reward.count)])
 			return false
-		_note("COLLECTED %s through its ordinary route prompt" % id)
+		_note("COLLECTED %s exact +%d %s through its ordinary route prompt" % [id, gained, str(reward.item)])
 		return true
 
 
