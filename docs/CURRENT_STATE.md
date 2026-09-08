@@ -15,8 +15,9 @@ remain in `docs/SECOND_PASS_BACKLOG.md`; they are not claimed passed.
 PR #79 landed at `7ab4a12647a377a400c43335b64aff8b03ca6d43`. Current work is on
 `codex/four-biome-wave0`, PR #80, which includes main through `f6b79a6b3` via
 merge `01f85b2b356de72689eb90e42242e42ae64d5dfb`. The latest submitted batch is
-`7415602f5231ff85e88d0a4f4c879cf1024d1ea0`; CI run `34195296547` is pending a
-complete verdict. These repairs are on the PR branch, not yet on main:
+`7415602f5231ff85e88d0a4f4c879cf1024d1ea0`; CI run `34195296547` completed with
+24 passing jobs, two failures and three skips. These repairs are on the PR branch,
+not yet on main:
 
 | Area | Verified progress and remaining boundary |
 |---|---|
@@ -26,11 +27,14 @@ complete verdict. These repairs are on the PR branch, not yet on main:
 | Tidewake progression | Aquaryn's ordinary strike action IDs are repaired; the production defeat-to-Swim-Stone-to-saddle-to-mount path passes. Five authored named encounter sites now spawn in production. Long mounted crossings, Salt Crown/Sluice fights and controls, and the composed Veilfall/Guardian ending remain an open continuous-play proof. Isolated finale tests do not close that requirement. |
 | Creatures and menu travel | All 32 later-biome species are assigned to encounter tables; creature sizes span 1.90–7.20 m. ROAD evidence and its visual limitations are in §3. Settings offers 58 destinations across all four biomes; production realm-crossing and physical menu checks passed. |
 
-The last completed PR #80 run, `34193395389` on `968ae8107`, had 25 passing
-jobs, one failure and three skips. Gate-B and six multiplayer shards passed;
-only shard 2's Livewire timing smoke failed on an accepted attack that missed
-its moving target. The submitted test fixture isolates timing with an opt-in
-stationary target; its connected verdict is pending, not claimed fixed.
+The latest completed PR #80 run, `34195296547`, passed Gate-B, all unit shards,
+solo regression and five multiplayer shards. Shard 2's Livewire smoke still
+reports an accepted attack without damage despite a stationary opponent;
+host-side hit geometry remains under investigation. Shard 5's shared-wild smoke
+read `replayed_action` where it expected `friendly_target`; its polling code can
+read the previous replay phase's retained refusal before the new network reply.
+The working polling repair awaits connected validation. Export and two optional
+known-red jobs were skipped. Neither failing job timed out.
 Full milestone completion remains unproven.
 Detailed evidence and commit boundaries: `ralph/reports/FOUR-BIOME-BUILD/checkpoints.md`.
 
@@ -56,7 +60,14 @@ or position injection. It then failed to reach Bex from the exploration spine:
 player `(832.01, 74.63, 2870.74)`, challenge target `(872, 116.22, 2940)`.
 The approximately 80 m horizontal / 42 m vertical separation requires a real
 route-versus-placement diagnosis; a navigator failure alone does not prove
-the terrain is impassable. No Bex victory or later finale is claimed.
+the terrain is impassable. That original run proved no Bex victory or later finale.
+
+Follow-up on the working placement repair: the synthetic-start diagnostic has
+now walked to Bex on the arrival spine, defeated both opponents (+442.6 s) and
+activated the western control (+443.5 s), with no post-departure fixture writes.
+The character-data change preserves his team, dialogue and progression flags.
+The running suffix has not yet proved Calder or the finale, and its synthetic
+starting state still prevents a continuous fresh-save claim.
 
 ### Consolidation baseline — historical, before PR #80 repairs
 
