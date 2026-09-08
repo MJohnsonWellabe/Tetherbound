@@ -15,7 +15,8 @@ remain in `docs/SECOND_PASS_BACKLOG.md`; they are not claimed passed.
 PR #79 landed at `7ab4a12647a377a400c43335b64aff8b03ca6d43`. Current work is on
 `codex/four-biome-wave0`, PR #80, which includes main through `f6b79a6b3` via
 merge `01f85b2b356de72689eb90e42242e42ae64d5dfb`. The latest submitted batch is
-`de4fc499fb0aa441561351169dd5cd895ab069b3`; CI run `34197701347` completed
+`c5012fff0d4286db42b76de34386ab37efcd3d1c`; CI run `34201147829` is active.
+The preceding batch `de4fc499fb0aa441561351169dd5cd895ab069b3`, run `34197701347`, completed
 successfully at 2026-09-08 07:32 UTC: 26 passing jobs and three skips.
 The preceding run `34195296547` completed with 24 passing jobs, two failures
 and three skips. These repairs are on the PR branch, not yet on main:
@@ -52,8 +53,9 @@ Salt Crown follow-up: a coordinate-only repair moves failing ROAD sites
 probe now admits 2/2 creatures at all seven Salt Crown ROAD sites, and real-stick
 24 m walks pass across all four repaired populated segments. Sluice's analogous
 four-site repair also passes: all six ROAD sites admit 2/2 and four populated
-24 m walks pass. Ordinary Salt Crown wild sites 011/012/013, Cradle ROAD 02/03
-and Veilfall ROAD 03 remain open. Full continuous forward-view coverage remains
+24 m walks pass. Tidal Cradle's three-site repair (`09cd1c66c`) now passes all
+nine ROAD sites at 2/2, plus populated 24 m walks at 02/03/08. Ordinary Salt
+Crown wild sites 011/012/013 and Veilfall ROAD 03 remain open. Full continuous forward-view coverage remains
 open; see the Salt and Sluice footing reports under `road-visual-creatures/`.
 
 **Late Tidewake approach open, 2026-09-08:** the synthetic-start traversal
