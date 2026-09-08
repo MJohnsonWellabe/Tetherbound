@@ -238,7 +238,9 @@ func _the_legendarys_tier_is_above_it() -> void:
 	var saddles := int(_bag.call("count", "saddle"))
 	if saddles > 0:
 		_bag.call("remove", "saddle", saddles)
-	_player.global_position = body.global_position + Vector3(1.2, 0.4, 0.0)
+	var legendary_beside := float(body.call("body_radius")) + 0.8 \
+		if body.has_method("body_radius") else 1.2
+	_player.global_position = body.global_position + Vector3(legendary_beside, 0.4, 0.0)
 	for i in 20:
 		await physics_frame
 	if not bool(_riding.call("mount")):
@@ -832,7 +834,8 @@ func _stand_beside_the_mount() -> void:
 	var body: Node3D = _director.call("ally_body")
 	if body == null or not is_instance_valid(body):
 		return
-	var spot := body.global_position + body.global_basis.x * 1.3
+	var radius := float(body.call("body_radius")) if body.has_method("body_radius") else 0.5
+	var spot := body.global_position + body.global_basis.x * (radius + 0.8)
 	spot.y = float(_world.call("ground_height_at", spot.x, spot.z)) + 0.5
 	_player.global_position = spot
 	_player.velocity = Vector3.ZERO

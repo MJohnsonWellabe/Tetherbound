@@ -109,23 +109,30 @@ func test_every_saddle_mount_multiplier_sits_in_one_to_two() -> void:
 			"'%s' ride_speed_multiplier is %.2f, outside R1-4's [1.0, 2.0] band" % [id, multiplier])
 
 
-## R1-4's own table values, pinned so a retune of the multipliers or the
-## dismount distances is a deliberate edit to this file too, not a silent
-## drift the design doc no longer matches.
+## R1-4's speed table stays exact. Dismount clearance scales with the creature
+## presentation ladder: pinning the pre-ladder metre values would require the
+## trainer to rematerialise inside a now-larger creature. The baseline ratio is
+## still exact and the resulting point must clear the gameplay radius.
 func test_r1_4_table_values() -> void:
 	var expected := {
-		"terrapup": {"ride_speed_multiplier": 1.7, "dismount_distance": 1.6},
-		"burrowback": {"ride_speed_multiplier": 1.5, "dismount_distance": 1.6},
-		"tuskroot": {"ride_speed_multiplier": 1.8, "dismount_distance": 1.8},
-		"meadowhart": {"ride_speed_multiplier": 2.0, "dismount_distance": 1.6},
+		"terrapup": {"ride_speed_multiplier": 1.7, "base_height": 2.3, "base_dismount": 1.6},
+		"burrowback": {"ride_speed_multiplier": 1.5, "base_height": 1.7, "base_dismount": 1.6},
+		"tuskroot": {"ride_speed_multiplier": 1.8, "base_height": 2.15, "base_dismount": 1.8},
+		"meadowhart": {"ride_speed_multiplier": 2.0, "base_height": 2.05, "base_dismount": 1.6},
 	}
 	for id: String in expected:
 		var block := SPECIES.rideable(id)
+		var look := SPECIES.placeholder(id)
 		var want: Dictionary = expected[id]
 		assert_eq(float(block.get("ride_speed_multiplier", 0.0)), float(want["ride_speed_multiplier"]),
 			"'%s' ride_speed_multiplier drifted from R1-4's table" % id)
-		assert_eq(float(block.get("dismount_distance", 0.0)), float(want["dismount_distance"]),
-			"'%s' dismount_distance drifted from R1-4's table" % id)
+		var expected_dismount := float(want["base_dismount"]) \
+			* float(look.get("height", 0.0)) / float(want["base_height"])
+		var actual_dismount := float(block.get("dismount_distance", 0.0))
+		assert_almost_eq(actual_dismount, expected_dismount, 0.001,
+			"'%s' dismount clearance no longer scales with its authored body" % id)
+		assert_true(actual_dismount >= float(look.get("radius", 0.0)) + 0.65,
+			"'%s' dismount point is still inside its gameplay body" % id)
 
 
 ## No saddle mount may out-run Meadowhart, the chapter's own dedicated

@@ -43,6 +43,10 @@ const AIM_REACH := 12.0
 ## and for why the falloff must stay smooth.
 const AIM_PULL_INNER := 1.0
 const AIM_PULL_OUTER := 2.5
+## Creature scale makes the target easier to hit, but it must not turn a throw
+## aimed plainly away from the creature into a lock. This angular ceiling keeps
+## the assist a near-reticle correction even for the largest bodies.
+const AIM_PULL_MAX_DEGREES := 35.0
 
 var state: State = State.IDLE
 
@@ -814,8 +818,7 @@ func _aim_direction(camera: Camera3D, origin: Vector3) -> Vector3:
 			# binary version made the aim jump as the reticle swept past, the
 			# "grabbed the stick" feel from an earlier playtest -- so this is a
 			# larger, gentler magnet, not a snap.
-			var pull := 1.0 - smoothstep(
-				body * AIM_PULL_INNER, body * AIM_PULL_OUTER, nearest.distance_to(centre))
+			var pull := aim_pull_weight(nearest.distance_to(centre), body, along)
 			aim_point = aim_point.lerp(centre, pull)
 
 	# BALLISTIC, not a straight line. This is the fix for the throw mechanic's
@@ -830,6 +833,20 @@ func _aim_direction(camera: Camera3D, origin: Vector3) -> Vector3:
 	# numbers) falls back to the straight line, which visibly falls short —
 	# with the arc preview drawing exactly that truth.
 	return _ballistic_direction(origin, aim_point, forward)
+
+
+## Pure form of the soft magnet so its body-size and angular contracts can be
+## proved without a camera or a live fight.
+static func aim_pull_weight(off_line: float, body_width: float, along: float) -> float:
+	if along <= 0.0 or body_width <= 0.0:
+		return 0.0
+	var outer := minf(body_width * AIM_PULL_OUTER,
+		along * tan(deg_to_rad(AIM_PULL_MAX_DEGREES)))
+	var inner := minf(body_width * AIM_PULL_INNER,
+		outer * AIM_PULL_INNER / AIM_PULL_OUTER)
+	if outer <= 0.001:
+		return 0.0
+	return 1.0 - smoothstep(inner, outer, off_line)
 
 
 ## The low-arc launch direction that lands a projectile of `_speed` under

@@ -2172,7 +2172,7 @@ func _step_strike(args: Dictionary) -> Dictionary:
 		return {"verdict": "ERROR", "detail": "strike facing is zero-length"}
 	facing = facing.normalized()
 	var slot := str(args.get("slot", "quick"))
-	var verdict: Dictionary = director.call("submit_encounter_intent", {
+	var intent := {
 		"kind": "strike_intent",
 		"encounter_id": id,
 		"slot": slot,
@@ -2180,7 +2180,15 @@ func _step_strike(args: Dictionary) -> Dictionary:
 			"move_quick" if slot == "quick" else "move_charged")),
 		"origin": [origin.x, origin.y, origin.z],
 		"facing": [facing.x, facing.y, facing.z],
-	})
+	}
+	if args.has("action"):
+		intent["action"] = int(args.get("action", 0))
+	# Intentionally untrusted extras used by the authority smoke. Shipping
+	# EncounterDirector rebuilds `move` and ignores these outcome claims.
+	for key in ["cooldown", "cooldown_multiplier", "damage"]:
+		if args.has(key):
+			intent[key] = args[key]
+	var verdict: Dictionary = director.call("submit_encounter_intent", intent)
 	for i in maxi(0, int(args.get("settle", 45))):
 		await physics_frame
 	# The LOCAL verdict, reported as fields and not only inside the detail
@@ -2262,7 +2270,23 @@ func _step_stormwood_hosted_start(args: Dictionary) -> Dictionary:
 		if follower.has_method("set"):
 			follower.set("home", follower.global_position)
 		if prepare_only:
-			return {"verdict": "PASS", "detail": "prepared client actor and follower beside '%s'" % trainer_id}
+			# A direct fixture placement is only a request. Let CharacterBody3D
+			# settle against the real Stormwood floor and give the owner proxy time
+			# to publish that settled pose before the coordinator measures either
+			# process. Returning both positions keeps the client-side production
+			# challenge radius separate from network replication tolerance.
+			for i in maxi(1, int(args.get("settle", 90))):
+				await physics_frame
+			return {
+				"verdict": "PASS",
+				"detail": "prepared settled client actor and follower beside '%s'" % trainer_id,
+				"client_actor_pos": [actor.global_position.x, actor.global_position.y,
+					actor.global_position.z],
+				"client_trainer_pos": [trainer.global_position.x, trainer.global_position.y,
+					trainer.global_position.z],
+				"client_body_pos": [follower.global_position.x, follower.global_position.y,
+					follower.global_position.z],
+			}
 	hub.call("request_start", trainer_id)
 	var waited := 0
 	var limit := maxi(60, int(args.get("settle", 360)))
@@ -4606,6 +4630,19 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"refusal": emanager.get("last_encounter_refusal"),
 				"joinable": joinable,
 			}
+			# Host-only action authority evidence. Array rows survive JSON without
+			# turning large ENet peer ids into ambiguous object-key strings.
+			var encounter_authority: Variant = edirector.get("_encounter_host")
+			var authority_rows: Array = []
+			if encounter_authority != null:
+				for raw_peer: Variant in (rec.get("participants", {}) as Dictionary).keys():
+					var authority_peer := int(raw_peer)
+					var authority_state: Dictionary = encounter_authority.call(
+						"strike_authority_state", str(rec.get("encounter_id", "")), authority_peer)
+					authority_state["peer_id"] = authority_peer
+					authority_rows.append(authority_state)
+			out["host_now_ms"] = Time.get_ticks_msec()
+			out["strike_authority"] = authority_rows
 			if mine != null:
 				out["my_creature_hp"] = float((mine as RefCounted).get("hp"))
 				out["my_creature_max_hp"] = float((mine as RefCounted).get("max_hp"))
@@ -4793,12 +4830,17 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"max_hp": float(peer_card.get("max_hp", 0.0)),
 				"quick": str(peer_card.get("move_quick", "")),
 				"charged": str(peer_card.get("move_charged", "")),
+				"active_relic_id": str(peer_card.get("active_relic_id", "")),
 			}
 			if fight != null:
 				var record: Dictionary = fight.get("record") as Dictionary
 				var opponent: Node3D = fight.get("opponent") as Node3D
 				var instance: Variant = opponent.get("instance") if opponent != null else null
 				var body: Node3D = hub.call("body_for", peer)
+				var actions: Dictionary = fight.get("_actions") as Dictionary
+				var cooldowns: Dictionary = fight.get("_cooldowns") as Dictionary
+				var resolved_multiplier := float(hub.get("director").call(
+					"host_card_cooldown_multiplier", peer_card))
 				result.merge({
 					"record": {
 						"id": str(record.get("encounter_id", "")),
@@ -4816,6 +4858,13 @@ func _execute_probe(msg: Dictionary) -> Variant:
 					"opponent_hp": float((instance as RefCounted).get("hp")) if instance != null else -1.0,
 					"opponent_pos": [opponent.global_position.x, opponent.global_position.y, opponent.global_position.z] if opponent != null else [],
 					"host_body_pos": [body.global_position.x, body.global_position.y, body.global_position.z] if body != null else [],
+					"host_authority": {
+						"host_now_ms": Time.get_ticks_msec(),
+						"last_accepted_action": int(actions.get(peer, 0)),
+						"deadline_ms": int(cooldowns.get(peer, 0)),
+						"active_relic_id": str(peer_card.get("active_relic_id", "")),
+						"cooldown_multiplier": resolved_multiplier,
+					},
 				}, true)
 			return result
 		"character_restore":

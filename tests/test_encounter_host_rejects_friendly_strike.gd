@@ -32,10 +32,12 @@ const QUICK := {"range": 2.6, "cone_degrees": 90.0, "power": 9.0, "is_quick": tr
 
 var host: RefCounted = null
 var encounter_id: String = ""
+var next_action: int = 0
 
 
 func before_each() -> void:
 	host = ENCOUNTER_HOST.new(HOST_PEER)
+	next_action = 0
 	var record: Dictionary = host.call("open", HOST_PEER, "meadows", "wild", {
 		"species_id": "bramblebun", "level": 4, "hp": 30.0, "hp_max": 30.0,
 		"position": [2.0, 0.0, 0.0],
@@ -56,7 +58,9 @@ func _body(owner_peer_id: int, at: Vector3, role: String = "creature") -> Dictio
 
 
 func _strike(facing: Vector3, origin: Variant = null) -> Dictionary:
-	var intent := {"encounter_id": encounter_id, "move": QUICK, "facing": facing}
+	next_action += 1
+	var intent := {"encounter_id": encounter_id, "move": QUICK, "facing": facing,
+		"action": next_action}
 	if origin != null:
 		intent["origin"] = origin
 	return intent
@@ -291,6 +295,13 @@ func test_an_intent_missing_its_move_is_malformed_rather_than_resolved_at_the_or
 	assert_false(bool(no_facing.get("ok", true)))
 	assert_eq(str(no_facing.get("code", "")), "malformed")
 
+	var no_action: Dictionary = host.call("validate_strike",
+		{"encounter_id": encounter_id, "move": QUICK, "facing": Vector3.RIGHT},
+		HOST_PEER, _view(Vector3.ZERO))
+	assert_false(bool(no_action.get("ok", true)))
+	assert_eq(str(no_action.get("code", "")), "malformed",
+		"an unstamped strike cannot enter the host action stream")
+
 
 func test_a_strike_into_a_fight_that_is_resolving_is_refused() -> void:
 	host.call("set_phase", encounter_id, "resolving")
@@ -298,6 +309,78 @@ func test_a_strike_into_a_fight_that_is_resolving_is_refused() -> void:
 		_strike(Vector3.RIGHT), HOST_PEER, _view(Vector3.ZERO))
 	assert_false(bool(verdict.get("ok", true)))
 	assert_eq(str(verdict.get("code", "")), "wrong_phase")
+
+
+# --- host action/cooldown authority -------------------------------------------------
+
+func test_replay_and_rapid_fresh_actions_are_refused_by_the_host_deadline() -> void:
+	var charged := QUICK.duplicate(true)
+	charged["cooldown"] = 1.2
+	charged["windup"] = 0.55
+	charged["recovery"] = 0.5
+	var first := {"encounter_id": encounter_id, "move": charged,
+		"facing": Vector3.RIGHT, "action": 41,
+		# Outcome/cooldown claims alongside the resolved move are irrelevant to
+		# EncounterHost: only `move`, supplied by the host director, is read.
+		"cooldown_multiplier": 0.01, "damage": 999999.0}
+	var accepted: Dictionary = host.call("validate_strike", first, HOST_PEER,
+		_view(Vector3.ZERO, [], 10_000))
+	assert_true(bool(accepted.get("ok", false)), "the first monotonic action is accepted")
+	var state: Dictionary = host.call("strike_authority_state", encounter_id, HOST_PEER)
+	assert_eq(int(state.get("last_action", 0)), 41)
+	assert_eq(int(state.get("accepted_at_ms", 0)), 10_000)
+	assert_eq(int(state.get("deadline_ms", 0)), 11_200,
+		"the deadline comes from the host-resolved 1.2 s profile")
+	var peer_b_first := first.duplicate(true)
+	peer_b_first["action"] = 1
+	assert_true(bool((host.call("validate_strike", peer_b_first, PEER_B,
+		_view(Vector3.ZERO, [], 10_000)) as Dictionary).get("ok", false)),
+		"one participant's cooldown does not suppress another participant")
+
+	var replay: Dictionary = host.call("validate_strike", first, HOST_PEER,
+		_view(Vector3.ZERO, [], 12_000))
+	assert_false(bool(replay.get("ok", true)), "elapsed time never makes a replay valid")
+	assert_eq(str(replay.get("code", "")), "replayed_action")
+
+	var rapid := first.duplicate(true)
+	rapid["action"] = 42
+	rapid["cooldown_multiplier"] = 0.0
+	var too_soon: Dictionary = host.call("validate_strike", rapid, HOST_PEER,
+		_view(Vector3.ZERO, [], 11_199))
+	assert_false(bool(too_soon.get("ok", true)), "a fresh id cannot bypass host cooldown")
+	assert_eq(str(too_soon.get("code", "")), "cooldown")
+	assert_eq(int((host.call("strike_authority_state", encounter_id, HOST_PEER)
+		as Dictionary).get("last_action", 0)), 41,
+		"a refused rapid intent does not consume its fresh action id")
+
+	var elapsed: Dictionary = host.call("validate_strike", rapid, HOST_PEER,
+		_view(Vector3.ZERO, [], 11_200))
+	assert_true(bool(elapsed.get("ok", false)), "the fresh action is accepted at the host deadline")
+	assert_eq(int((host.call("strike_authority_state", encounter_id, HOST_PEER)
+		as Dictionary).get("last_action", 0)), 42)
+
+
+func test_action_authority_resets_when_a_participant_or_opponent_lifecycle_resets() -> void:
+	var accepted: Dictionary = host.call("validate_strike",
+		_strike(Vector3.RIGHT), PEER_B, _view(Vector3.ZERO, [], 10_000))
+	assert_true(bool(accepted.get("ok", false)))
+	host.call("leave", encounter_id, PEER_B)
+	assert_eq(int((host.call("strike_authority_state", encounter_id, PEER_B)
+		as Dictionary).get("last_action", -1)), 0,
+		"leaving clears that peer's action stream")
+	assert_true(bool((host.call("join", encounter_id, PEER_B) as Dictionary).get("ok", false)))
+	var restarted := {"encounter_id": encounter_id, "move": QUICK,
+		"facing": Vector3.RIGHT, "action": 1}
+	assert_true(bool((host.call("validate_strike", restarted, PEER_B,
+		_view(Vector3.ZERO, [], 10_001)) as Dictionary).get("ok", false)),
+		"a rejoined participant starts a new authority lifecycle")
+
+	assert_true(bool(host.call("set_opponent", encounter_id, {
+		"species_id": "mosshell", "hp": 30.0, "hp_max": 30.0,
+		"position": [2.0, 0.0, 0.0]})))
+	assert_eq(int((host.call("strike_authority_state", encounter_id, PEER_B)
+		as Dictionary).get("last_action", -1)), 0,
+		"a new opponent round clears every preceding action deadline")
 
 
 # --- §6 and §9: joining and leaving do not reset a fight ------------------------------

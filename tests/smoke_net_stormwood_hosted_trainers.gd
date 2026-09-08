@@ -24,7 +24,11 @@ const TRAINER := "tamsin_surge_lesson"
 const DEFEAT_FLAG := "stormwood:trainer:tamsin_surge_lesson:defeated"
 const REALM_STEP_BUDGET := 10000
 const HOSTED_WAIT_FRAMES := 900
-const HOST_SYNC_M := 5.0
+## `_start_for()`'s actual host-side challenge gate. Kept separate from how
+## closely two replicated actor copies must agree.
+const CHALLENGE_RADIUS_M := 12.0
+const ACTOR_REPLICATION_M := 1.5
+const BODY_SYNC_M := 5.0
 var _client_peer_id := 0
 
 
@@ -116,12 +120,32 @@ func _run() -> void:
 	if str(prepared.get("verdict", "")) != "PASS":
 		quit(await finish())
 		return
-	var admitted := await _await_host_actor_near_trainer()
+	var client_actor_at := _vec(prepared.get("client_actor_pos", []))
+	var client_trainer_at := _vec(prepared.get("client_trainer_pos", []))
+	var client_challenge_distance := client_actor_at.distance_to(client_trainer_at) \
+		if client_actor_at != Vector3.INF and client_trainer_at != Vector3.INF else INF
+	check(client_challenge_distance <= CHALLENGE_RADIUS_M,
+		("settled client actor is inside Tamsin's %.1fm production challenge radius: "
+		+ "actor=%s trainer=%s distance=%.2f") % [CHALLENGE_RADIUS_M,
+			str(client_actor_at), str(client_trainer_at), client_challenge_distance])
+	if client_challenge_distance > CHALLENGE_RADIUS_M:
+		quit(await finish())
+		return
+	var admitted := await _await_host_actor_ready(client_actor_at)
 	var actor_at := _vec(admitted.get("host_actor_pos", []))
 	var trainer_at := _vec(admitted.get("trainer_pos", []))
-	check(actor_at != Vector3.INF and trainer_at != Vector3.INF and actor_at.distance_to(trainer_at) <= HOST_SYNC_M,
-		"host shell received the remote client's actor beside Tamsin before start")
-	if actor_at == Vector3.INF or trainer_at == Vector3.INF or actor_at.distance_to(trainer_at) > HOST_SYNC_M:
+	var replication_error := actor_at.distance_to(client_actor_at) \
+		if actor_at != Vector3.INF and client_actor_at != Vector3.INF else INF
+	var host_challenge_distance := actor_at.distance_to(trainer_at) \
+		if actor_at != Vector3.INF and trainer_at != Vector3.INF else INF
+	check(replication_error <= ACTOR_REPLICATION_M,
+		("host shell mirrors the settled client actor within %.1fm: client=%s host=%s error=%.2f")
+			% [ACTOR_REPLICATION_M, str(client_actor_at), str(actor_at), replication_error])
+	check(host_challenge_distance <= CHALLENGE_RADIUS_M,
+		("host actor is independently inside Tamsin's %.1fm production challenge radius: "
+		+ "actor=%s trainer=%s distance=%.2f") % [CHALLENGE_RADIUS_M,
+			str(actor_at), str(trainer_at), host_challenge_distance])
+	if replication_error > ACTOR_REPLICATION_M or host_challenge_distance > CHALLENGE_RADIUS_M:
 		quit(await finish())
 		return
 	var started := await step(1, "stormwood_hosted_start", {"trainer": TRAINER, "request_only": true})
@@ -179,7 +203,7 @@ func _run() -> void:
 		"face": [opponent_at.x, opponent_at.y, opponent_at.z], "settle": 90})
 	check(str(placed.get("verdict", "")) == "PASS", "client positioned its local creature near the hosted opponent")
 	host_state = await _await_host_body_near(stand)
-	check(_vec(host_state.get("host_body_pos", [])).distance_to(stand) <= HOST_SYNC_M,
+	check(_vec(host_state.get("host_body_pos", [])).distance_to(stand) <= BODY_SYNC_M,
 		"host shell received the client's creature transform before a strike")
 
 	# One legal raw request consumes an action. Re-sending its action id after a
@@ -324,7 +348,7 @@ func _stage_client_for_current_opponent() -> Dictionary:
 		% host_at.distance_to(stand)}
 
 
-func _await_host_body_near(at: Vector3, tolerance: float = HOST_SYNC_M) -> Dictionary:
+func _await_host_body_near(at: Vector3, tolerance: float = BODY_SYNC_M) -> Dictionary:
 	var last: Dictionary = {}
 	for tick in HOSTED_WAIT_FRAMES:
 		var raw: Variant = await probe(0, "stormwood_hosted_trainer", {"trainer": TRAINER, "peer": _client_peer_id})
@@ -336,14 +360,16 @@ func _await_host_body_near(at: Vector3, tolerance: float = HOST_SYNC_M) -> Dicti
 	return last
 
 
-func _await_host_actor_near_trainer() -> Dictionary:
+func _await_host_actor_ready(client_at: Vector3) -> Dictionary:
 	var last: Dictionary = {}
 	for tick in HOSTED_WAIT_FRAMES:
 		var raw: Variant = await probe(0, "stormwood_hosted_trainer", {"trainer": TRAINER, "peer": _client_peer_id})
 		last = raw as Dictionary if raw is Dictionary else {}
 		var actor_at := _vec(last.get("host_actor_pos", []))
 		var trainer_at := _vec(last.get("trainer_pos", []))
-		if actor_at != Vector3.INF and trainer_at != Vector3.INF and actor_at.distance_to(trainer_at) <= HOST_SYNC_M:
+		if actor_at != Vector3.INF and trainer_at != Vector3.INF \
+				and actor_at.distance_to(client_at) <= ACTOR_REPLICATION_M \
+				and actor_at.distance_to(trainer_at) <= CHALLENGE_RADIUS_M:
 			return last
 		await step(0, "wait", {"frames": 1})
 	return last

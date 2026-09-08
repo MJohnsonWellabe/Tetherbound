@@ -208,6 +208,11 @@ var _encounter: Dictionary = {}
 ## use; a sample every other frame covers the window with ~7 entries.
 var _encounter_sample_countdown: int = 0
 
+## Locally minted monotonic ids for ordinary combat-manager strike intents.
+## Explicit ids remain possible for adversarial protocol tests, but the host
+## validates every one against its own per-encounter/per-peer ledger.
+var _encounter_action: int = 0
+
 ## Host-side: the peer whose catch is currently being performed, so §8 step 4
 ## can tell everybody ELSE who got it.
 var _catch_claimant: int = 0
@@ -231,6 +236,10 @@ var _prompt: String = ""
 ## `CO1`. The last `Game.party.revision` `_sync_active_creature()` acted on, so a
 ## party-screen re-activation is caught exactly once instead of every frame.
 var _party_revision_seen: int = -1
+## The active relic is personal state, but its combat entitlement rides the
+## same deploy-time card as the creature's other owner-held facts. A revision
+## change re-announces that card once while the creature remains deployed.
+var _heart_revision_seen: int = -1
 
 ## Set when the scene has an InteractionArbiter to hand the prompt line to.
 ##
@@ -1278,15 +1287,23 @@ func _spawn_ally_body(creature: RefCounted) -> bool:
 ## proxy of it for everybody else. A no-op in solo and in a one-peer session,
 ## which is the whole of why nothing below changes single-player behaviour.
 func _announce_deployment(creature: RefCounted) -> void:
+	# Snapshot the personal relic revision carried by this card. Without this,
+	# the next idle frame mistakes the initial deployment for a shrine change
+	# and sends the identical reliable announcement twice.
+	if is_inside_tree():
+		var game := get_node_or_null(^"/root/Game")
+		var hearts: Variant = game.get("realm_hearts") if game != null else null
+		if hearts is RefCounted:
+			_heart_revision_seen = int((hearts as RefCounted).get("revision"))
 	if not _is_multi_peer():
 		return
 	var row := {
 		"species_id": str(creature.get("species_id")),
 		"shiny": bool(creature.get("shiny")),
 		"character_id": _local_character_id(),
-		# Stage B lane 4.C. The creature's COMBAT CARD, announced once with the
-		# species rather than quoted per swing -- see `_creature_card_for()` for
-		# why the host needs it and why this is the only honest place to get it.
+		# Stage B lane 4.C. The creature's COMBAT CARD, announced with the
+		# species (and refreshed only when the active relic revision changes)
+		# rather than quoted per swing -- see `_creature_card_for()`.
 		"card": _creature_card(creature),
 	}
 	if _is_host():
@@ -1328,7 +1345,16 @@ func _rpc_creature_recalled() -> void:
 func _host_set_deployed(peer_id: int, row: Dictionary) -> void:
 	if peer_id == 0:
 		return
+	var previous: Dictionary = _deployed_by.get(peer_id, {}) as Dictionary
 	_deployed_by[peer_id] = row.duplicate(true)
+	# A relic swap changes only the card. Preserve the already-replicated body;
+	# despawning it here would make activating Livewire flash the companion out
+	# of the world even though its species and owner did not change.
+	if not previous.is_empty() \
+			and str(previous.get("species_id", "")) == str(row.get("species_id", "")) \
+			and bool(previous.get("shiny", false)) == bool(row.get("shiny", false)) \
+			and str(previous.get("character_id", "")) == str(row.get("character_id", "")):
+		return
 	_despawn_creature_proxy(peer_id)
 	_spawn_creature_proxy(peer_id)
 
@@ -1566,12 +1592,20 @@ func encounter_record() -> Dictionary:
 ## and gets a pending verdict, and the real answer arrives later on
 ## `_rpc_encounter_verdict`.
 func submit_encounter_intent(intent: Dictionary) -> Dictionary:
+	var outbound := intent
+	if str(intent.get("kind", "")) == "strike_intent":
+		outbound = intent.duplicate(true)
+		if intent.has("action"):
+			_encounter_action = maxi(_encounter_action, int(intent.get("action", 0)))
+		else:
+			_encounter_action += 1
+			outbound["action"] = _encounter_action
 	if _is_host():
-		return _host_commit_encounter(intent, _local_peer_id())
+		return _host_commit_encounter(outbound, _local_peer_id())
 	if not _can_encounter_rpc():
-		return _encounter_pending(intent, false, "You are not connected to this world.")
-	rpc_id(1, "_rpc_encounter_intent", intent)
-	return _encounter_pending(intent, true, "")
+		return _encounter_pending(outbound, false, "You are not connected to this world.")
+	rpc_id(1, "_rpc_encounter_intent", outbound)
+	return _encounter_pending(outbound, true, "")
 
 
 ## Client -> host. Never trusted with a decision: the sender id comes from the
@@ -1707,7 +1741,8 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 		_manager.get("_moves") as RefCounted,
 		"player_quick" if slot == "quick" else "player_charged",
 		str(intent.get("move_id", "")),
-		_body_radius(striker), _body_radius(wild))
+		_body_radius(striker), _body_radius(wild),
+		host_card_cooldown_multiplier(card))
 
 	# The host's own position for the striking creature, never the intent's.
 	var host_intent := intent.duplicate()
@@ -1966,9 +2001,9 @@ func _encounter_body_rows() -> Array:
 ## peer's party is its own (D100) and the host has never seen it.
 ##
 ## So it comes from 4.B's deployment announcement, extended: a peer announces
-## what it has out ONCE, when it deploys, and the card rides along with the
-## species. Announced once at deploy rather than quoted per swing is what makes
-## it un-tunable mid-fight.
+## what it has out when it deploys, and the card rides along with the species.
+## The only refresh is a revision of the player's one active relic selection;
+## it is still never quoted per swing, so a strike cannot tune its own numbers.
 func _creature_card_for(peer_id: int) -> Dictionary:
 	if peer_id == _local_peer_id() and _ally != null:
 		return _creature_card(_ally)
@@ -1990,7 +2025,63 @@ func _creature_card(creature: RefCounted) -> Dictionary:
 		"move_charged": str(creature.get("move_charged")),
 		"hp": float(creature.get("hp")),
 		"max_hp": float(creature.get("max_hp")),
+		# An identity, never a numeric multiplier. The host resolves this id
+		# against its own config and verifies the world says it is placed.
+		"active_relic_id": _local_active_relic_id(),
 	}
+
+
+func _local_active_relic_id() -> String:
+	if not is_inside_tree():
+		return ""
+	var game := get_node_or_null(^"/root/Game")
+	if game == null or game.get("realm_hearts") == null:
+		return ""
+	return str(game.realm_hearts.call("active_id"))
+
+
+## Host-owned answer for a deployment card's cooldown power. The peer may name
+## its personal active relic because only that character knows the selection;
+## it cannot name the multiplier. Unknown, unplaced, or non-cooldown relics are
+## identity. The number comes solely from the host's config and is clamped by
+## CombatManager before it reaches a timer.
+func host_card_cooldown_multiplier(card: Dictionary) -> float:
+	if not is_inside_tree():
+		return 1.0
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return 1.0
+	return validate_card_cooldown_multiplier(card,
+		game.get("realm_hearts") as RefCounted,
+		game.get("progression") as RefCounted)
+
+
+static func validate_card_cooldown_multiplier(card: Dictionary, hearts: RefCounted,
+		progression: RefCounted) -> float:
+	if hearts == null or progression == null:
+		return 1.0
+	var relic_id := str(card.get("active_relic_id", ""))
+	if relic_id.is_empty() or not bool(hearts.call("is_placed", relic_id, progression)):
+		return 1.0
+	var spec: Dictionary = hearts.call("heart", relic_id)
+	var power: Variant = spec.get("power", {})
+	if not power is Dictionary or not (power as Dictionary).has("cooldown_multiplier"):
+		return 1.0
+	return clampf(float((power as Dictionary)["cooldown_multiplier"]), 0.1, 1.0)
+
+
+func _sync_active_relic_card() -> void:
+	if not is_inside_tree():
+		return
+	var game := get_node_or_null(^"/root/Game")
+	var hearts: Variant = game.get("realm_hearts") if game != null else null
+	var revision := int((hearts as RefCounted).get("revision")) if hearts is RefCounted else -1
+	if revision == _heart_revision_seen:
+		return
+	_heart_revision_seen = revision
+	if _ally == null or _ally_body == null or not is_instance_valid(_ally_body):
+		return
+	_announce_deployment(_ally)
 
 
 static func _body_radius(body: Node3D) -> float:
@@ -2498,6 +2589,7 @@ func _process(delta: float) -> void:
 	# put back to sleep in the same frame instead of one frame late.
 	_tick_streaming()
 	_sync_active_creature()
+	_sync_active_relic_card()
 	_show_a_revived_follower()
 	_update_prompt()
 

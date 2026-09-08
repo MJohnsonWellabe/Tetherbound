@@ -28,7 +28,7 @@ func test_wild_records_include_deterministic_fixed_named_encounters_without_orde
 	var first := CATALOGUE.wild_config("calm")
 	var second := CATALOGUE.wild_config("calm")
 	assert_eq(first, second)
-	assert_eq((first["spawns"] as Array).size(), 336)
+	assert_eq((first["spawns"] as Array).size(), 407)
 	var orders: Array[int] = []
 	var authored_by_id := {}
 	for authored: Dictionary in CATALOGUE.encounter_catalogue().named_encounters:
@@ -65,8 +65,16 @@ func test_wild_records_include_deterministic_fixed_named_encounters_without_orde
 			var options: Dictionary = spawn["stormwood_phase_options"]
 			assert_true(options.has("calm"))
 			assert_true(options.has("surge"))
-	assert_eq(ordinary, 330)
+	assert_eq(ordinary, 401)
 	assert_eq(named, 6)
+	var road_rows: Array = CATALOGUE.encounter_catalogue().wild_clusters.filter(
+		func(row: Dictionary) -> bool: return row.has("_why_road_visibility_0907"))
+	assert_eq(road_rows.size(), 71,
+		"the intentional critical-road sightline sites must not be mistaken for catalogue drift")
+	for row: Dictionary in road_rows:
+		assert_true(str(row.get("id", "")).begins_with("road_visibility_"))
+		assert_eq(str(row.get("purpose", "")), "roadside creature sightline pair")
+		assert_eq(int(row.get("radius", -1)), 3)
 
 
 func test_wild_phase_keeps_each_region_in_its_authored_table_band() -> void:

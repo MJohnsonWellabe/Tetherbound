@@ -132,7 +132,9 @@ func strike(peer: int, intent: Dictionary) -> Dictionary:
 	var now := Time.get_ticks_msec()
 	if action <= int(_actions.get(peer, 0)) or now < int(_cooldowns.get(peer, 0)):
 		return refused
-	var profile: Dictionary = FIGHT.host_move_profile(engine.get("_moves"), "player_" + slot, move_id, hub.body_radius(body), hub.body_radius(opponent))
+	var profile: Dictionary = FIGHT.host_move_profile(engine.get("_moves"),
+		"player_" + slot, move_id, hub.body_radius(body), hub.body_radius(opponent),
+		float(hub.director.call("host_card_cooldown_multiplier", card)))
 	var checked := intent.duplicate(true)
 	checked["move"] = profile
 	# The host's current facing, as well as its body position, owns the hit.

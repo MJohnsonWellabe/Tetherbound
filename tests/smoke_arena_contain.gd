@@ -229,6 +229,9 @@ func _warden_arena_staging_case() -> void:
 			% [str(_player.global_position), start_radius])
 	if start_radius <= 0.0:
 		return
+	var challenger_at := _player.global_position
+	var cfg: Dictionary = _arena_staging_config()
+	var span := float(cfg.get("deploy_offset", 2.6)) + float(cfg.get("separation", 5.0))
 
 	# Two fights already happened above and this case is not about surviving a
 	# third: the ally is put back on its feet exactly the way every other combat
@@ -262,30 +265,32 @@ func _warden_arena_staging_case() -> void:
 		_fail("the Warden fight opened without both bodies on the field")
 		return
 
-	# THE CHECK THAT KEEPS THE THREE BELOW HONEST. Containment only ever
-	# SHORTENS the staging along the axis the fight formed on, so the axis is
-	# still readable off the opponent -- and this asserts that the room really
-	# does end before the full, unshortened staging span reaches. Without it,
-	# a room that happened to be big enough would pass the floor checks below
-	# while proving nothing at all about containment.
-	var axis := opponent.global_position - _player.global_position
+	# Large bodies must not be crushed into whatever length is left on an unsafe
+	# bearing. The selected axis has to hold the full authored formation AND the
+	# opponent's footprint, while the live pair must still be physically apart.
+	var axis := opponent.global_position - ally.global_position
 	axis.y = 0.0
 	if axis.length() < 0.01:
 		_fail("the fight formed on top of the player; there is no staging axis to measure")
 		return
 	axis = axis.normalized()
-	var cfg: Dictionary = _arena_staging_config()
-	var span := float(cfg.get("deploy_offset", 2.6)) + float(cfg.get("separation", 5.0))
-	var uncontained := _player.global_position + axis * span
+	var uncontained := challenger_at + axis * span
 	var uncontained_r := float(stronghold.call("combat_arena_bounds_at", uncontained.x, uncontained.z))
-	_staging_check(uncontained_r <= 0.0,
-		("the unshortened staging point %s is still inside the Warden Arena (radius %.2f), so this case "
-			+ "cannot tell a contained fight from an uncontained one -- combat.json's deploy_offset+separation "
-			+ "is %.2f m and the room has grown past it") % [str(uncontained), uncontained_r, span])
-	if uncontained_r > 0.0:
+	var opponent_radius := float(opponent.call("body_radius")) \
+		if opponent.has_method("body_radius") else 0.5
+	_staging_check(uncontained_r >= opponent_radius,
+		("the selected full %.2f m staging point %s has only %.2f m to the Warden Arena wall, "
+		+ "less than the opponent's %.2f m footprint")
+			% [span, str(uncontained), uncontained_r, opponent_radius])
+	if uncontained_r < opponent_radius:
 		return
-	print("the full %.2f m staging span reaches %s, which the room does NOT claim (radius %.2f)" % [
-		span, str(uncontained), uncontained_r])
+	var ally_radius := float(ally.call("body_radius")) if ally.has_method("body_radius") else 0.5
+	var pair_gap := opponent.global_position - ally.global_position
+	pair_gap.y = 0.0
+	_staging_check(pair_gap.length() >= ally_radius + opponent_radius,
+		("the Warden pair opened %.2f m apart, inside their combined %.2f m gameplay footprint")
+			% [pair_gap.length(), ally_radius + opponent_radius])
+	print("the selected axis holds a full %.2f m formation and both large-body footprints" % span)
 
 	_every_body_stands_in_the_arena(stronghold, floor_y, ally, opponent, "as the fight opened")
 	for i in FALL_FRAMES:
@@ -314,9 +319,10 @@ func _every_body_stands_in_the_arena(stronghold: Node3D, floor_y: float,
 			continue
 		var at := body.global_position
 		var radius := float(stronghold.call("combat_arena_bounds_at", at.x, at.z))
-		_staging_check(radius > 0.0,
-			("%s is OUTSIDE the Warden Arena %s, at %s -- the room does not claim that spot, "
-				+ "so the floor it was seated on has no collider under it") % [who, when, str(at)])
+		var footprint := float(body.call("body_radius")) if body.has_method("body_radius") else 0.45
+		_staging_check(radius >= footprint,
+			("%s's %.2f m footprint crosses the Warden Arena wall %s, at %s (only %.2f m claimed) -- "
+				+ "the floor under the body is not fully contained") % [who, footprint, when, str(at), radius])
 		var drop := absf(at.y - floor_y)
 		_staging_check(drop <= ON_THE_FLOOR_M,
 			"%s is %.3f m off the Warden Arena's floor %s (body y %.3f, floor y %.3f)"

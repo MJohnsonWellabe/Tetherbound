@@ -40,6 +40,8 @@ extends RefCounted
 ##   `friendly_target`    §5 -- the strike resolved onto another participant's
 ##                        creature or trainer. A REFUSAL, never a damage
 ##                        number of zero.
+##   `replayed_action`    the action id did not advance for this participant
+##   `cooldown`           the host's deadline for the preceding action remains
 ##   `not_catchable`      §8 -- a trainer's creature can never be caught
 ##   `already_resolving`  §8 -- another peer's catch attempt committed first
 ##   `malformed`          the intent is missing a field it needs
@@ -157,6 +159,12 @@ var seq: int = 0
 var _minted: int = 0
 var _host_peer_id: int = 1
 
+## Host-owned action ledger, encounter id -> peer id -> accepted action state.
+## This deliberately does not ride the replicated encounter record: clients
+## need the verdict and shared HP, not authority internals they could mistake
+## for something they are allowed to write back.
+var _strike_authority: Dictionary = {}
+
 
 func _init(host_peer_id: int = 1) -> void:
 	_host_peer_id = host_peer_id
@@ -188,6 +196,7 @@ func open(peer_id: int, realm: String, kind: String, opponent: Dictionary,
 		"seq": seq,
 	}
 	encounters[id] = record
+	_strike_authority[id] = {}
 	_add_participant(record, peer_id, creature_uid, character_id)
 	_restamp_scaling(record)
 	return record
@@ -213,6 +222,7 @@ func join(encounter_id: String, peer_id: int, creature_uid: String = "",
 		# must not re-seat you at a new `joined_seq`; a retried intent is the
 		# ordinary shape of an unreliable world.
 		return _ok("engage", peer_id, {"encounter_id": encounter_id, "rejoined": true})
+	_strike_state_for(encounter_id).erase(peer_id)
 	_add_participant(record, peer_id, creature_uid, character_id)
 	seq += 1
 	record["seq"] = seq
@@ -234,6 +244,7 @@ func leave(encounter_id: String, peer_id: int) -> Dictionary:
 		return _refuse("disengage", peer_id, "unknown_encounter", "That fight is over.")
 	var participants: Dictionary = record["participants"]
 	participants.erase(peer_id)
+	_strike_state_for(encounter_id).erase(peer_id)
 	seq += 1
 	record["seq"] = seq
 	# A leaver stops being a target and stops being scaled for. Both halves are
@@ -303,6 +314,9 @@ func set_opponent(encounter_id: String, opponent: Dictionary) -> bool:
 	if rec.is_empty() or str(rec.get("phase", "")) == "done":
 		return false
 	rec["opponent"] = _opponent_row(opponent)
+	# A new roster member is a new action lifecycle. No cooldown or action id
+	# from the departed body may suppress the opening move of the next round.
+	_strike_authority[encounter_id] = {}
 	seq += 1
 	rec["seq"] = seq
 	return true
@@ -350,7 +364,7 @@ func opponent_hp(encounter_id: String) -> float:
 ## Validate a `strike_intent` against the host's own view of the world.
 ##
 ## `intent` is what the player DID and nothing about what happened (§4): `move`,
-## `origin`, `facing`. It carries no damage number and no target -- that
+## `origin`, `facing`, and a monotonic `action`. It carries no damage number and no target -- that
 ## asymmetry is the protocol.
 ##
 ## `view` is what the HOST holds, and every position in it is the host's own:
@@ -396,9 +410,21 @@ func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary) -> Dict
 	if facing.length_squared() <= 0.000001:
 		return _refuse("strike_intent", peer_id, "malformed",
 			"That attack did not say which way it faced.")
+	if not intent.has("action") or typeof(intent["action"]) != TYPE_INT \
+			or int(intent["action"]) <= 0:
+		return _refuse("strike_intent", peer_id, "malformed",
+			"That attack did not carry a valid action id.")
 
 	var host_origin := to_vec3(view.get("origin", []))
 	var now_ms := int(view.get("now_ms", 0))
+	var action := int(intent["action"])
+	var authority := strike_authority_state(encounter_id, peer_id)
+	if action <= int(authority.get("last_action", 0)):
+		return _refuse("strike_intent", peer_id, "replayed_action",
+			"That attack was already handled.")
+	if now_ms < int(authority.get("deadline_ms", 0)):
+		return _refuse("strike_intent", peer_id, "cooldown",
+			"That move is still recovering.")
 
 	# §5's whole point, and the reason `friendly_target` is a refusal rather
 	# than a damage number of zero: WHO the swing resolved onto is decided
@@ -409,12 +435,51 @@ func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary) -> Dict
 			"You can't attack your own side.")
 
 	var connected := _connects_now_or_recently(move, host_origin, facing, rec, intent, now_ms)
+	var lock_ms := move_lock_ms(move)
+	var deadline_ms := now_ms + lock_ms
+	_strike_state_for(encounter_id)[peer_id] = {
+		"last_action": action,
+		"accepted_at_ms": now_ms,
+		"deadline_ms": deadline_ms,
+		"cooldown_ms": lock_ms,
+	}
 	return _ok("strike_intent", peer_id, {
 		"encounter_id": encounter_id,
 		"hit": bool(connected.get("hit", false)),
 		"target": "opponent" if bool(connected.get("hit", false)) else "",
 		"connected_at_ms": int(connected.get("at_ms", now_ms)),
+		"accepted_action": action,
+		"accepted_at_ms": now_ms,
+		"cooldown_deadline_ms": deadline_ms,
 	})
+
+
+## The host lock covers the authored cooldown and, defensively, the whole move
+## commitment. A malformed profile cannot become a zero-time attack stream.
+static func move_lock_ms(move: Dictionary) -> int:
+	var seconds := maxf(float(move.get("cooldown", 0.0)),
+		float(move.get("windup", 0.1)) + float(move.get("recovery", 0.1)))
+	return ceili(1000.0 * maxf(0.05, seconds))
+
+
+## Read-only authority evidence for focused tests and the network harness.
+## Missing state is explicit zeroes rather than the live Dictionary, so a
+## caller cannot mutate the host ledger through a returned reference.
+func strike_authority_state(encounter_id: String, peer_id: int) -> Dictionary:
+	var by_peer: Dictionary = _strike_authority.get(encounter_id, {}) as Dictionary
+	var state: Dictionary = by_peer.get(peer_id, {}) as Dictionary
+	return {
+		"last_action": int(state.get("last_action", 0)),
+		"accepted_at_ms": int(state.get("accepted_at_ms", 0)),
+		"deadline_ms": int(state.get("deadline_ms", 0)),
+		"cooldown_ms": int(state.get("cooldown_ms", 0)),
+	}
+
+
+func _strike_state_for(encounter_id: String) -> Dictionary:
+	if not _strike_authority.has(encounter_id):
+		_strike_authority[encounter_id] = {}
+	return _strike_authority[encounter_id] as Dictionary
 
 
 ## The closest body in the swing's cone that belongs to ANOTHER participant.
@@ -634,6 +699,10 @@ func set_phase(encounter_id: String, phase: String) -> void:
 	if rec.is_empty():
 		return
 	rec["phase"] = phase
+	# Catch resolution, a breakout back to active, and encounter resolution are
+	# lifecycle boundaries. None inherits a half-spent attack from the previous
+	# phase.
+	_strike_authority[encounter_id] = {}
 	seq += 1
 	rec["seq"] = seq
 
@@ -657,6 +726,7 @@ func close(encounter_id: String) -> void:
 	if rec.is_empty():
 		return
 	rec["phase"] = "done"
+	_strike_authority.erase(encounter_id)
 	seq += 1
 	rec["seq"] = seq
 
@@ -665,6 +735,7 @@ func close(encounter_id: String) -> void:
 ## still be told the record's final state before it stops existing.
 func forget(encounter_id: String) -> void:
 	encounters.erase(encounter_id)
+	_strike_authority.erase(encounter_id)
 
 
 # --- internals ---------------------------------------------------------------------

@@ -334,7 +334,7 @@ func mount() -> bool:
 	var species_id := str(body.get("species_id"))
 	if not _has_tack(species_id):
 		return false
-	if _player.global_position.distance_to(body.global_position) > MOUNT_RADIUS:
+	if _mount_surface_distance(_player.global_position, body) > MOUNT_RADIUS:
 		return false
 
 	_mount = body
@@ -805,7 +805,7 @@ func interaction_offer(from: Vector3) -> Dictionary:
 	var body := _mountable_body()
 	if body == null:
 		return {}
-	var distance := from.distance_to(body.global_position)
+	var distance := _mount_surface_distance(from, body)
 	if distance > MOUNT_RADIUS:
 		return {}
 	var species_id := str(body.get("species_id"))
@@ -838,6 +838,22 @@ func interaction_offer(from: Vector3) -> Dictionary:
 	# was NOT enough on its own, because a follower keeps pace this close for
 	# as long as it is following, not just for the first couple of seconds.
 	return PROMPTS.offer("Ride %s" % label, distance, RIDE_PRIORITY)
+
+
+## Prompt distance is clearance from the creature, not distance to the point
+## between its feet. A 7 m legendary can be directly beside the trainer while
+## its origin is several metres away; growing the visible/gameplay body must
+## not make its own mount prompt unreachable.
+func _mount_surface_distance(from: Vector3, body: Node3D) -> float:
+	var radius := 0.0
+	if body.has_method("body_radius"):
+		radius = maxf(0.0, float(body.call("body_radius")))
+	return mount_surface_distance(from, body.global_position, radius)
+
+
+static func mount_surface_distance(from: Vector3, body_at: Vector3, radius: float) -> float:
+	var delta := from - body_at
+	return maxf(0.0, delta.length() - maxf(0.0, radius))
 
 
 func interaction_activate() -> void:

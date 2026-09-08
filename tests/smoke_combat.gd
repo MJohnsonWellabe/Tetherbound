@@ -725,7 +725,9 @@ func _fight_to_a_finish() -> void:
 		var to := _wild.global_position - _ally.global_position
 		to.y = 0.0
 		_aim_camera_along(to)
-		if to.length() > 2.0:
+		var reach := maxf(float(_manager.call("combat_move_reach", "quick")),
+			float(_manager.call("combat_move_reach", "charged")))
+		if to.length() > reach:
 			Input.action_press("move_forward")
 			await physics_frame
 			Input.action_release("move_forward")
