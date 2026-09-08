@@ -105,9 +105,16 @@ static func reconcile(progression: RefCounted, chapter: Dictionary,
 
 static func _complete(progression: RefCounted, objective: Dictionary, result: Dictionary,
 		writer: Callable = Callable()) -> void:
-	# Entitlements are flags, not inventory consumables. Apply them before the
-	# completion marker and repair missing ones safely when replaying an old save.
+	# Entitlements are normally permanent flags: apply them before the completion
+	# marker and repair missing ones safely when replaying an old save. One
+	# authored exception exists: a realm key can name the durable gate flag that
+	# consumed it in `consumed_grants`. Once that marker exists, reconciliation
+	# must not manufacture the spent key again.
+	var consumed_grants: Dictionary = objective.get("consumed_grants", {}) as Dictionary
 	for reward: String in objective.get("grants_flags", []):
+		var consumed_by := str(consumed_grants.get(reward, ""))
+		if not consumed_by.is_empty() and bool(progression.call("has", consumed_by)):
+			continue
 		if _set_flag(progression, reward, result, writer):
 			result["granted_flags"].append(reward)
 	if _set_flag(progression, str(objective["flag_id"]), result, writer):

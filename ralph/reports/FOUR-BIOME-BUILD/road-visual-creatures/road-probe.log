@@ -1,0 +1,103 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+ROAD VISIBILITY: 10m samples, 1m=15px@40m (15px minimum), 720p/70deg, forward 180deg, need 2
+[meadows]
+  band1_lower_meadows samples=242 min=2 failing=0 longest=0m
+  band2_stone_and_root samples=267 min=2 failing=0 longest=0m
+  band3_the_river_lock samples=239 min=2 failing=0 longest=0m
+  band4_upper_meadows_ironwood samples=345 min=2 failing=0 longest=0m
+  band5_stronghold_approach samples=67 min=2 failing=0 longest=0m
+[cloudreach]
+  arrival_gate_road samples=92 min=2 failing=0 longest=0m
+  lower_cliff_road samples=69 min=2 failing=0 longest=0m
+  broken_causeway_main samples=187 min=2 failing=0 longest=0m
+  windscar_floor_loop samples=179 min=2 failing=0 longest=0m
+  windscar_counterweight_pass samples=192 min=2 failing=0 longest=0m
+  upper_summit_road samples=155 min=2 failing=0 longest=0m
+[stormwood]
+  ash_road samples=261 min=2 failing=0 longest=0m
+  conductor_road samples=249 min=2 failing=0 longest=0m
+  deepwood_road samples=300 min=2 failing=0 longest=0m
+[water]
+  first_shore_exploration_spine samples=59 min=4 failing=0 longest=0m
+  reedhaven_exploration_spine samples=47 min=3 failing=0 longest=0m
+  brine_steps_exploration_spine samples=50 min=3 failing=0 longest=0m
+  shellwatch_exploration_spine samples=50 min=2 failing=0 longest=0m
+  tidal_cradle_exploration_spine samples=79 min=2 failing=0 longest=0m
+  salt_crown_exploration_spine samples=77 min=2 failing=0 longest=0m
+  sluice_isle_exploration_spine samples=86 min=2 failing=0 longest=0m
+  veilfall_exploration_spine samples=146 min=2 failing=0 longest=0m
+  first_shore_to_reedhaven_sheltered samples=10 min=5 failing=0 longest=0m
+  first_shore_to_reedhaven_direct samples=9 min=5 failing=0 longest=0m
+  reedhaven_to_brine_steps_sheltered samples=12 min=3 failing=0 longest=0m
+  reedhaven_to_brine_steps_direct samples=12 min=3 failing=0 longest=0m
+  brine_steps_to_shellwatch_sheltered samples=11 min=3 failing=0 longest=0m
+  brine_steps_to_shellwatch_direct samples=11 min=3 failing=0 longest=0m
+  shellwatch_to_tidal_cradle_sheltered samples=13 min=2 failing=0 longest=0m
+  shellwatch_to_tidal_cradle_direct samples=12 min=2 failing=0 longest=0m
+  tidal_cradle_to_salt_crown_sheltered samples=48 min=2 failing=0 longest=0m
+  tidal_cradle_to_salt_crown_direct samples=45 min=2 failing=0 longest=0m
+  salt_crown_to_sluice_isle_sheltered samples=45 min=2 failing=0 longest=0m
+  salt_crown_to_sluice_isle_direct samples=42 min=2 failing=0 longest=0m
+  sluice_isle_to_veilfall_sheltered samples=71 min=2 failing=0 longest=0m
+  sluice_isle_to_veilfall_direct samples=67 min=2 failing=0 longest=0m
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:178)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:179)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:180)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:242)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:283)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:285)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:299)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:299)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:302)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:302)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:304)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+ERROR: Failed to load script "res://scripts/ui/game_menu.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)

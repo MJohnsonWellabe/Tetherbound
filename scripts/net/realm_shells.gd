@@ -104,9 +104,16 @@ func reconcile() -> void:
 		release_all()
 		return
 	var wanted := _wanted_realms()
-	for realm: String in wanted.keys():
-		if not _shells.has(realm):
-			_stand_up(realm)
+	# `Game.enter_realm()` announces the new realm before the deferred scene
+	# swap. Tear down a shell the host is about to occupy immediately, but do
+	# not begin the replacement shell until the host's new current scene says
+	# it is ready. Otherwise the swap builds two procedural worlds in the same
+	# process at once (the live destination plus the just-vacated realm shell)
+	# and both peers lose the host heartbeat.
+	if _local_realm_scene_ready():
+		for realm: String in wanted.keys():
+			if not _shells.has(realm):
+				_stand_up(realm)
 	for realm: String in _shells.keys().duplicate():
 		if not wanted.has(realm):
 			_tear_down(realm)
@@ -116,6 +123,24 @@ func reconcile() -> void:
 	for realm: String in _loading.keys().duplicate():
 		if not wanted.has(realm):
 			_loading.erase(realm)
+
+
+func _local_realm_scene_ready() -> bool:
+	var game := _game()
+	var tree := get_tree()
+	if game == null or tree == null or tree.current_scene == null:
+		return false
+	return scene_ready_for_realm(tree.current_scene, str(game.get("current_realm")))
+
+
+static func scene_ready_for_realm(scene: Node, here: String) -> bool:
+	if scene == null:
+		return false
+	if scene.has_method("world_realm") and str(scene.call("world_realm")) != here:
+		return false
+	if scene.has_method("shell_build_complete"):
+		return bool(scene.call("shell_build_complete"))
+	return true
 
 
 ## Tear every shell down, saving each first. Called when this process stops

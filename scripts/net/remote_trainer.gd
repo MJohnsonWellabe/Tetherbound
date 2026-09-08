@@ -79,6 +79,8 @@ const IDLE_SPEED := 0.15
 ## node enters the tree. Not replicated per-frame: they never change.
 @export var peer_id: int = 0
 @export var character_id: String = ""
+## The art.json body id is separate from character_id, which names the save.
+@export var appearance_id: String = "trainer"
 @export var display_name: String = ""
 ## Wave 6 lane 6.A. The realm this body was spawned INTO, stamped by
 ## `trainer_spawn.gd::_spawn_trainer()` from the spawn data. Deliberately not
@@ -694,15 +696,19 @@ func _mount_body() -> Node3D:
 ## outbound proxy. Silent in solo: `_can_present()` is the same "is there
 ## actually a session" guard the presentation channel uses, and with no session
 ## `rpc()` on an `OfflineMultiplayerPeer` is an error rather than a no-op.
-func request_landing_anchor(claim: Vector3, realm: String) -> void:
+func request_landing_anchor(claim: Vector3, realm: String, request_id: int = -1) -> void:
 	if not bool(_owned_here) or not _can_present():
 		return
+	if request_id < 0:
+		var rig := _local_rig()
+		var fly: Variant = rig.get("fly_controller") if rig != null else null
+		request_id = int(fly.get("_anchor_request_id")) if fly != null else 0
 	rpc_id(1, "_rpc_request_landing_anchor",
-		[claim.x, claim.y, claim.z], realm)
+		[claim.x, claim.y, claim.z], realm, request_id)
 
 
 @rpc("any_peer", "call_remote", "reliable")
-func _rpc_request_landing_anchor(claim: Array, realm: String) -> void:
+func _rpc_request_landing_anchor(claim: Array, realm: String, request_id: int) -> void:
 	var sender := multiplayer.get_remote_sender_id()
 	var params := _anchor_params(sender, claim, realm)
 	var answer: Dictionary = ANCHOR_ARBITER.verdict(params)
@@ -715,7 +721,7 @@ func _rpc_request_landing_anchor(claim: Array, realm: String) -> void:
 		return
 	rpc_id(sender, "_rpc_landing_anchor_verdict", bool(answer.get("ok", false)),
 		[anchor.x, anchor.y, anchor.z], str(answer.get("code", "")),
-		str(answer.get("reason", "")))
+		str(answer.get("reason", "")), request_id)
 
 
 ## Everything the arbiter is handed, gathered here so the rule itself stays a
@@ -765,7 +771,7 @@ func _anchor_params(sender: int, claim: Array, realm: String) -> Dictionary:
 ## Host -> client, on the client's own body. Handed straight to the fly
 ## controller, which is the only thing that owns `safe_anchor`.
 @rpc("any_peer", "call_remote", "reliable")
-func _rpc_landing_anchor_verdict(ok: bool, anchor: Array, code: String, reason: String) -> void:
+func _rpc_landing_anchor_verdict(ok: bool, anchor: Array, code: String, reason: String, request_id: int) -> void:
 	if multiplayer.get_remote_sender_id() != 1:
 		# Only the host answers. A peer that is not the host sending a verdict
 		# is a peer trying to move somebody else's trainer.
@@ -779,7 +785,7 @@ func _rpc_landing_anchor_verdict(ok: bool, anchor: Array, code: String, reason: 
 	var fly: Variant = rig.get("fly_controller") if rig != null else null
 	if fly == null or not (fly is Object) or not (fly as Object).has_method("apply_anchor_verdict"):
 		return
-	(fly as Object).call("apply_anchor_verdict", ok, at, code, reason)
+	(fly as Object).call("apply_anchor_verdict", ok, at, code, reason, request_id)
 
 
 # --- what `trainer_model.gd` asks a player for -------------------------------

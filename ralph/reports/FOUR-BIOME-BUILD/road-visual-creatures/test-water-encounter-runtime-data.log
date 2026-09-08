@@ -1,0 +1,71 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_water_encounter_runtime_data.gd: 1 of 263 test files
+  ok    test_water_encounter_runtime_data.gd :: test_complete_counts_and_namespaced_board_species_without_story_leak
+  ok    test_water_encounter_runtime_data.gd :: test_invalid_species_or_ground_fails_atomically_and_inputs_do_not_mutate
+  ok    test_water_encounter_runtime_data.gd :: test_positions_are_regrounded_and_existing_npc_bodies_are_reused
+  ok    test_water_encounter_runtime_data.gd :: test_surface_site_contract_rejects_wrong_waterline_or_submerge
+  ok    test_water_encounter_runtime_data.gd :: test_table_levels_weights_and_named_replacements_remain_exact
+  ok    test_water_encounter_runtime_data.gd :: test_trainer_levels_rewards_and_unique_defeat_flags_preserve_content
+
+6 tests, 2122 assertions, 0 failed
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:178)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:179)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:180)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:242)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:283)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:285)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:299)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:299)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:302)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:302)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+SCRIPT ERROR: Parse Error: Identifier "UITokens" not declared in the current scope.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:304)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)
+ERROR: Failed to load script "res://scripts/ui/game_menu.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _mount_menu (res://autoload/game_state.gd:864)
+       [1] _ready (res://autoload/game_state.gd:715)

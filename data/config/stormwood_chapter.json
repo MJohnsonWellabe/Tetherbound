@@ -29,6 +29,7 @@
       "stormwood:crown_glass_gathered",
       "stormwood:crown_arch_built",
       "stormwood:crown_reached",
+      "stormwood:named:crown_guardian:cleared",
       "stormwood:engine_truth_learned",
       "stormwood:rootgate_released",
       "stormwood:lantern_hollow_reached",
@@ -269,7 +270,8 @@
           "how": "Defeat the Crown guardian and listen to Wen at the heartstone.",
           "region_id": "hollow_crown",
           "requires_flags": [
-            "stormwood:crown_reached"
+            "stormwood:crown_reached",
+            "stormwood:named:crown_guardian:cleared"
           ],
           "completion_event": "dialogue:wen_truth"
         },
@@ -281,6 +283,7 @@
           "how": "Touch the Crown heartstone after learning what the Dynamo is doing.",
           "region_id": "hollow_crown",
           "requires_flags": [
+            "stormwood:named:crown_guardian:cleared",
             "stormwood:engine_truth_learned"
           ],
           "completion_event": "heartstone:rootgate",
@@ -459,7 +462,10 @@
             "realm_key_water",
             "waterward_route_revealed",
             "stormwood:chapter_complete"
-          ]
+          ],
+          "consumed_grants": {
+            "realm_key_water": "realm_gate_water_unlocked"
+          }
         }
       ]
     }

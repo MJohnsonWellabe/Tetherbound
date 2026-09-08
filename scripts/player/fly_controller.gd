@@ -74,6 +74,13 @@ var _anchor_proposals := 0
 var _anchor_accepts := 0
 var _anchor_refusals := 0
 var _anchor_last_code := ""
+## The outbound trainer proxy can outlive a scene's FlyController. Allocate
+## across controller instances so a late old-scene reply cannot match a new
+## controller's first request.
+static var _next_anchor_request_id := 0
+var _anchor_request_id := _new_anchor_request_id()
+
+
 ## Whether the anchor currently committed was granted by the HOST, as opposed
 ## to written locally while this process was solo or the host itself.
 ##
@@ -114,6 +121,26 @@ func setup(player: CharacterBody3D, rig: Node3D, model: Node3D) -> void:
 
 func is_flying() -> bool:
 	return state in ["glide", "climb", "descent", "exhausted"]
+
+
+static func _new_anchor_request_id() -> int:
+	_next_anchor_request_id += 1
+	return _next_anchor_request_id
+
+
+## A deliberate relocation is not a fall from the previous landing. Do not
+## grant an anchor at the requested destination: observe_ground must still
+## verify real ground (and clients still use the host's normal approval path).
+func clear_recovery_anchor() -> void:
+	_anchor_request_id = _new_anchor_request_id()
+	safe_anchor = Vector3.INF
+	safe_realm = ""
+	_anchor_host_granted = false
+	_anchor_pending = false
+	_anchor_pending_claim = Vector3.INF
+	_anchor_pending_is_landing = false
+	_anchor_pending_for = 0.0
+	_touched_down = false
 
 
 func register_updraft(id: String, bounds: AABB, lift_speed: float, ceiling_y: float, requires_flag: String = "") -> void:
@@ -471,7 +498,8 @@ func _propose_anchor(here: Vector3) -> void:
 	_anchor_pending_is_landing = landing
 	_anchor_pending_for = 0.0
 	_anchor_proposals += 1
-	proxy.call("request_landing_anchor", here, _realm())
+	_anchor_request_id = _new_anchor_request_id()
+	proxy.call("request_landing_anchor", here, _realm(), _anchor_request_id)
 
 
 ## The host answered. Called by this peer's own trainer proxy; public so a
@@ -482,7 +510,11 @@ func _propose_anchor(here: Vector3) -> void:
 ## a place the host said yes to. A refused proposal made while merely walking
 ## changes nothing at all: the player never left ground the host is already
 ## simulating them on, so there is nothing to put right.
-func apply_anchor_verdict(ok: bool, anchor: Vector3, code: String, reason: String) -> void:
+func apply_anchor_verdict(ok: bool, anchor: Vector3, code: String, reason: String, request_id: int) -> void:
+	# A delayed answer cannot restore an anchor from before a deliberate
+	# relocation or supersede the answer to a newer proposal.
+	if request_id != _anchor_request_id:
+		return
 	var was_landing := _anchor_pending_is_landing
 	_anchor_pending = false
 	_anchor_pending_is_landing = false

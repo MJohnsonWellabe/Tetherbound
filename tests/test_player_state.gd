@@ -144,11 +144,11 @@ func test_make_creature_builds_from_species_json_and_refuses_an_unknown_species(
 
 func test_save_data_carries_the_player_half_of_the_v22_keys() -> void:
 	var data: Dictionary = player.save_data()
-	for key: String in ["character_id", "display_name", "party", "inventory",
+	for key: String in ["character_id", "display_name", "chosen_character", "party", "inventory",
 			"hotbar", "satiety", "player_pose", "realm", "pending_realm_entry",
 			"realm_hearts", "realm_maps", "skills", "flags", "satchel_escrow"]:
 		assert_true(data.has(key), "local.save_data() is missing '%s'" % key)
-	assert_eq(data.keys().size(), 14, "and nothing else -- got %s" % str(data.keys()))
+	assert_eq(data.keys().size(), 15, "and nothing else -- got %s" % str(data.keys()))
 
 
 func test_save_data_carries_no_world_key() -> void:
@@ -174,6 +174,7 @@ func test_alpha_pins_ride_inside_the_realm_map_rather_than_at_the_top_level() ->
 func test_save_then_load_round_trips_everything() -> void:
 	player.character_id = "character-1"
 	player.display_name = "Ren"
+	player.chosen_character = "lyra"
 	player.realm = "cloudreach"
 	player.pending_realm_entry = "cliff_gate"
 	player.satiety = 61.5
@@ -191,6 +192,7 @@ func test_save_then_load_round_trips_everything() -> void:
 	restored.load_data(payload)
 	assert_eq(restored.character_id, "character-1")
 	assert_eq(restored.display_name, "Ren")
+	assert_eq(restored.chosen_character, "lyra")
 	assert_eq(restored.realm, "cloudreach")
 	assert_eq(restored.pending_realm_entry, "cliff_gate")
 	assert_almost_eq(restored.satiety, 61.5)
@@ -206,10 +208,12 @@ func test_save_then_load_round_trips_everything() -> void:
 
 func test_load_data_of_an_empty_dictionary_is_a_working_fresh_player() -> void:
 	player.realm = "cloudreach"
+	player.chosen_character = "kael"
 	player.satiety = 3.0
 	player.flags.set_flag("tam_tools_given")
 	player.load_data({})
 	assert_eq(player.realm, "meadows")
+	assert_eq(player.chosen_character, "trainer", "an old save without a body choice uses the original trainer")
 	assert_almost_eq(player.satiety, 100.0)
 	assert_false(player.flags.has("tam_tools_given"))
 	assert_eq(player.hotbar.size(), 5)
@@ -238,6 +242,7 @@ func test_reset_empties_the_player_but_keeps_the_flag_store_and_the_feed() -> vo
 	player.feed.call("push_event", "xp_gained", null, {"amount": 5})
 	var epoch_before: int = feed.call("feed_epoch")
 	player.realm = "cloudreach"
+	player.chosen_character = "sera"
 	player.call("map_for", "cloudreach")
 
 	player.call("reset")
@@ -247,4 +252,5 @@ func test_reset_empties_the_player_but_keeps_the_flag_store_and_the_feed() -> vo
 	assert_true(int(feed.call("feed_epoch")) > epoch_before, "the epoch climbs across a New Game")
 	assert_eq(int(feed.call("newest_seq")), 0)
 	assert_eq(player.realm, "meadows")
+	assert_eq(player.chosen_character, "sera", "the title picks a body before new-game reset")
 	assert_true((player.maps as Dictionary).is_empty(), "a new run gets fresh fog")

@@ -111,6 +111,7 @@ var _paybacks := 0
 var _worst_slice_step := ""
 var _current_step := "boot"
 var _began_ms := 0
+var _world_label := "world"
 
 
 ## Decide whether this build is sliced at all, and how finely. `shell` is the
@@ -129,6 +130,7 @@ var _began_ms := 0
 ##      yielded, not changed in any way. Every `await` on this object resumes
 ##      in the same frame.
 func begin(world: Node, shell: bool) -> void:
+	_world_label = str(world.name) if world != null else "world"
 	_active = world != null and world.is_inside_tree()
 	if not _active:
 		return
@@ -151,6 +153,26 @@ func begin(world: Node, shell: bool) -> void:
 	_frame_started_ms = Time.get_ticks_msec()
 	_step_started_ms = _frame_started_ms
 	_began_ms = _frame_started_ms
+	mark("begin:%s" % ("shell" if shell else "live_crossing"))
+
+
+## Whether this particular build is yielding frames. World roots use this to
+## keep their not-yet-grounded local player inert only during a live-session
+## transition; solo builds remain exactly as they were.
+func is_slicing() -> bool:
+	return _active
+
+
+## Live diagnostic breadcrumb emitted BEFORE a potentially costly authored
+## substructure. Unlike the end-of-build summary this survives a killed peer,
+## so a heartbeat failure names the exact build boundary it never returned
+## from. No timing policy or yield behavior lives here.
+func mark(label: String) -> void:
+	if not _active:
+		return
+	print("[shell_build] %s %s total=%dms slice=%dms" % [
+		_world_label, label, Time.get_ticks_msec() - _began_ms,
+		Time.get_ticks_msec() - _frame_started_ms])
 
 
 ## Yield IF this frame has already spent its build budget. Call it inside the
@@ -158,13 +180,17 @@ func begin(world: Node, shell: bool) -> void:
 ## between them: a single loop that runs for eight seconds is the whole
 ## problem, and a yield placed after it does not help.
 func breathe() -> void:
-	if not _active:
+	var frames := take_breathe_frames()
+	if frames <= 0:
 		return
-	var slice := Time.get_ticks_msec() - _frame_started_ms
-	if slice < _budget_ms:
-		return
-	_note_slice(slice)
-	await _let_frames_out(slice)
+	# Own the signal suspension in this public coroutine. Godot 4.7 can lose the
+	# continuation when a deeply nested world-build coroutine awaits this
+	# RefCounted method while it, in turn, awaits another RefCounted coroutine.
+	# Keeping the signal await here removes that extra continuation boundary;
+	# the number and kind of frames released are unchanged.
+	for i in frames:
+		await _tree.physics_frame
+	finish_release(frames)
 
 
 ## `breathe()`, plus a named record of what the build has just finished, so a
@@ -172,12 +198,41 @@ func breathe() -> void:
 ## re-derive where the time goes. Yields unconditionally: a step boundary is a
 ## natural place to let a frame out even if this one has budget left.
 func step(label: String) -> void:
-	if not _active:
+	var frames := take_step_frames(label)
+	if frames <= 0:
 		return
+	for i in frames:
+		await _tree.physics_frame
+	finish_step(label, frames)
+
+
+## Synchronous half of `breathe()`. A world root that needs to own every
+## suspension itself asks how many frames are due, performs the signal await
+## on its Node coroutine, then calls `finish_release()`. This avoids routing a
+## deep procedural build continuation through a RefCounted coroutine.
+func take_breathe_frames() -> int:
+	if not _active:
+		return 0
+	var slice := Time.get_ticks_msec() - _frame_started_ms
+	if slice < _budget_ms:
+		return 0
+	_note_slice(slice)
+	return _frames_to_release(slice)
+
+
+## Synchronous half of `step()`, for the same world-root-owned scheduler.
+func take_step_frames(label: String) -> int:
+	if not _active:
+		return 0
 	var now := Time.get_ticks_msec()
 	_steps.append("%s=%d" % [label, now - _step_started_ms])
 	_note_slice(now - _frame_started_ms)
-	await _let_frames_out(now - _frame_started_ms)
+	mark("complete:%s" % label)
+	return _frames_to_release(now - _frame_started_ms)
+
+
+func finish_step(label: String, frames: int) -> void:
+	finish_release(frames)
 	_step_started_ms = _frame_started_ms
 	# The label of the step just FINISHED, so the next slice recorded is
 	# attributed as "the step after this one" rather than to itself.
@@ -185,15 +240,17 @@ func step(label: String) -> void:
 
 
 ## One frame normally; a whole heartbeat window after an indivisible slice.
-## Physics frames rather than process frames because the heartbeat this is
-## protecting is sent from `_physics_process`.
-func _let_frames_out(slice_ms: int) -> void:
+## Kept synchronous so `breathe()` and `step()` remain the sole owners of the
+## physics-signal await and their callers have only one continuation boundary.
+func _frames_to_release(slice_ms: int) -> int:
 	var frames := 1
 	if slice_ms >= LONG_SLICE_MS:
 		frames = HEARTBEAT_FRAMES + 5
 		_paybacks += 1
-	for i in frames:
-		await _tree.physics_frame
+	return frames
+
+
+func finish_release(frames: int) -> void:
 	_yields += frames
 	_frame_started_ms = Time.get_ticks_msec()
 

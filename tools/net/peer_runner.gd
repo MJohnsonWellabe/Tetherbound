@@ -92,6 +92,11 @@ const NET_REWARDS := preload("res://scripts/net/encounter_rewards.gd")
 ## Wave 6 lanes 6.B/6.C. Riding and Fly.
 const NET_RIDING := preload("res://scripts/world/riding_controller.gd")
 const SPECIES_DATA := preload("res://scripts/creatures/creature_species.gd")
+## Read-only geometry diagnostics for the hosted-trainer net smokes.  The host
+## still resolves every strike through the shipping classes; these only report
+## the exact profile and cone predicate that path is about to use.
+const NET_COMBAT_MANAGER := preload("res://scripts/combat/combat_manager.gd")
+const NET_COMBAT_MATH := preload("res://scripts/combat/combat_math.gd")
 
 const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
@@ -666,6 +671,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_stormwood_hosted_raw_strike(args)
 		"stormwood_hosted_quick":
 			out = await _step_stormwood_hosted_quick(args)
+		"stormwood_hosted_deadline_window":
+			out = await _step_stormwood_hosted_deadline_window(args)
 		_:
 			out = {"verdict": "ERROR", "detail": "unknown action '%s'" % action}
 	out["frames_used"] = _physics_count - before
@@ -1758,15 +1765,26 @@ func _step_enter_realm(args: Dictionary) -> Dictionary:
 	# the real bool, and using that as a bool aborts this step with a fatal
 	# script error before it reaches any `return` -- which is what actually
 	# produced the ERROR-with-no-detail this lane's net smokes hit.
+	var budget := maxi(1, int(args.get("budget_frames", 6000)))
+	var started_ms := Time.get_ticks_msec()
+	var started_physics_frame := Engine.get_physics_frames()
 	var crossed: bool = await game.call("enter_realm", realm, str(args.get("entry", "")))
+	var observed_frames := Engine.get_physics_frames() - started_physics_frame
+	if observed_frames > budget:
+		return {"verdict": "FAIL", "detail": ("Game.enter_realm('%s') exceeded its %d-physics-frame budget "
+			+ "(%d frames / %d ms)") % [realm, budget, observed_frames,
+				Time.get_ticks_msec() - started_ms]}
 	if not crossed:
 		return {"verdict": "FAIL",
 			"detail": "Game.enter_realm('%s') refused from '%s' (can_enter=%s)"
 				% [realm, was, str(game.call("can_enter_realm", realm))]}
 	var wanted := str(REALM_ROOT_NAMES.get(realm, ""))
-	var budget := int(args.get("budget_frames", 6000))
-	for i in maxi(1, budget):
+	# `enter_realm()` now owns the readiness wait. Keep the original, literal
+	# physics-frame budget around the whole transition rather than starting a
+	# second wall-clock timer after the expensive work has already completed.
+	while observed_frames <= budget:
 		await physics_frame
+		observed_frames = Engine.get_physics_frames() - started_physics_frame
 		if str(game.get("current_realm")) != realm:
 			continue
 		if wanted.is_empty():
@@ -1777,16 +1795,32 @@ func _step_enter_realm(args: Dictionary) -> Dictionary:
 		# accepted one of those would pass without the local player having
 		# gone anywhere at all.
 		if world != null and world == current_scene:
+			# A scene swap publishes `current_scene` before an async procedural
+			# `_ready()` has finished. Returning at that point lets the next control
+			# probe arrive inside the very build whose liveness this smoke measures.
+			# Stay within the caller's existing frame budget and wait for production's
+			# readiness seam; this does not enlarge either timeout.
+			if world.has_method("shell_build_complete") \
+					and not bool(world.call("shell_build_complete")):
+				continue
 			_scene_name = str(REALM_SCENE_NAMES.get(realm, _scene_name))
 			# Settle, so the arriving world has finished its procedural build
 			# before anything is probed against it.
 			for j in int(args.get("settle_frames", DEFAULT_SETTLE_FRAMES)):
 				await physics_frame
+			observed_frames = Engine.get_physics_frames() - started_physics_frame
+			if observed_frames > budget:
+				return {"verdict": "FAIL", "detail": ("enter_realm('%s') settled after its "
+					+ "%d-physics-frame budget (%d frames / %d ms)") % [realm, budget,
+						observed_frames, Time.get_ticks_msec() - started_ms]}
 			return {"verdict": "PASS",
-				"detail": "crossed '%s' -> '%s' after %d frames; current scene is /root/%s"
-					% [was, realm, i, wanted]}
-	return {"verdict": "FAIL", "detail": "enter_realm('%s') never stood /root/%s up as the current scene within %d frames"
-		% [realm, wanted, budget]}
+				"detail": ("crossed '%s' -> '%s' after %d observed physics frames / %d ms "
+					+ "(budget %d physics frames); current scene is /root/%s")
+					% [was, realm, observed_frames, Time.get_ticks_msec() - started_ms,
+						budget, wanted]}
+	return {"verdict": "FAIL", "detail": ("enter_realm('%s') never stood /root/%s up as "
+		+ "the current scene within %d physics frames (%d observed physics frames / %d ms)")
+		% [realm, wanted, budget, observed_frames, Time.get_ticks_msec() - started_ms]}
 
 
 ## Wave 6 lane 6.A. Vanish, the way a lost connection does -- NOT the way
@@ -2172,7 +2206,7 @@ func _step_strike(args: Dictionary) -> Dictionary:
 		return {"verdict": "ERROR", "detail": "strike facing is zero-length"}
 	facing = facing.normalized()
 	var slot := str(args.get("slot", "quick"))
-	var verdict: Dictionary = director.call("submit_encounter_intent", {
+	var intent := {
 		"kind": "strike_intent",
 		"encounter_id": id,
 		"slot": slot,
@@ -2180,7 +2214,20 @@ func _step_strike(args: Dictionary) -> Dictionary:
 			"move_quick" if slot == "quick" else "move_charged")),
 		"origin": [origin.x, origin.y, origin.z],
 		"facing": [facing.x, facing.y, facing.z],
-	})
+	}
+	if args.has("action"):
+		intent["action"] = int(args.get("action", 0))
+	# Intentionally untrusted extras used by the authority smoke. Shipping
+	# EncounterDirector rebuilds `move` and ignores these outcome claims.
+	for key in ["cooldown", "cooldown_multiplier", "damage"]:
+		if args.has(key):
+			intent[key] = args[key]
+	var verdict: Dictionary = director.call("submit_encounter_intent", intent)
+	# An explicit replay keeps its authored action id; an ordinary strike gets
+	# the production counter that submit_encounter_intent just allocated.  Keep
+	# this observable so a stale prior refusal cannot be mistaken for the answer
+	# to a newly numbered request.
+	var submitted_action := int(intent.get("action", director.get("_encounter_action")))
 	for i in maxi(0, int(args.get("settle", 45))):
 		await physics_frame
 	# The LOCAL verdict, reported as fields and not only inside the detail
@@ -2201,6 +2248,7 @@ func _step_strike(args: Dictionary) -> Dictionary:
 			"pending": bool(verdict.get("pending", false)),
 			"code": str(verdict.get("code", "")),
 			"reason": str(verdict.get("reason", "")),
+			"submitted_action": submitted_action,
 		}}
 
 
@@ -2262,7 +2310,28 @@ func _step_stormwood_hosted_start(args: Dictionary) -> Dictionary:
 		if follower.has_method("set"):
 			follower.set("home", follower.global_position)
 		if prepare_only:
-			return {"verdict": "PASS", "detail": "prepared client actor and follower beside '%s'" % trainer_id}
+			# A direct fixture placement is only a request. Let CharacterBody3D
+			# settle against the real Stormwood floor and give the owner proxy time
+			# to publish that settled pose before the coordinator measures either
+			# process. Returning both positions keeps the client-side production
+			# challenge radius separate from network replication tolerance.
+			for i in maxi(1, int(args.get("settle", 90))):
+				await physics_frame
+			return {
+				"verdict": "PASS",
+				"detail": "prepared settled client actor and follower beside '%s'" % trainer_id,
+				# `_handle_message()` deliberately transmits structured step output
+				# only through `data`; sibling fields are not part of the control
+				# protocol and never reach net_harness.gd::step().
+				"data": {
+					"client_actor_pos": [actor.global_position.x, actor.global_position.y,
+						actor.global_position.z],
+					"client_trainer_pos": [trainer.global_position.x, trainer.global_position.y,
+						trainer.global_position.z],
+					"client_body_pos": [follower.global_position.x, follower.global_position.y,
+						follower.global_position.z],
+				},
+			}
 	hub.call("request_start", trainer_id)
 	var waited := 0
 	var limit := maxi(60, int(args.get("settle", 360)))
@@ -2297,13 +2366,19 @@ func _step_stormwood_hosted_fixture_health(args: Dictionary) -> Dictionary:
 	if opponent == null or instance == null:
 		return {"verdict": "FAIL", "detail": "host has no live opponent to stage"}
 	(instance as RefCounted).set("hp", hp)
+	# The Livewire timing witness holds its target still so a valid cooldown
+	# admission cannot be confused with a moving-target miss. Ordinary hosted
+	# combat leaves this false and continues to exercise production enemy AI.
+	if bool(args.get("stationary_target", false)):
+		opponent.set_physics_process(false)
+		opponent.set("velocity", Vector3.ZERO)
 	var authority: RefCounted = fight.get("authority")
 	var record: Dictionary = fight.get("record") as Dictionary
 	authority.call("set_opponent_hp", str(record.get("encounter_id", "")), hp,
 		float((instance as RefCounted).get("max_hp")))
 	fight.call("_snapshot")
-	return {"verdict": "PASS", "detail": "TEST FIXTURE staged host-owned '%s' round %d to %.1f hp"
-		% [trainer_id, int(fight.get("round_index")), hp]}
+	return {"verdict": "PASS", "detail": "TEST FIXTURE staged host-owned '%s' round %d to %.1f hp; stationary_target=%s"
+		% [trainer_id, int(fight.get("round_index")), hp, bool(args.get("stationary_target", false))]}
 
 
 ## Sends intentionally untrusted fields down the same Session RPC as a client.
@@ -2337,6 +2412,54 @@ func _step_stormwood_hosted_raw_strike(args: Dictionary) -> Dictionary:
 		% [int(payload.action), str(payload.realm), str(manager.get("last_encounter_refusal") if manager != null else {})]}
 
 
+## Read the exact host-owned geometry and production move profile used by
+## `stormwood_hosted_trainer.gd::strike()`.  This does not submit or validate an
+## intent and therefore cannot advance action/cooldown authority; it only makes
+## an accepted miss distinguishable as range, facing, or missing-body state.
+func _stormwood_hosted_strike_geometry(fight: Node, body: Node3D,
+		opponent: Node3D, card: Dictionary, slot: String = "charged") -> Dictionary:
+	if fight == null or not is_instance_valid(fight) \
+			or body == null or not is_instance_valid(body) \
+			or opponent == null or not is_instance_valid(opponent):
+		return {"available": false, "reason": "missing fight/body/opponent"}
+	var engine: Node = fight.get("engine") as Node
+	if engine == null or not is_instance_valid(engine):
+		return {"available": false, "reason": "missing authoritative engine"}
+	var hosted_hub: Node = fight.get("hub") as Node
+	var hosted_director: Node = null
+	if hosted_hub != null and is_instance_valid(hosted_hub):
+		hosted_director = hosted_hub.get("director") as Node
+	if hosted_director == null or not is_instance_valid(hosted_director):
+		return {"available": false, "reason": "missing hosted encounter director"}
+	var move_id := str(card.get("move_" + slot, ""))
+	var profile := NET_COMBAT_MANAGER.host_move_profile(
+		engine.get("_moves") as RefCounted, "player_" + slot, move_id,
+		float(body.call("body_radius")) if body.has_method("body_radius") else 0.5,
+		float(opponent.call("body_radius")) if opponent.has_method("body_radius") else 0.5,
+		float(hosted_director.call("host_card_cooldown_multiplier", card)))
+	var origin: Vector3 = body.call("centre")
+	var facing: Vector3 = body.call("facing")
+	var target: Vector3 = opponent.call("centre")
+	var toward := Vector3(target.x - origin.x, 0.0, target.z - origin.z)
+	var planar_facing := Vector3(facing.x, 0.0, facing.z)
+	var angle := 0.0
+	if toward.length_squared() > 0.000001 and planar_facing.length_squared() > 0.000001:
+		angle = rad_to_deg(planar_facing.normalized().angle_to(toward.normalized()))
+	return {
+		"available": true,
+		"slot": slot,
+		"move_id": move_id,
+		"connects": NET_COMBAT_MATH.move_connects(profile, origin, facing, target),
+		"origin": [origin.x, origin.y, origin.z],
+		"facing": [facing.x, facing.y, facing.z],
+		"target": [target.x, target.y, target.z],
+		"distance_m": toward.length(),
+		"angle_degrees": angle,
+		"range_m": float(profile.get("range", 2.6)),
+		"cone_degrees": float(profile.get("cone_degrees", 90.0)),
+	}
+
+
 ## A real controller press, after the host has had time to receive the client
 ## body transform. This is intentionally not `fight.strike()` or a direct call
 ## to the hub: it is the combat input path a player uses.
@@ -2347,14 +2470,57 @@ func _step_stormwood_hosted_quick(args: Dictionary) -> Dictionary:
 	var ready_frames := maxi(30, int(args.get("ready_budget", 360)))
 	for i in ready_frames:
 		if bool(manager.call("quick_ready")):
+			var hub := _stormwood_hub()
+			var action_before := int(hub.get("_action")) if hub != null else -1
 			var pressed := await _inject("combat_quick", 1)
 			if not bool(pressed.get("ok", false)):
 				return {"verdict": "ERROR", "detail": "could not inject combat_quick: %s" % str(pressed)}
+			# Latch submission before a successful kill starts a new encounter
+			# record and resets the sender's per-round action counter to zero.
+			var action_observed := int(hub.get("_action")) if hub != null else -1
 			for settle in maxi(0, int(args.get("settle", 90))):
 				await physics_frame
-			return {"verdict": "PASS", "detail": "pressed the real hosted combat_quick input"}
+				if hub != null:
+					action_observed = maxi(action_observed, int(hub.get("_action")))
+			return {"verdict": "PASS" if action_observed > action_before else "FAIL",
+				"detail": "real hosted combat_quick input; observed action %d -> %d; retained refusal (may predate input)=%s"
+					% [action_before, action_observed, str(manager.get("last_encounter_refusal"))]}
 		await physics_frame
 	return {"verdict": "FAIL", "detail": "combat_quick never became ready; did not bypass cooldown"}
+
+
+## Read-only host-local wait: a coordinator probe + wait round trip can skip
+## an entire narrow cooldown window. Sample it on the clock that owns it.
+## This neither sends a strike nor changes any authority/deadline value.
+func _step_stormwood_hosted_deadline_window(args: Dictionary) -> Dictionary:
+	var wanted := int(args.get("deadline_ms", 0))
+	var target := int(args.get("target_ms", 0))
+	var minimum := int(args.get("minimum_ms", 0))
+	var last: Dictionary = {}
+	var entered_ms := Time.get_ticks_msec()
+	var first_remaining := 0
+	var previous_now := entered_ms
+	var largest_sample_gap := 0
+	for tick in 180:
+		last = _execute_probe({"what": "stormwood_hosted_trainer", "args": args}) as Dictionary
+		var authority: Dictionary = last.get("host_authority", {}) as Dictionary
+		if not bool(last.get("is_host", false)) or int(authority.get("deadline_ms", 0)) != wanted:
+			return {"verdict": "FAIL", "detail": "host deadline missing or changed", "data": last}
+		var sampled_now := int(authority.get("host_now_ms", 0))
+		var remaining := wanted - sampled_now
+		if tick == 0:
+			first_remaining = remaining
+		largest_sample_gap = maxi(largest_sample_gap, sampled_now - previous_now)
+		previous_now = sampled_now
+		if remaining <= target:
+			return {"verdict": "PASS" if remaining >= minimum else "FAIL",
+				"detail": ("host sampled %dms before deadline (required %d..%dms); "
+					+ "entry_remaining=%dms samples=%d elapsed=%dms max_sample_gap=%dms") % [
+					remaining, minimum, target, first_remaining, tick + 1,
+					sampled_now - entered_ms, largest_sample_gap],
+				"data": last}
+		await physics_frame
+	return {"verdict": "FAIL", "detail": "host window wait exceeded 180 frames", "data": last}
 
 
 func _combat_manager() -> Node:
@@ -4171,6 +4337,16 @@ func _probe_water_swimming() -> Dictionary:
 	return {"local": local, "remote": remote, "current_realm": str(root.get_node("Game").get("current_realm"))}
 
 
+## Capture both sides of the boss-friendly-fire observation in one callback.
+## Separate TCP probes leave a frame gap in which a legitimate boss hit changes
+## HP outside the tally's measured window. No await, so combat cannot tick here.
+static func boss_combat_snapshot(director: Object) -> Dictionary:
+	var record: Dictionary = director.call("encounter_record")
+	var creature: Variant = director.call("ally_instance")
+	return {"record": record.duplicate(true),
+		"my_creature_hp": float(creature.get("hp")) if creature != null else -1.0}
+
+
 func _execute_probe(msg: Dictionary) -> Variant:
 	var what := str(msg.get("what", ""))
 	var args: Dictionary = msg.get("args", {}) as Dictionary
@@ -4606,6 +4782,19 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"refusal": emanager.get("last_encounter_refusal"),
 				"joinable": joinable,
 			}
+			# Host-only action authority evidence. Array rows survive JSON without
+			# turning large ENet peer ids into ambiguous object-key strings.
+			var encounter_authority: Variant = edirector.get("_encounter_host")
+			var authority_rows: Array = []
+			if encounter_authority != null:
+				for raw_peer: Variant in (rec.get("participants", {}) as Dictionary).keys():
+					var authority_peer := int(raw_peer)
+					var authority_state: Dictionary = encounter_authority.call(
+						"strike_authority_state", str(rec.get("encounter_id", "")), authority_peer)
+					authority_state["peer_id"] = authority_peer
+					authority_rows.append(authority_state)
+			out["host_now_ms"] = Time.get_ticks_msec()
+			out["strike_authority"] = authority_rows
 			if mine != null:
 				out["my_creature_hp"] = float((mine as RefCounted).get("hp"))
 				out["my_creature_max_hp"] = float((mine as RefCounted).get("max_hp"))
@@ -4646,7 +4835,8 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			var bmanager := _combat_manager()
 			if bdirector == null or bmanager == null:
 				return {"available": false}
-			var brec: Dictionary = bdirector.call("encounter_record")
+			var combat_sample := boss_combat_snapshot(bdirector)
+			var brec: Dictionary = combat_sample["record"]
 			var bopponent: Dictionary = brec.get("opponent", {}) as Dictionary
 			var bargs: Dictionary = msg.get("args", {}) as Dictionary
 			var btrainer := str(bargs.get("trainer", "warden_aldis"))
@@ -4730,6 +4920,7 @@ func _execute_probe(msg: Dictionary) -> Variant:
 					"struck_counts": brec.get("struck_counts", {}),
 				},
 				"local_peer_id": bdirector.call("_local_peer_id"),
+				"my_creature_hp": combat_sample["my_creature_hp"],
 				"live": live,
 				"authored": authored,
 				# §10's gate, reported so a scaling assertion that goes red says
@@ -4793,13 +4984,21 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"max_hp": float(peer_card.get("max_hp", 0.0)),
 				"quick": str(peer_card.get("move_quick", "")),
 				"charged": str(peer_card.get("move_charged", "")),
+				"active_relic_id": str(peer_card.get("active_relic_id", "")),
 			}
 			if fight != null:
 				var record: Dictionary = fight.get("record") as Dictionary
 				var opponent: Node3D = fight.get("opponent") as Node3D
 				var instance: Variant = opponent.get("instance") if opponent != null else null
 				var body: Node3D = hub.call("body_for", peer)
+				var actions: Dictionary = fight.get("_actions") as Dictionary
+				var cooldowns: Dictionary = fight.get("_cooldowns") as Dictionary
+				var resolved_multiplier := float(hub.get("director").call(
+					"host_card_cooldown_multiplier", peer_card))
 				result.merge({
+					"last_strike": fight.get("last_strike"),
+					"body_radius": float(body.call("body_radius")) if body != null else 0.0,
+					"opponent_radius": float(opponent.call("body_radius")) if opponent != null else 0.0,
 					"record": {
 						"id": str(record.get("encounter_id", "")),
 						"realm": str(record.get("realm", "")),
@@ -4816,6 +5015,17 @@ func _execute_probe(msg: Dictionary) -> Variant:
 					"opponent_hp": float((instance as RefCounted).get("hp")) if instance != null else -1.0,
 					"opponent_pos": [opponent.global_position.x, opponent.global_position.y, opponent.global_position.z] if opponent != null else [],
 					"host_body_pos": [body.global_position.x, body.global_position.y, body.global_position.z] if body != null else [],
+					"host_authority": {
+						"host_now_ms": Time.get_ticks_msec(),
+						"last_accepted_action": int(actions.get(peer, 0)),
+						"deadline_ms": int(cooldowns.get(peer, 0)),
+						"active_relic_id": str(peer_card.get("active_relic_id", "")),
+						"cooldown_multiplier": resolved_multiplier,
+					},
+					"charged_geometry": _stormwood_hosted_strike_geometry(
+						fight, body, opponent, peer_card, "charged"),
+					"quick_geometry": _stormwood_hosted_strike_geometry(
+						fight, body, opponent, peer_card, "quick"),
 				}, true)
 			return result
 		"character_restore":

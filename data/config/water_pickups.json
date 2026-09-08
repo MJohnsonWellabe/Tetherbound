@@ -4131,7 +4131,7 @@
       "sampled_slope_deg": 6.115,
       "main_route_distance_m": 19.106,
       "registration": "planned",
-      "gather_action": "hand",
+      "gather_action": "knife",
       "placement_reason": "Reachable reed patch on dry coastal ground."
     },
     {
@@ -4419,7 +4419,7 @@
       "sampled_slope_deg": 5.234,
       "main_route_distance_m": 24.677,
       "registration": "planned",
-      "gather_action": "hand",
+      "gather_action": "knife",
       "placement_reason": "Reachable reed patch on dry coastal ground."
     },
     {

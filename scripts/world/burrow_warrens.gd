@@ -257,7 +257,8 @@ var _population: Array[Node3D] = []
 ## `world` is the playground root (it answers `ground_height_at`), `director`
 ## is the encounter director that owns every wild body in the scene. Both may
 ## be null in a bare test scene; the cave still stands up, just empty.
-func build(world: Node, camera_rig: Node = null, player: Node3D = null, director: Node = null) -> bool:
+func build(world: Node, camera_rig: Node = null, player: Node3D = null,
+		director: Node = null, build_budget: RefCounted = null) -> bool:
 	_world = world
 	_camera_rig = camera_rig
 	_player = player
@@ -293,10 +294,13 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null, director
 
 	_interior_skins = 0
 	_build_chambers()
+	await _build_breathe(build_budget)
 	_build_passages()
+	await _build_breathe(build_budget)
 	# WARRENS-ART-0906 (W3): after the passages, because a bay's own side-wall
 	# skins are clipped against the doorways `_build_passages()` records.
 	_build_earth_clad_bays()
+	await _build_breathe(build_budget)
 	if _interior_skins > 0:
 		print("[warrens] %d interior earth skins across %d walls-clad chamber(s) and the passages"
 			% [_interior_skins, _clad_chamber_count()])
@@ -305,33 +309,58 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null, director
 	# `_tag_exterior_children()`.
 	var exterior_from := get_child_count()
 	_build_approach_apron()
+	await _build_breathe(build_budget)
 	_tag_exterior_children(exterior_from)
 	_build_lights()
+	await _build_breathe(build_budget)
 	_build_interior_area()
+	await _build_breathe(build_budget)
 	exterior_from = get_child_count()
 	_clear_the_ground_the_cave_stands_on()
+	await _build_breathe(build_budget)
 	_build_bank()
+	await _build_breathe(build_budget)
 	_build_bank_mouth()
+	await _build_breathe(build_budget)
 	_build_warren_holes()
+	await _build_breathe(build_budget)
 	_build_bank_roots_and_scrapes()
+	await _build_breathe(build_budget)
 	_build_bank_crest_trees()
+	await _build_breathe(build_budget)
 	_build_accent_boulders()
+	await _build_breathe(build_budget)
 	_build_bank_face_outcrops()
+	await _build_breathe(build_budget)
 	_build_spoil_mounds()
+	await _build_breathe(build_budget)
 	_build_bank_rubble()
+	await _build_breathe(build_budget)
 	_dress_mound_with_growth()
+	await _build_breathe(build_budget)
 	_tag_exterior_children(exterior_from)
 	_build_deposits()
+	await _build_breathe(build_budget)
 	_build_dressing()
+	await _build_breathe(build_budget)
 	_build_den_atmosphere()
+	await _build_breathe(build_budget)
 	_build_interior_rock()
+	await _build_breathe(build_budget)
 	_build_structure()
+	await _build_breathe(build_budget)
 	_build_prize()
+	await _build_breathe(build_budget)
 	_build_roots()
+	await _build_breathe(build_budget)
 	_build_fungus()
+	await _build_breathe(build_budget)
 	_build_floor_litter()
+	await _build_breathe(build_budget)
 	_build_haze()
+	await _build_breathe(build_budget)
 	_build_interior_ambient()
+	await _build_breathe(build_budget)
 	_sync_vault_door()
 
 	_markers["entrance"] = to_global(Vector3(0.0, _floor_y, _mouth_outer_z() - 3.0))
@@ -339,6 +368,14 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null, director
 		_spawn_population(director)
 	set_process(true)
 	return true
+
+
+## Realm transitions hand in their existing frame budget. Ordinary solo and
+## focused fixture builds pass null and remain synchronous; no second build
+## policy lives in this dungeon.
+func _build_breathe(build_budget: RefCounted) -> void:
+	if build_budget != null:
+		await build_budget.call("breathe")
 
 
 func _load_config() -> Dictionary:
@@ -7443,4 +7480,3 @@ func _dress_mound_with_growth() -> void:
 		placed += 1
 	if placed > 0:
 		print("[warrens] %d pieces of growth on the bank" % placed)
-

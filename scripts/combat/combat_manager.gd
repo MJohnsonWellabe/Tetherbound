@@ -578,10 +578,10 @@ const CONTAIN_STEP_M := 0.5
 ## past it. Taken as ONE piece so `_open_arena()` and `_place_fighters()` cannot
 ## disagree about where the fight is.
 func _staging_spots(cfg: Dictionary) -> Array[Vector3]:
-	var forward := _forward_axis()
 	var deploy := float(cfg.get("deploy_offset", 2.6))
 	var separation := float(cfg.get("separation", 5.0))
 	var full := deploy + separation
+	var forward := _staging_axis(full)
 	var scale := 1.0
 	if full > 0.01:
 		scale = _staging_reach(_player.global_position, forward, full) / full
@@ -589,6 +589,24 @@ func _staging_spots(cfg: Dictionary) -> Array[Vector3]:
 		_player.global_position + forward * (deploy * scale),
 		_player.global_position + forward * (full * scale),
 	]
+
+
+## Prefer the direction the encounter was taken up in, except when a built
+## room has substantially more legal floor behind the player than ahead.
+##
+## The old containment fix only shortened the authored 7.6 m formation. With
+## today's creature sizes, shortening can put two perfectly grounded capsules
+## inside each other; physics then resolves the overlap vertically and a body
+## appears to float metres above the arena floor. A room is not a corridor with
+## only one legal facing: when the other direction carries the full formation,
+## turn the formation into that floor instead of crushing it.
+func _staging_axis(want: float) -> Vector3:
+	var forward := _forward_axis()
+	if want <= 0.0 or _arena_bounds(_player.global_position) <= 0.0:
+		return forward
+	var forward_reach := _staging_reach(_player.global_position, forward, want)
+	var reverse_reach := _staging_reach(_player.global_position, -forward, want)
+	return -forward if reverse_reach > forward_reach + CONTAIN_STEP_M else forward
 
 
 ## How far in front of `from` the fight may form before it leaves the room it is
@@ -652,7 +670,8 @@ func _place_fighters() -> void:
 	var cfg: Dictionary = MATH.config().get("arena", {})
 	# Taken BEFORE anything is placed: `_forward_axis()` reads the opponent's
 	# current position, and `_place()` below moves it.
-	var forward := _forward_axis()
+	var full := float(cfg.get("deploy_offset", 2.6)) + float(cfg.get("separation", 5.0))
+	var forward := _staging_axis(full)
 	var spots := _staging_spots(cfg)
 	var ally_spot: Vector3 = spots[0]
 	var wild_spot: Vector3 = spots[1]
@@ -1368,7 +1387,8 @@ func note_caught_by(peer_id: int, species: String) -> void:
 
 ## §5 steps 4-5, run on the host for ANY participant's strike -- its own
 ## included. `card` is the striker's creature as the host holds it (announced at
-## deploy time, never per-swing: see `encounter_director.gd::_creature_card()`).
+## deploy time or after a shrine selection changes, never per-swing: see
+## `encounter_director.gd::_creature_card()`).
 ##
 ## Returns `{"damage", "killed", "hp", "hp_max", "type_mult"}`. The opponent is
 ## `_enemy`, the host's own live instance, so `take_damage()` here IS the record
@@ -1401,7 +1421,7 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float) -> D
 ## longer reach by describing its own move in the intent -- it names the move,
 ## and this decides what the move is.
 static func host_move_profile(moves: RefCounted, block: String, move_id: String,
-		mine: float, theirs: float) -> Dictionary:
+		mine: float, theirs: float, cooldown_multiplier: float = 1.0) -> Dictionary:
 	var profile: Dictionary = MATH.config().get(block, {}).duplicate()
 	if not move_id.is_empty() and moves != null:
 		var move: Dictionary = moves.call("move", move_id)
@@ -1410,7 +1430,20 @@ static func host_move_profile(moves: RefCounted, block: String, move_id: String,
 				profile[key] = float(move[key])
 		profile["vfx"] = move.get("vfx", {})
 		profile["move_id"] = move_id
+	profile = with_cooldown_multiplier(profile, cooldown_multiplier)
 	return floor_reach_for_bodies(profile, mine, theirs)
+
+
+## Realm powers may shorten a move's cooldown, but never lengthen it and never
+## erase it. The host supplies the multiplier from its own validated relic
+## definition; a client does not send a numeric value with each swing.
+static func with_cooldown_multiplier(profile: Dictionary, multiplier: float) -> Dictionary:
+	var resolved := profile.duplicate(true)
+	if not resolved.has("cooldown"):
+		return resolved
+	var safe := clampf(multiplier, 0.1, 1.0)
+	resolved["cooldown"] = maxf(0.05, float(resolved["cooldown"]) * safe)
+	return resolved
 
 
 ## §5's other half, on the host: the opponent picks a target among the
@@ -1746,17 +1779,30 @@ func _consume_buffered_attack() -> void:
 ## plain hit is worth and the move scales it.
 func _move_profile(block: String, move_id: String) -> Dictionary:
 	var profile: Dictionary = MATH.config().get(block, {}).duplicate()
-	if move_id.is_empty() or _moves == null:
-		return profile
-	var move: Dictionary = _moves.call("move", move_id)
-	for key in ["range", "cone_degrees", "windup", "recovery", "cooldown", "lunge"]:
-		if move.has(key):
-			profile[key] = float(move[key])
-	# Carried so `_start_action` and the impact can read how this move should
-	# look without going back to the database for it.
-	profile["vfx"] = move.get("vfx", {})
-	profile["move_id"] = move_id
-	return profile
+	if not move_id.is_empty() and _moves != null:
+		var move: Dictionary = _moves.call("move", move_id)
+		for key in ["range", "cone_degrees", "windup", "recovery", "cooldown", "lunge"]:
+			if move.has(key):
+				profile[key] = float(move[key])
+		# Carried so `_start_action` and the impact can read how this move should
+		# look without going back to the database for it.
+		profile["vfx"] = move.get("vfx", {})
+		profile["move_id"] = move_id
+	return with_cooldown_multiplier(profile, active_move_cooldown_multiplier())
+
+
+## The single personal relic selection is the solo authority. In multiplayer
+## this same selection is announced in the deployment card and refreshed only
+## on a selection revision; the host then resolves the number from its own
+## config and placed-world state.
+func active_move_cooldown_multiplier() -> float:
+	if not is_inside_tree():
+		return 1.0
+	var game := get_node_or_null(^"/root/Game")
+	if game == null or game.get("realm_hearts") == null:
+		return 1.0
+	var power: Dictionary = game.realm_hearts.call("active_power")
+	return clampf(float(power.get("cooldown_multiplier", 1.0)), 0.1, 1.0)
 
 
 func _start_action(move: Dictionary) -> void:
@@ -2564,6 +2610,21 @@ func charged_ready() -> bool:
 	var creature := active_creature()
 	return creature != null and creature.can_use_charged() \
 		and _action == Action.READY and _charged_cooldown <= 0.0
+
+
+## The centre-to-centre reach the currently piloted creature gets for a move
+## slot. Combat drivers (the smoke pilots today, an accessibility auto-pilot
+## tomorrow) must ask the same size-aware rule the impact resolver uses. A
+## hard-coded two metres becomes unreachable as soon as two large creatures'
+## non-overlapping capsules already stand farther apart than that.
+func combat_move_reach(slot: String) -> float:
+	var creature := active_creature()
+	if creature == null:
+		return 0.0
+	var block := "player_charged" if slot == "charged" else "player_quick"
+	var move_id := str(creature.get("move_charged")) if slot == "charged" \
+		else str(creature.get("move_quick"))
+	return float(_with_reach_for_the_bodies(_move_profile(block, move_id)).get("range", 0.0))
 
 
 ## True while the player's creature is committed and cannot move.

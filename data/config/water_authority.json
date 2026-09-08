@@ -4,7 +4,7 @@
   "realm": "water",
   "personal_state": {
     "skills": {"owner": "PlayerState", "portable": true, "legacy_snapshot": true, "world_snapshot": false, "_comment": "XP, reveal and candy changes belong to the trainer. Missing legacy data starts at zero, with reveal inferred only from legitimately reached later realms."},
-    "swim_stone": {"owner": "PlayerState.flags", "flag": "water_swim_stone_earned", "portable": true, "grant_source": "host_alpha_completion", "_comment": "Shared Alpha resolution fans out one durable entitlement to eligible participants; later eligible arrivals claim from resolved Stone, not a respawned boss."},
+    "swim_stone": {"owner": "PlayerState.flags", "flag": "water_swim_stone_earned", "portable": true, "grant_source": "host_alpha_completion_or_iona_attunement", "_comment": "Shared Alpha resolution fans out one durable entitlement to eligible participants; a later stable character may earn one entitlement from host-validated physical Iona attunement after that shared victory, never by respawning the boss."},
     "swim_recipe": {"owner": "PlayerState.flags", "flag": "water_swim_saddle_recipe_learned", "portable": true, "requires": ["water_swim_stone_earned"]},
     "skill_candy": {"owner": "PlayerState.inventory", "consume": "local_identity_transaction", "world_pickup": "host_claim_pickup", "_comment": "The first world pickup claimant owns the item under existing pickup rules. Spending cannot affect another character; full tier must fit before item removal."},
     "swim_pose": {"owner": "PlayerState.pose", "portable": true, "fields": ["version", "realm", "mode", "surface_y", "human_stamina_fraction", "safe_landing", "active_index"], "_comment": "Index only describes current party slot in the same atomic character snapshot. Persistent mount resource is on the creature instance, so rearranging party cannot transfer endurance."},
@@ -35,6 +35,15 @@
       "validator": "host_authored_dock_contract",
       "checks": ["sender realm water", "known dock id", "sender within interaction range", "authored world prerequisites", "personal ingredient proof under existing portable-inventory trust model"],
       "_comment": "Never accept arbitrary client flag ids or a client claimed completion. Existing movement and inventory ownership remains intact; extend typed intentions for consequential Water state."
+    },
+    "water_swim_stone_attune": {
+      "transport": "existing_water_alpha_transport",
+      "validator": "host_water_alpha_authority",
+      "checks": ["shared Aquaryn resolved", "sender registry has stable character", "sender realm water", "host-observed trainer within 5 m of production Iona", "new entitlement only when the character has none"],
+      "atomic_world_ops": [{"flag_prefix": "water_claim:alpha:aquaryn:entitled:", "value": true}],
+      "personal_ops": [{"flag": "water_swim_stone_earned", "value": true, "recipient": "validated sender"}],
+      "duplicate_policy": "no_new_entitlement_or_world_save; idempotent_personal_flag_redelivery_allowed",
+      "_comment": "Late arrivals never refight or claim Aquaryn. The host journals the new stable-character entitlement before publishing the addressed personal flag; reconnect may re-deliver that same boolean flag from the entitlement without creating a second reward."
     },
     "skills_summary": {
       "transport": "existing_owned_trainer_proxy_or_session_rpc",

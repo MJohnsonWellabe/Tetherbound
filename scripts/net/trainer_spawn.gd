@@ -35,6 +35,8 @@ extends Node
 ## is the whole reason D101 keeps one local rig per process.
 
 const REMOTE_TRAINER := preload("res://scenes/player/remote_trainer.tscn")
+const PEER_REGISTRY := preload("res://scripts/net/peer_registry.gd")
+const HOST_PEER_ID := PEER_REGISTRY.HOST_PEER_ID
 
 ## Where `Session` is mounted: a `Node` child of the `Game` autoload
 ## (`archive/ralph/briefs/MP-W2/2A-SESSION.md` -- the one-autoload rule stands, so it
@@ -239,6 +241,19 @@ func _character_id_for(peer_id: int) -> String:
 	return ""
 
 
+func _appearance_id_for(peer_id: int) -> String:
+	if _session != null and _session.has_method("peers"):
+		var raw: Variant = _session.call("peers")
+		if raw is Array:
+			for entry in (raw as Array):
+				if entry is Dictionary:
+					var d: Dictionary = entry
+					if int(d.get("peer_id", d.get("id", 0))) == peer_id:
+						var appearance := str(d.get("appearance_id", "trainer"))
+						return appearance if not appearance.is_empty() else "trainer"
+	return "trainer"
+
+
 func _spawn_for(peer_id: int) -> void:
 	if _spawner == null or _bodies.has(peer_id):
 		return
@@ -246,6 +261,7 @@ func _spawn_for(peer_id: int) -> void:
 	var data := {
 		"peer_id": peer_id,
 		"character_id": _character_id_for(peer_id),
+		"appearance_id": _appearance_id_for(peer_id),
 		"display_name": _display_name_for(peer_id),
 		"at": [at.x, at.y, at.z],
 		# Carried in the spawn rather than read from `_realm` in the spawn
@@ -276,6 +292,13 @@ func _spawn_trainer(data: Variant) -> Node:
 	node.name = "Trainer_%d" % peer_id
 	node.set("peer_id", peer_id)
 	node.set("character_id", str(d.get("character_id", "")))
+	var appearance_id := str(d.get("appearance_id", "trainer"))
+	if appearance_id.is_empty():
+		appearance_id = "trainer"
+	node.set("appearance_id", appearance_id)
+	var model := node.get_node_or_null(^"Model")
+	if model != null:
+		model.set("appearance_id", appearance_id)
 	node.set("display_name", str(d.get("display_name", "")))
 	var at: Variant = d.get("at", [])
 	if at is Array and (at as Array).size() == 3:
@@ -356,8 +379,8 @@ func _on_session_ended(_reason: Variant = null) -> void:
 ##
 ## Added on EVERY peer, in the spawn function, because each process evaluates
 ## the filter for its own outbound traffic: the host for the spawn, the body's
-## owner for the deltas. Both read the same replicated registry, so both get
-## the same answer.
+## owner for the deltas. Ordinary viewers use the same registry answer; the
+## listen server is the deliberate exception because it owns every shell.
 ##
 ## The filter reads the session EVERY evaluation. It must: the answer changes
 ## the moment somebody walks through a gate, and a body that cached it at
@@ -372,14 +395,26 @@ func _scope_to_realm(node: Node, realm: String) -> void:
 		var session := node.get_node_or_null(SESSION_PATH)
 		if session == null or not session.has_method("realm_of"):
 			return true
-		if not bool(session.call("is_active")):
-			return true
-		var where := str(session.call("realm_of", observer))
-		# An observer with no registry row yet (the frame between the ENet
-		# connection and the hello) is shown the body rather than hidden from
-		# it: a spawn withheld is never retried, and a body seen one frame
-		# early corrects itself on the next evaluation.
-		return where.is_empty() or where == realm)
+		var active := bool(session.call("is_active"))
+		var where := str(session.call("realm_of", observer)) if active else ""
+		return observer_may_receive(observer, where, realm, active))
+
+
+## Realm scoping is a presentation boundary for ordinary observers, but the
+## listen server is also the simulation authority for every occupied realm.
+## It must keep receiving an owner's trainer pose while its own avatar is in a
+## different realm, otherwise a headless shell parks that trainer at its spawn
+## and every host-owned distance check refuses the remote player.  This is not
+## cross-realm drawing: the body lives below the non-current shell.
+static func observer_may_receive(observer: int, observer_realm: String,
+		body_realm: String, session_active: bool) -> bool:
+	if not session_active or observer == HOST_PEER_ID:
+		return true
+	# An observer with no registry row yet (the frame between the ENet
+	# connection and the hello) is shown the body rather than hidden from it:
+	# a spawn withheld is never retried, and a body seen one frame early
+	# corrects itself on the next evaluation.
+	return observer_realm.is_empty() or observer_realm == body_realm
 
 
 ## Test/inspection door: the remote bodies standing in this world right now.

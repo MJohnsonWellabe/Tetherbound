@@ -121,6 +121,12 @@ static func _definition(id: String, raw: Dictionary, base: Dictionary, errors: A
 	for key: String in ["model", "model_scale", "model_yaw", "animations"]:
 		if presentation.has(key):
 			look[key] = presentation[key].duplicate(true) if presentation[key] is Dictionary else presentation[key]
+	# The runtime id is namespaced (`water_aquaryn`) so it cannot also name the
+	# authored texture folder (`aquaryn`). CreatureBody needs the presentation
+	# id when a GLB embeds its textures and the colourway lookup falls back to
+	# `<species>_extracted_*_<suffix>.png`. Without this, every Water ordinary,
+	# shiny and alpha silently kept the source mesh's unpainted material.
+	look.colourway_source_species = id
 	var definition: Dictionary = {}
 	for key: String in ["display_name", "type", "base_hp", "base_attack", "base_defence", "catch_rate", "aggressive", "moves", "combat_role", "epithet"]:
 		if raw.has(key):

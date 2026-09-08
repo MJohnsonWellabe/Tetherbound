@@ -120,6 +120,17 @@ var net_conditions: Dictionary = {}
 ## a real link share one link.
 var _proxies: Dictionary = {}
 var _proxy_listen_next := 0
+var _children_terminated := false
+
+
+## MainLoop's last synchronous teardown seam. Smoke scripts normally call
+## `finish()`, but a script error, coordinator failure, or external SIGTERM can
+## end the tree before their coroutine reaches it. Killing known child PIDs here
+## keeps local/direct harness runs from leaving peer Godot processes behind;
+## CI additionally contains the entire runner tree in its own process group so
+## hard cancellation does not depend on Godot getting this callback.
+func _finalize() -> void:
+	_terminate_child_processes()
 
 
 ## `TB_NET_CONDITIONS="delay=150,jitter=30,loss=1"`. Any missing field is 0,
@@ -877,17 +888,7 @@ func finish() -> int:
 				break
 		if all_exited:
 			break
-	for entry3 in _peers:
-		var p3: Dictionary = entry3
-		var pid := int(p3.get("pid", -1))
-		if pid > 0 and OS.is_process_running(pid):
-			OS.kill(pid)
-
-	for key in _proxies.keys():
-		var proxy: Dictionary = _proxies[key]
-		var proxy_pid := int(proxy.get("pid", -1))
-		if proxy_pid > 0 and OS.is_process_running(proxy_pid):
-			OS.kill(proxy_pid)
+	_terminate_child_processes()
 
 	_write_run_json()
 	_write_summary()
@@ -903,6 +904,22 @@ func finish() -> int:
 		return 1
 	print("ALL CHECKS PASSED")
 	return 0
+
+
+func _terminate_child_processes() -> void:
+	if _children_terminated:
+		return
+	_children_terminated = true
+	for entry in _peers:
+		var peer: Dictionary = entry
+		var pid := int(peer.get("pid", -1))
+		if pid > 0 and OS.is_process_running(pid):
+			OS.kill(pid)
+	for key in _proxies.keys():
+		var proxy: Dictionary = _proxies[key]
+		var proxy_pid := int(proxy.get("pid", -1))
+		if proxy_pid > 0 and OS.is_process_running(proxy_pid):
+			OS.kill(proxy_pid)
 
 
 func _write_run_json() -> void:

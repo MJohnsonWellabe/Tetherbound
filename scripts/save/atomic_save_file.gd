@@ -1,22 +1,105 @@
 extends RefCounted
 
+static var _validity_cache: Dictionary = {}
+static var _io_mutex := Mutex.new()
+
+
+static func begin_transaction() -> void:
+	_io_mutex.lock()
+
+
+static func end_transaction() -> void:
+	_io_mutex.unlock()
+
 ## Per-file save commit. Godot 4.7's Windows rename removes an existing
 ## destination BEFORE moving the source, so never rename over a live save.
 ## Keep the previous document beside it until the new document is installed.
 ## Readers use that previous document if interrupted between the two renames.
-## This is not a transaction across world/character/slot files, nor an OS
-## power-loss durability guarantee (FileAccess exposes flush, not fsync).
-## Callers retain the existing one-owner, synchronous-write contract. Pending
+## This helper is not a transaction across world/character/slot files;
+## save_game.gd coordinates synchronous rollback for that group. Neither is an
+## OS power-loss durability guarantee (FileAccess exposes flush, not fsync).
+## The IO mutex serializes writers (including fallback workers); the outer
+## SaveGame transaction retains it across all three commits and rollback. Pending
 ## files orphaned by a crash are never loaded; only .previous is recoverable.
 
 static func readable_path(path: String) -> String:
-	if FileAccess.file_exists(path):
+	begin_transaction()
+	var result := _readable_path_locked(path)
+	end_transaction()
+	return result
+
+
+static func _readable_path_locked(path: String) -> String:
+	if _is_valid_document(path):
 		return path
-	return path + ".previous" if FileAccess.file_exists(path + ".previous") else path
-
-
-func write(path: String, text: String) -> bool:
 	var previous := path + ".previous"
+	return previous if _is_valid_document(previous) else path
+
+
+static func has_readable(path: String) -> bool:
+	begin_transaction()
+	var result := _has_readable_locked(path)
+	end_transaction()
+	return result
+
+
+static func _has_readable_locked(path: String) -> bool:
+	return _is_valid_document(readable_path(path))
+
+
+static func _is_valid_document(path: String) -> bool:
+	if not FileAccess.file_exists(path):
+		_validity_cache.erase(path)
+		return false
+	var modified := FileAccess.get_modified_time(path)
+	var size := FileAccess.get_size(path)
+	var cached: Variant = _validity_cache.get(path)
+	if cached is Dictionary and int(cached.get("modified", -1)) == modified \
+			and int(cached.get("size", -1)) == size:
+		return bool(cached.get("valid", false))
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		return false
+	var parser := JSON.new()
+	var parse_error := parser.parse(file.get_as_text())
+	file.close()
+	var valid := parse_error == OK and typeof(parser.data) == TYPE_DICTIONARY
+	_validity_cache[path] = {"modified": modified, "size": size, "valid": valid}
+	return valid
+
+
+## Remove every readable generation of one save. A backup-only interrupted
+## commit must not make a deleted slot reappear on the next listing.
+static func delete(path: String) -> bool:
+	begin_transaction()
+	var result := _delete_locked(path)
+	end_transaction()
+	return result
+
+
+static func _delete_locked(path: String) -> bool:
+	var complete := true
+	for candidate: String in [path, path + ".previous"]:
+		_validity_cache.erase(candidate)
+		if FileAccess.file_exists(candidate):
+			complete = DirAccess.remove_absolute(candidate) == OK and complete
+	return complete
+
+
+## With retain_previous=true, a successful replacement keeps the old readable
+## generation until finish() or rollback(). SaveGame uses that narrow mode to
+## coordinate its slot/world/character group without re-reading all three files.
+func write(path: String, text: String, retain_previous: bool = false) -> bool:
+	begin_transaction()
+	var result := _write_locked(path, text, retain_previous)
+	end_transaction()
+	return result
+
+
+func _write_locked(path: String, text: String, retain_previous: bool = false) -> bool:
+	var previous := path + ".previous"
+	_validity_cache.erase(path)
+	_validity_cache.erase(previous)
 	# Finish an interrupted rollback before starting another save. On refusal,
 	# retain the previous file; readable_path() can still load it.
 	if not FileAccess.file_exists(path) and FileAccess.file_exists(previous):
@@ -43,8 +126,10 @@ func write(path: String, text: String) -> bool:
 	if not complete:
 		DirAccess.remove_absolute(temporary)
 		return false
-	var had_previous := FileAccess.file_exists(path)
-	if had_previous:
+	var canonical_valid := _is_valid_document(path)
+	var previous_valid := _is_valid_document(previous)
+	var moved_canonical := false
+	if canonical_valid:
 		# A prior successful commit may have left its backup after cleanup was
 		# refused. The canonical document remains present throughout this step.
 		if FileAccess.file_exists(previous) and DirAccess.remove_absolute(previous) != OK:
@@ -53,14 +138,67 @@ func write(path: String, text: String) -> bool:
 		if _rename(path, previous) != OK:
 			DirAccess.remove_absolute(temporary)
 			return false
+		moved_canonical = true
+	elif FileAccess.file_exists(path):
+		# A truncated canonical must never displace its valid recovery copy. The
+		# new document is already fully staged and verified before it is removed.
+		if DirAccess.remove_absolute(path) != OK:
+			DirAccess.remove_absolute(temporary)
+			return false
 	if _rename(temporary, path) != OK:
-		if had_previous:
+		if moved_canonical:
 			_rename(previous, path)
 		DirAccess.remove_absolute(temporary)
 		return false
-	if had_previous:
+	if (moved_canonical or previous_valid) and not retain_previous:
 		DirAccess.remove_absolute(previous)
+	_validity_cache[path] = {
+		"modified": FileAccess.get_modified_time(path),
+		"size": FileAccess.get_size(path),
+		"valid": true,
+	}
+	_validity_cache.erase(previous)
 	return true
+
+
+## Complete a retained replacement after every member of its save group wrote.
+static func finish(path: String) -> bool:
+	begin_transaction()
+	var result := _finish_locked(path)
+	end_transaction()
+	return result
+
+
+static func _finish_locked(path: String) -> bool:
+	var previous := path + ".previous"
+	_validity_cache.erase(previous)
+	return not FileAccess.file_exists(previous) or DirAccess.remove_absolute(previous) == OK
+
+
+## Undo a retained replacement. had_readable is captured before write(): when
+## false, the new canonical is the first valid generation and rollback removes
+## it; when true, .previous is the exact old generation to restore.
+static func rollback(path: String, had_readable: bool) -> bool:
+	begin_transaction()
+	var result := _rollback_locked(path, had_readable)
+	end_transaction()
+	return result
+
+
+static func _rollback_locked(path: String, had_readable: bool) -> bool:
+	_validity_cache.erase(path)
+	_validity_cache.erase(path + ".previous")
+	if not had_readable:
+		return delete(path)
+	var previous := path + ".previous"
+	if not _is_valid_document(previous):
+		return false
+	if FileAccess.file_exists(path) and DirAccess.remove_absolute(path) != OK:
+		return false
+	if DirAccess.rename_absolute(previous, path) != OK:
+		return false
+	_validity_cache.erase(path)
+	return _is_valid_document(path)
 
 
 ## Narrow overridable IO seams let tests produce real truncated files and

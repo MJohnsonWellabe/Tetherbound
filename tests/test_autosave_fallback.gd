@@ -7,7 +7,8 @@ extends "res://tests/test_case.gd"
 ## `GameState._tick_autosave()` is the fix: a plain real-time cadence, ticked
 ## every `_process()`, independent of anything the player has built or rested
 ## at. This file proves it by actually reaching disk through the real
-## `GameState.save_game()` -> `save_system.save()` path, the same "real
+## `GameState._tick_autosave()` -> `save_system.request_fallback()` path,
+## explicitly joining before checking the file. This is the same "real
 ## object, real file over a mock" choice `tests/test_save_format.gd` and
 ## `tests/test_satchel.gd` already make.
 ##
@@ -36,6 +37,8 @@ func before_each() -> void:
 
 
 func after_each() -> void:
+	if saver != null:
+		saver.finish_fallback()
 	if game != null:
 		game.free()
 		game = null
@@ -61,6 +64,7 @@ func _wipe_test_dir() -> void:
 func test_no_camp_ever_built_still_autosaves_once_the_fallback_interval_passes() -> void:
 	assert_false(saver.has_slot(game.autosave_slot()), "nothing written yet")
 	game._tick_autosave(200.0) # comfortably past the fallback interval
+	assert_true(saver.finish_fallback())
 	assert_true(saver.has_slot(game.autosave_slot()),
 		"no camp was ever built -- the fallback timer is the only thing that could have written this")
 
@@ -78,6 +82,7 @@ func test_the_fallback_does_not_fire_before_its_interval_elapses() -> void:
 func test_many_small_ticks_add_up_to_a_fallback_autosave() -> void:
 	for i in range(1000):
 		game._tick_autosave(0.2) # 1000 * 0.2s = 200s of simulated frames
+	assert_true(saver.finish_fallback())
 	assert_true(saver.has_slot(game.autosave_slot()))
 
 
@@ -87,5 +92,6 @@ func test_many_small_ticks_add_up_to_a_fallback_autosave() -> void:
 func test_the_fallback_autosave_carries_the_real_game_state() -> void:
 	game.day = 5
 	game._tick_autosave(200.0)
+	assert_true(saver.finish_fallback())
 	var info: Dictionary = saver.slot_info(game.autosave_slot())
 	assert_eq(int(info.get("day")), 5)

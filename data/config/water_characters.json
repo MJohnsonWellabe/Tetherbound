@@ -13,6 +13,17 @@
       "effect": "water:water_swim_lesson_briefed"
     },
     {
+      "requires_world_flags": [
+        "water_aquaryn_resolved"
+      ],
+      "unless_personal_flags": [
+        "water_swim_stone_earned"
+      ],
+      "conversation": "water_iona_attunement",
+      "purpose": "A late arrival completes Iona's explanation before requesting one host-validated personal Stone attunement. Speech itself grants nothing.",
+      "effect": "water:water_swim_stone_attune"
+    },
+    {
       "requires_personal_flags": [
         "water_swim_stone_earned"
       ],
@@ -156,9 +167,9 @@
       "portrait": "res://assets/ui/portraits/wandering_trainer.png",
       "portrait_mode": "installed_body_render",
       "island_local_offset": [
-        9.0,
+        -25.0,
         0.0,
-        23.0
+        149.0
       ],
       "greeting": "water_tovin_pre",
       "greeting_when": [
@@ -167,7 +178,7 @@
           "conversation": "water_tovin_post"
         }
       ],
-      "_comment_placement": "Offset is island-local metres and must be grounded and composed by world integration; these are not measured terrain positions."
+      "_comment_placement": "Measured production placement beside the final graded Brine Steps spine leg, 22.29m before the Shellwatch departure; the trainer centre remains outside the 3m flat trail core."
     },
     {
       "id": "water_adair",
@@ -409,9 +420,9 @@
       "portrait": "res://assets/ui/portraits/officer_b.png",
       "portrait_mode": "installed_body_render",
       "island_local_offset": [
+        111.779,
         0.0,
-        0.0,
-        12.0
+        -245.567
       ],
       "greeting": "water_venn_pre",
       "greeting_when": [
@@ -506,7 +517,7 @@
         },
         {
           "trainer_owned": true,
-          "species": "brooktail",
+          "species": "sirenseal",
           "level": 44
         }
       ],
@@ -671,7 +682,7 @@
       "team": [
         {
           "trainer_owned": true,
-          "species": "galecrest",
+          "species": "riverdrake",
           "level": 47
         },
         {
@@ -968,9 +979,9 @@
       "npc_entity_id": "water_trainer_bex",
       "island_id": "sluice_isle",
       "island_local_offset": [
-        18.0,
+        -179.0,
         0.0,
-        -20.0
+        -155.0
       ],
       "critical": true,
       "ace_level": 51,
@@ -994,7 +1005,7 @@
       "intro_conversation": "water_trainer_bex_intro",
       "win_conversation": "water_trainer_bex_win",
       "lose_conversation": "water_trainer_bex_lose",
-      "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
+      "_comment": "Bex guards the west control on the physically proven arrival spine; the former central-crown placement required an unmarked roughly 660m island loop around a graded cut before it could be approached. Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
     },
     {
       "id": "water_trainer_calder",
@@ -1002,9 +1013,9 @@
       "npc_entity_id": "water_trainer_calder",
       "island_id": "sluice_isle",
       "island_local_offset": [
-        -18.0,
+        -107.0,
         0.0,
-        -30.0
+        216.0
       ],
       "critical": true,
       "ace_level": 52,
@@ -1033,7 +1044,7 @@
       "intro_conversation": "water_trainer_calder_intro",
       "win_conversation": "water_trainer_calder_win",
       "lose_conversation": "water_trainer_calder_lose",
-      "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
+      "_comment": "Calder guards the east control on the graded departure leg, upstream of its prompt; the former central-crown placement stood above the tested direct approach across the graded cut. Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
     },
     {
       "id": "water_trainer_vera",

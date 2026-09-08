@@ -2,7 +2,8 @@ extends Node3D
 
 ## Installed Water cast through production NPC bodies and the shared dialogue
 ## panel. Speech emits guarded requests only; this component never writes flags,
-## awards items, completes objectives, starts combat, or opens a dock.
+## awards items, completes objectives, starts combat, or opens a dock. Iona's
+## post-victory attunement is likewise only a request to host authority.
 signal guarded_event_requested(event_id: String, npc_id: String, peer_id: int)
 const NPC := preload("res://scripts/npc/npc_body.gd")
 const CHARACTER := preload("res://scripts/characters/character_model.gd")
@@ -148,6 +149,9 @@ func _guard_holds(guard: Dictionary) -> bool:
 	var personal: RefCounted = game.get("local")
 	for flag: String in guard.get("requires_personal_flags", []):
 		if personal == null or not personal.flags.has(flag):
+			return false
+	for flag: String in guard.get("unless_personal_flags", []):
+		if personal != null and personal.flags.has(flag):
 			return false
 	for flag: String in guard.get("requires_world_flags", []):
 		if not LEDGER.world_flag(self, flag):

@@ -53,7 +53,16 @@ func _on_enemy_strike() -> void:
 func stop_opponent() -> void:
 	state = State.INACTIVE
 	if is_instance_valid(_wild):
-		_wild.call("set_engaged", false)
+		if _wild.is_inside_tree():
+			_wild.call("set_engaged", false)
+		else:
+			# Realm-shell teardown can detach the opponent before this engine's
+			# `_exit_tree`. `wild_creature.set_engaged(false)` computes a new
+			# local wander target from global_position, which is invalid once the
+			# body has left SceneTree. The detached body cannot resume simulation;
+			# clear only the two live-fight references without reading a transform.
+			_wild.set("engaged", false)
+			_wild.set("_opponent", null)
 		_wild.set("arena", null)
 		if _wild.is_connected("strike_ready", _on_enemy_strike):
 			_wild.disconnect("strike_ready", _on_enemy_strike)

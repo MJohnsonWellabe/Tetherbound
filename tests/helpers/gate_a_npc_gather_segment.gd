@@ -47,6 +47,17 @@ var _menu: CanvasLayer = null
 var _hud: CanvasLayer = null
 var _failures: Array[String] = []
 var _started_ms := 0
+## The interaction arbiter recomputes its winner on the physics tick that reads
+## the physical press.  Its `winning_provider()` value from the preceding idle
+## frame is therefore only permission to TRY, not proof that the same provider
+## received the press.  This witness is set from the arbiter's production
+## `activated` signal. A press that activates nothing stays inside the existing
+## approach budget; a press that activates a competing provider fails at that
+## exact event instead of being misreported later as "dialogue did not open".
+enum ActivationVerdict { NONE, TARGET, COMPETING }
+var _activation_target: Object = null
+var _activation_verdict := ActivationVerdict.NONE
+var _competing_activation := ""
 ## Travel. See `stick_navigator.gd` for why walking is no longer a straight
 ## line: the village has buildings in it and the game has no navmesh.
 var _nav = null  # stick_navigator.gd; untyped so its methods read as methods
@@ -81,6 +92,9 @@ func run(tree: SceneTree, world: Node, game: Node, player: CharacterBody3D,
 	if not _required_pad_actions_exist():
 		return _failures
 	_nav = NAVIGATOR.new(_tree, _player, _rig, _send_stick)
+	var activation_handler := Callable(self, "_on_arbiter_activated")
+	if not _arbiter.is_connected("activated", activation_handler):
+		_arbiter.connect("activated", activation_handler)
 
 	# ORDER-BUG, found running this segment for real (OWNER-0901-PLAYER-SLEEP-V2):
 	# this used to visit only Tam here and then assert `recipe_orb_basic` plus
@@ -622,6 +636,8 @@ func _walk_to_and_activate(target: Node3D, budget: int) -> bool:
 	for attempt in 3:
 		if await _one_approach(target, budget):
 			return true
+		if not _failures.is_empty():
+			return false
 		_stop_left_stick()
 		for _i in 30:
 			await _tree.physics_frame
@@ -650,8 +666,18 @@ func _one_approach(target: Node3D, budget: int) -> bool:
 			continue
 		walked += 1
 		if _arbiter.call("winning_provider") == target:
-			await _tap_action(&"interact")
-			return true
+			var activation := await _press_and_observe_activation(target)
+			if activation == ActivationVerdict.TARGET:
+				return true
+			if activation == ActivationVerdict.COMPETING:
+				_fail("physical interact meant for %s activated competing provider %s" % [
+					target.name, _competing_activation])
+				return false
+			# The pre-press snapshot changed when production recomputed on the
+			# physics tick and NOTHING activated, so this is still the same
+			# approach -- keep walking/sidestepping within its original budget.
+			_nav.reset()
+			continue
 		var to := target.global_position - _player.global_position
 		to.y = 0.0
 		if to.length() <= 1.65:
@@ -689,10 +715,42 @@ func _one_approach(target: Node3D, budget: int) -> bool:
 	# still right once the walking is over.
 	for _i in 30:
 		if _arbiter.call("winning_provider") == target:
-			await _tap_action(&"interact")
-			return true
+			var activation := await _press_and_observe_activation(target)
+			if activation == ActivationVerdict.TARGET:
+				return true
+			if activation == ActivationVerdict.COMPETING:
+				_fail("physical interact meant for %s activated competing provider %s" % [
+					target.name, _competing_activation])
+				return false
 		await _tree.physics_frame
 	return false
+
+
+## A physical press succeeds only when the live arbiter says the requested
+## provider was actually activated.  Checking the winner before the press is
+## insufficient: `interaction_arbiter.gd::_physics_process()` deliberately
+## recomputes it at the button edge to avoid an idle/physics-clock race.
+func _press_and_observe_activation(target: Object) -> int:
+	_activation_target = target
+	_activation_verdict = ActivationVerdict.NONE
+	_competing_activation = ""
+	await _tap_action(&"interact")
+	_activation_target = null
+	return _activation_verdict
+
+
+func _on_arbiter_activated(provider: Object) -> void:
+	if _activation_target == null:
+		return
+	_activation_verdict = activation_verdict(provider, _activation_target)
+	if _activation_verdict == ActivationVerdict.COMPETING:
+		_competing_activation = provider.name if provider is Node else str(provider)
+
+
+static func activation_verdict(provider: Object, target: Object) -> int:
+	if provider == null:
+		return ActivationVerdict.NONE
+	return ActivationVerdict.TARGET if provider == target else ActivationVerdict.COMPETING
 
 
 ## Travel one leg. The detour logic lives in `stick_navigator.gd`; this only

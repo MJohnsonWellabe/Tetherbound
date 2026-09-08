@@ -2,6 +2,8 @@ extends Node3D
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const BOUNDS := preload("res://scripts/characters/render_bounds.gd")
+const GUARDIAN_CLEAR_FLAG := "stormwood:named:crown_guardian:cleared"
+const ENGINE_TRUTH_FLAG := "stormwood:engine_truth_learned"
 var world: Node3D
 var game: Node
 var prompt: Node3D
@@ -49,10 +51,24 @@ func restore_progression_from_game(_game: Node) -> void:
 	_revision = int(flags.get("revision"))
 	if prompt != null:
 		var opened := bool(flags.has("stormwood:rootgate_released"))
-		prompt.configure("The Rootgate is open" if opened else "Touch the Crown heartstone", 3.2, not opened)
+		var guardian_clear := bool(flags.has(GUARDIAN_CLEAR_FLAG))
+		var truth_learned := bool(flags.has(ENGINE_TRUTH_FLAG))
+		var ready := guardian_clear and truth_learned and not opened
+		var label := "Touch the Crown heartstone"
+		if opened:
+			label = "The Rootgate is open"
+		elif not guardian_clear:
+			label = "The Crown guardian bars the heartstone"
+		elif not truth_learned:
+			label = "Hear what Wen learned from the Crown"
+		prompt.configure(label, 3.2, not opened)
+		prompt.set("actionable", ready)
 
 func _touch() -> void:
-	if not game.get("progression").has("stormwood:engine_truth_learned"):
+	if not game.get("progression").has(GUARDIAN_CLEAR_FLAG):
+		game.push_world_message("The Crown guardian still bars the heartstone.")
+		return
+	if not game.get("progression").has(ENGINE_TRUTH_FLAG):
 		game.push_world_message("Wen can read what the heartstone remembers. Hear the truth first.")
 		return
 	world.get_node("StormwoodChapter").emit_event("heartstone:rootgate")

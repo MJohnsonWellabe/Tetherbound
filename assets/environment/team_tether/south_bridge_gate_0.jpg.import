@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://d3nhg2aaxt4o3"
-path="res://.godot/imported/south_bridge_gate_0.jpg-939c00e414567e2d5d98d0c7dfb1b644.ctex"
+path.s3tc="res://.godot/imported/south_bridge_gate_0.jpg-939c00e414567e2d5d98d0c7dfb1b644.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "f4c25fc89cb2374678b5dcb837cbccad"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/environment/team_tether/south_bridge_gate_0.jpg"
-dest_files=["res://.godot/imported/south_bridge_gate_0.jpg-939c00e414567e2d5d98d0c7dfb1b644.ctex"]
+dest_files=["res://.godot/imported/south_bridge_gate_0.jpg-939c00e414567e2d5d98d0c7dfb1b644.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

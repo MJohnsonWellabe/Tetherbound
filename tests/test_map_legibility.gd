@@ -184,7 +184,11 @@ func test_the_minimap_lifts_its_labels_by_the_same_rule() -> void:
 func test_canvas_labels_outline_heavier_than_the_shared_label_token() -> void:
 	# The other half of item 7: a lifted core needs something to sit against on
 	# the pale high ground at the top of the bake's height ramp.
-	var canvas_outline: int = _const(TAB_MAP_PATH, "CANVAS_OUTLINE_SIZE")
+	var outline_value: Variant = _const(TAB_MAP_PATH, "CANVAS_OUTLINE_SIZE")
+	assert_true(outline_value is int, "full map must expose its actual canvas outline size")
+	if not outline_value is int:
+		return
+	var canvas_outline: int = outline_value
 	assert_true(canvas_outline > UITokens.OUTLINE_SIZE, (
 		"the map canvas outlines its text at %d, no heavier than the shared %d authored "
 		+ "for Labels a third of this screen's font size"
@@ -199,7 +203,11 @@ func test_a_marker_knocks_the_terrain_under_it_all_the_way_back() -> void:
 	# around a notched or spiked glyph that show-through lands in the notches,
 	# which is exactly the silhouette contamination the judge measured.
 	for path in [TAB_MAP_PATH, MINIMAP_PATH]:
-		var knockback: Color = _const(path, "MARKER_KNOCKBACK")
+		var backing_value: Variant = _const(path, "MARKER_KNOCKBACK")
+		assert_true(backing_value is Color, "%s must expose its actual marker backing colour" % path)
+		if not backing_value is Color:
+			return
+		var knockback: Color = backing_value
 		assert_eq(knockback.a, 1.0,
 			"%s's marker backing is %.2f opaque; any terrain showing through fills in a shaped marker's notches" % [path, knockback.a])
 		assert_true(TAB_MAP.luma(knockback) < 0.12,
@@ -207,7 +215,11 @@ func test_a_marker_knocks_the_terrain_under_it_all_the_way_back() -> void:
 
 
 func test_a_marker_backing_is_darker_than_any_ground_it_can_land_on() -> void:
-	var knockback: Color = _const(TAB_MAP_PATH, "MARKER_KNOCKBACK")
+	var backing_value: Variant = _const(TAB_MAP_PATH, "MARKER_KNOCKBACK")
+	assert_true(backing_value is Color, "full map must expose its actual marker backing colour")
+	if not backing_value is Color:
+		return
+	var knockback: Color = backing_value
 	# The two extremes of `map_baker.gd`'s own height ramp.
 	var pale_high := UITokens.GROUND_OCHRE.lerp(Color(0.85, 0.83, 0.78), 0.55)
 	for ground in [_meadow_green(), pale_high]:

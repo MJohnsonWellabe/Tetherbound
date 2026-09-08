@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "_comment": "Stormwood trainer catalogue only. Parties, ranks, and anchors are authored data; chapter objectives, NPC dialogue, encounters, and runtime injection are separate work.",
+  "_comment": "Stormwood trainer catalogue only. Parties use the installed biome roster through the compatible replacement-point schema; ranks and anchors remain authored data, and runtime injection is separate work.",
   "realm_id": "stormwood",
   "leaders": {
     "verge": "officer_maren_verge_rod",
@@ -26,13 +26,13 @@
       "party": [
         {
           "slot": 1,
-          "placeholder_species": "pipwing",
+          "placeholder_species": "stormraven",
           "level": 32,
           "replacement_point": "trainers.tamsin_surge_lesson.party.1"
         },
         {
           "slot": 2,
-          "placeholder_species": "bramblebun",
+          "placeholder_species": "voltwig",
           "level": 33,
           "replacement_point": "trainers.tamsin_surge_lesson.party.2"
         }
@@ -63,7 +63,7 @@
       "party": [
         {
           "slot": 1,
-          "placeholder_species": "burrowback",
+          "placeholder_species": "thundertunnel",
           "level": 33,
           "replacement_point": "trainers.rodfolk_pathfinder_elin.party.1"
         },
@@ -100,13 +100,13 @@
       "party": [
         {
           "slot": 1,
-          "placeholder_species": "stormtrail",
+          "placeholder_species": "tanglevolt",
           "level": 35,
           "replacement_point": "trainers.lieutenant_dace_hollows_rod.party.1"
         },
         {
           "slot": 2,
-          "placeholder_species": "shadelet",
+          "placeholder_species": "glimmermoth",
           "level": 36,
           "replacement_point": "trainers.lieutenant_dace_hollows_rod.party.2"
         },
@@ -143,13 +143,13 @@
       "party": [
         {
           "slot": 1,
-          "placeholder_species": "brooktail",
+          "placeholder_species": "mosshock",
           "level": 34,
           "replacement_point": "trainers.traveller_ivo_lantern_pools.party.1"
         },
         {
           "slot": 2,
-          "placeholder_species": "duskhush",
+          "placeholder_species": "glimmermoth",
           "level": 35,
           "replacement_point": "trainers.traveller_ivo_lantern_pools.party.2"
         }
@@ -168,10 +168,11 @@
       "display_name": "Lieutenant Varga",
       "region_id": "conductor_run",
       "position": [
-        -700,
-        44.18,
-        2300
+        -630,
+        56.60764165,
+        2390
       ],
+      "_why_player_path_0908": "PLAYABLE-FIRST 2026-09-08. The old position [-700,44.18,2300] exactly overlapped Warden-Elect Bryn and made Bryn's registered greeting win InteractionArbiter from every side, so Varga's required Act-II challenge was physically unreachable. This point is the exact midpoint of conductor_road's first exposed ascent, 114.0 m from Bryn (inside the 120 m live-road limit), 114.0 m from the separate story Varga, and its Y is stormwood_heightfield.height_at(-630,2390) plus the catalogue's 0.15 m ground clearance.",
       "route_class": "critical",
       "critical_order": 6,
       "humanoid_key": "officer_a",
@@ -180,19 +181,19 @@
       "party": [
         {
           "slot": 1,
-          "placeholder_species": "stormtrail",
+          "placeholder_species": "tanglevolt",
           "level": 37,
           "replacement_point": "trainers.lieutenant_varga_rodline_bridge.party.1"
         },
         {
           "slot": 2,
-          "placeholder_species": "frostclaw",
+          "placeholder_species": "tanglevolt",
           "level": 38,
           "replacement_point": "trainers.lieutenant_varga_rodline_bridge.party.2"
         },
         {
           "slot": 3,
-          "placeholder_species": "galecrest",
+          "placeholder_species": "stormraven",
           "level": 39,
           "replacement_point": "trainers.lieutenant_varga_rodline_bridge.party.3"
         }
@@ -229,13 +230,13 @@
         },
         {
           "slot": 2,
-          "placeholder_species": "veridian",
+          "placeholder_species": "voltwig",
           "level": 33,
           "replacement_point": "trainers.officer_maren_verge_rod.party.2"
         },
         {
           "slot": 3,
-          "placeholder_species": "riftfrill",
+          "placeholder_species": "mosshock",
           "level": 34,
           "replacement_point": "trainers.officer_maren_verge_rod.party.3"
         }
@@ -266,13 +267,13 @@
       "party": [
         {
           "slot": 1,
-          "placeholder_species": "mosshell",
+          "placeholder_species": "staticub",
           "level": 39,
           "replacement_point": "trainers.archwright_senn_crown_footing.party.1"
         },
         {
           "slot": 2,
-          "placeholder_species": "pipwing",
+          "placeholder_species": "stormraven",
           "level": 40,
           "replacement_point": "trainers.archwright_senn_crown_footing.party.2"
         }
@@ -303,7 +304,7 @@
       "party": [
         {
           "slot": 1,
-          "placeholder_species": "mosshell",
+          "placeholder_species": "staticub",
           "level": 40,
           "replacement_point": "trainers.archivist_wen_crown_trial.party.1"
         },
@@ -340,13 +341,13 @@
       "party": [
         {
           "slot": 1,
-          "placeholder_species": "duskhush",
+          "placeholder_species": "glimmermoth",
           "level": 40,
           "replacement_point": "trainers.crown_wayfarer_nell.party.1"
         },
         {
           "slot": 2,
-          "placeholder_species": "shadelet",
+          "placeholder_species": "glimmermoth",
           "level": 41,
           "replacement_point": "trainers.crown_wayfarer_nell.party.2"
         }
@@ -377,19 +378,19 @@
       "party": [
         {
           "slot": 1,
-          "placeholder_species": "ashtusk",
+          "placeholder_species": "stormbrush",
           "level": 40,
           "replacement_point": "trainers.officer_nysa_deepwood_rod.party.1"
         },
         {
           "slot": 2,
-          "placeholder_species": "duskhush",
+          "placeholder_species": "glimmermoth",
           "level": 41,
           "replacement_point": "trainers.officer_nysa_deepwood_rod.party.2"
         },
         {
           "slot": 3,
-          "placeholder_species": "tuskroot",
+          "placeholder_species": "staticub",
           "level": 42,
           "replacement_point": "trainers.officer_nysa_deepwood_rod.party.3"
         }
@@ -420,13 +421,13 @@
       "party": [
         {
           "slot": 1,
-          "placeholder_species": "galecrest",
+          "placeholder_species": "stormraven",
           "level": 40,
           "replacement_point": "trainers.rodfolk_guard_bram.party.1"
         },
         {
           "slot": 2,
-          "placeholder_species": "cindercub",
+          "placeholder_species": "staticub",
           "level": 41,
           "replacement_point": "trainers.rodfolk_guard_bram.party.2"
         }
@@ -457,7 +458,7 @@
       "party": [
         {
           "slot": 1,
-          "placeholder_species": "nightburrow",
+          "placeholder_species": "thundertunnel",
           "level": 41,
           "replacement_point": "trainers.outerworks_lieutenant_sera.party.1"
         },
@@ -469,7 +470,7 @@
         },
         {
           "slot": 3,
-          "placeholder_species": "ashtusk",
+          "placeholder_species": "stormbrush",
           "level": 42,
           "replacement_point": "trainers.outerworks_lieutenant_sera.party.3"
         }
@@ -500,19 +501,19 @@
       "party": [
         {
           "slot": 1,
-          "placeholder_species": "galecrest",
+          "placeholder_species": "stormraven",
           "level": 41,
           "replacement_point": "trainers.officer_kestrel_outer_works.party.1"
         },
         {
           "slot": 2,
-          "placeholder_species": "stormtrail",
+          "placeholder_species": "tanglevolt",
           "level": 42,
           "replacement_point": "trainers.officer_kestrel_outer_works.party.2"
         },
         {
           "slot": 3,
-          "placeholder_species": "riftfrill",
+          "placeholder_species": "mosshock",
           "level": 43,
           "replacement_point": "trainers.officer_kestrel_outer_works.party.3"
         }
@@ -543,19 +544,19 @@
       "party": [
         {
           "slot": 1,
-          "placeholder_species": "stormtrail",
+          "placeholder_species": "tanglevolt",
           "level": 42,
           "replacement_point": "trainers.captain_marrow_dynamo_core.party.1"
         },
         {
           "slot": 2,
-          "placeholder_species": "galecrest",
+          "placeholder_species": "stormraven",
           "level": 43,
           "replacement_point": "trainers.captain_marrow_dynamo_core.party.2"
         },
         {
           "slot": 3,
-          "placeholder_species": "ashtusk",
+          "placeholder_species": "stormbrush",
           "level": 43,
           "replacement_point": "trainers.captain_marrow_dynamo_core.party.3"
         },
@@ -564,6 +565,12 @@
           "placeholder_species": "sparkit",
           "level": 44,
           "replacement_point": "trainers.captain_marrow_dynamo_core.party.4"
+        },
+        {
+          "slot": 5,
+          "placeholder_species": "voltarach",
+          "level": 44,
+          "replacement_point": "trainers.captain_marrow_dynamo_core.party.5"
         }
       ],
       "replacement_point": "trainers.captain_marrow_dynamo_core",
@@ -593,13 +600,13 @@
       "party": [
         {
           "slot": 1,
-          "placeholder_species": "bramblebun",
+          "placeholder_species": "voltwig",
           "level": 32,
           "replacement_point": "trainers.tamsin_ash_ring.party.1"
         },
         {
           "slot": 2,
-          "placeholder_species": "pipwing",
+          "placeholder_species": "stormraven",
           "level": 33,
           "replacement_point": "trainers.tamsin_ash_ring.party.2"
         }
@@ -630,13 +637,13 @@
       "party": [
         {
           "slot": 1,
-          "placeholder_species": "burrowback",
+          "placeholder_species": "thundertunnel",
           "level": 33,
           "replacement_point": "trainers.ranger_pax_sentinel.party.1"
         },
         {
           "slot": 2,
-          "placeholder_species": "shadelet",
+          "placeholder_species": "glimmermoth",
           "level": 34,
           "replacement_point": "trainers.ranger_pax_sentinel.party.2"
         }
@@ -667,7 +674,7 @@
       "party": [
         {
           "slot": 1,
-          "placeholder_species": "brooktail",
+          "placeholder_species": "mosshock",
           "level": 34,
           "replacement_point": "trainers.courier_pim_pool_loop.party.1"
         },
@@ -704,13 +711,13 @@
       "party": [
         {
           "slot": 1,
-          "placeholder_species": "meadowhart",
+          "placeholder_species": "mosshock",
           "level": 35,
           "replacement_point": "trainers.traveller_ivo_moss_detour.party.1"
         },
         {
           "slot": 2,
-          "placeholder_species": "duskhush",
+          "placeholder_species": "glimmermoth",
           "level": 36,
           "replacement_point": "trainers.traveller_ivo_moss_detour.party.2"
         }
@@ -741,7 +748,7 @@
       "party": [
         {
           "slot": 1,
-          "placeholder_species": "frostclaw",
+          "placeholder_species": "tanglevolt",
           "level": 36,
           "replacement_point": "trainers.rodline_scout_kael.party.1"
         },
@@ -778,13 +785,13 @@
       "party": [
         {
           "slot": 1,
-          "placeholder_species": "veridian",
+          "placeholder_species": "voltwig",
           "level": 37,
           "replacement_point": "trainers.rodline_keeper_fenn.party.1"
         },
         {
           "slot": 2,
-          "placeholder_species": "riftfrill",
+          "placeholder_species": "mosshock",
           "level": 38,
           "replacement_point": "trainers.rodline_keeper_fenn.party.2"
         }
@@ -815,13 +822,13 @@
       "party": [
         {
           "slot": 1,
-          "placeholder_species": "stormtrail",
+          "placeholder_species": "tanglevolt",
           "level": 38,
           "replacement_point": "trainers.rodline_duelist_ren.party.1"
         },
         {
           "slot": 2,
-          "placeholder_species": "galecrest",
+          "placeholder_species": "stormraven",
           "level": 39,
           "replacement_point": "trainers.rodline_duelist_ren.party.2"
         }
@@ -852,19 +859,19 @@
       "party": [
         {
           "slot": 1,
-          "placeholder_species": "galecrest",
+          "placeholder_species": "stormraven",
           "level": 40,
           "replacement_point": "trainers.rook_circuit_lantern.party.1"
         },
         {
           "slot": 2,
-          "placeholder_species": "tuskroot",
+          "placeholder_species": "staticub",
           "level": 41,
           "replacement_point": "trainers.rook_circuit_lantern.party.2"
         },
         {
           "slot": 3,
-          "placeholder_species": "ashtusk",
+          "placeholder_species": "stormbrush",
           "level": 42,
           "replacement_point": "trainers.rook_circuit_lantern.party.3"
         }
@@ -895,13 +902,13 @@
       "party": [
         {
           "slot": 1,
-          "placeholder_species": "cindercub",
+          "placeholder_species": "staticub",
           "level": 40,
           "replacement_point": "trainers.circuit_lena_giant.party.1"
         },
         {
           "slot": 2,
-          "placeholder_species": "nightburrow",
+          "placeholder_species": "thundertunnel",
           "level": 41,
           "replacement_point": "trainers.circuit_lena_giant.party.2"
         }
@@ -932,13 +939,13 @@
       "party": [
         {
           "slot": 1,
-          "placeholder_species": "riftfrill",
+          "placeholder_species": "mosshock",
           "level": 41,
           "replacement_point": "trainers.circuit_orin_blackwater.party.1"
         },
         {
           "slot": 2,
-          "placeholder_species": "duskhush",
+          "placeholder_species": "glimmermoth",
           "level": 42,
           "replacement_point": "trainers.circuit_orin_blackwater.party.2"
         }
@@ -969,13 +976,13 @@
       "party": [
         {
           "slot": 1,
-          "placeholder_species": "meadowhart",
+          "placeholder_species": "mosshock",
           "level": 39,
           "replacement_point": "trainers.circuit_mira_lantern.party.1"
         },
         {
           "slot": 2,
-          "placeholder_species": "mosshell",
+          "placeholder_species": "staticub",
           "level": 40,
           "replacement_point": "trainers.circuit_mira_lantern.party.2"
         }
@@ -1012,7 +1019,7 @@
         },
         {
           "slot": 2,
-          "placeholder_species": "frostclaw",
+          "placeholder_species": "tanglevolt",
           "level": 42,
           "replacement_point": "trainers.circuit_tavi_rodline.party.2"
         }

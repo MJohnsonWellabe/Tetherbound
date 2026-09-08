@@ -3484,24 +3484,25 @@
       "region_id": "tidal_cradle",
       "table_id": "water_tidal_cradle_land",
       "island_local_offset": [
-        -5.351,
-        114.5393,
-        10.406
+        2.31,
+        45.16,
+        5.042
       ],
       "position": [
-        694.649,
-        114.5393,
-        1540.406
+        702.31,
+        45.16,
+        1535.042
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 5.1671,
+      "terrain_slope_deg": 3.627,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Living shell clearings",
       "requires_aquatic_combat": false,
-      "placement_status": "analytic_spawn_footprint_only_arena_and_navigation_unproven"
+      "placement_status": "authored_route_core_runtime_capture_pending",
+      "_why_road_runtime_repair_0907": "The production Tidal Cradle road capture rejected the old high clearing at y=114.539. Reprojected to one metre off the critical land-spine centre at its authored y; keeps the native table/count and a low-gradient physical-road footprint."
     },
     {
       "id": "water_tidal_cradle_wild_006",
@@ -3684,24 +3685,25 @@
       "region_id": "tidal_cradle",
       "table_id": "water_tidal_cradle_land",
       "island_local_offset": [
-        58.03,
-        81.5435,
-        102.544
+        66.452,
+        52.25,
+        96.647
       ],
       "position": [
-        758.03,
-        81.5435,
-        1632.544
+        766.452,
+        52.25,
+        1626.647
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 27.6314,
+      "terrain_slope_deg": 3.627,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Living shell clearings",
       "requires_aquatic_combat": false,
-      "placement_status": "analytic_spawn_footprint_only_arena_and_navigation_unproven"
+      "placement_status": "authored_route_core_runtime_capture_pending",
+      "_why_road_runtime_repair_0907": "The production Tidal Cradle road capture rejected the old 27.6-degree clearing. Reprojected to one metre off the critical land-spine centre at its authored y; keeps the native table/count and a low-gradient physical-road footprint."
     },
     {
       "id": "water_tidal_cradle_wild_014",
@@ -4334,14 +4336,14 @@
       "region_id": "outer_reaches",
       "table_id": "water_salt_crown_land",
       "island_local_offset": [
-        -71.579,
-        68.0924,
-        -95.413
+        -74.64047,
+        38.30613,
+        -102.804
       ],
       "position": [
-        78.421,
-        68.0924,
-        2214.587
+        75.35953,
+        38.30613,
+        2207.196
       ],
       "count": 1,
       "radius_m": 2.5,
@@ -4359,14 +4361,14 @@
       "region_id": "outer_reaches",
       "table_id": "water_salt_crown_land",
       "island_local_offset": [
-        71.372,
-        66.1175,
-        101.172
+        65.8287,
+        66.63486,
+        103.468
       ],
       "position": [
-        221.372,
-        66.1175,
-        2411.172
+        215.8287,
+        66.63486,
+        2413.468
       ],
       "count": 1,
       "radius_m": 2.5,
@@ -4384,14 +4386,14 @@
       "region_id": "outer_reaches",
       "table_id": "water_salt_crown_land",
       "island_local_offset": [
-        42.383,
-        59.4807,
-        -131.76
+        46.0785,
+        59.60575,
+        -130.229
       ],
       "position": [
-        192.383,
-        59.4807,
-        2178.24
+        196.0785,
+        59.60575,
+        2179.771
       ],
       "count": 1,
       "radius_m": 2.5,
@@ -6681,6 +6683,1649 @@
       "requires_aquatic_combat": true,
       "placement_status": "analytic_spawn_footprint_only_arena_and_navigation_unproven",
       "named_replacement_id": "water_deep_watch_tidecoil"
+    },
+    {
+      "id": "road_visibility_tidal_cradle_exploration_spine_01",
+      "island_id": "tidal_cradle",
+      "region_id": "tidal_cradle",
+      "table_id": "water_tidal_cradle_land",
+      "island_local_offset": [
+        -93.617,
+        33.981,
+        -137.858
+      ],
+      "position": [
+        606.383,
+        33.981,
+        1392.142
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_tidal_cradle_exploration_spine_02",
+      "island_id": "tidal_cradle",
+      "region_id": "tidal_cradle",
+      "table_id": "water_tidal_cradle_land",
+      "island_local_offset": [
+        -74.429,
+        36.496,
+        -108.038
+      ],
+      "position": [
+        625.571,
+        36.496,
+        1421.962
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_tidal_cradle_exploration_spine_03",
+      "island_id": "tidal_cradle",
+      "region_id": "tidal_cradle",
+      "table_id": "water_tidal_cradle_land",
+      "island_local_offset": [
+        -64.619,
+        37.762,
+        -90.541
+      ],
+      "position": [
+        635.381,
+        37.762,
+        1439.459
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_tidal_cradle_exploration_spine_04",
+      "island_id": "tidal_cradle",
+      "region_id": "tidal_cradle",
+      "table_id": "water_tidal_cradle_land",
+      "island_local_offset": [
+        -17.186,
+        42.824,
+        -26.287
+      ],
+      "position": [
+        682.814,
+        42.824,
+        1503.713
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 pair one metre off the authored land-spine centre. The production capture rejected the old 5.49m shoulder; this retains the native table/count while putting the complete footprint on the low-gradient route core."
+    },
+    {
+      "id": "road_visibility_tidal_cradle_exploration_spine_05",
+      "island_id": "tidal_cradle",
+      "region_id": "tidal_cradle",
+      "table_id": "water_tidal_cradle_land",
+      "island_local_offset": [
+        26.97,
+        47.886,
+        40.26
+      ],
+      "position": [
+        726.97,
+        47.886,
+        1570.26
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 pair one metre off the authored land-spine centre. The production capture rejected the old 5.49m shoulder; this retains the native table/count while putting the complete footprint on the low-gradient route core."
+    },
+    {
+      "id": "road_visibility_tidal_cradle_exploration_spine_06",
+      "island_id": "tidal_cradle",
+      "region_id": "tidal_cradle",
+      "table_id": "water_tidal_cradle_land",
+      "island_local_offset": [
+        89.528,
+        54.086,
+        118.29
+      ],
+      "position": [
+        789.528,
+        54.086,
+        1648.29
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_tidal_cradle_exploration_spine_07",
+      "island_id": "tidal_cradle",
+      "region_id": "tidal_cradle",
+      "table_id": "water_tidal_cradle_land",
+      "island_local_offset": [
+        82.083,
+        52.567,
+        136.705
+      ],
+      "position": [
+        782.083,
+        52.567,
+        1666.705
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_tidal_cradle_exploration_spine_08",
+      "island_id": "tidal_cradle",
+      "region_id": "tidal_cradle",
+      "table_id": "water_tidal_cradle_land",
+      "island_local_offset": [
+        -5.646,
+        33.069,
+        156.411
+      ],
+      "position": [
+        694.354,
+        33.069,
+        1686.411
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_tidal_cradle_exploration_spine_09",
+      "island_id": "tidal_cradle",
+      "region_id": "tidal_cradle",
+      "table_id": "water_tidal_cradle_land",
+      "island_local_offset": [
+        -83.442,
+        16.537,
+        166.46
+      ],
+      "position": [
+        616.558,
+        16.537,
+        1696.46
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_salt_crown_exploration_spine_01",
+      "island_id": "salt_crown",
+      "region_id": "outer_reaches",
+      "table_id": "water_salt_crown_land",
+      "island_local_offset": [
+        70.574,
+        15.058,
+        -160.882
+      ],
+      "position": [
+        220.574,
+        15.058,
+        2149.118
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_salt_crown_exploration_spine_02",
+      "island_id": "salt_crown",
+      "region_id": "outer_reaches",
+      "table_id": "water_salt_crown_land",
+      "island_local_offset": [
+        -86.068,
+        40.058,
+        -99.708
+      ],
+      "position": [
+        63.932,
+        40.058,
+        2210.292
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_salt_crown_exploration_spine_03",
+      "island_id": "salt_crown",
+      "region_id": "outer_reaches",
+      "table_id": "water_salt_crown_land",
+      "island_local_offset": [
+        -75.915,
+        56.728,
+        -46.842
+      ],
+      "position": [
+        74.085,
+        56.728,
+        2263.158
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_salt_crown_exploration_spine_04",
+      "island_id": "salt_crown",
+      "region_id": "outer_reaches",
+      "table_id": "water_salt_crown_land",
+      "island_local_offset": [
+        -94.912,
+        54.235,
+        -57.7
+      ],
+      "position": [
+        55.088,
+        54.235,
+        2252.3
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_salt_crown_exploration_spine_05",
+      "island_id": "salt_crown",
+      "region_id": "outer_reaches",
+      "table_id": "water_salt_crown_land",
+      "island_local_offset": [
+        -5.176,
+        65.792,
+        -10.595
+      ],
+      "position": [
+        144.824,
+        65.792,
+        2299.405
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_salt_crown_exploration_spine_06",
+      "island_id": "salt_crown",
+      "region_id": "outer_reaches",
+      "table_id": "water_salt_crown_land",
+      "island_local_offset": [
+        70.165,
+        69.578,
+        34.827
+      ],
+      "position": [
+        220.165,
+        69.578,
+        2344.827
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_salt_crown_exploration_spine_07",
+      "island_id": "salt_crown",
+      "region_id": "outer_reaches",
+      "table_id": "water_salt_crown_land",
+      "island_local_offset": [
+        84.075,
+        38.796,
+        118.885
+      ],
+      "position": [
+        234.075,
+        38.796,
+        2428.885
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_sluice_isle_exploration_spine_01",
+      "island_id": "sluice_isle",
+      "region_id": "tether_current",
+      "table_id": "water_sluice_isle_land",
+      "island_local_offset": [
+        -146.528,
+        39.929,
+        -89.141
+      ],
+      "position": [
+        703.472,
+        39.929,
+        2870.859
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_sluice_isle_exploration_spine_02",
+      "island_id": "sluice_isle",
+      "region_id": "tether_current",
+      "table_id": "water_sluice_isle_land",
+      "island_local_offset": [
+        -30.614,
+        70.627,
+        -94.185
+      ],
+      "position": [
+        819.386,
+        70.627,
+        2865.815
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_sluice_isle_exploration_spine_03",
+      "island_id": "sluice_isle",
+      "region_id": "tether_current",
+      "table_id": "water_sluice_isle_land",
+      "island_local_offset": [
+        71.895,
+        74.879,
+        -7.568
+      ],
+      "position": [
+        921.895,
+        74.879,
+        2952.432
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_sluice_isle_exploration_spine_04",
+      "island_id": "sluice_isle",
+      "region_id": "tether_current",
+      "table_id": "water_sluice_isle_land",
+      "island_local_offset": [
+        104.993,
+        42.592,
+        145.618
+      ],
+      "position": [
+        954.993,
+        42.592,
+        3105.618
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 pair one metre off the authored land-spine centre. The production capture saw three bodies forward but only one framed from this stand at the old 5.39m shoulder; moving the same pair inward keeps both within the real road-facing camera without changing population budget."
+    },
+    {
+      "id": "road_visibility_sluice_isle_exploration_spine_05",
+      "island_id": "sluice_isle",
+      "region_id": "tether_current",
+      "table_id": "water_sluice_isle_land",
+      "island_local_offset": [
+        -23.811,
+        21.503,
+        188.984
+      ],
+      "position": [
+        826.189,
+        21.503,
+        3148.984
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_sluice_isle_exploration_spine_06",
+      "island_id": "sluice_isle",
+      "region_id": "tether_current",
+      "table_id": "water_sluice_isle_land",
+      "island_local_offset": [
+        -127.462,
+        1.929,
+        242.562
+      ],
+      "position": [
+        722.538,
+        1.929,
+        3202.562
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_veilfall_exploration_spine_01",
+      "island_id": "veilfall",
+      "region_id": "veilfall",
+      "table_id": "water_veilfall_land",
+      "island_local_offset": [
+        138.991,
+        139.396,
+        -249.844
+      ],
+      "position": [
+        338.991,
+        139.396,
+        3890.156
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_veilfall_exploration_spine_02",
+      "island_id": "veilfall",
+      "region_id": "veilfall",
+      "table_id": "water_veilfall_land",
+      "island_local_offset": [
+        105.343,
+        141.681,
+        -243.171
+      ],
+      "position": [
+        305.343,
+        141.681,
+        3896.829
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_veilfall_exploration_spine_03",
+      "island_id": "veilfall",
+      "region_id": "veilfall",
+      "table_id": "water_veilfall_land",
+      "island_local_offset": [
+        88.866,
+        142.968,
+        -235.97
+      ],
+      "position": [
+        288.866,
+        142.968,
+        3904.03
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_veilfall_exploration_spine_04",
+      "island_id": "veilfall",
+      "region_id": "veilfall",
+      "table_id": "water_veilfall_land",
+      "island_local_offset": [
+        67.952,
+        144.541,
+        -229.252
+      ],
+      "position": [
+        267.952,
+        144.541,
+        3910.748
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_veilfall_exploration_spine_05",
+      "island_id": "veilfall",
+      "region_id": "veilfall",
+      "table_id": "water_veilfall_land",
+      "island_local_offset": [
+        161.702,
+        81.788,
+        -109.252
+      ],
+      "position": [
+        361.702,
+        81.788,
+        4030.748
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_veilfall_exploration_spine_06",
+      "island_id": "veilfall",
+      "region_id": "veilfall",
+      "table_id": "water_veilfall_land",
+      "island_local_offset": [
+        157.222,
+        122.831,
+        3.44
+      ],
+      "position": [
+        357.222,
+        122.831,
+        4143.44
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_veilfall_exploration_spine_07",
+      "island_id": "veilfall",
+      "region_id": "veilfall",
+      "table_id": "water_veilfall_land",
+      "island_local_offset": [
+        148.748,
+        163.873,
+        115.901
+      ],
+      "position": [
+        348.748,
+        163.873,
+        4255.901
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_veilfall_exploration_spine_08",
+      "island_id": "veilfall",
+      "region_id": "veilfall",
+      "table_id": "water_veilfall_land",
+      "island_local_offset": [
+        53.087,
+        189.102,
+        123.684
+      ],
+      "position": [
+        253.087,
+        189.102,
+        4263.684
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_veilfall_exploration_spine_09",
+      "island_id": "veilfall",
+      "region_id": "veilfall",
+      "table_id": "water_veilfall_land",
+      "island_local_offset": [
+        62.58,
+        189.855,
+        131.055
+      ],
+      "position": [
+        262.58,
+        189.855,
+        4271.055
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_veilfall_exploration_spine_10",
+      "island_id": "veilfall",
+      "region_id": "veilfall",
+      "table_id": "water_veilfall_land",
+      "island_local_offset": [
+        67.78,
+        190.357,
+        137.195
+      ],
+      "position": [
+        267.78,
+        190.357,
+        4277.195
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_veilfall_exploration_spine_11",
+      "island_id": "veilfall",
+      "region_id": "veilfall",
+      "table_id": "water_veilfall_land",
+      "island_local_offset": [
+        84.619,
+        191.737,
+        151.322
+      ],
+      "position": [
+        284.619,
+        191.737,
+        4291.322
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_veilfall_exploration_spine_12",
+      "island_id": "veilfall",
+      "region_id": "veilfall",
+      "table_id": "water_veilfall_land",
+      "island_local_offset": [
+        89.819,
+        192.239,
+        157.462
+      ],
+      "position": [
+        289.819,
+        192.239,
+        4297.462
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_veilfall_exploration_spine_13",
+      "island_id": "veilfall",
+      "region_id": "veilfall",
+      "table_id": "water_veilfall_land",
+      "island_local_offset": [
+        106.658,
+        193.62,
+        171.588
+      ],
+      "position": [
+        306.658,
+        193.62,
+        4311.588
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_veilfall_exploration_spine_14",
+      "island_id": "veilfall",
+      "region_id": "veilfall",
+      "table_id": "water_veilfall_land",
+      "island_local_offset": [
+        111.858,
+        194.122,
+        177.729
+      ],
+      "position": [
+        311.858,
+        194.122,
+        4317.729
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_veilfall_exploration_spine_15",
+      "island_id": "veilfall",
+      "region_id": "veilfall",
+      "table_id": "water_veilfall_land",
+      "island_local_offset": [
+        128.696,
+        195.502,
+        191.855
+      ],
+      "position": [
+        328.696,
+        195.502,
+        4331.855
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_veilfall_exploration_spine_16",
+      "island_id": "veilfall",
+      "region_id": "veilfall",
+      "table_id": "water_veilfall_land",
+      "island_local_offset": [
+        133.896,
+        196.004,
+        197.996
+      ],
+      "position": [
+        333.896,
+        196.004,
+        4337.996
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_veilfall_exploration_spine_17",
+      "island_id": "veilfall",
+      "region_id": "veilfall",
+      "table_id": "water_veilfall_land",
+      "island_local_offset": [
+        -33.714,
+        181.573,
+        41.144
+      ],
+      "position": [
+        166.286,
+        181.573,
+        4181.144
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_veilfall_exploration_spine_18",
+      "island_id": "veilfall",
+      "region_id": "veilfall",
+      "table_id": "water_veilfall_land",
+      "island_local_offset": [
+        -123.223,
+        174.045,
+        -38.451
+      ],
+      "position": [
+        76.777,
+        174.045,
+        4101.549
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_veilfall_exploration_spine_19",
+      "island_id": "veilfall",
+      "region_id": "veilfall",
+      "table_id": "water_veilfall_land",
+      "island_local_offset": [
+        -135.478,
+        160.129,
+        -152.453
+      ],
+      "position": [
+        64.522,
+        160.129,
+        3987.547
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_veilfall_exploration_spine_20",
+      "island_id": "veilfall",
+      "region_id": "veilfall",
+      "table_id": "water_veilfall_land",
+      "island_local_offset": [
+        -128.679,
+        159.555,
+        -157.118
+      ],
+      "position": [
+        71.321,
+        159.555,
+        3982.882
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_veilfall_exploration_spine_21",
+      "island_id": "veilfall",
+      "region_id": "veilfall",
+      "table_id": "water_veilfall_land",
+      "island_local_offset": [
+        -165.739,
+        162.417,
+        -142.254
+      ],
+      "position": [
+        34.261,
+        162.417,
+        3997.746
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_veilfall_exploration_spine_22",
+      "island_id": "veilfall",
+      "region_id": "veilfall",
+      "table_id": "water_veilfall_land",
+      "island_local_offset": [
+        -182.914,
+        163.704,
+        -136.928
+      ],
+      "position": [
+        17.086,
+        163.704,
+        4003.072
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_veilfall_exploration_spine_23",
+      "island_id": "veilfall",
+      "region_id": "veilfall",
+      "table_id": "water_veilfall_land",
+      "island_local_offset": [
+        -203.13,
+        165.277,
+        -128.335
+      ],
+      "position": [
+        -3.13,
+        165.277,
+        4011.665
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_veilfall_exploration_spine_24",
+      "island_id": "veilfall",
+      "region_id": "veilfall",
+      "table_id": "water_veilfall_land",
+      "island_local_offset": [
+        -24.004,
+        151.548,
+        -196.086
+      ],
+      "position": [
+        175.996,
+        151.548,
+        3943.914
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "habitat": "land",
+      "activation_distance_m": 100,
+      "roam_radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "requires_aquatic_combat": false,
+      "placement_status": "route_surface_authored_runtime_grounding_required",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+    },
+    {
+      "id": "road_visibility_shellwatch_to_tidal_cradle_sheltered_01",
+      "island_id": "shellwatch",
+      "region_id": "marsh_channels",
+      "route_edge_id": "shellwatch_to_tidal_cradle",
+      "table_id": "water_shellwatch_shallows",
+      "island_local_offset": [
+        201.875,
+        0.0,
+        224.994
+      ],
+      "position": [
+        521.875,
+        0.0,
+        1344.994
+      ],
+      "count": 2,
+      "radius_m": 6.0,
+      "habitat": "open_water",
+      "placement_mode": "water_surface",
+      "surface_y_m": 0.0,
+      "surface_submerge_fraction": 0.28,
+      "activation_distance_m": 100,
+      "roam_radius_m": 6.0,
+      "purpose": "surface creature sightline pair beside main sailing route",
+      "requires_aquatic_combat": true,
+      "placement_status": "authored_surface_runtime_tether_required",
+      "_why_road_visibility_0907": "ROAD CP-2 surface pair for a main sailing choice. The pair uses explicit host-owned surface placement and remains peaceful/off the exact route line; no seabed grounding or global draw-distance increase."
+    },
+    {
+      "id": "road_visibility_tidal_cradle_to_salt_crown_sheltered_01",
+      "island_id": "tidal_cradle",
+      "region_id": "tidal_cradle",
+      "route_edge_id": "tidal_cradle_to_salt_crown",
+      "table_id": "water_tidal_cradle_shallows",
+      "island_local_offset": [
+        -211.957,
+        0.0,
+        249.293
+      ],
+      "position": [
+        488.043,
+        0.0,
+        1779.293
+      ],
+      "count": 2,
+      "radius_m": 6.0,
+      "habitat": "open_water",
+      "placement_mode": "water_surface",
+      "surface_y_m": 0.0,
+      "surface_submerge_fraction": 0.28,
+      "activation_distance_m": 100,
+      "roam_radius_m": 6.0,
+      "purpose": "surface creature sightline pair beside main sailing route",
+      "requires_aquatic_combat": true,
+      "placement_status": "authored_surface_runtime_tether_required",
+      "_why_road_visibility_0907": "ROAD CP-2 surface pair for a main sailing choice. The pair uses explicit host-owned surface placement and remains peaceful/off the exact route line; no seabed grounding or global draw-distance increase."
+    },
+    {
+      "id": "road_visibility_tidal_cradle_to_salt_crown_sheltered_02",
+      "island_id": "tidal_cradle",
+      "region_id": "tidal_cradle",
+      "route_edge_id": "tidal_cradle_to_salt_crown",
+      "table_id": "water_tidal_cradle_shallows",
+      "island_local_offset": [
+        -271.168,
+        0.0,
+        304.202
+      ],
+      "position": [
+        428.832,
+        0.0,
+        1834.202
+      ],
+      "count": 2,
+      "radius_m": 6.0,
+      "habitat": "open_water",
+      "placement_mode": "water_surface",
+      "surface_y_m": 0.0,
+      "surface_submerge_fraction": 0.28,
+      "activation_distance_m": 100,
+      "roam_radius_m": 6.0,
+      "purpose": "surface creature sightline pair beside main sailing route",
+      "requires_aquatic_combat": true,
+      "placement_status": "authored_surface_runtime_tether_required",
+      "_why_road_visibility_0907": "ROAD CP-2 surface pair for a main sailing choice. The pair uses explicit host-owned surface placement and remains peaceful/off the exact route line; no seabed grounding or global draw-distance increase."
+    },
+    {
+      "id": "road_visibility_tidal_cradle_to_salt_crown_sheltered_03",
+      "island_id": "tidal_cradle",
+      "region_id": "tidal_cradle",
+      "route_edge_id": "tidal_cradle_to_salt_crown",
+      "table_id": "water_tidal_cradle_shallows",
+      "island_local_offset": [
+        -343.001,
+        0.0,
+        341.093
+      ],
+      "position": [
+        356.999,
+        0.0,
+        1871.093
+      ],
+      "count": 2,
+      "radius_m": 6.0,
+      "habitat": "open_water",
+      "placement_mode": "water_surface",
+      "surface_y_m": 0.0,
+      "surface_submerge_fraction": 0.28,
+      "activation_distance_m": 100,
+      "roam_radius_m": 6.0,
+      "purpose": "surface creature sightline pair beside main sailing route",
+      "requires_aquatic_combat": true,
+      "placement_status": "authored_surface_runtime_tether_required",
+      "_why_road_visibility_0907": "ROAD CP-2 surface pair for a main sailing choice. The pair uses explicit host-owned surface placement and remains peaceful/off the exact route line; no seabed grounding or global draw-distance increase."
+    },
+    {
+      "id": "road_visibility_tidal_cradle_to_salt_crown_sheltered_04",
+      "island_id": "tidal_cradle",
+      "region_id": "tidal_cradle",
+      "route_edge_id": "tidal_cradle_to_salt_crown",
+      "table_id": "water_tidal_cradle_shallows",
+      "island_local_offset": [
+        -355.138,
+        0.0,
+        424.637
+      ],
+      "position": [
+        344.862,
+        0.0,
+        1954.637
+      ],
+      "count": 2,
+      "radius_m": 6.0,
+      "habitat": "open_water",
+      "placement_mode": "water_surface",
+      "surface_y_m": 0.0,
+      "surface_submerge_fraction": 0.28,
+      "activation_distance_m": 100,
+      "roam_radius_m": 6.0,
+      "purpose": "surface creature sightline pair beside main sailing route",
+      "requires_aquatic_combat": true,
+      "placement_status": "authored_surface_runtime_tether_required",
+      "_why_road_visibility_0907": "ROAD CP-2 surface pair for a main sailing choice. The pair uses explicit host-owned surface placement and remains peaceful/off the exact route line; no seabed grounding or global draw-distance increase."
+    },
+    {
+      "id": "road_visibility_tidal_cradle_to_salt_crown_sheltered_05",
+      "island_id": "tidal_cradle",
+      "region_id": "tidal_cradle",
+      "route_edge_id": "tidal_cradle_to_salt_crown",
+      "table_id": "water_tidal_cradle_shallows",
+      "island_local_offset": [
+        -386.974,
+        0.0,
+        498.849
+      ],
+      "position": [
+        313.026,
+        0.0,
+        2028.849
+      ],
+      "count": 2,
+      "radius_m": 6.0,
+      "habitat": "open_water",
+      "placement_mode": "water_surface",
+      "surface_y_m": 0.0,
+      "surface_submerge_fraction": 0.28,
+      "activation_distance_m": 100,
+      "roam_radius_m": 6.0,
+      "purpose": "surface creature sightline pair beside main sailing route",
+      "requires_aquatic_combat": true,
+      "placement_status": "authored_surface_runtime_tether_required",
+      "_why_road_visibility_0907": "ROAD CP-2 surface pair for a main sailing choice. The pair uses explicit host-owned surface placement and remains peaceful/off the exact route line; no seabed grounding or global draw-distance increase."
+    },
+    {
+      "id": "road_visibility_tidal_cradle_to_salt_crown_direct_01",
+      "island_id": "tidal_cradle",
+      "region_id": "tidal_cradle",
+      "route_edge_id": "tidal_cradle_to_salt_crown",
+      "table_id": "water_tidal_cradle_shallows",
+      "island_local_offset": [
+        -282.258,
+        0.0,
+        390.749
+      ],
+      "position": [
+        417.742,
+        0.0,
+        1920.749
+      ],
+      "count": 2,
+      "radius_m": 6.0,
+      "habitat": "open_water",
+      "placement_mode": "water_surface",
+      "surface_y_m": 0.0,
+      "surface_submerge_fraction": 0.28,
+      "activation_distance_m": 100,
+      "roam_radius_m": 6.0,
+      "purpose": "surface creature sightline pair beside main sailing route",
+      "requires_aquatic_combat": true,
+      "placement_status": "authored_surface_runtime_tether_required",
+      "_why_road_visibility_0907": "ROAD CP-2 surface pair for a main sailing choice. The pair uses explicit host-owned surface placement and remains peaceful/off the exact route line; no seabed grounding or global draw-distance increase."
+    },
+    {
+      "id": "road_visibility_salt_crown_to_sluice_isle_sheltered_01",
+      "island_id": "salt_crown",
+      "region_id": "outer_reaches",
+      "route_edge_id": "salt_crown_to_sluice_isle",
+      "table_id": "water_salt_crown_shallows",
+      "island_local_offset": [
+        241.637,
+        0.0,
+        287.831
+      ],
+      "position": [
+        391.637,
+        0.0,
+        2597.831
+      ],
+      "count": 2,
+      "radius_m": 6.0,
+      "habitat": "open_water",
+      "placement_mode": "water_surface",
+      "surface_y_m": 0.0,
+      "surface_submerge_fraction": 0.28,
+      "activation_distance_m": 100,
+      "roam_radius_m": 6.0,
+      "purpose": "surface creature sightline pair beside main sailing route",
+      "requires_aquatic_combat": true,
+      "placement_status": "authored_surface_runtime_tether_required",
+      "_why_road_visibility_0907": "ROAD CP-2 surface pair for a main sailing choice. The pair uses explicit host-owned surface placement and remains peaceful/off the exact route line; no seabed grounding or global draw-distance increase."
+    },
+    {
+      "id": "road_visibility_salt_crown_to_sluice_isle_sheltered_02",
+      "island_id": "salt_crown",
+      "region_id": "outer_reaches",
+      "route_edge_id": "salt_crown_to_sluice_isle",
+      "table_id": "water_salt_crown_shallows",
+      "island_local_offset": [
+        325.241,
+        0.0,
+        377.552
+      ],
+      "position": [
+        475.241,
+        0.0,
+        2687.552
+      ],
+      "count": 2,
+      "radius_m": 6.0,
+      "habitat": "open_water",
+      "placement_mode": "water_surface",
+      "surface_y_m": 0.0,
+      "surface_submerge_fraction": 0.28,
+      "activation_distance_m": 100,
+      "roam_radius_m": 6.0,
+      "purpose": "surface creature sightline pair beside main sailing route",
+      "requires_aquatic_combat": true,
+      "placement_status": "authored_surface_runtime_tether_required",
+      "_why_road_visibility_0907": "ROAD CP-2 surface pair for a main sailing choice. The pair uses explicit host-owned surface placement and remains peaceful/off the exact route line; no seabed grounding or global draw-distance increase."
+    },
+    {
+      "id": "road_visibility_salt_crown_to_sluice_isle_sheltered_03",
+      "island_id": "salt_crown",
+      "region_id": "outer_reaches",
+      "route_edge_id": "salt_crown_to_sluice_isle",
+      "table_id": "water_salt_crown_shallows",
+      "island_local_offset": [
+        431.324,
+        0.0,
+        434.714
+      ],
+      "position": [
+        581.324,
+        0.0,
+        2744.714
+      ],
+      "count": 2,
+      "radius_m": 6.0,
+      "habitat": "open_water",
+      "placement_mode": "water_surface",
+      "surface_y_m": 0.0,
+      "surface_submerge_fraction": 0.28,
+      "activation_distance_m": 100,
+      "roam_radius_m": 6.0,
+      "purpose": "surface creature sightline pair beside main sailing route",
+      "requires_aquatic_combat": true,
+      "placement_status": "authored_surface_runtime_tether_required",
+      "_why_road_visibility_0907": "ROAD CP-2 surface pair for a main sailing choice. The pair uses explicit host-owned surface placement and remains peaceful/off the exact route line; no seabed grounding or global draw-distance increase."
+    },
+    {
+      "id": "road_visibility_sluice_isle_to_veilfall_sheltered_01",
+      "island_id": "sluice_isle",
+      "region_id": "tether_current",
+      "route_edge_id": "sluice_isle_to_veilfall",
+      "table_id": "water_sluice_isle_shallows",
+      "island_local_offset": [
+        -227.629,
+        0.0,
+        323.882
+      ],
+      "position": [
+        622.371,
+        0.0,
+        3283.882
+      ],
+      "count": 2,
+      "radius_m": 6.0,
+      "habitat": "open_water",
+      "placement_mode": "water_surface",
+      "surface_y_m": 0.0,
+      "surface_submerge_fraction": 0.28,
+      "activation_distance_m": 100,
+      "roam_radius_m": 6.0,
+      "purpose": "surface creature sightline pair beside main sailing route",
+      "requires_aquatic_combat": true,
+      "placement_status": "authored_surface_runtime_tether_required",
+      "_why_road_visibility_0907": "ROAD CP-2 surface pair for a main sailing choice. The pair uses explicit host-owned surface placement and remains peaceful/off the exact route line; no seabed grounding or global draw-distance increase."
+    },
+    {
+      "id": "road_visibility_sluice_isle_to_veilfall_sheltered_02",
+      "island_id": "sluice_isle",
+      "region_id": "tether_current",
+      "route_edge_id": "sluice_isle_to_veilfall",
+      "table_id": "water_sluice_isle_shallows",
+      "island_local_offset": [
+        -310.439,
+        0.0,
+        411.423
+      ],
+      "position": [
+        539.561,
+        0.0,
+        3371.423
+      ],
+      "count": 2,
+      "radius_m": 6.0,
+      "habitat": "open_water",
+      "placement_mode": "water_surface",
+      "surface_y_m": 0.0,
+      "surface_submerge_fraction": 0.28,
+      "activation_distance_m": 100,
+      "roam_radius_m": 6.0,
+      "purpose": "surface creature sightline pair beside main sailing route",
+      "requires_aquatic_combat": true,
+      "placement_status": "authored_surface_runtime_tether_required",
+      "_why_road_visibility_0907": "ROAD CP-2 surface pair for a main sailing choice. The pair uses explicit host-owned surface placement and remains peaceful/off the exact route line; no seabed grounding or global draw-distance increase."
+    },
+    {
+      "id": "road_visibility_sluice_isle_to_veilfall_sheltered_03",
+      "island_id": "sluice_isle",
+      "region_id": "tether_current",
+      "route_edge_id": "sluice_isle_to_veilfall",
+      "table_id": "water_sluice_isle_shallows",
+      "island_local_offset": [
+        -407.942,
+        0.0,
+        486.616
+      ],
+      "position": [
+        442.058,
+        0.0,
+        3446.616
+      ],
+      "count": 2,
+      "radius_m": 6.0,
+      "habitat": "open_water",
+      "placement_mode": "water_surface",
+      "surface_y_m": 0.0,
+      "surface_submerge_fraction": 0.28,
+      "activation_distance_m": 100,
+      "roam_radius_m": 6.0,
+      "purpose": "surface creature sightline pair beside main sailing route",
+      "requires_aquatic_combat": true,
+      "placement_status": "authored_surface_runtime_tether_required",
+      "_why_road_visibility_0907": "ROAD CP-2 surface pair for a main sailing choice. The pair uses explicit host-owned surface placement and remains peaceful/off the exact route line; no seabed grounding or global draw-distance increase."
+    },
+    {
+      "id": "road_visibility_sluice_isle_to_veilfall_sheltered_04",
+      "island_id": "sluice_isle",
+      "region_id": "tether_current",
+      "route_edge_id": "sluice_isle_to_veilfall",
+      "table_id": "water_sluice_isle_shallows",
+      "island_local_offset": [
+        -415.953,
+        0.0,
+        606.853
+      ],
+      "position": [
+        434.047,
+        0.0,
+        3566.853
+      ],
+      "count": 2,
+      "radius_m": 6.0,
+      "habitat": "open_water",
+      "placement_mode": "water_surface",
+      "surface_y_m": 0.0,
+      "surface_submerge_fraction": 0.28,
+      "activation_distance_m": 100,
+      "roam_radius_m": 6.0,
+      "purpose": "surface creature sightline pair beside main sailing route",
+      "requires_aquatic_combat": true,
+      "placement_status": "authored_surface_runtime_tether_required",
+      "_why_road_visibility_0907": "ROAD CP-2 surface pair for a main sailing choice. The pair uses explicit host-owned surface placement and remains peaceful/off the exact route line; no seabed grounding or global draw-distance increase."
+    },
+    {
+      "id": "road_visibility_sluice_isle_to_veilfall_sheltered_05",
+      "island_id": "sluice_isle",
+      "region_id": "tether_current",
+      "route_edge_id": "sluice_isle_to_veilfall",
+      "table_id": "water_sluice_isle_shallows",
+      "island_local_offset": [
+        -445.691,
+        0.0,
+        723.629
+      ],
+      "position": [
+        404.309,
+        0.0,
+        3683.629
+      ],
+      "count": 2,
+      "radius_m": 6.0,
+      "habitat": "open_water",
+      "placement_mode": "water_surface",
+      "surface_y_m": 0.0,
+      "surface_submerge_fraction": 0.28,
+      "activation_distance_m": 100,
+      "roam_radius_m": 6.0,
+      "purpose": "surface creature sightline pair beside main sailing route",
+      "requires_aquatic_combat": true,
+      "placement_status": "authored_surface_runtime_tether_required",
+      "_why_road_visibility_0907": "ROAD CP-2 surface pair for a main sailing choice. The pair uses explicit host-owned surface placement and remains peaceful/off the exact route line; no seabed grounding or global draw-distance increase."
+    },
+    {
+      "id": "road_visibility_sluice_isle_to_veilfall_sheltered_06",
+      "island_id": "sluice_isle",
+      "region_id": "tether_current",
+      "route_edge_id": "sluice_isle_to_veilfall",
+      "table_id": "water_sluice_isle_shallows",
+      "island_local_offset": [
+        -451.888,
+        0.0,
+        832.479
+      ],
+      "position": [
+        398.112,
+        0.0,
+        3792.479
+      ],
+      "count": 2,
+      "radius_m": 6.0,
+      "habitat": "open_water",
+      "placement_mode": "water_surface",
+      "surface_y_m": 0.0,
+      "surface_submerge_fraction": 0.28,
+      "activation_distance_m": 100,
+      "roam_radius_m": 6.0,
+      "purpose": "surface creature sightline pair beside main sailing route",
+      "requires_aquatic_combat": true,
+      "placement_status": "authored_surface_runtime_tether_required",
+      "_why_road_visibility_0907": "ROAD CP-2 surface pair for a main sailing choice. The pair uses explicit host-owned surface placement and remains peaceful/off the exact route line; no seabed grounding or global draw-distance increase."
+    },
+    {
+      "id": "road_visibility_sluice_isle_to_veilfall_direct_01",
+      "island_id": "sluice_isle",
+      "region_id": "tether_current",
+      "route_edge_id": "sluice_isle_to_veilfall",
+      "table_id": "water_sluice_isle_shallows",
+      "island_local_offset": [
+        -309.751,
+        0.0,
+        550.917
+      ],
+      "position": [
+        540.249,
+        0.0,
+        3510.917
+      ],
+      "count": 2,
+      "radius_m": 6.0,
+      "habitat": "open_water",
+      "placement_mode": "water_surface",
+      "surface_y_m": 0.0,
+      "surface_submerge_fraction": 0.28,
+      "activation_distance_m": 100,
+      "roam_radius_m": 6.0,
+      "purpose": "surface creature sightline pair beside main sailing route",
+      "requires_aquatic_combat": true,
+      "placement_status": "authored_surface_runtime_tether_required",
+      "_why_road_visibility_0907": "ROAD CP-2 surface pair for a main sailing choice. The pair uses explicit host-owned surface placement and remains peaceful/off the exact route line; no seabed grounding or global draw-distance increase."
     }
   ],
   "named_encounters": [
@@ -6856,7 +8501,7 @@
     }
   ],
   "census": {
-    "wild_clusters": 240,
+    "wild_clusters": 303,
     "tables": 16,
     "optional_named_encounters": 5,
     "named_including_scripted_alpha": 6,
@@ -6865,26 +8510,30 @@
       "first_shore": 30,
       "reedhaven": 30,
       "brine_steps": 24,
-      "shellwatch": 24,
-      "tidal_cradle": 28,
-      "salt_crown": 28,
-      "sluice_isle": 24,
-      "veilfall": 20,
+      "shellwatch": 25,
+      "tidal_cradle": 43,
+      "salt_crown": 38,
+      "sluice_isle": 37,
+      "veilfall": 44,
       "lantern_cove": 8,
       "gull_rest": 8,
       "drowned_garden": 8,
       "deep_watch": 8
     },
-    "dry_clusters": 163,
+    "dry_clusters": 209,
     "shallow_clusters": 77,
-    "runtime_spawned_verified": 0
+    "runtime_spawned_verified": 0,
+    "road_visibility_land_pairs": 46,
+    "road_visibility_surface_pairs": 17,
+    "surface_clusters": 17
   },
   "validation_limitations": [
     "No render or traversal proof; Terrain3D bake may differ until parity test passes.",
     "Safe camps/NPC/trainer placements are not yet fully composed; revalidate exclusions after integration.",
     "Shallow footprint is spawn jitter, not complete monster body or combat arena certification.",
     "Veilfall land candidates include ungraded high ground; intended hike and encounter spacing require runtime relocation after grading.",
-    "Night table weighting, named replacement ownership and streamed active cap require runtime consumer support."
+    "Night table weighting, named replacement ownership and streamed active cap require runtime consumer support.",
+    "ROAD land-spine pairs are route-surface authored and require fresh runtime grounding/navigation proof. Open-water pairs use explicit surface placement and require fresh runtime settle/combat proof."
   ],
   "placement_validation": {
     "method": "Godot 4.7 water_heightfield.gd height_at and slope_degrees_at against every authored centre and eight radius samples",

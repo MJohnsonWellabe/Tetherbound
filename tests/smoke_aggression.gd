@@ -5,30 +5,40 @@ extends SceneTree
 ##
 ##   godot --headless --path . --script tests/smoke_aggression.gd
 ##
-## Two halves, and the SECOND is the important one.
+## Two isolated scene fixtures, and the FIRST is the important one.
 ##
-## The first asserts that an aggressive wild creature will close on the trainer and
-## start a fight with no button press — GAME_DESIGN.md §14 lists "Aggressive creature
-## initiates" beside the player's own routes in.
-##
-## The second asserts that a PEACEFUL one will not, no matter how long you stand
+## The first asserts that a PEACEFUL creature will not initiate, no matter how long you stand
 ## next to it. That is a regression guard on the other line in the same list:
 ## "**Not** simple proximity for peaceful creatures." A bug that makes every creature
-## aggressive would sail past the first half of this test and would not be
+## aggressive would sail past only the positive check and would not be
 ## noticed until someone wondered why the meadow felt hostile.
+##
+## The second asserts that an aggressive wild creature will close on the trainer and
+## start a fight with no button press — GAME_DESIGN.md §14 lists "Aggressive creature
+## initiates" beside the player's own routes in.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
+const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 
 const SETTLE_FRAMES := 300
+## VILLAGE-BOUNDARY-0908. These are deliberately separate initial fixtures.
+## The authored practice Bramblebun is inside the sealed village perimeter and
+## Galecrest is outside it. The old shared `(40,-62)` start intersects
+## FencePanelCollision_39 after the boundary reroute: at x=40 the current
+## [36,-61] -> [46,-63] segment is z=-61.8. An inside point cannot then reach
+## Galecrest without a gate key, and an outside point cannot reach Bramblebun.
+## Reloading gives each behavior assertion a valid initial pose without a
+## mid-approach teleport or a hidden progression unlock.
+const PEACEFUL_START_XZ := Vector2(40.0, -57.0) # inside, 4.71m from the fence line
+const AGGRESSIVE_START_XZ := Vector2(40.0, -72.0) # outside, 10.00m from the fence line
 ## How long to stand next to a creature waiting for something to happen. At the
 ## configured chase speed this is far more than enough for an aggressive creature to
 ## cross its notice range.
 const PATIENCE_FRAMES := 900
-## Physics frames to spend walking toward one creature. The aggressor's cluster
-## (spawns.json's `aggressor` role — Galecrest, at the southern foot of the
-## rocky rise) is ~95m from the practice cluster where the peaceful half leaves
-## the trainer, which is ~1,500 frames at walk speed before slopes; doubled so
-## an undulating line does not time out a walk that is actually progressing.
+## Physics frames to spend walking toward one creature. This retains the
+## smoke's established ceiling unchanged even though the isolated fixtures now
+## start closer to each subject; splitting the fixtures is not permission to
+## loosen or silently retune its timing contract.
 const WALK_FRAMES := 4000
 
 ## `_walk_towards()`'s own unstick escape. Investigated 2026-08-13, re-opened
@@ -70,29 +80,62 @@ var _director: Node = null
 
 
 func _init() -> void:
-	_run()
+	# Autoloads enter the tree after a `--script` SceneTree is constructed.
+	# Defer before replacing Game's saver so the smoke cannot fall back to the
+	# user's real save path merely because initialization order hid the autoload.
+	_run.call_deferred()
 
 
 func _run() -> void:
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		_fail("Game autoload is missing")
+		_report()
+		return
+	game.set("save_system", SAVE_GAME.new(
+		"user://test_aggression_%d_%d/" % [OS.get_process_id(), Time.get_ticks_usec()]))
+	game.call("reset_for_new_game")
+	if not await _load_fixture(PEACEFUL_START_XZ, "peaceful inside-perimeter"):
+		_report()
+		return
+	await _a_peaceful_creature_never_does()
+	if not _failures.is_empty():
+		_report()
+		return
+	await _unload_fixture()
+	if not await _load_fixture(AGGRESSIVE_START_XZ, "aggressive outside-perimeter"):
+		_report()
+		return
+	await _an_aggressive_creature_starts_the_fight_itself()
+	_report()
+
+
+func _load_fixture(xz: Vector2, label: String) -> bool:
 	_world = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(_world)
 	for i in SETTLE_FRAMES:
 		await physics_frame
-
 	await _ensure_ally()
-	_leave_the_farmhouse()
+	_place_fixture_player(xz)
+	for i in 10:
+		await physics_frame
 	if not _collect_nodes():
-		_report()
-		return
+		return false
+	print("AGGRESSION FIXTURE %s start=%s" % [label, _player.global_position])
+	return true
 
-	# Peaceful first, deliberately. Run the ambush half first and the aggressive
-	# creature is still awake and near the trainer for the second half, so it chases
-	# them across the meadow and the fight it starts gets blamed on the creature
-	# standing next to them. The order is the fix; the species check below is the
-	# belt to its braces.
-	await _a_peaceful_creature_never_does()
-	await _an_aggressive_creature_starts_the_fight_itself()
-	_report()
+
+func _unload_fixture() -> void:
+	Input.action_release("move_forward")
+	if _world != null and is_instance_valid(_world):
+		_world.queue_free()
+	_world = null
+	_player = null
+	_rig = null
+	_manager = null
+	_director = null
+	await process_frame
+	await process_frame
 
 
 ## Which creature the current fight is against. Combat holds the live instance,
@@ -119,15 +162,14 @@ func _ensure_ally() -> void:
 	await director.call("adopt_starter", "terrapup")
 
 
-## The opening's staging wakes the player in Grandpa's bed; this test bypasses
-## the opening and needs open meadow between it and both wild clusters, not a
-## farmhouse wall. Between the practice cluster and galecrest's foot-of-the-rise
-## spot (data/config/spawns.json).
-func _leave_the_farmhouse() -> void:
+## The opening's staging wakes the player in Grandpa's bed. Each isolated
+## behavior fixture bypasses that opening and starts on its subject's own side
+## of the sealed village perimeter; see the coordinate contract above.
+func _place_fixture_player(xz: Vector2) -> void:
 	var player := _world.get_node_or_null(^"Player") as CharacterBody3D
 	if player == null:
 		return
-	var start := Vector3(40.0, 0.0, -62.0)
+	var start := Vector3(xz.x, 0.0, xz.y)
 	start.y = float(_world.call("ground_height_at", start.x, start.z)) + 1.0
 	player.global_position = start
 	player.velocity = Vector3.ZERO
@@ -163,7 +205,8 @@ func _collect_nodes() -> bool:
 ## Walk within notice range and then stop. Nothing is pressed after this point.
 func _an_aggressive_creature_starts_the_fight_itself() -> void:
 	var wild: Node3D = _director.call("aggressive_creature") as Node3D
-	await _walk_towards(wild, 10.0)
+	if not await _walk_towards(wild, 10.0):
+		return
 
 	var started := false
 	var closed_from := _player.global_position.distance_to(wild.global_position)
@@ -193,9 +236,10 @@ func _an_aggressive_creature_starts_the_fight_itself() -> void:
 	if ally == null or not ally.visible:
 		_fail("an ambush did not deploy the player's creature")
 
-	# Leave, so the next half starts from exploration. The wait is flow's
-	# input_guard: a fight ignores input for a moment after it opens, so a
-	# player mashing B the instant they are ambushed has the first press eaten.
+	# Preserve the existing assertion that this is a complete, escapable fight,
+	# and leave the terminal scene in exploration. The wait is flow's input_guard:
+	# a fight ignores input for a moment after it opens, so a player mashing B the
+	# instant they are ambushed has the first press eaten.
 	for i in 30:
 		await physics_frame
 	await _press("combat_run")
@@ -219,7 +263,8 @@ func _a_peaceful_creature_never_does() -> void:
 		return
 
 	var wild: Node3D = _director.call("wild_creature") as Node3D
-	await _walk_towards(wild, 2.5)
+	if not await _walk_towards(wild, 2.5):
+		return
 
 	var distance := _player.global_position.distance_to(wild.global_position)
 	var species := str(wild.get("species_id"))
@@ -245,16 +290,22 @@ func _a_peaceful_creature_never_does() -> void:
 		_fail("no engage prompt next to the peaceful creature; it cannot be fought at all")
 
 
-func _walk_towards(wild: Node3D, stop_at: float) -> void:
+func _walk_towards(wild: Node3D, stop_at: float) -> bool:
 	var stuck_frames := 0
 	var stuck_check_pos := _player.global_position
+	var initial := _player.global_position
 	for i in WALK_FRAMES:
 		var to := wild.global_position - _player.global_position
 		to.y = 0.0
-		if to.length() <= stop_at:
+		if _player.global_position.distance_to(wild.global_position) <= stop_at:
 			break
 		if bool(_manager.call("is_fighting")):
 			break
+		if i % 400 == 0:
+			print("AGGRESSION APPROACH frame=%d player=%s target=%s distance=%.2f velocity=%s locomotion=%s grounded=%s wall=%s stuck=%d contacts=%s nearby=%s" % [
+				i, _player.global_position, wild.global_position, to.length(), _player.velocity,
+				_player.call("locomotion_enabled"), _player.is_on_floor(), _player.is_on_wall(), stuck_frames,
+				_slide_contacts(), _nearby_colliders()])
 
 		var heading := to.normalized()
 		if stuck_frames > UNSTICK_AFTER_FRAMES:
@@ -277,9 +328,55 @@ func _walk_towards(wild: Node3D, stop_at: float) -> void:
 		else:
 			stuck_frames = 0
 		stuck_check_pos = _player.global_position
+	var final_contacts := _slide_contacts()
+	var final_nearby := _nearby_colliders()
 	Input.action_release("move_forward")
 	for i in 10:
 		await physics_frame
+	# CI 34208280455's first attempt exhausted its approach then waited for an
+	# ambush from 116.1m away. Neither an ambush failure nor peaceful restraint
+	# is meaningful without the promised proximity. A real fight during the
+	# approach is preserved for the callers' exact opponent/peacefulness checks.
+	if bool(_manager.call("is_fighting")):
+		return true
+	var remaining := _player.global_position.distance_to(wild.global_position)
+	if remaining > stop_at:
+		_fail("approach never reached %s within %.1fm: start=%s player=%s target=%s distance=%.2f velocity=%s locomotion=%s grounded=%s wall=%s contacts=%s nearby=%s" % [
+			str(wild.get("display_name")), stop_at, initial, _player.global_position,
+			wild.global_position, remaining, _player.velocity, _player.call("locomotion_enabled"),
+			_player.is_on_floor(), _player.is_on_wall(), final_contacts, final_nearby])
+		return false
+	return true
+
+
+func _slide_contacts() -> Array[String]:
+	var found: Array[String] = []
+	for index in _player.get_slide_collision_count():
+		var collision := _player.get_slide_collision(index)
+		var collider: Object = collision.get_collider()
+		var path := str((collider as Node).get_path()) if collider is Node else str(collider)
+		found.append("%s normal=%s at=%s" % [path, collision.get_normal(), collision.get_position()])
+	return found
+
+
+func _nearby_colliders() -> Array[String]:
+	var query := PhysicsShapeQueryParameters3D.new()
+	var shape := SphereShape3D.new()
+	shape.radius = 2.5
+	query.shape = shape
+	query.transform = Transform3D(Basis.IDENTITY, _player.global_position + Vector3.UP * 0.8)
+	query.exclude = [_player.get_rid()]
+	query.collide_with_bodies = true
+	query.collide_with_areas = true
+	var found: Array[String] = []
+	for hit: Dictionary in _player.get_world_3d().direct_space_state.intersect_shape(query, 24):
+		var collider: Object = hit.get("collider")
+		if collider == null:
+			continue
+		var path := str((collider as Node).get_path()) if collider is Node else str(collider)
+		var position := str((collider as Node3D).global_position) if collider is Node3D else "n/a"
+		found.append("%s at=%s" % [path, position])
+	return found
 
 
 func _press(action: String) -> void:

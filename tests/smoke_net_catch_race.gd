@@ -46,12 +46,12 @@ extends "res://tests/helpers/net_harness.gd"
 ## with both intents in flight before either is decided. This smoke deliberately
 ## does not care which of them wins: it asserts the invariant, not the winner.
 ##
-## In practice **the host has won every observed run** (three, 2026-09-06), and
-## that is not surprising — the host arbitrates its own throw inside its own
-## `submit_encounter_intent` call while the client's is still on the wire, so it
-## is a round trip ahead by construction. Written down so nobody reads this file
-## as evidence that the race is symmetric. It is evidence that the SECOND throw
-## to arrive is refused, told why, and pays nothing, which is what §8 promises;
+## The client won CI run 34221457038 (2026-09-08): scheduling can put its intent
+## first even though the host usually wins. A client's synchronous submit return
+## stays `pending` after its real host reply has played a resolution. Read that
+## completed resolution too, or this smoke incorrectly requires a host winner.
+## It is evidence that the SECOND throw to arrive is refused, told why, and
+## pays nothing, which is what §8 promises;
 ## `test_catch_arbitration.gd::test_the_order_decides_it_and_nothing_else_does`
 ## is where "the host's own throw loses it like anybody else's" is proven, and
 ## it can prove that because it is pure.
@@ -93,8 +93,8 @@ extends "res://tests/helpers/net_harness.gd"
 ## Both peers' `probe catch` rows are printed. Read them in this order: `submit`
 ## on each peer ("" means the armed throw never fired, so nothing below means
 ## anything; "pending" on the client is CORRECT and is not a refusal); then
-## `verdict.ok` on both (two true is the duplication this file exists to catch,
-## two false means neither throw reached the arbiter); then `last_refusal` on
+## `verdict.ok` for a synchronous answer or `resolutions` for an asynchronous
+## answer (even a breakout proves admission); then `last_refusal` on
 ## the loser; then `owned` on both.
 
 ## How far ahead the shared throw instant is set — long enough that both peers
@@ -279,12 +279,18 @@ func _run() -> void:
 		else:
 			loser = i
 	want(winner >= 0 and loser >= 0 and winner != loser,
-		"EXACTLY ONE peer's throw was granted: peer 0 ok=%s, peer 1 ok=%s"
+		"EXACTLY ONE peer's throw was granted: peer 0 admitted=%s, peer 1 admitted=%s"
 			% [str(_won(after[0])), str(_won(after[1]))])
 	if winner < 0 or loser < 0 or winner == loser:
 		quit(await finish())
 		return
 	print("peer %d won the throw; peer %d lost it" % [winner, loser])
+	var winner_resolutions: Array = after[winner].get("resolutions", []) as Array
+	want(winner_resolutions.size() == 1,
+		"peer %d's granted throw played exactly one completed resolution (got %s)"
+			% [winner, str(winner_resolutions)])
+	want((after[winner].get("refusals", []) as Array).is_empty(),
+		"peer %d's granted throw was never also refused" % winner)
 
 	# --- THE LOSER IS TOLD WHY ------------------------------------------------
 	want(_code(after[loser]) == "already_resolving",
@@ -311,7 +317,7 @@ func _run() -> void:
 			% [winner, str(after[winner].get("last_refusal", {}))])
 
 	# --- NOT DUPLICATED -------------------------------------------------------
-	var caught := bool((after[winner].get("verdict", {}) as Dictionary).get("caught", false))
+	var caught := _caught(after[winner])
 	print("the host's roll on peer %d's throw: %s"
 		% [winner, "CAUGHT" if caught else "broke out"])
 	var owned_after := int(after[0].get("owned", -1)) + int(after[1].get("owned", -1))
@@ -377,11 +383,24 @@ func _encounter(peer: int) -> Dictionary:
 ## `has()` before `get()` throughout: a missing key read through `get()` is
 ## null, and `bool(null)` is false — which would silently read "this peer lost"
 ## for a peer whose probe returned nothing at all.
-func _won(row: Dictionary) -> bool:
+static func _won(row: Dictionary) -> bool:
 	if not row.has("verdict"):
 		return false
 	var v: Variant = row["verdict"]
-	return v is Dictionary and bool((v as Dictionary).get("ok", false))
+	if not (v is Dictionary):
+		return false
+	if not bool((v as Dictionary).get("pending", false)):
+		return bool((v as Dictionary).get("ok", false))
+	# apply_host_catch_verdict only starts the resolution on an admitted throw;
+	# refusals return before _play_catch_decision. Its catch_resolved signal is
+	# therefore evidence of the client's asynchronous grant, including breakouts.
+	# Pending without a completed host response remains unproven, never a win.
+	return not (row.get("resolutions", []) as Array).is_empty()
+
+
+static func _caught(row: Dictionary) -> bool:
+	var resolutions: Array = row.get("resolutions", []) as Array
+	return resolutions.size() == 1 and bool((resolutions[0] as Dictionary).get("caught", false))
 
 
 ## The code this peer was refused with.

@@ -79,6 +79,58 @@ static func entitled(world: RefCounted, character_id: String) -> bool:
 	return world != null and not character_id.is_empty() and world.flags.has(RESOLVED) \
 		and world.flags.has(entitlement(character_id))
 
+## A player who arrives after the one shared fight may earn the same durable
+## traversal entitlement from Iona. `actor` is reconstructed by the host's
+## Water transport; none of its identity, realm, or position comes from the
+## request. The entitlement and addressed personal flag are withheld until the
+## new world fact is journaled, so a failed save cannot mint a temporary Stone.
+static func attune(game: Object, ledger: RefCounted, actor: Dictionary, peer_id: int,
+		iona_position: Vector3, radius_m: float) -> Dictionary:
+	if not _ready_host(game, ledger):
+		return _refuse("not_host_or_ready")
+	var world: RefCounted = ledger.get("world")
+	if not world.flags.has(RESOLVED):
+		return _refuse("alpha_unresolved")
+	var character_id := str(actor.get("character_id", ""))
+	if peer_id <= 0 or int(actor.get("peer", 0)) != peer_id \
+			or str(actor.get("realm", "")) != "water" \
+			or character_id.is_empty() or character_id.strip_edges() != character_id:
+		return _refuse("invalid_actor")
+	var actor_position: Variant = actor.get("position")
+	if not actor_position is Vector3 or not (actor_position as Vector3).is_finite() \
+			or not iona_position.is_finite() or not is_finite(radius_m) or radius_m <= 0.0 \
+			or (actor_position as Vector3).distance_to(iona_position) > radius_m:
+		return _refuse("not_near_iona")
+	if entitled(world, character_id):
+		var redelivery: Dictionary = grant(game, ledger, character_id, peer_id)
+		redelivery["code"] = "already_attuned" if bool(redelivery.get("ok", false)) else str(redelivery.get("code", ""))
+		return redelivery
+	var before: Dictionary = world.save_data()
+	var before_revision: int = world.revision
+	var before_sequence: int = ledger.seq
+	var ops: Array = []
+	var entitlement_result: Dictionary = ledger.commit({
+		"kind": "set_world_flag", "realm": "water", "id": entitlement(character_id)}, 1)
+	if not bool(entitlement_result.get("ok", false)):
+		return _refuse("ledger_refused")
+	ops.append_array(entitlement_result.delta.ops)
+	var grant_result: Dictionary = ledger.commit({
+		"kind": "grant_player_flag", "realm": "water", "id": STONE,
+		"peers": [peer_id]}, 1)
+	if not bool(grant_result.get("ok", false)):
+		world.load_data(before)
+		world.revision = before_revision
+		ledger.seq = before_sequence
+		return _refuse("ledger_refused")
+	ops.append_array(grant_result.delta.ops)
+	if not bool(game.get("save_system").save_world(game, world.world_id)):
+		world.load_data(before)
+		world.revision = before_revision
+		ledger.seq = before_sequence
+		return _refuse("journal_failed")
+	return {"ok": true, "code": "attuned", "delta": {
+		"seq": ledger.seq, "realm": "water", "ops": ops}}
+
 ## character_id and peer_id MUST come from the host's current session registry.
 ## The durable entitlement deliberately has no consumed bit: a lost packet or
 ## reconnect with a new peer ID re-delivers this idempotent personal flag. No

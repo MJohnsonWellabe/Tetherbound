@@ -631,9 +631,7 @@ func _start_new_game_with_character(character_id: String) -> void:
 	# Set BEFORE reset_for_new_game(), same as PlayerState.chosen_character's
 	# own field comment requires -- the body choice is made before the run's
 	# own state resets, not part of it.
-	var player_state := get_node_or_null(^"/root/PlayerState")
-	if player_state != null:
-		player_state.set("chosen_character", character_id)
+	_set_chosen_character(game, character_id)
 	game.call("reset_for_new_game")
 	_enter_world("Starting new game…")
 
@@ -845,11 +843,19 @@ func _join_via(address: String, port: int) -> void:
 		return
 	_show_character_select(func(character_id: String) -> void:
 		_pending_character_option_id = character_id
-		var player_state := get_node_or_null(^"/root/PlayerState")
-		if player_state != null:
-			player_state.set("chosen_character", character_id)
+		_set_chosen_character(game, character_id)
 		_begin_join(address, port, 0.0)
 	, _show_join)
+
+
+## Game is deliberately the project's only autoload; PlayerState is its
+## `local` container, not a second `/root/PlayerState` singleton.
+static func _set_chosen_character(game: Object, character_id: String) -> void:
+	if game == null:
+		return
+	var local: Variant = game.get("local")
+	if local is Object:
+		(local as Object).set("chosen_character", character_id if not character_id.is_empty() else "trainer")
 
 
 ## Start a join. THE WORLD IS BUILT FIRST AND THE SOCKET OPENED SECOND, which

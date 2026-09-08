@@ -25,16 +25,15 @@ const SIZE := Vector2(1280.0, 720.0)
 ## `data/config/combat.json` arena.separation -- where `_place_fighters()`
 ## stands the two fighters when a fight opens.
 const ARENA_SEPARATION := 5.0
-## What a fight has closed to by the time a capture's camera settle is over,
-## measured by `tools/_capture_combat_moments.gd` ("a real fight was measured
-## sitting at ~2m by the time these shots fire, not 5m").
-const CLOSED_IN := 2.0
-
-
 func _box(species_id: String, at: Vector3) -> AABB:
 	var placeholder: Dictionary = SPECIES.placeholder(species_id)
 	return CAPTURE_CHECK.body_box(at, float(placeholder.get("height", 1.0)),
 		float(placeholder.get("radius", 0.4)))
+
+
+func _contact_distance(first: String, second: String) -> float:
+	return float(SPECIES.placeholder(first).get("radius", 0.4)) \
+		+ float(SPECIES.placeholder(second).get("radius", 0.4))
 
 
 ## A camera `back` metres from the origin on +Z, looking at the origin, eye
@@ -44,11 +43,13 @@ func _camera(back: float, up: float) -> Transform3D:
 
 
 func test_a_creature_box_is_its_own_body_not_its_spawn_allowance() -> void:
-	# galecrest: radius 0.65, footprint_allowance 4.2. The body is 1.30m wide.
+	# Whatever size the presentation ladder authors, the evidence box is the
+	# gameplay body and never the much larger spawn-spacing allowance.
 	var box := _box("galecrest", Vector3.ZERO)
-	assert_almost_eq(box.size.x, 1.30, 0.01, "the box is two radii wide, not a spawn footprint")
-	assert_almost_eq(box.size.z, 1.30, 0.01)
 	var placeholder: Dictionary = SPECIES.placeholder("galecrest")
+	var diameter := float(placeholder.get("radius", 0.0)) * 2.0
+	assert_almost_eq(box.size.x, diameter, 0.01, "the box is two radii wide, not a spawn footprint")
+	assert_almost_eq(box.size.z, diameter, 0.01)
 	assert_true(float(placeholder.get("footprint_allowance", 0.0)) > 3.0,
 		"this species really does carry a large allowance, or this test proves nothing")
 	assert_almost_eq(box.size.y, float(placeholder.get("height", 0.0)), 0.01)
@@ -66,10 +67,11 @@ func test_two_fighters_at_the_arenas_own_separation_do_not_read_as_overlapping()
 
 
 func test_two_fighters_closed_to_melee_still_do_not_read_as_overlapping() -> void:
-	# The run-5 case: the AI has closed the gap, and the frame is still honest.
+	# A melee pair is just outside physical contact at every authored size.
 	var ally := {"name": "companion:terrapup", "aabb": _box("terrapup", Vector3(0.0, 0.0, 0.0))}
-	var wild := {"name": "opponent:galecrest", "aabb": _box("galecrest", Vector3(CLOSED_IN, 0.0, 0.0))}
-	var problems: Array[String] = CAPTURE_CHECK.readable_problems(_camera(6.2, 2.4), FOV, SIZE, [ally, wild])
+	var closed_in := _contact_distance("terrapup", "galecrest") + 0.5
+	var wild := {"name": "opponent:galecrest", "aabb": _box("galecrest", Vector3(closed_in, 0.0, 0.0))}
+	var problems: Array[String] = CAPTURE_CHECK.readable_problems(_camera(8.5, 3.2), FOV, SIZE, [ally, wild])
 	assert_eq(problems.size(), 0, str(problems))
 
 
@@ -77,8 +79,9 @@ func test_one_fighter_directly_behind_the_other_is_still_reported() -> void:
 	# The rule must keep catching what it was written for: the same two bodies,
 	# one standing behind the other along the camera's own axis.
 	var ally := {"name": "companion:terrapup", "aabb": _box("terrapup", Vector3(0.0, 0.0, 0.0))}
-	var wild := {"name": "opponent:galecrest", "aabb": _box("galecrest", Vector3(0.0, 0.0, -CLOSED_IN))}
-	var problems: Array[String] = CAPTURE_CHECK.readable_problems(_camera(6.2, 2.4), FOV, SIZE, [ally, wild])
+	var closed_in := _contact_distance("terrapup", "galecrest") + 0.5
+	var wild := {"name": "opponent:galecrest", "aabb": _box("galecrest", Vector3(0.0, 0.0, -closed_in))}
+	var problems: Array[String] = CAPTURE_CHECK.readable_problems(_camera(8.5, 3.2), FOV, SIZE, [ally, wild])
 	assert_eq(problems.size(), 1, str(problems))
 	assert_true(problems[0].contains("overlap on screen"), problems[0])
 
@@ -90,10 +93,11 @@ func test_two_fighters_standing_inside_each_other_are_reported_as_such() -> void
 	# that interpenetrate in the WORLD are not a framing problem -- the report
 	# has to say so, because no bearing fixes it.
 	var ally := {"name": "companion:terrapup", "aabb": _box("terrapup", Vector3.ZERO)}
-	var wild := {"name": "opponent:galecrest", "aabb": _box("galecrest", Vector3(0.9, 0.0, 0.0))}
+	var inside := _contact_distance("terrapup", "galecrest") * 0.5
+	var wild := {"name": "opponent:galecrest", "aabb": _box("galecrest", Vector3(inside, 0.0, 0.0))}
 	assert_true((ally["aabb"] as AABB).intersects(wild["aabb"]),
-		"0.9 m apart really is inside each other for these two bodies")
-	var problems: Array[String] = CAPTURE_CHECK.readable_problems(_camera(6.2, 2.4), FOV, SIZE, [ally, wild])
+		"half their contact distance really is inside each other")
+	var problems: Array[String] = CAPTURE_CHECK.readable_problems(_camera(8.5, 3.2), FOV, SIZE, [ally, wild])
 	assert_eq(problems.size(), 1, str(problems))
 	assert_true(problems[0].contains("standing inside each other"), problems[0])
 	assert_true(problems[0].contains("no camera angle separates them"), problems[0])
@@ -103,8 +107,9 @@ func test_the_interpenetration_report_replaces_the_screen_overlap_one() -> void:
 	# Not both: two bodies inside each other also overlap on screen, and two
 	# messages about one situation is noise in a refusal that has to be read.
 	var ally := {"name": "companion:terrapup", "aabb": _box("terrapup", Vector3.ZERO)}
-	var wild := {"name": "opponent:galecrest", "aabb": _box("galecrest", Vector3(0.9, 0.0, 0.0))}
-	var problems: Array[String] = CAPTURE_CHECK.readable_problems(_camera(6.2, 2.4), FOV, SIZE, [ally, wild])
+	var inside := _contact_distance("terrapup", "galecrest") * 0.5
+	var wild := {"name": "opponent:galecrest", "aabb": _box("galecrest", Vector3(inside, 0.0, 0.0))}
+	var problems: Array[String] = CAPTURE_CHECK.readable_problems(_camera(8.5, 3.2), FOV, SIZE, [ally, wild])
 	for line: String in problems:
 		assert_false(line.contains("overlap on screen"), "the screen-overlap line is not also emitted: %s" % line)
 
@@ -122,9 +127,10 @@ func test_two_fighters_touching_on_screen_are_refused_when_a_gap_is_required() -
 	# radius these boxes are built from, so boxes that merely fail to overlap
 	# are not enough. The fight asks for daylight between them.
 	var ally := {"name": "companion:terrapup", "aabb": _box("terrapup", Vector3.ZERO), "fighter": true}
-	var wild := {"name": "opponent:galecrest", "aabb": _box("galecrest", Vector3(1.6, 0.0, 0.0)), "fighter": true}
+	var touching := _contact_distance("terrapup", "galecrest") + 0.02
+	var wild := {"name": "opponent:galecrest", "aabb": _box("galecrest", Vector3(touching, 0.0, 0.0)), "fighter": true}
 	assert_false((ally["aabb"] as AABB).intersects(wild["aabb"]), "these two are not inside each other")
-	var cam := _camera(6.0, 2.4)
+	var cam := _camera(8.5, 3.2)
 	assert_eq(CAPTURE_CHECK.readable_problems(cam, FOV, SIZE, [ally, wild]).size(), 0,
 		"and nothing refuses them without a gap requirement")
 	var problems: Array[String] = CAPTURE_CHECK.readable_problems(cam, FOV, SIZE, [ally, wild],
@@ -135,8 +141,11 @@ func test_two_fighters_touching_on_screen_are_refused_when_a_gap_is_required() -
 
 func test_fighters_with_real_daylight_between_them_pass_the_gap() -> void:
 	var ally := {"name": "companion:terrapup", "aabb": _box("terrapup", Vector3.ZERO), "fighter": true}
-	var wild := {"name": "opponent:galecrest", "aabb": _box("galecrest", Vector3(3.4, 0.0, 0.0)), "fighter": true}
-	assert_eq(CAPTURE_CHECK.readable_problems(_camera(7.5, 2.4), FOV, SIZE, [ally, wild],
+	# Two metres of actual air is the capture contract's readable silhouette
+	# gap at the current large-body framing, still inside the 5 m arena start.
+	var daylight := _contact_distance("terrapup", "galecrest") + 2.0
+	var wild := {"name": "opponent:galecrest", "aabb": _box("galecrest", Vector3(daylight, 0.0, 0.0)), "fighter": true}
+	assert_eq(CAPTURE_CHECK.readable_problems(_camera(9.5, 3.2), FOV, SIZE, [ally, wild],
 		{"min_gap_frac": 0.04}).size(), 0)
 
 
@@ -144,7 +153,8 @@ func test_the_gap_is_asked_of_fighters_only_not_of_the_trainer() -> void:
 	# The trainer stands where the fight put him. He has to be in frame and
 	# readable; he does not have to keep his distance from his own creature.
 	var ally := {"name": "companion:terrapup", "aabb": _box("terrapup", Vector3.ZERO), "fighter": true}
+	var trainer_distance := float(SPECIES.placeholder("terrapup").get("radius", 0.4)) + 0.6
 	var trainer := {"name": "trainer",
-		"aabb": CAPTURE_CHECK.body_box(Vector3(1.6, 0.0, 0.0), 1.8, 0.4), "fighter": false}
-	assert_eq(CAPTURE_CHECK.readable_problems(_camera(6.0, 2.4), FOV, SIZE, [ally, trainer],
+		"aabb": CAPTURE_CHECK.body_box(Vector3(trainer_distance, 0.0, 0.0), 1.8, 0.4), "fighter": false}
+	assert_eq(CAPTURE_CHECK.readable_problems(_camera(8.5, 3.2), FOV, SIZE, [ally, trainer],
 		{"min_gap_frac": 0.04}).size(), 0, "a close trainer is not a merged fight")

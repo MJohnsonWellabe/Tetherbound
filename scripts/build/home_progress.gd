@@ -198,6 +198,14 @@ static func maybe_set_creature_beds(game: Node) -> void:
 		return
 	var standing := creature_beds_built(game.get("placed_buildings") as Array)
 	for i in mini(standing, CREATURE_BED_FLAGS.size()):
+		# OWNER-0907-FREEZE. A grant commits and synchronously emits a ledger
+		# delta. SequenceDirector evaluates the shared camp again from that
+		# signal, so re-granting an already-earned rung recursively committed a
+		# fresh delta forever (one branch per standing bed). Progression flags
+		# are monotonic; once this process has the rung, there is no work to fan
+		# out and, critically, no nested ledger emit to make.
+		if bool(progression.call("has", CREATURE_BED_FLAGS[i])):
+			continue
 		# Granted to every peer, same rule as `home_built` above.
 		_grant(game, CREATURE_BED_FLAGS[i])
 

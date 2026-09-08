@@ -12,6 +12,9 @@ extends "res://scripts/characters/character_model.gd"
 ## disagree with the character that is running.
 
 @export var player_path: NodePath
+## Remote spawns set this before the node enters the tree. The local rig leaves
+## it empty and resolves the body from Game.local, the project's sole autoload.
+@export var appearance_id: String = ""
 
 var _player: CharacterBody3D = null
 ## Set while the trainer is aiming a throw, so the body reads as throwing rather
@@ -60,10 +63,7 @@ var _fly_pose: Dictionary = {}
 func _ready() -> void:
 	_player = get_node_or_null(player_path) as CharacterBody3D
 	_gait_feel = _load_gait_feel()
-	var chosen := "trainer"
-	var player_state := get_node_or_null(^"/root/PlayerState")
-	if player_state != null:
-		chosen = str(player_state.get("chosen_character"))
+	var chosen := resolved_appearance_id(appearance_id, get_node_or_null(^"/root/Game"))
 	if chosen.is_empty() or not build(chosen):
 		if chosen != "trainer":
 			push_warning("no '%s' body (falling back to trainer)" % chosen)
@@ -71,6 +71,17 @@ func _ready() -> void:
 			# The scene's capsule stays visible, so a missing trainer is a
 			# trainer that looks wrong rather than a trainer who is not there.
 			push_error("no trainer model; falling back to the placeholder capsule")
+
+
+static func resolved_appearance_id(explicit_id: String, game: Object) -> String:
+	if not explicit_id.is_empty():
+		return explicit_id
+	var local: Variant = game.get("local") if game != null else null
+	if local is Object:
+		var selected := str((local as Object).get("chosen_character"))
+		if not selected.is_empty():
+			return selected
+	return "trainer"
 
 
 static func _load_gait_feel() -> Dictionary:

@@ -5,6 +5,8 @@ extends Node
 const EVENTS := preload("res://scripts/world/realm_chapter_events.gd")
 const PEOPLE := preload("res://scripts/world/village_npcs.gd")
 const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
+const CROWN_GUARDIAN_CLEAR_FLAG := "stormwood:named:crown_guardian:cleared"
+const WEN_REFUSAL_CONVERSATION := "stormwood_archivist_wen_guardian_refusal"
 var world: Node3D
 var events: Node
 var people: Node3D
@@ -22,7 +24,7 @@ const DIALOGUE_EVENTS := {
 const STORY_CONVERSATION_GATES := {
 	"warden_elect_bryn": "stormwood:rodline_linked",
 	"keeper_ondra": "stormwood:varga_defeated",
-	"archivist_wen": "stormwood:crown_reached",
+	"archivist_wen": CROWN_GUARDIAN_CLEAR_FLAG,
 	"defector_sable": "stormwood:lantern_hollow_reached",
 }
 const ARRIVALS := [
@@ -46,17 +48,13 @@ func mount(owner_world: Node3D) -> void:
 	var conversations: Dictionary = _read("res://data/dialogue/stormwood.json").get("conversations", {})
 	for id: String in conversations:
 		RUNNER.table()[id] = conversations[id].duplicate(true)
+	RUNNER.table()[WEN_REFUSAL_CONVERSATION] = wen_refusal_conversation()
 	people = PEOPLE.new()
 	people.name = "StormwoodPeople"
 	world.add_child(people)
 	var specs: Array = []
 	for actor: Dictionary in _read("res://data/config/stormwood_npcs.json").get("characters", []):
-		var prefix := "stormwood_%s_" % actor.id
-		specs.append({"name": actor.name, "config_key": actor.body_profile,
-			"position": actor.position, "greeting": prefix + "arrival",
-			"greeting_when": [
-				{"if_flag": "stormwood:long_storm_ended", "conversation": prefix + "post_storm"},
-				{"if_flag": str(STORY_CONVERSATION_GATES.get(str(actor.id), "stormwood:chapter_started")), "conversation": prefix + "in_progress"}]})
+		specs.append(npc_spec(actor))
 	people.build_specs(world.get_node("Player"), specs)
 	# A core NPC stands on the authored arena, not the terrain far below it.
 	for actor: Dictionary in _read("res://data/config/stormwood_npcs.json").get("characters", []):
@@ -96,6 +94,42 @@ func _dialogue_finished(id: String) -> void:
 
 func emit_event(event: String) -> Dictionary:
 	return events.emit_event(event)
+
+
+## Pure so the unit suite can prove Wen's pre-guardian refusal with the same
+## branch shape the production NPC placer evaluates.
+static func npc_spec(actor: Dictionary) -> Dictionary:
+	var actor_id := str(actor.get("id", ""))
+	var prefix := "stormwood_%s_" % actor_id
+	var branches: Array = [
+		{"if_flag": "stormwood:long_storm_ended", "conversation": prefix + "post_storm"},
+	]
+	if actor_id == "archivist_wen":
+		branches.append({"if_flag": ["stormwood:crown_reached", CROWN_GUARDIAN_CLEAR_FLAG],
+			"conversation": prefix + "in_progress"})
+		branches.append({"if_flag": "stormwood:crown_reached",
+			"unless_flag": CROWN_GUARDIAN_CLEAR_FLAG,
+			"conversation": WEN_REFUSAL_CONVERSATION})
+	else:
+		branches.append({"if_flag": str(STORY_CONVERSATION_GATES.get(
+			actor_id, "stormwood:chapter_started")), "conversation": prefix + "in_progress"})
+	return {"name": str(actor.get("name", "")),
+		"config_key": str(actor.get("body_profile", "")),
+		"position": (actor.get("position", []) as Array).duplicate(),
+		"greeting": prefix + "arrival", "greeting_when": branches}
+
+
+static func wen_refusal_conversation() -> Dictionary:
+	return {
+		"speaker": "Archivist Wen",
+		"portrait": "res://assets/ui/portraits/old_perrin.png",
+		"state": "in_progress",
+		"requires_flags": ["stormwood:crown_reached"],
+		"lines": [
+			"Archivist Wen: The guardian is part of the Crown's living record. I cannot ask the heartstone to speak while it still defends this place.",
+			"Settle the guardian — defeat it or catch it — then return. Only then can I read the truth without the Crown fighting us.",
+		],
+	}
 
 func _read(path: String) -> Dictionary:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))

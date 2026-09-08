@@ -269,10 +269,15 @@ const ATOMIC_SAVE_FILE := preload("res://scripts/save/atomic_save_file.gd")
 const WORLD_SAVE := preload("res://scripts/save/world_save.gd")
 const CHARACTER_SAVE := preload("res://scripts/save/character_save.gd")
 const REALM_REWARD_MIGRATION := preload("res://scripts/save/realm_reward_migration.gd")
+const FALLBACK_WORKER := preload("res://scripts/save/fallback_save_worker.gd")
+
+signal fallback_completed(success: bool)
 
 var _dir: String
 var _worlds: RefCounted = null
 var _characters: RefCounted = null
+var _fallback: RefCounted = null
+var _fallback_writer: RefCounted = null
 
 
 ## `dir` is the slot directory. The two D100 directories are the real
@@ -294,10 +299,12 @@ func _init(dir: String = "user://saves/") -> void:
 ## The two savers, for a caller that needs to read a world or a character
 ## without going through a slot (`session.gd`, `tests/`).
 func worlds() -> RefCounted:
+	finish_fallback()
 	return _worlds
 
 
 func characters() -> RefCounted:
+	finish_fallback()
 	return _characters
 
 
@@ -306,7 +313,12 @@ func slot_path(slot: int) -> String:
 
 
 func has_slot(slot: int) -> bool:
-	return FileAccess.file_exists(ATOMIC_SAVE_FILE.readable_path(slot_path(slot)))
+	return slot >= 0 and slot < SLOT_COUNT and ATOMIC_SAVE_FILE.has_readable(slot_path(slot))
+
+
+func delete_slot(slot: int) -> bool:
+	finish_fallback()
+	return slot >= 0 and slot < SLOT_COUNT and ATOMIC_SAVE_FILE.delete(slot_path(slot))
 
 
 ## What a slot list screen needs without loading it onto live state — empty
@@ -343,15 +355,139 @@ func slot_info(slot: int) -> Dictionary:
 ## peer registry then advertises it to everybody -- and rewrite both files
 ## several times a second. A hash probe must not be able to rename a trainer.
 func save(game: Object, slot: int, write_split: bool = true) -> bool:
+	finish_fallback()
 	if slot < 0 or slot >= SLOT_COUNT:
 		return false
-	DirAccess.make_dir_recursive_absolute(_dir)
+	return write_snapshot(_prepare_snapshot(game, slot, write_split))
 
+
+## Resolve all gameplay state and flag scope on the main thread. The request
+## owns recursive copies, with every Array/Dictionary made read-only. The
+## worker's saver and file handles are separate from the main-thread saver.
+func _prepare_snapshot(game: Object, slot: int, write_split: bool = true,
+		character_only: String = "") -> Dictionary:
 	var data := snapshot(game)
-	if not ATOMIC_SAVE_FILE.new().write(slot_path(slot), JSON.stringify(data, "\t")):
+	var world_id := _world_id_for(game, slot) if write_split else ""
+	var character_id := _character_id_for(game, slot) if write_split else character_only
+	if not character_only.is_empty():
+		var world: Variant = game.get("world")
+		world_id = str(world.get("world_id")) if world != null else ""
+	var request := {
+		"slot": slot, "data": data, "write_split": write_split,
+		"character_only": not character_only.is_empty(),
+		"host": _is_host(game), "world_id": world_id,
+		"character_id": character_id, "display_name": _display_name(game),
+		"world_data": WORLD_SAVE.partition(data) if write_split else {},
+		"character_data": CHARACTER_SAVE.partition(data) if write_split or not character_only.is_empty() else {},
+	}
+	if not _snapshot_values_only(request):
+		push_warning("save: refusing snapshot containing a live object")
+		return {}
+	return _immutable_copy(request)
+
+
+static func _snapshot_values_only(value: Variant) -> bool:
+	if value is Object or value is Callable or value is Signal:
 		return false
+	if value is Dictionary:
+		for key: Variant in value:
+			if not _snapshot_values_only(key) or not _snapshot_values_only(value[key]):
+				return false
+	elif value is Array:
+		for entry: Variant in value:
+			if not _snapshot_values_only(entry):
+				return false
+	return true
+
+
+static func _immutable_copy(value: Variant) -> Variant:
+	if value is Dictionary:
+		var copy: Dictionary = {}
+		for key: Variant in value:
+			copy[key] = _immutable_copy(value[key])
+		copy.make_read_only()
+		return copy
+	if value is Array:
+		var copy: Array = []
+		for entry: Variant in value:
+			copy.append(_immutable_copy(entry))
+		copy.make_read_only()
+		return copy
+	return value
+
+
+func request_fallback(game: Object, slot: int, character_only: String = "") -> bool:
+	if slot < 0 or slot >= SLOT_COUNT:
+		return false
+	if _fallback == null:
+		_fallback = FALLBACK_WORKER.new()
+		_fallback.completed.connect(_on_fallback_completed)
+		_fallback_writer = get_script().new(_dir)
+	var request := _prepare_snapshot(game, slot, character_only.is_empty(), character_only)
+	if request.is_empty():
+		_on_fallback_completed(false)
+		return false
+	return _fallback.submit(request, _fallback_writer.write_snapshot)
+
+
+func poll_fallback() -> void:
+	if _fallback != null:
+		_fallback.poll()
+
+
+func finish_fallback() -> bool:
+	return _fallback.finish() if _fallback != null else true
+
+
+func fallback_busy() -> bool:
+	return _fallback != null and _fallback.busy()
+
+
+func _on_fallback_completed(success: bool) -> void:
+	if not success:
+		push_warning("fallback autosave: could not commit save")
+	fallback_completed.emit(success)
+
+
+## The existing slot/world/character transaction, now independent of Game.
+## A process-wide recursive IO mutex also serializes saves from other saver
+## instances and protects AtomicSaveFile's shared validity cache.
+func write_snapshot(request: Dictionary) -> bool:
+	if request.is_empty():
+		return false
+	ATOMIC_SAVE_FILE.begin_transaction()
+	var success := _write_snapshot_locked(request)
+	ATOMIC_SAVE_FILE.end_transaction()
+	return success
+
+
+func _write_snapshot_locked(request: Dictionary) -> bool:
+	var data: Dictionary = request["data"]
+	var world_id: String = request["world_id"]
+	var character_id: String = request["character_id"]
+	if bool(request["character_only"]):
+		return bool(_characters.call("write", character_id, request["character_data"],
+			{"display_name": request["display_name"], "last_world_id": world_id}))
+	var slot: int = request["slot"]
+	var write_split: bool = request["write_split"]
+	DirAccess.make_dir_recursive_absolute(_dir)
+	var slot_token := _document_token(slot_path(slot))
+	var world_token: Dictionary = {}
+	var character_token: Dictionary = {}
+	if write_split and bool(request["host"]):
+		world_token = _document_token(str(_worlds.call("path_for", world_id)))
 	if write_split:
-		_write_split(game, slot, data)
+		character_token = _document_token(str(_characters.call("path_for", character_id)))
+	if not ATOMIC_SAVE_FILE.new().write(slot_path(slot), JSON.stringify(data, "\t"), write_split):
+		return false
+	if not write_split:
+		return true
+	var written: Array[Dictionary] = [slot_token]
+	if not _write_split(request, world_token, character_token, written):
+		if not _rollback_documents(written):
+			push_error("save slot %d: split write failed and rollback was incomplete" % slot)
+		return false
+	_finish_documents(written)
 	return true
 
 
@@ -374,6 +510,7 @@ func snapshot(game: Object) -> Dictionary:
 	var data := {
 		"version": VERSION,
 		"day": int(game.get("day")),
+		"chosen_character": str(personal.get("chosen_character")) if personal is Object else "trainer",
 		"party": _party_to_array(game.get("party")),
 		"inventory": _inventory_to_array(game.get("inventory")),
 		"hotbar": _hotbar_to_array(game),
@@ -415,6 +552,7 @@ func _player_skills(game: Object) -> RefCounted:
 ## false, with `game` left untouched, for a missing, corrupt, or
 ## newer-than-this-build file.
 func load_slot(game: Object, slot: int) -> bool:
+	finish_fallback()
 	var data := _read(slot)
 	if data.is_empty():
 		return false
@@ -463,6 +601,9 @@ func load_slot(game: Object, slot: int) -> bool:
 	var skills_obj := _player_skills(game)
 	var personal: Variant = game.get("local")
 	if personal is Object:
+		personal.set("chosen_character", str(data.get("chosen_character", "trainer")))
+		if str(personal.get("chosen_character")).is_empty():
+			personal.set("chosen_character", "trainer")
 		var escrow: Variant = data.get("satchel_escrow", {})
 		personal.set("satchel_escrow", escrow.duplicate(true) if escrow is Dictionary else {})
 	if skills_obj != null:
@@ -556,46 +697,74 @@ func load_slot(game: Object, slot: int) -> bool:
 ## it buys is that no path in the game changed shape while the character half
 ## was being added, so a defect here cannot lose an existing save.
 
-## Write the D100 pair for a slot write. Never fatal: a failed split leaves the
-## slot file -- which is still the one `load_slot()` reads -- untouched and
-## correct.
+## Write the D100 pair for a slot write. A failure is fatal to the save call and
+## the caller restores every already-written document from its retained recovery
+## generation,
+## so the slot, world and character cannot be left at different generations.
 ##
 ## Ownership, exactly as D100 states it: the host writes the world file, EVERY
 ## peer writes its own character file, and a client never writes a world file.
 ## `_is_host()` asks the game, never `multiplayer.is_server()` -- with an
 ## `OfflineMultiplayerPeer` that call is true and `get_unique_id()` is 1, so it
 ## cannot tell a solo player from a host and cannot tell a client from either.
-func _write_split(game: Object, slot: int, data: Dictionary) -> void:
-	var world_id := _world_id_for(game, slot)
-	var character_id := _character_id_for(game, slot)
-	if _is_host(game):
-		_worlds.call("write", world_id, WORLD_SAVE.partition(data),
-			{"display_name": _display_name(game)})
-	_characters.call("write", character_id, CHARACTER_SAVE.partition(data),
-		{"display_name": _display_name(game), "last_world_id": world_id})
+func _write_split(request: Dictionary,
+		world_token: Dictionary, character_token: Dictionary, written: Array[Dictionary]) -> bool:
+	if bool(request["host"]):
+		if not bool(_worlds.call("write", request["world_id"], request["world_data"],
+			{"display_name": request["display_name"]}, true)):
+			return false
+		written.append(world_token)
+	return bool(_characters.call("write", request["character_id"], request["character_data"],
+		{"display_name": request["display_name"], "last_world_id": request["world_id"]}, true)) and _record_written(
+			written, character_token)
+
+
+func _record_written(written: Array[Dictionary], token: Dictionary) -> bool:
+	written.append(token)
+	return true
+
+
+func _document_token(path: String) -> Dictionary:
+	return {"path": path, "had_readable": ATOMIC_SAVE_FILE.has_readable(path)}
+
+
+func _rollback_documents(written: Array[Dictionary]) -> bool:
+	var complete := true
+	for i in range(written.size() - 1, -1, -1):
+		var token := written[i]
+		var restored := ATOMIC_SAVE_FILE.rollback(
+			str(token.get("path", "")), bool(token.get("had_readable", false)))
+		complete = restored and complete
+	return complete
+
+
+func _finish_documents(written: Array[Dictionary]) -> void:
+	for token: Dictionary in written:
+		var path := str(token.get("path", ""))
+		if not ATOMIC_SAVE_FILE.finish(path):
+			push_warning("save: could not remove retained recovery copy for %s" % path)
 
 
 ## Write only this peer's character file. `session.gd::_save_character_here()`
 ## calls this on a client, which has no slot and no business writing a world.
 func save_character(game: Object, character_id: String) -> bool:
+	finish_fallback()
 	if game == null or character_id.is_empty():
 		return false
-	var data := snapshot(game)
-	var world_id := ""
-	var world: Variant = game.get("world")
-	if world != null:
-		world_id = str((world as RefCounted).get("world_id"))
-	return bool(_characters.call("write", character_id, CHARACTER_SAVE.partition(data),
-		{"display_name": _display_name(game), "last_world_id": world_id}))
+	return write_snapshot(_prepare_snapshot(game, AUTOSAVE_SLOT, false, character_id))
 
 
 ## Write only the world file. Refuses on a client, so a caller cannot get the
 ## ownership rule wrong by calling the wrong function.
 func save_world(game: Object, world_id: String) -> bool:
+	finish_fallback()
 	if game == null or world_id.is_empty() or not _is_host(game):
 		return false
-	return bool(_worlds.call("write", world_id, WORLD_SAVE.partition(snapshot(game)),
+	ATOMIC_SAVE_FILE.begin_transaction()
+	var success := bool(_worlds.call("write", world_id, WORLD_SAVE.partition(snapshot(game)),
 		{"display_name": _display_name(game)}))
+	ATOMIC_SAVE_FILE.end_transaction()
+	return success
 
 
 ## D100: a v<=22 slot splits on FIRST LOAD into one world and one character, and
@@ -615,14 +784,23 @@ func _split_legacy_slot(game: Object, slot: int, data: Dictionary) -> void:
 	var world_id := "legacy-slot-%d" % slot
 	var character_id := "legacy-slot-%d" % slot
 	var origin := "slot_%d" % slot
+	var world_existed := bool(_worlds.call("has", world_id))
+	var character_existed := bool(_characters.call("has", character_id))
 	var wrote_world := false
-	if not bool(_worlds.call("has", world_id)):
+	if not world_existed:
 		wrote_world = bool(_worlds.call("write", world_id, WORLD_SAVE.partition(data),
 			{"display_name": _display_name(game), "migrated_from": origin}))
-	if not bool(_characters.call("has", character_id)):
-		_characters.call("write", character_id, CHARACTER_SAVE.partition(data),
+		if not wrote_world:
+			return
+	var wrote_character := false
+	if not character_existed:
+		wrote_character = bool(_characters.call("write", character_id, CHARACTER_SAVE.partition(data),
 			{"display_name": _display_name(game), "migrated_from": origin,
-			 "last_world_id": world_id})
+			 "last_world_id": world_id}))
+		if not wrote_character:
+			if wrote_world:
+				_worlds.call("delete", world_id)
+			return
 	if wrote_world:
 		print("[save] split %s into worlds/%s and characters/%s (original untouched)" % [
 			origin, world_id, character_id,
@@ -1255,9 +1433,10 @@ func _species_moves(species_table: Dictionary, species_id: String) -> Dictionary
 func _read(slot: int) -> Dictionary:
 	if slot < 0 or slot >= SLOT_COUNT:
 		return {}
-	var path := ATOMIC_SAVE_FILE.readable_path(slot_path(slot))
-	if not FileAccess.file_exists(path):
+	var canonical := slot_path(slot)
+	if not ATOMIC_SAVE_FILE.has_readable(canonical):
 		return {}
+	var path := ATOMIC_SAVE_FILE.readable_path(canonical)
 	var file := FileAccess.open(path, FileAccess.READ)
 	if file == null:
 		return {}

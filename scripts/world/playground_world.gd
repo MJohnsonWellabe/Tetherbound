@@ -746,16 +746,25 @@ func _ready() -> void:
 	# RG7. Mid-session Load restores persistent flags into an already-built
 	# Meadows scene; this world owns reconciling its authored one-shot props.
 	add_to_group("progression_restore")
-	# D97 / lane MP-REALM-REOPEN. A shell builds in slices; a real arrival does
-	# not. `begin(self, false)` makes every `await` below resume in the same
-	# frame, so a player walking in still gets a finished world before its
-	# first frame, exactly as it always did.
+	# D97 / lane MP-REALM-REOPEN. A shell builds in fine slices; a real arrival
+	# in a live session uses the coarser crossing slice so its connection keeps
+	# pumping. Solo still resumes every `await` below in the same frame.
 	_shell_build = SHELL_BUILD.new()
 	_shell_build.call("begin", self, simulation_only)
+	# The build yields while Terrain3D is coming online even in unsliced solo.
+	# A physics-active body resting on a collider that construction then moves
+	# inherits that collider's apparent platform velocity; T5-CARE measured a
+	# seven-digit launch, and AGGRESSION-STAGING-0908 reproduced the same guard
+	# warning on a same-process second Meadows boot. Hold every REAL local player
+	# before the first yield, not only a sliced multiplayer arrival. Simulation
+	# shells have already disabled/stripped their local rig and stay untouched.
+	var held_player_mode := hold_player_for_real_build(_player, simulation_only)
 	BOOT_LOG.phase("playground: _ready start, building Terrain3D node")
 	_terrain = _build_terrain()
 	if _terrain == null:
 		BOOT_LOG.line("playground: terrain build FAILED (see push_error above); world will not stand up")
+		if held_player_mode >= 0:
+			restore_player_after_real_build(_player, held_player_mode)
 		return
 	BOOT_LOG.phase("playground: terrain node created, waiting for Terrain3DData")
 	# D97 / lane MP-REALM-REOPEN. Split from the data-directory assignment
@@ -828,18 +837,56 @@ func _ready() -> void:
 	var profile := str(_shell_build.call("summary"))
 	if not profile.is_empty():
 		print("[playground] shell build %s" % profile)
+	if held_player_mode >= 0:
+		# `_place_player()` separately calls set_physics_process(false) for a
+		# pending remote arrival. Restoring process_mode here does not turn that
+		# flag back on; `_settle_meadows_realm_arrival()` remains its sole release.
+		# Keep the broader hold through one COMPLETE physics tick after the last
+		# build mutation. `physics_frame` is emitted before node physics callbacks,
+		# so the following process boundary is the first safe time to restore.
+		# Otherwise the first resumed `move_and_slide()` can still read the
+		# one-frame apparent velocity of collision moved during construction.
+		await get_tree().physics_frame
+		await get_tree().process_frame
+		restore_player_after_real_build(_player, held_player_mode)
+	# Readiness follows release. Realm entry must not dismiss its overlay while
+	# a real Player is still under the construction hold.
 	_shell_ready = true
 	await get_tree().process_frame
 	BOOT_LOG.phase("playground: first frame presented")
 
 
+## Keep a real local player inert while procedural construction moves collision
+## underneath it. Public/static only so the focused unit guard can prove the
+## mode/velocity contract without booting Terrain3D.
+static func hold_player_for_real_build(player: CharacterBody3D, simulation_only_build: bool) -> int:
+	if simulation_only_build or player == null or not is_instance_valid(player):
+		return -1
+	var prior_mode := int(player.process_mode)
+	player.process_mode = Node.PROCESS_MODE_DISABLED
+	player.velocity = Vector3.ZERO
+	return prior_mode
+
+
+## Restore only what the build hold owns. In particular, do not call
+## `set_physics_process(true)`: a pending realm arrival owns that narrower hold
+## until collision has streamed at its authored destination.
+static func restore_player_after_real_build(player: CharacterBody3D, prior_mode: int) -> void:
+	if player == null or not is_instance_valid(player) or prior_mode < 0:
+		return
+	player.velocity = Vector3.ZERO
+	player.process_mode = prior_mode as Node.ProcessMode
+	if player.is_inside_tree():
+		player.reset_physics_interpolation()
+
+
 ## D97 / lane MP-REALM-REOPEN. False while a SHELL is still building itself
 ## across frames, true the moment its `_ready()` finishes. Always true for a
 ## world a player is actually standing in. `realm_shells.gd::report()` carries
-## it and the net smokes wait on it. See `cloudreach_world.gd` for the full
-## note; the contract is identical.
+## it and realm entry wait on it. See `cloudreach_world.gd` for the full note;
+## the contract is identical for shells and sliced live-session crossings.
 func shell_build_complete() -> bool:
-	return _shell_ready or not simulation_only
+	return _shell_ready
 
 
 ## Sets dynamic collision (mode, radius, shape size) and reads every value
@@ -1530,9 +1577,9 @@ func _build_settlement() -> void:
 	_place_item_caches()
 	_place_band_pickups()
 	_place_sunstone()
-	_build_burrow_warrens()
+	await _build_burrow_warrens()
 	await _shell_build.call("breathe")
-	_build_stronghold()
+	await _build_stronghold()
 	await _shell_build.call("breathe")
 	_build_stronghold_climax()
 	await _shell_build.call("breathe")
@@ -1871,7 +1918,8 @@ func _build_burrow_warrens() -> void:
 	warrens.name = "BurrowWarrens"
 	add_child(warrens)
 	var director := get_node_or_null(^"EncounterDirector")
-	if not bool(warrens.call("build", self, _camera_rig, _player, director)):
+	var built: Variant = await warrens.call("build", self, _camera_rig, _player, director, _shell_build)
+	if not bool(built):
 		push_warning("the Burrow Warrens did not build; the required dungeon is missing")
 	else:
 		STRUCTURE_VISIBILITY_RANGE.apply(warrens, "burrow_warrens")
@@ -1889,7 +1937,8 @@ func _build_stronghold() -> void:
 	var stronghold: Node3D = STRONGHOLD.new()
 	stronghold.name = "Stronghold"
 	add_child(stronghold)
-	if not bool(stronghold.call("build", self, _camera_rig, _player)):
+	var built: Variant = await stronghold.call("build", self, _camera_rig, _player, _shell_build)
+	if not bool(built):
 		push_warning("the stronghold route did not build; spec §8's five spaces are missing")
 ## R8.3/SG40/R8.4: the Warden, the reveal and the freeing of the legendary.
 ##

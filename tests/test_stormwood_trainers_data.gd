@@ -61,7 +61,8 @@ func test_parties_ranks_and_critical_ladder_are_live_and_bounded() -> void:
 		assert_true(["trainer", "lieutenant", "officer", "ace", "captain"].has(str(trainer.get("rank", ""))))
 		assert_false(str(trainer.get("replacement_point", "")).is_empty())
 		var party: Array = trainer.get("party", [])
-		assert_true(party.size() >= 2 and party.size() <= 4)
+		var party_limit := 5 if str(trainer.get("id", "")) == "captain_marrow_dynamo_core" else 4
+		assert_true(party.size() >= 2 and party.size() <= party_limit)
 		for member: Dictionary in party:
 			var species := str(member.get("placeholder_species", ""))
 			assert_true(SPECIES.has(species))
@@ -88,6 +89,10 @@ func test_parties_ranks_and_critical_ladder_are_live_and_bounded() -> void:
 	assert_eq(named_ranks.get("lieutenant_varga_rodline_bridge", ""), "lieutenant")
 	assert_eq(named_ranks.get("officer_kestrel_outer_works", ""), "officer")
 	assert_eq(named_ranks.get("captain_marrow_dynamo_core", ""), "captain")
+	var marrow: Dictionary = (_read(PATH).get("trainers", []) as Array).filter(
+		func(trainer: Dictionary) -> bool: return str(trainer.get("id", "")) == "captain_marrow_dynamo_core")[0]
+	assert_eq((marrow.get("party", []) as Array).size(), 5,
+		"the authored half-team Overload threshold requires Marrow's five-creature roster")
 	assert_eq(picket_leaders, 4, "four rod/Outer Works picket leaders are separately authored")
 	var catalogue := _read(PATH)
 	var leaders: Dictionary = catalogue.get("leaders", {})

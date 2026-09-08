@@ -53,6 +53,18 @@ const LEDGER_RPC := preload("res://scripts/net/ledger_rpc.gd")
 ## would be inventing content the opening sequence owns.
 const DEMO_FLAG := "--menu-demo"
 
+## A normal live-session crossing has been measured at about 21 seconds for
+## Cloudreach, while a cold Meadows return has exceeded 60 seconds when its
+## host is concurrently building the departing realm's simulation shell.
+## Two minutes covers the already-measured ~85-second cold Meadows boot while
+## remaining a finite recovery boundary. The deadline cannot
+## interrupt one indivisible engine call; it bounds the frame-by-frame wait
+## once the main loop is pumping again.
+const REALM_SCENE_READY_TIMEOUT_MSEC := 120_000
+const REALM_READY_WAITING := 0
+const REALM_READY := 1
+const REALM_READY_TIMED_OUT := 2
+
 ## D98 / docs/specs/MP_STATE_SEAM.md §1. What has happened to this WORLD, and
 ## who THIS TRAINER is. Every state property below this line is a one-line
 ## forwarding property into one of them, so all 390 `Game.<field>` sites the
@@ -195,6 +207,18 @@ var pending_realm_entry: String:
 	set(value):
 		if local != null:
 			local.pending_realm_entry = value
+
+## Transient acknowledgement that the destination world has placed its player
+## and tried to complete the entry, but did so before its sliced build was
+## ready. `enter_realm()` retries only this asserted completion; it does not
+## guess that placement has settled merely because the shell finished.
+var _deferred_realm_entry_completion := ""
+
+## Non-empty only after a double-failure which cannot safely return control to
+## gameplay: either the compensating save or the prior-scene request failed.
+## Both snapshots remain available for diagnostics/recovery while the blocking
+## overlay tells the player to restart into the last atomic autosave.
+var _realm_transition_recovery: Dictionary = {}
 
 ## SB11. Reads `progression`'s flags against `data/progression/objectives.json`
 ## to answer "what is the one tracked Main Story line" and "what does the
@@ -613,10 +637,7 @@ const PREF_AUTO_RUN := "auto_run"
 ## rebuilding its whole canvas every time the tab opens (`game_menu.gd` forces
 ## a rebuild on open/select), the same "one thing across scene loads" job this
 ## autoload already does for `map` itself.
-## Local-first map view: the 1x whole-realm overview remains one zoom-out
-## away, while a fresh map opens close enough for the revealed ground and
-## nearby routes to occupy useful screen area.
-var map_last_zoom: float = 8.0
+var map_last_zoom: float = 1.0
 
 var _menu: CanvasLayer = null
 
@@ -740,7 +761,6 @@ func reset_for_new_game() -> void:
 	bind_realm_map()
 	objective_text = quest_log.call("tracked_text", progression)
 	objective_hint = quest_log.call("tracked_hint", progression)
-	_sync_tracked_objective_marker()
 	_last_progression_revision = int(progression.get("revision"))
 	_last_hint_device_was_gamepad = _last_input_was_gamepad
 	_objective_is_posed = false
@@ -750,6 +770,8 @@ func reset_for_new_game() -> void:
 	# `local.reset()` above -- including `local.feed.clear()`, which is the
 	# new-game reset `PROGRESSION_FEED.clear()` used to be.
 	_pending_world_message = ""
+	_deferred_realm_entry_completion = ""
+	_realm_transition_recovery.clear()
 	# T3-ENCOUNTER. A new run gets a new world only when the data says so, and
 	# `roll_new_worlds` ships false -- so today this resets to 0, the authored
 	# world, and every existing smoke test that starts a fresh game sees exactly
@@ -927,13 +949,33 @@ func set_farm_plot(index: int, plot: Dictionary) -> void:
 ## `quest_log`/etc. the way a full `_process()` tick would demand -- see
 ## `tests/test_autosave_fallback.gd`.
 func _tick_autosave(delta: float) -> void:
+	if save_system != null and save_system.has_method("poll_fallback"):
+		save_system.call("poll_fallback")
 	_autosave_elapsed += delta
 	if _autosave_elapsed < _AUTOSAVE_FALLBACK_INTERVAL_S:
 		return
 	_autosave_elapsed = 0.0
-	# D100: the world half is the host's to write. A client still reaches here
-	# every 180 s and still saves its own character (nothing, until the split).
-	autosave_here()
+	if save_system == null:
+		return
+	# Live scene state is synchronized here; only the copied save request goes
+	# to the worker. Bed/rest/quit/realm-entry still use the synchronous API.
+	_capture_player_pose()
+	var host := is_host()
+	if host:
+		_sync_placed_building_state()
+		_sync_death_satchel_state()
+		_sync_harvest_state()
+		_sync_clock_state()
+	var character_id := "" if host else str(session.call("_local_character_id"))
+	if not host and character_id.is_empty():
+		return
+	save_system.call("request_fallback", self, autosave_slot(), character_id)
+
+
+func _exit_tree() -> void:
+	# SceneTree.quit/window close must not abandon a partially committed split.
+	if save_system != null and save_system.has_method("finish_fallback"):
+		save_system.call("finish_fallback")
 
 
 ## Fog-of-war discovery, throttled to `_DISCOVERY_INTERVAL_S`. Silently does
@@ -974,7 +1016,6 @@ func _process(delta: float) -> void:
 		_objective_is_posed = false
 		objective_text = quest_log.call("tracked_text", progression)
 		objective_hint = quest_log.call("tracked_hint", progression)
-		_sync_tracked_objective_marker()
 
 	_discovery_elapsed += delta
 	if _discovery_elapsed < _DISCOVERY_INTERVAL_S:
@@ -1091,36 +1132,6 @@ func set_objective(text: String, world_pos: Variant = null) -> void:
 		map.add_dynamic_marker("objective", "objective", world_pos as Vector3)
 	else:
 		map.remove_dynamic_marker("objective")
-
-
-## Resolve the authored target of the tracked quest against this realm's map
-## database. Objective data names stable landmark/region ids; MapState remains
-## the only owner of their coordinates. Portable objectives intentionally
-## return no target and remove the pin instead of inventing a false location.
-func _sync_tracked_objective_marker() -> void:
-	if map == null or quest_log == null or progression == null:
-		return
-	var destination: Dictionary = quest_log.call("tracked_destination", progression)
-	var point: Variant = _resolve_map_destination(map, destination)
-	if point == null:
-		map.call("remove_dynamic_marker", "objective")
-		return
-	var p := point as Vector2
-	map.call("add_dynamic_marker", "objective", "objective", Vector3(p.x, 0.0, p.y), objective_text)
-
-
-static func _resolve_map_destination(map_state: RefCounted, destination: Dictionary) -> Variant:
-	var landmark_id := str(destination.get("landmark_id", ""))
-	if not landmark_id.is_empty():
-		for entry: Dictionary in (map_state.call("landmarks") as Array):
-			if str(entry.get("id", "")) == landmark_id:
-				return entry.get("position", null)
-	var region_id := str(destination.get("region_id", ""))
-	if not region_id.is_empty():
-		for entry: Dictionary in (map_state.call("regions") as Array):
-			if str(entry.get("id", "")) == region_id:
-				return entry.get("centre", null)
-	return null
 
 
 # --- naming a flag store explicitly (MP_STATE_SEAM.md §3, last paragraph) ----
@@ -1438,8 +1449,9 @@ func can_enter_realm(realm_id: String) -> bool:
 ##
 ## OP-0905-20: shows a full-screen "Loading <realm>…" overlay
 ## (`scripts/ui/loading_overlay.gd`) before the blocking
-## `change_scene_to_file()` below, and removes it once the destination scene
-## has drawn a frame. That overlay wait is why this is now a coroutine —
+## `change_scene_to_file()` below, and removes it only after the destination
+## says its sliced shell build is complete and has drawn a frame. That overlay
+## wait is why this is now a coroutine —
 ## every existing call site either discards the return value (`realm_gate.gd`)
 ## or is a test double that never awaits it, so calling this without `await`
 ## remains safe; only a NEW caller that reads the returned `bool` needs one.
@@ -1472,6 +1484,10 @@ func enter_realm(realm_id: String, entry_id: String = "", bypass_gate: bool = fa
 		# is the only caller and always names the other side), so refusing is
 		# free; leaving it open is not.
 		return false
+	var tree := get_tree()
+	if tree == null:
+		return false
+	var transition_snapshot := _realm_transition_snapshot(leaving)
 	_sync_placed_building_state()
 	_sync_death_satchel_state()
 	_sync_harvest_state()
@@ -1483,6 +1499,7 @@ func enter_realm(realm_id: String, entry_id: String = "", bypass_gate: bool = fa
 	current_realm = realm_id
 	bind_realm_map()
 	pending_realm_entry = entry_id
+	_deferred_realm_entry_completion = ""
 	saved_player_pose = {}
 	# Rule 16's ordering. Before the save and before the scene swap: the host
 	# has to take this peer out of the world it is leaving while that world is
@@ -1490,15 +1507,205 @@ func enter_realm(realm_id: String, entry_id: String = "", bypass_gate: bool = fa
 	announce_realm(leaving, realm_id)
 	# D100: the transition autosave is a WORLD write, so only the host makes it.
 	if save_system != null and is_host():
-		save_system.call("save", self, autosave_slot())
-	var tree := get_tree()
-	if tree == null:
-		return false
+		if not bool(save_system.call("save", self, autosave_slot())):
+			var failed_snapshot := _realm_transition_snapshot(realm_id)
+			_apply_realm_transition_snapshot(transition_snapshot)
+			announce_realm(realm_id, leaving)
+			_realm_transition_recovery = {
+				"reason": "transition_save_failed",
+				"prior": transition_snapshot.duplicate(true),
+				"failed": failed_snapshot.duplicate(true),
+			}
+			push_error("realm '%s' transition autosave failed; crossing cancelled" % realm_id)
+			return false
 	var display_name := str((realm_hearts.call("realm", realm_id) as Dictionary).get("display_name", realm_id))
 	var overlay := await LOADING_OVERLAY.present(tree, "Loading %s…" % display_name)
-	tree.change_scene_to_file(scene)
+	var scene_change_error := tree.change_scene_to_file(scene)
+	if scene_change_error != OK:
+		push_error("realm '%s' scene change failed (%d): %s" % [realm_id, scene_change_error, scene])
+		if not await _abort_realm_transition(tree, overlay, transition_snapshot, false):
+			push_error("realm transition rollback entered guarded recovery")
+		return false
+	if not await _await_realm_scene_ready(tree, realm_id):
+		push_error("realm '%s' did not become ready within %.1f seconds" % [
+			realm_id, float(REALM_SCENE_READY_TIMEOUT_MSEC) / 1000.0])
+		if not await _abort_realm_transition(tree, overlay, transition_snapshot, true):
+			push_error("realm transition rollback entered guarded recovery")
+		return false
+	# Most worlds complete their pending entry after placing the player. A
+	# sliced world may make that call before its remaining authored services
+	# are mounted; `complete_realm_entry()` now refuses that early call. Retry
+	# once here, after the readiness seam, so a correct early refusal cannot
+	# leave the arrival pending forever.
+	if pending_entry_for(realm_id) != "" \
+			and _deferred_realm_entry_completion == realm_id:
+		complete_realm_entry(realm_id)
 	await LOADING_OVERLAY.dismiss(tree, overlay)
 	return true
+
+
+## Wait for the scene swap AND for a sliced destination build. A synchronous
+## world reaches `shell_build_complete()` before the first awaited frame and
+## therefore does not enter a multi-frame readiness hold. A lightweight
+## fixture/realm with no shell-budget API is likewise ready as soon as its
+## scene root exists. Only a root that explicitly reports an unfinished build
+## holds the loading overlay across more frames.
+func _await_realm_scene_ready(tree: SceneTree, realm_id: String) -> bool:
+	var began_msec := Time.get_ticks_msec()
+	while true:
+		await tree.process_frame
+		var state := _realm_scene_wait_state(tree.current_scene, realm_id,
+			Time.get_ticks_msec() - began_msec, REALM_SCENE_READY_TIMEOUT_MSEC)
+		if state == REALM_READY:
+			return true
+		if state == REALM_READY_TIMED_OUT:
+			return false
+	return false
+
+
+## Pure three-state decision behind the awaited loop. Readiness wins on the
+## frame that crosses the deadline: a build which completed during one long
+## indivisible engine call is ready, not a false timeout.
+static func _realm_scene_wait_state(scene: Node, realm_id: String,
+		elapsed_msec: int, timeout_msec: int = REALM_SCENE_READY_TIMEOUT_MSEC) -> int:
+	if _realm_scene_ready(scene, realm_id):
+		return REALM_READY
+	if elapsed_msec >= timeout_msec:
+		return REALM_READY_TIMED_OUT
+	return REALM_READY_WAITING
+
+
+## Capture only state that `enter_realm()` mutates before the scene proves it
+## can finish. Per-realm maps remain resident on PlayerState; restoring the
+## realm id re-selects the exact old map rather than copying it.
+func _realm_transition_snapshot(leaving_realm: String) -> Dictionary:
+	var leaving_scene := ""
+	if realm_hearts != null:
+		leaving_scene = str(realm_hearts.call("scene_for_realm", leaving_realm))
+	return {
+		"realm": leaving_realm,
+		"scene": leaving_scene,
+		"pending_entry": pending_realm_entry,
+		"deferred_completion": _deferred_realm_entry_completion,
+		"saved_pose": saved_player_pose.duplicate(true),
+	}
+
+
+## Put the save-facing state and the session announcement back on the realm
+## the player actually came from. The transition autosave was already written
+## before the scene request, so a host writes this restored state again; a
+## client follows the existing rule and performs no world write.
+func _apply_realm_transition_snapshot(snapshot: Dictionary) -> void:
+	current_realm = str(snapshot.get("realm", "meadows"))
+	pending_realm_entry = str(snapshot.get("pending_entry", ""))
+	_deferred_realm_entry_completion = str(snapshot.get("deferred_completion", ""))
+	var prior_pose: Variant = snapshot.get("saved_pose", {})
+	saved_player_pose = prior_pose.duplicate(true) if prior_pose is Dictionary else {}
+	bind_realm_map()
+
+
+func _restore_realm_transition_state(snapshot: Dictionary) -> bool:
+	var failed_realm := current_realm
+	_apply_realm_transition_snapshot(snapshot)
+	var restored_realm := current_realm
+	if failed_realm != restored_realm:
+		announce_realm(failed_realm, restored_realm)
+	if save_system != null and is_host():
+		return bool(save_system.call("save", self, autosave_slot()))
+	return true
+
+
+## The first autosave made the failed destination the durable recovery point.
+## If overwriting it with the prior realm fails, restore that destination in
+## memory and in Session too: disk, live state and announcement continue to
+## describe the same transition instead of silently diverging. The prior
+## snapshot remains recorded so a restart/recovery tool has both sides.
+func _compensate_realm_transition(prior_snapshot: Dictionary,
+		failed_snapshot: Dictionary) -> bool:
+	if _restore_realm_transition_state(prior_snapshot):
+		return true
+	var prior_realm := current_realm
+	_apply_realm_transition_snapshot(failed_snapshot)
+	if prior_realm != current_realm:
+		announce_realm(prior_realm, current_realm)
+	_realm_transition_recovery = {
+		"reason": "compensating_save_failed",
+		"prior": prior_snapshot.duplicate(true),
+		"failed": failed_snapshot.duplicate(true),
+	}
+	return false
+
+
+static func _rollback_overlay_may_dismiss(compensating_save_ok: bool,
+		restore_scene: bool, rollback_scene_error: int,
+		restored_scene_ready: bool = true) -> bool:
+	return compensating_save_ok and (not restore_scene \
+		or (rollback_scene_error == OK and restored_scene_ready))
+
+
+## Keep the root-owned overlay alive while a timed-out destination is replaced
+## by the realm the player came from. A failed compensation or defensive scene
+## request changes the message and deliberately retains that overlay: exposing
+## a partial destination behind prior-realm state would be a worse softlock.
+func _abort_realm_transition(tree: SceneTree, overlay: CanvasLayer,
+		snapshot: Dictionary, restore_scene: bool) -> bool:
+	var failed_snapshot := _realm_transition_snapshot(current_realm)
+	if not _compensate_realm_transition(snapshot, failed_snapshot):
+		LOADING_OVERLAY.set_message(overlay,
+			"Recovery save failed. Restart Tetherbound to recover the last autosave.")
+		return false
+	var rollback_error := OK
+	var restored_scene_ready := true
+	if restore_scene:
+		var leaving_scene := str(snapshot.get("scene", ""))
+		if leaving_scene == "" or not ResourceLoader.exists(leaving_scene):
+			push_error("cannot restore prior realm scene: %s" % leaving_scene)
+			rollback_error = ERR_FILE_NOT_FOUND
+		else:
+			rollback_error = tree.change_scene_to_file(leaving_scene)
+			if rollback_error != OK:
+				push_error("prior realm scene restore failed (%d): %s" % [rollback_error, leaving_scene])
+			else:
+				restored_scene_ready = await _await_realm_scene_ready(tree, current_realm)
+				if not restored_scene_ready:
+					push_error("prior realm '%s' did not become ready during rollback" % current_realm)
+	if not _rollback_overlay_may_dismiss(true, restore_scene, rollback_error,
+			restored_scene_ready):
+		_realm_transition_recovery = {
+			"reason": "prior_scene_not_ready" if rollback_error == OK else "prior_scene_request_failed",
+			"prior": snapshot.duplicate(true),
+			"failed": failed_snapshot.duplicate(true),
+			"scene_error": rollback_error,
+		}
+		LOADING_OVERLAY.set_message(overlay,
+			"Unable to restore the prior region. Restart Tetherbound to recover safely.")
+		return false
+	await LOADING_OVERLAY.dismiss(tree, overlay)
+	_realm_transition_recovery.clear()
+	return true
+
+
+## Pure half of the readiness seam, separated so the four cases can be pinned
+## without booting any production world: absent scene, wrong scene, sliced
+## unfinished scene, and synchronous/no-budget scene.
+static func _realm_scene_ready(scene: Node, realm_id: String) -> bool:
+	if scene == null:
+		return false
+	if scene.has_method("world_realm") and str(scene.call("world_realm")) != realm_id:
+		return false
+	if scene.has_method("shell_build_complete"):
+		return bool(scene.call("shell_build_complete"))
+	return true
+
+
+## The full completion decision, pure for the same reason as the scene check.
+## `require_live_readiness = false` is the historical no-tree/unit-fixture
+## path; realm identity still applies there, but scene readiness cannot.
+static func _realm_entry_can_complete(active_realm: String, requested_realm: String,
+		live_scene: Node, require_live_readiness: bool) -> bool:
+	if requested_realm != active_realm:
+		return false
+	return not require_live_readiness or _realm_scene_ready(live_scene, requested_realm)
 
 
 ## The realm-change seam, in one place so `enter_realm()` is the only caller
@@ -1585,8 +1792,29 @@ func realm_map_for(realm_id: String) -> RefCounted:
 ## anchor. Clearing first and using the normal save path records the correct
 ## destination pose; a crash before this point retains the pending anchor.
 func complete_realm_entry(realm_id: String) -> bool:
-	if realm_id != current_realm:
+	# World roots place the player before they finish mounting every authored
+	# service. That was harmless while builds were synchronous, but a live
+	# session slices them across frames: clearing `pending_realm_entry` here
+	# would advertise and autosave a playable realm while it was still only a
+	# partial scene. Keep pure/no-tree callers unchanged; a live scene must
+	# explicitly be ready (or be a legacy/null-budget scene with no readiness
+	# method) before the arrival can commit.
+	var live_scene: Node = null
+	var require_live_readiness := false
+	if is_inside_tree():
+		var tree := get_tree()
+		if tree != null:
+			require_live_readiness = true
+			live_scene = tree.current_scene
+	if not _realm_entry_can_complete(current_realm, realm_id, live_scene,
+			require_live_readiness):
+		# The world has now asserted that its arrival placement is settled. Keep
+		# that fact separate from the durable pending entry so `enter_realm()`
+		# can retry after readiness without inventing the placement timing.
+		if realm_id == current_realm:
+			_deferred_realm_entry_completion = realm_id
 		return false
+	_deferred_realm_entry_completion = ""
 	pending_realm_entry = ""
 	return autosave_here()
 
@@ -2137,35 +2365,34 @@ func debug_teleport_destinations() -> Array[Dictionary]:
 			_debug_teleport_add(out, str(landmark.get("display_name", "")), landmark.get("position", Vector2.ZERO))
 	for spoke: Dictionary in _debug_teleport_spokes():
 		_debug_teleport_add(out, str(spoke.get("display_name", "")), spoke.get("position", Vector2.ZERO))
-	_debug_teleport_add_other_realm(out)
+	_debug_teleport_add_other_realms(out)
 	return out
 
 
-## OP-0905-21: the list above only ever named places in the realm the player
-## already stands in, so a player who had not yet found the physical gate had
-## no menu path to Cloudreach at all. Debug teleport is a settings-only
-## escape hatch (`set_debug_teleport`), so this deliberately does NOT require
-## `realm_key_cloudreach` the way a real gate crossing would — the point is to
-## reach the second realm before earning it. Rows are labelled with the
-## destination realm's own display name ("Cloudreach Cliffs — Galefoot
-## Landing") so a crossing reads as a crossing, not as "a place already here".
-func _debug_teleport_add_other_realm(out: Array[Dictionary]) -> void:
-	if realm_hearts == null:
+## OP-0905-21 began with Cloudreach. FOUR-BIOME-BUILD extends the same
+## settings escape hatch to every implemented realm: a tester must be able to
+## enter Meadows, Cloudreach, Stormwood or Water without first manufacturing
+## that chapter's story key. Read the player's mapped-realm registry instead
+## of choosing one hard-coded "other" realm, so the runtime contract and the
+## curated Settings list cannot disagree about which shipped worlds exist.
+func _debug_teleport_add_other_realms(out: Array[Dictionary]) -> void:
+	if realm_hearts == null or local == null or not local.has_method("mapped_realm_ids"):
 		return
-	var other_realm := "cloudreach" if current_realm != "cloudreach" else "meadows"
-	if str(realm_hearts.call("scene_for_realm", other_realm)) == "":
-		return
-	var other_map := _ensure_realm_map(other_realm)
-	if other_map == null:
-		return
-	var other_display := str((realm_hearts.call("realm", other_realm) as Dictionary).get("display_name", other_realm))
-	var entry_id := _debug_teleport_entry_id_for(other_realm)
-	for region: Dictionary in (other_map.regions() as Array):
-		_debug_teleport_add_crossing(out, other_realm, other_display, str(region.get("display_name", "")), region.get("centre", Vector2.ZERO), entry_id)
-	for landmark: Dictionary in (other_map.landmarks() as Array):
-		if bool(landmark.get("dynamic", false)):
+	for realm_value: Variant in (local.call("mapped_realm_ids") as Array):
+		var other_realm := str(realm_value)
+		if other_realm == current_realm or str(realm_hearts.call("scene_for_realm", other_realm)) == "":
 			continue
-		_debug_teleport_add_crossing(out, other_realm, other_display, str(landmark.get("display_name", "")), landmark.get("position", Vector2.ZERO), entry_id)
+		var other_map := _ensure_realm_map(other_realm)
+		if other_map == null:
+			continue
+		var other_display := str((realm_hearts.call("realm", other_realm) as Dictionary).get("display_name", other_realm))
+		var entry_id := _debug_teleport_entry_id_for(other_realm)
+		for region: Dictionary in (other_map.regions() as Array):
+			_debug_teleport_add_crossing(out, other_realm, other_display, str(region.get("display_name", "")), region.get("centre", Vector2.ZERO), entry_id)
+		for landmark: Dictionary in (other_map.landmarks() as Array):
+			if bool(landmark.get("dynamic", false)):
+				continue
+			_debug_teleport_add_crossing(out, other_realm, other_display, str(landmark.get("display_name", "")), landmark.get("position", Vector2.ZERO), entry_id)
 
 
 ## The authored arrival id `enter_realm()` should carry for a debug crossing
@@ -2180,6 +2407,18 @@ func _debug_teleport_entry_id_for(realm_id: String) -> String:
 		if typeof(parsed) == TYPE_DICTIONARY:
 			var points: Dictionary = (parsed as Dictionary).get("transition_points", {})
 			var entry: Dictionary = points.get("meadows_entry", {})
+			return str(entry.get("id", ""))
+	elif realm_id == "stormwood":
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_world.json"))
+		if typeof(parsed) == TYPE_DICTIONARY:
+			var points: Dictionary = (parsed as Dictionary).get("transition_points", {})
+			var entry: Dictionary = points.get("cloudreach_entry", {})
+			return str(entry.get("id", ""))
+	elif realm_id == "water":
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_world.json"))
+		if typeof(parsed) == TYPE_DICTIONARY:
+			var entries: Dictionary = (parsed as Dictionary).get("entry_anchors", {})
+			var entry: Dictionary = entries.get("from_stormwood", {})
 			return str(entry.get("id", ""))
 	elif realm_id == "meadows":
 		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/realm_transitions.json"))
@@ -2290,9 +2529,16 @@ func debug_teleport_to(x: float, z: float, realm_id: String = "", entry_id: Stri
 	if is_nan(ground):
 		return false
 	player.global_position = Vector3(x, ground + DEBUG_TELEPORT_CLEARANCE, z)
+	_clear_debug_teleport_recovery_anchor(player)
 	if player is CharacterBody3D:
 		(player as CharacterBody3D).velocity = Vector3.ZERO
 	return true
+
+
+func _clear_debug_teleport_recovery_anchor(player: Node3D) -> void:
+	var fly := player.get_node_or_null(^"FlyController")
+	if fly != null and fly.has_method("clear_recovery_anchor"):
+		fly.call("clear_recovery_anchor")
 
 
 ## OP-0905-21's cross-realm half. `enter_realm(..., bypass_gate = true)` skips
@@ -2329,6 +2575,7 @@ func _debug_teleport_cross_realm(x: float, z: float, realm_id: String, entry_id:
 	if is_nan(ground):
 		return false
 	player.global_position = Vector3(x, ground + DEBUG_TELEPORT_CLEARANCE, z)
+	_clear_debug_teleport_recovery_anchor(player)
 	if player is CharacterBody3D:
 		(player as CharacterBody3D).velocity = Vector3.ZERO
 	return true

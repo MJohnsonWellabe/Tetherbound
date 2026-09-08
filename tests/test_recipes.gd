@@ -326,8 +326,15 @@ func test_every_unlock_flag_named_by_a_recipe_is_actually_written_by_something()
 	# events to the same RealmChapterEvents -> RealmChapterProgression path.
 	# Drive the authored event sequence itself, including count flags, so a
 	# recipe gate is accepted only when the actual chapter contract writes it.
+	const STORMWOOD_CATALOGUE := preload("res://scripts/combat/stormwood_encounter_catalogue.gd")
+	var stormwood_external_flags: Array[String] = []
+	for encounter: Dictionary in _load_json(
+			"res://data/config/stormwood_encounters.json").get("named_encounters", []):
+		stormwood_external_flags.append(STORMWOOD_CATALOGUE.named_once_flag(
+			str(encounter.get("id", ""))))
 	for earned: String in _chapter_event_writers(CHAPTER_EVENTS,
-			_load_json("res://data/config/stormwood_chapter.json"), "realm_key_stormwood"):
+			_load_json("res://data/config/stormwood_chapter.json"), "realm_key_stormwood",
+			stormwood_external_flags):
 		written.append(earned)
 	for entry: Variant in TRAINERS.trainers():
 		for flag: String in TRAINERS.reward_flags(entry as Dictionary):
@@ -351,12 +358,18 @@ func test_every_unlock_flag_named_by_a_recipe_is_actually_written_by_something()
 		if flag == "":
 			continue
 		assert_true(written.has(flag),
-			"recipe '%s' waits on flag '%s', which no conversation ever sets" % [id, flag])
+			"recipe '%s' waits on flag '%s', which no production source sets" % [id, flag])
 
 
-func _chapter_event_writers(logic: Script, chapter: Dictionary, entry_flag: String) -> Array[String]:
+func _chapter_event_writers(logic: Script, chapter: Dictionary, entry_flag: String,
+		external_flags: Array[String] = []) -> Array[String]:
 	var progression: RefCounted = PROGRESSION_STATE.new()
 	progression.set_flag(entry_flag)
+	# Named encounter clears are real production writers outside the chapter
+	# event table. Seed their canonical flags before walking dependent story
+	# events, exactly as a completed encounter would have done in play.
+	for flag: String in external_flags:
+		progression.set_flag(flag)
 	for act: Dictionary in chapter.get("acts", []):
 		for objective: Dictionary in act.get("objectives", []):
 			for count_flag: String in objective.get("count_flags", []):

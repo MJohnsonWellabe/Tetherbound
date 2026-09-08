@@ -7,4 +7,4 @@ static func resolve(world_mode: String, combat_active: bool, modal: bool, moment
 		"party": mode in ["exploration", "relays", "modal"], "task": mode in ["exploration", "modal"] and not moment,
 		"location": mode in ["exploration", "modal"] and not moment, "hotbar": mode == "exploration",
 		"instruction": mode == "relays" and not moment, "prompt": mode in ["exploration", "relays"],
-		"human_vitals": mode == "exploration", "compass": mode in ["exploration", "modal"] and not moment}
+		"human_vitals": mode == "exploration", "minimap": mode in ["exploration", "modal"] and not moment}

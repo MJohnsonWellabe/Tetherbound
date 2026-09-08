@@ -370,6 +370,11 @@ func _resolve_swing() -> void:
 		if not is_instance_valid(node) or not (node is Node3D):
 			continue
 		var target := (node as Node3D).global_position
+		# Most harvest nodes are kilometres away. Reject outside the reach's
+		# bounding square before entering the full cone calculation; height is
+		# deliberately ignored, exactly as in_hit_cone ignores it.
+		if absf(target.x - origin.x) > SWING_REACH or absf(target.z - origin.z) > SWING_REACH:
+			continue
 		# The same cone arithmetic combat uses to decide whether a swing
 		# connects (`combat_math.gd::in_hit_cone`) -- horizontal only, so a
 		# node uphill of you is not unhittable for a reason you cannot see.

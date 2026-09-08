@@ -480,7 +480,7 @@
       "mechanics": ["basic_switching", "ledge_spacing"],
       "defeat_flag": "defeated_cloudreach_ila",
       "optional": true,
-      "team_contract": {"selection_key": "cloudreach.trainer.ila", "replaceable": true, "slots": [{"role": "fast_opener", "placeholder_species": "sparkit", "level": 19}, {"role": "air_finisher", "placeholder_species": "pipwing", "level": 21}]}
+      "team_contract": {"selection_key": "cloudreach.trainer.ila", "replaceable": true, "slots": [{"role": "fast_opener", "placeholder_species": "breezetail", "level": 19}, {"role": "air_finisher", "placeholder_species": "ribbonray", "level": 21}]}
     },
     {
       "id": "trainer_orrin_bridge_watch",
@@ -492,7 +492,7 @@
       "mechanics": ["narrow_arena", "forced_reposition"],
       "defeat_flag": "defeated_cloudreach_orrin",
       "optional": true,
-      "team_contract": {"selection_key": "cloudreach.trainer.orrin", "replaceable": true, "slots": [{"role": "bridge_controller", "placeholder_species": "galewisp", "level": 21}, {"role": "durable_anchor", "placeholder_species": "bramblebun", "level": 23}]}
+      "team_contract": {"selection_key": "cloudreach.trainer.orrin", "replaceable": true, "slots": [{"role": "bridge_controller", "placeholder_species": "aeriex", "level": 21}, {"role": "durable_anchor", "placeholder_species": "craghorn", "level": 23}]}
     },
     {
       "id": "tether_lieutenant_senn",
@@ -504,7 +504,7 @@
       "mechanics": ["anchor_pulse", "switch_pressure"],
       "defeat_flag": "defeated_cloudreach_senn",
       "optional": false,
-      "team_contract": {"selection_key": "cloudreach.trainer.senn", "replaceable": true, "slots": [{"role": "disruptor", "placeholder_species": "shadelet", "level": 22}, {"role": "pursuer", "placeholder_species": "galecrest", "level": 24}]}
+      "team_contract": {"selection_key": "cloudreach.trainer.senn", "replaceable": true, "slots": [{"role": "disruptor", "placeholder_species": "cliffspike", "level": 22}, {"role": "pursuer", "placeholder_species": "cloudfang", "level": 24}]}
     },
     {
       "id": "keeper_maela_trial",
@@ -516,7 +516,7 @@
       "mechanics": ["crosswind_lanes", "movement_test", "recovery_window"],
       "defeat_flag": "completed_cloudreach_maela_trial_battle",
       "optional": false,
-      "team_contract": {"selection_key": "cloudreach.trainer.maela", "replaceable": true, "slots": [{"role": "wind_tutor", "placeholder_species": "galewisp", "level": 23}, {"role": "flight_ace", "placeholder_species": "galecrest", "level": 25}]}
+      "team_contract": {"selection_key": "cloudreach.trainer.maela", "replaceable": true, "slots": [{"role": "wind_tutor", "placeholder_species": "aeriex", "level": 23}, {"role": "flight_ace", "placeholder_species": "galecrest", "level": 25}]}
     },
     {
       "id": "young_trainer_tavi_upper_ring",
@@ -528,7 +528,7 @@
       "mechanics": ["three_creature_composition", "counter_switching", "elevation_control"],
       "defeat_flag": "defeated_cloudreach_tavi",
       "optional": true,
-      "team_contract": {"selection_key": "cloudreach.trainer.tavi", "replaceable": true, "slots": [{"role": "terrain_controller", "placeholder_species": "frostclaw", "level": 26}, {"role": "switch_punisher", "placeholder_species": "sparkit", "level": 28}, {"role": "air_ace", "placeholder_species": "galecrest", "level": 29}]}
+      "team_contract": {"selection_key": "cloudreach.trainer.tavi", "replaceable": true, "slots": [{"role": "terrain_controller", "placeholder_species": "craghorn", "level": 26}, {"role": "switch_punisher", "placeholder_species": "skyrill", "level": 28}, {"role": "air_ace", "placeholder_species": "galecrest", "level": 29}]}
     },
     {
       "id": "officer_voss_summit_approach",
@@ -540,7 +540,7 @@
       "mechanics": ["gust_hazards", "positional_denial", "aggressive_switching"],
       "defeat_flag": "defeated_cloudreach_voss",
       "optional": false,
-      "team_contract": {"selection_key": "cloudreach.trainer.voss", "replaceable": true, "slots": [{"role": "edge_denial", "placeholder_species": "galewisp", "level": 29}, {"role": "heavy_pressure", "placeholder_species": "frostclaw", "level": 30}, {"role": "switching_ace", "placeholder_species": "shadelet", "level": 31}]}
+      "team_contract": {"selection_key": "cloudreach.trainer.voss", "replaceable": true, "slots": [{"role": "edge_denial", "placeholder_species": "stormcapra", "level": 29}, {"role": "heavy_pressure", "placeholder_species": "cloudfang", "level": 30}, {"role": "switching_ace", "placeholder_species": "skyrill", "level": 31}]}
     },
     {
       "id": "captain_veyra_storm_anchor",
@@ -552,7 +552,7 @@
       "mechanics": ["wind", "positioning", "switching", "recovery_planning"],
       "defeat_flag": "captain_veyra_defeated",
       "optional": false,
-      "team_contract": {"selection_key": "cloudreach.final.captain_veyra", "replaceable": true, "slots": [{"role": "crosswind_controller", "placeholder_species": "galewisp", "level": 31}, {"role": "positional_pursuer", "placeholder_species": "frostclaw", "level": 32}, {"role": "summit_ace", "placeholder_species": "galecrest", "level": 34}]}
+      "team_contract": {"selection_key": "cloudreach.final.captain_veyra", "replaceable": true, "slots": [{"role": "crosswind_controller", "placeholder_species": "aeriex", "level": 31}, {"role": "positional_pursuer", "placeholder_species": "cloudfang", "level": 32}, {"role": "summit_ace", "placeholder_species": "galecrest", "level": 34}]}
     }
   ],
   "encounter_tables": [
@@ -564,8 +564,8 @@
       "replaceable": true,
       "catchable": true,
       "entries": [
-        {"role": "air_scout", "placeholder_species": "pipwing", "weight": 4},
-        {"role": "ledge_forager", "placeholder_species": "sparkit", "weight": 3},
+        {"role": "air_scout", "placeholder_species": "skyrill", "weight": 4},
+        {"role": "ledge_forager", "placeholder_species": "pebbik", "weight": 3},
         {"role": "rare_updraft_guard", "placeholder_species": "galecrest", "weight": 1}
       ]
     },
@@ -577,9 +577,9 @@
       "replaceable": true,
       "catchable": true,
       "entries": [
-        {"role": "bridge_ambusher", "placeholder_species": "shadelet", "weight": 2},
-        {"role": "air_patrol", "placeholder_species": "galewisp", "weight": 4},
-        {"role": "stone_hold", "placeholder_species": "bramblebun", "weight": 3}
+        {"role": "bridge_ambusher", "placeholder_species": "breezetail", "weight": 2},
+        {"role": "air_patrol", "placeholder_species": "ribbonray", "weight": 4},
+        {"role": "stone_hold", "placeholder_species": "craghorn", "weight": 3}
       ]
     },
     {
@@ -590,8 +590,8 @@
       "replaceable": true,
       "catchable": true,
       "entries": [
-        {"role": "wind_controller", "placeholder_species": "galewisp", "weight": 4},
-        {"role": "ravine_pursuer", "placeholder_species": "frostclaw", "weight": 2},
+        {"role": "wind_controller", "placeholder_species": "aeriex", "weight": 4},
+        {"role": "ravine_pursuer", "placeholder_species": "cloudfang", "weight": 2},
         {"role": "flight_candidate", "placeholder_species": "galecrest", "weight": 2}
       ]
     },
@@ -604,9 +604,9 @@
       "catchable": true,
       "requires_unlock": "fly_traversal_unlocked",
       "entries": [
-        {"role": "perch_flock", "placeholder_species": "pipwing", "weight": 4},
-        {"role": "shrine_guard", "placeholder_species": "galecrest", "weight": 2},
-        {"role": "rare_glider", "placeholder_species": "reedwing", "weight": 1}
+        {"role": "perch_flock", "placeholder_species": "ribbonray", "weight": 4},
+        {"role": "shrine_guard", "placeholder_species": "stormcapra", "weight": 2},
+        {"role": "rare_glider", "placeholder_species": "tempestwing", "weight": 1, "roster_identity": "alpha_catch"}
       ]
     },
     {
@@ -618,9 +618,9 @@
       "catchable": true,
       "requires_unlock": "cloudreach_upper_route_unlocked",
       "entries": [
-        {"role": "plateau_hunter", "placeholder_species": "frostclaw", "weight": 3},
-        {"role": "storm_charger", "placeholder_species": "sparkit", "weight": 3},
-        {"role": "night_ledge_stalker", "placeholder_species": "shadelet", "weight": 2}
+        {"role": "plateau_hunter", "placeholder_species": "cloudfang", "weight": 3},
+        {"role": "storm_charger", "placeholder_species": "stormcapra", "weight": 3},
+        {"role": "night_ledge_stalker", "placeholder_species": "cliffspike", "weight": 2}
       ]
     },
     {
@@ -632,9 +632,9 @@
       "catchable": true,
       "requires_unlock": "cloudreach_upper_route_unlocked",
       "entries": [
-        {"role": "summit_sentinel", "placeholder_species": "galecrest", "weight": 2},
-        {"role": "engine_scavenger", "placeholder_species": "shadelet", "weight": 2},
-        {"role": "cold_front_hunter", "placeholder_species": "frostclaw", "weight": 2}
+        {"role": "summit_sentinel", "placeholder_species": "solmane", "weight": 2, "roster_identity": "legendary"},
+        {"role": "engine_scavenger", "placeholder_species": "breezetail", "weight": 2},
+        {"role": "cold_front_hunter", "placeholder_species": "cloudfang", "weight": 2}
       ]
     }
   ],
@@ -917,11 +917,11 @@
     "opposition_contract": {
       "selection_key": "cloudreach.final.captain_veyra",
       "replaceable": true,
-      "art_status": "installed_species_placeholders",
+      "art_status": "installed_species_roster",
       "captain_body_profile": "captain_b",
       "slots": [
-        {"role": "crosswind_controller", "placeholder_species": "galewisp", "level": 31},
-        {"role": "positional_pursuer", "placeholder_species": "frostclaw", "level": 32},
+        {"role": "crosswind_controller", "placeholder_species": "aeriex", "level": 31},
+        {"role": "positional_pursuer", "placeholder_species": "cloudfang", "level": 32},
         {"role": "summit_ace", "placeholder_species": "galecrest", "level": 34}
       ]
     },

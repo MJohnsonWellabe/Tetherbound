@@ -99,7 +99,12 @@ func _run() -> void:
 	await frames(12)
 	print("WILD RETENTION STARTUP " + JSON.stringify({"boot_seconds":(Time.get_ticks_usec()-started_usec)/1000000.0,
 		"world_seed":director.call("world_seed"),"fixture":"three site relocations; ordinary 60Hz wild physics; no encounter tables replaced"}))
-	check(director.get("encounter_config").wild_sites.size() == 6, "all six actual authored sites remain configured")
+	var configured_sites: Array = director.get("encounter_config").wild_sites
+	check(configured_sites.size() == 80, "six ecology sites plus 74 ROAD pairs remain configured")
+	for required_id in ["lower_cliff_foragers", "causeway_watch", "ravine_wind",
+			"roost_perches", "upper_scouts", "summit_watch"]:
+		check(not director.call("find_id", configured_sites, required_id).is_empty(),
+			"original authored site remains: " + required_id)
 	var resident_ids: Dictionary = {}
 	for id in ["lower_cliff_foragers", "causeway_watch", "ravine_wind"]:
 		var site: Dictionary = director.call("find_id", director.get("encounter_config").wild_sites, id)

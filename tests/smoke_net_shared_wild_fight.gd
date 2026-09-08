@@ -2,6 +2,9 @@ extends "res://tests/helpers/net_harness.gd"
 
 # peers: 2
 
+const COMBAT_MANAGER := preload("res://scripts/combat/combat_manager.gd")
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+
 ## Stage B Wave 4 lane 4.C. THE player-visible outcome of the lane: two people
 ## fight one creature together, and neither of them can hit the other.
 ##
@@ -117,6 +120,10 @@ func _run() -> void:
 	var joined: Dictionary = await step(1, "join", {"host": "127.0.0.1", "port": port})
 	check(str(joined.get("verdict", "")) == "PASS",
 		"peer 1 joined peer 0's world on port %d (%s)" % [port, str(joined.get("detail", ""))])
+	var guest_session: Variant = await probe(1, "session")
+	var guest_peer_id := int((guest_session as Dictionary).get("peer_id", 0)) \
+		if guest_session is Dictionary else 0
+	check(guest_peer_id > 1, "the joiner has a real ENet peer id for host action authority")
 	for i in 2:
 		var seen: Dictionary = await step(i, "expect_peers", {"count": 2})
 		check(str(seen.get("verdict", "")) == "PASS",
@@ -302,6 +309,61 @@ func _run() -> void:
 				% [hp_polls, host_hp, guest_hp, absf(guest_hp - host_hp)])
 		hp_before = host_hp
 
+	# --- host action/replay/cooldown authority --------------------------------
+	# First let the previous real swing's host deadline elapse. The probe reads
+	# host time, so coordinator polling latency cannot turn this into a guess.
+	var prior_authority := await _await_host_action_ready(guest_peer_id)
+	check(int(prior_authority.get("host_now_ms", 0)) >= int(prior_authority.get("deadline_ms", 0)),
+		"the prior real move reached its host-owned deadline")
+	var action_stage: Dictionary = await _encounter(0)
+	var action_target := _vec(action_stage.get("opponent_pos", []))
+	var action_origin := _vec((await _encounter(1)).get("my_creature_pos", []))
+	var action_facing := action_target - action_origin
+	action_facing.y = 0.0
+	check(action_target != Vector3.INF and action_origin != Vector3.INF
+		and action_facing.length_squared() > 0.0001,
+		"the authority strike has real host target and client body positions")
+	# Use the authored charged profile for the accepted action: its 1.2-second
+	# host lock is long enough to make this proof insensitive to coordinator and
+	# CI scheduling jitter. The next intent is submitted immediately, before any
+	# coordinator probe. Both travel reliable and ordered on CHANNEL_LEDGER, so
+	# the host must arbitrate 9001 before 9002 and must arbitrate both inside the
+	# same host-owned lock. The guest's forged zero cooldown remains the claim.
+	var forged: Dictionary = await step(1, "strike", {
+		"facing": [action_facing.x, action_facing.y, action_facing.z], "slot": "charged",
+		"action": 9001, "cooldown": 0.0, "cooldown_multiplier": 0.0,
+		"damage": 999999.0, "settle": 1,
+	})
+	check(str(forged.get("verdict", "")) == "PASS", "client sent a forged rapid-action payload")
+	var rapid: Dictionary = await step(1, "strike", {
+		"facing": [action_facing.x, action_facing.y, action_facing.z], "slot": "quick",
+		"action": 9002, "cooldown": 0.0, "cooldown_multiplier": 0.0, "settle": 1,
+	})
+	check(str(rapid.get("verdict", "")) == "PASS", "client sent a fresh id before host cooldown")
+	var rapid_refusal := await _await_refusal("cooldown")
+	check(str(rapid_refusal.get("code", "")) == "cooldown",
+		"host refused a fresh rapid intent against its own deadline")
+	var accepted_authority := await _await_host_action(guest_peer_id, 9001)
+	check(int(accepted_authority.get("last_action", 0)) == 9001,
+		"host accepted the fresh monotonic action")
+	check(int(accepted_authority.get("cooldown_ms", 0)) >= 1200,
+		"host retained its resolved charged-move lock instead of the forged zero cooldown")
+	var accepted_deadline := int(accepted_authority.get("deadline_ms", 0))
+
+	var replayed: Dictionary = await step(1, "strike", {
+		"facing": [action_facing.x, action_facing.y, action_facing.z], "slot": "quick",
+		"action": 9001, "cooldown": 0.0, "settle": 1,
+	})
+	check(str(replayed.get("verdict", "")) == "PASS", "client replayed the accepted action id")
+	var replay_refusal := await _await_refusal("replayed_action")
+	check(str(replay_refusal.get("code", "")) == "replayed_action",
+		"host refused the replay even if its original cooldown elapsed")
+	var held_authority := await _host_authority(guest_peer_id)
+	check(int(held_authority.get("last_action", 0)) == 9001
+		and int(held_authority.get("deadline_ms", 0)) == accepted_deadline,
+		"refused replay/rapid intents changed neither accepted action nor deadline")
+	await _await_host_action_ready(guest_peer_id)
+
 	# --- §5: peer 1 swings at peer 0's creature -------------------------------
 	var stage: Dictionary = await _encounter(0)
 	var opponent_now := _vec(stage.get("opponent_pos", []))
@@ -330,7 +392,11 @@ func _run() -> void:
 
 	var victim_before: Dictionary = await _encounter(0)
 	var victim_hp := float(victim_before.get("my_creature_hp", -1.0))
+	var opponent_hp_before_friendly := float(victim_before.get("opponent_hp", -1.0))
 	check(victim_hp > 0.0, "peer 0's creature is alive to be swung at (%.1f hp)" % victim_hp)
+	check(opponent_hp_before_friendly > 0.0,
+		"the shared opponent is alive before the friendly-strike check (%.1f hp)"
+			% opponent_hp_before_friendly)
 
 	# The facing is derived from where the two creatures ACTUALLY ended up, not
 	# from where they were asked to stand. Bodies settle onto sloping ground and
@@ -347,18 +413,24 @@ func _run() -> void:
 	# A diagnostic bound, not the claim. Its only job is to make "the swing
 	# never reached the teammate" legible if the refusal assertion below fails:
 	# a swing that fell short would be refused by nothing, which reads exactly
-	# like the feature working. The real reach for two ordinary bodies is
-	# `combat.json`'s floor of (r + r) * body_clearance 2.75 + 0.5, a little
-	# over 3 m; 4.0 is that with room for two bodies of unequal size.
-	check(at_teammate.length() < 4.0,
-		"the two creatures are within one swing of each other (%.2f m apart)"
-			% at_teammate.length())
+	# like the feature working. Ask the same body-size floor the host uses. The
+	# old fixed 4.0 m diagnostic became smaller than two non-overlapping
+	# road-scale Terrapups even though the production swing grew with them.
+	var radius := float(SPECIES.placeholder("terrapup").get("radius", 0.5))
+	var quick: Dictionary = COMBAT_MANAGER.floor_reach_for_bodies(
+		{"range": 2.6}, radius, radius)
+	var actual_reach := float(quick.get("range", 0.0))
+	check(at_teammate.length() <= actual_reach + 0.05,
+		"the two creatures are within the host's %.2f m swing reach (%.2f m apart)"
+			% [actual_reach, at_teammate.length()])
 
 	var friendly: Dictionary = await step(1, "strike",
 		{"facing": [at_teammate.x, 0.0, at_teammate.z], "slot": "quick",
 		 "settle": STRIKE_SETTLE})
 	check(str(friendly.get("verdict", "")) == "PASS",
 		"peer 1's swing at its teammate reached the host (%s)" % str(friendly.get("detail", "")))
+	check(int((friendly.get("data", {}) as Dictionary).get("submitted_action", 0)) == 9003,
+		"the friendly strike uses the next automatic action id after explicit authority/replay probes")
 
 	# POLLED, not read once after a fixed settle. This was a flake and a jitter
 	# failure and they were the same defect.
@@ -381,10 +453,15 @@ func _run() -> void:
 	# "pending is not a refusal" trap wearing a different hat.
 	var refusal: Dictionary = {}
 	var refusal_polls := 0
+	# The preceding replay proof deliberately leaves `replayed_action` in the
+	# client's last-refusal snapshot. Submission is asynchronous and does not
+	# clear that snapshot. Wait for this phase's expected host verdict, rather
+	# than treating the old non-empty response as the new strike's answer.
+	# The bounded poll still fails on a missing or wrong friendly verdict.
 	while refusal_polls < REFUSAL_POLLS:
 		refusal_polls += 1
 		refusal = ((await _encounter(1)).get("refusal", {}) as Dictionary)
-		if not str(refusal.get("code", "")).is_empty():
+		if str(refusal.get("code", "")) == "friendly_target":
 			break
 	# HALF ONE: the host said no, out loud, with the code §5 names.
 	check(str(refusal.get("code", "")) == "friendly_target",
@@ -403,10 +480,20 @@ func _run() -> void:
 
 	# And the opponent took nothing either: a refused strike is refused BEFORE
 	# any roll, so there is no blow for it to have landed somewhere else.
+	#
+	# Baseline THIS phase immediately before the friendly strike, not from the
+	# earlier two-player damage phase. The authority checks between those phases
+	# deliberately submit action 9001 aimed at the opponent and require the host
+	# to accept it. That legitimate strike can land (CI run 34177060785 measured
+	# 96.481 -> 87.259) or miss under D07; comparing against the pre-authority hp
+	# made a successful authority strike look like damage from the later refused
+	# friendly strike. `victim_before` is read after action 9001 has resolved and
+	# after both phase-2 placements, so it isolates exactly the action asserted
+	# here without relaxing the zero-damage bar.
 	var opponent_after := float((await _encounter(0)).get("opponent_hp", -1.0))
-	check(absf(opponent_after - hp_before) < 0.001,
+	check(absf(opponent_after - opponent_hp_before_friendly) < 0.001,
 		"and the opponent took nothing from it either (%.3f before, %.3f after)"
-			% [hp_before, opponent_after])
+			% [opponent_hp_before_friendly, opponent_after])
 
 	quit(await finish())
 
@@ -417,6 +504,44 @@ func _run() -> void:
 func _encounter(peer: int) -> Dictionary:
 	var value = await probe(peer, "encounter")
 	return value if value is Dictionary else {}
+
+
+func _host_authority(peer_id: int) -> Dictionary:
+	var state := await _encounter(0)
+	for raw: Variant in (state.get("strike_authority", []) as Array):
+		if raw is Dictionary and int((raw as Dictionary).get("peer_id", 0)) == peer_id:
+			var out := (raw as Dictionary).duplicate(true)
+			out["host_now_ms"] = int(state.get("host_now_ms", 0))
+			return out
+	return {"peer_id": peer_id, "last_action": 0, "accepted_at_ms": 0,
+		"deadline_ms": 0, "cooldown_ms": 0, "host_now_ms": int(state.get("host_now_ms", 0))}
+
+
+func _await_host_action(peer_id: int, action: int) -> Dictionary:
+	var last: Dictionary = {}
+	for poll in REFUSAL_POLLS:
+		last = await _host_authority(peer_id)
+		if int(last.get("last_action", 0)) == action:
+			return last
+	return last
+
+
+func _await_host_action_ready(peer_id: int) -> Dictionary:
+	var last: Dictionary = {}
+	for poll in REFUSAL_POLLS:
+		last = await _host_authority(peer_id)
+		if int(last.get("host_now_ms", 0)) >= int(last.get("deadline_ms", 0)):
+			return last
+	return last
+
+
+func _await_refusal(code: String) -> Dictionary:
+	var last: Dictionary = {}
+	for poll in REFUSAL_POLLS:
+		last = ((await _encounter(1)).get("refusal", {}) as Dictionary)
+		if str(last.get("code", "")) == code:
+			return last
+	return last
 
 
 ## An `[x, y, z]` from a probe. `Vector3.INF` when the field is missing, so

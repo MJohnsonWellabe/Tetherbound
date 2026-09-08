@@ -1,10 +1,20 @@
 extends "res://tests/test_case.gd"
-## Pure host state and real catch arbitration only. No network transport,
-## player combat loop, shoreline movement or reward persistence is proven here.
+## Host state, real catch arbitration, and the Water runtime's outbound strike
+## envelope. No network process, shoreline movement or reward persistence is
+## proven here; the production Alpha smoke covers the local combat loop.
 const ALPHA := preload("res://scripts/combat/water_alpha_state.gd")
+const ALPHA_RUNTIME := preload("res://scripts/combat/water_alpha.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const ARBITER := preload("res://scripts/net/catch_arbiter.gd")
 const PEER_B := 1369099083
+
+class RecordingTransport:
+	extends Node
+	var intents: Array[Dictionary] = []
+
+	func submit(intent: Dictionary) -> Dictionary:
+		intents.append(intent.duplicate(true))
+		return {"ok": true}
 
 func _enemy() -> RefCounted:
 	var enemy := SPECIES.spawn("water_aquaryn")
@@ -23,6 +33,23 @@ func _throw(state: RefCounted, roll: float) -> Dictionary:
 		"hp_fraction": state.enemy.hp / state.enemy.max_hp, "body_radius": 2.0,
 		"target_position": Vector3.ZERO, "launch_point": Vector3(0,0,-4),
 		"direction": Vector3(0,0,1), "orb_id": "orb_prime", "roll": roll}
+
+func test_runtime_transport_stamps_monotonic_strike_actions() -> void:
+	var alpha := ALPHA_RUNTIME.new()
+	var transport := RecordingTransport.new()
+	alpha.transport = transport
+	alpha.submit_encounter_intent({"kind": "strike_intent", "slot": "quick"})
+	alpha.submit_encounter_intent({"kind": "strike_intent", "slot": "quick"})
+	alpha.submit_encounter_intent({"kind": "strike_intent", "slot": "quick", "action": 9})
+	alpha.submit_encounter_intent({"kind": "strike_intent", "slot": "quick"})
+	alpha.submit_encounter_intent({"kind": "catch_attempt"})
+	assert_eq(transport.intents[0].action, 1)
+	assert_eq(transport.intents[1].action, 2)
+	assert_eq(transport.intents[2].action, 9)
+	assert_eq(transport.intents[3].action, 10)
+	assert_false(transport.intents[4].has("action"), "Non-strike intents retain their protocol shape")
+	alpha.free()
+	transport.free()
 
 func test_two_participants_join_the_same_wounded_enemy_without_reset() -> void:
 	var state := ALPHA.new()

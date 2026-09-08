@@ -833,6 +833,17 @@
         }
       ]
     },
+    "water_iona_attunement": {
+      "speaker": "Researcher Iona",
+      "portrait": "res://assets/ui/portraits/maren.png",
+      "lines": [
+        "Aquaryn's trial is over, but the tide should not close simply because you reached the cradle later.",
+        {
+          "text": "Stand with me at the cradle. I will attune a Swim Stone to you from the trial's shared wake; it can be granted only once.",
+          "effect": "water:water_swim_stone_attune"
+        }
+      ]
+    },
     "water_edda_guardian_offer": {
       "speaker": "Shrinekeeper Edda",
       "portrait": "res://assets/ui/portraits/cloudreach_aila_clean.png",

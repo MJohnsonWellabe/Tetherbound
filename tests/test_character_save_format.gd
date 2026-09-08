@@ -98,6 +98,8 @@ func test_the_character_file_values_are_the_ones_the_game_held() -> void:
 	var data: Dictionary = characters.call("read", "slot-1")
 	assert_eq(str(data.get("realm", "")), "meadows",
 		"`current_realm` becomes `realm`: which realm a trainer stands in is per player now")
+	assert_eq(str(data.get("chosen_character", "")), "sera",
+		"the body choice travels with the trainer")
 	assert_eq(str(data.get("pending_realm_entry", "")), "south_gate")
 	assert_almost_eq(float(data.get("satiety", 0.0)), 63.5)
 	assert_eq((data.get("party", []) as Array).size(), 1)
@@ -162,6 +164,7 @@ func test_apply_restores_a_character_onto_a_player_state() -> void:
 	arriving.local = player
 	assert_true(bool(characters.call("apply", arriving, "slot-1")))
 	assert_eq(str(player.get("character_id")), "slot-1")
+	assert_eq(str(player.get("chosen_character")), "sera")
 	assert_eq(str(player.get("realm")), "meadows")
 	assert_eq(str(player.get("pending_realm_entry")), "south_gate")
 	assert_almost_eq(float(player.get("satiety")), 63.5)

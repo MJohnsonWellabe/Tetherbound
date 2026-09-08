@@ -22,6 +22,18 @@ class HostedTransport extends Node:
 		return true
 
 
+class FightBody extends Node3D:
+	var engaged := true
+
+	func set_engaged(value: bool, _opponent: Node3D = null) -> void:
+		engaged = value
+
+
+class ThrowStub extends Node:
+	func disarm() -> void:
+		pass
+
+
 func _creature(level: int, nickname: String) -> RefCounted:
 	var creature: RefCounted = CREATURE.from_species("terrapup", DEFINITION)
 	creature.level = level
@@ -40,6 +52,19 @@ func _hosted_manager(encounter_id: String, party: Array[RefCounted], enemy: RefC
 	var transport := HostedTransport.new()
 	manager.add_child(transport)
 	manager.bind_encounter(transport, encounter_id, "trainer")
+	return manager
+
+
+func _active_manager(enemy_owned: bool) -> Node:
+	var manager := STORMWOOD_MANAGER.new()
+	manager.set("state", STORMWOOD_MANAGER.State.ACTIVE)
+	manager.set("_enemy_owned", enemy_owned)
+	var body := FightBody.new()
+	manager.set("_wild", body)
+	manager.add_child(body)
+	var throw := ThrowStub.new()
+	manager.set("_throw", throw)
+	manager.add_child(throw)
 	return manager
 
 
@@ -83,6 +108,28 @@ func test_host_retarget_changes_the_body_without_restarting_an_active_windup() -
 	first_target.free()
 	nearer_target.free()
 	engine.free()
+
+
+func test_hosted_admission_yields_only_a_fleeable_wild_fight() -> void:
+	var wild_manager := _active_manager(false)
+	var wild_body: FightBody = wild_manager.get("_wild")
+	assert_true(wild_manager.yield_wild_fight_for_hosted_trainer(),
+		"host admission should win a race with an aggressive local wild")
+	assert_false(wild_manager.is_fighting(),
+		"the yielded wild must release CombatManager for the hosted round")
+	assert_false(wild_body.engaged,
+		"yielding must disengage the local wild through normal combat cleanup")
+	wild_manager.free()
+
+	var trainer_manager := _active_manager(true)
+	var trainer_body: FightBody = trainer_manager.get("_wild")
+	assert_false(trainer_manager.yield_wild_fight_for_hosted_trainer(),
+		"host admission must never tear down an existing trainer fight")
+	assert_true(trainer_manager.is_fighting(),
+		"a protected trainer fight must remain active")
+	assert_true(trainer_body.engaged,
+		"a protected trainer opponent must remain engaged")
+	trainer_manager.free()
 
 
 func test_hosted_award_hook_awards_once_when_called_before_done_record() -> void:

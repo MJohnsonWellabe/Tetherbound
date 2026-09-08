@@ -471,7 +471,7 @@ func test_finale_is_named_mechanical_replaceable_and_not_an_hp_sponge() -> void:
 	assert_false(str(finale.get("arena_identity", "")).is_empty(), "the final arena has no identity")
 	var opposition: Dictionary = finale.get("opposition_contract", {})
 	assert_true(bool(opposition.get("replaceable", false)), "final species/art are hard-wired")
-	assert_eq(str(opposition.get("art_status", "")), "installed_species_placeholders")
+	assert_eq(str(opposition.get("art_status", "")), "installed_species_roster")
 	assert_true(_art().has(str(opposition.get("captain_body_profile", ""))), "final captain body is not installed")
 	assert_true((opposition.get("slots", []) as Array).size() >= 3, "final opposition has no switching composition")
 

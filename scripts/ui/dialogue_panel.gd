@@ -311,4 +311,9 @@ func _pull_the_camera_out() -> void:
 
 
 func _conversation_camera() -> Node:
+	# A panel may be prepared before attachment or closed during teardown.
+	# get_tree() itself raises a native error on a detached Node; no camera
+	# exists to notify in that state, just as on a scene without a camera rig.
+	if not is_inside_tree():
+		return null
 	return get_tree().get_first_node_in_group(CONVERSATION_CAMERA.GROUP)

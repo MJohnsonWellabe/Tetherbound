@@ -2,6 +2,7 @@ extends "res://tests/test_case.gd"
 
 const ADAPTER := preload("res://scripts/creatures/water_species_catalog.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 
 var original: Dictionary
 var installed: Dictionary
@@ -130,3 +131,18 @@ func test_installed_models_contain_every_authored_animation_and_existing_moves()
 			model.free()
 		for role: String in look.animations:
 			assert_true(str(look.animations[role]) in checked_models[path], id + " missing animation " + role)
+
+
+func test_namespaced_water_presentations_reach_their_authored_colourways() -> void:
+	var result: Dictionary = ADAPTER.merge_catalogue(original)
+	assert_true(result.ok, str(result.errors))
+	for id: String in ADAPTER.BOARD_IDS:
+		var runtime := ADAPTER.runtime_id(id)
+		var look: Dictionary = result.catalogue[runtime].placeholder
+		assert_eq(CREATURE_BODY.colourway_source_species(runtime, look), id, runtime)
+		var fallback := "res://assets/creatures/tetherbound/%s/models/%s_extracted_base_color_vivid.png" % [id, id]
+		var model_stem := str(look.model).get_file().get_basename()
+		var adjacent := str(look.model).get_base_dir().path_join(model_stem + "_base_color_vivid.png")
+		assert_true(ResourceLoader.exists(fallback) or ResourceLoader.exists(adjacent),
+			"%s cannot resolve an authored vivid texture" % runtime)
+	assert_eq(CREATURE_BODY.colourway_source_species("galecrest", {}), "galecrest")

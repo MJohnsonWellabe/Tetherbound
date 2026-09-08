@@ -130,10 +130,10 @@ func _receive(event: Dictionary) -> void:
 		add_child(ring)
 		ring.global_position = event.at
 		_visuals[id] = ring
-		get_tree().create_timer(3.0).timeout.connect(func() -> void:
-			if is_instance_valid(ring):
-				ring.queue_free()
-			_visuals.erase(id))
+		# An impact normally frees the ring before this fallback timeout. Bind
+		# only its ID: capturing the Node emits a freed-capture error before a
+		# lambda's is_instance_valid guard can even run.
+		get_tree().create_timer(3.0).timeout.connect(_expire_warning.bind(id))
 		return
 	if str(event.get("kind", "")) != "impact":
 		return
@@ -161,3 +161,10 @@ func _receive(event: Dictionary) -> void:
 	player.velocity *= 0.25
 	if vitals.is_dead():
 		player.died.emit()
+
+
+func _expire_warning(id: int) -> void:
+	var ring: Variant = _visuals.get(id)
+	_visuals.erase(id)
+	if is_instance_valid(ring):
+		ring.queue_free()

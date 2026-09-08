@@ -61,6 +61,18 @@ func _process(delta: float) -> void:
 				if str(spec.region_id) == "cinder_verge" and str(spec.item) == "stormglass" and _flags.has("harvest_node:order:" + str(spec.id)):
 					world.get_node("StormwoodChapter").emit_event("harvest:verge_stormglass")
 					break
+		# Crown Stormglass can be claimed before its chapter recipe prerequisite.
+		# Reconcile the durable host-ledger claim independently so learning the
+		# recipe later cannot leave the ordinary story route dead-ended.
+		if not bool(world.get("simulation_only")) \
+				and _flags.has("stormwood:arch_recipe_known") \
+				and not _flags.has("stormwood:crown_glass_gathered"):
+			for spec: Dictionary in _catalogue.get("sites", []):
+				if str(spec.get("grade", "")) == "crown" \
+						and str(spec.get("item", "")) == "stormglass_crown" \
+						and _flags.has("harvest_node:order:" + str(spec.get("id", ""))):
+					world.get_node("StormwoodChapter").emit_event("harvest:crown_grade")
+					break
 
 
 func restore_progression_from_game(game: Node) -> void:

@@ -1,7 +1,7 @@
 extends "res://tests/test_case.gd"
 
-## Pure catalogue census.  This validates authored data only; it intentionally
-## does not claim that a runtime has injected these entries into Stormwood.
+## Pure authored-data census. Runtime inclusion is covered by
+## test_stormwood_encounter_catalogue.gd.
 
 const PATH := "res://data/config/stormwood_encounters.json"
 const WORLD_PATH := "res://data/config/stormwood_world.json"

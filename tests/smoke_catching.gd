@@ -220,15 +220,32 @@ func _aiming_abandons_your_creature() -> void:
 		return
 
 	var before := _ally.global_position
-	Input.action_press("move_forward")
+	var trainer_before := _player.global_position
+	var foe_body: Node3D = _manager.call("enemy_body")
+	var range_before := trainer_before.distance_to(foe_body.global_position) \
+		if foe_body != null else 0.0
+	# Walk AWAY while proving that the stick belongs to the trainer. Walking
+	# forward here used to carry the trainer 3.7m into the enlarged opponent,
+	# embedding the over-the-shoulder camera in its collision body. That leaked
+	# point-blank geometry into the next, unrelated aim-placement assertion.
+	Input.action_press("move_back")
 	for i in 45:
 		await physics_frame
-	Input.action_release("move_forward")
+	Input.action_release("move_back")
 	var moved := before.distance_to(_ally.global_position)
+	var trainer_moved := trainer_before.distance_to(_player.global_position)
+	var range_after := _player.global_position.distance_to(foe_body.global_position) \
+		if foe_body != null else 0.0
+	if trainer_moved < 1.0:
+		_fail("the trainer only moved %.2fm while aim mode owned the stick" % trainer_moved)
+	if foe_body != null and range_after < 5.0:
+		_fail("the abandonment check left the trainer only %.2fm from the enlarged target; the next placement check needs clear combat distance" % range_after)
 	if moved > 0.75:
 		_fail("the creature moved %.2fm on the stick while aiming; aiming is supposed to abandon it" % moved)
 	else:
-		print("creature stayed put while aiming (%.2fm drift)" % moved)
+		print("creature stayed put while aiming (%.2fm drift); trainer moved %.2fm and target range %.2fm -> %.2fm" % [
+			moved, trainer_moved, range_before, range_after,
+		])
 
 
 ## Aim at the sky and let go. The orb is a projectile: it has to be able to go
@@ -287,8 +304,15 @@ func _the_advertised_chance_is_the_chance_the_throw_would_use() -> void:
 	for i in 12:
 		await physics_frame
 
+	var throw: Node = _manager.call("throw_aim")
+	var report: Dictionary = throw.call("aim_report") if throw != null else {}
+	if bool(report.get("inside_body", true)):
+		_fail("the 50-degree miss setup did not actually put the live reticle outside the creature: %s" % str(report))
+		return
 	if bool(_manager.call("catch_aim_is_locked")):
-		_fail("aimed 50 degrees off the creature and the aim still reports locked")
+		_fail("aimed 50 degrees off the creature and the aim still reports locked: player_range=%.3f report=%s" % [
+			_player.global_position.distance_to(foe_body.global_position), str(report),
+		])
 		return
 
 	var radius := 0.5

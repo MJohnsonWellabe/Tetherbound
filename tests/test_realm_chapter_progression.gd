@@ -9,6 +9,13 @@ class RealmStub extends Node:
 	var current_realm := "meadows"
 
 
+class ShellStub extends Node:
+	var simulation_only := true
+	var realm := "stormwood"
+	func world_realm() -> String:
+		return realm
+
+
 func _chapter() -> Dictionary:
 	return JSON.parse_string(FileAccess.get_file_as_string(PATH)) as Dictionary
 
@@ -141,6 +148,29 @@ func test_completed_reward_repairs_missing_entitlements_without_replaying_comple
 	assert_false(LOGIC.reconcile(flags, _chapter())["changed"])
 
 
+func test_consumed_chapter_grant_is_not_recreated_after_its_durable_marker() -> void:
+	var flags := PROGRESSION.new()
+	var chapter := {"acts": [{"entry_flags": [], "objectives": [{
+		"id": "water_key_reward", "flag_id": "waterward_revealed",
+		"requires_flags": [], "completion_event": "waterward:view",
+		"grants_flags": ["realm_key_water", "permanent_route"],
+		"consumed_grants": {"realm_key_water": "realm_gate_water_unlocked"},
+	}]}]}
+	assert_true(LOGIC.dispatch(flags, chapter, "waterward:view")["changed"])
+	assert_true(flags.has("realm_key_water"))
+	assert_true(flags.has("permanent_route"))
+	flags.set_flag("realm_key_water", false)
+	flags.set_flag("realm_gate_water_unlocked")
+	var revision := int(flags.revision)
+	var replay := LOGIC.reconcile(flags, chapter)
+	assert_false(replay["changed"])
+	assert_false(flags.has("realm_key_water"),
+		"a completed objective must not recreate a grant after its consumption marker")
+	assert_true(flags.has("permanent_route"),
+		"ordinary permanent rewards retain the existing reconciliation contract")
+	assert_eq(flags.revision, revision)
+
+
 func test_side_chain_visibility_order_fly_gate_and_reload() -> void:
 	var flags := PROGRESSION.new()
 	var chapter := _chapter()
@@ -188,4 +218,21 @@ func test_scene_adapter_uses_production_realm_property_and_rejects_meadows() -> 
 	assert_true(adapter._in_realm(game))
 	assert_false(adapter._in_realm(null))
 	adapter.free()
+	game.free()
+
+
+func test_scene_adapter_accepts_only_its_matching_host_simulation_shell() -> void:
+	var game := RealmStub.new()
+	var shell := ShellStub.new()
+	var adapter := ADAPTER.new()
+	adapter.realm_id = "stormwood"
+	shell.add_child(adapter)
+	assert_true(adapter._in_realm(game),
+		"a Stormwood shell must be allowed to commit its remote player's chapter event")
+	shell.realm = "cloudreach"
+	assert_false(adapter._in_realm(game), "a shell cannot emit for another realm")
+	shell.realm = "stormwood"
+	shell.simulation_only = false
+	assert_false(adapter._in_realm(game), "an inactive ordinary scene is not a realm authority")
+	shell.free()
 	game.free()

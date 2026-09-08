@@ -100,6 +100,27 @@ Point `data/creatures/species.json` at the exported GLB and map the clip names.
 `creature_body._fit()` scales it to the gameplay collider; watch for the
 footprint-allowance warning.
 
+The install command also marks any adjacent loose 3D textures for Godot's
+VRAM-compressed import path. After installing or replacing art, rebuild imports
+and verify the repository-wide policy:
+
+```bash
+godot --headless --path . --import
+python tools/art_pipeline/texture_import_policy.py --apply
+godot --headless --path . --import
+python tools/art_pipeline/texture_import_policy.py --check
+```
+
+The first import discovers sidecars for brand-new loose textures; the policy
+pass sets their explicit mode, and the second import builds the compressed
+payload that `--check` requires. Replacements with existing sidecars are
+already marked by `finish.py`, so `--apply` is idempotent there.
+
+The policy deliberately leaves `assets/ui/`, generator `reference/` images and
+unsuffixed `*_extracted_{base_color,emissive}.png` generator inputs Lossless.
+Reference directories must also carry a `.gdignore` so they never enter a
+player build.
+
 ### 8. Validate in the engine, not in Blender
 
 ```bash
