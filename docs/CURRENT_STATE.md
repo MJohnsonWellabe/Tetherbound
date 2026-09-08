@@ -6,6 +6,22 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-08, playable build in progress)
 
+**2026-09-08 Wave6 local gameplay work:** Lantern Hollow's four overlapping
+NPCs now have separate nearby placements around the unchanged Spark shrine.
+Actual grounded walking reached all four exact prompts, and Sable's ordinary
+dialogue granted captive_truth_learned; zero navigation resets, owner saves
+unchanged. No trainer fight or full campaign is claimed. Crown gathering now
+requires the production arch's six glass, with full builder payment unchanged.
+Focused progression/authority checks23 tests/115 assertions, Lantern data and
+dialogue8/936, and the adjusted earned Dynamo helper5/49 passed.
+These changes are local, awaiting PR CI and landing. Details: GAMEPLAY-WAVE6.md.
+
+The changed genuine fresh run on526bb5aac stopped302.373s into the tutorial
+fight before capture. Both throws committed outside the game's reticle radius;
+the loss is preserved, not rerun away. Necessary driver changes match player
+collision layers and recheck the final production throw verdict. Neither proves
+the older third-bed failure fixed. Full opening-to-ending remains incomplete.
+
 **2026-09-08 21:37 UTC: content Wave5 landed in PR #89.** Main is
 `65267c4bd935d80b2e073799caeffc81b913952c`, identical in tree to verified PR
 head`f4886bcb937e31a01276a2e5b7a42172b76be8d6`. Exact-head CI34279303451

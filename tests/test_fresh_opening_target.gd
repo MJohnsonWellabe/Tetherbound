@@ -73,3 +73,40 @@ func test_exact_admitted_body_is_accepted_and_absent_body_is_rejected() -> void:
 	assert_false(opening._engaged_expected_body(expected))
 	combat.free()
 	expected.free()
+
+
+class ThrowVerdict extends Node:
+	var current := {"eligible": false, "reason": "reticle_outside_body"}
+	var preview := {"eligible": true, "trajectory_blocked": false}
+	func launch_assist_diagnostics() -> Dictionary:
+		return current
+	func aim_report() -> Dictionary:
+		return preview
+
+class AimingCombat extends Node:
+	var aim: Node
+	var aiming := true
+	func throw_aim() -> Node:
+		return aim
+	func is_aiming() -> bool:
+		return aiming
+
+func test_final_throw_rejects_stale_eligible_preview_and_actual_obstruction() -> void:
+	var throw := ThrowVerdict.new()
+	var combat := AimingCombat.new()
+	combat.aim = throw
+	var opening := Probe.new()
+	opening._combat = combat
+	assert_false(opening._final_throw_verdict_ready(), "cached eligible preview cannot override current off-body reticle")
+	assert_true("reticle_outside_body" in opening._failures[-1])
+	throw.current = {"eligible": true, "reason": "eligible"}
+	throw.preview["trajectory_blocked"] = true
+	assert_false(opening._final_throw_verdict_ready(), "current camera eligibility does not override a blocked physical arc")
+	throw.preview["trajectory_blocked"] = false
+	assert_true(opening._final_throw_verdict_ready())
+	throw.preview = {}
+	assert_false(opening._final_throw_verdict_ready(), "missing physics preview fails closed")
+	combat.aiming = false
+	assert_false(opening._final_throw_verdict_ready(), "ended aim cannot launch")
+	combat.free()
+	throw.free()

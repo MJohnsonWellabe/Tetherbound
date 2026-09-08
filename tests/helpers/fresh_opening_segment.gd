@@ -186,6 +186,13 @@ func _catch_with_real_throws() -> bool:
 		if not await _aim_at_wild():
 			_fail("live catch aim did not converge after moving")
 			return false
+		# Camera convergence is not the production launch verdict. Release look,
+		# let the physics-owned preview refresh, then inspect before pressing.
+		_stop_right_stick()
+		await _tree.physics_frame
+		await _tree.process_frame
+		if not _final_throw_verdict_ready():
+			return false
 		var results_before := _catch_results.size()
 		var strikes_before := _throw_strikes
 		var misses_before := _throw_misses
@@ -256,3 +263,18 @@ func _hold_the_fight_where_it_was() -> void:
 func _drain_satchel_to_last_orb() -> int:
 	_fail("forbidden inventory fixture reached from fresh opening")
 	return -1
+
+
+func _final_throw_verdict_ready() -> bool:
+	var throw: Node = _combat.call("throw_aim")
+	if throw == null or not bool(_combat.call("is_aiming")):
+		_fail("live catch final aim is no longer active; no orb spent")
+		return false
+	var current: Dictionary = throw.call("launch_assist_diagnostics")
+	var preview: Dictionary = throw.call("aim_report")
+	if (not bool(current.get("eligible", false)) or preview.is_empty()
+			or bool(preview.get("trajectory_blocked", false))):
+		_fail("live catch final throw refused before spending an orb: current=%s preview=%s" % [
+			str(current), str(preview)])
+		return false
+	return true

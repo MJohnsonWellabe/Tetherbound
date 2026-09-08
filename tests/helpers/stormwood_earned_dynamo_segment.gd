@@ -61,7 +61,11 @@ func _continue_deepwood() -> void:
 		return
 	var sable := _world.get_node_or_null("StormwoodPeople/Sable") as Node3D
 	var prompt := sable.get_node_or_null("Interactable") as Node3D if sable != null else null
-	if not await _activate_exact(sable, prompt, Vector2(-450, 3957.5), "Sable captive truth") \
+	if sable == null or prompt == null:
+		_fail("Lantern Hollow is missing Sable's actual conversation prompt")
+		return
+	var approach := Vector2(sable.global_position.x, sable.global_position.z - 2.5)
+	if not await _activate_exact(sable, prompt, approach, "Sable captive truth") \
 			or not await _dialogue("Sable") or not await _receipt("stormwood:captive_truth_learned"):
 		return
 	if not await _walk_xz(Vector2(-890, 4490), "Deepwood station") \
