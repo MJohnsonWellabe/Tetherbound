@@ -635,6 +635,7 @@ func _rpc_session_ended(reason: String) -> void:
 # --- transport callbacks --------------------------------------------------------
 
 func _on_peer_connected(peer_id: int) -> void:
+	_configure_transport_timeout(peer_id)
 	# Nothing to do until the joiner says hello: the registry row is built from
 	# the character summary, not from an id arriving on its own.
 	print("[session] transport: peer %d connected" % peer_id)
@@ -657,7 +658,28 @@ func _on_peer_disconnected(peer_id: int) -> void:
 
 
 func _on_connected_to_server() -> void:
+	_configure_transport_timeout(HOST_PEER_ID)
 	_box["connected"] = true
+
+
+## ENet's stock 5 s minimum timeout is shorter than a legitimate procedural
+## realm crossing. During a split-realm transition both processes can be busy:
+## the client builds its destination while the host stands up the matching
+## simulation shell. Each build yields frames and is bounded by Game's 60 s
+## readiness deadline, but a reliable packet sent immediately before one of
+## those builds can otherwise age past ENet's minimum and tear down a healthy
+## session. Keep transport tolerance above Game's bounded 120 s loading window. The
+## network smoke's independent 15 s heartbeat remains the freeze detector.
+func _configure_transport_timeout(peer_id: int) -> void:
+	if _peer == null:
+		return
+	var transport_peer := _peer.get_peer(peer_id)
+	if transport_peer == null:
+		return
+	transport_peer.set_timeout(
+		int(_cfg("peer_timeout_limit", 32)),
+		int(_cfg("peer_timeout_min_ms", 135_000)),
+		int(_cfg("peer_timeout_max_ms", 180_000)))
 
 
 func _on_connection_failed() -> void:

@@ -99,6 +99,34 @@ network smokes and their production/harness dependencies passed Godot 4.7 static
 `--check-only`; the earlier 300-second cold-build result remains the honest full
 hosted boundary.
 
+## CI prepared-position serialization correction
+
+CI run `34177060785`, multiplayer shard-4 job `101909010326`, artifact
+`10037848400` reached the real Stormwood runtime and returned a PASS from the
+`prepare_only` step, but the coordinator received neither settled position. Its sole
+failure was therefore the intended semantic assertion reporting actor and trainer as
+`(inf, inf, inf)`. The artifact is retained locally at
+`C:\Projects\Tetherbound\.artifacts\ci-10037848400-extracted`.
+
+The exact cause was the peer control protocol, not Stormwood placement or vector JSON
+encoding. `_step_stormwood_hosted_start()` returned `client_actor_pos`,
+`client_trainer_pos`, and `client_body_pos` as siblings of `verdict` and `detail`,
+while `_handle_message()` deliberately transmits structured step results only through
+the `data` dictionary. Those sibling keys were silently omitted before
+`net_harness.gd::step()` returned to the smoke. The peer now places all three arrays
+inside `data`, and both hosted and Livewire consumers read the established `data`
+payload. The 12 m client challenge, 1.5 m replication, and independent 12 m host
+challenge assertions are unchanged.
+
+No timeout was raised and no full local cold-world rerun was needed: the artifact
+fully isolates a deterministic response-envelope defect after the production step
+had already passed. The hosted smoke, Livewire smoke, and peer runner pass Godot 4.7
+static `--check-only` after the repair.
+
+Focused post-repair units (`test_net_state_hash_scope.gd` plus
+`test_livewire_cooldowns.gd`) passed **9 tests, 46 assertions, 0 failures**. Their log
+is `C:\Projects\Tetherbound\.artifacts\livewire-serialization-focused.log`.
+
 `tests/smoke_net_stormwood_livewire.gd` uses the same prepared-position readiness
 contract before starting the remote hosted fight. Once a two-peer environment clears
 world startup, it places the Spark through the real shrine/ledger path and compares

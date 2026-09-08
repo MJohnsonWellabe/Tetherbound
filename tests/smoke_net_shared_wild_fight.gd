@@ -323,21 +323,18 @@ func _run() -> void:
 	check(action_target != Vector3.INF and action_origin != Vector3.INF
 		and action_facing.length_squared() > 0.0001,
 		"the authority strike has real host target and client body positions")
+	# Use the authored charged profile for the accepted action: its 1.2-second
+	# host lock is long enough to make this proof insensitive to coordinator and
+	# CI scheduling jitter. The next intent is submitted immediately, before any
+	# coordinator probe. Both travel reliable and ordered on CHANNEL_LEDGER, so
+	# the host must arbitrate 9001 before 9002 and must arbitrate both inside the
+	# same host-owned lock. The guest's forged zero cooldown remains the claim.
 	var forged: Dictionary = await step(1, "strike", {
-		"facing": [action_facing.x, action_facing.y, action_facing.z], "slot": "quick",
+		"facing": [action_facing.x, action_facing.y, action_facing.z], "slot": "charged",
 		"action": 9001, "cooldown": 0.0, "cooldown_multiplier": 0.0,
 		"damage": 999999.0, "settle": 1,
 	})
 	check(str(forged.get("verdict", "")) == "PASS", "client sent a forged rapid-action payload")
-	var accepted_authority := await _await_host_action(guest_peer_id, 9001)
-	check(int(accepted_authority.get("last_action", 0)) == 9001,
-		"host accepted the fresh monotonic action")
-	check(int(accepted_authority.get("cooldown_ms", 0)) >= 400,
-		"host retained its resolved quick-move lock instead of the forged zero cooldown")
-	var accepted_deadline := int(accepted_authority.get("deadline_ms", 0))
-	check(accepted_deadline - int(accepted_authority.get("host_now_ms", 0)) >= 150,
-		"authority observation left a safe host-clock margin for the rapid intent")
-
 	var rapid: Dictionary = await step(1, "strike", {
 		"facing": [action_facing.x, action_facing.y, action_facing.z], "slot": "quick",
 		"action": 9002, "cooldown": 0.0, "cooldown_multiplier": 0.0, "settle": 1,
@@ -346,6 +343,12 @@ func _run() -> void:
 	var rapid_refusal := await _await_refusal("cooldown")
 	check(str(rapid_refusal.get("code", "")) == "cooldown",
 		"host refused a fresh rapid intent against its own deadline")
+	var accepted_authority := await _await_host_action(guest_peer_id, 9001)
+	check(int(accepted_authority.get("last_action", 0)) == 9001,
+		"host accepted the fresh monotonic action")
+	check(int(accepted_authority.get("cooldown_ms", 0)) >= 1200,
+		"host retained its resolved charged-move lock instead of the forged zero cooldown")
+	var accepted_deadline := int(accepted_authority.get("deadline_ms", 0))
 
 	var replayed: Dictionary = await step(1, "strike", {
 		"facing": [action_facing.x, action_facing.y, action_facing.z], "slot": "quick",
@@ -389,7 +392,11 @@ func _run() -> void:
 
 	var victim_before: Dictionary = await _encounter(0)
 	var victim_hp := float(victim_before.get("my_creature_hp", -1.0))
+	var opponent_hp_before_friendly := float(victim_before.get("opponent_hp", -1.0))
 	check(victim_hp > 0.0, "peer 0's creature is alive to be swung at (%.1f hp)" % victim_hp)
+	check(opponent_hp_before_friendly > 0.0,
+		"the shared opponent is alive before the friendly-strike check (%.1f hp)"
+			% opponent_hp_before_friendly)
 
 	# The facing is derived from where the two creatures ACTUALLY ended up, not
 	# from where they were asked to stand. Bodies settle onto sloping ground and
@@ -466,10 +473,20 @@ func _run() -> void:
 
 	# And the opponent took nothing either: a refused strike is refused BEFORE
 	# any roll, so there is no blow for it to have landed somewhere else.
+	#
+	# Baseline THIS phase immediately before the friendly strike, not from the
+	# earlier two-player damage phase. The authority checks between those phases
+	# deliberately submit action 9001 aimed at the opponent and require the host
+	# to accept it. That legitimate strike can land (CI run 34177060785 measured
+	# 96.481 -> 87.259) or miss under D07; comparing against the pre-authority hp
+	# made a successful authority strike look like damage from the later refused
+	# friendly strike. `victim_before` is read after action 9001 has resolved and
+	# after both phase-2 placements, so it isolates exactly the action asserted
+	# here without relaxing the zero-damage bar.
 	var opponent_after := float((await _encounter(0)).get("opponent_hp", -1.0))
-	check(absf(opponent_after - hp_before) < 0.001,
+	check(absf(opponent_after - opponent_hp_before_friendly) < 0.001,
 		"and the opponent took nothing from it either (%.3f before, %.3f after)"
-			% [hp_before, opponent_after])
+			% [opponent_hp_before_friendly, opponent_after])
 
 	quit(await finish())
 

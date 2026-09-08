@@ -47,7 +47,8 @@ func build_environment(owner_world: Node3D) -> void:
 	battle_yards.call("build",world)
 
 
-func mount(owner_world: Node3D, chapter_node: Node, realm_map: RefCounted) -> void:
+func mount(owner_world: Node3D, chapter_node: Node, realm_map: RefCounted,
+		lightweight_multiplayer_build: bool = false) -> void:
 	if _mounted:
 		return
 	_mounted = true
@@ -59,10 +60,14 @@ func mount(owner_world: Node3D, chapter_node: Node, realm_map: RefCounted) -> vo
 	# a raycast-placed second ground-cover layer, trees/stones, cliffside
 	# settlement recolour). A separate node so it never touches world-build
 	# code; see scripts/world/cloudreach_look.gd for the full contract.
-	var look := LOOK.new()
-	look.name = "CloudreachLook"
-	world.add_child(look)
-	look.call("dress", world)
+	# A simulation-only host shell may omit dressing because no player sees or
+	# traverses it. A live crossing now passes false even while its build is
+	# time-sliced, preserving the production scene's authored visual geometry.
+	if not lightweight_multiplayer_build:
+		var look := LOOK.new()
+		look.name = "CloudreachLook"
+		world.add_child(look)
+		look.call("dress", world)
 	var game := get_node("/root/Game")
 	var placer := PLACER.new()
 	placer.name = "BuildPlacer"

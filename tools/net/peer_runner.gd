@@ -1758,15 +1758,26 @@ func _step_enter_realm(args: Dictionary) -> Dictionary:
 	# the real bool, and using that as a bool aborts this step with a fatal
 	# script error before it reaches any `return` -- which is what actually
 	# produced the ERROR-with-no-detail this lane's net smokes hit.
+	var budget := maxi(1, int(args.get("budget_frames", 6000)))
+	var started_ms := Time.get_ticks_msec()
+	var started_physics_frame := Engine.get_physics_frames()
 	var crossed: bool = await game.call("enter_realm", realm, str(args.get("entry", "")))
+	var observed_frames := Engine.get_physics_frames() - started_physics_frame
+	if observed_frames > budget:
+		return {"verdict": "FAIL", "detail": ("Game.enter_realm('%s') exceeded its %d-physics-frame budget "
+			+ "(%d frames / %d ms)") % [realm, budget, observed_frames,
+				Time.get_ticks_msec() - started_ms]}
 	if not crossed:
 		return {"verdict": "FAIL",
 			"detail": "Game.enter_realm('%s') refused from '%s' (can_enter=%s)"
 				% [realm, was, str(game.call("can_enter_realm", realm))]}
 	var wanted := str(REALM_ROOT_NAMES.get(realm, ""))
-	var budget := int(args.get("budget_frames", 6000))
-	for i in maxi(1, budget):
+	# `enter_realm()` now owns the readiness wait. Keep the original, literal
+	# physics-frame budget around the whole transition rather than starting a
+	# second wall-clock timer after the expensive work has already completed.
+	while observed_frames <= budget:
 		await physics_frame
+		observed_frames = Engine.get_physics_frames() - started_physics_frame
 		if str(game.get("current_realm")) != realm:
 			continue
 		if wanted.is_empty():
@@ -1777,16 +1788,32 @@ func _step_enter_realm(args: Dictionary) -> Dictionary:
 		# accepted one of those would pass without the local player having
 		# gone anywhere at all.
 		if world != null and world == current_scene:
+			# A scene swap publishes `current_scene` before an async procedural
+			# `_ready()` has finished. Returning at that point lets the next control
+			# probe arrive inside the very build whose liveness this smoke measures.
+			# Stay within the caller's existing frame budget and wait for production's
+			# readiness seam; this does not enlarge either timeout.
+			if world.has_method("shell_build_complete") \
+					and not bool(world.call("shell_build_complete")):
+				continue
 			_scene_name = str(REALM_SCENE_NAMES.get(realm, _scene_name))
 			# Settle, so the arriving world has finished its procedural build
 			# before anything is probed against it.
 			for j in int(args.get("settle_frames", DEFAULT_SETTLE_FRAMES)):
 				await physics_frame
+			observed_frames = Engine.get_physics_frames() - started_physics_frame
+			if observed_frames > budget:
+				return {"verdict": "FAIL", "detail": ("enter_realm('%s') settled after its "
+					+ "%d-physics-frame budget (%d frames / %d ms)") % [realm, budget,
+						observed_frames, Time.get_ticks_msec() - started_ms]}
 			return {"verdict": "PASS",
-				"detail": "crossed '%s' -> '%s' after %d frames; current scene is /root/%s"
-					% [was, realm, i, wanted]}
-	return {"verdict": "FAIL", "detail": "enter_realm('%s') never stood /root/%s up as the current scene within %d frames"
-		% [realm, wanted, budget]}
+				"detail": ("crossed '%s' -> '%s' after %d observed physics frames / %d ms "
+					+ "(budget %d physics frames); current scene is /root/%s")
+					% [was, realm, observed_frames, Time.get_ticks_msec() - started_ms,
+						budget, wanted]}
+	return {"verdict": "FAIL", "detail": ("enter_realm('%s') never stood /root/%s up as "
+		+ "the current scene within %d physics frames (%d observed physics frames / %d ms)")
+		% [realm, wanted, budget, observed_frames, Time.get_ticks_msec() - started_ms]}
 
 
 ## Wave 6 lane 6.A. Vanish, the way a lost connection does -- NOT the way
@@ -2280,12 +2307,17 @@ func _step_stormwood_hosted_start(args: Dictionary) -> Dictionary:
 			return {
 				"verdict": "PASS",
 				"detail": "prepared settled client actor and follower beside '%s'" % trainer_id,
-				"client_actor_pos": [actor.global_position.x, actor.global_position.y,
-					actor.global_position.z],
-				"client_trainer_pos": [trainer.global_position.x, trainer.global_position.y,
-					trainer.global_position.z],
-				"client_body_pos": [follower.global_position.x, follower.global_position.y,
-					follower.global_position.z],
+				# `_handle_message()` deliberately transmits structured step output
+				# only through `data`; sibling fields are not part of the control
+				# protocol and never reach net_harness.gd::step().
+				"data": {
+					"client_actor_pos": [actor.global_position.x, actor.global_position.y,
+						actor.global_position.z],
+					"client_trainer_pos": [trainer.global_position.x, trainer.global_position.y,
+						trainer.global_position.z],
+					"client_body_pos": [follower.global_position.x, follower.global_position.y,
+						follower.global_position.z],
+				},
 			}
 	hub.call("request_start", trainer_id)
 	var waited := 0

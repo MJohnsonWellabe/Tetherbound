@@ -120,8 +120,9 @@ func _run() -> void:
 	if str(prepared.get("verdict", "")) != "PASS":
 		quit(await finish())
 		return
-	var client_actor_at := _vec(prepared.get("client_actor_pos", []))
-	var client_trainer_at := _vec(prepared.get("client_trainer_pos", []))
+	var prepared_data: Dictionary = prepared.get("data", {}) as Dictionary
+	var client_actor_at := _vec(prepared_data.get("client_actor_pos", []))
+	var client_trainer_at := _vec(prepared_data.get("client_trainer_pos", []))
 	var client_challenge_distance := client_actor_at.distance_to(client_trainer_at) \
 		if client_actor_at != Vector3.INF and client_trainer_at != Vector3.INF else INF
 	check(client_challenge_distance <= CHALLENGE_RADIUS_M,

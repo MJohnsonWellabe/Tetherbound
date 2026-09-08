@@ -206,7 +206,8 @@ var _palette_cache: Dictionary = {}
 ## `world` answers `ground_height_at`; `camera_rig` and `player` may be null in
 ## a bare test scene and the complex still stands, just without the camera swap
 ## and without anybody to greet.
-func build(world: Node, camera_rig: Node = null, player: Node3D = null) -> bool:
+func build(world: Node, camera_rig: Node = null, player: Node3D = null,
+		build_budget: RefCounted = null) -> bool:
 	_world = world
 	_camera_rig = camera_rig
 	_player = player
@@ -249,29 +250,52 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null) -> bool:
 
 	_load_palette()
 	_build_approach_conduits(world)
+	await _build_breathe(build_budget)
 	_build_approach_drain(world)
+	await _build_breathe(build_budget)
 	_build_chambers()
+	await _build_breathe(build_budget)
 	_build_passages()
+	await _build_breathe(build_budget)
 	_build_approach_ramp()
+	await _build_breathe(build_budget)
 	_build_trim()
+	await _build_breathe(build_budget)
 	_build_structure()
+	await _build_breathe(build_budget)
 	_build_conduits()
+	await _build_breathe(build_budget)
 	_build_warden_arena_dressing()
+	await _build_breathe(build_budget)
 	_build_lights()
+	await _build_breathe(build_budget)
 	_build_exterior_facing()
+	await _build_breathe(build_budget)
 	_build_exterior_dressing()
+	await _build_breathe(build_budget)
 	_build_keep_parapets()
+	await _build_breathe(build_budget)
 	_build_gate_frame()
+	await _build_breathe(build_budget)
 	_build_hall_massing()
+	await _build_breathe(build_budget)
 	_build_tower_piers()
+	await _build_breathe(build_budget)
 	_build_occupation()
+	await _build_breathe(build_budget)
 	_build_interior_area()
+	await _build_breathe(build_budget)
 	_build_machine()
+	await _build_breathe(build_budget)
 	_build_recovery_point()
+	await _build_breathe(build_budget)
 	_build_marks()
+	await _build_breathe(build_budget)
 	_place_gauntlet()
+	await _build_breathe(build_budget)
 	_sync_doors()
 	_clear_the_ground_the_hall_stands_on()
+	await _build_breathe(build_budget)
 
 	# The entrance is the ramp's own foot when there is one -- the point of a
 	# marker is that a caller lands somewhere they can stand.
@@ -285,6 +309,14 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null) -> bool:
 		_approach_pylons,
 		", machine is a PLACEHOLDER" if machine_is_placeholder() else ""])
 	return true
+
+
+## Realm transitions hand in their existing frame budget. Ordinary solo and
+## focused fixture builds pass null and remain synchronous; no second build
+## policy lives in the Hall.
+func _build_breathe(build_budget: RefCounted) -> void:
+	if build_budget != null:
+		await build_budget.call("breathe")
 
 
 ## BAND5-CONTENT, prompt 66's navigation spine / machinery readability /
