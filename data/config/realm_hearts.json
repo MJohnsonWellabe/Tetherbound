@@ -63,7 +63,7 @@
     },
     "water": {
       "map_world_path": "res://data/config/water_world.json",
-      "display_name": "Water Archipelago",
+      "display_name": "Tidewake",
       "scene": "res://scenes/world/water_archipelago.tscn",
       "entry_key_flag": "realm_key_water"
     }
