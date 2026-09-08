@@ -242,6 +242,11 @@ var aspect_variant: String = ""
 ## caller that never sets it (the source and the wearer are the same species).
 var _aspect_source_species: String = ""
 
+## Which texture folder supplies this species' ordinary vivid/shiny/alpha
+## repaints. Usually identical to `species_id`; Water uses stable namespaced
+## runtime ids while its authored presentation assets retain their board ids.
+var _ordinary_colourway_species: String = ""
+
 ## The aspect variant's own idle VFX (flame/arcs/motes/embers), rebuilt
 ## whenever the body is re-dressed -- same lifecycle as `_aura` below.
 var _aspect_vfx: Node3D = null
@@ -452,6 +457,7 @@ var body_scale: float = 1.0
 
 func _build_placeholder() -> void:
 	var look: Dictionary = SPECIES.placeholder(species_id)
+	_ordinary_colourway_species = colourway_source_species(species_id, look)
 	# T1-CREATURE-ART contract (dormant until a species entry declares one --
 	# see set_aspect_variant()'s own comment): a species whose placeholder
 	# names `aspect_variant` wears that colourway/VFX instead of the ordinary
@@ -733,15 +739,22 @@ func _refresh_shiny_tint() -> void:
 		suffix = "shiny"
 	elif alpha:
 		suffix = "alpha"
-	if _has_model and _swap_colourway_textures(suffix):
+	if _has_model and _swap_colourway_textures(suffix, _ordinary_colourway_species):
 		_apply_alpha_presence()
 		return
-	if _has_model and suffix == "alpha" and _swap_colourway_textures("vivid"):
+	if _has_model and suffix == "alpha" and _swap_colourway_textures("vivid", _ordinary_colourway_species):
 		_apply_alpha_presence()
 		return
 	if shiny:
 		_apply_variant_tint(_shiny_palette())
 	_apply_alpha_presence()
+
+
+## Pure resolver kept public so catalogue tests can prove that a namespaced
+## runtime presentation reaches the same authored colourway folder as its GLB.
+static func colourway_source_species(id: String, look: Dictionary) -> String:
+	var configured := str(look.get("colourway_source_species", ""))
+	return configured if configured != "" else id
 
 
 ## CREATURE-IDENTITY-2. The half of alpha presence that is not the texture:

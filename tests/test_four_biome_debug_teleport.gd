@@ -6,6 +6,7 @@ extends "res://tests/test_case.gd"
 ## fast checks pin the complete menu catalogue and its authored entry anchors.
 
 const GAME := preload("res://autoload/game_state.gd")
+const TAB_SETTINGS := preload("res://scripts/ui/tab_settings.gd")
 const SPOTS_PATH := "res://data/config/debug_teleport_spots.json"
 
 const EXPECTED_GROUPS := {
@@ -21,6 +22,23 @@ const EXPECTED_ENTRY_IDS := {
 	"stormwood": "stormwood_arrival_from_cloudreach",
 	"water": "water_arrival_from_stormwood",
 }
+
+
+class TeleportGameDouble extends Node:
+	var current_realm := "menu_test_source"
+	var calls: Array[Dictionary] = []
+
+	func debug_teleport_to(x: float, z: float, realm_id: String = "", entry_id: String = "") -> bool:
+		calls.append({"x": x, "z": z, "realm": realm_id, "entry_id": entry_id})
+		return true
+
+
+class TeleportMenuDouble extends Node:
+	var game: Node = null
+	var close_count := 0
+
+	func close() -> void:
+		close_count += 1
 
 
 func test_curated_menu_has_two_destinations_in_every_named_region() -> void:
@@ -79,6 +97,71 @@ func test_every_realm_resolves_its_authored_arrival_anchor() -> void:
 		assert_eq(str(game.call("_debug_teleport_entry_id_for", realm_id)), EXPECTED_ENTRY_IDS[realm_id],
 			"%s must use its authored scene-arrival anchor" % realm_id)
 	game.free()
+
+
+func test_settings_tab_resolves_every_curated_row_to_a_realm_and_entry() -> void:
+	var game := GAME.new()
+	game.reset_for_new_game()
+	var tab := TAB_SETTINGS.new()
+	var destinations: Array = tab.call("_read_debug_teleport_spots", game)
+	var expected_count := 0
+	for group_ids: Array in EXPECTED_GROUPS.values():
+		expected_count += group_ids.size() * 2
+	assert_eq(destinations.size(), expected_count,
+		"Settings must flatten every curated two-per-region destination")
+	for entry_value: Variant in destinations:
+		assert_true(entry_value is Dictionary)
+		if not entry_value is Dictionary:
+			continue
+		var entry := entry_value as Dictionary
+		var realm_id := str(entry.get("realm", ""))
+		assert_true(EXPECTED_ENTRY_IDS.has(realm_id),
+			"Settings row has no shipped realm: %s" % entry)
+		if EXPECTED_ENTRY_IDS.has(realm_id):
+			assert_eq(str(entry.get("entry_id", "")), EXPECTED_ENTRY_IDS[realm_id],
+				"%s must carry its authored scene-arrival anchor" % entry.get("display_name", "?"))
+	tab.free()
+	game.free()
+
+
+func test_every_settings_row_calls_the_existing_cross_realm_teleport_seam() -> void:
+	var resolver := GAME.new()
+	resolver.reset_for_new_game()
+	var tab := TAB_SETTINGS.new()
+	var destinations: Array = tab.call("_read_debug_teleport_spots", resolver)
+	resolver.free()
+
+	var fake_game := TeleportGameDouble.new()
+	var fake_menu := TeleportMenuDouble.new()
+	fake_menu.game = fake_game
+	tab.menu = fake_menu
+	for entry_value: Variant in destinations:
+		var entry := entry_value as Dictionary
+		var before_calls := fake_game.calls.size()
+		var before_closes := fake_menu.close_count
+		# Exercise the row's real pressed callback, rather than calling the tab's
+		# handler directly. This pins the closure that must preserve realm/entry.
+		var button := tab.call("_build_teleport_row", entry) as Button
+		tab.add_child(button)
+		button.emit_signal("pressed")
+		assert_eq(fake_game.calls.size(), before_calls + 1,
+			"pressing %s must call debug_teleport_to once" % entry.get("display_name", "?"))
+		if fake_game.calls.size() != before_calls + 1:
+			continue
+		var call := fake_game.calls.back() as Dictionary
+		var position: Vector2 = entry.get("position", Vector2.ZERO)
+		assert_almost_eq(float(call.get("x", NAN)), position.x, 0.0001)
+		assert_almost_eq(float(call.get("z", NAN)), position.y, 0.0001)
+		assert_eq(str(call.get("realm", "")), str(entry.get("realm", "")),
+			"the menu row must preserve its destination realm")
+		assert_eq(str(call.get("entry_id", "")), str(entry.get("entry_id", "")),
+			"the menu row must preserve its authored arrival id")
+		assert_eq(fake_menu.close_count, before_closes + 1,
+			"a successful debug teleport must close the menu")
+
+	tab.free()
+	fake_menu.free()
+	fake_game.free()
 
 
 func test_runtime_destinations_offer_all_other_shipped_realms_without_story_keys() -> void:

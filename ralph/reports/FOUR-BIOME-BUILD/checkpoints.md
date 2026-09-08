@@ -217,3 +217,88 @@
 - Next action: commit and push this one small repair batch, then allow the full CI
   rerun—including all seven measured multiplayer shards—to finish before any further
   push. The ordinary Stormwood-to-Water gate remains the next player-path code lane.
+
+## Checkpoint 6 — 2026-09-07 22:20 CDT
+
+- PR #80 run `34177060785` completed rather than being cancelled: 22 jobs passed,
+  four multiplayer shards failed, and three downstream/known-red jobs were skipped.
+  Shards 2 and 4 shared one hosted-trainer result-serialization defect; shard 5 had
+  a stale pre-action health baseline plus a quick-cooldown timing race; shard 7 was
+  the split-realm world-build failure. Ordinary unit, owner-regression, region,
+  Gate A/B, evidence, harvest, scatter and discovery jobs were green.
+- Shards 2/4 now transmit prepared actor/trainer/body positions under the control
+  protocol's structured `data` field. Their focused contract remains exact: client
+  within 12 m of trainer, host replica within 1.5 m of client, and host within 12 m
+  of trainer. Shard 5 now captures the no-friendly-damage baseline immediately
+  before that phase and uses a host-resolved 1.2-second charged cooldown so ordered
+  action 9002 deterministically exercises refusal rather than wall-clock luck.
+- Shard 7 is locally green end to end under its unchanged 15-second heartbeat and
+  6,000 nominal-frame entry budget. Sliced multiplayer Cloudreach uses functional
+  route/landmark placeholders while solo retains full presentation; realm shells
+  now defer standing the just-vacated realm up until the host's destination scene
+  reports ready. Run `net-local-transition-guard-2-1788837965` passed every check:
+  first crossing 4,000 ms, Cloudreach shell ready in 3,629 ms, reverse host crossing
+  17,423 ms without silence, and the expected final Meadows shell.
+- The ordinary Stormwood→Water path is implemented: the Spark-gated Waterward view
+  grants the key; a named physical gate 14 m farther on the same platform asks the
+  host to atomically consume that key and create the reusable Water unlock; the next
+  interaction routes to Water's authored First Shore anchor. Focused proof is 11
+  tests / 70 assertions, zero failures. Independent review found no authority or
+  atomic-save defect; the actual two-press world crossing remains to be smoked.
+- Every Settings menu row is now pinned: all 58 destinations resolve their exact
+  biome/entry anchor and each real Button callback forwards x/z/realm/entry then
+  closes on success. Combined readiness/teleport proof is 8 tests / 929 assertions.
+  The loading overlay now waits for destination readiness; an independent review
+  found immediate scene-change failure and never-ready rollback still need a bounded
+  abort before this batch is committed.
+- Build-size is no longer an active defect. Current truth is 400 runtime 3D textures,
+  all VRAM Compressed and fully generated, zero policy violations. The measured PCK
+  fell 184,924,584 bytes (16.31%); remaining Lossless files are intentional UI,
+  reference or duplicate generator inputs. Water's 12 vivid texture folders were
+  separately found unreachable from namespaced runtime IDs; the static repair is
+  10 tests / 512 assertions green and awaits production capture plus blind verdict.
+- No push has been made since `15a09f0bf819a4554ad75074ba41d83ce8eec7e5`.
+  Finish the bounded realm-entry rollback, render/judge the Water colourway repair,
+  run the focused shard-5 connected smoke, then review and push this coherent batch
+  once; allow the resulting CI run to complete before any later push.
+
+## Checkpoint 7 — 2026-09-08 00:25 CDT
+
+- Main integration remains verifiable at merge commit
+  `296f7aa1d2ab48990ecdfb3ced7c2a69e4699545`, whose merged-main parent is
+  `22fe512af9702009c2c4d77e7fb18e6dc8143fcc`. The branch head before this batch is
+  still `15a09f0bf819a4554ad75074ba41d83ce8eec7e5`; no push has interrupted CI.
+- The four PR #80 multiplayer failures are locally closed. Shards 2/4 carry their
+  structured position payload under `data`; shard 5's unchanged connected smoke is
+  green; and shard 7 now passes twice end to end. Its final runs are
+  `net-local-split-integrated3-1788843045` and
+  `net-local-split-confirm-1788843300`, both **ALL CHECKS PASSED** under the unchanged
+  15-second heartbeat and literal 6,000-physics-frame transition cap.
+- The shard-7 confirmation exposed and fixed ENet's 5-second reliable-ACK timeout,
+  which was shorter than the simultaneous live/shell build. A cold Meadows return
+  measured 65.026 and 69.491 seconds, proving the new candidate 60-second scene-ready
+  cutoff was too short; readiness and rollback are now bounded at 120 seconds, and a
+  rollback keeps its blocking overlay until the prior realm is itself ready.
+- Cloudreach multiplayer retains the bounded visual path, but its placeholder
+  collision no longer changes named chapter surfaces: settlement, observatory and
+  both sloped Waterward crowns use the full build's exact footprints. Full live
+  geological/dressing work remains recorded visual second-pass work after a measured
+  >15-second heartbeat failure.
+- The ordinary production Stormwood-to-Water smoke is green after the scatter
+  fingerprint repair: reveal, first-press atomic key consumption/unlock, second-press
+  travel, destination shell readiness and authored Water arrival all passed. It is
+  now registered in `verify-regions-shard`. Stormwood's official scatter bake reports
+  108 regions and 33,773 placements; only the source fingerprint changed.
+- A parallel fresh-save route audit found a real solo dead edge: crown-grade
+  stormglass had authored sites but no `harvest:crown_grade` production emitter.
+  The existing host-authoritative harvest/chapter seam now emits it from durable
+  authored crown claims after the arch recipe is known. Focused regression: 2 tests,
+  4 assertions, zero failures. The same audit found Water's unmounted ordinary return
+  to Stormwood; it is non-forward-path work and is explicitly recorded in
+  `docs/SECOND_PASS_BACKLOG.md`.
+- Fast integrated evidence: production script check is green; realm readiness,
+  rollback, exact teleport rows, Stormwood gate/scatter/progression, Water colourways
+  and creature scale are green at 40 tests / 1,637 assertions; the follow-up
+  readiness/collision/crown-harvest set is green at 12 tests / 55 assertions.
+- Next: run the final consolidated fast suite and diff review, create reviewable local
+  commits, push once, then read every CI job before any further branch update.

@@ -124,10 +124,77 @@ The historical old-base probes reported an autoload parse failure for
 That note explains those superseded logs only; it is not the result of the final
 integrated production capture, whose log has no `SCRIPT ERROR` or `ERROR` lines.
 
+## Post-verdict Water colourway repair (capture ready for independent review)
+
+The blind verdict identified Water's same-colour heaps in `b04_s01` and
+`b04_s02`, while the roster already carried distinct vivid repaints for every
+Water presentation. Static tracing found those repaints were not reachable at
+runtime: Water's stable species ids are namespaced (`water_*`), but the embedded
+GLB fallback textures live in the unnamespaced board-id folders. CreatureBody
+therefore searched a folder that does not exist and silently retained each
+model's unpainted material.
+
+`water_species_catalog.gd` now carries the presentation's board id into
+CreatureBody's ordinary/shiny/alpha texture lookup. The focused catalogue gate
+proves all twelve namespaced presentations resolve an existing authored vivid
+texture. Together with the unchanged scale ladder, the focused result is 10
+tests / 512 assertions / 0 failures: minimum creature height remains 1.90 m
+against the fixed 1.80 m trainer, and the apex remains at least 7.0 m. This is a
+code/config repair only; it is not a visual acceptance claim.
+
+The focused production recapture used the current Gate-F road tool and pinned
+Godot 4.7-stable Compatibility renderer. The tool's `--only=water` parser path
+was first checked with `--check-only` (exit 0), then proved live by producing
+exactly three Water records and no records from another realm. The exact
+PowerShell launch was:
+
+```powershell
+$captureDir = 'ralph/reports/FOUR-BIOME-BUILD/road-visual-creatures/captures-water-colourway-20260907T2141'
+$logPath = Join-Path $PWD 'ralph/reports/FOUR-BIOME-BUILD/road-visual-creatures/capture-water-colourway-20260907T2141.log'
+$godotExe = 'C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64_console.exe'
+& $godotExe --path . --rendering-method gl_compatibility `
+  --rendering-driver opengl3 --resolution 1280x800 --log-file $logPath `
+  --script tools/gate_f/capture_four_biome_road_creatures.gd -- `
+  --only=water --out=('res://' + $captureDir)
+```
+
+PowerShell passed that final expression as an empty `--out=` argument plus a
+second token, so the validated files were written at `res://` and then moved,
+byte-for-byte, into `captures-water-colourway-20260907T2141/`. The run exited 0;
+its manifest records zero failures, a 1280x800 viewport, Windows display server,
+Compatibility renderer, and the production scene/camera/HUD/runtime-body
+contract. Results are `b04_s01` 3 forward / 3 framed, `b04_s02` 3/2 and
+`b04_s03` 3/2. The log has zero `SCRIPT ERROR`, `ERROR` or `FAIL` lines; its ten
+warnings are the already-emitted Terrain3D no-mipmap and unsupported Water
+footing warnings. Godot process count was zero after exit.
+
+The named blind-verdict offender frames are ready at:
+
+- `captures-water-colourway-20260907T2141/b04_s01.png` — 1,727,118 bytes,
+  SHA-256 `BB7F87CFC9DAFD9A8482B6E22BE135B167E4093997433BA4AE66ED8316436910`.
+- `captures-water-colourway-20260907T2141/b04_s02.png` — 1,816,492 bytes,
+  SHA-256 `09E97409B79F7A217F4EBEBAE0C8DB85125FD1802CA9B52A59552C48B125DE92`.
+
+## Independent blind verdict — Water colourway recapture
+
+A fresh code-blind judge received only `b04_s01.png`, `b04_s02.png`, and the
+visual rubric. It did not inspect implementation, reports, manifests, or diffs.
+The verdict was: multiple-creature visibility **FAIL**, species readability
+**FAIL**, colour separation/palette appeal **FAIL**, visual scale/substance
+**PASS**, and the Palworld-quality readability/appeal bar **FAIL**.
+
+The judge found `b04_s01` read as one tangled teal mass and `b04_s02` had useful
+pink/red separation but remained overlapped, harshly saturated, and silhouette-
+ambiguous. Its second-pass direction is to separate bodies into distinct depth
+lanes, bring the smallest body closer, preserve clear silhouette gaps, and tune
+the vivid colours into more coherent material families. This is a recorded
+one-round cosmetic verdict, not an acceptance claim.
+
 ## Remaining acceptance work
 
-ROAD does not judge its own frames. The final images still need an independent,
-code-blind visual verdict against the supplied comparison references. In
-particular, that verdict must not infer order 1912's legibility from the green
-frame-level count; the distant pair needs separate proof or a semantic placement
-repair if its own readability is required.
+ROAD did not judge its own frames. The focused Water recapture has now received
+the independent verdict above and remains deferred visual work. The earlier
+all-biome frames already have their recorded blind verdict. In particular, no
+verdict should infer order 1912's legibility from the green frame-level count;
+the distant pair needs separate proof or a semantic placement repair if its own
+readability is required.
