@@ -1120,26 +1120,26 @@
       "species": "meadowhart",
       "count": 2,
       "centre": [
-        -342.584,
+        -297.167,
         0.0,
-        572.89
+        610.055
       ],
       "radius": 3.0,
       "habitat": "roadside_sightline",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair for band1_lower_meadows; forward-visible at the preceding 10m sample. Alternating 5.5m shoulder offset preserves the player line and existing off-road ecology."
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair 5.5m off the route shoulder and just east of Creek Hollow's x=-300 compact-ecology boundary. Moving the pair preserves the ungated all-day road sightline without disguising two extra ordinary creatures as a time-gated exception to Creek Hollow's 8-entry/population-9 contract."
     },
     {
       "order": 1912,
       "species": "meadowhart",
       "count": 2,
       "centre": [
-        -249.917,
+        -394.549,
         0.0,
-        630.305
+        640.171
       ],
       "radius": 3.0,
       "habitat": "roadside_sightline",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair for band1_lower_meadows; forward-visible at the preceding 10m sample. Alternating 5.5m shoulder offset preserves the player line and existing off-road ecology."
+      "_why_road_visibility_0907": "ROAD CP-2 population-neutral reassignment for band1_lower_meadows. This existing pair now stands just north of Creek Hollow's z=640 compact-ecology boundary, where it remains forward-visible from the otherwise-empty 730m route sample without adding, gating, or disguising any Creek population. An exhaustive search found no 5.5m-shoulder placement outside the compact footprint that could cover that sample; this is the minimum-offset valid route-normal placement (79.5m) and leaves order 1910 at the only site that covers the route start."
     }
   ]
 }

@@ -3484,24 +3484,25 @@
       "region_id": "tidal_cradle",
       "table_id": "water_tidal_cradle_land",
       "island_local_offset": [
-        -5.351,
-        114.5393,
-        10.406
+        2.31,
+        45.16,
+        5.042
       ],
       "position": [
-        694.649,
-        114.5393,
-        1540.406
+        702.31,
+        45.16,
+        1535.042
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 5.1671,
+      "terrain_slope_deg": 3.627,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Living shell clearings",
       "requires_aquatic_combat": false,
-      "placement_status": "analytic_spawn_footprint_only_arena_and_navigation_unproven"
+      "placement_status": "authored_route_core_runtime_capture_pending",
+      "_why_road_runtime_repair_0907": "The production Tidal Cradle road capture rejected the old high clearing at y=114.539. Reprojected to one metre off the critical land-spine centre at its authored y; keeps the native table/count and a low-gradient physical-road footprint."
     },
     {
       "id": "water_tidal_cradle_wild_006",
@@ -3684,24 +3685,25 @@
       "region_id": "tidal_cradle",
       "table_id": "water_tidal_cradle_land",
       "island_local_offset": [
-        58.03,
-        81.5435,
-        102.544
+        66.452,
+        52.25,
+        96.647
       ],
       "position": [
-        758.03,
-        81.5435,
-        1632.544
+        766.452,
+        52.25,
+        1626.647
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 27.6314,
+      "terrain_slope_deg": 3.627,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Living shell clearings",
       "requires_aquatic_combat": false,
-      "placement_status": "analytic_spawn_footprint_only_arena_and_navigation_unproven"
+      "placement_status": "authored_route_core_runtime_capture_pending",
+      "_why_road_runtime_repair_0907": "The production Tidal Cradle road capture rejected the old 27.6-degree clearing. Reprojected to one metre off the critical land-spine centre at its authored y; keeps the native table/count and a low-gradient physical-road footprint."
     },
     {
       "id": "water_tidal_cradle_wild_014",
@@ -6763,14 +6765,14 @@
       "region_id": "tidal_cradle",
       "table_id": "water_tidal_cradle_land",
       "island_local_offset": [
-        -13.509,
-        42.697,
-        -28.862
+        -17.186,
+        42.824,
+        -26.287
       ],
       "position": [
-        686.491,
-        42.697,
-        1501.138
+        682.814,
+        42.824,
+        1503.713
       ],
       "count": 2,
       "radius_m": 3.0,
@@ -6780,7 +6782,7 @@
       "purpose": "roadside creature sightline pair",
       "requires_aquatic_combat": false,
       "placement_status": "route_surface_authored_runtime_grounding_required",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+      "_why_road_visibility_0907": "ROAD CP-2 pair one metre off the authored land-spine centre. The production capture rejected the old 5.49m shoulder; this retains the native table/count while putting the complete footprint on the low-gradient route core."
     },
     {
       "id": "road_visibility_tidal_cradle_exploration_spine_05",
@@ -6788,14 +6790,14 @@
       "region_id": "tidal_cradle",
       "table_id": "water_tidal_cradle_land",
       "island_local_offset": [
-        23.293,
-        47.759,
-        42.835
+        26.97,
+        47.886,
+        40.26
       ],
       "position": [
-        723.293,
-        47.759,
-        1572.835
+        726.97,
+        47.886,
+        1570.26
       ],
       "count": 2,
       "radius_m": 3.0,
@@ -6805,7 +6807,7 @@
       "purpose": "roadside creature sightline pair",
       "requires_aquatic_combat": false,
       "placement_status": "route_surface_authored_runtime_grounding_required",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+      "_why_road_visibility_0907": "ROAD CP-2 pair one metre off the authored land-spine centre. The production capture rejected the old 5.49m shoulder; this retains the native table/count while putting the complete footprint on the low-gradient route core."
     },
     {
       "id": "road_visibility_tidal_cradle_exploration_spine_06",
@@ -7163,14 +7165,14 @@
       "region_id": "tether_current",
       "table_id": "water_sluice_isle_land",
       "island_local_offset": [
-        109.293,
-        42.995,
-        144.747
+        104.993,
+        42.592,
+        145.618
       ],
       "position": [
-        959.293,
-        42.995,
-        3104.747
+        954.993,
+        42.592,
+        3105.618
       ],
       "count": 2,
       "radius_m": 3.0,
@@ -7180,7 +7182,7 @@
       "purpose": "roadside creature sightline pair",
       "requires_aquatic_combat": false,
       "placement_status": "route_surface_authored_runtime_grounding_required",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+      "_why_road_visibility_0907": "ROAD CP-2 pair one metre off the authored land-spine centre. The production capture saw three bodies forward but only one framed from this stand at the old 5.39m shoulder; moving the same pair inward keeps both within the real road-facing camera without changing population budget."
     },
     {
       "id": "road_visibility_sluice_isle_exploration_spine_05",

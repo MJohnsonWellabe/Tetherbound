@@ -21,6 +21,7 @@ const PAYOFF_PATH := "res://data/config/cloudreach_npc_runtime.json"
 const WILD_FOOT_MARGIN := 0.25
 const WILD_PATH_STEP := 0.5
 const WILD_STRATUM_TOLERANCE := 4.0
+const AIR_PATROL_AUTHORITY_ID := 1
 
 
 class CliffWild:
@@ -74,6 +75,31 @@ class CliffWild:
 
 	func peaceful_leash_recoveries() -> int:
 		return _peaceful_leash_recoveries
+
+
+## The chain bridge is intentionally narrower than the oversized Air roster's
+## full capsule. These are authored wildlife silhouettes above that crossing,
+## not ground bodies allowed to overhang it. They retain the real creature
+## prefab, presentation scale and idle animation, but stay at one deterministic
+## host-owned formation point instead of running ground wander/gravity.
+class AirPatrolWild:
+	extends "res://scripts/creatures/wild_creature.gd"
+	var patrol_anchor := Vector3.ZERO
+	var patrol_facing := Vector3.FORWARD
+
+	func configure_air_patrol(at: Vector3, facing: Vector3) -> void:
+		patrol_anchor = at
+		patrol_facing = facing.normalized() if facing.length_squared() > 0.001 else Vector3.FORWARD
+		global_position = patrol_anchor
+		rotation.y = atan2(patrol_facing.x, patrol_facing.z)
+		velocity = Vector3.ZERO
+
+	func _physics_process(_delta: float) -> void:
+		if not is_multiplayer_authority():
+			return
+		global_position = patrol_anchor
+		rotation.y = atan2(patrol_facing.x, patrol_facing.z)
+		velocity = Vector3.ZERO
 
 var realm_world: Node
 var chapter: Dictionary = {}
@@ -174,6 +200,44 @@ static func roll_wild(table: Dictionary, seed_value: int, ordinal: int) -> Dicti
 			return {"species": entry["placeholder_species"],
 				"level": rng.randi_range(int(levels[0]), int(levels[1]))}
 	return {}
+
+
+static func air_patrol_member_plan(site: Dictionary, index: int) -> Dictionary:
+	var count := maxi(1, int(site.get("count", 1)))
+	if index < 0 or index >= count:
+		return {}
+	var raw_centre: Array = site.get("position", [])
+	var raw_axis: Array = site.get("corridor_axis", [1.0, 0.0, 0.0])
+	if raw_centre.size() < 3 or raw_axis.size() < 3:
+		return {}
+	var centre := Vector3(float(raw_centre[0]), float(raw_centre[1]), float(raw_centre[2]))
+	var axis := Vector3(float(raw_axis[0]), float(raw_axis[1]), float(raw_axis[2]))
+	axis.y = 0.0
+	axis = axis.normalized() if axis.length_squared() > 0.001 else Vector3.RIGHT
+	var spacing := maxf(0.0, float(site.get("formation_spacing_m", 7.0)))
+	var offset := (float(index) - float(count - 1) * 0.5) * spacing
+	return {
+		"id": "AirPatrol_%s_%d" % [str(site.get("id", "unknown")), index],
+		"position": centre + axis * offset,
+		"facing": axis,
+		"authority_id": AIR_PATROL_AUTHORITY_ID,
+	}
+
+
+static func site_needs_spawn(spawned: Dictionary, failures: Dictionary, id: String) -> bool:
+	return not spawned.has(id) and not failures.has(id)
+
+
+static func keep_trainer_corridor_clear(wild: CollisionObject3D,
+		trainer: CollisionObject3D) -> void:
+	if wild == null or trainer == null:
+		return
+	# ROAD pairs are sightline ecology on Cloudreach's narrow ribbons. Their
+	# large silhouettes still collide with terrain, attacks and every other
+	# gameplay body; only the trainer/wild pair is exempt so a peaceful animal
+	# repaired onto the ribbon cannot seal the one authored walking lane.
+	wild.add_collision_exception_with(trainer)
+	trainer.add_collision_exception_with(wild)
 
 
 func setup(world: Node, bodies: Dictionary = {}, data: Dictionary = {}) -> void:
@@ -295,7 +359,7 @@ func _challenge(id: String) -> void:
 func _spawn_available_sites() -> void:
 	for site: Dictionary in encounter_config.get("wild_sites", []):
 		var id := str(site["id"])
-		if _site_spawned.has(id) or _site_failures.has(id):
+		if not site_needs_spawn(_site_spawned, _site_failures, id):
 			continue
 		var table := find_id(chapter.get("encounter_tables", []), str(site["table_id"]))
 		var gate := str(table.get("requires_unlock", ""))
@@ -311,13 +375,21 @@ func _spawn_available_sites() -> void:
 			if selected.is_empty():
 				complete = false
 				continue
-			var angle := index * TAU / maxi(1, int(site.get("count", 1)))
-			var at := centre + Vector3(cos(angle), 0, sin(angle)) * float(site.get("radius_m", 4.0)) * 0.5
-			var wild := spawn_wild(str(selected["species"]), at, {"name": "%s_%d" % [id, index],
-				"site_anchor": centre,
-				"level": selected["level"], "aggressive": false, "wander_radius": float(site.get("radius_m", 4.0)),
-				"combat": encounter_config.get("behavior_profiles", {}).get("scout", {})})
+			var wild: Node3D
+			if str(site.get("placement_mode", "ground")) == "air_patrol":
+				wild = _spawn_air_patrol(str(selected["species"]), site, index, int(selected["level"]))
+			else:
+				var angle := index * TAU / maxi(1, int(site.get("count", 1)))
+				var at := centre + Vector3(cos(angle), 0, sin(angle)) * float(site.get("radius_m", 4.0)) * 0.5
+				wild = spawn_wild(str(selected["species"]), at, {"name": "%s_%d" % [id, index],
+					"site_anchor": centre,
+					"level": selected["level"], "aggressive": false, "wander_radius": float(site.get("radius_m", 4.0)),
+					"combat": encounter_config.get("behavior_profiles", {}).get("scout", {})})
 			if wild != null:
+				if not str(site.get("_why_road_visibility_0907", "")).is_empty() \
+						and wild is CollisionObject3D and _player is CollisionObject3D:
+					keep_trainer_corridor_clear(wild as CollisionObject3D,
+						_player as CollisionObject3D)
 				members.append(wild)
 				_wild_respawn[wild] = float(encounter_config.get("wild_respawn_seconds", 180.0))
 				if not gate.is_empty():
@@ -332,6 +404,36 @@ func _spawn_available_sites() -> void:
 			# valid or roll replacements every idle frame for a partial site.
 			_site_failures[id] = true
 			push_warning("Cloudreach wild site has unsupported placements: " + id)
+
+
+func _spawn_air_patrol(species: String, site: Dictionary, index: int, level: int) -> Node3D:
+	if not SPECIES.has(species) or str(SPECIES.definition(species).get("type", "")) != "air":
+		push_error("Cloudreach air patrol requires an existing Air species: " + species)
+		return null
+	var plan := air_patrol_member_plan(site, index)
+	if plan.is_empty():
+		return null
+	var wild: Node3D = CREATURE_SCENE.instantiate()
+	wild.set_script(AirPatrolWild)
+	wild.name = str(plan.id)
+	# Peer 1 is the listen host in a live session and the ordinary offline
+	# authority in solo. Every peer builds the same fixed presentation node, but
+	# no client can acquire simulation authority or manufacture a second ID.
+	wild.set_multiplayer_authority(int(plan.authority_id), true)
+	get_parent().add_child(wild)
+	wild.call("populate", species, _player)
+	_set_fixed_level(wild, species, level)
+	wild.set("aggressive", false)
+	var wild_cfg: Dictionary = MATH.config().get("wild", {}).duplicate()
+	wild_cfg["wander_radius"] = 0.0
+	wild.call("configure", wild_cfg)
+	wild.call("configure_air_patrol", plan.position, plan.facing)
+	wild.set("home", plan.position)
+	wild.set_meta("cloudreach_site_id", str(site.id))
+	wild.set_meta("placement_mode", "air_patrol")
+	_wild_homes[wild] = plan.position
+	_wild_creatures.append(wild)
+	return wild
 
 
 func _gate_active(gate: Dictionary) -> bool:

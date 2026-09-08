@@ -6,6 +6,10 @@ const MODEL := preload("res://scripts/characters/character_model.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const FLAGS := preload("res://autoload/progression_state.gd")
 const SURFACE := preload("res://scripts/combat/cloudreach_combat_surface.gd")
+const NATIVE_WILD_SITE_IDS: Array[String] = [
+	"lower_cliff_foragers", "causeway_watch", "ravine_wind",
+	"roost_perches", "upper_scouts", "summit_watch",
+]
 
 
 func test_seven_trainers_use_real_species_models_curve_and_rewards() -> void:
@@ -47,8 +51,21 @@ func test_seven_trainers_use_real_species_models_curve_and_rewards() -> void:
 func test_wild_tables_are_replaceable_deterministic_and_within_real_level_ranges() -> void:
 	var chapter := DIRECTOR.read_json(DIRECTOR.CHAPTER_PATH)
 	var data := DIRECTOR.read_json(DIRECTOR.CONFIG_PATH)
-	assert_eq(data["wild_sites"].size(), 6)
+	var native_ids: Array[String] = []
+	var authored_ids: Dictionary = {}
 	for site: Dictionary in data["wild_sites"]:
+		var id := str(site.get("id", ""))
+		assert_false(id.is_empty(), "every Cloudreach wild site has a deterministic ID")
+		assert_false(authored_ids.has(id), "Cloudreach wild site IDs remain unique: %s" % id)
+		authored_ids[id] = true
+		if NATIVE_WILD_SITE_IDS.has(id):
+			native_ids.append(id)
+		else:
+			assert_true(not str(site.get("_why_road_visibility_0907", "")).is_empty()
+					or not str(site.get("_why_air_patrol_visibility_0907", "")).is_empty(),
+				"%s is an explicit ROAD/air-patrol addition, not silent ecology inflation" % id)
+			assert_true(int(site.get("count", 0)) >= 2,
+				"%s contributes the required visible creature pair" % id)
 		var table := DIRECTOR.find_id(chapter["encounter_tables"], str(site["table_id"]))
 		assert_false(table.is_empty())
 		assert_true(table["catchable"])
@@ -58,3 +75,20 @@ func test_wild_tables_are_replaceable_deterministic_and_within_real_level_ranges
 			assert_eq(rolled, DIRECTOR.roll_wild(table, 404, index))
 			assert_true(SPECIES.has(str(rolled["species"])))
 			assert_between(float(rolled["level"]), float(table["level_range"][0]), float(table["level_range"][1]))
+	native_ids.sort()
+	var expected_native := NATIVE_WILD_SITE_IDS.duplicate()
+	expected_native.sort()
+	assert_eq(native_ids, expected_native,
+		"the original six-site Cloudreach ecology contract remains present by identity")
+
+
+func test_road_sightline_creatures_cannot_body_block_the_trainer_corridor() -> void:
+	var trainer := CharacterBody3D.new()
+	var wild := CharacterBody3D.new()
+	DIRECTOR.keep_trainer_corridor_clear(wild, trainer)
+	assert_true(wild.get_collision_exceptions().has(trainer),
+		"ROAD creature ignores only the trainer body")
+	assert_true(trainer.get_collision_exceptions().has(wild),
+		"trainer has the reciprocal ROAD creature exception")
+	wild.free()
+	trainer.free()

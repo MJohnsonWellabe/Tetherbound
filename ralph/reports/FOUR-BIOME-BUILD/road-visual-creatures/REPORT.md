@@ -30,9 +30,15 @@ was changed by ROAD.
 ## Authored population delta
 
 The route authoring tool is deterministic and idempotent. It preserves all
-existing ecology and adds small pairs on alternating 5.5 m route shoulders;
-it does not increase global draw distance, activation distance, wander radius
-or active-peer caps.
+existing ecology and normally adds small pairs on alternating 5.5 m route
+shoulders; it does not increase global draw distance, activation distance,
+wander radius or active-peer caps. The Band 1 Creek Hollow repair is the one
+documented exception: order 1911 remains outside the compact ecology rectangle
+at `[-297.167, 0, 610.055]`, and the existing order-1912 pair was reassigned to
+`[-394.549, 0, 640.171]` rather than adding or gating population. That centre is
+79.5 m from the route because exhaustive single- and two-pair searches found no
+5.5 m shoulder placement that was both outside Creek Hollow and forward-visible
+from its formerly failing 730 m sample.
 
 - Meadows: 35 pair sites (3, 13, 8, 10, 1 across bands 1–5).
 - Cloudreach: 74 pair sites (9 arrival, 6 lower, 17 causeway, 15 floor loop,
@@ -48,6 +54,41 @@ activates within 130 m. Water still activates within 100 m and retains its
 population is several readable pairs rather than a realm-wide simultaneous
 spawn.
 
+Cloudreach ROAD bodies also receive one reciprocal collision exception with the
+trainer. This is deliberately trainer-only: the enlarged creatures retain their
+normal terrain, attack and other-body collisions, but cannot seal a narrow
+authored walking ribbon. The production arrival capture and the repaired
+Windscar capture both pass with that exception active.
+
+## Production capture result
+
+The final Compatibility-renderer run loaded each shipped biome scene in series,
+used the real trainer, exploration camera, HUD and runtime encounter directors,
+and wrote 12 valid 1280x800 PNGs. Every frame contains at least two living
+runtime creature bodies in the forward 180 degrees and at least two of those
+bodies inside the real camera frustum. The per-frame `forward/framed` counts are:
+
+- Meadows: `b01_s01` 8/8, `b01_s02` 5/3, `b01_s03` 10/10.
+- Cloudreach: `b02_s01` 4/4, `b02_s02` 6/6, `b02_s03` 2/2.
+- Stormwood: `b03_s01` 8/4, `b03_s02` 7/5, `b03_s03` 4/4.
+- Water: `b04_s01` 3/3, `b04_s02` 3/2, `b04_s03` 3/2.
+
+The capture runner pins Band 1's first frame to the exact 730 m route sample and
+identifies order 1912 as its authored anchor. It disables only trainer physics
+during each deterministic still so the production controller cannot integrate a
+teleport as extreme velocity and invoke recovery; it then hard-fails if the live
+trainer drifts more than 0.5 m from the authored stand before frame grading. This
+guard caught and explained a superseded River Lock attempt before the clean
+12-frame run.
+
+Honest limitation: Band 1 frame `b01_s01` passes with eight other production
+wildlife bodies forward and framed. The reassigned order-1912 Meadowhart pair is
+about 138 m from that stand and is not among the runner's conservative <=130 m
+credited body list. Therefore the frame proves the player-visible multiple-body
+contract at the repaired sample, but it does **not** prove that the distant
+order-1912 pair itself is clearly legible. No blind visual judge has accepted
+these frames, and this report does not claim Palworld-bar acceptance.
+
 ## Evidence
 
 - `static-zero-target.json`: the mirrored static CP-2 result, zero failures.
@@ -62,25 +103,31 @@ spawn.
   surface metadata.
 - `runtime-fitted-bounds.log`: deferred runtime probe attempt. This old-base
   worktree lacks fresh `.godot/imported/*.scn` files and also reports the
-  pre-existing `UITokens` parse errors listed below, so it correctly does not
-  claim runtime render proof. Root must rerun the included probe after fresh
-  integrated import.
+  pre-existing `UITokens` parse errors listed below, so it remains historical
+  diagnostic evidence rather than the final render proof.
+- `captures-final/`: final production evidence, containing 12 PNGs and
+  `capture-manifest.json`; the manifest records 12 captures, zero failures,
+  minimum forward count 2 and minimum framed count 2.
+- `capture-final-strict-road-3.log`: final serial production run, exit 0, with
+  no `SCRIPT ERROR` or `ERROR` lines.
 
-All focused Godot commands on this base also report a pre-existing autoload
-parse failure in `scripts/ui/game_menu.gd` at lines 178–180, 242, 283, 285,
-299, 302 and 304: `Identifier "UITokens" not declared in the current scope`.
-The Water settle smoke additionally reaches the same failure through
-`scripts/combat/throw_preview.gd` lines 166–167. Root directed this lane not to
-merge integration or repair that unrelated owner.
+The following capture evidence is superseded and should not be used or committed
+as final evidence: `captures/`, `captures-cloudreach-repair/`,
+`captures-final-meadows/`, `capture-final-strict-road.log`,
+`capture-final-strict-road-2.log`, and
+`capture-final-meadows-stabilized.log`. They record the original failed sites,
+the partial Cloudreach repair, the empty required-site-ledger tool fault, the
+River Lock stand-drift diagnosis, or the focused Meadows precursor.
 
-## Required integrated follow-up (not yet acceptance)
+The historical old-base probes reported an autoload parse failure for
+`UITokens` in `scripts/ui/game_menu.gd` and `scripts/combat/throw_preview.gd`.
+That note explains those superseded logs only; it is not the result of the final
+integrated production capture, whose log has no `SCRIPT ERROR` or `ERROR` lines.
 
-1. Fresh import, with BUILD-SIZE owning the new texture `.import` sidecars and
-   applying VRAM Compressed policy. ROAD commits no sidecars.
-2. Rerun `probe_creature_fitted_bounds.gd`,
-   `smoke_water_surface_wild_settle.gd`, Cloudreach wild retention, Stormwood
-   wild presence, Water wild presence, and real-game route capture.
-3. Capture fresh in-world creature/route frames. ROAD does not judge its own
-   frames; send baseline/new frames and Palworld/key-art references to an
-   independent code-blind judge. If rejected, accept its named defects for one
-   bounded repair round.
+## Remaining acceptance work
+
+ROAD does not judge its own frames. The final images still need an independent,
+code-blind visual verdict against the supplied comparison references. In
+particular, that verdict must not infer order 1912's legibility from the green
+frame-level count; the distant pair needs separate proof or a semantic placement
+repair if its own readability is required.

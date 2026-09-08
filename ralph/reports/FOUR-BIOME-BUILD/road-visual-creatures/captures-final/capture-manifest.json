@@ -1,0 +1,1176 @@
+{
+	"captures": [
+		{
+			"anchor": "order_1912",
+			"bodies": [
+				{
+					"distance_m": 53.8,
+					"framed": true,
+					"height_m": 2.15,
+					"position": [
+						-378.399,
+						-16.989,
+						528.05
+					],
+					"species": "paddlenewt",
+					"tier": "small"
+				},
+				{
+					"distance_m": 54.6,
+					"framed": true,
+					"height_m": 2.15,
+					"position": [
+						-377.67,
+						-17.257,
+						528.245
+					],
+					"species": "paddlenewt",
+					"tier": "small"
+				},
+				{
+					"distance_m": 70.7,
+					"framed": true,
+					"height_m": 2.1,
+					"position": [
+						-357.439,
+						-17.279,
+						515.25
+					],
+					"species": "brooktail",
+					"tier": "small"
+				},
+				{
+					"distance_m": 81.1,
+					"framed": true,
+					"height_m": 2.5,
+					"position": [
+						-369.045,
+						-17.357,
+						562.303
+					],
+					"species": "mosshell",
+					"tier": "small"
+				},
+				{
+					"distance_m": 96.8,
+					"framed": true,
+					"height_m": 1.9,
+					"position": [
+						-387.467,
+						-13.778,
+						594.28
+					],
+					"species": "pipwing",
+					"tier": "small"
+				},
+				{
+					"distance_m": 109.6,
+					"framed": true,
+					"height_m": 3.38,
+					"position": [
+						-318.0,
+						-13.516,
+						505.0
+					],
+					"species": "mosshell",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 118.9,
+					"framed": true,
+					"height_m": 2.1,
+					"position": [
+						-416.393,
+						-8.606,
+						624.613
+					],
+					"species": "brooktail",
+					"tier": "small"
+				},
+				{
+					"distance_m": 119.4,
+					"framed": true,
+					"height_m": 2.0,
+					"position": [
+						-354.234,
+						-15.018,
+						600.479
+					],
+					"species": "mudsnout",
+					"tier": "small"
+				}
+			],
+			"file": "b01_s01.png",
+			"forward_runtime_bodies": 8,
+			"framed_runtime_bodies": 8,
+			"heading": [
+				0.681,
+				0.0,
+				0.732
+			],
+			"image": {
+				"bytes": 1630281,
+				"height": 800,
+				"ok": true,
+				"sampled_spread": 0.7492,
+				"width": 1280
+			},
+			"realm": "meadows",
+			"required_site_state": {
+				"failed": [],
+				"missing": [],
+				"spawned": []
+			},
+			"route": "band1_lower_meadows",
+			"stand": [
+				-427.61,
+				-15.217,
+				506.244
+			]
+		},
+		{
+			"anchor": "order_3914",
+			"bodies": [
+				{
+					"distance_m": 22.8,
+					"framed": false,
+					"height_m": 3.5,
+					"position": [
+						61.031,
+						-1.782,
+						3990.5
+					],
+					"species": "galecrest",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 25.8,
+					"framed": true,
+					"height_m": 3.45,
+					"position": [
+						52.983,
+						-0.02,
+						4014.377
+					],
+					"species": "meadowhart",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 27.0,
+					"framed": true,
+					"height_m": 3.45,
+					"position": [
+						51.162,
+						-0.424,
+						4011.898
+					],
+					"species": "meadowhart",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 28.1,
+					"framed": true,
+					"height_m": 3.5,
+					"position": [
+						52.984,
+						-1.702,
+						3992.621
+					],
+					"species": "galecrest",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 40.3,
+					"framed": false,
+					"height_m": 3.5,
+					"position": [
+						49.245,
+						-1.11,
+						3977.579
+					],
+					"species": "galecrest",
+					"tier": "mid"
+				}
+			],
+			"file": "b01_s02.png",
+			"forward_runtime_bodies": 5,
+			"framed_runtime_bodies": 3,
+			"heading": [
+				-0.894,
+				0.0,
+				0.447
+			],
+			"image": {
+				"bytes": 1873897,
+				"height": 800,
+				"ok": true,
+				"sampled_spread": 0.7311,
+				"width": 1280
+			},
+			"realm": "meadows",
+			"required_site_state": {
+				"failed": [],
+				"missing": [],
+				"spawned": []
+			},
+			"route": "band3_the_river_lock",
+			"stand": [
+				77.514,
+				1.149,
+				4006.243
+			]
+		},
+		{
+			"anchor": "order_4916",
+			"bodies": [
+				{
+					"distance_m": 1.6,
+					"framed": true,
+					"height_m": 3.5,
+					"position": [
+						-246.205,
+						3.411,
+						6540.417
+					],
+					"species": "galecrest",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 2.7,
+					"framed": true,
+					"height_m": 3.5,
+					"position": [
+						-243.564,
+						3.595,
+						6540.866
+					],
+					"species": "galecrest",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 3.6,
+					"framed": true,
+					"height_m": 3.5,
+					"position": [
+						-245.953,
+						3.433,
+						6542.569
+					],
+					"species": "galecrest",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 4.8,
+					"framed": true,
+					"height_m": 3.5,
+					"position": [
+						-244.041,
+						3.527,
+						6543.592
+					],
+					"species": "galecrest",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 18.9,
+					"framed": true,
+					"height_m": 1.9,
+					"position": [
+						-243.897,
+						4.364,
+						6557.774
+					],
+					"species": "pipwing",
+					"tier": "small"
+				},
+				{
+					"distance_m": 22.6,
+					"framed": true,
+					"height_m": 3.5,
+					"position": [
+						-240.865,
+						5.066,
+						6561.104
+					],
+					"species": "galecrest",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 25.1,
+					"framed": true,
+					"height_m": 3.5,
+					"position": [
+						-243.562,
+						4.729,
+						6563.996
+					],
+					"species": "galecrest",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 34.6,
+					"framed": true,
+					"height_m": 1.9,
+					"position": [
+						-256.062,
+						2.281,
+						6571.933
+					],
+					"species": "pipwing",
+					"tier": "small"
+				},
+				{
+					"distance_m": 95.6,
+					"framed": true,
+					"height_m": 3.5,
+					"position": [
+						-205.023,
+						3.06,
+						6625.61
+					],
+					"species": "galecrest",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 101.3,
+					"framed": true,
+					"height_m": 3.5,
+					"position": [
+						-195.746,
+						1.204,
+						6627.271
+					],
+					"species": "galecrest",
+					"tier": "mid"
+				}
+			],
+			"file": "b01_s03.png",
+			"forward_runtime_bodies": 10,
+			"framed_runtime_bodies": 10,
+			"heading": [
+				0.401,
+				0.0,
+				0.916
+			],
+			"image": {
+				"bytes": 1791326,
+				"height": 800,
+				"ok": true,
+				"sampled_spread": 0.9053,
+				"width": 1280
+			},
+			"realm": "meadows",
+			"required_site_state": {
+				"failed": [],
+				"missing": [],
+				"spawned": []
+			},
+			"route": "band4_upper_meadows_ironwood",
+			"stand": [
+				-245.446,
+				3.746,
+				6538.98
+			]
+		},
+		{
+			"anchor": "road_visibility_arrival_gate_road_05",
+			"bodies": [
+				{
+					"distance_m": 24.9,
+					"framed": true,
+					"height_m": 3.25,
+					"position": [
+						-265.699,
+						143.087,
+						177.356
+					],
+					"species": "pebbik",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 27.2,
+					"framed": true,
+					"height_m": 3.25,
+					"position": [
+						-268.699,
+						143.231,
+						177.356
+					],
+					"species": "skyrill",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 125.4,
+					"framed": true,
+					"height_m": 3.25,
+					"position": [
+						-292.93,
+						154.081,
+						277.864
+					],
+					"species": "skyrill",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 128.2,
+					"framed": true,
+					"height_m": 3.5,
+					"position": [
+						-292.93,
+						154.457,
+						280.864
+					],
+					"species": "galecrest",
+					"tier": "mid"
+				}
+			],
+			"file": "b02_s01.png",
+			"forward_runtime_bodies": 4,
+			"framed_runtime_bodies": 4,
+			"heading": [
+				-0.809,
+				0.0,
+				0.588
+			],
+			"image": {
+				"bytes": 1677899,
+				"height": 800,
+				"ok": true,
+				"sampled_spread": 0.8186,
+				"width": 1280
+			},
+			"realm": "cloudreach",
+			"required_site_state": {
+				"failed": [],
+				"missing": [],
+				"spawned": [
+					"road_visibility_arrival_gate_road_05"
+				]
+			},
+			"route": "arrival_gate_road",
+			"stand": [
+				-246.73,
+				141.855,
+				161.258
+			]
+		},
+		{
+			"anchor": "road_visibility_windscar_floor_loop_08",
+			"bodies": [
+				{
+					"distance_m": 13.7,
+					"framed": true,
+					"height_m": 3.85,
+					"position": [
+						-302.5,
+						460.03,
+						3096.0
+					],
+					"species": "cloudfang",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 15.9,
+					"framed": true,
+					"height_m": 4.0,
+					"position": [
+						-304.0,
+						460.03,
+						3099.0
+					],
+					"species": "aeriex",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 22.4,
+					"framed": true,
+					"height_m": 4.0,
+					"position": [
+						-299.0,
+						460.03,
+						3104.0
+					],
+					"species": "aeriex",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 24.8,
+					"framed": true,
+					"height_m": 4.0,
+					"position": [
+						-294.5,
+						460.034,
+						3104.0
+					],
+					"species": "aeriex",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 112.2,
+					"framed": true,
+					"height_m": 4.0,
+					"position": [
+						-219.713,
+						470.798,
+						3151.58
+					],
+					"species": "aeriex",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 116.6,
+					"framed": true,
+					"height_m": 3.85,
+					"position": [
+						-216.531,
+						471.34,
+						3154.762
+					],
+					"species": "cloudfang",
+					"tier": "mid"
+				}
+			],
+			"file": "b02_s02.png",
+			"forward_runtime_bodies": 6,
+			"framed_runtime_bodies": 6,
+			"heading": [
+				0.67,
+				0.0,
+				0.743
+			],
+			"image": {
+				"bytes": 1437134,
+				"height": 800,
+				"ok": true,
+				"sampled_spread": 0.8592,
+				"width": 1280
+			},
+			"realm": "cloudreach",
+			"required_site_state": {
+				"failed": [],
+				"missing": [],
+				"spawned": [
+					"road_visibility_windscar_floor_loop_08",
+					"road_visibility_windscar_floor_loop_07"
+				]
+			},
+			"route": "windscar_floor_loop",
+			"stand": [
+				-309.246,
+				459.464,
+				3084.03
+			]
+		},
+		{
+			"anchor": "road_visibility_upper_summit_road_09",
+			"bodies": [
+				{
+					"distance_m": 24.0,
+					"framed": true,
+					"height_m": 6.7,
+					"position": [
+						418.949,
+						1026.006,
+						4976.295
+					],
+					"species": "solmane",
+					"tier": "large"
+				},
+				{
+					"distance_m": 27.7,
+					"framed": true,
+					"height_m": 3.25,
+					"position": [
+						417.242,
+						1027.182,
+						4979.831
+					],
+					"species": "breezetail",
+					"tier": "mid"
+				}
+			],
+			"file": "b02_s03.png",
+			"forward_runtime_bodies": 2,
+			"framed_runtime_bodies": 2,
+			"heading": [
+				-0.691,
+				0.0,
+				0.723
+			],
+			"image": {
+				"bytes": 1883063,
+				"height": 800,
+				"ok": true,
+				"sampled_spread": 0.856,
+				"width": 1280
+			},
+			"realm": "cloudreach",
+			"required_site_state": {
+				"failed": [],
+				"missing": [],
+				"spawned": [
+					"road_visibility_upper_summit_road_09"
+				]
+			},
+			"route": "upper_summit_road",
+			"stand": [
+				435.182,
+				1018.131,
+				4958.673
+			]
+		},
+		{
+			"anchor": "road_visibility_ash_road_10",
+			"bodies": [
+				{
+					"distance_m": 22.7,
+					"framed": true,
+					"height_m": 2.95,
+					"position": [
+						-613.966,
+						26.31,
+						1578.01
+					],
+					"species": "mosshock",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 26.7,
+					"framed": true,
+					"height_m": 2.95,
+					"position": [
+						-616.395,
+						26.124,
+						1581.189
+					],
+					"species": "mosshock",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 70.5,
+					"framed": false,
+					"height_m": 2.95,
+					"position": [
+						-652.841,
+						25.757,
+						1514.261
+					],
+					"species": "mosshock",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 71.2,
+					"framed": false,
+					"height_m": 2.95,
+					"position": [
+						-658.384,
+						26.0,
+						1520.355
+					],
+					"species": "mosshock",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 84.6,
+					"framed": true,
+					"height_m": 2.95,
+					"position": [
+						-668.44,
+						28.646,
+						1609.572
+					],
+					"species": "mosshock",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 102.8,
+					"framed": false,
+					"height_m": 2.95,
+					"position": [
+						-553.341,
+						28.095,
+						1652.234
+					],
+					"species": "mosshock",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 106.5,
+					"framed": true,
+					"height_m": 2.95,
+					"position": [
+						-694.084,
+						27.175,
+						1609.521
+					],
+					"species": "mosshock",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 122.6,
+					"framed": false,
+					"height_m": 2.95,
+					"position": [
+						-571.086,
+						29.319,
+						1679.745
+					],
+					"species": "mosshock",
+					"tier": "mid"
+				}
+			],
+			"file": "b03_s01.png",
+			"forward_runtime_bodies": 8,
+			"framed_runtime_bodies": 4,
+			"heading": [
+				-0.807,
+				0.0,
+				0.59
+			],
+			"image": {
+				"bytes": 1513048,
+				"height": 800,
+				"ok": true,
+				"sampled_spread": 0.7594,
+				"width": 1280
+			},
+			"realm": "stormwood",
+			"required_site_state": {
+				"failed": [],
+				"missing": [],
+				"spawned": []
+			},
+			"route": "ash_road",
+			"stand": [
+				-599.561,
+				26.52,
+				1560.448
+			]
+		},
+		{
+			"anchor": "road_visibility_conductor_road_17",
+			"bodies": [
+				{
+					"distance_m": 21.8,
+					"framed": true,
+					"height_m": 3.25,
+					"position": [
+						-759.824,
+						83.226,
+						2951.779
+					],
+					"species": "voltwig",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 25.4,
+					"framed": true,
+					"height_m": 3.25,
+					"position": [
+						-763.27,
+						83.336,
+						2948.781
+					],
+					"species": "voltwig",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 69.1,
+					"framed": true,
+					"height_m": 3.4,
+					"position": [
+						-799.744,
+						85.402,
+						2982.792
+					],
+					"species": "tanglevolt",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 80.2,
+					"framed": false,
+					"height_m": 3.4,
+					"position": [
+						-770.79,
+						83.517,
+						3024.842
+					],
+					"species": "tanglevolt",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 89.8,
+					"framed": true,
+					"height_m": 3.4,
+					"position": [
+						-827.742,
+						89.321,
+						2947.068
+					],
+					"species": "tanglevolt",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 101.1,
+					"framed": false,
+					"height_m": 3.4,
+					"position": [
+						-795.669,
+						87.814,
+						2868.494
+					],
+					"species": "tanglevolt",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 109.8,
+					"framed": true,
+					"height_m": 3.4,
+					"position": [
+						-840.596,
+						91.378,
+						2912.448
+					],
+					"species": "tanglevolt",
+					"tier": "mid"
+				}
+			],
+			"file": "b03_s02.png",
+			"forward_runtime_bodies": 7,
+			"framed_runtime_bodies": 5,
+			"heading": [
+				-0.981,
+				0.0,
+				0.196
+			],
+			"image": {
+				"bytes": 1661484,
+				"height": 800,
+				"ok": true,
+				"sampled_spread": 0.7381,
+				"width": 1280
+			},
+			"realm": "stormwood",
+			"required_site_state": {
+				"failed": [],
+				"missing": [],
+				"spawned": []
+			},
+			"route": "conductor_road",
+			"stand": [
+				-738.057,
+				81.456,
+				2951.612
+			]
+		},
+		{
+			"anchor": "road_visibility_deepwood_road_11",
+			"bodies": [
+				{
+					"distance_m": 21.4,
+					"framed": true,
+					"height_m": 3.25,
+					"position": [
+						-209.626,
+						55.819,
+						4664.955
+					],
+					"species": "staticub",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 24.4,
+					"framed": true,
+					"height_m": 3.25,
+					"position": [
+						-208.789,
+						55.736,
+						4668.561
+					],
+					"species": "staticub",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 93.5,
+					"framed": true,
+					"height_m": 3.4,
+					"position": [
+						-221.401,
+						51.473,
+						4736.776
+					],
+					"species": "stormraven",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 95.9,
+					"framed": true,
+					"height_m": 3.4,
+					"position": [
+						-219.768,
+						51.174,
+						4739.557
+					],
+					"species": "stormraven",
+					"tier": "mid"
+				}
+			],
+			"file": "b03_s03.png",
+			"forward_runtime_bodies": 4,
+			"framed_runtime_bodies": 4,
+			"heading": [
+				-0.262,
+				0.0,
+				0.965
+			],
+			"image": {
+				"bytes": 1662999,
+				"height": 800,
+				"ok": true,
+				"sampled_spread": 0.7422,
+				"width": 1280
+			},
+			"realm": "stormwood",
+			"required_site_state": {
+				"failed": [],
+				"missing": [],
+				"spawned": []
+			},
+			"route": "deepwood_road",
+			"stand": [
+				-200.35,
+				55.356,
+				4645.667
+			]
+		},
+		{
+			"anchor": "road_visibility_tidal_cradle_exploration_spine_05",
+			"bodies": [
+				{
+					"distance_m": 24.0,
+					"framed": true,
+					"height_m": 2.5,
+					"position": [
+						726.97,
+						47.888,
+						1570.26
+					],
+					"species": "water_mosshell",
+					"tier": "small"
+				},
+				{
+					"distance_m": 25.8,
+					"framed": true,
+					"height_m": 2.5,
+					"position": [
+						729.97,
+						47.997,
+						1570.26
+					],
+					"species": "water_mosshell",
+					"tier": "small"
+				},
+				{
+					"distance_m": 92.8,
+					"framed": true,
+					"height_m": 2.5,
+					"position": [
+						766.452,
+						52.252,
+						1626.647
+					],
+					"species": "water_mosshell",
+					"tier": "small"
+				}
+			],
+			"file": "b04_s01.png",
+			"forward_runtime_bodies": 3,
+			"framed_runtime_bodies": 3,
+			"heading": [
+				0.574,
+				0.0,
+				0.819
+			],
+			"image": {
+				"bytes": 1730564,
+				"height": 800,
+				"ok": true,
+				"sampled_spread": 0.703,
+				"width": 1280
+			},
+			"realm": "water",
+			"required_site_state": {
+				"failed": [],
+				"missing": [],
+				"spawned": [
+					"road_visibility_tidal_cradle_exploration_spine_05",
+					"road_visibility_tidal_cradle_exploration_spine_04",
+					"water_tidal_cradle_wild_005",
+					"water_tidal_cradle_wild_013"
+				]
+			},
+			"route": "tidal_cradle_exploration_spine",
+			"stand": [
+				714.023,
+				46.614,
+				1550.027
+			]
+		},
+		{
+			"anchor": "road_visibility_salt_crown_exploration_spine_04",
+			"bodies": [
+				{
+					"distance_m": 24.0,
+					"framed": true,
+					"height_m": 3.7,
+					"position": [
+						55.088,
+						54.243,
+						2252.3
+					],
+					"species": "water_sirenseal",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 28.1,
+					"framed": true,
+					"height_m": 4.45,
+					"position": [
+						59.588,
+						54.702,
+						2252.3
+					],
+					"species": "water_riptusk",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 78.9,
+					"framed": false,
+					"height_m": 3.7,
+					"position": [
+						49.272,
+						75.589,
+						2318.713
+					],
+					"species": "water_sirenseal",
+					"tier": "mid"
+				}
+			],
+			"file": "b04_s02.png",
+			"forward_runtime_bodies": 3,
+			"framed_runtime_bodies": 2,
+			"heading": [
+				0.89,
+				0.0,
+				0.456
+			],
+			"image": {
+				"bytes": 1816641,
+				"height": 800,
+				"ok": true,
+				"sampled_spread": 0.7094,
+				"width": 1280
+			},
+			"realm": "water",
+			"required_site_state": {
+				"failed": [],
+				"missing": [],
+				"spawned": [
+					"road_visibility_salt_crown_exploration_spine_04"
+				]
+			},
+			"route": "salt_crown_exploration_spine",
+			"stand": [
+				33.729,
+				51.748,
+				2241.355
+			]
+		},
+		{
+			"anchor": "road_visibility_sluice_isle_exploration_spine_04",
+			"bodies": [
+				{
+					"distance_m": 24.0,
+					"framed": true,
+					"height_m": 3.55,
+					"position": [
+						954.993,
+						42.233,
+						3105.618
+					],
+					"species": "water_mirejaw",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 26.9,
+					"framed": true,
+					"height_m": 3.7,
+					"position": [
+						954.996,
+						41.892,
+						3108.618
+					],
+					"species": "water_cragclaw",
+					"tier": "mid"
+				},
+				{
+					"distance_m": 52.9,
+					"framed": false,
+					"height_m": 3.55,
+					"position": [
+						896.44,
+						82.92,
+						3084.891
+					],
+					"species": "water_mirejaw",
+					"tier": "mid"
+				}
+			],
+			"file": "b04_s03.png",
+			"forward_runtime_bodies": 3,
+			"framed_runtime_bodies": 2,
+			"heading": [
+				-0.009,
+				0.0,
+				1.0
+			],
+			"image": {
+				"bytes": 1499899,
+				"height": 800,
+				"ok": true,
+				"sampled_spread": 0.7734,
+				"width": 1280
+			},
+			"realm": "water",
+			"required_site_state": {
+				"failed": [],
+				"missing": [],
+				"spawned": [
+					"road_visibility_sluice_isle_exploration_spine_04"
+				]
+			},
+			"route": "sluice_isle_exploration_spine",
+			"stand": [
+				949.244,
+				47.787,
+				3082.295
+			]
+		}
+	],
+	"contract": "production scenes, real exploration camera/HUD, runtime wild bodies",
+	"display_server": "Windows",
+	"failures": [],
+	"forward_cone_degrees": 180,
+	"minimum_forward_runtime_bodies": 2,
+	"renderer": "gl_compatibility",
+	"tier_coverage": {
+		"large": 1,
+		"mid": 50,
+		"small": 12
+	},
+	"viewport": [
+		1280,
+		800
+	],
+	"world_seed": 0
+}

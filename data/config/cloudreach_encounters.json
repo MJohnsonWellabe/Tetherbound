@@ -808,27 +808,61 @@
       "id": "road_visibility_windscar_floor_loop_07",
       "table_id": "cloudreach_windscar_wild",
       "position": [
-        -371.968,
-        450.697,
-        2986.643
+        -304.0,
+        460.03,
+        3096.0
       ],
       "count": 2,
       "radius_m": 3.0,
       "purpose": "roadside creature sightline pair",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
+      "_why_road_visibility_0907": "ROAD CP-2 pair on the Windscar turn's production landing crown. Both the old 5.49m shoulder and a one-metre polyline projection failed the full runtime creature footprints; this centre is four metres inside each axis of the authored (-300,460,3100) broad pad and preserves the same table/count without inflating radius, draw distance or budget."
     },
     {
       "id": "road_visibility_windscar_floor_loop_08",
       "table_id": "cloudreach_windscar_wild",
       "position": [
-        -307.485,
-        458.195,
-        3076.12
+        -296.0,
+        460.03,
+        3104.0
       ],
       "count": 2,
       "radius_m": 3.0,
       "purpose": "roadside creature sightline pair",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
+      "_why_road_visibility_0907": "ROAD CP-2 pair on the opposite side of the Windscar turn's production landing crown. Both the old 5.49m shoulder and a one-metre polyline projection failed the full runtime creature footprints; this centre is four metres inside each axis of the authored (-300,460,3100) broad pad and keeps four bodies separated on real collision without changing population budget."
+    },
+    {
+      "id": "windscar_chain_air_patrol_01",
+      "table_id": "cloudreach_windscar_wild",
+      "position": [
+        -368.085,
+        458.834,
+        2984.395
+      ],
+      "count": 2,
+      "radius_m": 0.0,
+      "placement_mode": "air_patrol",
+      "ground_reference_y": 450.834,
+      "corridor_axis": [0.501, 0.0, 0.865],
+      "formation_spacing_m": 7.0,
+      "purpose": "fixed host-owned wildlife patrol over the narrow chain bridge",
+      "_why_air_patrol_visibility_0907": "Existing Air creatures hover eight metres over the bridge approach where their presentation-scale capsules cannot safely stand two abreast. This replaces no ground encounter, uses deterministic IDs/formation, and closes the measured forward-visibility gap without widening the bridge."
+    },
+    {
+      "id": "windscar_chain_air_patrol_02",
+      "table_id": "cloudreach_windscar_wild",
+      "position": [
+        -311.368,
+        466.332,
+        3078.368
+      ],
+      "count": 2,
+      "radius_m": 0.0,
+      "placement_mode": "air_patrol",
+      "ground_reference_y": 458.332,
+      "corridor_axis": [0.501, 0.0, 0.865],
+      "formation_spacing_m": 7.0,
+      "purpose": "fixed host-owned wildlife patrol over the narrow chain bridge",
+      "_why_air_patrol_visibility_0907": "Second deterministic Air pair carries the readable wildlife sightline to the broad Windscar landing; altitude and corridor are authored explicitly, with no generated asset, scale reduction or ground-support exception."
     },
     {
       "id": "road_visibility_windscar_floor_loop_09",
