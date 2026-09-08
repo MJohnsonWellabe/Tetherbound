@@ -15,7 +15,14 @@ remain in `docs/SECOND_PASS_BACKLOG.md`; they are not claimed passed.
 PR #79 landed at `7ab4a12647a377a400c43335b64aff8b03ca6d43`. Current work is on
 `codex/four-biome-wave0`, PR #80, which includes main through `f6b79a6b3` via
 merge `01f85b2b356de72689eb90e42242e42ae64d5dfb`. The latest submitted batch is
-`226aaf070168b71e36bc6ee1eaf150c4148613af`; CI run `34205399274` is active.
+`226aaf070168b71e36bc6ee1eaf150c4148613af`; CI run `34205399274` completed
+with 25 passing jobs, three skips and one failure. Only multiplayer shard 2
+failed: Livewire's remote polling missed its narrow pre-deadline observation
+window; gameplay hit/refusal and action-sequence checks passed. The exact
+remaining time at the failed observation was not logged. Local repair
+`12c7d76e0` samples that unchanged window on host physics frames, without
+changing deadlines or combat. A Windows two-peer run passes with samples at
+316 ms and 331 ms; the next CI verdict is required.
 The preceding batch `c5012fff0d4286db42b76de34386ab37efcd3d1c`, run `34201147829`, completed
 with 25 passing jobs, three skips and one failure: multiplayer shard 4's hosted
 Tamsin smoke did not advance round 0 after its finishing input. The subsequent
@@ -24,7 +31,10 @@ logs; strike submission/host acceptance/geometry are not yet distinguished.
 An instrumented Windows two-peer run passes both Tamsin rounds, rewards and
 replay refusal. The new batch also requires actual host quick-hit geometry
 before finishing input. Neither establishes the original Linux cause; the new
-CI verdict is still required. No further push will interrupt that run.
+CI run `34205399274` now passes Tamsin on attempt 1/1. Its diagnostics show
+position proximity can pass while the host hit cone is false; waiting for the
+actual cone precedes successful real input and round advancement. This confirms
+the precondition gap, not the unlogged impact geometry of the earlier failure.
 The preceding batch `de4fc499fb0aa441561351169dd5cd895ab069b3`, run `34197701347`, completed
 successfully at 2026-09-08 07:32 UTC: 26 passing jobs and three skips.
 The preceding run `34195296547` completed with 24 passing jobs, two failures

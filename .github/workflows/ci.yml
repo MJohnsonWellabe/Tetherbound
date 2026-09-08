@@ -1288,6 +1288,13 @@ jobs:
           timeout 30s godot --headless --path . --log-file /tmp/stormwood-lightning-cleanup.log --script tests/smoke_stormwood_lightning_cleanup.gd
           test -s /tmp/stormwood-lightning-cleanup.log
           if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-lightning-cleanup.log; then exit 1; fi
+      - name: Verify Stormwood authoritative opponent teardown
+        if: ${{ !cancelled() }}
+        run: |
+          set -euo pipefail
+          timeout 30s godot --headless --path . --log-file /tmp/stormwood-authoritative-teardown.log --script tests/smoke_stormwood_authoritative_teardown.gd
+          test -s /tmp/stormwood-authoritative-teardown.log
+          if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-authoritative-teardown.log; then exit 1; fi
       - name: Verify Stormwood heartstone interaction
         if: ${{ !cancelled() }}
         run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_crown_heartstone.gd
