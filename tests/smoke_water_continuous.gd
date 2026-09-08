@@ -24,10 +24,11 @@ const LATE_ROUTES := [
 	"salt_crown_to_sluice_isle_sheltered",
 	"sluice_isle_to_veilfall_sheltered",
 ]
-# The measured physical prefix reaches Sluice completion at about 690 seconds;
-# the remaining 1.27 km Veilfall exterior path plus two named fights cannot fit
-# a 15-minute whole-script watchdog even when every interaction succeeds.
-const WATCHDOG_MS := 30 * 60 * 1000
+# The measured physical prefix reaches Sluice completion at about 754 seconds
+# and Venn at about 1329. The single-creature diagnostic must then retrace the
+# 1.27 km authored spine to its only exterior recovery service and return; that
+# ordinary player path cannot fit a 30-minute whole-script watchdog.
+const WATCHDOG_MS := 50 * 60 * 1000
 
 var game: Node
 var world: Node3D
@@ -212,10 +213,33 @@ func _run() -> void:
 	if not await _defeat_trainer("water_trainer_venn", "defeated_water_trainer_venn"):
 		_finish()
 		return
-	if not await _walk_to(veilfall_path[-1], "waterfall entrance"):
+	_checkpoint("OFFICER VENN defeated after the physical Veilfall hike")
+
+	# The disclosed single-creature seam survives Venn hurt and cannot also
+	# defeat Nerissa's four-creature team: measured 250.9/708.4 after Venn, then
+	# fainted during Nerissa's second opponent. Veilfall's authored camp is back
+	# at waypoint 1. Recall to protect the survivor, retrace the same graded
+	# spine to its bed, and return on that spine; no HP or roster write replaces
+	# the ordinary recovery trip.
+	if not await _recall_active("Post-Venn recovery return"):
 		_finish()
 		return
-	_checkpoint("OFFICER VENN defeated after the physical Veilfall hike")
+	for index in range(veilfall_path.size() - 2, 0, -1):
+		if not await _walk_to(veilfall_path[index], "Veilfall recovery waypoint %d" % index):
+			_finish()
+			return
+	if not await _recover_at_camp("water_camp_veilfall"):
+		_finish()
+		return
+	_checkpoint("Post-Venn Aquaryn recovered through the authored Veilfall camp")
+	if not await _recall_active("Veilfall return to the waterfall"):
+		_finish()
+		return
+	for index in range(2, veilfall_path.size()):
+		if not await _walk_to(veilfall_path[index], "Veilfall return waypoint %d" % index):
+			_finish()
+			return
+	_checkpoint("Returned to the waterfall on the authored spine after ordinary recovery")
 
 	var cave: Node3D = world.get_node("WaterVeilfall")
 	if not await _activate_prompt(cave.get("_entry_prompt"), "Veilfall waterfall entrance"):
@@ -523,6 +547,14 @@ func _recover_at_camp(id: String) -> bool:
 	await _tap("creature_recall")
 	await _frames(24)
 	return _check(director.ally_body() != null, "Controller input redeploys the recovered Aquaryn")
+
+
+func _recall_active(label: String) -> bool:
+	if director.ally_body() == null:
+		return _fail(label + ": no active ally was available to recall")
+	await _tap("creature_recall")
+	await _frames(12)
+	return _check(director.ally_body() == null, label + " uses controller recall")
 
 
 func _activate_dock_action(id: String, flag: String) -> bool:

@@ -72,33 +72,45 @@ contract without constructing a Terrain3D world. Its focused result is:
 1 tests, 1 assertions, 0 failed
 ```
 
-## Next run preparation and route blocker
+## Venn route repair and first full attempt
 
-The ordinary late diagnostic now physically approaches the surviving follower
-and requires the real Ride offer before the Sluice-to-Veilfall crossing. At the
-Veilfall landing it uses the authored camp and creature bed to recover through
-ordinary UI. Cave entry intentionally dismisses the follower, so controller
-input redeploys it before Nerissa. The measured prefix reaches Sluice completion
-at about 690 seconds; the remaining exterior route is about 1.27 km. The
-whole-path watchdog is therefore 30 minutes because the old 15-minute ceiling
-was impossible even when every remaining interaction succeeded.
+The original production encounter reused Officer Venn's NPC body at
+`(200, 619.079, 4152)`, stranded above the graded approach. The focused
+production repair placed that same body at `(311.779, 141.188, 3894.433)`,
+exactly on the final spine leg. From point 3, real stick travel covered 349.49 m
+with zero navigator resets and zero of 349 grade samples above 24 degrees. The
+first grounded stance received actionable `Challenge Officer Venn` at 2.02 m.
+This focused evidence is in `%TEMP%\water-venn-approach-final.log`.
 
-One intended-route question must be resolved before spending that full runtime.
-The production encounter reuses Officer Venn's NPC body at
-`(200, 619.079, 4152)`; the trainer row's `[-18, -40]` offset is not its runtime
-placement. The body is 45.27 m from the nearest graded spine sample. From the
-harness's last pre-Venn waypoint at spine point 3, the direct chord is 517.64 m
-in 3D and 193 of its 255 measured samples exceed a 24-degree grade. Those
-measurements do not by themselves prove that normal movement fails, so the
-Veilfall lane is running a production StickNavigator approach from that exact
-waypoint before proposing any placement change. No production placement was
-guessed in this harness commit.
+The subsequent uninterrupted run in
+`%TEMP%\water-continuous-full-20260908-0358.log` had no script errors or freeze.
+After the disclosed `DEPARTED` boundary it passed both crossings, Bex, both
+Sluice controls, the final barrier, both authored exterior camp rests, Venn's
+three-creature fight, the waterfall entry, controller redeploy after entry's
+intentional dismissal, and both interior controls. Venn completed at +1329.1
+seconds with Aquaryn at 250.9/708.4 HP; both Veilfall controls completed at
++1359.8 seconds.
 
-Once that ordinary approach is present, the run will fight Venn, enter the
-waterfall through its production prompt, activate the intake and return sluice
-controls, fight Captain Nerissa, release the Guardian tether, settle the
-Guardian through its prompt, and require the durable
-`water_currents_restored` result. No post-departure fixture write is permitted.
+The run then reproduced a bounded recovery problem in this one-creature
+diagnostic: Aquaryn fainted during Nerissa's second opponent (Cannonback then
+Mirejaw), leaving two of the captain's four creatures unseen and
+`water_captain_nerissa_defeated` unset. It ended with 33 checks and one failure.
+This does not prove an ordinary five-creature campaign party is underpowered.
+
+`water_camp_veilfall` at spine point 1 is the authored exterior recovery service;
+the compact Veilfall interior defines controls, grilles and an exit but no camp
+or bed. The next harness revision therefore uses only ordinary player actions:
+recall after Venn, retrace the same graded spine from point 3 to point 1, assign
+Aquaryn to the camp bed, pass one night, recall the freshly redeployed ally to
+protect it on the return hike, retrace points 2-4, enter the cave, and deploy by
+controller input for Nerissa. No party member, item, HP, stamina, position or
+progression flag is injected. The measured extra 2.54 km round trip requires a
+50-minute whole-path watchdog; individual interaction and fight deadlines are
+unchanged.
+
+The prepared next run will then fight Captain Nerissa, release the Guardian
+tether, settle the Guardian through its prompt, and require the durable
+`water_currents_restored` result.
 
 A passing future run will prove only that disclosed late-route span. Fresh-save
 composition with the preceding Alpha/saddle milestone remains separately
