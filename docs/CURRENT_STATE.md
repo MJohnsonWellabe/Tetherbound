@@ -16,8 +16,15 @@ multiplayer shard 5. Prior green runs do not validate that head. The repair
 batch corrects Varga's data clearance, observes completed asynchronous catch
 admission, and stages Tamsin's combat fixture at production body clearance
 with explicit authoritative killing-hit checks. Local catch (47 checks) and
-Tamsin (59 checks) smokes and the required world boot pass; the full unit suite
-is running and the new head still needs CI. PR #80 remains draft. See
+Tamsin (59 checks) smokes and the required world boot pass. The local full suite
+finished 2993 tests / 3842642 assertions / three failed tests: the contradictory
+Varga route expectation (follow-up now passes both suites, 5/517) plus two Gate F
+issues recorded in `SECOND_PASS_BACKLOG.md`. CI `34225403192` on `d387d0bdd`
+completed 25 successful jobs / one failure / three intentional skips. Every
+job log was reviewed; all runtime and multiplayer shards passed first attempts.
+The sole failure is the contradictory Varga route expectation, corrected in
+the follow-up batch; that new head needs its own CI verdict.
+PR #80 remains draft. See
 `ralph/reports/FOUR-BIOME-BUILD/MAIN-GREEN-20260908.md` for exact failures and
 evidence. The four-biome goal is incomplete, and Wave 1 has not started.
 

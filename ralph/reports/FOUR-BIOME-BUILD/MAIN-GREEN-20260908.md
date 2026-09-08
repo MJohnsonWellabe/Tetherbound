@@ -83,9 +83,11 @@ Failed-smoke coordinator extracts:
   requested node absent in packet, non-authority delta/invalid synchronizer.
   Both peer processes were independently confirmed terminated.
   No retry, ceiling increase, shard skip or acceptance weakening was introduced.
-- Full unit suite is running with engine log
+- Full unit suite completed exit 1: 2993 tests / 3842642 assertions /
+  three failed tests, identified below. It began before the follow-up Varga
+  expectation correction and is not a final-head all-green verdict. Engine log
   `%TEMP%/wave0-full-units-20260908.log` and stdout companion
-  `%TEMP%/wave0-full-units-20260908-stdout.log`; no terminal verdict yet.
+  `%TEMP%/wave0-full-units-20260908-stdout.log`.
 - Required `tests/smoke_playground.gd` passes, exit 0 / `smoke: OK`.
   `%TEMP%/wave0-playground-20260908.log` and its stdout companion record the
   known `ERROR: Parameter "material" is null.` as the sole native error kind;
@@ -98,3 +100,35 @@ before the four-biome goal resumes.
 Independent astra review of the bounded repair diff found no actionable issues.
 It inspected code and regression evidence only; it does not substitute for
 the outstanding runtime and exact-head CI checks.
+
+## Follow-up from exact-head CI
+
+Submitted `d387d0bdd9fac44ec81087e31b0e18d963f27bf9` once; run `34225403192`
+completed at 12:37:29 UTC (18m21s), attempt 1: 25 successful jobs, one failure,
+three intentional skips. Every completed job log and every job's steps were
+reviewed; all seven multiplayer shards and all runtime shards pass on their
+first attempts. Unit shard 1 passes the repaired catalogue, but unit shard
+4 fails `test_stormwood_varga_route` (575 tests / 279741 assertions / one failure).
+That route test, introduced with relocation `efa2a92b`, expects raw terrain
+height and contradicts the pre-existing catalogue's terrain + 0.15 m contract.
+Root missed this second test in the initial focused verification.
+
+The follow-up corrects its expected height to include the existing clearance.
+Its stricter 0.001 m tolerance is unchanged; so are exact X/Z, route proximity,
+prompt separation and 120 m travel checks. Both suites together pass 5 tests /
+517 assertions / zero failures, exit 0, with clean native output in
+`%TEMP%/wave0-varga-contracts-20260908.log`. Independent astra review confirmed
+this resolves contradictory expectations without weakening acceptance.
+
+The completed run's logs and job metadata are retained locally under
+`.artifacts/ci-34225403192/`. Only unit shard 4 failed; no rerun or cancellation
+was requested. The test expectation correction and this evidence form the
+next coherent push, after that terminal review.
+
+Local full-suite terminal failures are the
+same Varga contradictory test (now corrected) plus two Gate F issues: S04/S05
+recorder row thresholds versus retained report telemetry, and unavailable
+Windows `bash` for the lane-declaration subprocess followed by a missing-file
+parse error. These are recorded in `docs/SECOND_PASS_BACKLOG.md`, with no
+assertion, telemetry or threshold changes. Existing CI sparse-report behavior
+does not prove the full-checkout recorder check. The local suite is NOT green.

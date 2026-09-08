@@ -22,9 +22,12 @@ func test_varga_is_grounded_on_the_authored_first_ascent() -> void:
 	assert_eq(at, Vector2(-630.0, 2390.0))
 	assert_almost_eq(_segment_distance(at, _xz(points[0]), _xz(points[1])), 0.0, 0.01,
 		"Varga must stand on the first exposed conductor-road segment")
+	# The trainer catalogue's established grounding contract includes 0.15 m
+	# clearance (test_stormwood_trainers_data). The relocation must preserve it;
+	# expecting raw terrain height here contradicted that existing contract.
 	assert_almost_eq(float((varga.get("position", []) as Array)[1]),
-		float(HEIGHTFIELD.new().height_at(at.x, at.y)), 0.001,
-		"authored Y must come from the production Stormwood heightfield")
+		float(HEIGHTFIELD.new().height_at(at.x, at.y)) + 0.15, 0.001,
+		"authored Y must preserve the catalogue clearance above the production heightfield")
 
 
 func test_varga_prompt_is_distinct_without_creating_dead_travel() -> void:
