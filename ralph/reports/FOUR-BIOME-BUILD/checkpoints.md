@@ -322,3 +322,59 @@
   Final post-merge validation passed at 20 tests / 1,023 assertions, zero failures;
   the complete production Stormwood-to-Tidewake smoke also passed in 28.2 seconds,
   and production script check plus `git diff --check` are clean.
+
+## Checkpoint 9 — 2026-09-08 00:36 CDT
+
+- Exact-head PR #80 CI run `34190049594` on `7f28b5ed23a98432badb92e1dbc6e1b341247ab2`
+  completed: 22 jobs succeeded, three failed, and four were skipped. The two expected
+  known-red jobs were skipped; `export` and `verify-solo-regression` skipped only
+  because required jobs failed upstream. Every job conclusion was read individually.
+- The split-realm repair is now confirmed in CI: multiplayer shard 7 passed. Shards
+  1, 3, 5 and 6 also passed. Shard 4's hosted-Tamsin smoke starts the authoritative
+  fight but the client never binds its hosted trainer; shard 2's Livewire smoke reaches
+  the same binding failure and then cannot prove three strike/deadline assertions.
+  These are content failures, not timeouts. A focused CI repair lane owns them.
+- `verify-gate-b-core` failed both CI attempts at Bram dialogue cycle 3. A same-head
+  local production run then completed Bram cycles 1/2/3 and the whole Gate-B core in
+  156.25 seconds. This matches the previously recorded nondeterministic village-tools
+  leg, but it is not being waived: a diagnosis lane is looking for the arbitration
+  mechanism rather than increasing retries or weakening the assertion.
+- Work continued beside CI. A production Alpha-to-saddle smoke found Aquaryn refusing
+  every ordinary strike as `malformed` because its special transport bypassed the
+  shared action-ID stamping seam. The Water-only parity repair is green at 9 tests /
+  84 assertions and 33 production checks through defeat, Swim Stone, recipe, craft and
+  mount; independent review found no P0/P1 issue. A second lane wired all five authored
+  Water named encounters into production and passed 21 tests / 2,233 assertions.
+
+## Checkpoint 10 — 2026-09-08 01:06 CDT
+
+- The Gate-B cycle-3 failure was a harness arbitration race, not a missing retry. The
+  helper now observes the activation arbiter's real post-input winner: the requested
+  provider succeeds, no winner stays inside the existing bounded approach, and a
+  competing provider fails with its exact identity. The focused contract is green at
+  4 tests / 14 assertions; the production Gate-B core was already green through all
+  three Bram cycles and tournament readiness in 156.25 seconds.
+- The two Stormwood CI failures shared one product race. An aggressive local wild could
+  engage during the hosted-trainer round trip, leaving a valid authoritative trainer
+  record pending forever. Host admission now yields only a fleeable wild through normal
+  combat cleanup; trainer fights remain protected. The full two-peer Tamsin smoke is
+  green through both rounds, hostile-input rejection, rewards, retry refusal and final
+  state hash. Its focused regression is green at 5 tests / 14 assertions, and an
+  independent code review found no P0/P1 issue.
+- Livewire then passed trainer binding and every host deadline/cooldown assertion except
+  one expected hit whose opponent had moved while the smoke waited on deadlines. The
+  smoke now refreshes the existing real client/host strike geometry immediately before
+  expected hits without changing action ids, deadlines, HP or acceptance assertions.
+  The follow-up local run lost its host heartbeat during Stormwood entry before reaching
+  any Livewire assertion; neither peer exited or crashed. CI is the next meaningful
+  connected verdict rather than weakening the smoke around local full-world startup.
+- ROAD-VISUAL-CREATURES is closed for the playable contract: 36 critical routes and
+  4,253 ten-metre samples have at least two creature bodies in the forward 180 degrees,
+  12 representative production frames each contain at least two forward/framed bodies,
+  and fitted creature heights span 1.90-7.20 m against the 1.80 m trainer. The blind
+  visual judge still rejects pileups, crops and palette/silhouette clarity; that cosmetic
+  work remains explicitly deferred in `docs/SECOND_PASS_BACKLOG.md`.
+- Reviewable local commits since the last push are `046beff74` (Aquaryn and named
+  Tidewake encounters), `531647a9e` (Gate-B prompt arbitration), and `9a6ff4e5e`
+  (hosted Stormwood trainer admission). The next action is one batched push, then a
+  job-by-job exact-head CI read before another branch update.
