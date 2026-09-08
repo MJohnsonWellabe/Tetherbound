@@ -8,7 +8,9 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 **Session wrapped at owner request, 2026-09-08.** Resume from
 `docs/HANDOFF_FOUR_BIOME_2026-09-08_SESSION_WRAP.md` in this same local workspace.
-Local commits and two dirty Shellwatch composition files are newer than remote.
+The owner subsequently requested a GitHub preservation push: local commits and
+the formerly dirty Shellwatch/candidate source are included in the new branch
+head. Read the handoff's preservation update; its new CI is not the old green run.
 No Godot process remains. The goal is incomplete, not declared blocked or passed.
 
 The active target is the **playable four-biome build**, as defined by

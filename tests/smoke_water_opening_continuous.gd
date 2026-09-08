@@ -4,6 +4,7 @@ extends SceneTree
 ## The default fixture is an empty solo Water realm at its production arrival;
 ## --through-reedhaven supplies only disclosed pre-arrival knife/axe hotbar tools.
 ## --through-brine additionally carries the disclosed synthetic level-44 party.
+## --through-shellwatch retains that same state and party without another fixture.
 ## No actor pose, Water fact, inventory, HP or stamina is injected after arrival.
 ## The player walks to Pell, finishes his real dialogue, then earns the physical lesson.
 const WORLD := preload("res://scenes/world/water_archipelago.tscn")
@@ -13,6 +14,7 @@ const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const NAV := preload("res://tests/helpers/stick_navigator.gd")
 const REEDHAVEN := preload("res://tests/helpers/water_reedhaven_segment.gd")
 const BRINE := preload("res://tests/helpers/water_brine_segment.gd")
+const SHELLWATCH := preload("res://tests/helpers/water_shellwatch_segment.gd")
 const BRINE_PARTY: Array[String] = [
 	"sparkit", "mudsnout", "bramblebun", "terrapup", "brooktail",
 ]
@@ -27,6 +29,7 @@ var activated: Object
 var swim_metres := 0.0
 var through_reedhaven := false
 var through_brine := false
+var through_shellwatch := false
 
 func _init() -> void:
 	_run.call_deferred()
@@ -35,6 +38,7 @@ func _run() -> void:
 	var selection := requested_segments(OS.get_cmdline_user_args())
 	through_reedhaven = bool(selection.through_reedhaven)
 	through_brine = bool(selection.through_brine)
+	through_shellwatch = bool(selection.through_shellwatch)
 	_watchdog.call_deferred()
 	game = root.get_node("Game")
 	game.save_system = SAVE.new("user://water_opening_continuous_%d/" % Time.get_ticks_usec())
@@ -161,13 +165,24 @@ func _run() -> void:
 			_fail("Ordinary Brine continuation failed; inspect its exact result above")
 			return
 		print("WATER OPENING THROUGH BRINE PASS: Tovin and dock trial flags earned")
+	if through_shellwatch:
+		var shellwatch := SHELLWATCH.new()
+		shellwatch.setup(self, world, player, camera)
+		var shellwatch_open: bool = await shellwatch.run()
+		print("WATER SHELLWATCH RESULT: %s" % str(shellwatch.result()))
+		if not shellwatch_open or not bool(shellwatch.result().ok):
+			_fail("Ordinary Shellwatch continuation failed; inspect its exact result above")
+			return
+		print("WATER OPENING THROUGH SHELLWATCH PASS: residents, pump and next dock resolved")
 	finished = true
 	quit(0)
 
 
 static func requested_segments(args: PackedStringArray) -> Dictionary:
-	var wants_brine := "--through-brine" in args
+	var wants_shellwatch := "--through-shellwatch" in args
+	var wants_brine := wants_shellwatch or "--through-brine" in args
 	return {
+		"through_shellwatch": wants_shellwatch,
 		"through_brine": wants_brine,
 		"through_reedhaven": wants_brine or "--through-reedhaven" in args,
 	}

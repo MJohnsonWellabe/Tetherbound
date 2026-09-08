@@ -1,5 +1,29 @@
 # Four-biome handoff — 2026-09-08 session wrap
 
+## GitHub preservation update — supersedes local-only notes below
+
+Owner subsequently requested all source work on GitHub before archiving. This
+handoff, all local commits, the two formerly dirty Shellwatch composition files,
+the known-red Brine candidate diagnostic, character-picker capture tool and
+validated source UID sidecars are now included in the preservation push to
+`codex/four-biome-wave0` / PR80. Use the latest branch head, not the earlier
+`c3cd1ac82` CI head. The new push needs its own CI verdict; next session must
+inspect that run before any further push. Nothing has been merged to main.
+
+The Shellwatch composition now passes parser/loading and focused3 tests/26
+assertions (`github-handoff-shellwatch-tests-20260908.log`); actual Shellwatch
+runtime remains unproven. Brine candidate and character-picker tools parse
+cleanly. Brine's recorded admission failure remains unfixed and is prominently
+marked WIP in its source. No new world smoke was started for this preservation.
+
+Generated `.artifacts/`, per-frame PNGs and telemetry captures remain local,
+excluded under repository evidence-hygiene rules. Their written verdicts and
+reproduction tools are in GitHub. Preserve this workspace if those raw captures
+are needed; do not claim they were uploaded. No private API key was added.
+
+The remaining sections describe the exact state at the original wrap, before
+this preservation update; references to dirty/untracked source are historical.
+
 Owner requested stop and handoff. Do not treat this as goal completion. Resume
 in **C:\Projects\Tetherbound**, not a fresh clone: local commits and two deliberate
 uncommitted Water edits are newer than the remote branch. No new session was
