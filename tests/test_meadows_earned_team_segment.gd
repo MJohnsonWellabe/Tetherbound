@@ -5,6 +5,7 @@ const TOURNAMENT := preload("res://scripts/world/tournament.gd")
 const PARTY := preload("res://autoload/party.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const ROAD_GATE := preload("res://scripts/world/road_gate.gd")
 
 
 class Admission extends Node:
@@ -14,6 +15,85 @@ class Admission extends Node:
 		return admitted
 	func is_fighting() -> bool:
 		return fighting
+
+
+func test_logged_outside_wild_approach_crosses_solid_corner_and_routes_through_open_pond_gate() -> void:
+	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(SEGMENT.BOUNDARY_CONFIG))
+	var polygon := PackedVector2Array()
+	for raw: Array in config.outline.points:
+		polygon.append(Vector2(float(raw[0]), float(raw[1])))
+	var stopped := Vector2(-37.72714, 4.499945)
+	var target := Vector2(-54.17064, 23.00343)
+	assert_true(Geometry2D.is_point_in_polygon(stopped, polygon))
+	assert_false(Geometry2D.is_point_in_polygon(target, polygon))
+	assert_eq(polygon[11], Vector2(-38, 6))
+	# Production corner half-width1.1 plus Player capsule radius0.4 explains
+	# the observed z=4.5 stop. Terrain alone is a walkable ~13 degree slope.
+	assert_almost_eq(stopped.y, polygon[11].y - 1.1 - 0.4, 0.0001)
+	var corner_hit: Variant = Geometry2D.segment_intersects_segment(stopped, target,
+		polygon[11] + Vector2(-1.1, -1.1), polygon[11] + Vector2(1.1, -1.1))
+	assert_true(corner_hit != null, "direct bearing hits the authored corner guard")
+	var route := SEGMENT.boundary_approach(config, stopped, target, ["RoadGate", "PondGate", "TrailGate"])
+	assert_true(route.required)
+	assert_eq(route.gate, "PondGate")
+	assert_eq(route.points.size(), 3)
+	assert_eq(route.points[1], Vector2(-21, 21))
+	assert_false(SEGMENT.crosses_boundary(stopped, route.points[0], polygon))
+	assert_false(SEGMENT.crosses_boundary(route.points[2], target, polygon))
+	var crossings: Array[Vector2] = []
+	for index in polygon.size():
+		var hit: Variant = Geometry2D.segment_intersects_segment(route.points[0], route.points[2],
+			polygon[index], polygon[(index + 1) % polygon.size()])
+		if hit != null:
+			crossings.append(hit)
+	assert_eq(crossings.size(), 1, "only the actual gate opening crosses the fence")
+	assert_true(crossings[0].distance_to(Vector2(-21, 21)) < 0.01)
+	var original_start := Vector2(19.65534, -42.48375)
+	assert_eq(SEGMENT.boundary_approach(config, original_start, target, ["RoadGate", "PondGate", "TrailGate"]).gate, "PondGate")
+	var reverse := SEGMENT.boundary_approach(config, target, original_start, ["PondGate"])
+	assert_eq(reverse.gate, "PondGate")
+	assert_true(Geometry2D.is_point_in_polygon(reverse.points[-1], polygon))
+
+
+func test_boundary_route_does_not_assume_an_open_leaf_or_invent_a_direct_crossing() -> void:
+	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(SEGMENT.BOUNDARY_CONFIG))
+	var stopped := Vector2(-37.72714, 4.499945)
+	var target := Vector2(-54.17064, 23.00343)
+	var refused := SEGMENT.boundary_approach(config, stopped, target, [])
+	assert_true(refused.required)
+	assert_eq(refused.points, [])
+	assert_eq(SEGMENT.boundary_approach(config, stopped, target, ["MissingGate"]).points, [])
+	var direct := SEGMENT.boundary_approach(config, Vector2(20, -40), Vector2(30, -40), [])
+	assert_false(direct.required)
+	assert_eq(direct.points, [])
+	assert_true(SEGMENT.boundary_approach({}, stopped, target, []).required)
+	assert_eq(SEGMENT.APPROACH_FRAMES, 3600, "gate travel shares the original approach budget")
+	var missing := config.duplicate(true)
+	missing.gates.entries = []
+	assert_eq(SEGMENT.boundary_approach(missing, stopped, target, ["PondGate"]).points, [])
+
+
+func test_only_an_actual_open_leaf_with_disabled_collision_authorizes_the_route() -> void:
+	var world := Node3D.new()
+	var boundary := Node3D.new()
+	boundary.name = "VillageBoundary"
+	world.add_child(boundary)
+	var gate := ROAD_GATE.new()
+	gate._shape = CollisionShape3D.new()
+	gate.add_child(gate._shape)
+	gate.name = "PondGate"
+	boundary.add_child(gate)
+	var segment := SEGMENT.new()
+	segment._world = world
+	assert_false(segment._open_boundary_gate("PondGate"))
+	gate._open = true
+	assert_false(segment._open_boundary_gate("PondGate"), "logical open cannot bypass a solid leaf")
+	gate._shape.disabled = true
+	assert_true(segment._open_boundary_gate("PondGate"))
+	gate.flag_id = "another_gate"
+	assert_false(segment._open_boundary_gate("PondGate"))
+	assert_false(segment._open_boundary_gate("MissingGate"))
+	world.free()
 
 
 func test_training_selection_prefers_the_eligible_current_offer_before_latching_identity() -> void:

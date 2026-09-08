@@ -513,7 +513,13 @@ func _clear_capacitor_alpha() -> bool:
 			if bool(_game.get("progression").call("has", CLEAR_FLAG)):
 				break
 			if _named_engage_ready(body):
+				_activated_provider_id = 0
+				_activated_provider_path = ""
+				var observer := Callable(self, "_on_arbiter_activated")
+				_arbiter.activated.connect(observer)
 				await _tap(&"interact")
+				if _arbiter.activated.is_connected(observer):
+					_arbiter.activated.disconnect(observer)
 				if bool(_manager.call("is_fighting")) \
 						and _manager.call("enemy_body") != body:
 					return _fail("explicit named Alpha Engage admitted a different body")
@@ -549,6 +555,8 @@ func _alpha_admission_snapshot(body: Node3D) -> Dictionary:
 		return {"body": "<retired>"}
 	var candidate := _director.call("_engageable") as Node3D
 	var winner := _arbiter.call("winning_provider") as Node
+	var owner := INPUT_OWNER.current(_tree)
+	var ally := _director.call("ally_instance") as RefCounted
 	return {
 		"body": str(body.get_path()), "aggressive": body.get("aggressive"),
 		"announced": body.get("_has_announced"), "grace": body.get("_grace_left"),
@@ -560,6 +568,14 @@ func _alpha_admission_snapshot(body: Node3D) -> Dictionary:
 		"candidate": str(candidate.get_path()) if candidate != null else "<none>",
 		"winner": str(winner.get_path()) if winner != null else "<none>",
 		"offer": _arbiter.call("winner"), "fighting": _manager.call("is_fighting"),
+		"arbiter_enabled": _arbiter.call("enabled"), "tree_paused": _tree.paused,
+		"input_owner": str(owner.get_path()) if owner != null else "<none>",
+		"interact_pressed": Input.is_action_pressed("interact"),
+		"activated_provider": _activated_provider_path,
+		"ally_fainted": ally.get("fainted") if ally != null else null,
+		"ally_resting": ally.get("resting") if ally != null else null,
+		"ally_hp": ally.get("hp") if ally != null else null,
+		"manager_state": _manager.get("state"),
 	}
 
 

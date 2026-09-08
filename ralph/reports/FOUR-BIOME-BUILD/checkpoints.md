@@ -737,3 +737,45 @@
   Tidewake reviews/tests its Shellwatch composition in parallel; independent
   astra audit identifies reusable earned-state opening/Cloudreach seams. Root
   owns end-to-end composition and integration. No cosmetic backlog is reopened.
+
+## 2026-09-08 15:51 UTC — checkpoint recorded 15:56; first zero merged delta
+
+- Main remains `75aaccca0210a9bc1ac0f16bac687d8557f0aacf`, own push CI
+  `34231941105` green. No Wave 1 runtime change has merged since 13:51.
+  This is the first consecutive checkpoint with zero credited merged delta;
+  the late record does not extend the cadence. Next checkpoint: 17:51 UTC.
+- Draft PR #85 head `0a91f9b39aa552e554b849b4eb57d8011e2c7589` finished
+  CI `34245691443` at 15:52:33 UTC, attempt 1: 25 success, one failure,
+  three existing conditional skips. Every job/step and log evidence reviewed.
+  All four unit shards passed: 2977 tests / 486656 assertions. All seven
+  multiplayer Run net smokes steps passed. MP4 failed artifact finalization
+  after uploading 9381576 bytes: non-retryable intermediary HTTP 403.
+  This remains a red run, not merge verification; no rerun requested.
+  Logs: `.artifacts/ci-34245691443/`; review `wave1-ci-0a91-1554.txt`.
+  Existing cleanup/material/cache messages and deliberate peer-death negative
+  control remain disclosed. Previous head 8cd81b422e466a3918f471344750ee7edd15e883
+  passed complete run 34242634338, 2963 tests / 486540 assertions.
+- Actual fresh-save run `four_biome_fresh_29284_1784` passed the changed physical
+  key/gate navigation at 111.73 seconds, earned five creatures and one real
+  training victory. It failed at 293.92 seconds on a 3600-frame wild approach:
+  player (-37.72714, 2.680571, 4.499945), Mudsnout (-54.17064, 5.498205,
+  23.00343), remaining distance 24.914 m, Terrain colliders, no input owner.
+  Exit 1; owner fingerprints unchanged; no ERROR/SCRIPT ERROR lines.
+  Logs: `.artifacts/wave1-fresh-key-nav-camp{,-engine}.log` and matching
+  owner-before/after.json. No camp completion or full team training claimed.
+  Two failed team approaches trigger bounded geometry/source diagnosis,
+  not another blind prefix or an expanded frame allowance.
+- Stormwood again earned Ondra's recipe but exact Alpha Engage did not enter
+  combat. A small actual arbiter/director/manager probe reproduces refusal for
+  a resting ally and success for a healthy ally. The campaign fixture does not
+  set resting: that control is NOT the campaign diagnosis. Added activation
+  telemetry passes focused 6 tests / 74 assertions. Next is a focused scene
+  diagnostic, not a third full-prefix replay. See STORMWOOD-WAVE1-20260908.md.
+- Tidewake's previous path proved paid Shellwatch rest/redeployment but stopped
+  on the Solm approach. Production-height sampling found the direct line exceeds
+  the player's 45-degree limit; a physical detour has a measured 39.85-degree
+  maximum and focused 8 tests / 58 assertions. Changed full-world continuation
+  now owns RAM, session 92218, `.artifacts/wave1-water-solm-detour` logs/profile.
+- Prepared Warrens, camp/rest/tournament/bridge and later chapter helpers remain
+  unproved as a continuous fresh path. Opening-to-Tidewake ending and full forward
+  coverage are still open. No new deferrals or milestone closure credited.

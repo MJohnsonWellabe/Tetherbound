@@ -12,6 +12,7 @@ const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const MAX_TRAINING_FIGHTS := 40
 const APPROACH_FRAMES := 3600
 const SATCHEL_COLUMNS := 6
+const BOUNDARY_CONFIG := "res://data/config/village_boundary.json"
 
 var _tree: SceneTree
 var _world: Node3D
@@ -187,16 +188,25 @@ static func preferred_candidate_index(distances: Array[float], offered_index: in
 func _engage(target: Node3D) -> bool:
 	_nav.reset()
 	var closest := INF
+	var boundary := _boundary_approach(target)
+	if bool(boundary.required) and (boundary.points as Array).is_empty():
+		return _fail("The selected wild needs a physical village crossing but no current open gate route is available")
+	var waypoint := 0
+	var points: Array = boundary.points
+	if not points.is_empty():
+		_receipt("wild_boundary_route", {"target": str(target.name), "gate": boundary.gate, "points": points})
 	_receipt("wild_approach", _approach_snapshot(target))
 	for _frame in APPROACH_FRAMES:
 		if _fighting():
 			_stick(0, 0)
+			if waypoint < points.size():
+				return _fail("Combat interrupted the required physical village gate crossing")
 			return _verify_engagement(target)
 		if not is_instance_valid(target) or not bool(target.call("is_alive")):
 			return _fail("The selected living wild disappeared before engagement")
 		closest = minf(closest, _player.global_position.distance_to(target.global_position))
 		var offer: Dictionary = _arbiter.call("winner")
-		if _arbiter.call("winning_provider") == _director \
+		if waypoint >= points.size() and _arbiter.call("winning_provider") == _director \
 				and bool(offer.get("actionable", false)) \
 				and _director.call("_engageable") == target:
 			_stick(0, 0)
@@ -207,23 +217,125 @@ func _engage(target: Node3D) -> bool:
 					return _verify_engagement(target)
 				await _tree.physics_frame
 			return _fail("The offered wild did not enter combat after Interact")
-		_nav.step(target.global_position)
+		if waypoint < points.size():
+			if not _open_boundary_gate(str(boundary.gate)):
+				_stick(0, 0)
+				return _fail("The actual village gate closed during the selected wild's approach")
+			var at: Vector2 = points[waypoint]
+			if Vector2(_player.global_position.x, _player.global_position.z).distance_to(at) <= 1.0:
+				waypoint += 1
+				_nav.reset()
+				if waypoint == points.size():
+					_receipt("wild_boundary_crossed", {"gate": boundary.gate, "player": str(_player.global_position),
+						"target": str(target.name), "approach_frames": _frame})
+			else:
+				_nav.step(Vector3(at.x, float(_world.call("ground_height_at", at.x, at.y)), at.y))
+		else:
+			_nav.step(target.global_position)
 		await _tree.physics_frame
 	_stick(0, 0)
 	var stalled := _approach_snapshot(target)
 	stalled["closest_distance"] = closest
 	stalled["approach_frames"] = APPROACH_FRAMES
+	stalled["boundary_gate"] = boundary.gate
+	stalled["boundary_waypoint"] = waypoint
 	_receipt("wild_approach_failed", stalled)
 	return _fail("Ordinary movement did not reach the practice-meadow wild: " + JSON.stringify(stalled))
+
+
+func _boundary_approach(target: Node3D) -> Dictionary:
+	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(BOUNDARY_CONFIG))
+	var open_ids: Array[String] = []
+	for entry: Dictionary in (config.get("gates", {}) as Dictionary).get("entries", []):
+		var id := str(entry.get("id", ""))
+		if _open_boundary_gate(id):
+			open_ids.append(id)
+	return boundary_approach(config, Vector2(_player.global_position.x, _player.global_position.z),
+		Vector2(target.global_position.x, target.global_position.z), open_ids)
+
+
+func _open_boundary_gate(id: String) -> bool:
+	var gate := _world.get_node_or_null("VillageBoundary/" + id)
+	if gate == null or str(gate.get("flag_id")) != "road_gate_open" or not bool(gate.get("_open")):
+		return false
+	var script := gate.get_script() as Script
+	if script == null or script.resource_path != "res://scripts/world/road_gate.gd":
+		return false
+	var leaf := gate.get("_shape") as CollisionShape3D
+	return leaf != null and leaf.disabled
+
+
+## The village is a closed polygon even after its three leaves open. Crossing
+## its solid corner to pursue an outside wild is not a navigation shortcut.
+## Derive the crossing from current authored leaves; the caller supplies only
+## IDs whose actual live leaf collider is open. Other obstacles remain the
+## ordinary stick navigator's job, inside the same approach frame budget.
+static func boundary_approach(config: Dictionary, from: Vector2, target: Vector2,
+		open_ids: Array[String]) -> Dictionary:
+	var polygon := PackedVector2Array()
+	for raw: Array in (config.get("outline", {}) as Dictionary).get("points", []):
+		polygon.append(Vector2(float(raw[0]), float(raw[1])))
+	var refused := {"required": true, "gate": "", "points": []}
+	if polygon.size() < 3:
+		return refused
+	var from_inside := Geometry2D.is_point_in_polygon(from, polygon)
+	var target_inside := Geometry2D.is_point_in_polygon(target, polygon)
+	if from_inside == target_inside:
+		# A same-side chord that crosses the fence twice needs an explicit
+		# multi-gate route, not a blind line through the settlement.
+		return refused if crosses_boundary(from, target, polygon) else {"required": false, "gate": "", "points": []}
+	var clearance := float((config.get("wall", {}) as Dictionary).get("gate_clear_m", 0.0))
+	if clearance <= 1.0:
+		return refused
+	var best := refused
+	var best_distance := INF
+	for entry: Dictionary in (config.get("gates", {}) as Dictionary).get("entries", []):
+		var id := str(entry.get("id", ""))
+		if not open_ids.has(id):
+			continue
+		var raw: Array = entry.get("at", [])
+		if raw.size() != 2:
+			continue
+		var centre := Vector2(float(raw[0]), float(raw[1]))
+		var yaw := deg_to_rad(float(entry.get("yaw_deg", 0.0)))
+		var across := Vector2(sin(yaw), cos(yaw)) * clearance
+		var inside := centre + across
+		var outside := centre - across
+		if not Geometry2D.is_point_in_polygon(inside, polygon):
+			var swap := inside
+			inside = outside
+			outside = swap
+		if not Geometry2D.is_point_in_polygon(inside, polygon) or Geometry2D.is_point_in_polygon(outside, polygon):
+			continue
+		var first := inside if from_inside else outside
+		var last := outside if from_inside else inside
+		if crosses_boundary(from, first, polygon) or crosses_boundary(last, target, polygon):
+			continue
+		var distance := from.distance_to(first) + first.distance_to(last) + last.distance_to(target)
+		if distance < best_distance:
+			best_distance = distance
+			best = {"required": true, "gate": id, "points": [first, centre, last]}
+	return best
+
+
+static func crosses_boundary(from: Vector2, to: Vector2, polygon: PackedVector2Array) -> bool:
+	for index in polygon.size():
+		if Geometry2D.segment_intersects_segment(from, to, polygon[index], polygon[(index + 1) % polygon.size()]) != null:
+			return true
+	return false
 
 
 func _approach_snapshot(target: Node3D) -> Dictionary:
 	var offered := _director.call("_engageable") as Node3D
 	var provider: Object = _arbiter.call("winning_provider")
 	var blockers: Array[String] = []
+	var contacts: Array[Dictionary] = []
 	for index in _player.get_slide_collision_count():
-		var collider: Object = _player.get_slide_collision(index).get_collider()
+		var contact := _player.get_slide_collision(index)
+		var collider: Object = contact.get_collider()
 		blockers.append(str(collider.name) if collider is Node else str(collider))
+		contacts.append({"collider": str(collider.get_path()) if collider is Node else str(collider),
+			"position": str(contact.get_position()), "normal": str(contact.get_normal())})
 	return {"target": str(target.name) if is_instance_valid(target) else "<missing>",
 		"target_position": str(target.global_position) if is_instance_valid(target) else "<missing>",
 		"player_position": str(_player.global_position),
@@ -231,7 +343,11 @@ func _approach_snapshot(target: Node3D) -> Dictionary:
 		"offered_target": str(offered.name) if is_instance_valid(offered) else "<none>",
 		"winning_provider": str(provider.name) if provider is Node else str(provider),
 		"offer": _arbiter.call("winner"), "can_walk": _nav.can_walk(),
-		"input_owner": str(INPUT_OWNER.current(_tree)), "slide_colliders": blockers}
+		"input_owner": str(INPUT_OWNER.current(_tree)), "slide_colliders": blockers, "contacts": contacts,
+		"input_vector": str(Input.get_vector("move_left", "move_right", "move_forward", "move_back")),
+		"velocity": str(_player.velocity), "on_floor": _player.is_on_floor(), "on_wall": _player.is_on_wall(),
+		"nav_side": _nav.get("_side"), "nav_detour": str(_nav.get("_detour")),
+		"nav_detour_left": _nav.get("_detour_left")}
 
 
 func _verify_engagement(target: Node3D) -> bool:

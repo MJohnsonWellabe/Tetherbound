@@ -202,3 +202,23 @@ with the same five. Its focused tests pass 8 / 82; no world execution is claimed
 The complete changed driver parses in
 `.artifacts/wave1-key-warrens-composition-parse.log`. The default still fails
 at its missing later Meadows suffix and reports `campaign_complete:false`.
+
+## 2026-09-08 15:56 UTC — changed key approach proved; team route still blocked
+
+Fresh scratch `user://four_biome_fresh_29284_1784`, current head
+`0a91f9b39aa552e554b849b4eb57d8011e2c7589`, through-camp request:
+actual opening catch at 104.57 s, key acquisition/consumption at 111.73 s,
+village tools and gathers, then all five actual catches (Ripplet level 3,
+Bramblebun 2, Mudsnout 4, Bramblebun 2, Bramblebun 2). One carried small potion
+restored the selected Bramblebun from 46.467 to 81.467 HP; two remained. One
+real Mudsnout victory granted actual shared XP. The next 3600-frame approach
+stopped 24.914 m from Wild_mudsnout_1_2: player (-37.72714, 2.680571, 4.499945),
+target (-54.17064, 5.498205, 23.00343), terrain collisions, no modal input owner.
+
+Terminal exit 1 at 293.92 s. Owner fingerprint files match, no native ERROR or
+SCRIPT ERROR lines. Logs `.artifacts/wave1-fresh-key-nav-camp{,-engine}.log`;
+fingerprint files share that stem with `-owner-before.json` / `-owner-after.json`.
+No camp completion, all-five level-5 training or uninterrupted ending is claimed.
+The key navigation repair has actual fresh-path evidence. This second team
+approach failure changes strategy to a bounded geometry/source diagnostic;
+there is no third blind prefix, larger movement ceiling or skipped encounter.

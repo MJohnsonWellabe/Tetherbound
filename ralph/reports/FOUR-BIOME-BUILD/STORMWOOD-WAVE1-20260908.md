@@ -158,10 +158,85 @@ failures, terminal exit 0, no native/script error. Logs:
 `%TEMP%/wave1-crown-named-engage-focus-console.log` and matching `-engine.log`.
 No full-world test has yet run on this changed helper.
 
+## Fourth runtime: exact Alpha offer observed; admission still fails
+
+Before launch, lifecycle review added an entry-combat resolution before recall
+or cycling, a clear-receipt check immediately after a walk can resolve Alpha,
+and retired-body guards around diagnostics. Focused checks then passed
+**6 tests / 74 assertions** (`wave1-crown-lifecycle-focus-console.log` and
+matching engine log). The production once-only path normally hides the body
+after its faint linger; the guard also handles future retirement safely.
+
+The changed full run, included in head
+`0a91f9b39aa552e554b849b4eb57d8011e2c7589`, again earned Ondra's recipe.
+Alpha telemetry then showed the following:
+
+- All four approaches: Alpha alive, visible, aggressive, already announced;
+  grace 0, not returning home; an available healthy ally was deployed.
+- Approaches 1–3: the director offered the closer ordinary
+  `Wild_tanglevolt_881250888_1` at roughly 1.6–2.2 m, while Alpha was
+  2.8–3.4 m away. The exact-identity guard correctly withheld Interact.
+- Approach 4: the candidate was the exact `Named_capacitor_alpha`, the winner
+  was EncounterDirector and its `Engage Voltarach` offer was actionable.
+  After physical Interact, the candidate remained Alpha but fighting remained
+  false. No outcome was emitted. The terminal Alpha distance was 7.73 m.
+
+This separates competing-candidate selection from the remaining explicit-input
+or admission failure. It does not prove which admission guard/input consumer
+refused the fourth press; do not report the latch alone as the cause.
+
+Terminal exit 1, two explicit harness `ERROR:` records, no native/script error,
+and no remaining Godot processes. Logs:
+`%TEMP%/wave1-stormwood-alpha-engage-console.log` and matching `-engine.log`.
+Manifests `wave1-stormwood-alpha-save-before.json` and
+`wave1-stormwood-alpha-save-after.json`: eight default files, zero path/hash
+differences. RAM released to the root's fresh-path run. No further world run
+or implementation change followed this failure.
+
+## Strategy change: bounded source audit and synthetic admission probe
+
+Two Alpha attempts failed admission, so no third full-prefix replay followed.
+The source chain is synchronous: arbiter physics input recomputes the offer,
+calls provider activation, the director calls manager `begin`, and successful
+`begin` publishes ACTIVE/entered before returning. There is no deferred/await
+admission or terrain refusal between these calls. The physical tap already
+waits six physics frames. The missing entry therefore needs input/activation
+or guard evidence, not a longer wait.
+
+New telemetry observes the real arbiter's `activated` signal and adds the input
+owner, arbiter enablement, pause state, Interact state, director ally HP/fainted/
+resting and manager state. Focused checks remain **6 tests / 74 assertions**,
+zero failures (`wave1-alpha-observer-focus-console.log` and matching engine log).
+
+`tools/probe_stormwood_alpha_admission.gd` is explicitly synthetic and low RAM:
+real arbiter, real director admission methods and real manager `begin`, with
+an isolated flat fixture and no Terrain3D, saved party or progression mutation.
+It replaces only director startup/population. Physical Interact yielded:
+
+- Resting ally: exact actionable Alpha offer, `no_usable_ally=false`, one
+  director activation, zero manager entries, no fight.
+- Healthy ally: same exact offer and activation, one manager entry, active fight.
+
+Both cases passed, exit 0, with no native/script errors in
+`%TEMP%/wave1-alpha-synthetic-admission-r2-console.log` and matching engine log.
+The initial probe read the cached offer before its first idle publication and
+failed that diagnostic assertion; settling process frames corrected the probe,
+without changing admission. This does not validate an unchanged campaign run.
+
+The resting mismatch is real but is not established as this campaign's cause:
+CreatureInstance defaults resting to false, the continuous fixture does not set
+it, and the production write found by source search is saved-state restoration.
+Do not attribute the Alpha failure to resting without observing the live value.
+An input owner also remains possible: the navigator checks locomotion enablement,
+so walking alone does not prove that Interact is unowned. A focused synthetic
+Stormwood admission fixture with the new telemetry is the next useful runtime;
+it must be labeled diagnostic and must not count as earned chapter progress.
+
 ## Remaining proof and disclosure
 
-The next assigned RAM slot may test this changed explicit-Engage path and its
-decisive telemetry. No unchanged prefix rerun is proposed. The command remains:
+Next diagnose why the fourth exact actionable offer did not admit combat;
+inspect the actual input owner/activation and manager refusal conditions before
+another runtime. No unchanged prefix rerun is proposed. The command remains:
 
 ```text
 godot --headless --path . --log-file <unique-engine-log> --script tests/smoke_stormwood_continuous.gd -- --through-crown
@@ -178,3 +253,18 @@ a five-member level-44 party and three tools, with 8x simulation acceleration.
 It is not an earned fresh-opening-to-Stormwood handoff. No Stormwood progress
 or post-entry materials are seeded. The root's future continuous campaign must
 provide the actual carried state rather than cite this seam as fresh-save proof.
+
+### Focused actual-scene admission diagnostic prepared
+
+`tools/probe_stormwood_alpha_scene.gd` reuses the actual Stormwood scene,
+named Alpha and Crown admission helper with activation/input-owner/ally-guard
+telemetry. It explicitly seeds a synthetic chapter party/entitlement and one
+trainer starting position, so any outcome is diagnostic only. The scratch save
+is bound before the first yield. The readiness guard requires completed shell,
+empty pending realm entry and populated encounters under the unchanged scene
+wait bound. Ordinary recall and Interact then exercise the existing helper;
+there is no production admission change or third full-prefix replay.
+
+Parser passed after the readiness guard correction; logs
+`%TEMP%/wave1-alpha-scene-readiness-parse-{console,engine}.log`.
+Full-world execution remains queued behind the live Tidewake run.

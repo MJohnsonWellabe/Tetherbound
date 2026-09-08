@@ -28,6 +28,15 @@ Varga/Ondra/Crown continuation, Tidewake's Shellwatch-onward composition and the
 actual uninterrupted fresh-save opening-to-ending run remain unproved. Existing
 chapter fixtures carry synthetic starting state; they are not milestone proof.
 
+**15:56 UTC update:** draft PR #85 head `0a91f9b39aa552e554b849b4eb57d8011e2c7589`
+is not green. Run `34245691443` passed all runtime smoke steps and 2977 unit
+tests / 486656 assertions, but MP4 artifact finalization failed with HTTP 403.
+No rerun or merge requested. The latest genuine fresh path passed key consumption,
+earned five creatures and one training win, then stopped on a terrain approach
+at 293.92 seconds. Owner saves are unchanged. The Stormwood exact-Engage attempt
+also failed admission; its underlying cause remains under bounded diagnosis.
+These later observations supersede the pending-runtime descriptions below.
+
 The changed Fenn placement now passes ordinary Ondra access: the serialized
 Stormwood path collected the actual route-09 reward and learned the Stormglass
 Arch recipe through dialogue. It next failed admission to Capacitor Alpha in

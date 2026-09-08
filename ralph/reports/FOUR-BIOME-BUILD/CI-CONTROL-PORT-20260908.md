@@ -67,3 +67,24 @@ and `-1532.txt`; raw ledger/logs are `.artifacts/ci-34242634338/`.
 Existing cleanup/material/cache diagnostics and intentional peer-death failure
 remain disclosed; green is not a claim of zero native diagnostic lines. No
 rerun or cancellation was requested. This is PR CI, not a new main landing.
+
+## 2026-09-08 16:00 UTC — subsequent exact-head verdict
+
+Head `0a91f9b39aa552e554b849b4eb57d8011e2c7589` completed run
+`34245691443`, attempt 1, at15:52:33 UTC:25 successful jobs, one failure,
+three existing conditional skips. All four unit shards passed2977 tests and
+486656 assertions. All seven multiplayer `Run net smokes` steps passed,
+including catch race47 checks under the reserved-listener allocator.
+
+The red job is multiplayer shard4, job102128348335, at upload-artifact
+finalization, after all its smokes passed and9381576 bytes uploaded. The log
+reports `Failed to FinalizeArtifact` and non-retryable intermediary HTTP403.
+No artifact policy, retry, ignored error or acceptance change is proposed.
+The run remains red, PR85 draft; no unchanged rerun was requested.
+
+Every new terminal job/step/log was reviewed in
+`.artifacts/wave1-ci-0a91-1554.txt`, complementing initial/1542/1547 reviews.
+Raw logs are `.artifacts/ci-34245691443/`. Existing resource-at-exit/material
+messages and multiplayer cached-node teardown messages remain present; MP3's
+peer-death failure text is its deliberate negative control. Green individual
+smoke steps are not a claim of a native-error-free full suite or green CI.
