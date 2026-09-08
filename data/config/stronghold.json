@@ -158,7 +158,7 @@
     "_comment_tint": "`terrain_playground.json`'s own `drains.tint`, not a new colour, so the runtime skin and the eventual bake agree. That file's `_comment_tint` explains why it sits close to the healthy near-white: the colour map MULTIPLIES the PBR albedo, and a darker tint here would be a brightness change pretending to be a colour."
   },
   "_comment_language": "R8.2's brief: a sacred natural site INDUSTRIALISED by Tether. The same grammar `SE23` uses at the relay, at full scale here. In geometry that means three things and nothing more elaborate: the shell is old cut stone (`site.stone`, the same weathered value family the castle's own plinth uses), every space carries Team Tether hardware bolted ONTO that stone rather than replacing it (`trim` bands and `conduits` below, in the reserved oxblood and the reserved teal from palette.json), and the deeper you go the more of the room is machine and the less of it is masonry. `conduits` are lit teal runs; they all point at the Legendary Chamber because that is where the power comes from, which is `SG40`'s reveal drawn a room early and never said out loud.",
-  "_comment_chambers": "`open: true` means no roof -- the outer works and the courtyard are open-air yards inside high walls, the three inner spaces are roofed. `height` is floor-to-ceiling (or wall height, for the open ones). The Legendary Chamber's 22m is set by the machine, not by taste: the board draws it at ~15m against its own 0-20m scale bar, so the room has to be architecture-sized or the centrepiece cannot stand up in it.",
+  "_comment_chambers": "`open: true` means no roof -- the outer works and the courtyard are open-air yards inside high walls, the three inner spaces are roofed. `height` is floor-to-ceiling (or wall height, for the open ones). The Legendary Chamber's 23m is set by the machine, not by taste: the board draws it as architecture-sized, and the live 19.5m fit leaves the enlarged bound legendary inside its measured cage plus the smoke's required 3m of architectural clearance.",
   "chambers": [
     {
       "id": "outer_works",
@@ -204,7 +204,7 @@
       "id": "legendary_chamber",
       "at": [-32.0, 90.2],
       "size": [28.0, 28.0],
-      "height": 22.0,
+      "height": 23.0,
       "_role": "Sec8: tether mechanism, freeing sequence, voluntary join, release ceremony. Built AROUND the machine. World box x[218.0,246.0] z[-197.4,-169.4] -- directly behind the castle's own plinth (z[-154.4,-134.4]), 15m clear of it."
     }
   ],
@@ -2710,7 +2710,7 @@
     "facing_deg": -101.2,
     "model": "res://assets/environment/team_tether/tether_machine.glb",
     "chamber": "legendary_chamber",
-    "height": 15.0,
+    "height": 19.5,
     "base_radius": 5.6,
     "ring_radius": 7.2,
     "ring_pillars": 8,
@@ -2720,7 +2720,7 @@
       "range": 22.0,
       "_comment": "HALL-STAGING-0906 round 2: the core was the Legendary Chamber's key at 3.2/26 -- a blind judge read the room as \"a teal machine room with one candle in the corner\". The torch rows are the key now; the core is the accent that says the machine is live."
     },
-    "_scale_note": "15m against the board's own 0-20m bar. base_radius/ring_radius are read off the same board's plan proportions (the containment ring is a little under half the total height across), not invented -- but they are TUNABLE and will be replaced wholesale by the real mesh's own extents.",
+    "_scale_note": "Originally 15m against the board's own 0-20m bar. ROAD-VISUAL raised Veridian to 5.8m under the owner's 2026-09-07 large-creature directive; its bound 1.22x presentation then measured 10.25m at the top against an 8.89m cage crown. The machine is the smaller side and grows to 19.5m, which proportionally gives the installed mesh a roughly 7.49m cage void for the roughly 7.08m body while remaining below the chamber's 22m ceiling. base_radius/ring_radius describe the primitive fallback and are unchanged; the installed model's real extents remain authoritative.",
     "_comment_seam_closed": "SEAM CLOSED 2026-08-16. The owner authorised the generation and the key came from the Ralph art-lane Routine. Meshy multi-image-to-3D, refine tier, from four crops of board 15 cut by tools/art_pipeline/crop_prop_views.py -- and the front and side crops had the BOUND LEGENDARY LIFTED OUT of them first, because D24 licenses the machine and not its prisoner and image-to-3D follows its pictures rather than its negative prompt. `height` below is still the authority: stronghold.gd fits the mesh to it by its own visual bounds. The primitive massing under `base_radius`/`ring_radius`/`core_radius` is kept as the fallback the code still takes when `model` is empty or missing, and as the record of what the chamber was built around."
   },
   "_comment_recovery": "SG38's recovery opportunity, and Sec8 puts it in the Tether Chamber Approach -- past the elite, before the Warden. It is `scripts/build/creature_bed.gd`, the SAME object R4.8 already ships as a buildable, placed here instead of built by the player: `home_recovery.gd::rest` heals a party member fully (reviving a fainted one) and grants progression.gd's rest XP. Reusing it rather than inventing a stronghold-only heal is the whole point -- a player who has built a bed at home already knows exactly what this is.",
