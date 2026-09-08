@@ -22,7 +22,15 @@ const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
 
 const TEST_SAVE_DIR := "user://stormwood_continuous_chapter_entry"
 const SCENE_WAIT_FRAMES := 7200
-const PREFIX_WATCHDOG_MS := 8 * 60 * 1000
+# The eight-minute prefix cap was measured too small after the segment grew into
+# Act II: it expired after pair B's first endpoint, with 1,536.8 authored metres
+# and Varga's bounded five-minute sequence still ahead. At 80 physics frames per
+# metre and this wrapper's 480 Hz target, that walk's nominal target-clock
+# estimate is 256 seconds (actual wall time still includes runtime overhead).
+# Twenty minutes covers the observed eight-minute prefix + that walk + the
+# unchanged trainer bound + interaction/dialogue margin. Per-step limits remain
+# authoritative, so this outer guard is capacity rather than a weaker assertion.
+const PREFIX_WATCHDOG_MS := 20 * 60 * 1000
 const COMPLETED_CLOUDREACH_FLAGS: Array[String] = [
 	"cloudreach_chapter_started",
 	"cloudreach_act_i_complete",
@@ -40,6 +48,7 @@ const ENTRY_PARTY: Array[String] = [
 
 var _failures: Array[String] = []
 var _finished := false
+var _segment: Variant = null
 
 
 func _init() -> void:
@@ -116,8 +125,8 @@ func _run() -> void:
 		_finish()
 		return
 
-	var segment := Segment.new()
-	var result: Dictionary = await segment.run(self, world, game)
+	_segment = Segment.new()
+	var result: Dictionary = await _segment.run(self, world, game)
 	for line: Variant in result.get("transcript", []):
 		print("STORMWOOD CONTINUOUS — %s" % str(line))
 	for line: Variant in result.get("failures", []):
@@ -138,7 +147,10 @@ func _wait_for_stormwood() -> Node3D:
 func _watchdog() -> void:
 	await create_timer(float(PREFIX_WATCHDOG_MS) / 1000.0, true, false, true).timeout
 	if not _finished:
-		_failures.append("prefix watchdog expired before the Act-II Stormglass Arch recipe")
+		var detail := ""
+		if _segment != null and _segment.has_method("diagnostic_snapshot"):
+			detail = " (%s)" % str(_segment.call("diagnostic_snapshot"))
+		_failures.append("prefix watchdog expired before the Act-II Stormglass Arch recipe%s" % detail)
 		_finish()
 
 
@@ -198,6 +210,12 @@ class Segment extends RefCounted:
 	var _activated_provider_path := ""
 	var _trainer_outcomes: Dictionary = {}
 	var _last_combat_outcome := ""
+	var _active_phase := "segment setup"
+	var _active_phase_started_ms := 0
+	var _active_target := Vector2.ZERO
+	var _active_target_valid := false
+	var _active_walk_budget := 0
+	var _active_walked := 0
 
 
 	func run(p_tree: SceneTree, p_world: Node3D, p_game: Node) -> Dictionary:
@@ -209,6 +227,7 @@ class Segment extends RefCounted:
 		arbiter = tree.get_first_node_in_group(&"interaction_arbiter")
 		director = world.get_node_or_null(^"EncounterDirector")
 		manager = world.get_node_or_null(^"CombatManager")
+		_active_phase_started_ms = Time.get_ticks_msec()
 		if player == null or camera == null or arbiter == null or director == null or manager == null:
 			_fail("Stormwood lacks the live player, camera, InteractionArbiter, or combat runtime")
 			return _result()
@@ -542,9 +561,14 @@ class Segment extends RefCounted:
 	func _wait_for_charged_window(at: Vector2, label: String) -> bool:
 		var surge := world.get_node_or_null(^"StormwoodSurge")
 		var started := Time.get_ticks_msec()
+		_begin_phase("%s charged-window wait" % label, at)
+		print("STORMWOOD CONTINUOUS — DIAGNOSTIC: START %s" % _active_phase)
 		while surge != null and Time.get_ticks_msec() - started < BREAK_WAIT_MS:
 			if bool(surge.call("charged_nodes_open_at", Vector3(at.x,
 					world.call("ground_height_at", at.x, at.y), at.y))):
+				print("STORMWOOD CONTINUOUS — DIAGNOSTIC: END %s elapsed_ms=%d" % [
+					_active_phase, Time.get_ticks_msec() - started])
+				_end_phase()
 				return true
 			await tree.physics_frame
 		_fail("%s did not reach a Break/Fading charged-node window" % label)
@@ -712,11 +736,16 @@ class Segment extends RefCounted:
 		var target := Vector3(point.x, world.call("ground_height_at", point.x, point.y), point.y)
 		var distance := Vector2(player.global_position.x, player.global_position.z).distance_to(point)
 		var budget := maxi(1800, int(distance * 80.0))
+		_begin_phase("walk to %s" % label, point)
+		_active_walk_budget = budget
+		print("STORMWOOD CONTINUOUS — DIAGNOSTIC: START %s from=%s target=%s distance_m=%.1f budget_frames=%d" % [
+			_active_phase, str(player.global_position), str(target), distance, budget])
 		navigator.call("reset")
 		var walked := 0
 		var held := 0
 		var arrived := false
 		while walked < budget:
+			_active_walked = walked
 			var remaining := Vector2(player.global_position.x, player.global_position.z).distance_to(point)
 			if remaining <= tolerance:
 				arrived = true
@@ -742,7 +771,48 @@ class Segment extends RefCounted:
 				_fail("ordinary locomotion could not reach %s (%.1fm remain; player=%s target=%s)" % [
 					label, player.global_position.distance_to(target), str(player.global_position), str(target)])
 			return false
+		print("STORMWOOD CONTINUOUS — DIAGNOSTIC: END %s elapsed_ms=%d walked_frames=%d player=%s" % [
+			_active_phase, Time.get_ticks_msec() - _active_phase_started_ms, walked,
+			str(player.global_position)])
+		_end_phase()
 		return true
+
+
+	func _begin_phase(label: String, target: Vector2 = Vector2.ZERO) -> void:
+		_active_phase = label
+		_active_phase_started_ms = Time.get_ticks_msec()
+		_active_target = target
+		_active_target_valid = true
+		_active_walk_budget = 0
+		_active_walked = 0
+
+
+	func _end_phase() -> void:
+		_active_phase = "between route steps"
+		_active_phase_started_ms = Time.get_ticks_msec()
+		_active_target_valid = false
+		_active_walk_budget = 0
+		_active_walked = 0
+
+
+	func diagnostic_snapshot() -> String:
+		var parts: Array[String] = [
+			"phase=%s" % _active_phase,
+			"phase_elapsed_ms=%d" % (Time.get_ticks_msec() - _active_phase_started_ms),
+		]
+		if is_instance_valid(player):
+			parts.append("player=%s" % str(player.global_position))
+			if _active_target_valid:
+				var here := Vector2(player.global_position.x, player.global_position.z)
+				parts.append("target=%s" % str(_active_target))
+				parts.append("remaining_m=%.1f" % here.distance_to(_active_target))
+		if _active_walk_budget > 0:
+			parts.append("walked_frames=%d/%d" % [_active_walked, _active_walk_budget])
+		if is_instance_valid(manager):
+			parts.append("fighting=%s" % str(bool(manager.call("is_fighting"))))
+		if is_instance_valid(navigator):
+			parts.append("can_walk=%s" % str(bool(navigator.call("can_walk"))))
+		return ", ".join(parts)
 
 
 	## Ordinary locomotion can be interrupted by the production wild population.

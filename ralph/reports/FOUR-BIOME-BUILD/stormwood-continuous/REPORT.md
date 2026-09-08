@@ -16,7 +16,7 @@ Cloudreach earned the disclosed input state in the same process or save.
 
 ## Proven uninterrupted prefix
 
-The run in `%TEMP%/stormwood-continuous-solo-award-final.log` reached all of the
+The first run in `%TEMP%/stormwood-continuous-solo-award-final.log` reached all of the
 following without a debug teleport, reload, Stormwood flag fixture, position
 write, or combat-state write:
 
@@ -34,6 +34,17 @@ write, or combat-state write:
    its live switch.
 10. Continued on ordinary locomotion through another wild encounter to Dace.
 
+The follow-up in `%TEMP%/stormwood-continuous-dace-act2.log` repeated that prefix
+and continued further:
+
+11. Recorded the intervening Ash-road wild as an actual `outcome=lost`.
+12. Recovered through ordinary party-cycle/recall input, then won all three Dace
+    rounds, observed hosted `finished, won=true`, committed Dace's durable defeat
+    fact, operated the Hollows switch, and earned `stormwood:lower_rods_disabled`.
+13. The autosaved world from that same process contains both authored Pools
+    harvest-node facts and `stormwood:arch:b_pools:lit`, proving the segment also
+    gathered pair B's six Stormglass and relit its first endpoint before timeout.
+
 The Maren run also proves the solo hosted-reward repair in commit `7a773b8b0` in
 the production world: before that repair, the same three resolved rounds ended
 without the durable defeat fact. The focused real-ledger regression separately
@@ -42,19 +53,41 @@ idempotence, and Captain Marrow's Dynamo defeat fact.
 
 ## First current boundary
 
-The same run opened Dace dialogue but did not start hosted combat. This is not
-yet classified as a production blocker. The immediately preceding wild combat
-was recorded only as “resolved”; the harness did not capture its outcome and
-only attempted recall when no body existed. Production intentionally does not
-auto-switch after a wild loss, so a fainted deployed member would make Dace's
-pre-dialogue `can_challenge` check false while healthy party members remained.
+The Dace boundary is cleared. The follow-up observed the source-supported
+condition the earlier harness could not see: the route wild ended in a loss.
+The harness then ran its ordinary party-cycle/recall recovery path, the named
+challenge became available, and the live three-round fight passed. This proves
+the player path recovers; it does not claim that lost-wild recovery was the sole
+cause of the earlier harness attempt's missing challenge.
 
-The next harness revision now records every `CombatManager.exited` outcome and
-uses ordinary `party_cycle` followed by `creature_recall` before each trainer.
-It fails closed with the live manager/trainer/ally/defeat state if Dace remains
-unavailable. Until that revised run executes, “fainted ally after the route
-wild” is a source-supported candidate, not a proven diagnosis, and Act I beyond
-Dace is not claimed.
+The current boundary is diagnostic capacity, not a demonstrated production
+softlock. The expanded segment exhausted its fixed eight-minute wall-clock
+watchdog after pair B's Pools endpoint and before its next checkpoint at the
+Rodline endpoint. The last persisted pose was `(-782.55, 27.30, 1674.73)`, on
+the authored road between the relit Pools endpoint and the harness's
+`(-900, 1780)` intermediate waypoint. The save contains no Rodline-link or Bryn
+fact. Because the old harness logged neither per-leg starts nor its live state
+at watchdog expiry, it cannot distinguish remaining ordinary travel from a
+stalled navigator and must not classify this as either pass or product defect.
+
+The prepared diagnostic now logs each walk's start, end, distance, elapsed wall
+time and consumed physics-frame budget. If its outer watchdog expires, the
+failure includes the active phase, live player/target/remaining distance,
+walked-frame budget, combat state and navigator availability.
+
+The whole-prefix ceiling is now 20 minutes, derived from the expanded scope
+rather than guessed from the old prefix. From the last persisted pose, the
+authored legs through the `(-900,1780)` and `(-700,2300)` waypoints, Rodline
+arch/Bryn, and the two conductor-road points to Ondra total 1,536.8 m. The
+unchanged walker allowance of 80 physics frames per metre has a 256.1-second
+target-clock estimate for that distance at the wrapper's configured 480 Hz;
+actual wall time can be higher with runtime overhead. Adding that estimate to
+the eight minutes already observed, Varga's unchanged five-minute sequence
+bound, and 60 seconds for the nearby pickup, switches and two dialogues yields
+18.3 minutes. Twenty minutes is a bounded margin for the prepared Act-II scope.
+It does not relax the per-walk frame budget, 120-second weather window,
+180-second live-fight bound, five-minute trainer bound, or prompt/dialogue
+assertions.
 
 ## Prepared Act-II opening (not yet runtime-proven)
 
@@ -75,8 +108,9 @@ The exact intended terminal flag for this bounded extension is
 `stormwood:arch_recipe_known`. It does not fabricate Crown materials, place the
 missing arch, cross the Glass Sink, clear the guardian, or claim Act II complete.
 All extension actions are locomotion, ordinary prompt activation, dialogue, and
-controller combat. It remains prepared source coverage until the Dace boundary
-is cleared and one uninterrupted runtime reaches it.
+controller combat. Dace and the first pair-B endpoint are now runtime-proven;
+Rodline/Bryn and the prepared Act-II extension remain unproven until one
+uninterrupted runtime reaches them.
 
 ## Focused checks
 
@@ -86,3 +120,6 @@ is cleared and one uninterrupted runtime reaches it.
   `%TEMP%/root-stormwood-hosted-rewards.log`.
 - Continuous script check-only parse passed after the outcome/recovery change;
   log `%TEMP%/stormwood-continuous-outcome-check.log`.
+- Dace/pair-B continuation: exit 1 only at the fixed eight-minute harness
+  watchdog after the Pools endpoint; log
+  `%TEMP%/stormwood-continuous-dace-act2.log`.
