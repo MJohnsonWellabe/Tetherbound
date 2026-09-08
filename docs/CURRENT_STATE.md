@@ -54,8 +54,9 @@ Detailed evidence and commit boundaries: `ralph/reports/FOUR-BIOME-BUILD/checkpo
 
 **Solo Stormwood victory blocker, 2026-09-08:** the continuous runtime re-earned
 Ashfoot arrival/dialogues, sheltered Break, six Stormglass, arch pair A and the
-route pickup, then defeated Maren's three opponents through real combat input.
-The durable trainer defeat flag did not arrive. Root confirmed
+route pickup, then resolved three Maren combat rounds through real input.
+The durable trainer defeat flag did not arrive; that log does not separately
+record each round's win/loss outcome. Independently, root confirmed
 `StormwoodEncounterDirector.award_hosted_trainer()` incorrectly uses the base
 live-session-only `_is_host()` guard, although the Stormwood hub also owns solo
 fights. The same award method is called by Dynamo completion. A focused repair
