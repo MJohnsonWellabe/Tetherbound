@@ -83,14 +83,16 @@ at about 690 seconds; the remaining exterior route is about 1.27 km. The
 whole-path watchdog is therefore 30 minutes because the old 15-minute ceiling
 was impossible even when every remaining interaction succeeded.
 
-One intended-route gap must be resolved before spending that full runtime.
-Officer Venn currently resolves to world XZ `(182, 4100)`, while the complete
-authored `veilfall_exploration_spine` remains at least 213.95 m away (nearest at
-spine point 3, `(-14.774, 4016)`). The story contract says Venn holds the
-waterfall approach. A continuous witness must not silently replace that missing
-connection with an ungraded 214 m navigator chord. The Veilfall footing lane is
-measuring a reachable late-spine/approach placement; no production placement
-was guessed in this harness commit.
+One intended-route question must be resolved before spending that full runtime.
+The production encounter reuses Officer Venn's NPC body at
+`(200, 619.079, 4152)`; the trainer row's `[-18, -40]` offset is not its runtime
+placement. The body is 45.27 m from the nearest graded spine sample. From the
+harness's last pre-Venn waypoint at spine point 3, the direct chord is 517.64 m
+in 3D and 193 of its 255 measured samples exceed a 24-degree grade. Those
+measurements do not by themselves prove that normal movement fails, so the
+Veilfall lane is running a production StickNavigator approach from that exact
+waypoint before proposing any placement change. No production placement was
+guessed in this harness commit.
 
 Once that ordinary approach is present, the run will fight Venn, enter the
 waterfall through its production prompt, activate the intake and return sluice
