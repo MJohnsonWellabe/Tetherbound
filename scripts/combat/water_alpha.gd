@@ -33,12 +33,27 @@ func _ready() -> void:
 	pass
 
 func _process(_delta: float) -> void:
+	_retire_completed_body()
 	# Use the shared controller interaction arbiter; never consume an unrelated
 	# NPC/workbench interact press just because Aquaryn is nearby.
 	if _challenge_prompt != null:
 		_challenge_prompt.enabled = not world.simulation_only and not _local_fight \
 			and not _engage_pending and not _manager.is_fighting() \
 			and not get_node("/root/Game").world.flags.has(str(rules.completion_flag))
+
+func _retire_completed_body() -> void:
+	# This realm service owns Aquaryn outside the ordinary director's
+	# _engaged_with cleanup. A durable result must clear its physical body in
+	# the same live realm too, after the local manager finishes its result beat.
+	# Observers and late ledger recipients take the identical completed state.
+	if _local_fight or not is_instance_valid(body):
+		return
+	var game := get_node_or_null("/root/Game")
+	if game == null or not game.world.flags.has(str(rules.get("completion_flag", ""))):
+		return
+	body.visible = false
+	body.collision_layer = 0
+	body.set_physics_process(false)
 
 func build(realm: Node3D, director: Node) -> void:
 	world = realm
@@ -66,10 +81,7 @@ func build(realm: Node3D, director: Node) -> void:
 	body.global_position.y = world.ground_height_at(body.position.x, body.position.z)
 	body.home = body.global_position
 	body.set_alpha(true)
-	if get_node("/root/Game").world.flags.has(str(rules.completion_flag)):
-		body.visible = false
-		body.collision_layer = 0
-		body.set_physics_process(false)
+	_retire_completed_body()
 	body.register_environment_velocity_modifier(&"water_alpha", body, body.apply_surface_velocity, 0, Vector3(1, 0, 1))
 	body.strike_ready.connect(_on_alpha_strike)
 	_challenge_prompt = preload("res://scripts/world/interactable.gd").new()

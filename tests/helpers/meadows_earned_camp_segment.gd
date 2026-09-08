@@ -3,19 +3,26 @@ extends "res://tests/helpers/gate_b_tail_segment.gd"
 ## Earned campsite construction in the caller's current world. Only the
 ## parent's controller catalogue, navigation and placement methods are reused.
 ## The fixture, feeding, dialogue and combat shortcuts are fail-closed below.
+var _lesson_mode := false
 const PLACER := preload("res://scripts/build/build_placer.gd")
 
 
-static func piece_plan() -> Array[String]:
+static func piece_plan(lesson_mode: bool = false) -> Array[String]:
+	if lesson_mode:
+		var lesson: Array[String] = []
+		for id: String in HOME_PROGRESS.required_pieces():
+			for _count in int(HOME_PROGRESS.required_pieces()[id]):
+				lesson.append(id)
+		return lesson
 	var pieces: Array[String] = ["tent", "campfire", "bedroll"]
 	for _index in TOURNAMENT.required_party_size():
 		pieces.append("creature_bed")
 	return pieces
 
 
-static func required_stock(game: Node) -> Dictionary:
+static func required_stock(game: Node, lesson_mode: bool = false) -> Dictionary:
 	var stock := {}
-	for id in piece_plan():
+	for id in piece_plan(lesson_mode):
 		for requirement: Dictionary in game.call("build_cost_for", id):
 			var item := str(requirement.get("id", ""))
 			stock[item] = int(stock.get(item, 0)) + int(requirement.get("n", 0))
@@ -23,7 +30,8 @@ static func required_stock(game: Node) -> Dictionary:
 
 
 func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
-		rig: Node3D, stage_arena: bool = false, skip_house: bool = false) -> Dictionary:
+		rig: Node3D, stage_arena: bool = false, skip_house: bool = false, lesson_mode: bool = false) -> Dictionary:
+	_lesson_mode = lesson_mode
 	_tree = tree
 	_world = world
 	_game = game
@@ -37,14 +45,14 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 	if bool(game.get("free_build")):
 		_fail("earned campsite cannot run with Free Build enabled")
 		return _result()
-	for id in piece_plan():
+	for id in piece_plan(_lesson_mode):
 		if (game.call("build_cost_for", id) as Array).is_empty():
 			_fail("earned campsite has no payable catalogue cost for " + id)
 			return _result()
 	if not _collect_nodes():
 		return _result()
 	_resolve_move_bindings()
-	var needed := required_stock(game)
+	var needed := required_stock(game, _lesson_mode)
 	for item: String in needed:
 		if int(game.get("inventory").call("count", item)) < int(needed[item]):
 			_fail("earned campsite lacks %s: need %d, have %d" % [item,
@@ -57,6 +65,24 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 		return _result()
 	transcript.append("paid campsite and %d beds placed; care and tournament remain" % _beds.size())
 	return _result()
+
+
+func _place_the_creature_beds() -> bool:
+	if not _lesson_mode:
+		return await super._place_the_creature_beds()
+	if int(HOME_PROGRESS.required_pieces().get("creature_bed", 0)) != 1:
+		_fail("Single-bed lesson requires the actual home quest's one creature bed")
+		return false
+	var bed := await _place_fixture("creature_bed")
+	if bed == null:
+		return false
+	_beds.append(bed)
+	_bed = bed
+	if not _flag("creature_bed_built") or not _flag("home_built"):
+		_fail("Paid lesson bed did not complete the actual campsite objectives")
+		return false
+	_objective_should_be("tournament_sleep", "paid one-bed care lesson")
+	return failures.is_empty()
 
 
 func _place_fixture(id: String) -> Node3D:

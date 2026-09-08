@@ -273,11 +273,12 @@
    "amount": 4,
    "label": "Gather deadwood",
    "at": [
-    6.0,
-    -34.0
+    7.0,
+    -24.0
    ],
    "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
-   "model_scale": 0.22
+   "model_scale": 0.22,
+   "_why_early_camp_loop_2026_09_08": "EARLY-CAMP-LOOP 2026-09-08. Move the existing deadwood from [6,-34], exactly Garrick's authored standing position, onto the west shoulder of the Tam-to-practice gathering walk at [7,-24]. It is inside the village square's flat and vegetation clearing, 8.1m from Tam, 5.4m from the nearest other supply, and off the practice road. This keeps useful axe practice beside the tools lesson without contesting a villager prompt. Same order, installed prop, amount and verb; no extra resources."
   },
   {
    "order": 1021,
@@ -357,11 +358,12 @@
    "amount": 4,
    "label": "Strip meadow grass",
    "at": [
-    30.0,
-    -8.0
+    31.0,
+    -32.0
    ],
    "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
-   "model_scale": 1.3
+   "model_scale": 1.3,
+   "_why_early_camp_loop_2026_09_08": "EARLY-CAMP-LOOP 2026-09-08. Move this existing grass stop from the square's east edge [30,-8] to the cleared north edge of Practice Meadow [31,-32]. It completes the short tools-to-deadwood-to-stone-to-grass preparation walk toward the campsite clearing, with the existing southern grass and deadwood stops forming the return leg. The site is 8.1m from the practice clearing centre, outside the dirt path, clear of village fences, people and the trainer-camp prop cluster. Same order, installed grass model, knife verb and yield; later road resources remain in place."
   },
   {
    "order": 1028,

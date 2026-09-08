@@ -237,3 +237,5 @@ This is not a Windows/Ally gameplay or complete fresh campaign claim.
 Separate Release34258802676 was not counted. Evidence: `.artifacts/ci-34258802654/`
 all27logs and run/jobs metadata; `.artifacts/wave2-main-ci-34258802654-FINAL.txt`,
 `-alljobs-final.txt`, `-export-evidence.txt`, snapshots01 through09.
+
+Wave3 landing: PR87 exact6c0f0e78046fbd15c3e1fe46de06fa154981be66 passedCI34262351185 and squashlanded main043cd1061ba8e1423d1681c7479d9ad36f6d4317. Its own pushCI34264602920 passed at19:10:32UTC attempt1,27successfuljobs/two existingmanual-onlyskips. All executedjobs/steps/logs reviewed;3037unit tests/487178assertions;all7MPshards;WindowsPE102948352bytes;actualLinuxexportedruntimeground/terrain383004props;artifact10072368637=686522937bytes,ZIPsha2564acae933284d2ec3860a720b7a90de550dd6d4ed3a37352c37e3e401f3fa06e2. Exactreceipts .artifacts/wave3-main-ci-34264602920-{FINAL,alljobs-final,export-evidence}.txt. Notownerhardware/fullcampaignproof. CI laneclosed forowner's content-firstdirection.

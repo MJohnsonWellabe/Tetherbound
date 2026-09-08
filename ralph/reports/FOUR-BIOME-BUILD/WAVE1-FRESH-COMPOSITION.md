@@ -429,3 +429,98 @@ and ending remain unproved. Focused receipt/completion checks pass2 tests/16
 assertions clean under `.artifacts/wave3-earned-ending-focus-r2-engine.log`;
 the first test invocation failed to parse an incorrect Party preload path,
 which was corrected to the actual autoload path. That failed log is retained.
+
+## Changed material run — second, distinct reach failure
+
+The new isolated `four_biome_fresh_40872_2563` title-start run terminated exit1
+at632.274s after ten actual training wins and five creatures at levels5,5,6,5,5.
+The earlier successful scatter harvest no longer emitted material errors;
+entire `.artifacts/wave3-fresh-harvest-campaign{,-engine}.log` had zero
+ERROR/SCRIPT ERROR lines. Owner fingerprints match. Wood again reached31/42.
+At the same vegetation tree(45.44735,-0.188587,-62.50097), the final interaction
+was now3.32m away versus5.29m in the previous run, but still offered only the
+ordinary director fallback. The approach-policy defect was reproduced/fixed,
+but this run does not establish that the actual tree is reachable. New
+investigation compares its scaled prompt height and collision geometry;
+no unchanged rerun, skip of that tree, or relaxed reach criterion is allowed.
+The current PR87 head6c0f0e78046fbd15c3e1fe46de06fa154981be66 remains frozen
+for CI34262351185. Further geometry/late-route work is a separate local batch.
+
+## Complete source composition and actual Guardian GUI probe
+
+The next local source now connects Iona -> actual swimmer selection/capture,
+explicit duplicate-only farewell -> paid saddle -> ordinary care/mount ->
+Salt Crown/Sluice/Veilfall/Nerissa -> Guardian invitation/farewell. Default
+campaign_complete can become true only after every segment returns its actual
+success receipt; prefix flags cannot set it. A caller-owned terminal callback
+preserves the late route's original50-minute ceiling. No complete fresh run
+has passed. Parser log: `.artifacts/wave4-complete-composition-parse-engine.log`.
+The captured swimmer is wounded by design, so before mounting the driver also
+uses the existing ordinary Tidal bed/rest flow for that exact newcomer; no HP
+repair or extra fighter is injected. Four focused suites pass15tests/101asserts
+without engine/script errors (`wave4-water-full-composed-focus-engine.log`).
+
+`tools/_probe_water_earned_guardian_farewell.gd` separately booted actual Water
+with disclosed fiveMosshell55/freed-tether flags and one starting interior
+pose. It then called the actual new ending helper. That helper physically
+approached/invited the Guardian, used GUI input to decline only the pending
+newcomer, preserved all five, and observed actual saved character receipt,
+host claim acknowledgment/removal and all three saved ending flags. Terminal
+exit0; owner fingerprints unchanged; zeroERROR/SCRIPTERROR and seven existing
+Water texture-mipmap warnings. Logs/profile: `.artifacts/wave4-guardian-farewell*`.
+This is a chapter-end fixture proof, NOT an uninterrupted campaign completion.
+The probe did not place or activate the optional Tideglass shrine afterward.
+
+## Wave 3 landing and Wave 4 changed fresh run
+
+PR87 exact6c0f0e78046fbd15c3e1fe46de06fa154981be66 passed CI34262351185,
+26 executed jobs/three existing conditional skips, attempt1. All jobs, steps
+and logs reviewed; 3037 unit tests/487178 assertions and all seven net shards
+passed. The five new strict native checks passed without engine/script errors.
+Empty PR comments were checked before expected-head squash merge. Fetched main
+043cd1061ba8e1423d1681c7479d9ad36f6d4317 has the identical verified tree;
+its own push CI34264602920 is pending, so no new main-green claim yet.
+
+The next branch is codex/four-biome-wave4. Exact tree prompt-height and
+same-live Aquaryn body-retirement repairs have native original/fixed evidence
+in MEADOWS-TREE-PROMPT-HEIGHT-WAVE3.md and WATER-ALPHA-RETIREMENT-WAVE3.md.
+Two additional CI checks are registered once with isolated profiles and strict
+engine/console error detection; no retries or existing ceilings changed.
+
+A new genuine title-start run began18:40UTC, scratch four_biome_fresh_3588_2512,
+using .artifacts/wave4-fresh-complete-campaign-profile and matching named logs,
+source hash manifest and owner-before fingerprint. It loads the complete
+ending composition and both new runtime repairs. It is active, not passed.
+The earlier failed scratch was neither copied nor reloaded. Live forward-view
+coverage is still open: static authored rows and twelve staged captures do
+not measure every sample on the actual continuously traversed campaign.
+
+## Wave 4 first full-composition run — new neighboring-prompt failure
+
+Fresh3588_2512 terminated exit1 at750.55s; owner before/after fingerprints
+match and the entire engine log has zero ERROR/SCRIPT ERROR lines. Five earned
+creatures reached levels5,5,6,5,5 after ten wins. Actual wood reached40/42:
+the old exact tree and two further trees paid correctly. The next selected
+tree at(78.98997,-2.175245,-44.09865) remained standing with stock3. Its prompt
+was1.93m away while a neighboring Chop at(80.4,-43.9) won at1.517838m. No
+harvest receipt was accepted, no failed tree was skipped, and no rerun began.
+A native neighboring-tree reproduction is in progress. Logs/profile/manifest
+are .artifacts/wave4-fresh-complete-campaign*. Paid camp remains unproved.
+After this terminal, the next source adds read-only travel visibility JSONL
+and explicit late Ride/recall failure reasons; neither changes this run's proof.
+
+## Wave 4 actual first-camp lesson
+
+The next fresh run, scratch35664_2471, ended at595.393s after the normal
+opening, revised village conversations, five earned creatures and ten wins.
+It gathered the authored one-bed camp bill, paid for all four pieces, and
+completed two actual creature rests. A third assignment stopped5.2m from
+the bed while walking from the bedroll. No care/tournament pass is claimed.
+Owner save fingerprints match and engine/script errors are absent. The tent
+and sleeping display are nonblocking; the retained log does not identify the
+actual movement obstruction. No guessed detour or rerun is accepted as a fix.
+The separate optional forest cluster remains deferred, not repaired.
+
+Read-only observation recorded123 samples over1364.57m,92 below two visible
+creatures and one undersampled interval. This is partial observed travel,
+not full forward-view coverage. See MEADOWS-FIRST-CAMP-CONTENT-WAVE4.md.

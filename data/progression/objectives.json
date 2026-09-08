@@ -77,7 +77,7 @@
       "scope": "player",
       "retired_by": "home_built",
       "label": "Gather supplies for your team's camp.",
-      "how": "Select a tool on the hotbar, then {interact} at a tree, an outcrop or a bush.",
+      "how": "Follow the village path toward Practice Meadow: gather deadwood, cut the long grass and prise loose stones beside the path. Select the right tool on the hotbar and use {interact}; pick up the material left after a tree or rock falls.",
       "_comment": "FIRST-HOUR-FUN-REBUILD. The existing material flag remains save-compatible, but its next step is the compact Camp rather than a mandatory house.",
       "_comment_retired_by": "OBJECTIVE-CAMP-0903, owner playtest 2026-09-03 item 1: \"After I have already built a camp it keeps telling me to gather supplies. I built in free mode so I never had to but if you've already bypassed it, it should move on.\" `home_materials_gathered` is written only from a real harvest (`harvest_node.gd`/`felled_resource.gd` calling `home_progress.gd::maybe_set_materials_gathered`) -- free build waives what PLACING costs but a player who never triggers a tracked harvest never sets this flag, however many materials they actually hold. `home_built` (`build_placer.gd`, checked after every real placement including a free-build one, and again on `restore_from_game` for an older save) is the honest, always-correct answer to \"is the camp standing\" regardless of route. The second entry to use `retired_by` (`quest_log.gd::_done()`'s mechanism, first written for `tournament_team_fed`): the camp existing retires the rung that exists to produce it, exactly the way `tournament_entered` retires the feeding rung below -- one flag, checked with `has`, still not the branching sec19/CLAUDE.md ban. Pinned by `test_camp_already_built_retires_the_gather_rung` and `test_the_guided_view_advances_past_a_camp_built_without_the_gather_flag` in `tests/test_quest_log.gd`."
     },
@@ -86,15 +86,15 @@
       "flag_id": "home_built",
       "scope": "player",
       "label": "Make camp for your team.",
-      "how": "Select the hammer on the hotbar and {interact} to open Build. Place a Tent, a Campfire and a Bedroll: together they are your team's base.",
-      "_comment": "FIRST-HOUR-FUN-REBUILD. `home_built` is retained as the existing save-compatible completion flag, but the owning camp configuration now defines it as three separately placed pieces -- Tent, Campfire and Bedroll (OWNER-0902-CAMP-SPLIT split the old single Camp buy so each is independently placeable) -- with no wall, roof or door requirement."
+      "how": "Make a clearing-side camp at Practice Meadow. Select the hammer and {interact} to open Build. Place a Tent, a Campfire, a Bedroll under the canvas and one Creature Bed beside it; keep the path clear.",
+      "_comment": "FIRST-HOUR-FUN-REBUILD. `home_built` is retained as the existing save-compatible completion flag, but the owning camp configuration defines it as Tent, Campfire, Bedroll and one Creature Bed. OWNER-0902-CAMP-SPLIT made the camp pieces independently placeable; the Creature Bed supplies the care lesson. No wall, roof or door is required."
     },
     {
       "id": "tournament_build_creature_beds",
       "flag_id": "creature_bed_built",
       "scope": "player",
       "label": "Build a Creature Bed for your team.",
-      "how": "Place one by your camp with the hammer, then leave a creature there to recover before you sleep.",
+      "how": "Place one beside your tent with the hammer. Assign a tired creature with {interact} before you sleep; additional beds let more of your five recover together.",
       "_comment": "FIRST-HOUR-FUN-REBUILD. One player-built Creature Bed is the mandatory care lesson and tournament proof. More beds remain a useful optional investment for a five-creature team; they are not a qualification wall."
     },
     {
