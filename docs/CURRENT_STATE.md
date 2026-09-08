@@ -38,6 +38,14 @@ these directions after the recipe is learned. Existing dialogue/dock/quest
 checks pass47 tests/937 assertions with clean engine output. No new costs,
 completion flags, equipment step or encounter rule was introduced.
 
+Water's runtime builder also omitted the shipped CombatHUD and shared Engage
+registration. Local Wave5 now mounts that existing HUD against the actual
+manager/director and registers the director with the scene arbiter. The existing
+scene smoke passes40 checks headless and41 rendered, including health/name/move
+panels and Engage display. Owner saves match; no engine/script errors. The frame
+proves HUD presence, not combat framing: the synthetic fixture's camera has not
+settled onto the actors. Existing terrain/deprecation warnings remain recorded.
+
 The existing isolated Water chapter run has now completed First Shore through
 Iona's Swim Saddle recipe with the same five carried creatures, including all
 Reedhaven/Brine/Shellwatch actions, actual camp care and Aquaryn victory. It

@@ -50,3 +50,27 @@ currently provide; its failure remains recorded. The corrected diagnostic uses
 Water's real direct-input path, not a callback or larger reach. Site010's high
 shelf failed ordinary approach and was restored. No full combat win, HUD
 presentation, fresh campaign or complete ecology repair is claimed.
+
+The placement investigation exposed a separate player-facing omission: Water
+created its combat manager and director without mounting the existing CombatHUD
+or registering Engage with its interaction arbiter. No alternate Water consumer
+provided those displays. The builder now reuses the shipped HUD with the actual
+manager/director paths and registers the director, matching the other realms.
+Simulation worlds still omit the HUD; repeated build calls reuse the same nodes.
+No combat UI redesign or fighting rule changed.
+
+The existing scene smoke retains its original checks and now also checks actual
+HUD binding, idempotence, Engage presentation, both combatant panels, names,
+health and move controls. Its headless run passed40 checks/zero failures.
+Evidence: `.artifacts/wave5-water-combat-hud{,-engine}.log`. This scene fixture
+uses synthetic prerequisites, diagnostic poses and its existing direct trainer
+challenge; it does not establish ordinary chapter traversal or a full fight win.
+
+Rendered execution passed41 checks/zero failures, owner hashes unchanged,
+zero engine/script errors and seven existing terrain/deprecation warnings.
+Root inspected `.artifacts/wave5-water-combat-hud-render.png`: Cragclaw/Lysa,
+Mosshell, health, energy and move controls are visible. The fixture camera is
+still looking across the landscape after its diagnostic pose change; the image
+is evidence of the HUD, not combat framing or visual-quality acceptance.
+No second art iteration was made. Render logs:
+`.artifacts/wave5-water-combat-hud-render{,-engine}.log`.
