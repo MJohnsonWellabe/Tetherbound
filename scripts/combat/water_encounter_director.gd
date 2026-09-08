@@ -57,6 +57,37 @@ static func named_spawn_plan(site: Dictionary, named_encounters: Array) -> Dicti
 			"level": int(named.get("level", 1)), "aggressive": false,
 			"wander_radius": float(site.get("roam_radius_m", site.get("radius_m", 4)))}}
 
+
+## One selector owns both authored named replacements and ordinary table rolls.
+## A site that names a replacement fails closed when its two authored references
+## disagree; it must never silently turn back into a random wild population.
+static func site_spawn_plans(site: Dictionary, table: Dictionary,
+		named_encounters: Array, seed_value: int) -> Array[Dictionary]:
+	var named_id := str(site.get("named_replacement_id", ""))
+	if not named_id.is_empty():
+		var named := named_spawn_plan(site, named_encounters)
+		if named.is_empty() or int(site.get("count", 1)) != 1:
+			return []
+		named["member_index"] = 0
+		return [named]
+	var plans: Array[Dictionary] = []
+	for index in int(site.get("count", 1)):
+		var selected := roll_wild(table, seed_value, hash(str(site.get("id", ""))) + index)
+		if selected.is_empty():
+			continue
+		plans.append({
+			"id": "",
+			"species": str(selected.species),
+			"position": site.get("position", []).duplicate(),
+			"display_name": "",
+			"reward_role": "",
+			"member_index": index,
+			"opts": {"name": "%s_%d" % [str(site.get("id", "")), index],
+				"level": int(selected.level), "aggressive": false,
+				"wander_radius": float(site.get("radius_m", 4.0))},
+		})
+	return plans
+
 ## Rebuild the saved owner's existing party member through the deployment seam.
 ## A surface swimmer must not be placed on the seabed by the land spawn helper.
 func restore_swim_mount(saved: Dictionary) -> bool:
@@ -162,33 +193,50 @@ func _spawn_available_sites() -> void:
 		var table := find_id(chapter.get("encounter_tables", []), str(site.table_id))
 		var centre := _vector3_of(site.position)
 		var members: Array = []
-		for index in int(site.get("count", 1)):
-			var selected := roll_wild(table, world_seed(), hash(id) + index)
-			if selected.is_empty():
-				continue
-			var opts := {"name": "%s_%d" % [id, index],
-				"site_anchor": centre, "level": selected.level, "aggressive": false,
-				"wander_radius": float(site.get("radius_m", 4))}
+		var plans := site_spawn_plans(site, table,
+			encounter_config.get("named_encounters", []), world_seed())
+		# A valid named reservation whose once flag already fired is complete,
+		# not a broken spawn. Settle it as intentionally absent so returning to
+		# the island (or loading a completed save) stays quiet and deterministic.
+		if plans.size() == 1 and not str(plans[0].id).is_empty() \
+				and _once_cleared(str(plans[0].opts.get("once_id", ""))):
+			_site_members[id] = members
+			_site_spawned[id] = true
+			continue
+		for plan: Dictionary in plans:
+			var index := int(plan.member_index)
+			var opts: Dictionary = plan.opts.duplicate(true)
+			opts["site_anchor"] = centre
+			var spawn_at := _vector3_of(plan.position)
 			var wild: Node3D
 			if str(site.get("placement_mode", "ground")) == "water_surface":
-				var member_at := _surface_member_position(centre, int(site.get("count", 1)), index,
+				var member_at := _surface_member_position(spawn_at, int(site.get("count", 1)), index,
 					float(site.get("radius_m", 4.0)))
-				wild = _spawn_surface_wild(str(selected.species), member_at, opts,
-					float(site.get("surface_y_m", centre.y)),
+				wild = _spawn_surface_wild(str(plan.species), member_at, opts,
+					float(site.get("surface_y_m", spawn_at.y)),
 					float(site.get("surface_submerge_fraction", 0.28)))
 			else:
-				wild = spawn_wild(str(selected.species), centre, opts)
+				wild = spawn_wild(str(plan.species), spawn_at, opts)
 			if wild != null:
 				wild.set_meta("water_site_id", id)
 				wild.set_meta("water_placement_mode", str(site.get("placement_mode", "ground")))
+				if not str(plan.id).is_empty():
+					# Named identity has to reach both the exploration prompt (the
+					# body) and combat/catch presentation (the live instance).
+					wild.set("display_name", str(plan.display_name))
+					var instance: Variant = wild.get("instance")
+					if instance != null:
+						(instance as RefCounted).set("display_name", str(plan.display_name))
+					wild.set_meta("water_named_encounter", str(plan.id))
+					wild.set_meta("water_reward_role", str(plan.reward_role))
 				members.append(wild)
 				_wild_respawn[wild] = float(encounter_config.get("wild_respawn_seconds", 240))
 		_site_members[id] = members
-		if members.size() == int(site.get("count", 1)):
+		if plans.size() == int(site.get("count", 1)) and members.size() == plans.size():
 			_site_spawned[id] = true
 		else:
 			_site_failures[id] = true
-			push_warning("Water site lacks supported creature footing: " + id)
+			push_warning("Water site lacks a valid authored encounter or supported creature footing: " + id)
 
 
 static func _surface_member_position(centre: Vector3, count: int, index: int, radius: float) -> Vector3:

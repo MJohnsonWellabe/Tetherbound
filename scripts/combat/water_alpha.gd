@@ -117,10 +117,22 @@ func _creature_card_for(peer_id: int) -> Dictionary:
 	return primary._creature_card_for(peer_id)
 
 func submit_encounter_intent(intent: Dictionary) -> Dictionary:
+	# Aquaryn uses its own persistent transport, so it does not pass through the
+	# inherited EncounterDirector submitter that normally stamps strikes with a
+	# monotonic action id. Keep the same protocol invariant here: the host's
+	# replay/cooldown authority refuses missing or repeated action ids.
+	var outbound := intent
+	if str(intent.get("kind", "")) == "strike_intent":
+		outbound = intent.duplicate(true)
+		if intent.has("action"):
+			_encounter_action = maxi(_encounter_action, int(intent.get("action", 0)))
+		else:
+			_encounter_action += 1
+			outbound["action"] = _encounter_action
 	if str(intent.get("kind", "")) == "catch_attempt":
 		_catch_finish_reply = {}
 		_catch_finish_pending = false
-	return transport.submit(intent)
+	return transport.submit(outbound)
 
 func host_commit(intent: Dictionary, peer: int, actor: Dictionary) -> Dictionary:
 	if not is_alpha_authority():

@@ -1,7 +1,51 @@
 extends "res://tests/test_case.gd"
 const ADAPTER := preload("res://scripts/world/water_encounter_runtime_data.gd")
 const CATALOG := preload("res://scripts/creatures/water_species_catalog.gd")
+const DIRECTOR := preload("res://scripts/combat/water_encounter_director.gd")
 const FIELD := preload("res://scripts/world/water_heightfield.gd")
+
+
+class NamedSpawnProbeDirector:
+	extends "res://scripts/combat/water_encounter_director.gd"
+	const CREATURE := preload("res://scenes/creatures/creature.tscn")
+	const WILD := preload("res://scripts/creatures/wild_creature.gd")
+	var probe_positions: Array[Vector3] = []
+	var spawn_calls: Array[Dictionary] = []
+	var spawned_bodies: Array[Node3D] = []
+	var cleared_ids: Dictionary = {}
+
+	func occupied_positions() -> Array[Vector3]:
+		return probe_positions
+
+	func world_seed() -> int:
+		return 13579
+
+	func _flags_hold(_flags: Array) -> bool:
+		return true
+
+	func _once_cleared(id: String) -> bool:
+		return cleared_ids.has(id)
+
+	func spawn_wild(species: String, spot: Vector3, opts: Dictionary = {}) -> Node3D:
+		spawn_calls.append({"species": species, "spot": spot, "opts": opts.duplicate(true)})
+		var wild: Node3D = CREATURE.instantiate()
+		wild.set_script(WILD)
+		wild.call("populate", species, null)
+		spawned_bodies.append(wild)
+		return wild
+
+	func site_state(id: String) -> Dictionary:
+		return {
+			"spawned": _site_spawned.has(id),
+			"failed": _site_failures.has(id),
+			"members": _site_members.get(id, []).duplicate(),
+		}
+
+	func dispose() -> void:
+		for body: Node3D in spawned_bodies:
+			if is_instance_valid(body):
+				body.free()
+
 var world: Dictionary
 var characters: Dictionary
 var encounters: Dictionary
@@ -129,6 +173,149 @@ func test_table_levels_weights_and_named_replacements_remain_exact() -> void:
 		var named: Dictionary = result.encounter_config.named_encounters[index]
 		assert_eq(named.replaces_wild_site_id, encounters.named_encounters[index].replaces_wild_site_id)
 		assert_eq(named.level, encounters.named_encounters[index].level)
+
+
+func test_reserved_named_sites_use_the_fixed_actor_and_once_flag_in_production_selector() -> void:
+	var sites_by_id: Dictionary = {}
+	for site: Dictionary in result.encounter_config.wild_sites:
+		sites_by_id[str(site.id)] = site
+	var tables_by_id: Dictionary = {}
+	for table: Dictionary in result.chapter.encounter_tables:
+		tables_by_id[str(table.id)] = table
+	var seen: Dictionary = {}
+	for named: Dictionary in result.encounter_config.named_encounters:
+		var site: Dictionary = sites_by_id.get(str(named.replaces_wild_site_id), {})
+		assert_false(site.is_empty(), str(named.id) + " keeps its reserved wild site")
+		if site.is_empty():
+			continue
+		var plans := DIRECTOR.site_spawn_plans(site, tables_by_id.get(str(site.table_id), {}),
+			result.encounter_config.named_encounters, 987654)
+		assert_eq(plans.size(), 1, str(named.id) + " resolves to exactly one authored actor")
+		if plans.size() != 1:
+			continue
+		var plan: Dictionary = plans[0]
+		assert_eq(plan.id, named.id)
+		assert_eq(plan.species, named.species)
+		assert_eq(plan.position, named.position)
+		assert_eq(plan.display_name, named.display_name)
+		assert_eq(plan.opts.name, named.id)
+		assert_eq(plan.opts.level, named.level)
+		assert_eq(plan.opts.once_id, named.completion_flag)
+		seen[str(named.id)] = true
+	assert_eq(seen.size(), 5, "all authored Water named encounters reach the production selector")
+
+	var malformed: Dictionary = sites_by_id[str(
+		result.encounter_config.named_encounters[0].replaces_wild_site_id)].duplicate(true)
+	malformed.named_replacement_id = "missing_named_actor"
+	var rejected := DIRECTOR.site_spawn_plans(malformed,
+		tables_by_id.get(str(malformed.table_id), {}), result.encounter_config.named_encounters, 987654)
+	assert_true(rejected.is_empty(), "a broken reserved reference fails closed instead of rolling a random substitute")
+
+
+func test_unreserved_site_keeps_deterministic_table_population() -> void:
+	var ordinary: Dictionary = {}
+	for site: Dictionary in result.encounter_config.wild_sites:
+		if str(site.get("named_replacement_id", "")).is_empty():
+			ordinary = site
+			break
+	assert_false(ordinary.is_empty())
+	if ordinary.is_empty():
+		return
+	var table: Dictionary = {}
+	for candidate: Dictionary in result.chapter.encounter_tables:
+		if str(candidate.id) == str(ordinary.table_id):
+			table = candidate
+			break
+	var first := DIRECTOR.site_spawn_plans(ordinary, table,
+		result.encounter_config.named_encounters, 24680)
+	var second := DIRECTOR.site_spawn_plans(ordinary, table,
+		result.encounter_config.named_encounters, 24680)
+	assert_eq(first, second, "ordinary table rolls remain deterministic")
+	assert_eq(first.size(), int(ordinary.count))
+	for plan: Dictionary in first:
+		assert_eq(plan.id, "")
+		assert_true(CATALOG.BOARD_IDS.has(CATALOG.board_id(str(plan.species))))
+
+
+func test_spawn_bridge_applies_named_identity_metadata_once_opts_and_clean_cleared_state() -> void:
+	var named: Dictionary = result.encounter_config.named_encounters[0]
+	var site: Dictionary = {}
+	for candidate: Dictionary in result.encounter_config.wild_sites:
+		if str(candidate.id) == str(named.replaces_wild_site_id):
+			site = candidate
+			break
+	var table: Dictionary = {}
+	for candidate: Dictionary in result.chapter.encounter_tables:
+		if str(candidate.id) == str(site.table_id):
+			table = candidate
+			break
+	assert_false(site.is_empty())
+	assert_false(table.is_empty())
+	if site.is_empty() or table.is_empty():
+		return
+	var named_position := Vector3(float(named.position[0]), float(named.position[1]),
+		float(named.position[2]))
+
+	var director := NamedSpawnProbeDirector.new()
+	director.chapter = {"encounter_tables": [table]}
+	director.encounter_config = {"wild_sites": [site], "named_encounters": [named],
+		"activation_distance_m": 100.0, "active_wild_cap_per_peer": 16,
+		"wild_respawn_seconds": 240.0}
+	director.probe_positions = [named_position]
+	director.call("_spawn_available_sites")
+	assert_eq(director.spawn_calls.size(), 1, "the production site loop consumes the named plan")
+	assert_eq(director.spawned_bodies.size(), 1)
+	if director.spawn_calls.size() == 1 and director.spawned_bodies.size() == 1:
+		var call: Dictionary = director.spawn_calls[0]
+		var body: Node3D = director.spawned_bodies[0]
+		assert_eq(call.species, named.species)
+		assert_eq(call.spot, named_position)
+		assert_eq(call.opts.name, named.id)
+		assert_eq(call.opts.level, named.level)
+		assert_eq(call.opts.once_id, named.completion_flag)
+		assert_eq(body.get("display_name"), named.display_name)
+		assert_eq((body.get("instance") as RefCounted).get("display_name"), named.display_name)
+		assert_eq(body.get_meta("water_named_encounter", ""), named.id)
+		assert_eq(body.get_meta("water_reward_role", ""), named.reward_role)
+	var live_state := director.site_state(str(site.id))
+	assert_true(live_state.spawned)
+	assert_false(live_state.failed)
+	assert_eq(live_state.members.size(), 1)
+	director.dispose()
+	director.free()
+
+	var cleared := NamedSpawnProbeDirector.new()
+	cleared.chapter = {"encounter_tables": [table]}
+	cleared.encounter_config = {"wild_sites": [site], "named_encounters": [named],
+		"activation_distance_m": 100.0, "active_wild_cap_per_peer": 16,
+		"wild_respawn_seconds": 240.0}
+	cleared.probe_positions = [named_position]
+	cleared.cleared_ids[str(named.completion_flag)] = true
+	cleared.call("_spawn_available_sites")
+	var cleared_state := cleared.site_state(str(site.id))
+	assert_true(cleared_state.spawned, "a resolved named reservation settles as intentionally absent")
+	assert_false(cleared_state.failed, "a resolved named reservation is not a spawn defect")
+	assert_true(cleared_state.members.is_empty())
+	assert_true(cleared.spawn_calls.is_empty())
+	cleared.dispose()
+	cleared.free()
+
+	var malformed_site := site.duplicate(true)
+	malformed_site.named_replacement_id = "missing_named_actor"
+	var malformed := NamedSpawnProbeDirector.new()
+	malformed.chapter = {"encounter_tables": [table]}
+	malformed.encounter_config = {"wild_sites": [malformed_site], "named_encounters": [named],
+		"activation_distance_m": 100.0, "active_wild_cap_per_peer": 16,
+		"wild_respawn_seconds": 240.0}
+	malformed.probe_positions = [named_position]
+	malformed.call("_spawn_available_sites")
+	var malformed_state := malformed.site_state(str(site.id))
+	assert_false(malformed_state.spawned)
+	assert_true(malformed_state.failed, "a malformed reservation remains a visible spawn defect")
+	assert_true(malformed.spawn_calls.is_empty())
+	malformed.dispose()
+	malformed.free()
+
 func test_invalid_species_or_ground_fails_atomically_and_inputs_do_not_mutate() -> void:
 	var before: Dictionary = encounters.duplicate(true)
 	var changed := encounters.duplicate(true)
