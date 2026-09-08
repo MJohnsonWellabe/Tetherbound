@@ -420,9 +420,9 @@
       "portrait": "res://assets/ui/portraits/officer_b.png",
       "portrait_mode": "installed_body_render",
       "island_local_offset": [
+        111.779,
         0.0,
-        0.0,
-        12.0
+        -245.567
       ],
       "greeting": "water_venn_pre",
       "greeting_when": [
