@@ -20,8 +20,13 @@ with 26 passing jobs and three skips. All seven multiplayer shards passed on
 their first attempts, including Livewire and Tamsin. Combat's aggression smoke
 failed its first attempt after the player never approached closer than the
 reported 116.1 m, then passed attempt two. This is a retry finding, not a clean
-validation. Checked proximity and approach telemetry are prepared in
-`1765092fc`; the physical approach cause remains under diagnosis. Full job
+validation. Checked proximity and approach telemetry in `1765092fc` now expose
+a stale fixture: its `(40,-62)` starting point intersects the closed village
+fence. The local collider diagnostic repeatedly contacts
+`VillageBoundary/FencePanelCollision_39`. The authored peaceful Bramblebun and
+aggressive Galecrest are on opposite sides of that sealed boundary; separate
+initial scene fixtures are being prepared without unlocking progression or
+changing either behavior assertion. A clean complete runtime remains unproven. Full job
 review: `ralph/reports/FOUR-BIOME-BUILD/CI-34208280455.md`.
 The preceding batch `226aaf070168b71e36bc6ee1eaf150c4148613af`, run `34205399274`, completed
 with 25 passing jobs, three skips and one failure. Only multiplayer shard 2
@@ -83,13 +88,29 @@ allows the offline authority while continuing to refuse active clients;
 `7a773b8b0` passes eight focused authority/real-ledger checks. In the
 subsequent uninterrupted run, the production finished event explicitly reports
 Maren won, the durable defeat flag arrives, and the ordinary Verge rod switch
-succeeds. The run then failed to start Dace; this is not whole-chapter completion.
-The next harness records intervening wild win/loss and uses ordinary party
-cycling/recall if the active ally fainted. That explanation remains unproven.
+succeeds. That run then failed to start Dace. The subsequent diagnostic records
+an intervening wild loss, uses ordinary party cycling/recall, and wins all three
+Dace rounds, receiving the durable victory and both lower-rod switch results.
+It then reaches the eight-minute outer harness watchdog; this is neither
+whole-chapter completion nor a demonstrated game freeze. A twenty-minute
+scope-derived harness with per-leg telemetry is prepared for the extended route
+through Varga and Ondra. The earlier unlogged challenge failure's exact cause
+is not established merely by this successful recovery.
 Log: `C:/Users/mattj/AppData/Local/Temp/stormwood-continuous-solo-award-final.log`.
 New CI steps `7e2753721` cover the reward and lightning-cleanup regressions;
 these commits are included in submitted batch `23b7d4acd`, along with a focused
 detached-opponent teardown fix and a CI regression that scans native errors.
+
+**Tidewake opening seam, 2026-09-08:** the uninterrupted diagnostic starts at
+the production arrival, walks to Pell, completes his real dialogue, swims
+64.488 m to earn the lesson, and crosses to Reedhaven through ordinary human
+movement. Its first reed gather fails correctly because the fixture lacks the
+canonical knife; the stale selected-node metadata says hand. The prepared
+correction supplies disclosed knife/axe tools before world creation and uses
+their real hotbar actions. No Water materials or progression are granted.
+Reedhaven repair remains unproven pending the corrected composed run. This
+initial chapter fixture does not establish earned Stormwood-to-Water campaign
+continuity. Log: `%TEMP%/water-opening-reedhaven-first.log`.
 
 **ROAD validation reopened, 2026-09-08:** the late-Tidewake traversal diagnostic
 reached Salt Crown but production rejected footing at
