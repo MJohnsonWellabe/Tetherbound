@@ -10,7 +10,7 @@ extends SceneTree
 ## actions. The `Segment` class is deliberately reusable by a future four-biome
 ## harness that arrives with its own live Game and mounted Stormwood scene.
 ##
-## The first executable prefix reaches the end of Act I at Rodline Post.
+## The first executable prefix reaches Act II's Stormglass Arch recipe.
 ## Later phases extend the same live Segment; a failed prefix requires diagnosis
 ## and must not be bypassed by seeding its next flag.
 
@@ -138,7 +138,7 @@ func _wait_for_stormwood() -> Node3D:
 func _watchdog() -> void:
 	await create_timer(float(PREFIX_WATCHDOG_MS) / 1000.0, true, false, true).timeout
 	if not _finished:
-		_failures.append("prefix watchdog expired before the Act-I handoff at Rodline Post")
+		_failures.append("prefix watchdog expired before the Act-II Stormglass Arch recipe")
 		_finish()
 
 
@@ -158,7 +158,7 @@ func _finish() -> void:
 	Engine.physics_ticks_per_second = 60
 	Engine.max_physics_steps_per_frame = 8
 	if _failures.is_empty():
-		print("stormwood continuous: OK — chapter-entry through Act I passed without Stormwood flag or position fixtures")
+		print("stormwood continuous: OK — chapter-entry through the Act-II arch recipe passed without Stormwood flag or position fixtures")
 		quit(0)
 		return
 	for line: String in _failures:
@@ -170,6 +170,7 @@ class Segment extends RefCounted:
 	const FIRST_HARVEST_ID := "stormwood_harvest_cinder_verge_018"
 	const SECOND_HARVEST_ID := "stormwood_harvest_cinder_verge_023"
 	const VERGE_ROUTE_PICKUP_ID := "stormwood_pickup_route_03"
+	const RODLINE_ROUTE_PICKUP_ID := "stormwood_pickup_route_07"
 	const POOLS_HARVEST_IDS: Array[String] = [
 		"stormwood_harvest_glowmoss_hollows_036",
 		"stormwood_harvest_glowmoss_hollows_037",
@@ -380,6 +381,27 @@ class Segment extends RefCounted:
 			_fail("Bryn dialogue advanced its objective but did not complete Act I")
 			return _result()
 		_note("COMPLETED Act I through the production task chain at Rodline Post")
+
+		# Act II opens on the named trainer standing at Rodline's far side. The
+		# route-07 reward shares this station, so consume its ordinary visible
+		# prompt first just as the Verge route does; no competing provider may be
+		# mistaken for Varga's challenge.
+		if not await _collect_route_pickup(RODLINE_ROUTE_PICKUP_ID):
+			return _result()
+		if not await _defeat_trainer("lieutenant_varga_rodline_bridge"):
+			return _result()
+		if not await _wait_flag("stormwood:varga_defeated", 300):
+			_fail("Varga's hosted victory did not advance the Act-II chapter event")
+			return _result()
+		_note("RECLAIMED the conductor bridge through Varga's authored trainer fight")
+
+		for point: Vector2 in [Vector2(-560.0, 2480.0), Vector2(-160.0, 2700.0)]:
+			if not await _walk_xz(point, "conductor road to Keeper Ondra", 2.0):
+				return _result()
+		if not await _talk_to("Keeper Ondra", Vector2(-160.0, 2697.5),
+				"stormwood:arch_recipe_known", "Ondra's Stormglass Arch lesson"):
+			return _result()
+		_note("LEARNED the Stormglass Arch recipe through Ondra's production dialogue")
 		return _result()
 
 
@@ -401,7 +423,7 @@ class Segment extends RefCounted:
 		if int(game.get("inventory").call("count", "good_candy")) <= before:
 			_fail("%s committed without granting its authored good candy" % id)
 			return false
-		_note("COLLECTED the Verge station route reward through its ordinary prompt")
+		_note("COLLECTED %s through its ordinary route prompt" % id)
 		return true
 
 

@@ -56,6 +56,28 @@ unavailable. Until that revised run executes, “fainted ally after the route
 wild” is a source-supported candidate, not a proven diagnosis, and Act I beyond
 Dace is not claimed.
 
+## Prepared Act-II opening (not yet runtime-proven)
+
+The reusable segment now continues past Bryn for one bounded Act-II slice. Its
+contract comes directly from `data/config/stormwood_chapter.json`'s first two
+Act-II objectives and `stormwood_chapter.gd`'s production event bindings:
+
+1. collect the visible route-07 candy that shares Rodline Post, so its prompt
+   cannot be mistaken for the named trainer interaction;
+2. challenge and defeat `lieutenant_varga_rodline_bridge`, requiring the hosted
+   victory to earn both the defeat fact and `stormwood:varga_defeated` through
+   `trainer:varga_defeated`;
+3. walk the authored `conductor_road` points to Keeper Ondra and finish her
+   in-progress dialogue, requiring `dialogue:ondra_arch_recipe` to earn
+   `stormwood:arch_recipe_known`.
+
+The exact intended terminal flag for this bounded extension is
+`stormwood:arch_recipe_known`. It does not fabricate Crown materials, place the
+missing arch, cross the Glass Sink, clear the guardian, or claim Act II complete.
+All extension actions are locomotion, ordinary prompt activation, dialogue, and
+controller combat. It remains prepared source coverage until the Dace boundary
+is cleared and one uninterrupted runtime reaches it.
+
 ## Focused checks
 
 - `tests/smoke_stormwood_hosted_rewards.gd`: 8 checks passed, exit 0; log
