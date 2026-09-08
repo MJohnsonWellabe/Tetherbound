@@ -4,7 +4,35 @@
 it used to carry is under `archive/docs/current-state-history/` (list at the end).
 Findings go in §3, ranked by player impact; process traps in §4.
 
-## 0. Where the project is (2026-09-07, second pass)
+## 0. Where the project is (2026-09-08, playable build in progress)
+
+The active target is the **playable four-biome build**, as defined by
+`docs/owner/OWNER_DIRECTIVE_2026-09-07_PLAYABLE_FIRST.md`: a fresh save completes
+the opening through Tidewake without debug travel, console commands or a reload
+to advance. Full visual, density, performance and multiplayer-depth criteria
+remain in `docs/SECOND_PASS_BACKLOG.md`; they are not claimed passed.
+
+PR #79 landed at `7ab4a12647a377a400c43335b64aff8b03ca6d43`. Current work is on
+`codex/four-biome-wave0`, PR #80, which includes main through `f6b79a6b3` via
+merge `01f85b2b356de72689eb90e42242e42ae64d5dfb`. The latest submitted batch is
+`968ae810780ad9fd8189adc38ba5523c4a668f16`; CI run `34193395389` is pending a
+complete verdict. These repairs are on the PR branch, not yet on main:
+
+| Area | Verified progress and remaining boundary |
+|---|---|
+| Saves and second-bed freeze | Corrupt-canonical recovery and split-write rollback repaired; immutable fallback autosave runs on one worker. Ten two-bed cycles plus a 180-second soak pass, with the measured post-warmup maximum reduced from 536.7 ms to 107.6 ms. Save/load and recovery tests pass. This does not establish first-hour rendered performance on the Ally. See `ralph/reports/FOUR-BIOME-BUILD/save/REPORT.md` and `autosave/REPORT.md`. |
+| Map/minimap | Compass overhaul rolled back; minimap restored. Real repeated map input and an independent blind inspection confirm both opens remain populated and the second is not corrupt. Existing label crowding remains deferred. See `ralph/reports/FOUR-BIOME-BUILD/hud-map/REPORT.md`. |
+| Stormwood and ordinary Tidewake entry | Dynamo, release/aftermath and the Waterward reveal are implemented; the real Stormwood-to-Tidewake gate smoke passes. Hosted-trainer admission now resolves the race with local aggressive wild combat, with a passing two-peer Tamsin smoke. Livewire's final connected verdict is still pending CI. |
+| Tidewake progression | Aquaryn's ordinary strike action IDs are repaired; the production defeat-to-Swim-Stone-to-saddle-to-mount path passes. Five authored named encounter sites now spawn in production. Long mounted crossings, Salt Crown/Sluice fights and controls, and the composed Veilfall/Guardian ending remain an open continuous-play proof. Isolated finale tests do not close that requirement. |
+| Creatures and menu travel | All 32 later-biome species are assigned to encounter tables; creature sizes span 1.90–7.20 m. ROAD evidence and its visual limitations are in §3. Settings offers 58 destinations across all four biomes; production realm-crossing and physical menu checks passed. |
+
+The last completed PR #80 run, `34190049594` on `7f28b5ed2`, had 22 passing
+jobs, three failures and four skips. The failures were Gate-B Bram cycle 3 and
+the two Stormwood hosted-combat shards; repairs are in the submitted batch.
+Split-realm shard 7 passed. Full milestone completion remains unproven.
+Detailed evidence and commit boundaries: `ralph/reports/FOUR-BIOME-BUILD/checkpoints.md`.
+
+### Consolidation baseline — historical, before PR #80 repairs
 
 **Every branch that carried unique work is merged onto `codex/four-biome-push-0907`
 and lands as PR #79**, on the owner's instruction to get everything onto `main`. The
