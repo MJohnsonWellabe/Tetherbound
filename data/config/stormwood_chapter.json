@@ -462,7 +462,10 @@
             "realm_key_water",
             "waterward_route_revealed",
             "stormwood:chapter_complete"
-          ]
+          ],
+          "consumed_grants": {
+            "realm_key_water": "realm_gate_water_unlocked"
+          }
         }
       ]
     }

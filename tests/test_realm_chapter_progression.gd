@@ -148,6 +148,29 @@ func test_completed_reward_repairs_missing_entitlements_without_replaying_comple
 	assert_false(LOGIC.reconcile(flags, _chapter())["changed"])
 
 
+func test_consumed_chapter_grant_is_not_recreated_after_its_durable_marker() -> void:
+	var flags := PROGRESSION.new()
+	var chapter := {"acts": [{"entry_flags": [], "objectives": [{
+		"id": "water_key_reward", "flag_id": "waterward_revealed",
+		"requires_flags": [], "completion_event": "waterward:view",
+		"grants_flags": ["realm_key_water", "permanent_route"],
+		"consumed_grants": {"realm_key_water": "realm_gate_water_unlocked"},
+	}]}]}
+	assert_true(LOGIC.dispatch(flags, chapter, "waterward:view")["changed"])
+	assert_true(flags.has("realm_key_water"))
+	assert_true(flags.has("permanent_route"))
+	flags.set_flag("realm_key_water", false)
+	flags.set_flag("realm_gate_water_unlocked")
+	var revision := int(flags.revision)
+	var replay := LOGIC.reconcile(flags, chapter)
+	assert_false(replay["changed"])
+	assert_false(flags.has("realm_key_water"),
+		"a completed objective must not recreate a grant after its consumption marker")
+	assert_true(flags.has("permanent_route"),
+		"ordinary permanent rewards retain the existing reconciliation contract")
+	assert_eq(flags.revision, revision)
+
+
 func test_side_chain_visibility_order_fly_gate_and_reload() -> void:
 	var flags := PROGRESSION.new()
 	var chapter := _chapter()

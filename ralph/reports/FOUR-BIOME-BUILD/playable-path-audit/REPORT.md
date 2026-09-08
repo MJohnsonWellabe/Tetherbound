@@ -1,5 +1,29 @@
 # Stormwood -> Water ordinary solo playable-path audit — 2026-09-07
 
+## 2026-09-08 implementation update — supersedes the original static outcome
+
+The blocker this audit found is closed on the current working tree. Production now
+builds a named Water gate 14 m beyond the Waterward view. Its first real interaction
+uses the host-authoritative Water transaction to consume `realm_key_water` and set
+`realm_gate_water_unlocked` in one saved/published two-op delta; a failed save rolls
+the key, gate, sequence and revision back. Its second interaction uses the ordinary
+realm gate path and arrives at `water_arrival_from_stormwood`.
+
+`tests/smoke_stormwood_water_gate_path.gd` proved the production two-press route on
+the real Stormwood and Water scenes. It drains the authored ending dialogue through
+real input, activates the Waterward view, proves the first press cannot travel,
+verifies the exact durable/published transaction, then proves the second press clears
+the pending entry only after Water's shell is ready at the authored First Shore
+anchor. Final result: **`STORMWOOD WATER GATE PATH OK: reveal -> atomic unlock ->
+ordinary Water arrival`**, exit 0. The same smoke is now registered in
+`verify-regions-shard`.
+
+The scatter manifest invalidated by the new authored departure has also been rebuilt
+through the official baker: 108 regions, 33,773 placements, no binary-region churn,
+and the production freshness guard passes. The original read-only audit remains below
+as the evidence that located the defect; its “broken transition” wording describes
+the starting tree, not the current status.
+
 ## Outcome
 
 Static audit at observed repository HEAD `1a6bf406dceed5a51fd24e81cddf35d60a8808e4`
@@ -153,19 +177,16 @@ promote them to current-HEAD continuous acceptance.
 
 ## Ranked repair / proof list
 
-1. **P0 — implement the missing ordinary Stormwood -> Water crossing.** This is
-   a demonstrated static dead-end. The lane should own
-   `scripts/world/stormwood_world.gd`, `data/config/stormwood_world.json`, an
-   explicit Water gate/authority adapter (new file if the atomic special case is
-   kept), `autoload/game_state.gd`, and the relevant Water entry metadata. Do not
-   make debug teleport the campaign route.
-2. **P0 — settle key-versus-unlock semantics atomically.** Either make the
-   Water-specific gate consume the key and make the router accept the durable
-   unlock, or deliberately amend the Water authority contract to the generic
-   retained-entitlement model. The former matches the current authored
-   contract. Test save failure/rollback and repeated use; never clear the key in
-   one commit and open the gate in another.
-3. **P1 — add the missing ordinary Water -> Stormwood return.** Water config has
+1. **CLOSED — implement the missing ordinary Stormwood -> Water crossing.** This was
+   a demonstrated static dead-end. `stormwood_ending.gd` now builds
+   `stormwood_water_gate.gd` at the authored `stormwood_departure_to_water`, and
+   production smoke—not debug teleport—proves the Water arrival.
+2. **CLOSED — settle key-versus-unlock semantics atomically.** The Water-specific
+   gate consumes the key and opens the durable gate in one host journal commit;
+   the router accepts that durable unlock, and chapter reconciliation cannot regrant
+   the consumed key after the marker exists. Save-failure rollback, idempotence and
+   repeated use are covered by focused tests.
+3. **DEFERRED P1 — add the missing ordinary Water -> Stormwood return.** Water config has
    `return_to_stormwood`, but production builds no return `RealmGate`. This does
    not block reaching the Water ending, but without debug teleport it traps an
    ordinary player in Water and leaves authored return metadata inert.
@@ -202,7 +223,8 @@ promote them to current-HEAD continuous acceptance.
   forbid teleport/flag fixtures. Log each island arrival and objective emitter
   so a route, stamina, collision, combat, or prompt failure is localized.
 
-Until those tests pass, the accurate status is: **menu teleport works; the
-ordinary Stormwood -> Water campaign handoff does not exist; Water's internal
-ending is implemented and has strong isolated evidence, but the complete solo
-chapter remains unproven.**
+Current accurate status: **menu teleport works across all four regions; the ordinary
+Stormwood -> Water campaign handoff exists and its production two-press crossing is
+green; Water's internal ending retains strong isolated evidence, but the complete
+fresh-save continuous solo chapter remains unproven.** The missing ordinary
+Water -> Stormwood return is explicitly recorded in `docs/SECOND_PASS_BACKLOG.md`.

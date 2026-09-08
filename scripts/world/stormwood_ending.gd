@@ -14,6 +14,7 @@ const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 const TRAINER_NPC := preload("res://scripts/world/trainer_npc.gd")
 const CAPTURE_CODEC := preload("res://scripts/save/water_capture_codec.gd")
 const SHRINE := preload("res://scripts/world/realm_heart_shrine.gd")
+const WATER_GATE := preload("res://scripts/world/stormwood_water_gate.gd")
 
 const MARROW_FLAG := "stormwood:marrow_defeated"
 const FREED_FLAG := "stormwood:legendary_freed"
@@ -28,6 +29,7 @@ const LEGENDARY_LEVEL := 44
 const CORE_POSITION := Vector3(-100.0, 262.21, 5470.0)
 const OFFER_RADIUS_M := 14.0
 const VIEW_RADIUS_M := 18.0
+const WATER_GATE_RADIUS_M := 6.0
 const RESEND_SECONDS := 1.0
 
 var world: Node3D
@@ -38,6 +40,7 @@ var _legendary: Node3D
 var _cage: Node3D
 var _offer_prompt: Node3D
 var _view_prompt: Node3D
+var _water_gate: Node3D
 var _waterward_sea: MeshInstance3D
 var _local_claim: Dictionary = {}
 var _local_creature: RefCounted
@@ -59,6 +62,7 @@ func mount(owner_world: Node3D) -> void:
 	_build_offer_prompt()
 	_build_spark_shrine()
 	_build_waterward_view()
+	_build_water_gate()
 	var panel := world.get_node_or_null("DialoguePanel")
 	if panel != null:
 		panel.finished.connect(_dialogue_finished)
@@ -80,6 +84,8 @@ func dispatch(peer: int, intent: Dictionary) -> void:
 			_settle_for(peer, intent)
 		"ending_waterward_view":
 			_reveal_for(peer)
+		WATER_GATE.UNLOCK_INTENT:
+			_unlock_water_gate_for(peer)
 		"ending_snapshot":
 			send_snapshot(peer)
 
@@ -103,6 +109,8 @@ func receive(event: Dictionary) -> void:
 			_aftermath_announced = true
 			_refresh_presentation()
 			_start_dialogue_when_free("stormwood_waterward_aftermath")
+		"ending_water_gate_opened":
+			get_node("/root/Game").push_world_message("The Waterward gate is open.")
 		"ending_refused":
 			get_node("/root/Game").push_world_message(str(event.get("reason", "The Stormheart is not ready.")))
 
@@ -229,6 +237,32 @@ func _reveal_for(peer: int) -> void:
 	var result: Dictionary = _chapter.call("emit_event", "aftermath:waterward_view")
 	if bool(result.get("accepted", false)) and _has(WATERWARD_FLAG):
 		_broadcast({"kind": "ending_aftermath"})
+
+
+func _unlock_water_gate_for(peer: int) -> void:
+	if not is_instance_valid(_water_gate):
+		_refuse(peer, "The Waterward gate is not ready yet.")
+		return
+	var actor: Node3D = hub.call("actor_for", peer)
+	var game := get_node("/root/Game")
+	var flags: RefCounted = game.get("progression") as RefCounted
+	if not is_instance_valid(actor) or not WATER_GATE.request_allowed(flags,
+			actor.global_position, _water_gate.global_position, WATER_GATE_RADIUS_M):
+		_refuse(peer, "Stand at the Waterward gate after charting the cleared sky.")
+		return
+	var transport: Node = game.get("ledger") as Node
+	var ledger: RefCounted = transport.get("ledger") as RefCounted if transport != null else null
+	var result: Dictionary = WATER_GATE.host_commit(game, ledger)
+	if not bool(result.get("ok", false)):
+		_refuse(peer, str(result.get("reason", "The Waterward gate did not open.")))
+		return
+	var delta: Dictionary = result.get("delta", {}) as Dictionary
+	if transport != null and not (delta.get("ops", []) as Array).is_empty():
+		transport.call("publish_journaled_delta", delta)
+	# The host's ordinary RealmGate interaction already reports synchronous
+	# success. A remote requester needs the same feedback while its delta lands.
+	if peer != int(session.call("local_peer_id")):
+		hub.call("send_to", peer, {"kind": "ending_water_gate_opened"})
 
 
 func _receive_claim(claim: Dictionary) -> void:
@@ -423,8 +457,9 @@ func _build_waterward_view() -> void:
 	add_child(_view_prompt)
 	if bool(world.get("simulation_only")):
 		return
-	# A horizon, not a gate: Water owns its eventual playable shore and entry.
-	# This plane begins beyond Stormwood's authored bounds and has no collision.
+	# The view remains a horizon and has no collision. The deliberate gate on
+	# this same platform is built separately and stays sealed until this view
+	# grants the one-time key.
 	_waterward_sea = MeshInstance3D.new()
 	_waterward_sea.name = "DistantWaterwardSea"
 	var plane := PlaneMesh.new()
@@ -433,6 +468,21 @@ func _build_waterward_view() -> void:
 	_waterward_sea.material_override = _glow(Color("2d8fa6"), 0.35, 0.92)
 	world.add_child(_waterward_sea)
 	_waterward_sea.global_position = Vector3(-100.0, 35.0, 6900.0)
+
+
+func _build_water_gate() -> void:
+	_water_gate = WATER_GATE.new()
+	_water_gate.name = "WaterwardRealmGate"
+	_water_gate.origin_realm = "stormwood"
+	_water_gate.call("setup", "water", "water_arrival_from_stormwood",
+		"Water Archipelago", WATER_GATE.WATER_KEY_FLAG, WATER_GATE.WATER_GATE_FLAG)
+	world.add_child(_water_gate)
+	var anchor: Dictionary = world.call("entry_anchor", "stormwood_departure_to_water")
+	var position: Array = anchor.get("position", []) as Array
+	if position.size() >= 3:
+		_water_gate.global_position = Vector3(float(position[0]), float(position[1]), float(position[2]))
+	if bool(world.get("simulation_only")):
+		_water_gate.visible = false
 
 
 func _make_legendary() -> RefCounted:
