@@ -12,6 +12,7 @@ const TOVIN_FLAG := "defeated_water_trainer_tovin"
 const TRIAL_FLAG := "water_dock_brine_steps_trial_won"
 const ROUTE_ID := "reedhaven_to_brine_steps_sheltered"
 const SPINE_ID := "brine_steps_exploration_spine"
+const TOVIN_LOCAL_OFFSET := Vector3(-25.0, 0.0, 149.0)
 
 var failures: Array[String] = []
 var transcript: Array[String] = []
@@ -65,9 +66,9 @@ func run() -> bool:
 	var spine := _land_route(SPINE_ID)
 	if spine.size() < 7:
 		return _fail("Brine Steps exploration spine is missing its seven authored points")
-	# Keep every leg on the authored graded arrival-to-interior route before the
-	# final sub-120m physical approach to Tovin's production body.
-	for index in [1, 2, 3]:
+	# Stay on the authored graded arrival-to-pier route through the final inland
+	# point. Tovin now stands beside p5 instead of across an ungraded summit chord.
+	for index in [1, 2, 3, 4, 5]:
 		if not await _walk_to(spine[index], "Brine Steps spine point %d" % index):
 			return false
 	if not await _ensure_ally_deployed():
@@ -107,6 +108,16 @@ static func trainer_contract(trainer: Dictionary) -> bool:
 		and bool(trainer.get("critical", false)) \
 		and int(trainer.get("ace_level", 0)) == 46 \
 		and (trainer.get("team", []) as Array).size() == 2
+
+
+static func placement_contract(npc: Dictionary) -> bool:
+	var raw: Array = npc.get("island_local_offset", [])
+	return str(npc.get("id", "")) == "water_tovin" \
+		and str(npc.get("island_id", "")) == "brine_steps" \
+		and str(npc.get("role", "")) == "trainer_dock_test" \
+		and raw.size() == 3 \
+		and Vector3(float(raw[0]), float(raw[1]), float(raw[2])).is_equal_approx(
+			TOVIN_LOCAL_OFFSET)
 
 
 func _preconditions_hold() -> bool:

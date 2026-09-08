@@ -167,9 +167,9 @@
       "portrait": "res://assets/ui/portraits/wandering_trainer.png",
       "portrait_mode": "installed_body_render",
       "island_local_offset": [
-        9.0,
+        -25.0,
         0.0,
-        23.0
+        149.0
       ],
       "greeting": "water_tovin_pre",
       "greeting_when": [
@@ -178,7 +178,7 @@
           "conversation": "water_tovin_post"
         }
       ],
-      "_comment_placement": "Offset is island-local metres and must be grounded and composed by world integration; these are not measured terrain positions."
+      "_comment_placement": "Measured production placement beside the final graded Brine Steps spine leg, 22.29m before the Shellwatch departure; the trainer centre remains outside the 3m flat trail core."
     },
     {
       "id": "water_adair",
