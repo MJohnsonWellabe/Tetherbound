@@ -873,3 +873,59 @@
   open. Next priority is ship the prepared content after exact-head CI, then
   progress actual play without reopening an unsupported navigation grind.
   Next checkpoint21:51UTC.
+
+## 2026-09-08 21:40 UTC — actual content landed, Wave5 main verification pending
+
+- Written before the21:51 deadline. Main is
+  `65267c4bd935d80b2e073799caeffc81b913952c` after PR89, identical in tree to
+  verified head`f4886bcb937e31a01276a2e5b7a42172b76be8d6`. Fresh integration
+  branch is`codex/four-biome-wave6`; no new gameplay code is being built while
+  main's OWN CI34281611197 is pending. PR success does not stand in for it.
+- Material merged delta since19:51: PR88's authored village resource stops,
+  camp instructions and Tidewake guidance; PR89's all-five care objective,
+  persistent saddle preparation directions, installed Water combat HUD/shared
+  Engage registration, and both recovered Brine ordinary encounters. Positive
+  merged player-facing delta; zero streak0. No CI workflow improvement was added.
+- PR88 main`2eb8d4b8681ce8224eaa58666b41be5164479c5b` passed its OWN
+  CI34272560821 at20:31,27 successful jobs/two existing manual-only skips,
+  Windows PE/exported Linux runtime checks and artifact10075421254. That green
+  belongs to the previous main. Evidence`.artifacts/wave4-main-ci-34272560821-*`.
+- PR89 first head08b5b3d6 failed CI34277113851 on two stale objective fixtures:
+  inventory count33 after the new34th authored row, and the ordered chain missing
+  condition_ready. Both fixtures now require the new content; every scope and
+  transition assertion is retained. The old run ended24success/2failure/3skips
+  and remains red. No rerun/cancellation/raised ceiling or softened acceptance.
+- Corrected PR CI34279303451 passed at21:32:26 on attempt1:26 successful jobs,
+  three configured skips,3056 units/487375 assertions, all seven multiplayer
+  shards,86 wrapped smokes on attempt1 and18 direct checks. All jobs, steps and
+  executed logs reviewed. Raw metadata/logs`.artifacts/ci-34279303451/`; verdict,
+  strict and corrected-test receipts`.artifacts/wave5-pr-ci-34279303451-*`.
+- Brine011's supported shelf and010's lower road shoulder each passed all three
+  table species' native footing. Ordinary grounded approaches and physical
+  Interact started their exact Riptusk/Mangrove Monitor encounters,85/86 observed
+  frames, zero navigator resets. Original010 high ledge and011's invalid arbiter
+  diagnostic remain recorded. No full fight win or full-road coverage claim.
+  Logs`.artifacts/wave5-brine011-direct-*` and`wave5-brine010-low-*`;
+  scoped data/residency checks12 tests/2213 assertions. Owner saves unchanged.
+- Water's missing combat HUD now reuses the shipped panels and move controls.
+  Existing scene smoke40headless/41rendered checks passed, zero engine/script
+  errors, seven existing warnings. These are LOCAL receipts, not a new CI
+  invocation. Render proves HUD presence; synthetic camera had not settled onto
+  the fighters. Evidence`.artifacts/wave5-water-combat-hud*`.
+- Saved paid-camp capture now visibly says to rest/feed all five before signup,
+  superseding the misleading entry instruction. `.artifacts/wave5-paid-camp-guidance.png`
+  is a diagnostic-copy frame, not resumed fresh play. Capture exit0, zero errors,
+  fourteen explicit terrain/deprecation/staged-camera warnings; original scratch
+  and owner fingerprints unchanged. Scope/chain/quest checks59/1223, quest/home
+  54/896, Water dialogue/dock/quest47/937 are separate overlapping scoped suites.
+- Isolated First Shore through Iona passed once in about18m24 within its existing
+  20-minute watchdog, same synthetic carried five, no post-arrival state repair.
+  Logs`.artifacts/wave5-water-through-iona*`. Its saved files do not preserve the
+  final live Iona endpoint and its five species are unique; no copied-save
+  workaround or new farewell policy was introduced to force a later segment.
+- The genuine fresh frontier remains595.393s at the third bed-assignment walk,
+  after paid camp and two real rests. The earlier copy diagnostic did not
+  reproduce that stall. No camp-navigation fix, full care/tournament pass,
+  uninterrupted opening-to-ending run or full forward-view coverage is claimed.
+  Finish main's own shipping review, then continue actual player-path work from
+  these limits. Next checkpoint23:40UTC.

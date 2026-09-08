@@ -6,22 +6,24 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-08, playable build in progress)
 
-**Wave5 shipping status:** draft PR #89 is frozen at
-`08b5b3d6f7cf6bf02ddd492cd941dab2b807a5a6`. CI34277113851 found two stale
-objective-fixture expectations; the remaining jobs are still being reviewed.
-The corrected fixtures require the new care rung and all34 authored objectives.
-Existing scope/chain/quest checks pass59 tests/1223 assertions with clean output.
-It contains the care/saddle guidance, Water combat HUD and Brine011 repair below.
-A later LOCAL-only010 placement also passed all-three-species footing and
-ordinary grounded approach/physical Engage against its exact Mangrove Monitor:
-86 observed frames, zero navigator resets/errors, owner saves unchanged.
-Its lower shoulder[320.4116,26.3276,637.8423] avoids the rejected high ledge.
-Existing data/residency checks pass12 tests/2213 assertions. This010 edit is
-not in PR89's first head; it will join the corrected batch after that run ends.
-Neither placement proves a full fight win or campaign.
+**2026-09-08 21:37 UTC: content Wave5 landed in PR #89.** Main is
+`65267c4bd935d80b2e073799caeffc81b913952c`, identical in tree to verified PR
+head`f4886bcb937e31a01276a2e5b7a42172b76be8d6`. Exact-head CI34279303451
+passed on attempt1:26 successful jobs/three configured skips,3056 unit tests/
+487375 assertions, all seven multiplayer shards. Every job, step and executed
+log was reviewed;86 wrapped smokes used only attempt1 and18 direct checks passed.
+Main's OWN push CI34281611197 is pending; PR CI does not replace its export/run.
+
+The shipped batch includes the all-five care rung, persistent swimmer preparation
+instructions, actual Water combat HUD/shared Engage, and both Brine010/011
+placements. Each site's three species passed native footing; ordinary grounded
+walking and physical Interact started its exact encounter. No full fight win or
+campaign is implied. The two stale content expectations from first head08b5b3d6
+remain recorded in failed CI34277113851; corrected fixtures require all34 authored
+objectives and the readiness transition. No retries or acceptance weakening.
 
 **2026-09-08 20:03 UTC: first-camp and Tidewake content landed in PR #88.**
-Main is `2eb8d4b8681ce8224eaa58666b41be5164479c5b`, with the identical tree
+That landing's main was `2eb8d4b8681ce8224eaa58666b41be5164479c5b`, with the identical tree
 to verified PR head `9cb6b1b42d4c5947842f72e2b8a57a1cd54e4593`.
 Its PR CI34270467585 passed on attempt1:26 successful jobs/three configured
 skips,3055 unit tests/487315 assertions and all seven multiplayer shards.
@@ -38,13 +40,14 @@ rests remain partial evidence. A diagnostic reload reached the same bed and
 did not reproduce the stall; it proves no fix and is not fresh acceptance.
 
 The saved-camp image exposed an additional guidance gap: the HUD says to enter
-the tournament while three creatures are still unrested. Local Wave5 adds a
+the tournament while three creatures are still unrested. Shipped Wave5 adds a
 care rung using the existing live tournament_condition_ready flag and retires
-it after registration. It changes no eligibility rule and is not merged yet.
+it after registration. It changes no eligibility rule. A new diagnostic-copy
+capture renders the correct care instruction; original/owner saves are unchanged.
 Existing quest/home checks pass54 tests/896 assertions. Full uninterrupted
 campaign and full forward-view coverage remain open.
 
-Local Wave5 also makes the post-Iona preparation explicit: craft at the actual
+Shipped Wave5 also makes the post-Iona preparation explicit: craft at the actual
 Tidal Cradle camp workbench, keep the saddle in the bag and use the companion's
 Ride prompt. Otto explains ordinary swimmer capture, the five-creature choice
 and pickaxe gathering for Reef Stone. Salt Crown's existing objective retains
@@ -53,7 +56,7 @@ checks pass47 tests/937 assertions with clean engine output. No new costs,
 completion flags, equipment step or encounter rule was introduced.
 
 Water's runtime builder also omitted the shipped CombatHUD and shared Engage
-registration. Local Wave5 now mounts that existing HUD against the actual
+registration. Shipped Wave5 now mounts that existing HUD against the actual
 manager/director and registers the director with the scene arbiter. The existing
 scene smoke passes40 checks headless and41 rendered, including health/name/move
 panels and Engage display. Owner saves match; no engine/script errors. The frame
@@ -66,13 +69,16 @@ Reedhaven/Brine/Shellwatch actions, actual camp care and Aquaryn victory. It
 passed once in approximately18m24s within the unchanged20-minute watchdog,
 with owner saves unchanged and no engine/script errors. This uses the disclosed
 synthetic level44 chapter-entry team, not fresh campaign progress. Brine sites
-010/011 emitted invalid-footing warnings in that run. Local011 now moves to
+010/011 emitted invalid-footing warnings in that run. Shipped011 now moves to
 a supported nearby shelf: all three species passed native footing, and a
 grounded approach plus physical Interact started combat with the exact Riptusk.
-The first011 diagnostic wrongly required arbiter registration; Water currently
-uses its director's direct Engage path. Its failure is retained, not rerun away.
-010's candidate failed ordinary approach and was restored. Full fight completion
-and the combat HUD were not proved by this placement check.
+The first011 diagnostic wrongly required arbiter registration before Water's
+HUD/registration fix; its failure is retained. The original010 high candidate
+failed and was restored, then a different lower shoulder at
+[320.4116,26.3276,637.8423] passed all-three-species footing and actual Engage
+through the shared arbiter against its Mangrove Monitor:86 observed frames,
+zero resets/errors and unchanged owner saves. Data/residency checks pass12 tests/
+2213 assertions. Full fight completion was not proved by these placement checks.
 See WATER-OPENING-CONTINUOUS.md and BRINE-ORDINARY-FOOTING.md for evidence.
 
 **2026-09-08 19:10 UTC: Wave 3 landed; its own main CI is green.**

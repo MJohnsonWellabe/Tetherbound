@@ -48,8 +48,12 @@ prompts and same-live Aquaryn retirement. Exact-head PR CI34270467585 passed
 26 jobs/three configured skips; main's OWN CI34272560821 passed on attempt1
 at20:31 UTC with27 successful jobs/two existing manual-only skips, all seven
 multiplayer shards and export/runtime checks. Full campaign acceptance stays open.
-The new all-five care guidance found from the saved camp is local Wave5 work.
-See `CURRENT_STATE.md` and MEADOWS-FIRST-CAMP-CONTENT-WAVE4.md for evidence.
+PR #89 also landed all-five care guidance, swimmer preparation instructions,
+the actual Water combat HUD and two reachable Brine ordinary encounters as
+65267c4bd935d80b2e073799caeffc81b913952c. Exact-head CI34279303451 passed
+26 jobs/three configured skips on attempt1; main's OWN CI34281611197 is pending.
+The new saved-camp capture shows the correct care instruction, not fresh closure.
+See `CURRENT_STATE.md` and TEAM-CARE-AND-SWIMMER-CONTENT-WAVE5.md for evidence.
 
 **Owning prompts:** `56-OPENING-first-session-to-tournament.md`, with
 `17-RG18`, `15-RG16`, `26-RG19`, `43-CREATURE-BED`, `44-GATHER`, `45-CATCH`,
