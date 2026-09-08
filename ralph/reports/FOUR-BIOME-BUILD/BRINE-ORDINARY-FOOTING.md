@@ -120,3 +120,44 @@ The expected site warnings were present; scans found no `SCRIPT ERROR` or
 coordinate per site is checked for all three species, then passes the unchanged
 production admission loop and Tovin's ordinary route. No coordinate is claimed
 fixed in this report.
+
+## Common-coordinate diagnostic (not final admission proof)
+
+The fixture-disclosed diagnostic `tests/smoke_water_brine_candidate_footing.gd`
+searched the live production world for one exact XZ per rejected site that
+supports all three legal species at the inherited production margin. It also
+required at least 4.9875 m from the authored exploration-spine centre (player
+radius + Riptusk radius + the full 2.5 m roam radius + 0.6 m), then walked the
+affected road segment with a real-size inert Riptusk seated at the candidate.
+
+Two reproducible runs selected the same candidates:
+
+| Site | Candidate ground XYZ | Route clearance | All-species direct/spawn | Ordinary spine walk |
+|---|---:|---:|---|---|
+| 010 | 340.8148, 58.2118, 638.7739 | 19.1203 m | 3/3 pass | pass, 1.259 m final gap, 0 resets |
+| 011 | 473.6123, 41.1299, 747.8559 | 6.7376 m | 3/3 pass | pass, 1.249 m final gap, 0 resets |
+
+The second run used:
+
+```text
+Godot_v4.7-stable_win64_console.exe --headless --path . --log-file %TEMP%/water-brine-common-candidate-engine-20260908-r2.log --script tests/smoke_water_brine_candidate_footing.gd
+```
+
+Wrapper output is `%TEMP%/water-brine-common-candidate-stdout-20260908-r2.log`.
+It exited 1 at the final admission assertion, and that result is not evidence
+against the candidates. The inherited director's `_ready()` first awaits a
+process frame and `_spawn_creatures()` then awaits a physics frame. The harness
+waited only one physics/process pair after Water reported shell-ready. The
+director's pending initial spawn resumed later, after the diagnostic had moved
+the player onto the original 010 route but before the in-memory candidate was
+installed. Original 010 therefore entered the director's deliberately sticky
+`_site_failures`; `water_encounter_director.gd::_spawn_available_sites()` then
+correctly skipped the same ID during the final candidate call. Both runs show
+the backtrace `_spawn_creatures -> _spawn_available_sites` before the successful
+walk records, followed by `failed=true`, `members=0` for 010.
+
+Next proof must wait for `population_ready` while the player remains at First
+Shore and then assert both target IDs are pristine before moving, or use fresh
+fixture-only duplicate IDs that preserve the production plan semantics. It must
+not clear `_site_failures`, because that would bypass the fail-closed gameplay
+contract. No encounter coordinate has been edited or claimed production-ready.
