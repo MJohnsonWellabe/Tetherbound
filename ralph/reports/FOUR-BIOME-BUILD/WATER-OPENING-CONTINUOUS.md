@@ -4,9 +4,10 @@
 production arrival -> Pell briefing -> physical swim lesson seam. That bounded
 production route has passed at runtime.
 
-The isolated initial fixture is an empty solo Water realm with its production
-arrival placement. It does not earn the preceding Stormwood ending or transfer
-an actual campaign party. A unique test save directory is installed before reset.
+The default and Reedhaven-only initial fixture is an empty solo Water realm with
+its production arrival placement. It does not earn the preceding Stormwood
+ending or transfer an actual campaign party. The optional Brine composition's
+synthetic party is disclosed below. A unique test save directory is installed before reset.
 Independent source review added an explicit grounded, within-3-metre check
 against `world.entry_anchor("from_stormwood")`, so a default/stale spawn cannot
 silently count as arrival coverage.
@@ -56,3 +57,20 @@ controller harvests, exact six-reed/six-drift yield, and the paid Reedhaven
 repair with `ok: true`, `failures: []`. The log has no `ERROR` or `SCRIPT ERROR`:
 `%TEMP%/water-opening-reedhaven-corrected.log`. This remains a bounded Water
 entry fixture, not proof that Stormwood completion supplied the party/tools.
+
+## Optional composed Brine continuation
+
+`-- --through-brine` includes the entire proven Reedhaven continuation, then
+drives `tests/helpers/water_brine_segment.gd` from the paid dock across the
+authored 107.088m human route to Tovin's real challenge. Its additional
+pre-arrival fixture is exactly the existing Stormwood continuous diagnostic's
+five species -- Sparkit, Mudsnout, Bramblebun, Terrapup and Brooktail -- each at
+level 44. It is explicitly a synthetic carried party, not an earned Stormwood
+save or proof of chapter continuity. The fixture adds no Water progress,
+materials, HP, stamina or actor pose, and never changes the party after the
+production world starts.
+
+The default and `--through-reedhaven` modes remain party-empty and unchanged.
+A focused argument test makes `--through-brine` imply Reedhaven while preserving
+both shorter selections. Production runtime for the Brine composition remains
+required.

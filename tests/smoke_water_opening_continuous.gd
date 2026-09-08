@@ -1,14 +1,22 @@
 extends SceneTree
 
 ## Bounded chapter-entry diagnostic, NOT fresh-save campaign acceptance.
-## The fixture is an empty solo Water realm at its production arrival; optional
+## The default fixture is an empty solo Water realm at its production arrival;
 ## --through-reedhaven supplies only disclosed pre-arrival knife/axe hotbar tools.
+## --through-brine additionally carries the disclosed synthetic level-44 party.
 ## No actor pose, Water fact, inventory, HP or stamina is injected after arrival.
 ## The player walks to Pell, finishes his real dialogue, then earns the physical lesson.
 const WORLD := preload("res://scenes/world/water_archipelago.tscn")
 const SAVE := preload("res://scripts/save/save_game.gd")
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const NAV := preload("res://tests/helpers/stick_navigator.gd")
 const REEDHAVEN := preload("res://tests/helpers/water_reedhaven_segment.gd")
+const BRINE := preload("res://tests/helpers/water_brine_segment.gd")
+const BRINE_PARTY: Array[String] = [
+	"sparkit", "mudsnout", "bramblebun", "terrapup", "brooktail",
+]
+const BRINE_PARTY_LEVEL := 44
 var game: Node
 var world: Node3D
 var player: CharacterBody3D
@@ -18,12 +26,15 @@ var finished := false
 var activated: Object
 var swim_metres := 0.0
 var through_reedhaven := false
+var through_brine := false
 
 func _init() -> void:
 	_run.call_deferred()
 
 func _run() -> void:
-	through_reedhaven = "--through-reedhaven" in OS.get_cmdline_user_args()
+	var selection := requested_segments(OS.get_cmdline_user_args())
+	through_reedhaven = bool(selection.through_reedhaven)
+	through_brine = bool(selection.through_brine)
 	_watchdog.call_deferred()
 	game = root.get_node("Game")
 	game.save_system = SAVE.new("user://water_opening_continuous_%d/" % Time.get_ticks_usec())
@@ -40,6 +51,18 @@ func _run() -> void:
 		game.assign_hotbar(0, "axe")
 		game.assign_hotbar(1, "knife")
 		print("WATER OPENING FIXTURE: pre-arrival knife/axe for optional Reedhaven; no Water materials/progress")
+	if through_brine:
+		for species_id: String in BRINE_PARTY:
+			var creature: RefCounted = SPECIES.spawn(species_id)
+			if creature == null:
+				_fail("Could not construct disclosed Brine party member " + species_id)
+				return
+			creature.set_level(BRINE_PARTY_LEVEL, PROGRESSION.config())
+			if not game.local.party.add(creature):
+				_fail("Could not add disclosed Brine party member " + species_id)
+				return
+		print("WATER OPENING FIXTURE: synthetic carried level-44 party %s; not an earned Stormwood handoff" %
+			str(BRINE_PARTY))
 	world = WORLD.instantiate()
 	root.add_child(world)
 	current_scene = world
@@ -58,7 +81,8 @@ func _run() -> void:
 	if not arrival.is_finite() or not player.is_on_floor() or player.global_position.distance_to(arrival) > 3.0:
 		_fail("Production arrival did not settle at First Shore: player=%s expected=%s" % [player.global_position, arrival])
 		return
-	print("WATER OPENING ARRIVED: production pose=%s; chapter-entry fixture (axe=%s), not earned Stormwood transition" % [player.global_position, through_reedhaven])
+	print("WATER OPENING ARRIVED: production pose=%s; fixture tools=%s synthetic_party=%s, not earned Stormwood transition" % [
+		player.global_position, through_reedhaven, through_brine])
 	if game.world.flags.has("water_swim_lesson_complete") or game.local.flags.has("water_swim_lesson_briefed"):
 		_fail("Opening fixture already contains lesson progress")
 		return
@@ -128,8 +152,25 @@ func _run() -> void:
 			_fail("Ordinary Reedhaven continuation failed; inspect its exact result above")
 			return
 		print("WATER OPENING THROUGH REEDHAVEN PASS: paid repair earned through ordinary crossing and gathering")
+	if through_brine:
+		var brine := BRINE.new()
+		brine.setup(self, world, player, camera)
+		var trial_won: bool = await brine.run()
+		print("WATER BRINE RESULT: %s" % str(brine.result()))
+		if not trial_won or not bool(brine.result().ok):
+			_fail("Ordinary Brine continuation failed; inspect its exact result above")
+			return
+		print("WATER OPENING THROUGH BRINE PASS: Tovin and dock trial flags earned")
 	finished = true
 	quit(0)
+
+
+static func requested_segments(args: PackedStringArray) -> Dictionary:
+	var wants_brine := "--through-brine" in args
+	return {
+		"through_brine": wants_brine,
+		"through_reedhaven": wants_brine or "--through-reedhaven" in args,
+	}
 
 func _walk(point: Vector3, label: String) -> bool:
 	if not point.is_finite():

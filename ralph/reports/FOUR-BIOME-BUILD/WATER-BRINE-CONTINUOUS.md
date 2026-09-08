@@ -33,9 +33,13 @@ NPC offset `(9,23)`, not the unused trainer placement offset. Its XZ is
 horizontal approach. That is source geometry only; the baked grade, obstacles,
 prompt offer and battle still require production runtime proof.
 
-Focused checks must cover the fail-closed result plus the exact authored route,
-critical trainer identity, reused NPC, level, team size and species. The next
-runtime should compose this helper after the proven Reedhaven repair without
-adding Water flags/materials, changing player pose, or healing/replacing the
-campaign party. Stop at the first physical or combat defect rather than
-bypassing it.
+Focused checks cover the fail-closed result plus the exact authored route,
+critical trainer identity, reused NPC, level, team size and species.
+
+The optional opening composition `-- --through-brine` provides exactly the
+five-species, level-44 party already used by the Stormwood continuous chapter
+entry diagnostic, before Water world creation. It is a bounded synthetic carried
+party, not an earned Stormwood save. It adds no Water flags/materials, pose, HP
+or stamina, and performs no later party write. The default and Reedhaven-only
+opening modes remain party-empty. Production runtime is still required; stop at
+the first physical or combat defect rather than bypassing it.
