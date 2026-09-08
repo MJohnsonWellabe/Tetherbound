@@ -41,3 +41,17 @@ shutdown it additionally reports a detached-body transform read from
 `StormwoodAuthoritativeFight._exit_tree -> stop_opponent -> set_engaged`.
 That teardown defect is assigned separately; this is not a zero-engine-error run.
 The timing repair has local runtime evidence but still needs its next CI verdict.
+
+## Subsequent CI proof — 34208280455
+
+On submitted SHA `23b7d4acd935b508d53769a71e434857de1de41c`, multiplayer
+shard 2 job `102004054120` completed successfully. All six smokes ran on
+attempt 1/1. Root retrieved and inspected the job log.
+
+Livewire's inactive window was sampled at 345 ms (09:14:25 UTC), and the
+released window at 348 ms (09:14:38 UTC), both inside the unchanged 180–350 ms
+contract. Subsequent real early actions were refused without advancing host
+authority; elapsed strikes, host-resolved 0.75 activation and 1.0 release all
+passed. The formerly failing released-window assertion now passes in Linux CI,
+not only the local Windows two-peer run. The other jobs in this run must still
+reach terminal verdicts before a whole-run green claim.
