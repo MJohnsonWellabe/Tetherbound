@@ -6915,14 +6915,14 @@
       "region_id": "outer_reaches",
       "table_id": "water_salt_crown_land",
       "island_local_offset": [
-        69.008,
-        14.763,
-        -165.037
+        70.574,
+        15.058,
+        -160.882
       ],
       "position": [
-        219.008,
-        14.763,
-        2144.963
+        220.574,
+        15.058,
+        2149.118
       ],
       "count": 2,
       "radius_m": 3.0,
@@ -6940,14 +6940,14 @@
       "region_id": "outer_reaches",
       "table_id": "water_salt_crown_land",
       "island_local_offset": [
-        -84.502,
-        39.764,
-        -95.553
+        -86.068,
+        40.058,
+        -99.708
       ],
       "position": [
-        65.498,
-        39.764,
-        2214.447
+        63.932,
+        40.058,
+        2210.292
       ],
       "count": 2,
       "radius_m": 3.0,
@@ -6965,14 +6965,14 @@
       "region_id": "outer_reaches",
       "table_id": "water_salt_crown_land",
       "island_local_offset": [
-        -77.951,
-        56.501,
-        -42.869
+        -75.915,
+        56.728,
+        -46.842
       ],
       "position": [
-        72.049,
-        56.501,
-        2267.131
+        74.085,
+        56.728,
+        2263.158
       ],
       "count": 2,
       "radius_m": 3.0,
@@ -7015,14 +7015,14 @@
       "region_id": "outer_reaches",
       "table_id": "water_salt_crown_land",
       "island_local_offset": [
-        -7.212,
-        65.566,
-        -6.622
+        -5.176,
+        65.792,
+        -10.595
       ],
       "position": [
-        142.788,
-        65.566,
-        2303.378
+        144.824,
+        65.792,
+        2299.405
       ],
       "count": 2,
       "radius_m": 3.0,

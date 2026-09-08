@@ -15,7 +15,7 @@ remain in `docs/SECOND_PASS_BACKLOG.md`; they are not claimed passed.
 PR #79 landed at `7ab4a12647a377a400c43335b64aff8b03ca6d43`. Current work is on
 `codex/four-biome-wave0`, PR #80, which includes main through `f6b79a6b3` via
 merge `01f85b2b356de72689eb90e42242e42ae64d5dfb`. The latest submitted batch is
-`968ae810780ad9fd8189adc38ba5523c4a668f16`; CI run `34193395389` is pending a
+`7415602f5231ff85e88d0a4f4c879cf1024d1ea0`; CI run `34195296547` is pending a
 complete verdict. These repairs are on the PR branch, not yet on main:
 
 | Area | Verified progress and remaining boundary |
@@ -26,10 +26,12 @@ complete verdict. These repairs are on the PR branch, not yet on main:
 | Tidewake progression | Aquaryn's ordinary strike action IDs are repaired; the production defeat-to-Swim-Stone-to-saddle-to-mount path passes. Five authored named encounter sites now spawn in production. Long mounted crossings, Salt Crown/Sluice fights and controls, and the composed Veilfall/Guardian ending remain an open continuous-play proof. Isolated finale tests do not close that requirement. |
 | Creatures and menu travel | All 32 later-biome species are assigned to encounter tables; creature sizes span 1.90–7.20 m. ROAD evidence and its visual limitations are in §3. Settings offers 58 destinations across all four biomes; production realm-crossing and physical menu checks passed. |
 
-The last completed PR #80 run, `34190049594` on `7f28b5ed2`, had 22 passing
-jobs, three failures and four skips. The failures were Gate-B Bram cycle 3 and
-the two Stormwood hosted-combat shards; repairs are in the submitted batch.
-Split-realm shard 7 passed. Full milestone completion remains unproven.
+The last completed PR #80 run, `34193395389` on `968ae8107`, had 25 passing
+jobs, one failure and three skips. Gate-B and six multiplayer shards passed;
+only shard 2's Livewire timing smoke failed on an accepted attack that missed
+its moving target. The submitted test fixture isolates timing with an opt-in
+stationary target; its connected verdict is pending, not claimed fixed.
+Full milestone completion remains unproven.
 Detailed evidence and commit boundaries: `ralph/reports/FOUR-BIOME-BUILD/checkpoints.md`.
 
 **ROAD validation reopened, 2026-09-08:** the late-Tidewake traversal diagnostic
@@ -39,6 +41,13 @@ sites `water_salt_crown_wild_011` and `_013`. The earlier 4,253-sample route mod
 and 12 representative frames do not establish continuous live coverage of these
 sites. Measure the surviving creatures along this played route and repair any
 coverage gap before treating the functional ROAD closure below as complete.
+
+Salt Crown follow-up: a coordinate-only repair moves failing ROAD sites
+01/02/03/05 from 5.44–5.47 m shoulders to 1 m route offsets. The production
+probe now admits 2/2 creatures at all seven Salt Crown ROAD sites, and real-stick
+24 m walks pass across all four repaired populated segments. This does not close
+Sluice ROAD failures or ordinary Salt Crown wild sites 011/012/013, which still
+emit footing warnings. Full continuous forward-view coverage remains open.
 
 **Late Tidewake approach open, 2026-09-08:** the synthetic-start traversal
 diagnostic completed Tidal Cradle -> Salt Crown, the Salt chart interaction,
