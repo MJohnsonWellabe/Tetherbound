@@ -16,6 +16,16 @@ const PROBES := {
 		"prefix": "road_visibility_sluice_isle_exploration_spine_",
 		"repairs": ["01", "02", "03", "05"],
 	},
+	"tidal": {
+		"route": "tidal_cradle_exploration_spine",
+		"prefix": "road_visibility_tidal_cradle_exploration_spine_",
+		"repairs": ["02", "03", "08"],
+	},
+	"veilfall": {
+		"route": "veilfall_exploration_spine",
+		"prefix": "road_visibility_veilfall_exploration_spine_",
+		"repairs": ["03"],
+	},
 }
 
 func _init() -> void:
@@ -48,13 +58,32 @@ func _run() -> void:
 	var director: Node = world.get_node("EncounterDirector")
 	var player: Node3D = world.local_rig()
 	# Freeze normal admission while collecting raw footprint evidence. This probe
-	# starts on First Shore, so no Salt Crown site has been admitted yet.
+	# starts on First Shore, so no selected-route site has been admitted yet.
 	director.set_process(false)
+	var route: Dictionary = _find_id(world.config.land_routes, str(probe.route))
+	var polyline: Variant = route.get("polyline", [])
+	if route.is_empty() or not polyline is Array or (polyline as Array).size() < 2:
+		push_error("Water footing probe route has no valid polyline: " + str(probe.route))
+		quit(2)
+		return
 	var road_sites: Array[Dictionary] = []
 	for site: Dictionary in director.encounter_config.wild_sites:
 		if not str(site.id).begins_with(site_prefix):
 			continue
 		road_sites.append(site)
+	if road_sites.is_empty():
+		push_error("Water footing probe prefix resolved no sites: " + site_prefix)
+		quit(2)
+		return
+	var road_ids: Array[String] = []
+	for site: Dictionary in road_sites:
+		road_ids.append(str(site.id))
+	for repaired_id: String in repaired_ids:
+		if repaired_id not in road_ids:
+			push_error("Water footing probe repair target is absent: " + repaired_id)
+			quit(2)
+			return
+	for site: Dictionary in road_sites:
 		var at := Vector3(site.position[0], site.position[1], site.position[2])
 		var table: Dictionary = director.find_id(director.chapter.encounter_tables, str(site.table_id))
 		var plans: Array = director.site_spawn_plans(site, table,
@@ -105,7 +134,6 @@ func _run() -> void:
 			"expected": int(site.count)}))
 		if not ok:
 			production_failures.append(id)
-	var route: Dictionary = _find_id(world.config.land_routes, str(probe.route))
 	var navigator := NAVIGATOR.new(self, player, world.local_camera_rig(), _send_stick)
 	for site: Dictionary in road_sites:
 		var id := str(site.id)

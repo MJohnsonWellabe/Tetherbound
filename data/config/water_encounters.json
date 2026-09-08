@@ -6715,14 +6715,14 @@
       "region_id": "tidal_cradle",
       "table_id": "water_tidal_cradle_land",
       "island_local_offset": [
-        -70.752,
-        36.369,
-        -110.613
+        -74.429,
+        36.496,
+        -108.038
       ],
       "position": [
-        629.248,
-        36.369,
-        1419.387
+        625.571,
+        36.496,
+        1421.962
       ],
       "count": 2,
       "radius_m": 3.0,
@@ -6740,14 +6740,14 @@
       "region_id": "tidal_cradle",
       "table_id": "water_tidal_cradle_land",
       "island_local_offset": [
-        -68.296,
-        37.635,
-        -87.966
+        -64.619,
+        37.762,
+        -90.541
       ],
       "position": [
-        631.704,
-        37.635,
-        1442.034
+        635.381,
+        37.762,
+        1439.459
       ],
       "count": 2,
       "radius_m": 3.0,
@@ -6865,14 +6865,14 @@
       "region_id": "tidal_cradle",
       "table_id": "water_tidal_cradle_land",
       "island_local_offset": [
-        -4.735,
-        33.492,
-        160.69
+        -5.646,
+        33.069,
+        156.411
       ],
       "position": [
-        695.265,
-        33.492,
-        1690.69
+        694.354,
+        33.069,
+        1686.411
       ],
       "count": 2,
       "radius_m": 3.0,
