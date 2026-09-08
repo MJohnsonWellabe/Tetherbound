@@ -15,7 +15,11 @@ remain in `docs/SECOND_PASS_BACKLOG.md`; they are not claimed passed.
 PR #79 landed at `7ab4a12647a377a400c43335b64aff8b03ca6d43`. Current work is on
 `codex/four-biome-wave0`, PR #80, which includes main through `f6b79a6b3` via
 merge `01f85b2b356de72689eb90e42242e42ae64d5dfb`. The latest submitted batch is
-`c5012fff0d4286db42b76de34386ab37efcd3d1c`; CI run `34201147829` is active.
+`c5012fff0d4286db42b76de34386ab37efcd3d1c`; CI run `34201147829` completed
+with 25 passing jobs, three skips and one failure: multiplayer shard 4's hosted
+Tamsin smoke did not advance round 0 after its finishing input. The subsequent
+smoke watchdog is secondary, not a shard timeout. Root has retrieved its peer
+logs; strike submission/host acceptance/geometry are not yet distinguished.
 The preceding batch `de4fc499fb0aa441561351169dd5cd895ab069b3`, run `34197701347`, completed
 successfully at 2026-09-08 07:32 UTC: 26 passing jobs and three skips.
 The preceding run `34195296547` completed with 24 passing jobs, two failures
@@ -29,7 +33,7 @@ and three skips. These repairs are on the PR branch, not yet on main:
 | Tidewake progression | Aquaryn's ordinary strike action IDs are repaired; the production defeat-to-Swim-Stone-to-saddle-to-mount path passes. Five authored named encounter sites now spawn in production. Long mounted crossings, Salt Crown/Sluice fights and controls, and the composed Veilfall/Guardian ending remain an open continuous-play proof. Isolated finale tests do not close that requirement. |
 | Creatures and menu travel | All 32 later-biome species are assigned to encounter tables; creature sizes span 1.90–7.20 m. ROAD evidence and its visual limitations are in §3. Settings offers 58 destinations across all four biomes; production realm-crossing and physical menu checks passed. |
 
-The latest completed PR #80 run, `34197701347`, passed Gate-B, all unit shards,
+The preceding green PR #80 run, `34197701347`, passed Gate-B, all unit shards,
 solo regression and all seven multiplayer shards. The former Livewire failure
 is repaired by waiting for measured production host hit geometry, not merely
 client placement. The shared-wild check now awaits the new friendly-target
@@ -37,7 +41,10 @@ refusal rather than consuming the previous replay phase's retained response.
 Both formerly failing smokes passed on attempt 1/1. Export and two optional
 known-red jobs were skipped. This verdict covers `de4fc499f`, not subsequent
 local Fly-anchor protocol changes or uncommitted Tidewake route repairs.
-Full milestone completion remains unproven.
+The newer run `34201147829` passes the other six multiplayer shards and all four
+unit shards, but reopens hosted Tamsin. Local Calder approach (`ffb7916db`),
+lightning cleanup (`112220071`) and cheap harvest scan (`767d3350a`) repairs are
+not covered by that run. Full milestone completion remains unproven.
 Detailed evidence and commit boundaries: `ralph/reports/FOUR-BIOME-BUILD/checkpoints.md`.
 
 **ROAD validation reopened, 2026-09-08:** the late-Tidewake traversal diagnostic

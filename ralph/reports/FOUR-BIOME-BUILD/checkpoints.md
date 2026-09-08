@@ -586,3 +586,35 @@
 - The camp/Calder diagnostic ended earlier on a Salt Crown waypoint, 2.1 m from
   its target with the unchanged 1.3 m tolerance. A new run records collision,
   input-owner and navigator state on failure; no Calder success is claimed.
+
+### Checkpoint — 2026-09-08 08:20 UTC
+
+- Branch still contains main `f6b79a6b32983d3b60f7333d8b44706736701474`
+  through merge `01f85b2b356de72689eb90e42242e42ae64d5dfb`. No further push
+  since c5012fff0; CI 34201147829 is terminal, 25 pass / three skip / one fail.
+  Root retrieved failed MP4 job 101981005779 and its artifact: hosted Tamsin
+  round 0 fails to advance, followed by a secondary smoke watchdog. This is
+  not a shard timeout. Diagnostic strengthening is local, not a claimed fix;
+  see `TAMSIN-CI-34201147829.md`.
+- Local Calder repair ffb7916db is backed by the synthetic-start late-water
+  run: ordinary camp/rest, three Calder opponents, east control and combined
+  sluice barrier flag pass. Departure mount fails; no finale closure claimed.
+  A copied pre-Calder save diagnostic is next to measure every mount predicate,
+  explicitly not a fresh-save or uninterrupted chapter proof.
+- Local lightning fix 112220071 removes a freed warning-ring lambda capture.
+  Minimal real receiver regression reproduces baseline error and passes repaired;
+  Stormwood continuous rerun reaches Break, six glass and arch pair A without
+  that error. Maren activation remains a harness evidence gap: prompt focus
+  alone did not prove an interaction. Agent now observes arbiter activation.
+- Veilfall strict candidate exits 1: 23/24 ROAD sites admit 2/2; site20 admits
+  only 1/2. Twelve of 15 populated walks pass; walks19/20/22 fail. Root read
+  the actual terminal summary. Repair is uncommitted and not declared complete.
+- All three agents are active with independent file ownership. Veil released
+  its completed full-world run to Water saved-suffix; Stormwood and root's
+  instrumented hosted Tamsin run follow. Unit/source work continues beside
+  full-world runs; each Godot invocation uses its own log file.
+- Harvest broad-phase optimization 767d3350a has bounded cost/selection tests,
+  not full-world proof yet. c501's core CI smoke passes its unchanged chop
+  assertion on attempt1; timing telemetry alone does not prove the optimization.
+  Fresh-save opening-to-ending composition and full forward-view coverage
+  remain open. The playable-first target and backlog are unchanged.

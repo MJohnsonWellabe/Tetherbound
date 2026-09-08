@@ -2468,12 +2468,21 @@ func _step_stormwood_hosted_quick(args: Dictionary) -> Dictionary:
 	var ready_frames := maxi(30, int(args.get("ready_budget", 360)))
 	for i in ready_frames:
 		if bool(manager.call("quick_ready")):
+			var hub := _stormwood_hub()
+			var action_before := int(hub.get("_action")) if hub != null else -1
 			var pressed := await _inject("combat_quick", 1)
 			if not bool(pressed.get("ok", false)):
 				return {"verdict": "ERROR", "detail": "could not inject combat_quick: %s" % str(pressed)}
+			# Latch submission before a successful kill starts a new encounter
+			# record and resets the sender's per-round action counter to zero.
+			var action_observed := int(hub.get("_action")) if hub != null else -1
 			for settle in maxi(0, int(args.get("settle", 90))):
 				await physics_frame
-			return {"verdict": "PASS", "detail": "pressed the real hosted combat_quick input"}
+				if hub != null:
+					action_observed = maxi(action_observed, int(hub.get("_action")))
+			return {"verdict": "PASS" if action_observed > action_before else "FAIL",
+				"detail": "real hosted combat_quick input; observed action %d -> %d; retained refusal (may predate input)=%s"
+					% [action_before, action_observed, str(manager.get("last_encounter_refusal"))]}
 		await physics_frame
 	return {"verdict": "FAIL", "detail": "combat_quick never became ready; did not bypass cooldown"}
 
@@ -4964,6 +4973,8 @@ func _execute_probe(msg: Dictionary) -> Variant:
 					},
 					"charged_geometry": _stormwood_hosted_strike_geometry(
 						fight, body, opponent, peer_card, "charged"),
+					"quick_geometry": _stormwood_hosted_strike_geometry(
+						fight, body, opponent, peer_card, "quick"),
 				}, true)
 			return result
 		"character_restore":

@@ -218,6 +218,8 @@ func _run() -> void:
 	check(str(legal.get("verdict", "")) == "PASS", "client sent one host-validated action")
 	await step(1, "wait", {"frames": 180}) # longer than the action cooldown; stale must stay stale.
 	var before_stale := await _await_hosted(0, true)
+	check(int((before_stale.get("host_authority", {}) as Dictionary).get("last_accepted_action", 0)) == 703,
+		"host actually accepted action 703 before the stale replay")
 	var stale := await step(1, "stormwood_hosted_raw_strike", {"trainer": TRAINER,
 		"encounter_id": str((before_stale.get("record", {}) as Dictionary).get("id", "")), "action": 703,
 		"move_id": quick, "realm": STORMWOOD, "damage": 999999.0, "settle": 90})
@@ -241,11 +243,21 @@ func _run() -> void:
 			quit(await finish())
 			return
 		var pressed := await step(1, "stormwood_hosted_quick", {"settle": 150, "ready_budget": 600})
-		check(str(pressed.get("verdict", "")) == "PASS", "client used real combat input to finish hosted round %d" % expected_round)
+		check(str(pressed.get("verdict", "")) == "PASS", "client submitted real combat input for hosted round %d: %s"
+			% [expected_round, str(pressed.get("detail", ""))])
+		if str(pressed.get("verdict", "")) != "PASS":
+			print("Hosted quick failure host state: ", await _await_hosted(0, true))
+			quit(await finish())
+			return
 		if expected_round == 0:
 			var next := await _await_round(0, 1)
-			check(int(next.get("round", -1)) == 1 and not bool(next.get("finished", true)),
+			var advanced := int(next.get("round", -1)) == 1 and not bool(next.get("finished", true))
+			check(advanced,
 				"host advanced from Tamsin round 0 to her authored second member once")
+			if not advanced:
+				print("Hosted round transition failure state: ", next)
+				quit(await finish())
+				return
 
 	var completed := await _await_finished(0)
 	check(bool(completed.get("finished", false)), "host marked Tamsin's roster finished after actual strikes")
@@ -342,6 +354,8 @@ func _stage_client_for_current_opponent() -> Dictionary:
 	if str(placed.get("verdict", "")) != "PASS":
 		return {"verdict": "FAIL", "detail": "client follower: " + str(placed.get("detail", ""))}
 	state = await _await_host_body_near(stand, 1.0)
+	print("Hosted pre-quick authority: ", state.get("host_authority", {}),
+		" geometry: ", state.get("quick_geometry", {}))
 	var host_at := _vec(state.get("host_body_pos", []))
 	if host_at == Vector3.INF or host_at.distance_to(stand) > 1.0:
 		return {"verdict": "FAIL", "detail": "host follower never reached the aimed position"}
