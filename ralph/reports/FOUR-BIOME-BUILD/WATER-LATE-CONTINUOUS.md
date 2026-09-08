@@ -72,15 +72,30 @@ contract without constructing a Terrain3D world. Its focused result is:
 1 tests, 1 assertions, 0 failed
 ```
 
-## Next run
+## Next run preparation and route blocker
 
-The ordinary late diagnostic is ready to rerun from its disclosed Tidal seam.
-With corrected mount handling it will physically approach the surviving
-follower and require the real Ride offer before the Sluice-to-Veilfall crossing.
-It then walks the complete Veilfall exterior route, fights Officer Venn, enters
-the waterfall through its production prompt, activates the intake and return
-sluice controls, fights Captain Nerissa, releases the Guardian tether, settles
-the Guardian through its prompt, and requires the durable
+The ordinary late diagnostic now physically approaches the surviving follower
+and requires the real Ride offer before the Sluice-to-Veilfall crossing. At the
+Veilfall landing it uses the authored camp and creature bed to recover through
+ordinary UI. Cave entry intentionally dismisses the follower, so controller
+input redeploys it before Nerissa. The measured prefix reaches Sluice completion
+at about 690 seconds; the remaining exterior route is about 1.27 km. The
+whole-path watchdog is therefore 30 minutes because the old 15-minute ceiling
+was impossible even when every remaining interaction succeeded.
+
+One intended-route gap must be resolved before spending that full runtime.
+Officer Venn currently resolves to world XZ `(182, 4100)`, while the complete
+authored `veilfall_exploration_spine` remains at least 213.95 m away (nearest at
+spine point 3, `(-14.774, 4016)`). The story contract says Venn holds the
+waterfall approach. A continuous witness must not silently replace that missing
+connection with an ungraded 214 m navigator chord. The Veilfall footing lane is
+measuring a reachable late-spine/approach placement; no production placement
+was guessed in this harness commit.
+
+Once that ordinary approach is present, the run will fight Venn, enter the
+waterfall through its production prompt, activate the intake and return sluice
+controls, fight Captain Nerissa, release the Guardian tether, settle the
+Guardian through its prompt, and require the durable
 `water_currents_restored` result. No post-departure fixture write is permitted.
 
 A passing future run will prove only that disclosed late-route span. Fresh-save

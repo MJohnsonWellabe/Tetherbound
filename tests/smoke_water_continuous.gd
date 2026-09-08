@@ -24,7 +24,10 @@ const LATE_ROUTES := [
 	"salt_crown_to_sluice_isle_sheltered",
 	"sluice_isle_to_veilfall_sheltered",
 ]
-const WATCHDOG_MS := 15 * 60 * 1000
+# The measured physical prefix reaches Sluice completion at about 690 seconds;
+# the remaining 1.27 km Veilfall exterior path plus two named fights cannot fit
+# a 15-minute whole-script watchdog even when every interaction succeeds.
+const WATCHDOG_MS := 30 * 60 * 1000
 
 var game: Node
 var world: Node3D
@@ -194,6 +197,10 @@ func _run() -> void:
 	if not await _dismount_on_land("Veilfall"):
 		_finish()
 		return
+	if not await _recover_at_camp("water_camp_veilfall"):
+		_finish()
+		return
+	_checkpoint("Aquaryn recovered through the authored Veilfall camp before the two final fights")
 
 	# The complete authored exploration spine is the graded exterior hike. Venn
 	# is fought where production placed him before the path returns to the falls.
@@ -216,6 +223,15 @@ func _run() -> void:
 		return
 	await _frames(12)
 	if not _check(cave.contains_interior(player.global_position), "Waterfall entrance transfers the same player into Veilfall"):
+		_finish()
+		return
+	# Same-realm cave transfer deliberately dismisses the follower at its narrow
+	# entrance. A player must deploy again before Nerissa offers a challenge.
+	if director.ally_body() == null:
+		await _tap("creature_recall")
+		await _frames(24)
+	if not _check(director.ally_body() != null,
+			"Controller input redeploys the surviving ally inside Veilfall"):
 		_finish()
 		return
 	var controls: Dictionary = cave.get("_controls")
@@ -456,7 +472,9 @@ func _defeat_trainer(id: String, flag: String) -> bool:
 			id, flag, str(opponents.values()), float(ally.hp) if ally != null else -1.0,
 			float(ally.max_hp) if ally != null else -1.0,
 			str(bool(ally.fainted)) if ally != null else "missing", str(director.usable_ally_blocker())])
-	_checkpoint("defeated %s opponents=%d" % [id, opponents.size()])
+	var survivor: RefCounted = director.ally_instance()
+	_checkpoint("defeated %s opponents=%d ally_hp=%.1f/%.1f" % [
+		id, opponents.size(), float(survivor.hp), float(survivor.max_hp)])
 	return true
 
 
@@ -479,7 +497,7 @@ func _recover_at_camp(id: String) -> bool:
 	var panel: Node = INPUT_OWNER.current(self)
 	var focus := root.get_viewport().gui_get_focus_owner() as Button
 	if not _check(panel != null and panel.has_method("is_open") and bool(panel.is_open()),
-			"Sluice creature-bed interaction opens its production panel"):
+			"%s creature-bed interaction opens its production panel" % id):
 		return false
 	if not _check(focus != null and not focus.disabled,
 			"Creature-bed panel gives controller focus to an enabled party row"):
@@ -487,7 +505,7 @@ func _recover_at_camp(id: String) -> bool:
 	await _tap("ui_accept")
 	await _frames(8)
 	if not _check(bool(member.resting) and int(member.rest_bed_index) == int(bed.build_index()),
-			"Controller input assigns Aquaryn to the authored Sluice creature bed"):
+			"Controller input assigns Aquaryn to the authored %s creature bed" % id):
 		return false
 	await _tap("menu_cancel")
 	await _frames(8)
@@ -497,7 +515,7 @@ func _recover_at_camp(id: String) -> bool:
 	var deadline := Time.get_ticks_msec() + 15000
 	while game.day == day_before and Time.get_ticks_msec() < deadline:
 		await physics_frame
-	if not _check(game.day == day_before + 1, "Ordinary Sluice camp input advances one night"):
+	if not _check(game.day == day_before + 1, "Ordinary %s camp input advances one night" % id):
 		return false
 	if not _check(not bool(member.fainted) and float(member.hp) >= float(member.max_hp) - 0.01,
 			"Physically bedded Aquaryn recovers overnight without an HP injection"):
@@ -656,7 +674,7 @@ func _watchdog() -> void:
 	while not finished and Time.get_ticks_msec() - started_ms < WATCHDOG_MS:
 		await create_timer(1.0).timeout
 	if not finished:
-		_fail("15 minute continuous Tidewake watchdog expired")
+		_fail("%d minute continuous Tidewake watchdog expired" % int(WATCHDOG_MS / 60000))
 		_finish()
 
 
