@@ -4337,6 +4337,16 @@ func _probe_water_swimming() -> Dictionary:
 	return {"local": local, "remote": remote, "current_realm": str(root.get_node("Game").get("current_realm"))}
 
 
+## Capture both sides of the boss-friendly-fire observation in one callback.
+## Separate TCP probes leave a frame gap in which a legitimate boss hit changes
+## HP outside the tally's measured window. No await, so combat cannot tick here.
+static func boss_combat_snapshot(director: Object) -> Dictionary:
+	var record: Dictionary = director.call("encounter_record")
+	var creature: Variant = director.call("ally_instance")
+	return {"record": record.duplicate(true),
+		"my_creature_hp": float(creature.get("hp")) if creature != null else -1.0}
+
+
 func _execute_probe(msg: Dictionary) -> Variant:
 	var what := str(msg.get("what", ""))
 	var args: Dictionary = msg.get("args", {}) as Dictionary
@@ -4825,7 +4835,8 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			var bmanager := _combat_manager()
 			if bdirector == null or bmanager == null:
 				return {"available": false}
-			var brec: Dictionary = bdirector.call("encounter_record")
+			var combat_sample := boss_combat_snapshot(bdirector)
+			var brec: Dictionary = combat_sample["record"]
 			var bopponent: Dictionary = brec.get("opponent", {}) as Dictionary
 			var bargs: Dictionary = msg.get("args", {}) as Dictionary
 			var btrainer := str(bargs.get("trainer", "warden_aldis"))
@@ -4909,6 +4920,7 @@ func _execute_probe(msg: Dictionary) -> Variant:
 					"struck_counts": brec.get("struck_counts", {}),
 				},
 				"local_peer_id": bdirector.call("_local_peer_id"),
+				"my_creature_hp": combat_sample["my_creature_hp"],
 				"live": live,
 				"authored": authored,
 				# §10's gate, reported so a scaling assertion that goes red says

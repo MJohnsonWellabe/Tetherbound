@@ -638,6 +638,9 @@ func _run() -> void:
 	#      `host_pick_struck_participant`'s header says a pick IS a hit on this
 	#      path -- so a tally that did not move is the host stating the boss
 	#      landed nothing on that peer in that window.
+	#      HP and tally must come from the SAME synchronous boss probe. Separate
+	#      encounter probes widened the HP window beyond the tally window: CI
+	#      34227293723 read 124.403 -> 109.718 HP while its inner tally stayed 1.
 	#
 	# PEER 1 swings, at peer 0's creature. The client is the striker
 	# deliberately: a client's refusal has to travel back over the wire and
@@ -684,7 +687,7 @@ func _run() -> void:
 		var pre: Dictionary = await _boss(0)
 		struck_before = _struck(pre, host_peer_id)
 		boss_before = float((pre.get("record", {}) as Dictionary).get("hp", -1.0))
-		victim_hp = float(mine.get("my_creature_hp", -1.0))
+		victim_hp = float(pre.get("my_creature_hp", -1.0))
 		var at_teammate := host_creature_at - guest_at
 		at_teammate.y = 0.0
 		friendly = await step(1, "strike",
@@ -693,7 +696,7 @@ func _run() -> void:
 		var post: Dictionary = await _boss(0)
 		struck_after = _struck(post, host_peer_id)
 		boss_after = float((post.get("record", {}) as Dictionary).get("hp", -1.0))
-		victim_after = float((await _encounter(0)).get("my_creature_hp", -1.0))
+		victim_after = float(post.get("my_creature_hp", -1.0))
 		refusal = (await _boss(1)).get("refusal", {}) as Dictionary
 		# The refusal's ARRIVAL is part of `clean`, not merely something read
 		# once the swing looked good. Without this the loop exits the moment the

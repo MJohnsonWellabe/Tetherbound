@@ -22,8 +22,17 @@ Varga route expectation (follow-up now passes both suites, 5/517) plus two Gate 
 issues recorded in `SECOND_PASS_BACKLOG.md`. CI `34225403192` on `d387d0bdd`
 completed 25 successful jobs / one failure / three intentional skips. Every
 job log was reviewed; all runtime and multiplayer shards passed first attempts.
-The sole failure is the contradictory Varga route expectation, corrected in
-the follow-up batch; that new head needs its own CI verdict.
+That Varga expectation is corrected in follow-up `d0f9a263e`; its CI
+`34227293723` passes all four unit shards, but multiplayer shard 5 fails the
+shared-boss friendly-fire HP check (124.403 before / 109.718 after). The
+`friendly_target` refusal passed. The run finished 25 successful jobs / one
+failure / three intentional skips; every job log and step was reviewed. The
+smoke reads HP outside its boss-hit-counter window, so a legitimate hit in
+either sampling gap can falsely fail the check. An atomic probe correction
+preserves the HP/refusal criteria; focused regressions pass (3 tests / 9
+assertions), as does its first repaired runtime run (85 checks / zero failures).
+Independent review found no actionable issues. The precise CI hit frame is
+not reconstructed. The next exact-head CI remains required before landing.
 PR #80 remains draft. See
 `ralph/reports/FOUR-BIOME-BUILD/MAIN-GREEN-20260908.md` for exact failures and
 evidence. The four-biome goal is incomplete, and Wave 1 has not started.

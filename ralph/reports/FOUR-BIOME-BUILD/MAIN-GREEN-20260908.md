@@ -132,3 +132,42 @@ Windows `bash` for the lane-declaration subprocess followed by a missing-file
 parse error. These are recorded in `docs/SECOND_PASS_BACKLOG.md`, with no
 assertion, telemetry or threshold changes. Existing CI sparse-report behavior
 does not prove the full-checkout recorder check. The local suite is NOT green.
+
+## Follow-up head d0f9a263e
+
+Head `d0f9a263e283612df4d1a1bf2378f506c871d5a1`, CI `34227293723`, passes
+all four unit shards (2918 tests / 486209 assertions) but multiplayer shard 5
+job `102065696857` fails `smoke_net_shared_boss` on attempt 1/1. The friendly
+strike is refused with `friendly_target`, and boss HP stays unchanged, but
+peer 0 HP falls from 124.403 to 109.718. The quiet-window diagnostic reports
+one `pick_struck` choice of peer 1 both before and after. Actual boss activity
+and that observation boundary are under investigation; no intermittent-pass
+rerun is accepted as proof. Raw job log: `.artifacts/ci-34227293723/102065696857.log`;
+full peer artifact: `%TEMP%/wave0-net5-34227293723/`.
+
+The run terminated at 12:57:37 UTC: 25 successful jobs, one failure, three
+intentional skips. Every job log and step was reviewed. All other multiplayer
+shards, all runtime shards and the solo aggregate pass. No rerun or cancellation
+was requested. PR #80 remains draft and main remains red; the four-biome goal
+has not resumed.
+
+The shared-boss smoke sampled HP using separate encounter probes outside its
+pre/post boss-hit-counter probes. This strictly wider HP interval can include
+a legitimate boss hit that the counter interval excludes. The exact CI hit
+frame cannot be reconstructed from retained logs; that timing explanation is
+an inference, while the torn observation is directly present in the code.
+The repair captures HP and a deep copy of the encounter record synchronously
+in the real boss probe. It preserves exact HP acceptance, refusal checks,
+existing attempt limits and gameplay. Three deterministic regressions / nine
+assertions pass, including both former sampling gaps and unexplained HP loss
+still failing the unchanged criterion (`.artifacts/boss-snapshot-unit.log`).
+The single repaired shared-boss runtime invocation passes 85 checks / zero
+failures, exit 0. The first friendly-fire window has host HP 125.050 -> 125.050,
+boss HP 194.879 -> 194.879 and hit tally 1 -> 1, with `friendly_target` refusal.
+Both child processes exited. Coordinator and engine logs use local prefix
+`.artifacts/boss-atomic-repair-20260908`; peer logs are in its matching directory.
+No script errors; both peers retain the pre-existing `player already has a
+creature; adopt_starter is not a swap` error also present in the original CI
+artifact, so native output is not clean. Independent astra review found no
+actionable issues and confirmed unchanged HP/refusal/attempt criteria. This
+is not yet exact-head green evidence; the next coherent push requires fresh CI.
