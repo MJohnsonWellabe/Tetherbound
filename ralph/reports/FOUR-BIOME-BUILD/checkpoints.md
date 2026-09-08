@@ -826,3 +826,50 @@
   opening-to-Tidewake ending and forward-view coverage remain open. Next priority:
   complete main's own CI review, then the actual fresh camp/training path and its
   observed blockers. Next checkpoint19:51 UTC.
+
+## 2026-09-08 19:51 UTC — merged gameplay repairs; first-camp content prepared
+
+- Material merged delta since17:51: PR87 landed as
+  `043cd1061ba8e1423d1681c7479d9ad36f6d4317`; exact PR head
+  `6c0f0e78046fbd15c3e1fe46de06fa154981be66` passed CI34262351185.
+  Main's OWN push CI34264602920 passed attempt1 at19:10:32:27 successful
+  jobs/two existing manual-only skips,3037 unit tests/487178 assertions,
+  all seven multiplayer shards, Windows PE export and actual Linux exported
+  runtime terrain/ground validation. All jobs, steps, attempts and logs were
+  reviewed. This is not a Windows/Ally full playthrough.
+- Landed gameplay capability includes reachable Iona conversation footing and
+  a traversable Stormheart approach lip, with actual Player/native terrain
+  proof; corrected physical throw previews and controller party cycling also
+  have actual fresh capture/training receipts. PR86 main's own34258802654
+  was confirmed green at18:12; that validation is not double-counted as a new
+  feature. The checkpoint has a positive merged runtime delta; zero streak0.
+- Owner redirected effort toward actual content. Local content commit
+  `d30e0e62b` authors the Tam-to-Practice Meadow gathering walk, moves two
+  existing resource stops out of conflicting/less useful positions, explains
+  the actual one-bed camp lesson, and corrects Salt Crown and Nerissa guidance.
+  Draft PR88 head`9cb6b1b42d4c5947842f72e2b8a57a1cd54e4593` includes this
+  content and already-prepared harvest/Aquaryn repairs plus earned ending
+  composition. Its CI34270467585 is pending; no unmerged credit is counted.
+- Genuine fresh scratch35664_2471 ended at595.393s: normal opening and revised
+  dialogue, five earned creatures, ten training wins, actual18wood/18fiber/8stone
+  camp bill gathered, four paid pieces placed and two real creature rests.
+  The third bed assignment failed during the walk,5.2m short at[31,0,-38].
+  Owner fingerprints match; zero engine/script errors. Full care, tournament
+  and opening-to-ending remain open. Logs .artifacts/wave4-fresh-camp-lesson*.
+- One labelled copy-save diagnostic reached the same bed in269frames and did
+  NOT reproduce the failure. It observed contacts with the bed, a wild
+  Bramblebun and terrain. No cause/fix is established and no unchanged rerun
+  is accepted as fresh proof. Original scratch and owner saves remained intact.
+  No further guessed detour is planned from these data.
+- Existing content checks passed29/22302, village dialogue/quest110/1998,
+  lesson helpers/home60/896 and Tidewake guidance113/2053. Four actual-world
+  day/night captures received one fresh blind judge: key-art no, Palworld
+  same-kind yes without quality parity. Named visual gaps are deferred.
+- Travel observer recorded123 samples over1364.57m,92 below two visible
+  creatures and one undersampled interval. Read-only review found the clearest
+  ~50m empty-camera stretch was real road travel with the camera looking
+  backward; three Mudsnouts were12–18m ahead of movement. No120m dead-content
+  gap or placement change is justified by that record. Full coverage remains
+  open. Next priority is ship the prepared content after exact-head CI, then
+  progress actual play without reopening an unsupported navigation grind.
+  Next checkpoint21:51UTC.

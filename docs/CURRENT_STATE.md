@@ -6,6 +6,27 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-08, playable build in progress)
 
+**2026-09-08 20:03 UTC: first-camp and Tidewake content landed in PR #88.**
+Main is `2eb8d4b8681ce8224eaa58666b41be5164479c5b`, with the identical tree
+to verified PR head `9cb6b1b42d4c5947842f72e2b8a57a1cd54e4593`.
+Its PR CI34270467585 passed on attempt1:26 successful jobs/three configured
+skips,3055 unit tests/487315 assertions and all seven multiplayer shards.
+Every executed job/step/log was reviewed. Main's OWN push CI34272560821 is
+pending; the prior green main run below does not stand in for it.
+
+The village gathering placements and campsite dialogue, Salt Crown charting
+instruction, Nerissa dialogue, reachable wood prompts and same-live Aquaryn
+retirement are now on main. The failed fresh run's paid camp and two actual
+rests remain partial evidence. A diagnostic reload reached the same bed and
+did not reproduce the stall; it proves no fix and is not fresh acceptance.
+
+The saved-camp image exposed an additional guidance gap: the HUD says to enter
+the tournament while three creatures are still unrested. Local Wave5 adds a
+care rung using the existing live tournament_condition_ready flag and retires
+it after registration. It changes no eligibility rule and is not merged yet.
+Existing quest/home checks pass54 tests/896 assertions. Full uninterrupted
+campaign and full forward-view coverage remain open.
+
 **2026-09-08 19:10 UTC: Wave 3 landed; its own main CI is green.**
 PR #87 exact `6c0f0e78046fbd15c3e1fe46de06fa154981be66` passed run
 `34262351185` on attempt 1: 26 executed jobs passed, three existing conditional

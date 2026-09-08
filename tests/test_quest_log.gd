@@ -277,6 +277,7 @@ const WORLD_FLAGS := {
 	"creature_bed_built_2": "scripts/build/home_progress.gd::maybe_set_creature_beds() (second placed bed)",
 	"creature_bed_built_3": "scripts/build/home_progress.gd::maybe_set_creature_beds() (third placed bed)",
 	"tournament_team_fed": "scripts/world/tournament.gd::_write_entry_flags() via team_fed() -- VOLATILE, written true AND false",
+	"tournament_condition_ready": "scripts/world/tournament.gd::_write_entry_flags() via condition_ready() -- VOLATILE, written true AND false",
 	"tournament_team_ready": "scripts/world/tournament.gd::_write_entry_flags() (RG19)",
 	"tournament_training_ready": "scripts/world/tournament.gd::_write_entry_flags() (RG19)",
 	"home_materials_gathered": "scripts/build/home_progress.gd",
@@ -697,6 +698,37 @@ func test_the_bed_rung_finishes_when_the_first_creature_bed_is_built() -> void:
 ## "Keep the satiety drain rate; teach it... an explicit 'feed your team' step
 ## before tournament sign-up." Both halves: the rung exists, and it is
 ## ordered where the directive puts it.
+func test_team_condition_blocks_entry_guidance_until_ready_and_retires_after_registration() -> void:
+	var order := _flag_order()
+	var ready := order.find("tournament_condition_ready")
+	assert_true(order.find("tournament_team_fed") < ready and ready < order.find("tournament_entered"),
+		"whole-team condition guidance must follow feeding and precede sign-up")
+	var preparation := {}
+	var enter_label := ""
+	for raw: Variant in _main_data():
+		var entry: Dictionary = raw
+		var flag := str(entry.get("flag_id", ""))
+		if flag == "tournament_entered": enter_label = str(entry.label)
+		if flag == "tournament_condition_ready":
+			preparation = entry
+		elif preparation.is_empty():
+			progression.set_flag(flag)
+	assert_false(preparation.is_empty(), "the existing readiness verdict needs its own guidance rung")
+	if preparation.is_empty(): return
+	assert_eq(str(preparation.get("retired_by", "")), "tournament_entered")
+	assert_eq(log_reader.tracked_text(progression), str(preparation.label),
+		"one sleep and a fed team must not advertise entry while another creature needs care")
+	progression.set_flag("tournament_condition_ready")
+	assert_eq(log_reader.tracked_text(progression), enter_label)
+	progression.set_flag("tournament_condition_ready", false)
+	assert_eq(log_reader.tracked_text(progression), str(preparation.label),
+		"readiness lost before entry must restore the care instruction")
+	progression.set_flag("tournament_entered")
+	assert_true(log_reader._done(preparation, progression),
+		"post-entry fatigue must not reactivate the preparation lesson")
+	assert_ne(log_reader.tracked_text(progression), str(preparation.label))
+
+
 func test_a_feed_your_team_rung_stands_between_the_sleep_and_the_sign_up() -> void:
 	var order := _flag_order()
 	var sleep := order.find("player_slept_at_home")
