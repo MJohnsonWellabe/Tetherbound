@@ -15,6 +15,10 @@ remain in `docs/SECOND_PASS_BACKLOG.md`; they are not claimed passed.
 PR #79 landed at `7ab4a12647a377a400c43335b64aff8b03ca6d43`. Current work is on
 `codex/four-biome-wave0`, PR #80, which includes main through `f6b79a6b3` via
 merge `01f85b2b356de72689eb90e42242e42ae64d5dfb`. The latest submitted batch is
+`0ddc10269955bfbe16389ab8c2e6916708c64d06`; CI run `34213024669` is in progress,
+not a verdict. It includes the aggression fixture repair, Salt Crown ordinary
+spawn repair and Reedhaven tool-contract correction. No further push is planned
+until this run finishes. The preceding submitted batch was
 `23b7d4acd935b508d53769a71e434857de1de41c`; CI run `34208280455` completed
 with 26 passing jobs and three skips. All seven multiplayer shards passed on
 their first attempts, including Livewire and Tamsin. Combat's aggression smoke
@@ -24,9 +28,13 @@ validation. Checked proximity and approach telemetry in `1765092fc` now expose
 a stale fixture: its `(40,-62)` starting point intersects the closed village
 fence. The local collider diagnostic repeatedly contacts
 `VillageBoundary/FencePanelCollision_39`. The authored peaceful Bramblebun and
-aggressive Galecrest are on opposite sides of that sealed boundary; separate
-initial scene fixtures are being prepared without unlocking progression or
-changing either behavior assertion. A clean complete runtime remains unproven. Full job
+aggressive Galecrest are on opposite sides of that sealed boundary. Separate
+initial scene fixtures now pass locally without unlocking progression or
+changing either behavior assertion: peaceful at 2.2 m for 900 frames, aggressive
+self-initiation at 8.8 m, real arena/ally/locomotion state and Run escape.
+Second-scene staging emitted a velocity-clamp warning at the origin before the
+measured approach; its cause remains under investigation. This is a behavior
+pass, not a warning-free scene-loading claim. Full job
 review: `ralph/reports/FOUR-BIOME-BUILD/CI-34208280455.md`.
 The preceding batch `226aaf070168b71e36bc6ee1eaf150c4148613af`, run `34205399274`, completed
 with 25 passing jobs, three skips and one failure. Only multiplayer shard 2
