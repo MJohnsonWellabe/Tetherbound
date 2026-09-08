@@ -6,6 +6,20 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-08, playable build in progress)
 
+**Wave5 shipping status:** draft PR #89 is frozen at
+`08b5b3d6f7cf6bf02ddd492cd941dab2b807a5a6`. CI34277113851 found two stale
+objective-fixture expectations; the remaining jobs are still being reviewed.
+The corrected fixtures require the new care rung and all34 authored objectives.
+Existing scope/chain/quest checks pass59 tests/1223 assertions with clean output.
+It contains the care/saddle guidance, Water combat HUD and Brine011 repair below.
+A later LOCAL-only010 placement also passed all-three-species footing and
+ordinary grounded approach/physical Engage against its exact Mangrove Monitor:
+86 observed frames, zero navigator resets/errors, owner saves unchanged.
+Its lower shoulder[320.4116,26.3276,637.8423] avoids the rejected high ledge.
+Existing data/residency checks pass12 tests/2213 assertions. This010 edit is
+not in PR89's first head; it will join the corrected batch after that run ends.
+Neither placement proves a full fight win or campaign.
+
 **2026-09-08 20:03 UTC: first-camp and Tidewake content landed in PR #88.**
 Main is `2eb8d4b8681ce8224eaa58666b41be5164479c5b`, with the identical tree
 to verified PR head `9cb6b1b42d4c5947842f72e2b8a57a1cd54e4593`.

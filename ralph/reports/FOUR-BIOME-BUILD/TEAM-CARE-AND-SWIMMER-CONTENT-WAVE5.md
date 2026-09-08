@@ -74,3 +74,12 @@ still looking across the landscape after its diagnostic pose change; the image
 is evidence of the HUD, not combat framing or visual-quality acceptance.
 No second art iteration was made. Render logs:
 `.artifacts/wave5-water-combat-hud-render{,-engine}.log`.
+
+PR89's first head08b5b3d6 exposed two stale content expectations in CI34277113851:
+`test_flag_scopes` still required33 entries after the new authored row made34,
+and `test_gateb_objective_chain` omitted the condition-ready step before entry.
+The corrected fixtures retain every scope assertion and add the readiness
+transition to the ordered chain; no reach, timeout, gameplay eligibility or
+failure criterion is relaxed. Existing scope/chain/quest checks pass59 tests/
+1223 assertions with clean output in `.artifacts/wave5-objective-chain{,-engine}.log`.
+The failed CI head remains recorded; it is not rerun or merged.

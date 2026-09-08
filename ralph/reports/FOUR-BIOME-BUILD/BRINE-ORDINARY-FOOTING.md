@@ -1,10 +1,9 @@
 # Brine Steps ordinary ecology footing
 
-Status: original rejection reproduced for 010/011. Both common candidates now
-pass fresh authored admission and all-species footing. Site 010's ordinary
-approach failed; its candidate is rejected and original row restored. Site
-011's independent human walk reached its stance but produced no Engage offer.
-Both authored rows are restored; no completed repair is claimed.
+Status: both 010 and 011 now have supported, reachable authored candidates.
+Site 011 was accepted previously; the new lower-spine 010 candidate passed
+all-species native footing and an ordinary approach plus exact physical Engage.
+The rejected high 010 ledge and earlier invalid prompt criterion remain below.
 
 ## Observed production failure
 
@@ -269,3 +268,39 @@ bug. No production input/runtime changes were made to satisfy the diagnostic.
 Final retained-011-only data passed the existing runtime-data/residency checks:
 12 tests / 2213 assertions, zero failures, exit 0, no engine errors
 (.artifacts/wave5-brine011-final-tests-{console,engine}.log).
+
+
+### Site 010 lower-spine content recovery (next-wave local change)
+
+The previous shelf's 31 m elevation mismatch was rejected, not retried.
+A different placement uses the lower west shoulder of the existing spine:
+(320.4116, 26.3276, 637.8423), island-local (-99.5884, 26.3276, -22.1577).
+It is 1.1 m from the spine at the same elevation. Production heightfield
+screening measured 11.8468 degrees maximum slope across the largest legal
+1.7375 m footprint and only 0.3628 m height variation. The footprint stays
+inside the graded shoulder; no other authored wild site lies within 20 m.
+No terrain, count, table, roam radius, interaction range or budget changed.
+
+The unchanged existing ordinary-footing probe ran once on this candidate:
+`.artifacts/wave5-brine010-low-footing-{console,engine}.log`, exit 0.
+Riptusk, Cragclaw and Mangrove Monitor all passed; initial production admission
+reported spawned=true, failed=false and one member against one expected.
+
+One actual-world controller diagnostic then began six metres back along the
+same spine to avoid a synthetic start inside the newly nearby creature.
+Start (320.932,25.21899,631.7645) is an explicitly synthetic diagnostic pose;
+subsequent approach and Interact were ordinary inputs. The actual arbiter
+published actionable Engage Mangrove Monitor at 3.174 m, with the manager
+inactive and the exact site 010 body selected. One physical Interact started
+combat against that same object. The approach arrived grounded with zero
+resets; 86 observed frames included the unchanged movement/input/settle path,
+well inside the original 2400-frame movement bound and six-minute watchdog.
+Log `.artifacts/wave5-brine010-low-engage-{console,engine}.log`, exit 0.
+
+This recovers ordinary encounter presence and fight admission, not full fight
+completion or fresh campaign continuity. Both runs had no ERROR/SCRIPT ERROR;
+existing Terrain3D warnings remain. Owner save fingerprints matched the
+before/after records `.artifacts/wave5-brine010-low-owner-*.json`, and Godot
+processes had exited when RAM was released. Site 011's accepted row is unchanged.
+
+Existing data/residency checks passed 12 tests / 2213 assertions, zero failures, exit 0 (.artifacts/wave5-brine010-low-tests-*.log).
