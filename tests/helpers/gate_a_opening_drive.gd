@@ -159,8 +159,8 @@ func run(tree: SceneTree) -> Dictionary:
 	# ANSWER THE CHARACTER-CHOICE STEP the same way, folded into the same wait
 	# for the same reason: every new-game path now shows "Choose Your
 	# Character" (data/config/characters.json) before the world is entered.
-	# One entry exists today, focused automatically, so pressing through it is
-	# the production path for the only character that currently exists.
+	# The original character is focused automatically. Identify its stable id
+	# so a display-name change does not prevent the ordinary confirm press.
 	var answered_confirmation := false
 	var answered_character_choice := false
 	for _i in 2400:
@@ -176,7 +176,7 @@ func run(tree: SceneTree) -> Dictionary:
 				continue
 		if not answered_character_choice:
 			var character_choice := _tree.root.get_viewport().gui_get_focus_owner() as Button
-			if character_choice != null and character_choice.text.begins_with("The Trainer"):
+			if character_choice != null and str(character_choice.get_meta("character_id", "")) == "trainer":
 				answered_character_choice = true
 				_checkpoint("answered the character-choice step")
 				await _tap_action("ui_accept")

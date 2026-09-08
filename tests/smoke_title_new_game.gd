@@ -89,11 +89,10 @@ func _run() -> void:
 		await _pad(button_index)
 
 	# ANSWER THE CHARACTER-CHOICE STEP every new-game path now shows first
-	# (data/config/characters.json). One entry exists today ("The Trainer"),
-	# focused automatically, so pressing through it is the production path
-	# for the only character that currently exists -- not a test convenience.
+	# (data/config/characters.json). The original character is focused by
+	# default; use its stable id rather than the changeable display name.
 	var character_choice := root.get_viewport().gui_get_focus_owner() as Button
-	if character_choice != null and character_choice.text.begins_with("The Trainer"):
+	if character_choice != null and str(character_choice.get_meta("character_id", "")) == "trainer":
 		await _pad(button_index)
 
 	# change_scene_to_file() is requested after one title frame.  World _ready()

@@ -6,6 +6,28 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-08, playable build in progress)
 
+**Owner priority update, 2026-09-08:** Ally Gamepad mode resolved the reported
+inability to get out of bed (owner confirmation). The four-character picker is
+rebuilt locally with portraits and Arlo/Lyra/Kael/Sera names; stable save IDs remain.
+Actual UI controller/keyboard checks and a blind capture review passed. Combined
+picker/device tests:13 tests/70 assertions, zero failures. Prompt tracking now
+ignores old-device releases and stationary cursor refreshes; this is not claimed
+as the hardware wake fix. The owner explicitly reopened region loading and the
+non-Meadows terrain/cloud visual pass; these are the current work priorities.
+See OWNER_PLAYTEST_2026-09-08_PICKER_LOADING_TERRAIN.md and
+ralph/reports/FOUR-BIOME-BUILD/CHARACTER-PICKER-OWNER-FIX.md.
+
+PR90 head10fb6f1dbcc4dd42fdf4fb532c7fee4101dac801 passed exact-head
+CI34287024505 on attempt1:26 successful jobs/three expected skips,3060 unit
+tests/487393 assertions,86 first-attempt wrapped smokes. This is PR evidence,
+not a new main landing. Picker/input changes are subsequent local work.
+The chapter-fixture Stormwood-through-Crown run was interrupted for the owner's
+urgent Ally report after gathering six glass; no Crown completion is claimed.
+The second genuine fresh run stopped before throwing because the production
+reticle verdict was ineligible; no full fresh campaign pass exists. After two
+failed fresh attempts, repeated opening runs stopped. An isolated proposed aim
+timing change did not pass and was withdrawn.
+
 **2026-09-08 Wave6 local gameplay work:** Lantern Hollow's four overlapping
 NPCs now have separate nearby placements around the unchanged Spark shrine.
 Actual grounded walking reached all four exact prompts, and Sable's ordinary

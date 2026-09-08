@@ -911,12 +911,14 @@ func last_input_was_gamepad() -> bool:
 ## who handled the press.
 func _input(event: InputEvent) -> void:
 	if event is InputEventJoypadButton or event is InputEventKey or event is InputEventMouseButton:
-		_last_input_was_gamepad = event is InputEventJoypadButton
+		if event.is_pressed():
+			_last_input_was_gamepad = event is InputEventJoypadButton
 	elif event is InputEventJoypadMotion:
 		if absf((event as InputEventJoypadMotion).axis_value) >= _MOTION_DEADZONE:
 			_last_input_was_gamepad = true
 	elif event is InputEventMouseMotion:
-		_last_input_was_gamepad = false
+		if not (event as InputEventMouseMotion).relative.is_zero_approx():
+			_last_input_was_gamepad = false
 
 
 ## D105: the day is host truth. `world_look.gd`'s automatic day roll calls this

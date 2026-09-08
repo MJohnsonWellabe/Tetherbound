@@ -1,30 +1,34 @@
 {
   "_comment": "Owner-requested character-CHOICE step: every new-game path (solo Start New Game, hosting -- which is Start New Game on the host's own machine, session.gd never a second entry point -- and Join when this machine has no local character yet) shows a 'Choose Your Character' screen before the world is entered. scripts/ui/title_screen.gd::_load_character_options() reads this list generically and builds one row per entry, so a second character is a JSON entry here, not a UI rewrite.",
   "_comment_four_options": "Extended from the original single trainer option to four (owner directive: generate alternate main-character choices Lyra, Kael and Sera). `id` doubles as the `data/config/art.json` key that decides the player's body (trainer_model.gd::_ready() reads Game.local.chosen_character, set from this id the moment it is picked -- see title_screen.gd's two call sites), so each id here must exist as a key there. `trainer`'s id matches art.json's own default/fallback key exactly, rather than a separate 'trainer_default' string, so picking it needs no fallback path.",
-  "_comment_fields": "`id` is the stable key a future consumer (e.g. a starting-loadout or cosmetic difference) would key off, and the `art.json` body key. `display_name` and `tagline` are shown on the row. `portrait` is optional (`res://assets/ui/portraits/<id>.png`); an option without one draws as a text-only row. Selecting a row is also the confirmation -- the same one-press pattern the Load Game slot list already uses -- so a single option is one press, not a picker plus a separate confirm button.",
+  "_comment_fields": "id remains the stable save/network/body key. display_name is the card label; tagline is retained as catalogue flavour, not picker text. portrait names an installed image; optional portrait_region [x,y,width,height] crops a mini profile from an existing full-body portrait. Selecting the card confirms it. The original trainer is named Arlo; its persisted id remains trainer.",
   "characters": [
     {
       "id": "trainer",
-      "display_name": "The Trainer",
+      "display_name": "Arlo",
+      "portrait": "res://assets/ui/portraits/trainer.png",
       "tagline": "Wakes at Grandpa's farmhouse to build a team of five and see the Meadows through."
     },
     {
       "id": "lyra",
-      "display_name": "Lyra the Pathfinder",
+      "display_name": "Lyra",
       "tagline": "Curious, bold, always scouting the horizon.",
-      "portrait": "res://assets/ui/portraits/lyra.png"
+      "portrait": "res://assets/ui/portraits/lyra.png",
+      "portrait_region": [78, 6, 108, 108]
     },
     {
       "id": "kael",
-      "display_name": "Kael the Northward",
+      "display_name": "Kael",
       "tagline": "Steadfast, resilient, built for what's next.",
-      "portrait": "res://assets/ui/portraits/kael.png"
+      "portrait": "res://assets/ui/portraits/kael.png",
+      "portrait_region": [82, 4, 108, 108]
     },
     {
       "id": "sera",
-      "display_name": "Sera the Harmonist",
+      "display_name": "Sera",
       "tagline": "Thoughtful, compassionate, gentle.",
-      "portrait": "res://assets/ui/portraits/sera.png"
+      "portrait": "res://assets/ui/portraits/sera.png",
+      "portrait_region": [80, 2, 108, 108]
     }
   ]
 }
