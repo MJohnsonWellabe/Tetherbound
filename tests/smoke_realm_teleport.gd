@@ -160,6 +160,9 @@ func _ground_every_curated_destination(game: Node, realm_id: String) -> void:
 			var player := game.call("find_player") as Node3D
 			if player != null:
 				var at := player.global_position
+				_expect(Vector2(at.x, at.z).distance_to(target) <= 3.0,
+					"Settings row %s/%s moved away without input after landing: %s requested=%s" % [
+						realm_id, entry.get("display_name", "?"), at, target])
 				var floor_y := float(current_scene.call("ground_height_at", at.x, at.z))
 				_expect(at.is_finite() and is_finite(floor_y) and at.y >= floor_y - 0.5,
 					"Settings row %s/%s fell below terrain after physics resumed: %s floor=%.2f" % [

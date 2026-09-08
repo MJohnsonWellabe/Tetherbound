@@ -16,7 +16,7 @@
           "display_name": "Band 1 — Lower Meadows",
           "spots": [
             { "display_name": "Grandpa's Village", "position": [6.0, -22.0] },
-            { "display_name": "The South Bridge", "position": [0.0, 1330.0] }
+            { "display_name": "The South Bridge", "position": [9.0, 1300.0], "_comment": "Use the authored village-side approach road, not the trench centre: terrain-height teleport at the centre lands below the bridge deck and triggers recovery." }
           ]
         },
         {
@@ -32,7 +32,7 @@
           "display_name": "Band 3 — The River Lock",
           "spots": [
             { "display_name": "The Tether Relay", "position": [350.0, 3760.0] },
-            { "display_name": "Old Mill Crossing", "position": [-152.0, 4203.0] }
+            { "display_name": "Old Mill Crossing", "position": [-152.0, 4170.0], "_comment": "Use the authored near-side approach road; the landmark centre is the channel beneath the bridge deck." }
           ]
         },
         {

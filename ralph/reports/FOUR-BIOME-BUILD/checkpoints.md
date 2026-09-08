@@ -456,3 +456,26 @@
   Sluice's short production footing probe runs first. CI monitoring, Bex analysis,
   ROAD analysis and root integration run in parallel; full-world smokes serialize
   for RAM only. No continuous fresh-save completion is claimed.
+
+### Follow-up — teleport recovery and current CI failures
+
+- The two Meadows menu coordinates were bridge/channel landmark centres; the
+  terrain-height teleport seam therefore places the player below the elevated
+  deck. The working repair uses existing near-side approach road vertices:
+  South Bridge (9,1300), Old Mill (-152,4170). The smoke now also requires no-input
+  horizontal displacement to remain within 3 m after its physics settle, so
+  road recovery cannot silently pass the final height check. Focused menu tests
+  pass 5 tests / 921 assertions and the smoke parses; the strengthened runtime
+  verdict is pending behind Bex's full-world run.
+- Run `34195296547` is still active but has two confirmed failures, not timeouts:
+  multiplayer shard 2 Livewire accepted-without-damage again, and shard 5 shared
+  wild friendly-fire proof read `replayed_action` instead of `friendly_target`.
+  Root independently read all 27 currently visible job states: five other
+  multiplayer shards, Gate-B and all four unit shards have passed; gate-evidence
+  remains active and two optional jobs are skipped.
+- Livewire's stationary-opponent fixture did not eliminate the miss. Its lane
+  is inspecting host-facing/hit geometry before another repair. Shared wild's
+  friendly-refusal poll exits on any nonempty snapshot, although the immediately
+  preceding replay proof intentionally leaves `replayed_action` there and a
+  submitted client request does not clear it. A bounded expected-code poll
+  repair parses; peer-log confirmation and connected validation remain pending.
