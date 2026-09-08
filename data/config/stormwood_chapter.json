@@ -231,7 +231,7 @@
           "flag_id": "stormwood:crown_glass_gathered",
           "scope": "world",
           "label": "Gather Crown-grade stormglass.",
-          "how": "Pass the Capacitor Grove guardian and harvest charged glass during a Break.",
+          "how": "Pass the Capacitor Grove guardian and gather six Crown-grade stormglass during Break or Fading. The arch's builder must carry all six, plus two Thunderwood Frames and four Conductor Vines.",
           "region_id": "conductor_run",
           "requires_flags": [
             "stormwood:arch_recipe_known"

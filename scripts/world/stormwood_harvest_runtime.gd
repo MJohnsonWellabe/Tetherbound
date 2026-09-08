@@ -5,6 +5,7 @@ extends Node3D
 ## phase check or alter host authority.
 
 const HARVEST_NODE := preload("res://scripts/world/harvest_node.gd")
+const ARCH_BUILD := preload("res://scripts/world/stormwood_arch_build_rules.gd")
 
 const DATA_PATH := "res://data/config/stormwood_harvests.json"
 const REALM_ID := "stormwood"
@@ -24,6 +25,7 @@ var _placements: Dictionary = {}
 var _revision := -1
 var _event_check_left := 0.0
 var _catalogue: Dictionary = {}
+var _crown_glass_required := -1
 
 
 static func read(path: String = DATA_PATH) -> Dictionary:
@@ -67,12 +69,40 @@ func _process(delta: float) -> void:
 		if not bool(world.get("simulation_only")) \
 				and _flags.has("stormwood:arch_recipe_known") \
 				and not _flags.has("stormwood:crown_glass_gathered"):
-			for spec: Dictionary in _catalogue.get("sites", []):
-				if str(spec.get("grade", "")) == "crown" \
-						and str(spec.get("item", "")) == "stormglass_crown" \
-						and _flags.has("harvest_node:order:" + str(spec.get("id", ""))):
-					world.get_node("StormwoodChapter").emit_event("harvest:crown_grade")
-					break
+			if _crown_glass_required < 0:
+				_crown_glass_required = crown_glass_cost()
+			if _crown_glass_required > 0 and claimed_crown_glass(_catalogue, _flags) >= _crown_glass_required:
+				world.get_node("StormwoodChapter").emit_event("harvest:crown_grade")
+
+
+static func crown_glass_cost() -> int:
+	for footing: Dictionary in ARCH_BUILD.ARCHES.config().get("footings", []):
+		if str(footing.get("fixed_twin", "")) != "e_crown":
+			continue
+		var at: Array = footing.at
+		var total := 0
+		for need: Dictionary in ARCH_BUILD.cost(Vector3(float(at[0]), 0.0, float(at[1]))):
+			if str(need.id) == "stormglass_crown":
+				total += int(need.n)
+		return total
+	return 0
+
+
+## This world objective records shared gathering, not one player's current
+## inventory. The ledger still grants each yield only to its claiming peer;
+## the builder must hold and pay the complete production cost separately.
+static func claimed_crown_glass(catalogue: Dictionary, flags: RefCounted) -> int:
+	var total := 0
+	var seen := {}
+	for spec: Dictionary in catalogue.get("sites", []):
+		var id := str(spec.get("id", ""))
+		if id.is_empty() or seen.has(id) or str(spec.get("grade", "")) != "crown" \
+				or str(spec.get("item", "")) != "stormglass_crown" \
+				or not flags.has("harvest_node:order:" + id):
+			continue
+		seen[id] = true
+		total += maxi(0, int(spec.get("amount", 0)))
+	return total
 
 
 func restore_progression_from_game(game: Node) -> void:

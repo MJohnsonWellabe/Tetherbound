@@ -706,6 +706,7 @@ func _drops_away(direction: Vector3) -> bool:
 	query.collide_with_areas = false
 	if _player is CollisionObject3D:
 		query.exclude = [(_player as CollisionObject3D).get_rid()]
+		query.collision_mask = (_player as CollisionObject3D).collision_mask
 	var hit := space.intersect_ray(query)
 	if hit.is_empty():
 		return true
@@ -739,6 +740,10 @@ func _free_space(direction: Vector3) -> float:
 			# Areas are triggers -- interior camera volumes, encounter zones --
 			# not things a body can walk into.
 			query.collide_with_areas = false
+			# Selectable decoration can have a collider the Player ignores.
+			# Probe only the layers that can actually stop this body.
+			if _player is CollisionObject3D:
+				query.collision_mask = (_player as CollisionObject3D).collision_mask
 			# An origin already inside geometry means that flank of the body is
 			# buried in it, which is the most blocked a direction can be. The
 			# default (silently no hit) reads it as wide open instead, and a
