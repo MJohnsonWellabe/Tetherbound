@@ -6,7 +6,7 @@ extends SceneTree
 
 const BODY := preload("res://scripts/creatures/creature_body.gd")
 const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
-const OUTPUT := "res://shots/creatures-mipmap-experiment"
+const OUTPUT := "res://.artifacts/creature-mipmap-camera-fit-0909/captures"
 const SIZE := Vector2i(1280, 800)
 const TARGET_BODY_HEIGHT_PX := 180.0
 const SUBPIXEL_OFFSETS: Array[float] = [0.0, 0.25, 0.5, 0.75]
@@ -40,6 +40,7 @@ const FIXED_FIVE: Array[String] = ["pebbik", "skyrill", "voltarach", "water_torr
 
 var _world: Node3D
 var _camera: Camera3D
+var _viewport: SubViewport
 var _manifest: Dictionary = {"complete":false, "records":[], "failures":[]}
 
 
@@ -48,10 +49,11 @@ func _initialize() -> void:
 
 
 func _run() -> void:
-	await process_frame
 	_build_stage()
-	if root.get_viewport().get_visible_rect().size != Vector2(SIZE):
-		_manifest.failures.append("viewport must be exactly %s; got %s" % [SIZE, root.get_viewport().get_visible_rect().size])
+	if _viewport.get_visible_rect().size != Vector2(SIZE):
+		_manifest.failures.append("capture viewport must be exactly %s; got %s" % [SIZE, _viewport.get_visible_rect().size])
+	await process_frame
+	await process_frame
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUTPUT))
 	await _capture_fixed_five()
 	for entry: Dictionary in COHORT:
@@ -63,7 +65,7 @@ func _run() -> void:
 	else:
 		_manifest.complete = (_manifest.failures as Array).is_empty()
 		file.store_string(JSON.stringify(_manifest, "  ") + "\n")
-	_world.queue_free()
+	_viewport.queue_free()
 	await process_frame
 	await process_frame
 	print("CREATURE_MIPMAP_EXPERIMENT=%s" % JSON.stringify({"complete":_manifest.complete, "records":(_manifest.records as Array).size(), "failures":_manifest.failures}))
@@ -71,8 +73,14 @@ func _run() -> void:
 
 
 func _build_stage() -> void:
+	_viewport = SubViewport.new()
+	_viewport.name = "CreatureMipmapCaptureViewport"
+	_viewport.size = SIZE
+	_viewport.own_world_3d = true
+	_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	root.add_child(_viewport)
 	_world = Node3D.new()
-	root.add_child(_world)
+	_viewport.add_child(_world)
 	var environment_node := WorldEnvironment.new()
 	var environment := Environment.new()
 	environment.background_mode = Environment.BG_COLOR
@@ -123,10 +131,14 @@ func _capture_fixed_five() -> void:
 	await process_frame
 	for branch: String in ["A", "B"]:
 		var signatures := _apply_branch(materials, branch)
+		if signatures.size() != materials.size():
+			_manifest.failures.append("fixed-five branch %s treatment validation failed before capture" % branch)
+			break
 		await process_frame
 		await process_frame
+		await RenderingServer.frame_post_draw
 		var filename := "fixed-five__%s.png" % branch
-		var error := root.get_viewport().get_texture().get_image().save_png(ProjectSettings.globalize_path(OUTPUT.path_join(filename)))
+		var error := _save_capture(filename)
 		var body_rects: Dictionary = {}
 		for index: int in bodies.size():
 			body_rects[FIXED_FIVE[index]] = _rect_array(_projected_rect(bodies[index]))
@@ -162,10 +174,10 @@ func _capture_species(id: String, face_values: Array) -> void:
 	var vfov := deg_to_rad(_camera.fov)
 	var target_fraction := TARGET_BODY_HEIGHT_PX / float(SIZE.y)
 	var distance := half_height / (tan(vfov * 0.5) * target_fraction)
-	distance = maxf(distance, bounds.size.z * 0.5 + 0.25)
+	var minimum_distance := bounds.size.z * 0.5 + _camera.near + 0.05
+	distance = maxf(distance, minimum_distance)
 	var hfov := 2.0 * atan(tan(vfov * 0.5) * float(SIZE.x) / float(SIZE.y))
-	_camera.position = Vector3(center.x, center.y, center.z + distance)
-	_camera.look_at(center, Vector3.UP)
+	distance = _fit_camera_distance(body, center, distance, minimum_distance)
 	await process_frame
 	var source_materials := _active_material_records(body)
 	if source_materials.is_empty():
@@ -173,16 +185,20 @@ func _capture_species(id: String, face_values: Array) -> void:
 	else:
 		for branch: String in ["A", "B"]:
 			var signatures := _apply_branch(source_materials, branch)
+			if signatures.size() != source_materials.size():
+				_manifest.failures.append("%s branch %s treatment validation failed before capture" % [id, branch])
+				break
 			for offset: float in SUBPIXEL_OFFSETS:
 				var pixel_world := 2.0 * distance * tan(hfov * 0.5) / float(SIZE.x)
 				_camera.position.x = center.x + offset * pixel_world
 				_camera.look_at(center + Vector3(offset * pixel_world, 0.0, 0.0), Vector3.UP)
 				await process_frame
 				await process_frame
+				await RenderingServer.frame_post_draw
 				var body_rect := _projected_rect(body)
 				var face_rect := _fractional_rect(body_rect, face_values)
 				var filename := "%s__%s__subpixel_%02d.png" % [id, branch, int(round(offset * 100.0))]
-				var error := root.get_viewport().get_texture().get_image().save_png(ProjectSettings.globalize_path(OUTPUT.path_join(filename)))
+				var error := _save_capture(filename)
 				_manifest.records.append({"kind":"isolated", "id":id, "branch":branch, "subpixel":offset, "file":filename, "body_rect":_rect_array(body_rect), "face_rect":_rect_array(face_rect), "active_materials":signatures, "save_error":error})
 				if absf(body_rect.size.y - TARGET_BODY_HEIGHT_PX) > 40.0:
 					_manifest.failures.append("%s projected height %.2f outside target tolerance" % [filename, body_rect.size.y])
@@ -194,6 +210,51 @@ func _capture_species(id: String, face_values: Array) -> void:
 	body.queue_free()
 	await process_frame
 	await process_frame
+
+
+func _save_capture(filename: String) -> Error:
+	var image := _viewport.get_texture().get_image()
+	if image == null or image.is_empty():
+		_manifest.failures.append("%s capture returned no image" % filename)
+		return ERR_CANT_ACQUIRE_RESOURCE
+	if image.get_size() != SIZE:
+		_manifest.failures.append("%s capture must be exactly %s; got %s" % [filename, SIZE, image.get_size()])
+		return ERR_INVALID_DATA
+	return image.save_png(ProjectSettings.globalize_path(OUTPUT.path_join(filename)))
+
+
+func _fit_camera_distance(body: Node3D, center: Vector3, initial_distance: float, minimum_distance: float) -> float:
+	var low := initial_distance
+	var high := initial_distance
+	_set_camera_distance(center, initial_distance)
+	var initial_height := _projected_rect(body).size.y
+	if initial_height > TARGET_BODY_HEIGHT_PX:
+		for iteration: int in 24:
+			high *= 2.0
+			_set_camera_distance(center, high)
+			if _projected_rect(body).size.y <= TARGET_BODY_HEIGHT_PX:
+				break
+	else:
+		for iteration: int in 24:
+			low = maxf(minimum_distance, low * 0.5)
+			_set_camera_distance(center, low)
+			if _projected_rect(body).size.y >= TARGET_BODY_HEIGHT_PX or is_equal_approx(low, minimum_distance):
+				break
+	for iteration: int in 24:
+		var midpoint := (low + high) * 0.5
+		_set_camera_distance(center, midpoint)
+		if _projected_rect(body).size.y > TARGET_BODY_HEIGHT_PX:
+			low = midpoint
+		else:
+			high = midpoint
+	var fitted_distance := (low + high) * 0.5
+	_set_camera_distance(center, fitted_distance)
+	return fitted_distance
+
+
+func _set_camera_distance(center: Vector3, distance: float) -> void:
+	_camera.position = Vector3(center.x, center.y, center.z + distance)
+	_camera.look_at(center, Vector3.UP)
 
 
 func _active_material_records(body: Node) -> Array[Dictionary]:
@@ -225,8 +286,16 @@ func _apply_branch(records: Array[Dictionary], branch: String) -> Array[Dictiona
 			_manifest.failures.append("%s unavailable image" % source_texture.resource_path)
 			continue
 		var branch_image := image.duplicate()
+		if branch_image.is_compressed():
+			var decompress_error: Error = branch_image.decompress()
+			if decompress_error != OK:
+				_manifest.failures.append("%s branch %s decompression failed: %s" % [source_texture.resource_path, branch, decompress_error])
+				continue
 		if branch == "B" and branch_image.get_mipmap_count() == 0:
 			branch_image.generate_mipmaps()
+		if branch == "B" and image.get_mipmap_count() == 0 and branch_image.get_mipmap_count() == 0:
+			_manifest.failures.append("%s branch B did not generate a mip chain" % source_texture.resource_path)
+			continue
 		var branch_texture := ImageTexture.create_from_image(branch_image)
 		var material := source.duplicate() as BaseMaterial3D
 		material.albedo_texture = branch_texture
@@ -239,6 +308,10 @@ func _apply_branch(records: Array[Dictionary], branch: String) -> Array[Dictiona
 		var effective_texture := effective.albedo_texture if effective != null else null
 		if effective_texture != branch_texture:
 			_manifest.failures.append("%s branch %s did not become the effective active texture" % [source_texture.resource_path, branch])
+			continue
+		if effective.texture_filter != source.texture_filter:
+			_manifest.failures.append("%s branch %s changed texture filter" % [source_texture.resource_path, branch])
+			continue
 		signatures.append({
 			"source_path": source_texture.resource_path,
 			"source_mips": image.get_mipmap_count(),
