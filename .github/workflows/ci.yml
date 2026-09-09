@@ -334,6 +334,13 @@ jobs:
         run: |
           godot --headless --path . --script tests/run_tests.gd \
             -- --only=test_terrain_bake_freshness.gd::test_playground_terrain_bake_is_committed_and_fresh
+      - name: Check initialized shared terrain mipmaps
+        run: |
+          set -euo pipefail
+          godot --headless --path . --script tools/probe_terrain_texture_mipmaps.gd 2>&1 | tee /tmp/terrain-mipmaps.log
+          if grep -qE 'SCRIPT ERROR|Parse Error|ERROR:' /tmp/terrain-mipmaps.log; then
+            exit 1
+          fi
 
   verify-unit-tests:
     runs-on: ubuntu-latest
