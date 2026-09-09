@@ -1285,11 +1285,10 @@ func _spawn_harvest_point(placement: Dictionary) -> void:
 	point.call("setup", {
 		"item": placement["harvest_item"],
 		"amount": placement["harvest_amount"],
-		# Keep the standing harvest prompt at the harvest point's human-height
-		# default. Scaling its Y with the tree can put the whole 2.6 m offer
-		# sphere above a grounded player outside the trunk collider.
-		"prompt_height": HARVEST_POINT.HUMAN_PROMPT_HEIGHT if str(placement["harvest_item"]) == "wood" \
-			else 1.0 + float(placement["scale"]),
+		# Keep every standing harvest prompt at human height. Scaling its Y with
+		# a large tree or stone can put the whole 2.6 m offer sphere above a
+		# grounded player outside the placement collider.
+		"prompt_height": HARVEST_POINT.HUMAN_PROMPT_HEIGHT,
 		# RG9: this is the STANDING stage now -- "Chop", not "Gather". The
 		# felled pickup `fell()` stands afterward carries its own "Pick up"
 		# prompt (`felled_resource.gd::setup()`).
