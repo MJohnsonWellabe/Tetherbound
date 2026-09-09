@@ -2,7 +2,7 @@
 
 **Status:** canonical living product-development roadmap.
 
-**Current audit-resume status, 2026-09-09 02:14 UTC:** the owner resumed the
+**Current audit-resume status, 2026-09-09 02:31 UTC:** the owner resumed the
 four-biome Beta Ready objective, superseding the dated owner-stop state retained in
 `CURRENT_STATE.md`. Main remains
 `65267c4bd935d80b2e073799caeffc81b913952c`; no resumed code or audit work has landed.
@@ -15,12 +15,19 @@ Stage C6 is pulled forward and in progress. The full Stage C six-question audit 
 incomplete. The 116-frame baseline has five blind reports plus completed triage/backlog
 at `732c889ad`; all 116 corrected-camera frames/sheets exist through `e93a9f341`, and
 post-pylon Cloudreach/Stormwood recaptures plus a fresh combined 116-frame sheet exist
-locally through `f64013f44`. Independent review of the final set is pending. Aim work
-has a named commit-race/control-phase cause and handoff; its bounded guard and phase
-proofs failed, so there will be no further fresh campaign in this resume session.
+locally through `f64013f44`. Independent review is complete through `2f41763a7` and
+informed disposition through `8e2227b47`: Meadows A/B Yes/Yes; Cloudreach, Stormwood,
+Water and Combined A/B No/Yes; all five sets remain No for shipping-art readiness.
+The category-intent B results are not shipping acceptance. Aim work has a named
+commit-race/control-phase cause and handoff; its bounded guard and phase proofs failed,
+so there will be no further fresh campaign in this resume session.
 Water's authored return into Stormwood is implemented locally at `d769a93c5` with
 focused 11-test/81-assertion evidence, but full runtime proof, exact-head CI, and landing
-remain pending. None of this marks a stage passed or code shipped.
+remain pending. The earlier playground chop failure is preserved as observation lag;
+test-only `7c11fce2a` now requires synchronous identity-resolved durability loss, passes
+its 3-test/10-assertion ToolHold/Inventory fixture, and passed the one corrected full
+smoke (`0.401 / 0.625 = 0.6416`) while exact-head CI remains pending. None of this marks
+a stage passed or code shipped; main remains `65267c4bd`.
 
 **2026-09-08 18:12 UTC update:** Wave 2 is merged as main
 `b3458eb1d0f54ceb2554a97e9b0fe0b2f88f5bfb`, after exact-head PR CI
@@ -84,7 +91,7 @@ A stage is not complete because files, tests or branches exist. Completion is pl
 | **0** | Current work: land Meadows + Cloudreach in flight, ship playable 1–4 player multiplayer, run the Meadows visual sweep, and land general game fixes. | In progress |
 | **A** | Build Biome 3, the Stormwood. | In progress; Wave 0 integrated through PR #80, but earned continuous Crown/Dynamo completion remains unproved |
 | **B** | Build Biome 4, the Water Archipelago (Tidewake). | In progress on main through PR #80; ordinary entry is smoke-proven, continuous earned opening-to-ending completion remains unproved |
-| **C** | Full four-biome product audit — six questions: does it work, is there enough to do, is progression satisfying, is it fun minute-to-minute, does the world feel authored, does it meet the visual bar. | In progress: C6 was pulled forward; final fresh visual review is pending and the full six-question audit is incomplete |
+| **C** | Full four-biome product audit — six questions: does it work, is there enough to do, is progression satisfying, is it fun minute-to-minute, does the world feel authored, does it meet the visual bar. | In progress: C6 review is complete (Meadows A/B Yes/Yes; Cloudreach, Stormwood, Water and Combined A/B No/Yes; all shipping-art No); the full six-question audit is incomplete |
 | **D** | Four-biome repair pass — fix Stage C's P0/P1 findings before any new content. | Not started |
 | **E** | Four-biome Beta Ready gate. | Not started |
 | **F** | Four-biome beta launch. | Not started |

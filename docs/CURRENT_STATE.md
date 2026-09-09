@@ -6,7 +6,7 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-08, playable build in progress)
 
-**Current audit-resume instruction, 2026-09-09 02:14 UTC:** the owner resumed the
+**Current audit-resume instruction, 2026-09-09 02:31 UTC:** the owner resumed the
 four-biome Beta Ready objective. This paragraph supersedes the owner-stop instruction
 below for current work; the older paragraphs remain as dated history. Main is still
 `65267c4bd935d80b2e073799caeffc81b913952c`, so none of the resumed work is shipped.
@@ -21,8 +21,11 @@ not complete. All 116 baseline catalogue frames have five blind reports and a co
 triage/backlog at `732c889ad`. A corrected-production-camera set of all 116 frames and
 sheets exists through `e93a9f341`; post-pylon Cloudreach and Stormwood recaptures and a
 new combined 116-frame sheet exist locally through `f64013f44`. Fresh independent review
-of that final set is pending. These captures and reports are evidence, not a visual pass
-or a landing.
+of that final set is complete through `2f41763a7`, with informed disposition at
+`8e2227b47`: Meadows A/B is Yes/Yes; Cloudreach, Stormwood, Water and Combined A/B are
+No/Yes; every set remains No for shipping-art readiness. B establishes recognizable
+creature-adventure intent, not commercial-quality acceptance. These captures and
+reports are evidence, not a visual pass or a landing.
 
 The fresh-campaign aim work has a named commit-race/control-phase cause and handoff.
 Both bounded guard and phase proofs failed; no further fresh campaign will run in this
@@ -31,6 +34,15 @@ resume session. Water's authored return into Stormwood is implemented locally at
 exact-head CI, and landing remain pending. Continue with final visual verification,
 integration CI and landing, then the remaining earned-play frontier. Do not mark a
 stage passed or code shipped from local commits, focused checks, or capture evidence.
+
+The earlier playground chop smoke failure was observation lag: its process-frame
+durability poll trailed a synchronous impact callback that was inside the unchanged
+timing band. Test-only commit `7c11fce2a` now accepts the callback's wall-clock time
+only when the required tool's real inventory durability has already decreased by
+identity, while retaining the later poll as diagnostic evidence. The deterministic
+ToolHold/Inventory fixture passes 3 tests/10 assertions, and the single corrected full
+playground smoke exited 0 with `smoke: OK` (`0.401 / 0.625 = 0.6416`, delayed poll
+`0.441`). Exact-head CI and landing are still pending; main remains `65267c4bd`.
 
 **Owner-requested stop, 2026-09-08:** see
 `docs/HANDOFF_FOUR_BIOME_2026-09-08_OWNER_STOP.md` before resuming. Latest owner
