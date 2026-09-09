@@ -4988,7 +4988,9 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			}
 			if fight != null:
 				var record: Dictionary = fight.get("record") as Dictionary
-				var opponent: Node3D = fight.get("opponent") as Node3D
+				# A finished fight remains inspectable after its opponent is freed.
+				var raw_opponent: Variant = fight.get("opponent")
+				var opponent: Node3D = raw_opponent as Node3D if is_instance_valid(raw_opponent) else null
 				var instance: Variant = opponent.get("instance") if opponent != null else null
 				var body: Node3D = hub.call("body_for", peer)
 				var actions: Dictionary = fight.get("_actions") as Dictionary
@@ -4996,6 +4998,7 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				var resolved_multiplier := float(hub.get("director").call(
 					"host_card_cooldown_multiplier", peer_card))
 				result.merge({
+					"participants": (fight.get("participants") as Array).duplicate(),
 					"last_strike": fight.get("last_strike"),
 					"body_radius": float(body.call("body_radius")) if body != null else 0.0,
 					"opponent_radius": float(opponent.call("body_radius")) if opponent != null else 0.0,

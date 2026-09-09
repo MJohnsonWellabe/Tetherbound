@@ -42,6 +42,9 @@ extends Node3D
 ## ledger and no world record, because it reaches nothing but the player.
 
 const DEATH_SATCHEL := preload("res://scripts/world/death_satchel.gd")
+## Final death only: the revive window never emits this. Realm encounter owners
+## must release combat control before the recovery tween moves the human.
+signal finalized_death
 const DOWNED_STATE := preload("res://scripts/player/downed_state.gd")
 const WORLD_RECORDS := preload("res://scripts/world/realm_world_records.gd")
 
@@ -124,6 +127,7 @@ func _die_now() -> void:
 	var game := get_node_or_null(^"/root/Game")
 	if game == null:
 		return
+	finalized_death.emit()
 
 	var carried: Array = []
 	var bag: RefCounted = game.get("inventory")

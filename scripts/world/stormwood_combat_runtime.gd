@@ -41,4 +41,5 @@ func mount(world: Node3D) -> void:
 		var entry := Vector3(-350, world.ground_height_at(-350, 450), 450)
 		death.configure_recovery([{"id": "ashfoot", "position": [entry.x, entry.y, entry.z], "requires_flag": ""}], Callable(world, "ground_height_near"))
 		death.build(world, player, entry + Vector3.UP)
+		death.finalized_death.connect(hub.on_finalized_death)
 		death.restore_from_game(world.get_node("/root/Game"))

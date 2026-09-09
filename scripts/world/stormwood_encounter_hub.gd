@@ -13,7 +13,11 @@ var _local_trainer := ""
 var _local_record := ""
 var _action := 0
 var _pending_state: Dictionary = {}
+var _pending_challenge := ""
 var last_start_refusal: Dictionary = {}
+## A reliable state already in flight may still include a departed participant.
+## Keep that trainer retired locally until the player explicitly challenges anew.
+var _withdrawn_trainers: Dictionary = {}
 
 func mount(owner_world: Node3D) -> void:
 	world = owner_world
@@ -28,7 +32,41 @@ func mount(owner_world: Node3D) -> void:
 
 func request_start(id: String) -> void:
 	last_start_refusal.clear()
+	_withdrawn_trainers.erase(id)
+	_pending_challenge = id
 	session.request_stormwood_encounter({"kind": "start", "trainer_id": id})
+
+
+func on_finalized_death() -> void:
+	var id := _local_trainer
+	if id.is_empty():
+		id = str(_pending_state.get("trainer_id", ""))
+	if id.is_empty():
+		id = _pending_challenge
+	if id.is_empty() or _withdrawn_trainers.has(id):
+		return
+	var record_id := _local_record
+	_withdrawn_trainers[id] = true
+	_retire_local_trainer(id)
+	# Self-only withdrawal is routed through the same authority even for solo.
+	# Do not use ordinary disengage: a done round is not roster withdrawal.
+	session.request_stormwood_encounter({"kind": "finalized_death_withdrawal",
+		"trainer_id": id, "encounter_id": record_id})
+
+
+func _retire_local_trainer(id: String) -> void:
+	if _local_trainer != id and str(_pending_state.get("trainer_id", "")) != id \
+			and _pending_challenge != id:
+		return
+	_pending_state.clear()
+	if _pending_challenge == id:
+		_pending_challenge = ""
+	if _local_trainer == id:
+		world.get_node("CombatManager").call("abort_for_finalized_death")
+	director.end_hosted_trainer(false)
+	director.remove_hosted_observer(id)
+	_local_trainer = ""
+	_local_record = ""
 
 func _refuse_start(peer: int, id: String, reason: String) -> void:
 	send_to(peer, {"kind": "start_refused", "trainer_id": id, "reason": reason})
@@ -66,6 +104,14 @@ func dispatch(peer: int, intent: Dictionary) -> void:
 	if not is_instance_valid(fight):
 		return
 	match kind:
+		"finalized_death_withdrawal":
+			# The authenticated sender is the only removable participant. The
+			# current roster membership, not an old round id/phase, owns this
+			# decision so final death also works during the between-round gap.
+			if fight.participants.has(peer):
+				fight.leave(peer)
+			send_to(peer, {"kind": "withdrawn", "trainer_id": id,
+				"encounter_id": str(intent.get("encounter_id", ""))})
 		"strike_intent":
 			var verdict: Dictionary = fight.strike(peer, intent)
 			send_to(peer, {"kind": "verdict", "trainer_id": id, "encounter_id": intent.get("encounter_id", ""), "verdict": verdict})
@@ -186,6 +232,12 @@ func _receive(event: Dictionary) -> void:
 		return
 	var kind := str(event.get("kind", ""))
 	var id := str(event.get("trainer_id", ""))
+	if kind == "withdrawn":
+		# Local final-death handling already releases control before the RPC.
+		# Never let an old acknowledgement abort a later explicit challenge.
+		if _withdrawn_trainers.has(id):
+			_retire_local_trainer(id)
+		return
 	if kind.begins_with("dynamo_"):
 		var dynamo := world.get_node_or_null("StormwoodDynamo")
 		if dynamo != null:
@@ -197,6 +249,8 @@ func _receive(event: Dictionary) -> void:
 			ending.call("receive", event)
 		return
 	if kind == "start_refused":
+		if _pending_challenge == id:
+			_pending_challenge = ""
 		last_start_refusal = event.duplicate(true)
 		var messages := {
 			"missing_trainer_or_deployment": "Bring your companion close before challenging.",
@@ -215,6 +269,8 @@ func _receive(event: Dictionary) -> void:
 	if kind == "state":
 		if not (event.get("participants", []) as Array).has(session.local_peer_id()):
 			director.observe_hosted_state(event)
+			return
+		if _withdrawn_trainers.has(id):
 			return
 		_pending_state = event.duplicate(true)
 		_apply_state()
@@ -248,6 +304,9 @@ func _process(_delta: float) -> void:
 		_apply_state()
 
 func _apply_state() -> void:
+	if _withdrawn_trainers.has(str(_pending_state.get("trainer_id", ""))):
+		_pending_state.clear()
+		return
 	var manager := world.get_node("CombatManager")
 	var incoming: Dictionary = _pending_state.get("record", {})
 	var incoming_id := str(incoming.get("encounter_id", ""))
@@ -268,6 +327,8 @@ func _apply_state() -> void:
 			return
 		_local_trainer = str(_pending_state.trainer_id)
 		_local_record = incoming_id
+		if _pending_challenge == _local_trainer:
+			_pending_challenge = ""
 		_action = 0
 	director.update_hosted_opponent(_pending_state)
 	manager.apply_encounter_record(incoming)
