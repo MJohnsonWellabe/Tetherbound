@@ -6,18 +6,20 @@ Six visual assignments rotate in waves; a queue entry is not shipped progress.
 
 | Assignment | Evidence and disposition | Current work |
 |---|---|---|
-| Cloudreach | High Perches structural and ground-roost candidates captured; both independent A/B No, held. Small ground props did not fix empty floor/repetitive pillars; cloud-deck mechanism exhausted | Sol inspects retained evidence for a distinct worthwhile defect; no second small-prop High Perches tune |
-| Stormwood | Crown Arch held. Separate authored shadow contract restored; 2 tests/24 assertions and clean canonical capture. Image-only review accepts narrow daylight readability, overall A/B No | PR98 landed main77745ef03 after full CI/raw-log review; main CI/release pending |
+| Cloudreach | High Perches candidates held. Distinct Windscar Beacon solid mesh occupies the navigation anchor | Open24m beacon candidate passed initialized25-assertion geometry/contact check after two retained fixture failures; guarded canonical/ordinary capture next |
+| Stormwood | Crown Arch held. Separate authored shadow contract restored; 2 tests/24 assertions and clean canonical capture. Image-only review accepts narrow daylight readability, overall A/B No | PR98 main77745ef03 CI and release fully verified; later protocol mainc3a7eac5a keeps that visual fix |
 | Meadows | Flowers/clover held. Separate night-shadow candidate completed real day/night capture14:29–14:30 UTC with no errors; live opacity day1/night.68 | Wave8 finds no meaningful readability improvement, A No/B categoryYes. Held; no second shadow-opacity tune |
 | Water | First Shore gate/dock and Veilfall held. Gull Rest candidate passed focused clearance checks; first capture failed parsing, second failed all screenshot output paths | Held without images or acceptance; both failures retained and capture sequence ended |
-| Creatures | Pebblik/Voltarach fixture A No/B Yes. Torrentoad quieter surface also A No/B Yes, broad group appeal unresolved | Separate Torrentoad attack-anticipation component capture active; source and wrapper limitations recorded, no creature visual landing |
-| Characters | Arlo shipped PR96. Craftsperson emission correction passed2 tests/11 assertions and9 capture checks, clean logs. Wave9 prefers restrained highlights but flags reduced dark-detail separation | Candidate frozen b4a2a2b31; review was contaminated by author intent and is not the missing blind gate. Sol rotates to another Water location |
+| Creatures | Surface candidates held. Separate Torrentoad motion passed final5/28 unit and8-frame capture; fresh Wave11 supports narrow pose contrast, commercial No | Isolated draft PR99 a585ffa2b is in CI34373237730; current released texture retained, held repaint excluded |
+| Characters | Arlo shipped PR96. Craftsperson candidate captured; fresh Wave12 prefers highlight control but finds reduced hands/belt separation | Held with fresh independent verdict; no further garment microtuning authorized |
 
-The formal image review is `VISUAL-WAVE-IMAGE-REVIEW-0909.md`. The reviewer is
-reused, not a fresh task: new tasks were rejected by the session thread limit.
+The original formal image review is `VISUAL-WAVE-IMAGE-REVIEW-0909.md`. That reviewer was
+reused; fresh-task attempts were previously rejected by the active slot limit.
 It had operational names but had not read visual implementations, reports or
 intentions; it read the visual-judge skill and references before neutral frames.
-The report discloses that limitation. No self-verdict substitutes for review.
+The report discloses that limitation. After the creature author actually completed,
+a fresh Astra slot became available. Wave11 and Wave12 are new image-only reviews
+without author/source context. No self-verdict substitutes for review.
 
 One import/render/world lease at a time. Exact-file briefs precede changes;
 installed assets only, no new purchases or shrinking creatures. Two serious
