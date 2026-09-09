@@ -263,6 +263,14 @@ func _watch_throw_commit() -> Node:
 	return observer
 
 
+func _open_throw_aim() -> bool:
+	# An ignored launch can leave aim open. Another opening press would launch
+	# before the strict verdict and commit observer are installed.
+	if is_instance_valid(_combat) and bool(_combat.call("is_aiming")):
+		return true
+	return await super._open_throw_aim()
+
+
 func _step_until_the_shot_is_clear() -> bool:
 	if not await super._step_until_the_shot_is_clear():
 		return false
@@ -299,6 +307,9 @@ func _final_throw_verdict_ready() -> bool:
 	var throw: Node = _combat.call("throw_aim")
 	if throw == null or not bool(_combat.call("is_aiming")):
 		_fail("live catch final aim is no longer active; no orb spent")
+		return false
+	if float(throw.get("_guard")) > 0.0:
+		_fail("live catch final throw refused during native aim-entry guard; no orb spent")
 		return false
 	var current: Dictionary = throw.call("launch_assist_diagnostics")
 	var preview: Dictionary = throw.call("aim_report")
@@ -345,6 +356,8 @@ func _aim_readiness_receipt(stage: String) -> void:
 func _aim_readiness_ready() -> bool:
 	var throw: Node = _combat.call("throw_aim") if _combat != null else null
 	if throw == null or not bool(_combat.call("is_aiming")):
+		return false
+	if float(throw.get("_guard")) > 0.0:
 		return false
 	var current: Dictionary = throw.call("launch_assist_diagnostics")
 	var preview: Dictionary = throw.call("aim_report")
