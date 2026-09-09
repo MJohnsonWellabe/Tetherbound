@@ -65,3 +65,32 @@ Keep the full-road visibility requirement open. A later continuity proof must
 arrive through ordinary earned village access; it must not treat a fresh reset
 at a historical coordinate as equivalent campaign state. Continue the separate
 Stormwood content lane while this partial evidence is judged.
+
+## Independent image verdict and informed disposition
+
+`REJUDGE-ROAD-FRAMES.md` is the fresh critic's unchanged report. Both frames
+answer A yes, B no, shipping readiness no. These narrow-view answers do not
+replace the 116-frame catalogue verdicts. The critic could not confidently
+identify the distant pale forms as creatures, people or props, and found no
+assessable foreground companion. This is an important limit on the observer's
+three-body count: its credited Bramblebun, Pipwing and Meadowhart are about
+52.8, 61.3 and 66.5 metres away, with projected heights of 21.3, 17.7 and
+28.6 pixels at 720p. Their presence and centre-ray clearance do not prove the
+owner's readable-creatures-ahead experience. Do not lower or replace the bar
+with a numeric probe pass.
+
+The full rubric also repeats ground/foliage noise, weak depth/destination,
+trainer differentiation and intrusive empty HUD slots. These map to the
+already-recorded G/D/K/U families in `audit-resume/VISUAL-TRIAGE-REVERIFY.md`:
+shared ground/scatter, atmosphere and interface presentation with local road
+composition; cast-art residual conditional on identified installed assets.
+The images establish no new gross scale contradiction, terrain seam or
+production traversal defect. Growing remains the only permitted scale remedy,
+but no scale edit is justified by these distant silhouettes.
+
+The next ROAD acceptance evidence must show readable living creatures during
+ordinary earned road travel, including natural heading changes. This attempt
+has isolated camera sensitivity and the fixture's locked-gate mismatch; it
+has not justified global population inflation, a new art purchase, or another
+cosmetic loop. The full ROAD requirement remains open alongside the existing
+local scarcity and occlusion findings.
