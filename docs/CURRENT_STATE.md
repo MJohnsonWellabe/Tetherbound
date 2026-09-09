@@ -51,7 +51,11 @@ identical tree verified. Exact-head CI `34344633432` passed on attempt1 in
 19m41s:26 successful jobs, three configured skips,3,076 tests/487,614 assertions,
 37 first-invocation network smokes and the four native aim cases19/8/5/8.
 All executed raw logs were reviewed; shutdown differences also occur in retained
-PR92 smokes. See `CI-PR95-2a971cb3a.md`. Main CI and Release remain pending.
+PR92 smokes. See `CI-PR95-2a971cb3a.md`. Main CI `34346697696` passed all 27
+executed jobs on attempt 1; all raw logs were reviewed. Release `34346697917`
+also passed, including packaged ground, Windows asset publication and Pages.
+Independent read-back verifies the release and literal `latest` tag identify
+ab5314. See `CI-MAIN-ab5314e1b.md` and `RELEASE-MAIN-ab5314e1b.md`.
 
 The owner's dedicated visual review and fixes lane remains active under
 `OWNER_DIRECTIVE_2026-09-09_CONTINUOUS_VISUAL_LANE.md`. Veilfall's two material
@@ -67,10 +71,14 @@ The bounded supported-ribbon proof rejected initial spacing alone: normal
 look-at-player rotation bypasses wander clearance and crosses the reserved route.
 See `CREATURE-CROWDING-NEXT-BRIEF.md`; no production spacing fix is claimed.
 The latest owner directive expands work across every biome, creatures and
-characters. Two Sol visual workers now own Cloudreach High Perches structural
-finish and a proven two-species repaint-rule defect; the remaining biome and
-character assignments are queued in `VISUAL-LANES-0909.md`. The separate
-multiplayer repair worker continues while root owns CI/integration.
+characters. Cloudreach High Perches has a held first-round candidate and a
+fresh narrow-view rejection. Stormwood Crown Arch has two rendered material
+rounds and passing mechanical checks, pending independent judgment and capture
+identity review. Its worker has begun the Meadows assignment. A two-species
+repaint correction is imported and fixture-visible, but actual context capture
+hit a physical-memory guard and is still pending. Characters and Water remain
+next in the two Sol visual slots; `VISUAL-LANES-0909.md` records the queue.
+The separate multiplayer repair worker continues while root owns CI/integration.
 
 The first real-manager aim fixture
 failed before windup; independently proven idempotent opening and native guard
