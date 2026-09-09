@@ -1316,7 +1316,14 @@ func _wander_for_a_new_angle() -> void:
 	_stop_left_stick()
 	for _i in 10:
 		await _tree.physics_frame
-	await _aim_camera_at(_wild, AIM_REAIM_SECONDS)
+	# A resolved throw leaves ThrowAim IDLE. Its production `aim_report()` is
+	# deliberately empty outside AIMING, so waiting on the strict preview-ready
+	# aim loop here can only burn the whole eight-second bound while the fight
+	# continues. The next catch-loop iteration opens aim through the physical
+	# action and applies that same strict readiness check. Callers that wandered
+	# while aim remained active still re-aim here as before.
+	if bool(_combat.call("is_aiming")):
+		await _aim_camera_at(_wild, AIM_REAIM_SECONDS)
 
 
 ## How close the trainer wants to be before hunting sideways for a clear line.

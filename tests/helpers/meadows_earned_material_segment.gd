@@ -46,6 +46,7 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 			var authored := (node.get_script() as Script).resource_path == HARVEST_NODE_PATH
 			var before := _count(item)
 			print("EARNED CAMP MATERIAL target=", node.get_path(), " at=", at, " player=", _player.global_position)
+			_active_walk_purpose = "harvest %s" % item
 			if not await _walk_supply(node, _travel_budget(at)) \
 					and _player.global_position.distance_to(at) > WITHIN_REACH:
 				_fail("ordinary material walk stopped short of %s at %s" % [item, at])
@@ -65,6 +66,7 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 	transcript.append("actual campsite catalogue cost funded: " + str(needed))
 	var patch: Vector2 = CAMP.BUILD_PATCH_XZ
 	var destination := Vector3(patch.x, _world.ground_height_at(patch.x, patch.y), patch.y)
+	_active_walk_purpose = "return campsite materials"
 	if not await _walk_target(destination, _travel_budget(destination)):
 		_fail("earned campsite supply could not return through the actual village gate to the build patch")
 		return _result()
@@ -132,6 +134,7 @@ func _clear_a_statement_off_the_button() -> bool:
 
 
 func _walk_target(target: Vector3, budget: int) -> bool:
+	var route_purpose := _active_walk_purpose
 	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(BOUNDARY.BOUNDARY_CONFIG))
 	var open_ids: Array[String] = []
 	for entry: Dictionary in (config.get("gates", {}) as Dictionary).get("entries", []):
@@ -156,6 +159,8 @@ func _walk_target(target: Vector3, budget: int) -> bool:
 		# Retain the navigator's held-input and confined-detour recovery. The
 		# original total budget covers every gate waypoint, including held time.
 		var tolerance := 1.65 if index == points.size() - 1 else 1.0
+		_active_walk_purpose = "%s final" % route_purpose if index == points.size() - 1 \
+			else "%s boundary waypoint %d/%d" % [route_purpose, index + 1, points.size() - 1]
 		if not await _walk_to(points[index], tolerance, remaining):
 			return false
 	return Engine.get_physics_frames() - started <= budget \
