@@ -813,6 +813,7 @@ func _build_cover_tiers(cfg: Dictionary, radius: float) -> void:
 		elif cfg.has("wind_dir"):
 			var d2: Array = cfg["wind_dir"]
 			mat.set_shader_parameter("wind_dir", Vector2(float(d2[0]), float(d2[1])).normalized())
+		_apply_authored_composition(mat, tier)
 		# Where it grows, by terrain texture NAME. Same list the grass tier
 		# builds its forbidden mask from, so a lane that reorders
 		# terrain_playground.json's textures cannot silently move a tier onto
@@ -829,6 +830,35 @@ func _build_cover_tiers(cfg: Dictionary, radius: float) -> void:
 			str(tier.get("name", "tier")), placed, plan.size(), count])
 	if not _cover_materials.is_empty():
 		print("[grass_field] %d cover tier(s) up" % _cover_materials.size())
+
+
+## A deliberately narrow seam for one landmark's cover composition. The shader
+## defaults are a no-op; a tier opts in with one zone and three uneven masses.
+## Keeping this beside the tier's other material bindings makes it impossible
+## for the local Ridgeline treatment to change world geometry or scatter state.
+static func _apply_authored_composition(mat: ShaderMaterial, tier: Dictionary) -> void:
+	var authored: Dictionary = tier.get("authored_composition", {})
+	if authored.is_empty():
+		return
+	var zone: Array = authored.get("zone", [])
+	var clusters: Array = authored.get("clusters", [])
+	if zone.size() != 3 or clusters.size() != 3:
+		push_warning("cover tier authored_composition needs one x/z/r zone and three clusters")
+		return
+	mat.set_shader_parameter("composition_zone",
+			Vector3(float(zone[0]), float(zone[1]), float(zone[2])))
+	var keys := [&"composition_cluster_a", &"composition_cluster_b", &"composition_cluster_c"]
+	for index in 3:
+		var cluster: Array = clusters[index]
+		if cluster.size() != 3:
+			push_warning("cover tier authored_composition cluster %d needs x/z/r" % index)
+			return
+		mat.set_shader_parameter(keys[index],
+				Vector3(float(cluster[0]), float(cluster[1]), float(cluster[2])))
+	mat.set_shader_parameter("composition_quiet_keep",
+			clampf(float(authored.get("quiet_keep", 1.0)), 0.0, 1.0))
+	mat.set_shader_parameter("composition_scale_boost",
+			clampf(float(authored.get("scale_boost", 0.0)), 0.0, 1.0))
 
 
 # ---------------------------------------------------------------------------

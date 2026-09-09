@@ -172,6 +172,17 @@
       "sway": 0.05,
       "gust": 0.8,
       "reach_m": 56.0,
+      "_comment_authored_composition": "VISUAL-LANES-0909, Ridgeline Watch only. The production field suppresses vegetation.json's baked flower layer, so this generated tier is the actual emitter behind the blind audit's repeated isolated V-shaped blooms. Three unequal masses sit to either side of the northeast route sightline, while quiet_keep reserves readable ground between them. Existing stable-lattice hash and drift still shape the inside of each mass; this is an authored local composition mask, not a global noise tune. The modest scale lift gives cluster cores a second size beat using the same established flower mesh. Outside the feathered zone this is exactly a no-op.",
+      "authored_composition": {
+        "zone": [-250.0, 6518.0, 72.0],
+        "clusters": [
+          [-254.0, 6517.0, 10.0],
+          [-221.0, 6513.0, 13.0],
+          [-252.0, 6543.0, 15.0]
+        ],
+        "quiet_keep": 0.08,
+        "scale_boost": 0.38
+      },
       "ground": [
         "grass",
         "soil"
