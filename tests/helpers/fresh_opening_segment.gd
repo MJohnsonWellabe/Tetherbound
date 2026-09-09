@@ -186,11 +186,9 @@ func _catch_with_real_throws() -> bool:
 		if not await _aim_at_wild():
 			_fail("live catch aim did not converge after moving")
 			return false
-		# Camera convergence is not the production launch verdict. Release look,
-		# let the physics-owned preview refresh, then inspect before pressing.
-		_stop_right_stick()
-		await _tree.physics_frame
-		await _tree.process_frame
+		# `_aim_at_wild()` has already released look and survived a camera-process
+		# plus physics refresh. Re-read synchronously at the actual pad dispatch
+		# boundary so no stale convergence success can spend an earned orb.
 		if not _final_throw_verdict_ready():
 			return false
 		var results_before := _catch_results.size()
@@ -278,3 +276,15 @@ func _final_throw_verdict_ready() -> bool:
 			str(current), str(preview)])
 		return false
 	return true
+
+
+## Transient failures stay inside the inherited convergence timer. The final
+## dispatch check above remains the strict, failure-reporting refusal.
+func _aim_readiness_ready() -> bool:
+	var throw: Node = _combat.call("throw_aim") if _combat != null else null
+	if throw == null or not bool(_combat.call("is_aiming")):
+		return false
+	var current: Dictionary = throw.call("launch_assist_diagnostics")
+	var preview: Dictionary = throw.call("aim_report")
+	return bool(current.get("eligible", false)) and not preview.is_empty() \
+		and not bool(preview.get("trajectory_blocked", false))

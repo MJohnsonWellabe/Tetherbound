@@ -791,8 +791,9 @@ func _aim_camera_at(target: Node3D, seconds: float = AIM_CONVERGE_SECONDS) -> bo
 		# the camera, so an error computed once is stale immediately.
 		var to := (target.call("centre") as Vector3) - camera.global_position
 		if to.length() < 0.01:
-			_stop_right_stick()
-			return true
+			if await _released_aim_is_ready():
+				return true
+			continue
 		var forward := -camera.global_transform.basis.z
 		var wanted := to.normalized()
 		# The one angular error, resolved onto the two axes the stick drives, in
@@ -803,10 +804,17 @@ func _aim_camera_at(target: Node3D, seconds: float = AIM_CONVERGE_SECONDS) -> bo
 		var yaw_error := atan2(wanted.dot(right), wanted.dot(forward))
 		var pitch_error := atan2(wanted.dot(up), wanted.dot(forward))
 		last_error = rad_to_deg(forward.angle_to(wanted))
-		if absf(yaw_error) < deg_to_rad(AIM_WINDOW_DEGREES) \
-				and absf(pitch_error) < deg_to_rad(AIM_WINDOW_DEGREES):
-			_stop_right_stick()
-			return true
+		if (absf(yaw_error) < deg_to_rad(AIM_WINDOW_DEGREES) \
+				and absf(pitch_error) < deg_to_rad(AIM_WINDOW_DEGREES)) \
+				or _shot_is_eligible():
+			# Releasing look does not stop the camera's positional follow. Let the
+			# real camera process first, then let throw_aim refresh its physics-owned
+			# verdict. If either follow or a moving target invalidates the shot, keep
+			# steering inside this same deadline.
+			if await _released_aim_is_ready():
+				return true
+			_aim_has_history = false
+			continue
 		# One deflection, split across the two axes by the direction of the
 		# error rather than per-axis. `camera_rig.gd::_apply_look()` bends the
 		# stick by its LENGTH (`response_exponent`) and scales it by the same
@@ -831,6 +839,23 @@ func _aim_camera_at(target: Node3D, seconds: float = AIM_CONVERGE_SECONDS) -> bo
 		camera.global_position.y - (target.call("centre") as Vector3).y,
 		_aim_sample_turn, _aim_sample_seconds * 1000.0, _aim_deflection])
 	return false
+
+
+## A convergence candidate is only ready after look release survives the camera
+## process and the throw system's next physics verdict. Subclasses may require
+## additional production readiness such as the physical trajectory preview.
+func _released_aim_is_ready() -> bool:
+	_stop_right_stick()
+	# SceneTree's frame signals fire BEFORE node callbacks. Zero-second timers
+	# fire after the nodes in their selected phase, so these waits prove the
+	# camera `_process` and throw `_physics_process` have both completed.
+	await _tree.create_timer(0.0, true, false).timeout
+	await _tree.create_timer(0.0, true, true).timeout
+	return _aim_readiness_ready()
+
+
+func _aim_readiness_ready() -> bool:
+	return _shot_is_eligible()
 
 
 ## How far to push the stick this sample, measured rather than assumed.
@@ -934,8 +959,6 @@ func _smallest_live_deflection() -> float:
 func _aim_at_wild(seconds: float = AIM_CONVERGE_SECONDS) -> bool:
 	if await _aim_camera_at(_wild, seconds):
 		return true
-	if _shot_is_eligible():
-		return true
 	for _attempt in AIM_BACKOFF_TRIES:
 		if not is_instance_valid(_wild) or not bool(_combat.call("is_fighting")):
 			return false
@@ -956,8 +979,6 @@ func _aim_at_wild(seconds: float = AIM_CONVERGE_SECONDS) -> bool:
 			for _i in 6:
 				await _tree.physics_frame
 		if await _aim_camera_at(_wild, seconds):
-			return true
-		if _shot_is_eligible():
 			return true
 	return false
 

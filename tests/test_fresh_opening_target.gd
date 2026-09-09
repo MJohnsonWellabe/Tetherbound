@@ -110,3 +110,21 @@ func test_final_throw_rejects_stale_eligible_preview_and_actual_obstruction() ->
 	assert_false(opening._final_throw_verdict_ready(), "ended aim cannot launch")
 	combat.free()
 	throw.free()
+
+
+func test_transient_readiness_uses_current_verdict_and_clear_preview_without_failing() -> void:
+	var throw := ThrowVerdict.new()
+	var combat := AimingCombat.new()
+	combat.aim = throw
+	var opening := Probe.new()
+	opening._combat = combat
+	assert_false(opening._aim_readiness_ready())
+	assert_true(opening._failures.is_empty(), "a transient convergence sample is not a terminal refusal")
+	throw.current = {"eligible": true, "reason": "eligible"}
+	assert_true(opening._aim_readiness_ready())
+	throw.preview["trajectory_blocked"] = true
+	assert_false(opening._aim_readiness_ready())
+	combat.aiming = false
+	assert_false(opening._aim_readiness_ready())
+	combat.free()
+	throw.free()
