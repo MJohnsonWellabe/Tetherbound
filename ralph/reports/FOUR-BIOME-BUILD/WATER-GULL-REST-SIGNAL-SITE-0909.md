@@ -1,7 +1,8 @@
 # Gull Rest Signal Spire — 2026-09-09
 
-Status: one focused production candidate is source-bound and mechanically tested;
-ordinary-view capture failed twice and no visual acceptance is claimed.
+Status: the first crossed-support form is superseded by one approved installed-wall
+and balcony form candidate; the new form is mechanically tested and awaits its one
+mature-catalogue appearance pair. No visual acceptance is claimed.
 
 ## Attribution and contract
 
@@ -127,3 +128,34 @@ No frame was retained from either attempt. The helper now ignores empty output v
 but it was not run again. One unchanged canonical stand 19 day/night pair and one
 ordinary grounded incoming-spine view remain required. This report makes no
 image-quality or whole-biome acceptance claim.
+
+## Second form round — installed wall shaft and balcony
+
+The mature catalogue strategy later produced the first valid canonical pair for the
+original form. Wave16 found its feet grounded and silhouette legible, but the four long
+supports read as a crossed-stick stand rather than a convincing landmark. Root approved
+one further form round using the installed modules measured in
+`WATER-GULL-REST-LOOKOUT-ASSET-PROPOSAL-0909.md`.
+
+Only `data/config/water_gull_rest_signal_site.json` changed in production. Four
+`Wall_Plaster_WoodGrid.gltf` panels replace the braces as a closed textured shaft, and
+four rotations of `Balcony_Cross_Straight.gltf` replace the isolated fence pieces.
+The existing helper already terrain-fits every support to the common platform and
+derives matching collision, so neither it nor `water_world.gd` changed. Site centre,
+route envelope, actors, pickups, floor, torch and light are unchanged.
+
+A checked-in deferred child fixture completed its 60 initialized geometry assertions
+with zero failures; the standard parent test completed 2 tests / 31 assertions / 0
+failed with clean console, stderr and engine logs. It verifies exact imported
+wall/balcony bounds, all four finite terrain contacts and common tops, collision
+size/centre/yaw equality, platform contact, the complete transformed footprint inside
+2.5 m, and retained clearance beyond both route legs. The earlier non-deferred fixture
+failure is preserved rather than counted as a pass. Exact receipts and final hashes are
+in the asset proposal report.
+
+This second form is frozen after one mature catalogue stand-19 day/night capture at
+`shots/catalogue/water/20260909T173239Z`. The manifest is complete with the exact 2/2
+planned frame IDs and no failures. The earlier custom capture helper remains retired.
+The catalogue pair proves production-camera appearance at the authored destination;
+it does not prove physical traversal, UI correction, image improvement or Water-wide
+visual acceptance. Independent visual review remains required.

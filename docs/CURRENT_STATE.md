@@ -6,6 +6,17 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
+**Visual disposition, 2026-09-09 17:38 UTC:** equipment's second1280x800
+production-menu frame passed independent narrow usability review: one clear
+selection, matching preview, readable navigation/Unequip, no clipping or new
+defect. Source review found no concrete transaction/save-ownership blocker;
+portable character cases and full CI remain pending. Gull Rest Wave17 is held:
+denser construction and stronger night visibility come with a new pale-base
+contact/material drawback. Both substantive form rounds are closed; no third
+Gull tuning pass. Warden staff attachment passes79 initialized assertions and
+awaits a matched appearance capture. All287 protected import sidecars were
+rechecked byte-identical after the latest captures.
+
 **Landing, 2026-09-09 17:33 UTC:** PR100 is merged as
 `8e58444aa273430f435ae96a8663c7860850614e`; reviewed-head ancestry and identical
 `e7f9406a7391fec9372365c8d69fd55c7be4c3b8` tree verified. Exact-head full CI
