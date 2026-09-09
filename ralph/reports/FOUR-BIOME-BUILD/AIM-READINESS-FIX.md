@@ -20,6 +20,12 @@ preview and `trajectory_blocked == false`. It reads them again synchronously at 
 actual physical Interact dispatch boundary. The terminal check remains strict and
 reports failure before an orb can be spent.
 
+The earned helper now prints read-only `AIM READINESS` receipts at the angular
+candidate (`convergence`), after the camera/physics callbacks (`post-settle`) and
+at the synchronous physical input boundary (`input-commit`). Each includes camera
+position/forward, player and live-target positions, current launch diagnostics and
+the preview. Repeated identical samples are suppressed; changed facts are retained.
+
 ## Focused native evidence
 
 Command (with isolated APPDATA and Godot 4.7):
@@ -84,3 +90,9 @@ poses only to isolate the timing race. It does not prove a campaign or gameplay 
 The one changed genuine fresh-campaign attempt required by the implementation brief
 is pending root review and the full-world RAM lease. A request was sent after all
 focused checks passed. No full world was launched without that grant.
+
+Prepared command source is the existing
+`.artifacts/run-wave6-fresh-final-verdict.ps1`, with a new never-before-used isolated
+APPDATA/output stem for the approved attempt. It invokes
+`tests/smoke_four_biome_continuous.gd` directly and fingerprints owner saves before
+and after. The old profile/output stem will not be reused.
