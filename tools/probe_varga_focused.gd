@@ -16,6 +16,7 @@ var last_sample_ms := 0
 var last_impact_key := ""
 var game: Node
 var world: Node3D
+var finalized_death_events := 0
 
 class ObservedSegment extends ENTRY.Segment:
 	var observe: Callable
@@ -98,6 +99,11 @@ func _run() -> void:
 			or not bool(world.get_node("EncounterDirector").get("population_ready")):
 		_finish(false, "production world did not settle")
 		return
+	var death := world.get_node_or_null(^"PlayerDeath")
+	if death == null or not death.has_signal("finalized_death"):
+		_finish(false, "production finalized-death observer is missing")
+		return
+	death.connect("finalized_death", _on_finalized_death)
 	segment = ObservedSegment.new()
 	segment.tree = self
 	segment.world = world
@@ -168,7 +174,16 @@ func _capture(label: String) -> void:
 	var vitals: RefCounted = segment.player.get("vitals")
 	row["human_health"] = vitals.get("health") if vitals != null else null
 	row["human_max_health"] = vitals.get("max_health") if vitals != null else null
+	row["finalized_death_events"] = finalized_death_events
+	row["trainer_battle_active"] = bool(segment.director.call("trainer_battle_active"))
+	row["varga_defeat_flag"] = bool(game.get("progression").call(
+		"has", "stormwood:trainer:%s:defeated" % VARGA))
 	_write(row)
+
+
+func _on_finalized_death() -> void:
+	finalized_death_events += 1
+	_capture("finalized_death_observed")
 
 func _write(row: Dictionary) -> void:
 	if output != null:
@@ -188,8 +203,28 @@ func _finish(ok: bool, detail: String) -> void:
 	_capture("terminal_outer")
 	finished = true
 	_write({"label": "result", "ok": ok, "detail": detail,
+		"classification": _classification(ok), "finalized_death_events": finalized_death_events,
+		"last_outcome": segment._last_combat_outcome if segment != null else "",
+		"trainer_outcomes": segment._trainer_outcomes.duplicate(true) if segment != null else {},
+		"varga_defeat_flag": bool(game.get("progression").call(
+			"has", "stormwood:trainer:%s:defeated" % VARGA)) if game != null else false,
 		"failures": segment.failures if segment != null else [], "wall_ms": Time.get_ticks_msec()})
 	if output != null:
 		output.close()
 	print("VARGA FOCUSED ", "PASS" if ok else "FAIL", ": ", detail)
 	quit(0 if ok else 1)
+
+
+func _classification(won: bool) -> String:
+	if won:
+		return "victory"
+	if finalized_death_events > 0 and segment != null \
+			and segment._last_combat_outcome == "lost" \
+			and not bool(game.get("progression").call(
+				"has", "stormwood:trainer:%s:defeated" % VARGA)):
+		return "finalized_death_loss"
+	if segment != null:
+		for failure: String in segment.failures:
+			if failure.contains("did not resolve through controller combat within 180 seconds"):
+				return "duel_timeout"
+	return "nonvictory_unclassified"
