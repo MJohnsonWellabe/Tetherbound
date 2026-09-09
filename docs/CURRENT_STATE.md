@@ -15,8 +15,15 @@ below for current work; the older paragraphs remain as dated history. PR #90 mer
 `origin/main`. Exact-head PR CI `34303950964` passed on workflow attempt 1: all 26
 executed jobs succeeded, the three configured jobs skipped, 3,076 unit tests/487,614
 assertions passed, and all 86 wrapped smokes passed on their first invocation. The raw
-review is `ralph/reports/FOUR-BIOME-BUILD/CI-34303950964.md`. Main's own push CI and
-export remain pending separate review; there is no published Windows release claim.
+review is `ralph/reports/FOUR-BIOME-BUILD/CI-34303950964.md`. Exact-main push CI
+`34305636072` then passed workflow attempt 1: all 27 executed jobs succeeded, only the
+two configured known-red jobs skipped, and all 86 wrapped smokes passed on their first
+invocation. Its Windows debug export and exported-runtime ground check passed. Release
+run `34305636213` also passed attempt 1, including its Windows release export and
+exported-runtime ground check; rolling public asset [`551867266`](https://github.com/MJohnsonWellabe/Tetherbound/releases/download/latest/Tetherbound-windows.zip)
+was created 2026-09-09 03:13:32 UTC and updated 03:13:54 UTC for this exact main SHA.
+The full raw-log and before/after asset review is
+`ralph/reports/FOUR-BIOME-BUILD/CI-MAIN-57660e4fe.md`. Main remains `57660e4fe`.
 
 Stage C6 has been pulled forward and is **in progress**, but the full Stage C audit is
 not complete. The merged reports document 116 local corrected-camera catalogue frames,
@@ -27,7 +34,11 @@ Cloudreach, Stormwood, Water and Combined A/B are No/Yes; every set remains No f
 shipping-art readiness. B establishes recognizable creature-adventure intent, not
 commercial-quality acceptance. The later three-image Water-gate blind report is local
 descendant evidence and answers A/B No/No for that narrow view only; it does not replace
-Water or Combined B Yes. All visual findings and the Beta gate remain open.
+Water or Combined B Yes. Local Cloudreach commit `ac2e2462f` records the completed
+Settings catalogue audit within Phase A, while its broader route, interior,
+weather/motion and target-hardware sweep remains in progress. The inspected raw screens
+remain local; only their identity receipts and audit text are committed. All visual
+findings and the Beta gate remain open.
 
 The fresh-campaign aim work remains unresolved with a named commit-race/control-phase
 cause and handoff. Both bounded guard and phase proofs failed; no fourth fresh campaign
@@ -35,9 +46,14 @@ will run in this resume session. Water's authored return into Stormwood at `d769
 is now on main. The later `WATER-RETURN-RUNTIME.md` solo run proves ordinary interaction,
 realm transfer and grounded destination arrival only from an isolated prerequisite
 fixture; it is local descendant evidence, not earned campaign completion. Network
-realm/session/route checks have passed, but their report and root arrival review remain
-pending, so full network arrival is not claimed. Do not mark a stage passed from these
-bounded proofs.
+evidence through local pending-PR #91 commit `b5dd34b4b` adds a 33-check two-peer run:
+the connected client used ordinary movement and interaction, reached ready Stormwood
+with no pending entry, and was grounded at the authored return point while the host
+remained in Water and route authority stayed unchanged. Neither fixture is earned
+campaign evidence. The known older avatar/proxy cached-packet teardown issue remains
+open. PR #91 CI `34306689396` is still in progress, its review is not merged, and it
+does not extend main's verified coverage. Do not mark a stage passed from these bounded
+proofs.
 
 The earlier playground chop smoke failure was observation lag: its process-frame
 durability poll trailed a synchronous impact callback inside the unchanged timing band.

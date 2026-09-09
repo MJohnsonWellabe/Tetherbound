@@ -10,8 +10,15 @@ the four-biome Beta Ready objective, superseding the dated owner-stop state reta
 `f227816f88cc88e702a6934650f7c8bf1daea871`, which is an ancestor of main. Exact-head
 PR CI `34303950964` passed on attempt 1: all 26 executed jobs succeeded, the three
 configured jobs skipped, and all 86 wrapped smokes passed on their first invocation.
-See `ralph/reports/FOUR-BIOME-BUILD/CI-34303950964.md` for the raw-log review. Main's
-own push CI and export remain pending; there is no published Windows release claim.
+See `ralph/reports/FOUR-BIOME-BUILD/CI-34303950964.md` for the raw-log review. Exact-main
+push CI `34305636072` then passed attempt 1: all 27 executed jobs succeeded, only the
+two configured known-red jobs skipped, and all 86 wrapped smokes passed on their first
+invocation. Its Windows debug export and exported-runtime ground check passed. Release
+run `34305636213` passed attempt 1 with its Windows release export and exported-runtime
+ground check; rolling public asset [`551867266`](https://github.com/MJohnsonWellabe/Tetherbound/releases/download/latest/Tetherbound-windows.zip)
+was created 2026-09-09 03:13:32 UTC and updated 03:13:54 UTC for this exact main SHA.
+See `ralph/reports/FOUR-BIOME-BUILD/CI-MAIN-57660e4fe.md` for the raw-log and asset
+review. Main remains `57660e4fe`.
 
 Stage C6 is pulled forward and in progress. The full Stage C six-question audit remains
 incomplete. The merged reports document the local corrected 116-frame catalogue,
@@ -21,16 +28,24 @@ Yes/Yes; Cloudreach, Stormwood, Water and Combined A/B No/Yes;
 all five sets remain No for shipping-art readiness. The category-intent B results are
 not shipping acceptance. The later three-image Water-gate A/B No/No report is local
 descendant evidence for that narrow view and does not replace Water or Combined B Yes.
-All visual findings and the Beta gate remain open.
+Local Cloudreach commit `ac2e2462f` records the completed Settings catalogue audit
+within Phase A; the broader route, interior, weather/motion and target-hardware sweep
+remains in progress. Its inspected raw screens remain local while committed receipts
+preserve their identities. All visual findings and the Beta gate remain open.
 
 Aim work remains unresolved with its named commit-race/control-phase handoff; both
 bounded proofs failed, so no fourth fresh campaign will run in this resume session.
 Water's authored return at `d769a93c5` is now on main. Local descendant report
 `WATER-RETURN-RUNTIME.md` proves the solo route only from isolated prerequisites, not an
-earned campaign. Network realm/session/route checks passed, but the report and root
-arrival review remain pending, so full network arrival is not claimed. The chop observer
-repair `7c11fce2a` is also on main and its regression plus full playground smoke passed
-exact-head CI on first invocation. These results do not complete a stage.
+earned campaign. Local pending-PR #91 commit `b5dd34b4b` adds a 33-check two-peer run:
+ordinary movement and interaction reached ready Stormwood with no pending entry and a
+grounded arrival at the authored return point, while the host remained in Water and
+route authority stayed unchanged. The known older avatar/proxy cached-packet teardown
+issue remains open. PR #91 CI `34306689396` is still in progress, its review is not
+merged, and it does not extend main's verified coverage. The chop observer repair
+`7c11fce2a` is on main and its regression plus full playground smoke passed exact-head
+CI on first invocation. These bounded fixture results do not complete a stage or an
+earned campaign.
 
 **2026-09-08 18:12 UTC update:** Wave 2 is merged as main
 `b3458eb1d0f54ceb2554a97e9b0fe0b2f88f5bfb`, after exact-head PR CI
