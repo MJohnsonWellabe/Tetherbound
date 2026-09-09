@@ -1169,3 +1169,38 @@ zero-delta checkpoints. The standing Beta goal remains active.
   the proven client receiver protocol to Game with its required cancellation,
   rollback and compatibility checks. Keep the two visual assignments active
   across biome/cast waves rather than returning to exhausted material tuning.
+
+## 2026-09-09 14:41 UTC — Arlo shipped, Stormwood accepted, protocol CI corrected
+
+- Material player-visible delta on main: Arlo's teal cloth contrast is shipped
+  in PR96, main `1eef3df5a774e4fe4a2ba27751df24def522e2b7`. Independent A/B Yes
+  covers this narrow character improvement. Reviewed-head ancestry and identical
+  tree, all exact-head/main CI raw logs, release and literal latest reference
+  were verified. The first import-policy CI failure remains retained.
+- Newly reachable earned campaign paths: none established. No fourth campaign
+  or through-Crown replay. PR94 finalized-death fix remains held.
+- Accepted visual work awaiting landing: Stormwood's authored shadow opacity
+  now survives surge weather application.2 tests/24 assertions and a clean real
+  canonical day/night capture support the independent narrow daylight readability
+  acceptance; overall scene A/B remains No. Isolated PR98 head8f2c7c7ec is in CI.
+- Held candidates: Water gate/dock, Cloudreach ground roost, Meadows clover and
+  three creature surfaces have rendered evidence but insufficient visual verdicts.
+  A distinct Meadows night-shadow candidate completed2/2 with modest quantitative
+  gain, awaiting independent review. Craftsperson's established exporter-emission
+  artefact correction passed2 tests/11 assertions and9 capture checks; review
+  pending. No held candidate is credited as shipped progress.
+- Multiplayer mechanism: isolated PR97 first-head CI452a7d10 completed24 successful
+  jobs,1 failed region job and4 skips,3,116 tests/487,808 assertions and all seven
+  net shards passing. All25 full raw logs retained. New final-revision Game108,
+  cancellation77 and latejoin82 pass, but baseline emitted8 inactive-ENet errors
+  during fixture shutdown. Post-proof synchronizer quiesce fixes the identified
+  fixture gap: one corrected baseline81/cancel77/latejoin82 each passed with all18
+  raw logs clean. The failed CI is not rerun or relabeled; new exact-head CI next.
+- Integration branch before this checkpoint commit:72fb652c9. Root is committing
+  the bounded terminal correction separately; held visual work remains isolated
+  from shipping branches. Original287 import bytes remain protected. One local
+  runtime lease; all corrected native engines are now terminal.
+- Next: test PR97's corrected tree together with accepted PR98 contents once,
+  land Stormwood first after complete CI review, then protocol if clear. Continue
+  two Sol visual assignments and the stronger network/review lane. Broad earned
+  chapter, visual and Beta gates remain open.
