@@ -1,0 +1,19 @@
+{
+  "_comment": "Runtime-only Ridgeline Watch composition for the two existing clover meshes. It never participates in scatter_bake.config_fingerprint and does not alter baked count, model, yaw, scale, density, or seed.",
+  "enabled": true,
+  "zone": {
+    "x": -250.0,
+    "z": 6518.0,
+    "radius": 72.0,
+    "feather": 18.0
+  },
+  "max_displacement": 6.0,
+  "max_blend": 0.45,
+  "clearance_threshold": 0.02,
+  "rock_margin": 0.12,
+  "centres": [
+    {"x": -254.0, "z": 6517.0, "radius": 10.0},
+    {"x": -221.0, "z": 6513.0, "radius": 13.0},
+    {"x": -252.0, "z": 6543.0, "radius": 15.0}
+  ]
+}

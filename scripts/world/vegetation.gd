@@ -46,6 +46,11 @@ const HARVEST_POINT := preload("res://scripts/world/vegetation_harvest_point.gd"
 const FELLED_RESOURCE := preload("res://scripts/world/felled_resource.gd")
 const BAKE := preload("res://scripts/world/scatter_bake.gd")
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
+const RIDGELINE_GROUNDMAT_VISUAL_PATH := "res://data/config/ridgeline_groundmat_visual.json"
+const RIDGELINE_CLOVER_MODELS: Array[String] = [
+	"res://assets/environment/stylized_nature/Clover_1.gltf",
+	"res://assets/environment/stylized_nature/Clover_2.gltf",
+]
 ## D103 / Stage B lane 3.B. The world ledger arbitrates who fells a placement;
 ## this file applies the LIVE half of the committed delta. See
 ## `_on_delta_applied()` for why that half cannot be a `world` op.
@@ -255,6 +260,12 @@ var _mesh_ids: Dictionary = {}
 ## walked straight through and still blocked the entrance in every frame.
 var _instance_positions: Dictionary = {}
 var _next_mesh_id: int = 0
+## Runtime-only presentation for two clover meshes at Ridgeline Watch. This is
+## deliberately outside vegetation.json and the scatter fingerprint: it moves
+## a bounded subset of already-baked visual transforms without changing which
+## placements exist, their models, yaw, scale, or any gameplay-bearing layer.
+var _ridgeline_groundmat_visual: Dictionary = {}
+var _ridgeline_rock_exclusions: Array[Dictionary] = []
 
 ## OWNER-0901-CREATURE-GRASS-VISIBILITY-V2, generalised by N02/W18. Scatter
 ## that is visually solid but carries `collides: false`
@@ -413,6 +424,8 @@ func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 	_sim_mesh_ids.clear()
 	_next_sim_mesh_id = 0
 	_instance_positions.clear()
+	_ridgeline_groundmat_visual.clear()
+	_ridgeline_rock_exclusions.clear()
 	_soft_occluder_positions.clear()
 	_soft_occluder_radii.clear()
 	_next_mesh_id = 0
@@ -516,6 +529,8 @@ func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 				_drained.erase(layer_name)
 		print("[vegetation] grass field is on; %d placements across %d layers left unbuilt (%s)" % [
 			dropped, suppressed.size(), ", ".join(suppressed.keys())])
+
+	_load_ridgeline_groundmat_visual(by_layer)
 
 	await _breathe(slicer)
 	_mark_harvestable(by_layer)
@@ -1165,6 +1180,121 @@ func _breathe(slicer: RefCounted) -> void:
 	await slicer.call("breathe")
 
 
+func _load_ridgeline_groundmat_visual(by_layer: Dictionary) -> void:
+	# Realm shells reuse this class with different fields and bakes. Ridgeline
+	# is authored only in the playground, so other realms remain byte-for-byte
+	# on their existing transform path and never open this optional config.
+	if _realm_bake_name != BAKE_WORLD_NAME:
+		return
+	var file := FileAccess.open(RIDGELINE_GROUNDMAT_VISUAL_PATH, FileAccess.READ)
+	if file == null:
+		return
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	file.close()
+	if not parsed is Dictionary or not bool((parsed as Dictionary).get("enabled", false)):
+		return
+	_ridgeline_groundmat_visual = parsed
+	var zone: Dictionary = _ridgeline_groundmat_visual.get("zone", {})
+	var centre := Vector2(float(zone.get("x", 0.0)), float(zone.get("z", 0.0)))
+	var reach := float(zone.get("radius", 0.0)) + float(_ridgeline_groundmat_visual.get("max_displacement", 0.0))
+	var margin := float(_ridgeline_groundmat_visual.get("rock_margin", 0.0))
+	for entry: Variant in by_layer.get("rocks", []):
+		var placement: Dictionary = entry
+		var position: Vector3 = placement.get("position", Vector3.ZERO)
+		if Vector2(position.x, position.z).distance_to(centre) > reach + 8.0:
+			continue
+		var model := str(placement.get("model", ""))
+		_ridgeline_rock_exclusions.append({
+			"centre": Vector2(position.x, position.z),
+			"radius": _model_footprint_radius(model) * float(placement.get("scale", 1.0)) + margin,
+		})
+
+
+## Bounded presentation-only relocation for the two repeated clover silhouettes
+## around Ridgeline Watch. Every failed or inapplicable check returns the exact
+## baked position. The destination is tested against the same terrain, authored
+## footprint, path, stream, river, waterline, and rock constraints that govern
+## placement, so composition cannot buy a prettier frame by occupying a route.
+func _ridgeline_groundmat_position(model_path: String, placement: Dictionary, layer_cfg: Dictionary) -> Vector3:
+	var original: Vector3 = placement.get("position", Vector3.ZERO)
+	if _ridgeline_groundmat_visual.is_empty() or not RIDGELINE_CLOVER_MODELS.has(model_path):
+		return original
+	if _field == null:
+		return original
+	var zone: Dictionary = _ridgeline_groundmat_visual.get("zone", {})
+	var zone_centre := Vector2(float(zone.get("x", 0.0)), float(zone.get("z", 0.0)))
+	var zone_radius := float(zone.get("radius", 0.0))
+	var feather := clampf(float(zone.get("feather", 0.0)), 0.0, zone_radius)
+	var original_xz := Vector2(original.x, original.z)
+	var zone_distance := original_xz.distance_to(zone_centre)
+	if zone_radius <= 0.0 or zone_distance >= zone_radius:
+		return original
+	var zone_weight := 1.0
+	if feather > 0.0:
+		zone_weight = 1.0 - smoothstep(zone_radius - feather, zone_radius, zone_distance)
+	if zone_weight <= 0.0:
+		return original
+
+	var best_centre := Vector2.INF
+	var best_score := INF
+	for entry: Variant in _ridgeline_groundmat_visual.get("centres", []):
+		var cluster: Dictionary = entry
+		var cluster_centre := Vector2(float(cluster.get("x", 0.0)), float(cluster.get("z", 0.0)))
+		var cluster_radius := maxf(float(cluster.get("radius", 0.0)), 0.001)
+		var score := original_xz.distance_to(cluster_centre) / cluster_radius
+		if score < best_score:
+			best_score = score
+			best_centre = cluster_centre
+	if best_centre == Vector2.INF:
+		return original
+	var toward := best_centre - original_xz
+	var distance := toward.length()
+	if distance <= 0.001:
+		return original
+	var max_displacement := minf(float(_ridgeline_groundmat_visual.get("max_displacement", 0.0)), 6.0)
+	var blend := minf(float(_ridgeline_groundmat_visual.get("max_blend", 0.0)) * zone_weight, max_displacement / distance)
+	if blend <= 0.0:
+		return original
+	var candidate := original_xz.lerp(best_centre, blend)
+	if not _ridgeline_destination_is_clear(candidate, model_path, placement, layer_cfg):
+		return original
+	var original_height := float(_field.call("height_at", original.x, original.z))
+	var candidate_height := float(_field.call("height_at", candidate.x, candidate.y))
+	if is_nan(original_height) or is_nan(candidate_height):
+		return original
+	return Vector3(candidate.x, candidate_height + (original.y - original_height), candidate.y)
+
+
+func _ridgeline_destination_is_clear(
+	spot: Vector2, model_path: String, placement: Dictionary, layer_cfg: Dictionary
+) -> bool:
+	if not _field.has_method("height_at") or not _field.has_method("slope_degrees_at"):
+		return false
+	var height := float(_field.call("height_at", spot.x, spot.y))
+	if is_nan(height):
+		return false
+	var slope := float(_field.call("slope_degrees_at", spot.x, spot.y))
+	if not RULES.allowed(layer_cfg, height, slope, spot.length(), spot):
+		return false
+	var threshold := float(_ridgeline_groundmat_visual.get("clearance_threshold", 0.02))
+	for method: String in ["path_factor", "stream_factor", "river_factor"]:
+		if _field.has_method(method) and float(_field.call(method, spot.x, spot.y)) > threshold:
+			return false
+	if _field.has_method("nearest_point_on_paths"):
+		var nearest: Vector2 = _field.call("nearest_point_on_paths", spot.x, spot.y)
+		var standoff: Dictionary = layer_cfg.get("path_standoff", {})
+		if nearest != Vector2.INF and not standoff.is_empty():
+			if spot.distance_to(nearest) < RULES.path_standoff_at(spot, nearest, standoff, _field):
+				return false
+	if _field.has_method("water_level") and height < float(_field.call("water_level")) - 0.5:
+		return false
+	var clover_radius := _model_footprint_radius(model_path) * float(placement.get("scale", 1.0))
+	for rock: Dictionary in _ridgeline_rock_exclusions:
+		if spot.distance_to(rock["centre"]) < clover_radius + float(rock["radius"]):
+			return false
+	return true
+
+
 func _build_batch(model_path: String, placements: Array, slicer: RefCounted = null) -> void:
 	# In a shell nothing is registered with Terrain3D, so there is no real
 	# mesh id to ask for -- and asking would load the model, which is the
@@ -1194,6 +1324,7 @@ func _build_batch(model_path: String, placements: Array, slicer: RefCounted = nu
 	# spawns are gameplay, not rendering.
 	var transforms: Array[Transform3D] = []
 	var colours := PackedColorArray()
+	var displayed_positions := PackedVector3Array()
 	if not simulation_only:
 		transforms.resize(placements.size())
 		if use_colour:
@@ -1208,6 +1339,7 @@ func _build_batch(model_path: String, placements: Array, slicer: RefCounted = nu
 			await _breathe(slicer)
 		var placement: Dictionary = placements[i]
 		if simulation_only:
+			displayed_positions.append(placement["position"])
 			if placement.has("harvest_item"):
 				var t_hs0 := Time.get_ticks_msec()
 				_spawn_harvest_point(placement)
@@ -1220,7 +1352,8 @@ func _build_batch(model_path: String, placements: Array, slicer: RefCounted = nu
 			var normal: Vector3 = placement["normal"]
 			basis = Basis(Quaternion(Vector3.UP, normal)) * basis
 		basis = basis.scaled(Vector3.ONE * float(placement["scale"]))
-		var spot: Vector3 = placement["position"]
+		var spot: Vector3 = _ridgeline_groundmat_position(model_path, placement, layer_cfg)
+		displayed_positions.append(spot)
 		transforms[i] = Transform3D(basis, spot - Vector3.UP * SINK)
 		if use_colour:
 			var v := 1.0 + jitter_rng.randf_range(-jitter, jitter)
@@ -1239,8 +1372,8 @@ func _build_batch(model_path: String, placements: Array, slicer: RefCounted = nu
 		_instancer.call("add_transforms", mesh_id, transforms, colours, false)
 
 	var known: PackedVector3Array = _instance_positions.get(mesh_id, PackedVector3Array())
-	for i in placements.size():
-		known.append((placements[i] as Dictionary)["position"])
+	for spot: Vector3 in displayed_positions:
+		known.append(spot)
 	_instance_positions[mesh_id] = known
 
 	_record_soft_occluders(model_path, layer_cfg, placements)
