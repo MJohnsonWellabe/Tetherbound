@@ -87,6 +87,11 @@ var _last_diagnostic := ""
 var observation_only := false
 var cancellation_mode := false
 var source_ready_observed := false
+var latejoin_mode := false
+var policy_seen_before_snapshot := false
+var latejoin_reported := false
+var pending_origin := ""
+var departed_motion_before := 0.0
 
 func _process(_delta: float) -> void:
 	if stopping or transition == null or not moving:
@@ -100,6 +105,7 @@ func _ready() -> void:
 	var arguments := OS.get_cmdline_user_args()
 	observation_only = arguments.has("observe")
 	cancellation_mode = arguments.has("cancel")
+	latejoin_mode = arguments.has("latejoin")
 	var preflight_only := arguments[0] == "preflight"
 	role = "host" if preflight_only else arguments[0]
 	var port := 0 if preflight_only else int(arguments[1])
@@ -123,6 +129,20 @@ func _ready() -> void:
 		print("ADAPTER PREFLIGHT COMPLETE checks=%d" % checks)
 		get_tree().quit(0)
 		return
+	if latejoin_mode:
+		session.set_process(true)
+		if role == "host":
+			session.peer_joined.connect(_late_peer_joined)
+		elif role == "latejoin":
+			get_tree().current_scene = worlds[SOURCE]
+			session.snapshot_applied.connect(_late_snapshot_applied)
+			session.set("_mode", "")
+			_check(bool(session.call("join", "127.0.0.1", port,
+				{"character_id": "latejoin-fixture", "display_name": "Latejoin fixture", "realm": SOURCE})), "actual Session.join started")
+			_check(not bool(session.call("snapshot_ready")), "actual join closes snapshot readiness")
+			get_tree().create_timer(60.0).timeout.connect(func(): _fail("native latejoin deadline"))
+			print("ADAPTER BOOT latejoin")
+			return
 	session.connect("peer_realm_changed", _realm_changed)
 	var enet := ENetMultiplayerPeer.new()
 	var result := enet.create_server(port, 2) if role == "host" else enet.create_client("127.0.0.1", port)
@@ -133,7 +153,7 @@ func _ready() -> void:
 	session.set("_peer", enet)
 	if role != "host":
 		multiplayer.connected_to_server.connect(func(): _hello.rpc_id(1, role))
-	get_tree().create_timer(60.0 if cancellation_mode else 20.0).timeout.connect(func(): _fail("native adapter deadline"))
+	get_tree().create_timer(60.0 if cancellation_mode or latejoin_mode else 20.0).timeout.connect(func(): _fail("native adapter deadline"))
 	print("ADAPTER BOOT %s" % role)
 
 func _preflight() -> bool:
@@ -220,6 +240,8 @@ func _build_world(realm: String) -> void:
 		SCOPE.attach(spawner, realm, producer if kind == "Creature" else null)
 
 func _make_body(data: Variant, realm: String, kind: String) -> Node:
+	if latejoin_mode and role == "latejoin" and kind == "Item":
+		_check(policy_seen_before_snapshot and bool(session.call("snapshot_ready")), "new pending cohort admitted after actual policy and snapshot")
 	if cancellation_mode and role == "departing" and bool(transition.get("injected")):
 		_check(source_ready_observed, "actual respawn follows source readiness")
 	var owner := int(data.owner)
@@ -266,7 +288,7 @@ func _hello(label: String) -> void:
 		_fail("hello identity")
 		return
 	ids[label] = multiplayer.get_remote_sender_id()
-	if ids.size() == 3:
+	if ids.size() == (2 if latejoin_mode else 3):
 		_configure.rpc(ids)
 		_configure_local(ids)
 		for owner: int in ids.values():
@@ -300,7 +322,13 @@ func _body_count(realm: String) -> int:
 		+ (world as Node).get_node("CreatureBodies").get_child_count()
 
 func _physics_process(_delta: float) -> void:
-	if stopping or failed or ids.size() != 3:
+	if latejoin_mode and role == "latejoin":
+		if not bool(session.call("snapshot_ready")):
+			return
+		for row: Dictionary in session.call("peers"):
+			var id := int(row.peer_id)
+			ids["latejoin" if id == multiplayer.get_unique_id() else ("host" if id == 1 else "departing")] = id
+	if stopping or failed or ids.size() < (2 if latejoin_mode else 3):
 		return
 	if multiplayer.multiplayer_peer == null or multiplayer.multiplayer_peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
 		_fail("transport lost")
@@ -309,13 +337,25 @@ func _physics_process(_delta: float) -> void:
 		for kind: String in ["Trainer", "Creature"]:
 			var body := _body(realm, multiplayer.get_unique_id(), kind)
 			if body != null:
+				if latejoin_mode and role == "latejoin" and not policy_seen_before_snapshot:
+					_fail("new owner producer preceded policy application")
+					return
 				body.position.x += 0.1
 				body.rotation.y += 0.01
 				for observer: int in multiplayer.get_peers():
 					if SCOPE.outgoing_allowed(body, observer):
 						body.rpc_id(observer, "presentation")
 	var host_body := _body(SOURCE, 1)
-	if role != "host" and not ready_sent and _body_count(SOURCE) == 6 \
+	if latejoin_mode and role == "latejoin":
+		if not latejoin_reported and _body_count(SOURCE) == 4 and host_body != null and host_body.position.x > 0.5 \
+				and (worlds[SOURCE] as Node).get_node("ItemBodies").get_child_count() == 1:
+			latejoin_reported = true
+			_check(policy_seen_before_snapshot, "policy applied before first new-owner producer")
+			_check(not worlds.has(TARGET), "actual joiner has no dummy Water receiver")
+			_check(int(host_body.get("presentations")) > 0, "new joiner consumes host reliable presentation")
+			_latejoin_verified.rpc_id(1)
+		return
+	if role != "host" and not ready_sent and _body_count(SOURCE) == (4 if latejoin_mode else 6) \
 			and host_body != null and host_body.position.x > 0.5 and host_body.rotation.y > 0.01:
 		ready_sent = true
 		_check(true, "trainer and creature received with live continuous and reliable state")
@@ -327,8 +367,8 @@ func _peer_ready(label: String) -> void:
 		_fail("ready identity")
 		return
 	prepared[label] = true
-	if prepared.size() == 2:
-		host_motion_before = _body(SOURCE, int(ids.staying)).position.x
+	if prepared.size() == (1 if latejoin_mode else 2):
+		host_motion_before = _body(SOURCE, int(ids.departing if latejoin_mode else ids.staying)).position.x
 		_begin.rpc()
 		moving = true
 		_start_observation()
@@ -413,10 +453,59 @@ func _realm_changed(peer: int, from: String, to: String) -> void:
 		_build_world(to)
 	_spawn_pair(to, peer)
 
+func _late_snapshot_applied() -> void:
+	var local_join: Dictionary = transition.get("_joining_local")
+	var origin_policy: RefCounted = transition.get("origins")
+	var pending: Dictionary = origin_policy.get("pending_receivers")
+	var identity := multiplayer.get_unique_id()
+	policy_seen_before_snapshot = not local_join.is_empty() and pending.has(identity) \
+		and str(pending[identity].generation) == str(local_join.permit)
+	_check(policy_seen_before_snapshot, "actual snapshot signal observes matching pending generation already applied")
+	for row: Dictionary in (origin_policy.get("rows") as Dictionary).values():
+		_check(str(row.members.get(identity, "")) == str(local_join.get("permit", "")), "full origin rows match prior pending RPC generation")
+		_check(row.denied.has(identity), "snapshot alone has not granted receiver admission")
+
+func _late_peer_joined(peer: int, _character_id: String) -> void:
+	ids["latejoin"] = peer
+	var joining: Dictionary = transition.get("_joining")
+	_check(joining.has(peer) and str(joining[peer].phase) == "receiver", "actual host peer_joined follows policy applied ACK")
+	var origin_policy: RefCounted = transition.get("origins")
+	_check((origin_policy.get("pending_receivers") as Dictionary).has(peer), "receiver remains pending when owner bodies are created")
+	_spawn_pair(SOURCE, peer)
+	# Real host-authored extra scoped cohort, created during the pending stage.
+	# Its source receiver exists, but admission must wait for actual readiness.
+	pending_origin = "fixture-pending:%d" % peer
+	origin_policy.call("create", pending_origin, SOURCE, 1, session.call("peers"))
+	transition.rpc("_origin_install", pending_origin, (origin_policy.get("rows") as Dictionary)[pending_origin])
+	_check(not bool(origin_policy.call("allowed", pending_origin, peer)), "new same-realm origin inherits pending receiver deny")
+	((worlds[SOURCE] as Node).get_node("ItemSpawner") as MultiplayerSpawner).spawn({"owner": 1, "origin": pending_origin})
+
+@rpc("any_peer", "call_remote", "reliable", 0)
+func _latejoin_verified() -> void:
+	var peer := multiplayer.get_remote_sender_id()
+	if not latejoin_mode or peer != int(ids.get("latejoin", -1)):
+		_fail("latejoin verification identity")
+		return
+	while not stopping and (_body(SOURCE, peer).position.x <= 0.2 \
+			or _body(TARGET, int(ids.departing)).position.x <= departed_motion_before):
+		await get_tree().process_frame
+	_check((transition.get("_joining") as Dictionary).is_empty(), "actual joined receiver pending state cleared")
+	_check(_body(SOURCE, peer).position.x > 0.2 and int(_body(SOURCE, peer).get("presentations")) > 0,
+		"host consumes new owner continuous state and reliable presentation")
+	_check(_body(TARGET, int(ids.departing)).position.x > departed_motion_before, "existing Water owner movement continues through latejoin")
+	_check(bool((transition.get("origins") as RefCounted).call("allowed", pending_origin, peer)), "matching actual source readiness admits pending cohort")
+	_finish.rpc()
+	_finish_local()
+
 @rpc("any_peer", "call_remote", "reliable", 0)
 func _arrived() -> void:
 	if multiplayer.get_remote_sender_id() != int(ids.departing):
 		_fail("arrival identity")
+		return
+	if latejoin_mode:
+		_check(not (transition.get("origins") as RefCounted).get("rows").is_empty(), "completed departure retains live origin policy")
+		departed_motion_before = _body(TARGET, int(ids.departing)).position.x
+		print("ADAPTER LATEJOIN READY")
 		return
 	if cancellation_mode:
 		_check(str(session.call("realm_of", int(ids.departing))) == SOURCE, "host membership returned to source")

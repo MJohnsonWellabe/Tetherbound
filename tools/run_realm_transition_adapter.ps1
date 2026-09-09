@@ -3,7 +3,8 @@ param(
     [string]$ArtifactName = 'realm-transition-adapter-20260909-v1',
     [int]$Port = 39679,
     [switch]$ObserveOnly,
-    [switch]$Cancellation
+    [switch]$Cancellation,
+    [switch]$Latejoin
 )
 $ErrorActionPreference = 'Stop'
 $workspace = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
@@ -37,8 +38,40 @@ try {
     $initialHeadroom = Read-AdapterHeadroom
     $memorySamples += $initialHeadroom
     if (-not $initialHeadroom.allowed) { $finding = 'Resource guard: no headroom before native launch.' }
-    foreach ($role in @('host', 'departing', 'staying')) {
+    $roles = if ($Latejoin) { @('host', 'departing', 'latejoin') } else { @('host', 'departing', 'staying') }
+    foreach ($role in $roles) {
         if ($finding) { break }
+        if ($role -eq 'latejoin') {
+            while ($watch.Elapsed.TotalSeconds -lt 65) {
+                $waitingEngines = Get-CimInstance Win32_Process -Filter "Name LIKE '%Godot%'"
+                foreach ($prior in $ownedProcesses) {
+                    foreach ($child in $waitingEngines) {
+                        if ($child.ParentProcessId -eq $prior.process.Id -and $child.CommandLine -match ('probe_realm_transition_adapter\.gd.*\s--\s+' + [Regex]::Escape($prior.role) + '\s+' + $Port + '(?:\s|$)')) {
+                            $childId = [int]$child.ProcessId
+                            if (-not $prior.children.ContainsKey($childId)) {
+                                $handle = Get-Process -Id $childId -ErrorAction SilentlyContinue
+                                if ($handle) { $prior.children[$childId] = [PSCustomObject]@{ process = $handle; peak_mb = 0.0 } }
+                            }
+                        }
+                    }
+                }
+                foreach ($prior in $ownedProcesses) {
+                    foreach ($priorLog in @($prior.stdout, $prior.stderr)) {
+                        $errorLine = Select-String -LiteralPath $priorLog -Pattern '^(ERROR:|SCRIPT ERROR:|WARNING:|ADAPTER FAIL |ADAPTER CHECK .* FAIL )' | Select-Object -First 1
+                        if ($errorLine) { $finding = $prior.role + ': ' + $errorLine.Line; break }
+                    }
+                    if ($finding) { break }
+                }
+                if ($finding) { break }
+                $headroom = Read-AdapterHeadroom
+                $memorySamples += $headroom
+                if (-not $headroom.allowed) { $finding = 'Resource guard while awaiting latejoin marker'; break }
+                if (Select-String -LiteralPath $ownedProcesses[0].stdout -Pattern '^ADAPTER LATEJOIN READY$' -Quiet) { break }
+                Start-Sleep -Milliseconds 40
+            }
+            if (-not $finding -and $watch.Elapsed.TotalSeconds -ge 65) { $finding = 'Missing actual departure readiness marker' }
+            if ($finding) { break }
+        }
         $profile = Join-Path $artifactRoot ($role + '-profile')
         New-Item -ItemType Directory -Path $profile | Out-Null
         $env:APPDATA = $profile
@@ -48,6 +81,7 @@ try {
             '--script', 'tools/probe_realm_transition_adapter.gd', '--', $role, $Port)
         if ($ObserveOnly) { $arguments += 'observe' }
         if ($Cancellation) { $arguments += 'cancel' }
+        if ($Latejoin) { $arguments += 'latejoin' }
         $process = Start-Process -FilePath $Godot -ArgumentList $arguments `
             -WindowStyle Hidden -RedirectStandardOutput $stdout -RedirectStandardError $stderr -PassThru
         $env:APPDATA = $savedAppData

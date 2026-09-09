@@ -1,0 +1,17 @@
+# Scoped native latejoin — first candidate pass and final ACK follow-up
+
+2026-09-09. `.artifacts/realm-transition-latejoin-native-v1/` retains all six role logs, isolated profiles and process/resource/source receipt. Invocation: `tools/run_realm_transition_adapter.ps1 -ArtifactName realm-transition-latejoin-native-v1 -Port 39749 -Latejoin`. No retry or world run.
+
+**82 checks passed**: host26, departing29, latejoin27, including54 preflight checks. Elapsed **15.389797 seconds**. All three launcher exits0; all six raw logs contain zero ERROR, SCRIPT ERROR or WARNING. Max system commit52%, global process count258. Actual engine peaks: host144.29MB, departing144.39MB, latejoin143.39MB. Child exit-code handles unavailable; all owned children and global Godot count were terminal/zero on explicit lease release.
+
+Host marker ADAPTER LATEJOIN READY followed a real completed departure and live scoped Water origin bodies. Only then the third peer started actual Session.join with a fresh isolated character. Its actual snapshot_applied signal observed the prior policy's matching pending generation and full origin row membership; snapshot alone had not admitted it. Host peer_joined followed the applied policy ACK. A new scoped source Item cohort created during pending inherited denial, then actually spawned after snapshot and realm readiness. The joiner had no Water receiver and no Water path lookup error. Host consumed the joiner's real continuous state and reliable presentation while the existing Water owner's continuous state kept advancing. Actual receiver pending state cleared.
+
+This proves the initial completed departure plus one real scoped native join in tiny authored realms. The first pair is explicitly pre-snapshotted; the new third peer is not. It does not establish full-world reconnect, simultaneous joins, naturally elapsed timeout, or the old host occupied-world rebuild defect.
+
+## Post-candidate static correction, separately scoped
+
+After the clean candidate, review found that preserving a join permit during policy refresh also required an explicit snapshot revision in its applied ACK. Otherwise an old ACK with the same permit could unlock the refreshed policy. Root approved a minimal revision echo/validation. Final focused tests passed **29 tests/154 assertions**, exit0, raw clear; `revision-unit.log` is retained alongside the earlier focused logs in `.artifacts/realm-transition-latejoin-unit-v1/`. The new regression rejects old-revision ACK, accepts the current exact ACK once, rejects its duplicate and preserves receiver generation/deadline.
+
+Final coordinator SHA256: `B4159D3BE17E69E0EF479C5EC2D62BA798A482FFD8667AE8CA60DC501FA60A9F`. The native82 receipt remains evidence for its recorded pre-ACK-revision source. No local native rerun was performed, per root direction; forthcoming exact-head CI must exercise the revised wire signature. All six files are now frozen for root integration review.
+
+Remaining shipping requirements: exact-head full CI including baseline81, cancellation77, latejoin82 and actual Game108; raw logs outrank badges. Prior default Water28 remains evidence for its original pre-cancellation snapshot. Full-world reconnect/retained-fight/host compatibility coverage remains limited and must not be inferred from these tiny fixtures. Existing host occupied-world rebuild behavior is explicitly outside the client-only repair.

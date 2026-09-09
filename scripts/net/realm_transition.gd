@@ -22,6 +22,7 @@ var _host_move: Array[String] = []
 var _pending: Array[Dictionary] = []
 var _awaiting_install: Dictionary = {}
 var _joining: Dictionary = {}
+var _joining_local: Dictionary = {}
 var _policy_revision := 0
 
 func _ready() -> void:
@@ -56,6 +57,7 @@ func reset() -> void:
 	_pending.clear()
 	_awaiting_install.clear()
 	_joining.clear()
+	_joining_local.clear()
 	_policy_revision += 1
 	_host_move.clear()
 	# Old awaiters capture epoch and fail without keeping a refusal that would
@@ -543,39 +545,119 @@ func prepare_joined_sender(peer: int) -> bool:
 	return true
 
 func _send_joined_policy(peer: int) -> void:
-	_serial += 1
-	var permit := "%d:join:%d:%d" % [epoch, peer, _serial]
-	_joining[peer] = {"permit": permit, "revision": _policy_revision}
+	var prepared := _prepare_joined_policy(peer, Time.get_ticks_msec())
+	if bool(prepared.fresh):
+		_origin_receiver_pending.rpc(peer, str(prepared.permit), int(prepared.sequence))
 	var current: Dictionary = transactions.duplicate(true)
 	for tx: Dictionary in current.values():
 		tx.erase("acks")
 		tx.erase("installed")
-	_joined_sender_policy.rpc_id(peer, permit, current, retired_receivers, origins.rows)
+	_joined_sender_policy.rpc_id(peer, str(prepared.permit), int(_joining[peer].revision), current, retired_receivers, origins.rows)
+
+func _prepare_joined_policy(peer: int, now: int) -> Dictionary:
+	var deadline := int((_joining.get(peer, {}) as Dictionary).get("deadline", now + TIMEOUT_MS))
+	var permit := str((_joining.get(peer, {}) as Dictionary).get("permit", ""))
+	var fresh := permit.is_empty()
+	if fresh:
+		_serial += 1
+		permit = "%d:join:%d:%d" % [epoch, peer, _serial]
+		origins.begin_receiver(peer, permit, _serial)
+		_policy_revision += 1
+	# A snapshot refresh is not a new receiver identity. Keeping its generation
+	# also prevents simultaneous joins from invalidating each other's revisions
+	# forever merely by resending otherwise current snapshots.
+	_joining[peer] = {"permit": permit, "revision": _policy_revision, "phase": "policy", "deadline": deadline}
+	return {"fresh": fresh, "permit": permit, "sequence": _serial}
 
 @rpc("authority", "call_remote", "reliable", 0)
-func _joined_sender_policy(permit: String, current: Dictionary, retired: Dictionary, origin_rows: Dictionary) -> void:
+func _joined_sender_policy(permit: String, revision: int, current: Dictionary, retired: Dictionary, origin_rows: Dictionary) -> void:
 	transactions = current.duplicate(true)
 	retired_receivers = retired.duplicate(true)
 	origins.rows = origin_rows.duplicate(true)
+	_joining_local = {"permit": permit, "epoch": epoch, "sent": false}
 	for scope: Node in scopes:
 		if is_instance_valid(scope):
 			scope.call("refresh_visibility")
-	_joined_sender_applied.rpc_id(1, permit)
+	_joined_sender_applied.rpc_id(1, permit, revision)
 
 @rpc("any_peer", "call_remote", "reliable", 0)
-func _joined_sender_applied(permit: String) -> void:
+func _joined_sender_applied(permit: String, revision: int) -> void:
 	if not host():
 		return
 	var peer := multiplayer.get_remote_sender_id()
-	if not _joining.has(peer) or str(_joining[peer].permit) != permit:
+	if not _joining.has(peer) or str(_joining[peer].permit) != permit or str(_joining[peer].phase) != "policy":
+		return
+	if revision != int(_joining[peer].revision):
 		return
 	if int(_joining[peer].revision) != _policy_revision:
 		_send_joined_policy(peer)
 		return
-	_joining.erase(peer)
+	if not _accept_joined_policy(peer, permit, revision):
+		return
 	# Only now may the ordinary snapshot unlock the joining world's scene
 	# producers and peer_joined create its host-spawned owner State bodies.
 	session().call("_finish_peer_hello", peer)
+
+func _accept_joined_policy(peer: int, permit: String, revision: int) -> bool:
+	if not _joining.has(peer) or str(_joining[peer].permit) != permit \
+			or str(_joining[peer].phase) != "policy" \
+			or revision != int(_joining[peer].revision) or revision != _policy_revision:
+		return false
+	_joining[peer].phase = "receiver"
+	return true
+
+@rpc("authority", "call_remote", "reliable", 0)
+func _origin_receiver_pending(peer: int, permit: String, sequence: int) -> void:
+	origins.begin_receiver(peer, permit, sequence)
+
+func _poll_joined_receiver() -> void:
+	if _joining_local.is_empty() or bool(_joining_local.sent) \
+			or not context_valid(int(_joining_local.epoch)) or not bool(session().call("snapshot_ready")):
+		return
+	var game := get_node_or_null("/root/Game")
+	var realm := str(game.get("current_realm")) if game != null else ""
+	if not _target_ready(realm):
+		return
+	_joining_local.sent = true
+	_joined_receiver_ready.rpc_id(1, str(_joining_local.permit), realm)
+
+func _accept_joined_receiver(peer: int, permit: String, realm: String) -> bool:
+	if not _joining.has(peer) or str(_joining[peer].permit) != permit \
+			or str(_joining[peer].phase) != "receiver" \
+			or str(session().call("realm_of", peer)) != realm:
+		return false
+	origins.complete_receiver(peer, realm, permit)
+	_joining.erase(peer)
+	_policy_revision += 1
+	return true
+
+@rpc("any_peer", "call_remote", "reliable", 0)
+func _joined_receiver_ready(permit: String, realm: String) -> void:
+	var peer := multiplayer.get_remote_sender_id()
+	if not host() or not _accept_joined_receiver(peer, permit, realm):
+		return
+	_origin_receiver_ready.rpc(peer, permit, realm)
+	_refresh_scopes()
+
+@rpc("authority", "call_remote", "reliable", 0)
+func _origin_receiver_ready(peer: int, permit: String, realm: String) -> void:
+	# Matching-generation delta; never overwrite whole rows with an older copy.
+	origins.complete_receiver(peer, realm, permit)
+	if peer == me() and str(_joining_local.get("permit", "")) == permit:
+		_joining_local.clear()
+	_refresh_scopes()
+
+func _refresh_scopes() -> void:
+	for scope: Node in scopes:
+		if is_instance_valid(scope):
+			scope.call("refresh_visibility")
+
+func _expire_joined_receivers(now: int) -> void:
+	for peer: int in _joining.keys().duplicate():
+		if now >= int(_joining[peer].deadline):
+			print("[realm_transition] scoped receiver readiness timed out for peer %d; ending its session" % peer)
+			peer_disconnected(peer)
+			session().call("kick", peer)
 
 @rpc("authority", "call_remote", "reliable", 0)
 func _origin_install(origin: String, row: Dictionary) -> void:
@@ -634,7 +716,9 @@ func _process(_delta: float) -> void:
 	_check_local_drain()
 	if not host():
 		_flush_installed()
+		_poll_joined_receiver()
 		return
+	_expire_joined_receivers(Time.get_ticks_msec())
 	for origin: String in origins.collect_dead():
 		_policy_revision += 1
 		_origin_retired.rpc(origin)

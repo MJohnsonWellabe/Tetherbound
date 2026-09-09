@@ -99,6 +99,12 @@ func test_automatic_public_aggregation_respects_departure_owner_and_receiver() -
 
 class SessionStub extends Node:
 	var peer := 1
+	var kicked: Array[int] = []
+	func kick(id: int) -> bool:
+		kicked.append(id)
+		return true
+	func realm_of(_peer: int) -> String:
+		return "water"
 	func is_active() -> bool:
 		return true
 	func is_host() -> bool:
@@ -112,6 +118,69 @@ func _make(peer: int = 1) -> Node:
 	var transition := TRANSITION.new()
 	parent.add_child(transition)
 	return transition
+
+func test_joined_receiver_ready_requires_live_permit_phase_and_realm() -> void:
+	var transition := _make()
+	transition.origins.create("origin", "water", 20, [])
+	transition.origins.begin_receiver(40, "permit", 1)
+	transition._joining[40] = {"permit": "permit", "phase": "policy"}
+	assert_false(transition._accept_joined_receiver(40, "permit", "water"), "policy receipt is not world readiness")
+	transition._joining[40].phase = "receiver"
+	assert_false(transition._accept_joined_receiver(40, "old", "water"))
+	assert_false(transition._accept_joined_receiver(40, "permit", "meadows"))
+	assert_false(transition.origins.allowed("origin", 40))
+	assert_true(transition._accept_joined_receiver(40, "permit", "water"))
+	assert_true(transition.origins.allowed("origin", 40))
+	assert_true(transition._joining.is_empty())
+	assert_false(transition._accept_joined_receiver(40, "permit", "water"), "duplicate ready has no side effects")
+	transition.get_parent().free()
+
+func test_policy_refresh_keeps_receiver_generation_and_original_deadline() -> void:
+	var transition := _make()
+	transition.origins.create("origin", "water", 20, [])
+	var first: Dictionary = transition._prepare_joined_policy(40, 100)
+	var deadline: int = transition._joining[40].deadline
+	transition._prepare_joined_policy(50, 110)
+	var revision: int = transition._policy_revision
+	var refreshed: Dictionary = transition._prepare_joined_policy(40, 120)
+	assert_true(first.fresh)
+	assert_false(refreshed.fresh)
+	assert_eq(refreshed.permit, first.permit)
+	assert_eq(transition._joining[40].deadline, deadline)
+	assert_eq(transition._policy_revision, revision, "snapshot refresh does not churn policy generations")
+	assert_eq(transition._joining[40].revision, revision)
+	transition.get_parent().free()
+
+func test_policy_ack_binds_exact_refreshed_revision_and_unlocks_only_once() -> void:
+	var transition := _make()
+	var first: Dictionary = transition._prepare_joined_policy(40, 100)
+	var old_revision: int = transition._joining[40].revision
+	var deadline: int = transition._joining[40].deadline
+	transition._policy_revision += 1
+	transition._prepare_joined_policy(40, 200)
+	assert_false(transition._accept_joined_policy(40, str(first.permit), old_revision), "old applied ACK cannot unlock refreshed snapshot")
+	assert_eq(transition._joining[40].phase, "policy")
+	assert_eq(transition._joining[40].permit, first.permit)
+	assert_eq(transition._joining[40].deadline, deadline)
+	assert_true(transition._accept_joined_policy(40, str(first.permit), transition._policy_revision))
+	assert_eq(transition._joining[40].phase, "receiver")
+	assert_false(transition._accept_joined_policy(40, str(first.permit), transition._policy_revision), "duplicate exact ACK cannot unlock twice")
+	transition.get_parent().free()
+
+func test_joined_receiver_timeout_ends_existing_session_path_and_cleans_pending_state() -> void:
+	var transition := _make()
+	transition.origins.create("origin", "water", 20, [])
+	transition.origins.begin_receiver(40, "permit", 1)
+	transition._joining[40] = {"permit": "permit", "phase": "receiver", "deadline": 100}
+	transition._expire_joined_receivers(99)
+	assert_true(transition.get_parent().kicked.is_empty())
+	transition._expire_joined_receivers(100)
+	assert_eq(transition.get_parent().kicked, [40])
+	assert_true(transition._joining.is_empty() and transition.origins.pending_receivers.is_empty())
+	assert_false(transition.origins.allowed("origin", 40), "failed readiness never opens invisible receiver")
+	transition._expire_joined_receivers(101)
+	assert_eq(transition.get_parent().kicked.size(), 1, "timeout cleanup is idempotent")
+	transition.get_parent().free()
 
 func _transaction(phase: String) -> Dictionary:
 	return {"mover": 20, "from": "meadows", "to": "water", "phase": phase}
