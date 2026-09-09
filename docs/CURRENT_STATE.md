@@ -32,14 +32,27 @@ camp recovery left hosted combat active, producing 200 accepted misses roughly
 revivable players, preserve other participants, and handle late admission and
 observer snapshots. Native lifecycle coverage passed 37 checks; the earlier
 two-process expiry regression passed 28 checks. The named world boot passed with
-only its known material-null error. Exact-head CI and landing remain pending;
+only its known material-null error. Native-error clearance and landing remain pending;
 this is no Varga victory, earned campaign completion, or Beta acceptance. Details:
 `VARGA-FOCUSED-DIAGNOSIS.md` and `VARGA-FINALIZED-DEATH-NET.md` in the same reports
 directory. PR #94 carries this repair. Its first full CI at `f823de9a5` failed
 only the new telemetry output-open assertion because the workflow omitted its
 output-path environment variable. The correction at `e5056c65f` passed the
-local 15-check smoke and is under new exact-head CI; the failed run remains
-recorded. The dated prior status below remains
+local 15-check smoke. New exact-head CI `34340315960` completed all intended
+jobs successfully on attempt 1 (3,076 unit tests and 38 network smokes), but
+raw-log review found a new distinct unauthorized-despawn error during Water
+realm migration. PR94 remains held pending mechanism investigation; no clean
+native-error verdict or landing is claimed. See `CI-PR94-e5056c65f.md` and
+`REALM-DESPAWN-CI-FINDING.md`. The failed earlier run remains recorded.
+
+The owner's dedicated visual lane is investigating and repairing Veilfall's
+waterfall whiteout. A matched visibility-only diagnostic attributes the pale
+wash to the local unshaded curtain; its material repair is unmerged and awaiting
+fresh rendered evidence and blind review. Aim cancellation integration likewise
+remains unverified in the full catch loop: the single real-manager fixture's
+throw press produced no windup, and the run stopped before cancellation/capture.
+The tiny 19-check cancellation and 8-check HUD proofs retain their narrower scope.
+The dated prior status below remains
 historical context.
 
 **Current audit-resume status after PR #91 merge, 2026-09-09:** the owner resumed

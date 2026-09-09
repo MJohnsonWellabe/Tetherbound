@@ -10,7 +10,9 @@ The published Windows executable's headless packaged-ground check also passed;
 see `WINDOWS-RELEASE-4830-PROOF.md` for scope and exit-code capture limitation.
 PR94's finalized Stormwood death repair has 37 native lifecycle checks and a
 28-check two-process expiry proof; its failed first CI output-path setup is
-corrected at `e5056c65f`, with a new run pending. Neither this fixture nor the
+corrected at `e5056c65f`. Its new CI passed all intended jobs, but raw review found
+a distinct unauthorized-despawn error in Water realm migration; landing is held
+for mechanism investigation. Neither this fixture nor the
 release work completes a chapter or stage. The earned fresh path remains paused;
 new cancellation proofs do not yet establish campaign-driver acceptance.
 
