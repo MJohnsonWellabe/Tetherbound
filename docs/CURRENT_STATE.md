@@ -6,6 +6,22 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
+**Latest delta,15:49 UTC:** PR97 landed as main
+`c3a7eac5a44ad36751249eeda97eb771fb3099d0`; reviewed head3104aa9ce is an ancestor
+and the landed tree is identical. CI34369962476 passed all26 executed jobs with
+every full raw log reviewed,3,129 tests/487,903 assertions and no rescued first
+invocation. Game108 and native81/77/82 establish the documented Phase1 lifecycle
+scope; broader suites retain known baseline native diagnostics. Main CI34372508608
+and Release34372508549 are running. Held PR94 now has a clean integration preflight
+against the protocol and will receive its own new exact-head CI.
+
+Torrentoad's separate motion candidate passed final5 tests/28 assertions and an
+eight-frame corrected capture with clean logs. Fresh Wave11 review supports the
+narrow pose contrast improvement without a new unique visible defect; commercial
+creature quality remains No because shared contact/surface/face defects remain.
+The candidate is committed locally, not yet shipped. Cloudreach's Windscar Beacon
+is a distinct active structure correction; no new world capture has passed yet.
+
 **Latest delta,14:54 UTC:** Stormwood's shadow-contract fix landed in PR98 as main
 `77745ef03421a3adceb6282d3e5abb71350e1197`, with reviewed-head ancestry and identical
 tree verified. Exact-head CI34364284283 passed26 executed jobs; all full raw logs
