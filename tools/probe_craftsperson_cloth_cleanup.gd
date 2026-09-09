@@ -1,7 +1,7 @@
 extends SceneTree
 
-## Fixed same-camera proof of the installed source beside the production
-## craftsperson config's paired albedo/emission garment cleanup.
+## Fixed same-camera proof of the self-lit installed source beside the production
+## craftsperson's retained garment albedo with the exporter-artifact emission off.
 
 const CHARACTER_MODEL := preload("res://scripts/characters/character_model.gd")
 const EXPECTED := "res://assets/characters/craftsperson/craftsperson_cloth_clean.png"
@@ -25,21 +25,17 @@ func _run() -> void:
 	var production: Dictionary = CHARACTER_MODEL.config_for("craftsperson").duplicate(true)
 	var baseline := production.duplicate(true)
 	baseline.erase("body_albedo_override")
-	baseline.erase("body_emission_override")
-	var source := _build_character(baseline, Vector3(-1.35, 0.0, 0.0), "installed source")
-	var cleaned := _build_character(production, Vector3(1.35, 0.0, 0.0), "garment cleanup")
+	baseline.erase("body_emission_enabled")
+	var source := _build_character(baseline, Vector3(-1.35, 0.0, 0.0), "self-lit source")
+	var cleaned := _build_character(production, Vector3(1.35, 0.0, 0.0), "production PBR")
 	_check(source != null and cleaned != null, "both body materials resolve")
 	if source != null and cleaned != null:
 		_check(source != cleaned, "override has a separate cached body material")
 		_check(cleaned.albedo_texture != null and cleaned.albedo_texture.resource_path == EXPECTED,
 			"production albedo samples the cleanup texture")
-		_check(cleaned.emission_texture != null and cleaned.emission_texture.resource_path == EXPECTED,
-			"production emission samples the cleanup texture")
 		_check(source.albedo_texture != cleaned.albedo_texture, "source and cleanup albedo are isolated")
-		_check(source.emission_texture != cleaned.emission_texture, "source and cleanup emission are isolated")
-		_check(source.emission_enabled == cleaned.emission_enabled, "emission state is preserved")
-		_check(is_equal_approx(source.emission_energy_multiplier, cleaned.emission_energy_multiplier),
-			"emission energy is preserved")
+		_check(source.emission_enabled, "installed source carries full-body emission")
+		_check(not cleaned.emission_enabled, "production body disables full-body emission")
 		_check(is_equal_approx(source.roughness, cleaned.roughness), "roughness is preserved")
 		_check(is_equal_approx(source.metallic, cleaned.metallic), "metallic is preserved")
 	_check(FileAccess.get_sha256(ProjectSettings.globalize_path(SOURCE_PATH)) == SOURCE_SHA256,

@@ -1,6 +1,8 @@
 # Craftsperson garment value cleanup — 2026-09-09
 
-Status: one production candidate prepared and runtime-bound; independent image review pending.
+Status: the texture-only candidate was held after independent review; one distinct,
+pipeline-backed emission correction is runtime-bound and awaiting independent image
+review.
 
 ## Finding and scope
 
@@ -36,3 +38,55 @@ The exact-path policy check reports `PASS: 1 runtime 3D texture import sidecar(s
 The existing false-colour image and ten successful engine checks establish garment attribution only. Its wrapper failed after launch due a malformed sleep parameter, so it has no valid resource receipt and was not rerun. The later production fixture supplies the clean runtime binding proof. Independent review in `VISUAL-WAVE4-IMAGE-REVIEW-0909.md` found neither side meaningfully stronger at displayed size. Both provisionally fit the character reference bars, but the candidate adds no demonstrated player-visible improvement; root holds it from shipping. Differing cast shadows also limit fine lighting attribution. No near-identical second garment tuning is authorized.
 
 The editor import itself exited after 26 seconds with Windows access violation `-1073741819`, despite completing the target texture import. Its stdout also detected the unrelated WoodTrim normal/roughness mapping, and the filesystem scan rewrote `project.godot`, that one protected sidecar, three previously clean Bark sidecars, and generated 154 untracked UID files. Root restored those exact files and removed the generated UIDs. All 287 pre-existing dirty sidecar hashes match their byte backup; the one intentional new craftsperson sidecar remains. This is not recorded as a clean import process.
+
+## Distinct correction: reject exporter-artifact full-body emission
+
+Wave 4's review held the texture-only cleanup because it did not make a meaningful
+displayed-size improvement. A separate source audit then found that the installed
+craftsperson GLB uses embedded image 0 for both `baseColorTexture` and
+`emissiveTexture`, with `emissiveFactor [1, 1, 1]`. This is the exact signature that
+`tools/art_pipeline/strip_character_emissive.py` classifies as a Meshy exporter
+artifact. Commit `5262e025b` stripped that signature from the original six humanoids;
+the later 22-body cast installation in `a96c0874f` added the craftsperson afterward.
+A read-only current-tree dry run reports that 25 of 31 rigs still carry the signature.
+That count establishes provenance only: this candidate changes the craftsperson body
+alone and does not establish a cast-wide policy.
+
+The GLB remains byte-identical at SHA-256
+`0BAB2DF02CD1DF0A6A504430E1806F9EB2469DF0DDC4707C2545854765E5F73D`.
+`character_model.gd` now accepts an optional body-only `body_emission_enabled` flag,
+includes its tri-state value in the duplicated-material cache key, and preserves the
+imported source behavior when the field is absent. The craftsperson config alone sets
+it to `false` while retaining `craftsperson_cloth_clean.png` as albedo. The held
+derivative, height, rig, clips, source texture, roughness `1.0`, and metallic `0.0`
+are unchanged. The imported emission texture remains referenced internally, but the
+production material disables the emission channel.
+
+The focused production-node contract test ran in Godot 4.7 and passed `2 tests / 11
+assertions / 0 failed`. It proves the craftsperson's held derivative and disabled
+emission, the unchanged GLB hash, source craft emission, and absent-key preservation
+on another generated-cast control. Its raw log contains no `ERROR`, `SCRIPT ERROR`,
+or `WARNING` lines.
+
+- focused run: `2026-09-09T14:33:43.656Z` to `14:33:45.804Z`, exit `0`
+- focused raw log: `.artifacts/craftsperson-emission-test-0909/raw.log`, SHA-256 `4943CAEE78256B232EA364D456FF9753255966A969EAF159FC4B914EE22AC516`
+- focused test: `tests/test_craftsperson_material_contract.gd`, SHA-256 `5B514B779FD5FDB5D8A5C43D040C2989FAED4C24E49964321C6FEC7463C26BA6`
+
+The single fixed-camera Compatibility capture passed all `9/9` material and source
+checks. The left body retains the installed self-lit atlas; the right production body
+responds to the same scene light and shows substantially stronger light-to-shadow
+separation across the face, beard, gloves, apron and boots. This is an observation of
+the fixture, not an independent acceptance result.
+
+- pair: `shots/character-craftsperson-emission/craftsperson-source-vs-pbr-1280x800.png`, SHA-256 `111A03BEA42447539ADD096145C45B19FAD8624325766A5D894C1EDC3B877982`
+- neutral review copy (only the empty-backdrop header band cleared; every pixel outside that band is bit-identical): `shots/character-craftsperson-emission/neutral-paired-1280x800.png`, SHA-256 `3A721A19CACEF2E601E0CA1E5EB5583AA69C87A03898727962A8814F2F354DC2`
+- run: `2026-09-09T14:34:49.029Z` to `14:34:56.017Z`, PID `15600`, exit `0`
+- guard: not triggered; 8 samples; peak system commit `57.81%`; peak process count `255`
+- capture raw log: `.artifacts/craftsperson-emission-capture-0909/raw.log`, SHA-256 `3404AA5A2E8A84F4858B48042DF7F81290332BE134113BF82E422F76A228F9B6`
+- receipt: `.artifacts/craftsperson-emission-capture-0909/receipt.json`, SHA-256 `740592C8BCC408FB9FD9D3682E061A20C8DB4F63CB9F9DB84024C3F718661752`
+
+The pair does not prove true cloth/leather/metal regional roughness: the craftsperson
+is still a single fused surface with one imported material. It proves only that the
+production body no longer emits its complete colour atlas and can respond to authored
+scene lighting. No second emission or finish round is authorized before independent
+review.

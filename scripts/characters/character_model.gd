@@ -491,9 +491,14 @@ func _shared_variant_material(source: Material, name: String, colour: Color,
 	# Accessories use `body == false` and retain their source textures.
 	var body_albedo_path := str(_cfg.get("body_albedo_override", "")) if body else ""
 	var body_emission_path := str(_cfg.get("body_emission_override", "")) if body else ""
-	var key := "%s|%s|%s|%s|%s|%s|%s" % [str(_cfg.get("model", "")), name, colour.to_html(),
+	# A body may explicitly reject an imported full-surface emission channel.
+	# Absent means preserve the source material exactly, so this is not a cast-wide
+	# finish policy. Include the tri-state in the cache identity: an opted-out body
+	# must never receive a shared material built for the same model with emission on.
+	var body_emission_enabled: Variant = _cfg.get("body_emission_enabled", null) if body else null
+	var key := "%s|%s|%s|%s|%s|%s|%s|%s" % [str(_cfg.get("model", "")), name, colour.to_html(),
 		("" if finish.is_empty() else "%s/%s" % [finish.get("metallic", ""), finish.get("roughness", "")]),
-		str(body), body_albedo_path, body_emission_path]
+		str(body), body_albedo_path, body_emission_path, str(body_emission_enabled)]
 	if _variant_materials.has(key):
 		return _variant_materials[key]
 	var material: BaseMaterial3D = (source.duplicate() as BaseMaterial3D) \
@@ -510,6 +515,8 @@ func _shared_variant_material(source: Material, name: String, colour: Color,
 			material.emission_texture = body_emission
 		else:
 			push_warning("Character body emission override did not load: %s" % body_emission_path)
+	if body_emission_enabled is bool:
+		material.emission_enabled = bool(body_emission_enabled)
 	material.albedo_color = material.albedo_color * colour
 	# A default StandardMaterial3D is roughness 1.0 / metallic 0.0 -- perfectly
 	# matte. On a flat-faced primitive under one directional key that renders as
