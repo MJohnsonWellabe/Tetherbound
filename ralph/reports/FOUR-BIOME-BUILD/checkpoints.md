@@ -1018,3 +1018,29 @@ No speculative fix or repeated fresh run was performed. Next checkpoint23:40UTC.
   biome sheets plus the combined sheet, obtain a fresh code-blind rubric verdict, and
   triage accepted local/systemic findings while the independent earned-content lane
   continues toward the genuine opening-to-Tidewake ending.
+
+## 2026-09-09 02:01:20 UTC — resume checkpoint 1
+
+- Player-visible capability added: none merged during this two-hour interval.
+- Paths newly reachable: none merged during this two-hour interval.
+- Systems newly working in real play: none merged during this two-hour interval.
+- Content added: none merged during this two-hour interval.
+- Merged SHA: `65267c4bd935d80b2e073799caeffc81b913952c`; a read-only
+  `origin/main` check at 02:01:20 UTC confirmed that main is unchanged. The interval's
+  merged, runtime-evidenced delta is zero.
+- Evidence in progress is deliberately excluded from merged credit. All 116 baseline
+  catalogue frames have a completed blind judgment and triage at `732c889ad`; 116
+  corrected-camera frames and audit sheets exist through `e93a9f341`, with fresh
+  judgment pending. The pylon material change `2a5f291f3` has focused native tests and
+  post-material Cloudreach/Stormwood captures in progress, but no blind verdict or CI
+  coverage. CI run `34296093682` is first-attempt clean for exact head `812ab87eafd87f2bd54074def488730f27dd56a5`
+  only. None of these unmerged heads establishes a landing.
+- Blockers: no resumed work has landed; the final post-material visual round and fresh
+  blind verdict are incomplete; later integration heads still need exact-head CI and
+  landing. Bounded aim-guard and phase proofs failed, and no fourth fresh campaign was
+  run. The latest actual campaign reached a catch plus 102.09 seconds of standing and
+  was stopped before completion. Current Water-return and Stormwood-arrival work is
+  uncommitted and unproven.
+- Next highest-value task: finish the post-material recapture and fresh blind visual
+  verification, obtain green CI for the resulting exact integration head, land through
+  the PR, then continue the standing Beta goal from the remaining earned-play frontier.
