@@ -217,6 +217,12 @@ func _wanted_realms() -> Dictionary:
 		if realm.is_empty() or realm == here:
 			continue
 		out[realm] = true
+	var transition := session.get_node_or_null("RealmTransition")
+	if transition != null:
+		for tx: Dictionary in (transition.get("transactions") as Dictionary).values():
+			for realm: String in [str(tx.from), str(tx.to)]:
+				if not realm.is_empty() and realm != here:
+					out[realm] = true
 	return out
 
 

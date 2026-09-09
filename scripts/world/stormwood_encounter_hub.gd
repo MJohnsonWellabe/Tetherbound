@@ -289,3 +289,11 @@ func hosted_transport() -> bool:
 
 func local_encounter_peer_id() -> int:
 	return session.local_peer_id()
+
+
+## Called by the host director after request fences, before response fences.
+## A done round still owns a live trainer roster; retire through fight.leave.
+func withdraw_peer_for_realm_transition(peer: int) -> void:
+	for fight: Node in fights.values().duplicate():
+		if is_instance_valid(fight) and fight.participants.has(peer):
+			fight.leave(peer)

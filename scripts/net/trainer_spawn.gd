@@ -36,6 +36,7 @@ extends Node
 
 const REMOTE_TRAINER := preload("res://scenes/player/remote_trainer.tscn")
 const PEER_REGISTRY := preload("res://scripts/net/peer_registry.gd")
+const REPLICATION_SCOPE := preload("res://scripts/net/realm_replication_scope.gd")
 const HOST_PEER_ID := PEER_REGISTRY.HOST_PEER_ID
 
 ## Where `Session` is mounted: a `Node` child of the `Game` autoload
@@ -75,6 +76,7 @@ func _ready() -> void:
 	_spawner.spawn_function = _spawn_trainer
 
 	_realm = _resolve_realm()
+	REPLICATION_SCOPE.attach(_spawner, _realm)
 	_session = get_node_or_null(SESSION_PATH)
 	if _session == null:
 		return
@@ -269,6 +271,9 @@ func _spawn_for(peer_id: int) -> void:
 		# receiving it may have no such world of its own to ask.
 		"realm": _realm,
 	}
+	var transition := REPLICATION_SCOPE.coordinator(self)
+	if transition != null:
+		data["transition_origin"] = str(transition.call("stamp_spawn", peer_id, _realm))
 	print("[trainers] spawning a body for peer %d at (%.1f, %.1f)" % [peer_id, at.x, at.z])
 	var node: Node = _spawner.spawn(data)
 	if node != null:
@@ -314,7 +319,10 @@ func _spawn_trainer(data: Variant) -> Node:
 		# they are large random numbers and a swapped pair is otherwise
 		# indistinguishable from a working one.
 		node.set_multiplayer_authority(peer_id)
-	_scope_to_realm(node, realm)
+	_scope_to_realm(node, realm, str(d.get("transition_origin", "")))
+	var transition := REPLICATION_SCOPE.coordinator(self)
+	if transition != null:
+		transition.call("track_origin_body", str(d.get("transition_origin", "")), node)
 	print("[trainers] built %s for peer %d, authority %d (this peer is %d)"
 		% [node.name, peer_id, node.get_multiplayer_authority(), multiplayer.get_unique_id()])
 	return node
@@ -385,19 +393,22 @@ func _on_session_ended(_reason: Variant = null) -> void:
 ## The filter reads the session EVERY evaluation. It must: the answer changes
 ## the moment somebody walks through a gate, and a body that cached it at
 ## spawn would keep replicating into a realm its owner has left.
-func _scope_to_realm(node: Node, realm: String) -> void:
+func _scope_to_realm(node: Node, realm: String, origin: String = "") -> void:
 	if realm.is_empty():
 		return
 	var sync := node.get_node_or_null(^"Sync") as MultiplayerSynchronizer
 	if sync == null:
 		return
-	sync.add_visibility_filter(func(observer: int) -> bool:
+	var baseline := func(observer: int) -> bool:
 		var session := node.get_node_or_null(SESSION_PATH)
 		if session == null or not session.has_method("realm_of"):
 			return true
 		var active := bool(session.call("is_active"))
 		var where := str(session.call("realm_of", observer)) if active else ""
-		return observer_may_receive(observer, where, realm, active))
+		return observer_may_receive(observer, where, realm, active)
+	sync.add_visibility_filter(baseline)
+	REPLICATION_SCOPE.wire_body(node, sync, realm,
+		node.get_multiplayer_authority(), baseline, origin)
 
 
 ## Realm scoping is a presentation boundary for ordinary observers, but the
