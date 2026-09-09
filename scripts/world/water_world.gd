@@ -19,6 +19,7 @@ const CAMPS := preload("res://scripts/world/water_camps.gd")
 const REALM_GATE := preload("res://scripts/world/realm_gate.gd")
 const FIRST_SHORE_GATE_SITE := preload("res://scripts/world/water_first_shore_gate_site.gd")
 const GULL_REST_SIGNAL_SITE := preload("res://scripts/world/water_gull_rest_signal_site.gd")
+const WATER_VEGETATION := preload("res://scripts/world/water_vegetation.gd")
 
 @export var simulation_only: bool = false
 @export var shell_realm: String = "water"
@@ -73,6 +74,10 @@ func _ready() -> void:
 		return
 	if not simulation_only:
 		_build_materials()
+		var vegetation := WATER_VEGETATION.new()
+		vegetation.name = "WaterVegetation"
+		add_child(vegetation)
+		vegetation.build(config, field)
 		var surface := SURFACE.new()
 		surface.name = "WaterSurface"
 		add_child(surface)
