@@ -37,6 +37,10 @@ var _current: String = ""
 var _hold: float = 0.0
 ## Set once a creature has fainted, so nothing plays over its death.
 var _finished := false
+## The attack clip currently being stretched across a combat telegraph. Empty
+## for rigs whose data does not declare an authored contact phase.
+var _telegraph_attack_clip := ""
+var _telegraph_contact_position := 0.0
 
 
 func _init(animation_player: AnimationPlayer, clips: Dictionary) -> void:
@@ -72,8 +76,46 @@ func play_once(role: String) -> void:
 	var clip := _resolve(role)
 	if clip == "":
 		return
+	# Combat resolves the strike through the body's long-standing play_attack()
+	# call. If this exact clip already supplied the wind-up, continue from its
+	# authored contact pose instead of restarting at frame zero after damage.
+	if role == ATTACK and clip == _telegraph_attack_clip and clip == _current:
+		_player.seek(_telegraph_contact_position, true)
+		_player.speed_scale = 1.0
+		_hold = maxf(0.0, _player.get_animation(clip).length - _telegraph_contact_position)
+		_telegraph_attack_clip = ""
+		_telegraph_contact_position = 0.0
+		return
+	_clear_telegraph_attack()
 	_hold = _player.get_animation(clip).length
 	_play(role, false)
+
+
+## Start an attack while its gameplay telegraph begins, but only for an
+## animation map that declares where THIS clip's authored contact occurs.
+## Unannotated rigs retain the old impact-time playback rather than borrowing a
+## timing guess from another skeleton family.
+func begin_attack_telegraph(seconds_to_impact: float) -> bool:
+	if _player == null or _finished or seconds_to_impact <= 0.0:
+		return false
+	var contact_phase := float(_clips.get("attack_contact_phase", 0.0))
+	if contact_phase <= 0.0 or contact_phase >= 1.0:
+		return false
+	var clip := _resolve(ATTACK)
+	if clip == "":
+		return false
+	var length := float(_player.get_animation(clip).length)
+	if length <= 0.0:
+		return false
+	_telegraph_attack_clip = clip
+	_telegraph_contact_position = length * contact_phase
+	var playback_speed := _telegraph_contact_position / seconds_to_impact
+	_hold = length / playback_speed
+	# A previous attack can still be `_current` during a very fast combat state
+	# change. A new telegraph is a new committed wind-up and starts at frame zero.
+	_current = ""
+	_play(ATTACK, false, playback_speed)
+	return true
 
 
 ## A faint is final: it plays once and nothing plays after it, so a creature
@@ -89,6 +131,7 @@ func revive() -> void:
 	_finished = false
 	_hold = 0.0
 	_current = ""
+	_clear_telegraph_attack()
 
 
 ## W12-COMPANION-0904. Play `role` once IF this rig has a clip for it (its own
@@ -119,9 +162,10 @@ func play_if_exists(role: String) -> bool:
 ## still for a pose that finished being true.
 func cancel_hold() -> void:
 	_hold = 0.0
+	_clear_telegraph_attack()
 
 
-func _play(role: String, looping: bool) -> void:
+func _play(role: String, looping: bool, playback_speed: float = 1.0) -> void:
 	var clip := _resolve(role)
 	if clip == "" or clip == _current:
 		return
@@ -131,7 +175,18 @@ func _play(role: String, looping: bool) -> void:
 		animation.loop_mode = Animation.LOOP_LINEAR if looping else Animation.LOOP_NONE
 	# Cross-faded. A creature that snaps between idle and run reads as broken
 	# even when the states are right.
+	# Use one speed mechanism. AnimationPlayer's custom play speed and
+	# `speed_scale` multiply; mixing them would leave the telegraph rate active
+	# after setting only `speed_scale` back to one at impact.
+	_player.speed_scale = playback_speed
 	_player.play(clip, 0.15)
+
+
+func _clear_telegraph_attack() -> void:
+	_telegraph_attack_clip = ""
+	_telegraph_contact_position = 0.0
+	if _player != null:
+		_player.speed_scale = 1.0
 
 
 ## Find a clip for a role, falling back rather than failing.
