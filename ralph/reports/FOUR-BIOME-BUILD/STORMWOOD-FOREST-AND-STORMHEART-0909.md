@@ -2,8 +2,9 @@
 
 **HELD. No visual acceptance or traversal pass.** The corrected production run
 shows ground cover at Rodline Post and Lantern Hollow. The parent inspected both
-frames and still found raw cylindrical/polygon platforms in Lantern Hollow and
-small house/NPC proportions. A clean render and a bound node do not establish
+frames and still found raw cylindrical/polygon forms in Lantern Hollow and
+small house/NPC proportions. Subsequent source attribution identifies those forms
+as the four-relic shrine, not gameplay decks (details below). A clean render and a bound node do not establish
 whole-scene quality. A fresh independent judge was unavailable at the thread limit;
 the author has not self-accepted these frames. Stormheart needs its own clear
 production approach render and independent assessment.
@@ -28,7 +29,8 @@ production approach render and independent assessment.
 - `tools/_capture_stormwood_groundcover.gd`: existing production catalogue capture
   with terrain/camera binding witnesses; no replacement world or camera.
 - `tools/_capture_stormwood_stormheart_context.gd`: source-only supplemental
-  Glass Field landmark probe; prepared after capture2 and not yet parsed or run.
+  Glass Field landmark probe prepared after capture2; subsequently parsed/run as
+  recorded in the follow-up below.
 - Official bake: manifest plus 121 region binaries. The complete owned output list
   is [STORMWOOD-FOREST-AND-STORMHEART-0909-BAKE-FILES.txt](STORMWOOD-FOREST-AND-STORMHEART-0909-BAKE-FILES.txt).
 
@@ -84,6 +86,24 @@ combat clearance, ordinary ascent or Water exit traversal is credited by this ru
 | `scripts/world/stormheart_tree.gd` | `E97A3A7D4C20A74995617888232F5275B58AAB5FEDB85D0C837B6270472FD9BC` |
 | `tools/_capture_stormwood_groundcover.gd` | `75384D7F5DED6A4E20D720EF01080D64D910BDA332E3746FA89537A3255431E3` |
 
+## Follow-up source attribution: Lantern Hollow foreground
+
+`scripts/world/stormwood_ending.gd::_build_spark_shrine` mounts the ordinary
+`SparkOfStormwoodShrine` at XZ `(-450, 3960)`. The shared
+`scripts/world/realm_heart_shrine.gd::_build_visual` produces its untextured
+10-sided StoneBase, octagonal HeartSocket and four rectangular standing stones;
+`_build_relic_slots` adds the other three relic sockets. Those shapes and offsets
+match the four gray forms in the retained Lantern Hollow image. They are not
+Stormheart arena decks or new grass/scatter geometry.
+
+The Settings catalogue and route potion use that same `(-450, 3960)` coordinate.
+The canonical capture therefore resolves the trainer onto the central shrine
+collision. This is the retained canonical audit view, not an ordinary walking
+approach to the shrine. No image has been altered or discarded. A later bounded
+Stormwood shrine presentation can inherit the shared state/prompt/collision contract
+and replace only the visible masonry. No shrine source edits have been made; the
+current next action remains the useful Stormheart approach capture.
+
 The tree fixture's subsequent read-only hash is
 `EA768BE953816F2F2557A367D9242B557359A4F8AC032E80D6738A0EF5B314CC`.
 It was not included in the original capture2 source snapshot.
@@ -91,16 +111,68 @@ It was not included in the original capture2 source snapshot.
 Next: source-only preparation of a supplemental Stormheart approach view from the
 Glassfield catalogue destination using ordinary player/look input and the real
 camera. Run only after the next native lease; preserve the canonical frame and
-disclose supplemental motion. The remaining platform/building presentation defects
+disclose supplemental motion. The remaining shrine/building presentation defects
 and independent visual judgment remain open.
 
-Prepared next render arguments (not executed):
+Supplemental render arguments (subsequently executed; follow-up below):
 
 ```text
 --path C:/Projects/Tetherbound --rendering-driver opengl3 --resolution 1280x800 --position -10000,-10000 --script tools/_capture_stormwood_stormheart_context.gd -- --biome=stormwood --subset=glass_field --times=day --output=res://shots/catalogue/stormwood/stormheart-context-first-0909
 ```
 
-The next leased phase must first parse the new probe under the 120s guard, then
-capture under the 180s guard in a fresh output directory. The probe requires the
+The leased phase parsed the new probe under the 120s guard, then captured under
+the 180s guard in a fresh output directory. The probe requires the
 unchanged Glass Field coordinate, retains its canonical frame, and fails on
-unreached ordinary look/walk targets. This source preparation is not run evidence.
+unreached ordinary look/walk targets.
+
+## Follow-up: first production Stormheart approach — HELD / obstructed
+
+Evidence root: `.artifacts/stormheart-context-0909/`. Parser phase ran
+23:46:03–23:46:07Z, exit 0. Production capture ran 23:46:17–23:47:37Z,
+exit 0, with three saved frames and no script/engine errors. The existing
+interpolation deprecation warning remains. Peak system commit 77.31%, peak process
+count 264; terminal Godot census zero. Native lease returned to Creature.
+
+The manifest reports three captured frames against one canonical planned row;
+its separately named two supplemental frames account for the difference. All
+three files are retained under
+`shots/catalogue/stormwood/stormheart-context-first-0909/`:
+
+- `stormwood__dynamo__11__the_glass_field__day.png`
+- `stormwood__stormheart__glass_field_look.png`
+- `stormwood__stormheart__glass_field_backstep_look.png`
+
+**The composition objective was not achieved.** The first look is inside a nearby
+Voltarach mesh. The ordinary backstep clears the camera from its mesh, but the
+creature still blocks the intended tree silhouette. This is retained crowding
+evidence, not a useful clear finale view, art acceptance or campaign traversal
+proof. No creature was moved, hidden, disabled or scaled by this probe.
+
+The actual ordinary `move_back` travelled 12.146m horizontally over 167 physics
+frames, ending at `(-316.498, 63.021, 5041.691)`. Ordinary look reached approximately
+20.323 degrees pitch. The actual production tree was present at
+`(-100, 112.059, 5470)` under `/root/Stormwood/StormheartTree`.
+
+Source attribution: `data/config/stormwood_encounters.json` names
+`glass_field_alpha`, Voltarach level 42, at XZ `(-310, 5050)`.
+`data/config/debug_teleport_spots.json` uses the identical Glass Field coordinate,
+as does the `deepwood_road` critical-route waypoint in
+`data/config/stormwood_world.json`. `_named_spawn` in the Stormwood encounter
+catalogue gives this fixed encounter zero placement scatter and resolves its Y
+from actual terrain. The retained runtime witness is `Named_glass_field_alpha`
+at `(-310.012, 65.308, 5049.915)`, body height 4.25m and radius 1.4875m.
+This is an authored site/route/teleport overlap; it does not justify global
+creature shrinking.
+
+Tested supplemental probe SHA-256:
+`A8F0C16F25BD2929105B57CD96CE101B75654341F71D90E3433C0E57EB2C76B0`.
+All four production/config source hashes match capture2 above. Inherited helper
+hashes are retained in `capture/source-hashes.json`; bake unchanged. The report
+and tested probe are frozen for the root checkpoint.
+
+Next work is a supported production route-side offset for this named encounter,
+preserving its count, identity, catchability, level and rewards. Actual terrain,
+mesh footprint plus ordinary wander, nearby vegetation and route/camera clearance
+must be checked before the next production capture. A lateral ordinary approach
+may then supplement the unchanged canonical view. Further tree geometry tuning
+waits for a useful unobstructed frame; shrine and building source remain unchanged.
