@@ -142,6 +142,13 @@ successful cycles rule out a bed-panel identity mismatch, but do not distinguish
 new physical obstruction from a navigation state or world-input condition. No helper
 change is justified before the next live receipt.
 
+With root-confirmed ownership, the content driver's exhausted-walk branch now emits
+one bounded read-only `CONTENT WALK FAILURE` receipt. It includes purpose and exact
+target/player positions, remaining distance, `can_walk`, navigator side/detour and
+confined-reset count, arbiter provider/winner, and current slide contacts. It changes
+no movement, assertion or budget. `test_meadows_earned_rest_segment.gd` passes
+6 tests / 46 assertions after the addition.
+
 The next run is prepared with a unique unused `wave8-memory-watched-fresh-profile`.
 It will start the normal Godot console command, identify the real child by verified
 parent PID, and run `tools/allocation_resume_memory_watch.ps1` against that real child.

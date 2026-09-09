@@ -1187,6 +1187,25 @@ func _walk_to(target: Vector3, purpose: String, close_enough: float = MOVE_EPSIL
 		return true
 	if not report_failure:
 		return false
+	var contacts: Array[Dictionary] = []
+	for index in _player.get_slide_collision_count():
+		var collision := _player.get_slide_collision(index)
+		var collider: Object = collision.get_collider()
+		contacts.append({"collider": str((collider as Node).get_path()) if collider is Node else str(collider),
+			"position": str(collision.get_position()), "normal": str(collision.get_normal())})
+	var provider: Object = _arbiter.call("winning_provider") if _arbiter != null \
+		and _arbiter.has_method("winning_provider") else null
+	print("CONTENT WALK FAILURE %s" % JSON.stringify({
+		"purpose": purpose, "target": str(target), "player": str(_player.global_position),
+		"remaining_m": Vector2(target.x - _player.global_position.x,
+			target.z - _player.global_position.z).length(),
+		"can_walk": _nav.can_walk(), "nav_side": _nav.get("_side"),
+		"nav_detour": str(_nav.get("_detour")), "nav_detour_left": _nav.get("_detour_left"),
+		"nav_confined_resets": _nav.call("confined_resets"),
+		"arbiter_provider": str((provider as Node).get_path()) if provider is Node else str(provider),
+		"arbiter_winner": _arbiter.call("winner") if _arbiter != null and _arbiter.has_method("winner") else {},
+		"slide_contacts": contacts,
+	}))
 	_fail("controller movement could not reach %s (stopped %.1fm short at %s)" % [
 		purpose,
 		Vector2(target.x - _player.global_position.x,
