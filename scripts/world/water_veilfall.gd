@@ -137,12 +137,26 @@ func _build_waterfall() -> void:
 	var mesh := MeshInstance3D.new()
 	var plane := PlaneMesh.new()
 	plane.size = Vector2(float(fall.width_m), float(fall.height_m))
-	var material := StandardMaterial3D.new()
-	material.albedo_color = Color(fall.colour)
-	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.albedo_color.a = 0.83
-	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	var material := ShaderMaterial.new()
+	material.shader = preload("res://shaders/waterfall_curtain.gdshader")
+	material.set_shader_parameter("water_colour", Color(fall.colour))
+	for key in ["opacity_min", "opacity_max", "flow_speed", "edge_feather", "ground_feather_m", "albedo_min", "albedo_max"]:
+		material.set_shader_parameter(key, float(fall[key]))
+	# Match the curtain's exact world X/Z, including its -2m depth offset.
+	# A line texture avoids renderer-dependent depth readback on Compatibility.
+	var heights := Image.create(64, 1, false, Image.FORMAT_RF)
+	for sample_index in 64:
+		var local_x := (float(sample_index) / 63.0 - 0.5) * float(fall.width_m)
+		var sample_at := exterior.to_global(Vector3(local_x, 0, -2))
+		var height := float(world.ground_height_at(sample_at.x, sample_at.z))
+		if not is_finite(height):
+			push_error("Veilfall curtain terrain sample is not finite at %s" % sample_at)
+			height = entrance.y
+		heights.set_pixel(sample_index, 0, Color(height, 0, 0))
+	material.set_shader_parameter("ground_heights", ImageTexture.create_from_image(heights))
+	material.set_shader_parameter("ground_span", Vector2(
+		exterior.to_global(Vector3(-float(fall.width_m) * 0.5, 0, -2)).x,
+		exterior.to_global(Vector3(float(fall.width_m) * 0.5, 0, -2)).x))
 	plane.material = material
 	mesh.mesh = plane
 	mesh.rotation.x = PI * 0.5

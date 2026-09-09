@@ -6,6 +6,17 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
+**Owner-requested stop and preservation, 2026-09-09 18:27 UTC:** development is
+stopped. Read `docs/HANDOFF_SESSION_STOP_2026-09-09.md` before resuming. The
+local checkpoint preserves unfinished work and a hash-verified backup of all306
+pending files; protected287 import sidecars remain unchanged and uncommitted.
+Remote main remains PR101a46. PR103 and PR104 remain open drafts; their exact-head
+CI runs now report success, but full raw-log/first-attempt audits remain unfinished.
+The committed reconnect report atfbacb5350 proves equipment persistence, not a
+playable replicated-world reconnect. Held waterfall and material experiments are
+preserved without acceptance. No new game gate is closed; older next-action prose
+does not authorize restarting the stopped goal.
+
 **Verified follow-up, 2026-09-09:** PR100's main8e CI34383202374 completed
 successfully on attempt1 at17:56:51 UTC:27 executed jobs/full raw logs,
 all38 network smokes first invocation, no new runtime diagnostic class.

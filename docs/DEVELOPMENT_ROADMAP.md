@@ -2,6 +2,14 @@
 
 **Status:** canonical living product-development roadmap.
 
+**Owner-requested stop, 2026-09-09:** development is paused for a new owner
+request. `docs/HANDOFF_SESSION_STOP_2026-09-09.md` records the local preservation
+checkpoint and outstanding work. Main is PR101a46; PR103/104 remain draft despite
+successful CI run metadata, pending full raw-log acceptance review. Reconnect
+persistence is proven only within the documented fixture limits; playable re-entry
+remains open. No stage is newly complete. Earlier next-action entries are historical
+intent, not authorization to resume this stopped run.
+
 **Latest runtime evidence, 2026-09-09 16:43 UTC:** the corrected synthetic Varga
 diagnostic directly observed final death ending manager/trainer activity and
 emptying authority participants without victory/reward. This closes the immediate

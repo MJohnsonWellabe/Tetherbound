@@ -1,7 +1,7 @@
 {
   "_comment": "Veilfall kitbash implementation. Exterior follows the authored hike to the waterfall. The compact cave interior uses a concealed same-realm staging area so terrain collision remains available for players outside while peers independently enter and reconnect inside. Coordinates and all distances are starting tuning, not visual acceptance.",
   "entrance_xz": [335.208, 3885.711],
-  "waterfall": {"_comment": "A broad curtain hides the gate; the island mountain remains the distant silhouette.", "width_m": 20.0, "height_m": 82.0, "depth_m": 1.2, "colour": "#b8e2df"},
+  "waterfall": {"_comment": "A broad lit, flowing curtain hides the gate; the island mountain remains the distant silhouette. Feathered edges and broken opacity preserve nearby silhouettes without an unshaded night overlay.", "width_m": 20.0, "height_m": 82.0, "depth_m": 1.2, "colour": "#b8e2df", "opacity_min": 0.28, "opacity_max": 0.70, "flow_speed": 0.32, "edge_feather": 0.08, "ground_feather_m": 2.0, "albedo_min": 0.40, "albedo_max": 0.68},
   "interior_origin": [1800.0, 40.0, 4140.0],
   "interact_radius_m": 4.2,
   "floor_thickness_m": 1.0,
