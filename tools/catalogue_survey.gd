@@ -6,8 +6,9 @@ extends SceneTree
 ## travel and pins the day/night clock; it is never campaign or progression
 ## evidence. It does not grant progress, creatures, items, health, or access.
 ## The production world, trainer, encounter population, and ordinary gameplay
-## HUD remain present. A separate camera copies the production camera FOV and
-## stays close behind the 1.80 m trainer so the trainer is a scale ruler.
+## HUD remain present. The production CameraRig/SpringArm3D follows the 1.80 m
+## trainer so authored obstruction handling and the player's settled floor are
+## part of the evidence rather than recreated by a second camera.
 ##
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x800 \
 ##     --script tools/catalogue_survey.gd -- \
@@ -25,14 +26,13 @@ const SCENES := {
 	"water": "res://scenes/world/water_archipelago.tscn",
 }
 const VALID_TIMES := ["day", "night"]
+const BUILT_FLOOR := preload("res://scripts/world/built_floor.gd")
 const BUILD_TIMEOUT_MSEC := 900000
 const BOOT_SETTLE_FRAMES := 24
 const ARRIVE_FRAMES := 20
 const POPULATE_FRAMES := 45
 const LIGHT_SETTLE_FRAMES := 12
 const POSE_FRAMES := 4
-const CAMERA_BACK := 5.2
-const CAMERA_UP := 2.5
 const TRAINER_CLEARANCE := 0.4
 
 var _biome_id := ""
@@ -41,6 +41,7 @@ var _subsets: Array[String] = []
 var _times: Array[String] = []
 var _world: Node3D
 var _player: CharacterBody3D
+var _rig: SpringArm3D
 var _camera: Camera3D
 var _look: Node
 var _weather: Node
@@ -264,29 +265,40 @@ func _mount_production_world() -> bool:
 
 func _prepare_capture_shell() -> bool:
 	_player = _world.get_node_or_null(^"Player") as CharacterBody3D
-	var production_camera := _world.get_node_or_null(^"CameraRig/Camera3D") as Camera3D
-	if _player == null or production_camera == null:
+	_rig = _world.get_node_or_null(^"CameraRig") as SpringArm3D
+	_camera = _world.get_node_or_null(^"CameraRig/Camera3D") as Camera3D
+	if _player == null or _rig == null or _camera == null:
 		_failures.append("production Player or CameraRig/Camera3D is missing")
 		return false
-	var rig := _world.get_node_or_null(^"CameraRig")
-	if rig != null:
-		rig.set_process(false)
-		rig.set_physics_process(false)
-	production_camera.current = false
-	_camera = Camera3D.new()
-	_camera.name = "CatalogueSurveyCamera"
-	_camera.fov = production_camera.fov
-	_camera.near = production_camera.near
-	_camera.far = production_camera.far
-	_world.add_child(_camera)
+	_rig.set_process(true)
+	_rig.set_physics_process(true)
 	_camera.make_current()
 	var terrain := _world.get_node_or_null(^"Terrain")
 	if terrain != null and terrain.has_method("set_camera"):
 		terrain.call("set_camera", _camera)
 	_look = _world.get_node_or_null(^"WorldLook")
 	_weather = _world.get_node_or_null(^"WorldWeather")
-	_manifest["production_camera"] = {"path": "CameraRig/Camera3D", "instance_id": production_camera.get_instance_id(), "fov": production_camera.fov}
-	_manifest["capture_camera"] = {"path": str(_world.get_path_to(_camera)), "instance_id": _camera.get_instance_id(), "fov": _camera.fov}
+	if _look == null or not _look.has_method("apply_time"):
+		_failures.append("production WorldLook/apply_time is missing; day/night labels would be unverified")
+		return false
+	var camera_metadata := {
+		"path": str(_world.get_path_to(_camera)),
+		"instance_id": _camera.get_instance_id(),
+		"fov": _camera.fov,
+		"near": _camera.near,
+		"far": _camera.far,
+	}
+	_manifest["production_camera"] = camera_metadata.duplicate(true)
+	_manifest["capture_camera"] = camera_metadata.duplicate(true)
+	_manifest["capture_camera"]["source"] = "production CameraRig/Camera3D"
+	_manifest["camera_rig"] = {
+		"path": str(_world.get_path_to(_rig)),
+		"instance_id": _rig.get_instance_id(),
+		"class": _rig.get_class(),
+		"spring_length": _rig.spring_length,
+		"margin": _rig.margin,
+		"has_shape": _rig.shape != null,
+	}
 	return true
 
 
@@ -302,26 +314,34 @@ func _capture_row(row: Dictionary) -> void:
 		return
 	for _frame in ARRIVE_FRAMES:
 		await physics_frame
-	var player_ground := float(_world.call("ground_height_at", at.x, at.y))
-	if is_nan(player_ground):
+	var terrain_ground := float(_world.call("ground_height_at", at.x, at.y))
+	if is_nan(terrain_ground):
 		_failures.append("%s: destination has no ground height" % str(row.frame_id))
 		_write_manifest()
 		return
-	_player.global_position = Vector3(at.x, player_ground + TRAINER_CLEARANCE, at.y)
+	var resolved_ground := resolve_capture_ground(_player, at.x, at.y, terrain_ground)
+	_player.global_position = Vector3(at.x, resolved_ground + TRAINER_CLEARANCE, at.y)
 	_player.velocity = Vector3.ZERO
 	_player.rotation.y = atan2(forward.x, forward.y)
-	var camera_xz := at - forward * CAMERA_BACK
-	var camera_ground := float(_world.call("ground_height_at", camera_xz.x, camera_xz.y))
-	if is_nan(camera_ground):
-		camera_ground = player_ground
-	_camera.global_position = Vector3(camera_xz.x, maxf(camera_ground + CAMERA_UP, player_ground + 1.6), camera_xz.y)
-	_camera.look_at(Vector3(at.x, player_ground + 1.15, at.y) + Vector3(forward.x, 0.0, forward.y) * 3.0, Vector3.UP)
+	_rig.call("set_target", _player)
+	var camera_yaw := capture_yaw(forward)
+	var camera_pitch := float(_rig.get("pitch"))
+	_rig.set("yaw", camera_yaw)
+	_rig.rotation = Vector3(camera_pitch, camera_yaw, 0.0)
+	# A catalogue jump is the same remote-target case as loading a saved pose:
+	# snap the production pivot so Terrain3D collision and the spring arm update
+	# at the destination immediately instead of lerping across kilometres.
+	_rig.global_position = _player.global_position
 	_camera.make_current()
 	_player.reset_physics_interpolation()
+	_rig.reset_physics_interpolation()
 	_camera.reset_physics_interpolation()
 	for _frame in POPULATE_FRAMES:
 		await physics_frame
-	await _pin_time(str(row.time))
+	var observed_clock := await _pin_time(str(row.time))
+	if observed_clock.is_empty():
+		_write_manifest()
+		return
 	for _frame in POSE_FRAMES:
 		await process_frame
 	await RenderingServer.frame_post_draw
@@ -338,11 +358,18 @@ func _capture_row(row: Dictionary) -> void:
 		record["player_position"] = _vec3(_player.global_position)
 		record["camera_position"] = _vec3(_camera.global_position)
 		record["view_heading_xz"] = [forward.x, forward.y]
+		record["terrain_ground_y"] = terrain_ground
+		record["resolved_ground_y"] = resolved_ground
+		record["camera_rig_transform"] = _transform(_rig.global_transform)
+		record["camera_rig_spring_length"] = _rig.spring_length
 		record["camera_transform"] = _transform(_camera.global_transform)
 		record["camera_player_distance_m"] = _camera.global_position.distance_to(_player.global_position)
+		record["observed_clock"] = observed_clock
 		record["trainer_visible_intent"] = true
-		record["trainer_visibility_limit"] = "Framed over-shoulder; manifest does not prove pixels are unobstructed. Judge the frame."
-		record["nearby_creatures_160m"] = _creatures_near(_player.global_position)
+		record["trainer_visibility_limit"] = "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame."
+		var nearby_creatures := _nearby_creatures(_player.global_position)
+		record["nearby_creatures_160m"] = nearby_creatures.size()
+		record["nearby_creature_records_160m"] = nearby_creatures
 		record["bytes"] = FileAccess.get_file_as_bytes(path).size()
 		_records.append(record)
 		print("CATALOGUE CAPTURE %s -> %s" % [str(row.frame_id), path])
@@ -370,41 +397,78 @@ func _route_forward(destination_index: int) -> Vector2:
 	return direction if direction.length_squared() > 0.0 else Vector2(0.0, 1.0)
 
 
-func _pin_time(time_name: String) -> void:
+static func resolve_capture_ground(from: Node, x: float, z: float, terrain: float) -> float:
+	return BUILT_FLOOR.resolve(from, x, z, terrain)
+
+
+static func capture_yaw(forward: Vector2) -> float:
+	return atan2(-forward.x, -forward.y)
+
+
+func _pin_time(time_name: String) -> Dictionary:
+	if _look == null or not _look.has_method("apply_time"):
+		_failures.append("%s: production WorldLook/apply_time became unavailable" % time_name)
+		return {}
+	if _look.has_method("times_available") \
+			and time_name not in (_look.call("times_available") as Array):
+		_failures.append("%s: requested time is absent from production WorldLook" % time_name)
+		return {}
 	if _weather != null:
 		_weather.set_process(true)
 		_weather.set_physics_process(true)
 		if _weather.has_method("set_weather"):
 			_weather.call("set_weather", "clear")
-	if _look != null:
-		_look.set_process(true)
-		_look.set_physics_process(true)
-		if _look.has_method("set_clock_frozen"):
-			_look.call("set_clock_frozen", false)
-		if _look.has_method("apply_time"):
-			_look.call("apply_time", time_name)
+	_look.set_process(true)
+	_look.set_physics_process(true)
+	if _look.has_method("set_clock_frozen"):
+		_look.call("set_clock_frozen", false)
+	_look.call("apply_time", time_name)
 	for _frame in LIGHT_SETTLE_FRAMES:
 		await physics_frame
 	if _weather != null:
 		_weather.set_process(false)
 		_weather.set_physics_process(false)
-	if _look != null:
-		if _look.has_method("set_clock_frozen"):
-			_look.call("set_clock_frozen", true)
-		_look.set_process(false)
-		_look.set_physics_process(false)
+	if _look.has_method("set_clock_frozen"):
+		_look.call("set_clock_frozen", true)
+	_look.set_process(false)
+	_look.set_physics_process(false)
+	var observed := {"requested": time_name}
+	if _look.has_method("time_of_day"):
+		observed["time_of_day"] = str(_look.call("time_of_day"))
+		if str(observed.time_of_day) != time_name:
+			_failures.append("%s: WorldLook reports observed time '%s'" % [time_name, str(observed.time_of_day)])
+			return {}
+	if _look.has_method("hour"):
+		observed["hour"] = float(_look.call("hour"))
+	if _look.has_method("elapsed_seconds"):
+		observed["elapsed_seconds"] = float(_look.call("elapsed_seconds"))
+	return observed
 
 
-func _creatures_near(at: Vector3) -> int:
+func _nearby_creatures(at: Vector3) -> Array[Dictionary]:
 	var director := _world.get_node_or_null(^"EncounterDirector")
 	if director == null or not director.has_method("wild_creatures"):
-		return -1
-	var count := 0
+		return []
+	var records: Array[Dictionary] = []
 	for value: Variant in director.call("wild_creatures"):
 		var body := value as Node3D
 		if body != null and is_instance_valid(body) and body.global_position.distance_to(at) <= 160.0:
-			count += 1
-	return count
+			var record := {
+				"node_path": str(_world.get_path_to(body)),
+				"species_id": str(body.get("species_id")),
+				"position": _vec3(body.global_position),
+				"node_scale": _vec3(body.global_basis.get_scale()),
+			}
+			# CreatureBody exposes gameplay dimensions as the public size contract;
+			# its render-bounds helper is private, so no bounds claim is invented.
+			if body.has_method("body_height"):
+				record["body_height_m"] = float(body.call("body_height"))
+			if body.has_method("body_radius"):
+				record["body_radius_m"] = float(body.call("body_radius"))
+			records.append(record)
+	records.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return str(a.node_path) < str(b.node_path))
+	return records
 
 
 func _vec3(value: Vector3) -> Array[float]:
