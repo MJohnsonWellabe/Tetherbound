@@ -5,6 +5,13 @@ session (Claude Code) because direct remote control into this session was
 unavailable at the time. This supersedes the **lane structure** of
 `OWNER_DIRECTIVE_2026-09-09_CONTINUOUS_VISUAL_LANE.md` — not its intent.
 
+**Amendment, same day:** the read-first list and the worktree-render test below were
+being treated as repeatable rituals rather than one-time steps, producing turns that
+read for several minutes and closed with a status note instead of a code change. See
+`CLAUDE.md`'s "Process rules" and `AGENT_WORKFLOW.md` §2/§4: a scoped subagent reads
+its brief, not the whole directive stack, and a written finding is not a checkpoint.
+Both now apply here explicitly.
+
 ## What that directive got right, and what it caused
 
 "Keep a lane focused on visual review and fixes always" was the right call —
@@ -39,9 +46,11 @@ project's own established ceiling (`AGENT_WORKFLOW.md` §3, PR #83's own
 reasoning). Before relying on parallel capture across biomes: test whether a
 second git worktree (its own `.godot/` import cache) actually sustains a
 second concurrent render on this hardware without degrading either, and report
-that result. If it can't, capture sequentially but completely — full
-catalogue, day and night, one biome at a time — rather than the ad hoc renders
-that have been happening.
+that result. **Do this once** — a single pair of concurrent test renders, not
+a repeated check on every task — then move directly into the fix work below
+regardless of the outcome. If it can't sustain two, capture sequentially but
+completely — full catalogue, day and night, one biome at a time — rather than
+the ad hoc renders that have been happening.
 
 **The shared-system fix stays ONE lane, never split per biome.** Splitting it
 would recreate the exact instance-by-instance pattern above, with the added

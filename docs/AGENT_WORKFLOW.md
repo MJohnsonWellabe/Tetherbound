@@ -49,6 +49,15 @@ outcome; the exact files the agent owns and the files it must not touch; the tes
 must run; whether the change is visual (and therefore needs a render + blind judge);
 the completion-report format below; and a stop condition.
 
+**Only the top-level orchestrating context reads the full directive stack**
+(`CLAUDE.md`, `00_START_HERE.md`, every file in `docs/owner/`, `checkpoints.md`). A
+scoped subagent gets its written brief only, not a fresh full re-read of every
+governing document — re-deriving the whole stack on every delegated task is wasted
+context, and on a long session it is the visible mechanism behind turns that read for
+several minutes and then produce nothing but a status note. If a subagent's brief
+turns out to need something from the full stack the brief didn't include, that is a
+brief-writing defect to fix, not a reason for every subagent to re-read everything.
+
 ## 3. Parallelism rule
 
 Parallelize agents that touch independent files. Serialize agents whose changes are
@@ -99,6 +108,14 @@ the actual branch, not the summary:
 
 A report without a commit hash is not complete. A report whose test claim cannot be
 reproduced from the branch is treated as failed.
+
+**A written finding is not a checkpoint either.** A turn that produces only a report —
+no diff, no commit, no test run, no render — does not close a checkpoint interval, even
+when it correctly diagnoses something real. Diagnosis is real work and belongs in the
+report, but it is not a stopping point on its own. **Two consecutive report-only turns
+is the same stop-and-escalate signal as two no-yield attempts at the same fix:** change
+strategy, or hand off for decomposition. Do not keep re-documenting the same finding
+across turns hoping the next read produces a different result.
 
 ## 5. Branches, CI and landing
 
@@ -200,6 +217,14 @@ reproduced from the branch is treated as failed.
   ledger says is fixed.
 - When an owner report conflicts with a passing test, check which build they actually
   played (release asset time) before assuming the test lies.
+- **Ralph report trees and `checkpoints.md` grow without bound, and every fresh
+  orientation pass pays their full read cost.** When a live checkpoint file passes
+  roughly 40 KB, split it: archive everything before the last clean milestone (a merged
+  main landing, an owner-requested wrap) into a dated `checkpoints-archive-<date>.md`
+  beside it, leave a one-line pointer at the top of each file to the other, and keep the
+  live file to the current campaign only. Never delete archived content — move it. Do
+  this at a natural pause between sessions, not while a live session may still be
+  appending to the same file.
 
 ## 9. Definition of done
 
