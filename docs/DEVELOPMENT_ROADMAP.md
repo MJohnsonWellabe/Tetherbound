@@ -2,16 +2,19 @@
 
 **Status:** canonical living product-development roadmap.
 
-**Current audit-resume status after PR #90 merge, 2026-09-09:** the owner resumed
+**Current audit-resume status after PR #91 merge, 2026-09-09:** the owner resumed
 the four-biome Beta Ready objective, superseding the dated owner-stop state retained in
-`CURRENT_STATE.md`. PR #90 merged as `origin/main`
-`57660e4feb81fcbf8de5b0fe065e0ac107287676`. Its tree
-`7c0e65986d6283cf0e835cbdb4e434c3cdef0da3` is identical to verified PR head
-`f227816f88cc88e702a6934650f7c8bf1daea871`, which is an ancestor of main. Exact-head
-PR CI `34303950964` passed on attempt 1: all 26 executed jobs succeeded, the three
-configured jobs skipped, and all 86 wrapped smokes passed on their first invocation.
-See `ralph/reports/FOUR-BIOME-BUILD/CI-34303950964.md` for the raw-log review. Main's
-own push CI and export remain pending; there is no published Windows release claim.
+`CURRENT_STATE.md`. PR #91 landed as `origin/main`
+`49da91d51953fb4b650f29b1399ae41218f68f86`, from exact reviewed head
+`b5dd34b4b7cec5bafc76affdbf33af84192e84a5`. Exact-head PR CI `34306689396`
+passed on attempt 1: 26 jobs succeeded, the three configured jobs skipped, every
+executed step was terminal success, and all 37 network smokes ran once. See
+`ralph/reports/FOUR-BIOME-BUILD/CI-PR91-b5dd34b4b.md`. Exact-main push CI
+`34308309450` and Release `34308309474` are live; no result is claimed for either.
+PR #91's parent main `57660e4feb81fcbf8de5b0fe065e0ac107287676` remains verified by
+passed main CI `34305636072` and Release `34305636213`, including their Windows exports
+and exported-runtime ground checks; see
+`ralph/reports/FOUR-BIOME-BUILD/CI-MAIN-57660e4fe.md`. Main is now `49da91d51`.
 
 Stage C6 is pulled forward and in progress. The full Stage C six-question audit remains
 incomplete. The merged reports document the local corrected 116-frame catalogue,
@@ -21,16 +24,36 @@ Yes/Yes; Cloudreach, Stormwood, Water and Combined A/B No/Yes;
 all five sets remain No for shipping-art readiness. The category-intent B results are
 not shipping acceptance. The later three-image Water-gate A/B No/No report is local
 descendant evidence for that narrow view and does not replace Water or Combined B Yes.
-All visual findings and the Beta gate remain open.
+Local Cloudreach commit `ac2e2462f` records the completed Settings catalogue audit
+within Phase A; the broader route, interior, weather/motion and target-hardware sweep
+remains in progress. Its inspected raw screens remain local while committed receipts
+preserve their identities. All visual findings and the Beta gate remain open.
 
 Aim work remains unresolved with its named commit-race/control-phase handoff; both
 bounded proofs failed, so no fourth fresh campaign will run in this resume session.
 Water's authored return at `d769a93c5` is now on main. Local descendant report
 `WATER-RETURN-RUNTIME.md` proves the solo route only from isolated prerequisites, not an
-earned campaign. Network realm/session/route checks passed, but the report and root
-arrival review remain pending, so full network arrival is not claimed. The chop observer
-repair `7c11fce2a` is also on main and its regression plus full playground smoke passed
-exact-head CI on first invocation. These results do not complete a stage.
+earned campaign. Now-landed PR #91 commit `b5dd34b4b` adds a 33-check two-peer run:
+ordinary movement and interaction reached ready Stormwood with no pending entry and a
+grounded arrival at the authored return point, while the host remained in Water and
+route authority stayed unchanged. The known older avatar/proxy cached-packet teardown
+issue remains open. The chop observer repair
+`7c11fce2a` is on main and its regression plus full playground smoke passed exact-head
+CI on first invocation. These bounded fixture results do not complete a stage or an
+earned campaign.
+
+The ROAD heading reproduction at `618ff7ea1`, with informed disposition and fresh
+blind report through `f50bf67ba`, is narrow partial evidence: two 1280×720 images at
+sample 37 only. Turning from the recorded heading to the attempted travel heading moved
+the observer proxy from zero to three, but the critic could not independently recognize
+the distant bodies as creatures. Its narrow verdict is A Yes / B No / shipping No.
+The fresh-reset walk then met the intentionally locked TrailGate because the historical
+campaign had already earned that prerequisite; this is a fixture mismatch, not a new
+production bug. The capture's clock metadata failed, so exact time/weather is unverified.
+There is no sample-43 pair, whole-ROAD pass, art pass or Beta claim; readable creatures
+during ordinary earned road travel remains open. The post-run helper correction passed
+only the isolated headless `--parse-only` early return (`ROAD HEADING PROBE PARSE OK`,
+exit 0); it loaded no world and is not a second graphical validation.
 
 **2026-09-08 18:12 UTC update:** Wave 2 is merged as main
 `b3458eb1d0f54ceb2554a97e9b0fe0b2f88f5bfb`, after exact-head PR CI

@@ -1044,3 +1044,46 @@ No speculative fix or repeated fresh run was performed. Next checkpoint23:40UTC.
 - Next highest-value task: finish the post-material recapture and fresh blind visual
   verification, obtain green CI for the resulting exact integration head, land through
   the PR, then continue the standing Beta goal from the remaining earned-play frontier.
+
+## 2026-09-09 04:01:24 UTC — resume checkpoint 2
+
+- Player-visible capability added: the merged new-game picker presents four named,
+  portrait-backed choices with controller/keyboard selection, and the merged Water
+  return gate provides an ordinary interaction back to Stormwood. Focused physical UI
+  evidence and the bounded solo return run passed; neither is a full campaign claim.
+- Regions or paths newly reachable: PR #90 mounts the Water-to-Stormwood return and
+  preserves the elevated authored Stormheart arrival. The solo full-scene fixture and
+  PR #91's two-peer 33-check fixture both reached ready Stormwood, cleared pending entry
+  and observed a grounded player at the authored point. Their prerequisites were
+  disclosed fixture state, not earned campaign progress.
+- Systems newly working in real play: the return route preserves WORLD authority and
+  route facts in solo and two-peer evidence, with host/client realm and shell ownership
+  checked. Team Tether pylon consumers now apply their installed live/drained finishes;
+  Cloudreach and Stormwood were recaptured, but independent visual closure covers only
+  the visible Verge material portion. Other repaired consumers remain context-unverified,
+  and no shipping-art or whole-biome acceptance is claimed. The older avatar/proxy
+  cached-packet teardown issue remains open.
+- Content added: Arlo, Lyra, Kael and Sera now have distinct installed picker
+  portrait/name cards, and five previously unfinished Cloudreach/Stormwood pylon
+  consumers now use the shared installed material treatment. The corrected 116-frame
+  audit and independent reviews are evidence of the build, not new gameplay content or
+  a Stage C pass.
+- Merged SHA (`origin/main`):
+  `49da91d51953fb4b650f29b1399ae41218f68f86`. PR #90 landed as
+  `57660e4feb81fcbf8de5b0fe065e0ac107287676` with exact-head and main push CI,
+  Windows debug/release exported-runtime ground checks and public asset `551867266`.
+  PR #91 head `b5dd34b4b7cec5bafc76affdbf33af84192e84a5` is an ancestor with an identical
+  merge tree and passed exact-head CI `34306689396` on attempt 1. Its new main CI
+  `34308309450` remains under separate review.
+- Blockers: the genuine title-start path remains stopped at the documented aim commit
+  race and has never reached Stormwood. Stage C and shipping-art acceptance remain
+  open. Release `34308309474` exported and published asset `551927103`, but literal
+  `tags/latest` still resolves to old commit
+  `a8423f00fc0245af166222383b9c24dc7beb603e`; release identity hygiene is therefore
+  not closed. The active chapter-entry Crown regression is local, synthetic-seam
+  evidence and remains uncredited while running.
+- Next highest-value task: finish the single bounded same-live Stormwood
+  `--through-crown` regression and stop at its first result, then use that evidence to
+  choose the smallest substantive Crown/player-path repair. In parallel, finish exact
+  main CI/release review and the diagnosed rolling-tag workflow repair; do not restart
+  the blocked fresh aim campaign or mark a stage complete.
