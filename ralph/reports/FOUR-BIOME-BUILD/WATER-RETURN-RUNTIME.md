@@ -1,8 +1,8 @@
 # Water return runtime evidence
 
-Date: 2026-09-08  
-Branch: `codex/four-biome-audit-resume-0908`  
-Production connection commit: `d769a93c5`  
+Date: 2026-09-08
+Branch: `codex/four-biome-audit-resume-0908`
+Production connection commit: `d769a93c5`
 Generated scatter repair commit: `f227816f8`
 
 ## Evidence boundary
