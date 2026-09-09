@@ -1,6 +1,10 @@
 # Meadows Warden staff — 2026-09-09
 
-Status: source, initialized component proof and matched bare-stage A/B capture complete. Appearance awaits independent image-only review; this report does not claim visual acceptance or field/world commercial acceptance.
+Status: **held after fresh image judgment**. Source and initialized component
+proof are complete; six matched frames were captured, but the fresh judge
+prefers the baseline's cleaner presentation. Staff grip and material language
+are unresolved despite geometric attachment. See `VISUAL-FRESH-WARDEN-0909.md`.
+No shipping or visual acceptance. Pending statements below retain earlier history.
 
 ## Defect and retained evidence
 

@@ -25,6 +25,25 @@ second pass.
 
 ## Known deferrals carried in from before this directive
 
+### Explicit identity disposition —2026-09-09 owner root-cause directive item6
+
+Arlo's generic identity is **accepted for now**, as the directive explicitly
+permits. The shipped accent-color change improves readability but does not
+establish a distinctive costume or character identity. Do not re-review that
+same accent expecting identity acceptance. A later identity pass needs a
+coherent costume/accessory brief using the installed humanoid, then a fresh
+judge; no new humanoid mesh is authorized. This is a recorded local deferral,
+not satisfaction of the four-biome commercial-cohesion gate. Evidence: PR96
+and retained Arlo verdicts; the new instruction is
+`OWNER_DIRECTIVE_2026-09-09_VISUAL_ROOTCAUSE_PARALLEL_LANES.md` item6.
+
+Warden staff candidate2f441b2fc is held after
+`ralph/reports/FOUR-BIOME-BUILD/VISUAL-FRESH-WARDEN-0909.md`: the fresh judge
+prefers the baseline's cleaner presentation. The new staff adds identity but
+has an unconvincing grip and simpler material language; attachment79/0 and
+six matched stills do not resolve those appearance defects. Preserve evidence
+and prioritize the shared-system investigation before another local art round.
+
 These were already deferred or open when the directive was written, and belong to the
 second pass unless they start blocking the playable path.
 
