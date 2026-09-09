@@ -5,7 +5,7 @@
   "transition_points": {
     "cloudreach_entry": {"id": "stormwood_arrival_from_cloudreach", "position": [-300, 30, 180], "facing_yaw_deg": 180, "peer_realm_id": "cloudreach", "peer_anchor_id": "cloudreach_return_from_stormwood", "save_anchor": true},
     "cloudreach_return": {"id": "stormwood_return_to_cloudreach", "position": [-300, 30, 145], "facing_yaw_deg": 0, "peer_realm_id": "cloudreach", "peer_anchor_id": "cloudreach_return_from_stormwood", "save_anchor": true},
-    "water_departure": {"id": "stormwood_departure_to_water", "position": [-100, 262.21, 5501], "facing_yaw_deg": 180, "peer_realm_id": "water", "peer_anchor_id": "water_arrival_from_stormwood", "save_anchor": true}
+    "water_departure": {"id": "stormwood_departure_to_water", "position": [-100, 262.21, 5501], "facing_yaw_deg": 180, "peer_realm_id": "water", "peer_anchor_id": "water_arrival_from_stormwood", "save_anchor": true, "arrival_height_policy": "authored"}
   },
   "regions": [
     {"id": "cinder_verge", "display_name": "Cinder Verge", "order": 1, "position": [-300, 28, 530], "bounds": {"min_x": -2560, "max_x": 2048, "min_y": -100, "max_y": 360, "min_z": 0, "max_z": 1050}},

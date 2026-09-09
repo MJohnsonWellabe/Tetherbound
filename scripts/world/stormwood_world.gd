@@ -49,6 +49,13 @@ func entry_anchor(id: String) -> Dictionary:
 			return entry.duplicate(true)
 	return {}
 
+func resolve_entry_position(anchor: Dictionary) -> Vector3:
+	var position: Array = anchor.position
+	var authored := Vector3(float(position[0]),float(position[1]),float(position[2]))
+	if str(anchor.get("arrival_height_policy","terrain")) == "authored":
+		return authored
+	return Vector3(authored.x,ground_height_at(authored.x,authored.z)+0.3,authored.z)
+
 func _ready() -> void:
 	_build_started_ms = Time.get_ticks_msec()
 	_config = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_world.json"))
@@ -106,8 +113,7 @@ func _ready() -> void:
 		var anchor := entry_anchor(pending)
 		if anchor.is_empty():
 			anchor = _config.transition_points.cloudreach_entry
-		var p: Array = anchor.position
-		player.position = Vector3(float(p[0]),ground_height_at(float(p[0]),float(p[2]))+0.3,float(p[2]))
+		player.position = resolve_entry_position(anchor)
 		if pending.is_empty():
 			game.call("apply_loaded_player_pose")
 		get_node("CameraRig").call("set_target",player)

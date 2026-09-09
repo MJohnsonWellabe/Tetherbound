@@ -1385,6 +1385,7 @@
       "id": "water_return_to_stormwood",
       "island_id": "first_shore",
       "peer_realm": "stormwood",
+      "peer_anchor_id": "stormwood_departure_to_water",
       "position": [
         12.0,
         1.881,

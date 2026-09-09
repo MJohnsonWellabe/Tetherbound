@@ -16,6 +16,7 @@ const DOCKS := preload("res://scripts/world/water_dock_actions.gd")
 const RIDING := preload("res://scripts/world/water_riding_controller.gd")
 const MOUNTED_SWIM := preload("res://scripts/world/water_mounted_swim.gd")
 const CAMPS := preload("res://scripts/world/water_camps.gd")
+const REALM_GATE := preload("res://scripts/world/realm_gate.gd")
 
 @export var simulation_only: bool = false
 @export var shell_realm: String = "water"
@@ -74,6 +75,7 @@ func _ready() -> void:
 		surface.name = "WaterSurface"
 		add_child(surface)
 		surface.build(config, _visual)
+	_build_return_gate()
 	var player := local_rig()
 	if player != null and not simulation_only:
 		player.global_position = entry_anchor("from_stormwood")
@@ -215,6 +217,39 @@ func entry_anchor(_entry_id: String = "from_stormwood") -> Vector3:
 	if is_finite(height):
 		point.y = height + 0.15
 	return point
+
+
+## The Stormwood -> Water key was consumed when the durable Water gate opened.
+## Returning through the same connection therefore reads only that WORLD unlock;
+## an empty key flag keeps RealmGate out of its unlockable/key-writing branch.
+## Game remains the realm router and resolves this authored Stormwood entry id.
+func _build_return_gate() -> void:
+	var raw: Variant = config.get("entry_anchors", {}).get("return_to_stormwood", {})
+	if not raw is Dictionary:
+		push_error("Water return connection is missing entry_anchors.return_to_stormwood")
+		return
+	var spec := raw as Dictionary
+	var position_raw: Variant = spec.get("position", [])
+	if not position_raw is Array or (position_raw as Array).size() < 3:
+		push_error("Water return connection has no authored position")
+		return
+	var values := position_raw as Array
+	var point := Vector3(float(values[0]), float(values[1]), float(values[2]))
+	var height := ground_height_at(point.x, point.z)
+	if is_finite(height):
+		point.y = height
+	var destination_entry_id := str(spec.get("peer_anchor_id", ""))
+	if destination_entry_id.is_empty():
+		push_error("Water return connection has no authored Stormwood peer anchor")
+		return
+	var gate: Node3D = REALM_GATE.new()
+	gate.name = "StormwoodReturnRealmGate"
+	gate.origin_realm = "water"
+	gate.position = point
+	gate.rotation.y = deg_to_rad(float(spec.get("facing_yaw_deg", 0.0)))
+	gate.call("setup", "stormwood", destination_entry_id, "Stormwood", "",
+		"realm_gate_water_unlocked")
+	add_child(gate)
 
 
 func _build_materials() -> void:
